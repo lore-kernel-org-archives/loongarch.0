@@ -1,127 +1,81 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2024.outbound.protection.outlook.com [40.92.18.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D29822603
-	for <loongarch@lists.linux.dev>; Sat, 13 May 2023 14:46:17 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QkSA6j/X4Z+rp24NmW72NGi5CH0eNWnUiOQRXfECmTNrj1yqIQnW+ACl6Q2cccIH4QwjCy0VK1Nb46lJeDXHKdA4SISFa6QoTDzpbsJ8rcJWDlRzxfAGCDaP38cphz6YwjImPPoMa7Vus6tohLsQ6efAb/P/q/lQf92qIfKAHNa7EbvQ8mPB+M8vowYEa8xVWxjQ8om7HVfViYMYU1+FdxlHg5XL+X0ADpPmLKA9ypC1nbnxzrZ2pS0MNZYRokZi0frGIycXAx+7tGvCDbLcshs9gEHPWeT9gTPCLuHcbUgTfVAbk5+GP3dx+dISQGBWlPHJew7OiOxL9XqmTeGBiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QqjfHygK+RUtnCXnLMttbbKxL5rcOWChexL8SNKSU8Q=;
- b=cheI0c+d7UaLAJOr54p/n2zgdxZIFBVO9KQtKNphW0UQXUBcNry4RJ9Yaf2UTCSvW+zSsjMLbriq0kGrmIyQp/8fS9I9clKqGk4nsagv0ZPUJ+m4CqV0bp5UGC9MYob6R5JF6S+tJOsw03yCtEOi4cw6dVZgBcc4IXyiR64h//eb+j/dfQyH4jn+f+LxDKkiLr7FNK8A+YIgJv/OHy54iJhglTNudLUKSQDeARmCHOGFhj5lx/MSejxNYuoIfncM4cNEueRL/Ap0bkcC+pPbHrYMqJ1GQ8Eh0rUeXsuZaaxDg6FUJR6HGO2o75HXXfXAkUxdkYM2tZMMF+mFo3ziig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QqjfHygK+RUtnCXnLMttbbKxL5rcOWChexL8SNKSU8Q=;
- b=qCl3CQpSaEl2pCRTSG7RK778B3cgSeQR4qjyeA/FS8GCDYbSesaM09Dqi+1pQWmuNss09DPLkqek5cnFG5l1zsjFFackWpOTimrl8ulGrXBeAVOpGSXrxwmMhWyp757z1x+nPnga5KGvMECXSFXwKgAyPy85yW5umaibIdoW+XSFRnDc3kIfz9o/vHauALW32ITHZ97wQAJkYQD9ihf8XrotafUI2UFIJCwXTPbKJdUU83A7CbyE4PSj9dBg+XjxzIaRywE6dZGOf5JjVva/IoS7+d760fq8E7T2sCUwn2NGGVognHqViMC4m3RgmMZabNa10QFQMO9ikMnkw638Mw==
-Received: from CY5PR12MB6455.namprd12.prod.outlook.com (2603:10b6:930:35::10)
- by PH7PR12MB6657.namprd12.prod.outlook.com (2603:10b6:510:1fe::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.24; Sat, 13 May
- 2023 14:46:15 +0000
-Received: from CY5PR12MB6455.namprd12.prod.outlook.com
- ([fe80::eece:c2b8:c7ea:a6]) by CY5PR12MB6455.namprd12.prod.outlook.com
- ([fe80::eece:c2b8:c7ea:a6%6]) with mapi id 15.20.6340.031; Sat, 13 May 2023
- 14:46:15 +0000
-From: mirimmad@outlook.com
-To:
-Cc: skhan@linuxfoundation.org,
-	Immad Mir <mirimmad17@gmail.com>,
-	Ivan Orlov <ivan.orlov0322@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] loongarch: fix debugfs_create_dir error checking
-Date: Sat, 13 May 2023 20:15:29 +0530
-Message-ID:
- <CY5PR12MB64557005ECDAFFC89FC8C7B3C67A9@CY5PR12MB6455.namprd12.prod.outlook.com>
-X-Mailer: git-send-email 2.40.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [FZBOP/zqqhSB1eBn8dYsU2ozcboGbYjfmQEuDZGFUQeWAiWgViJSue2A2ENZVpey]
-X-ClientProxiedBy: BM1P287CA0014.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:40::29) To CY5PR12MB6455.namprd12.prod.outlook.com
- (2603:10b6:930:35::10)
-X-Microsoft-Original-Message-ID:
- <20230513144530.140410-1-mirimmad@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7EA137B
+	for <loongarch@lists.linux.dev>; Sun, 14 May 2023 03:09:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A268C433EF
+	for <loongarch@lists.linux.dev>; Sun, 14 May 2023 03:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684033742;
+	bh=tn/b5nGJCsepGZi2dbYA45zwbk8oczOejMOPqJtpC7Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VOBOZyxJKKyHOmtkUljxhyfXvdzH3+SezeVJLpK1eKjgqkAkkvynaEhr+2qQ/8mTF
+	 8M+JXtwOT2gC5DaOU/y2AAQDlMh28y7PH7D9atCL2HntpStS5RZY0Az/WJZXyFixYi
+	 zAPDPwUz3MT+kXmO1yoAxnh18Uxv8k9G4Jk+jn/LF0y9Umb05pTTnaHUMCGe4UaaKq
+	 nxFMMfk6vaJ1ZfQ7KHvN2OeMa+WtJwe4gLX6srNRl+psJ5uPdanm7kmLAuGJbAPU3Q
+	 C+ro9LPv+zGvhotpdLvrO4Xajq00vSQsix8yX1vudaMZ2+4xG1XdRVc4rkF+MMsTC0
+	 t7hevlSNfe8YQ==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-50bc22805d3so17266732a12.1
+        for <loongarch@lists.linux.dev>; Sat, 13 May 2023 20:09:02 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwqTVOYcvoBGTBJk3dxpAaW0FfZ5agYdM6+ihGCm3K7JSCu6Vo5
+	DwqRjNyKDY4sWSdrDfrneepe4k3hcBIuRL1qhgo=
+X-Google-Smtp-Source: ACHHUZ6E4Jt1x4ZkdyPgRQks/D1qMhCbmJDBp7GH1/QQSJgaRyNJOwWuuJ3cDuT6TWOQryBV1SvkOcQcTlNxKjfDj0I=
+X-Received: by 2002:a17:907:97d0:b0:969:7739:2eb7 with SMTP id
+ js16-20020a17090797d000b0096977392eb7mr20654208ejc.4.1684033740317; Sat, 13
+ May 2023 20:09:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6455:EE_|PH7PR12MB6657:EE_
-X-MS-Office365-Filtering-Correlation-Id: e08031b5-e9dc-4061-b4d5-08db53c0cd34
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	QPCkCNus5tkYGAJKRayxPM77KPQ9B2hKUMLDubZqMtj8tVWF/90hGa4vfNP+p3EAlkrz8FN8RuNhJkxSlJTwbe6bml4l9d0DaNakrxOYPA4YQsKbdDCZRbbIfMMnoxB3v54ggY3xVrt5XL6tutgOnOrAz1qx40X7VOvHbKPzHMlATbfVLSpmghjT1P+ijGHohvnOG7aIjKtoWmZZzWywzLNdltEtsdUGXwiC4UVCSAPp7dXIlvLdUSHzOomCyo633lTsRekslp6oARzhNCihqeQIHJJ21BudVWka9uG5lzSCDCbAlQgZlwy1RkOTR/Yg4uJWEVXpapOarEfeaXdpjBdFRNrkECnMylJfjJgBcVUaqTYT7tCb7nKaqmaVX52d33NBkhG1PLZpQv5ZGL40cvYuIFLSn4P2gTXdl1lG2heTVLdABShk6DkuqJQEfHEBmfvQEOt7U9d7mSxOAXIZw2z5g0R2KE1mCGoAgfddKmRspaJXH8lphLmGrQRoy1AE4Wo2SimY8MV6eWuD9x6IbT2davRyVpuzL0tTTAiWVdQpDjT+EBziRel/gsCoskBu
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lWahLwpxr0foIbJ3eSnDMRgKentKpF76eDj2iAMSjFw79VUVwSIycHw/kPdm?=
- =?us-ascii?Q?7D02r3hAfXYOzgkfRxz2LHQUnyS46nNNqHQbjiJ8VHecKH00rPqDcj665eps?=
- =?us-ascii?Q?bfRtBrbtH126CcuZgR/Y+/DhvBH1OHGgZrvtgcYXf0oeezNL867MGnUkASjl?=
- =?us-ascii?Q?e1571aXZmS6yRD/NB9Y4EaJzXl+Sr15Kv4w+OlwjWKtTDYElC8cze8w9UYxx?=
- =?us-ascii?Q?gXEjoy+O1q4LILrYQJvrzc02mjFAJWF82QSGgS9Qe0mScH8bDMa5gEOUg0yR?=
- =?us-ascii?Q?Tmclmt0MNNqLkJfNpO52YotNF+hYm142745CHC8R8yBXeDyxHEa8xZ1rjDjj?=
- =?us-ascii?Q?KugFLTPIG4aHr6x3h6PKcvWkKyIg1570DrQgMGrEk3CPPV/OBpoXM3UNlDm2?=
- =?us-ascii?Q?VK4t7IdBrcb0LbYmT1C2yFhmUraFzd7rJK4dQK8RYdslKT7PNTrFoRZHbPiy?=
- =?us-ascii?Q?tVAMr+d+EcLxStekxAtP69ywqVd2vood07uTcieuDtKLNwD0GyoycNdnsVXe?=
- =?us-ascii?Q?oELaa4hPhsqQGRiy9tV7h2gd7JKzQyEclVazytLLItNXM6NLznSACl4Wf86l?=
- =?us-ascii?Q?aUc+2SPQCQDV7RwvB7u4t0ugBrkWwPQh3/1MR89CmaKE5JZiyHQC1dwffiJt?=
- =?us-ascii?Q?9txHPhsYzAZ6uZIEXn6Z/g06uVXNob1zleNE9G15iTQzLr0dMvwPdQjTZ/+4?=
- =?us-ascii?Q?8BDeRiWjrQ3C+v6Dc3r8ksvUvTYCCklFVRcbUAJSgHPHz/IZ/q/pU7nynvSk?=
- =?us-ascii?Q?qsnZj295nofXEPZ2YucS8PO7P1F//8FCPnZxNOvPVt81jYI+7OcugIlLCtyb?=
- =?us-ascii?Q?3CGmf/AUV3kgZBPYQypkb4tgKcm+ar88TWYpiTzroJy/t73nyPRCzeekUO1a?=
- =?us-ascii?Q?tcGl57Orcwgy94lmtE2nuKodVdmH1pCZfj1BGNxPHgsNBubd4yFOtAm8ZcFY?=
- =?us-ascii?Q?YwKdsvzu6EOOdzWhpTjxXB1qeuMdMCkdznQdCTyNrnfKr8F5pFoljXZqyK0P?=
- =?us-ascii?Q?BggisAJ6K15Tbiuq/PEIECnwcfEV5SaxOe2gOTCrUVWZ2EDo0saLwpoj+wXQ?=
- =?us-ascii?Q?ANy++3u75hHgLFCDEZLF1C2frHBFCyEnYBXTd9wctG8+EVmmIV4fro/L07j5?=
- =?us-ascii?Q?1luP7lt1CgrQX+0fb8FscJgfn9e2SrhgXd5ZzWRfBC0NgHNkrcHMQ4QDyruH?=
- =?us-ascii?Q?JL46cbSaQgdIxk9y8nREmVM+JLzTr9Akp9LeNfU8nKUWcPKxnoKKTTnSRJEk?=
- =?us-ascii?Q?deKKbAr8TE46V6o9+yVCq/q7sL6BQwR82W8e4GLkpg=3D=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e08031b5-e9dc-4061-b4d5-08db53c0cd34
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6455.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2023 14:46:15.1546
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6657
+References: <CY5PR12MB64557005ECDAFFC89FC8C7B3C67A9@CY5PR12MB6455.namprd12.prod.outlook.com>
+In-Reply-To: <CY5PR12MB64557005ECDAFFC89FC8C7B3C67A9@CY5PR12MB6455.namprd12.prod.outlook.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 14 May 2023 11:08:48 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H48t8tDmWoZOSqx06HwwXKY1CR=X+hi0o_ok6gSu6dQSg@mail.gmail.com>
+Message-ID: <CAAhV-H48t8tDmWoZOSqx06HwwXKY1CR=X+hi0o_ok6gSu6dQSg@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: fix debugfs_create_dir error checking
+To: mirimmad@outlook.com
+Cc: skhan@linuxfoundation.org, Immad Mir <mirimmad17@gmail.com>, 
+	Ivan Orlov <ivan.orlov0322@gmail.com>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Immad Mir <mirimmad17@gmail.com>
+Hi, Immad,
 
-The debugfs_create_dir returns ERR_PTR incase of an error and the
-correct way of checking it by using the IS_ERR inline function, and
-not the simple null comparision. This patch fixes this.
+On Sat, May 13, 2023 at 10:46=E2=80=AFPM <mirimmad@outlook.com> wrote:
+>
+> From: Immad Mir <mirimmad17@gmail.com>
+>
+> The debugfs_create_dir returns ERR_PTR incase of an error and the
+> correct way of checking it by using the IS_ERR inline function, and
+> not the simple null comparision. This patch fixes this.
+>
+> Suggested-By: Ivan Orlov <ivan.orlov0322@gmail.com>
+> Signed-off-by: Immad Mir <mirimmad17@gmail.com>
+> ---
+>  arch/loongarch/kernel/unaligned.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/kernel/unaligned.c b/arch/loongarch/kernel/un=
+aligned.c
+> index bdff825d2..be2a5bdc5 100644
+> --- a/arch/loongarch/kernel/unaligned.c
+> +++ b/arch/loongarch/kernel/unaligned.c
+> @@ -485,7 +485,7 @@ static int __init debugfs_unaligned(void)
+>         struct dentry *d;
+>
+>         d =3D debugfs_create_dir("loongarch", NULL);
+> -       if (!d)
+> +       if (IS_ERR(d))
+Maybe we need IS_ERR_OR_NULL() here?
 
-Suggested-By: Ivan Orlov <ivan.orlov0322@gmail.com>
-Signed-off-by: Immad Mir <mirimmad17@gmail.com>
----
- arch/loongarch/kernel/unaligned.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kernel/unaligned.c b/arch/loongarch/kernel/unaligned.c
-index bdff825d2..be2a5bdc5 100644
---- a/arch/loongarch/kernel/unaligned.c
-+++ b/arch/loongarch/kernel/unaligned.c
-@@ -485,7 +485,7 @@ static int __init debugfs_unaligned(void)
- 	struct dentry *d;
-
- 	d = debugfs_create_dir("loongarch", NULL);
--	if (!d)
-+	if (IS_ERR(d))
- 		return -ENOMEM;
-
- 	debugfs_create_u32("unaligned_instructions_user",
---
-2.40.0
-
+Huacai
+>                 return -ENOMEM;
+>
+>         debugfs_create_u32("unaligned_instructions_user",
+> --
+> 2.40.0
+>
