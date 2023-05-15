@@ -1,209 +1,286 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1DBEEA0
-	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 02:42:59 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxGuoynGFk_7EIAA--.14846S3;
-	Mon, 15 May 2023 10:42:58 +0800 (CST)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxgjgwnGFkK7JeAA--.32831S2;
-	Mon, 15 May 2023 10:42:56 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Zhangjin Wu <falcon@tinylab.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH v3] LoongArch: Add jump-label implementation
-Date: Mon, 15 May 2023 10:42:54 +0800
-Message-Id: <1684118574-7572-1-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8AxgjgwnGFkK7JeAA--.32831S2
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKr1fGw47ArWDAw1ktr4fZrb_yoW7GF1fpr
-	17Awn5GF4kGFn3JrZxtFyDur45XFZ3W3W2gF4ayFy8AFy7Z340vr1IkryDZF1DJ393GrWI
-	gF1ruFsIva1UJ3JanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
-	4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BF78468
+	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 09:09:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1684141754;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=awWutqv7Tku6RTy5++zNn2CsetnK4SAvTciCez0pzMg=;
+	b=eG8YwqMM1zo9BEm7zNaFhFLCnVi2FxgkVCZED5Hy/KnaevAyFRiCqbWSCuVz888fbDodrK
+	QRh73XVRPwdsYddhR0rywQqSJCEGaNvXtCYZGhomaQU8stP3BI7XlI47oDnFmtml1x9zRx
+	6G+Gx2n+zBFe2SktLvcFLdxEmTwsMZs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-659-KJdy53drOYK6CyyGE_o-bQ-1; Mon, 15 May 2023 05:09:08 -0400
+X-MC-Unique: KJdy53drOYK6CyyGE_o-bQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BB828800047;
+	Mon, 15 May 2023 09:09:07 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-32.pek2.redhat.com [10.72.12.32])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6FF2D40C2063;
+	Mon, 15 May 2023 09:08:59 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	arnd@arndb.de,
+	christophe.leroy@csgroup.eu,
+	hch@infradead.org,
+	agordeev@linux.ibm.com,
+	wangkefeng.wang@huawei.com,
+	schnelle@linux.ibm.com,
+	David.Laight@ACULAB.COM,
+	shorne@gmail.com,
+	willy@infradead.org,
+	deller@gmx.de,
+	Baoquan He <bhe@redhat.com>,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	x86@kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v5 RESEND 01/17] asm-generic/iomap.h: remove ARCH_HAS_IOREMAP_xx macros
+Date: Mon, 15 May 2023 17:08:32 +0800
+Message-Id: <20230515090848.833045-2-bhe@redhat.com>
+In-Reply-To: <20230515090848.833045-1-bhe@redhat.com>
+References: <20230515090848.833045-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 
-Add support for jump labels based on the ARM64 version.
+Let's use '#define ioremap_xx' and "#ifdef ioremap_xx" instead.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+For each architecture to remove defined ARCH_HAS_IOREMAP_xx macros in
+To remove defined ARCH_HAS_IOREMAP_xx macros in <asm/io.h> of each ARCH,
+the ARCH's own ioremap_wc|wt|np definition need be above
+"#include <asm-generic/iomap.h>. Otherwise the redefinition error would
+be seen during compiling. So the relevant adjustments are made to avoid
+compiling error:
+
+  loongarch:
+  - doesn't include <asm-generic/iomap.h>, defining ARCH_HAS_IOREMAP_WC
+    is redundant, so simply remove it.
+
+  m68k:
+  - selected GENERIC_IOMAP, <asm-generic/iomap.h> has been added in
+    <asm-generic/io.h>, and <asm/kmap.h> is included above
+    <asm-generic/iomap.h>, so simply remove ARCH_HAS_IOREMAP_WT defining.
+
+  mips:
+  - move "#include <asm-generic/iomap.h>" below ioremap_wc definition
+    in <asm/io.h>
+
+  powerpc:
+  - remove "#include <asm-generic/iomap.h>" in <asm/io.h> because it's
+    duplicated with the one in <asm-generic/io.h>, let's rely on the
+    latter.
+
+  x86:
+  - selected GENERIC_IOMAP, remove #include <asm-generic/iomap.h> in
+    the middle of <asm/io.h>. Let's rely on <asm-generic/io.h>.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Cc: loongarch@lists.linux.dev
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mips@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: x86@kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
 ---
-Changes in v3:
-- Define the JUMP_TABLE_ENTRY macro so that arch_static_branch
-  and arch_static_branch_jump can be shared.
-- Modify commit message.
+ arch/loongarch/include/asm/io.h     | 2 --
+ arch/m68k/include/asm/io_mm.h       | 2 --
+ arch/m68k/include/asm/kmap.h        | 2 --
+ arch/mips/include/asm/io.h          | 5 ++---
+ arch/powerpc/include/asm/io.h       | 9 +--------
+ arch/x86/include/asm/io.h           | 5 -----
+ drivers/net/ethernet/sfc/io.h       | 2 +-
+ drivers/net/ethernet/sfc/siena/io.h | 2 +-
+ include/asm-generic/iomap.h         | 6 +++---
+ 9 files changed, 8 insertions(+), 27 deletions(-)
 
-Changes in v2:
-- Fix build errors.
-- fix comment.
-
- .../core/jump-labels/arch-support.txt         |  2 +-
- arch/loongarch/Kconfig                        |  2 +
- arch/loongarch/configs/loongson3_defconfig    |  1 +
- arch/loongarch/include/asm/jump_label.h       | 50 +++++++++++++++++++
- arch/loongarch/kernel/Makefile                |  2 +
- arch/loongarch/kernel/jump_label.c            | 23 +++++++++
- 6 files changed, 79 insertions(+), 1 deletion(-)
- create mode 100644 arch/loongarch/include/asm/jump_label.h
- create mode 100644 arch/loongarch/kernel/jump_label.c
-
-diff --git a/Documentation/features/core/jump-labels/arch-support.txt b/Documentation/features/core/jump-labels/arch-support.txt
-index 2328eada3a49..94d9dece580f 100644
---- a/Documentation/features/core/jump-labels/arch-support.txt
-+++ b/Documentation/features/core/jump-labels/arch-support.txt
-@@ -13,7 +13,7 @@
-     |        csky: |  ok  |
-     |     hexagon: | TODO |
-     |        ia64: | TODO |
--    |   loongarch: | TODO |
-+    |   loongarch: |  ok  |
-     |        m68k: | TODO |
-     |  microblaze: | TODO |
-     |        mips: |  ok  |
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index d38b066fc931..193a959a5611 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -83,6 +83,8 @@ config LOONGARCH
- 	select GPIOLIB
- 	select HAS_IOPORT
- 	select HAVE_ARCH_AUDITSYSCALL
-+	select HAVE_ARCH_JUMP_LABEL
-+	select HAVE_ARCH_JUMP_LABEL_RELATIVE
- 	select HAVE_ARCH_MMAP_RND_BITS if MMU
- 	select HAVE_ARCH_SECCOMP_FILTER
- 	select HAVE_ARCH_TRACEHOOK
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 6cd26dd3c134..33a0f5f742f6 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -63,6 +63,7 @@ CONFIG_EFI_ZBOOT=y
- CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
- CONFIG_EFI_CAPSULE_LOADER=m
- CONFIG_EFI_TEST=m
-+CONFIG_JUMP_LABEL=y
- CONFIG_MODULES=y
- CONFIG_MODULE_FORCE_LOAD=y
- CONFIG_MODULE_UNLOAD=y
-diff --git a/arch/loongarch/include/asm/jump_label.h b/arch/loongarch/include/asm/jump_label.h
-new file mode 100644
-index 000000000000..4d8cbd5a8221
---- /dev/null
-+++ b/arch/loongarch/include/asm/jump_label.h
-@@ -0,0 +1,50 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2023 Loongson Technology Corporation Limited
-+ *
-+ * Based on arch/arm64/include/asm/jump_label.h
-+ */
-+#ifndef __ASM_JUMP_LABEL_H
-+#define __ASM_JUMP_LABEL_H
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <linux/types.h>
-+
-+#define JUMP_LABEL_NOP_SIZE	4
-+
-+#define JUMP_TABLE_ENTRY				\
-+	 ".pushsection	__jump_table, \"aw\"	\n\t"	\
-+	 ".align	3			\n\t"	\
-+	 ".long		1b - ., %l[l_yes] - .	\n\t"	\
-+	 ".quad		%0 - .			\n\t"	\
-+	 ".popsection				\n\t"
-+
-+static __always_inline bool arch_static_branch(struct static_key * const key,
-+					       const bool branch)
-+{
-+	asm_volatile_goto(
-+		"1:	nop			\n\t"
-+		JUMP_TABLE_ENTRY
-+		:  :  "i"(&((char *)key)[branch]) :  : l_yes);
-+
-+	return false;
-+l_yes:
-+	return true;
-+}
-+
-+static __always_inline bool arch_static_branch_jump(struct static_key * const key,
-+						    const bool branch)
-+{
-+	asm_volatile_goto(
-+		"1:	b	%l[l_yes]	\n\t"
-+		JUMP_TABLE_ENTRY
-+		:  :  "i"(&((char *)key)[branch]) :  : l_yes);
-+
-+	return false;
-+l_yes:
-+	return true;
-+}
-+
-+#endif  /* __ASSEMBLY__ */
-+#endif	/* __ASM_JUMP_LABEL_H */
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 9a72d91cd104..64ea76f60e2c 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -54,4 +54,6 @@ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+index 545e2708fbf7..5fef1246c6fb 100644
+--- a/arch/loongarch/include/asm/io.h
++++ b/arch/loongarch/include/asm/io.h
+@@ -5,8 +5,6 @@
+ #ifndef _ASM_IO_H
+ #define _ASM_IO_H
  
- obj-$(CONFIG_KPROBES)		+= kprobes.o kprobes_trampoline.o
+-#define ARCH_HAS_IOREMAP_WC
+-
+ #include <linux/kernel.h>
+ #include <linux/types.h>
  
-+obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
+diff --git a/arch/m68k/include/asm/io_mm.h b/arch/m68k/include/asm/io_mm.h
+index d41fa488453b..6a0abd4846c6 100644
+--- a/arch/m68k/include/asm/io_mm.h
++++ b/arch/m68k/include/asm/io_mm.h
+@@ -26,8 +26,6 @@
+ #include <asm/virtconvert.h>
+ #include <asm/kmap.h>
+ 
+-#include <asm-generic/iomap.h>
+-
+ #ifdef CONFIG_ATARI
+ #define atari_readb   raw_inb
+ #define atari_writeb  raw_outb
+diff --git a/arch/m68k/include/asm/kmap.h b/arch/m68k/include/asm/kmap.h
+index dec05743d426..4efb3efa593a 100644
+--- a/arch/m68k/include/asm/kmap.h
++++ b/arch/m68k/include/asm/kmap.h
+@@ -4,8 +4,6 @@
+ 
+ #ifdef CONFIG_MMU
+ 
+-#define ARCH_HAS_IOREMAP_WT
+-
+ /* Values for nocacheflag and cmode */
+ #define IOMAP_FULL_CACHING		0
+ #define IOMAP_NOCACHE_SER		1
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index cc28d207a061..477773328a06 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -12,8 +12,6 @@
+ #ifndef _ASM_IO_H
+ #define _ASM_IO_H
+ 
+-#define ARCH_HAS_IOREMAP_WC
+-
+ #include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+@@ -25,7 +23,6 @@
+ #include <asm/byteorder.h>
+ #include <asm/cpu.h>
+ #include <asm/cpu-features.h>
+-#include <asm-generic/iomap.h>
+ #include <asm/page.h>
+ #include <asm/pgtable-bits.h>
+ #include <asm/processor.h>
+@@ -210,6 +207,8 @@ void iounmap(const volatile void __iomem *addr);
+ #define ioremap_wc(offset, size)					\
+ 	ioremap_prot((offset), (size), boot_cpu_data.writecombine)
+ 
++#include <asm-generic/iomap.h>
 +
- CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
-diff --git a/arch/loongarch/kernel/jump_label.c b/arch/loongarch/kernel/jump_label.c
-new file mode 100644
-index 000000000000..b06245955f7a
---- /dev/null
-+++ b/arch/loongarch/kernel/jump_label.c
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2023 Loongson Technology Corporation Limited
-+ *
-+ * Based on arch/arm64/kernel/jump_label.c
-+ */
-+#include <linux/jump_label.h>
-+#include <linux/kernel.h>
-+#include <asm/inst.h>
-+
-+void arch_jump_label_transform(struct jump_entry *entry,
-+			       enum jump_label_type type)
-+{
-+	void *addr = (void *)jump_entry_code(entry);
-+	u32 insn;
-+
-+	if (type == JUMP_LABEL_JMP)
-+		insn = larch_insn_gen_b(jump_entry_code(entry), jump_entry_target(entry));
-+	else
-+		insn = larch_insn_gen_nop();
-+
-+	larch_insn_patch_text(addr, insn);
-+}
+ #if defined(CONFIG_CPU_CAVIUM_OCTEON)
+ #define war_io_reorder_wmb()		wmb()
+ #else
+diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
+index f1e657c9bbe8..67a3fb6de498 100644
+--- a/arch/powerpc/include/asm/io.h
++++ b/arch/powerpc/include/asm/io.h
+@@ -3,11 +3,6 @@
+ #define _ASM_POWERPC_IO_H
+ #ifdef __KERNEL__
+ 
+-#define ARCH_HAS_IOREMAP_WC
+-#ifdef CONFIG_PPC32
+-#define ARCH_HAS_IOREMAP_WT
+-#endif
+-
+ /*
+  */
+ 
+@@ -732,9 +727,7 @@ static inline void name at					\
+ #define writel_relaxed(v, addr)	writel(v, addr)
+ #define writeq_relaxed(v, addr)	writeq(v, addr)
+ 
+-#ifdef CONFIG_GENERIC_IOMAP
+-#include <asm-generic/iomap.h>
+-#else
++#ifndef CONFIG_GENERIC_IOMAP
+ /*
+  * Here comes the implementation of the IOMAP interfaces.
+  */
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index e9025640f634..76238842406a 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -35,9 +35,6 @@
+   *  - Arnaldo Carvalho de Melo <acme@conectiva.com.br>
+   */
+ 
+-#define ARCH_HAS_IOREMAP_WC
+-#define ARCH_HAS_IOREMAP_WT
+-
+ #include <linux/string.h>
+ #include <linux/compiler.h>
+ #include <linux/cc_platform.h>
+@@ -212,8 +209,6 @@ void memset_io(volatile void __iomem *, int, size_t);
+ #define memcpy_toio memcpy_toio
+ #define memset_io memset_io
+ 
+-#include <asm-generic/iomap.h>
+-
+ /*
+  * ISA space is 'always mapped' on a typical x86 system, no need to
+  * explicitly ioremap() it. The fact that the ISA IO space is mapped
+diff --git a/drivers/net/ethernet/sfc/io.h b/drivers/net/ethernet/sfc/io.h
+index 30439cc83a89..07f99ad14bf3 100644
+--- a/drivers/net/ethernet/sfc/io.h
++++ b/drivers/net/ethernet/sfc/io.h
+@@ -70,7 +70,7 @@
+  */
+ #ifdef CONFIG_X86_64
+ /* PIO is a win only if write-combining is possible */
+-#ifdef ARCH_HAS_IOREMAP_WC
++#ifdef ioremap_wc
+ #define EFX_USE_PIO 1
+ #endif
+ #endif
+diff --git a/drivers/net/ethernet/sfc/siena/io.h b/drivers/net/ethernet/sfc/siena/io.h
+index 30439cc83a89..07f99ad14bf3 100644
+--- a/drivers/net/ethernet/sfc/siena/io.h
++++ b/drivers/net/ethernet/sfc/siena/io.h
+@@ -70,7 +70,7 @@
+  */
+ #ifdef CONFIG_X86_64
+ /* PIO is a win only if write-combining is possible */
+-#ifdef ARCH_HAS_IOREMAP_WC
++#ifdef ioremap_wc
+ #define EFX_USE_PIO 1
+ #endif
+ #endif
+diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
+index 08237ae8b840..196087a8126e 100644
+--- a/include/asm-generic/iomap.h
++++ b/include/asm-generic/iomap.h
+@@ -93,15 +93,15 @@ extern void __iomem *ioport_map(unsigned long port, unsigned int nr);
+ extern void ioport_unmap(void __iomem *);
+ #endif
+ 
+-#ifndef ARCH_HAS_IOREMAP_WC
++#ifndef ioremap_wc
+ #define ioremap_wc ioremap
+ #endif
+ 
+-#ifndef ARCH_HAS_IOREMAP_WT
++#ifndef ioremap_wt
+ #define ioremap_wt ioremap
+ #endif
+ 
+-#ifndef ARCH_HAS_IOREMAP_NP
++#ifndef ioremap_np
+ /* See the comment in asm-generic/io.h about ioremap_np(). */
+ #define ioremap_np ioremap_np
+ static inline void __iomem *ioremap_np(phys_addr_t offset, size_t size)
 -- 
-2.37.1
+2.34.1
 
