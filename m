@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57AD715B8
-	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 02:15:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7029815A6
+	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 02:15:33 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dxi+rFlWFkxa8IAA--.14963S3;
-	Mon, 15 May 2023 10:15:33 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Ax1ei+lWFkUq8IAA--.14945S3;
+	Mon, 15 May 2023 10:15:26 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxn7O6lWFk0KJeAA--.33838S17;
-	Mon, 15 May 2023 10:15:31 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxn7O6lWFk0KJeAA--.33838S6;
+	Mon, 15 May 2023 10:15:25 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -22,9 +22,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v10 15/30] LoongArch: KVM: Implement vcpu status description
-Date: Mon, 15 May 2023 10:15:07 +0800
-Message-Id: <20230515021522.2445551-16-zhaotianrui@loongson.cn>
+Subject: [PATCH v10 04/30] LoongArch: KVM: Implement VM related functions
+Date: Mon, 15 May 2023 10:14:56 +0800
+Message-Id: <20230515021522.2445551-5-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
 References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
@@ -35,61 +35,120 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxn7O6lWFk0KJeAA--.33838S17
+X-CM-TRANSID:AQAAf8Dxn7O6lWFk0KJeAA--.33838S6
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uw4kGry8Kw4DWrW7KFyrXrb_yoW8Gr1UpF
-	nruas0gr4rWwnxWw1fJ39xXw43XrZ5WF1fWr92qryYkFnrtrn5XFW0krWDGFyvy34Fyr1S
-	qayrtwnxua90yaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7KFWrZF1xWFWkKF1fAF4rAFb_yoW5JF1kpF
+	1UCa95Kr4rX3s7trn3J3yDuw1S9393Wry8J342v345CFnxtrn5JFy0yry5GFWDJ34ruryf
+	Xa4aqwnI9a4Yy3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
-	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
-	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
-	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
+	bcAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
+	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement LoongArch vcpu status description such as idle exits counter,
-signal exits counter, cpucfg exits counter, etc.
+Implement LoongArch VM operations: Init and destroy vm interface,
+allocating memory page to save the vm pgd when init vm. Implement
+vm check extension, such as getting vcpu number info, memory slots
+info, and fpu info. And implement vm status description.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/loongarch/kvm/vm.c | 78 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 arch/loongarch/kvm/vm.c
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index a48f4b17ddc5..28319500c091 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -12,6 +12,23 @@
- #define CREATE_TRACE_POINTS
- #include "trace.h"
- 
-+const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
-+	KVM_GENERIC_VCPU_STATS(),
-+	STATS_DESC_COUNTER(VCPU, idle_exits),
-+	STATS_DESC_COUNTER(VCPU, signal_exits),
-+	STATS_DESC_COUNTER(VCPU, int_exits),
-+	STATS_DESC_COUNTER(VCPU, cpucfg_exits),
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+new file mode 100644
+index 000000000000..43688a04ab78
+--- /dev/null
++++ b/arch/loongarch/kvm/vm.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/kvm_host.h>
++
++#define KVM_LOONGARCH_VERSION 1
++
++const struct _kvm_stats_desc kvm_vm_stats_desc[] = {
++	KVM_GENERIC_VM_STATS(),
 +};
 +
-+const struct kvm_stats_header kvm_vcpu_stats_header = {
++const struct kvm_stats_header kvm_vm_stats_header = {
 +	.name_size = KVM_STATS_NAME_SIZE,
-+	.num_desc = ARRAY_SIZE(kvm_vcpu_stats_desc),
-+	.id_offset = sizeof(struct kvm_stats_header),
++	.num_desc = ARRAY_SIZE(kvm_vm_stats_desc),
++	.id_offset =  sizeof(struct kvm_stats_header),
 +	.desc_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE,
 +	.data_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE +
-+		       sizeof(kvm_vcpu_stats_desc),
++					sizeof(kvm_vm_stats_desc),
 +};
 +
- int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
- {
- 	return !!(vcpu->arch.irq_pending) &&
++int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
++{
++	/* Allocate page table to map GPA -> RPA */
++	kvm->arch.gpa_mm.pgd = kvm_pgd_alloc();
++	if (!kvm->arch.gpa_mm.pgd)
++		return -ENOMEM;
++
++	kvm_init_vmcs(kvm);
++	kvm->arch.gpa_size = BIT(cpu_vabits - 1);
++	return 0;
++}
++
++void kvm_arch_destroy_vm(struct kvm *kvm)
++{
++	kvm_destroy_vcpus(kvm);
++	_kvm_destroy_mm(kvm);
++}
++
++int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
++{
++	int r;
++
++	switch (ext) {
++	case KVM_CAP_ONE_REG:
++	case KVM_CAP_ENABLE_CAP:
++	case KVM_CAP_READONLY_MEM:
++	case KVM_CAP_SYNC_MMU:
++	case KVM_CAP_IMMEDIATE_EXIT:
++	case KVM_CAP_IOEVENTFD:
++	case KVM_CAP_MP_STATE:
++		r = 1;
++		break;
++	case KVM_CAP_NR_VCPUS:
++		r = num_online_cpus();
++		break;
++	case KVM_CAP_MAX_VCPUS:
++		r = KVM_MAX_VCPUS;
++		break;
++	case KVM_CAP_MAX_VCPU_ID:
++		r = KVM_MAX_VCPU_IDS;
++		break;
++	case KVM_CAP_NR_MEMSLOTS:
++		r = KVM_USER_MEM_SLOTS;
++		break;
++	default:
++		r = 0;
++		break;
++	}
++
++	return r;
++}
++
++int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
++{
++	return -ENOIOCTLCMD;
++}
 -- 
 2.31.1
 
