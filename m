@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37A2B1381
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A3041389
 	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 02:17:31 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxE_DAlWFkcK8IAA--.14936S3;
-	Mon, 15 May 2023 10:15:28 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxnOrBlWFkla8IAA--.14722S3;
+	Mon, 15 May 2023 10:15:29 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxn7O6lWFk0KJeAA--.33838S9;
-	Mon, 15 May 2023 10:15:27 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxn7O6lWFk0KJeAA--.33838S13;
+	Mon, 15 May 2023 10:15:29 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -22,9 +22,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v10 07/30] LoongArch: KVM: Implement vcpu run interface
-Date: Mon, 15 May 2023 10:14:59 +0800
-Message-Id: <20230515021522.2445551-8-zhaotianrui@loongson.cn>
+Subject: [PATCH v10 11/30] LoongArch: KVM: Implement fpu related operations for vcpu
+Date: Mon, 15 May 2023 10:15:03 +0800
+Message-Id: <20230515021522.2445551-12-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
 References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
@@ -35,134 +35,104 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxn7O6lWFk0KJeAA--.33838S9
+X-CM-TRANSID:AQAAf8Dxn7O6lWFk0KJeAA--.33838S13
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAryruFWxJryUXw43KFWxWFg_yoW5XFW3pF
-	4xCwn09w4rJ34xG3yfJrs0vrs0qrZ5Kr17XryxtrW3tr1Ut34DursakrWUAFWfA34fZF1S
-	vFn5tF4UCF1jy37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7AF45CryDuFWruw4DKw1Dtrb_yoW8ur1kpF
+	W7Cr98X3yrG3WxK3yaqr1jvr1av3ykKr1xXa47Wry3Ar1UtryrZr4vkrW2vF98Jw1xZFyI
+	yF1fGF45CFyDAwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
-	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
-	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
+	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
+	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement vcpu run interface, handling mmio, iocsr reading fault
-and deliver interrupt, lose fpu before vcpu enter guest.
+Implement LoongArch fpu related interface for vcpu, such as get fpu, set
+fpu, own fpu and lose fpu, etc.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 86 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 60 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 24b5b00266a1..eca8b96a3e6e 100644
+index 5a88f815c412..60213f7f7bac 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -17,6 +17,44 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- 	return 0;
+@@ -244,6 +244,66 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 	return r;
  }
  
-+/* Returns 1 if the guest TLB may be clobbered */
-+static int _kvm_check_requests(struct kvm_vcpu *vcpu, int cpu)
++int kvm_arch_vcpu_ioctl_get_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
 +{
-+	int ret = 0;
++	int i = 0;
 +
-+	if (!kvm_request_pending(vcpu))
-+		return 0;
++	/* no need vcpu_load and vcpu_put */
++	fpu->fcsr = vcpu->arch.fpu.fcsr;
++	fpu->fcc = vcpu->arch.fpu.fcc;
++	for (i = 0; i < NUM_FPU_REGS; i++)
++		memcpy(&fpu->fpr[i], &vcpu->arch.fpu.fpr[i], FPU_REG_WIDTH / 64);
 +
-+	if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu)) {
-+		/* Drop vpid for this vCPU */
-+		vcpu->arch.vpid = 0;
-+		/* This will clobber guest TLB contents too */
-+		ret = 1;
-+	}
-+
-+	return ret;
++	return 0;
 +}
 +
-+static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
++int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
 +{
-+	int cpu;
++	int i = 0;
++
++	/* no need vcpu_load and vcpu_put */
++	vcpu->arch.fpu.fcsr = fpu->fcsr;
++	vcpu->arch.fpu.fcc = fpu->fcc;
++	for (i = 0; i < NUM_FPU_REGS; i++)
++		memcpy(&vcpu->arch.fpu.fpr[i], &fpu->fpr[i], FPU_REG_WIDTH / 64);
++
++	return 0;
++}
++
++/* Enable FPU for guest and restore context */
++void kvm_own_fpu(struct kvm_vcpu *vcpu)
++{
++	preempt_disable();
 +
 +	/*
-+	 * handle vcpu timer, interrupts, check requests and
-+	 * check vmid before vcpu enter guest
++	 * Enable FPU for guest
 +	 */
-+	kvm_acquire_timer(vcpu);
-+	_kvm_deliver_intr(vcpu);
-+	/* make sure the vcpu mode has been written */
-+	smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+	cpu = smp_processor_id();
-+	_kvm_check_requests(vcpu, cpu);
-+	_kvm_check_vmid(vcpu, cpu);
-+	vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-+	/* clear KVM_LARCH_CSR as csr will change when enter guest */
-+	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
++	set_csr_euen(CSR_EUEN_FPEN);
++
++	kvm_restore_fpu(&vcpu->arch.fpu);
++	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
++	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
++
++	preempt_enable();
 +}
 +
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	unsigned long timer_hz;
-@@ -86,3 +124,51 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 			context->last_vcpu = NULL;
- 	}
- }
-+
-+int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
++/* Save and disable FPU */
++void kvm_lose_fpu(struct kvm_vcpu *vcpu)
 +{
-+	int r = -EINTR;
-+	struct kvm_run *run = vcpu->run;
++	preempt_disable();
 +
-+	vcpu_load(vcpu);
++	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
++		kvm_save_fpu(&vcpu->arch.fpu);
++		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
++		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
 +
-+	kvm_sigset_activate(vcpu);
-+
-+	if (vcpu->mmio_needed) {
-+		if (!vcpu->mmio_is_write)
-+			_kvm_complete_mmio_read(vcpu, run);
-+		vcpu->mmio_needed = 0;
++		/* Disable FPU */
++		clear_csr_euen(CSR_EUEN_FPEN);
 +	}
 +
-+	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
-+		if (!run->iocsr_io.is_write)
-+			_kvm_complete_iocsr_read(vcpu, run);
-+	}
-+
-+	/* clear exit_reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	if (run->immediate_exit)
-+		goto out;
-+
-+	lose_fpu(1);
-+
-+	local_irq_disable();
-+	guest_timing_enter_irqoff();
-+
-+	kvm_pre_enter_guest(vcpu);
-+	trace_kvm_enter(vcpu);
-+
-+	guest_state_enter_irqoff();
-+	r = kvm_loongarch_ops->enter_guest(run, vcpu);
-+
-+	/* guest_state_exit_irqoff() already done.  */
-+	trace_kvm_out(vcpu);
-+	guest_timing_exit_irqoff();
-+	local_irq_enable();
-+
-+out:
-+	kvm_sigset_deactivate(vcpu);
-+
-+	vcpu_put(vcpu);
-+	return r;
++	preempt_enable();
 +}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ {
+ 	return 0;
 -- 
 2.31.1
 
