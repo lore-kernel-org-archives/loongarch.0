@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AC7E15C2
-	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 02:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A61C15C9
+	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 02:15:37 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxZ+nBlWFkia8IAA--.14649S3;
-	Mon, 15 May 2023 10:15:29 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxTuvDlWFkr68IAA--.14945S3;
+	Mon, 15 May 2023 10:15:31 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxn7O6lWFk0KJeAA--.33838S12;
-	Mon, 15 May 2023 10:15:28 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxn7O6lWFk0KJeAA--.33838S15;
+	Mon, 15 May 2023 10:15:30 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -22,9 +22,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v10 10/30] LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
-Date: Mon, 15 May 2023 10:15:02 +0800
-Message-Id: <20230515021522.2445551-11-zhaotianrui@loongson.cn>
+Subject: [PATCH v10 13/30] LoongArch: KVM: Implement misc vcpu related interfaces
+Date: Mon, 15 May 2023 10:15:05 +0800
+Message-Id: <20230515021522.2445551-14-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
 References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxn7O6lWFk0KJeAA--.33838S12
+X-CM-TRANSID:AQAAf8Dxn7O6lWFk0KJeAA--.33838S15
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw4fJr4xJrWUJF1rAr1kKrg_yoW8JFy3pF
-	srCr90qr4rJrWIgwn3tws3ur1aqrWkKr4xZFZrX3yYyF42kry5GF4FkrWDAFW5tw4rGF1I
-	qw1ft3WUuFn8AwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJw4ftr4xCF4xXFWrAF1rtFb_yoW5Zw4fpr
+	1kCw45Xw4rGrW7Ww1ftws09rsI93ykKr17ZryxW3yY9r4DtF15Ar4kKrWDAFW5JryrZF1S
+	yrn8Aa1Dua1jy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
 	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
@@ -51,60 +51,136 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw4fJr4xJrWUJF1rAr1kKrg_yoW8JFy3pF
 	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
 	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
 	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement LoongArch vcpu KVM_ENABLE_CAP ioctl interface.
+Implement some misc vcpu relaterd interfaces, such as vcpu runnable,
+vcpu should kick, vcpu dump regs, etc.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 108 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 278fbafc59b4..5a88f815c412 100644
+index f661743dbe66..a314fb441962 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -186,6 +186,23 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
- 	return 0;
- }
+@@ -12,6 +12,114 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
  
-+static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
-+				     struct kvm_enable_cap *cap)
++int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
 +{
-+	int r = 0;
-+
-+	if (!kvm_vm_ioctl_check_extension(vcpu->kvm, cap->cap))
-+		return -EINVAL;
-+	if (cap->flags)
-+		return -EINVAL;
-+	if (cap->args[0])
-+		return -EINVAL;
-+	if (cap->cap)
-+		return -EINVAL;
-+
-+	return r;
++	return !!(vcpu->arch.irq_pending) &&
++		vcpu->arch.mp_state.mp_state == KVM_MP_STATE_RUNNABLE;
 +}
 +
- long kvm_arch_vcpu_ioctl(struct file *filp,
- 			 unsigned int ioctl, unsigned long arg)
- {
-@@ -209,6 +226,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 			r = _kvm_get_reg(vcpu, &reg);
- 		break;
- 	}
-+	case KVM_ENABLE_CAP: {
-+		struct kvm_enable_cap cap;
++int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
++{
++	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
++}
 +
-+		r = -EFAULT;
-+		if (copy_from_user(&cap, argp, sizeof(cap)))
-+			break;
-+		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
-+		break;
++bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
++{
++	return false;
++}
++
++vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
++{
++	return VM_FAULT_SIGBUS;
++}
++
++int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
++				  struct kvm_translation *tr)
++{
++	return -EINVAL;
++}
++
++int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return _kvm_pending_timer(vcpu) ||
++		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) &
++			(1 << INT_TI);
++}
++
++int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
++{
++	int i;
++
++	if (!vcpu)
++		return -1;
++
++	kvm_debug("vCPU Register Dump:\n");
++	kvm_debug("\tpc = 0x%08lx\n", vcpu->arch.pc);
++	kvm_debug("\texceptions: %08lx\n", vcpu->arch.irq_pending);
++
++	for (i = 0; i < 32; i += 4) {
++		kvm_debug("\tgpr%02d: %08lx %08lx %08lx %08lx\n", i,
++		       vcpu->arch.gprs[i],
++		       vcpu->arch.gprs[i + 1],
++		       vcpu->arch.gprs[i + 2], vcpu->arch.gprs[i + 3]);
 +	}
- 	default:
- 		r = -ENOIOCTLCMD;
- 		break;
++
++	kvm_debug("\tCRMOD: 0x%08llx, exst: 0x%08llx\n",
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD),
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT));
++
++	kvm_debug("\tERA: 0x%08llx\n", kvm_read_hw_gcsr(LOONGARCH_CSR_ERA));
++
++	return 0;
++}
++
++int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
++				struct kvm_mp_state *mp_state)
++{
++	*mp_state = vcpu->arch.mp_state;
++
++	return 0;
++}
++
++int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
++				struct kvm_mp_state *mp_state)
++{
++	int ret = 0;
++
++	switch (mp_state->mp_state) {
++	case KVM_MP_STATE_RUNNABLE:
++		vcpu->arch.mp_state = *mp_state;
++		break;
++	default:
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
++int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
++					struct kvm_guest_debug *dbg)
++{
++	return -EINVAL;
++}
++
++/**
++ * kvm_migrate_count() - Migrate timer.
++ * @vcpu:       Virtual CPU.
++ *
++ * Migrate hrtimer to the current CPU by cancelling and restarting it
++ * if it was running prior to being cancelled.
++ *
++ * Must be called when the vCPU is migrated to a different CPU to ensure that
++ * timer expiry during guest execution interrupts the guest and causes the
++ * interrupt to be delivered in a timely manner.
++ */
++static void kvm_migrate_count(struct kvm_vcpu *vcpu)
++{
++	if (hrtimer_cancel(&vcpu->arch.swtimer))
++		hrtimer_restart(&vcpu->arch.swtimer);
++}
++
+ int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
+ {
+ 	unsigned long val;
 -- 
 2.31.1
 
