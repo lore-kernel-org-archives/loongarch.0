@@ -1,286 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BF78468
-	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 09:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684141754;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=awWutqv7Tku6RTy5++zNn2CsetnK4SAvTciCez0pzMg=;
-	b=eG8YwqMM1zo9BEm7zNaFhFLCnVi2FxgkVCZED5Hy/KnaevAyFRiCqbWSCuVz888fbDodrK
-	QRh73XVRPwdsYddhR0rywQqSJCEGaNvXtCYZGhomaQU8stP3BI7XlI47oDnFmtml1x9zRx
-	6G+Gx2n+zBFe2SktLvcFLdxEmTwsMZs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-659-KJdy53drOYK6CyyGE_o-bQ-1; Mon, 15 May 2023 05:09:08 -0400
-X-MC-Unique: KJdy53drOYK6CyyGE_o-bQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BB828800047;
-	Mon, 15 May 2023 09:09:07 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-32.pek2.redhat.com [10.72.12.32])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6FF2D40C2063;
-	Mon, 15 May 2023 09:08:59 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-arch@vger.kernel.org,
-	linux-mm@kvack.org,
-	arnd@arndb.de,
-	christophe.leroy@csgroup.eu,
-	hch@infradead.org,
-	agordeev@linux.ibm.com,
-	wangkefeng.wang@huawei.com,
-	schnelle@linux.ibm.com,
-	David.Laight@ACULAB.COM,
-	shorne@gmail.com,
-	willy@infradead.org,
-	deller@gmx.de,
-	Baoquan He <bhe@redhat.com>,
-	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	x86@kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v5 RESEND 01/17] asm-generic/iomap.h: remove ARCH_HAS_IOREMAP_xx macros
-Date: Mon, 15 May 2023 17:08:32 +0800
-Message-Id: <20230515090848.833045-2-bhe@redhat.com>
-In-Reply-To: <20230515090848.833045-1-bhe@redhat.com>
-References: <20230515090848.833045-1-bhe@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABE9FBF9
+	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 19:11:58 +0000 (UTC)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-b9daef8681fso11343712276.1
+        for <loongarch@lists.linux.dev>; Mon, 15 May 2023 12:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684177917; x=1686769917;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lEdsDznoeQ0wGPMJWBs10mMvCj7VphDqPqR+uizklHY=;
+        b=W/Z9qzmBUq3bCVhP8uewmPEIaZEVYfzpzeh9YTeAKrK3sWIwtOfql71JlvN0P+P5pK
+         YKy9cml02fk4SnFQ2DdWQ6w4JijHunpNA4zsiud1GYDMnfuy8RTxF/bEehOFA+aPeByE
+         DTSRG2bdMMqymbgvM1f+cbSlSYq+sQANl8uMoYLlmajJ3SyWJdGVyTNcYD0Ioakieviy
+         BESs3L0iPHTKfiNNq75aO8FTJdn/BYay+E8sIKUXSqB49RgAR5VB2xxzW+nwEEKofO5F
+         26ssX78nNr5JZdvfN8wyMBJyb6MRO06YlrKHWh/GpY8CaWKtewkcbGK5ZJkz6FL2Wiq9
+         dAhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684177917; x=1686769917;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lEdsDznoeQ0wGPMJWBs10mMvCj7VphDqPqR+uizklHY=;
+        b=LVElv0f9+/0ZM7HD3raNjw8hkrqtKKs69tcjkzycx4oWub4vYsP1FRyGVhzov2JDi2
+         xtNqGEsDH9sGoUQcV/VBayDiwFqyb+c2CGJxP4HLWWqnWww8LA5kP7A53VlxyO+J9Y3W
+         A64TdcKzrzyD83qvFo/CQ5vCup41yK66n05+gm93UlsoZ/pUe2+IdqDwsuqHCrw8GIgU
+         zrbLEK6mL0Ut9bdxZ5/V29NYZF+NnyNuM2cLBNQVmnTelI/RLBBkkyaTBJWCG1wpvEFf
+         vpzrk9vYtUSQlKCGiDdMy6t1EvUG4c978VE+A/I5HHtXBYwT519vPgR4zNuX8KHx8Q6I
+         94hA==
+X-Gm-Message-State: AC+VfDxAgiFF0epAOahTrqlhuBpVoq3Yj8qIxr9m60k46SC6MFe9Uc4j
+	K2OuBHiC0ijKTGaZ1OjFkRLrtBhzrWpebjqjuTU=
+X-Google-Smtp-Source: ACHHUZ5oDsw20tcH12/01C4i2nT6w5iAb2H6/okJg55EYYpqTgJ8h9iiRdXz2tD9egoOuSwMxk4Rmyquuvv7u/aep3U=
+X-Received: by 2002:a25:2586:0:b0:ba7:809c:50de with SMTP id
+ l128-20020a252586000000b00ba7809c50demr6158133ybl.38.1684177917068; Mon, 15
+ May 2023 12:11:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+References: <20230501192829.17086-1-vishal.moola@gmail.com>
+ <20230501192829.17086-31-vishal.moola@gmail.com> <c0677d21a4b6caa2e5018af000294a974121d9e8.camel@physik.fu-berlin.de>
+In-Reply-To: <c0677d21a4b6caa2e5018af000294a974121d9e8.camel@physik.fu-berlin.de>
+From: Vishal Moola <vishal.moola@gmail.com>
+Date: Mon, 15 May 2023 12:11:46 -0700
+Message-ID: <CAOzc2pz6y=gRcdfkQVgwRuzWeWf2Nx-UBtKnZBTs2qKJ+r7R0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 30/34] sh: Convert pte_free_tlb() to use ptdescs
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Let's use '#define ioremap_xx' and "#ifdef ioremap_xx" instead.
+On Sat, May 6, 2023 at 4:35=E2=80=AFAM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
+>
+> Hi Vishal!
+>
+> On Mon, 2023-05-01 at 12:28 -0700, Vishal Moola (Oracle) wrote:
+> > Part of the conversions to replace pgtable constructor/destructors with
+> > ptdesc equivalents. Also cleans up some spacing issues.
+> >
+> > Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> > ---
+> >  arch/sh/include/asm/pgalloc.h | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgallo=
+c.h
+> > index a9e98233c4d4..ce2ba99dbd84 100644
+> > --- a/arch/sh/include/asm/pgalloc.h
+> > +++ b/arch/sh/include/asm/pgalloc.h
+> > @@ -2,6 +2,7 @@
+> >  #ifndef __ASM_SH_PGALLOC_H
+> >  #define __ASM_SH_PGALLOC_H
+> >
+> > +#include <linux/mm.h>
+> >  #include <asm/page.h>
+> >
+> >  #define __HAVE_ARCH_PMD_ALLOC_ONE
+> > @@ -31,10 +32,10 @@ static inline void pmd_populate(struct mm_struct *m=
+m, pmd_t *pmd,
+> >       set_pmd(pmd, __pmd((unsigned long)page_address(pte)));
+> >  }
+> >
+> > -#define __pte_free_tlb(tlb,pte,addr)                 \
+> > -do {                                                 \
+> > -     pgtable_pte_page_dtor(pte);                     \
+> > -     tlb_remove_page((tlb), (pte));                  \
+> > +#define __pte_free_tlb(tlb, pte, addr)                               \
+> > +do {                                                         \
+> > +     ptdesc_pte_dtor(page_ptdesc(pte));                      \
+> > +     tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));      \
+> >  } while (0)
+> >
+> >  #endif /* __ASM_SH_PGALLOC_H */
+>
+> Looking at the patch which introduces tlb_remove_page_ptdesc() [1], it se=
+ems that
+> tlb_remove_page_ptdesc() already calls tlb_remove_page() with ptdesc_page=
+(pt), so
+> I'm not sure whether the above tlb_remove_page_ptdesc((tlb), (page_ptdesc=
+(pte)))
+> is correct.
+>
+> Shouldn't it just be tlb_remove_page_ptdesc((tlb), (pte))?
 
-For each architecture to remove defined ARCH_HAS_IOREMAP_xx macros in
-To remove defined ARCH_HAS_IOREMAP_xx macros in <asm/io.h> of each ARCH,
-the ARCH's own ioremap_wc|wt|np definition need be above
-"#include <asm-generic/iomap.h>. Otherwise the redefinition error would
-be seen during compiling. So the relevant adjustments are made to avoid
-compiling error:
-
-  loongarch:
-  - doesn't include <asm-generic/iomap.h>, defining ARCH_HAS_IOREMAP_WC
-    is redundant, so simply remove it.
-
-  m68k:
-  - selected GENERIC_IOMAP, <asm-generic/iomap.h> has been added in
-    <asm-generic/io.h>, and <asm/kmap.h> is included above
-    <asm-generic/iomap.h>, so simply remove ARCH_HAS_IOREMAP_WT defining.
-
-  mips:
-  - move "#include <asm-generic/iomap.h>" below ioremap_wc definition
-    in <asm/io.h>
-
-  powerpc:
-  - remove "#include <asm-generic/iomap.h>" in <asm/io.h> because it's
-    duplicated with the one in <asm-generic/io.h>, let's rely on the
-    latter.
-
-  x86:
-  - selected GENERIC_IOMAP, remove #include <asm-generic/iomap.h> in
-    the middle of <asm/io.h>. Let's rely on <asm-generic/io.h>.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Cc: loongarch@lists.linux.dev
-Cc: linux-m68k@lists.linux-m68k.org
-Cc: linux-mips@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: x86@kernel.org
-Cc: netdev@vger.kernel.org
-Cc: linux-arch@vger.kernel.org
----
- arch/loongarch/include/asm/io.h     | 2 --
- arch/m68k/include/asm/io_mm.h       | 2 --
- arch/m68k/include/asm/kmap.h        | 2 --
- arch/mips/include/asm/io.h          | 5 ++---
- arch/powerpc/include/asm/io.h       | 9 +--------
- arch/x86/include/asm/io.h           | 5 -----
- drivers/net/ethernet/sfc/io.h       | 2 +-
- drivers/net/ethernet/sfc/siena/io.h | 2 +-
- include/asm-generic/iomap.h         | 6 +++---
- 9 files changed, 8 insertions(+), 27 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
-index 545e2708fbf7..5fef1246c6fb 100644
---- a/arch/loongarch/include/asm/io.h
-+++ b/arch/loongarch/include/asm/io.h
-@@ -5,8 +5,6 @@
- #ifndef _ASM_IO_H
- #define _ASM_IO_H
- 
--#define ARCH_HAS_IOREMAP_WC
--
- #include <linux/kernel.h>
- #include <linux/types.h>
- 
-diff --git a/arch/m68k/include/asm/io_mm.h b/arch/m68k/include/asm/io_mm.h
-index d41fa488453b..6a0abd4846c6 100644
---- a/arch/m68k/include/asm/io_mm.h
-+++ b/arch/m68k/include/asm/io_mm.h
-@@ -26,8 +26,6 @@
- #include <asm/virtconvert.h>
- #include <asm/kmap.h>
- 
--#include <asm-generic/iomap.h>
--
- #ifdef CONFIG_ATARI
- #define atari_readb   raw_inb
- #define atari_writeb  raw_outb
-diff --git a/arch/m68k/include/asm/kmap.h b/arch/m68k/include/asm/kmap.h
-index dec05743d426..4efb3efa593a 100644
---- a/arch/m68k/include/asm/kmap.h
-+++ b/arch/m68k/include/asm/kmap.h
-@@ -4,8 +4,6 @@
- 
- #ifdef CONFIG_MMU
- 
--#define ARCH_HAS_IOREMAP_WT
--
- /* Values for nocacheflag and cmode */
- #define IOMAP_FULL_CACHING		0
- #define IOMAP_NOCACHE_SER		1
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index cc28d207a061..477773328a06 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -12,8 +12,6 @@
- #ifndef _ASM_IO_H
- #define _ASM_IO_H
- 
--#define ARCH_HAS_IOREMAP_WC
--
- #include <linux/compiler.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
-@@ -25,7 +23,6 @@
- #include <asm/byteorder.h>
- #include <asm/cpu.h>
- #include <asm/cpu-features.h>
--#include <asm-generic/iomap.h>
- #include <asm/page.h>
- #include <asm/pgtable-bits.h>
- #include <asm/processor.h>
-@@ -210,6 +207,8 @@ void iounmap(const volatile void __iomem *addr);
- #define ioremap_wc(offset, size)					\
- 	ioremap_prot((offset), (size), boot_cpu_data.writecombine)
- 
-+#include <asm-generic/iomap.h>
-+
- #if defined(CONFIG_CPU_CAVIUM_OCTEON)
- #define war_io_reorder_wmb()		wmb()
- #else
-diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
-index f1e657c9bbe8..67a3fb6de498 100644
---- a/arch/powerpc/include/asm/io.h
-+++ b/arch/powerpc/include/asm/io.h
-@@ -3,11 +3,6 @@
- #define _ASM_POWERPC_IO_H
- #ifdef __KERNEL__
- 
--#define ARCH_HAS_IOREMAP_WC
--#ifdef CONFIG_PPC32
--#define ARCH_HAS_IOREMAP_WT
--#endif
--
- /*
-  */
- 
-@@ -732,9 +727,7 @@ static inline void name at					\
- #define writel_relaxed(v, addr)	writel(v, addr)
- #define writeq_relaxed(v, addr)	writeq(v, addr)
- 
--#ifdef CONFIG_GENERIC_IOMAP
--#include <asm-generic/iomap.h>
--#else
-+#ifndef CONFIG_GENERIC_IOMAP
- /*
-  * Here comes the implementation of the IOMAP interfaces.
-  */
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index e9025640f634..76238842406a 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -35,9 +35,6 @@
-   *  - Arnaldo Carvalho de Melo <acme@conectiva.com.br>
-   */
- 
--#define ARCH_HAS_IOREMAP_WC
--#define ARCH_HAS_IOREMAP_WT
--
- #include <linux/string.h>
- #include <linux/compiler.h>
- #include <linux/cc_platform.h>
-@@ -212,8 +209,6 @@ void memset_io(volatile void __iomem *, int, size_t);
- #define memcpy_toio memcpy_toio
- #define memset_io memset_io
- 
--#include <asm-generic/iomap.h>
--
- /*
-  * ISA space is 'always mapped' on a typical x86 system, no need to
-  * explicitly ioremap() it. The fact that the ISA IO space is mapped
-diff --git a/drivers/net/ethernet/sfc/io.h b/drivers/net/ethernet/sfc/io.h
-index 30439cc83a89..07f99ad14bf3 100644
---- a/drivers/net/ethernet/sfc/io.h
-+++ b/drivers/net/ethernet/sfc/io.h
-@@ -70,7 +70,7 @@
-  */
- #ifdef CONFIG_X86_64
- /* PIO is a win only if write-combining is possible */
--#ifdef ARCH_HAS_IOREMAP_WC
-+#ifdef ioremap_wc
- #define EFX_USE_PIO 1
- #endif
- #endif
-diff --git a/drivers/net/ethernet/sfc/siena/io.h b/drivers/net/ethernet/sfc/siena/io.h
-index 30439cc83a89..07f99ad14bf3 100644
---- a/drivers/net/ethernet/sfc/siena/io.h
-+++ b/drivers/net/ethernet/sfc/siena/io.h
-@@ -70,7 +70,7 @@
-  */
- #ifdef CONFIG_X86_64
- /* PIO is a win only if write-combining is possible */
--#ifdef ARCH_HAS_IOREMAP_WC
-+#ifdef ioremap_wc
- #define EFX_USE_PIO 1
- #endif
- #endif
-diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
-index 08237ae8b840..196087a8126e 100644
---- a/include/asm-generic/iomap.h
-+++ b/include/asm-generic/iomap.h
-@@ -93,15 +93,15 @@ extern void __iomem *ioport_map(unsigned long port, unsigned int nr);
- extern void ioport_unmap(void __iomem *);
- #endif
- 
--#ifndef ARCH_HAS_IOREMAP_WC
-+#ifndef ioremap_wc
- #define ioremap_wc ioremap
- #endif
- 
--#ifndef ARCH_HAS_IOREMAP_WT
-+#ifndef ioremap_wt
- #define ioremap_wt ioremap
- #endif
- 
--#ifndef ARCH_HAS_IOREMAP_NP
-+#ifndef ioremap_np
- /* See the comment in asm-generic/io.h about ioremap_np(). */
- #define ioremap_np ioremap_np
- static inline void __iomem *ioremap_np(phys_addr_t offset, size_t size)
--- 
-2.34.1
-
+As of this patchset all implementations of __pte_free_tlb() take in a
+struct page. Eventually we'll want it to be tlb_remove_page_ptdesc(tlb, pte=
+),
+but for now the cast is necessary here.
