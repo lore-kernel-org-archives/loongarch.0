@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDC6015BF
-	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 02:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ECD715D0
+	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 02:15:39 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8DxSurAlWFkaq8IAA--.14962S3;
-	Mon, 15 May 2023 10:15:28 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Ax1ejKlWFkJ7AIAA--.14952S3;
+	Mon, 15 May 2023 10:15:38 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxn7O6lWFk0KJeAA--.33838S8;
-	Mon, 15 May 2023 10:15:26 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxn7O6lWFk0KJeAA--.33838S27;
+	Mon, 15 May 2023 10:15:37 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -22,9 +22,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v10 06/30] LoongArch: KVM: Implement vcpu create and destroy interface
-Date: Mon, 15 May 2023 10:14:58 +0800
-Message-Id: <20230515021522.2445551-7-zhaotianrui@loongson.cn>
+Subject: [PATCH v10 25/30] LoongArch: KVM: Implement handle fpu exception
+Date: Mon, 15 May 2023 10:15:17 +0800
+Message-Id: <20230515021522.2445551-26-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
 References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
@@ -35,129 +35,66 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxn7O6lWFk0KJeAA--.33838S8
+X-CM-TRANSID:AQAAf8Dxn7O6lWFk0KJeAA--.33838S27
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxur1fAw1xCrW7Wr1ktw4UCFg_yoW5Cr47pF
-	4xCw15Ww48Jry7Gw1fXrn0vrn0qrW8uF12ga47X3ySyr1DtryFvF4vkrWDAFW3XayfZF1S
-	qF1rJF1Uuw4UAw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7trWDZrW7uw1UtrW8JFWDArb_yoW8JFW8pF
+	WfAwnYkr48Wry7ta9Iy3ZFqrsxArWkKry7Wr9Fk345Zw4Ut3s5XF48KrWvgFy5Kr1rXa1S
+	qr13KF98uF1UJ3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
 	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
 	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
 	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
 	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
 	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+	x0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement vcpu create and destroy interface, saving some info
-into vcpu arch structure such as vcpu exception entrance, vcpu
-enter guest pointer, etc. Init vcpu timer and set address
-translation mode when vcpu create.
+Implement handle fpu exception, using kvm_own_fpu to enable fpu for
+guest.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 88 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 arch/loongarch/kvm/vcpu.c
+ arch/loongarch/kvm/exit.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-new file mode 100644
-index 000000000000..24b5b00266a1
---- /dev/null
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index 1237ceb06d0c..10f9922a7e76 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -631,3 +631,29 @@ static int _kvm_handle_read_fault(struct kvm_vcpu *vcpu)
+ {
+ 	return _kvm_handle_mmu_fault(vcpu, false);
+ }
++
++/**
++ * _kvm_handle_fpu_disabled() - Guest used fpu however it is disabled at host
++ * @vcpu:	Virtual CPU context.
++ *
++ * Handle when the guest attempts to use fpu which hasn't been allowed
++ * by the root context.
 + */
-+
-+#include <linux/kvm_host.h>
-+#include <asm/fpu.h>
-+#include <asm/loongarch.h>
-+#include <asm/setup.h>
-+#include <asm/time.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
-+int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
++static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
 +{
-+	return 0;
-+}
-+
-+int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long timer_hz;
-+	struct loongarch_csrs *csr;
-+
-+	vcpu->arch.vpid = 0;
-+
-+	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
-+	vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
-+	vcpu->kvm->arch.online_vcpus = vcpu->vcpu_id + 1;
-+
-+	vcpu->arch.guest_eentry = (unsigned long)kvm_loongarch_ops->guest_eentry;
-+	vcpu->arch.handle_exit = _kvm_handle_exit;
-+	vcpu->arch.csr = kzalloc(sizeof(struct loongarch_csrs), GFP_KERNEL);
-+	if (!vcpu->arch.csr)
-+		return -ENOMEM;
++	struct kvm_run *run = vcpu->run;
 +
 +	/*
-+	 * kvm all exceptions share one exception entry, and host <-> guest switch
-+	 * also switch excfg.VS field, keep host excfg.VS info here
++	 * If guest FPU not present, the FPU operation should have been
++	 * treated as a reserved instruction!
++	 * If FPU already in use, we shouldn't get this at all.
 +	 */
-+	vcpu->arch.host_ecfg = (read_csr_ecfg() & CSR_ECFG_VS);
-+
-+	/* Init */
-+	vcpu->arch.last_sched_cpu = -1;
-+	vcpu->arch.last_exec_cpu = -1;
-+
-+	/*
-+	 * Initialize guest register state to valid architectural reset state.
-+	 */
-+	timer_hz = calc_const_freq();
-+	kvm_init_timer(vcpu, timer_hz);
-+
-+	/* Set Initialize mode for GUEST */
-+	csr = vcpu->arch.csr;
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CRMD, CSR_CRMD_DA);
-+
-+	/* Set cpuid */
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TMID, vcpu->vcpu_id);
-+
-+	/* start with no pending virtual guest interrupts */
-+	csr->csrs[LOONGARCH_CSR_GINTC] = 0;
-+
-+	return 0;
-+}
-+
-+void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
-+{
-+}
-+
-+void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
-+{
-+	int cpu;
-+	struct kvm_context *context;
-+
-+	hrtimer_cancel(&vcpu->arch.swtimer);
-+	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
-+	kfree(vcpu->arch.csr);
-+
-+	/*
-+	 * If the vCPU is freed and reused as another vCPU, we don't want the
-+	 * matching pointer wrongly hanging around in last_vcpu.
-+	 */
-+	for_each_possible_cpu(cpu) {
-+		context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+		if (context->last_vcpu == vcpu)
-+			context->last_vcpu = NULL;
++	if (WARN_ON(vcpu->arch.aux_inuse & KVM_LARCH_FPU)) {
++		kvm_err("%s internal error\n", __func__);
++		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++		return RESUME_HOST;
 +	}
++
++	kvm_own_fpu(vcpu);
++	return RESUME_GUEST;
 +}
 -- 
 2.31.1
