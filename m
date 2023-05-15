@@ -1,130 +1,141 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2099.outbound.protection.outlook.com [40.92.40.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9499B1C08
-	for <loongarch@lists.linux.dev>; Sun, 14 May 2023 06:44:29 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E5k+u/Gy1kZ81DYPgtQdnNQuWEzukYXSmDHF9hzEBEdwY8VHIJPo1xMRDnj2nsJ3pAWp3WPRVI0pn26lSYqOZbEhGXM/nPy2vaKnltaZYJiztB46FvBmihSsAif0Vflgb94qoVPeOxZ/Db7TVwziqDETO8JG9UFjkDycpEFCCJg2ge9VgV1Jib+APUAnC+5+iPyufmfKfMtr7pLM3JWNy5eysuojZmaUcujIQnzOLt9XwVxPeILYz/oo5cIoZ6Bl57tNdFnleFg9Fd+1kiunA8tsY+2gK0KmdmsPKYFnTiizaNgKwbX4Uda7Lh/eac5zXgzOduHtT8JdYcLyc2dx5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kFojvHt4yblPll/23JiNXv0wkZ0S8N5BnD9OglZLvXE=;
- b=c5IvapCNTOVLv7jVQ54pNi44CBlrgngd6YeWuvyuu3s7h0Nyv84mD7Mf4G2jIQmlvqJRXGqPy9Dvm2GzE1u/ztc5WXA2f31p2ZxYOoEFPT+ztqopFZ3y9DFsSwxjCIYpaLyCmBsIx9bsORmC77/9ZbKz3byCWpuTvEmoUa8cFlYZCZZQoImE4wSoDUkcQkGvlhpTuJTBFXhMRjcrjQSjO54QZDn54b5ywtN9RhooXE0lYre9FPoDT87Vvfiss4YYomuiBI8m2oIeEsiy7jKCK4GOwmavMwnU+lzlZ1OKwF8m6XF2cbKScWymGBmaGv3FQrGfeu5BCsiRlcX8Q0IuRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kFojvHt4yblPll/23JiNXv0wkZ0S8N5BnD9OglZLvXE=;
- b=BBtN/H1aATFwMgr/th31JvWPG4jU2AZLiiiy4y0r0rDi7y+fHvFWTe/+hzEhqQeoO0wpNgALY1hXrrj7tetPCD0k+p+eAi0OToAHjOSd5RlgpjPUZfv3sqngSL+cHrHRR9WlttI1u3qxmW3RU0USPLiBltF5uG2ZW3EcvSvBToEeq5oaMyhy9qct8XNRmsO5hgUkueW1CWNFzDM9C2Hwmgr2/aNSdbLJyw38jfai1Y46zcWYS7Uu7YTpQoVsBwvIrDAZUIL0bYAkGy5aLv2/4kSEcsS0ia4LywVa675FX5QZUYzCLJMy/r9mStHxP/CJS6LCvKBngeiqrRUJ6XtBBw==
-Received: from CY5PR12MB6455.namprd12.prod.outlook.com (2603:10b6:930:35::10)
- by CH3PR12MB9077.namprd12.prod.outlook.com (2603:10b6:610:1a2::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.29; Sun, 14 May
- 2023 06:44:27 +0000
-Received: from CY5PR12MB6455.namprd12.prod.outlook.com
- ([fe80::eece:c2b8:c7ea:a6]) by CY5PR12MB6455.namprd12.prod.outlook.com
- ([fe80::eece:c2b8:c7ea:a6%5]) with mapi id 15.20.6387.029; Sun, 14 May 2023
- 06:44:27 +0000
-From: mirimmad@outlook.com
-To: chenhuacai@kernel.org
-Cc: ivan.orlov0322@gmail.com,
-	kernel@xen0n.name,
-	linux-kernel@vger.kernel.org,
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3525F1381
+	for <loongarch@lists.linux.dev>; Mon, 15 May 2023 02:15:32 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8DxTuu9lWFkPa8IAA--.14941S3;
+	Mon, 15 May 2023 10:15:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxn7O6lWFk0KJeAA--.33838S5;
+	Mon, 15 May 2023 10:15:24 +0800 (CST)
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	loongarch@lists.linux.dev,
-	mirimmad17@gmail.com,
-	mirimmad@outlook.com,
-	skhan@linuxfoundation.org
-Subject: [PATCH v2] loongarch: fix debugfs_create_dir error checking
-Date: Sun, 14 May 2023 12:13:46 +0530
-Message-ID:
- <CY5PR12MB64558068B314942BA1B2ED2BC67B9@CY5PR12MB6455.namprd12.prod.outlook.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <CAAhV-H48t8tDmWoZOSqx06HwwXKY1CR=X+hi0o_ok6gSu6dQSg@mail.gmail.com>
-References: <CAAhV-H48t8tDmWoZOSqx06HwwXKY1CR=X+hi0o_ok6gSu6dQSg@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [IVcKfHWj8F5gRP9FLvLf7qeOVNpJFIHJbBhVex5aIJ4cH29cjop6+hiQnK+1mI/o]
-X-ClientProxiedBy: PN2PR01CA0214.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:ea::9) To CY5PR12MB6455.namprd12.prod.outlook.com
- (2603:10b6:930:35::10)
-X-Microsoft-Original-Message-ID: <20230514064346.12744-1-mirimmad@outlook.com>
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	maobibo@loongson.cn,
+	Xi Ruoyao <xry111@xry111.site>,
+	zhaotianrui@loongson.cn
+Subject: [PATCH v10 03/30] LoongArch: KVM: Implement kvm hardware enable, disable interface
+Date: Mon, 15 May 2023 10:14:55 +0800
+Message-Id: <20230515021522.2445551-4-zhaotianrui@loongson.cn>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
+References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6455:EE_|CH3PR12MB9077:EE_
-X-MS-Office365-Filtering-Correlation-Id: cbcabdf3-8e96-49ee-fc84-08db5446a972
-X-MS-Exchange-SLBlob-MailProps:
-	ScCmN3RHayH7ocfjk3L3dZBU/GwNzE2mxiG5SoRpMefMvLHfDuFax19edQ8/iL4YCvPKOSu06PvoasGFbLxvFJMdjxsn0WBv3dZUiLXnBjC81RxbUB2IkREtS2ofBiaCLOyNt5+f/k6bmmVPPTIuVe/snZAA8/jOcHFAY5aQqkepKg9OKHOZBG5ksZeeGJGOzUKh9S8eb1Ekp06dL+coxwBFaHv4XX3h3j5p2exPHpIO8kwMY1AugXpXPWTVXayqSwgtfdHM13JkzM35nQaXDvVGqsrKyK9tz6cIxRxcjy6ylmQtbSP5mlcL0EFEaXAbNPVbj9yMxnGHTWjPabpr61/F5Gj3bLbxJyESqgGpg3L22FIuelt8dSg/EJcct8uf+Zl3Zp/1QzP9sllTYvHDCUN0HzL6uhKcVrK4QJ798hwem4q0C2awms3sAZdHngD3vGUu1lQWHYbU9rarRTcQYMHXGQXOBfdC5/wyKYo7aroB/4I60DEOUNrszRkB4jtL//jbkI4Pefj/wnhLQT+WgG2can5zgZ2KUz1rjkFnIB48Gy+7TN960fTeEC8+3bu61bUlHOKx5IQxUg6tiaImdAl6ot7lKs2WXMZ5wGnWjqf7jgKqBvnh4MYPLQZgWmc5t4G46X2tRVY138i7aEtPj31BcLRGkso0g3s+CzCvESbEgTxGZjGt4bESvZnWNduvH94vR4PvoD6loDnAdhXWtjp7McNoY8XB3l307X+NPnM=
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ArddcTdAKrc7SGAXsHX6vaKZbO0uM+BFGv+AkUO/Rnr22UaHC/vCv50TYUviXyIFW/NM0FZg1rjm1zIfs+Z4wIjjRiCGvU0+q4d43aSWtFmmMj0563yZV9KCw0KLzis2VApIXk39fifoISoTB/deW/vkCfaD+nRnCwR8pFSglxTTRC+BVsWmDAMqQIM9yG1SUUxHhbzLio2MICuLKrbL31x7AwfMFxci1A3Owo3kA8W+YxqLNXdkXDYsNYcOnVwoscxXFk15HbFSLgQWwGqIVWzgOFt39yn1+AornaCAohiixJVDSvZZhTwU1d5W7HCt8mgjxK6XsacEHO8JJ5JYRDVJmBWmPr+ZtAtLTRW/jLm4SNb7YFImKgOr9xWQTgSgt2Q+nqBMQoLyQ0AfhpI2Okbm+0u/EStTgU9T2PNVZ6ICfJaPAB7NYWB0Xz7gtwWjIc0MJ8f5Npi3jIFhVVht+mxlS9smlMXJ9HJxXs2Ot/qlCzZ7zadRUPpn6oIKpZqUx8G89XY4HzJUX+l5TkSfMgmHW4fIVAfv4HUifGTFWAI2eaxME8lS2ORufh6Ijjv+13s5KYIlA2AyGhCss0zdjwD14BGU/jZFTk7GXtKkw6yY6BxQOTGtqgNfrYE72UtQ
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gIUCl6Q9Rpznz7mwyU3wpQHYT/nmB0B/rs2CL+MB0MIByE38vMPdK3cemprP?=
- =?us-ascii?Q?VxXdeTpYaLMEFgM/umiTWfr3zPxM57xni4xoy/iBpnDWPFx5KCN3bCrzRhuT?=
- =?us-ascii?Q?jefSI/7fmlWRmdxPO1eX+wxFTb/doySDVLnyTLmUw0Lj1JYsEob3AwBEjgNJ?=
- =?us-ascii?Q?Rk1KJuK0lUns3QWbHlgkLkBdVDyedgkzi+KMWgj+sVkhf4EM+1s66iO1M1Ai?=
- =?us-ascii?Q?stc5/BokxIBobIMUL5VlObgG9yyL1iDVktkR68z4UQq2j7PP7Q4xxAuZyOen?=
- =?us-ascii?Q?o+l2zXzVf9Jt0gLNII3SPzo+WtyStHkO0b21Z/dpeqRQsAH98l4VVr38rZnp?=
- =?us-ascii?Q?XpYotHv8/3LlmD/E5eE4n0BCstjXsmdBl0Zq0KC05s3Raaa+ZjD2pJcxJCeD?=
- =?us-ascii?Q?7B9F+b13a40OyP9vhYiUobgzy/ovmXx+VIDA8Q7SLlCrG93U/RAaU03Oft9O?=
- =?us-ascii?Q?QpAbBx1LK9Qp0ZsR6axWizmJ7e23ilt0m7A17iup3dN+BO4PyavvYafS9U6c?=
- =?us-ascii?Q?o1hKkewtqQDb0neo1bP5208WcSY00ZvxKHo1EzrRCOWoSlH7ESh/QxOeUIcg?=
- =?us-ascii?Q?zcjJ5YulCIMNkSNFndAp/JW3z/jCMyz5BXLROEFi6QDEmrXBzIWj8iVGB9uu?=
- =?us-ascii?Q?x/RwncB+y7kGkKo5X54r+zLryxfcRBUQF9AQjG6Lenk0KqmPqB9GihpDsE1Y?=
- =?us-ascii?Q?ltb6+BdP7GWUGAz6oPiFMd0AneQUripvsDF2VPppay2lOhzV7AL78mzJdMK+?=
- =?us-ascii?Q?1j/ZLyTLdLPOt77SiH3pAyB0f+NXOGKgvCJPWwa7R+hQDZEiDjaFLJFac6z/?=
- =?us-ascii?Q?fTWDaAhLmcYHGHRQMAkCH34tlazGLeRMThyLu9okBqOHotqi4f0q43hWOgYY?=
- =?us-ascii?Q?+WwZQCI5Fz1t2u0ZC/CK7+yXRl9dAuuEgpnGlJYycX/vUF3SIMp1KYRSzK1o?=
- =?us-ascii?Q?Z0R4CFr8SDeC6o7895gU8Z1czhgjqcZWLrWclBlWjD/8qISdqOspjx7+CaBG?=
- =?us-ascii?Q?90MP5pHaZrDp7LJomfiO+cqaPqrVsxPoA9OyXwP2HWTfIURwMKc3V1BO1QiL?=
- =?us-ascii?Q?2GjmvRK9gMg3+FG5yOoD0IwEZFteqz7wgJcShP9a0+Q4wHbeNZlRH5R5JgMs?=
- =?us-ascii?Q?8hI102oATS0+ZQSdofpcFwtl94j6O784ra/NJblXKCDTodKIkknfNbwPNBqi?=
- =?us-ascii?Q?RsEnmGgsh7vHgKNHtl+hbtFoNtVula6Jv09Rdi0El7Mef+9HLNntljnRYJOZ?=
- =?us-ascii?Q?G5Ph5zdDVXSAwv+RHyv89HT67RgHr1N+3FE9jeH4Dg=3D=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbcabdf3-8e96-49ee-fc84-08db5446a972
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6455.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2023 06:44:27.6441
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9077
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dxn7O6lWFk0KJeAA--.33838S5
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Ar4DJrWxKFW5ZFyDAF4kCrg_yoW8tF4fpr
+	W7AFW5Ary5tr1SgF93J3Zxtr13GrWvgay7Za12ya45Xw4j9F4rXF95Kr9rJFy5W3y8XF1S
+	v39ayFyF9F1DAwUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bnxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2
+	zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_WwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxF
+	aVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7xRE6wZ7UUUUU==
 
-From: Immad Mir <mirimmad17@gmail.com>
+Implement kvm hardware enable, disable interface, setting
+the guest config register to enable virtualization features
+when called the interface.
 
-The debugfs_create_dir returns ERR_PTR incase of an error and the
-correct way of checking it by using the IS_ERR_OR_NULL inline function, and
-not the simple null comparision. This patch fixes this.
-
-Suggested-By: Ivan Orlov <ivan.orlov0322@gmail.com>
-Signed-off-by: Immad Mir <mirimmad17@gmail.com>
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kernel/unaligned.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/kvm/main.c | 63 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/arch/loongarch/kernel/unaligned.c b/arch/loongarch/kernel/unaligned.c
-index bdff825d2..85fae3d2d 100644
---- a/arch/loongarch/kernel/unaligned.c
-+++ b/arch/loongarch/kernel/unaligned.c
-@@ -485,7 +485,7 @@ static int __init debugfs_unaligned(void)
- 	struct dentry *d;
-
- 	d = debugfs_create_dir("loongarch", NULL);
--	if (!d)
-+	if (IS_ERR_OR_NULL(d))
- 		return -ENOMEM;
-
- 	debugfs_create_u32("unaligned_instructions_user",
---
-2.40.0
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index 228d21dc40ae..08e8ec497660 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -188,6 +188,69 @@ static void _kvm_init_gcsr_flag(void)
+ 	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR3);
+ }
+ 
++void kvm_init_vmcs(struct kvm *kvm)
++{
++	kvm->arch.vmcs = vmcs;
++}
++
++long kvm_arch_dev_ioctl(struct file *filp,
++			unsigned int ioctl, unsigned long arg)
++{
++	return -ENOIOCTLCMD;
++}
++
++#ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
++int kvm_arch_hardware_enable(void)
++{
++	unsigned long gcfg = 0;
++
++	/* First init gtlbc, gcfg, gstat, gintc. All guest use the same config */
++	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
++	write_csr_gcfg(0);
++	write_csr_gstat(0);
++	write_csr_gintc(0);
++
++	/*
++	 * Enable virtualization features granting guest direct control of
++	 * certain features:
++	 * GCI=2:       Trap on init or unimplement cache instruction.
++	 * TORU=0:      Trap on Root Unimplement.
++	 * CACTRL=1:    Root control cache.
++	 * TOP=0:       Trap on Previlege.
++	 * TOE=0:       Trap on Exception.
++	 * TIT=0:       Trap on Timer.
++	 */
++	if (cpu_has_gcip_all)
++		gcfg |= CSR_GCFG_GCI_SECURE;
++	if (cpu_has_matc_root)
++		gcfg |= CSR_GCFG_MATC_ROOT;
++
++	gcfg |= CSR_GCFG_TIT;
++	write_csr_gcfg(gcfg);
++
++	kvm_flush_tlb_all();
++
++	/* Enable using TGID  */
++	set_csr_gtlbc(CSR_GTLBC_USETGID);
++	kvm_debug("gtlbc:%llx gintc:%llx gstat:%llx gcfg:%llx",
++			read_csr_gtlbc(), read_csr_gintc(),
++			read_csr_gstat(), read_csr_gcfg());
++
++	return 0;
++}
++
++void kvm_arch_hardware_disable(void)
++{
++	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
++	write_csr_gcfg(0);
++	write_csr_gstat(0);
++	write_csr_gintc(0);
++
++	/* Flush any remaining guest TLB entries */
++	kvm_flush_tlb_all();
++}
++#endif
++
+ static int kvm_loongarch_env_init(void)
+ {
+ 	struct kvm_context *context;
+-- 
+2.31.1
 
