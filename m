@@ -1,22 +1,22 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989C034CD9
-	for <loongarch@lists.linux.dev>; Tue, 16 May 2023 13:13:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AF434CD9
+	for <loongarch@lists.linux.dev>; Tue, 16 May 2023 13:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1684242780; bh=3rrM5MTq6afXCrvQtLKko6oJGNoh4YLY5u3IOiGXilI=;
+	t=1684243462; bh=uKBTIEyKFI5FLfb0xUDgLgLShmIFsKgpBJhdrcbHSxI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VtHC8niFuiVN4/7DumhVhj2KxYR6XXp+rMLSARJ1objE7MgXCeXmZOEi+2+5NcGZG
-	 bHGn4RPVGhBf1hbeyh6WAUpTCz/0rr1iZjWhRnzhe4xTNR6pdNHgiNZdsLT6uwzjBD
-	 CK1ztkv2TtP/XmnsR+uF4iErjenYnBi1l63U1yKw=
+	b=dS/iADKJuazy5XCXeDHXThViNXOIvfdFGA1wsdWRZrc1Vj7LzgIQyv+zHvT2ecS4c
+	 5feplLi5HdpNPlrta/E4P7ngywsMEOxlSjRNKmiRrUVyEW86MpB0sSq/BRd7k6jtQN
+	 6AyS0hLj1ggFps1o2+Cu71SF3UUuxaQqXNSl8BB8=
 Received: from [100.100.57.122] (unknown [58.34.185.106])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 64EA060117;
-	Tue, 16 May 2023 21:13:00 +0800 (CST)
-Message-ID: <e181913e-633d-e2ab-95f4-a653758d678d@xen0n.name>
-Date: Tue, 16 May 2023 21:13:00 +0800
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0A332600A9;
+	Tue, 16 May 2023 21:24:22 +0800 (CST)
+Message-ID: <97b57aa9-b3c2-58bc-fa55-804056877d05@xen0n.name>
+Date: Tue, 16 May 2023 21:24:21 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -25,299 +25,289 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.10.1
-Subject: Re: [PATCH] LoongArch: Introduce hardware page table walker
+Subject: Re: [PATCH] LoongArch: Support dbar with different hints
+Content-Language: en-US
 To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
  Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
  Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn, Liang Gao <gaoliang@loongson.cn>,
- Jun Yi <yijun@loongson.cn>
-References: <20230516124610.535360-1-chenhuacai@loongson.cn>
-Content-Language: en-US
+ loongson-kernel@lists.loongnix.cn, Jun Yi <yijun@loongson.cn>
+References: <20230516124536.535343-1-chenhuacai@loongson.cn>
 From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230516124610.535360-1-chenhuacai@loongson.cn>
+In-Reply-To: <20230516124536.535343-1-chenhuacai@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2023/5/16 20:46, Huacai Chen wrote:
-> Loongson-3A6000 and newer processors have hardware page table walker
-> (PTW) support. PTW can handle all fastpaths of TLBI/TLBL/TLBS/TLBM
-> exceptions by hardware, software only need to handle slowpaths (page
-> faults).
-> 
-> BTW, PTW doesn't append _PAGE_MODIFIED for page table entries, so we
-> change pmd_dirty() and pte_dirty() to also check _PAGE_DIRTY for the
-> "dirty" attribute.
+On 2023/5/16 20:45, Huacai Chen wrote:
+> Traditionally, LoongArch uses "dbar 0" (full completion barrier) for
+> everything. But the full completion barrier is a performance killer, so
+> Loongson-3A6000 and newer processors introduce different hints:
 
-Too bad we can't get a sneak peek at the new manuals... reviewing some 
-of the code anyway.
+"have made finer granularity hints available"
 
 > 
-> Signed-off-by: Liang Gao <gaoliang@loongson.cn>
+> Bit4: ordering or completion (0: completion, 1: ordering)
+> Bit3: barrier for previous read (0: true, 1: false)
+> Bit2: barrier for previous write (0: true, 1: false)
+> Bit1: barrier for succeeding read (0: true, 1: false)
+> Bit0: barrier for succedding write (0: true, 1: false)
+
+"succeeding"
+
+> 
+> Hint 0x700: barrier for "read after read" from the same address, which
+> is needed by LL-SC loops.
+
+"needed by LL-SC loops on older models"?
+
+> 
+> This patch enable various hints for different memory barries, it brings
+> performance improvements for Loongson-3A6000 series, and doesn't impact
+> Loongson-3A5000 series because they treat all hints as "dbar 0".
+
+"This patch makes use of the various new hints for different kinds of 
+memory barriers. It brings performance improvements on Loongson-3A6000 
+series, while not affecting the existing models because all variants are 
+treated as 'dbar 0' there."
+
+> 
 > Signed-off-by: Jun Yi <yijun@loongson.cn>
 > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->   arch/loongarch/include/asm/cpu-features.h |  2 +-
->   arch/loongarch/include/asm/cpu.h          |  2 ++
->   arch/loongarch/include/asm/loongarch.h    |  4 ++++
->   arch/loongarch/include/asm/pgtable.h      |  4 ++--
->   arch/loongarch/include/asm/tlb.h          |  3 +++
->   arch/loongarch/include/uapi/asm/hwcap.h   |  1 +
->   arch/loongarch/kernel/cpu-probe.c         |  4 ++++
->   arch/loongarch/kernel/proc.c              |  1 +
->   arch/loongarch/mm/tlb.c                   | 24 ++++++++++++++++++-----
->   arch/loongarch/mm/tlbex.S                 | 21 ++++++++++++++++++++
->   10 files changed, 58 insertions(+), 8 deletions(-)
+>   arch/loongarch/include/asm/barrier.h | 130 ++++++++++++---------------
+>   arch/loongarch/include/asm/io.h      |   2 +-
+>   arch/loongarch/kernel/smp.c          |   2 +-
+>   arch/loongarch/mm/tlbex.S            |   6 +-
+>   4 files changed, 60 insertions(+), 80 deletions(-)
 > 
-> diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
-> index f6177f133477..2eafe6a6aca8 100644
-> --- a/arch/loongarch/include/asm/cpu-features.h
-> +++ b/arch/loongarch/include/asm/cpu-features.h
-> @@ -64,6 +64,6 @@
->   #define cpu_has_eiodecode	cpu_opt(LOONGARCH_CPU_EIODECODE)
->   #define cpu_has_guestid		cpu_opt(LOONGARCH_CPU_GUESTID)
->   #define cpu_has_hypervisor	cpu_opt(LOONGARCH_CPU_HYPERVISOR)
-> -
-> +#define cpu_has_ptw		cpu_opt(LOONGARCH_CPU_PTW)
+> diff --git a/arch/loongarch/include/asm/barrier.h b/arch/loongarch/include/asm/barrier.h
+> index cda977675854..0286ae7e3636 100644
+> --- a/arch/loongarch/include/asm/barrier.h
+> +++ b/arch/loongarch/include/asm/barrier.h
+> @@ -5,27 +5,56 @@
+>   #ifndef __ASM_BARRIER_H
+>   #define __ASM_BARRIER_H
 >   
->   #endif /* __ASM_CPU_FEATURES_H */
-> diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
-> index 88773d849e33..48b9f7168bcc 100644
-> --- a/arch/loongarch/include/asm/cpu.h
-> +++ b/arch/loongarch/include/asm/cpu.h
-> @@ -98,6 +98,7 @@ enum cpu_type_enum {
->   #define CPU_FEATURE_EIODECODE		23	/* CPU has EXTIOI interrupt pin decode mode */
->   #define CPU_FEATURE_GUESTID		24	/* CPU has GuestID feature */
->   #define CPU_FEATURE_HYPERVISOR		25	/* CPU has hypervisor (running in VM) */
-> +#define CPU_FEATURE_PTW			26	/* CPU has hardware page table walker */
->   
->   #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
->   #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
-> @@ -125,5 +126,6 @@ enum cpu_type_enum {
->   #define LOONGARCH_CPU_EIODECODE		BIT_ULL(CPU_FEATURE_EIODECODE)
->   #define LOONGARCH_CPU_GUESTID		BIT_ULL(CPU_FEATURE_GUESTID)
->   #define LOONGARCH_CPU_HYPERVISOR	BIT_ULL(CPU_FEATURE_HYPERVISOR)
-> +#define LOONGARCH_CPU_PTW		BIT_ULL(CPU_FEATURE_PTW)
->   
->   #endif /* _ASM_CPU_H */
-> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-> index b3323ab5b78d..93b22a7af654 100644
-> --- a/arch/loongarch/include/asm/loongarch.h
-> +++ b/arch/loongarch/include/asm/loongarch.h
-> @@ -138,6 +138,7 @@ static inline u32 read_cpucfg(u32 reg)
->   #define  CPUCFG2_MIPSBT			BIT(20)
->   #define  CPUCFG2_LSPW			BIT(21)
->   #define  CPUCFG2_LAM			BIT(22)
-> +#define  CPUCFG2_PTW			BIT(24)
->   
->   #define LOONGARCH_CPUCFG3		0x3
->   #define  CPUCFG3_CCDMA			BIT(0)
-> @@ -453,6 +454,9 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
->   #define  CSR_PWCTL0_PTBASE		(_ULCAST_(0x1f) << CSR_PWCTL0_PTBASE_SHIFT)
->   
->   #define LOONGARCH_CSR_PWCTL1		0x1d	/* PWCtl1 */
-> +#define  CSR_PWCTL1_PTW_SHIFT		24
-> +#define  CSR_PWCTL1_PTW_WIDTH		1
-> +#define  CSR_PWCTL1_PTW			(_ULCAST_(0x1) << CSR_PWCTL1_PTW_SHIFT)
->   #define  CSR_PWCTL1_DIR3WIDTH_SHIFT	18
->   #define  CSR_PWCTL1_DIR3WIDTH_WIDTH	5
->   #define  CSR_PWCTL1_DIR3WIDTH		(_ULCAST_(0x1f) << CSR_PWCTL1_DIR3WIDTH_SHIFT)
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-> index d28fb9dbec59..5f93d6eef657 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -362,7 +362,7 @@ extern pgd_t invalid_pg_dir[];
->    */
->   static inline int pte_write(pte_t pte)	{ return pte_val(pte) & _PAGE_WRITE; }
->   static inline int pte_young(pte_t pte)	{ return pte_val(pte) & _PAGE_ACCESSED; }
-> -static inline int pte_dirty(pte_t pte)	{ return pte_val(pte) & _PAGE_MODIFIED; }
-> +static inline int pte_dirty(pte_t pte)	{ return pte_val(pte) & (_PAGE_DIRTY | _PAGE_MODIFIED); }
+> -#define __sync()	__asm__ __volatile__("dbar 0" : : : "memory")
+> +/*
+> + * Hint types:
 
-Will this affect existing models? I can't seem to remember the details.
+"Hint encoding" might be more appropriate?
 
+> + *
+> + * Bit4: ordering or completion (0: completion, 1: ordering)
+> + * Bit3: barrier for previous read (0: true, 1: false)
+> + * Bit2: barrier for previous write (0: true, 1: false)
+> + * Bit1: barrier for succeeding read (0: true, 1: false)
+> + * Bit0: barrier for succedding write (0: true, 1: false)
+
+"succeeding"
+
+> + *
+> + * Hint 0x700: barrier for "read after read" from the same address
+> + */
+> +
+> +#define DBAR(hint) __asm__ __volatile__("dbar %0 " : : "I"(hint) : "memory")
+
+Why not __builtin_loongarch_dbar (should be usable with both GCC and 
+Clang) or __dbar (in <larchintrin.h>)?
+
+> +
+> +#define crwrw		0b00000
+> +#define cr_r_		0b00101
+> +#define c_w_w		0b01010
 >   
->   static inline pte_t pte_mkold(pte_t pte)
->   {
-> @@ -506,7 +506,7 @@ static inline pmd_t pmd_wrprotect(pmd_t pmd)
+> -#define fast_wmb()	__sync()
+> -#define fast_rmb()	__sync()
+> -#define fast_mb()	__sync()
+> -#define fast_iob()	__sync()
+> -#define wbflush()	__sync()
+> +#define orwrw		0b10000
+> +#define or_r_		0b10101
+> +#define o_w_w		0b11010
 >   
->   static inline int pmd_dirty(pmd_t pmd)
->   {
-> -	return !!(pmd_val(pmd) & _PAGE_MODIFIED);
-> +	return !!(pmd_val(pmd) & (_PAGE_DIRTY | _PAGE_MODIFIED));
+> -#define wmb()		fast_wmb()
+> -#define rmb()		fast_rmb()
+> -#define mb()		fast_mb()
+> -#define iob()		fast_iob()
+> +#define orw_w		0b10010
+> +#define or_rw		0b10100
+>   
+> -#define __smp_mb()	__asm__ __volatile__("dbar 0" : : : "memory")
+> -#define __smp_rmb()	__asm__ __volatile__("dbar 0" : : : "memory")
+> -#define __smp_wmb()	__asm__ __volatile__("dbar 0" : : : "memory")
+> +#define c_sync()	DBAR(crwrw)
+> +#define c_rsync()	DBAR(cr_r_)
+> +#define c_wsync()	DBAR(c_w_w)
+> +
+> +#define o_sync()	DBAR(orwrw)
+> +#define o_rsync()	DBAR(or_r_)
+> +#define o_wsync()	DBAR(o_w_w)
+> +
+> +#define ldacq_mb()	DBAR(or_rw)
+> +#define strel_mb()	DBAR(orw_w)
+> +
+> +#define mb()		c_sync()
+> +#define rmb()		c_rsync()
+> +#define wmb()		c_wsync()
+> +#define iob()		c_sync()
+> +#define wbflush()	c_sync()
+> +
+> +#define __smp_mb()	o_sync()
+> +#define __smp_rmb()	o_rsync()
+> +#define __smp_wmb()	o_wsync()
+>   
+>   #ifdef CONFIG_SMP
+> -#define __WEAK_LLSC_MB		"	dbar 0  \n"
+> +#define __WEAK_LLSC_MB		"	dbar 0x700	\n"
+>   #else
+> -#define __WEAK_LLSC_MB		"		\n"
+> +#define __WEAK_LLSC_MB		"			\n"
+>   #endif
+>   
+>   #define __smp_mb__before_atomic()	barrier()
+> @@ -59,68 +88,19 @@ static inline unsigned long array_index_mask_nospec(unsigned long index,
+>   	return mask;
 >   }
 >   
->   static inline pmd_t pmd_mkclean(pmd_t pmd)
-> diff --git a/arch/loongarch/include/asm/tlb.h b/arch/loongarch/include/asm/tlb.h
-> index f5e4deb97402..0dc9ee2b05d2 100644
-> --- a/arch/loongarch/include/asm/tlb.h
-> +++ b/arch/loongarch/include/asm/tlb.h
-> @@ -163,6 +163,9 @@ extern void handle_tlb_store(void);
->   extern void handle_tlb_modify(void);
->   extern void handle_tlb_refill(void);
->   extern void handle_tlb_protect(void);
-> +extern void handle_tlb_load_ptw(void);
-> +extern void handle_tlb_store_ptw(void);
-> +extern void handle_tlb_modify_ptw(void);
+> -#define __smp_load_acquire(p)							\
+> -({										\
+> -	union { typeof(*p) __val; char __c[1]; } __u;				\
+> -	unsigned long __tmp = 0;							\
+> -	compiletime_assert_atomic_type(*p);					\
+> -	switch (sizeof(*p)) {							\
+> -	case 1:									\
+> -		*(__u8 *)__u.__c = *(volatile __u8 *)p;				\
+> -		__smp_mb();							\
+> -		break;								\
+> -	case 2:									\
+> -		*(__u16 *)__u.__c = *(volatile __u16 *)p;			\
+> -		__smp_mb();							\
+> -		break;								\
+> -	case 4:									\
+> -		__asm__ __volatile__(						\
+> -		"amor_db.w %[val], %[tmp], %[mem]	\n"				\
+> -		: [val] "=&r" (*(__u32 *)__u.__c)				\
+> -		: [mem] "ZB" (*(u32 *) p), [tmp] "r" (__tmp)			\
+> -		: "memory");							\
+> -		break;								\
+> -	case 8:									\
+> -		__asm__ __volatile__(						\
+> -		"amor_db.d %[val], %[tmp], %[mem]	\n"				\
+> -		: [val] "=&r" (*(__u64 *)__u.__c)				\
+> -		: [mem] "ZB" (*(u64 *) p), [tmp] "r" (__tmp)			\
+> -		: "memory");							\
+> -		break;								\
+> -	}									\
+> -	(typeof(*p))__u.__val;								\
+> +#define __smp_load_acquire(p)				\
+> +({							\
+> +	typeof(*p) ___p1 = READ_ONCE(*p);		\
+> +	compiletime_assert_atomic_type(*p);		\
+> +	ldacq_mb();					\
+> +	___p1;						\
+>   })
 >   
->   extern void dump_tlb_all(void);
->   extern void dump_tlb_regs(void);
-> diff --git a/arch/loongarch/include/uapi/asm/hwcap.h b/arch/loongarch/include/uapi/asm/hwcap.h
-> index 8840b72fa8e8..6955a7cb2c65 100644
-> --- a/arch/loongarch/include/uapi/asm/hwcap.h
-> +++ b/arch/loongarch/include/uapi/asm/hwcap.h
-> @@ -16,5 +16,6 @@
->   #define HWCAP_LOONGARCH_LBT_X86		(1 << 10)
->   #define HWCAP_LOONGARCH_LBT_ARM		(1 << 11)
->   #define HWCAP_LOONGARCH_LBT_MIPS	(1 << 12)
-> +#define HWCAP_LOONGARCH_PTW		(1 << 13)
-
-This feature should be irrevelant to userspace, right? We should 
-probably not add it here.
-
+> -#define __smp_store_release(p, v)						\
+> -do {										\
+> -	union { typeof(*p) __val; char __c[1]; } __u =				\
+> -		{ .__val = (__force typeof(*p)) (v) };				\
+> -	unsigned long __tmp;							\
+> -	compiletime_assert_atomic_type(*p);					\
+> -	switch (sizeof(*p)) {							\
+> -	case 1:									\
+> -		__smp_mb();							\
+> -		*(volatile __u8 *)p = *(__u8 *)__u.__c;				\
+> -		break;								\
+> -	case 2:									\
+> -		__smp_mb();							\
+> -		*(volatile __u16 *)p = *(__u16 *)__u.__c;			\
+> -		break;								\
+> -	case 4:									\
+> -		__asm__ __volatile__(						\
+> -		"amswap_db.w %[tmp], %[val], %[mem]	\n"			\
+> -		: [mem] "+ZB" (*(u32 *)p), [tmp] "=&r" (__tmp)			\
+> -		: [val] "r" (*(__u32 *)__u.__c)					\
+> -		: );								\
+> -		break;								\
+> -	case 8:									\
+> -		__asm__ __volatile__(						\
+> -		"amswap_db.d %[tmp], %[val], %[mem]	\n"			\
+> -		: [mem] "+ZB" (*(u64 *)p), [tmp] "=&r" (__tmp)			\
+> -		: [val] "r" (*(__u64 *)__u.__c)					\
+> -		: );								\
+> -		break;								\
+> -	}									\
+> +#define __smp_store_release(p, v)			\
+> +do {							\
+> +	compiletime_assert_atomic_type(*p);		\
+> +	strel_mb();					\
+> +	WRITE_ONCE(*p, v);				\
+>   } while (0)
 >   
->   #endif /* _UAPI_ASM_HWCAP_H */
-> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-> index f42acc6c8df6..e925579c7a71 100644
-> --- a/arch/loongarch/kernel/cpu-probe.c
-> +++ b/arch/loongarch/kernel/cpu-probe.c
-> @@ -136,6 +136,10 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
->   		c->options |= LOONGARCH_CPU_CRYPTO;
->   		elf_hwcap |= HWCAP_LOONGARCH_CRYPTO;
->   	}
-> +	if (config & CPUCFG2_PTW) {
-> +		c->options |= LOONGARCH_CPU_PTW;
-> +		elf_hwcap |= HWCAP_LOONGARCH_PTW;
-> +	}
->   	if (config & CPUCFG2_LVZP) {
->   		c->options |= LOONGARCH_CPU_LVZ;
->   		elf_hwcap |= HWCAP_LOONGARCH_LVZ;
-> diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-> index 0d82907b5404..782a34e7336e 100644
-> --- a/arch/loongarch/kernel/proc.c
-> +++ b/arch/loongarch/kernel/proc.c
-> @@ -79,6 +79,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
->   	if (cpu_has_crc32)	seq_printf(m, " crc32");
->   	if (cpu_has_complex)	seq_printf(m, " complex");
->   	if (cpu_has_crypto)	seq_printf(m, " crypto");
-> +	if (cpu_has_ptw)	seq_printf(m, " ptw");
->   	if (cpu_has_lvz)	seq_printf(m, " lvz");
->   	if (cpu_has_lbt_x86)	seq_printf(m, " lbt_x86");
->   	if (cpu_has_lbt_arm)	seq_printf(m, " lbt_arm");
-> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-> index 8bad6b0cff59..3e1d1d3c7058 100644
-> --- a/arch/loongarch/mm/tlb.c
-> +++ b/arch/loongarch/mm/tlb.c
-> @@ -167,6 +167,9 @@ void __update_tlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep
->   	int idx;
->   	unsigned long flags;
+>   #define __smp_store_mb(p, v)							\
+> diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+> index 545e2708fbf7..1c9410220040 100644
+> --- a/arch/loongarch/include/asm/io.h
+> +++ b/arch/loongarch/include/asm/io.h
+> @@ -62,7 +62,7 @@ extern pgprot_t pgprot_wc;
+>   #define ioremap_cache(offset, size)	\
+>   	ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL))
 >   
-> +	if (cpu_has_ptw)
-> +		return;
-> +
->   	/*
->   	 * Handle debugger faulting in for debugee.
->   	 */
-> @@ -220,7 +223,11 @@ static void setup_ptwalker(void)
->   	pte_w = PAGE_SHIFT - 3;
+> -#define mmiowb() asm volatile ("dbar 0" ::: "memory")
+> +#define mmiowb() wmb()
 >   
->   	pwctl0 = pte_i | pte_w << 5 | pmd_i << 10 | pmd_w << 15 | pud_i << 20 | pud_w << 25;
-> -	pwctl1 = pgd_i | pgd_w << 6;
-> +
-> +	if (!cpu_has_ptw)
-> +		pwctl1 = pgd_i | pgd_w << 6;
-> +	else
-> +		pwctl1 = pgd_i | pgd_w << 6 | CSR_PWCTL1_PTW;
-
-This is better in avoiding the duplication:
-
-if (cpu_has_ptw)
-     pwctl1 |= CSR_PWCTL1_PTW;
-
+>   /*
+>    * String version of I/O memory access operations.
+> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> index ed167e244cda..8daa97148c8e 100644
+> --- a/arch/loongarch/kernel/smp.c
+> +++ b/arch/loongarch/kernel/smp.c
+> @@ -118,7 +118,7 @@ static u32 ipi_read_clear(int cpu)
+>   	action = iocsr_read32(LOONGARCH_IOCSR_IPI_STATUS);
+>   	/* Clear the ipi register to clear the interrupt */
+>   	iocsr_write32(action, LOONGARCH_IOCSR_IPI_CLEAR);
+> -	smp_mb();
+> +	wbflush();
 >   
->   	csr_write64(pwctl0, LOONGARCH_CSR_PWCTL0);
->   	csr_write64(pwctl1, LOONGARCH_CSR_PWCTL1);
-> @@ -264,10 +271,17 @@ void setup_tlb_handler(int cpu)
->   	if (cpu == 0) {
->   		memcpy((void *)tlbrentry, handle_tlb_refill, 0x80);
->   		local_flush_icache_range(tlbrentry, tlbrentry + 0x80);
-> -		set_handler(EXCCODE_TLBI * VECSIZE, handle_tlb_load, VECSIZE);
-> -		set_handler(EXCCODE_TLBL * VECSIZE, handle_tlb_load, VECSIZE);
-> -		set_handler(EXCCODE_TLBS * VECSIZE, handle_tlb_store, VECSIZE);
-> -		set_handler(EXCCODE_TLBM * VECSIZE, handle_tlb_modify, VECSIZE);
-> +		if (!cpu_has_ptw) {
-
-Better not have the condition inverted for less cognitive burden (have 
-to go "no [hardware] page table walker" -> "take the software approach" 
-otherwise).
-
-> +			set_handler(EXCCODE_TLBI * VECSIZE, handle_tlb_load, VECSIZE);
-> +			set_handler(EXCCODE_TLBL * VECSIZE, handle_tlb_load, VECSIZE);
-> +			set_handler(EXCCODE_TLBS * VECSIZE, handle_tlb_store, VECSIZE);
-> +			set_handler(EXCCODE_TLBM * VECSIZE, handle_tlb_modify, VECSIZE);
-> +		} else {
-> +			set_handler(EXCCODE_TLBI * VECSIZE, handle_tlb_load_ptw, VECSIZE);
-> +			set_handler(EXCCODE_TLBL * VECSIZE, handle_tlb_load_ptw, VECSIZE);
-> +			set_handler(EXCCODE_TLBS * VECSIZE, handle_tlb_store_ptw, VECSIZE);
-> +			set_handler(EXCCODE_TLBM * VECSIZE, handle_tlb_modify_ptw, VECSIZE);
-> +		}
->   		set_handler(EXCCODE_TLBNR * VECSIZE, handle_tlb_protect, VECSIZE);
->   		set_handler(EXCCODE_TLBNX * VECSIZE, handle_tlb_protect, VECSIZE);
->   		set_handler(EXCCODE_TLBPE * VECSIZE, handle_tlb_protect, VECSIZE);
+>   	return action;
+>   }
 > diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
-> index 240ced55586e..01df8a0b87f6 100644
+> index 244e2f5aeee5..240ced55586e 100644
 > --- a/arch/loongarch/mm/tlbex.S
 > +++ b/arch/loongarch/mm/tlbex.S
-> @@ -190,6 +190,13 @@ nopage_tlb_load:
->   	jr		t0
->   SYM_FUNC_END(handle_tlb_load)
+> @@ -184,7 +184,7 @@ tlb_huge_update_load:
+>   	ertn
 >   
-> +SYM_FUNC_START(handle_tlb_load_ptw)
-> +	csrwr	t0, LOONGARCH_CSR_KS0
-> +	csrwr	t1, LOONGARCH_CSR_KS1
-> +	la_abs	t0, tlb_do_page_fault_0
-> +	jirl	zero, t0, 0
-
-jr t0
-
-> +SYM_FUNC_END(handle_tlb_load_ptw)
-> +
->   SYM_FUNC_START(handle_tlb_store)
->   	csrwr		t0, EXCEPTION_KS0
->   	csrwr		t1, EXCEPTION_KS1
-> @@ -339,6 +346,13 @@ nopage_tlb_store:
+>   nopage_tlb_load:
+> -	dbar		0
+> +	dbar		0x700
+>   	csrrd		ra, EXCEPTION_KS2
+>   	la_abs		t0, tlb_do_page_fault_0
 >   	jr		t0
->   SYM_FUNC_END(handle_tlb_store)
+> @@ -333,7 +333,7 @@ tlb_huge_update_store:
+>   	ertn
 >   
-> +SYM_FUNC_START(handle_tlb_store_ptw)
-> +	csrwr	t0, LOONGARCH_CSR_KS0
-> +	csrwr	t1, LOONGARCH_CSR_KS1
-> +	la_abs	t0, tlb_do_page_fault_1
-> +	jirl	zero, t0, 0
-
-Same here.
-
-> +SYM_FUNC_END(handle_tlb_store_ptw)
-> +
->   SYM_FUNC_START(handle_tlb_modify)
->   	csrwr		t0, EXCEPTION_KS0
->   	csrwr		t1, EXCEPTION_KS1
-> @@ -486,6 +500,13 @@ nopage_tlb_modify:
+>   nopage_tlb_store:
+> -	dbar		0
+> +	dbar		0x700
+>   	csrrd		ra, EXCEPTION_KS2
+>   	la_abs		t0, tlb_do_page_fault_1
 >   	jr		t0
->   SYM_FUNC_END(handle_tlb_modify)
+> @@ -480,7 +480,7 @@ tlb_huge_update_modify:
+>   	ertn
 >   
-> +SYM_FUNC_START(handle_tlb_modify_ptw)
-> +	csrwr	t0, LOONGARCH_CSR_KS0
-> +	csrwr	t1, LOONGARCH_CSR_KS1
-> +	la_abs	t0, tlb_do_page_fault_1
-> +	jirl	zero, t0, 0
+>   nopage_tlb_modify:
+> -	dbar		0
+> +	dbar		0x700
+>   	csrrd		ra, EXCEPTION_KS2
+>   	la_abs		t0, tlb_do_page_fault_1
+>   	jr		t0
 
-And here.
-
-> +SYM_FUNC_END(handle_tlb_modify_ptw)
-> +
->   SYM_FUNC_START(handle_tlb_refill)
->   	csrwr		t0, LOONGARCH_CSR_TLBRSAVE
->   	csrrd		t0, LOONGARCH_CSR_PGD
+Due to not having the manuals, I cannot review any further, but I can at 
+least see that semantics on older models should be reasonably conserved, 
+and the new bits seem reasonable. Nice cleanups anyway, and thanks to 
+all of you for listening to community voices!
 
 -- 
 WANG "xen0n" Xuerui
