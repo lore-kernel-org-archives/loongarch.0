@@ -1,82 +1,224 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B854F199
-	for <loongarch@lists.linux.dev>; Tue, 16 May 2023 00:53:48 +0000 (UTC)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 9D7EE92009C; Tue, 16 May 2023 02:53:45 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 9709492009B;
-	Tue, 16 May 2023 01:53:45 +0100 (BST)
-Date: Tue, 16 May 2023 01:53:45 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-cc: Greg KH <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, 
-    Richard Henderson <richard.henderson@linaro.org>, 
-    Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-    Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
-    Russell King <linux@armlinux.org.uk>, 
-    Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-    Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-    Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>, 
-    Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-    Nicholas Piggin <npiggin@gmail.com>, 
-    Christophe Leroy <christophe.leroy@csgroup.eu>, 
-    Paul Walmsley <paul.walmsley@sifive.com>, 
-    Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-    Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-    Alexander Gordeev <agordeev@linux.ibm.com>, 
-    Christian Borntraeger <borntraeger@linux.ibm.com>, 
-    Sven Schnelle <svens@linux.ibm.com>, 
-    Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-    "David S . Miller" <davem@davemloft.net>, 
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
-    Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-    Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
-    linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-    linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, 
-    linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-    linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-    linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-    linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-    linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org, 
-    Palmer Dabbelt <palmer@rivosinc.com>
-Subject: Re: [PATCH v5 14/26] alpha: Remove empty <uapi/asm/setup.h>
-In-Reply-To: <20230306100508.1171812-15-alexghiti@rivosinc.com>
-Message-ID: <alpine.DEB.2.21.2305160147100.11892@angie.orcam.me.uk>
-References: <20230306100508.1171812-1-alexghiti@rivosinc.com> <20230306100508.1171812-15-alexghiti@rivosinc.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3847617CE
+	for <loongarch@lists.linux.dev>; Tue, 16 May 2023 02:01:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C82E1C4339E
+	for <loongarch@lists.linux.dev>; Tue, 16 May 2023 02:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684202491;
+	bh=T2CH5jcEZ50auWMm9WlAERi13fZH34cVW0QQ55u3B1c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QYBV8uK05eipDy5EOb/FG+aKmAIuGJuZOBw6Ska1SmTfZiZU5WIOYPBNzr2ORGBmS
+	 kAnUtES8TlXc9i0JlRXGO8QPnDcDr4BHJKIaoUbpG7PBaVjdfcrXMbigf2atBDhNvX
+	 SY10wMbrj7hWNLzWoX+N1vZbKZArzmHKn81UmmlLBxVGyoYcxhjVoza81h2p1pA2KM
+	 rjiMdn8KUMQFAzlCO/Aj6BVbCYXFnRlqzU/W9ihgknbH+hznsX2/OKNWgtAT5/8zkK
+	 2ty9py1a9mro5bSA125FcbTG5zBU8NFrimGohmp21nQoCqRd6xe1wK5IQGrroZyte9
+	 CvMWtW3O6tOnQ==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-50bc3088b7aso24989123a12.3
+        for <loongarch@lists.linux.dev>; Mon, 15 May 2023 19:01:31 -0700 (PDT)
+X-Gm-Message-State: AC+VfDz2nbyBTbr1PaxKJvog4B+HqjY4MR5liDNr+9+NFlli5TR5x4YV
+	B1KR0bwwzAJlAPRChSxNZ8meMybGQ9dbqhSGTbE=
+X-Google-Smtp-Source: ACHHUZ6dgbB/xaSvvgnJkKxDy3hlVfrT9ojYrxmb8jMg0x1u/fS5lK20Eg9fSgXweC7x1BMbB5N2zEbZ0SdmmUxuiL8=
+X-Received: by 2002:a17:907:7214:b0:96a:c661:fa1 with SMTP id
+ dr20-20020a170907721400b0096ac6610fa1mr10638554ejc.46.1684202489967; Mon, 15
+ May 2023 19:01:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <1684118574-7572-1-git-send-email-tangyouling@loongson.cn>
+In-Reply-To: <1684118574-7572-1-git-send-email-tangyouling@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 16 May 2023 10:01:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5QJQ2fcB5urye4Ffcbeynmjy7qN9qW=d0-Av2QhzpbxA@mail.gmail.com>
+Message-ID: <CAAhV-H5QJQ2fcB5urye4Ffcbeynmjy7qN9qW=d0-Av2QhzpbxA@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch: Add jump-label implementation
+To: Youling Tang <tangyouling@loongson.cn>
+Cc: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Zhangjin Wu <falcon@tinylab.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 6 Mar 2023, Alexandre Ghiti wrote:
+Queued, thanks.
 
-> diff --git a/arch/alpha/include/uapi/asm/setup.h b/arch/alpha/include/uapi/asm/setup.h
-> deleted file mode 100644
-> index 9b3b5ba39b1d..000000000000
-> --- a/arch/alpha/include/uapi/asm/setup.h
-> +++ /dev/null
-> @@ -1,5 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> -#ifndef _UAPI__ALPHA_SETUP_H
-> -#define _UAPI__ALPHA_SETUP_H
-> -
-> -#endif /* _UAPI__ALPHA_SETUP_H */
+Huacai
 
- You can't just remove a UAPI header like this, something will break; cf. 
-arch/arc/include/uapi/asm/setup.h, or arch/x86/include/uapi/asm/setup.h if 
-you want it brief.
-
- I suggest that you fold it into 01/26 (it makes no sense to have empty 
-multiple inclusion protection), and likewise for the relevant remaining 
-headers.
-
-  Maciej
+On Mon, May 15, 2023 at 10:43=E2=80=AFAM Youling Tang <tangyouling@loongson=
+.cn> wrote:
+>
+> Add support for jump labels based on the ARM64 version.
+>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> ---
+> Changes in v3:
+> - Define the JUMP_TABLE_ENTRY macro so that arch_static_branch
+>   and arch_static_branch_jump can be shared.
+> - Modify commit message.
+>
+> Changes in v2:
+> - Fix build errors.
+> - fix comment.
+>
+>  .../core/jump-labels/arch-support.txt         |  2 +-
+>  arch/loongarch/Kconfig                        |  2 +
+>  arch/loongarch/configs/loongson3_defconfig    |  1 +
+>  arch/loongarch/include/asm/jump_label.h       | 50 +++++++++++++++++++
+>  arch/loongarch/kernel/Makefile                |  2 +
+>  arch/loongarch/kernel/jump_label.c            | 23 +++++++++
+>  6 files changed, 79 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/loongarch/include/asm/jump_label.h
+>  create mode 100644 arch/loongarch/kernel/jump_label.c
+>
+> diff --git a/Documentation/features/core/jump-labels/arch-support.txt b/D=
+ocumentation/features/core/jump-labels/arch-support.txt
+> index 2328eada3a49..94d9dece580f 100644
+> --- a/Documentation/features/core/jump-labels/arch-support.txt
+> +++ b/Documentation/features/core/jump-labels/arch-support.txt
+> @@ -13,7 +13,7 @@
+>      |        csky: |  ok  |
+>      |     hexagon: | TODO |
+>      |        ia64: | TODO |
+> -    |   loongarch: | TODO |
+> +    |   loongarch: |  ok  |
+>      |        m68k: | TODO |
+>      |  microblaze: | TODO |
+>      |        mips: |  ok  |
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index d38b066fc931..193a959a5611 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -83,6 +83,8 @@ config LOONGARCH
+>         select GPIOLIB
+>         select HAS_IOPORT
+>         select HAVE_ARCH_AUDITSYSCALL
+> +       select HAVE_ARCH_JUMP_LABEL
+> +       select HAVE_ARCH_JUMP_LABEL_RELATIVE
+>         select HAVE_ARCH_MMAP_RND_BITS if MMU
+>         select HAVE_ARCH_SECCOMP_FILTER
+>         select HAVE_ARCH_TRACEHOOK
+> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/=
+configs/loongson3_defconfig
+> index 6cd26dd3c134..33a0f5f742f6 100644
+> --- a/arch/loongarch/configs/loongson3_defconfig
+> +++ b/arch/loongarch/configs/loongson3_defconfig
+> @@ -63,6 +63,7 @@ CONFIG_EFI_ZBOOT=3Dy
+>  CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=3Dy
+>  CONFIG_EFI_CAPSULE_LOADER=3Dm
+>  CONFIG_EFI_TEST=3Dm
+> +CONFIG_JUMP_LABEL=3Dy
+>  CONFIG_MODULES=3Dy
+>  CONFIG_MODULE_FORCE_LOAD=3Dy
+>  CONFIG_MODULE_UNLOAD=3Dy
+> diff --git a/arch/loongarch/include/asm/jump_label.h b/arch/loongarch/inc=
+lude/asm/jump_label.h
+> new file mode 100644
+> index 000000000000..4d8cbd5a8221
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/jump_label.h
+> @@ -0,0 +1,50 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + *
+> + * Based on arch/arm64/include/asm/jump_label.h
+> + */
+> +#ifndef __ASM_JUMP_LABEL_H
+> +#define __ASM_JUMP_LABEL_H
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#include <linux/types.h>
+> +
+> +#define JUMP_LABEL_NOP_SIZE    4
+> +
+> +#define JUMP_TABLE_ENTRY                               \
+> +        ".pushsection  __jump_table, \"aw\"    \n\t"   \
+> +        ".align        3                       \n\t"   \
+> +        ".long         1b - ., %l[l_yes] - .   \n\t"   \
+> +        ".quad         %0 - .                  \n\t"   \
+> +        ".popsection                           \n\t"
+> +
+> +static __always_inline bool arch_static_branch(struct static_key * const=
+ key,
+> +                                              const bool branch)
+> +{
+> +       asm_volatile_goto(
+> +               "1:     nop                     \n\t"
+> +               JUMP_TABLE_ENTRY
+> +               :  :  "i"(&((char *)key)[branch]) :  : l_yes);
+> +
+> +       return false;
+> +l_yes:
+> +       return true;
+> +}
+> +
+> +static __always_inline bool arch_static_branch_jump(struct static_key * =
+const key,
+> +                                                   const bool branch)
+> +{
+> +       asm_volatile_goto(
+> +               "1:     b       %l[l_yes]       \n\t"
+> +               JUMP_TABLE_ENTRY
+> +               :  :  "i"(&((char *)key)[branch]) :  : l_yes);
+> +
+> +       return false;
+> +l_yes:
+> +       return true;
+> +}
+> +
+> +#endif  /* __ASSEMBLY__ */
+> +#endif /* __ASM_JUMP_LABEL_H */
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
+ile
+> index 9a72d91cd104..64ea76f60e2c 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -54,4 +54,6 @@ obj-$(CONFIG_HAVE_HW_BREAKPOINT)      +=3D hw_breakpoin=
+t.o
+>
+>  obj-$(CONFIG_KPROBES)          +=3D kprobes.o kprobes_trampoline.o
+>
+> +obj-$(CONFIG_JUMP_LABEL)       +=3D jump_label.o
+> +
+>  CPPFLAGS_vmlinux.lds           :=3D $(KBUILD_CFLAGS)
+> diff --git a/arch/loongarch/kernel/jump_label.c b/arch/loongarch/kernel/j=
+ump_label.c
+> new file mode 100644
+> index 000000000000..b06245955f7a
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/jump_label.c
+> @@ -0,0 +1,23 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + *
+> + * Based on arch/arm64/kernel/jump_label.c
+> + */
+> +#include <linux/jump_label.h>
+> +#include <linux/kernel.h>
+> +#include <asm/inst.h>
+> +
+> +void arch_jump_label_transform(struct jump_entry *entry,
+> +                              enum jump_label_type type)
+> +{
+> +       void *addr =3D (void *)jump_entry_code(entry);
+> +       u32 insn;
+> +
+> +       if (type =3D=3D JUMP_LABEL_JMP)
+> +               insn =3D larch_insn_gen_b(jump_entry_code(entry), jump_en=
+try_target(entry));
+> +       else
+> +               insn =3D larch_insn_gen_nop();
+> +
+> +       larch_insn_patch_text(addr, insn);
+> +}
+> --
+> 2.37.1
+>
+>
