@@ -1,391 +1,231 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020020.outbound.protection.outlook.com [52.101.56.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6732B101D7
-	for <loongarch@lists.linux.dev>; Tue, 16 May 2023 17:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1684259054; i=deller@gmx.de;
-	bh=28Q2XTKI3jOrWHGJRY35mfdpvNOlP9oZTBSK7WL8Bjk=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=eXaGMvBKqACcsFqkTyYRfQM2481JQl71DzQiEIaVDzUVH1aDV1H4R33xqAwl3T9xg
-	 WyGs2k/8xP0S2HR/CekXsMf6yLBmqry4QSYxr4BvpJva3Ks/s2ycdHnF+/EoAr+h6u
-	 NIoYxuVUMWztf2AdYwAzRMjkS9hI8Pd8dMPpn7VuHOMlyOdCyXRmWCYoqqSUxHBvmw
-	 evV8w3qjZaKNyexAvtHeNQIrjaAsxgulFEKp3nDKkDglGurFZX71jPAWLjfTwmgGYG
-	 s4H5RwDK7jPGN43mnLsgqXe6Vt8DhM5WO+h9lRK2vxVHJEwQX4XP6bFslTwNi3OGd0
-	 TeuNvCu0UJvAw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.60] ([94.134.150.20]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N5mKP-1qDPOg4AKR-017Dz0; Tue, 16
- May 2023 19:44:14 +0200
-Message-ID: <df527e53-3148-02f0-241b-fbc5e28b1618@gmx.de>
-Date: Tue, 16 May 2023 19:44:09 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F8F23DB
+	for <loongarch@lists.linux.dev>; Wed, 17 May 2023 02:26:40 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rw5KQ9Ii6gbtDWbJw1HW3+96fiC65KOBcUoDOwNFrlFVJ6NHiKD5ToYlf40v+D91+jMbRiKOfxoIXV6Tyx8yInAoHSoZ9kWAa36PFeuzdki8bGSiNlc2AJxHFA3L84CRgg04dXQv9mc8MNzjRWTAiASQPKe1TpraXh5ob5lbDa4YMNdNgVamGSvMG7U8Jcx5WJ/Mrr4yUcj+IRuQlCwFRET7ZDlMZ99CBkT7TBHRMGNOdhtaAovuh9nyhVnKdWAytSMMe872BUAnKNXtBwBrR0STIZy4RCDSlvcL9IR7F9enJY286U4YvDKpcAtwmxvLQeu7FCrCSwD0hnLbJyk+ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oh+jtBDcQGwKL47a/sTYNeBB8dtEGr5uAwWvDP8A28U=;
+ b=cjI9rfNHyuGjqn5eWNtWxGeEkHpHAncNyDxbqWlCddNjLyefWOpkmpAv3dzFmr+vUvDYeRpIUmxcQjLJ1eDbOt10uslxaKouCbkk5PGt8ypNiT96MuF/weZWKcf5pasctuaol4QYVOQEyIvHQioXk5vpBXmVWYj5no9Ze9+P6eFZE0h/aCQfiSpoZuz2Sg8QXd+NWu+oBGIeVjVsLbh6UeCso+7cDesKNZ6YsqGKf34IaON+1Io964lBgQAdq/7FN0X2xXddTz+pI/5iJS1oBBoIWB9pWnFryIprWM4PhKhx5RFQsPFuYseQ6y3BasSlqNjpdtpArOcEgEQS3FqCEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oh+jtBDcQGwKL47a/sTYNeBB8dtEGr5uAwWvDP8A28U=;
+ b=V5UI8iMWxWA5SNTBmjgCxrZwe0RW/XcBshERDXL7ftbQEgAJ5VHIatLCzn1dJVAeZIFC0ILf9iDAbt5wXO7bxtElmdb4rqjwKrOJcyGNiv41p9uLFq1bYHQDY5pZ1WQCHQtdW20hUUKm9uU3XmqW9S/ZKumv+IVd0+Gr1m41a7I=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by PH8PR21MB3815.namprd21.prod.outlook.com (2603:10b6:510:215::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.4; Wed, 17 May
+ 2023 02:26:37 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::a4f7:2466:97b5:bd31]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::a4f7:2466:97b5:bd31%5]) with mapi id 15.20.6433.005; Wed, 17 May 2023
+ 02:26:35 +0000
+From: "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To: Peter Zijlstra <peterz@infradead.org>, "bigeasy@linutronix.de"
+	<bigeasy@linutronix.de>
+CC: Mark Rutland <Mark.Rutland@arm.com>, "maz@kernel.org" <maz@kernel.org>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
+	<will@kernel.org>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"kernel@xen0n.name" <kernel@xen0n.name>, "hca@linux.ibm.com"
+	<hca@linux.ibm.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>,
+	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+	"svens@linux.ibm.com" <svens@linux.ibm.com>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "wanpengli@tencent.com" <wanpengli@tencent.com>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"jgross@suse.com" <jgross@suse.com>, "boris.ostrovsky@oracle.com"
+	<boris.ostrovsky@oracle.com>, "daniel.lezcano@linaro.org"
+	<daniel.lezcano@linaro.org>, KY Srinivasan <kys@microsoft.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan
+ Cui <decui@microsoft.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"longman@redhat.com" <longman@redhat.com>, "boqun.feng@gmail.com"
+	<boqun.feng@gmail.com>, "pmladek@suse.com" <pmladek@suse.com>,
+	"senozhatsky@chromium.org" <senozhatsky@chromium.org>, "rostedt@goodmis.org"
+	<rostedt@goodmis.org>, "john.ogness@linutronix.de"
+	<john.ogness@linutronix.de>, "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+	"dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>, "bsegall@google.com"
+	<bsegall@google.com>, "mgorman@suse.de" <mgorman@suse.de>,
+	"bristot@redhat.com" <bristot@redhat.com>, "vschneid@redhat.com"
+	<vschneid@redhat.com>, "jstultz@google.com" <jstultz@google.com>,
+	"sboyd@kernel.org" <sboyd@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: RE: [RFC][PATCH 7/9] x86/tsc: Provide sched_clock_noinstr()
+Thread-Topic: [RFC][PATCH 7/9] x86/tsc: Provide sched_clock_noinstr()
+Thread-Index: AQHZgfVJgXDGJCXHgkicklmkIOtQvK9Q6JGAgAzfthA=
+Date: Wed, 17 May 2023 02:26:35 +0000
+Message-ID:
+ <BYAPR21MB1688853D01CABA74B51DA841D77E9@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <20230508211951.901961964@infradead.org>
+ <20230508213147.853677542@infradead.org>
+ <20230508214419.GA2053935@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230508214419.GA2053935@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5329c7e3-bfca-439e-a9df-2326ba163ea2;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-17T02:20:07Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|PH8PR21MB3815:EE_
+x-ms-office365-filtering-correlation-id: c63e16e8-eeb6-4a29-5a22-08db567e22e0
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ waLSHBo/lES7jG6wG1LW2+XHWMJJ/G6gPu3InDad+lxE6TkKdxwR3D7dsrY8WCylV9F0iqMvmaVdgHDityFP3P7+ztGrLMft8oRqJrLHdjv4RYxXUli8Z2GacmEgbDrKp+1cid6tdluuqXX/EB1xL0X0XkKn51pGsmDfUVBUftXvZ8L0PiqvYDB7kAYIbnpPx4V0AjlccRG+k1m1FmH5YSv3uvX+28cJiVfM80vy7sMLzzCAEtLmDSNAWioP7/S9sdmDXc4IIfOtJ0nEg/3dPVVD7Whrhnw//ZxMMK+86brRfIUzsCZb2ZVu2hoN5wgET+jHoWArBqgntl8HosCs+VFST+Zw4J59FkL4FX2Yx28j4NBa+xCJPNy+yQf9/t9SXh3TOW5TICHEpo7zwqAlyxN7PdJz+P6Dli4qe/2hC3NJsEM7SGzvJDPeHygoaVVwjNJwfCkpAJYUXGRGVrU/tNkNiOUByR6PF/MJVRrtl/7MhUWGb6AyUCiwuaGdlE//h/dWN9cDhTzYTa7iWjbwckC2CAYVJzh/Ps+9k2Mte+Xf7kEHrBF7EoCI3dq+gbhI37pEzN6poQvUr2kQqsiPNQyAXp1jQIsTQK9gPdO9ZkRdjZ7wentXcQ+KxWbty2sekt1G1ApCY3K16vjvX0cn9WshYTSrhUOhE1yUMWNzkAk=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(366004)(39860400002)(376002)(396003)(136003)(451199021)(83380400001)(6506007)(26005)(2906002)(33656002)(8990500004)(186003)(9686003)(38070700005)(52536014)(7416002)(86362001)(7696005)(5660300002)(55016003)(7406005)(71200400001)(8676002)(478600001)(64756008)(8936002)(10290500003)(54906003)(38100700002)(110136005)(41300700001)(66476007)(316002)(66446008)(122000001)(76116006)(4326008)(786003)(82960400001)(66946007)(82950400001)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?WdBIUJO4K6JFXQfd53wgHzYQWp2Ie+ouaIGbeG4jIET39gzz+QIUB13AAGed?=
+ =?us-ascii?Q?IeRD2NPpriFCuLUdTlPqJSXktq7FSZZQs3ErBZeZipBs2cUNQCdwh2G3Xpz7?=
+ =?us-ascii?Q?FM0BNIoyWKTSJyHyE5Uk5nEjOLFVFkkTPleynUjUo6oq0VkYFEhZXhEourP+?=
+ =?us-ascii?Q?1s5NhleSN2j+fN5CRhSjjQEDCI9P08vZIbgE/R5oB7pNOGO7OvXUKuq9oXL7?=
+ =?us-ascii?Q?Xv9hPOOF5kPtblZAWhtW7TkhLWr2w6R4sJc8OOeJb2n20/KKk7D5bfpJ4MUz?=
+ =?us-ascii?Q?shuGlxprq6aomK1mvNNj/FBpmET3qtE+bv87WDpZfw+/UAUKsAITSrqYrJYW?=
+ =?us-ascii?Q?hI5CUpT1NDaPSfSkK9VXLCklhag8Y/9nrDGuHydFWiDI3NVGvJVTmMhXJTSz?=
+ =?us-ascii?Q?5+iLBsos38ba3+l8gqlrkuijwfm50zUJr805w72i6iegmKee3jRz9yj8z3R6?=
+ =?us-ascii?Q?NSgaRn313LIAGlG1C8ORR3gOGb3vzSHsa+Nqk5KR6splu67pIs0SYnWx3i/l?=
+ =?us-ascii?Q?H9dA7Uzdy2oxzo5sHg3BHIYyDa4GWvKtEKqdTz+jZ+HcwTdvBwSnPTEUM+Ih?=
+ =?us-ascii?Q?GBz26fFo1A7MCYEpf4VHuBtXiPTNB29Jy1NtuJfptbolkdAO7Ws75jDBebtc?=
+ =?us-ascii?Q?+yzjMcZeHLKScZthMjqbsYSJY2lrV1M0xqtz1MAgVFB2AggdgpwntW9Vkpgg?=
+ =?us-ascii?Q?JJCjpqlsKq4dtV6O4PIBgLr/SdKAc/+gat8qQ5xJkf3e9Atf2eAyZsKqqs7m?=
+ =?us-ascii?Q?CMFbrMwIt5T/VMOScU2Q+/vseMA4rPNg+MRGdOFUCQ1EONIRFhIvbhawjR1a?=
+ =?us-ascii?Q?zjy6XPvKaM07B/fgkhnq6JQS8heMwT6uxor6vFUaDJmDJvI+PbFkz96cz7fq?=
+ =?us-ascii?Q?f0WHlxrZknHZcmWm+UA/yM4uTbt1hr2mUetpOY06ordtsIoT6XY3riWHG70r?=
+ =?us-ascii?Q?b1TXf7/hMFhPcC1/Q6wMZvRXmZEwkvqLhlplcJDxkkgrG23Kmq2A3W9OUqRK?=
+ =?us-ascii?Q?da1NPOI7JXwSdABJuKGdyD+EMF//+S9m3cTOBm/lZHwns3YAl9+36W7BMYoC?=
+ =?us-ascii?Q?ml8MHPzSPe+UXBkijErSycGQMBmmKeYnAzs11DU5vqj5c8dnIljLdScHef1J?=
+ =?us-ascii?Q?Jp257rJ2OdJOG6Uj/qcSw29+lzDTUtjMyAJkzMHe1yBEg/otRywl8zk+TAOB?=
+ =?us-ascii?Q?O5qs8UR/7kQe6V/eLIBqHMkH/ec8puT/NoTo6/1XW1QewmuVCuYoaljE4PTP?=
+ =?us-ascii?Q?oLxETYSF9CEXwN17/83XACkuuIKUPf25MFF4Zowcg6glcX9d1ZG4O/O+ekJK?=
+ =?us-ascii?Q?COXyi25z1a0YLZx76vgqF+WrkEQFW1fQZDWyOcBVY8stgCJvU8Elw0ved7MQ?=
+ =?us-ascii?Q?E81rci+C1CrG6oo4N6NzwJN53LV+7cD85JZoMTq8IGqvIVCCdVVOY5GaOh7l?=
+ =?us-ascii?Q?4VXsWVIezPqw128XOqaPsKdrGZMJW5c+u+uUf1CtpQcfY0SC5sOBPG4S76dz?=
+ =?us-ascii?Q?+kwHbf5JJ+1yDqUInRGRTQ48LP/T1sTLH1W79BHLZnsoWou99/MTq1kt5y2+?=
+ =?us-ascii?Q?tHksHD5aCKdSkbyYS7XfxgyCaxjqFrU6UJZ8no7llmxGjOw0XqOrhZeTCz9a?=
+ =?us-ascii?Q?GQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v7 1/7] fbdev/hitfb: Cast I/O offset to address
-Content-Language: en-US
-To: Thomas Zimmermann <tzimmermann@suse.de>, geert@linux-m68k.org,
- javierm@redhat.com, daniel@ffwll.ch, vgupta@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, davem@davemloft.net,
- James.Bottomley@HansenPartnership.com, arnd@arndb.de, sam@ravnborg.org,
- suijingfeng@loongson.cn
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-parisc@vger.kernel.org, kernel test robot <lkp@intel.com>,
- Artur Rojek <contact@artur-rojek.eu>
-References: <20230512102444.5438-1-tzimmermann@suse.de>
- <20230512102444.5438-2-tzimmermann@suse.de>
-From: Helge Deller <deller@gmx.de>
-In-Reply-To: <20230512102444.5438-2-tzimmermann@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rSOrO+0jt4O4RzM9l14Bz6wfGEKXucA0j3Waundj3xcBKFDFc52
- MmW0hsb8NLlq0rH9mMz/XUMz+PTuDsa6n+7OMeP7elMOy6xV14Nc64lHY1vMLN09t7CrUAU
- aro3xE6YuZBtr5yHHhTsC4g3TbNooxbmvDC+2u1zgRm2sKkzCxIS3lxPvtY+OC7z04Uhti5
- 72FlfAhLCIiPZ2ZVXmmOQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ecBgGlwkX5Y=;oQwXswBOboXoEMT5pniOW9e5zDy
- TDc0juyT2oeDOAYSymZ4Yve6mAwtAQYgC4JulDpsWI54/lpT/3D7R4HTWQBItkMqSmELB7Tfh
- k/xHSW5SHoW+vvUk5sL4+IR5vxCspl8eKgpH3nyPYnge684GFJK7ApwoTiF0bEeuMEPeE0f98
- 5nKB5Ki2nXvssTP6YWZstlRi9vmm7UDfKmr6dJC7XQRSdL459sxpPqb6y5Py+VeOtrwRswQ9b
- mgX6Q416C2OMUv1g2qvDpI/CUwPMRZVR7PdDu0s1ziJFjAoZ4bpAU0a2Amuhqx8ipGBYPgxy9
- 8K9IWqbt6vD0urHXico4zJpR6rXjjdvRQeMftW7c4y+Mn7o+Gzt+zxbKNHywWhVRr/GF+ybXC
- yB72kKK2MPCb8Ol4bxPSD2qxRs+u6yR+B5tS0PfJiS96Acllk7UA/0W8kS5K14nUpMPF1nBjW
- SgGVsJmvnSiuIjlbaZLisaUJpWXTZIYL9DjVqv50wqiLFUrTuaMcFH8IXzLv29VjHSZNEOpBo
- DUYeBfYKUtlMQjLEL/KhlDZ//O00ulUgDkRDV3l+HMC3KDxM4w1qVuyk9g6rR1gHVFvtRMw4B
- pKUdaCegbB6YWC3baOTepNotkyxry/FsXyBxefzaocIcXxJipYn7OyR61jwcy7DFoul70oAn1
- 0a2ZvSp2XLUaT8vIUNhNrNECPa3NCDdrWfNByBWiFrW8o/WVtK5oM6zVT1IzOnAYuzrkDTjAD
- uoZnelK3f6VSOHLd7t16PWGRCXk7M6eV8Pew6pM1LwlLxJGYb0XchPIobzDo+3uuXqgw8k1x/
- qfxDOSuCv3W9gkj/I6aq7QqrnHkYz1J9yv4wny00fCDTmiez/GMrUxjchUPzeZj1hpyqCP4Kg
- AodCMcCoACTsxxNkm24VDBz4N08R7D9G25UWZxxPaXTBo0szFnbZxYJX0JCcEfySdyg7jco/x
- Rp2dTA==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c63e16e8-eeb6-4a29-5a22-08db567e22e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2023 02:26:35.3749
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FPZ4GOpGAuIx5bJtFl3Vkxr0ZAvJKjBDnZZrBToKIBr8lPXi7HEHtm0565mKm9ITiPtESmoeBR8nkfYMI0m0GhP0cax1h0qvGzwYwhXj3I8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR21MB3815
 
-On 5/12/23 12:24, Thomas Zimmermann wrote:
-> Cast I/O offsets to pointers to use them with I/O functions. The I/O
-> functions expect pointers of type 'volatile void __iomem *', but the
-> offsets are plain integers. Build warnings are
->
->    ../drivers/video/fbdev/hitfb.c: In function 'hitfb_accel_wait':
->    ../arch/x86/include/asm/hd64461.h:18:33: warning: passing argument 1 =
-of 'fb_readw' makes pointer from integer without a cast [-Wint-conversion]
->     18 | #define HD64461_IO_OFFSET(x)    (HD64461_IOBASE + (x))
->        |                                 ^~~~~~~~~~~~~~~~~~~~~~
->        |                                 |
->        |                                 unsigned int
->    ../arch/x86/include/asm/hd64461.h:93:33: note: in expansion of macro =
-'HD64461_IO_OFFSET'
->     93 | #define HD64461_GRCFGR          HD64461_IO_OFFSET(0x1044)      =
- /* Accelerator Configuration Register */
->        |                                 ^~~~~~~~~~~~~~~~~
->    ../drivers/video/fbdev/hitfb.c:47:25: note: in expansion of macro 'HD=
-64461_GRCFGR'
->     47 |         while (fb_readw(HD64461_GRCFGR) & HD64461_GRCFGR_ACCSTA=
-TUS) ;
->        |                         ^~~~~~~~~~~~~~
->    In file included from ../arch/x86/include/asm/fb.h:15,
->    from ../include/linux/fb.h:19,
->    from ../drivers/video/fbdev/hitfb.c:22:
->    ../include/asm-generic/fb.h:52:57: note: expected 'const volatile voi=
-d *' but argument is of type 'unsigned int'
->     52 | static inline u16 fb_readw(const volatile void __iomem *addr)
->        |                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
->
-> This patch only fixes the build warnings. It's not clear if the I/O
-> offsets can legally be passed to the I/O helpers. It was apparently
-> broken in 2007 when custom inw()/outw() helpers got removed by
-> commit 34a780a0afeb ("sh: hp6xx pata_platform support."). Fixing the
-> driver would require setting the I/O base address.
+From: Peter Zijlstra <peterz@infradead.org> Sent: Monday, May 8, 2023 2:44 =
+PM
+>=20
+> On Mon, May 08, 2023 at 11:19:58PM +0200, Peter Zijlstra wrote:
+>=20
+> > --- a/drivers/clocksource/hyperv_timer.c
+> > +++ b/drivers/clocksource/hyperv_timer.c
+> > @@ -408,9 +408,9 @@ static u64 notrace read_hv_clock_tsc_cs(
+> >  	return read_hv_clock_tsc();
+> >  }
+> >
+> > -static u64 notrace read_hv_sched_clock_tsc(void)
+> > +static u64 noinstr read_hv_sched_clock_tsc(void)
+> >  {
+> > -	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
+> > +	return (hv_read_tsc_page(hv_get_tsc_page()) - hv_sched_clock_offset) =
+*
+> >  		(NSEC_PER_SEC / HV_CLOCK_HZ);
+> >  }
+> >
+> > --- a/include/clocksource/hyperv_timer.h
+> > +++ b/include/clocksource/hyperv_timer.h
+> > @@ -38,7 +38,7 @@ extern void hv_remap_tsc_clocksource(voi
+> >  extern unsigned long hv_get_tsc_pfn(void);
+> >  extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
+> >
+> > -static inline notrace u64
+> > +static __always_inline notrace u64
+> >  hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg, u64 *cur=
+_tsc)
+> >  {
+> >  	u64 scale, offset;
+> > @@ -85,7 +85,7 @@ hv_read_tsc_page_tsc(const struct ms_hyp
+> >  	return mul_u64_u64_shr(*cur_tsc, scale, 64) + offset;
+> >  }
+> >
+> > -static inline notrace u64
+> > +static __always_inline notrace u64
+> >  hv_read_tsc_page(const struct ms_hyperv_tsc_page *tsc_pg)
+> >  {
+> >  	u64 cur_tsc;
+>=20
+> Hyper-V folks!
+>=20
+> While reviewing all this I found the following 'gem':
+>=20
+> hv_init_clocksource()
+>   hv_setup_sched_clock()
+>     paravirt_set_sched_clock(read_hv_sched_clock_msr)
+>=20
+> read_hv_sched_clock_msr() [notrace]
+>   read_hv_clock_msr()     [notrace]
+>     hv_get_register()      *traced*
+>       hv_get_non_nested_register() ...
+>         hv_ghcb_msr_read()
+> 	  WARN_ON(in_nmi())
+> 	  ...
+> 	  local_irq_save()
+>=20
+>=20
+> Note that:
+>=20
+>  a) sched_clock() is used in NMI context a *LOT*
+>  b) sched_clock() is notrace (or even noinstr with these patches)
+>     and local_irq_save() implies tracing
+>=20
+>=20
+> Can you pretty please:
+>=20
+>  1) delete all this; or,
+>  2) fix it in a hurry?
+>=20
 
-I think your patch is the best you can do for now... So...
+Peter -- I've sent you an RFC patch to incorporate into your broader
+patch set.  I think it probably makes sense for all the Hyper-V
+stuff to be a separate patch.
 
-Acked-by: Helge Deller <deller@gmx.de>
+I haven't previously worked with the details of notrace vs. noinstr,
+but I followed the patterns elsewhere in patch set. Please review
+to see if it seems correct.
 
-Thanks!
-Helge
+One thing:  In the cases where I added __always_inline, I dropped
+any notrace or noinstr annotations.  I presume such code always
+takes on the attributes of the caller.  If that's not correct, let me know.
 
-
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202305102136.eMjTSPwH-lkp@=
-intel.com/
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Artur Rojek <contact@artur-rojek.eu>
-> ---
->   drivers/video/fbdev/hitfb.c | 122 ++++++++++++++++++++----------------
->   1 file changed, 69 insertions(+), 53 deletions(-)
->
-> diff --git a/drivers/video/fbdev/hitfb.c b/drivers/video/fbdev/hitfb.c
-> index 3033f5056976..7737923b7a0a 100644
-> --- a/drivers/video/fbdev/hitfb.c
-> +++ b/drivers/video/fbdev/hitfb.c
-> @@ -42,17 +42,33 @@ static struct fb_fix_screeninfo hitfb_fix =3D {
->   	.accel		=3D FB_ACCEL_NONE,
->   };
->
-> +static volatile void __iomem *hitfb_offset_to_addr(unsigned int offset)
-> +{
-> +	return (__force volatile void __iomem *)(uintptr_t)offset;
-> +}
-> +
-> +static u16 hitfb_readw(unsigned int offset)
-> +{
-> +	return fb_readw(hitfb_offset_to_addr(offset));
-> +}
-> +
-> +static void hitfb_writew(u16 value, unsigned int offset)
-> +{
-> +	fb_writew(value, hitfb_offset_to_addr(offset));
-> +}
-> +
->   static inline void hitfb_accel_wait(void)
->   {
-> -	while (fb_readw(HD64461_GRCFGR) & HD64461_GRCFGR_ACCSTATUS) ;
-> +	while (hitfb_readw(HD64461_GRCFGR) & HD64461_GRCFGR_ACCSTATUS)
-> +		;
->   }
->
->   static inline void hitfb_accel_start(int truecolor)
->   {
->   	if (truecolor) {
-> -		fb_writew(6, HD64461_GRCFGR);
-> +		hitfb_writew(6, HD64461_GRCFGR);
->   	} else {
-> -		fb_writew(7, HD64461_GRCFGR);
-> +		hitfb_writew(7, HD64461_GRCFGR);
->   	}
->   }
->
-> @@ -63,11 +79,11 @@ static inline void hitfb_accel_set_dest(int truecolo=
-r, u16 dx, u16 dy,
->   	if (truecolor)
->   		saddr <<=3D 1;
->
-> -	fb_writew(width-1, HD64461_BBTDWR);
-> -	fb_writew(height-1, HD64461_BBTDHR);
-> +	hitfb_writew(width-1, HD64461_BBTDWR);
-> +	hitfb_writew(height-1, HD64461_BBTDHR);
->
-> -	fb_writew(saddr & 0xffff, HD64461_BBTDSARL);
-> -	fb_writew(saddr >> 16, HD64461_BBTDSARH);
-> +	hitfb_writew(saddr & 0xffff, HD64461_BBTDSARL);
-> +	hitfb_writew(saddr >> 16, HD64461_BBTDSARH);
->
->   }
->
-> @@ -80,7 +96,7 @@ static inline void hitfb_accel_bitblt(int truecolor, u=
-16 sx, u16 sy, u16 dx,
->
->   	height--;
->   	width--;
-> -	fb_writew(rop, HD64461_BBTROPR);
-> +	hitfb_writew(rop, HD64461_BBTROPR);
->   	if ((sy < dy) || ((sy =3D=3D dy) && (sx <=3D dx))) {
->   		saddr =3D WIDTH * (sy + height) + sx + width;
->   		daddr =3D WIDTH * (dy + height) + dx + width;
-> @@ -91,32 +107,32 @@ static inline void hitfb_accel_bitblt(int truecolor=
-, u16 sx, u16 sy, u16 dx,
->   				maddr =3D
->   				    (((width >> 4) + 1) * (height + 1) - 1) * 2;
->
-> -			fb_writew((1 << 5) | 1, HD64461_BBTMDR);
-> +			hitfb_writew((1 << 5) | 1, HD64461_BBTMDR);
->   		} else
-> -			fb_writew(1, HD64461_BBTMDR);
-> +			hitfb_writew(1, HD64461_BBTMDR);
->   	} else {
->   		saddr =3D WIDTH * sy + sx;
->   		daddr =3D WIDTH * dy + dx;
->   		if (mask_addr) {
-> -			fb_writew((1 << 5), HD64461_BBTMDR);
-> +			hitfb_writew((1 << 5), HD64461_BBTMDR);
->   		} else {
-> -			fb_writew(0, HD64461_BBTMDR);
-> +			hitfb_writew(0, HD64461_BBTMDR);
->   		}
->   	}
->   	if (truecolor) {
->   		saddr <<=3D 1;
->   		daddr <<=3D 1;
->   	}
-> -	fb_writew(width, HD64461_BBTDWR);
-> -	fb_writew(height, HD64461_BBTDHR);
-> -	fb_writew(saddr & 0xffff, HD64461_BBTSSARL);
-> -	fb_writew(saddr >> 16, HD64461_BBTSSARH);
-> -	fb_writew(daddr & 0xffff, HD64461_BBTDSARL);
-> -	fb_writew(daddr >> 16, HD64461_BBTDSARH);
-> +	hitfb_writew(width, HD64461_BBTDWR);
-> +	hitfb_writew(height, HD64461_BBTDHR);
-> +	hitfb_writew(saddr & 0xffff, HD64461_BBTSSARL);
-> +	hitfb_writew(saddr >> 16, HD64461_BBTSSARH);
-> +	hitfb_writew(daddr & 0xffff, HD64461_BBTDSARL);
-> +	hitfb_writew(daddr >> 16, HD64461_BBTDSARH);
->   	if (mask_addr) {
->   		maddr +=3D mask_addr;
-> -		fb_writew(maddr & 0xffff, HD64461_BBTMARL);
-> -		fb_writew(maddr >> 16, HD64461_BBTMARH);
-> +		hitfb_writew(maddr & 0xffff, HD64461_BBTMARL);
-> +		hitfb_writew(maddr >> 16, HD64461_BBTMARH);
->   	}
->   	hitfb_accel_start(truecolor);
->   }
-> @@ -127,17 +143,17 @@ static void hitfb_fillrect(struct fb_info *p, cons=
-t struct fb_fillrect *rect)
->   		cfb_fillrect(p, rect);
->   	else {
->   		hitfb_accel_wait();
-> -		fb_writew(0x00f0, HD64461_BBTROPR);
-> -		fb_writew(16, HD64461_BBTMDR);
-> +		hitfb_writew(0x00f0, HD64461_BBTROPR);
-> +		hitfb_writew(16, HD64461_BBTMDR);
->
->   		if (p->var.bits_per_pixel =3D=3D 16) {
-> -			fb_writew(((u32 *) (p->pseudo_palette))[rect->color],
-> +			hitfb_writew(((u32 *) (p->pseudo_palette))[rect->color],
->   				  HD64461_GRSCR);
->   			hitfb_accel_set_dest(1, rect->dx, rect->dy, rect->width,
->   					     rect->height);
->   			hitfb_accel_start(1);
->   		} else {
-> -			fb_writew(rect->color, HD64461_GRSCR);
-> +			hitfb_writew(rect->color, HD64461_GRSCR);
->   			hitfb_accel_set_dest(0, rect->dx, rect->dy, rect->width,
->   					     rect->height);
->   			hitfb_accel_start(0);
-> @@ -162,7 +178,7 @@ static int hitfb_pan_display(struct fb_var_screeninf=
-o *var,
->   	if (xoffset !=3D 0)
->   		return -EINVAL;
->
-> -	fb_writew((yoffset*info->fix.line_length)>>10, HD64461_LCDCBAR);
-> +	hitfb_writew((yoffset*info->fix.line_length)>>10, HD64461_LCDCBAR);
->
->   	return 0;
->   }
-> @@ -172,33 +188,33 @@ int hitfb_blank(int blank_mode, struct fb_info *in=
-fo)
->   	unsigned short v;
->
->   	if (blank_mode) {
-> -		v =3D fb_readw(HD64461_LDR1);
-> +		v =3D hitfb_readw(HD64461_LDR1);
->   		v &=3D ~HD64461_LDR1_DON;
-> -		fb_writew(v, HD64461_LDR1);
-> +		hitfb_writew(v, HD64461_LDR1);
->
-> -		v =3D fb_readw(HD64461_LCDCCR);
-> +		v =3D hitfb_readw(HD64461_LCDCCR);
->   		v |=3D HD64461_LCDCCR_MOFF;
-> -		fb_writew(v, HD64461_LCDCCR);
-> +		hitfb_writew(v, HD64461_LCDCCR);
->
-> -		v =3D fb_readw(HD64461_STBCR);
-> +		v =3D hitfb_readw(HD64461_STBCR);
->   		v |=3D HD64461_STBCR_SLCDST;
-> -		fb_writew(v, HD64461_STBCR);
-> +		hitfb_writew(v, HD64461_STBCR);
->   	} else {
-> -		v =3D fb_readw(HD64461_STBCR);
-> +		v =3D hitfb_readw(HD64461_STBCR);
->   		v &=3D ~HD64461_STBCR_SLCDST;
-> -		fb_writew(v, HD64461_STBCR);
-> +		hitfb_writew(v, HD64461_STBCR);
->
-> -		v =3D fb_readw(HD64461_LCDCCR);
-> +		v =3D hitfb_readw(HD64461_LCDCCR);
->   		v &=3D ~(HD64461_LCDCCR_MOFF | HD64461_LCDCCR_STREQ);
-> -		fb_writew(v, HD64461_LCDCCR);
-> +		hitfb_writew(v, HD64461_LCDCCR);
->
->   		do {
-> -		    v =3D fb_readw(HD64461_LCDCCR);
-> +		    v =3D hitfb_readw(HD64461_LCDCCR);
->   		} while(v&HD64461_LCDCCR_STBACK);
->
-> -		v =3D fb_readw(HD64461_LDR1);
-> +		v =3D hitfb_readw(HD64461_LDR1);
->   		v |=3D HD64461_LDR1_DON;
-> -		fb_writew(v, HD64461_LDR1);
-> +		hitfb_writew(v, HD64461_LDR1);
->   	}
->   	return 0;
->   }
-> @@ -211,10 +227,10 @@ static int hitfb_setcolreg(unsigned regno, unsigne=
-d red, unsigned green,
->
->   	switch (info->var.bits_per_pixel) {
->   	case 8:
-> -		fb_writew(regno << 8, HD64461_CPTWAR);
-> -		fb_writew(red >> 10, HD64461_CPTWDR);
-> -		fb_writew(green >> 10, HD64461_CPTWDR);
-> -		fb_writew(blue >> 10, HD64461_CPTWDR);
-> +		hitfb_writew(regno << 8, HD64461_CPTWAR);
-> +		hitfb_writew(red >> 10, HD64461_CPTWDR);
-> +		hitfb_writew(green >> 10, HD64461_CPTWDR);
-> +		hitfb_writew(blue >> 10, HD64461_CPTWDR);
->   		break;
->   	case 16:
->   		if (regno >=3D 16)
-> @@ -302,11 +318,11 @@ static int hitfb_set_par(struct fb_info *info)
->   		break;
->   	}
->
-> -	fb_writew(info->fix.line_length, HD64461_LCDCLOR);
-> -	ldr3 =3D fb_readw(HD64461_LDR3);
-> +	hitfb_writew(info->fix.line_length, HD64461_LCDCLOR);
-> +	ldr3 =3D hitfb_readw(HD64461_LDR3);
->   	ldr3 &=3D ~15;
->   	ldr3 |=3D (info->var.bits_per_pixel =3D=3D 8) ? 4 : 8;
-> -	fb_writew(ldr3, HD64461_LDR3);
-> +	hitfb_writew(ldr3, HD64461_LDR3);
->   	return 0;
->   }
->
-> @@ -337,9 +353,9 @@ static int hitfb_probe(struct platform_device *dev)
->   	hitfb_fix.smem_start =3D HD64461_IO_OFFSET(0x02000000);
->   	hitfb_fix.smem_len =3D 512 * 1024;
->
-> -	lcdclor =3D fb_readw(HD64461_LCDCLOR);
-> -	ldvndr =3D fb_readw(HD64461_LDVNDR);
-> -	ldr3 =3D fb_readw(HD64461_LDR3);
-> +	lcdclor =3D hitfb_readw(HD64461_LCDCLOR);
-> +	ldvndr =3D hitfb_readw(HD64461_LDVNDR);
-> +	ldr3 =3D hitfb_readw(HD64461_LDR3);
->
->   	switch (ldr3 & 15) {
->   	default:
-> @@ -429,9 +445,9 @@ static int hitfb_suspend(struct device *dev)
->   	u16 v;
->
->   	hitfb_blank(1,0);
-> -	v =3D fb_readw(HD64461_STBCR);
-> +	v =3D hitfb_readw(HD64461_STBCR);
->   	v |=3D HD64461_STBCR_SLCKE_IST;
-> -	fb_writew(v, HD64461_STBCR);
-> +	hitfb_writew(v, HD64461_STBCR);
->
->   	return 0;
->   }
-> @@ -440,12 +456,12 @@ static int hitfb_resume(struct device *dev)
->   {
->   	u16 v;
->
-> -	v =3D fb_readw(HD64461_STBCR);
-> +	v =3D hitfb_readw(HD64461_STBCR);
->   	v &=3D ~HD64461_STBCR_SLCKE_OST;
->   	msleep(100);
-> -	v =3D fb_readw(HD64461_STBCR);
-> +	v =3D hitfb_readw(HD64461_STBCR);
->   	v &=3D ~HD64461_STBCR_SLCKE_IST;
-> -	fb_writew(v, HD64461_STBCR);
-> +	hitfb_writew(v, HD64461_STBCR);
->   	hitfb_blank(0,0);
->
->   	return 0;
-
+Michael
