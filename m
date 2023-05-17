@@ -1,125 +1,142 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71145CA1
-	for <loongarch@lists.linux.dev>; Wed, 17 May 2023 15:00:28 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-965b8a969b3so23178966b.1
-        for <loongarch@lists.linux.dev>; Wed, 17 May 2023 08:00:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C22333D5
+	for <loongarch@lists.linux.dev>; Wed, 17 May 2023 15:10:02 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-965ab8ed1c0so136241466b.2
+        for <loongarch@lists.linux.dev>; Wed, 17 May 2023 08:10:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684335627; x=1686927627;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u1G2m3/V/8HwP4S0PilYqw+ntJ6wrr0IYdjxDwg97nI=;
-        b=KGGwf+TgQE3MnRRbh8F9ZWrd7mAnUM8CGnhjLSRzEP7eBdZtDzGG8r9cH15QPidrTY
-         yNGdaoRLij2m2vk4yF9wQ3wdwVDhXg4ZKccA5K6j9U3lRc/r/vfo+iflvGfjQCIfce0s
-         SpLcDsgxsiGJL1KfSZWdYCfPprlt0QjnmOVxFI6UAmoWosvoa6scXeFec1MUvbqFhhA2
-         QtoY0wUfTxjbVwxaZQ5TtE79S8Rbp+jvbwanrUIFKLrlpkjUwk3WshLMR+18gmvifTFs
-         kNhjU1v1QwAba8Umv1KoaJRvXo2IZUYVBC11kMyEb/TjWc+uzI6MYel0w8b3ANUkt4pR
-         foYA==
+        d=gmail.com; s=20221208; t=1684336200; x=1686928200;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RbHR3p/aSwGiwoZdp2CXqzfCqmJLbldvSD60wsj1Fzs=;
+        b=jHNY7YUQq7T5u7nBwuVtfqJOHyeYlzKXv+ooTfcFyKORavnxs8v9xgsa5X09yq5+oF
+         0yJlPl+gNCXgkVEEA1lmjzsnM+FeXzZ8RMTq9UXaZF514rYjhkALhBPZh//eg3CdVYoD
+         sDDShdi+8y6B/+2XvFQHvkJP4AyFxtpr1Wpp+YEymFNole9yPq8mWDQoEo2dZJ0+8PEY
+         p4ayoD9o/wofATVFsQeMUNH2yNnSPfZqRQTwK7fmnyLjmL1O8g3m1SymuPfIlS1ae7d6
+         KlIampzTO1eXgcl9QqAkTW4Q3njVKtnTadDUUhwiTF7CPE5yx1JgyREVP2ueLR2R+NCL
+         zAJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684335627; x=1686927627;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u1G2m3/V/8HwP4S0PilYqw+ntJ6wrr0IYdjxDwg97nI=;
-        b=WdroBuMBuGrpAaMQzihK51d+8BS2WHQh0f29auhW4IZDzKLHp5XVDrKEmAuCyuP8Me
-         Uzwk3ZhihWMeiilyO1gAV3e7Tta+kRHH5/8aOsaqMAAYsdIaPla/Lqvaw+lsmc6uiicn
-         NMWFEXO4ED9iUaFFVEbujVbGkBtCmHS4VlvNVE/j3CKao5MCV3UpAuyy1jMs2zDh3MNp
-         2XOem3uPffVLTBu8LfwInbuLjcaNqpevDBK98j1+5rogzmUQGeK9KcFEsQiNHvVMBua2
-         r0HtEUgc8ucK3waKrk0JBdP+hOS3A/yzIRCQZ7KaSRUvmfaWzCips3uYNG5gdDOOxCdp
-         lEBg==
-X-Gm-Message-State: AC+VfDzGquPls2B/W0U3Si5kbSxjm9tDtUD9rYeFu8fawWwRky3S4Ee2
-	FIf0dcA8Q3dEDfP17gsgAnmlBw==
-X-Google-Smtp-Source: ACHHUZ6wgsqOiRJf4xmcSwbV6QggqmsGx/cjJKJNST88Bdd9lOPCs5cSMTYn0pICtw84HRJnXKbqFA==
-X-Received: by 2002:a17:907:d21:b0:94a:57d1:5539 with SMTP id gn33-20020a1709070d2100b0094a57d15539mr2566510ejc.5.1684335626891;
-        Wed, 17 May 2023 08:00:26 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:c9ff:4c84:dd21:568d? ([2a02:810d:15c0:828:c9ff:4c84:dd21:568d])
-        by smtp.gmail.com with ESMTPSA id bm11-20020a170906c04b00b00965ec1faf27sm12391114ejb.74.2023.05.17.08.00.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 08:00:26 -0700 (PDT)
-Message-ID: <d3791702-4d41-0208-1346-34738a2883b6@linaro.org>
-Date: Wed, 17 May 2023 17:00:24 +0200
+        d=1e100.net; s=20221208; t=1684336200; x=1686928200;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RbHR3p/aSwGiwoZdp2CXqzfCqmJLbldvSD60wsj1Fzs=;
+        b=gGhlQ1qI3tEwyPYK0r4geD/Xs7rtd7fKaf1ZtAeYFTL2sFzqbkxrEqblwCOlj8TLOg
+         AB6Fq95ifpkI3IZK84lkIG6Kic928DF2jTlmrM9P1mJSIgaeaxM0LcuH5/yu5mNLcj9H
+         vvYUudOMBHVeotwfu+vvfw6zhXQ850Q0QjyJBiMtqZkttSZ1snEB/b+m7ok70TFYohvI
+         +IXKX+urGC2WyLRvec/KwiNV96TsPB1SJbrR+0Ibt6WkjFzjlBOty/1+zIq30OfQIXz3
+         mLiMKpcdLyuVBn1Ht1SJ2xhYEFrBLKOEsRNo0sXLcTvXbKAGpWly/XPkREMU2QKIIKnw
+         tapw==
+X-Gm-Message-State: AC+VfDy11FeEbh0upNlYX44lDWzoC80BGWW2HfKaoAnypSI1s02cDIpM
+	v6b+OtI0UsAIIP0JmyvrQdqIXkbyr1H/iA==
+X-Google-Smtp-Source: ACHHUZ4sorPC+/RpGxDAM+RiswTD01mb/F0FjwwmcxR8Y5NPGoupZIgsSlQwp8ACSQZXGcUniFMyXg==
+X-Received: by 2002:a17:907:948e:b0:96a:ec5c:685b with SMTP id dm14-20020a170907948e00b0096aec5c685bmr12951001ejc.29.1684336199815;
+        Wed, 17 May 2023 08:09:59 -0700 (PDT)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id e26-20020a170906845a00b00965cd15c9bbsm12413901ejy.62.2023.05.17.08.09.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 08:09:59 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	x86@kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Charlemagne Lasse <charlemagnelasse@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jun Yi <yijun@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] locking/arch: Avoid variable shadowing in local_try_cmpxchg()
+Date: Wed, 17 May 2023 17:09:40 +0200
+Message-Id: <20230517150940.172430-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v1 2/3] dt-bindings: soc: add loongson-2 pm
-Content-Language: en-US
-To: Yinbo Zhu <zhuyinbo@loongson.cn>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Pavel Machek <pavel@ucw.cz>, Tiezhu Yang <yangtiezhu@loongson.cn>,
- Marc Zyngier <maz@kernel.org>, Youling Tang <tangyouling@loongson.cn>,
- Baoqi Zhang <zhangbaoqi@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Yun Liu <liuyun@loongson.cn>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
- Liu Peibao <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn
-References: <20230517073149.31980-1-zhuyinbo@loongson.cn>
- <20230517073149.31980-3-zhuyinbo@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230517073149.31980-3-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 17/05/2023 09:31, Yinbo Zhu wrote:
-> Add the Loongson-2 SoC Power Management Controller binding with DT
-> schema format using json-schema.
-> 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Several architectures define arch_try_local_cmpxchg macro using
+internal temporary variables named __old or _old. Uglify equally
+named variable in local_try_cmpxchg() with additional underscore
+to avoid variable shadowing warning.
 
-...
+Fixes: d994f2c8e241 ("locking/arch: Wire up local_try_cmpxchg()")
+Reported-by: Charlemagne Lasse <charlemagnelasse@gmail.com>
+Closes: https://lore.kernel.org/lkml/CAFGhKbyxtuk=LoW-E3yLXgcmR93m+Dfo5-u9oQA_YC5Fcy_t9g@mail.gmail.com/
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Jun Yi <yijun@loongson.cn>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+---
+ arch/loongarch/include/asm/local.h | 4 ++--
+ arch/mips/include/asm/local.h      | 4 ++--
+ arch/x86/include/asm/local.h       | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - loongson,ls2k-pmc
-> +      - const: syscon
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  suspend-address:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      This option indicate this PM suspend address.
-
-This tells me nothing. Drop "This option indicate this" and rephrase
-everything to actually describe this property. Why would the address
-differ on given, specific SoC? It looks like you just miss compatibles.
-Anyway this needs much more explanation so we can judge whether it fits DT.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    pmc: pm@1fe27000 {
-> +        compatible = "loongson,ls2k-pmc", "syscon";
-> +        reg = <0x1fe27000 0x58>;
-> +        interrupt-parent = <&liointc1>;
-> +        interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-> +        suspend-address = <0x1c000500>;
-
-
-Best regards,
-Krzysztof
+diff --git a/arch/loongarch/include/asm/local.h b/arch/loongarch/include/asm/local.h
+index 83e995b30e47..4c6e4ed23433 100644
+--- a/arch/loongarch/include/asm/local.h
++++ b/arch/loongarch/include/asm/local.h
+@@ -63,8 +63,8 @@ static inline long local_cmpxchg(local_t *l, long old, long new)
+ 
+ static inline bool local_try_cmpxchg(local_t *l, long *old, long new)
+ {
+-	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
+-	return try_cmpxchg_local(&l->a.counter, __old, new);
++	typeof(l->a.counter) *___old = (typeof(l->a.counter) *) old;
++	return try_cmpxchg_local(&l->a.counter, ___old, new);
+ }
+ 
+ #define local_xchg(l, n) (atomic_long_xchg((&(l)->a), (n)))
+diff --git a/arch/mips/include/asm/local.h b/arch/mips/include/asm/local.h
+index 5daf6fe8e3e9..de276e2ebb64 100644
+--- a/arch/mips/include/asm/local.h
++++ b/arch/mips/include/asm/local.h
+@@ -101,8 +101,8 @@ static __inline__ long local_cmpxchg(local_t *l, long old, long new)
+ 
+ static __inline__ bool local_try_cmpxchg(local_t *l, long *old, long new)
+ {
+-	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
+-	return try_cmpxchg_local(&l->a.counter, __old, new);
++	typeof(l->a.counter) *___old = (typeof(l->a.counter) *) old;
++	return try_cmpxchg_local(&l->a.counter, ___old, new);
+ }
+ 
+ #define local_xchg(l, n) (atomic_long_xchg((&(l)->a), (n)))
+diff --git a/arch/x86/include/asm/local.h b/arch/x86/include/asm/local.h
+index 56d4ef604b91..36cf5ca83ccb 100644
+--- a/arch/x86/include/asm/local.h
++++ b/arch/x86/include/asm/local.h
+@@ -127,8 +127,8 @@ static inline long local_cmpxchg(local_t *l, long old, long new)
+ 
+ static inline bool local_try_cmpxchg(local_t *l, long *old, long new)
+ {
+-	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
+-	return try_cmpxchg_local(&l->a.counter, __old, new);
++	typeof(l->a.counter) *___old = (typeof(l->a.counter) *) old;
++	return try_cmpxchg_local(&l->a.counter, ___old, new);
+ }
+ 
+ /* Always has a lock prefix */
+-- 
+2.40.1
 
