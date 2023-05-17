@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA7D1749D
-	for <loongarch@lists.linux.dev>; Wed, 17 May 2023 07:31:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C01438830
+	for <loongarch@lists.linux.dev>; Wed, 17 May 2023 07:31:57 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.35])
-	by gateway (Coremail) with SMTP id _____8AxdfDugmRkPWoJAA--.16356S3;
-	Wed, 17 May 2023 15:31:58 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxqOnrgmRkLGoJAA--.16504S3;
+	Wed, 17 May 2023 15:31:55 +0800 (CST)
 Received: from user-pc.202.106.0.20 (unknown [10.20.42.35])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axmr3lgmRk_1plAA--.41619S4;
-	Wed, 17 May 2023 15:31:56 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axmr3lgmRk_1plAA--.41619S2;
+	Wed, 17 May 2023 15:31:55 +0800 (CST)
 From: Yinbo Zhu <zhuyinbo@loongson.cn>
 To: Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -30,12 +30,10 @@ Cc: Jianmin Lv <lvjianmin@loongson.cn>,
 	Liu Peibao <liupeibao@loongson.cn>,
 	loongson-kernel@lists.loongnix.cn,
 	Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v1 2/3] dt-bindings: soc: add loongson-2 pm
-Date: Wed, 17 May 2023 15:31:48 +0800
-Message-Id: <20230517073149.31980-3-zhuyinbo@loongson.cn>
+Subject: [PATCH v1 0/3] soc: loongson2_pm: add power management support
+Date: Wed, 17 May 2023 15:31:46 +0800
+Message-Id: <20230517073149.31980-1-zhuyinbo@loongson.cn>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230517073149.31980-1-zhuyinbo@loongson.cn>
-References: <20230517073149.31980-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,106 +41,44 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axmr3lgmRk_1plAA--.41619S4
+X-CM-TRANSID:AQAAf8Axmr3lgmRk_1plAA--.41619S2
 X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7ArW7tFy3KryxJrykJFyrZwb_yoW8KFy3p3
-	ZxCas3KF40qF17Zws5KFy8C3W5ZF95C3ZrXFsrJw17Kr9rJ3WYvw43K3WDZF43Cry8JFW7
-	uF92krWjgFyUJw7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
-	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
-	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-	CTnIWIevJa73UjIFyTuYvjxU44SoDUUUU
+X-Coremail-Antispam: 1Uk129KBjvdXoW7GFWrJr18Xr4kXw1xtry8AFb_yoW3XwbE9a
+	s7Xay8ur47GFZrJa4DXw15Xry5WFWxJ3Z093Wqqr1I93WYyr15Jr4UZ343CF12qFWUuFs8
+	XrW8KryFyryFyjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	c7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2
+	IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84AC
+	jcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x
+	8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7TKuUUUUU
 
-Add the Loongson-2 SoC Power Management Controller binding with DT
-schema format using json-schema.
+Loongson-2 platform support Power Management Controller (ACPI) and this
+series patch was to add PM driver that base on dts and PM binding support.
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
- .../soc/loongson/loongson,ls2k-pmc.yaml       | 47 +++++++++++++++++++
- MAINTAINERS                                   |  6 +++
- 2 files changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
+Yinbo Zhu (3):
+  loongarch: export loongarch pm interface
+  dt-bindings: soc: add loongson-2 pm
+  soc: loongson2_pm: add power management support
 
-diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
-new file mode 100644
-index 000000000000..a52bfa5e3eb6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-pmc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson-2 Power Manager controller
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - loongson,ls2k-pmc
-+      - const: syscon
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  suspend-address:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      This option indicate this PM suspend address.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    pmc: pm@1fe27000 {
-+        compatible = "loongson,ls2k-pmc", "syscon";
-+        reg = <0x1fe27000 0x58>;
-+        interrupt-parent = <&liointc1>;
-+        interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+        suspend-address = <0x1c000500>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7a91f14cad2e..bcd05f1fa5c1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12190,6 +12190,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
- F:	drivers/soc/loongson/loongson2_guts.c
- 
-+LOONGSON-2 SOC SERIES PM DRIVER
-+M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-+L:	linux-pm@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
-+
- LOONGSON-2 SOC SERIES PINCTRL DRIVER
- M:	zhanghongchen <zhanghongchen@loongson.cn>
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ .../soc/loongson/loongson,ls2k-pmc.yaml       |  47 ++++
+ MAINTAINERS                                   |   7 +
+ arch/loongarch/include/asm/acpi.h             |   5 +-
+ arch/loongarch/include/asm/suspend.h          |  10 +
+ arch/loongarch/power/suspend.c                |  10 +-
+ arch/loongarch/power/suspend_asm.S            |   8 +-
+ drivers/soc/loongson/Kconfig                  |  10 +
+ drivers/soc/loongson/Makefile                 |   1 +
+ drivers/soc/loongson/loongson2_pm.c           | 237 ++++++++++++++++++
+ 9 files changed, 323 insertions(+), 12 deletions(-)
+
 -- 
 2.20.1
 
