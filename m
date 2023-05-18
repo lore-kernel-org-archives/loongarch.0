@@ -1,142 +1,136 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C22333D5
-	for <loongarch@lists.linux.dev>; Wed, 17 May 2023 15:10:02 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-965ab8ed1c0so136241466b.2
-        for <loongarch@lists.linux.dev>; Wed, 17 May 2023 08:10:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684336200; x=1686928200;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RbHR3p/aSwGiwoZdp2CXqzfCqmJLbldvSD60wsj1Fzs=;
-        b=jHNY7YUQq7T5u7nBwuVtfqJOHyeYlzKXv+ooTfcFyKORavnxs8v9xgsa5X09yq5+oF
-         0yJlPl+gNCXgkVEEA1lmjzsnM+FeXzZ8RMTq9UXaZF514rYjhkALhBPZh//eg3CdVYoD
-         sDDShdi+8y6B/+2XvFQHvkJP4AyFxtpr1Wpp+YEymFNole9yPq8mWDQoEo2dZJ0+8PEY
-         p4ayoD9o/wofATVFsQeMUNH2yNnSPfZqRQTwK7fmnyLjmL1O8g3m1SymuPfIlS1ae7d6
-         KlIampzTO1eXgcl9QqAkTW4Q3njVKtnTadDUUhwiTF7CPE5yx1JgyREVP2ueLR2R+NCL
-         zAJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684336200; x=1686928200;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RbHR3p/aSwGiwoZdp2CXqzfCqmJLbldvSD60wsj1Fzs=;
-        b=gGhlQ1qI3tEwyPYK0r4geD/Xs7rtd7fKaf1ZtAeYFTL2sFzqbkxrEqblwCOlj8TLOg
-         AB6Fq95ifpkI3IZK84lkIG6Kic928DF2jTlmrM9P1mJSIgaeaxM0LcuH5/yu5mNLcj9H
-         vvYUudOMBHVeotwfu+vvfw6zhXQ850Q0QjyJBiMtqZkttSZ1snEB/b+m7ok70TFYohvI
-         +IXKX+urGC2WyLRvec/KwiNV96TsPB1SJbrR+0Ibt6WkjFzjlBOty/1+zIq30OfQIXz3
-         mLiMKpcdLyuVBn1Ht1SJ2xhYEFrBLKOEsRNo0sXLcTvXbKAGpWly/XPkREMU2QKIIKnw
-         tapw==
-X-Gm-Message-State: AC+VfDy11FeEbh0upNlYX44lDWzoC80BGWW2HfKaoAnypSI1s02cDIpM
-	v6b+OtI0UsAIIP0JmyvrQdqIXkbyr1H/iA==
-X-Google-Smtp-Source: ACHHUZ4sorPC+/RpGxDAM+RiswTD01mb/F0FjwwmcxR8Y5NPGoupZIgsSlQwp8ACSQZXGcUniFMyXg==
-X-Received: by 2002:a17:907:948e:b0:96a:ec5c:685b with SMTP id dm14-20020a170907948e00b0096aec5c685bmr12951001ejc.29.1684336199815;
-        Wed, 17 May 2023 08:09:59 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id e26-20020a170906845a00b00965cd15c9bbsm12413901ejy.62.2023.05.17.08.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 08:09:59 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	x86@kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Charlemagne Lasse <charlemagnelasse@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jun Yi <yijun@loongson.cn>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] locking/arch: Avoid variable shadowing in local_try_cmpxchg()
-Date: Wed, 17 May 2023 17:09:40 +0200
-Message-Id: <20230517150940.172430-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.40.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FEA7E
+	for <loongarch@lists.linux.dev>; Thu, 18 May 2023 02:11:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 875F9C433EF
+	for <loongarch@lists.linux.dev>; Thu, 18 May 2023 02:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684375863;
+	bh=E52TVkteomz/h6pUEBvlWgEUbOD2I9Bt/bs3FHGid+s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VdbOK9dZbsGcZ8+H5Jkf6/zdKQOX8dhO8VnlbEquipFI08HW9uiK4J8N2s/LEqMAd
+	 wu1FHBx+SAkq/09gTMKFhWGecYgNVIlxN9F35PxqL7k6vCNMLsvgFDj7+b5Jwe3BsH
+	 BkOrQSsMvmHjN2pdArq3pAZePD9kmdgLAOKIZIQhiU4muhwVebz2mX5MIrkXj4o42M
+	 sPc0xjBD/Gb8V450hiapssA1IH4rJ1KhlTI7eJQwxnh7EFgUu5Ulo2eRpsnArT21XR
+	 /yCIQAxNYTgXgRR4xLwr80H6l+IodIYC8624PHmFrLqJT2cKvfUueX2LZUQyXJo2/3
+	 5E5vlHrG/Dlcg==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-965e4be7541so271561066b.1
+        for <loongarch@lists.linux.dev>; Wed, 17 May 2023 19:11:03 -0700 (PDT)
+X-Gm-Message-State: AC+VfDyL2CYRuqZvaqK76bj7cD1EWllDS0F3MGyO0E9YSM6W5qh7x0Hb
+	/xqQRzv7rnC1DzTU1QLpAaUAwQnA5MfPuHIVZqA=
+X-Google-Smtp-Source: ACHHUZ4zGhL9FkpGlEvE/gBigliwX11Sx4WQab0+w6J0eH0UHxPZsndFA14XQdGdGpi5cbxysP3tT65Cfsr1rd0CS7Q=
+X-Received: by 2002:a17:907:6d15:b0:96a:bfc:7335 with SMTP id
+ sa21-20020a1709076d1500b0096a0bfc7335mr27608366ejc.53.1684375861787; Wed, 17
+ May 2023 19:11:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1683614971-10744-1-git-send-email-yangtiezhu@loongson.cn>
+ <68984bbb-4ccc-51f8-7d4b-b1ae08a43c52@loongson.cn> <d1256c93-1c70-c3ff-de71-42405d336cac@loongson.cn>
+In-Reply-To: <d1256c93-1c70-c3ff-de71-42405d336cac@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 18 May 2023 10:10:50 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5epE4yqT3RveoZSUxUy2AQMYn7xr554rXJNqrGWf3vuA@mail.gmail.com>
+Message-ID: <CAAhV-H5epE4yqT3RveoZSUxUy2AQMYn7xr554rXJNqrGWf3vuA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Select HAVE_DEBUG_KMEMLEAK to support kmemleak
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Youling Tang <tangyouling@loongson.cn>, Catalin Marinas <catalin.marinas@arm.com>, 
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn, Jonathan Corbet <corbet@lwn.net>, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Several architectures define arch_try_local_cmpxchg macro using
-internal temporary variables named __old or _old. Uglify equally
-named variable in local_try_cmpxchg() with additional underscore
-to avoid variable shadowing warning.
+Queued, thanks.
 
-Fixes: d994f2c8e241 ("locking/arch: Wire up local_try_cmpxchg()")
-Reported-by: Charlemagne Lasse <charlemagnelasse@gmail.com>
-Closes: https://lore.kernel.org/lkml/CAFGhKbyxtuk=LoW-E3yLXgcmR93m+Dfo5-u9oQA_YC5Fcy_t9g@mail.gmail.com/
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Jun Yi <yijun@loongson.cn>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
----
- arch/loongarch/include/asm/local.h | 4 ++--
- arch/mips/include/asm/local.h      | 4 ++--
- arch/x86/include/asm/local.h       | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+Huacai
 
-diff --git a/arch/loongarch/include/asm/local.h b/arch/loongarch/include/asm/local.h
-index 83e995b30e47..4c6e4ed23433 100644
---- a/arch/loongarch/include/asm/local.h
-+++ b/arch/loongarch/include/asm/local.h
-@@ -63,8 +63,8 @@ static inline long local_cmpxchg(local_t *l, long old, long new)
- 
- static inline bool local_try_cmpxchg(local_t *l, long *old, long new)
- {
--	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
--	return try_cmpxchg_local(&l->a.counter, __old, new);
-+	typeof(l->a.counter) *___old = (typeof(l->a.counter) *) old;
-+	return try_cmpxchg_local(&l->a.counter, ___old, new);
- }
- 
- #define local_xchg(l, n) (atomic_long_xchg((&(l)->a), (n)))
-diff --git a/arch/mips/include/asm/local.h b/arch/mips/include/asm/local.h
-index 5daf6fe8e3e9..de276e2ebb64 100644
---- a/arch/mips/include/asm/local.h
-+++ b/arch/mips/include/asm/local.h
-@@ -101,8 +101,8 @@ static __inline__ long local_cmpxchg(local_t *l, long old, long new)
- 
- static __inline__ bool local_try_cmpxchg(local_t *l, long *old, long new)
- {
--	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
--	return try_cmpxchg_local(&l->a.counter, __old, new);
-+	typeof(l->a.counter) *___old = (typeof(l->a.counter) *) old;
-+	return try_cmpxchg_local(&l->a.counter, ___old, new);
- }
- 
- #define local_xchg(l, n) (atomic_long_xchg((&(l)->a), (n)))
-diff --git a/arch/x86/include/asm/local.h b/arch/x86/include/asm/local.h
-index 56d4ef604b91..36cf5ca83ccb 100644
---- a/arch/x86/include/asm/local.h
-+++ b/arch/x86/include/asm/local.h
-@@ -127,8 +127,8 @@ static inline long local_cmpxchg(local_t *l, long old, long new)
- 
- static inline bool local_try_cmpxchg(local_t *l, long *old, long new)
- {
--	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
--	return try_cmpxchg_local(&l->a.counter, __old, new);
-+	typeof(l->a.counter) *___old = (typeof(l->a.counter) *) old;
-+	return try_cmpxchg_local(&l->a.counter, ___old, new);
- }
- 
- /* Always has a lock prefix */
--- 
-2.40.1
-
+On Tue, May 9, 2023 at 3:43=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
+ wrote:
+>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+>      linux-doc@vger.kernel.org
+>
+> On 05/09/2023 03:13 PM, Youling Tang wrote:
+> > Hi, Tiezhu
+> >
+> > On 05/09/2023 02:49 PM, Tiezhu Yang wrote:
+> >> We can see that DEBUG_KMEMLEAK depends on HAVE_DEBUG_KMEMLEAK after
+> >> commit b69ec42b1b19 ("Kconfig: clean up the long arch list for the
+> >> DEBUG_KMEMLEAK config option"), just select HAVE_DEBUG_KMEMLEAK to
+> >> support kmemleak on LoongArch.
+> >>
+> >> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> >> ---
+> >>
+> >> This is based on 6.4-rc1
+> >>
+> >>  arch/loongarch/Kconfig | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> >> index d38b066..1e64edd 100644
+> >> --- a/arch/loongarch/Kconfig
+> >> +++ b/arch/loongarch/Kconfig
+> >> @@ -90,6 +90,7 @@ config LOONGARCH
+> >>      select HAVE_ASM_MODVERSIONS
+> >>      select HAVE_CONTEXT_TRACKING_USER
+> >>      select HAVE_C_RECORDMCOUNT
+> >> +    select HAVE_DEBUG_KMEMLEAK
+> >>      select HAVE_DEBUG_STACKOVERFLOW
+> >>      select HAVE_DMA_CONTIGUOUS
+> >>      select HAVE_DYNAMIC_FTRACE
+> >>
+> >
+> > At the same time, you need to modify the loongarch in arch-support.txt
+> > to ok.
+> >
+> > BTW, we can submit a separate patch to modify the features already
+> > supported by LoongArch.
+> >
+> > The following features are already supported in LoongArch.
+> >
+> > diff --git
+> > a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+> > b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+> ...
+> > diff --git a/Documentation/features/debug/kprobes/arch-support.txt
+> > b/Documentation/features/debug/kprobes/arch-support.txt
+> > index 8a77d62a42c5..aad83b57587a 100644
+> > --- a/Documentation/features/debug/kprobes/arch-support.txt
+> > +++ b/Documentation/features/debug/kprobes/arch-support.txt
+> ...
+> > diff --git a/Documentation/features/debug/kretprobes/arch-support.txt
+> > b/Documentation/features/debug/kretprobes/arch-support.txt
+> > index cf4723c5ac55..61380010a4a7 100644
+> > --- a/Documentation/features/debug/kretprobes/arch-support.txt
+> > +++ b/Documentation/features/debug/kretprobes/arch-support.txt
+> ...
+> > diff --git
+> > a/Documentation/features/debug/stackprotector/arch-support.txt
+> > b/Documentation/features/debug/stackprotector/arch-support.txt
+> > index 71cd4ba18f7d..4c64c5d596f7 100644
+> > --- a/Documentation/features/debug/stackprotector/arch-support.txt
+> > +++ b/Documentation/features/debug/stackprotector/arch-support.txt
+>
+> Thank you, I have already prepared a patch to update the docs,
+> but some more features will be added on LoongArch in the following
+> merge window, I am not sure what is the proper time to send the
+> following patch, maybe two months later, or right away, maybe
+> Jonathan can give some suggestions.
+>
+> Documentation/features: Refresh LoongArch support files
+>
+> Run the refresh script [1] to document the recent feature additions
+> on LoongArch.
+>
+> [1] Documentation/features/scripts/features-refresh.sh
+>
+> Thanks,
+> Tiezhu
+>
+>
