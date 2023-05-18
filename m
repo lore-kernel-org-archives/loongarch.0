@@ -1,226 +1,281 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A407E
-	for <loongarch@lists.linux.dev>; Thu, 18 May 2023 02:25:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3FB9C433A0
-	for <loongarch@lists.linux.dev>; Thu, 18 May 2023 02:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684376729;
-	bh=BJ+zBtzidStymX1Xdsl4tnDX+vPeQYRYOTB0T2LRp38=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WCHPlaknHiGRj9rCq7F41vWTl8o2TVPqZvzvbk5putWNtJGCX/vmNJXK2lW5EO8ZZ
-	 9kJo1ZQSpY14g+6QnNC2+k2SClB04WQo8ful1DGFfkXR9pdJ1RVanKpfBfVGpG7+Yh
-	 RXuhdSKCHVXyg0LWChtiwxtHnwHyvA4SnUqB2eiRYxGpFB/K6KLpGtG/a9VIvvpp6l
-	 dAJ/DtABSenooroFbzCf5jBkWzuFBueeGc1TQ1UOMNX0M2//GKvYCNPEVOJZDd460w
-	 zKBpzltZSi9KIa7CP4Osi6uWQ4Ut8/9TnzUAGmwJ0/Kc3wboUdMqVSkcORbi4ckS+Y
-	 V7BL8HMeZG6rw==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-50bc0117683so2687646a12.1
-        for <loongarch@lists.linux.dev>; Wed, 17 May 2023 19:25:29 -0700 (PDT)
-X-Gm-Message-State: AC+VfDx+wp+yQPk9x/yTeEE08/VydhZ5knR/R3LChUroPAIGg+MmEqia
-	K8lZ9rRdOPJm4MDjoUA3KjcwtUez+i4Jhu6FhI0=
-X-Google-Smtp-Source: ACHHUZ5drE9lWsneoeKrXat+THfTJNpI734MDx9OZr8skaG5GNqzYL2Tdyq+myp5Z5grM9LWYhtFo+Kn2wep9HM61Ls=
-X-Received: by 2002:a17:907:2d90:b0:966:40ad:3aec with SMTP id
- gt16-20020a1709072d9000b0096640ad3aecmr36796716ejc.6.1684376727891; Wed, 17
- May 2023 19:25:27 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9361519B
+	for <loongarch@lists.linux.dev>; Thu, 18 May 2023 02:56:37 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8Dxi+rik2Vkd7oJAA--.17023S3;
+	Thu, 18 May 2023 10:56:34 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxBMXfk2VkcCBnAA--.45731S3;
+	Thu, 18 May 2023 10:56:31 +0800 (CST)
+Message-ID: <02f07d8e-e1c2-2ec0-59c3-f5b4ef0463dc@loongson.cn>
+Date: Thu, 18 May 2023 10:56:31 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1684292580-2455-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1684292580-2455-1-git-send-email-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 18 May 2023 10:25:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6wtsFX+EUqzgseNmEW7FJk4b7b_PmcxKBiYu0qdHGwJQ@mail.gmail.com>
-Message-ID: <CAAhV-H6wtsFX+EUqzgseNmEW7FJk4b7b_PmcxKBiYu0qdHGwJQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add support to clone a time namespace
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Christian Brauner <brauner@kernel.org>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v10 00/30] Add KVM LoongArch support
+To: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>
+References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
+Content-Language: en-US
+From: maobibo <maobibo@loongson.cn>
+In-Reply-To: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxBMXfk2VkcCBnAA--.45731S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWfGr1UJr4xCrWxWFW8JF1rtFb_yoWkAryrpF
+	W7urn8Grs5Grsaqws3K3s7ur98XF1xGrWaq3Wa9348CrW2qrykZrykKr9FyF9rA3yrJr10
+	qr1rKw1ag3WUAaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8q2NtUUUUU==
 
-Hi, Tiezhu,
+Hi Paolo & Huacai,
 
-The layout of vdso data (loongarch_vdso_data):
+Sorry to bother you, I do not know flow of kernel code reviewing and merging.
 
-       struct vdso_pcpu_data pdata[NR_CPUS];
-       struct vdso_data data[CS_BASES];
+I want to know who should give a reviewed-by comments for these piece of code
+about loongarch kvm patch. It should be kvm maintainer or LoongArch maintianer?
+And any suggestion is welcome.
 
-VDSO_DATA_SIZE is the page aligned size of loongarch_vdso_data, and in
-memory, vdso code is above vdso data.
 
-Then, get_vdso_base() returns the start of vdso code, and
-get_vdso_data() returns the start of vdso data.
+Regards
+Bibo, Mao
 
-In your patch, __arch_get_timens_vdso_data() returns get_vdso_data() +
-PAGE_SIZE, but you don't increase the size of loongarch_vdso_data. The
-result is it returns an address in vdso code.
+在 2023/5/15 10:14, Tianrui Zhao 写道:
+> This series adds KVM LoongArch support. Loongson 3A5000 supports hardware
+> assisted virtualization. With cpu virtualization, there are separate
+> hw-supported user mode and kernel mode in guest mode. With memory
+> virtualization, there are two-level hw mmu table for guest mode and host
+> mode. Also there is separate hw cpu timer with consant frequency in
+> guest mode, so that vm can migrate between hosts with different freq.
+> Currently, we are able to boot LoongArch Linux Guests.
+> 
+> Few key aspects of KVM LoongArch added by this series are:
+> 1. Enable kvm hardware function when kvm module is loaded.
+> 2. Implement VM and vcpu related ioctl interface such as vcpu create,
+>    vcpu run etc. GET_ONE_REG/SET_ONE_REG ioctl commands are use to
+>    get general registers one by one.
+> 3. Hardware access about MMU, timer and csr are emulated in kernel.
+> 4. Hardwares such as mmio and iocsr device are emulated in user space
+>    such as APIC, IPI, pci devices etc.
+> 
+> The running environment of LoongArch virt machine:
+> 1. Cross tools to build kernel and uefi:
+>    $ wget https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz
+>    tar -vxf loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz  -C /opt
+>    export PATH=/opt/cross-tools/bin:$PATH
+>    export LD_LIBRARY_PATH=/opt/cross-tools/lib:$LD_LIBRARY_PATH
+>    export LD_LIBRARY_PATH=/opt/cross-tools/loongarch64-unknown-linux-gnu/lib/:$LD_LIBRARY_PATH
+> 2. This series is based on the linux source code:
+>    https://github.com/loongson/linux-loongarch-kvm
+>    Build command:
+>    git checkout kvm-loongarch
+>    make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu- loongson3_defconfig
+>    make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu-
+> 3. QEMU hypervisor with LoongArch supported:
+>    https://github.com/loongson/qemu
+>    Build command:
+>    git checkout kvm-loongarch
+>    ./configure --target-list="loongarch64-softmmu"  --enable-kvm
+>    make
+> 4. Uefi bios of LoongArch virt machine:
+>    Link: https://github.com/tianocore/edk2-platforms/tree/master/Platform/Loongson/LoongArchQemuPkg#readme
+> 5. you can also access the binary files we have already build:
+>    https://github.com/yangxiaojuan-loongson/qemu-binary
+> The command to boot loongarch virt machine:
+>    $ qemu-system-loongarch64 -machine virt -m 4G -cpu la464 \
+>    -smp 1 -bios QEMU_EFI.fd -kernel vmlinuz.efi -initrd ramdisk \
+>    -serial stdio   -monitor telnet:localhost:4495,server,nowait \
+>    -append "root=/dev/ram rdinit=/sbin/init console=ttyS0,115200" \
+>    --nographic
+> 
+> Changes for v10:
+> 1. Fix grammatical problems in LoongArch documentation.
+> 2. It is not necessary to save or restore the LOONGARCH_CSR_PGD when
+> vcpu put and vcpu load, so we remove it.
+> 
+> Changes for v9:
+> 1. Apply the new defined interrupt number macros in loongarch.h to kvm,
+> such as INT_SWI0, INT_HWI0, INT_TI, INT_IPI, etc. And remove the
+> previous unused macros.
+> 2. Remove unused variables in kvm_vcpu_arch, and reorder the variables
+> to make them more standard.
+> 
+> Changes for v8:
+> 1. Adjust the cpu_data.guest.options structure, add the ases flag into
+> it, and remove the previous guest.ases. We do this to keep consistent
+> with host cpu_data.options structure.
+> 2. Remove the "#include <asm/kvm_host.h>" in some files which also
+> include the "<linux/kvm_host.h>". As linux/kvm_host.h already include
+> the asm/kvm_host.h.
+> 3. Fix some unstandard spelling and grammar errors in comments, and
+> improve a little code format to make it easier and standard.
+> 
+> Changes for v7:
+> 1. Fix the kvm_save/restore_hw_gcsr compiling warnings reported by
+> kernel test robot. The report link is:
+> https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp@intel.com/
+> 2. Fix loongarch kvm trace related compiling problems.
+> 
+> Changes for v6:
+> 1. Fix the Documentation/virt/kvm/api.rst compile warning about
+> loongarch parts.
+> 
+> Changes for v5:
+> 1. Implement get/set mp_state ioctl interface, and only the
+> KVM_MP_STATE_RUNNABLE state is supported now, and other states
+> will be completed in the future. The state is also used when vcpu
+> run idle instruction, if vcpu state is changed to RUNNABLE, the
+> vcpu will have the possibility to be woken up.
+> 2. Supplement kvm document about loongarch-specific part, such as add
+> api introduction for GET/SET_ONE_REG, GET/SET_FPU, GET/SET_MP_STATE,
+> etc.
+> 3. Improve the kvm_switch_to_guest function in switch.S, remove the
+> previous tmp,tmp1 arguments and replace it with t0,t1 reg.
+> 
+> Changes for v4:
+> 1. Add a csr_need_update flag in _vcpu_put, as most csr registers keep
+> unchanged during process context switch, so we need not to update it
+> every time. We can do this only if the soft csr is different form hardware.
+> That is to say all of csrs should update after vcpu enter guest, as for
+> set_csr_ioctl, we have written soft csr to keep consistent with hardware.
+> 2. Improve get/set_csr_ioctl interface, we set SW or HW or INVALID flag
+> for all csrs according to it's features when kvm init. In get/set_csr_ioctl,
+> if csr is HW, we use gcsrrd/ gcsrwr instruction to access it, else if csr is
+> SW, we use software to emulate it, and others return false.
+> 3. Add set_hw_gcsr function in csr_ops.S, and it is used in set_csr_ioctl.
+> We have splited hw gcsr into three parts, so we can calculate the code offset
+> by gcsrid and jump here to run the gcsrwr instruction. We use this function to
+> make the code easier and avoid to use the previous SET_HW_GCSR(XXX) interface.
+> 4. Improve kvm mmu functions, such as flush page table and make clean page table
+> interface.
+> 
+> Changes for v3:
+> 1. Remove the vpid array list in kvm_vcpu_arch and use a vpid variable here,
+> because a vpid will never be recycled if a vCPU migrates from physical CPU A
+> to B and back to A.
+> 2. Make some constant variables in kvm_context to global such as vpid_mask,
+> guest_eentry, enter_guest, etc.
+> 3. Add some new tracepoints, such as kvm_trace_idle, kvm_trace_cache,
+> kvm_trace_gspr, etc.
+> 4. There are some duplicate codes in kvm_handle_exit and kvm_vcpu_run,
+> so we move it to a new function kvm_pre_enter_guest.
+> 5. Change the RESUME_HOST, RESUME_GUEST value, return 1 for resume guest
+> and "<= 0" for resume host.
+> 6. Fcsr and fpu registers are saved/restored together.
+> 
+> Changes for v2:
+> 1. Seprate the original patch-01 and patch-03 into small patches, and the
+> patches mainly contain kvm module init, module exit, vcpu create, vcpu run,
+> etc.
+> 2. Remove the original KVM_{GET,SET}_CSRS ioctl in the kvm uapi header,
+> and we use the common KVM_{GET,SET}_ONE_REG to access register.
+> 3. Use BIT(x) to replace the "1 << n_bits" statement.
+> 
+> Tianrui Zhao (30):
+>   LoongArch: KVM: Add kvm related header files
+>   LoongArch: KVM: Implement kvm module related interface
+>   LoongArch: KVM: Implement kvm hardware enable, disable interface
+>   LoongArch: KVM: Implement VM related functions
+>   LoongArch: KVM: Add vcpu related header files
+>   LoongArch: KVM: Implement vcpu create and destroy interface
+>   LoongArch: KVM: Implement vcpu run interface
+>   LoongArch: KVM: Implement vcpu handle exit interface
+>   LoongArch: KVM: Implement vcpu get, vcpu set registers
+>   LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
+>   LoongArch: KVM: Implement fpu related operations for vcpu
+>   LoongArch: KVM: Implement vcpu interrupt operations
+>   LoongArch: KVM: Implement misc vcpu related interfaces
+>   LoongArch: KVM: Implement vcpu load and vcpu put operations
+>   LoongArch: KVM: Implement vcpu status description
+>   LoongArch: KVM: Implement update VM id function
+>   LoongArch: KVM: Implement virtual machine tlb operations
+>   LoongArch: KVM: Implement vcpu timer operations
+>   LoongArch: KVM: Implement kvm mmu operations
+>   LoongArch: KVM: Implement handle csr excption
+>   LoongArch: KVM: Implement handle iocsr exception
+>   LoongArch: KVM: Implement handle idle exception
+>   LoongArch: KVM: Implement handle gspr exception
+>   LoongArch: KVM: Implement handle mmio exception
+>   LoongArch: KVM: Implement handle fpu exception
+>   LoongArch: KVM: Implement kvm exception vector
+>   LoongArch: KVM: Implement vcpu world switch
+>   LoongArch: KVM: Implement probe virtualization when LoongArch cpu init
+>   LoongArch: KVM: Enable kvm config and add the makefile
+>   LoongArch: KVM: Supplement kvm document about LoongArch-specific part
+> 
+>  Documentation/virt/kvm/api.rst             |  71 +-
+>  arch/loongarch/Kbuild                      |   1 +
+>  arch/loongarch/Kconfig                     |   2 +
+>  arch/loongarch/configs/loongson3_defconfig |   2 +
+>  arch/loongarch/include/asm/cpu-features.h  |  22 +
+>  arch/loongarch/include/asm/cpu-info.h      |  10 +
+>  arch/loongarch/include/asm/inst.h          |  16 +
+>  arch/loongarch/include/asm/kvm_csr.h       |  57 ++
+>  arch/loongarch/include/asm/kvm_host.h      | 252 ++++++
+>  arch/loongarch/include/asm/kvm_types.h     |  11 +
+>  arch/loongarch/include/asm/kvm_vcpu.h      |  97 +++
+>  arch/loongarch/include/asm/loongarch.h     | 211 ++++-
+>  arch/loongarch/include/uapi/asm/kvm.h      | 107 +++
+>  arch/loongarch/kernel/asm-offsets.c        |  32 +
+>  arch/loongarch/kernel/cpu-probe.c          |  53 ++
+>  arch/loongarch/kvm/Kconfig                 |  38 +
+>  arch/loongarch/kvm/Makefile                |  22 +
+>  arch/loongarch/kvm/csr_ops.S               |  76 ++
+>  arch/loongarch/kvm/exit.c                  | 707 +++++++++++++++++
+>  arch/loongarch/kvm/interrupt.c             | 126 +++
+>  arch/loongarch/kvm/main.c                  | 339 ++++++++
+>  arch/loongarch/kvm/mmu.c                   | 729 +++++++++++++++++
+>  arch/loongarch/kvm/switch.S                | 301 +++++++
+>  arch/loongarch/kvm/timer.c                 | 266 +++++++
+>  arch/loongarch/kvm/tlb.c                   |  31 +
+>  arch/loongarch/kvm/trace.h                 | 168 ++++
+>  arch/loongarch/kvm/vcpu.c                  | 880 +++++++++++++++++++++
+>  arch/loongarch/kvm/vm.c                    |  78 ++
+>  arch/loongarch/kvm/vmid.c                  |  64 ++
+>  include/uapi/linux/kvm.h                   |   9 +
+>  30 files changed, 4764 insertions(+), 14 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+>  create mode 100644 arch/loongarch/include/asm/kvm_host.h
+>  create mode 100644 arch/loongarch/include/asm/kvm_types.h
+>  create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
+>  create mode 100644 arch/loongarch/include/uapi/asm/kvm.h
+>  create mode 100644 arch/loongarch/kvm/Kconfig
+>  create mode 100644 arch/loongarch/kvm/Makefile
+>  create mode 100644 arch/loongarch/kvm/csr_ops.S
+>  create mode 100644 arch/loongarch/kvm/exit.c
+>  create mode 100644 arch/loongarch/kvm/interrupt.c
+>  create mode 100644 arch/loongarch/kvm/main.c
+>  create mode 100644 arch/loongarch/kvm/mmu.c
+>  create mode 100644 arch/loongarch/kvm/switch.S
+>  create mode 100644 arch/loongarch/kvm/timer.c
+>  create mode 100644 arch/loongarch/kvm/tlb.c
+>  create mode 100644 arch/loongarch/kvm/trace.h
+>  create mode 100644 arch/loongarch/kvm/vcpu.c
+>  create mode 100644 arch/loongarch/kvm/vm.c
+>  create mode 100644 arch/loongarch/kvm/vmid.c
+> 
 
-Now, do you know what the problem is? Or still insist that "I have tested"?
-
-Huacai
-
-On Wed, May 17, 2023 at 11:03=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
->
-> When execute the following command to test clone3 on LoongArch:
->
->   # cd tools/testing/selftests/clone3 && make && ./clone3
->
-> we can see the following error info:
->
->   # [5719] Trying clone3() with flags 0x80 (size 0)
->   # Invalid argument - Failed to create new process
->   # [5719] clone3() with flags says: -22 expected 0
->   not ok 18 [5719] Result (-22) is different than expected (0)
->
-> This is because if CONFIG_TIME_NS is not set, but the flag
-> CLONE_NEWTIME (0x80) is used to clone a time namespace, it
-> will return -EINVAL in copy_time_ns().
->
-> Here is the related code in include/linux/time_namespace.h:
->
->   #ifdef CONFIG_TIME_NS
->   ...
->   struct time_namespace *copy_time_ns(unsigned long flags,
->                                       struct user_namespace *user_ns,
->                                       struct time_namespace *old_ns);
->   ...
->   #else
->   ...
->   static inline
->   struct time_namespace *copy_time_ns(unsigned long flags,
->                                       struct user_namespace *user_ns,
->                                       struct time_namespace *old_ns)
->   {
->           if (flags & CLONE_NEWTIME)
->                   return ERR_PTR(-EINVAL);
->
->           return old_ns;
->   }
->   ...
->   #endif
->
-> Here is the complete call stack:
->
->   clone3()
->     kernel_clone()
->       copy_process()
->         copy_namespaces()
->           create_new_namespaces()
->             copy_time_ns()
->               clone_time_ns()
->
-> Because CONFIG_TIME_NS depends on GENERIC_VDSO_TIME_NS, select
-> GENERIC_VDSO_TIME_NS to enable CONFIG_TIME_NS to build the real
-> implementation of copy_time_ns() in kernel/time/namespace.c.
->
-> Additionally, it needs to define some arch dependent functions
-> such as __arch_get_timens_vdso_data(), arch_get_vdso_data() and
-> vdso_join_timens(), then the failed test can be fixed.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->
-> This is based on 6.4-rc2
->
->  arch/loongarch/Kconfig                         |  1 +
->  arch/loongarch/include/asm/vdso/gettimeofday.h |  7 ++++++
->  arch/loongarch/kernel/vdso.c                   | 32 ++++++++++++++++++++=
-++++++
->  3 files changed, 40 insertions(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index d38b066..93b167f 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -80,6 +80,7 @@ config LOONGARCH
->         select GENERIC_SCHED_CLOCK
->         select GENERIC_SMP_IDLE_THREAD
->         select GENERIC_TIME_VSYSCALL
-> +       select GENERIC_VDSO_TIME_NS
->         select GPIOLIB
->         select HAS_IOPORT
->         select HAVE_ARCH_AUDITSYSCALL
-> diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loonga=
-rch/include/asm/vdso/gettimeofday.h
-> index 7b2cd37..1af88ac 100644
-> --- a/arch/loongarch/include/asm/vdso/gettimeofday.h
-> +++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
-> @@ -94,6 +94,13 @@ static __always_inline const struct vdso_data *__arch_=
-get_vdso_data(void)
->         return get_vdso_data();
->  }
->
-> +#ifdef CONFIG_TIME_NS
-> +static __always_inline
-> +const struct vdso_data *__arch_get_timens_vdso_data(const struct vdso_da=
-ta *vd)
-> +{
-> +       return get_vdso_data() + PAGE_SIZE;
-> +}
-> +#endif
->  #endif /* !__ASSEMBLY__ */
->
->  #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
-> diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
-> index eaebd2e..cf62103 100644
-> --- a/arch/loongarch/kernel/vdso.c
-> +++ b/arch/loongarch/kernel/vdso.c
-> @@ -14,6 +14,7 @@
->  #include <linux/random.h>
->  #include <linux/sched.h>
->  #include <linux/slab.h>
-> +#include <linux/time_namespace.h>
->  #include <linux/timekeeper_internal.h>
->
->  #include <asm/page.h>
-> @@ -73,6 +74,37 @@ static int __init init_vdso(void)
->  }
->  subsys_initcall(init_vdso);
->
-> +#ifdef CONFIG_TIME_NS
-> +struct vdso_data *arch_get_vdso_data(void *vvar_page)
-> +{
-> +       return (struct vdso_data *)(vvar_page);
-> +}
-> +
-> +/*
-> + * The vvar mapping contains data for a specific time namespace, so when=
- a
-> + * task changes namespace we must unmap its vvar data for the old namesp=
-ace.
-> + * Subsequent faults will map in data for the new namespace.
-> + *
-> + * For more details see timens_setup_vdso_data().
-> + */
-> +int vdso_join_timens(struct task_struct *task, struct time_namespace *ns=
-)
-> +{
-> +       struct mm_struct *mm =3D task->mm;
-> +       struct vm_area_struct *vma;
-> +
-> +       VMA_ITERATOR(vmi, mm, 0);
-> +
-> +       mmap_read_lock(mm);
-> +       for_each_vma(vmi, vma) {
-> +               if (vma_is_special_mapping(vma, &vdso_info.data_mapping))
-> +                       zap_vma_pages(vma);
-> +       }
-> +       mmap_read_unlock(mm);
-> +
-> +       return 0;
-> +}
-> +#endif
-> +
->  static unsigned long vdso_base(void)
->  {
->         unsigned long base =3D STACK_TOP;
-> --
-> 2.1.0
->
