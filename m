@@ -1,32 +1,32 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679A66FAF
-	for <loongarch@lists.linux.dev>; Fri, 19 May 2023 10:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2975D6135
+	for <loongarch@lists.linux.dev>; Fri, 19 May 2023 10:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Subject:Cc:To:From:Date:Message-ID:
-	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=i8/RQiOFGVhuX3oCgXDWVh0oQbt/Cbzp/ltX/NfGGd0=; b=D4LJiuZl6kzCVn4vMC8lP792Br
-	tNAZy6PqDUpZzRoNd/rNPkXt0ciJDb940fpNGE4K76cGofNO5mnpIAUlwWuC98fEtgV4R0PFWFXsi
-	A5ZnNICp6f9Pgplfvg/WInMoh8LDZvMZ25lMirYbqQIulpctckJnfgFkPi8OAoXhi0nC+D3cpL9Y9
-	TxVhDH78itXDcdxGi8hFHZQOQkMDVAFbo0IuljiCHKtXMdUZimM9wkYFvMeREFHHS+U2oJvbhmAdI
-	3EBnyaKZd84pnM1i+2fk1H96xqHHC0Gg70mZloG4ubl14zB4pBKoHhsg8boTCYpAANt4ud26eMJDm
-	o5laKIrw==;
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=YB2UOIFIw2gwCNTVh1j30XHP2RZzZzmzkIRobxbOGl0=; b=ghSSZdzkafHz78mzS4GGbj71O7
+	SXXaHp+mpN010O+0jF+6pvvZGjzNbCeL9fRihXGCSrCvKmjJFi1w7JR/UVVTMMEXVA1Xnrdzu7+sB
+	CpSLRVsXbmqoKQ1sJACrj4KY/PgWjUhWPBWqCcijzl6OImzKJISzAOd8sciG4X41lrr6zgoUpIKap
+	paqHTBLRhlA/vM1uMKEqMUzfJCW+NvPNQOZMfIzoFLPznYjoSv44/83tGcfCgLWSn9Qwm8ElMANui
+	kt8AgiykeY0kez68CgoqtGvGH1RwAJFfF20uQNpp87aEng/rdSek17PDz3oqM71sIF9yg35f2qVeS
+	RZbT/x4Q==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pzxPw-006Uqb-0r; Fri, 19 May 2023 10:33:00 +0000
+	id 1pzxPv-006UqP-M2; Fri, 19 May 2023 10:33:00 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D733530008D;
-	Fri, 19 May 2023 12:32:55 +0200 (CEST)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 109C630611B;
+	Fri, 19 May 2023 12:32:56 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id AF4AD235EF085; Fri, 19 May 2023 12:32:55 +0200 (CEST)
-Message-ID: <20230519102058.581557770@infradead.org>
+	id C35A8235EF0A0; Fri, 19 May 2023 12:32:55 +0200 (CEST)
+Message-ID: <20230519102715.502547082@infradead.org>
 User-Agent: quilt/0.66
-Date: Fri, 19 May 2023 12:20:58 +0200
+Date: Fri, 19 May 2023 12:21:03 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: bigeasy@linutronix.de
 Cc: mark.rutland@arm.com,
@@ -79,46 +79,63 @@ Cc: mark.rutland@arm.com,
  kvm@vger.kernel.org,
  linux-hyperv@vger.kernel.org,
  linux-pm@vger.kernel.org
-Subject: [PATCH v2 00/13] local_clock() vs noinstr
+Subject: [PATCH v2 05/13] loongarch: Provide noinstr sched_clock_read()
+References: <20230519102058.581557770@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-Hi All,
+With the intent to provide local_clock_noinstr(), a variant of
+local_clock() that's safe to be called from noinstr code (with the
+assumption that any such code will already be non-preemptible),
+prepare for things by providing a noinstr sched_clock_read() function.
 
-latest version of the local_clock_noinstr() patches.
+Specifically, preempt_enable_*() calls out to schedule(), which upsets
+noinstr validation efforts.
 
-Most of the changes are in Hyper-V and x86/vdso/gettimeofday; Michael has been
-very helpful navigating the Hyper-V spec and fixing their sched_clock
-implementation.
-
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/arm64/include/asm/arch_timer.h      |  8 +----
- arch/arm64/include/asm/io.h              | 12 +++----
- arch/loongarch/include/asm/loongarch.h   |  2 +-
- arch/loongarch/kernel/time.c             |  6 ++--
- arch/s390/include/asm/timex.h            | 13 ++++---
- arch/s390/kernel/time.c                  |  5 +++
- arch/x86/include/asm/mshyperv.h          |  5 +++
- arch/x86/include/asm/vdso/gettimeofday.h | 41 ++++++++++++++++------
- arch/x86/kernel/kvmclock.c               |  4 +--
- arch/x86/kernel/tsc.c                    | 38 +++++++++++++++-----
- arch/x86/kvm/x86.c                       |  7 ++--
- arch/x86/xen/time.c                      |  3 +-
- drivers/clocksource/arm_arch_timer.c     | 60 ++++++++++++++++++++++++--------
- drivers/clocksource/hyperv_timer.c       | 44 ++++++++++++++---------
- drivers/cpuidle/cpuidle.c                |  8 ++---
- drivers/cpuidle/poll_state.c             |  4 +--
- include/clocksource/hyperv_timer.h       | 24 +++++--------
- include/linux/math64.h                   |  2 +-
- include/linux/rbtree_latch.h             |  2 +-
- include/linux/sched/clock.h              | 17 ++++++++-
- include/linux/seqlock.h                  | 15 ++++----
- kernel/printk/printk.c                   |  2 +-
- kernel/sched/clock.c                     | 19 ++++++----
- kernel/time/sched_clock.c                | 24 +++++++++----
- kernel/time/timekeeping.c                |  4 +--
- 25 files changed, 242 insertions(+), 127 deletions(-)
+ arch/loongarch/include/asm/loongarch.h |    2 +-
+ arch/loongarch/kernel/time.c           |    6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -1167,7 +1167,7 @@ static __always_inline void iocsr_write6
+ 
+ #ifndef __ASSEMBLY__
+ 
+-static inline u64 drdtime(void)
++static __always_inline u64 drdtime(void)
+ {
+ 	int rID = 0;
+ 	u64 val = 0;
+--- a/arch/loongarch/kernel/time.c
++++ b/arch/loongarch/kernel/time.c
+@@ -190,9 +190,9 @@ static u64 read_const_counter(struct clo
+ 	return drdtime();
+ }
+ 
+-static u64 native_sched_clock(void)
++static noinstr u64 sched_clock_read(void)
+ {
+-	return read_const_counter(NULL);
++	return drdtime();
+ }
+ 
+ static struct clocksource clocksource_const = {
+@@ -211,7 +211,7 @@ int __init constant_clocksource_init(voi
+ 
+ 	res = clocksource_register_hz(&clocksource_const, freq);
+ 
+-	sched_clock_register(native_sched_clock, 64, freq);
++	sched_clock_register(sched_clock_read, 64, freq);
+ 
+ 	pr_info("Constant clock source device register\n");
+ 
+
 
