@@ -1,32 +1,32 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297A96FAF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303586FDF
 	for <loongarch@lists.linux.dev>; Fri, 19 May 2023 10:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=oLBoSaVp3WekjBQYhO4JPOJSW0AQPAtxk0yC89gO6Pg=; b=uKRVJy5sUKL/o6KVz/EzG1JmJV
-	6N0e2PK34KDhR9DEbiPEcDZekm3+FqBiihDSGI2x6TVoGMVwa2B516kqhvchhJRm/QJk5aUeaiFyQ
-	mPL7arOZl4UTHRUMsv010g5MZlR38lvNUw9GkemBFSyLE3CugKAmxwenAy8/mdKFjP71mhdgvOgrs
-	M779+UNhLz8c5b+lCrJXac89jea2V0XiYzreJDyP8YKJo7a7r+v243rhG0vhtMM0u9BO9dW436HFz
-	TY9G49ZWNJytbpkd3z2c4+3AXUs7I2kFUCwdDnJQfEHhmELA6sZyusIRBRpWaHgwwf3VJhg2inqGN
-	tc7QRuHg==;
+	bh=y/NZkFjA2o+5kqY9Uzuitbn0zBukaZRP/fG6yHo/Mzw=; b=rwT6emRs6FoOj5HRbZc4Lyv/mV
+	RvdRsAQUnKcg46+OWrPIi2J2ej4an7WZerhQmJKXBJnDiGnvPiVCZYCyXzKb1IRoocJVVPVgQ+v16
+	bumy1VcTdETnIj7T1KDg7rOr7sBYl1PbIEHG0nYMI7kW4mEZoUNgphgQbHVg0bZBBPzojJXsO8FCF
+	fdQs2pM5MMmdiLLvNeHtDosmCMS+CAcMGQF+CqBy3XTevbzGxWWAmUTAxgrPVwGSgsSklrVnuG5d6
+	2BSXnUmgiXpeUnzBvOH0Xx8L4pa+TUcWYnyI9AhMnrdcHk+r4uwWD6GowTtUYulQHH96Mt+iEjYUj
+	Nwj/wofw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pzxPv-006UqS-Mw; Fri, 19 May 2023 10:33:00 +0000
+	id 1pzxPw-006UqY-0H; Fri, 19 May 2023 10:33:00 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 18815306128;
-	Fri, 19 May 2023 12:32:56 +0200 (CEST)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DEC2C302D93;
+	Fri, 19 May 2023 12:32:55 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id C9892235EF0AA; Fri, 19 May 2023 12:32:55 +0200 (CEST)
-Message-ID: <20230519102715.570170436@infradead.org>
+	id B7170235EF094; Fri, 19 May 2023 12:32:55 +0200 (CEST)
+Message-ID: <20230519102715.302350330@infradead.org>
 User-Agent: quilt/0.66
-Date: Fri, 19 May 2023 12:21:04 +0200
+Date: Fri, 19 May 2023 12:21:00 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: bigeasy@linutronix.de
 Cc: mark.rutland@arm.com,
@@ -79,7 +79,7 @@ Cc: mark.rutland@arm.com,
  kvm@vger.kernel.org,
  linux-hyperv@vger.kernel.org,
  linux-pm@vger.kernel.org
-Subject: [PATCH v2 06/13] s390/time: Provide sched_clock_noinstr()
+Subject: [PATCH v2 02/13] time/sched_clock: Provide sched_clock_noinstr()
 References: <20230519102058.581557770@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -92,81 +92,72 @@ Content-Type: text/plain; charset=UTF-8
 With the intent to provide local_clock_noinstr(), a variant of
 local_clock() that's safe to be called from noinstr code (with the
 assumption that any such code will already be non-preemptible),
-prepare for things by providing a noinstr sched_clock_noinstr()
-function.
+prepare for things by providing a noinstr sched_clock_noinstr() function.
 
 Specifically, preempt_enable_*() calls out to schedule(), which upsets
 noinstr validation efforts.
 
+As such, pull out the preempt_{dis,en}able_notrace() requirements from
+the sched_clock_read() implementations by explicitly providing it in
+the sched_clock() function.
+
+This further requires said sched_clock_read() functions to be noinstr
+themselves, for ARCH_WANTS_NO_INSTR users. See the next few patches.
+
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/s390/include/asm/timex.h |   13 +++++++++----
- arch/s390/kernel/time.c       |   11 ++++++++++-
- 2 files changed, 19 insertions(+), 5 deletions(-)
+ kernel/time/sched_clock.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/arch/s390/include/asm/timex.h
-+++ b/arch/s390/include/asm/timex.h
-@@ -63,7 +63,7 @@ static inline int store_tod_clock_ext_cc
- 	return cc;
- }
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -64,7 +64,7 @@ static struct clock_data cd ____cachelin
+ 	.actual_read_sched_clock = jiffy_sched_clock_read,
+ };
  
--static inline void store_tod_clock_ext(union tod_clock *tod)
-+static __always_inline void store_tod_clock_ext(union tod_clock *tod)
+-static inline u64 notrace cyc_to_ns(u64 cyc, u32 mult, u32 shift)
++static __always_inline u64 cyc_to_ns(u64 cyc, u32 mult, u32 shift)
  {
- 	asm volatile("stcke %0" : "=Q" (*tod) : : "cc");
+ 	return (cyc * mult) >> shift;
  }
-@@ -177,7 +177,7 @@ static inline void local_tick_enable(uns
- 
- typedef unsigned long cycles_t;
- 
--static inline unsigned long get_tod_clock(void)
-+static __always_inline unsigned long get_tod_clock(void)
- {
- 	union tod_clock clk;
- 
-@@ -204,6 +204,11 @@ void init_cpu_timer(void);
- 
- extern union tod_clock tod_clock_base;
- 
-+static __always_inline unsigned long __get_tod_clock_monotonic(void)
-+{
-+	return get_tod_clock() - tod_clock_base.tod;
-+}
-+
- /**
-  * get_clock_monotonic - returns current time in clock rate units
-  *
-@@ -216,7 +221,7 @@ static inline unsigned long get_tod_cloc
- 	unsigned long tod;
- 
- 	preempt_disable_notrace();
--	tod = get_tod_clock() - tod_clock_base.tod;
-+	tod = __get_tod_clock_monotonic();
- 	preempt_enable_notrace();
- 	return tod;
- }
-@@ -240,7 +245,7 @@ static inline unsigned long get_tod_cloc
-  * -> ns = (th * 125) + ((tl * 125) >> 9);
-  *
-  */
--static inline unsigned long tod_to_ns(unsigned long todval)
-+static __always_inline unsigned long tod_to_ns(unsigned long todval)
- {
- 	return ((todval >> 9) * 125) + (((todval & 0x1ff) * 125) >> 9);
- }
---- a/arch/s390/kernel/time.c
-+++ b/arch/s390/kernel/time.c
-@@ -102,6 +102,11 @@ void __init time_early_init(void)
- 			((long) qui.old_leap * 4096000000L);
+@@ -80,23 +80,33 @@ notrace int sched_clock_read_retry(unsig
+ 	return raw_read_seqcount_latch_retry(&cd.seq, seq);
  }
  
+-unsigned long long notrace sched_clock(void)
 +unsigned long long noinstr sched_clock_noinstr(void)
+ {
+-	u64 cyc, res;
+-	unsigned int seq;
+ 	struct clock_read_data *rd;
++	unsigned int seq;
++	u64 cyc, res;
+ 
+ 	do {
+-		rd = sched_clock_read_begin(&seq);
++		seq = raw_read_seqcount_latch(&cd.seq);
++		rd = cd.read_data + (seq & 1);
+ 
+ 		cyc = (rd->read_sched_clock() - rd->epoch_cyc) &
+ 		      rd->sched_clock_mask;
+ 		res = rd->epoch_ns + cyc_to_ns(cyc, rd->mult, rd->shift);
+-	} while (sched_clock_read_retry(seq));
++	} while (raw_read_seqcount_latch_retry(&cd.seq, seq));
+ 
+ 	return res;
+ }
+ 
++unsigned long long notrace sched_clock(void)
 +{
-+	return tod_to_ns(__get_tod_clock_monotonic());
++	unsigned long long ns;
++	preempt_disable_notrace();
++	ns = sched_clock_noinstr();
++	preempt_enable_notrace();
++	return ns;
 +}
 +
  /*
-  * Scheduler clock - returns current time in nanosec units.
-  */
+  * Updating the data required to read the clock.
+  *
 
 
