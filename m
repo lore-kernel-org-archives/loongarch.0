@@ -1,32 +1,32 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297DD6FDD
-	for <loongarch@lists.linux.dev>; Fri, 19 May 2023 10:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679A66FAF
+	for <loongarch@lists.linux.dev>; Fri, 19 May 2023 10:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
-	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To;
-	bh=jRlOPCiGZ1QUnD3ip/ciK1dDyTis2uNLJ5A1APQzhgQ=; b=Dzv1GYHGnPXTBnG4o/Xs2ei8aB
-	Q4Q6AnwKkhA4/hEfC+CyMGueM2yEEVQV5k5/e+DpKX7iQH+uIsaifb3r5hun1Lb7Ut3RbjPW/FK3q
-	7GgHVmd0difqEDkcOUBcHAAh5c6uRhVnesPdDrMRNy/o6AnRENKyjOblNglpALQqDQc/2Nn6ie6+b
-	ucFkxiKZvHRfSu80GKiNvsUh8ymS2G3cSlbSyOZ+URcvm9aZHO7ZGRSM/eu5b4omZrZLj+4rqNVY9
-	AKoPw+lovjejVC3kt7P8jMHh8B13s8koFqJH7ULD9r3B+YQXXFeiaQspwGhIId5AKB0TqQ/qGFkBs
-	ApoGTrcA==;
+	d=infradead.org; s=casper.20170209; h=Subject:Cc:To:From:Date:Message-ID:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=i8/RQiOFGVhuX3oCgXDWVh0oQbt/Cbzp/ltX/NfGGd0=; b=D4LJiuZl6kzCVn4vMC8lP792Br
+	tNAZy6PqDUpZzRoNd/rNPkXt0ciJDb940fpNGE4K76cGofNO5mnpIAUlwWuC98fEtgV4R0PFWFXsi
+	A5ZnNICp6f9Pgplfvg/WInMoh8LDZvMZ25lMirYbqQIulpctckJnfgFkPi8OAoXhi0nC+D3cpL9Y9
+	TxVhDH78itXDcdxGi8hFHZQOQkMDVAFbo0IuljiCHKtXMdUZimM9wkYFvMeREFHHS+U2oJvbhmAdI
+	3EBnyaKZd84pnM1i+2fk1H96xqHHC0Gg70mZloG4ubl14zB4pBKoHhsg8boTCYpAANt4ud26eMJDm
+	o5laKIrw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pzxPv-006UqQ-LP; Fri, 19 May 2023 10:33:00 +0000
+	id 1pzxPw-006Uqb-0r; Fri, 19 May 2023 10:33:00 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3C81430614C;
-	Fri, 19 May 2023 12:32:56 +0200 (CEST)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D733530008D;
+	Fri, 19 May 2023 12:32:55 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id E61E9235EF0B3; Fri, 19 May 2023 12:32:55 +0200 (CEST)
-Message-ID: <20230519102715.843039089@infradead.org>
+	id AF4AD235EF085; Fri, 19 May 2023 12:32:55 +0200 (CEST)
+Message-ID: <20230519102058.581557770@infradead.org>
 User-Agent: quilt/0.66
-Date: Fri, 19 May 2023 12:21:08 +0200
+Date: Fri, 19 May 2023 12:20:58 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: bigeasy@linutronix.de
 Cc: mark.rutland@arm.com,
@@ -78,120 +78,47 @@ Cc: mark.rutland@arm.com,
  linux-s390@vger.kernel.org,
  kvm@vger.kernel.org,
  linux-hyperv@vger.kernel.org,
- linux-pm@vger.kernel.org,
- Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH v2 10/13] clocksource: hyper-v: Provide noinstr sched_clock()
-References: <20230519102058.581557770@infradead.org>
+ linux-pm@vger.kernel.org
+Subject: [PATCH v2 00/13] local_clock() vs noinstr
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 
-With the intent to provide local_clock_noinstr(), a variant of
-local_clock() that's safe to be called from noinstr code (with the
-assumption that any such code will already be non-preemptible),
-prepare for things by making the Hyper-V TSC and MSR sched_clock
-implementations noinstr.
+Hi All,
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Co-developed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+latest version of the local_clock_noinstr() patches.
+
+Most of the changes are in Hyper-V and x86/vdso/gettimeofday; Michael has been
+very helpful navigating the Hyper-V spec and fixing their sched_clock
+implementation.
+
 ---
- arch/x86/include/asm/mshyperv.h    |    5 +++++
- drivers/clocksource/hyperv_timer.c |   32 ++++++++++++++++++--------------
- 2 files changed, 23 insertions(+), 14 deletions(-)
-
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -257,6 +257,11 @@ void hv_set_register(unsigned int reg, u
- u64 hv_get_non_nested_register(unsigned int reg);
- void hv_set_non_nested_register(unsigned int reg, u64 value);
- 
-+static __always_inline u64 hv_raw_get_register(unsigned int reg)
-+{
-+	return __rdmsr(reg);
-+}
-+
- #else /* CONFIG_HYPERV */
- static inline void hyperv_init(void) {}
- static inline void hyperv_setup_mmu_ops(void) {}
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -365,6 +365,20 @@ void hv_stimer_global_cleanup(void)
- }
- EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
- 
-+static __always_inline u64 read_hv_clock_msr(void)
-+{
-+	/*
-+	 * Read the partition counter to get the current tick count. This count
-+	 * is set to 0 when the partition is created and is incremented in 100
-+	 * nanosecond units.
-+	 *
-+	 * Use hv_raw_get_register() because this function is used from
-+	 * noinstr. Notable; while HV_REGISTER_TIME_REF_COUNT is a synthetic
-+	 * register it doesn't need the GHCB path.
-+	 */
-+	return hv_raw_get_register(HV_REGISTER_TIME_REF_COUNT);
-+}
-+
- /*
-  * Code and definitions for the Hyper-V clocksources.  Two
-  * clocksources are defined: one that reads the Hyper-V defined MSR, and
-@@ -393,7 +407,7 @@ struct ms_hyperv_tsc_page *hv_get_tsc_pa
- }
- EXPORT_SYMBOL_GPL(hv_get_tsc_page);
- 
--static notrace u64 read_hv_clock_tsc(void)
-+static __always_inline u64 read_hv_clock_tsc(void)
- {
- 	u64 cur_tsc, time;
- 
-@@ -404,7 +418,7 @@ static notrace u64 read_hv_clock_tsc(voi
- 	 * to the MSR in case the TSC page indicates unavailability.
- 	 */
- 	if (!hv_read_tsc_page_tsc(tsc_page, &cur_tsc, &time))
--		time = hv_get_register(HV_REGISTER_TIME_REF_COUNT);
-+		time = read_hv_clock_msr();
- 
- 	return time;
- }
-@@ -414,7 +428,7 @@ static u64 notrace read_hv_clock_tsc_cs(
- 	return read_hv_clock_tsc();
- }
- 
--static u64 notrace read_hv_sched_clock_tsc(void)
-+static u64 noinstr read_hv_sched_clock_tsc(void)
- {
- 	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
- 		(NSEC_PER_SEC / HV_CLOCK_HZ);
-@@ -466,22 +480,12 @@ static struct clocksource hyperv_cs_tsc
- #endif
- };
- 
--static u64 notrace read_hv_clock_msr(void)
--{
--	/*
--	 * Read the partition counter to get the current tick count. This count
--	 * is set to 0 when the partition is created and is incremented in
--	 * 100 nanosecond units.
--	 */
--	return hv_get_register(HV_REGISTER_TIME_REF_COUNT);
--}
--
- static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
- {
- 	return read_hv_clock_msr();
- }
- 
--static u64 notrace read_hv_sched_clock_msr(void)
-+static u64 noinstr read_hv_sched_clock_msr(void)
- {
- 	return (read_hv_clock_msr() - hv_sched_clock_offset) *
- 		(NSEC_PER_SEC / HV_CLOCK_HZ);
-
+ arch/arm64/include/asm/arch_timer.h      |  8 +----
+ arch/arm64/include/asm/io.h              | 12 +++----
+ arch/loongarch/include/asm/loongarch.h   |  2 +-
+ arch/loongarch/kernel/time.c             |  6 ++--
+ arch/s390/include/asm/timex.h            | 13 ++++---
+ arch/s390/kernel/time.c                  |  5 +++
+ arch/x86/include/asm/mshyperv.h          |  5 +++
+ arch/x86/include/asm/vdso/gettimeofday.h | 41 ++++++++++++++++------
+ arch/x86/kernel/kvmclock.c               |  4 +--
+ arch/x86/kernel/tsc.c                    | 38 +++++++++++++++-----
+ arch/x86/kvm/x86.c                       |  7 ++--
+ arch/x86/xen/time.c                      |  3 +-
+ drivers/clocksource/arm_arch_timer.c     | 60 ++++++++++++++++++++++++--------
+ drivers/clocksource/hyperv_timer.c       | 44 ++++++++++++++---------
+ drivers/cpuidle/cpuidle.c                |  8 ++---
+ drivers/cpuidle/poll_state.c             |  4 +--
+ include/clocksource/hyperv_timer.h       | 24 +++++--------
+ include/linux/math64.h                   |  2 +-
+ include/linux/rbtree_latch.h             |  2 +-
+ include/linux/sched/clock.h              | 17 ++++++++-
+ include/linux/seqlock.h                  | 15 ++++----
+ kernel/printk/printk.c                   |  2 +-
+ kernel/sched/clock.c                     | 19 ++++++----
+ kernel/time/sched_clock.c                | 24 +++++++++----
+ kernel/time/timekeeping.c                |  4 +--
+ 25 files changed, 242 insertions(+), 127 deletions(-)
 
