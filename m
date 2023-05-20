@@ -1,27 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B8F39C
-	for <loongarch@lists.linux.dev>; Sat, 20 May 2023 02:30:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF210C433EF;
-	Sat, 20 May 2023 02:30:49 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CA6E398
+	for <loongarch@lists.linux.dev>; Sat, 20 May 2023 06:38:20 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.176])
+	by gateway (Coremail) with SMTP id _____8AxHuvaamhk3F4KAA--.18187S3;
+	Sat, 20 May 2023 14:38:18 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.176])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLXaamhkd1JrAA--.51105S2;
+	Sat, 20 May 2023 14:38:18 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
 	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Jun Yi <yijun@loongson.cn>
-Subject: [PATCH] LoongArch: Fix perf event id calculation
-Date: Sat, 20 May 2023 10:30:00 +0800
-Message-Id: <20230520023001.3491257-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH V1 0/4] irqchip/loongson: Fix some loongson irqchip drivers
+Date: Sat, 20 May 2023 14:38:14 +0800
+Message-Id: <20230520063818.27208-1-lvjianmin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -29,47 +27,39 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxFLXaamhkd1JrAA--.51105S2
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
+	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
+	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+	Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
 
-LoongArch PMCFG has 10bit event id rather than 8 bit, so fix it.
+The patch series provide some fixes for loongson-liointc and loongson-pch-pic driver.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jun Yi <yijun@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/perf_event.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Jianmin Lv (2):
+  irqchip/loongson-pch-pic: Fix initialization of HT vector register
+  irqchip/loongson-liointc: Fix IRQ trigger polarity
 
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index ff28f99b47d7..0491bf453cd4 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -271,7 +271,7 @@ static void loongarch_pmu_enable_event(struct hw_perf_event *evt, int idx)
- 	WARN_ON(idx < 0 || idx >= loongarch_pmu.num_counters);
- 
- 	/* Make sure interrupt enabled. */
--	cpuc->saved_ctrl[idx] = M_PERFCTL_EVENT(evt->event_base & 0xff) |
-+	cpuc->saved_ctrl[idx] = M_PERFCTL_EVENT(evt->event_base) |
- 		(evt->config_base & M_PERFCTL_CONFIG_MASK) | CSR_PERFCTRL_IE;
- 
- 	cpu = (event->cpu >= 0) ? event->cpu : smp_processor_id();
-@@ -594,7 +594,7 @@ static struct pmu pmu = {
- 
- static unsigned int loongarch_pmu_perf_event_encode(const struct loongarch_perf_event *pev)
- {
--	return (pev->event_id & 0xff);
-+	return M_PERFCTL_EVENT(pev->event_id);
- }
- 
- static const struct loongarch_perf_event *loongarch_pmu_map_general_event(int idx)
-@@ -849,7 +849,7 @@ static void resume_local_counters(void)
- 
- static const struct loongarch_perf_event *loongarch_pmu_map_raw_event(u64 config)
- {
--	raw_event.event_id = config & 0xff;
-+	raw_event.event_id = M_PERFCTL_EVENT(config);
- 
- 	return &raw_event;
- }
+Liu Peibao (1):
+  irqchip/loongson-pch-pic: Fix potential incorrect hwirq assignment
+
+Yinbo Zhu (1):
+  irqchip/loongson-liointc: Add IRQCHIP_SKIP_SET_WAKE flag
+
+ drivers/irqchip/irq-loongson-liointc.c |  9 +++++----
+ drivers/irqchip/irq-loongson-pch-pic.c | 10 ++++------
+ 2 files changed, 9 insertions(+), 10 deletions(-)
+
 -- 
-2.39.1
+2.31.1
 
