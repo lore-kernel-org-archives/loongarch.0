@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2469398
-	for <loongarch@lists.linux.dev>; Sat, 20 May 2023 06:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A98624
+	for <loongarch@lists.linux.dev>; Sat, 20 May 2023 06:38:29 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.176])
-	by gateway (Coremail) with SMTP id _____8AxX+viamhk9V4KAA--.18286S3;
-	Sat, 20 May 2023 14:38:26 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxX+vkamhkDV8KAA--.18288S3;
+	Sat, 20 May 2023 14:38:28 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.176])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLXaamhkd1JrAA--.51105S4;
-	Sat, 20 May 2023 14:38:26 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLXaamhkd1JrAA--.51105S6;
+	Sat, 20 May 2023 14:38:27 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Marc Zyngier <maz@kernel.org>
@@ -16,11 +16,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	loongson-kernel@lists.loongnix.cn,
-	Liu Peibao <liupeibao@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH V1 2/4] irqchip/loongson-pch-pic: Fix potential incorrect hwirq assignment
-Date: Sat, 20 May 2023 14:38:16 +0800
-Message-Id: <20230520063818.27208-3-lvjianmin@loongson.cn>
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH V1 4/4] irqchip/loongson-liointc: Add IRQCHIP_SKIP_SET_WAKE flag
+Date: Sat, 20 May 2023 14:38:18 +0800
+Message-Id: <20230520063818.27208-5-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230520063818.27208-1-lvjianmin@loongson.cn>
 References: <20230520063818.27208-1-lvjianmin@loongson.cn>
@@ -31,68 +30,51 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxFLXaamhkd1JrAA--.51105S4
+X-CM-TRANSID:AQAAf8BxFLXaamhkd1JrAA--.51105S6
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uF48ZrWxXF1DCw4DJry3XFb_yoW8Cr1UpF
-	47uwsa9F4DAF1jyw18Gw4kW343Aa9xtFW7Ka1SyF93ur1kJ34qkF1UZF1F9r1kZrWfAFWU
-	ZFZI9FWY9F1xAFJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
-	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
-	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY
-	6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
-	AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
-	vjxU4miiDUUUU
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Jry3XF48ZryDXF4fuFy3Arb_yoWkGFX_WF
+	y7Jw1kCry2vrsIka4xCr4Utr1Fk3y5uanrua1FvFs3Z348tw45Cay3Z3ZxGFWUKryjvF93
+	Kr48Wr4rCrWxtjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	y7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
+	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
+	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07j6sjUUUUUU=
 
-From: Liu Peibao <liupeibao@loongson.cn>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
 
-In DeviceTree path, when ht_vec_base is not zero, the hwirq of PCH PIC will
-be assigned incorrectly. Because when pch_pic_domain_translate() adds the
-ht_vec_base to hwirq, the hwirq dose not subtract the ht_vec_base when
-calling irq_domain_set_info().
+Liointc doesn't require specific logic to work with wakeup IRQs,
+and no irq_set_wake callback is needed. To allow registered IRQs
+from liointc to be used as a wakeup-source, and ensure irq_set_irq_wake()
+works well, the flag IRQCHIP_SKIP_SET_WAKE should be added.
 
-The ht_vec_base is designed for the parent irq chip/domain of the PCH PIC.
-It seems not proper to deal this in callbacks of the PCH PIC domain and
-let's put this back like the initial commit ef8c01eb64ca ("irqchip: Add
-Loongson PCH PIC controller").
-
-Fixes: bcdd75c596c8 ("irqchip/loongson-pch-pic: Add ACPI init support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-pch-pic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-loongson-liointc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-index 921c5c0190d1..93a71f66efeb 100644
---- a/drivers/irqchip/irq-loongson-pch-pic.c
-+++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -164,7 +164,7 @@ static int pch_pic_domain_translate(struct irq_domain *d,
- 		if (fwspec->param_count < 2)
- 			return -EINVAL;
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+index 9a9c2bf048a3..dbd1ccce0fb2 100644
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -291,6 +291,7 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
+ 	ct->chip.irq_mask = irq_gc_mask_disable_reg;
+ 	ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
+ 	ct->chip.irq_set_type = liointc_set_type;
++	ct->chip.flags = IRQCHIP_SKIP_SET_WAKE;
  
--		*hwirq = fwspec->param[0] + priv->ht_vec_base;
-+		*hwirq = fwspec->param[0];
- 		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
- 	} else {
- 		if (fwspec->param_count < 1)
-@@ -196,7 +196,7 @@ static int pch_pic_alloc(struct irq_domain *domain, unsigned int virq,
- 
- 	parent_fwspec.fwnode = domain->parent->fwnode;
- 	parent_fwspec.param_count = 1;
--	parent_fwspec.param[0] = hwirq;
-+	parent_fwspec.param[0] = hwirq + priv->ht_vec_base;
- 
- 	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &parent_fwspec);
- 	if (err)
+ 	gc->mask_cache = 0;
+ 	priv->gc = gc;
 -- 
 2.31.1
 
