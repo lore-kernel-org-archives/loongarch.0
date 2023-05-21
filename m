@@ -1,126 +1,89 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4F9A29
-	for <loongarch@lists.linux.dev>; Sun, 21 May 2023 10:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1684665977; bh=ROm0pJOZNyVDKEAis1Y6Eci8XLW7KJHTxO8fnKHcE5k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mH+YJ27HMqhNsQjU+h8lFEiVcwuIQDEP7IoCIvHgdTVn5XPDbyx19NbUrmnYvOaFY
-	 LOz2TDlA91owpQ0zButjzTnK2/BYfFDlFq7NDtdtvjCcCYE8oKF4fEKKN+1qRGpem8
-	 GUqAhxAxB55f5Pt/rh+uzS/s8WEO7YeePbFRbjAU=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 4A09A60115;
-	Sun, 21 May 2023 18:46:17 +0800 (CST)
-Message-ID: <4a08b133-4ead-083e-4ddb-519e12a0dad6@xen0n.name>
-Date: Sun, 21 May 2023 18:46:16 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40A83D3B6
+	for <loongarch@lists.linux.dev>; Sun, 21 May 2023 11:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1684667871;
+	bh=Q26CYmvUlS+fBTmmnY0bWV8ZvrwzVZeSJzFo8/ADxRA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=cjPlRo3SnYcMX+/nzK6H1iJmrb6mzETgC1X6eqv7JRPssiRUIG6tseoXXED9IvDcx
+	 Gzy21SjMmc39YBDXEDucNGM4yB8HMqyMKDzA9x+leMkBQjtrpV8nZXFut5uPzySYAk
+	 taQOMV+xU7K8xC5qkI/GluXEZiUnMnuCgINgr8gU=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 1A72565AEB;
+	Sun, 21 May 2023 07:17:48 -0400 (EDT)
+Message-ID: <aa66d0049add6a780a8f04f998a24eef25605bde.camel@xry111.site>
+Subject: Re: [PATCH v10 00/30] Add KVM LoongArch support
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Xuerui <kernel@xen0n.name>, maobibo <maobibo@loongson.cn>, Paolo
+	Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org,  Jens Axboe <axboe@kernel.dk>, Mark Brown
+ <broonie@kernel.org>, Alex Deucher <alexander.deucher@amd.com>,  Oliver
+ Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>
+Date: Sun, 21 May 2023 19:17:47 +0800
+In-Reply-To: <4529ee5b-364a-7819-c727-71cf94057b8b@xen0n.name>
+References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
+	 <02f07d8e-e1c2-2ec0-59c3-f5b4ef0463dc@loongson.cn>
+	 <4529ee5b-364a-7819-c727-71cf94057b8b@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.1
-Subject: Re: [PATCH V1 3/4] irqchip/loongson-liointc: Fix IRQ trigger polarity
-Content-Language: en-US
-To: Jianmin Lv <lvjianmin@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>,
- Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
- loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
-References: <20230520063818.27208-1-lvjianmin@loongson.cn>
- <20230520063818.27208-4-lvjianmin@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230520063818.27208-4-lvjianmin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 2023/5/20 14:38, Jianmin Lv wrote:
-> For IRQ controller INT_POLARITY regitser of Loongson-2K CPU
+On Sun, 2023-05-21 at 18:22 +0800, WANG Xuerui wrote:
 
-"For the INT_POLARITY register of Loongson-2K series IRQ controller"?
+/* snip */
 
-> series, '0' indicates high level or rising edge triggered IRQ,
-> '1' indicates low level or falling edge triggered IRQ.
+> (BTW, how do people usually deal with pre-release hardware wit=20
+> documentation not out yet? I suppose similar situations like this should=
+=20
+> turn up fairly often.)
 
-Remove the two "IRQ"s; the topic is "polarity", not "IRQs".
+Intel normally releases the doc much earlier than shipping the hardware
+to customers.  For example, the x86 Linear Address Masking doc has been
+released in 2020 (allowing Linus himself to hack the LAM code in kernel
+:), but AFAIK there is no Intel CPU models released with LAM support yet
+(at least my Raptor Lake does not indicate LAM in cpuid, or maybe I'm
+missing the latest server models?)
 
-Also please mention the source of this information; I've checked the 
-Loongson 2K1000LA User Manual v1.0 and it seems a similar description is 
-found in Table 9-2, Section 9.3 (中断寄存器描述 / Description of the Interrupt 
-Registers). It mentioned "Intpol_0" and "Intpol_1" but the description 
-is consistent with the wording here.
+For other vendors I'm not sure.
 
-> 
-> For Loongson-3A CPU series, setting INT_POLARITY register is not
-> supported and writting it has no effect.
+> Aside from this, there's another point: use of undocumented instructions=
+=20
+> in raw form with ".word". This currently doesn't work in LLVM/Clang,=20
 
-Only 3A and not the whole Loongson-3 series?
+Hmm, is it an inherent limitation of Clang or it's simply not
+implemented for LoongArch yet?  On x86_64 I tried ".byte 0x90" in the
+inline assembly and Clang correctly emits a nop instruction.
 
-Also typo: "writing".
+> thus will slightly set back the ongoing ClangBuiltLinux enablement=20
+> effort (currently all such usages in arch/loongarch are related to=20
+> "invtlb" which has perfect support, and can be removed). AFAIK, such=20
+> practice dates back to the LoongISA times, when the Loongson extended=20
+> opcodes weren't supported by the upstream MIPS toolchains for some=20
+> reason; but LoongArch is independent and not bounded by anyone else now,=
+=20
+> so it's better in terms of maintainability to just add the instructions=
+=20
+> to the toolchains. People will not be inconvenienced by having to use=20
+> bleeding-edge LoongArch toolchains because upstream LoongArch devs have=
+=20
+> always been doing this.
 
-> 
-> So trigger polarity setting shouled be fixed for Loongson-2K CPU
-> series.
+Or it may be resolved by some fancy #ifdef directives.
 
-The changes seem to be just inversion of the polarity flags. It should 
-be correct given your description, and not affect Loongson-3 series 
-because it's supposed to behave as noops; it may be better to move the 
-explanation regarding Loongson-3 behavior to code comment (e.g. 
-somewhere near the definition of LIOINTC_REG_INTC_POL) so it's 
-immediately visible to drive-by readers not familiar with LoongArch 
-internals, without them having to dig through commit history to see this.
-
-> 
-> Fixes: 17343d0b4039 ("irqchip/loongson-liointc: Support to set IRQ type for ACPI path")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-
-Again, who's the proper author for this patch? Given the tags it seems 
-the author should be Chong Qiao, but I didn't see an Author: line at the 
-beginning.
-
-> ---
->   drivers/irqchip/irq-loongson-liointc.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-> index 8d00a9ad5b00..9a9c2bf048a3 100644
-> --- a/drivers/irqchip/irq-loongson-liointc.c
-> +++ b/drivers/irqchip/irq-loongson-liointc.c
-> @@ -116,19 +116,19 @@ static int liointc_set_type(struct irq_data *data, unsigned int type)
->   	switch (type) {
->   	case IRQ_TYPE_LEVEL_HIGH:
->   		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
-> -		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
-> +		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
->   		break;
->   	case IRQ_TYPE_LEVEL_LOW:
->   		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
-> -		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
-> +		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
->   		break;
->   	case IRQ_TYPE_EDGE_RISING:
->   		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
-> -		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
-> +		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
->   		break;
->   	case IRQ_TYPE_EDGE_FALLING:
->   		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
-> -		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
-> +		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
->   		break;
->   	default:
->   		irq_gc_unlock_irqrestore(gc, flags);
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
