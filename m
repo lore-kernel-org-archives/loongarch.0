@@ -1,76 +1,99 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E311114
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 06:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1684736260;
-	bh=yIi6ZOjy+E6qviZRUdHvLuggrTIRwROuyCYtl1GPs/c=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PowzOCIkGK3QPPK1zhPYjhGrmt6OzZ3lAY1BvQvpwmo2Pna3qsXwu/R4pDlxoH7K0
-	 aH/LjNoZ3zGKusbk1YJhG2xiz3Lp3x8bsdO9jnx0aSx3ACXjdGsy3WqKP4zbgvqTp9
-	 9r1Po7UIPb+xZMSI+YcLUyS5/EyB7OKtHwL0AsYA=
-Received: from [IPv6:240e:358:114f:a600:dc73:854d:832e:5] (unknown [IPv6:240e:358:114f:a600:dc73:854d:832e:5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A8DC46627E;
-	Mon, 22 May 2023 02:17:31 -0400 (EDT)
-Message-ID: <e442508c20e8a077892a90b54fdbea302026eacd.camel@xry111.site>
-Subject: Re: [PATCH v10 00/30] Add KVM LoongArch support
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, maobibo <maobibo@loongson.cn>, Paolo
-	Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org,  Jens Axboe <axboe@kernel.dk>, Mark Brown
- <broonie@kernel.org>, Alex Deucher <alexander.deucher@amd.com>,  Oliver
- Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>
-Date: Mon, 22 May 2023 14:17:24 +0800
-In-Reply-To: <90b2fc60-af26-4ba6-f775-7db2514a62f4@xen0n.name>
-References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
-	 <02f07d8e-e1c2-2ec0-59c3-f5b4ef0463dc@loongson.cn>
-	 <4529ee5b-364a-7819-c727-71cf94057b8b@xen0n.name>
-	 <99371487-717a-64d6-1c3d-aaeaee6f20db@loongson.cn>
-	 <90b2fc60-af26-4ba6-f775-7db2514a62f4@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1 
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45C6310F4
+	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 07:14:28 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.111])
+	by gateway (Coremail) with SMTP id _____8CxPutTFmtkttgKAA--.18422S3;
+	Mon, 22 May 2023 15:14:27 +0800 (CST)
+Received: from [192.168.124.115] (unknown [10.20.42.111])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx4zhQFmtkksVuAA--.54591S3;
+	Mon, 22 May 2023 15:14:24 +0800 (CST)
+Subject: Re: [PATCH v11 31/31] LoongArch: KVM: Add maintainers for LoongArch
+ KVM
+To: WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>
+References: <20230522031217.956464-1-zhaotianrui@loongson.cn>
+ <20230522031217.956464-32-zhaotianrui@loongson.cn>
+ <fb7f0c26-b609-c225-f8db-de32e72cd97b@xen0n.name>
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+Message-ID: <f6b4bd12-ac04-bb1a-f3ce-657fc8802f8f@loongson.cn>
+Date: Mon, 22 May 2023 15:14:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <fb7f0c26-b609-c225-f8db-de32e72cd97b@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8Cx4zhQFmtkksVuAA--.54591S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tF1xJF15ZF4DZF47Wr1xXwb_yoW8Xry8pF
+	s7AF4DKrWxWr1xArn5tF9xZa45XrykCr12qay3X3WqvFnxJw10qryqg3Z0gFn8Xan5Wr4F
+	vrn3tw13uF1UJrJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
+	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280
+	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
+	xVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
+	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxUc0eHDUUUU
 
-On Mon, 2023-05-22 at 10:37 +0800, WANG Xuerui wrote:
-> > Manual is actually one issue, however it does not prevent the review
-> > process. There are some drivers for *fruit* devices, I can not find
-> > the hw manual also.=C2=A0 With the manual, it helps to review and point=
-s
-> > out the further and detailed issues.
->=20
-> There's a *slight* difference: the certain vendor you've mentioned is=20
-> historically uncooperative in providing the documentation, so outside=20
-> contributors had to reverse-engineer and document the HW themselves; but=
-=20
-> in Loongson's case, you *are* the vendor, so you are probably in a=20
-> position that can make everyone's life easier by at least pushing for=20
-> the docs release...
 
-And some other differences:
+On 2023/5/22 上午11:42, WANG Xuerui wrote:
+> On 2023/5/22 11:12, Tianrui Zhao wrote:
+>> Add maintainers for LoongArch KVM.
+>>
+>> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+>> ---
+>>   MAINTAINERS | 12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 27ef11624748..0b6fe590f275 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -11357,6 +11357,18 @@ F:    include/kvm/arm_*
+>>   F:    tools/testing/selftests/kvm/*/aarch64/
+>>   F:    tools/testing/selftests/kvm/aarch64/
+>>   +KERNEL VIRTUAL MACHINE FOR LOONGARCH (KVM/LoongArch)
+>> +M:    Tianrui Zhao <zhaotianrui@loongson.com>
+>> +M:    Bibo Mao <maobibo@loongson.com>
+>
+> Your company email addresses end with loongson.cn, aren't they? ;-)
 
-1. *fruit* devices use an ARM64 which is already documented anyway.
-2. *fruit* devices are more "popular" and the maintainer can test on it
-more easily.  And *fruit* have more fans (esp. more fans with CS/EE
-skills, while we have more [expletive deleted] fans :( ) so their
-reverse-engineer effort is easier as well.  Yes it may be not fair to
-others, but the world is just not fair.
-3. *fruit* is really a bad example... When people ask me how to build
-Linux From Scratch on *fruit* I just tell them "try to avoid things from
-a vendor with no intention to allow you run another OS".
+Thanks for your reviewing carefully, I will fix this e-mail address.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Tianrui Zhao
+
+>
+>> +M:    Huacai Chen <chenhuacai@kernel.org>
+>> +L:    kvm@vger.kernel.org
+>> +L:    loongarch@lists.linux.dev
+>> +S:    Maintained
+>> +T:    git https://github.com/loongson/linux-loongarch-kvm
+>> +F:    arch/loongarch/include/asm/kvm*
+>> +F:    arch/loongarch/include/uapi/asm/kvm*
+>> +F:    arch/loongarch/kvm/
+>> +
+>>   KERNEL VIRTUAL MACHINE FOR MIPS (KVM/mips)
+>>   M:    Huacai Chen <chenhuacai@kernel.org>
+>>   M:    Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
+>
+
