@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9563CEA4
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95661EA6
 	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 03:13:26 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Bx7eqV3WpkPssKAA--.18744S3;
-	Mon, 22 May 2023 11:12:21 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxW+qX3WpkfcsKAA--.18553S3;
+	Mon, 22 May 2023 11:12:23 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S13;
-	Mon, 22 May 2023 11:12:21 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S19;
+	Mon, 22 May 2023 11:12:23 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v11 11/31] LoongArch: KVM: Implement fpu related operations for vcpu
-Date: Mon, 22 May 2023 11:11:57 +0800
-Message-Id: <20230522031217.956464-12-zhaotianrui@loongson.cn>
+Subject: [PATCH v11 17/31] LoongArch: KVM: Implement virtual machine tlb operations
+Date: Mon, 22 May 2023 11:12:03 +0800
+Message-Id: <20230522031217.956464-18-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230522031217.956464-1-zhaotianrui@loongson.cn>
 References: <20230522031217.956464-1-zhaotianrui@loongson.cn>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S13
+X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S19
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7AF45CryDuFWruw4DKw1Dtrb_yoW8ur1kpF
-	W7Ar98X3yrG3WxK3yaqr1jvr1av3ykKr1xXa47Xry3Ar1UtryrZr4vkrW2vF98Jw1fZFyI
-	yF1fGF45CFyDAwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7WrW7Xw4fGF4xGw1xtw43KFg_yoW8JF4kpF
+	yfurs5Gw4fX3ZIg39xXwn7Wr13Xr4vkF17ZFW3ua4rZrZrtr1vyFnakrykJFy8tayrCr48
+	W34ftF4jgFWUJw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -54,85 +54,52 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7AF45CryDuFWruw4DKw1Dtrb_yoW8ur1kpF
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
 	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement LoongArch fpu related interface for vcpu, such as get fpu, set
-fpu, own fpu and lose fpu, etc.
+Implement LoongArch virtual machine tlb operations such as flush tlb by
+specific gpa parameter and flush all of the virt machines tlb.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 60 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/loongarch/kvm/tlb.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 arch/loongarch/kvm/tlb.c
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 5a88f815c412..60213f7f7bac 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -244,6 +244,66 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 	return r;
- }
- 
-+int kvm_arch_vcpu_ioctl_get_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
+diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+new file mode 100644
+index 000000000000..66e116cf2486
+--- /dev/null
++++ b/arch/loongarch/kvm/tlb.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/kvm_host.h>
++#include <asm/tlb.h>
++
++int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
 +{
-+	int i = 0;
-+
-+	/* no need vcpu_load and vcpu_put */
-+	fpu->fcsr = vcpu->arch.fpu.fcsr;
-+	fpu->fcc = vcpu->arch.fpu.fcc;
-+	for (i = 0; i < NUM_FPU_REGS; i++)
-+		memcpy(&fpu->fpr[i], &vcpu->arch.fpu.fpr[i], FPU_REG_WIDTH / 64);
-+
++	preempt_disable();
++	gpa &= (PAGE_MASK << 1);
++	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
++	preempt_enable();
 +	return 0;
 +}
 +
-+int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
++/**
++ * kvm_flush_tlb_all() - Flush all root TLB entries for
++ * guests.
++ *
++ * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
++ */
++void kvm_flush_tlb_all(void)
 +{
-+	int i = 0;
++	unsigned long flags;
 +
-+	/* no need vcpu_load and vcpu_put */
-+	vcpu->arch.fpu.fcsr = fpu->fcsr;
-+	vcpu->arch.fpu.fcc = fpu->fcc;
-+	for (i = 0; i < NUM_FPU_REGS; i++)
-+		memcpy(&vcpu->arch.fpu.fpr[i], &fpu->fpr[i], FPU_REG_WIDTH / 64);
-+
-+	return 0;
++	local_irq_save(flags);
++	invtlb_all(INVTLB_ALLGID, 0, 0);
++	local_irq_restore(flags);
 +}
-+
-+/* Enable FPU for guest and restore context */
-+void kvm_own_fpu(struct kvm_vcpu *vcpu)
-+{
-+	preempt_disable();
-+
-+	/*
-+	 * Enable FPU for guest
-+	 */
-+	set_csr_euen(CSR_EUEN_FPEN);
-+
-+	kvm_restore_fpu(&vcpu->arch.fpu);
-+	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
-+	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
-+
-+	preempt_enable();
-+}
-+
-+/* Save and disable FPU */
-+void kvm_lose_fpu(struct kvm_vcpu *vcpu)
-+{
-+	preempt_disable();
-+
-+	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
-+		kvm_save_fpu(&vcpu->arch.fpu);
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
-+		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
-+
-+		/* Disable FPU */
-+		clear_csr_euen(CSR_EUEN_FPEN);
-+	}
-+
-+	preempt_enable();
-+}
-+
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- {
- 	return 0;
 -- 
 2.39.1
 
