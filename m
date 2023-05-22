@@ -1,25 +1,26 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8B781115
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 08:58:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A52C1115
+	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 09:00:20 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.176])
-	by gateway (Coremail) with SMTP id _____8DxDeu7LmtkUd8KAA--.18879S3;
-	Mon, 22 May 2023 16:58:35 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxyOkjL2tkjt8KAA--.18862S3;
+	Mon, 22 May 2023 17:00:19 +0800 (CST)
 Received: from [10.20.42.176] (unknown [10.20.42.176])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLb+6LmtkddxuAA--.56365S3;
-	Mon, 22 May 2023 16:58:35 +0800 (CST)
-Subject: Re: [PATCH V1 3/4] irqchip/loongson-liointc: Fix IRQ trigger polarity
-To: loongson-kernel@lists.loongnix.cn, Thomas Gleixner <tglx@linutronix.de>,
- Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLUhL2tk89xuAA--.55826S3;
+	Mon, 22 May 2023 17:00:17 +0800 (CST)
+Subject: Re: [PATCH V1 4/4] irqchip/loongson-liointc: Add
+ IRQCHIP_SKIP_SET_WAKE flag
+To: loongson-kernel@lists.loongnix.cn
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
  Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
  Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
- stable@vger.kernel.org
+ Yinbo Zhu <zhuyinbo@loongson.cn>
 References: <20230520063818.27208-1-lvjianmin@loongson.cn>
- <20230520063818.27208-4-lvjianmin@loongson.cn>
- <4a08b133-4ead-083e-4ddb-519e12a0dad6@xen0n.name>
+ <20230520063818.27208-5-lvjianmin@loongson.cn>
+ <CAAhV-H6BBCXpF2uOehwz1gsMdb6vcjHsCYsp+soL+Tzy-bfxQg@mail.gmail.com>
 From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <43e89edb-edea-d094-9b80-f9ce253df77f@loongson.cn>
-Date: Mon, 22 May 2023 16:58:34 +0800
+Message-ID: <853bc63c-24ec-a004-ea29-1c58f45ca996@loongson.cn>
+Date: Mon, 22 May 2023 17:00:17 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -28,15 +29,15 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <4a08b133-4ead-083e-4ddb-519e12a0dad6@xen0n.name>
+In-Reply-To: <CAAhV-H6BBCXpF2uOehwz1gsMdb6vcjHsCYsp+soL+Tzy-bfxQg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxLb+6LmtkddxuAA--.56365S3
+X-CM-TRANSID:AQAAf8BxFLUhL2tk89xuAA--.55826S3
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZF1UGr18CFW3ZF4kXF48Xrb_yoWrCr4Dpw
-	4fAa4DtryYqr18Wr1UGr18JFy5Jw15Xan8JF1xWFyUuFZ8AwsYvryUWF4qgr1xJr48Gr1U
-	Ary5Gay5ua17ArDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7KrW8Zr1rAr15ArW7KF43trb_yoW8AF1Dpr
+	43A3WqkF4UJryUZanxKr4UJ3WUZan5XrZ7tay5KFyI9FyDGw1DJF1kZF13ur4fAw45GF12
+	9F4rGry8WF45CrUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
@@ -47,108 +48,55 @@ X-Coremail-Antispam: 1Uk129KBjvJXoWxZF1UGr18CFW3ZF4kXF48Xrb_yoWrCr4Dpw
 	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
 	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
 	xVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
-	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_
+	Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
 	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
 	CTnIWIevJa73UjIFyTuYvjxU4AhLUUUUU
 
 
 
-On 2023/5/21 下午6:46, WANG Xuerui wrote:
-> On 2023/5/20 14:38, Jianmin Lv wrote:
->> For IRQ controller INT_POLARITY regitser of Loongson-2K CPU
+On 2023/5/20 下午4:43, Huacai Chen wrote:
+> Hi, Jianmin,
 > 
-> "For the INT_POLARITY register of Loongson-2K series IRQ controller"?
-> 
->> series, '0' indicates high level or rising edge triggered IRQ,
->> '1' indicates low level or falling edge triggered IRQ.
-> 
-> Remove the two "IRQ"s; the topic is "polarity", not "IRQs".
-> 
-> Also please mention the source of this information; I've checked the 
-> Loongson 2K1000LA User Manual v1.0 and it seems a similar description is 
-> found in Table 9-2, Section 9.3 (中断寄存器描述 / Description of the 
-> Interrupt Registers). It mentioned "Intpol_0" and "Intpol_1" but the 
-> description is consistent with the wording here.
-> 
+> On Sat, May 20, 2023 at 2:38 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
 >>
->> For Loongson-3A CPU series, setting INT_POLARITY register is not
->> supported and writting it has no effect.
+>> From: Yinbo Zhu <zhuyinbo@loongson.cn>
+>>
+>> Liointc doesn't require specific logic to work with wakeup IRQs,
+>> and no irq_set_wake callback is needed. To allow registered IRQs
+>> from liointc to be used as a wakeup-source, and ensure irq_set_irq_wake()
+>> works well, the flag IRQCHIP_SKIP_SET_WAKE should be added.
+> Maybe using LIOINTC instead of Liointc/liointc is better in commit
+> message. Except this small issue, for the whole series,
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 > 
-> Only 3A and not the whole Loongson-3 series?
-> 
-> Also typo: "writing".
-> 
-
-Ok, I'll adjust the commit as your suggestion above, thanks.
+Ok, I'll change it, thanks.
 
 >>
->> So trigger polarity setting shouled be fixed for Loongson-2K CPU
->> series.
-> 
-> The changes seem to be just inversion of the polarity flags. It should 
-> be correct given your description, and not affect Loongson-3 series 
-> because it's supposed to behave as noops; it may be better to move the 
-> explanation regarding Loongson-3 behavior to code comment (e.g. 
-> somewhere near the definition of LIOINTC_REG_INTC_POL) so it's 
-> immediately visible to drive-by readers not familiar with LoongArch 
-> internals, without them having to dig through commit history to see this.
-> 
-Good suggestion, I'll add the information near the definition of 
-LIOINTC_REG_INTC_POL.
-
->>
->> Fixes: 17343d0b4039 ("irqchip/loongson-liointc: Support to set IRQ 
->> type for ACPI path")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 >> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-> 
-> Again, who's the proper author for this patch? Given the tags it seems 
-> the author should be Chong Qiao, but I didn't see an Author: line at the 
-> beginning.
-> 
-
-Again, I'll adjust them as following:
-Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-
-Thanks.
-
 >> ---
->>   drivers/irqchip/irq-loongson-liointc.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>   drivers/irqchip/irq-loongson-liointc.c | 1 +
+>>   1 file changed, 1 insertion(+)
 >>
->> diff --git a/drivers/irqchip/irq-loongson-liointc.c 
->> b/drivers/irqchip/irq-loongson-liointc.c
->> index 8d00a9ad5b00..9a9c2bf048a3 100644
+>> diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+>> index 9a9c2bf048a3..dbd1ccce0fb2 100644
 >> --- a/drivers/irqchip/irq-loongson-liointc.c
 >> +++ b/drivers/irqchip/irq-loongson-liointc.c
->> @@ -116,19 +116,19 @@ static int liointc_set_type(struct irq_data 
->> *data, unsigned int type)
->>       switch (type) {
->>       case IRQ_TYPE_LEVEL_HIGH:
->>           liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
->> -        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
->> +        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
->>           break;
->>       case IRQ_TYPE_LEVEL_LOW:
->>           liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
->> -        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
->> +        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
->>           break;
->>       case IRQ_TYPE_EDGE_RISING:
->>           liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
->> -        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
->> +        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
->>           break;
->>       case IRQ_TYPE_EDGE_FALLING:
->>           liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
->> -        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
->> +        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
->>           break;
->>       default:
->>           irq_gc_unlock_irqrestore(gc, flags);
+>> @@ -291,6 +291,7 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
+>>          ct->chip.irq_mask = irq_gc_mask_disable_reg;
+>>          ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
+>>          ct->chip.irq_set_type = liointc_set_type;
+>> +       ct->chip.flags = IRQCHIP_SKIP_SET_WAKE;
+>>
+>>          gc->mask_cache = 0;
+>>          priv->gc = gc;
+>> --
+>> 2.31.1
+>>
+>>
+> _______________________________________________
+> Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
+> To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
 > 
 
