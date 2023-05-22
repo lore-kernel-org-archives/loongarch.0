@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 939E4EBC
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 03:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C6F0EC7
+	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 03:12:24 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxFumV3WpkMcsKAA--.18666S3;
-	Mon, 22 May 2023 11:12:21 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxZ+mX3WpkcMsKAA--.18315S3;
+	Mon, 22 May 2023 11:12:23 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S12;
-	Mon, 22 May 2023 11:12:21 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S18;
+	Mon, 22 May 2023 11:12:22 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v11 10/31] LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
-Date: Mon, 22 May 2023 11:11:56 +0800
-Message-Id: <20230522031217.956464-11-zhaotianrui@loongson.cn>
+Subject: [PATCH v11 16/31] LoongArch: KVM: Implement update VM id function
+Date: Mon, 22 May 2023 11:12:02 +0800
+Message-Id: <20230522031217.956464-17-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230522031217.956464-1-zhaotianrui@loongson.cn>
 References: <20230522031217.956464-1-zhaotianrui@loongson.cn>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S12
+X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S18
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw4fJr4xJrWUJF1rAr1kKrg_yoW8JFy3pF
-	srCr90qr4rJrWIgwn3tws3ur1aqrWkKr4xZFZrX3yYyF42kry5GF4FkrWDAFW5tw4rGF1I
-	qw1ft3WUuFn8AwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Aw1kJrW5GFWrWry3CF4rZrb_yoW8tr1rpr
+	WxCrn5Wr4rXwnxu3sIqw10qrn09395JF13Xa47Ja4Yyr17t34qkrWvkrWDAFyxXr1rAryx
+	XF15tF4jkF18A37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
 	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
@@ -51,60 +51,88 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw4fJr4xJrWUJF1rAr1kKrg_yoW8JFy3pF
 	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
 	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
 	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement LoongArch vcpu KVM_ENABLE_CAP ioctl interface.
+Implement kvm check vmid and update vmid, the vmid should be checked before
+vcpu enter guest.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/loongarch/kvm/vmid.c | 64 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 arch/loongarch/kvm/vmid.c
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 278fbafc59b4..5a88f815c412 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -186,6 +186,23 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
- 	return 0;
- }
- 
-+static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
-+				     struct kvm_enable_cap *cap)
+diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
+new file mode 100644
+index 000000000000..6fef81b28a48
+--- /dev/null
++++ b/arch/loongarch/kvm/vmid.c
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/kvm_host.h>
++#include "trace.h"
++
++static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
 +{
-+	int r = 0;
++	struct kvm_context *context;
++	unsigned long vpid;
 +
-+	if (!kvm_vm_ioctl_check_extension(vcpu->kvm, cap->cap))
-+		return -EINVAL;
-+	if (cap->flags)
-+		return -EINVAL;
-+	if (cap->args[0])
-+		return -EINVAL;
-+	if (cap->cap)
-+		return -EINVAL;
++	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++	vpid = context->vpid_cache + 1;
++	if (!(vpid & vpid_mask)) {
++		/* finish round of 64 bit loop */
++		if (unlikely(!vpid))
++			vpid = vpid_mask + 1;
 +
-+	return r;
++		/* vpid 0 reserved for root */
++		++vpid;
++
++		/* start new vpid cycle */
++		kvm_flush_tlb_all();
++	}
++
++	context->vpid_cache = vpid;
++	vcpu->arch.vpid = vpid;
 +}
 +
- long kvm_arch_vcpu_ioctl(struct file *filp,
- 			 unsigned int ioctl, unsigned long arg)
- {
-@@ -209,6 +226,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 			r = _kvm_get_reg(vcpu, &reg);
- 		break;
- 	}
-+	case KVM_ENABLE_CAP: {
-+		struct kvm_enable_cap cap;
++void _kvm_check_vmid(struct kvm_vcpu *vcpu, int cpu)
++{
++	struct kvm_context *context;
++	bool migrated;
++	unsigned long ver, old, vpid;
 +
-+		r = -EFAULT;
-+		if (copy_from_user(&cap, argp, sizeof(cap)))
-+			break;
-+		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
-+		break;
++	/*
++	 * Are we entering guest context on a different CPU to last time?
++	 * If so, the vCPU's guest TLB state on this CPU may be stale.
++	 */
++	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++	migrated = (vcpu->arch.last_exec_cpu != cpu);
++	vcpu->arch.last_exec_cpu = cpu;
++
++	/*
++	 * Check if our vpid is of an older version
++	 *
++	 * We also discard the stored vpid if we've executed on
++	 * another CPU, as the guest mappings may have changed without
++	 * hypervisor knowledge.
++	 */
++	ver = vcpu->arch.vpid & ~vpid_mask;
++	old = context->vpid_cache  & ~vpid_mask;
++	if (migrated || (ver != old)) {
++		_kvm_update_vpid(vcpu, cpu);
++		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
 +	}
- 	default:
- 		r = -ENOIOCTLCMD;
- 		break;
++
++	/* Restore GSTAT(0x50).vpid */
++	vpid = (vcpu->arch.vpid & vpid_mask)
++		<< CSR_GSTAT_GID_SHIFT;
++	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
++}
 -- 
 2.39.1
 
