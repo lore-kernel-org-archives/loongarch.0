@@ -1,11 +1,11 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95661EA6
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95689EA8
 	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 03:13:26 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxW+qX3WpkfcsKAA--.18553S3;
-	Mon, 22 May 2023 11:12:23 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxTuuY3Wpkl8sKAA--.18664S3;
+	Mon, 22 May 2023 11:12:24 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S19;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S22;
 	Mon, 22 May 2023 11:12:23 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v11 17/31] LoongArch: KVM: Implement virtual machine tlb operations
-Date: Mon, 22 May 2023 11:12:03 +0800
-Message-Id: <20230522031217.956464-18-zhaotianrui@loongson.cn>
+Subject: [PATCH v11 20/31] LoongArch: KVM: Implement handle csr excption
+Date: Mon, 22 May 2023 11:12:06 +0800
+Message-Id: <20230522031217.956464-21-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230522031217.956464-1-zhaotianrui@loongson.cn>
 References: <20230522031217.956464-1-zhaotianrui@loongson.cn>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S19
+X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S22
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7WrW7Xw4fGF4xGw1xtw43KFg_yoW8JF4kpF
-	yfurs5Gw4fX3ZIg39xXwn7Wr13Xr4vkF17ZFW3ua4rZrZrtr1vyFnakrykJFy8tayrCr48
-	W34ftF4jgFWUJw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxKryDWr4kur4rZF1kJFWfuFg_yoW7Xr1fpF
+	WkC3W5Zw40qw1Skas3trs0vrs8X3ykGr12qFy2q34Iv3W2yF95XFWvgryDXF98Ga9aqFWa
+	qay5trs5ur4UtaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -54,51 +54,183 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7WrW7Xw4fGF4xGw1xtw43KFg_yoW8JF4kpF
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
 	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement LoongArch virtual machine tlb operations such as flush tlb by
-specific gpa parameter and flush all of the virt machines tlb.
+Implement kvm handle LoongArch vcpu exit caused by reading and
+writing csr. Using csr structure to emulate the registers.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/tlb.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 arch/loongarch/kvm/tlb.c
+ arch/loongarch/include/asm/kvm_csr.h | 57 ++++++++++++++++
+ arch/loongarch/kvm/exit.c            | 98 ++++++++++++++++++++++++++++
+ 2 files changed, 155 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+ create mode 100644 arch/loongarch/kvm/exit.c
 
-diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+diff --git a/arch/loongarch/include/asm/kvm_csr.h b/arch/loongarch/include/asm/kvm_csr.h
 new file mode 100644
-index 000000000000..66e116cf2486
+index 000000000000..2c572a332d53
 --- /dev/null
-+++ b/arch/loongarch/kvm/tlb.c
-@@ -0,0 +1,31 @@
++++ b/arch/loongarch/include/asm/kvm_csr.h
+@@ -0,0 +1,57 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#ifndef __ASM_LOONGARCH_KVM_CSR_H__
++#define __ASM_LOONGARCH_KVM_CSR_H__
++#include <asm/loongarch.h>
++#include <asm/kvm_vcpu.h>
++#include <linux/uaccess.h>
++#include <linux/kvm_host.h>
++
++#define kvm_read_hw_gcsr(id)		gcsr_read(id)
++#define kvm_write_hw_gcsr(csr, id, val)	gcsr_write(val, id)
++
++int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v);
++int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 v);
++
++int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu);
++
++static __always_inline void kvm_save_hw_gcsr(struct loongarch_csrs *csr, int gid)
++{
++	csr->csrs[gid] = gcsr_read(gid);
++}
++
++static __always_inline void kvm_restore_hw_gcsr(struct loongarch_csrs *csr, int gid)
++{
++	gcsr_write(csr->csrs[gid], gid);
++}
++
++static __always_inline unsigned long kvm_read_sw_gcsr(struct loongarch_csrs *csr, int gid)
++{
++	return csr->csrs[gid];
++}
++
++static __always_inline void kvm_write_sw_gcsr(struct loongarch_csrs *csr,
++					      int gid, unsigned long val)
++{
++	csr->csrs[gid] = val;
++}
++
++static __always_inline void kvm_set_sw_gcsr(struct loongarch_csrs *csr,
++					    int gid, unsigned long val)
++{
++	csr->csrs[gid] |= val;
++}
++
++static __always_inline void kvm_change_sw_gcsr(struct loongarch_csrs *csr,
++					       int gid, unsigned long mask,
++					       unsigned long val)
++{
++	unsigned long _mask = mask;
++
++	csr->csrs[gid] &= ~_mask;
++	csr->csrs[gid] |= val & _mask;
++}
++#endif	/* __ASM_LOONGARCH_KVM_CSR_H__ */
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+new file mode 100644
+index 000000000000..508cbce31aa5
+--- /dev/null
++++ b/arch/loongarch/kvm/exit.c
+@@ -0,0 +1,98 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
 +
-+#include <linux/kvm_host.h>
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/preempt.h>
++#include <linux/vmalloc.h>
++#include <asm/fpu.h>
++#include <asm/inst.h>
++#include <asm/time.h>
 +#include <asm/tlb.h>
++#include <asm/loongarch.h>
++#include <asm/numa.h>
++#include <asm/kvm_vcpu.h>
++#include <asm/kvm_csr.h>
++#include <linux/kvm_host.h>
++#include <asm/mmzone.h>
++#include "trace.h"
 +
-+int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
++static unsigned long _kvm_emu_read_csr(struct kvm_vcpu *vcpu, int csrid)
 +{
-+	preempt_disable();
-+	gpa &= (PAGE_MASK << 1);
-+	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
-+	preempt_enable();
-+	return 0;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	unsigned long val = 0;
++
++	if (csrid < 4096 && (get_gcsr_flag(csrid) & SW_GCSR))
++		val = kvm_read_sw_gcsr(csr, csrid);
++	else
++		pr_warn_once("Unsupport csrread 0x%x with pc %lx\n",
++			csrid, vcpu->arch.pc);
++	return val;
 +}
 +
-+/**
-+ * kvm_flush_tlb_all() - Flush all root TLB entries for
-+ * guests.
-+ *
-+ * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
-+ */
-+void kvm_flush_tlb_all(void)
++static void _kvm_emu_write_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long val)
 +{
-+	unsigned long flags;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
 +
-+	local_irq_save(flags);
-+	invtlb_all(INVTLB_ALLGID, 0, 0);
-+	local_irq_restore(flags);
++	if (csrid < 4096 && (get_gcsr_flag(csrid) & SW_GCSR))
++		kvm_write_sw_gcsr(csr, csrid, val);
++	else
++		pr_warn_once("Unsupport csrwrite 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
++}
++
++static void _kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long csr_mask, unsigned long val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	if (csrid < 4096 && (get_gcsr_flag(csrid) & SW_GCSR)) {
++		unsigned long orig;
++
++		orig = kvm_read_sw_gcsr(csr, csrid);
++		orig &= ~csr_mask;
++		orig |= val & csr_mask;
++		kvm_write_sw_gcsr(csr, csrid, orig);
++	} else
++		pr_warn_once("Unsupport csrxchg 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
++}
++
++static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
++{
++	unsigned int rd, rj, csrid;
++	unsigned long csr_mask;
++	unsigned long val = 0;
++
++	/*
++	 * CSR value mask imm
++	 * rj = 0 means csrrd
++	 * rj = 1 means csrwr
++	 * rj != 0,1 means csrxchg
++	 */
++	rd = inst.reg2csr_format.rd;
++	rj = inst.reg2csr_format.rj;
++	csrid = inst.reg2csr_format.csr;
++
++	/* Process CSR ops */
++	if (rj == 0) {
++		/* process csrrd */
++		val = _kvm_emu_read_csr(vcpu, csrid);
++		vcpu->arch.gprs[rd] = val;
++	} else if (rj == 1) {
++		/* process csrwr */
++		val = vcpu->arch.gprs[rd];
++		_kvm_emu_write_csr(vcpu, csrid, val);
++	} else {
++		/* process csrxchg */
++		val = vcpu->arch.gprs[rd];
++		csr_mask = vcpu->arch.gprs[rj];
++		_kvm_emu_xchg_csr(vcpu, csrid, csr_mask, val);
++	}
++
++	return EMULATE_DONE;
 +}
 -- 
 2.39.1
