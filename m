@@ -1,115 +1,110 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25053AD4C
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 13:48:17 +0000 (UTC)
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1ae875bf125so21360335ad.1
-        for <loongarch@lists.linux.dev>; Mon, 22 May 2023 06:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684763296; x=1687355296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jGz08OQyeCqnxoLIdSWq6+vL4UPq3XQv2QFGyx1tKg0=;
-        b=qjgTLN5ERjKFpuEJDSYNk4vi4w+YGsguhc3ja5gz5WGB5Yf6W8P14biSciYvbMBtS1
-         uzmhoCmwR5WeSgVlFxYLxU3KwfmoQDyDtPJqB+A1+gBSsMhWP2DBAkayAeSyySIMn9Wy
-         hVkG6/sVX353mDAMcCpBKRMGHZgt3Wt/K1CYOUPxVAYJfGrrPywwf/pi5RQbnPfg+6ke
-         WdynKBvc5b9g9roZ4+9VUwGPq5pqfDrJWtGInWRSoipySMQA09QEXjFnoG+EaTB38oB/
-         lM0YhEIU+73uu7yZkd5zf933iEcZ9WEqAXq1P9BtD53vhuz0vw4TGHD6hAuZZDH27ZVP
-         VjrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684763296; x=1687355296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jGz08OQyeCqnxoLIdSWq6+vL4UPq3XQv2QFGyx1tKg0=;
-        b=UG2A0LCngjjYjtGafjxJk5totJ0zW8TXlHo9faIkVjCedXOhGnBswM9U1VXqUzJa58
-         jojbfnFJYBPUMkab4gVQxV3vfgUUgylbzmWjMqwIySYZQZkQriSIVVmtJoYPUk/OSWNp
-         mu6u4ljWX3SanUNYFViXIjHd/qs3G85Bk0o1G+Yg+2SB9QiQ+HTPMFZiM81DqRx2N1z1
-         2YeWq28hVg63QLYMd7Ra1XH4hWTrj7CqHNJS14vZlh7XSehFLBsXHRiIoOW3MfCg5wAI
-         Tj9WF85sUMvVjVMBl3DNLiXiKvznl2SB4J7QFB/6UOwcDu28UhpgUrJLISpQLtRj9Bia
-         PQBQ==
-X-Gm-Message-State: AC+VfDysjwueF27nznZj5P7LIi+7HWDkIHT6JbIy/z+bQSRCjzC1VGrH
-	/l+9+jxUpHqb0T17niRcl8OZ/noLx+pekQee4Ac=
-X-Google-Smtp-Source: ACHHUZ6IS5JmJ+ZDTz9QQZzHRGh7k7Pl91xxM/bsmLz/eNgRZwjR4aYBIugPczwz3Y9QlmRcmk40BVDGa6k/Iq/KC0Q=
-X-Received: by 2002:a17:902:8508:b0:1af:b2d3:c6f4 with SMTP id
- bj8-20020a170902850800b001afb2d3c6f4mr2949506plb.14.1684763295850; Mon, 22
- May 2023 06:48:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D859914266
+	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 14:19:23 +0000 (UTC)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34MEFPol018220;
+	Mon, 22 May 2023 14:18:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=z2ZSDd89AXbLMt+6T7YsO2fdF0Yi8CPnR5yZ/lkSqSY=;
+ b=b6NU5OeCXax+WrVwHJKBxU/2eP96sPFh/BlyPWwACQ/7wUWy6YKEjXCQw9pGRd6Hq9u6
+ MLWn9B4REgKuxAwXLXxVoiQ/caTY+5b2VJYARsH2GLmnE/WF+75uxVAMsycMBbGGbTN0
+ WdlESeBK8OJxuulsQRedH+dgpSmBwtogMv1YWS89315e3uleicCPE65liI3FCc0CRUsp
+ IMoEoP6IguzCWOKm9MeOaeUZ0trUtnp3AJqz9TIT2AQ7wc2ARtMGjMJ+GvNpVqnqflEm
+ 38hJ8QrXOMCAwnMAHMotE71twb0+4R7u+wbmNBqvd9/1givEuwWgmivHIjEM5kOfo1wL Yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qr8y9au0p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 May 2023 14:18:53 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34MEFUDT018701;
+	Mon, 22 May 2023 14:18:52 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qr8y9atyc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 May 2023 14:18:52 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+	by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34M812dN006123;
+	Mon, 22 May 2023 14:18:49 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3qppe08ty6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 May 2023 14:18:49 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34MEIj8V35258654
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 22 May 2023 14:18:45 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C7DAC2004B;
+	Mon, 22 May 2023 14:18:45 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2169620040;
+	Mon, 22 May 2023 14:18:43 +0000 (GMT)
+Received: from osiris (unknown [9.171.20.176])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 22 May 2023 14:18:43 +0000 (GMT)
+Date: Mon, 22 May 2023 16:18:41 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: bigeasy@linutronix.de, mark.rutland@arm.com, maz@kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+        kernel@xen0n.name, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com, pbonzini@redhat.com,
+        wanpengli@tencent.com, vkuznets@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, jgross@suse.com,
+        boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, rafael@kernel.org, longman@redhat.com,
+        boqun.feng@gmail.com, pmladek@suse.com, senozhatsky@chromium.org,
+        rostedt@goodmis.org, john.ogness@linutronix.de, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, jstultz@google.com, sboyd@kernel.org,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 06/13] s390/time: Provide sched_clock_noinstr()
+Message-ID: <ZGt5wR/VyVFTPHEK@osiris>
+References: <20230519102058.581557770@infradead.org>
+ <20230519102715.570170436@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1683792372-29338-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1683792372-29338-1-git-send-email-yangtiezhu@loongson.cn>
-From: Jeff Xie <xiehuan09@gmail.com>
-Date: Mon, 22 May 2023 21:48:03 +0800
-Message-ID: <CAEr6+EBU+Uon8rMvuEhLU0nADUMDEOSVZGSkAZvtuXJCEndzMg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] Add uprobes support for LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230519102715.570170436@infradead.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8u38vrNKBwlno1xrZVRe_usY_SDPYYwI
+X-Proofpoint-GUID: -02WeZ8d1wkDcrhX0-M0Ma7vvv7DyGGi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-22_10,2023-05-22_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=643 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305220117
 
-On Thu, May 11, 2023 at 4:06=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> v4:
->   -- Rebased on 6.4rc1
->   -- Fix problem about "perf probe -x /lib64/libc.so.6 malloc"
->
-> v3:
->   -- Check atomic instructions in insns_not_supported()
->   -- Remove five DIE_* definitions in kdebug.h
->
-> v2:
->   -- Move the functions to inst.c in patch #1
->   -- Pass around union for insns_not_supported(),
->      insns_need_simulation() and arch_simulate_insn()
->
-> v1:
->   -- Split the RFC patch #2 into two patches
->   -- Use larch_insn_gen_break() to generate break insns
->      for kprobes and uprobes
->   -- Pass around instruction word instead of union for
->      insns_not_supported(), insns_need_simulation() and
->      arch_simulate_insn() to avoid type conversion for callers
->   -- Add a simple test case for uprobes in the commit message
->
-> Tiezhu Yang (6):
->   LoongArch: Move three functions from kprobes.c to inst.c
->   LoongArch: Add larch_insn_gen_break() to generate break insns
->   LoongArch: Use larch_insn_gen_break() for kprobes
->   LoongArch: Add uprobes support
->   LoongArch: Check atomic instructions in insns_not_supported()
->   LoongArch: Remove five DIE_* definitions in kdebug.h
->
->  arch/loongarch/Kconfig               |   3 +
->  arch/loongarch/include/asm/inst.h    |  42 ++++++++++
->  arch/loongarch/include/asm/kdebug.h  |   5 --
->  arch/loongarch/include/asm/kprobes.h |   2 +-
->  arch/loongarch/include/asm/uprobes.h |  35 +++++++++
->  arch/loongarch/kernel/Makefile       |   1 +
->  arch/loongarch/kernel/inst.c         |  54 +++++++++++++
->  arch/loongarch/kernel/kprobes.c      |  75 ++++--------------
->  arch/loongarch/kernel/traps.c        |   9 +--
->  arch/loongarch/kernel/uprobes.c      | 148 +++++++++++++++++++++++++++++=
-++++++
->  10 files changed, 302 insertions(+), 72 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/uprobes.h
->  create mode 100644 arch/loongarch/kernel/uprobes.c
->
-> --
-> 2.1.0
->
->
+On Fri, May 19, 2023 at 12:21:04PM +0200, Peter Zijlstra wrote:
+> With the intent to provide local_clock_noinstr(), a variant of
+> local_clock() that's safe to be called from noinstr code (with the
+> assumption that any such code will already be non-preemptible),
+> prepare for things by providing a noinstr sched_clock_noinstr()
+> function.
+> 
+> Specifically, preempt_enable_*() calls out to schedule(), which upsets
+> noinstr validation efforts.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/s390/include/asm/timex.h |   13 +++++++++----
+>  arch/s390/kernel/time.c       |   11 ++++++++++-
+>  2 files changed, 19 insertions(+), 5 deletions(-)
 
-It looks good to me for the patchset.
-
-Tested-by: Jeff Xie <xiehuan09@gmail.com>
-
---=20
-Thanks,
-JeffXie
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
