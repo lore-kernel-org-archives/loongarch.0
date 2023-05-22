@@ -1,363 +1,168 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C24459471
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 09:33:30 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.35])
-	by gateway (Coremail) with SMTP id _____8Ax2enpNmtkAuIKAA--.18964S3;
-	Mon, 22 May 2023 17:33:29 +0800 (CST)
-Received: from user-pc.202.106.0.20 (unknown [10.20.42.35])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxkrDiNmtkAuRuAA--.55569S2;
-	Mon, 22 May 2023 17:33:27 +0800 (CST)
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Marc Zyngier <maz@kernel.org>,
-	Youling Tang <tangyouling@loongson.cn>,
-	Baoqi Zhang <zhangbaoqi@loongson.cn>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yun Liu <liuyun@loongson.cn>,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Cc: Jianmin Lv <lvjianmin@loongson.cn>,
-	wanghongliang@loongson.cn,
-	Liu Peibao <liupeibao@loongson.cn>,
-	loongson-kernel@lists.loongnix.cn,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v2 3/3] soc: loongson2_pm: add power management support
-Date: Mon, 22 May 2023 17:33:20 +0800
-Message-Id: <20230522093320.7176-1-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6390312B98
+	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 12:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1684759691; x=1716295691;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yxKglgoCICqxCp/YUO9N6SBOqlY2w1KxWsoJyA/AVRs=;
+  b=RKgE6zoHQejIRpwP3t2A5xcBpx6rebUNvtOGUX6KHWz8YeoiHOYqHN1p
+   q0/uvDppylwhR1s3nhkXwWz59GJOF4Ar9BnGrBmdAUtnMAAoTTHvEkaKM
+   fM80wHDa8h8J47qJKbybm0aWsknb/ANbRo8ewnw+o19NvjqM+TRSrRRGs
+   LfwTjQgCLKdF+Qcq1J8ZjrdHd7+0JA0VBWNJThoRFGw9jRpDIUYAqlEsU
+   7k7soHJla88rLOYty+Ucfh5RSjcJrRfPGShWH1nVS8YY+TBQ2QU2tSe5P
+   WnIH0Tiz8IXWmGoHRrkxDgJUAIIOQieHHNzY+kkzPCsRcOqRgpBMvseDV
+   w==;
+X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
+   d="asc'?scan'208";a="214906449"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 May 2023 05:48:03 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 22 May 2023 05:48:02 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Mon, 22 May 2023 05:47:59 -0700
+Date: Mon, 22 May 2023 13:47:37 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>
+CC: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, "Rafael
+ J . Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Tiezhu Yang
+	<yangtiezhu@loongson.cn>, Marc Zyngier <maz@kernel.org>, Youling Tang
+	<tangyouling@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>, Arnd
+ Bergmann <arnd@arndb.de>, Yun Liu <liuyun@loongson.cn>,
+	<linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>, Jianmin Lv
+	<lvjianmin@loongson.cn>, <wanghongliang@loongson.cn>, Liu Peibao
+	<liupeibao@loongson.cn>, <loongson-kernel@lists.loongnix.cn>
+Subject: Re: [PATCH v2 2/3] dt-bindings: soc: add loongson-2 pm
+Message-ID: <20230522-kooky-outbid-82662b45d305@wendy>
+References: <20230522093156.7108-1-zhuyinbo@loongson.cn>
+ <20230522093156.7108-3-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxkrDiNmtkAuRuAA--.55569S2
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3WryUJrWkCry5Gw48CFWxJFb_yoWfAFWUp3
-	yfAay8GFWUGF43Zrs5XryDWr1YyFW3Ga9rJFZrGw1UG3s7Jwn5Wr1UJFyrZr4xAryDJFZr
-	Z395CFWUCF4UWFUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0ow
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE
-	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
-	80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCj
-	c4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7V
-	AKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
-	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7
-	JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-	daVFxhVjvjDU0xZFpf9x07jFFALUUUUU=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gKHvUwRJNqoRSsho"
+Content-Disposition: inline
+In-Reply-To: <20230522093156.7108-3-zhuyinbo@loongson.cn>
 
-The Loongson-2's Power Management Controller was ACPI, supports ACPI
-S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
-Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
-(USB, GMAC, PWRBTN, etc.). This driver was to add Power Management
-Controller support that base on dts for Loongson-2 series SoCs.
+--gKHvUwRJNqoRSsho
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Liu Yun <liuyun@loongson.cn>
-Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Hey!
+
+On Mon, May 22, 2023 at 05:31:55PM +0800, Yinbo Zhu wrote:
+> Add the Loongson-2 SoC Power Management Controller binding with DT
+> schema format using json-schema.
+
+Grabbing thread from lore.kernel.org/all/20230522093156.7108-3-zhuyinbo%40l=
+oongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Checking attestation on all messages, may take a moment...
 ---
- MAINTAINERS                         |   1 +
- drivers/soc/loongson/Kconfig        |  10 ++
- drivers/soc/loongson/Makefile       |   1 +
- drivers/soc/loongson/loongson2_pm.c | 235 ++++++++++++++++++++++++++++
- 4 files changed, 247 insertions(+)
- create mode 100644 drivers/soc/loongson/loongson2_pm.c
+  [PATCH v2 1/3] loongarch: export loongarch pm interface
+    + Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+  [PATCH v2 2/3] dt-bindings: soc: add loongson-2 pm
+    + Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+  ERROR: missing [3/3]!
+---
+Total patches: 2
+---
+WARNING: Thread incomplete!
+Applying: loongarch: export loongarch pm interface
+Applying: dt-bindings: soc: add loongson-2 pm
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bcd05f1fa5c1..7c4ad0cbaeff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12195,6 +12195,7 @@ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-pm@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
-+F:	drivers/soc/loongson/loongson2_pm.c
- 
- LOONGSON-2 SOC SERIES PINCTRL DRIVER
- M:	zhanghongchen <zhanghongchen@loongson.cn>
-diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
-index 707f56358dc4..2431a0bcbd84 100644
---- a/drivers/soc/loongson/Kconfig
-+++ b/drivers/soc/loongson/Kconfig
-@@ -16,3 +16,13 @@ config LOONGSON2_GUTS
- 	 SoCs. Initially only reading SVR and registering soc device are
- 	 supported. Other guts accesses, such as reading firmware configuration
- 	 by default, should eventually be added into this driver as well.
-+
-+config LOONGSON2_PM
-+	bool "Loongson-2 SoC Power Management Controller Driver"
-+	depends on LOONGARCH && OF
-+	help
-+	 The Loongson-2's Power Management Controller was ACPI, supports ACPI
-+	 S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
-+	 Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
-+	 (USB, GMAC, PWRBTN, etc.). This driver was to add Power Management
-+	 Controller support that base on dts for Loongson-2 series SoCs.
-diff --git a/drivers/soc/loongson/Makefile b/drivers/soc/loongson/Makefile
-index 263c486df638..4118f50f55e2 100644
---- a/drivers/soc/loongson/Makefile
-+++ b/drivers/soc/loongson/Makefile
-@@ -4,3 +4,4 @@
- #
- 
- obj-$(CONFIG_LOONGSON2_GUTS)		+= loongson2_guts.o
-+obj-$(CONFIG_LOONGSON2_PM)		+= loongson2_pm.o
-diff --git a/drivers/soc/loongson/loongson2_pm.c b/drivers/soc/loongson/loongson2_pm.c
-new file mode 100644
-index 000000000000..cd96a1ebbb6c
---- /dev/null
-+++ b/drivers/soc/loongson/loongson2_pm.c
-@@ -0,0 +1,235 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Loongson-2 PM Support
-+ *
-+ * Copyright (C) 2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/suspend.h>
-+#include <linux/interrupt.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/platform_device.h>
-+#include <asm/bootinfo.h>
-+#include <asm/suspend.h>
-+
-+#define LOONGSON2_PM1_CNT_REG		0x14
-+#define LOONGSON2_PM1_STS_REG		0x0c
-+#define LOONGSON2_PM1_ENA_REG		0x10
-+#define LOONGSON2_GPE0_STS_REG		0x28
-+#define LOONGSON2_GPE0_ENA_REG		0x2c
-+
-+#define LOONGSON2_PM1_PWRBTN_STS	BIT(8)
-+#define LOONGSON2_PM1_PCIEXP_WAKE_STS	BIT(14)
-+#define LOONGSON2_PM1_WAKE_STS		BIT(15)
-+#define LOONGSON2_PM1_CNT_INT_EN	BIT(0)
-+#define LOONGSON2_PM1_PWRBTN_EN		LOONGSON2_PM1_PWRBTN_STS
-+
-+static struct loongson2_pm {
-+	void __iomem			*base;
-+	struct input_dev		*dev;
-+	bool				suspended;
-+} loongson2_pm;
-+
-+#define loongson2_pm_readw(reg)		readw(loongson2_pm.base + reg)
-+#define loongson2_pm_readl(reg)		readl(loongson2_pm.base + reg)
-+#define loongson2_pm_writew(val, reg)	writew(val, loongson2_pm.base + reg)
-+#define loongson2_pm_writel(val, reg)	writel(val, loongson2_pm.base + reg)
-+
-+static void loongson2_pm_status_clear(void)
-+{
-+	u16 value;
-+
-+	value = loongson2_pm_readw(LOONGSON2_PM1_STS_REG);
-+	value |= (LOONGSON2_PM1_PWRBTN_STS | LOONGSON2_PM1_PCIEXP_WAKE_STS |
-+		  LOONGSON2_PM1_WAKE_STS);
-+	loongson2_pm_writew(value, LOONGSON2_PM1_STS_REG);
-+	loongson2_pm_writel(loongson2_pm_readl(LOONGSON2_GPE0_STS_REG),
-+			    LOONGSON2_GPE0_STS_REG);
-+}
-+
-+static void loongson2_pm_irq_enable(void)
-+{
-+	u16 value;
-+
-+	value = loongson2_pm_readw(LOONGSON2_PM1_CNT_REG);
-+	value |= LOONGSON2_PM1_CNT_INT_EN;
-+	loongson2_pm_writew(value, LOONGSON2_PM1_CNT_REG);
-+}
-+
-+static void loongson2_pm_pwrbtn_irq_enable(void)
-+{
-+	u16 value;
-+
-+	loongson2_pm_irq_enable();
-+
-+	value = loongson2_pm_readw(LOONGSON2_PM1_ENA_REG);
-+	value |= LOONGSON2_PM1_PWRBTN_EN;
-+	loongson2_pm_writew(value, LOONGSON2_PM1_ENA_REG);
-+}
-+
-+static void loongson2_pm_mach_resume(void)
-+{
-+	loongson_common_resume();
-+	loongson2_pm_irq_enable();
-+}
-+
-+static void loongson2_pm_mach_suspend(void)
-+{
-+	loongson2_pm_status_clear();
-+	loongson_common_suspend();
-+}
-+
-+static int loongson2_suspend_enter(suspend_state_t state)
-+{
-+	loongson2_pm_mach_suspend();
-+	loongson_suspend_enter();
-+	pm_set_resume_via_firmware();
-+	loongson2_pm_mach_resume();
-+
-+	return 0;
-+}
-+
-+static int loongson2_suspend_begin(suspend_state_t state)
-+{
-+	pm_set_suspend_via_firmware();
-+
-+	return 0;
-+}
-+
-+static int loongson2_suspend_valid_state(suspend_state_t state)
-+{
-+	if (state == PM_SUSPEND_MEM)
-+		return !!loongson_sysconf.suspend_addr;
-+
-+	return 0;
-+}
-+
-+static const struct platform_suspend_ops loongson2_suspend_ops = {
-+	.valid	= loongson2_suspend_valid_state,
-+	.begin	= loongson2_suspend_begin,
-+	.enter	= loongson2_suspend_enter,
-+};
-+
-+static int loongson2_pm_pwrbtn_init(struct device *dev, int irq)
-+{
-+	int ret;
-+	struct input_dev *pwrbt;
-+
-+	pwrbt = input_allocate_device();
-+	if (!dev)
-+		return -ENOMEM;
-+
-+	pwrbt->name = "Power Button";
-+	pwrbt->phys = "pm/button/input0";
-+	pwrbt->id.bustype = BUS_HOST;
-+	pwrbt->dev.parent = NULL;
-+	input_set_capability(pwrbt, EV_KEY, KEY_POWER);
-+
-+	ret = input_register_device(pwrbt);
-+	if (ret)
-+		goto free_dev;
-+
-+	dev_pm_set_wake_irq(&pwrbt->dev, irq);
-+	device_set_wakeup_capable(&pwrbt->dev, true);
-+	device_set_wakeup_enable(&pwrbt->dev, true);
-+
-+	loongson2_pm.dev = pwrbt;
-+	dev_info(dev, "Power Button: Init successful!\n");
-+
-+	return 0;
-+
-+free_dev:
-+	input_free_device(pwrbt);
-+
-+	return ret;
-+}
-+
-+static irqreturn_t loongson2_pm_irq_handler(int irq, void *dev_id)
-+{
-+	u16 status = loongson2_pm_readw(LOONGSON2_PM1_STS_REG);
-+
-+	if (!loongson2_pm.suspended && (status & LOONGSON2_PM1_PWRBTN_STS)) {
-+		pr_info("Power Button pressed...\n");
-+		input_report_key(loongson2_pm.dev, KEY_POWER, 1);
-+		input_sync(loongson2_pm.dev);
-+		input_report_key(loongson2_pm.dev, KEY_POWER, 0);
-+		input_sync(loongson2_pm.dev);
-+	}
-+
-+	loongson2_pm_status_clear();
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int __maybe_unused loongson2_pm_suspend(struct device *dev)
-+{
-+	loongson2_pm.suspended = true;
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused loongson2_pm_resume(struct device *dev)
-+{
-+	loongson2_pm.suspended = false;
-+
-+	return 0;
-+}
-+static SIMPLE_DEV_PM_OPS(loongson2_pm_ops, loongson2_pm_suspend, loongson2_pm_resume);
-+
-+static int loongson2_pm_probe(struct platform_device *pdev)
-+{
-+	int irq, retval;
-+	u32 suspend_addr;
-+	struct device *dev = &pdev->dev;
-+
-+	loongson2_pm.base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(loongson2_pm.base))
-+		return PTR_ERR(loongson2_pm.base);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	if (!device_property_read_u32(dev, "suspend-address", &suspend_addr))
-+		loongson_sysconf.suspend_addr = (u64)phys_to_virt(suspend_addr);
-+	else
-+		dev_err(dev, "No suspend-address, could not support S3!\n");
-+
-+	if (loongson2_pm_pwrbtn_init(dev, irq))
-+		return -EINVAL;
-+
-+	retval = devm_request_irq(&pdev->dev, irq, loongson2_pm_irq_handler,
-+				  IRQF_SHARED, "pm_irq", &loongson2_pm);
-+	if (retval)
-+		return retval;
-+
-+	loongson2_pm_pwrbtn_irq_enable();
-+	loongson2_pm_status_clear();
-+
-+	if (loongson_sysconf.suspend_addr)
-+		suspend_set_ops(&loongson2_suspend_ops);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id loongson2_pm_match[] = {
-+	{ .compatible = "loongson,ls2k-pmc", },
-+	{},
-+};
-+
-+static struct platform_driver loongson2_pm_driver = {
-+	.driver = {
-+		.name = "ls2k-pm",
-+		.pm = &loongson2_pm_ops,
-+		.of_match_table = loongson2_pm_match,
-+	},
-+	.probe = loongson2_pm_probe,
-+};
-+module_platform_driver(loongson2_pm_driver);
-+
-+MODULE_DESCRIPTION("Loongson-2 PM driver");
-+MODULE_LICENSE("GPL");
--- 
-2.20.1
+Looks like the user for these bindings got lost somewhere along the way?
+Please make sure to keep a series threaded.
 
+>=20
+> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> ---
+>  .../soc/loongson/loongson,ls2k-pmc.yaml       | 51 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 +++
+>  2 files changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongs=
+on,ls2k-pmc.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k=
+-pmc.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pm=
+c.yaml
+> new file mode 100644
+> index 000000000000..ddad62889c60
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.ya=
+ml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-pmc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson-2 Power Manager controller
+> +
+> +maintainers:
+> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - loongson,ls2k-pmc
+> +      - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  suspend-address:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      The "suspend-address" is a deep sleep state (Suspend To RAM)
+> +      firmware entry address which was jumped from kernel and it's
+> +      value was dependent on specific platform firmware code. In
+> +      addition, the PM need according to it to indicate that current
+> +      SoC whether support Suspend To RAM.
+
+I (still) think this property is rather odd, maybe I am just not really
+understanding the property as it seems to be described partly in terms
+of operating system behaviour rather than its actual function. "was
+jumped from kernel" I don't get.
+
+The whole setup here seems a bit odd, but that's for the loongson arch
+folks reviewing the actual code to comment on!
+
+Thanks,
+Conor.
+
+--gKHvUwRJNqoRSsho
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGtkaQAKCRB4tDGHoIJi
+0lI/AP9QXb2RsmKR29etNH1JpHYidwCCU9a2ysUEbVebSFyQYwD6AytJGE2GQLfa
+2xQLm5VNuuHYmHeEFacgzuPyui/L4gg=
+=xr43
+-----END PGP SIGNATURE-----
+
+--gKHvUwRJNqoRSsho--
