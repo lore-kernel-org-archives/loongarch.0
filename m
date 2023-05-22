@@ -1,168 +1,115 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6390312B98
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 12:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1684759691; x=1716295691;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yxKglgoCICqxCp/YUO9N6SBOqlY2w1KxWsoJyA/AVRs=;
-  b=RKgE6zoHQejIRpwP3t2A5xcBpx6rebUNvtOGUX6KHWz8YeoiHOYqHN1p
-   q0/uvDppylwhR1s3nhkXwWz59GJOF4Ar9BnGrBmdAUtnMAAoTTHvEkaKM
-   fM80wHDa8h8J47qJKbybm0aWsknb/ANbRo8ewnw+o19NvjqM+TRSrRRGs
-   LfwTjQgCLKdF+Qcq1J8ZjrdHd7+0JA0VBWNJThoRFGw9jRpDIUYAqlEsU
-   7k7soHJla88rLOYty+Ucfh5RSjcJrRfPGShWH1nVS8YY+TBQ2QU2tSe5P
-   WnIH0Tiz8IXWmGoHRrkxDgJUAIIOQieHHNzY+kkzPCsRcOqRgpBMvseDV
-   w==;
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="asc'?scan'208";a="214906449"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 May 2023 05:48:03 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Mon, 22 May 2023 05:48:02 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Mon, 22 May 2023 05:47:59 -0700
-Date: Mon, 22 May 2023 13:47:37 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Yinbo Zhu <zhuyinbo@loongson.cn>
-CC: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, "Rafael
- J . Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Tiezhu Yang
-	<yangtiezhu@loongson.cn>, Marc Zyngier <maz@kernel.org>, Youling Tang
-	<tangyouling@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>, Arnd
- Bergmann <arnd@arndb.de>, Yun Liu <liuyun@loongson.cn>,
-	<linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>, Jianmin Lv
-	<lvjianmin@loongson.cn>, <wanghongliang@loongson.cn>, Liu Peibao
-	<liupeibao@loongson.cn>, <loongson-kernel@lists.loongnix.cn>
-Subject: Re: [PATCH v2 2/3] dt-bindings: soc: add loongson-2 pm
-Message-ID: <20230522-kooky-outbid-82662b45d305@wendy>
-References: <20230522093156.7108-1-zhuyinbo@loongson.cn>
- <20230522093156.7108-3-zhuyinbo@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25053AD4C
+	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 13:48:17 +0000 (UTC)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1ae875bf125so21360335ad.1
+        for <loongarch@lists.linux.dev>; Mon, 22 May 2023 06:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684763296; x=1687355296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jGz08OQyeCqnxoLIdSWq6+vL4UPq3XQv2QFGyx1tKg0=;
+        b=qjgTLN5ERjKFpuEJDSYNk4vi4w+YGsguhc3ja5gz5WGB5Yf6W8P14biSciYvbMBtS1
+         uzmhoCmwR5WeSgVlFxYLxU3KwfmoQDyDtPJqB+A1+gBSsMhWP2DBAkayAeSyySIMn9Wy
+         hVkG6/sVX353mDAMcCpBKRMGHZgt3Wt/K1CYOUPxVAYJfGrrPywwf/pi5RQbnPfg+6ke
+         WdynKBvc5b9g9roZ4+9VUwGPq5pqfDrJWtGInWRSoipySMQA09QEXjFnoG+EaTB38oB/
+         lM0YhEIU+73uu7yZkd5zf933iEcZ9WEqAXq1P9BtD53vhuz0vw4TGHD6hAuZZDH27ZVP
+         VjrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684763296; x=1687355296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jGz08OQyeCqnxoLIdSWq6+vL4UPq3XQv2QFGyx1tKg0=;
+        b=UG2A0LCngjjYjtGafjxJk5totJ0zW8TXlHo9faIkVjCedXOhGnBswM9U1VXqUzJa58
+         jojbfnFJYBPUMkab4gVQxV3vfgUUgylbzmWjMqwIySYZQZkQriSIVVmtJoYPUk/OSWNp
+         mu6u4ljWX3SanUNYFViXIjHd/qs3G85Bk0o1G+Yg+2SB9QiQ+HTPMFZiM81DqRx2N1z1
+         2YeWq28hVg63QLYMd7Ra1XH4hWTrj7CqHNJS14vZlh7XSehFLBsXHRiIoOW3MfCg5wAI
+         Tj9WF85sUMvVjVMBl3DNLiXiKvznl2SB4J7QFB/6UOwcDu28UhpgUrJLISpQLtRj9Bia
+         PQBQ==
+X-Gm-Message-State: AC+VfDysjwueF27nznZj5P7LIi+7HWDkIHT6JbIy/z+bQSRCjzC1VGrH
+	/l+9+jxUpHqb0T17niRcl8OZ/noLx+pekQee4Ac=
+X-Google-Smtp-Source: ACHHUZ6IS5JmJ+ZDTz9QQZzHRGh7k7Pl91xxM/bsmLz/eNgRZwjR4aYBIugPczwz3Y9QlmRcmk40BVDGa6k/Iq/KC0Q=
+X-Received: by 2002:a17:902:8508:b0:1af:b2d3:c6f4 with SMTP id
+ bj8-20020a170902850800b001afb2d3c6f4mr2949506plb.14.1684763295850; Mon, 22
+ May 2023 06:48:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gKHvUwRJNqoRSsho"
-Content-Disposition: inline
-In-Reply-To: <20230522093156.7108-3-zhuyinbo@loongson.cn>
-
---gKHvUwRJNqoRSsho
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <1683792372-29338-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1683792372-29338-1-git-send-email-yangtiezhu@loongson.cn>
+From: Jeff Xie <xiehuan09@gmail.com>
+Date: Mon, 22 May 2023 21:48:03 +0800
+Message-ID: <CAEr6+EBU+Uon8rMvuEhLU0nADUMDEOSVZGSkAZvtuXJCEndzMg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] Add uprobes support for LoongArch
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hey!
+On Thu, May 11, 2023 at 4:06=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> v4:
+>   -- Rebased on 6.4rc1
+>   -- Fix problem about "perf probe -x /lib64/libc.so.6 malloc"
+>
+> v3:
+>   -- Check atomic instructions in insns_not_supported()
+>   -- Remove five DIE_* definitions in kdebug.h
+>
+> v2:
+>   -- Move the functions to inst.c in patch #1
+>   -- Pass around union for insns_not_supported(),
+>      insns_need_simulation() and arch_simulate_insn()
+>
+> v1:
+>   -- Split the RFC patch #2 into two patches
+>   -- Use larch_insn_gen_break() to generate break insns
+>      for kprobes and uprobes
+>   -- Pass around instruction word instead of union for
+>      insns_not_supported(), insns_need_simulation() and
+>      arch_simulate_insn() to avoid type conversion for callers
+>   -- Add a simple test case for uprobes in the commit message
+>
+> Tiezhu Yang (6):
+>   LoongArch: Move three functions from kprobes.c to inst.c
+>   LoongArch: Add larch_insn_gen_break() to generate break insns
+>   LoongArch: Use larch_insn_gen_break() for kprobes
+>   LoongArch: Add uprobes support
+>   LoongArch: Check atomic instructions in insns_not_supported()
+>   LoongArch: Remove five DIE_* definitions in kdebug.h
+>
+>  arch/loongarch/Kconfig               |   3 +
+>  arch/loongarch/include/asm/inst.h    |  42 ++++++++++
+>  arch/loongarch/include/asm/kdebug.h  |   5 --
+>  arch/loongarch/include/asm/kprobes.h |   2 +-
+>  arch/loongarch/include/asm/uprobes.h |  35 +++++++++
+>  arch/loongarch/kernel/Makefile       |   1 +
+>  arch/loongarch/kernel/inst.c         |  54 +++++++++++++
+>  arch/loongarch/kernel/kprobes.c      |  75 ++++--------------
+>  arch/loongarch/kernel/traps.c        |   9 +--
+>  arch/loongarch/kernel/uprobes.c      | 148 +++++++++++++++++++++++++++++=
+++++++
+>  10 files changed, 302 insertions(+), 72 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/uprobes.h
+>  create mode 100644 arch/loongarch/kernel/uprobes.c
+>
+> --
+> 2.1.0
+>
+>
 
-On Mon, May 22, 2023 at 05:31:55PM +0800, Yinbo Zhu wrote:
-> Add the Loongson-2 SoC Power Management Controller binding with DT
-> schema format using json-schema.
+It looks good to me for the patchset.
 
-Grabbing thread from lore.kernel.org/all/20230522093156.7108-3-zhuyinbo%40l=
-oongson.cn/t.mbox.gz
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-Analyzing 3 messages in the thread
-Checking attestation on all messages, may take a moment...
----
-  [PATCH v2 1/3] loongarch: export loongarch pm interface
-    + Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-  [PATCH v2 2/3] dt-bindings: soc: add loongson-2 pm
-    + Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-  ERROR: missing [3/3]!
----
-Total patches: 2
----
-WARNING: Thread incomplete!
-Applying: loongarch: export loongarch pm interface
-Applying: dt-bindings: soc: add loongson-2 pm
+Tested-by: Jeff Xie <xiehuan09@gmail.com>
 
-Looks like the user for these bindings got lost somewhere along the way?
-Please make sure to keep a series threaded.
-
->=20
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
->  .../soc/loongson/loongson,ls2k-pmc.yaml       | 51 +++++++++++++++++++
->  MAINTAINERS                                   |  6 +++
->  2 files changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongs=
-on,ls2k-pmc.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k=
--pmc.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pm=
-c.yaml
-> new file mode 100644
-> index 000000000000..ddad62889c60
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.ya=
-ml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-pmc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson-2 Power Manager controller
-> +
-> +maintainers:
-> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - loongson,ls2k-pmc
-> +      - const: syscon
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  suspend-address:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      The "suspend-address" is a deep sleep state (Suspend To RAM)
-> +      firmware entry address which was jumped from kernel and it's
-> +      value was dependent on specific platform firmware code. In
-> +      addition, the PM need according to it to indicate that current
-> +      SoC whether support Suspend To RAM.
-
-I (still) think this property is rather odd, maybe I am just not really
-understanding the property as it seems to be described partly in terms
-of operating system behaviour rather than its actual function. "was
-jumped from kernel" I don't get.
-
-The whole setup here seems a bit odd, but that's for the loongson arch
-folks reviewing the actual code to comment on!
-
+--=20
 Thanks,
-Conor.
-
---gKHvUwRJNqoRSsho
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGtkaQAKCRB4tDGHoIJi
-0lI/AP9QXb2RsmKR29etNH1JpHYidwCCU9a2ysUEbVebSFyQYwD6AytJGE2GQLfa
-2xQLm5VNuuHYmHeEFacgzuPyui/L4gg=
-=xr43
------END PGP SIGNATURE-----
-
---gKHvUwRJNqoRSsho--
+JeffXie
