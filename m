@@ -1,26 +1,25 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0F9D4408
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 08:50:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8B781115
+	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 08:58:37 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.176])
-	by gateway (Coremail) with SMTP id _____8AxFum4LGtkkN4KAA--.18753S3;
-	Mon, 22 May 2023 16:50:00 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxDeu7LmtkUd8KAA--.18879S3;
+	Mon, 22 May 2023 16:58:35 +0800 (CST)
 Received: from [10.20.42.176] (unknown [10.20.42.176])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxqra3LGtkcdpuAA--.55156S3;
-	Mon, 22 May 2023 16:50:00 +0800 (CST)
-Subject: Re: [PATCH V1 2/4] irqchip/loongson-pch-pic: Fix potential incorrect
- hwirq assignment
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLb+6LmtkddxuAA--.56365S3;
+	Mon, 22 May 2023 16:58:35 +0800 (CST)
+Subject: Re: [PATCH V1 3/4] irqchip/loongson-liointc: Fix IRQ trigger polarity
 To: loongson-kernel@lists.loongnix.cn, Thomas Gleixner <tglx@linutronix.de>,
  Marc Zyngier <maz@kernel.org>
 Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
  Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
  Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Liu Peibao <liupeibao@loongson.cn>, stable@vger.kernel.org
+ stable@vger.kernel.org
 References: <20230520063818.27208-1-lvjianmin@loongson.cn>
- <20230520063818.27208-3-lvjianmin@loongson.cn>
- <a31415d5-ca4e-49fa-60d7-9cd53ba5a680@xen0n.name>
+ <20230520063818.27208-4-lvjianmin@loongson.cn>
+ <4a08b133-4ead-083e-4ddb-519e12a0dad6@xen0n.name>
 From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <72063c42-f781-5ef5-ec05-7adaa2eabb33@loongson.cn>
-Date: Mon, 22 May 2023 16:49:59 +0800
+Message-ID: <43e89edb-edea-d094-9b80-f9ce253df77f@loongson.cn>
+Date: Mon, 22 May 2023 16:58:34 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -29,19 +28,19 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <a31415d5-ca4e-49fa-60d7-9cd53ba5a680@xen0n.name>
+In-Reply-To: <4a08b133-4ead-083e-4ddb-519e12a0dad6@xen0n.name>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxqra3LGtkcdpuAA--.55156S3
+X-CM-TRANSID:AQAAf8BxLb+6LmtkddxuAA--.56365S3
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uF48ZrWxXF1DZry5GrWruFg_yoW8Kr1DpF
-	48A3y3uFWUCr18A348Jw48Wry3Aw47ta9rKa1rtFyfXr1DX3s0gF1UZFy09r1kAr4xAr1U
-	ZFs09FWj9Fy7AFJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZF1UGr18CFW3ZF4kXF48Xrb_yoWrCr4Dpw
+	4fAa4DtryYqr18Wr1UGr18JFy5Jw15Xan8JF1xWFyUuFZ8AwsYvryUWF4qgr1xJr48Gr1U
+	Ary5Gay5ua17ArDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
 	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
 	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
@@ -55,58 +54,101 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7uF48ZrWxXF1DZry5GrWruFg_yoW8Kr1DpF
 
 
 
-On 2023/5/21 下午6:31, WANG Xuerui wrote:
+On 2023/5/21 下午6:46, WANG Xuerui wrote:
 > On 2023/5/20 14:38, Jianmin Lv wrote:
->> From: Liu Peibao <liupeibao@loongson.cn>
->>
->> In DeviceTree path, when ht_vec_base is not zero, the hwirq of PCH PIC 
->> will
->> be assigned incorrectly. Because when pch_pic_domain_translate() adds the
->> ht_vec_base to hwirq, the hwirq dose not subtract the ht_vec_base when
+>> For IRQ controller INT_POLARITY regitser of Loongson-2K CPU
 > 
-> "does not have the ht_vec_base subtracted"?
+> "For the INT_POLARITY register of Loongson-2K series IRQ controller"?
+> 
+>> series, '0' indicates high level or rising edge triggered IRQ,
+>> '1' indicates low level or falling edge triggered IRQ.
+> 
+> Remove the two "IRQ"s; the topic is "polarity", not "IRQs".
+> 
+> Also please mention the source of this information; I've checked the 
+> Loongson 2K1000LA User Manual v1.0 and it seems a similar description is 
+> found in Table 9-2, Section 9.3 (中断寄存器描述 / Description of the 
+> Interrupt Registers). It mentioned "Intpol_0" and "Intpol_1" but the 
+> description is consistent with the wording here.
+> 
+>>
+>> For Loongson-3A CPU series, setting INT_POLARITY register is not
+>> supported and writting it has no effect.
+> 
+> Only 3A and not the whole Loongson-3 series?
+> 
+> Also typo: "writing".
 > 
 
-Ok, I'll change it as your suggestion, thanks.
+Ok, I'll adjust the commit as your suggestion above, thanks.
 
->> calling irq_domain_set_info().
 >>
->> The ht_vec_base is designed for the parent irq chip/domain of the PCH 
->> PIC.
->> It seems not proper to deal this in callbacks of the PCH PIC domain and
->> let's put this back like the initial commit ef8c01eb64ca ("irqchip: Add
->> Loongson PCH PIC controller").
+>> So trigger polarity setting shouled be fixed for Loongson-2K CPU
+>> series.
+> 
+> The changes seem to be just inversion of the polarity flags. It should 
+> be correct given your description, and not affect Loongson-3 series 
+> because it's supposed to behave as noops; it may be better to move the 
+> explanation regarding Loongson-3 behavior to code comment (e.g. 
+> somewhere near the definition of LIOINTC_REG_INTC_POL) so it's 
+> immediately visible to drive-by readers not familiar with LoongArch 
+> internals, without them having to dig through commit history to see this.
+> 
+Good suggestion, I'll add the information near the definition of 
+LIOINTC_REG_INTC_POL.
+
 >>
->> Fixes: bcdd75c596c8 ("irqchip/loongson-pch-pic: Add ACPI init support")
+>> Fixes: 17343d0b4039 ("irqchip/loongson-liointc: Support to set IRQ 
+>> type for ACPI path")
 >> Cc: stable@vger.kernel.org
->> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+>> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
 >> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> 
+> Again, who's the proper author for this patch? Given the tags it seems 
+> the author should be Chong Qiao, but I didn't see an Author: line at the 
+> beginning.
+> 
+
+Again, I'll adjust them as following:
+Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+
+Thanks.
+
 >> ---
->>   drivers/irqchip/irq-loongson-pch-pic.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>   drivers/irqchip/irq-loongson-liointc.c | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
 >>
->> diff --git a/drivers/irqchip/irq-loongson-pch-pic.c 
->> b/drivers/irqchip/irq-loongson-pch-pic.c
->> index 921c5c0190d1..93a71f66efeb 100644
->> --- a/drivers/irqchip/irq-loongson-pch-pic.c
->> +++ b/drivers/irqchip/irq-loongson-pch-pic.c
->> @@ -164,7 +164,7 @@ static int pch_pic_domain_translate(struct 
->> irq_domain *d,
->>           if (fwspec->param_count < 2)
->>               return -EINVAL;
->> -        *hwirq = fwspec->param[0] + priv->ht_vec_base;
->> +        *hwirq = fwspec->param[0];
->>           *type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
->>       } else {
->>           if (fwspec->param_count < 1)
->> @@ -196,7 +196,7 @@ static int pch_pic_alloc(struct irq_domain 
->> *domain, unsigned int virq,
->>       parent_fwspec.fwnode = domain->parent->fwnode;
->>       parent_fwspec.param_count = 1;
->> -    parent_fwspec.param[0] = hwirq;
->> +    parent_fwspec.param[0] = hwirq + priv->ht_vec_base;
->>       err = irq_domain_alloc_irqs_parent(domain, virq, 1, 
->> &parent_fwspec);
->>       if (err)
+>> diff --git a/drivers/irqchip/irq-loongson-liointc.c 
+>> b/drivers/irqchip/irq-loongson-liointc.c
+>> index 8d00a9ad5b00..9a9c2bf048a3 100644
+>> --- a/drivers/irqchip/irq-loongson-liointc.c
+>> +++ b/drivers/irqchip/irq-loongson-liointc.c
+>> @@ -116,19 +116,19 @@ static int liointc_set_type(struct irq_data 
+>> *data, unsigned int type)
+>>       switch (type) {
+>>       case IRQ_TYPE_LEVEL_HIGH:
+>>           liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
+>> -        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
+>> +        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
+>>           break;
+>>       case IRQ_TYPE_LEVEL_LOW:
+>>           liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
+>> -        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
+>> +        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
+>>           break;
+>>       case IRQ_TYPE_EDGE_RISING:
+>>           liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
+>> -        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
+>> +        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
+>>           break;
+>>       case IRQ_TYPE_EDGE_FALLING:
+>>           liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
+>> -        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
+>> +        liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
+>>           break;
+>>       default:
+>>           irq_gc_unlock_irqrestore(gc, flags);
 > 
 
