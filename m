@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C6F0EC7
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 03:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 713B3EC4
+	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 03:12:23 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxZ+mX3WpkcMsKAA--.18315S3;
-	Mon, 22 May 2023 11:12:23 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S18;
+	by gateway (Coremail) with SMTP id _____8Bx5eiW3WpkVssKAA--.18696S3;
 	Mon, 22 May 2023 11:12:22 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S15;
+	Mon, 22 May 2023 11:12:21 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v11 16/31] LoongArch: KVM: Implement update VM id function
-Date: Mon, 22 May 2023 11:12:02 +0800
-Message-Id: <20230522031217.956464-17-zhaotianrui@loongson.cn>
+Subject: [PATCH v11 13/31] LoongArch: KVM: Implement misc vcpu related interfaces
+Date: Mon, 22 May 2023 11:11:59 +0800
+Message-Id: <20230522031217.956464-14-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230522031217.956464-1-zhaotianrui@loongson.cn>
 References: <20230522031217.956464-1-zhaotianrui@loongson.cn>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S18
+X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S15
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Aw1kJrW5GFWrWry3CF4rZrb_yoW8tr1rpr
-	WxCrn5Wr4rXwnxu3sIqw10qrn09395JF13Xa47Ja4Yyr17t34qkrWvkrWDAFyxXr1rAryx
-	XF15tF4jkF18A37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJw4ftr4xCF4xXFWrAF1rtFb_yoW5Zw4fpr
+	1kCw45Xw4rGrW7Ww1ftws09rsI93ykKr17ZryxW3yY9r4DtF15Ar4kKrWDAFW5JryrZF1S
+	yrn8Aa1Dua1Yy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -54,85 +54,133 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7Aw1kJrW5GFWrWry3CF4rZrb_yoW8tr1rpr
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
 	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement kvm check vmid and update vmid, the vmid should be checked before
-vcpu enter guest.
+Implement some misc vcpu relaterd interfaces, such as vcpu runnable,
+vcpu should kick, vcpu dump regs, etc.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vmid.c | 64 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 arch/loongarch/kvm/vmid.c
+ arch/loongarch/kvm/vcpu.c | 108 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
-diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
-new file mode 100644
-index 000000000000..6fef81b28a48
---- /dev/null
-+++ b/arch/loongarch/kvm/vmid.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index f661743dbe66..a314fb441962 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -12,6 +12,114 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+ 
++int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
++{
++	return !!(vcpu->arch.irq_pending) &&
++		vcpu->arch.mp_state.mp_state == KVM_MP_STATE_RUNNABLE;
++}
++
++int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
++{
++	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
++}
++
++bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
++{
++	return false;
++}
++
++vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
++{
++	return VM_FAULT_SIGBUS;
++}
++
++int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
++				  struct kvm_translation *tr)
++{
++	return -EINVAL;
++}
++
++int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return _kvm_pending_timer(vcpu) ||
++		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) &
++			(1 << INT_TI);
++}
++
++int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
++{
++	int i;
++
++	if (!vcpu)
++		return -1;
++
++	kvm_debug("vCPU Register Dump:\n");
++	kvm_debug("\tpc = 0x%08lx\n", vcpu->arch.pc);
++	kvm_debug("\texceptions: %08lx\n", vcpu->arch.irq_pending);
++
++	for (i = 0; i < 32; i += 4) {
++		kvm_debug("\tgpr%02d: %08lx %08lx %08lx %08lx\n", i,
++		       vcpu->arch.gprs[i],
++		       vcpu->arch.gprs[i + 1],
++		       vcpu->arch.gprs[i + 2], vcpu->arch.gprs[i + 3]);
++	}
++
++	kvm_debug("\tCRMOD: 0x%08llx, exst: 0x%08llx\n",
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD),
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT));
++
++	kvm_debug("\tERA: 0x%08llx\n", kvm_read_hw_gcsr(LOONGARCH_CSR_ERA));
++
++	return 0;
++}
++
++int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
++				struct kvm_mp_state *mp_state)
++{
++	*mp_state = vcpu->arch.mp_state;
++
++	return 0;
++}
++
++int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
++				struct kvm_mp_state *mp_state)
++{
++	int ret = 0;
++
++	switch (mp_state->mp_state) {
++	case KVM_MP_STATE_RUNNABLE:
++		vcpu->arch.mp_state = *mp_state;
++		break;
++	default:
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
++int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
++					struct kvm_guest_debug *dbg)
++{
++	return -EINVAL;
++}
++
++/**
++ * kvm_migrate_count() - Migrate timer.
++ * @vcpu:       Virtual CPU.
++ *
++ * Migrate hrtimer to the current CPU by cancelling and restarting it
++ * if it was running prior to being cancelled.
++ *
++ * Must be called when the vCPU is migrated to a different CPU to ensure that
++ * timer expiry during guest execution interrupts the guest and causes the
++ * interrupt to be delivered in a timely manner.
 + */
-+
-+#include <linux/kvm_host.h>
-+#include "trace.h"
-+
-+static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
++static void kvm_migrate_count(struct kvm_vcpu *vcpu)
 +{
-+	struct kvm_context *context;
-+	unsigned long vpid;
-+
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	vpid = context->vpid_cache + 1;
-+	if (!(vpid & vpid_mask)) {
-+		/* finish round of 64 bit loop */
-+		if (unlikely(!vpid))
-+			vpid = vpid_mask + 1;
-+
-+		/* vpid 0 reserved for root */
-+		++vpid;
-+
-+		/* start new vpid cycle */
-+		kvm_flush_tlb_all();
-+	}
-+
-+	context->vpid_cache = vpid;
-+	vcpu->arch.vpid = vpid;
++	if (hrtimer_cancel(&vcpu->arch.swtimer))
++		hrtimer_restart(&vcpu->arch.swtimer);
 +}
 +
-+void _kvm_check_vmid(struct kvm_vcpu *vcpu, int cpu)
-+{
-+	struct kvm_context *context;
-+	bool migrated;
-+	unsigned long ver, old, vpid;
-+
-+	/*
-+	 * Are we entering guest context on a different CPU to last time?
-+	 * If so, the vCPU's guest TLB state on this CPU may be stale.
-+	 */
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	migrated = (vcpu->arch.last_exec_cpu != cpu);
-+	vcpu->arch.last_exec_cpu = cpu;
-+
-+	/*
-+	 * Check if our vpid is of an older version
-+	 *
-+	 * We also discard the stored vpid if we've executed on
-+	 * another CPU, as the guest mappings may have changed without
-+	 * hypervisor knowledge.
-+	 */
-+	ver = vcpu->arch.vpid & ~vpid_mask;
-+	old = context->vpid_cache  & ~vpid_mask;
-+	if (migrated || (ver != old)) {
-+		_kvm_update_vpid(vcpu, cpu);
-+		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
-+	}
-+
-+	/* Restore GSTAT(0x50).vpid */
-+	vpid = (vcpu->arch.vpid & vpid_mask)
-+		<< CSR_GSTAT_GID_SHIFT;
-+	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
-+}
+ int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
+ {
+ 	unsigned long val;
 -- 
 2.39.1
 
