@@ -1,101 +1,164 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF8F7F0
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 02:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1684723048; bh=2I37PoGTbZtIxILPqHRdtx9Ofw+v5h7+2+yuRe0uyXY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KFsw6ekVQ3j3EjS4tBu9id9rY9133f1FoEeQzmnSPT1tW3x+0upklnWahcL7jgR6s
-	 RejJ0t8pcMOsGfbHRJUmPGc1SGQOYabX+Pu0nu3x1VWtVzNKUdsSdcTxJ6jMiqMYZI
-	 O9MTUADUpalQgYNg+EYrgio/RiRNJ471E+pxKZ1Q=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 114F4600DA;
-	Mon, 22 May 2023 10:37:27 +0800 (CST)
-Message-ID: <90b2fc60-af26-4ba6-f775-7db2514a62f4@xen0n.name>
-Date: Mon, 22 May 2023 10:37:26 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84DADA5C
+	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 03:12:21 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8CxE_CU3WpkDMsKAA--.18607S3;
+	Mon, 22 May 2023 11:12:20 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S8;
+	Mon, 22 May 2023 11:12:19 +0800 (CST)
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	maobibo@loongson.cn,
+	Xi Ruoyao <xry111@xry111.site>,
+	zhaotianrui@loongson.cn
+Subject: [PATCH v11 06/31] LoongArch: KVM: Implement vcpu create and destroy interface
+Date: Mon, 22 May 2023 11:11:52 +0800
+Message-Id: <20230522031217.956464-7-zhaotianrui@loongson.cn>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230522031217.956464-1-zhaotianrui@loongson.cn>
+References: <20230522031217.956464-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.0
-Subject: Re: [PATCH v10 00/30] Add KVM LoongArch support
-Content-Language: en-US
-To: maobibo <maobibo@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- Mark Brown <broonie@kernel.org>, Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
- Tianrui Zhao <zhaotianrui@loongson.cn>
-References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
- <02f07d8e-e1c2-2ec0-59c3-f5b4ef0463dc@loongson.cn>
- <4529ee5b-364a-7819-c727-71cf94057b8b@xen0n.name>
- <99371487-717a-64d6-1c3d-aaeaee6f20db@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <99371487-717a-64d6-1c3d-aaeaee6f20db@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S8
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxur1fAw1xCrW7Wr1ktw4UCFg_yoW5Cr47pF
+	4xCw15Ww48Jry7Gw1fXrn0vrn0qrW8uF12ga47X3ySyr1DtryFvF4vkrWDAFW3XayfZF1S
+	qF1rJF1Uuw4UAw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b4xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
+	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-On 2023/5/22 09:39, maobibo wrote:
-> 
-> 
-> 在 2023/5/21 18:22, WANG Xuerui 写道:
->> On 2023/5/18 10:56, maobibo wrote:
->>> <snip>
->> (BTW, how do people usually deal with pre-release hardware wit documentation not out yet? I suppose similar situations like this should turn up fairly often.)
-> Manual is actually one issue, however it does not prevent the review
-> process. There are some drivers for *fruit* devices, I can not find
-> the hw manual also.  With the manual, it helps to review and points
-> out the further and detailed issues.
+Implement vcpu create and destroy interface, saving some info
+into vcpu arch structure such as vcpu exception entrance, vcpu
+enter guest pointer, etc. Init vcpu timer and set address
+translation mode when vcpu create.
 
-There's a *slight* difference: the certain vendor you've mentioned is 
-historically uncooperative in providing the documentation, so outside 
-contributors had to reverse-engineer and document the HW themselves; but 
-in Loongson's case, you *are* the vendor, so you are probably in a 
-position that can make everyone's life easier by at least pushing for 
-the docs release...
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+---
+ arch/loongarch/kvm/vcpu.c | 88 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 arch/loongarch/kvm/vcpu.c
 
->>
->> Aside from this, there's another point: use of undocumented instructions in raw form with ".word". This currently doesn't work in LLVM/Clang <snip>
-> As for one new architecture, it is normal to use .word or .insn, instruction
-> will update for the first few years and also compiler may be not supported
-> timely. The other arch has the same phenomenon if you grep "\.insn", also
-> llvm on LoongArch supports ".word" directives.
-> 
-> After three or five years, we will remove these ".insn" macro when hw and
-> compiler is matured.
-
-Sorry for the confusion at my side; `.word` certainly works, what 
-doesn't work currently seems to be the `parse_r` helper. I know because 
-I've tried in the last week with latest LLVM/Clang snapshot. And you 
-can't write ergonomic inline asm with proper register allocator 
-awareness without the helper; the LoongArch assembler isn't capable of 
-assembling in a certain encoding format. With RISC-V `.insn` you can do 
-things like `.insn r 0xNN, 0, 0, a0, a1, a2`, but you cannot simply e.g. 
-express gcsrxchg with `.insn DJK 0x05000000, a0, a1, a2` because no such 
-instruction format convention has been standardized. (The notation 
-demonstrated here is taken from [1].)
-
-In any case, it seems best to at least wait for the documentation 
-release a little bit, or you should state clearly that this is not going 
-to happen soon, so people can properly manage their expectation and 
-prioritize. (For example, if I know docs and/or assembler support for 
-the virtualization extension won't come soon, then I'd work on 
-supporting the .word idiom before other things. Otherwise there are more 
-important things than that.)
-
-[1]: https://github.com/loongson/LoongArch-Documentation/pull/56
-
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+new file mode 100644
+index 000000000000..24b5b00266a1
+--- /dev/null
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/kvm_host.h>
++#include <asm/fpu.h>
++#include <asm/loongarch.h>
++#include <asm/setup.h>
++#include <asm/time.h>
++
++#define CREATE_TRACE_POINTS
++#include "trace.h"
++
++int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
++{
++	return 0;
++}
++
++int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
++{
++	unsigned long timer_hz;
++	struct loongarch_csrs *csr;
++
++	vcpu->arch.vpid = 0;
++
++	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
++	vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
++	vcpu->kvm->arch.online_vcpus = vcpu->vcpu_id + 1;
++
++	vcpu->arch.guest_eentry = (unsigned long)kvm_loongarch_ops->guest_eentry;
++	vcpu->arch.handle_exit = _kvm_handle_exit;
++	vcpu->arch.csr = kzalloc(sizeof(struct loongarch_csrs), GFP_KERNEL);
++	if (!vcpu->arch.csr)
++		return -ENOMEM;
++
++	/*
++	 * kvm all exceptions share one exception entry, and host <-> guest switch
++	 * also switch excfg.VS field, keep host excfg.VS info here
++	 */
++	vcpu->arch.host_ecfg = (read_csr_ecfg() & CSR_ECFG_VS);
++
++	/* Init */
++	vcpu->arch.last_sched_cpu = -1;
++	vcpu->arch.last_exec_cpu = -1;
++
++	/*
++	 * Initialize guest register state to valid architectural reset state.
++	 */
++	timer_hz = calc_const_freq();
++	kvm_init_timer(vcpu, timer_hz);
++
++	/* Set Initialize mode for GUEST */
++	csr = vcpu->arch.csr;
++	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CRMD, CSR_CRMD_DA);
++
++	/* Set cpuid */
++	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TMID, vcpu->vcpu_id);
++
++	/* start with no pending virtual guest interrupts */
++	csr->csrs[LOONGARCH_CSR_GINTC] = 0;
++
++	return 0;
++}
++
++void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
++{
++}
++
++void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
++{
++	int cpu;
++	struct kvm_context *context;
++
++	hrtimer_cancel(&vcpu->arch.swtimer);
++	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
++	kfree(vcpu->arch.csr);
++
++	/*
++	 * If the vCPU is freed and reused as another vCPU, we don't want the
++	 * matching pointer wrongly hanging around in last_vcpu.
++	 */
++	for_each_possible_cpu(cpu) {
++		context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++		if (context->last_vcpu == vcpu)
++			context->last_vcpu = NULL;
++	}
++}
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+2.39.1
 
