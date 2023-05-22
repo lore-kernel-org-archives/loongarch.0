@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C85AEA9
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDC85EB8
 	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 03:12:21 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxRPCT3Wpk4soKAA--.18735S3;
-	Mon, 22 May 2023 11:12:19 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxnOqU3WpkJMsKAA--.18489S3;
+	Mon, 22 May 2023 11:12:20 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S5;
-	Mon, 22 May 2023 11:12:18 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMiR3WpkJIFuAA--.54000S10;
+	Mon, 22 May 2023 11:12:20 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v11 03/31] LoongArch: KVM: Implement kvm hardware enable, disable interface
-Date: Mon, 22 May 2023 11:11:49 +0800
-Message-Id: <20230522031217.956464-4-zhaotianrui@loongson.cn>
+Subject: [PATCH v11 08/31] LoongArch: KVM: Implement vcpu handle exit interface
+Date: Mon, 22 May 2023 11:11:54 +0800
+Message-Id: <20230522031217.956464-9-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230522031217.956464-1-zhaotianrui@loongson.cn>
 References: <20230522031217.956464-1-zhaotianrui@loongson.cn>
@@ -35,108 +35,90 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S5
+X-CM-TRANSID:AQAAf8DxMMiR3WpkJIFuAA--.54000S10
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Ar4DJrWxKFW5ZFyDAF4kCrg_yoW8tF4fpr
-	W7AFW5Ary5tr1SgF93J3Zxtr13GrWvgay7Za12ya45Xw4UuF4rXF95Kr9rJFy5W3y8XF1S
-	v39ayFyF9F1DAwUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7WF17ArykWw17ZF48KFyxAFb_yoW8Cry7pr
+	4xCryY9w4rG34xJ39ayrs0qr4Yq3s7Kr17Zry3Xay2yFsFva45Zr48KrZrtFy5Ww1FqF1f
+	Xr1rG3WY9F4jywUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bw8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48J
-	MxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxV
-	WUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-	0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-	VjvjDU0xZFpf9x0zRByIUUUUUU=
+	b4kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
+	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
+	AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj4R_gAwDUUUU
 
-Implement kvm hardware enable, disable interface, setting
-the guest config register to enable virtualization features
-when called the interface.
+Implement vcpu handle exit interface, getting the exit code by ESTAT
+register and using kvm exception vector to handle it.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/main.c | 63 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 46 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index 228d21dc40ae..08e8ec497660 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -188,6 +188,69 @@ static void _kvm_init_gcsr_flag(void)
- 	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR3);
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index eca8b96a3e6e..ddea480fa5b0 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -55,6 +55,52 @@ static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
  }
  
-+void kvm_init_vmcs(struct kvm *kvm)
++/*
++ * Return 1 for resume guest and "<= 0" for resume host.
++ */
++static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
 +{
-+	kvm->arch.vmcs = vmcs;
++	unsigned long exst = vcpu->arch.host_estat;
++	u32 intr = exst & 0x1fff; /* ignore NMI */
++	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
++	int ret = RESUME_GUEST;
++
++	vcpu->mode = OUTSIDE_GUEST_MODE;
++
++	/* Set a default exit reason */
++	run->exit_reason = KVM_EXIT_UNKNOWN;
++	run->ready_for_interrupt_injection = 1;
++
++	local_irq_enable();
++	guest_state_exit_irqoff();
++
++	trace_kvm_exit(vcpu, exccode);
++	if (exccode) {
++		ret = _kvm_handle_fault(vcpu, exccode);
++	} else {
++		WARN(!intr, "suspicious vm exiting");
++		++vcpu->stat.int_exits;
++	}
++
++	cond_resched();
++	local_irq_disable();
++
++	if (ret == RESUME_HOST)
++		return ret;
++
++	/* Only check for signals if not already exiting to userspace */
++	if (signal_pending(current)) {
++		vcpu->run->exit_reason = KVM_EXIT_INTR;
++		++vcpu->stat.signal_exits;
++		return -EINTR;
++	}
++
++	kvm_pre_enter_guest(vcpu);
++	trace_kvm_reenter(vcpu);
++	guest_state_enter_irqoff();
++	return RESUME_GUEST;
 +}
 +
-+long kvm_arch_dev_ioctl(struct file *filp,
-+			unsigned int ioctl, unsigned long arg)
-+{
-+	return -ENOIOCTLCMD;
-+}
-+
-+#ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
-+int kvm_arch_hardware_enable(void)
-+{
-+	unsigned long gcfg = 0;
-+
-+	/* First init gtlbc, gcfg, gstat, gintc. All guest use the same config */
-+	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
-+	write_csr_gcfg(0);
-+	write_csr_gstat(0);
-+	write_csr_gintc(0);
-+
-+	/*
-+	 * Enable virtualization features granting guest direct control of
-+	 * certain features:
-+	 * GCI=2:       Trap on init or unimplement cache instruction.
-+	 * TORU=0:      Trap on Root Unimplement.
-+	 * CACTRL=1:    Root control cache.
-+	 * TOP=0:       Trap on Previlege.
-+	 * TOE=0:       Trap on Exception.
-+	 * TIT=0:       Trap on Timer.
-+	 */
-+	if (cpu_has_gcip_all)
-+		gcfg |= CSR_GCFG_GCI_SECURE;
-+	if (cpu_has_matc_root)
-+		gcfg |= CSR_GCFG_MATC_ROOT;
-+
-+	gcfg |= CSR_GCFG_TIT;
-+	write_csr_gcfg(gcfg);
-+
-+	kvm_flush_tlb_all();
-+
-+	/* Enable using TGID  */
-+	set_csr_gtlbc(CSR_GTLBC_USETGID);
-+	kvm_debug("gtlbc:%llx gintc:%llx gstat:%llx gcfg:%llx",
-+			read_csr_gtlbc(), read_csr_gintc(),
-+			read_csr_gstat(), read_csr_gcfg());
-+
-+	return 0;
-+}
-+
-+void kvm_arch_hardware_disable(void)
-+{
-+	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
-+	write_csr_gcfg(0);
-+	write_csr_gstat(0);
-+	write_csr_gintc(0);
-+
-+	/* Flush any remaining guest TLB entries */
-+	kvm_flush_tlb_all();
-+}
-+#endif
-+
- static int kvm_loongarch_env_init(void)
+ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
  {
- 	struct kvm_context *context;
+ 	unsigned long timer_hz;
 -- 
 2.39.1
 
