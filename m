@@ -1,124 +1,106 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39D5B1EA7C
-	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 10:22:17 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx6fHYk2xkqQgAAA--.200S3;
-	Tue, 23 May 2023 18:22:16 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxkrDWk2xk3CNwAA--.57318S4;
-	Tue, 23 May 2023 18:22:16 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: Hans-Peter Nilsson <hp@axis.com>,
-	Leo Yan <leo.yan@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 2/2] perf LoongArch: Simplify mksyscalltbl
-Date: Tue, 23 May 2023 18:22:07 +0800
-Message-Id: <1684837327-18203-3-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8BxkrDWk2xk3CNwAA--.57318S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zry5GF45JF1xWr4rurWDXFb_yoW8Zr4xpF
-	s3Cr9rta1rZr1xCwnF9r42qryrCws7Jr1YvFyvy3ySvw13C34rAry8Was3GFyxG3y8trWF
-	vryFqryUKa18XaDanT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bh8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	M2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
-	CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2
-	z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x
-	0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCF
-	I7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-	xVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
-	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4j
-	6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxfHUUUUUU
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210411EA6C
+	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 10:26:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C80B6C433D2
+	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 10:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684837613;
+	bh=0vlCDn5GYXan9qivPDneQ2nYL3hkWFznEm195urAu+4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=q/nNk8Zlf7v9fHI6+tL4MQADuV0OJXDkiBSDRZ/yyPbxZPtdKvzjBuVW5SB5Zs7pV
+	 rBCpiiJ+PlK8q26rSP4InoJjgEB9SMROwUc84eqeRk9umUs9eAEkDd7U72LQhRifFs
+	 BuHN3V+mOBBrcVCDsKa9yfb2p0/4M+FI7etoyz6p5m77EA5KaL9NjeI/d+XonOsu1M
+	 DUXSZ6Bx2PxSFxRhqLkAFTPiiG1DyDnBc2GrhT+p4ygAp3VwMydxyzgn4a2SfNwLe6
+	 4KpeinGI7YQT4zv1vr9qWesb5wPBKyJkl4VKRWyIUxxXYuy/5h5I7RLiVdvvKAaPZe
+	 YXJrOF8RZbVEA==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-96aae59bbd6so1337826066b.3
+        for <loongarch@lists.linux.dev>; Tue, 23 May 2023 03:26:53 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwyyLMFrtSiiTVBizXlust+2O34ovFCJsir54PxD++egGnkK9x7
+	FPHVxCkZ3hvilURplkEjzPyK0YU+STjqEAxcxoc=
+X-Google-Smtp-Source: ACHHUZ7SrLdSYlyQXm8aeoe997GjeZoDbRoWBUEFfNUyjO6cHSN7A6U0G4UA/HJaXi1FQwlLAqQWqocH0I6LJu9t3b4=
+X-Received: by 2002:a17:907:9494:b0:96a:30b5:cfb0 with SMTP id
+ dm20-20020a170907949400b0096a30b5cfb0mr12353417ejc.22.1684837612089; Tue, 23
+ May 2023 03:26:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 23 May 2023 18:26:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Es7qs54zr_hNPwn5MfgeLiKr3sgoTUP5iNj3JrH-1Uw@mail.gmail.com>
+Message-ID: <CAAhV-H4Es7qs54zr_hNPwn5MfgeLiKr3sgoTUP5iNj3JrH-1Uw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf symbol: Add LoongArch case in get_plt_sizes()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In order to print the numerical entries of the syscall table,
-there is no need to call the host compiler to build and then
-run a program, this can be done directly by the shell script.
+Acked-by: Huacai Chen <chenhuacai@loongson.cn>
 
-This is similar with commit 9854e7ad35fe ("perf arm64: Simplify
-mksyscalltbl").
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- .../arch/loongarch/entry/syscalls/mksyscalltbl     | 32 ++++++----------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
-
-diff --git a/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-index c52156f..d7d97d5 100755
---- a/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-@@ -22,40 +22,24 @@ create_table_from_c()
- {
- 	local sc nr last_sc
- 
--	create_table_exe=`mktemp ${TMPDIR:-/tmp}/create-table-XXXXXX`
--
--	{
--
--	cat <<-_EoHEADER
--		#include <stdio.h>
--		#include "$input"
--		int main(int argc, char *argv[])
--		{
--	_EoHEADER
--
- 	while read sc nr; do
--		printf "%s\n" "	printf(\"\\t[%d] = \\\"$sc\\\",\\n\", $nr);"
--		last_sc=$nr
-+		printf "%s\n" "	[$nr] = \"$sc\","
-+		last_sc=$sc
- 	done
- 
--	printf "%s\n" "	printf(\"#define SYSCALLTBL_LOONGARCH_MAX_ID %d\\n\", $last_sc);"
--	printf "}\n"
--
--	} | $hostcc -I $incpath/include/uapi -o $create_table_exe -x c -
--
--	$create_table_exe
--
--	rm -f $create_table_exe
-+	printf "%s\n" "#define SYSCALLTBL_LOONGARCH_MAX_ID __NR_$last_sc"
- }
- 
- create_table()
- {
-+	echo "#include \"$input\""
- 	echo "static const char *syscalltbl_loongarch[] = {"
- 	create_table_from_c
- 	echo "};"
- }
- 
--$gcc -E -dM -x c  -I $incpath/include/uapi $input	       \
--	|sed -ne 's/^#define __NR_//p' \
--	|sort -t' ' -k2 -n \
-+$gcc -E -dM -x c -I $incpath/include/uapi $input		\
-+	|awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'	\
-+	|sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'	\
-+	|sort -t' ' -k2 -n					\
- 	|create_table
--- 
-2.1.0
-
+On Tue, May 23, 2023 at 5:57=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> We can see the following definitions in bfd/elfnn-loongarch.c:
+>
+>   #define PLT_HEADER_INSNS 8
+>   #define PLT_HEADER_SIZE (PLT_HEADER_INSNS * 4)
+>
+>   #define PLT_ENTRY_INSNS 4
+>   #define PLT_ENTRY_SIZE (PLT_ENTRY_INSNS * 4)
+>
+> so plt header size is 32 and plt entry size is 16 on LoongArch,
+> let us add LoongArch case in get_plt_sizes().
+>
+> Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dblob;f=3Dbfd/e=
+lfnn-loongarch.c
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>
+> v2: Add EM_LOONGARCH definition to avoid build error
+>
+>  tools/perf/util/symbol-elf.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index b2ed9cc..b3dbf6c 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -35,6 +35,10 @@
+>  #define EM_AARCH64     183  /* ARM 64 bit */
+>  #endif
+>
+> +#ifndef EM_LOONGARCH
+> +#define EM_LOONGARCH   258
+> +#endif
+> +
+>  #ifndef ELF32_ST_VISIBILITY
+>  #define ELF32_ST_VISIBILITY(o) ((o) & 0x03)
+>  #endif
+> @@ -411,6 +415,10 @@ static bool get_plt_sizes(struct dso *dso, GElf_Ehdr=
+ *ehdr, GElf_Shdr *shdr_plt,
+>                 *plt_header_size =3D 32;
+>                 *plt_entry_size =3D 16;
+>                 return true;
+> +       case EM_LOONGARCH:
+> +               *plt_header_size =3D 32;
+> +               *plt_entry_size =3D 16;
+> +               return true;
+>         case EM_SPARC:
+>                 *plt_header_size =3D 48;
+>                 *plt_entry_size =3D 12;
+> --
+> 2.1.0
+>
+>
