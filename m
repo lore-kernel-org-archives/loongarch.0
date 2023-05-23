@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0E871EA60
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FED1EA6B
 	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 10:22:17 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx6fHYk2xkkQgAAA--.199S3;
+	by gateway (Coremail) with SMTP id _____8CxZ_HYk2xknAgAAA--.135S3;
 	Tue, 23 May 2023 18:22:16 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxkrDWk2xk3CNwAA--.57318S2;
-	Tue, 23 May 2023 18:22:14 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxkrDWk2xk3CNwAA--.57318S3;
+	Tue, 23 May 2023 18:22:15 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -23,42 +23,72 @@ Cc: Hans-Peter Nilsson <hp@axis.com>,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 0/2] perf tools: Modify mksyscalltbl
-Date: Tue, 23 May 2023 18:22:05 +0800
-Message-Id: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
+Date: Tue, 23 May 2023 18:22:06 +0800
+Message-Id: <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8BxkrDWk2xk3CNwAA--.57318S2
+In-Reply-To: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8BxkrDWk2xk3CNwAA--.57318S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4c8EcI0En4kS14v26r126r1DMxAqzxv26xkF7I0En4kS14v26r1q6r43
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8P5r7UUUU
-	U==
+X-Coremail-Antispam: 1Uk129KBjvJXoW7trWxur1DKr43Xr1kCr1UGFg_yoW8JF4kpr
+	s5C34DtayrWF1Iyw1xursIqFZ3Ca1kJF1Ygry0yrZakrnxJ3WrKryFq3Z0kFWxX34xK3yj
+	vFyrtFy5XF48XrJanT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+	Aaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+	O2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxUc66wDUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-Tiezhu Yang (2):
-  perf arm64: Handle __NR3264_ prefixed syscall number
-  perf LoongArch: Simplify mksyscalltbl
+After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
+in the generated syscall table file syscalls.c, there exist some
+__NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
+it looks like not so good, just do some small filter operations
+to handle __NR3264_ prefixed syscall number as a digital number.
 
- tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  |  7 +++--
- .../arch/loongarch/entry/syscalls/mksyscalltbl     | 32 ++++++----------------
- 2 files changed, 12 insertions(+), 27 deletions(-)
+Without this patch:
 
+  [__NR3264_ftruncate] = "ftruncate",
+
+With this patch:
+
+  [46] = "ftruncate",
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+index 22cdf91..59ab7939 100755
+--- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
++++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+@@ -39,7 +39,8 @@ create_table()
+ 	echo "};"
+ }
+ 
+-$gcc -E -dM -x c -I $incpath/include/uapi $input \
+-	|sed -ne 's/^#define __NR_//p' \
+-	|sort -t' ' -k2 -n	       \
++$gcc -E -dM -x c -I $incpath/include/uapi $input		\
++	|awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'	\
++	|sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'	\
++	|sort -t' ' -k2 -n					\
+ 	|create_table
 -- 
 2.1.0
 
