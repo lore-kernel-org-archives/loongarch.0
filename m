@@ -1,106 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210411EA6C
-	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 10:26:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C80B6C433D2
-	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 10:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684837613;
-	bh=0vlCDn5GYXan9qivPDneQ2nYL3hkWFznEm195urAu+4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=q/nNk8Zlf7v9fHI6+tL4MQADuV0OJXDkiBSDRZ/yyPbxZPtdKvzjBuVW5SB5Zs7pV
-	 rBCpiiJ+PlK8q26rSP4InoJjgEB9SMROwUc84eqeRk9umUs9eAEkDd7U72LQhRifFs
-	 BuHN3V+mOBBrcVCDsKa9yfb2p0/4M+FI7etoyz6p5m77EA5KaL9NjeI/d+XonOsu1M
-	 DUXSZ6Bx2PxSFxRhqLkAFTPiiG1DyDnBc2GrhT+p4ygAp3VwMydxyzgn4a2SfNwLe6
-	 4KpeinGI7YQT4zv1vr9qWesb5wPBKyJkl4VKRWyIUxxXYuy/5h5I7RLiVdvvKAaPZe
-	 YXJrOF8RZbVEA==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-96aae59bbd6so1337826066b.3
-        for <loongarch@lists.linux.dev>; Tue, 23 May 2023 03:26:53 -0700 (PDT)
-X-Gm-Message-State: AC+VfDwyyLMFrtSiiTVBizXlust+2O34ovFCJsir54PxD++egGnkK9x7
-	FPHVxCkZ3hvilURplkEjzPyK0YU+STjqEAxcxoc=
-X-Google-Smtp-Source: ACHHUZ7SrLdSYlyQXm8aeoe997GjeZoDbRoWBUEFfNUyjO6cHSN7A6U0G4UA/HJaXi1FQwlLAqQWqocH0I6LJu9t3b4=
-X-Received: by 2002:a17:907:9494:b0:96a:30b5:cfb0 with SMTP id
- dm20-20020a170907949400b0096a30b5cfb0mr12353417ejc.22.1684837612089; Tue, 23
- May 2023 03:26:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D47C1E501
+	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 10:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1684837640; bh=Rz/jMDI3oh2zrPusaXmjU04cYzz6hGQWeOgOEHalzd8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=c+zjYF5TpdsF52OTYDOxRLNuSsDFqIM3ZaPTqSGcWba5wKmKaSFNIfXz/kWtW8/D2
+	 jpOc3vobIycxsYyGlYOfhL08n2YfCo69J7M2h2NAMPv78M7OtpfJePRdo96mH2qNzo
+	 qBe84T+MmH3a7osEVPx1SpWyXFv8D9ey2OcvPl9g=
+Received: from [100.100.57.122] (unknown [58.34.185.106])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E29C160115;
+	Tue, 23 May 2023 18:27:19 +0800 (CST)
+Message-ID: <29a9c6b4-96b8-3fb5-9b7a-2f9dba97e06f@xen0n.name>
+Date: Tue, 23 May 2023 18:27:19 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 23 May 2023 18:26:39 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Es7qs54zr_hNPwn5MfgeLiKr3sgoTUP5iNj3JrH-1Uw@mail.gmail.com>
-Message-ID: <CAAhV-H4Es7qs54zr_hNPwn5MfgeLiKr3sgoTUP5iNj3JrH-1Uw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf symbol: Add LoongArch case in get_plt_sizes()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.0
+Subject: Re: [PATCH v10 00/30] Add KVM LoongArch support
+Content-Language: en-US
+To: maobibo <maobibo@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+ Mark Brown <broonie@kernel.org>, Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>
+References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
+ <02f07d8e-e1c2-2ec0-59c3-f5b4ef0463dc@loongson.cn>
+ <4529ee5b-364a-7819-c727-71cf94057b8b@xen0n.name>
+ <99371487-717a-64d6-1c3d-aaeaee6f20db@loongson.cn>
+ <90b2fc60-af26-4ba6-f775-7db2514a62f4@xen0n.name>
+ <1218d3f9-4955-7176-afbd-a0dfa0bd7565@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <1218d3f9-4955-7176-afbd-a0dfa0bd7565@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+On 2023/5/23 10:54, maobibo wrote:
+> 
+> [snip]
+> 
+> I hate parse_r helper also, it is hard to understand, the kernel about
+> LoongArch has the same issue. How about using a fixed register like this?
+> 
+> /* GCSR */
+> static __always_inline u64 gcsr_read(u32 reg)
+> {
+> 	u64 val = 0;
+> 
+> 	BUILD_BUG_ON(!__builtin_constant_p(reg));
+> 	/* Instructions will be available in binutils later */
+> 	asm volatile (
+> 		"parse_r __reg, %[val]\n\t"
 
-On Tue, May 23, 2023 at 5:57=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> We can see the following definitions in bfd/elfnn-loongarch.c:
->
->   #define PLT_HEADER_INSNS 8
->   #define PLT_HEADER_SIZE (PLT_HEADER_INSNS * 4)
->
->   #define PLT_ENTRY_INSNS 4
->   #define PLT_ENTRY_SIZE (PLT_ENTRY_INSNS * 4)
->
-> so plt header size is 32 and plt entry size is 16 on LoongArch,
-> let us add LoongArch case in get_plt_sizes().
->
-> Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dblob;f=3Dbfd/e=
-lfnn-loongarch.c
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->
-> v2: Add EM_LOONGARCH definition to avoid build error
->
->  tools/perf/util/symbol-elf.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index b2ed9cc..b3dbf6c 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -35,6 +35,10 @@
->  #define EM_AARCH64     183  /* ARM 64 bit */
->  #endif
->
-> +#ifndef EM_LOONGARCH
-> +#define EM_LOONGARCH   258
-> +#endif
-> +
->  #ifndef ELF32_ST_VISIBILITY
->  #define ELF32_ST_VISIBILITY(o) ((o) & 0x03)
->  #endif
-> @@ -411,6 +415,10 @@ static bool get_plt_sizes(struct dso *dso, GElf_Ehdr=
- *ehdr, GElf_Shdr *shdr_plt,
->                 *plt_header_size =3D 32;
->                 *plt_entry_size =3D 16;
->                 return true;
-> +       case EM_LOONGARCH:
-> +               *plt_header_size =3D 32;
-> +               *plt_entry_size =3D 16;
-> +               return true;
->         case EM_SPARC:
->                 *plt_header_size =3D 48;
->                 *plt_entry_size =3D 12;
-> --
-> 2.1.0
->
->
+Isn't this still parse_r-ing things? ;-)
+
+> 		/*
+> 		 * read val from guest csr register %[reg]
+> 		 * gcsrrd %[val], %[reg]
+> 		 */
+> 		".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | __reg\n\t"
+> 		: [val] "+r" (val)
+> 		: [reg] "i" (reg)
+> 		: "memory");
+> 
+> 	return val;
+> }
+> 
+> /* GCSR */
+> static __always_inline u64 gcsr_read(u32 reg)
+> {
+>          register unsigned long val asm("t0");
+
+I got what you're trying to accomplish here. At which point you may just 
+refer to how glibc implements its inline syscall templates and hardcode 
+both the input and output arguments, then simply hard-code the whole 
+instruction word. If others don't have opinions about doing things this 
+way, I wouldn't either.
+
+(CSR operations are not expected to become performance-sensitive in any 
+case, so you may freely choose registers here, and t0 for output seems 
+okay. I'd recommend stuffing "reg" to a temporary value bound to a0 though.)
+
+> 
+>          BUILD_BUG_ON(!__builtin_constant_p(reg));
+>          /* Instructions will be available in binutils later */
+>          asm volatile (
+>                  "parse_r __reg, %[val]\n\t"
+>                  /*
+>                   * read val from guest csr register %[reg]
+>                   * gcsrrd %[val], %[reg]
+>                   */
+>                  ".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | 12 \n\t"
+>                  : : [reg] "i" (reg)
+>                  : "memory", "t0");
+> 
+>          return val;
+> }
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
