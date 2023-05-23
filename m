@@ -1,162 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D521D1874
-	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 01:47:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F382C43445
-	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 01:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684806454;
-	bh=zF9SlkquxGLSSSsCHeIU+JOEWIonnAgASkV8Rx91284=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hNjsFAIRCjjLHInm0rtZOeU0u2QBN+7SX1d35PNhKmbjTJUNgZahsq+as7R+Uq9OB
-	 opALivvid8n+5J6g5NnVKfWiU8RP776bhJ+jplk0eZxY4zK42if6lw2/ScC7sbtg5D
-	 g0adg/Ex5tUOfEu5hYZZDIhtAggbQ4d3TOGf/Z05JD0U/G07UbG2LBCSuGHjQGZ3Kh
-	 4IOJ0cr2t9S3SRZNs5ZcixBhv+LW5+b6wHFlrlK7APDre14MyvXbu7odngO6PDsAcE
-	 f7BnxTC+lQAKOOqTHvw+qQUIUdcdW9jVtkYGEHTH3wPnBI1BjCBfiJ09IwBZPMeWEO
-	 N2+aZi+qyW7og==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-953343581a4so1014585966b.3
-        for <loongarch@lists.linux.dev>; Mon, 22 May 2023 18:47:34 -0700 (PDT)
-X-Gm-Message-State: AC+VfDy8pwWogUocXPUL7h0vBqfEQ3WLD4kNQHA739n+DZyZlsW/tspo
-	CIZm03W2Tn8QixwJCFAdqX1DKWLZtTEeFex1Euc=
-X-Google-Smtp-Source: ACHHUZ6qqygH0lMEsrELRXy5wCYzVStel8CIlNRie2g9W5SwbYX6OwQG92lQVrbI1jC1i6Ej47DgLVRkT82CbNgvOPE=
-X-Received: by 2002:a17:907:6e14:b0:971:5a46:8ac8 with SMTP id
- sd20-20020a1709076e1400b009715a468ac8mr418537ejc.27.1684806452724; Mon, 22
- May 2023 18:47:32 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370F35383
+	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 02:54:31 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8DxTuvhKmxkASYLAA--.19099S3;
+	Tue, 23 May 2023 10:54:25 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrbfKmxkK9ZvAA--.56532S3;
+	Tue, 23 May 2023 10:54:24 +0800 (CST)
+Message-ID: <1218d3f9-4955-7176-afbd-a0dfa0bd7565@loongson.cn>
+Date: Tue, 23 May 2023 10:54:23 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1683615352-10794-1-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H7waE0gmSU09YKJMHDAnj7BV7ukiLqWs+JzzLrHDG5z8w@mail.gmail.com>
- <20230518030618.GB1068119@leoy-yangtze.lan> <CAAhV-H6L9kNyGU2UrX7jyN_6O_pafSVSamP7DYHkzfMgmCxVXA@mail.gmail.com>
- <20230518032129.GC1068119@leoy-yangtze.lan> <CAAhV-H6_=qwheWvNozop2+9MexnOZQcva28xaeikCc49_DqABA@mail.gmail.com>
- <20230518040553.GE1068119@leoy-yangtze.lan> <ZGYXKnRZQh18D2Fd@kernel.org>
- <CAAhV-H40kQf5WD-8ozFwS6copfQaGtUJqm=nvQ6btXZnpDmZFA@mail.gmail.com> <387463f9-adb0-8e98-1de6-cae7a79a7d03@loongson.cn>
-In-Reply-To: <387463f9-adb0-8e98-1de6-cae7a79a7d03@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 23 May 2023 09:47:19 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4mLCZ7qN3y6siTzpaybMr64f4FrKhfUhA_Qjm-O+sKnQ@mail.gmail.com>
-Message-ID: <CAAhV-H4mLCZ7qN3y6siTzpaybMr64f4FrKhfUhA_Qjm-O+sKnQ@mail.gmail.com>
-Subject: Re: [PATCH] perf symbol: Add LoongArch case in get_plt_sizes()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v10 00/30] Add KVM LoongArch support
+Content-Language: en-US
+To: WANG Xuerui <kernel@xen0n.name>, Paolo Bonzini <pbonzini@redhat.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+ Mark Brown <broonie@kernel.org>, Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>
+References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
+ <02f07d8e-e1c2-2ec0-59c3-f5b4ef0463dc@loongson.cn>
+ <4529ee5b-364a-7819-c727-71cf94057b8b@xen0n.name>
+ <99371487-717a-64d6-1c3d-aaeaee6f20db@loongson.cn>
+ <90b2fc60-af26-4ba6-f775-7db2514a62f4@xen0n.name>
+From: maobibo <maobibo@loongson.cn>
+In-Reply-To: <90b2fc60-af26-4ba6-f775-7db2514a62f4@xen0n.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxqrbfKmxkK9ZvAA--.56532S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCw17XFWUJrWktF4xJFWrXwb_yoWrJFyDpa
+	y5uF4akF4vgFnYkwnFyr48u34akrWxGrW5Zr98Kwn7u3Z8AryxKr17tFs0kas8J3Z3CF1Y
+	qr4UtF1UCF4UA3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bq8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+	AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCa
+	FVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
+	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
+	aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
 
-On Mon, May 22, 2023 at 3:59=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
->
->
-> On 05/22/2023 11:50 AM, Huacai Chen wrote:
-> > Hi, Arnaldo,
-> >
-> > On Thu, May 18, 2023 at 8:16=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> >>
-> >> Em Thu, May 18, 2023 at 12:05:53PM +0800, Leo Yan escreveu:
-> >>> On Thu, May 18, 2023 at 11:57:29AM +0800, Huacai Chen wrote:
-> >>>> On Thu, May 18, 2023 at 11:21=E2=80=AFAM Leo Yan <leo.yan@linaro.org=
-> wrote:
-> >>>>>
-> >>>>> On Thu, May 18, 2023 at 11:12:26AM +0800, Huacai Chen wrote:
-> >>>>>> On Thu, May 18, 2023 at 11:06=E2=80=AFAM Leo Yan <leo.yan@linaro.o=
-rg> wrote:
-> >>>>>>>
-> >>>>>>> On Thu, May 18, 2023 at 10:11:27AM +0800, Huacai Chen wrote:
-> >>>>>>>> Queued, thanks.
-> >>>>>>>
-> >>>>>>> The patch is fine for me.
-> >>>>>>>
-> >>>>>>> Should not perf patches are to be merged via Arnaldo's tree?
-> >>>>>>
-> >>>>>> I think both are OK, if Arnaldo takes this patch, I will drop it.
-> >>>>>
-> >>>>> A good practice is to firstly inquiry the maintainers.
-> >>>>>
-> >>>>> AFAIK, Arnaldo will test perf patches before sending out pull reque=
-st;
-> >>>>> if perf patches are scattered out, it might be out of the testing
-> >>>>> radar.
-> >>>> OK, I know, thank you very much.
-> >>>
-> >>> You are welcome!
-> >>>
-> >>> I found the code base for bfd:
-> >>> https://github.com/bminor/binutils-gdb/blob/master/bfd/elfnn-loongarc=
-h.c
-> >>>
-> >>> And this patch is consistent with above link, FWIW:
-> >>>
-> >>> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> >>
-> >> Thanks, applied.
-> > I'm very sorry that this patch breaks cross-build. We need some
-> > additional modification.
-> >
-> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.=
-c
-> > index 5d409c26a22e..b3dbf6ca99a7 100644
-> > --- a/tools/perf/util/symbol-elf.c
-> > +++ b/tools/perf/util/symbol-elf.c
-> > @@ -35,6 +35,10 @@
-> >  #define EM_AARCH64     183  /* ARM 64 bit */
-> >  #endif
-> >
-> > +#ifndef EM_LOONGARCH
-> > +#define EM_LOONGARCH   258
-> > +#endif
-> > +
-> >  #ifndef ELF32_ST_VISIBILITY
-> >  #define ELF32_ST_VISIBILITY(o) ((o) & 0x03)
-> >  #endif
-> >
-> > Then, drop this patch to get an updated version, or let me send an
-> > incremental patch?
-> >
->
-> I tested this patch on native LoongArch and x86 system, I did not
-> hit the build error about undeclared EM_LOONGARCH both on LoongArch
-> and x86, because EM_LOONGARCH is defined in /usr/include/elf.h
->
-> Here is the x86 system info:
->
-> [root@fedora yangtiezhu]# cat /etc/fedora-release
-> Fedora release 38 (Thirty Eight)
-> [root@fedora yangtiezhu]# uname -m
-> x86_64
-> [root@fedora yangtiezhu]# grep -rn -w EM_LOONGARCH /usr/include/
-> /usr/include/linux/elf-em.h:54:#define EM_LOONGARCH    258    /*
-> LoongArch */
-> /usr/include/linux/audit.h:442:#define AUDIT_ARCH_LOONGARCH32
-> (EM_LOONGARCH|__AUDIT_ARCH_LE)
-> /usr/include/linux/audit.h:443:#define AUDIT_ARCH_LOONGARCH64
-> (EM_LOONGARCH|__AUDIT_ARCH_64BIT|__AUDIT_ARCH_LE)
-> /usr/include/elf.h:361:#define EM_LOONGARCH    258    /* LoongArch */
-> [root@fedora yangtiezhu]# rpm -qf /usr/include/elf.h
-> glibc-headers-x86-2.37-1.fc38.noarch
->
-> If I am missing something, please let me know.
-Fedora 38 has a very new toolchain, older distribution will meet build erro=
-rs.
 
-Huacai
->
-> Anyway, it is not a bad thing to add the EM_LOONGARCH definition
-> to avoid the build error on some systems which have no EM_LOONGARCH
-> in the glibc header.
->
-> Thanks,
-> Tiezhu
->
->
+
+在 2023/5/22 10:37, WANG Xuerui 写道:
+> On 2023/5/22 09:39, maobibo wrote:
+>>
+>>
+>> 在 2023/5/21 18:22, WANG Xuerui 写道:
+>>> On 2023/5/18 10:56, maobibo wrote:
+>>>> <snip>
+>>> (BTW, how do people usually deal with pre-release hardware wit documentation not out yet? I suppose similar situations like this should turn up fairly often.)
+>> Manual is actually one issue, however it does not prevent the review
+>> process. There are some drivers for *fruit* devices, I can not find
+>> the hw manual also.  With the manual, it helps to review and points
+>> out the further and detailed issues.
+> 
+> There's a *slight* difference: the certain vendor you've mentioned is historically uncooperative in providing the documentation, so outside contributors had to reverse-engineer and document the HW themselves; but in Loongson's case, you *are* the vendor, so you are probably in a position that can make everyone's life easier by at least pushing for the docs release...
+> 
+>>>
+>>> Aside from this, there's another point: use of undocumented instructions in raw form with ".word". This currently doesn't work in LLVM/Clang <snip>
+>> As for one new architecture, it is normal to use .word or .insn, instruction
+>> will update for the first few years and also compiler may be not supported
+>> timely. The other arch has the same phenomenon if you grep "\.insn", also
+>> llvm on LoongArch supports ".word" directives.
+>>
+>> After three or five years, we will remove these ".insn" macro when hw and
+>> compiler is matured.
+> 
+> Sorry for the confusion at my side; `.word` certainly works, what doesn't work currently seems to be the `parse_r` helper. I know because I've tried in the last week with latest LLVM/Clang snapshot. And you can't write ergonomic inline asm with proper register allocator awareness without the helper; the LoongArch assembler isn't capable of assembling in a certain encoding format. With RISC-V `.insn` you can do things like `.insn r 0xNN, 0, 0, a0, a1, a2`, but you cannot simply e.g. express gcsrxchg with `.insn DJK 0x05000000, a0, a1, a2` because no such instruction format convention has been standardized. (The notation demonstrated here is taken from [1].)
+
+I hate parse_r helper also, it is hard to understand, the kernel about
+LoongArch has the same issue. How about using a fixed register like this?
+
+/* GCSR */
+static __always_inline u64 gcsr_read(u32 reg)
+{
+	u64 val = 0;
+
+	BUILD_BUG_ON(!__builtin_constant_p(reg));
+	/* Instructions will be available in binutils later */
+	asm volatile (
+		"parse_r __reg, %[val]\n\t"
+		/*
+		 * read val from guest csr register %[reg]
+		 * gcsrrd %[val], %[reg]
+		 */
+		".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | __reg\n\t"
+		: [val] "+r" (val)
+		: [reg] "i" (reg)
+		: "memory");
+
+	return val;
+}
+
+/* GCSR */
+static __always_inline u64 gcsr_read(u32 reg)
+{
+        register unsigned long val asm("t0");
+
+        BUILD_BUG_ON(!__builtin_constant_p(reg));
+        /* Instructions will be available in binutils later */
+        asm volatile (
+                "parse_r __reg, %[val]\n\t"
+                /*
+                 * read val from guest csr register %[reg]
+                 * gcsrrd %[val], %[reg]
+                 */
+                ".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | 12 \n\t"
+                : : [reg] "i" (reg)
+                : "memory", "t0");
+
+        return val;
+} 
+
+Regards
+Bibo, Mao
+> 
+> In any case, it seems best to at least wait for the documentation release a little bit, or you should state clearly that this is not going to happen soon, so people can properly manage their expectation and prioritize. (For example, if I know docs and/or assembler support for the virtualization extension won't come soon, then I'd work on supporting the .word idiom before other things. Otherwise there are more important things than that.)
+> 
+> [1]: https://github.com/loongson/LoongArch-Documentation/pull/56
+> 
+
