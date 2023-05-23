@@ -1,139 +1,164 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370F35383
-	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 02:54:31 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8DxTuvhKmxkASYLAA--.19099S3;
-	Tue, 23 May 2023 10:54:25 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrbfKmxkK9ZvAA--.56532S3;
-	Tue, 23 May 2023 10:54:24 +0800 (CST)
-Message-ID: <1218d3f9-4955-7176-afbd-a0dfa0bd7565@loongson.cn>
-Date: Tue, 23 May 2023 10:54:23 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49FCA4C94
+	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 03:22:29 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.35])
+	by gateway (Coremail) with SMTP id _____8CxNulzMWxkeicLAA--.19250S3;
+	Tue, 23 May 2023 11:22:27 +0800 (CST)
+Received: from [10.20.42.35] (unknown [10.20.42.35])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHuRwMWxkvdtvAA--.57042S3;
+	Tue, 23 May 2023 11:22:25 +0800 (CST)
+Subject: Re: [PATCH v2 2/3] dt-bindings: soc: add loongson-2 pm
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Pavel Machek <pavel@ucw.cz>, Tiezhu Yang <yangtiezhu@loongson.cn>,
+ Marc Zyngier <maz@kernel.org>, Youling Tang <tangyouling@loongson.cn>,
+ Baoqi Zhang <zhangbaoqi@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Yun Liu <liuyun@loongson.cn>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, Jianmin Lv <lvjianmin@loongson.cn>,
+ wanghongliang@loongson.cn, Liu Peibao <liupeibao@loongson.cn>,
+ loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
+References: <20230522093156.7108-1-zhuyinbo@loongson.cn>
+ <20230522093156.7108-3-zhuyinbo@loongson.cn>
+ <20230522-kooky-outbid-82662b45d305@wendy>
+From: zhuyinbo <zhuyinbo@loongson.cn>
+Message-ID: <d88c0965-8f72-7be1-b67f-1bcf3be60da3@loongson.cn>
+Date: Tue, 23 May 2023 11:22:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v10 00/30] Add KVM LoongArch support
+In-Reply-To: <20230522-kooky-outbid-82662b45d305@wendy>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Language: en-US
-To: WANG Xuerui <kernel@xen0n.name>, Paolo Bonzini <pbonzini@redhat.com>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- Mark Brown <broonie@kernel.org>, Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
- Tianrui Zhao <zhaotianrui@loongson.cn>
-References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
- <02f07d8e-e1c2-2ec0-59c3-f5b4ef0463dc@loongson.cn>
- <4529ee5b-364a-7819-c727-71cf94057b8b@xen0n.name>
- <99371487-717a-64d6-1c3d-aaeaee6f20db@loongson.cn>
- <90b2fc60-af26-4ba6-f775-7db2514a62f4@xen0n.name>
-From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <90b2fc60-af26-4ba6-f775-7db2514a62f4@xen0n.name>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxqrbfKmxkK9ZvAA--.56532S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxCw17XFWUJrWktF4xJFWrXwb_yoWrJFyDpa
-	y5uF4akF4vgFnYkwnFyr48u34akrWxGrW5Zr98Kwn7u3Z8AryxKr17tFs0kas8J3Z3CF1Y
-	qr4UtF1UCF4UA3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8BxHuRwMWxkvdtvAA--.57042S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxAr45tr1fWw1xZF17WrWkXrb_yoW5tr1fpa
+	n7Ca1Ykr48ZF13uws5JFy8Aw1Y9rZakFsrXFZrJry0kr98u3WFq3y7KF98ZFW3ArykGFW2
+	vFyIgw4jgF4DCFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bq8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-	AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCa
-	FVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
-	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-	aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
+	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l42xK82IY6x
+	8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzgAwDUUUU
 
 
 
-在 2023/5/22 10:37, WANG Xuerui 写道:
-> On 2023/5/22 09:39, maobibo wrote:
+在 2023/5/22 下午8:47, Conor Dooley 写道:
+> Hey!
+> 
+> On Mon, May 22, 2023 at 05:31:55PM +0800, Yinbo Zhu wrote:
+>> Add the Loongson-2 SoC Power Management Controller binding with DT
+>> schema format using json-schema.
+> 
+> Grabbing thread from lore.kernel.org/all/20230522093156.7108-3-zhuyinbo%40loongson.cn/t.mbox.gz
+> Checking for newer revisions
+> Grabbing search results from lore.kernel.org
+> Analyzing 3 messages in the thread
+> Checking attestation on all messages, may take a moment...
+> ---
+>    [PATCH v2 1/3] loongarch: export loongarch pm interface
+>      + Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>    [PATCH v2 2/3] dt-bindings: soc: add loongson-2 pm
+>      + Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>    ERROR: missing [3/3]!
+> ---
+> Total patches: 2
+> ---
+> WARNING: Thread incomplete!
+> Applying: loongarch: export loongarch pm interface
+> Applying: dt-bindings: soc: add loongson-2 pm
+> 
+> Looks like the user for these bindings got lost somewhere along the way?
+> Please make sure to keep a series threaded.
+
+okay, I got it.  I will use a thread to send a series patch.
+
+> 
 >>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> ---
+>>   .../soc/loongson/loongson,ls2k-pmc.yaml       | 51 +++++++++++++++++++
+>>   MAINTAINERS                                   |  6 +++
+>>   2 files changed, 57 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
 >>
->> 在 2023/5/21 18:22, WANG Xuerui 写道:
->>> On 2023/5/18 10:56, maobibo wrote:
->>>> <snip>
->>> (BTW, how do people usually deal with pre-release hardware wit documentation not out yet? I suppose similar situations like this should turn up fairly often.)
->> Manual is actually one issue, however it does not prevent the review
->> process. There are some drivers for *fruit* devices, I can not find
->> the hw manual also.  With the manual, it helps to review and points
->> out the further and detailed issues.
+>> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
+>> new file mode 100644
+>> index 000000000000..ddad62889c60
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
+>> @@ -0,0 +1,51 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-pmc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Loongson-2 Power Manager controller
+>> +
+>> +maintainers:
+>> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - enum:
+>> +          - loongson,ls2k-pmc
+>> +      - const: syscon
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  suspend-address:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      The "suspend-address" is a deep sleep state (Suspend To RAM)
+>> +      firmware entry address which was jumped from kernel and it's
+>> +      value was dependent on specific platform firmware code. In
+>> +      addition, the PM need according to it to indicate that current
+>> +      SoC whether support Suspend To RAM.
 > 
-> There's a *slight* difference: the certain vendor you've mentioned is historically uncooperative in providing the documentation, so outside contributors had to reverse-engineer and document the HW themselves; but in Loongson's case, you *are* the vendor, so you are probably in a position that can make everyone's life easier by at least pushing for the docs release...
+> I (still) think this property is rather odd, maybe I am just not really
+> understanding the property as it seems to be described partly in terms
+> of operating system behaviour rather than its actual function. "was
+> jumped from kernel" I don't get.
+
+The function Suspend-To-RAM include kernel logic and firmware logic and
+if no define "suspend-address" that kernel will can't into firmware 
+after suspend to ram and the Suspend-To-RAM function will not be 
+finished in LoongArch.
+
+
 > 
->>>
->>> Aside from this, there's another point: use of undocumented instructions in raw form with ".word". This currently doesn't work in LLVM/Clang <snip>
->> As for one new architecture, it is normal to use .word or .insn, instruction
->> will update for the first few years and also compiler may be not supported
->> timely. The other arch has the same phenomenon if you grep "\.insn", also
->> llvm on LoongArch supports ".word" directives.
->>
->> After three or five years, we will remove these ".insn" macro when hw and
->> compiler is matured.
+> The whole setup here seems a bit odd, but that's for the loongson arch
+> folks reviewing the actual code to comment on!
+
+okay, I got it.
+
+Thanks
+Yinbo.
 > 
-> Sorry for the confusion at my side; `.word` certainly works, what doesn't work currently seems to be the `parse_r` helper. I know because I've tried in the last week with latest LLVM/Clang snapshot. And you can't write ergonomic inline asm with proper register allocator awareness without the helper; the LoongArch assembler isn't capable of assembling in a certain encoding format. With RISC-V `.insn` you can do things like `.insn r 0xNN, 0, 0, a0, a1, a2`, but you cannot simply e.g. express gcsrxchg with `.insn DJK 0x05000000, a0, a1, a2` because no such instruction format convention has been standardized. (The notation demonstrated here is taken from [1].)
-
-I hate parse_r helper also, it is hard to understand, the kernel about
-LoongArch has the same issue. How about using a fixed register like this?
-
-/* GCSR */
-static __always_inline u64 gcsr_read(u32 reg)
-{
-	u64 val = 0;
-
-	BUILD_BUG_ON(!__builtin_constant_p(reg));
-	/* Instructions will be available in binutils later */
-	asm volatile (
-		"parse_r __reg, %[val]\n\t"
-		/*
-		 * read val from guest csr register %[reg]
-		 * gcsrrd %[val], %[reg]
-		 */
-		".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | __reg\n\t"
-		: [val] "+r" (val)
-		: [reg] "i" (reg)
-		: "memory");
-
-	return val;
-}
-
-/* GCSR */
-static __always_inline u64 gcsr_read(u32 reg)
-{
-        register unsigned long val asm("t0");
-
-        BUILD_BUG_ON(!__builtin_constant_p(reg));
-        /* Instructions will be available in binutils later */
-        asm volatile (
-                "parse_r __reg, %[val]\n\t"
-                /*
-                 * read val from guest csr register %[reg]
-                 * gcsrrd %[val], %[reg]
-                 */
-                ".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | 12 \n\t"
-                : : [reg] "i" (reg)
-                : "memory", "t0");
-
-        return val;
-} 
-
-Regards
-Bibo, Mao
-> 
-> In any case, it seems best to at least wait for the documentation release a little bit, or you should state clearly that this is not going to happen soon, so people can properly manage their expectation and prioritize. (For example, if I know docs and/or assembler support for the virtualization extension won't come soon, then I'd work on supporting the .word idiom before other things. Otherwise there are more important things than that.)
-> 
-> [1]: https://github.com/loongson/LoongArch-Documentation/pull/56
+> Thanks,
+> Conor.
 > 
 
