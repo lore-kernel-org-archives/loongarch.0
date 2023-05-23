@@ -1,143 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71C894A840
-	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 11:57:23 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8DxqvIhqmxk6Q4AAA--.279S3;
-	Tue, 23 May 2023 19:57:21 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxMuUgqmxkoFFwAA--.55963S3;
-	Tue, 23 May 2023 19:57:20 +0800 (CST)
-Message-ID: <94b7f3d6-e2e1-be0a-cd39-dd1b1f1f607e@loongson.cn>
-Date: Tue, 23 May 2023 19:57:20 +0800
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1840F4A84E
+	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 12:31:45 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f417ea5252so50432435e9.0
+        for <loongarch@lists.linux.dev>; Tue, 23 May 2023 05:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684845103; x=1687437103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G+XmU9cW6dJqezkxpvVuKdHpfUq+glTTnVbU9jQUiIY=;
+        b=BDsW8NKXWqnFAViuFEK3+DwmsJ3XA06LSPv9HjHVs5GKyo1yV/SucJ936S6bNsIhJh
+         jTj4G9coN/rwe0OPxC1VlrWDIKgASIOfXqvRpTg6yP4NWUYkOGD9W4oeQpNYfYgutB4e
+         nj3tjodWahVPM2ZwAtnq+Nww6bHEbAwBK3vg6OysQWDqMNoDtG37mh6vGzCaH5ZdCAnr
+         UIra1foqagU/c/HW8F3S8UplRlbt91wPrgvKSbB6t5XKeTVtae9Yscrd+YXyb88dzuXe
+         johacs49XetzbV6WqEcwrprsN9kXEFVP51o5EN967GFxi+EHmn1AulV9lc7dyc1Fv1XP
+         InUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684845103; x=1687437103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G+XmU9cW6dJqezkxpvVuKdHpfUq+glTTnVbU9jQUiIY=;
+        b=GMjE3OyvtiK74iE2rswlbt9wlkyAGlkfLm2MybsgxhOAaOgNEPJS5fBnt9C4rAYjXH
+         Mwk444RRN3niZQQslHwXJM3z7G5T2OcuvM5Zed/4X7eH4+S82VA4Etw0CyTboqBhRPtz
+         2KoPXdUnwqmkq0aXazhiPBvdkM3umNPQ1AA/BmtyR0TSG+NrmNhZQT3wddIyUcdylHsh
+         2e/zGy8WyvXZXkTPfAQ3MN1QrNO6RkwolGBvHniuII60V0fiG89ffCae+Ovw6rjAtXZl
+         CSDCbhQlw1PHwvL176Ccm8NnXzr6oqFcAJECtDkKlDa2kF10upWoi6RZ8zOpvCM+H9lG
+         080g==
+X-Gm-Message-State: AC+VfDzoABttqXuaZbTDewlDPQaP1Zelu6IM60sOfp2PTIpNKW4slQv5
+	MlZTzoOZXaxfAm4Gw2RoNcJOu8VhWmUznbS6cms=
+X-Google-Smtp-Source: ACHHUZ7eyHVelDYqGRcyV5GEaa5qgxyRZz2b4R38sbUlVVncJAHgy5N45wc0X6Zmj95p6Lf77UFhSQw+36FXBfxCi9M=
+X-Received: by 2002:a05:600c:259:b0:3f4:f0c2:125 with SMTP id
+ 25-20020a05600c025900b003f4f0c20125mr9235031wmj.23.1684845102963; Tue, 23 May
+ 2023 05:31:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v10 00/30] Add KVM LoongArch support
-Content-Language: en-US
-To: WANG Xuerui <kernel@xen0n.name>, Paolo Bonzini <pbonzini@redhat.com>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- Mark Brown <broonie@kernel.org>, Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
- Tianrui Zhao <zhaotianrui@loongson.cn>
-References: <20230515021522.2445551-1-zhaotianrui@loongson.cn>
- <02f07d8e-e1c2-2ec0-59c3-f5b4ef0463dc@loongson.cn>
- <4529ee5b-364a-7819-c727-71cf94057b8b@xen0n.name>
- <99371487-717a-64d6-1c3d-aaeaee6f20db@loongson.cn>
- <90b2fc60-af26-4ba6-f775-7db2514a62f4@xen0n.name>
- <1218d3f9-4955-7176-afbd-a0dfa0bd7565@loongson.cn>
- <29a9c6b4-96b8-3fb5-9b7a-2f9dba97e06f@xen0n.name>
-From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <29a9c6b4-96b8-3fb5-9b7a-2f9dba97e06f@xen0n.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxMuUgqmxkoFFwAA--.55963S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZF15KFWxXry5Ww47Kw45ZFb_yoW5Cr1fpr
-	1kGr15Ary5Wr1kJr17Xr18Xry3Jw1UK3WDJr1DGFy5tF4UJr10qr4UXr1Y9rnrJr48Jr15
-	Jr1Utw13ur17Jr7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m2NtUUUUU==
+References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn> <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
+From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Date: Tue, 23 May 2023 15:31:06 +0300
+Message-ID: <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 23, 2023 at 1:22=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
+> in the generated syscall table file syscalls.c, there exist some
+> __NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
+> it looks like not so good, just do some small filter operations
+> to handle __NR3264_ prefixed syscall number as a digital number.
+>
+> Without this patch:
+>
+>   [__NR3264_ftruncate] =3D "ftruncate",
+>
+> With this patch:
+>
+>   [46] =3D "ftruncate",
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/pe=
+rf/arch/arm64/entry/syscalls/mksyscalltbl
+> index 22cdf91..59ab7939 100755
+> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+> @@ -39,7 +39,8 @@ create_table()
+>         echo "};"
+>  }
+>
+> -$gcc -E -dM -x c -I $incpath/include/uapi $input \
+> -       |sed -ne 's/^#define __NR_//p' \
+> -       |sort -t' ' -k2 -n             \
+> +$gcc -E -dM -x c -I $incpath/include/uapi $input               \
+> +       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
+> +       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
+> +       |sort -t' ' -k2 -n                                      \
+>         |create_table
+> --
+> 2.1.0
+>
 
-
-在 2023/5/23 18:27, WANG Xuerui 写道:
-> On 2023/5/23 10:54, maobibo wrote:
->>
->> [snip]
->>
->> I hate parse_r helper also, it is hard to understand, the kernel about
->> LoongArch has the same issue. How about using a fixed register like this?
->>
->> /* GCSR */
->> static __always_inline u64 gcsr_read(u32 reg)
->> {
->>     u64 val = 0;
->>
->>     BUILD_BUG_ON(!__builtin_constant_p(reg));
->>     /* Instructions will be available in binutils later */
->>     asm volatile (
->>         "parse_r __reg, %[val]\n\t"
-> 
-> Isn't this still parse_r-ing things? ;-)
-> 
->>         /*
->>          * read val from guest csr register %[reg]
->>          * gcsrrd %[val], %[reg]
->>          */
->>         ".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | __reg\n\t"
->>         : [val] "+r" (val)
->>         : [reg] "i" (reg)
->>         : "memory");
->>
->>     return val;
->> }
->>
->> /* GCSR */
->> static __always_inline u64 gcsr_read(u32 reg)
->> {
->>          register unsigned long val asm("t0");
-> 
-> I got what you're trying to accomplish here. At which point you may just refer to how glibc implements its inline syscall templates and hardcode both the input and output arguments, then simply hard-code the whole instruction word. If others don't have opinions about doing things this way, I wouldn't either.
-> 
-> (CSR operations are not expected to become performance-sensitive in any case, so you may freely choose registers here, and t0 for output seems okay. I'd recommend stuffing "reg" to a temporary value bound to a0 though.)
-a0 is ok for me.
-
-riscv has better method than both parse_r helper and using tmp register
-as follows, maybe we can use the similiar method. 
-
-        .macro insn_r, opcode, func3, func7, rd, rs1, rs2
-        .4byte  ((\opcode << INSN_R_OPCODE_SHIFT) |             \
-                 (\func3 << INSN_R_FUNC3_SHIFT) |               \
-                 (\func7 << INSN_R_FUNC7_SHIFT) |               \
-                 (.L__gpr_num_\rd << INSN_R_RD_SHIFT) |         \
-                 (.L__gpr_num_\rs1 << INSN_R_RS1_SHIFT) |       \
-                 (.L__gpr_num_\rs2 << INSN_R_RS2_SHIFT))
-        .endm
-
-#define HINVAL_VVMA(vaddr, asid)                                \
-        INSN_R(OPCODE_SYSTEM, FUNC3(0), FUNC7(19),              \
-               __RD(0), RS1(vaddr), RS2(asid))
-
-asm volatile(HINVAL_VVMA(%0, %1)
-                        : : "r" (pos), "r" (asid) : "memory");
-
-Regards
-Bibo, Mao
-> 
->>
->>          BUILD_BUG_ON(!__builtin_constant_p(reg));
->>          /* Instructions will be available in binutils later */
->>          asm volatile (
->>                  "parse_r __reg, %[val]\n\t"
->>                  /*
->>                   * read val from guest csr register %[reg]
->>                   * gcsrrd %[val], %[reg]
->>                   */
->>                  ".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | 12 \n\t"
->>                  : : [reg] "i" (reg)
->>                  : "memory", "t0");
->>
->>          return val;
->> }
-> 
-
+As an aside, the awk + sed + sort parts of the command line may be
+reduced to the following awk script, if desired:
+awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
+        sub("^#define __NR_", "")
+        sub("^#define __NR3264_", "")
+        print | "sort -k2 -n"
+}'
