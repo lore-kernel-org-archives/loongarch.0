@@ -1,110 +1,162 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D859914266
-	for <loongarch@lists.linux.dev>; Mon, 22 May 2023 14:19:23 +0000 (UTC)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34MEFPol018220;
-	Mon, 22 May 2023 14:18:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=z2ZSDd89AXbLMt+6T7YsO2fdF0Yi8CPnR5yZ/lkSqSY=;
- b=b6NU5OeCXax+WrVwHJKBxU/2eP96sPFh/BlyPWwACQ/7wUWy6YKEjXCQw9pGRd6Hq9u6
- MLWn9B4REgKuxAwXLXxVoiQ/caTY+5b2VJYARsH2GLmnE/WF+75uxVAMsycMBbGGbTN0
- WdlESeBK8OJxuulsQRedH+dgpSmBwtogMv1YWS89315e3uleicCPE65liI3FCc0CRUsp
- IMoEoP6IguzCWOKm9MeOaeUZ0trUtnp3AJqz9TIT2AQ7wc2ARtMGjMJ+GvNpVqnqflEm
- 38hJ8QrXOMCAwnMAHMotE71twb0+4R7u+wbmNBqvd9/1givEuwWgmivHIjEM5kOfo1wL Yg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qr8y9au0p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 May 2023 14:18:53 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34MEFUDT018701;
-	Mon, 22 May 2023 14:18:52 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qr8y9atyc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 May 2023 14:18:52 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-	by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34M812dN006123;
-	Mon, 22 May 2023 14:18:49 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3qppe08ty6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 May 2023 14:18:49 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34MEIj8V35258654
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 May 2023 14:18:45 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C7DAC2004B;
-	Mon, 22 May 2023 14:18:45 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2169620040;
-	Mon, 22 May 2023 14:18:43 +0000 (GMT)
-Received: from osiris (unknown [9.171.20.176])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 22 May 2023 14:18:43 +0000 (GMT)
-Date: Mon, 22 May 2023 16:18:41 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: bigeasy@linutronix.de, mark.rutland@arm.com, maz@kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
-        kernel@xen0n.name, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com, pbonzini@redhat.com,
-        wanpengli@tencent.com, vkuznets@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, jgross@suse.com,
-        boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, rafael@kernel.org, longman@redhat.com,
-        boqun.feng@gmail.com, pmladek@suse.com, senozhatsky@chromium.org,
-        rostedt@goodmis.org, john.ogness@linutronix.de, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, jstultz@google.com, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 06/13] s390/time: Provide sched_clock_noinstr()
-Message-ID: <ZGt5wR/VyVFTPHEK@osiris>
-References: <20230519102058.581557770@infradead.org>
- <20230519102715.570170436@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D521D1874
+	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 01:47:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F382C43445
+	for <loongarch@lists.linux.dev>; Tue, 23 May 2023 01:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684806454;
+	bh=zF9SlkquxGLSSSsCHeIU+JOEWIonnAgASkV8Rx91284=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hNjsFAIRCjjLHInm0rtZOeU0u2QBN+7SX1d35PNhKmbjTJUNgZahsq+as7R+Uq9OB
+	 opALivvid8n+5J6g5NnVKfWiU8RP776bhJ+jplk0eZxY4zK42if6lw2/ScC7sbtg5D
+	 g0adg/Ex5tUOfEu5hYZZDIhtAggbQ4d3TOGf/Z05JD0U/G07UbG2LBCSuGHjQGZ3Kh
+	 4IOJ0cr2t9S3SRZNs5ZcixBhv+LW5+b6wHFlrlK7APDre14MyvXbu7odngO6PDsAcE
+	 f7BnxTC+lQAKOOqTHvw+qQUIUdcdW9jVtkYGEHTH3wPnBI1BjCBfiJ09IwBZPMeWEO
+	 N2+aZi+qyW7og==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-953343581a4so1014585966b.3
+        for <loongarch@lists.linux.dev>; Mon, 22 May 2023 18:47:34 -0700 (PDT)
+X-Gm-Message-State: AC+VfDy8pwWogUocXPUL7h0vBqfEQ3WLD4kNQHA739n+DZyZlsW/tspo
+	CIZm03W2Tn8QixwJCFAdqX1DKWLZtTEeFex1Euc=
+X-Google-Smtp-Source: ACHHUZ6qqygH0lMEsrELRXy5wCYzVStel8CIlNRie2g9W5SwbYX6OwQG92lQVrbI1jC1i6Ej47DgLVRkT82CbNgvOPE=
+X-Received: by 2002:a17:907:6e14:b0:971:5a46:8ac8 with SMTP id
+ sd20-20020a1709076e1400b009715a468ac8mr418537ejc.27.1684806452724; Mon, 22
+ May 2023 18:47:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230519102715.570170436@infradead.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 8u38vrNKBwlno1xrZVRe_usY_SDPYYwI
-X-Proofpoint-GUID: -02WeZ8d1wkDcrhX0-M0Ma7vvv7DyGGi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-22_10,2023-05-22_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- malwarescore=0 suspectscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0
- mlxlogscore=643 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305220117
+References: <1683615352-10794-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H7waE0gmSU09YKJMHDAnj7BV7ukiLqWs+JzzLrHDG5z8w@mail.gmail.com>
+ <20230518030618.GB1068119@leoy-yangtze.lan> <CAAhV-H6L9kNyGU2UrX7jyN_6O_pafSVSamP7DYHkzfMgmCxVXA@mail.gmail.com>
+ <20230518032129.GC1068119@leoy-yangtze.lan> <CAAhV-H6_=qwheWvNozop2+9MexnOZQcva28xaeikCc49_DqABA@mail.gmail.com>
+ <20230518040553.GE1068119@leoy-yangtze.lan> <ZGYXKnRZQh18D2Fd@kernel.org>
+ <CAAhV-H40kQf5WD-8ozFwS6copfQaGtUJqm=nvQ6btXZnpDmZFA@mail.gmail.com> <387463f9-adb0-8e98-1de6-cae7a79a7d03@loongson.cn>
+In-Reply-To: <387463f9-adb0-8e98-1de6-cae7a79a7d03@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 23 May 2023 09:47:19 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4mLCZ7qN3y6siTzpaybMr64f4FrKhfUhA_Qjm-O+sKnQ@mail.gmail.com>
+Message-ID: <CAAhV-H4mLCZ7qN3y6siTzpaybMr64f4FrKhfUhA_Qjm-O+sKnQ@mail.gmail.com>
+Subject: Re: [PATCH] perf symbol: Add LoongArch case in get_plt_sizes()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 19, 2023 at 12:21:04PM +0200, Peter Zijlstra wrote:
-> With the intent to provide local_clock_noinstr(), a variant of
-> local_clock() that's safe to be called from noinstr code (with the
-> assumption that any such code will already be non-preemptible),
-> prepare for things by providing a noinstr sched_clock_noinstr()
-> function.
-> 
-> Specifically, preempt_enable_*() calls out to schedule(), which upsets
-> noinstr validation efforts.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/s390/include/asm/timex.h |   13 +++++++++----
->  arch/s390/kernel/time.c       |   11 ++++++++++-
->  2 files changed, 19 insertions(+), 5 deletions(-)
+On Mon, May 22, 2023 at 3:59=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+>
+>
+> On 05/22/2023 11:50 AM, Huacai Chen wrote:
+> > Hi, Arnaldo,
+> >
+> > On Thu, May 18, 2023 at 8:16=E2=80=AFPM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> >>
+> >> Em Thu, May 18, 2023 at 12:05:53PM +0800, Leo Yan escreveu:
+> >>> On Thu, May 18, 2023 at 11:57:29AM +0800, Huacai Chen wrote:
+> >>>> On Thu, May 18, 2023 at 11:21=E2=80=AFAM Leo Yan <leo.yan@linaro.org=
+> wrote:
+> >>>>>
+> >>>>> On Thu, May 18, 2023 at 11:12:26AM +0800, Huacai Chen wrote:
+> >>>>>> On Thu, May 18, 2023 at 11:06=E2=80=AFAM Leo Yan <leo.yan@linaro.o=
+rg> wrote:
+> >>>>>>>
+> >>>>>>> On Thu, May 18, 2023 at 10:11:27AM +0800, Huacai Chen wrote:
+> >>>>>>>> Queued, thanks.
+> >>>>>>>
+> >>>>>>> The patch is fine for me.
+> >>>>>>>
+> >>>>>>> Should not perf patches are to be merged via Arnaldo's tree?
+> >>>>>>
+> >>>>>> I think both are OK, if Arnaldo takes this patch, I will drop it.
+> >>>>>
+> >>>>> A good practice is to firstly inquiry the maintainers.
+> >>>>>
+> >>>>> AFAIK, Arnaldo will test perf patches before sending out pull reque=
+st;
+> >>>>> if perf patches are scattered out, it might be out of the testing
+> >>>>> radar.
+> >>>> OK, I know, thank you very much.
+> >>>
+> >>> You are welcome!
+> >>>
+> >>> I found the code base for bfd:
+> >>> https://github.com/bminor/binutils-gdb/blob/master/bfd/elfnn-loongarc=
+h.c
+> >>>
+> >>> And this patch is consistent with above link, FWIW:
+> >>>
+> >>> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> >>
+> >> Thanks, applied.
+> > I'm very sorry that this patch breaks cross-build. We need some
+> > additional modification.
+> >
+> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.=
+c
+> > index 5d409c26a22e..b3dbf6ca99a7 100644
+> > --- a/tools/perf/util/symbol-elf.c
+> > +++ b/tools/perf/util/symbol-elf.c
+> > @@ -35,6 +35,10 @@
+> >  #define EM_AARCH64     183  /* ARM 64 bit */
+> >  #endif
+> >
+> > +#ifndef EM_LOONGARCH
+> > +#define EM_LOONGARCH   258
+> > +#endif
+> > +
+> >  #ifndef ELF32_ST_VISIBILITY
+> >  #define ELF32_ST_VISIBILITY(o) ((o) & 0x03)
+> >  #endif
+> >
+> > Then, drop this patch to get an updated version, or let me send an
+> > incremental patch?
+> >
+>
+> I tested this patch on native LoongArch and x86 system, I did not
+> hit the build error about undeclared EM_LOONGARCH both on LoongArch
+> and x86, because EM_LOONGARCH is defined in /usr/include/elf.h
+>
+> Here is the x86 system info:
+>
+> [root@fedora yangtiezhu]# cat /etc/fedora-release
+> Fedora release 38 (Thirty Eight)
+> [root@fedora yangtiezhu]# uname -m
+> x86_64
+> [root@fedora yangtiezhu]# grep -rn -w EM_LOONGARCH /usr/include/
+> /usr/include/linux/elf-em.h:54:#define EM_LOONGARCH    258    /*
+> LoongArch */
+> /usr/include/linux/audit.h:442:#define AUDIT_ARCH_LOONGARCH32
+> (EM_LOONGARCH|__AUDIT_ARCH_LE)
+> /usr/include/linux/audit.h:443:#define AUDIT_ARCH_LOONGARCH64
+> (EM_LOONGARCH|__AUDIT_ARCH_64BIT|__AUDIT_ARCH_LE)
+> /usr/include/elf.h:361:#define EM_LOONGARCH    258    /* LoongArch */
+> [root@fedora yangtiezhu]# rpm -qf /usr/include/elf.h
+> glibc-headers-x86-2.37-1.fc38.noarch
+>
+> If I am missing something, please let me know.
+Fedora 38 has a very new toolchain, older distribution will meet build erro=
+rs.
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Huacai
+>
+> Anyway, it is not a bad thing to add the EM_LOONGARCH definition
+> to avoid the build error on some systems which have no EM_LOONGARCH
+> in the glibc header.
+>
+> Thanks,
+> Tiezhu
+>
+>
