@@ -1,162 +1,111 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A01A29A0
-	for <loongarch@lists.linux.dev>; Wed, 24 May 2023 07:18:33 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bxy_JGum1kpVYAAA--.1033S3;
-	Wed, 24 May 2023 15:18:30 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrZEum1keVRzAA--.61319S3;
-	Wed, 24 May 2023 15:18:29 +0800 (CST)
-Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
-To: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
- <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
- <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
- <49e98308-ab8d-5811-66a8-9e17f22bb8c4@loongson.cn>
- <CAJ1xhMV=WaYbdGpiRedLUGnYp8JLzcP81Ksw1k1610xeHCiGBA@mail.gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <2932e212-ba17-090b-761b-b18e8f9c33e8@loongson.cn>
-Date: Wed, 24 May 2023 15:18:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BAFE8467
+	for <loongarch@lists.linux.dev>; Wed, 24 May 2023 07:42:02 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.185])
+	by gateway (Coremail) with SMTP id _____8Bxy_LIv21kEVgAAA--.1045S3;
+	Wed, 24 May 2023 15:42:00 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx673Cv21kE2RzAA--.60844S2;
+	Wed, 24 May 2023 15:42:00 +0800 (CST)
+From: Hongchen Zhang <zhanghongchen@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Hongchen Zhang <zhanghongchen@loongson.cn>,
+	David Hildenbrand <david@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Feiyang Chen <chenfeiyang@loongson.cn>,
+	Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH] LoongArch: let pmd_present return true when splitting pmd
+Date: Wed, 24 May 2023 15:41:32 +0800
+Message-Id: <20230524074132.10916-1-zhanghongchen@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAJ1xhMV=WaYbdGpiRedLUGnYp8JLzcP81Ksw1k1610xeHCiGBA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxqrZEum1keVRzAA--.61319S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWF1rCr4fXF4kXw18XF17GFg_yoW5urWfpr
-	n5Aay5tay0gF12kwn29rsIqrySy34ktr1DWryqyws3u3WDt3Z3Kr10vF4YkFWxXw4xKrW5
-	Zr10qFy7X3W5Z3DanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8Bx673Cv21kE2RzAA--.60844S2
+X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Zr45Gw4Dtr43Ww4kAry3CFg_yoW8KFWrp3
+	Z7CFykurW5Ka4Sy343tF13Xry7CrsrGFnaqryqgw1UAFy3X397Jrn8Kwn8ZFy8XayvvFW8
+	Wr1xWa15WFy3JwUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	bS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
 	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFOJ5UUUUU=
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4U
+	YxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
 
+when we split a pmd into ptes, pmd_present() and pmd_trans_huge() should
+return true,otherwise it would be treated as a swap pmd.
+As arm64 does in
+commit b65399f6111b ("arm64/mm: Change THP helpers to comply with generic MM semantics")
+we add a _PAGE_PRESENT_INVALID bit for LoongArch.
 
+Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+---
+ arch/loongarch/include/asm/pgtable-bits.h | 2 ++
+ arch/loongarch/include/asm/pgtable.h      | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-On 05/24/2023 02:43 PM, Alexander Kapshuk wrote:
-> On Wed, May 24, 2023 at 6:19 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->>
->>
->> On 05/23/2023 08:31 PM, Alexander Kapshuk wrote:
->>> On Tue, May 23, 2023 at 1:22 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>>>
->>>> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
->>>> in the generated syscall table file syscalls.c, there exist some
->>>> __NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
->>>> it looks like not so good, just do some small filter operations
->>>> to handle __NR3264_ prefixed syscall number as a digital number.
->>>>
->>>> Without this patch:
->>>>
->>>>   [__NR3264_ftruncate] = "ftruncate",
->>>>
->>>> With this patch:
->>>>
->>>>   [46] = "ftruncate",
->>>>
->>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>>> ---
->>>>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
->>>>  1 file changed, 4 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
->>>> index 22cdf91..59ab7939 100755
->>>> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
->>>> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
->>>> @@ -39,7 +39,8 @@ create_table()
->>>>         echo "};"
->>>>  }
->>>>
->>>> -$gcc -E -dM -x c -I $incpath/include/uapi $input \
->>>> -       |sed -ne 's/^#define __NR_//p' \
->>>> -       |sort -t' ' -k2 -n             \
->>>> +$gcc -E -dM -x c -I $incpath/include/uapi $input               \
->>>> +       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
->>>> +       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
->>>> +       |sort -t' ' -k2 -n                                      \
->>>>         |create_table
->>>> --
->>>> 2.1.0
->>>>
->>>
->>> As an aside, the awk + sed + sort parts of the command line may be
->>> reduced to the following awk script, if desired:
->>> awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
->>>         sub("^#define __NR_", "")
->>>         sub("^#define __NR3264_", "")
->>>         print | "sort -k2 -n"
->>> }'
->>>
->>
->> Hi Alexander,
->>
->> Thanks, it seems more simple and works well as expected.
->> Let us wait for more review comments before respin.
->>
->> If no any objections, I will send v2 with the following
->> changes based on the current patch in the next week.
->>
->> -$gcc -E -dM -x c -I $incpath/include/uapi $input               \
->> -       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
->> -       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
->> -       |sort -t' ' -k2 -n                                      \
->> +$gcc -E -dM -x c -I $incpath/include/uapi $input \
->> +       |awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
->> +               sub("^#define __NR_", "")
->> +               sub("^#define __NR3264_", "")
->> +               print | "sort -k2 -n"}' \
->>          |create_table
->>
->> Thanks,
->> Tiezhu
->>
->
-> Hi Tiezhu,
->
-> Thanks for your prompt feedback.
-> It was merely a suggestion entirely subject to your discretion.
->
-> If no other patterns are anticipated to be processed by the sub
+diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
+index 8b98d22a145b..a7469d28d9d0 100644
+--- a/arch/loongarch/include/asm/pgtable-bits.h
++++ b/arch/loongarch/include/asm/pgtable-bits.h
+@@ -22,12 +22,14 @@
+ #define	_PAGE_PFN_SHIFT		12
+ #define	_PAGE_SWP_EXCLUSIVE_SHIFT 23
+ #define	_PAGE_PFN_END_SHIFT	48
++#define _PAGE_PRESENT_INVALID_SHIFT 60
+ #define	_PAGE_NO_READ_SHIFT	61
+ #define	_PAGE_NO_EXEC_SHIFT	62
+ #define	_PAGE_RPLV_SHIFT	63
+ 
+ /* Used by software */
+ #define _PAGE_PRESENT		(_ULCAST_(1) << _PAGE_PRESENT_SHIFT)
++#define _PAGE_PRESENT_INVALID	(_ULCAST_(1) << _PAGE_PRESENT_INVALID_SHIFT)
+ #define _PAGE_WRITE		(_ULCAST_(1) << _PAGE_WRITE_SHIFT)
+ #define _PAGE_ACCESSED		(_ULCAST_(1) << _PAGE_ACCESSED_SHIFT)
+ #define _PAGE_MODIFIED		(_ULCAST_(1) << _PAGE_MODIFIED_SHIFT)
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index d28fb9dbec59..9a9f9ff9b709 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -213,7 +213,7 @@ static inline int pmd_bad(pmd_t pmd)
+ static inline int pmd_present(pmd_t pmd)
+ {
+ 	if (unlikely(pmd_val(pmd) & _PAGE_HUGE))
+-		return !!(pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE));
++		return !!(pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PRESENT_INVALID));
+ 
+ 	return pmd_val(pmd) != (unsigned long)invalid_pte_table;
+ }
+@@ -558,6 +558,7 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+ 
+ static inline pmd_t pmd_mkinvalid(pmd_t pmd)
+ {
++	pmd_val(pmd) |= _PAGE_PRESENT_INVALID;
+ 	pmd_val(pmd) &= ~(_PAGE_PRESENT | _PAGE_VALID | _PAGE_DIRTY | _PAGE_PROTNONE);
+ 
+ 	return pmd;
 
-Yes, there are only 2 patterns such as "__NR_" and "__NR3264_",
-I confirmed that in include/uapi/asm-generic/unistd.h.
-
-> routines, they may be combined into a single sub routine like so:
-> awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
->         sub("^#define __NR(3264)?_", "")
->         print | "sort -k2 -n"
-> }'
-
-Thanks again, I tested the above code, it also works well and
-looks better, I will modify the code as you suggested in v2.
-
-Thanks,
-Tiezhu
+base-commit: f1fcbaa18b28dec10281551dfe6ed3a3ed80e3d6
+-- 
+2.31.1
 
