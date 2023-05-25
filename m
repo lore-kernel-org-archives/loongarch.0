@@ -1,165 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E4860859
-	for <loongarch@lists.linux.dev>; Wed, 24 May 2023 16:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684946452;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YU48hv50mXOheNgtwLXvm6BL0As/IRm4S4+H7EFvY6A=;
-	b=eAByMmhDT9ISbPNj1Qw5cbCnnFT/hY0TyC39VLVPFoNQscpr/SRwGzDFk24t6cWgxq4v2w
-	Mg3czBRwtRBBqGHfzqc5W49F8MK90Ua6u3pBYJF9EeeolcNORy0iOoPsa7Smj8vH4Ew3iM
-	JKNGR9OOeHdaIwYMDeeOM9wZsrhcPDU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-336-QvwmKs93OlO8K6fz5tmnzA-1; Wed, 24 May 2023 12:40:50 -0400
-X-MC-Unique: QvwmKs93OlO8K6fz5tmnzA-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-30932d15a30so702199f8f.1
-        for <loongarch@lists.linux.dev>; Wed, 24 May 2023 09:40:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684946449; x=1687538449;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YU48hv50mXOheNgtwLXvm6BL0As/IRm4S4+H7EFvY6A=;
-        b=lpMdWzvRcpUzZnVmef2Vk6i26mzlLDbmPRYO9sRfAh5/jnXbOQhkMtpAOCskAmWpJX
-         mk6lLD5+dHlYrbKHxamw8t+n3jaayKLL84v6mgzsdbrUIZb4GRPabMCxc6IUDLyyr6h7
-         +jbq8qKK7r8MFhqJQQSZAB0zO9myb/v+JHTN2kVx7O4zDtVeJzI2hGvD5wvV7WDXqpWF
-         opSgqvS3g/t7t24Gz0xj2jPCTdRcyW074YUZHlUxtTfpO9qgyoAzOhkaeHYiVlkJgUiu
-         CjzPiweP41bL77xJLKbuu4DZIPNcecXYRAJ595KRlDBMOS0FMUZP0quMsmPrFgmNDjTJ
-         iRNw==
-X-Gm-Message-State: AC+VfDzyJ4mqLrT9uyJeEudDXEs4C2p4Mw4FUrTtcC8PCUQabRLkrUJg
-	egUygIW92rf7erEP25hH09Rjw7vyjz/H1WpVi+KdYc5pzTQRiWvUwhnb/eqfRuIAvV4dXO+l8tf
-	7KLCQ3zwl1igNJlkgpUvI
-X-Received: by 2002:a5d:4b8e:0:b0:306:3b78:fe33 with SMTP id b14-20020a5d4b8e000000b003063b78fe33mr295791wrt.32.1684946449592;
-        Wed, 24 May 2023 09:40:49 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4Eq4QeR9/BJ3B8RRkdoVpa79HYvap1nF06Mugaau72o6IHjT2PaOeIJyaUKVC9H0K24yEeVg==
-X-Received: by 2002:a5d:4b8e:0:b0:306:3b78:fe33 with SMTP id b14-20020a5d4b8e000000b003063b78fe33mr295772wrt.32.1684946449333;
-        Wed, 24 May 2023 09:40:49 -0700 (PDT)
-Received: from vschneid.remote.csb ([154.57.232.159])
-        by smtp.gmail.com with ESMTPSA id e9-20020adffc49000000b003078a3f3a24sm15120399wrs.114.2023.05.24.09.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 09:40:48 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>, bigeasy@linutronix.de
-Cc: mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
- will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- borntraeger@linux.ibm.com, svens@linux.ibm.com, pbonzini@redhat.com,
- wanpengli@tencent.com, vkuznets@redhat.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, jgross@suse.com,
- boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- rafael@kernel.org, peterz@infradead.org, longman@redhat.com,
- boqun.feng@gmail.com, pmladek@suse.com, senozhatsky@chromium.org,
- rostedt@goodmis.org, john.ogness@linutronix.de, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, jstultz@google.com, sboyd@kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-s390@vger.kernel.org, kvm@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 04/13] arm64/arch_timer: Provide noinstr
- sched_clock_read() functions
-In-Reply-To: <20230519102715.435618812@infradead.org>
-References: <20230519102058.581557770@infradead.org>
- <20230519102715.435618812@infradead.org>
-Date: Wed, 24 May 2023 17:40:47 +0100
-Message-ID: <xhsmho7m9ptrk.mognet@vschneid.remote.csb>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850C1849C
+	for <loongarch@lists.linux.dev>; Thu, 25 May 2023 08:56:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9425AC433EF;
+	Thu, 25 May 2023 08:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685004981;
+	bh=T3x6HsAO3RQbrXA8lAmGWzhIEFxQo3e/SuF/zmio4Hs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mRtUeUA+TIvgOPBLeDE0LEeluR6Lkzocki1ce4LxvGW3Kh74OsnmFoUFRRmQEOqgY
+	 vPbs8UllpBsHYQNETyRPKHNQXbkjzvcZ/qcNMJMO2YSn7oQ9dFwS8Ece6KmReDjGKv
+	 UHsfvGg5kn0tsbjmZAqeTwYppOTlzTxEsz6d+ZO+0GcrxaOJ0wF3N2ge6+B4EiqPJP
+	 Rr14bkavs3kxuqVnqdy8wSuE2VMYBsI0nPEtl+gq6jIzwj54Hlj3QoMxeOG7OsIhLt
+	 Fod2UUbjMqcZpiBjbvghJGsfjbRDVycHZQ/GoUx1cUGXfXrx/0id06caAMVPKwYBaI
+	 blTpXwhMXt6qg==
+Date: Thu, 25 May 2023 11:55:55 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 01/34] mm: Add PAGE_TYPE_OP folio functions
+Message-ID: <20230525085555.GV4967@kernel.org>
+References: <20230501192829.17086-1-vishal.moola@gmail.com>
+ <20230501192829.17086-2-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230501192829.17086-2-vishal.moola@gmail.com>
 
-On 19/05/23 12:21, Peter Zijlstra wrote:
-> With the intent to provide local_clock_noinstr(), a variant of
-> local_clock() that's safe to be called from noinstr code (with the
-> assumption that any such code will already be non-preemptible),
-> prepare for things by providing a noinstr sched_clock_read() function.
->
-> Specifically, preempt_enable_*() calls out to schedule(), which upsets
-> noinstr validation efforts.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hi,
+
+On Mon, May 01, 2023 at 12:27:56PM -0700, Vishal Moola (Oracle) wrote:
+> No folio equivalents for page type operations have been defined, so
+> define them for later folio conversions.
+
+Can you please elaborate why would we need folios for page table descriptors? 
+ 
+> Also changes the Page##uname macros to take in const struct page* since
+> we only read the memory here.
+> 
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 > ---
->  arch/arm64/include/asm/arch_timer.h  |    8 ----
->  drivers/clocksource/arm_arch_timer.c |   60 ++++++++++++++++++++++++++---------
->  2 files changed, 47 insertions(+), 21 deletions(-)
->
-> --- a/arch/arm64/include/asm/arch_timer.h
-> +++ b/arch/arm64/include/asm/arch_timer.h
-> @@ -88,13 +88,7 @@ static inline notrace u64 arch_timer_rea
->
->  #define arch_timer_reg_read_stable(reg)					\
->       ({								\
-> -		u64 _val;						\
-> -									\
-> -		preempt_disable_notrace();				\
-> -		_val = erratum_handler(read_ ## reg)();			\
-> -		preempt_enable_notrace();				\
-> -									\
-> -		_val;							\
-> +		erratum_handler(read_ ## reg)();			\
->       })
->
+>  include/linux/page-flags.h | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 1c68d67b832f..607b495d1b57 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -902,6 +902,8 @@ static inline bool is_page_hwpoison(struct page *page)
+>  
+>  #define PageType(page, flag)						\
+>  	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
+> +#define folio_test_type(folio, flag)					\
+> +	((folio->page.page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
+>  
+>  static inline int page_type_has_type(unsigned int page_type)
+>  {
+> @@ -914,20 +916,34 @@ static inline int page_has_type(struct page *page)
+>  }
+>  
+>  #define PAGE_TYPE_OPS(uname, lname)					\
+> -static __always_inline int Page##uname(struct page *page)		\
+> +static __always_inline int Page##uname(const struct page *page)		\
+>  {									\
+>  	return PageType(page, PG_##lname);				\
+>  }									\
+> +static __always_inline int folio_test_##lname(const struct folio *folio)\
+> +{									\
+> +	return folio_test_type(folio, PG_##lname);			\
+> +}									\
+>  static __always_inline void __SetPage##uname(struct page *page)		\
+>  {									\
+>  	VM_BUG_ON_PAGE(!PageType(page, 0), page);			\
+>  	page->page_type &= ~PG_##lname;					\
+>  }									\
+> +static __always_inline void __folio_set_##lname(struct folio *folio)	\
+> +{									\
+> +	VM_BUG_ON_FOLIO(!folio_test_type(folio, 0), folio);		\
+> +	folio->page.page_type &= ~PG_##lname;				\
+> +}									\
+>  static __always_inline void __ClearPage##uname(struct page *page)	\
+>  {									\
+>  	VM_BUG_ON_PAGE(!Page##uname(page), page);			\
+>  	page->page_type |= PG_##lname;					\
+> -}
+> +}									\
+> +static __always_inline void __folio_clear_##lname(struct folio *folio)	\
+> +{									\
+> +	VM_BUG_ON_FOLIO(!folio_test_##lname(folio), folio);		\
+> +	folio->page.page_type |= PG_##lname;				\
+> +}									\
+>  
 >  /*
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -191,22 +191,40 @@ u32 arch_timer_reg_read(int access, enum
->       return val;
->  }
->
-> -static notrace u64 arch_counter_get_cntpct_stable(void)
-> +static noinstr u64 _arch_counter_get_cntpct_stable(void)
->  {
->       return __arch_counter_get_cntpct_stable();
->  }
->
+>   * PageBuddy() indicates that the page is free and in the buddy system
+> -- 
+> 2.39.2
+> 
+> 
 
-I tripped over the underscores when reviewing this :( This must be
-getting close to the symbol length limit, but could we give this a helpful
-prefix or suffix? raw_* or *_noinstr?
-
-> @@ -1074,6 +1092,13 @@ struct arch_timer_kvm_info *arch_timer_g
->
->  static void __init arch_counter_register(unsigned type)
->  {
-> +	/*
-> +	 * Default to cp15 based access because arm64 uses this function for
-> +	 * sched_clock() before DT is probed and the cp15 method is guaranteed
-> +	 * to exist on arm64. arm doesn't use this before DT is probed so even
-> +	 * if we don't have the cp15 accessors we won't have a problem.
-> +	 */
-> +	u64 (*scr)(void) = arch_counter_get_cntvct;
-
-So this bit sent me on a little spelunking session :-)
-
-From a control flow perspective the initialization isn't required, but then
-I looked into the comment and found it comes from the
-arch_timer_read_counter() definition... Which itself doesn't get used by
-sched_clock() until the sched_clock_register() below!
-
-So AFAICT that comment was true as of
-
-  220069945b29 ("clocksource: arch_timer: Add support for memory mapped timers")
-
-but not after a commit that came 2 months later:
-
-  65cd4f6c99c1 ("arch_timer: Move to generic sched_clock framework")
-
-which IIUC made arm/arm64 follow the default approach of using the
-jiffy-based sched_clock() before probing DT/ACPI and registering a "proper"
-sched_clock.
-
-All of that to say: the comment about arch_timer_read_counter() vs early
-sched_clock() doesn't apply anymore, but I think we need to keep its
-initalization around for stuff like get_cycles(). This initialization here
-should be OK to put to the bin, though.
-
+-- 
+Sincerely yours,
+Mike.
