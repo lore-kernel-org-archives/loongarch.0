@@ -1,118 +1,92 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C742742C4
-	for <loongarch@lists.linux.dev>; Fri, 26 May 2023 12:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1685104750; x=1716640750;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0eDJx4cPwsq80iImTB8nLrKWaWeH8p+wAFaX0YpCUpY=;
-  b=HSSELNZpH6wuVX+rn33ma2ckbnZj4XxXM+T5bitFsjbx2cyy7a0g0nz9
-   SNspmHSKsNAFwcUDCHFkIrNBMmc4QdvSQY6QK/YDZWjsi9kuKtLbWvYW7
-   LDVmMVL2TWr1GKUDNkSv+EaaAD9azPxNZtYQN29mCLf/tEGCTBkJ9rX5C
-   7uUcCNZbsSP8mgC/EEI/wmjW5R9jAulXbW6dx2oB+3IyoszFWfvhVTtB4
-   1Sx8Q2CiS4wl1fMyR59mAgo+E4zMsc6puEWuv9JnoGjkeqt0Sj9h4N5A3
-   4NTt0j7+th+TA1T21d0Qs/H1c8/MibznujBePNWErTmUUZHN6fszLD4Cb
-   w==;
-X-IronPort-AV: E=Sophos;i="6.00,194,1681196400"; 
-   d="asc'?scan'208";a="154091159"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 May 2023 05:39:01 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 26 May 2023 05:38:55 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Fri, 26 May 2023 05:38:52 -0700
-Date: Fri, 26 May 2023 13:38:29 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-CC: Binbin Zhou <zhoubb.aaron@gmail.com>, Conor Dooley <conor@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo
-	<a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	<linux-rtc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>, Huacai Chen
-	<chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang
-	<kernel@xen0n.name>, <loongarch@lists.linux.dev>, Thomas Bogendoerfer
-	<tsbogend@alpha.franken.de>, "linux-mips@vger.kernel.org"
-	<linux-mips@vger.kernel.org>, Kelvin Cheung <keguang.zhang@gmail.com>, zhao
- zhang <zhzhl555@gmail.com>, Yang Ling <gnaygnil@gmail.com>,
-	<loongson-kernel@lists.loongnix.cn>
-Subject: Re: [PATCH V4 1/5] dt-bindings: rtc: Remove the LS2X from the
- trivial RTCs
-Message-ID: <20230526-hardwired-flashbulb-de3ef456f9a0@wendy>
-References: <cover.1684983279.git.zhoubinbin@loongson.cn>
- <9a2fbd6860f37760ca6089c150fd6f67628405f6.1684983279.git.zhoubinbin@loongson.cn>
- <20230525-custody-oversleep-f778eddf981c@spud>
- <CAMpQs4LuGAUfMNB93B=vgwJaLqEM6Cq5KyaCtnHOL7RWGuZy-w@mail.gmail.com>
- <20230526-dolly-reheat-06c4d5658415@wendy>
- <1EAC8FA8-4125-4436-9EE1-13B61B5687AF@flygoat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D69637D
+	for <loongarch@lists.linux.dev>; Sat, 27 May 2023 01:44:08 +0000 (UTC)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-30a892c45c4so794202f8f.3
+        for <loongarch@lists.linux.dev>; Fri, 26 May 2023 18:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685151846; x=1687743846;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ri/mthOsR+FC7s1/H/J1smTMHriaL5bub6hFt3L7yNE=;
+        b=qzKXlM7bDcnP8FYpH+hgQu6YAHWqCXYjZ7LEN9tFjXPIEEV93/kCYNn0wSyxxTBiLw
+         u7h18hNVtd2vAsOW4BtLDbf+lTr61rtgu0u4DSwqFDYJHfUBLa81hwmKL4a4M3ydMm76
+         0TzNtGUnkaGHQbdnqyVotJXZqlwNYXItrBG66FpKzi6/JF9Bm8NN4Zeqjskvbsmi/oGk
+         so4NatIaAGbiTwNgDy1E+AHp2yeUfrlO6j0dXDxehEtnJL8gD5vaj0BlaICMDm3TiZXR
+         VgU7AKCCEugx6pd2OnJc3ckNZdNI/UFOvpML77xO+p06+Wn92ORzX1FZ5YH+twxN/NUd
+         Xwvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685151846; x=1687743846;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ri/mthOsR+FC7s1/H/J1smTMHriaL5bub6hFt3L7yNE=;
+        b=Ci3wVzpNUKo4gN1P/ya0XAfxflUqHx52PZq/dS/aqaBrGtpWBK5F2+QTP4gVEHYuhs
+         FjI6Z00ySNlPlPxGWlV9BYPdWNrpBEDPJhSV7CvwWxty0puAGHJyd5QOo8nJIXkoxbDF
+         Hl4y/rH4EsT3l5uTcHovqCRMXcsp7U9sfjr5AxWsQUHgGPJh4/nYCOQbZz/s8GMZPMyF
+         /v56TuNJvqDB9SV+ee4wTZCbWgfLgnL5HGUe/hRW13SbIkj1wbm6GndAWo0qxrlHpyZw
+         6IqA8wOCHCjYsMV7cieTNjMhYpyVtuzsrXxgYVYeF57EbesyPjP7iP584JQslsY6EhYj
+         JPKg==
+X-Gm-Message-State: AC+VfDyyAuJfzmllnICj9RbSzdbC5UcWcuv9JN5lE9kirkiPXP6b9Brr
+	WetfDm7HDFCPSK87iISw3qmoSBm0wHCrGdrfA4a1Gw==
+X-Google-Smtp-Source: ACHHUZ6ZawPDKx7a8SGXdmOLKwXFTngn5C4MeWa2OyPUHjgySBUOAzaZd1fyftY3wtOoH7ZLX6RjcGxIdzOpHyG1wN4=
+X-Received: by 2002:adf:e94f:0:b0:2ef:ba4f:c821 with SMTP id
+ m15-20020adfe94f000000b002efba4fc821mr2588316wrn.36.1685151846445; Fri, 26
+ May 2023 18:44:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WSYevugeXVX6hZ2M"
-Content-Disposition: inline
-In-Reply-To: <1EAC8FA8-4125-4436-9EE1-13B61B5687AF@flygoat.com>
+References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
+ <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
+ <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
+ <49e98308-ab8d-5811-66a8-9e17f22bb8c4@loongson.cn> <CAJ1xhMV=WaYbdGpiRedLUGnYp8JLzcP81Ksw1k1610xeHCiGBA@mail.gmail.com>
+ <2932e212-ba17-090b-761b-b18e8f9c33e8@loongson.cn>
+In-Reply-To: <2932e212-ba17-090b-761b-b18e8f9c33e8@loongson.cn>
+From: Leo Yan <leo.yan@linaro.org>
+Date: Sat, 27 May 2023 09:43:55 +0800
+Message-ID: <CALZQ+UN0y29mJUypfSUHCLkMHzBVQTVU0i95MtHG3U+VzS+5Og@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Alexander Kapshuk <alexander.kapshuk@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Hans-Peter Nilsson <hp@axis.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
 
---WSYevugeXVX6hZ2M
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 24, 2023 at 03:18:28PM +0800, Tiezhu Yang wrote:
+> On 05/24/2023 02:43 PM, Alexander Kapshuk wrote:
 
-On Fri, May 26, 2023 at 01:22:15PM +0100, Jiaxun Yang wrote:
->=20
->=20
-> > 2023=E5=B9=B45=E6=9C=8826=E6=97=A5 13:06=EF=BC=8CConor Dooley <conor.do=
-oley@microchip.com> =E5=86=99=E9=81=93=EF=BC=9A
-> Hi all,
->=20
-> [...]
-> My two cents here as Loongson64 maintainer.
->=20
-> >=20
-> >>> To maintain compatibility with the existing devicetrees, should the o=
-ld
-> >>> "loongson,ls2x-rtc" be kept in the driver?
-> >>=20
-> >> No, It seems that wildcards in compatible are not allowed."
-> >> loongson,ls2x-rtc" itself was part of this patch series at one time,
-> >> but apparently it is not the right way to describe these chips.
-> >=20
-> > Right, but it has been merged - you are deleting the driver that suppor=
-ts
-> > it after all - which means that any dtb with the old compatible will
-> > stop working.
-> It is perfectly fine to break DTB compatibility for Loongson64 systems
-> As they *only* use builtin dtb. Bootloader will only pass machine type in=
-formation
-> and kernel will choose one dtb from it=E2=80=99s dtbs pool.
+[...]
 
-Ah, that is good to know thanks! I think that should be mentioned in the
-commit messages for the next revision.
+> Yes, there are only 2 patterns such as "__NR_" and "__NR3264_",
+> I confirmed that in include/uapi/asm-generic/unistd.h.
+>
+> > routines, they may be combined into a single sub routine like so:
+> > awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
+> >         sub("^#define __NR(3264)?_", "")
+> >         print | "sort -k2 -n"
+> > }'
 
-Cheers,
-Conor.
+Thanks for improving this, Tiezhu and Alexander.
 
---WSYevugeXVX6hZ2M
-Content-Type: application/pgp-signature; name="signature.asc"
+The format between '[46]' and '[__NR3264_ftruncate]' has changed back
+and forth for several times due to various reasons ;)
 
------BEGIN PGP SIGNATURE-----
+Above change is a good improvement for me and I tested at my side
+with below commands:
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZHCoRQAKCRB4tDGHoIJi
-0m7HAQDegOrEFQvfjtNlpAP88Pr1kQ6xFHXGlHvSieXoat9fSAD/fQLNWWmCM9oI
-Nebcr7/ygJ6fD/4udFPchcokkg67nA8=
-=4uhD
------END PGP SIGNATURE-----
+  $ aarch64-linux-gnu-gcc -E -dM -x c -I tools/include/uapi/ \
+    tools/include/uapi/asm-generic/unistd.h \
+    | awk '$2 ~ "__NR" && $3 !~ "__NR3264_" { sub("^#define
+__NR(3264)?_", ""); print | "sort -k2 -n"}'
 
---WSYevugeXVX6hZ2M--
+The result looks good to me.  You are welcome to add my review tag:
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
