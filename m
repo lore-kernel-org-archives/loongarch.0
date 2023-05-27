@@ -1,128 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FCF644
-	for <loongarch@lists.linux.dev>; Sat, 27 May 2023 05:32:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7482C433EF
-	for <loongarch@lists.linux.dev>; Sat, 27 May 2023 05:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685165571;
-	bh=NgYtuftywdY9FLSkoRc9as8wdNmR5QpobqvD812H/ew=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YZDzXUSAnP53o2yCWlLTATQDPY7oM6ePS4PJmOyH8A+2SdyjiUqRlA7ATj+trPwub
-	 7UQFANjyzAhvoumjdwbWUhMQZhA97YH7y583/2BqaI7SnpRANDlHPPv7094TT/V4+a
-	 h2EtDMTl1/Cu9BBAJqC93X+jYVHSHwLfdrwpT1iQz6lBpsNS0Rle7L+IY/3VzQdcKx
-	 WfQ8/Tg4lC5JggZ1RB5MIPnWlsh1DbuqaQSqS6DIl7nwh9SglumQtZUqgGPWq0R6z4
-	 xpMIdz0e4qSaWN1x/x5AhMq6Tt/Lshsbbz6Wiyc9g5YViOjEPZymmspQOBLh/6in6J
-	 q+703Tgr9Wt4w==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-973bf581759so260264666b.0
-        for <loongarch@lists.linux.dev>; Fri, 26 May 2023 22:32:51 -0700 (PDT)
-X-Gm-Message-State: AC+VfDxq9CUKcyi8VGMDl3yBz+jED6PJaUcLy6IOoqgN8atxUyJxwcYa
-	p3pwhKqSzW21Y3Jdnk+FDrDAPgplIRQEB9Lfew8=
-X-Google-Smtp-Source: ACHHUZ5pS9iHDzXG6sv+ImhknySwnRojiU77ciwfhaWLXqIPZqUdu6433Ha3MYtb1cxY+363JNB0n7ngXTWfsjXM2Hs=
-X-Received: by 2002:a17:907:94cf:b0:973:93d6:189f with SMTP id
- dn15-20020a17090794cf00b0097393d6189fmr4286386ejc.61.1685165570124; Fri, 26
- May 2023 22:32:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3159C8BE1
+	for <loongarch@lists.linux.dev>; Sat, 27 May 2023 09:23:01 +0000 (UTC)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-565c3aa9e82so12407137b3.2
+        for <loongarch@lists.linux.dev>; Sat, 27 May 2023 02:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685179380; x=1687771380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YuPOou2ChL9QAjpTDeWMH9OMTxYByyxepLnhS7nCInU=;
+        b=UypQL/1cTDi0jd5atuzjWwrNbEZHph9c81yu9B026PuuRefA2X7exdJbYS+AOx0nBp
+         gAM4/C+tc/QMH5TXhnmPmcu1CzlDW+sm2lJ1uH28kYO/Iahk4SZgNrQB5Kp7NSDEcVtl
+         TAIXWUnGNKQEkgubKWG/y2W1PtO0NSljxJeG0GJOdE717jgybvCyZtHUIJrl69fjSsPs
+         c/lHsTB2ZHY1ZfwRytky/hcr8KVRp2qlxPOTva3Ow0wHEH1rK4w+J+jRsB75f8REyKCi
+         ZDkc5cgIVQr4jW7tzWZEKPTjezlb0HKQII7emo61su46V7bDndt31K4y21jhN7q5jFqp
+         l23A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685179380; x=1687771380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YuPOou2ChL9QAjpTDeWMH9OMTxYByyxepLnhS7nCInU=;
+        b=do7qpT9ev527nfW6eaUyzJf9OsrDmYFdN0POBqM2a0y1fuaFycKjSqahUWaoZKYuD3
+         +rrjB7fKK8csaULXy8HTEPAyQYDjw62rNY9LSw+6WvKBZL/32bRt1wibQOsqIVzW0HGI
+         vrQHMR/RBh9UEC2DRbQUfY19Ilj3KD50Zcq39DS1so0jcOcuUroS9tsUKHl1hqFY5tfT
+         jtjJik4keo/HQM7kLT1IiEII1/EAnaZ0tHs3uxeWVWqYwJ4AZMnmAj+ZiiTdCaVKtakw
+         avhYf1S6znUHs7j4wqrrYfSrEQe7EFRhuLBWrfvk3RUQH1qly7bwOijOchmjqyZEKEXB
+         haXg==
+X-Gm-Message-State: AC+VfDx5j9pUMHkINQDjgU7oZpSBu4o1G9hOuiKrseQS7Mo/Nl8LuYQc
+	Ei8RNLxq/c6ERtoFREQAJfb6aDom+haYBakr39E=
+X-Google-Smtp-Source: ACHHUZ4nCuMzRZKk6dXeDY7dZsT6tQWUJPKOPNYzgMbPZwdT1gG/zS5BtPMCqhQZ/U1B3et1LNOcHl0PMtnNpQgUMl0=
+X-Received: by 2002:a0d:eb03:0:b0:565:e48d:32cf with SMTP id
+ u3-20020a0deb03000000b00565e48d32cfmr134704ywe.7.1685179380005; Sat, 27 May
+ 2023 02:23:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230524074132.10916-1-zhanghongchen@loongson.cn>
-In-Reply-To: <20230524074132.10916-1-zhanghongchen@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 27 May 2023 13:32:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4CC0S7ciLCqdb_AoQ+3-24uo6TZb9Pz7H1yu+mvspFDw@mail.gmail.com>
-Message-ID: <CAAhV-H4CC0S7ciLCqdb_AoQ+3-24uo6TZb9Pz7H1yu+mvspFDw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: let pmd_present return true when splitting pmd
-To: Hongchen Zhang <zhanghongchen@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, David Hildenbrand <david@redhat.com>, 
-	Mike Rapoport <rppt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+References: <cover.1684983279.git.zhoubinbin@loongson.cn> <9a2fbd6860f37760ca6089c150fd6f67628405f6.1684983279.git.zhoubinbin@loongson.cn>
+ <20230525-custody-oversleep-f778eddf981c@spud> <CAMpQs4LuGAUfMNB93B=vgwJaLqEM6Cq5KyaCtnHOL7RWGuZy-w@mail.gmail.com>
+ <20230526-dolly-reheat-06c4d5658415@wendy>
+In-Reply-To: <20230526-dolly-reheat-06c4d5658415@wendy>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Sat, 27 May 2023 17:22:48 +0800
+Message-ID: <CAMpQs4KeHCW+9ssAn-jF0efiUOzERRFDu9Sjz1Mtv5Lk1uFuPA@mail.gmail.com>
+Subject: Re: [PATCH V4 1/5] dt-bindings: rtc: Remove the LS2X from the trivial RTCs
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Conor Dooley <conor@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	linux-rtc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-mips@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>, 
+	zhao zhang <zhzhl555@gmail.com>, Yang Ling <gnaygnil@gmail.com>, 
 	loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Anshuman,
+On Fri, May 26, 2023 at 8:07=E2=80=AFPM Conor Dooley <conor.dooley@microchi=
+p.com> wrote:
+>
+> On Fri, May 26, 2023 at 09:37:02AM +0800, Binbin Zhou wrote:
+> > On Fri, May 26, 2023 at 1:05=E2=80=AFAM Conor Dooley <conor@kernel.org>=
+ wrote:
+> > > On Thu, May 25, 2023 at 08:55:23PM +0800, Binbin Zhou wrote:
+>
+> >> > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - loongson,ls1b-rtc
+> > > > +      - loongson,ls1c-rtc
+> > > > +      - loongson,ls7a-rtc
+> > > > +      - loongson,ls2k0500-rtc
+> > > > +      - loongson,ls2k1000-rtc
+> > > > +      - loongson,ls2k2000-rtc
+> > >
+> > > |+static const struct of_device_id loongson_rtc_of_match[] =3D {
+> > > |+       { .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1x_rtc_c=
+onfig },
+> > > |+       { .compatible =3D "loongson,ls1c-rtc", .data =3D &ls1x_rtc_c=
+onfig },
+> > > |+       { .compatible =3D "loongson,ls7a-rtc", .data =3D &generic_rt=
+c_config },
+> > > |+       { .compatible =3D "loongson,ls2k0500-rtc", .data =3D &generi=
+c_rtc_config },
+> > > |+       { .compatible =3D "loongson,ls2k1000-rtc", .data =3D &ls2k10=
+00_rtc_config },
+> > > |+       { .compatible =3D "loongson,ls2k2000-rtc", .data =3D &generi=
+c_rtc_config },
+> > > |+       { /* sentinel */ }
+> > > |+};
+> > >
+> > > This is a sign to me that your compatibles here are could do with som=
+e
+> > > fallbacks. Both of the ls1 ones are compatible with each other & ther=
+e
+> > > are three that are generic.
+> > >
+> > > I would allow the following:
+> > > "loongson,ls1b-rtc"
+> > > "loongson,ls1c-rtc", "loongson,ls1b-rtc"
+> > > "loongson,ls7a-rtc"
+> > > "loongson,ls2k0500-rtc", "loongson,ls7a-rtc"
+> > > "loongson,ls2k2000-rtc", "loongson,ls7a-rtc"
+> > > "loongson,ls2k1000-rtc"
+> > >
+> > > And then the driver only needs:
+> > > |+static const struct of_device_id loongson_rtc_of_match[] =3D {
+> > > |+       { .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1x_rtc_c=
+onfig },
+> > > |+       { .compatible =3D "loongson,ls7a-rtc", .data =3D &generic_rt=
+c_config },
+> > > |+       { .compatible =3D "loongson,ls2k1000-rtc", .data =3D &ls2k10=
+00_rtc_config },
+> > > |+       { /* sentinel */ }
+> > > |+};
+> > >
+> > > And ~if~when you add support for more devices in the future that are
+> > > compatible with the existing ones no code changes are required.
+> >
+> > Hi Conor:
+> >
+> > Thanks for your reply.
+> >
+> > Yes, this is looking much cleaner. But it can't show every chip that
+> > supports that driver.
+> >
+> > As we know, Loongson is a family of chips:
+> > ls1b/ls1c represent the Loongson-1 family of CPU chips;
+> > ls7a represents the Loongson LS7A bridge chip;
+> > ls2k0500/ls2k1000/ls2k2000 represent the Loongson-2 family of CPU chips=
+.
+> >
+> > Based on my previous conversations with Krzysztof, it seems that
+> > soc-based to order compatible is more popular, so I have listed all
+> > the chips that support that RTC driver.
+>
+> Right. You don't actually have to list them all *in the driver* though,
+> just in the binding and in the devicetree. I think what you have missed
+> is:
+> > > I would allow the following:
+> > > "loongson,ls1b-rtc"
+> > > "loongson,ls1c-rtc", "loongson,ls1b-rtc"
+> > > "loongson,ls7a-rtc"
+> > > "loongson,ls2k0500-rtc", "loongson,ls7a-rtc"
+> > > "loongson,ls2k2000-rtc", "loongson,ls7a-rtc"
+> > > "loongson,ls2k1000-rtc"
+>
+> This is what you would put in the compatible section of a devicetree
+> node, using "fallback compatibles". So for a ls1c you put in
+> compatible =3D "loongson,ls1c-rtc", "loongson,ls1b-rtc";
+> and the kernel first tries to find a driver that supports
+> "loongson,ls1c-rtc" but if that fails it tries to find one that supports
+> "loongson,ls1b-rtc". This gives you the best of both worlds - you can
+> add support easily for new systems (when an ls1d comes out, you don't
+> even need to change the driver for it to just work!) and you have a
+> soc-specific compatible in case you need to add some workaround for
+> hardware errata etc in the future.
 
-Excuse me, but could you please tell me something that why commit
-b65399f6111b ("arm64/mm: Change THP helpers to comply with generic MM
-semantics") needn't be backported to 5.4LTS and 4.19LTS series. The
-discussion link you referred is as early as in 2018, before 4.19
-released. I think this information is important for us because we want
-to know how to handle our 4.19-loongarch codebase.
+Hi Conor:
 
-Huacai
+I seem to understand what you are talking about.
+I hadn't delved into "fallback compatibles" before, so thanks for the
+detailed explanation.
 
-On Wed, May 24, 2023 at 3:42=E2=80=AFPM Hongchen Zhang
-<zhanghongchen@loongson.cn> wrote:
+In fact, I have thought before if there is a good way to do it other
+than adding comptable to the driver frequently, and "fallback
+compatibles" should be the most suitable.
+
+So in the dt-bindings file, should we just write this:
+
+  compatible:
+    oneOf:
+      - items:
+          - enum:
+              - loongson,ls1c-rtc
+          - const: loongson,ls1b-rtc
+      - items:
+          - enum:
+              - loongson,ls2k0500-rtc
+              - loongson,ls2k2000-rtc
+          - const: loongson,ls7a-rtc
+      - items:
+          - const: loongson,ls2k1000-rtc
+
+Thanks.
+Binbin
+
 >
-> when we split a pmd into ptes, pmd_present() and pmd_trans_huge() should
-> return true,otherwise it would be treated as a swap pmd.
-> As arm64 does in
-> commit b65399f6111b ("arm64/mm: Change THP helpers to comply with generic=
- MM semantics")
-> we add a _PAGE_PRESENT_INVALID bit for LoongArch.
+> > > To maintain compatibility with the existing devicetrees, should the o=
+ld
+> > > "loongson,ls2x-rtc" be kept in the driver?
+> >
+> > No, It seems that wildcards in compatible are not allowed."
+> > loongson,ls2x-rtc" itself was part of this patch series at one time,
+> > but apparently it is not the right way to describe these chips.
 >
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> ---
->  arch/loongarch/include/asm/pgtable-bits.h | 2 ++
->  arch/loongarch/include/asm/pgtable.h      | 3 ++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
+> Right, but it has been merged - you are deleting the driver that supports
+> it after all - which means that any dtb with the old compatible will
+> stop working.
+> I don't disagree with Krzysztof that having wildcard based compatibles
+> is bad, but I do not think that regressing rtc support for systems with
+> these old devicetrees is the right way to go either.
 >
-> diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/i=
-nclude/asm/pgtable-bits.h
-> index 8b98d22a145b..a7469d28d9d0 100644
-> --- a/arch/loongarch/include/asm/pgtable-bits.h
-> +++ b/arch/loongarch/include/asm/pgtable-bits.h
-> @@ -22,12 +22,14 @@
->  #define        _PAGE_PFN_SHIFT         12
->  #define        _PAGE_SWP_EXCLUSIVE_SHIFT 23
->  #define        _PAGE_PFN_END_SHIFT     48
-> +#define _PAGE_PRESENT_INVALID_SHIFT 60
->  #define        _PAGE_NO_READ_SHIFT     61
->  #define        _PAGE_NO_EXEC_SHIFT     62
->  #define        _PAGE_RPLV_SHIFT        63
->
->  /* Used by software */
->  #define _PAGE_PRESENT          (_ULCAST_(1) << _PAGE_PRESENT_SHIFT)
-> +#define _PAGE_PRESENT_INVALID  (_ULCAST_(1) << _PAGE_PRESENT_INVALID_SHI=
-FT)
->  #define _PAGE_WRITE            (_ULCAST_(1) << _PAGE_WRITE_SHIFT)
->  #define _PAGE_ACCESSED         (_ULCAST_(1) << _PAGE_ACCESSED_SHIFT)
->  #define _PAGE_MODIFIED         (_ULCAST_(1) << _PAGE_MODIFIED_SHIFT)
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
-e/asm/pgtable.h
-> index d28fb9dbec59..9a9f9ff9b709 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -213,7 +213,7 @@ static inline int pmd_bad(pmd_t pmd)
->  static inline int pmd_present(pmd_t pmd)
->  {
->         if (unlikely(pmd_val(pmd) & _PAGE_HUGE))
-> -               return !!(pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE)=
-);
-> +               return !!(pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE =
-| _PAGE_PRESENT_INVALID));
->
->         return pmd_val(pmd) !=3D (unsigned long)invalid_pte_table;
->  }
-> @@ -558,6 +558,7 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t ne=
-wprot)
->
->  static inline pmd_t pmd_mkinvalid(pmd_t pmd)
->  {
-> +       pmd_val(pmd) |=3D _PAGE_PRESENT_INVALID;
->         pmd_val(pmd) &=3D ~(_PAGE_PRESENT | _PAGE_VALID | _PAGE_DIRTY | _=
-PAGE_PROTNONE);
->
->         return pmd;
->
-> base-commit: f1fcbaa18b28dec10281551dfe6ed3a3ed80e3d6
-> --
-> 2.31.1
->
->
+> Thanks,
+> Conor.
