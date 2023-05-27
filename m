@@ -1,213 +1,99 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3159C8BE1
-	for <loongarch@lists.linux.dev>; Sat, 27 May 2023 09:23:01 +0000 (UTC)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-565c3aa9e82so12407137b3.2
-        for <loongarch@lists.linux.dev>; Sat, 27 May 2023 02:23:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685179380; x=1687771380;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YuPOou2ChL9QAjpTDeWMH9OMTxYByyxepLnhS7nCInU=;
-        b=UypQL/1cTDi0jd5atuzjWwrNbEZHph9c81yu9B026PuuRefA2X7exdJbYS+AOx0nBp
-         gAM4/C+tc/QMH5TXhnmPmcu1CzlDW+sm2lJ1uH28kYO/Iahk4SZgNrQB5Kp7NSDEcVtl
-         TAIXWUnGNKQEkgubKWG/y2W1PtO0NSljxJeG0GJOdE717jgybvCyZtHUIJrl69fjSsPs
-         c/lHsTB2ZHY1ZfwRytky/hcr8KVRp2qlxPOTva3Ow0wHEH1rK4w+J+jRsB75f8REyKCi
-         ZDkc5cgIVQr4jW7tzWZEKPTjezlb0HKQII7emo61su46V7bDndt31K4y21jhN7q5jFqp
-         l23A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685179380; x=1687771380;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YuPOou2ChL9QAjpTDeWMH9OMTxYByyxepLnhS7nCInU=;
-        b=do7qpT9ev527nfW6eaUyzJf9OsrDmYFdN0POBqM2a0y1fuaFycKjSqahUWaoZKYuD3
-         +rrjB7fKK8csaULXy8HTEPAyQYDjw62rNY9LSw+6WvKBZL/32bRt1wibQOsqIVzW0HGI
-         vrQHMR/RBh9UEC2DRbQUfY19Ilj3KD50Zcq39DS1so0jcOcuUroS9tsUKHl1hqFY5tfT
-         jtjJik4keo/HQM7kLT1IiEII1/EAnaZ0tHs3uxeWVWqYwJ4AZMnmAj+ZiiTdCaVKtakw
-         avhYf1S6znUHs7j4wqrrYfSrEQe7EFRhuLBWrfvk3RUQH1qly7bwOijOchmjqyZEKEXB
-         haXg==
-X-Gm-Message-State: AC+VfDx5j9pUMHkINQDjgU7oZpSBu4o1G9hOuiKrseQS7Mo/Nl8LuYQc
-	Ei8RNLxq/c6ERtoFREQAJfb6aDom+haYBakr39E=
-X-Google-Smtp-Source: ACHHUZ4nCuMzRZKk6dXeDY7dZsT6tQWUJPKOPNYzgMbPZwdT1gG/zS5BtPMCqhQZ/U1B3et1LNOcHl0PMtnNpQgUMl0=
-X-Received: by 2002:a0d:eb03:0:b0:565:e48d:32cf with SMTP id
- u3-20020a0deb03000000b00565e48d32cfmr134704ywe.7.1685179380005; Sat, 27 May
- 2023 02:23:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56889A20
+	for <loongarch@lists.linux.dev>; Sat, 27 May 2023 10:42:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE11AC433EF;
+	Sat, 27 May 2023 10:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685184129;
+	bh=Z4TeIapFpeS1e5WxOMUpOrDg87Rxe8ydQavxJsO0vug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qtjpACU3i7FVjLT023Ddg5iX1Sm9mYGyR9BAcAldcZGtkGi1IgPSjR20Gkom5YVFi
+	 9GqwWTqSe6aCGE+Jk6r1lk9ASI1BqwfpG0h2HSrQ1BaMlG84/DZwyIoKGVbNuFJs46
+	 KM/CX4KgN01bs8ctMAmNzdH3P/7vJMOVtl/spQpp1NeNWLVBfmoG8tubTTHEz78nbM
+	 Mi5TzSK4O/LtfJpDtvhI5QLWzSn68VROvh7bVsKVmfCA0L8DXw2EUj7uC78b19+5Rx
+	 6iPjAV5tMRrgS7SBBOhhGo75UiSObo7waKqxJ5uuMYjPYcI7MRtTbdg+ba8TB9jNgs
+	 b+IpYHQpsYW9A==
+Date: Sat, 27 May 2023 13:41:44 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Vishal Moola <vishal.moola@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 05/34] mm: add utility functions for ptdesc
+Message-ID: <20230527104144.GH4967@kernel.org>
+References: <20230501192829.17086-1-vishal.moola@gmail.com>
+ <20230501192829.17086-6-vishal.moola@gmail.com>
+ <20230525090956.GX4967@kernel.org>
+ <CAOzc2pxSH6GhBnAoSOjvYJk2VdMDFZi3H_1qGC5Cdyp3j4AzPQ@mail.gmail.com>
+ <20230525202537.GA4967@kernel.org>
+ <CAOzc2pxD21mxisy-M5b_SDUv0MYwNHqaVDJnJpARuDG_HjCbOg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1684983279.git.zhoubinbin@loongson.cn> <9a2fbd6860f37760ca6089c150fd6f67628405f6.1684983279.git.zhoubinbin@loongson.cn>
- <20230525-custody-oversleep-f778eddf981c@spud> <CAMpQs4LuGAUfMNB93B=vgwJaLqEM6Cq5KyaCtnHOL7RWGuZy-w@mail.gmail.com>
- <20230526-dolly-reheat-06c4d5658415@wendy>
-In-Reply-To: <20230526-dolly-reheat-06c4d5658415@wendy>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Sat, 27 May 2023 17:22:48 +0800
-Message-ID: <CAMpQs4KeHCW+9ssAn-jF0efiUOzERRFDu9Sjz1Mtv5Lk1uFuPA@mail.gmail.com>
-Subject: Re: [PATCH V4 1/5] dt-bindings: rtc: Remove the LS2X from the trivial RTCs
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Conor Dooley <conor@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	linux-rtc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-mips@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>, 
-	zhao zhang <zhzhl555@gmail.com>, Yang Ling <gnaygnil@gmail.com>, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOzc2pxD21mxisy-M5b_SDUv0MYwNHqaVDJnJpARuDG_HjCbOg@mail.gmail.com>
 
-On Fri, May 26, 2023 at 8:07=E2=80=AFPM Conor Dooley <conor.dooley@microchi=
-p.com> wrote:
->
-> On Fri, May 26, 2023 at 09:37:02AM +0800, Binbin Zhou wrote:
-> > On Fri, May 26, 2023 at 1:05=E2=80=AFAM Conor Dooley <conor@kernel.org>=
- wrote:
-> > > On Thu, May 25, 2023 at 08:55:23PM +0800, Binbin Zhou wrote:
->
-> >> > > +properties:
-> > > > +  compatible:
-> > > > +    enum:
-> > > > +      - loongson,ls1b-rtc
-> > > > +      - loongson,ls1c-rtc
-> > > > +      - loongson,ls7a-rtc
-> > > > +      - loongson,ls2k0500-rtc
-> > > > +      - loongson,ls2k1000-rtc
-> > > > +      - loongson,ls2k2000-rtc
+On Thu, May 25, 2023 at 01:53:24PM -0700, Vishal Moola wrote:
+> On Thu, May 25, 2023 at 1:26 PM Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> > On Thu, May 25, 2023 at 11:04:28AM -0700, Vishal Moola wrote:
+> > > On Thu, May 25, 2023 at 2:10 AM Mike Rapoport <rppt@kernel.org> wrote:
+> > > > > +
+> > > > > +static inline struct ptdesc *ptdesc_alloc(gfp_t gfp, unsigned int order)
+> > > > > +{
+> > > > > +     struct page *page = alloc_pages(gfp | __GFP_COMP, order);
+> > > > > +
+> > > > > +     return page_ptdesc(page);
+> > > > > +}
+> > > > > +
+> > > > > +static inline void ptdesc_free(struct ptdesc *pt)
+> > > > > +{
+> > > > > +     struct page *page = ptdesc_page(pt);
+> > > > > +
+> > > > > +     __free_pages(page, compound_order(page));
+> > > > > +}
+> > > >
+> > > > The ptdesc_{alloc,free} API does not sound right to me. The name
+> > > > ptdesc_alloc() implies the allocation of the ptdesc itself, rather than
+> > > > allocation of page table page. The same goes for free.
 > > >
-> > > |+static const struct of_device_id loongson_rtc_of_match[] =3D {
-> > > |+       { .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1x_rtc_c=
-onfig },
-> > > |+       { .compatible =3D "loongson,ls1c-rtc", .data =3D &ls1x_rtc_c=
-onfig },
-> > > |+       { .compatible =3D "loongson,ls7a-rtc", .data =3D &generic_rt=
-c_config },
-> > > |+       { .compatible =3D "loongson,ls2k0500-rtc", .data =3D &generi=
-c_rtc_config },
-> > > |+       { .compatible =3D "loongson,ls2k1000-rtc", .data =3D &ls2k10=
-00_rtc_config },
-> > > |+       { .compatible =3D "loongson,ls2k2000-rtc", .data =3D &generi=
-c_rtc_config },
-> > > |+       { /* sentinel */ }
-> > > |+};
-> > >
-> > > This is a sign to me that your compatibles here are could do with som=
-e
-> > > fallbacks. Both of the ls1 ones are compatible with each other & ther=
-e
-> > > are three that are generic.
-> > >
-> > > I would allow the following:
-> > > "loongson,ls1b-rtc"
-> > > "loongson,ls1c-rtc", "loongson,ls1b-rtc"
-> > > "loongson,ls7a-rtc"
-> > > "loongson,ls2k0500-rtc", "loongson,ls7a-rtc"
-> > > "loongson,ls2k2000-rtc", "loongson,ls7a-rtc"
-> > > "loongson,ls2k1000-rtc"
-> > >
-> > > And then the driver only needs:
-> > > |+static const struct of_device_id loongson_rtc_of_match[] =3D {
-> > > |+       { .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1x_rtc_c=
-onfig },
-> > > |+       { .compatible =3D "loongson,ls7a-rtc", .data =3D &generic_rt=
-c_config },
-> > > |+       { .compatible =3D "loongson,ls2k1000-rtc", .data =3D &ls2k10=
-00_rtc_config },
-> > > |+       { /* sentinel */ }
-> > > |+};
-> > >
-> > > And ~if~when you add support for more devices in the future that are
-> > > compatible with the existing ones no code changes are required.
+> > > I'm not sure I see the difference. Could you elaborate?
 > >
-> > Hi Conor:
-> >
-> > Thanks for your reply.
-> >
-> > Yes, this is looking much cleaner. But it can't show every chip that
-> > supports that driver.
-> >
-> > As we know, Loongson is a family of chips:
-> > ls1b/ls1c represent the Loongson-1 family of CPU chips;
-> > ls7a represents the Loongson LS7A bridge chip;
-> > ls2k0500/ls2k1000/ls2k2000 represent the Loongson-2 family of CPU chips=
-.
-> >
-> > Based on my previous conversations with Krzysztof, it seems that
-> > soc-based to order compatible is more popular, so I have listed all
-> > the chips that support that RTC driver.
->
-> Right. You don't actually have to list them all *in the driver* though,
-> just in the binding and in the devicetree. I think what you have missed
-> is:
-> > > I would allow the following:
-> > > "loongson,ls1b-rtc"
-> > > "loongson,ls1c-rtc", "loongson,ls1b-rtc"
-> > > "loongson,ls7a-rtc"
-> > > "loongson,ls2k0500-rtc", "loongson,ls7a-rtc"
-> > > "loongson,ls2k2000-rtc", "loongson,ls7a-rtc"
-> > > "loongson,ls2k1000-rtc"
->
-> This is what you would put in the compatible section of a devicetree
-> node, using "fallback compatibles". So for a ls1c you put in
-> compatible =3D "loongson,ls1c-rtc", "loongson,ls1b-rtc";
-> and the kernel first tries to find a driver that supports
-> "loongson,ls1c-rtc" but if that fails it tries to find one that supports
-> "loongson,ls1b-rtc". This gives you the best of both worlds - you can
-> add support easily for new systems (when an ls1d comes out, you don't
-> even need to change the driver for it to just work!) and you have a
-> soc-specific compatible in case you need to add some workaround for
-> hardware errata etc in the future.
+> > I read ptdesc_alloc() as "allocate a ptdesc" rather than as "allocate a
+> > page for page table and return ptdesc pointing to that page". Seems very
+> > confusing to me already and it will be even more confusion when we'll start
+> > allocating actual ptdescs.
+> 
+> Hmm, I see what you're saying. I'm envisioning this function evolving into
+> one that allocates a ptdesc later. I don't see why we would need to have both a
+> page table page AND ptdesc at any point, but that may be a lack of knowledge
+> from my part.
 
-Hi Conor:
+Sorry if I wasn't clear, by "page table page" I meant the page (or memory
+for that matter) for actual page table rather than struct page describing
+that memory.
 
-I seem to understand what you are talking about.
-I hadn't delved into "fallback compatibles" before, so thanks for the
-detailed explanation.
+So what we allocate here is the actual memory for the page tables and not
+the memory for the metadata. That's why I think the name ptdesc_alloc is
+confusing.
+ 
+> I was thinking later, if necessary, we could make another function
+> (only to be used internally) to allocate page table pages.
 
-In fact, I have thought before if there is a good way to do it other
-than adding comptable to the driver frequently, and "fallback
-compatibles" should be the most suitable.
-
-So in the dt-bindings file, should we just write this:
-
-  compatible:
-    oneOf:
-      - items:
-          - enum:
-              - loongson,ls1c-rtc
-          - const: loongson,ls1b-rtc
-      - items:
-          - enum:
-              - loongson,ls2k0500-rtc
-              - loongson,ls2k2000-rtc
-          - const: loongson,ls7a-rtc
-      - items:
-          - const: loongson,ls2k1000-rtc
-
-Thanks.
-Binbin
-
->
-> > > To maintain compatibility with the existing devicetrees, should the o=
-ld
-> > > "loongson,ls2x-rtc" be kept in the driver?
-> >
-> > No, It seems that wildcards in compatible are not allowed."
-> > loongson,ls2x-rtc" itself was part of this patch series at one time,
-> > but apparently it is not the right way to describe these chips.
->
-> Right, but it has been merged - you are deleting the driver that supports
-> it after all - which means that any dtb with the old compatible will
-> stop working.
-> I don't disagree with Krzysztof that having wildcard based compatibles
-> is bad, but I do not think that regressing rtc support for systems with
-> these old devicetrees is the right way to go either.
->
-> Thanks,
-> Conor.
+-- 
+Sincerely yours,
+Mike.
