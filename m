@@ -1,93 +1,101 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A86A663B
-	for <loongarch@lists.linux.dev>; Mon, 29 May 2023 02:25:07 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxZ_GWDHRkRBkCAA--.5073S3;
-	Mon, 29 May 2023 10:23:18 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxRrWSDHRkNzh+AA--.9081S3;
-	Mon, 29 May 2023 10:23:17 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: Hans-Peter Nilsson <hp@axis.com>,
-	Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-	Leo Yan <leo.yan@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v2 1/3] perf arm64: Rename create_table_from_c() to create_sc_table()
-Date: Mon, 29 May 2023 10:23:12 +0800
-Message-Id: <1685326994-11987-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1685326994-11987-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1685326994-11987-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8BxRrWSDHRkNzh+AA--.9081S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoWruFykWryxAr47JryrWrW8tFb_yoWDuFg_CF
-	WSgw1Du3y5Xr42vF1fGFn8ur92kw4UJ398JwsrWr9rt34SqFWDZryFva4kuF1YyFsYgrnI
-	qrsxWr18AFs8ujkaLaAFLSUrUUUU5b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	C7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-	w2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
-	kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5
-	JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x07jr9NsUUUUU=
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDDA62D
+	for <loongarch@lists.linux.dev>; Mon, 29 May 2023 03:00:15 +0000 (UTC)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-96fab30d1e1so599810066b.0
+        for <loongarch@lists.linux.dev>; Sun, 28 May 2023 20:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685329214; x=1687921214;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gnwCDU/T0dIgwtC1BckdG+1O/GRZHwgSBiHqZjkeZY0=;
+        b=DHutnTQgsS/VW4QNKEqWBXu31AcnEMJlOLXo4uu32E9qQe5Ta1xW8sW7EW8BAdzNKD
+         FxCYP/gKb1tw+8b+w+vO+plLSnLcI4GQ42pBE34z2+DXSwaXslTmjsqjrBXGEfHeJYtL
+         nRcxwuFuGt7JIgC88ZxriwIwKCI3d2rpr5BMkLh5yQhYWr7NHCfkbfYkvk3pBClfb0FT
+         GQzwvklLlCiVX/YPLoAXzLhuDrutM1KbTd2bv9/NJxdC4BBqQymOIANQLkMP3sCUywaP
+         UTIlgveLuOW56214lTZFq151Kd/mVGY3B4nSvVN1j0FiRaFPM8khKhZupda2wPUl0PZQ
+         GTRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685329214; x=1687921214;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gnwCDU/T0dIgwtC1BckdG+1O/GRZHwgSBiHqZjkeZY0=;
+        b=YY4vvVNIMktHA/Zzk4FSfEyhbIZngUy3hZh5dYnouQ3s2zINozWKXJ0jaTLivcUQWo
+         zKzg/6keZ2VHEQBcarU4aSag1Dd7Xqd3g6BdunHy6roDi3qciT2RpelWb/SvbVMX99nA
+         D6gvUgd9Yk8zQjioANbf+RUyP/WBxxpw/1TGIx8RSRyXrZJaSf/b2fIE/rSF4DGGZ5He
+         /+5GVYZnGjP3jq5xTeLlKH04r+vh1cGCCP29GF2SBsn5q4/Hg+nGbBU/lIUwY5lEAVXJ
+         egg4dlG1iI9ELyECtfR5FW+JYVyg9Ym33iqibdiDAqa5Nr8TiyoXZdwNwESmcMKM/TAy
+         F6zw==
+X-Gm-Message-State: AC+VfDxxeaEV/meTguOe2qYUhIqbXS52egFWHkYZlFB/a0o0HjTccH+R
+	7tTHyPYm+6ZF2doGVKRsOv6empFdEC5OUoM2hag=
+X-Google-Smtp-Source: ACHHUZ41+qkZF5JJGOKotRickXAjiArq6Xp1CoMDAreNbe/oiNtC8e9tF2SAa/F/Vlh80jWpuKSBQnIXY7WdeJB1uj8=
+X-Received: by 2002:a17:907:720c:b0:965:ae3a:52c8 with SMTP id
+ dr12-20020a170907720c00b00965ae3a52c8mr5673819ejc.32.1685329213609; Sun, 28
+ May 2023 20:00:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <cover.1684983279.git.zhoubinbin@loongson.cn> <9a2fbd6860f37760ca6089c150fd6f67628405f6.1684983279.git.zhoubinbin@loongson.cn>
+ <20230525-custody-oversleep-f778eddf981c@spud> <CAMpQs4LuGAUfMNB93B=vgwJaLqEM6Cq5KyaCtnHOL7RWGuZy-w@mail.gmail.com>
+ <20230526-dolly-reheat-06c4d5658415@wendy> <CAMpQs4KeHCW+9ssAn-jF0efiUOzERRFDu9Sjz1Mtv5Lk1uFuPA@mail.gmail.com>
+ <A206E0A5-9BF0-4787-9B06-9F91FA3C60A3@flygoat.com> <20230527-passing-unfixed-39e01b787808@spud>
+ <14EF9F21-8150-40D9-8870-E9151C4882CF@flygoat.com> <20230527-poet-antarctic-cc02aa60ab52@spud>
+In-Reply-To: <20230527-poet-antarctic-cc02aa60ab52@spud>
+From: Keguang Zhang <keguang.zhang@gmail.com>
+Date: Mon, 29 May 2023 10:59:57 +0800
+Message-ID: <CAJhJPsU_qOJKO99S1xjJaSUqXsXAG7HpYbzs5wTb8J4-tQqSQA@mail.gmail.com>
+Subject: Re: [PATCH V4 1/5] dt-bindings: rtc: Remove the LS2X from the trivial RTCs
+To: Conor Dooley <conor@kernel.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	linux-rtc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, zhao zhang <zhzhl555@gmail.com>, 
+	Yang Ling <gnaygnil@gmail.com>, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
-it has been removed the temporary C program and used shell to
-generate syscall table, so let us rename create_table_from_c()
-to create_sc_table() to avoid confusion.
+On Sun, May 28, 2023 at 6:22=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Sat, May 27, 2023 at 10:59:48PM +0100, Jiaxun Yang wrote:
+> > > 2023=E5=B9=B45=E6=9C=8827=E6=97=A5 17:23=EF=BC=8CConor Dooley <conor@=
+kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+> > > On Sat, May 27, 2023 at 05:13:39PM +0100, Jiaxun Yang wrote:
+>
+> > >> My recommendation is leaving compatible string as is.
+> > >
+> > > "as is" meaning "as it is right now in Linus' tree", or "as it is in
+> > > this patch"?
+> >
+> > Ah sorry I meant in this patch.
+> >
+> > Since there won=E2=80=99t be any new ls1x chip that will boot Linux any=
+ time soon (due to
+> > Loongson move away from MIPS but LoongArch32 is undefined for now), and
+> > rest compatible strings are wide enough to cover their family, I think =
+the present
+> > compatible strings in this patch describes hardware best.
+>
+> I don't see why new bindings being written for old hardware should someho=
+w
+> be treated differently than new bindings for new hardware.
 
-Suggested-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Let me add that ls1b RTC and ls1c RTC are not exactly the same.
+The former supports RTC interrupt, while the latter does not.
+So my suggestion is to leave the compatible string as it is in this patch.
 
-diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-index 22cdf91..e530587 100755
---- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-@@ -19,7 +19,7 @@ if ! test -r $input; then
- 	exit 1
- fi
- 
--create_table_from_c()
-+create_sc_table()
- {
- 	local sc nr last_sc
- 
-@@ -35,7 +35,7 @@ create_table()
- {
- 	echo "#include \"$input\""
- 	echo "static const char *syscalltbl_arm64[] = {"
--	create_table_from_c
-+	create_sc_table
- 	echo "};"
- }
- 
--- 
-2.1.0
+--=20
+Best regards,
 
+Keguang Zhang
