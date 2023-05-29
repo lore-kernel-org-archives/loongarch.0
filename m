@@ -1,108 +1,186 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2358C1E
-	for <loongarch@lists.linux.dev>; Mon, 29 May 2023 17:05:40 +0000 (UTC)
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-3f6c6320d4eso269631cf.1
-        for <loongarch@lists.linux.dev>; Mon, 29 May 2023 10:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685379939; x=1687971939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rwoMfWi97obMRCWCH25odgr0RjnVbHr4fnSsN464Q64=;
-        b=cyKzIaN5n4IEkAWYqYcz7ARQulcXV517rngzKO5u7FJbqGglnmsxa6uu0JpVvC5mv+
-         HrBjREOjysA+0RaOYkpC/IvflK1p+OC4ovSrIoSOFhBwOZpoyLqwdNpwf4WQZvPT+E5K
-         8QhHCvRhSLyw6950wYUzsNiqUiCvrd4zslDt3WbS5T7gbEpJlph9pteggyLDcdZf43I1
-         kk+4QiwU2zyeM3PBrmCrD6bPxgaX//2rFPiSXXt+tLIhRVy3p4WmP4EGs/PqB/P78cFu
-         pI/Hd4rc+JQxI4TDIsJLlpP4PKP2ZW8QzMy/DSXsYD0+dqUjVOM9CyywGwyXIrlFmZdE
-         FAkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685379939; x=1687971939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rwoMfWi97obMRCWCH25odgr0RjnVbHr4fnSsN464Q64=;
-        b=eQXWiWkr9fNnOfKErfdReV58PvlqgyOdjaFABKGzRjkLOueMbmye9RauYH/Xpp4Cmr
-         uFal55NgVPXDXwi3qX9SuFUAyzt4wugYjcQftxOMqibUxJwD8fUdtW6Yg7aEDiQshije
-         1CiHh5HAqS4KqasBRn5Cq9jiA//xwvQRj4+G7XSNcna8vHraYWRVKqA+H5lRQ/Zclkds
-         28xO+ULb8cip+jgULugHjSZfIJhnbsveJ7422JhTkgYXKDgJFIIC5YmHHOb4pfUJ+dNk
-         MEcx/0dBF8J4zpEPhdvUiQB08eFvMQRahs+La1lR5bcPLYq15ijKBetL+byNWoozjaWS
-         dGhw==
-X-Gm-Message-State: AC+VfDxWDtY+9aBn0+obqm4Dh6TKNRbe+hbVWrYMefMQiwIiqe0Cu9Ye
-	2MVgqK3PjHo2zaq8JHgZcJtDlZ+hd57xELi1sK0k4A==
-X-Google-Smtp-Source: ACHHUZ5KZq1BWV/GcKLg76iWYFUFlREK5iiRQxXX/nyiEq5TjEiRv6E8dspkBJQql+dC4FXCsM0xAVIfH0SxyW+V0rE=
-X-Received: by 2002:ac8:4e8a:0:b0:3f3:9b0b:8750 with SMTP id
- 10-20020ac84e8a000000b003f39b0b8750mr361294qtp.17.1685379938842; Mon, 29 May
- 2023 10:05:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E782811181
+	for <loongarch@lists.linux.dev>; Mon, 29 May 2023 22:20:12 +0000 (UTC)
+X-GND-Sasl: alexandre.belloni@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1685398810;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=piJwelwJzoOHS0zCI5Yv47Y6GkNNebOL6BgBOE2MHnk=;
+	b=GYvMNZIwrEw+CKQccWlGAsp9/B0XQij1+v9eXoXg5b76awP6gyEfbvbMT1VctZQe9LWlHu
+	amP8iVBM/ta9hE6C8GluIBXOUuJVwSjJPw9K++CmF39zf1xZlraWvQQ9qMD0mCe13t1lCZ
+	91U8JVaWGi59WFSuX/6m9XxMUDasjru1Nhdd6ekoedFyRrH/N8uRDQ+M7ISDpRynjeIar+
+	qwUTBdV9F1+a0q/rzPxAmLeSpcd9HcjLF6M6VwSayQMrBqJw4W5xf5BvQfmzspRcodd2Va
+	20W+zWQmtTgKz9CzgRQJ9c4r0yfhZyIK7lnai8TW6+cQ4ocOH/Y3CBptt4Sxfg==
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E736F240005;
+	Mon, 29 May 2023 22:20:07 +0000 (UTC)
+Date: Tue, 30 May 2023 00:20:07 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Conor Dooley <conor@kernel.org>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	zhao zhang <zhzhl555@gmail.com>, Yang Ling <gnaygnil@gmail.com>,
+	loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH V4 1/5] dt-bindings: rtc: Remove the LS2X from the
+ trivial RTCs
+Message-ID: <2023052922200701b20517@mail.local>
+References: <CAMpQs4LuGAUfMNB93B=vgwJaLqEM6Cq5KyaCtnHOL7RWGuZy-w@mail.gmail.com>
+ <20230526-dolly-reheat-06c4d5658415@wendy>
+ <CAMpQs4KeHCW+9ssAn-jF0efiUOzERRFDu9Sjz1Mtv5Lk1uFuPA@mail.gmail.com>
+ <A206E0A5-9BF0-4787-9B06-9F91FA3C60A3@flygoat.com>
+ <20230527-passing-unfixed-39e01b787808@spud>
+ <14EF9F21-8150-40D9-8870-E9151C4882CF@flygoat.com>
+ <20230527-poet-antarctic-cc02aa60ab52@spud>
+ <CAJhJPsU_qOJKO99S1xjJaSUqXsXAG7HpYbzs5wTb8J4-tQqSQA@mail.gmail.com>
+ <E229B204-1B00-4B24-B4BF-15277682FB4B@kernel.org>
+ <CAMpQs4K4e3BSVvqXa+QjhM5XDxHc_ZCiRYW+HgPo21AQ_bYSRQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1685326994-11987-1-git-send-email-yangtiezhu@loongson.cn> <1685326994-11987-2-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1685326994-11987-2-git-send-email-yangtiezhu@loongson.cn>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 29 May 2023 10:05:26 -0700
-Message-ID: <CAP-5=fXkbBm52v9DC8jZm8Xr0uqKdvL7QfDmGN6j3=ZPRErLcA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] perf arm64: Rename create_table_from_c() to create_sc_table()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Hans-Peter Nilsson <hp@axis.com>, Alexander Kapshuk <alexander.kapshuk@gmail.com>, Leo Yan <leo.yan@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4K4e3BSVvqXa+QjhM5XDxHc_ZCiRYW+HgPo21AQ_bYSRQ@mail.gmail.com>
 
-On Sun, May 28, 2023 at 7:23=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
-> it has been removed the temporary C program and used shell to
-> generate syscall table, so let us rename create_table_from_c()
-> to create_sc_table() to avoid confusion.
->
-> Suggested-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/pe=
-rf/arch/arm64/entry/syscalls/mksyscalltbl
-> index 22cdf91..e530587 100755
-> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> @@ -19,7 +19,7 @@ if ! test -r $input; then
->         exit 1
->  fi
->
-> -create_table_from_c()
-> +create_sc_table()
->  {
->         local sc nr last_sc
->
-> @@ -35,7 +35,7 @@ create_table()
->  {
->         echo "#include \"$input\""
->         echo "static const char *syscalltbl_arm64[] =3D {"
+Hello,
 
-I know this isn't changed here, but this would be better as:
-echo "static const char *const syscalltbl_arm64[] =3D {"
-as the array itself, not just the strings, should never be changing.
+Honestly, the list of compatibles is fine for me. I wouldn't go for
+fallback. The improvement would be to drop "loongson,ls1c-rtc",
+and probably "loongson,ls2k0500-rtc" and "loongson,ls2k2000-rtc".
 
-Thanks,
-Ian
+loongson,ls1c-rtc is definitively not needed, the alarm may not be wired
+but the registers are there.
 
-> -       create_table_from_c
-> +       create_sc_table
->         echo "};"
->  }
->
-> --
-> 2.1.0
->
+For 2k0500 and 2k2000, I don't mind either way.
+
+On 29/05/2023 16:31:42+0800, Binbin Zhou wrote:
+> Hi Krzysztof:
+> 
+> Excuse me.
+> We have different opinions on how to better describe rtc-loongson compatible.
+> 
+> Based on my previous communication with you, I think we should list
+> all the Socs in the driver and drop the wildcards.
+> This should be clearer and more straightforward:
+> 
+>         { .compatible = "loongson,ls1b-rtc", .data = &ls1x_rtc_config
+> }, //ls1b soc
+>         { .compatible = "loongson,ls1c-rtc", .data = &ls1x_rtc_config
+> }, //ls1c soc
+>         { .compatible = "loongson,ls7a-rtc", .data =
+> &generic_rtc_config }, //ls7a bridge chip
+>         { .compatible = "loongson,ls2k0500-rtc", .data =
+> &generic_rtc_config }, // ls2k0500 soc
+>         { .compatible = "loongson,ls2k2000-rtc", .data =
+> &generic_rtc_config }, // ls2k2000 soc
+>         { .compatible = "loongson,ls2k1000-rtc", .data =
+> &ls2k1000_rtc_config }, // ls2k1000 soc
+> 
+> And Conor thought it should be rendered using a fallback compatible
+> form based on ".data".
+> 
+>         "loongson,ls1b-rtc"
+>         "loongson,ls1c-rtc", "loongson,ls1b-rtc"
+>         "loongson,ls7a-rtc"
+>         "loongson,ls2k0500-rtc", "loongson,ls7a-rtc"
+>         "longson,ls2k2000-rtc", "longson,ls7a-rtc"
+>         "loonson,ls2k1000-rtc"
+> 
+>         { .compatible = "loongson,ls1b-rtc", .data = &ls1x_rtc_config }
+>         { .compatible = "loongson,ls7a-rtc", .data = &generic_rtc_config }
+>         { .compatible = "loongson,ls2k1000-rtc", .data = &ls2k1000_rtc_config }
+> 
+> In this form,  I think it might not be possible to show very
+> graphically which chips are using the driver.
+> Also, for example, "ls7a" is a bridge chip, while
+> "ls2k2000"/"ls2k0500" are soc chips, and it seems inappropriate to
+> integrate them into one item.
+> 
+> Which one do you think is more suitable for us?
+> 
+> Here is the link to our discussion:
+> 
+> https://lore.kernel.org/linux-rtc/E229B204-1B00-4B24-B4BF-15277682FB4B@kernel.org/T/#m6c1ae9b74fceafc4042f7598b1bc594e68e5ec76
+> 
+> Thanks.
+> Binbin
+> 
+> 
+> On Mon, May 29, 2023 at 2:24 PM Conor Dooley <conor@kernel.org> wrote:
+> >
+> >
+> >
+> > On 29 May 2023 03:59:57 IST, Keguang Zhang <keguang.zhang@gmail.com> wrote:
+> > >On Sun, May 28, 2023 at 6:22 AM Conor Dooley <conor@kernel.org> wrote:
+> > >>
+> > >> On Sat, May 27, 2023 at 10:59:48PM +0100, Jiaxun Yang wrote:
+> > >> > > 2023年5月27日 17:23，Conor Dooley <conor@kernel.org> 写道：
+> > >> > > On Sat, May 27, 2023 at 05:13:39PM +0100, Jiaxun Yang wrote:
+> > >>
+> > >> > >> My recommendation is leaving compatible string as is.
+> > >> > >
+> > >> > > "as is" meaning "as it is right now in Linus' tree", or "as it is in
+> > >> > > this patch"?
+> > >> >
+> > >> > Ah sorry I meant in this patch.
+> > >> >
+> > >> > Since there won’t be any new ls1x chip that will boot Linux any time soon (due to
+> > >> > Loongson move away from MIPS but LoongArch32 is undefined for now), and
+> > >> > rest compatible strings are wide enough to cover their family, I think the present
+> > >> > compatible strings in this patch describes hardware best.
+> > >>
+> > >> I don't see why new bindings being written for old hardware should somehow
+> > >> be treated differently than new bindings for new hardware.
+> > >
+> > >Let me add that ls1b RTC and ls1c RTC are not exactly the same.
+> > >The former supports RTC interrupt, while the latter does not.
+> > >So my suggestion is to leave the compatible string as it is in this patch.
+> >
+> > Just as a reminder, there are more than ls1b & c in the patch, lest we forget.
+> > Also, fallback compatibles mean a compatible subset, not only that two devices are identical.
+> > The interrupt is passed by the interrupts property.
+> >
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
