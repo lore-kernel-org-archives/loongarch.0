@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6002C111E
-	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 01:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1B5F1119
+	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 01:52:36 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxJvHlVnVkDGsCAA--.5645S3;
-	Tue, 30 May 2023 09:52:37 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxfOvdVnVkVWoCAA--.2328S3;
+	Tue, 30 May 2023 09:52:29 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxQbTYVnVkQNZ_AA--.12077S32;
-	Tue, 30 May 2023 09:52:36 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxQbTYVnVkQNZ_AA--.12077S14;
+	Tue, 30 May 2023 09:52:28 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v12 30/31] LoongArch: KVM: Supplement kvm document about LoongArch-specific part
-Date: Tue, 30 May 2023 09:52:22 +0800
-Message-Id: <20230530015223.147755-31-zhaotianrui@loongson.cn>
+Subject: [PATCH v12 12/31] LoongArch: KVM: Implement vcpu interrupt operations
+Date: Tue, 30 May 2023 09:52:04 +0800
+Message-Id: <20230530015223.147755-13-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230530015223.147755-1-zhaotianrui@loongson.cn>
 References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
@@ -35,216 +35,225 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxQbTYVnVkQNZ_AA--.12077S32
+X-CM-TRANSID:AQAAf8AxQbTYVnVkQNZ_AA--.12077S14
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3AFyUuF4rtFW3Aw4UWFy5twb_yoW7Cw4DpF
-	sxC3yfKr48try7J347J34jgFy3GFyxtFW7Ca4ftr1xG3Wjyw1kJrnFvrW8GFWUCry8AF18
-	AFy0yw4UCFyUAw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCrWfAr1fKFWkWF4rZryDGFg_yoWruFW7pr
+	48C3yrZw4fJry7K343GanY9r4Yv3yvgrW7ArZ3t343Kwnrtrn0vF1xKr98JFy7Gw4kGFna
+	gFWa9FWDCF4DJw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
+	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
+	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Supplement kvm document about LoongArch-specific part, such as add
-api introduction for GET/SET_ONE_REG, GET/SET_FPU, GET/SET_MP_STATE,
-etc.
+Implement vcpu interrupt operations such as vcpu set irq and
+vcpu clear irq, using set_gcsr_estat to set irq which is
+parsed by the irq bitmap.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- Documentation/virt/kvm/api.rst | 71 +++++++++++++++++++++++++++++-----
- 1 file changed, 62 insertions(+), 9 deletions(-)
+ arch/loongarch/kvm/interrupt.c | 127 +++++++++++++++++++++++++++++++++
+ arch/loongarch/kvm/vcpu.c      |  45 ++++++++++++
+ 2 files changed, 172 insertions(+)
+ create mode 100644 arch/loongarch/kvm/interrupt.c
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index add067793b90..ad8e13eab48d 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -416,6 +416,12 @@ Reads the general purpose registers from the vcpu.
- 	__u64 pc;
-   };
- 
-+  /* LoongArch */
-+  struct kvm_regs {
-+        unsigned long gpr[32];
-+        unsigned long pc;
-+  };
+diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
+new file mode 100644
+index 000000000000..243bb19b387e
+--- /dev/null
++++ b/arch/loongarch/kvm/interrupt.c
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
 +
- 
- 4.12 KVM_SET_REGS
- -----------------
-@@ -506,7 +512,7 @@ translation mode.
- ------------------
- 
- :Capability: basic
--:Architectures: x86, ppc, mips, riscv
-+:Architectures: x86, ppc, mips, riscv, loongarch
- :Type: vcpu ioctl
- :Parameters: struct kvm_interrupt (in)
- :Returns: 0 on success, negative on failure.
-@@ -592,6 +598,14 @@ b) KVM_INTERRUPT_UNSET
- 
- This is an asynchronous vcpu ioctl and can be invoked from any thread.
- 
-+LOONGARCH:
-+^^^^^^^^^^
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <asm/kvm_vcpu.h>
++#include <asm/kvm_csr.h>
 +
-+Queues an external interrupt to be injected into the virtual CPU. A negative
-+interrupt number dequeues the interrupt.
++static unsigned int int_to_coreint[EXCCODE_INT_NUM] = {
++	[INT_TI]	= CPU_TIMER,
++	[INT_IPI]	= CPU_IPI,
++	[INT_SWI0]	= CPU_SIP0,
++	[INT_SWI1]	= CPU_SIP1,
++	[INT_HWI0]	= CPU_IP0,
++	[INT_HWI1]	= CPU_IP1,
++	[INT_HWI2]	= CPU_IP2,
++	[INT_HWI3]	= CPU_IP3,
++	[INT_HWI4]	= CPU_IP4,
++	[INT_HWI5]	= CPU_IP5,
++	[INT_HWI6]	= CPU_IP6,
++	[INT_HWI7]	= CPU_IP7,
++};
 +
-+This is an asynchronous vcpu ioctl and can be invoked from any thread.
++static int _kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
++{
++	unsigned int irq = 0;
 +
- 
- 4.17 KVM_DEBUG_GUEST
- --------------------
-@@ -737,7 +751,7 @@ signal mask.
- ----------------
- 
- :Capability: basic
--:Architectures: x86
-+:Architectures: x86, loongarch
- :Type: vcpu ioctl
- :Parameters: struct kvm_fpu (out)
- :Returns: 0 on success, -1 on error
-@@ -746,7 +760,7 @@ Reads the floating point state from the vcpu.
- 
- ::
- 
--  /* for KVM_GET_FPU and KVM_SET_FPU */
-+  /* x86: for KVM_GET_FPU and KVM_SET_FPU */
-   struct kvm_fpu {
- 	__u8  fpr[8][16];
- 	__u16 fcw;
-@@ -761,12 +775,22 @@ Reads the floating point state from the vcpu.
- 	__u32 pad2;
-   };
- 
-+  /* LoongArch: for KVM_GET_FPU and KVM_SET_FPU */
-+  struct kvm_fpu {
-+        __u32 fcsr;
-+        __u32 none;
-+        __u64 fcc;
-+        struct kvm_fpureg {
-+                __u64 val64[4];
-+        }fpr[32];
-+  };
++	clear_bit(priority, &vcpu->arch.irq_pending);
++	if (priority < EXCCODE_INT_NUM)
++		irq = int_to_coreint[priority];
 +
- 
- 4.23 KVM_SET_FPU
- ----------------
- 
- :Capability: basic
--:Architectures: x86
-+:Architectures: x86, loongarch
- :Type: vcpu ioctl
- :Parameters: struct kvm_fpu (in)
- :Returns: 0 on success, -1 on error
-@@ -775,7 +799,7 @@ Writes the floating point state to the vcpu.
- 
- ::
- 
--  /* for KVM_GET_FPU and KVM_SET_FPU */
-+  /* x86: for KVM_GET_FPU and KVM_SET_FPU */
-   struct kvm_fpu {
- 	__u8  fpr[8][16];
- 	__u16 fcw;
-@@ -790,6 +814,16 @@ Writes the floating point state to the vcpu.
- 	__u32 pad2;
-   };
- 
-+  /* LoongArch: for KVM_GET_FPU and KVM_SET_FPU */
-+  struct kvm_fpu {
-+        __u32 fcsr;
-+        __u32 none;
-+        __u64 fcc;
-+        struct kvm_fpureg {
-+                __u64 val64[4];
-+        }fpr[32];
-+  };
++	switch (priority) {
++	case INT_TI:
++	case INT_IPI:
++	case INT_SWI0:
++	case INT_SWI1:
++		set_gcsr_estat(irq);
++		break;
 +
- 
- 4.24 KVM_CREATE_IRQCHIP
- -----------------------
-@@ -1387,7 +1421,7 @@ documentation when it pops into existence).
- -------------------
- 
- :Capability: KVM_CAP_ENABLE_CAP
--:Architectures: mips, ppc, s390, x86
-+:Architectures: mips, ppc, s390, x86, loongarch
- :Type: vcpu ioctl
- :Parameters: struct kvm_enable_cap (in)
- :Returns: 0 on success; -1 on error
-@@ -1442,7 +1476,7 @@ for vm-wide capabilities.
- ---------------------
- 
- :Capability: KVM_CAP_MP_STATE
--:Architectures: x86, s390, arm64, riscv
-+:Architectures: x86, s390, arm64, riscv, loongarch
- :Type: vcpu ioctl
- :Parameters: struct kvm_mp_state (out)
- :Returns: 0 on success; -1 on error
-@@ -1460,7 +1494,7 @@ Possible values are:
- 
-    ==========================    ===============================================
-    KVM_MP_STATE_RUNNABLE         the vcpu is currently running
--                                 [x86,arm64,riscv]
-+                                 [x86,arm64,riscv,loongarch]
-    KVM_MP_STATE_UNINITIALIZED    the vcpu is an application processor (AP)
-                                  which has not yet received an INIT signal [x86]
-    KVM_MP_STATE_INIT_RECEIVED    the vcpu has received an INIT signal, and is
-@@ -1516,11 +1550,14 @@ For riscv:
- The only states that are valid are KVM_MP_STATE_STOPPED and
- KVM_MP_STATE_RUNNABLE which reflect if the vcpu is paused or not.
- 
-+On LoongArch, only the KVM_MP_STATE_RUNNABLE state is used to reflect
-+whether the vcpu is runnable.
++	case INT_HWI0:
++	case INT_HWI1:
++	case INT_HWI2:
++	case INT_HWI3:
++	case INT_HWI4:
++	case INT_HWI5:
++	case INT_HWI6:
++	case INT_HWI7:
++		set_csr_gintc(irq);
++		break;
 +
- 4.39 KVM_SET_MP_STATE
- ---------------------
++	default:
++		break;
++	}
++
++	return 1;
++}
++
++static int _kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
++{
++	unsigned int irq = 0;
++
++	clear_bit(priority, &vcpu->arch.irq_clear);
++	if (priority < EXCCODE_INT_NUM)
++		irq = int_to_coreint[priority];
++
++	switch (priority) {
++	case INT_TI:
++	case INT_IPI:
++	case INT_SWI0:
++	case INT_SWI1:
++		clear_gcsr_estat(irq);
++		break;
++
++	case INT_HWI0:
++	case INT_HWI1:
++	case INT_HWI2:
++	case INT_HWI3:
++	case INT_HWI4:
++	case INT_HWI5:
++	case INT_HWI6:
++	case INT_HWI7:
++		clear_csr_gintc(irq);
++		break;
++
++	default:
++		break;
++	}
++
++	return 1;
++}
++
++void _kvm_deliver_intr(struct kvm_vcpu *vcpu)
++{
++	unsigned long *pending = &vcpu->arch.irq_pending;
++	unsigned long *pending_clr = &vcpu->arch.irq_clear;
++	unsigned int priority;
++
++	if (!(*pending) && !(*pending_clr))
++		return;
++
++	if (*pending_clr) {
++		priority = __ffs(*pending_clr);
++		while (priority <= INT_IPI) {
++			_kvm_irq_clear(vcpu, priority);
++			priority = find_next_bit(pending_clr,
++					BITS_PER_BYTE * sizeof(*pending_clr),
++					priority + 1);
++		}
++	}
++
++	if (*pending) {
++		priority = __ffs(*pending);
++		while (priority <= INT_IPI) {
++			_kvm_irq_deliver(vcpu, priority);
++			priority = find_next_bit(pending,
++					BITS_PER_BYTE * sizeof(*pending),
++					priority + 1);
++		}
++	}
++}
++
++int _kvm_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return test_bit(INT_TI, &vcpu->arch.irq_pending);
++}
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 60213f7f7bac..f661743dbe66 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -304,6 +304,51 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+ 	preempt_enable();
+ }
  
- :Capability: KVM_CAP_MP_STATE
--:Architectures: x86, s390, arm64, riscv
-+:Architectures: x86, s390, arm64, riscv, loongarch
- :Type: vcpu ioctl
- :Parameters: struct kvm_mp_state (in)
- :Returns: 0 on success; -1 on error
-@@ -1538,6 +1575,9 @@ For arm64/riscv:
- The only states that are valid are KVM_MP_STATE_STOPPED and
- KVM_MP_STATE_RUNNABLE which reflect if the vcpu should be paused or not.
- 
-+On LoongArch, only the KVM_MP_STATE_RUNNABLE state is used to reflect
-+whether the vcpu is runnable.
++int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
++			     struct kvm_loongarch_interrupt *irq)
++{
++	int intr = (int)irq->irq;
++	struct kvm_vcpu *dvcpu = NULL;
 +
- 4.40 KVM_SET_IDENTITY_MAP_ADDR
- ------------------------------
- 
-@@ -2839,6 +2879,19 @@ Following are the RISC-V D-extension registers:
-   0x8020 0000 0600 0020 fcsr      Floating point control and status register
- ======================= ========= =============================================
- 
-+LoongArch registers are mapped using the lower 32 bits. The upper 16 bits of
-+that is the register group type.
++	if (irq->cpu == -1)
++		dvcpu = vcpu;
++	else
++		dvcpu = kvm_get_vcpu(vcpu->kvm, irq->cpu);
 +
-+LoongArch csr registers are used to control guest cpu or get status of guest
-+cpu, and they have the following id bit patterns::
++	if (intr > 0)
++		_kvm_queue_irq(dvcpu, intr);
++	else if (intr < 0)
++		_kvm_dequeue_irq(dvcpu, -intr);
++	else {
++		kvm_err("%s: invalid interrupt ioctl (%d:%d)\n", __func__,
++				irq->cpu, irq->irq);
++		return -EINVAL;
++	}
 +
-+  0x9030 0000 0001 00 <reg:5> <sel:3>   (64-bit)
++	kvm_vcpu_kick(dvcpu);
++	return 0;
++}
 +
-+LoongArch KVM control registers are used to implement some new defined functions
-+such as set vcpu counter or reset vcpu, and they have the following id bit patterns::
++long kvm_arch_vcpu_async_ioctl(struct file *filp,
++			       unsigned int ioctl, unsigned long arg)
++{
++	struct kvm_vcpu *vcpu = filp->private_data;
++	void __user *argp = (void __user *)arg;
 +
-+  0x9030 0000 0002 <reg:16>
++	if (ioctl == KVM_INTERRUPT) {
++		struct kvm_loongarch_interrupt irq;
 +
- 
- 4.69 KVM_GET_ONE_REG
- --------------------
++		if (copy_from_user(&irq, argp, sizeof(irq)))
++			return -EFAULT;
++		kvm_debug("[%d] %s: irq: %d\n", vcpu->vcpu_id, __func__,
++			  irq.irq);
++
++		return kvm_vcpu_ioctl_interrupt(vcpu, &irq);
++	}
++
++	return -ENOIOCTLCMD;
++}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ {
+ 	return 0;
 -- 
 2.39.1
 
