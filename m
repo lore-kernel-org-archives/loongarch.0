@@ -1,134 +1,99 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50B417FF5
-	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 12:03:04 +0000 (UTC)
-X-GND-Sasl: alexandre.belloni@bootlin.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1685448177;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7CSRmaE6JhiYga7TPE+m6X9B1ZhYPe18KEKuurrlc1s=;
-	b=BnDg/KM0HCEuPhQEczxYX0epEE8tK793htPY2GFqK5/Zp6N1pp55AqFzdds8A2MVgNbG3o
-	LtS0qTp+BfCFBxNYOxvMbTG8GMvMUhtwMcYT6qW2DLVqD+iZkVDiSbXYVH55bd9ucpY39i
-	XAkYghCMdpcc8/yJIPrk+f3HgI/i4zTz5QkylYAiLCxUiyfUJOTl0qNj5+i/4pcYcH71OG
-	BqKOkDbWZawF5wip3pJHa6ETSnkKGlJTAMQkKxLE6nAvGGKLe1aEw/17JSZXMZ+3mkPn4N
-	kkjq7TjQp4mgLyzXT1y25E0Pl4Bwh1Is9VnANufeqx+LK57YnV3XdeVRshrzMw==
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 76A4424000A;
-	Tue, 30 May 2023 12:02:54 +0000 (UTC)
-Date: Tue, 30 May 2023 14:02:54 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Conor Dooley <conor@kernel.org>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	zhao zhang <zhzhl555@gmail.com>, Yang Ling <gnaygnil@gmail.com>,
-	loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH V4 1/5] dt-bindings: rtc: Remove the LS2X from the
- trivial RTCs
-Message-ID: <20230530120254a7ee88f0@mail.local>
-References: <CAMpQs4KeHCW+9ssAn-jF0efiUOzERRFDu9Sjz1Mtv5Lk1uFuPA@mail.gmail.com>
- <A206E0A5-9BF0-4787-9B06-9F91FA3C60A3@flygoat.com>
- <20230527-passing-unfixed-39e01b787808@spud>
- <14EF9F21-8150-40D9-8870-E9151C4882CF@flygoat.com>
- <20230527-poet-antarctic-cc02aa60ab52@spud>
- <CAJhJPsU_qOJKO99S1xjJaSUqXsXAG7HpYbzs5wTb8J4-tQqSQA@mail.gmail.com>
- <E229B204-1B00-4B24-B4BF-15277682FB4B@kernel.org>
- <CAMpQs4K4e3BSVvqXa+QjhM5XDxHc_ZCiRYW+HgPo21AQ_bYSRQ@mail.gmail.com>
- <6845b6ce-06a8-9a0c-7f04-50fa906cd1e4@linaro.org>
- <CAMpQs4JLp3iUh6LkN6SND8O8wRZZcM04Shcq4rUa5QEOUAVsGg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32D319924
+	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 19:03:42 +0000 (UTC)
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-3f804665702so41661cf.0
+        for <loongarch@lists.linux.dev>; Tue, 30 May 2023 12:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1685473421; x=1688065421;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/wg+eakYRQJkWFsR8VKHGbMsmZUbdUsVveMbi9l3IrU=;
+        b=3BmQfsxcutfEPmqGYcWZ6a1Z5O/lPh3rsVadxX5KMEHUjcanhGptNKJnGxEYxA80Pr
+         2ZP7LNROMrce7azCSMf2CZ6VOYrWdF1RepVCJBvUM/XqXsCYE/iGEvXSw1iscTlQLHDy
+         U6AWSOx0qz/RDoEbz3PDPZrrZ16/cArEZDOmC+QkNBFDC2O/n/8K4E70uW8KTDIqi817
+         FYURPHLzGtiDCCgHuHASq6MLJLq6VoYmte0kJ4QGj9YbtLMk+HGk9QjTb2UdHT5X3U8k
+         951Ivghweq5RhxWVyD7RHbRH6F4Mq3idiqIR92BMZQJOkCzkdAuPMPRJagF3dTBwxaMr
+         hbXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685473421; x=1688065421;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/wg+eakYRQJkWFsR8VKHGbMsmZUbdUsVveMbi9l3IrU=;
+        b=RtRg9JpMTvkVbUKWDOPDUkPWNu1Ygdko6vI6DYXmeUD8H0f8ei47qxsIbUGM9ymJLQ
+         /mCKVRNwObrwr8KGGPTG9S3BfUHnOXXlt/sXJJmzEm+zJgi+t3oWH1miU+eDVgCL/o3Z
+         GCPA7DENoJ5Cg7aEJ7EbK9I0jWUjxZi2qxzioGVsm5k1pU96NSwpz064D4RL38Lz7o04
+         DoqkHuIBlxalFA7XgD2P+oR9gs8kC9iqa269QPvrH5lREZ32XjSUJ9As//77Rs345ep2
+         yUlb5+gLkQ9LMU4XV336zcwUOKDDTSK7dhZO/QhrZlGA/zKDn/8qMzvTd2oiGdfGzDb/
+         fPqw==
+X-Gm-Message-State: AC+VfDwvsbMe/Zh8+4Sf44OSUYUa0e5ym+dbBMOoRL3hjS96TAdZRB7C
+	n1XUfuksvfBSdkCuMM43ccTp/JB/S04dOtfhJBbDmg==
+X-Google-Smtp-Source: ACHHUZ4tQx7CHfFMGAthsUJbOk3tJkETYESkIEu6PzSgqVUmKF4lp6c4aKVS3iVEhQx3+aj/GpFZwh3LLrvIT/yC8HY=
+X-Received: by 2002:a05:622a:1a01:b0:3f8:3065:7fc5 with SMTP id
+ f1-20020a05622a1a0100b003f830657fc5mr234549qtb.1.1685473421607; Tue, 30 May
+ 2023 12:03:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4JLp3iUh6LkN6SND8O8wRZZcM04Shcq4rUa5QEOUAVsGg@mail.gmail.com>
+References: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 30 May 2023 12:03:30 -0700
+Message-ID: <CAP-5=fXvN1b+_krmFSL2=C31WZ3zKafnq=Bqw3ruBKFNzG_8Kw@mail.gmail.com>
+Subject: Re: [PATCH RESEND v3 0/5] perf tools: Modify mksyscalltbl
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/05/2023 19:39:50+0800, Binbin Zhou wrote:
-> Hi Krzysztof:
-> 
-> LS7A bridge chip can be considered as a combination of South and North
-> bridge. Generally, it will be connected to the Loongson-3 series CPUs.
-> LS2K500/LS2K1000/LS2K2000 refers to the LS2K series embedded CPU chip.
-> 
-> Therefore, from the understanding of the driver code, I don't think it
-> is appropriate to fallback them together. Please pardon me if this
-> view does not apply to dt-binding.
-> 
-> If fallback is necessary, can we have this:
-> 
-> Let ls7a remain a separate item.
-> 
-> "loongson,ls1b-rtc"
-> "loongson,ls1c-rtc", "loongson,ls1b-rtc"
+On Tue, May 30, 2023 at 3:10=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> I'm sorry, somehow the patchset didn't reach mailing lists.
+> Resending with a fewer people in the cc list, which probably
+> was the reason.
+>
+> Thanks Alexander, Leo and Ian for your reviews and suggestions.
 
-Based on Keguang's feedback, "loongson,ls1b-rtc" is not a fallback for
-"loongson,ls1c-rtc" as it is missing registers, keep it standalone.
+Thanks for the consts!
 
-> "loongson,ls7a-rtc"
-> "loongson,ls2k0500-rtc"
-> "loongson,ls2k2000-rtc", "loongson,ls2k0500-rtc"
-> "loongson,ls2k1000-rtc"
-> 
-> { .compatible = "loongson,ls1b-rtc", .data = &ls1x_rtc_config }
-> { .compatible = "loongson,ls7a-rtc", .data = &generic_rtc_config }
-> { .compatible = "loongson,ls2k0500-rtc", .data = &generic_rtc_config }
-> { .compatible = "loongson,ls2k1000-rtc", .data = &ls2k1000_rtc_config }
-> 
-> Thanks.
-> Binbin
-> 
-> >
-> > >
-> > > Which one do you think is more suitable for us?
-> >
-> > Use fallbacks for some. You pointed difference in alarm for ls1x, right?
-> > If so, then they can stay separate.
-> >
-> > ls2k500 and ls2k2000 seem compatible with each other so should use fallback.
-> >
-> > Best regards,
-> > Krzysztof
-> >
+Acked-by: Ian Rogers <irogers@google.com>
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> v3:
+>   -- Add a new patch to declare syscalltbl_*[] as const for all archs,
+>      suggested by Ian.
+>   -- Add a new patch to use max_nr to define SYSCALLTBL_ARM64_MAX_ID.
+>
+> v2:
+>   -- Add a new patch to rename create_table_from_c()
+>      to create_sc_table(), suggested by Leo.
+>   -- Simplify the shell script, suggested by Alexander.
+>
+> Tiezhu Yang (5):
+>   perf tools: Declare syscalltbl_*[] as const for all archs
+>   perf arm64: Rename create_table_from_c() to create_sc_table()
+>   perf arm64: Handle __NR3264_ prefixed syscall number
+>   perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
+>   perf LoongArch: Simplify mksyscalltbl
+>
+>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  | 17 ++++-----
+>  .../arch/loongarch/entry/syscalls/mksyscalltbl     | 40 +++++++---------=
+------
+>  tools/perf/arch/mips/entry/syscalls/mksyscalltbl   |  2 +-
+>  .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  2 +-
+>  tools/perf/arch/s390/entry/syscalls/mksyscalltbl   |  2 +-
+>  tools/perf/arch/x86/entry/syscalls/syscalltbl.sh   |  2 +-
+>  tools/perf/util/syscalltbl.c                       | 14 ++++----
+>  7 files changed, 32 insertions(+), 47 deletions(-)
+>
+> --
+> 2.1.0
+>
