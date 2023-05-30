@@ -1,84 +1,185 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E93D171BA
-	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 10:10:05 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx1fB8y3Vk6oUCAA--.5729S3;
-	Tue, 30 May 2023 18:10:04 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axo8B6y3Vk_WqAAA--.12905S5;
-	Tue, 30 May 2023 18:10:04 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH RESEND v3 3/5] perf arm64: Handle __NR3264_ prefixed syscall number
-Date: Tue, 30 May 2023 18:09:59 +0800
-Message-Id: <1685441401-8709-4-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8Axo8B6y3Vk_WqAAA--.12905S5
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7trWxur1Dtw1xtw4ktF15CFg_yoW8JFW8pw
-	s3C34UtFZ5GF10kw1xur4jqFZ5CF4kJF1UKryjyrW3Crn8J345tr1YqasYkFW7Xw1xK3y5
-	Zr1FqFy5XF18Xw7anT9S1TB71UUUU1JqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS
-	14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4
-	kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E
-	5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAV
-	WUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY
-	1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-	0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07jP-BNUUUUU=
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9451C17AD7
+	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 11:40:03 +0000 (UTC)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-565e8d575cbso21813787b3.3
+        for <loongarch@lists.linux.dev>; Tue, 30 May 2023 04:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685446802; x=1688038802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pl5TicixGzRQ0Rq0fw3FNPOG1mfIhS0y+dbkDNMEbHI=;
+        b=brYtG3pmzpjYxd0Gspn+o+J/iBHmc4MVzR7HSexEtLmYmHpWz1GUbxDnAePchkkuDT
+         1X1eWz/LvDJ3VPoUwppx5yQIj5reIhouxsv5CIrwspQUd1p7DEzGuKnZLRrqSfA/Ut6v
+         +DEsWTkChutc2HZT/Jo4WQhhys9SqMj5zujqLXp5XUJSgMc4yeFVcg1u+g9UfVxetwMj
+         AT+wofkSXoUraY/WlFJOq8mLWycHCH+GR1fW+mysT8oBxYlrMXnOcdPbexFnJi4kBFC/
+         rdvOS4sJoBZ2An8avCaTGirU9DJ2JDz9H6OCeanbmygSBFWqI1iFd9zIjqkRNXRvMsq6
+         icHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685446802; x=1688038802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pl5TicixGzRQ0Rq0fw3FNPOG1mfIhS0y+dbkDNMEbHI=;
+        b=L5pw/xWUqEWyXSyvClP638cz96J1JKglR6FojahXJGVtOlm2IEDfetobF1ABJBYY0F
+         q5vXYtf6suG4Cl6ofGw0TSDSKT/6GQX19AfdsdEJYZjTgNvWxXJhQPAQpLRfiJ1Pw11l
+         +drzxqrlYXUfrdgeZ15EJuCsh19xn2V/6kSXPsDT4rL/jNJzWbeD7Kc4x6FqX33fJu5d
+         hegssLz3Jc28VGaO6Mo8NEzVBxxc3KEy+zZaroG9ZAcw4+Pzi0i7oDnTUygvmvkSiJb9
+         ln9OmFnWDE77DICzTgVRMq2l7zs8LICK+Te2D9I57+caDHBzyNM1i0PBfDsqzKf5Tr93
+         Pufg==
+X-Gm-Message-State: AC+VfDytpET1zayKaU3lygNE+Rh5bm37kMatEi5+8b3XwDcXglLm6zRv
+	p8YE14F4dNogUqzeVjHyqF+s5p0l31vwnaYbwbw=
+X-Google-Smtp-Source: ACHHUZ5HLiNtBoCLtNDdf4gENt8MpYtx6f5wliUYDAFOEj+EumK9qpKm+caObyiJwcoOzICOaaSjesoNWnDLtA2vx+g=
+X-Received: by 2002:a0d:d4cd:0:b0:564:c4db:633a with SMTP id
+ w196-20020a0dd4cd000000b00564c4db633amr2212623ywd.15.1685446802410; Tue, 30
+ May 2023 04:40:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <cover.1684983279.git.zhoubinbin@loongson.cn> <9a2fbd6860f37760ca6089c150fd6f67628405f6.1684983279.git.zhoubinbin@loongson.cn>
+ <20230525-custody-oversleep-f778eddf981c@spud> <CAMpQs4LuGAUfMNB93B=vgwJaLqEM6Cq5KyaCtnHOL7RWGuZy-w@mail.gmail.com>
+ <20230526-dolly-reheat-06c4d5658415@wendy> <CAMpQs4KeHCW+9ssAn-jF0efiUOzERRFDu9Sjz1Mtv5Lk1uFuPA@mail.gmail.com>
+ <A206E0A5-9BF0-4787-9B06-9F91FA3C60A3@flygoat.com> <20230527-passing-unfixed-39e01b787808@spud>
+ <14EF9F21-8150-40D9-8870-E9151C4882CF@flygoat.com> <20230527-poet-antarctic-cc02aa60ab52@spud>
+ <CAJhJPsU_qOJKO99S1xjJaSUqXsXAG7HpYbzs5wTb8J4-tQqSQA@mail.gmail.com>
+ <E229B204-1B00-4B24-B4BF-15277682FB4B@kernel.org> <CAMpQs4K4e3BSVvqXa+QjhM5XDxHc_ZCiRYW+HgPo21AQ_bYSRQ@mail.gmail.com>
+ <6845b6ce-06a8-9a0c-7f04-50fa906cd1e4@linaro.org>
+In-Reply-To: <6845b6ce-06a8-9a0c-7f04-50fa906cd1e4@linaro.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 30 May 2023 19:39:50 +0800
+Message-ID: <CAMpQs4JLp3iUh6LkN6SND8O8wRZZcM04Shcq4rUa5QEOUAVsGg@mail.gmail.com>
+Subject: Re: [PATCH V4 1/5] dt-bindings: rtc: Remove the LS2X from the trivial RTCs
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Conor Dooley <conor@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo <a.zummo@towertech.it>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-rtc@vger.kernel.org, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, zhao zhang <zhzhl555@gmail.com>, 
+	Yang Ling <gnaygnil@gmail.com>, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
-in the generated syscall table file syscalls.c, there exist some
-__NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
-it looks like not so good, just do some small filter operations
-to handle __NR3264_ prefixed syscall number as a digital number.
+On Tue, May 30, 2023 at 4:17=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 29/05/2023 10:31, Binbin Zhou wrote:
+> > Hi Krzysztof:
+> >
+> > Excuse me.
+> > We have different opinions on how to better describe rtc-loongson compa=
+tible.
+> >
+> > Based on my previous communication with you, I think we should list
+> > all the Socs in the driver and drop the wildcards.
+>
+> Suggestion was about the bindings. Not in the driver. I never said to
+> list all compatibles in the driver...
+>
+> > This should be clearer and more straightforward:
+> >
+> >         { .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1x_rtc_conf=
+ig
+> > }, //ls1b soc
+> >         { .compatible =3D "loongson,ls1c-rtc", .data =3D &ls1x_rtc_conf=
+ig
+> > }, //ls1c soc
+> >         { .compatible =3D "loongson,ls7a-rtc", .data =3D
+> > &generic_rtc_config }, //ls7a bridge chip
+> >         { .compatible =3D "loongson,ls2k0500-rtc", .data =3D
+> > &generic_rtc_config }, // ls2k0500 soc
+> >         { .compatible =3D "loongson,ls2k2000-rtc", .data =3D
+> > &generic_rtc_config }, // ls2k2000 soc
+> >         { .compatible =3D "loongson,ls2k1000-rtc", .data =3D
+> > &ls2k1000_rtc_config }, // ls2k1000 soc
+>
+> I would suggest to use fallbacks as suggested by Conor at least for some
+> of them. You referred to my previous comments about wildcards.
+> Wildcard !=3D fallback.
+>
+> >
+> > And Conor thought it should be rendered using a fallback compatible
+> > form based on ".data".
+>
+> Based on common (compatible) programming model unless you already have
+> clear hardware differences making them incompatible.
+>
+> >
+> >         "loongson,ls1b-rtc"
+> >         "loongson,ls1c-rtc", "loongson,ls1b-rtc"
+> >         "loongson,ls7a-rtc"
+> >         "loongson,ls2k0500-rtc", "loongson,ls7a-rtc"
+> >         "longson,ls2k2000-rtc", "longson,ls7a-rtc"
+> >         "loonson,ls2k1000-rtc"
+> >
+> >         { .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1x_rtc_conf=
+ig }
+> >         { .compatible =3D "loongson,ls7a-rtc", .data =3D &generic_rtc_c=
+onfig }
+> >         { .compatible =3D "loongson,ls2k1000-rtc", .data =3D &ls2k1000_=
+rtc_config }
+> >
+> > In this form,  I think it might not be possible to show very
+> > graphically which chips are using the driver.
+>
+> ??? How is it impossible? For all other SoCs and architectures it is
+> possible, so what is special for Loongson?
+>
+> > Also, for example, "ls7a" is a bridge chip, while
+> > "ls2k2000"/"ls2k0500" are soc chips, and it seems inappropriate to
+> > integrate them into one item.
+>
+> Why it is inappropriate? I don't see the issue here... what is a
+> "bridge" chip? Isn't this also an SoC?
+>
+Hi Krzysztof:
 
-Without this patch:
+LS7A bridge chip can be considered as a combination of South and North
+bridge. Generally, it will be connected to the Loongson-3 series CPUs.
+LS2K500/LS2K1000/LS2K2000 refers to the LS2K series embedded CPU chip.
 
-  [__NR3264_ftruncate] = "ftruncate",
+Therefore, from the understanding of the driver code, I don't think it
+is appropriate to fallback them together. Please pardon me if this
+view does not apply to dt-binding.
 
-With this patch:
+If fallback is necessary, can we have this:
 
-  [46] = "ftruncate",
+Let ls7a remain a separate item.
 
-Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+"loongson,ls1b-rtc"
+"loongson,ls1c-rtc", "loongson,ls1b-rtc"
+"loongson,ls7a-rtc"
+"loongson,ls2k0500-rtc"
+"loongson,ls2k2000-rtc", "loongson,ls2k0500-rtc"
+"loongson,ls2k1000-rtc"
 
-diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-index 84976dc..0bcd64a 100755
---- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-@@ -40,6 +40,7 @@ create_table()
- }
- 
- $gcc -E -dM -x c -I $incpath/include/uapi $input \
--	|sed -ne 's/^#define __NR_//p' \
--	|sort -t' ' -k2 -n	       \
-+	|awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
-+		sub("^#define __NR(3264)?_", "");
-+		print | "sort -k2 -n"}' \
- 	|create_table
--- 
-2.1.0
+{ .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1x_rtc_config }
+{ .compatible =3D "loongson,ls7a-rtc", .data =3D &generic_rtc_config }
+{ .compatible =3D "loongson,ls2k0500-rtc", .data =3D &generic_rtc_config }
+{ .compatible =3D "loongson,ls2k1000-rtc", .data =3D &ls2k1000_rtc_config }
 
+Thanks.
+Binbin
+
+>
+> >
+> > Which one do you think is more suitable for us?
+>
+> Use fallbacks for some. You pointed difference in alarm for ls1x, right?
+> If so, then they can stay separate.
+>
+> ls2k500 and ls2k2000 seem compatible with each other so should use fallba=
+ck.
+>
+> Best regards,
+> Krzysztof
+>
