@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B096F156C1
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B312316403
 	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 09:51:12 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxTesNx3VkSoQCAA--.1219S3;
+	by gateway (Coremail) with SMTP id _____8CxPesNx3VkXIQCAA--.1327S3;
 	Tue, 30 May 2023 17:51:09 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWdIJx3VkkmSAAA--.12317S3;
-	Tue, 30 May 2023 17:51:07 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWdIJx3VkkmSAAA--.12317S5;
+	Tue, 30 May 2023 17:51:09 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -24,172 +24,72 @@ Cc: Hans-Peter Nilsson <hp@axis.com>,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 1/5] perf tools: Declare syscalltbl_*[] as const for all archs
-Date: Tue, 30 May 2023 17:51:01 +0800
-Message-Id: <1685440265-7021-2-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 3/5] perf arm64: Handle __NR3264_ prefixed syscall number
+Date: Tue, 30 May 2023 17:51:03 +0800
+Message-Id: <1685440265-7021-4-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8BxWdIJx3VkkmSAAA--.12317S3
+X-CM-TRANSID:AQAAf8BxWdIJx3VkkmSAAA--.12317S5
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKw4kurWxJr4UJF17Aw4fKrg_yoWxGr1Dp3
-	Z2kw1kJ3Z5Wr1rA34Igw4jqFyrurn7Gr12qryjkrZxArsxJ343trWUXa95tFWfX34xGrWj
-	vrW8Xry5GF1IqF7anT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7trWxur1Dtw1xtw4ktF15CFg_yoW8JFW8pw
+	s3C34UtFZ5GF10kw1xur4jqFZ5CF4kJF1UKryjyrW3Crn8J345tr1YqasYkFW7Xw1xK3y5
+	Zr1FqFy5XF18Xw7anT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS
-	14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
-	AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_
-	Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-	CTnIWIevJa73UjIFyTuYvjxUc66wDUUUU
+	bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+	ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2kK
+	e7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2z280
+	aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
+	kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW7
+	JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxUxfHUUUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-syscalltbl_*[] should never be changing, let us declare it as const.
+After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
+in the generated syscall table file syscalls.c, there exist some
+__NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
+it looks like not so good, just do some small filter operations
+to handle __NR3264_ prefixed syscall number as a digital number.
 
-Suggested-by: Ian Rogers <irogers@google.com>
+Without this patch:
+
+  [__NR3264_ftruncate] = "ftruncate",
+
+With this patch:
+
+  [46] = "ftruncate",
+
+Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/arch/arm64/entry/syscalls/mksyscalltbl     |  2 +-
- tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl |  2 +-
- tools/perf/arch/mips/entry/syscalls/mksyscalltbl      |  2 +-
- tools/perf/arch/powerpc/entry/syscalls/mksyscalltbl   |  2 +-
- tools/perf/arch/s390/entry/syscalls/mksyscalltbl      |  2 +-
- tools/perf/arch/x86/entry/syscalls/syscalltbl.sh      |  2 +-
- tools/perf/util/syscalltbl.c                          | 14 +++++++-------
- 7 files changed, 13 insertions(+), 13 deletions(-)
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-index 22cdf91..4edcdf6 100755
+index 84976dc..0bcd64a 100755
 --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
 +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-@@ -34,7 +34,7 @@ create_table_from_c()
- create_table()
- {
- 	echo "#include \"$input\""
--	echo "static const char *syscalltbl_arm64[] = {"
-+	echo "static const char *const syscalltbl_arm64[] = {"
- 	create_table_from_c
- 	echo "};"
- }
-diff --git a/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-index c52156f..5fb83bd 100755
---- a/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-@@ -50,7 +50,7 @@ create_table_from_c()
- 
- create_table()
- {
--	echo "static const char *syscalltbl_loongarch[] = {"
-+	echo "static const char *const syscalltbl_loongarch[] = {"
- 	create_table_from_c
- 	echo "};"
- }
-diff --git a/tools/perf/arch/mips/entry/syscalls/mksyscalltbl b/tools/perf/arch/mips/entry/syscalls/mksyscalltbl
-index fb1f494..c0d93f9 100644
---- a/tools/perf/arch/mips/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/mips/entry/syscalls/mksyscalltbl
-@@ -18,7 +18,7 @@ create_table()
- {
- 	local max_nr nr abi sc discard
- 
--	echo 'static const char *syscalltbl_mips_n64[] = {'
-+	echo 'static const char *const syscalltbl_mips_n64[] = {'
- 	while read nr abi sc discard; do
- 		printf '\t[%d] = "%s",\n' $nr $sc
- 		max_nr=$nr
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/mksyscalltbl b/tools/perf/arch/powerpc/entry/syscalls/mksyscalltbl
-index 6c58060..0eb316f 100755
---- a/tools/perf/arch/powerpc/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/powerpc/entry/syscalls/mksyscalltbl
-@@ -23,7 +23,7 @@ create_table()
- 	max_nr=-1
- 	nr=0
- 
--	echo "static const char *syscalltbl_powerpc_${wordsize}[] = {"
-+	echo "static const char *const syscalltbl_powerpc_${wordsize}[] = {"
- 	while read nr abi sc discard; do
- 		if [ "$max_nr" -lt "$nr" ]; then
- 			printf '\t[%d] = "%s",\n' $nr $sc
-diff --git a/tools/perf/arch/s390/entry/syscalls/mksyscalltbl b/tools/perf/arch/s390/entry/syscalls/mksyscalltbl
-index 72ecbb6..52eb88a 100755
---- a/tools/perf/arch/s390/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/s390/entry/syscalls/mksyscalltbl
-@@ -18,7 +18,7 @@ create_table()
- {
- 	local max_nr nr abi sc discard
- 
--	echo 'static const char *syscalltbl_s390_64[] = {'
-+	echo 'static const char *const syscalltbl_s390_64[] = {'
- 	while read nr abi sc discard; do
- 		printf '\t[%d] = "%s",\n' $nr $sc
- 		max_nr=$nr
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh b/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
-index 029a72c..fa526a9 100755
---- a/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
-+++ b/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
-@@ -18,7 +18,7 @@ emit() {
-     syscall_macro "$nr" "$entry"
+@@ -40,6 +40,7 @@ create_table()
  }
  
--echo "static const char *syscalltbl_${arch}[] = {"
-+echo "static const char *const syscalltbl_${arch}[] = {"
- 
- sorted_table=$(mktemp /tmp/syscalltbl.XXXXXX)
- grep '^[0-9]' "$in" | sort -n > $sorted_table
-diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-index 313ecce..63be7b5 100644
---- a/tools/perf/util/syscalltbl.c
-+++ b/tools/perf/util/syscalltbl.c
-@@ -17,31 +17,31 @@
- #if defined(__x86_64__)
- #include <asm/syscalls_64.c>
- const int syscalltbl_native_max_id = SYSCALLTBL_x86_64_MAX_ID;
--static const char **syscalltbl_native = syscalltbl_x86_64;
-+static const char *const *syscalltbl_native = syscalltbl_x86_64;
- #elif defined(__s390x__)
- #include <asm/syscalls_64.c>
- const int syscalltbl_native_max_id = SYSCALLTBL_S390_64_MAX_ID;
--static const char **syscalltbl_native = syscalltbl_s390_64;
-+static const char *const *syscalltbl_native = syscalltbl_s390_64;
- #elif defined(__powerpc64__)
- #include <asm/syscalls_64.c>
- const int syscalltbl_native_max_id = SYSCALLTBL_POWERPC_64_MAX_ID;
--static const char **syscalltbl_native = syscalltbl_powerpc_64;
-+static const char *const *syscalltbl_native = syscalltbl_powerpc_64;
- #elif defined(__powerpc__)
- #include <asm/syscalls_32.c>
- const int syscalltbl_native_max_id = SYSCALLTBL_POWERPC_32_MAX_ID;
--static const char **syscalltbl_native = syscalltbl_powerpc_32;
-+static const char *const *syscalltbl_native = syscalltbl_powerpc_32;
- #elif defined(__aarch64__)
- #include <asm/syscalls.c>
- const int syscalltbl_native_max_id = SYSCALLTBL_ARM64_MAX_ID;
--static const char **syscalltbl_native = syscalltbl_arm64;
-+static const char *const *syscalltbl_native = syscalltbl_arm64;
- #elif defined(__mips__)
- #include <asm/syscalls_n64.c>
- const int syscalltbl_native_max_id = SYSCALLTBL_MIPS_N64_MAX_ID;
--static const char **syscalltbl_native = syscalltbl_mips_n64;
-+static const char *const *syscalltbl_native = syscalltbl_mips_n64;
- #elif defined(__loongarch__)
- #include <asm/syscalls.c>
- const int syscalltbl_native_max_id = SYSCALLTBL_LOONGARCH_MAX_ID;
--static const char **syscalltbl_native = syscalltbl_loongarch;
-+static const char *const *syscalltbl_native = syscalltbl_loongarch;
- #endif
- 
- struct syscall {
+ $gcc -E -dM -x c -I $incpath/include/uapi $input \
+-	|sed -ne 's/^#define __NR_//p' \
+-	|sort -t' ' -k2 -n	       \
++	|awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
++		sub("^#define __NR(3264)?_", "");
++		print | "sort -k2 -n"}' \
+ 	|create_table
 -- 
 2.1.0
 
