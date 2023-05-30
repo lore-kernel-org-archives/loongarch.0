@@ -1,11 +1,11 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41BD320E8
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43FF8A42
 	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 01:53:38 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Axz+vfVnVktWoCAA--.5347S3;
+	by gateway (Coremail) with SMTP id _____8Dx9fDfVnVkrWoCAA--.5619S3;
 	Tue, 30 May 2023 09:52:31 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxQbTYVnVkQNZ_AA--.12077S24;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxQbTYVnVkQNZ_AA--.12077S23;
 	Tue, 30 May 2023 09:52:31 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v12 22/31] LoongArch: KVM: Implement handle idle exception
-Date: Tue, 30 May 2023 09:52:14 +0800
-Message-Id: <20230530015223.147755-23-zhaotianrui@loongson.cn>
+Subject: [PATCH v12 21/31] LoongArch: KVM: Implement handle iocsr exception
+Date: Tue, 30 May 2023 09:52:13 +0800
+Message-Id: <20230530015223.147755-22-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230530015223.147755-1-zhaotianrui@loongson.cn>
 References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
@@ -35,60 +35,174 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxQbTYVnVkQNZ_AA--.12077S24
+X-CM-TRANSID:AQAAf8AxQbTYVnVkQNZ_AA--.12077S23
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7JrW5uFykWr43XF4UXFyUAwb_yoWkXrb_ZF
-	Z7Jas5GFWrXFs8Ka4Dt345Ka4Ygw4kXFWY9FW7ury3GF1qyrWUC39rWw1DZrWkKFWUZFW5
-	K3yDZas7Z342qjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5
-	i7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48J
-	MxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxV
-	WUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWDJVCq3wCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
-	sGvfC2KfnxnUUI43ZEXa7xRihFxUUUUUU==
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWFWrGw17Kry5ZFy7ArWxXrb_yoWrJF1Upa
+	yUZryktrW8Wwn3twsxJrs7Xr1aqF48Gry7JFZxJw4furW2ya45Jr4vkrnFvF98K393Gr4I
+	9w1fJryxuF1qy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
+	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement kvm handle LoongArch vcpu idle exception, using kvm_vcpu_block
-to emulate it.
+Implement kvm handle vcpu iocsr exception, setting the iocsr info into
+vcpu_run and return to user space to handle it.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/loongarch/include/asm/inst.h | 16 ++++++
+ arch/loongarch/kvm/exit.c         | 92 +++++++++++++++++++++++++++++++
+ 2 files changed, 108 insertions(+)
 
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index b09887ffcd15..db5857796432 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -56,6 +56,14 @@ enum reg2_op {
+ 	revbd_op	= 0x0f,
+ 	revh2w_op	= 0x10,
+ 	revhd_op	= 0x11,
++	iocsrrdb_op     = 0x19200,
++	iocsrrdh_op     = 0x19201,
++	iocsrrdw_op     = 0x19202,
++	iocsrrdd_op     = 0x19203,
++	iocsrwrb_op     = 0x19204,
++	iocsrwrh_op     = 0x19205,
++	iocsrwrw_op     = 0x19206,
++	iocsrwrd_op     = 0x19207,
+ };
+ 
+ enum reg2i5_op {
+@@ -298,6 +306,13 @@ struct reg3sa2_format {
+ 	unsigned int opcode : 15;
+ };
+ 
++struct reg2csr_format {
++	unsigned int rd : 5;
++	unsigned int rj : 5;
++	unsigned int csr : 14;
++	unsigned int opcode : 8;
++};
++
+ union loongarch_instruction {
+ 	unsigned int word;
+ 	struct reg0i15_format	reg0i15_format;
+@@ -313,6 +328,7 @@ union loongarch_instruction {
+ 	struct reg2bstrd_format	reg2bstrd_format;
+ 	struct reg3_format	reg3_format;
+ 	struct reg3sa2_format	reg3sa2_format;
++	struct reg2csr_format   reg2csr_format;
+ };
+ 
+ #define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index bd33fe0c6424..3fdb42939a05 100644
+index 508cbce31aa5..bd33fe0c6424 100644
 --- a/arch/loongarch/kvm/exit.c
 +++ b/arch/loongarch/kvm/exit.c
-@@ -188,3 +188,23 @@ int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
+@@ -96,3 +96,95 @@ static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
  
- 	return er;
+ 	return EMULATE_DONE;
  }
 +
-+int _kvm_emu_idle(struct kvm_vcpu *vcpu)
++int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
 +{
-+	++vcpu->stat.idle_exits;
-+	trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
++	u32 rd, rj, opcode;
++	u32 addr;
++	unsigned long val;
++	int ret;
 +
-+	if (!kvm_arch_vcpu_runnable(vcpu)) {
-+		/*
-+		 * Switch to the software timer before halt-polling/blocking as
-+		 * the guest's timer may be a break event for the vCPU, and the
-+		 * hypervisor timer runs only when the CPU is in guest mode.
-+		 * Switch before halt-polling so that KVM recognizes an expired
-+		 * timer before blocking.
-+		 */
-+		kvm_save_timer(vcpu);
-+		kvm_vcpu_block(vcpu);
++	/*
++	 * Each IOCSR with different opcode
++	 */
++	rd = inst.reg2_format.rd;
++	rj = inst.reg2_format.rj;
++	opcode = inst.reg2_format.opcode;
++	addr = vcpu->arch.gprs[rj];
++	ret = EMULATE_DO_IOCSR;
++	run->iocsr_io.phys_addr = addr;
++	run->iocsr_io.is_write = 0;
++
++	/* LoongArch is Little endian */
++	switch (opcode) {
++	case iocsrrdb_op:
++		run->iocsr_io.len = 1;
++		break;
++	case iocsrrdh_op:
++		run->iocsr_io.len = 2;
++		break;
++	case iocsrrdw_op:
++		run->iocsr_io.len = 4;
++		break;
++	case iocsrrdd_op:
++		run->iocsr_io.len = 8;
++		break;
++	case iocsrwrb_op:
++		run->iocsr_io.len = 1;
++		run->iocsr_io.is_write = 1;
++		break;
++	case iocsrwrh_op:
++		run->iocsr_io.len = 2;
++		run->iocsr_io.is_write = 1;
++		break;
++	case iocsrwrw_op:
++		run->iocsr_io.len = 4;
++		run->iocsr_io.is_write = 1;
++		break;
++	case iocsrwrd_op:
++		run->iocsr_io.len = 8;
++		run->iocsr_io.is_write = 1;
++		break;
++	default:
++		ret = EMULATE_FAIL;
++		break;
 +	}
 +
-+	return EMULATE_DONE;
++	if (ret == EMULATE_DO_IOCSR) {
++		if (run->iocsr_io.is_write) {
++			val = vcpu->arch.gprs[rd];
++			memcpy(run->iocsr_io.data, &val, run->iocsr_io.len);
++		}
++		vcpu->arch.io_gpr = rd;
++	}
++
++	return ret;
++}
++
++int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
++{
++	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
++	enum emulation_result er = EMULATE_DONE;
++
++	switch (run->iocsr_io.len) {
++	case 8:
++		*gpr = *(s64 *)run->iocsr_io.data;
++		break;
++	case 4:
++		*gpr = *(int *)run->iocsr_io.data;
++		break;
++	case 2:
++		*gpr = *(short *)run->iocsr_io.data;
++		break;
++	case 1:
++		*gpr = *(char *) run->iocsr_io.data;
++		break;
++	default:
++		kvm_err("Bad IOCSR length: %d,addr is 0x%lx",
++				run->iocsr_io.len, vcpu->arch.badv);
++		er = EMULATE_FAIL;
++		break;
++	}
++
++	return er;
 +}
 -- 
 2.39.1
