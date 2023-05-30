@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79E2D1116
-	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 01:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D94111C
+	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 01:52:37 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxR_HiVnVk4moCAA--.5675S3;
-	Tue, 30 May 2023 09:52:34 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxuPHeVnVkeWoCAA--.5525S3;
+	Tue, 30 May 2023 09:52:30 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxQbTYVnVkQNZ_AA--.12077S28;
-	Tue, 30 May 2023 09:52:33 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxQbTYVnVkQNZ_AA--.12077S18;
+	Tue, 30 May 2023 09:52:29 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v12 26/31] LoongArch: KVM: Implement kvm exception vector
-Date: Tue, 30 May 2023 09:52:18 +0800
-Message-Id: <20230530015223.147755-27-zhaotianrui@loongson.cn>
+Subject: [PATCH v12 16/31] LoongArch: KVM: Implement update VM id function
+Date: Tue, 30 May 2023 09:52:08 +0800
+Message-Id: <20230530015223.147755-17-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230530015223.147755-1-zhaotianrui@loongson.cn>
 References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
@@ -35,88 +35,103 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxQbTYVnVkQNZ_AA--.12077S28
+X-CM-TRANSID:AQAAf8AxQbTYVnVkQNZ_AA--.12077S18
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Kw15tF1UurWUKF17uF4UJwb_yoW8ZFW3pF
-	yfA34Yyr48Wa42va4akw1vgF13AayxKr17WrW7G343uw4jqryrtrWvk397JF43KryrZF1x
-	AFZ8tr15uF4UG37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Aw1kJrW5GFWrWry3CF4rZrb_yoW8tr1rpr
+	WxCrn5Wr4rXwnxu3sIqw10qrn09395JF13Xa47Ja4Yyr17t34qkrWvkrWDAFyxXr1rAryx
+	XF15tF4jkF18A37anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
+	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zRXo7NUUUUU=
 
-Implement kvm exception vector, using _kvm_fault_tables array to save
-the handle function pointer and it is used when vcpu handle exit.
+Implement kvm check vmid and update vmid, the vmid should be checked before
+vcpu enter guest.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 48 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/loongarch/kvm/vmid.c | 64 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 arch/loongarch/kvm/vmid.c
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 10f9922a7e76..625045fc95c8 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -657,3 +657,51 @@ static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
- 	kvm_own_fpu(vcpu);
- 	return RESUME_GUEST;
- }
-+
+diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
+new file mode 100644
+index 000000000000..6fef81b28a48
+--- /dev/null
++++ b/arch/loongarch/kvm/vmid.c
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Loongarch KVM callback handling for not implemented guest exiting
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
-+static int _kvm_fault_ni(struct kvm_vcpu *vcpu)
++
++#include <linux/kvm_host.h>
++#include "trace.h"
++
++static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
 +{
-+	unsigned long estat, badv;
-+	unsigned int exccode, inst;
++	struct kvm_context *context;
++	unsigned long vpid;
++
++	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++	vpid = context->vpid_cache + 1;
++	if (!(vpid & vpid_mask)) {
++		/* finish round of 64 bit loop */
++		if (unlikely(!vpid))
++			vpid = vpid_mask + 1;
++
++		/* vpid 0 reserved for root */
++		++vpid;
++
++		/* start new vpid cycle */
++		kvm_flush_tlb_all();
++	}
++
++	context->vpid_cache = vpid;
++	vcpu->arch.vpid = vpid;
++}
++
++void _kvm_check_vmid(struct kvm_vcpu *vcpu, int cpu)
++{
++	struct kvm_context *context;
++	bool migrated;
++	unsigned long ver, old, vpid;
 +
 +	/*
-+	 *  Fetch the instruction.
++	 * Are we entering guest context on a different CPU to last time?
++	 * If so, the vCPU's guest TLB state on this CPU may be stale.
 +	 */
-+	badv = vcpu->arch.badv;
-+	estat = vcpu->arch.host_estat;
-+	exccode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-+	inst = vcpu->arch.badi;
-+	kvm_err("Exccode: %d PC=%#lx inst=0x%08x BadVaddr=%#lx estat=%#lx\n",
-+			exccode, vcpu->arch.pc, inst, badv, read_gcsr_estat());
-+	kvm_arch_vcpu_dump_regs(vcpu);
-+	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++	migrated = (vcpu->arch.last_exec_cpu != cpu);
++	vcpu->arch.last_exec_cpu = cpu;
 +
-+	return RESUME_HOST;
-+}
++	/*
++	 * Check if our vpid is of an older version
++	 *
++	 * We also discard the stored vpid if we've executed on
++	 * another CPU, as the guest mappings may have changed without
++	 * hypervisor knowledge.
++	 */
++	ver = vcpu->arch.vpid & ~vpid_mask;
++	old = context->vpid_cache  & ~vpid_mask;
++	if (migrated || (ver != old)) {
++		_kvm_update_vpid(vcpu, cpu);
++		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
++	}
 +
-+static exit_handle_fn _kvm_fault_tables[EXCCODE_INT_START] = {
-+	[EXCCODE_TLBL]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBI]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBNR]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBNX]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBS]		= _kvm_handle_write_fault,
-+	[EXCCODE_TLBM]		= _kvm_handle_write_fault,
-+	[EXCCODE_FPDIS]		= _kvm_handle_fpu_disabled,
-+	[EXCCODE_GSPR]		= _kvm_handle_gspr,
-+};
-+
-+int _kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
-+{
-+	return _kvm_fault_tables[fault](vcpu);
-+}
-+
-+void _kvm_init_fault(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < EXCCODE_INT_START; i++)
-+		if (!_kvm_fault_tables[i])
-+			_kvm_fault_tables[i] = _kvm_fault_ni;
++	/* Restore GSTAT(0x50).vpid */
++	vpid = (vcpu->arch.vpid & vpid_mask)
++		<< CSR_GSTAT_GID_SHIFT;
++	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
 +}
 -- 
 2.39.1
