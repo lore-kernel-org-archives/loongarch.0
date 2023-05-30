@@ -1,101 +1,207 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440703D9F
-	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 01:53:38 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxBvHhVnVk12oCAA--.5608S3;
-	Tue, 30 May 2023 09:52:33 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxQbTYVnVkQNZ_AA--.12077S27;
-	Tue, 30 May 2023 09:52:32 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	loongarch@lists.linux.dev,
-	Jens Axboe <axboe@kernel.dk>,
-	Mark Brown <broonie@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	maobibo@loongson.cn,
-	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn
-Subject: [PATCH v12 25/31] LoongArch: KVM: Implement handle fpu exception
-Date: Tue, 30 May 2023 09:52:17 +0800
-Message-Id: <20230530015223.147755-26-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230530015223.147755-1-zhaotianrui@loongson.cn>
-References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9977E
+	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 06:41:36 +0000 (UTC)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-bad0c4f6f50so5861501276.1
+        for <loongarch@lists.linux.dev>; Mon, 29 May 2023 23:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685428896; x=1688020896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ksc2a0nJPOl5HteHEt9zVIK3nbbw25L/fRHOoiC8NCA=;
+        b=dseSC82+/ugzCB4OXcqx9WNoNB5/2VINEeY9CZMtxWB8oVBHC5MQ9housiTfb+HCXY
+         agPX+ocNvQkgFyuK/M4+Zulzae8Rl8GIJXImhngEgNUNKl3ADNFj/+GGPgUfMoHemYzk
+         HFokhKcIVFDy0PYTj3H4sCrNAX/ACjf23zd5+5/ODDlokYGfSvQQomfdDw6urO5tVh/+
+         FC+0IyzJfrv13AYx0S1bDOltnIcLgGzaPN3nEbyQihxDfiu+anbElh70nydbEKtMJW2/
+         ltfssRTNJoigddCCaS44eeNtclWavD/06Mt+iofcXW/aD5KGQ8d8iLVENwNK/Aw9ydWt
+         sygw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685428896; x=1688020896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ksc2a0nJPOl5HteHEt9zVIK3nbbw25L/fRHOoiC8NCA=;
+        b=CyRgRi2gVWC1bRqFPIAJ05ReABro1O6z5oS2cj/0Q44B3Uv9wc6PhVRi4IGaaRKonl
+         tCGYNegFydq5fiuZX/zPYfrT/zygrEtaAd7ycNWU+pLHMncOE/mE5x/LRICD6SqqHahK
+         kG0VJ1f8Bool2SUdktXwXoRW5Kp542p93enUEFwdpw2ZKOJpIz/gvsLZR7nd4mEGU2iz
+         UEIc+nefMlNdnIOZzVlEda7FP5Jpc18dE8hj0VmrH+W8x40x3msPa3360b5TkFVtO07N
+         5sZ2n5oicDTFUZ96aZ69wbmz9mO5eeWjCRIQeTNPq2StCNBbtv6XRCxwklux608WDO3F
+         q12A==
+X-Gm-Message-State: AC+VfDxs88IfRz9E9FL/nfgPNF9VwPqso/Rl9DoCEQdhONViqkRlFO02
+	MbR1d55hfiKefGSb/UX+sd1fPpFX3+XberOcgC7tkoZJc1d+nA==
+X-Google-Smtp-Source: ACHHUZ58Z2Jc5+6ob3VrFMHzmODh7gWfq9R9qYHbxX/ht0lSOPdInOYGVmgg3JsdAyijk1MO4zDQ13rgMkc/kh5Gyoo=
+X-Received: by 2002:a25:d4b:0:b0:bad:dc4:88fd with SMTP id 72-20020a250d4b000000b00bad0dc488fdmr1599370ybn.8.1685428895763;
+ Mon, 29 May 2023 23:41:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxQbTYVnVkQNZ_AA--.12077S27
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7trWDZrW7uw1UtrW8JFWDArb_yoW8JFW8pF
-	WfAwnYkr48Wry7ta9Iy3ZFqrsxArWkKry7Wr9Fk345Zw4Ut3s5XF48KrWvgFy5Kr1rXa1S
-	qr13KF98uF1UJ3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
-	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
-	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
-	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+References: <CAMpQs4LuGAUfMNB93B=vgwJaLqEM6Cq5KyaCtnHOL7RWGuZy-w@mail.gmail.com>
+ <20230526-dolly-reheat-06c4d5658415@wendy> <CAMpQs4KeHCW+9ssAn-jF0efiUOzERRFDu9Sjz1Mtv5Lk1uFuPA@mail.gmail.com>
+ <A206E0A5-9BF0-4787-9B06-9F91FA3C60A3@flygoat.com> <20230527-passing-unfixed-39e01b787808@spud>
+ <14EF9F21-8150-40D9-8870-E9151C4882CF@flygoat.com> <20230527-poet-antarctic-cc02aa60ab52@spud>
+ <CAJhJPsU_qOJKO99S1xjJaSUqXsXAG7HpYbzs5wTb8J4-tQqSQA@mail.gmail.com>
+ <E229B204-1B00-4B24-B4BF-15277682FB4B@kernel.org> <CAMpQs4K4e3BSVvqXa+QjhM5XDxHc_ZCiRYW+HgPo21AQ_bYSRQ@mail.gmail.com>
+ <2023052922200701b20517@mail.local>
+In-Reply-To: <2023052922200701b20517@mail.local>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 30 May 2023 14:41:24 +0800
+Message-ID: <CAMpQs4JSYg0PdeRXypnERf7RXUkAmt=M2RKsv19NqR8nkCDcLQ@mail.gmail.com>
+Subject: Re: [PATCH V4 1/5] dt-bindings: rtc: Remove the LS2X from the trivial RTCs
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Conor Dooley <conor@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, zhao zhang <zhzhl555@gmail.com>, 
+	Yang Ling <gnaygnil@gmail.com>, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Implement handle fpu exception, using kvm_own_fpu to enable fpu for
-guest.
+On Tue, May 30, 2023 at 6:20=E2=80=AFAM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> Hello,
+>
+> Honestly, the list of compatibles is fine for me. I wouldn't go for
+> fallback. The improvement would be to drop "loongson,ls1c-rtc",
+> and probably "loongson,ls2k0500-rtc" and "loongson,ls2k2000-rtc".
+>
+> loongson,ls1c-rtc is definitively not needed, the alarm may not be wired
+> but the registers are there.
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- arch/loongarch/kvm/exit.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Hi Alexandre:
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 1237ceb06d0c..10f9922a7e76 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -631,3 +631,29 @@ static int _kvm_handle_read_fault(struct kvm_vcpu *vcpu)
- {
- 	return _kvm_handle_mmu_fault(vcpu, false);
- }
-+
-+/**
-+ * _kvm_handle_fpu_disabled() - Guest used fpu however it is disabled at host
-+ * @vcpu:	Virtual CPU context.
-+ *
-+ * Handle when the guest attempts to use fpu which hasn't been allowed
-+ * by the root context.
-+ */
-+static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_run *run = vcpu->run;
-+
-+	/*
-+	 * If guest FPU not present, the FPU operation should have been
-+	 * treated as a reserved instruction!
-+	 * If FPU already in use, we shouldn't get this at all.
-+	 */
-+	if (WARN_ON(vcpu->arch.aux_inuse & KVM_LARCH_FPU)) {
-+		kvm_err("%s internal error\n", __func__);
-+		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+		return RESUME_HOST;
-+	}
-+
-+	kvm_own_fpu(vcpu);
-+	return RESUME_GUEST;
-+}
--- 
-2.39.1
+I am glad to receive your reply.
 
+Yes, we tested and found that ls1c indeed can't trigger alarm
+interrupts, but can read and write RTC time normally.
+Also, in the latest rtc driver (V4), we measure the alarm function by
+the interrupts property.
+Therefore, whether the ls1c compatible can be retained?
+
+Thanks.
+Binbin
+
+>
+> For 2k0500 and 2k2000, I don't mind either way.
+>
+> On 29/05/2023 16:31:42+0800, Binbin Zhou wrote:
+> > Hi Krzysztof:
+> >
+> > Excuse me.
+> > We have different opinions on how to better describe rtc-loongson compa=
+tible.
+> >
+> > Based on my previous communication with you, I think we should list
+> > all the Socs in the driver and drop the wildcards.
+> > This should be clearer and more straightforward:
+> >
+> >         { .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1x_rtc_conf=
+ig
+> > }, //ls1b soc
+> >         { .compatible =3D "loongson,ls1c-rtc", .data =3D &ls1x_rtc_conf=
+ig
+> > }, //ls1c soc
+> >         { .compatible =3D "loongson,ls7a-rtc", .data =3D
+> > &generic_rtc_config }, //ls7a bridge chip
+> >         { .compatible =3D "loongson,ls2k0500-rtc", .data =3D
+> > &generic_rtc_config }, // ls2k0500 soc
+> >         { .compatible =3D "loongson,ls2k2000-rtc", .data =3D
+> > &generic_rtc_config }, // ls2k2000 soc
+> >         { .compatible =3D "loongson,ls2k1000-rtc", .data =3D
+> > &ls2k1000_rtc_config }, // ls2k1000 soc
+> >
+> > And Conor thought it should be rendered using a fallback compatible
+> > form based on ".data".
+> >
+> >         "loongson,ls1b-rtc"
+> >         "loongson,ls1c-rtc", "loongson,ls1b-rtc"
+> >         "loongson,ls7a-rtc"
+> >         "loongson,ls2k0500-rtc", "loongson,ls7a-rtc"
+> >         "longson,ls2k2000-rtc", "longson,ls7a-rtc"
+> >         "loonson,ls2k1000-rtc"
+> >
+> >         { .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1x_rtc_conf=
+ig }
+> >         { .compatible =3D "loongson,ls7a-rtc", .data =3D &generic_rtc_c=
+onfig }
+> >         { .compatible =3D "loongson,ls2k1000-rtc", .data =3D &ls2k1000_=
+rtc_config }
+> >
+> > In this form,  I think it might not be possible to show very
+> > graphically which chips are using the driver.
+> > Also, for example, "ls7a" is a bridge chip, while
+> > "ls2k2000"/"ls2k0500" are soc chips, and it seems inappropriate to
+> > integrate them into one item.
+> >
+> > Which one do you think is more suitable for us?
+> >
+> > Here is the link to our discussion:
+> >
+> > https://lore.kernel.org/linux-rtc/E229B204-1B00-4B24-B4BF-15277682FB4B@=
+kernel.org/T/#m6c1ae9b74fceafc4042f7598b1bc594e68e5ec76
+> >
+> > Thanks.
+> > Binbin
+> >
+> >
+> > On Mon, May 29, 2023 at 2:24=E2=80=AFPM Conor Dooley <conor@kernel.org>=
+ wrote:
+> > >
+> > >
+> > >
+> > > On 29 May 2023 03:59:57 IST, Keguang Zhang <keguang.zhang@gmail.com> =
+wrote:
+> > > >On Sun, May 28, 2023 at 6:22=E2=80=AFAM Conor Dooley <conor@kernel.o=
+rg> wrote:
+> > > >>
+> > > >> On Sat, May 27, 2023 at 10:59:48PM +0100, Jiaxun Yang wrote:
+> > > >> > > 2023=E5=B9=B45=E6=9C=8827=E6=97=A5 17:23=EF=BC=8CConor Dooley =
+<conor@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+> > > >> > > On Sat, May 27, 2023 at 05:13:39PM +0100, Jiaxun Yang wrote:
+> > > >>
+> > > >> > >> My recommendation is leaving compatible string as is.
+> > > >> > >
+> > > >> > > "as is" meaning "as it is right now in Linus' tree", or "as it=
+ is in
+> > > >> > > this patch"?
+> > > >> >
+> > > >> > Ah sorry I meant in this patch.
+> > > >> >
+> > > >> > Since there won=E2=80=99t be any new ls1x chip that will boot Li=
+nux any time soon (due to
+> > > >> > Loongson move away from MIPS but LoongArch32 is undefined for no=
+w), and
+> > > >> > rest compatible strings are wide enough to cover their family, I=
+ think the present
+> > > >> > compatible strings in this patch describes hardware best.
+> > > >>
+> > > >> I don't see why new bindings being written for old hardware should=
+ somehow
+> > > >> be treated differently than new bindings for new hardware.
+> > > >
+> > > >Let me add that ls1b RTC and ls1c RTC are not exactly the same.
+> > > >The former supports RTC interrupt, while the latter does not.
+> > > >So my suggestion is to leave the compatible string as it is in this =
+patch.
+> > >
+> > > Just as a reminder, there are more than ls1b & c in the patch, lest w=
+e forget.
+> > > Also, fallback compatibles mean a compatible subset, not only that tw=
+o devices are identical.
+> > > The interrupt is passed by the interrupts property.
+> > >
+>
+> --
+> Alexandre Belloni, co-owner and COO, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
