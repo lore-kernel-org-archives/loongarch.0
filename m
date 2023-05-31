@@ -1,27 +1,24 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9BAC1852
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6006EC4
 	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 03:21:47 +0000 (UTC)
 Received: from loongson.cn (unknown [223.106.25.146])
-	by gateway (Coremail) with SMTP id _____8DxuPFEvXZkztMCAA--.6323S3;
-	Wed, 31 May 2023 11:21:40 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxyfFDvXZkydMCAA--.6433S3;
+	Wed, 31 May 2023 11:21:39 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.106.25.146])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx77M_vXZkqrWBAA--.14943S3;
-	Wed, 31 May 2023 11:21:40 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx77M_vXZkqrWBAA--.14943S2;
+	Wed, 31 May 2023 11:21:37 +0800 (CST)
 From: Yanteng Si <siyanteng@loongson.cn>
 To: tiwai@suse.com
 Cc: Yanteng Si <siyanteng@loongson.cn>,
 	perex@perex.cz,
 	chenhuacai@loongson.cn,
-	mengyingkun@loongson.cn,
 	alsa-devel@alsa-project.org,
 	loongarch@lists.linux.dev,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 1/4] ALSA: hda: Add Loongson LS7A HD-Audio support
-Date: Wed, 31 May 2023 11:21:31 +0800
-Message-Id: <0b9480e89df63804db504554f441cc648fe5c2ef.1685501806.git.siyanteng@loongson.cn>
+Subject: [PATCH 0/4] Add Loongson HD Audio support
+Date: Wed, 31 May 2023 11:21:30 +0800
+Message-Id: <cover.1685501806.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.31.4
-In-Reply-To: <cover.1685501806.git.siyanteng@loongson.cn>
-References: <cover.1685501806.git.siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -29,119 +26,46 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx77M_vXZkqrWBAA--.14943S3
+X-CM-TRANSID:AQAAf8Cx77M_vXZkqrWBAA--.14943S2
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWF48Xw43urW7ZryrCFy7trb_yoWrJF4fpr
-	1kZryUKFZ7tFWYyF4DG3WDKFyfC3WDCFn8urW29w1xuFna9w4xX34Dur45AFWavrW3Wrya
-	grWqk3s7ZFW3Jw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wNVDUUUUU==
+X-Coremail-Antispam: 1Uk129KBjvdXoWrurW8Jr48GF43ur1fGr1UGFg_yoW3KrX_A3
+	yIvFWkurWUuasrAF92vr4kCryfXayUu3yUK3Z3tr48Zan3tr4aqryDCrWfur1xWFn5Jryr
+	XrWqgF4rAr1aqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
+	W8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqWUUUUU
 
-Add the new PCI ID 0x0014 0x7a07 and the new PCI ID 0x0014 0x7a37
-Loongson HDA controller.
+* The Loongson HDA controller is compatible with High Definition Audio
+  Specification Revision 1.0a.
+  See <https://loongson.github.io/LoongArch-Documentation/Loongson-
+  7A1000-usermanual-EN.html#hda-controller>
 
-Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
----
- include/linux/pci_ids.h        | 3 +++
- sound/hda/hdac_device.c        | 1 +
- sound/pci/hda/hda_controller.h | 1 +
- sound/pci/hda/hda_intel.c      | 7 +++++++
- sound/pci/hda/patch_hdmi.c     | 1 +
- 5 files changed, 13 insertions(+)
+Yanteng Si (4):
+  ALSA: hda: Add Loongson LS7A HD-Audio support
+  ALSA: hda: Using polling mode for loongson controller by default
+  ALSA: hda: Workaround for SDnCTL register on loongson controller
+  ALSA: hda/intel: Workaround for WALLCLK register for loongson
+    controller
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index e43ab203054a..f2aecb78f628 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -158,6 +158,9 @@
- 
- #define PCI_VENDOR_ID_LOONGSON		0x0014
- 
-+#define PCI_DEVICE_ID_LOONGSON_HDA      0x7a07
-+#define PCI_DEVICE_ID_LOONGSON_HDMI     0x7a37
-+
- #define PCI_VENDOR_ID_SOLIDIGM		0x025e
- 
- #define PCI_VENDOR_ID_TTTECH		0x0357
-diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
-index 6c043fbd606f..bbf7bcdb449a 100644
---- a/sound/hda/hdac_device.c
-+++ b/sound/hda/hdac_device.c
-@@ -645,6 +645,7 @@ struct hda_vendor_id {
- };
- 
- static const struct hda_vendor_id hda_vendor_ids[] = {
-+	{ 0x0014, "Loongson" },
- 	{ 0x1002, "ATI" },
- 	{ 0x1013, "Cirrus Logic" },
- 	{ 0x1057, "Motorola" },
-diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
-index 8556031bcd68..1fd60246412f 100644
---- a/sound/pci/hda/hda_controller.h
-+++ b/sound/pci/hda/hda_controller.h
-@@ -45,6 +45,7 @@
- #define AZX_DCAPS_CORBRP_SELF_CLEAR (1 << 28)	/* CORBRP clears itself after reset */
- #define AZX_DCAPS_NO_MSI64      (1 << 29)	/* Stick to 32-bit MSIs */
- #define AZX_DCAPS_SEPARATE_STREAM_TAG	(1 << 30) /* capture and playback use separate stream tag */
-+#define AZX_DCAPS_LOONGSON_WORKAROUND (1 << 31)    /* Loongson workaround */
- 
- enum {
- 	AZX_SNOOP_TYPE_NONE,
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 3226691ac923..f28806b3e308 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -237,6 +237,7 @@ enum {
- 	AZX_DRIVER_CTHDA,
- 	AZX_DRIVER_CMEDIA,
- 	AZX_DRIVER_ZHAOXIN,
-+	AZX_DRIVER_LOONGSON,
- 	AZX_DRIVER_GENERIC,
- 	AZX_NUM_DRIVERS, /* keep this as last entry */
- };
-@@ -360,6 +361,7 @@ static const char * const driver_short_names[] = {
- 	[AZX_DRIVER_CTHDA] = "HDA Creative",
- 	[AZX_DRIVER_CMEDIA] = "HDA C-Media",
- 	[AZX_DRIVER_ZHAOXIN] = "HDA Zhaoxin",
-+	[AZX_DRIVER_LOONGSON] = "HDA Loongson",
- 	[AZX_DRIVER_GENERIC] = "HD-Audio Generic",
- };
- 
-@@ -2809,6 +2811,11 @@ static const struct pci_device_id azx_ids[] = {
- 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_HDMI },
- 	/* Zhaoxin */
- 	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
-+	/* Loongson HDAudio*/
-+	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDA),
-+	  .driver_data = AZX_DRIVER_LOONGSON | AZX_DCAPS_LOONGSON_WORKAROUND },
-+	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDMI),
-+	  .driver_data = AZX_DRIVER_LOONGSON | AZX_DCAPS_LOONGSON_WORKAROUND },
- 	{ 0, }
- };
- MODULE_DEVICE_TABLE(pci, azx_ids);
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 5c0b1a09fd57..260d3e64f658 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -4505,6 +4505,7 @@ static int patch_gf_hdmi(struct hda_codec *codec)
-  * patch entries
-  */
- static const struct hda_device_id snd_hda_id_hdmi[] = {
-+HDA_CODEC_ENTRY(0x00147a47, "Loongson HDMI",	patch_generic_hdmi),
- HDA_CODEC_ENTRY(0x1002793c, "RS600 HDMI",	patch_atihdmi),
- HDA_CODEC_ENTRY(0x10027919, "RS600 HDMI",	patch_atihdmi),
- HDA_CODEC_ENTRY(0x1002791a, "RS690/780 HDMI",	patch_atihdmi),
+ include/linux/pci_ids.h        |  3 +++
+ sound/hda/hdac_controller.c    |  8 +++++++-
+ sound/hda/hdac_device.c        |  1 +
+ sound/hda/hdac_stream.c        |  8 +++++++-
+ sound/pci/hda/hda_controller.h |  1 +
+ sound/pci/hda/hda_intel.c      | 10 ++++++++++
+ sound/pci/hda/patch_hdmi.c     |  1 +
+ 7 files changed, 30 insertions(+), 2 deletions(-)
+
 -- 
 2.31.4
 
