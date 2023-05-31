@@ -1,28 +1,28 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FD722621
-	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 22:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626C122621
+	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 22:46:55 +0000 (UTC)
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1685573181;
+	s=2020; t=1685573213;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XIzF93UFC/GVQtUvE2kmelWoKlJPXu6KUTtN32GYwuQ=;
-	b=V4DPu0J+97KAWG7BljWcm9M0WHGm0oFGKQ9g9wUUxSN/LO+zWjV49iPI6Hjj/IGOqwKOzL
-	OKMHt/kgS2Fj9wNQS6JZayL1xRB9qL9ZZldaosbz1V1k9FxIHU6k2qLJavO1ixGoKcogJs
-	dfZ7awEDuxELHzHUTjUKYb9MF7auj7T+0Arlp4+wGURQesGYcA+i/Gav86bIj4ZeY7uZ65
-	eyAMN4aSzumzjtyV2OwLrGFWz++MQrew4U7nnl19oUAf7FzSFj19Bm5tsCKpriSHbOQuyL
-	a1u0FiRhzzXZbPsuEmwrEl4gDw/ygdWkCBFUo9xjAi5Hec85szOvFlw1OczFiA==
+	bh=62QRYD2JYjhVXeJKvz+pkD9g/8yVOTlXBJz91bvypxw=;
+	b=ZTWkydXm1wNQ5gZo7CxsTSYajGsGC0YzS9sTU6T0bztRYTaCYcG4H1U3UDnry+Xjkis7Jp
+	6fOrB6YPGVEJzXsuW7GxphBGncPYvXN46XMFtnnv7mVsef7vsxag6/w3hWi4RXXQw3oCHY
+	li9vZ/7OWEQYIqM66VfG0bdZxDoFxZBM1IaSB1DUD+vW13gy5Gldyow7yebpO1LCgr5mUe
+	+Dqpv9jKYYpBqVbgPS9TC6KBvRnjNNCPC8zFtFkwez2l+u17rkwcVT/HcNpPOLZyv8U0W4
+	sYSBQnoj9ZIY8QSSztGefOgtfRouphsL8ECMjEKeKj8XDW8VtbsqJjMsgUVPzw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1685573181;
+	s=2020e; t=1685573213;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XIzF93UFC/GVQtUvE2kmelWoKlJPXu6KUTtN32GYwuQ=;
-	b=F+YyJiH1yOM9XIjwob6LO4nIlHL224W6az+hPOCyNCD6y/jiPsX75Y75sIr2xcGCLe3HlM
-	BEwcjfldmbxSEWDg==
+	bh=62QRYD2JYjhVXeJKvz+pkD9g/8yVOTlXBJz91bvypxw=;
+	b=OYdOVBuwhy9HPaq+iyeB6G5qd5KyWyZQl82e4O7qqtpxPvSA9guQpP5TjHmcz8Ah9suApN
+	d3qCwR44gPP8BVCw==
 To: Peter Zijlstra <peterz@infradead.org>, bigeasy@linutronix.de
 Cc: mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
  will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
@@ -42,11 +42,11 @@ Cc: mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
  linux-s390@vger.kernel.org, kvm@vger.kernel.org,
  linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
 Subject: Re: [PATCH v2 08/13] x86/vdso: Fix gettimeofday masking
-In-Reply-To: <87r0qwfrm0.ffs@tglx>
+In-Reply-To: <20230519102715.704767397@infradead.org>
 References: <20230519102058.581557770@infradead.org>
- <20230519102715.704767397@infradead.org> <87r0qwfrm0.ffs@tglx>
-Date: Thu, 01 Jun 2023 00:46:20 +0200
-Message-ID: <87y1l4dsqr.ffs@tglx>
+ <20230519102715.704767397@infradead.org>
+Date: Thu, 01 Jun 2023 00:46:52 +0200
+Message-ID: <87v8g8dspv.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -55,29 +55,11 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-On Wed, May 31 2023 at 17:27, Thomas Gleixner wrote:
-> On Fri, May 19 2023 at 12:21, Peter Zijlstra wrote:
->> to take wrapping into account, but per all the above, we don't
->> actually wrap on u64 anymore.
+On Fri, May 19 2023 at 12:21, Peter Zijlstra wrote:
+> to take wrapping into account, but per all the above, we don't
+> actually wrap on u64 anymore.
 >
-> Indeed. The rationale was that you need ~146 years uptime with a 4GHz
-> TSC or ~584 years with 1GHz to actually reach the wrap around point.
->
-> Though I can see your point to make sure that silly BIOSes or VMMs
-> cannot cause havoc by accident or malice.
->
-> Did anyone ever validate that wrap around on TSC including TSC deadline
-> timer works correctly?
->
-> I have faint memories of TSC_ADJUST, which I prefer not to bring back to
-> main memory :)
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-It seems my fears have been unjustified.
-
-At least a quick test which sets the TSC to ~ -8min @2.1Ghz the machine
-seems to survive without the colourful explosions I expected due to my
-early exposure to TSC_ADJUST and TSC_DEADLINE_TIMER :)
-
-Thanks,
-
-        tglx
+Tested-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
