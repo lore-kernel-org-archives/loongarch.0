@@ -1,160 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36CA12B8C
-	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 13:15:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE6E4C433D2;
-	Wed, 31 May 2023 13:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685538954;
-	bh=vOTa5MUOhxTH37zrJH/3NXFRmUhlyERnZdSp2zEDzMw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MohAVbsLBjUuF5j7mcmA9YUSlj8iSsNTlEp/4CErRWscq4hgDdCdQosJYH1VX4OD6
-	 8NljKsV5mGEhUd1bhty4MryUDP67j/72hfE9RwsOyvQKPDxb4XJeZmBxrcwM5yItv9
-	 w75Pwt1QP+4/+B92+4gwUkipydak26QdEsMhkWtVUC5CET8Nf6ledh09d2yH4Jw5vm
-	 vAbMHe3wzZOSz09HLRiInoRz2Qbd/JEN22sFPp6ueeZX8bBcto/W2TATKoS5IcrHOZ
-	 v8EUAeAV3boQ0COyFoMKckHuXwnhD7UO9cjN04I7opo7rzwIuf65Spo8+nsPb6wA+5
-	 mSHMBTxXIddGA==
-Date: Wed, 31 May 2023 14:15:49 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	Yingkun Meng <mengyingkun@loongson.cn>,
-	loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: Add Loongson LS2X APB DMA
- controller
-Message-ID: <20230531-quicksand-enviable-75a070860077@spud>
-References: <cover.1685448898.git.zhoubinbin@loongson.cn>
- <23536e4dcd5a839e932901b7c66a15d1f5465c4d.1685448898.git.zhoubinbin@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D3816438
+	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 15:27:53 +0000 (UTC)
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1685546872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J/AAE9ZGPs36fIX5clcov8ewvgNxaRXgiAw5owj43/k=;
+	b=dgIZbWn0Ffwl39MVqBYxhPk2zpqPDivTmcf41Fwe6BiycAhlt0CQ23s3y9g+opc388aIX1
+	KMxYZ759atp4cXI4qOTYG11J1QP7M4cOEdXucffb0LttwWfoAe0n4Wa7Zd20QcC8oOfxgj
+	96/yB9GLCeaI3pr7pfguXpIhv/df5PM/paQIV4bgjljfkr3mhLev75vrgdvAzRBUk1NLEZ
+	ywkKRdkJ9R7LTx37n2x1qjKWFtrMbxL4AWvlDsLppwCiClDZTRU3KXx1jbWVf908rNmO4K
+	ljHAUO2sUBOI0cgVUtSNDz+PiJ6CkZvm8VEAwx773h+T43k7b9R5cW2Sg+KGmw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1685546872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J/AAE9ZGPs36fIX5clcov8ewvgNxaRXgiAw5owj43/k=;
+	b=siix7a116hO8Xmv/CgUCeR0LA9Ni9RJTtUSvmYgfIbz3coXXR2G04VhnPcGIBu6HbqOjaw
+	b571t2+jaB3FtuDg==
+To: Peter Zijlstra <peterz@infradead.org>, bigeasy@linutronix.de
+Cc: mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com, svens@linux.ibm.com, pbonzini@redhat.com,
+ wanpengli@tencent.com, vkuznets@redhat.com, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ jgross@suse.com, boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, rafael@kernel.org, peterz@infradead.org,
+ longman@redhat.com, boqun.feng@gmail.com, pmladek@suse.com,
+ senozhatsky@chromium.org, rostedt@goodmis.org, john.ogness@linutronix.de,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+ bristot@redhat.com, vschneid@redhat.com, jstultz@google.com,
+ sboyd@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 08/13] x86/vdso: Fix gettimeofday masking
+In-Reply-To: <20230519102715.704767397@infradead.org>
+References: <20230519102058.581557770@infradead.org>
+ <20230519102715.704767397@infradead.org>
+Date: Wed, 31 May 2023 17:27:51 +0200
+Message-ID: <87r0qwfrm0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qc6F2OFGFNda1XWa"
-Content-Disposition: inline
-In-Reply-To: <23536e4dcd5a839e932901b7c66a15d1f5465c4d.1685448898.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain
 
+On Fri, May 19 2023 at 12:21, Peter Zijlstra wrote:
+> Because of how the virtual clocks use U64_MAX as an exception value
+> instead of a valid time, the clocks can no longer be assumed to wrap
+> cleanly. This is then compounded by arch_vdso_cycles_ok() rejecting
+> everything with the MSB/Sign-bit set.
+>
+> Therefore, the effective mask becomes S64_MAX, and the comment with
+> vdso_calc_delta() that states the mask is U64_MAX and isn't optimized
+> out is just plain silly.
+>
+> Now, the code has a negative filter -- to deal with TSC wobbles:
+>
+> 	if (cycles > last)
+>
+> which is just plain wrong, because it should've been written as:
+>
+> 	if ((s64)(cycles - last) > 0)
+>
+> to take wrapping into account, but per all the above, we don't
+> actually wrap on u64 anymore.
 
---qc6F2OFGFNda1XWa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Indeed. The rationale was that you need ~146 years uptime with a 4GHz
+TSC or ~584 years with 1GHz to actually reach the wrap around point.
 
-On Wed, May 31, 2023 at 04:50:04PM +0800, Binbin Zhou wrote:
-> Add Loongson LS2X APB DMA controller binding with DT schema
-> format using json-schema.
->=20
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../bindings/dma/loongson,ls2x-apbdma.yaml    | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls2x-a=
-pbdma.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.y=
-aml b/Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
-> new file mode 100644
-> index 000000000000..9df32dd98aaf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/loongson,ls2x-apbdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson LS2X APB DMA controller
-> +
-> +description: |
+Though I can see your point to make sure that silly BIOSes or VMMs
+cannot cause havoc by accident or malice.
 
-As a minor nit, the | shouldn't be required here.
+Did anyone ever validate that wrap around on TSC including TSC deadline
+timer works correctly?
 
-> +  The Loongson LS2X APB DMA controller is used for transferring data
-> +  between system memory and the peripherals on the APB bus.
-> +
-> +maintainers:
-> +  - Binbin Zhou <zhoubinbin@loongson.cn>
-> +
-> +allOf:
-> +  - $ref: dma-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: loongson,ls2k1000-apbdma
-> +      - items:
-> +          - const: loongson,ls2k0500-apbdma
-> +          - const: loongson,ls2k1000-apbdma
-
-Sweet, good to see fallbacks in use here ;)
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#dma-cells":
-> +    const: 1
-> +
-> +  dma-channels:
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#dma-cells"
-> +  - dma-channels
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    apbdma0: dma-controller@1fe00c00 {
-
-Nothing references the apbdma0 label so it can be dropped.
-Otherwise,
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+I have faint memories of TSC_ADJUST, which I prefer not to bring back to
+main memory :)
 
 Thanks,
-Conor.
 
-> +        compatible =3D "loongson,ls2k1000-apbdma";
-> +        reg =3D <0x1fe00c00 0x8>;
-> +        interrupt-parent =3D <&liointc1>;
-> +        interrupts =3D <12 IRQ_TYPE_LEVEL_HIGH>;
-> +        #dma-cells =3D <1>;
-> +        dma-channels =3D <1>;
-> +    };
-> +
-> +...
-> --=20
-> 2.39.1
->=20
-
---qc6F2OFGFNda1XWa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZHdIhQAKCRB4tDGHoIJi
-0tOrAP9Cl0SsiSBLexNeoIQe71NHkgQQJYYL6Bkmn5tX+RRFUQEAkGeOMq9MYEdb
-GxJXw1qKzqK4800lDfFBhRMJaIMligk=
-=3DRW
------END PGP SIGNATURE-----
-
---qc6F2OFGFNda1XWa--
+        tglx
