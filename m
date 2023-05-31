@@ -1,65 +1,86 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626C122621
-	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 22:46:55 +0000 (UTC)
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1685573213;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=62QRYD2JYjhVXeJKvz+pkD9g/8yVOTlXBJz91bvypxw=;
-	b=ZTWkydXm1wNQ5gZo7CxsTSYajGsGC0YzS9sTU6T0bztRYTaCYcG4H1U3UDnry+Xjkis7Jp
-	6fOrB6YPGVEJzXsuW7GxphBGncPYvXN46XMFtnnv7mVsef7vsxag6/w3hWi4RXXQw3oCHY
-	li9vZ/7OWEQYIqM66VfG0bdZxDoFxZBM1IaSB1DUD+vW13gy5Gldyow7yebpO1LCgr5mUe
-	+Dqpv9jKYYpBqVbgPS9TC6KBvRnjNNCPC8zFtFkwez2l+u17rkwcVT/HcNpPOLZyv8U0W4
-	sYSBQnoj9ZIY8QSSztGefOgtfRouphsL8ECMjEKeKj8XDW8VtbsqJjMsgUVPzw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1685573213;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=62QRYD2JYjhVXeJKvz+pkD9g/8yVOTlXBJz91bvypxw=;
-	b=OYdOVBuwhy9HPaq+iyeB6G5qd5KyWyZQl82e4O7qqtpxPvSA9guQpP5TjHmcz8Ah9suApN
-	d3qCwR44gPP8BVCw==
-To: Peter Zijlstra <peterz@infradead.org>, bigeasy@linutronix.de
-Cc: mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
- will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- borntraeger@linux.ibm.com, svens@linux.ibm.com, pbonzini@redhat.com,
- wanpengli@tencent.com, vkuznets@redhat.com, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- jgross@suse.com, boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, rafael@kernel.org, peterz@infradead.org,
- longman@redhat.com, boqun.feng@gmail.com, pmladek@suse.com,
- senozhatsky@chromium.org, rostedt@goodmis.org, john.ogness@linutronix.de,
- juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
- bristot@redhat.com, vschneid@redhat.com, jstultz@google.com,
- sboyd@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-s390@vger.kernel.org, kvm@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 08/13] x86/vdso: Fix gettimeofday masking
-In-Reply-To: <20230519102715.704767397@infradead.org>
-References: <20230519102058.581557770@infradead.org>
- <20230519102715.704767397@infradead.org>
-Date: Thu, 01 Jun 2023 00:46:52 +0200
-Message-ID: <87v8g8dspv.ffs@tglx>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809B9168A8
+	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 23:55:58 +0000 (UTC)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bad97da58adso227202276.1
+        for <loongarch@lists.linux.dev>; Wed, 31 May 2023 16:55:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685577357; x=1688169357;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ffeGkCCxmZRXaX7kleQQatpanGiTdKsdCLgHFebf7mc=;
+        b=MDCGoRZhkbFSyrwM+BZajfxrFe4migeTv4EwyyMQbeTVfPN+J52+EtQYEbLRGR6rQH
+         2HeSjOG2CjZH03dICRBEuxiVmb+dvvP6HYD01cLmS1ZUL4G1qUtPZxgep5a5UlcULw/z
+         yJo5gpfkvRak7iZaAFq7+T2NH7ze2sYHDCYCIcuaIe4vHibmamyNO2NmlysHjFKhABdP
+         jx7b8Ae700tfB1aXArLg4Z1/uv6msoICNXZwZeFEOz+psstPKtkF3Y8+DlPSM0TF9LDM
+         ZmC1v7yrzKgLQmDy71Caka45zQ/f4FXWukeYn1nInSs/2N1+lPLy6YRv/k7uwxpKdvXR
+         b3Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685577357; x=1688169357;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ffeGkCCxmZRXaX7kleQQatpanGiTdKsdCLgHFebf7mc=;
+        b=NORptd5zzJbZbTP+uTbKSam/Elm1FI8xcZoFijnUkncAEtS0osFbmh2FtjfsSv6LLN
+         RPs8glLT/QwwPb9uFi7trry4f199WkPkSP84kdIvxHRA4KsCPO1G3lGT1dopCG80EXxU
+         V7JuYEqoS+5BiCRWgIMMoRdliOUS4tIqnkaevhaVgKrcn220eh3jUqQJw5lLXTU1Xd6y
+         loxNnZDHJnzNkJQ9+2GG57kZRq8qgNDbfTi4CnuyybMQNGON2s2pBxzEiR55TVHlFOs1
+         ecVxGPoXHcp7VloeF++0+yJWjmj3rXUvJtZ298BalLDJmuQaE0/XpxTZjficGF3PCmDx
+         V6PQ==
+X-Gm-Message-State: AC+VfDyKBS7ZssF2pvy3ww8UgeXa48h4sjTh3fntG4uegDlbcWMQQ647
+	leMJkpQa8AxjAnTwUw9TVQNLiw==
+X-Google-Smtp-Source: ACHHUZ6njTT2rGRvIomrKde2z8U6i+z2vnjrl7WjICXc5t40i/G594dgSjmvG2Pa1k3fizXXmWDSpw==
+X-Received: by 2002:a25:264b:0:b0:ba8:4859:3eb1 with SMTP id m72-20020a25264b000000b00ba848593eb1mr8234829ybm.42.1685577357054;
+        Wed, 31 May 2023 16:55:57 -0700 (PDT)
+Received: from leoy-huanghe ([156.59.103.123])
+        by smtp.gmail.com with ESMTPSA id 18-20020a170902c25200b001b042c0939fsm1969251plg.99.2023.05.31.16.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 May 2023 16:55:56 -0700 (PDT)
+Date: Thu, 1 Jun 2023 07:55:50 +0800
+From: Leo Yan <leo.yan@linaro.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Hans-Peter Nilsson <hp@axis.com>,
+	Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 0/5] perf tools: Modify mksyscalltbl
+Message-ID: <20230531235455.GA132356@leoy-huanghe>
+References: <1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn>
 
-On Fri, May 19 2023 at 12:21, Peter Zijlstra wrote:
-> to take wrapping into account, but per all the above, we don't
-> actually wrap on u64 anymore.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hi Tiezhu,
 
-Tested-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+On Tue, May 30, 2023 at 05:51:00PM +0800, Tiezhu Yang wrote:
+
+[...]
+
+> Tiezhu Yang (5):
+>   perf tools: Declare syscalltbl_*[] as const for all archs
+>   perf arm64: Rename create_table_from_c() to create_sc_table()
+>   perf arm64: Handle __NR3264_ prefixed syscall number
+>   perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
+>   perf LoongArch: Simplify mksyscalltbl
+
+Either in my mail inbox or on lore site [1], it only shows up 3 patches
+but not the 5 patches.  Please consider to resend the series.
+
+Thanks,
+Leo
+
+[1] https://lore.kernel.org/lkml/1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn/
