@@ -1,99 +1,147 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32D319924
-	for <loongarch@lists.linux.dev>; Tue, 30 May 2023 19:03:42 +0000 (UTC)
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-3f804665702so41661cf.0
-        for <loongarch@lists.linux.dev>; Tue, 30 May 2023 12:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685473421; x=1688065421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/wg+eakYRQJkWFsR8VKHGbMsmZUbdUsVveMbi9l3IrU=;
-        b=3BmQfsxcutfEPmqGYcWZ6a1Z5O/lPh3rsVadxX5KMEHUjcanhGptNKJnGxEYxA80Pr
-         2ZP7LNROMrce7azCSMf2CZ6VOYrWdF1RepVCJBvUM/XqXsCYE/iGEvXSw1iscTlQLHDy
-         U6AWSOx0qz/RDoEbz3PDPZrrZ16/cArEZDOmC+QkNBFDC2O/n/8K4E70uW8KTDIqi817
-         FYURPHLzGtiDCCgHuHASq6MLJLq6VoYmte0kJ4QGj9YbtLMk+HGk9QjTb2UdHT5X3U8k
-         951Ivghweq5RhxWVyD7RHbRH6F4Mq3idiqIR92BMZQJOkCzkdAuPMPRJagF3dTBwxaMr
-         hbXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685473421; x=1688065421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/wg+eakYRQJkWFsR8VKHGbMsmZUbdUsVveMbi9l3IrU=;
-        b=RtRg9JpMTvkVbUKWDOPDUkPWNu1Ygdko6vI6DYXmeUD8H0f8ei47qxsIbUGM9ymJLQ
-         /mCKVRNwObrwr8KGGPTG9S3BfUHnOXXlt/sXJJmzEm+zJgi+t3oWH1miU+eDVgCL/o3Z
-         GCPA7DENoJ5Cg7aEJ7EbK9I0jWUjxZi2qxzioGVsm5k1pU96NSwpz064D4RL38Lz7o04
-         DoqkHuIBlxalFA7XgD2P+oR9gs8kC9iqa269QPvrH5lREZ32XjSUJ9As//77Rs345ep2
-         yUlb5+gLkQ9LMU4XV336zcwUOKDDTSK7dhZO/QhrZlGA/zKDn/8qMzvTd2oiGdfGzDb/
-         fPqw==
-X-Gm-Message-State: AC+VfDwvsbMe/Zh8+4Sf44OSUYUa0e5ym+dbBMOoRL3hjS96TAdZRB7C
-	n1XUfuksvfBSdkCuMM43ccTp/JB/S04dOtfhJBbDmg==
-X-Google-Smtp-Source: ACHHUZ4tQx7CHfFMGAthsUJbOk3tJkETYESkIEu6PzSgqVUmKF4lp6c4aKVS3iVEhQx3+aj/GpFZwh3LLrvIT/yC8HY=
-X-Received: by 2002:a05:622a:1a01:b0:3f8:3065:7fc5 with SMTP id
- f1-20020a05622a1a0100b003f830657fc5mr234549qtb.1.1685473421607; Tue, 30 May
- 2023 12:03:41 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9BAC1852
+	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 03:21:47 +0000 (UTC)
+Received: from loongson.cn (unknown [223.106.25.146])
+	by gateway (Coremail) with SMTP id _____8DxuPFEvXZkztMCAA--.6323S3;
+	Wed, 31 May 2023 11:21:40 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.106.25.146])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx77M_vXZkqrWBAA--.14943S3;
+	Wed, 31 May 2023 11:21:40 +0800 (CST)
+From: Yanteng Si <siyanteng@loongson.cn>
+To: tiwai@suse.com
+Cc: Yanteng Si <siyanteng@loongson.cn>,
+	perex@perex.cz,
+	chenhuacai@loongson.cn,
+	mengyingkun@loongson.cn,
+	alsa-devel@alsa-project.org,
+	loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH 1/4] ALSA: hda: Add Loongson LS7A HD-Audio support
+Date: Wed, 31 May 2023 11:21:31 +0800
+Message-Id: <0b9480e89df63804db504554f441cc648fe5c2ef.1685501806.git.siyanteng@loongson.cn>
+X-Mailer: git-send-email 2.31.4
+In-Reply-To: <cover.1685501806.git.siyanteng@loongson.cn>
+References: <cover.1685501806.git.siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 30 May 2023 12:03:30 -0700
-Message-ID: <CAP-5=fXvN1b+_krmFSL2=C31WZ3zKafnq=Bqw3ruBKFNzG_8Kw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v3 0/5] perf tools: Modify mksyscalltbl
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cx77M_vXZkqrWBAA--.14943S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWF48Xw43urW7ZryrCFy7trb_yoWrJF4fpr
+	1kZryUKFZ7tFWYyF4DG3WDKFyfC3WDCFn8urW29w1xuFna9w4xX34Dur45AFWavrW3Wrya
+	grWqk3s7ZFW3Jw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wNVDUUUUU==
 
-On Tue, May 30, 2023 at 3:10=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> I'm sorry, somehow the patchset didn't reach mailing lists.
-> Resending with a fewer people in the cc list, which probably
-> was the reason.
->
-> Thanks Alexander, Leo and Ian for your reviews and suggestions.
+Add the new PCI ID 0x0014 0x7a07 and the new PCI ID 0x0014 0x7a37
+Loongson HDA controller.
 
-Thanks for the consts!
+Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+---
+ include/linux/pci_ids.h        | 3 +++
+ sound/hda/hdac_device.c        | 1 +
+ sound/pci/hda/hda_controller.h | 1 +
+ sound/pci/hda/hda_intel.c      | 7 +++++++
+ sound/pci/hda/patch_hdmi.c     | 1 +
+ 5 files changed, 13 insertions(+)
 
-Acked-by: Ian Rogers <irogers@google.com>
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index e43ab203054a..f2aecb78f628 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -158,6 +158,9 @@
+ 
+ #define PCI_VENDOR_ID_LOONGSON		0x0014
+ 
++#define PCI_DEVICE_ID_LOONGSON_HDA      0x7a07
++#define PCI_DEVICE_ID_LOONGSON_HDMI     0x7a37
++
+ #define PCI_VENDOR_ID_SOLIDIGM		0x025e
+ 
+ #define PCI_VENDOR_ID_TTTECH		0x0357
+diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+index 6c043fbd606f..bbf7bcdb449a 100644
+--- a/sound/hda/hdac_device.c
++++ b/sound/hda/hdac_device.c
+@@ -645,6 +645,7 @@ struct hda_vendor_id {
+ };
+ 
+ static const struct hda_vendor_id hda_vendor_ids[] = {
++	{ 0x0014, "Loongson" },
+ 	{ 0x1002, "ATI" },
+ 	{ 0x1013, "Cirrus Logic" },
+ 	{ 0x1057, "Motorola" },
+diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
+index 8556031bcd68..1fd60246412f 100644
+--- a/sound/pci/hda/hda_controller.h
++++ b/sound/pci/hda/hda_controller.h
+@@ -45,6 +45,7 @@
+ #define AZX_DCAPS_CORBRP_SELF_CLEAR (1 << 28)	/* CORBRP clears itself after reset */
+ #define AZX_DCAPS_NO_MSI64      (1 << 29)	/* Stick to 32-bit MSIs */
+ #define AZX_DCAPS_SEPARATE_STREAM_TAG	(1 << 30) /* capture and playback use separate stream tag */
++#define AZX_DCAPS_LOONGSON_WORKAROUND (1 << 31)    /* Loongson workaround */
+ 
+ enum {
+ 	AZX_SNOOP_TYPE_NONE,
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 3226691ac923..f28806b3e308 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -237,6 +237,7 @@ enum {
+ 	AZX_DRIVER_CTHDA,
+ 	AZX_DRIVER_CMEDIA,
+ 	AZX_DRIVER_ZHAOXIN,
++	AZX_DRIVER_LOONGSON,
+ 	AZX_DRIVER_GENERIC,
+ 	AZX_NUM_DRIVERS, /* keep this as last entry */
+ };
+@@ -360,6 +361,7 @@ static const char * const driver_short_names[] = {
+ 	[AZX_DRIVER_CTHDA] = "HDA Creative",
+ 	[AZX_DRIVER_CMEDIA] = "HDA C-Media",
+ 	[AZX_DRIVER_ZHAOXIN] = "HDA Zhaoxin",
++	[AZX_DRIVER_LOONGSON] = "HDA Loongson",
+ 	[AZX_DRIVER_GENERIC] = "HD-Audio Generic",
+ };
+ 
+@@ -2809,6 +2811,11 @@ static const struct pci_device_id azx_ids[] = {
+ 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_HDMI },
+ 	/* Zhaoxin */
+ 	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
++	/* Loongson HDAudio*/
++	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDA),
++	  .driver_data = AZX_DRIVER_LOONGSON | AZX_DCAPS_LOONGSON_WORKAROUND },
++	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDMI),
++	  .driver_data = AZX_DRIVER_LOONGSON | AZX_DCAPS_LOONGSON_WORKAROUND },
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, azx_ids);
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 5c0b1a09fd57..260d3e64f658 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -4505,6 +4505,7 @@ static int patch_gf_hdmi(struct hda_codec *codec)
+  * patch entries
+  */
+ static const struct hda_device_id snd_hda_id_hdmi[] = {
++HDA_CODEC_ENTRY(0x00147a47, "Loongson HDMI",	patch_generic_hdmi),
+ HDA_CODEC_ENTRY(0x1002793c, "RS600 HDMI",	patch_atihdmi),
+ HDA_CODEC_ENTRY(0x10027919, "RS600 HDMI",	patch_atihdmi),
+ HDA_CODEC_ENTRY(0x1002791a, "RS690/780 HDMI",	patch_atihdmi),
+-- 
+2.31.4
 
-> v3:
->   -- Add a new patch to declare syscalltbl_*[] as const for all archs,
->      suggested by Ian.
->   -- Add a new patch to use max_nr to define SYSCALLTBL_ARM64_MAX_ID.
->
-> v2:
->   -- Add a new patch to rename create_table_from_c()
->      to create_sc_table(), suggested by Leo.
->   -- Simplify the shell script, suggested by Alexander.
->
-> Tiezhu Yang (5):
->   perf tools: Declare syscalltbl_*[] as const for all archs
->   perf arm64: Rename create_table_from_c() to create_sc_table()
->   perf arm64: Handle __NR3264_ prefixed syscall number
->   perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
->   perf LoongArch: Simplify mksyscalltbl
->
->  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  | 17 ++++-----
->  .../arch/loongarch/entry/syscalls/mksyscalltbl     | 40 +++++++---------=
-------
->  tools/perf/arch/mips/entry/syscalls/mksyscalltbl   |  2 +-
->  .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  2 +-
->  tools/perf/arch/s390/entry/syscalls/mksyscalltbl   |  2 +-
->  tools/perf/arch/x86/entry/syscalls/syscalltbl.sh   |  2 +-
->  tools/perf/util/syscalltbl.c                       | 14 ++++----
->  7 files changed, 32 insertions(+), 47 deletions(-)
->
-> --
-> 2.1.0
->
