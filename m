@@ -1,93 +1,186 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D3816438
-	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 15:27:53 +0000 (UTC)
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1685546872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J/AAE9ZGPs36fIX5clcov8ewvgNxaRXgiAw5owj43/k=;
-	b=dgIZbWn0Ffwl39MVqBYxhPk2zpqPDivTmcf41Fwe6BiycAhlt0CQ23s3y9g+opc388aIX1
-	KMxYZ759atp4cXI4qOTYG11J1QP7M4cOEdXucffb0LttwWfoAe0n4Wa7Zd20QcC8oOfxgj
-	96/yB9GLCeaI3pr7pfguXpIhv/df5PM/paQIV4bgjljfkr3mhLev75vrgdvAzRBUk1NLEZ
-	ywkKRdkJ9R7LTx37n2x1qjKWFtrMbxL4AWvlDsLppwCiClDZTRU3KXx1jbWVf908rNmO4K
-	ljHAUO2sUBOI0cgVUtSNDz+PiJ6CkZvm8VEAwx773h+T43k7b9R5cW2Sg+KGmw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1685546872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J/AAE9ZGPs36fIX5clcov8ewvgNxaRXgiAw5owj43/k=;
-	b=siix7a116hO8Xmv/CgUCeR0LA9Ni9RJTtUSvmYgfIbz3coXXR2G04VhnPcGIBu6HbqOjaw
-	b571t2+jaB3FtuDg==
-To: Peter Zijlstra <peterz@infradead.org>, bigeasy@linutronix.de
-Cc: mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
- will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- borntraeger@linux.ibm.com, svens@linux.ibm.com, pbonzini@redhat.com,
- wanpengli@tencent.com, vkuznets@redhat.com, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- jgross@suse.com, boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, rafael@kernel.org, peterz@infradead.org,
- longman@redhat.com, boqun.feng@gmail.com, pmladek@suse.com,
- senozhatsky@chromium.org, rostedt@goodmis.org, john.ogness@linutronix.de,
- juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
- bristot@redhat.com, vschneid@redhat.com, jstultz@google.com,
- sboyd@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-s390@vger.kernel.org, kvm@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 08/13] x86/vdso: Fix gettimeofday masking
-In-Reply-To: <20230519102715.704767397@infradead.org>
-References: <20230519102058.581557770@infradead.org>
- <20230519102715.704767397@infradead.org>
-Date: Wed, 31 May 2023 17:27:51 +0200
-Message-ID: <87r0qwfrm0.ffs@tglx>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FD71640F
+	for <loongarch@lists.linux.dev>; Wed, 31 May 2023 21:31:10 +0000 (UTC)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-568ba7abc11so704177b3.3
+        for <loongarch@lists.linux.dev>; Wed, 31 May 2023 14:31:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685568670; x=1688160670;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wjb7mkxds2Oxu0tDA//mCadvcwpJnafWf0cD82pJKQE=;
+        b=nYeBH5p3+Qt6FUJ38UmFIxO7emaaMGST1TXgppBSGlquoGi0Vu88EMjm0R/stdK090
+         rAkGmKWr2iOmn9u+Pb/kM3qRzmk4mZo0E/qCXj+6fXwb5xT2cyvDopKHOf2mbUaUTVkW
+         IZJWedT+tZ8ojnhcwbCb2MsICPKO3NlZEBtylSK1ToQ7f9kqjkh5/U5nwImpNeor9qu5
+         IqgnJLTK4zE+DQC6rph9ulLyMVpd89EilRZG10pjBGo7K+adbGLVnpAlHyiTcC9wvrmA
+         MF9mV19ie8UWuPHO/B2dxtGuMvy+vvJd/sRqVo6b1JEZ5k0xW/bO1/+Ig0OmF8ty3QFr
+         I20Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685568670; x=1688160670;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Wjb7mkxds2Oxu0tDA//mCadvcwpJnafWf0cD82pJKQE=;
+        b=Q+H/Dcx6D4PLYMTH3lKog2u5ustcff2iqsnuUyLnlBZ/o8wBG2rpEhlzjU7ZvDWOqc
+         4He80VqAVyBRwUu6csWhpm+2ZJGwLxh9h/XZC6lwkDkl84iZf4BfI267cI5JZgiBsBoM
+         JuPQ0TmP8oIbKFUc9/Xwb+pGWVfamN3Iki9gkLgWxvCtFBorx5lz060XI2AIZ4q8tSYX
+         +D4DLo6IXDfZRetWDxEvuxVDzrRv4Jry4Q/RdeBCehj4F34DpeBZbCvDGg4Td+DpzvlG
+         3S7O1h87dKFo06xUj8Ch2NVHX2U7lpZC2GzfK2q4qrmw5qw0Yf7JcTXKNrqGmstgDZVK
+         3ddQ==
+X-Gm-Message-State: AC+VfDxWf8Us87YUcbEcjeBQreuAUCpaHBQXgOfApDCZ/jQU9LTVmqLA
+	X6+yL4OvdSFy3Ljvp7m059w=
+X-Google-Smtp-Source: ACHHUZ5BOuY9ns1UExUd8Gqiz8IGTSQZuNKoj5s1mEJ0QIzwi0ShIzlk0w6m3uPiq99qwG8NM2Rw1w==
+X-Received: by 2002:a0d:df51:0:b0:55a:3560:8ee0 with SMTP id i78-20020a0ddf51000000b0055a35608ee0mr6881175ywe.20.1685568669613;
+        Wed, 31 May 2023 14:31:09 -0700 (PDT)
+Received: from unknowna0e70b2ca394.attlocal.net ([2600:1700:2f7d:1800::46])
+        by smtp.googlemail.com with ESMTPSA id t63-20020a0dd142000000b0055aafcef659sm658905ywd.5.2023.05.31.14.31.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 May 2023 14:31:09 -0700 (PDT)
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: linux-mm@kvack.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	xen-devel@lists.xenproject.org,
+	kvm@vger.kernel.org,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Jonas Bonn <jonas@southpole.se>,
+	David Hildenbrand <david@redhat.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Richard Weinberger <richard@nod.at>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v3 00/34] Split ptdesc from struct page
+Date: Wed, 31 May 2023 14:29:58 -0700
+Message-Id: <20230531213032.25338-1-vishal.moola@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 19 2023 at 12:21, Peter Zijlstra wrote:
-> Because of how the virtual clocks use U64_MAX as an exception value
-> instead of a valid time, the clocks can no longer be assumed to wrap
-> cleanly. This is then compounded by arch_vdso_cycles_ok() rejecting
-> everything with the MSB/Sign-bit set.
->
-> Therefore, the effective mask becomes S64_MAX, and the comment with
-> vdso_calc_delta() that states the mask is U64_MAX and isn't optimized
-> out is just plain silly.
->
-> Now, the code has a negative filter -- to deal with TSC wobbles:
->
-> 	if (cycles > last)
->
-> which is just plain wrong, because it should've been written as:
->
-> 	if ((s64)(cycles - last) > 0)
->
-> to take wrapping into account, but per all the above, we don't
-> actually wrap on u64 anymore.
+The MM subsystem is trying to shrink struct page. This patchset
+introduces a memory descriptor for page table tracking - struct ptdesc.
 
-Indeed. The rationale was that you need ~146 years uptime with a 4GHz
-TSC or ~584 years with 1GHz to actually reach the wrap around point.
+This patchset introduces ptdesc, splits ptdesc from struct page, and
+converts many callers of page table constructor/destructors to use ptdescs.
 
-Though I can see your point to make sure that silly BIOSes or VMMs
-cannot cause havoc by accident or malice.
+Ptdesc is a foundation to further standardize page tables, and eventually
+allow for dynamic allocation of page tables independent of struct page.
+However, the use of pages for page table tracking is quite deeply
+ingrained and varied across archictectures, so there is still a lot of
+work to be done before that can happen.
 
-Did anyone ever validate that wrap around on TSC including TSC deadline
-timer works correctly?
+This is rebased on next-20230531.
 
-I have faint memories of TSC_ADJUST, which I prefer not to bring back to
-main memory :)
+v3:
+  Got an Acked-by
+  Fixed the arm64 compilation issue
+  Rename some ptdesc utility functions to be pagetable_* instead
+  Add some comments to functions describing their uses
 
-Thanks,
+Vishal Moola (Oracle) (34):
+  mm: Add PAGE_TYPE_OP folio functions
+  s390: Use _pt_s390_gaddr for gmap address tracking
+  s390: Use pt_frag_refcount for pagetables
+  pgtable: Create struct ptdesc
+  mm: add utility functions for ptdesc
+  mm: Convert pmd_pgtable_page() to pmd_ptdesc()
+  mm: Convert ptlock_alloc() to use ptdescs
+  mm: Convert ptlock_ptr() to use ptdescs
+  mm: Convert pmd_ptlock_init() to use ptdescs
+  mm: Convert ptlock_init() to use ptdescs
+  mm: Convert pmd_ptlock_free() to use ptdescs
+  mm: Convert ptlock_free() to use ptdescs
+  mm: Create ptdesc equivalents for pgtable_{pte,pmd}_page_{ctor,dtor}
+  powerpc: Convert various functions to use ptdescs
+  x86: Convert various functions to use ptdescs
+  s390: Convert various gmap functions to use ptdescs
+  s390: Convert various pgalloc functions to use ptdescs
+  mm: Remove page table members from struct page
+  pgalloc: Convert various functions to use ptdescs
+  arm: Convert various functions to use ptdescs
+  arm64: Convert various functions to use ptdescs
+  csky: Convert __pte_free_tlb() to use ptdescs
+  hexagon: Convert __pte_free_tlb() to use ptdescs
+  loongarch: Convert various functions to use ptdescs
+  m68k: Convert various functions to use ptdescs
+  mips: Convert various functions to use ptdescs
+  nios2: Convert __pte_free_tlb() to use ptdescs
+  openrisc: Convert __pte_free_tlb() to use ptdescs
+  riscv: Convert alloc_{pmd, pte}_late() to use ptdescs
+  sh: Convert pte_free_tlb() to use ptdescs
+  sparc64: Convert various functions to use ptdescs
+  sparc: Convert pgtable_pte_page_{ctor, dtor}() to ptdesc equivalents
+  um: Convert {pmd, pte}_free_tlb() to use ptdescs
+  mm: Remove pgtable_{pmd, pte}_page_{ctor, dtor}() wrappers
 
-        tglx
+ Documentation/mm/split_page_table_lock.rst    |  12 +-
+ .../zh_CN/mm/split_page_table_lock.rst        |  14 +-
+ arch/arm/include/asm/tlb.h                    |  12 +-
+ arch/arm/mm/mmu.c                             |   6 +-
+ arch/arm64/include/asm/tlb.h                  |  14 +-
+ arch/arm64/mm/mmu.c                           |   7 +-
+ arch/csky/include/asm/pgalloc.h               |   4 +-
+ arch/hexagon/include/asm/pgalloc.h            |   8 +-
+ arch/loongarch/include/asm/pgalloc.h          |  27 ++-
+ arch/loongarch/mm/pgtable.c                   |   7 +-
+ arch/m68k/include/asm/mcf_pgalloc.h           |  41 ++--
+ arch/m68k/include/asm/sun3_pgalloc.h          |   8 +-
+ arch/m68k/mm/motorola.c                       |   4 +-
+ arch/mips/include/asm/pgalloc.h               |  31 +--
+ arch/mips/mm/pgtable.c                        |   7 +-
+ arch/nios2/include/asm/pgalloc.h              |   8 +-
+ arch/openrisc/include/asm/pgalloc.h           |   8 +-
+ arch/powerpc/mm/book3s64/mmu_context.c        |  10 +-
+ arch/powerpc/mm/book3s64/pgtable.c            |  32 +--
+ arch/powerpc/mm/pgtable-frag.c                |  46 ++--
+ arch/riscv/include/asm/pgalloc.h              |   8 +-
+ arch/riscv/mm/init.c                          |  16 +-
+ arch/s390/include/asm/pgalloc.h               |   4 +-
+ arch/s390/include/asm/tlb.h                   |   4 +-
+ arch/s390/mm/gmap.c                           | 222 +++++++++++-------
+ arch/s390/mm/pgalloc.c                        | 126 +++++-----
+ arch/sh/include/asm/pgalloc.h                 |   9 +-
+ arch/sparc/mm/init_64.c                       |  17 +-
+ arch/sparc/mm/srmmu.c                         |   5 +-
+ arch/um/include/asm/pgalloc.h                 |  18 +-
+ arch/x86/mm/pgtable.c                         |  46 ++--
+ arch/x86/xen/mmu_pv.c                         |   2 +-
+ include/asm-generic/pgalloc.h                 |  62 +++--
+ include/asm-generic/tlb.h                     |  11 +
+ include/linux/mm.h                            | 155 ++++++++----
+ include/linux/mm_types.h                      |  14 --
+ include/linux/page-flags.h                    |  20 +-
+ include/linux/pgtable.h                       |  61 +++++
+ mm/memory.c                                   |   8 +-
+ 39 files changed, 665 insertions(+), 449 deletions(-)
+
+-- 
+2.40.1
+
