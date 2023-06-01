@@ -1,40 +1,40 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009AE5392
-	for <loongarch@lists.linux.dev>; Thu,  1 Jun 2023 08:20:27 +0000 (UTC)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-565a6837a0bso5682847b3.3
-        for <loongarch@lists.linux.dev>; Thu, 01 Jun 2023 01:20:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B845392
+	for <loongarch@lists.linux.dev>; Thu,  1 Jun 2023 08:22:14 +0000 (UTC)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5659d85876dso5067327b3.2
+        for <loongarch@lists.linux.dev>; Thu, 01 Jun 2023 01:22:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685607627; x=1688199627;
+        d=gmail.com; s=20221208; t=1685607734; x=1688199734;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tS4a1xOgxMUMLEbnCg0V4q+ycCWx2xlztmESkIXckyo=;
-        b=bIHOxHzjZXokee9j5bbLR5t5pc8c2Z3iggLrV1+hE0XnEXAKfoXhCLHOSa/72NNKfd
-         6fz4mYEsaohJNpEL4Rs9VL4vNpL+O0IFENkKP8Ed1r56LzcraMW5AYAo4x/ntCtiU2p3
-         x22qNSqmdrlW4Y/tGkgjrEwyv71XC2UWZFG42WlTnI/gnlPQ9bm7CQBxLeRufsNGf3b3
-         aSnEcs9elD0+6oKwXRc6fHvLfsfn4GZRVVoYihKOLOoIEu2kuGpVvxaorPdvDNijmjMi
-         d1rL9Zr7ifZGWT0hflvFwiRNteKQuaUR21zo007VMcTBghI8tw53RKKaLOkzxLItE6zV
-         XEtw==
+        bh=F3q8fSv1CYQ8OeBSkoHHq8yQzPVMEdcVj1sJJBohCe0=;
+        b=scnpKoycafdSA6Zmoxe64NtU1IPtpP1XoN7u6BxbHgaNpHHpBaRgfB2X/NbVQI3XUI
+         S43vtnrb0VpUQFKtCtNAL2Z4eQGxKB9jkDmQzBef6OSmzPFkANcNw2nEHbBaxtIGRJFx
+         F2gdbWX0/JO50BjGXzMMRjG/dVaN6/37Aaxe3j2XyiD9NBGl22snChdmfv7CpIBT4YsT
+         wzEsBAOaAGJLasaxdabRza57BmBoAT7cVmGOq5aUEFhtYj/c1WejBdPyTkL2OU+y9vxz
+         zNiBma0es8vOX0CahjWds9KH8J6DH6xHzp6sGGczNoDJQcyp7Q2snP8wt+QQc7Qs4GOa
+         fyBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685607627; x=1688199627;
+        d=1e100.net; s=20221208; t=1685607734; x=1688199734;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tS4a1xOgxMUMLEbnCg0V4q+ycCWx2xlztmESkIXckyo=;
-        b=jyPT6jubjIcY19RBAIHhg5aXQ09UIc1mQFx7bPa1sCnpigRD/dMUcTuWpj7CwRA71H
-         afETP3moyt49emx4G6vlGqFONGTfyowJcgYVUmBcXKs+Y3fawKdl3r/COprvhkfOffsm
-         No7yX/4+3bdhdqx0ieWuVhyS/ebW1DBDWQqYiV/DIDIrW/zHkdl1Lc2YUtBt87aAck3D
-         R1j7L73cj/zMYA44uDsyTiPI+wZOm1mrYWuDdgtDElha/RlBvH/WJTr9XJflmSt976h+
-         wRWesO3j431zF0OL0rI++Lx7n17ro5uwsGTMnc7CkcEBsiXtgwx187EW6OjtSqitKeus
-         4QIQ==
-X-Gm-Message-State: AC+VfDwGtYOsnexNahw8Pu4khbPwDQS02g0gxiGyuw/4UPos/4nzZaA9
-	Lww2/UohQFqX7nA225lR7GtSNxqZyYo3IX/4mUU=
-X-Google-Smtp-Source: ACHHUZ4IZT44NtIfRs/xlbKnWFcG4D7AEEUxUuudHP/RnlDvS1B/rq8axgox+tzLkd9y6rosB3Zw4KNqjFWW/wbAOr8=
-X-Received: by 2002:a81:7785:0:b0:565:7d7:1356 with SMTP id
- s127-20020a817785000000b0056507d71356mr8254467ywc.22.1685607626688; Thu, 01
- Jun 2023 01:20:26 -0700 (PDT)
+        bh=F3q8fSv1CYQ8OeBSkoHHq8yQzPVMEdcVj1sJJBohCe0=;
+        b=TYqz0qTelFk3OAWHriFayGLBFDBLV7RVc84JG7KncPoHpWk5ZmTA7AExE6TMdQFJw/
+         8aXh82/DPl0L6bcbUdlypG39o5ZglDk0H/dM+4BcJY96Huj9ZzgL/ROS8VA2YAfexBrU
+         l5xV42U3eWbEXhkqwg/ZOMwE84G663Ek1tiRoCaZgwu4xTzZXhvZpAvLP52icNKJZaj2
+         3p2oFm/ptF9ccdNoZh1aCN0fLauOfGdwbESdjA49VaGH8AFk3YgvljW8Ad5VufgAqn6t
+         z3tuTGfWh7VEiz3I0ZR/S2BbA2gIIU9AfF5PLxQBVv9YmAbdPZBT5xPhRGFBUxIIA5ww
+         2SzQ==
+X-Gm-Message-State: AC+VfDwOWUJMHetPSncupRVKv/rl1rzSc+nNh6iv3k/g6LM8HJ2X5CaY
+	ogIbrsSYv/meVr2BbAhjYz2eSbOdOwyZHBcTBzc=
+X-Google-Smtp-Source: ACHHUZ4BVGpqKx729yAA7sIpRRuJCk9B2q39qd4V84f+TNhLT6e1WTgI1mcqI+pCtHVuJpHfepvjflFti312UIm7bGk=
+X-Received: by 2002:a0d:f5c2:0:b0:568:d63e:dd2c with SMTP id
+ e185-20020a0df5c2000000b00568d63edd2cmr6202683ywf.11.1685607733835; Thu, 01
+ Jun 2023 01:22:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,177 +42,46 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20230531213032.25338-1-vishal.moola@gmail.com>
- <20230531213032.25338-26-vishal.moola@gmail.com> <CAMuHMdWCe=VsTJYNA_-k=JipeAGKzgBFjZ8i+XRK7U1DBei=7A@mail.gmail.com>
-In-Reply-To: <CAMuHMdWCe=VsTJYNA_-k=JipeAGKzgBFjZ8i+XRK7U1DBei=7A@mail.gmail.com>
+ <20230531213032.25338-31-vishal.moola@gmail.com> <CAMuHMdU4t4ac_eCH0UaX9F+GQ5-9kYjB_=e+pSfTkxG=3b8DsA@mail.gmail.com>
+ <025fc34a24e1a1c26b187f15dba86d382d9617eb.camel@physik.fu-berlin.de>
+In-Reply-To: <025fc34a24e1a1c26b187f15dba86d382d9617eb.camel@physik.fu-berlin.de>
 From: Vishal Moola <vishal.moola@gmail.com>
-Date: Thu, 1 Jun 2023 01:20:15 -0700
-Message-ID: <CAOzc2pzVEO_LSw1Ffwk1K3sXni_32wO0T+fEAnR6zVVB5x=vVA@mail.gmail.com>
-Subject: Re: [PATCH v3 25/34] m68k: Convert various functions to use ptdescs
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org
+Date: Thu, 1 Jun 2023 01:22:03 -0700
+Message-ID: <CAOzc2pxnb6WXoVK5JXX42R0Q6FK59Q1uebQskK2fxLn6DuicqA@mail.gmail.com>
+Subject: Re: [PATCH v3 30/34] sh: Convert pte_free_tlb() to use ptdescs
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-um@lists.infradead.org, xen-devel@lists.xenproject.org, 
+	kvm@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 1, 2023 at 12:40=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
+On Thu, Jun 1, 2023 at 12:28=E2=80=AFAM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
 >
-> Hi Vishal,
+> Hi Geert!
 >
-> On Wed, May 31, 2023 at 11:32=E2=80=AFPM Vishal Moola (Oracle)
-> <vishal.moola@gmail.com> wrote:
-> > As part of the conversions to replace pgtable constructor/destructors w=
-ith
-> > ptdesc equivalents, convert various page table functions to use ptdescs=
-.
+> On Thu, 2023-06-01 at 09:20 +0200, Geert Uytterhoeven wrote:
+> > On Wed, May 31, 2023 at 11:33=E2=80=AFPM Vishal Moola (Oracle)
+> > <vishal.moola@gmail.com> wrote:
+> > > Part of the conversions to replace pgtable constructor/destructors wi=
+th
+> > > ptdesc equivalents. Also cleans up some spacing issues.
+> > >
+> > > Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 > >
-> > Some of the functions use the *get*page*() helper functions. Convert
-> > these to use pagetable_alloc() and ptdesc_address() instead to help
-> > standardize page tables further.
-> >
-> > Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> > LGTM, so
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
-> Thanks for your patch!
->
-> > --- a/arch/m68k/include/asm/mcf_pgalloc.h
-> > +++ b/arch/m68k/include/asm/mcf_pgalloc.h
-> > @@ -7,20 +7,19 @@
-> >
-> >  extern inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
-> >  {
-> > -       free_page((unsigned long) pte);
-> > +       pagetable_free(virt_to_ptdesc(pte));
-> >  }
-> >
-> >  extern const char bad_pmd_string[];
-> >
-> >  extern inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
-> >  {
-> > -       unsigned long page =3D __get_free_page(GFP_DMA);
-> > +       struct ptdesc *ptdesc =3D pagetable_alloc(GFP_DMA | __GFP_ZERO,=
- 0);
-> >
-> > -       if (!page)
-> > +       if (!ptdesc)
-> >                 return NULL;
-> >
-> > -       memset((void *)page, 0, PAGE_SIZE);
-> > -       return (pte_t *) (page);
-> > +       return (pte_t *) (ptdesc_address(ptdesc));
->
-> No need to cast "void *" when returning a different pointer type.
->
-> >  }
-> >
-> >  extern inline pmd_t *pmd_alloc_kernel(pgd_t *pgd, unsigned long addres=
-s)
-> > @@ -35,36 +34,36 @@ extern inline pmd_t *pmd_alloc_kernel(pgd_t *pgd, u=
-nsigned long address)
-> >  static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pg=
-table,
-> >                                   unsigned long address)
-> >  {
-> > -       struct page *page =3D virt_to_page(pgtable);
-> > +       struct ptdesc *ptdesc =3D virt_to_ptdesc(pgtable);
-> >
-> > -       pgtable_pte_page_dtor(page);
-> > -       __free_page(page);
-> > +       pagetable_pte_dtor(ptdesc);
-> > +       pagetable_free(ptdesc);
-> >  }
-> >
-> >  static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
-> >  {
-> > -       struct page *page =3D alloc_pages(GFP_DMA, 0);
-> > +       struct ptdesc *ptdesc =3D pagetable_alloc(GFP_DMA, 0);
-> >         pte_t *pte;
-> >
-> > -       if (!page)
-> > +       if (!ptdesc)
-> >                 return NULL;
-> > -       if (!pgtable_pte_page_ctor(page)) {
-> > -               __free_page(page);
-> > +       if (!pagetable_pte_ctor(ptdesc)) {
-> > +               pagetable_free(ptdesc);
-> >                 return NULL;
-> >         }
-> >
-> > -       pte =3D page_address(page);
-> > -       clear_page(pte);
-> > +       pte =3D ptdesc_address(ptdesc);
-> > +       pagetable_clear(pte);
-> >
-> >         return pte;
-> >  }
-> >
-> >  static inline void pte_free(struct mm_struct *mm, pgtable_t pgtable)
-> >  {
-> > -       struct page *page =3D virt_to_page(pgtable);
-> > +       struct ptdesc *ptdesc =3D virt_to_ptdesc(ptdesc);
->
-> virt_to_ptdesc(pgtable)
->
-> (You can build this using m5475evb_defconfig)
->
-> >
-> > -       pgtable_pte_page_dtor(page);
-> > -       __free_page(page);
-> > +       pagetable_pte_dtor(ptdesc);
-> > +       pagetable_free(ptdesc);
-> >  }
-> >
-> >  /*
-> > @@ -75,16 +74,18 @@ static inline void pte_free(struct mm_struct *mm, p=
-gtable_t pgtable)
-> >
-> >  static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
-> >  {
-> > -       free_page((unsigned long) pgd);
-> > +       pagetable_free(virt_to_ptdesc(pgd));
-> >  }
-> >
-> >  static inline pgd_t *pgd_alloc(struct mm_struct *mm)
-> >  {
-> >         pgd_t *new_pgd;
-> > +       struct ptdesc *ptdesc =3D pagetable_alloc(GFP_DMA | GFP_NOWARN,=
- 0);
-> >
-> > -       new_pgd =3D (pgd_t *)__get_free_page(GFP_DMA | __GFP_NOWARN);
-> > -       if (!new_pgd)
-> > +       if (!ptdesc)
-> >                 return NULL;
-> > +       new_pgd =3D (pgd_t *) ptdesc_address(ptdesc);
->
-> No need to cast "void *" when assigning to a different pointer type.
->
-> > +
-> >         memcpy(new_pgd, swapper_pg_dir, PTRS_PER_PGD * sizeof(pgd_t));
-> >         memset(new_pgd, 0, PAGE_OFFSET >> PGDIR_SHIFT);
-> >         return new_pgd;
->
-> The rest LGTM.
+> I assume this series is supposed to go through some mm tree?
 
-Thanks so much for the review! I'll make those changes in the next
-version.
-
-
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+Hi Adrian,
+I was going to have Andrew take this through mm-unstable
+once it gets enough review.
