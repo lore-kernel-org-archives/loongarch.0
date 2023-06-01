@@ -1,41 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39011878
-	for <loongarch@lists.linux.dev>; Thu,  1 Jun 2023 04:36:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56C31C433D2
-	for <loongarch@lists.linux.dev>; Thu,  1 Jun 2023 04:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685594197;
-	bh=QZIVYOfQMQfDIruN7rSg689YIbiJbkkfE8AKRfy2n5U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XjX+qO5TgZej3fh2HJQIqiOR5PxyL4koYuTQx2qeUwz0mw2WS7S8765bRMbrDCQVG
-	 whIGCjOlXBTjeWiN2+LrCx+Or8mSlhjQdHY5MFaYnqKspwUjKhBsJekNkwwwC3A2tK
-	 RRJ+PYWLTNVwk2Tc4E1sjjLY66LER3hFT6QIRdlz0YEtfE5QnejkEMpgjlFtCb1L5b
-	 jav2+jHQW0E6lB/EBDYRssonNB4dhirDM2pvI3kpcWJ0B9czAKVTkvmbZ2ylsgGsMq
-	 x3kGCiBqFY0IqxyFq7Pvs4DJbAWcMeNsAFCqYa1UhLYAOwr6LlCcKM6JbTbj+s1hsP
-	 DnX5huppMSCjQ==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5147e441c33so1066360a12.0
-        for <loongarch@lists.linux.dev>; Wed, 31 May 2023 21:36:37 -0700 (PDT)
-X-Gm-Message-State: AC+VfDzE9KAL/HMVMQ6DbS2AhY0ykzTJufB9Fw2DqlU/1+gdogaX3G5k
-	DBP0XDn016p/dX9+/3BBuLdG7as7gFUIMvv4UvQ=
-X-Google-Smtp-Source: ACHHUZ7XdaYihX3P0occ4fimfrY7vXLE/b8sATTjW74eXROnZDFW1BQ/va3F8G7kmqLig8peXPPgGCGmqMpiLEgKGXM=
-X-Received: by 2002:a05:6402:3511:b0:4fc:97d9:18ec with SMTP id
- b17-20020a056402351100b004fc97d918ecmr437472edd.21.1685594195535; Wed, 31 May
- 2023 21:36:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF41539B
+	for <loongarch@lists.linux.dev>; Thu,  1 Jun 2023 07:20:21 +0000 (UTC)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-75b01b0c712so61468785a.3
+        for <loongarch@lists.linux.dev>; Thu, 01 Jun 2023 00:20:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685604020; x=1688196020;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uahBQ1+NZ4LtBmJlKuzSeHMKUQpvPqnHtI00z7d7Eg4=;
+        b=ickS08rORIU8juWy3ztNj71mk2R1N81vEYv+mg9x6XBHPBNc+MHS9j6cDAU1fj/hu4
+         pppi/dPhkxR+pV+1mJFlWprWA2ZNAh7drFtznietScn79++g4SXNxai1iatPqceyo2Br
+         CUahEaIFkNOttk/4MzzWZVUVMRGlWQZMqi3IHeJGNjUO7rSV1MRER3R5553H7pBnc3uU
+         CpF5QJav2/MZ57xNDQ64NidF3pT5RAjTP3DsJNRcGVXVAsT/AWkj13h9av6LRi+SxdQq
+         PHHM+w78G3v7D1pKZ86BDKavXPakrF4V37EOGroB3JOHO0YqvNij73RYlL0U4drO6sI4
+         D/IA==
+X-Gm-Message-State: AC+VfDw9tb6ZFMYs8QXvix6FCMJxu7C6bfuIGUiZhYJiG0nUQpdnZ5eu
+	bDUkPaMBAIx7ExMy+n3qmzwAnCIb6zpgMw==
+X-Google-Smtp-Source: ACHHUZ6iihjph1n1pnkmR/GkuTMWgqEAFqHmA6iVnFh4cu8sf6R/TddGYQ0O4MdKZ0NtdUZx8rYzaw==
+X-Received: by 2002:a05:620a:22f7:b0:75b:23a0:de98 with SMTP id p23-20020a05620a22f700b0075b23a0de98mr7860222qki.22.1685604020011;
+        Thu, 01 Jun 2023 00:20:20 -0700 (PDT)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id n63-20020a0de442000000b00545b02d4af5sm5381467ywe.48.2023.06.01.00.20.18
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Jun 2023 00:20:18 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-bad97da58adso549350276.1
+        for <loongarch@lists.linux.dev>; Thu, 01 Jun 2023 00:20:18 -0700 (PDT)
+X-Received: by 2002:a25:6891:0:b0:ba8:7122:2917 with SMTP id
+ d139-20020a256891000000b00ba871222917mr10052062ybc.0.1685604018484; Thu, 01
+ Jun 2023 00:20:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230531213032.25338-1-vishal.moola@gmail.com> <20230531213032.25338-23-vishal.moola@gmail.com>
-In-Reply-To: <20230531213032.25338-23-vishal.moola@gmail.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Thu, 1 Jun 2023 12:36:23 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSEguewbRMD8w3u3tfSPt-Opy+i=jm_8W2+NtAP1OYSsA@mail.gmail.com>
-Message-ID: <CAJF2gTSEguewbRMD8w3u3tfSPt-Opy+i=jm_8W2+NtAP1OYSsA@mail.gmail.com>
-Subject: Re: [PATCH v3 22/34] csky: Convert __pte_free_tlb() to use ptdescs
+References: <20230531213032.25338-1-vishal.moola@gmail.com> <20230531213032.25338-31-vishal.moola@gmail.com>
+In-Reply-To: <20230531213032.25338-31-vishal.moola@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 1 Jun 2023 09:20:05 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU4t4ac_eCH0UaX9F+GQ5-9kYjB_=e+pSfTkxG=3b8DsA@mail.gmail.com>
+Message-ID: <CAMuHMdU4t4ac_eCH0UaX9F+GQ5-9kYjB_=e+pSfTkxG=3b8DsA@mail.gmail.com>
+Subject: Re: [PATCH v3 30/34] sh: Convert pte_free_tlb() to use ptdescs
 To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
 	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
@@ -45,44 +54,32 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.o
 	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
 	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
 	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Guo Ren <guoren@kernel.org>
-
-On Thu, Jun 1, 2023 at 5:34=E2=80=AFAM Vishal Moola (Oracle)
+On Wed, May 31, 2023 at 11:33=E2=80=AFPM Vishal Moola (Oracle)
 <vishal.moola@gmail.com> wrote:
->
 > Part of the conversions to replace pgtable constructor/destructors with
-> ptdesc equivalents.
+> ptdesc equivalents. Also cleans up some spacing issues.
 >
 > Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-> ---
->  arch/csky/include/asm/pgalloc.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/csky/include/asm/pgalloc.h b/arch/csky/include/asm/pgal=
-loc.h
-> index 7d57e5da0914..9c84c9012e53 100644
-> --- a/arch/csky/include/asm/pgalloc.h
-> +++ b/arch/csky/include/asm/pgalloc.h
-> @@ -63,8 +63,8 @@ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
->
->  #define __pte_free_tlb(tlb, pte, address)              \
->  do {                                                   \
-> -       pgtable_pte_page_dtor(pte);                     \
-> -       tlb_remove_page(tlb, pte);                      \
-> +       pagetable_pte_dtor(page_ptdesc(pte));           \
-> +       tlb_remove_page_ptdesc(tlb, page_ptdesc(pte));  \
->  } while (0)
->
->  extern void pagetable_init(void);
-> --
-> 2.40.1
->
 
+LGTM, so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --=20
-Best Regards
- Guo Ren
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
