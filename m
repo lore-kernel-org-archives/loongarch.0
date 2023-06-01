@@ -1,84 +1,88 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF9041390
-	for <loongarch@lists.linux.dev>; Thu,  1 Jun 2023 02:44:24 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxfOsGBnhkkikDAA--.3784S3;
-	Thu, 01 Jun 2023 10:44:22 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxOLYDBnhkHnGDAA--.16216S3;
-	Thu, 01 Jun 2023 10:44:20 +0800 (CST)
-Subject: Re: [PATCH v3 0/5] perf tools: Modify mksyscalltbl
-To: Leo Yan <leo.yan@linaro.org>
-References: <1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn>
- <20230531235455.GA132356@leoy-huanghe>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Hans-Peter Nilsson <hp@axis.com>,
- Alexander Kapshuk <alexander.kapshuk@gmail.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <b0498d76-7e66-1060-2555-be1a09018c88@loongson.cn>
-Date: Thu, 1 Jun 2023 10:44:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39011878
+	for <loongarch@lists.linux.dev>; Thu,  1 Jun 2023 04:36:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56C31C433D2
+	for <loongarch@lists.linux.dev>; Thu,  1 Jun 2023 04:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685594197;
+	bh=QZIVYOfQMQfDIruN7rSg689YIbiJbkkfE8AKRfy2n5U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XjX+qO5TgZej3fh2HJQIqiOR5PxyL4koYuTQx2qeUwz0mw2WS7S8765bRMbrDCQVG
+	 whIGCjOlXBTjeWiN2+LrCx+Or8mSlhjQdHY5MFaYnqKspwUjKhBsJekNkwwwC3A2tK
+	 RRJ+PYWLTNVwk2Tc4E1sjjLY66LER3hFT6QIRdlz0YEtfE5QnejkEMpgjlFtCb1L5b
+	 jav2+jHQW0E6lB/EBDYRssonNB4dhirDM2pvI3kpcWJ0B9czAKVTkvmbZ2ylsgGsMq
+	 x3kGCiBqFY0IqxyFq7Pvs4DJbAWcMeNsAFCqYa1UhLYAOwr6LlCcKM6JbTbj+s1hsP
+	 DnX5huppMSCjQ==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5147e441c33so1066360a12.0
+        for <loongarch@lists.linux.dev>; Wed, 31 May 2023 21:36:37 -0700 (PDT)
+X-Gm-Message-State: AC+VfDzE9KAL/HMVMQ6DbS2AhY0ykzTJufB9Fw2DqlU/1+gdogaX3G5k
+	DBP0XDn016p/dX9+/3BBuLdG7as7gFUIMvv4UvQ=
+X-Google-Smtp-Source: ACHHUZ7XdaYihX3P0occ4fimfrY7vXLE/b8sATTjW74eXROnZDFW1BQ/va3F8G7kmqLig8peXPPgGCGmqMpiLEgKGXM=
+X-Received: by 2002:a05:6402:3511:b0:4fc:97d9:18ec with SMTP id
+ b17-20020a056402351100b004fc97d918ecmr437472edd.21.1685594195535; Wed, 31 May
+ 2023 21:36:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230531235455.GA132356@leoy-huanghe>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8DxOLYDBnhkHnGDAA--.16216S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrKFykXryrKr1kKr1DCr1UAwb_yoW3CFb_WF
-	nFgr1UC3y5Wr17KF4DKan8ZFyaqF9rXFs8t3s7Ww1kXw13Xr9xJFZa9ryrua1jyrWvqFZI
-	kFs8Xry8ZFZ8ujkaLaAFLSUrUUUUnb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
-	07kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-	w2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-	AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCa
-	FVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI
-	42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-	aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2txhDUUUU
+References: <20230531213032.25338-1-vishal.moola@gmail.com> <20230531213032.25338-23-vishal.moola@gmail.com>
+In-Reply-To: <20230531213032.25338-23-vishal.moola@gmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Thu, 1 Jun 2023 12:36:23 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSEguewbRMD8w3u3tfSPt-Opy+i=jm_8W2+NtAP1OYSsA@mail.gmail.com>
+Message-ID: <CAJF2gTSEguewbRMD8w3u3tfSPt-Opy+i=jm_8W2+NtAP1OYSsA@mail.gmail.com>
+Subject: Re: [PATCH v3 22/34] csky: Convert __pte_free_tlb() to use ptdescs
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Acked-by: Guo Ren <guoren@kernel.org>
 
-
-On 06/01/2023 07:55 AM, Leo Yan wrote:
-> Hi Tiezhu,
+On Thu, Jun 1, 2023 at 5:34=E2=80=AFAM Vishal Moola (Oracle)
+<vishal.moola@gmail.com> wrote:
 >
-> On Tue, May 30, 2023 at 05:51:00PM +0800, Tiezhu Yang wrote:
+> Part of the conversions to replace pgtable constructor/destructors with
+> ptdesc equivalents.
 >
-> [...]
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> ---
+>  arch/csky/include/asm/pgalloc.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
->> Tiezhu Yang (5):
->>   perf tools: Declare syscalltbl_*[] as const for all archs
->>   perf arm64: Rename create_table_from_c() to create_sc_table()
->>   perf arm64: Handle __NR3264_ prefixed syscall number
->>   perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
->>   perf LoongArch: Simplify mksyscalltbl
+> diff --git a/arch/csky/include/asm/pgalloc.h b/arch/csky/include/asm/pgal=
+loc.h
+> index 7d57e5da0914..9c84c9012e53 100644
+> --- a/arch/csky/include/asm/pgalloc.h
+> +++ b/arch/csky/include/asm/pgalloc.h
+> @@ -63,8 +63,8 @@ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
 >
-> Either in my mail inbox or on lore site [1], it only shows up 3 patches
-> but not the 5 patches.  Please consider to resend the series.
+>  #define __pte_free_tlb(tlb, pte, address)              \
+>  do {                                                   \
+> -       pgtable_pte_page_dtor(pte);                     \
+> -       tlb_remove_page(tlb, pte);                      \
+> +       pagetable_pte_dtor(page_ptdesc(pte));           \
+> +       tlb_remove_page_ptdesc(tlb, page_ptdesc(pte));  \
+>  } while (0)
+>
+>  extern void pagetable_init(void);
+> --
+> 2.40.1
+>
 
-Here is the complete patchset:
 
-[PATCH RESEND v3 0/5] perf tools: Modify mksyscalltbl
-https://lore.kernel.org/linux-perf-users/1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn/
-
-Thanks,
-Tiezhu
-
+--=20
+Best Regards
+ Guo Ren
