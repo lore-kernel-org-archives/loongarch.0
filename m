@@ -1,210 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86843538B
-	for <loongarch@lists.linux.dev>; Fri,  2 Jun 2023 08:01:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B49DFC43322
-	for <loongarch@lists.linux.dev>; Fri,  2 Jun 2023 08:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685692867;
-	bh=g9o7Q3+qu3TNO+oYRpWCOL8HyzqTrELhpP5873uRd3Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fIx6/4LHQG+owHhDhXY9/WQld6+BM6nYUxDsotzvwnXvb3XE+INXK1gU/X6Ur2xWE
-	 Xj5Yd+L9k5tux8Ie55/Ensh/n0W90+i27Uw+PYsvJdb+zuiES9IKBViof0OVfJtqc8
-	 uivIy03pbppOwTFfwuiSRz/W2Fo6szMCqqt4wFGR83kFyzWyBiygjRzwx8UcBPgMIC
-	 V8FM4cR6y0Ag6cfG6FiZigclLKn9JNCGpGjpFHoNTgqr4zVLz7HLCg4DkWpVTGH63P
-	 p71m3HQ19UrLP4WNof72ZdMttdXGqxFxDoyETLjNhBK62aQP3SG7I0aOjo4byBDbmE
-	 dweSld3uB+toA==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5151934a4e3so2648508a12.1
-        for <loongarch@lists.linux.dev>; Fri, 02 Jun 2023 01:01:07 -0700 (PDT)
-X-Gm-Message-State: AC+VfDw6RsPV9uACaiWxoKAlXLf6fqPC/CdqLTtfE1nPqF8cB6iNy+9Q
-	50Gqr4sZNFKPJg7dFgptIlCi5u8BBDoP6QbjqhU=
-X-Google-Smtp-Source: ACHHUZ5huCZPcpNVr9McO23JvVRywJTG/caMrkpDTQMHjXfG/M+enxYRpgAmmluiCgnaZywlNYJgyt4PzOr/x/kmQ5s=
-X-Received: by 2002:aa7:d281:0:b0:504:9346:11d3 with SMTP id
- w1-20020aa7d281000000b00504934611d3mr1415324edq.29.1685692865422; Fri, 02 Jun
- 2023 01:01:05 -0700 (PDT)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A78D117ABA
+	for <loongarch@lists.linux.dev>; Fri,  2 Jun 2023 09:35:20 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2ACE41063;
+	Fri,  2 Jun 2023 02:36:05 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.24.167])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF4863F7BD;
+	Fri,  2 Jun 2023 02:35:14 -0700 (PDT)
+Date: Fri, 2 Jun 2023 10:35:09 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+Message-ID: <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230602030732.1047696-1-maobibo@loongson.cn> <CAAhV-H58dR4JWtCdqCR553H1-pbppKyi114BMhsrV74Zb_c58Q@mail.gmail.com>
- <17a2ba54-2b85-9cc9-2a43-16eb20d6ce84@loongson.cn> <CAAhV-H4VHoNQdpDdpcPfDXJxnpoWUtDqmJMhb_r4DS4JtnxvhQ@mail.gmail.com>
- <e483b7bb-4184-758d-2840-11d75659975e@loongson.cn>
-In-Reply-To: <e483b7bb-4184-758d-2840-11d75659975e@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 2 Jun 2023 16:00:53 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4VH2yZ3sMqQYK_KWrv6FT7fqHykuMMFo_B55WJeRQOwA@mail.gmail.com>
-Message-ID: <CAAhV-H4VH2yZ3sMqQYK_KWrv6FT7fqHykuMMFo_B55WJeRQOwA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Align pci memory base address with page size
-To: "bibo, mao" <maobibo@loongson.cn>
-Cc: loongson-kernel@lists.loongnix.cn, Bjorn Helgaas <helgaas@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZHjgIH3aX9dCvVZc@moria.home.lan>
 
-On Fri, Jun 2, 2023 at 3:35=E2=80=AFPM bibo, mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> =E5=9C=A8 2023/6/2 14:55, Huacai Chen =E5=86=99=E9=81=93:
-> > On Fri, Jun 2, 2023 at 2:48=E2=80=AFPM bibo, mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >>
-> >>
-> >> =E5=9C=A8 2023/6/2 12:11, Huacai Chen =E5=86=99=E9=81=93:
-> >>> +cc Bjorn
-> >>>
-> >>> Hi, Bibo,
-> >>>
-> >>> On Fri, Jun 2, 2023 at 11:07=E2=80=AFAM Bibo Mao <maobibo@loongson.cn=
-> wrote:
-> >>>>
-> >>>> LoongArch linux kernel uses 16K page size by default, some pci devic=
-es have
-> >>>> only 4K memory size, it is normal in general architectures. However =
-memory
-> >>>> space of different pci devices will share one physical page address =
-space.
-> >>>> This is not safe for mmu protection, also UIO and VFIO requires base
-> >>>> address of pci memory space page aligned.
-> >>>>
-> >>>> This patch adds check with function pcibios_align_resource, and set =
-base
-> >>>> address of resource page aligned.
-> >>>>
-> >>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>> ---
-> >>>>  arch/loongarch/pci/pci.c | 23 +++++++++++++++++++++++
-> >>>>  1 file changed, 23 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-> >>>> index 2726639150bc..1380f3672ba2 100644
-> >>>> --- a/arch/loongarch/pci/pci.c
-> >>>> +++ b/arch/loongarch/pci/pci.c
-> >>>> @@ -83,6 +83,29 @@ int pcibios_alloc_irq(struct pci_dev *dev)
-> >>>>         return acpi_pci_irq_enable(dev);
-> >>>>  }
-> >>>>
-> >>>> +/*
-> >>>> + * memory space size of some pci cards is 4K, it is separated with
-> >>>> + * different pages for generic architectures, so that mmu protectio=
-n can
-> >>>> + * work with different pci cards. However page size for LoongArch s=
-ystem
-> >>>> + * is 16K, memory space of different pci cards may share the same p=
-age
-> >>>> + * on LoongArch, it is not safe here.
-> >>>> + * Also uio drivers and vfio drivers sugguests that base address of=
- memory
-> >>>> + * space should page aligned. This function aligns base address wit=
-h page size
-> >>>> + */
-> >>>> +resource_size_t pcibios_align_resource(void *data, const struct res=
-ource *res,
-> >>>> +               resource_size_t size, resource_size_t align)
-> >>>> +{
-> >>>> +       resource_size_t start =3D res->start;
-> >>>> +
-> >>>> +       if (res->flags & IORESOURCE_MEM) {
-> >>>> +               if (align & (PAGE_SIZE - 1)) {
-> >>>> +                       align =3D PAGE_SIZE;
-> >>>> +                       start =3D ALIGN(start, align);
-> >>> I don't know whether this patch is really needed, but the logic here
-> >>> has some problems.
-> >>>
-> >>> For example, if PAGE_SIZE=3D16KB, align=3D18KB, what should we do? Al=
-ign
-> >>> to 16KB or align to 32KB? IMO it should align to 32KB, but in your
-> >>> patch it will align to 16KB.
-> >> In general pci device is aligned by size, and its value is a power of =
-2 in value.
-> >> I do not see such devices with 18K alignment requirements.
-> > If so, you can simply ignore "align" and use  start =3D ALIGN(start, PA=
-GE_SIZE);
-> >
-> >>
-> >> By pci local bus spec, there are such lines:
-> >>
-> >> "Devices are free to consume more address space than required, but dec=
-oding down
-> >> to a 4 KB space for memory is suggested for devices that need less tha=
-n that amount. For
-> >> instance, a device that has 64 bytes of registers to be mapped into Me=
-mory Space may
-> >> consume up to 4 KB of address space in order to minimize the number of=
- bits in the address
-> >> decoder."
-> >>
-> >> I cannot  think whether it is necessary simply from judging whether ot=
-her
-> >> architectures have similar code. If so, LoongArch system just  always =
-follows others.
-> >> It is actually one problem since LoongArch uses 16K page size.
-> > As I know, both MIPS and ARM64 can use non-4K pages, but when I grep
-> > pcibios_align_resource in the arch directory, none of them do
-> > PAGE_SIZE alignment.
-> Here is piece of  code in drivers/vfio/pci/vfio_pci_core.c
->                 /*
->                  * Here we don't handle the case when the BAR is not page
->                  * aligned because we can't expect the BAR will be
->                  * assigned into the same location in a page in guest
->                  * when we passthrough the BAR. And it's hard to access
->                  * this BAR in userspace because we have no way to get
->                  * the BAR's location in a page.
->                  */
-> no_mmap:
->                 vdev->bar_mmap_supported[bar] =3D false;
->
-> Do you think it is a issue or not?
-May be or may not be, if it should be aligned to PAGE_SIZE, then MIPS
-and ARM64 also need this.
+On Thu, Jun 01, 2023 at 02:14:56PM -0400, Kent Overstreet wrote:
+> On Thu, Jun 01, 2023 at 05:12:03PM +0100, Mark Rutland wrote:
+> > For a while I have wanted to give kprobes its own allocator so that it can work
+> > even with CONFIG_MODULES=n, and so that it doesn't have to waste VA space in
+> > the modules area.
+> > 
+> > Given that, I think these should have their own allocator functions that can be
+> > provided independently, even if those happen to use common infrastructure.
+> 
+> How much memory can kprobes conceivably use? I think we also want to try
+> to push back on combinatorial new allocators, if we can.
 
->
-> You can search function pnv_pci_default_alignment or pcibios_align_resour=
-ce about
-> alpha architecture.
-Alpha's pcibios_align_resource() have nothing to do with PAGE_SIZE,
-pnv_pci_default_alignment() seems to be the case. But if alignment is
-really needed, I think it is better to provide a
-pcibios_default_alignment() as powerpc.
+That depends on who's using it, and how (e.g. via BPF).
 
-Huacai
->
-> Regards
-> Bibo, mao
->
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo, Mao
-> >>>
-> >>> Huacai
-> >>>> +               }
-> >>>> +       }
-> >>>> +       return start;
-> >>>> +}
-> >>>> +
-> >>>>  static void pci_fixup_vgadev(struct pci_dev *pdev)
-> >>>>  {
-> >>>>         struct pci_dev *devp =3D NULL;
-> >>>> --
-> >>>> 2.27.0
-> >>>>
-> >>> _______________________________________________
-> >>> Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
-> >>> To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.=
-cn
-> >>
-> >>
-> > _______________________________________________
-> > Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
-> > To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
->
->
+To be clear, I'm not necessarily asking for entirely different allocators, but
+I do thinkg that we want wrappers that can at least pass distinct start+end
+parameters to a common allocator, and for arm64's modules code I'd expect that
+we'd keep the range falblack logic out of the common allcoator, and just call
+it twice.
+
+> > > Several architectures override module_alloc() because of various
+> > > constraints where the executable memory can be located and this causes
+> > > additional obstacles for improvements of code allocation.
+> > > 
+> > > This set splits code allocation from modules by introducing
+> > > jit_text_alloc(), jit_data_alloc() and jit_free() APIs, replaces call
+> > > sites of module_alloc() and module_memfree() with the new APIs and
+> > > implements core text and related allocation in a central place.
+> > > 
+> > > Instead of architecture specific overrides for module_alloc(), the
+> > > architectures that require non-default behaviour for text allocation must
+> > > fill jit_alloc_params structure and implement jit_alloc_arch_params() that
+> > > returns a pointer to that structure. If an architecture does not implement
+> > > jit_alloc_arch_params(), the defaults compatible with the current
+> > > modules::module_alloc() are used.
+> > 
+> > As above, I suspect that each of the callsites should probably be using common
+> > infrastructure, but I don't think that a single jit_alloc_arch_params() makes
+> > sense, since the parameters for each case may need to be distinct.
+> 
+> I don't see how that follows. The whole point of function parameters is
+> that they may be different :)
+
+What I mean is that jit_alloc_arch_params() tries to aggregate common
+parameters, but they aren't actually common (e.g. the actual start+end range
+for allocation).
+
+> Can you give more detail on what parameters you need? If the only extra
+> parameter is just "does this allocation need to live close to kernel
+> text", that's not that big of a deal.
+
+My thinking was that we at least need the start + end for each caller. That
+might be it, tbh.
+
+Thanks,
+Mark.
