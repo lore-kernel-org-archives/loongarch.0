@@ -1,57 +1,51 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8E28466
-	for <loongarch@lists.linux.dev>; Fri,  2 Jun 2023 11:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=TNU/G9TSMeyQi8I5o1Gz1jaa+8f4RLEdgRB4a+ht+Qw=; b=ND0Cui7lGRCITibE4mA3XHf5OL
-	o9n8Wi78YIiyjLwgjWx2Siqy5aDe5ovwgAhLmEh1yrZsD/+fKvUlmc0hhtA1qWXdTnqR5OGv8lX0q
-	XzwjEbJ5Zbe0gdzoPg6I8ya3Fe51qPKL1tgMzor5Uf16y883dDhXuyyzlBVp7Y+hhpwxBNwqIVHdo
-	h5fOsfrBCZrEO8UtvQXSVhchce5sGM3t7NMU/To+fQ1rEujUCw2WPonTcbn6slckHwmrk+IwJt0tB
-	VKQZkKj0qjxSBMYPYEwWhBrlAlPWc9q9g6FhS4lwisAlETMV3g3azsF0NmqKFaO5vWaSbcM5esA1n
-	4+e3EkWg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1q53Mt-009BAi-Ri; Fri, 02 Jun 2023 11:54:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E62313002F0;
-	Fri,  2 Jun 2023 13:54:51 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CA1C924553E74; Fri,  2 Jun 2023 13:54:51 +0200 (CEST)
-Date: Fri, 2 Jun 2023 13:54:51 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: bigeasy@linutronix.de, mark.rutland@arm.com, maz@kernel.org,
-	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
-	kernel@xen0n.name, hca@linux.ibm.com, gor@linux.ibm.com,
-	agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-	svens@linux.ibm.com, pbonzini@redhat.com, wanpengli@tencent.com,
-	vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, jgross@suse.com, boris.ostrovsky@oracle.com,
-	daniel.lezcano@linaro.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	rafael@kernel.org, longman@redhat.com, boqun.feng@gmail.com,
-	pmladek@suse.com, senozhatsky@chromium.org, rostedt@goodmis.org,
-	john.ogness@linutronix.de, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-	jstultz@google.com, sboyd@kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 04/13] arm64/arch_timer: Provide noinstr
- sched_clock_read() functions
-Message-ID: <20230602115451.GG620383@hirez.programming.kicks-ass.net>
-References: <20230519102058.581557770@infradead.org>
- <20230519102715.435618812@infradead.org>
- <xhsmho7m9ptrk.mognet@vschneid.remote.csb>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C882F15BF;
+	Fri,  2 Jun 2023 12:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685710594; x=1717246594;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=25GYVrBSeIZshbsRClfURyGuYpPyStjnVIsiOAveQYw=;
+  b=GfoFtP09q1BlA/WcUsVAFDXAeFNKGMJdM/7CiJdn40dv7LpmD0LO3vUp
+   PeEn/BrGBoaiI5y+6xNN/ZVmiGeo2fso0LH8y5RPV+bJqyt5zNrTl7otJ
+   WAUi30okSES2Z4/dhQhU7oq4SMZjFAu0D07bYupnfJwAGPCG+1PpkuoVX
+   IEft6303HkhgWD+LxxXrtR4Zftp1uErtzO5FXEKWV6EHLYxrFWgfGIKx9
+   riCZJuK8cYUUJxaBWvHdmyeA21rg+3iWrj+kizy0HebIQO2Wcr+Rhw9l6
+   OsNdCuMNUYuMIo0Mex5rIcORXhnOJsSeAKYepUf8/LrmMEPzMjuZAagly
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="419392210"
+X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
+   d="scan'208";a="419392210"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 05:56:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="831981005"
+X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
+   d="scan'208";a="831981005"
+Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 02 Jun 2023 05:56:30 -0700
+Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1q54KT-0000Rd-2k;
+	Fri, 02 Jun 2023 12:56:29 +0000
+Date: Fri, 2 Jun 2023 20:55:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Cc: oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, Yingkun Meng <mengyingkun@loongson.cn>,
+	loongson-kernel@lists.loongnix.cn,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: Re: [PATCH 2/2] dmaengine: ls2x-apb: new driver for the Loongson
+ LS2X APB DMA controller
+Message-ID: <202306022006.u6leN6i9-lkp@intel.com>
+References: <f65ebee39b5e1827af08d9e8d1f260928915f9b0.1685448898.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -60,147 +54,115 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <xhsmho7m9ptrk.mognet@vschneid.remote.csb>
+In-Reply-To: <f65ebee39b5e1827af08d9e8d1f260928915f9b0.1685448898.git.zhoubinbin@loongson.cn>
 
-On Wed, May 24, 2023 at 05:40:47PM +0100, Valentin Schneider wrote:
-> On 19/05/23 12:21, Peter Zijlstra wrote:
-> > With the intent to provide local_clock_noinstr(), a variant of
-> > local_clock() that's safe to be called from noinstr code (with the
-> > assumption that any such code will already be non-preemptible),
-> > prepare for things by providing a noinstr sched_clock_read() function.
-> >
-> > Specifically, preempt_enable_*() calls out to schedule(), which upsets
-> > noinstr validation efforts.
-> >
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  arch/arm64/include/asm/arch_timer.h  |    8 ----
-> >  drivers/clocksource/arm_arch_timer.c |   60 ++++++++++++++++++++++++++---------
-> >  2 files changed, 47 insertions(+), 21 deletions(-)
-> >
-> > --- a/arch/arm64/include/asm/arch_timer.h
-> > +++ b/arch/arm64/include/asm/arch_timer.h
-> > @@ -88,13 +88,7 @@ static inline notrace u64 arch_timer_rea
-> >
-> >  #define arch_timer_reg_read_stable(reg)					\
-> >       ({								\
-> > -		u64 _val;						\
-> > -									\
-> > -		preempt_disable_notrace();				\
-> > -		_val = erratum_handler(read_ ## reg)();			\
-> > -		preempt_enable_notrace();				\
-> > -									\
-> > -		_val;							\
-> > +		erratum_handler(read_ ## reg)();			\
-> >       })
-> >
-> >  /*
-> > --- a/drivers/clocksource/arm_arch_timer.c
-> > +++ b/drivers/clocksource/arm_arch_timer.c
-> > @@ -191,22 +191,40 @@ u32 arch_timer_reg_read(int access, enum
-> >       return val;
-> >  }
-> >
-> > -static notrace u64 arch_counter_get_cntpct_stable(void)
-> > +static noinstr u64 _arch_counter_get_cntpct_stable(void)
-> >  {
-> >       return __arch_counter_get_cntpct_stable();
-> >  }
-> >
-> 
-> I tripped over the underscores when reviewing this :( This must be
-> getting close to the symbol length limit, but could we give this a helpful
-> prefix or suffix? raw_* or *_noinstr?
-> 
-> > @@ -1074,6 +1092,13 @@ struct arch_timer_kvm_info *arch_timer_g
-> >
-> >  static void __init arch_counter_register(unsigned type)
-> >  {
-> > +	/*
-> > +	 * Default to cp15 based access because arm64 uses this function for
-> > +	 * sched_clock() before DT is probed and the cp15 method is guaranteed
-> > +	 * to exist on arm64. arm doesn't use this before DT is probed so even
-> > +	 * if we don't have the cp15 accessors we won't have a problem.
-> > +	 */
-> > +	u64 (*scr)(void) = arch_counter_get_cntvct;
-> 
-> So this bit sent me on a little spelunking session :-)
-> 
-> From a control flow perspective the initialization isn't required, but then
-> I looked into the comment and found it comes from the
-> arch_timer_read_counter() definition... Which itself doesn't get used by
-> sched_clock() until the sched_clock_register() below!
-> 
-> So AFAICT that comment was true as of
-> 
->   220069945b29 ("clocksource: arch_timer: Add support for memory mapped timers")
-> 
-> but not after a commit that came 2 months later:
-> 
->   65cd4f6c99c1 ("arch_timer: Move to generic sched_clock framework")
-> 
-> which IIUC made arm/arm64 follow the default approach of using the
-> jiffy-based sched_clock() before probing DT/ACPI and registering a "proper"
-> sched_clock.
-> 
-> All of that to say: the comment about arch_timer_read_counter() vs early
-> sched_clock() doesn't apply anymore, but I think we need to keep its
-> initalization around for stuff like get_cycles(). This initialization here
-> should be OK to put to the bin, though.
+Hi Binbin,
 
-Something like the below folded in then?
+kernel test robot noticed the following build errors:
 
----
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -191,7 +191,7 @@ u32 arch_timer_reg_read(int access, enum
- 	return val;
- }
- 
--static noinstr u64 _arch_counter_get_cntpct_stable(void)
-+static noinstr u64 raw_counter_get_cntpct_stable(void)
- {
- 	return __arch_counter_get_cntpct_stable();
- }
-@@ -210,7 +210,7 @@ static noinstr u64 arch_counter_get_cntp
- 	return __arch_counter_get_cntpct();
- }
- 
--static noinstr u64 _arch_counter_get_cntvct_stable(void)
-+static noinstr u64 raw_counter_get_cntvct_stable(void)
- {
- 	return __arch_counter_get_cntvct_stable();
- }
-@@ -1092,13 +1092,7 @@ struct arch_timer_kvm_info *arch_timer_g
- 
- static void __init arch_counter_register(unsigned type)
- {
--	/*
--	 * Default to cp15 based access because arm64 uses this function for
--	 * sched_clock() before DT is probed and the cp15 method is guaranteed
--	 * to exist on arm64. arm doesn't use this before DT is probed so even
--	 * if we don't have the cp15 accessors we won't have a problem.
--	 */
--	u64 (*scr)(void) = arch_counter_get_cntvct;
-+	u64 (*scr)(void);
- 	u64 start_count;
- 	int width;
- 
-@@ -1110,7 +1104,7 @@ static void __init arch_counter_register
- 		    arch_timer_uses_ppi == ARCH_TIMER_VIRT_PPI) {
- 			if (arch_timer_counter_has_wa()) {
- 				rd = arch_counter_get_cntvct_stable;
--				scr = _arch_counter_get_cntvct_stable;
-+				scr = raw_counter_get_cntvct_stable;
- 			} else {
- 				rd = arch_counter_get_cntvct;
- 				scr = arch_counter_get_cntvct;
-@@ -1118,7 +1112,7 @@ static void __init arch_counter_register
- 		} else {
- 			if (arch_timer_counter_has_wa()) {
- 				rd = arch_counter_get_cntpct_stable;
--				scr = _arch_counter_get_cntpct_stable;
-+				scr = raw_counter_get_cntpct_stable;
- 			} else {
- 				rd = arch_counter_get_cntpct;
- 				scr = arch_counter_get_cntpct;
+[auto build test ERROR on vkoul-dmaengine/next]
+[also build test ERROR on robh/for-next linus/master v6.4-rc4 next-20230602]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/dt-bindings-dmaengine-Add-Loongson-LS2X-APB-DMA-controller/20230531-165211
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/f65ebee39b5e1827af08d9e8d1f260928915f9b0.1685448898.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH 2/2] dmaengine: ls2x-apb: new driver for the Loongson LS2X APB DMA controller
+config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20230602/202306022006.u6leN6i9-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 12.3.0
+reproduce (this is a W=1 build):
+        mkdir -p ~/bin
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/c78b43fba2c7874dc293c0e2aba22c4e74500283
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Binbin-Zhou/dt-bindings-dmaengine-Add-Loongson-LS2X-APB-DMA-controller/20230531-165211
+        git checkout c78b43fba2c7874dc293c0e2aba22c4e74500283
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/dma/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306022006.u6leN6i9-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/dma/ls2x-apb-dma.c: In function 'ls2x_dma_write_cmd':
+>> drivers/dma/ls2x-apb-dma.c:179:15: error: implicit declaration of function 'readq'; did you mean 'readw'? [-Werror=implicit-function-declaration]
+     179 |         val = readq(priv->regs + LDMA_ORDER_ERG) & LDMA_ASK_ADDR_MASK;
+         |               ^~~~~
+         |               readw
+   In file included from include/linux/ratelimit_types.h:5,
+                    from include/linux/ratelimit.h:5,
+                    from include/linux/dev_printk.h:16,
+                    from include/linux/device.h:15,
+                    from include/linux/dmaengine.h:8,
+                    from drivers/dma/ls2x-apb-dma.c:8:
+   include/linux/bits.h:35:18: warning: right shift count is negative [-Wshift-count-negative]
+      35 |          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+         |                  ^~
+   include/linux/bits.h:37:38: note: in expansion of macro '__GENMASK'
+      37 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |                                      ^~~~~~~~~
+   drivers/dma/ls2x-apb-dma.c:33:33: note: in expansion of macro 'GENMASK'
+      33 | #define LDMA_ASK_ADDR_MASK      GENMASK(63, 5) /* Ask Addr Mask */
+         |                                 ^~~~~~~
+   drivers/dma/ls2x-apb-dma.c:179:52: note: in expansion of macro 'LDMA_ASK_ADDR_MASK'
+     179 |         val = readq(priv->regs + LDMA_ORDER_ERG) & LDMA_ASK_ADDR_MASK;
+         |                                                    ^~~~~~~~~~~~~~~~~~
+>> drivers/dma/ls2x-apb-dma.c:181:9: error: implicit declaration of function 'writeq'; did you mean 'writew'? [-Werror=implicit-function-declaration]
+     181 |         writeq(val, priv->regs + LDMA_ORDER_ERG);
+         |         ^~~~~~
+         |         writew
+   drivers/dma/ls2x-apb-dma.c: In function 'ls2x_dma_start_transfer':
+   include/linux/bits.h:35:18: warning: right shift count is negative [-Wshift-count-negative]
+      35 |          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+         |                  ^~
+   include/linux/bits.h:37:38: note: in expansion of macro '__GENMASK'
+      37 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |                                      ^~~~~~~~~
+   drivers/dma/ls2x-apb-dma.c:33:33: note: in expansion of macro 'GENMASK'
+      33 | #define LDMA_ASK_ADDR_MASK      GENMASK(63, 5) /* Ask Addr Mask */
+         |                                 ^~~~~~~
+   drivers/dma/ls2x-apb-dma.c:204:31: note: in expansion of macro 'LDMA_ASK_ADDR_MASK'
+     204 |         val = (ldma_sg->llp & LDMA_ASK_ADDR_MASK) | LDMA_64BIT_EN | LDMA_START;
+         |                               ^~~~~~~~~~~~~~~~~~
+   In file included from include/linux/device/driver.h:21,
+                    from include/linux/device.h:32:
+   drivers/dma/ls2x-apb-dma.c: At top level:
+>> drivers/dma/ls2x-apb-dma.c:628:25: error: 'ls2x_dma_dt_ids' undeclared here (not in a function); did you mean 'ls2x_dma_isr'?
+     628 | MODULE_DEVICE_TABLE(of, ls2x_dma_dt_ids);
+         |                         ^~~~~~~~~~~~~~~
+   include/linux/module.h:244:15: note: in definition of macro 'MODULE_DEVICE_TABLE'
+     244 | extern typeof(name) __mod_##type##__##name##_device_table               \
+         |               ^~~~
+>> include/linux/module.h:244:21: error: '__mod_of__ls2x_dma_dt_ids_device_table' aliased to undefined symbol 'ls2x_dma_dt_ids'
+     244 | extern typeof(name) __mod_##type##__##name##_device_table               \
+         |                     ^~~~~~
+   drivers/dma/ls2x-apb-dma.c:628:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
+     628 | MODULE_DEVICE_TABLE(of, ls2x_dma_dt_ids);
+         | ^~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +179 drivers/dma/ls2x-apb-dma.c
+
+   173	
+   174	static void ls2x_dma_write_cmd(struct ls2x_dma_chan *lchan, bool cmd)
+   175	{
+   176		u64 val = 0;
+   177		struct ls2x_dma_priv *priv = to_ldma_priv(lchan->vchan.chan.device);
+   178	
+ > 179		val = readq(priv->regs + LDMA_ORDER_ERG) & LDMA_ASK_ADDR_MASK;
+   180		val |= LDMA_64BIT_EN | cmd;
+ > 181		writeq(val, priv->regs + LDMA_ORDER_ERG);
+   182	}
+   183	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
