@@ -1,116 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88993ECA
-	for <loongarch@lists.linux.dev>; Fri,  2 Jun 2023 00:36:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7BAC433A8
-	for <loongarch@lists.linux.dev>; Fri,  2 Jun 2023 00:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685666196;
-	bh=8680DMzx0gtVOisbuW5F5FI58VdZiV3S7sDNyC66jIs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XTmFrz6x8P+uu4p7+8CwwHHAR8ToxETybv3aokjIkUt8au2/bliIWtKwA0GAbEtXU
-	 35MXE4ZwOYCOUbquOW3LQoZZDXhPbam+LWuZhJ0mqETvOfa2/rMGWxD+GJruYpNbS6
-	 ci30bYJW5Xs8iSRMEPad+knzjZDpipv9dxPxlL70NiYXhKXJnUs1HWnqvirj5dSWAN
-	 B2cCO/rarwHERSu66gvzGkFtyDmlSmQAJPI3dJJQqihBq56qTMR5zptT8HtrJ2b10S
-	 TMFJdORTSry9D8pvsZGiWSqPLVC1lC/A7oq6hOwBZbEcU0/jUM34HuLUgEBSnU29a0
-	 P+mvZ51/iQCoA==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-4f004cc54f4so2027024e87.3
-        for <loongarch@lists.linux.dev>; Thu, 01 Jun 2023 17:36:35 -0700 (PDT)
-X-Gm-Message-State: AC+VfDySw/xPzZR7m6CxBg6E/WcLEShmuqjN7xoeXYTOSrK9wcibCZsO
-	S0mLi/Veft8WFxEo6McrTos7meRcGsetURxiDNE=
-X-Google-Smtp-Source: ACHHUZ4rAYUoiHYEWWqFuntxOuL06QmDCDII8lO4o2SuljgVgQXswY+xn62uFOnPiNtfcw4WXcIV+P9v/6p/Zkld05w=
-X-Received: by 2002:ac2:44ca:0:b0:4f3:b18a:6497 with SMTP id
- d10-20020ac244ca000000b004f3b18a6497mr927744lfm.52.1685666193979; Thu, 01 Jun
- 2023 17:36:33 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 785EB15B2
+	for <loongarch@lists.linux.dev>; Fri,  2 Jun 2023 03:07:42 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.9.158])
+	by gateway (Coremail) with SMTP id _____8BxGvL1XHlkun4DAA--.7673S3;
+	Fri, 02 Jun 2023 11:07:34 +0800 (CST)
+Received: from kvm-1-158.loongson.cn (unknown [10.2.9.158])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxfTv0XHlk3jaFAA--.19342S2;
+	Fri, 02 Jun 2023 11:07:32 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jianmin Lv <lvjianmin@loongson.cn>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH] LoongArch: Align pci memory base address with page size
+Date: Fri,  2 Jun 2023 11:07:32 +0800
+Message-Id: <20230602030732.1047696-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230601101257.530867-1-rppt@kernel.org>
-In-Reply-To: <20230601101257.530867-1-rppt@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Thu, 1 Jun 2023 17:36:21 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5Em5Sj9uCGyfM6BheTuvA4pviavRTUK-3MbGsd9yCRbQ@mail.gmail.com>
-Message-ID: <CAPhsuW5Em5Sj9uCGyfM6BheTuvA4pviavRTUK-3MbGsd9yCRbQ@mail.gmail.com>
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxfTv0XHlk3jaFAA--.19342S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uw1UWFyrGryDtryUCFW7urg_yoW8Aw1rpF
+	yxAa9xAFs5KrnIqwsxtw1DZFnYga92ka13JrWfAr9xGanxZ34xZrn3AryUZFW8Ar4kGFW0
+	qF4Yyr4UWFyUAa7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY
+	6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
+	AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
+	vjxU7fMaUUUUU
 
-On Thu, Jun 1, 2023 at 3:13=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wrot=
-e:
->
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
->
-> Hi,
->
-> module_alloc() is used everywhere as a mean to allocate memory for code.
->
-> Beside being semantically wrong, this unnecessarily ties all subsystmes
-> that need to allocate code, such as ftrace, kprobes and BPF to modules
-> and puts the burden of code allocation to the modules code.
->
-> Several architectures override module_alloc() because of various
-> constraints where the executable memory can be located and this causes
-> additional obstacles for improvements of code allocation.
->
-> This set splits code allocation from modules by introducing
-> jit_text_alloc(), jit_data_alloc() and jit_free() APIs, replaces call
-> sites of module_alloc() and module_memfree() with the new APIs and
-> implements core text and related allocation in a central place.
->
-> Instead of architecture specific overrides for module_alloc(), the
-> architectures that require non-default behaviour for text allocation must
-> fill jit_alloc_params structure and implement jit_alloc_arch_params() tha=
-t
-> returns a pointer to that structure. If an architecture does not implemen=
-t
-> jit_alloc_arch_params(), the defaults compatible with the current
-> modules::module_alloc() are used.
->
-> The new jitalloc infrastructure allows decoupling of kprobes and ftrace
-> from modules, and most importantly it enables ROX allocations for
-> executable memory.
+LoongArch linux kernel uses 16K page size by default, some pci devices have
+only 4K memory size, it is normal in general architectures. However memory
+space of different pci devices will share one physical page address space.
+This is not safe for mmu protection, also UIO and VFIO requires base
+address of pci memory space page aligned.
 
-This set does look cleaner than my version [1]. However, this is
-partially because this set only separates text and data; while [1]
-also separates rw data, ro data, and ro_after_init data. We need
-such separation to fully cover module usage, and to remove
-VM_FLUSH_RESET_PERMS. Once we add these logic to this
-set, the two versions will look similar.
+This patch adds check with function pcibios_align_resource, and set base
+address of resource page aligned.
 
-OTOH, I do like the fact this version enables kprobes (and
-potentially ftrace and bpf) without CONFIG_MODULES. And
-mm/ seems a better home for the logic.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/pci/pci.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-That being said, besides comments in a few patches, this
-version looks good to me. With the fix I suggested for patch
-12/13, it passed my tests on x86_64 with modules, kprobes,
-ftrace, and BPF.
+diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
+index 2726639150bc..1380f3672ba2 100644
+--- a/arch/loongarch/pci/pci.c
++++ b/arch/loongarch/pci/pci.c
+@@ -83,6 +83,29 @@ int pcibios_alloc_irq(struct pci_dev *dev)
+ 	return acpi_pci_irq_enable(dev);
+ }
+ 
++/*
++ * memory space size of some pci cards is 4K, it is separated with
++ * different pages for generic architectures, so that mmu protection can
++ * work with different pci cards. However page size for LoongArch system
++ * is 16K, memory space of different pci cards may share the same page
++ * on LoongArch, it is not safe here.
++ * Also uio drivers and vfio drivers sugguests that base address of memory
++ * space should page aligned. This function aligns base address with page size
++ */
++resource_size_t pcibios_align_resource(void *data, const struct resource *res,
++		resource_size_t size, resource_size_t align)
++{
++	resource_size_t start = res->start;
++
++	if (res->flags & IORESOURCE_MEM) {
++		if (align & (PAGE_SIZE - 1)) {
++			align = PAGE_SIZE;
++			start = ALIGN(start, align);
++		}
++	}
++	return start;
++}
++
+ static void pci_fixup_vgadev(struct pci_dev *pdev)
+ {
+ 	struct pci_dev *devp = NULL;
+-- 
+2.27.0
 
-If we decided to ship this version, I would appreciate it if I
-could get more credit for my work in [1] and research work
-before that.
-
-Thanks,
-Song
-
-[1] https://lore.kernel.org/lkml/20230526051529.3387103-1-song@kernel.org/
