@@ -1,183 +1,120 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48573816
-	for <loongarch@lists.linux.dev>; Sat,  3 Jun 2023 01:51:02 +0000 (UTC)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-bad010e1e50so2995973276.1
-        for <loongarch@lists.linux.dev>; Fri, 02 Jun 2023 18:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685757061; x=1688349061;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+haGyXm6YykBz/oKJVR4lxh8FAPCM1LLYnf/lq4Msmk=;
-        b=MSSxpfa62CFzGS4/7t8aT0vkJZmT+tJBYJ2WrSXbcNviPLWhOsDwW8U9GsB/8Td/2X
-         3qJ8HIXnFiQRPsIzTsqNddnkXGTe2S4xwp27l4WuziLN6EvWLCZeuU32yyzrB9/xLbfD
-         4E7D73MLrry2XQUVpV2nckK+GPrK3pNqsBn/YGZIXOcXOogGWQh7QITHN7sBvykT26LN
-         F0nRaotcvYBvY7hmR8a5EdeTlvVUF2mPYE3oiOSKxKv0dvhNW65oEZmJRu6lzTmbxBkf
-         CuThhABcVn3a+ha6vDEHVbQE8V5rd9Kad5QymdXMklRuSD4A+/GvNQrwziEVDeg6P/HC
-         BRxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685757061; x=1688349061;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+haGyXm6YykBz/oKJVR4lxh8FAPCM1LLYnf/lq4Msmk=;
-        b=Zk9sMT1BGzJ7DhnKuli9DgCgMmkVHrpQ1B6vUtJwbyzWZJUYiABsSolwoPhCr1mz60
-         08TW59qbH6YvbA5GEV9ngv9UU6ff0Xs0sixyetjphrwU+6pKqtAozjHyKbCqctNNZEP4
-         YmM5LJ6kqqKL+Guk+p31Gfjm2b98uAuKhWH8d+9JRMlrAHKGKoQCXDQQzkPwy/UQvx0+
-         DdJWoOaXFPRRte6rMYeuC3eqTXIiDxQcLmiRkMyXXDKtuMdwagFTWRU7sOwOzQnN8sGx
-         reghtiAx03Q3k1M+p4vJS2cZl6pdU+bpCS3XKI3DlyCvrveW6rp9J1AT0onJpYXBI45f
-         /2+g==
-X-Gm-Message-State: AC+VfDyHrE1Oh4SjTsiyfSIY35+FFwd7Qai/I75E47MDFGXtIPS1y8NI
-	x8X/dVlOwqe73NLQf5NVPIarsN/ZnZWbkhXT3IU=
-X-Google-Smtp-Source: ACHHUZ4xw9XIJvykaamYDvL4pOW/ZVbr8wwnsqQIsGZqCdOahv5nd8ae9U47d9dfDfU1dhEsi4WKs3nJCIkt98QACNs=
-X-Received: by 2002:a81:4745:0:b0:54f:adff:bd7a with SMTP id
- u66-20020a814745000000b0054fadffbd7amr2005581ywa.8.1685757060985; Fri, 02 Jun
- 2023 18:51:00 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6692D816
+	for <loongarch@lists.linux.dev>; Sat,  3 Jun 2023 02:07:52 +0000 (UTC)
+Received: from loongson.cn (unknown [192.168.100.1])
+	by gateway (Coremail) with SMTP id _____8DxNvF3oHpkPtMDAA--.8237S3;
+	Sat, 03 Jun 2023 10:07:51 +0800 (CST)
+Received: from [0.0.0.0] (unknown [192.168.100.1])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxXrN2oHpkEbyGAA--.22083S3;
+	Sat, 03 Jun 2023 10:07:50 +0800 (CST)
+Subject: Re: [PATCH v3] LoongArch: Add support to clone a time namespace
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <1685519761-20425-1-git-send-email-yangtiezhu@loongson.cn>
+ <87bki0hn4y.ffs@tglx> <d9684f7b-871a-e759-d6b8-4556719702a1@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Christian Brauner <brauner@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <cc45475e-3d87-efa5-1c3a-c2c70d6aca94@loongson.cn>
+Date: Sat, 3 Jun 2023 10:07:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1685693501.git.zhoubinbin@loongson.cn> <1b0bb443bd74647c17b7902f3d719700f81a1dba.1685693501.git.zhoubinbin@loongson.cn>
- <20230602-giveaway-tipping-4c420a13f2f1@spud>
-In-Reply-To: <20230602-giveaway-tipping-4c420a13f2f1@spud>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Sat, 3 Jun 2023 09:50:49 +0800
-Message-ID: <CAMpQs4LMw8srAXq_3Q1wt3g3KWY5JY=n_=r_GJNy7ic8T9gskg@mail.gmail.com>
-Subject: Re: [PATCH V5 1/5] dt-bindings: rtc: Remove the LS2X from the trivial RTCs
-To: Conor Dooley <conor@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	linux-rtc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, 
-	Keguang Zhang <keguang.zhang@gmail.com>, zhao zhang <zhzhl555@gmail.com>, 
-	Yang Ling <gnaygnil@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d9684f7b-871a-e759-d6b8-4556719702a1@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8DxXrN2oHpkEbyGAA--.22083S3
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Kr1UCFWfAryUuFWxJF4UXFb_yoW8Cw47pF
+	97Wan8Kw4kWF15tF9rt3WDXFyrKws3ZFWUWryYv348CasY9wn5Jr48t3y8uFyrJr1kJ34I
+	v348trWa934UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I2
+	62IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4
+	CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvj
+	eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
 
-On Sat, Jun 3, 2023 at 2:05=E2=80=AFAM Conor Dooley <conor@kernel.org> wrot=
-e:
+Hi, Tiezhu
+
+On 05/31/2023 06:04 PM, Tiezhu Yang wrote:
 >
-> On Fri, Jun 02, 2023 at 05:50:20PM +0800, Binbin Zhou wrote:
-> > Move Loongson RTC bindings from trivial-rtc.yaml into loongson,rtc.yaml=
-.
 >
-> $subject: dt-bindings: rtc: Remove the LS2X from the trivial RTCs
+> On 05/31/2023 05:21 PM, Thomas Gleixner wrote:
+>> On Wed, May 31 2023 at 15:56, Tiezhu Yang wrote:
+>>> When execute the following command to test clone3 on LoongArch:
+>>>
+>>>   # cd tools/testing/selftests/clone3 && make && ./clone3
+>>>
+>>> we can see the following error info:
+>>>
+>>>   # [5719] Trying clone3() with flags 0x80 (size 0)
+>>>   # Invalid argument - Failed to create new process
+>>>   # [5719] clone3() with flags says: -22 expected 0
+>>>   not ok 18 [5719] Result (-22) is different than expected (0)
+>>>
+>>> This is because if CONFIG_TIME_NS is not set, but the flag
+>>> CLONE_NEWTIME (0x80) is used to clone a time namespace, it
+>>> will return -EINVAL in copy_time_ns().
+>>
+>> Which means that test case is broken.
+>>
+>>> With this patch, the following failed test can be fixed too:
+>>
+>> You cannot fix a broken test case by enabling functionality which
+>> is not guaranteed to be available on all platforms.
+>>
+>> Adding time name spaces on loongarch is a completely separate issue and
+>> has absolutely nothing to do with broken test cases.
+>>
+>> They are still broken when CONFIG_TIME_NS is disabled in Kconfig, no?
+>>
+>> So this wants to be two separate things:
+>>
+>>    1) Fix the broken test cases so they handle CONFIG_TIME_NS=n
+>>       situations correctly
+>>
+>>    2) Add support for TIME_NS to loongarch
+>>
+
+With this patch, we should also modify the stack_top() implementation,
+because the vvar size is not PAGE_SIZE at this time.
+
+'maps' before the patch,
+  # sudo cat /proc/1/maps
+  ...
+  7ffffbec8000-7ffffbeec000 rw-p 00000000 00:00 0 
+   [stack]
+  7ffffc7d8000-7ffffc7dc000 r--p 00000000 00:00 0 
+   [vvar]
+  7ffffc7dc000-7ffffc7e0000 r-xp 00000000 00:00 0 
+   [vdso]
+
+STACK_TOP = TASK_SIZE - PAGE_ALIGN(current->thread.vdso->size) - VVAR_SIZE
+
+Thanks,
+Youling.
+
 >
-> If you end up resubmitting, could you use a subject like that better
-> describes the changes?
-> Say "dt-bindings: rtc: Split loongson,ls2x-rtc into SoC-based compatibles=
-"?
-
-OK, I got it.
-
-Thanks.
-Binbin
-
-> Otherwise,
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>
+> Thanks for your reply and detailed suggestions,
+> I will do it in the next version.
 >
 > Thanks,
-> Conor.
-> >
-> > The architectures associated with this driver use the built-in DTB, so
-> > we can just drop the compatible(rtc-ls2x) with wildcards.
-> > Also, soc-based compatible is more accurate for hardware differences
-> > between chips.
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  .../devicetree/bindings/rtc/loongson,rtc.yaml | 57 +++++++++++++++++++
-> >  .../devicetree/bindings/rtc/trivial-rtc.yaml  |  2 -
-> >  2 files changed, 57 insertions(+), 2 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/loongson,rtc.=
-yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/rtc/loongson,rtc.yaml b/=
-Documentation/devicetree/bindings/rtc/loongson,rtc.yaml
-> > new file mode 100644
-> > index 000000000000..f89c1f660aee
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/loongson,rtc.yaml
-> > @@ -0,0 +1,57 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/rtc/loongson,rtc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Loongson Real-Time Clock
-> > +
-> > +description:
-> > +  The Loongson family chips use an on-chip counter 0 (Time Of Year
-> > +  counter) as the RTC.
-> > +
-> > +maintainers:
-> > +  - Binbin Zhou <zhoubinbin@loongson.cn>
-> > +
-> > +allOf:
-> > +  - $ref: rtc.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - enum:
-> > +          - loongson,ls1b-rtc
-> > +          - loongson,ls1c-rtc
-> > +          - loongson,ls7a-rtc
-> > +          - loongson,ls2k1000-rtc
-> > +      - items:
-> > +          - enum:
-> > +              - loongson,ls2k2000-rtc
-> > +              - loongson,ls2k0500-rtc
-> > +          - const: loongson,ls7a-rtc
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    rtc@1fe27800 {
-> > +        compatible =3D "loongson,ls2k1000-rtc";
-> > +        reg =3D <0x1fe27800 0x100>;
-> > +
-> > +        interrupt-parent =3D <&liointc1>;
-> > +        interrupts =3D <8 IRQ_TYPE_LEVEL_HIGH>;
-> > +    };
-> > +
-> > +...
-> > diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml b/D=
-ocumentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> > index a3603e638c37..9af77f21bb7f 100644
-> > --- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> > +++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> > @@ -47,8 +47,6 @@ properties:
-> >        - isil,isl1218
-> >        # Intersil ISL12022 Real-time Clock
-> >        - isil,isl12022
-> > -      # Loongson-2K Socs/LS7A bridge Real-time Clock
-> > -      - loongson,ls2x-rtc
-> >        # Real Time Clock Module with I2C-Bus
-> >        - microcrystal,rv3029
-> >        # Real Time Clock
-> > --
-> > 2.39.1
-> >
+> Tiezhu
+>
+
