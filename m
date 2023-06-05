@@ -1,92 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FAA10FB
-	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 14:51:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3672DC4339B;
-	Mon,  5 Jun 2023 14:51:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694381F169
+	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 15:07:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 708D1C433EF;
+	Mon,  5 Jun 2023 15:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685976705;
-	bh=tVVido3T4gfgRQ2GgQgMcTHENzpErpk9i+d9AUbaNCA=;
+	s=k20201202; t=1685977619;
+	bh=eidswOiIHb6J7g9gZ8YGCj4/t5ooFfmlHRG0/DCt9gw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uWKJ6gPeqOP6il8lQWEbrboryM9xwV2fxcEB++ou1yyIfWHenYszJ2u26Hf3XVWBI
-	 fY8A46jIVuWGZSKd/zSO+yTFNjq1kcn9Bu9TdKpgm0qXmLJv7B7ZFrjeZ55fXJAwWE
-	 siQonTg9nP0EDD4wGUwUsJKdra59ZUY6oP9p3KeGo+ztJ/BlBbDGhe7V2/qew6kP+H
-	 HkGsO2oC9ayDnN+9GrpgREKYX2b4OP++ScgOXa9iwb/1Wq3/ppGifcc6PxXGN+DASv
-	 X7CAi9twr9V/eVgb/76ghkfIfM10kQu7+9vzxhhj8bU10Bf+q4qoy1ECTwV+bTTDac
-	 YhMJha3x97jEA==
-Date: Mon, 5 Jun 2023 15:51:39 +0100
-From: Will Deacon <will@kernel.org>
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>, helgaas@kernel.org,
-	linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v2] PCI: Align pci memory space base address with page
- size
-Message-ID: <20230605145138.GH21212@willie-the-truck>
-References: <20230605034423.1528206-1-maobibo@loongson.cn>
+	b=L1WqGVNKM0LMprpTuSPW88ttxsQya+6RCSHywsjoqhCt9c0U8etTahbFiEC6fRl/z
+	 vf5ygXd303eAmHGnO3775BYbGeLj3HGVeqeS7Bm7PLl6IMJiSYFZOB+8yeuL4XGnw+
+	 GB/8G7iZrh5AzEBiWSiciPIu26R5t/QEfayVRJIM08LIGs3RPUJz9P6dYvUveXvjEJ
+	 TrMyhTMzCuraxUl851ANQEAyd9bosIc9csPwZCyRMtWtpCdnQ1fI2hDRQLIWIbXwsj
+	 rITVGnMABV6X4/drtvOMpvlV3beCXUl6EsatriH3gRVV+EKYJo48qvYje43d5CSfr0
+	 LDeHdJQHqLJgQ==
+Date: Mon, 5 Jun 2023 16:06:54 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: YingKun Meng <mengyingkun@loongson.cn>, lgirdwood@gmail.com,
+	alsa-devel@alsa-project.org, loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH 3/3] ASoC: dt-bindings: Add support for Loongson audio
+ card
+Message-ID: <9fb3da48-a20b-4e2f-b84a-733f96126ebe@sirena.org.uk>
+References: <20230605120934.2306548-1-mengyingkun@loongson.cn>
+ <20230605120934.2306548-3-mengyingkun@loongson.cn>
+ <118d13ef-a247-cf88-5084-afdebc6b7651@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="v/cqJIry2Sg0YIf1"
+Content-Disposition: inline
+In-Reply-To: <118d13ef-a247-cf88-5084-afdebc6b7651@kernel.org>
+X-Cookie: Biggest security gap -- an open mouth.
+
+
+--v/cqJIry2Sg0YIf1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230605034423.1528206-1-maobibo@loongson.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Jun 05, 2023 at 11:44:23AM +0800, Bibo Mao wrote:
-> Some PCI devices has only 4K memory space size, it is normal in general
-> machines and aligned with page size. However some architectures which
-> support different page size, default page size on LoongArch is 16K, and
-> ARM64 supports page size varying from 4K to 64K. On machines where larger
-> page size is use, memory space region of two different pci devices may be
-> in one page. It is not safe with mmu protection, also VFIO pci device
-> driver requires base address of pci memory space page aligned, so that it
-> can be memory mapped to qemu user space when it is pass-through to vm.
-> 
-> It consumes more pci memory resource with page size alignment requirement,
-> on 64 bit system it should not be a problem. And UEFI bios set pci memory
-> base address with 4K fixed-size aligned, the safer solution is to align
-> with larger size on UEFI BIOS stage on these architectures, linux kernel
-> can reuse resource from UEFI bios. For new devices such hotplug pci
-> devices and sriov devices, pci resource is assigned in Linux kernel side.
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/arm64/kernel/pci.c  | 13 +++++++++++++
->  arch/loongarch/pci/pci.c | 18 ++++++++++++++++++
->  2 files changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index 2276689b5411..e2f7b176b156 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -232,4 +232,17 @@ void pcibios_remove_bus(struct pci_bus *bus)
->  	acpi_pci_remove_bus(bus);
->  }
->  
-> +resource_size_t pcibios_align_resource(void *data, const struct resource *res,
-> +				resource_size_t size, resource_size_t align)
-> +{
-> +	resource_size_t start = res->start;
-> +
-> +	/*
-> +	 * align base address of pci memory resource with page size
-> +	 */
-> +	if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
-> +		start = ALIGN(start, PAGE_SIZE);
-> +
-> +	return start;
-> +}
->  #endif
+On Mon, Jun 05, 2023 at 04:45:38PM +0200, Krzysztof Kozlowski wrote:
+> On 05/06/2023 14:09, YingKun Meng wrote:
 
-If this is needed by all architectures with !4k page size, why don't we
-instead handle the alignment in the core code, given that it is aware
-of the page size?
+> > +title: Loongson generic ASoC audio sound card.
 
-Will
+> What is a "generic audio card"? Does it even match hardware? Bindings
+> are supposed to describe hardware, which is usually very specific.
+
+The concept of a generic, reusable sound card seems reasonably clear -
+there's a bunch of in tree examples already and the idea that we have to
+pull together multiple bits of hardware to make a useful sound subsystem
+is a known thing.
+
+> Also: Drop full stop. It's a title.
+
+Shouldn't this be checked by the tooling?
+
+--v/cqJIry2Sg0YIf1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmR9+g4ACgkQJNaLcl1U
+h9BgRgf/UjZGQKyfV2oVwePqSNHH0HwTGYid7NA5rMUyPXEpnfbliL3giOXSCz2x
+KzLiuvPawEC9UtkLOs1BRIjKqU8nI9E0I7WgIkr69HhWP9aWxh7ssxmZSUOL4lG7
+TqJpq1YNSWQenNPZxu+p/vrJFO/WQMfNk/mhrnYZXDQdMhQV63jvZ7+e3i+lm6/q
+KkpoiPKLX/7yu2KQjtGrhqSftdg7H50YGvxx5eC+PqhI/YJK+F29CiiG6X4DJtz1
+z6Dzw36EbwyX6BvP8rtcHoW9FhBw/AXXuus91jJqnGxzYRZ1+omUX6jrTytGgAwR
+mT9RQweeNJKwgOJIlgdF8OL/e1JD1w==
+=Omhv
+-----END PGP SIGNATURE-----
+
+--v/cqJIry2Sg0YIf1--
