@@ -1,101 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3746FC3
-	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 13:17:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D773C433EF;
-	Mon,  5 Jun 2023 13:17:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9573179D9
+	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 14:44:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCDDCC433D2;
+	Mon,  5 Jun 2023 14:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685971067;
-	bh=SGsAGVrSqKqwUbt7JXQCFYcn8EXvmNfwpHAaExlrrFE=;
+	s=k20201202; t=1685976254;
+	bh=R6GScf/2m/FE3MMjEUfQt6ds1jbix6HnFEj8CKPfcI8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C58oqxJolO0WvmjWrd4Xn0Kcf2c4dkOI3G9BagcES3ULZk9Zqcfaa97VdQz9Edrbl
-	 amYy+HTtXZ1eh49cFk2W5N1AP9ZPhpgCYOVqTdrM0D8YaVFlKY1Nk6UEMeprRr+TK7
-	 z+SqTuHYwdgZHsj7Ul8XUYQHR1xQ0omtk79pQZogNW36CYUDZIneK5WniAZz2jVGFl
-	 zbznDXdO7rTjqC1tG0FImrSANZhaaAl1CpmVGizMLo41k2bnnQ9JXOorbKrcRyuq2I
-	 mlPcGUlpiQeeTIhUMSYyIP/+AZoLHfxS/Yf40WHH1NuGGX+etwdGyuBIUfPaGw1okJ
-	 c1cwc/P2vjYwg==
-Date: Mon, 5 Jun 2023 14:17:43 +0100
-From: Mark Brown <broonie@kernel.org>
-To: YingKun Meng <mengyingkun@loongson.cn>
-Cc: lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH 1/3] ASoC: Add support for Loongson I2S controller
-Message-ID: <f88a4985-0dc1-4599-8656-2029c0825495@sirena.org.uk>
-References: <20230605120934.2306548-1-mengyingkun@loongson.cn>
+	b=i/Isot8NJ9Dh8zyeRrG1spNbywS4TZpCCEA8icuEqSxJglUMyqu+minuFosPpGoH0
+	 Qh+oBq9+pqvynpxX111TyfOID3K7GueWiGMXVH8AOO+CPGRwxDorZYQnnAgFP0uS2g
+	 Hset6NuJ5jCBrBEXMyRupOvms2E0o/dVSr3BQbkm3MaxIt1fdONyz9WKlITc1vGb0Q
+	 DHShieACNz1sjpp7KEjKmpysG2Gu5ewTGDVejZCuWlAKx8XAGJLBXfAMoi65zmIvdM
+	 ca803T3EL3QEDeFbLqq/SIS1p/3sKYKkridQYH9yMLzPRXqEU1gqmXyKuB2x04RbUs
+	 ng71KhrNREl1Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 3FB3040692; Mon,  5 Jun 2023 11:44:11 -0300 (-03)
+Date: Mon, 5 Jun 2023 11:44:11 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH RESEND v3 0/5] perf tools: Modify mksyscalltbl
+Message-ID: <ZH30uwj7S72vxoX1@kernel.org>
+References: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAP-5=fXvN1b+_krmFSL2=C31WZ3zKafnq=Bqw3ruBKFNzG_8Kw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BoAetZG8U0jkcF7v"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230605120934.2306548-1-mengyingkun@loongson.cn>
-X-Cookie: Biggest security gap -- an open mouth.
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXvN1b+_krmFSL2=C31WZ3zKafnq=Bqw3ruBKFNzG_8Kw@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
+Em Tue, May 30, 2023 at 12:03:30PM -0700, Ian Rogers escreveu:
+> On Tue, May 30, 2023 at 3:10 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> >
+> > I'm sorry, somehow the patchset didn't reach mailing lists.
+> > Resending with a fewer people in the cc list, which probably
+> > was the reason.
+> >
+> > Thanks Alexander, Leo and Ian for your reviews and suggestions.
+> 
+> Thanks for the consts!
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
 
---BoAetZG8U0jkcF7v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, applied.
 
-On Mon, Jun 05, 2023 at 08:09:32PM +0800, YingKun Meng wrote:
+- Arnaldo
 
-> +			regmap_read_poll_timeout_atomic(i2s->regmap,
-> +						LS_I2S_CTRL, val,
-> +						!(val & I2S_CTRL_MCLK_READY),
-> +						10, 2000);
+ 
+> > v3:
+> >   -- Add a new patch to declare syscalltbl_*[] as const for all archs,
+> >      suggested by Ian.
+> >   -- Add a new patch to use max_nr to define SYSCALLTBL_ARM64_MAX_ID.
+> >
+> > v2:
+> >   -- Add a new patch to rename create_table_from_c()
+> >      to create_sc_table(), suggested by Leo.
+> >   -- Simplify the shell script, suggested by Alexander.
+> >
+> > Tiezhu Yang (5):
+> >   perf tools: Declare syscalltbl_*[] as const for all archs
+> >   perf arm64: Rename create_table_from_c() to create_sc_table()
+> >   perf arm64: Handle __NR3264_ prefixed syscall number
+> >   perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
+> >   perf LoongArch: Simplify mksyscalltbl
+> >
+> >  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  | 17 ++++-----
+> >  .../arch/loongarch/entry/syscalls/mksyscalltbl     | 40 +++++++---------------
+> >  tools/perf/arch/mips/entry/syscalls/mksyscalltbl   |  2 +-
+> >  .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  2 +-
+> >  tools/perf/arch/s390/entry/syscalls/mksyscalltbl   |  2 +-
+> >  tools/perf/arch/x86/entry/syscalls/syscalltbl.sh   |  2 +-
+> >  tools/perf/util/syscalltbl.c                       | 14 ++++----
+> >  7 files changed, 32 insertions(+), 47 deletions(-)
+> >
+> > --
+> > 2.1.0
+> >
 
-The driver is waiting for status bits to change in the regmap but...
+-- 
 
-> +		pr_err("buf len not multiply of period len\n");
-
-Use dev_ functions to log things please.
-
-> +static const struct regmap_config loongson_i2s_regmap_config =3D {
-> +	.reg_bits =3D 32,
-> +	.reg_stride =3D 4,
-> +	.val_bits =3D 32,
-> +	.max_register =3D 0x110,
-> +	.cache_type =3D REGCACHE_FLAT,
-> +};
-
-=2E..there are no volatile registers in the regmap so we will never read
-=66rom the hardware.  I don't understand how this can work?
-
-> +	i2s->reg_base =3D pci_iomap(pdev, BAR_NUM, 0);
-> +	if (!i2s->reg_base) {
-> +		dev_err(&pdev->dev, "pci_iomap_error\n");
-> +		ret =3D -EIO;
-> +		goto err_release;
-> +	}
-
-pcim_iomap()?
-
-> +	dev_set_name(&pdev->dev, "%s", loongson_i2s_dai.name);
-
-Don't log static information like this, it just adds noise and makes the
-boot slower.
-
-> +	pci_disable_device(pdev);
-
-pcim_enable_device() too.
-
---BoAetZG8U0jkcF7v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmR94HYACgkQJNaLcl1U
-h9BFUgf5AXvsVIgWvo+jhUt1AcZpA6XupVdE4xlXM5TdaMAaZmx2ngdVrqlnqHo0
-2r95znx9+wfqcikJcBwCYUz3GHg4Pp1djO4lxfUshg7ixYXL8jUH4zeUiDeOrHB1
-NwNV+HRQJagRLUkSWr0LGiglrRqW4+zRtxbF5xH2xNkMY3dp0LDFZ0JXy+/5rKol
-PK1MfPS6sLAnvXQkX2QMFHj4OEHX6JWKMAT5Ay0iUZIAph8d6FhhwYzGDe4vMHFm
-aLF4PZcuMtiaDakkwFqMGn3ttIf2X7sQNaB9T5FG0juxqc5rT/bW21LCjN5z6TSB
-dtSQKEGv5YU7Pk7u9kcabpa73VblVg==
-=4kkP
------END PGP SIGNATURE-----
-
---BoAetZG8U0jkcF7v--
+- Arnaldo
