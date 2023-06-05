@@ -1,264 +1,168 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE9DDDC0;
-	Mon,  5 Jun 2023 19:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685994627; x=1717530627;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=q94VM5L4sKKZjMgSvGwItqptIOrEoLGcNgaTpRVjwN4=;
-  b=ZAxrMpT/BX59gOrxkqSM/rniWkfzCwCc3Ui9jK8BXvEAvBgivH9NciEC
-   686gEiD6IJVs7sxdVPxZX0w8eVX0Dg8B9Efy8kUHXfFw3JVcQZBFS6lwd
-   nxg5MQ72/Pp++/RJHI7L0llXXubC7FVZLlwB+E9Awhy4AtRxQFxqA2JoO
-   9/pdOcTOHNdTDC6o419ZVLqENP+xoo5SHb2bg5umkOce542QZRr4XfL1a
-   nN+7LbkrX3dRsE8RpC5zftnS3gSb7x8jBATG4UowAshECXoteqCWJYFKd
-   Sd6A9KZGi0DZWBjUdHV9pOf1vFEw5FpORJldjeYKpYnMYYVYesemKIuMV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="336087869"
-X-IronPort-AV: E=Sophos;i="6.00,218,1681196400"; 
-   d="scan'208";a="336087869"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 12:50:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="741848462"
-X-IronPort-AV: E=Sophos;i="6.00,218,1681196400"; 
-   d="scan'208";a="741848462"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 05 Jun 2023 12:50:22 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1q6GDd-0004Ox-1S;
-	Mon, 05 Jun 2023 19:50:21 +0000
-Date: Tue, 6 Jun 2023 03:50:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: YingKun Meng <mengyingkun@loongson.cn>, lgirdwood@gmail.com,
-	broonie@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, alsa-devel@alsa-project.org,
-	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn,
-	Yingkun Meng <mengyingkun@loongson.cn>
-Subject: Re: [PATCH 1/3] ASoC: Add support for Loongson I2S controller
-Message-ID: <202306060320.Sphw0ihy-lkp@intel.com>
-References: <20230605120934.2306548-1-mengyingkun@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A7EBE59;
+	Mon,  5 Jun 2023 20:43:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0414C433D2;
+	Mon,  5 Jun 2023 20:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685997807;
+	bh=We5qywEUXFBvYr91+f59TuYCdj8cINMwKn3eQvO6qKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I7xvXQXLM0Tk+V+96RzBdr/UoRB92a3ftHnZrilLQZvr5w3AlNjzmN9wbeCqkkbCl
+	 DDUm1W1zxfiZwe+gjXC6K0QMqz8d9USg05gKXvmHLfrAf+FqT+OTOcMK6aGFqzG1zb
+	 E86H0paXXm7ihSYO0CbgPPXfw8rIsLX4qwzhB6/StpLTRz6eVNJy8R0u2bcXb5AObl
+	 Ay16QdoRp1sSVGG9bP4FMnVsq9x+ifwOZH0isH9pe4CqYdVcIo5Tq1wLxq/sUlyaRg
+	 pXJxzrOzrppU5klX4Kcg/mPHvek90M1w/P5hCMfIv1PTbM22Z3AvfuML6Ql3ohsT7Q
+	 qhU+5loHIlZWg==
+Date: Mon, 5 Jun 2023 23:42:56 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"mcgrof@kernel.org" <mcgrof@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"nadav.amit@gmail.com" <nadav.amit@gmail.com>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"hca@linux.ibm.com" <hca@linux.ibm.com>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>,
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"will@kernel.org" <will@kernel.org>,
+	"dinguyen@kernel.org" <dinguyen@kernel.org>,
+	"naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"song@kernel.org" <song@kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH 12/13] x86/jitalloc: prepare to allocate exectuatble
+ memory as ROX
+Message-ID: <20230605204256.GA52412@kernel.org>
+References: <20230601101257.530867-13-rppt@kernel.org>
+ <0f50ac52a5280d924beeb131e6e4717b6ad9fdf7.camel@intel.com>
+ <ZHjcr26YskTm+0EF@moria.home.lan>
+ <a51c041b61e2916d2b91c990349aabc6cb9836aa.camel@intel.com>
+ <ZHjljJfQjhVV/jNS@moria.home.lan>
+ <68b8160454518387c53508717ba5ed5545ff0283.camel@intel.com>
+ <50D768D7-15BF-43B8-A5FD-220B25595336@gmail.com>
+ <20230604225244.65be9103@rorschach.local.home>
+ <20230605081143.GA3460@kernel.org>
+ <88a62f834688ed77d08c778e1e427014cf7d3c1b.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230605120934.2306548-1-mengyingkun@loongson.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88a62f834688ed77d08c778e1e427014cf7d3c1b.camel@intel.com>
 
-Hi YingKun,
+On Mon, Jun 05, 2023 at 04:10:21PM +0000, Edgecombe, Rick P wrote:
+> On Mon, 2023-06-05 at 11:11 +0300, Mike Rapoport wrote:
+> > On Sun, Jun 04, 2023 at 10:52:44PM -0400, Steven Rostedt wrote:
+> > > On Thu, 1 Jun 2023 16:54:36 -0700
+> > > Nadav Amit <nadav.amit@gmail.com> wrote:
+> > > 
+> > > > > The way text_poke() is used here, it is creating a new writable
+> > > > > alias
+> > > > > and flushing it for *each* write to the module (like for each
+> > > > > write of
+> > > > > an individual relocation, etc). I was just thinking it might
+> > > > > warrant
+> > > > > some batching or something.  
+> > 
+> > > > I am not advocating to do so, but if you want to have many
+> > > > efficient
+> > > > writes, perhaps you can just disable CR0.WP. Just saying that if
+> > > > you
+> > > > are about to write all over the memory, text_poke() does not
+> > > > provide
+> > > > too much security for the poking thread.
+> > 
+> > Heh, this is definitely and easier hack to implement :)
+> 
+> I don't know the details, but previously there was some strong dislike
+> of CR0.WP toggling. And now there is also the problem of CET. Setting
+> CR0.WP=0 will #GP if CR4.CET is 1 (as it currently is for kernel IBT).
+> I guess you might get away with toggling them both in some controlled
+> situation, but it might be a lot easier to hack up then to be made
+> fully acceptable. It does sound much more efficient though.
+ 
+I don't think we'd really want that, especially looking at 
 
-kernel test robot noticed the following build errors:
+		WARN_ONCE(bits_missing, "CR0 WP bit went missing!?\n");
 
-[auto build test ERROR on 1fbcc5ab1c7a172ef1159b154c296fe1e9ce209b]
+at native_write_cr0().
+ 
+> > > Batching does exist, which is what the text_poke_queue() thing
+> > > does.
+> > 
+> > For module loading text_poke_queue() will still be much slower than a
+> > bunch
+> > of memset()s for no good reason because we don't need all the
+> > complexity of
+> > text_poke_bp_batch() for module initialization because we are sure we
+> > are
+> > not patching live code.
+> > 
+> > What we'd need here is a new batching mode that will create a
+> > writable
+> > alias mapping at the beginning of apply_relocate_*() and
+> > module_finalize(),
+> > then it will use memcpy() to that writable alias and will tear the
+> > mapping
+> > down in the end.
+> 
+> It's probably only a tiny bit faster than keeping a separate writable
+> allocation and text_poking it in at the end.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/YingKun-Meng/ASoC-loongson-Add-Loongson-Generic-ASoC-Sound-Card-Support/20230605-215940
-base:   1fbcc5ab1c7a172ef1159b154c296fe1e9ce209b
-patch link:    https://lore.kernel.org/r/20230605120934.2306548-1-mengyingkun%40loongson.cn
-patch subject: [PATCH 1/3] ASoC: Add support for Loongson I2S controller
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20230606/202306060320.Sphw0ihy-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 12.3.0
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/cb79a1df70a849f772428740eb3c155da83de25b
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review YingKun-Meng/ASoC-loongson-Add-Loongson-Generic-ASoC-Sound-Card-Support/20230605-215940
-        git checkout cb79a1df70a849f772428740eb3c155da83de25b
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=sh olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=sh SHELL=/bin/bash sound/soc/loongson/
+Right, but it still will be faster than text_poking every relocation.
+ 
+> > Another option is to teach alternatives to update a writable copy
+> > rather
+> > than do in place changes like Song suggested. My feeling is that it
+> > will be
+> > more intrusive change though.
+> 
+> You mean keeping a separate RW allocation and then text_poking() the
+> whole thing in when you are done? That is what I was trying to say at
+> the beginning of this thread. The other benefit is you don't make the
+> intermediate loading states of the module, executable.
+> 
+> I tried this technique previously [0], and I thought it was not too
+> bad. In most of the callers it looks similar to what you have in
+> do_text_poke(). Sometimes less, sometimes more. It might need
+> enlightening of some of the stuff currently using text_poke() during
+> module loading, like jump labels. So that bit is more intrusive, yea.
+> But it sounds so much cleaner and well controlled. Did you have a
+> particular trouble spot in mind?
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306060320.Sphw0ihy-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   sound/soc/loongson/loongson_i2s_pci.c: In function 'loongson_pcm_hw_params':
-   sound/soc/loongson/loongson_i2s_pci.c:171:45: warning: right shift count >= width of type [-Wshift-count-overflow]
-     171 |                 desc->order_hi = order_addr >> 32;
-         |                                             ^~
-   sound/soc/loongson/loongson_i2s_pci.c:174:43: warning: right shift count >= width of type [-Wshift-count-overflow]
-     174 |                 desc->saddr_hi = mem_addr >> 32;
-         |                                           ^~
-   sound/soc/loongson/loongson_i2s_pci.c:190:57: warning: right shift count >= width of type [-Wshift-count-overflow]
-     190 |                 desc->order_hi = prtd->dma_desc_arr_phy >> 32;
-         |                                                         ^~
-   sound/soc/loongson/loongson_i2s_pci.c: In function 'loongson_i2s_pci_probe':
->> sound/soc/loongson/loongson_i2s_pci.c:364:15: error: implicit declaration of function 'pci_request_region'; did you mean 'pci_request_regions'? [-Werror=implicit-function-declaration]
-     364 |         ret = pci_request_region(pdev, BAR_NUM, LS_I2S_DRVNAME);
-         |               ^~~~~~~~~~~~~~~~~~
-         |               pci_request_regions
->> sound/soc/loongson/loongson_i2s_pci.c:379:25: error: implicit declaration of function 'pci_iomap'; did you mean 'pcim_iomap'? [-Werror=implicit-function-declaration]
-     379 |         i2s->reg_base = pci_iomap(pdev, BAR_NUM, 0);
-         |                         ^~~~~~~~~
-         |                         pcim_iomap
->> sound/soc/loongson/loongson_i2s_pci.c:379:23: warning: assignment to 'void *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     379 |         i2s->reg_base = pci_iomap(pdev, BAR_NUM, 0);
-         |                       ^
-   sound/soc/loongson/loongson_i2s_pci.c:397:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     397 |         tx_data->dev_addr = (u64)i2s->reg_base + LS_I2S_TX_DATA;
-         |                             ^
-   sound/soc/loongson/loongson_i2s_pci.c:400:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     400 |         rx_data->dev_addr = (u64)i2s->reg_base + LS_I2S_RX_DATA;
-         |                             ^
->> sound/soc/loongson/loongson_i2s_pci.c:441:9: error: implicit declaration of function 'pci_iounmap'; did you mean 'pcim_iounmap'? [-Werror=implicit-function-declaration]
-     441 |         pci_iounmap(pdev, i2s->reg_base);
-         |         ^~~~~~~~~~~
-         |         pcim_iounmap
->> sound/soc/loongson/loongson_i2s_pci.c:443:9: error: implicit declaration of function 'pci_release_region'; did you mean 'pci_release_regions'? [-Werror=implicit-function-declaration]
-     443 |         pci_release_region(pdev, BAR_NUM);
-         |         ^~~~~~~~~~~~~~~~~~
-         |         pci_release_regions
-   sound/soc/loongson/loongson_i2s_pci.c: At top level:
->> sound/soc/loongson/loongson_i2s_pci.c:474:1: warning: data definition has no type or storage class
-     474 | module_pci_driver(loongson_i2s_driver);
-         | ^~~~~~~~~~~~~~~~~
->> sound/soc/loongson/loongson_i2s_pci.c:474:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
->> sound/soc/loongson/loongson_i2s_pci.c:474:1: warning: parameter names (without types) in function declaration
-   sound/soc/loongson/loongson_i2s_pci.c:464:26: warning: 'loongson_i2s_driver' defined but not used [-Wunused-variable]
-     464 | static struct pci_driver loongson_i2s_driver = {
-         |                          ^~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +364 sound/soc/loongson/loongson_i2s_pci.c
-
-   350	
-   351	static int loongson_i2s_pci_probe(struct pci_dev *pdev,
-   352					  const struct pci_device_id *pid)
-   353	{
-   354		const struct fwnode_handle *fwnode = pdev->dev.fwnode;
-   355		struct loongson_dma_data *tx_data, *rx_data;
-   356		struct loongson_i2s *i2s;
-   357		int ret;
-   358	
-   359		if (pci_enable_device(pdev)) {
-   360			dev_err(&pdev->dev, "pci_enable_device failed\n");
-   361			return -ENODEV;
-   362		}
-   363	
- > 364		ret = pci_request_region(pdev, BAR_NUM, LS_I2S_DRVNAME);
-   365		if (ret) {
-   366			dev_err(&pdev->dev, "request regions failed %d\n", ret);
-   367			goto err_disable;
-   368		}
-   369	
-   370		i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
-   371		if (!i2s) {
-   372			ret = -ENOMEM;
-   373			goto err_release;
-   374		}
-   375		i2s->rev_id = pdev->revision;
-   376		i2s->dev = &pdev->dev;
-   377		pci_set_drvdata(pdev, i2s);
-   378	
- > 379		i2s->reg_base = pci_iomap(pdev, BAR_NUM, 0);
-   380		if (!i2s->reg_base) {
-   381			dev_err(&pdev->dev, "pci_iomap_error\n");
-   382			ret = -EIO;
-   383			goto err_release;
-   384		}
-   385	
-   386		i2s->regmap = devm_regmap_init_mmio(&pdev->dev, i2s->reg_base,
-   387						    &loongson_i2s_regmap_config);
-   388		if (IS_ERR(i2s->regmap)) {
-   389			dev_err(&pdev->dev, "Failed to initialize register map");
-   390			ret = PTR_ERR(i2s->regmap);
-   391			goto err_unmap;
-   392		}
-   393	
-   394		tx_data = &i2s->tx_dma_data;
-   395		rx_data = &i2s->rx_dma_data;
-   396	
-   397		tx_data->dev_addr = (u64)i2s->reg_base + LS_I2S_TX_DATA;
-   398		tx_data->order_addr = i2s->reg_base + LS_I2S_TX_ORDER;
-   399	
-   400		rx_data->dev_addr = (u64)i2s->reg_base + LS_I2S_RX_DATA;
-   401		rx_data->order_addr = i2s->reg_base + LS_I2S_RX_ORDER;
-   402	
-   403		tx_data->irq = fwnode_irq_get_byname(fwnode, "tx");
-   404		if (tx_data->irq < 0) {
-   405			dev_err(&pdev->dev, "dma tx irq invalid\n");
-   406			ret = tx_data->irq;
-   407			goto err_unmap;
-   408		}
-   409	
-   410		rx_data->irq = fwnode_irq_get_byname(fwnode, "rx");
-   411		if (rx_data->irq < 0) {
-   412			dev_err(&pdev->dev, "dma rx irq invalid\n");
-   413			ret = rx_data->irq;
-   414			goto err_unmap;
-   415		}
-   416	
-   417		device_property_read_u32(&pdev->dev, "clock-frequency", &i2s->clk_rate);
-   418		if (!i2s->clk_rate) {
-   419			dev_err(&pdev->dev, "clock-frequency property invalid\n");
-   420			ret = -EINVAL;
-   421			goto err_unmap;
-   422		}
-   423	
-   424		dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-   425	
-   426		dev_set_name(&pdev->dev, "%s", loongson_i2s_dai.name);
-   427	
-   428		loongson_i2s_init(i2s);
-   429	
-   430		ret = devm_snd_soc_register_component(&pdev->dev,
-   431						      &loongson_i2s_component,
-   432						      &loongson_i2s_dai, 1);
-   433		if (ret) {
-   434			dev_err(&pdev->dev, "register DAI failed %d\n", ret);
-   435			goto err_unmap;
-   436		}
-   437	
-   438		return 0;
-   439	
-   440	err_unmap:
- > 441		pci_iounmap(pdev, i2s->reg_base);
-   442	err_release:
- > 443		pci_release_region(pdev, BAR_NUM);
-   444	err_disable:
-   445		pci_disable_device(pdev);
-   446		return ret;
-   447	}
-   448	
-   449	static void loongson_i2s_pci_remove(struct pci_dev *pdev)
-   450	{
-   451		struct loongson_i2s *i2s = dev_get_drvdata(&pdev->dev);
-   452	
-   453		pci_iounmap(pdev, i2s->reg_base);
-   454		pci_release_region(pdev, BAR_NUM);
-   455		pci_disable_device(pdev);
-   456	}
-   457	
-   458	static const struct pci_device_id loongson_i2s_ids[] = {
-   459		{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x7a27) },
-   460		{ },
-   461	};
-   462	MODULE_DEVICE_TABLE(pci, loongson_i2s_ids);
-   463	
-   464	static struct pci_driver loongson_i2s_driver = {
-   465		.name = "loongson-i2s-pci",
-   466		.id_table = loongson_i2s_ids,
-   467		.probe = loongson_i2s_pci_probe,
-   468		.remove = loongson_i2s_pci_remove,
-   469		.driver = {
-   470			.owner = THIS_MODULE,
-   471			.pm = pm_sleep_ptr(&loongson_i2s_pm),
-   472		},
-   473	};
- > 474	module_pci_driver(loongson_i2s_driver);
-   475	
+Nothing in particular, except the intrusive part. Except the changes in
+modules.c we'd need to teach alternatives to deal with a writable copy.
+ 
+> [0]
+> https://lore.kernel.org/lkml/20201120202426.18009-5-rick.p.edgecombe@intel.com/
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sincerely yours,
+Mike.
