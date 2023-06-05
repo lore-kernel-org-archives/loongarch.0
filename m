@@ -1,127 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81731096C
-	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 14:45:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5148C433D2;
-	Mon,  5 Jun 2023 14:45:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FAA10FB
+	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 14:51:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3672DC4339B;
+	Mon,  5 Jun 2023 14:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685976345;
-	bh=W29DiFd00K8hukRzh7m2tWsdPBE9ZZWXYOwuKdLzUOM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JaVIG1v4rnNauxEFhjHpUvkm8iUPJoZmdzYPWadpgRZzAlfu2SzMTdt3iLmsLsbcF
-	 WnNI3LYmykUmviomBVf1KPJr9dTMls3dyAo3YB/pjePzaIcP9nVTIAl7Kp7T7HSo0K
-	 aTsOL0veP2X/YvXjgT73JhicFhMHtmV2pgrn/bsj9iyLpqWY69bSOgIk+SWi8/byKd
-	 Md0hhTIzirzyu7/tXH25UWzZwhOUz82jfuGY5rvpIz+Vzp5/xwb9bRvMayDlVo9EP6
-	 0lpvzFPNJi3rjzzeIJTZkIVBAOV4qHtX3Xu9R/QnwZgbG2glDuBa02l/pf/G9gp05M
-	 /rhDQdltDH3Tw==
-Message-ID: <118d13ef-a247-cf88-5084-afdebc6b7651@kernel.org>
-Date: Mon, 5 Jun 2023 16:45:38 +0200
+	s=k20201202; t=1685976705;
+	bh=tVVido3T4gfgRQ2GgQgMcTHENzpErpk9i+d9AUbaNCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uWKJ6gPeqOP6il8lQWEbrboryM9xwV2fxcEB++ou1yyIfWHenYszJ2u26Hf3XVWBI
+	 fY8A46jIVuWGZSKd/zSO+yTFNjq1kcn9Bu9TdKpgm0qXmLJv7B7ZFrjeZ55fXJAwWE
+	 siQonTg9nP0EDD4wGUwUsJKdra59ZUY6oP9p3KeGo+ztJ/BlBbDGhe7V2/qew6kP+H
+	 HkGsO2oC9ayDnN+9GrpgREKYX2b4OP++ScgOXa9iwb/1Wq3/ppGifcc6PxXGN+DASv
+	 X7CAi9twr9V/eVgb/76ghkfIfM10kQu7+9vzxhhj8bU10Bf+q4qoy1ECTwV+bTTDac
+	 YhMJha3x97jEA==
+Date: Mon, 5 Jun 2023 15:51:39 +0100
+From: Will Deacon <will@kernel.org>
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, helgaas@kernel.org,
+	linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v2] PCI: Align pci memory space base address with page
+ size
+Message-ID: <20230605145138.GH21212@willie-the-truck>
+References: <20230605034423.1528206-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH 3/3] ASoC: dt-bindings: Add support for Loongson audio
- card
-To: YingKun Meng <mengyingkun@loongson.cn>, lgirdwood@gmail.com,
- broonie@kernel.org
-Cc: alsa-devel@alsa-project.org, loongarch@lists.linux.dev,
- loongson-kernel@lists.loongnix.cn
-References: <20230605120934.2306548-1-mengyingkun@loongson.cn>
- <20230605120934.2306548-3-mengyingkun@loongson.cn>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20230605120934.2306548-3-mengyingkun@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230605034423.1528206-1-maobibo@loongson.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On 05/06/2023 14:09, YingKun Meng wrote:
-> From: Yingkun Meng <mengyingkun@loongson.cn>
+On Mon, Jun 05, 2023 at 11:44:23AM +0800, Bibo Mao wrote:
+> Some PCI devices has only 4K memory space size, it is normal in general
+> machines and aligned with page size. However some architectures which
+> support different page size, default page size on LoongArch is 16K, and
+> ARM64 supports page size varying from 4K to 64K. On machines where larger
+> page size is use, memory space region of two different pci devices may be
+> in one page. It is not safe with mmu protection, also VFIO pci device
+> driver requires base address of pci memory space page aligned, so that it
+> can be memory mapped to qemu user space when it is pass-through to vm.
 > 
-> The audio card uses loongson I2S controller present in 7axxx/2kxxx chips
-> to transfer audio data.
-
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC.  It might happen, that command when run on an older
-kernel, gives you outdated entries.  Therefore please be sure you base
-your patches on recent Linux kernel.
-
-You missed at least DT list (maybe more), so this won't be tested.
-Please resend and include all necessary entries.
-
+> It consumes more pci memory resource with page size alignment requirement,
+> on 64 bit system it should not be a problem. And UEFI bios set pci memory
+> base address with 4K fixed-size aligned, the safer solution is to align
+> with larger size on UEFI BIOS stage on these architectures, linux kernel
+> can reuse resource from UEFI bios. For new devices such hotplug pci
+> devices and sriov devices, pci resource is assigned in Linux kernel side.
 > 
-> Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  .../sound/loongson,ls-audio-card.yaml         | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
+>  arch/arm64/kernel/pci.c  | 13 +++++++++++++
+>  arch/loongarch/pci/pci.c | 18 ++++++++++++++++++
+>  2 files changed, 31 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-> new file mode 100644
-> index 000000000000..f1d6ee346bb3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/loongson-audio-card.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index 2276689b5411..e2f7b176b156 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -232,4 +232,17 @@ void pcibios_remove_bus(struct pci_bus *bus)
+>  	acpi_pci_remove_bus(bus);
+>  }
+>  
+> +resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+> +				resource_size_t size, resource_size_t align)
+> +{
+> +	resource_size_t start = res->start;
 > +
-> +title: Loongson generic ASoC audio sound card.
-
-What is a "generic audio card"? Does it even match hardware? Bindings
-are supposed to describe hardware, which is usually very specific.
-
-Also: Drop full stop. It's a title.
-
-
+> +	/*
+> +	 * align base address of pci memory resource with page size
+> +	 */
+> +	if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
+> +		start = ALIGN(start, PAGE_SIZE);
 > +
-> +maintainers:
-> +  - Yingkun Meng <mengyingkun@loongson.cn>
-> +
-> +description:
-> +  Generic ASoC audio device for loongson platform.
-> +
-> +properties:
-> +  compatible:
-> +    const: loongson,ls-audio-card
-> +
-> +  model:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description: User specified audio sound card name
-> +
-> +  mclk-fs:
-> +    $ref: simple-card.yaml#/definitions/mclk-fs
-> +
-> +  cpu:
-> +    description: Holds subnode which indicates cpu dai.
-> +    type: object
-> +    additionalProperties: false
-> +    properties:
-> +      sound-dai:
-> +        maxItems: 1
+> +	return start;
+> +}
+>  #endif
 
-In the cpu: required with sound-dai
+If this is needed by all architectures with !4k page size, why don't we
+instead handle the alignment in the core code, given that it is aware
+of the page size?
 
-> +
-> +  codec:
-> +    description: Holds subnode which indicates codec dai.
-> +    type: object
-> +    additionalProperties: false
-> +    properties:
-> +      sound-dai:
-> +        maxItems: 1
-
-In the codec: required with sound-dai
-
-No multiple dai links? Are you sure this card is so limited?
-
-
-Best regards,
-Krzysztof
-
+Will
