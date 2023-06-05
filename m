@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB6FA182C2
-	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 12:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B5C118AE6
+	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 12:09:44 +0000 (UTC)
 Received: from loongson.cn (unknown [10.180.13.124])
-	by gateway (Coremail) with SMTP id _____8BxlfCE0H1k9BMAAA--.174S3;
-	Mon, 05 Jun 2023 20:09:40 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx9vCG0H1k+hMAAA--.212S3;
+	Mon, 05 Jun 2023 20:09:42 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.180.13.124])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxauWC0H1k_3AAAA--.2032S5;
-	Mon, 05 Jun 2023 20:09:40 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxauWC0H1k_3AAAA--.2032S6;
+	Mon, 05 Jun 2023 20:09:42 +0800 (CST)
 From: YingKun Meng <mengyingkun@loongson.cn>
 To: lgirdwood@gmail.com,
 	broonie@kernel.org
@@ -14,9 +14,9 @@ Cc: alsa-devel@alsa-project.org,
 	loongarch@lists.linux.dev,
 	loongson-kernel@lists.loongnix.cn,
 	Yingkun Meng <mengyingkun@loongson.cn>
-Subject: [PATCH 2/3] ASoC: loongson: Add Loongson Generic ASoC Sound Card Support
-Date: Mon,  5 Jun 2023 20:09:33 +0800
-Message-Id: <20230605120934.2306548-2-mengyingkun@loongson.cn>
+Subject: [PATCH 3/3] ASoC: dt-bindings: Add support for Loongson audio card
+Date: Mon,  5 Jun 2023 20:09:34 +0800
+Message-Id: <20230605120934.2306548-3-mengyingkun@loongson.cn>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20230605120934.2306548-1-mengyingkun@loongson.cn>
 References: <20230605120934.2306548-1-mengyingkun@loongson.cn>
@@ -27,279 +27,106 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxauWC0H1k_3AAAA--.2032S5
-X-CM-SenderInfo: 5phqw55lqjy33q6o00pqjv00gofq/1tbiAQANDGR8fwASxAAQsh
-X-Coremail-Antispam: 1Uk129KBj93XoW3Ww1DCr4DJw47ur1UXF4rXrc_yoW3AF43pa
-	n3Zay5KrWrXF4fAwn5XrW8AF13C34fuFnrXa17Jw1xKrZrA3s5WwnrGF1UZF4fAr98KFWU
-	XFZ5CFW8GF98G3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:AQAAf8AxauWC0H1k_3AAAA--.2032S6
+X-CM-SenderInfo: 5phqw55lqjy33q6o00pqjv00gofq/1tbiAQANDGR8fwASxAASsj
+X-Coremail-Antispam: 1Uk129KBj93XoW7tF4fuF1UWw15WF47ZFWDtrc_yoW8Zw1Dpw
+	s3C34UGrWxt3W7C395ZFWxAw4fJasayFsrXF42qw1UGFWDKa4FqwsIk3W5u3W2kFn5Jay7
+	Wa4rGr1xGas3CwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
+	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
 	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
 	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2nYFDUUUU
+	IIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8l38UUUUUU==
 
 From: Yingkun Meng <mengyingkun@loongson.cn>
 
-The Loongson Generic ASoC Sound Card is a general ASoC DAI Link driver that
-can be used for Loongson CPU DAI drivers and external CODECs.
-
-The driver supports the use of ACPI table to describe device resources.
-On loongson 7axxx platforms, the audio device is an ACPI device.
+The audio card uses loongson I2S controller present in 7axxx/2kxxx chips
+to transfer audio data.
 
 Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
 ---
- sound/soc/loongson/Kconfig         |  10 ++
- sound/soc/loongson/Makefile        |   4 +
- sound/soc/loongson/loongson_card.c | 201 +++++++++++++++++++++++++++++
- 3 files changed, 215 insertions(+)
- create mode 100644 sound/soc/loongson/loongson_card.c
+ .../sound/loongson,ls-audio-card.yaml         | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
 
-diff --git a/sound/soc/loongson/Kconfig b/sound/soc/loongson/Kconfig
-index fd477e7da6e0..da471ba3b2de 100644
---- a/sound/soc/loongson/Kconfig
-+++ b/sound/soc/loongson/Kconfig
-@@ -12,4 +12,14 @@ config SND_SOC_LOONGSON_I2S_PCI
- 	  The controller is found in loongson bridge chips or SoCs,
- 	  and work as a PCI device.
- 
-+config SND_SOC_LOONGSON_CARD
-+	tristate "Loongson Sound Card Driver"
-+	select SND_SOC_LOONGSON_I2S_PCI
-+	help
-+	  Say Y or M if you want to add support for SoC audio using
-+	  loongson I2S controller.
-+
-+	  The driver add support for ALSA SoC Audio support using
-+	  loongson I2S controller.
-+
- endmenu
-diff --git a/sound/soc/loongson/Makefile b/sound/soc/loongson/Makefile
-index cfd0de1b1b22..a173a0fe17fe 100644
---- a/sound/soc/loongson/Makefile
-+++ b/sound/soc/loongson/Makefile
-@@ -2,3 +2,7 @@
- #Platform Support
- snd-soc-loongson-i2s-pci-objs := loongson_i2s_pci.o loongson_i2s.o
- obj-$(CONFIG_SND_SOC_LOONGSON_I2S_PCI) += snd-soc-loongson-i2s-pci.o
-+
-+#Machine Support
-+snd-soc-loongson-card-objs := loongson_card.o
-+obj-$(CONFIG_SND_SOC_LOONGSON_CARD) += snd-soc-loongson-card.o
-diff --git a/sound/soc/loongson/loongson_card.c b/sound/soc/loongson/loongson_card.c
+diff --git a/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
 new file mode 100644
-index 000000000000..bedf799bd7f2
+index 000000000000..f1d6ee346bb3
 --- /dev/null
-+++ b/sound/soc/loongson/loongson_card.c
-@@ -0,0 +1,201 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Loongson ASoC Audio driver
-+ *
-+ * Copyright (C) 2022 Loongson Technology Corporation Limited
-+ */
++++ b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/loongson-audio-card.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/module.h>
-+#include <sound/soc.h>
-+#include <sound/soc-acpi.h>
-+#include <linux/acpi.h>
-+#include <linux/pci.h>
-+#include <sound/pcm_params.h>
++title: Loongson generic ASoC audio sound card.
 +
-+struct loongson_card_data {
-+	struct snd_soc_card snd_card;
-+	unsigned int mclk_fs;
-+};
++maintainers:
++  - Yingkun Meng <mengyingkun@loongson.cn>
 +
-+static int loongson_card_hw_params(struct snd_pcm_substream *substream,
-+				   struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-+	struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-+	struct loongson_card_data *ls_card = snd_soc_card_get_drvdata(rtd->card);
-+	int ret, mclk;
++description:
++  Generic ASoC audio device for loongson platform.
 +
-+	if (ls_card->mclk_fs) {
-+		mclk = ls_card->mclk_fs * params_rate(params);
-+		ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
-+					     SND_SOC_CLOCK_OUT);
-+		if (ret < 0) {
-+			dev_err(codec_dai->dev, "cpu_dai clock not set\n");
-+			return ret;
-+		}
++properties:
++  compatible:
++    const: loongson,ls-audio-card
 +
-+		ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
-+					     SND_SOC_CLOCK_IN);
-+		if (ret < 0) {
-+			dev_err(codec_dai->dev, "codec_dai clock not set\n");
-+			return ret;
-+		}
-+	}
-+	return 0;
-+}
++  model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: User specified audio sound card name
 +
-+static const struct snd_soc_ops loongson_ops = {
-+	.hw_params = loongson_card_hw_params,
-+};
++  mclk-fs:
++    $ref: simple-card.yaml#/definitions/mclk-fs
 +
-+SND_SOC_DAILINK_DEFS(analog,
-+	DAILINK_COMP_ARRAY(COMP_CPU("loongson-i2s")),
-+	DAILINK_COMP_ARRAY(COMP_EMPTY()),
-+	DAILINK_COMP_ARRAY(COMP_PLATFORM("loongson-i2s")));
++  cpu:
++    description: Holds subnode which indicates cpu dai.
++    type: object
++    additionalProperties: false
++    properties:
++      sound-dai:
++        maxItems: 1
 +
-+static struct snd_soc_dai_link loongson_dai_links[] = {
-+	{
-+		.name = "HiFi PAIF TX",
-+		.stream_name = "Playback",
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_IB_NF
-+			| SND_SOC_DAIFMT_CBC_CFC,
-+		SND_SOC_DAILINK_REG(analog),
-+		.ops = &loongson_ops,
-+	},
-+	{
-+		.name = "HiFi PAIF RX",
-+		.stream_name = "Capture",
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_IB_NF
-+			| SND_SOC_DAIFMT_CBC_CFC,
-+		SND_SOC_DAILINK_REG(analog),
-+		.ops = &loongson_ops,
-+	},
-+};
++  codec:
++    description: Holds subnode which indicates codec dai.
++    type: object
++    additionalProperties: false
++    properties:
++      sound-dai:
++        maxItems: 1
 +
-+static int loongson_card_parse_of(struct loongson_card_data *data)
-+{
-+	const char *cpu_dai_name, *codec_dai_name;
-+	struct device_node *cpu, *codec;
-+	struct snd_soc_card *card = &data->snd_card;
-+	struct device *dev = card->dev;
-+	struct of_phandle_args args;
-+	int ret, i;
++required:
++  - compatible
++  - model
++  - mclk-fs
++  - cpu
++  - codec
 +
-+	cpu = of_get_child_by_name(dev->of_node, "cpu");
-+	if (!cpu) {
-+		dev_err(dev, "platform property missing or invalid\n");
-+		return -EINVAL;
-+	}
-+	codec = of_get_child_by_name(dev->of_node, "codec");
-+	if (!codec) {
-+		dev_err(dev, "audio-codec property missing or invalid\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
++additionalProperties: false
 +
-+	ret = of_parse_phandle_with_args(cpu, "sound-dai",
-+					 "#sound-dai-cells", 0, &args);
-+	if (ret) {
-+		dev_err(dev, "codec node missing #sound-dai-cells\n");
-+		goto err;
-+	}
-+	for (i = 0; i < card->num_links; i++)
-+		loongson_dai_links[i].cpus->of_node = args.np;
++examples:
++  - |
++    sound {
++        compatible = "loongson,ls-audio-card";
++        model = "loongson-audio";
++        mclk-fs = <512>;
 +
-+	ret = of_parse_phandle_with_args(codec, "sound-dai",
-+					 "#sound-dai-cells", 0, &args);
-+	if (ret) {
-+		dev_err(dev, "codec node missing #sound-dai-cells\n");
-+		goto err;
-+	}
-+	for (i = 0; i < card->num_links; i++)
-+		loongson_dai_links[i].codecs->of_node = args.np;
-+
-+	snd_soc_of_get_dai_name(cpu, &cpu_dai_name);
-+	snd_soc_of_get_dai_name(codec, &codec_dai_name);
-+	for (i = 0; i < card->num_links; i++) {
-+		loongson_dai_links[i].cpus->dai_name = cpu_dai_name;
-+		loongson_dai_links[i].codecs->dai_name = codec_dai_name;
-+	}
-+	of_node_put(cpu);
-+	of_node_put(codec);
-+
-+	return 0;
-+
-+err:
-+	of_node_put(cpu);
-+	of_node_put(codec);
-+	return ret;
-+}
-+
-+static int loongson_asoc_card_probe(struct platform_device *pdev)
-+{
-+	struct loongson_card_data *ls_priv;
-+	struct snd_soc_card *card;
-+	const char *codec_name, *codec_dai_name;
-+	int ret, i;
-+
-+	ls_priv = devm_kzalloc(&pdev->dev, sizeof(*ls_priv), GFP_KERNEL);
-+	if (!ls_priv)
-+		return -ENOMEM;
-+
-+	card = &ls_priv->snd_card;
-+
-+	card->dev = &pdev->dev;
-+	card->owner = THIS_MODULE;
-+	card->dai_link = loongson_dai_links;
-+	card->num_links = ARRAY_SIZE(loongson_dai_links);
-+	snd_soc_card_set_drvdata(card, ls_priv);
-+
-+	ret = device_property_read_string(&pdev->dev, "model", &card->name);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Error parsing card name: %d\n", ret);
-+		return ret;
-+	}
-+	ret = device_property_read_u32(&pdev->dev, "mclk-fs", &ls_priv->mclk_fs);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Error parsing mclk-fs: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (has_acpi_companion(&pdev->dev)) {
-+		device_property_read_string(&pdev->dev, "codec-name",
-+						&codec_name);
-+		for (i = 0; i < card->num_links; i++)
-+			loongson_dai_links[i].codecs->name = codec_name;
-+
-+		device_property_read_string(&pdev->dev, "codec-dai-name",
-+						&codec_dai_name);
-+		for (i = 0; i < card->num_links; i++)
-+			loongson_dai_links[i].codecs->dai_name = codec_dai_name;
-+	} else {
-+		ret = loongson_card_parse_of(ls_priv);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = devm_snd_soc_register_card(&pdev->dev, card);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id loongson_asoc_dt_ids[] = {
-+	{ .compatible = "loongson,ls-audio-card" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, loongson_asoc_dt_ids);
-+
-+static struct platform_driver loongson_audio_driver = {
-+	.probe = loongson_asoc_card_probe,
-+	.driver = {
-+		.name = "loongson-asoc-card",
-+		.pm = &snd_soc_pm_ops,
-+		.of_match_table = of_match_ptr(loongson_asoc_dt_ids),
-+	},
-+};
-+module_platform_driver(loongson_audio_driver);
-+
-+MODULE_DESCRIPTION("Loongson ASoc Sound Card driver");
-+MODULE_AUTHOR("Loongson Technology Corporation Limited");
-+MODULE_LICENSE("GPL");
++        cpu {
++            sound-dai = <&i2s>;
++        };
++        codec {
++             sound-dai = <&es8323>;
++        };
++    };
 -- 
 2.33.0
 
