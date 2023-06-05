@@ -1,189 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA0EB5684
-	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 10:09:43 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B9CBD75;
-	Mon,  5 Jun 2023 03:10:28 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.24.244])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F8793F793;
-	Mon,  5 Jun 2023 03:09:37 -0700 (PDT)
-Date: Mon, 5 Jun 2023 11:09:34 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-Message-ID: <ZH20XkD74prrdN4u@FVFF77S0Q05N>
-References: <20230601101257.530867-1-rppt@kernel.org>
- <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
- <ZHjgIH3aX9dCvVZc@moria.home.lan>
- <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
- <20230605092040.GB3460@kernel.org>
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03912156DE
+	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 10:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1685960329;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k2I42yHoa8cBG+5F/vO+XJiYcKmCOnxhW9y167l+rbY=;
+	b=G70VAKgPHOcvqqh5JhKGnKW3ZRsZaCy3IdZJAvsfVU480thw/DvvefVQXUXbbwyEOI37GD
+	Mekns7PXk7rGkTIUJ+NoOa5QX+k5HPKzVj8y6O3Xah1ZPlmQ9jNXEAlnm5HKJ0O1HMtPxL
+	dPwNyzywb3WdTTO/afVe2vtw0W4WSu4=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-88-1sx3kSEuMRSBW3bQrOVpGA-1; Mon, 05 Jun 2023 06:18:48 -0400
+X-MC-Unique: 1sx3kSEuMRSBW3bQrOVpGA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-96f4d917e06so627077766b.1
+        for <loongarch@lists.linux.dev>; Mon, 05 Jun 2023 03:18:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685960327; x=1688552327;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k2I42yHoa8cBG+5F/vO+XJiYcKmCOnxhW9y167l+rbY=;
+        b=iudZN9r7xnjojh4k3cKb9aUsz921sBPaM/49/mfFHYa4xPdt79TVtVJwuu/H7PGqia
+         HBNcdthqMpnFxg9iu53n3WE8/+6kYXf62gjDf3BqFvE+iw/WU4P+9Anom2iTmfJki4py
+         Ft4vuul+hc54b7xQadlsofF9DjAcEIwlmDeaQ5yh1dhpeJJRUbQM1lmfIB/Py/qQEjBu
+         OBv568iD62DRUtOamm4aEHMTlv2HM/54kB3v3j+EwczTd8MRLG70NL+Bt9iZcLBZOpPq
+         x8p84aKUhK2GB+yHTBpw1AY/PnHcxVN/o1q221p0juxFStWLJm2MK08e0Yxl82tWE2XG
+         O7NQ==
+X-Gm-Message-State: AC+VfDzJwyyr2V7alRlIynsVZK9FJxGyv3O5Oh2BylOmP1qi2jxt6x7o
+	sH43d9m90Qqwe4Sgk29Q3jWwkgx/GtQ4qqszkWfEuvjX8QCjRpgdRaeO7m5j8Q1gX1W1yPI0UZC
+	qty1jFesXuOT9vSSwCpGw
+X-Received: by 2002:a17:906:58d2:b0:974:5a12:546 with SMTP id e18-20020a17090658d200b009745a120546mr5892881ejs.23.1685960327185;
+        Mon, 05 Jun 2023 03:18:47 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4y5FTZMdHhj+OpYwDLDbO7vzaJvoyV4RaoadpCqeL/iBSSvEhdT6Qn1T/bEdAIbL9INizO6w==
+X-Received: by 2002:a17:906:58d2:b0:974:5a12:546 with SMTP id e18-20020a17090658d200b009745a120546mr5892862ejs.23.1685960326938;
+        Mon, 05 Jun 2023 03:18:46 -0700 (PDT)
+Received: from ?IPV6:2001:b07:6468:f312:1c09:f536:3de6:228c? ([2001:b07:6468:f312:1c09:f536:3de6:228c])
+        by smtp.googlemail.com with ESMTPSA id y11-20020a17090629cb00b009660e775691sm4063967eje.151.2023.06.05.03.18.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Jun 2023 03:18:46 -0700 (PDT)
+Message-ID: <e013dd26-40e5-0da7-8648-83fd9906b207@redhat.com>
+Date: Mon, 5 Jun 2023 12:18:45 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230605092040.GB3460@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v12 01/31] LoongArch: KVM: Add kvm related header files
+To: Huacai Chen <chenhuacai@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>
+References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
+ <20230530015223.147755-2-zhaotianrui@loongson.cn>
+ <CAAhV-H6B9M3iN7ugR9hFVxSpDHMgD=biZJbsArx_Uncgk3OHcg@mail.gmail.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <CAAhV-H6B9M3iN7ugR9hFVxSpDHMgD=biZJbsArx_Uncgk3OHcg@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 05, 2023 at 12:20:40PM +0300, Mike Rapoport wrote:
-> On Fri, Jun 02, 2023 at 10:35:09AM +0100, Mark Rutland wrote:
-> > On Thu, Jun 01, 2023 at 02:14:56PM -0400, Kent Overstreet wrote:
-> > > On Thu, Jun 01, 2023 at 05:12:03PM +0100, Mark Rutland wrote:
-> > > > For a while I have wanted to give kprobes its own allocator so that it can work
-> > > > even with CONFIG_MODULES=n, and so that it doesn't have to waste VA space in
-> > > > the modules area.
-> > > > 
-> > > > Given that, I think these should have their own allocator functions that can be
-> > > > provided independently, even if those happen to use common infrastructure.
-> > > 
-> > > How much memory can kprobes conceivably use? I think we also want to try
-> > > to push back on combinatorial new allocators, if we can.
-> > 
-> > That depends on who's using it, and how (e.g. via BPF).
-> > 
-> > To be clear, I'm not necessarily asking for entirely different allocators, but
-> > I do thinkg that we want wrappers that can at least pass distinct start+end
-> > parameters to a common allocator, and for arm64's modules code I'd expect that
-> > we'd keep the range falblack logic out of the common allcoator, and just call
-> > it twice.
-> > 
-> > > > > Several architectures override module_alloc() because of various
-> > > > > constraints where the executable memory can be located and this causes
-> > > > > additional obstacles for improvements of code allocation.
-> > > > > 
-> > > > > This set splits code allocation from modules by introducing
-> > > > > jit_text_alloc(), jit_data_alloc() and jit_free() APIs, replaces call
-> > > > > sites of module_alloc() and module_memfree() with the new APIs and
-> > > > > implements core text and related allocation in a central place.
-> > > > > 
-> > > > > Instead of architecture specific overrides for module_alloc(), the
-> > > > > architectures that require non-default behaviour for text allocation must
-> > > > > fill jit_alloc_params structure and implement jit_alloc_arch_params() that
-> > > > > returns a pointer to that structure. If an architecture does not implement
-> > > > > jit_alloc_arch_params(), the defaults compatible with the current
-> > > > > modules::module_alloc() are used.
-> > > > 
-> > > > As above, I suspect that each of the callsites should probably be using common
-> > > > infrastructure, but I don't think that a single jit_alloc_arch_params() makes
-> > > > sense, since the parameters for each case may need to be distinct.
-> > > 
-> > > I don't see how that follows. The whole point of function parameters is
-> > > that they may be different :)
-> > 
-> > What I mean is that jit_alloc_arch_params() tries to aggregate common
-> > parameters, but they aren't actually common (e.g. the actual start+end range
-> > for allocation).
+On 6/5/23 07:00, Huacai Chen wrote:
+> I found something like this in our internal repo.
 > 
-> jit_alloc_arch_params() tries to aggregate architecture constraints and
-> requirements for allocations of executable memory and this exactly what
-> the first 6 patches of this set do.
+> #define KVM_CAP_LOONGARCH_FPU 228
+> #define KVM_CAP_LOONGARCH_LSX 229
+> #define KVM_CAP_LOONGARCH_VZ 230
+> #define KVM_LOONGARCH_GET_VCPU_STATE    _IOR(KVMIO,   0xd0, struct
+> kvm_loongarch_vcpu_state)
+> #define KVM_LOONGARCH_SET_VCPU_STATE    _IOW(KVMIO,   0xd1, struct
+> kvm_loongarch_vcpu_state)
+> #define KVM_LOONGARCH_GET_CPUCFG           _IOR(KVMIO,   0xd2, struct
+> kvm_cpucfg)
+> #define KVM_LOONGARCH_GET_IOCSR              _IOR(KVMIO,   0xd3,
+> struct kvm_iocsr_entry)
+> #define KVM_LOONGARCH_SET_IOCSR              _IOW(KVMIO,   0xd4,
+> struct kvm_iocsr_entry)
+> #define KVM_LOONGARCH_SET_CPUCFG           _IOR(KVMIO,   0xd5, struct
+> kvm_cpucfg)
 > 
-> A while ago Thomas suggested to use a structure that parametrizes
-> architecture constraints by the memory type used in modules [1] and Song
-> implemented the infrastructure for it and x86 part [2].
-> 
-> I liked the idea of defining parameters in a single structure, but I
-> thought that approaching the problem from the arch side rather than from
-> modules perspective will be better starting point, hence these patches.
-> 
-> I don't see a fundamental reason why a single structure cannot describe
-> what is needed for different code allocation cases, be it modules, kprobes
-> or bpf. There is of course an assumption that the core allocations will be
-> the same for all the users, and it seems to me that something like 
-> 
-> * allocate physical memory if allocator caches are empty
-> * map it in vmalloc or modules address space
-> * return memory from the allocator cache to the caller
-> 
-> will work for all usecases.
-> 
-> We might need separate caches for different cases on different
-> architectures, and a way to specify what cache should be used in the
-> allocator API, but that does not contradict a single structure for arch
-> specific parameters, but only makes it more elaborate, e.g. something like
-> 
-> enum jit_type {
-> 	JIT_MODULES_TEXT,
-> 	JIT_MODULES_DATA,
-> 	JIT_KPROBES,
-> 	JIT_FTRACE,
-> 	JIT_BPF,
-> 	JIT_TYPE_MAX,
-> };
-> 
-> struct jit_alloc_params {
-> 	struct jit_range	ranges[JIT_TYPE_MAX];
-> 	/* ... */
-> };
-> 
-> > > Can you give more detail on what parameters you need? If the only extra
-> > > parameter is just "does this allocation need to live close to kernel
-> > > text", that's not that big of a deal.
-> > 
-> > My thinking was that we at least need the start + end for each caller. That
-> > might be it, tbh.
-> 
-> Do you mean that modules will have something like
-> 
-> 	jit_text_alloc(size, MODULES_START, MODULES_END);
-> 
-> and kprobes will have
-> 
-> 	jit_text_alloc(size, KPROBES_START, KPROBES_END);
-> ?
+> These are all UAPI definitions, if they are needed (at present or in
+> future), they should be merged in the first wave of KVM.
 
-Yes.
+No, dead definitions should never be mergd.
 
-> It sill can be achieved with a single jit_alloc_arch_params(), just by
-> adding enum jit_type parameter to jit_text_alloc().
+Paolo
 
-That feels backwards to me; it centralizes a bunch of information about
-distinct users to be able to shove that into a static array, when the callsites
-can pass that information. 
-
-What's *actually* common after separating out the ranges? Is it just the
-permissions?
-
-If we want this to be able to share allocations and so on, why can't we do this
-like a kmem_cache, and have the callsite pass a pointer to the allocator data?
-That would make it easy for callsites to share an allocator or use a distinct
-one.
-
-Thanks,
-Mark.
-
-> [1] https://lore.kernel.org/linux-mm/87v8mndy3y.ffs@tglx/ 
-> [2] https://lore.kernel.org/all/20230526051529.3387103-1-song@kernel.org
-> 
-> > Thanks,
-> > Mark.
-> 
-> -- 
-> Sincerely yours,
-> Mike.
