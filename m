@@ -1,111 +1,115 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F82194
-	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 07:36:29 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1BC2A21AF9;
-	Mon,  5 Jun 2023 07:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1685950588; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZyQYrJRYAU3gYho/iQyn8Ng9xP05pdlHsPTn4ZWxt90=;
-	b=gliU+Rb30zCGLi8xyOTJlGIW+XdVfUk5bwpGXHwuSOJwKHYD/rJrN7X/G/HafcmZvzG9tr
-	ePMVcIsmIu6x+tANTMyTuDgPSVJFHrPL/FNIqK1zXdUvKlLqUnOcwqrWKJYupweaISH/Jl
-	svldqAdMVa2B7FX8HAVlqNipj01jh0E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1685950588;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZyQYrJRYAU3gYho/iQyn8Ng9xP05pdlHsPTn4ZWxt90=;
-	b=OUhZn66bYPZj+TJK2x4/PeTCo//eI7tnnFoof+sWxKkImPXHc7YElcGjh/RPLu2jCKZ8ky
-	d18kC5Xd+4aaAjAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D70A0139C7;
-	Mon,  5 Jun 2023 07:36:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 8MGFM3uQfWT0bwAAMHmgww
-	(envelope-from <tiwai@suse.de>); Mon, 05 Jun 2023 07:36:27 +0000
-Date: Mon, 05 Jun 2023 09:36:27 +0200
-Message-ID: <87r0qqicn8.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Yanteng Si <siyanteng@loongson.cn>
-Cc: tiwai@suse.com,
-	perex@perex.cz,
-	chenhuacai@loongson.cn,
-	alsa-devel@alsa-project.org,
-	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn,
-	Yingkun Meng <mengyingkun@loongson.cn>
-Subject: Re: [PATCH 3/4] ALSA: hda: Workaround for SDnCTL register on loongson controller
-In-Reply-To: <74a63661726b8c44be72bf3bd35a3259f2ae2e6a.1685501806.git.siyanteng@loongson.cn>
-References: <cover.1685501806.git.siyanteng@loongson.cn>
-	<74a63661726b8c44be72bf3bd35a3259f2ae2e6a.1685501806.git.siyanteng@loongson.cn>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C82D125A0;
+	Mon,  5 Jun 2023 08:12:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD463C433D2;
+	Mon,  5 Jun 2023 08:12:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685952732;
+	bh=0a3Erj1+y05IXqjDMWsbKoIt+bMhOMaYKv6SbF8QYx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zu6xmXaSJOaYGEZ1M18sqNTyQoodb/FtprpnZS9jE7WS1RsqZh7vr80D82GP+H1i8
+	 Qbu+kLGLXkmXcf2oXs54XG8W5AAc+Szj5iw7w1esJF0pl3B4pku9TUNP0nnZRtgroI
+	 L7ysBaeg9qWTT4omm1x3jmC2/a5iIXjq4VNltoSIXSnirdvBxVCgizUUrQFclxA9A9
+	 JI6H8n/NsAtikP0Klus6G9HwEipbiVd/EmoeyXvbNSuuqp00lQftKP5siTorJJyFWk
+	 NlQqlLQB4dqezssu+rEQF7hm50+nogklsOxP5i6Esuay261E/tRiQMISJtPYoOP/Ua
+	 Cp41VdtuUrJ+Q==
+Date: Mon, 5 Jun 2023 11:11:43 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Nadav Amit <nadav.amit@gmail.com>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"mcgrof@kernel.org" <mcgrof@kernel.org>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"hca@linux.ibm.com" <hca@linux.ibm.com>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>,
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+	Will Deacon <will@kernel.org>,
+	"dinguyen@kernel.org" <dinguyen@kernel.org>,
+	"naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"song@kernel.org" <song@kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 12/13] x86/jitalloc: prepare to allocate exectuatble
+ memory as ROX
+Message-ID: <20230605081143.GA3460@kernel.org>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <20230601101257.530867-13-rppt@kernel.org>
+ <0f50ac52a5280d924beeb131e6e4717b6ad9fdf7.camel@intel.com>
+ <ZHjcr26YskTm+0EF@moria.home.lan>
+ <a51c041b61e2916d2b91c990349aabc6cb9836aa.camel@intel.com>
+ <ZHjljJfQjhVV/jNS@moria.home.lan>
+ <68b8160454518387c53508717ba5ed5545ff0283.camel@intel.com>
+ <50D768D7-15BF-43B8-A5FD-220B25595336@gmail.com>
+ <20230604225244.65be9103@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230604225244.65be9103@rorschach.local.home>
 
-On Wed, 31 May 2023 05:21:33 +0200,
-Yanteng Si wrote:
+On Sun, Jun 04, 2023 at 10:52:44PM -0400, Steven Rostedt wrote:
+> On Thu, 1 Jun 2023 16:54:36 -0700
+> Nadav Amit <nadav.amit@gmail.com> wrote:
 > 
-> On loongson controller, after calling snd_hdac_stream_updateb()
-> to enable DMA engine, the SDnCTL.STRM will become to zero.  We
-> need to access SDnCTL in dword to keep SDnCTL.STRM is not changed.
+> > > The way text_poke() is used here, it is creating a new writable alias
+> > > and flushing it for *each* write to the module (like for each write of
+> > > an individual relocation, etc). I was just thinking it might warrant
+> > > some batching or something.  
+
+> > I am not advocating to do so, but if you want to have many efficient
+> > writes, perhaps you can just disable CR0.WP. Just saying that if you
+> > are about to write all over the memory, text_poke() does not provide
+> > too much security for the poking thread.
+
+Heh, this is definitely and easier hack to implement :)
+
+> Batching does exist, which is what the text_poke_queue() thing does.
+
+For module loading text_poke_queue() will still be much slower than a bunch
+of memset()s for no good reason because we don't need all the complexity of
+text_poke_bp_batch() for module initialization because we are sure we are
+not patching live code.
+
+What we'd need here is a new batching mode that will create a writable
+alias mapping at the beginning of apply_relocate_*() and module_finalize(),
+then it will use memcpy() to that writable alias and will tear the mapping
+down in the end.
+
+Another option is to teach alternatives to update a writable copy rather
+than do in place changes like Song suggested. My feeling is that it will be
+more intrusive change though.
+
+> -- Steve
 > 
-> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-> Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
-> ---
->  sound/hda/hdac_stream.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/hda/hdac_stream.c b/sound/hda/hdac_stream.c
-> index 1f56fd33b9af..90fbf9fea2b3 100644
-> --- a/sound/hda/hdac_stream.c
-> +++ b/sound/hda/hdac_stream.c
-> @@ -13,6 +13,7 @@
->  #include <sound/hdaudio.h>
->  #include <sound/hda_register.h>
->  #include "trace.h"
-> +#include "../pci/hda/hda_controller.h"
->  
->  /*
->   * the hdac_stream library is intended to be used with the following
-> @@ -130,6 +131,7 @@ EXPORT_SYMBOL_GPL(snd_hdac_stream_init);
->  void snd_hdac_stream_start(struct hdac_stream *azx_dev)
->  {
->  	struct hdac_bus *bus = azx_dev->bus;
-> +	struct azx *chip = bus_to_azx(bus);
->  	int stripe_ctl;
->  
->  	trace_snd_hdac_stream_start(bus, azx_dev);
-> @@ -150,7 +152,11 @@ void snd_hdac_stream_start(struct hdac_stream *azx_dev)
->  					stripe_ctl);
->  	}
->  	/* set DMA start and interrupt mask */
-> -	snd_hdac_stream_updateb(azx_dev, SD_CTL,
-> +	if (chip->driver_caps & AZX_DCAPS_LOONGSON_WORKAROUND)
-> +		snd_hdac_stream_updatel(azx_dev, SD_CTL,
-> +				0, SD_CTL_DMA_START | SD_INT_MASK);
-> +	else
-> +		snd_hdac_stream_updateb(azx_dev, SD_CTL,
->  				0, SD_CTL_DMA_START | SD_INT_MASK);
 
-Similarly like the patch 2, this has to be handled with a new flag
-added to struct hdac_bus.
-
-
-Takashi
+-- 
+Sincerely yours,
+Mike.
