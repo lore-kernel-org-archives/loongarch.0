@@ -1,140 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE33117F4
-	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 03:58:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432E9C4339C
-	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 03:58:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D271B17F4
+	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 04:06:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610BBC433EF
+	for <loongarch@lists.linux.dev>; Mon,  5 Jun 2023 04:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685937504;
-	bh=Lozl+B9c9ZtOgU9jlGHLMSW0ijTaUHs8B+vJDZaxmP0=;
+	s=k20201202; t=1685937961;
+	bh=WtI1jY3mnr9zb4/0mcezfP7YgsPqPtpWRWa72DAZTTg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mgErmNctkUMj3Cg5fufF5WtfEHwtkGjsoSQf/8rbdjspHdQIHDDPJQHQgGOItjHpg
-	 elJD8LbmhcJDo/sQ0FTE267hTCcyb6uM2z3tEFrhOIWFfJyTC099VWljAOwmxI8zx4
-	 8SElgRpma4jSIuXrX3LwXFTtqnUzTBzaXxoKIzC1/rNkvvl6ehN+sL6hU1JwxeqaO6
-	 NJYAUFQz5Z95djQor7BeNs+CikjXG92aMc8fE1WUrM66l5t+gPiGSn+oKs3F25rAUj
-	 l4wDa3jUXSHgtTLyijLRrR5awkrjlyx9/66jpmBFYvDoynwxIX+QQnZj6rVVDlRd+J
-	 RnkhWX1ANKVIw==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-514ab6cb529so11440522a12.1
-        for <loongarch@lists.linux.dev>; Sun, 04 Jun 2023 20:58:24 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyHjR0jJVo271nzspErpcaDlFDUix2bCxZTMpv+gGLOdSkEWFp0
-	N7POVHv6ZoIYvRwPughKXd/ixSt5TE47LlsqrRg=
-X-Google-Smtp-Source: ACHHUZ6uzVN8ZGQlBo5csuBzT7qJ3sVK7iqjj3ky0+eHZij/P+I6xMbn/J0KyxfD9kmwLT9TeQvP2RVjDJKQEOHKUaU=
-X-Received: by 2002:aa7:c252:0:b0:514:a302:c334 with SMTP id
- y18-20020aa7c252000000b00514a302c334mr9117220edo.14.1685937502492; Sun, 04
- Jun 2023 20:58:22 -0700 (PDT)
+	b=uxKGktXNqn49bEfc54rxrLont7pLs83GyZuzAufBwsGBjuGMKdcRP/bEdwYmfXXxU
+	 WvxTYj5OfeXmTt5HLnDLwPgr67Lkt70CP1EvdU2veiDINIXLIDAS+iKL+CqrOBDxNc
+	 W/VQJXu20GHLghTy7G8UfIn1gM+F5ueXv0na8lU8CSN0FmokvQ65P4mX8K8i05YG/W
+	 fPh72tKYwA3H59nPmnDH3bp9qH5k5y+9C+A7tg1dtcxIc9fAAEgtE2WRW9gNO+56RG
+	 rnpEhaZc8TsRLxnuELVYU2NxAebO69dROiM74lzh42BNKszJ2YPFsTB9bCrjTQGdS0
+	 SNLJmYWsBwYSA==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2b1b30445cfso32412961fa.1
+        for <loongarch@lists.linux.dev>; Sun, 04 Jun 2023 21:06:01 -0700 (PDT)
+X-Gm-Message-State: AC+VfDyB47OlB5s49qQM6MPFNmPDZ5x+NoZcQ1eyzhFLdtrArws6qSqD
+	3fdifPTqxiFRIYa2WIjVJ2RSGVqVR626WTL/Vts=
+X-Google-Smtp-Source: ACHHUZ5GrSEK3PQNTobRaaPR4GI9Q/dG/dH9vtDqov4NPtsLbAuvSoOBGIqnwRO1u3fwexaWyE5OrfsdUvjgUci7FZk=
+X-Received: by 2002:a2e:2419:0:b0:2ad:d6cd:efdd with SMTP id
+ k25-20020a2e2419000000b002add6cdefddmr3089294ljk.32.1685937959380; Sun, 04
+ Jun 2023 21:05:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230605034423.1528206-1-maobibo@loongson.cn>
-In-Reply-To: <20230605034423.1528206-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 5 Jun 2023 11:58:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6O+_EnmDU6kE-19PP+8tD3wwbzzuakE_vHZGCtjZWDbg@mail.gmail.com>
-Message-ID: <CAAhV-H6O+_EnmDU6kE-19PP+8tD3wwbzzuakE_vHZGCtjZWDbg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Align pci memory space base address with page size
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, helgaas@kernel.org, 
-	linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn
+References: <20230601101257.530867-1-rppt@kernel.org> <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan> <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+ <CAPhsuW7Euczff_KB70nuH=Hhf2EYHAf=xiQR7mFqVfByhD34XA@mail.gmail.com>
+ <ZHzRxE5V6YzGVsHy@moria.home.lan> <CAPhsuW7iEDa44jxc_7Cj4KnVhtct-UTO2JtVK-U7o2ynn2iX8Q@mail.gmail.com>
+ <ZH0EseWI9F1n9yJx@moria.home.lan>
+In-Reply-To: <ZH0EseWI9F1n9yJx@moria.home.lan>
+From: Song Liu <song@kernel.org>
+Date: Sun, 4 Jun 2023 21:05:47 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7S40xCz_e0fdimfC+ybO=kvMg3SSzTd1s4qiOcvmJJcA@mail.gmail.com>
+Message-ID: <CAPhsuW7S40xCz_e0fdimfC+ybO=kvMg3SSzTd1s4qiOcvmJJcA@mail.gmail.com>
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Mark Rutland <mark.rutland@arm.com>, Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "David S. Miller" <davem@davemloft.net>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Russell King <linux@armlinux.org.uk>, 
+	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org, 
+	Puranjay Mohan <puranjay12@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Bibo,
+On Sun, Jun 4, 2023 at 2:40=E2=80=AFPM Kent Overstreet
+<kent.overstreet@linux.dev> wrote:
+>
+> On Sun, Jun 04, 2023 at 02:22:30PM -0700, Song Liu wrote:
+> > On Sun, Jun 4, 2023 at 11:02=E2=80=AFAM Kent Overstreet
+> > <kent.overstreet@linux.dev> wrote:
+> > >
+> > > On Fri, Jun 02, 2023 at 11:20:58AM -0700, Song Liu wrote:
+> > > > IIUC, arm64 uses VMALLOC address space for BPF programs. The reason
+> > > > is each BPF program uses at least 64kB (one page) out of the 128MB
+> > > > address space. Puranjay Mohan (CC'ed) is working on enabling
+> > > > bpf_prog_pack for arm64. Once this work is done, multiple BPF progr=
+ams
+> > > > will be able to share a page. Will this improvement remove the need=
+ to
+> > > > specify a different address range for BPF programs?
+> > >
+> > > Can we please stop working on BPF specific sub page allocation and fo=
+cus
+> > > on doing this in mm/? This never should have been in BPF in the first
+> > > place.
+> >
+> > That work is mostly independent of the allocator work we are discussing=
+ here.
+> > The goal Puranjay's work is to enable the arm64 BPF JIT engine to use a
+> > ROX allocator. The allocator could be the bpf_prog_pack allocator, or j=
+italloc,
+> > or module_alloc_type. Puranjay is using bpf_prog_alloc for now. But onc=
+e
+> > jitalloc or module_alloc_type (either one) is merged, we will migrate B=
+PF
+> > JIT engines (x86_64 and arm64) to the new allocator and then tear down
+> > bpf_prog_pack.
+> >
+> > Does this make sense?
+>
+> Yeah, as long as that's the plan. Maybe one of you could tell us what
+> issues were preventing prog_pack from being used in the first place, it
+> might be relevant - this is the time to get the new allocator API right.
 
-Three suggestions:
-1, split to two patches.
-2, the "(align < PAGE_SIZE)" condition can be removed.
-3, you can unify the comments between ARM64 and LoongArch.
+The JIT engine does a lot of writes. Instead of doing many text_poke(),
+we are using a temporary RW write buffer, and then do text_poke_copy()
+at the end. To make this work, we need the JIT engine to be able to
+handle an RW temporary buffer and an RO final memory region. There
+is nothing preventing prog_pack to work. It is just we need to do the
+work.
 
-Huacai
-
-On Mon, Jun 5, 2023 at 11:44=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> Some PCI devices has only 4K memory space size, it is normal in general
-> machines and aligned with page size. However some architectures which
-> support different page size, default page size on LoongArch is 16K, and
-> ARM64 supports page size varying from 4K to 64K. On machines where larger
-> page size is use, memory space region of two different pci devices may be
-> in one page. It is not safe with mmu protection, also VFIO pci device
-> driver requires base address of pci memory space page aligned, so that it
-> can be memory mapped to qemu user space when it is pass-through to vm.
->
-> It consumes more pci memory resource with page size alignment requirement=
-,
-> on 64 bit system it should not be a problem. And UEFI bios set pci memory
-> base address with 4K fixed-size aligned, the safer solution is to align
-> with larger size on UEFI BIOS stage on these architectures, linux kernel
-> can reuse resource from UEFI bios. For new devices such hotplug pci
-> devices and sriov devices, pci resource is assigned in Linux kernel side.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/arm64/kernel/pci.c  | 13 +++++++++++++
->  arch/loongarch/pci/pci.c | 18 ++++++++++++++++++
->  2 files changed, 31 insertions(+)
->
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index 2276689b5411..e2f7b176b156 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -232,4 +232,17 @@ void pcibios_remove_bus(struct pci_bus *bus)
->         acpi_pci_remove_bus(bus);
->  }
->
-> +resource_size_t pcibios_align_resource(void *data, const struct resource=
- *res,
-> +                               resource_size_t size, resource_size_t ali=
-gn)
-> +{
-> +       resource_size_t start =3D res->start;
-> +
-> +       /*
-> +        * align base address of pci memory resource with page size
-> +        */
-> +       if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
-> +               start =3D ALIGN(start, PAGE_SIZE);
-> +
-> +       return start;
-> +}
->  #endif
-> diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-> index 2726639150bc..943a48e60fb1 100644
-> --- a/arch/loongarch/pci/pci.c
-> +++ b/arch/loongarch/pci/pci.c
-> @@ -83,6 +83,24 @@ int pcibios_alloc_irq(struct pci_dev *dev)
->         return acpi_pci_irq_enable(dev);
->  }
->
-> +/*
-> + * memory space size of some pci cards is 4K, it is separated with
-> + * different pages for generic architectures, so that mmu protection can
-> + * work with different pci cards. However page size for LoongArch system
-> + * is 16K, memory space of different pci cards may share the same page
-> + * on LoongArch, it is not safe here.
-> + */
-> +resource_size_t pcibios_align_resource(void *data, const struct resource=
- *res,
-> +                               resource_size_t size, resource_size_t ali=
-gn)
-> +{
-> +       resource_size_t start =3D res->start;
-> +
-> +       if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
-> +               start =3D ALIGN(start, PAGE_SIZE);
-> +
-> +       return start;
-> +}
-> +
->  static void pci_fixup_vgadev(struct pci_dev *pdev)
->  {
->         struct pci_dev *devp =3D NULL;
-> --
-> 2.27.0
->
+Thanks,
+Song
