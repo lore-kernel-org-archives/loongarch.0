@@ -1,144 +1,191 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E915C7F
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:13:31 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.86])
-	by gateway (Coremail) with SMTP id _____8AxxvBKln5kx1UAAA--.981S3;
-	Tue, 06 Jun 2023 10:13:30 +0800 (CST)
-Received: from [10.20.42.86] (unknown [10.20.42.86])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxReRIln5kBZ8BAA--.7390S3;
-	Tue, 06 Jun 2023 10:13:29 +0800 (CST)
-Subject: Re: [PATCH v12 08/31] LoongArch: KVM: Implement vcpu handle exit
- interface
-To: "bibo, mao" <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
- <20230530015223.147755-9-zhaotianrui@loongson.cn>
- <d28f48e3-95d2-111f-e938-348d68402a57@loongson.cn>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <3fe89bb1-a39c-1da2-b527-4175dfb68752@loongson.cn>
-Date: Tue, 6 Jun 2023 10:13:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9805391
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:17:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612A8C4339C
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686017869;
+	bh=PwAxfEO6U+WKSxEaEYXu3C2Un1n6Ggfy5FOFAmLtwcI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Fe9mMIpYFB6cIcBpLMM5q2WcJyh/joZeOme7/DfuQtFJ2VYT6KAI0Gkh74//69+23
+	 9Cs42dhFPfEBOTZUrN4YJ2xaha3+sGOfYVhtV8VEQO1hnw9qAcN42VK+pugeyFY510
+	 YFevXn+8Nmh7H62gGlN/b2BCrGPVCD7d/XNgcUi+2jdDzVo80HDrJsqMK1I4NTCZHI
+	 U8BHJwwcBwfkO7bK4nlSdiRN/UWnmknXtvnc7v+zueM2jxaathkYf492vf0JrAiP6C
+	 hmy/WaombE0amn1d23d6x/9DeWQKuW9du52TnGnidzVER8xJMNOFfMi0OylVu/GfcX
+	 1CQRse8FootMg==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-978345f3798so109350066b.3
+        for <loongarch@lists.linux.dev>; Mon, 05 Jun 2023 19:17:49 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwCtEtiHAR0ULlRqow6J+c4dzTPLvhdEY0b5jjfauRv78JKX9qZ
+	4jGLA8B9P+pCmXuP6q9eMrQF1ZAY3UBoTP97ikw=
+X-Google-Smtp-Source: ACHHUZ5sgA0ZKrm3D7nww13G21t1yiGVku/UHWR3Fvcyc85cCBGbT3NUOF+icKMh0DS3B5IEC+CVqLGgvuHwaoAI8FU=
+X-Received: by 2002:a17:907:16a5:b0:978:6be4:7efb with SMTP id
+ hc37-20020a17090716a500b009786be47efbmr679173ejc.7.1686017867509; Mon, 05 Jun
+ 2023 19:17:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <d28f48e3-95d2-111f-e938-348d68402a57@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxReRIln5kBZ8BAA--.7390S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Aw4UtFWxCFW8Zw15tF15ZFc_yoW5JF43pr
-	WkCFn8Ww4rJry7Gw13tws0qrnIqr97Kr1I9ry3Way2yrsFy34rtry8KrZxCFy5ur1FqF1x
-	ZF1rGrn8uFs0yagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
-	xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267
-	AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_
-	Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3
-	UUUUU==
+References: <20230605034423.1528206-1-maobibo@loongson.cn> <CAAhV-H6O+_EnmDU6kE-19PP+8tD3wwbzzuakE_vHZGCtjZWDbg@mail.gmail.com>
+ <749898e2-01c2-9f74-f939-fac36227431a@loongson.cn>
+In-Reply-To: <749898e2-01c2-9f74-f939-fac36227431a@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 6 Jun 2023 10:17:35 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6o8Dx0g+UaNjh9JfAVv=aAU=GFkUS9aO6tsBim3mYZjQ@mail.gmail.com>
+Message-ID: <CAAhV-H6o8Dx0g+UaNjh9JfAVv=aAU=GFkUS9aO6tsBim3mYZjQ@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Align pci memory space base address with page size
+To: "bibo, mao" <maobibo@loongson.cn>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, helgaas@kernel.org, 
+	linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>, 
+	WANG Xuerui <kernel@xen0n.name>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-在 2023年06月05日 21:03, bibo, mao 写道:
+On Mon, Jun 5, 2023 at 2:31=E2=80=AFPM bibo, mao <maobibo@loongson.cn> wrot=
+e:
 >
-> 在 2023/5/30 09:52, Tianrui Zhao 写道:
->> Implement vcpu handle exit interface, getting the exit code by ESTAT
->> register and using kvm exception vector to handle it.
->>
->> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
->> ---
->>   arch/loongarch/kvm/vcpu.c | 46 +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 46 insertions(+)
->>
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index eca8b96a3e6e..ddea480fa5b0 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -55,6 +55,52 @@ static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
->>   	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
->>   }
->>   
->> +/*
->> + * Return 1 for resume guest and "<= 0" for resume host.
->> + */
->> +static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
->> +{
->> +	unsigned long exst = vcpu->arch.host_estat;
->> +	u32 intr = exst & 0x1fff; /* ignore NMI */
->> +	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
->> +	int ret = RESUME_GUEST;
->> +
->> +	vcpu->mode = OUTSIDE_GUEST_MODE;
->> +
->> +	/* Set a default exit reason */
->> +	run->exit_reason = KVM_EXIT_UNKNOWN;
->> +	run->ready_for_interrupt_injection = 1;
-> Is ready_for_interrupt_injection used in qemu or kvm for LoongArch?
-We do not handle ready_for_interrupt_injection when vcpu exit in 
-qemu/kvm, and I will remove it.
-
-Thanks
-Tianrui Zhao
 >
->> +
->> +	local_irq_enable();
->> +	guest_state_exit_irqoff();
->> +
->> +	trace_kvm_exit(vcpu, exccode);
->> +	if (exccode) {
->> +		ret = _kvm_handle_fault(vcpu, exccode);
->> +	} else {
->> +		WARN(!intr, "suspicious vm exiting");
-> how about comments like this?
->    WARN(!intr, "vm exiting with suspicious irq \n")
+>
+> =E5=9C=A8 2023/6/5 11:58, Huacai Chen =E5=86=99=E9=81=93:
+> > Hi, Bibo,
+> >
+> > Three suggestions:
+> > 1, split to two patches.
+> will do.
+> > 2, the "(align < PAGE_SIZE)" condition can be removed.
+> With  "(align < PAGE_SIZE)" condition, there is little modification compa=
+red
+> to the weak function.
+> resource_size_t __weak pcibios_align_resource(void *data,
+>                                               const struct resource *res,
+>                                               resource_size_t size,
+>                                               resource_size_t align)
+> {
+>        return res->start;
+> }
+Why? I think "align > PAGE_SIZE" doesn't ensure res->start is aligned here.
+
+>
+> or do you mean something this?
+>        if (res->flags & IORESOURCE_MEM) {
+>                 align =3D max_t(resource_size_t, PAGE_SIZE, align);
+>                 start =3D ALIGN(start, align);
+>         }
+>
+No, I mean use "start =3D ALIGN(start, PAGE_SIZE)" unconditionally.
+
+Huacai
+>
+> > 3, you can unify the comments between ARM64 and LoongArch.
+> will do.
 >
 > Regards
 > Bibo, Mao
-Thanks, this comment should contain more information, I will fix it.
-
-Thanks
-Tianrui Zhao
->> +		++vcpu->stat.int_exits;
->> +	}
->> +
->> +	cond_resched();
->> +	local_irq_disable();
->> +
->> +	if (ret == RESUME_HOST)
->> +		return ret;
->> +
->> +	/* Only check for signals if not already exiting to userspace */
->> +	if (signal_pending(current)) {
->> +		vcpu->run->exit_reason = KVM_EXIT_INTR;
->> +		++vcpu->stat.signal_exits;
->> +		return -EINTR;
->> +	}
->> +
->> +	kvm_pre_enter_guest(vcpu);
->> +	trace_kvm_reenter(vcpu);
->> +	guest_state_enter_irqoff();
->> +	return RESUME_GUEST;
->> +}
->> +
->>   int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->>   {
->>   	unsigned long timer_hz;
-
+>
+> >
+> > Huacai
+> >
+> > On Mon, Jun 5, 2023 at 11:44=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >> Some PCI devices has only 4K memory space size, it is normal in genera=
+l
+> >> machines and aligned with page size. However some architectures which
+> >> support different page size, default page size on LoongArch is 16K, an=
+d
+> >> ARM64 supports page size varying from 4K to 64K. On machines where lar=
+ger
+> >> page size is use, memory space region of two different pci devices may=
+ be
+> >> in one page. It is not safe with mmu protection, also VFIO pci device
+> >> driver requires base address of pci memory space page aligned, so that=
+ it
+> >> can be memory mapped to qemu user space when it is pass-through to vm.
+> >>
+> >> It consumes more pci memory resource with page size alignment requirem=
+ent,
+> >> on 64 bit system it should not be a problem. And UEFI bios set pci mem=
+ory
+> >> base address with 4K fixed-size aligned, the safer solution is to alig=
+n
+> >> with larger size on UEFI BIOS stage on these architectures, linux kern=
+el
+> >> can reuse resource from UEFI bios. For new devices such hotplug pci
+> >> devices and sriov devices, pci resource is assigned in Linux kernel si=
+de.
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>  arch/arm64/kernel/pci.c  | 13 +++++++++++++
+> >>  arch/loongarch/pci/pci.c | 18 ++++++++++++++++++
+> >>  2 files changed, 31 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> >> index 2276689b5411..e2f7b176b156 100644
+> >> --- a/arch/arm64/kernel/pci.c
+> >> +++ b/arch/arm64/kernel/pci.c
+> >> @@ -232,4 +232,17 @@ void pcibios_remove_bus(struct pci_bus *bus)
+> >>         acpi_pci_remove_bus(bus);
+> >>  }
+> >>
+> >> +resource_size_t pcibios_align_resource(void *data, const struct resou=
+rce *res,
+> >> +                               resource_size_t size, resource_size_t =
+align)
+> >> +{
+> >> +       resource_size_t start =3D res->start;
+> >> +
+> >> +       /*
+> >> +        * align base address of pci memory resource with page size
+> >> +        */
+> >> +       if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
+> >> +               start =3D ALIGN(start, PAGE_SIZE);
+> >> +
+> >> +       return start;
+> >> +}
+> >>  #endif
+> >> diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
+> >> index 2726639150bc..943a48e60fb1 100644
+> >> --- a/arch/loongarch/pci/pci.c
+> >> +++ b/arch/loongarch/pci/pci.c
+> >> @@ -83,6 +83,24 @@ int pcibios_alloc_irq(struct pci_dev *dev)
+> >>         return acpi_pci_irq_enable(dev);
+> >>  }
+> >>
+> >> +/*
+> >> + * memory space size of some pci cards is 4K, it is separated with
+> >> + * different pages for generic architectures, so that mmu protection =
+can
+> >> + * work with different pci cards. However page size for LoongArch sys=
+tem
+> >> + * is 16K, memory space of different pci cards may share the same pag=
+e
+> >> + * on LoongArch, it is not safe here.
+> >> + */
+> >> +resource_size_t pcibios_align_resource(void *data, const struct resou=
+rce *res,
+> >> +                               resource_size_t size, resource_size_t =
+align)
+> >> +{
+> >> +       resource_size_t start =3D res->start;
+> >> +
+> >> +       if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
+> >> +               start =3D ALIGN(start, PAGE_SIZE);
+> >> +
+> >> +       return start;
+> >> +}
+> >> +
+> >>  static void pci_fixup_vgadev(struct pci_dev *pdev)
+> >>  {
+> >>         struct pci_dev *devp =3D NULL;
+> >> --
+> >> 2.27.0
+> >>
+> > _______________________________________________
+> > Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
+> > To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
+>
