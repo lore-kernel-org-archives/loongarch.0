@@ -1,18 +1,19 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF3D7F
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:02:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E915C7F
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:13:31 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.86])
-	by gateway (Coremail) with SMTP id _____8AxB_HIk35k9lQAAA--.1050S3;
-	Tue, 06 Jun 2023 10:02:48 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxxvBKln5kx1UAAA--.981S3;
+	Tue, 06 Jun 2023 10:13:30 +0800 (CST)
 Received: from [10.20.42.86] (unknown [10.20.42.86])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxNeTHk35kXJwBAA--.7117S3;
-	Tue, 06 Jun 2023 10:02:48 +0800 (CST)
-Subject: Re: [PATCH v12 07/31] LoongArch: KVM: Implement vcpu run interface
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxReRIln5kBZ8BAA--.7390S3;
+	Tue, 06 Jun 2023 10:13:29 +0800 (CST)
+Subject: Re: [PATCH v12 08/31] LoongArch: KVM: Implement vcpu handle exit
+ interface
 To: "bibo, mao" <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
  kvm@vger.kernel.org
 References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
- <20230530015223.147755-8-zhaotianrui@loongson.cn>
- <2ed84603-f046-202e-dc1c-d6fcfc36662d@loongson.cn>
+ <20230530015223.147755-9-zhaotianrui@loongson.cn>
+ <d28f48e3-95d2-111f-e938-348d68402a57@loongson.cn>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
  WANG Xuerui <kernel@xen0n.name>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
@@ -20,8 +21,8 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
  Alex Deucher <alexander.deucher@amd.com>,
  Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <41ffdfef-d88f-4c57-8707-a5d041531651@loongson.cn>
-Date: Tue, 6 Jun 2023 10:02:47 +0800
+Message-ID: <3fe89bb1-a39c-1da2-b527-4175dfb68752@loongson.cn>
+Date: Tue, 6 Jun 2023 10:13:28 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -30,150 +31,114 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <2ed84603-f046-202e-dc1c-d6fcfc36662d@loongson.cn>
+In-Reply-To: <d28f48e3-95d2-111f-e938-348d68402a57@loongson.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxNeTHk35kXJwBAA--.7117S3
+X-CM-TRANSID:AQAAf8CxReRIln5kBZ8BAA--.7390S3
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCw1UWrW3WrW8KrW7Wry7XFc_yoW5uryUpF
-	WkCan09w4rJryxG34aqrs0grs0qrZ5Kr12vFyxtFW3Ar1qk34kCr48KrZrCFyxA34fu3WS
-	vF1rtry7C3WDtrgCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw4UtFWxCFW8Zw15tF15ZFc_yoW5JF43pr
+	WkCFn8Ww4rJry7Gw13tws0qrnIqr97Kr1I9ry3Way2yrsFy34rtry8KrZxCFy5ur1FqF1x
+	ZF1rGrn8uFs0yagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUPSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4Xo7DU
-	UUU
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_
+	Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3
+	UUUUU==
 
 
 
-在 2023年06月05日 20:53, bibo, mao 写道:
+在 2023年06月05日 21:03, bibo, mao 写道:
 >
-> 在 2023/5/30 09:51, Tianrui Zhao 写道:
->> Implement vcpu run interface, handling mmio, iocsr reading fault
->> and deliver interrupt, lose fpu before vcpu enter guest.
+> 在 2023/5/30 09:52, Tianrui Zhao 写道:
+>> Implement vcpu handle exit interface, getting the exit code by ESTAT
+>> register and using kvm exception vector to handle it.
 >>
 >> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 >> ---
->>   arch/loongarch/kvm/vcpu.c | 86 +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 86 insertions(+)
+>>   arch/loongarch/kvm/vcpu.c | 46 +++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 46 insertions(+)
 >>
 >> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 24b5b00266a1..eca8b96a3e6e 100644
+>> index eca8b96a3e6e..ddea480fa5b0 100644
 >> --- a/arch/loongarch/kvm/vcpu.c
 >> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -17,6 +17,44 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
->>   	return 0;
+>> @@ -55,6 +55,52 @@ static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+>>   	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
 >>   }
 >>   
->> +/* Returns 1 if the guest TLB may be clobbered */
->> +static int _kvm_check_requests(struct kvm_vcpu *vcpu, int cpu)
+>> +/*
+>> + * Return 1 for resume guest and "<= 0" for resume host.
+>> + */
+>> +static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
 >> +{
->> +	int ret = 0;
+>> +	unsigned long exst = vcpu->arch.host_estat;
+>> +	u32 intr = exst & 0x1fff; /* ignore NMI */
+>> +	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
+>> +	int ret = RESUME_GUEST;
 >> +
->> +	if (!kvm_request_pending(vcpu))
->> +		return 0;
+>> +	vcpu->mode = OUTSIDE_GUEST_MODE;
 >> +
->> +	if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu)) {
->> +		/* Drop vpid for this vCPU */
->> +		vcpu->arch.vpid = 0;
->> +		/* This will clobber guest TLB contents too */
->> +		ret = 1;
->> +	}
->> +
->> +	return ret;
->> +}
-> can parameter cpu in function _kvm_check_requests be removed since it is not used here?
->
-> Regards
-> Bibo, Mao
-Thanks, I will remove the 'cpu' parameter.
+>> +	/* Set a default exit reason */
+>> +	run->exit_reason = KVM_EXIT_UNKNOWN;
+>> +	run->ready_for_interrupt_injection = 1;
+> Is ready_for_interrupt_injection used in qemu or kvm for LoongArch?
+We do not handle ready_for_interrupt_injection when vcpu exit in 
+qemu/kvm, and I will remove it.
 
 Thanks
 Tianrui Zhao
+>
 >> +
->> +static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
->> +{
->> +	int cpu;
+>> +	local_irq_enable();
+>> +	guest_state_exit_irqoff();
 >> +
->> +	/*
->> +	 * handle vcpu timer, interrupts, check requests and
->> +	 * check vmid before vcpu enter guest
->> +	 */
->> +	kvm_acquire_timer(vcpu);
->> +	_kvm_deliver_intr(vcpu);
->> +	/* make sure the vcpu mode has been written */
->> +	smp_store_mb(vcpu->mode, IN_GUEST_MODE);
->> +	cpu = smp_processor_id();
->> +	_kvm_check_requests(vcpu, cpu);
->> +	_kvm_check_vmid(vcpu, cpu);
->> +	vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
->> +	/* clear KVM_LARCH_CSR as csr will change when enter guest */
->> +	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
+>> +	trace_kvm_exit(vcpu, exccode);
+>> +	if (exccode) {
+>> +		ret = _kvm_handle_fault(vcpu, exccode);
+>> +	} else {
+>> +		WARN(!intr, "suspicious vm exiting");
+> how about comments like this?
+>    WARN(!intr, "vm exiting with suspicious irq \n")
+>
+> Regards
+> Bibo, Mao
+Thanks, this comment should contain more information, I will fix it.
+
+Thanks
+Tianrui Zhao
+>> +		++vcpu->stat.int_exits;
+>> +	}
+>> +
+>> +	cond_resched();
+>> +	local_irq_disable();
+>> +
+>> +	if (ret == RESUME_HOST)
+>> +		return ret;
+>> +
+>> +	/* Only check for signals if not already exiting to userspace */
+>> +	if (signal_pending(current)) {
+>> +		vcpu->run->exit_reason = KVM_EXIT_INTR;
+>> +		++vcpu->stat.signal_exits;
+>> +		return -EINTR;
+>> +	}
+>> +
+>> +	kvm_pre_enter_guest(vcpu);
+>> +	trace_kvm_reenter(vcpu);
+>> +	guest_state_enter_irqoff();
+>> +	return RESUME_GUEST;
 >> +}
 >> +
 >>   int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
 >>   {
 >>   	unsigned long timer_hz;
->> @@ -86,3 +124,51 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
->>   			context->last_vcpu = NULL;
->>   	}
->>   }
->> +
->> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->> +{
->> +	int r = -EINTR;
->> +	struct kvm_run *run = vcpu->run;
->> +
->> +	vcpu_load(vcpu);
->> +
->> +	kvm_sigset_activate(vcpu);
->> +
->> +	if (vcpu->mmio_needed) {
->> +		if (!vcpu->mmio_is_write)
->> +			_kvm_complete_mmio_read(vcpu, run);
->> +		vcpu->mmio_needed = 0;
->> +	}
->> +
->> +	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
->> +		if (!run->iocsr_io.is_write)
->> +			_kvm_complete_iocsr_read(vcpu, run);
->> +	}
->> +
->> +	/* clear exit_reason */
->> +	run->exit_reason = KVM_EXIT_UNKNOWN;
->> +	if (run->immediate_exit)
->> +		goto out;
->> +
->> +	lose_fpu(1);
->> +
->> +	local_irq_disable();
->> +	guest_timing_enter_irqoff();
->> +
->> +	kvm_pre_enter_guest(vcpu);
->> +	trace_kvm_enter(vcpu);
->> +
->> +	guest_state_enter_irqoff();
->> +	r = kvm_loongarch_ops->enter_guest(run, vcpu);
->> +
->> +	/* guest_state_exit_irqoff() already done.  */
->> +	trace_kvm_out(vcpu);
->> +	guest_timing_exit_irqoff();
->> +	local_irq_enable();
->> +
->> +out:
->> +	kvm_sigset_deactivate(vcpu);
->> +
->> +	vcpu_put(vcpu);
->> +	return r;
->> +}
 
