@@ -1,115 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD699633
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:27:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260C6C433A0
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:27:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686018477;
-	bh=8w5l++HfxzD3uHKzwQjjiajXQ1/YXpzExj4rmuGMb+g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SCNkls8wgo/SrfPPBecyRke6NPbM9EwPT4r7RepWD36UhkVTRQwUPx8zdjBlExA5D
-	 7GzdCR5NYpSZ2eU/hZ3vqPrlIBAnYmrCqpMfFJV6zGQE8Pah2aPx6YwFO8m+L3+/Js
-	 JrSP0MfZRRLHo1HJyC1wS0MDB4bmUymE4/su7FnELpoS2JDoyWaPd95Wc4mD5sQI/H
-	 TIiOmeAbi0jIPBQtXuTPbfwTM0YM1dSZqXPk3JZKTbW3AS8rbatellg+fo25Lc+iOe
-	 USOdVpnuLic7zzIWMCZMxcM3EqTaxWng7fEl8/nGII0AHj5aWBaCA1O+/UZOYSwZsP
-	 e9AV1kF0SjKTQ==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5147e441c33so11499518a12.0
-        for <loongarch@lists.linux.dev>; Mon, 05 Jun 2023 19:27:57 -0700 (PDT)
-X-Gm-Message-State: AC+VfDw1UxJsKUx6/+IdLFZt7jHM7fvaC3II4IK+znHjSOcbKnhJBgN3
-	iRQCUvdZQr5ypo8pACc4YsnzWIM7Aj1TOArV+RE=
-X-Google-Smtp-Source: ACHHUZ78XULWy52BiI/ISzfKx6wTP7I6WEmOAcI1Z0VqatmsI9XCYcD4ODPiCUMiLr/gZ441FN4YVD88g2EEFIrUcbI=
-X-Received: by 2002:a05:6402:3582:b0:514:a5cf:745b with SMTP id
- y2-20020a056402358200b00514a5cf745bmr11687147edc.3.1686018475283; Mon, 05 Jun
- 2023 19:27:55 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 192D8361
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:37:56 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8BxeeoDnH5kzFcAAA--.307S3;
+	Tue, 06 Jun 2023 10:37:55 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxReQAnH5kg6UBAA--.7521S3;
+	Tue, 06 Jun 2023 10:37:52 +0800 (CST)
+Message-ID: <1102ca21-fdc7-cb06-d241-79b2e3627144@loongson.cn>
+Date: Tue, 6 Jun 2023 10:37:52 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230605034423.1528206-1-maobibo@loongson.cn> <20230605145138.GH21212@willie-the-truck>
-In-Reply-To: <20230605145138.GH21212@willie-the-truck>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 6 Jun 2023 10:27:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H449Kv0WVfpD-d_j1Gq0Ud-TGqZRHAn6MrjQWH76cLGCA@mail.gmail.com>
-Message-ID: <CAAhV-H449Kv0WVfpD-d_j1Gq0Ud-TGqZRHAn6MrjQWH76cLGCA@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Align pci memory space base address with page size
-To: Will Deacon <will@kernel.org>
-Cc: Bibo Mao <maobibo@loongson.cn>, Catalin Marinas <catalin.marinas@arm.com>, helgaas@kernel.org, 
-	linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v12 29/31] LoongArch: KVM: Enable kvm config and add the
+ makefile
+Content-Language: en-US
+To: Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
+ kernel test robot <lkp@intel.com>
+References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
+ <20230530015223.147755-30-zhaotianrui@loongson.cn>
+From: "bibo, mao" <maobibo@loongson.cn>
+In-Reply-To: <20230530015223.147755-30-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxReQAnH5kg6UBAA--.7521S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZFWfJryrurWrtF1DGw4xZrc_yoWrWF4kpr
+	yxCr95Gr4xWFn3J393t34kWrs0kF97KFW3W3W3Za48Cr9rZ34kur18tr9rZFyDA395JrW0
+	gF1rGa1aga1UJwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPlb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4U
+	JVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+	jO2-nUUUUU=
 
-On Mon, Jun 5, 2023 at 10:51=E2=80=AFPM Will Deacon <will@kernel.org> wrote=
-:
->
-> On Mon, Jun 05, 2023 at 11:44:23AM +0800, Bibo Mao wrote:
-> > Some PCI devices has only 4K memory space size, it is normal in general
-> > machines and aligned with page size. However some architectures which
-> > support different page size, default page size on LoongArch is 16K, and
-> > ARM64 supports page size varying from 4K to 64K. On machines where larg=
-er
-> > page size is use, memory space region of two different pci devices may =
-be
-> > in one page. It is not safe with mmu protection, also VFIO pci device
-> > driver requires base address of pci memory space page aligned, so that =
-it
-> > can be memory mapped to qemu user space when it is pass-through to vm.
-> >
-> > It consumes more pci memory resource with page size alignment requireme=
-nt,
-> > on 64 bit system it should not be a problem. And UEFI bios set pci memo=
-ry
-> > base address with 4K fixed-size aligned, the safer solution is to align
-> > with larger size on UEFI BIOS stage on these architectures, linux kerne=
-l
-> > can reuse resource from UEFI bios. For new devices such hotplug pci
-> > devices and sriov devices, pci resource is assigned in Linux kernel sid=
-e.
-> >
-> > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > ---
-> >  arch/arm64/kernel/pci.c  | 13 +++++++++++++
-> >  arch/loongarch/pci/pci.c | 18 ++++++++++++++++++
-> >  2 files changed, 31 insertions(+)
-> >
-> > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> > index 2276689b5411..e2f7b176b156 100644
-> > --- a/arch/arm64/kernel/pci.c
-> > +++ b/arch/arm64/kernel/pci.c
-> > @@ -232,4 +232,17 @@ void pcibios_remove_bus(struct pci_bus *bus)
-> >       acpi_pci_remove_bus(bus);
-> >  }
-> >
-> > +resource_size_t pcibios_align_resource(void *data, const struct resour=
-ce *res,
-> > +                             resource_size_t size, resource_size_t ali=
-gn)
-> > +{
-> > +     resource_size_t start =3D res->start;
-> > +
-> > +     /*
-> > +      * align base address of pci memory resource with page size
-> > +      */
-> > +     if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
-> > +             start =3D ALIGN(start, PAGE_SIZE);
-> > +
-> > +     return start;
-> > +}
-> >  #endif
->
-> If this is needed by all architectures with !4k page size, why don't we
-> instead handle the alignment in the core code, given that it is aware
-> of the page size?
-Agree, modifying the common weak version of pcibios_align_resource()
-seems better. Maybe we can use CONFIG_VFIO_PCI to guard the align
-operation.
+Reviewed-by: Bibo, Mao <maobibo@loongson.cn>
 
-Huacai
->
-> Will
+在 2023/5/30 09:52, Tianrui Zhao 写道:
+> Enable LoongArch kvm config and add the makefile to support build kvm
+> module.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp@intel.com/
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> ---
+>  arch/loongarch/Kbuild                      |  1 +
+>  arch/loongarch/Kconfig                     |  2 ++
+>  arch/loongarch/configs/loongson3_defconfig |  2 ++
+>  arch/loongarch/kvm/Kconfig                 | 38 ++++++++++++++++++++++
+>  arch/loongarch/kvm/Makefile                | 22 +++++++++++++
+>  5 files changed, 65 insertions(+)
+>  create mode 100644 arch/loongarch/kvm/Kconfig
+>  create mode 100644 arch/loongarch/kvm/Makefile
+> 
+> diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
+> index b01f5cdb27e0..40be8a1696f9 100644
+> --- a/arch/loongarch/Kbuild
+> +++ b/arch/loongarch/Kbuild
+> @@ -2,6 +2,7 @@ obj-y += kernel/
+>  obj-y += mm/
+>  obj-y += net/
+>  obj-y += vdso/
+> +obj-y += kvm/
+>  
+>  # for cleaning
+>  subdir- += boot
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index d38b066fc931..16ddf4f6f9bd 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -113,6 +113,7 @@ config LOONGARCH
+>  	select HAVE_KPROBES
+>  	select HAVE_KPROBES_ON_FTRACE
+>  	select HAVE_KRETPROBES
+> +	select HAVE_KVM
+>  	select HAVE_MOD_ARCH_SPECIFIC
+>  	select HAVE_NMI
+>  	select HAVE_PCI
+> @@ -604,3 +605,4 @@ source "drivers/acpi/Kconfig"
+>  endmenu
+>  
+>  source "drivers/firmware/Kconfig"
+> +source "arch/loongarch/kvm/Kconfig"
+> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+> index 6cd26dd3c134..3c0cbe6ad08f 100644
+> --- a/arch/loongarch/configs/loongson3_defconfig
+> +++ b/arch/loongarch/configs/loongson3_defconfig
+> @@ -63,6 +63,8 @@ CONFIG_EFI_ZBOOT=y
+>  CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
+>  CONFIG_EFI_CAPSULE_LOADER=m
+>  CONFIG_EFI_TEST=m
+> +CONFIG_VIRTUALIZATION=y
+> +CONFIG_KVM=m
+>  CONFIG_MODULES=y
+>  CONFIG_MODULE_FORCE_LOAD=y
+>  CONFIG_MODULE_UNLOAD=y
+> diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
+> new file mode 100644
+> index 000000000000..8a999b4c0232
+> --- /dev/null
+> +++ b/arch/loongarch/kvm/Kconfig
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# KVM configuration
+> +#
+> +
+> +source "virt/kvm/Kconfig"
+> +
+> +menuconfig VIRTUALIZATION
+> +	bool "Virtualization"
+> +	help
+> +	  Say Y here to get to see options for using your Linux host to run
+> +	  other operating systems inside virtual machines (guests).
+> +	  This option alone does not add any kernel code.
+> +
+> +	  If you say N, all options in this submenu will be skipped and
+> +	  disabled.
+> +
+> +if VIRTUALIZATION
+> +
+> +config KVM
+> +	tristate "Kernel-based Virtual Machine (KVM) support"
+> +	depends on HAVE_KVM
+> +	select MMU_NOTIFIER
+> +	select ANON_INODES
+> +	select PREEMPT_NOTIFIERS
+> +	select KVM_MMIO
+> +	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+> +	select HAVE_KVM_VCPU_ASYNC_IOCTL
+> +	select HAVE_KVM_EVENTFD
+> +	select SRCU
+> +	help
+> +	  Support hosting virtualized guest machines using hardware
+> +	  virtualization extensions. You will need a fairly processor
+> +	  equipped with virtualization extensions.
+> +
+> +	  If unsure, say N.
+> +
+> +endif # VIRTUALIZATION
+> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+> new file mode 100644
+> index 000000000000..2335e873a6ef
+> --- /dev/null
+> +++ b/arch/loongarch/kvm/Makefile
+> @@ -0,0 +1,22 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for LOONGARCH KVM support
+> +#
+> +
+> +ccflags-y += -I $(srctree)/$(src)
+> +
+> +include $(srctree)/virt/kvm/Makefile.kvm
+> +
+> +obj-$(CONFIG_KVM) += kvm.o
+> +
+> +kvm-y += main.o
+> +kvm-y += vm.o
+> +kvm-y += vmid.o
+> +kvm-y += tlb.o
+> +kvm-y += mmu.o
+> +kvm-y += vcpu.o
+> +kvm-y += exit.o
+> +kvm-y += interrupt.o
+> +kvm-y += timer.o
+> +kvm-y += switch.o
+> +kvm-y += csr_ops.o
+
