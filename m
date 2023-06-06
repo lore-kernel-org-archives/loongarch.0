@@ -1,143 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B6E19915
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 18:22:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B748CC433B3
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 18:22:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8955C4C7A
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 20:45:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B098BC433D2;
+	Tue,  6 Jun 2023 20:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686075733;
-	bh=08bgDTu6K2r14VqmkEIMfCPJQ/ZZrnAx7Zh60inB9tQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PvVbLJcYr9sEPc4KvXnz7da5hnzjz64447Y1vyViBiCb+fl59qj0pvbLDlkg7Wuob
-	 rzrnBjSOFtiQecuq+LZ/SRRxmzgXLdbIbqyyYrcYGhY29RsiV56QlreCUSnVm+stVt
-	 UoVEGKhBSdT54YRh1gXdKSmvd62cZB1711kSzDIW8D76YUK3gBLlfz43UtqujOAa4M
-	 WNIOBkfcw2WKv0IUzEzdSsuoiqNT0iAk+aytnzF0p5Ex5Qs+2o2gd4vHHiQKTwquZM
-	 rFReB/rrpz7owlp/MdxR2Mp3uAIDm8MwdFNdtC8Gq4wlspi7VJYfgsGIf9GhxSZs3/
-	 0v9cbIwE3cmiA==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2b1a6a8e851so72152031fa.2
-        for <loongarch@lists.linux.dev>; Tue, 06 Jun 2023 11:22:13 -0700 (PDT)
-X-Gm-Message-State: AC+VfDy/LmlOPH1uVDyJOBVh8feRRVePysgjhfeCB5upnwhV6/XSUQ6j
-	DKS7FwhJw2JPcblW79i2+6/wyhcKfhR3uFkRhqY=
-X-Google-Smtp-Source: ACHHUZ5bLSr3tA3IB8xCjeC0rEYdnEDeq7vmc1y/QuS5oHjyhnnuqZDpSw2PwmODz4CMTnRxT8zG59Qp1zLSa+hdG70=
-X-Received: by 2002:a2e:82d0:0:b0:2b0:297c:cbdf with SMTP id
- n16-20020a2e82d0000000b002b0297ccbdfmr1546782ljh.1.1686075731505; Tue, 06 Jun
- 2023 11:22:11 -0700 (PDT)
+	s=k20201202; t=1686084324;
+	bh=68tKpI2HU5uWW5UQM+HSKSBXNSVkchVHaoEuof6BVrs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=O/fYW8OkKSbLgX9E4bsHNn6FXN94l0YBRl/nbW+Hu54Mr4Nl02Swt9a4rhQk44upo
+	 oNCe5d9yx76ksPnD/TQv3zLToVEdsQ/AH/Gxgkf7v+38IiH2mGEuvS05vZKbRW0wQE
+	 rRx+gsJueSaPFogOzlT1TDJJBzScoYmuiTaU7oXUeihrp9k/PACWSzdjW5aEO+9GvG
+	 1RhHhkRrkHA/qUOYjJotqlB6fvQh3otd/S6P8952M2Co/P261HrpXzRlOg8UDjgcV0
+	 0hwiqQrr2VE0cdl1Zj4PaDlaPlaTbFzAfxkVnHJKJAu8gAhIxKtKJllGtTIxUn/oTj
+	 FzKLsXT7tuL7Q==
+Date: Tue, 6 Jun 2023 15:45:22 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "bibo, mao" <maobibo@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>, loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3] PCI: Align pci memory space base address with page
+ size
+Message-ID: <20230606204522.GA1142773@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230601101257.530867-1-rppt@kernel.org> <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
- <ZHjgIH3aX9dCvVZc@moria.home.lan> <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
- <20230605092040.GB3460@kernel.org> <ZH20XkD74prrdN4u@FVFF77S0Q05N>
-In-Reply-To: <ZH20XkD74prrdN4u@FVFF77S0Q05N>
-From: Song Liu <song@kernel.org>
-Date: Tue, 6 Jun 2023 11:21:59 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
-Message-ID: <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Russell King <linux@armlinux.org.uk>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Will Deacon <will@kernel.org>, bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <57c428e9-6d7c-c0b7-be5f-365373ab1b9c@loongson.cn>
 
-On Mon, Jun 5, 2023 at 3:09=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
-wrote:
+On Tue, Jun 06, 2023 at 06:06:04PM +0800, bibo, mao wrote:
+> Huacai,
+> 
+> Although I post this patch, I think this should be arch specified
+> rather than general problem.  X86 has solved this problem, arm64
+> with 64K page size is not popular. However LoongArch has this
+> problem, page size is 16K rather than 4K. It is the problem of
+> LoongArch system rather than generic issue.
 
-[...]
+I think this is only related to the page size, not to any
+LoongArch-specific details.  If that's the case, I don't think the
+change should be arch-specific.
 
-> > > > Can you give more detail on what parameters you need? If the only e=
-xtra
-> > > > parameter is just "does this allocation need to live close to kerne=
-l
-> > > > text", that's not that big of a deal.
-> > >
-> > > My thinking was that we at least need the start + end for each caller=
-. That
-> > > might be it, tbh.
-> >
-> > Do you mean that modules will have something like
-> >
-> >       jit_text_alloc(size, MODULES_START, MODULES_END);
-> >
-> > and kprobes will have
-> >
-> >       jit_text_alloc(size, KPROBES_START, KPROBES_END);
-> > ?
->
-> Yes.
+> There is such discussion before:
+> https://patchwork.kernel.org/project/linux-pci/patch/22400b8828ad44ddbccb876cc5ca3b11@FE-MBX1012.de.bosch.com/#19319457
+> 
+> UEFI bios sets pci memory space 4K aligned, however Loongarch kernel rescans the pci
+> bus and reassigns pci memory resource. So it it strange like this, here is pci memory info on
+>  my 7A2000 board.
+> root@user-pc:~# lspci -vvv | grep Region
+>         Region 5: Memory at e003526e800 (32-bit, non-prefetchable) [size=1K]
+>         Region 0: Memory at e003526ec00 (64-bit, non-prefetchable) [size=1K]
 
-How about we start with two APIs:
-     jit_text_alloc(size);
-     jit_text_alloc_range(size, start, end);
+I guess these BARs are from different devices, and the problem you're
+pointing out is that both BARs end up in the same 16K page (actually
+even the same 4K page):
 
-AFAICT, arm64 is the only arch that requires the latter API. And TBH, I am
-not quite convinced it is needed.
+  (gdb) p/x 0xe003526e800 >> 12
+  $1 = 0xe003526e
+  (gdb) p/x 0xe003526ec00 >> 12
+  $2 = 0xe003526e
 
->
-> > It sill can be achieved with a single jit_alloc_arch_params(), just by
-> > adding enum jit_type parameter to jit_text_alloc().
->
-> That feels backwards to me; it centralizes a bunch of information about
-> distinct users to be able to shove that into a static array, when the cal=
-lsites
-> can pass that information.
+I agree that's a potential issue because a user mmap of the first
+device also gets access to the BAR of the second device.  But it
+doesn't seem to be a *new* or LoongArch-specific issue.
 
-I think we only two type of users: module and everything else (ftrace, kpro=
-be,
-bpf stuff). The key differences are:
+So I *think* the point of this patch is to ensure that BARs of
+different devices never share a page.  Why is that suddenly an issue
+for LoongArch?  Is it only because you see more sharing with 16K pages
+than other arches do with 4K pages?
 
-  1. module uses text and data; while everything else only uses text.
-  2. module code is generated by the compiler, and thus has stronger
-  requirements in address ranges; everything else are generated via some
-  JIT or manual written assembly, so they are more flexible with address
-  ranges (in JIT, we can avoid using instructions that requires a specific
-  address range).
+> 在 2023/6/6 16:45, Bibo Mao 写道:
+> > Some PCI devices have only 4K memory space size, it is normal in general
+> > machines and aligned with page size. However some architectures which
+> > support different page size, default page size on LoongArch is 16K, and
+> > ARM64 supports page size varying from 4K to 64K. On machines where larger
+> > page size is use, memory space region of two different pci devices may be
+> > in one page. It is not safe with mmu protection, also VFIO pci device
+> > driver requires base address of pci memory space page aligned, so that it
+> > can be memory mapped to qemu user space when it is passed-through to vm.
 
-The next question is, can we have the two types of users share the same
-address ranges? If not, we can reserve the preferred range for modules,
-and let everything else use the other range. I don't see reasons to further
-separate users in the "everything else" group.
+The minimum memory BAR per spec is 128 bytes (not 4K).  You just
+demonstrated that even with 4K pages, different devices can share a
+page.
 
->
-> What's *actually* common after separating out the ranges? Is it just the
-> permissions?
+> > It consumes more pci memory resource with page size alignment requirement,
+> > it should not be a problem on 64 bit system.
+> > 
+> > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> > ---
+> >  drivers/pci/setup-res.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> > index 967f9a758923..55440ae0128d 100644
+> > --- a/drivers/pci/setup-res.c
+> > +++ b/drivers/pci/setup-res.c
+> > @@ -339,6 +339,14 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > +#ifdef CONFIG_64BIT
+> > +	/*
+> > +	 * force minimum page alignment for vfio pci usage
+> > +	 * supposing there is enough pci memory resource on 64bit system
+> > +	 */
+> > +	if (res->flags & IORESOURCE_MEM)
+> > +		align = max_t(resource_size_t, PAGE_SIZE, align);
+> > +#endif
 
-I believe permission is the key, as we need the hardware to enforce
-permission.
+Why is this under CONFIG_64BIT?  That doesn't have anything to do with
+the BAR size.  The only reason I can see is that with CONFIG_64BIT=y,
+we *might* have more MMIO space to use for BARs.
 
->
-> If we want this to be able to share allocations and so on, why can't we d=
-o this
-> like a kmem_cache, and have the callsite pass a pointer to the allocator =
-data?
-> That would make it easy for callsites to share an allocator or use a dist=
-inct
-> one.
-
-Sharing among different call sites will give us more benefit (in TLB
-misses rate,
-etc.). For example, a 2MB page may host text of two kernel modules, 4 kprob=
-es,
-6 ftrace trampolines, and 10 BPF programs. All of these only require one en=
-try
-in the iTLB.
-
-Thanks,
-Song
+> >  	size = resource_size(res);
+> >  	ret = _pci_assign_resource(dev, resno, size, align);
