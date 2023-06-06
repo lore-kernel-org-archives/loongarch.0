@@ -1,143 +1,116 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8EA4A19
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 07:00:14 +0000 (UTC)
-Received: from loongson.cn (unknown [192.168.100.1])
-	by gateway (Coremail) with SMTP id _____8CxPut92X5kDQcAAA--.187S3;
-	Tue, 06 Jun 2023 15:00:13 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.100.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxJeR72X5kR+oBAA--.8393S3;
-	Tue, 06 Jun 2023 15:00:12 +0800 (CST)
-Subject: Re: [PATCH v12 26/31] LoongArch: KVM: Implement kvm exception vector
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
- <20230530015223.147755-27-zhaotianrui@loongson.cn>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
- Xi Ruoyao <xry111@xry111.site>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <b0e8a311-d988-a1be-a256-130adcdbbfc6@loongson.cn>
-Date: Tue, 6 Jun 2023 15:00:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F08B01C29
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 07:40:01 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.41.186])
+	by gateway (Coremail) with SMTP id _____8DxTuvN4n5kcAkAAA--.259S3;
+	Tue, 06 Jun 2023 15:39:58 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.41.186])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxC8rM4n5kv_YBAA--.108S2;
+	Tue, 06 Jun 2023 15:39:56 +0800 (CST)
+From: Hongliang Wang <wanghongliang@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn,
+	wanghongliang <wanghongliang@loongson.cn>
+Subject: [PATCH v1] soc:loongson:add model and clock-frequency attribute parse.
+Date: Tue,  6 Jun 2023 15:39:38 +0800
+Message-Id: <20230606073938.556-1-wanghongliang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230530015223.147755-27-zhaotianrui@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8AxJeR72X5kR+oBAA--.8393S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJFyUtr1xJr4DKF47tFyDXFc_yoW5XF1kpF
-	yfCw1akrWUWF12vFy2ka1qgr13C3yxKr17Wr4xG345uw4vqryrtrWvg393JF43KrykZF1x
-	AayUJr15uF4UG3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxC8rM4n5kv_YBAA--.108S2
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cw45Ww1xAr1xuw45ZFy7Jwc_yoW8ArWfpF
+	WkZFZ5Gr45GFn3u34rtry8ZryYyrn5Cr4Iga47KFW5CanrXrn8X3yjqFyq9ryxJayrXa4F
+	gr95uw4vqa15JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUU90b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2JKsUU
-	UUU
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVj
+	vjDU0xZFpf9x07jjWlkUUUUU=
 
+From: wanghongliang <wanghongliang@loongson.cn>
 
+This patch add the parse of model and clock-frequency attribute,
+which come from the cpus device_node in device tree and show as
+Model Name and CPU MHz in /proc/cpuinfo.
 
-On 05/30/2023 09:52 AM, Tianrui Zhao wrote:
-> Implement kvm exception vector, using _kvm_fault_tables array to save
-> the handle function pointer and it is used when vcpu handle exit.
->
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> ---
->  arch/loongarch/kvm/exit.c | 48 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> index 10f9922a7e76..625045fc95c8 100644
-> --- a/arch/loongarch/kvm/exit.c
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -657,3 +657,51 @@ static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
->  	kvm_own_fpu(vcpu);
->  	return RESUME_GUEST;
->  }
-> +
-> +/*
-> + * Loongarch KVM callback handling for not implemented guest exiting
-> + */
-> +static int _kvm_fault_ni(struct kvm_vcpu *vcpu)
-> +{
-> +	unsigned long estat, badv;
-> +	unsigned int exccode, inst;
-> +
-> +	/*
-> +	 *  Fetch the instruction.
-> +	 */
-> +	badv = vcpu->arch.badv;
-> +	estat = vcpu->arch.host_estat;
-> +	exccode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-> +	inst = vcpu->arch.badi;
-> +	kvm_err("Exccode: %d PC=%#lx inst=0x%08x BadVaddr=%#lx estat=%#lx\n",
-> +			exccode, vcpu->arch.pc, inst, badv, read_gcsr_estat());
-> +	kvm_arch_vcpu_dump_regs(vcpu);
-> +	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-> +
-> +	return RESUME_HOST;
-> +}
-> +
-> +static exit_handle_fn _kvm_fault_tables[EXCCODE_INT_START] = {
-> +	[EXCCODE_TLBL]		= _kvm_handle_read_fault,
-> +	[EXCCODE_TLBI]		= _kvm_handle_read_fault,
-> +	[EXCCODE_TLBNR]		= _kvm_handle_read_fault,
-> +	[EXCCODE_TLBNX]		= _kvm_handle_read_fault,
-> +	[EXCCODE_TLBS]		= _kvm_handle_write_fault,
-> +	[EXCCODE_TLBM]		= _kvm_handle_write_fault,
-> +	[EXCCODE_FPDIS]		= _kvm_handle_fpu_disabled,
-> +	[EXCCODE_GSPR]		= _kvm_handle_gspr,
-> +};
-It can be modified as follows and remove _kvm_init_fault().
+device tree:
 
-static exit_handle_fn _kvm_fault_tables[EXCCODE_INT_START] = {
-	[0 ... EXCCODE_INT_START - 1]	= _kvm_fault_ni,
+cpus {
+	...
+	model = "Loongson-LS2K1000";
 
-	[EXCCODE_TLBL]			= _kvm_handle_read_fault,
-	[EXCCODE_TLBI]			= _kvm_handle_read_fault,
-	[EXCCODE_TLBNR]			= _kvm_handle_read_fault,
-	[EXCCODE_TLBNX]			= _kvm_handle_read_fault,
-	[EXCCODE_TLBS]			= _kvm_handle_write_fault,
-	[EXCCODE_TLBM]			= _kvm_handle_write_fault,
-	[EXCCODE_FPDIS]			= _kvm_handle_fpu_disabled,
-	[EXCCODE_GSPR]			= _kvm_handle_gspr,
+	cpu0: cpu@0 {
+		...
+		clock-frequency = <1000000000>;
+	};
 };
 
-Thanks,
-Youling
+/proc/cpuinfo:
 
-> +
-> +int _kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
-> +{
-> +	return _kvm_fault_tables[fault](vcpu);
-> +}
-> +
-> +void _kvm_init_fault(void)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < EXCCODE_INT_START; i++)
-> +		if (!_kvm_fault_tables[i])
-> +			_kvm_fault_tables[i] = _kvm_fault_ni;
-> +}
->
+Model Name              : Loongson-LS2K1000
+CPU MHz                 : 1000.00
+
+Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+---
+ arch/loongarch/kernel/smp.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index ed167e244cda..8644fb9119ec 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -30,6 +30,7 @@
+ #include <asm/processor.h>
+ #include <asm/setup.h>
+ #include <asm/time.h>
++#include <asm/bootinfo.h>
+ 
+ int __cpu_number_map[NR_CPUS];   /* Map physical to logical */
+ EXPORT_SYMBOL(__cpu_number_map);
+@@ -186,6 +187,14 @@ static void __init fdt_smp_setup(void)
+ #ifdef CONFIG_OF
+ 	unsigned int cpu, cpuid;
+ 	struct device_node *node = NULL;
++	const void *prop = NULL;
++
++	node = of_find_node_by_path("/cpus");
++	if (node) {
++		prop = of_get_property(node, "model", NULL);
++		if (prop)
++			loongson_sysconf.cpuname = (const char *)prop;
++	}
+ 
+ 	for_each_of_cpu_node(node) {
+ 		if (!of_device_is_available(node))
+@@ -202,6 +211,10 @@ static void __init fdt_smp_setup(void)
+ 			cpu = cpumask_next_zero(-1, cpu_present_mask);
+ 		}
+ 
++		prop = of_get_property(node, "clock-frequency", NULL);
++		if (prop)
++			cpu_clock_freq = be32_to_cpup(prop);
++
+ 		num_processors++;
+ 		set_cpu_possible(cpu, true);
+ 		set_cpu_present(cpu, true);
+-- 
+2.31.1
 
