@@ -1,116 +1,143 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F08B01C29
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 07:40:01 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.41.186])
-	by gateway (Coremail) with SMTP id _____8DxTuvN4n5kcAkAAA--.259S3;
-	Tue, 06 Jun 2023 15:39:58 +0800 (CST)
-Received: from loongson-pc.loongson.cn (unknown [10.20.41.186])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxC8rM4n5kv_YBAA--.108S2;
-	Tue, 06 Jun 2023 15:39:56 +0800 (CST)
-From: Hongliang Wang <wanghongliang@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn,
-	wanghongliang <wanghongliang@loongson.cn>
-Subject: [PATCH v1] soc:loongson:add model and clock-frequency attribute parse.
-Date: Tue,  6 Jun 2023 15:39:38 +0800
-Message-Id: <20230606073938.556-1-wanghongliang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBA75660
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 08:18:50 +0000 (UTC)
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1686039522;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/XO+0lafkbbOTc9Ohf6++LJZTGdV+3DEsv3tuzHhunU=;
+	b=mLuRIdTDj0aXz1KvPIejSWap+ruiLHpHURi275tdQ0BS7UD2Q8lKq2WqyZ3kzWdaKMn34j
+	hysepywR0O7hqUqfkVBaCeZSyNhNx5+8a6xRx6EMwQxQGWrY1vgfJA94mWCBVSdIn9szu6
+	0SKjwMGLEUjKz3ly3OkENVAIyOLBLxcYshXJ+tcYSUYfoGEECv73vThN9b8YbHdSe0HHJJ
+	AfaYvj9098f6/C5mlbyyWA5Pp360tbl222Ic75ifxY29KrfT8/Xaq5miRucBZNbPJS+RzF
+	0A532SMFaomnz5IvZ7LIk64RTR3NAVmAOMTpcBx6Cp92fkVUup3VdtwSXO+n3g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1686039522;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/XO+0lafkbbOTc9Ohf6++LJZTGdV+3DEsv3tuzHhunU=;
+	b=CslhaFWMsiGYcFLEKNe+FIRm5f/g5NjHAqy6Yb0DWMhlUj8acBkLj20XC7o6lyk6RbbfJt
+	rGLbdon+VIZdd8Cw==
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Christian Brauner <brauner@kernel.org>, Andy
+ Lutomirski <luto@kernel.org>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v4 1/2] selftests/clone3: Fix broken test under
+ !CONFIG_TIME_NS
+In-Reply-To: <1685968410-5412-2-git-send-email-yangtiezhu@loongson.cn>
+References: <1685968410-5412-1-git-send-email-yangtiezhu@loongson.cn>
+ <1685968410-5412-2-git-send-email-yangtiezhu@loongson.cn>
+Date: Tue, 06 Jun 2023 10:18:41 +0200
+Message-ID: <87jzwh3swu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxC8rM4n5kv_YBAA--.108S2
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw45Ww1xAr1xuw45ZFy7Jwc_yoW8ArWfpF
-	WkZFZ5Gr45GFn3u34rtry8ZryYyrn5Cr4Iga47KFW5CanrXrn8X3yjqFyq9ryxJayrXa4F
-	gr95uw4vqa15JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU90b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
-	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVj
-	vjDU0xZFpf9x07jjWlkUUUUU=
+Content-Type: text/plain
 
-From: wanghongliang <wanghongliang@loongson.cn>
+On Mon, Jun 05 2023 at 20:33, Tiezhu Yang wrote:
+> When execute the following command to test clone3 on LoongArch:
+>
+>   # cd tools/testing/selftests/clone3 && make && ./clone3
+>
+> we can see the following error info:
+>
+>   # [5719] Trying clone3() with flags 0x80 (size 0)
+>   # Invalid argument - Failed to create new process
+>   # [5719] clone3() with flags says: -22 expected 0
+>   not ok 18 [5719] Result (-22) is different than expected (0)
+>
+> This is because if CONFIG_TIME_NS is not set, but the flag
+> CLONE_NEWTIME (0x80) is used to clone a time namespace, it
+> will return -EINVAL in copy_time_ns().
+>
+> Here is the related code in include/linux/time_namespace.h:
+>
+>   #ifdef CONFIG_TIME_NS
+>   ...
+>   struct time_namespace *copy_time_ns(unsigned long flags,
+> 				      struct user_namespace *user_ns,
+> 				      struct time_namespace *old_ns);
+>   ...
+>   #else
+>   ...
+>   static inline
+>   struct time_namespace *copy_time_ns(unsigned long flags,
+> 				      struct user_namespace *user_ns,
+> 				      struct time_namespace *old_ns)
+>   {
+> 	  if (flags & CLONE_NEWTIME)
+> 		  return ERR_PTR(-EINVAL);
+>
+> 	  return old_ns;
+>   }
+>   ...
+>   #endif
 
-This patch add the parse of model and clock-frequency attribute,
-which come from the cpus device_node in device tree and show as
-Model Name and CPU MHz in /proc/cpuinfo.
+There is really no point in copying that code into the changelog. The
+textual explanation that it returns -EINVAL is good enough.
 
-device tree:
+> Here is the complete call stack:
+>
+>   clone3()
+>     kernel_clone()
+>       copy_process()
+>         copy_namespaces()
+>           create_new_namespaces()
+>             copy_time_ns()
+>               clone_time_ns()
 
-cpus {
-	...
-	model = "Loongson-LS2K1000";
+Uninteresting too.
 
-	cpu0: cpu@0 {
-		...
-		clock-frequency = <1000000000>;
-	};
-};
+> If kernel does not support CONFIG_TIME_NS, /proc/self/ns/time
+> will be not exist, and then we should skip clone3() test with
+> CLONE_NEWTIME.
 
-/proc/cpuinfo:
+Correct.
 
-Model Name              : Loongson-LS2K1000
-CPU MHz                 : 1000.00
+> With this patch under !CONFIG_TIME_NS:
+>
+>   # cd tools/testing/selftests/clone3 && make && ./clone3
+>   ...
+>   # Time namespaces are not supported
+>   ok 18 # SKIP Skipping clone3() with CLONE_NEWTIME
+>   # Totals: pass:17 fail:0 xfail:0 xpass:0 skip:1 error:0
 
-Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
----
- arch/loongarch/kernel/smp.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> Fixes: 515bddf0ec41 ("selftests/clone3: test clone3 with CLONE_NEWTIME")
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  tools/testing/selftests/clone3/clone3.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
+> index e495f89..c721f8a 100644
+> --- a/tools/testing/selftests/clone3/clone3.c
+> +++ b/tools/testing/selftests/clone3/clone3.c
+> @@ -196,7 +196,12 @@ int main(int argc, char *argv[])
+>  			CLONE3_ARGS_NO_TEST);
+>  
+>  	/* Do a clone3() in a new time namespace */
+> -	test_clone3(CLONE_NEWTIME, 0, 0, CLONE3_ARGS_NO_TEST);
+> +	if (access("/proc/self/ns/time", F_OK) == 0) {
+> +		test_clone3(CLONE_NEWTIME, 0, 0, CLONE3_ARGS_NO_TEST);
+> +	} else {
+> +		ksft_print_msg("Time namespaces are not supported\n");
+> +		ksft_test_result_skip("Skipping clone3() with CLONE_NEWTIME\n");
+> +	}
 
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index ed167e244cda..8644fb9119ec 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -30,6 +30,7 @@
- #include <asm/processor.h>
- #include <asm/setup.h>
- #include <asm/time.h>
-+#include <asm/bootinfo.h>
- 
- int __cpu_number_map[NR_CPUS];   /* Map physical to logical */
- EXPORT_SYMBOL(__cpu_number_map);
-@@ -186,6 +187,14 @@ static void __init fdt_smp_setup(void)
- #ifdef CONFIG_OF
- 	unsigned int cpu, cpuid;
- 	struct device_node *node = NULL;
-+	const void *prop = NULL;
-+
-+	node = of_find_node_by_path("/cpus");
-+	if (node) {
-+		prop = of_get_property(node, "model", NULL);
-+		if (prop)
-+			loongson_sysconf.cpuname = (const char *)prop;
-+	}
- 
- 	for_each_of_cpu_node(node) {
- 		if (!of_device_is_available(node))
-@@ -202,6 +211,10 @@ static void __init fdt_smp_setup(void)
- 			cpu = cpumask_next_zero(-1, cpu_present_mask);
- 		}
- 
-+		prop = of_get_property(node, "clock-frequency", NULL);
-+		if (prop)
-+			cpu_clock_freq = be32_to_cpup(prop);
-+
- 		num_processors++;
- 		set_cpu_possible(cpu, true);
- 		set_cpu_present(cpu, true);
--- 
-2.31.1
+Patch looks good otherwise.
+
+Thanks,
+
+        tglx
 
