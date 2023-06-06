@@ -1,191 +1,425 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9805391
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:17:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612A8C4339C
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686017869;
-	bh=PwAxfEO6U+WKSxEaEYXu3C2Un1n6Ggfy5FOFAmLtwcI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Fe9mMIpYFB6cIcBpLMM5q2WcJyh/joZeOme7/DfuQtFJ2VYT6KAI0Gkh74//69+23
-	 9Cs42dhFPfEBOTZUrN4YJ2xaha3+sGOfYVhtV8VEQO1hnw9qAcN42VK+pugeyFY510
-	 YFevXn+8Nmh7H62gGlN/b2BCrGPVCD7d/XNgcUi+2jdDzVo80HDrJsqMK1I4NTCZHI
-	 U8BHJwwcBwfkO7bK4nlSdiRN/UWnmknXtvnc7v+zueM2jxaathkYf492vf0JrAiP6C
-	 hmy/WaombE0amn1d23d6x/9DeWQKuW9du52TnGnidzVER8xJMNOFfMi0OylVu/GfcX
-	 1CQRse8FootMg==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-978345f3798so109350066b.3
-        for <loongarch@lists.linux.dev>; Mon, 05 Jun 2023 19:17:49 -0700 (PDT)
-X-Gm-Message-State: AC+VfDwCtEtiHAR0ULlRqow6J+c4dzTPLvhdEY0b5jjfauRv78JKX9qZ
-	4jGLA8B9P+pCmXuP6q9eMrQF1ZAY3UBoTP97ikw=
-X-Google-Smtp-Source: ACHHUZ5sgA0ZKrm3D7nww13G21t1yiGVku/UHWR3Fvcyc85cCBGbT3NUOF+icKMh0DS3B5IEC+CVqLGgvuHwaoAI8FU=
-X-Received: by 2002:a17:907:16a5:b0:978:6be4:7efb with SMTP id
- hc37-20020a17090716a500b009786be47efbmr679173ejc.7.1686017867509; Mon, 05 Jun
- 2023 19:17:47 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FCED633
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 02:27:10 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8BxPOt9mX5kz1YAAA--.292S3;
+	Tue, 06 Jun 2023 10:27:09 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxVeR8mX5kh6IBAA--.7172S3;
+	Tue, 06 Jun 2023 10:27:08 +0800 (CST)
+Message-ID: <b7169d2b-c729-7682-d8b1-c13e4f298c6a@loongson.cn>
+Date: Tue, 6 Jun 2023 10:27:08 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230605034423.1528206-1-maobibo@loongson.cn> <CAAhV-H6O+_EnmDU6kE-19PP+8tD3wwbzzuakE_vHZGCtjZWDbg@mail.gmail.com>
- <749898e2-01c2-9f74-f939-fac36227431a@loongson.cn>
-In-Reply-To: <749898e2-01c2-9f74-f939-fac36227431a@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 6 Jun 2023 10:17:35 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6o8Dx0g+UaNjh9JfAVv=aAU=GFkUS9aO6tsBim3mYZjQ@mail.gmail.com>
-Message-ID: <CAAhV-H6o8Dx0g+UaNjh9JfAVv=aAU=GFkUS9aO6tsBim3mYZjQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Align pci memory space base address with page size
-To: "bibo, mao" <maobibo@loongson.cn>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, helgaas@kernel.org, 
-	linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v12 27/31] LoongArch: KVM: Implement vcpu world switch
+Content-Language: en-US
+To: Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>
+References: <20230530015223.147755-1-zhaotianrui@loongson.cn>
+ <20230530015223.147755-28-zhaotianrui@loongson.cn>
+From: "bibo, mao" <maobibo@loongson.cn>
+In-Reply-To: <20230530015223.147755-28-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxVeR8mX5kh6IBAA--.7172S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3tryrWrW8Zr1fXw48ZrW3XFc_yoWkCw1Dpr
+	9rArsYv3yj9Fn5uFs7tFyj9r13XFWxXrWagwnrGFs5AryDWFyvq3WFkF1DGFyUAw18XFnY
+	qF9Ykw48CrWUA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPlb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4U
+	JVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+	jYBT5UUUUU=
 
-On Mon, Jun 5, 2023 at 2:31=E2=80=AFPM bibo, mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> =E5=9C=A8 2023/6/5 11:58, Huacai Chen =E5=86=99=E9=81=93:
-> > Hi, Bibo,
-> >
-> > Three suggestions:
-> > 1, split to two patches.
-> will do.
-> > 2, the "(align < PAGE_SIZE)" condition can be removed.
-> With  "(align < PAGE_SIZE)" condition, there is little modification compa=
-red
-> to the weak function.
-> resource_size_t __weak pcibios_align_resource(void *data,
->                                               const struct resource *res,
->                                               resource_size_t size,
->                                               resource_size_t align)
-> {
->        return res->start;
-> }
-Why? I think "align > PAGE_SIZE" doesn't ensure res->start is aligned here.
+Reviewed-by: Bibo, Mao <maobibo@loongson.cn>
 
->
-> or do you mean something this?
->        if (res->flags & IORESOURCE_MEM) {
->                 align =3D max_t(resource_size_t, PAGE_SIZE, align);
->                 start =3D ALIGN(start, align);
->         }
->
-No, I mean use "start =3D ALIGN(start, PAGE_SIZE)" unconditionally.
+在 2023/5/30 09:52, Tianrui Zhao 写道:
+> Implement LoongArch vcpu world switch, including vcpu enter guest and
+> vcpu exit from guest, both operations need to save or restore the host
+> and guest registers.
+> 
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> ---
+>  arch/loongarch/kernel/asm-offsets.c |  32 +++
+>  arch/loongarch/kvm/switch.S         | 301 ++++++++++++++++++++++++++++
+>  2 files changed, 333 insertions(+)
+>  create mode 100644 arch/loongarch/kvm/switch.S
+> 
+> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+> index 4bdb203fc66e..0c055f2046eb 100644
+> --- a/arch/loongarch/kernel/asm-offsets.c
+> +++ b/arch/loongarch/kernel/asm-offsets.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/kbuild.h>
+>  #include <linux/suspend.h>
+> +#include <linux/kvm_host.h>
+>  #include <asm/cpu-info.h>
+>  #include <asm/ptrace.h>
+>  #include <asm/processor.h>
+> @@ -272,3 +273,34 @@ void output_pbe_defines(void)
+>  	BLANK();
+>  }
+>  #endif
+> +
+> +static void __used output_kvm_defines(void)
+> +{
+> +	COMMENT(" KVM/LOONGARCH Specific offsets. ");
+> +
+> +	OFFSET(VCPU_FCSR0, kvm_vcpu_arch, fpu.fcsr);
+> +	OFFSET(VCPU_FCC, kvm_vcpu_arch, fpu.fcc);
+> +	BLANK();
+> +
+> +	OFFSET(KVM_VCPU_ARCH, kvm_vcpu, arch);
+> +	OFFSET(KVM_VCPU_KVM, kvm_vcpu, kvm);
+> +	OFFSET(KVM_VCPU_RUN, kvm_vcpu, run);
+> +	BLANK();
+> +
+> +	OFFSET(KVM_ARCH_HSTACK, kvm_vcpu_arch, host_stack);
+> +	OFFSET(KVM_ARCH_HGP, kvm_vcpu_arch, host_gp);
+> +	OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
+> +	OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
+> +	OFFSET(KVM_ARCH_GEENTRY, kvm_vcpu_arch, guest_eentry);
+> +	OFFSET(KVM_ARCH_GPC, kvm_vcpu_arch, pc);
+> +	OFFSET(KVM_ARCH_GGPR, kvm_vcpu_arch, gprs);
+> +	OFFSET(KVM_ARCH_HESTAT, kvm_vcpu_arch, host_estat);
+> +	OFFSET(KVM_ARCH_HBADV, kvm_vcpu_arch, badv);
+> +	OFFSET(KVM_ARCH_HBADI, kvm_vcpu_arch, badi);
+> +	OFFSET(KVM_ARCH_HECFG, kvm_vcpu_arch, host_ecfg);
+> +	OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
+> +	OFFSET(KVM_ARCH_HPERCPU, kvm_vcpu_arch, host_percpu);
+> +
+> +	OFFSET(KVM_GPGD, kvm, arch.gpa_mm.pgd);
+> +	BLANK();
+> +}
+> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+> new file mode 100644
+> index 000000000000..1f36ae84ccc3
+> --- /dev/null
+> +++ b/arch/loongarch/kvm/switch.S
+> @@ -0,0 +1,301 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+> + */
+> +
+> +#include <linux/linkage.h>
+> +#include <asm/stackframe.h>
+> +#include <asm/asm.h>
+> +#include <asm/asmmacro.h>
+> +#include <asm/regdef.h>
+> +#include <asm/loongarch.h>
+> +#include <asm/export.h>
+> +
+> +#define PT_GPR_OFFSET(x)	(PT_R0 + 8*x)
+> +	.text
+> +
+> +.macro kvm_save_host_gpr base
+> +	.irp n,1,2,3,22,23,24,25,26,27,28,29,30,31
+> +	st.d	$r\n, \base, PT_GPR_OFFSET(\n)
+> +	.endr
+> +.endm
+> +
+> +.macro kvm_restore_host_gpr base
+> +	.irp n,1,2,3,22,23,24,25,26,27,28,29,30,31
+> +	ld.d	$r\n, \base, PT_GPR_OFFSET(\n)
+> +	.endr
+> +.endm
+> +
+> +/*
+> + * prepare switch to guest, save host reg and restore guest reg.
+> + * a2: kvm_vcpu_arch, don't touch it until 'ertn'
+> + * t0, t1: temp register
+> + */
+> +.macro kvm_switch_to_guest
+> +	/* set host excfg.VS=0, all exceptions share one exception entry */
+> +	csrrd		t0, LOONGARCH_CSR_ECFG
+> +	bstrins.w	t0, zero, CSR_ECFG_VS_SHIFT_END, CSR_ECFG_VS_SHIFT
+> +	csrwr		t0, LOONGARCH_CSR_ECFG
+> +
+> +	/* Load up the new EENTRY */
+> +	ld.d	t0, a2, KVM_ARCH_GEENTRY
+> +	csrwr	t0, LOONGARCH_CSR_EENTRY
+> +
+> +	/* Set Guest ERA */
+> +	ld.d	t0, a2, KVM_ARCH_GPC
+> +	csrwr	t0, LOONGARCH_CSR_ERA
+> +
+> +	/* Save host PGDL */
+> +	csrrd	t0, LOONGARCH_CSR_PGDL
+> +	st.d	t0, a2, KVM_ARCH_HPGD
+> +
+> +	/* Switch to kvm */
+> +	ld.d	t1, a2, KVM_VCPU_KVM - KVM_VCPU_ARCH
+> +
+> +	/* Load guest PGDL */
+> +	lu12i.w t0, KVM_GPGD
+> +	srli.w  t0, t0, 12
+> +	ldx.d   t0, t1, t0
+> +	csrwr	t0, LOONGARCH_CSR_PGDL
+> +
+> +	/* Mix GID and RID */
+> +	csrrd		t1, LOONGARCH_CSR_GSTAT
+> +	bstrpick.w	t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
+> +	csrrd		t0, LOONGARCH_CSR_GTLBC
+> +	bstrins.w	t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+> +	csrwr		t0, LOONGARCH_CSR_GTLBC
+> +
+> +	/*
+> +	 * Switch to guest:
+> +	 *  GSTAT.PGM = 1, ERRCTL.ISERR = 0, TLBRPRMD.ISTLBR = 0
+> +	 *  ertn
+> +	 */
+> +
+> +	/*
+> +	 * Enable intr in root mode with future ertn so that host interrupt
+> +	 * can be responsed during VM runs
+> +	 * guest crmd comes from separate gcsr_CRMD register
+> +	 */
+> +	ori	t0, zero, CSR_PRMD_PIE
+> +	csrxchg	t0, t0,   LOONGARCH_CSR_PRMD
+> +
+> +	/* Set PVM bit to setup ertn to guest context */
+> +	ori	t0, zero, CSR_GSTAT_PVM
+> +	csrxchg	t0, t0,   LOONGARCH_CSR_GSTAT
+> +
+> +	/* Load Guest gprs */
+> +	ld.d	ra,	a2,	(KVM_ARCH_GGPR + 8 * REG_RA)
+> +	ld.d	tp,	a2,	(KVM_ARCH_GGPR + 8 * REG_TP)
+> +	ld.d	sp,	a2,	(KVM_ARCH_GGPR + 8 * REG_SP)
+> +	ld.d	a0,	a2,	(KVM_ARCH_GGPR + 8 * REG_A0)
+> +	ld.d	a1,	a2,	(KVM_ARCH_GGPR + 8 * REG_A1)
+> +	ld.d	a3,	a2,	(KVM_ARCH_GGPR + 8 * REG_A3)
+> +	ld.d	a4,	a2,	(KVM_ARCH_GGPR + 8 * REG_A4)
+> +	ld.d	a5,	a2,	(KVM_ARCH_GGPR + 8 * REG_A5)
+> +	ld.d	a6,	a2,	(KVM_ARCH_GGPR + 8 * REG_A6)
+> +	ld.d	a7,	a2,	(KVM_ARCH_GGPR + 8 * REG_A7)
+> +	ld.d	t0,	a2,	(KVM_ARCH_GGPR + 8 * REG_T0)
+> +	ld.d	t1,	a2,	(KVM_ARCH_GGPR + 8 * REG_T1)
+> +	ld.d	t2,	a2,	(KVM_ARCH_GGPR + 8 * REG_T2)
+> +	ld.d	t3,	a2,	(KVM_ARCH_GGPR + 8 * REG_T3)
+> +	ld.d	t4,	a2,	(KVM_ARCH_GGPR + 8 * REG_T4)
+> +	ld.d	t5,	a2,	(KVM_ARCH_GGPR + 8 * REG_T5)
+> +	ld.d	t6,	a2,	(KVM_ARCH_GGPR + 8 * REG_T6)
+> +	ld.d	t7,	a2,	(KVM_ARCH_GGPR + 8 * REG_T7)
+> +	ld.d	t8,	a2,	(KVM_ARCH_GGPR + 8 * REG_T8)
+> +	ld.d	u0,	a2,	(KVM_ARCH_GGPR + 8 * REG_U0)
+> +	ld.d	fp,	a2,	(KVM_ARCH_GGPR + 8 * REG_FP)
+> +	ld.d	s0,	a2,	(KVM_ARCH_GGPR + 8 * REG_S0)
+> +	ld.d	s1,	a2,	(KVM_ARCH_GGPR + 8 * REG_S1)
+> +	ld.d	s2,	a2,	(KVM_ARCH_GGPR + 8 * REG_S2)
+> +	ld.d	s3,	a2,	(KVM_ARCH_GGPR + 8 * REG_S3)
+> +	ld.d	s4,	a2,	(KVM_ARCH_GGPR + 8 * REG_S4)
+> +	ld.d	s5,	a2,	(KVM_ARCH_GGPR + 8 * REG_S5)
+> +	ld.d	s6,	a2,	(KVM_ARCH_GGPR + 8 * REG_S6)
+> +	ld.d	s7,	a2,	(KVM_ARCH_GGPR + 8 * REG_S7)
+> +	ld.d	s8,	a2,	(KVM_ARCH_GGPR + 8 * REG_S8)
+> +	/* Load KVM_ARCH register */
+> +	ld.d	a2,	a2,	(KVM_ARCH_GGPR + 8 * REG_A2)
+> +
+> +	ertn
+> +.endm
+> +
+> +	/*
+> +	 * exception entry for general exception from guest mode
+> +	 *  - IRQ is disabled
+> +	 *  - kernel privilege in root mode
+> +	 *  - page mode keep unchanged from previous prmd in root mode
+> +	 *  - Fixme: tlb exception cannot happen since registers relative with TLB
+> +	 *  -        is still in guest mode, such as pgd table/vmid registers etc,
+> +	 *  -        will fix with hw page walk enabled in future
+> +	 * load kvm_vcpu from reserved CSR KVM_VCPU_KS, and save a2 to KVM_TEMP_KS
+> +	 */
+> +	.section	.text
+> +	.cfi_sections	.debug_frame
+> +SYM_CODE_START(kvm_vector_entry)
+> +	csrwr	a2,   KVM_TEMP_KS
+> +	csrrd	a2,   KVM_VCPU_KS
+> +	addi.d	a2,   a2, KVM_VCPU_ARCH
+> +
+> +	/* After save gprs, free to use any gpr */
+> +	st.d	ra,	a2,	(KVM_ARCH_GGPR + 8 * REG_RA)
+> +	st.d	tp,	a2,	(KVM_ARCH_GGPR + 8 * REG_TP)
+> +	st.d	sp,	a2,	(KVM_ARCH_GGPR + 8 * REG_SP)
+> +	st.d	a0,	a2,	(KVM_ARCH_GGPR + 8 * REG_A0)
+> +	st.d	a1,	a2,	(KVM_ARCH_GGPR + 8 * REG_A1)
+> +	st.d	a3,	a2,	(KVM_ARCH_GGPR + 8 * REG_A3)
+> +	st.d	a4,	a2,	(KVM_ARCH_GGPR + 8 * REG_A4)
+> +	st.d	a5,	a2,	(KVM_ARCH_GGPR + 8 * REG_A5)
+> +	st.d	a6,	a2,	(KVM_ARCH_GGPR + 8 * REG_A6)
+> +	st.d	a7,	a2,	(KVM_ARCH_GGPR + 8 * REG_A7)
+> +	st.d	t0,	a2,	(KVM_ARCH_GGPR + 8 * REG_T0)
+> +	st.d	t1,	a2,	(KVM_ARCH_GGPR + 8 * REG_T1)
+> +	st.d	t2,	a2,	(KVM_ARCH_GGPR + 8 * REG_T2)
+> +	st.d	t3,	a2,	(KVM_ARCH_GGPR + 8 * REG_T3)
+> +	st.d	t4,	a2,	(KVM_ARCH_GGPR + 8 * REG_T4)
+> +	st.d	t5,	a2,	(KVM_ARCH_GGPR + 8 * REG_T5)
+> +	st.d	t6,	a2,	(KVM_ARCH_GGPR + 8 * REG_T6)
+> +	st.d	t7,	a2,	(KVM_ARCH_GGPR + 8 * REG_T7)
+> +	st.d	t8,	a2,	(KVM_ARCH_GGPR + 8 * REG_T8)
+> +	st.d	u0,	a2,	(KVM_ARCH_GGPR + 8 * REG_U0)
+> +	st.d	fp,	a2,	(KVM_ARCH_GGPR + 8 * REG_FP)
+> +	st.d	s0,	a2,	(KVM_ARCH_GGPR + 8 * REG_S0)
+> +	st.d	s1,	a2,	(KVM_ARCH_GGPR + 8 * REG_S1)
+> +	st.d	s2,	a2,	(KVM_ARCH_GGPR + 8 * REG_S2)
+> +	st.d	s3,	a2,	(KVM_ARCH_GGPR + 8 * REG_S3)
+> +	st.d	s4,	a2,	(KVM_ARCH_GGPR + 8 * REG_S4)
+> +	st.d	s5,	a2,	(KVM_ARCH_GGPR + 8 * REG_S5)
+> +	st.d	s6,	a2,	(KVM_ARCH_GGPR + 8 * REG_S6)
+> +	st.d	s7,	a2,	(KVM_ARCH_GGPR + 8 * REG_S7)
+> +	st.d	s8,	a2,	(KVM_ARCH_GGPR + 8 * REG_S8)
+> +	/* Save guest a2 */
+> +	csrrd	t0,	KVM_TEMP_KS
+> +	st.d	t0,	a2,	(KVM_ARCH_GGPR + 8 * REG_A2)
+> +
+> +	/* a2: kvm_vcpu_arch, a1 is free to use */
+> +	csrrd	s1,   KVM_VCPU_KS
+> +	ld.d	s0,   s1, KVM_VCPU_RUN
+> +
+> +	csrrd	t0,   LOONGARCH_CSR_ESTAT
+> +	st.d	t0,   a2, KVM_ARCH_HESTAT
+> +	csrrd	t0,   LOONGARCH_CSR_ERA
+> +	st.d	t0,   a2, KVM_ARCH_GPC
+> +	csrrd	t0,   LOONGARCH_CSR_BADV
+> +	st.d	t0,   a2, KVM_ARCH_HBADV
+> +	csrrd	t0,   LOONGARCH_CSR_BADI
+> +	st.d	t0,   a2, KVM_ARCH_HBADI
+> +
+> +	/* Restore host excfg.VS */
+> +	csrrd	t0, LOONGARCH_CSR_ECFG
+> +	ld.d	t1, a2, KVM_ARCH_HECFG
+> +	or	t0, t0, t1
+> +	csrwr	t0, LOONGARCH_CSR_ECFG
+> +
+> +	/* Restore host eentry */
+> +	ld.d	t0, a2, KVM_ARCH_HEENTRY
+> +	csrwr	t0, LOONGARCH_CSR_EENTRY
+> +
+> +	/* restore host pgd table */
+> +	ld.d    t0, a2, KVM_ARCH_HPGD
+> +	csrwr   t0, LOONGARCH_CSR_PGDL
+> +
+> +	/*
+> +	 * Disable PGM bit to enter root mode by default with next ertn
+> +	 */
+> +	ori	t0, zero, CSR_GSTAT_PVM
+> +	csrxchg	zero, t0, LOONGARCH_CSR_GSTAT
+> +	/*
+> +	 * Clear GTLBC.TGID field
+> +	 *       0: for root  tlb update in future tlb instr
+> +	 *  others: for guest tlb update like gpa to hpa in future tlb instr
+> +	 */
+> +	csrrd	t0, LOONGARCH_CSR_GTLBC
+> +	bstrins.w	t0, zero, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+> +	csrwr	t0, LOONGARCH_CSR_GTLBC
+> +	ld.d	tp, a2, KVM_ARCH_HGP
+> +	ld.d	sp, a2, KVM_ARCH_HSTACK
+> +	/* restore per cpu register */
+> +	ld.d	u0, a2, KVM_ARCH_HPERCPU
+> +	addi.d	sp, sp, -PT_SIZE
+> +
+> +	/* Prepare handle exception */
+> +	or	a0, s0, zero
+> +	or	a1, s1, zero
+> +	ld.d	t8, a2, KVM_ARCH_HANDLE_EXIT
+> +	jirl	ra,t8, 0
+> +
+> +	or	a2, s1, zero
+> +	addi.d	a2, a2, KVM_VCPU_ARCH
+> +
+> +	/* resume host when ret <= 0 */
+> +	bge	zero, a0, ret_to_host
+> +
+> +	/*
+> +         * return to guest
+> +         * save per cpu register again, maybe switched to another cpu
+> +         */
+> +	st.d	u0, a2, KVM_ARCH_HPERCPU
+> +
+> +	/* Save kvm_vcpu to kscratch */
+> +	csrwr	s1, KVM_VCPU_KS
+> +	kvm_switch_to_guest
+> +
+> +ret_to_host:
+> +	ld.d    a2, a2, KVM_ARCH_HSTACK
+> +	addi.d  a2, a2, -PT_SIZE
+> +	kvm_restore_host_gpr    a2
+> +	jirl    zero, ra, 0
+> +SYM_CODE_END(kvm_vector_entry)
+> +kvm_vector_entry_end:
+> +
+> +/*
+> + * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
+> + *
+> + * @register_param:
+> + *  a0: kvm_run* run
+> + *  a1: kvm_vcpu* vcpu
+> + */
+> +SYM_FUNC_START(kvm_enter_guest)
+> +	/* allocate space in stack bottom */
+> +	addi.d	a2, sp, -PT_SIZE
+> +	/* save host gprs */
+> +	kvm_save_host_gpr a2
+> +
+> +	/* save host crmd,prmd csr to stack */
+> +	csrrd	a3, LOONGARCH_CSR_CRMD
+> +	st.d	a3, a2, PT_CRMD
+> +	csrrd	a3, LOONGARCH_CSR_PRMD
+> +	st.d	a3, a2, PT_PRMD
+> +
+> +	addi.d	a2, a1, KVM_VCPU_ARCH
+> +	st.d	sp, a2, KVM_ARCH_HSTACK
+> +	st.d	tp, a2, KVM_ARCH_HGP
+> +	/* Save per cpu register */
+> +	st.d	u0, a2, KVM_ARCH_HPERCPU
+> +
+> +	/* Save kvm_vcpu to kscratch */
+> +	csrwr	a1, KVM_VCPU_KS
+> +	kvm_switch_to_guest
+> +SYM_FUNC_END(kvm_enter_guest)
+> +kvm_enter_guest_end:
+> +
+> +	.section ".rodata"
+> +SYM_DATA(kvm_vector_size,
+> +		.quad kvm_vector_entry_end - kvm_vector_entry)
+> +SYM_DATA(kvm_enter_guest_size,
+> +		.quad kvm_enter_guest_end - kvm_enter_guest)
+> +
+> +
+> +SYM_FUNC_START(kvm_save_fpu)
+> +	fpu_save_csr	a0 t1
+> +	fpu_save_double a0 t1
+> +	fpu_save_cc	a0 t1 t2
+> +	jirl    zero, ra, 0
+> +SYM_FUNC_END(kvm_save_fpu)
+> +
+> +SYM_FUNC_START(kvm_restore_fpu)
+> +	fpu_restore_double a0 t1
+> +	fpu_restore_csr    a0 t1
+> +	fpu_restore_cc	   a0 t1 t2
+> +	jirl    zero, ra, 0
+> +SYM_FUNC_END(kvm_restore_fpu)
 
-Huacai
->
-> > 3, you can unify the comments between ARM64 and LoongArch.
-> will do.
->
-> Regards
-> Bibo, Mao
->
-> >
-> > Huacai
-> >
-> > On Mon, Jun 5, 2023 at 11:44=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> Some PCI devices has only 4K memory space size, it is normal in genera=
-l
-> >> machines and aligned with page size. However some architectures which
-> >> support different page size, default page size on LoongArch is 16K, an=
-d
-> >> ARM64 supports page size varying from 4K to 64K. On machines where lar=
-ger
-> >> page size is use, memory space region of two different pci devices may=
- be
-> >> in one page. It is not safe with mmu protection, also VFIO pci device
-> >> driver requires base address of pci memory space page aligned, so that=
- it
-> >> can be memory mapped to qemu user space when it is pass-through to vm.
-> >>
-> >> It consumes more pci memory resource with page size alignment requirem=
-ent,
-> >> on 64 bit system it should not be a problem. And UEFI bios set pci mem=
-ory
-> >> base address with 4K fixed-size aligned, the safer solution is to alig=
-n
-> >> with larger size on UEFI BIOS stage on these architectures, linux kern=
-el
-> >> can reuse resource from UEFI bios. For new devices such hotplug pci
-> >> devices and sriov devices, pci resource is assigned in Linux kernel si=
-de.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>  arch/arm64/kernel/pci.c  | 13 +++++++++++++
-> >>  arch/loongarch/pci/pci.c | 18 ++++++++++++++++++
-> >>  2 files changed, 31 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> >> index 2276689b5411..e2f7b176b156 100644
-> >> --- a/arch/arm64/kernel/pci.c
-> >> +++ b/arch/arm64/kernel/pci.c
-> >> @@ -232,4 +232,17 @@ void pcibios_remove_bus(struct pci_bus *bus)
-> >>         acpi_pci_remove_bus(bus);
-> >>  }
-> >>
-> >> +resource_size_t pcibios_align_resource(void *data, const struct resou=
-rce *res,
-> >> +                               resource_size_t size, resource_size_t =
-align)
-> >> +{
-> >> +       resource_size_t start =3D res->start;
-> >> +
-> >> +       /*
-> >> +        * align base address of pci memory resource with page size
-> >> +        */
-> >> +       if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
-> >> +               start =3D ALIGN(start, PAGE_SIZE);
-> >> +
-> >> +       return start;
-> >> +}
-> >>  #endif
-> >> diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-> >> index 2726639150bc..943a48e60fb1 100644
-> >> --- a/arch/loongarch/pci/pci.c
-> >> +++ b/arch/loongarch/pci/pci.c
-> >> @@ -83,6 +83,24 @@ int pcibios_alloc_irq(struct pci_dev *dev)
-> >>         return acpi_pci_irq_enable(dev);
-> >>  }
-> >>
-> >> +/*
-> >> + * memory space size of some pci cards is 4K, it is separated with
-> >> + * different pages for generic architectures, so that mmu protection =
-can
-> >> + * work with different pci cards. However page size for LoongArch sys=
-tem
-> >> + * is 16K, memory space of different pci cards may share the same pag=
-e
-> >> + * on LoongArch, it is not safe here.
-> >> + */
-> >> +resource_size_t pcibios_align_resource(void *data, const struct resou=
-rce *res,
-> >> +                               resource_size_t size, resource_size_t =
-align)
-> >> +{
-> >> +       resource_size_t start =3D res->start;
-> >> +
-> >> +       if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
-> >> +               start =3D ALIGN(start, PAGE_SIZE);
-> >> +
-> >> +       return start;
-> >> +}
-> >> +
-> >>  static void pci_fixup_vgadev(struct pci_dev *pdev)
-> >>  {
-> >>         struct pci_dev *devp =3D NULL;
-> >> --
-> >> 2.27.0
-> >>
-> > _______________________________________________
-> > Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
-> > To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
->
