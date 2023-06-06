@@ -1,114 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDB42A6EA;
-	Tue,  6 Jun 2023 10:16:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CCDC433EF;
-	Tue,  6 Jun 2023 10:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686046599;
-	bh=K3mQNwoT9j+uKtNH0+N5SGAruipqVMe0nyrOVYu8zmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ex2boOSbFX9F8vILoj2ER6OMGqZieI/qXxa+Cl88F6P5WueebucHT8gXYMljU/UwF
-	 W4Vwtw16CB66Ckf8CUcEwiMgsp0Rl7Zp+sWmc7WhCTWF54CsHU5is7Yegd2qZ+FcpB
-	 7HYr90xDXGc4Q+jlXpM3iwKf1+z1TAE79jym8dBpk7/sIwryEOoaJwZE+mZ+/dgO9Q
-	 jbUZZ/yVspF9cToZ4ExktC3lUSHmqXSahqJcQT5b1PfE/IsSC9GrwIVg8JzQsfRBlA
-	 +FWytBECVY5td4H8LIUSl6ZWwnci/X0OdWg6sGet7yNw0Tt3OFZ9/6khP83arPzxeP
-	 mpCOpEPlPas8A==
-Date: Tue, 6 Jun 2023 13:16:08 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-Message-ID: <20230606101608.GC52412@kernel.org>
-References: <20230601101257.530867-1-rppt@kernel.org>
- <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
- <ZHjgIH3aX9dCvVZc@moria.home.lan>
- <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
- <20230605092040.GB3460@kernel.org>
- <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9B2115AD2
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 11:40:06 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.185])
+	by gateway (Coremail) with SMTP id _____8AxHusIG39kkyIAAA--.681S3;
+	Tue, 06 Jun 2023 19:39:52 +0800 (CST)
+Received: from [10.180.13.185] (unknown [10.180.13.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxluQFG39kWkkCAA--.9429S3;
+	Tue, 06 Jun 2023 19:39:49 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: let pmd_present return true when splitting pmd
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Feiyang Chen
+ <chenfeiyang@loongson.cn>, Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+References: <20230524074132.10916-1-zhanghongchen@loongson.cn>
+From: Hongchen Zhang <zhanghongchen@loongson.cn>
+Message-ID: <46ce41a3-16bd-6d92-c8a8-764283859190@loongson.cn>
+Date: Tue, 6 Jun 2023 19:38:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+In-Reply-To: <20230524074132.10916-1-zhanghongchen@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8DxluQFG39kWkkCAA--.9429S3
+X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQANB2R8fwAONwAGsT
+X-Coremail-Antispam: 1Uk129KBj93XoWxXrykur4kWw15Cr1DCr47WrX_yoW5Gr17p3
+	Z7CFykur45KFyIy343tF1fZry7ursrGFn2gryqgw1UAFy3X397Jrn8Kwn8ZFy8XayvyFW8
+	Wrn2g3W5Way3J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
-On Mon, Jun 05, 2023 at 11:09:34AM +0100, Mark Rutland wrote:
-> On Mon, Jun 05, 2023 at 12:20:40PM +0300, Mike Rapoport wrote:
-> > On Fri, Jun 02, 2023 at 10:35:09AM +0100, Mark Rutland wrote:
-> >
-> > It sill can be achieved with a single jit_alloc_arch_params(), just by
-> > adding enum jit_type parameter to jit_text_alloc().
+Hi,
+
+Gentle ping.
+
+On 2023/5/24 pm 3:41, Hongchen Zhang wrote:
+> when we split a pmd into ptes, pmd_present() and pmd_trans_huge() should
+> return true,otherwise it would be treated as a swap pmd.
+> As arm64 does in
+> commit b65399f6111b ("arm64/mm: Change THP helpers to comply with generic MM semantics")
+> we add a _PAGE_PRESENT_INVALID bit for LoongArch.
 > 
-> That feels backwards to me; it centralizes a bunch of information about
-> distinct users to be able to shove that into a static array, when the callsites
-> can pass that information. 
+> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/pgtable-bits.h | 2 ++
+>   arch/loongarch/include/asm/pgtable.h      | 3 ++-
+>   2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
+> index 8b98d22a145b..a7469d28d9d0 100644
+> --- a/arch/loongarch/include/asm/pgtable-bits.h
+> +++ b/arch/loongarch/include/asm/pgtable-bits.h
+> @@ -22,12 +22,14 @@
+>   #define	_PAGE_PFN_SHIFT		12
+>   #define	_PAGE_SWP_EXCLUSIVE_SHIFT 23
+>   #define	_PAGE_PFN_END_SHIFT	48
+> +#define _PAGE_PRESENT_INVALID_SHIFT 60
+>   #define	_PAGE_NO_READ_SHIFT	61
+>   #define	_PAGE_NO_EXEC_SHIFT	62
+>   #define	_PAGE_RPLV_SHIFT	63
+>   
+>   /* Used by software */
+>   #define _PAGE_PRESENT		(_ULCAST_(1) << _PAGE_PRESENT_SHIFT)
+> +#define _PAGE_PRESENT_INVALID	(_ULCAST_(1) << _PAGE_PRESENT_INVALID_SHIFT)
+>   #define _PAGE_WRITE		(_ULCAST_(1) << _PAGE_WRITE_SHIFT)
+>   #define _PAGE_ACCESSED		(_ULCAST_(1) << _PAGE_ACCESSED_SHIFT)
+>   #define _PAGE_MODIFIED		(_ULCAST_(1) << _PAGE_MODIFIED_SHIFT)
+> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+> index d28fb9dbec59..9a9f9ff9b709 100644
+> --- a/arch/loongarch/include/asm/pgtable.h
+> +++ b/arch/loongarch/include/asm/pgtable.h
+> @@ -213,7 +213,7 @@ static inline int pmd_bad(pmd_t pmd)
+>   static inline int pmd_present(pmd_t pmd)
+>   {
+>   	if (unlikely(pmd_val(pmd) & _PAGE_HUGE))
+> -		return !!(pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE));
+> +		return !!(pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PRESENT_INVALID));
+>   
+>   	return pmd_val(pmd) != (unsigned long)invalid_pte_table;
+>   }
+> @@ -558,6 +558,7 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+>   
+>   static inline pmd_t pmd_mkinvalid(pmd_t pmd)
+>   {
+> +	pmd_val(pmd) |= _PAGE_PRESENT_INVALID;
+>   	pmd_val(pmd) &= ~(_PAGE_PRESENT | _PAGE_VALID | _PAGE_DIRTY | _PAGE_PROTNONE);
+>   
+>   	return pmd;
+> 
+> base-commit: f1fcbaa18b28dec10281551dfe6ed3a3ed80e3d6
+> 
 
-The goal was not to shove everything into an array, but centralize
-architecture requirements for code allocations. The callsites don't have
-that information per se, they get it from the arch code, so having this
-information in a single place per arch is better than spreading
-MODULE_START, KPROBES_START etc all over.
+Best Regards
+Hongchen Zhang
 
-I'd agree though that having types for jit_text_alloc is ugly and this
-should be handled differently.
- 
-> What's *actually* common after separating out the ranges? Is it just the
-> permissions?
-
-On x86 everything, on arm64 apparently just the permissions.
-
-I've started to summarize what are the restrictions for code placement for
-modules, kprobes and bpf on different architectures, that's roughly what
-I've got so far:
-
-* x86 and s390 need everything within modules address space because of
-PC-relative
-* arm, arm64, loongarch, sparc64, riscv64, some of mips and
-powerpc32 configurations require a dedicated modules address space; the
-rest just use vmalloc address space
-* all architectures that support kprobes except x86 and s390 don't use
-relative jumps, so they don't care where kprobes insn_page will live
-* not sure yet about BPF. Looks like on arm and arm64 it does not use
-relative jumps, so it can be anywhere, didn't dig enough about the others.
-
-> If we want this to be able to share allocations and so on, why can't we do this
-> like a kmem_cache, and have the callsite pass a pointer to the allocator data?
-> That would make it easy for callsites to share an allocator or use a distinct
-> one.
-
-This maybe something worth exploring.
- 
-> Thanks,
-> Mark.
-
--- 
-Sincerely yours,
-Mike.
