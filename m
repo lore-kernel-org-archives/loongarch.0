@@ -1,109 +1,114 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2027E294F5
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 10:07:05 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8Cx_eoNBX9k1hYAAA--.494S3;
-	Tue, 06 Jun 2023 18:06:05 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxReQMBX9kkCcCAA--.9410S3;
-	Tue, 06 Jun 2023 18:06:04 +0800 (CST)
-Message-ID: <57c428e9-6d7c-c0b7-be5f-365373ab1b9c@loongson.cn>
-Date: Tue, 6 Jun 2023 18:06:04 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDB42A6EA;
+	Tue,  6 Jun 2023 10:16:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CCDC433EF;
+	Tue,  6 Jun 2023 10:16:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686046599;
+	bh=K3mQNwoT9j+uKtNH0+N5SGAruipqVMe0nyrOVYu8zmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ex2boOSbFX9F8vILoj2ER6OMGqZieI/qXxa+Cl88F6P5WueebucHT8gXYMljU/UwF
+	 W4Vwtw16CB66Ckf8CUcEwiMgsp0Rl7Zp+sWmc7WhCTWF54CsHU5is7Yegd2qZ+FcpB
+	 7HYr90xDXGc4Q+jlXpM3iwKf1+z1TAE79jym8dBpk7/sIwryEOoaJwZE+mZ+/dgO9Q
+	 jbUZZ/yVspF9cToZ4ExktC3lUSHmqXSahqJcQT5b1PfE/IsSC9GrwIVg8JzQsfRBlA
+	 +FWytBECVY5td4H8LIUSl6ZWwnci/X0OdWg6sGet7yNw0Tt3OFZ9/6khP83arPzxeP
+	 mpCOpEPlPas8A==
+Date: Tue, 6 Jun 2023 13:16:08 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+Message-ID: <20230606101608.GC52412@kernel.org>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan>
+ <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+ <20230605092040.GB3460@kernel.org>
+ <ZH20XkD74prrdN4u@FVFF77S0Q05N>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3] PCI: Align pci memory space base address with page
- size
-Content-Language: en-US
-From: "bibo, mao" <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Will Deacon <will@kernel.org>, loongarch@lists.linux.dev,
- loongson-kernel@lists.loongnix.cn, Bjorn Helgaas <bhelgaas@google.com>
-References: <20230606084539.1694441-1-maobibo@loongson.cn>
-In-Reply-To: <20230606084539.1694441-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxReQMBX9kkCcCAA--.9410S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw1xGry5Ar18WFW7Kr1xWFX_yoW8Kw4kpF
-	WxCFn8CrWkKr1fGws2qw1DuF4fWws2gFWYkrWIkas0k3Z7JasFyry7GrW5Cry8Wrs3Gr1j
-	qFs8tr1xXa48ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
-	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	W8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuY
-	vjxU7WrWUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZH20XkD74prrdN4u@FVFF77S0Q05N>
 
-Huacai,
-
-Although I post this patch, I think this should be arch specified rather than general problem.
-X86 has solved this problem, arm64 with 64K page size is not popular. However LoongArch
-has this problem, page size is 16K rather than 4K. It is the problem of LoongArch system
-rather than generic issue.
-
-There is such discussion before:
-https://patchwork.kernel.org/project/linux-pci/patch/22400b8828ad44ddbccb876cc5ca3b11@FE-MBX1012.de.bosch.com/#19319457
-
-UEFI bios sets pci memory space 4K aligned, however Loongarch kernel rescans the pci
-bus and reassigns pci memory resource. So it it strange like this, here is pci memory info on
- my 7A2000 board.
-root@user-pc:~# lspci -vvv | grep Region
-        Region 5: Memory at e003526e800 (32-bit, non-prefetchable) [size=1K]
-        Region 0: Memory at e003526ec00 (64-bit, non-prefetchable) [size=1K]
-
-Regards
-Bibo, Mao
-
-在 2023/6/6 16:45, Bibo Mao 写道:
-> Some PCI devices have only 4K memory space size, it is normal in general
-> machines and aligned with page size. However some architectures which
-> support different page size, default page size on LoongArch is 16K, and
-> ARM64 supports page size varying from 4K to 64K. On machines where larger
-> page size is use, memory space region of two different pci devices may be
-> in one page. It is not safe with mmu protection, also VFIO pci device
-> driver requires base address of pci memory space page aligned, so that it
-> can be memory mapped to qemu user space when it is passed-through to vm.
+On Mon, Jun 05, 2023 at 11:09:34AM +0100, Mark Rutland wrote:
+> On Mon, Jun 05, 2023 at 12:20:40PM +0300, Mike Rapoport wrote:
+> > On Fri, Jun 02, 2023 at 10:35:09AM +0100, Mark Rutland wrote:
+> >
+> > It sill can be achieved with a single jit_alloc_arch_params(), just by
+> > adding enum jit_type parameter to jit_text_alloc().
 > 
-> It consumes more pci memory resource with page size alignment requirement,
-> it should not be a problem on 64 bit system.
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  drivers/pci/setup-res.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index 967f9a758923..55440ae0128d 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -339,6 +339,14 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
->  		return -EINVAL;
->  	}
->  
-> +#ifdef CONFIG_64BIT
-> +	/*
-> +	 * force minimum page alignment for vfio pci usage
-> +	 * supposing there is enough pci memory resource on 64bit system
-> +	 */
-> +	if (res->flags & IORESOURCE_MEM)
-> +		align = max_t(resource_size_t, PAGE_SIZE, align);
-> +#endif
->  	size = resource_size(res);
->  	ret = _pci_assign_resource(dev, resno, size, align);
->  
+> That feels backwards to me; it centralizes a bunch of information about
+> distinct users to be able to shove that into a static array, when the callsites
+> can pass that information. 
 
+The goal was not to shove everything into an array, but centralize
+architecture requirements for code allocations. The callsites don't have
+that information per se, they get it from the arch code, so having this
+information in a single place per arch is better than spreading
+MODULE_START, KPROBES_START etc all over.
+
+I'd agree though that having types for jit_text_alloc is ugly and this
+should be handled differently.
+ 
+> What's *actually* common after separating out the ranges? Is it just the
+> permissions?
+
+On x86 everything, on arm64 apparently just the permissions.
+
+I've started to summarize what are the restrictions for code placement for
+modules, kprobes and bpf on different architectures, that's roughly what
+I've got so far:
+
+* x86 and s390 need everything within modules address space because of
+PC-relative
+* arm, arm64, loongarch, sparc64, riscv64, some of mips and
+powerpc32 configurations require a dedicated modules address space; the
+rest just use vmalloc address space
+* all architectures that support kprobes except x86 and s390 don't use
+relative jumps, so they don't care where kprobes insn_page will live
+* not sure yet about BPF. Looks like on arm and arm64 it does not use
+relative jumps, so it can be anywhere, didn't dig enough about the others.
+
+> If we want this to be able to share allocations and so on, why can't we do this
+> like a kmem_cache, and have the callsite pass a pointer to the allocator data?
+> That would make it easy for callsites to share an allocator or use a distinct
+> one.
+
+This maybe something worth exploring.
+ 
+> Thanks,
+> Mark.
+
+-- 
+Sincerely yours,
+Mike.
