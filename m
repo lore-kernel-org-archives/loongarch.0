@@ -1,118 +1,118 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9B2115AD2
-	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 11:40:06 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.185])
-	by gateway (Coremail) with SMTP id _____8AxHusIG39kkyIAAA--.681S3;
-	Tue, 06 Jun 2023 19:39:52 +0800 (CST)
-Received: from [10.180.13.185] (unknown [10.180.13.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxluQFG39kWkkCAA--.9429S3;
-	Tue, 06 Jun 2023 19:39:49 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: let pmd_present return true when splitting pmd
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Andrew Morton <akpm@linux-foundation.org>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Feiyang Chen
- <chenfeiyang@loongson.cn>, Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <20230524074132.10916-1-zhanghongchen@loongson.cn>
-From: Hongchen Zhang <zhanghongchen@loongson.cn>
-Message-ID: <46ce41a3-16bd-6d92-c8a8-764283859190@loongson.cn>
-Date: Tue, 6 Jun 2023 19:38:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04BF915ACE
+	for <loongarch@lists.linux.dev>; Tue,  6 Jun 2023 12:11:14 +0000 (UTC)
+Received: from loongson.cn (unknown [223.106.25.146])
+	by gateway (Coremail) with SMTP id _____8DxPPBKIn9kmScAAA--.753S3;
+	Tue, 06 Jun 2023 20:10:51 +0800 (CST)
+Received: from [192.168.100.8] (unknown [223.106.25.146])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxauVIIn9kcVMCAA--.9829S3;
+	Tue, 06 Jun 2023 20:10:50 +0800 (CST)
+Message-ID: <569f203c-8e77-6ba8-56f9-b57d4840f502@loongson.cn>
+Date: Tue, 6 Jun 2023 20:10:48 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230524074132.10916-1-zhanghongchen@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH 2/4] ALSA: hda: Using polling mode for loongson controller
+ by default
 Content-Language: en-US
+To: Takashi Iwai <tiwai@suse.de>
+Cc: tiwai@suse.com, perex@perex.cz, chenhuacai@loongson.cn,
+ alsa-devel@alsa-project.org, loongarch@lists.linux.dev,
+ loongson-kernel@lists.loongnix.cn, Yingkun Meng <mengyingkun@loongson.cn>
+References: <cover.1685501806.git.siyanteng@loongson.cn>
+ <ad85194e2da2118ff49f127ffd74727e298a3ea5.1685501806.git.siyanteng@loongson.cn>
+ <87sfb6icoa.wl-tiwai@suse.de>
+From: Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <87sfb6icoa.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8DxluQFG39kWkkCAA--.9429S3
-X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQANB2R8fwAONwAGsT
-X-Coremail-Antispam: 1Uk129KBj93XoWxXrykur4kWw15Cr1DCr47WrX_yoW5Gr17p3
-	Z7CFykur45KFyIy343tF1fZry7ursrGFn2gryqgw1UAFy3X397Jrn8Kwn8ZFy8XayvyFW8
-	Wrn2g3W5Way3J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:AQAAf8AxauVIIn9kcVMCAA--.9829S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur45tF17CF1ktFWrZFWxXwc_yoW8uw4xpF
+	48Ca45KF48Jws09r4q9FW5Kr13ta93JF47KrWIg34DAwn29w13Wa42yr109FWvk3sa9r43
+	AwsFqas3X3yYvabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UWHqcU
+	UUUU=
 
-Hi,
 
-Gentle ping.
+On 2023/6/5 15:35, Takashi Iwai wrote:
+> On Wed, 31 May 2023 05:21:32 +0200,
+> Yanteng Si wrote:
+>> On loongson controller, RIRBSTS.RINTFL cannot be cleared,
+>> azx_interrupt() is called all the time. We disable RIRB
+>> interrupt, and use polling mode by default.
+>>
+>> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+>> Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+>> ---
+>>   sound/hda/hdac_controller.c | 8 +++++++-
+>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
+>> index 3c7af6558249..dbaa19cb8162 100644
+>> --- a/sound/hda/hdac_controller.c
+>> +++ b/sound/hda/hdac_controller.c
+>> @@ -10,6 +10,7 @@
+>>   #include <sound/hdaudio.h>
+>>   #include <sound/hda_register.h>
+>>   #include "local.h"
+>> +#include "../pci/hda/hda_controller.h"
+>>   
+>>   /* clear CORB read pointer properly */
+>>   static void azx_clear_corbrp(struct hdac_bus *bus)
+>> @@ -42,6 +43,8 @@ static void azx_clear_corbrp(struct hdac_bus *bus)
+>>    */
+>>   void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
+>>   {
+>> +	struct azx *chip = bus_to_azx(bus);
+> You can't convert in this way in the generic HD-audio bus code in
+> sound/hda/*.  The struct azx is specific to sound/pci/hda/*.
+I see!
+>
+>
+>>   	WARN_ON_ONCE(!bus->rb.area);
+>>   
+>>   	spin_lock_irq(&bus->reg_lock);
+>> @@ -79,7 +82,10 @@ void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
+>>   	/* set N=1, get RIRB response interrupt for new entry */
+>>   	snd_hdac_chip_writew(bus, RINTCNT, 1);
+>>   	/* enable rirb dma and response irq */
+>> -	snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
+>> +	if (chip->driver_caps & AZX_DCAPS_LOONGSON_WORKAROUND)
+>> +		snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN);
+>> +	else
+>> +		snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
+> That is, for some device-specific workaround like this, you'd need to
+> introduce a new flag in struct hdac_bus, set up in the
+> sound/pci/hda/hda_intel.c instead.
 
-On 2023/5/24 pm 3:41, Hongchen Zhang wrote:
-> when we split a pmd into ptes, pmd_present() and pmd_trans_huge() should
-> return true,otherwise it would be treated as a swap pmd.
-> As arm64 does in
-> commit b65399f6111b ("arm64/mm: Change THP helpers to comply with generic MM semantics")
-> we add a _PAGE_PRESENT_INVALID bit for LoongArch.
-> 
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> ---
->   arch/loongarch/include/asm/pgtable-bits.h | 2 ++
->   arch/loongarch/include/asm/pgtable.h      | 3 ++-
->   2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
-> index 8b98d22a145b..a7469d28d9d0 100644
-> --- a/arch/loongarch/include/asm/pgtable-bits.h
-> +++ b/arch/loongarch/include/asm/pgtable-bits.h
-> @@ -22,12 +22,14 @@
->   #define	_PAGE_PFN_SHIFT		12
->   #define	_PAGE_SWP_EXCLUSIVE_SHIFT 23
->   #define	_PAGE_PFN_END_SHIFT	48
-> +#define _PAGE_PRESENT_INVALID_SHIFT 60
->   #define	_PAGE_NO_READ_SHIFT	61
->   #define	_PAGE_NO_EXEC_SHIFT	62
->   #define	_PAGE_RPLV_SHIFT	63
->   
->   /* Used by software */
->   #define _PAGE_PRESENT		(_ULCAST_(1) << _PAGE_PRESENT_SHIFT)
-> +#define _PAGE_PRESENT_INVALID	(_ULCAST_(1) << _PAGE_PRESENT_INVALID_SHIFT)
->   #define _PAGE_WRITE		(_ULCAST_(1) << _PAGE_WRITE_SHIFT)
->   #define _PAGE_ACCESSED		(_ULCAST_(1) << _PAGE_ACCESSED_SHIFT)
->   #define _PAGE_MODIFIED		(_ULCAST_(1) << _PAGE_MODIFIED_SHIFT)
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-> index d28fb9dbec59..9a9f9ff9b709 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -213,7 +213,7 @@ static inline int pmd_bad(pmd_t pmd)
->   static inline int pmd_present(pmd_t pmd)
->   {
->   	if (unlikely(pmd_val(pmd) & _PAGE_HUGE))
-> -		return !!(pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE));
-> +		return !!(pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PRESENT_INVALID));
->   
->   	return pmd_val(pmd) != (unsigned long)invalid_pte_table;
->   }
-> @@ -558,6 +558,7 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
->   
->   static inline pmd_t pmd_mkinvalid(pmd_t pmd)
->   {
-> +	pmd_val(pmd) |= _PAGE_PRESENT_INVALID;
->   	pmd_val(pmd) &= ~(_PAGE_PRESENT | _PAGE_VALID | _PAGE_DIRTY | _PAGE_PROTNONE);
->   
->   	return pmd;
-> 
-> base-commit: f1fcbaa18b28dec10281551dfe6ed3a3ed80e3d6
-> 
+OK! I will try to put your ideas into practice.
 
-Best Regards
-Hongchen Zhang
+
+Thanks,
+
+Yanteng
+
+>
+>
+> thanks,
+>
+> Takashi
 
