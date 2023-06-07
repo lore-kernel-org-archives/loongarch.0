@@ -1,11 +1,11 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03AF28F47
-	for <loongarch@lists.linux.dev>; Wed,  7 Jun 2023 09:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBBBA8F75
+	for <loongarch@lists.linux.dev>; Wed,  7 Jun 2023 09:22:01 +0000 (UTC)
 Received: from loongson.cn (unknown [223.106.25.146])
-	by gateway (Coremail) with SMTP id _____8DxSuo3TIBkTRcAAA--.341S3;
-	Wed, 07 Jun 2023 17:21:59 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx+ek4TIBkVBcAAA--.330S3;
+	Wed, 07 Jun 2023 17:22:00 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.106.25.146])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxNeQ2TIBkvzcEAA--.14996S3;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxNeQ2TIBkvzcEAA--.14996S4;
 	Wed, 07 Jun 2023 17:21:59 +0800 (CST)
 From: Yanteng Si <siyanteng@loongson.cn>
 To: tiwai@suse.com
@@ -14,10 +14,11 @@ Cc: Yanteng Si <siyanteng@loongson.cn>,
 	chenhuacai@loongson.cn,
 	alsa-devel@alsa-project.org,
 	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH RESEND v3 1/4] ALSA: hda: Add Loongson LS7A HD-Audio support
-Date: Wed,  7 Jun 2023 17:21:49 +0800
-Message-Id: <993587483b9509796b29a416f257fcfb4b15c6ea.1686128807.git.siyanteng@loongson.cn>
+	loongson-kernel@lists.loongnix.cn,
+	Yingkun Meng <mengyingkun@loongson.cn>
+Subject: [PATCH RESEND v3 2/4] ALSA: hda: Using polling mode for loongson controller by default
+Date: Wed,  7 Jun 2023 17:21:50 +0800
+Message-Id: <d309a75424d438b958d90d797b4f1ba45468e090.1686128807.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.31.4
 In-Reply-To: <cover.1686128807.git.siyanteng@loongson.cn>
 References: <cover.1686128807.git.siyanteng@loongson.cn>
@@ -28,14 +29,14 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxNeQ2TIBkvzcEAA--.14996S3
+X-CM-TRANSID:AQAAf8BxNeQ2TIBkvzcEAA--.14996S4
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFy8GrW7KrWkAFy5Xry8tFc_yoW5AFWfpr
-	4kZryjkFZ7JrWYvr4DW3ZrKF9rC3WDA3WDurW29w1xuFn2yw4Sqa4Dur45ZF4ayrW7WFya
-	grWqk34xuayUJwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7ArWkuF1UCr1fGw1xXF4DJrc_yoW8tFyxpF
+	97C348KFW7Wr4Yvr4DKa4UKr13Xa93G3ZxGrW0k348Arn2v3WfW39FyF40yFWjkrWIgrW3
+	X3ykt348Jay5twcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUU90b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
@@ -43,92 +44,67 @@ X-Coremail-Antispam: 1Uk129KBj93XoWxGFy8GrW7KrWkAFy5Xry8tFc_yoW5AFWfpr
 	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
 	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
 	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
 	vEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x07jz5lbUUUUU=
+	vjDU0xZFpf9x07jwhLnUUUUU=
 
-Add the new PCI ID 0x0014 0x7a07 and the new PCI ID 0x0014 0x7a37
-Loongson HDA controller.
+On loongson controller, RIRBSTS.RINTFL cannot be cleared,
+azx_interrupt() is called all the time. We disable RIRB
+interrupt, and use polling mode by default.
 
 Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
 ---
- include/linux/pci_ids.h    | 3 +++
- sound/hda/hdac_device.c    | 1 +
- sound/pci/hda/hda_intel.c  | 7 +++++++
- sound/pci/hda/patch_hdmi.c | 1 +
- 4 files changed, 12 insertions(+)
+ include/sound/hdaudio.h     | 1 +
+ sound/hda/hdac_controller.c | 5 ++++-
+ sound/pci/hda/hda_intel.c   | 5 +++++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 22f4be95b3f1..543998b44e4c 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -158,6 +158,9 @@
+diff --git a/include/sound/hdaudio.h b/include/sound/hdaudio.h
+index 97f09acae302..a0bb40a4b721 100644
+--- a/include/sound/hdaudio.h
++++ b/include/sound/hdaudio.h
+@@ -347,6 +347,7 @@ struct hdac_bus {
+ 	bool corbrp_self_clear:1;	/* CORBRP clears itself after reset */
+ 	bool polling_mode:1;
+ 	bool needs_damn_long_delay:1;
++	bool not_use_interrupts:1;	/* prohibiting the RIRB IRQ */
  
- #define PCI_VENDOR_ID_LOONGSON		0x0014
+ 	int poll_count;
  
-+#define PCI_DEVICE_ID_LOONGSON_HDA      0x7a07
-+#define PCI_DEVICE_ID_LOONGSON_HDMI     0x7a37
-+
- #define PCI_VENDOR_ID_SOLIDIGM		0x025e
- 
- #define PCI_VENDOR_ID_TTTECH		0x0357
-diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
-index 6c043fbd606f..bbf7bcdb449a 100644
---- a/sound/hda/hdac_device.c
-+++ b/sound/hda/hdac_device.c
-@@ -645,6 +645,7 @@ struct hda_vendor_id {
- };
- 
- static const struct hda_vendor_id hda_vendor_ids[] = {
-+	{ 0x0014, "Loongson" },
- 	{ 0x1002, "ATI" },
- 	{ 0x1013, "Cirrus Logic" },
- 	{ 0x1057, "Motorola" },
+diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
+index 3c7af6558249..7f3a000fab0c 100644
+--- a/sound/hda/hdac_controller.c
++++ b/sound/hda/hdac_controller.c
+@@ -79,7 +79,10 @@ void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
+ 	/* set N=1, get RIRB response interrupt for new entry */
+ 	snd_hdac_chip_writew(bus, RINTCNT, 1);
+ 	/* enable rirb dma and response irq */
+-	snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
++	if (bus->not_use_interrupts)
++		snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN);
++	else
++		snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
+ 	/* Accept unsolicited responses */
+ 	snd_hdac_chip_updatel(bus, GCTL, AZX_GCTL_UNSOL, AZX_GCTL_UNSOL);
+ 	spin_unlock_irq(&bus->reg_lock);
 diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 3226691ac923..9c353dc7740c 100644
+index 9c353dc7740c..b7a7a92d03ef 100644
 --- a/sound/pci/hda/hda_intel.c
 +++ b/sound/pci/hda/hda_intel.c
-@@ -237,6 +237,7 @@ enum {
- 	AZX_DRIVER_CTHDA,
- 	AZX_DRIVER_CMEDIA,
- 	AZX_DRIVER_ZHAOXIN,
-+	AZX_DRIVER_LOONGSON,
- 	AZX_DRIVER_GENERIC,
- 	AZX_NUM_DRIVERS, /* keep this as last entry */
- };
-@@ -360,6 +361,7 @@ static const char * const driver_short_names[] = {
- 	[AZX_DRIVER_CTHDA] = "HDA Creative",
- 	[AZX_DRIVER_CMEDIA] = "HDA C-Media",
- 	[AZX_DRIVER_ZHAOXIN] = "HDA Zhaoxin",
-+	[AZX_DRIVER_LOONGSON] = "HDA Loongson",
- 	[AZX_DRIVER_GENERIC] = "HD-Audio Generic",
- };
+@@ -1875,6 +1875,11 @@ static int azx_first_init(struct azx *chip)
+ 	if (chip->driver_type == AZX_DRIVER_GFHDMI)
+ 		bus->polling_mode = 1;
  
-@@ -2809,6 +2811,11 @@ static const struct pci_device_id azx_ids[] = {
- 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_HDMI },
- 	/* Zhaoxin */
- 	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
-+	/* Loongson HDAudio*/
-+	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDA),
-+	  .driver_data = AZX_DRIVER_LOONGSON },
-+	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDMI),
-+	  .driver_data = AZX_DRIVER_LOONGSON },
- 	{ 0, }
- };
- MODULE_DEVICE_TABLE(pci, azx_ids);
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 5c0b1a09fd57..260d3e64f658 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -4505,6 +4505,7 @@ static int patch_gf_hdmi(struct hda_codec *codec)
-  * patch entries
-  */
- static const struct hda_device_id snd_hda_id_hdmi[] = {
-+HDA_CODEC_ENTRY(0x00147a47, "Loongson HDMI",	patch_generic_hdmi),
- HDA_CODEC_ENTRY(0x1002793c, "RS600 HDMI",	patch_atihdmi),
- HDA_CODEC_ENTRY(0x10027919, "RS600 HDMI",	patch_atihdmi),
- HDA_CODEC_ENTRY(0x1002791a, "RS690/780 HDMI",	patch_atihdmi),
++	if (chip->driver_type == AZX_DRIVER_LOONGSON) {
++		bus->polling_mode = 1;
++		bus->not_use_interrupts = 1;
++	}
++
+ 	err = pcim_iomap_regions(pci, 1 << 0, "ICH HD audio");
+ 	if (err < 0)
+ 		return err;
 -- 
 2.31.4
 
