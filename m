@@ -1,14 +1,14 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E7FE7C
-	for <loongarch@lists.linux.dev>; Wed,  7 Jun 2023 04:49:01 +0000 (UTC)
-Received: from loongson.cn (unknown [223.106.25.146])
-	by gateway (Coremail) with SMTP id _____8Dx_+s3DIBkiAYAAA--.136S3;
-	Wed, 07 Jun 2023 12:48:56 +0800 (CST)
-Received: from [192.168.100.8] (unknown [223.106.25.146])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxFOQ2DIBkP9MDAA--.13899S3;
-	Wed, 07 Jun 2023 12:48:55 +0800 (CST)
-Message-ID: <7d5c7765-936e-e7be-a80b-feec61b9f9ef@loongson.cn>
-Date: Wed, 7 Jun 2023 12:48:54 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC91F1C3A
+	for <loongarch@lists.linux.dev>; Wed,  7 Jun 2023 08:26:54 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8DxyOlMP4BkBRMAAA--.209S3;
+	Wed, 07 Jun 2023 16:26:52 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxCOVKP4BknBoEAA--.14829S3;
+	Wed, 07 Jun 2023 16:26:50 +0800 (CST)
+Message-ID: <e8f80e1a-7f2e-bbff-4630-a04e6cc9c5fe@loongson.cn>
+Date: Wed, 7 Jun 2023 16:26:50 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -16,113 +16,159 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v2 2/4] ALSA: hda: Using polling mode for loongson
- controller by default
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3] PCI: Align pci memory space base address with page
+ size
 Content-Language: en-US
-To: Takashi Iwai <tiwai@suse.de>
-Cc: tiwai@suse.com, perex@perex.cz, chenhuacai@loongson.cn,
- alsa-devel@alsa-project.org, loongarch@lists.linux.dev,
- loongson-kernel@lists.loongnix.cn, Yingkun Meng <mengyingkun@loongson.cn>
-References: <cover.1686057365.git.siyanteng@loongson.cn>
- <521be42ac818d35a996e01cc3d591e1c87f230d9.1686057365.git.siyanteng@loongson.cn>
- <87wn0gg16g.wl-tiwai@suse.de>
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <87wn0gg16g.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: "bibo, mao" <maobibo@loongson.cn>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Will Deacon <will@kernel.org>, loongarch@lists.linux.dev,
+ loongson-kernel@lists.loongnix.cn, Bjorn Helgaas <bhelgaas@google.com>
+References: <20230606204522.GA1142773@bhelgaas>
+ <685d3265-ac76-60a9-57b2-66da00b04b32@loongson.cn>
+In-Reply-To: <685d3265-ac76-60a9-57b2-66da00b04b32@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxFOQ2DIBkP9MDAA--.13899S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCryfuFy5GF45CF4ruF47ZFc_yoW5Gw4UpF
-	ykCa4rKFZrJr4jkFsrK3WUKr1fXa97GF13GrWj9340yrnFv3WrWw1qkr4rZFWjvr4Igrya
-	qr1vqa48JayYqabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:AQAAf8CxCOVKP4BknBoEAA--.14829S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3WF17AryfWFWfur48KrW7Awc_yoW7Gw45pF
+	WxCF4qkF4DtryfGws2vwn8uFnaqw4I9rWYgrySkr90ka4DAFyxtry7JrW5CrykXr4rGF1j
+	qr45tr1xuas5ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjQ6JUUU
-	UU=
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
+	WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcyxR
+	UUUUU
 
 
-在 2023/6/6 21:39, Takashi Iwai 写道:
-> On Tue, 06 Jun 2023 15:25:28 +0200,
-> Yanteng Si wrote:
->> On loongson controller, RIRBSTS.RINTFL cannot be cleared,
->> azx_interrupt() is called all the time. We disable RIRB
->> interrupt, and use polling mode by default.
+
+在 2023/6/7 09:42, bibo, mao 写道:
+> 
+> 
+> 在 2023/6/7 04:45, Bjorn Helgaas 写道:
+>> On Tue, Jun 06, 2023 at 06:06:04PM +0800, bibo, mao wrote:
+>>> Huacai,
+>>>
+>>> Although I post this patch, I think this should be arch specified
+>>> rather than general problem.  X86 has solved this problem, arm64
+>>> with 64K page size is not popular. However LoongArch has this
+>>> problem, page size is 16K rather than 4K. It is the problem of
+>>> LoongArch system rather than generic issue.
 >>
->> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
->> Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
->> ---
->>   include/sound/hdaudio.h     | 1 +
->>   sound/hda/hdac_controller.c | 5 ++++-
->>   sound/pci/hda/hda_intel.c   | 4 ++++
->>   3 files changed, 9 insertions(+), 1 deletion(-)
+>> I think this is only related to the page size, not to any
+>> LoongArch-specific details.  If that's the case, I don't think the
+>> change should be arch-specific.
 >>
->> diff --git a/include/sound/hdaudio.h b/include/sound/hdaudio.h
->> index 97f09acae302..a1dcc7f97d08 100644
->> --- a/include/sound/hdaudio.h
->> +++ b/include/sound/hdaudio.h
->> @@ -346,6 +346,7 @@ struct hdac_bus {
->>   	bool reverse_assign:1;		/* assign devices in reverse order */
->>   	bool corbrp_self_clear:1;	/* CORBRP clears itself after reset */
->>   	bool polling_mode:1;
->> +	bool no_intr_polling_mode:1;
-> It isn't clear enough what this flag does.  It's basically prohibiting
-> the RIRB IRQ (hence requiring the polling mode), right?  Write it in
-> the comment.
-OK!
->
->> diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
->> index 3c7af6558249..705e09cc50ac 100644
->> --- a/sound/hda/hdac_controller.c
->> +++ b/sound/hda/hdac_controller.c
->> @@ -79,7 +79,10 @@ void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
->>   	/* set N=1, get RIRB response interrupt for new entry */
->>   	snd_hdac_chip_writew(bus, RINTCNT, 1);
->>   	/* enable rirb dma and response irq */
->> -	snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
->> +	if (bus->no_intr_polling_mode)
->> +		snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN);
->> +	else
->> +		snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
->>   	/* Accept unsolicited responses */
->>   	snd_hdac_chip_updatel(bus, GCTL, AZX_GCTL_UNSOL, AZX_GCTL_UNSOL);
->>   	spin_unlock_irq(&bus->reg_lock);
->> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
->> index 9c353dc7740c..1e8993836fc6 100644
->> --- a/sound/pci/hda/hda_intel.c
->> +++ b/sound/pci/hda/hda_intel.c
->> @@ -1875,6 +1875,10 @@ static int azx_first_init(struct azx *chip)
->>   	if (chip->driver_type == AZX_DRIVER_GFHDMI)
->>   		bus->polling_mode = 1;
->>   
->> +	if (chip->driver_type == AZX_DRIVER_LOONGSON) {
->> +		bus->no_intr_polling_mode = 1;
->> +	}
-> Don't you need to set the bus->polling_mode?
+>>> There is such discussion before:
+>>> https://patchwork.kernel.org/project/linux-pci/patch/22400b8828ad44ddbccb876cc5ca3b11@FE-MBX1012.de.bosch.com/#19319457
+>>>
+>>> UEFI bios sets pci memory space 4K aligned, however Loongarch kernel rescans the pci
+>>> bus and reassigns pci memory resource. So it it strange like this, here is pci memory info on
+>>>  my 7A2000 board.
+>>> root@user-pc:~# lspci -vvv | grep Region
+>>>         Region 5: Memory at e003526e800 (32-bit, non-prefetchable) [size=1K]
+>>>         Region 0: Memory at e003526ec00 (64-bit, non-prefetchable) [size=1K]
+>>
+>> I guess these BARs are from different devices, and the problem you're
+>> pointing out is that both BARs end up in the same 16K page (actually
+>> even the same 4K page):
+>>
+>>   (gdb) p/x 0xe003526e800 >> 12
+>>   $1 = 0xe003526e
+>>   (gdb) p/x 0xe003526ec00 >> 12
+>>   $2 = 0xe003526e
+>>
+>> I agree that's a potential issue because a user mmap of the first
+>> device also gets access to the BAR of the second device.  But it
+>> doesn't seem to be a *new* or LoongArch-specific issue.
+>>
+>> So I *think* the point of this patch is to ensure that BARs of
+>> different devices never share a page.  Why is that suddenly an issue
+>> for LoongArch?  Is it only because you see more sharing with 16K pages
+>> than other arches do with 4K pages?
+> The UEFI BIOS has assigned the PCI device with minimal 4K aligned, I guest
+> Linux kernel on X86/ARM uses resource directly rather than reassign resource
+> again. So there is problem for hot-plug devices, however most hot-plug devices
+> are used for server system and they are high speed devices, PCI resource size
+> is larger than 4K. So it is not obvious on x86/ARM system.
+> 
+> However on LoongArch system with page size 16K, the problem is obvious since
+> pci devices with 4K resource size are popular.
+>>
+>>> 在 2023/6/6 16:45, Bibo Mao 写道:
+>>>> Some PCI devices have only 4K memory space size, it is normal in general
+>>>> machines and aligned with page size. However some architectures which
+>>>> support different page size, default page size on LoongArch is 16K, and
+>>>> ARM64 supports page size varying from 4K to 64K. On machines where larger
+>>>> page size is use, memory space region of two different pci devices may be
+>>>> in one page. It is not safe with mmu protection, also VFIO pci device
+>>>> driver requires base address of pci memory space page aligned, so that it
+>>>> can be memory mapped to qemu user space when it is passed-through to vm.
+>>
+>> The minimum memory BAR per spec is 128 bytes (not 4K).  You just
+>> demonstrated that even with 4K pages, different devices can share a
+>> page.
+>>
+>>>> It consumes more pci memory resource with page size alignment requirement,
+>>>> it should not be a problem on 64 bit system.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>  drivers/pci/setup-res.c | 8 ++++++++
+>>>>  1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+>>>> index 967f9a758923..55440ae0128d 100644
+>>>> --- a/drivers/pci/setup-res.c
+>>>> +++ b/drivers/pci/setup-res.c
+>>>> @@ -339,6 +339,14 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
+>>>>  		return -EINVAL;
+>>>>  	}
+>>>>  
+>>>> +#ifdef CONFIG_64BIT
+>>>> +	/*
+>>>> +	 * force minimum page alignment for vfio pci usage
+>>>> +	 * supposing there is enough pci memory resource on 64bit system
+>>>> +	 */
+>>>> +	if (res->flags & IORESOURCE_MEM)
+>>>> +		align = max_t(resource_size_t, PAGE_SIZE, align);
+>>>> +#endif
+>>
+>> Why is this under CONFIG_64BIT?  That doesn't have anything to do with
+>> the BAR size.  The only reason I can see is that with CONFIG_64BIT=y,
+>> we *might* have more MMIO space to use for BARs.
+> yes, I assume that there is enough PCI memory resource with 64 bit system,
+> after all it consumes more memory resource and brings out negative effect.
+> For UIO and SRIOV requirements, they are most 64-bit server system, they
+> can suffer from wasting some PCI memory resource.
+Can we add extra config option and let architecture selects whether enable it?
+Here is piece of code:
 
-Yes, I do.
+#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
+        /*
+         * force minimum page alignment for vfio pci usage
+         */
+        if (res->flags & IORESOURCE_MEM)
+                align = max_t(resource_size_t, PAGE_SIZE, align);
+#endif
 
-Although it works now, some messages will print.
-
-
-Thanks,
-
-Yanteng
-
->
->
-> thanks,
->
-> Takashi
+Regards
+Bibo, Mao
+> 
+> Regards
+> Bibo, Mao
+>>
+>>>>  	size = resource_size(res);
+>>>>  	ret = _pci_assign_resource(dev, resno, size, align);
 
