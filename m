@@ -1,124 +1,111 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6628A746C;
-	Thu,  8 Jun 2023 07:04:17 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cxe+pwfYFkMHIAAA--.1699S3;
-	Thu, 08 Jun 2023 15:04:16 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxC8ptfYFk49MGAA--.13616S3;
-	Thu, 08 Jun 2023 15:04:14 +0800 (CST)
-Subject: Re: [RFC PATCH] asm-generic: Unify uapi bitsperlong.h
-To: Arnd Bergmann <arnd@arndb.de>
-References: <1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn>
- <b9624545-2c80-49a1-ac3c-39264a591f7b@app.fastmail.com>
-Cc: linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <76d3be65-91df-7969-5303-38231a7df926@loongson.cn>
-Date: Thu, 8 Jun 2023 15:04:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950DE749E
+	for <loongarch@lists.linux.dev>; Thu,  8 Jun 2023 07:47:31 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-30ae95c4e75so296987f8f.2
+        for <loongarch@lists.linux.dev>; Thu, 08 Jun 2023 00:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686210450; x=1688802450;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pKpO5ItYiMJJEW+sejs/pUx6xuufVOGsXiL4H+U2QwY=;
+        b=VRapvNbs5TXGVO1BxVueVxAZD0DTuxkR7z+FFcdZQ/M4+d2mDQcPgQBG+rk4w3CiMJ
+         n5DGxnLn5UYVzwS3kqnNYZW2EBiaZDLyrrqZ2kKur2Gq/TlX4T2S1//Gcm+r6hZjL8R9
+         LOaDcZUftcq+xcSn43bZt4NN+oFznjt1EMPIXdu/iFo4un+jotj1GY61o0h94paoobTk
+         K3GyC8q03HLXlkXk4UzzjmzF54ihv6AoE9mZo0pdUSp2u/7ej6V9rULUnkQsNesmSpc8
+         q86ux17YDjsKVl7KnD4SwxIvalG699Pl2hib4Oi+a5KOBKEdkIReMu5+Cqbltq9TSt/v
+         1q5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686210450; x=1688802450;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pKpO5ItYiMJJEW+sejs/pUx6xuufVOGsXiL4H+U2QwY=;
+        b=etCkSPCD0q0Os3yM/+xIqqkcRK0H5rL0LnJP8o0j96L8hGjMg0k6oQODKjJQERNgf0
+         gFGvui1AzBjkN6DTmSlNzKGjlDNl0Q08S6TEHZOqItdlKWPhAKSnFr8J08K5sZmfXTV4
+         gCANkaO9hI6r1IFJh20UlLQo6Ez72iR3loz+9oOLIeXk8xdZhZRqVJB06VMl9vxJKl2s
+         nl7GqL2BEsFZHDYQO0x0CCP1eyH/jh2C0h7OJvLmz78FG6YnT6hls+k94tQtILMavjej
+         WlBxFz+g/ZBLvnR+XM3grozSKTaUP8uMKElmhO4LuFkGLhKGn0DYikYB+geysSMeExaN
+         rm9A==
+X-Gm-Message-State: AC+VfDwkJmXbbyhjvnGEkYKmCIgGyzxtMejOVZSUhED6fHD8lOq64OKS
+	BFVyjTcn2m6u1ODQyHvby3I=
+X-Google-Smtp-Source: ACHHUZ7FLCvn48wU8ttK/wqkrjcYnTcAakUdl/pruduaGLnlji9N1PUvK/8kk/UjPBh0vzwGCI0Ciw==
+X-Received: by 2002:a05:6000:4f:b0:306:41d3:fcb9 with SMTP id k15-20020a056000004f00b0030641d3fcb9mr6440745wrx.27.1686210449445;
+        Thu, 08 Jun 2023 00:47:29 -0700 (PDT)
+Received: from [192.168.0.210] (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.googlemail.com with ESMTPSA id x4-20020a05600c21c400b003f72d7dc66esm1082613wmj.13.2023.06.08.00.47.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Jun 2023 00:47:28 -0700 (PDT)
+Message-ID: <f0265d75-d0e9-9f03-c730-dcc32fcccc69@gmail.com>
+Date: Thu, 8 Jun 2023 08:47:27 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <b9624545-2c80-49a1-ac3c-39264a591f7b@app.fastmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Content-Language: en-US
+To: Qing Zhang <zhangqing@loongson.cn>, loongarch@lists.linux.dev
+From: "Colin King (gmail)" <colin.i.king@gmail.com>
+Subject: re: LoongArch: Add hardware breakpoints/watchpoints support
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxC8ptfYFk49MGAA--.13616S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXw1UJry5Ww1rXr47ZrW8AFc_yoW5Ww1UpF
-	47Jw12gF4qkr1ftrn7Gw47Za45Jwn3Ka1ak39agryxZFW5Wry7trZF9rWagFykXrW8tF4q
-	vrZ8tryjkay8AagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4AhLUUUUU
 
-Hi all,
+Hi,
 
-On 05/09/2023 05:37 PM, Arnd Bergmann wrote:
-> On Tue, May 9, 2023, at 09:05, Tiezhu Yang wrote:
->> Now we specify the minimal version of GCC as 5.1 and Clang/LLVM as 11.0.0
->> in Documentation/process/changes.rst, __CHAR_BIT__ and __SIZEOF_LONG__ are
->> usable, just define __BITS_PER_LONG as (__CHAR_BIT__ * __SIZEOF_LONG__) in
->> asm-generic uapi bitsperlong.h, simpler, works everywhere.
->>
->> Remove all the arch specific uapi bitsperlong.h which will be generated as
->> arch/*/include/generated/uapi/asm/bitsperlong.h.
->>
->> Suggested-by: Xi Ruoyao <xry111@xry111.site>
->> Link:
->> https://lore.kernel.org/all/d3e255e4746de44c9903c4433616d44ffcf18d1b.camel@xry111.site/
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->
-> I originally introduced the bitsperlong.h header, and I'd love to
-> see it removed if it's no longer needed. Your patch certainly
-> seems like it does this well.
->
-> There is one minor obstacle to this, which is that the compiler
-> requirements for uapi headers are not the same as for kernel
-> internal code. In particular, the uapi headers may be included
-> by user space code that is built with an older compiler version,
-> or with a compiler that is not gcc or clang.
->
-> I think we are completely safe on the architectures that were
-> added since the linux-3.x days (arm64, riscv, csky, openrisc,
-> loongarch, nios2, and hexagon), but for the older ones there
-> is a regression risk. Especially on targets that are not that
-> actively maintained (sparc, alpha, ia64, sh, ...) there is
-> a good chance that users are stuck on ancient toolchains.
->
-> It's probably also a safe assumption that anyone with an older
-> libc version won't be using the latest kernel headers, so
-> I think we can still do this across architectures if both
-> glibc and musl already require a compiler that is new enough,
-> or alternatively if we know that the kernel headers require
-> a new compiler for other reasons and nobody has complained.
->
-> For glibc, it looks the minimum compiler version was raised
-> from gcc-5 to gcc-8 four years ago, so we should be fine.
->
-> In musl, the documentation states that at least gcc-3.4 or
-> clang-3.2 are required, which probably predate the
-> __SIZEOF_LONG__ macro. On the other hand, musl was only
-> released in 2011, and building musl itself explicitly
-> does not require kernel uapi headers, so this may not
-> be too critical.
->
-> There is also uClibc, but I could not find any minimum
-> supported compiler version for that. Most commonly, this
-> one is used for cross-build environments, so it's also
-> less likely to have libc/gcc/headers being wildly out of
-> sync. Not sure.
->
->       Arnd
->
-> [1] https://sourceware.org/pipermail/libc-alpha/2019-January/101010.html
->
+Static analysis with cppcheck has found an issue in 
+arch/loongarch/kernel/hw_breakpoint.c function hw_breakpoint_arch_parse 
+with the following commit:
 
-Thanks Arnd for the detailed reply.
-Any more comments? What should I do in the next step?
+commit edffa33c7bb5a73e90c754c7a497162b77d7c55f
+Author: Qing Zhang <zhangqing@loongson.cn>
+Date:   Sat Feb 25 15:52:57 2023 +0800
 
-Thanks,
-Tiezhu
+     LoongArch: Add hardware breakpoints/watchpoints support
+
+
+/*
+  * Validate the arch-specific HW Breakpoint register settings.
+  */
+int hw_breakpoint_arch_parse(struct perf_event *bp,
+                              const struct perf_event_attr *attr,
+                              struct arch_hw_breakpoint *hw)
+{
+         int ret;
+         u64 alignment_mask, offset;
+
+^^ alignment mask is not initialized
+
+         /* Build the arch_hw_breakpoint. */
+         ret = arch_build_bp_info(bp, attr, hw);
+         if (ret)
+                 return ret;
+
+         if (hw->ctrl.type != LOONGARCH_BREAKPOINT_EXECUTE)
+                 alignment_mask = 0x7;
+^^ only on this if path is alignment_mask being assigned
+
+         offset = hw->address & alignment_mask;
+         hw->address &= ~alignment_mask;
+
+^^ offset and hw->address being modified by potentially uninitialized 
+alignment_mask
+
+         hw->ctrl.len <<= offset;
+
+         return 0;
+}
+
+
+Regards,
+
+Colin
+
+
 
