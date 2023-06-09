@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF176BE4B
-	for <loongarch@lists.linux.dev>; Fri,  9 Jun 2023 09:05:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFD72BE4B
+	for <loongarch@lists.linux.dev>; Fri,  9 Jun 2023 09:06:01 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dx_+tu64Jk2fsAAA--.3061S3;
-	Fri, 09 Jun 2023 17:05:50 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxSup264JkG_wAAA--.2999S3;
+	Fri, 09 Jun 2023 17:05:58 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxluRO64JkSXEKAA--.31854S7;
-	Fri, 09 Jun 2023 17:05:49 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxluRO64JkSXEKAA--.31854S8;
+	Fri, 09 Jun 2023 17:05:57 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -23,9 +23,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn,
 	tangyouling@loongson.cn
-Subject: [PATCH v13 10/30] LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
-Date: Fri,  9 Jun 2023 17:04:58 +0800
-Message-Id: <20230609090518.2130926-11-zhaotianrui@loongson.cn>
+Subject: [PATCH v13 20/30] LoongArch: KVM: Implement handle csr excption
+Date: Fri,  9 Jun 2023 17:05:08 +0800
+Message-Id: <20230609090518.2130926-21-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230609090518.2130926-1-zhaotianrui@loongson.cn>
 References: <20230609090518.2130926-1-zhaotianrui@loongson.cn>
@@ -36,56 +36,125 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxluRO64JkSXEKAA--.31854S7
+X-CM-TRANSID:AQAAf8DxluRO64JkSXEKAA--.31854S8
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement LoongArch vcpu KVM_ENABLE_CAP ioctl interface.
+Implement kvm handle LoongArch vcpu exit caused by reading and
+writing csr. Using csr structure to emulate the registers.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/loongarch/kvm/exit.c | 98 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 arch/loongarch/kvm/exit.c
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index b0cce413762d..da97b77da8eb 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -186,6 +186,16 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
- 	return 0;
- }
- 
-+static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
-+				     struct kvm_enable_cap *cap)
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+new file mode 100644
+index 000000000000..18635333fc9a
+--- /dev/null
++++ b/arch/loongarch/kvm/exit.c
+@@ -0,0 +1,98 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/preempt.h>
++#include <linux/vmalloc.h>
++#include <asm/fpu.h>
++#include <asm/inst.h>
++#include <asm/time.h>
++#include <asm/tlb.h>
++#include <asm/loongarch.h>
++#include <asm/numa.h>
++#include <asm/kvm_vcpu.h>
++#include <asm/kvm_csr.h>
++#include <linux/kvm_host.h>
++#include <asm/mmzone.h>
++#include "trace.h"
++
++static unsigned long _kvm_emu_read_csr(struct kvm_vcpu *vcpu, int csrid)
 +{
-+	/*
-+	 * FPU is enable by default, do not support any other caps,
-+	 * and later we will support such as LSX cap.
-+	 */
-+	return -EINVAL;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	unsigned long val = 0;
++
++	if (get_gcsr_flag(csrid) & SW_GCSR)
++		val = kvm_read_sw_gcsr(csr, csrid);
++	else
++		pr_warn_once("Unsupport csrread 0x%x with pc %lx\n",
++			csrid, vcpu->arch.pc);
++	return val;
 +}
 +
- long kvm_arch_vcpu_ioctl(struct file *filp,
- 			 unsigned int ioctl, unsigned long arg)
- {
-@@ -209,6 +219,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 			r = _kvm_get_reg(vcpu, &reg);
- 		break;
- 	}
-+	case KVM_ENABLE_CAP: {
-+		struct kvm_enable_cap cap;
++static void _kvm_emu_write_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
 +
-+		r = -EFAULT;
-+		if (copy_from_user(&cap, argp, sizeof(cap)))
-+			break;
-+		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
-+		break;
++	if (get_gcsr_flag(csrid) & SW_GCSR)
++		kvm_write_sw_gcsr(csr, csrid, val);
++	else
++		pr_warn_once("Unsupport csrwrite 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
++}
++
++static void _kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long csr_mask, unsigned long val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	if (get_gcsr_flag(csrid) & SW_GCSR) {
++		unsigned long orig;
++
++		orig = kvm_read_sw_gcsr(csr, csrid);
++		orig &= ~csr_mask;
++		orig |= val & csr_mask;
++		kvm_write_sw_gcsr(csr, csrid, orig);
++	} else
++		pr_warn_once("Unsupport csrxchg 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
++}
++
++static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
++{
++	unsigned int rd, rj, csrid;
++	unsigned long csr_mask;
++	unsigned long val = 0;
++
++	/*
++	 * CSR value mask imm
++	 * rj = 0 means csrrd
++	 * rj = 1 means csrwr
++	 * rj != 0,1 means csrxchg
++	 */
++	rd = inst.reg2csr_format.rd;
++	rj = inst.reg2csr_format.rj;
++	csrid = inst.reg2csr_format.csr;
++
++	/* Process CSR ops */
++	if (rj == 0) {
++		/* process csrrd */
++		val = _kvm_emu_read_csr(vcpu, csrid);
++		vcpu->arch.gprs[rd] = val;
++	} else if (rj == 1) {
++		/* process csrwr */
++		val = vcpu->arch.gprs[rd];
++		_kvm_emu_write_csr(vcpu, csrid, val);
++	} else {
++		/* process csrxchg */
++		val = vcpu->arch.gprs[rd];
++		csr_mask = vcpu->arch.gprs[rj];
++		_kvm_emu_xchg_csr(vcpu, csrid, csr_mask, val);
 +	}
- 	default:
- 		r = -ENOIOCTLCMD;
- 		break;
++
++	return EMULATE_DONE;
++}
 -- 
 2.39.1
 
