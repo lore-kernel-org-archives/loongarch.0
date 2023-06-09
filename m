@@ -1,259 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F634A39
-	for <loongarch@lists.linux.dev>; Fri,  9 Jun 2023 04:21:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB543C4339B
-	for <loongarch@lists.linux.dev>; Fri,  9 Jun 2023 04:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686284506;
-	bh=Wz718jwwzmOKzord1kOyXkdwsSSbA/+VRPxHZgPAsbI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tCSgH4LH1QQ98DUYNV005dDVGw7jCt1bUTSuSTcBKbIOk28k+HhrCN4L1u3/BEapm
-	 iDfBk+xstJPrtav94F73RBqnUM7wJid4/yQqg2rdyb3xWHNIw0AnHfHu4Sndrj99gv
-	 e5ST42fokrj4vhRK1QQQRYG+pRfM95vw0JsnjZZN602RgZzSo/LRqBLrNPSa6Q3yAw
-	 7UdW/lFl8t4B1cYn+Lum5bPe7YtnoofQS5vH5JlBUkxQYAmRGcMcDFwImCho4iaSxf
-	 cJDZJ9//WvEDfhhD7kUjCyL7M82BImQVX/WOW4VUtTF+ZXyzDOrwEpwHsg6x/6Rpij
-	 HUu/c3IMYoB0g==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-977d4a1cf0eso206374066b.1
-        for <loongarch@lists.linux.dev>; Thu, 08 Jun 2023 21:21:46 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyD2hOnV5tLS3/e2e1bRLhg3nExYf2Scd75NGHmXTY0hN23Unm6
-	iXChvNpyPrfwl2eylzA/8b3H+SyyL/5YoSly2GE=
-X-Google-Smtp-Source: ACHHUZ6Uvoy6d/d9OEXEsldhP+EGsWezX4Wnp2JTQ32JRxyygEJ8grppU9UOz12iF648+4a4ALWmbltc8Rr6gCVEpnI=
-X-Received: by 2002:a17:906:dc95:b0:973:d27e:bd87 with SMTP id
- cs21-20020a170906dc9500b00973d27ebd87mr519930ejc.25.1686284504873; Thu, 08
- Jun 2023 21:21:44 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83ED9ED8;
+	Fri,  9 Jun 2023 06:51:05 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxTuvVy4JkbvAAAA--.3020S3;
+	Fri, 09 Jun 2023 14:51:01 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxZuTSy4Jk8QsKAA--.30794S3;
+	Fri, 09 Jun 2023 14:51:00 +0800 (CST)
+Subject: Re: [RFC PATCH] asm-generic: Unify uapi bitsperlong.h
+To: Arnd Bergmann <arnd@arndb.de>
+References: <1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn>
+ <b9624545-2c80-49a1-ac3c-39264a591f7b@app.fastmail.com>
+ <76d3be65-91df-7969-5303-38231a7df926@loongson.cn>
+ <a3a4f48a-07d4-4ed9-bc53-5d383428bdd2@app.fastmail.com>
+Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-s390@vger.kernel.org,
+ llvm@lists.linux.dev, linux-ia64@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-parisc@vger.kernel.org,
+ x86@kernel.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongson-kernel@lists.loongnix.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <ca4c4968-411d-4e2c-543e-ffb62413ddef@loongson.cn>
+Date: Fri, 9 Jun 2023 14:50:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230609022047.2195689-1-maobibo@loongson.cn> <CAAhV-H7n1Z58h2qxCASDXMMQBDN6x_vq6bH_utVhB5boYoZDGQ@mail.gmail.com>
- <4cfe93cb-7713-f994-45c3-e99fe34a3f9e@loongson.cn>
-In-Reply-To: <4cfe93cb-7713-f994-45c3-e99fe34a3f9e@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 9 Jun 2023 12:21:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7_RYzmuCunn5tMzWwKtzi_0sGqUBc5NV1F=_Hyc2X6jg@mail.gmail.com>
-Message-ID: <CAAhV-H7_RYzmuCunn5tMzWwKtzi_0sGqUBc5NV1F=_Hyc2X6jg@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: Align pci memory space base address with page size
-To: "bibo, mao" <maobibo@loongson.cn>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a3a4f48a-07d4-4ed9-bc53-5d383428bdd2@app.fastmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8AxZuTSy4Jk8QsKAA--.30794S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr1UWFy8Kr1kJFy7Kr47KFX_yoW5JFyrpF
+	4UGF1j9r4kAr1fAFn2yw4jqa4Fyws7KF1aq3s0gryxJFs0gFyrtry29w4agFWqvr18Jr4j
+	93yUXFy5uay0yFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wr
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zw
+	Z7UUUUU==
 
-On Fri, Jun 9, 2023 at 11:47=E2=80=AFAM bibo, mao <maobibo@loongson.cn> wro=
-te:
->
->
->
-> =E5=9C=A8 2023/6/9 10:29, Huacai Chen =E5=86=99=E9=81=93:
-> > Hi, Bibo,
-> >
-> > On Fri, Jun 9, 2023 at 10:20=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> Some PCI devices have only 4K memory space size, it is normal in gener=
-al
-> >> machines and aligned with page size. However some architectures which
-> >> support different page size, default page size on LoongArch is 16K, an=
-d
-> >> ARM64 supports page size varying from 4K to 64K. On machines where lar=
-ger
-> >> page size is use, memory space region of two different pci devices may=
- be
-> >> in one page. It is not safe with mmu protection, also VFIO pci device
-> >> driver requires base address of pci memory space page aligned, so that=
- it
-> >> can be memory mapped to qemu user space when it is passed-through to v=
-m.
-> >>
-> >> It consumes more pci memory resource with page size alignment requirem=
-ent,
-> >> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled by
-> >> different architectures.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >> Change history
-> >> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory resour=
-ce
-> >>     page aligned.
-> >>
-> >> v3: move alignment requirement to generic pci code
-> >>
-> >> v2: add pci resource alignment requirement in arch specified function
-> >>     pcibios_align_resource on arm64/LoongArch platforms
-> >>
-> >> ---
-> >>  arch/loongarch/Kconfig  | 1 +
-> >>  drivers/pci/Kconfig     | 3 +++
-> >>  drivers/pci/setup-res.c | 7 +++++++
-> >>  3 files changed, 11 insertions(+)
-> >>
-> >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> >> index d38b066fc931..65b2f6ba9f8e 100644
-> >> --- a/arch/loongarch/Kconfig
-> >> +++ b/arch/loongarch/Kconfig
-> >> @@ -142,6 +142,7 @@ config LOONGARCH
-> >>         select PCI_LOONGSON
-> >>         select PCI_MSI_ARCH_FALLBACKS
-> >>         select PCI_QUIRKS
-> >> +       select PCI_MEMRES_PAGE_ALIGN
-> >>         select PERF_USE_VMALLOC
-> >>         select RTC_LIB
-> >>         select SMP
-> >> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> >> index 9309f2469b41..9be5f85ff9dc 100644
-> >> --- a/drivers/pci/Kconfig
-> >> +++ b/drivers/pci/Kconfig
-> >> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
-> >>  config PCI_BRIDGE_EMUL
-> >>         bool
-> >>
-> >> +config PCI_MEMRES_PAGE_ALIGN
-> >> +       bool
-> >> +
-> >>  config PCI_IOV
-> >>         bool "PCI IOV support"
-> >>         select PCI_ATS
-> >> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> >> index 967f9a758923..6ad76734a670 100644
-> >> --- a/drivers/pci/setup-res.c
-> >> +++ b/drivers/pci/setup-res.c
-> >> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, int =
-resno)
-> >>                 return -EINVAL;
-> >>         }
-> >>
-> >> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
-> >> +       /*
-> >> +        * force minimum page alignment for vfio pci usage
-> >> +        */
-> >> +       if (res->flags & IORESOURCE_MEM)
-> >> +               align =3D max_t(resource_size_t, PAGE_SIZE, align);
-> >> +#endif
-> > Does this really have its effect? The common version of
-> > pcibios_align_resource() simply returns res->start, and doesn't care
-> > about the 'align' parameter.
-> yes, it works. The is output of command " lspci -vvv | grep Region" on my
-> 3C5000+7A2000 box. After the patch base address of all pci mem resource
-> is aligned with 16K.
->
-> output without the patch:
->         Region 0: Memory at e0045240000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045248000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045250000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045258000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045260000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045271400 (64-bit, non-prefetchable) [size=
-=3D256]
->         Region 2: Memory at e0040000000 (64-bit, non-prefetchable) [size=
-=3D64M]
->         Region 4: Memory at e0045200000 (64-bit, non-prefetchable) [size=
-=3D64K]
->         Region 0: Memory at e0045210000 (64-bit, non-prefetchable) [size=
-=3D64K]
->         Region 0: Memory at e0045220000 (64-bit, non-prefetchable) [size=
-=3D64K]
->         Region 0: Memory at e0045230000 (64-bit, non-prefetchable) [size=
-=3D64K]
->         Region 5: Memory at e0045271000 (32-bit, non-prefetchable) [size=
-=3D1K]
->         Region 0: Memory at e0045268000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e0045269000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e004526a000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e004526b000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e004526c000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e004526d000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e004526e000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e004526f000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e0045270000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 2: Memory at e0044000000 (64-bit, non-prefetchable) [size=
-=3D16M]
->         Region 0: Memory at e0045100000 (64-bit, non-prefetchable) [size=
-=3D1M]
->         Region 0: Memory at e0045000000 (64-bit, non-prefetchable) [size=
-=3D16K]
->
-> out put with the patch:
->         Region 0: Memory at e0045240000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045248000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045250000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045258000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045260000 (64-bit, non-prefetchable) [size=
-=3D32K]
->         Region 0: Memory at e0045290000 (64-bit, non-prefetchable) [size=
-=3D256]
->         Region 2: Memory at e0040000000 (64-bit, non-prefetchable) [size=
-=3D64M]
->         Region 4: Memory at e0045200000 (64-bit, non-prefetchable) [size=
-=3D64K]
->         Region 0: Memory at e0045210000 (64-bit, non-prefetchable) [size=
-=3D64K]
->         Region 0: Memory at e0045220000 (64-bit, non-prefetchable) [size=
-=3D64K]
->         Region 0: Memory at e0045230000 (64-bit, non-prefetchable) [size=
-=3D64K]
->         Region 5: Memory at e004528c000 (32-bit, non-prefetchable) [size=
-=3D1K]
->         Region 0: Memory at e0045268000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e004526c000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e0045270000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e0045274000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e0045278000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e004527c000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e0045280000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e0045284000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 0: Memory at e0045288000 (64-bit, non-prefetchable) [size=
-=3D4K]
->         Region 2: Memory at e0044000000 (64-bit, non-prefetchable) [size=
-=3D16M]
->         Region 0: Memory at e0045100000 (64-bit, non-prefetchable) [size=
-=3D1M]
->         Region 0: Memory at e0045000000 (64-bit, non-prefetchable) [size=
-=3D16K]
-OK, thanks.
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
+On 06/08/2023 08:56 PM, Arnd Bergmann wrote:
+> On Thu, Jun 8, 2023, at 09:04, Tiezhu Yang wrote:
+>> On 05/09/2023 05:37 PM, Arnd Bergmann wrote:
+>>> On Tue, May 9, 2023, at 09:05, Tiezhu Yang wrote:
+>>>
+>>> I think we are completely safe on the architectures that were
+>>> added since the linux-3.x days (arm64, riscv, csky, openrisc,
+>>> loongarch, nios2, and hexagon), but for the older ones there
+>>> is a regression risk. Especially on targets that are not that
+>>> actively maintained (sparc, alpha, ia64, sh, ...) there is
+>>> a good chance that users are stuck on ancient toolchains.
+>>> It's probably also a safe assumption that anyone with an older
+>>> libc version won't be using the latest kernel headers, so
+>>> I think we can still do this across architectures if both
+>>> glibc and musl already require a compiler that is new enough,
+>>> or alternatively if we know that the kernel headers require
+>>> a new compiler for other reasons and nobody has complained.
+>>>
+>>> For glibc, it looks the minimum compiler version was raised
+>>> from gcc-5 to gcc-8 four years ago, so we should be fine.
+>>>
+>>> In musl, the documentation states that at least gcc-3.4 or
+>>> clang-3.2 are required, which probably predate the
+>>> __SIZEOF_LONG__ macro. On the other hand, musl was only
+>>> released in 2011, and building musl itself explicitly
+>>> does not require kernel uapi headers, so this may not
+>>> be too critical.
+>>>
+>>> There is also uClibc, but I could not find any minimum
+>>> supported compiler version for that. Most commonly, this
+>>> one is used for cross-build environments, so it's also
+>>> less likely to have libc/gcc/headers being wildly out of
+>>> sync. Not sure.
+>>>
+>>>       Arnd
+>>>
+>>> [1] https://sourceware.org/pipermail/libc-alpha/2019-January/101010.html
+>>>
+>>
+>> Thanks Arnd for the detailed reply.
+>> Any more comments? What should I do in the next step?
 >
-> Regards
-> Bibo, Mao
-> >
-> > Huacai
-> >>         size =3D resource_size(res);
-> >>         ret =3D _pci_assign_resource(dev, resno, size, align);
-> >>
-> >> --
-> >> 2.27.0
-> >>
->
+> I think the summary is "it's probably fine", but I don't know
+> for sure, and it may not be worth the benefit.
+
+Thank you, it is very clear now.
+
+> Maybe you can prepare a v2 that only does this for the newer
+> architectures I mentioned above, with and an explanation and
+> link to my above reply in the file comments?
+
+Only arm64, riscv and loongarch belong to the newer architectures
+which are related with this change, I am not sure it is necessary
+to "unify" uapi bitsperlong.h for them.
+
+Anyway, let me try, I will send a new version, maybe this is going
+to progress in the right direction.
+
+Thanks,
+Tiezhu
+
