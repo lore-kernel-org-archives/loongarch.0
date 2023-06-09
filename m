@@ -1,134 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m11877.qiye.163.com (mail-m11877.qiye.163.com [115.236.118.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46654A33
-	for <loongarch@lists.linux.dev>; Fri,  9 Jun 2023 02:30:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65551C433D2
-	for <loongarch@lists.linux.dev>; Fri,  9 Jun 2023 02:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686277806;
-	bh=lFODl6QKIv49kcz8dOO9K/tHqzGHNLQJ2rXjJtuw2EE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AqzWx0G5buMX45W3K+sM4xQ/cEdkRfSHIpus62lBGCmx2MShFQ0rEnv36+fS6J0Cd
-	 QnYq/gfxYlQytVBRJn5y6JjJIf/BOFDnJJQu5N6dr3nfEiqQgtQ94hNYhMcQguPKsc
-	 0nEPiMU0lWEE5DrnxTCxVo3/RDkc5hX9SpB6wMx3iy5OJ9Aa4P5FZIRO1g6Vb2I6VV
-	 HLvx93iczcQ2A3oJ//3JHbk8eeHSI0q6w3BPZuSIIM67S83q7hr7fMSq0XSRhGTL6n
-	 rgZ4eiQYYvh9N4plgimMnETrAs9d3gyss19lOep5jGo51fzlHsTETykt/aSRMzgB4G
-	 SjcPmYzrZfYEw==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-977c88c9021so216552366b.3
-        for <loongarch@lists.linux.dev>; Thu, 08 Jun 2023 19:30:06 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyeMuwUFK5v4lTOJlNTIFU9ZQ3kuktslLkBQT/1PSdMZYSN9oam
-	67/s18jDosdTeBdgYjqKPokNm1WKv6jIDMqteoI=
-X-Google-Smtp-Source: ACHHUZ777zj3UeQ+dgcHObu2L3r2HUnMRbo0DQbGQeFHfEaURr2zk4uIYA4fA1CCGP0ruh8y5dCBTMVIeM8/3FERr80=
-X-Received: by 2002:a17:907:7207:b0:957:17c5:8705 with SMTP id
- dr7-20020a170907720700b0095717c58705mr302799ejc.51.1686277804594; Thu, 08 Jun
- 2023 19:30:04 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5D71C39
+	for <loongarch@lists.linux.dev>; Fri,  9 Jun 2023 03:36:43 +0000 (UTC)
+Received: from [172.23.197.13] (unknown [121.32.254.149])
+	by mail-m11877.qiye.163.com (Hmail) with ESMTPA id CD1954001E6;
+	Fri,  9 Jun 2023 11:22:51 +0800 (CST)
+Message-ID: <64f5298c-6712-de7e-7f90-5aeb0d0d770c@sangfor.com.cn>
+Date: Fri, 9 Jun 2023 11:22:51 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230609022047.2195689-1-maobibo@loongson.cn>
-In-Reply-To: <20230609022047.2195689-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 9 Jun 2023 10:29:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7n1Z58h2qxCASDXMMQBDN6x_vq6bH_utVhB5boYoZDGQ@mail.gmail.com>
-Message-ID: <CAAhV-H7n1Z58h2qxCASDXMMQBDN6x_vq6bH_utVhB5boYoZDGQ@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: Align pci memory space base address with page size
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v11 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+To: linux@armlinux.org.uk
+Cc: mhiramat@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+ mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+ rmk+kernel@armlinux.org.uk, palmer@dabbelt.com, paul.walmsley@sifive.com,
+ aou@eecs.berkeley.edu, tglx@linutronix.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
+ zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
+ peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+ huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+ linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
+ <c61eb9290c3e817d4d70c429c0e987e3ec51a3c4.1680954589.git.pengdonglin@sangfor.com.cn>
+ <20230608215719.7537ce38@gandalf.local.home>
+Content-Language: en-US
+From: Donglin Peng <pengdonglin@sangfor.com.cn>
+In-Reply-To: <20230608215719.7537ce38@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTUxMVhhIH0pMHhlKH0kfGVUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpJSlVISVVJTk9VSk9CWVdZFhoPEhUdFFlBWU9LSFVKTkxJSklVSktLVUpCWQY+
+X-HM-Tid: 0a889e2daa942eb3kusncd1954001e6
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OFE6Tzo4LD1IMi0WEhBLOTcf
+	CCEKCzdVSlVKTUNNSUNLQkxIT0lKVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSklKVUhJVUlOT1VKT0JZV1kIAVlBTE9CTTcG
 
-Hi, Bibo,
+On 2023/6/9 9:57, Steven Rostedt wrote:
+> On Sat,  8 Apr 2023 05:42:17 -0700
+> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
+> 
+>> The previous patch ("function_graph: Support recording and printing
+>> the return value of function") has laid the groundwork for the for
+>> the funcgraph-retval, and this modification makes it available on
+>> the ARM platform.
+>>
+>> We introduce a new structure called fgraph_ret_regs for the ARM platform
+>> to hold return registers and the frame pointer. We then fill its content
+>> in the return_to_handler and pass its address to the function
+>> ftrace_return_to_handler to record the return value.
+>>
+>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+> 
+> I really don't want to add this without an ack from an arm maintainer.
+> 
+> I have the patches queued (for testing), but I may remove the ones that do
+> not have the appropriate acks.
+> 
+> -- Steve
+> 
 
-On Fri, Jun 9, 2023 at 10:20=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> Some PCI devices have only 4K memory space size, it is normal in general
-> machines and aligned with page size. However some architectures which
-> support different page size, default page size on LoongArch is 16K, and
-> ARM64 supports page size varying from 4K to 64K. On machines where larger
-> page size is use, memory space region of two different pci devices may be
-> in one page. It is not safe with mmu protection, also VFIO pci device
-> driver requires base address of pci memory space page aligned, so that it
-> can be memory mapped to qemu user space when it is passed-through to vm.
->
-> It consumes more pci memory resource with page size alignment requirement=
-,
-> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled by
-> different architectures.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
-> Change history
-> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory resource
->     page aligned.
->
-> v3: move alignment requirement to generic pci code
->
-> v2: add pci resource alignment requirement in arch specified function
->     pcibios_align_resource on arm64/LoongArch platforms
->
-> ---
->  arch/loongarch/Kconfig  | 1 +
->  drivers/pci/Kconfig     | 3 +++
->  drivers/pci/setup-res.c | 7 +++++++
->  3 files changed, 11 insertions(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index d38b066fc931..65b2f6ba9f8e 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -142,6 +142,7 @@ config LOONGARCH
->         select PCI_LOONGSON
->         select PCI_MSI_ARCH_FALLBACKS
->         select PCI_QUIRKS
-> +       select PCI_MEMRES_PAGE_ALIGN
->         select PERF_USE_VMALLOC
->         select RTC_LIB
->         select SMP
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 9309f2469b41..9be5f85ff9dc 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
->  config PCI_BRIDGE_EMUL
->         bool
->
-> +config PCI_MEMRES_PAGE_ALIGN
-> +       bool
-> +
->  config PCI_IOV
->         bool "PCI IOV support"
->         select PCI_ATS
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index 967f9a758923..6ad76734a670 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, int res=
-no)
->                 return -EINVAL;
->         }
->
-> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
-> +       /*
-> +        * force minimum page alignment for vfio pci usage
-> +        */
-> +       if (res->flags & IORESOURCE_MEM)
-> +               align =3D max_t(resource_size_t, PAGE_SIZE, align);
-> +#endif
-Does this really have its effect? The common version of
-pcibios_align_resource() simply returns res->start, and doesn't care
-about the 'align' parameter.
+Hi Russell, can I get a ack for arm?
 
-Huacai
->         size =3D resource_size(res);
->         ret =3D _pci_assign_resource(dev, resno, size, align);
->
-> --
-> 2.27.0
->
+> 
+>> ---
+>> v10:
+>>   - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
+>>
+>> v9:
+>>   - Fix stack pointer align issues
+>>   - Update the commit message
+>>
+>> v8:
+>>   - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+>> ---
+>>   arch/arm/Kconfig               |  1 +
+>>   arch/arm/include/asm/ftrace.h  | 22 ++++++++++++++++++++++
+>>   arch/arm/kernel/asm-offsets.c  |  8 +++++++-
+>>   arch/arm/kernel/entry-ftrace.S | 10 ++++++----
+>>   4 files changed, 36 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index e24a9820e12f..73061379855a 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -98,6 +98,7 @@ config ARM
+>>   	select HAVE_FAST_GUP if ARM_LPAE
+>>   	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+>>   	select HAVE_FUNCTION_ERROR_INJECTION
+>> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>>   	select HAVE_FUNCTION_GRAPH_TRACER
+>>   	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+>>   	select HAVE_GCC_PLUGINS
+>> diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
+>> index 7e9251ca29fe..3c457902b355 100644
+>> --- a/arch/arm/include/asm/ftrace.h
+>> +++ b/arch/arm/include/asm/ftrace.h
+>> @@ -77,4 +77,26 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>>   
+>>   #endif /* ifndef __ASSEMBLY__ */
+>>   
+>> +#ifndef __ASSEMBLY__
+>> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>> +struct fgraph_ret_regs {
+>> +	/* r0 - r3 */
+>> +	unsigned long regs[4];
+>> +
+>> +	unsigned long fp;
+>> +	unsigned long __unused;
+>> +};
+>> +
+>> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->regs[0];
+>> +}
+>> +
+>> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->fp;
+>> +}
+>> +#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
+>> +#endif
+>> +
+>>   #endif /* _ASM_ARM_FTRACE */
+>> diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+>> index 38121c59cbc2..18bb85115b21 100644
+>> --- a/arch/arm/kernel/asm-offsets.c
+>> +++ b/arch/arm/kernel/asm-offsets.c
+>> @@ -23,6 +23,7 @@
+>>   #include <asm/suspend.h>
+>>   #include <asm/vdso_datapage.h>
+>>   #include <asm/hardware/cache-l2x0.h>
+>> +#include <asm/ftrace.h>
+>>   #include <linux/kbuild.h>
+>>   #include <linux/arm-smccc.h>
+>>   #include "signal.h"
+>> @@ -170,5 +171,10 @@ int main(void)
+>>     DEFINE(KEXEC_INDIR_PAGE,	offsetof(struct kexec_relocate_data, kexec_indirection_page));
+>>     DEFINE(KEXEC_MACH_TYPE,	offsetof(struct kexec_relocate_data, kexec_mach_type));
+>>     DEFINE(KEXEC_R2,		offsetof(struct kexec_relocate_data, kexec_r2));
+>> -  return 0;
+>> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>> +  BLANK();
+>> +  DEFINE(FGRET_REGS_SIZE,	sizeof(struct fgraph_ret_regs));
+>> +  BLANK();
+>> +#endif
+>> +  return 0;
+>>   }
+>> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+>> index 3e7bcaca5e07..d41a1676608c 100644
+>> --- a/arch/arm/kernel/entry-ftrace.S
+>> +++ b/arch/arm/kernel/entry-ftrace.S
+>> @@ -257,11 +257,13 @@ ENDPROC(ftrace_graph_regs_caller)
+>>   
+>>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>>   ENTRY(return_to_handler)
+>> -	stmdb	sp!, {r0-r3}
+>> -	add	r0, sp, #16		@ sp at exit of instrumented routine
+>> +	mov	ip, sp				@ sp at exit of instrumented routine
+>> +	stmdb	sp!, {r0-r3, ip, lr}		@ fill fgraph_ret_regs
+>> +	mov	r0, sp
+>>   	bl	ftrace_return_to_handler
+>> -	mov	lr, r0			@ r0 has real ret addr
+>> -	ldmia	sp!, {r0-r3}
+>> +	mov	lr, r0				@ r0 has real ret addr
+>> +	ldmia	sp, {r0-r3}
+>> +	add	sp, sp, #FGRET_REGS_SIZE	@ restore stack pointer
+>>   	ret	lr
+>>   ENDPROC(return_to_handler)
+>>   #endif
+> 
+
