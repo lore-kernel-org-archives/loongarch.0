@@ -1,173 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C62408E0
-	for <loongarch@lists.linux.dev>; Fri,  9 Jun 2023 21:21:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3062CC433EF;
-	Fri,  9 Jun 2023 21:21:56 +0000 (UTC)
-Date: Fri, 9 Jun 2023 17:21:53 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Russell King <linux@armlinux.org.uk>
-Cc: Donglin Peng <pengdonglin@sangfor.com.cn>, mhiramat@kernel.org,
- linux@armlinux.org.uk, mark.rutland@arm.com, will@kernel.org,
- catalin.marinas@arm.com, rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
- paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de,
- dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de, hpa@zytor.com,
- chenhuacai@kernel.org, zhangqing@loongson.cn, kernel@xen0n.name,
- mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
- dinghui@sangfor.com.cn, huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
- linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Message-ID: <20230609172153.73b0ef9d@gandalf.local.home>
-In-Reply-To: <c61eb9290c3e817d4d70c429c0e987e3ec51a3c4.1680954589.git.pengdonglin@sangfor.com.cn>
-References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
-	<c61eb9290c3e817d4d70c429c0e987e3ec51a3c4.1680954589.git.pengdonglin@sangfor.com.cn>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D793C408F8
+	for <loongarch@lists.linux.dev>; Sat, 10 Jun 2023 05:35:12 +0000 (UTC)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-bc43a73ab22so394623276.0
+        for <loongarch@lists.linux.dev>; Fri, 09 Jun 2023 22:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686375311; x=1688967311;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=66j/h+9cZEjKb4UdwLgMXHl/kBywtFkqb8wIoqWmDMo=;
+        b=Fgz9LE+WgSayy0gqznU4nHufTkzzOdkWA77tPaKYuOOBIE9nSZwtWlWTcLvi3I83Nm
+         yCIfnuvzBhkEvNL0TO3VEtAZZ8fhuE+QVZkNV13GWT8P7/Q1lOA+c2S9TbrH05K9BLbI
+         aJNSicKHM0yT4TIW2AMc4rUuuEp82Gxhf0pYn3KJMsnBRl52zleKRI5AFi9n1w1ntddC
+         qtpHb7ZgfWhXx0Kg5s8hU2ZU5sbR6lgSUbYyXqMocfve5ZNbM3OxXfSG8ENvGfy9YzF+
+         t4rZndmqRZNdYPwZlPGCiN63QGEx3E7n8/XVuMKO2N8A7vT/bLDCQny0///xi9fV/HD0
+         4WDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686375311; x=1688967311;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=66j/h+9cZEjKb4UdwLgMXHl/kBywtFkqb8wIoqWmDMo=;
+        b=FW8AsW5msSgONUrxiPX40CdlBo4qzfEtRrNY9EpG2ajtfiFOsBJry1C0gF+aMF9Hud
+         /1xcQl2qVkYfhHZasJZ6Roarlsc7RftPCxr/nhjEa9pUDCzvLFvP6iy/50OjpOkkBj9U
+         lFQ507MVEOq/q/vr+B9wLsL3QqB3diTC2szP7F/A1RVgMyBNpfWEFIlzlEY17xQGrzEW
+         KQmbAKlNvEF04+s7owISUbJB+Qpw/LLPsWYibm5VtQHCdB2HqdEgRZ0pMtoXUtCmhvb0
+         UuqsJB8C44l9vNJbT6qWAA8ijWb12SkWHmIzwBawqtLxZv3/Zi8xMov4enIAzUcgIhqa
+         TpkQ==
+X-Gm-Message-State: AC+VfDy/Z6VD9l4mIQoAfgI8ZdaEyKPBcpoM6JpxSfxiNDq2/mkFWgYb
+	bdQVqEu7jYh+3bE5hrFhYsb6R2Kux1u7RUrBKcA=
+X-Google-Smtp-Source: ACHHUZ44wzkF29g4xzNfFH994CgHcQled1GvWddTD2bcNqr/f4iQNWBbImwZgeL8vGFigKA1//NILymWMxvSlQDXSiY=
+X-Received: by 2002:a25:54f:0:b0:bac:46f2:8d0f with SMTP id
+ 76-20020a25054f000000b00bac46f28d0fmr6290839ybf.3.1686375311574; Fri, 09 Jun
+ 2023 22:35:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1686192243.git.zhoubinbin@loongson.cn> <bb2d5985a3d9fd8e7ccbe2794842d93a8978d8a6.1686192243.git.zhoubinbin@loongson.cn>
+ <68bb3816-d707-3a21-59a2-8785dce7210a@linaro.org>
+In-Reply-To: <68bb3816-d707-3a21-59a2-8785dce7210a@linaro.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Sat, 10 Jun 2023 13:35:00 +0800
+Message-ID: <CAMpQs4JF-HtHpb_3YJBUNo2x6_E=S-gf1p9kJ7vp01S62PYSxw@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 1/2] dt-bindings: dmaengine: Add Loongson LS2X
+ APB DMA controller
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Yingkun Meng <mengyingkun@loongson.cn>, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Jun 10, 2023 at 12:49=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 08/06/2023 04:55, Binbin Zhou wrote:
+> > Add Loongson LS2X APB DMA controller binding with DT schema
+> > format using json-schema.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>
+>
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - const: loongson,ls2k1000-apbdma
+> > +      - items:
+> > +          - const: loongson,ls2k0500-apbdma
+> > +          - const: loongson,ls2k1000-apbdma
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  "#dma-cells":
+> > +    const: 1
+> > +
+> > +  dma-channels:
+> > +    const: 1
+>
+> If it is const, why do you need it?
+>
+Hi Krzysztof:
 
-Hi Russell,
+IMO, although it is a single-channel DMAC, the "dma-channels" are
+still needed for a more comprehensive description of the hardware.
 
-I noticed that this patch set only went to the linux-arm-kernel mailing
-list but did not include you in the Cc.
+Thanks.
+Binbin
 
-Could you give an ack to this patch, and I can take it through my tree?
-
-The full patch set went to linux-arm-kernel where I'm sure you have access
-to.
-
-Thanks!
-
--- Steve
-
-
-On Sat,  8 Apr 2023 05:42:17 -0700
-Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
-
-> The previous patch ("function_graph: Support recording and printing
-> the return value of function") has laid the groundwork for the for
-> the funcgraph-retval, and this modification makes it available on
-> the ARM platform.
-> 
-> We introduce a new structure called fgraph_ret_regs for the ARM platform
-> to hold return registers and the frame pointer. We then fill its content
-> in the return_to_handler and pass its address to the function
-> ftrace_return_to_handler to record the return value.
-> 
-> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
-> ---
-> v10:
->  - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
-> 
-> v9:
->  - Fix stack pointer align issues
->  - Update the commit message
-> 
-> v8:
->  - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-> ---
->  arch/arm/Kconfig               |  1 +
->  arch/arm/include/asm/ftrace.h  | 22 ++++++++++++++++++++++
->  arch/arm/kernel/asm-offsets.c  |  8 +++++++-
->  arch/arm/kernel/entry-ftrace.S | 10 ++++++----
->  4 files changed, 36 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index e24a9820e12f..73061379855a 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -98,6 +98,7 @@ config ARM
->  	select HAVE_FAST_GUP if ARM_LPAE
->  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
->  	select HAVE_FUNCTION_ERROR_INJECTION
-> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
->  	select HAVE_GCC_PLUGINS
-> diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
-> index 7e9251ca29fe..3c457902b355 100644
-> --- a/arch/arm/include/asm/ftrace.h
-> +++ b/arch/arm/include/asm/ftrace.h
-> @@ -77,4 +77,26 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
->  
->  #endif /* ifndef __ASSEMBLY__ */
->  
-> +#ifndef __ASSEMBLY__
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +struct fgraph_ret_regs {
-> +	/* r0 - r3 */
-> +	unsigned long regs[4];
-> +
-> +	unsigned long fp;
-> +	unsigned long __unused;
-> +};
-> +
-> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-> +{
-> +	return ret_regs->regs[0];
-> +}
-> +
-> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-> +{
-> +	return ret_regs->fp;
-> +}
-> +#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
-> +#endif
-> +
->  #endif /* _ASM_ARM_FTRACE */
-> diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
-> index 38121c59cbc2..18bb85115b21 100644
-> --- a/arch/arm/kernel/asm-offsets.c
-> +++ b/arch/arm/kernel/asm-offsets.c
-> @@ -23,6 +23,7 @@
->  #include <asm/suspend.h>
->  #include <asm/vdso_datapage.h>
->  #include <asm/hardware/cache-l2x0.h>
-> +#include <asm/ftrace.h>
->  #include <linux/kbuild.h>
->  #include <linux/arm-smccc.h>
->  #include "signal.h"
-> @@ -170,5 +171,10 @@ int main(void)
->    DEFINE(KEXEC_INDIR_PAGE,	offsetof(struct kexec_relocate_data, kexec_indirection_page));
->    DEFINE(KEXEC_MACH_TYPE,	offsetof(struct kexec_relocate_data, kexec_mach_type));
->    DEFINE(KEXEC_R2,		offsetof(struct kexec_relocate_data, kexec_r2));
-> -  return 0; 
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +  BLANK();
-> +  DEFINE(FGRET_REGS_SIZE,	sizeof(struct fgraph_ret_regs));
-> +  BLANK();
-> +#endif
-> +  return 0;
->  }
-> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
-> index 3e7bcaca5e07..d41a1676608c 100644
-> --- a/arch/arm/kernel/entry-ftrace.S
-> +++ b/arch/arm/kernel/entry-ftrace.S
-> @@ -257,11 +257,13 @@ ENDPROC(ftrace_graph_regs_caller)
->  
->  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->  ENTRY(return_to_handler)
-> -	stmdb	sp!, {r0-r3}
-> -	add	r0, sp, #16		@ sp at exit of instrumented routine
-> +	mov	ip, sp				@ sp at exit of instrumented routine
-> +	stmdb	sp!, {r0-r3, ip, lr}		@ fill fgraph_ret_regs
-> +	mov	r0, sp
->  	bl	ftrace_return_to_handler
-> -	mov	lr, r0			@ r0 has real ret addr
-> -	ldmia	sp!, {r0-r3}
-> +	mov	lr, r0				@ r0 has real ret addr
-> +	ldmia	sp, {r0-r3}
-> +	add	sp, sp, #FGRET_REGS_SIZE	@ restore stack pointer
->  	ret	lr
->  ENDPROC(return_to_handler)
->  #endif
-
+> Best regards,
+> Krzysztof
+>
