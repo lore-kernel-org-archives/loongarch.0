@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F193A156C3
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F190713AEA
 	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 11:01:44 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxRukV+4ZkCrYDAA--.6072S3;
+	by gateway (Coremail) with SMTP id _____8BxrOoU+4Zk_7UDAA--.8007S3;
 	Mon, 12 Jun 2023 19:01:41 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxfcoQ+4Zk19QVAA--.54161S4;
-	Mon, 12 Jun 2023 19:01:41 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxfcoQ+4Zk19QVAA--.54161S2;
+	Mon, 12 Jun 2023 19:01:37 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Arnd Bergmann <arnd@arndb.de>
 Cc: linux-arm-kernel@lists.infradead.org,
@@ -18,93 +18,68 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v1 2/2] tools arch: Remove uapi bitsperlong.h of hexagon and microblaze
-Date: Mon, 12 Jun 2023 19:01:34 +0800
-Message-Id: <1686567694-20099-3-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v1 0/2] Unify uapi bitsperlong.h
+Date: Mon, 12 Jun 2023 19:01:32 +0800
+Message-Id: <1686567694-20099-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1686567694-20099-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1686567694-20099-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8AxfcoQ+4Zk19QVAA--.54161S4
+X-CM-TRANSID:AQAAf8AxfcoQ+4Zk19QVAA--.54161S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJr1DAFWUWFykKr4UGFWxuFX_yoW5Jr1UpF
-	95XwsrWF48CryjkrWFkF1jqrW3A39rGF4jga1xWry8ZrWxJF18Ar4S9FsFya47JayIqa1r
-	uF93WryUKa1kKagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7WF17Jr1xtF4fKrWkCw1fZrc_yoW8CFW5pF
+	93ArnxWF45CrWayw15Ja4jqryUJ3yxGr4jgay2qry8GrWIvF1UJrsYkrs7Ca47JayUXFn5
+	ur93Gry5G3WDK3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07Ul4E_UUUUU=
+	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2KsjUUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-After the following two commits:
+v1:
+  -- Rebase on 6.4-rc6
+  -- Only unify uapi bitsperlong.h for arm64, riscv and loongarch
+  -- Remove uapi bitsperlong.h of hexagon and microblaze in a new patch
 
-  commit 872e24d5c698 ("hexagon: remove asm/bitsperlong.h")
-  commit 83f0124ad81e ("microblaze: remove asm-generic wrapper headers")
+Here is the RFC patch:
+https://lore.kernel.org/linux-arch/1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn/
 
-the arch-specific headers of hexagon and microblaze have been removed,
-the tools arch uapi headers are useless too, remove them.
+Tiezhu Yang (2):
+  asm-generic: Unify uapi bitsperlong.h for arm64, riscv and loongarch
+  tools arch: Remove uapi bitsperlong.h of hexagon and microblaze
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+ arch/arm64/include/uapi/asm/bitsperlong.h          | 24 -------------------
+ arch/loongarch/include/uapi/asm/bitsperlong.h      |  9 --------
+ arch/riscv/include/uapi/asm/bitsperlong.h          | 14 -----------
+ include/uapi/asm-generic/bitsperlong.h             | 10 ++++++++
+ tools/arch/arm64/include/uapi/asm/bitsperlong.h    | 24 -------------------
  tools/arch/hexagon/include/uapi/asm/bitsperlong.h  | 27 ----------------------
+ .../arch/loongarch/include/uapi/asm/bitsperlong.h  |  9 --------
  .../arch/microblaze/include/uapi/asm/bitsperlong.h |  2 --
- 2 files changed, 29 deletions(-)
+ tools/arch/riscv/include/uapi/asm/bitsperlong.h    | 14 -----------
+ tools/include/uapi/asm-generic/bitsperlong.h       | 11 +++++++++
+ tools/include/uapi/asm/bitsperlong.h               |  6 -----
+ 11 files changed, 21 insertions(+), 129 deletions(-)
+ delete mode 100644 arch/arm64/include/uapi/asm/bitsperlong.h
+ delete mode 100644 arch/loongarch/include/uapi/asm/bitsperlong.h
+ delete mode 100644 arch/riscv/include/uapi/asm/bitsperlong.h
+ delete mode 100644 tools/arch/arm64/include/uapi/asm/bitsperlong.h
  delete mode 100644 tools/arch/hexagon/include/uapi/asm/bitsperlong.h
+ delete mode 100644 tools/arch/loongarch/include/uapi/asm/bitsperlong.h
  delete mode 100644 tools/arch/microblaze/include/uapi/asm/bitsperlong.h
+ delete mode 100644 tools/arch/riscv/include/uapi/asm/bitsperlong.h
 
-diff --git a/tools/arch/hexagon/include/uapi/asm/bitsperlong.h b/tools/arch/hexagon/include/uapi/asm/bitsperlong.h
-deleted file mode 100644
-index 5adca0d..0000000
---- a/tools/arch/hexagon/include/uapi/asm/bitsperlong.h
-+++ /dev/null
-@@ -1,27 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--/*
-- * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 and
-- * only version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-- * 02110-1301, USA.
-- */
--
--#ifndef __ASM_HEXAGON_BITSPERLONG_H
--#define __ASM_HEXAGON_BITSPERLONG_H
--
--#define __BITS_PER_LONG 32
--
--#include <asm-generic/bitsperlong.h>
--
--#endif
-diff --git a/tools/arch/microblaze/include/uapi/asm/bitsperlong.h b/tools/arch/microblaze/include/uapi/asm/bitsperlong.h
-deleted file mode 100644
-index 76da34b..0000000
---- a/tools/arch/microblaze/include/uapi/asm/bitsperlong.h
-+++ /dev/null
-@@ -1,2 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#include <asm-generic/bitsperlong.h>
 -- 
 2.1.0
 
