@@ -1,226 +1,138 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21B51C06
-	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 05:55:12 +0000 (UTC)
-X-UUID: fd8932f1c2ac43c4a9da1a991d25c288-20230612
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.22,REQID:192ed0d9-28fc-4d8f-9b62-1ebb2203813c,IP:15,
-	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:-25
-X-CID-INFO: VERSION:1.1.22,REQID:192ed0d9-28fc-4d8f-9b62-1ebb2203813c,IP:15,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-25
-X-CID-META: VersionHash:120426c,CLOUDID:a31b503e-7aa7-41f3-a6bd-0433bee822f3,B
-	ulkID:230612135506W0JV12BG,BulkQuantity:0,Recheck:0,SF:44|24|17|19|102,TC:
-	nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-	,OSI:0,OSA:0,AV:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-UUID: fd8932f1c2ac43c4a9da1a991d25c288-20230612
-X-User: jianghaoran@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.12)] by mailgw
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
-	with ESMTP id 1443604619; Mon, 12 Jun 2023 13:55:05 +0800
-From: jianghaoran <jianghaoran@kylinos.cn>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	yangtiezhu@loongson.cn,
-	zhangqing@loongson.cn,
-	hejinyang@loongson.cn,
-	tangyouling@loongson.cn,
-	masahiroy@kernel.org,
-	conor.dooley@microchip.com,
-	l3b2w1@gmail.com,
-	palmer@rivosinc.com,
-	mhiramat@kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	jhrhhao <jhrhhao@163.com>
-Subject: [PATCH] LoongArch/rethook: Replace kretprobe with rethook on loongarch
-Date: Mon, 12 Jun 2023 13:49:49 +0800
-Message-Id: <20230612054949.305652-1-jianghaoran@kylinos.cn>
-X-Mailer: git-send-email 2.27.0
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B14CF136D
+	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 07:26:39 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dxh+mqyIZkNYgDAA--.5744S3;
+	Mon, 12 Jun 2023 15:26:34 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxZuSnyIZkmzkVAA--.61198S3;
+	Mon, 12 Jun 2023 15:26:32 +0800 (CST)
+Subject: Re: [PATCH] LoongArch/rethook: Replace kretprobe with rethook on
+ loongarch
+To: jianghaoran <jianghaoran@kylinos.cn>, chenhuacai@kernel.org
+References: <20230612054949.305652-1-jianghaoran@kylinos.cn>
+Cc: kernel@xen0n.name, zhangqing@loongson.cn, hejinyang@loongson.cn,
+ tangyouling@loongson.cn, masahiroy@kernel.org, conor.dooley@microchip.com,
+ l3b2w1@gmail.com, palmer@rivosinc.com, mhiramat@kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ jhrhhao <jhrhhao@163.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <63c16a5a-ea60-6607-a4ff-23ad9d47cd73@loongson.cn>
+Date: Mon, 12 Jun 2023 15:26:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230612054949.305652-1-jianghaoran@kylinos.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8AxZuSnyIZkmzkVAA--.61198S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZw4UXw13KFWkAr4UXw4kKrX_yoW5Ar18pF
+	9xArn8Gr4rCr9rAF9xJ3yrXF4Fvrn3Cw42gFnxt348Ca4Fvr1kJr1IgrZIvFWrK3sYvr1S
+	qF4FgryDtFy7J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zw
+	Z7UUUUU==
 
-That's an adaptation of commit f3a112c0c40d ("x86,rethook,kprobes:
-Replace kretprobe with rethook on x86") to loongarch.
 
-Replaces the kretprobe code with rethook on loongarch. With this patch,
-kretprobe on loongarch uses the rethook instead of kretprobe specific
-trampoline code.
 
-Signed-off-by: jianghaoran<jianghaoran@kylinos.cn>
-Signed-off-by: jhrhhao<jhrhhao@163.com>
----
- arch/loongarch/Kconfig                        |  1 +
- arch/loongarch/include/asm/kprobes.h          |  3 ---
- arch/loongarch/kernel/Makefile                |  3 ++-
- arch/loongarch/kernel/kprobes.c               | 20 --------------
- arch/loongarch/kernel/rethook.c               | 27 +++++++++++++++++++
- arch/loongarch/kernel/rethook.h               |  9 +++++++
- ...obes_trampoline.S => rethook_trampoline.S} |  6 ++---
- 7 files changed, 42 insertions(+), 27 deletions(-)
- create mode 100644 arch/loongarch/kernel/rethook.c
- create mode 100644 arch/loongarch/kernel/rethook.h
- rename arch/loongarch/kernel/{kprobes_trampoline.S => rethook_trampoline.S} (93%)
+On 06/12/2023 01:49 PM, jianghaoran wrote:
+> That's an adaptation of commit f3a112c0c40d ("x86,rethook,kprobes:
+> Replace kretprobe with rethook on x86") to loongarch.
+>
+> Replaces the kretprobe code with rethook on loongarch. With this patch,
+> kretprobe on loongarch uses the rethook instead of kretprobe specific
+> trampoline code.
+>
+> Signed-off-by: jianghaoran<jianghaoran@kylinos.cn>
+> Signed-off-by: jhrhhao<jhrhhao@163.com>
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index d38b066fc931..33753a1ab0bb 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -113,6 +113,7 @@ config LOONGARCH
- 	select HAVE_KPROBES
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
-+	select HAVE_RETHOOK
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_PCI
-diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
-index 798020ae02c6..7b9fc3ed71c3 100644
---- a/arch/loongarch/include/asm/kprobes.h
-+++ b/arch/loongarch/include/asm/kprobes.h
-@@ -49,9 +49,6 @@ bool kprobe_fault_handler(struct pt_regs *regs, int trapnr);
- bool kprobe_breakpoint_handler(struct pt_regs *regs);
- bool kprobe_singlestep_handler(struct pt_regs *regs);
- 
--void __kretprobe_trampoline(void);
--void *trampoline_probe_handler(struct pt_regs *regs);
--
- #else /* !CONFIG_KPROBES */
- 
- static inline bool kprobe_breakpoint_handler(struct pt_regs *regs) { return false; }
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 9a72d91cd104..e0d4d29a6f0f 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -52,6 +52,7 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
- obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_regs.o
- obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
- 
--obj-$(CONFIG_KPROBES)		+= kprobes.o kprobes_trampoline.o
-+obj-$(CONFIG_KPROBES)		+= kprobes.o
-+obj-$(CONFIG_RETHOOK)		+= rethook.o rethook_trampoline.o
- 
- CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
-diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
-index 56c8c4b09a42..dbce23ba9970 100644
---- a/arch/loongarch/kernel/kprobes.c
-+++ b/arch/loongarch/kernel/kprobes.c
-@@ -378,26 +378,6 @@ int __init arch_init_kprobes(void)
- 	return 0;
- }
- 
--/* ASM function that handles the kretprobes must not be probed */
--NOKPROBE_SYMBOL(__kretprobe_trampoline);
--
--/* Called from __kretprobe_trampoline */
--void __used *trampoline_probe_handler(struct pt_regs *regs)
--{
--	return (void *)kretprobe_trampoline_handler(regs, NULL);
--}
--NOKPROBE_SYMBOL(trampoline_probe_handler);
--
--void arch_prepare_kretprobe(struct kretprobe_instance *ri,
--			    struct pt_regs *regs)
--{
--	ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
--	ri->fp = NULL;
--
--	/* Replace the return addr with trampoline addr */
--	regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
--}
--NOKPROBE_SYMBOL(arch_prepare_kretprobe);
- 
- int arch_trampoline_kprobe(struct kprobe *p)
- {
-diff --git a/arch/loongarch/kernel/rethook.c b/arch/loongarch/kernel/rethook.c
-new file mode 100644
-index 000000000000..ac97b78daf55
---- /dev/null
-+++ b/arch/loongarch/kernel/rethook.c
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Generic return hook for loongarch.
-+ */
+Please check Signed-off-by's "<first> <last> <email>" order
+and spelling. Should it be "Haoran Jiang <jianghaoran@kylinos.cn>"?
+Please refer the following link:
+https://lore.kernel.org/all/CAEf4BzYS5mj+0ZBA2HKW3=kB1cjZ3wdiJZ2OP9gSLE4e7WB_wQ@mail.gmail.com/
+
+> ---
+>  arch/loongarch/Kconfig                        |  1 +
+>  arch/loongarch/include/asm/kprobes.h          |  3 ---
+>  arch/loongarch/kernel/Makefile                |  3 ++-
+>  arch/loongarch/kernel/kprobes.c               | 20 --------------
+>  arch/loongarch/kernel/rethook.c               | 27 +++++++++++++++++++
+>  arch/loongarch/kernel/rethook.h               |  9 +++++++
+>  ...obes_trampoline.S => rethook_trampoline.S} |  6 ++---
+>  7 files changed, 42 insertions(+), 27 deletions(-)
+>  create mode 100644 arch/loongarch/kernel/rethook.c
+>  create mode 100644 arch/loongarch/kernel/rethook.h
+>  rename arch/loongarch/kernel/{kprobes_trampoline.S => rethook_trampoline.S} (93%)
+
+...
+
+> --- a/arch/loongarch/kernel/kprobes.c
+> +++ b/arch/loongarch/kernel/kprobes.c
+> @@ -378,26 +378,6 @@ int __init arch_init_kprobes(void)
+>  	return 0;
+>  }
+>
+> -/* ASM function that handles the kretprobes must not be probed */
+> -NOKPROBE_SYMBOL(__kretprobe_trampoline);
+> -
+> -/* Called from __kretprobe_trampoline */
+> -void __used *trampoline_probe_handler(struct pt_regs *regs)
+> -{
+> -	return (void *)kretprobe_trampoline_handler(regs, NULL);
+> -}
+> -NOKPROBE_SYMBOL(trampoline_probe_handler);
+> -
+> -void arch_prepare_kretprobe(struct kretprobe_instance *ri,
+> -			    struct pt_regs *regs)
+> -{
+> -	ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
+> -	ri->fp = NULL;
+> -
+> -	/* Replace the return addr with trampoline addr */
+> -	regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
+> -}
+> -NOKPROBE_SYMBOL(arch_prepare_kretprobe);
+>
+
+When git am this patch, there exists the following warning:
+
+Applying: LoongArch/rethook: Replace kretprobe with rethook on loongarch
+.git/rebase-apply/patch:131: new blank line at EOF.
 +
-+#include <linux/kprobes.h>
-+#include <linux/rethook.h>
-+#include "rethook.h"
-+
-+/* This is called from arch_rethook_trampoline() */
-+unsigned long __used arch_rethook_trampoline_callback(struct pt_regs *regs)
-+{
-+	return rethook_trampoline_handler(regs, 0);
-+}
-+
-+NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
-+
-+void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs, bool mcount)
-+{
-+	rhn->ret_addr = regs->regs[1];
-+	rhn->frame = 0;
-+
-+	/* replace return addr with trampoline */
-+	regs->regs[1] = (unsigned long)arch_rethook_trampoline;
-+}
-+
-+NOKPROBE_SYMBOL(arch_rethook_prepare);
-diff --git a/arch/loongarch/kernel/rethook.h b/arch/loongarch/kernel/rethook.h
-new file mode 100644
-index 000000000000..22967d1e1281
---- /dev/null
-+++ b/arch/loongarch/kernel/rethook.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LOONGARCH_RETHOOK_H
-+#define __LOONGARCH_RETHOOK_H
-+
-+unsigned long arch_rethook_trampoline_callback(struct pt_regs *regs);
-+void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs, bool mcount);
-+
-+#endif
-+
-diff --git a/arch/loongarch/kernel/kprobes_trampoline.S b/arch/loongarch/kernel/rethook_trampoline.S
-similarity index 93%
-rename from arch/loongarch/kernel/kprobes_trampoline.S
-rename to arch/loongarch/kernel/rethook_trampoline.S
-index af94b0d213fa..bd5772c96338 100644
---- a/arch/loongarch/kernel/kprobes_trampoline.S
-+++ b/arch/loongarch/kernel/rethook_trampoline.S
-@@ -75,7 +75,7 @@
- 	csrxchg t0, t1, LOONGARCH_CSR_CRMD
- 	.endm
- 
--SYM_CODE_START(__kretprobe_trampoline)
-+SYM_CODE_START(arch_rethook_trampoline)
- 	addi.d	sp, sp, -PT_SIZE
- 	save_all_base_regs
- 
-@@ -84,7 +84,7 @@ SYM_CODE_START(__kretprobe_trampoline)
- 
- 	move a0, sp /* pt_regs */
- 
--	bl trampoline_probe_handler
-+	bl arch_rethook_trampoline_callback
- 
- 	/* use the result as the return-address */
- 	move ra, a0
-@@ -93,4 +93,4 @@ SYM_CODE_START(__kretprobe_trampoline)
- 	addi.d	sp, sp, PT_SIZE
- 
- 	jr ra
--SYM_CODE_END(__kretprobe_trampoline)
-+SYM_CODE_END(arch_rethook_trampoline)
--- 
-2.27.0
+warning: 1 line adds whitespace errors.
+
+So please remove the blank line.
+
+>  int arch_trampoline_kprobe(struct kprobe *p)
+
+...
+
+> -SYM_CODE_END(__kretprobe_trampoline)
+> +SYM_CODE_END(arch_rethook_trampoline)
+
+This patch is almost same with commit b57c2f124098 ("riscv: add
+riscv rethook implementation"), it is better to provide this info
+in the commit message.
+
+The code itself looks good to me, I am doing the test.
+
+Thanks,
+Tiezhu
 
