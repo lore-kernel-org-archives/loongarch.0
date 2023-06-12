@@ -1,138 +1,136 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B14CF136D
-	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 07:26:39 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dxh+mqyIZkNYgDAA--.5744S3;
-	Mon, 12 Jun 2023 15:26:34 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxZuSnyIZkmzkVAA--.61198S3;
-	Mon, 12 Jun 2023 15:26:32 +0800 (CST)
-Subject: Re: [PATCH] LoongArch/rethook: Replace kretprobe with rethook on
- loongarch
-To: jianghaoran <jianghaoran@kylinos.cn>, chenhuacai@kernel.org
-References: <20230612054949.305652-1-jianghaoran@kylinos.cn>
-Cc: kernel@xen0n.name, zhangqing@loongson.cn, hejinyang@loongson.cn,
- tangyouling@loongson.cn, masahiroy@kernel.org, conor.dooley@microchip.com,
- l3b2w1@gmail.com, palmer@rivosinc.com, mhiramat@kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- jhrhhao <jhrhhao@163.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <63c16a5a-ea60-6607-a4ff-23ad9d47cd73@loongson.cn>
-Date: Mon, 12 Jun 2023 15:26:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C727F46BB
+	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 07:41:52 +0000 (UTC)
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-543c6a2aa07so2045249a12.0
+        for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 00:41:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686555712; x=1689147712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SSLtE9E0vmCcghH4dSd0lHHpsUifthyCoqFs6ZgaUaw=;
+        b=VyxQ9Rkh3zhRrPa+z0VNWVV7eMuki71zijDBxYrRhKUGgtimiNX3HiYS6FpKUCj4V7
+         jvqfGYSU4bpIVBu6Z3+0Wpd7dLv55JxUNffaaWbDJNms8B4wULR1DSrRpPscL1+kALCJ
+         twvdd45qWfNMLXrP+b5tOD2Yv7TOrtIeNb6JZhBQnX3UnZ4ti6MJFEbVo2aN/kALrbE7
+         NRjks+atUjin0MzJlKKPKnFO+mp1tZPkDMqu/K/R2uEfg4f7oxYjYVzoiPlX0IdTX7TM
+         aql9L02SifdCsxsZpwuSEOn/RzegirjCtnyv/4aUni8UOXrz0rvCbjApviX19D9ZQcQv
+         OBLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686555712; x=1689147712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SSLtE9E0vmCcghH4dSd0lHHpsUifthyCoqFs6ZgaUaw=;
+        b=NAg7HJBCkStHhnVSmpjF1Ove9Vid/LPtjL3oFwyGi0zZLJroeQtVElMkvxMAV+QYDG
+         sq+kiJuqr02VN5TcfGMmIJJ5ewR6sQr7facKC3MoWu3aOz7V/SNDCmNIA7etrEmaXTLn
+         o79yUrLC9lQCc5zJAhDLv6GWrAQU2Cq2jm4Y3nhUX+FplWIN8kXGNCJbI68JipTl1X8q
+         mCKNIzu+QXMjUdLp9OO1h4Ve0kPcZzugESk6jU3Z/ZFNrNzGzjy0nS6FMurHlCqfq6Ie
+         pc5zD4Nj6SkmTiiwLm3mEx/GKpTtc94e5wRlI7SfzSsRK2SreoXIn3svhuqdc5lcslKb
+         JT5w==
+X-Gm-Message-State: AC+VfDx6wOZByYk51yUxQ95MrdANaGd8wTBKmjxEhU5EOz4ICNMQAPS5
+	1kzXsORyboG5q1DfI7u2vfrE5pgdVE1/aEBgrDESNiDU
+X-Google-Smtp-Source: ACHHUZ4GJlYRw5sQhOMFC+yfY+NGowvFcUFxYSpFHK3hwLbSevbI8QoY3IsTyXIBdxTb9oiPTyAB+swTScLD2gajvh0=
+X-Received: by 2002:a17:90a:688d:b0:259:17c9:fda7 with SMTP id
+ a13-20020a17090a688d00b0025917c9fda7mr7130374pjd.4.1686555711613; Mon, 12 Jun
+ 2023 00:41:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230612054949.305652-1-jianghaoran@kylinos.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8AxZuSnyIZkmzkVAA--.61198S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw4UXw13KFWkAr4UXw4kKrX_yoW5Ar18pF
-	9xArn8Gr4rCr9rAF9xJ3yrXF4Fvrn3Cw42gFnxt348Ca4Fvr1kJr1IgrZIvFWrK3sYvr1S
-	qF4FgryDtFy7J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zw
-	Z7UUUUU==
+References: <1685947150-4949-1-git-send-email-yangtiezhu@loongson.cn> <CAAhV-H5CXX+tVdXj8jpYjeprwFihDJw6O6K5t6dRZPH8bWZ94A@mail.gmail.com>
+In-Reply-To: <CAAhV-H5CXX+tVdXj8jpYjeprwFihDJw6O6K5t6dRZPH8bWZ94A@mail.gmail.com>
+From: Jeff Xie <xiehuan09@gmail.com>
+Date: Mon, 12 Jun 2023 15:41:40 +0800
+Message-ID: <CAEr6+EA9OCRANk+kVov=jZmrbxAV_vVhLV-F+5v7P7dYM2g7PQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Add uprobes support for LoongArch
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 06/12/2023 01:49 PM, jianghaoran wrote:
-> That's an adaptation of commit f3a112c0c40d ("x86,rethook,kprobes:
-> Replace kretprobe with rethook on x86") to loongarch.
+On Wed, Jun 7, 2023 at 4:52=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
+wrote:
 >
-> Replaces the kretprobe code with rethook on loongarch. With this patch,
-> kretprobe on loongarch uses the rethook instead of kretprobe specific
-> trampoline code.
+> Hi, Jeff,
 >
-> Signed-off-by: jianghaoran<jianghaoran@kylinos.cn>
-> Signed-off-by: jhrhhao<jhrhhao@163.com>
+> I queued this series at
+> https://github.com/chenhuacai/linux/commits/loongarch-next, could you
+> please test it when you have time? Thanks.
 
-Please check Signed-off-by's "<first> <last> <email>" order
-and spelling. Should it be "Haoran Jiang <jianghaoran@kylinos.cn>"?
-Please refer the following link:
-https://lore.kernel.org/all/CAEf4BzYS5mj+0ZBA2HKW3=kB1cjZ3wdiJZ2OP9gSLE4e7WB_wQ@mail.gmail.com/
+I have tested this series and saw no errors while using uprobe, the
+patchset looks good to me.
 
-> ---
->  arch/loongarch/Kconfig                        |  1 +
->  arch/loongarch/include/asm/kprobes.h          |  3 ---
->  arch/loongarch/kernel/Makefile                |  3 ++-
->  arch/loongarch/kernel/kprobes.c               | 20 --------------
->  arch/loongarch/kernel/rethook.c               | 27 +++++++++++++++++++
->  arch/loongarch/kernel/rethook.h               |  9 +++++++
->  ...obes_trampoline.S => rethook_trampoline.S} |  6 ++---
->  7 files changed, 42 insertions(+), 27 deletions(-)
->  create mode 100644 arch/loongarch/kernel/rethook.c
->  create mode 100644 arch/loongarch/kernel/rethook.h
->  rename arch/loongarch/kernel/{kprobes_trampoline.S => rethook_trampoline.S} (93%)
+Tested-by: Jeff Xie <xiehuan09@gmail.com>
 
-...
-
-> --- a/arch/loongarch/kernel/kprobes.c
-> +++ b/arch/loongarch/kernel/kprobes.c
-> @@ -378,26 +378,6 @@ int __init arch_init_kprobes(void)
->  	return 0;
->  }
 >
-> -/* ASM function that handles the kretprobes must not be probed */
-> -NOKPROBE_SYMBOL(__kretprobe_trampoline);
-> -
-> -/* Called from __kretprobe_trampoline */
-> -void __used *trampoline_probe_handler(struct pt_regs *regs)
-> -{
-> -	return (void *)kretprobe_trampoline_handler(regs, NULL);
-> -}
-> -NOKPROBE_SYMBOL(trampoline_probe_handler);
-> -
-> -void arch_prepare_kretprobe(struct kretprobe_instance *ri,
-> -			    struct pt_regs *regs)
-> -{
-> -	ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
-> -	ri->fp = NULL;
-> -
-> -	/* Replace the return addr with trampoline addr */
-> -	regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
-> -}
-> -NOKPROBE_SYMBOL(arch_prepare_kretprobe);
+> Huacai
 >
+> On Mon, Jun 5, 2023 at 2:39=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.c=
+n> wrote:
+> >
+> > v5:
+> >   -- Rebased on 6.4rc5
+> >   -- Like arm64, add user_enable_single_step() in arch_uprobe_pre_xol()=
+,
+> >      add user_disable_single_step() in arch_uprobe_{post,abort}_xol(),
+> >      suggested by Jeff and Huacai offline
+> >
+> > v4:
+> >   -- Rebased on 6.4rc1
+> >   -- Fix problem about "perf probe -x /lib64/libc.so.6 malloc"
+> >
+> > v3:
+> >   -- Check atomic instructions in insns_not_supported()
+> >   -- Remove five DIE_* definitions in kdebug.h
+> >
+> > v2:
+> >   -- Move the functions to inst.c in patch #1
+> >   -- Pass around union for insns_not_supported(),
+> >      insns_need_simulation() and arch_simulate_insn()
+> >
+> > v1:
+> >   -- Split the RFC patch #2 into two patches
+> >   -- Use larch_insn_gen_break() to generate break insns
+> >      for kprobes and uprobes
+> >   -- Pass around instruction word instead of union for
+> >      insns_not_supported(), insns_need_simulation() and
+> >      arch_simulate_insn() to avoid type conversion for callers
+> >   -- Add a simple test case for uprobes in the commit message
+> >
+> > Tiezhu Yang (6):
+> >   LoongArch: Move three functions from kprobes.c to inst.c
+> >   LoongArch: Add larch_insn_gen_break() to generate break insns
+> >   LoongArch: Use larch_insn_gen_break() for kprobes
+> >   LoongArch: Add uprobes support
+> >   LoongArch: Check atomic instructions in insns_not_supported()
+> >   LoongArch: Remove five DIE_* definitions in kdebug.h
+> >
+> >  arch/loongarch/Kconfig               |   3 +
+> >  arch/loongarch/include/asm/inst.h    |  42 ++++++++++
+> >  arch/loongarch/include/asm/kdebug.h  |   5 --
+> >  arch/loongarch/include/asm/kprobes.h |   2 +-
+> >  arch/loongarch/include/asm/uprobes.h |  35 ++++++++
+> >  arch/loongarch/kernel/Makefile       |   1 +
+> >  arch/loongarch/kernel/inst.c         |  54 +++++++++++++
+> >  arch/loongarch/kernel/kprobes.c      |  75 ++++-------------
+> >  arch/loongarch/kernel/traps.c        |   9 +--
+> >  arch/loongarch/kernel/uprobes.c      | 152 +++++++++++++++++++++++++++=
+++++++++
+> >  10 files changed, 306 insertions(+), 72 deletions(-)
+> >  create mode 100644 arch/loongarch/include/asm/uprobes.h
+> >  create mode 100644 arch/loongarch/kernel/uprobes.c
+> >
+> > --
+> > 2.1.0
+> >
 
-When git am this patch, there exists the following warning:
 
-Applying: LoongArch/rethook: Replace kretprobe with rethook on loongarch
-.git/rebase-apply/patch:131: new blank line at EOF.
-+
-warning: 1 line adds whitespace errors.
 
-So please remove the blank line.
-
->  int arch_trampoline_kprobe(struct kprobe *p)
-
-...
-
-> -SYM_CODE_END(__kretprobe_trampoline)
-> +SYM_CODE_END(arch_rethook_trampoline)
-
-This patch is almost same with commit b57c2f124098 ("riscv: add
-riscv rethook implementation"), it is better to provide this info
-in the commit message.
-
-The code itself looks good to me, I am doing the test.
-
+--=20
 Thanks,
-Tiezhu
-
+JeffXie
