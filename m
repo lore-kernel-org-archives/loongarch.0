@@ -1,403 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7A715B7
-	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 04:36:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E909DC4339B
-	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 04:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686544609;
-	bh=RTLH6/qX0boVL/Mo3La5Q/cG0oTORPisOYKQg5/Tgak=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=skOZpoGc+9Q/pGMvjQxhizgISYr0f+WvKWZHcB3XS6i0WIGcMUd/pnfdAPKHJx+qk
-	 0F306oktSO57F8frBsCn7fCaO90ni8z4UwSK9qZmfpdtKGPHzgz7tg89xCRMdF2ZJi
-	 ZFjEqOMo6dOuCFShMP4fbhFlf806WOWo4EtAtVfEbkN+Po10xYUp/bskPGe9OIyOPX
-	 RoTyk2dY+3n9witUMsg+XVxQ2OPxOkgQfW9azkk+s/hQVjMIKwGp6LfcvQa8pXcCf2
-	 N2UmWZGxecKgPV/sgLWr/psHYYBuuE39lOh7SS/4E5OtbKWeT01Vnruru/2fkAwQgS
-	 SRsOC7ioDNfVA==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-977c72b116fso586201466b.3
-        for <loongarch@lists.linux.dev>; Sun, 11 Jun 2023 21:36:49 -0700 (PDT)
-X-Gm-Message-State: AC+VfDytLLhj5pdznZzLS6D1HH0tLQwvjT50eVecMC6PcihECPQj4m/i
-	+MtdSh9wVT3G+KHbwo5Dd892/TEXnkCLOVmldQI=
-X-Google-Smtp-Source: ACHHUZ7NIM2FiIJ2XP3QFmg0qUphmz2JgVSW6L6Dnb/GYYjr73vQ142pX930uqkPDVTjnBtZSfXUI8GWyOr1xeCkTYA=
-X-Received: by 2002:a17:907:36ca:b0:978:6b18:e935 with SMTP id
- bj10-20020a17090736ca00b009786b18e935mr7379206ejc.23.1686544608138; Sun, 11
- Jun 2023 21:36:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21B51C06
+	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 05:55:12 +0000 (UTC)
+X-UUID: fd8932f1c2ac43c4a9da1a991d25c288-20230612
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.22,REQID:192ed0d9-28fc-4d8f-9b62-1ebb2203813c,IP:15,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-25
+X-CID-INFO: VERSION:1.1.22,REQID:192ed0d9-28fc-4d8f-9b62-1ebb2203813c,IP:15,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-25
+X-CID-META: VersionHash:120426c,CLOUDID:a31b503e-7aa7-41f3-a6bd-0433bee822f3,B
+	ulkID:230612135506W0JV12BG,BulkQuantity:0,Recheck:0,SF:44|24|17|19|102,TC:
+	nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+	,OSI:0,OSA:0,AV:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-UUID: fd8932f1c2ac43c4a9da1a991d25c288-20230612
+X-User: jianghaoran@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.12)] by mailgw
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
+	with ESMTP id 1443604619; Mon, 12 Jun 2023 13:55:05 +0800
+From: jianghaoran <jianghaoran@kylinos.cn>
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	yangtiezhu@loongson.cn,
+	zhangqing@loongson.cn,
+	hejinyang@loongson.cn,
+	tangyouling@loongson.cn,
+	masahiroy@kernel.org,
+	conor.dooley@microchip.com,
+	l3b2w1@gmail.com,
+	palmer@rivosinc.com,
+	mhiramat@kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	jhrhhao <jhrhhao@163.com>
+Subject: [PATCH] LoongArch/rethook: Replace kretprobe with rethook on loongarch
+Date: Mon, 12 Jun 2023 13:49:49 +0800
+Message-Id: <20230612054949.305652-1-jianghaoran@kylinos.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230522093320.7176-1-zhuyinbo@loongson.cn>
-In-Reply-To: <20230522093320.7176-1-zhuyinbo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 12 Jun 2023 12:36:36 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5wF28E5k+uHvPP1xErr=v=icTSMWdygfd4pYdwiBk=LA@mail.gmail.com>
-Message-ID: <CAAhV-H5wF28E5k+uHvPP1xErr=v=icTSMWdygfd4pYdwiBk=LA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] soc: loongson2_pm: add power management support
-To: Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, "Rafael J . Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Marc Zyngier <maz@kernel.org>, 
-	Youling Tang <tangyouling@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>, 
-	Arnd Bergmann <arnd@arndb.de>, Yun Liu <liuyun@loongson.cn>, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Jianmin Lv <lvjianmin@loongson.cn>, 
-	wanghongliang@loongson.cn, Liu Peibao <liupeibao@loongson.cn>, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Yinbo,
+That's an adaptation of commit f3a112c0c40d ("x86,rethook,kprobes:
+Replace kretprobe with rethook on x86") to loongarch.
 
-On Mon, May 22, 2023 at 5:33=E2=80=AFPM Yinbo Zhu <zhuyinbo@loongson.cn> wr=
-ote:
->
-> The Loongson-2's Power Management Controller was ACPI, supports ACPI
-> S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
-> Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
-> (USB, GMAC, PWRBTN, etc.). This driver was to add Power Management
-> Controller support that base on dts for Loongson-2 series SoCs.
->
-> Signed-off-by: Liu Yun <liuyun@loongson.cn>
-> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
->  MAINTAINERS                         |   1 +
->  drivers/soc/loongson/Kconfig        |  10 ++
->  drivers/soc/loongson/Makefile       |   1 +
->  drivers/soc/loongson/loongson2_pm.c | 235 ++++++++++++++++++++++++++++
->  4 files changed, 247 insertions(+)
->  create mode 100644 drivers/soc/loongson/loongson2_pm.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bcd05f1fa5c1..7c4ad0cbaeff 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12195,6 +12195,7 @@ M:      Yinbo Zhu <zhuyinbo@loongson.cn>
->  L:     linux-pm@vger.kernel.org
->  S:     Maintained
->  F:     Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.=
-yaml
-> +F:     drivers/soc/loongson/loongson2_pm.c
->
->  LOONGSON-2 SOC SERIES PINCTRL DRIVER
->  M:     zhanghongchen <zhanghongchen@loongson.cn>
-> diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
-> index 707f56358dc4..2431a0bcbd84 100644
-> --- a/drivers/soc/loongson/Kconfig
-> +++ b/drivers/soc/loongson/Kconfig
-> @@ -16,3 +16,13 @@ config LOONGSON2_GUTS
->          SoCs. Initially only reading SVR and registering soc device are
->          supported. Other guts accesses, such as reading firmware configu=
-ration
->          by default, should eventually be added into this driver as well.
-> +
-> +config LOONGSON2_PM
-> +       bool "Loongson-2 SoC Power Management Controller Driver"
-> +       depends on LOONGARCH && OF
-> +       help
-> +        The Loongson-2's Power Management Controller was ACPI, supports =
-ACPI
-> +        S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Sus=
-pend To
-> +        Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up met=
-hods
-> +        (USB, GMAC, PWRBTN, etc.). This driver was to add Power Manageme=
-nt
-> +        Controller support that base on dts for Loongson-2 series SoCs.
-> diff --git a/drivers/soc/loongson/Makefile b/drivers/soc/loongson/Makefil=
-e
-> index 263c486df638..4118f50f55e2 100644
-> --- a/drivers/soc/loongson/Makefile
-> +++ b/drivers/soc/loongson/Makefile
-> @@ -4,3 +4,4 @@
->  #
->
->  obj-$(CONFIG_LOONGSON2_GUTS)           +=3D loongson2_guts.o
-> +obj-$(CONFIG_LOONGSON2_PM)             +=3D loongson2_pm.o
-> diff --git a/drivers/soc/loongson/loongson2_pm.c b/drivers/soc/loongson/l=
-oongson2_pm.c
-> new file mode 100644
-> index 000000000000..cd96a1ebbb6c
-> --- /dev/null
-> +++ b/drivers/soc/loongson/loongson2_pm.c
-> @@ -0,0 +1,235 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Loongson-2 PM Support
-> + *
-> + * Copyright (C) 2023 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/init.h>
-> +#include <linux/input.h>
-> +#include <linux/suspend.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/pm_wakeirq.h>
-> +#include <linux/platform_device.h>
-> +#include <asm/bootinfo.h>
-> +#include <asm/suspend.h>
-> +
-> +#define LOONGSON2_PM1_CNT_REG          0x14
-> +#define LOONGSON2_PM1_STS_REG          0x0c
-> +#define LOONGSON2_PM1_ENA_REG          0x10
-> +#define LOONGSON2_GPE0_STS_REG         0x28
-> +#define LOONGSON2_GPE0_ENA_REG         0x2c
-> +
-> +#define LOONGSON2_PM1_PWRBTN_STS       BIT(8)
-> +#define LOONGSON2_PM1_PCIEXP_WAKE_STS  BIT(14)
-> +#define LOONGSON2_PM1_WAKE_STS         BIT(15)
-> +#define LOONGSON2_PM1_CNT_INT_EN       BIT(0)
-> +#define LOONGSON2_PM1_PWRBTN_EN                LOONGSON2_PM1_PWRBTN_STS
-> +
-> +static struct loongson2_pm {
-> +       void __iomem                    *base;
-> +       struct input_dev                *dev;
-> +       bool                            suspended;
-> +} loongson2_pm;
-> +
-> +#define loongson2_pm_readw(reg)                readw(loongson2_pm.base +=
- reg)
-> +#define loongson2_pm_readl(reg)                readl(loongson2_pm.base +=
- reg)
-> +#define loongson2_pm_writew(val, reg)  writew(val, loongson2_pm.base + r=
-eg)
-> +#define loongson2_pm_writel(val, reg)  writel(val, loongson2_pm.base + r=
-eg)
-> +
-> +static void loongson2_pm_status_clear(void)
-> +{
-> +       u16 value;
-> +
-> +       value =3D loongson2_pm_readw(LOONGSON2_PM1_STS_REG);
-> +       value |=3D (LOONGSON2_PM1_PWRBTN_STS | LOONGSON2_PM1_PCIEXP_WAKE_=
-STS |
-> +                 LOONGSON2_PM1_WAKE_STS);
-> +       loongson2_pm_writew(value, LOONGSON2_PM1_STS_REG);
-> +       loongson2_pm_writel(loongson2_pm_readl(LOONGSON2_GPE0_STS_REG),
-> +                           LOONGSON2_GPE0_STS_REG);
-> +}
-> +
-> +static void loongson2_pm_irq_enable(void)
-> +{
-> +       u16 value;
-> +
-> +       value =3D loongson2_pm_readw(LOONGSON2_PM1_CNT_REG);
-> +       value |=3D LOONGSON2_PM1_CNT_INT_EN;
-> +       loongson2_pm_writew(value, LOONGSON2_PM1_CNT_REG);
-> +}
-> +
-> +static void loongson2_pm_pwrbtn_irq_enable(void)
-> +{
-> +       u16 value;
-> +
-> +       loongson2_pm_irq_enable();
-> +
-> +       value =3D loongson2_pm_readw(LOONGSON2_PM1_ENA_REG);
-> +       value |=3D LOONGSON2_PM1_PWRBTN_EN;
-> +       loongson2_pm_writew(value, LOONGSON2_PM1_ENA_REG);
-> +}
-You can combine these two functions as loongson2_power_button_irq_enable().
+Replaces the kretprobe code with rethook on loongarch. With this patch,
+kretprobe on loongarch uses the rethook instead of kretprobe specific
+trampoline code.
 
-> +
-> +static void loongson2_pm_mach_resume(void)
-> +{
-> +       loongson_common_resume();
-> +       loongson2_pm_irq_enable();
-> +}
-> +
-> +static void loongson2_pm_mach_suspend(void)
-> +{
-> +       loongson2_pm_status_clear();
-> +       loongson_common_suspend();
-> +}
-> +
-> +static int loongson2_suspend_enter(suspend_state_t state)
-> +{
-> +       loongson2_pm_mach_suspend();
-> +       loongson_suspend_enter();
-> +       pm_set_resume_via_firmware();
-> +       loongson2_pm_mach_resume();
-> +
-> +       return 0;
-> +}
-After some thinkings, I found these three simple function can be combined a=
-s:
-static int loongson2_suspend_enter(suspend_state_t state)
-{
-       loongson2_pm_status_clear();
-       loongson_common_suspend();
-       loongson_suspend_enter();
-       loongson_common_resume();
-       loongson2_pm_irq_enable();
-       pm_set_resume_via_firmware();
+Signed-off-by: jianghaoran<jianghaoran@kylinos.cn>
+Signed-off-by: jhrhhao<jhrhhao@163.com>
+---
+ arch/loongarch/Kconfig                        |  1 +
+ arch/loongarch/include/asm/kprobes.h          |  3 ---
+ arch/loongarch/kernel/Makefile                |  3 ++-
+ arch/loongarch/kernel/kprobes.c               | 20 --------------
+ arch/loongarch/kernel/rethook.c               | 27 +++++++++++++++++++
+ arch/loongarch/kernel/rethook.h               |  9 +++++++
+ ...obes_trampoline.S => rethook_trampoline.S} |  6 ++---
+ 7 files changed, 42 insertions(+), 27 deletions(-)
+ create mode 100644 arch/loongarch/kernel/rethook.c
+ create mode 100644 arch/loongarch/kernel/rethook.h
+ rename arch/loongarch/kernel/{kprobes_trampoline.S => rethook_trampoline.S} (93%)
 
-       return 0;
-}
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index d38b066fc931..33753a1ab0bb 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -113,6 +113,7 @@ config LOONGARCH
+ 	select HAVE_KPROBES
+ 	select HAVE_KPROBES_ON_FTRACE
+ 	select HAVE_KRETPROBES
++	select HAVE_RETHOOK
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_NMI
+ 	select HAVE_PCI
+diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
+index 798020ae02c6..7b9fc3ed71c3 100644
+--- a/arch/loongarch/include/asm/kprobes.h
++++ b/arch/loongarch/include/asm/kprobes.h
+@@ -49,9 +49,6 @@ bool kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ bool kprobe_breakpoint_handler(struct pt_regs *regs);
+ bool kprobe_singlestep_handler(struct pt_regs *regs);
+ 
+-void __kretprobe_trampoline(void);
+-void *trampoline_probe_handler(struct pt_regs *regs);
+-
+ #else /* !CONFIG_KPROBES */
+ 
+ static inline bool kprobe_breakpoint_handler(struct pt_regs *regs) { return false; }
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 9a72d91cd104..e0d4d29a6f0f 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -52,6 +52,7 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_regs.o
+ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+ 
+-obj-$(CONFIG_KPROBES)		+= kprobes.o kprobes_trampoline.o
++obj-$(CONFIG_KPROBES)		+= kprobes.o
++obj-$(CONFIG_RETHOOK)		+= rethook.o rethook_trampoline.o
+ 
+ CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
+diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+index 56c8c4b09a42..dbce23ba9970 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -378,26 +378,6 @@ int __init arch_init_kprobes(void)
+ 	return 0;
+ }
+ 
+-/* ASM function that handles the kretprobes must not be probed */
+-NOKPROBE_SYMBOL(__kretprobe_trampoline);
+-
+-/* Called from __kretprobe_trampoline */
+-void __used *trampoline_probe_handler(struct pt_regs *regs)
+-{
+-	return (void *)kretprobe_trampoline_handler(regs, NULL);
+-}
+-NOKPROBE_SYMBOL(trampoline_probe_handler);
+-
+-void arch_prepare_kretprobe(struct kretprobe_instance *ri,
+-			    struct pt_regs *regs)
+-{
+-	ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
+-	ri->fp = NULL;
+-
+-	/* Replace the return addr with trampoline addr */
+-	regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
+-}
+-NOKPROBE_SYMBOL(arch_prepare_kretprobe);
+ 
+ int arch_trampoline_kprobe(struct kprobe *p)
+ {
+diff --git a/arch/loongarch/kernel/rethook.c b/arch/loongarch/kernel/rethook.c
+new file mode 100644
+index 000000000000..ac97b78daf55
+--- /dev/null
++++ b/arch/loongarch/kernel/rethook.c
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Generic return hook for loongarch.
++ */
++
++#include <linux/kprobes.h>
++#include <linux/rethook.h>
++#include "rethook.h"
++
++/* This is called from arch_rethook_trampoline() */
++unsigned long __used arch_rethook_trampoline_callback(struct pt_regs *regs)
++{
++	return rethook_trampoline_handler(regs, 0);
++}
++
++NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
++
++void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs, bool mcount)
++{
++	rhn->ret_addr = regs->regs[1];
++	rhn->frame = 0;
++
++	/* replace return addr with trampoline */
++	regs->regs[1] = (unsigned long)arch_rethook_trampoline;
++}
++
++NOKPROBE_SYMBOL(arch_rethook_prepare);
+diff --git a/arch/loongarch/kernel/rethook.h b/arch/loongarch/kernel/rethook.h
+new file mode 100644
+index 000000000000..22967d1e1281
+--- /dev/null
++++ b/arch/loongarch/kernel/rethook.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LOONGARCH_RETHOOK_H
++#define __LOONGARCH_RETHOOK_H
++
++unsigned long arch_rethook_trampoline_callback(struct pt_regs *regs);
++void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs, bool mcount);
++
++#endif
++
+diff --git a/arch/loongarch/kernel/kprobes_trampoline.S b/arch/loongarch/kernel/rethook_trampoline.S
+similarity index 93%
+rename from arch/loongarch/kernel/kprobes_trampoline.S
+rename to arch/loongarch/kernel/rethook_trampoline.S
+index af94b0d213fa..bd5772c96338 100644
+--- a/arch/loongarch/kernel/kprobes_trampoline.S
++++ b/arch/loongarch/kernel/rethook_trampoline.S
+@@ -75,7 +75,7 @@
+ 	csrxchg t0, t1, LOONGARCH_CSR_CRMD
+ 	.endm
+ 
+-SYM_CODE_START(__kretprobe_trampoline)
++SYM_CODE_START(arch_rethook_trampoline)
+ 	addi.d	sp, sp, -PT_SIZE
+ 	save_all_base_regs
+ 
+@@ -84,7 +84,7 @@ SYM_CODE_START(__kretprobe_trampoline)
+ 
+ 	move a0, sp /* pt_regs */
+ 
+-	bl trampoline_probe_handler
++	bl arch_rethook_trampoline_callback
+ 
+ 	/* use the result as the return-address */
+ 	move ra, a0
+@@ -93,4 +93,4 @@ SYM_CODE_START(__kretprobe_trampoline)
+ 	addi.d	sp, sp, PT_SIZE
+ 
+ 	jr ra
+-SYM_CODE_END(__kretprobe_trampoline)
++SYM_CODE_END(arch_rethook_trampoline)
+-- 
+2.27.0
 
-After this combining,
-loongson_common_suspend()/loongson_suspend_enter()/loongson_common_resume()
-can be still use the old naming
-loongarch_common_suspend()/loongarch_suspend_enter()/loongarch_common_resum=
-e().
-
-> +
-> +static int loongson2_suspend_begin(suspend_state_t state)
-> +{
-> +       pm_set_suspend_via_firmware();
-> +
-> +       return 0;
-> +}
-> +
-> +static int loongson2_suspend_valid_state(suspend_state_t state)
-> +{
-> +       if (state =3D=3D PM_SUSPEND_MEM)
-> +               return !!loongson_sysconf.suspend_addr;
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct platform_suspend_ops loongson2_suspend_ops =3D {
-> +       .valid  =3D loongson2_suspend_valid_state,
-> +       .begin  =3D loongson2_suspend_begin,
-> +       .enter  =3D loongson2_suspend_enter,
-> +};
-> +
-> +static int loongson2_pm_pwrbtn_init(struct device *dev, int irq)
-> +{
-> +       int ret;
-> +       struct input_dev *pwrbt;
-Rename  loongson2_pm_pwrbtn_init() to  loongson2_power_button_init()
-and rename 'pwrbt' to 'pwrbtn' or just 'button' is better.
-
-Huacai
-> +
-> +       pwrbt =3D input_allocate_device();
-> +       if (!dev)
-> +               return -ENOMEM;
-> +
-> +       pwrbt->name =3D "Power Button";
-> +       pwrbt->phys =3D "pm/button/input0";
-> +       pwrbt->id.bustype =3D BUS_HOST;
-> +       pwrbt->dev.parent =3D NULL;
-> +       input_set_capability(pwrbt, EV_KEY, KEY_POWER);
-> +
-> +       ret =3D input_register_device(pwrbt);
-> +       if (ret)
-> +               goto free_dev;
-> +
-> +       dev_pm_set_wake_irq(&pwrbt->dev, irq);
-> +       device_set_wakeup_capable(&pwrbt->dev, true);
-> +       device_set_wakeup_enable(&pwrbt->dev, true);
-> +
-> +       loongson2_pm.dev =3D pwrbt;
-> +       dev_info(dev, "Power Button: Init successful!\n");
-> +
-> +       return 0;
-> +
-> +free_dev:
-> +       input_free_device(pwrbt);
-> +
-> +       return ret;
-> +}
-> +
-> +static irqreturn_t loongson2_pm_irq_handler(int irq, void *dev_id)
-> +{
-> +       u16 status =3D loongson2_pm_readw(LOONGSON2_PM1_STS_REG);
-> +
-> +       if (!loongson2_pm.suspended && (status & LOONGSON2_PM1_PWRBTN_STS=
-)) {
-> +               pr_info("Power Button pressed...\n");
-> +               input_report_key(loongson2_pm.dev, KEY_POWER, 1);
-> +               input_sync(loongson2_pm.dev);
-> +               input_report_key(loongson2_pm.dev, KEY_POWER, 0);
-> +               input_sync(loongson2_pm.dev);
-> +       }
-> +
-> +       loongson2_pm_status_clear();
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int __maybe_unused loongson2_pm_suspend(struct device *dev)
-> +{
-> +       loongson2_pm.suspended =3D true;
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused loongson2_pm_resume(struct device *dev)
-> +{
-> +       loongson2_pm.suspended =3D false;
-> +
-> +       return 0;
-> +}
-> +static SIMPLE_DEV_PM_OPS(loongson2_pm_ops, loongson2_pm_suspend, loongso=
-n2_pm_resume);
-> +
-> +static int loongson2_pm_probe(struct platform_device *pdev)
-> +{
-> +       int irq, retval;
-> +       u32 suspend_addr;
-> +       struct device *dev =3D &pdev->dev;
-> +
-> +       loongson2_pm.base =3D devm_platform_ioremap_resource(pdev, 0);
-> +       if (IS_ERR(loongson2_pm.base))
-> +               return PTR_ERR(loongson2_pm.base);
-> +
-> +       irq =3D platform_get_irq(pdev, 0);
-> +       if (irq < 0)
-> +               return irq;
-> +
-> +       if (!device_property_read_u32(dev, "suspend-address", &suspend_ad=
-dr))
-> +               loongson_sysconf.suspend_addr =3D (u64)phys_to_virt(suspe=
-nd_addr);
-> +       else
-> +               dev_err(dev, "No suspend-address, could not support S3!\n=
-");
-> +
-> +       if (loongson2_pm_pwrbtn_init(dev, irq))
-> +               return -EINVAL;
-> +
-> +       retval =3D devm_request_irq(&pdev->dev, irq, loongson2_pm_irq_han=
-dler,
-> +                                 IRQF_SHARED, "pm_irq", &loongson2_pm);
-> +       if (retval)
-> +               return retval;
-> +
-> +       loongson2_pm_pwrbtn_irq_enable();
-> +       loongson2_pm_status_clear();
-> +
-> +       if (loongson_sysconf.suspend_addr)
-> +               suspend_set_ops(&loongson2_suspend_ops);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id loongson2_pm_match[] =3D {
-> +       { .compatible =3D "loongson,ls2k-pmc", },
-> +       {},
-> +};
-> +
-> +static struct platform_driver loongson2_pm_driver =3D {
-> +       .driver =3D {
-> +               .name =3D "ls2k-pm",
-> +               .pm =3D &loongson2_pm_ops,
-> +               .of_match_table =3D loongson2_pm_match,
-> +       },
-> +       .probe =3D loongson2_pm_probe,
-> +};
-> +module_platform_driver(loongson2_pm_driver);
-> +
-> +MODULE_DESCRIPTION("Loongson-2 PM driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.20.1
->
->
