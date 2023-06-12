@@ -1,136 +1,272 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C727F46BB
-	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 07:41:52 +0000 (UTC)
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-543c6a2aa07so2045249a12.0
-        for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 00:41:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686555712; x=1689147712;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SSLtE9E0vmCcghH4dSd0lHHpsUifthyCoqFs6ZgaUaw=;
-        b=VyxQ9Rkh3zhRrPa+z0VNWVV7eMuki71zijDBxYrRhKUGgtimiNX3HiYS6FpKUCj4V7
-         jvqfGYSU4bpIVBu6Z3+0Wpd7dLv55JxUNffaaWbDJNms8B4wULR1DSrRpPscL1+kALCJ
-         twvdd45qWfNMLXrP+b5tOD2Yv7TOrtIeNb6JZhBQnX3UnZ4ti6MJFEbVo2aN/kALrbE7
-         NRjks+atUjin0MzJlKKPKnFO+mp1tZPkDMqu/K/R2uEfg4f7oxYjYVzoiPlX0IdTX7TM
-         aql9L02SifdCsxsZpwuSEOn/RzegirjCtnyv/4aUni8UOXrz0rvCbjApviX19D9ZQcQv
-         OBLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686555712; x=1689147712;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SSLtE9E0vmCcghH4dSd0lHHpsUifthyCoqFs6ZgaUaw=;
-        b=NAg7HJBCkStHhnVSmpjF1Ove9Vid/LPtjL3oFwyGi0zZLJroeQtVElMkvxMAV+QYDG
-         sq+kiJuqr02VN5TcfGMmIJJ5ewR6sQr7facKC3MoWu3aOz7V/SNDCmNIA7etrEmaXTLn
-         o79yUrLC9lQCc5zJAhDLv6GWrAQU2Cq2jm4Y3nhUX+FplWIN8kXGNCJbI68JipTl1X8q
-         mCKNIzu+QXMjUdLp9OO1h4Ve0kPcZzugESk6jU3Z/ZFNrNzGzjy0nS6FMurHlCqfq6Ie
-         pc5zD4Nj6SkmTiiwLm3mEx/GKpTtc94e5wRlI7SfzSsRK2SreoXIn3svhuqdc5lcslKb
-         JT5w==
-X-Gm-Message-State: AC+VfDx6wOZByYk51yUxQ95MrdANaGd8wTBKmjxEhU5EOz4ICNMQAPS5
-	1kzXsORyboG5q1DfI7u2vfrE5pgdVE1/aEBgrDESNiDU
-X-Google-Smtp-Source: ACHHUZ4GJlYRw5sQhOMFC+yfY+NGowvFcUFxYSpFHK3hwLbSevbI8QoY3IsTyXIBdxTb9oiPTyAB+swTScLD2gajvh0=
-X-Received: by 2002:a17:90a:688d:b0:259:17c9:fda7 with SMTP id
- a13-20020a17090a688d00b0025917c9fda7mr7130374pjd.4.1686555711613; Mon, 12 Jun
- 2023 00:41:51 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A018C8D8
+	for <loongarch@lists.linux.dev>; Mon, 12 Jun 2023 07:54:44 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.35])
+	by gateway (Coremail) with SMTP id _____8CxOupCz4Zkm48DAA--.7909S3;
+	Mon, 12 Jun 2023 15:54:42 +0800 (CST)
+Received: from [10.20.42.35] (unknown [10.20.42.35])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxVeRBz4Zkb0gVAA--.61490S3;
+	Mon, 12 Jun 2023 15:54:41 +0800 (CST)
+Subject: Re: [PATCH v2 3/3] soc: loongson2_pm: add power management support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>, Marc Zyngier <maz@kernel.org>,
+ Youling Tang <tangyouling@loongson.cn>, Baoqi Zhang
+ <zhangbaoqi@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Yun Liu <liuyun@loongson.cn>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, Jianmin Lv <lvjianmin@loongson.cn>,
+ wanghongliang@loongson.cn, Liu Peibao <liupeibao@loongson.cn>,
+ loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
+References: <20230522093320.7176-1-zhuyinbo@loongson.cn>
+ <CAAhV-H5wF28E5k+uHvPP1xErr=v=icTSMWdygfd4pYdwiBk=LA@mail.gmail.com>
+From: zhuyinbo <zhuyinbo@loongson.cn>
+Message-ID: <f2aaa71e-c8c0-1ab7-2338-328759ca5f9f@loongson.cn>
+Date: Mon, 12 Jun 2023 15:54:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1685947150-4949-1-git-send-email-yangtiezhu@loongson.cn> <CAAhV-H5CXX+tVdXj8jpYjeprwFihDJw6O6K5t6dRZPH8bWZ94A@mail.gmail.com>
-In-Reply-To: <CAAhV-H5CXX+tVdXj8jpYjeprwFihDJw6O6K5t6dRZPH8bWZ94A@mail.gmail.com>
-From: Jeff Xie <xiehuan09@gmail.com>
-Date: Mon, 12 Jun 2023 15:41:40 +0800
-Message-ID: <CAEr6+EA9OCRANk+kVov=jZmrbxAV_vVhLV-F+5v7P7dYM2g7PQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Add uprobes support for LoongArch
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 7, 2023 at 4:52=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
-wrote:
->
-> Hi, Jeff,
->
-> I queued this series at
-> https://github.com/chenhuacai/linux/commits/loongarch-next, could you
-> please test it when you have time? Thanks.
-
-I have tested this series and saw no errors while using uprobe, the
-patchset looks good to me.
-
-Tested-by: Jeff Xie <xiehuan09@gmail.com>
-
->
-> Huacai
->
-> On Mon, Jun 5, 2023 at 2:39=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
-> >
-> > v5:
-> >   -- Rebased on 6.4rc5
-> >   -- Like arm64, add user_enable_single_step() in arch_uprobe_pre_xol()=
-,
-> >      add user_disable_single_step() in arch_uprobe_{post,abort}_xol(),
-> >      suggested by Jeff and Huacai offline
-> >
-> > v4:
-> >   -- Rebased on 6.4rc1
-> >   -- Fix problem about "perf probe -x /lib64/libc.so.6 malloc"
-> >
-> > v3:
-> >   -- Check atomic instructions in insns_not_supported()
-> >   -- Remove five DIE_* definitions in kdebug.h
-> >
-> > v2:
-> >   -- Move the functions to inst.c in patch #1
-> >   -- Pass around union for insns_not_supported(),
-> >      insns_need_simulation() and arch_simulate_insn()
-> >
-> > v1:
-> >   -- Split the RFC patch #2 into two patches
-> >   -- Use larch_insn_gen_break() to generate break insns
-> >      for kprobes and uprobes
-> >   -- Pass around instruction word instead of union for
-> >      insns_not_supported(), insns_need_simulation() and
-> >      arch_simulate_insn() to avoid type conversion for callers
-> >   -- Add a simple test case for uprobes in the commit message
-> >
-> > Tiezhu Yang (6):
-> >   LoongArch: Move three functions from kprobes.c to inst.c
-> >   LoongArch: Add larch_insn_gen_break() to generate break insns
-> >   LoongArch: Use larch_insn_gen_break() for kprobes
-> >   LoongArch: Add uprobes support
-> >   LoongArch: Check atomic instructions in insns_not_supported()
-> >   LoongArch: Remove five DIE_* definitions in kdebug.h
-> >
-> >  arch/loongarch/Kconfig               |   3 +
-> >  arch/loongarch/include/asm/inst.h    |  42 ++++++++++
-> >  arch/loongarch/include/asm/kdebug.h  |   5 --
-> >  arch/loongarch/include/asm/kprobes.h |   2 +-
-> >  arch/loongarch/include/asm/uprobes.h |  35 ++++++++
-> >  arch/loongarch/kernel/Makefile       |   1 +
-> >  arch/loongarch/kernel/inst.c         |  54 +++++++++++++
-> >  arch/loongarch/kernel/kprobes.c      |  75 ++++-------------
-> >  arch/loongarch/kernel/traps.c        |   9 +--
-> >  arch/loongarch/kernel/uprobes.c      | 152 +++++++++++++++++++++++++++=
-++++++++
-> >  10 files changed, 306 insertions(+), 72 deletions(-)
-> >  create mode 100644 arch/loongarch/include/asm/uprobes.h
-> >  create mode 100644 arch/loongarch/kernel/uprobes.c
-> >
-> > --
-> > 2.1.0
-> >
+In-Reply-To: <CAAhV-H5wF28E5k+uHvPP1xErr=v=icTSMWdygfd4pYdwiBk=LA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxVeRBz4Zkb0gVAA--.61490S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
 
 
---=20
+在 2023/6/12 下午12:36, Huacai Chen 写道:
+> Hi, Yinbo,
+> 
+> On Mon, May 22, 2023 at 5:33 PM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+>>
+>> The Loongson-2's Power Management Controller was ACPI, supports ACPI
+>> S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
+>> Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
+>> (USB, GMAC, PWRBTN, etc.). This driver was to add Power Management
+>> Controller support that base on dts for Loongson-2 series SoCs.
+>>
+>> Signed-off-by: Liu Yun <liuyun@loongson.cn>
+>> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> ---
+>>   MAINTAINERS                         |   1 +
+>>   drivers/soc/loongson/Kconfig        |  10 ++
+>>   drivers/soc/loongson/Makefile       |   1 +
+>>   drivers/soc/loongson/loongson2_pm.c | 235 ++++++++++++++++++++++++++++
+>>   4 files changed, 247 insertions(+)
+>>   create mode 100644 drivers/soc/loongson/loongson2_pm.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index bcd05f1fa5c1..7c4ad0cbaeff 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -12195,6 +12195,7 @@ M:      Yinbo Zhu <zhuyinbo@loongson.cn>
+>>   L:     linux-pm@vger.kernel.org
+>>   S:     Maintained
+>>   F:     Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
+>> +F:     drivers/soc/loongson/loongson2_pm.c
+>>
+>>   LOONGSON-2 SOC SERIES PINCTRL DRIVER
+>>   M:     zhanghongchen <zhanghongchen@loongson.cn>
+>> diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
+>> index 707f56358dc4..2431a0bcbd84 100644
+>> --- a/drivers/soc/loongson/Kconfig
+>> +++ b/drivers/soc/loongson/Kconfig
+>> @@ -16,3 +16,13 @@ config LOONGSON2_GUTS
+>>           SoCs. Initially only reading SVR and registering soc device are
+>>           supported. Other guts accesses, such as reading firmware configuration
+>>           by default, should eventually be added into this driver as well.
+>> +
+>> +config LOONGSON2_PM
+>> +       bool "Loongson-2 SoC Power Management Controller Driver"
+>> +       depends on LOONGARCH && OF
+>> +       help
+>> +        The Loongson-2's Power Management Controller was ACPI, supports ACPI
+>> +        S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
+>> +        Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
+>> +        (USB, GMAC, PWRBTN, etc.). This driver was to add Power Management
+>> +        Controller support that base on dts for Loongson-2 series SoCs.
+>> diff --git a/drivers/soc/loongson/Makefile b/drivers/soc/loongson/Makefile
+>> index 263c486df638..4118f50f55e2 100644
+>> --- a/drivers/soc/loongson/Makefile
+>> +++ b/drivers/soc/loongson/Makefile
+>> @@ -4,3 +4,4 @@
+>>   #
+>>
+>>   obj-$(CONFIG_LOONGSON2_GUTS)           += loongson2_guts.o
+>> +obj-$(CONFIG_LOONGSON2_PM)             += loongson2_pm.o
+>> diff --git a/drivers/soc/loongson/loongson2_pm.c b/drivers/soc/loongson/loongson2_pm.c
+>> new file mode 100644
+>> index 000000000000..cd96a1ebbb6c
+>> --- /dev/null
+>> +++ b/drivers/soc/loongson/loongson2_pm.c
+>> @@ -0,0 +1,235 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * Loongson-2 PM Support
+>> + *
+>> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#include <linux/io.h>
+>> +#include <linux/of.h>
+>> +#include <linux/init.h>
+>> +#include <linux/input.h>
+>> +#include <linux/suspend.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/pm_wakeirq.h>
+>> +#include <linux/platform_device.h>
+>> +#include <asm/bootinfo.h>
+>> +#include <asm/suspend.h>
+>> +
+>> +#define LOONGSON2_PM1_CNT_REG          0x14
+>> +#define LOONGSON2_PM1_STS_REG          0x0c
+>> +#define LOONGSON2_PM1_ENA_REG          0x10
+>> +#define LOONGSON2_GPE0_STS_REG         0x28
+>> +#define LOONGSON2_GPE0_ENA_REG         0x2c
+>> +
+>> +#define LOONGSON2_PM1_PWRBTN_STS       BIT(8)
+>> +#define LOONGSON2_PM1_PCIEXP_WAKE_STS  BIT(14)
+>> +#define LOONGSON2_PM1_WAKE_STS         BIT(15)
+>> +#define LOONGSON2_PM1_CNT_INT_EN       BIT(0)
+>> +#define LOONGSON2_PM1_PWRBTN_EN                LOONGSON2_PM1_PWRBTN_STS
+>> +
+>> +static struct loongson2_pm {
+>> +       void __iomem                    *base;
+>> +       struct input_dev                *dev;
+>> +       bool                            suspended;
+>> +} loongson2_pm;
+>> +
+>> +#define loongson2_pm_readw(reg)                readw(loongson2_pm.base + reg)
+>> +#define loongson2_pm_readl(reg)                readl(loongson2_pm.base + reg)
+>> +#define loongson2_pm_writew(val, reg)  writew(val, loongson2_pm.base + reg)
+>> +#define loongson2_pm_writel(val, reg)  writel(val, loongson2_pm.base + reg)
+>> +
+>> +static void loongson2_pm_status_clear(void)
+>> +{
+>> +       u16 value;
+>> +
+>> +       value = loongson2_pm_readw(LOONGSON2_PM1_STS_REG);
+>> +       value |= (LOONGSON2_PM1_PWRBTN_STS | LOONGSON2_PM1_PCIEXP_WAKE_STS |
+>> +                 LOONGSON2_PM1_WAKE_STS);
+>> +       loongson2_pm_writew(value, LOONGSON2_PM1_STS_REG);
+>> +       loongson2_pm_writel(loongson2_pm_readl(LOONGSON2_GPE0_STS_REG),
+>> +                           LOONGSON2_GPE0_STS_REG);
+>> +}
+>> +
+>> +static void loongson2_pm_irq_enable(void)
+>> +{
+>> +       u16 value;
+>> +
+>> +       value = loongson2_pm_readw(LOONGSON2_PM1_CNT_REG);
+>> +       value |= LOONGSON2_PM1_CNT_INT_EN;
+>> +       loongson2_pm_writew(value, LOONGSON2_PM1_CNT_REG);
+>> +}
+>> +
+>> +static void loongson2_pm_pwrbtn_irq_enable(void)
+>> +{
+>> +       u16 value;
+>> +
+>> +       loongson2_pm_irq_enable();
+>> +
+>> +       value = loongson2_pm_readw(LOONGSON2_PM1_ENA_REG);
+>> +       value |= LOONGSON2_PM1_PWRBTN_EN;
+>> +       loongson2_pm_writew(value, LOONGSON2_PM1_ENA_REG);
+>> +}
+> You can combine these two functions as loongson2_power_button_irq_enable().
+
+
+okay, I got it.
+
+> 
+>> +
+>> +static void loongson2_pm_mach_resume(void)
+>> +{
+>> +       loongson_common_resume();
+>> +       loongson2_pm_irq_enable();
+>> +}
+>> +
+>> +static void loongson2_pm_mach_suspend(void)
+>> +{
+>> +       loongson2_pm_status_clear();
+>> +       loongson_common_suspend();
+>> +}
+>> +
+>> +static int loongson2_suspend_enter(suspend_state_t state)
+>> +{
+>> +       loongson2_pm_mach_suspend();
+>> +       loongson_suspend_enter();
+>> +       pm_set_resume_via_firmware();
+>> +       loongson2_pm_mach_resume();
+>> +
+>> +       return 0;
+>> +}
+> After some thinkings, I found these three simple function can be combined as:
+> static int loongson2_suspend_enter(suspend_state_t state)
+> {
+>         loongson2_pm_status_clear();
+>         loongson_common_suspend();
+>         loongson_suspend_enter();
+>         loongson_common_resume();
+>         loongson2_pm_irq_enable();
+>         pm_set_resume_via_firmware();
+> 
+>         return 0;
+> }
+> 
+> After this combining,
+> loongson_common_suspend()/loongson_suspend_enter()/loongson_common_resume()
+> can be still use the old naming
+> loongarch_common_suspend()/loongarch_suspend_enter()/loongarch_common_resume().
+> 
+
+
+okay, I got it.
+
+>> +
+>> +static int loongson2_suspend_begin(suspend_state_t state)
+>> +{
+>> +       pm_set_suspend_via_firmware();
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int loongson2_suspend_valid_state(suspend_state_t state)
+>> +{
+>> +       if (state == PM_SUSPEND_MEM)
+>> +               return !!loongson_sysconf.suspend_addr;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct platform_suspend_ops loongson2_suspend_ops = {
+>> +       .valid  = loongson2_suspend_valid_state,
+>> +       .begin  = loongson2_suspend_begin,
+>> +       .enter  = loongson2_suspend_enter,
+>> +};
+>> +
+>> +static int loongson2_pm_pwrbtn_init(struct device *dev, int irq)
+>> +{
+>> +       int ret;
+>> +       struct input_dev *pwrbt;
+> Rename  loongson2_pm_pwrbtn_init() to  loongson2_power_button_init()
+> and rename 'pwrbt' to 'pwrbtn' or just 'button' is better.
+
+
+okay, I got it.
+
 Thanks,
-JeffXie
+Yinbo
+
