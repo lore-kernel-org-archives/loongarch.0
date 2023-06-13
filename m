@@ -1,47 +1,47 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A51312B77
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 12:56:38 +0000 (UTC)
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-4f74cda5f1dso2290491e87.3
-        for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 05:56:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D291A12B77
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 12:57:37 +0000 (UTC)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2b3402f6befso2797261fa.2
+        for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 05:57:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686660996; x=1689252996;
+        d=gmail.com; s=20221208; t=1686661056; x=1689253056;
         h=content-transfer-encoding:in-reply-to:references:cc:to:subject
          :user-agent:mime-version:date:message-id:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=WICqJH+RY9rL2TO+4voHx0nD9gL2WvHqo9ICGl9Zhr8=;
-        b=prNplwdsTxvCbTHswX7EviFH0PzuEuI8aCS0FYz3Q8nBx+uf0jbyzCubpHiNpgI8YK
-         74LRt03Y1AZUmdFTCD3IIwvsxHtUIOscldibGwXtSiJSwSJqr0xCNe5vBQ9IYT/LHffQ
-         lgmtWbOlq9e/BUEYYRri9eBE2XtabjvFdr7E1Wuv0iS8l1RxwCUfCZupmvAS/Z9NG7kg
-         BuAucJ6xsNbK4u/jJ/y/F0r+BtIeYHYTBO/UIwBa3fkflPj1fVK3Ie5gyeIvDBezlPTa
-         qDg2geE3HSafLmzbr3FxpiJpWK70NVi/vcX9xw5XyO/AEgMrOGjt3qQFEGPdqMLoEyy9
-         S1Kg==
+        bh=XeFbrqjcv72tXKY+nTQZPqYsLbKLXvzDbqnXIJWbTaI=;
+        b=F8VnRb8baWHgKP7PGJySntfa4HuH266ABbFf9nId1exOyhM/HnnQ/GywEd0BxhfGHu
+         X+luqaQSHaFKkz1nXryWggrcRnyk+KUEytNhbL6ujbuN6Wi7hS+9PUmXykJz6BUUNSMc
+         9BAKSdiAzBDZVwqMvhzHJRovQ6NmXSRibBDtOnER+gnqh03i+9/ivgzNOWlvXlGhGpBG
+         POOMoB+I3FweB+xZvaCgAUWBaL76Z6t98IcdTiKOmvBtAVNxBi2xprk/qzjXw4anLsmO
+         Hd1h4rEz9BCi8Iqch0RFz8FQAnX6d46OFwT02Bwt50ZCv+YtKZDH8qrEpSRWEbxReAoa
+         INzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686660996; x=1689252996;
+        d=1e100.net; s=20221208; t=1686661056; x=1689253056;
         h=content-transfer-encoding:in-reply-to:references:cc:to:subject
          :user-agent:mime-version:date:message-id:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=WICqJH+RY9rL2TO+4voHx0nD9gL2WvHqo9ICGl9Zhr8=;
-        b=lPnr6RSxIqAzyO0RIbieKQnCVqQU+JdItzx45cC+5Yn6y+oITMlEA4HZ2yW9okvbPb
-         xF4LS93ML0BXTA4ro2PHTbOcii5cGaI5I9TrXhHy/u4D0dapA3H7XlbgKaWX96NOVGp+
-         fYZ1Gj8dJbgI78kKCnjBQsDc1K+3iLtUY2T5AvOOAhx0G0jLmz2Uxu31zVcAwgFxQlx7
-         UsnI1J7fBh+lCzUy24GeI7/qrkYdRLrj7d0W6AUdhjl2i805+go/7mff2Qh5R6gslvhN
-         VEr3+RQF6+V6tazSDH5wHksZplBlqYRYX4gVO9qzAjUjdH2K5sBJDg3QxTvgHMtQiwRo
-         kZOQ==
-X-Gm-Message-State: AC+VfDzHJzwvr6SOsI5E2mBNXoheet2wdKJqWbYgDnpTOqlBfOswaKin
-	jfa5qO0kC5uQktb+dVRb1ts=
-X-Google-Smtp-Source: ACHHUZ4eDjiZq+6LCo3PUb6iG1hsZFF9yaGP1ilxp8FzBDDkMmIdJLrioYFr0dES8PbQ+b99/PRoFg==
-X-Received: by 2002:ac2:46ec:0:b0:4f3:a820:dd98 with SMTP id q12-20020ac246ec000000b004f3a820dd98mr6097106lfo.7.1686660996264;
-        Tue, 13 Jun 2023 05:56:36 -0700 (PDT)
+        bh=XeFbrqjcv72tXKY+nTQZPqYsLbKLXvzDbqnXIJWbTaI=;
+        b=Teo1+NvWnl+O3fCjw6jznAARfn8XIBEEVxU0++4m/Sgj1I4z1SWTKnEF7srqaNEEeh
+         GXh7qrJesbkymW7GA+/6yFkSOPmla0fn2H+dtodPpzh0ymFlPLy82hzcMNhMmlLw9PNn
+         uAplMhk/9D71d1YgIXCZ4uAmQ2iE2hHe7MApKsZMs2Eg80w0AukwaxYbhAn8yIzrXGqI
+         k5S8Jav1WlOZeGAqIeSo459CX4Le0DI+o83yFuSbcv0daRrpUNuFQnm6XOihk3aCcQV1
+         HrUeTXp5chLTxSd1wETpFhXFfl3GJLVcTQoawy5MzHcl8XhUXxUFoE5XjylQ3OooTYsU
+         Ox5g==
+X-Gm-Message-State: AC+VfDz+LRJh6kZIAGuBWhKPF1vpbxqO519AdnhvGFoM0Hgmid8/v4qg
+	tA6pxWtWw4DtfQG9HUy/m0c=
+X-Google-Smtp-Source: ACHHUZ58fdvqqZGzZ2BJ69HvjsawvXZXVqX8mWvk/TZrT9Ybw87KzskU5alAos2BM+DSCl/BlFmKEw==
+X-Received: by 2002:a2e:241a:0:b0:2b1:e958:efa0 with SMTP id k26-20020a2e241a000000b002b1e958efa0mr3743952ljk.50.1686661055572;
+        Tue, 13 Jun 2023 05:57:35 -0700 (PDT)
 Received: from ?IPV6:2a0b:6204:4302:5f00:4dab:3483:4506:9a0e? ([2a0b:6204:4302:5f00:4dab:3483:4506:9a0e])
-        by smtp.gmail.com with ESMTPSA id u1-20020ac248a1000000b004eaf41933a4sm1773998lfg.59.2023.06.13.05.56.33
+        by smtp.gmail.com with ESMTPSA id r7-20020a2eb607000000b0029c96178425sm2165663ljn.19.2023.06.13.05.57.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 05:56:35 -0700 (PDT)
+        Tue, 13 Jun 2023 05:57:35 -0700 (PDT)
 From: "bibo, mao" <bibo.mao@gmail.com>
 X-Google-Original-From: "bibo, mao" <maobibo@loongson.cn>
-Message-ID: <b55f4665-1e2b-30fe-fb29-ae8856227275@loongson.cn>
-Date: Tue, 13 Jun 2023 20:56:32 +0800
+Message-ID: <5442b28a-12d9-bacb-3983-ad4cc0c79689@loongson.cn>
+Date: Tue, 13 Jun 2023 20:57:30 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v13 08/30] LoongArch: KVM: Implement vcpu handle exit
+Subject: Re: [PATCH v13 10/30] LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl
  interface
 To: Tianrui Zhao <zhaotianrui@loongson.cn>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
@@ -61,8 +61,8 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
  Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
  tangyouling@loongson.cn, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 References: <20230609090832.2131037-1-zhaotianrui@loongson.cn>
- <20230609090832.2131037-9-zhaotianrui@loongson.cn>
-In-Reply-To: <20230609090832.2131037-9-zhaotianrui@loongson.cn>
+ <20230609090832.2131037-11-zhaotianrui@loongson.cn>
+In-Reply-To: <20230609090832.2131037-11-zhaotianrui@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
@@ -72,67 +72,47 @@ Regards
 Bibo, Mao
 
 在 2023/6/9 17:08, Tianrui Zhao 写道:
-> Implement vcpu handle exit interface, getting the exit code by ESTAT
-> register and using kvm exception vector to handle it.
+> Implement LoongArch vcpu KVM_ENABLE_CAP ioctl interface.
 > 
 > Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 > ---
->   arch/loongarch/kvm/vcpu.c | 45 +++++++++++++++++++++++++++++++++++++++
->   1 file changed, 45 insertions(+)
+>   arch/loongarch/kvm/vcpu.c | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
 > 
 > diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index eba5c07b8be3..a45e9d9efe5b 100644
+> index b0cce413762d..da97b77da8eb 100644
 > --- a/arch/loongarch/kvm/vcpu.c
 > +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -52,6 +52,51 @@ static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
->   	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
+> @@ -186,6 +186,16 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+>   	return 0;
 >   }
 >   
-> +/*
-> + * Return 1 for resume guest and "<= 0" for resume host.
-> + */
-> +static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
+> +static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
+> +				     struct kvm_enable_cap *cap)
 > +{
-> +	unsigned long exst = vcpu->arch.host_estat;
-> +	u32 intr = exst & 0x1fff; /* ignore NMI */
-> +	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-> +	int ret = RESUME_GUEST;
-> +
-> +	vcpu->mode = OUTSIDE_GUEST_MODE;
-> +
-> +	/* Set a default exit reason */
-> +	run->exit_reason = KVM_EXIT_UNKNOWN;
-> +
-> +	local_irq_enable();
-> +	guest_state_exit_irqoff();
-> +
-> +	trace_kvm_exit(vcpu, exccode);
-> +	if (exccode) {
-> +		ret = _kvm_handle_fault(vcpu, exccode);
-> +	} else {
-> +		WARN(!intr, "vm exiting with suspicious irq\n");
-> +		++vcpu->stat.int_exits;
-> +	}
-> +
-> +	cond_resched();
-> +	local_irq_disable();
-> +
-> +	if (ret == RESUME_HOST)
-> +		return ret;
-> +
-> +	/* Only check for signals if not already exiting to userspace */
-> +	if (signal_pending(current)) {
-> +		vcpu->run->exit_reason = KVM_EXIT_INTR;
-> +		++vcpu->stat.signal_exits;
-> +		return -EINTR;
-> +	}
-> +
-> +	kvm_pre_enter_guest(vcpu);
-> +	trace_kvm_reenter(vcpu);
-> +	guest_state_enter_irqoff();
-> +	return RESUME_GUEST;
+> +	/*
+> +	 * FPU is enable by default, do not support any other caps,
+> +	 * and later we will support such as LSX cap.
+> +	 */
+> +	return -EINVAL;
 > +}
 > +
->   int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>   long kvm_arch_vcpu_ioctl(struct file *filp,
+>   			 unsigned int ioctl, unsigned long arg)
 >   {
->   	unsigned long timer_hz;
+> @@ -209,6 +219,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>   			r = _kvm_get_reg(vcpu, &reg);
+>   		break;
+>   	}
+> +	case KVM_ENABLE_CAP: {
+> +		struct kvm_enable_cap cap;
+> +
+> +		r = -EFAULT;
+> +		if (copy_from_user(&cap, argp, sizeof(cap)))
+> +			break;
+> +		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
+> +		break;
+> +	}
+>   	default:
+>   		r = -ENOIOCTLCMD;
+>   		break;
