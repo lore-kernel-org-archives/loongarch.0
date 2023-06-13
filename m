@@ -1,26 +1,26 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A973D38F
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 23:39:29 +0000 (UTC)
-Message-ID: <20230613224545.137045745@linutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021951361
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 23:39:30 +0000 (UTC)
+Message-ID: <20230613224545.195288218@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1686699567;
+	s=2020; t=1686699569;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=DDD4mAWSMPbjAODBEDFm/GZSLXiwbvYxlB2kHZQV314=;
-	b=wVvSy71gluUCZPIXgEtKPo8BBg7ieMdvjy41cFsDvAMwvS7sWiK2ivysp2uh7x/mxyaE2v
-	lRpXB1T+7Rb6IhJgtH5Gh08EjeY+LV6qZp8KxcG+Mhf6mq4TcOLzZ/urF31L2Jq6vP8rGD
-	O3sKohDckVTh89UONt6PufDlgq59mtO9ozxMIcgcJeJuYnkf5IiWhWBIszpLhkgYnocc/h
-	xrbrRFzNmT23GfQzPff5kIDwltofebDY8pYCgfGaONVaucUAY1o15zJaZaeGbebvk8LdrS
-	hHhnyxcZsRDg7D6qogYEDL7tYICUsTP9fXm2+DUkN6m2IpENljiliuemCZcuKg==
+	 references:references; bh=wAbnFBlurd+q5E9YGYWZQzKMTp8tWmNvPLQZMDxb/Z0=;
+	b=Zbd+Ir52V2uzr84SvierPlBHrV4Z647TbDfnQDNmOz8wsBHhI1d0jbx2x2H4r0NktbREbQ
+	28ckft5GWbaeip07ikMsd5MJbYiCi8IatCCi+2EN6HExK2NDajXlsCATRGvKhOVDcKhFmc
+	9a2oImJ57XFcAA8hbs09AAGlr3jBInku7z1q9oOF9a/B7k1J9TPKJ9vYVxqApFK7CI/bd7
+	xdpiBUxUZhxa6ZrUzVTUfs6hhkzmLmoqTMpmvK6zbWMJIBf/5rMs05SKGaoy2hbp/pGnKD
+	ElHvnkYeIgDklS+Flj/Qcy1uzIc+V5Mhxk/nLp4THDyZxVhBIG24cKjKijysqg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1686699567;
+	s=2020e; t=1686699569;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=DDD4mAWSMPbjAODBEDFm/GZSLXiwbvYxlB2kHZQV314=;
-	b=xCdom/FmXQFqzqnDxobvpXnmHuFNJaBHO2lxQlF4vIc3u28hxBBnrlvC4Zi9IVE9w6CRK5
-	Ws8bEUww9+yjUQBg==
+	 references:references; bh=wAbnFBlurd+q5E9YGYWZQzKMTp8tWmNvPLQZMDxb/Z0=;
+	b=AcuEE4hQ/G5Km4tkU+ef7uMrfhw8Xn+afVYkhiaEbiCBXOFGTRhMbw4Oh/nc0o3eWyoXw9
+	9/6M+VRLTRLtIOAg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: x86@kernel.org,
@@ -28,12 +28,12 @@ Cc: x86@kernel.org,
  Nikolay Borisov <nik.borisov@suse.com>,
  "Ahmed S. Darwish" <darwi@linutronix.de>,
  Arnd Bergmann <arnd@arndb.de>,
- linux-ia64@vger.kernel.org,
- Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org,
  Huacai Chen <chenhuacai@kernel.org>,
  WANG Xuerui <kernel@xen0n.name>,
  loongarch@lists.linux.dev,
+ Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org,
+ linux-ia64@vger.kernel.org,
  Geert Uytterhoeven <geert@linux-m68k.org>,
  linux-m68k@lists.linux-m68k.org,
  Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -53,7 +53,7 @@ Cc: x86@kernel.org,
  Michael Ellerman <mpe@ellerman.id.au>,
  Chris Zankel <chris@zankel.net>,
  Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [patch 04/17] ia64/cpu: Switch to arch_cpu_finalize_init()
+Subject: [patch 05/17] loongarch/cpu: Switch to arch_cpu_finalize_init()
 References: <20230613223827.532680283@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -62,7 +62,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 14 Jun 2023 01:39:27 +0200 (CEST)
+Date: Wed, 14 Jun 2023 01:39:28 +0200 (CEST)
 
 check_bugs() is about to be phased out. Switch over to the new
 arch_cpu_finalize_init() implementation.
@@ -70,56 +70,68 @@ arch_cpu_finalize_init() implementation.
 No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-ia64@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
 ---
- arch/ia64/Kconfig            |    1 +
- arch/ia64/include/asm/bugs.h |   20 --------------------
- arch/ia64/kernel/setup.c     |    3 +--
- 3 files changed, 2 insertions(+), 22 deletions(-)
+ arch/loongarch/Kconfig            |    1 +
+ arch/loongarch/include/asm/bugs.h |   15 ---------------
+ arch/loongarch/kernel/setup.c     |    4 ++--
+ 3 files changed, 3 insertions(+), 17 deletions(-)
 
---- a/arch/ia64/Kconfig
-+++ b/arch/ia64/Kconfig
-@@ -9,6 +9,7 @@ menu "Processor type and features"
- config IA64
- 	bool
- 	select ARCH_BINFMT_ELF_EXTRA_PHDRS
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -10,6 +10,7 @@ config LOONGARCH
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
 +	select ARCH_HAS_CPU_FINALIZE_INIT
- 	select ARCH_HAS_DMA_MARK_CLEAN
- 	select ARCH_HAS_STRNCPY_FROM_USER
- 	select ARCH_HAS_STRNLEN_USER
---- a/arch/ia64/include/asm/bugs.h
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+ 	select ARCH_HAS_PTE_SPECIAL
+--- a/arch/loongarch/include/asm/bugs.h
 +++ /dev/null
-@@ -1,20 +0,0 @@
+@@ -1,15 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 */
 -/*
 - * This is included by init/main.c to check for architecture-dependent bugs.
 - *
-- * Needs:
-- *	void check_bugs(void);
-- *
-- * Based on <asm-alpha/bugs.h>.
-- *
-- * Modified 1998, 1999, 2003
-- *	David Mosberger-Tang <davidm@hpl.hp.com>,  Hewlett-Packard Co.
+- * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
 - */
--#ifndef _ASM_IA64_BUGS_H
--#define _ASM_IA64_BUGS_H
+-#ifndef _ASM_BUGS_H
+-#define _ASM_BUGS_H
 -
--#include <asm/processor.h>
+-#include <asm/cpu.h>
+-#include <asm/cpu-info.h>
 -
--extern void check_bugs (void);
+-extern void check_bugs(void);
 -
--#endif /* _ASM_IA64_BUGS_H */
---- a/arch/ia64/kernel/setup.c
-+++ b/arch/ia64/kernel/setup.c
-@@ -1067,8 +1067,7 @@ cpu_init (void)
- 	}
+-#endif /* _ASM_BUGS_H */
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -12,6 +12,7 @@
+  */
+ #include <linux/init.h>
+ #include <linux/acpi.h>
++#include <linux/cpu.h>
+ #include <linux/dmi.h>
+ #include <linux/efi.h>
+ #include <linux/export.h>
+@@ -37,7 +38,6 @@
+ #include <asm/addrspace.h>
+ #include <asm/alternative.h>
+ #include <asm/bootinfo.h>
+-#include <asm/bugs.h>
+ #include <asm/cache.h>
+ #include <asm/cpu.h>
+ #include <asm/dma.h>
+@@ -87,7 +87,7 @@ const char *get_system_type(void)
+ 	return "generic-loongson-machine";
  }
  
--void __init
--check_bugs (void)
+-void __init check_bugs(void)
 +void __init arch_cpu_finalize_init(void)
  {
- 	ia64_patch_mckinley_e9((unsigned long) __start___mckinley_e9_bundles,
- 			       (unsigned long) __end___mckinley_e9_bundles);
+ 	alternative_instructions();
+ }
 
