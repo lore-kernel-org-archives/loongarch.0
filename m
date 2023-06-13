@@ -1,194 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C0F30B78
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 12:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686659218;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x4X42epITHEmHx9Rdq7WZvtJt4reSEJsGpXTx4uakPs=;
-	b=DBb9DPAjcZemA/oa0ZdRVU1XPx5PXg5XlKawdVI87npbdrud8NfmgK9AqGZETqx6C5HU3W
-	AwMljf4JbcQqJv37aJaBEJNWe6++5APY8NN4cJ419pqHjoqh18mMeodMFMgunusO4LgrKf
-	nILp/NuHNg78SF3HUcBHUWQn4Tuurlk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-245-aBFVuDN5O86Sk5peq2epfg-1; Tue, 13 Jun 2023 08:26:57 -0400
-X-MC-Unique: aBFVuDN5O86Sk5peq2epfg-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-30ae4ed92eeso2128764f8f.1
-        for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 05:26:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686659216; x=1689251216;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=x4X42epITHEmHx9Rdq7WZvtJt4reSEJsGpXTx4uakPs=;
-        b=VQCYJG/W8N7zS/ownQYfk4VLIVhpSXu3EKinwimyfuXtaQHrPWqDtAtn5secVX8GCq
-         PI74M5itTLmp2QObTxLcPDrCNAVkphD0nFsMIKjk9YodCg3zlvUV6ugMGdh72kzmBZEP
-         pgWDO+xmH33Nlt9R574v6hSNvazoFsE230IrcGC7t42+R5gEdIdMBuyiyI5sULY1XHXX
-         3j/mi5qkg9XV0Ax5/GxaHAq2NjkbzoNfGL8kN0K+NcBrNkY17mILEW1ZkojuicRZ0crC
-         3vOBR9KDtsjDLgccgvT0w1Y2hQytTBTKPvyic+MFbfl6T5UzWiP3oj/LL02o8g+vOreh
-         Fn6Q==
-X-Gm-Message-State: AC+VfDztyk/dgLWZcLedPJR80qvLPxQJ/ITfN7si0pOUu303jvrv2zfe
-	r31GUghBlGIT/cnxeBlF7U2yKWuONJaJII0XDnqUR3mi2maE2oHDmDEQheXXbxE5LzuXGN/hL+q
-	nVQ4g+KM5mNaF/ShkaU6n
-X-Received: by 2002:a5d:6acd:0:b0:30f:b7b4:3e55 with SMTP id u13-20020a5d6acd000000b0030fb7b43e55mr6371724wrw.19.1686659216768;
-        Tue, 13 Jun 2023 05:26:56 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4yteTIZOrnVCopzRkUBsfyPnfoDVYPpW9xv2sO4EBsmO+rg3naLzU0Pz+CwjSuscU8Zw+bFQ==
-X-Received: by 2002:a5d:6acd:0:b0:30f:b7b4:3e55 with SMTP id u13-20020a5d6acd000000b0030fb7b43e55mr6371694wrw.19.1686659216382;
-        Tue, 13 Jun 2023 05:26:56 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c710:ff00:1a06:80f:733a:e8c6? (p200300cbc710ff001a06080f733ae8c6.dip0.t-ipconnect.de. [2003:cb:c710:ff00:1a06:80f:733a:e8c6])
-        by smtp.gmail.com with ESMTPSA id i1-20020adff301000000b002f28de9f73bsm15275419wro.55.2023.06.13.05.26.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 05:26:55 -0700 (PDT)
-Message-ID: <497e571e-e4de-7634-7da6-683599a4bbba@redhat.com>
-Date: Tue, 13 Jun 2023 14:26:53 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A2F2A9D1
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 12:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1686659331; x=1718195331;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=M+YsxAsrMOdQXi3EjTzJQEXiDd2GLlwy4TAIkoE71E8=;
+  b=L+ooH7MZl/EnlNPIj2K7l69RkLIrDeXaR5b+ei8AkyYDkw6tleICblx+
+   omCQrIoVc1ZhIhP08CibaqeY9EsYeKTST1FrOrfLgfo0m0ZLdI9Bzcq4b
+   lBbtapSx0SJ9aRYWDP6mnaTZdZjr61B8nG92zXYzbSlTOwjzSH7rIqkjN
+   XRUntAWMUMWawIRZB4Y1fzCdnmxhBPR8FRkuzHGdOg7m0fH+FE+VEgras
+   qcqG0GhZhVD4aaH9pvrnhFoEgaMj4bP3xkqXq+NpRXR+oTFmNEWQlBlai
+   NmY0EKnulN8PhvnPJ5YT4O38wtkiCYo2amfd8cHlcZPQBSZwlt0uCtW/z
+   g==;
+X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
+   d="asc'?scan'208";a="156745543"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jun 2023 05:28:40 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 13 Jun 2023 05:28:38 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Tue, 13 Jun 2023 05:28:36 -0700
+Date: Tue, 13 Jun 2023 13:28:11 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Yingkun Meng <mengyingkun@loongson.cn>
+CC: Conor Dooley <conor@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<robh+dt@kernel.org>, <conor+dt@kernel.org>, <broonie@kernel.org>,
+	<lgirdwood@gmail.com>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+	<loongarch@lists.linux.dev>, <loongson-kernel@lists.loongnix.cn>
+Subject: Re: [ PATCH v2 3/3] ASoC: dt-bindings: Add support for Loongson
+ audio card
+Message-ID: <20230613-zoologist-panorama-a87858bba075@wendy>
+References: <20230612085614.3039498-1-mengyingkun@loongson.cn>
+ <20230612-booted-french-186dd95e78a9@spud>
+ <bda7c25f-65cf-d45f-3ac0-f2471e3aacf8@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v9 01/42] mm: Rename arch pte_mkwrite()'s to
- pte_mkwrite_novma()
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-arch@vger.kernel.org,
- linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- Andy Lutomirski <luto@kernel.org>, Balbir Singh <bsingharora@gmail.com>,
- Borislav Petkov <bp@alien8.de>, Cyrill Gorcunov <gorcunov@gmail.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Eugene Syromiatnikov <esyr@redhat.com>, Florian Weimer <fweimer@redhat.com>,
- "H . J . Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
- Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
- Mike Kravetz <mike.kravetz@oracle.com>, Nadav Amit <nadav.amit@gmail.com>,
- Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
- Peter Zijlstra <peterz@infradead.org>, Randy Dunlap <rdunlap@infradead.org>,
- Weijiang Yang <weijiang.yang@intel.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- John Allen <john.allen@amd.com>, kcc@google.com, eranian@google.com,
- rppt@kernel.org, jamorris@linux.microsoft.com, dethoma@microsoft.com,
- akpm@linux-foundation.org, Andrew.Cooper3@citrix.com,
- christina.schimpe@intel.com, debug@rivosinc.com, szabolcs.nagy@arm.com,
- torvalds@linux-foundation.org, broonie@kernel.org
-Cc: linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
- linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, Linus Torvalds <torvalds@linuxfoundation.org>
-References: <20230613001108.3040476-1-rick.p.edgecombe@intel.com>
- <20230613001108.3040476-2-rick.p.edgecombe@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20230613001108.3040476-2-rick.p.edgecombe@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="b/Hqn05Zp1cdyDvp"
+Content-Disposition: inline
+In-Reply-To: <bda7c25f-65cf-d45f-3ac0-f2471e3aacf8@loongson.cn>
 
-On 13.06.23 02:10, Rick Edgecombe wrote:
-> The x86 Shadow stack feature includes a new type of memory called shadow
-> stack. This shadow stack memory has some unusual properties, which requires
-> some core mm changes to function properly.
-> 
-> One of these unusual properties is that shadow stack memory is writable,
-> but only in limited ways. These limits are applied via a specific PTE
-> bit combination. Nevertheless, the memory is writable, and core mm code
-> will need to apply the writable permissions in the typical paths that
-> call pte_mkwrite(). Future patches will make pte_mkwrite() take a VMA, so
-> that the x86 implementation of it can know whether to create regular
-> writable memory or shadow stack memory.
-> 
-> But there are a couple of challenges to this. Modifying the signatures of
-> each arch pte_mkwrite() implementation would be error prone because some
-> are generated with macros and would need to be re-implemented. Also, some
-> pte_mkwrite() callers operate on kernel memory without a VMA.
-> 
-> So this can be done in a three step process. First pte_mkwrite() can be
-> renamed to pte_mkwrite_novma() in each arch, with a generic pte_mkwrite()
-> added that just calls pte_mkwrite_novma(). Next callers without a VMA can
-> be moved to pte_mkwrite_novma(). And lastly, pte_mkwrite() and all callers
-> can be changed to take/pass a VMA.
-> 
-> Start the process by renaming pte_mkwrite() to pte_mkwrite_novma() and
-> adding the pte_mkwrite() wrapper in linux/pgtable.h. Apply the same
-> pattern for pmd_mkwrite(). Since not all archs have a pmd_mkwrite_novma(),
-> create a new arch config HAS_HUGE_PAGE that can be used to tell if
-> pmd_mkwrite() should be defined. Otherwise in the !HAS_HUGE_PAGE cases the
-> compiler would not be able to find pmd_mkwrite_novma().
-> 
-> No functional change.
-> 
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-alpha@vger.kernel.org
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-csky@vger.kernel.org
-> Cc: linux-hexagon@vger.kernel.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: loongarch@lists.linux.dev
-> Cc: linux-m68k@lists.linux-m68k.org
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Dinh Nguyen <dinguyen@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: openrisc@lists.librecores.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: linux-um@lists.infradead.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Suggested-by: Linus Torvalds <torvalds@linuxfoundation.org>
-> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> Link: https://lore.kernel.org/lkml/CAHk-=wiZjSu7c9sFYZb3q04108stgHff2wfbokGCCgW7riz+8Q@mail.gmail.com/
-> ---
-> Hi Non-x86 Arch’s,
-> 
-> x86 has a feature that allows for the creation of a special type of
-> writable memory (shadow stack) that is only writable in limited specific
-> ways. Previously, changes were proposed to core MM code to teach it to
-> decide when to create normally writable memory or the special shadow stack
-> writable memory, but David Hildenbrand suggested[0] to change
-> pXX_mkwrite() to take a VMA, so awareness of shadow stack memory can be
-> moved into x86 code. Later Linus suggested a less error-prone way[1] to go
-> about this after the first attempt had a bug.
-> 
-> Since pXX_mkwrite() is defined in every arch, it requires some tree-wide
-> changes. So that is why you are seeing some patches out of a big x86
-> series pop up in your arch mailing list. There is no functional change.
-> After this refactor, the shadow stack series goes on to use the arch
-> helpers to push arch memory details inside arch/x86 and other arch's
-> with upcoming shadow stack features.
-> 
-> Testing was just 0-day build testing.
-> 
-> Hopefully that is enough context. Thanks!
-> 
-> [0] https://lore.kernel.org/lkml/0e29a2d0-08d8-bcd6-ff26-4bea0e4037b0@redhat.com/
-> [1] https://lore.kernel.org/lkml/CAHk-=wiZjSu7c9sFYZb3q04108stgHff2wfbokGCCgW7riz+8Q@mail.gmail.com/
-> ---
+--b/Hqn05Zp1cdyDvp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: David Hildenbrand <david@redhat.com>
+On Tue, Jun 13, 2023 at 08:23:58PM +0800, Yingkun Meng wrote:
+>=20
+> On 2023/6/13 01:24, Conor Dooley wrote:
+> > Hey!
+> >=20
+> > On Mon, Jun 12, 2023 at 04:56:14PM +0800, YingKun Meng wrote:
+> > > From: Yingkun Meng <mengyingkun@loongson.cn>
+> > >=20
+> > > The audio card uses loongson I2S controller present in
+> > > 7axxx/2kxxx chips to transfer audio data.
+> > >=20
+> > > On loongson platform, the chip has only one I2S controller.
+> > >=20
+> > > Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+> > I got 2 copies of this patch, but none of the rest of the series appears
+> > to be threaded with it.
+> >=20
+> > >   .../sound/loongson,ls-audio-card.yaml         | 70 ++++++++++++++++=
++++
+> > >   1 file changed, 70 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/sound/loongson=
+,ls-audio-card.yaml
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/sound/loongson,ls-audi=
+o-card.yaml b/Documentation/devicetree/bindings/sound/loongson,ls-audio-car=
+d.yaml
+> > > new file mode 100644
+> > > index 000000000000..61e8babed402
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.=
+yaml
+> > > @@ -0,0 +1,70 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/sound/loongson,ls-audio-card.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Loongson 7axxx/2kxxx ASoC audio sound card driver
+> > > +
+> > > +maintainers:
+> > > +  - Yingkun Meng <mengyingkun@loongson.cn>
+> > > +
+> > > +description:
+> > > +  The binding describes the sound card present in loongson
+> > > +  7axxx/2kxxx platform. The sound card is an ASoC component
+> > > +  which uses Loongson I2S controller to transfer the audio data.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: loongson,ls-audio-card
+> > Reviewing sound stuff is beyond my pay grade, so forgive me if I am off
+> > the rails here, but this (and the "x"s in the description) look a bit
+> > odd. Recently, we've noticed quite a few loongson dt-bindings attempting
+> > to use a single compatible for many different chips.
+> > Usually you have individual compatibles for the various SoCs with this
+> > core, which can fall back to a generic one, rather than just adding a
+> > generic compatible for all devices.
+> > As far as I know, there's several SoCs fitting 2kxxx, and the format
+> > being used elsewhere is "loongson,ls2k1000" etc.
+>=20
+>=20
+> Currently, Loongson has 2K0500/2K1000LA/2K1500/2K2000 chips.
+>=20
+> Here, its' possible to use a single compatible for different chips,
+>=20
+> as the audio device is a logical device, not dependent on chip model.
 
--- 
-Cheers,
+What, may I ask, is a "logical device"?
 
-David / dhildenb
+--b/Hqn05Zp1cdyDvp
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZIhg2wAKCRB4tDGHoIJi
+0u4VAQCigbmTSbs6qKpLCthlel+v9B2o217oImTKlmwzgWRYqQEArSFE2JivD5nX
+5x8XGvhmbqoQ+5dKs74EhWk1XyGz6Qs=
+=K/HX
+-----END PGP SIGNATURE-----
+
+--b/Hqn05Zp1cdyDvp--
