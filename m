@@ -1,828 +1,232 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0AB17E
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 00:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686615129; x=1718151129;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+8Ah+gwuuWVdk3MaZgJFhmVmdzU+WHC34h/afb7gaAY=;
-  b=aZWwhZA6JjWMpcuDyxkFqktTYoj18JUZrCyD9RsooF5qQaRekFi/Pplt
-   LR/zGUfluYIHceipEOOiKFVDE36hf9Rr+5VuErQa/RaOIE9YQ38Q7I5TW
-   Pyt65tJpAxjghF0lRPWNpjAWI719PvBBQ0aCe4IipE+TCqlyiW+m4XQz2
-   oUsc8qwwmK2JKhI3PbJnDfbtt9AN4rv0NW9JONloBE+Tm4OTkhZ3yCx5a
-   zIS7HCm8IrrOQyYuQKuwvry4WJUrEGsgZ00JpJg69I5HvxNWuaYjm/KY/
-   n8EcOwfVKLpQjFN1iPlM7yuSItLBGD/4MTGqglMuJqBam5wlUrmroNdC/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="361556669"
-X-IronPort-AV: E=Sophos;i="6.00,238,1681196400"; 
-   d="scan'208";a="361556669"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 17:12:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="835670967"
-X-IronPort-AV: E=Sophos;i="6.00,238,1681196400"; 
-   d="scan'208";a="835670967"
-Received: from almeisch-mobl1.amr.corp.intel.com (HELO rpedgeco-desk4.amr.corp.intel.com) ([10.209.42.242])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 17:12:06 -0700
-From: Rick Edgecombe <rick.p.edgecombe@intel.com>
-To: x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802FE17C7
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 01:25:18 +0000 (UTC)
+X-UUID: 8c2aff6bc5d24a209d5c5544ea9d2a5b-20230613
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.22,REQID:5e329a3f-e73c-4094-bef6-1922449838b3,IP:15,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-25
+X-CID-INFO: VERSION:1.1.22,REQID:5e329a3f-e73c-4094-bef6-1922449838b3,IP:15,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-25
+X-CID-META: VersionHash:120426c,CLOUDID:0174673e-7aa7-41f3-a6bd-0433bee822f3,B
+	ulkID:230613092002CDXHWVAO,BulkQuantity:0,Recheck:0,SF:24|17|19|44|102,TC:
+	nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+	,OSI:0,OSA:0,AV:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-UUID: 8c2aff6bc5d24a209d5c5544ea9d2a5b-20230613
+X-User: jianghaoran@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.12)] by mailgw
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
+	with ESMTP id 2025963885; Tue, 13 Jun 2023 09:20:00 +0800
+From: jianghaoran <jianghaoran@kylinos.cn>
+To: yangtiezhu@loongson.cn
+Cc: chenhuacai@kernel.org,
+	conor.dooley@microchip.com,
+	hejinyang@loongson.cn,
+	jhrhhao@163.com,
+	jianghaoran@kylinos.cn,
+	kernel@xen0n.name,
+	l3b2w1@gmail.com,
 	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-arch@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andy Lutomirski <luto@kernel.org>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Cyrill Gorcunov <gorcunov@gmail.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Eugene Syromiatnikov <esyr@redhat.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	"H . J . Lu" <hjl.tools@gmail.com>,
-	Jann Horn <jannh@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Kees Cook <keescook@chromium.org>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Pavel Machek <pavel@ucw.cz>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Weijiang Yang <weijiang.yang@intel.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	John Allen <john.allen@amd.com>,
-	kcc@google.com,
-	eranian@google.com,
-	rppt@kernel.org,
-	jamorris@linux.microsoft.com,
-	dethoma@microsoft.com,
-	akpm@linux-foundation.org,
-	Andrew.Cooper3@citrix.com,
-	christina.schimpe@intel.com,
-	david@redhat.com,
-	debug@rivosinc.com,
-	szabolcs.nagy@arm.com,
-	torvalds@linux-foundation.org,
-	broonie@kernel.org
-Cc: rick.p.edgecombe@intel.com,
-	linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-ia64@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	Michal Simek <monstr@monstr.eu>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	linux-mips@vger.kernel.org,
-	openrisc@lists.librecores.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: [PATCH v9 01/42] mm: Rename arch pte_mkwrite()'s to pte_mkwrite_novma()
-Date: Mon, 12 Jun 2023 17:10:27 -0700
-Message-Id: <20230613001108.3040476-2-rick.p.edgecombe@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230613001108.3040476-1-rick.p.edgecombe@intel.com>
-References: <20230613001108.3040476-1-rick.p.edgecombe@intel.com>
+	masahiroy@kernel.org,
+	mhiramat@kernel.org,
+	palmer@rivosinc.com,
+	tangyouling@loongson.cn,
+	zhangqing@loongson.cn
+Subject: [PATCH v2] LoongArch/rethook: Replace kretprobe with rethook on loongarch
+Date: Tue, 13 Jun 2023 09:14:39 +0800
+Message-Id: <20230613011439.59168-1-jianghaoran@kylinos.cn>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <63c16a5a-ea60-6607-a4ff-23ad9d47cd73@loongson.cn>
+References: <63c16a5a-ea60-6607-a4ff-23ad9d47cd73@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The x86 Shadow stack feature includes a new type of memory called shadow
-stack. This shadow stack memory has some unusual properties, which requires
-some core mm changes to function properly.
+That's an adaptation of commit f3a112c0c40d ("x86,rethook,kprobes:
+Replace kretprobe with rethook on x86")and commit b57c2f124098
+("riscv: add riscv rethook implementation") to loongarch.
+Mainly refer to this commit b57c2f124098.
 
-One of these unusual properties is that shadow stack memory is writable,
-but only in limited ways. These limits are applied via a specific PTE
-bit combination. Nevertheless, the memory is writable, and core mm code
-will need to apply the writable permissions in the typical paths that
-call pte_mkwrite(). Future patches will make pte_mkwrite() take a VMA, so
-that the x86 implementation of it can know whether to create regular
-writable memory or shadow stack memory.
+Replaces the kretprobe code with rethook on loongarch. With this patch,
+kretprobe on loongarch uses the rethook instead of kretprobe specific
+trampoline code.
 
-But there are a couple of challenges to this. Modifying the signatures of
-each arch pte_mkwrite() implementation would be error prone because some
-are generated with macros and would need to be re-implemented. Also, some
-pte_mkwrite() callers operate on kernel memory without a VMA.
-
-So this can be done in a three step process. First pte_mkwrite() can be
-renamed to pte_mkwrite_novma() in each arch, with a generic pte_mkwrite()
-added that just calls pte_mkwrite_novma(). Next callers without a VMA can
-be moved to pte_mkwrite_novma(). And lastly, pte_mkwrite() and all callers
-can be changed to take/pass a VMA.
-
-Start the process by renaming pte_mkwrite() to pte_mkwrite_novma() and
-adding the pte_mkwrite() wrapper in linux/pgtable.h. Apply the same
-pattern for pmd_mkwrite(). Since not all archs have a pmd_mkwrite_novma(),
-create a new arch config HAS_HUGE_PAGE that can be used to tell if
-pmd_mkwrite() should be defined. Otherwise in the !HAS_HUGE_PAGE cases the
-compiler would not be able to find pmd_mkwrite_novma().
-
-No functional change.
-
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-alpha@vger.kernel.org
-Cc: linux-snps-arc@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-csky@vger.kernel.org
-Cc: linux-hexagon@vger.kernel.org
-Cc: linux-ia64@vger.kernel.org
-Cc: loongarch@lists.linux.dev
-Cc: linux-m68k@lists.linux-m68k.org
-Cc: Michal Simek <monstr@monstr.eu>
-Cc: Dinh Nguyen <dinguyen@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: openrisc@lists.librecores.org
-Cc: linux-parisc@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-sh@vger.kernel.org
-Cc: sparclinux@vger.kernel.org
-Cc: linux-um@lists.infradead.org
-Cc: linux-arch@vger.kernel.org
-Cc: linux-mm@kvack.org
-Suggested-by: Linus Torvalds <torvalds@linuxfoundation.org>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Link: https://lore.kernel.org/lkml/CAHk-=wiZjSu7c9sFYZb3q04108stgHff2wfbokGCCgW7riz+8Q@mail.gmail.com/
+Signed-off-by: Haoran Jiang<jianghaoran@kylinos.cn>
 ---
-Hi Non-x86 Arch’s,
-
-x86 has a feature that allows for the creation of a special type of
-writable memory (shadow stack) that is only writable in limited specific
-ways. Previously, changes were proposed to core MM code to teach it to
-decide when to create normally writable memory or the special shadow stack
-writable memory, but David Hildenbrand suggested[0] to change
-pXX_mkwrite() to take a VMA, so awareness of shadow stack memory can be
-moved into x86 code. Later Linus suggested a less error-prone way[1] to go
-about this after the first attempt had a bug.
-
-Since pXX_mkwrite() is defined in every arch, it requires some tree-wide
-changes. So that is why you are seeing some patches out of a big x86
-series pop up in your arch mailing list. There is no functional change.
-After this refactor, the shadow stack series goes on to use the arch
-helpers to push arch memory details inside arch/x86 and other arch's
-with upcoming shadow stack features.
-
-Testing was just 0-day build testing.
-
-Hopefully that is enough context. Thanks!
-
-[0] https://lore.kernel.org/lkml/0e29a2d0-08d8-bcd6-ff26-4bea0e4037b0@redhat.com/
-[1] https://lore.kernel.org/lkml/CAHk-=wiZjSu7c9sFYZb3q04108stgHff2wfbokGCCgW7riz+8Q@mail.gmail.com/
+v2:
+Modified the patch format and commit message.
 ---
- Documentation/mm/arch_pgtable_helpers.rst    |  6 ++++++
- arch/Kconfig                                 |  3 +++
- arch/alpha/include/asm/pgtable.h             |  2 +-
- arch/arc/include/asm/hugepage.h              |  2 +-
- arch/arc/include/asm/pgtable-bits-arcv2.h    |  2 +-
- arch/arm/include/asm/pgtable-3level.h        |  2 +-
- arch/arm/include/asm/pgtable.h               |  2 +-
- arch/arm64/include/asm/pgtable.h             |  4 ++--
- arch/csky/include/asm/pgtable.h              |  2 +-
- arch/hexagon/include/asm/pgtable.h           |  2 +-
- arch/ia64/include/asm/pgtable.h              |  2 +-
- arch/loongarch/include/asm/pgtable.h         |  4 ++--
- arch/m68k/include/asm/mcf_pgtable.h          |  2 +-
- arch/m68k/include/asm/motorola_pgtable.h     |  2 +-
- arch/m68k/include/asm/sun3_pgtable.h         |  2 +-
- arch/microblaze/include/asm/pgtable.h        |  2 +-
- arch/mips/include/asm/pgtable.h              |  6 +++---
- arch/nios2/include/asm/pgtable.h             |  2 +-
- arch/openrisc/include/asm/pgtable.h          |  2 +-
- arch/parisc/include/asm/pgtable.h            |  2 +-
- arch/powerpc/include/asm/book3s/32/pgtable.h |  2 +-
- arch/powerpc/include/asm/book3s/64/pgtable.h |  4 ++--
- arch/powerpc/include/asm/nohash/32/pgtable.h |  4 ++--
- arch/powerpc/include/asm/nohash/32/pte-8xx.h |  4 ++--
- arch/powerpc/include/asm/nohash/64/pgtable.h |  2 +-
- arch/riscv/include/asm/pgtable.h             |  6 +++---
- arch/s390/include/asm/hugetlb.h              |  2 +-
- arch/s390/include/asm/pgtable.h              |  4 ++--
- arch/sh/include/asm/pgtable_32.h             |  4 ++--
- arch/sparc/include/asm/pgtable_32.h          |  2 +-
- arch/sparc/include/asm/pgtable_64.h          |  6 +++---
- arch/um/include/asm/pgtable.h                |  2 +-
- arch/x86/include/asm/pgtable.h               |  4 ++--
- arch/xtensa/include/asm/pgtable.h            |  2 +-
- include/asm-generic/hugetlb.h                |  2 +-
- include/linux/pgtable.h                      | 14 ++++++++++++++
- 36 files changed, 70 insertions(+), 47 deletions(-)
+ arch/loongarch/Kconfig                        |  1 +
+ arch/loongarch/include/asm/kprobes.h          |  3 ---
+ arch/loongarch/kernel/Makefile                |  3 ++-
+ arch/loongarch/kernel/kprobes.c               | 20 --------------
+ arch/loongarch/kernel/rethook.c               | 27 +++++++++++++++++++
+ arch/loongarch/kernel/rethook.h               |  8 ++++++
+ ...obes_trampoline.S => rethook_trampoline.S} |  6 ++---
+ 7 files changed, 41 insertions(+), 27 deletions(-)
+ create mode 100644 arch/loongarch/kernel/rethook.c
+ create mode 100644 arch/loongarch/kernel/rethook.h
+ rename arch/loongarch/kernel/{kprobes_trampoline.S => rethook_trampoline.S} (93%)
 
-diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm/arch_pgtable_helpers.rst
-index af3891f895b0..69ce1f2aa4d1 100644
---- a/Documentation/mm/arch_pgtable_helpers.rst
-+++ b/Documentation/mm/arch_pgtable_helpers.rst
-@@ -48,6 +48,9 @@ PTE Page Table Helpers
- +---------------------------+--------------------------------------------------+
- | pte_mkwrite               | Creates a writable PTE                           |
- +---------------------------+--------------------------------------------------+
-+| pte_mkwrite_novma         | Creates a writable PTE, of the conventional type |
-+|                           | of writable.                                     |
-++---------------------------+--------------------------------------------------+
- | pte_wrprotect             | Creates a write protected PTE                    |
- +---------------------------+--------------------------------------------------+
- | pte_mkspecial             | Creates a special PTE                            |
-@@ -120,6 +123,9 @@ PMD Page Table Helpers
- +---------------------------+--------------------------------------------------+
- | pmd_mkwrite               | Creates a writable PMD                           |
- +---------------------------+--------------------------------------------------+
-+| pmd_mkwrite_novma         | Creates a writable PMD, of the conventional type |
-+|                           | of writable.                                     |
-++---------------------------+--------------------------------------------------+
- | pmd_wrprotect             | Creates a write protected PMD                    |
- +---------------------------+--------------------------------------------------+
- | pmd_mkspecial             | Creates a special PMD                            |
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 205fd23e0cad..3bc11c9a2ac1 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -919,6 +919,9 @@ config HAVE_ARCH_HUGE_VMALLOC
- config ARCH_WANT_HUGE_PMD_SHARE
- 	bool
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index d38b066fc931..33753a1ab0bb 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -113,6 +113,7 @@ config LOONGARCH
+ 	select HAVE_KPROBES
+ 	select HAVE_KPROBES_ON_FTRACE
+ 	select HAVE_KRETPROBES
++	select HAVE_RETHOOK
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_NMI
+ 	select HAVE_PCI
+diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
+index 798020ae02c6..7b9fc3ed71c3 100644
+--- a/arch/loongarch/include/asm/kprobes.h
++++ b/arch/loongarch/include/asm/kprobes.h
+@@ -49,9 +49,6 @@ bool kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ bool kprobe_breakpoint_handler(struct pt_regs *regs);
+ bool kprobe_singlestep_handler(struct pt_regs *regs);
  
-+config HAS_HUGE_PAGE
-+	def_bool HAVE_ARCH_HUGE_VMAP || TRANSPARENT_HUGEPAGE || HUGETLBFS
+-void __kretprobe_trampoline(void);
+-void *trampoline_probe_handler(struct pt_regs *regs);
+-
+ #else /* !CONFIG_KPROBES */
+ 
+ static inline bool kprobe_breakpoint_handler(struct pt_regs *regs) { return false; }
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 9a72d91cd104..e0d4d29a6f0f 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -52,6 +52,7 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_regs.o
+ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+ 
+-obj-$(CONFIG_KPROBES)		+= kprobes.o kprobes_trampoline.o
++obj-$(CONFIG_KPROBES)		+= kprobes.o
++obj-$(CONFIG_RETHOOK)		+= rethook.o rethook_trampoline.o
+ 
+ CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
+diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+index 56c8c4b09a42..dbce23ba9970 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -378,26 +378,6 @@ int __init arch_init_kprobes(void)
+ 	return 0;
+ }
+ 
+-/* ASM function that handles the kretprobes must not be probed */
+-NOKPROBE_SYMBOL(__kretprobe_trampoline);
+-
+-/* Called from __kretprobe_trampoline */
+-void __used *trampoline_probe_handler(struct pt_regs *regs)
+-{
+-	return (void *)kretprobe_trampoline_handler(regs, NULL);
+-}
+-NOKPROBE_SYMBOL(trampoline_probe_handler);
+-
+-void arch_prepare_kretprobe(struct kretprobe_instance *ri,
+-			    struct pt_regs *regs)
+-{
+-	ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
+-	ri->fp = NULL;
+-
+-	/* Replace the return addr with trampoline addr */
+-	regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
+-}
+-NOKPROBE_SYMBOL(arch_prepare_kretprobe);
+ 
+ int arch_trampoline_kprobe(struct kprobe *p)
+ {
+diff --git a/arch/loongarch/kernel/rethook.c b/arch/loongarch/kernel/rethook.c
+new file mode 100644
+index 000000000000..ac97b78daf55
+--- /dev/null
++++ b/arch/loongarch/kernel/rethook.c
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Generic return hook for loongarch.
++ */
 +
- config HAVE_ARCH_SOFT_DIRTY
- 	bool
- 
-diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pgtable.h
-index ba43cb841d19..af1a13ab3320 100644
---- a/arch/alpha/include/asm/pgtable.h
-+++ b/arch/alpha/include/asm/pgtable.h
-@@ -256,7 +256,7 @@ extern inline int pte_young(pte_t pte)		{ return pte_val(pte) & _PAGE_ACCESSED;
- extern inline pte_t pte_wrprotect(pte_t pte)	{ pte_val(pte) |= _PAGE_FOW; return pte; }
- extern inline pte_t pte_mkclean(pte_t pte)	{ pte_val(pte) &= ~(__DIRTY_BITS); return pte; }
- extern inline pte_t pte_mkold(pte_t pte)	{ pte_val(pte) &= ~(__ACCESS_BITS); return pte; }
--extern inline pte_t pte_mkwrite(pte_t pte)	{ pte_val(pte) &= ~_PAGE_FOW; return pte; }
-+extern inline pte_t pte_mkwrite_novma(pte_t pte){ pte_val(pte) &= ~_PAGE_FOW; return pte; }
- extern inline pte_t pte_mkdirty(pte_t pte)	{ pte_val(pte) |= __DIRTY_BITS; return pte; }
- extern inline pte_t pte_mkyoung(pte_t pte)	{ pte_val(pte) |= __ACCESS_BITS; return pte; }
- 
-diff --git a/arch/arc/include/asm/hugepage.h b/arch/arc/include/asm/hugepage.h
-index 5001b796fb8d..ef8d4166370c 100644
---- a/arch/arc/include/asm/hugepage.h
-+++ b/arch/arc/include/asm/hugepage.h
-@@ -21,7 +21,7 @@ static inline pmd_t pte_pmd(pte_t pte)
- }
- 
- #define pmd_wrprotect(pmd)	pte_pmd(pte_wrprotect(pmd_pte(pmd)))
--#define pmd_mkwrite(pmd)	pte_pmd(pte_mkwrite(pmd_pte(pmd)))
-+#define pmd_mkwrite_novma(pmd)	pte_pmd(pte_mkwrite_novma(pmd_pte(pmd)))
- #define pmd_mkdirty(pmd)	pte_pmd(pte_mkdirty(pmd_pte(pmd)))
- #define pmd_mkold(pmd)		pte_pmd(pte_mkold(pmd_pte(pmd)))
- #define pmd_mkyoung(pmd)	pte_pmd(pte_mkyoung(pmd_pte(pmd)))
-diff --git a/arch/arc/include/asm/pgtable-bits-arcv2.h b/arch/arc/include/asm/pgtable-bits-arcv2.h
-index 6e9f8ca6d6a1..5c073d9f41c2 100644
---- a/arch/arc/include/asm/pgtable-bits-arcv2.h
-+++ b/arch/arc/include/asm/pgtable-bits-arcv2.h
-@@ -87,7 +87,7 @@
- 
- PTE_BIT_FUNC(mknotpresent,     &= ~(_PAGE_PRESENT));
- PTE_BIT_FUNC(wrprotect,	&= ~(_PAGE_WRITE));
--PTE_BIT_FUNC(mkwrite,	|= (_PAGE_WRITE));
-+PTE_BIT_FUNC(mkwrite_novma,	|= (_PAGE_WRITE));
- PTE_BIT_FUNC(mkclean,	&= ~(_PAGE_DIRTY));
- PTE_BIT_FUNC(mkdirty,	|= (_PAGE_DIRTY));
- PTE_BIT_FUNC(mkold,	&= ~(_PAGE_ACCESSED));
-diff --git a/arch/arm/include/asm/pgtable-3level.h b/arch/arm/include/asm/pgtable-3level.h
-index 106049791500..71c3add6417f 100644
---- a/arch/arm/include/asm/pgtable-3level.h
-+++ b/arch/arm/include/asm/pgtable-3level.h
-@@ -202,7 +202,7 @@ static inline pmd_t pmd_##fn(pmd_t pmd) { pmd_val(pmd) op; return pmd; }
- 
- PMD_BIT_FUNC(wrprotect,	|= L_PMD_SECT_RDONLY);
- PMD_BIT_FUNC(mkold,	&= ~PMD_SECT_AF);
--PMD_BIT_FUNC(mkwrite,   &= ~L_PMD_SECT_RDONLY);
-+PMD_BIT_FUNC(mkwrite_novma,   &= ~L_PMD_SECT_RDONLY);
- PMD_BIT_FUNC(mkdirty,   |= L_PMD_SECT_DIRTY);
- PMD_BIT_FUNC(mkclean,   &= ~L_PMD_SECT_DIRTY);
- PMD_BIT_FUNC(mkyoung,   |= PMD_SECT_AF);
-diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtable.h
-index a58ccbb406ad..f37ba2472eae 100644
---- a/arch/arm/include/asm/pgtable.h
-+++ b/arch/arm/include/asm/pgtable.h
-@@ -227,7 +227,7 @@ static inline pte_t pte_wrprotect(pte_t pte)
- 	return set_pte_bit(pte, __pgprot(L_PTE_RDONLY));
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	return clear_pte_bit(pte, __pgprot(L_PTE_RDONLY));
- }
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 0bd18de9fd97..7a3d62cb9bee 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -180,7 +180,7 @@ static inline pmd_t set_pmd_bit(pmd_t pmd, pgprot_t prot)
- 	return pmd;
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte = set_pte_bit(pte, __pgprot(PTE_WRITE));
- 	pte = clear_pte_bit(pte, __pgprot(PTE_RDONLY));
-@@ -487,7 +487,7 @@ static inline int pmd_trans_huge(pmd_t pmd)
- #define pmd_cont(pmd)		pte_cont(pmd_pte(pmd))
- #define pmd_wrprotect(pmd)	pte_pmd(pte_wrprotect(pmd_pte(pmd)))
- #define pmd_mkold(pmd)		pte_pmd(pte_mkold(pmd_pte(pmd)))
--#define pmd_mkwrite(pmd)	pte_pmd(pte_mkwrite(pmd_pte(pmd)))
-+#define pmd_mkwrite_novma(pmd)	pte_pmd(pte_mkwrite_novma(pmd_pte(pmd)))
- #define pmd_mkclean(pmd)	pte_pmd(pte_mkclean(pmd_pte(pmd)))
- #define pmd_mkdirty(pmd)	pte_pmd(pte_mkdirty(pmd_pte(pmd)))
- #define pmd_mkyoung(pmd)	pte_pmd(pte_mkyoung(pmd_pte(pmd)))
-diff --git a/arch/csky/include/asm/pgtable.h b/arch/csky/include/asm/pgtable.h
-index d4042495febc..aa0cce4fc02f 100644
---- a/arch/csky/include/asm/pgtable.h
-+++ b/arch/csky/include/asm/pgtable.h
-@@ -176,7 +176,7 @@ static inline pte_t pte_mkold(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte_val(pte) |= _PAGE_WRITE;
- 	if (pte_val(pte) & _PAGE_MODIFIED)
-diff --git a/arch/hexagon/include/asm/pgtable.h b/arch/hexagon/include/asm/pgtable.h
-index 59393613d086..fc2d2d83368d 100644
---- a/arch/hexagon/include/asm/pgtable.h
-+++ b/arch/hexagon/include/asm/pgtable.h
-@@ -300,7 +300,7 @@ static inline pte_t pte_wrprotect(pte_t pte)
- }
- 
- /* pte_mkwrite - mark page as writable */
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte_val(pte) |= _PAGE_WRITE;
- 	return pte;
-diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
-index 21c97e31a28a..f80aba7cad99 100644
---- a/arch/ia64/include/asm/pgtable.h
-+++ b/arch/ia64/include/asm/pgtable.h
-@@ -268,7 +268,7 @@ ia64_phys_addr_valid (unsigned long addr)
-  * access rights:
-  */
- #define pte_wrprotect(pte)	(__pte(pte_val(pte) & ~_PAGE_AR_RW))
--#define pte_mkwrite(pte)	(__pte(pte_val(pte) | _PAGE_AR_RW))
-+#define pte_mkwrite_novma(pte)	(__pte(pte_val(pte) | _PAGE_AR_RW))
- #define pte_mkold(pte)		(__pte(pte_val(pte) & ~_PAGE_A))
- #define pte_mkyoung(pte)	(__pte(pte_val(pte) | _PAGE_A))
- #define pte_mkclean(pte)	(__pte(pte_val(pte) & ~_PAGE_D))
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index d28fb9dbec59..8245cf367b31 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -390,7 +390,7 @@ static inline pte_t pte_mkdirty(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte_val(pte) |= _PAGE_WRITE;
- 	if (pte_val(pte) & _PAGE_MODIFIED)
-@@ -490,7 +490,7 @@ static inline int pmd_write(pmd_t pmd)
- 	return !!(pmd_val(pmd) & _PAGE_WRITE);
- }
- 
--static inline pmd_t pmd_mkwrite(pmd_t pmd)
-+static inline pmd_t pmd_mkwrite_novma(pmd_t pmd)
- {
- 	pmd_val(pmd) |= _PAGE_WRITE;
- 	if (pmd_val(pmd) & _PAGE_MODIFIED)
-diff --git a/arch/m68k/include/asm/mcf_pgtable.h b/arch/m68k/include/asm/mcf_pgtable.h
-index d97fbb812f63..42ebea0488e3 100644
---- a/arch/m68k/include/asm/mcf_pgtable.h
-+++ b/arch/m68k/include/asm/mcf_pgtable.h
-@@ -211,7 +211,7 @@ static inline pte_t pte_mkold(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte_val(pte) |= CF_PAGE_WRITABLE;
- 	return pte;
-diff --git a/arch/m68k/include/asm/motorola_pgtable.h b/arch/m68k/include/asm/motorola_pgtable.h
-index ec0dc19ab834..ba28ca4d219a 100644
---- a/arch/m68k/include/asm/motorola_pgtable.h
-+++ b/arch/m68k/include/asm/motorola_pgtable.h
-@@ -155,7 +155,7 @@ static inline int pte_young(pte_t pte)		{ return pte_val(pte) & _PAGE_ACCESSED;
- static inline pte_t pte_wrprotect(pte_t pte)	{ pte_val(pte) |= _PAGE_RONLY; return pte; }
- static inline pte_t pte_mkclean(pte_t pte)	{ pte_val(pte) &= ~_PAGE_DIRTY; return pte; }
- static inline pte_t pte_mkold(pte_t pte)	{ pte_val(pte) &= ~_PAGE_ACCESSED; return pte; }
--static inline pte_t pte_mkwrite(pte_t pte)	{ pte_val(pte) &= ~_PAGE_RONLY; return pte; }
-+static inline pte_t pte_mkwrite_novma(pte_t pte){ pte_val(pte) &= ~_PAGE_RONLY; return pte; }
- static inline pte_t pte_mkdirty(pte_t pte)	{ pte_val(pte) |= _PAGE_DIRTY; return pte; }
- static inline pte_t pte_mkyoung(pte_t pte)	{ pte_val(pte) |= _PAGE_ACCESSED; return pte; }
- static inline pte_t pte_mknocache(pte_t pte)
-diff --git a/arch/m68k/include/asm/sun3_pgtable.h b/arch/m68k/include/asm/sun3_pgtable.h
-index e582b0484a55..4114eaff7404 100644
---- a/arch/m68k/include/asm/sun3_pgtable.h
-+++ b/arch/m68k/include/asm/sun3_pgtable.h
-@@ -143,7 +143,7 @@ static inline int pte_young(pte_t pte)		{ return pte_val(pte) & SUN3_PAGE_ACCESS
- static inline pte_t pte_wrprotect(pte_t pte)	{ pte_val(pte) &= ~SUN3_PAGE_WRITEABLE; return pte; }
- static inline pte_t pte_mkclean(pte_t pte)	{ pte_val(pte) &= ~SUN3_PAGE_MODIFIED; return pte; }
- static inline pte_t pte_mkold(pte_t pte)	{ pte_val(pte) &= ~SUN3_PAGE_ACCESSED; return pte; }
--static inline pte_t pte_mkwrite(pte_t pte)	{ pte_val(pte) |= SUN3_PAGE_WRITEABLE; return pte; }
-+static inline pte_t pte_mkwrite_novma(pte_t pte){ pte_val(pte) |= SUN3_PAGE_WRITEABLE; return pte; }
- static inline pte_t pte_mkdirty(pte_t pte)	{ pte_val(pte) |= SUN3_PAGE_MODIFIED; return pte; }
- static inline pte_t pte_mkyoung(pte_t pte)	{ pte_val(pte) |= SUN3_PAGE_ACCESSED; return pte; }
- static inline pte_t pte_mknocache(pte_t pte)	{ pte_val(pte) |= SUN3_PAGE_NOCACHE; return pte; }
-diff --git a/arch/microblaze/include/asm/pgtable.h b/arch/microblaze/include/asm/pgtable.h
-index d1b8272abcd9..9108b33a7886 100644
---- a/arch/microblaze/include/asm/pgtable.h
-+++ b/arch/microblaze/include/asm/pgtable.h
-@@ -266,7 +266,7 @@ static inline pte_t pte_mkread(pte_t pte) \
- 	{ pte_val(pte) |= _PAGE_USER; return pte; }
- static inline pte_t pte_mkexec(pte_t pte) \
- 	{ pte_val(pte) |= _PAGE_USER | _PAGE_EXEC; return pte; }
--static inline pte_t pte_mkwrite(pte_t pte) \
-+static inline pte_t pte_mkwrite_novma(pte_t pte) \
- 	{ pte_val(pte) |= _PAGE_RW; return pte; }
- static inline pte_t pte_mkdirty(pte_t pte) \
- 	{ pte_val(pte) |= _PAGE_DIRTY; return pte; }
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index 574fa14ac8b2..40a54fd6e48d 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -309,7 +309,7 @@ static inline pte_t pte_mkold(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte.pte_low |= _PAGE_WRITE;
- 	if (pte.pte_low & _PAGE_MODIFIED) {
-@@ -364,7 +364,7 @@ static inline pte_t pte_mkold(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte_val(pte) |= _PAGE_WRITE;
- 	if (pte_val(pte) & _PAGE_MODIFIED)
-@@ -627,7 +627,7 @@ static inline pmd_t pmd_wrprotect(pmd_t pmd)
- 	return pmd;
- }
- 
--static inline pmd_t pmd_mkwrite(pmd_t pmd)
-+static inline pmd_t pmd_mkwrite_novma(pmd_t pmd)
- {
- 	pmd_val(pmd) |= _PAGE_WRITE;
- 	if (pmd_val(pmd) & _PAGE_MODIFIED)
-diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pgtable.h
-index 0f5c2564e9f5..cf1ffbc1a121 100644
---- a/arch/nios2/include/asm/pgtable.h
-+++ b/arch/nios2/include/asm/pgtable.h
-@@ -129,7 +129,7 @@ static inline pte_t pte_mkold(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte_val(pte) |= _PAGE_WRITE;
- 	return pte;
-diff --git a/arch/openrisc/include/asm/pgtable.h b/arch/openrisc/include/asm/pgtable.h
-index 3eb9b9555d0d..828820c74fc5 100644
---- a/arch/openrisc/include/asm/pgtable.h
-+++ b/arch/openrisc/include/asm/pgtable.h
-@@ -250,7 +250,7 @@ static inline pte_t pte_mkold(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte_val(pte) |= _PAGE_WRITE;
- 	return pte;
-diff --git a/arch/parisc/include/asm/pgtable.h b/arch/parisc/include/asm/pgtable.h
-index e715df5385d6..79d1cef2fd7c 100644
---- a/arch/parisc/include/asm/pgtable.h
-+++ b/arch/parisc/include/asm/pgtable.h
-@@ -331,7 +331,7 @@ static inline pte_t pte_mkold(pte_t pte)	{ pte_val(pte) &= ~_PAGE_ACCESSED; retu
- static inline pte_t pte_wrprotect(pte_t pte)	{ pte_val(pte) &= ~_PAGE_WRITE; return pte; }
- static inline pte_t pte_mkdirty(pte_t pte)	{ pte_val(pte) |= _PAGE_DIRTY; return pte; }
- static inline pte_t pte_mkyoung(pte_t pte)	{ pte_val(pte) |= _PAGE_ACCESSED; return pte; }
--static inline pte_t pte_mkwrite(pte_t pte)	{ pte_val(pte) |= _PAGE_WRITE; return pte; }
-+static inline pte_t pte_mkwrite_novma(pte_t pte)	{ pte_val(pte) |= _PAGE_WRITE; return pte; }
- static inline pte_t pte_mkspecial(pte_t pte)	{ pte_val(pte) |= _PAGE_SPECIAL; return pte; }
- 
- /*
-diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
-index 7bf1fe7297c6..67dfb674a4c1 100644
---- a/arch/powerpc/include/asm/book3s/32/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
-@@ -498,7 +498,7 @@ static inline pte_t pte_mkpte(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	return __pte(pte_val(pte) | _PAGE_RW);
- }
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 4acc9690f599..0328d917494a 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -600,7 +600,7 @@ static inline pte_t pte_mkexec(pte_t pte)
- 	return __pte_raw(pte_raw(pte) | cpu_to_be64(_PAGE_EXEC));
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	/*
- 	 * write implies read, hence set both
-@@ -1071,7 +1071,7 @@ static inline pte_t *pmdp_ptep(pmd_t *pmd)
- #define pmd_mkdirty(pmd)	pte_pmd(pte_mkdirty(pmd_pte(pmd)))
- #define pmd_mkclean(pmd)	pte_pmd(pte_mkclean(pmd_pte(pmd)))
- #define pmd_mkyoung(pmd)	pte_pmd(pte_mkyoung(pmd_pte(pmd)))
--#define pmd_mkwrite(pmd)	pte_pmd(pte_mkwrite(pmd_pte(pmd)))
-+#define pmd_mkwrite_novma(pmd)	pte_pmd(pte_mkwrite_novma(pmd_pte(pmd)))
- 
- #ifdef CONFIG_HAVE_ARCH_SOFT_DIRTY
- #define pmd_soft_dirty(pmd)    pte_soft_dirty(pmd_pte(pmd))
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index fec56d965f00..33213b31fcbb 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -170,8 +170,8 @@ void unmap_kernel_page(unsigned long va);
- #define pte_clear(mm, addr, ptep) \
- 	do { pte_update(mm, addr, ptep, ~0, 0, 0); } while (0)
- 
--#ifndef pte_mkwrite
--static inline pte_t pte_mkwrite(pte_t pte)
-+#ifndef pte_mkwrite_novma
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	return __pte(pte_val(pte) | _PAGE_RW);
- }
-diff --git a/arch/powerpc/include/asm/nohash/32/pte-8xx.h b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
-index 1a89ebdc3acc..21f681ee535a 100644
---- a/arch/powerpc/include/asm/nohash/32/pte-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
-@@ -101,12 +101,12 @@ static inline int pte_write(pte_t pte)
- 
- #define pte_write pte_write
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	return __pte(pte_val(pte) & ~_PAGE_RO);
- }
- 
--#define pte_mkwrite pte_mkwrite
-+#define pte_mkwrite_novma pte_mkwrite_novma
- 
- static inline bool pte_user(pte_t pte)
- {
-diff --git a/arch/powerpc/include/asm/nohash/64/pgtable.h b/arch/powerpc/include/asm/nohash/64/pgtable.h
-index 287e25864ffa..abe4fd82721e 100644
---- a/arch/powerpc/include/asm/nohash/64/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/64/pgtable.h
-@@ -85,7 +85,7 @@
- #ifndef __ASSEMBLY__
- /* pte_clear moved to later in this file */
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	return __pte(pte_val(pte) | _PAGE_RW);
- }
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 2258b27173b0..b38faec98154 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -379,7 +379,7 @@ static inline pte_t pte_wrprotect(pte_t pte)
- 
- /* static inline pte_t pte_mkread(pte_t pte) */
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	return __pte(pte_val(pte) | _PAGE_WRITE);
- }
-@@ -665,9 +665,9 @@ static inline pmd_t pmd_mkyoung(pmd_t pmd)
- 	return pte_pmd(pte_mkyoung(pmd_pte(pmd)));
- }
- 
--static inline pmd_t pmd_mkwrite(pmd_t pmd)
-+static inline pmd_t pmd_mkwrite_novma(pmd_t pmd)
- {
--	return pte_pmd(pte_mkwrite(pmd_pte(pmd)));
-+	return pte_pmd(pte_mkwrite_novma(pmd_pte(pmd)));
- }
- 
- static inline pmd_t pmd_wrprotect(pmd_t pmd)
-diff --git a/arch/s390/include/asm/hugetlb.h b/arch/s390/include/asm/hugetlb.h
-index ccdbccfde148..f07267875a19 100644
---- a/arch/s390/include/asm/hugetlb.h
-+++ b/arch/s390/include/asm/hugetlb.h
-@@ -104,7 +104,7 @@ static inline int huge_pte_dirty(pte_t pte)
- 
- static inline pte_t huge_pte_mkwrite(pte_t pte)
- {
--	return pte_mkwrite(pte);
-+	return pte_mkwrite_novma(pte);
- }
- 
- static inline pte_t huge_pte_mkdirty(pte_t pte)
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 6822a11c2c8a..699406036f30 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1005,7 +1005,7 @@ static inline pte_t pte_wrprotect(pte_t pte)
- 	return set_pte_bit(pte, __pgprot(_PAGE_PROTECT));
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	pte = set_pte_bit(pte, __pgprot(_PAGE_WRITE));
- 	if (pte_val(pte) & _PAGE_DIRTY)
-@@ -1488,7 +1488,7 @@ static inline pmd_t pmd_wrprotect(pmd_t pmd)
- 	return set_pmd_bit(pmd, __pgprot(_SEGMENT_ENTRY_PROTECT));
- }
- 
--static inline pmd_t pmd_mkwrite(pmd_t pmd)
-+static inline pmd_t pmd_mkwrite_novma(pmd_t pmd)
- {
- 	pmd = set_pmd_bit(pmd, __pgprot(_SEGMENT_ENTRY_WRITE));
- 	if (pmd_val(pmd) & _SEGMENT_ENTRY_DIRTY)
-diff --git a/arch/sh/include/asm/pgtable_32.h b/arch/sh/include/asm/pgtable_32.h
-index 21952b094650..165b4fd08152 100644
---- a/arch/sh/include/asm/pgtable_32.h
-+++ b/arch/sh/include/asm/pgtable_32.h
-@@ -359,11 +359,11 @@ static inline pte_t pte_##fn(pte_t pte) { pte.pte_##h op; return pte; }
-  * kernel permissions), we attempt to couple them a bit more sanely here.
-  */
- PTE_BIT_FUNC(high, wrprotect, &= ~(_PAGE_EXT_USER_WRITE | _PAGE_EXT_KERN_WRITE));
--PTE_BIT_FUNC(high, mkwrite, |= _PAGE_EXT_USER_WRITE | _PAGE_EXT_KERN_WRITE);
-+PTE_BIT_FUNC(high, mkwrite_novma, |= _PAGE_EXT_USER_WRITE | _PAGE_EXT_KERN_WRITE);
- PTE_BIT_FUNC(high, mkhuge, |= _PAGE_SZHUGE);
- #else
- PTE_BIT_FUNC(low, wrprotect, &= ~_PAGE_RW);
--PTE_BIT_FUNC(low, mkwrite, |= _PAGE_RW);
-+PTE_BIT_FUNC(low, mkwrite_novma, |= _PAGE_RW);
- PTE_BIT_FUNC(low, mkhuge, |= _PAGE_SZHUGE);
- #endif
- 
-diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm/pgtable_32.h
-index d4330e3c57a6..a2d909446539 100644
---- a/arch/sparc/include/asm/pgtable_32.h
-+++ b/arch/sparc/include/asm/pgtable_32.h
-@@ -241,7 +241,7 @@ static inline pte_t pte_mkold(pte_t pte)
- 	return __pte(pte_val(pte) & ~SRMMU_REF);
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	return __pte(pte_val(pte) | SRMMU_WRITE);
- }
-diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
-index 5563efa1a19f..4dd4f6cdc670 100644
---- a/arch/sparc/include/asm/pgtable_64.h
-+++ b/arch/sparc/include/asm/pgtable_64.h
-@@ -517,7 +517,7 @@ static inline pte_t pte_mkclean(pte_t pte)
- 	return __pte(val);
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	unsigned long val = pte_val(pte), mask;
- 
-@@ -772,11 +772,11 @@ static inline pmd_t pmd_mkyoung(pmd_t pmd)
- 	return __pmd(pte_val(pte));
- }
- 
--static inline pmd_t pmd_mkwrite(pmd_t pmd)
-+static inline pmd_t pmd_mkwrite_novma(pmd_t pmd)
- {
- 	pte_t pte = __pte(pmd_val(pmd));
- 
--	pte = pte_mkwrite(pte);
-+	pte = pte_mkwrite_novma(pte);
- 
- 	return __pmd(pte_val(pte));
- }
-diff --git a/arch/um/include/asm/pgtable.h b/arch/um/include/asm/pgtable.h
-index a70d1618eb35..46f59a8bc812 100644
---- a/arch/um/include/asm/pgtable.h
-+++ b/arch/um/include/asm/pgtable.h
-@@ -207,7 +207,7 @@ static inline pte_t pte_mkyoung(pte_t pte)
- 	return(pte);
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	if (unlikely(pte_get_bits(pte,  _PAGE_RW)))
- 		return pte;
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 15ae4d6ba476..112e6060eafa 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -352,7 +352,7 @@ static inline pte_t pte_mkyoung(pte_t pte)
- 	return pte_set_flags(pte, _PAGE_ACCESSED);
- }
- 
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- {
- 	return pte_set_flags(pte, _PAGE_RW);
- }
-@@ -453,7 +453,7 @@ static inline pmd_t pmd_mkyoung(pmd_t pmd)
- 	return pmd_set_flags(pmd, _PAGE_ACCESSED);
- }
- 
--static inline pmd_t pmd_mkwrite(pmd_t pmd)
-+static inline pmd_t pmd_mkwrite_novma(pmd_t pmd)
- {
- 	return pmd_set_flags(pmd, _PAGE_RW);
- }
-diff --git a/arch/xtensa/include/asm/pgtable.h b/arch/xtensa/include/asm/pgtable.h
-index fc7a14884c6c..27e3ae38a5de 100644
---- a/arch/xtensa/include/asm/pgtable.h
-+++ b/arch/xtensa/include/asm/pgtable.h
-@@ -262,7 +262,7 @@ static inline pte_t pte_mkdirty(pte_t pte)
- 	{ pte_val(pte) |= _PAGE_DIRTY; return pte; }
- static inline pte_t pte_mkyoung(pte_t pte)
- 	{ pte_val(pte) |= _PAGE_ACCESSED; return pte; }
--static inline pte_t pte_mkwrite(pte_t pte)
-+static inline pte_t pte_mkwrite_novma(pte_t pte)
- 	{ pte_val(pte) |= _PAGE_WRITABLE; return pte; }
- 
- #define pgprot_noncached(prot) \
-diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
-index d7f6335d3999..4da02798a00b 100644
---- a/include/asm-generic/hugetlb.h
-+++ b/include/asm-generic/hugetlb.h
-@@ -22,7 +22,7 @@ static inline unsigned long huge_pte_dirty(pte_t pte)
- 
- static inline pte_t huge_pte_mkwrite(pte_t pte)
- {
--	return pte_mkwrite(pte);
-+	return pte_mkwrite_novma(pte);
- }
- 
- #ifndef __HAVE_ARCH_HUGE_PTE_WRPROTECT
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index c5a51481bbb9..ae271a307584 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -507,6 +507,20 @@ extern pud_t pudp_huge_clear_flush(struct vm_area_struct *vma,
- 			      pud_t *pudp);
- #endif
- 
-+#ifndef pte_mkwrite
-+static inline pte_t pte_mkwrite(pte_t pte)
++#include <linux/kprobes.h>
++#include <linux/rethook.h>
++#include "rethook.h"
++
++/* This is called from arch_rethook_trampoline() */
++unsigned long __used arch_rethook_trampoline_callback(struct pt_regs *regs)
 +{
-+	return pte_mkwrite_novma(pte);
++	return rethook_trampoline_handler(regs, 0);
 +}
-+#endif
 +
-+#if defined(CONFIG_HAS_HUGE_PAGE) && !defined(pmd_mkwrite)
-+static inline pmd_t pmd_mkwrite(pmd_t pmd)
++NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
++
++void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs, bool mcount)
 +{
-+	return pmd_mkwrite_novma(pmd);
-+}
-+#endif
++	rhn->ret_addr = regs->regs[1];
++	rhn->frame = 0;
 +
- #ifndef __HAVE_ARCH_PTEP_SET_WRPROTECT
- struct mm_struct;
- static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long address, pte_t *ptep)
++	/* replace return addr with trampoline */
++	regs->regs[1] = (unsigned long)arch_rethook_trampoline;
++}
++
++NOKPROBE_SYMBOL(arch_rethook_prepare);
+diff --git a/arch/loongarch/kernel/rethook.h b/arch/loongarch/kernel/rethook.h
+new file mode 100644
+index 000000000000..3f1c1edf0d0b
+--- /dev/null
++++ b/arch/loongarch/kernel/rethook.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LOONGARCH_RETHOOK_H
++#define __LOONGARCH_RETHOOK_H
++
++unsigned long arch_rethook_trampoline_callback(struct pt_regs *regs);
++void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs, bool mcount);
++
++#endif
+diff --git a/arch/loongarch/kernel/kprobes_trampoline.S b/arch/loongarch/kernel/rethook_trampoline.S
+similarity index 93%
+rename from arch/loongarch/kernel/kprobes_trampoline.S
+rename to arch/loongarch/kernel/rethook_trampoline.S
+index af94b0d213fa..bd5772c96338 100644
+--- a/arch/loongarch/kernel/kprobes_trampoline.S
++++ b/arch/loongarch/kernel/rethook_trampoline.S
+@@ -75,7 +75,7 @@
+ 	csrxchg t0, t1, LOONGARCH_CSR_CRMD
+ 	.endm
+ 
+-SYM_CODE_START(__kretprobe_trampoline)
++SYM_CODE_START(arch_rethook_trampoline)
+ 	addi.d	sp, sp, -PT_SIZE
+ 	save_all_base_regs
+ 
+@@ -84,7 +84,7 @@ SYM_CODE_START(__kretprobe_trampoline)
+ 
+ 	move a0, sp /* pt_regs */
+ 
+-	bl trampoline_probe_handler
++	bl arch_rethook_trampoline_callback
+ 
+ 	/* use the result as the return-address */
+ 	move ra, a0
+@@ -93,4 +93,4 @@ SYM_CODE_START(__kretprobe_trampoline)
+ 	addi.d	sp, sp, PT_SIZE
+ 
+ 	jr ra
+-SYM_CODE_END(__kretprobe_trampoline)
++SYM_CODE_END(arch_rethook_trampoline)
 -- 
-2.34.1
+2.27.0
 
