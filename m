@@ -1,79 +1,255 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07DA3FF5
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 08:43:27 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-977cc662f62so772972066b.3
-        for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 01:43:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686645805; x=1689237805;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m5Dbs9odIHVvkEWBqHHqfLFf7lgHuWeM0uugMrIB5UY=;
-        b=LloKSIEhAMpnEpsYPW39b6O6NUjbZ2ljy2hcRAYG21medhu4KyE2ePRR0r+zVHeL64
-         pDEzzdxroHyDIdqlykc6iTGhhQ/UrKnN6XR0uqNzz0t4o6x1sBiEovQY2eFH6QAkK/By
-         KYHuM6dKnJTpkoJBbs4k5cM/iEgCYHccdow6ZBBOOFHFHLgGvim7eG8pld4Obs74ufJH
-         7Xd5U1H0U5Fzu4S7Oe/sTghVUA52cIJ2Ada8qz7OtkpqHpt/IBTmUUkuKmqXrKbrPipf
-         Eo/ydGkWScNOYzLsari49zXzfz9lAyhQbbPUEW58HQf2Bq9+eLHVVBei067BxG2OqapH
-         miGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686645805; x=1689237805;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m5Dbs9odIHVvkEWBqHHqfLFf7lgHuWeM0uugMrIB5UY=;
-        b=LTNGMFwClSAnvJeyJ5qDtxMn//WTtMBHg5SBryQQK+iucU74yWo2TQcTMaJfHBNDGG
-         uRCO1qWlVdonFJNmjNoDa4Oj9Fias3mAC7waOHZTM4yn1BpOo4qsq2DOvXk7GV3tJSe6
-         Rr1OTvSXv24rsqTliIAkgNHv0aQOqz3retvur38oDG9LyWf/HdbFJFdlHirHNyGrbVnY
-         YMFXXMWfB7KMr0biYUvk81N70VftszetFR2qpsnyY9KJ9ybQfIBD1J3j2+Kys4FZv45I
-         MNUlMr31CbDauUu3WLHnHCuC+21uY0coMMRSd6g/mAPQu95gkKqeoapQoDwsaQIHSmyN
-         vzTw==
-X-Gm-Message-State: AC+VfDzOzusEEIGcvLKbiJd3Ge43cshDDIe4p21iIL0mZtdRdBPAGyPG
-	qabfnAtG7UEOKhw/yNNVAUR20A==
-X-Google-Smtp-Source: ACHHUZ4/ztJz5BfPpk5ZLSM0RLuAYAVgxSU3DPpJe1GRo73HUHvkUMgS3aOL4f8QyySrPKsiYIeIjA==
-X-Received: by 2002:a17:907:320a:b0:974:52e6:93cb with SMTP id xg10-20020a170907320a00b0097452e693cbmr12720907ejb.50.1686645805697;
-        Tue, 13 Jun 2023 01:43:25 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id y9-20020a17090668c900b0098242730348sm218185ejr.72.2023.06.13.01.43.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 01:43:25 -0700 (PDT)
-Message-ID: <9e0ac1da-9064-5a0a-0365-d5e00cefd1c0@linaro.org>
-Date: Tue, 13 Jun 2023 10:43:23 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C05E23A5
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 08:49:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BC8C433A0
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 08:49:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686646141;
+	bh=fkTcYXnnODoZaFJg2UKlm/SmZquUIwJqB4u8HHmm8ow=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TtFhoaMdqFjIV3nG0qPhO2EodgKhv45BGHccH3vrptUTN3vESLcz1S9aQAUCGKG0N
+	 0Va5HNoW3m+yunDDXKLLF8nwhI7aH/to9whdsmLj/oqpE4nyWvdAf/6XfyqBqqjkmt
+	 DFPt3yzPgEgD4N2i9zc4122BmeHMn+dUHJDQxmlG4yS9FJoKCFGXpiRAal7EiCZ+GQ
+	 EWfx7bC8WNuJvtJO6DEfux0t5NF/BO4HiBXxP1r16IcZCw3byXQ3+RonMakJ1dFOvI
+	 Z3TjwUVRtXAJ/Z9Bltn+gfiros4ycBcFry3nAwM+cswfYTEZgEow12SgFcCYfg34ZQ
+	 sS8FoLUJh4MDQ==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-977d0288fd2so876629766b.1
+        for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 01:49:00 -0700 (PDT)
+X-Gm-Message-State: AC+VfDxMI1zu1W55XsJuhQyJFMzJ3yjXXuRF8Sm64XhhVcIwqepn96hK
+	hbinXpZHn8aOVOq6bGw/cxEzULvLLt/GQAplpEA=
+X-Google-Smtp-Source: ACHHUZ6wp2VuzDoDQ87Zc1LbXPtFM+HS9UxKOtKze/Q5AN9sFsbjTss1ZjX9wT+MsT0Ffb0o+nfyB77zVAbzKfQ1HsM=
+X-Received: by 2002:a17:907:1c03:b0:96f:32ae:a7e1 with SMTP id
+ nc3-20020a1709071c0300b0096f32aea7e1mr12562187ejc.63.1686646139188; Tue, 13
+ Jun 2023 01:48:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [ PATCH v2 3/3] ASoC: dt-bindings: Add support for Loongson audio
- card
-Content-Language: en-US
-To: YingKun Meng <mengyingkun@loongson.cn>,
- krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org, conor+dt@kernel.org
-Cc: broonie@kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
- loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-References: <20230612090058.3039546-1-mengyingkun@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230612090058.3039546-1-mengyingkun@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230613011439.59168-1-jianghaoran@kylinos.cn> <20230613060329.356201-1-jianghaoran@kylinos.cn>
+In-Reply-To: <20230613060329.356201-1-jianghaoran@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 13 Jun 2023 16:48:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Fz59Wmmu9Y0TQS18uw4UfEGg_J+Xj_gX46MhvF1C-MA@mail.gmail.com>
+Message-ID: <CAAhV-H7Fz59Wmmu9Y0TQS18uw4UfEGg_J+Xj_gX46MhvF1C-MA@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch/rethook: Replace kretprobe with rethook on LoongArch
+To: Haoran Jiang <jianghaoran@kylinos.cn>
+Cc: conor.dooley@microchip.com, hejinyang@loongson.cn, jhrhhao@163.com, 
+	kernel@xen0n.name, l3b2w1@gmail.com, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, masahiroy@kernel.org, mhiramat@kernel.org, 
+	palmer@rivosinc.com, tangyouling@loongson.cn, yangtiezhu@loongson.cn, 
+	zhangqing@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/06/2023 11:00, YingKun Meng wrote:
-> From: Yingkun Meng <mengyingkun@loongson.cn>
-> 
-> The audio card uses loongson I2S controller present in
-> 7axxx/2kxxx chips to transfer audio data.
-> 
-> On loongson platform, the chip has only one I2S controller.
-> 
-> Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+On Tue, Jun 13, 2023 at 2:09=E2=80=AFPM Haoran Jiang <jianghaoran@kylinos.c=
+n> wrote:
+>
+> That's an adaptation of commit f3a112c0c40d ("x86,rethook,kprobes:
+> Replace kretprobe with rethook on x86")and commit b57c2f124098
+> ("riscv: add riscv rethook implementation") to LoongArch.
+> Mainly refer to this commit
+> b57c2f124098 ("riscv: add riscv rethook implementation").
+>
+> Replaces the kretprobe code with rethook on LoongArch. With this patch,
+> kretprobe on LoongArch uses the rethook instead of kretprobe specific
+> trampoline code.
+>
+> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+>
+> ---
+> v3:
+> 1,Fixed some format and spelling issues
+> 2,According to this commit 571a2a50a8fc
+> (rethook, fprobe: do not trace rethook related functions),
+> the problem described in this commit Should be modified on LoongArch.
+>
+> v2:
+> Modified the patch format and commit message.
+> ---
+>  arch/loongarch/Kconfig                        |  1 +
+>  arch/loongarch/include/asm/kprobes.h          |  3 ---
+>  arch/loongarch/kernel/Makefile                |  7 ++++-
+>  arch/loongarch/kernel/kprobes.c               | 20 --------------
+>  arch/loongarch/kernel/rethook.c               | 27 +++++++++++++++++++
+>  arch/loongarch/kernel/rethook.h               |  8 ++++++
+>  ...obes_trampoline.S =3D> rethook_trampoline.S} |  6 ++---
+>  7 files changed, 45 insertions(+), 27 deletions(-)
+>  create mode 100644 arch/loongarch/kernel/rethook.c
+>  create mode 100644 arch/loongarch/kernel/rethook.h
+>  rename arch/loongarch/kernel/{kprobes_trampoline.S =3D> rethook_trampoli=
+ne.S} (93%)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index d38b066fc931..5800aa52c82f 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -120,6 +120,7 @@ config LOONGARCH
+>         select HAVE_PERF_REGS
+>         select HAVE_PERF_USER_STACK_DUMP
+>         select HAVE_REGS_AND_STACK_ACCESS_API
+> +       select HAVE_RETHOOK
+>         select HAVE_RSEQ
+>         select HAVE_SAMPLE_FTRACE_DIRECT
+>         select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+> diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/includ=
+e/asm/kprobes.h
+> index 798020ae02c6..7b9fc3ed71c3 100644
+> --- a/arch/loongarch/include/asm/kprobes.h
+> +++ b/arch/loongarch/include/asm/kprobes.h
+> @@ -49,9 +49,6 @@ bool kprobe_fault_handler(struct pt_regs *regs, int tra=
+pnr);
+>  bool kprobe_breakpoint_handler(struct pt_regs *regs);
+>  bool kprobe_singlestep_handler(struct pt_regs *regs);
+>
+> -void __kretprobe_trampoline(void);
+> -void *trampoline_probe_handler(struct pt_regs *regs);
+> -
+>  #else /* !CONFIG_KPROBES */
+>
+>  static inline bool kprobe_breakpoint_handler(struct pt_regs *regs) { ret=
+urn false; }
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
+ile
+> index 9a72d91cd104..7106ca996e55 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -52,6 +52,11 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) +=3D unwind_prologue.o
+>  obj-$(CONFIG_PERF_EVENTS)      +=3D perf_event.o perf_regs.o
+>  obj-$(CONFIG_HAVE_HW_BREAKPOINT)       +=3D hw_breakpoint.o
+>
+> -obj-$(CONFIG_KPROBES)          +=3D kprobes.o kprobes_trampoline.o
+> +obj-$(CONFIG_KPROBES)          +=3D kprobes.o
+> +obj-$(CONFIG_RETHOOK)          +=3D rethook.o rethook_trampoline.o
+> +
+> +CFLAGS_REMOVE_rethook.o =3D $(CC_FLAGS_FTRACE)
+> +CFLAGS_REMOVE_rethook_trampoline.o =3D $(CC_FLAGS_FTRACE)
+Move them to below CFLAGS_REMOVE_perf_event.o =3D $(CC_FLAGS_FTRACE), thank=
+s.
 
-Where is the changelog? It's second v2 I got.
-
-Best regards,
-Krzysztof
-
+Huacai
+> +
+>
+>  CPPFLAGS_vmlinux.lds           :=3D $(KBUILD_CFLAGS)
+> diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kpro=
+bes.c
+> index 56c8c4b09a42..dbce23ba9970 100644
+> --- a/arch/loongarch/kernel/kprobes.c
+> +++ b/arch/loongarch/kernel/kprobes.c
+> @@ -378,26 +378,6 @@ int __init arch_init_kprobes(void)
+>         return 0;
+>  }
+>
+> -/* ASM function that handles the kretprobes must not be probed */
+> -NOKPROBE_SYMBOL(__kretprobe_trampoline);
+> -
+> -/* Called from __kretprobe_trampoline */
+> -void __used *trampoline_probe_handler(struct pt_regs *regs)
+> -{
+> -       return (void *)kretprobe_trampoline_handler(regs, NULL);
+> -}
+> -NOKPROBE_SYMBOL(trampoline_probe_handler);
+> -
+> -void arch_prepare_kretprobe(struct kretprobe_instance *ri,
+> -                           struct pt_regs *regs)
+> -{
+> -       ri->ret_addr =3D (kprobe_opcode_t *)regs->regs[1];
+> -       ri->fp =3D NULL;
+> -
+> -       /* Replace the return addr with trampoline addr */
+> -       regs->regs[1] =3D (unsigned long)&__kretprobe_trampoline;
+> -}
+> -NOKPROBE_SYMBOL(arch_prepare_kretprobe);
+>
+>  int arch_trampoline_kprobe(struct kprobe *p)
+>  {
+> diff --git a/arch/loongarch/kernel/rethook.c b/arch/loongarch/kernel/reth=
+ook.c
+> new file mode 100644
+> index 000000000000..b5e7f62f7dea
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/rethook.c
+> @@ -0,0 +1,27 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Generic return hook for LoongArch.
+> + */
+> +
+> +#include <linux/kprobes.h>
+> +#include <linux/rethook.h>
+> +#include "rethook.h"
+> +
+> +/* This is called from arch_rethook_trampoline() */
+> +unsigned long __used arch_rethook_trampoline_callback(struct pt_regs *re=
+gs)
+> +{
+> +       return rethook_trampoline_handler(regs, 0);
+> +}
+> +
+> +NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
+> +
+> +void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs=
+, bool mcount)
+> +{
+> +       rhn->ret_addr =3D regs->regs[1];
+> +       rhn->frame =3D 0;
+> +
+> +       /* replace return addr with trampoline */
+> +       regs->regs[1] =3D (unsigned long)arch_rethook_trampoline;
+> +}
+> +
+> +NOKPROBE_SYMBOL(arch_rethook_prepare);
+> diff --git a/arch/loongarch/kernel/rethook.h b/arch/loongarch/kernel/reth=
+ook.h
+> new file mode 100644
+> index 000000000000..3f1c1edf0d0b
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/rethook.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __LOONGARCH_RETHOOK_H
+> +#define __LOONGARCH_RETHOOK_H
+> +
+> +unsigned long arch_rethook_trampoline_callback(struct pt_regs *regs);
+> +void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs=
+, bool mcount);
+> +
+> +#endif
+> diff --git a/arch/loongarch/kernel/kprobes_trampoline.S b/arch/loongarch/=
+kernel/rethook_trampoline.S
+> similarity index 93%
+> rename from arch/loongarch/kernel/kprobes_trampoline.S
+> rename to arch/loongarch/kernel/rethook_trampoline.S
+> index af94b0d213fa..bd5772c96338 100644
+> --- a/arch/loongarch/kernel/kprobes_trampoline.S
+> +++ b/arch/loongarch/kernel/rethook_trampoline.S
+> @@ -75,7 +75,7 @@
+>         csrxchg t0, t1, LOONGARCH_CSR_CRMD
+>         .endm
+>
+> -SYM_CODE_START(__kretprobe_trampoline)
+> +SYM_CODE_START(arch_rethook_trampoline)
+>         addi.d  sp, sp, -PT_SIZE
+>         save_all_base_regs
+>
+> @@ -84,7 +84,7 @@ SYM_CODE_START(__kretprobe_trampoline)
+>
+>         move a0, sp /* pt_regs */
+>
+> -       bl trampoline_probe_handler
+> +       bl arch_rethook_trampoline_callback
+>
+>         /* use the result as the return-address */
+>         move ra, a0
+> @@ -93,4 +93,4 @@ SYM_CODE_START(__kretprobe_trampoline)
+>         addi.d  sp, sp, PT_SIZE
+>
+>         jr ra
+> -SYM_CODE_END(__kretprobe_trampoline)
+> +SYM_CODE_END(arch_rethook_trampoline)
+> --
+> 2.27.0
+>
