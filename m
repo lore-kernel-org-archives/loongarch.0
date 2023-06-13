@@ -1,26 +1,26 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96EE3D38F
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 23:39:41 +0000 (UTC)
-Message-ID: <20230613224545.612182854@linutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181981361
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 23:39:43 +0000 (UTC)
+Message-ID: <20230613224545.670360645@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1686699580;
+	s=2020; t=1686699581;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=0VnFCDlFg0Z65xUPcTSUW8cd097ZM3tj8m6sSpK3s64=;
-	b=2vIwQPIUp/HJUmCG4BQezI45Q367xKHJYYqLK7G4wdrDSn+cOBFzLkdHYUwzUXc6gDifT9
-	rXY1lpsCnLehM7zAXb6roxx5XLRXYnCJR+grAmVc2dHif25zyPdBFAdRB8oZi5F8oDEYjX
-	LfRMBrXHCi+WgVWwvhW/rD4N9Ur83iWtMYD/8dwxcO3p39WY5cZNs0IUmsHtiYOfpH2mPn
-	zfJVRybOawF0SSzGOD7ZbR8K3/Wde2+WMR35K0mYj4U05gliICM7VVvC+XUr8nRG+osE42
-	Jt6Rw45sBhht2PYfVT0AcDzOMXI7pmmP+pQ2CC66euAz7R6Cd8BF8y04Prxn9g==
+	 references:references; bh=lNQFIv9giVxLbCumZPShd6fBwItl7AKDfIjQdD1B1ok=;
+	b=NhwOjp0vdKWOrteRuFiTOkExTiGFZ+1X3uZu8Sf9fdyrIPm2q/gN4MmPHkCZJSMuDFIyau
+	62b1YEZwJdmoo/8iAGDMB+f2rfpJWTxhz280VlrOWuVI8kMlClaNhFnA/HnrvxfThhq2Y7
+	LrmEMnVJ5d25Djkc3MZjVW/Fmz2axOYQ++mr4C8i7V8xhsVuiDO0UcuAgoIZ2LkpjNgGiP
+	7dqi2bz7PCyBpzzyh/htAgssbDnwJDTyEbGU2gqgSCoXYtobvOXRW69yEXXCETLnzJzHvQ
+	dbG14Dx6omVuOO5nyZKPQvEOw9jwwdikXGwasbUA2D71OPAp4CjnptBqSSwaHw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1686699580;
+	s=2020e; t=1686699581;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=0VnFCDlFg0Z65xUPcTSUW8cd097ZM3tj8m6sSpK3s64=;
-	b=Xu1aR4gK/TE/PO7y3dM5tqNyYP8UwrzsrU8JCSaOdKEVqSuAOvhIQ2kubFuP8M//eeln2X
-	Z4Xwxgc0BSAFJ1Bg==
+	 references:references; bh=lNQFIv9giVxLbCumZPShd6fBwItl7AKDfIjQdD1B1ok=;
+	b=gfCfRi6taulCsvO42taqM4pd4hXtC0EjIZYTeRqyo9lKyT8xnwcJ0CXF+9O/JENzPKmB+i
+	pT1TJrwh+wATGyAA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: x86@kernel.org,
@@ -28,6 +28,7 @@ Cc: x86@kernel.org,
  Nikolay Borisov <nik.borisov@suse.com>,
  "Ahmed S. Darwish" <darwi@linutronix.de>,
  Arnd Bergmann <arnd@arndb.de>,
+ Tom Lendacky <thomas.lendacky@amd.com>,
  Russell King <linux@armlinux.org.uk>,
  linux-arm-kernel@lists.infradead.org,
  linux-ia64@vger.kernel.org,
@@ -51,9 +52,9 @@ Cc: x86@kernel.org,
  Richard Henderson <richard.henderson@linaro.org>,
  "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
  Michael Ellerman <mpe@ellerman.id.au>,
- Chris Zankel <chris@zankel.net>,
- Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [patch 12/17] init: Invoke arch_cpu_finalize_init() earlier
+ Chris Zankel <chris@zankel.net>
+Subject: [patch 13/17] init, x86: Move mem_encrypt_init() into
+ arch_cpu_finalize_init()
 References: <20230613223827.532680283@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -62,50 +63,107 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 14 Jun 2023 01:39:39 +0200 (CEST)
+Date: Wed, 14 Jun 2023 01:39:41 +0200 (CEST)
 
-X86 is reworking the boot process so that initializations which are not
-required during early boot can be moved into the late boot process and out
-of the fragile and restricted initial boot phase.
+Invoke the X86ism mem_encrypt_init() from X86 arch_cpu_finalize_init() and
+remove the weak fallback from the core code.
 
-arch_cpu_finalize_init() is the obvious place to do such initializations,
-but arch_cpu_finalize_init() is invoked too late in start_kernel() e.g. for
-initializing the FPU completely. fork_init() requires that the FPU is
-initialized as the size of task_struct on X86 depends on the size of the
-required FPU register buffer.
-
-Fortunately none of the init calls between calibrate_delay() and
-arch_cpu_finalize_init() is relevant for the functionality of
-arch_cpu_finalize_init().
-
-Invoke it right after calibrate_delay() where everything which is relevant
-for arch_cpu_finalize_init() has been set up already.
-
-No functional change intended.
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- init/main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/mem_encrypt.h |    7 ++++---
+ arch/x86/kernel/cpu/common.c       |   11 +++++++++++
+ init/main.c                        |   13 -------------
+ 3 files changed, 15 insertions(+), 16 deletions(-)
 
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -51,6 +51,8 @@ void __init mem_encrypt_free_decrypted_m
+ 
+ void __init sev_es_init_vc_handling(void);
+ 
++void __init mem_encrypt_init(void);
++
+ #define __bss_decrypted __section(".bss..decrypted")
+ 
+ #else	/* !CONFIG_AMD_MEM_ENCRYPT */
+@@ -83,13 +85,12 @@ early_set_mem_enc_dec_hypercall(unsigned
+ 
+ static inline void mem_encrypt_free_decrypted_mem(void) { }
+ 
++static inline void mem_encrypt_init(void) { }
++
+ #define __bss_decrypted
+ 
+ #endif	/* CONFIG_AMD_MEM_ENCRYPT */
+ 
+-/* Architecture __weak replacement functions */
+-void __init mem_encrypt_init(void);
+-
+ void add_encrypt_protection_map(void);
+ 
+ /*
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -18,6 +18,7 @@
+ #include <linux/init.h>
+ #include <linux/kprobes.h>
+ #include <linux/kgdb.h>
++#include <linux/mem_encrypt.h>
+ #include <linux/smp.h>
+ #include <linux/cpu.h>
+ #include <linux/io.h>
+@@ -2417,4 +2418,14 @@ void __init arch_cpu_finalize_init(void)
+ 	} else {
+ 		fpu__init_check_bugs();
+ 	}
++
++	/*
++	 * This needs to be called before any devices perform DMA
++	 * operations that might use the SWIOTLB bounce buffers. It will
++	 * mark the bounce buffers as decrypted so that their usage will
++	 * not cause "plain-text" data to be decrypted when accessed. It
++	 * must be called after late_time_init() so that Hyper-V x86/x64
++	 * hypercalls work when the SWIOTLB bounce buffers are decrypted.
++	 */
++	mem_encrypt_init();
+ }
 --- a/init/main.c
 +++ b/init/main.c
-@@ -1041,6 +1041,8 @@ asmlinkage __visible void __init __no_sa
- 	sched_clock_init();
- 	calibrate_delay();
+@@ -95,7 +95,6 @@
+ #include <linux/cache.h>
+ #include <linux/rodata_test.h>
+ #include <linux/jump_label.h>
+-#include <linux/mem_encrypt.h>
+ #include <linux/kcsan.h>
+ #include <linux/init_syscalls.h>
+ #include <linux/stackdepot.h>
+@@ -786,8 +785,6 @@ void __init __weak thread_stack_cache_in
+ }
+ #endif
  
-+	arch_cpu_finalize_init();
-+
- 	/*
- 	 * This needs to be called before any devices perform DMA
- 	 * operations that might use the SWIOTLB bounce buffers. It will
-@@ -1077,8 +1079,6 @@ asmlinkage __visible void __init __no_sa
- 	taskstats_init_early();
- 	delayacct_init();
- 
--	arch_cpu_finalize_init();
+-void __init __weak mem_encrypt_init(void) { }
 -
- 	acpi_subsystem_init();
- 	arch_post_acpi_subsys_init();
- 	kcsan_init();
+ void __init __weak poking_init(void) { }
+ 
+ void __init __weak pgtable_cache_init(void) { }
+@@ -1043,16 +1040,6 @@ asmlinkage __visible void __init __no_sa
+ 
+ 	arch_cpu_finalize_init();
+ 
+-	/*
+-	 * This needs to be called before any devices perform DMA
+-	 * operations that might use the SWIOTLB bounce buffers. It will
+-	 * mark the bounce buffers as decrypted so that their usage will
+-	 * not cause "plain-text" data to be decrypted when accessed. It
+-	 * must be called after late_time_init() so that Hyper-V x86/x64
+-	 * hypercalls work when the SWIOTLB bounce buffers are decrypted.
+-	 */
+-	mem_encrypt_init();
+-
+ 	pid_idr_init();
+ 	anon_vma_init();
+ #ifdef CONFIG_X86
 
