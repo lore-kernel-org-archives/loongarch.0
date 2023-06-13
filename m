@@ -1,186 +1,106 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B58B12B77
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 12:58:55 +0000 (UTC)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4f4b2bc1565so6675079e87.2
-        for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 05:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686661134; x=1689253134;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uoHY7f5SpaZmehHO5pzD7w8BkW1cE5mh1OnwQ8erXk0=;
-        b=CUIbht58ZuwStSZVhwocni2OvSmzJRPWJ+NCYbrIO5E2jeIm8OWvSbKjWAUF4mF2C3
-         VNJAaxxGxyupYMYb9iV1NEfgp8kqe4WhM4RejVZMxfLBZ1tPxLQg6gCHzt+C84PYL+qd
-         Z0MG7yWOvTLmXe1bsPDNB3GdbpXk+HJPNtJzv+HWoPGlYmvkVOwpzNn9ocA7/3U59V/z
-         rYF9zV3NWPCVIypyfAPy4+bLcVLWCHewWcbL16xaHRxR97CNzvhoV3UhJaCXeWMFsxcJ
-         BFoS+SIEhH2xtYS/JiojnwG+A1u2+DDz5GKdR7hG1iBzr1Yveh8NbjGEbyeF2RbN3jxx
-         LJlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686661134; x=1689253134;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uoHY7f5SpaZmehHO5pzD7w8BkW1cE5mh1OnwQ8erXk0=;
-        b=Y20nvwWzzv32zpiV2b61rO1bFUiKLiefccYPp1NrUEnuUUKYRKilMO5gLTKPz15geK
-         62PVmsS7nfJVjPQRRV/1kuBEC+L/g7aLoz93VV2UaXZP51FSeQ9kpzDSSgaHL4hID+Oj
-         rkREx9FAZBVaeIDaw+dlayIL9+6xV3Yy+EUcQ+ajcj9X0sCs5SbmabIileLe8PjgwcKh
-         sedD9CMaEtH9fLWMIrupQzJb7LhAihB3e9TDfclF4oY168sJDrQJj1i1A/TWIaSG2N/r
-         MrXAcxb37ToMDwon6K6N7DJbW2SwA+cPjK0OKRpBHR3pw0Torb5eNe71k8yfFv2GZf7b
-         FAHg==
-X-Gm-Message-State: AC+VfDy2Q2KbwEGN5sYvHtDbgTLiDLFkl8HTcCxrPNF0T8WY/wBy85PK
-	X0NysWOuzRX0hQwLtBa1ux4=
-X-Google-Smtp-Source: ACHHUZ5hpxIirshOoeLkuF5RellTk57gwjytTxxsOJZKHLvqweumaYxLmUUZFl2Bj2FETplTZqT4/g==
-X-Received: by 2002:a19:3807:0:b0:4ef:f11c:f5b0 with SMTP id f7-20020a193807000000b004eff11cf5b0mr5800493lfa.54.1686661133869;
-        Tue, 13 Jun 2023 05:58:53 -0700 (PDT)
-Received: from ?IPV6:2a0b:6204:4302:5f00:4dab:3483:4506:9a0e? ([2a0b:6204:4302:5f00:4dab:3483:4506:9a0e])
-        by smtp.gmail.com with ESMTPSA id a8-20020a19f808000000b004f14ecc03f1sm1769903lff.100.2023.06.13.05.58.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 05:58:53 -0700 (PDT)
-From: "bibo, mao" <bibo.mao@gmail.com>
-X-Google-Original-From: "bibo, mao" <maobibo@loongson.cn>
-Message-ID: <e6508c4c-4987-37ed-9c4e-9189417e0f83@loongson.cn>
-Date: Tue, 13 Jun 2023 20:58:49 +0800
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE53C522B
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 13:03:50 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.22])
+	by gateway (Coremail) with SMTP id _____8BxKuo0aYhkgqYEAA--.9829S3;
+	Tue, 13 Jun 2023 21:03:48 +0800 (CST)
+Received: from [10.180.13.22] (unknown [10.180.13.22])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axfco0aYhkZTEZAA--.63228S3;
+	Tue, 13 Jun 2023 21:03:48 +0800 (CST)
+Message-ID: <58b70e1b-d292-ec45-2309-e237a4a43d0d@loongson.cn>
+Date: Tue, 13 Jun 2023 21:03:23 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v13 20/30] LoongArch: KVM: Implement handle csr excption
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
- tangyouling@loongson.cn, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20230609090832.2131037-1-zhaotianrui@loongson.cn>
- <20230609090832.2131037-21-zhaotianrui@loongson.cn>
-In-Reply-To: <20230609090832.2131037-21-zhaotianrui@loongson.cn>
+Subject: Re: [ PATCH v2 3/3] ASoC: dt-bindings: Add support for Loongson audio
+ card
+Content-Language: en-US
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Conor Dooley <conor@kernel.org>, krzysztof.kozlowski+dt@linaro.org,
+ robh+dt@kernel.org, conor+dt@kernel.org, broonie@kernel.org,
+ lgirdwood@gmail.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+ loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+References: <20230612085614.3039498-1-mengyingkun@loongson.cn>
+ <20230612-booted-french-186dd95e78a9@spud>
+ <bda7c25f-65cf-d45f-3ac0-f2471e3aacf8@loongson.cn>
+ <20230613-zoologist-panorama-a87858bba075@wendy>
+ <887f9cc4-6457-9d14-8aef-011ff4c9aeda@loongson.cn>
+ <20230613-depletion-garnet-ccc2009111c3@wendy>
+From: Yingkun Meng <mengyingkun@loongson.cn>
+In-Reply-To: <20230613-depletion-garnet-ccc2009111c3@wendy>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Axfco0aYhkZTEZAA--.63228S3
+X-CM-SenderInfo: 5phqw55lqjy33q6o00pqjv00gofq/1tbiAQABDGSIXIIBbgABsQ
+X-Coremail-Antispam: 1Uk129KBj93XoW7tF1kWF1DKr4DAF47uFykZwc_yoW8uw1fpF
+	W8Ja47KFn5Kw15Cr9Yvw18Jr42vFWftFZxXr4DXr17G390gry3Gr13tF1Fk3srCr18X342
+	vFWFka47J3Z8JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
+	14v26r4a6rW5MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
+	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU8I38UUUUUU==
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-Regards
-Bibo, Mao
+On 2023/6/13 20:46, Conor Dooley wrote:
+> On Tue, Jun 13, 2023 at 08:38:59PM +0800, Yingkun Meng wrote:
+>> On 2023/6/13 20:28, Conor Dooley wrote:
+>>> On Tue, Jun 13, 2023 at 08:23:58PM +0800, Yingkun Meng wrote:
+>>>> On 2023/6/13 01:24, Conor Dooley wrote:
+>>>>> On Mon, Jun 12, 2023 at 04:56:14PM +0800, YingKun Meng wrote:
+>>>>>> From: Yingkun Meng <mengyingkun@loongson.cn>
+>>>>>>
+>>>>>> The audio card uses loongson I2S controller present in
+>>>>>> 7axxx/2kxxx chips to transfer audio data.
+>>>>>>
+>>>>>> On loongson platform, the chip has only one I2S controller.
+>>>>>> +description:
+>>>>>> +  The binding describes the sound card present in loongson
+>>>>>> +  7axxx/2kxxx platform. The sound card is an ASoC component
+>>>>>> +  which uses Loongson I2S controller to transfer the audio data.
+>>>>>> +
+>>>>>> +properties:
+>>>>>> +  compatible:
+>>>>>> +    const: loongson,ls-audio-card
+>>>>> Reviewing sound stuff is beyond my pay grade, so forgive me if I am off
+>>>>> the rails here, but this (and the "x"s in the description) look a bit
+>>>>> odd. Recently, we've noticed quite a few loongson dt-bindings attempting
+>>>>> to use a single compatible for many different chips.
+>>>>> Usually you have individual compatibles for the various SoCs with this
+>>>>> core, which can fall back to a generic one, rather than just adding a
+>>>>> generic compatible for all devices.
+>>>>> As far as I know, there's several SoCs fitting 2kxxx, and the format
+>>>>> being used elsewhere is "loongson,ls2k1000" etc.
+>>>> Currently, Loongson has 2K0500/2K1000LA/2K1500/2K2000 chips.
+>>>>
+>>>> Here, its' possible to use a single compatible for different chips,
+>>>>
+>>>> as the audio device is a logical device, not dependent on chip model.
+>>> What, may I ask, is a "logical device"?
+>>
+>> I means it's not a physical one, like "platform bus".
+> So it is entirely a software construct? Why does it need a dt-binding
+> then? Your commit message says the controller is present on the device!
 
-在 2023/6/9 17:08, Tianrui Zhao 写道:
-> Implement kvm handle LoongArch vcpu exit caused by reading and
-> writing csr. Using csr structure to emulate the registers.
-> 
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> ---
->   arch/loongarch/kvm/exit.c | 98 +++++++++++++++++++++++++++++++++++++++
->   1 file changed, 98 insertions(+)
->   create mode 100644 arch/loongarch/kvm/exit.c
-> 
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> new file mode 100644
-> index 000000000000..18635333fc9a
-> --- /dev/null
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -0,0 +1,98 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/errno.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/preempt.h>
-> +#include <linux/vmalloc.h>
-> +#include <asm/fpu.h>
-> +#include <asm/inst.h>
-> +#include <asm/time.h>
-> +#include <asm/tlb.h>
-> +#include <asm/loongarch.h>
-> +#include <asm/numa.h>
-> +#include <asm/kvm_vcpu.h>
-> +#include <asm/kvm_csr.h>
-> +#include <linux/kvm_host.h>
-> +#include <asm/mmzone.h>
-> +#include "trace.h"
-> +
-> +static unsigned long _kvm_emu_read_csr(struct kvm_vcpu *vcpu, int csrid)
-> +{
-> +	struct loongarch_csrs *csr = vcpu->arch.csr;
-> +	unsigned long val = 0;
-> +
-> +	if (get_gcsr_flag(csrid) & SW_GCSR)
-> +		val = kvm_read_sw_gcsr(csr, csrid);
-> +	else
-> +		pr_warn_once("Unsupport csrread 0x%x with pc %lx\n",
-> +			csrid, vcpu->arch.pc);
-> +	return val;
-> +}
-> +
-> +static void _kvm_emu_write_csr(struct kvm_vcpu *vcpu, int csrid,
-> +	unsigned long val)
-> +{
-> +	struct loongarch_csrs *csr = vcpu->arch.csr;
-> +
-> +	if (get_gcsr_flag(csrid) & SW_GCSR)
-> +		kvm_write_sw_gcsr(csr, csrid, val);
-> +	else
-> +		pr_warn_once("Unsupport csrwrite 0x%x with pc %lx\n",
-> +				csrid, vcpu->arch.pc);
-> +}
-> +
-> +static void _kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
-> +	unsigned long csr_mask, unsigned long val)
-> +{
-> +	struct loongarch_csrs *csr = vcpu->arch.csr;
-> +
-> +	if (get_gcsr_flag(csrid) & SW_GCSR) {
-> +		unsigned long orig;
-> +
-> +		orig = kvm_read_sw_gcsr(csr, csrid);
-> +		orig &= ~csr_mask;
-> +		orig |= val & csr_mask;
-> +		kvm_write_sw_gcsr(csr, csrid, orig);
-> +	} else
-> +		pr_warn_once("Unsupport csrxchg 0x%x with pc %lx\n",
-> +				csrid, vcpu->arch.pc);
-> +}
-> +
-> +static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
-> +{
-> +	unsigned int rd, rj, csrid;
-> +	unsigned long csr_mask;
-> +	unsigned long val = 0;
-> +
-> +	/*
-> +	 * CSR value mask imm
-> +	 * rj = 0 means csrrd
-> +	 * rj = 1 means csrwr
-> +	 * rj != 0,1 means csrxchg
-> +	 */
-> +	rd = inst.reg2csr_format.rd;
-> +	rj = inst.reg2csr_format.rj;
-> +	csrid = inst.reg2csr_format.csr;
-> +
-> +	/* Process CSR ops */
-> +	if (rj == 0) {
-> +		/* process csrrd */
-> +		val = _kvm_emu_read_csr(vcpu, csrid);
-> +		vcpu->arch.gprs[rd] = val;
-> +	} else if (rj == 1) {
-> +		/* process csrwr */
-> +		val = vcpu->arch.gprs[rd];
-> +		_kvm_emu_write_csr(vcpu, csrid, val);
-> +	} else {
-> +		/* process csrxchg */
-> +		val = vcpu->arch.gprs[rd];
-> +		csr_mask = vcpu->arch.gprs[rj];
-> +		_kvm_emu_xchg_csr(vcpu, csrid, csr_mask, val);
-> +	}
-> +
-> +	return EMULATE_DONE;
-> +}
+It's not. The audio device consists of an i2s controller and codec.
+
+The dt-binding is for the audio device, not for i2s controller.
+
+> Confused,
+> Conor.
+
