@@ -1,26 +1,26 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181981361
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 23:39:43 +0000 (UTC)
-Message-ID: <20230613224545.670360645@linutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3153D38F
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 23:39:44 +0000 (UTC)
+Message-ID: <20230613224545.727330699@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1686699581;
+	s=2020; t=1686699583;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=lNQFIv9giVxLbCumZPShd6fBwItl7AKDfIjQdD1B1ok=;
-	b=NhwOjp0vdKWOrteRuFiTOkExTiGFZ+1X3uZu8Sf9fdyrIPm2q/gN4MmPHkCZJSMuDFIyau
-	62b1YEZwJdmoo/8iAGDMB+f2rfpJWTxhz280VlrOWuVI8kMlClaNhFnA/HnrvxfThhq2Y7
-	LrmEMnVJ5d25Djkc3MZjVW/Fmz2axOYQ++mr4C8i7V8xhsVuiDO0UcuAgoIZ2LkpjNgGiP
-	7dqi2bz7PCyBpzzyh/htAgssbDnwJDTyEbGU2gqgSCoXYtobvOXRW69yEXXCETLnzJzHvQ
-	dbG14Dx6omVuOO5nyZKPQvEOw9jwwdikXGwasbUA2D71OPAp4CjnptBqSSwaHw==
+	 references:references; bh=3CR6tgLD7rhzvqZr45BM9V80YjsrczzKijoUucNo/+c=;
+	b=EYe7iiF4scXvDMgiUbwXL/T+lduiRzS+SJhlEvazCoZJUCrGp1Hz5rf4m3IdPtjj8cDzzT
+	oqHy2cl14gT+kMatDcbzWhLVe1PSnOyYVUFJPfQrT6U/YkVka5VPoxtUN9BEUfAS5YOkGU
+	Bmv0b6/gTsXmP5xxTF5Gjn2rfGlKqFgbbrVhcewOMPGxUpVD3LhL5DRzVP+rlCGXe22osw
+	IMvwikGyopJ7RkqTUMst4sZXg8rS7/bZ8HQ2sJMUFdCNsVjh6otKPg6G3uoZhB2yEl8rf6
+	RUSzPq6J2UzRKMuVBo3SW8O1838X+cq4La+hJ0Uc9YVzwnEQGwLfR1FJb+8z2g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1686699581;
+	s=2020e; t=1686699583;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=lNQFIv9giVxLbCumZPShd6fBwItl7AKDfIjQdD1B1ok=;
-	b=gfCfRi6taulCsvO42taqM4pd4hXtC0EjIZYTeRqyo9lKyT8xnwcJ0CXF+9O/JENzPKmB+i
-	pT1TJrwh+wATGyAA==
+	 references:references; bh=3CR6tgLD7rhzvqZr45BM9V80YjsrczzKijoUucNo/+c=;
+	b=LPsNrGxEP8Km+tZv8qRIJtaALFJmiJBfXpv6Uvz8QfFEr/ZN23NzxBgtjM8dYII5szXKtk
+	mtfRZq8oVXIvAnCg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: x86@kernel.org,
@@ -28,7 +28,6 @@ Cc: x86@kernel.org,
  Nikolay Borisov <nik.borisov@suse.com>,
  "Ahmed S. Darwish" <darwi@linutronix.de>,
  Arnd Bergmann <arnd@arndb.de>,
- Tom Lendacky <thomas.lendacky@amd.com>,
  Russell King <linux@armlinux.org.uk>,
  linux-arm-kernel@lists.infradead.org,
  linux-ia64@vger.kernel.org,
@@ -52,9 +51,9 @@ Cc: x86@kernel.org,
  Richard Henderson <richard.henderson@linaro.org>,
  "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
  Michael Ellerman <mpe@ellerman.id.au>,
- Chris Zankel <chris@zankel.net>
-Subject: [patch 13/17] init, x86: Move mem_encrypt_init() into
- arch_cpu_finalize_init()
+ Chris Zankel <chris@zankel.net>,
+ Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [patch 14/17] x86/init: Initialize signal frame size late
 References: <20230613223827.532680283@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -63,107 +62,66 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 14 Jun 2023 01:39:41 +0200 (CEST)
+Date: Wed, 14 Jun 2023 01:39:42 +0200 (CEST)
 
-Invoke the X86ism mem_encrypt_init() from X86 arch_cpu_finalize_init() and
-remove the weak fallback from the core code.
-
-No functional change.
+No point in doing this during really early boot. Move it to an early
+initcall so that it is set up before possible user mode helpers are started
+during device initialization.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/mem_encrypt.h |    7 ++++---
- arch/x86/kernel/cpu/common.c       |   11 +++++++++++
- init/main.c                        |   13 -------------
- 3 files changed, 15 insertions(+), 16 deletions(-)
+ arch/x86/include/asm/sigframe.h |    2 --
+ arch/x86/kernel/cpu/common.c    |    3 ---
+ arch/x86/kernel/signal.c        |    4 +++-
+ 3 files changed, 3 insertions(+), 6 deletions(-)
 
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -51,6 +51,8 @@ void __init mem_encrypt_free_decrypted_m
+--- a/arch/x86/include/asm/sigframe.h
++++ b/arch/x86/include/asm/sigframe.h
+@@ -85,6 +85,4 @@ struct rt_sigframe_x32 {
  
- void __init sev_es_init_vc_handling(void);
+ #endif /* CONFIG_X86_64 */
  
-+void __init mem_encrypt_init(void);
-+
- #define __bss_decrypted __section(".bss..decrypted")
- 
- #else	/* !CONFIG_AMD_MEM_ENCRYPT */
-@@ -83,13 +85,12 @@ early_set_mem_enc_dec_hypercall(unsigned
- 
- static inline void mem_encrypt_free_decrypted_mem(void) { }
- 
-+static inline void mem_encrypt_init(void) { }
-+
- #define __bss_decrypted
- 
- #endif	/* CONFIG_AMD_MEM_ENCRYPT */
- 
--/* Architecture __weak replacement functions */
--void __init mem_encrypt_init(void);
+-void __init init_sigframe_size(void);
 -
- void add_encrypt_protection_map(void);
- 
- /*
+ #endif /* _ASM_X86_SIGFRAME_H */
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
-@@ -18,6 +18,7 @@
- #include <linux/init.h>
- #include <linux/kprobes.h>
- #include <linux/kgdb.h>
-+#include <linux/mem_encrypt.h>
- #include <linux/smp.h>
- #include <linux/cpu.h>
- #include <linux/io.h>
-@@ -2417,4 +2418,14 @@ void __init arch_cpu_finalize_init(void)
- 	} else {
- 		fpu__init_check_bugs();
- 	}
-+
-+	/*
-+	 * This needs to be called before any devices perform DMA
-+	 * operations that might use the SWIOTLB bounce buffers. It will
-+	 * mark the bounce buffers as decrypted so that their usage will
-+	 * not cause "plain-text" data to be decrypted when accessed. It
-+	 * must be called after late_time_init() so that Hyper-V x86/x64
-+	 * hypercalls work when the SWIOTLB bounce buffers are decrypted.
-+	 */
-+	mem_encrypt_init();
- }
---- a/init/main.c
-+++ b/init/main.c
-@@ -95,7 +95,6 @@
- #include <linux/cache.h>
- #include <linux/rodata_test.h>
- #include <linux/jump_label.h>
--#include <linux/mem_encrypt.h>
- #include <linux/kcsan.h>
- #include <linux/init_syscalls.h>
- #include <linux/stackdepot.h>
-@@ -786,8 +785,6 @@ void __init __weak thread_stack_cache_in
- }
- #endif
+@@ -64,7 +64,6 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/uv/uv.h>
+ #include <asm/set_memory.h>
+-#include <asm/sigframe.h>
+ #include <asm/traps.h>
+ #include <asm/sev.h>
  
--void __init __weak mem_encrypt_init(void) { }
+@@ -1607,8 +1606,6 @@ static void __init early_identify_cpu(st
+ 
+ 	fpu__init_system(c);
+ 
+-	init_sigframe_size();
 -
- void __init __weak poking_init(void) { }
+ #ifdef CONFIG_X86_32
+ 	/*
+ 	 * Regardless of whether PCID is enumerated, the SDM says
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -182,7 +182,7 @@ get_sigframe(struct ksignal *ksig, struc
+ static unsigned long __ro_after_init max_frame_size;
+ static unsigned int __ro_after_init fpu_default_state_size;
  
- void __init __weak pgtable_cache_init(void) { }
-@@ -1043,16 +1040,6 @@ asmlinkage __visible void __init __no_sa
+-void __init init_sigframe_size(void)
++static int __init init_sigframe_size(void)
+ {
+ 	fpu_default_state_size = fpu__get_fpstate_size();
  
- 	arch_cpu_finalize_init();
+@@ -194,7 +194,9 @@ void __init init_sigframe_size(void)
+ 	max_frame_size = round_up(max_frame_size, FRAME_ALIGNMENT);
  
--	/*
--	 * This needs to be called before any devices perform DMA
--	 * operations that might use the SWIOTLB bounce buffers. It will
--	 * mark the bounce buffers as decrypted so that their usage will
--	 * not cause "plain-text" data to be decrypted when accessed. It
--	 * must be called after late_time_init() so that Hyper-V x86/x64
--	 * hypercalls work when the SWIOTLB bounce buffers are decrypted.
--	 */
--	mem_encrypt_init();
--
- 	pid_idr_init();
- 	anon_vma_init();
- #ifdef CONFIG_X86
+ 	pr_info("max sigframe size: %lu\n", max_frame_size);
++	return 0;
+ }
++early_initcall(init_sigframe_size);
+ 
+ unsigned long get_sigframe_size(void)
+ {
 
