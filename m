@@ -1,139 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4250D3D90
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 07:44:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E078FC433D2;
-	Tue, 13 Jun 2023 07:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686642270;
-	bh=ez0I+RKRhMdZt82NML91fPb7fzRC4/NkCFA3IdK3cEg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HyA2VS9kwVTQsYOWOuof1Z4qJ92ct0+rpQ0B5SIAzOL2Mz6wp6NoYwA7DcLYOqzj9
-	 Q8Z9RGOQt5lsRA8Nc33tC8G7SiwN9ipBSdD03bBdhpX4MycI3Vh7vOT7ypJVtsouWv
-	 8Bsg5dlRSFLhnsq+PWCSJc5VolYLva+SeDgrT92N096TEl0/uLmsJvVPLGz9OK3/dz
-	 OYm6tEkeVT/cDyaIgk5UyxE5b/W7hyDcldGwNesOYI9EZOqwD7xGIveZKNt/lp9izm
-	 uoBjmwxoGZjGvj7XWF9lQv7iNjjhyG9sIxFni/WcE8h+xW9r48P7ifrawWGz2rEEWN
-	 FKciDs53eQHeQ==
-Date: Tue, 13 Jun 2023 10:43:47 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Cyrill Gorcunov <gorcunov@gmail.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Eugene Syromiatnikov <esyr@redhat.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	"H . J . Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Nadav Amit <nadav.amit@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Pavel Machek <pavel@ucw.cz>, Peter Zijlstra <peterz@infradead.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Weijiang Yang <weijiang.yang@intel.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	John Allen <john.allen@amd.com>, kcc@google.com, eranian@google.com,
-	jamorris@linux.microsoft.com, dethoma@microsoft.com,
-	akpm@linux-foundation.org, Andrew.Cooper3@citrix.com,
-	christina.schimpe@intel.com, david@redhat.com, debug@rivosinc.com,
-	szabolcs.nagy@arm.com, torvalds@linux-foundation.org,
-	broonie@kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
-	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: Re: [PATCH v9 01/42] mm: Rename arch pte_mkwrite()'s to
- pte_mkwrite_novma()
-Message-ID: <20230613074347.GR52412@kernel.org>
-References: <20230613001108.3040476-1-rick.p.edgecombe@intel.com>
- <20230613001108.3040476-2-rick.p.edgecombe@intel.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E38DB7495
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 08:04:30 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxOuoHI4hkyYMEAA--.9804S3;
+	Tue, 13 Jun 2023 16:04:23 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxVeQFI4hkN60YAA--.5284S3;
+	Tue, 13 Jun 2023 16:04:22 +0800 (CST)
+Subject: Re: [PATCH v3] LoongArch/rethook: Replace kretprobe with rethook on
+ LoongArch
+To: Haoran Jiang <jianghaoran@kylinos.cn>
+References: <20230613011439.59168-1-jianghaoran@kylinos.cn>
+ <20230613060329.356201-1-jianghaoran@kylinos.cn>
+Cc: chenhuacai@kernel.org, conor.dooley@microchip.com, hejinyang@loongson.cn,
+ jhrhhao@163.com, kernel@xen0n.name, l3b2w1@gmail.com,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ masahiroy@kernel.org, mhiramat@kernel.org, palmer@rivosinc.com,
+ tangyouling@loongson.cn, zhangqing@loongson.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8ffd58dd-2e0c-0078-5e3f-a1139f05720b@loongson.cn>
+Date: Tue, 13 Jun 2023 16:04:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230613001108.3040476-2-rick.p.edgecombe@intel.com>
+In-Reply-To: <20230613060329.356201-1-jianghaoran@kylinos.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8DxVeQFI4hkN60YAA--.5284S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxur1rArW8tr45uF1rCF4rJFc_yoW5CFWxpF
+	9rArn5Cr4Uur1qvryDAw1rZF40vrn3ua17WF1DG34fCF90qrZ8JryxXrWqvFWrKwnYvr4F
+	qF4FqryqyFZrJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zw
+	Z7UUUUU==
 
-On Mon, Jun 12, 2023 at 05:10:27PM -0700, Rick Edgecombe wrote:
-> The x86 Shadow stack feature includes a new type of memory called shadow
-> stack. This shadow stack memory has some unusual properties, which requires
-> some core mm changes to function properly.
-> 
-> One of these unusual properties is that shadow stack memory is writable,
-> but only in limited ways. These limits are applied via a specific PTE
-> bit combination. Nevertheless, the memory is writable, and core mm code
-> will need to apply the writable permissions in the typical paths that
-> call pte_mkwrite(). Future patches will make pte_mkwrite() take a VMA, so
-> that the x86 implementation of it can know whether to create regular
-> writable memory or shadow stack memory.
 
-Nit:                            ^ mapping?
 
-> But there are a couple of challenges to this. Modifying the signatures of
-> each arch pte_mkwrite() implementation would be error prone because some
-> are generated with macros and would need to be re-implemented. Also, some
-> pte_mkwrite() callers operate on kernel memory without a VMA.
-> 
-> So this can be done in a three step process. First pte_mkwrite() can be
-> renamed to pte_mkwrite_novma() in each arch, with a generic pte_mkwrite()
-> added that just calls pte_mkwrite_novma(). Next callers without a VMA can
-> be moved to pte_mkwrite_novma(). And lastly, pte_mkwrite() and all callers
-> can be changed to take/pass a VMA.
-> 
-> Start the process by renaming pte_mkwrite() to pte_mkwrite_novma() and
-> adding the pte_mkwrite() wrapper in linux/pgtable.h. Apply the same
-> pattern for pmd_mkwrite(). Since not all archs have a pmd_mkwrite_novma(),
-> create a new arch config HAS_HUGE_PAGE that can be used to tell if
-> pmd_mkwrite() should be defined. Otherwise in the !HAS_HUGE_PAGE cases the
-> compiler would not be able to find pmd_mkwrite_novma().
-> 
-> No functional change.
-> 
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-alpha@vger.kernel.org
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-csky@vger.kernel.org
-> Cc: linux-hexagon@vger.kernel.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: loongarch@lists.linux.dev
-> Cc: linux-m68k@lists.linux-m68k.org
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Dinh Nguyen <dinguyen@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: openrisc@lists.librecores.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: linux-um@lists.infradead.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Suggested-by: Linus Torvalds <torvalds@linuxfoundation.org>
-> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> Link: https://lore.kernel.org/lkml/CAHk-=wiZjSu7c9sFYZb3q04108stgHff2wfbokGCCgW7riz+8Q@mail.gmail.com/
+On 06/13/2023 02:03 PM, Haoran Jiang wrote:
+> That's an adaptation of commit f3a112c0c40d ("x86,rethook,kprobes:
+> Replace kretprobe with rethook on x86")and commit b57c2f124098
+> ("riscv: add riscv rethook implementation") to LoongArch.
+> Mainly refer to this commit
+> b57c2f124098 ("riscv: add riscv rethook implementation").
+>
+> Replaces the kretprobe code with rethook on LoongArch. With this patch,
+> kretprobe on LoongArch uses the rethook instead of kretprobe specific
+> trampoline code.
 
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Maybe Huacai can refine the commit message.
 
--- 
-Sincerely yours,
-Mike.
+>
+> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+
+...
+
+> diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+> index 56c8c4b09a42..dbce23ba9970 100644
+> --- a/arch/loongarch/kernel/kprobes.c
+> +++ b/arch/loongarch/kernel/kprobes.c
+> @@ -378,26 +378,6 @@ int __init arch_init_kprobes(void)
+>  	return 0;
+>  }
+>
+> -/* ASM function that handles the kretprobes must not be probed */
+> -NOKPROBE_SYMBOL(__kretprobe_trampoline);
+> -
+> -/* Called from __kretprobe_trampoline */
+> -void __used *trampoline_probe_handler(struct pt_regs *regs)
+> -{
+> -	return (void *)kretprobe_trampoline_handler(regs, NULL);
+> -}
+> -NOKPROBE_SYMBOL(trampoline_probe_handler);
+> -
+> -void arch_prepare_kretprobe(struct kretprobe_instance *ri,
+> -			    struct pt_regs *regs)
+> -{
+> -	ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
+> -	ri->fp = NULL;
+> -
+> -	/* Replace the return addr with trampoline addr */
+> -	regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
+> -}
+> -NOKPROBE_SYMBOL(arch_prepare_kretprobe);
+>
+
+Please remove the blank line.
+
+>  int arch_trampoline_kprobe(struct kprobe *p)
+>  {
+> diff --git a/arch/loongarch/kernel/rethook.c b/arch/loongarch/kernel/rethook.c
+> new file mode 100644
+> index 000000000000..b5e7f62f7dea
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/rethook.c
+> @@ -0,0 +1,27 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Generic return hook for LoongArch.
+> + */
+> +
+> +#include <linux/kprobes.h>
+> +#include <linux/rethook.h>
+> +#include "rethook.h"
+> +
+> +/* This is called from arch_rethook_trampoline() */
+> +unsigned long __used arch_rethook_trampoline_callback(struct pt_regs *regs)
+> +{
+> +	return rethook_trampoline_handler(regs, 0);
+> +}
+> +
+
+Ditto
+
+> +NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
+> +
+> +void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs, bool mcount)
+> +{
+> +	rhn->ret_addr = regs->regs[1];
+> +	rhn->frame = 0;
+> +
+> +	/* replace return addr with trampoline */
+> +	regs->regs[1] = (unsigned long)arch_rethook_trampoline;
+> +}
+> +
+
+Ditto
+
+> +NOKPROBE_SYMBOL(arch_rethook_prepare);
+
+Like s390 and x86, please add:
+
+/* assembler function that handles the rethook must not be probed itself */
+NOKPROBE_SYMBOL(arch_rethook_trampoline);
+
+> diff --git a/arch/loongarch/kernel/rethook.h b/arch/loongarch/kernel/rethook.h
+
+...
+
+> -SYM_CODE_END(__kretprobe_trampoline)
+> +SYM_CODE_END(arch_rethook_trampoline)
+
+Thanks,
+Tiezhu
+
