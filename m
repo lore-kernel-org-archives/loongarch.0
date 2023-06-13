@@ -1,258 +1,121 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC16B3C25
-	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 11:23:25 +0000 (UTC)
-X-UUID: 3a8083491aa742ea815668872604386d-20230613
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.22,REQID:5eed85c2-4a7d-407a-b6d1-6a8520863757,IP:10,
-	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-24
-X-CID-INFO: VERSION:1.1.22,REQID:5eed85c2-4a7d-407a-b6d1-6a8520863757,IP:10,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-24
-X-CID-META: VersionHash:120426c,CLOUDID:397c4a3e-de1e-4348-bc35-c96f92f1dcbb,B
-	ulkID:2306131923195QNQN7Q1,BulkQuantity:0,Recheck:0,SF:43|24|17|19|102,TC:
-	nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-	,OSI:0,OSA:0,AV:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-UUID: 3a8083491aa742ea815668872604386d-20230613
-X-User: jianghaoran@kylinos.cn
-Received: from localhost.localdomain [(223.70.160.245)] by mailgw
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
-	with ESMTP id 536587108; Tue, 13 Jun 2023 19:23:16 +0800
-From: Haoran Jiang <jianghaoran@kylinos.cn>
-To: jianghaoran@kylinos.cn
-Cc: chenhuacai@kernel.org,
-	conor.dooley@microchip.com,
-	hejinyang@loongson.cn,
-	jhrhhao@163.com,
-	kernel@xen0n.name,
-	l3b2w1@gmail.com,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	masahiroy@kernel.org,
-	mhiramat@kernel.org,
-	palmer@rivosinc.com,
-	tangyouling@loongson.cn,
-	yangtiezhu@loongson.cn,
-	zhangqing@loongson.cn
-Subject: [PATCH v4] LoongArch/rethook: Replace kretprobe with rethook on LoongArch
-Date: Tue, 13 Jun 2023 19:18:04 +0800
-Message-Id: <20230613111804.683707-1-jianghaoran@kylinos.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20230612054949.305652-1-jianghaoran@kylinos.cn>
-References: <20230612054949.305652-1-jianghaoran@kylinos.cn>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF8D13C25
+	for <loongarch@lists.linux.dev>; Tue, 13 Jun 2023 12:24:26 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.22])
+	by gateway (Coremail) with SMTP id _____8AxV+n4X4hkXqMEAA--.7921S3;
+	Tue, 13 Jun 2023 20:24:24 +0800 (CST)
+Received: from [10.180.13.22] (unknown [10.180.13.22])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax6OT3X4hknyMZAA--.6254S3;
+	Tue, 13 Jun 2023 20:24:23 +0800 (CST)
+Message-ID: <bda7c25f-65cf-d45f-3ac0-f2471e3aacf8@loongson.cn>
+Date: Tue, 13 Jun 2023 20:23:58 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [ PATCH v2 3/3] ASoC: dt-bindings: Add support for Loongson audio
+ card
+To: Conor Dooley <conor@kernel.org>
+Cc: krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+ conor+dt@kernel.org, broonie@kernel.org, lgirdwood@gmail.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ alsa-devel@alsa-project.org, loongarch@lists.linux.dev,
+ loongson-kernel@lists.loongnix.cn
+References: <20230612085614.3039498-1-mengyingkun@loongson.cn>
+ <20230612-booted-french-186dd95e78a9@spud>
+Content-Language: en-US
+From: Yingkun Meng <mengyingkun@loongson.cn>
+In-Reply-To: <20230612-booted-french-186dd95e78a9@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Ax6OT3X4hknyMZAA--.6254S3
+X-CM-SenderInfo: 5phqw55lqjy33q6o00pqjv00gofq/1tbiAQABDGSIXIIAKwABsU
+X-Coremail-Antispam: 1Uk129KBj93XoWxGF4DKrW3ZF13AFWkuw43XFc_yoW5Gr47pF
+	WrCasrKF4xt3W7C3savFyrJr4fZFZayanxJr42qw1UC3s8Ka4rWw42kF1rZay2yrn5GrW2
+	vFyF9w48G3Z0yagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
+	c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
+	4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnI
+	WIevJa73UjIFyTuYvjxU2BT5DUUUU
 
-That's an adaptation of commit f3a112c0c40d ("x86,rethook,kprobes:
-Replace kretprobe with rethook on x86")and commit b57c2f124098
-("riscv: add riscv rethook implementation") to LoongArch.
-Mainly refer to this commit
-b57c2f124098 ("riscv: add riscv rethook implementation").
 
-Replaces the kretprobe code with rethook on LoongArch. With this patch,
-kretprobe on LoongArch uses the rethook instead of kretprobe specific
-trampoline code.
+On 2023/6/13 01:24, Conor Dooley wrote:
+> Hey!
+>
+> On Mon, Jun 12, 2023 at 04:56:14PM +0800, YingKun Meng wrote:
+>> From: Yingkun Meng <mengyingkun@loongson.cn>
+>>
+>> The audio card uses loongson I2S controller present in
+>> 7axxx/2kxxx chips to transfer audio data.
+>>
+>> On loongson platform, the chip has only one I2S controller.
+>>
+>> Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+> I got 2 copies of this patch, but none of the rest of the series appears
+> to be threaded with it.
+>
+>>   .../sound/loongson,ls-audio-card.yaml         | 70 +++++++++++++++++++
+>>   1 file changed, 70 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
+>> new file mode 100644
+>> index 000000000000..61e8babed402
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
+>> @@ -0,0 +1,70 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/sound/loongson,ls-audio-card.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Loongson 7axxx/2kxxx ASoC audio sound card driver
+>> +
+>> +maintainers:
+>> +  - Yingkun Meng <mengyingkun@loongson.cn>
+>> +
+>> +description:
+>> +  The binding describes the sound card present in loongson
+>> +  7axxx/2kxxx platform. The sound card is an ASoC component
+>> +  which uses Loongson I2S controller to transfer the audio data.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: loongson,ls-audio-card
+> Reviewing sound stuff is beyond my pay grade, so forgive me if I am off
+> the rails here, but this (and the "x"s in the description) look a bit
+> odd. Recently, we've noticed quite a few loongson dt-bindings attempting
+> to use a single compatible for many different chips.
+> Usually you have individual compatibles for the various SoCs with this
+> core, which can fall back to a generic one, rather than just adding a
+> generic compatible for all devices.
+> As far as I know, there's several SoCs fitting 2kxxx, and the format
+> being used elsewhere is "loongson,ls2k1000" etc.
 
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
 
----
-v4:
-1,remove some blank lines
-2,add NOKPROBE_SYMBOL(arch_rethook_trampoline)
-3,Move CFLAGS_REMOVE_rethook.o = $(CC_FLAGS_FTRACE) and
-CFLAGS_REMOVE_rethook_trampoline.o = $(CC_FLAGS_FTRACE)
-to below CFLAGS_REMOVE_perf_event.o = $(CC_FLAGS_FTRACE)
+Currently, Loongson has 2K0500/2K1000LA/2K1500/2K2000 chips.
 
-v3:
-1,Fixed some format and spelling issues
-2,According to this commit 571a2a50a8fc
-(rethook, fprobe: do not trace rethook related functions),
-the problem described in this commit Should be modified on LoongArch.
+Here, its' possible to use a single compatible for different chips,
 
-v2:
-Modified the patch format and commit message.
----
- arch/loongarch/Kconfig                        |  1 +
- arch/loongarch/include/asm/kprobes.h          |  3 --
- arch/loongarch/kernel/Makefile                |  5 +++-
- arch/loongarch/kernel/kprobes.c               | 21 --------------
- arch/loongarch/kernel/rethook.c               | 28 +++++++++++++++++++
- arch/loongarch/kernel/rethook.h               |  8 ++++++
- ...obes_trampoline.S => rethook_trampoline.S} |  6 ++--
- 7 files changed, 44 insertions(+), 28 deletions(-)
- create mode 100644 arch/loongarch/kernel/rethook.c
- create mode 100644 arch/loongarch/kernel/rethook.h
- rename arch/loongarch/kernel/{kprobes_trampoline.S => rethook_trampoline.S} (93%)
+as the audio device is a logical device, not dependent on chip model.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index d38b066fc931..5800aa52c82f 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -120,6 +120,7 @@ config LOONGARCH
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-+	select HAVE_RETHOOK
- 	select HAVE_RSEQ
- 	select HAVE_SAMPLE_FTRACE_DIRECT
- 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
-diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
-index 798020ae02c6..7b9fc3ed71c3 100644
---- a/arch/loongarch/include/asm/kprobes.h
-+++ b/arch/loongarch/include/asm/kprobes.h
-@@ -49,9 +49,6 @@ bool kprobe_fault_handler(struct pt_regs *regs, int trapnr);
- bool kprobe_breakpoint_handler(struct pt_regs *regs);
- bool kprobe_singlestep_handler(struct pt_regs *regs);
- 
--void __kretprobe_trampoline(void);
--void *trampoline_probe_handler(struct pt_regs *regs);
--
- #else /* !CONFIG_KPROBES */
- 
- static inline bool kprobe_breakpoint_handler(struct pt_regs *regs) { return false; }
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 9a72d91cd104..b30b1459f513 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -28,6 +28,8 @@ ifdef CONFIG_FUNCTION_TRACER
-   CFLAGS_REMOVE_inst.o = $(CC_FLAGS_FTRACE)
-   CFLAGS_REMOVE_time.o = $(CC_FLAGS_FTRACE)
-   CFLAGS_REMOVE_perf_event.o = $(CC_FLAGS_FTRACE)
-+  CFLAGS_REMOVE_rethook.o = $(CC_FLAGS_FTRACE)
-+  CFLAGS_REMOVE_rethook_trampoline.o = $(CC_FLAGS_FTRACE)
- endif
- 
- obj-$(CONFIG_MODULES)		+= module.o module-sections.o
-@@ -52,6 +54,7 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
- obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_regs.o
- obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
- 
--obj-$(CONFIG_KPROBES)		+= kprobes.o kprobes_trampoline.o
-+obj-$(CONFIG_KPROBES)		+= kprobes.o
-+obj-$(CONFIG_RETHOOK)		+= rethook.o rethook_trampoline.o
- 
- CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
-diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
-index 56c8c4b09a42..83467232ca3c 100644
---- a/arch/loongarch/kernel/kprobes.c
-+++ b/arch/loongarch/kernel/kprobes.c
-@@ -378,27 +378,6 @@ int __init arch_init_kprobes(void)
- 	return 0;
- }
- 
--/* ASM function that handles the kretprobes must not be probed */
--NOKPROBE_SYMBOL(__kretprobe_trampoline);
--
--/* Called from __kretprobe_trampoline */
--void __used *trampoline_probe_handler(struct pt_regs *regs)
--{
--	return (void *)kretprobe_trampoline_handler(regs, NULL);
--}
--NOKPROBE_SYMBOL(trampoline_probe_handler);
--
--void arch_prepare_kretprobe(struct kretprobe_instance *ri,
--			    struct pt_regs *regs)
--{
--	ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
--	ri->fp = NULL;
--
--	/* Replace the return addr with trampoline addr */
--	regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
--}
--NOKPROBE_SYMBOL(arch_prepare_kretprobe);
--
- int arch_trampoline_kprobe(struct kprobe *p)
- {
- 	return 0;
-diff --git a/arch/loongarch/kernel/rethook.c b/arch/loongarch/kernel/rethook.c
-new file mode 100644
-index 000000000000..69966af30d4f
---- /dev/null
-+++ b/arch/loongarch/kernel/rethook.c
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Generic return hook for LoongArch.
-+ */
-+
-+#include <linux/kprobes.h>
-+#include <linux/rethook.h>
-+#include "rethook.h"
-+
-+/* This is called from arch_rethook_trampoline() */
-+unsigned long __used arch_rethook_trampoline_callback(struct pt_regs *regs)
-+{
-+	return rethook_trampoline_handler(regs, 0);
-+}
-+NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
-+
-+void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs, bool mcount)
-+{
-+	rhn->ret_addr = regs->regs[1];
-+	rhn->frame = 0;
-+
-+	/* replace return addr with trampoline */
-+	regs->regs[1] = (unsigned long)arch_rethook_trampoline;
-+}
-+NOKPROBE_SYMBOL(arch_rethook_prepare);
-+
-+/* assembler function that handles the rethook must not be probed itself */
-+NOKPROBE_SYMBOL(arch_rethook_trampoline);
-diff --git a/arch/loongarch/kernel/rethook.h b/arch/loongarch/kernel/rethook.h
-new file mode 100644
-index 000000000000..3f1c1edf0d0b
---- /dev/null
-+++ b/arch/loongarch/kernel/rethook.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LOONGARCH_RETHOOK_H
-+#define __LOONGARCH_RETHOOK_H
-+
-+unsigned long arch_rethook_trampoline_callback(struct pt_regs *regs);
-+void arch_rethook_prepare(struct rethook_node *rhn, struct pt_regs *regs, bool mcount);
-+
-+#endif
-diff --git a/arch/loongarch/kernel/kprobes_trampoline.S b/arch/loongarch/kernel/rethook_trampoline.S
-similarity index 93%
-rename from arch/loongarch/kernel/kprobes_trampoline.S
-rename to arch/loongarch/kernel/rethook_trampoline.S
-index af94b0d213fa..bd5772c96338 100644
---- a/arch/loongarch/kernel/kprobes_trampoline.S
-+++ b/arch/loongarch/kernel/rethook_trampoline.S
-@@ -75,7 +75,7 @@
- 	csrxchg t0, t1, LOONGARCH_CSR_CRMD
- 	.endm
- 
--SYM_CODE_START(__kretprobe_trampoline)
-+SYM_CODE_START(arch_rethook_trampoline)
- 	addi.d	sp, sp, -PT_SIZE
- 	save_all_base_regs
- 
-@@ -84,7 +84,7 @@ SYM_CODE_START(__kretprobe_trampoline)
- 
- 	move a0, sp /* pt_regs */
- 
--	bl trampoline_probe_handler
-+	bl arch_rethook_trampoline_callback
- 
- 	/* use the result as the return-address */
- 	move ra, a0
-@@ -93,4 +93,4 @@ SYM_CODE_START(__kretprobe_trampoline)
- 	addi.d	sp, sp, PT_SIZE
- 
- 	jr ra
--SYM_CODE_END(__kretprobe_trampoline)
-+SYM_CODE_END(arch_rethook_trampoline)
--- 
-2.27.0
+
+> Cheers,
+> Conor.
+>
 
