@@ -1,101 +1,148 @@
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957CD3FE4
-	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 10:40:40 +0000 (UTC)
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1D3B11EC072D;
-	Wed, 14 Jun 2023 12:40:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-	t=1686739238;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-	bh=l0wmUCOq08ocL9JWwuGeMkrv5XjoGiMDJp61EtBoHWU=;
-	b=NtiUaYGB5+TIiR6764dKlyutinr0Ii2WHv1k1ezwxrjjQluavlkSikEJFCBE29+y/6mRd/
-	9MUSBX1BWV2MDxyCbr2QzRorpbH40VaUbn3P++FsWlkUli8gdX+1wB1IMooeSaZUIQ00QY
-	2Z4CIiA4TBNTNbI3FVrl+xBfD2lz8oY=
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Pj0lafQrEqVp; Wed, 14 Jun 2023 10:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1686739234; bh=l0wmUCOq08ocL9JWwuGeMkrv5XjoGiMDJp61EtBoHWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k/bfHtEPP8YIugFtqP+tN7LuSStGm8cFiUrHxVXMD7P3bgirpEEolWPDL+G5Du0Ye
-	 oES6q+UTrgVC0XsCPnhHAnXrgeI74hSaa4liUMaygb/Qe6T0A1WExfifcs6O/SI6Hy
-	 UMJ7Ylo8gXm87tXLFG1dJLNFsdrX59AjRaa1KiXyl87SWoSzBeagPRa2apwt2nEakO
-	 e9VbO5ef2lKwu/7Bl6wRfn5UcrR3L58Vyjjqim1KInTv2VbqErVoEhQrLfTpdXcONy
-	 i8l0xguR7a/APu4Q5wiNXeUs1DhYdGfZpibapg0j34EWnXTfHRkimUnz2uqO5nbl1n
-	 WrKGDg1wRNEi6YV9N8ASx3Jkh1GEBSm3Iy47Rtq0mzqtK9wFgejzMmuWsq5rLDTnbu
-	 k476FnlY9Q03tTWlcNR0mwL0cltiNK+WzxryIwdyhXz79/U59j+aXRPE3226LH7nuR
-	 mPBd/hcumKwgUIW/y7r34xKEyDlXo1cCJDvrLyXetKh9urHMjgm/wmTfrBwkAQeXa7
-	 NV1zEAOAmoRv1ihD7AGnEoHuTT3zFe1Rlmdp4JaQPZMj9XyEbY87bxlzuUTxP4/HDP
-	 xLdf/AJlIV1769l55vJl2dl/9HW3PNJkuIUZVr1tn/7QIJCewdotxWz7PITPBacB/8
-	 mrNBtZfDh3ofu7rt5wUXClHo=
-Received: from zn.tnic (p200300ea971dC5f7329c23ffFea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971d:c5f7:329c:23ff:fea6:a903])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 511F740E018C;
-	Wed, 14 Jun 2023 10:40:02 +0000 (UTC)
-Date: Wed, 14 Jun 2023 12:39:55 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>,
-	Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-m68k@lists.linux-m68k.org,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	linux-sh@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	sparclinux@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-um@lists.infradead.org,
-	Richard Henderson <richard.henderson@linaro.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Chris Zankel <chris@zankel.net>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [patch 02/17] x86/cpu: Switch to arch_cpu_finalize_init()
-Message-ID: <20230614103955.GAZImY+6VF9oezn22m@fat_crate.local>
-References: <20230613223827.532680283@linutronix.de>
- <20230613224545.019583869@linutronix.de>
- <87legm8j4h.ffs@tglx>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E3386FC2
+	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 11:12:47 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.124])
+	by gateway (Coremail) with SMTP id _____8Ax3equoIlk+BkFAA--.10820S3;
+	Wed, 14 Jun 2023 19:12:46 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.124])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxNeSsoIlklIkaAA--.10308S4;
+	Wed, 14 Jun 2023 19:12:44 +0800 (CST)
+From: YingKun Meng <mengyingkun@loongson.cn>
+To: krzysztof.kozlowski@linaro.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	robh+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: broonie@kernel.org,
+	lgirdwood@gmail.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn,
+	Yingkun Meng <mengyingkun@loongson.cn>
+Subject: [ PATCH RESEND v2 3/3] ASoC: dt-bindings: Add support for Loongson audio card
+Date: Wed, 14 Jun 2023 19:11:39 +0800
+Message-Id: <20230614111139.3399284-1-mengyingkun@loongson.cn>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87legm8j4h.ffs@tglx>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxNeSsoIlklIkaAA--.10308S4
+X-CM-SenderInfo: 5phqw55lqjy33q6o00pqjv00gofq/1tbiAQACDGSIXIIYSwAFsr
+X-Coremail-Antispam: 1Uk129KBj93XoW7tF4DXF4xJF1DArW5ArW3XFc_yoW5Jr15pw
+	s3C34UGrW8t3W7Cas5ZFyxAw4fZasayFsrXr42qw1UCFZ8K3WFqw4ak3WUu3W2kF1kJay7
+	uFyFkw18Gas3CwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-On Wed, Jun 14, 2023 at 11:53:50AM +0200, Thomas Gleixner wrote:
-> That's the wrong order. mitigations must come before the smt
-> update. Thanks to Boris for spotting it.
+From: Yingkun Meng <mengyingkun@loongson.cn>
 
-Right, with that fixed the ordering looks good now.
+The audio card uses loongson I2S controller present in
+7axxx/2kxxx chips to transfer audio data.
 
-Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+On loongson platform, the chip has only one I2S controller.
 
+Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+---
+v1 -> v2:
+* Add chip model restriction for title and description.
+* Add 'required' restriction for sound-dai property.
+
+ .../sound/loongson,ls-audio-card.yaml         | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
+new file mode 100644
+index 000000000000..61e8babed402
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/loongson,ls-audio-card.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson 7axxx/2kxxx ASoC audio sound card driver
++
++maintainers:
++  - Yingkun Meng <mengyingkun@loongson.cn>
++
++description:
++  The binding describes the sound card present in loongson
++  7axxx/2kxxx platform. The sound card is an ASoC component
++  which uses Loongson I2S controller to transfer the audio data.
++
++properties:
++  compatible:
++    const: loongson,ls-audio-card
++
++  model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: User specified audio sound card name
++
++  mclk-fs:
++    $ref: simple-card.yaml#/definitions/mclk-fs
++
++  cpu:
++    description: Holds subnode which indicates cpu dai.
++    type: object
++    additionalProperties: false
++    properties:
++      sound-dai:
++        maxItems: 1
++    required:
++      - sound-dai
++
++  codec:
++    description: Holds subnode which indicates codec dai.
++    type: object
++    additionalProperties: false
++    properties:
++      sound-dai:
++        maxItems: 1
++    required:
++      - sound-dai
++
++required:
++  - compatible
++  - model
++  - mclk-fs
++  - cpu
++  - codec
++
++additionalProperties: false
++
++examples:
++  - |
++    sound {
++        compatible = "loongson,ls-audio-card";
++        model = "loongson-audio";
++        mclk-fs = <512>;
++
++        cpu {
++            sound-dai = <&i2s>;
++        };
++        codec {
++             sound-dai = <&es8323>;
++        };
++    };
 -- 
-Regards/Gruss,
-    Boris.
+2.33.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
