@@ -1,30 +1,29 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1193933E9
-	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 09:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC0C33E9
+	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 09:53:53 +0000 (UTC)
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1686736334;
+	s=2020; t=1686736431;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k8/kluo4EhxJUN1w8Wkxa+89VuHL9oMdcgH3J0LyeG0=;
-	b=Az/2Llqz+IM3XCNfPKYHopkPqaXC+pwMBOIpVA+mJJHPWxSPOIY34kEAIaen1V0Ow+QlxI
-	NwXssu9xAGcIJuH9pLqUTwxjEj03zgvfEssBnfsHPEPQIBpsWpsym5MYe87R56oVEK6Ppg
-	so8zxD9U3nruzhrdwW2y8dBP09ZrsaczRfdum4KYj2TOgHQWqvaDr8+oKdPXE/SpaX1Vb0
-	dUO9xBd0DLIueg+D6EjwtITyCleCX9eGbA0lXl1NQ8rRG3RuKc1Q695iKe085RguBbM6B1
-	KehZaYHQ9WpTKOCQntKCcBydTrGOqa6dvjJFZUj8dWdUzmbM7Ell8lih0F5yrw==
+	bh=gewkOqH+92uWmAuYgplX6+/Ly+2B4bJPgpiHXTVzXQk=;
+	b=tqj22TzLcKVa7QGDJhQvthc22fxmYp1bEMbHU5gV5SM6PQpZp6kp0i2wnUwmLbjf0CLrap
+	mSUv9QezTK0yVagOwlSWU4p3FaZCYsDoxKisAdNmcpgz5kGNAFT/V22PTBWuHAIYrPCxGG
+	orFdcsPKRX6+ZaA+0FBbG0meTGRdNVh1nzgdwrrqYoSrf8Wi1fHshUpmA3DmqDUFuWjx1e
+	KcPFi4QdkJW/dxXZ+C+hALAUKQRa4k0TioqiO2E+t6X5moXeY+B6J5VuJDjWDOYjdBCH/u
+	rEWkI1MsWeRE9yznziTGCSaNXzfJWIzQy+DhqgcDCciYGItM8bNnTX/uUpCWjg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1686736334;
+	s=2020e; t=1686736431;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k8/kluo4EhxJUN1w8Wkxa+89VuHL9oMdcgH3J0LyeG0=;
-	b=FVmcyAPxnopLQkGRCsMmFInFjSnDHkimejjG/YwNIqrUEGJ3/xx0bziZNTPs5wNfY73Etv
-	rMYxWz+Vccq4JaAQ==
-To: "Chang S. Bae" <chang.seok.bae@intel.com>, LKML
- <linux-kernel@vger.kernel.org>
+	bh=gewkOqH+92uWmAuYgplX6+/Ly+2B4bJPgpiHXTVzXQk=;
+	b=NSOtxM+isOfij0yNL7TltAj+Qj/tSD4ZYY6BTGce3d2MOdmAPjYcJs21kt6mU/o8eqtD8F
+	i7U7+jZHzmEiIKAA==
+To: LKML <linux-kernel@vger.kernel.org>
 Cc: x86@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Nikolay
  Borisov <nik.borisov@suse.com>, "Ahmed S. Darwish" <darwi@linutronix.de>,
  Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
@@ -43,14 +42,12 @@ Cc: x86@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Nikolay
  <James.Bottomley@HansenPartnership.com>, Michael Ellerman
  <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Tom Lendacky
  <thomas.lendacky@amd.com>
-Subject: Re: [patch 17/17] x86/fpu: Move FPU initialization into
- arch_cpu_finalize_init()
-In-Reply-To: <23dc1c47-88ee-6b2d-1a5a-d6c812bb1761@intel.com>
+Subject: Re: [patch 02/17] x86/cpu: Switch to arch_cpu_finalize_init()
+In-Reply-To: <20230613224545.019583869@linutronix.de>
 References: <20230613223827.532680283@linutronix.de>
- <20230613224545.902376621@linutronix.de>
- <23dc1c47-88ee-6b2d-1a5a-d6c812bb1761@intel.com>
-Date: Wed, 14 Jun 2023 11:52:14 +0200
-Message-ID: <87o7li8j75.ffs@tglx>
+ <20230613224545.019583869@linutronix.de>
+Date: Wed, 14 Jun 2023 11:53:50 +0200
+Message-ID: <87legm8j4h.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -59,32 +56,22 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-On Tue, Jun 13 2023 at 22:03, Chang S. Bae wrote:
+On Wed, Jun 14 2023 at 01:39, Thomas Gleixner wrote:
+> +	/*
+> +	 * identify_boot_cpu() initialized SMT support information, let the
+> +	 * core code know.
+> +	 */
+> +	cpu_smt_check_topology();
+> +
+> +	if (!IS_ENABLED(CONFIG_SMP)) {
+> +		pr_info("CPU: ");
+> +		print_cpu_info(&boot_cpu_data);
+> +	}
+> +
+> +	arch_smt_update();
+> +
+> +	cpu_select_mitigations();
 
-> On 6/13/2023 4:39 PM, Thomas Gleixner wrote:
->>   
->> @@ -2396,6 +2393,13 @@ void __init arch_cpu_finalize_init(void)
->>   			'0' + (boot_cpu_data.x86 > 6 ? 6 : boot_cpu_data.x86);
->>   	}
->>   
->> +	/*
->> +	 * Must be before alternatives because it might set or clear
->> +	 * feature bits.
->> +	 */
->> +	fpu__init_system();
->> +	fpu__init_cpu();
->
-> fpu__init_cpu() appears to be duplicated here because fpu__init_system() 
-> invoked this already:
->
-> void __init fpu__init_system(void)
-> {
-> ...
-> 	/*
-> 	 * The FPU has to be operational for some of the
-> 	 * later FPU init activities:
-> 	 */
-> 	fpu__init_cpu();
+That's the wrong order. mitigations must come before the smt
+update. Thanks to Boris for spotting it.
 
-Well, that's _before_ xstate initialization and I couldn't convince
-myself that it's good enough. All of this is such a horrible mess...
