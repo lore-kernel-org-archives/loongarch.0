@@ -1,29 +1,26 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E3386FC2
-	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 11:12:47 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.124])
-	by gateway (Coremail) with SMTP id _____8Ax3equoIlk+BkFAA--.10820S3;
-	Wed, 14 Jun 2023 19:12:46 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.124])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxNeSsoIlklIkaAA--.10308S4;
-	Wed, 14 Jun 2023 19:12:44 +0800 (CST)
-From: YingKun Meng <mengyingkun@loongson.cn>
-To: krzysztof.kozlowski@linaro.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	robh+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: broonie@kernel.org,
-	lgirdwood@gmail.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 664EB6FC2
+	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 11:14:27 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.116])
+	by gateway (Coremail) with SMTP id _____8BxpOgSoYlkLxoFAA--.408S3;
+	Wed, 14 Jun 2023 19:14:26 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.116])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx+OQSoYlk_IkaAA--.10128S2;
+	Wed, 14 Jun 2023 19:14:26 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn,
-	Yingkun Meng <mengyingkun@loongson.cn>
-Subject: [ PATCH RESEND v2 3/3] ASoC: dt-bindings: Add support for Loongson audio card
-Date: Wed, 14 Jun 2023 19:11:39 +0800
-Message-Id: <20230614111139.3399284-1-mengyingkun@loongson.cn>
-X-Mailer: git-send-email 2.33.0
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH V1 0/4] irqchip/loongson: Fix some loongson irqchip drivers
+Date: Wed, 14 Jun 2023 19:14:22 +0800
+Message-Id: <20230614111426.5545-1-lvjianmin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -31,118 +28,40 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxNeSsoIlklIkaAA--.10308S4
-X-CM-SenderInfo: 5phqw55lqjy33q6o00pqjv00gofq/1tbiAQACDGSIXIIYSwAFsr
-X-Coremail-Antispam: 1Uk129KBj93XoW7tF4DXF4xJF1DArW5ArW3XFc_yoW5Jr15pw
-	s3C34UGrW8t3W7Cas5ZFyxAw4fZasayFsrXr42qw1UCFZ8K3WFqw4ak3WUu3W2kF1kJay7
-	uFyFkw18Gas3CwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
+X-CM-TRANSID:AQAAf8Bx+OQSoYlk_IkaAA--.10128S2
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E
+	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4c8EcI0En4kS14v26r1Y6r17MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIY
+	CTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-From: Yingkun Meng <mengyingkun@loongson.cn>
+The patch series provide some fixes for loongson-liointc and loongson-pch-pic driver.
 
-The audio card uses loongson I2S controller present in
-7axxx/2kxxx chips to transfer audio data.
+Jianmin Lv (2):
+  irqchip/loongson-pch-pic: Fix initialization of HT vector register
+  irqchip/loongson-liointc: Fix IRQ trigger polarity
 
-On loongson platform, the chip has only one I2S controller.
+Liu Peibao (1):
+  irqchip/loongson-pch-pic: Fix potential incorrect hwirq assignment
 
-Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
----
-v1 -> v2:
-* Add chip model restriction for title and description.
-* Add 'required' restriction for sound-dai property.
+Yinbo Zhu (1):
+  irqchip/loongson-liointc: Add IRQCHIP_SKIP_SET_WAKE flag
 
- .../sound/loongson,ls-audio-card.yaml         | 70 +++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
+ drivers/irqchip/irq-loongson-liointc.c |  9 +++++----
+ drivers/irqchip/irq-loongson-pch-pic.c | 10 ++++------
+ 2 files changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-new file mode 100644
-index 000000000000..61e8babed402
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/loongson,ls-audio-card.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson 7axxx/2kxxx ASoC audio sound card driver
-+
-+maintainers:
-+  - Yingkun Meng <mengyingkun@loongson.cn>
-+
-+description:
-+  The binding describes the sound card present in loongson
-+  7axxx/2kxxx platform. The sound card is an ASoC component
-+  which uses Loongson I2S controller to transfer the audio data.
-+
-+properties:
-+  compatible:
-+    const: loongson,ls-audio-card
-+
-+  model:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: User specified audio sound card name
-+
-+  mclk-fs:
-+    $ref: simple-card.yaml#/definitions/mclk-fs
-+
-+  cpu:
-+    description: Holds subnode which indicates cpu dai.
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      sound-dai:
-+        maxItems: 1
-+    required:
-+      - sound-dai
-+
-+  codec:
-+    description: Holds subnode which indicates codec dai.
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      sound-dai:
-+        maxItems: 1
-+    required:
-+      - sound-dai
-+
-+required:
-+  - compatible
-+  - model
-+  - mclk-fs
-+  - cpu
-+  - codec
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    sound {
-+        compatible = "loongson,ls-audio-card";
-+        model = "loongson-audio";
-+        mclk-fs = <512>;
-+
-+        cpu {
-+            sound-dai = <&i2s>;
-+        };
-+        codec {
-+             sound-dai = <&es8323>;
-+        };
-+    };
 -- 
-2.33.0
+2.31.1
 
