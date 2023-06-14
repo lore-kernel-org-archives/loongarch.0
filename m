@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C6BE1FD3
-	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 11:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B6858BF0
+	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 11:59:39 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.116])
-	by gateway (Coremail) with SMTP id _____8AxHuupq4lkpR0FAA--.10839S3;
-	Wed, 14 Jun 2023 19:59:37 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxL_Cqq4lksB0FAA--.10975S3;
+	Wed, 14 Jun 2023 19:59:38 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.116])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxNeSoq4lkzJMaAA--.10424S2;
-	Wed, 14 Jun 2023 19:59:36 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxNeSoq4lkzJMaAA--.10424S3;
+	Wed, 14 Jun 2023 19:59:37 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Marc Zyngier <maz@kernel.org>
@@ -16,11 +16,15 @@ Cc: linux-kernel@vger.kernel.org,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	WANG Xuerui <kernel@xen0n.name>,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH V3 0/5] irqchip/loongson: Fix some loongson irqchip drivers
-Date: Wed, 14 Jun 2023 19:59:31 +0800
-Message-Id: <20230614115936.5950-1-lvjianmin@loongson.cn>
+	loongson-kernel@lists.loongnix.cn,
+	stable@vger.kernel.org,
+	liuyun <liuyun@loongson.cn>
+Subject: [PATCH V3 1/5] irqchip/loongson-pch-pic: Fix initialization of HT vector register
+Date: Wed, 14 Jun 2023 19:59:32 +0800
+Message-Id: <20230614115936.5950-2-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230614115936.5950-1-lvjianmin@loongson.cn>
+References: <20230614115936.5950-1-lvjianmin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -28,50 +32,87 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxNeSoq4lkzJMaAA--.10424S2
+X-CM-TRANSID:AQAAf8BxNeSoq4lkzJMaAA--.10424S3
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZF13JFWDXFyDJF1kZF17CFX_yoWfZFb_uF
-	WI93yDCrn2gF1xXay2yr40vF9I9FWUW3Wq9FyjqF1rX3yqv3W3Cr47CwnxG3Z7JF48tFn8
-	Xrs5GryfCryIyosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5WrAUUUUU=
+X-Coremail-Antispam: 1Uk129KBj93XoWxJr1DZFy8WFyfXr1fXF1xtFc_yoW8tw15pa
+	yaqa1avr4UJr1UKF1kGayrXFy3J39xC39rKayYyr1fXwn8C3sFkrsrA3W8ZFWxCrWUZF13
+	ZrWSyF18C3W5AFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
+	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjxU7fOzDUUUU
 
-The patch series provide some fixes for loongson-liointc and loongson-pch-pic driver.
+In an ACPI-based dual-bridge system, IRQ of each bridge's
+PCH PIC sent to CPU is always a zero-based number, which
+means that the IRQ on PCH PIC of each bridge is mapped into
+vector range from 0 to 63 of upstream irqchip(e.g. EIOINTC).
 
-V1->V2:
-1. Adjust commit log for all patchs
-2. Add some explanation for Loongson-3's polarity register
+      EIOINTC N: [0 ... 63 | 64 ... 255]
+                  --------   ----------
+                      ^          ^
+                      |          |
+                  PCH PIC N      |
+                             PCH MSI N
 
-V2->V3:
-1. Add a new patch[5] to fix irq affinity setting during resume for loongson-eiointc
+For example, the IRQ vector number of sata controller on
+PCH PIC of each bridge is 16, which is sent to upstream
+irqchip of EIOINTC when an interrupt occurs, which will set
+bit 16 of EIOINTC. Since hwirq of 16 on EIOINTC has been
+mapped to a irq_desc for sata controller during hierarchy
+irq allocation, the related mapped IRQ will be found through
+irq_resolve_mapping() in the IRQ domain of EIOINTC.
 
-Jianmin Lv (3):
-  irqchip/loongson-pch-pic: Fix initialization of HT vector register
-  irqchip/loongson-liointc: Fix IRQ trigger polarity
-  irqchip/loongson-eiointc: Fix irq affinity setting during resume
+So, the IRQ number set in HT vector register should be fixed
+to be a zero-based number.
 
-Liu Peibao (1):
-  irqchip/loongson-pch-pic: Fix potential incorrect hwirq assignment
+Cc: stable@vger.kernel.org
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Co-developed-by: liuyun <liuyun@loongson.cn>
+Signed-off-by: liuyun <liuyun@loongson.cn>
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+---
+ drivers/irqchip/irq-loongson-pch-pic.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Yinbo Zhu (1):
-  irqchip/loongson-liointc: Add IRQCHIP_SKIP_SET_WAKE flag
-
- drivers/irqchip/irq-loongson-eiointc.c |  2 +-
- drivers/irqchip/irq-loongson-liointc.c | 13 +++++++++----
- drivers/irqchip/irq-loongson-pch-pic.c | 10 ++++------
- 3 files changed, 14 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index e5fe4d50be05..921c5c0190d1 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -401,14 +401,12 @@ static int __init acpi_cascade_irqdomain_init(void)
+ int __init pch_pic_acpi_init(struct irq_domain *parent,
+ 					struct acpi_madt_bio_pic *acpi_pchpic)
+ {
+-	int ret, vec_base;
++	int ret;
+ 	struct fwnode_handle *domain_handle;
+ 
+ 	if (find_pch_pic(acpi_pchpic->gsi_base) >= 0)
+ 		return 0;
+ 
+-	vec_base = acpi_pchpic->gsi_base - GSI_MIN_PCH_IRQ;
+-
+ 	domain_handle = irq_domain_alloc_fwnode(&acpi_pchpic->address);
+ 	if (!domain_handle) {
+ 		pr_err("Unable to allocate domain handle\n");
+@@ -416,7 +414,7 @@ int __init pch_pic_acpi_init(struct irq_domain *parent,
+ 	}
+ 
+ 	ret = pch_pic_init(acpi_pchpic->address, acpi_pchpic->size,
+-				vec_base, parent, domain_handle, acpi_pchpic->gsi_base);
++				0, parent, domain_handle, acpi_pchpic->gsi_base);
+ 
+ 	if (ret < 0) {
+ 		irq_domain_free_fwnode(domain_handle);
 -- 
 2.31.1
 
