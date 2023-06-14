@@ -1,11 +1,11 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B881FD3
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7F0B8C07
 	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 11:59:41 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.116])
-	by gateway (Coremail) with SMTP id _____8Dxi+qqq4lkxR0FAA--.10679S3;
+	by gateway (Coremail) with SMTP id _____8Dxh+mqq4lkvR0FAA--.8957S3;
 	Wed, 14 Jun 2023 19:59:38 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.116])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxNeSoq4lkzJMaAA--.10424S6;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxNeSoq4lkzJMaAA--.10424S5;
 	Wed, 14 Jun 2023 19:59:38 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -17,11 +17,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	WANG Xuerui <kernel@xen0n.name>,
 	loongson-kernel@lists.loongnix.cn,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Subject: [PATCH V3 4/5] irqchip/loongson-liointc: Add IRQCHIP_SKIP_SET_WAKE flag
-Date: Wed, 14 Jun 2023 19:59:35 +0800
-Message-Id: <20230614115936.5950-5-lvjianmin@loongson.cn>
+	stable@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: [PATCH V3 3/5] irqchip/loongson-liointc: Fix IRQ trigger polarity
+Date: Wed, 14 Jun 2023 19:59:34 +0800
+Message-Id: <20230614115936.5950-4-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230614115936.5950-1-lvjianmin@loongson.cn>
 References: <20230614115936.5950-1-lvjianmin@loongson.cn>
@@ -31,53 +32,90 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxNeSoq4lkzJMaAA--.10424S6
+X-CM-TRANSID:AQAAf8BxNeSoq4lkzJMaAA--.10424S5
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Jw1DGFW3GrW8Jr4kCr4rWFX_yoWkurc_WF
-	yxJws5uryftr4aka48Cr4UJrnYk3y5uan7ua1FvFs3Z348tw43Ca13Z3W3GFWUKryqyF93
-	Gr4UWr4rAryxJosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1l
-	Yx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0fhLUUUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoWxurW5JFWDZw1xKF1xXFyDXFc_yoW5WF4kp3
+	yfuayktr4aqF1UWw48Cr4rXF13tw43XanrKa13W345uFZ0kws5A34FqFsrXr1xt3W8GFW7
+	CrW5Gay5ua1UZ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8-B_UUUUU=
 
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
+For the INT_POLARITY register of Loongson-2K series IRQ
+controller, '0' indicates high level or rising edge triggered,
+'1' indicates low level or falling edge triggered, and we
+can find out the information from the Loongson 2K1000LA User
+Manual v1.0, Table 9-2, Section 9.3 (中断寄存器描述 / Description
+of the Interrupt Registers).
 
-LIOINTC doesn't require specific logic to work with wakeup IRQs,
-and no irq_set_wake callback is needed. To allow registered IRQs
-from LIOINTC to be used as a wakeup-source, and ensure irq_set_irq_wake()
-works well, the flag IRQCHIP_SKIP_SET_WAKE should be added.
+For Loongson-3 CPU series, setting INT_POLARITY register is not
+supported and writting it has no effect.
 
+So trigger polarity setting shouled be fixed for Loongson-2K CPU
+series.
+
+Fixes: 17343d0b4039 ("irqchip/loongson-liointc: Support to set IRQ type for ACPI path")
+Cc: stable@vger.kernel.org
 Reviewed-by: Huacai Chen <chenhuacai@kernel.org>
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-liointc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/irq-loongson-liointc.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-index 5dd9db8f8fa8..e4b33aed1c97 100644
+index 8d00a9ad5b00..5dd9db8f8fa8 100644
 --- a/drivers/irqchip/irq-loongson-liointc.c
 +++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -295,6 +295,7 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
- 	ct->chip.irq_mask = irq_gc_mask_disable_reg;
- 	ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
- 	ct->chip.irq_set_type = liointc_set_type;
-+	ct->chip.flags = IRQCHIP_SKIP_SET_WAKE;
+@@ -32,6 +32,10 @@
+ #define LIOINTC_REG_INTC_EN_STATUS	(LIOINTC_INTC_CHIP_START + 0x04)
+ #define LIOINTC_REG_INTC_ENABLE	(LIOINTC_INTC_CHIP_START + 0x08)
+ #define LIOINTC_REG_INTC_DISABLE	(LIOINTC_INTC_CHIP_START + 0x0c)
++/*
++ * LIOINTC_REG_INTC_POL register is only valid for Loongson-2K series, and
++ * Loongson-3 series behave as noops.
++ */
+ #define LIOINTC_REG_INTC_POL	(LIOINTC_INTC_CHIP_START + 0x10)
+ #define LIOINTC_REG_INTC_EDGE	(LIOINTC_INTC_CHIP_START + 0x14)
  
- 	gc->mask_cache = 0;
- 	priv->gc = gc;
+@@ -116,19 +120,19 @@ static int liointc_set_type(struct irq_data *data, unsigned int type)
+ 	switch (type) {
+ 	case IRQ_TYPE_LEVEL_HIGH:
+ 		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
+-		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
++		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
+ 		break;
+ 	case IRQ_TYPE_LEVEL_LOW:
+ 		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
+-		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
++		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
+ 		break;
+ 	case IRQ_TYPE_EDGE_RISING:
+ 		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
+-		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
++		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
+ 		break;
+ 	case IRQ_TYPE_EDGE_FALLING:
+ 		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
+-		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
++		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
+ 		break;
+ 	default:
+ 		irq_gc_unlock_irqrestore(gc, flags);
 -- 
 2.31.1
 
