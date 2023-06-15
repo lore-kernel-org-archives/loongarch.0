@@ -1,328 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD18718D
-	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 02:31:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ABDAC433CA
-	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 02:31:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686796277;
-	bh=Si/Tf+Eqe5mk7ecGTKWOceVzZNl9K6bgEh+lpHRHCEo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FquzsmDu8CYdj2bOLF9tUqIJjXS68sHmNxabtN+bH4B+PsealCGHtgJ+WwVTyyLwE
-	 iwlBQyEA1zOZTZMPKde9Yco3QknhXFrLzpQ4gQ66tBPypr0b7MBhrzlqRMple6iUe+
-	 ZZghvZDZ1I5fc6dTLsdBjZIa/hRZQDkkVNyckf6Tv2YRMZKrU7qIG2aK3PiTpv2C4q
-	 HLHiVv7nmRtobcgXY6Uixio7g1TsC/kvHpjuV2Fb62iw8vPFGslFTYxH9lz71j0woM
-	 RKBw1mS9cwf6QkwdUYPygRE2wfix01RiHVfmDMZqAvujcYXHSrFnUzgJ5t5Mo5s8XL
-	 xuK59qEwha/fQ==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4f122ff663eso9728880e87.2
-        for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 19:31:17 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyICespmGQtXE5PP0fly1Kx9EUaeYAi4C7QpHdijirdW7Cr5iVs
-	laK1FslMdu5mhlhmU0DXaSFMLjXFLZODusllcG8=
-X-Google-Smtp-Source: ACHHUZ58fYYF27zw2qoDK75nI8/jVNrLM8/3xmOzSL6rgh6Qe7fb5goj956EKKrraCoZGQx8rkP3HwWKqmLo9knsXec=
-X-Received: by 2002:a19:e05a:0:b0:4e9:9f10:b31d with SMTP id
- g26-20020a19e05a000000b004e99f10b31dmr9130364lfj.2.1686796275141; Wed, 14 Jun
- 2023 19:31:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5EB625
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 03:33:40 +0000 (UTC)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4QhSPm1K9Bz4wjB;
+	Thu, 15 Jun 2023 13:26:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1686799607;
+	bh=bmc6oqF5FNKBZGg1/rZAHOUSx4X5esqFgaD2hQBXRq8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=KB2FyunhTuXf+jozautVWXZthKKCB+waS3cucwpJbJk0s24v4KKDQVWgg9Q1V6jR3
+	 0vEX2OWPXK/8QOdVINYGXUEXFhmEMCe6tR8/kJ2gs4NvUNlqzJka9/WRx2Av26B2bo
+	 vITH1k1S5enB4XE2YnFXxPCt6IWEd6YUcRno10b5k49kD4HUIdaDZUg9pyurS1KRTV
+	 HGZpbW1b+az+ld9IyfWGAhCPNIYxUEB/mIcl6YmKDvB1j32ka+tFJzfZQQ8K4TE/RF
+	 jdgpZreP8tke/E0lPR+QDG6MJzN4Q+6VqMmtmB3YLVvYFkFLRyyYqL9Imhecexc6g6
+	 0X6N/8mTgEXyA==
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Eric DeVolder <eric.devolder@oracle.com>, Kees Cook <keescook@chromium.org>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, geert@linux-m68k.org, tsbogend@alpha.franken.de,
+ James.Bottomley@hansenpartnership.com, deller@gmx.de,
+ ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, kernel@xen0n.name,
+ npiggin@gmail.com, christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+ gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+ svens@linux.ibm.com, hpa@zytor.com, paulmck@kernel.org,
+ peterz@infradead.org, frederic@kernel.org, akpm@linux-foundation.org,
+ ardb@kernel.org, samitolvanen@google.com, juerg.haefliger@canonical.com,
+ arnd@arndb.de, rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
+ sebastian.reichel@collabora.com, rppt@kernel.org,
+ kirill.shutemov@linux.intel.com, anshuman.khandual@arm.com,
+ ziy@nvidia.com, masahiroy@kernel.org, ndesaulniers@google.com,
+ mhiramat@kernel.org, ojeda@kernel.org, thunder.leizhen@huawei.com,
+ xin3.li@intel.com, tj@kernel.org, gregkh@linuxfoundation.org,
+ tsi@tuyoix.net, bhe@redhat.com, hbathini@linux.ibm.com,
+ sourabhjain@linux.ibm.com, boris.ostrovsky@oracle.com,
+ konrad.wilk@oracle.com
+Subject: Re: [PATCH v1 00/21] refactor Kconfig to consolidate KEXEC and
+ CRASH options
+In-Reply-To: <8a97f096-2bdc-0298-a1c5-8d48dbf94179@oracle.com>
+References: <20230612172805.681179-1-eric.devolder@oracle.com>
+ <202306131314.EFA558B7@keescook>
+ <8a97f096-2bdc-0298-a1c5-8d48dbf94179@oracle.com>
+Date: Thu, 15 Jun 2023 13:26:35 +1000
+Message-ID: <87ilbpflsk.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230614093755.88881-1-wangliupu@loongson.cn> <CAJZ5v0iTKPbpskDVcsnVaWnhdvb5a-W2TVBfd0c=H2hVv8mOog@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iTKPbpskDVcsnVaWnhdvb5a-W2TVBfd0c=H2hVv8mOog@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 15 Jun 2023 10:31:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7=+cyLK=whuYL3qD+CwFqxvSWywnLEVJ5W=0uqH+ZKiQ@mail.gmail.com>
-Message-ID: <CAAhV-H7=+cyLK=whuYL3qD+CwFqxvSWywnLEVJ5W=0uqH+ZKiQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add SMT (Simultaneous Multi-Threading) support
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Liupu Wang <wangliupu@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Len Brown <lenb@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>, Marc Zyngier <maz@kernel.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi, Rafael,
-
-On Thu, Jun 15, 2023 at 2:24=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
+Eric DeVolder <eric.devolder@oracle.com> writes:
+> On 6/13/23 15:21, Kees Cook wrote:
+>> On Mon, Jun 12, 2023 at 01:27:52PM -0400, Eric DeVolder wrote:
+>>> The Kconfig is refactored to consolidate KEXEC and CRASH options from
+>>> various arch/<arch>/Kconfig files into new file kernel/Kconfig.kexec.
+>> 
+>> This looks very nice!
+>> 
+> Thank you Kees!
 >
-> On Wed, Jun 14, 2023 at 11:38=E2=80=AFAM Liupu Wang <wangliupu@loongson.c=
-n> wrote:
-> >
-> > From: Huacai Chen <chenhuacai@loongson.cn>
-> >
-> > Loongson-3A6000 has SMT (Simultaneous Multi-Threading) support, each
-> > physical core has two logical cores (threads). This patch add SMT probe
-> > and scheduler support via ACPI PPTT.
-> >
-> > If SCHED_SMT enabled, Loongson-3A6000 is treated as 4 cores, 8 threads;
-> > If SCHED_SMT disabled, Loongson-3A6000 is treated as 8 cores, 8 threads=
-.
-> >
-> > Remove smp_num_siblings to support HMP (Heterogeneous Multi-Processing)=
-.
-> >
-> > Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  arch/loongarch/Kconfig                |  8 +++++++
-> >  arch/loongarch/include/asm/acpi.h     |  9 ++++++++
-> >  arch/loongarch/include/asm/cpu-info.h |  1 +
-> >  arch/loongarch/kernel/acpi.c          | 32 +++++++++++++++++++++++++++
-> >  arch/loongarch/kernel/proc.c          |  1 +
-> >  arch/loongarch/kernel/smp.c           | 24 +++++++++-----------
-> >  drivers/acpi/Kconfig                  |  2 +-
-> >  7 files changed, 62 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > index d38b066fc931..6d36b681068e 100644
-> > --- a/arch/loongarch/Kconfig
-> > +++ b/arch/loongarch/Kconfig
-> > @@ -5,6 +5,7 @@ config LOONGARCH
-> >         select ACPI
-> >         select ACPI_GENERIC_GSI if ACPI
-> >         select ACPI_MCFG if ACPI
-> > +       select ACPI_PPTT if ACPI
-> >         select ACPI_SYSTEM_POWER_STATES_SUPPORT if ACPI
-> >         select ARCH_BINFMT_ELF_STATE
-> >         select ARCH_ENABLE_MEMORY_HOTPLUG
-> > @@ -372,6 +373,13 @@ config EFI_STUB
-> >           This kernel feature allows the kernel to be loaded directly b=
-y
-> >           EFI firmware without the use of a bootloader.
-> >
-> > +config SCHED_SMT
-> > +       bool "SMT scheduler support"
-> > +       default y
-> > +       help
-> > +         Improves scheduler's performance when there are multiple
-> > +         threads in one physical core.
-> > +
-> >  config SMP
-> >         bool "Multi-Processing support"
-> >         help
-> > diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include=
-/asm/acpi.h
-> > index 976a810352c6..5c78b5d2bfb7 100644
-> > --- a/arch/loongarch/include/asm/acpi.h
-> > +++ b/arch/loongarch/include/asm/acpi.h
-> > @@ -13,6 +13,7 @@ extern int acpi_strict;
-> >  extern int acpi_disabled;
-> >  extern int acpi_pci_disabled;
-> >  extern int acpi_noirq;
-> > +extern int pptt_enabled;
-> >
-> >  #define acpi_os_ioremap acpi_os_ioremap
-> >  void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size si=
-ze);
-> > @@ -30,6 +31,14 @@ static inline bool acpi_has_cpu_in_madt(void)
-> >  }
-> >
-> >  extern struct list_head acpi_wakeup_device_list;
-> > +extern struct acpi_madt_core_pic acpi_core_pic[NR_CPUS];
-> > +
-> > +extern int __init parse_acpi_topology(void);
-> > +
-> > +static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
-> > +{
-> > +       return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
-> > +}
-> >
-> >  #endif /* !CONFIG_ACPI */
-> >
-> > diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/inc=
-lude/asm/cpu-info.h
-> > index cd73a6f57fe3..900589cb159d 100644
-> > --- a/arch/loongarch/include/asm/cpu-info.h
-> > +++ b/arch/loongarch/include/asm/cpu-info.h
-> > @@ -54,6 +54,7 @@ struct cpuinfo_loongarch {
-> >         struct cache_desc       cache_leaves[CACHE_LEAVES_MAX];
-> >         int                     core;   /* physical core number in pack=
-age */
-> >         int                     package;/* physical package number */
-> > +       int                     global_id; /* physical global thread nu=
-mber */
-> >         int                     vabits; /* Virtual Address size in bits=
- */
-> >         int                     pabits; /* Physical Address size in bit=
-s */
-> >         unsigned int            ksave_mask; /* Usable KSave mask. */
-> > diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.=
-c
-> > index 98f431157e4c..9450e09073eb 100644
-> > --- a/arch/loongarch/kernel/acpi.c
-> > +++ b/arch/loongarch/kernel/acpi.c
-> > @@ -33,6 +33,8 @@ u64 acpi_saved_sp;
-> >
-> >  #define PREFIX                 "ACPI: "
-> >
-> > +struct acpi_madt_core_pic acpi_core_pic[NR_CPUS];
-> > +
-> >  void __init __iomem * __acpi_map_table(unsigned long phys, unsigned lo=
-ng size)
-> >  {
-> >
-> > @@ -99,6 +101,7 @@ acpi_parse_processor(union acpi_subtable_headers *he=
-ader, const unsigned long en
-> >
-> >         acpi_table_print_madt_entry(&header->common);
-> >  #ifdef CONFIG_SMP
-> > +       acpi_core_pic[processor->core_id] =3D *processor;
-> >         set_processor_mask(processor->core_id, processor->flags);
-> >  #endif
-> >
-> > @@ -140,6 +143,35 @@ static void __init acpi_process_madt(void)
-> >         loongson_sysconf.nr_cpus =3D num_processors;
-> >  }
-> >
-> > +int pptt_enabled;
-> > +
-> > +int __init parse_acpi_topology(void)
-> > +{
-> > +       int cpu, topology_id;
-> > +
-> > +       for_each_possible_cpu(cpu) {
-> > +               topology_id =3D find_acpi_cpu_topology(cpu, 0);
-> > +               if (topology_id < 0) {
-> > +                       pr_warn("Invalid BIOS PPTT\n");
-> > +                       return -ENOENT;
-> > +               }
-> > +
-> > +               if (acpi_pptt_cpu_is_thread(cpu) <=3D 0)
-> > +                       cpu_data[cpu].core =3D topology_id;
-> > +               else {
-> > +                       topology_id =3D find_acpi_cpu_topology(cpu, 1);
-> > +                       if (topology_id < 0)
-> > +                               return -ENOENT;
-> > +
-> > +                       cpu_data[cpu].core =3D topology_id;
-> > +               }
-> > +       }
-> > +
-> > +       pptt_enabled =3D 1;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  #ifndef CONFIG_SUSPEND
-> >  int (*acpi_suspend_lowlevel)(void);
-> >  #else
-> > diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.=
-c
-> > index 0d82907b5404..d4b270630bb5 100644
-> > --- a/arch/loongarch/kernel/proc.c
-> > +++ b/arch/loongarch/kernel/proc.c
-> > @@ -49,6 +49,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
-> >         seq_printf(m, "processor\t\t: %ld\n", n);
-> >         seq_printf(m, "package\t\t\t: %d\n", cpu_data[n].package);
-> >         seq_printf(m, "core\t\t\t: %d\n", cpu_data[n].core);
-> > +       seq_printf(m, "global_id\t\t: %d\n", cpu_data[n].global_id);
-> >         seq_printf(m, "CPU Family\t\t: %s\n", __cpu_family[n]);
-> >         seq_printf(m, "Model Name\t\t: %s\n", __cpu_full_name[n]);
-> >         seq_printf(m, "CPU Revision\t\t: 0x%02x\n", version);
-> > diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> > index ed167e244cda..062f3fe8df60 100644
-> > --- a/arch/loongarch/kernel/smp.c
-> > +++ b/arch/loongarch/kernel/smp.c
-> > @@ -8,6 +8,7 @@
-> >   * Copyright (C) 2000, 2001 Silicon Graphics, Inc.
-> >   * Copyright (C) 2000, 2001, 2003 Broadcom Corporation
-> >   */
-> > +#include <linux/acpi.h>
-> >  #include <linux/cpu.h>
-> >  #include <linux/cpumask.h>
-> >  #include <linux/init.h>
-> > @@ -37,10 +38,6 @@ EXPORT_SYMBOL(__cpu_number_map);
-> >  int __cpu_logical_map[NR_CPUS];                /* Map logical to physi=
-cal */
-> >  EXPORT_SYMBOL(__cpu_logical_map);
-> >
-> > -/* Number of threads (siblings) per CPU core */
-> > -int smp_num_siblings =3D 1;
-> > -EXPORT_SYMBOL(smp_num_siblings);
-> > -
-> >  /* Representing the threads (siblings) of each logical CPU */
-> >  cpumask_t cpu_sibling_map[NR_CPUS] __read_mostly;
-> >  EXPORT_SYMBOL(cpu_sibling_map);
-> > @@ -228,9 +225,12 @@ void __init loongson_prepare_cpus(unsigned int max=
-_cpus)
-> >  {
-> >         int i =3D 0;
-> >
-> > +       parse_acpi_topology();
-> > +
-> >         for (i =3D 0; i < loongson_sysconf.nr_cpus; i++) {
-> >                 set_cpu_present(i, true);
-> >                 csr_mail_send(0, __cpu_logical_map[i], 0);
-> > +               cpu_data[i].global_id =3D __cpu_logical_map[i];
-> >         }
-> >
-> >         per_cpu(cpu_state, smp_processor_id()) =3D CPU_ONLINE;
-> > @@ -271,10 +271,10 @@ void loongson_init_secondary(void)
-> >         numa_add_cpu(cpu);
-> >  #endif
-> >         per_cpu(cpu_state, cpu) =3D CPU_ONLINE;
-> > -       cpu_data[cpu].core =3D
-> > -                    cpu_logical_map(cpu) % loongson_sysconf.cores_per_=
-package;
-> >         cpu_data[cpu].package =3D
-> >                      cpu_logical_map(cpu) / loongson_sysconf.cores_per_=
-package;
-> > +       cpu_data[cpu].core =3D pptt_enabled ? cpu_data[cpu].core :
-> > +                    cpu_logical_map(cpu) % loongson_sysconf.cores_per_=
-package;
-> >  }
-> >
-> >  void loongson_smp_finish(void)
-> > @@ -380,14 +380,10 @@ static inline void set_cpu_sibling_map(int cpu)
-> >
-> >         cpumask_set_cpu(cpu, &cpu_sibling_setup_map);
-> >
-> > -       if (smp_num_siblings <=3D 1)
-> > -               cpumask_set_cpu(cpu, &cpu_sibling_map[cpu]);
-> > -       else {
-> > -               for_each_cpu(i, &cpu_sibling_setup_map) {
-> > -                       if (cpus_are_siblings(cpu, i)) {
-> > -                               cpumask_set_cpu(i, &cpu_sibling_map[cpu=
-]);
-> > -                               cpumask_set_cpu(cpu, &cpu_sibling_map[i=
-]);
-> > -                       }
-> > +       for_each_cpu(i, &cpu_sibling_setup_map) {
-> > +               if (cpus_are_siblings(cpu, i)) {
-> > +                       cpumask_set_cpu(i, &cpu_sibling_map[cpu]);
-> > +                       cpumask_set_cpu(cpu, &cpu_sibling_map[i]);
-> >                 }
-> >         }
-> >  }
-> > diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> > index ccbeab9500ec..00dd309b6682 100644
-> > --- a/drivers/acpi/Kconfig
-> > +++ b/drivers/acpi/Kconfig
-> > @@ -542,10 +542,10 @@ config ACPI_PFRUT
-> >
-> >  if ARM64
-> >  source "drivers/acpi/arm64/Kconfig"
-> > +endif
-> >
-> >  config ACPI_PPTT
-> >         bool
-> > -endif
->
-> x86 doesn't use PPTT as of today.  Why do you enable it for them?
-ACPI_PPTT is an invisible symbol, it cannot be enabled by explicitly
-selecting and its default value is n, so I think it isn't enabled for
-x86. On the other hand, moving it out of ARM64 can make other archs
-don't need to modify this file any more if they need PPTT.
+>>> [...]
+>>> - The boolean ARCH_HAS_<option> in effect allows the arch to determine
+>>>    when the feature is allowed.  Archs which don't have the feature
+>>>    simply do not provide the corresponding ARCH_HAS_<option>.
+>>>    For each arch, where there previously were KEXEC and/or CRASH
+>>>    options, these have been replaced with the corresponding boolean
+>>>    ARCH_HAS_<option>, and an appropriate def_bool statement.
+>>>
+>>>    For example, if the arch supports KEXEC_FILE, then the
+>>>    ARCH_HAS_KEXEC_FILE simply has a 'def_bool y'. This permits the
+>>>    KEXEC_FILE option to be available.
+>>>
+>>>    If the arch has a 'depends on' statement in its original coding
+>>>    of the option, then that expression becomes part of the def_bool
+>>>    expression. For example, arm64 had:
+>>>
+>>>    config KEXEC
+>>>      depends on PM_SLEEP_SMP
+>>>
+>>>    and in this solution, this converts to:
+>>>
+>>>    config ARCH_HAS_KEXEC
+>>>      def_bool PM_SLEEP_SMP
+>>>
+>>>
+>>> - In order to account for the differences in the config coding for
+>>>    the three common options, the ARCH_SUPPORTS_<option> is used.
+>>>    This options has a 'depends on <option>' statement to couple it
+>>>    to the main option, and from there can insert the differences
+>>>    from the common option and the arch original coding of that option.
+>>>
+>>>    For example, a few archs enable CRYPTO and CRYTPO_SHA256 for
+>>>    KEXEC_FILE. These require a ARCH_SUPPORTS_KEXEC_FILE and
+>>>    'select CRYPTO' and 'select CRYPTO_SHA256' statements.
+>> 
+>> Naming nit: "HAS" and "SUPPORTS" feel very similar, and looking at
+>> existing configs, "ARCH_SUPPORTS_..." is already used for doing this
+>> kind of bare "bool" management. e.g. see ARCH_SUPPORTS_INT128
+>> 
+>> It looks like you need to split "depends" and "select" so the options
+>> can be chosen separately from the "selectable" configs.
+>> 
+>> How about naming this ARCH_SELECTS_<option>, since that's what it's
+>> there for?
+>> 
+> I'm OK with this. Let's see if others agree?
 
-Huacai
+Yeah please rename one or both of them. At a glance the difference
+between HAS and SUPPORTS is very non-obvious.
 
->
-> >  config ACPI_PCC
-> >         bool "ACPI PCC Address Space"
-> > --
+I like Kees' suggestion to use ARCH_SUPPORTS and ARCH_SELECTS.
+
+cheers
