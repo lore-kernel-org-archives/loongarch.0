@@ -1,1045 +1,861 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5518913AD3
-	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 12:28:10 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.124])
-	by gateway (Coremail) with SMTP id _____8CxtOjZA4tk440FAA--.1540S3;
-	Thu, 15 Jun 2023 20:28:09 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.124])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxJeTYA4tkRfsbAA--.14263S4;
-	Thu, 15 Jun 2023 20:28:08 +0800 (CST)
-From: YingKun Meng <mengyingkun@loongson.cn>
-To: broonie@kernel.org,
-	lgirdwood@gmail.com
-Cc: krzysztof.kozlowski@linaro.org,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn,
-	mengyingkun@loongson.cn
-Subject: [PATCH v4 1/3] ASoC: Add support for Loongson I2S controller
-Date: Thu, 15 Jun 2023 20:27:18 +0800
-Message-Id: <20230615122718.3412942-1-mengyingkun@loongson.cn>
-X-Mailer: git-send-email 2.33.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D2D1FDA
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 12:58:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3576CC43395
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 12:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686833890;
+	bh=n28yRKnyxvSZqEJvGqcOY/YVjyyfb3fMoQk1KQhe2DQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=n5uPgneP1zNzoZ/fD3l3YbKPPztuRWTMgeaLJUTZEr4Xd/Pxvb/x+4xT+5/uhvI8q
+	 DkCEgoO7YKLChMjhf8I0mPmnacH2Rie7ZnuDb75rrobV6lqhH8d/FUuSHRYJaksD+3
+	 952ikEXiaI+EclsFG9sX2VrZUMmAYMnBs1cEXEcsQEk8kmsJSd4uEH2kxWnYlK46yw
+	 l2T+zGK4VXBIdxhGFxiQkT/Kmk5P7aapkrtn3fT+6x1lHA0aF+oralEI1b/Oj9aGvs
+	 wJ92itroSHQaqHTRb9ptA9yKPY+FarLSsw3IeM8yoeaMWivYvcK3vTmw87LWTNtGeL
+	 ZipPjtGTlf7Ug==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-51a21185130so1207643a12.0
+        for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 05:58:10 -0700 (PDT)
+X-Gm-Message-State: AC+VfDx/1fCNQzYdkB/YikwzKDf1RsPMxS69wM8YGCuqZND48z6USOsT
+	ucS1BT7NXjPjZ6/aIklwRWkvwhFoZPQpwnOOrDo=
+X-Google-Smtp-Source: ACHHUZ4Ur/CP30djeLZF8JMOzhvZE6CbUfW0PcrKGtfwsalCTNriNe9bgA27/OMIc97a8rb10mOz2XYfQhvFNUN963g=
+X-Received: by 2002:a05:6402:8:b0:518:79c4:f599 with SMTP id
+ d8-20020a056402000800b0051879c4f599mr5159526edu.28.1686833888043; Thu, 15 Jun
+ 2023 05:58:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxJeTYA4tkRfsbAA--.14263S4
-X-CM-SenderInfo: 5phqw55lqjy33q6o00pqjv00gofq/1tbiAQADDGSK-4IAhwACsY
-X-Coremail-Antispam: 1Uk129KBj9fXoWfXry8tFWfZw1xZw4rKFyDArc_yoW5Ary8uo
-	W29F93W3yrZr1UZFyYq3WrWF1UXF15uF4ay3yxAr98C3WYyFyDWayUGr17GF1fuF4rtrW8
-	AF95trs3Ww42vr4xl-sFpf9Il3svdjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
-	CY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
+References: <20230512015839.23862-1-zhangqing@loongson.cn>
+In-Reply-To: <20230512015839.23862-1-zhangqing@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 15 Jun 2023 20:57:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7bVZ5Svg4Y0TUGXy-0fksR4p9ota_HfnW4cCY+Ow4t5Q@mail.gmail.com>
+Message-ID: <CAAhV-H7bVZ5Svg4Y0TUGXy-0fksR4p9ota_HfnW4cCY+Ow4t5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] LoongArch: Add kernel address sanitizer support
+To: Qing Zhang <zhangqing@loongson.cn>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, Alexander Potapenko <glider@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, kasan-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yingkun Meng <mengyingkun@loongson.cn>
+Hi, Qing,
 
-Loongson I2S controller is found on 7axxx/2kxxx chips from loongson,
-it is a PCI device with two private DMA controllers, one for playback,
-the other for capture.
+On Fri, May 12, 2023 at 9:58=E2=80=AFAM Qing Zhang <zhangqing@loongson.cn> =
+wrote:
+>
+> 1/8 of kernel addresses reserved for shadow memory. But for LoongArch,
+> There are a lot of holes between different segments and valid address
+> space (256T available) is insufficient to map all these segments to kasan
+> shadow memory with the common formula provided by kasan core, saying
+> (addr >> KASAN_SHADOW_SCALE_SHIFT) + KASAN_SHADOW_OFFSET
+>
+> So LoongArch has a arch-specific mapping formula, different segments are
+> mapped individually, and only limited space lengths of these specific
+> segments are mapped to shadow.
+>
+> At early boot stage the whole shadow region populated with just one
+> physical page (kasan_early_shadow_page). Later, this page is reused as
+> readonly zero shadow for some memory that kasan currently don't track.
+> After mapping the physical memory, pages for shadow memory are allocated
+> and mapped.
+>
+> Functions like memset()/memcpy()/memmove() do a lot of memory accesses.
+> If bad pointer passed to one of these function it is important to be
+> caught. Compiler's instrumentation cannot do this since these functions
+> are written in assembly.
+>
+> KASan replaces memory functions with manually instrumented variants.
+> Original functions declared as weak symbols so strong definitions in
+> mm/kasan/kasan.c could replace them. Original functions have aliases
+> with '__' prefix in names, so we could call non-instrumented variant
+> if needed.
+>
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> ---
+>  Documentation/dev-tools/kasan.rst             |   4 +-
+>  .../features/debug/KASAN/arch-support.txt     |   2 +-
+>  .../translations/zh_CN/dev-tools/kasan.rst    |   2 +-
+>  arch/loongarch/Kconfig                        |   7 +
+>  arch/loongarch/include/asm/kasan.h            | 120 +++++++++
+>  arch/loongarch/include/asm/pgtable.h          |   7 +
+>  arch/loongarch/include/asm/string.h           |  20 ++
+>  arch/loongarch/kernel/Makefile                |   6 +
+>  arch/loongarch/kernel/head.S                  |   4 +
+>  arch/loongarch/kernel/setup.c                 |   4 +
+>  arch/loongarch/lib/memcpy.S                   |   4 +-
+>  arch/loongarch/lib/memmove.S                  |  16 +-
+>  arch/loongarch/lib/memset.S                   |   4 +-
+>  arch/loongarch/mm/Makefile                    |   2 +
+>  arch/loongarch/mm/kasan_init.c                | 255 ++++++++++++++++++
+>  arch/loongarch/vdso/Makefile                  |   4 +
+>  16 files changed, 448 insertions(+), 13 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/kasan.h
+>  create mode 100644 arch/loongarch/mm/kasan_init.c
+>
+> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/=
+kasan.rst
+> index e66916a483cd..ee91f2872767 100644
+> --- a/Documentation/dev-tools/kasan.rst
+> +++ b/Documentation/dev-tools/kasan.rst
+> @@ -41,8 +41,8 @@ Support
+>  Architectures
+>  ~~~~~~~~~~~~~
+>
+> -Generic KASAN is supported on x86_64, arm, arm64, powerpc, riscv, s390, =
+and
+> -xtensa, and the tag-based KASAN modes are supported only on arm64.
+> +Generic KASAN is supported on x86_64, arm, arm64, powerpc, riscv, s390, =
+xtensa,
+> +and loongarch, and the tag-based KASAN modes are supported only on arm64=
+.
+>
+>  Compilers
+>  ~~~~~~~~~
+> diff --git a/Documentation/features/debug/KASAN/arch-support.txt b/Docume=
+ntation/features/debug/KASAN/arch-support.txt
+> index bf0124fae643..c4581c2edb28 100644
+> --- a/Documentation/features/debug/KASAN/arch-support.txt
+> +++ b/Documentation/features/debug/KASAN/arch-support.txt
+> @@ -13,7 +13,7 @@
+>      |        csky: | TODO |
+>      |     hexagon: | TODO |
+>      |        ia64: | TODO |
+> -    |   loongarch: | TODO |
+> +    |   loongarch: |  ok  |
+>      |        m68k: | TODO |
+>      |  microblaze: | TODO |
+>      |        mips: | TODO |
+> diff --git a/Documentation/translations/zh_CN/dev-tools/kasan.rst b/Docum=
+entation/translations/zh_CN/dev-tools/kasan.rst
+> index 05ef904dbcfb..8fdb20c9665b 100644
+> --- a/Documentation/translations/zh_CN/dev-tools/kasan.rst
+> +++ b/Documentation/translations/zh_CN/dev-tools/kasan.rst
+> @@ -42,7 +42,7 @@ KASAN=E6=9C=89=E4=B8=89=E7=A7=8D=E6=A8=A1=E5=BC=8F:
+>  =E4=BD=93=E7=B3=BB=E6=9E=B6=E6=9E=84
+>  ~~~~~~~~
+>
+> -=E5=9C=A8x86_64=E3=80=81arm=E3=80=81arm64=E3=80=81powerpc=E3=80=81riscv=
+=E3=80=81s390=E5=92=8Cxtensa=E4=B8=8A=E6=94=AF=E6=8C=81=E9=80=9A=E7=94=A8KA=
+SAN=EF=BC=8C
+> +=E5=9C=A8x86_64=E3=80=81arm=E3=80=81arm64=E3=80=81powerpc=E3=80=81riscv=
+=E3=80=81s390=E3=80=81xtensa=E5=92=8Cloongarch=E4=B8=8A=E6=94=AF=E6=8C=81=
+=E9=80=9A=E7=94=A8KASAN=EF=BC=8C
+>  =E8=80=8C=E5=9F=BA=E4=BA=8E=E6=A0=87=E7=AD=BE=E7=9A=84KASAN=E6=A8=A1=E5=
+=BC=8F=E5=8F=AA=E5=9C=A8arm64=E4=B8=8A=E6=94=AF=E6=8C=81=E3=80=82
+>
+>  =E7=BC=96=E8=AF=91=E5=99=A8
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index ac3d3d9b5716..a9c879fd037e 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -7,6 +7,7 @@ config LOONGARCH
+>         select ACPI_MCFG if ACPI
+>         select ACPI_SYSTEM_POWER_STATES_SUPPORT if ACPI
+>         select ARCH_BINFMT_ELF_STATE
+> +       select ARCH_DISABLE_KASAN_INLINE
+>         select ARCH_ENABLE_MEMORY_HOTPLUG
+>         select ARCH_ENABLE_MEMORY_HOTREMOVE
+>         select ARCH_HAS_ACPI_TABLE_UPGRADE      if ACPI
+> @@ -82,6 +83,7 @@ config LOONGARCH
+>         select GENERIC_TIME_VSYSCALL
+>         select GPIOLIB
+>         select HAVE_ARCH_AUDITSYSCALL
+> +       select HAVE_ARCH_KASAN
+>         select HAVE_ARCH_MMAP_RND_BITS if MMU
+>         select HAVE_ARCH_SECCOMP_FILTER
+>         select HAVE_ARCH_TRACEHOOK
+> @@ -595,6 +597,11 @@ config ARCH_MMAP_RND_BITS_MIN
+>  config ARCH_MMAP_RND_BITS_MAX
+>         default 18
+>
+> +config KASAN_SHADOW_OFFSET
+> +       hex
+> +       default 0x0
+> +       depends on KASAN
+> +
+>  menu "Power management options"
+>
+>  config ARCH_SUSPEND_POSSIBLE
+> diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/include/=
+asm/kasan.h
+> new file mode 100644
+> index 000000000000..04fb6c210945
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/kasan.h
+> @@ -0,0 +1,120 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __ASM_KASAN_H
+> +#define __ASM_KASAN_H
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#include <linux/linkage.h>
+> +#include <linux/mmzone.h>
+> +#include <asm/addrspace.h>
+> +#include <asm/io.h>
+> +#include <asm/pgtable.h>
+> +
+> +#define __HAVE_ARCH_SHADOW_MAP
+> +
+> +#define KASAN_SHADOW_SCALE_SHIFT 3
+> +#define KASAN_SHADOW_OFFSET    _AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
+> +
+> +#define XRANGE_SHIFT (48)
+> +
+> +/* Valid address length */
+> +#define XRANGE_SHADOW_SHIFT    (PGDIR_SHIFT + PAGE_SHIFT - 3)
+> +/* Used for taking out the valid address */
+> +#define XRANGE_SHADOW_MASK     GENMASK_ULL(XRANGE_SHADOW_SHIFT - 1, 0)
+> +/* One segment whole address space size */
+> +#define        XRANGE_SIZE             (XRANGE_SHADOW_MASK + 1)
+Use space instead of tab here.
 
-The driver supports the use of DTS or ACPI to describe device resources.
+> +
+> +/* 64-bit segment value. */
+> +#define XKPRANGE_UC_SEG                (UNCACHE_BASE >> DMW_PABITS)
+> +#define XKPRANGE_CC_SEG                (CACHE_BASE >> DMW_PABITS)
+> +#define XKVRANGE_VC_SEG                (0xffff)
+> +
+> +/* Cached */
+> +#define XKPRANGE_CC_START              CACHE_BASE
+> +#define XKPRANGE_CC_SIZE               XRANGE_SIZE
+> +#define XKPRANGE_CC_KASAN_OFFSET       (0)
+> +#define XKPRANGE_CC_SHADOW_SIZE                (XKPRANGE_CC_SIZE >> KASA=
+N_SHADOW_SCALE_SHIFT)
+> +#define XKPRANGE_CC_SHADOW_END         (XKPRANGE_CC_KASAN_OFFSET + XKPRA=
+NGE_CC_SHADOW_SIZE)
+> +
+> +/* UnCached */
+> +#define XKPRANGE_UC_START              UNCACHE_BASE
+> +#define XKPRANGE_UC_SIZE               XRANGE_SIZE
+> +#define XKPRANGE_UC_KASAN_OFFSET       XKPRANGE_CC_SHADOW_END
+> +#define XKPRANGE_UC_SHADOW_SIZE                (XKPRANGE_UC_SIZE >> KASA=
+N_SHADOW_SCALE_SHIFT)
+> +#define XKPRANGE_UC_SHADOW_END         (XKPRANGE_UC_KASAN_OFFSET + XKPRA=
+NGE_UC_SHADOW_SIZE)
+> +
+> +/* VMALLOC (Cached or UnCached)  */
+> +#define XKVRANGE_VC_START              MODULES_VADDR
+> +#define XKVRANGE_VC_SIZE               round_up(VMEMMAP_END - MODULES_VA=
+DDR + 1, PGDIR_SIZE)
+> +#define XKVRANGE_VC_KASAN_OFFSET       XKPRANGE_UC_SHADOW_END
+> +#define XKVRANGE_VC_SHADOW_SIZE                (XKVRANGE_VC_SIZE >> KASA=
+N_SHADOW_SCALE_SHIFT)
+> +#define XKVRANGE_VC_SHADOW_END         (XKVRANGE_VC_KASAN_OFFSET + XKVRA=
+NGE_VC_SHADOW_SIZE)
+> +
+> +/* Kasan shadow memory start right after vmalloc. */
+> +#define KASAN_SHADOW_START             round_up(VMEMMAP_END, PGDIR_SIZE)
+> +#define KASAN_SHADOW_SIZE              (XKVRANGE_VC_SHADOW_END - XKPRANG=
+E_CC_KASAN_OFFSET)
+> +#define KASAN_SHADOW_END               round_up(KASAN_SHADOW_START + KAS=
+AN_SHADOW_SIZE, PGDIR_SIZE)
+> +
+> +#define XKPRANGE_CC_SHADOW_OFFSET      (KASAN_SHADOW_START + XKPRANGE_CC=
+_KASAN_OFFSET)
+> +#define XKPRANGE_UC_SHADOW_OFFSET      (KASAN_SHADOW_START + XKPRANGE_UC=
+_KASAN_OFFSET)
+> +#define XKVRANGE_VC_SHADOW_OFFSET      (KASAN_SHADOW_START + XKVRANGE_VC=
+_KASAN_OFFSET)
+> +
+> +extern bool kasan_early_stage;
+> +extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
+> +
+> +static inline void *kasan_mem_to_shadow(const void *addr)
+> +{
+> +       if (kasan_early_stage) {
+> +               return (void *)(kasan_early_shadow_page);
+> +       } else {
+> +               unsigned long maddr =3D (unsigned long)addr;
+> +               unsigned long xrange =3D (maddr >> XRANGE_SHIFT) & 0xffff=
+;
+> +               unsigned long offset =3D 0;
+> +
+> +               maddr &=3D XRANGE_SHADOW_MASK;
+> +               switch (xrange) {
+> +               case XKPRANGE_CC_SEG:
+> +                       offset =3D XKPRANGE_CC_SHADOW_OFFSET;
+> +                       break;
+> +               case XKPRANGE_UC_SEG:
+> +                       offset =3D XKPRANGE_UC_SHADOW_OFFSET;
+> +                       break;
+> +               case XKVRANGE_VC_SEG:
+> +                       offset =3D XKVRANGE_VC_SHADOW_OFFSET;
+> +                       break;
+> +               default:
+> +                       WARN_ON(1);
+> +                       return NULL;
+> +               }
+> +
+> +               return (void *)((maddr >> KASAN_SHADOW_SCALE_SHIFT) + off=
+set);
+> +       }
+> +}
+> +
+> +static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
+> +{
+> +       unsigned long addr =3D (unsigned long)shadow_addr;
+> +
+> +       if (unlikely(addr > KASAN_SHADOW_END) ||
+> +               unlikely(addr < KASAN_SHADOW_START)) {
+> +               WARN_ON(1);
+> +               return NULL;
+> +       }
+> +
+> +       if (addr >=3D XKVRANGE_VC_SHADOW_OFFSET)
+> +               return (void *)(((addr - XKVRANGE_VC_SHADOW_OFFSET) << KA=
+SAN_SHADOW_SCALE_SHIFT) + XKVRANGE_VC_START);
+> +       else if (addr >=3D XKPRANGE_UC_SHADOW_OFFSET)
+> +               return (void *)(((addr - XKPRANGE_UC_SHADOW_OFFSET) << KA=
+SAN_SHADOW_SCALE_SHIFT) + XKPRANGE_UC_START);
+> +       else if (addr >=3D XKPRANGE_CC_SHADOW_OFFSET)
+> +               return (void *)(((addr - XKPRANGE_CC_SHADOW_OFFSET) << KA=
+SAN_SHADOW_SCALE_SHIFT) + XKPRANGE_CC_START);
+> +       else {
+> +               WARN_ON(1);
+> +               return NULL;
+> +       }
+> +}
+> +
+> +void kasan_init(void);
+> +asmlinkage void kasan_early_init(void);
+> +
+> +#endif
+> +#endif
+> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
+e/asm/pgtable.h
+> index d28fb9dbec59..5cfdf79b287e 100644
+> --- a/arch/loongarch/include/asm/pgtable.h
+> +++ b/arch/loongarch/include/asm/pgtable.h
+> @@ -86,9 +86,16 @@ extern unsigned long zero_page_mask;
+>  #define MODULES_END    (MODULES_VADDR + SZ_256M)
+>
+>  #define VMALLOC_START  MODULES_END
+> +
+> +#ifndef CONFIG_KASAN
+>  #define VMALLOC_END    \
+>         (vm_map_base +  \
+>          min(PTRS_PER_PGD * PTRS_PER_PUD * PTRS_PER_PMD * PTRS_PER_PTE * =
+PAGE_SIZE, (1UL << cpu_vabits)) - PMD_SIZE - VMEMMAP_SIZE)
+> +#else
+> +#define VMALLOC_END    \
+> +       (vm_map_base +  \
+> +        min(PTRS_PER_PGD * PTRS_PER_PUD * PTRS_PER_PMD * PTRS_PER_PTE * =
+PAGE_SIZE, (1UL << cpu_vabits) / 2) - PMD_SIZE - VMEMMAP_SIZE)
+> +#endif
+>
+>  #define vmemmap                ((struct page *)((VMALLOC_END + PMD_SIZE)=
+ & PMD_MASK))
+>  #define VMEMMAP_END    ((unsigned long)vmemmap + VMEMMAP_SIZE - 1)
+> diff --git a/arch/loongarch/include/asm/string.h b/arch/loongarch/include=
+/asm/string.h
+> index 7b29cc9c70aa..5bb5a90d2681 100644
+> --- a/arch/loongarch/include/asm/string.h
+> +++ b/arch/loongarch/include/asm/string.h
+> @@ -7,11 +7,31 @@
+>
+>  #define __HAVE_ARCH_MEMSET
+>  extern void *memset(void *__s, int __c, size_t __count);
+> +extern void *__memset(void *__s, int __c, size_t __count);
+>
+>  #define __HAVE_ARCH_MEMCPY
+>  extern void *memcpy(void *__to, __const__ void *__from, size_t __n);
+> +extern void *__memcpy(void *__to, __const__ void *__from, size_t __n);
+>
+>  #define __HAVE_ARCH_MEMMOVE
+>  extern void *memmove(void *__dest, __const__ void *__src, size_t __n);
+> +extern void *__memmove(void *__dest, __const__ void *__src, size_t __n);
+> +
+> +#if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
+> +
+> +/*
+> + * For files that are not instrumented (e.g. mm/slub.c) we
+> + * should use not instrumented version of mem* functions.
+> + */
+> +
+> +#define memset(s, c, n) __memset(s, c, n)
+> +#define memcpy(dst, src, len) __memcpy(dst, src, len)
+> +#define memmove(dst, src, len) __memmove(dst, src, len)
+> +
+> +#ifndef __NO_FORTIFY
+> +#define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
+> +#endif
+> +
+> +#endif
+>
+>  #endif /* _ASM_STRING_H */
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
+ile
+> index 9a72d91cd104..b45c6932a6cf 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -30,6 +30,12 @@ ifdef CONFIG_FUNCTION_TRACER
+>    CFLAGS_REMOVE_perf_event.o =3D $(CC_FLAGS_FTRACE)
+>  endif
+>
+> +KASAN_SANITIZE_efi.o :=3D n
+> +KASAN_SANITIZE_vdso.o :=3D n
+> +KASAN_SANITIZE_cpu-probe.o :=3D n
+> +KASAN_SANITIZE_traps.o :=3D n
+> +KASAN_SANITIZE_smp.o :=3D n
+> +
+>  obj-$(CONFIG_MODULES)          +=3D module.o module-sections.o
+>  obj-$(CONFIG_STACKTRACE)       +=3D stacktrace.o
+>
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index aace7a300cd3..0d8180153ec0 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -104,6 +104,10 @@ SYM_CODE_START(kernel_entry)                       #=
+ kernel entry point
+>
+>  #endif /* CONFIG_RELOCATABLE */
+>
+> +#ifdef CONFIG_KASAN
+> +       bl              kasan_early_init
+> +#endif
+> +
+>         bl              start_kernel
+>         ASM_BUG()
+>
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
+c
+> index 4444b13418f0..9e94bf60c900 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -610,4 +610,8 @@ void __init setup_arch(char **cmdline_p)
+>  #endif
+>
+>         paging_init();
+> +
+> +#ifdef CONFIG_KASAN
+> +       kasan_init();
+> +#endif
+>  }
+> diff --git a/arch/loongarch/lib/memcpy.S b/arch/loongarch/lib/memcpy.S
+> index 39ce6621c704..b9eb89e90550 100644
+> --- a/arch/loongarch/lib/memcpy.S
+> +++ b/arch/loongarch/lib/memcpy.S
+> @@ -10,16 +10,18 @@
+>  #include <asm/export.h>
+>  #include <asm/regdef.h>
+>
+> -SYM_FUNC_START(memcpy)
+> +SYM_FUNC_START_WEAK(memcpy)
+>         /*
+>          * Some CPUs support hardware unaligned access
+>          */
+>         ALTERNATIVE     "b __memcpy_generic", \
+>                         "b __memcpy_fast", CPU_FEATURE_UAL
+>  SYM_FUNC_END(memcpy)
+> +SYM_FUNC_ALIAS(__memcpy, memcpy)
+>  _ASM_NOKPROBE(memcpy)
+>
+>  EXPORT_SYMBOL(memcpy)
+> +EXPORT_SYMBOL(__memcpy)
+>
+>  /*
+>   * void *__memcpy_generic(void *dst, const void *src, size_t n)
+> diff --git a/arch/loongarch/lib/memmove.S b/arch/loongarch/lib/memmove.S
+> index 45b725ba7867..df521f8b9c9a 100644
+> --- a/arch/loongarch/lib/memmove.S
+> +++ b/arch/loongarch/lib/memmove.S
+> @@ -10,23 +10,25 @@
+>  #include <asm/export.h>
+>  #include <asm/regdef.h>
+>
+> -SYM_FUNC_START(memmove)
+> -       blt     a0, a1, memcpy  /* dst < src, memcpy */
+> -       blt     a1, a0, rmemcpy /* src < dst, rmemcpy */
+> -       jr      ra              /* dst =3D=3D src, return */
+> +SYM_FUNC_START_WEAK(memmove)
+> +       blt     a0, a1, __memcpy        /* dst < src, memcpy */
+> +       blt     a1, a0, __rmemcpy       /* src < dst, rmemcpy */
+> +       jr      ra                      /* dst =3D=3D src, return */
+>  SYM_FUNC_END(memmove)
+> +SYM_FUNC_ALIAS(__memmove, memmove)
+>  _ASM_NOKPROBE(memmove)
+>
+>  EXPORT_SYMBOL(memmove)
+> +EXPORT_SYMBOL(__memmove)
+>
+> -SYM_FUNC_START(rmemcpy)
+> +SYM_FUNC_START(__rmemcpy)
+>         /*
+>          * Some CPUs support hardware unaligned access
+>          */
+>         ALTERNATIVE     "b __rmemcpy_generic", \
+>                         "b __rmemcpy_fast", CPU_FEATURE_UAL
+> -SYM_FUNC_END(rmemcpy)
+> -_ASM_NOKPROBE(rmemcpy)
+> +SYM_FUNC_END(__rmemcpy)
+> +_ASM_NOKPROBE(__rmemcpy)
+>
+>  /*
+>   * void *__rmemcpy_generic(void *dst, const void *src, size_t n)
+> diff --git a/arch/loongarch/lib/memset.S b/arch/loongarch/lib/memset.S
+> index b39c6194e3ae..392901aba970 100644
+> --- a/arch/loongarch/lib/memset.S
+> +++ b/arch/loongarch/lib/memset.S
+> @@ -16,16 +16,18 @@
+>         bstrins.d \r0, \r0, 63, 32
+>  .endm
+>
+> -SYM_FUNC_START(memset)
+> +SYM_FUNC_START_WEAK(memset)
+>         /*
+>          * Some CPUs support hardware unaligned access
+>          */
+>         ALTERNATIVE     "b __memset_generic", \
+>                         "b __memset_fast", CPU_FEATURE_UAL
+>  SYM_FUNC_END(memset)
+> +SYM_FUNC_ALIAS(__memset, memset)
+>  _ASM_NOKPROBE(memset)
+>
+>  EXPORT_SYMBOL(memset)
+> +EXPORT_SYMBOL(__memset)
+>
+>  /*
+>   * void *__memset_generic(void *s, int c, size_t n)
+> diff --git a/arch/loongarch/mm/Makefile b/arch/loongarch/mm/Makefile
+> index 8ffc6383f836..6e50cf6cf733 100644
+> --- a/arch/loongarch/mm/Makefile
+> +++ b/arch/loongarch/mm/Makefile
+> @@ -7,3 +7,5 @@ obj-y                           +=3D init.o cache.o tlb.o=
+ tlbex.o extable.o \
+>                                    fault.o ioremap.o maccess.o mmap.o pgt=
+able.o page.o
+>
+>  obj-$(CONFIG_HUGETLB_PAGE)     +=3D hugetlbpage.o
+> +obj-$(CONFIG_KASAN)            +=3D kasan_init.o
+> +KASAN_SANITIZE_kasan_init.o     :=3D n
+> diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_ini=
+t.c
+> new file mode 100644
+> index 000000000000..fb3077f8d508
+> --- /dev/null
+> +++ b/arch/loongarch/mm/kasan_init.c
+> @@ -0,0 +1,255 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + */
+> +#define pr_fmt(fmt) "kasan: " fmt
+> +#include <linux/kasan.h>
+> +#include <linux/memblock.h>
+> +#include <linux/sched/task.h>
+> +
+> +#include <asm/tlbflush.h>
+> +#include <asm/pgalloc.h>
+> +#include <asm-generic/sections.h>
+> +
+> +static pgd_t tmp_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+> +
+> +static inline int __p4d_none(int early, p4d_t p4d) {return 0; }
+> +
+> +#ifndef __PAGETABLE_PUD_FOLDED
+> +#define __p4d_none(early, p4d) (early ? (p4d_val(p4d) =3D=3D 0) : \
+> +(__pa(p4d_val(p4d)) =3D=3D (unsigned long)__pa(kasan_early_shadow_pud)))
+> +#endif
+__p4d_none() is redefined in some cases here.
 
-Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
----
-changes v3 -> v4
-  Add __packed attribute for loongson_dma_desc struct.
+> +
+> +#define __pud_none(early, pud) (early ? (pud_val(pud) =3D=3D 0) : \
+> +(__pa(pud_val(pud)) =3D=3D (unsigned long)__pa(kasan_early_shadow_pmd)))
+> +
+> +#define __pmd_none(early, pmd) (early ? (pmd_val(pmd) =3D=3D 0) : \
+> +(__pa(pmd_val(pmd)) =3D=3D (unsigned long)__pa(kasan_early_shadow_pte)))
+> +
+> +#define __pte_none(early, pte) (early ? pte_none(pte) : \
+> +((pte_val(pte) & _PFN_MASK) =3D=3D (unsigned long)__pa(kasan_early_shado=
+w_page)))
+> +
+> +bool kasan_early_stage =3D true;
+> +
+> +/*
+> + * Alloc memory for shadow memory page table.
+> + */
+> +static phys_addr_t __init kasan_alloc_zeroed_page(int node)
+> +{
+> +       void *p =3D memblock_alloc_try_nid(PAGE_SIZE, PAGE_SIZE,
+> +                                       __pa(MAX_DMA_ADDRESS),
+> +                                       MEMBLOCK_ALLOC_ACCESSIBLE, node);
+> +       if (!p)
+> +               panic("%s: Failed to allocate %lu bytes align=3D0x%lx nid=
+=3D%d from=3D%llx\n",
+> +                       __func__, PAGE_SIZE, PAGE_SIZE, node, __pa(MAX_DM=
+A_ADDRESS));
+> +       return __pa(p);
+> +}
+> +
+> +static pte_t *kasan_pte_offset(pmd_t *pmdp, unsigned long addr, int node=
+,
+> +                                    bool early)
+> +{
+> +       if (__pmd_none(early, READ_ONCE(*pmdp))) {
+> +               phys_addr_t pte_phys =3D early ?
+> +                               __pa_symbol(kasan_early_shadow_pte)
+> +                                       : kasan_alloc_zeroed_page(node);
+> +               if (!early)
+> +                       memcpy(__va(pte_phys), kasan_early_shadow_pte,
+> +                               sizeof(kasan_early_shadow_pte));
+> +               pmd_populate_kernel(NULL, pmdp, (pte_t *)__va(pte_phys));
+> +       }
+> +
+> +       return pte_offset_kernel(pmdp, addr);
+> +}
+> +
+> +static inline void kasan_set_pgd(pgd_t *pgdp, pgd_t pgdval)
+> +{
+> +       WRITE_ONCE(*pgdp, pgdval);
+> +}
+> +
+> +static pmd_t *kasan_pmd_offset(pud_t *pudp, unsigned long addr, int node=
+,
+> +                                    bool early)
+> +{
+> +       if (__pud_none(early, READ_ONCE(*pudp))) {
+> +               phys_addr_t pmd_phys =3D early ?
+> +                               __pa_symbol(kasan_early_shadow_pmd)
+> +                                       : kasan_alloc_zeroed_page(node);
+> +               if (!early)
+> +                       memcpy(__va(pmd_phys), kasan_early_shadow_pmd,
+> +                               sizeof(kasan_early_shadow_pmd));
+> +               pud_populate(&init_mm, pudp, (pmd_t *)__va(pmd_phys));
+> +       }
+> +
+> +       return pmd_offset(pudp, addr);
+> +}
+> +
+> +static pud_t *__init kasan_pud_offset(p4d_t *p4dp, unsigned long addr, i=
+nt node,
+> +                                           bool early)
+> +{
+> +       if (__p4d_none(early, READ_ONCE(*p4dp))) {
+> +               phys_addr_t pud_phys =3D early ?
+> +                       __pa_symbol(kasan_early_shadow_pud)
+> +                               : kasan_alloc_zeroed_page(node);
+> +               if (!early)
+> +                       memcpy(__va(pud_phys), kasan_early_shadow_pud,
+> +                               sizeof(kasan_early_shadow_pud));
+> +               p4d_populate(&init_mm, p4dp, (pud_t *)__va(pud_phys));
+> +       }
+> +
+> +       return pud_offset(p4dp, addr);
+> +}
+> +
+> +static void  kasan_pte_populate(pmd_t *pmdp, unsigned long addr,
+> +                                     unsigned long end, int node, bool e=
+arly)
+> +{
+> +       unsigned long next;
+> +       pte_t *ptep =3D kasan_pte_offset(pmdp, addr, node, early);
+> +
+> +       do {
+> +               phys_addr_t page_phys =3D early ?
+> +                                       __pa_symbol(kasan_early_shadow_pa=
+ge)
+> +                                             : kasan_alloc_zeroed_page(n=
+ode);
+> +               next =3D addr + PAGE_SIZE;
+> +               set_pte(ptep, pfn_pte(__phys_to_pfn(page_phys), PAGE_KERN=
+EL));
+> +       } while (ptep++, addr =3D next, addr !=3D end && __pte_none(early=
+, READ_ONCE(*ptep)));
+> +}
+> +
+> +static void kasan_pmd_populate(pud_t *pudp, unsigned long addr,
+> +                                     unsigned long end, int node, bool e=
+arly)
+> +{
+> +       unsigned long next;
+> +       pmd_t *pmdp =3D kasan_pmd_offset(pudp, addr, node, early);
+> +
+> +       do {
+> +               next =3D pmd_addr_end(addr, end);
+> +               kasan_pte_populate(pmdp, addr, next, node, early);
+> +       } while (pmdp++, addr =3D next, addr !=3D end && __pmd_none(early=
+, READ_ONCE(*pmdp)));
+> +}
+> +
+> +static void __init kasan_pud_populate(p4d_t *p4dp, unsigned long addr,
+> +                                           unsigned long end, int node, =
+bool early)
+> +{
+> +       unsigned long next;
+> +       pud_t *pudp =3D kasan_pud_offset(p4dp, addr, node, early);
+> +
+> +       do {
+> +               next =3D pud_addr_end(addr, end);
+> +               kasan_pmd_populate(pudp, addr, next, node, early);
+> +       } while (pudp++, addr =3D next, addr !=3D end);
+> +}
+> +
+> +static void __init kasan_p4d_populate(pgd_t *pgdp, unsigned long addr,
+> +                                           unsigned long end, int node, =
+bool early)
+> +{
+> +       unsigned long next;
+> +       p4d_t *p4dp =3D p4d_offset(pgdp, addr);
+> +
+> +       do {
+> +               next =3D p4d_addr_end(addr, end);
+> +               kasan_pud_populate(p4dp, addr, next, node, early);
+> +       } while (p4dp++, addr =3D next, addr !=3D end);
+> +}
+> +
+> +static void __init kasan_pgd_populate(unsigned long addr, unsigned long =
+end,
+> +                                     int node, bool early)
+> +{
+> +       unsigned long next;
+> +       pgd_t *pgdp;
+> +
+> +       pgdp =3D pgd_offset_k(addr);
+> +
+> +       do {
+> +               next =3D pgd_addr_end(addr, end);
+> +               kasan_p4d_populate(pgdp, addr, next, node, early);
+> +       } while (pgdp++, addr =3D next, addr !=3D end);
+> +
+> +}
+> +
+> +asmlinkage void __init kasan_early_init(void)
+> +{
+> +       BUILD_BUG_ON(!IS_ALIGNED(KASAN_SHADOW_START, PGDIR_SIZE));
+> +       BUILD_BUG_ON(!IS_ALIGNED(KASAN_SHADOW_END, PGDIR_SIZE));
+> +}
+> +
+> +/* Set up full kasan mappings, ensuring that the mapped pages are zeroed=
+ */
+> +static void __init kasan_map_populate(unsigned long start, unsigned long=
+ end,
+> +                                     int node)
+> +{
+> +       kasan_pgd_populate(start & PAGE_MASK, PAGE_ALIGN(end), node, fals=
+e);
+> +}
+> +
+> +static void __init clear_pgds(unsigned long start, unsigned long end)
+> +{
+> +       /*
+> +        * Remove references to kasan page tables from
+> +        * swapper_pg_dir. pgd_clear() can't be used
+> +        * here because it's nop on 2,3-level pagetable setups
+> +        */
+> +       for (; start < end; start +=3D PGDIR_SIZE)
+> +               kasan_set_pgd((pgd_t *)pgd_offset_k(start), __pgd(0));
+> +}
+> +
+> +void __init kasan_init(void)
+> +{
+> +       u64 i;
+> +       phys_addr_t pa_start, pa_end;
+> +       /*
+> +        * PGD was populated as invalid_pmd_table or invalid_pud_table
+> +        * in pagetable_init() which depends on how many levels of page
+> +        * table you are using, but we had to clean the gpd of kasan
+> +        * shadow memory, as the pgd value is none-zero.
+> +        * The assertion pgd_none is going to be false and the formal pop=
+ulate
+> +        * afterwards is not going to create any new pgd at all.
+> +        */
+> +       memcpy(tmp_pg_dir, swapper_pg_dir, sizeof(tmp_pg_dir));
+tmp_pg_dir can be a local variable, I think.
 
-sound/soc/Kconfig                     |   1 +
- sound/soc/Makefile                    |   1 +
- sound/soc/loongson/Kconfig            |  16 ++
- sound/soc/loongson/Makefile           |   4 +
- sound/soc/loongson/loongson_dma.c     | 350 ++++++++++++++++++++++++++
- sound/soc/loongson/loongson_dma.h     |  16 ++
- sound/soc/loongson/loongson_i2s.c     | 269 ++++++++++++++++++++
- sound/soc/loongson/loongson_i2s.h     |  71 ++++++
- sound/soc/loongson/loongson_i2s_pci.c | 171 +++++++++++++
- 9 files changed, 899 insertions(+)
- create mode 100644 sound/soc/loongson/Kconfig
- create mode 100644 sound/soc/loongson/Makefile
- create mode 100644 sound/soc/loongson/loongson_dma.c
- create mode 100644 sound/soc/loongson/loongson_dma.h
- create mode 100644 sound/soc/loongson/loongson_i2s.c
- create mode 100644 sound/soc/loongson/loongson_i2s.h
- create mode 100644 sound/soc/loongson/loongson_i2s_pci.c
+> +       __sync();
+I don't know why we need __sync(), keep the memory ordering or flush
+the write buffer?
 
-diff --git a/sound/soc/Kconfig b/sound/soc/Kconfig
-index 4b6e5a802880..bfa9622e1ab1 100644
---- a/sound/soc/Kconfig
-+++ b/sound/soc/Kconfig
-@@ -79,6 +79,7 @@ source "sound/soc/google/Kconfig"
- source "sound/soc/hisilicon/Kconfig"
- source "sound/soc/jz4740/Kconfig"
- source "sound/soc/kirkwood/Kconfig"
-+source "sound/soc/loongson/Kconfig"
- source "sound/soc/img/Kconfig"
- source "sound/soc/intel/Kconfig"
- source "sound/soc/mediatek/Kconfig"
-diff --git a/sound/soc/Makefile b/sound/soc/Makefile
-index 9d9b228e4508..8376fdb217ed 100644
---- a/sound/soc/Makefile
-+++ b/sound/soc/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_SND_SOC)	+= fsl/
- obj-$(CONFIG_SND_SOC)	+= google/
- obj-$(CONFIG_SND_SOC)	+= hisilicon/
- obj-$(CONFIG_SND_SOC)	+= jz4740/
-+obj-$(CONFIG_SND_SOC)	+= loongson/
- obj-$(CONFIG_SND_SOC)	+= img/
- obj-$(CONFIG_SND_SOC)	+= intel/
- obj-$(CONFIG_SND_SOC)	+= mediatek/
-diff --git a/sound/soc/loongson/Kconfig b/sound/soc/loongson/Kconfig
-new file mode 100644
-index 000000000000..4478ac91e402
---- /dev/null
-+++ b/sound/soc/loongson/Kconfig
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: GPL-2.0
-+menu "SoC Audio for Loongson CPUs"
-+	depends on LOONGARCH || COMPILE_TEST
-+
-+config SND_SOC_LOONGSON_I2S_PCI
-+	tristate "Loongson I2S-PCI Device Driver"
-+	select REGMAP_MMIO
-+	depends on PCI
-+	help
-+	  Say Y or M if you want to add support for I2S driver for
-+	  Loongson I2S controller.
-+
-+	  The controller is found in loongson bridge chips or SoCs,
-+	  and work as a PCI device.
-+
-+endmenu
-diff --git a/sound/soc/loongson/Makefile b/sound/soc/loongson/Makefile
-new file mode 100644
-index 000000000000..099af7989103
---- /dev/null
-+++ b/sound/soc/loongson/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#Platform Support
-+snd-soc-loongson-i2s-pci-objs := loongson_i2s_pci.o loongson_i2s.o loongson_dma.o
-+obj-$(CONFIG_SND_SOC_LOONGSON_I2S_PCI) += snd-soc-loongson-i2s-pci.o
-diff --git a/sound/soc/loongson/loongson_dma.c b/sound/soc/loongson/loongson_dma.c
-new file mode 100644
-index 000000000000..65b6719e61c5
---- /dev/null
-+++ b/sound/soc/loongson/loongson_dma.c
-@@ -0,0 +1,350 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Loongson ALSA SoC Platform (DMA) driver
-+//
-+// Copyright (C) 2023 Loongson Technology Corporation Limited
-+// Author: Yingkun Meng <mengyingkun@loongson.cn>
-+//
-+
-+#include <linux/module.h>
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/delay.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/dma-mapping.h>
-+#include <sound/soc.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include "loongson_i2s.h"
-+
-+/* DMA dma_order Register */
-+#define DMA_ORDER_STOP          (1 << 4) /* DMA stop */
-+#define DMA_ORDER_START         (1 << 3) /* DMA start */
-+#define DMA_ORDER_ASK_VALID     (1 << 2) /* DMA ask valid flag */
-+#define DMA_ORDER_AXI_UNCO      (1 << 1) /* Uncache access */
-+#define DMA_ORDER_ADDR_64       (1 << 0) /* 64bits address support */
-+
-+#define DMA_ORDER_ASK_MASK      (~0x1fUL) /* Ask addr mask */
-+#define DMA_ORDER_CTRL_MASK     (0x0fUL)  /* Control mask  */
-+
-+/*
-+ * DMA registers descriptor.
-+ */
-+struct loongson_dma_desc {
-+	u32 order;		/* Next descriptor address register */
-+	u32 saddr;		/* Source address register */
-+	u32 daddr;		/* Device address register */
-+	u32 length;		/* Total length register */
-+	u32 step_length;	/* Memory stride register */
-+	u32 step_times;		/* Repeat time register */
-+	u32 cmd;		/* Command register */
-+	u32 stats;		/* Status register */
-+	u32 order_hi;		/* Next descriptor high address register */
-+	u32 saddr_hi;		/* High source address register */
-+	u32 res[6];		/* Reserved */
-+} __packed;
-+
-+struct loongson_runtime_data {
-+	struct loongson_dma_data *dma_data;
-+
-+	struct loongson_dma_desc *dma_desc_arr;
-+	dma_addr_t dma_desc_arr_phy;
-+	int dma_desc_arr_size;
-+
-+	struct loongson_dma_desc *dma_pos_desc;
-+	dma_addr_t dma_pos_desc_phy;
-+};
-+
-+static const struct snd_pcm_hardware ls_pcm_hardware = {
-+	.info = SNDRV_PCM_INFO_MMAP |
-+		SNDRV_PCM_INFO_INTERLEAVED |
-+		SNDRV_PCM_INFO_MMAP_VALID |
-+		SNDRV_PCM_INFO_RESUME |
-+		SNDRV_PCM_INFO_PAUSE,
-+	.formats = (SNDRV_PCM_FMTBIT_S8 |
-+		SNDRV_PCM_FMTBIT_S16_LE |
-+		SNDRV_PCM_FMTBIT_S20_3LE |
-+		SNDRV_PCM_FMTBIT_S24_LE),
-+	.period_bytes_min = 128,
-+	.period_bytes_max = 128 * 1024,
-+	.periods_min = 1,
-+	.periods_max = PAGE_SIZE / sizeof(struct loongson_dma_desc),
-+	.buffer_bytes_max = 1024 * 1024,
-+};
-+
-+static struct
-+loongson_dma_desc *dma_desc_save(struct loongson_runtime_data *prtd)
-+{
-+	void __iomem *order_reg = prtd->dma_data->order_addr;
-+	u64 val;
-+
-+	val = (u64)prtd->dma_pos_desc_phy & DMA_ORDER_ASK_MASK;
-+	val |= (readq(order_reg) & DMA_ORDER_CTRL_MASK);
-+	val |= DMA_ORDER_ASK_VALID;
-+	writeq(val, order_reg);
-+
-+	while (readl(order_reg) & DMA_ORDER_ASK_VALID)
-+		udelay(2);
-+
-+	return prtd->dma_pos_desc;
-+}
-+
-+static int loongson_pcm_trigger(struct snd_soc_component *component,
-+				struct snd_pcm_substream *substream, int cmd)
-+{
-+	struct loongson_runtime_data *prtd = substream->runtime->private_data;
-+	struct device *dev = substream->pcm->card->dev;
-+	void __iomem *order_reg = prtd->dma_data->order_addr;
-+	u64 val;
-+	int ret = 0;
-+
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		val = prtd->dma_pos_desc_phy & DMA_ORDER_ASK_MASK;
-+		if (dev->coherent_dma_mask == DMA_BIT_MASK(64))
-+			val |= DMA_ORDER_ADDR_64;
-+		else
-+			val &= ~DMA_ORDER_ADDR_64;
-+		val |= (readq(order_reg) & DMA_ORDER_CTRL_MASK);
-+		val |= DMA_ORDER_START;
-+		writeq(val, order_reg);
-+
-+		while ((readl(order_reg) & DMA_ORDER_START))
-+			udelay(2);
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		dma_desc_save(prtd);
-+
-+		/* dma stop */
-+		val = readq(order_reg) | DMA_ORDER_STOP;
-+		writeq(val, order_reg);
-+		udelay(1000);
-+
-+		break;
-+	default:
-+		dev_err(dev, "Invalid pcm trigger operation\n");
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int loongson_pcm_hw_params(struct snd_soc_component *component,
-+				  struct snd_pcm_substream *substream,
-+				  struct snd_pcm_hw_params *params)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct device *dev = substream->pcm->card->dev;
-+	struct loongson_runtime_data *prtd = runtime->private_data;
-+	size_t buf_len = params_buffer_bytes(params);
-+	size_t period_len = params_period_bytes(params);
-+	dma_addr_t order_addr, mem_addr;
-+	struct loongson_dma_desc *desc;
-+	u32 num_periods;
-+	int i;
-+
-+	if (buf_len % period_len) {
-+		dev_err(dev, "buf len not multiply of period len\n");
-+		return -EINVAL;
-+	}
-+
-+	num_periods = buf_len / period_len;
-+	if (!num_periods || num_periods > prtd->dma_desc_arr_size) {
-+		dev_err(dev, "dma data too small or too big\n");
-+		return -EINVAL;
-+	}
-+
-+	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
-+	runtime->dma_bytes = buf_len;
-+
-+	/* initialize dma descriptor array */
-+	mem_addr = runtime->dma_addr;
-+	order_addr = prtd->dma_desc_arr_phy;
-+	for (i = 0; i < num_periods; i++) {
-+		desc = &prtd->dma_desc_arr[i];
-+
-+		/* next descriptor physical address */
-+		order_addr += sizeof(*desc);
-+		desc->order = lower_32_bits(order_addr | BIT(0));
-+		desc->order_hi = upper_32_bits(order_addr);
-+
-+		desc->saddr = lower_32_bits(mem_addr);
-+		desc->saddr_hi = upper_32_bits(mem_addr);
-+		desc->daddr = prtd->dma_data->dev_addr;
-+
-+		desc->cmd = BIT(0);
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			desc->cmd |= BIT(12);
-+
-+		desc->length = period_len >> 2;
-+		desc->step_length = 0;
-+		desc->step_times = 1;
-+
-+		mem_addr += period_len;
-+	}
-+	desc = &prtd->dma_desc_arr[num_periods - 1];
-+	desc->order = lower_32_bits(prtd->dma_desc_arr_phy | BIT(0));
-+	desc->order_hi = upper_32_bits(prtd->dma_desc_arr_phy);
-+
-+	/* init position descriptor */
-+	*prtd->dma_pos_desc = *prtd->dma_desc_arr;
-+
-+	return 0;
-+}
-+
-+static snd_pcm_uframes_t
-+loongson_pcm_pointer(struct snd_soc_component *component,
-+		     struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct loongson_runtime_data *prtd = runtime->private_data;
-+	struct loongson_dma_desc *desc;
-+	snd_pcm_uframes_t x;
-+	u64 addr;
-+
-+	desc = dma_desc_save(prtd);
-+	addr = ((u64)desc->saddr_hi << 32) | desc->saddr;
-+
-+	x = bytes_to_frames(runtime, addr - runtime->dma_addr);
-+	if (x == runtime->buffer_size)
-+		x = 0;
-+	return x;
-+}
-+
-+static irqreturn_t loongson_pcm_dma_irq(int irq, void *devid)
-+{
-+	struct snd_pcm_substream *substream = devid;
-+
-+	snd_pcm_period_elapsed(substream);
-+	return IRQ_HANDLED;
-+}
-+
-+static int loongson_pcm_open(struct snd_soc_component *component,
-+			     struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_card *card = substream->pcm->card;
-+	struct loongson_runtime_data *prtd;
-+	struct loongson_dma_data *dma_data;
-+	int ret;
-+
-+	/*
-+	 * For mysterious reasons (and despite what the manual says)
-+	 * playback samples are lost if the DMA count is not a multiple
-+	 * of the DMA burst size.  Let's add a rule to enforce that.
-+	 */
-+	snd_pcm_hw_constraint_step(runtime, 0,
-+				   SNDRV_PCM_HW_PARAM_PERIOD_BYTES, 128);
-+	snd_pcm_hw_constraint_step(runtime, 0,
-+				   SNDRV_PCM_HW_PARAM_BUFFER_BYTES, 128);
-+	snd_pcm_hw_constraint_integer(substream->runtime,
-+				      SNDRV_PCM_HW_PARAM_PERIODS);
-+	snd_soc_set_runtime_hwparams(substream, &ls_pcm_hardware);
-+
-+	prtd = kzalloc(sizeof(*prtd), GFP_KERNEL);
-+	if (!prtd)
-+		return -ENOMEM;
-+
-+	prtd->dma_desc_arr = dma_alloc_coherent(card->dev, PAGE_SIZE,
-+						&prtd->dma_desc_arr_phy,
-+						GFP_KERNEL);
-+	if (!prtd->dma_desc_arr) {
-+		ret = -ENOMEM;
-+		goto desc_err;
-+	}
-+	prtd->dma_desc_arr_size = PAGE_SIZE / sizeof(*prtd->dma_desc_arr);
-+
-+	prtd->dma_pos_desc = dma_alloc_coherent(card->dev,
-+						sizeof(*prtd->dma_pos_desc),
-+						&prtd->dma_pos_desc_phy,
-+						GFP_KERNEL);
-+	if (!prtd->dma_pos_desc) {
-+		ret = -ENOMEM;
-+		goto pos_err;
-+	}
-+
-+	dma_data = snd_soc_dai_get_dma_data(asoc_rtd_to_cpu(rtd, 0), substream);
-+	prtd->dma_data = dma_data;
-+
-+	substream->runtime->private_data = prtd;
-+
-+	return 0;
-+pos_err:
-+	dma_free_coherent(card->dev, PAGE_SIZE, prtd->dma_desc_arr,
-+			  prtd->dma_desc_arr_phy);
-+desc_err:
-+	kfree(prtd);
-+
-+	return ret;
-+}
-+
-+static int loongson_pcm_close(struct snd_soc_component *component,
-+			      struct snd_pcm_substream *substream)
-+{
-+	struct snd_card *card = substream->pcm->card;
-+	struct loongson_runtime_data *prtd = substream->runtime->private_data;
-+
-+	dma_free_coherent(card->dev, PAGE_SIZE, prtd->dma_desc_arr,
-+			  prtd->dma_desc_arr_phy);
-+
-+	dma_free_coherent(card->dev, sizeof(*prtd->dma_pos_desc),
-+			  prtd->dma_pos_desc, prtd->dma_pos_desc_phy);
-+
-+	kfree(prtd);
-+	return 0;
-+}
-+
-+static int loongson_pcm_mmap(struct snd_soc_component *component,
-+			     struct snd_pcm_substream *substream,
-+			     struct vm_area_struct *vma)
-+{
-+	return remap_pfn_range(vma, vma->vm_start,
-+			substream->dma_buffer.addr >> PAGE_SHIFT,
-+			vma->vm_end - vma->vm_start, vma->vm_page_prot);
-+}
-+
-+static int loongson_pcm_new(struct snd_soc_component *component,
-+			    struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct snd_card *card = rtd->card->snd_card;
-+	struct snd_pcm_substream *substream;
-+	struct loongson_dma_data *dma_data;
-+	unsigned int i;
-+	int ret;
-+
-+	for_each_pcm_streams(i) {
-+		substream = rtd->pcm->streams[i].substream;
-+		if (!substream)
-+			continue;
-+
-+		dma_data = snd_soc_dai_get_dma_data(asoc_rtd_to_cpu(rtd, 0),
-+						    substream);
-+		ret = devm_request_irq(card->dev, dma_data->irq,
-+				       loongson_pcm_dma_irq,
-+				       IRQF_TRIGGER_HIGH, LS_I2S_DRVNAME,
-+				       substream);
-+		if (ret < 0) {
-+			dev_err(card->dev, "request irq for DMA failed\n");
-+			return ret;
-+		}
-+	}
-+
-+	return snd_pcm_set_fixed_buffer_all(rtd->pcm, SNDRV_DMA_TYPE_DEV,
-+					    card->dev,
-+					    ls_pcm_hardware.buffer_bytes_max);
-+}
-+
-+const struct snd_soc_component_driver loongson_i2s_component = {
-+	.name		= LS_I2S_DRVNAME,
-+	.open		= loongson_pcm_open,
-+	.close		= loongson_pcm_close,
-+	.hw_params	= loongson_pcm_hw_params,
-+	.trigger	= loongson_pcm_trigger,
-+	.pointer	= loongson_pcm_pointer,
-+	.mmap		= loongson_pcm_mmap,
-+	.pcm_construct	= loongson_pcm_new,
-+};
-diff --git a/sound/soc/loongson/loongson_dma.h b/sound/soc/loongson/loongson_dma.h
-new file mode 100644
-index 000000000000..073ee8c0c046
---- /dev/null
-+++ b/sound/soc/loongson/loongson_dma.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * ALSA ASoC interface for the Loongson platform
-+ *
-+ * Copyright (C) 2023 Loongson Technology Corporation Limited
-+ * Author: Yingkun Meng <mengyingkun@loongson.cn>
-+ */
-+
-+#ifndef _LOONGSON_DMA_H
-+#define _LOONGSON_DMA_H
-+
-+#include <sound/soc.h>
-+
-+extern const struct snd_soc_component_driver loongson_i2s_component;
-+
-+#endif
-diff --git a/sound/soc/loongson/loongson_i2s.c b/sound/soc/loongson/loongson_i2s.c
-new file mode 100644
-index 000000000000..35d34568be79
---- /dev/null
-+++ b/sound/soc/loongson/loongson_i2s.c
-@@ -0,0 +1,269 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Common functions for loongson I2S controller driver
-+//
-+// Copyright (C) 2023 Loongson Technology Corporation Limited.
-+// Author: Yingkun Meng <mengyingkun@loongson.cn>
-+//
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/delay.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/dma-mapping.h>
-+#include <sound/soc.h>
-+#include <linux/regmap.h>
-+#include <sound/pcm_params.h>
-+#include "loongson_i2s.h"
-+
-+#define LOONGSON_I2S_FORMATS (SNDRV_PCM_FMTBIT_S8 | \
-+			SNDRV_PCM_FMTBIT_S16_LE | \
-+			SNDRV_PCM_FMTBIT_S20_3LE | \
-+			SNDRV_PCM_FMTBIT_S24_LE)
-+
-+static int loongson_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
-+				struct snd_soc_dai *dai)
-+{
-+	struct loongson_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-+	int ret = 0;
-+
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
-+					   I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN,
-+					   I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN);
-+		else
-+			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
-+					   I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN,
-+					   I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN);
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
-+					I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN, 0);
-+		else
-+			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
-+					I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN, 0);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int loongson_i2s_hw_params(struct snd_pcm_substream *substream,
-+				  struct snd_pcm_hw_params *params,
-+				  struct snd_soc_dai *dai)
-+{
-+	struct loongson_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-+	u32 clk_rate = i2s->clk_rate;
-+	u32 sysclk = i2s->sysclk;
-+	u32 bits = params_width(params);
-+	u32 chans = params_channels(params);
-+	u32 fs = params_rate(params);
-+	u32 bclk_ratio, mclk_ratio;
-+	u32 mclk_ratio_frac;
-+	u32 val = 0;
-+
-+	switch (i2s->rev_id) {
-+	case 0:
-+		bclk_ratio = DIV_ROUND_CLOSEST(clk_rate,
-+					       (bits * chans * fs * 2)) - 1;
-+		mclk_ratio = DIV_ROUND_CLOSEST(clk_rate, (sysclk * 2)) - 1;
-+
-+		/* According to 2k1000LA user manual, set bits == depth */
-+		val |= (bits << 24);
-+		val |= (bits << 16);
-+		val |= (bclk_ratio << 8);
-+		val |= mclk_ratio;
-+		regmap_write(i2s->regmap, LS_I2S_CFG, val);
-+
-+		break;
-+	case 1:
-+		bclk_ratio = DIV_ROUND_CLOSEST(sysclk,
-+					       (bits * chans * fs * 2)) - 1;
-+		mclk_ratio = clk_rate / sysclk;
-+		mclk_ratio_frac = DIV_ROUND_CLOSEST(((u64)clk_rate << 16),
-+						    sysclk) - (mclk_ratio << 16);
-+
-+		regmap_read(i2s->regmap, LS_I2S_CFG, &val);
-+		val |= (bits << 24);
-+		val |= (bclk_ratio << 8);
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			val |= (bits << 16);
-+		else
-+			val |= bits;
-+		regmap_write(i2s->regmap, LS_I2S_CFG, val);
-+
-+		val = (mclk_ratio_frac << 16) | mclk_ratio;
-+		regmap_write(i2s->regmap, LS_I2S_CFG1, val);
-+
-+		break;
-+	default:
-+		dev_err(i2s->dev, "I2S revision invalid\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int loongson_i2s_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
-+				       unsigned int freq, int dir)
-+{
-+	struct loongson_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-+
-+	i2s->sysclk = freq;
-+
-+	return 0;
-+}
-+
-+static int loongson_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-+{
-+	struct loongson_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-+	u32 val;
-+	int ret;
-+
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_I2S:
-+		break;
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, I2S_CTRL_MSB,
-+				   I2S_CTRL_MSB);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+
-+	switch (fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK) {
-+	case SND_SOC_DAIFMT_BC_FC:
-+		break;
-+	case SND_SOC_DAIFMT_BP_FC:
-+		/* Enable master mode */
-+		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, I2S_CTRL_MASTER,
-+				   I2S_CTRL_MASTER);
-+		if (i2s->rev_id == 1) {
-+			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
-+						LS_I2S_CTRL, val,
-+						val & I2S_CTRL_CLK_READY,
-+						10, 500000);
-+			if (ret < 0)
-+				dev_warn(dai->dev, "wait BCLK ready timeout\n");
-+		}
-+		break;
-+	case SND_SOC_DAIFMT_BC_FP:
-+		/* Enable MCLK */
-+		if (i2s->rev_id == 1) {
-+			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
-+					   I2S_CTRL_MCLK_EN,
-+					   I2S_CTRL_MCLK_EN);
-+			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
-+						LS_I2S_CTRL, val,
-+						val & I2S_CTRL_MCLK_READY,
-+						10, 500000);
-+			if (ret < 0)
-+				dev_warn(dai->dev, "wait MCLK ready timeout\n");
-+		}
-+		break;
-+	case SND_SOC_DAIFMT_BP_FP:
-+		/* Enable MCLK */
-+		if (i2s->rev_id == 1) {
-+			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
-+					   I2S_CTRL_MCLK_EN,
-+					   I2S_CTRL_MCLK_EN);
-+			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
-+						LS_I2S_CTRL, val,
-+						val & I2S_CTRL_MCLK_READY,
-+						10, 500000);
-+			if (ret < 0)
-+				dev_warn(dai->dev, "wait MCLK ready timeout\n");
-+		}
-+
-+		/* Enable master mode */
-+		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, I2S_CTRL_MASTER,
-+				   I2S_CTRL_MASTER);
-+		if (i2s->rev_id == 1) {
-+			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
-+						LS_I2S_CTRL, val,
-+						val & I2S_CTRL_CLK_READY,
-+						10, 500000);
-+			if (ret < 0)
-+				dev_warn(dai->dev, "wait BCLK ready timeout\n");
-+		}
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_dai_ops loongson_i2s_dai_ops = {
-+	.trigger	= loongson_i2s_trigger,
-+	.hw_params	= loongson_i2s_hw_params,
-+	.set_sysclk	= loongson_i2s_set_dai_sysclk,
-+	.set_fmt	= loongson_i2s_set_fmt,
-+};
-+
-+static int loongson_i2s_dai_probe(struct snd_soc_dai *cpu_dai)
-+{
-+	struct loongson_i2s *i2s = dev_get_drvdata(cpu_dai->dev);
-+
-+	snd_soc_dai_init_dma_data(cpu_dai, &i2s->playback_dma_data,
-+				  &i2s->capture_dma_data);
-+	snd_soc_dai_set_drvdata(cpu_dai, i2s);
-+
-+	return 0;
-+}
-+
-+struct snd_soc_dai_driver loongson_i2s_dai = {
-+	.name = "loongson-i2s",
-+	.probe = loongson_i2s_dai_probe,
-+	.playback = {
-+		.stream_name = "CPU-Playback",
-+		.channels_min = 1,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_8000_96000,
-+		.formats = LOONGSON_I2S_FORMATS,
-+	},
-+	.capture = {
-+		.stream_name = "CPU-Capture",
-+		.channels_min = 1,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_8000_96000,
-+		.formats = LOONGSON_I2S_FORMATS,
-+	},
-+	.ops = &loongson_i2s_dai_ops,
-+	.symmetric_rate = 1,
-+};
-+
-+static int i2s_suspend(struct device *dev)
-+{
-+	struct loongson_i2s *i2s = dev_get_drvdata(dev);
-+
-+	regcache_cache_only(i2s->regmap, true);
-+
-+	return 0;
-+}
-+
-+static int i2s_resume(struct device *dev)
-+{
-+	struct loongson_i2s *i2s = dev_get_drvdata(dev);
-+	int ret;
-+
-+	regcache_cache_only(i2s->regmap, false);
-+	regcache_mark_dirty(i2s->regmap);
-+	ret = regcache_sync(i2s->regmap);
-+
-+	return ret;
-+}
-+
-+const struct dev_pm_ops loongson_i2s_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(i2s_suspend, i2s_resume)
-+};
-diff --git a/sound/soc/loongson/loongson_i2s.h b/sound/soc/loongson/loongson_i2s.h
-new file mode 100644
-index 000000000000..52788f6a94ad
---- /dev/null
-+++ b/sound/soc/loongson/loongson_i2s.h
-@@ -0,0 +1,71 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * ALSA I2S interface for the Loongson platform
-+ *
-+ * Copyright (C) 2023 Loongson Technology Corporation Limited
-+ * Author: Yingkun Meng <mengyingkun@loongson.cn>
-+ */
-+
-+#ifndef _LOONGSON_I2S_H
-+#define _LOONGSON_I2S_H
-+
-+#include <linux/regmap.h>
-+#include <sound/dmaengine_pcm.h>
-+
-+/* I2S Common Registers */
-+#define LS_I2S_VER	0x00 /* I2S Version */
-+#define LS_I2S_CFG	0x04 /* I2S Config */
-+#define LS_I2S_CTRL	0x08 /* I2S Control */
-+#define LS_I2S_RX_DATA	0x0C /* I2S DMA RX Address */
-+#define LS_I2S_TX_DATA	0x10 /* I2S DMA TX Address */
-+
-+/* 2K2000 I2S Specify Registers */
-+#define LS_I2S_CFG1	0x14 /* I2S Config1 */
-+
-+/* 7A2000 I2S Specify Registers */
-+#define LS_I2S_TX_ORDER	0x100 /* TX DMA Order */
-+#define LS_I2S_RX_ORDER 0x110 /* RX DMA Order */
-+
-+/* Loongson I2S Control Register */
-+#define I2S_CTRL_MCLK_READY	(1 << 16) /* MCLK ready */
-+#define I2S_CTRL_MASTER		(1 << 15) /* Master mode */
-+#define I2S_CTRL_MSB		(1 << 14) /* MSB bit order */
-+#define I2S_CTRL_RX_EN		(1 << 13) /* RX enable */
-+#define I2S_CTRL_TX_EN		(1 << 12) /* TX enable */
-+#define I2S_CTRL_RX_DMA_EN	(1 << 11) /* DMA RX enable */
-+#define I2S_CTRL_CLK_READY	(1 << 8)  /* BCLK ready */
-+#define I2S_CTRL_TX_DMA_EN	(1 << 7)  /* DMA TX enable */
-+#define I2S_CTRL_RESET		(1 << 4)  /* Controller soft reset */
-+#define I2S_CTRL_MCLK_EN	(1 << 3)  /* Enable MCLK */
-+#define I2S_CTRL_RX_INT_EN	(1 << 1)  /* RX interrupt enable */
-+#define I2S_CTRL_TX_INT_EN	(1 << 0)  /* TX interrupt enable */
-+
-+#define LS_I2S_DRVNAME		"loongson-i2s"
-+
-+struct loongson_dma_data {
-+	dma_addr_t dev_addr;		/* device physical address for DMA */
-+	void __iomem *order_addr;	/* DMA order register */
-+	u32 irq;			/* DMA irq */
-+};
-+
-+struct loongson_i2s {
-+	struct device *dev;
-+	union {
-+		struct snd_dmaengine_dai_dma_data playback_dma_data;
-+		struct loongson_dma_data tx_dma_data;
-+	};
-+	union {
-+		struct snd_dmaengine_dai_dma_data capture_dma_data;
-+		struct loongson_dma_data rx_dma_data;
-+	};
-+	struct regmap *regmap;
-+	void __iomem *reg_base;
-+	u32 rev_id;
-+	u32 clk_rate;
-+	u32 sysclk;
-+};
-+
-+extern const struct dev_pm_ops loongson_i2s_pm;
-+extern struct snd_soc_dai_driver loongson_i2s_dai;
-+
-+#endif
-diff --git a/sound/soc/loongson/loongson_i2s_pci.c b/sound/soc/loongson/loongson_i2s_pci.c
-new file mode 100644
-index 000000000000..6dcfb17d3276
---- /dev/null
-+++ b/sound/soc/loongson/loongson_i2s_pci.c
-@@ -0,0 +1,171 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// loongson_i2s_pci.c -- Loongson I2S controller driver
-+//
-+// Copyright (C) 2023 Loongson Technology Corporation Limited
-+// Author: Yingkun Meng <mengyingkun@loongson.cn>
-+//
-+
-+#include <linux/module.h>
-+#include <linux/delay.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/acpi.h>
-+#include <linux/pci.h>
-+#include <sound/soc.h>
-+#include "loongson_i2s.h"
-+#include "loongson_dma.h"
-+
-+static bool loongson_i2s_wr_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case LS_I2S_CFG:
-+	case LS_I2S_CTRL:
-+	case LS_I2S_RX_DATA:
-+	case LS_I2S_TX_DATA:
-+	case LS_I2S_CFG1:
-+		return true;
-+	default:
-+		return false;
-+	};
-+}
-+
-+static bool loongson_i2s_rd_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case LS_I2S_VER:
-+	case LS_I2S_CFG:
-+	case LS_I2S_CTRL:
-+	case LS_I2S_RX_DATA:
-+	case LS_I2S_TX_DATA:
-+	case LS_I2S_CFG1:
-+		return true;
-+	default:
-+		return false;
-+	};
-+}
-+
-+static bool loongson_i2s_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case LS_I2S_CFG:
-+	case LS_I2S_CTRL:
-+	case LS_I2S_RX_DATA:
-+	case LS_I2S_TX_DATA:
-+	case LS_I2S_CFG1:
-+		return true;
-+	default:
-+		return false;
-+	};
-+}
-+
-+static const struct regmap_config loongson_i2s_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = LS_I2S_CFG1,
-+	.writeable_reg = loongson_i2s_wr_reg,
-+	.readable_reg = loongson_i2s_rd_reg,
-+	.volatile_reg = loongson_i2s_volatile_reg,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+static int loongson_i2s_pci_probe(struct pci_dev *pdev,
-+				  const struct pci_device_id *pid)
-+{
-+	const struct fwnode_handle *fwnode = pdev->dev.fwnode;
-+	struct loongson_dma_data *tx_data, *rx_data;
-+	struct loongson_i2s *i2s;
-+	int ret;
-+
-+	if (pcim_enable_device(pdev)) {
-+		dev_err(&pdev->dev, "pci_enable_device failed\n");
-+		return -ENODEV;
-+	}
-+
-+	i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
-+	if (!i2s)
-+		return -ENOMEM;
-+
-+	i2s->rev_id = pdev->revision;
-+	i2s->dev = &pdev->dev;
-+	pci_set_drvdata(pdev, i2s);
-+
-+	ret = pcim_iomap_regions(pdev, 1 << 0, dev_name(&pdev->dev));
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "iomap_regions failed\n");
-+		return ret;
-+	}
-+	i2s->reg_base = pcim_iomap_table(pdev)[0];
-+	i2s->regmap = devm_regmap_init_mmio(&pdev->dev, i2s->reg_base,
-+					    &loongson_i2s_regmap_config);
-+	if (IS_ERR(i2s->regmap)) {
-+		dev_err(&pdev->dev, "regmap_init_mmio failed\n");
-+		return PTR_ERR(i2s->regmap);
-+	}
-+
-+	tx_data = &i2s->tx_dma_data;
-+	rx_data = &i2s->rx_dma_data;
-+
-+	tx_data->dev_addr = (dma_addr_t)i2s->reg_base + LS_I2S_TX_DATA;
-+	tx_data->order_addr = i2s->reg_base + LS_I2S_TX_ORDER;
-+
-+	rx_data->dev_addr = (dma_addr_t)i2s->reg_base + LS_I2S_RX_DATA;
-+	rx_data->order_addr = i2s->reg_base + LS_I2S_RX_ORDER;
-+
-+	tx_data->irq = fwnode_irq_get_byname(fwnode, "tx");
-+	if (tx_data->irq < 0) {
-+		dev_err(&pdev->dev, "dma tx irq invalid\n");
-+		return tx_data->irq;
-+	}
-+
-+	rx_data->irq = fwnode_irq_get_byname(fwnode, "rx");
-+	if (rx_data->irq < 0) {
-+		dev_err(&pdev->dev, "dma rx irq invalid\n");
-+		return rx_data->irq;
-+	}
-+
-+	device_property_read_u32(&pdev->dev, "clock-frequency", &i2s->clk_rate);
-+	if (!i2s->clk_rate) {
-+		dev_err(&pdev->dev, "clock-frequency property invalid\n");
-+		return -EINVAL;
-+	}
-+
-+	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+
-+	if (i2s->rev_id == 1) {
-+		regmap_write(i2s->regmap, LS_I2S_CTRL, I2S_CTRL_RESET);
-+		udelay(200);
-+	}
-+
-+	ret = devm_snd_soc_register_component(&pdev->dev,
-+					      &loongson_i2s_component,
-+					      &loongson_i2s_dai, 1);
-+	if (ret) {
-+		dev_err(&pdev->dev, "register DAI failed %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pci_device_id loongson_i2s_ids[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x7a27) },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(pci, loongson_i2s_ids);
-+
-+static struct pci_driver loongson_i2s_driver = {
-+	.name = "loongson-i2s-pci",
-+	.id_table = loongson_i2s_ids,
-+	.probe = loongson_i2s_pci_probe,
-+	.driver = {
-+		.owner = THIS_MODULE,
-+		.pm = pm_sleep_ptr(&loongson_i2s_pm),
-+	},
-+};
-+module_pci_driver(loongson_i2s_driver);
-+
-+MODULE_DESCRIPTION("Loongson I2S Master Mode ASoC Driver");
-+MODULE_AUTHOR("Loongson Technology Corporation Limited");
-+MODULE_LICENSE("GPL");
--- 
-2.33.0
-
+Huacai
+> +       csr_write64(__pa_symbol(tmp_pg_dir), LOONGARCH_CSR_PGDH);
+> +       local_flush_tlb_all();
+> +
+> +       clear_pgds(KASAN_SHADOW_START, KASAN_SHADOW_END);
+> +
+> +       /* Maps everything to a single page of zeroes */
+> +       kasan_pgd_populate(KASAN_SHADOW_START, KASAN_SHADOW_END,
+> +                       NUMA_NO_NODE, true);
+> +
+> +       kasan_populate_early_shadow(kasan_mem_to_shadow((void *)MODULES_E=
+ND),
+> +                       kasan_mem_to_shadow((void *)VMEMMAP_END));
+> +
+> +       if (!IS_ENABLED(CONFIG_KASAN_VMALLOC))
+> +               kasan_populate_early_shadow(kasan_mem_to_shadow((void *)V=
+MALLOC_START),
+> +                                           kasan_mem_to_shadow((void *)V=
+MALLOC_END));
+> +
+> +       kasan_early_stage =3D false;
+> +
+> +       /* Populate the linear mapping */
+> +       for_each_mem_range(i, &pa_start, &pa_end) {
+> +               void *start =3D (void *)phys_to_virt(pa_start);
+> +               void *end   =3D (void *)phys_to_virt(pa_end);
+> +
+> +               if (start >=3D end)
+> +                       break;
+> +
+> +               kasan_map_populate((unsigned long)kasan_mem_to_shadow(sta=
+rt),
+> +                       (unsigned long)kasan_mem_to_shadow(end), NUMA_NO_=
+NODE);
+> +       }
+> +
+> +       /* Populate modules mapping */
+> +       kasan_map_populate((unsigned long)kasan_mem_to_shadow((void *)MOD=
+ULES_VADDR),
+> +               (unsigned long)kasan_mem_to_shadow((void *)MODULES_END), =
+NUMA_NO_NODE);
+> +       /*
+> +        * Kasan may reuse the contents of kasan_early_shadow_pte directl=
+y, so we
+> +        * should make sure that it maps the zero page read-only.
+> +        */
+> +       for (i =3D 0; i < PTRS_PER_PTE; i++)
+> +               set_pte(&kasan_early_shadow_pte[i],
+> +                       pfn_pte(__phys_to_pfn(__pa_symbol(kasan_early_sha=
+dow_page)),
+> +                               PAGE_KERNEL_RO));
+> +
+> +       memset(kasan_early_shadow_page, 0, PAGE_SIZE);
+> +        __sync();
+> +       csr_write64(__pa_symbol(swapper_pg_dir), LOONGARCH_CSR_PGDH);
+> +       local_flush_tlb_all();
+> +
+> +       /* At this point kasan is fully initialized. Enable error message=
+s */
+> +       init_task.kasan_depth =3D 0;
+> +       pr_info("KernelAddressSanitizer initialized.\n");
+> +}
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index d89e2ac75f7b..df328cd92875 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -1,6 +1,10 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Objects to go into the VDSO.
+>
+> +ifdef CONFIG_KASAN
+> +KASAN_SANITIZE :=3D n
+> +endif
+> +
+>  # Absolute relocation type $(ARCH_REL_TYPE_ABS) needs to be defined befo=
+re
+>  # the inclusion of generic Makefile.
+>  ARCH_REL_TYPE_ABS :=3D R_LARCH_32|R_LARCH_64|R_LARCH_MARK_LA|R_LARCH_JUM=
+P_SLOT
+> --
+> 2.36.0
+>
+>
