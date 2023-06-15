@@ -1,33 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFD7168C6
-	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 13:58:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFBA3C433CA;
-	Thu, 15 Jun 2023 13:58:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF576168C6
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 13:58:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB39C433C0;
+	Thu, 15 Jun 2023 13:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686837507;
-	bh=HDfK6TZ6p1z9konXBYN4xiV7FVSWRCnUgThCTPlpODE=;
+	s=k20201202; t=1686837517;
+	bh=IacgEK9Jdc3F5jDBfHVX7mYpC3mWqaiQ7huWmQ6BiyI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=MijxV188M3NQstbEsPBKj+rQV+7WTV0//Wbr3a4d9hw8Uh4EqXOfg6QCDXnAbBL3w
-	 +pAhyiO0Nd5YMsZFl9bhjk0PQDxIxAWDXbE+BhfykWcGOwQ8DNQQ/Md7bB9BirALm8
-	 UGFWqGhWUmu/KeTaAjC0+hOdgJ8A0F0Ygzh7ZPkV81o3IxSnB+foK4J0l78ccT1KjQ
-	 yJtEqC3LtEmWDIbFo1IHk8it1Rh+JUSK+oIbMePCKvnQtwP1Irr2hBe17qwVe8U1kP
-	 N/9GukHMt5b9RS/sLbuKqTNkrLStQp8A2nVjbO7weAdBsWLYqVjVDSx9DjqSUDgm9g
-	 pivHGmCjswPKw==
+	b=PHSzg9W1hXzkyYhLqpdJNCcS0XNkUYr/V0JZPz8i8SOveprKjZknkncgTK/OCpjjN
+	 7zL6VpIrk4XYrcB394RkW230JestkLVQIP+uvr0ML7yWae8xX7lNYh7r91ay3uxmST
+	 AqwyBkmMYF9P9U8xEPUahnCEpXx+P/2GSbLu8ar/OKYCHudPV/VXDkinWkG2kqr5LW
+	 iLHdFn7C0BYXthDjLUxRix2NkM5Ar8LXaaFa9UcW7JV+eqAH8aCJVTiKuBTTxZzOIY
+	 talg1490HLK+M1zxvro1nDkdohl0lIbkEBvHD7HBT5ZuGNSK7OLxNbUKzG2rU5z64S
+	 UJF+mEJ6ePadQ==
 From: Mark Brown <broonie@kernel.org>
-To: krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org, 
- conor+dt@kernel.org, krzysztof.kozlowski@linaro.org, 
- YingKun Meng <mengyingkun@loongson.cn>
-Cc: devicetree@vger.kernel.org, lgirdwood@gmail.com, 
- linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, 
- loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-In-Reply-To: <20230614122659.3402788-1-mengyingkun@loongson.cn>
-References: <20230614122659.3402788-1-mengyingkun@loongson.cn>
-Subject: Re: [PATCH v3 3/3] ASoC: dt-bindings: Add support for Loongson
- audio card
-Message-Id: <168683750444.557448.16842931306884549608.b4-ty@kernel.org>
-Date: Thu, 15 Jun 2023 14:58:24 +0100
+To: lgirdwood@gmail.com, YingKun Meng <mengyingkun@loongson.cn>
+Cc: krzysztof.kozlowski@linaro.org, linux-kernel@vger.kernel.org, 
+ alsa-devel@alsa-project.org, loongarch@lists.linux.dev, 
+ loongson-kernel@lists.loongnix.cn
+In-Reply-To: <20230615122718.3412942-1-mengyingkun@loongson.cn>
+References: <20230615122718.3412942-1-mengyingkun@loongson.cn>
+Subject: Re: [PATCH v4 1/3] ASoC: Add support for Loongson I2S controller
+Message-Id: <168683751466.557448.16150477443606791325.b4-ty@kernel.org>
+Date: Thu, 15 Jun 2023 14:58:34 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,13 +35,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13-dev-c6835
 
-On Wed, 14 Jun 2023 20:26:59 +0800, YingKun Meng wrote:
-> The audio card uses loongson I2S controller present in
-> 7axxx/2kxxx chips to transfer audio data.
+On Thu, 15 Jun 2023 20:27:18 +0800, YingKun Meng wrote:
+> Loongson I2S controller is found on 7axxx/2kxxx chips from loongson,
+> it is a PCI device with two private DMA controllers, one for playback,
+> the other for capture.
 > 
-> On loongson platform, the chip has only one I2S controller.
+> The driver supports the use of DTS or ACPI to describe device resources.
 > 
 > 
+> [...]
 
 Applied to
 
@@ -52,8 +51,8 @@ Applied to
 
 Thanks!
 
-[3/3] ASoC: dt-bindings: Add support for Loongson audio card
-      commit: fadccca8f33959857948e279045a3757b5f21d55
+[1/3] ASoC: Add support for Loongson I2S controller
+      commit: d84881e06836dc1655777a592b4279be76ad7324
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
