@@ -1,80 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC9020E0
-	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 11:30:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66CE2C433C0;
-	Thu, 15 Jun 2023 11:30:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686828636;
-	bh=R9F8GfHIz5BzxMyYLOltGUrhmXtWgm9RjW99JiZySp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dB5c/uqncj87+C2R9Ni1LUM4gA5CB+rNQVniaQabBj4lth1T4APuNfj+PUMccVgt5
-	 OoM3PADiPzcc6z60HlPG6RhGHBHBUwIsZLi1N5ze12FBJjKYbRK3/cI6V35sA444ba
-	 hzA/Vj6FIif+sW/IuVrARisqzpCukoTYR+54JaM2GSGGgHOyu21JRBWQN3wUMVidZm
-	 GlSWryL3G9Iek14LFKgdURzUd/llaPe1dSKsKQs1rYnWhhEELJ5yoaA8hqsYXFYxhi
-	 z9g0egVQgKo70a4eogD6s5NgFMSUtz43i1Kpjah3SrOtF0soUGU13ONJD4fSJRVBGw
-	 j8z7E9K6JuMWA==
-Date: Thu, 15 Jun 2023 12:30:31 +0100
-From: Mark Brown <broonie@kernel.org>
-To: YingKun Meng <mengyingkun@loongson.cn>
-Cc: lgirdwood@gmail.com, krzysztof.kozlowski@linaro.org,
-	linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 1/3] ASoC: Add support for Loongson I2S controller
-Message-ID: <89022514-9f99-4fdc-9eba-d428ad0bcbb6@sirena.org.uk>
-References: <20230614122140.3402749-1-mengyingkun@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A84E13AD3
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 12:23:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39EF0C433C8;
+	Thu, 15 Jun 2023 12:23:31 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.4-rc7
+Date: Thu, 15 Jun 2023 20:23:11 +0800
+Message-Id: <20230615122311.3754870-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/A+VzvD15DayBDle"
-Content-Disposition: inline
-In-Reply-To: <20230614122140.3402749-1-mengyingkun@loongson.cn>
-X-Cookie: You are false data.
+Content-Transfer-Encoding: 8bit
 
+The following changes since commit 858fd168a95c5b9669aac8db6c14a9aeab446375:
 
---/A+VzvD15DayBDle
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  Linux 6.4-rc6 (2023-06-11 14:35:30 -0700)
 
-On Wed, Jun 14, 2023 at 08:21:40PM +0800, YingKun Meng wrote:
-> From: Yingkun Meng <mengyingkun@loongson.cn>
->=20
-> Loongson I2S controller is found on 7axxx/2kxxx chips from loongson,
-> it is a PCI device with two private DMA controllers, one for playback,
-> the other for capture.
->=20
-> The driver supports the use of DTS or ACPI to describe device resources.
+are available in the Git repository at:
 
-One minor thing which can be done as an incremental patch:
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.4-1
 
-> +/*
-> + * DMA registers descriptor.
-> + */
-> +struct loongson_dma_desc {
-> +	u32 order;		/* Next descriptor address register */
+for you to fetch changes up to 41efbb682de1231c3f6361039f46ad149e3ff5b9:
 
-This probably needs a __packed to ensure the layout doesn't get changed
-by the compiler (eg, with struct randomisation options).
+  LoongArch: Fix debugfs_create_dir() error checking (2023-06-15 14:35:56 +0800)
 
---/A+VzvD15DayBDle
-Content-Type: application/pgp-signature; name="signature.asc"
+----------------------------------------------------------------
+LoongArch fixes for v6.4-rc7
 
------BEGIN PGP SIGNATURE-----
+Some trivial bug fixes for v6.4-rc7.
+----------------------------------------------------------------
+Hongchen Zhang (1):
+      LoongArch: Let pmd_present() return true when splitting pmd
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmSK9lYACgkQJNaLcl1U
-h9DVwwf/XbYLj9C6R6KJf+n6qkH6SmKd8327N8rN5wqMmGk3eGtuKHwLH9j4p2BV
-vdvPkbcWbLiULZLXC8bpxg/KeOXTyS873qsvMoiNjqaIKKpGAuLNM1fhNrIRtgpg
-dj/OBVVQg90Web2zrDiUia0uqRzU8mY/WRffRuVaiUfDBQmaHkaCEgK3cxbP6o91
-WTulyQP9NVE6Vh7dcndWOpLc526CZkmOPgO7pSyGzw/n8D09nTicsP6zNb95GtHl
-AxQOuu5Dun7ibJAbWKACf+VeXPYfBsg0EuR6/rIn2SrYodg39sPi5b45KL2kR/mI
-JvxjCSIrK8YUePlv7O/iqHuaFsJXTQ==
-=yMz1
------END PGP SIGNATURE-----
+Huacai Chen (1):
+      LoongArch: Fix perf event id calculation
 
---/A+VzvD15DayBDle--
+Immad Mir (1):
+      LoongArch: Fix debugfs_create_dir() error checking
+
+Qi Hu (1):
+      LoongArch: Fix the write_fcsr() macro
+
+Qing Zhang (1):
+      LoongArch: Avoid uninitialized alignment_mask
+
+ arch/loongarch/include/asm/loongarch.h    | 2 +-
+ arch/loongarch/include/asm/pgtable-bits.h | 2 ++
+ arch/loongarch/include/asm/pgtable.h      | 3 ++-
+ arch/loongarch/kernel/hw_breakpoint.c     | 2 ++
+ arch/loongarch/kernel/perf_event.c        | 6 +++---
+ arch/loongarch/kernel/unaligned.c         | 2 +-
+ 6 files changed, 11 insertions(+), 6 deletions(-)
