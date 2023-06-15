@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CF4171A0
-	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 13:58:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 596B6C433C8;
-	Thu, 15 Jun 2023 13:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE19168C7
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 13:58:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA14C433C9;
+	Thu, 15 Jun 2023 13:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686837501;
-	bh=t+2wC354QWhU+O19T6Rgik2yRjFWn188LUJeRwNUofc=;
+	s=k20201202; t=1686837504;
+	bh=VjrxKNUyqqwfgs3hDcEiMErb77PH5mLOvHSL73d2Y5E=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=K//TbDnohYFTagexGKtrRwrEcpN/jzaTeuXG/IgwXLO0tFsKSB2ekf1fUWY6laii1
-	 vYKI1iTvA/ARANfsLZpZr7aOvHlfYkeWAUBIuWwYCfK2ttfbnKwyndrzncdYo89vro
-	 BAJGpMo0u134UwgHdV2qEllY1Z6q1vL4Kgj5r2jpNTjGT82vFqrEgbRmD9qjCJpnt7
-	 z6PQ/kSbZ7YMWix3F+oTjpvKZMT6XlxmIOmBrz7anElgNaPi4TqLcdIM/04sFPCNn7
-	 3z3yjXZOyHFZlNrVM2Q0k/uu3KnO24RVabGom8+uR0ylXX29cFu/I2vOYC3NeIYd1t
-	 uSO27Q++cW+YA==
+	b=V1NmSeYQXyDn8JX9Jp6wW564xLTgGZTxqBQAilml//XfEd2bfLiadeT81HcJdIDLP
+	 vJk4hiheeqlaIN5zIl8QjM6dgjr4RpFbZzaVUf8vMLYTMKdSmTyf3o2rCVWIjYlm6V
+	 gHQEXpmXX3ucAZ4cBveVspOXrjXEZOql/MtBjV73JMC+dSMUT3NHsavWzcJ2yT67s4
+	 ACJdt8BlkZVMTNBAzuHtq7ccQMJx9aNYsme2C5/fewP4e6zf9Osmj5Q72Qol3p4POj
+	 WQXrHyuANYmYP6o4fnUmDt5HjlvlXl/kNW2fFfFGf+tsP3FiYauhekRMyHNTfcfd7f
+	 TRzPIeS4RBqcg==
 From: Mark Brown <broonie@kernel.org>
 To: lgirdwood@gmail.com, YingKun Meng <mengyingkun@loongson.cn>
 Cc: krzysztof.kozlowski@linaro.org, linux-kernel@vger.kernel.org, 
  alsa-devel@alsa-project.org, loongarch@lists.linux.dev, 
  loongson-kernel@lists.loongnix.cn
-In-Reply-To: <20230614122140.3402749-1-mengyingkun@loongson.cn>
-References: <20230614122140.3402749-1-mengyingkun@loongson.cn>
-Subject: Re: [PATCH v3 1/3] ASoC: Add support for Loongson I2S controller
-Message-Id: <168683750003.557448.10961262618538846845.b4-ty@kernel.org>
-Date: Thu, 15 Jun 2023 14:58:20 +0100
+In-Reply-To: <20230614122240.3402762-1-mengyingkun@loongson.cn>
+References: <20230614122240.3402762-1-mengyingkun@loongson.cn>
+Subject: Re: [PATCH v3 2/3] ASoC: loongson: Add Loongson ASoC Sound Card
+ Support
+Message-Id: <168683750214.557448.6898111686510406347.b4-ty@kernel.org>
+Date: Thu, 15 Jun 2023 14:58:22 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,12 +36,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13-dev-c6835
 
-On Wed, 14 Jun 2023 20:21:40 +0800, YingKun Meng wrote:
-> Loongson I2S controller is found on 7axxx/2kxxx chips from loongson,
-> it is a PCI device with two private DMA controllers, one for playback,
-> the other for capture.
+On Wed, 14 Jun 2023 20:22:40 +0800, YingKun Meng wrote:
+> The Loongson ASoC Sound Card is a general ASoC DAI Link driver that
+> can be used for Loongson CPU DAI drivers and external CODECs.
 > 
-> The driver supports the use of DTS or ACPI to describe device resources.
+> The driver supports the use of ACPI table to describe device resources.
+> On loongson 7axxx platforms, the audio device is an ACPI device.
 > 
 > 
 > [...]
@@ -51,8 +52,8 @@ Applied to
 
 Thanks!
 
-[1/3] ASoC: Add support for Loongson I2S controller
-      commit: d84881e06836dc1655777a592b4279be76ad7324
+[2/3] ASoC: loongson: Add Loongson ASoC Sound Card Support
+      commit: d24028606e7642261d33ad2a50aed940d35cfb66
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
