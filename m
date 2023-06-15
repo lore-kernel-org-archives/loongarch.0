@@ -1,333 +1,270 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AF4E53BA
-	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 09:37:21 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.35])
-	by gateway (Coremail) with SMTP id _____8CxOurQ24pkMYIFAA--.11960S3;
-	Thu, 15 Jun 2023 17:37:20 +0800 (CST)
-Received: from [10.20.42.35] (unknown [10.20.42.35])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxCOXO24pkg9EbAA--.13406S3;
-	Thu, 15 Jun 2023 17:37:19 +0800 (CST)
-Subject: [PATCH v3 3/3] soc: loongson2_pm: add power management support
-To: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Pavel Machek <pavel@ucw.cz>, Marc Zyngier <maz@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
- Liu Peibao <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
- zhuyinbo@loongson.cn
-References: <20230615091757.24686-1-zhuyinbo@loongson.cn>
-From: zhuyinbo <zhuyinbo@loongson.cn>
-Message-ID: <968b7c81-a24e-1e0d-31a4-f633a82d17b0@loongson.cn>
-Date: Thu, 15 Jun 2023 17:37:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEDA53BA
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 09:42:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C83AC43397
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 09:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686822140;
+	bh=XQuGQJ3NoUrSQwNFP59JJLdxojYQ1TBivS0WT8/w20M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u8g8Ozh3mE2Snbs1cwUSb+RzROAQ6VDZetn74FhW+Lvt6kK7tuQnxhXI1q57lMD2r
+	 HjDbmJrSNVgR8BdXSaF25zqfgUXCj89a1Dw1oMD26FGuC1CAPYf2MCY0KD2ODAghM5
+	 Qc9++SJw+7dFtVAIW+Fhcya1X9t6JJsz0wPmfcmakfCryJs/u/0XMZKwmJj87l23o8
+	 rn4/Hj+TiJimGzHM+tbpdxFNWfYKlPcQmGEGhxzEQI1NbsYeeZCL8VF+0sWbQGiUwg
+	 DWy7oRzztq2Gy8xA2U9iTihhUfAniq596JyRQB19gnnlL/PJsKq0q0+H+R2oW8gHtu
+	 65gdoJ4b7D0bw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5189f49c315so2141678a12.2
+        for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 02:42:20 -0700 (PDT)
+X-Gm-Message-State: AC+VfDzDwdYSXqM+w7t/L+3NpB/zJlk1oemBOsy4JaqYaECk3Mz9UK1R
+	xDEV08Kv945+mhsJpclYJOJLIfpjFdm/MHYHCMs=
+X-Google-Smtp-Source: ACHHUZ5EqaWjq5vvJT3H+n50g/V85lvdiQoY7gum7sTvRKfWvo/vJxKBj7qau0xrHobkq3qsSyH3sg7fVkQhR5EYTmQ=
+X-Received: by 2002:aa7:d358:0:b0:514:9423:65a5 with SMTP id
+ m24-20020aa7d358000000b00514942365a5mr12355526edr.19.1686822138291; Thu, 15
+ Jun 2023 02:42:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230615091757.24686-1-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxCOXO24pkg9EbAA--.13406S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20230609090832.2131037-1-zhaotianrui@loongson.cn> <20230609090832.2131037-30-zhaotianrui@loongson.cn>
+In-Reply-To: <20230609090832.2131037-30-zhaotianrui@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 15 Jun 2023 17:42:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4rzRZQpfxFBANFJyUshsNHYqmZmLnZfHA+McPyQ3m4-w@mail.gmail.com>
+Message-ID: <CAAhV-H4rzRZQpfxFBANFJyUshsNHYqmZmLnZfHA+McPyQ3m4-w@mail.gmail.com>
+Subject: Re: [PATCH v13 29/30] LoongArch: KVM: Supplement kvm document about
+ LoongArch-specific part
+To: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev, 
+	Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>, 
+	Alex Deucher <alexander.deucher@amd.com>, Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn, 
+	Xi Ruoyao <xry111@xry111.site>, tangyouling@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
- From 6edcb9d6a1b18ccbecaf283b4f543afc9e7126d6 Mon Sep 17 00:00:00 2001
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-Date: Tue, 18 Apr 2023 14:18:00 +0800
-Subject: [PATCH v3 3/3] soc: loongson2_pm: add power management support
+Hi, Tianrui,
 
-The Loongson-2's power management controller was ACPI, supports ACPI
-S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
-Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
-(USB, GMAC, PWRBTN, etc.). This driver was to add power management
-controller support that base on dts for Loongson-2 series SoCs.
+On Fri, Jun 9, 2023 at 5:09=E2=80=AFPM Tianrui Zhao <zhaotianrui@loongson.c=
+n> wrote:
+>
+> Supplement kvm document about LoongArch-specific part, such as add
+> api introduction for GET/SET_ONE_REG, GET/SET_FPU, GET/SET_MP_STATE,
+> etc.
+>
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> ---
+>  Documentation/virt/kvm/api.rst | 71 +++++++++++++++++++++++++++++-----
+>  1 file changed, 62 insertions(+), 9 deletions(-)
+>
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.=
+rst
+> index add067793b90..ad8e13eab48d 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -416,6 +416,12 @@ Reads the general purpose registers from the vcpu.
+>         __u64 pc;
+>    };
+>
+> +  /* LoongArch */
+> +  struct kvm_regs {
+Add a " /* out (KVM_GET_REGS) / in (KVM_SET_REGS) */" line as others here?
 
-Signed-off-by: Liu Yun <liuyun@loongson.cn>
-Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
-  MAINTAINERS                         |   1 +
-  drivers/soc/loongson/Kconfig        |  10 ++
-  drivers/soc/loongson/Makefile       |   1 +
-  drivers/soc/loongson/loongson2_pm.c | 218 ++++++++++++++++++++++++++++
-  4 files changed, 230 insertions(+)
-  create mode 100644 drivers/soc/loongson/loongson2_pm.c
+> +        unsigned long gpr[32];
+> +        unsigned long pc;
+> +  };
+> +
+>
+>  4.12 KVM_SET_REGS
+>  -----------------
+> @@ -506,7 +512,7 @@ translation mode.
+>  ------------------
+>
+>  :Capability: basic
+> -:Architectures: x86, ppc, mips, riscv
+> +:Architectures: x86, ppc, mips, riscv, loongarch
+>  :Type: vcpu ioctl
+>  :Parameters: struct kvm_interrupt (in)
+>  :Returns: 0 on success, negative on failure.
+> @@ -592,6 +598,14 @@ b) KVM_INTERRUPT_UNSET
+>
+>  This is an asynchronous vcpu ioctl and can be invoked from any thread.
+>
+> +LOONGARCH:
+> +^^^^^^^^^^
+> +
+> +Queues an external interrupt to be injected into the virtual CPU. A nega=
+tive
+> +interrupt number dequeues the interrupt.
+> +
+> +This is an asynchronous vcpu ioctl and can be invoked from any thread.
+> +
+>
+>  4.17 KVM_DEBUG_GUEST
+>  --------------------
+> @@ -737,7 +751,7 @@ signal mask.
+>  ----------------
+>
+>  :Capability: basic
+> -:Architectures: x86
+> +:Architectures: x86, loongarch
+>  :Type: vcpu ioctl
+>  :Parameters: struct kvm_fpu (out)
+>  :Returns: 0 on success, -1 on error
+> @@ -746,7 +760,7 @@ Reads the floating point state from the vcpu.
+>
+>  ::
+>
+> -  /* for KVM_GET_FPU and KVM_SET_FPU */
+> +  /* x86: for KVM_GET_FPU and KVM_SET_FPU */
+>    struct kvm_fpu {
+>         __u8  fpr[8][16];
+>         __u16 fcw;
+> @@ -761,12 +775,22 @@ Reads the floating point state from the vcpu.
+>         __u32 pad2;
+>    };
+>
+> +  /* LoongArch: for KVM_GET_FPU and KVM_SET_FPU */
+> +  struct kvm_fpu {
+> +        __u32 fcsr;
+> +        __u32 none;
+Maybe use pad1 as x86 is better.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bcd05f1fa5c1..7c4ad0cbaeff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12195,6 +12195,7 @@ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-  L:	linux-pm@vger.kernel.org
-  S:	Maintained
-  F:	Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
-+F:	drivers/soc/loongson/loongson2_pm.c
-
-  LOONGSON-2 SOC SERIES PINCTRL DRIVER
-  M:	zhanghongchen <zhanghongchen@loongson.cn>
-diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
-index 707f56358dc4..4f3ce9eb7520 100644
---- a/drivers/soc/loongson/Kconfig
-+++ b/drivers/soc/loongson/Kconfig
-@@ -16,3 +16,13 @@ config LOONGSON2_GUTS
-  	 SoCs. Initially only reading SVR and registering soc device are
-  	 supported. Other guts accesses, such as reading firmware configuration
-  	 by default, should eventually be added into this driver as well.
-+
-+config LOONGSON2_PM
-+	bool "Loongson-2 SoC Power Management Controller Driver"
-+	depends on LOONGARCH && OF
-+	help
-+	 The Loongson-2's power management controller was ACPI, supports ACPI
-+	 S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
-+	 Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
-+	 (USB, GMAC, PWRBTN, etc.). This driver was to add power management
-+	 controller support that base on dts for Loongson-2 series SoCs.
-diff --git a/drivers/soc/loongson/Makefile b/drivers/soc/loongson/Makefile
-index 263c486df638..4118f50f55e2 100644
---- a/drivers/soc/loongson/Makefile
-+++ b/drivers/soc/loongson/Makefile
-@@ -4,3 +4,4 @@
-  #
-
-  obj-$(CONFIG_LOONGSON2_GUTS)		+= loongson2_guts.o
-+obj-$(CONFIG_LOONGSON2_PM)		+= loongson2_pm.o
-diff --git a/drivers/soc/loongson/loongson2_pm.c 
-b/drivers/soc/loongson/loongson2_pm.c
-new file mode 100644
-index 000000000000..287828413d72
---- /dev/null
-+++ b/drivers/soc/loongson/loongson2_pm.c
-@@ -0,0 +1,218 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Loongson-2 PM Support
-+ *
-+ * Copyright (C) 2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/suspend.h>
-+#include <linux/interrupt.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/platform_device.h>
-+#include <asm/bootinfo.h>
-+#include <asm/suspend.h>
-+
-+#define LOONGSON2_PM1_CNT_REG		0x14
-+#define LOONGSON2_PM1_STS_REG		0x0c
-+#define LOONGSON2_PM1_ENA_REG		0x10
-+#define LOONGSON2_GPE0_STS_REG		0x28
-+#define LOONGSON2_GPE0_ENA_REG		0x2c
-+
-+#define LOONGSON2_PM1_PWRBTN_STS	BIT(8)
-+#define LOONGSON2_PM1_PCIEXP_WAKE_STS	BIT(14)
-+#define LOONGSON2_PM1_WAKE_STS		BIT(15)
-+#define LOONGSON2_PM1_CNT_INT_EN	BIT(0)
-+#define LOONGSON2_PM1_PWRBTN_EN		LOONGSON2_PM1_PWRBTN_STS
-+
-+static struct loongson2_pm {
-+	void __iomem			*base;
-+	struct input_dev		*dev;
-+	bool				suspended;
-+} loongson2_pm;
-+
-+#define loongson2_pm_readw(reg)		readw(loongson2_pm.base + reg)
-+#define loongson2_pm_readl(reg)		readl(loongson2_pm.base + reg)
-+#define loongson2_pm_writew(val, reg)	writew(val, loongson2_pm.base + reg)
-+#define loongson2_pm_writel(val, reg)	writel(val, loongson2_pm.base + reg)
-+
-+static void loongson2_pm_status_clear(void)
-+{
-+	u16 value;
-+
-+	value = loongson2_pm_readw(LOONGSON2_PM1_STS_REG);
-+	value |= (LOONGSON2_PM1_PWRBTN_STS | LOONGSON2_PM1_PCIEXP_WAKE_STS |
-+		  LOONGSON2_PM1_WAKE_STS);
-+	loongson2_pm_writew(value, LOONGSON2_PM1_STS_REG);
-+	loongson2_pm_writel(loongson2_pm_readl(LOONGSON2_GPE0_STS_REG),
-+			    LOONGSON2_GPE0_STS_REG);
-+}
-+
-+static void loongson2_power_button_irq_enable(void)
-+{
-+	u16 value;
-+
-+	value = loongson2_pm_readw(LOONGSON2_PM1_CNT_REG);
-+	value |= LOONGSON2_PM1_CNT_INT_EN;
-+	loongson2_pm_writew(value, LOONGSON2_PM1_CNT_REG);
-+
-+	value = loongson2_pm_readw(LOONGSON2_PM1_ENA_REG);
-+	value |= LOONGSON2_PM1_PWRBTN_EN;
-+	loongson2_pm_writew(value, LOONGSON2_PM1_ENA_REG);
-+}
-+
-+static int loongson2_suspend_enter(suspend_state_t state)
-+{
-+	loongson2_pm_status_clear();
-+	loongarch_common_suspend();
-+	loongarch_suspend_enter();
-+	loongarch_common_resume();
-+	loongson2_power_button_irq_enable();
-+	pm_set_resume_via_firmware();
-+
-+	return 0;
-+}
-+
-+static int loongson2_suspend_begin(suspend_state_t state)
-+{
-+	pm_set_suspend_via_firmware();
-+
-+	return 0;
-+}
-+
-+static int loongson2_suspend_valid_state(suspend_state_t state)
-+{
-+	if (state == PM_SUSPEND_MEM)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static const struct platform_suspend_ops loongson2_suspend_ops = {
-+	.valid	= loongson2_suspend_valid_state,
-+	.begin	= loongson2_suspend_begin,
-+	.enter	= loongson2_suspend_enter,
-+};
-+
-+static int loongson2_power_button_init(struct device *dev, int irq)
-+{
-+	int ret;
-+	struct input_dev *button;
-+
-+	button = input_allocate_device();
-+	if (!dev)
-+		return -ENOMEM;
-+
-+	button->name = "Power Button";
-+	button->phys = "pm/button/input0";
-+	button->id.bustype = BUS_HOST;
-+	button->dev.parent = NULL;
-+	input_set_capability(button, EV_KEY, KEY_POWER);
-+
-+	ret = input_register_device(button);
-+	if (ret)
-+		goto free_dev;
-+
-+	dev_pm_set_wake_irq(&button->dev, irq);
-+	device_set_wakeup_capable(&button->dev, true);
-+	device_set_wakeup_enable(&button->dev, true);
-+
-+	loongson2_pm.dev = button;
-+	dev_info(dev, "Power Button: Init successful!\n");
-+
-+	return 0;
-+
-+free_dev:
-+	input_free_device(button);
-+
-+	return ret;
-+}
-+
-+static irqreturn_t loongson2_pm_irq_handler(int irq, void *dev_id)
-+{
-+	u16 status = loongson2_pm_readw(LOONGSON2_PM1_STS_REG);
-+
-+	if (!loongson2_pm.suspended && (status & LOONGSON2_PM1_PWRBTN_STS)) {
-+		pr_info("Power Button pressed...\n");
-+		input_report_key(loongson2_pm.dev, KEY_POWER, 1);
-+		input_sync(loongson2_pm.dev);
-+		input_report_key(loongson2_pm.dev, KEY_POWER, 0);
-+		input_sync(loongson2_pm.dev);
-+	}
-+
-+	loongson2_pm_status_clear();
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int __maybe_unused loongson2_pm_suspend(struct device *dev)
-+{
-+	loongson2_pm.suspended = true;
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused loongson2_pm_resume(struct device *dev)
-+{
-+	loongson2_pm.suspended = false;
-+
-+	return 0;
-+}
-+static SIMPLE_DEV_PM_OPS(loongson2_pm_ops, loongson2_pm_suspend, 
-loongson2_pm_resume);
-+
-+static int loongson2_pm_probe(struct platform_device *pdev)
-+{
-+	int irq, retval;
-+	u32 suspend_addr;
-+	struct device *dev = &pdev->dev;
-+
-+	loongson2_pm.base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(loongson2_pm.base))
-+		return PTR_ERR(loongson2_pm.base);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	if (!device_property_read_u32(dev, "suspend-address", &suspend_addr))
-+		loongson_sysconf.suspend_addr = (u64)phys_to_virt(suspend_addr);
-+	else
-+		dev_err(dev, "No suspend-address, could not support S3!\n");
-+
-+	if (loongson2_power_button_init(dev, irq))
-+		return -EINVAL;
-+
-+	retval = devm_request_irq(&pdev->dev, irq, loongson2_pm_irq_handler,
-+				  IRQF_SHARED, "pm_irq", &loongson2_pm);
-+	if (retval)
-+		return retval;
-+
-+	loongson2_power_button_irq_enable();
-+	loongson2_pm_status_clear();
-+
-+	if (loongson_sysconf.suspend_addr)
-+		suspend_set_ops(&loongson2_suspend_ops);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id loongson2_pm_match[] = {
-+	{ .compatible = "loongson,ls2k1000-pmc", },
-+	{},
-+};
-+
-+static struct platform_driver loongson2_pm_driver = {
-+	.driver = {
-+		.name = "ls2k-pm",
-+		.pm = &loongson2_pm_ops,
-+		.of_match_table = loongson2_pm_match,
-+	},
-+	.probe = loongson2_pm_probe,
-+};
-+module_platform_driver(loongson2_pm_driver);
-+
-+MODULE_DESCRIPTION("Loongson-2 PM driver");
-+MODULE_LICENSE("GPL");
--- 
-2.20.1
-
+Huacai
+> +        __u64 fcc;
+> +        struct kvm_fpureg {
+> +                __u64 val64[4];
+> +        }fpr[32];
+> +  };
+> +
+>
+>  4.23 KVM_SET_FPU
+>  ----------------
+>
+>  :Capability: basic
+> -:Architectures: x86
+> +:Architectures: x86, loongarch
+>  :Type: vcpu ioctl
+>  :Parameters: struct kvm_fpu (in)
+>  :Returns: 0 on success, -1 on error
+> @@ -775,7 +799,7 @@ Writes the floating point state to the vcpu.
+>
+>  ::
+>
+> -  /* for KVM_GET_FPU and KVM_SET_FPU */
+> +  /* x86: for KVM_GET_FPU and KVM_SET_FPU */
+>    struct kvm_fpu {
+>         __u8  fpr[8][16];
+>         __u16 fcw;
+> @@ -790,6 +814,16 @@ Writes the floating point state to the vcpu.
+>         __u32 pad2;
+>    };
+>
+> +  /* LoongArch: for KVM_GET_FPU and KVM_SET_FPU */
+> +  struct kvm_fpu {
+> +        __u32 fcsr;
+> +        __u32 none;
+> +        __u64 fcc;
+> +        struct kvm_fpureg {
+> +                __u64 val64[4];
+> +        }fpr[32];
+> +  };
+> +
+>
+>  4.24 KVM_CREATE_IRQCHIP
+>  -----------------------
+> @@ -1387,7 +1421,7 @@ documentation when it pops into existence).
+>  -------------------
+>
+>  :Capability: KVM_CAP_ENABLE_CAP
+> -:Architectures: mips, ppc, s390, x86
+> +:Architectures: mips, ppc, s390, x86, loongarch
+>  :Type: vcpu ioctl
+>  :Parameters: struct kvm_enable_cap (in)
+>  :Returns: 0 on success; -1 on error
+> @@ -1442,7 +1476,7 @@ for vm-wide capabilities.
+>  ---------------------
+>
+>  :Capability: KVM_CAP_MP_STATE
+> -:Architectures: x86, s390, arm64, riscv
+> +:Architectures: x86, s390, arm64, riscv, loongarch
+>  :Type: vcpu ioctl
+>  :Parameters: struct kvm_mp_state (out)
+>  :Returns: 0 on success; -1 on error
+> @@ -1460,7 +1494,7 @@ Possible values are:
+>
+>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+>     KVM_MP_STATE_RUNNABLE         the vcpu is currently running
+> -                                 [x86,arm64,riscv]
+> +                                 [x86,arm64,riscv,loongarch]
+>     KVM_MP_STATE_UNINITIALIZED    the vcpu is an application processor (A=
+P)
+>                                   which has not yet received an INIT sign=
+al [x86]
+>     KVM_MP_STATE_INIT_RECEIVED    the vcpu has received an INIT signal, a=
+nd is
+> @@ -1516,11 +1550,14 @@ For riscv:
+>  The only states that are valid are KVM_MP_STATE_STOPPED and
+>  KVM_MP_STATE_RUNNABLE which reflect if the vcpu is paused or not.
+>
+> +On LoongArch, only the KVM_MP_STATE_RUNNABLE state is used to reflect
+> +whether the vcpu is runnable.
+> +
+>  4.39 KVM_SET_MP_STATE
+>  ---------------------
+>
+>  :Capability: KVM_CAP_MP_STATE
+> -:Architectures: x86, s390, arm64, riscv
+> +:Architectures: x86, s390, arm64, riscv, loongarch
+>  :Type: vcpu ioctl
+>  :Parameters: struct kvm_mp_state (in)
+>  :Returns: 0 on success; -1 on error
+> @@ -1538,6 +1575,9 @@ For arm64/riscv:
+>  The only states that are valid are KVM_MP_STATE_STOPPED and
+>  KVM_MP_STATE_RUNNABLE which reflect if the vcpu should be paused or not.
+>
+> +On LoongArch, only the KVM_MP_STATE_RUNNABLE state is used to reflect
+> +whether the vcpu is runnable.
+> +
+>  4.40 KVM_SET_IDENTITY_MAP_ADDR
+>  ------------------------------
+>
+> @@ -2839,6 +2879,19 @@ Following are the RISC-V D-extension registers:
+>    0x8020 0000 0600 0020 fcsr      Floating point control and status regi=
+ster
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>
+> +LoongArch registers are mapped using the lower 32 bits. The upper 16 bit=
+s of
+> +that is the register group type.
+> +
+> +LoongArch csr registers are used to control guest cpu or get status of g=
+uest
+> +cpu, and they have the following id bit patterns::
+> +
+> +  0x9030 0000 0001 00 <reg:5> <sel:3>   (64-bit)
+> +
+> +LoongArch KVM control registers are used to implement some new defined f=
+unctions
+> +such as set vcpu counter or reset vcpu, and they have the following id b=
+it patterns::
+> +
+> +  0x9030 0000 0002 <reg:16>
+> +
+>
+>  4.69 KVM_GET_ONE_REG
+>  --------------------
+> --
+> 2.39.1
+>
+>
