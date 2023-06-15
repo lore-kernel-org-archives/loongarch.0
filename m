@@ -1,276 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D98375
-	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 06:45:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AF7C433C8
-	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 06:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686811540;
-	bh=jUyq9MCR5EFJXwJ9EDYffG16LnNM6FSeWeGUNewIMxU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cbV7kw2ngCC1lmiko6SGKS3SysBzaP00oiq9aYiboSSH5jy/ydr7mnnvI1QCjw/eu
-	 fNDPcb/kTDU6NwAFyE56VoS3JYPtyJ8g+A4wHkgA9cTCWaNW8u61tBNEVI7O6PHQQR
-	 Tt/lYo/t7AnT52rWNNuzE17ew4dWg95I0+dbSC3ZJf5E1msTZIH/luzE+ZQWw7a4BW
-	 x9Ac6dHADeq1R1GK89Ke8rJnOwkc4ivNdetxCHDFrhScGInFmufXa/SmI3cRUNM+2v
-	 pmuEEvtft9Sgo8LMBEezWlcr1kM7tHcoKZ3KgfHowofKfMlC25hT8QZjc4LN43quvX
-	 I4dyVdSNhHwuQ==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5147e40bbbbso11131837a12.3
-        for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 23:45:40 -0700 (PDT)
-X-Gm-Message-State: AC+VfDxIAWBbF3PHSytkkj+AFFNtatu8RoT7Cd0ku31wgH6SYcyRWwAr
-	h4P16y4p0630J4+roOloV8RXrdGT8Z7+vUgEhEQ=
-X-Google-Smtp-Source: ACHHUZ6ON8hmFkJ8hHDv8k/o/oD3CMjEPAjJX7IUgIb2V3DLHTKtRLfNQSo06ngI8f4EC9aCuLqphXcTzMj0jQAW6Hc=
-X-Received: by 2002:a05:6402:88e:b0:514:964c:4c42 with SMTP id
- e14-20020a056402088e00b00514964c4c42mr11191042edy.8.1686811538874; Wed, 14
- Jun 2023 23:45:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9381C29
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 07:57:30 +0000 (UTC)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5702415be17so9154447b3.2
+        for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 00:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1686815849; x=1689407849;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xLt61v9ssqW8THTFBubZKFO6yUx9jJyRuoagCfuj5p4=;
+        b=sqOjHZl7egAhowGBIl8syIGU5uGIW1wSh5YqCADkB0Zmhbwaikuj12BL/Atk+qYS71
+         8dY5tiV1rX4DjXNhrE2xJeIEdceT4TUB4AfmV60Sg7nUR26TxpBkZUfQbEPDRpELwXiM
+         3HDz0uXJ5pPS05kzKVjfB3TERQuwjHm7feUY48emv6g2FTDXB9kM0valHSq3MAkeYNdE
+         mA/iBYPYSlEE3tWbGq5EWumSWyWn91B8nqrAaue3xEBOGl9H7R/5SfVVFZg7lrOxN+sl
+         dQY9293XfHEDMeAx5R4qX4oCaN7KwBo3Iv/M+KCSiSSfPpdtHzovKysKwSYDtQgZOCuN
+         1f9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686815849; x=1689407849;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xLt61v9ssqW8THTFBubZKFO6yUx9jJyRuoagCfuj5p4=;
+        b=Iv8hWoGYxooPgvypDem5Q0CZF1D6uHgH/P8lRCI4UNPQ4BU3fMq14QHu/Fa1u0Vj6x
+         +hEdBILnKpVVmWli2eHVSkFL//GN4BfMfI4SLJTQYMqCyE5IppAjnn54tJN0usnEwupQ
+         ReHW9x2hcMfiaVLeHoQO2L+dABklcqStdlLGzN47WvS/hAQm4FvUbAnSOzNFhQQByoLm
+         gFdldijveaWuohhXyr841CYYCctAxn8hrPagJT49JF5XU/fsTk+Rh9hKyQ3pN/VmWcVW
+         GgG0YGMQfm9InosgcObyA2Uze6odoupnfManVHWkaMjqvhif7IaSNEW9wMyC5oO6Xmm0
+         hf7g==
+X-Gm-Message-State: AC+VfDyC6DX13oazA/41krUEw793GFBFdRJ14uJoEF/kKDxK1L16wPBJ
+	cPBEE543gzJgB4co3SJINrQIFA==
+X-Google-Smtp-Source: ACHHUZ7WkxW4gg02vDJcQOsCLmdXn2XBXedO6GCP0YsU33dh0gQYY291P8lwRaex9WlgnYowIiPsYQ==
+X-Received: by 2002:a0d:d9c9:0:b0:56d:244:ab13 with SMTP id b192-20020a0dd9c9000000b0056d0244ab13mr4185666ywe.28.1686815849226;
+        Thu, 15 Jun 2023 00:57:29 -0700 (PDT)
+Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id w10-20020a0dd40a000000b00568a207aaedsm4237877ywd.68.2023.06.15.00.57.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jun 2023 00:57:28 -0700 (PDT)
+Date: Thu, 15 Jun 2023 00:57:19 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@ripple.attlocal.net
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+cc: Andrew Morton <akpm@linux-foundation.org>, 
+    Matthew Wilcox <willy@infradead.org>, 
+    Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+    Vasily Gorbik <gor@linux.ibm.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+    Heiko Carstens <hca@linux.ibm.com>, 
+    Christian Borntraeger <borntraeger@linux.ibm.com>, 
+    Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+    Alexander Gordeev <agordeev@linux.ibm.com>, linux-mm@kvack.org, 
+    linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+    linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+    loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+    linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+    linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+    linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+    sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+    xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
+    Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH v4 04/34] pgtable: Create struct ptdesc
+In-Reply-To: <20230612210423.18611-5-vishal.moola@gmail.com>
+Message-ID: <fd63179-6ad6-fd86-79d6-2833c91111f8@google.com>
+References: <20230612210423.18611-1-vishal.moola@gmail.com> <20230612210423.18611-5-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230609022047.2195689-1-maobibo@loongson.cn> <CAAhV-H7n1Z58h2qxCASDXMMQBDN6x_vq6bH_utVhB5boYoZDGQ@mail.gmail.com>
- <4cfe93cb-7713-f994-45c3-e99fe34a3f9e@loongson.cn> <CAAhV-H7_RYzmuCunn5tMzWwKtzi_0sGqUBc5NV1F=_Hyc2X6jg@mail.gmail.com>
-In-Reply-To: <CAAhV-H7_RYzmuCunn5tMzWwKtzi_0sGqUBc5NV1F=_Hyc2X6jg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 15 Jun 2023 14:45:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H46Ngj6MewcVor4ebFxJ_P-ET=PqwZXZa9=nNL1vYUntQ@mail.gmail.com>
-Message-ID: <CAAhV-H46Ngj6MewcVor4ebFxJ_P-ET=PqwZXZa9=nNL1vYUntQ@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: Align pci memory space base address with page size
-To: "bibo, mao" <maobibo@loongson.cn>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-Hi, Bjorn,
+On Mon, 12 Jun 2023, Vishal Moola (Oracle) wrote:
 
-What's your opinion? This patch indeed fixes a problem on LoongArch,
-and in theory other non-4K page platforms also need it. If someone
-disagrees, maybe we can use the old way: provide a LoongArch-specific
-pcibios_align_resource() at this time.
+> Currently, page table information is stored within struct page. As part
+> of simplifying struct page, create struct ptdesc for page table
+> information.
+> 
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 
-Huacai
+Vishal, as I think you have already guessed, your ptdesc series and
+my pte_free_defer() "mm: free retracted page table by RCU" series are
+on a collision course.
 
-On Fri, Jun 9, 2023 at 12:21=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> On Fri, Jun 9, 2023 at 11:47=E2=80=AFAM bibo, mao <maobibo@loongson.cn> w=
-rote:
-> >
-> >
-> >
-> > =E5=9C=A8 2023/6/9 10:29, Huacai Chen =E5=86=99=E9=81=93:
-> > > Hi, Bibo,
-> > >
-> > > On Fri, Jun 9, 2023 at 10:20=E2=80=AFAM Bibo Mao <maobibo@loongson.cn=
-> wrote:
-> > >>
-> > >> Some PCI devices have only 4K memory space size, it is normal in gen=
-eral
-> > >> machines and aligned with page size. However some architectures whic=
-h
-> > >> support different page size, default page size on LoongArch is 16K, =
-and
-> > >> ARM64 supports page size varying from 4K to 64K. On machines where l=
-arger
-> > >> page size is use, memory space region of two different pci devices m=
-ay be
-> > >> in one page. It is not safe with mmu protection, also VFIO pci devic=
-e
-> > >> driver requires base address of pci memory space page aligned, so th=
-at it
-> > >> can be memory mapped to qemu user space when it is passed-through to=
- vm.
-> > >>
-> > >> It consumes more pci memory resource with page size alignment requir=
-ement,
-> > >> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled =
-by
-> > >> different architectures.
-> > >>
-> > >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > >> ---
-> > >> Change history
-> > >> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory reso=
-urce
-> > >>     page aligned.
-> > >>
-> > >> v3: move alignment requirement to generic pci code
-> > >>
-> > >> v2: add pci resource alignment requirement in arch specified functio=
-n
-> > >>     pcibios_align_resource on arm64/LoongArch platforms
-> > >>
-> > >> ---
-> > >>  arch/loongarch/Kconfig  | 1 +
-> > >>  drivers/pci/Kconfig     | 3 +++
-> > >>  drivers/pci/setup-res.c | 7 +++++++
-> > >>  3 files changed, 11 insertions(+)
-> > >>
-> > >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > >> index d38b066fc931..65b2f6ba9f8e 100644
-> > >> --- a/arch/loongarch/Kconfig
-> > >> +++ b/arch/loongarch/Kconfig
-> > >> @@ -142,6 +142,7 @@ config LOONGARCH
-> > >>         select PCI_LOONGSON
-> > >>         select PCI_MSI_ARCH_FALLBACKS
-> > >>         select PCI_QUIRKS
-> > >> +       select PCI_MEMRES_PAGE_ALIGN
-> > >>         select PERF_USE_VMALLOC
-> > >>         select RTC_LIB
-> > >>         select SMP
-> > >> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> > >> index 9309f2469b41..9be5f85ff9dc 100644
-> > >> --- a/drivers/pci/Kconfig
-> > >> +++ b/drivers/pci/Kconfig
-> > >> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
-> > >>  config PCI_BRIDGE_EMUL
-> > >>         bool
-> > >>
-> > >> +config PCI_MEMRES_PAGE_ALIGN
-> > >> +       bool
-> > >> +
-> > >>  config PCI_IOV
-> > >>         bool "PCI IOV support"
-> > >>         select PCI_ATS
-> > >> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> > >> index 967f9a758923..6ad76734a670 100644
-> > >> --- a/drivers/pci/setup-res.c
-> > >> +++ b/drivers/pci/setup-res.c
-> > >> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, in=
-t resno)
-> > >>                 return -EINVAL;
-> > >>         }
-> > >>
-> > >> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
-> > >> +       /*
-> > >> +        * force minimum page alignment for vfio pci usage
-> > >> +        */
-> > >> +       if (res->flags & IORESOURCE_MEM)
-> > >> +               align =3D max_t(resource_size_t, PAGE_SIZE, align);
-> > >> +#endif
-> > > Does this really have its effect? The common version of
-> > > pcibios_align_resource() simply returns res->start, and doesn't care
-> > > about the 'align' parameter.
-> > yes, it works. The is output of command " lspci -vvv | grep Region" on =
-my
-> > 3C5000+7A2000 box. After the patch base address of all pci mem resource
-> > is aligned with 16K.
-> >
-> > output without the patch:
-> >         Region 0: Memory at e0045240000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045248000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045250000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045258000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045260000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045271400 (64-bit, non-prefetchable) [siz=
-e=3D256]
-> >         Region 2: Memory at e0040000000 (64-bit, non-prefetchable) [siz=
-e=3D64M]
-> >         Region 4: Memory at e0045200000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045210000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045220000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045230000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 5: Memory at e0045271000 (32-bit, non-prefetchable) [siz=
-e=3D1K]
-> >         Region 0: Memory at e0045268000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045269000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526a000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526b000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526c000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526d000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526e000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526f000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045270000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 2: Memory at e0044000000 (64-bit, non-prefetchable) [siz=
-e=3D16M]
-> >         Region 0: Memory at e0045100000 (64-bit, non-prefetchable) [siz=
-e=3D1M]
-> >         Region 0: Memory at e0045000000 (64-bit, non-prefetchable) [siz=
-e=3D16K]
-> >
-> > out put with the patch:
-> >         Region 0: Memory at e0045240000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045248000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045250000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045258000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045260000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045290000 (64-bit, non-prefetchable) [siz=
-e=3D256]
-> >         Region 2: Memory at e0040000000 (64-bit, non-prefetchable) [siz=
-e=3D64M]
-> >         Region 4: Memory at e0045200000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045210000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045220000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045230000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 5: Memory at e004528c000 (32-bit, non-prefetchable) [siz=
-e=3D1K]
-> >         Region 0: Memory at e0045268000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526c000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045270000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045274000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045278000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004527c000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045280000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045284000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045288000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 2: Memory at e0044000000 (64-bit, non-prefetchable) [siz=
-e=3D16M]
-> >         Region 0: Memory at e0045100000 (64-bit, non-prefetchable) [siz=
-e=3D1M]
-> >         Region 0: Memory at e0045000000 (64-bit, non-prefetchable) [siz=
-e=3D16K]
-> OK, thanks.
->
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> >
-> > Regards
-> > Bibo, Mao
-> > >
-> > > Huacai
-> > >>         size =3D resource_size(res);
-> > >>         ret =3D _pci_assign_resource(dev, resno, size, align);
-> > >>
-> > >> --
-> > >> 2.27.0
-> > >>
-> >
+Probably just trivial collisions in most architectures, which either
+of us can easily adjust to the other; powerpc likely to be more awkward,
+but fairly easily resolved; s390 quite a problem.
+
+I've so far been unable to post a v2 of my series (and powerpc and s390
+were stupidly wrong in the v1), because a good s390 patch is not yet
+decided - Gerald Schaefer and I are currently working on that, on the
+s390 list (I took off most Ccs until we are settled and I can post v2).
+
+As you have no doubt found yourself, s390 has sophisticated handling of
+free half-pages already, and I need to add rcu_head usage in there too:
+it's tricky to squeeze it all in, and ptdesc does not appear to help us
+in any way (though mostly it's just changing some field names, okay).
+
+If ptdesc were actually allowing a flexible structure which architectures
+could add into, that would (in some future) be nice; but of course at
+present it's still fitting it all into one struct page, and mandating
+new restrictions which just make an architecture's job harder.
+
+Some notes on problematic fields below FYI.
+
+> ---
+>  include/linux/pgtable.h | 51 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+> 
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index c5a51481bbb9..330de96ebfd6 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -975,6 +975,57 @@ static inline void ptep_modify_prot_commit(struct vm_area_struct *vma,
+>  #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
+>  #endif /* CONFIG_MMU */
+>  
+> +
+> +/**
+> + * struct ptdesc - Memory descriptor for page tables.
+> + * @__page_flags: Same as page flags. Unused for page tables.
+> + * @pt_list: List of used page tables. Used for s390 and x86.
+> + * @_pt_pad_1: Padding that aliases with page's compound head.
+> + * @pmd_huge_pte: Protected by ptdesc->ptl, used for THPs.
+> + * @_pt_s390_gaddr: Aliases with page's mapping. Used for s390 gmap only.
+> + * @pt_mm: Used for x86 pgds.
+> + * @pt_frag_refcount: For fragmented page table tracking. Powerpc and s390 only.
+> + * @ptl: Lock for the page table.
+> + *
+> + * This struct overlays struct page for now. Do not modify without a good
+> + * understanding of the issues.
+> + */
+> +struct ptdesc {
+> +	unsigned long __page_flags;
+> +
+> +	union {
+> +		struct list_head pt_list;
+
+I shall be needing struct rcu_head rcu_head (or pt_rcu_head or whatever,
+if you prefer) in this union too.  Sharing the lru or pt_list with rcu_head
+is what's difficult to get right and efficient on s390 - and if ptdesc gave
+us an independent rcu_head for each page table, that would be a blessing!
+but sadly not, it still has to squeeze into a struct page.
+
+> +		struct {
+> +			unsigned long _pt_pad_1;
+> +			pgtable_t pmd_huge_pte;
+> +		};
+> +	};
+> +	unsigned long _pt_s390_gaddr;
+> +
+> +	union {
+> +		struct mm_struct *pt_mm;
+> +		atomic_t pt_frag_refcount;
+
+Whether s390 will want pt_mm is not yet decided: I want to use it,
+Gerald prefers to go without it; but if we do end up using it,
+then pt_frag_refcount is a luxury we would have to give up.
+
+s390 does very well already with its _refcount tricks, and I'd expect
+powerpc's simpler but more wasteful implementation to work as well
+with _refcount too - I know that a few years back, powerpc did misuse
+_refcount (it did not allow for speculative accesses, thought it had
+sole ownership of that field); but s390 copes well with that, and I
+expect powerpc can do so too, without the luxury of pt_frag_refcount.
+
+But I've no desire to undo powerpc's use of pt_frag_refcount:
+just warning that we may want to undo any use of it in s390.
+
+I thought I had more issues to mention, probably Gerald will
+remind me of a whole new unexplored dimension! gmap perhaps.
+
+Hugh
+
+> +	};
+> +
+> +#if ALLOC_SPLIT_PTLOCKS
+> +	spinlock_t *ptl;
+> +#else
+> +	spinlock_t ptl;
+> +#endif
+> +};
+> +
+> +#define TABLE_MATCH(pg, pt)						\
+> +	static_assert(offsetof(struct page, pg) == offsetof(struct ptdesc, pt))
+> +TABLE_MATCH(flags, __page_flags);
+> +TABLE_MATCH(compound_head, pt_list);
+> +TABLE_MATCH(compound_head, _pt_pad_1);
+> +TABLE_MATCH(pmd_huge_pte, pmd_huge_pte);
+> +TABLE_MATCH(mapping, _pt_s390_gaddr);
+> +TABLE_MATCH(pt_mm, pt_mm);
+> +TABLE_MATCH(ptl, ptl);
+> +#undef TABLE_MATCH
+> +static_assert(sizeof(struct ptdesc) <= sizeof(struct page));
+> +
+>  /*
+>   * No-op macros that just return the current protection value. Defined here
+>   * because these macros can be used even if CONFIG_MMU is not defined.
+> -- 
+> 2.40.1
