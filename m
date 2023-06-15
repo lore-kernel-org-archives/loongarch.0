@@ -1,239 +1,328 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F881548A
-	for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 23:06:06 +0000 (UTC)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35EKIbbM015424;
-	Wed, 14 Jun 2023 22:11:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=b+g0tBnNiLUaxF5Ts6ofeRdt6hYqU+Nj4Wg+Un9484Y=;
- b=2L61P/VwrwdbDar9sM8X0Aw7/Q1eKD6BwVEtfFEEl95txWpGMD71cDVu/eG75Wnq4xcm
- rQT44CH9zHzo2WXG1xLEo1dS84fNRrcoBZwbo7IqnX5/Tv0HgMzQIUBnEMnBDeTInyPl
- 297hX1deb2R9ZEzq15SgDDVbZleqCdu2YdKTaOgbTtJCQLPRy7rHfucHIfppwkzRejkq
- kRqlNql6Oo/PDkE8n0q6u2RNogVdMljFt0YE1Z600qqkUBRErlN06vUZoEajB62zfHLE
- bDhs5AE10826o8IYgJLRvt77sZXx5FTJIdOfJgCT9TLqP5VG/6gDGdyitWz445Ld3DMd aw== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r4h2arnbe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 Jun 2023 22:11:38 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35EKaPTt021593;
-	Wed, 14 Jun 2023 22:11:37 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2104.outbound.protection.outlook.com [104.47.70.104])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3r4fm65kea-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 Jun 2023 22:11:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bCG3KHkJogsEkPAA6e/qkcDfQeRs0Iym4UvHApbQgOIznP4I38+OtiWoeSS9p9WiRzT9gILnqXiQo5opAt1H6LyPyb1cKPGOCO3lhxFbio+t4ONb1W9SPevB90S4ZSIHsrKAi7l2hRvQQZUpONCnLW6RrVSyoHtxKOZ/PxdMz2hG9YNpyRHlWDLZcXuN8iajEcdVokaPAX+WAR1WHVLN7SoBijIr3UB1+1RtcUywsUd0+jgVewSit7A8EV0+vwfujOm4OsoP9fg8mUFoVacwv9g+/ACVd3cC486ZbjfpeG+rDoD2jZdaHXhSkB7SzafzdGa85hNMytcjS6wwxV5hTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b+g0tBnNiLUaxF5Ts6ofeRdt6hYqU+Nj4Wg+Un9484Y=;
- b=L87e+XGmhn8/fy4omwCSaNV4OzgSKioagh/dcTAfgYk5cF/I5+fMUeJlnnLHmE0nH4mDrmRmO3Zyer5CEIpvoXnlbQZVsUThMSiOuVkghtpAT3crZFWspCi6fnBj1qygU8qoJShRWYgeU3yreIWjQW4yfX4V8vuqhmhBM4sBqdsooSXc0KZ7n+ph6sPkprm00Lgh6+F0HhmomE8XKRM7CrgzVFLooYO0UDcSOpupPBU1FXddM/iWTnFQNZwpbn4LyCRKbi+wUO+uJ2zQUt4buIXmqfdGBZlmNBCgJFe65SytKhbrfiK5ilBfdqJCt9RSArz404iZrlRvNe8MoYnh4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b+g0tBnNiLUaxF5Ts6ofeRdt6hYqU+Nj4Wg+Un9484Y=;
- b=zMYBhL4+61YuOdUsJPfMbbi5dGqIXLRabRnsyvLx2INlwyWqSvFaO/pHiQgTu5lWF+tdfNWEgfWRlwqT5ZumuKlgRPaGb6sZdPVHmcCoDFnJuNsWjQ7olyB91R5n9MGBfZJMCPx5BIQEAfsf5AzqoTwv3Y0HsKpusao1i66O3g0=
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by SJ2PR10MB7656.namprd10.prod.outlook.com (2603:10b6:a03:53e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.44; Wed, 14 Jun
- 2023 22:11:34 +0000
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::8b8f:b4b1:bb78:b048]) by CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::8b8f:b4b1:bb78:b048%5]) with mapi id 15.20.6477.028; Wed, 14 Jun 2023
- 22:11:33 +0000
-Message-ID: <b5ba29d3-0de0-9bff-b9e5-bab24ade8733@oracle.com>
-Date: Wed, 14 Jun 2023 17:11:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v1 01/21] kexec: consolidate kexec and crash options into
- kernel/Kconfig.kexec
-Content-Language: en-US
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        chenhuacai@kernel.org, geert@linux-m68k.org, tsbogend@alpha.franken.de,
-        James.Bottomley@hansenpartnership.com, deller@gmx.de,
-        ysato@users.sourceforge.jp, dalias@libc.org,
-        glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, kernel@xen0n.name, mpe@ellerman.id.au,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, hpa@zytor.com, keescook@chromium.org,
-        paulmck@kernel.org, peterz@infradead.org, frederic@kernel.org,
-        akpm@linux-foundation.org, ardb@kernel.org, samitolvanen@google.com,
-        juerg.haefliger@canonical.com, arnd@arndb.de,
-        rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
-        sebastian.reichel@collabora.com, rppt@kernel.org,
-        kirill.shutemov@linux.intel.com, anshuman.khandual@arm.com,
-        ziy@nvidia.com, masahiroy@kernel.org, ndesaulniers@google.com,
-        mhiramat@kernel.org, ojeda@kernel.org, thunder.leizhen@huawei.com,
-        xin3.li@intel.com, tj@kernel.org, gregkh@linuxfoundation.org,
-        tsi@tuyoix.net, bhe@redhat.com, hbathini@linux.ibm.com,
-        sourabhjain@linux.ibm.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com
-References: <20230612172805.681179-1-eric.devolder@oracle.com>
- <20230612172805.681179-2-eric.devolder@oracle.com>
- <ZInbx5cof4STvrZl@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-From: Eric DeVolder <eric.devolder@oracle.com>
-In-Reply-To: <ZInbx5cof4STvrZl@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR13CA0068.namprd13.prod.outlook.com
- (2603:10b6:5:134::45) To CO1PR10MB4531.namprd10.prod.outlook.com
- (2603:10b6:303:6c::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD18718D
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 02:31:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ABDAC433CA
+	for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 02:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686796277;
+	bh=Si/Tf+Eqe5mk7ecGTKWOceVzZNl9K6bgEh+lpHRHCEo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FquzsmDu8CYdj2bOLF9tUqIJjXS68sHmNxabtN+bH4B+PsealCGHtgJ+WwVTyyLwE
+	 iwlBQyEA1zOZTZMPKde9Yco3QknhXFrLzpQ4gQ66tBPypr0b7MBhrzlqRMple6iUe+
+	 ZZghvZDZ1I5fc6dTLsdBjZIa/hRZQDkkVNyckf6Tv2YRMZKrU7qIG2aK3PiTpv2C4q
+	 HLHiVv7nmRtobcgXY6Uixio7g1TsC/kvHpjuV2Fb62iw8vPFGslFTYxH9lz71j0woM
+	 RKBw1mS9cwf6QkwdUYPygRE2wfix01RiHVfmDMZqAvujcYXHSrFnUzgJ5t5Mo5s8XL
+	 xuK59qEwha/fQ==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4f122ff663eso9728880e87.2
+        for <loongarch@lists.linux.dev>; Wed, 14 Jun 2023 19:31:17 -0700 (PDT)
+X-Gm-Message-State: AC+VfDyICespmGQtXE5PP0fly1Kx9EUaeYAi4C7QpHdijirdW7Cr5iVs
+	laK1FslMdu5mhlhmU0DXaSFMLjXFLZODusllcG8=
+X-Google-Smtp-Source: ACHHUZ58fYYF27zw2qoDK75nI8/jVNrLM8/3xmOzSL6rgh6Qe7fb5goj956EKKrraCoZGQx8rkP3HwWKqmLo9knsXec=
+X-Received: by 2002:a19:e05a:0:b0:4e9:9f10:b31d with SMTP id
+ g26-20020a19e05a000000b004e99f10b31dmr9130364lfj.2.1686796275141; Wed, 14 Jun
+ 2023 19:31:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|SJ2PR10MB7656:EE_
-X-MS-Office365-Filtering-Correlation-Id: fe51cdf0-2034-4140-5718-08db6d245056
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	tv26wXvbufuEZP3//i0wLXE6NeJhURAVsek1jrLbF7ya1DqEP04KV7hRTIXjlAw2g7MRcbrRsBGnztiwyrnIfYgmDE8Dp+mFRzAfQAIAh0WAvi7yRcocByeOQToNmYjyzWqHUyBSL0RFJV6h7FTQZkn8UeGmQp/7XSYppNFAxOoo5/VvD2+wd5789x34MnW+ETJ1BhS9Bno8mpYrQjjfECwPJgslCC+XJRcabKdwUn2C18Zf/AVv5dWXlbP/dVREY467ur0Xq+WoA7zm/fzbi5b+D34pvA0/jhKBBFM//1uMcmvvPuQRrKaEIvl8qdXO4Sdn9lMHMLnAE0yfZqybLIhQfNZi5psIwMMnJyFAQyL5R2po1Q6CYczU2LqZ32NuEw/uxikPVQkhglbUShUK7cpGhWwCK9C/CKzyCa4JylKwyqRB0o9/u8DF9edhqOr3eaXvsKEvIMeup8ALjobxCR1Kt6uJ6JrsmSscq7dm9kdyLyOWeLBog3Dcqb8s0bBpnFLKqR6H/zc5rukR85X0ke2DxU1FqfZYDhixvPYHTDmg3nLAY3i+bJCsmhfBchCwW9JQa05my8GoSWICrnCiCwIPqDBb1t8o2AqdkrUK1pVM9/wTwOZzoxQFHDAfYiVzQB/BELIGauF9FM87ggPYLw==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(366004)(136003)(346002)(39860400002)(451199021)(8936002)(8676002)(7366002)(7416002)(31686004)(7406005)(66476007)(5660300002)(6916009)(66946007)(66556008)(4326008)(316002)(2906002)(4744005)(41300700001)(6666004)(478600001)(6486002)(186003)(6506007)(53546011)(107886003)(6512007)(26005)(36756003)(2616005)(31696002)(38100700002)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?WXc1R0ZVVVcveDFZbFJ3M0lrdkUwSzNDQlZwKzhmT00wS2dqazNPemNvVmVD?=
- =?utf-8?B?V1FaK04vUnQxVkVkR3hheHorSGl2dUdZb29UdGNRVEpjemorL282b3lDd3dE?=
- =?utf-8?B?bWJxRk5vSEc4RTczZ0s0MGhXQm1qaTZrYkpZakYvd2FIUjYwWU9uZUNvdW9t?=
- =?utf-8?B?Rjl2WG0wQlVINWdUdTlKZERFL2ZwTVExdkQvWnBPUkY3akdXVmxFUjlndjU4?=
- =?utf-8?B?VDhKWmZzZ0lvaDFUeE5sNytmakV1K2Z1UU5sY3hxeUhPck1IbkpMUTAxYncx?=
- =?utf-8?B?c0lLSHdnZ0tHNG5TZDBCekNrcklpcWQ2OFNSczVrM2UwV3ZXZWc3V2JmVUh3?=
- =?utf-8?B?amFhb0FWRG9zUlJ4akxnd000bm1jVEcwRVZKL1AvNzE5LzM3SklFajVzNm9Z?=
- =?utf-8?B?L0pMQjZQU2k4dE53a3lUSEZVTFhkZFh0NkExSnl1Y3pBVzUxTis0NVlNK3ZZ?=
- =?utf-8?B?Zms2WnRXeTZ6Nk9TcWJoVUIzWlJMS3FRbTVsWVB2andBbU5EbTZxZzRjanFX?=
- =?utf-8?B?VU51SWVkejlINFVWL0UwMWY2bTdMSUxleStvckxJckI4dVFSZUdCN1haYjQ0?=
- =?utf-8?B?eXU4SVhTNXMvdzVzeWhNZFlEQXJZUFBCZE1UUjR0b0J0T1R1MXNxak1KeGFV?=
- =?utf-8?B?ZFdUcnQ4YmppejYyMW92MDBNVElXRnVyV3Zrb242NGlMRlMrdS93U21Gb2RU?=
- =?utf-8?B?eFJ1Um1aNVVSNXl2WE96NElKTk1pK05HV0RiTGpXVHlVZ0tHZlpwL0UrejNm?=
- =?utf-8?B?MktMY0FoYURleDNQWm01VDB4Y2lZRDdzclJzZlZzMmk5bDQzdFJwQ3J5RDcz?=
- =?utf-8?B?My93T09OTXp2MnBmTFVEWElWVkJXam5xb1pGMHJzS3YySnRDdCtZYWJqcFZY?=
- =?utf-8?B?TDllMGdtRUNUdFhSRlJiTVFCWFc3bWt5eVBiejNydVk3YkU2UXYvalIycDB3?=
- =?utf-8?B?OXZzYnYyQy9sanJ3a0J5UjVNNm1ad3ByemtmYkswVUh6emxBVEFKT0tMMnhu?=
- =?utf-8?B?TjRDeWxvR1N3Q3JCSmFqd1oxWUR1UHlHS2Y5LzdGNjZURWJlZWJXUm9aL0s1?=
- =?utf-8?B?NXVXM3VwaE9MbU94OUJLTlVkczRxUnprWmMwL1g3MFpyTUthc0NvdEMva2U4?=
- =?utf-8?B?QmpiQ1lmUzdGMUg4RGJyWjhOZ1ZDRGZ6ejdWcHVPeW02UnYyR1VOYlJoKzhn?=
- =?utf-8?B?M2k2VUluL2pyQWQwMytObzJ4QS9ONzRDRU1qRW1TRTJnWFpsUS84MWFJRUND?=
- =?utf-8?B?NzNtUGJ5S2dYNDVvUllWbkJwNlJSR09YTUFpQ1NLUldrcC9RLzBOd2F0RDJv?=
- =?utf-8?B?RHhadEVIRW1DQ0FCQ1QzY1h3aTgwSSszeUlEMG1GUURlMDNCNXJCK0JBd2dv?=
- =?utf-8?B?SXhYSUZwbUJVdGx6bXFjNXRiS0dtY0RTUm81M0lkeTh0NDJEM2dDcWJ2NWli?=
- =?utf-8?B?eFJsK1AvQmh0RE5GM0JDNHg1aEFrdkJic1NJMnFEVW11UzltdnlBV2xiNklU?=
- =?utf-8?B?ZVVNaFJLRCt2QnQvNm5WYlFBbCt1T3NSMlhvVS9MQlBBa3NSdXVRYmFkNlNL?=
- =?utf-8?B?Q3MvQ0JVdXNpYnltSW1mQ2tNSTFHOHZaYkNtSU1tR2hZZWNQSFNZNnhMRTQr?=
- =?utf-8?B?bkp3ZWZ6QzBIZjJxSEZMZ0IvNThrR3RkZmxUUzlSOUlhYzl6K2lhRFVLK1Nn?=
- =?utf-8?B?Y29TOGgwaFdJWm1lNGVKakdTY1hzd1lJN2xZYW03TjRQSEFXclozS2FwdVY3?=
- =?utf-8?B?Q3BmWnR5eWczdW1SWW1EOEdUNjQzZ2FMM1o5bVhPOVAzUEFzZG1iZm9pQ0VF?=
- =?utf-8?B?QnBZM0k5WVZRV0piaUZ3dFl6MkZRSGVNdU5HZGlBeiswdTdaWjVTVU9aREx2?=
- =?utf-8?B?blMyWTgvZG5ISWU2b0g0Z2ZDSk9Cd1lXUlYySzdqaFJzQkxPK3R1Y3I2L0lY?=
- =?utf-8?B?Z0gvOURFZWVBN2ZaUUhwNC9oSXB0cmFHN0Rhb1FHZ2dDUEdEWTJqNnl0VWVu?=
- =?utf-8?B?U0g3dnNDMWFZelVlbEI0dC9nQTMyVXRmSmdyZnRHRWtQWWx2dlBhM3dLeGNZ?=
- =?utf-8?B?TGZrbUgyeWpYNXFwQW5EZkxyZ0xJbzhadHVsWHNnTnNnYTl2dUJEb090WWFS?=
- =?utf-8?B?R3hXeEFLOFlUb1ptY1o3MlJHd1BoRFVhM2ZWUkp6QXVIZDJ6Y0Y2VnZlemdU?=
- =?utf-8?B?MUE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?utf-8?B?K21YK1crOUE3K0xjY1BPVTdBK1FvcU0vbmdvMUJUcmwwMDBuRUhVQUZtSTVG?=
- =?utf-8?B?Ty93UWEyYWdpWHB1dkxMMnh4M3NKa1lYVHczNmtIaFh0YTBUVWZoYm5GQzdE?=
- =?utf-8?B?cEVwQXh6ZWtPczdiWVM2QlJHV1M5VHVuYjhJYjJjU3ZaRmxyUitGTE1oaWNY?=
- =?utf-8?B?dG9KOHZ1UUJyT1dNOGY4MWc2UWFQYUU2aGZlUHRZWlYzMUttenllbTVNNWt5?=
- =?utf-8?B?Vm5rSTB4aU1wSmdEcFpLMVZPVFQzZE1wN3NpemRnNWxzcEZxdlBnZUtidU1q?=
- =?utf-8?B?TkxnaHNkL3B2VEpvNS8zbnBEaVZONThOQ203K3lMUDRYa0FXRHFsZmI3Q1pG?=
- =?utf-8?B?Ulp1UXRYT2ZUTHNFaEp6UnlTeWl4S0N3T1pMR05SSklrMFlWcGFPQ2htQzRZ?=
- =?utf-8?B?N1Z4UVBFei81UVFwZldxTmxwaUJSWFU1SzRJS1drMVhXaHd0OGt5Z1haYnBu?=
- =?utf-8?B?bWVvL1g4aXpWcDFMQWNvTnFCRVdxSmV1NGdkVFRYTGJQQ3Fnczh6ekhRb016?=
- =?utf-8?B?SjQyMFlwcmhjSUJpVHVpSmtMSVZKZ1k2SnJuc241cVI4T0R0eXlzbW9zUHUy?=
- =?utf-8?B?aHcveVpTWVpCb2M4VnBYcG83S0lXNEtnMjQ4YitzL1NXck4ySG1FOVdnZ3kr?=
- =?utf-8?B?dEdtOVNBRzlCRnlnR0FDVzlWUFpqRUhDcFhvV3lid1hpZmZZdjUybTNWM0s2?=
- =?utf-8?B?Z3cwZWhLcDk3YVgxYWlvblBBdXg1eEUySmNUWkF4RTRSY0twTXhRTnVJVTht?=
- =?utf-8?B?NXJFVTBZMVQzdndZQ2pGdVRqSGJNekdaQW5hbkt2ai9XM0hVV1BjUE1HRXBF?=
- =?utf-8?B?NDNmVkZzc29tRUlHdnJVcUM3QndVbSt4dXVwdXdRNzY0NzhCTkdkcHliaUF0?=
- =?utf-8?B?c0xsTmU0Y3NDcmJFYWM4M2tDS2Y5aHZ4V2dJWWtzNit4VnFhQSs1M1h0M2l5?=
- =?utf-8?B?QW1PRmtNSGdqUlRSZGkvYytMeDAxWWNMVDc0Y1A3NjlGNkxQRGcvOWNLaGhY?=
- =?utf-8?B?VVJoQzVISFdPdU1TdDUrc1J2TWlKNXpyZE1hNDBjTS9GdmhDL3FmZFlOalAy?=
- =?utf-8?B?UVBWTVJ3YWJDdnBKMlhQLzIrSS8zbHRzOFNMbm1sNmZGMVFEM05XamF4N1Jl?=
- =?utf-8?B?ZlNwcjFIcTdVbDhpRDFjL0lTa0lNQk1zTVdNSWE3TzRoUEU1K05YTkhEL3JH?=
- =?utf-8?B?R2pjWjJPbGo1NVU1M1Z3aVNLTVRJdWRkNnF6TDYzTWFUU0FmdUt3eHRHRGRZ?=
- =?utf-8?B?RUthSnBab0Q5c3NEN2tLSkxPRkZteHZDdDNQQkRhS25xajRYd1JjeHIzMUky?=
- =?utf-8?B?TDQzeXZ0cENIWGxWb2JUalZLYk1BRTZFVVJkU3NNa05QcFp2NXd1ZEpuZXk2?=
- =?utf-8?B?ak9hQVRyWmtSRGRMN0diS3c4aUdoTC9GWkhlZGdJZFF1dkRlWEVGTXBmZmdW?=
- =?utf-8?B?TlVDNWd1blhzUWZvczhtdk5OSE1zMFhVYWxwTjRlVlZWdTQrUENXU3VuMmsx?=
- =?utf-8?B?SVlzVlBSeUdpT0xEU05WT1Iwd3NHUWhDMnRra2o3V0UxY2VFcytOOThMOUln?=
- =?utf-8?B?TlZnbW9JNHpMbm42Y25ndXYxNVJKaTdtSXhveXgzU2RDcUZGRnYvZERmNllS?=
- =?utf-8?B?NzNXanMvNWk2WHlmZlE1cksyN0t1ZjRnY2ppeHlZeGRqMmV4d3pvd243TCtt?=
- =?utf-8?B?a083aExGVWdZUEFHbmg2RU9YMXVJT3h0K1F1ZHI5cVhpVFVmdTVnTXY3UnBo?=
- =?utf-8?B?cG44YVR0L3RmWk5kOW5rUWY5RVJiQjU3eDJOUWRCR2RESXVzYXIyamdCcHZB?=
- =?utf-8?B?cGJ6Tk1EVmlydXRmdkVzTTJmV1RCU2N0NXplaGprcE1uSEpuYXR4b3lQQUtl?=
- =?utf-8?B?UWtueTc0UFJnQU1EVXBUbjFkWS9kQzQwbS80bDdPM2NWdloxVnI5WXlCQ3hD?=
- =?utf-8?B?K0Z5RHNvS3JWS2M2VXBiYVh6SkhpN1N5cjdKK25YbmZsNzdjdTQ0ekJqRXd1?=
- =?utf-8?B?aUhPTjU5VlpUQ21vcG1SbCtWcUF0WGVXa2hiaFlLdXk4cTRGZTNKTklPVUhk?=
- =?utf-8?B?Z1c2M3VQNm9NQmR1NmlaTFU1SjluZnlid1dvT0hxVHo3ckZzak4xdG9RaUJH?=
- =?utf-8?B?bHJ0RnlVemdOZ0ZlZjFyV0lkQTUwNUpQalRnNzVOenNiUlordnVWRUNaNkdo?=
- =?utf-8?B?cVR3cEVWZnoyQ0JqcTQwWXIyak9BYTF3SWcySlJVNTIrV0Y5VGxBVzJoeHpy?=
- =?utf-8?B?aDZuM211T1BwNnJMNW5jUk9xV1JLUGlCTEhza0s4N0thMlhPRGJlSlNBOFBU?=
- =?utf-8?B?Mk5BRDNjWUx5QVZmelVDZWo5dkdlM0oyZXY4aXNjT3N2aXVEQXFDejgxQkpN?=
- =?utf-8?Q?2XmrEcmUGZNTKMgc/48LOOPEp3dumZU4lDJzvX3MnKbHQ?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-1: 
-	4r/jnSiGPNybN1jL+PgCg9CiKiSD+Ch3WY5Lrtsfk9Ru4dzCXhWrjSufLj/AfdWdmWrJnOBNtI53k8cAsgL+7efWYOE5F2IMgw5vcevmnC3ToyIRn5Z2amdiotrm3ZSY0JYGZas+oxTevftETdby/pyK23WUtmaBRsKgGvgMHSmSoH/4hCYuvvA5bw+Q8xU/nX9UCE3hNAL20+eaa9foEb4ZRn0ok3rQ7Dtwxmz4ir0aS8naQDHmLGWiC2OW+ChTnHXYBkIEHNhLPB6Ti3HM7ond5tmOmNL/Xy+gSknvNyb8WGcMfT33/DVOMX6FOZem0E0T1rlbwgubYEa2y+nIUJ5eEz0gwhn3YSg5WXd16qu+JPDDm1kKeLRAwia5Z7tSJQjF0y5TKEZNiHIRbx2Sm92V/XR8JEUtBu6C+pS4M28gYS8oRG6YmfJve+GMSe2YOt9mN9cHtgCnEg==
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe51cdf0-2034-4140-5718-08db6d245056
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2023 22:11:33.9063
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 09oYXa4rmvOO07cosJE5g+CW+qG7PuEhcvOcCXUcK9Nvru89x8qYwwap9e2+mtIzPUQYU6LWvBoktpax0g+lnP+uNTm87nC8idXDfYQ9Tlo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR10MB7656
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-14_14,2023-06-14_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=949 bulkscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306140194
-X-Proofpoint-ORIG-GUID: pC6TT_BFCX1nNGxbXm7ry9qbuWqZBJ2a
-X-Proofpoint-GUID: pC6TT_BFCX1nNGxbXm7ry9qbuWqZBJ2a
+References: <20230614093755.88881-1-wangliupu@loongson.cn> <CAJZ5v0iTKPbpskDVcsnVaWnhdvb5a-W2TVBfd0c=H2hVv8mOog@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iTKPbpskDVcsnVaWnhdvb5a-W2TVBfd0c=H2hVv8mOog@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 15 Jun 2023 10:31:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7=+cyLK=whuYL3qD+CwFqxvSWywnLEVJ5W=0uqH+ZKiQ@mail.gmail.com>
+Message-ID: <CAAhV-H7=+cyLK=whuYL3qD+CwFqxvSWywnLEVJ5W=0uqH+ZKiQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add SMT (Simultaneous Multi-Threading) support
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Liupu Wang <wangliupu@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Len Brown <lenb@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>, Marc Zyngier <maz@kernel.org>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, loongarch@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Rafael,
 
+On Thu, Jun 15, 2023 at 2:24=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Wed, Jun 14, 2023 at 11:38=E2=80=AFAM Liupu Wang <wangliupu@loongson.c=
+n> wrote:
+> >
+> > From: Huacai Chen <chenhuacai@loongson.cn>
+> >
+> > Loongson-3A6000 has SMT (Simultaneous Multi-Threading) support, each
+> > physical core has two logical cores (threads). This patch add SMT probe
+> > and scheduler support via ACPI PPTT.
+> >
+> > If SCHED_SMT enabled, Loongson-3A6000 is treated as 4 cores, 8 threads;
+> > If SCHED_SMT disabled, Loongson-3A6000 is treated as 8 cores, 8 threads=
+.
+> >
+> > Remove smp_num_siblings to support HMP (Heterogeneous Multi-Processing)=
+.
+> >
+> > Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  arch/loongarch/Kconfig                |  8 +++++++
+> >  arch/loongarch/include/asm/acpi.h     |  9 ++++++++
+> >  arch/loongarch/include/asm/cpu-info.h |  1 +
+> >  arch/loongarch/kernel/acpi.c          | 32 +++++++++++++++++++++++++++
+> >  arch/loongarch/kernel/proc.c          |  1 +
+> >  arch/loongarch/kernel/smp.c           | 24 +++++++++-----------
+> >  drivers/acpi/Kconfig                  |  2 +-
+> >  7 files changed, 62 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> > index d38b066fc931..6d36b681068e 100644
+> > --- a/arch/loongarch/Kconfig
+> > +++ b/arch/loongarch/Kconfig
+> > @@ -5,6 +5,7 @@ config LOONGARCH
+> >         select ACPI
+> >         select ACPI_GENERIC_GSI if ACPI
+> >         select ACPI_MCFG if ACPI
+> > +       select ACPI_PPTT if ACPI
+> >         select ACPI_SYSTEM_POWER_STATES_SUPPORT if ACPI
+> >         select ARCH_BINFMT_ELF_STATE
+> >         select ARCH_ENABLE_MEMORY_HOTPLUG
+> > @@ -372,6 +373,13 @@ config EFI_STUB
+> >           This kernel feature allows the kernel to be loaded directly b=
+y
+> >           EFI firmware without the use of a bootloader.
+> >
+> > +config SCHED_SMT
+> > +       bool "SMT scheduler support"
+> > +       default y
+> > +       help
+> > +         Improves scheduler's performance when there are multiple
+> > +         threads in one physical core.
+> > +
+> >  config SMP
+> >         bool "Multi-Processing support"
+> >         help
+> > diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include=
+/asm/acpi.h
+> > index 976a810352c6..5c78b5d2bfb7 100644
+> > --- a/arch/loongarch/include/asm/acpi.h
+> > +++ b/arch/loongarch/include/asm/acpi.h
+> > @@ -13,6 +13,7 @@ extern int acpi_strict;
+> >  extern int acpi_disabled;
+> >  extern int acpi_pci_disabled;
+> >  extern int acpi_noirq;
+> > +extern int pptt_enabled;
+> >
+> >  #define acpi_os_ioremap acpi_os_ioremap
+> >  void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size si=
+ze);
+> > @@ -30,6 +31,14 @@ static inline bool acpi_has_cpu_in_madt(void)
+> >  }
+> >
+> >  extern struct list_head acpi_wakeup_device_list;
+> > +extern struct acpi_madt_core_pic acpi_core_pic[NR_CPUS];
+> > +
+> > +extern int __init parse_acpi_topology(void);
+> > +
+> > +static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+> > +{
+> > +       return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
+> > +}
+> >
+> >  #endif /* !CONFIG_ACPI */
+> >
+> > diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/inc=
+lude/asm/cpu-info.h
+> > index cd73a6f57fe3..900589cb159d 100644
+> > --- a/arch/loongarch/include/asm/cpu-info.h
+> > +++ b/arch/loongarch/include/asm/cpu-info.h
+> > @@ -54,6 +54,7 @@ struct cpuinfo_loongarch {
+> >         struct cache_desc       cache_leaves[CACHE_LEAVES_MAX];
+> >         int                     core;   /* physical core number in pack=
+age */
+> >         int                     package;/* physical package number */
+> > +       int                     global_id; /* physical global thread nu=
+mber */
+> >         int                     vabits; /* Virtual Address size in bits=
+ */
+> >         int                     pabits; /* Physical Address size in bit=
+s */
+> >         unsigned int            ksave_mask; /* Usable KSave mask. */
+> > diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.=
+c
+> > index 98f431157e4c..9450e09073eb 100644
+> > --- a/arch/loongarch/kernel/acpi.c
+> > +++ b/arch/loongarch/kernel/acpi.c
+> > @@ -33,6 +33,8 @@ u64 acpi_saved_sp;
+> >
+> >  #define PREFIX                 "ACPI: "
+> >
+> > +struct acpi_madt_core_pic acpi_core_pic[NR_CPUS];
+> > +
+> >  void __init __iomem * __acpi_map_table(unsigned long phys, unsigned lo=
+ng size)
+> >  {
+> >
+> > @@ -99,6 +101,7 @@ acpi_parse_processor(union acpi_subtable_headers *he=
+ader, const unsigned long en
+> >
+> >         acpi_table_print_madt_entry(&header->common);
+> >  #ifdef CONFIG_SMP
+> > +       acpi_core_pic[processor->core_id] =3D *processor;
+> >         set_processor_mask(processor->core_id, processor->flags);
+> >  #endif
+> >
+> > @@ -140,6 +143,35 @@ static void __init acpi_process_madt(void)
+> >         loongson_sysconf.nr_cpus =3D num_processors;
+> >  }
+> >
+> > +int pptt_enabled;
+> > +
+> > +int __init parse_acpi_topology(void)
+> > +{
+> > +       int cpu, topology_id;
+> > +
+> > +       for_each_possible_cpu(cpu) {
+> > +               topology_id =3D find_acpi_cpu_topology(cpu, 0);
+> > +               if (topology_id < 0) {
+> > +                       pr_warn("Invalid BIOS PPTT\n");
+> > +                       return -ENOENT;
+> > +               }
+> > +
+> > +               if (acpi_pptt_cpu_is_thread(cpu) <=3D 0)
+> > +                       cpu_data[cpu].core =3D topology_id;
+> > +               else {
+> > +                       topology_id =3D find_acpi_cpu_topology(cpu, 1);
+> > +                       if (topology_id < 0)
+> > +                               return -ENOENT;
+> > +
+> > +                       cpu_data[cpu].core =3D topology_id;
+> > +               }
+> > +       }
+> > +
+> > +       pptt_enabled =3D 1;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  #ifndef CONFIG_SUSPEND
+> >  int (*acpi_suspend_lowlevel)(void);
+> >  #else
+> > diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.=
+c
+> > index 0d82907b5404..d4b270630bb5 100644
+> > --- a/arch/loongarch/kernel/proc.c
+> > +++ b/arch/loongarch/kernel/proc.c
+> > @@ -49,6 +49,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+> >         seq_printf(m, "processor\t\t: %ld\n", n);
+> >         seq_printf(m, "package\t\t\t: %d\n", cpu_data[n].package);
+> >         seq_printf(m, "core\t\t\t: %d\n", cpu_data[n].core);
+> > +       seq_printf(m, "global_id\t\t: %d\n", cpu_data[n].global_id);
+> >         seq_printf(m, "CPU Family\t\t: %s\n", __cpu_family[n]);
+> >         seq_printf(m, "Model Name\t\t: %s\n", __cpu_full_name[n]);
+> >         seq_printf(m, "CPU Revision\t\t: 0x%02x\n", version);
+> > diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> > index ed167e244cda..062f3fe8df60 100644
+> > --- a/arch/loongarch/kernel/smp.c
+> > +++ b/arch/loongarch/kernel/smp.c
+> > @@ -8,6 +8,7 @@
+> >   * Copyright (C) 2000, 2001 Silicon Graphics, Inc.
+> >   * Copyright (C) 2000, 2001, 2003 Broadcom Corporation
+> >   */
+> > +#include <linux/acpi.h>
+> >  #include <linux/cpu.h>
+> >  #include <linux/cpumask.h>
+> >  #include <linux/init.h>
+> > @@ -37,10 +38,6 @@ EXPORT_SYMBOL(__cpu_number_map);
+> >  int __cpu_logical_map[NR_CPUS];                /* Map logical to physi=
+cal */
+> >  EXPORT_SYMBOL(__cpu_logical_map);
+> >
+> > -/* Number of threads (siblings) per CPU core */
+> > -int smp_num_siblings =3D 1;
+> > -EXPORT_SYMBOL(smp_num_siblings);
+> > -
+> >  /* Representing the threads (siblings) of each logical CPU */
+> >  cpumask_t cpu_sibling_map[NR_CPUS] __read_mostly;
+> >  EXPORT_SYMBOL(cpu_sibling_map);
+> > @@ -228,9 +225,12 @@ void __init loongson_prepare_cpus(unsigned int max=
+_cpus)
+> >  {
+> >         int i =3D 0;
+> >
+> > +       parse_acpi_topology();
+> > +
+> >         for (i =3D 0; i < loongson_sysconf.nr_cpus; i++) {
+> >                 set_cpu_present(i, true);
+> >                 csr_mail_send(0, __cpu_logical_map[i], 0);
+> > +               cpu_data[i].global_id =3D __cpu_logical_map[i];
+> >         }
+> >
+> >         per_cpu(cpu_state, smp_processor_id()) =3D CPU_ONLINE;
+> > @@ -271,10 +271,10 @@ void loongson_init_secondary(void)
+> >         numa_add_cpu(cpu);
+> >  #endif
+> >         per_cpu(cpu_state, cpu) =3D CPU_ONLINE;
+> > -       cpu_data[cpu].core =3D
+> > -                    cpu_logical_map(cpu) % loongson_sysconf.cores_per_=
+package;
+> >         cpu_data[cpu].package =3D
+> >                      cpu_logical_map(cpu) / loongson_sysconf.cores_per_=
+package;
+> > +       cpu_data[cpu].core =3D pptt_enabled ? cpu_data[cpu].core :
+> > +                    cpu_logical_map(cpu) % loongson_sysconf.cores_per_=
+package;
+> >  }
+> >
+> >  void loongson_smp_finish(void)
+> > @@ -380,14 +380,10 @@ static inline void set_cpu_sibling_map(int cpu)
+> >
+> >         cpumask_set_cpu(cpu, &cpu_sibling_setup_map);
+> >
+> > -       if (smp_num_siblings <=3D 1)
+> > -               cpumask_set_cpu(cpu, &cpu_sibling_map[cpu]);
+> > -       else {
+> > -               for_each_cpu(i, &cpu_sibling_setup_map) {
+> > -                       if (cpus_are_siblings(cpu, i)) {
+> > -                               cpumask_set_cpu(i, &cpu_sibling_map[cpu=
+]);
+> > -                               cpumask_set_cpu(cpu, &cpu_sibling_map[i=
+]);
+> > -                       }
+> > +       for_each_cpu(i, &cpu_sibling_setup_map) {
+> > +               if (cpus_are_siblings(cpu, i)) {
+> > +                       cpumask_set_cpu(i, &cpu_sibling_map[cpu]);
+> > +                       cpumask_set_cpu(cpu, &cpu_sibling_map[i]);
+> >                 }
+> >         }
+> >  }
+> > diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> > index ccbeab9500ec..00dd309b6682 100644
+> > --- a/drivers/acpi/Kconfig
+> > +++ b/drivers/acpi/Kconfig
+> > @@ -542,10 +542,10 @@ config ACPI_PFRUT
+> >
+> >  if ARM64
+> >  source "drivers/acpi/arm64/Kconfig"
+> > +endif
+> >
+> >  config ACPI_PPTT
+> >         bool
+> > -endif
+>
+> x86 doesn't use PPTT as of today.  Why do you enable it for them?
+ACPI_PPTT is an invisible symbol, it cannot be enabled by explicitly
+selecting and its default value is n, so I think it isn't enabled for
+x86. On the other hand, moving it out of ARM64 can make other archs
+don't need to modify this file any more if they need PPTT.
 
-On 6/14/23 10:24, Alexander Gordeev wrote:
-> On Mon, Jun 12, 2023 at 01:27:53PM -0400, Eric DeVolder wrote:
-> ...
->> +config KEXEC_FILE
->> +	bool "Enable kexec file based system call"
->> +	depends on ARCH_HAS_KEXEC_FILE
->> +	select KEXEC_CORE
->> +	help
->> +	  This is new version of kexec system call. This system call is
->> +	  file based and takes file descriptors as system call argument
->> +	  for kernel and initramfs as opposed to list of segments as
->> +	  accepted by previous system call.
-> 
-> Which "previous"? I guess, "by kexec system call" would sound clear.
-> 
-> Thanks!
+Huacai
 
-OK, will make that change!
-eric
+>
+> >  config ACPI_PCC
+> >         bool "ACPI PCC Address Space"
+> > --
