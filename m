@@ -1,53 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C497F3
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 04:16:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 208C8C433C0;
-	Fri, 16 Jun 2023 04:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686889005;
-	bh=yLWxc3xMe5p1sSJEtqjnvtcWn40iQCwZMSOVlK2T3o8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=XkAr3W+Gf3b52rS2mYV5HbHdF69/avxgHFYgmx1H62ef2MJ5OGqwEB1jQ7wYrLeOG
-	 enw4gfgy0bLg5FQ53UIy0DRxJBzg5kkc5d5edNLHCPw1STzxdEAiMMnscL5x93pwqh
-	 ocfsWXaNEag56PktYMyEVrGl6Mos0kM7EM3dxqRd6jHcMykUoHSy8EOEU9VHmobymP
-	 /foxg+547MSrtOlcemG+fyq1YJp/o+R6PaMYtydPUCUUVhERox9814xqej9egSTG4v
-	 1MnN3wXgXyxm+1uKd1IA314V/C3Ob624qycBXazKMu62LG13YgFlk8y3xWt1PtrGNY
-	 78cRzv7dUaR8w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0DCA7C00446;
-	Fri, 16 Jun 2023 04:16:45 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.4-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20230615122311.3754870-1-chenhuacai@loongson.cn>
-References: <20230615122311.3754870-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20230615122311.3754870-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.4-1
-X-PR-Tracked-Commit-Id: 41efbb682de1231c3f6361039f46ad149e3ff5b9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 627d858674f54f585b5dc82529f629fb8d0f85b4
-Message-Id: <168688900505.32380.4601668679010613893.pr-tracker-bot@kernel.org>
-Date: Fri, 16 Jun 2023 04:16:45 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BFCD7C
+	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 06:06:34 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.35])
+	by gateway (Coremail) with SMTP id _____8BxLuvo+4tkjdsFAA--.12696S3;
+	Fri, 16 Jun 2023 14:06:32 +0800 (CST)
+Received: from [10.20.42.35] (unknown [10.20.42.35])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxTMrm+4tkLfAcAA--.7600S3;
+	Fri, 16 Jun 2023 14:06:31 +0800 (CST)
+Subject: Re: [PATCH v3 1/3] loongarch: export some arch-specific pm interfaces
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+ Liu Peibao <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
+ zhuyinbo@loongson.cn
+References: <20230615091757.24686-1-zhuyinbo@loongson.cn>
+ <20230615091757.24686-2-zhuyinbo@loongson.cn>
+ <CAAhV-H5XxxGd_+NMRJKUCtk24dBQF0Fzdsg_5mZEWh1hs_u0qg@mail.gmail.com>
+From: zhuyinbo <zhuyinbo@loongson.cn>
+Message-ID: <437633c4-b5fc-6e6d-2711-f2abd420936b@loongson.cn>
+Date: Fri, 16 Jun 2023 14:06:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <CAAhV-H5XxxGd_+NMRJKUCtk24dBQF0Fzdsg_5mZEWh1hs_u0qg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxTMrm+4tkLfAcAA--.7600S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-The pull request you sent on Thu, 15 Jun 2023 20:23:11 +0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.4-1
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/627d858674f54f585b5dc82529f629fb8d0f85b4
+在 2023/6/16 下午12:04, Huacai Chen 写道:
+> Hi, Yinbo,
+> 
+> I think this patch should go through the loongarch tree and the others
+> to go through the soc tree, so I just applied this one. The next
+> version you can only send the other two, thanks. 
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+okay, I got it.
+
+Thanks,
+Yinbo
+
