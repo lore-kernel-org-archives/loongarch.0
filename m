@@ -1,125 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBDD1F92C
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 20:19:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64345C433C0
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 20:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686946762;
-	bh=2gFsvIXhZCi6KoizK2mVR8ubH1d6zKHpuStaPaewE2c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=odf6iFy8lo1eFW+F91kkl6LkwFjzixBdQJWY2UrKzrQcy5MfXmLWGuJTodjIMkgej
-	 ZySuLEH9iDCNaGqlZGjtQqC0o9WZZYyBdgpjgPIith+FuSoQkqvvJCCm6qlfBZ86nW
-	 IrjtVcB1/My5Mzo7BwqAcKUMxH21XTOoTDqbcXAdH+kvJkymIpe8w1FIaW8wS5dO84
-	 lyoqFCMiGq2/n1d4gE4brBARZKEB4+dufyBqrDCsFT+T/zN9yVkgrB72P5sQCuiPjo
-	 p5TCj2S/9EFuJofT0N2Gq4wRBO5du/Lakveqc7OjRLd4Z1peg4Edlq+EKloAxFPZ4k
-	 WcV+p9dCq1UeQ==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2b45b6adffbso12958891fa.3
-        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 13:19:22 -0700 (PDT)
-X-Gm-Message-State: AC+VfDzN//VJ9/Rbxe/C+DdlAKETZxZRZNpdNdFrH0UdTSqf0tPGO5ca
-	KxFpUXqd+MO8kEAjq/67lPFirEqIFpUzDU6c07I=
-X-Google-Smtp-Source: ACHHUZ4xCjWLdj6bUZgrYEqyfT0+mWbIpLp7dl+h+OA2H/SetbsgMpyruMyrfqh6ldv/ey70g6BKmUQ4Jmh+AiNCLf0=
-X-Received: by 2002:a19:5e02:0:b0:4f7:69b9:fa07 with SMTP id
- s2-20020a195e02000000b004f769b9fa07mr2191315lfb.45.1686946740318; Fri, 16 Jun
- 2023 13:19:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27428ECB
+	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 20:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fw74FAZhkocnJnJyLR/WQNNOz26kiObyhL++hGG0nWw=; b=QBNdm8qv6j/A/iWrMKfpB6M7G8
+	dX02GHdjAg9rPGckqaKAq0nuLHgnEOZOUcT5iS1KFKrWFBJlTrkF2I4g5N2YgCfsexrQECwyFoHPp
+	z6yd+/vIl/PequagU7pGV8UNE2yhdOrdkDT+t3SJSVONZj6Q1cQWhoxiK+7FUVh/Fb17OdOH8kjtt
+	OWIuj2P4ze5K/i70TfCVLOSJSXO+Ry9WEoIoy6BlMNh0EJ1wlu/c8zXDIuEPPIicVlz2AV+6m8LDv
+	lA4vOEDBJYuPKGoF8lu2OSuuFhx10iSF/LiB0UcYpqrALuMFJM02PbH03w+/bd9OLb/nrxdqasmpe
+	J/m6D//w==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qAGD7-009Lj7-EI; Fri, 16 Jun 2023 20:38:21 +0000
+Date: Fri, 16 Jun 2023 21:38:21 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Hugh Dickins <hughd@google.com>
+Cc: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 04/34] pgtable: Create struct ptdesc
+Message-ID: <ZIzIPQBXvnMtQekj@casper.infradead.org>
+References: <20230612210423.18611-1-vishal.moola@gmail.com>
+ <20230612210423.18611-5-vishal.moola@gmail.com>
+ <fd63179-6ad6-fd86-79d6-2833c91111f8@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-12-rppt@kernel.org>
-In-Reply-To: <20230616085038.4121892-12-rppt@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Fri, 16 Jun 2023 13:18:48 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5N3RuBijpyXrzVk_mpAyUQ5TeTuS2jic6Y-ybFVJpBjg@mail.gmail.com>
-Message-ID: <CAPhsuW5N3RuBijpyXrzVk_mpAyUQ5TeTuS2jic6Y-ybFVJpBjg@mail.gmail.com>
-Subject: Re: [PATCH v2 11/12] x86/ftrace: enable dynamic ftrace without CONFIG_MODULES
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nadav Amit <nadav.amit@gmail.com>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd63179-6ad6-fd86-79d6-2833c91111f8@google.com>
 
-On Fri, Jun 16, 2023 at 1:52=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
->
-> Dynamic ftrace must allocate memory for code and this was impossible
-> without CONFIG_MODULES.
->
-> With execmem separated from the modules code, execmem_text_alloc() is
-> available regardless of CONFIG_MODULES.
->
-> Remove dependency of dynamic ftrace on CONFIG_MODULES and make
-> CONFIG_DYNAMIC_FTRACE select CONFIG_EXECMEM in Kconfig.
->
-> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+On Thu, Jun 15, 2023 at 12:57:19AM -0700, Hugh Dickins wrote:
+> Probably just trivial collisions in most architectures, which either
+> of us can easily adjust to the other; powerpc likely to be more awkward,
+> but fairly easily resolved; s390 quite a problem.
+> 
+> I've so far been unable to post a v2 of my series (and powerpc and s390
+> were stupidly wrong in the v1), because a good s390 patch is not yet
+> decided - Gerald Schaefer and I are currently working on that, on the
+> s390 list (I took off most Ccs until we are settled and I can post v2).
+> 
+> As you have no doubt found yourself, s390 has sophisticated handling of
+> free half-pages already, and I need to add rcu_head usage in there too:
+> it's tricky to squeeze it all in, and ptdesc does not appear to help us
+> in any way (though mostly it's just changing some field names, okay).
+> 
+> If ptdesc were actually allowing a flexible structure which architectures
+> could add into, that would (in some future) be nice; but of course at
+> present it's still fitting it all into one struct page, and mandating
+> new restrictions which just make an architecture's job harder.
 
-Acked-by: Song Liu <song@kernel.org>
+The intent is to get ptdescs to be dynamically allocated at some point
+in the ~2-3 years out future when we have finished the folio project ...
+which is not a terribly helpful thing for me to say.
 
-> ---
->  arch/x86/Kconfig         |  1 +
->  arch/x86/kernel/ftrace.c | 10 ----------
->  2 files changed, 1 insertion(+), 10 deletions(-)
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 53bab123a8ee..ab64bbef9e50 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -35,6 +35,7 @@ config X86_64
->         select SWIOTLB
->         select ARCH_HAS_ELFCORE_COMPAT
->         select ZONE_DMA32
-> +       select EXECMEM if DYNAMIC_FTRACE
->
->  config FORCE_DYNAMIC_FTRACE
->         def_bool y
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index f77c63bb3203..a824a5d3b129 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -261,8 +261,6 @@ void arch_ftrace_update_code(int command)
->  /* Currently only x86_64 supports dynamic trampolines */
->  #ifdef CONFIG_X86_64
->
-> -#ifdef CONFIG_MODULES
-> -/* Module allocation simplifies allocating memory for code */
->  static inline void *alloc_tramp(unsigned long size)
->  {
->         return execmem_text_alloc(size);
-> @@ -271,14 +269,6 @@ static inline void tramp_free(void *tramp)
->  {
->         execmem_free(tramp);
->  }
-> -#else
-> -/* Trampolines can only be created if modules are supported */
-> -static inline void *alloc_tramp(unsigned long size)
-> -{
-> -       return NULL;
-> -}
-> -static inline void tramp_free(void *tramp) { }
-> -#endif
->
->  /* Defined as markers to the end of the ftrace default trampolines */
->  extern void ftrace_regs_caller_end(void);
-> --
-> 2.35.1
->
+I have three suggestions, probably all dreadful:
+
+1. s390 could change its behaviour to always allocate page tables in
+pairs.  That is, it fills in two pmd_t entries any time it takes a fault
+in either of them.
+
+2. We could allocate two or four pages at a time for s390 to allocate
+2kB pages from.  That gives us a lot more space to store RCU heads.
+
+3. We could use s390 as a guinea-pig for dynamic ptdesc allocation.
+Every time we allocate a struct page, we have a slab cache for an
+s390-special definition of struct ptdesc, we allocate a ptdesc and store
+a pointer to that in compound_head.
+
+We could sweeten #3 by doing that not just for s390 but also for every
+configuration which has ALLOC_SPLIT_PTLOCKS today.  That would get rid
+of the ambiguity between "is ptl a pointer or a lock".
+
+> But I've no desire to undo powerpc's use of pt_frag_refcount:
+> just warning that we may want to undo any use of it in s390.
+
+I would dearly love ppc & s390 to use the _same_ scheme to solve the
+same problem.
