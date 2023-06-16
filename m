@@ -1,157 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966C680B
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 04:04:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17672C433C0
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 04:04:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C497F3
+	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 04:16:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 208C8C433C0;
+	Fri, 16 Jun 2023 04:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686888259;
-	bh=mM+ePtb7BuKhyXicQy73Wilwkxcyho5LfSxMZEjCC+U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t/4FrNRf+HpGEQpn/4gnQq7WIrkrzyRZfKOAdt5SdfVSRU0gTA7MpkzLe5K4IUEF9
-	 CMvHU7F3mCAtd5PhJ3XlepeTElk22v0EgYDmG+q2B+E5C+2KLSTHSwWqmHFDRGhv4x
-	 B9nL1A4Lt/BQ/Y9JxAlgALUmVQk2b9usm/83u1yjWH3UHLkamUsoa3p6xloxk3Mqgv
-	 klguQgasGkXW4ivxULAaxbK5fpraox+R1+4tFqGScsvy0CVCcn0yaq17fq8ZYFX/rG
-	 jJFqpqvkOxh4cO9fLD7JhOhi45Z+dSIhxJRFatf8kAG7zOr6x3GoOyK+C0cb12C1y7
-	 oq4UVe25ktXzg==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-51a1d539ffaso735589a12.0
-        for <loongarch@lists.linux.dev>; Thu, 15 Jun 2023 21:04:18 -0700 (PDT)
-X-Gm-Message-State: AC+VfDxca/v4glg3IxWGMpChtAlKMa4NcFK24RTuhKlOxZbVU5uxHz8B
-	lTF93XuJoQu0bFj7TOkMEdD0QpjxW9kFFtbofqM=
-X-Google-Smtp-Source: ACHHUZ6bTOrFVu2ifqXPtw4eiH/scWRZwhF3/BunnDnhrmuUNZtNKzzMETjOzHCVCIvYSDM/AjGy09btuxswxw8ow7U=
-X-Received: by 2002:a05:6402:42c3:b0:514:8fdb:6354 with SMTP id
- i3-20020a05640242c300b005148fdb6354mr6909278edc.18.1686888257340; Thu, 15 Jun
- 2023 21:04:17 -0700 (PDT)
+	s=k20201202; t=1686889005;
+	bh=yLWxc3xMe5p1sSJEtqjnvtcWn40iQCwZMSOVlK2T3o8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=XkAr3W+Gf3b52rS2mYV5HbHdF69/avxgHFYgmx1H62ef2MJ5OGqwEB1jQ7wYrLeOG
+	 enw4gfgy0bLg5FQ53UIy0DRxJBzg5kkc5d5edNLHCPw1STzxdEAiMMnscL5x93pwqh
+	 ocfsWXaNEag56PktYMyEVrGl6Mos0kM7EM3dxqRd6jHcMykUoHSy8EOEU9VHmobymP
+	 /foxg+547MSrtOlcemG+fyq1YJp/o+R6PaMYtydPUCUUVhERox9814xqej9egSTG4v
+	 1MnN3wXgXyxm+1uKd1IA314V/C3Ob624qycBXazKMu62LG13YgFlk8y3xWt1PtrGNY
+	 78cRzv7dUaR8w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0DCA7C00446;
+	Fri, 16 Jun 2023 04:16:45 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.4-rc7
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20230615122311.3754870-1-chenhuacai@loongson.cn>
+References: <20230615122311.3754870-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230615122311.3754870-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.4-1
+X-PR-Tracked-Commit-Id: 41efbb682de1231c3f6361039f46ad149e3ff5b9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 627d858674f54f585b5dc82529f629fb8d0f85b4
+Message-Id: <168688900505.32380.4601668679010613893.pr-tracker-bot@kernel.org>
+Date: Fri, 16 Jun 2023 04:16:45 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20230615091757.24686-1-zhuyinbo@loongson.cn> <20230615091757.24686-2-zhuyinbo@loongson.cn>
-In-Reply-To: <20230615091757.24686-2-zhuyinbo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 16 Jun 2023 12:04:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5XxxGd_+NMRJKUCtk24dBQF0Fzdsg_5mZEWh1hs_u0qg@mail.gmail.com>
-Message-ID: <CAAhV-H5XxxGd_+NMRJKUCtk24dBQF0Fzdsg_5mZEWh1hs_u0qg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] loongarch: export some arch-specific pm interfaces
-To: Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, "Rafael J . Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
-	Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Jianmin Lv <lvjianmin@loongson.cn>, 
-	wanghongliang@loongson.cn, Liu Peibao <liupeibao@loongson.cn>, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Yinbo,
+The pull request you sent on Thu, 15 Jun 2023 20:23:11 +0800:
 
-I think this patch should go through the loongarch tree and the others
-to go through the soc tree, so I just applied this one. The next
-version you can only send the other two, thanks.
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.4-1
 
-Huacai
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/627d858674f54f585b5dc82529f629fb8d0f85b4
 
-On Thu, Jun 15, 2023 at 5:18=E2=80=AFPM Yinbo Zhu <zhuyinbo@loongson.cn> wr=
-ote:
->
-> Some power management controllers need to support DTS and will use
-> the suspend interface thus this patch was to export such interface
-> for their use.
->
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
->  arch/loongarch/include/asm/acpi.h    |  3 +--
->  arch/loongarch/include/asm/suspend.h | 10 ++++++++++
->  arch/loongarch/power/suspend.c       |  8 ++++----
->  3 files changed, 15 insertions(+), 6 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/suspend.h
->
-> diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/a=
-sm/acpi.h
-> index 976a810352c6..1d7810798c08 100644
-> --- a/arch/loongarch/include/asm/acpi.h
-> +++ b/arch/loongarch/include/asm/acpi.h
-> @@ -8,6 +8,7 @@
->  #ifndef _ASM_LOONGARCH_ACPI_H
->  #define _ASM_LOONGARCH_ACPI_H
->
-> +#include <asm/suspend.h>
->  #ifdef CONFIG_ACPI
->  extern int acpi_strict;
->  extern int acpi_disabled;
-> @@ -37,12 +38,10 @@ extern struct list_head acpi_wakeup_device_list;
->
->  extern int loongarch_acpi_suspend(void);
->  extern int (*acpi_suspend_lowlevel)(void);
-> -extern void loongarch_suspend_enter(void);
->
->  static inline unsigned long acpi_get_wakeup_address(void)
->  {
->  #ifdef CONFIG_SUSPEND
-> -       extern void loongarch_wakeup_start(void);
->         return (unsigned long)loongarch_wakeup_start;
->  #endif
->         return 0UL;
-> diff --git a/arch/loongarch/include/asm/suspend.h b/arch/loongarch/includ=
-e/asm/suspend.h
-> new file mode 100644
-> index 000000000000..fc64089fefaa
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/suspend.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ASM_SUSPEND_H
-> +#define __ASM_SUSPEND_H
-> +
-> +void loongarch_common_resume(void);
-> +void loongarch_common_suspend(void);
-> +void loongarch_suspend_enter(void);
-> +void loongarch_wakeup_start(void);
-> +
-> +#endif
-> diff --git a/arch/loongarch/power/suspend.c b/arch/loongarch/power/suspen=
-d.c
-> index 5e19733e5e05..166d9e06a64b 100644
-> --- a/arch/loongarch/power/suspend.c
-> +++ b/arch/loongarch/power/suspend.c
-> @@ -27,7 +27,7 @@ struct saved_registers {
->  };
->  static struct saved_registers saved_regs;
->
-> -static void arch_common_suspend(void)
-> +void loongarch_common_suspend(void)
->  {
->         save_counter();
->         saved_regs.pgd =3D csr_read64(LOONGARCH_CSR_PGDL);
-> @@ -40,7 +40,7 @@ static void arch_common_suspend(void)
->         loongarch_suspend_addr =3D loongson_sysconf.suspend_addr;
->  }
->
-> -static void arch_common_resume(void)
-> +void loongarch_common_resume(void)
->  {
->         sync_counter();
->         local_flush_tlb_all();
-> @@ -62,12 +62,12 @@ int loongarch_acpi_suspend(void)
->         enable_gpe_wakeup();
->         enable_pci_wakeup();
->
-> -       arch_common_suspend();
-> +       loongarch_common_suspend();
->
->         /* processor specific suspend */
->         loongarch_suspend_enter();
->
-> -       arch_common_resume();
-> +       loongarch_common_resume();
->
->         return 0;
->  }
-> --
-> 2.20.1
->
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
