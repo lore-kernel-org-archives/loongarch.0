@@ -1,93 +1,81 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F2733ED
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 10:04:48 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-9829b12b80fso72460466b.2
-        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 03:04:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4515F2E0F6
+	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 10:59:10 +0000 (UTC)
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-4f764e92931so736313e87.2
+        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 03:59:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686909887; x=1689501887;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uYBJJFpgemmy6W4txbxWomnmBYNEc2Pci2rgkT0U7hg=;
-        b=WeM4PckhJwPQ1923kkK/m24dg7JziG6V4ajokijrPIYQHuZp5fTGYVsti5xHtHMZbE
-         OjRnMw4ofWUHcGbWQbNu10iJrQVNfgAaEnCAHvAs/ZTPLLiYgzlcURrMAUgsRyyiKq5z
-         yi/gkplSCNfDeiFqKmzghI7XGH19x5qWCpCIeZkx8HAGV5PvMPHr8uE9tltyhabd0lAe
-         pSf9WZ82qoRpGkZZnsAGG4qs0g73oT1uIN5kSmb5qqQMWRzDJ5ArvsJLwKSjWQfwxhC1
-         YYKkr4heeFlGCIK3ck0mukJh4avG2R51W+EqtmzLSKgGrohcL8F5xhSm8hKse0auGsxO
-         r1Ww==
+        d=gmail.com; s=20221208; t=1686913148; x=1689505148;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dUWCxuHQ8in5DxE2T0YCH5bwAXst66aM81pUfth5QkM=;
+        b=fz8zCd5w8W6aAZ+vJQ7uwA8T3b6dQH2EaG6ukoYeiQGvCILCxDCNVt+nRMeMar9a5p
+         V6YeuitHvCXWxWgH1hldRyV1GgBQphnJznkVx8zuicOpR7pVzJLRlAHWPkzV5t3QrQXG
+         ln4XCHrGSU5NfXHOoGo37yNYyz13XUqsGLYqYiTOjit9Cw3JLTbaVrFY5ZK1SWwtLXAh
+         cZgl5qxN8PL1glHOyAQVBnKs5H2iu2R+UjffVIAwfXjH2B+kGLxq0sTzzyj7I/gFUxKj
+         H9Ztl0+DCT9lWglC5npWWORzuO16o20XLuN8AR2y+DLsYaxhwdoGGoSV1YOhhJm2g+iI
+         8gIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686909887; x=1689501887;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uYBJJFpgemmy6W4txbxWomnmBYNEc2Pci2rgkT0U7hg=;
-        b=bs/HE5akW3gtNQbcyUzkRXNSKK7FObAjmDWAH12NUSTZP/kyNw2taI/yVEQxrFfhZW
-         RC3ck76zKjFU8289EgZA3apMQ6KR4ZpUnw54j00jFsJVdcE3TyeC+Fd17p3DW/VIo1ln
-         wP+RDd44TIr88SZAspsS9MSDm+EE/3tpmVWa9cWV+tDQ8Xt6x3twDZi1HvdQiKx4VAKM
-         1RECqzgKUHYzlxZRtk4CwpWAR4X+P9ywMqVHiUD0rjB2w3PEMlqAGfmbtVkqCJ85USIF
-         OF+Fn/AHJybxoM4sLCV8nLrtMcbw7n3cLCPof45d2qf7ZP1/TyGEheJvDqKyBmbpXqEg
-         IKfQ==
-X-Gm-Message-State: AC+VfDzAlN8bwgxj2F0rrvLsYHLQe8f5DROtJwspyUxKnTCxQca+IcM6
-	bkO+//V9U1Ug60LtPQYCfgAfpg==
-X-Google-Smtp-Source: ACHHUZ4rcmI11g1mhDGNXV6YANHaooS38LFWir880NILrYi+St8Lb9fV6/jlWjeoYYiY2HdPxS6i2w==
-X-Received: by 2002:a17:907:86ab:b0:973:a30d:b264 with SMTP id qa43-20020a17090786ab00b00973a30db264mr1281273ejc.46.1686909887022;
-        Fri, 16 Jun 2023 03:04:47 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id s16-20020a170906355000b00982943c7892sm2383714eja.134.2023.06.16.03.04.42
+        d=1e100.net; s=20221208; t=1686913148; x=1689505148;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dUWCxuHQ8in5DxE2T0YCH5bwAXst66aM81pUfth5QkM=;
+        b=h09aR9/51QgtHXJ8j5+q8szW8j/d65QoBIy0lv0ywrgW24o7DOnkChmVS6cv3ZKgpC
+         OAJCmy6ykhkUlJdnVUOWpHbSy1q2akENsMP0JGXi2wwDv7xjMrGb4OJT0n8T4E/FpXmB
+         i8yGc1xDU+sc/csW1BNn2IhbkGzxN5cHyzsBqfPbHBjUJSDtYcXdubH+yhNPKaIyxFLC
+         qR5D4iBD+oJlkQYJ11wHDxwbKDb/3xRRjespzUbOVsLUjFAio36rvKScZsDKqYxJEg8C
+         pMGNarRIpPEVwNvy5dehAImdwnF5b5iECmOKOKPGMC2wsb8EUgPQDoiKFm78jy4ESzQA
+         8vIQ==
+X-Gm-Message-State: AC+VfDxncR6NBqzXXCOY+Uuc3AwHAODP0aKapgHLTELxwfYqiCvsEqTP
+	h7bZ5cwWiQN7f94WsC3ewB8=
+X-Google-Smtp-Source: ACHHUZ6kOEnIBIg2UJAOJAWbU63kq1NhzKdzBsq1h9lx/I7J6dicurWwVVj1+Nb2b6TuNuoulJMefA==
+X-Received: by 2002:a19:e019:0:b0:4f6:ab8:bc12 with SMTP id x25-20020a19e019000000b004f60ab8bc12mr1358190lfg.20.1686913147774;
+        Fri, 16 Jun 2023 03:59:07 -0700 (PDT)
+Received: from ?IPV6:2a0b:6204:4302:5f00:f401:444b:6444:44af? ([2a0b:6204:4302:5f00:f401:444b:6444:44af])
+        by smtp.gmail.com with ESMTPSA id d24-20020ac25458000000b004f8424ed05esm704884lfn.63.2023.06.16.03.59.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Jun 2023 03:04:46 -0700 (PDT)
-Message-ID: <ca49f782-7e5f-5203-c981-e601eb2ff4c5@linaro.org>
-Date: Fri, 16 Jun 2023 12:04:40 +0200
+        Fri, 16 Jun 2023 03:59:07 -0700 (PDT)
+From: "bibo, mao" <bibo.mao@gmail.com>
+X-Google-Original-From: "bibo, mao" <maobibo@loongson.cn>
+Message-ID: <8e310bd1-1fbc-36f7-7abc-5553fc20a85d@loongson.cn>
+Date: Fri, 16 Jun 2023 18:59:02 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH 4/6] LoongArch: DeviceTree for Loongson-2K0500
-Content-Language: en-US
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Hongliang Wang <wanghongliang@loongson.cn>
-References: <cover.1686882123.git.zhoubinbin@loongson.cn>
- <c7087046a725e7a2cfde788185112c150e216f1b.1686882123.git.zhoubinbin@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <c7087046a725e7a2cfde788185112c150e216f1b.1686882123.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v4] PCI: Align pci memory space base address with page
+ size
+To: Will Deacon <will@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
+ loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+References: <20230609022047.2195689-1-maobibo@loongson.cn>
+ <20230616093116.GA10423@willie-the-truck>
+In-Reply-To: <20230616093116.GA10423@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 16/06/2023 08:10, Binbin Zhou wrote:
-> Add DeviceTree file for Loongson-2K0500 processor, which integrates one
-> 64-bit dual emission superscalar LA264 processor core.
+
+
+在 2023/6/16 17:31, Will Deacon 写道:
+> On Fri, Jun 09, 2023 at 10:20:47AM +0800, Bibo Mao wrote:
+>> Some PCI devices have only 4K memory space size, it is normal in general
+>> machines and aligned with page size. However some architectures which
+>> support different page size, default page size on LoongArch is 16K, and
+>> ARM64 supports page size varying from 4K to 64K.
 > 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
+> Shouldn't we also select this new Kconfig option on arm64 then?
+OK, will add this option on arm64 also in next version.
 
+Regards
+Bibo, Mao
 
-> +
-> +		pixi2c@1ff4a800 {
-> +			compatible = "loongson,ls2k-i2c";
-> +			reg = <0 0x1ff4a800 0 0x0800>;
-> +			interrupt-parent = <&eiointc>;
-> +			interrupts = <19>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pmc: acpi@1ff6c000 {
-> +			compatible = "syscon";
-
-One more - this is not allowed and clear NAK.
-
-Best regards,
-Krzysztof
-
+> 
+> Will
