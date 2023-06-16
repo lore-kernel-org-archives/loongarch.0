@@ -1,138 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BDBC8E5;
-	Fri, 16 Jun 2023 08:51:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416C3C43391;
-	Fri, 16 Jun 2023 08:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686905468;
-	bh=VoOzGojCT0s2khtn9U0zehI+G2CTL85NKGZbZioHSD0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KGdNi1DykOpL1nAp8YKmwUQtjmCY/GNdUrUS59wOYcF4YSeSmrHnLBQ1izkZ44N8U
-	 HHO3e+TYfMkfqi0szVbZ5zeAc9QeKHM17xDlt8OFJq0dr7xpgPizOgDUQGBudyuu82
-	 ld7wsSBnY8+kktqR9FA0EEr8dMyJJXJ5BDD3M0xH0u+jPEYh/O9MrpHZwSiBGPLOPy
-	 3GS8k19KoDWuq6n3hxMBwWwAyLGYUSGTMaYKta4EnO43cwBG8JuYjGTnnCo8Ak9JVZ
-	 t0m+rqOW+OVypCmxh/X1bXMy4dzCVDUgwqQdYYJYURrrYUW3z2v96C4kPFTxM8Oyco
-	 sdMiv6KioS9+Q==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v2 01/12] nios2: define virtual address space for modules
-Date: Fri, 16 Jun 2023 11:50:27 +0300
-Message-Id: <20230616085038.4121892-2-rppt@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230616085038.4121892-1-rppt@kernel.org>
-References: <20230616085038.4121892-1-rppt@kernel.org>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 199F9D525
+	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 08:51:09 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.35])
+	by gateway (Coremail) with SMTP id _____8AxX+t7IoxkiugFAA--.12651S3;
+	Fri, 16 Jun 2023 16:51:07 +0800 (CST)
+Received: from [10.20.42.35] (unknown [10.20.42.35])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxluR4IoxknxIdAA--.17041S3;
+	Fri, 16 Jun 2023 16:51:05 +0800 (CST)
+Subject: Re: [PATCH v3 2/3] soc: dt-bindings: add loongson-2 pm
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Pavel Machek <pavel@ucw.cz>, Marc Zyngier <maz@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+ Liu Peibao <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
+ zhuyinbo@loongson.cn
+References: <20230615091757.24686-1-zhuyinbo@loongson.cn>
+ <20230615091757.24686-3-zhuyinbo@loongson.cn>
+ <efdd8e66-a8dc-1a7e-6ac3-fdbe0ba45204@linaro.org>
+From: zhuyinbo <zhuyinbo@loongson.cn>
+Message-ID: <5f50f83d-52f4-276b-1e99-6fef461df80a@loongson.cn>
+Date: Fri, 16 Jun 2023 16:51:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <efdd8e66-a8dc-1a7e-6ac3-fdbe0ba45204@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxluR4IoxknxIdAA--.17041S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 
-nios2 uses kmalloc() to implement module_alloc() because CALL26/PCREL26
-cannot reach all of vmalloc address space.
 
-Define module space as 32MiB below the kernel base and switch nios2 to
-use vmalloc for module allocations.
+在 2023/6/16 下午4:03, Krzysztof Kozlowski 写道:
+> On 15/06/2023 11:17, Yinbo Zhu wrote:
+>> Add the Loongson-2 SoC Power Management Controller binding with DT
+>> schema format using json-schema.
+>>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> ---
+>>   .../soc/loongson/loongson,ls2k-pmc.yaml       | 53 +++++++++++++++++++
+>>   MAINTAINERS                                   |  6 +++
+>>   2 files changed, 59 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
+>> new file mode 100644
+>> index 000000000000..32499bd10f8c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
+>> @@ -0,0 +1,53 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-pmc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Loongson-2 Power Manager controller
+>> +
+>> +maintainers:
+>> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+> 
+> Drop oneOf, you don't have here many choices.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
----
- arch/nios2/include/asm/pgtable.h |  5 ++++-
- arch/nios2/kernel/module.c       | 19 ++++---------------
- 2 files changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pgtable.h
-index 0f5c2564e9f5..0073b289c6a4 100644
---- a/arch/nios2/include/asm/pgtable.h
-+++ b/arch/nios2/include/asm/pgtable.h
-@@ -25,7 +25,10 @@
- #include <asm-generic/pgtable-nopmd.h>
- 
- #define VMALLOC_START		CONFIG_NIOS2_KERNEL_MMU_REGION_BASE
--#define VMALLOC_END		(CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
-+#define VMALLOC_END		(CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M - 1)
-+
-+#define MODULES_VADDR		(CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M)
-+#define MODULES_END		(CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
- 
- struct mm_struct;
- 
-diff --git a/arch/nios2/kernel/module.c b/arch/nios2/kernel/module.c
-index 76e0a42d6e36..9c97b7513853 100644
---- a/arch/nios2/kernel/module.c
-+++ b/arch/nios2/kernel/module.c
-@@ -21,23 +21,12 @@
- 
- #include <asm/cacheflush.h>
- 
--/*
-- * Modules should NOT be allocated with kmalloc for (obvious) reasons.
-- * But we do it for now to avoid relocation issues. CALL26/PCREL26 cannot reach
-- * from 0x80000000 (vmalloc area) to 0xc00000000 (kernel) (kmalloc returns
-- * addresses in 0xc0000000)
-- */
- void *module_alloc(unsigned long size)
- {
--	if (size == 0)
--		return NULL;
--	return kmalloc(size, GFP_KERNEL);
--}
--
--/* Free memory returned from module_alloc */
--void module_memfree(void *module_region)
--{
--	kfree(module_region);
-+	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
-+				    GFP_KERNEL, PAGE_KERNEL_EXEC,
-+				    VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
-+				    __builtin_return_address(0));
- }
- 
- int apply_relocate_add(Elf32_Shdr *sechdrs, const char *strtab,
--- 
-2.35.1
+okay, I got it.
+
+> 
+>> +      - items:
+>> +          - enum:
+>> +              - loongson,ls2k1000-pmc
+>> +              - loongson,ls2k0500-pmc
+>> +          - const: syscon
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  suspend-address:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      The "suspend-address" is a deep sleep state (Suspend To RAM)
+>> +      firmware entry address which was jumped from kernel and it's
+>> +      value was dependent on specific platform firmware code. In
+>> +      addition, the PM need according to it to indicate that current
+>> +      SoC whether support Suspend To RAM.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +    pmc: pm@1fe27000 {
+> 
+> Node name: system-controller or power-pamanagement
+> 
+> With these two:
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+
+okay, I will do it.
+
+Thanks,
+Yinbo
 
