@@ -1,47 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EBD1DCB2
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 18:15:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 917BBC433C0
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 18:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F281DCB9
+	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 18:19:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A91EBC433C9
+	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 18:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686939305;
-	bh=BGYZV1Km+8ZgDrE9neT/E0fU3u3ixvSh8AYCC3TbmE4=;
+	s=k20201202; t=1686939556;
+	bh=JYIeppGROaSwt5RJCAxNQJPfExACzvun2YHFgIEWjL0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ocOHhJrXehTtu0FMSDnDYc+b1HFDqXYmwBdweLEUdI+PqsG/szN2oQhqLKT46Ahr6
-	 NbufDpPBvtEpwi7JxXuy8Y6fzkJL718yxdZyFeBRwYraOMwF2mAUBYtMYDYs6NBzdm
-	 Tcq++cEDyhYS0x6zcZrANcqU/z6HIuHVL+Hn5wg40Osm0yMNN/WFOLO4p3Pw9a/k+9
-	 CHQaJtdsdkue27q5KzdOyP9R4S3UwBEq+qKYe0JrAQ4ca1NhuO7ceP3E4ATGY4JhGo
-	 r67idxkr4uZH96Z/Wwtjx+Wm4vAxrc1GxLjEVM27U1tQj9VF8xbqxt5TUDZXt/pUyg
-	 dx6Qg6yOGLCwA==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-977d55ac17bso147389766b.3
-        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 11:15:05 -0700 (PDT)
-X-Gm-Message-State: AC+VfDw8ondFvOfROwf1ivYZS0+8BVpJQdcuKFQkGKfx1ejMzUZn0Q0c
-	skcPeYfWYVlbp5PRbIhubmP0PmwEtQQ9CALkzxk=
-X-Google-Smtp-Source: ACHHUZ76yiO622Uh9+9rKEsm8ImEC4jXzUaBUsNUHgrPnEQ5V1l0GL/PgIuvK/efbFnHaYtpj3eltn1zagg/5cT90Eo=
-X-Received: by 2002:a19:ab11:0:b0:4f3:bbfe:db4e with SMTP id
- u17-20020a19ab11000000b004f3bbfedb4emr1747329lfe.56.1686939283176; Fri, 16
- Jun 2023 11:14:43 -0700 (PDT)
+	b=h1uz7zEMjuJtrPfng9729hhzwKLZAjy1ewqpDHwBM6x8slzfWprGf0O18yD5YM5Nd
+	 lGrbrUrowo9fDsb+lAOGvAoWnDAfAP5J79owCfLrI9X6tYLpbi9XoI/UAuwzwNAGKp
+	 uS2fXdigB5ECiLhk9agV7m4/pIaJenGLNQYxRfmC8jcc5SDlatuAxyWZyrfx5KCZ4C
+	 nAgUv4yGMGNtBZL5hST5LlW8srRPQlrEhkQRyfWOF1UvUbQZZnfFHC0ywkpWTYZo57
+	 g84yWxoWvPkR8+3GDTr2jisfGnTD+BA+9Ava4iBdRwGPmWHh5AEmmZ6ZirDhevOKEH
+	 CpiF+nCdw7SpQ==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-4f762b3227dso1369024e87.1
+        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 11:19:16 -0700 (PDT)
+X-Gm-Message-State: AC+VfDzCxMzGsjF0mfikUbpNxRrHmvNFKtFIyvj6adROKZyYCLURz9UR
+	24fi36ywtKIjfdoOEPnrYOyMv5wyseZttI01LVI=
+X-Google-Smtp-Source: ACHHUZ6PUs5qG5gEz0Ui+rYTOBYo1CNjp/5QXhNKC7wMrP1gtK8A+svd4/31TT3PuRRLSD+QiqJSaxjJua7jMaFtZ74=
+X-Received: by 2002:ac2:4c4c:0:b0:4f6:3ef3:13e8 with SMTP id
+ o12-20020ac24c4c000000b004f63ef313e8mr2671938lfk.0.1686939533810; Fri, 16 Jun
+ 2023 11:18:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-2-rppt@kernel.org>
-In-Reply-To: <20230616085038.4121892-2-rppt@kernel.org>
+References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-3-rppt@kernel.org>
+ <ZIySQgafdTHk5Yet@moria.home.lan>
+In-Reply-To: <ZIySQgafdTHk5Yet@moria.home.lan>
 From: Song Liu <song@kernel.org>
-Date: Fri, 16 Jun 2023 11:14:31 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4nDne7L=Qh142w+dMX2pqM_4k+SZSB=QBJ8ruG_j8dug@mail.gmail.com>
-Message-ID: <CAPhsuW4nDne7L=Qh142w+dMX2pqM_4k+SZSB=QBJ8ruG_j8dug@mail.gmail.com>
-Subject: Re: [PATCH v2 01/12] nios2: define virtual address space for modules
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
+Date: Fri, 16 Jun 2023 11:18:41 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5hnH3Tq+rO1XJEAieDtr61xHBDRmp+C5zRYV5ajRcDFQ@mail.gmail.com>
+Message-ID: <CAPhsuW5hnH3Tq+rO1XJEAieDtr61xHBDRmp+C5zRYV5ajRcDFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and jit_text_alloc()
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "David S. Miller" <davem@davemloft.net>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
 	Nadav Amit <nadav.amit@gmail.com>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
 	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
@@ -57,82 +58,53 @@ Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 16, 2023 at 1:51=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
+On Fri, Jun 16, 2023 at 9:48=E2=80=AFAM Kent Overstreet
+<kent.overstreet@linux.dev> wrote:
 >
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> On Fri, Jun 16, 2023 at 11:50:28AM +0300, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> >
+> > module_alloc() is used everywhere as a mean to allocate memory for code=
+.
+> >
+> > Beside being semantically wrong, this unnecessarily ties all subsystems
+> > that need to allocate code, such as ftrace, kprobes and BPF to modules
+> > and puts the burden of code allocation to the modules code.
+> >
+> > Several architectures override module_alloc() because of various
+> > constraints where the executable memory can be located and this causes
+> > additional obstacles for improvements of code allocation.
+> >
+> > Start splitting code allocation from modules by introducing
+> > execmem_text_alloc(), execmem_free(), jit_text_alloc(), jit_free() APIs=
+.
+> >
+> > Initially, execmem_text_alloc() and jit_text_alloc() are wrappers for
+> > module_alloc() and execmem_free() and jit_free() are replacements of
+> > module_memfree() to allow updating all call sites to use the new APIs.
+> >
+> > The intention semantics for new allocation APIs:
+> >
+> > * execmem_text_alloc() should be used to allocate memory that must resi=
+de
+> >   close to the kernel image, like loadable kernel modules and generated
+> >   code that is restricted by relative addressing.
+> >
+> > * jit_text_alloc() should be used to allocate memory for generated code
+> >   when there are no restrictions for the code placement. For
+> >   architectures that require that any code is within certain distance
+> >   from the kernel image, jit_text_alloc() will be essentially aliased t=
+o
+> >   execmem_text_alloc().
+> >
+> > The names execmem_text_alloc() and jit_text_alloc() emphasize that the
+> > allocated memory is for executable code, the allocations of the
+> > associated data, like data sections of a module will use
+> > execmem_data_alloc() interface that will be added later.
 >
-> nios2 uses kmalloc() to implement module_alloc() because CALL26/PCREL26
-> cannot reach all of vmalloc address space.
+> I like the API split - at the risk of further bikeshedding, perhaps
+> near_text_alloc() and far_text_alloc()? Would be more explicit.
 >
-> Define module space as 32MiB below the kernel base and switch nios2 to
-> use vmalloc for module allocations.
->
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+> Reviewed-by: Kent Overstreet <kent.overstreet@linux.dev>
 
 Acked-by: Song Liu <song@kernel.org>
-
-
-> ---
->  arch/nios2/include/asm/pgtable.h |  5 ++++-
->  arch/nios2/kernel/module.c       | 19 ++++---------------
->  2 files changed, 8 insertions(+), 16 deletions(-)
->
-> diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pg=
-table.h
-> index 0f5c2564e9f5..0073b289c6a4 100644
-> --- a/arch/nios2/include/asm/pgtable.h
-> +++ b/arch/nios2/include/asm/pgtable.h
-> @@ -25,7 +25,10 @@
->  #include <asm-generic/pgtable-nopmd.h>
->
->  #define VMALLOC_START          CONFIG_NIOS2_KERNEL_MMU_REGION_BASE
-> -#define VMALLOC_END            (CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
-> +#define VMALLOC_END            (CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M=
- - 1)
-> +
-> +#define MODULES_VADDR          (CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M=
-)
-> +#define MODULES_END            (CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
->
->  struct mm_struct;
->
-> diff --git a/arch/nios2/kernel/module.c b/arch/nios2/kernel/module.c
-> index 76e0a42d6e36..9c97b7513853 100644
-> --- a/arch/nios2/kernel/module.c
-> +++ b/arch/nios2/kernel/module.c
-> @@ -21,23 +21,12 @@
->
->  #include <asm/cacheflush.h>
->
-> -/*
-> - * Modules should NOT be allocated with kmalloc for (obvious) reasons.
-> - * But we do it for now to avoid relocation issues. CALL26/PCREL26 canno=
-t reach
-> - * from 0x80000000 (vmalloc area) to 0xc00000000 (kernel) (kmalloc retur=
-ns
-> - * addresses in 0xc0000000)
-> - */
->  void *module_alloc(unsigned long size)
->  {
-> -       if (size =3D=3D 0)
-> -               return NULL;
-> -       return kmalloc(size, GFP_KERNEL);
-> -}
-> -
-> -/* Free memory returned from module_alloc */
-> -void module_memfree(void *module_region)
-> -{
-> -       kfree(module_region);
-> +       return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
-> +                                   GFP_KERNEL, PAGE_KERNEL_EXEC,
-> +                                   VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
-> +                                   __builtin_return_address(0));
->  }
->
->  int apply_relocate_add(Elf32_Shdr *sechdrs, const char *strtab,
-> --
-> 2.35.1
->
