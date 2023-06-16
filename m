@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C7E1F160
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 20:10:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FDA1C433C0
-	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 20:10:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FC91ED4C
+	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 20:18:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9B53C433C9
+	for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 20:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686946219;
-	bh=WUwJ/CcnS7KQMIGc+n1lO6t7DBapdJHs3PtzN2L5DOs=;
+	s=k20201202; t=1686946712;
+	bh=U5Tl9qs4B0TBI/rIx4ZZgTkRwFm5uyKz4CPReQtXH/U=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tvFwKK05+1xn/zFlZ8hIAg1/8j1KoC6TrI2q6Y8JxzXsD1mJiAKl2YLRJVdXynja0
-	 QvpJMzIs3ZEWbrsSxsITbvxIQNpdqgf4BGNabeJS/FxGxNUy8oGOW2SfqdN2jG+wBO
-	 i6aj93uZasUkX7O7xG3MtVYRprkOD9kcB7dakAkePMeaWY/dQkCfDJ93Eurms6o8Ky
-	 McM8MpK6U9f/raFjOqe/d5ku9LEQLXsdZNoEoIHkapvZHVVTku7zEiUZni2ATIkdJ/
-	 +6fGiD3smTUkEh0uGUd1Bji29f1hb7noDinK67WShNZ7uSlPuhXNZHNPegFlSu/4Ps
-	 yJtjFWLM6h66A==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5183101690cso4615853a12.0
-        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 13:10:19 -0700 (PDT)
-X-Gm-Message-State: AC+VfDxnGHKCo6T9paqx6aGL/1aB0TY0pP796kJcEZLvsRaPZNFv9vAQ
-	yOgYPKOOINRQjmK5P0HzC0qOHM0NXnqAHaTwwCI=
-X-Google-Smtp-Source: ACHHUZ7ituqSYIn1SCVORmrSh+1n8O6ydQ9eZHh9b53aIx4zqNf09sKQF/S2prJ95SKqvJfHTGetd9Upy9eJLOlNi04=
-X-Received: by 2002:a05:6512:3052:b0:4f7:47bb:2ce0 with SMTP id
- b18-20020a056512305200b004f747bb2ce0mr3066562lfb.4.1686946197316; Fri, 16 Jun
- 2023 13:09:57 -0700 (PDT)
+	b=nuzYXIXsf5+35Wegc1iVuGClflOWoqB4Nk9ca2IBcdkmyQo7Aoh1vTfllBVwrJh8A
+	 xIKUWz3GmALzh2oLqSf0pcjsd+cxxIidc1WArjGpfc60dS0MSkVEAR/P1bXKuOfTyT
+	 FBzgNvhQTqu+C4Iqu58sa/2bgTGyBKqpd3TiKE77gEHVLjDYDhLkuBKuDRD8sO9r4j
+	 auGpPMngDwFLSjR1U6n9TERMce4FLLCk4WBE81Lrg1DtOAGA0QwhqvMomnHKm6oz2l
+	 yMUO5GnlggVRWxD6yXSJZ2wnpfhUXqx5dtImnArLOzciCgH/FV/kczpJyvzEX9Pavo
+	 SXWKBQt4wqWXQ==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-519c0ad1223so1464452a12.0
+        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 13:18:32 -0700 (PDT)
+X-Gm-Message-State: AC+VfDxUqar/8jX+LmdnP9OcZ6DInOOVLVnZlVEhILio2RG8KfqivDYx
+	4jW19N+Q94Qnhpl7PQ6zpYng9tITDzU1NDRqB9c=
+X-Google-Smtp-Source: ACHHUZ4zX0CYOJSSN4FGWX93J1VUIgZYXEOYsrGR9cSML7AlHx0h0qQhMxp9jkMOVU4u0KdCA43Yux1f/ue71yfnFUk=
+X-Received: by 2002:a05:651c:225:b0:2b3:4fb7:8991 with SMTP id
+ z5-20020a05651c022500b002b34fb78991mr2815162ljn.43.1686946690319; Fri, 16 Jun
+ 2023 13:18:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-10-rppt@kernel.org>
-In-Reply-To: <20230616085038.4121892-10-rppt@kernel.org>
+References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-11-rppt@kernel.org>
+In-Reply-To: <20230616085038.4121892-11-rppt@kernel.org>
 From: Song Liu <song@kernel.org>
-Date: Fri, 16 Jun 2023 13:09:45 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6TmwsBmP4NQroE5OEFsaHh+S9zweXa4Fs_ZeJURguqAg@mail.gmail.com>
-Message-ID: <CAPhsuW6TmwsBmP4NQroE5OEFsaHh+S9zweXa4Fs_ZeJURguqAg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/12] powerpc: extend execmem_params for kprobes allocations
+Date: Fri, 16 Jun 2023 13:17:57 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4C1zm72AkHfuo6Xz4+37AG4BgX_k2fM+xw536QeDQS+w@mail.gmail.com>
+Message-ID: <CAPhsuW4C1zm72AkHfuo6Xz4+37AG4BgX_k2fM+xw536QeDQS+w@mail.gmail.com>
+Subject: Re: [PATCH v2 10/12] arch: make execmem setup available regardless of CONFIG_MODULES
 To: Mike Rapoport <rppt@kernel.org>
 Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
 	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
@@ -62,84 +62,34 @@ te:
 >
 > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 >
-> powerpc overrides kprobes::alloc_insn_page() to remove writable
-> permissions when STRICT_MODULE_RWX is on.
+> execmem does not depend on modules, on the contrary modules use
+> execmem.
 >
-> Add definition of jit area to execmem_params to allow using the generic
-> kprobes::alloc_insn_page() with the desired permissions.
->
-> As powerpc uses breakpoint instructions to inject kprobes, it does not
-> need to constrain kprobe allocations to the modules area and can use the
-> entire vmalloc address space.
+> To make execmem available when CONFIG_MODULES=3Dn, for instance for
+> kprobes, split execmem_params initialization out from
+> arch/kernel/module.c and compile it when CONFIG_EXECMEM=3Dy
 >
 > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> ---
+[...]
+> +
+> +struct execmem_params __init *execmem_arch_params(void)
+> +{
+> +       u64 module_alloc_end;
+> +
+> +       kaslr_init();
+
+Aha, this addresses my comment on the earlier patch. Thanks!
 
 Acked-by: Song Liu <song@kernel.org>
 
 
-> ---
->  arch/powerpc/kernel/kprobes.c | 14 --------------
->  arch/powerpc/kernel/module.c  | 13 +++++++++++++
->  2 files changed, 13 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.=
-c
-> index 5db8df5e3657..14c5ddec3056 100644
-> --- a/arch/powerpc/kernel/kprobes.c
-> +++ b/arch/powerpc/kernel/kprobes.c
-> @@ -126,20 +126,6 @@ kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned lo=
-ng addr, unsigned long offse
->         return (kprobe_opcode_t *)(addr + offset);
->  }
->
-> -void *alloc_insn_page(void)
-> -{
-> -       void *page;
-> -
-> -       page =3D jit_text_alloc(PAGE_SIZE);
-> -       if (!page)
-> -               return NULL;
-> -
-> -       if (strict_module_rwx_enabled())
-> -               set_memory_rox((unsigned long)page, 1);
-> -
-> -       return page;
-> -}
-> -
->  int arch_prepare_kprobe(struct kprobe *p)
->  {
->         int ret =3D 0;
-> diff --git a/arch/powerpc/kernel/module.c b/arch/powerpc/kernel/module.c
-> index 4c6c15bf3947..8e5b379d6da1 100644
-> --- a/arch/powerpc/kernel/module.c
-> +++ b/arch/powerpc/kernel/module.c
-> @@ -96,6 +96,11 @@ static struct execmem_params execmem_params =3D {
->                         .alignment =3D 1,
->                 },
->         },
-> +       .jit =3D {
-> +               .text =3D {
-> +                       .alignment =3D 1,
-> +               },
-> +       },
->  };
->
->
-> @@ -131,5 +136,13 @@ struct execmem_params __init *execmem_arch_params(vo=
-id)
->
->         execmem_params.modules.text.pgprot =3D prot;
->
-> +       execmem_params.jit.text.start =3D VMALLOC_START;
-> +       execmem_params.jit.text.end =3D VMALLOC_END;
 > +
-> +       if (strict_module_rwx_enabled())
-> +               execmem_params.jit.text.pgprot =3D PAGE_KERNEL_ROX;
-> +       else
-> +               execmem_params.jit.text.pgprot =3D PAGE_KERNEL_EXEC;
+> +       module_alloc_end =3D module_alloc_base + MODULES_VSIZE;
 > +
->         return &execmem_params;
->  }
-> --
-> 2.35.1
->
+> +       execmem_params.modules.text.pgprot =3D PAGE_KERNEL;
+> +       execmem_params.modules.text.start =3D module_alloc_base;
+> +       execmem_params.modules.text.end =3D module_alloc_end;
+> +
+> +       execmem_params.jit.text.pgprot =3D PAGE_KERNEL_ROX;
+[...]
