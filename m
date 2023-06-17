@@ -1,104 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-19.mta1.migadu.com (out-19.mta1.migadu.com [95.215.58.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F298F78
-	for <loongarch@lists.linux.dev>; Sat, 17 Jun 2023 16:38:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B281C433C8
-	for <loongarch@lists.linux.dev>; Sat, 17 Jun 2023 16:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687019932;
-	bh=wsV5PAOYMtSK534qTONYBGMJADMTf/thu6AVR5VKWFg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VmQziocpRcmVifVkHuWRxVOEIy23wmy3B1TsTMMzQlYk8chvJPZ4Trw4bkoUkL8ry
-	 9P6ZysmQGbJ8kTXvEai+gcYMtaTcfT8r154jxLD7ekTecDyDMqeUuuWFCmtEC1gr14
-	 JbhYHRaCtEDcWofjtenPw3xF+aXvKsk34kokspLJ9oJNOsU6ZMwr9znkEfti6BvDQm
-	 TZkzOCltKBpre/4D+KXxPIkqbgF2KpBVedrdvHOja7RcKb4SNv1AvZRBaTSpXucQae
-	 ECxJL03xT1G+Gp+Jc15MXzFwh3SP4/PYpxOrp3a4v/MhwRQnjC4aR4sFTQcr2yYFio
-	 FlCunuU2ZXlHA==
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-31110aea814so1627645f8f.2
-        for <loongarch@lists.linux.dev>; Sat, 17 Jun 2023 09:38:52 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyKQAap60WfZvPh9VG9L/8dbBrjY3E0NBXaveLMCetbg/0F2Or4
-	Oqti+xaDNmPwDuSfFRyQdpqcBZh4gKv1BFK2GdY=
-X-Google-Smtp-Source: ACHHUZ7/x1kYUhYXMtUENPjhDtD48HKOo5oy2K5VqpfigImzwjTDz7CrLzlDpzPNd4SA2zOD7D4teoP7FVQzMuuaU40=
-X-Received: by 2002:ac2:5bd1:0:b0:4eb:42b7:8c18 with SMTP id
- u17-20020ac25bd1000000b004eb42b78c18mr3005243lfn.53.1687019909491; Sat, 17
- Jun 2023 09:38:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6292E7F4
+	for <loongarch@lists.linux.dev>; Sat, 17 Jun 2023 20:37:38 +0000 (UTC)
+Date: Sat, 17 Jun 2023 16:37:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1687034256;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q0VmYCbqCGEwwRm9p2gHyBMkJehgKoo9YX+I+uEXlwI=;
+	b=dfNjewHVuYudVnc8TKpcch6UyyxsC62EekInr+KCF+/d5W19oLEbYgWNkxwMPmu6LU+6YJ
+	DDxDUAUrcbSRUp/oMghsBWa2J9HukZTCZ/JGCQrtkNxjPDHNM3pSHNKVBsHXTHpr3HEdfU
+	c38+ELnaz0YDpRbuK0hGGk55HYtUVFk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Song Liu <song@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2 07/12] arm64, execmem: extend execmem_params for
+ generated code definitions
+Message-ID: <ZI4Zifzfi/5qBNMw@moria.home.lan>
+References: <20230616085038.4121892-1-rppt@kernel.org>
+ <20230616085038.4121892-8-rppt@kernel.org>
+ <CAPhsuW6BG2oVrGDOpCKyOEvU9fBOboYYhducv96KUBe276Mvng@mail.gmail.com>
+ <20230617065759.GT52412@kernel.org>
+ <ZI3TGhJ2y5SBWmnA@moria.home.lan>
+ <CAPhsuW4KDriCDfQ40MKKQ3AjyeRbEUJxjqoBLipe5AJMxY3U-w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-8-rppt@kernel.org>
- <CAPhsuW6BG2oVrGDOpCKyOEvU9fBOboYYhducv96KUBe276Mvng@mail.gmail.com>
- <20230617065759.GT52412@kernel.org> <ZI3TGhJ2y5SBWmnA@moria.home.lan>
-In-Reply-To: <ZI3TGhJ2y5SBWmnA@moria.home.lan>
-From: Song Liu <song@kernel.org>
-Date: Sat, 17 Jun 2023 09:38:17 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4KDriCDfQ40MKKQ3AjyeRbEUJxjqoBLipe5AJMxY3U-w@mail.gmail.com>
-Message-ID: <CAPhsuW4KDriCDfQ40MKKQ3AjyeRbEUJxjqoBLipe5AJMxY3U-w@mail.gmail.com>
-Subject: Re: [PATCH v2 07/12] arm64, execmem: extend execmem_params for
- generated code definitions
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "David S. Miller" <davem@davemloft.net>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nadav Amit <nadav.amit@gmail.com>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW4KDriCDfQ40MKKQ3AjyeRbEUJxjqoBLipe5AJMxY3U-w@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, Jun 17, 2023 at 8:37=E2=80=AFAM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Sat, Jun 17, 2023 at 09:57:59AM +0300, Mike Rapoport wrote:
-> > > This is growing fast. :) We have 3 now: text, data, jit. And it will =
-be
-> > > 5 when we split data into rw data, ro data, ro after init data. I won=
-der
-> > > whether we should still do some type enum here. But we can revisit
-> > > this topic later.
+On Sat, Jun 17, 2023 at 09:38:17AM -0700, Song Liu wrote:
+> On Sat, Jun 17, 2023 at 8:37 AM Kent Overstreet
+> <kent.overstreet@linux.dev> wrote:
 > >
-> > I don't think we'd need 5. Four at most :)
+> > On Sat, Jun 17, 2023 at 09:57:59AM +0300, Mike Rapoport wrote:
+> > > > This is growing fast. :) We have 3 now: text, data, jit. And it will be
+> > > > 5 when we split data into rw data, ro data, ro after init data. I wonder
+> > > > whether we should still do some type enum here. But we can revisit
+> > > > this topic later.
+> > >
+> > > I don't think we'd need 5. Four at most :)
+> > >
+> > > I don't know yet what would be the best way to differentiate RW and RO
+> > > data, but ro_after_init surely won't need a new type. It either will be
+> > > allocated as RW and then the caller will have to set it RO after
+> > > initialization is done, or it will be allocated as RO and the caller will
+> > > have to do something like text_poke to update it.
 > >
-> > I don't know yet what would be the best way to differentiate RW and RO
-> > data, but ro_after_init surely won't need a new type. It either will be
-> > allocated as RW and then the caller will have to set it RO after
-> > initialization is done, or it will be allocated as RO and the caller wi=
-ll
-> > have to do something like text_poke to update it.
->
-> Perhaps ro_after_init could use the same allocation interface and share
-> pages with ro pages - if we just added a refcount for "this page
-> currently needs to be rw, module is still loading?"
+> > Perhaps ro_after_init could use the same allocation interface and share
+> > pages with ro pages - if we just added a refcount for "this page
+> > currently needs to be rw, module is still loading?"
+> 
+> If we don't relax rules with read only, we will have to separate rw, ro,
+> and ro_after_init. But we can still have page sharing:
+> 
+> Two modules can put rw data on the same page.
+> With text poke (ro data poke to be accurate), two modules can put
+> ro data on the same page.
+> 
+> > text_poke() approach wouldn't be workable, you'd have to audit and fix
+> > all module init code in the entire kernel.
+> 
+> Agreed. For this reason, each module has to have its own page(s) for
+> ro_after_init data.
 
-If we don't relax rules with read only, we will have to separate rw, ro,
-and ro_after_init. But we can still have page sharing:
-
-Two modules can put rw data on the same page.
-With text poke (ro data poke to be accurate), two modules can put
-ro data on the same page.
-
-> text_poke() approach wouldn't be workable, you'd have to audit and fix
-> all module init code in the entire kernel.
-
-Agreed. For this reason, each module has to have its own page(s) for
-ro_after_init data.
-
-To eventually remove VM_FLUSH_RESET_PERMS, we want
-ro_after_init data to share the same allocation interface.
-
-Thanks,
-Song
+Relaxing page permissions to allow for page sharing could also be a
+config option. For archs with 64k pages it seems worthwhile.
