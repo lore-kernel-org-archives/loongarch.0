@@ -1,122 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A002E0EA;
-	Sat, 17 Jun 2023 06:58:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9588BC433C0;
-	Sat, 17 Jun 2023 06:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686985126;
-	bh=9S4P8JW7Aw6+2ZoVDniU5EdIBLc9OdiTvqw3YA9ECf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nHkTyW+hctadrgmIg2I6LaptKR6YKkmtmdcOS/HSni9feQ5p1DZtCSX6Dnam1slU3
-	 FLDQnf/OEx1d4jSPxMmAwLEhSg3dDkigyXgxGzkX1VJc1UJnkk6n01fCEZ0qwx4ELP
-	 r6wbjQNoXnPg5HveUgv1zS7owOZuF5kej34YgRIGZdC2tH3sGX0H+MpQa784HSW6mk
-	 qjN9Au7ZhvMEPLupJ+gAv5/GudEwZVVlLyNGJFO9CDGv8qdQ0I+Zmw8CDlXcjxb8w/
-	 RZuOMQ5h8Q4Z/8VeTux+zm8PEK9dnLGg98fBUnC+4CbpTq0gKeC8d5BMUXJufl+4IU
-	 tPAEuFrGSOYnA==
-Date: Sat, 17 Jun 2023 09:57:59 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 07/12] arm64, execmem: extend execmem_params for
- generated code definitions
-Message-ID: <20230617065759.GT52412@kernel.org>
-References: <20230616085038.4121892-1-rppt@kernel.org>
- <20230616085038.4121892-8-rppt@kernel.org>
- <CAPhsuW6BG2oVrGDOpCKyOEvU9fBOboYYhducv96KUBe276Mvng@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7282E0EA
+	for <loongarch@lists.linux.dev>; Sat, 17 Jun 2023 06:59:21 +0000 (UTC)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5701eaf0d04so17709727b3.2
+        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 23:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686985160; x=1689577160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uckLMjvzIaZTWhXCpigTz423wFbz8o6FswSoizd2WBk=;
+        b=eisGvaZUi3gAoHoa4vj7Ys0ura9VncuZXTFZ1MVIeLxZoZ9CMQCtOftO7ctNRAeMti
+         udNCWOgCQAC+MbZYtIAFgh+nyackO17gZqAwXaG5EUvZa1lt3Ym+O7C0om/yT2ZFlIWW
+         SKtJbYhMQbutdWEXTeiQ4f1HM27bjj/WvMWjJ6Q6UiNm67UGGhyAI6mFBuwNnffxzw94
+         VMcMFoNoFU/Ge3Zs957l3le7odUqxrhZrs5myqppbyf+cU8JEzAd1wE8x98tpi1tJ8Qc
+         d7plYrRzgPHgxzKSel3sir/9FQ2lTIAgWfnByKRFfyH4dzZjYlcrJx5kAv6ADuEJMZi9
+         k4Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686985160; x=1689577160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uckLMjvzIaZTWhXCpigTz423wFbz8o6FswSoizd2WBk=;
+        b=IorY7WPsb3oN7Wm0K9AWcVNHPGqRwz2MDFZmDJth7cdVMwx3tQcfi6CO+JkDwitm7U
+         bV78zYGSpenthgaLbcXA3F82n18LBt+//kzaGMin20f6PMtqi1I7E3dqTWqoFwIp2WWq
+         EoHRoKGixnOq6Dbpj3Twm6AdOxLvTDABaln9qPixtJPsZU29N0AxVG6WjKtaagNwjK4X
+         SEmVN/Ud3Mk6RS/xHxSim2N/X3KxsbehJChbVitr0L1Vyin1GGqmPsqT0RX/Sgje5ZZh
+         qcovWigd6BS6pOvq2ZCcNNAowuWN8gtslwiA4xisN32jEMrTnSySBrC5fPjJ9yJ1FPo0
+         t8ew==
+X-Gm-Message-State: AC+VfDwt5IHNMSJv+gIiATPBvyKfqCNalFEkr/WTWTkC3ACy25YFDJJL
+	3QrEgaNx+LQUk+nfRxNdt2RB4fHmjTJktRFO6YY=
+X-Google-Smtp-Source: ACHHUZ5SwcgbC3RQPe/SWrhKQcJ7vCFyxqVvJuq6FtyoL6Z5FZxu2wZ9owz33UnREb4AAtOTn368iEvkRkQdKFKV+Oo=
+X-Received: by 2002:a81:7206:0:b0:570:209a:a4fe with SMTP id
+ n6-20020a817206000000b00570209aa4femr3997833ywc.32.1686985160487; Fri, 16 Jun
+ 2023 23:59:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW6BG2oVrGDOpCKyOEvU9fBOboYYhducv96KUBe276Mvng@mail.gmail.com>
+References: <cover.1686882123.git.zhoubinbin@loongson.cn> <99bdbfc66604b4700e3e22e28c3d27ef7c9c9af7.1686882123.git.zhoubinbin@loongson.cn>
+ <493a28b2-8ad5-2e9a-462b-bdc7d585b722@linaro.org>
+In-Reply-To: <493a28b2-8ad5-2e9a-462b-bdc7d585b722@linaro.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Sat, 17 Jun 2023 14:59:08 +0800
+Message-ID: <CAMpQs4JJWryScd_nEi+LpKGPXup=RZXw=rBhb7HQkxJuBXgTBw@mail.gmail.com>
+Subject: Re: [PATCH 5/6] LoongArch: DeviceTree for Loongson-2K1000
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Hongliang Wang <wanghongliang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 16, 2023 at 01:05:29PM -0700, Song Liu wrote:
-> On Fri, Jun 16, 2023 at 1:52 AM Mike Rapoport <rppt@kernel.org> wrote:
+On Fri, Jun 16, 2023 at 5:59=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 16/06/2023 08:11, Binbin Zhou wrote:
+> > Add DeviceTree file for Loongson-2K1000 processor, which integrates two
+> > 64-bit dual emission superscalar LA264 processor cores.
 > >
-> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> >
-> > The memory allocations for kprobes on arm64 can be placed anywhere in
-> > vmalloc address space and currently this is implemented with an override
-> > of alloc_insn_page() in arm64.
-> >
-> > Extend execmem_params with a range for generated code allocations and
-> > make kprobes on arm64 use this extension rather than override
-> > alloc_insn_page().
-> >
-> > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > > ---
-> >  arch/arm64/kernel/module.c         |  9 +++++++++
-> >  arch/arm64/kernel/probes/kprobes.c |  7 -------
-> >  include/linux/execmem.h            | 11 +++++++++++
-> >  mm/execmem.c                       | 14 +++++++++++++-
-> >  4 files changed, 33 insertions(+), 8 deletions(-)
+> >  arch/loongarch/boot/dts/Makefile            |   3 +-
+> >  arch/loongarch/boot/dts/loongson_2k1000.dts | 565 ++++++++++++++++++++
+> >  2 files changed, 567 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/loongarch/boot/dts/loongson_2k1000.dts
 > >
-> > diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-> > index c3d999f3a3dd..52b09626bc0f 100644
-> > --- a/arch/arm64/kernel/module.c
-> > +++ b/arch/arm64/kernel/module.c
-> > @@ -30,6 +30,13 @@ static struct execmem_params execmem_params = {
-> >                         .alignment = MODULE_ALIGN,
-> >                 },
-> >         },
-> > +       .jit = {
-> > +               .text = {
-> > +                       .start = VMALLOC_START,
-> > +                       .end = VMALLOC_END,
-> > +                       .alignment = 1,
-> > +               },
-> > +       },
-> >  };
-> 
-> This is growing fast. :) We have 3 now: text, data, jit. And it will be
-> 5 when we split data into rw data, ro data, ro after init data. I wonder
-> whether we should still do some type enum here. But we can revisit
-> this topic later.
+> > diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts=
+/Makefile
+> > index 0e5ed373b1b4..c0464bb8e430 100644
+> > --- a/arch/loongarch/boot/dts/Makefile
+> > +++ b/arch/loongarch/boot/dts/Makefile
+> > @@ -1,5 +1,6 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> >
+> > -dtb-$(CONFIG_MACH_LOONGSON64)        =3D loongson_2k0500.dtb
+> > +dtb-$(CONFIG_MACH_LOONGSON64)        =3D loongson_2k0500.dtb \
+> > +                               loongson_2k1000.dtb
+> >
+> >  obj-$(CONFIG_BUILTIN_DTB)    +=3D $(addsuffix .dtb.o, $(CONFIG_BUILTIN=
+_DTB_NAME))
+> > diff --git a/arch/loongarch/boot/dts/loongson_2k1000.dts b/arch/loongar=
+ch/boot/dts/loongson_2k1000.dts
+> > new file mode 100644
+> > index 000000000000..9fd9d400d97f
+> > --- /dev/null
+> > +++ b/arch/loongarch/boot/dts/loongson_2k1000.dts
+> > @@ -0,0 +1,565 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/clock/loongson,ls2k-clk.h>
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +
+> > +/ {
+> > +     model =3D "LS2K1000 Reference Board";
+> > +     compatible =3D "loongson,ls2k1000";
+> > +
+>
+> All the same comments apply here. Don't mix SoC (DTSI) with boards.
 
-I don't think we'd need 5. Four at most :)
+Hi Krzysztof:
 
-I don't know yet what would be the best way to differentiate RW and RO
-data, but ro_after_init surely won't need a new type. It either will be
-allocated as RW and then the caller will have to set it RO after
-initialization is done, or it will be allocated as RO and the caller will
-have to do something like text_poke to update it.
- 
-> Other than that
-> 
-> Acked-by: Song Liu <song@kernel.org>
+I'm very sorry, this is the first time I've written a full DTS.
+Do you mean that I need to put the descriptions of these devices into
+DTSI and the descriptions of the boards into DTS?
 
--- 
-Sincerely yours,
-Mike.
+>
+> It does not look like you tested the DTS against bindings. Please run
+> `make dtbs_check` (see
+> Documentation/devicetree/bindings/writing-schema.rst for instructions).
+
+Ok, I will do these checks before the next version.
+
+Thanks.
+Binbin
+
+>
+> Best regards,
+> Krzysztof
+>
