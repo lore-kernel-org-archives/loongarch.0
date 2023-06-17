@@ -1,96 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE86833FD;
-	Sat, 17 Jun 2023 06:53:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C22C433C0;
-	Sat, 17 Jun 2023 06:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686984783;
-	bh=s5IbUS/R9FUeza7Uno3Hll+WeqZYFms0rCFRllsd4i8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O0jdChYvxLTPBx1BOB1xElON4yTO54jJpqqtDjBH7kzjTk7h8ut1Zvwg88nJSwHD5
-	 dR46BC1yX4kfsB9fmhzM3g5FAiBBJ7EopEe68OhToY9ZvFD0H28XYCChSftyR0QUBZ
-	 RDI9hk6abzU7ADT2Mp8RObMy225YcvgqAzj8bWooQ/IUkq2S0z3QH97xrM4q9eh/eL
-	 W9Ix4DLih/xlZ3Zq9c6AydZXL5tY2UznK8+LjAqeaAIVsE4aQyWtPv0n7kE5DQG+KX
-	 YYFIH+XCs7DhkCWkawXBSwV8RH6HWXBuasnHhsf1ZYp1zsYvUdnbybweDJ02yKksNs
-	 +4CfHcBEs1MPg==
-Date: Sat, 17 Jun 2023 09:52:16 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 12/12] kprobes: remove dependcy on CONFIG_MODULES
-Message-ID: <20230617065216.GS52412@kernel.org>
-References: <20230616085038.4121892-1-rppt@kernel.org>
- <20230616085038.4121892-13-rppt@kernel.org>
- <87r0qbmy14.fsf@all.your.base.are.belong.to.us>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4071833FD
+	for <loongarch@lists.linux.dev>; Sat, 17 Jun 2023 06:54:05 +0000 (UTC)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-570282233ceso17233817b3.1
+        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 23:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686984845; x=1689576845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bdtV/MXVNsTYrKqOmSjIMz7q9/avU6No9O79dlPLg4o=;
+        b=lWN8KQGCQp2fyzA6niAu9qi8qPkMR9Uo5N9XH3SSbZEk3HdnpSJel1WD0QN8ey5gNg
+         XnqaZMzIaYscPYWOdwa6XyT5oS7zimjPTHF+9LHBa4aAZl47FTNHiKp+6bBN835epOVI
+         Usv7EdKuhTr3q3oMEE2rLc2Ox0RbRfA8kisFZFuW9DgLRjdEGJblK13RvKaKGJ8FOGPf
+         R8syVmiGUb3VJrSA0i3mSL7OQ3i/RKVOa2DiJx6RpIsbkbg475qhBK+lSVPFNs8WQfqw
+         NTGgnwCMfIaPf4+aoxLOAHf2SXTiWu8ryQlkMRsGNxTbf74MaRLEZQcxtMIOPiW6sk55
+         Om+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686984845; x=1689576845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bdtV/MXVNsTYrKqOmSjIMz7q9/avU6No9O79dlPLg4o=;
+        b=bzfRLW3Df7Rk3CNBFIpOvKBWLbFnBkheTJFrxODhmnLqBjXjU2n8RYItti0EcN9kyD
+         VAcCx2JGvh295IdLyAqs9uu4Pe7zNUM2+GB5xCnD2nEzD2UNstHlGHZgVwINfNJEDNb3
+         EYK7Rwy4cz3Ksqv5C//Rgrq1jSxs7xAp1ZqTRDzStuSEof67r0P+Z3COAhtuovXyIM9F
+         TJUxSg3Sjbk7dqF3e3EnJdKA2vjY7xeYEEW58SHXNz0AdH2nD2sXeR1bckTWot7JGGGj
+         G7/5ZjxlvOIQjf+QfM9olDjmQ6XfQXpVcJX9nRB1eu0smNFpnJ0TZLh0XECCs33rWnSc
+         kktg==
+X-Gm-Message-State: AC+VfDwhzUwPfzf4JMkKOb+C1qBH2vDaWo4SAG16mYgoQ7F8XxeH8t6m
+	F+qblbicKdFuAHHcbWZQZq2x0+laxW7bQsnfzzE=
+X-Google-Smtp-Source: ACHHUZ52sw3ie38tAu1fFwsmlJYcRFNJjls5PAh3xu5TxqVpHPRBgDpjVFAqNCW/gheSeJedLOJTsqo+Q22ilJucSLI=
+X-Received: by 2002:a81:7584:0:b0:56d:6c9:d82d with SMTP id
+ q126-20020a817584000000b0056d06c9d82dmr3965778ywc.21.1686984844879; Fri, 16
+ Jun 2023 23:54:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87r0qbmy14.fsf@all.your.base.are.belong.to.us>
+References: <cover.1686882123.git.zhoubinbin@loongson.cn> <99bdbfc66604b4700e3e22e28c3d27ef7c9c9af7.1686882123.git.zhoubinbin@loongson.cn>
+ <20230616-projector-visible-4135a378fb56@wendy>
+In-Reply-To: <20230616-projector-visible-4135a378fb56@wendy>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Sat, 17 Jun 2023 14:53:53 +0800
+Message-ID: <CAMpQs4K38C3URsBQ6YC0km5Fg21o4VuEqOe=f6emeutdoqKf_A@mail.gmail.com>
+Subject: Re: [PATCH 5/6] LoongArch: DeviceTree for Loongson-2K1000
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Hongliang Wang <wanghongliang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 16, 2023 at 01:44:55PM +0200, Björn Töpel wrote:
-> Mike Rapoport <rppt@kernel.org> writes:
-> 
-> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> >
-> > kprobes depended on CONFIG_MODULES because it has to allocate memory for
-> > code.
-> 
-> I think you can remove the MODULES dependency from BPF_JIT as well:
+On Fri, Jun 16, 2023 at 5:48=E2=80=AFPM Conor Dooley <conor.dooley@microchi=
+p.com> wrote:
+>
+> On Fri, Jun 16, 2023 at 02:11:31PM +0800, Binbin Zhou wrote:
+>
+> > +     memalloc@0 {
+> > +             compatible =3D "loongson,ls-memalloc";
+> > +             reg =3D <0 0x90000000 0 0x20000000>;
+> > +     };
+>
+> This is not documented.
 
-Yeah, I think so. Thanks!
- 
-> --8<--
-> diff --git a/kernel/bpf/Kconfig b/kernel/bpf/Kconfig
-> index 2dfe1079f772..fa4587027f8b 100644
-> --- a/kernel/bpf/Kconfig
-> +++ b/kernel/bpf/Kconfig
-> @@ -41,7 +41,6 @@ config BPF_JIT
->         bool "Enable BPF Just In Time compiler"
->         depends on BPF
->         depends on HAVE_CBPF_JIT || HAVE_EBPF_JIT
-> -       depends on MODULES
->         help
->           BPF programs are normally handled by a BPF interpreter. This option
->           allows the kernel to generate native code when a program is loaded
-> --8<--
-> 
-> 
-> Björn
+Hi Conor:
 
--- 
-Sincerely yours,
-Mike.
+Sorry, this is my mistake, a private driver will use it, I will try to
+remove it in the next version.
+
+>
+> > +             gpio0: gpio@1fe00500 {
+> > +                     compatible =3D "loongson,ls2k-gpio", "syscon";
+>
+> This isn't valid either, the binding doesn't allow syscon?
+
+The syscon is not needed right now. I will remove it.
+
+>
+> > +                     ethernet@3,1 {
+> > +                             compatible =3D "pci0014,7a03.0",
+> > +                                          "pci0014,7a03",
+> > +                                          "pciclass,020000",
+> > +                                          "pciclass,0200",
+> > +                                          "loongson, pci-gmac";
+>
+> None of the compatibles from here on out are documented either.
+
+These are required to be added according to DeviceTree Spec PCI [1],
+Linux does not use these compatible for now.
+Removing them really doesn't affect the driver, but to follow the spec
+and make sure every node has a compatible, I've left them all in.
+
+Are they not required?
+
+[1]: https://www.openfirmware.info/data/docs/bus.pci.pdf
+
+Thanks.
+Binbin
+
+>
+> Cheers,
+> Conor.
