@@ -1,186 +1,119 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF30EA3
-	for <loongarch@lists.linux.dev>; Sat, 17 Jun 2023 06:31:41 +0000 (UTC)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bc4e41b7bc9so1618538276.2
-        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 23:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686983500; x=1689575500;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ojxzkT9Y/xK695pRTZ6SYKEpFMh9KWUqZ4lZ86oCXSU=;
-        b=mhVXRV8QQ4Sw3xl9XfzBSTwep0QBWvIK+i5qhuaKS649s6YKwoX0dWr1tilMIQdeS/
-         8MMCDdbDivzK9zbu+YjKxW2bGp0gdJsSA+RNNcl4e7ZwI1OJEQh7Fx2uksGLEVkvymg1
-         J8WdL2jwB8hodc+4HkaXj4emVEaDcuFf+cF++w/ASUYW5ivEf3Raqwf+DwwkCOfzk2qb
-         Ws3jBRzSi5QBVOd6lL/oSI+JrLF4haQgsUhN1gxRTbx3VGbVeV2aESpO25/frgRIRvPi
-         hArM4mrccihfOwMJRWNNce5Zh3c8HuYppzZg2kMumKl6Lz7roZf/j4WfS1VgLAfEMbuP
-         86MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686983500; x=1689575500;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ojxzkT9Y/xK695pRTZ6SYKEpFMh9KWUqZ4lZ86oCXSU=;
-        b=B3Vtf8+XsvDyPuYtkYeMhVj+XkSvKAruSsByzHpCiZza8wYGO6ZpMLoklSBKXJSGQP
-         aMrEWUlgVzvXy8572GNvZjwJ7ECn97BAzNZyzXIVtqh4wojl1JqpCHpDdj+gPeI2A9QJ
-         dJzpbIX9Z+uoUgec3BSWlJWJ0rncP7w59nfsF1AMYLeQSaotUi/6WLLEwABfAwsUzWsd
-         Y3wIr8wgLBK0MUsli1tSJjAmUbELLAAZ8U48rxCpcaYKYGt7lrwPK1SNAy2Lk9Dfucsh
-         w8dnLi1PIxIDZ2oc3tlR+QBQFogGFvGznvgeWNtpVDx3amzDRvnoUqO0FYcjyASjd6pN
-         sFaQ==
-X-Gm-Message-State: AC+VfDwgUwdr3DhZNNb1jOjIwVKWLiD9T5Eo+uzfuBfiV//qqkskob/a
-	vzqd2u8EgGRFMLMnt3K0eVADjPmSubEwKRPsAB4=
-X-Google-Smtp-Source: ACHHUZ4CCjZ0kn7J0zFcGTDsbjx1bc8zahyEmCiijZiNZ21bqAwtjiL4O2lXnZkuKYjgxxAxeH5yztmPYhYvBA0Mkrc=
-X-Received: by 2002:a25:e756:0:b0:bd7:545e:ab41 with SMTP id
- e83-20020a25e756000000b00bd7545eab41mr1503800ybh.27.1686983499980; Fri, 16
- Jun 2023 23:31:39 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2912633FD;
+	Sat, 17 Jun 2023 06:45:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC914C433C8;
+	Sat, 17 Jun 2023 06:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686984307;
+	bh=Uw5cw1TPn0rntsQJRbeXZU+V2i3I8bpFiME/qcflP08=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A0C/04zwp8Svpx/hprFTuDwIwHJCnHpNRmn2tDdvfcmYt4wp3n7OAxHp5Py33C+kd
+	 4kMHu8FACuUr1jN3jGFObWQ4Pw9NFQKQAIyO/G6pFYoVPUe76lGyVXZO3TQemSokHm
+	 VXxdoS02gSAauNcMun3iVu1Zubv2t9PebDcIDYD6cqQx8/HkOPh4X4/5bVg3dgu6dB
+	 sBHr55LVzNEboL0DRdq7gLRwtJOv/T3RNn91O3Tsgsn70wRNMkVoUNRgpMFOdo78UU
+	 n4UYOHCQfFtBs9Glr8+Avi1tBIrn2kszVYZ167A35xKrcwfLNkZs7DpMC2d48GQpfN
+	 ByDutHlpcGnYg==
+Date: Sat, 17 Jun 2023 09:44:21 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mcgrof@kernel.org" <mcgrof@kernel.org>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"nadav.amit@gmail.com" <nadav.amit@gmail.com>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"hca@linux.ibm.com" <hca@linux.ibm.com>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+	"puranjay12@gmail.com" <puranjay12@gmail.com>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>,
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"will@kernel.org" <will@kernel.org>,
+	"dinguyen@kernel.org" <dinguyen@kernel.org>,
+	"naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"song@kernel.org" <song@kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 06/12] mm/execmem: introduce execmem_data_alloc()
+Message-ID: <20230617064421.GQ52412@kernel.org>
+References: <20230616085038.4121892-1-rppt@kernel.org>
+ <20230616085038.4121892-7-rppt@kernel.org>
+ <90a64b6f040491da16af0694172a6cbdaba33669.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1686882123.git.zhoubinbin@loongson.cn> <c1f86e5d1026937abda331ce564e5ee96b7114c7.1686882123.git.zhoubinbin@loongson.cn>
- <6bfd273e-d7e8-8447-f7e7-ebda33092337@linaro.org>
-In-Reply-To: <6bfd273e-d7e8-8447-f7e7-ebda33092337@linaro.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Sat, 17 Jun 2023 14:31:28 +0800
-Message-ID: <CAMpQs4JiyGk+qTyv6Bbnn-P++5FTxdhBNBOa+FcxNVm0j0-9tg@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: loongarch: Add CPU bindings for LoongArch
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Hongliang Wang <wanghongliang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <90a64b6f040491da16af0694172a6cbdaba33669.camel@intel.com>
 
-On Fri, Jun 16, 2023 at 5:51=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 16/06/2023 08:10, Binbin Zhou wrote:
-> > Add the available CPUs in LoongArch binding with DT schema format using
-> > json-schema.
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  .../devicetree/bindings/loongarch/cpus.yaml   | 65 +++++++++++++++++++
-> >  1 file changed, 65 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/loongarch/cpus.ya=
-ml
-> >
-> > diff --git a/Documentation/devicetree/bindings/loongarch/cpus.yaml b/Do=
-cumentation/devicetree/bindings/loongarch/cpus.yaml
-> > new file mode 100644
-> > index 000000000000..c3e2dba42c81
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/loongarch/cpus.yaml
-> > @@ -0,0 +1,65 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/loongarch/cpus.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: LoongArch CPUs
-> > +
-> > +maintainers:
-> > +  - Binbin Zhou <zhoubinbin@loongson.cn>
-> > +
-> > +description:
-> > +  The device tree allows to describe the layout of CPUs in a system th=
-rough
-> > +  the "cpus" node, which in turn contains a number of subnodes (ie "cp=
-u")
-> > +  defining properties for every CPU.
->
-> I understand you copied it from ARM, but I would prefer to have here
-> something meaningful. Bindings description does not explain what is DTS,
-> but explains what the hardware is.
+On Fri, Jun 16, 2023 at 04:55:53PM +0000, Edgecombe, Rick P wrote:
+> On Fri, 2023-06-16 at 11:50 +0300, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> > 
+> > Data related to code allocations, such as module data section, need
+> > to
+> > comply with architecture constraints for its placement and its
+> > allocation right now was done using execmem_text_alloc().
+> > 
+> > Create a dedicated API for allocating data related to code
+> > allocations
+> > and allow architectures to define address ranges for data
+> > allocations.
+> 
+> Right now the cross-arch way to specify kernel memory permissions is
+> encoded in the function names of all the set_memory_foo()'s. You can't
+> just have unified prot names because some arch's have NX and some have
+> X bits, etc. CPA wouldn't know if it needs to set or unset a bit if you
+> pass in a PROT.
 
-Hi Krzysztof:
+The idea is that allocator never uses CPA. It allocates with the
+permissions defined by architecture at the first place and then the callers
+might use CPA to change them. Ideally, that shouldn't be needed for
+anything but ro_after_init, but we are far from there.
 
-I am very sorry, this is my problem and I will rewrite this part.
+> But then you end up with a new function for *each* combination (i.e.
+> set_memory_rox()). I wish CPA has flags like mmap() does, and I wonder
+> if it makes sense here instead of execmem_data_alloc().
 
->
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - loongson,la264
-> > +      - loongson,la364
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  device_type: true
-> > +
-> > +  clock-frequency:
-> > +    description: The frequency of cpu in Hz.
-> > +
-> > +  model:
-> > +    $ref: /schemas/types.yaml#/definitions/string
-> > +    description: User-visible cpu name in /proc/cpuinfo.
->
-> First, aren't you mixing nodes?
-> Second, it is derived from compatible, so no need for such property.
+I don't think execmem should handle all the combinations. The code is
+always allocated as ROX for architectures that support text poking and as
+RWX for those that don't.
 
-Well, this attribute is an attempt to tweak it.
+Maybe execmem_data_alloc() will need to able to handle RW and RO data
+differently at some point, but that's the only variant I can think of, but
+even then I don't expect CPA will be used by execmem. 
 
-As the description says, this attribute was added to show the model
-name in /proc/cpuinfo. here, we will show the custom name instead of
-using the cpu core name directly.
+We also might move resetting the permissions to default from vmalloc to
+execmem, but again, we are far from there.
+ 
+> Maybe that is an overhaul for another day though...
 
-For example, on a Loongson-3A5000 machine, although its cpu core is
-la464, we can see:
-[root@fedora ~]# cat /proc/cpuinfo
-system type : generic-loongson-machine
-..............
-Model Name : Loongson-3A5000-HV
-............
-CPU MHz : 2500.00
-...........
+CPA surely needs some love :)
 
-Unfortunately, some Loongson-2K chips are not designed with
-corresponding CPUNAME registers, so we expect to add them in the DTS.
-
-At first, we considered writing it directly into cpu compatible, but
-it seems that dts compatible is all lower case, while our desired
-model name contains upper case letters.
-
-What do you think if we repositioned this attribute under cpu?
-
-                cpu0: cpu@0 {
-                        compatible =3D "loongson,la264".
-                        model =3D "Loongson-2K1000".
-                        device_type =3D "cpu".
-                        reg=3D <0x0>.
-                        .....
-                }.
-
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clock-frequency
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    cpus {
-> > +        #size-cells =3D <0>;
-> > +        #address-cells =3D <1>;
-> > +
-> > +        model =3D "Loongson-2K1000";
->
-> Drop, not related.
->
-> Best regards,
-> Krzysztof
->
+-- 
+Sincerely yours,
+Mike.
