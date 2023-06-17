@@ -1,175 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120BB1C36;
-	Sat, 17 Jun 2023 06:15:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87CEDC433C8;
-	Sat, 17 Jun 2023 06:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686982531;
-	bh=FmBCPGQr9kc4FZ3SJahzQDpcowAg0zz2/CXRHAPmuKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dZPxNNOZ7Pj7Xyf/2II866o9WGyGm1IrJ+s0YaBcPXU6Zpw9n8L8eiTjVcgJY+2Vs
-	 kld2AEWURToZP5cMWq1Ovy1Zcdh+nXcQ07YLmVsYdmCnhWaIZH4rzkh5ACAnqBAq9Q
-	 wzQ0gANPefS1BRw6XI2qxQxNWzMTUvfRDmLMmiCAO67igHmVxwDCWFEarRwd0xHul6
-	 0oDC+Um1uswFwi7/PIIIM9hS3jTKdm7q0/KfQYWawgyRH6/0DjKNXWaG0NeXVYm4Y8
-	 x6nV8BirqJ1tjKuPw4r0wnIidEjuy3LK+walcl5GcB9OnmJlHxiCHLuLAiHeiVPkg6
-	 78arIfpTAXAlw==
-Date: Sat, 17 Jun 2023 09:14:44 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 04/12] mm/execmem, arch: convert remaining overrides
- of module_alloc to execmem
-Message-ID: <20230617061444.GP52412@kernel.org>
-References: <20230616085038.4121892-1-rppt@kernel.org>
- <20230616085038.4121892-5-rppt@kernel.org>
- <CAPhsuW7xE8sz8Nh2AdNb62k=8kgEPxaBCw3w50EfXraxmKca-A@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20F31117
+	for <loongarch@lists.linux.dev>; Sat, 17 Jun 2023 06:29:19 +0000 (UTC)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5700401acbeso18675167b3.0
+        for <loongarch@lists.linux.dev>; Fri, 16 Jun 2023 23:29:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686983359; x=1689575359;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nGsJ3GmkLm/SN/kLvTNcYuy0c+xYeJmxn3Y+T48Gt3o=;
+        b=rcXqNIwnXiQ4MbL/Tlyq/wIM/fW5ttpoYim4O0noMUOso517SAJAKbM8p1b3l/qM7S
+         DgZRBJlwJ93X34A6esm/UxEO3gcxECVyrxBEGvk9HwFIdaoqnYNG3wOj7itk4+szKtuL
+         b2NNF1IcyGuThMrdcbD1bttPgGKajvjYz671WWDDci+FR6TCKXkkvFPeJuFOmiN+hNya
+         /NbbZZ2JlpwKPms5fo9q7fy2QUf/nWUaOqIOKVoyKz3QHS+WWB1x80wLFyEykmFb9i71
+         8QikWYYKaeJlXiPFD3vTZ8LBW7JO4NnBOYB+6LxdopXy6lJ/hLgoaE5gY722owFXwZi4
+         xOIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686983359; x=1689575359;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nGsJ3GmkLm/SN/kLvTNcYuy0c+xYeJmxn3Y+T48Gt3o=;
+        b=l+mH7DFKKRmZsXTyHGvDg6n5xxedvGfic9+HP1+c1xgB17PgXInti+7nFVRJ37X4JA
+         59GwbchLA9jDTm/nNpi+h2UuF0FQI+EcaDjhHefVWEbiZUPZOdEsBXFzcbpQLzoP/mKL
+         LNhVcLciK++2f5DZQNa+ZwKuzTQ+1qykjyJml1eFKbtxLrAoTdwGS9T1DYda5UwQR5To
+         f5UMgLf8DAUazoz//dHxtPkVUKngJjFXEnjfrVijLUTfptbV92NAyStdMcA4n6cCYAvK
+         qTyrOoZh7nCloiksLp6kb0jRVPMreCdHsZU4k1i5gHs2O0Rs7T7orP55ezFYe2hbVvu1
+         dp+A==
+X-Gm-Message-State: AC+VfDxz2RpfjHw7UEWptzYCGhhh8VvmtIMl8S0oee01lwA4CAgeTDNl
+	A3IOiO7tq7xlrCaEkCi2oj/hM/i5f97dwcJoPCw=
+X-Google-Smtp-Source: ACHHUZ7QN2ySclaaaIyW0feGuNgYn7FOUItA15CKRwTqaaNdVI/VT2l1kKGrQAOuOAOaGaPgoF2CiTlThU+wG6o4dF8=
+X-Received: by 2002:a81:4788:0:b0:55d:a9d7:521e with SMTP id
+ u130-20020a814788000000b0055da9d7521emr4350517ywa.18.1686983358711; Fri, 16
+ Jun 2023 23:29:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW7xE8sz8Nh2AdNb62k=8kgEPxaBCw3w50EfXraxmKca-A@mail.gmail.com>
+References: <cover.1686882123.git.zhoubinbin@loongson.cn> <c1f86e5d1026937abda331ce564e5ee96b7114c7.1686882123.git.zhoubinbin@loongson.cn>
+ <20230616-gallon-shrank-42613cd73666@wendy>
+In-Reply-To: <20230616-gallon-shrank-42613cd73666@wendy>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Sat, 17 Jun 2023 14:29:06 +0800
+Message-ID: <CAMpQs4J4hOAFaarv9O3u20czpNjeHfBoPHWOzY7Y_Zno0R3vYg@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: loongarch: Add CPU bindings for LoongArch
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Hongliang Wang <wanghongliang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 16, 2023 at 11:53:54AM -0700, Song Liu wrote:
-> On Fri, Jun 16, 2023 at 1:51 AM Mike Rapoport <rppt@kernel.org> wrote:
-> [...]
-> > diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-> > index 5af4975caeb5..c3d999f3a3dd 100644
-> > --- a/arch/arm64/kernel/module.c
-> > +++ b/arch/arm64/kernel/module.c
-> > @@ -17,56 +17,50 @@
-> >  #include <linux/moduleloader.h>
-> >  #include <linux/scs.h>
-> >  #include <linux/vmalloc.h>
-> > +#include <linux/execmem.h>
-> >  #include <asm/alternative.h>
-> >  #include <asm/insn.h>
-> >  #include <asm/scs.h>
-> >  #include <asm/sections.h>
+On Fri, Jun 16, 2023 at 5:34=E2=80=AFPM Conor Dooley <conor.dooley@microchi=
+p.com> wrote:
+>
+> On Fri, Jun 16, 2023 at 02:10:38PM +0800, Binbin Zhou wrote:
+> > Add the available CPUs in LoongArch binding with DT schema format using
+> > json-schema.
 > >
-> > -void *module_alloc(unsigned long size)
-> > +static struct execmem_params execmem_params = {
-> > +       .modules = {
-> > +               .flags = EXECMEM_KASAN_SHADOW,
-> > +               .text = {
-> > +                       .alignment = MODULE_ALIGN,
-> > +               },
-> > +       },
-> > +};
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  .../devicetree/bindings/loongarch/cpus.yaml   | 65 +++++++++++++++++++
+> >  1 file changed, 65 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/loongarch/cpus.ya=
+ml
+> >
+> > diff --git a/Documentation/devicetree/bindings/loongarch/cpus.yaml b/Do=
+cumentation/devicetree/bindings/loongarch/cpus.yaml
+> > new file mode 100644
+> > index 000000000000..c3e2dba42c81
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/loongarch/cpus.yaml
+> > @@ -0,0 +1,65 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/loongarch/cpus.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +struct execmem_params __init *execmem_arch_params(void)
-> >  {
-> >         u64 module_alloc_end = module_alloc_base + MODULES_VSIZE;
-> > -       gfp_t gfp_mask = GFP_KERNEL;
-> > -       void *p;
-> > -
-> > -       /* Silence the initial allocation */
-> > -       if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
-> > -               gfp_mask |= __GFP_NOWARN;
-> >
-> > -       if (IS_ENABLED(CONFIG_KASAN_GENERIC) ||
-> > -           IS_ENABLED(CONFIG_KASAN_SW_TAGS))
-> > -               /* don't exceed the static module region - see below */
-> > -               module_alloc_end = MODULES_END;
-> > +       execmem_params.modules.text.pgprot = PAGE_KERNEL;
-> > +       execmem_params.modules.text.start = module_alloc_base;
-> 
-> I think I mentioned this earlier. For arm64 with CONFIG_RANDOMIZE_BASE,
-> module_alloc_base is not yet set when execmem_arch_params() is
-> called. So we will need some extra logic for this.
-
-Right, this is taken care of in a later patch, but it actually belongs here.
-Good catch!
- 
-> Thanks,
-> Song
-> 
-> 
-> > +       execmem_params.modules.text.end = module_alloc_end;
-> >
-> > -       p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
-> > -                               module_alloc_end, gfp_mask, PAGE_KERNEL, VM_DEFER_KMEMLEAK,
-> > -                               NUMA_NO_NODE, __builtin_return_address(0));
-> > -
-> > -       if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
-> > +       /*
-> > +        * KASAN without KASAN_VMALLOC can only deal with module
-> > +        * allocations being served from the reserved module region,
-> > +        * since the remainder of the vmalloc region is already
-> > +        * backed by zero shadow pages, and punching holes into it
-> > +        * is non-trivial. Since the module region is not randomized
-> > +        * when KASAN is enabled without KASAN_VMALLOC, it is even
-> > +        * less likely that the module region gets exhausted, so we
-> > +        * can simply omit this fallback in that case.
-> > +        */
-> > +       if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
-> >             (IS_ENABLED(CONFIG_KASAN_VMALLOC) ||
-> >              (!IS_ENABLED(CONFIG_KASAN_GENERIC) &&
-> > -             !IS_ENABLED(CONFIG_KASAN_SW_TAGS))))
-> > -               /*
-> > -                * KASAN without KASAN_VMALLOC can only deal with module
-> > -                * allocations being served from the reserved module region,
-> > -                * since the remainder of the vmalloc region is already
-> > -                * backed by zero shadow pages, and punching holes into it
-> > -                * is non-trivial. Since the module region is not randomized
-> > -                * when KASAN is enabled without KASAN_VMALLOC, it is even
-> > -                * less likely that the module region gets exhausted, so we
-> > -                * can simply omit this fallback in that case.
-> > -                */
-> > -               p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
-> > -                               module_alloc_base + SZ_2G, GFP_KERNEL,
-> > -                               PAGE_KERNEL, 0, NUMA_NO_NODE,
-> > -                               __builtin_return_address(0));
-> > -
-> > -       if (p && (kasan_alloc_module_shadow(p, size, gfp_mask) < 0)) {
-> > -               vfree(p);
-> > -               return NULL;
-> > +             !IS_ENABLED(CONFIG_KASAN_SW_TAGS)))) {
-> > +               unsigned long end = module_alloc_base + SZ_2G;
+> > +title: LoongArch CPUs
 > > +
-> > +               execmem_params.modules.text.fallback_start = module_alloc_base;
-> > +               execmem_params.modules.text.fallback_end = end;
-> >         }
-> >
-> > -       /* Memory is intended to be executable, reset the pointer tag. */
-> > -       return kasan_reset_tag(p);
-> > +       return &execmem_params;
-> >  }
-> >
-> >  enum aarch64_reloc_op {
+> > +maintainers:
+> > +  - Binbin Zhou <zhoubinbin@loongson.cn>
+> > +
+> > +description:
+> > +  The device tree allows to describe the layout of CPUs in a system th=
+rough
+> > +  the "cpus" node, which in turn contains a number of subnodes (ie "cp=
+u")
+> > +  defining properties for every CPU.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - loongson,la264
+> > +      - loongson,la364
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  device_type: true
+> > +
+> > +  clock-frequency:
+> > +    description: The frequency of cpu in Hz.
+>
+> Why don't you just add a ref to the common cpu schema and use the
+> standard properties for communicating clock frequencies?
+> You then get the standard properties for l1 caches, power management,
+> frequency scaling etc as a side effect.
 
--- 
-Sincerely yours,
-Mike.
+Hi Conor:
+
+Sorry, not sure if I understand correctly. Do the standard attributes
+refer to the following:
+
+power-domains =3D <>
+clocks =3D <>
+i-cache-size =3D <>
+d-cache-size =3D <>
+next-level-cache =3D <>
+
+Thanks.
+Binbin
+
+>
+> Cheers,
+> Conor.
