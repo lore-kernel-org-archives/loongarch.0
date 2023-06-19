@@ -1,91 +1,159 @@
-Received: from out-23.mta1.migadu.com (out-23.mta1.migadu.com [95.215.58.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F89186F
-	for <loongarch@lists.linux.dev>; Mon, 19 Jun 2023 02:12:16 +0000 (UTC)
-Date: Sun, 18 Jun 2023 22:12:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1687140734;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r76UCXNSYK7hKAPox1fty7/njlbL/lomotiDbXrHJ0c=;
-	b=TBWCnt8zcFJ5nKRG4NITLMc0ih7Ljc1nAilqoS2S6VpJEHCfC/iKrXm4DqvCBteAIE0x7N
-	KKt8TEEvrj/SIu68Wj5oBDWU01USU5SRaXmsywsmSDitWFep2jlqsfvvNpzkBQyjcAlBQy
-	vbP17KRUSXvKHyjAh6Si2ussqbVjvZw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 06/12] mm/execmem: introduce execmem_data_alloc()
-Message-ID: <20230619021205.vfbolcklckdpbm4k@moria.home.lan>
-References: <20230616085038.4121892-1-rppt@kernel.org>
- <20230616085038.4121892-7-rppt@kernel.org>
- <87jzw0qu3s.ffs@tglx>
- <20230618231431.4aj3k5ujye22sqai@moria.home.lan>
- <87h6r4qo1d.ffs@tglx>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34D1C1FA9
+	for <loongarch@lists.linux.dev>; Mon, 19 Jun 2023 03:43:53 +0000 (UTC)
+Received: from loongson.cn (unknown [10.40.46.158])
+	by gateway (Coremail) with SMTP id _____8AxX+v3zo9kCLwGAA--.13905S3;
+	Mon, 19 Jun 2023 11:43:51 +0800 (CST)
+Received: from [192.168.124.126] (unknown [10.40.46.158])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxluT2zo9ka8QfAA--.23712S3;
+	Mon, 19 Jun 2023 11:43:50 +0800 (CST)
+Subject: Re: [PATCH v13 03/30] LoongArch: KVM: Implement kvm hardware enable,
+ disable interface
+To: "bibo, mao" <bibo.mao@gmail.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
+ tangyouling@loongson.cn, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20230609090832.2131037-1-zhaotianrui@loongson.cn>
+ <20230609090832.2131037-4-zhaotianrui@loongson.cn>
+ <cc73aaf7-85bf-2062-6d1b-f1cbb70242f8@loongson.cn>
+From: zhaotianrui <zhaotianrui@loongson.cn>
+Message-ID: <8bc58ebf-080e-fdb9-5b79-0bfe8412bd32@loongson.cn>
+Date: Mon, 19 Jun 2023 11:43:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h6r4qo1d.ffs@tglx>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <cc73aaf7-85bf-2062-6d1b-f1cbb70242f8@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8DxluT2zo9ka8QfAA--.23712S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXw13KF45CFWUZrW7JF1kJFc_yoW5tr1rpr
+	1kAFW5JrWUJrn3GF9xXFn8AFy5Ary8G3ZrJF1Iqa4UJr429r1FgFyjgryqgF15Xw48JF10
+	yr1jgrnxuF1DJrgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUU
+	UU=
 
-On Mon, Jun 19, 2023 at 02:43:58AM +0200, Thomas Gleixner wrote:
-> Kent!
 
-Hi Thomas :)
+在 2023/6/13 下午8:49, bibo, mao 写道:
+>
+>
+> 在 2023/6/9 17:08, Tianrui Zhao 写道:
+>> Implement kvm hardware enable, disable interface, setting
+>> the guest config register to enable virtualization features
+>> when called the interface.
+>>
+>> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+>> ---
+>>   arch/loongarch/kvm/main.c | 64 +++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 64 insertions(+)
+>>
+>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+>> index f98c1619725f..5ebae1ea7565 100644
+>> --- a/arch/loongarch/kvm/main.c
+>> +++ b/arch/loongarch/kvm/main.c
+>> @@ -195,6 +195,70 @@ static void _kvm_init_gcsr_flag(void)
+>>       set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR3);
+>>   }
+>>   +void kvm_init_vmcs(struct kvm *kvm)
+>> +{
+>> +    kvm->arch.vmcs = vmcs;
+>> +}
+>> +
+>> +long kvm_arch_dev_ioctl(struct file *filp,
+>> +            unsigned int ioctl, unsigned long arg)
+>> +{
+>> +    return -ENOIOCTLCMD;
+>> +}
+>> +
+>> +#ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
+> Can we remove macro CONFIG_KVM_GENERIC_HARDWARE_ENABLING here since it 
+> is always enabled? The other looks good to me.
+>
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>
+> Regards
+> Bibo, Mao
+Thanks, this CONFIG_KVM_GENERIC_HARDWARE_ENABLING is meaningless, and I 
+will remove it.
 
-> No. I am not.
+Tianrui Zhao
+>> +int kvm_arch_hardware_enable(void)
+>> +{
+>> +    unsigned long env, gcfg = 0;
+>> +
+>> +    env = read_csr_gcfg();
+>> +    /* First init gtlbc, gcfg, gstat, gintc. All guest use the same 
+>> config */
+>> +    clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
+>> +    write_csr_gcfg(0);
+>> +    write_csr_gstat(0);
+>> +    write_csr_gintc(0);
+>> +
+>> +    /*
+>> +     * Enable virtualization features granting guest direct control of
+>> +     * certain features:
+>> +     * GCI=2:       Trap on init or unimplement cache instruction.
+>> +     * TORU=0:      Trap on Root Unimplement.
+>> +     * CACTRL=1:    Root control cache.
+>> +     * TOP=0:       Trap on Previlege.
+>> +     * TOE=0:       Trap on Exception.
+>> +     * TIT=0:       Trap on Timer.
+>> +     */
+>> +    if (env & CSR_GCFG_GCIP_ALL)
+>> +        gcfg |= CSR_GCFG_GCI_SECURE;
+>> +    if (env & CSR_GCFG_MATC_ROOT)
+>> +        gcfg |= CSR_GCFG_MATC_ROOT;
+>> +
+>> +    gcfg |= CSR_GCFG_TIT;
+>> +    write_csr_gcfg(gcfg);
+>> +
+>> +    kvm_flush_tlb_all();
+>> +
+>> +    /* Enable using TGID  */
+>> +    set_csr_gtlbc(CSR_GTLBC_USETGID);
+>> +    kvm_debug("gtlbc:%llx gintc:%llx gstat:%llx gcfg:%llx",
+>> +            read_csr_gtlbc(), read_csr_gintc(),
+>> +            read_csr_gstat(), read_csr_gcfg());
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +void kvm_arch_hardware_disable(void)
+>> +{
+>> +    clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
+>> +    write_csr_gcfg(0);
+>> +    write_csr_gstat(0);
+>> +    write_csr_gintc(0);
+>> +
+>> +    /* Flush any remaining guest TLB entries */
+>> +    kvm_flush_tlb_all();
+>> +}
+>> +#endif
+>> +
+>>   static int kvm_loongarch_env_init(void)
+>>   {
+>>       struct kvm_context *context;
 
-Ok.
-
-> Whether that's an internal function or not does not make any difference
-> at all.
-
-Well, at the risk of this discussion going completely off the rails, I
-have to disagree with you there. External interfaces and high level
-semantics are more important to get right from the outset, internal
-implementation details can be cleaned up later, within reason.
-
-And the discussion on this patchset has been more focused on those
-external interfaces, which seems like the right approach to me.
-
-> > ... I made the same mistake reviewing Song's patchset...
-> 
-> Songs series had rough edges, but was way more data structure driven
-> and palatable than this hackery.
-
-I liked that aspect of Song's patchset too, and I'm actually inclined to
-agree with you that this patchset might get a bit cleaner with more of
-that, but really, this semes like just quibbling over calling convention
-for an internal helper function.
