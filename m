@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B590E6FBD
-	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 07:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48DD253BD
+	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 07:50:29 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxGupBWpFkmBsHAA--.14681S3;
-	Tue, 20 Jun 2023 15:50:25 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx8OhEWpFkrBsHAA--.12664S3;
+	Tue, 20 Jun 2023 15:50:28 +0800 (CST)
 Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPMo+WpFkp2chAA--.19067S3;
-	Tue, 20 Jun 2023 15:50:24 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPMo+WpFkp2chAA--.19067S5;
+	Tue, 20 Jun 2023 15:50:27 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
 To: Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -19,77 +19,107 @@ Cc: chenzhongjin@huawei.com,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	tangyouling00@gmail.com,
-	youling.tang@outlook.com
-Subject: [RFC PATCH v1 11/23] objtool: Add annotate_reachable() for objtools
-Date: Tue, 20 Jun 2023 15:50:07 +0800
-Message-Id: <1687247415-32057-2-git-send-email-tangyouling@loongson.cn>
+	youling.tang@outlook.com,
+	Jinyang He <hejinyang@loongson.cn>
+Subject: [RFC PATCH v1 13/23] objtool: Add next member in struct reloc
+Date: Tue, 20 Jun 2023 15:50:09 +0800
+Message-Id: <1687247415-32057-4-git-send-email-tangyouling@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1687247415-32057-1-git-send-email-tangyouling@loongson.cn>
 References: <1687247415-32057-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8AxPMo+WpFkp2chAA--.19067S3
+X-CM-TRANSID:AQAAf8AxPMo+WpFkp2chAA--.19067S5
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zw13Cr45Gw48GFW7KrWrCrX_yoW8Xr15pF
-	97CrykKF4YvrsFkr1a9w4rKr13K3y8CF1UGrZFq3s8Aa47t3Z3WwnFvanxAay8Cr95t3y3
-	WFnIq3WDWFyxCFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr4kGw1DZry8uFy5CF4rWFX_yoW8tw48pF
+	srC39rKFW8XryxJ3WavF48G3yYkwnruFyIyr47G340vrsrXrn0qF4ayF1jyFyjqrWYgFWa
+	qry5Kr40yr4UZagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUmIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
 	14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
 	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
-	6Fy26r45twAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2
+	6r45tVCq3wAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2
 	IYc2Ij64vIr41lF7xvrVCFI7AF6II2Y40_Zr0_Gr1UMxkF7I0En4kS14v26r126r1DMxAI
 	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI
 	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
 	xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI
 	8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
 	87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa
-	73UjIFyTuYvjxUgPfHUUUUU
+	73UjIFyTuYvjxU99YwUUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-x86 removed annotate_reachable and replaced it with ASM_REACHABLE
-which is not suitable for LoongArch micro.
+In LoongArch, there may be multiple relocation information in one location,
+so the next member is added to handle this situation.
 
-Re-add annotation_reachable() for LoongArch.
+The following warning appears when the next member is not added,
+warning: objtool: unexpected relocation symbol type in .rela.discard.unreachable
 
-Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+Relocation section '.rela.discard.unreachable' at offset 0x1a58 contains 4 entries:
+    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+0000000000000000  0000000200000032 R_LARCH_ADD32          0000000000000000 .text + 354
+0000000000000000  0000000900000037 R_LARCH_SUB32          0000000000000000 L0^A + 0
+
+Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
 Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 ---
- include/linux/compiler.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/objtool/elf.c                 | 11 ++++++++++-
+ tools/objtool/include/objtool/elf.h |  1 +
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 947a60b801db..6b33de8bf7c3 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -117,6 +117,14 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-  */
- #define __stringify_label(n) #n
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 6806ce01d933..d345300d269b 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -895,7 +895,7 @@ static int read_relocs(struct elf *elf)
+ {
+ 	unsigned long nr_reloc, max_reloc = 0, tot_reloc = 0;
+ 	struct section *sec;
+-	struct reloc *reloc;
++	struct reloc *reloc, *next_reloc;
+ 	unsigned int symndx;
+ 	struct symbol *sym;
+ 	int i;
+@@ -915,6 +915,7 @@ static int read_relocs(struct elf *elf)
+ 			return -1;
+ 		}
  
-+#define __annotate_reachable(c) ({					\
-+	asm volatile(__stringify_label(c) ":\n\t"			\
-+			".pushsection .discard.reachable\n\t"		\
-+			".long " __stringify_label(c) "b - .\n\t"	\
-+			".popsection\n\t");				\
-+})
-+#define annotate_reachable() __annotate_reachable(__COUNTER__)
++		next_reloc = NULL;
+ 		sec->base->reloc = sec;
+ 
+ 		nr_reloc = 0;
+@@ -946,6 +947,14 @@ static int read_relocs(struct elf *elf)
+ 				return -1;
+ 			}
+ 
++			if (next_reloc && reloc->offset == next_reloc->offset) {
++				next_reloc->next = reloc;
++				next_reloc = reloc;
++				continue;
++			}
 +
- #define __annotate_unreachable(c) ({					\
- 	asm volatile(__stringify_label(c) ":\n\t"			\
- 		     ".pushsection .discard.unreachable\n\t"		\
-@@ -129,6 +137,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- #define __annotate_jump_table __section(".rodata..c_jump_table")
- 
- #else /* !CONFIG_OBJTOOL */
-+#define annotate_reachable()
- #define annotate_unreachable()
- #define __annotate_jump_table
- #endif /* CONFIG_OBJTOOL */
++			next_reloc = reloc;
++
+ 			list_add_tail(&reloc->sym_reloc_entry, &sym->reloc_list);
+ 			list_add_tail(&reloc->list, &sec->reloc_list);
+ 			elf_hash_add(reloc, &reloc->hash, reloc_hash(reloc));
+diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
+index ad0024da262b..7877298fe401 100644
+--- a/tools/objtool/include/objtool/elf.h
++++ b/tools/objtool/include/objtool/elf.h
+@@ -68,6 +68,7 @@ struct symbol {
+ struct reloc {
+ 	struct list_head list;
+ 	struct hlist_node hash;
++	struct reloc *next;
+ 	union {
+ 		GElf_Rela rela;
+ 		GElf_Rel  rel;
 -- 
 2.39.2
 
