@@ -1,104 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFAE0848D
-	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 08:18:45 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dx_+vkYJFk5h4HAA--.14571S3;
-	Tue, 20 Jun 2023 16:18:44 +0800 (CST)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxReThYJFkJ3AhAA--.28832S5;
-	Tue, 20 Jun 2023 16:18:43 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	madvenka@linux.microsoft.com
-Cc: chenzhongjin@huawei.com,
-	WANG Xuerui <kernel@xen0n.name>,
-	Xi Ruoyao <xry111@xry111.site>,
-	live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	tangyouling00@gmail.com,
-	youling.tang@outlook.com
-Subject: [RFC PATCH v1 23/23] LoongArch: objtool: Mark non-standard object files and directories
-Date: Tue, 20 Jun 2023 16:18:32 +0800
-Message-Id: <1687249112-2790-4-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1687249112-2790-1-git-send-email-tangyouling@loongson.cn>
-References: <1687249112-2790-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8CxReThYJFkJ3AhAA--.28832S5
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CrWfZr1xJFWrZr17AFWxKrX_yoW8ArWkpr
-	nI9a1kJr4kur1kKrykt3y5Zr1Uta4DKr12ga1YvFy8CrnrXr1DZr4xJrWDXF1jgw4rAayF
-	gwn3G34aqFWUJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUmjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Cr1j6rxdM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWr
-	XVW3AwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41lF7xvrVCFI7AF6II2Y40_Zr0_Gr1UMxkF7I0En4kS14v26r126r1DMxAIw28I
-	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I
-	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-	tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcV
-	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
-	wI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43
-	ZEXa7IU5pSoJUUUUU==
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8728473
+	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 08:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1687249314;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5XHdbMNys0EMjfbiSdwj8lWyGP51R68NotGh4ls9XCg=;
+	b=S2rAmRn0HDU0TU/bnKgA5gi3i5e7GUNc0dWT/4Ap/wl2fNg/qjXCB7FCJHNaPupo2kTJGd
+	F1dzTHkSBxn07Aeq7pBZPiPNlXepLBXAZGQ6lsB+8o0G45lWJM32UtL598A+11wPvw2l7b
+	RH17LTawXmbistUgq2/c8ANWPNijqcM=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-653-DHNnL6O0PoOX-_3jeDwo5g-1; Tue, 20 Jun 2023 04:21:49 -0400
+X-MC-Unique: DHNnL6O0PoOX-_3jeDwo5g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 918E73806739;
+	Tue, 20 Jun 2023 08:21:48 +0000 (UTC)
+Received: from localhost (ovpn-12-166.pek2.redhat.com [10.72.12.166])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2B95A2166B26;
+	Tue, 20 Jun 2023 08:21:46 +0000 (UTC)
+Date: Tue, 20 Jun 2023 16:21:42 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	chenhuacai@kernel.org, geert@linux-m68k.org,
+	tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
+	deller@gmx.de, ysato@users.sourceforge.jp, dalias@libc.org,
+	glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, kernel@xen0n.name, mpe@ellerman.id.au,
+	npiggin@gmail.com, christophe.leroy@csgroup.eu,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
+	keescook@chromium.org, paulmck@kernel.org, peterz@infradead.org,
+	frederic@kernel.org, akpm@linux-foundation.org, ardb@kernel.org,
+	samitolvanen@google.com, juerg.haefliger@canonical.com,
+	arnd@arndb.de, rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
+	sebastian.reichel@collabora.com, rppt@kernel.org,
+	kirill.shutemov@linux.intel.com, anshuman.khandual@arm.com,
+	ziy@nvidia.com, masahiroy@kernel.org, ndesaulniers@google.com,
+	mhiramat@kernel.org, ojeda@kernel.org, thunder.leizhen@huawei.com,
+	xin3.li@intel.com, tj@kernel.org, gregkh@linuxfoundation.org,
+	tsi@tuyoix.net, hbathini@linux.ibm.com, sourabhjain@linux.ibm.com,
+	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+Subject: Re: [PATCH v2 02/13] x86/kexec: refactor for kernel/Kconfig.kexec
+Message-ID: <ZJFhlsFN6DxnWsQE@MiWiFi-R3L-srv>
+References: <20230619145801.1064716-1-eric.devolder@oracle.com>
+ <20230619145801.1064716-3-eric.devolder@oracle.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230619145801.1064716-3-eric.devolder@oracle.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-Set OBJECT_FILES_NON_STANDARD for their related files and directories,
-which will tell objtool to skip checking them.  It's ok to skip them
-because they don't affect runtime stack traces.
+Hi Eric,
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- arch/loongarch/kernel/Makefile | 2 ++
- arch/loongarch/power/Makefile  | 2 ++
- arch/loongarch/vdso/Makefile   | 2 ++
- 3 files changed, 6 insertions(+)
+On 06/19/23 at 10:57am, Eric DeVolder wrote:
+......
+> +config ARCH_SUPPORTS_KEXEC
+> +	def_bool y
+>  
+> -config ARCH_HAS_KEXEC_PURGATORY
+> -	def_bool KEXEC_FILE
+> +config ARCH_SUPPORTS_KEXEC_FILE
+> +	def_bool X86_64 && CRYPTO && CRYPTO_SHA256
+......  
+> +config ARCH_SELECTS_KEXEC_FILE
+> +	def_bool y
+>  	depends on KEXEC_FILE
+> -	help
 
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index fcbfa0f38b53..9ea4d6b93f4d 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -3,6 +3,8 @@
- # Makefile for the Linux/LoongArch kernel.
- #
- 
-+OBJECT_FILES_NON_STANDARD_head.o := y
-+
- extra-y		:= vmlinux.lds
- 
- obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
-diff --git a/arch/loongarch/power/Makefile b/arch/loongarch/power/Makefile
-index 58151d003e40..bbd1d4793e8b 100644
---- a/arch/loongarch/power/Makefile
-+++ b/arch/loongarch/power/Makefile
-@@ -1,3 +1,5 @@
-+OBJECT_FILES_NON_STANDARD_suspend_asm.o := y
-+
- obj-y	+= platform.o
- 
- obj-$(CONFIG_SUSPEND)		+= suspend.o suspend_asm.o
-diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index d89e2ac75f7b..37c7795990b8 100644
---- a/arch/loongarch/vdso/Makefile
-+++ b/arch/loongarch/vdso/Makefile
-@@ -1,6 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- # Objects to go into the VDSO.
- 
-+OBJECT_FILES_NON_STANDARD := y
-+
- # Absolute relocation type $(ARCH_REL_TYPE_ABS) needs to be defined before
- # the inclusion of generic Makefile.
- ARCH_REL_TYPE_ABS := R_LARCH_32|R_LARCH_64|R_LARCH_MARK_LA|R_LARCH_JUMP_SLOT
--- 
-2.39.2
+I am a little confused about this ARCH_SELECTS_XX adding. Wondering what
+limits us defining the ARCH_SUPPORTS_KEXEC_FILE like below? I have limited
+knowledge about Kconfig, please correct me if I am wrong. Thanks in
+advance.
+
+ +config ARCH_SUPPORTS_KEXEC_FILE
+ +	def_bool y
+  	depends on KEXEC_FILE
+  	depends on X86_64 && CRYPTO && CRYPTO_SHA256
+
+> -
+> -	  This option makes the kexec_file_load() syscall check for a valid
+> -	  signature of the kernel image.  The image can still be loaded without
+> -	  a valid signature unless you also enable KEXEC_SIG_FORCE, though if
+> -	  there's a signature that we can check, then it must be valid.
+> -
+> -	  In addition to this option, you need to enable signature
+> -	  verification for the corresponding kernel image type being
+> -	  loaded in order for this to work.
+> -
 
