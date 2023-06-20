@@ -1,165 +1,93 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34ACF79DF
-	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 07:52:15 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxMuitWpFkShwHAA--.567S3;
-	Tue, 20 Jun 2023 15:52:13 +0800 (CST)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxauWoWpFkdmghAA--.28374S6;
-	Tue, 20 Jun 2023 15:52:12 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	madvenka@linux.microsoft.com
-Cc: chenzhongjin@huawei.com,
-	WANG Xuerui <kernel@xen0n.name>,
-	Xi Ruoyao <xry111@xry111.site>,
-	live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	tangyouling00@gmail.com,
-	youling.tang@outlook.com,
-	Jinyang He <hejinyang@loongson.cn>
-Subject: [RFC PATCH v1 19/23] LoongArch: Annotate unwind_hint
-Date: Tue, 20 Jun 2023 15:52:06 +0800
-Message-Id: <1687247526-32258-5-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1687247526-32258-1-git-send-email-tangyouling@loongson.cn>
-References: <1687247526-32258-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8AxauWoWpFkdmghAA--.28374S6
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCw47Wry3uF4DXFW3tF45XFc_yoW5KFWrpF
-	nrZrn7JrZYgrn7Aw1DJa4Y9rWUJw1DWw1agF1qka4rC3ZFqr15Xr1kZr1qgF1qqa1rKw40
-	gFyFgwsFqa1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUm2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Gryq6s0DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0x
-	vY0x0EwIxGrwACjcxG6xCI17CEII8vrVW3JVW8Jr1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK
-	82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2
-	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-	6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2
-	IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x07b-1v3UUUUU=
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C46E23C4
+	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 08:06:42 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-3f9189228bcso19693025e9.3
+        for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 01:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1687248400; x=1689840400;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dpAf75Epa+861D9oY47tt3qyQ5zTBW5nFqUpj0OqmkY=;
+        b=NoKTco0j3qXXxRS4tA6dTQdBwGyaAIqG8priYh8yO7q/N5QHL7J4gihRXmYSgneAv9
+         OB8Rzi9P2DzQDHw4wmh3vIqHiteD8ebBbrIb99MAYl0uEKDG4PyYYjm4tMJgPAjEJdX1
+         HJgG4gqMXxUFkE1caDD3JpznsxPWCBvPYXXH0LzbM4IdvCmIBNi+2rH7cEKCz1Go8b1I
+         V5nt2C0tOeCRH1TknlOGg8pu4SDFB34+d4Shnce48xVYdZsp4OgUBj2rwno43qSZ+h8P
+         9K3KkOyQWFXYd1StonSOUuhZZhTE1ofk/TajhZIKP4peVK5H1d7NW5Ah+/sbBNda4a7k
+         s1cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687248400; x=1689840400;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dpAf75Epa+861D9oY47tt3qyQ5zTBW5nFqUpj0OqmkY=;
+        b=SngJvnsRWhDE3KD3J6nn/1mSKSVT/NwBKFo1wj76DGulYGfg1bXwhRDKd2Okhlxci9
+         xjWtTTDDvkHAcHM/QylH9I7bBjiAPfaMAmzQdXU2JvHKyaUVYXXwFtI6j9j36QEHYCEc
+         GwfVcsXkSewKqqTOfFg4oGBGPpK1hgLTyWd7rFc0+HCUb3kuCk6AqvbqmCjLszO9732x
+         eF8vuy8KX7H8ildCbLhEL3D+ONAgG13ZFgdU3kiNz1v9Iq/Ni+DVoMIGQoCGHGk0OApU
+         K4JZihMsTgnjkwj3XEKUs1J7/vPTt8da/GZyGhLBp380vLw/hSgjBFH00mrfbCK0E1BV
+         pElg==
+X-Gm-Message-State: AC+VfDzO3Hx8TW1U/zdnFJ1BW9HA8FJpmPsT9OWPcrKuFZ3ZwK4Zz5om
+	+DrGaRieHc4q6WYw8QcG9S66IA==
+X-Google-Smtp-Source: ACHHUZ7Iq5zLnkiPfQeKWzTl+u5DgpbsE0Nx3NaaeVH1Se7g4hl0Y4B42OMwGaUHOncBRff/bAZe9w==
+X-Received: by 2002:a1c:4c14:0:b0:3f9:b0c2:9ff7 with SMTP id z20-20020a1c4c14000000b003f9b0c29ff7mr3182486wmf.30.1687248400328;
+        Tue, 20 Jun 2023 01:06:40 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id k9-20020a7bc409000000b003f9b24cf881sm4093945wmi.16.2023.06.20.01.06.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jun 2023 01:06:38 -0700 (PDT)
+Date: Tue, 20 Jun 2023 11:06:34 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ivan Orlov <ivan.orlov0322@gmail.com>, Immad Mir <mirimmad17@gmail.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] LoongArch: Delete debugfs checking
+Message-ID: <7627f2b9-2287-46d2-b461-d33aa69931a8@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-Some assembly symbols contain code that might be executed with an
-unspecified stack state (e.g. invalid stack pointer,no stackframe, ...).
+Debugfs functions are not supposed to be checked for errors.  This
+is sort of unusual but it is described in the comments for the
+debugfs_create_dir() function.  Also debugfs_create_dir() can never
+return NULL.
 
-Annotate those symbol with UNWIND_HINT_EMPTY to let objtool be aware of
-them.
-
-When taking an exception/interrupt, add UNWIND_HINT_REGS to indicate
-from which point the pt_regs is on stack.
-
-Whether returning to userland or creating a new task, sp is
-pointing to a pt_regs frame, add UNWIND_HINT_REGS after that.
-
-Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- arch/loongarch/include/asm/stackframe.h | 3 +++
- arch/loongarch/kernel/entry.S           | 2 ++
- arch/loongarch/kernel/head.S            | 1 +
- arch/loongarch/kernel/relocate_kernel.S | 5 +++++
- 4 files changed, 11 insertions(+)
+I spotted this code because I was looking at patches which were sent
+to stable but without a Fixes tag.  The correct way of checking for
+error pointers is not IS_ERR_OR_NULL(), it's IS_ERR().  When a function
+returns both error pointers and NULL, the NULL should be treated as a
+special kind of success.  Please see my blog for more details.
 
-diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-index 7df80e6ae9d2..ab16f2d10257 100644
---- a/arch/loongarch/include/asm/stackframe.h
-+++ b/arch/loongarch/include/asm/stackframe.h
-@@ -13,6 +13,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/loongarch.h>
- #include <asm/thread_info.h>
-+#include <asm/unwind_hints.h>
+https://staticthinking.wordpress.com/2022/08/01/mixing-error-pointers-and-null/
+
+I have not included a Fixes tag here, because it's not really a bug fix,
+it's just a clean up.
+
+ arch/loongarch/kernel/unaligned.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/loongarch/kernel/unaligned.c b/arch/loongarch/kernel/unaligned.c
+index 85fae3d2d71a..3abf163dda05 100644
+--- a/arch/loongarch/kernel/unaligned.c
++++ b/arch/loongarch/kernel/unaligned.c
+@@ -485,8 +485,6 @@ static int __init debugfs_unaligned(void)
+ 	struct dentry *d;
  
- /* Make the addition of cfi info a little easier. */
- 	.macro cfi_rel_offset reg offset=0 docfi=0
-@@ -158,6 +159,7 @@
- 	cfi_st  u0, PT_R21, \docfi
- 	csrrd	u0, PERCPU_BASE_KS
- 9:
-+	UNWIND_HINT_REGS
- 	.endm
+ 	d = debugfs_create_dir("loongarch", NULL);
+-	if (IS_ERR_OR_NULL(d))
+-		return -ENOMEM;
  
- 	.macro	SAVE_ALL docfi=0
-@@ -215,6 +217,7 @@
- 
- 	.macro	RESTORE_SP_AND_RET docfi=0
- 	cfi_ld	sp, PT_R3, \docfi
-+	UNWIND_HINT_FUNC
- 	ertn
- 	.endm
- 
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index d737e3cf42d3..458d4e8e126f 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -70,6 +70,7 @@ SYM_FUNC_END(handle_syscall)
- _ASM_NOKPROBE(handle_syscall)
- 
- SYM_CODE_START(ret_from_fork)
-+	UNWIND_HINT_REGS
- 	bl		schedule_tail		# a0 = struct task_struct *prev
- 	move		a0, sp
- 	bl 		syscall_exit_to_user_mode
-@@ -79,6 +80,7 @@ SYM_CODE_START(ret_from_fork)
- SYM_CODE_END(ret_from_fork)
- 
- SYM_CODE_START(ret_from_kernel_thread)
-+	UNWIND_HINT_REGS
- 	bl		schedule_tail		# a0 = struct task_struct *prev
- 	move		a0, s1
- 	jirl		ra, s0, 0
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index aa64b179744f..73e5ec0006bb 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -43,6 +43,7 @@ SYM_DATA(kernel_offset, .long kernel_offset - _text);
- 	.align 12
- 
- SYM_CODE_START(kernel_entry)			# kernel entry point
-+	UNWIND_HINT_EMPTY
- 
- 	/* Config direct window and set PG */
- 	li.d		t0, CSR_DMW0_INIT	# UC, PLV0, 0x8000 xxxx xxxx xxxx
-diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
-index d13252553a7c..d0123fa2b511 100644
---- a/arch/loongarch/kernel/relocate_kernel.S
-+++ b/arch/loongarch/kernel/relocate_kernel.S
-@@ -13,8 +13,11 @@
- #include <asm/loongarch.h>
- #include <asm/stackframe.h>
- #include <asm/addrspace.h>
-+#include <asm/unwind_hints.h>
- 
- SYM_CODE_START(relocate_new_kernel)
-+	UNWIND_HINT_EMPTY
-+
- 	/*
- 	 * a0: EFI boot flag for the new kernel
- 	 * a1: Command line pointer for the new kernel
-@@ -91,6 +94,8 @@ SYM_CODE_END(relocate_new_kernel)
-  * then start at the entry point from LOONGARCH_IOCSR_MBUF0.
-  */
- SYM_CODE_START(kexec_smp_wait)
-+	UNWIND_HINT_EMPTY
-+
- 1:	li.w		t0, 0x100			/* wait for init loop */
- 2:	addi.w		t0, t0, -1			/* limit mailbox access */
- 	bnez		t0, 2b
+ 	debugfs_create_u32("unaligned_instructions_user",
+ 				S_IRUGO, d, &unaligned_instructions_user);
 -- 
 2.39.2
 
