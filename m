@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 194F079F6
-	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 07:52:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34ACF79DF
+	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 07:52:15 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Ax0OisWpFkQBwHAA--.12660S3;
-	Tue, 20 Jun 2023 15:52:12 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxMuitWpFkShwHAA--.567S3;
+	Tue, 20 Jun 2023 15:52:13 +0800 (CST)
 Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxauWoWpFkdmghAA--.28374S5;
-	Tue, 20 Jun 2023 15:52:11 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxauWoWpFkdmghAA--.28374S6;
+	Tue, 20 Jun 2023 15:52:12 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
 To: Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -19,80 +19,147 @@ Cc: chenzhongjin@huawei.com,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	tangyouling00@gmail.com,
-	youling.tang@outlook.com
-Subject: [RFC PATCH v1 18/23] LoongArch: Fix fpu.S objtool warning
-Date: Tue, 20 Jun 2023 15:52:05 +0800
-Message-Id: <1687247526-32258-4-git-send-email-tangyouling@loongson.cn>
+	youling.tang@outlook.com,
+	Jinyang He <hejinyang@loongson.cn>
+Subject: [RFC PATCH v1 19/23] LoongArch: Annotate unwind_hint
+Date: Tue, 20 Jun 2023 15:52:06 +0800
+Message-Id: <1687247526-32258-5-git-send-email-tangyouling@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1687247526-32258-1-git-send-email-tangyouling@loongson.cn>
 References: <1687247526-32258-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8AxauWoWpFkdmghAA--.28374S5
+X-CM-TRANSID:AQAAf8AxauWoWpFkdmghAA--.28374S6
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7JF4xCFy7GF1ruFy3AFyfZrc_yoW8JF1rpr
-	9xArZ5Kr45Wa4fAa4jyw18WrZ8Ga97Ga1293WvyrWxAFWjgF1jqw40yrZ7XFyaq3yfJr4F
-	qws5Wr4Sva1DCwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw47Wry3uF4DXFW3tF45XFc_yoW5KFWrpF
+	nrZrn7JrZYgrn7Aw1DJa4Y9rWUJw1DWw1agF1qka4rC3ZFqr15Xr1kZr1qgF1qqa1rKw40
+	gFyFgwsFqa1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUmIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUm2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
-	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
-	6r45tVCq3wAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2
-	IYc2Ij64vIr41lF7xvrVCFI7AF6II2Y40_Zr0_Gr1UMxkF7I0En4kS14v26r126r1DMxAI
-	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI
-	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
-	xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI
-	8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa
-	73UjIFyTuYvjxU99YwUUUUU
+	14v26F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Gryq6s0DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0x
+	vY0x0EwIxGrwACjcxG6xCI17CEII8vrVW3JVW8Jr1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK
+	82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2
+	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
+	6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2
+	IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvj
+	DU0xZFpf9x07b-1v3UUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-When objtool checked the fpu.o file, the following warnings appeared,
-$ ./tools/objtool/objtool --orc arch/loongarch/kernel/fpu.o
-arch/loongarch/kernel/fpu.o: warning: objtool: _save_fp_context() falls through
-to next function fault()
+Some assembly symbols contain code that might be executed with an
+unspecified stack state (e.g. invalid stack pointer,no stackframe, ...).
 
-This `fault` is only used in extable, it is not a function itself, and change
-SYM_FUNC_START(fault) to the label method(.L_fault).
+Annotate those symbol with UNWIND_HINT_EMPTY to let objtool be aware of
+them.
 
+When taking an exception/interrupt, add UNWIND_HINT_REGS to indicate
+from which point the pt_regs is on stack.
+
+Whether returning to userland or creating a new task, sp is
+pointing to a pt_regs frame, add UNWIND_HINT_REGS after that.
+
+Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
 Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 ---
- arch/loongarch/kernel/fpu.S | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ arch/loongarch/include/asm/stackframe.h | 3 +++
+ arch/loongarch/kernel/entry.S           | 2 ++
+ arch/loongarch/kernel/head.S            | 1 +
+ arch/loongarch/kernel/relocate_kernel.S | 5 +++++
+ 4 files changed, 11 insertions(+)
 
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index ccde94140c89..8331835c0591 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -20,9 +20,13 @@
- #define LSX_REG_WIDTH		16
- #define LASX_REG_WIDTH		32
+diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
+index 7df80e6ae9d2..ab16f2d10257 100644
+--- a/arch/loongarch/include/asm/stackframe.h
++++ b/arch/loongarch/include/asm/stackframe.h
+@@ -13,6 +13,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/loongarch.h>
+ #include <asm/thread_info.h>
++#include <asm/unwind_hints.h>
  
-+.L_fault:
-+	li.w	a0, -EFAULT				# failure
-+	jr	ra
-+
- 	.macro	EX insn, reg, src, offs
- .ex\@:	\insn	\reg, \src, \offs
--	_asm_extable .ex\@, fault
-+	_asm_extable .ex\@, .L_fault
+ /* Make the addition of cfi info a little easier. */
+ 	.macro cfi_rel_offset reg offset=0 docfi=0
+@@ -158,6 +159,7 @@
+ 	cfi_st  u0, PT_R21, \docfi
+ 	csrrd	u0, PERCPU_BASE_KS
+ 9:
++	UNWIND_HINT_REGS
  	.endm
  
- 	.macro sc_save_fp base
-@@ -243,8 +247,3 @@ SYM_FUNC_START(_restore_fp_context)
- 	li.w		a0, 0				# success
- 	jr		ra
- SYM_FUNC_END(_restore_fp_context)
--
--SYM_FUNC_START(fault)
--	li.w	a0, -EFAULT				# failure
--	jr	ra
--SYM_FUNC_END(fault)
+ 	.macro	SAVE_ALL docfi=0
+@@ -215,6 +217,7 @@
+ 
+ 	.macro	RESTORE_SP_AND_RET docfi=0
+ 	cfi_ld	sp, PT_R3, \docfi
++	UNWIND_HINT_FUNC
+ 	ertn
+ 	.endm
+ 
+diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
+index d737e3cf42d3..458d4e8e126f 100644
+--- a/arch/loongarch/kernel/entry.S
++++ b/arch/loongarch/kernel/entry.S
+@@ -70,6 +70,7 @@ SYM_FUNC_END(handle_syscall)
+ _ASM_NOKPROBE(handle_syscall)
+ 
+ SYM_CODE_START(ret_from_fork)
++	UNWIND_HINT_REGS
+ 	bl		schedule_tail		# a0 = struct task_struct *prev
+ 	move		a0, sp
+ 	bl 		syscall_exit_to_user_mode
+@@ -79,6 +80,7 @@ SYM_CODE_START(ret_from_fork)
+ SYM_CODE_END(ret_from_fork)
+ 
+ SYM_CODE_START(ret_from_kernel_thread)
++	UNWIND_HINT_REGS
+ 	bl		schedule_tail		# a0 = struct task_struct *prev
+ 	move		a0, s1
+ 	jirl		ra, s0, 0
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index aa64b179744f..73e5ec0006bb 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -43,6 +43,7 @@ SYM_DATA(kernel_offset, .long kernel_offset - _text);
+ 	.align 12
+ 
+ SYM_CODE_START(kernel_entry)			# kernel entry point
++	UNWIND_HINT_EMPTY
+ 
+ 	/* Config direct window and set PG */
+ 	li.d		t0, CSR_DMW0_INIT	# UC, PLV0, 0x8000 xxxx xxxx xxxx
+diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
+index d13252553a7c..d0123fa2b511 100644
+--- a/arch/loongarch/kernel/relocate_kernel.S
++++ b/arch/loongarch/kernel/relocate_kernel.S
+@@ -13,8 +13,11 @@
+ #include <asm/loongarch.h>
+ #include <asm/stackframe.h>
+ #include <asm/addrspace.h>
++#include <asm/unwind_hints.h>
+ 
+ SYM_CODE_START(relocate_new_kernel)
++	UNWIND_HINT_EMPTY
++
+ 	/*
+ 	 * a0: EFI boot flag for the new kernel
+ 	 * a1: Command line pointer for the new kernel
+@@ -91,6 +94,8 @@ SYM_CODE_END(relocate_new_kernel)
+  * then start at the entry point from LOONGARCH_IOCSR_MBUF0.
+  */
+ SYM_CODE_START(kexec_smp_wait)
++	UNWIND_HINT_EMPTY
++
+ 1:	li.w		t0, 0x100			/* wait for init loop */
+ 2:	addi.w		t0, t0, -1			/* limit mailbox access */
+ 	bnez		t0, 2b
 -- 
 2.39.2
 
