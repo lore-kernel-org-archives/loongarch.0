@@ -1,44 +1,45 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93820C2DF
-	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 08:58:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dNcfVblJVY+zLncrG+sL2zTOo9XdHdTH5fIK479aTXQ=; b=jZafrTEi6+i9joWWuwVLuOUlv6
-	s+6kibmkrLE+337dcbLt1lEfYdOFd9PkEwyQGfEXyfwYyHD8VC+KHkj0s3oDzqjw35V7rmDiHKO4K
-	z6h8tq2aExj3mvbOkX0FniVWq1njcQbDl+m1LGcaN+H/cVPzdVL0ecKW3uQcm5/F1aiPmHJmvj9SZ
-	ssnjqpxagYQRNfyXDxC0/XLbbdajwi8PTifAKsuQhOXYQ0Q3YX02PyGeEwHMmaqOrmhiThIETiHzz
-	OSbxMPOznxpntfq3JFouOkLY7PcRHCEPj5v0q7oHf4l/ITlRye74I3ftF7aULJrcbPCHoAsAapXt5
-	bOnAHTww==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1qBXBN-00G0Xr-1C;
-	Tue, 20 Jun 2023 08:57:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3A31B3002F0;
-	Tue, 20 Jun 2023 10:57:46 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 134DF21440F42; Tue, 20 Jun 2023 10:57:46 +0200 (CEST)
-Date: Tue, 20 Jun 2023 10:57:46 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, madvenka@linux.microsoft.com,
-	chenzhongjin@huawei.com, WANG Xuerui <kernel@xen0n.name>,
-	Xi Ruoyao <xry111@xry111.site>, live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	tangyouling00@gmail.com, youling.tang@outlook.com,
-	Jinyang He <hejinyang@loongson.cn>
-Subject: Re: [RFC PATCH v1 13/23] objtool: Add next member in struct reloc
-Message-ID: <20230620085746.GY4253@hirez.programming.kicks-ass.net>
-References: <1687247415-32057-1-git-send-email-tangyouling@loongson.cn>
- <1687247415-32057-4-git-send-email-tangyouling@loongson.cn>
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAEB51FA1
+	for <loongarch@lists.linux.dev>; Tue, 20 Jun 2023 12:53:04 +0000 (UTC)
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1qBaqt-000889-00; Tue, 20 Jun 2023 14:52:55 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id AD602C03C3; Tue, 20 Jun 2023 14:52:36 +0200 (CEST)
+Date: Tue, 20 Jun 2023 14:52:36 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	chenhuacai@kernel.org, geert@linux-m68k.org,
+	James.Bottomley@HansenPartnership.com, deller@gmx.de,
+	ysato@users.sourceforge.jp, dalias@libc.org,
+	glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, kernel@xen0n.name, mpe@ellerman.id.au,
+	npiggin@gmail.com, christophe.leroy@csgroup.eu,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
+	keescook@chromium.org, paulmck@kernel.org, peterz@infradead.org,
+	frederic@kernel.org, akpm@linux-foundation.org, ardb@kernel.org,
+	samitolvanen@google.com, juerg.haefliger@canonical.com,
+	arnd@arndb.de, rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
+	sebastian.reichel@collabora.com, rppt@kernel.org,
+	kirill.shutemov@linux.intel.com, anshuman.khandual@arm.com,
+	ziy@nvidia.com, masahiroy@kernel.org, ndesaulniers@google.com,
+	mhiramat@kernel.org, ojeda@kernel.org, thunder.leizhen@huawei.com,
+	xin3.li@intel.com, tj@kernel.org, gregkh@linuxfoundation.org,
+	tsi@tuyoix.net, bhe@redhat.com, hbathini@linux.ibm.com,
+	sourabhjain@linux.ibm.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com
+Subject: Re: [PATCH v2 08/13] mips/kexec: refactor for kernel/Kconfig.kexec
+Message-ID: <20230620125236.GF10520@alpha.franken.de>
+References: <20230619145801.1064716-1-eric.devolder@oracle.com>
+ <20230619145801.1064716-9-eric.devolder@oracle.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,86 +48,22 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1687247415-32057-4-git-send-email-tangyouling@loongson.cn>
+In-Reply-To: <20230619145801.1064716-9-eric.devolder@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Jun 20, 2023 at 03:50:09PM +0800, Youling Tang wrote:
-> In LoongArch, there may be multiple relocation information in one location,
-> so the next member is added to handle this situation.
-
-So Josh did a shrink on struct reloc because there are too many of them;
-ideally we find another way to link them for the case where it is
-needed.
-
+On Mon, Jun 19, 2023 at 10:57:56AM -0400, Eric DeVolder wrote:
+> The kexec and crash kernel options are provided in the common
+> kernel/Kconfig.kexec. Utilize the common options and provide
+> the ARCH_SUPPORTS_ and ARCH_SELECTS_ entries to recreate the
+> equivalent set of KEXEC and CRASH options.
 > 
-> The following warning appears when the next member is not added,
-> warning: objtool: unexpected relocation symbol type in .rela.discard.unreachable
-> 
-> Relocation section '.rela.discard.unreachable' at offset 0x1a58 contains 4 entries:
->     Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
-> 0000000000000000  0000000200000032 R_LARCH_ADD32          0000000000000000 .text + 354
-> 0000000000000000  0000000900000037 R_LARCH_SUB32          0000000000000000 L0^A + 0
-> 
-> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 > ---
->  tools/objtool/elf.c                 | 11 ++++++++++-
->  tools/objtool/include/objtool/elf.h |  1 +
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-> index 6806ce01d933..d345300d269b 100644
-> --- a/tools/objtool/elf.c
-> +++ b/tools/objtool/elf.c
-> @@ -895,7 +895,7 @@ static int read_relocs(struct elf *elf)
->  {
->  	unsigned long nr_reloc, max_reloc = 0, tot_reloc = 0;
->  	struct section *sec;
-> -	struct reloc *reloc;
-> +	struct reloc *reloc, *next_reloc;
->  	unsigned int symndx;
->  	struct symbol *sym;
->  	int i;
-> @@ -915,6 +915,7 @@ static int read_relocs(struct elf *elf)
->  			return -1;
->  		}
->  
-> +		next_reloc = NULL;
->  		sec->base->reloc = sec;
->  
->  		nr_reloc = 0;
-> @@ -946,6 +947,14 @@ static int read_relocs(struct elf *elf)
->  				return -1;
->  			}
->  
-> +			if (next_reloc && reloc->offset == next_reloc->offset) {
-> +				next_reloc->next = reloc;
-> +				next_reloc = reloc;
-> +				continue;
-> +			}
-> +
-> +			next_reloc = reloc;
+>  arch/mips/Kconfig | 32 +++++---------------------------
+>  1 file changed, 5 insertions(+), 27 deletions(-)
 
-This seems to rely on 'linked' reloc being adjecent in the ELF tables;
-is this required by the LoongArch ELF spec? If not, you really should
-not rely on it.
+Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-> +
->  			list_add_tail(&reloc->sym_reloc_entry, &sym->reloc_list);
->  			list_add_tail(&reloc->list, &sec->reloc_list);
->  			elf_hash_add(reloc, &reloc->hash, reloc_hash(reloc));
-> diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-> index ad0024da262b..7877298fe401 100644
-> --- a/tools/objtool/include/objtool/elf.h
-> +++ b/tools/objtool/include/objtool/elf.h
-> @@ -68,6 +68,7 @@ struct symbol {
->  struct reloc {
->  	struct list_head list;
->  	struct hlist_node hash;
-> +	struct reloc *next;
->  	union {
->  		GElf_Rela rela;
->  		GElf_Rel  rel;
-> -- 
-> 2.39.2
-> 
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
