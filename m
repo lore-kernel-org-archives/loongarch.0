@@ -1,82 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7389D20690
-	for <loongarch@lists.linux.dev>; Thu, 22 Jun 2023 22:05:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB652C433C8;
-	Thu, 22 Jun 2023 22:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687471516;
-	bh=dnifwmEwN5EPVqltpiQCF3MdFT37QyzPJA5VU9yHeeQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RzL6J1fXaBDz0XMnNSx8x8mXcyvopQkvOXbep39IPzJX6IZTiyxdwE2nHfhbPls3L
-	 N+mS72rPbV5Hplxc5fgNpJiDPbV/HNUcjlNM0k72bojGJ4KjFY1InlFqwVw3x6nnQC
-	 91+lFDGDXPX57EeoiKgvynYAipkz9J96TnpYMaik9KnCYZuHYn0BitFhgrP4G1fgbY
-	 6R4Jpwcj42qDrlJ2D+uH33pP6SPXmc0IbmA4+yG9XAiy7RYgb0iOqdFeCCR7TQblLZ
-	 fmEHl1XvZkPJVwZHZ1ypNXpY1N8YMHO70VuR9LvpNAy1Wj1k/paRgs0NZSlBf4+f5g
-	 0uQe2Ka6aNE0g==
-Message-ID: <bf396b3f-a3f3-817e-8241-222591f88c97@kernel.org>
-Date: Thu, 22 Jun 2023 17:05:13 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B8F3AA87
+	for <loongarch@lists.linux.dev>; Thu, 22 Jun 2023 22:34:00 +0000 (UTC)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-bcde2b13fe2so7471804276.3
+        for <loongarch@lists.linux.dev>; Thu, 22 Jun 2023 15:34:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687473239; x=1690065239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1l4aMFEdO0xpytk7dXv95q+X9YwG7wxeJ0FzYDYOHe0=;
+        b=Vz8hG0hR3xd12WRDeW4WgU2y/R6uS4lSapnDF4MO7hF95e6UaB9EMrNjEC/G7T5iIx
+         kMk+8CS0zztzJ/k7A7Xsritdzz9t+UocGOyr1vm4O4PFY8KIMNhV6l67J0rNsAfTsb9y
+         CjSHW6/Lk9n1r/waFoVVFl9RjrjZ1biZU/bV2W1R4sxHGVBa/EEmxV6Ea3O9BQ2eP4YC
+         GF7Qvho8cJhOMlm5UMKrN+YX2g3Mk1aw1rfq3/TaTiBHUlDBSM25Ug6Tu+YLaQY4qbZw
+         0QtAO6irhk06gyimN8pSrfoasJqdRpZnYGpO9PYEdlTJ3b2qDUjM+Oo64TGDFP9Tr2N/
+         N7LA==
+X-Gm-Message-State: AC+VfDzOxnXq0tF2F6U8xmaNUoF8xDKdmA1TScEn78TCkDGcXHS6LjrN
+	XW/o/hQu8vrmweKilHTB1Z5xUY+ScZBCuY1S5RY=
+X-Google-Smtp-Source: ACHHUZ7wmp5ZlK/YD8jhbJ0ww5BHVrS9AY0ql6wbq5yfg0IOLxbxiiLJkiV8HYnKE2uNGnX7pDx8tJxhcKTRsSI7eS4=
+X-Received: by 2002:a25:abcb:0:b0:bc1:dfa5:83a4 with SMTP id
+ v69-20020a25abcb000000b00bc1dfa583a4mr17891317ybi.13.1687473239508; Thu, 22
+ Jun 2023 15:33:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v5 26/33] nios2: Convert __pte_free_tlb() to use ptdescs
-Content-Language: en-US
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, Hugh Dickins <hughd@google.com>,
- Mike Rapoport <rppt@kernel.org>
-References: <20230622205745.79707-1-vishal.moola@gmail.com>
- <20230622205745.79707-27-vishal.moola@gmail.com>
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <20230622205745.79707-27-vishal.moola@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H4Es7qs54zr_hNPwn5MfgeLiKr3sgoTUP5iNj3JrH-1Uw@mail.gmail.com>
+ <7a085947-9011-ebc9-a97d-7a62c755a978@loongson.cn> <1c3c95c7-54e9-a65a-2f63-3a16af0fc2bf@loongson.cn>
+In-Reply-To: <1c3c95c7-54e9-a65a-2f63-3a16af0fc2bf@loongson.cn>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 22 Jun 2023 15:33:48 -0700
+Message-ID: <CAM9d7cj8mk_jAmK5KYrAJW248Nc1UY=_yD5BRBM+8aC+BaRBTw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf symbol: Add LoongArch case in get_plt_sizes()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
+On Tue, Jun 20, 2023 at 9:36=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+>
+>
+> On 06/08/2023 03:01 PM, Tiezhu Yang wrote:
+> > Hi Arnaldo,
+> >
+> > On 05/23/2023 06:26 PM, Huacai Chen wrote:
+> >> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> >>
+> >> On Tue, May 23, 2023 at 5:57=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongs=
+on.cn>
+> >> wrote:
+> >>>
+> >>> We can see the following definitions in bfd/elfnn-loongarch.c:
+>
+> ...
+>
+> >
+> > Are you OK with this change?
+> > Could you please pick it up in your tree?
+>
+> Ping. What is the status of this patch? Any more comments?
+> Is there a chance to merge it for this coming merge window?
 
-On 6/22/23 15:57, Vishal Moola (Oracle) wrote:
-> Part of the conversions to replace pgtable constructor/destructors with
-> ptdesc equivalents.
-> 
-> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-> Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> ---
->   arch/nios2/include/asm/pgalloc.h | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/nios2/include/asm/pgalloc.h b/arch/nios2/include/asm/pgalloc.h
-> index ecd1657bb2ce..ce6bb8e74271 100644
-> --- a/arch/nios2/include/asm/pgalloc.h
-> +++ b/arch/nios2/include/asm/pgalloc.h
-> @@ -28,10 +28,10 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmd,
->   
->   extern pgd_t *pgd_alloc(struct mm_struct *mm);
->   
-> -#define __pte_free_tlb(tlb, pte, addr)				\
-> -	do {							\
-> -		pgtable_pte_page_dtor(pte);			\
-> -		tlb_remove_page((tlb), (pte));			\
-> +#define __pte_free_tlb(tlb, pte, addr)					\
-> +	do {								\
-> +		pagetable_pte_dtor(page_ptdesc(pte));			\
-> +		tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
->   	} while (0)
->   
->   #endif /* _ASM_NIOS2_PGALLOC_H */
+Sorry for the late reply,  I'll apply it to the perf-tools-next tree.
 
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+Thanks,
+Namhyung
