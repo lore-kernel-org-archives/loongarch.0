@@ -1,163 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5DA17E0
-	for <loongarch@lists.linux.dev>; Thu, 22 Jun 2023 05:40:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B53F9C433C8;
-	Thu, 22 Jun 2023 05:40:25 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	WANG Rui <wangrui@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Add guard for the larch_insn_gen_xxx functions
-Date: Thu, 22 Jun 2023 13:40:18 +0800
-Message-Id: <20230622054018.414153-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19A801EA73;
+	Thu, 22 Jun 2023 12:50:27 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxmMWMQ5RkvW8AAA--.747S3;
+	Thu, 22 Jun 2023 20:50:20 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxWM2LQ5RkrxwCAA--.11455S3;
+	Thu, 22 Jun 2023 20:50:19 +0800 (CST)
+Subject: Re: [PATCH v2 1/2] asm-generic: Unify uapi bitsperlong.h for arm64,
+ riscv and loongarch
+To: kernel test robot <lkp@intel.com>, Arnd Bergmann <arnd@arndb.de>
+References: <1687336748-4898-2-git-send-email-yangtiezhu@loongson.cn>
+ <202306220334.C80BpATp-lkp@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <27295ba8-f57e-61c1-9cc4-f2207fd97ae0@loongson.cn>
+Date: Thu, 22 Jun 2023 20:50:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <202306220334.C80BpATp-lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8CxWM2LQ5RkrxwCAA--.11455S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtF1ktrWrtFWDtr1xCF13Jrc_yoW3Wrb_A3
+	4aywsrGr1S9Fyqqws8CwsaqFyDJayUC3sruwn5Jw4DGFWIkw48Jws3W3srJF4kKrZxtw13
+	ZasYqr9Yyw17KosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-
+	UUUUU
 
-From: WANG Rui <wangrui@loongson.cn>
 
-Add guard for the larch_insn_gen_xxx functions to verify whether the
-immediate operand is within the acceptable range.
 
-Signed-off-by: WANG Rui <wangrui@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/inst.h   | 13 +++++++++++--
- arch/loongarch/include/asm/module.h |  2 +-
- arch/loongarch/kernel/inst.c        | 24 ++++++++++++++++++++++--
- 3 files changed, 34 insertions(+), 5 deletions(-)
+On 06/22/2023 04:04 AM, kernel test robot wrote:
+> Hi Tiezhu,
+>
+> kernel test robot noticed the following build warnings:
+>
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index b09887ffcd15..1dc5b5802c15 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -5,6 +5,7 @@
- #ifndef _ASM_INST_H
- #define _ASM_INST_H
- 
-+#include <linux/bitops.h>
- #include <linux/types.h>
- #include <asm/asm.h>
- #include <asm/ptrace.h>
-@@ -15,14 +16,22 @@
- #define ADDR_IMMMASK_LU52ID	0xFFF0000000000000
- #define ADDR_IMMMASK_LU32ID	0x000FFFFF00000000
- #define ADDR_IMMMASK_LU12IW	0x00000000FFFFF000
-+#define ADDR_IMMMASK_ORI	0x0000000000000FFF
- #define ADDR_IMMMASK_ADDU16ID	0x00000000FFFF0000
- 
- #define ADDR_IMMSHIFT_LU52ID	52
-+#define ADDR_IMMSBIDX_LU52ID	11
- #define ADDR_IMMSHIFT_LU32ID	32
-+#define ADDR_IMMSBIDX_LU32ID	19
- #define ADDR_IMMSHIFT_LU12IW	12
-+#define ADDR_IMMSBIDX_LU12IW	19
-+#define ADDR_IMMSHIFT_ORI	0
-+#define ADDR_IMMSBIDX_ORI	63
- #define ADDR_IMMSHIFT_ADDU16ID	16
-+#define ADDR_IMMSBIDX_ADDU16ID	15
- 
--#define ADDR_IMM(addr, INSN)	((addr & ADDR_IMMMASK_##INSN) >> ADDR_IMMSHIFT_##INSN)
-+#define ADDR_IMM(addr, INSN)	\
-+	(sign_extend64(((addr & ADDR_IMMMASK_##INSN) >> ADDR_IMMSHIFT_##INSN), ADDR_IMMSBIDX_##INSN))
- 
- enum reg0i15_op {
- 	break_op	= 0x54,
-@@ -449,7 +458,7 @@ u32 larch_insn_gen_move(enum loongarch_gpr rd, enum loongarch_gpr rj);
- u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
- u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
- u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
--u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
-+u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
- 
- static inline bool signed_imm_check(long val, unsigned int bit)
- {
-diff --git a/arch/loongarch/include/asm/module.h b/arch/loongarch/include/asm/module.h
-index 12a0f1e66916..2ecd82bb64e1 100644
---- a/arch/loongarch/include/asm/module.h
-+++ b/arch/loongarch/include/asm/module.h
-@@ -55,7 +55,7 @@ static inline struct plt_entry emit_plt_entry(unsigned long val)
- 	lu12iw = larch_insn_gen_lu12iw(LOONGARCH_GPR_T1, ADDR_IMM(val, LU12IW));
- 	lu32id = larch_insn_gen_lu32id(LOONGARCH_GPR_T1, ADDR_IMM(val, LU32ID));
- 	lu52id = larch_insn_gen_lu52id(LOONGARCH_GPR_T1, LOONGARCH_GPR_T1, ADDR_IMM(val, LU52ID));
--	jirl = larch_insn_gen_jirl(0, LOONGARCH_GPR_T1, 0, (val & 0xfff));
-+	jirl = larch_insn_gen_jirl(0, LOONGARCH_GPR_T1, ADDR_IMM(val, ORI));
- 
- 	return (struct plt_entry) { lu12iw, lu32id, lu52id, jirl };
- }
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index 258ef267cd30..ffe13c5ba557 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -226,6 +226,11 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm)
- {
- 	union loongarch_instruction insn;
- 
-+	if (imm < -SZ_512K || imm >= SZ_512K) {
-+		pr_warn("The generated lu12i.w instruction is out of range.\n");
-+		return INSN_BREAK;
-+	}
-+
- 	emit_lu12iw(&insn, rd, imm);
- 
- 	return insn.word;
-@@ -235,6 +240,11 @@ u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm)
- {
- 	union loongarch_instruction insn;
- 
-+	if (imm < -SZ_512K || imm >= SZ_512K) {
-+		pr_warn("The generated lu32i.d instruction is out of range.\n");
-+		return INSN_BREAK;
-+	}
-+
- 	emit_lu32id(&insn, rd, imm);
- 
- 	return insn.word;
-@@ -244,16 +254,26 @@ u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
- {
- 	union loongarch_instruction insn;
- 
-+	if (imm < -SZ_2K || imm >= SZ_2K) {
-+		pr_warn("The generated lu52i.d instruction is out of range.\n");
-+		return INSN_BREAK;
-+	}
-+
- 	emit_lu52id(&insn, rd, rj, imm);
- 
- 	return insn.word;
- }
- 
--u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest)
-+u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
- {
- 	union loongarch_instruction insn;
- 
--	emit_jirl(&insn, rj, rd, (dest - pc) >> 2);
-+	if ((imm & 3) || imm < -SZ_128K || imm >= SZ_128K) {
-+		pr_warn("The generated jirl instruction is out of range.\n");
-+		return INSN_BREAK;
-+	}
-+
-+	emit_jirl(&insn, rj, rd, imm >> 2);
- 
- 	return insn.word;
- }
--- 
-2.39.3
+...
+
+>    In file included from include/asm-generic/bitsperlong.h:5:
+>>> include/uapi/asm-generic/bitsperlong.h:13:9: warning: '__BITS_PER_LONG' macro redefined [-Wmacro-redefined]
+
+Oh, thanks for the report, I am sorry.
+
+In order to silence the build warning, it should check the definition
+of __BITS_PER_LONG first at the beginning of bitsperlong.h, like this:
+
+#ifndef __BITS_PER_LONG
+
+#if defined(__CHAR_BIT__) && defined(__SIZEOF_LONG__)
+#define __BITS_PER_LONG (__CHAR_BIT__ * __SIZEOF_LONG__)
+#else
+#define __BITS_PER_LONG 32
+#endif
+
+#endif
+
+I will test and then send v3 later.
+
+Thanks,
+Tiezhu
 
