@@ -1,122 +1,163 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B608A1C766
-	for <loongarch@lists.linux.dev>; Wed, 21 Jun 2023 22:23:46 +0000 (UTC)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35LLceqD020127;
-	Wed, 21 Jun 2023 22:23:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=twHnZ9LZXyCdzFJSikPPS2cXIq/+7siyPXRk460Htms=;
- b=Ot8RK4iaywiK1SGE0vTVJhXsK7qD0NfiAU9srQaqP4e0E5JbyFo1CIXrt982ssP7oQ3I
- aZdC+9+IeEhDDmgPQ1H+135MIEcyLyvXJGn9eqj8viglJPHe4rdBLlNjXl+4tzItGIg5
- NkggAhaJsXbAVmc40xroxWMBssTqjLL78+P+pxIZ3Oe2m4Prrt6lOYa38IP+s2NmM6OW
- 0+HG/+JccegQbt9uKajGe/6By2OLSSxAC3EQ6XrQPLx3BYFeyppAmX++/Ilw4vNGiwoB
- LG4rTNYxF73DgEsWUMH04G64wqtJlVrKC1N+tBbyNUdBTBjCroGlz/Dkp9+UY11cs8bZ LQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rc919h6xj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Jun 2023 22:23:03 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35LMCVOM014060;
-	Wed, 21 Jun 2023 22:23:02 GMT
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rc919h6x1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Jun 2023 22:23:02 +0000
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-	by ppma03wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35LKsGSs016692;
-	Wed, 21 Jun 2023 22:23:00 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([9.208.130.99])
-	by ppma03wdc.us.ibm.com (PPS) with ESMTPS id 3r94f66emv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Jun 2023 22:23:00 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35LMMxO516908784
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 Jun 2023 22:22:59 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 151C858059;
-	Wed, 21 Jun 2023 22:22:59 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9D92258053;
-	Wed, 21 Jun 2023 22:22:52 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.17.230])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 21 Jun 2023 22:22:52 +0000 (GMT)
-Message-ID: <7fdade2c2b091461b5e696327cc420cf9789daf5.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 12/13] s390/kexec: refactor for kernel/Kconfig.kexec
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Eric DeVolder
-	 <eric.devolder@oracle.com>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        chenhuacai@kernel.org, geert@linux-m68k.org, tsbogend@alpha.franken.de,
-        James.Bottomley@hansenpartnership.com, deller@gmx.de,
-        ysato@users.sourceforge.jp, dalias@libc.org,
-        glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, kernel@xen0n.name, mpe@ellerman.id.au,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, hpa@zytor.com, keescook@chromium.org,
-        paulmck@kernel.org, peterz@infradead.org, frederic@kernel.org,
-        akpm@linux-foundation.org, ardb@kernel.org, samitolvanen@google.com,
-        juerg.haefliger@canonical.com, arnd@arndb.de,
-        rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
-        sebastian.reichel@collabora.com, rppt@kernel.org,
-        kirill.shutemov@linux.intel.com, anshuman.khandual@arm.com,
-        ziy@nvidia.com, masahiroy@kernel.org, ndesaulniers@google.com,
-        mhiramat@kernel.org, ojeda@kernel.org, thunder.leizhen@huawei.com,
-        xin3.li@intel.com, tj@kernel.org, gregkh@linuxfoundation.org,
-        tsi@tuyoix.net, bhe@redhat.com, hbathini@linux.ibm.com,
-        sourabhjain@linux.ibm.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com
-Date: Wed, 21 Jun 2023 18:22:52 -0400
-In-Reply-To: <ZJKD690QaX1IgiAz@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20230619145801.1064716-1-eric.devolder@oracle.com>
-	 <20230619145801.1064716-13-eric.devolder@oracle.com>
-	 <ZJKD690QaX1IgiAz@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5DA17E0
+	for <loongarch@lists.linux.dev>; Thu, 22 Jun 2023 05:40:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B53F9C433C8;
+	Thu, 22 Jun 2023 05:40:25 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	WANG Rui <wangrui@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Add guard for the larch_insn_gen_xxx functions
+Date: Thu, 22 Jun 2023 13:40:18 +0800
+Message-Id: <20230622054018.414153-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: A0xU2IGjRL44QhWtskIUDcoDDAzlrqkc
-X-Proofpoint-ORIG-GUID: dllZ298DcKriG7GVLaW-qyk4RJTHD_2f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-21_12,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- mlxscore=0 adultscore=0 malwarescore=0 clxscore=1011 phishscore=0
- priorityscore=1501 mlxlogscore=975 bulkscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306210186
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2023-06-21 at 07:00 +0200, Alexander Gordeev wrote:
-> AFAICT the MODULE_SIG_FORMAT dependency was introduced with commit
-> c8424e776b09 ("MODSIGN: Export module signature definitions") and
-> in fact was not necessary, since s390 did/does not use mod_check_sig()
-> anyway. So the SYSTEM_DATA_VERIFICATION could have left intact.
+From: WANG Rui <wangrui@loongson.cn>
 
-FYI, this patch was included in the patch set to allow IMA to verify
-the kexec kernel image appended signature on OpenPOWER.
+Add guard for the larch_insn_gen_xxx functions to verify whether the
+immediate operand is within the acceptable range.
 
+Signed-off-by: WANG Rui <wangrui@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/inst.h   | 13 +++++++++++--
+ arch/loongarch/include/asm/module.h |  2 +-
+ arch/loongarch/kernel/inst.c        | 24 ++++++++++++++++++++++--
+ 3 files changed, 34 insertions(+), 5 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index b09887ffcd15..1dc5b5802c15 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -5,6 +5,7 @@
+ #ifndef _ASM_INST_H
+ #define _ASM_INST_H
+ 
++#include <linux/bitops.h>
+ #include <linux/types.h>
+ #include <asm/asm.h>
+ #include <asm/ptrace.h>
+@@ -15,14 +16,22 @@
+ #define ADDR_IMMMASK_LU52ID	0xFFF0000000000000
+ #define ADDR_IMMMASK_LU32ID	0x000FFFFF00000000
+ #define ADDR_IMMMASK_LU12IW	0x00000000FFFFF000
++#define ADDR_IMMMASK_ORI	0x0000000000000FFF
+ #define ADDR_IMMMASK_ADDU16ID	0x00000000FFFF0000
+ 
+ #define ADDR_IMMSHIFT_LU52ID	52
++#define ADDR_IMMSBIDX_LU52ID	11
+ #define ADDR_IMMSHIFT_LU32ID	32
++#define ADDR_IMMSBIDX_LU32ID	19
+ #define ADDR_IMMSHIFT_LU12IW	12
++#define ADDR_IMMSBIDX_LU12IW	19
++#define ADDR_IMMSHIFT_ORI	0
++#define ADDR_IMMSBIDX_ORI	63
+ #define ADDR_IMMSHIFT_ADDU16ID	16
++#define ADDR_IMMSBIDX_ADDU16ID	15
+ 
+-#define ADDR_IMM(addr, INSN)	((addr & ADDR_IMMMASK_##INSN) >> ADDR_IMMSHIFT_##INSN)
++#define ADDR_IMM(addr, INSN)	\
++	(sign_extend64(((addr & ADDR_IMMMASK_##INSN) >> ADDR_IMMSHIFT_##INSN), ADDR_IMMSBIDX_##INSN))
+ 
+ enum reg0i15_op {
+ 	break_op	= 0x54,
+@@ -449,7 +458,7 @@ u32 larch_insn_gen_move(enum loongarch_gpr rd, enum loongarch_gpr rj);
+ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
+ u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
+ u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
+-u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
++u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
+ 
+ static inline bool signed_imm_check(long val, unsigned int bit)
+ {
+diff --git a/arch/loongarch/include/asm/module.h b/arch/loongarch/include/asm/module.h
+index 12a0f1e66916..2ecd82bb64e1 100644
+--- a/arch/loongarch/include/asm/module.h
++++ b/arch/loongarch/include/asm/module.h
+@@ -55,7 +55,7 @@ static inline struct plt_entry emit_plt_entry(unsigned long val)
+ 	lu12iw = larch_insn_gen_lu12iw(LOONGARCH_GPR_T1, ADDR_IMM(val, LU12IW));
+ 	lu32id = larch_insn_gen_lu32id(LOONGARCH_GPR_T1, ADDR_IMM(val, LU32ID));
+ 	lu52id = larch_insn_gen_lu52id(LOONGARCH_GPR_T1, LOONGARCH_GPR_T1, ADDR_IMM(val, LU52ID));
+-	jirl = larch_insn_gen_jirl(0, LOONGARCH_GPR_T1, 0, (val & 0xfff));
++	jirl = larch_insn_gen_jirl(0, LOONGARCH_GPR_T1, ADDR_IMM(val, ORI));
+ 
+ 	return (struct plt_entry) { lu12iw, lu32id, lu52id, jirl };
+ }
+diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+index 258ef267cd30..ffe13c5ba557 100644
+--- a/arch/loongarch/kernel/inst.c
++++ b/arch/loongarch/kernel/inst.c
+@@ -226,6 +226,11 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm)
+ {
+ 	union loongarch_instruction insn;
+ 
++	if (imm < -SZ_512K || imm >= SZ_512K) {
++		pr_warn("The generated lu12i.w instruction is out of range.\n");
++		return INSN_BREAK;
++	}
++
+ 	emit_lu12iw(&insn, rd, imm);
+ 
+ 	return insn.word;
+@@ -235,6 +240,11 @@ u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm)
+ {
+ 	union loongarch_instruction insn;
+ 
++	if (imm < -SZ_512K || imm >= SZ_512K) {
++		pr_warn("The generated lu32i.d instruction is out of range.\n");
++		return INSN_BREAK;
++	}
++
+ 	emit_lu32id(&insn, rd, imm);
+ 
+ 	return insn.word;
+@@ -244,16 +254,26 @@ u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
+ {
+ 	union loongarch_instruction insn;
+ 
++	if (imm < -SZ_2K || imm >= SZ_2K) {
++		pr_warn("The generated lu52i.d instruction is out of range.\n");
++		return INSN_BREAK;
++	}
++
+ 	emit_lu52id(&insn, rd, rj, imm);
+ 
+ 	return insn.word;
+ }
+ 
+-u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest)
++u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
+ {
+ 	union loongarch_instruction insn;
+ 
+-	emit_jirl(&insn, rj, rd, (dest - pc) >> 2);
++	if ((imm & 3) || imm < -SZ_128K || imm >= SZ_128K) {
++		pr_warn("The generated jirl instruction is out of range.\n");
++		return INSN_BREAK;
++	}
++
++	emit_jirl(&insn, rj, rd, imm >> 2);
+ 
+ 	return insn.word;
+ }
 -- 
-thanks,
-
-Mimi
+2.39.3
 
