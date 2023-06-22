@@ -1,96 +1,145 @@
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211FB1F186
-	for <loongarch@lists.linux.dev>; Thu, 22 Jun 2023 15:09:57 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.west.internal (Postfix) with ESMTP id 7B1773200258;
-	Thu, 22 Jun 2023 11:09:56 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Thu, 22 Jun 2023 11:09:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1687446596; x=1687532996; bh=UF
-	Ik7GqKMTQQbMewPZ3JZd1cKUV2IvhZU7QLYY4nLQk=; b=VqXzuiAnU40BIyTBrS
-	9/SRN8hrv7scO6zI3Wgs3SMHosS7t3TIJr1SBen8U4HVEj75R1HMftaR11UagFuI
-	dQDwOO6WznyWPpjHfiZA/qhgUCvAGQy5BbZaxLT8/yzptS5v9ubV79kwpAGGxQuM
-	DE1SwgGx2/ZH4LHcTmR8+ATYG4+1ChyqonunUcwENZ8WIemWrIms+PVug0q2eEMY
-	TSR/0Lv+VsDmf75Ax2ZUYJHD9iEFh1NOs/D996wZlKS3iocCzmdyaCf0ugaZ8754
-	mkrP5Erd8AZHVvjwPj+SwlMzINCbTf+N7Ax13yVW7pywBRzZV7toq41p/Zg6HRml
-	8+aA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1687446596; x=1687532996; bh=UFIk7GqKMTQQb
-	MewPZ3JZd1cKUV2IvhZU7QLYY4nLQk=; b=GDkxVJy0ljSrkyo6YnDKY4pFJLdfF
-	2IiwBq716JjjpA1//mgjXXP5rcXOZixDJgoknebyqw1EqT2D2QU8dP8YL2NcTi1O
-	IcPYk8faxiG7shlcm1dGUo/6sDJPCw3Xx0CSF1UrFWPh0CpWGKFhWKa1eSkHxUvZ
-	hQKxsPVNrue7m49ASD49SHR8b6Ycrxepba23aSdmT5JPYAnwwLCp85qf4tpFV9QC
-	s7uZrWeg6Rcr0aeiWooXqJ01AnWywTF72j+hj2YO3Lel+WKAuW51T7GBsJGC4tEX
-	zBWePkKQBus17YZIOFzKmp68jsxY9m/bGzWsIxe3JfxKnYUSnioOb56VA==
-X-ME-Sender: <xms:QmSUZLkPh6E0UqDs8VS6ZyRN4qZgBuUFafXc6Are0ycgDlrH6NDVqg>
-    <xme:QmSUZO0DJFPef8z4dg0gEklyqcQOteSgU8sjn_ihzdZQGYc5BSSDYBjdql0sceTKV
-    t-Mz_Lh8TLjXlZnyUY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeeguddgkeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:QmSUZBryuN3fCOL33LL87iiMJqMuPdQ374jsU4AyA3x_IUnaAeTNqw>
-    <xmx:QmSUZDndHZJxE8ISniqoZMrjyBRb3ilM9dINXYaxUJ00LFwhgi62PA>
-    <xmx:QmSUZJ0rSKbadaLwaeA2sIbRM2gI4zZSyduBaxYgvlWuucs5KccdXw>
-    <xmx:RGSUZGlj-v19qlVP4kskwEzbSFARUROY_1DQ0zqqUTkr7VMXuaT54Q>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7DFC4B60089; Thu, 22 Jun 2023 11:09:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043AF8494
+	for <loongarch@lists.linux.dev>; Thu, 22 Jun 2023 16:25:13 +0000 (UTC)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35MGGlKS013633;
+	Thu, 22 Jun 2023 16:24:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=qD1qlhKCKV9Gk/Gjt6jadS5UFlsWxSGO0aUPUrItqzs=;
+ b=jYYfGeGRQ3zLxjiAvNda/y4OI0ywP/4TVxqY691pSz9R4RSvpFS617nUYNj5UUutDpom
+ UleDGVAcUhDXI+PuKYQkAWE61q0e1MrEx59dpSq0lnGywnAQCTuVXeIzei8NNSg3y1yt
+ XgqXarDC/ZJzCx1hV/X+HF+DKQG9z+Q54SXgv+ppPs2lEa5WuSvXEkNqNsJWWhW94mg/
+ 6QMJW+Al7D23OIoT2g86XUFe3uWxhCGdhwQvlEcu+N2jps3uYBviGEJeLHNYiHumKmZb
+ b+lkg15evovpPWtaS8fTKKOPolOBeanzafGNt614LBgCD/xl7rhZ7zwuo0Ez0+4Vt5dv zg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rcsfkrskb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Jun 2023 16:24:16 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35MG49ni025954;
+	Thu, 22 Jun 2023 16:24:15 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rcsfkrsj8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Jun 2023 16:24:15 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+	by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35M9kkIB029518;
+	Thu, 22 Jun 2023 16:24:13 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3r943e3kjc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Jun 2023 16:24:12 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35MGO9tV10420856
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 22 Jun 2023 16:24:09 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 29FCA20043;
+	Thu, 22 Jun 2023 16:24:09 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 77E2320040;
+	Thu, 22 Jun 2023 16:24:05 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.59.34])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 22 Jun 2023 16:24:05 +0000 (GMT)
+Date: Thu, 22 Jun 2023 18:24:03 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>, linux@armlinux.org.uk,
+        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+        geert@linux-m68k.org, tsbogend@alpha.franken.de,
+        James.Bottomley@hansenpartnership.com, deller@gmx.de,
+        ysato@users.sourceforge.jp, dalias@libc.org,
+        glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, kernel@xen0n.name, mpe@ellerman.id.au,
+        npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, hpa@zytor.com, keescook@chromium.org,
+        paulmck@kernel.org, peterz@infradead.org, frederic@kernel.org,
+        akpm@linux-foundation.org, ardb@kernel.org, samitolvanen@google.com,
+        juerg.haefliger@canonical.com, arnd@arndb.de,
+        rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
+        sebastian.reichel@collabora.com, rppt@kernel.org,
+        kirill.shutemov@linux.intel.com, anshuman.khandual@arm.com,
+        ziy@nvidia.com, masahiroy@kernel.org, ndesaulniers@google.com,
+        mhiramat@kernel.org, ojeda@kernel.org, thunder.leizhen@huawei.com,
+        xin3.li@intel.com, tj@kernel.org, gregkh@linuxfoundation.org,
+        tsi@tuyoix.net, bhe@redhat.com, hbathini@linux.ibm.com,
+        sourabhjain@linux.ibm.com, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com
+Subject: Re: [PATCH v2 12/13] s390/kexec: refactor for kernel/Kconfig.kexec
+Message-ID: <ZJR1o0lzhIUdpTb+@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20230619145801.1064716-1-eric.devolder@oracle.com>
+ <20230619145801.1064716-13-eric.devolder@oracle.com>
+ <ZJKD690QaX1IgiAz@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <b89bb8d6-77db-76fe-e360-f6c439b80e73@oracle.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <1412dbaf-56f4-418b-85ea-681b1c44cc26@app.fastmail.com>
-In-Reply-To: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
-Date: Thu, 22 Jun 2023 17:09:34 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>
-Cc: linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
- loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 0/2] Unify uapi bitsperlong.h
-Content-Type: text/plain
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b89bb8d6-77db-76fe-e360-f6c439b80e73@oracle.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: qCenS3OA9UceHHV25yycwEWlCVqc_XCw
+X-Proofpoint-GUID: t_YQDqT-rDR4fb7suT2OXhiuNh4-PXUO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-22_11,2023-06-22_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ malwarescore=0 clxscore=1015 adultscore=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306220136
 
-On Thu, Jun 22, 2023, at 16:13, Tiezhu Yang wrote:
-> v3:
->   -- Check the definition of __BITS_PER_LONG first at
->      the beginning of uapi/asm-generic/bitsperlong.h
->
-> v2:
->   -- Check __CHAR_BIT__ and __SIZEOF_LONG__ rather than
->      __aarch64__, __riscv, __loongarch__, thanks Ruoyao
->   -- Update the code comment and commit message
->
-> v1:
->   -- Rebase on 6.4-rc6
->   -- Only unify uapi bitsperlong.h for arm64, riscv and loongarch
->   -- Remove uapi bitsperlong.h of hexagon and microblaze in a new patch
->
-> Here is the RFC patch:
-> https://lore.kernel.org/linux-arch/1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn/
+On Wed, Jun 21, 2023 at 12:10:49PM -0500, Eric DeVolder wrote:
+Hi Eric,
+...
+> > > NOTE: The original Kconfig has a KEXEC_SIG which depends on
+> > > MODULE_SIG_FORMAT. However, attempts to keep the MODULE_SIG_FORMAT
+> > > dependency (using the strategy outlined in this series, and other
+> > > techniques) results in 'error: recursive dependency detected'
+> > > on CRYPTO. This occurs due to any path through KEXEC_SIG
+> > > attempting to select CRYPTO is ultimately dependent upon CRYPTO:
+> > > 
+> > >   CRYPTO
+> > >    <- ARCH_SUPPORTS_KEXEC_FILE
+> > >       <- KEXEC_FILE
+> > >          <- KEXEC_SIG
+> > > 
+> > > Therefore, the solution is to drop the MODULE_SIG_FORMAT dependency
+> > > for KEXEC_SIG. In practice, however, MODULE_SIG_FORMAT is still
+> > > configured-in as the use of KEXEC_SIG is in step with the use of
+> > > SYSTEM_DATA_VERIFICATION, which does select MODULE_SIG_FORMAT.
+> > 
+> > No, it is actually the other way around.
+> > Could you please provide the correct explanation?
+> > 
+> > AFAICT the MODULE_SIG_FORMAT dependency was introduced with commit
+> > c8424e776b09 ("MODSIGN: Export module signature definitions") and
+> > in fact was not necessary, since s390 did/does not use mod_check_sig()
+> > anyway. So the SYSTEM_DATA_VERIFICATION could have left intact.
+> 
+> Thomas, would the correct explanation be simply indicating that
+> MODULE_SIG_FORMAT isn't needed as it is not used by s390 (crediting your
+> summary above)?
 
-I've applied these to the asm-generic tree now
+I guess, you asked me? Anyway, I will try to answer as if I were Thomas :)
 
-Thanks,
+MODULE_SIG_FORMAT is needed to select SYSTEM_DATA_VERIFICATION.
+But SYSTEM_DATA_VERIFICATION is also selected by FS_VERITY*, so
+dropping MODULE_SIG_FORMAT does not hurt.
 
-   Arnd
+Thanks!
