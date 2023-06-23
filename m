@@ -1,20 +1,20 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1326A8F46;
-	Fri, 23 Jun 2023 13:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7078F4D;
+	Fri, 23 Jun 2023 13:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687527844; bh=XjMJYVClVBZoq59JRA/g/JtKw+4iNV+idqP9kd8lKmU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=a50DuS080AUdkqLrk8Gl9D/KDlR7Zjw9FOr0hJGpUO+wusB8EUalv4A0FebLE+24S
-	 BR6SBWemSRsIMUo5cFUBuHHbCzuaKCEJBsTNNTldJ30JrDNjoIi/Yqe8KOJIjbZpub
-	 AY+knOb8/4LlrKVU/+AGFL/ZEKFm7xMgLODHFmbY=
+	t=1687527850; bh=I9sBWXJarUacmT9tJVRaaV9L2voiD3I9Gx59y+JU7NY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FnGl2zpNJcTOSoS6xm5nWi8rAtAahvSAYEgKmfK0DBi0WiLoKBbB/7sBsR7XOPXo+
+	 P2ZfadFDDkDGkOQDEgdxm1y5Ur8ETZRC959WDAeAFuKU3PPeu8fuhMgcKZ+Jr094S/
+	 i+oScUM/oUUXFDKK/KJq+8/OapsFgD+h+JjF4tu8=
 Received: from ld50.lan (unknown [101.88.25.181])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id C13C160106;
-	Fri, 23 Jun 2023 21:44:02 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 7E1EC605E0;
+	Fri, 23 Jun 2023 21:44:10 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Rui <wangrui@loongson.cn>,
@@ -24,10 +24,12 @@ Cc: WANG Rui <wangrui@loongson.cn>,
 	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH 0/9] LoongArch: Preliminary ClangBuiltLinux enablement
-Date: Fri, 23 Jun 2023 21:43:42 +0800
-Message-Id: <20230623134351.1898379-1-kernel@xen0n.name>
+Subject: [PATCH 3/9] LoongArch: Prepare for assemblers with proper FCSR bank support
+Date: Fri, 23 Jun 2023 21:43:45 +0800
+Message-Id: <20230623134351.1898379-4-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20230623134351.1898379-1-kernel@xen0n.name>
+References: <20230623134351.1898379-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,66 +40,54 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Hi,
+The GNU assembler (as of 2.40) mis-treats FCSR operands as GPRs, but
+the LLVM IAS does not. Probe for this and refer to FCSRs as "$fcsrNN"
+if support is present.
 
-It's been a long time since the LoongArch port was upstreamed to LLVM,
-and there seems to be evidence that Linux was successfully built with
-Clang inside Loongson roughly around that time; however, a lot has
-changed since then, and the Linux/LoongArch codebase now makes use of
-more novel features that necessitate further work. (The enablement work
-is tracked at [1].)
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+---
+ arch/loongarch/Kconfig                | 3 +++
+ arch/loongarch/include/asm/fpregdef.h | 7 +++++++
+ 2 files changed, 10 insertions(+)
 
-With this patch series and a patched LLVM/LLD ([2] for llvm-objcopy,
-and [3] for LLD), a working kernel can be built with `make LLVM=1`;
-although currently support for CONFIG_RELOCATABLE and CONFIG_MODULE is
-still TODO, we've decided to post the series early to hopefully reduce
-the rebase burden. The series contains several useful cleanups anyway.
-
-Regarding how to merge this: because only Patch 8 is outside
-arch/loongarch, I'd prefer the series to get merged through Huacai's
-tree. The series applies cleanly on top of next-20230622.
-
-Thanks go to the ClangBuiltLinux team, and LoongArch toolchain
-maintainers from Loongson and the community alike; without your help
-this would come much later, if at all (my free time has been steadily
-dwindling this year already).
-
-Your comments are welcome!
-
-[1]: https://github.com/ClangBuiltLinux/linux/issues/1787
-[2]: https://reviews.llvm.org/D153609
-[3]: https://reviews.llvm.org/D138135
-
-WANG Rui (2):
-  LoongArch: Calculate various sizes in the linker script
-  LoongArch: extable: Also recognize ABI names of registers
-
-WANG Xuerui (7):
-  LoongArch: Prepare for assemblers with proper FCSR bank support
-  LoongArch: Make {read,write}_fcsr compatible with LLVM/Clang
-  LoongArch: Make the CPUCFG and CSR ops simple aliases of compiler
-    built-ins
-  LoongArch: Simplify the invtlb wrappers
-  LoongArch: Tweak CFLAGS for Clang compatibility
-  Makefile: Add loongarch target flag for Clang compilation
-  LoongArch: Mark Clang LTO as working
-
- arch/loongarch/Kconfig                 |  5 ++
- arch/loongarch/Makefile                | 14 ++++-
- arch/loongarch/include/asm/fpregdef.h  |  7 +++
- arch/loongarch/include/asm/gpr-num.h   | 30 ++++++++++
- arch/loongarch/include/asm/loongarch.h | 82 ++++++++------------------
- arch/loongarch/include/asm/tlb.h       | 45 +++++---------
- arch/loongarch/kernel/efi-header.S     |  6 +-
- arch/loongarch/kernel/head.S           |  8 +--
- arch/loongarch/kernel/traps.c          |  2 +-
- arch/loongarch/kernel/vmlinux.lds.S    |  7 +++
- arch/loongarch/lib/dump_tlb.c          |  6 +-
- arch/loongarch/mm/tlb.c                | 10 ++--
- arch/loongarch/vdso/Makefile           |  6 +-
- scripts/Makefile.clang                 |  1 +
- 14 files changed, 122 insertions(+), 107 deletions(-)
-
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 743d87655742..c8e4f8b03c55 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -242,6 +242,9 @@ config SCHED_OMIT_FRAME_POINTER
+ config AS_HAS_EXPLICIT_RELOCS
+ 	def_bool $(as-instr,x:pcalau12i \$t0$(comma)%pc_hi20(x))
+ 
++config AS_HAS_FCSR_BANK
++	def_bool $(as-instr,x:movfcsr2gr \$t0$(comma)\$fcsr0)
++
+ config CC_HAS_LSX_EXTENSION
+ 	def_bool $(cc-option,-mlsx)
+ 
+diff --git a/arch/loongarch/include/asm/fpregdef.h b/arch/loongarch/include/asm/fpregdef.h
+index b6be527831dd..b0ac640db74c 100644
+--- a/arch/loongarch/include/asm/fpregdef.h
++++ b/arch/loongarch/include/asm/fpregdef.h
+@@ -40,6 +40,12 @@
+ #define fs6	$f30
+ #define fs7	$f31
+ 
++#ifdef CONFIG_AS_HAS_FCSR_BANK
++#define fcsr0	$fcsr0
++#define fcsr1	$fcsr1
++#define fcsr2	$fcsr2
++#define fcsr3	$fcsr3
++#else
+ /*
+  * Current binutils expects *GPRs* at FCSR position for the FCSR
+  * operation instructions, so define aliases for those used.
+@@ -48,5 +54,6 @@
+ #define fcsr1	$r1
+ #define fcsr2	$r2
+ #define fcsr3	$r3
++#endif
+ 
+ #endif /* _ASM_FPREGDEF_H */
 -- 
 2.40.0
 
