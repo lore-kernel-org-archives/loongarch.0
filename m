@@ -1,103 +1,202 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27838F4A;
-	Fri, 23 Jun 2023 13:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687527849; bh=/Ae3yGesaN7INKQfcIHyYeenAVct9PlZ6PKdEfJO/pk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g0tcPRjdJAB4zJ1J7o8RgYD67NPg92Lr3puaEW9/IUxDIJMcr/AP3vc9vDt3Q2tse
-	 36aB9ryT43crdMZ1CIo00Anf2m2yhjx2RkVsE6w1vZ7K6OFzU5NoAk6mdq3rogjXfW
-	 GG+Jj4X1EURYB3cu6bZ9p+MLHGUf7tXgx4XiQidE=
-Received: from ld50.lan (unknown [101.88.25.181])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 95703605DB;
-	Fri, 23 Jun 2023 21:44:08 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Rui <wangrui@loongson.cn>,
-	Xi Ruoyao <xry111@xry111.site>,
-	loongarch@lists.linux.dev,
-	linux-kbuild@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH 2/9] LoongArch: extable: Also recognize ABI names of registers
-Date: Fri, 23 Jun 2023 21:43:44 +0800
-Message-Id: <20230623134351.1898379-3-kernel@xen0n.name>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230623134351.1898379-1-kernel@xen0n.name>
-References: <20230623134351.1898379-1-kernel@xen0n.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E25100AA;
+	Fri, 23 Jun 2023 15:57:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9CB8C43397;
+	Fri, 23 Jun 2023 15:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687535870;
+	bh=ZvtKMCreuF1Bw/8sl4ZAqqcyo/nUFlKwy8MW1+OOcB4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RU1wFpQChxqltgI2/fn0idKJrwTwaKrQ6DJe07WIvQkhY/HLAobnXiibjNGk0L20B
+	 cyD5JrJtvZNqmuXvWXUPzic0Z66Jqo5aAHGqxvRh86vtVdX5hCh2lTDj0AtM8U2793
+	 r6rkBLs/fkvS0DoOX5Ph53qdxWAxhaRm7OtH7EMX4C0ohrvWbdJSgX0BVEHdtPfE7m
+	 STYOrTi+uxPcWl1MR6lAKHJDwbWEjqIHNahhMdvMMxX82/AIJ/kGEMq0VQ8jQfwlIX
+	 Vz97qsZJVcrnJWSiREaiE2A4RxnIU+0kExQeg5wxzeMJ9aNhLGPvkufK5LE0dEYIrb
+	 ivjHjJ8yXw8wg==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-51be928b31cso884963a12.2;
+        Fri, 23 Jun 2023 08:57:50 -0700 (PDT)
+X-Gm-Message-State: AC+VfDzlzf28HwPJAotUrHfcNdWwhZEG6vMMElNY8Jx2dgD4yT1dGjLa
+	lzrMFy3Wa882OWF46N3828FDFzxZ6EG2OR0Lktg=
+X-Google-Smtp-Source: ACHHUZ4vLTrY+IQbjpeH3EXz6L1njzyeJ3LKDD7Th7B/S0PKNiDHdkM33OPA8SSOU+8Zm6TrONplCoN9bihldu0f0oc=
+X-Received: by 2002:aa7:d498:0:b0:51b:cd07:d0f8 with SMTP id
+ b24-20020aa7d498000000b0051bcd07d0f8mr7013316edr.6.1687535868798; Fri, 23 Jun
+ 2023 08:57:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230623134351.1898379-1-kernel@xen0n.name> <20230623134351.1898379-7-kernel@xen0n.name>
+In-Reply-To: <20230623134351.1898379-7-kernel@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 23 Jun 2023 23:57:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4FGF-WTjUB+-Yxmk_kuXkgjsT6_2g2dCUpfYjggz7NMw@mail.gmail.com>
+Message-ID: <CAAhV-H4FGF-WTjUB+-Yxmk_kuXkgjsT6_2g2dCUpfYjggz7NMw@mail.gmail.com>
+Subject: Re: [PATCH 6/9] LoongArch: Simplify the invtlb wrappers
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: WANG Rui <wangrui@loongson.cn>, Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: WANG Rui <wangrui@loongson.cn>
+Hi, Xuerui,
 
-When the kernel is compiled with LLVM, the register names being handled
-during exception fixup building are ABI names instead of bare $rNN
-style. Add mapping for the ABI names for LLVM compatibility.
+To minimize modifications, and be more convenient to rebase, please
+only modify the implementation of these functions, don't remove
+functions and parameters. Thank you.
 
-Signed-off-by: WANG Rui <wangrui@loongson.cn>
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/include/asm/gpr-num.h | 30 ++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Huacai
 
-diff --git a/arch/loongarch/include/asm/gpr-num.h b/arch/loongarch/include/asm/gpr-num.h
-index e0941af20c7e..996038da806d 100644
---- a/arch/loongarch/include/asm/gpr-num.h
-+++ b/arch/loongarch/include/asm/gpr-num.h
-@@ -9,6 +9,22 @@
- 	.equ	.L__gpr_num_$r\num, \num
- 	.endr
- 
-+	/* ABI names of registers */
-+	.equ	.L__gpr_num_$ra, 1
-+	.equ	.L__gpr_num_$tp, 2
-+	.equ	.L__gpr_num_$sp, 3
-+	.irp	num,0,1,2,3,4,5,6,7
-+	.equ	.L__gpr_num_$a\num, 4 + \num
-+	.endr
-+	.irp	num,0,1,2,3,4,5,6,7,8
-+	.equ	.L__gpr_num_$t\num, 12 + \num
-+	.endr
-+	.equ	.L__gpr_num_$s9, 22
-+	.equ	.L__gpr_num_$fp, 22
-+	.irp	num,0,1,2,3,4,5,6,7,8
-+	.equ	.L__gpr_num_$s\num, 23 + \num
-+	.endr
-+
- #else /* __ASSEMBLY__ */
- 
- #define __DEFINE_ASM_GPR_NUMS					\
-@@ -16,6 +32,20 @@
- "	.irp	num,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31\n" \
- "	.equ	.L__gpr_num_$r\\num, \\num\n"			\
- "	.endr\n"						\
-+"	.equ	.L__gpr_num_$ra, 1\n"				\
-+"	.equ	.L__gpr_num_$tp, 2\n"				\
-+"	.equ	.L__gpr_num_$sp, 3\n"				\
-+"	.irp	num,0,1,2,3,4,5,6,7\n"				\
-+"	.equ	.L__gpr_num_$a\\num, 4 + \\num\n"		\
-+"	.endr\n"						\
-+"	.irp	num,0,1,2,3,4,5,6,7,8\n"			\
-+"	.equ	.L__gpr_num_$t\\num, 12 + \\num\n"		\
-+"	.endr\n"						\
-+"	.equ	.L__gpr_num_$s9, 22\n"				\
-+"	.equ	.L__gpr_num_$fp, 22\n"				\
-+"	.irp	num,0,1,2,3,4,5,6,7,8\n"			\
-+"	.equ	.L__gpr_num_$s\\num, 23 + \\num\n"		\
-+"	.endr\n"						\
- 
- #endif /* __ASSEMBLY__ */
- 
--- 
-2.40.0
-
+On Fri, Jun 23, 2023 at 9:44=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
+te:
+>
+> From: WANG Xuerui <git@xen0n.name>
+>
+> Of the 3 existing invtlb wrappers, invtlb_info is not used at all,
+> so it is removed; invtlb_all and invtlb_addr have their unused
+> argument(s) removed from their signatures.
+>
+> Also, the invtlb instruction has been supported by upstream LoongArch
+> toolchains from day one, so ditch the raw opcode trickery and just use
+> plain inline asm for it.
+>
+> Signed-off-by: WANG Xuerui <git@xen0n.name>
+> ---
+>  arch/loongarch/include/asm/tlb.h | 45 ++++++++++++--------------------
+>  arch/loongarch/mm/tlb.c          | 10 +++----
+>  2 files changed, 21 insertions(+), 34 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/tlb.h b/arch/loongarch/include/as=
+m/tlb.h
+> index 0dc9ee2b05d2..5e6ee9a15f0f 100644
+> --- a/arch/loongarch/include/asm/tlb.h
+> +++ b/arch/loongarch/include/asm/tlb.h
+> @@ -88,52 +88,39 @@ enum invtlb_ops {
+>         INVTLB_GID_ADDR =3D 0x16,
+>  };
+>
+> -/*
+> - * invtlb op info addr
+> - * (0x1 << 26) | (0x24 << 20) | (0x13 << 15) |
+> - * (addr << 10) | (info << 5) | op
+> - */
+>  static inline void invtlb(u32 op, u32 info, u64 addr)
+>  {
+>         __asm__ __volatile__(
+> -               "parse_r addr,%0\n\t"
+> -               "parse_r info,%1\n\t"
+> -               ".word ((0x6498000) | (addr << 10) | (info << 5) | %2)\n\=
+t"
+> -               :
+> -               : "r"(addr), "r"(info), "i"(op)
+> -               :
+> -               );
+> -}
+> -
+> -static inline void invtlb_addr(u32 op, u32 info, u64 addr)
+> -{
+> -       __asm__ __volatile__(
+> -               "parse_r addr,%0\n\t"
+> -               ".word ((0x6498000) | (addr << 10) | (0 << 5) | %1)\n\t"
+> -               :
+> -               : "r"(addr), "i"(op)
+> +               "invtlb %0, %1, %2\n\t"
+>                 :
+> +               : "i"(op), "r"(info), "r"(addr)
+> +               : "memory"
+>                 );
+>  }
+>
+> -static inline void invtlb_info(u32 op, u32 info, u64 addr)
+> +static inline void invtlb_addr(u32 op, u64 addr)
+>  {
+> +       /*
+> +        * The ISA manual says $zero shall be used in case a particular o=
+p
+> +        * does not take the respective argument, hence the invtlb helper=
+ is
+> +        * not re-used to make sure this is the case.
+> +        */
+>         __asm__ __volatile__(
+> -               "parse_r info,%0\n\t"
+> -               ".word ((0x6498000) | (0 << 10) | (info << 5) | %1)\n\t"
+> -               :
+> -               : "r"(info), "i"(op)
+> +               "invtlb %0, $zero, %1\n\t"
+>                 :
+> +               : "i"(op), "r"(addr)
+> +               : "memory"
+>                 );
+>  }
+>
+> -static inline void invtlb_all(u32 op, u32 info, u64 addr)
+> +static inline void invtlb_all(u32 op)
+>  {
+> +       /* Similar to invtlb_addr, ensure the operands are actually $zero=
+. */
+>         __asm__ __volatile__(
+> -               ".word ((0x6498000) | (0 << 10) | (0 << 5) | %0)\n\t"
+> +               "invtlb %0, $zero, $zero\n\t"
+>                 :
+>                 : "i"(op)
+> -               :
+> +               : "memory"
+>                 );
+>  }
+>
+> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+> index 00bb563e3c89..de04d2624ef4 100644
+> --- a/arch/loongarch/mm/tlb.c
+> +++ b/arch/loongarch/mm/tlb.c
+> @@ -17,19 +17,19 @@
+>
+>  void local_flush_tlb_all(void)
+>  {
+> -       invtlb_all(INVTLB_CURRENT_ALL, 0, 0);
+> +       invtlb_all(INVTLB_CURRENT_ALL);
+>  }
+>  EXPORT_SYMBOL(local_flush_tlb_all);
+>
+>  void local_flush_tlb_user(void)
+>  {
+> -       invtlb_all(INVTLB_CURRENT_GFALSE, 0, 0);
+> +       invtlb_all(INVTLB_CURRENT_GFALSE);
+>  }
+>  EXPORT_SYMBOL(local_flush_tlb_user);
+>
+>  void local_flush_tlb_kernel(void)
+>  {
+> -       invtlb_all(INVTLB_CURRENT_GTRUE, 0, 0);
+> +       invtlb_all(INVTLB_CURRENT_GTRUE);
+>  }
+>  EXPORT_SYMBOL(local_flush_tlb_kernel);
+>
+> @@ -100,7 +100,7 @@ void local_flush_tlb_kernel_range(unsigned long start=
+, unsigned long end)
+>                 end &=3D (PAGE_MASK << 1);
+>
+>                 while (start < end) {
+> -                       invtlb_addr(INVTLB_ADDR_GTRUE_OR_ASID, 0, start);
+> +                       invtlb_addr(INVTLB_ADDR_GTRUE_OR_ASID, start);
+>                         start +=3D (PAGE_SIZE << 1);
+>                 }
+>         } else {
+> @@ -131,7 +131,7 @@ void local_flush_tlb_page(struct vm_area_struct *vma,=
+ unsigned long page)
+>  void local_flush_tlb_one(unsigned long page)
+>  {
+>         page &=3D (PAGE_MASK << 1);
+> -       invtlb_addr(INVTLB_ADDR_GTRUE_OR_ASID, 0, page);
+> +       invtlb_addr(INVTLB_ADDR_GTRUE_OR_ASID, page);
+>  }
+>
+>  static void __update_hugetlb(struct vm_area_struct *vma, unsigned long a=
+ddress, pte_t *ptep)
+> --
+> 2.40.0
+>
+>
