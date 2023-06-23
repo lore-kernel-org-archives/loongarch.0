@@ -1,56 +1,173 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA1AA959;
-	Fri, 23 Jun 2023 17:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1687539640;
-	bh=6rmpokyTm1820Gky7UqivAdAm5uBlKSdZ2K2AKHvsoo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ELkuyH9EaOux9JN8Rzhe8b55zb5ry82dafuzWG1B32tILizw1CfgU+XgRTyd9E2se
-	 8cNf1bTtjKFLsmP95eo/lRh0PFXNteJP5340qiSs/23bQb26RdpANzxlCSyAHyfDA/
-	 xDyn0+MD4p1QKDjDMRiGC6zUuZphCej3sc5vYjjo=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id CEA0E65DB9;
-	Fri, 23 Jun 2023 13:00:38 -0400 (EDT)
-Message-ID: <22d794613f70b04544e39e8861737af09365ae8a.camel@xry111.site>
-Subject: Re: [PATCH 7/9] LoongArch: Tweak CFLAGS for Clang compatibility
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Rui <wangrui@loongson.cn>, loongarch@lists.linux.dev, 
- linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
- linux-kernel@vger.kernel.org,  WANG Xuerui <git@xen0n.name>
-Date: Sat, 24 Jun 2023 01:00:37 +0800
-In-Reply-To: <20230623134351.1898379-8-kernel@xen0n.name>
-References: <20230623134351.1898379-1-kernel@xen0n.name>
-	 <20230623134351.1898379-8-kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5D8944B;
+	Fri, 23 Jun 2023 17:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1687539924; bh=CwaupLNxCaQfdyqirb5X7+xJvkBuOUpQ0ThhbWfP/hk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ukUcNbU2eLFRCrRZNr7wSbGcmF3VKpW5hY2lA7txYZxFGvuN9BJe4lCuFDKFLtlUB
+	 vEIv7jrSQE2aARCFPjHXT4iuMkOJWOF3OUJLYuWKey33ub2gKTlbSNXS1Xwb9QMToc
+	 Ee0as+6Bm1F+uhQdtwslcWQsN7Dd5V5zbFK9I9hc=
+Received: from [192.168.9.172] (unknown [101.88.25.181])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 74662600A9;
+	Sat, 24 Jun 2023 01:05:24 +0800 (CST)
+Message-ID: <267d223d-5215-f53d-ffb8-c74a209326e4@xen0n.name>
+Date: Sat, 24 Jun 2023 01:05:23 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH 7/9] LoongArch: Tweak CFLAGS for Clang compatibility
+Content-Language: en-US
+To: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Rui <wangrui@loongson.cn>,
+ Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
+ linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
+References: <20230623134351.1898379-1-kernel@xen0n.name>
+ <20230623134351.1898379-8-kernel@xen0n.name>
+ <CAKwvOdn5e+BzhGzDPnZYEjCuanABJmu5ZZo5x2uwHj4L44m5nA@mail.gmail.com>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <CAKwvOdn5e+BzhGzDPnZYEjCuanABJmu5ZZo5x2uwHj4L44m5nA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2023-06-23 at 21:43 +0800, WANG Xuerui wrote:
 
-> -cflags-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-+=3D -G0 -pipe -msoft-float
+On 6/24/23 00:39, Nick Desaulniers wrote:
+> On Fri, Jun 23, 2023 at 6:44 AM WANG Xuerui <kernel@xen0n.name> wrote:
+>> From: WANG Xuerui <git@xen0n.name>
+>>
+>> Now the arch code is mostly ready for LLVM/Clang consumption, it is time
+>> to re-organize the CFLAGS a little to actually enable the LLVM build.
+>>
+>> A build with !RELOCATABLE && !MODULE is confirmed working within a QEMU
+>> environment; support for the two features are currently blocked by
+>> LLVM/Clang, and will come later.
+>>
+>> Signed-off-by: WANG Xuerui <git@xen0n.name>
+>> ---
+>>   arch/loongarch/Makefile      | 14 +++++++++++---
+>>   arch/loongarch/vdso/Makefile |  6 +++++-
+>>   2 files changed, 16 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+>> index a27e264bdaa5..efe9b50bd829 100644
+>> --- a/arch/loongarch/Makefile
+>> +++ b/arch/loongarch/Makefile
+>> @@ -46,12 +46,18 @@ ld-emul                     = $(64bit-emul)
+>>   cflags-y               += -mabi=lp64s
+>>   endif
+>>
+>> -cflags-y                       += -G0 -pipe -msoft-float
+> This seems to drop -msoft-float for GCC. Intentional?
 
--msoft-float should not be removed.  Our consensus (made when I was
-developing https://gcc.gnu.org/r13-6500) is -mabi=3Dlp64s does *not*
-disable floating point instructions, but only disable FPRs for passing
-arguments and return values.  So w/o -msoft-float (or -mfpu=3Dnone) GCC is
-allowed to generate FP instructions everywhere in kernel and it may
-cause kernel FPD exception in the future.
+Kind-of; according to the LoongArch Toolchain Conventions [1], 
+-msoft-float basically selects the soft-float ABI, but *also prevents 
+use of any FP instructions*. This is where things get hairy, because it 
+means e.g. any translation unit can't manipulate the FP context at all 
+without special-casing its CFLAGS to have the -msoft-float flag removed. 
+I've tried and stopped when I noticed >3 files needed such treatment 
+even in arch/loongarch/kernel alone; -mabi=lp64s is always present right 
+now and that's enough.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+[1]: 
+https://loongson.github.io/LoongArch-Documentation/LoongArch-toolchain-conventions-EN.html#_compiler_options
+
+>
+>> -LDFLAGS_vmlinux                        += -G0 -static -n -nostdlib
+>> +ifndef CONFIG_CC_IS_CLANG
+>> +cflags-y                       += -G0
+>> +LDFLAGS_vmlinux                        += -G0
+> Thanks for the patch!
+>
+> I can understand not passing -G0 to clang if clang doesn't understand
+> it, but should you be using CONFIG_LD_IS_LLD for LDFLAGS?
+>
+> What does -G0 do?
+Just as Ruoyao explained earlier, it's the "small data threshold". It's 
+not implemented on LoongArch yet, and we don't have ABI provisions for 
+that either, so IMO it's even okay to just drop it unconditionally. (I 
+haven't double-checked the GCC behavior though.)
+>
+> Is there a plan to support it in clang and lld?
+>
+> If so, please file a bug in LLVM's issue tracker
+> https://github.com/llvm/llvm-project/issues
+> then link to it in a comment in this Makefile above the relevant condition.
+As explained above, proper support for "small data optimization" 
+probably means some cooperation from ABI side (e.g. reserving a GP 
+register for being able to reference +/-4KiB from it with a single 
+insn), so I don't expect this to happen anytime soon.
+>
+>> +endif
+>> +cflags-y                       += -pipe
+>> +LDFLAGS_vmlinux                        += -static -n -nostdlib
+>>
+>>   # When the assembler supports explicit relocation hint, we must use it.
+>>   # GCC may have -mexplicit-relocs off by default if it was built with an old
+>> -# assembler, so we force it via an option.
+>> +# assembler, so we force it via an option. For LLVM/Clang the desired behavior
+>> +# is the default, and the flag is not supported, so don't pass it if Clang is
+>> +# being used.
+>>   #
+>>   # When the assembler does not supports explicit relocation hint, we can't use
+>>   # it.  Disable it if the compiler supports it.
+>> @@ -61,8 +67,10 @@ LDFLAGS_vmlinux                      += -G0 -static -n -nostdlib
+>>   # combination of a "new" assembler and "old" compiler is not supported.  Either
+>>   # upgrade the compiler or downgrade the assembler.
+>>   ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
+>> +ifndef CONFIG_CC_IS_CLANG
+>>   cflags-y                       += -mexplicit-relocs
+>>   KBUILD_CFLAGS_KERNEL           += -mdirect-extern-access
+>> +endif
+> Why would AS_HAS_EXPLICIT_RELOCS be set if -mexplicit-relocs isn't
+> supported? Is the kconfig for that broken?
+>
+> Does AS_HAS_EXPLICIT_RELOCS also need to test for the support for
+> -mdirect-extern-access or should there be a new config for that?
+> CC_SUPPORTS_DIRECT_EXTERN_ACCESS
+>
+>>   else
+>>   cflags-y                       += $(call cc-option,-mno-explicit-relocs)
+>>   KBUILD_AFLAGS_KERNEL           += -Wa,-mla-global-with-pcrel
+>> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+>> index 4c859a0e4754..19f6c75a1106 100644
+>> --- a/arch/loongarch/vdso/Makefile
+>> +++ b/arch/loongarch/vdso/Makefile
+>> @@ -25,13 +25,17 @@ endif
+>>   cflags-vdso := $(ccflags-vdso) \
+>>          -isystem $(shell $(CC) -print-file-name=include) \
+>>          $(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+>> -       -O2 -g -fno-strict-aliasing -fno-common -fno-builtin -G0 \
+>> +       -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
+>>          -fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+>>          $(call cc-option, -fno-asynchronous-unwind-tables) \
+>>          $(call cc-option, -fno-stack-protector)
+>>   aflags-vdso := $(ccflags-vdso) \
+>>          -D__ASSEMBLY__ -Wa,-gdwarf-2
+>>
+>> +ifndef CONFIG_CC_IS_CLANG
+>> +cflags-vdso += -G0
+>> +endif
+>> +
+>>   ifneq ($(c-gettimeofday-y),)
+>>     CFLAGS_vgettimeofday.o += -include $(c-gettimeofday-y)
+>>   endif
+>> --
+>> 2.40.0
+>>
+>>
+>
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
