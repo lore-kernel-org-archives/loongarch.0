@@ -1,20 +1,20 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54FF8C1B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1326A8F46;
 	Fri, 23 Jun 2023 13:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687527852; bh=ZJI78+EPNTp82LSUythHTSjkLEKJnQKH+YZh2u1h6f4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OHJr2KhxCtSIMq1CF71GM745UnDdJH35CzRxq05bJNeYqqiBxqkZM3Pqgnyfgzp57
-	 48tFm3jhTJiqAXRbaYE4Ny3ySfX14KOqMQHMlS8OkRQ6ii/oLkoI72b6PLK7ynma/N
-	 hC2VOT3XAiAmNsw44ev5GL9UbmBDQZvovPjQRuFA=
+	t=1687527844; bh=XjMJYVClVBZoq59JRA/g/JtKw+4iNV+idqP9kd8lKmU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=a50DuS080AUdkqLrk8Gl9D/KDlR7Zjw9FOr0hJGpUO+wusB8EUalv4A0FebLE+24S
+	 BR6SBWemSRsIMUo5cFUBuHHbCzuaKCEJBsTNNTldJ30JrDNjoIi/Yqe8KOJIjbZpub
+	 AY+knOb8/4LlrKVU/+AGFL/ZEKFm7xMgLODHFmbY=
 Received: from ld50.lan (unknown [101.88.25.181])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3B330605E5;
-	Fri, 23 Jun 2023 21:44:12 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id C13C160106;
+	Fri, 23 Jun 2023 21:44:02 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Rui <wangrui@loongson.cn>,
@@ -24,12 +24,10 @@ Cc: WANG Rui <wangrui@loongson.cn>,
 	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH 4/9] LoongArch: Make {read,write}_fcsr compatible with LLVM/Clang
-Date: Fri, 23 Jun 2023 21:43:46 +0800
-Message-Id: <20230623134351.1898379-5-kernel@xen0n.name>
+Subject: [PATCH 0/9] LoongArch: Preliminary ClangBuiltLinux enablement
+Date: Fri, 23 Jun 2023 21:43:42 +0800
+Message-Id: <20230623134351.1898379-1-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230623134351.1898379-1-kernel@xen0n.name>
-References: <20230623134351.1898379-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -40,61 +38,66 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-LLVM/Clang does not see FCSRs as GPRs, so make use of compiler
-built-ins instead for better maintainability with less code.
+Hi,
 
-The existing version cannot be wholly removed though, because the
-built-ins, while available on GCC too, is predicated TARGET_HARD_FLOAT,
-which means soft-float code cannot make use of them.
+It's been a long time since the LoongArch port was upstreamed to LLVM,
+and there seems to be evidence that Linux was successfully built with
+Clang inside Loongson roughly around that time; however, a lot has
+changed since then, and the Linux/LoongArch codebase now makes use of
+more novel features that necessitate further work. (The enablement work
+is tracked at [1].)
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/include/asm/loongarch.h | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+With this patch series and a patched LLVM/LLD ([2] for llvm-objcopy,
+and [3] for LLD), a working kernel can be built with `make LLVM=1`;
+although currently support for CONFIG_RELOCATABLE and CONFIG_MODULE is
+still TODO, we've decided to post the series early to hopefully reduce
+the rebase burden. The series contains several useful cleanups anyway.
 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index ac83e60c60d1..eedc313b5241 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -1445,12 +1445,6 @@ __BUILD_CSR_OP(tlbidx)
- #define EXCCODE_INT_START	64
- #define EXCCODE_INT_END		(EXCCODE_INT_START + EXCCODE_INT_NUM - 1)
- 
--/* FPU register names */
--#define LOONGARCH_FCSR0	$r0
--#define LOONGARCH_FCSR1	$r1
--#define LOONGARCH_FCSR2	$r2
--#define LOONGARCH_FCSR3	$r3
--
- /* FPU Status Register Values */
- #define FPU_CSR_RSVD	0xe0e0fce0
- 
-@@ -1487,6 +1481,18 @@ __BUILD_CSR_OP(tlbidx)
- #define FPU_CSR_RU	0x200	/* towards +Infinity */
- #define FPU_CSR_RD	0x300	/* towards -Infinity */
- 
-+#ifdef CONFIG_CC_IS_CLANG
-+#define LOONGARCH_FCSR0	0
-+#define LOONGARCH_FCSR1	1
-+#define LOONGARCH_FCSR2	2
-+#define LOONGARCH_FCSR3	3
-+#define read_fcsr(source)	__movfcsr2gr(source)
-+#define write_fcsr(dest, val)	__movgr2fcsr(dest, val)
-+#else /* CONFIG_CC_IS_CLANG */
-+#define LOONGARCH_FCSR0	$r0
-+#define LOONGARCH_FCSR1	$r1
-+#define LOONGARCH_FCSR2	$r2
-+#define LOONGARCH_FCSR3	$r3
- #define read_fcsr(source)	\
- ({	\
- 	unsigned int __res;	\
-@@ -1503,5 +1509,6 @@ do {	\
- 	"	movgr2fcsr	"__stringify(dest)", %0	\n"	\
- 	: : "r" (val));	\
- } while (0)
-+#endif /* CONFIG_CC_IS_CLANG */
- 
- #endif /* _ASM_LOONGARCH_H */
+Regarding how to merge this: because only Patch 8 is outside
+arch/loongarch, I'd prefer the series to get merged through Huacai's
+tree. The series applies cleanly on top of next-20230622.
+
+Thanks go to the ClangBuiltLinux team, and LoongArch toolchain
+maintainers from Loongson and the community alike; without your help
+this would come much later, if at all (my free time has been steadily
+dwindling this year already).
+
+Your comments are welcome!
+
+[1]: https://github.com/ClangBuiltLinux/linux/issues/1787
+[2]: https://reviews.llvm.org/D153609
+[3]: https://reviews.llvm.org/D138135
+
+WANG Rui (2):
+  LoongArch: Calculate various sizes in the linker script
+  LoongArch: extable: Also recognize ABI names of registers
+
+WANG Xuerui (7):
+  LoongArch: Prepare for assemblers with proper FCSR bank support
+  LoongArch: Make {read,write}_fcsr compatible with LLVM/Clang
+  LoongArch: Make the CPUCFG and CSR ops simple aliases of compiler
+    built-ins
+  LoongArch: Simplify the invtlb wrappers
+  LoongArch: Tweak CFLAGS for Clang compatibility
+  Makefile: Add loongarch target flag for Clang compilation
+  LoongArch: Mark Clang LTO as working
+
+ arch/loongarch/Kconfig                 |  5 ++
+ arch/loongarch/Makefile                | 14 ++++-
+ arch/loongarch/include/asm/fpregdef.h  |  7 +++
+ arch/loongarch/include/asm/gpr-num.h   | 30 ++++++++++
+ arch/loongarch/include/asm/loongarch.h | 82 ++++++++------------------
+ arch/loongarch/include/asm/tlb.h       | 45 +++++---------
+ arch/loongarch/kernel/efi-header.S     |  6 +-
+ arch/loongarch/kernel/head.S           |  8 +--
+ arch/loongarch/kernel/traps.c          |  2 +-
+ arch/loongarch/kernel/vmlinux.lds.S    |  7 +++
+ arch/loongarch/lib/dump_tlb.c          |  6 +-
+ arch/loongarch/mm/tlb.c                | 10 ++--
+ arch/loongarch/vdso/Makefile           |  6 +-
+ scripts/Makefile.clang                 |  1 +
+ 14 files changed, 122 insertions(+), 107 deletions(-)
+
 -- 
 2.40.0
 
