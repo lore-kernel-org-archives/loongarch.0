@@ -1,20 +1,20 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C628C09;
-	Fri, 23 Jun 2023 13:44:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB5023102;
+	Fri, 23 Jun 2023 13:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687527855; bh=gdMT1VPu7/T52oiYEqx+LXNHcCWHe7wIMOjlRAhlRp4=;
+	t=1687527858; bh=A/+xsnM5BmDYFUpJ1w+uRG48h4f/gI8zKnMGjRgeidc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LbZUAwOBMJDqn53dBYM6vkJk0QzMOlZIpO4XkyKJcp3LLA9UYdeAm4QO5NmZ7Hg3B
-	 Vt+LbbPcmhvdXLiI0FkO/5nhUEIBUWVSEtSRRIdYOwWk112ZSFfz99lXjB22Kxq1Fl
-	 /y4el0HPuzUO6cB2bR4t3fQdnRceT87sRecquOAw=
+	b=CjTUhw+2wYJEO4aFkjXMrZWLdyXKMr06aCIb9So6lhCFu6m/TZAv6HBWx8i3reXur
+	 7UPdVIMipxJQKanw4OrOCJi5+Tg57YV8zBuIM7lHjONv3TypbpUj8BLfatdj8jWaHQ
+	 IOshJ+oGJdDY+lIF0hd7KGMVMvHgDaXA+cKI46mQ=
 Received: from ld50.lan (unknown [101.88.25.181])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id AC758605F4;
-	Fri, 23 Jun 2023 21:44:15 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id B6473605FA;
+	Fri, 23 Jun 2023 21:44:17 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Rui <wangrui@loongson.cn>,
@@ -24,9 +24,9 @@ Cc: WANG Rui <wangrui@loongson.cn>,
 	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH 7/9] LoongArch: Tweak CFLAGS for Clang compatibility
-Date: Fri, 23 Jun 2023 21:43:49 +0800
-Message-Id: <20230623134351.1898379-8-kernel@xen0n.name>
+Subject: [PATCH 9/9] LoongArch: Mark Clang LTO as working
+Date: Fri, 23 Jun 2023 21:43:51 +0800
+Message-Id: <20230623134351.1898379-10-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230623134351.1898379-1-kernel@xen0n.name>
 References: <20230623134351.1898379-1-kernel@xen0n.name>
@@ -40,79 +40,26 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Now the arch code is mostly ready for LLVM/Clang consumption, it is time
-to re-organize the CFLAGS a little to actually enable the LLVM build.
-
-A build with !RELOCATABLE && !MODULE is confirmed working within a QEMU
-environment; support for the two features are currently blocked by
-LLVM/Clang, and will come later.
+Confirmed working with QEMU system emulation.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/Makefile      | 14 +++++++++++---
- arch/loongarch/vdso/Makefile |  6 +++++-
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ arch/loongarch/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index a27e264bdaa5..efe9b50bd829 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -46,12 +46,18 @@ ld-emul			= $(64bit-emul)
- cflags-y		+= -mabi=lp64s
- endif
- 
--cflags-y			+= -G0 -pipe -msoft-float
--LDFLAGS_vmlinux			+= -G0 -static -n -nostdlib
-+ifndef CONFIG_CC_IS_CLANG
-+cflags-y			+= -G0
-+LDFLAGS_vmlinux			+= -G0
-+endif
-+cflags-y			+= -pipe
-+LDFLAGS_vmlinux			+= -static -n -nostdlib
- 
- # When the assembler supports explicit relocation hint, we must use it.
- # GCC may have -mexplicit-relocs off by default if it was built with an old
--# assembler, so we force it via an option.
-+# assembler, so we force it via an option. For LLVM/Clang the desired behavior
-+# is the default, and the flag is not supported, so don't pass it if Clang is
-+# being used.
- #
- # When the assembler does not supports explicit relocation hint, we can't use
- # it.  Disable it if the compiler supports it.
-@@ -61,8 +67,10 @@ LDFLAGS_vmlinux			+= -G0 -static -n -nostdlib
- # combination of a "new" assembler and "old" compiler is not supported.  Either
- # upgrade the compiler or downgrade the assembler.
- ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
-+ifndef CONFIG_CC_IS_CLANG
- cflags-y			+= -mexplicit-relocs
- KBUILD_CFLAGS_KERNEL		+= -mdirect-extern-access
-+endif
- else
- cflags-y			+= $(call cc-option,-mno-explicit-relocs)
- KBUILD_AFLAGS_KERNEL		+= -Wa,-mla-global-with-pcrel
-diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index 4c859a0e4754..19f6c75a1106 100644
---- a/arch/loongarch/vdso/Makefile
-+++ b/arch/loongarch/vdso/Makefile
-@@ -25,13 +25,17 @@ endif
- cflags-vdso := $(ccflags-vdso) \
- 	-isystem $(shell $(CC) -print-file-name=include) \
- 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
--	-O2 -g -fno-strict-aliasing -fno-common -fno-builtin -G0 \
-+	-O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
- 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
- 	$(call cc-option, -fno-asynchronous-unwind-tables) \
- 	$(call cc-option, -fno-stack-protector)
- aflags-vdso := $(ccflags-vdso) \
- 	-D__ASSEMBLY__ -Wa,-gdwarf-2
- 
-+ifndef CONFIG_CC_IS_CLANG
-+cflags-vdso += -G0
-+endif
-+
- ifneq ($(c-gettimeofday-y),)
-   CFLAGS_vgettimeofday.o += -include $(c-gettimeofday-y)
- endif
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index c8e4f8b03c55..7c5d562b2623 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -51,6 +51,8 @@ config LOONGARCH
+ 	select ARCH_SUPPORTS_ACPI
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_SUPPORTS_HUGETLBFS
++	select ARCH_SUPPORTS_LTO_CLANG
++	select ARCH_SUPPORTS_LTO_CLANG_THIN
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
 -- 
 2.40.0
 
