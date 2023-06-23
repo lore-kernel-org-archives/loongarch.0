@@ -1,95 +1,86 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC64E100B8
-	for <loongarch@lists.linux.dev>; Fri, 23 Jun 2023 17:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687541652; bh=uijmNbUmIlHkh56jJTNP2T+S8lHX64iWOnrHTLZxmMY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c7ReWnrwTc9Z/yK/YxC63JsOxA9Ryx737DuAuXNPnXzjONrx43KxaW58qqTnmf5wa
-	 vcBAKCY6htQxSV4Ljc8ozyQ9fQAqvAKLzv2/2cTylYnPWouKP8/3deP8ypWTkbt+hO
-	 JkcqaXhSmlP1nGMj2yVoRdr+ONFZJkcIRgT8V2AU=
-Received: from [192.168.9.172] (unknown [101.88.25.181])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E9C0C600A9;
-	Sat, 24 Jun 2023 01:34:11 +0800 (CST)
-Message-ID: <ec964673-4dcd-df8d-9a90-15c84215080f@xen0n.name>
-Date: Sat, 24 Jun 2023 01:34:11 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA88100CA
+	for <loongarch@lists.linux.dev>; Fri, 23 Jun 2023 18:01:29 +0000 (UTC)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-bd5f59fb71dso894401276.3
+        for <loongarch@lists.linux.dev>; Fri, 23 Jun 2023 11:01:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687543289; x=1690135289;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DrJkokJikgOCvzs7OI6rvSjtU00f06IG7Q3tiUY6Zfw=;
+        b=fKUSyljafe4wuS9v3vyIjFynsz5MACLBz0a5H9UlIA8jXUvi2Sr5rUqI+VsR4RcfOP
+         rrnKf+hlHMqAV+kDel/pzWQL5N8Biprf0ZYNnVXC4+IDMILuZP6EiocJ2m8a6q1I4n8x
+         ntws0C+3BIw6B5Vb7Tswsa9xjex/3/VAGGt6MMKQUOdth10ifuvdfUPdD0pv7f8dxwv6
+         OChofOgSE4F24S2+il63jZ7/e279hd0+3vkWrYE0J5LJbI4vb47Gh3iBuiDvEw1KBen1
+         6MNx8md/E17VWxSysu3Li44uGwMt4rJ9LMLk6bUUWTBjz2b/Si1Mw1wMNjgwrJfhA+LJ
+         CvfA==
+X-Gm-Message-State: AC+VfDxSXPAWLhFWQeKJXYUhf4BFBas7nPEIJS2zzM3TfOoMwlML8Zqj
+	DQFJM/4QKwWmPtWsCHzmpYNlRE2rk7ApXjb7h/E=
+X-Google-Smtp-Source: ACHHUZ7gcMe3ibKA/hNp9Z4n8zg1/7efJ7VqDxtomIKEicWZSRCUJthxrmNt1VrTXT93ysYlhgzVdaLiU1DTdSiYx08=
+X-Received: by 2002:a25:18d7:0:b0:bcd:f5f3:2e11 with SMTP id
+ 206-20020a2518d7000000b00bcdf5f32e11mr20184302yby.11.1687543288690; Fri, 23
+ Jun 2023 11:01:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] LoongArch: Add SMT (Simultaneous Multi-Threading) support
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Liupu Wang <wangliupu@loongson.cn>, Len Brown <lenb@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>, Marc Zyngier <maz@kernel.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, Binbin Zhou <zhoubinbin@loongson.cn>,
- Bibo Mao <maobibo@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>,
- loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-References: <20230614093755.88881-1-wangliupu@loongson.cn>
- <CAJZ5v0iTKPbpskDVcsnVaWnhdvb5a-W2TVBfd0c=H2hVv8mOog@mail.gmail.com>
- <CAAhV-H7=+cyLK=whuYL3qD+CwFqxvSWywnLEVJ5W=0uqH+ZKiQ@mail.gmail.com>
- <CAJZ5v0jQD2ABKy3h9FXaKpvW9gcyTXngDAcVikZKQ5PxbyEH=g@mail.gmail.com>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <CAJZ5v0jQD2ABKy3h9FXaKpvW9gcyTXngDAcVikZKQ5PxbyEH=g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H4Es7qs54zr_hNPwn5MfgeLiKr3sgoTUP5iNj3JrH-1Uw@mail.gmail.com>
+ <7a085947-9011-ebc9-a97d-7a62c755a978@loongson.cn> <1c3c95c7-54e9-a65a-2f63-3a16af0fc2bf@loongson.cn>
+ <CAM9d7cj8mk_jAmK5KYrAJW248Nc1UY=_yD5BRBM+8aC+BaRBTw@mail.gmail.com>
+In-Reply-To: <CAM9d7cj8mk_jAmK5KYrAJW248Nc1UY=_yD5BRBM+8aC+BaRBTw@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 23 Jun 2023 11:01:17 -0700
+Message-ID: <CAM9d7cgZqyv6gPs=6LRNEgT_-PkRPz+TVRSSi-trSD9vb=59-A@mail.gmail.com>
+Subject: Re: [PATCH v2] perf symbol: Add LoongArch case in get_plt_sizes()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On 6/24/23 01:20, Rafael J. Wysocki wrote:
-> On Thu, Jun 15, 2023 at 4:31 AM Huacai Chen <chenhuacai@kernel.org> wrote:
->> Hi, Rafael,
->>
->> On Thu, Jun 15, 2023 at 2:24 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->>> On Wed, Jun 14, 2023 at 11:38 AM Liupu Wang <wangliupu@loongson.cn> wrote:
->>>> [snip]
->>>> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
->>>> index ccbeab9500ec..00dd309b6682 100644
->>>> --- a/drivers/acpi/Kconfig
->>>> +++ b/drivers/acpi/Kconfig
->>>> @@ -542,10 +542,10 @@ config ACPI_PFRUT
->>>>
->>>>   if ARM64
->>>>   source "drivers/acpi/arm64/Kconfig"
->>>> +endif
->>>>
->>>>   config ACPI_PPTT
->>>>          bool
->>>> -endif
->>> x86 doesn't use PPTT as of today.  Why do you enable it for them?
->> ACPI_PPTT is an invisible symbol, it cannot be enabled by explicitly
->> selecting and its default value is n, so I think it isn't enabled for
->> x86. On the other hand, moving it out of ARM64 can make other archs
->> don't need to modify this file any more if they need PPTT.
-> AFAICS, setting ACPI_PPTT causes pptt.c to be compiled and if it is
-> never going to be used by the given arch, it will just be dead code.
+On Thu, Jun 22, 2023 at 3:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Can't this be avoided?
+> Hello,
+>
+> On Tue, Jun 20, 2023 at 9:36=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
+cn> wrote:
+> >
+> >
+> >
+> > On 06/08/2023 03:01 PM, Tiezhu Yang wrote:
+> > > Hi Arnaldo,
+> > >
+> > > On 05/23/2023 06:26 PM, Huacai Chen wrote:
+> > >> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> > >>
+> > >> On Tue, May 23, 2023 at 5:57=E2=80=AFPM Tiezhu Yang <yangtiezhu@loon=
+gson.cn>
+> > >> wrote:
+> > >>>
+> > >>> We can see the following definitions in bfd/elfnn-loongarch.c:
+> >
+> > ...
+> >
+> > >
+> > > Are you OK with this change?
+> > > Could you please pick it up in your tree?
+> >
+> > Ping. What is the status of this patch? Any more comments?
+> > Is there a chance to merge it for this coming merge window?
+>
+> Sorry for the late reply,  I'll apply it to the perf-tools-next tree.
 
-FYI I've just tried a x86_64 defconfig build and ACPI_PPTT isn't being 
-enabled, nor is there a pptt.o signifying the same thing.
-
- > drivers/acpi/Makefile
- > 109:obj-$(CONFIG_ACPI_PPTT)     += pptt.o
-
-This should mean that, if nothing is selecting ACPI_PPTT then the file 
-isn't going to be compiled? Right now it seems only arch/arm64 and 
-arch/loongarch are doing so based on my cursory grep. Or do you mean we 
-should be extra careful and keep the guard around the symbol to ensure 
-it's nonexistent on other irrelevant arches?
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+Applied to perf-tools-next, thanks!
