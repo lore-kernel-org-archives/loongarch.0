@@ -1,20 +1,20 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB47364;
-	Sat, 24 Jun 2023 18:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDF22F30;
+	Sat, 24 Jun 2023 18:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687632067; bh=bAxZaycDbWfuwRvHTfXiVsCe0Y6mZrUxvMWuln5IK0A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TUd3908nen/qm/u4LMrb/IbpjtP0GyGXJ4vZM75NFB9EI5fa5kcnjfDRZNqWx7W70
-	 47kma0fpv17iAHBRnA+P2ob6BsF3mSxBp8szaoYq6qa4pHxaPYECoW49d1tlmtNQ2R
-	 b7aFukYAbfEdbn7OJ7G4BWEZz4eslJZ/QNK+q71E=
+	t=1687632077; bh=/Ae3yGesaN7INKQfcIHyYeenAVct9PlZ6PKdEfJO/pk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=W0FowH2hBnntaEvJepg6vWOVJdazENduLKVu8dJOy/eSMAZNaUP9/lQSUv5221dNg
+	 Jod9FOdXsSeZj652qWQ8vbDTfjfX4sJG8wOS8QOqvr4sKcqG0kJRvddbfT3uuLYh08
+	 mX21padNCBhsaAnIyXaBsQtlkk9E1ZDKflSQUZ5M=
 Received: from ld50.lan (unknown [101.88.25.181])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 61C78600B5;
-	Sun, 25 Jun 2023 02:41:04 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 824DE6015C;
+	Sun, 25 Jun 2023 02:41:17 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Rui <wangrui@loongson.cn>,
@@ -24,10 +24,12 @@ Cc: WANG Rui <wangrui@loongson.cn>,
 	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v2 0/9] LoongArch: Preliminary ClangBuiltLinux enablement
-Date: Sun, 25 Jun 2023 02:40:46 +0800
-Message-Id: <20230624184055.3000636-1-kernel@xen0n.name>
+Subject: [PATCH v2 2/9] LoongArch: extable: Also recognize ABI names of registers
+Date: Sun, 25 Jun 2023 02:40:48 +0800
+Message-Id: <20230624184055.3000636-3-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20230624184055.3000636-1-kernel@xen0n.name>
+References: <20230624184055.3000636-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,83 +38,66 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: WANG Xuerui <git@xen0n.name>
+From: WANG Rui <wangrui@loongson.cn>
 
-Hi,
+When the kernel is compiled with LLVM, the register names being handled
+during exception fixup building are ABI names instead of bare $rNN
+style. Add mapping for the ABI names for LLVM compatibility.
 
-It's been a long time since the LoongArch port was upstreamed to LLVM,
-and there seems to be evidence that Linux was successfully built with
-Clang inside Loongson roughly around that time; however, a lot has
-changed since then, and the Linux/LoongArch codebase now makes use of
-more novel features that necessitate further work. (The enablement work
-is tracked at [1].)
+Signed-off-by: WANG Rui <wangrui@loongson.cn>
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+---
+ arch/loongarch/include/asm/gpr-num.h | 30 ++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-With this patch series and a patched LLVM/Clang/LLD ([2][3][4][5]), a
-working kernel can be built with `make LLVM=1`. Although currently
-support for CONFIG_RELOCATABLE and CONFIG_MODULE is still TODO, we've
-decided to post the series early to hopefully reduce the rebase
-burden. The series contains several useful cleanups anyway.
-
-Regarding how to merge this: because only Patch 8 is outside
-arch/loongarch, I'd prefer the series to get merged through Huacai's
-tree. The series applies cleanly on top of next-20230622.
-
-Thanks go to the ClangBuiltLinux team, and LoongArch toolchain
-maintainers from Loongson and the community alike; without your help
-this would come much later, if at all (my free time has been steadily
-dwindling this year already).
-
-Your comments are welcome!
-
-[1]: https://github.com/ClangBuiltLinux/linux/issues/1787
-[2]: https://reviews.llvm.org/D153609
-[3]: https://reviews.llvm.org/D138135
-[4]: https://reviews.llvm.org/D150196
-[5]: https://reviews.llvm.org/D153707
-
-Changes in v2:
-
-- Merged the two FCSR-related patches, now using the same approach for
-  assembly and C (given that the inline asm codepath cannot be removed
-  right away), also change terminology: register "class" instead of
-  "bank"
-- Restored signatures of invtlb wrappers for ease of rebase (potentially
-  downstream product kernels?)
-- Removed -G0 switches altogether (turned out it's useless upon closer
-  look)
-- Fix -mabi and -msoft-float handling in the CFLAGS patch; two more LLVM
-  patches are now necessary (the [4] and [5] links above) but the
-  original and correct CFLAGS arrangement now works
-
-WANG Rui (2):
-  LoongArch: Calculate various sizes in the linker script
-  LoongArch: extable: Also recognize ABI names of registers
-
-WANG Xuerui (7):
-  LoongArch: Prepare for assemblers with proper FCSR class support
-  LoongArch: Make the CPUCFG and CSR ops simple aliases of compiler
-    built-ins
-  LoongArch: Simplify the invtlb wrappers
-  LoongArch: Remove all -G0 switches from CFLAGS
-  LoongArch: Tweak CFLAGS for Clang compatibility
-  LoongArch: Mark Clang LTO as working
-  Makefile: Add loongarch target flag for Clang compilation
-
- arch/loongarch/Kconfig                 |  5 ++
- arch/loongarch/Makefile                | 10 ++--
- arch/loongarch/include/asm/fpregdef.h  |  7 +++
- arch/loongarch/include/asm/gpr-num.h   | 30 +++++++++++
- arch/loongarch/include/asm/loongarch.h | 72 +++++++-------------------
- arch/loongarch/include/asm/tlb.h       | 39 +++++++-------
- arch/loongarch/kernel/efi-header.S     |  6 +--
- arch/loongarch/kernel/head.S           |  8 +--
- arch/loongarch/kernel/traps.c          |  2 +-
- arch/loongarch/kernel/vmlinux.lds.S    |  7 +++
- arch/loongarch/lib/dump_tlb.c          |  6 +--
- arch/loongarch/vdso/Makefile           |  2 +-
- scripts/Makefile.clang                 |  1 +
- 13 files changed, 107 insertions(+), 88 deletions(-)
-
+diff --git a/arch/loongarch/include/asm/gpr-num.h b/arch/loongarch/include/asm/gpr-num.h
+index e0941af20c7e..996038da806d 100644
+--- a/arch/loongarch/include/asm/gpr-num.h
++++ b/arch/loongarch/include/asm/gpr-num.h
+@@ -9,6 +9,22 @@
+ 	.equ	.L__gpr_num_$r\num, \num
+ 	.endr
+ 
++	/* ABI names of registers */
++	.equ	.L__gpr_num_$ra, 1
++	.equ	.L__gpr_num_$tp, 2
++	.equ	.L__gpr_num_$sp, 3
++	.irp	num,0,1,2,3,4,5,6,7
++	.equ	.L__gpr_num_$a\num, 4 + \num
++	.endr
++	.irp	num,0,1,2,3,4,5,6,7,8
++	.equ	.L__gpr_num_$t\num, 12 + \num
++	.endr
++	.equ	.L__gpr_num_$s9, 22
++	.equ	.L__gpr_num_$fp, 22
++	.irp	num,0,1,2,3,4,5,6,7,8
++	.equ	.L__gpr_num_$s\num, 23 + \num
++	.endr
++
+ #else /* __ASSEMBLY__ */
+ 
+ #define __DEFINE_ASM_GPR_NUMS					\
+@@ -16,6 +32,20 @@
+ "	.irp	num,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31\n" \
+ "	.equ	.L__gpr_num_$r\\num, \\num\n"			\
+ "	.endr\n"						\
++"	.equ	.L__gpr_num_$ra, 1\n"				\
++"	.equ	.L__gpr_num_$tp, 2\n"				\
++"	.equ	.L__gpr_num_$sp, 3\n"				\
++"	.irp	num,0,1,2,3,4,5,6,7\n"				\
++"	.equ	.L__gpr_num_$a\\num, 4 + \\num\n"		\
++"	.endr\n"						\
++"	.irp	num,0,1,2,3,4,5,6,7,8\n"			\
++"	.equ	.L__gpr_num_$t\\num, 12 + \\num\n"		\
++"	.endr\n"						\
++"	.equ	.L__gpr_num_$s9, 22\n"				\
++"	.equ	.L__gpr_num_$fp, 22\n"				\
++"	.irp	num,0,1,2,3,4,5,6,7,8\n"			\
++"	.equ	.L__gpr_num_$s\\num, 23 + \\num\n"		\
++"	.endr\n"						\
+ 
+ #endif /* __ASSEMBLY__ */
+ 
 -- 
 2.40.0
 
