@@ -1,138 +1,118 @@
-Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2695663
-	for <loongarch@lists.linux.dev>; Sat, 24 Jun 2023 14:22:18 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 9D1445801DE;
-	Sat, 24 Jun 2023 10:22:17 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Sat, 24 Jun 2023 10:22:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1687616537; x=1687623737; bh=Ih
-	z6/bi511oP4d526TPPtM1blBZt4arV1NypQDvLup8=; b=Owr1gNHl98uY/LqghJ
-	ew6TAsiUgTWjuGMsxDEW7dPPnLV3e7dQ48EjTdP5xHC8mtn8gOYupnCSHk4hfivP
-	2548A0+ELQQlya9a+Jj0JkYOlxNPXvbMtrvZE4ZYuMEg0oeEVRQxH3fZk7dq7fcR
-	K2FnnRvxLC2ctHogIIPsu5AzKYi/b1l8LHXlg+nhxQKDQbQ2GgNgOE7o0SLx/lJl
-	ZJl/F2RHs+ZN1HfuzBUUYja0J54XdNJ5XYphhB2SZMV3SOmTcHA6JZT0U9/SAmVC
-	9c8VJBDM16nnBrphov+n9ifuK0VIrDEcUy1gZSuUHvkasNoYZlMz0wEqqeUYovQg
-	985w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1687616537; x=1687623737; bh=Ihz6/bi511oP4
-	d526TPPtM1blBZt4arV1NypQDvLup8=; b=VK5TgDjVEpiEaunZZwRRAQPsTnjFp
-	zkoDEEdhdFioqudleRGZjNuek0JsRnk3YrU4OgaJsTS63QgF8QOtf7vg2z1azqmX
-	zbJgS5KJT8RVEJGWIcWXoccJV7DsEUPIM7fQrw314Non4B0AcKCTS2tiu4ftIj8G
-	sBy+JyOj8lBXvLnjyDAYLzzz21cS9Rw6GZ1k8qjXXnVcAj+7YV4car/+OJ2Hz1Vy
-	XzKWDBO3QquHdDPcc9ZnIK0trCu+0GLImpYfYIOCCwLguVtAkJf4TryNcTfPhMob
-	qjIlOfgux2mxV3SnTy++07Z7K6tSNSgFgk6q7BXZ1w+17nZskwCf6fCwA==
-X-ME-Sender: <xms:GPyWZCp4xCyzgIT7Kv57_S9Fj_YrOyXXtQi7KxbKTITt5sPxujuEgA>
-    <xme:GPyWZAoCSw5-QOKYgYL1kqq0dPmclQVYtInH9cHAwaW4i2eRqwCURn45oRtWD_RQc
-    xQUs-Q4Qr9LCBw-SYo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeegjedgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:GPyWZHMyXf5Kvsllp2a13R-ZdsUa5Eyn9zm8e_TevTvdOPqjcW5nlQ>
-    <xmx:GPyWZB456YmIlexKtameEvfzxT6jb_S5LP8U4ZZ8x8ftCJgDf8Imbw>
-    <xmx:GPyWZB4KiilRGFPdEeCPRk6Xvib-UQo3Rc6SHJIcWlgnWs25oEFPvQ>
-    <xmx:GfyWZDvcJNvUjndis2HwHYCG9wl31VYvNLjRzs3Fi5XOZJ7a0ROd8w>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id B8029B60086; Sat, 24 Jun 2023 10:22:16 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB47364;
+	Sat, 24 Jun 2023 18:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1687632067; bh=bAxZaycDbWfuwRvHTfXiVsCe0Y6mZrUxvMWuln5IK0A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TUd3908nen/qm/u4LMrb/IbpjtP0GyGXJ4vZM75NFB9EI5fa5kcnjfDRZNqWx7W70
+	 47kma0fpv17iAHBRnA+P2ob6BsF3mSxBp8szaoYq6qa4pHxaPYECoW49d1tlmtNQ2R
+	 b7aFukYAbfEdbn7OJ7G4BWEZz4eslJZ/QNK+q71E=
+Received: from ld50.lan (unknown [101.88.25.181])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 61C78600B5;
+	Sun, 25 Jun 2023 02:41:04 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Rui <wangrui@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>,
+	loongarch@lists.linux.dev,
+	linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH v2 0/9] LoongArch: Preliminary ClangBuiltLinux enablement
+Date: Sun, 25 Jun 2023 02:40:46 +0800
+Message-Id: <20230624184055.3000636-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <d9ffc44c-c4ae-4f01-bc0b-ee5359a24a0a@app.fastmail.com>
-In-Reply-To: <d4156e51-102f-36b4-e42c-938268b4b608@roeck-us.net>
-References: <20230417125651.25126-18-tzimmermann@suse.de>
- <c525adc9-6623-4660-8718-e0c9311563b8@roeck-us.net>
- <55130a50-d129-4336-99ce-3be4229b1c7d@app.fastmail.com>
- <d4156e51-102f-36b4-e42c-938268b4b608@roeck-us.net>
-Date: Sat, 24 Jun 2023 16:21:47 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Guenter Roeck" <linux@roeck-us.net>,
- "Thomas Zimmermann" <tzimmermann@suse.de>
-Cc: "Daniel Vetter" <daniel.vetter@ffwll.ch>, "Helge Deller" <deller@gmx.de>,
- "Javier Martinez Canillas" <javierm@redhat.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-sh@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, "David S . Miller" <davem@davemloft.net>,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [v3,17/19] arch/sparc: Implement fb_is_primary_device() in source file
-Content-Type: text/plain
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 24, 2023, at 15:26, Guenter Roeck wrote:
-> On 6/24/23 02:27, Arnd Bergmann wrote:
->> On Sat, Jun 24, 2023, at 03:55, Guenter Roeck wrote:
->>>
->>> On Mon, Apr 17, 2023 at 02:56:49PM +0200, Thomas Zimmermann wrote:
->>>> Other architectures implment fb_is_primary_device() in a source
->>>> file. Do the same on sparc. No functional changes, but allows to
->>>> remove several include statement from <asm/fb.h>.
->>>>
->>>> v2:
->>>> 	* don't include <asm/prom.h> in header file
->>>>
->>>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->>>> Cc: "David S. Miller" <davem@davemloft.net>
->>>
->>> This patch results (or appears to result) in the following build error
->>> when trying to build sparc64:allmodconfig.
->>>
->>> Error log:
->>> <stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
->>> WARNING: modpost: drivers/cpufreq/sparc-us2e-cpufreq: section mismatch
->>> in reference: cpufreq_us2e_driver+0x20 (section: .data) ->
->>> us2e_freq_cpu_init (section: .init.text)
->>> WARNING: modpost: drivers/cpufreq/sparc-us3-cpufreq: section mismatch
->>> in reference: cpufreq_us3_driver+0x20 (section: .data) ->
->>> us3_freq_cpu_init (section: .init.text)
->>> ERROR: modpost: "__xchg_called_with_bad_pointer" [lib/atomic64_test.ko]
->>> undefined!
->> 
->> These all look like old bugs that would be trivially fixed if
->> anyone cared about sparc.
->> 
->
-> Odd argument, given that this _is_ a sparc patch. Those may be old
-> bugs, but at least in 6.4-rc7 sparc64:allmodconfig does at least compile.
+From: WANG Xuerui <git@xen0n.name>
 
-The first three are non-fatal warnings even with CONFIG_WERROR=y, I'm
-sure they have been there for years. I don't immediately see what
-caused the __xchg_called_with_bad_pointer error, but it does not
-look related to the fbdev patch. I would guess that this is a second
-regression that happened to come in at the same time.
+Hi,
 
-> Sure, I can stop build testing it if that is where things are going.
+It's been a long time since the LoongArch port was upstreamed to LLVM,
+and there seems to be evidence that Linux was successfully built with
+Clang inside Loongson roughly around that time; however, a lot has
+changed since then, and the Linux/LoongArch codebase now makes use of
+more novel features that necessitate further work. (The enablement work
+is tracked at [1].)
 
-I think we clearly want to fix the fbdev regression you found, and
-maybe bisect the atomic64_test as well to see if that was caused by
-a recent patch to get it into a working state again.
+With this patch series and a patched LLVM/Clang/LLD ([2][3][4][5]), a
+working kernel can be built with `make LLVM=1`. Although currently
+support for CONFIG_RELOCATABLE and CONFIG_MODULE is still TODO, we've
+decided to post the series early to hopefully reduce the rebase
+burden. The series contains several useful cleanups anyway.
 
-Regarding whether to continue build testing: if every kernel build
-warns about a missing syscall for almost four years (clone3 was
-added in 5.3 and requires a minimal review to hook it up to asm
-code), it shows that the architecture is seriously neglected
-already.
+Regarding how to merge this: because only Patch 8 is outside
+arch/loongarch, I'd prefer the series to get merged through Huacai's
+tree. The series applies cleanly on top of next-20230622.
 
-     Arnd
+Thanks go to the ClangBuiltLinux team, and LoongArch toolchain
+maintainers from Loongson and the community alike; without your help
+this would come much later, if at all (my free time has been steadily
+dwindling this year already).
+
+Your comments are welcome!
+
+[1]: https://github.com/ClangBuiltLinux/linux/issues/1787
+[2]: https://reviews.llvm.org/D153609
+[3]: https://reviews.llvm.org/D138135
+[4]: https://reviews.llvm.org/D150196
+[5]: https://reviews.llvm.org/D153707
+
+Changes in v2:
+
+- Merged the two FCSR-related patches, now using the same approach for
+  assembly and C (given that the inline asm codepath cannot be removed
+  right away), also change terminology: register "class" instead of
+  "bank"
+- Restored signatures of invtlb wrappers for ease of rebase (potentially
+  downstream product kernels?)
+- Removed -G0 switches altogether (turned out it's useless upon closer
+  look)
+- Fix -mabi and -msoft-float handling in the CFLAGS patch; two more LLVM
+  patches are now necessary (the [4] and [5] links above) but the
+  original and correct CFLAGS arrangement now works
+
+WANG Rui (2):
+  LoongArch: Calculate various sizes in the linker script
+  LoongArch: extable: Also recognize ABI names of registers
+
+WANG Xuerui (7):
+  LoongArch: Prepare for assemblers with proper FCSR class support
+  LoongArch: Make the CPUCFG and CSR ops simple aliases of compiler
+    built-ins
+  LoongArch: Simplify the invtlb wrappers
+  LoongArch: Remove all -G0 switches from CFLAGS
+  LoongArch: Tweak CFLAGS for Clang compatibility
+  LoongArch: Mark Clang LTO as working
+  Makefile: Add loongarch target flag for Clang compilation
+
+ arch/loongarch/Kconfig                 |  5 ++
+ arch/loongarch/Makefile                | 10 ++--
+ arch/loongarch/include/asm/fpregdef.h  |  7 +++
+ arch/loongarch/include/asm/gpr-num.h   | 30 +++++++++++
+ arch/loongarch/include/asm/loongarch.h | 72 +++++++-------------------
+ arch/loongarch/include/asm/tlb.h       | 39 +++++++-------
+ arch/loongarch/kernel/efi-header.S     |  6 +--
+ arch/loongarch/kernel/head.S           |  8 +--
+ arch/loongarch/kernel/traps.c          |  2 +-
+ arch/loongarch/kernel/vmlinux.lds.S    |  7 +++
+ arch/loongarch/lib/dump_tlb.c          |  6 +--
+ arch/loongarch/vdso/Makefile           |  2 +-
+ scripts/Makefile.clang                 |  1 +
+ 13 files changed, 107 insertions(+), 88 deletions(-)
+
+-- 
+2.40.0
+
