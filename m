@@ -1,86 +1,131 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA88100CA
-	for <loongarch@lists.linux.dev>; Fri, 23 Jun 2023 18:01:29 +0000 (UTC)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-bd5f59fb71dso894401276.3
-        for <loongarch@lists.linux.dev>; Fri, 23 Jun 2023 11:01:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0CD378
+	for <loongarch@lists.linux.dev>; Sat, 24 Jun 2023 01:55:32 +0000 (UTC)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1b543f7e53aso9987255ad.1
+        for <loongarch@lists.linux.dev>; Fri, 23 Jun 2023 18:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687571732; x=1690163732;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QARueVM5NgEI8ly6kngoX66nkjJ1HIAQ25yUVJM/M7k=;
+        b=jnZC2ybL2QP1QYE4yr+wvqkrseWiA9e6NoqP59ZFdonp0a0kyhkp+nxwBRo6v1Y6Z/
+         YBydA7V4cijiWmqQJyW4qnDfnVFc68PWFrCyQW3WfyV83ZcXiNsnDb36P/IPvxrgawFQ
+         PdsKZv5Qeij8R+FWyRTJSBaFp39sDmm1TEDZXejL81ABXEvWRWyW8842SfLapBaR16sF
+         vD+ELtc/pHAw+pFteF4AqHPumHwOHQ8Xukac1UTuqCAW8wrP8Mwv7RW0ehQhkTSuQINb
+         3rHDLxwqMxX1Ty8DNYaLL6kO4Y4zAIst7+KWnQ3JQ6oIvuvnGT2NsAhP5/RdOvdpuSiy
+         65Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687543289; x=1690135289;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1687571732; x=1690163732;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DrJkokJikgOCvzs7OI6rvSjtU00f06IG7Q3tiUY6Zfw=;
-        b=fKUSyljafe4wuS9v3vyIjFynsz5MACLBz0a5H9UlIA8jXUvi2Sr5rUqI+VsR4RcfOP
-         rrnKf+hlHMqAV+kDel/pzWQL5N8Biprf0ZYNnVXC4+IDMILuZP6EiocJ2m8a6q1I4n8x
-         ntws0C+3BIw6B5Vb7Tswsa9xjex/3/VAGGt6MMKQUOdth10ifuvdfUPdD0pv7f8dxwv6
-         OChofOgSE4F24S2+il63jZ7/e279hd0+3vkWrYE0J5LJbI4vb47Gh3iBuiDvEw1KBen1
-         6MNx8md/E17VWxSysu3Li44uGwMt4rJ9LMLk6bUUWTBjz2b/Si1Mw1wMNjgwrJfhA+LJ
-         CvfA==
-X-Gm-Message-State: AC+VfDxSXPAWLhFWQeKJXYUhf4BFBas7nPEIJS2zzM3TfOoMwlML8Zqj
-	DQFJM/4QKwWmPtWsCHzmpYNlRE2rk7ApXjb7h/E=
-X-Google-Smtp-Source: ACHHUZ7gcMe3ibKA/hNp9Z4n8zg1/7efJ7VqDxtomIKEicWZSRCUJthxrmNt1VrTXT93ysYlhgzVdaLiU1DTdSiYx08=
-X-Received: by 2002:a25:18d7:0:b0:bcd:f5f3:2e11 with SMTP id
- 206-20020a2518d7000000b00bcdf5f32e11mr20184302yby.11.1687543288690; Fri, 23
- Jun 2023 11:01:28 -0700 (PDT)
+        bh=QARueVM5NgEI8ly6kngoX66nkjJ1HIAQ25yUVJM/M7k=;
+        b=crskJDykap62KSFVFoMQon8mpfMmb6WiYhPbQsGV2Jxez3+YyZFttdDZo+ZtdKlNDT
+         j6w1E1G4ZGf2ac0SPLSwWTOMgmLUIjweNkCEMhagxt5AX6fukTd2cIDl0itLZpRKRHkV
+         705+NfrrhPstvnOUmI1TOdHW18B6s0jpO8/ULIt59z0SidWk9l4bAE9DLS5XGpfbuzIC
+         p2At3z2rEHC7AlX3WYbrpq8GxDWglJ+FWUJ4GYI3xB5XfPZa8HPN4JeetTDkBg4Kcc7U
+         Ia+wiMT8zP5Rpn++is/rranPAvl+5elpxBzoR5r/zPxH35Ybg+zdIgJKJg1BIuQGzW89
+         XLDQ==
+X-Gm-Message-State: AC+VfDx0t6H+yGAG2yQamU4342GEGMoJQ1UwUVwOf/vXeLFi2lUkuAKZ
+	30L7DjnfNQW9E6+7Qqoy4QU=
+X-Google-Smtp-Source: ACHHUZ7EKMVxU8TWRgRU9+XwK7LYVXWH3v+gEDo5Epfh8lUR0ifndnY3uj+0AVLI0zG/i3TrUbosxA==
+X-Received: by 2002:a17:902:d50c:b0:1b0:4a37:9ccc with SMTP id b12-20020a170902d50c00b001b04a379cccmr736136plg.62.1687571731937;
+        Fri, 23 Jun 2023 18:55:31 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id jn16-20020a170903051000b001b53472353csm172067plb.211.2023.06.23.18.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jun 2023 18:55:31 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Fri, 23 Jun 2023 18:55:29 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: arnd@arndb.de, daniel.vetter@ffwll.ch, deller@gmx.de,
+	javierm@redhat.com, gregkh@linuxfoundation.org,
+	linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
+	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-sh@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [v3,17/19] arch/sparc: Implement fb_is_primary_device() in
+ source file
+Message-ID: <c525adc9-6623-4660-8718-e0c9311563b8@roeck-us.net>
+References: <20230417125651.25126-18-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H4Es7qs54zr_hNPwn5MfgeLiKr3sgoTUP5iNj3JrH-1Uw@mail.gmail.com>
- <7a085947-9011-ebc9-a97d-7a62c755a978@loongson.cn> <1c3c95c7-54e9-a65a-2f63-3a16af0fc2bf@loongson.cn>
- <CAM9d7cj8mk_jAmK5KYrAJW248Nc1UY=_yD5BRBM+8aC+BaRBTw@mail.gmail.com>
-In-Reply-To: <CAM9d7cj8mk_jAmK5KYrAJW248Nc1UY=_yD5BRBM+8aC+BaRBTw@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 23 Jun 2023 11:01:17 -0700
-Message-ID: <CAM9d7cgZqyv6gPs=6LRNEgT_-PkRPz+TVRSSi-trSD9vb=59-A@mail.gmail.com>
-Subject: Re: [PATCH v2] perf symbol: Add LoongArch case in get_plt_sizes()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230417125651.25126-18-tzimmermann@suse.de>
 
-On Thu, Jun 22, 2023 at 3:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello,
->
-> On Tue, Jun 20, 2023 at 9:36=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
-cn> wrote:
-> >
-> >
-> >
-> > On 06/08/2023 03:01 PM, Tiezhu Yang wrote:
-> > > Hi Arnaldo,
-> > >
-> > > On 05/23/2023 06:26 PM, Huacai Chen wrote:
-> > >> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
-> > >>
-> > >> On Tue, May 23, 2023 at 5:57=E2=80=AFPM Tiezhu Yang <yangtiezhu@loon=
-gson.cn>
-> > >> wrote:
-> > >>>
-> > >>> We can see the following definitions in bfd/elfnn-loongarch.c:
-> >
-> > ...
-> >
-> > >
-> > > Are you OK with this change?
-> > > Could you please pick it up in your tree?
-> >
-> > Ping. What is the status of this patch? Any more comments?
-> > Is there a chance to merge it for this coming merge window?
->
-> Sorry for the late reply,  I'll apply it to the perf-tools-next tree.
+Hi,
 
-Applied to perf-tools-next, thanks!
+On Mon, Apr 17, 2023 at 02:56:49PM +0200, Thomas Zimmermann wrote:
+> Other architectures implment fb_is_primary_device() in a source
+> file. Do the same on sparc. No functional changes, but allows to
+> remove several include statement from <asm/fb.h>.
+> 
+> v2:
+> 	* don't include <asm/prom.h> in header file
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: "David S. Miller" <davem@davemloft.net>
+
+This patch results (or appears to result) in the following build error
+when trying to build sparc64:allmodconfig.
+
+Error log:
+<stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+WARNING: modpost: drivers/cpufreq/sparc-us2e-cpufreq: section mismatch in reference: cpufreq_us2e_driver+0x20 (section: .data) -> us2e_freq_cpu_init (section: .init.text)
+WARNING: modpost: drivers/cpufreq/sparc-us3-cpufreq: section mismatch in reference: cpufreq_us3_driver+0x20 (section: .data) -> us3_freq_cpu_init (section: .init.text)
+ERROR: modpost: missing MODULE_LICENSE() in arch/sparc/video/fbdev.o
+ERROR: modpost: "__xchg_called_with_bad_pointer" [lib/atomic64_test.ko] undefined!
+
+Bisect log attached. Note that I suspect that there are several problems,
+but that is difficult to determine since this patch can not easily
+be reverted.
+
+Guenter
+
+---
+# bad: [8d2be868b42c08290509c60515865f4de24ea704] Add linux-next specific files for 20230623
+# good: [45a3e24f65e90a047bef86f927ebdc4c710edaa1] Linux 6.4-rc7
+git bisect start 'HEAD' 'v6.4-rc7'
+# good: [a5838c78db6a3a02e8d221e588c948f792e7f256] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git
+git bisect good a5838c78db6a3a02e8d221e588c948f792e7f256
+# bad: [cca41cc0b5485a0ec20707316c1a00082c01a2af] Merge branch 'for-next' of git://git.kernel.dk/linux-block.git
+git bisect bad cca41cc0b5485a0ec20707316c1a00082c01a2af
+# bad: [901bdf5ea1a836400ee69aa32b04e9c209271ec7] Merge tag 'amd-drm-next-6.5-2023-06-09' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
+git bisect bad 901bdf5ea1a836400ee69aa32b04e9c209271ec7
+# good: [c2d2588c702364ff53916ddd97e2b26fd4f4a317] drm/amdkfd: add send exception operation
+git bisect good c2d2588c702364ff53916ddd97e2b26fd4f4a317
+# bad: [1b842f73edbb1f8513ef4a89389176c628dc014a] drm/i915/guc: Remove some obsolete definitions
+git bisect bad 1b842f73edbb1f8513ef4a89389176c628dc014a
+# bad: [b8887e796e06b1de4db899f49d531d220f94f393] Merge tag 'drm-misc-next-2023-05-24' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
+git bisect bad b8887e796e06b1de4db899f49d531d220f94f393
+# bad: [bfdede3a58ea970333d77a05144a7bcec13cf515] drm/rockchip: cdn-dp: call drm_connector_update_edid_property() unconditionally
+git bisect bad bfdede3a58ea970333d77a05144a7bcec13cf515
+# good: [b50f6d465ac1fb37cab7bfb39ac6c9fb9d8e3716] arch/powerpc: Implement <asm/fb.h> with generic helpers
+git bisect good b50f6d465ac1fb37cab7bfb39ac6c9fb9d8e3716
+# bad: [322d716a3e8a74fb75cd0f657647be4df253fd2f] drm/vkms: isolate pixel conversion functionality
+git bisect bad 322d716a3e8a74fb75cd0f657647be4df253fd2f
+# bad: [55b24786b74863b8f10e4d262e642749911cb3bb] drm/display: Add missing OLED Vesa brightnesses definitions
+git bisect bad 55b24786b74863b8f10e4d262e642749911cb3bb
+# bad: [1c9da7db8899fa0e891997118d75b46d38102497] drm/armada: Include <linux/of.h>
+git bisect bad 1c9da7db8899fa0e891997118d75b46d38102497
+# bad: [db76f19a607d6cf4a9d5868d05675c355e99809c] arch/sparc: Implement <asm/fb.h> with generic helpers
+git bisect bad db76f19a607d6cf4a9d5868d05675c355e99809c
+# bad: [4eec0b3048fcd74b504c2a6828a07f133a8ab508] arch/sparc: Implement fb_is_primary_device() in source file
+git bisect bad 4eec0b3048fcd74b504c2a6828a07f133a8ab508
+# good: [b6cf29637be638a6846d2d297d80cf7c6fb74faf] arch/sh: Implement <asm/fb.h> with generic helpers
+git bisect good b6cf29637be638a6846d2d297d80cf7c6fb74faf
+# first bad commit: [4eec0b3048fcd74b504c2a6828a07f133a8ab508] arch/sparc: Implement fb_is_primary_device() in source file
