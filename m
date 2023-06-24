@@ -1,20 +1,20 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC683C31;
-	Sat, 24 Jun 2023 18:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9824C3C31;
+	Sat, 24 Jun 2023 18:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687632073; bh=UGMkiVgsD7TmU72TjAy44icKsVdzIhU52JRB8B10DPk=;
+	t=1687632081; bh=NOCcPZczdsomiPtC0nBfEgK1XfX0lPqE5Cxg6R5R4g4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rqoM2NoH9rlQ7eTfbgCTMVda9R/RGyl4KllU5Ib5Sg8IZgEbAmMkkbXkP8MOUR/UM
-	 fV2xsavONr28n+2bBrmQh5/CpbS9o4KMaJi5gO/byulQ0WUa1CjBhIVpr62wYUeO8j
-	 3lSaIFhXBOtnMEt+GIjZ0S5163G0Jt2X07PvoUZY=
+	b=OQeSqC3sECHenzvybqjfuRyAjSaCo0e490rGBUFKJVUIsvUJgJ75ENipcEAK37XG7
+	 kcHtY9xJSkKDWLvQDn/iikcGaEl6hlYDVEBG4TMnbVAPKcaU6hPfOQcQOig9hEDxzE
+	 FmZ2X11ZoGX3vWCwC3vDT09u2giwPbj47Yl9d6IM=
 Received: from ld50.lan (unknown [101.88.25.181])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E57366015B;
-	Sun, 25 Jun 2023 02:41:12 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 89CD9600B5;
+	Sun, 25 Jun 2023 02:41:21 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Rui <wangrui@loongson.cn>,
@@ -24,9 +24,9 @@ Cc: WANG Rui <wangrui@loongson.cn>,
 	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v2 1/9] LoongArch: Calculate various sizes in the linker script
-Date: Sun, 25 Jun 2023 02:40:47 +0800
-Message-Id: <20230624184055.3000636-2-kernel@xen0n.name>
+Subject: [PATCH v2 3/9] LoongArch: Prepare for assemblers with proper FCSR class support
+Date: Sun, 25 Jun 2023 02:40:49 +0800
+Message-Id: <20230624184055.3000636-4-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230624184055.3000636-1-kernel@xen0n.name>
 References: <20230624184055.3000636-1-kernel@xen0n.name>
@@ -38,89 +38,81 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: WANG Rui <wangrui@loongson.cn>
+From: WANG Xuerui <git@xen0n.name>
 
-Taking the address delta between symbols in different sections is not
-supported by the LLVM IAS. Instead, do this in the linker script, so
-the same data can be properly referenced in assembly.
+The GNU assembler (as of 2.40) mis-treats FCSR operands as GPRs, but
+the LLVM IAS does not. Probe for this and refer to FCSRs as "$fcsrNN"
+if support is present.
 
-Signed-off-by: WANG Rui <wangrui@loongson.cn>
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kernel/efi-header.S  | 6 +++---
- arch/loongarch/kernel/head.S        | 8 ++++----
- arch/loongarch/kernel/vmlinux.lds.S | 7 +++++++
- 3 files changed, 14 insertions(+), 7 deletions(-)
+ arch/loongarch/Kconfig                 | 3 +++
+ arch/loongarch/include/asm/fpregdef.h  | 7 +++++++
+ arch/loongarch/include/asm/loongarch.h | 9 ++++++++-
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/kernel/efi-header.S b/arch/loongarch/kernel/efi-header.S
-index 8c1d229a2afa..5f23b85d78ca 100644
---- a/arch/loongarch/kernel/efi-header.S
-+++ b/arch/loongarch/kernel/efi-header.S
-@@ -24,7 +24,7 @@
- 	.byte	0x02					/* MajorLinkerVersion */
- 	.byte	0x14					/* MinorLinkerVersion */
- 	.long	__inittext_end - .Lefi_header_end	/* SizeOfCode */
--	.long	_end - __initdata_begin			/* SizeOfInitializedData */
-+	.long	_kernel_vsize				/* SizeOfInitializedData */
- 	.long	0					/* SizeOfUninitializedData */
- 	.long	__efistub_efi_pe_entry - _head		/* AddressOfEntryPoint */
- 	.long	.Lefi_header_end - _head		/* BaseOfCode */
-@@ -79,9 +79,9 @@
- 		IMAGE_SCN_MEM_EXECUTE			/* Characteristics */
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 743d87655742..ac3564935281 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -242,6 +242,9 @@ config SCHED_OMIT_FRAME_POINTER
+ config AS_HAS_EXPLICIT_RELOCS
+ 	def_bool $(as-instr,x:pcalau12i \$t0$(comma)%pc_hi20(x))
  
- 	.ascii	".data\0\0\0"
--	.long	_end - __initdata_begin			/* VirtualSize */
-+	.long	_kernel_vsize				/* VirtualSize */
- 	.long	__initdata_begin - _head		/* VirtualAddress */
--	.long	_edata - __initdata_begin		/* SizeOfRawData */
-+	.long	_kernel_rsize				/* SizeOfRawData */
- 	.long	__initdata_begin - _head		/* PointerToRawData */
- 
- 	.long	0					/* PointerToRelocations */
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 0d8180153ec0..53b883db0786 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -23,7 +23,7 @@ _head:
- 	.word	MZ_MAGIC		/* "MZ", MS-DOS header */
- 	.org	0x8
- 	.dword	kernel_entry		/* Kernel entry point */
--	.dword	_end - _text		/* Kernel image effective size */
-+	.dword	_kernel_asize		/* Kernel image effective size */
- 	.quad	PHYS_LINK_KADDR		/* Kernel image load offset from start of RAM */
- 	.org	0x38			/* 0x20 ~ 0x37 reserved */
- 	.long	LINUX_PE_MAGIC
-@@ -32,9 +32,9 @@ _head:
- pe_header:
- 	__EFI_PE_HEADER
- 
--SYM_DATA(kernel_asize, .long _end - _text);
--SYM_DATA(kernel_fsize, .long _edata - _text);
--SYM_DATA(kernel_offset, .long kernel_offset - _text);
-+SYM_DATA(kernel_asize, .long _kernel_asize);
-+SYM_DATA(kernel_fsize, .long _kernel_fsize);
-+SYM_DATA(kernel_offset, .long _kernel_offset);
- 
- #endif
- 
-diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-index 0c7b041be9d8..79f238df029e 100644
---- a/arch/loongarch/kernel/vmlinux.lds.S
-+++ b/arch/loongarch/kernel/vmlinux.lds.S
-@@ -136,6 +136,13 @@ SECTIONS
- 	DWARF_DEBUG
- 	ELF_DETAILS
- 
-+	/* header symbols */
-+	_kernel_asize = _end - _text;
-+	_kernel_fsize = _edata - _text;
-+	_kernel_offset = kernel_offset - _text;
-+	_kernel_vsize = _end - __initdata_begin;
-+	_kernel_rsize = _edata - __initdata_begin;
++config AS_HAS_FCSR_CLASS
++	def_bool $(as-instr,x:movfcsr2gr \$t0$(comma)\$fcsr0)
 +
- 	.gptab.sdata : {
- 		*(.gptab.data)
- 		*(.gptab.sdata)
+ config CC_HAS_LSX_EXTENSION
+ 	def_bool $(cc-option,-mlsx)
+ 
+diff --git a/arch/loongarch/include/asm/fpregdef.h b/arch/loongarch/include/asm/fpregdef.h
+index b6be527831dd..3eb7ff9e1d8e 100644
+--- a/arch/loongarch/include/asm/fpregdef.h
++++ b/arch/loongarch/include/asm/fpregdef.h
+@@ -40,6 +40,12 @@
+ #define fs6	$f30
+ #define fs7	$f31
+ 
++#ifdef CONFIG_AS_HAS_FCSR_CLASS
++#define fcsr0	$fcsr0
++#define fcsr1	$fcsr1
++#define fcsr2	$fcsr2
++#define fcsr3	$fcsr3
++#else
+ /*
+  * Current binutils expects *GPRs* at FCSR position for the FCSR
+  * operation instructions, so define aliases for those used.
+@@ -48,5 +54,6 @@
+ #define fcsr1	$r1
+ #define fcsr2	$r2
+ #define fcsr3	$r3
++#endif
+ 
+ #endif /* _ASM_FPREGDEF_H */
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index ac83e60c60d1..ff4482fd8ad7 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -1445,11 +1445,18 @@ __BUILD_CSR_OP(tlbidx)
+ #define EXCCODE_INT_START	64
+ #define EXCCODE_INT_END		(EXCCODE_INT_START + EXCCODE_INT_NUM - 1)
+ 
+-/* FPU register names */
++/* FPU Status Register Names */
++#ifdef CONFIG_AS_HAS_FCSR_CLASS
++#define LOONGARCH_FCSR0	$fcsr0
++#define LOONGARCH_FCSR1	$fcsr1
++#define LOONGARCH_FCSR2	$fcsr2
++#define LOONGARCH_FCSR3	$fcsr3
++#else
+ #define LOONGARCH_FCSR0	$r0
+ #define LOONGARCH_FCSR1	$r1
+ #define LOONGARCH_FCSR2	$r2
+ #define LOONGARCH_FCSR3	$r3
++#endif
+ 
+ /* FPU Status Register Values */
+ #define FPU_CSR_RSVD	0xe0e0fce0
 -- 
 2.40.0
 
