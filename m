@@ -1,115 +1,128 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1239036C
-	for <loongarch@lists.linux.dev>; Sun, 25 Jun 2023 08:51:32 +0000 (UTC)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-56ffd7d7fedso23246747b3.2
-        for <loongarch@lists.linux.dev>; Sun, 25 Jun 2023 01:51:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687683092; x=1690275092;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e/Aydrd9oAz9wF8VtbGA6a+XUUai3n6kkWsRZbAgo9o=;
-        b=GDNu9ffuvVgHbXVStOeH6qydOAmOFb8sHm5kReMq78ffMLcp9Fx1rxs+nh7aEZUcCQ
-         OFiZfGidK2caAGT997jF9iY374LhI4SKqth3P23IA0WwZgCIBRCxISAcL088FWcNlWE5
-         Df7yLqinkrLjGI4BkbS7Wo4vMwl9Y/5RTVfLwHi5GNHr8OF2J+0LcnW+86UQ0Ng6VMp5
-         k2O7lHbLkBJQO/yCCegFMRfkoCB5lvTr4qtYBUqvA5+QIkjkb8q0e/cgCLyg8l+C0y14
-         Aeq2ZoEq5CVyKZq/1jRMAR6pfZu+r9Aww0btncSeIjteeFtoyNTyNN4E8prSYaRZNG3v
-         VPzw==
-X-Gm-Message-State: AC+VfDwhfG1Bo2uJ/b9rra+15xIdzRJEhr/VaF+U11wLflqe/gMqOjv/
-	AEJJhX6WUe6vXdZXpWbow+hAL0BCFRoE3Q==
-X-Google-Smtp-Source: ACHHUZ491aeVYgQwUip4O6LF3prk//ehtY9928qksaAvY4YUkZJIBUTg34wELyqEJFbhzz9L6wUw8A==
-X-Received: by 2002:a25:e60e:0:b0:c1c:9285:64c3 with SMTP id d14-20020a25e60e000000b00c1c928564c3mr1136857ybh.61.1687683091686;
-        Sun, 25 Jun 2023 01:51:31 -0700 (PDT)
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
-        by smtp.gmail.com with ESMTPSA id f135-20020a25cf8d000000b00b923b2935d9sm667658ybg.20.2023.06.25.01.51.30
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Jun 2023 01:51:31 -0700 (PDT)
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-c13280dfb09so1211109276.2
-        for <loongarch@lists.linux.dev>; Sun, 25 Jun 2023 01:51:30 -0700 (PDT)
-X-Received: by 2002:a25:cc02:0:b0:c13:f86d:3324 with SMTP id
- l2-20020a25cc02000000b00c13f86d3324mr3724376ybf.14.1687683090555; Sun, 25 Jun
- 2023 01:51:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F0AED2;
+	Sun, 25 Jun 2023 09:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1687687011; bh=JmY7+0q0b02U7ojD4bGBn1BjJD3l/ocHesTOn1m7IrI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lHIcLxRV31EO3XLmjR57RObdIkhRhuqSV2daXGxGFdzr8Iq414L25wr36nILZt/A4
+	 du8ASRcbnj7gwij3zaksxQ6syzFfBkKbh8MlbUPcWi/gTPsCkF4weuH1pBVs2AZ8qY
+	 G3xuhbtKwTsTGOY5lRByH+6EIf/nYiv/WcQbrNpk=
+Received: from ld50.lan (unknown [101.88.25.181])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 127CD600B5;
+	Sun, 25 Jun 2023 17:56:50 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Rui <wangrui@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>,
+	loongarch@lists.linux.dev,
+	linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH v3 0/8] LoongArch: Preliminary ClangBuiltLinux enablement
+Date: Sun, 25 Jun 2023 17:56:36 +0800
+Message-Id: <20230625095644.3156349-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230622205745.79707-1-vishal.moola@gmail.com> <20230622205745.79707-25-vishal.moola@gmail.com>
-In-Reply-To: <20230622205745.79707-25-vishal.moola@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 25 Jun 2023 10:51:19 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU2ZM1oJ7=Br6nezLpxjDQo_07N3T-adOupDm0Jntp=Qg@mail.gmail.com>
-Message-ID: <CAMuHMdU2ZM1oJ7=Br6nezLpxjDQo_07N3T-adOupDm0Jntp=Qg@mail.gmail.com>
-Subject: Re: [PATCH v5 24/33] m68k: Convert various functions to use ptdescs
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Vishal,
+From: WANG Xuerui <git@xen0n.name>
 
-On Thu, Jun 22, 2023 at 10:58=E2=80=AFPM Vishal Moola (Oracle)
-<vishal.moola@gmail.com> wrote:
-> As part of the conversions to replace pgtable constructor/destructors wit=
-h
-> ptdesc equivalents, convert various page table functions to use ptdescs.
->
-> Some of the functions use the *get*page*() helper functions. Convert
-> these to use pagetable_alloc() and ptdesc_address() instead to help
-> standardize page tables further.
->
-> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+Hi,
 
-Thanks for your patch!
+It's been a long time since the LoongArch port was upstreamed to LLVM,
+and there seems to be evidence that Linux was successfully built with
+Clang inside Loongson roughly around that time; however, a lot has
+changed since then, and the Linux/LoongArch codebase now makes use of
+more novel features that necessitate further work. (The enablement work
+is tracked at [1].)
 
-> --- a/arch/m68k/include/asm/mcf_pgalloc.h
-> +++ b/arch/m68k/include/asm/mcf_pgalloc.h
+With this patch series and a patched LLVM/Clang/LLD ([2][3][4][5]), a
+working kernel can be built with `make LLVM=1`. Although currently
+support for CONFIG_RELOCATABLE and CONFIG_MODULE is still TODO, we've
+decided to post the series early to hopefully reduce the rebase
+burden. The series contains several useful cleanups anyway.
 
->  static inline pgd_t *pgd_alloc(struct mm_struct *mm)
->  {
->         pgd_t *new_pgd;
-> +       struct ptdesc *ptdesc =3D pagetable_alloc((GFP_DMA | GFP_NOWARN) =
-&
+Regarding how to merge this: because only Patch 8 is outside
+arch/loongarch, I'd prefer the series to get merged through Huacai's
+tree. The series applies cleanly on top of next-20230622.
 
-0-day already told you for v3 that GFP_NOWARN does not exist.
-Please try cross-compiling your changes:
-https://mirrors.edge.kernel.org/pub/tools/crosstool/
+Thanks go to the ClangBuiltLinux team, and LoongArch toolchain
+maintainers from Loongson and the community alike; without your help
+this would come much later, if at all (my free time has been steadily
+dwindling this year already).
 
-> +                       ~__GFP_HIGHMEM, 0);
->
-> -       new_pgd =3D (pgd_t *)__get_free_page(GFP_DMA | __GFP_NOWARN);
-> -       if (!new_pgd)
-> +       if (!ptdesc)
->                 return NULL;
-> +       new_pgd =3D ptdesc_address(ptdesc);
-> +
->         memcpy(new_pgd, swapper_pg_dir, PTRS_PER_PGD * sizeof(pgd_t));
->         memset(new_pgd, 0, PAGE_OFFSET >> PGDIR_SHIFT);
->         return new_pgd;
+Your comments are welcome!
 
-Gr{oetje,eeting}s,
+[1]: https://github.com/ClangBuiltLinux/linux/issues/1787
+[2]: https://reviews.llvm.org/D153609
+[3]: https://reviews.llvm.org/D138135
+[4]: https://reviews.llvm.org/D150196
+[5]: https://reviews.llvm.org/D153707
 
-                        Geert
+Changes in v3:
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+- Squashed the two CFLAGS patches into one, and removed the CC_IS_CLANG
+  check in favor of a feature detection approach (Huacai and Ruoyao)
+- Removed unnecessary BUILD_BUG_ONs in the invtlb wrappers, and made
+  them __always_inline (Ruoyao and Bibo)
+- Linked to the explanation regarding the Clang triple's "libc" part
+  (Nick)
+- Fixed a wrong punctuation in commit message of Patch 4
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Changes in v2:
+
+- Merged the two FCSR-related patches, now using the same approach for
+  assembly and C (given that the inline asm codepath cannot be removed
+  right away), also change terminology: register "class" instead of
+  "bank"
+- Restored signatures of invtlb wrappers for ease of rebase (potentially
+  downstream product kernels?)
+- Removed -G0 switches altogether (turned out it's useless upon closer
+  look)
+- Fix -mabi and -msoft-float handling in the CFLAGS patch; two more LLVM
+  patches are now necessary (the [4] and [5] links above) but the
+  original and correct CFLAGS arrangement now works
+
+WANG Rui (2):
+  LoongArch: Calculate various sizes in the linker script
+  LoongArch: extable: Also recognize ABI names of registers
+
+WANG Xuerui (6):
+  LoongArch: Prepare for assemblers with proper FCSR class support
+  LoongArch: Make the CPUCFG and CSR ops simple aliases of compiler
+    built-ins
+  LoongArch: Simplify the invtlb wrappers
+  LoongArch: Tweak CFLAGS for Clang compatibility
+  LoongArch: Mark Clang LTO as working
+  Makefile: Add loongarch target flag for Clang compilation
+
+ arch/loongarch/Kconfig                 |  5 ++
+ arch/loongarch/Makefile                | 21 +++++---
+ arch/loongarch/include/asm/fpregdef.h  |  7 +++
+ arch/loongarch/include/asm/gpr-num.h   | 30 +++++++++++
+ arch/loongarch/include/asm/loongarch.h | 72 +++++++-------------------
+ arch/loongarch/include/asm/percpu.h    |  6 ++-
+ arch/loongarch/include/asm/tlb.h       | 43 +++++++--------
+ arch/loongarch/kernel/efi-header.S     |  6 +--
+ arch/loongarch/kernel/head.S           |  8 +--
+ arch/loongarch/kernel/traps.c          |  2 +-
+ arch/loongarch/kernel/vmlinux.lds.S    |  7 +++
+ arch/loongarch/lib/dump_tlb.c          |  6 +--
+ arch/loongarch/vdso/Makefile           |  2 +-
+ scripts/Makefile.clang                 |  1 +
+ 14 files changed, 118 insertions(+), 98 deletions(-)
+
+-- 
+2.40.0
+
