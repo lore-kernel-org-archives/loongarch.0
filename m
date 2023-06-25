@@ -1,20 +1,20 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FFEED9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A46ED2;
 	Sun, 25 Jun 2023 09:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687687079; bh=H4NWls1bUMGdPdN2OveQqxUMkhksKubc1e0oOz7s4Zo=;
+	t=1687687078; bh=f9UodCze65MUHVrQj48fTjyEJzJh37WtI+PaqIa5H+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sHDre7+MIxe4WQ9QS0lzPx9Dumw9urre45a1mvqRpkjtJDoLDxkzHMPjfE2HZVtFf
-	 D42CXGxQnJjuBmQwADvU4RY2meRUwyzlTkSahMQ7vkFUu+mEA0m/eFxMh77v/zMZdY
-	 uYXa4Y64sAkFaB33r0rvJAsQ818oKanHu7sbiNeA=
+	b=fHnuVqWNo63965Jjvx1FcKAfbuDWLk9u8rMHzZOqUMYp5ttLIAg6H/vKIkVK/8t4N
+	 O9bicTpW8khT3DY2zPhZKiMqzyh3HXoigWp7s3dWVNjkGhrCVjDq+0oJiFSRGKXIes
+	 D5DMQjNia5R0U3HSoQSfbttFeEFZafzyY5vDOnak=
 Received: from ld50.lan (unknown [101.88.25.181])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 44E61605E5;
-	Sun, 25 Jun 2023 17:57:59 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 5E3B060164;
+	Sun, 25 Jun 2023 17:57:58 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Rui <wangrui@loongson.cn>,
@@ -25,9 +25,9 @@ Cc: WANG Rui <wangrui@loongson.cn>,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>,
 	Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v3 8/8] Makefile: Add loongarch target flag for Clang compilation
-Date: Sun, 25 Jun 2023 17:56:44 +0800
-Message-Id: <20230625095644.3156349-9-kernel@xen0n.name>
+Subject: [PATCH v3 7/8] LoongArch: Mark Clang LTO as working
+Date: Sun, 25 Jun 2023 17:56:43 +0800
+Message-Id: <20230625095644.3156349-8-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230625095644.3156349-1-kernel@xen0n.name>
 References: <20230625095644.3156349-1-kernel@xen0n.name>
@@ -41,31 +41,27 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-The LoongArch kernel is 64-bit and built with the soft-float ABI,
-hence the loongarch64-linux-gnusf target. (The "libc" part can affect
-the codegen of libcalls: other arches do not use a bare-metal target,
-and currently the only fully supported libc on LoongArch is glibc
-anyway.)
+Confirmed working with QEMU system emulation.
 
-See: https://lore.kernel.org/loongarch/CAKwvOdnimxv8oJ4mVY74zqtt1x7KTMrWvn2_T9x22SFDbU6rHQ@mail.gmail.com/
 Signed-off-by: WANG Xuerui <git@xen0n.name>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- scripts/Makefile.clang | 1 +
- 1 file changed, 1 insertion(+)
+ arch/loongarch/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
-index 058a4c0f864e..6c23c6af797f 100644
---- a/scripts/Makefile.clang
-+++ b/scripts/Makefile.clang
-@@ -4,6 +4,7 @@
- CLANG_TARGET_FLAGS_arm		:= arm-linux-gnueabi
- CLANG_TARGET_FLAGS_arm64	:= aarch64-linux-gnu
- CLANG_TARGET_FLAGS_hexagon	:= hexagon-linux-musl
-+CLANG_TARGET_FLAGS_loongarch	:= loongarch64-linux-gnusf
- CLANG_TARGET_FLAGS_m68k		:= m68k-linux-gnu
- CLANG_TARGET_FLAGS_mips		:= mipsel-linux-gnu
- CLANG_TARGET_FLAGS_powerpc	:= powerpc64le-linux-gnu
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index ac3564935281..ed9a148cdcde 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -51,6 +51,8 @@ config LOONGARCH
+ 	select ARCH_SUPPORTS_ACPI
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_SUPPORTS_HUGETLBFS
++	select ARCH_SUPPORTS_LTO_CLANG
++	select ARCH_SUPPORTS_LTO_CLANG_THIN
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
 -- 
 2.40.0
 
