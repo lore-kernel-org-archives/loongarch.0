@@ -1,120 +1,118 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCCA3C3C;
-	Sat, 24 Jun 2023 19:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1687633637;
-	bh=IFHbcQKorjSN9Dp63NRvEuStEH8On6qKJMUm6jbMLyU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=bPJaTSzlxk2dTxP4Glpfe28xB11ohsQBlz3qYXP/NnIlJUGBzVvYCHyHE3RWEDbpJ
-	 ROc91PUW1neKVeD7CKszABYLjjlw3LnE7equmTGybo3m8KMz3DkF36bVZTzWILWbJh
-	 1Vftct6yiQaaVC5Yxj49NmPHBuy2Eh9tyINqv3y8=
-Received: from [IPv6:240e:358:11d2:6c00:dc73:854d:832e:2] (unknown [IPv6:240e:358:11d2:6c00:dc73:854d:832e:2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 6703E65ECA;
-	Sat, 24 Jun 2023 15:07:13 -0400 (EDT)
-Message-ID: <7142bd60ca9764fe836a76d61513bbcc66ded783.camel@xry111.site>
-Subject: Re: [PATCH v2 7/9] LoongArch: Tweak CFLAGS for Clang compatibility
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Rui <wangrui@loongson.cn>, loongarch@lists.linux.dev, 
- linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
- linux-kernel@vger.kernel.org,  WANG Xuerui <git@xen0n.name>
-Date: Sun, 25 Jun 2023 03:07:09 +0800
-In-Reply-To: <20230624184055.3000636-8-kernel@xen0n.name>
-References: <20230624184055.3000636-1-kernel@xen0n.name>
-	 <20230624184055.3000636-8-kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBE37F;
+	Sun, 25 Jun 2023 02:13:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BBCC433C0;
+	Sun, 25 Jun 2023 02:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687659216;
+	bh=tO8ygIBNQgDG09IQJY8tRBeB8/twzooSyi/a2iRZmPU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DJSJvVSnJxdBSrlwsxs04gMyVeUDOC7H0y9BM7ozxTP8SmX5s6EYRpQjgtqA9EkPT
+	 x8B6f7hZPd8zd0PU7/P80D2Fjg7///2oJp7TKxhDR3997mz/Oy+p2OK7pbjEiWGCC1
+	 tcvBKjCWATgBYtwdSdpQe8q41uJhIU8n6WhCvFyhfInooMZH7Pq0Mxm1nf1816+HCR
+	 9Zf7DOgKIW5/KERl3dxloK87us+Lq7e2+IrjsF1sJnOcH28rHK8SbtGmk6sTKhoyv9
+	 XkGA3PpXqkKIiTP6H4vruwDzWuBaTT24lzf6u8Dek3AgyEiHjyC0oPvgH44WvjJ19Z
+	 1Zih4s+D970jA==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-98e0c1d5289so85430466b.2;
+        Sat, 24 Jun 2023 19:13:35 -0700 (PDT)
+X-Gm-Message-State: AC+VfDyucCILlQ2vWks5BrT30T5hSmAJvs5FO1MNm6Qfhe/zhGyasu+o
+	qYEjq1kZdWVlNKYPjse0aeqnJiZWYta4livnWBI=
+X-Google-Smtp-Source: ACHHUZ7e7ZGxx17j1nJTkWVwVj2OgSY6k/JVOZOyZm7hb2/sSdTOvJSRHjCeW++9haXDHPqDDAMFjsqdjN7hU/an2lk=
+X-Received: by 2002:a17:906:30c1:b0:98d:63c5:d132 with SMTP id
+ b1-20020a17090630c100b0098d63c5d132mr4946746ejb.72.1687659214276; Sat, 24 Jun
+ 2023 19:13:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20230624184055.3000636-1-kernel@xen0n.name> <20230624184055.3000636-8-kernel@xen0n.name>
+In-Reply-To: <20230624184055.3000636-8-kernel@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 25 Jun 2023 10:13:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H54bZ5_OSXtcq3B3d4bZj4GBTOf7Z8aA6Jm7uGdKTj_ug@mail.gmail.com>
+Message-ID: <CAAhV-H54bZ5_OSXtcq3B3d4bZj4GBTOf7Z8aA6Jm7uGdKTj_ug@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] LoongArch: Tweak CFLAGS for Clang compatibility
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: WANG Rui <wangrui@loongson.cn>, Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2023-06-25 at 02:40 +0800, WANG Xuerui wrote:
+Hi, Ruoyao,
+
+On Sun, Jun 25, 2023 at 2:42=E2=80=AFAM WANG Xuerui <kernel@xen0n.name> wro=
+te:
+>
 > From: WANG Xuerui <git@xen0n.name>
->=20
-> Now the arch code is mostly ready for LLVM/Clang consumption, it is
-> time
+>
+> Now the arch code is mostly ready for LLVM/Clang consumption, it is time
 > to re-organize the CFLAGS a little to actually enable the LLVM build.
->=20
+>
 > In particular, -mexplicit-relocs and -mdirect-extern-access are not
-> necessary nor supported on Clang; feature detection via cc-option
-> would
+> necessary nor supported on Clang; feature detection via cc-option would
 > not work, because that way the broken combo of "new GNU as + old GCC"
 > would seem to get "fixed", but actually produce broken kernels.
 > Explicitly depending on CONFIG_CC_IS_CLANG is thus necessary to not
 > regress UX for those building their own kernels.
->=20
-> A build with !RELOCATABLE && !MODULE is confirmed working within a
-> QEMU
+>
+> A build with !RELOCATABLE && !MODULE is confirmed working within a QEMU
 > environment; support for the two features are currently blocked on
 > LLVM/Clang, and will come later.
->=20
+>
 > Signed-off-by: WANG Xuerui <git@xen0n.name>
 > ---
-> =C2=A0arch/loongarch/Makefile | 6 +++++-
-> =C2=A01 file changed, 5 insertions(+), 1 deletion(-)
->=20
+>  arch/loongarch/Makefile | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
 > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
 > index 366771016b99..82c619791a63 100644
 > --- a/arch/loongarch/Makefile
 > +++ b/arch/loongarch/Makefile
-> @@ -51,7 +51,9 @@ LDFLAGS_vmlinux=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0+=3D -static -n
-> -nostdlib
-> =C2=A0
-> =C2=A0# When the assembler supports explicit relocation hint, we must use=
- it.
-> =C2=A0# GCC may have -mexplicit-relocs off by default if it was built wit=
-h an old
+> @@ -51,7 +51,9 @@ LDFLAGS_vmlinux                       +=3D -static -n -=
+nostdlib
+>
+>  # When the assembler supports explicit relocation hint, we must use it.
+>  # GCC may have -mexplicit-relocs off by default if it was built with an =
+old
 > -# assembler, so we force it via an option.
 > +# assembler, so we force it via an option. For LLVM/Clang the desired be=
 havior
-> +# is the default
-
-Actually -mdirect-extern-access is also a part of the desired behavior.
-Though it's not strictly needed, it is a micro-optimization to avoid
-unnecessary GOT accesses.  Maybe with Clang the LTO pass can optimize
-them away but I'm not sure.
-
-Ok with the flags change (for now) but the comment can be more accurate.
-
-> , and the flag is not supported, so don't pass it if Clang is
+> +# is the default, and the flag is not supported, so don't pass it if Cla=
+ng is
 > +# being used.
-> =C2=A0#
-> =C2=A0# When the assembler does not supports explicit relocation hint, we=
- can't use
-> =C2=A0# it.=C2=A0 Disable it if the compiler supports it.
-> @@ -61,8 +63,10 @@ LDFLAGS_vmlinux=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0+=3D -static -n -nostdlib
-> =C2=A0# combination of a "new" assembler and "old" compiler is not suppor=
-ted.=C2=A0 Either
-> =C2=A0# upgrade the compiler or downgrade the assembler.
-> =C2=A0ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
+>  #
+>  # When the assembler does not supports explicit relocation hint, we can'=
+t use
+>  # it.  Disable it if the compiler supports it.
+> @@ -61,8 +63,10 @@ LDFLAGS_vmlinux                      +=3D -static -n -=
+nostdlib
+>  # combination of a "new" assembler and "old" compiler is not supported. =
+ Either
+>  # upgrade the compiler or downgrade the assembler.
+>  ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
 > +ifndef CONFIG_CC_IS_CLANG
-> =C2=A0cflags-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0+=3D -mexplicit-relocs
-> =C2=A0KBUILD_CFLAGS_KERNEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0+=3D -mdirect-extern-access
+>  cflags-y                       +=3D -mexplicit-relocs
+>  KBUILD_CFLAGS_KERNEL           +=3D -mdirect-extern-access
 > +endif
-> =C2=A0else
-> =C2=A0cflags-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0+=3D $(call cc-option,-mno-explicit-relocs)
-> =C2=A0KBUILD_AFLAGS_KERNEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0+=3D -Wa,-mla-global-with-pcrel
+I prefer to drop CONFIG_CC_IS_CLANG and use
+cflags-y                       +=3D $(call cc-option,-mexplicit-relocs)
+KBUILD_CFLAGS_KERNEL           +=3D $(call cc-option,-mdirect-extern-access=
+)
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Then Patch-6 can be merged in this.
+
+What's your opinion?
+
+Huacai
+>  else
+>  cflags-y                       +=3D $(call cc-option,-mno-explicit-reloc=
+s)
+>  KBUILD_AFLAGS_KERNEL           +=3D -Wa,-mla-global-with-pcrel
+> --
+> 2.40.0
+>
