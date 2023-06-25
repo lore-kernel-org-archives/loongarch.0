@@ -1,162 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC307C;
-	Sun, 25 Jun 2023 08:13:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F40B5C433CA;
-	Sun, 25 Jun 2023 08:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687680825;
-	bh=A6eLoSF/3c9MwdZ73/LDRUS0KBbUtVOgEQo1SNVN0vY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SMNiC13gJnhftwCGlx3d+/qnKa958AbLokVoVK7Bfl2io6pcfM2Oxevrpm6LPhaSN
-	 YNVkINkYcks+8LGX7ytgTfOtAtsfyKIo2EA4POdffxfxoBX8nKW58NBkKzz6/lW1wX
-	 zgcEApLiHK1xhmMXnm22aXj+KaepyyUrmwJaAlMp8AQZoTm9XVz+sRdAQCTxEn94O2
-	 muel+R0184GpAYEKawpeC6shDbPC/5i6lH9wmx2e4X7AZCpYTrkRYqoCPeb64KEMDK
-	 B8y3L6xjPHETTlvy/3nNXnMWqBeL7Dq9K26UXdN2aRa4Yu5aCDhfh4BC8ICmyAS7Yf
-	 AMIL5G7LdqRFQ==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-51d8fa4dbf9so747934a12.1;
-        Sun, 25 Jun 2023 01:13:44 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyAky9igI5/aONR3rib9gjVjcgHtXwPsA/diZWKAliZvi7z+P4s
-	cgKC+A5RoiLZM6d7dpq2eZg++nNR5xF3fqLMQxk=
-X-Google-Smtp-Source: ACHHUZ6tZAjsjOuGF42BTonLvZw/MNdZ/ki6HUzFD7w8sca/HlOnCwNTPffBK9UWiVacTzDdRe71RKDem/p0WWv0WTo=
-X-Received: by 2002:a05:6402:1641:b0:51d:80a1:7b1e with SMTP id
- s1-20020a056402164100b0051d80a17b1emr1964597edx.9.1687680823171; Sun, 25 Jun
- 2023 01:13:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1239036C
+	for <loongarch@lists.linux.dev>; Sun, 25 Jun 2023 08:51:32 +0000 (UTC)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-56ffd7d7fedso23246747b3.2
+        for <loongarch@lists.linux.dev>; Sun, 25 Jun 2023 01:51:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687683092; x=1690275092;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e/Aydrd9oAz9wF8VtbGA6a+XUUai3n6kkWsRZbAgo9o=;
+        b=GDNu9ffuvVgHbXVStOeH6qydOAmOFb8sHm5kReMq78ffMLcp9Fx1rxs+nh7aEZUcCQ
+         OFiZfGidK2caAGT997jF9iY374LhI4SKqth3P23IA0WwZgCIBRCxISAcL088FWcNlWE5
+         Df7yLqinkrLjGI4BkbS7Wo4vMwl9Y/5RTVfLwHi5GNHr8OF2J+0LcnW+86UQ0Ng6VMp5
+         k2O7lHbLkBJQO/yCCegFMRfkoCB5lvTr4qtYBUqvA5+QIkjkb8q0e/cgCLyg8l+C0y14
+         Aeq2ZoEq5CVyKZq/1jRMAR6pfZu+r9Aww0btncSeIjteeFtoyNTyNN4E8prSYaRZNG3v
+         VPzw==
+X-Gm-Message-State: AC+VfDwhfG1Bo2uJ/b9rra+15xIdzRJEhr/VaF+U11wLflqe/gMqOjv/
+	AEJJhX6WUe6vXdZXpWbow+hAL0BCFRoE3Q==
+X-Google-Smtp-Source: ACHHUZ491aeVYgQwUip4O6LF3prk//ehtY9928qksaAvY4YUkZJIBUTg34wELyqEJFbhzz9L6wUw8A==
+X-Received: by 2002:a25:e60e:0:b0:c1c:9285:64c3 with SMTP id d14-20020a25e60e000000b00c1c928564c3mr1136857ybh.61.1687683091686;
+        Sun, 25 Jun 2023 01:51:31 -0700 (PDT)
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
+        by smtp.gmail.com with ESMTPSA id f135-20020a25cf8d000000b00b923b2935d9sm667658ybg.20.2023.06.25.01.51.30
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 Jun 2023 01:51:31 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-c13280dfb09so1211109276.2
+        for <loongarch@lists.linux.dev>; Sun, 25 Jun 2023 01:51:30 -0700 (PDT)
+X-Received: by 2002:a25:cc02:0:b0:c13:f86d:3324 with SMTP id
+ l2-20020a25cc02000000b00c13f86d3324mr3724376ybf.14.1687683090555; Sun, 25 Jun
+ 2023 01:51:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230624184055.3000636-1-kernel@xen0n.name> <20230624184055.3000636-8-kernel@xen0n.name>
- <CAAhV-H54bZ5_OSXtcq3B3d4bZj4GBTOf7Z8aA6Jm7uGdKTj_ug@mail.gmail.com>
- <cc8c2f2d-b242-7488-3b5a-33828ee38b36@xen0n.name> <5154e8141e2b022b477f2d2658279e94f6b02149.camel@xry111.site>
- <12e9a417-e655-b85b-1213-231fd68b0977@xen0n.name>
-In-Reply-To: <12e9a417-e655-b85b-1213-231fd68b0977@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 25 Jun 2023 16:13:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Xn51y4Vd1DgtVCRtkAAvVT5DtmQ7EZ+NwF2M9xRiRcw@mail.gmail.com>
-Message-ID: <CAAhV-H5Xn51y4Vd1DgtVCRtkAAvVT5DtmQ7EZ+NwF2M9xRiRcw@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] LoongArch: Tweak CFLAGS for Clang compatibility
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Xi Ruoyao <xry111@xry111.site>, WANG Rui <wangrui@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
+References: <20230622205745.79707-1-vishal.moola@gmail.com> <20230622205745.79707-25-vishal.moola@gmail.com>
+In-Reply-To: <20230622205745.79707-25-vishal.moola@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Sun, 25 Jun 2023 10:51:19 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU2ZM1oJ7=Br6nezLpxjDQo_07N3T-adOupDm0Jntp=Qg@mail.gmail.com>
+Message-ID: <CAMuHMdU2ZM1oJ7=Br6nezLpxjDQo_07N3T-adOupDm0Jntp=Qg@mail.gmail.com>
+Subject: Re: [PATCH v5 24/33] m68k: Convert various functions to use ptdescs
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
+	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 25, 2023 at 3:48=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
-te:
->
-> On 2023/6/25 15:36, Xi Ruoyao wrote:
-> > On Sun, 2023-06-25 at 15:16 +0800, WANG Xuerui wrote:
-> >> On 2023/6/25 10:13, Huacai Chen wrote:
-> >>> Hi, Ruoyao,
-> >>>
-> >>> On Sun, Jun 25, 2023 at 2:42=E2=80=AFAM WANG Xuerui <kernel@xen0n.nam=
-e> wrote:
-> >>>>
-> >>>> From: WANG Xuerui <git@xen0n.name>
-> >>>>
-> >>>> Now the arch code is mostly ready for LLVM/Clang consumption, it is =
-time
-> >>>> to re-organize the CFLAGS a little to actually enable the LLVM build=
-.
-> >>>>
-> >>>> In particular, -mexplicit-relocs and -mdirect-extern-access are not
-> >>>> necessary nor supported on Clang; feature detection via cc-option wo=
-uld
-> >>>> not work, because that way the broken combo of "new GNU as + old GCC=
-"
-> >>>> would seem to get "fixed", but actually produce broken kernels.
-> >>>> Explicitly depending on CONFIG_CC_IS_CLANG is thus necessary to not
-> >>>> regress UX for those building their own kernels.
-> >>>>
-> >>>> A build with !RELOCATABLE && !MODULE is confirmed working within a Q=
-EMU
-> >>>> environment; support for the two features are currently blocked on
-> >>>> LLVM/Clang, and will come later.
-> >>>>
-> >>>> Signed-off-by: WANG Xuerui <git@xen0n.name>
-> >>>> ---
-> >>>>    arch/loongarch/Makefile | 6 +++++-
-> >>>>    1 file changed, 5 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> >>>> index 366771016b99..82c619791a63 100644
-> >>>> --- a/arch/loongarch/Makefile
-> >>>> +++ b/arch/loongarch/Makefile
-> >>>> @@ -51,7 +51,9 @@ LDFLAGS_vmlinux                       +=3D -static=
- -n -nostdlib
-> >>>>
-> >>>>    # When the assembler supports explicit relocation hint, we must u=
-se it.
-> >>>>    # GCC may have -mexplicit-relocs off by default if it was built w=
-ith an old
-> >>>> -# assembler, so we force it via an option.
-> >>>> +# assembler, so we force it via an option. For LLVM/Clang the desir=
-ed behavior
-> >>>> +# is the default, and the flag is not supported, so don't pass it i=
-f Clang is
-> >>>> +# being used.
-> >>>>    #
-> >>>>    # When the assembler does not supports explicit relocation hint, =
-we can't use
-> >>>>    # it.  Disable it if the compiler supports it.
-> >>>> @@ -61,8 +63,10 @@ LDFLAGS_vmlinux                      +=3D -static=
- -n -nostdlib
-> >>>>    # combination of a "new" assembler and "old" compiler is not supp=
-orted.  Either
-> >>>>    # upgrade the compiler or downgrade the assembler.
-> >>>>    ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
-> >>>> +ifndef CONFIG_CC_IS_CLANG
-> >>>>    cflags-y                       +=3D -mexplicit-relocs
-> >>>>    KBUILD_CFLAGS_KERNEL           +=3D -mdirect-extern-access
-> >>>> +endif
-> >>> I prefer to drop CONFIG_CC_IS_CLANG and use
-> >>> cflags-y                       +=3D $(call cc-option,-mexplicit-reloc=
-s)
-> >>> KBUILD_CFLAGS_KERNEL           +=3D $(call cc-option,-mdirect-extern-=
-access)
-> >>>
-> >>> Then Patch-6 can be merged in this.
-> >>>
-> >>> What's your opinion?
-> >>
-> >> FYI: with this approach the build no longer instantly dies with binuti=
-ls
-> >> 2.40 + gcc 12.3, but there are also tons of warnings that say the mode=
-l
-> >> attribute is being ignored. I checked earlier discussions and this mea=
-ns
-> >> modules are silently broken at runtime, which is not particularly good=
- UX.
-> >
-> > We can add
-> >
-> > #if defined(MODULE) && !__has_attribute(model)
-> > #  error some fancy error message
-> > #endif
-> >
-> > into percpu.h to error out in this case.  It had been in my earlier
-> > drafts of explicit relocs patches, but we dropped it because there was
-> > no such configuration (unless a snapshot of development GCC is used, an=
-d
-> > using such a snapshot is never supported IIUC).
->
-> Ah I've seen that. So in this case we simply wrap -mexplicit-relocs with
-> cc-option and error out in case of CONFIG_MODULE but no model attribute,
-> which nicely prevents broken configurations (MODULE && ((old_gcc &&
-> new_binutils) || clang)) with feature detection alone.
->
-> This seems elegant and better to me; Huacai, WDYT?
-OK, perfect.
+Hi Vishal,
 
-Huacai
+On Thu, Jun 22, 2023 at 10:58=E2=80=AFPM Vishal Moola (Oracle)
+<vishal.moola@gmail.com> wrote:
+> As part of the conversions to replace pgtable constructor/destructors wit=
+h
+> ptdesc equivalents, convert various page table functions to use ptdescs.
 >
-> --
-> WANG "xen0n" Xuerui
+> Some of the functions use the *get*page*() helper functions. Convert
+> these to use pagetable_alloc() and ptdesc_address() instead to help
+> standardize page tables further.
 >
-> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+
+Thanks for your patch!
+
+> --- a/arch/m68k/include/asm/mcf_pgalloc.h
+> +++ b/arch/m68k/include/asm/mcf_pgalloc.h
+
+>  static inline pgd_t *pgd_alloc(struct mm_struct *mm)
+>  {
+>         pgd_t *new_pgd;
+> +       struct ptdesc *ptdesc =3D pagetable_alloc((GFP_DMA | GFP_NOWARN) =
+&
+
+0-day already told you for v3 that GFP_NOWARN does not exist.
+Please try cross-compiling your changes:
+https://mirrors.edge.kernel.org/pub/tools/crosstool/
+
+> +                       ~__GFP_HIGHMEM, 0);
 >
+> -       new_pgd =3D (pgd_t *)__get_free_page(GFP_DMA | __GFP_NOWARN);
+> -       if (!new_pgd)
+> +       if (!ptdesc)
+>                 return NULL;
+> +       new_pgd =3D ptdesc_address(ptdesc);
+> +
+>         memcpy(new_pgd, swapper_pg_dir, PTRS_PER_PGD * sizeof(pgd_t));
+>         memset(new_pgd, 0, PAGE_OFFSET >> PGDIR_SHIFT);
+>         return new_pgd;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
