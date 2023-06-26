@@ -1,147 +1,299 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5E557EF
-	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 01:30:23 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8Axz8ct6phk6QoCAA--.2944S3;
-	Mon, 26 Jun 2023 09:30:21 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx5sws6phkgX0IAA--.18114S3;
-	Mon, 26 Jun 2023 09:30:20 +0800 (CST)
-Message-ID: <f676d9e0-bb88-283a-5189-f1ae945ee4dd@loongson.cn>
-Date: Mon, 26 Jun 2023 09:30:20 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427DBEC5
+	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 06:13:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE7DCC433C9
+	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 06:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687760030;
+	bh=tIDPiX4oZCQnSjoJrRmXYm4/HW+kneyQ9COWSK2/0ZY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B86CViIwvBn7jJ4RX90TMOcbf6mxJFcSP1KYXCyp3NNVd3HbyamcwZj0LmgR79pqg
+	 o8Rt1WkD8OjP1u4E80Ly635QxjXiNNq1b4N/VaYII26ouZ12WKGASsHDRyuwrvZPOJ
+	 zULfbTD1QoYM50+6BbqBLEqD9rlgoN/nnbcpdPdIl5fdJUkoBuuWG2cAXa6w754KkY
+	 yx2cqK+rCoMRURekNXQm4CJQlVAPgTfvNPYwecel4gUjUJXdEqJSdNadHTEeSA/nUB
+	 7PjTMs2L4Da8UMSeGlJ+GTwyKohbfDpl0swfp3M2yZzEYOXupxSVFlzgvZVSQBXd8W
+	 pTvIWZ2tvb5XA==
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-313df030ccaso2475912f8f.1
+        for <loongarch@lists.linux.dev>; Sun, 25 Jun 2023 23:13:50 -0700 (PDT)
+X-Gm-Message-State: AC+VfDy/hVtFRjgHHHJKJqC7u58DnRj+JysaG6eHutYf7knDVY57xURO
+	1QS/0P87IisbseChTjlO9aCLWhBiKucRqPU6SLo=
+X-Google-Smtp-Source: ACHHUZ7Z1BsryLRBJgwSdFpXVYEgN5RfTaOqmCtmT2+wVlbf2QTe+Yf05nZb1BtwYAaKvRHJWuEELQy+6WhHrJTYCe0=
+X-Received: by 2002:a05:6512:705:b0:4f9:ec5e:d624 with SMTP id
+ b5-20020a056512070500b004f9ec5ed624mr1614382lfs.38.1687760008514; Sun, 25 Jun
+ 2023 23:13:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v5] PCI: Align pci memory space base address with page
- size
-From: bibo mao <maobibo@loongson.cn>
-To: Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <20230619014715.3792883-1-maobibo@loongson.cn>
-Content-Language: en-US
-In-Reply-To: <20230619014715.3792883-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx5sws6phkgX0IAA--.18114S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCF48Xw4UJry3AFy5tF4kXwc_yoW5uw13pF
-	yxA3ZrCrW8Gr13G398t3s7uF4fXa97KFWY9ryrCa4rGF9rCryUC3s8XryagayDAr4DWrW0
-	qFnYkF1Yqa1Yq3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUU
-	U
+References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-3-rppt@kernel.org>
+ <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com> <20230618080027.GA52412@kernel.org>
+ <a17c65c6-863f-4026-9c6f-a04b659e9ab4@app.fastmail.com> <20230625161417.GK52412@kernel.org>
+ <90161ac9-3ca0-4c72-b1c4-ab1293e55445@app.fastmail.com> <20230625174257.GL52412@kernel.org>
+ <20230625180741.jrrtkq55c4jrqh3t@moria.home.lan>
+In-Reply-To: <20230625180741.jrrtkq55c4jrqh3t@moria.home.lan>
+From: Song Liu <song@kernel.org>
+Date: Sun, 25 Jun 2023 23:13:15 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW45gmtCVgA0mg6X87x5EOzSmVqq3SCMSR6agyiukiJvEQ@mail.gmail.com>
+Message-ID: <CAPhsuW45gmtCVgA0mg6X87x5EOzSmVqq3SCMSR6agyiukiJvEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and jit_text_alloc()
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Mike Rapoport <rppt@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Kees Cook <keescook@chromium.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nadav Amit <nadav.amit@gmail.com>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, 
+	"Russell King (Oracle)" <linux@armlinux.org.uk>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Will Deacon <will@kernel.org>, bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, 
+	"the arch/x86 maintainers" <x86@kernel.org>, pjt@google.com, torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-gentle ping.
+On Sun, Jun 25, 2023 at 11:07=E2=80=AFAM Kent Overstreet
+<kent.overstreet@linux.dev> wrote:
+>
+> On Sun, Jun 25, 2023 at 08:42:57PM +0300, Mike Rapoport wrote:
+> > On Sun, Jun 25, 2023 at 09:59:34AM -0700, Andy Lutomirski wrote:
+> > >
+> > >
+> > > On Sun, Jun 25, 2023, at 9:14 AM, Mike Rapoport wrote:
+> > > > On Mon, Jun 19, 2023 at 10:09:02AM -0700, Andy Lutomirski wrote:
+> > > >>
+> > > >> On Sun, Jun 18, 2023, at 1:00 AM, Mike Rapoport wrote:
+> > > >> > On Sat, Jun 17, 2023 at 01:38:29PM -0700, Andy Lutomirski wrote:
+> > > >> >> On Fri, Jun 16, 2023, at 1:50 AM, Mike Rapoport wrote:
+> > > >> >> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> > > >> >> >
+> > > >> >> > module_alloc() is used everywhere as a mean to allocate memor=
+y for code.
+> > > >> >> >
+> > > >> >> > Beside being semantically wrong, this unnecessarily ties all =
+subsystems
+> > > >> >> > that need to allocate code, such as ftrace, kprobes and BPF t=
+o modules
+> > > >> >> > and puts the burden of code allocation to the modules code.
+> > > >> >> >
+> > > >> >> > Several architectures override module_alloc() because of vari=
+ous
+> > > >> >> > constraints where the executable memory can be located and th=
+is causes
+> > > >> >> > additional obstacles for improvements of code allocation.
+> > > >> >> >
+> > > >> >> > Start splitting code allocation from modules by introducing
+> > > >> >> > execmem_text_alloc(), execmem_free(), jit_text_alloc(), jit_f=
+ree() APIs.
+> > > >> >> >
+> > > >> >> > Initially, execmem_text_alloc() and jit_text_alloc() are wrap=
+pers for
+> > > >> >> > module_alloc() and execmem_free() and jit_free() are replacem=
+ents of
+> > > >> >> > module_memfree() to allow updating all call sites to use the =
+new APIs.
+> > > >> >> >
+> > > >> >> > The intention semantics for new allocation APIs:
+> > > >> >> >
+> > > >> >> > * execmem_text_alloc() should be used to allocate memory that=
+ must reside
+> > > >> >> >   close to the kernel image, like loadable kernel modules and=
+ generated
+> > > >> >> >   code that is restricted by relative addressing.
+> > > >> >> >
+> > > >> >> > * jit_text_alloc() should be used to allocate memory for gene=
+rated code
+> > > >> >> >   when there are no restrictions for the code placement. For
+> > > >> >> >   architectures that require that any code is within certain =
+distance
+> > > >> >> >   from the kernel image, jit_text_alloc() will be essentially=
+ aliased to
+> > > >> >> >   execmem_text_alloc().
+> > > >> >> >
+> > > >> >>
+> > > >> >> Is there anything in this series to help users do the appropria=
+te
+> > > >> >> synchronization when the actually populate the allocated memory=
+ with
+> > > >> >> code?  See here, for example:
+> > > >> >
+> > > >> > This series only factors out the executable allocations from mod=
+ules and
+> > > >> > puts them in a central place.
+> > > >> > Anything else would go on top after this lands.
+> > > >>
+> > > >> Hmm.
+> > > >>
+> > > >> On the one hand, there's nothing wrong with factoring out common c=
+ode. On
+> > > >> the other hand, this is probably the right time to at least start
+> > > >> thinking about synchronization, at least to the extent that it mig=
+ht make
+> > > >> us want to change this API.  (I'm not at all saying that this seri=
+es
+> > > >> should require changes -- I'm just saying that this is a good time=
+ to
+> > > >> think about how this should work.)
+> > > >>
+> > > >> The current APIs, *and* the proposed jit_text_alloc() API, don't a=
+ctually
+> > > >> look like the one think in the Linux ecosystem that actually
+> > > >> intelligently and efficiently maps new text into an address space:
+> > > >> mmap().
+> > > >>
+> > > >> On x86, you can mmap() an existing file full of executable code PR=
+OT_EXEC
+> > > >> and jump to it with minimal synchronization (just the standard imp=
+licit
+> > > >> ordering in the kernel that populates the pages before setting up =
+the
+> > > >> PTEs and whatever user synchronization is needed to avoid jumping =
+into
+> > > >> the mapping before mmap() finishes).  It works across CPUs, and th=
+e only
+> > > >> possible way userspace can screw it up (for a read-only mapping of
+> > > >> read-only text, anyway) is to jump to the mapping too early, in wh=
+ich
+> > > >> case userspace gets a page fault.  Incoherence is impossible, and =
+no one
+> > > >> needs to "serialize" (in the SDM sense).
+> > > >>
+> > > >> I think the same sequence (from userspace's perspective) works on =
+other
+> > > >> architectures, too, although I think more cache management is need=
+ed on
+> > > >> the kernel's end.  As far as I know, no Linux SMP architecture nee=
+ds an
+> > > >> IPI to map executable text into usermode, but I could easily be wr=
+ong.
+> > > >> (IIRC RISC-V has very developer-unfriendly icache management, but =
+I don't
+> > > >> remember the details.)
+> > > >>
+> > > >> Of course, using ptrace or any other FOLL_FORCE to modify text on =
+x86 is
+> > > >> rather fraught, and I bet many things do it wrong when userspace i=
+s
+> > > >> multithreaded.  But not in production because it's mostly not used=
+ in
+> > > >> production.)
+> > > >>
+> > > >> But jit_text_alloc() can't do this, because the order of operation=
+s
+> > > >> doesn't match.  With jit_text_alloc(), the executable mapping show=
+s up
+> > > >> before the text is populated, so there is no atomic change from no=
+t-there
+> > > >> to populated-and-executable.  Which means that there is an opportu=
+nity
+> > > >> for CPUs, speculatively or otherwise, to start filling various cac=
+hes
+> > > >> with intermediate states of the text, which means that various
+> > > >> architectures (even x86!) may need serialization.
+> > > >>
+> > > >> For eBPF- and module- like use cases, where JITting/code gen is qu=
+ite
+> > > >> coarse-grained, perhaps something vaguely like:
+> > > >>
+> > > >> jit_text_alloc() -> returns a handle and an executable virtual add=
+ress,
+> > > >> but does *not* map it there
+> > > >> jit_text_write() -> write to that handle
+> > > >> jit_text_map() -> map it and synchronize if needed (no sync needed=
+ on
+> > > >> x86, I think)
+> > > >>
+> > > >> could be more efficient and/or safer.
+> > > >>
+> > > >> (Modules could use this too.  Getting alternatives right might tak=
+e some
+> > > >> fiddling, because off the top of my head, this doesn't match how i=
+t works
+> > > >> now.)
+> > > >>
+> > > >> To make alternatives easier, this could work, maybe (haven't fully
+> > > >> thought it through):
+> > > >>
+> > > >> jit_text_alloc()
+> > > >> jit_text_map_rw_inplace() -> map at the target address, but RW, !X
+> > > >>
+> > > >> write the text and apply alternatives
+> > > >>
+> > > >> jit_text_finalize() -> change from RW to RX *and synchronize*
+> > > >>
+> > > >> jit_text_finalize() would either need to wait for RCU (possibly ex=
+tra
+> > > >> heavy weight RCU to get "serialization") or send an IPI.
+> > > >
+> > > > This essentially how modules work now. The memory is allocated RW, =
+written
+> > > > and updated with alternatives and then made ROX in the end with set=
+_memory
+> > > > APIs.
+> > > >
+> > > > The issue with not having the memory mapped X when it's written is =
+that we
+> > > > cannot use large pages to map it. One of the goals is to have execu=
+table
+> > > > memory mapped with large pages and make code allocator able to divi=
+de that
+> > > > page among several callers.
+> > > >
+> > > > So the idea was that jit_text_alloc() will have a cache of large pa=
+ges
+> > > > mapped ROX, will allocate memory from those caches and there will b=
+e
+> > > > jit_update() that uses text poking for writing to that memory.
+> > > >
+> > > > Upon allocation of a large page to increase the cache, that large p=
+age will
+> > > > be "invalidated" by filling it with breakpoint instructions (e.g in=
+t3 on
+> > > > x86)
+> > >
+> > > Is this actually valid?  In between int3 and real code, there=E2=80=
+=99s a
+> > > potential torn read of real code mixed up with 0xcc.
+> >
+> > You mean while doing text poking?
+>
+> I think we've been getting distracted by text_poke(). text_poke() does
+> updates via a different virtual address which introduce new
+> synchroniation wrinkles, but it's not the main issue.
+>
+> As _think_ I understand it, the root of the issue is that speculative
+> execution - and that per Andy, speculative execution doesn't obey memory
+> barriers.
+>
+> I have _not_ dug into the details of how retpolines work and all the
+> spectre stuff that was going on, but - retpoline uses lfence, doesn't
+> it? And if speculative execution is the issue here, isn't retpoline what
+> we need?
+>
+> For this particular issue, I'm not sure "invalidate by filling with
+> illegal instructions" makes sense. For that to work, would the processor
+> have to execute a serialize operation and a retry on hitting an illegal
+> instruction - or perhaps we do in the interrupt handler?
+>
+> But if filling with illegal instructions does act as a speculation
+> barrier, then the issue is that a torn read could generate a legal but
+> incorrect instruction.
 
-在 2023/6/19 09:47, Bibo Mao 写道:
-> Some PCI devices have only 4K memory space size, it is normal in general
-> machines and aligned with page size. However some architectures which
-> support different page size, default page size on LoongArch is 16K, and
-> ARM64 supports page size varying from 4K to 64K. On machines where larger
-> page size is use, memory space region of two different pci devices may be
-> in one page. It is not safe with mmu protection, also VFIO pci device
-> driver requires base address of pci memory space page aligned, so that it
-> can be memory mapped to qemu user space when it is passed-through to vm.
-> 
-> It consumes more pci memory resource with page size alignment requirement,
-> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled by
-> different architectures, currently arm64/loongarch enable this option.
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
-> Change history
-> v5: enable option PCI_MEMRES_PAGE_ALIGN on arm64. Verified on LoongArch
-> and pass to compile on arm64 with defconfig
-> 
-> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory resource
->     page aligned
-> 
-> v3: move alignment requirement to generic pci code
-> 
-> v2: add pci resource alignment requirement in arch specified function
->     pcibios_align_resource on arm64/LoongArch platforms
-> 
-> ---
->  arch/arm64/Kconfig      | 1 +
->  arch/loongarch/Kconfig  | 1 +
->  drivers/pci/Kconfig     | 3 +++
->  drivers/pci/setup-res.c | 7 +++++++
->  4 files changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 343e1e1cae10..24858bbf2b72 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -232,6 +232,7 @@ config ARM64
->  	select OF_EARLY_FLATTREE
->  	select PCI_DOMAINS_GENERIC if PCI
->  	select PCI_ECAM if (ACPI && PCI)
-> +	select PCI_MEMRES_PAGE_ALIGN if PCI
->  	select PCI_SYSCALL if PCI
->  	select POWER_RESET
->  	select POWER_SUPPLY
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index d38b066fc931..7dbde5e5b351 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -140,6 +140,7 @@ config LOONGARCH
->  	select PCI_DOMAINS_GENERIC
->  	select PCI_ECAM if ACPI
->  	select PCI_LOONGSON
-> +	select PCI_MEMRES_PAGE_ALIGN
->  	select PCI_MSI_ARCH_FALLBACKS
->  	select PCI_QUIRKS
->  	select PERF_USE_VMALLOC
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 9309f2469b41..9be5f85ff9dc 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
->  config PCI_BRIDGE_EMUL
->  	bool
->  
-> +config PCI_MEMRES_PAGE_ALIGN
-> +	bool
-> +
->  config PCI_IOV
->  	bool "PCI IOV support"
->  	select PCI_ATS
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index 967f9a758923..6ad76734a670 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
->  		return -EINVAL;
->  	}
->  
-> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
-> +	/*
-> +	 * force minimum page alignment for vfio pci usage
-> +	 */
-> +	if (res->flags & IORESOURCE_MEM)
-> +		align = max_t(resource_size_t, PAGE_SIZE, align);
-> +#endif
->  	size = resource_size(res);
->  	ret = _pci_assign_resource(dev, resno, size, align);
->  
+What is a "torn read" here? I assume it is an instruction read that
+goes at the wrong instruction boundary (CISC). If this is correct, do
+we need to handle torn read caused by software bug, or hardware
+bit flip, or both?
 
+Thanks,
+Song
