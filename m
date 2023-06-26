@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E91B2906
-	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B11953B2
+	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:09 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxxvDBUJlk0jQCAA--.3359S3;
-	Mon, 26 Jun 2023 16:48:01 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Axz8fCUJlkATUCAA--.3222S3;
+	Mon, 26 Jun 2023 16:48:02 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S19;
-	Mon, 26 Jun 2023 16:48:00 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S24;
+	Mon, 26 Jun 2023 16:48:02 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -23,9 +23,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn,
 	tangyouling@loongson.cn
-Subject: [PATCH v15 17/30] LoongArch: KVM: Implement virtual machine tlb operations
-Date: Mon, 26 Jun 2023 16:47:39 +0800
-Message-Id: <20230626084752.1138621-18-zhaotianrui@loongson.cn>
+Subject: [PATCH v15 22/30] LoongArch: KVM: Implement handle idle exception
+Date: Mon, 26 Jun 2023 16:47:44 +0800
+Message-Id: <20230626084752.1138621-23-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
 References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
@@ -36,59 +36,48 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S19
+X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S24
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement LoongArch virtual machine tlb operations such as flush tlb by
-specific gpa parameter and flush all of the virt machines tlb.
+Implement kvm handle LoongArch vcpu idle exception, using kvm_vcpu_block
+to emulate it.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/tlb.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 arch/loongarch/kvm/tlb.c
+ arch/loongarch/kvm/exit.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
-new file mode 100644
-index 000000000000..3475b76492ad
---- /dev/null
-+++ b/arch/loongarch/kvm/tlb.c
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index 32edd915ebcb..30748238c78c 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -188,3 +188,23 @@ int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ 
+ 	return er;
+ }
 +
-+#include <linux/kvm_host.h>
-+#include <asm/tlb.h>
-+#include <asm/kvm_csr.h>
-+
-+int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
++int _kvm_emu_idle(struct kvm_vcpu *vcpu)
 +{
-+	preempt_disable();
-+	gpa &= (PAGE_MASK << 1);
-+	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
-+	preempt_enable();
-+	return 0;
-+}
++	++vcpu->stat.idle_exits;
++	trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
 +
-+/**
-+ * kvm_flush_tlb_all() - Flush all root TLB entries for
-+ * guests.
-+ *
-+ * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
-+ */
-+void kvm_flush_tlb_all(void)
-+{
-+	unsigned long flags;
++	if (!kvm_arch_vcpu_runnable(vcpu)) {
++		/*
++		 * Switch to the software timer before halt-polling/blocking as
++		 * the guest's timer may be a break event for the vCPU, and the
++		 * hypervisor timer runs only when the CPU is in guest mode.
++		 * Switch before halt-polling so that KVM recognizes an expired
++		 * timer before blocking.
++		 */
++		kvm_save_timer(vcpu);
++		kvm_vcpu_block(vcpu);
++	}
 +
-+	local_irq_save(flags);
-+	invtlb_all(INVTLB_ALLGID, 0, 0);
-+	local_irq_restore(flags);
++	return EMULATE_DONE;
 +}
 -- 
 2.39.1
