@@ -1,76 +1,92 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08CF120F6
-	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 07:34:51 +0000 (UTC)
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1qDgkA-0002xN-00; Mon, 26 Jun 2023 09:34:38 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id AE9D7C02FD; Mon, 26 Jun 2023 09:19:25 +0200 (CEST)
-Date: Mon, 26 Jun 2023 09:19:25 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2A7D110D
+	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:02 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8BxHMe+UJlkjDQCAA--.3294S3;
+	Mon, 26 Jun 2023 16:47:58 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S12;
+	Mon, 26 Jun 2023 16:47:58 +0800 (CST)
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-mips@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>,
-	zhao zhang <zhzhl555@gmail.com>, Yang Ling <gnaygnil@gmail.com>,
-	WANG Xuerui <git@xen0n.name>
-Subject: Re: [PATCH V5 4/5] MIPS: Loongson64: DTS: Add RTC support to LS7A PCH
-Message-ID: <20230626071925.GA4397@alpha.franken.de>
-References: <cover.1685693501.git.zhoubinbin@loongson.cn>
- <25fa98ee2fac5955c68158ad7428900491981f2d.1685693501.git.zhoubinbin@loongson.cn>
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	maobibo@loongson.cn,
+	Xi Ruoyao <xry111@xry111.site>,
+	zhaotianrui@loongson.cn,
+	tangyouling@loongson.cn
+Subject: [PATCH v15 10/30] LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
+Date: Mon, 26 Jun 2023 16:47:32 +0800
+Message-Id: <20230626084752.1138621-11-zhaotianrui@loongson.cn>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
+References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25fa98ee2fac5955c68158ad7428900491981f2d.1685693501.git.zhoubinbin@loongson.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S12
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Fri, Jun 02, 2023 at 05:50:49PM +0800, Binbin Zhou wrote:
-> The RTC module is now supported, enable it.
-> 
-> Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Signed-off-by: WANG Xuerui <git@xen0n.name>
-> ---
->  arch/mips/boot/dts/loongson/ls7a-pch.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-> index 2f45fce2cdc4..7c69e8245c2f 100644
-> --- a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-> +++ b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-> @@ -19,6 +19,13 @@ pic: interrupt-controller@10000000 {
->  			#interrupt-cells = <2>;
->  		};
->  
-> +		rtc0: rtc@100d0100 {
-> +			compatible = "loongson,ls7a-rtc";
-> +			reg = <0 0x100d0100 0 0x78>;
-> +			interrupt-parent = <&pic>;
-> +			interrupts = <52 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
->  		ls7a_uart0: serial@10080000 {
->  			compatible = "ns16550a";
->  			reg = <0 0x10080000 0 0x100>;
-> -- 
-> 2.39.1
+Implement LoongArch vcpu KVM_ENABLE_CAP ioctl interface.
 
-applied to mips-next.
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+---
+ arch/loongarch/kvm/vcpu.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Thomas.
-
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index b0cce413762d..da97b77da8eb 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -186,6 +186,16 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+ 	return 0;
+ }
+ 
++static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
++				     struct kvm_enable_cap *cap)
++{
++	/*
++	 * FPU is enable by default, do not support any other caps,
++	 * and later we will support such as LSX cap.
++	 */
++	return -EINVAL;
++}
++
+ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			 unsigned int ioctl, unsigned long arg)
+ {
+@@ -209,6 +219,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			r = _kvm_get_reg(vcpu, &reg);
+ 		break;
+ 	}
++	case KVM_ENABLE_CAP: {
++		struct kvm_enable_cap cap;
++
++		r = -EFAULT;
++		if (copy_from_user(&cap, argp, sizeof(cap)))
++			break;
++		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
++		break;
++	}
+ 	default:
+ 		r = -ENOIOCTLCMD;
+ 		break;
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.39.1
+
