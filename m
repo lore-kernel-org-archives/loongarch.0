@@ -1,97 +1,147 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB157464
-	for <loongarch@lists.linux.dev>; Sun, 25 Jun 2023 23:24:03 +0000 (UTC)
-Received: from relay1-d.mail.gandi.net (unknown [217.70.183.193])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 066BCCE0A8
-	for <loongarch@lists.linux.dev>; Sun, 25 Jun 2023 23:20:13 +0000 (UTC)
-X-GND-Sasl: alexandre.belloni@bootlin.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1687735206;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wbt8/LPyP1QYCii04eX43/1rWu6vVqxs0wktrfwj45w=;
-	b=khC7XwlsJPiQDFeqHoN1xgYMLC2qb0R9ENHYHTQ8XexNK22rrHJHbN8aSw6Z6CtEU13eCt
-	pt1ewXoIIqFyNDdiLWzxThwO0dVEu5/3uYx0pZJ4h4HZEZHNLCHIeQB9Mou8e7+0CmdC0G
-	KnrdU8YF31vJwmvwRHzc1ZtpO01YDcLULHsY7BDCgl6ajWew9eGafOzRy5832w3JthkYp0
-	1e1deFjCO02fz+vMGcFJ+ccA+zuXoLHfFo75xjWAbxtDWWOkICQ7Za7fIS8a9t1+AaF1rb
-	c0tp6M8E2WfRhbY0RmIRCn/3RxNZRjP5SpjraHLcEYxyM09155uBV2N2hNTGkQ==
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C33C3240002;
-	Sun, 25 Jun 2023 23:20:03 +0000 (UTC)
-Date: Mon, 26 Jun 2023 01:20:03 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	zhao zhang <zhzhl555@gmail.com>, Yang Ling <gnaygnil@gmail.com>
-Subject: Re: (subset) [PATCH V5 0/5] Add rtc driver for the Loongson family
- chips
-Message-ID: <168773516435.124871.682738752755283483.b4-ty@bootlin.com>
-References: <cover.1685693501.git.zhoubinbin@loongson.cn>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5E557EF
+	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 01:30:23 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8Axz8ct6phk6QoCAA--.2944S3;
+	Mon, 26 Jun 2023 09:30:21 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx5sws6phkgX0IAA--.18114S3;
+	Mon, 26 Jun 2023 09:30:20 +0800 (CST)
+Message-ID: <f676d9e0-bb88-283a-5189-f1ae945ee4dd@loongson.cn>
+Date: Mon, 26 Jun 2023 09:30:20 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1685693501.git.zhoubinbin@loongson.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v5] PCI: Align pci memory space base address with page
+ size
+From: bibo mao <maobibo@loongson.cn>
+To: Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn,
+ Huacai Chen <chenhuacai@loongson.cn>
+References: <20230619014715.3792883-1-maobibo@loongson.cn>
+Content-Language: en-US
+In-Reply-To: <20230619014715.3792883-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx5sws6phkgX0IAA--.18114S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF48Xw4UJry3AFy5tF4kXwc_yoW5uw13pF
+	yxA3ZrCrW8Gr13G398t3s7uF4fXa97KFWY9ryrCa4rGF9rCryUC3s8XryagayDAr4DWrW0
+	qFnYkF1Yqa1Yq3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUU
+	U
 
+gentle ping.
 
-On Fri, 02 Jun 2023 17:50:19 +0800, Binbin Zhou wrote:
-> The initial DT-base ls2x rtc driver was written by Wang Xuerui, He has
-> released five versions of patchset before, and all related mail records
-> are shown below if you are interested:
+在 2023/6/19 09:47, Bibo Mao 写道:
+> Some PCI devices have only 4K memory space size, it is normal in general
+> machines and aligned with page size. However some architectures which
+> support different page size, default page size on LoongArch is 16K, and
+> ARM64 supports page size varying from 4K to 64K. On machines where larger
+> page size is use, memory space region of two different pci devices may be
+> in one page. It is not safe with mmu protection, also VFIO pci device
+> driver requires base address of pci memory space page aligned, so that it
+> can be memory mapped to qemu user space when it is passed-through to vm.
 > 
-> https://lore.kernel.org/all/?q=ls2x-rtc
+> It consumes more pci memory resource with page size alignment requirement,
+> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled by
+> different architectures, currently arm64/loongarch enable this option.
 > 
-> In this series of patches, based on the code above, I have added the
-> following support:
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> Change history
+> v5: enable option PCI_MEMRES_PAGE_ALIGN on arm64. Verified on LoongArch
+> and pass to compile on arm64 with defconfig
 > 
-> [...]
+> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory resource
+>     page aligned
+> 
+> v3: move alignment requirement to generic pci code
+> 
+> v2: add pci resource alignment requirement in arch specified function
+>     pcibios_align_resource on arm64/LoongArch platforms
+> 
+> ---
+>  arch/arm64/Kconfig      | 1 +
+>  arch/loongarch/Kconfig  | 1 +
+>  drivers/pci/Kconfig     | 3 +++
+>  drivers/pci/setup-res.c | 7 +++++++
+>  4 files changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 343e1e1cae10..24858bbf2b72 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -232,6 +232,7 @@ config ARM64
+>  	select OF_EARLY_FLATTREE
+>  	select PCI_DOMAINS_GENERIC if PCI
+>  	select PCI_ECAM if (ACPI && PCI)
+> +	select PCI_MEMRES_PAGE_ALIGN if PCI
+>  	select PCI_SYSCALL if PCI
+>  	select POWER_RESET
+>  	select POWER_SUPPLY
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index d38b066fc931..7dbde5e5b351 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -140,6 +140,7 @@ config LOONGARCH
+>  	select PCI_DOMAINS_GENERIC
+>  	select PCI_ECAM if ACPI
+>  	select PCI_LOONGSON
+> +	select PCI_MEMRES_PAGE_ALIGN
+>  	select PCI_MSI_ARCH_FALLBACKS
+>  	select PCI_QUIRKS
+>  	select PERF_USE_VMALLOC
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 9309f2469b41..9be5f85ff9dc 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
+>  config PCI_BRIDGE_EMUL
+>  	bool
+>  
+> +config PCI_MEMRES_PAGE_ALIGN
+> +	bool
+> +
+>  config PCI_IOV
+>  	bool "PCI IOV support"
+>  	select PCI_ATS
+> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> index 967f9a758923..6ad76734a670 100644
+> --- a/drivers/pci/setup-res.c
+> +++ b/drivers/pci/setup-res.c
+> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
+>  		return -EINVAL;
+>  	}
+>  
+> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
+> +	/*
+> +	 * force minimum page alignment for vfio pci usage
+> +	 */
+> +	if (res->flags & IORESOURCE_MEM)
+> +		align = max_t(resource_size_t, PAGE_SIZE, align);
+> +#endif
+>  	size = resource_size(res);
+>  	ret = _pci_assign_resource(dev, resno, size, align);
+>  
 
-Applied, thanks!
-
-[1/5] dt-bindings: rtc: Remove the LS2X from the trivial RTCs
-      commit: 487ef32caebe010f0ff0f17267230ebaf2177e67
-[2/5] rtc: Remove the Loongson-1 RTC driver
-      commit: 9fb23090658adbd7f8f44bf5c38aa3fc4b1699bd
-[3/5] rtc: Add rtc driver for the Loongson family chips
-      commit: 1b733a9ebc3d8011ca66ec6ff17f55a440358794
-
-Best regards,
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
