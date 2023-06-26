@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEBAE110D
-	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C892906
+	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:10 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxI_DDUJlkFjUCAA--.3326S3;
-	Mon, 26 Jun 2023 16:48:03 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S25;
+	by gateway (Coremail) with SMTP id _____8BxHMfCUJlk+zQCAA--.3299S3;
 	Mon, 26 Jun 2023 16:48:02 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S22;
+	Mon, 26 Jun 2023 16:48:01 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -23,9 +23,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn,
 	tangyouling@loongson.cn
-Subject: [PATCH v15 23/30] LoongArch: KVM: Implement handle gspr exception
-Date: Mon, 26 Jun 2023 16:47:45 +0800
-Message-Id: <20230626084752.1138621-24-zhaotianrui@loongson.cn>
+Subject: [PATCH v15 20/30] LoongArch: KVM: Implement handle csr excption
+Date: Mon, 26 Jun 2023 16:47:42 +0800
+Message-Id: <20230626084752.1138621-21-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
 References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
@@ -36,143 +36,125 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S25
+X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S22
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement kvm handle gspr exception interface, including emulate the
-reading and writing of cpucfg, csr, iocsr resource.
+Implement kvm handle LoongArch vcpu exit caused by reading and
+writing csr. Using csr structure to emulate the registers.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 115 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
+ arch/loongarch/kvm/exit.c | 98 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 arch/loongarch/kvm/exit.c
 
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 30748238c78c..04e4339cd78d 100644
---- a/arch/loongarch/kvm/exit.c
+new file mode 100644
+index 000000000000..18635333fc9a
+--- /dev/null
 +++ b/arch/loongarch/kvm/exit.c
-@@ -208,3 +208,118 @@ int _kvm_emu_idle(struct kvm_vcpu *vcpu)
- 
- 	return EMULATE_DONE;
- }
+@@ -0,0 +1,98 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
 +
-+static int _kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/preempt.h>
++#include <linux/vmalloc.h>
++#include <asm/fpu.h>
++#include <asm/inst.h>
++#include <asm/time.h>
++#include <asm/tlb.h>
++#include <asm/loongarch.h>
++#include <asm/numa.h>
++#include <asm/kvm_vcpu.h>
++#include <asm/kvm_csr.h>
++#include <linux/kvm_host.h>
++#include <asm/mmzone.h>
++#include "trace.h"
++
++static unsigned long _kvm_emu_read_csr(struct kvm_vcpu *vcpu, int csrid)
 +{
-+	enum emulation_result er = EMULATE_DONE;
-+	struct kvm_run *run = vcpu->run;
-+	larch_inst inst;
-+	unsigned long curr_pc;
-+	int rd, rj;
-+	unsigned int index;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	unsigned long val = 0;
 +
-+	/*
-+	 *  Fetch the instruction.
-+	 */
-+	inst.word = vcpu->arch.badi;
-+	curr_pc = vcpu->arch.pc;
-+	update_pc(&vcpu->arch);
-+
-+	trace_kvm_exit_gspr(vcpu, inst.word);
-+	er = EMULATE_FAIL;
-+	switch (((inst.word >> 24) & 0xff)) {
-+	case 0x0:
-+		/* cpucfg GSPR */
-+		if (inst.reg2_format.opcode == 0x1B) {
-+			rd = inst.reg2_format.rd;
-+			rj = inst.reg2_format.rj;
-+			++vcpu->stat.cpucfg_exits;
-+			index = vcpu->arch.gprs[rj];
-+
-+			vcpu->arch.gprs[rd] = read_cpucfg(index);
-+			/* Nested KVM is not supported */
-+			if (index == 2)
-+				vcpu->arch.gprs[rd] &= ~CPUCFG2_LVZP;
-+			if (index == 6)
-+				vcpu->arch.gprs[rd] &= ~CPUCFG6_PMP;
-+			er = EMULATE_DONE;
-+		}
-+		break;
-+	case 0x4:
-+		/* csr GSPR */
-+		er = _kvm_handle_csr(vcpu, inst);
-+		break;
-+	case 0x6:
-+		/* iocsr,cache,idle GSPR */
-+		switch (((inst.word >> 22) & 0x3ff)) {
-+		case 0x18:
-+			/* cache GSPR */
-+			er = EMULATE_DONE;
-+			trace_kvm_exit_cache(vcpu, KVM_TRACE_EXIT_CACHE);
-+			break;
-+		case 0x19:
-+			/* iocsr/idle GSPR */
-+			switch (((inst.word >> 15) & 0x1ffff)) {
-+			case 0xc90:
-+				/* iocsr GSPR */
-+				er = _kvm_emu_iocsr(inst, run, vcpu);
-+				break;
-+			case 0xc91:
-+				/* idle GSPR */
-+				er = _kvm_emu_idle(vcpu);
-+				break;
-+			default:
-+				er = EMULATE_FAIL;
-+				break;
-+			}
-+			break;
-+		default:
-+			er = EMULATE_FAIL;
-+			break;
-+		}
-+		break;
-+	default:
-+		er = EMULATE_FAIL;
-+		break;
-+	}
-+
-+	/* Rollback PC only if emulation was unsuccessful */
-+	if (er == EMULATE_FAIL) {
-+		kvm_err("[%#lx]%s: unsupported gspr instruction 0x%08x\n",
-+			curr_pc, __func__, inst.word);
-+
-+		kvm_arch_vcpu_dump_regs(vcpu);
-+		vcpu->arch.pc = curr_pc;
-+	}
-+	return er;
++	if (get_gcsr_flag(csrid) & SW_GCSR)
++		val = kvm_read_sw_gcsr(csr, csrid);
++	else
++		pr_warn_once("Unsupport csrread 0x%x with pc %lx\n",
++			csrid, vcpu->arch.pc);
++	return val;
 +}
 +
-+/*
-+ * Execute cpucfg instruction will tirggerGSPR,
-+ * Also the access to unimplemented csrs 0x15
-+ * 0x16, 0x50~0x53, 0x80, 0x81, 0x90~0x95, 0x98
-+ * 0xc0~0xff, 0x100~0x109, 0x500~0x502,
-+ * cache_op, idle_op iocsr ops the same
-+ */
-+static int _kvm_handle_gspr(struct kvm_vcpu *vcpu)
++static void _kvm_emu_write_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long val)
 +{
-+	enum emulation_result er = EMULATE_DONE;
-+	int ret = RESUME_GUEST;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
 +
-+	er = _kvm_trap_handle_gspr(vcpu);
++	if (get_gcsr_flag(csrid) & SW_GCSR)
++		kvm_write_sw_gcsr(csr, csrid, val);
++	else
++		pr_warn_once("Unsupport csrwrite 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
++}
 +
-+	if (er == EMULATE_DONE) {
-+		ret = RESUME_GUEST;
-+	} else if (er == EMULATE_DO_MMIO) {
-+		vcpu->run->exit_reason = KVM_EXIT_MMIO;
-+		ret = RESUME_HOST;
-+	} else if (er == EMULATE_DO_IOCSR) {
-+		vcpu->run->exit_reason = KVM_EXIT_LOONGARCH_IOCSR;
-+		ret = RESUME_HOST;
++static void _kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long csr_mask, unsigned long val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	if (get_gcsr_flag(csrid) & SW_GCSR) {
++		unsigned long orig;
++
++		orig = kvm_read_sw_gcsr(csr, csrid);
++		orig &= ~csr_mask;
++		orig |= val & csr_mask;
++		kvm_write_sw_gcsr(csr, csrid, orig);
++	} else
++		pr_warn_once("Unsupport csrxchg 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
++}
++
++static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
++{
++	unsigned int rd, rj, csrid;
++	unsigned long csr_mask;
++	unsigned long val = 0;
++
++	/*
++	 * CSR value mask imm
++	 * rj = 0 means csrrd
++	 * rj = 1 means csrwr
++	 * rj != 0,1 means csrxchg
++	 */
++	rd = inst.reg2csr_format.rd;
++	rj = inst.reg2csr_format.rj;
++	csrid = inst.reg2csr_format.csr;
++
++	/* Process CSR ops */
++	if (rj == 0) {
++		/* process csrrd */
++		val = _kvm_emu_read_csr(vcpu, csrid);
++		vcpu->arch.gprs[rd] = val;
++	} else if (rj == 1) {
++		/* process csrwr */
++		val = vcpu->arch.gprs[rd];
++		_kvm_emu_write_csr(vcpu, csrid, val);
 +	} else {
-+		kvm_err("%s internal error\n", __func__);
-+		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+		ret = RESUME_HOST;
++		/* process csrxchg */
++		val = vcpu->arch.gprs[rd];
++		csr_mask = vcpu->arch.gprs[rj];
++		_kvm_emu_xchg_csr(vcpu, csrid, csr_mask, val);
 +	}
-+	return ret;
++
++	return EMULATE_DONE;
 +}
 -- 
 2.39.1
