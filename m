@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D96A2906
-	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F38182906
+	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:49:11 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxiMXHUJlkcTUCAA--.3369S3;
-	Mon, 26 Jun 2023 16:48:07 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx6cW+UJlkcDQCAA--.3296S3;
+	Mon, 26 Jun 2023 16:47:58 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S32;
-	Mon, 26 Jun 2023 16:48:06 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S10;
+	Mon, 26 Jun 2023 16:47:57 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,11 +22,10 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn,
-	tangyouling@loongson.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v15 30/30] LoongArch: KVM: Add maintainers for LoongArch KVM
-Date: Mon, 26 Jun 2023 16:47:52 +0800
-Message-Id: <20230626084752.1138621-31-zhaotianrui@loongson.cn>
+	tangyouling@loongson.cn
+Subject: [PATCH v15 08/30] LoongArch: KVM: Implement vcpu handle exit interface
+Date: Mon, 26 Jun 2023 16:47:30 +0800
+Message-Id: <20230626084752.1138621-9-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
 References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
@@ -37,43 +36,77 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S32
+X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S10
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Add maintainers for LoongArch KVM.
+Implement vcpu handle exit interface, getting the exit code by ESTAT
+register and using kvm exception vector to handle it.
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 45 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ad32db6c81cc..b6733248ec09 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11377,6 +11377,18 @@ F:	include/kvm/arm_*
- F:	tools/testing/selftests/kvm/*/aarch64/
- F:	tools/testing/selftests/kvm/aarch64/
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index eba5c07b8be3..a45e9d9efe5b 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -52,6 +52,51 @@ static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
+ }
  
-+KERNEL VIRTUAL MACHINE FOR LOONGARCH (KVM/LoongArch)
-+M:	Tianrui Zhao <zhaotianrui@loongson.cn>
-+M:	Bibo Mao <maobibo@loongson.cn>
-+M:	Huacai Chen <chenhuacai@kernel.org>
-+L:	kvm@vger.kernel.org
-+L:	loongarch@lists.linux.dev
-+S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
-+F:	arch/loongarch/include/asm/kvm*
-+F:	arch/loongarch/include/uapi/asm/kvm*
-+F:	arch/loongarch/kvm/
++/*
++ * Return 1 for resume guest and "<= 0" for resume host.
++ */
++static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
++{
++	unsigned long exst = vcpu->arch.host_estat;
++	u32 intr = exst & 0x1fff; /* ignore NMI */
++	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
++	int ret = RESUME_GUEST;
 +
- KERNEL VIRTUAL MACHINE FOR MIPS (KVM/mips)
- M:	Huacai Chen <chenhuacai@kernel.org>
- M:	Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
++	vcpu->mode = OUTSIDE_GUEST_MODE;
++
++	/* Set a default exit reason */
++	run->exit_reason = KVM_EXIT_UNKNOWN;
++
++	local_irq_enable();
++	guest_state_exit_irqoff();
++
++	trace_kvm_exit(vcpu, exccode);
++	if (exccode) {
++		ret = _kvm_handle_fault(vcpu, exccode);
++	} else {
++		WARN(!intr, "vm exiting with suspicious irq\n");
++		++vcpu->stat.int_exits;
++	}
++
++	cond_resched();
++	local_irq_disable();
++
++	if (ret == RESUME_HOST)
++		return ret;
++
++	/* Only check for signals if not already exiting to userspace */
++	if (signal_pending(current)) {
++		vcpu->run->exit_reason = KVM_EXIT_INTR;
++		++vcpu->stat.signal_exits;
++		return -EINTR;
++	}
++
++	kvm_pre_enter_guest(vcpu);
++	trace_kvm_reenter(vcpu);
++	guest_state_enter_irqoff();
++	return RESUME_GUEST;
++}
++
+ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ {
+ 	unsigned long timer_hz;
 -- 
 2.39.1
 
