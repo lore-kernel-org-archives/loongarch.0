@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C12D0110D
-	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AEB92906
+	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:05 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxTce_UJlkrDQCAA--.3319S3;
-	Mon, 26 Jun 2023 16:47:59 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxI_C9UJlkYTQCAA--.3316S3;
+	Mon, 26 Jun 2023 16:47:57 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S15;
-	Mon, 26 Jun 2023 16:47:59 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S8;
+	Mon, 26 Jun 2023 16:47:57 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -23,9 +23,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn,
 	tangyouling@loongson.cn
-Subject: [PATCH v15 13/30] LoongArch: KVM: Implement misc vcpu related interfaces
-Date: Mon, 26 Jun 2023 16:47:35 +0800
-Message-Id: <20230626084752.1138621-14-zhaotianrui@loongson.cn>
+Subject: [PATCH v15 06/30] LoongArch: KVM: Implement vcpu create and destroy interface
+Date: Mon, 26 Jun 2023 16:47:28 +0800
+Message-Id: <20230626084752.1138621-7-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
 References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
@@ -36,140 +36,118 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S15
+X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S8
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement some misc vcpu relaterd interfaces, such as vcpu runnable,
-vcpu should kick, vcpu dump regs, etc.
+Implement vcpu create and destroy interface, saving some info
+into vcpu arch structure such as vcpu exception entrance, vcpu
+enter guest pointer, etc. Init vcpu timer and set address
+translation mode when vcpu create.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 108 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 88 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 arch/loongarch/kvm/vcpu.c
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index be4a6a2aeb44..26585e1661b7 100644
---- a/arch/loongarch/kvm/vcpu.c
+new file mode 100644
+index 000000000000..24b5b00266a1
+--- /dev/null
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -12,6 +12,114 @@
- #define CREATE_TRACE_POINTS
- #include "trace.h"
- 
-+int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
-+{
-+	return !!(vcpu->arch.irq_pending) &&
-+		vcpu->arch.mp_state.mp_state == KVM_MP_STATE_RUNNABLE;
-+}
-+
-+int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
-+{
-+	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
-+}
-+
-+bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
-+{
-+	return false;
-+}
-+
-+vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
-+{
-+	return VM_FAULT_SIGBUS;
-+}
-+
-+int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
-+				  struct kvm_translation *tr)
-+{
-+	return -EINVAL;
-+}
-+
-+int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
-+{
-+	return _kvm_pending_timer(vcpu) ||
-+		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) &
-+			(1 << INT_TI);
-+}
-+
-+int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
-+{
-+	int i;
-+
-+	if (!vcpu)
-+		return -1;
-+
-+	kvm_debug("vCPU Register Dump:\n");
-+	kvm_debug("\tpc = 0x%08lx\n", vcpu->arch.pc);
-+	kvm_debug("\texceptions: %08lx\n", vcpu->arch.irq_pending);
-+
-+	for (i = 0; i < 32; i += 4) {
-+		kvm_debug("\tgpr%02d: %08lx %08lx %08lx %08lx\n", i,
-+		       vcpu->arch.gprs[i],
-+		       vcpu->arch.gprs[i + 1],
-+		       vcpu->arch.gprs[i + 2], vcpu->arch.gprs[i + 3]);
-+	}
-+
-+	kvm_debug("\tCRMOD: 0x%08lx, exst: 0x%08lx\n",
-+		  kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD),
-+		  kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT));
-+
-+	kvm_debug("\tERA: 0x%08lx\n", kvm_read_hw_gcsr(LOONGARCH_CSR_ERA));
-+
-+	return 0;
-+}
-+
-+int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
-+				struct kvm_mp_state *mp_state)
-+{
-+	*mp_state = vcpu->arch.mp_state;
-+
-+	return 0;
-+}
-+
-+int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
-+				struct kvm_mp_state *mp_state)
-+{
-+	int ret = 0;
-+
-+	switch (mp_state->mp_state) {
-+	case KVM_MP_STATE_RUNNABLE:
-+		vcpu->arch.mp_state = *mp_state;
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
-+					struct kvm_guest_debug *dbg)
-+{
-+	return -EINVAL;
-+}
-+
-+/**
-+ * kvm_migrate_count() - Migrate timer.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Migrate hrtimer to the current CPU by cancelling and restarting it
-+ * if it was running prior to being cancelled.
-+ *
-+ * Must be called when the vCPU is migrated to a different CPU to ensure that
-+ * timer expiry during guest execution interrupts the guest and causes the
-+ * interrupt to be delivered in a timely manner.
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
-+static void kvm_migrate_count(struct kvm_vcpu *vcpu)
++
++#include <linux/kvm_host.h>
++#include <asm/fpu.h>
++#include <asm/loongarch.h>
++#include <asm/setup.h>
++#include <asm/time.h>
++
++#define CREATE_TRACE_POINTS
++#include "trace.h"
++
++int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
 +{
-+	if (hrtimer_cancel(&vcpu->arch.swtimer))
-+		hrtimer_restart(&vcpu->arch.swtimer);
++	return 0;
 +}
 +
- int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
- {
- 	unsigned long val;
++int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
++{
++	unsigned long timer_hz;
++	struct loongarch_csrs *csr;
++
++	vcpu->arch.vpid = 0;
++
++	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
++	vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
++	vcpu->kvm->arch.online_vcpus = vcpu->vcpu_id + 1;
++
++	vcpu->arch.guest_eentry = (unsigned long)kvm_loongarch_ops->guest_eentry;
++	vcpu->arch.handle_exit = _kvm_handle_exit;
++	vcpu->arch.csr = kzalloc(sizeof(struct loongarch_csrs), GFP_KERNEL);
++	if (!vcpu->arch.csr)
++		return -ENOMEM;
++
++	/*
++	 * kvm all exceptions share one exception entry, and host <-> guest switch
++	 * also switch excfg.VS field, keep host excfg.VS info here
++	 */
++	vcpu->arch.host_ecfg = (read_csr_ecfg() & CSR_ECFG_VS);
++
++	/* Init */
++	vcpu->arch.last_sched_cpu = -1;
++	vcpu->arch.last_exec_cpu = -1;
++
++	/*
++	 * Initialize guest register state to valid architectural reset state.
++	 */
++	timer_hz = calc_const_freq();
++	kvm_init_timer(vcpu, timer_hz);
++
++	/* Set Initialize mode for GUEST */
++	csr = vcpu->arch.csr;
++	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CRMD, CSR_CRMD_DA);
++
++	/* Set cpuid */
++	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TMID, vcpu->vcpu_id);
++
++	/* start with no pending virtual guest interrupts */
++	csr->csrs[LOONGARCH_CSR_GINTC] = 0;
++
++	return 0;
++}
++
++void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
++{
++}
++
++void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
++{
++	int cpu;
++	struct kvm_context *context;
++
++	hrtimer_cancel(&vcpu->arch.swtimer);
++	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
++	kfree(vcpu->arch.csr);
++
++	/*
++	 * If the vCPU is freed and reused as another vCPU, we don't want the
++	 * matching pointer wrongly hanging around in last_vcpu.
++	 */
++	for_each_possible_cpu(cpu) {
++		context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++		if (context->last_vcpu == vcpu)
++			context->last_vcpu = NULL;
++	}
++}
 -- 
 2.39.1
 
