@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AEB92906
-	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C80E4C95
+	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 08:48:06 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxI_C9UJlkYTQCAA--.3316S3;
-	Mon, 26 Jun 2023 16:47:57 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Axjse_UJlkqjQCAA--.3517S3;
+	Mon, 26 Jun 2023 16:47:59 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S8;
-	Mon, 26 Jun 2023 16:47:57 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxsy5UJlk4hQJAA--.19269S14;
+	Mon, 26 Jun 2023 16:47:58 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -23,9 +23,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn,
 	tangyouling@loongson.cn
-Subject: [PATCH v15 06/30] LoongArch: KVM: Implement vcpu create and destroy interface
-Date: Mon, 26 Jun 2023 16:47:28 +0800
-Message-Id: <20230626084752.1138621-7-zhaotianrui@loongson.cn>
+Subject: [PATCH v15 12/30] LoongArch: KVM: Implement vcpu interrupt operations
+Date: Mon, 26 Jun 2023 16:47:34 +0800
+Message-Id: <20230626084752.1138621-13-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
 References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
@@ -36,118 +36,199 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S8
+X-CM-TRANSID:AQAAf8Bxxsy5UJlk4hQJAA--.19269S14
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement vcpu create and destroy interface, saving some info
-into vcpu arch structure such as vcpu exception entrance, vcpu
-enter guest pointer, etc. Init vcpu timer and set address
-translation mode when vcpu create.
+Implement vcpu interrupt operations such as vcpu set irq and
+vcpu clear irq, using set_gcsr_estat to set irq which is
+parsed by the irq bitmap.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 88 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 arch/loongarch/kvm/vcpu.c
+ arch/loongarch/kvm/interrupt.c | 113 +++++++++++++++++++++++++++++++++
+ arch/loongarch/kvm/vcpu.c      |  45 +++++++++++++
+ 2 files changed, 158 insertions(+)
+ create mode 100644 arch/loongarch/kvm/interrupt.c
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
 new file mode 100644
-index 000000000000..24b5b00266a1
+index 000000000000..14e19653b2bf
 --- /dev/null
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -0,0 +1,88 @@
++++ b/arch/loongarch/kvm/interrupt.c
+@@ -0,0 +1,113 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
 +
-+#include <linux/kvm_host.h>
-+#include <asm/fpu.h>
-+#include <asm/loongarch.h>
-+#include <asm/setup.h>
-+#include <asm/time.h>
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <asm/kvm_vcpu.h>
++#include <asm/kvm_csr.h>
 +
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
++static unsigned int int_to_coreint[EXCCODE_INT_NUM] = {
++	[INT_TI]	= CPU_TIMER,
++	[INT_IPI]	= CPU_IPI,
++	[INT_SWI0]	= CPU_SIP0,
++	[INT_SWI1]	= CPU_SIP1,
++	[INT_HWI0]	= CPU_IP0,
++	[INT_HWI1]	= CPU_IP1,
++	[INT_HWI2]	= CPU_IP2,
++	[INT_HWI3]	= CPU_IP3,
++	[INT_HWI4]	= CPU_IP4,
++	[INT_HWI5]	= CPU_IP5,
++	[INT_HWI6]	= CPU_IP6,
++	[INT_HWI7]	= CPU_IP7,
++};
 +
-+int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
++static int _kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
 +{
-+	return 0;
++	unsigned int irq = 0;
++
++	clear_bit(priority, &vcpu->arch.irq_pending);
++	if (priority < EXCCODE_INT_NUM)
++		irq = int_to_coreint[priority];
++
++	switch (priority) {
++	case INT_TI:
++	case INT_IPI:
++	case INT_SWI0:
++	case INT_SWI1:
++		set_gcsr_estat(irq);
++		break;
++
++	case INT_HWI0 ... INT_HWI7:
++		set_csr_gintc(irq);
++		break;
++
++	default:
++		break;
++	}
++
++	return 1;
 +}
 +
-+int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
++static int _kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
 +{
-+	unsigned long timer_hz;
-+	struct loongarch_csrs *csr;
++	unsigned int irq = 0;
 +
-+	vcpu->arch.vpid = 0;
++	clear_bit(priority, &vcpu->arch.irq_clear);
++	if (priority < EXCCODE_INT_NUM)
++		irq = int_to_coreint[priority];
 +
-+	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
-+	vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
-+	vcpu->kvm->arch.online_vcpus = vcpu->vcpu_id + 1;
++	switch (priority) {
++	case INT_TI:
++	case INT_IPI:
++	case INT_SWI0:
++	case INT_SWI1:
++		clear_gcsr_estat(irq);
++		break;
 +
-+	vcpu->arch.guest_eentry = (unsigned long)kvm_loongarch_ops->guest_eentry;
-+	vcpu->arch.handle_exit = _kvm_handle_exit;
-+	vcpu->arch.csr = kzalloc(sizeof(struct loongarch_csrs), GFP_KERNEL);
-+	if (!vcpu->arch.csr)
-+		return -ENOMEM;
++	case INT_HWI0 ... INT_HWI7:
++		clear_csr_gintc(irq);
++		break;
 +
-+	/*
-+	 * kvm all exceptions share one exception entry, and host <-> guest switch
-+	 * also switch excfg.VS field, keep host excfg.VS info here
-+	 */
-+	vcpu->arch.host_ecfg = (read_csr_ecfg() & CSR_ECFG_VS);
++	default:
++		break;
++	}
 +
-+	/* Init */
-+	vcpu->arch.last_sched_cpu = -1;
-+	vcpu->arch.last_exec_cpu = -1;
-+
-+	/*
-+	 * Initialize guest register state to valid architectural reset state.
-+	 */
-+	timer_hz = calc_const_freq();
-+	kvm_init_timer(vcpu, timer_hz);
-+
-+	/* Set Initialize mode for GUEST */
-+	csr = vcpu->arch.csr;
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CRMD, CSR_CRMD_DA);
-+
-+	/* Set cpuid */
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TMID, vcpu->vcpu_id);
-+
-+	/* start with no pending virtual guest interrupts */
-+	csr->csrs[LOONGARCH_CSR_GINTC] = 0;
-+
-+	return 0;
++	return 1;
 +}
 +
-+void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
++void _kvm_deliver_intr(struct kvm_vcpu *vcpu)
 +{
-+}
++	unsigned long *pending = &vcpu->arch.irq_pending;
++	unsigned long *pending_clr = &vcpu->arch.irq_clear;
++	unsigned int priority;
 +
-+void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
-+{
-+	int cpu;
-+	struct kvm_context *context;
++	if (!(*pending) && !(*pending_clr))
++		return;
 +
-+	hrtimer_cancel(&vcpu->arch.swtimer);
-+	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
-+	kfree(vcpu->arch.csr);
++	if (*pending_clr) {
++		priority = __ffs(*pending_clr);
++		while (priority <= INT_IPI) {
++			_kvm_irq_clear(vcpu, priority);
++			priority = find_next_bit(pending_clr,
++					BITS_PER_BYTE * sizeof(*pending_clr),
++					priority + 1);
++		}
++	}
 +
-+	/*
-+	 * If the vCPU is freed and reused as another vCPU, we don't want the
-+	 * matching pointer wrongly hanging around in last_vcpu.
-+	 */
-+	for_each_possible_cpu(cpu) {
-+		context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+		if (context->last_vcpu == vcpu)
-+			context->last_vcpu = NULL;
++	if (*pending) {
++		priority = __ffs(*pending);
++		while (priority <= INT_IPI) {
++			_kvm_irq_deliver(vcpu, priority);
++			priority = find_next_bit(pending,
++					BITS_PER_BYTE * sizeof(*pending),
++					priority + 1);
++		}
 +	}
 +}
++
++int _kvm_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return test_bit(INT_TI, &vcpu->arch.irq_pending);
++}
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 71f5e0fb96e5..be4a6a2aeb44 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -297,6 +297,51 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+ 	preempt_enable();
+ }
+ 
++int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
++			     struct kvm_loongarch_interrupt *irq)
++{
++	int intr = (int)irq->irq;
++	struct kvm_vcpu *dvcpu = NULL;
++
++	if (irq->cpu == -1)
++		dvcpu = vcpu;
++	else
++		dvcpu = kvm_get_vcpu(vcpu->kvm, irq->cpu);
++
++	if (intr > 0)
++		_kvm_queue_irq(dvcpu, intr);
++	else if (intr < 0)
++		_kvm_dequeue_irq(dvcpu, -intr);
++	else {
++		kvm_err("%s: invalid interrupt ioctl (%d:%d)\n", __func__,
++				irq->cpu, irq->irq);
++		return -EINVAL;
++	}
++
++	kvm_vcpu_kick(dvcpu);
++	return 0;
++}
++
++long kvm_arch_vcpu_async_ioctl(struct file *filp,
++			       unsigned int ioctl, unsigned long arg)
++{
++	struct kvm_vcpu *vcpu = filp->private_data;
++	void __user *argp = (void __user *)arg;
++
++	if (ioctl == KVM_INTERRUPT) {
++		struct kvm_loongarch_interrupt irq;
++
++		if (copy_from_user(&irq, argp, sizeof(irq)))
++			return -EFAULT;
++		kvm_debug("[%d] %s: irq: %d\n", vcpu->vcpu_id, __func__,
++			  irq.irq);
++
++		return kvm_vcpu_ioctl_interrupt(vcpu, &irq);
++	}
++
++	return -ENOIOCTLCMD;
++}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ {
+ 	return 0;
 -- 
 2.39.1
 
