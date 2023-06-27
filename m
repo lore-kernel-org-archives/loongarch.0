@@ -1,77 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7636A15AD0
-	for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 21:50:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE50C433C8;
-	Mon, 26 Jun 2023 21:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687816255;
-	bh=aSLq5uHp6/F3LAD0eREO/jTQOhAVrAYg972K5sNmKu0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=agC99o7qr/lXPtorgCzcO1ZQ+no/KwjBLiT9jEhv3tQsZlv1Y47XTZ0rRUbFGdbVq
-	 Xh3ItLr/WR/bDyNqUiKPHQTLl8U9Mi8DzJpxrmcnqhG4lk4iPxQknta88qM9rTOvA4
-	 616sfNUn8Kwnpxc6glPtkBpv4J/jVPzfmoSjwQQl6wg1uD54sMS/G1K6pC7RCYBRsr
-	 Y403MtuEUNz2zeMifFiO/vjgSw9tCrqE7KHr5Rx4xHw0dBrja5Tkv+pUvOr+f6iZW/
-	 3CAdPeudJrKmelh6P6tbIoy37bVITKLC4X0b7bIw0XB8P8Q7FTygs8+3Hlem+eAw5a
-	 1MXxpbbXUKqxA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Qi Hu <huqi@loongson.cn>,
-	Miao HAO <haomiao19@mails.ucas.ac.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	git@xen0n.name,
-	zhangqing@loongson.cn,
-	lienze@kylinos.cn,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 14/15] LoongArch: Fix the write_fcsr() macro
-Date: Mon, 26 Jun 2023 17:50:30 -0400
-Message-Id: <20230626215031.179159-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230626215031.179159-1-sashal@kernel.org>
-References: <20230626215031.179159-1-sashal@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E030EA1
+	for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 03:15:08 +0000 (UTC)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-57028539aadso44551707b3.2
+        for <loongarch@lists.linux.dev>; Mon, 26 Jun 2023 20:15:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687835708; x=1690427708;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iYTDP3CVo/pn4MBpnsVYDf65SVee1q+w6kCUgJokK48=;
+        b=kFdRpygS4WguFY2TIXFMCd2xbUYUslDwOhJ095L7ozx9CL0OSI6zj/K4mM+s7TbWhS
+         9zIZyA70hoFifzCOd1aewZ1yhLO2rBPOLuIElBxKRi5m6cvGDxzOV5z6misqLTfIRCXL
+         XPKfCVIPeKEk1w/EtT2SlKc18aMxKl81RwWtDJHCQOOQwTat12hCBR/UJwcCsUByCQnp
+         xPIqCDYl6eeVttXMi5drV03T1r0uzwcB8eqR424vWOHJ9pfaxoKjvFS/+eIWFJtobwVv
+         zZV6muAWYcpIcnBMA6UzmFfsZ6RlIit91ynY1KCJiFuPe3YS3HQ1OCdsGe5+lkqZWZwe
+         tjMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687835708; x=1690427708;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iYTDP3CVo/pn4MBpnsVYDf65SVee1q+w6kCUgJokK48=;
+        b=IYv1ecQ6637E4RZ7s344S2x6S2/pvdlqqciExmuBbpyjzhPQ/WBuWkIpqaq9bq08du
+         Y7MoM3t4eZW+eq25nSBVFaL7gL19qhjtE+jcDYcmQq+jJUUJqRsfzxuLbHgiYWrNGxOO
+         xTDLQSOOYlzAFbsMPMzS1xL/2oM0e6yMyFNhzViT9yqsPzLVSq4gyBia8BfoMOog9PZW
+         Cmu4ka7m9qf0wz9sHpEauz59nNODUm2ZfG/ej7/KswZqcDTzz8RKTRTxLJuP3/2XKawb
+         5couR0KNzU2SfQJajbSTy6T4yqZtzz3WRPBg34cT2jFrgq1OgEq2IIFSBbzJfWc/bcHI
+         hQeA==
+X-Gm-Message-State: AC+VfDwl0lh8pTRFwaDy2WK4cTPQOaWnt3UDvf8m4v5wnPuPEcysi9Vy
+	yEfoc9k80sb51I/oyasnPzI=
+X-Google-Smtp-Source: ACHHUZ4ATK/fn+XGL+Tqd6Lbx5sr7g8FEnC/NPQWKHVXRjdEDS0JhBnwpRdiXqnqBIQnqfKuzcysxA==
+X-Received: by 2002:a81:83ce:0:b0:570:28c6:a321 with SMTP id t197-20020a8183ce000000b0057028c6a321mr38284183ywf.18.1687835707756;
+        Mon, 26 Jun 2023 20:15:07 -0700 (PDT)
+Received: from unknowna0e70b2ca394.attlocal.net ([2600:1700:2f7d:1800::16])
+        by smtp.googlemail.com with ESMTPSA id s4-20020a0dd004000000b0057399b3bd26sm1614798ywd.33.2023.06.26.20.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jun 2023 20:15:07 -0700 (PDT)
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: linux-mm@kvack.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	xen-devel@lists.xenproject.org,
+	kvm@vger.kernel.org,
+	Hugh Dickins <hughd@google.com>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Jonas Bonn <jonas@southpole.se>,
+	David Hildenbrand <david@redhat.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Richard Weinberger <richard@nod.at>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v6 00/33] Split ptdesc from struct page
+Date: Mon, 26 Jun 2023 20:13:58 -0700
+Message-Id: <20230627031431.29653-1-vishal.moola@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.35
 Content-Transfer-Encoding: 8bit
 
-From: Qi Hu <huqi@loongson.cn>
+The MM subsystem is trying to shrink struct page. This patchset
+introduces a memory descriptor for page table tracking - struct ptdesc.
 
-[ Upstream commit 346dc929623cef70ff7832a4fa0ffd1b696e312a ]
+This patchset introduces ptdesc, splits ptdesc from struct page, and
+converts many callers of page table constructor/destructors to use ptdescs.
 
-The "write_fcsr()" macro uses wrong the positions for val and dest in
-asm. Fix it!
+Ptdesc is a foundation to further standardize page tables, and eventually
+allow for dynamic allocation of page tables independent of struct page.
+However, the use of pages for page table tracking is quite deeply
+ingrained and varied across archictectures, so there is still a lot of
+work to be done before that can happen.
 
-Reported-by: Miao HAO <haomiao19@mails.ucas.ac.cn>
-Signed-off-by: Qi Hu <huqi@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/include/asm/loongarch.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is rebased on next-20230626.
 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 62835d84a647d..3d15fa5bef37d 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -1488,7 +1488,7 @@ __BUILD_CSR_OP(tlbidx)
- #define write_fcsr(dest, val) \
- do {	\
- 	__asm__ __volatile__(	\
--	"	movgr2fcsr	%0, "__stringify(dest)"	\n"	\
-+	"	movgr2fcsr	"__stringify(dest)", %0	\n"	\
- 	: : "r" (val));	\
- } while (0)
- 
+There is a minor conflict with patch 24 and the mm-unstable tree in
+arch/m68k/mm/motorola.c - The end result of applying the patch should
+be the same.
+
+v6:
+  Fix compiler warnings/errors
+
+v5:
+  More Acked-bys :)
+  Cleanup some documentation wording and formatting
+  Add pt_rcu_head to ptdesc
+  Add memcg to ptdesc (and align it with struct page)
+  Ensure all get_free_page() callers prohibit HIGHMEM for 32 bit support.
+  Renamed folio_{set, clear}_table() to folio_{set, clear}_pgtable()
+  Removed pagetable_clear() as it is not necessary right now
+  Dropped s390 _refcount to _pt_frag_refcount conversion
+
+Vishal Moola (Oracle) (33):
+  mm: Add PAGE_TYPE_OP folio functions
+  s390: Use _pt_s390_gaddr for gmap address tracking
+  pgtable: Create struct ptdesc
+  mm: add utility functions for ptdesc
+  mm: Convert pmd_pgtable_page() to pmd_ptdesc()
+  mm: Convert ptlock_alloc() to use ptdescs
+  mm: Convert ptlock_ptr() to use ptdescs
+  mm: Convert pmd_ptlock_init() to use ptdescs
+  mm: Convert ptlock_init() to use ptdescs
+  mm: Convert pmd_ptlock_free() to use ptdescs
+  mm: Convert ptlock_free() to use ptdescs
+  mm: Create ptdesc equivalents for pgtable_{pte,pmd}_page_{ctor,dtor}
+  powerpc: Convert various functions to use ptdescs
+  x86: Convert various functions to use ptdescs
+  s390: Convert various gmap functions to use ptdescs
+  s390: Convert various pgalloc functions to use ptdescs
+  mm: Remove page table members from struct page
+  pgalloc: Convert various functions to use ptdescs
+  arm: Convert various functions to use ptdescs
+  arm64: Convert various functions to use ptdescs
+  csky: Convert __pte_free_tlb() to use ptdescs
+  hexagon: Convert __pte_free_tlb() to use ptdescs
+  loongarch: Convert various functions to use ptdescs
+  m68k: Convert various functions to use ptdescs
+  mips: Convert various functions to use ptdescs
+  nios2: Convert __pte_free_tlb() to use ptdescs
+  openrisc: Convert __pte_free_tlb() to use ptdescs
+  riscv: Convert alloc_{pmd, pte}_late() to use ptdescs
+  sh: Convert pte_free_tlb() to use ptdescs
+  sparc64: Convert various functions to use ptdescs
+  sparc: Convert pgtable_pte_page_{ctor, dtor}() to ptdesc equivalents
+  um: Convert {pmd, pte}_free_tlb() to use ptdescs
+  mm: Remove pgtable_{pmd, pte}_page_{ctor, dtor}() wrappers
+
+ Documentation/mm/split_page_table_lock.rst    |  12 +-
+ .../zh_CN/mm/split_page_table_lock.rst        |  14 +-
+ arch/arm/include/asm/tlb.h                    |  12 +-
+ arch/arm/mm/mmu.c                             |   7 +-
+ arch/arm64/include/asm/tlb.h                  |  14 +-
+ arch/arm64/mm/mmu.c                           |   7 +-
+ arch/csky/include/asm/pgalloc.h               |   4 +-
+ arch/hexagon/include/asm/pgalloc.h            |   8 +-
+ arch/loongarch/include/asm/pgalloc.h          |  27 ++-
+ arch/loongarch/mm/pgtable.c                   |   7 +-
+ arch/m68k/include/asm/mcf_pgalloc.h           |  47 ++--
+ arch/m68k/include/asm/sun3_pgalloc.h          |   8 +-
+ arch/m68k/mm/motorola.c                       |   4 +-
+ arch/mips/include/asm/pgalloc.h               |  32 +--
+ arch/mips/mm/pgtable.c                        |   8 +-
+ arch/nios2/include/asm/pgalloc.h              |   8 +-
+ arch/openrisc/include/asm/pgalloc.h           |   8 +-
+ arch/powerpc/mm/book3s64/mmu_context.c        |  10 +-
+ arch/powerpc/mm/book3s64/pgtable.c            |  32 +--
+ arch/powerpc/mm/pgtable-frag.c                |  46 ++--
+ arch/riscv/include/asm/pgalloc.h              |   8 +-
+ arch/riscv/mm/init.c                          |  16 +-
+ arch/s390/include/asm/pgalloc.h               |   4 +-
+ arch/s390/include/asm/tlb.h                   |   4 +-
+ arch/s390/mm/gmap.c                           | 207 ++++++++++--------
+ arch/s390/mm/pgalloc.c                        | 108 ++++-----
+ arch/sh/include/asm/pgalloc.h                 |   9 +-
+ arch/sparc/mm/init_64.c                       |  17 +-
+ arch/sparc/mm/srmmu.c                         |   5 +-
+ arch/um/include/asm/pgalloc.h                 |  18 +-
+ arch/x86/mm/pgtable.c                         |  47 ++--
+ arch/x86/xen/mmu_pv.c                         |   2 +-
+ include/asm-generic/pgalloc.h                 |  88 +++++---
+ include/asm-generic/tlb.h                     |  11 +
+ include/linux/mm.h                            | 153 +++++++++----
+ include/linux/mm_types.h                      |  14 --
+ include/linux/page-flags.h                    |  30 ++-
+ include/linux/pgtable.h                       |  77 +++++++
+ mm/memory.c                                   |   8 +-
+ 39 files changed, 686 insertions(+), 455 deletions(-)
+
 -- 
-2.39.2
+2.40.1
 
