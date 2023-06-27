@@ -1,127 +1,162 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9CF79F2
-	for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 07:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1687850075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N1scKhPxxz/YxysE64BuheSdyQmgV4XhiinPf6icWX8=;
-	b=gLHtxCt7YxT7fD4RUMsMt5nkuqomgRGHLVnhkE5mtTO9G6qqlrV6MupV/chx6JnAHldSvj
-	wk86egqixoIqEzSgzOQ0uzhhe50WyoLlDU0uUS0mQ8IJsOJB9b5honExYv+XEhLrorqKcT
-	tv5LsStXpK5QhintwqeKkiF2P9peTmQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-n1HtfKS5PBKm92BMlVhgBw-1; Tue, 27 Jun 2023 03:14:33 -0400
-X-MC-Unique: n1HtfKS5PBKm92BMlVhgBw-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-3f5df65fa35so17679265e9.3
-        for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 00:14:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687850072; x=1690442072;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N1scKhPxxz/YxysE64BuheSdyQmgV4XhiinPf6icWX8=;
-        b=cZN8OEyQ9eOHzqDgGwpQqGRXqmzXQAZuHsxlGXR46pBnMGXO85mOr7yWe5Csqr7JN4
-         t2sIIy5mVp10V1g/ZFz3oZt715Ap3m/AvNchyaCcFLy81ge/JkrekwVUj6T/K7MUoqbt
-         RD2+NzAg6puRa93K7I9ASUtVgXxChoPeYBJO31QL8cMR8o7La/teL5jm9PMLqE33ztu+
-         GwwOSCL/97ZbrAvacI+tcF+pfrMrT2JbCxAAux9gkwNn2O86mSehUMrXpGjeZmDBpREL
-         XeEd5B8BthCUfphuzDR/8ccWTMUvZvGlIoB+5SXs+qn1WdIdA+PVSckrBBUw5qQ0lF9V
-         57VQ==
-X-Gm-Message-State: AC+VfDxJo62McWhcgu17T7Kmbnr/Kocq/STEsigrZhbqQGWLDizL2PbD
-	FoCmyqvOsvrmYysJIod2l5ebryE2pyboy4PYyXCLp7y+YQTp7yCDsvwOjHfYv4cHN+6eIbdlHK1
-	jWyVJZA581OUmiK7xDUm6
-X-Received: by 2002:a05:600c:3655:b0:3fa:9d0f:f1e1 with SMTP id y21-20020a05600c365500b003fa9d0ff1e1mr2936781wmq.35.1687850072226;
-        Tue, 27 Jun 2023 00:14:32 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6HIpOGvancvhac5jw2GR0kOhKc72MxDndtCuN9HZ1pSF+uaoBl/D52ddajPiSHV9uK1Eb9sw==
-X-Received: by 2002:a05:600c:3655:b0:3fa:9d0f:f1e1 with SMTP id y21-20020a05600c365500b003fa9d0ff1e1mr2936755wmq.35.1687850071891;
-        Tue, 27 Jun 2023 00:14:31 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c737:4900:68b3:e93b:e07a:558b? (p200300cbc737490068b3e93be07a558b.dip0.t-ipconnect.de. [2003:cb:c737:4900:68b3:e93b:e07a:558b])
-        by smtp.gmail.com with ESMTPSA id 21-20020a05600c22d500b003f96d10eafbsm9778433wmg.12.2023.06.27.00.14.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Jun 2023 00:14:31 -0700 (PDT)
-Message-ID: <ac1c162c-07d8-6084-44ca-a2c1a4183df2@redhat.com>
-Date: Tue, 27 Jun 2023 09:14:29 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA38215ACE
+	for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 08:20:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1687853998; bh=FNm89gkdhid/F9i0RK3rbfD/L/HwpUHHCTG+95nssus=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=xoWamd7VJHJpaAmhRrr9sJ9Ih38xFEyD6qLt6k/qDNKZOVjq1NqVRIKh07ClO53M9
+	 kaBZux4vXrf3vFscj2Oa33lclnuqe6k4TRkqNXF1WgHj2roXq5gPmfQx1bCO381a/Y
+	 bE+/Tg3JgyUQoRqUGPibLrrFr5mDYAGoy26Tzibw=
+Received: from [100.100.34.13] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 017D96011B;
+	Tue, 27 Jun 2023 16:19:57 +0800 (CST)
+Message-ID: <18bc1f6b-5299-2628-82b7-55f3848e856a@xen0n.name>
+Date: Tue, 27 Jun 2023 16:19:56 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v6 00/33] Split ptdesc from struct page
-To: Hugh Dickins <hughd@google.com>,
- "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
- Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- "David S. Miller" <davem@davemloft.net>, Richard Weinberger
- <richard@nod.at>, Yoshinori Sato <ysato@users.sourceforge.jp>,
- Dave Hansen <dave.hansen@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>,
- Christophe Leroy <christophe.leroy@csgroup.eu>
-References: <20230627031431.29653-1-vishal.moola@gmail.com>
- <e8992eee-4140-427e-bacb-9449f346318@google.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <e8992eee-4140-427e-bacb-9449f346318@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH v15 05/30] LoongArch: KVM: Add vcpu related header files
+To: Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>, tangyouling@loongson.cn
+References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
+ <20230626084752.1138621-6-zhaotianrui@loongson.cn>
 Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230626084752.1138621-6-zhaotianrui@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 27.06.23 06:44, Hugh Dickins wrote:
-> On Mon, 26 Jun 2023, Vishal Moola (Oracle) wrote:
+On 2023/6/26 16:47, Tianrui Zhao wrote:
+> Add LoongArch vcpu related header files, including vcpu csr
+> information, irq number defines, and some vcpu interfaces.
 > 
->> The MM subsystem is trying to shrink struct page. This patchset
->> introduces a memory descriptor for page table tracking - struct ptdesc.
-> ...
->>   39 files changed, 686 insertions(+), 455 deletions(-)
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/insn-def.h  |  55 ++++++
+>   arch/loongarch/include/asm/kvm_csr.h   | 231 +++++++++++++++++++++++++
+>   arch/loongarch/include/asm/kvm_vcpu.h  |  97 +++++++++++
+>   arch/loongarch/include/asm/loongarch.h |  20 ++-
+>   arch/loongarch/kvm/trace.h             | 168 ++++++++++++++++++
+>   5 files changed, 566 insertions(+), 5 deletions(-)
+>   create mode 100644 arch/loongarch/include/asm/insn-def.h
+>   create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+>   create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
+>   create mode 100644 arch/loongarch/kvm/trace.h
 > 
-> I don't see the point of this patchset: to me it is just obfuscation of
-> the present-day tight relationship between page table and struct page.
-> 
-> Matthew already explained:
-> 
->> The intent is to get ptdescs to be dynamically allocated at some point
->> in the ~2-3 years out future when we have finished the folio project ...
-> 
-> So in a kindly mood, I'd say that this patchset is ahead of its time.
-> But I can certainly adapt to it, if everyone else sees some point to it.
+> diff --git a/arch/loongarch/include/asm/insn-def.h b/arch/loongarch/include/asm/insn-def.h
+> new file mode 100644
+> index 000000000000..e285ee108fb0
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/insn-def.h
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef __ASM_INSN_DEF_H
+> +#define __ASM_INSN_DEF_H
+> +
+> +#include <linux/stringify.h>
+> +#include <asm/gpr-num.h>
+> +#include <asm/asm.h>
+> +
+> +#define INSN_STR(x)		__stringify(x)
+> +#define CSR_RD_SHIFT		0
+> +#define CSR_RJ_SHIFT		5
+> +#define CSR_SIMM14_SHIFT	10
+> +#define CSR_OPCODE_SHIFT	24
+> +
+> +#define DEFINE_INSN_CSR							\
+> +	__DEFINE_ASM_GPR_NUMS						\
+> +"	.macro insn_csr, opcode, rj, rd, simm14\n"			\
+> +"	.4byte	((\\opcode << " INSN_STR(CSR_OPCODE_SHIFT) ") |"	\
+> +"		 (.L__gpr_num_\\rj << " INSN_STR(CSR_RJ_SHIFT) ") |"	\
+> +"		 (.L__gpr_num_\\rd << " INSN_STR(CSR_RD_SHIFT) ") |"	\
+> +"		 (\\simm14 << " INSN_STR(CSR_SIMM14_SHIFT) "))\n"	\
+> +"	.endm\n"
+> +
+> +#define UNDEFINE_INSN_CSR						\
+> +"	.purgem insn_csr\n"
+> +
+> +#define __INSN_CSR(opcode, rj, rd, simm14)				\
+> +	DEFINE_INSN_CSR							\
+> +	"insn_csr " opcode ", " rj ", " rd ", " simm14 "\n"		\
+> +	UNDEFINE_INSN_CSR
+> +
+> +
+> +#define INSN_CSR(opcode, rj, rd, simm14)				\
+> +	__INSN_CSR(LARCH_##opcode, LARCH_##rj, LARCH_##rd,		\
+> +		   LARCH_##simm14)
+> +
+> +#define __ASM_STR(x)		#x
+> +#define LARCH_OPCODE(v)		__ASM_STR(v)
+> +#define LARCH_SIMM14(v)		__ASM_STR(v)
+> +#define __LARCH_REG(v)		__ASM_STR(v)
+> +#define LARCH___RD(v)		__LARCH_REG(v)
+> +#define LARCH___RJ(v)		__LARCH_REG(v)
+> +#define LARCH_OPCODE_GCSR	LARCH_OPCODE(5)
+> +
+> +#define GCSR_read(csr, rd)						\
+> +	INSN_CSR(OPCODE_GCSR, __RJ(zero), __RD(rd), SIMM14(csr))
+> +
+> +#define GCSR_write(csr, rd)						\
+> +	INSN_CSR(OPCODE_GCSR, __RJ($r1), __RD(rd), SIMM14(csr))
+> +
+> +#define GCSR_xchg(csr, rj, rd)						\
+> +	INSN_CSR(OPCODE_GCSR, __RJ(rj), __RD(rd), SIMM14(csr))
+> +
+> +#endif /* __ASM_INSN_DEF_H */
 
-I share your thoughts, that code churn which will help eventually in the 
-far, far future (not wanting to sound too pessimistic, but it's not 
-going to be there tomorrow ;) ).
+I still find this unnecessarily complex. First of all this is 
+reinventing infra that's already available as the "parse_r" helper 
+(check out include/asm/tlb.h in v6.4), but the only usage of the helper 
+has just been removed, so it's probably a signal saying this practice 
+may not last for long -- people are no longer in a situation like back 
+in the MIPS era when toolchain support are not guaranteed (or even 
+allowed upstream).
 
-However, if it's just the same as the other conversions we already did 
-(e.g., struct slab), then I guess there is no reason to stop now -- the 
-obfuscation already happened.
+Secondly, while support for older compilers is nice-to-have, but users 
+of upstream kernels also already effectively depend on very recent 
+toolchains (if not bleeding-edge). So we can just probe for support and 
+just use proper mnemonics and automatically get support soon, because we 
+can expect most of them to pick up upstream changes very quickly. That's 
+to say, if we have something like:
 
-... or is there a difference regarding this conversion and the previous 
-ones?
+# arch/loongarch/Kconfig
+config LOONGARCH
+     # ...
+     select HAVE_KVM if AS_HAS_LVZ_EXTENSION
+
+config AS_HAS_LVZ_EXTENSION
+     def_bool $(as-instr,gcsrrd \$t0$(comma)\$t1$(comma)123)
+
+Then support is guaranteed for all KVM code and this cruft can go away, 
+and then the feature will likely be available in a few months.
+
+FYI, support for LSX and LASX instructions are already posted by your 
+fellow toolchain folks [1], so it's 100% doable for them to add support 
+despite the manuals not being available yet. Just coordinate with them a 
+bit...
+
+[1]: https://sourceware.org/pipermail/binutils/2023-June/127990.html
 
 -- 
-Cheers,
+WANG "xen0n" Xuerui
 
-David / dhildenb
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
