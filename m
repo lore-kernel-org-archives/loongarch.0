@@ -1,104 +1,99 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1966C1308A
-	for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 17:52:11 +0000 (UTC)
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6b71cdb47e1so4267005a34.2
-        for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 10:52:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4E44A26
+	for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 19:10:24 +0000 (UTC)
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5577900c06bso3673302a12.2
+        for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 12:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687888331; x=1690480331;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ya0gjT04wvrkPEwxsIo0SrjOZFrw43ACMJ5aI2sBKGs=;
-        b=jU0XSQm/UgQNqhqQcjqaxOHJKL3Tu8GM/GwEobHZGDkP+x8DVdgSjRkU85h/Lj/+te
-         oZwK4Q1yO37Pzbn1i7oZRsd+yfivOXZX9DLv/iX+OOzSZ/17s4ytR4cUrCKbaq8ScVjb
-         y4NBy98BQyt8WGI73+o5s1aq7cUaSdPW95ULfQ6FlPkdUprfA5PQkMvKjJsZAGVBcKqi
-         qlieckJVpQyRqbWlQMoi71Q4k95ldkAZz69rpAi1h8kLQ3wxt3idqYMSWF1Mqn3mJooy
-         Rs2GGbK0m2G7LUgnIAcus/1X+0dgeX1Usy3dZ/2MF2ihQvsHs5fE8nG3/WrSESAbmo+3
-         LPFw==
+        d=gmail.com; s=20221208; t=1687893024; x=1690485024;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=yS/xmFpqe6+k8T+yWQv7frf8UxF7B6Cm+1CNfhqUPlA=;
+        b=BMqSkVfZP75OxNlOqvaghKGJv9m0y4sm8KFw5SHceiXFQz/e0SiiKJT9I5B52iAH17
+         cMt4KC2GjU9iq0SnaoF95JUsMa0mk+JEcq2FkRIOzoow88IvYkDfH7aBL3K5PbCOKOue
+         txhLzT7BLkzfYn4DxxqSwsZ2KmDA6ILNOIWpC3UOJTW+EHWbeQQdlcmGoaBUyJofM5AY
+         lnVmBNLdubBt20V6jFfi37xAvQhhTT8MryCyACblmLywm5IjXVYJCWSIUi3pbGc+j98S
+         r4FtzORgbma5+HwlZ2RT9hRW9y3a8jxCdKlGNGBWvRri5+DzenA7COAJXTL5/EtGEK0g
+         cong==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687888331; x=1690480331;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ya0gjT04wvrkPEwxsIo0SrjOZFrw43ACMJ5aI2sBKGs=;
-        b=CmpzCcdQDqd+5c0QPTewarNrG7T4xmXBqzLslX1qCKl5O1qYYccbULl8VMZNLs+yD3
-         b3hmS90ZmgWYIzz7Gv44MKtP94NyLcW6W07BWF/kh/hDivseorrvfZ47HOgjnp/E7w52
-         5saFXtikqIME4tsODyMocUk4VqpbRTCc2ybGw4lgmD5MDwFg3fzc7UiaJFDRpK/tRBXt
-         iuHo5Pv0y7Wq5TuRKI6gjQOoI6Q7t6OK3grTOWk40sUPyqYjpAfAXEGMjAbQLdMGnAyT
-         xe/rESv3LKCorEJjeaDk9T02ZXgrFVDv2Akm77mkmn0jd/nmyn3dYXYiaQDERCzpNsxg
-         7wlw==
-X-Gm-Message-State: AC+VfDzrd93AgaQ/A7JWbfrgXZyNGi1QtnE/xQjbzGTvRTzPyq3T0A6E
-	q4fladOfME9Lf0OEgtRQ/2HZvWc1m/B7ik/D4Lk=
-X-Google-Smtp-Source: ACHHUZ60PXVLGXFjCZbPL4+H89P+QaultgII2fPTXJpRhifF/y6voZRlslPkfFetToA56imkT1WhjHNqMU1RYiBUm6M=
-X-Received: by 2002:a05:6359:d23:b0:133:a55:7e26 with SMTP id
- gp35-20020a0563590d2300b001330a557e26mr5444430rwb.7.1687888330839; Tue, 27
- Jun 2023 10:52:10 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1687893024; x=1690485024;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yS/xmFpqe6+k8T+yWQv7frf8UxF7B6Cm+1CNfhqUPlA=;
+        b=aKqzSUO3N1QT7r5m9bKbH+qtZHxPxeZmrU68cYJk9NFh5/M0Xipy+DFBsT+LapieTb
+         tmfj9mI+BJ7Z2piQdo5xIM63zWDpQbq5nCt8RKaMfm2Tr6uQ5bSJmgZkmXBJnI+7n3SU
+         NFMgIbzB0iWv7wM+WEFeZDARYYCUJIKNT8mMpnytxcJYdVV+xlIUVCjGWGmjIwEDh6Ij
+         6ZYLASVMotYIyrPqHPdDSv6NEg7SAN441rHeUR1Eu9aGpaTX4S8VE8Xz2pcjAQA4hF20
+         Lj4noKA1Bbfqeh+a+5MIBUEpzrNj6q6F/9karfVhGaI4tXQmNbYn+XFe1076Ap0H++Vx
+         Qeag==
+X-Gm-Message-State: AC+VfDz5IuAXTy/nHT6dOebnzHSqnTpcJmexIhs21Nu6lQ8z9TtPdwIo
+	tJHMgtDmzjQqhoEsW9aUsXg=
+X-Google-Smtp-Source: ACHHUZ4TyTsIrCRAZ6UdXT5Omt1I9QGIq3lGO+AmEbof8hKm4unG6pcuoo4CdZZ1APibznjic8nqlQ==
+X-Received: by 2002:a17:90a:3cc6:b0:262:df8e:fcb6 with SMTP id k6-20020a17090a3cc600b00262df8efcb6mr9240150pjd.43.1687893024298;
+        Tue, 27 Jun 2023 12:10:24 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n91-20020a17090a5ae400b002471deb13fcsm6684270pji.6.2023.06.27.12.10.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Jun 2023 12:10:23 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <cc954b15-63ab-9d9f-2d37-1aea78b7f65f@roeck-us.net>
+Date: Tue, 27 Jun 2023 12:10:20 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230627031431.29653-1-vishal.moola@gmail.com>
- <20230627031431.29653-4-vishal.moola@gmail.com> <ZJsJT9dLtxaKlxVb@x1n>
-In-Reply-To: <ZJsJT9dLtxaKlxVb@x1n>
-From: Vishal Moola <vishal.moola@gmail.com>
-Date: Tue, 27 Jun 2023 10:51:59 -0700
-Message-ID: <CAOzc2pw2U2XvMcaEdy18UYe=5=PeCBn_qLR_3ns8_nWvgSSDQw@mail.gmail.com>
-Subject: Re: [PATCH v6 03/33] pgtable: Create struct ptdesc
-To: Peter Xu <peterx@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v5 26/33] nios2: Convert __pte_free_tlb() to use ptdescs
+Content-Language: en-US
+To: Vishal Moola <vishal.moola@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+ xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+ Hugh Dickins <hughd@google.com>, Dinh Nguyen <dinguyen@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>
+References: <20230622205745.79707-1-vishal.moola@gmail.com>
+ <20230622205745.79707-27-vishal.moola@gmail.com>
+ <13bab37c-0f0a-431a-8b67-4379bf4dc541@roeck-us.net>
+ <CAOzc2px6VutRkMUTn+M5LFLf1YbRVZFgJ=q7StaApwYRxUWqQA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <CAOzc2px6VutRkMUTn+M5LFLf1YbRVZFgJ=q7StaApwYRxUWqQA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 27, 2023 at 9:07=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote:
->
-> On Mon, Jun 26, 2023 at 08:14:01PM -0700, Vishal Moola (Oracle) wrote:
-> > Currently, page table information is stored within struct page. As part
-> > of simplifying struct page, create struct ptdesc for page table
-> > information.
-> >
-> > Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-> > Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> > ---
-> >  include/linux/pgtable.h | 68 +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 68 insertions(+)
-> >
-> > diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> > index 5063b482e34f..d46cb709ce08 100644
-> > --- a/include/linux/pgtable.h
-> > +++ b/include/linux/pgtable.h
-> > @@ -987,6 +987,74 @@ static inline void ptep_modify_prot_commit(struct =
-vm_area_struct *vma,
-> >  #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
-> >  #endif /* CONFIG_MMU */
-> >
-> > +
-> > +/**
-> > + * struct ptdesc -    Memory descriptor for page tables.
-> > + * @__page_flags:     Same as page flags. Unused for page tables.
-> > + * @pt_rcu_head:      For freeing page table pages.
-> > + * @pt_list:          List of used page tables. Used for s390 and x86.
-> > + * @_pt_pad_1:        Padding that aliases with page's compound head.
-> > + * @pmd_huge_pte:     Protected by ptdesc->ptl, used for THPs.
-> > + * @_pt_s390_gaddr:   Aliases with page's mapping. Used for s390 gmap =
-only.
->
-> Should some arch-specific bits (and a few others) always under some
-> #ifdefs, so it shouldn't appear on other archs?
+On 6/27/23 10:42, Vishal Moola wrote:
+> On Mon, Jun 26, 2023 at 10:47 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> On Thu, Jun 22, 2023 at 01:57:38PM -0700, Vishal Moola (Oracle) wrote:
+>>> Part of the conversions to replace pgtable constructor/destructors with
+>>> ptdesc equivalents.
+>>>
+>>> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+>>> Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+>>
+>> This patch causes all nios2 builds to fail.
+> 
+> It looks like you tried to apply this patch on its own. This patch depends
+> on patches 01-12 of this patchset to compile properly. I've cross-compiled
+> this architecture and it worked, but let me know if something fails
+> when its applied on top of those patches (or the rest of the patchset).
 
-Right now this struct completely overlays struct page, so the padding as
-well as any arch-specific fields have to stay. Whenever we get ptdescs
-independent of struct page we can cleanup any unnecessary fields, as
-well as omit unnecessary fields from unrelated architectures.
+
+No, I did not try to apply this patch on its own. I tried to build yesterday's
+pending-fixes branch of linux-next.
+
+Guenter
+
