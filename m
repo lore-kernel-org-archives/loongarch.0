@@ -1,141 +1,460 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A13146A8
-	for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 21:57:56 +0000 (UTC)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-666eec46206so4554669b3a.3
-        for <loongarch@lists.linux.dev>; Tue, 27 Jun 2023 14:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687903076; x=1690495076;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=t1QqN2jdF+WL3G2Fn2F+gnSyyU4sNUKe3JWXuNtILlE=;
-        b=g+t5RbdhRiaLoYyDKYrUABIe+H7AyRcVTK6Ps8KX11dLH3rVyHHxTIp4jo1F1MLfJ/
-         7iNHUg8lMtHSGaBwqfjHucjm6wwc/jl78+I2QtBt+NVF52zFOTO8iGbXC2EXZcfaizxp
-         syPg/dBUX2hToZvcUTpD+czYfrRw5crN2vey7CoePIDlxvhbRn4jKEtVasFgYbYadRKT
-         uIII/cayZYqptv+yRMmyM+Wfpd5/UPoabOL1LFJ6elItbp/e6VHQDna35ucIS9DgJdAS
-         QwUA3GiJRf5dQk/OTJ3hXfUBDFz7VSwh76MedBtdvOPKN3bvoe9PwVVR6Es4OllczpXD
-         WRDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687903076; x=1690495076;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t1QqN2jdF+WL3G2Fn2F+gnSyyU4sNUKe3JWXuNtILlE=;
-        b=SPwSDgPAzjeW+gUOeyfIXKD/D4pvCtMAh6TK5c4AxzoSJUS8M0abe4O6ab78NKYinB
-         n5oUGArtTL25FPPfYvBFwMnJSuqsnckaajRLRidu4gCnK1Pex8H3oWS9XgBNypBN7Fd7
-         nD5FVIhHZXOMkedf5glw9UpUWNXnakAKqCKTege9iVqz1x2u9JIQ6gJvSOsbRCkXIYOz
-         qWjv/byvf+cadwjSLkc6fygbzd7tFmxdyvVpUARGludIKikPprCK8gA/LcMpMLcOaRnP
-         zKteP9anpWusUL+xKoG3JhDDnHgqiFxUfkC6TIBfRg7KquNr+nmBezwtBw+wmUE+ru0Z
-         BDQw==
-X-Gm-Message-State: AC+VfDyfk8I25866s/6SvTfHxvmm2JoIiO50bfYFZ7duFIZBHI0oxV9C
-	YhpybZqQWdQ5UL2Q26CMCfk=
-X-Google-Smtp-Source: ACHHUZ6lN48OedTSkLTDBhYcXWegZDranrwbL7k9xhFTjM3m37Ei4jw/mCpSF8qmoSte/cwaCNHhUw==
-X-Received: by 2002:a17:902:c407:b0:1ac:8717:d436 with SMTP id k7-20020a170902c40700b001ac8717d436mr14008978plk.60.1687903075769;
-        Tue, 27 Jun 2023 14:57:55 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e16-20020a17090301d000b001b69303db65sm6438851plh.26.2023.06.27.14.57.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Jun 2023 14:57:55 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <a7e61e75-cc94-9771-4b56-d1a7c35c13f2@roeck-us.net>
-Date: Tue, 27 Jun 2023 14:57:52 -0700
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 735721847
+	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 03:42:50 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8Bx1cQ4rJtkvlYDAA--.5515S3;
+	Wed, 28 Jun 2023 11:42:48 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxzyM0rJtkm4sNAA--.11940S3;
+	Wed, 28 Jun 2023 11:42:46 +0800 (CST)
+Subject: Re: [PATCH v15 27/30] LoongArch: KVM: Implement vcpu world switch
+To: Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>, tangyouling@loongson.cn
+References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
+ <20230626084752.1138621-28-zhaotianrui@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <f648a182-7c26-5bbc-6ae5-584af26e9db1@loongson.cn>
+Date: Wed, 28 Jun 2023 11:42:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v5 26/33] nios2: Convert __pte_free_tlb() to use ptdescs
+In-Reply-To: <20230626084752.1138621-28-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-To: Dinh Nguyen <dinguyen@kernel.org>, Vishal Moola <vishal.moola@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
- Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20230622205745.79707-1-vishal.moola@gmail.com>
- <20230622205745.79707-27-vishal.moola@gmail.com>
- <13bab37c-0f0a-431a-8b67-4379bf4dc541@roeck-us.net>
- <CAOzc2px6VutRkMUTn+M5LFLf1YbRVZFgJ=q7StaApwYRxUWqQA@mail.gmail.com>
- <cc954b15-63ab-9d9f-2d37-1aea78b7f65f@roeck-us.net>
- <b6a5753b-8874-6465-f690-094ee753e038@roeck-us.net>
- <CAOzc2pxdqeaRjYLfOqvMW-AEobTzD9xOP+MyP9nxgEbi1T2r7Q@mail.gmail.com>
- <c3751051-7fc7-7129-b9a7-ead71c576ace@kernel.org>
- <2b7e8b1d-1697-6a25-434d-352f95e6fff2@roeck-us.net>
- <70776142-a778-9c20-5594-835ed6f7e7a2@kernel.org>
-From: Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <70776142-a778-9c20-5594-835ed6f7e7a2@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxzyM0rJtkm4sNAA--.11940S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Cw18Kw4xXr17Ary5ZFW7KFX_yoWkKr13pr
+	9xArsYv3yj9Fn5uFs7tFyj9r13XFWxXrWagwnrGFs5AryDWFyvq3WvkFn8GFyUAw18XFnY
+	qF9Ykw48CFWDA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUU
+	U==
 
-On 6/27/23 14:46, Dinh Nguyen wrote:
-> 
-> 
-> On 6/27/23 16:01, Guenter Roeck wrote:
->> On 6/27/23 13:05, Dinh Nguyen wrote:
->>>
->>>
->>> On 6/27/23 14:56, Vishal Moola wrote:
->>>> On Tue, Jun 27, 2023 at 12:14 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>>>>
->>>>> On 6/27/23 12:10, Guenter Roeck wrote:
->>>>>> On 6/27/23 10:42, Vishal Moola wrote:
->>>>>>> On Mon, Jun 26, 2023 at 10:47 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>>>>>>>
->>>>>>>> On Thu, Jun 22, 2023 at 01:57:38PM -0700, Vishal Moola (Oracle) wrote:
->>>>>>>>> Part of the conversions to replace pgtable constructor/destructors with
->>>>>>>>> ptdesc equivalents.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
->>>>>>>>> Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
->>>>>>>>
->>>>>>>> This patch causes all nios2 builds to fail.
->>>>>>>
->>>>>>> It looks like you tried to apply this patch on its own. This patch depends
->>>>>>> on patches 01-12 of this patchset to compile properly. I've cross-compiled
->>>>>>> this architecture and it worked, but let me know if something fails
->>>>>>> when its applied on top of those patches (or the rest of the patchset).
->>>>>>
->>>>>>
->>>>>> No, I did not try to apply this patch on its own. I tried to build yesterday's
->>>>>> pending-fixes branch of linux-next.
->>>>>>
->>>>>
->>>>> A quick check shows that the build fails with next-20230627. See log below.
->>>>
->>>> Ah it looks like this one slipped into -next on its own somehow? Stephen, please
->>>> drop this patch from -next; it shouldn't be in without the rest of the
->>>> patchset which
->>>> I intend to have Andrew take through the mm tree.
->>>>
->>>
->>> I apologize, but I queue this patch up for Linus and it's been pulled for this merge window. I didn't realize you were going to take this patchset through another tree.
->>>
->>> Sorry about that.
->>>
->>
->> Yes, indeed, I just confirmed that all nios2 builds in the mainline kernel
->> are now broken.
->>
-> 
-> Please let me know if you need to do anything. I'm going to out for a week starting tomorrow.
-> 
+On 2023-06-26 16:47, Tianrui Zhao wrote:
 
-Not sure I understand. It seems to me that it would have to be you to do something.
-After all, you are the nios2 maintainer, and nios2 builds in mainline are now
-broken. Maybe send a revert ? Am I missing something ?
+> Implement LoongArch vcpu world switch, including vcpu enter guest and
+> vcpu exit from guest, both operations need to save or restore the host
+> and guest registers.
+>
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> ---
+>   arch/loongarch/kernel/asm-offsets.c |  32 +++
+>   arch/loongarch/kvm/switch.S         | 299 ++++++++++++++++++++++++++++
+>   2 files changed, 331 insertions(+)
+>   create mode 100644 arch/loongarch/kvm/switch.S
+>
+> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+> index 4bdb203fc66e..cb6c5a5afea9 100644
+> --- a/arch/loongarch/kernel/asm-offsets.c
+> +++ b/arch/loongarch/kernel/asm-offsets.c
+> @@ -9,6 +9,7 @@
+>   #include <linux/mm.h>
+>   #include <linux/kbuild.h>
+>   #include <linux/suspend.h>
+> +#include <linux/kvm_host.h>
+>   #include <asm/cpu-info.h>
+>   #include <asm/ptrace.h>
+>   #include <asm/processor.h>
+> @@ -272,3 +273,34 @@ void output_pbe_defines(void)
+>   	BLANK();
+>   }
+>   #endif
+> +
+> +static void __used output_kvm_defines(void)
+> +{
+> +	COMMENT(" KVM/LOONGARCH Specific offsets. ");
+> +
+> +	OFFSET(VCPU_FCSR0, kvm_vcpu_arch, fpu.fcsr);
+> +	OFFSET(VCPU_FCC, kvm_vcpu_arch, fpu.fcc);
+> +	BLANK();
+> +
+> +	OFFSET(KVM_VCPU_ARCH, kvm_vcpu, arch);
+> +	OFFSET(KVM_VCPU_KVM, kvm_vcpu, kvm);
+> +	OFFSET(KVM_VCPU_RUN, kvm_vcpu, run);
+> +	BLANK();
+> +
+> +	OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
+> +	OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
+> +	OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
+> +	OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
+> +	OFFSET(KVM_ARCH_GEENTRY, kvm_vcpu_arch, guest_eentry);
+> +	OFFSET(KVM_ARCH_GPC, kvm_vcpu_arch, pc);
+> +	OFFSET(KVM_ARCH_GGPR, kvm_vcpu_arch, gprs);
+> +	OFFSET(KVM_ARCH_HESTAT, kvm_vcpu_arch, host_estat);
+> +	OFFSET(KVM_ARCH_HBADV, kvm_vcpu_arch, badv);
+> +	OFFSET(KVM_ARCH_HBADI, kvm_vcpu_arch, badi);
+> +	OFFSET(KVM_ARCH_HECFG, kvm_vcpu_arch, host_ecfg);
+> +	OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
+> +	OFFSET(KVM_ARCH_HPERCPU, kvm_vcpu_arch, host_percpu);
+> +
+> +	OFFSET(KVM_GPGD, kvm, arch.gpa_mm.pgd);
+> +	BLANK();
+> +}
+> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+> new file mode 100644
+> index 000000000000..7e55976c6fec
+> --- /dev/null
+> +++ b/arch/loongarch/kvm/switch.S
+> @@ -0,0 +1,299 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+> + */
+> +
+> +#include <linux/linkage.h>
+> +#include <asm/stackframe.h>
+> +#include <asm/asm.h>
+> +#include <asm/asmmacro.h>
+> +#include <asm/regdef.h>
+> +#include <asm/loongarch.h>
+> +#include <asm/export.h>
+> +
+> +#define PT_GPR_OFFSET(x)	(PT_R0 + 8*x)
+> +	.text
 
-Guenter
+The .text is redundant, you also marked it later.
+
+
+> +
+> +.macro kvm_save_host_gpr base
+> +	.irp n,1,2,3,22,23,24,25,26,27,28,29,30,31
+> +	st.d	$r\n, \base, PT_GPR_OFFSET(\n)
+> +	.endr
+> +.endm
+> +
+> +.macro kvm_restore_host_gpr base
+> +	.irp n,1,2,3,22,23,24,25,26,27,28,29,30,31
+> +	ld.d	$r\n, \base, PT_GPR_OFFSET(\n)
+> +	.endr
+> +.endm
+> +
+> +/*
+> + * prepare switch to guest, save host reg and restore guest reg.
+> + * a2: kvm_vcpu_arch, don't touch it until 'ertn'
+> + * t0, t1: temp register
+> + */
+> +.macro kvm_switch_to_guest
+> +	/* set host excfg.VS=0, all exceptions share one exception entry */
+> +	csrrd		t0, LOONGARCH_CSR_ECFG
+> +	bstrins.w	t0, zero, CSR_ECFG_VS_SHIFT_END, CSR_ECFG_VS_SHIFT
+> +	csrwr		t0, LOONGARCH_CSR_ECFG
+> +
+> +	/* Load up the new EENTRY */
+> +	ld.d	t0, a2, KVM_ARCH_GEENTRY
+> +	csrwr	t0, LOONGARCH_CSR_EENTRY
+> +
+> +	/* Set Guest ERA */
+> +	ld.d	t0, a2, KVM_ARCH_GPC
+> +	csrwr	t0, LOONGARCH_CSR_ERA
+> +
+> +	/* Save host PGDL */
+> +	csrrd	t0, LOONGARCH_CSR_PGDL
+> +	st.d	t0, a2, KVM_ARCH_HPGD
+> +
+> +	/* Switch to kvm */
+> +	ld.d	t1, a2, KVM_VCPU_KVM - KVM_VCPU_ARCH
+> +
+> +	/* Load guest PGDL */
+> +	lu12i.w t0, KVM_GPGD
+> +	srli.w  t0, t0, 12
+
+I think the "lu12i.w+srli.w" can be replaced by "li.w t0, KVM_GPGD" .
+
+
+> +	ldx.d   t0, t1, t0
+> +	csrwr	t0, LOONGARCH_CSR_PGDL
+> +
+> +	/* Mix GID and RID */
+> +	csrrd		t1, LOONGARCH_CSR_GSTAT
+> +	bstrpick.w	t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
+> +	csrrd		t0, LOONGARCH_CSR_GTLBC
+> +	bstrins.w	t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+> +	csrwr		t0, LOONGARCH_CSR_GTLBC
+> +
+> +	/*
+> +	 * Switch to guest:
+> +	 *  GSTAT.PGM = 1, ERRCTL.ISERR = 0, TLBRPRMD.ISTLBR = 0
+> +	 *  ertn
+> +	 */
+> +
+> +	/*
+> +	 * Enable intr in root mode with future ertn so that host interrupt
+> +	 * can be responsed during VM runs
+> +	 * guest crmd comes from separate gcsr_CRMD register
+> +	 */
+> +	ori	t0, zero, CSR_PRMD_PIE
+li.w t0, CSR_PRMD_PIE
+> +	csrxchg	t0, t0,   LOONGARCH_CSR_PRMD
+> +
+> +	/* Set PVM bit to setup ertn to guest context */
+> +	ori	t0, zero, CSR_GSTAT_PVM
+li.w t0, ...
+> +	csrxchg	t0, t0,   LOONGARCH_CSR_GSTAT
+> +
+> +	/* Load Guest gprs */
+> +	ld.d	ra,	a2,	(KVM_ARCH_GGPR + 8 * REG_RA)
+> +	ld.d	tp,	a2,	(KVM_ARCH_GGPR + 8 * REG_TP)
+> +	ld.d	sp,	a2,	(KVM_ARCH_GGPR + 8 * REG_SP)
+> +	ld.d	a0,	a2,	(KVM_ARCH_GGPR + 8 * REG_A0)
+> +	ld.d	a1,	a2,	(KVM_ARCH_GGPR + 8 * REG_A1)
+> +	ld.d	a3,	a2,	(KVM_ARCH_GGPR + 8 * REG_A3)
+> +	ld.d	a4,	a2,	(KVM_ARCH_GGPR + 8 * REG_A4)
+> +	ld.d	a5,	a2,	(KVM_ARCH_GGPR + 8 * REG_A5)
+> +	ld.d	a6,	a2,	(KVM_ARCH_GGPR + 8 * REG_A6)
+> +	ld.d	a7,	a2,	(KVM_ARCH_GGPR + 8 * REG_A7)
+> +	ld.d	t0,	a2,	(KVM_ARCH_GGPR + 8 * REG_T0)
+> +	ld.d	t1,	a2,	(KVM_ARCH_GGPR + 8 * REG_T1)
+> +	ld.d	t2,	a2,	(KVM_ARCH_GGPR + 8 * REG_T2)
+> +	ld.d	t3,	a2,	(KVM_ARCH_GGPR + 8 * REG_T3)
+> +	ld.d	t4,	a2,	(KVM_ARCH_GGPR + 8 * REG_T4)
+> +	ld.d	t5,	a2,	(KVM_ARCH_GGPR + 8 * REG_T5)
+> +	ld.d	t6,	a2,	(KVM_ARCH_GGPR + 8 * REG_T6)
+> +	ld.d	t7,	a2,	(KVM_ARCH_GGPR + 8 * REG_T7)
+> +	ld.d	t8,	a2,	(KVM_ARCH_GGPR + 8 * REG_T8)
+> +	ld.d	u0,	a2,	(KVM_ARCH_GGPR + 8 * REG_U0)
+> +	ld.d	fp,	a2,	(KVM_ARCH_GGPR + 8 * REG_FP)
+> +	ld.d	s0,	a2,	(KVM_ARCH_GGPR + 8 * REG_S0)
+> +	ld.d	s1,	a2,	(KVM_ARCH_GGPR + 8 * REG_S1)
+> +	ld.d	s2,	a2,	(KVM_ARCH_GGPR + 8 * REG_S2)
+> +	ld.d	s3,	a2,	(KVM_ARCH_GGPR + 8 * REG_S3)
+> +	ld.d	s4,	a2,	(KVM_ARCH_GGPR + 8 * REG_S4)
+> +	ld.d	s5,	a2,	(KVM_ARCH_GGPR + 8 * REG_S5)
+> +	ld.d	s6,	a2,	(KVM_ARCH_GGPR + 8 * REG_S6)
+> +	ld.d	s7,	a2,	(KVM_ARCH_GGPR + 8 * REG_S7)
+> +	ld.d	s8,	a2,	(KVM_ARCH_GGPR + 8 * REG_S8)
+
+Why not use .irp which like kvm_save/restore_host_gpr do here?
+
+
+> +	/* Load KVM_ARCH register */
+> +	ld.d	a2,	a2,	(KVM_ARCH_GGPR + 8 * REG_A2)
+> +
+> +	ertn
+> +.endm
+> +
+> +	/*
+> +	 * exception entry for general exception from guest mode
+> +	 *  - IRQ is disabled
+> +	 *  - kernel privilege in root mode
+> +	 *  - page mode keep unchanged from previous prmd in root mode
+> +	 *  - Fixme: tlb exception cannot happen since registers relative with TLB
+> +	 *  -        is still in guest mode, such as pgd table/vmid registers etc,
+> +	 *  -        will fix with hw page walk enabled in future
+> +	 * load kvm_vcpu from reserved CSR KVM_VCPU_KS, and save a2 to KVM_TEMP_KS
+> +	 */
+> +	.section	.text
+
+here.
+
+
+> +	.cfi_sections	.debug_frame
+> +SYM_CODE_START(kvm_vector_entry)
+> +	csrwr	a2,   KVM_TEMP_KS
+> +	csrrd	a2,   KVM_VCPU_KS
+> +	addi.d	a2,   a2, KVM_VCPU_ARCH
+> +
+> +	/* After save gprs, free to use any gpr */
+> +	st.d	ra,	a2,	(KVM_ARCH_GGPR + 8 * REG_RA)
+> +	st.d	tp,	a2,	(KVM_ARCH_GGPR + 8 * REG_TP)
+> +	st.d	sp,	a2,	(KVM_ARCH_GGPR + 8 * REG_SP)
+> +	st.d	a0,	a2,	(KVM_ARCH_GGPR + 8 * REG_A0)
+> +	st.d	a1,	a2,	(KVM_ARCH_GGPR + 8 * REG_A1)
+> +	st.d	a3,	a2,	(KVM_ARCH_GGPR + 8 * REG_A3)
+> +	st.d	a4,	a2,	(KVM_ARCH_GGPR + 8 * REG_A4)
+> +	st.d	a5,	a2,	(KVM_ARCH_GGPR + 8 * REG_A5)
+> +	st.d	a6,	a2,	(KVM_ARCH_GGPR + 8 * REG_A6)
+> +	st.d	a7,	a2,	(KVM_ARCH_GGPR + 8 * REG_A7)
+> +	st.d	t0,	a2,	(KVM_ARCH_GGPR + 8 * REG_T0)
+> +	st.d	t1,	a2,	(KVM_ARCH_GGPR + 8 * REG_T1)
+> +	st.d	t2,	a2,	(KVM_ARCH_GGPR + 8 * REG_T2)
+> +	st.d	t3,	a2,	(KVM_ARCH_GGPR + 8 * REG_T3)
+> +	st.d	t4,	a2,	(KVM_ARCH_GGPR + 8 * REG_T4)
+> +	st.d	t5,	a2,	(KVM_ARCH_GGPR + 8 * REG_T5)
+> +	st.d	t6,	a2,	(KVM_ARCH_GGPR + 8 * REG_T6)
+> +	st.d	t7,	a2,	(KVM_ARCH_GGPR + 8 * REG_T7)
+> +	st.d	t8,	a2,	(KVM_ARCH_GGPR + 8 * REG_T8)
+> +	st.d	u0,	a2,	(KVM_ARCH_GGPR + 8 * REG_U0)
+> +	st.d	fp,	a2,	(KVM_ARCH_GGPR + 8 * REG_FP)
+> +	st.d	s0,	a2,	(KVM_ARCH_GGPR + 8 * REG_S0)
+> +	st.d	s1,	a2,	(KVM_ARCH_GGPR + 8 * REG_S1)
+> +	st.d	s2,	a2,	(KVM_ARCH_GGPR + 8 * REG_S2)
+> +	st.d	s3,	a2,	(KVM_ARCH_GGPR + 8 * REG_S3)
+> +	st.d	s4,	a2,	(KVM_ARCH_GGPR + 8 * REG_S4)
+> +	st.d	s5,	a2,	(KVM_ARCH_GGPR + 8 * REG_S5)
+> +	st.d	s6,	a2,	(KVM_ARCH_GGPR + 8 * REG_S6)
+> +	st.d	s7,	a2,	(KVM_ARCH_GGPR + 8 * REG_S7)
+> +	st.d	s8,	a2,	(KVM_ARCH_GGPR + 8 * REG_S8)
+
+Why not .irp ... ?
+
+
+> +	/* Save guest a2 */
+> +	csrrd	t0,	KVM_TEMP_KS
+> +	st.d	t0,	a2,	(KVM_ARCH_GGPR + 8 * REG_A2)
+> +
+> +	/* a2: kvm_vcpu_arch, a1 is free to use */
+> +	csrrd	s1,   KVM_VCPU_KS
+> +	ld.d	s0,   s1, KVM_VCPU_RUN
+> +
+> +	csrrd	t0,   LOONGARCH_CSR_ESTAT
+> +	st.d	t0,   a2, KVM_ARCH_HESTAT
+> +	csrrd	t0,   LOONGARCH_CSR_ERA
+> +	st.d	t0,   a2, KVM_ARCH_GPC
+> +	csrrd	t0,   LOONGARCH_CSR_BADV
+> +	st.d	t0,   a2, KVM_ARCH_HBADV
+> +	csrrd	t0,   LOONGARCH_CSR_BADI
+> +	st.d	t0,   a2, KVM_ARCH_HBADI
+> +
+> +	/* Restore host excfg.VS */
+> +	csrrd	t0, LOONGARCH_CSR_ECFG
+> +	ld.d	t1, a2, KVM_ARCH_HECFG
+> +	or	t0, t0, t1
+> +	csrwr	t0, LOONGARCH_CSR_ECFG
+> +
+> +	/* Restore host eentry */
+> +	ld.d	t0, a2, KVM_ARCH_HEENTRY
+> +	csrwr	t0, LOONGARCH_CSR_EENTRY
+> +
+> +	/* restore host pgd table */
+> +	ld.d    t0, a2, KVM_ARCH_HPGD
+> +	csrwr   t0, LOONGARCH_CSR_PGDL
+> +
+> +	/*
+> +	 * Disable PGM bit to enter root mode by default with next ertn
+> +	 */
+> +	ori	t0, zero, CSR_GSTAT_PVM
+li.w
+> +	csrxchg	zero, t0, LOONGARCH_CSR_GSTAT
+> +	/*
+> +	 * Clear GTLBC.TGID field
+> +	 *       0: for root  tlb update in future tlb instr
+> +	 *  others: for guest tlb update like gpa to hpa in future tlb instr
+> +	 */
+> +	csrrd	t0, LOONGARCH_CSR_GTLBC
+> +	bstrins.w	t0, zero, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+> +	csrwr	t0, LOONGARCH_CSR_GTLBC
+> +	ld.d	tp, a2, KVM_ARCH_HTP
+> +	ld.d	sp, a2, KVM_ARCH_HSP
+> +	/* restore per cpu register */
+> +	ld.d	u0, a2, KVM_ARCH_HPERCPU
+> +	addi.d	sp, sp, -PT_SIZE
+> +
+> +	/* Prepare handle exception */
+> +	or	a0, s0, zero
+move
+> +	or	a1, s1, zero
+move
+> +	ld.d	t8, a2, KVM_ARCH_HANDLE_EXIT
+> +	jirl	ra, t8, 0
+> +
+> +	or	a2, s1, zero
+move
+> +	addi.d	a2, a2, KVM_VCPU_ARCH
+> +
+> +	/* resume host when ret <= 0 */
+> +	bge	zero, a0, ret_to_host
+blez a0, ret_to_host
+> +
+> +	/*
+> +         * return to guest
+> +         * save per cpu register again, maybe switched to another cpu
+> +         */
+> +	st.d	u0, a2, KVM_ARCH_HPERCPU
+> +
+> +	/* Save kvm_vcpu to kscratch */
+> +	csrwr	s1, KVM_VCPU_KS
+> +	kvm_switch_to_guest
+> +
+> +ret_to_host:
+> +	ld.d    a2, a2, KVM_ARCH_HSP
+> +	addi.d  a2, a2, -PT_SIZE
+> +	kvm_restore_host_gpr    a2
+> +	jr      ra
+> +SYM_CODE_END(kvm_vector_entry)
+> +kvm_vector_entry_end:
+> +
+> +/*
+> + * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
+> + *
+> + * @register_param:
+> + *  a0: kvm_run* run
+> + *  a1: kvm_vcpu* vcpu
+> + */
+> +SYM_FUNC_START(kvm_enter_guest)
+> +	/* allocate space in stack bottom */
+> +	addi.d	a2, sp, -PT_SIZE
+> +	/* save host gprs */
+> +	kvm_save_host_gpr a2
+> +
+> +	/* save host crmd,prmd csr to stack */
+> +	csrrd	a3, LOONGARCH_CSR_CRMD
+> +	st.d	a3, a2, PT_CRMD
+> +	csrrd	a3, LOONGARCH_CSR_PRMD
+> +	st.d	a3, a2, PT_PRMD
+> +
+> +	addi.d	a2, a1, KVM_VCPU_ARCH
+> +	st.d	sp, a2, KVM_ARCH_HSP
+> +	st.d	tp, a2, KVM_ARCH_HTP
+> +	/* Save per cpu register */
+> +	st.d	u0, a2, KVM_ARCH_HPERCPU
+> +
+> +	/* Save kvm_vcpu to kscratch */
+> +	csrwr	a1, KVM_VCPU_KS
+> +	kvm_switch_to_guest
+> +SYM_FUNC_END(kvm_enter_guest)
+> +kvm_enter_guest_end:
+> +
+> +	.section ".rodata"
+> +SYM_DATA(kvm_vector_size, .quad kvm_vector_entry_end - kvm_vector_entry)
+> +SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
+
+Not restore .text section. Although I'd like to use .pushsection ... .pop
+
+after marked kvm_..._end, you can put them after kvm_restore_fpu, too.
+
+
+Jinyang
+
+
+> +
+> +
+> +SYM_FUNC_START(kvm_save_fpu)
+> +	fpu_save_csr	a0 t1
+> +	fpu_save_double a0 t1
+> +	fpu_save_cc	a0 t1 t2
+> +	jr              ra
+> +SYM_FUNC_END(kvm_save_fpu)
+> +
+> +SYM_FUNC_START(kvm_restore_fpu)
+> +	fpu_restore_double a0 t1
+> +	fpu_restore_csr    a0 t1
+> +	fpu_restore_cc	   a0 t1 t2
+> +	jr                 ra
+> +SYM_FUNC_END(kvm_restore_fpu)
 
