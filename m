@@ -1,153 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B688833;
-	Wed, 28 Jun 2023 09:33:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD1D3C433CB;
-	Wed, 28 Jun 2023 09:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687944824;
-	bh=CrYGMFVkuZ18bbqqXmjfHXjWhRbYeT+J+BKK1daGGTM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kOuXnRg1BENhX68oF4wUvOmW/QKYKiFbeB0wy5Ut2FxM4NX35vw0HSBU3KmtU25Oc
-	 dD2GnXVvObPqkTvkdH7Sm4c9s0P8eZa2vrfUMQlMnJr5eD1rOrOq5Se46/4/K4o6NH
-	 9UJlVx63Axich432Zg3l3EzUS3KMKanaVvVm3MzNM3uHSJBqv9YnS3FJuQTZWk0b4H
-	 MHT1zgheuTxilkJYVIJEkC2eKTdTkqy0Wv0g7hLWKSbB63HFEiy+Q2BmVACbpRl7CZ
-	 SLTLNlty4b8+YHM2M9KQVJxy8R9ZhO+Eqi+ESZ7RRwEDZljTsvl2/JZ/gZn0NZg/Qt
-	 kVGUOaZzCtibQ==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-51d9c71fb4bso3236670a12.2;
-        Wed, 28 Jun 2023 02:33:44 -0700 (PDT)
-X-Gm-Message-State: AC+VfDx5Mk7ugBOyJCfxCaVWXt0LSZaXEmOqYZhAH2Yzbmv5iPnVrEcW
-	+aivV+rfKCsUuiVsknjYX6iVdgjpc+QifTeS8rI=
-X-Google-Smtp-Source: ACHHUZ7bRzRsDllhNLipd/qefy1r65bKvlwuhhM1+DNN01yuN/J3IxfKXTbbm1Hh31Dk7m5G6zYrn7LxlzhxhZiIySE=
-X-Received: by 2002:a05:6402:755:b0:51a:4842:ecdc with SMTP id
- p21-20020a056402075500b0051a4842ecdcmr23379907edy.1.1687944823012; Wed, 28
- Jun 2023 02:33:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B89BA20
+	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 09:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1687945890; bh=mERR5o/6GAasOdmhfFEv0s0jaV6yQdbTTBXBhqFAqgI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ag+B3SY2EAgFH+HU437SHcr9olebrpCEhzkgGhOszvll4+B2qkAon0dWQPULujxqZ
+	 HtSHHGOTWf0z5sZCcNI88A/TucYf0UT/cq/COITvzTEPtOsd6cI+elKhe3jo2WQCzh
+	 iKK29Zl+6XHUqPRR0+zbcAkiDZ1NCjaPRn/LjwEY=
+Received: from [100.100.34.13] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id B59C7600A6;
+	Wed, 28 Jun 2023 17:51:29 +0800 (CST)
+Message-ID: <cfc87f85-3a09-8a9e-4258-4fb1fd8013ab@xen0n.name>
+Date: Wed, 28 Jun 2023 17:51:28 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230625095644.3156349-1-kernel@xen0n.name> <20230625095644.3156349-2-kernel@xen0n.name>
-In-Reply-To: <20230625095644.3156349-2-kernel@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 28 Jun 2023 17:33:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5hBes5R30mFBW7asX8wPWeSQ+J-=GypnoMoO=-CR3cNg@mail.gmail.com>
-Message-ID: <CAAhV-H5hBes5R30mFBW7asX8wPWeSQ+J-=GypnoMoO=-CR3cNg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/8] LoongArch: Calculate various sizes in the linker script
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: WANG Rui <wangrui@loongson.cn>, Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH v15 27/30] LoongArch: KVM: Implement vcpu world switch
+Content-Language: en-US
+To: zhaotianrui <zhaotianrui@loongson.cn>, Jinyang He
+ <hejinyang@loongson.cn>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>, tangyouling@loongson.cn
+References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
+ <20230626084752.1138621-28-zhaotianrui@loongson.cn>
+ <f648a182-7c26-5bbc-6ae5-584af26e9db1@loongson.cn>
+ <7017277c-3721-b417-5215-491efae7c8a9@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <7017277c-3721-b417-5215-491efae7c8a9@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 25, 2023 at 5:57=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
-te:
->
-> From: WANG Rui <wangrui@loongson.cn>
->
-> Taking the address delta between symbols in different sections is not
-> supported by the LLVM IAS. Instead, do this in the linker script, so
-> the same data can be properly referenced in assembly.
->
-> Signed-off-by: WANG Rui <wangrui@loongson.cn>
-> Signed-off-by: WANG Xuerui <git@xen0n.name>
-> ---
->  arch/loongarch/kernel/efi-header.S  | 6 +++---
->  arch/loongarch/kernel/head.S        | 8 ++++----
->  arch/loongarch/kernel/vmlinux.lds.S | 7 +++++++
->  3 files changed, 14 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/efi-header.S b/arch/loongarch/kernel/e=
-fi-header.S
-> index 8c1d229a2afa..5f23b85d78ca 100644
-> --- a/arch/loongarch/kernel/efi-header.S
-> +++ b/arch/loongarch/kernel/efi-header.S
-> @@ -24,7 +24,7 @@
->         .byte   0x02                                    /* MajorLinkerVer=
-sion */
->         .byte   0x14                                    /* MinorLinkerVer=
-sion */
->         .long   __inittext_end - .Lefi_header_end       /* SizeOfCode */
-> -       .long   _end - __initdata_begin                 /* SizeOfInitiali=
-zedData */
-> +       .long   _kernel_vsize                           /* SizeOfInitiali=
-zedData */
->         .long   0                                       /* SizeOfUninitia=
-lizedData */
->         .long   __efistub_efi_pe_entry - _head          /* AddressOfEntry=
-Point */
->         .long   .Lefi_header_end - _head                /* BaseOfCode */
-> @@ -79,9 +79,9 @@
->                 IMAGE_SCN_MEM_EXECUTE                   /* Characteristic=
-s */
->
->         .ascii  ".data\0\0\0"
-> -       .long   _end - __initdata_begin                 /* VirtualSize */
-> +       .long   _kernel_vsize                           /* VirtualSize */
->         .long   __initdata_begin - _head                /* VirtualAddress=
- */
-> -       .long   _edata - __initdata_begin               /* SizeOfRawData =
-*/
-> +       .long   _kernel_rsize                           /* SizeOfRawData =
-*/
->         .long   __initdata_begin - _head                /* PointerToRawDa=
-ta */
->
->         .long   0                                       /* PointerToReloc=
-ations */
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index 0d8180153ec0..53b883db0786 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -23,7 +23,7 @@ _head:
->         .word   MZ_MAGIC                /* "MZ", MS-DOS header */
->         .org    0x8
->         .dword  kernel_entry            /* Kernel entry point */
-> -       .dword  _end - _text            /* Kernel image effective size */
-> +       .dword  _kernel_asize           /* Kernel image effective size */
->         .quad   PHYS_LINK_KADDR         /* Kernel image load offset from =
-start of RAM */
->         .org    0x38                    /* 0x20 ~ 0x37 reserved */
->         .long   LINUX_PE_MAGIC
-> @@ -32,9 +32,9 @@ _head:
->  pe_header:
->         __EFI_PE_HEADER
->
-> -SYM_DATA(kernel_asize, .long _end - _text);
-> -SYM_DATA(kernel_fsize, .long _edata - _text);
-> -SYM_DATA(kernel_offset, .long kernel_offset - _text);
-> +SYM_DATA(kernel_asize, .long _kernel_asize);
-> +SYM_DATA(kernel_fsize, .long _kernel_fsize);
-> +SYM_DATA(kernel_offset, .long _kernel_offset);
->
->  #endif
->
-> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/=
-vmlinux.lds.S
-> index 0c7b041be9d8..79f238df029e 100644
-> --- a/arch/loongarch/kernel/vmlinux.lds.S
-> +++ b/arch/loongarch/kernel/vmlinux.lds.S
-> @@ -136,6 +136,13 @@ SECTIONS
->         DWARF_DEBUG
->         ELF_DETAILS
->
-> +       /* header symbols */
-> +       _kernel_asize =3D _end - _text;
-> +       _kernel_fsize =3D _edata - _text;
-> +       _kernel_offset =3D kernel_offset - _text;
-When !CONFIG_EFI_STUB there is a build error, I fixed it when I applied.
+Hi,
 
-Huacai
-> +       _kernel_vsize =3D _end - __initdata_begin;
-> +       _kernel_rsize =3D _edata - __initdata_begin;
-> +
->         .gptab.sdata : {
->                 *(.gptab.data)
->                 *(.gptab.sdata)
-> --
-> 2.40.0
->
->
+On 2023/6/28 16:34, zhaotianrui wrote:
+> 
+> 在 2023/6/28 上午11:42, Jinyang He 写道:
+>> On 2023-06-26 16:47, Tianrui Zhao wrote:
+>>
+>>> [snip]
+>>
+>>> +    ldx.d   t0, t1, t0
+>>> +    csrwr    t0, LOONGARCH_CSR_PGDL
+>>> +
+>>> +    /* Mix GID and RID */
+>>> +    csrrd        t1, LOONGARCH_CSR_GSTAT
+>>> +    bstrpick.w    t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
+>>> +    csrrd        t0, LOONGARCH_CSR_GTLBC
+>>> +    bstrins.w    t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+>>> +    csrwr        t0, LOONGARCH_CSR_GTLBC
+>>> +
+>>> +    /*
+>>> +     * Switch to guest:
+>>> +     *  GSTAT.PGM = 1, ERRCTL.ISERR = 0, TLBRPRMD.ISTLBR = 0
+>>> +     *  ertn
+>>> +     */
+>>> +
+>>> +    /*
+>>> +     * Enable intr in root mode with future ertn so that host interrupt
+>>> +     * can be responsed during VM runs
+>>> +     * guest crmd comes from separate gcsr_CRMD register
+>>> +     */
+>>> +    ori    t0, zero, CSR_PRMD_PIE
+>> li.w t0, CSR_PRMD_PIE
+> Thanks for your advice, and I think it need not to replace it with 
+> "li.w" there, as it has the same meaning with "ori" instruction, and 
+> "ori" instruction is simple and clear enough. The same as the following 
+> "move" instructions. What do you think of it.
+
+Just my 2c: I'd agree that pseudo-instructions should be used wherever 
+possible and helping readability.
+
+FYI there were similar usages way before, but all were cleaned up with 
+my previous commit 57ce5d3eefac ("LoongArch: Use the "move" 
+pseudo-instruction where applicable").
+
+Such usages apparently came from an era when the LoongArch toolchains 
+didn't support any pseudo-instruction, and are less intuitive especially 
+for someone not familiar with LoongArch assembly. Given that familiarity 
+with LoongArch won't be widespread (unlike with e.g. RISC-V that are 
+adopted more widely), we should optimize for readability when writing 
+code; it's also a best practice in general because code is read way more 
+often than written, and people care about semantics not unnecessary 
+details like "how are moves like this or that materialized".
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
