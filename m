@@ -1,58 +1,97 @@
-Received: from a3.inai.de (a3.inai.de [88.198.85.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BCC1847
-	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 03:45:13 +0000 (UTC)
-Received: by a3.inai.de (Postfix, from userid 25121)
-	id 3EAFB5880BBDB; Wed, 28 Jun 2023 05:38:57 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by a3.inai.de (Postfix) with ESMTP id 3CBF860DE22B8;
-	Wed, 28 Jun 2023 05:38:57 +0200 (CEST)
-Date: Wed, 28 Jun 2023 05:38:57 +0200 (CEST)
-From: Jan Engelhardt <jengelh@inai.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, 
-    Linus Torvalds <torvalds@linux-foundation.org>, 
-    Nikolay Borisov <nik.borisov@suse.com>, 
-    "Ahmed S. Darwish" <darwi@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, 
-    Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, 
-    linux-ia64@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
-    WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-    Geert Uytterhoeven <geert@linux-m68k.org>, linux-m68k@lists.linux-m68k.org, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    linux-mips@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-    Rich Felker <dalias@libc.org>, 
-    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-    linux-sh@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-    sparclinux@vger.kernel.org, Richard Weinberger <richard@nod.at>, 
-    Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-    Johannes Berg <johannes@sipsolutions.net>, linux-um@lists.infradead.org, 
-    Richard Henderson <richard.henderson@linaro.org>, 
-    "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
-    Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, 
-    Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [patch 00/17] init, treewide, x86: Cleanup check_bugs() and
- start sanitizing the x86 boot process
-In-Reply-To: <20230613223827.532680283@linutronix.de>
-Message-ID: <8qpp1r32-pr73-8477-nso-327o845o1149@vanv.qr>
-References: <20230613223827.532680283@linutronix.de>
-User-Agent: Alpine 2.25 (LSU 592 2021-09-18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61624C98;
+	Wed, 28 Jun 2023 04:22:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5495DC433CB;
+	Wed, 28 Jun 2023 04:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687926150;
+	bh=E3cMC1OQGi1J1pe3NYVGtGoJHPH7rhJK8+ImhoRtZnM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=blRrkp5fGfDYZjME7oxp79y1t4UBgdiSTArjFD9e0VObw8M2NnRSWAVZ07eqnO6Zb
+	 BWNDzpydl1KBnMBI7oxdWEb3kIx6Uajkrdhe7n7YYiYrmpFrcXwDaAVEJfUYZFhkza
+	 GAhshZngBARHXJvRCCNUvbAeVr27B8dfQwdWCzIhBIkhMoXXRKotWhfDBq1ZXvkv1R
+	 R8656hY7K9DcrLOglckLAhRS+8tmxUv1xoNKnVAm4xngmm30VSfH7IFHfp0XDK3AV1
+	 QzgSFflZno0YbV7f4aEJ7mia9DtOUsdXRpUq0lz4NFh9zHICVq7ifRdhSJJh8O6hW8
+	 BcnOEaGDX8IQg==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-51d80d81d6eso4671152a12.1;
+        Tue, 27 Jun 2023 21:22:30 -0700 (PDT)
+X-Gm-Message-State: AC+VfDyi3wPf8CW3nBqrWMsn3VJ1bfYT8uwFESULbk/Kgq9ay18UVyFQ
+	ccLpK5IfCLivjr0NiWkIpB1Dh2bOU7M1ZRcNpLk=
+X-Google-Smtp-Source: ACHHUZ4uzjpla0PpOSz7jN5NaYu5agLcovOE+HYx95odgKreDQRpg1KAvz2GEMXy5EMzysJilLMiKt2x2E5aG/OwbKs=
+X-Received: by 2002:a05:6402:12d3:b0:51d:988d:5ed8 with SMTP id
+ k19-20020a05640212d300b0051d988d5ed8mr5576748edx.29.1687926148447; Tue, 27
+ Jun 2023 21:22:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20230627130122.1491765-1-kernel@xen0n.name> <20230627130122.1491765-2-kernel@xen0n.name>
+ <20230627162456.GA223742@dev-arch.thelio-3990X>
+In-Reply-To: <20230627162456.GA223742@dev-arch.thelio-3990X>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 28 Jun 2023 12:22:15 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5P1+hToeNFO2Np5v2EorPK4B9Fmh5U4n+aHRDsaOnYcw@mail.gmail.com>
+Message-ID: <CAAhV-H5P1+hToeNFO2Np5v2EorPK4B9Fmh5U4n+aHRDsaOnYcw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] LoongArch: vDSO: Use CLANG_FLAGS instead of filtering
+ out '--target='
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, WANG Rui <wangrui@loongson.cn>, 
+	Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wednesday 2023-06-14 01:39, Thomas Gleixner wrote:
+Queued for loongarch-next, thanks.
 
->Hi!
+Huacai
+
+On Wed, Jun 28, 2023 at 12:24=E2=80=AFAM Nathan Chancellor <nathan@kernel.o=
+rg> wrote:
 >
->My team and myself are working on sanitizing the x86 boot process,
->especially the complete horror show of CPUID evaluation, which is
->constructed with hay-wire circuits, duct tape and superglue.
-
-What's with Intel and its glue analogies? Not to mention it stuck very 
-well, if I may say so myself (not to mention the glue in the co 
-struction of the 12th Intel series).
+> On Tue, Jun 27, 2023 at 09:01:21PM +0800, WANG Xuerui wrote:
+> > From: WANG Xuerui <git@xen0n.name>
+> >
+> > This is a port of commit 76d7fff22be3e ("MIPS: VDSO: Use CLANG_FLAGS
+> > instead of filtering out '--target=3D'") to arch/loongarch, for fixing
+> > cross-compilation with Clang.
+> >
+> > Reported-by: Nathan Chancellor <nathan@kernel.org>
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1787#issuecomment=
+-1608306002
+> > Signed-off-by: WANG Xuerui <git@xen0n.name>
+>
+> Thanks for the patch!
+>
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+>
+> > ---
+> >  arch/loongarch/vdso/Makefile | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> >
+> > diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefil=
+e
+> > index 3f9df4d9930f..a50308b6fc25 100644
+> > --- a/arch/loongarch/vdso/Makefile
+> > +++ b/arch/loongarch/vdso/Makefile
+> > @@ -12,12 +12,9 @@ ccflags-vdso :=3D \
+> >       $(filter -E%,$(KBUILD_CFLAGS)) \
+> >       $(filter -march=3D%,$(KBUILD_CFLAGS)) \
+> >       $(filter -m%-float,$(KBUILD_CFLAGS)) \
+> > +     $(CLANG_FLAGS) \
+> >       -D__VDSO__
+> >
+> > -ifeq ($(cc-name),clang)
+> > -ccflags-vdso +=3D $(filter --target=3D%,$(KBUILD_CFLAGS))
+> > -endif
+> > -
+> >  cflags-vdso :=3D $(ccflags-vdso) \
+> >       -isystem $(shell $(CC) -print-file-name=3Dinclude) \
+> >       $(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+> > --
+> > 2.40.0
+> >
