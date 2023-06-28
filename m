@@ -1,96 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4973F4C98;
-	Wed, 28 Jun 2023 04:22:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C871AC433CA;
-	Wed, 28 Jun 2023 04:22:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687926172;
-	bh=X3rvLe7iT1fsUty/3X7jBr4yKHG5Fo+ow7WiOnlm/OY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZhvOamz2SSgjdgsYUzyx8dChx82/qE+ipvNsapcBvuyS3D98jiQj65p1O97Hl9NLX
-	 f/2uF8eNTAUyoVnQQ99zxuLbtPGvw+mOPC17Zk80Jr0Byxi/LSDO+8qTN/Uqwynd17
-	 j6DyMeQfkayDPKkKpmSEw24/egB12eL+i/rU52nkqFtaDlXiIiZc6kYvoNcx3oS/75
-	 8tY/Zx9BJEFDkUrKRtSYdn9o+x9zSELLzvPGBMq3LyVUv3H5TknUDKNJlM6aselwOr
-	 lVFgTdQ5u7mVjYOTtA3D7xPSx6qMk94IQLNDWlCL5dkRIgHF7LduUpmtvStei/4vQ+
-	 w8Fm6geHZRQ4A==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-51d5569e4d1so4146237a12.2;
-        Tue, 27 Jun 2023 21:22:52 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyxrBByKDJ1VNGBYcauFoiCmR6mKImLvfXoFT52ATCxYHP+FPPx
-	8UfApFoA1bfnTu/aewv6Utw/IaA36nx3eMIvpVo=
-X-Google-Smtp-Source: ACHHUZ5lQ/OUgzU/r2jKXXgQTJJNNX1ps35U07SrvvAOjGzO8AVNbAs0Emji5F2TczIfBYlqW3wazYu2gYxNb9AUKt0=
-X-Received: by 2002:aa7:c7cf:0:b0:514:8eb7:d587 with SMTP id
- o15-20020aa7c7cf000000b005148eb7d587mr17503964eds.17.1687926171043; Tue, 27
- Jun 2023 21:22:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FBA5CBE
+	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 07:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1687938084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SH32jNlN6Jqg7DPKFWcTzn8QudVshhtxY6DizRJx1h4=;
+	b=S4D8ghz4dH6SXiRzbL4HnXOL94HXIJ7TdoQEk+FA1LMbfacW8J/dM5fQWvc0FNa8aHq3tS
+	vrn3+YLN+GUNj9reo2frJUtFgMlH2zWx0mTzvWwJIMWHVh+dVFFvcwt3Sl3n6EIQkTGIJP
+	r5U8KKDWOkaQ4BMCoz8w9Ya4U0q2llM=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-646-p8LvzciCPRGbrSqfcOpCQw-1; Wed, 28 Jun 2023 03:41:22 -0400
+X-MC-Unique: p8LvzciCPRGbrSqfcOpCQw-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-4edbdd8268bso4851649e87.2
+        for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 00:41:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687938081; x=1690530081;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :content-language:references:cc:to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SH32jNlN6Jqg7DPKFWcTzn8QudVshhtxY6DizRJx1h4=;
+        b=SfFcJebOFDcwH09rffw0+5nf3OHEbgseN917DGVVvJLFKL/XlbFYmReOnFGWqwKcgj
+         JPcyfwrJqaQEReh7SwKrfuqIfdns/bgiW0qhOjBvGDoPvOFrbdwwE35HiNsNt/ws3EG1
+         ZFdXbuCQjoQPYDJjoIWDaKuiqUP/xlyDeMK2+eOg8rRYICFgT1AJQFIG7s+eIOebWBc+
+         NUAIBSlDPz+E1facu5Kq6UtaKtjk6jMG9PqqVPZ+K0aY6m4c6wStNXf1IlHjZAuxzqKa
+         69+cLNzEnoqcW3QGcSQ5RDq7qXY7dqql6asmFiXwqAk99DFix+ik2vtcC0D4D3oKg3RT
+         nrqA==
+X-Gm-Message-State: AC+VfDzA0ClVHPNrjMwkqKvyWdy3/WNWWUbyHuaDxMGAeYHsPKSdJmx1
+	RP6L/tiVjr4IRJZWOkKZQ3yc6s86i44ti3FPHBQU+TQmZHHiYV30CIFK3LAFWo9MExGGgvsJCG0
+	8PpImWQoNUmysare62QOO
+X-Received: by 2002:a05:6512:10cb:b0:4fb:9341:9921 with SMTP id k11-20020a05651210cb00b004fb93419921mr540043lfg.52.1687938081187;
+        Wed, 28 Jun 2023 00:41:21 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4/LL8Q6ptsPVewMKWY4urM5AzIoWSMnfr2lL0PypvevicnXRpVgfkYzOOBDpLnug9qgwbQPw==
+X-Received: by 2002:a05:6512:10cb:b0:4fb:9341:9921 with SMTP id k11-20020a05651210cb00b004fb93419921mr540021lfg.52.1687938080672;
+        Wed, 28 Jun 2023 00:41:20 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c715:ef00:fa40:f6df:a68d:a0e4? (p200300cbc715ef00fa40f6dfa68da0e4.dip0.t-ipconnect.de. [2003:cb:c715:ef00:fa40:f6df:a68d:a0e4])
+        by smtp.gmail.com with ESMTPSA id hn10-20020a05600ca38a00b003fba586100fsm3970092wmb.6.2023.06.28.00.41.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Jun 2023 00:41:20 -0700 (PDT)
+Message-ID: <26282cb8-b6b0-f3a0-e82d-b4fec45c5f72@redhat.com>
+Date: Wed, 28 Jun 2023 09:41:18 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230627130122.1491765-1-kernel@xen0n.name> <20230627130122.1491765-3-kernel@xen0n.name>
- <20230627162512.GB223742@dev-arch.thelio-3990X>
-In-Reply-To: <20230627162512.GB223742@dev-arch.thelio-3990X>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 28 Jun 2023 12:22:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5jU9xWe3Us2R5hqnny5tf+wEZ3LFH5AqZBfaoE+J888w@mail.gmail.com>
-Message-ID: <CAAhV-H5jU9xWe3Us2R5hqnny5tf+wEZ3LFH5AqZBfaoE+J888w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] LoongArch: Include KBUILD_CPPFLAGS in CHECKFLAGS invocation
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, WANG Rui <wangrui@loongson.cn>, 
-	Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+To: Hugh Dickins <hughd@google.com>
+Cc: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+ xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ "David S. Miller" <davem@davemloft.net>, Richard Weinberger
+ <richard@nod.at>, Yoshinori Sato <ysato@users.sourceforge.jp>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>
+References: <20230627031431.29653-1-vishal.moola@gmail.com>
+ <e8992eee-4140-427e-bacb-9449f346318@google.com>
+ <ac1c162c-07d8-6084-44ca-a2c1a4183df2@redhat.com>
+ <90e643ca-de72-2f4c-f4fe-35e06e1a9277@google.com>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH v6 00/33] Split ptdesc from struct page
+In-Reply-To: <90e643ca-de72-2f4c-f4fe-35e06e1a9277@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Queued for loongarch-next, thanks.
+On 27.06.23 22:13, Hugh Dickins wrote:
+> On Tue, 27 Jun 2023, David Hildenbrand wrote:
+>> On 27.06.23 06:44, Hugh Dickins wrote:
+>>> On Mon, 26 Jun 2023, Vishal Moola (Oracle) wrote:
+>>>
+>>>> The MM subsystem is trying to shrink struct page. This patchset
+>>>> introduces a memory descriptor for page table tracking - struct ptdesc.
+>>> ...
+>>>>    39 files changed, 686 insertions(+), 455 deletions(-)
+>>>
+>>> I don't see the point of this patchset: to me it is just obfuscation of
+>>> the present-day tight relationship between page table and struct page.
+>>>
+>>> Matthew already explained:
+>>>
+>>>> The intent is to get ptdescs to be dynamically allocated at some point
+>>>> in the ~2-3 years out future when we have finished the folio project ...
+>>>
+>>> So in a kindly mood, I'd say that this patchset is ahead of its time.
+>>> But I can certainly adapt to it, if everyone else sees some point to it.
+>>
+>> I share your thoughts, that code churn which will help eventually in the far,
+>> far future (not wanting to sound too pessimistic, but it's not going to be
+>> there tomorrow ;) ).
+>>
+>> However, if it's just the same as the other conversions we already did (e.g.,
+>> struct slab), then I guess there is no reason to stop now -- the obfuscation
+>> already happened.
+>>
+>> ... or is there a difference regarding this conversion and the previous ones?
+> 
+> I was aware of the struct slab thing, didn't see much point there myself
+> either; but it was welcomed by Vlastimil, and barely affected outside of
+> slab allocators, so I had no reason to object.
+> 
+> You think that if a little unnecessary churn (a *lot* of churn if you
+> include folios, which did save some repeated calls to compound_head())
+> has already occurred, that's a good precedent for allowing more and more?
 
-Huacai
+Well, if you phrase it like that ... no, I'm not in favor of unnecessary 
+churn at all. Yes, folios were/are a lot of churn (IMHO not unnecessary, 
+though).
 
-On Wed, Jun 28, 2023 at 12:25=E2=80=AFAM Nathan Chancellor <nathan@kernel.o=
-rg> wrote:
->
-> On Tue, Jun 27, 2023 at 09:01:22PM +0800, WANG Xuerui wrote:
-> > From: WANG Xuerui <git@xen0n.name>
-> >
-> > This is a port of commit 08f6554ff90e ("mips: Include KBUILD_CPPFLAGS
-> > in CHECKFLAGS invocation") to arch/loongarch, for fixing
-> > cross-compilation of Linux/LoongArch with Clang, where previously the
-> > `--target` flag would no longer be present for the CHECKFLAGS cc
-> > invocation leading to build failure.
-> >
-> > Reported-by: Nathan Chancellor <nathan@kernel.org>
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1787#issuecomment=
--1608306002
-> > Signed-off-by: WANG Xuerui <git@xen0n.name>
->
-> Thanks for the patch!
->
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
->
-> > ---
-> >  arch/loongarch/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> > index a63683da3bcf..09ba338a64de 100644
-> > --- a/arch/loongarch/Makefile
-> > +++ b/arch/loongarch/Makefile
-> > @@ -112,7 +112,7 @@ KBUILD_CFLAGS +=3D -isystem $(shell $(CC) -print-fi=
-le-name=3Dinclude)
-> >  KBUILD_LDFLAGS       +=3D -m $(ld-emul)
-> >
-> >  ifdef CONFIG_LOONGARCH
-> > -CHECKFLAGS +=3D $(shell $(CC) $(KBUILD_CFLAGS) -dM -E -x c /dev/null |=
- \
-> > +CHECKFLAGS +=3D $(shell $(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) -dM =
--E -x c /dev/null | \
-> >       grep -E -vw '__GNUC_(MINOR_|PATCHLEVEL_)?_' | \
-> >       sed -e "s/^\#define /-D'/" -e "s/ /'=3D'/" -e "s/$$/'/" -e 's/\$$=
-/&&/g')
-> >  endif
-> > --
-> > 2.40.0
-> >
+I'm not a friend of these "overlays"; it all only really makes sense to 
+me once we actually allocate the descriptors dynamically. Maybe some of 
+the existing/ongoing conversions were different (that's why I was asking 
+for the difference, as you said the "struct slab" thing was well received).
+
+If they are primarily only unnecessary churn for now (and unclear 
+when/how it will become useful), I share your opinion.
+
+-- 
+Cheers,
+
+David / dhildenb
+
