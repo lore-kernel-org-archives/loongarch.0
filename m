@@ -1,101 +1,87 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E56FA923
-	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 10:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687947969; bh=CywiEZ2ioeoVRwvb3VhckHlwPQWISEuRuyDIMUh/SlE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sO40R4CELoyZP15+xzNfqv8fc7MUdkASAJSkqWSLOF+ywVO11MV3l+vbMWMg1dqiL
-	 S3XqzYIfgs3lH9JEuQ4NBON04QSxnL2skzqa8NCotSC1yJtWdJ9eUJkPUFbXxZTmd4
-	 Zxi4HVbihTOgYh7ZLnJNy6YsG4+r5nIfmYW+cbyA=
-Received: from [100.100.34.13] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 05B73600A6;
-	Wed, 28 Jun 2023 18:26:08 +0800 (CST)
-Message-ID: <dd7bd914-634a-115f-ab5c-80349493b1f6@xen0n.name>
-Date: Wed, 28 Jun 2023 18:26:08 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DBBA23
+	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 10:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1687948824;
+	bh=j1QlM126j6MA+r/+OaAKCCpzmed3Q7diNaQnwFqIZ8U=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=he8v0OYnFOPwL55tjufGR98tmw8tQQXPIdHEIUgxkSsv3f7JngrXzV1aU+i1bsw2J
+	 iFw/W/hTQzIIJQwMxFXpuNk9D22uydpV2stSa1vQUA2L+oMLFWkCKDo25UoMgrjiLz
+	 hh5nGrEcl5FwV7L/20/wRImVTklBVOpe9UIkxR9g=
+Received: from [192.168.124.11] (unknown [113.140.11.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id D86A165C20;
+	Wed, 28 Jun 2023 06:40:21 -0400 (EDT)
+Message-ID: <74a06e8e7d0bab88892321dbdb891762487b6f6b.camel@xry111.site>
+Subject: Re: [PATCH v15 27/30] LoongArch: KVM: Implement vcpu world switch
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Xuerui <kernel@xen0n.name>, bibo mao <maobibo@loongson.cn>, 
+ zhaotianrui <zhaotianrui@loongson.cn>, Jinyang He <hejinyang@loongson.cn>,
+ linux-kernel@vger.kernel.org,  kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen
+ <chenhuacai@kernel.org>,  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ loongarch@lists.linux.dev, Jens Axboe <axboe@kernel.dk>, Mark Brown
+ <broonie@kernel.org>, Alex Deucher <alexander.deucher@amd.com>, Oliver
+ Upton <oliver.upton@linux.dev>, tangyouling@loongson.cn
+Date: Wed, 28 Jun 2023 18:40:20 +0800
+In-Reply-To: <baf5c93f-59ae-57eb-49e0-a0231dab325d@xen0n.name>
+References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
+	 <20230626084752.1138621-28-zhaotianrui@loongson.cn>
+	 <f648a182-7c26-5bbc-6ae5-584af26e9db1@loongson.cn>
+	 <7017277c-3721-b417-5215-491efae7c8a9@loongson.cn>
+	 <cfc87f85-3a09-8a9e-4258-4fb1fd8013ab@xen0n.name>
+	 <30261345-45de-8511-e285-fe16ee408ba1@loongson.cn>
+	 <baf5c93f-59ae-57eb-49e0-a0231dab325d@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v3 06/19] arch/loongarch: Implement <asm/fb.h> with
- generic helpers
-Content-Language: en-US
-To: Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de,
- daniel.vetter@ffwll.ch, deller@gmx.de, javierm@redhat.com,
- gregkh@linuxfoundation.org
-Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
- Huacai Chen <chenhuacai@kernel.org>
-References: <20230417125651.25126-1-tzimmermann@suse.de>
- <20230417125651.25126-7-tzimmermann@suse.de>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230417125651.25126-7-tzimmermann@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hi,
+On Wed, 2023-06-28 at 18:22 +0800, WANG Xuerui wrote:
+> > is "ori t0, zero, CSR_PRMD_PIE" hard to understand? It is basic
+> > arithmetic instr and easy to understand also. To be frank I do not
+> > see the advantage of using li.w, also there is no document that
+> > pseudo-instruction should be used with high priority.
 
-On 2023/4/17 20:56, Thomas Zimmermann wrote:
-> Replace the architecture's fbdev helpers with the generic
-> ones from <asm-generic/fb.h>. No functional changes.
-> 
-> v2:
-> 	* use default implementation for fb_pgprotect() (Arnd)
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> ---
->   arch/loongarch/include/asm/fb.h | 15 +--------------
->   1 file changed, 1 insertion(+), 14 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/fb.h b/arch/loongarch/include/asm/fb.h
-> index 3116bde8772d..ff82f20685c8 100644
-> --- a/arch/loongarch/include/asm/fb.h
-> +++ b/arch/loongarch/include/asm/fb.h
-> @@ -5,19 +5,6 @@
->   #ifndef _ASM_FB_H_
->   #define _ASM_FB_H_
->   
-> -#include <linux/fb.h>
-> -#include <linux/fs.h>
-> -#include <asm/page.h>
-> -
-> -static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
-> -				unsigned long off)
-> -{
-> -	vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
-> -}
-> -
-> -static inline int fb_is_primary_device(struct fb_info *info)
-> -{
-> -	return 0;
-> -}
-> +#include <asm-generic/fb.h>
->   
->   #endif /* _ASM_FB_H_ */
+> It depends on the reader. Sure the semantics are the same, but with "ori=
+=20
+> xx, zero, xx" someone's always going to wonder "why do 'x =3D 0 |=20
+> something' when you can simply li.w", because even if it's easy to=20
+> understand it's still an extra level of indirection.
+>=20
+> And I've given the historical and general software engineering=20
+> perspective too; it's not something set in stone, but I'd expect general=
+=20
+> software development best practices and minimizing any *possible* reader=
+=20
+> confusion to be acceptable.
 
-Sorry for the late review. The change is fairly trivial, so:
+The pseudo *should* be the high priority in general.  If we don't
+consider the pseudos high priority, people will start to load immediates
+with "their own way", like writing "addi.w $t0, $zero, 42" or even "xori
+$t0, $zero, 42" for "42".  These may puzzle the uarch, causing a
+performance worse than "ori $t0, $zero, 42".  So the only rationale
+things are either:
 
-Reviewed-by: WANG Xuerui <git@xen0n.name>
+1. Telling people always use pseudos if possible.
 
-Thanks!
+or
 
--- 
-WANG "xen0n" Xuerui
+2. Telling people "remember to use ori for loading small immediates, not
+other instructions".
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+1 is obviously easier.
 
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
