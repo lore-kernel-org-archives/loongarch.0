@@ -1,104 +1,109 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B89BA20
-	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 09:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1687945890; bh=mERR5o/6GAasOdmhfFEv0s0jaV6yQdbTTBXBhqFAqgI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ag+B3SY2EAgFH+HU437SHcr9olebrpCEhzkgGhOszvll4+B2qkAon0dWQPULujxqZ
-	 HtSHHGOTWf0z5sZCcNI88A/TucYf0UT/cq/COITvzTEPtOsd6cI+elKhe3jo2WQCzh
-	 iKK29Zl+6XHUqPRR0+zbcAkiDZ1NCjaPRn/LjwEY=
-Received: from [100.100.34.13] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id B59C7600A6;
-	Wed, 28 Jun 2023 17:51:29 +0800 (CST)
-Message-ID: <cfc87f85-3a09-8a9e-4258-4fb1fd8013ab@xen0n.name>
-Date: Wed, 28 Jun 2023 17:51:28 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B524A923
+	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 10:02:24 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id CBDC43200065;
+	Wed, 28 Jun 2023 06:02:21 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 28 Jun 2023 06:02:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm1; t=1687946541; x=1688032941; bh=jr
+	26aMNCJW0isrXg6UfE/c6yGNQaJhjRzD6v2gyhJiU=; b=go17TU7pTv/88ZkN9V
+	azy1f3TEVC4eh2cFjnlQc2THDkHBS+hRIb/NP5smWX8p6PlBu7xeOqAwlNdA81xY
+	TUkBeDN7zTDh3o36eA21ZlUjbEU5candTuxAFq3YHskdZd/8uzhKvCwlBRFaGmdd
+	aw1DR0kZe/ksoI20WFqSBO+gM8dqlB2IUHdEh7hlP+DT2hdznnJW574L5g0d9Vwg
+	D5GtZjfLSEZm7snNwyXu0b74sIjEKF42ZMc7wLhJUDcHtrRk1pCpLasCCyCNEkNH
+	gV3ANc4YxQxjgWGLghO3x/mfFHkqhgIEr6KQRrJWV7koAkLG/LAXcn4K1lzvyzUI
+	urqw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1687946541; x=1688032941; bh=jr26aMNCJW0is
+	rXg6UfE/c6yGNQaJhjRzD6v2gyhJiU=; b=gu+CZY1l55I1TAbIiJdtfb7gL+Up+
+	PXTJtGjBdA7pyur7SHIEFhf45EIjdwgUuG47YxZDuzXjF4zqkDy4OiEdtckEj+KR
+	hT3c4gY9Y8Zbs1P5SY8EHl0lfEF5tOTz1ibyRcHsSCjras6I5fLzCyyxANm9O9rU
+	FVjvcx80F96DvBDGL+up2UfzkUD00xBJwSuVlTnkAORCl20tNBC0S4IY68yWazFd
+	sRTsJIk0gTG0ZZ6ABFprGWXtT33+zqf8wgcxS5IQc5dg10rRJNJvCtnze0zHHTMT
+	BP1xXByoUkKMsH9aQ8m1uEdksBkSYB7QcQVWzSEgMwfeR+G/jQ51lOkLA==
+X-ME-Sender: <xms:LAWcZED4fNZxTlKrdjBmHxJP-sckGwx35hV9UkqQISEoQIfhRmo-JQ>
+    <xme:LAWcZGhPNT2BfytOOn8bcbgj-iEhpLaDXkzpKrTalDsNK6BfgCbkrCcgQAl4ySoEj
+    TpHsdXpmtJtJ4PC5BI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrtddvgddvudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
+    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:LAWcZHmXSlCpeeyNoZE7_0LnoPbJ74fdoPhH1-tEgZSeUBVdS7LK5g>
+    <xmx:LAWcZKygSArf1RXeJy6o-saV1OnxLw5eXJf69NNMxU3YltpCM4robQ>
+    <xmx:LAWcZJS1GiS98HbAAxa5aqyjTH6zrMIgmdtULLLD7yJ2KFbTG__paQ>
+    <xmx:LQWcZIAyk7e_edqPJYxvNmmrL7ukerO_p8vou2sRrc2B0RKlJg_Qaw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 2F7CEB6008D; Wed, 28 Jun 2023 06:02:20 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v15 27/30] LoongArch: KVM: Implement vcpu world switch
-Content-Language: en-US
-To: zhaotianrui <zhaotianrui@loongson.cn>, Jinyang He
- <hejinyang@loongson.cn>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
- Xi Ruoyao <xry111@xry111.site>, tangyouling@loongson.cn
-References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
- <20230626084752.1138621-28-zhaotianrui@loongson.cn>
- <f648a182-7c26-5bbc-6ae5-584af26e9db1@loongson.cn>
- <7017277c-3721-b417-5215-491efae7c8a9@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <7017277c-3721-b417-5215-491efae7c8a9@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Message-Id: <afe5194e-fd49-4cc9-9a8c-e7671c55d664@app.fastmail.com>
+In-Reply-To: <d9ffc44c-c4ae-4f01-bc0b-ee5359a24a0a@app.fastmail.com>
+References: <20230417125651.25126-18-tzimmermann@suse.de>
+ <c525adc9-6623-4660-8718-e0c9311563b8@roeck-us.net>
+ <55130a50-d129-4336-99ce-3be4229b1c7d@app.fastmail.com>
+ <d4156e51-102f-36b4-e42c-938268b4b608@roeck-us.net>
+ <d9ffc44c-c4ae-4f01-bc0b-ee5359a24a0a@app.fastmail.com>
+Date: Wed, 28 Jun 2023 12:01:58 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Guenter Roeck" <linux@roeck-us.net>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>
+Cc: "Daniel Vetter" <daniel.vetter@ffwll.ch>, "Helge Deller" <deller@gmx.de>,
+ "Javier Martinez Canillas" <javierm@redhat.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, "David S . Miller" <davem@davemloft.net>,
+ linux-arm-kernel@lists.infradead.org, "Mark Rutland" <mark.rutland@arm.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ "KKees Cook" <keescook@chromium.org>, "ees Cook" <keescook@chromium.org>
+Subject: Re: [v3,17/19] arch/sparc: Implement fb_is_primary_device() in source file
+Content-Type: text/plain
 
-Hi,
-
-On 2023/6/28 16:34, zhaotianrui wrote:
-> 
-> 在 2023/6/28 上午11:42, Jinyang He 写道:
->> On 2023-06-26 16:47, Tianrui Zhao wrote:
+On Sat, Jun 24, 2023, at 16:21, Arnd Bergmann wrote:
+> On Sat, Jun 24, 2023, at 15:26, Guenter Roeck wrote:
+>> On 6/24/23 02:27, Arnd Bergmann wrote:
+>>> On Sat, Jun 24, 2023, at 03:55, Guenter Roeck wrote:
+>>>>
+>>>> ERROR: modpost: "__xchg_called_with_bad_pointer" [lib/atomic64_test.ko]
+>>>> undefined!
+>>> 
+>>> These all look like old bugs that would be trivially fixed if
+>>> anyone cared about sparc.
+>>> 
 >>
->>> [snip]
->>
->>> +    ldx.d   t0, t1, t0
->>> +    csrwr    t0, LOONGARCH_CSR_PGDL
->>> +
->>> +    /* Mix GID and RID */
->>> +    csrrd        t1, LOONGARCH_CSR_GSTAT
->>> +    bstrpick.w    t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
->>> +    csrrd        t0, LOONGARCH_CSR_GTLBC
->>> +    bstrins.w    t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
->>> +    csrwr        t0, LOONGARCH_CSR_GTLBC
->>> +
->>> +    /*
->>> +     * Switch to guest:
->>> +     *  GSTAT.PGM = 1, ERRCTL.ISERR = 0, TLBRPRMD.ISTLBR = 0
->>> +     *  ertn
->>> +     */
->>> +
->>> +    /*
->>> +     * Enable intr in root mode with future ertn so that host interrupt
->>> +     * can be responsed during VM runs
->>> +     * guest crmd comes from separate gcsr_CRMD register
->>> +     */
->>> +    ori    t0, zero, CSR_PRMD_PIE
->> li.w t0, CSR_PRMD_PIE
-> Thanks for your advice, and I think it need not to replace it with 
-> "li.w" there, as it has the same meaning with "ori" instruction, and 
-> "ori" instruction is simple and clear enough. The same as the following 
-> "move" instructions. What do you think of it.
+>> Odd argument, given that this _is_ a sparc patch. Those may be old
+>> bugs, but at least in 6.4-rc7 sparc64:allmodconfig does at least compile.
+>
+> I think we clearly want to fix the fbdev regression you found, and
+> maybe bisect the atomic64_test as well to see if that was caused by
+> a recent patch to get it into a working state again.
 
-Just my 2c: I'd agree that pseudo-instructions should be used wherever 
-possible and helping readability.
+I have bisected this as well now and sent a trivial fix, see
+https://lore.kernel.org/lkml/20230628094938.2318171-1-arnd@kernel.org/
 
-FYI there were similar usages way before, but all were cleaned up with 
-my previous commit 57ce5d3eefac ("LoongArch: Use the "move" 
-pseudo-instruction where applicable").
-
-Such usages apparently came from an era when the LoongArch toolchains 
-didn't support any pseudo-instruction, and are less intuitive especially 
-for someone not familiar with LoongArch assembly. Given that familiarity 
-with LoongArch won't be widespread (unlike with e.g. RISC-V that are 
-adopted more widely), we should optimize for readability when writing 
-code; it's also a best practice in general because code is read way more 
-often than written, and people care about semantics not unnecessary 
-details like "how are moves like this or that materialized".
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+      Arnd
