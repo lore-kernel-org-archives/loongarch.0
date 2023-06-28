@@ -1,109 +1,115 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B524A923
-	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 10:02:24 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.west.internal (Postfix) with ESMTP id CBDC43200065;
-	Wed, 28 Jun 2023 06:02:21 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 28 Jun 2023 06:02:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1687946541; x=1688032941; bh=jr
-	26aMNCJW0isrXg6UfE/c6yGNQaJhjRzD6v2gyhJiU=; b=go17TU7pTv/88ZkN9V
-	azy1f3TEVC4eh2cFjnlQc2THDkHBS+hRIb/NP5smWX8p6PlBu7xeOqAwlNdA81xY
-	TUkBeDN7zTDh3o36eA21ZlUjbEU5candTuxAFq3YHskdZd/8uzhKvCwlBRFaGmdd
-	aw1DR0kZe/ksoI20WFqSBO+gM8dqlB2IUHdEh7hlP+DT2hdznnJW574L5g0d9Vwg
-	D5GtZjfLSEZm7snNwyXu0b74sIjEKF42ZMc7wLhJUDcHtrRk1pCpLasCCyCNEkNH
-	gV3ANc4YxQxjgWGLghO3x/mfFHkqhgIEr6KQRrJWV7koAkLG/LAXcn4K1lzvyzUI
-	urqw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1687946541; x=1688032941; bh=jr26aMNCJW0is
-	rXg6UfE/c6yGNQaJhjRzD6v2gyhJiU=; b=gu+CZY1l55I1TAbIiJdtfb7gL+Up+
-	PXTJtGjBdA7pyur7SHIEFhf45EIjdwgUuG47YxZDuzXjF4zqkDy4OiEdtckEj+KR
-	hT3c4gY9Y8Zbs1P5SY8EHl0lfEF5tOTz1ibyRcHsSCjras6I5fLzCyyxANm9O9rU
-	FVjvcx80F96DvBDGL+up2UfzkUD00xBJwSuVlTnkAORCl20tNBC0S4IY68yWazFd
-	sRTsJIk0gTG0ZZ6ABFprGWXtT33+zqf8wgcxS5IQc5dg10rRJNJvCtnze0zHHTMT
-	BP1xXByoUkKMsH9aQ8m1uEdksBkSYB7QcQVWzSEgMwfeR+G/jQ51lOkLA==
-X-ME-Sender: <xms:LAWcZED4fNZxTlKrdjBmHxJP-sckGwx35hV9UkqQISEoQIfhRmo-JQ>
-    <xme:LAWcZGhPNT2BfytOOn8bcbgj-iEhpLaDXkzpKrTalDsNK6BfgCbkrCcgQAl4ySoEj
-    TpHsdXpmtJtJ4PC5BI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrtddvgddvudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
-    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:LAWcZHmXSlCpeeyNoZE7_0LnoPbJ74fdoPhH1-tEgZSeUBVdS7LK5g>
-    <xmx:LAWcZKygSArf1RXeJy6o-saV1OnxLw5eXJf69NNMxU3YltpCM4robQ>
-    <xmx:LAWcZJS1GiS98HbAAxa5aqyjTH6zrMIgmdtULLLD7yJ2KFbTG__paQ>
-    <xmx:LQWcZIAyk7e_edqPJYxvNmmrL7ukerO_p8vou2sRrc2B0RKlJg_Qaw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 2F7CEB6008D; Wed, 28 Jun 2023 06:02:20 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDA64A923
+	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 10:11:43 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8AxQ8RYB5xkV3ADAA--.5501S3;
+	Wed, 28 Jun 2023 18:11:36 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF8xXB5xkuyUOAA--.13135S3;
+	Wed, 28 Jun 2023 18:11:35 +0800 (CST)
+Message-ID: <30261345-45de-8511-e285-fe16ee408ba1@loongson.cn>
+Date: Wed, 28 Jun 2023 18:11:35 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <afe5194e-fd49-4cc9-9a8c-e7671c55d664@app.fastmail.com>
-In-Reply-To: <d9ffc44c-c4ae-4f01-bc0b-ee5359a24a0a@app.fastmail.com>
-References: <20230417125651.25126-18-tzimmermann@suse.de>
- <c525adc9-6623-4660-8718-e0c9311563b8@roeck-us.net>
- <55130a50-d129-4336-99ce-3be4229b1c7d@app.fastmail.com>
- <d4156e51-102f-36b4-e42c-938268b4b608@roeck-us.net>
- <d9ffc44c-c4ae-4f01-bc0b-ee5359a24a0a@app.fastmail.com>
-Date: Wed, 28 Jun 2023 12:01:58 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Guenter Roeck" <linux@roeck-us.net>,
- "Thomas Zimmermann" <tzimmermann@suse.de>
-Cc: "Daniel Vetter" <daniel.vetter@ffwll.ch>, "Helge Deller" <deller@gmx.de>,
- "Javier Martinez Canillas" <javierm@redhat.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-sh@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, "David S . Miller" <davem@davemloft.net>,
- linux-arm-kernel@lists.infradead.org, "Mark Rutland" <mark.rutland@arm.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- "KKees Cook" <keescook@chromium.org>, "ees Cook" <keescook@chromium.org>
-Subject: Re: [v3,17/19] arch/sparc: Implement fb_is_primary_device() in source file
-Content-Type: text/plain
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v15 27/30] LoongArch: KVM: Implement vcpu world switch
+Content-Language: en-US
+To: WANG Xuerui <kernel@xen0n.name>, zhaotianrui <zhaotianrui@loongson.cn>,
+ Jinyang He <hejinyang@loongson.cn>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
+ tangyouling@loongson.cn
+References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
+ <20230626084752.1138621-28-zhaotianrui@loongson.cn>
+ <f648a182-7c26-5bbc-6ae5-584af26e9db1@loongson.cn>
+ <7017277c-3721-b417-5215-491efae7c8a9@loongson.cn>
+ <cfc87f85-3a09-8a9e-4258-4fb1fd8013ab@xen0n.name>
+From: bibo mao <maobibo@loongson.cn>
+In-Reply-To: <cfc87f85-3a09-8a9e-4258-4fb1fd8013ab@xen0n.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxF8xXB5xkuyUOAA--.13135S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGry3CF4kKrWfXw15XrWUtrc_yoW5WFy5pF
+	18AFW3GrZ8Jrs5Gw1UK3WUZF9ayF18ta15Xr1Fqa45A348Kwn2gF10gr1q9F1fJw4rJryj
+	9r4jqws7ZF13AFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_GFv_Wrylx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUU
+	UU=
 
-On Sat, Jun 24, 2023, at 16:21, Arnd Bergmann wrote:
-> On Sat, Jun 24, 2023, at 15:26, Guenter Roeck wrote:
->> On 6/24/23 02:27, Arnd Bergmann wrote:
->>> On Sat, Jun 24, 2023, at 03:55, Guenter Roeck wrote:
->>>>
->>>> ERROR: modpost: "__xchg_called_with_bad_pointer" [lib/atomic64_test.ko]
->>>> undefined!
->>> 
->>> These all look like old bugs that would be trivially fixed if
->>> anyone cared about sparc.
->>> 
+
+
+在 2023/6/28 17:51, WANG Xuerui 写道:
+> Hi,
+> 
+> On 2023/6/28 16:34, zhaotianrui wrote:
 >>
->> Odd argument, given that this _is_ a sparc patch. Those may be old
->> bugs, but at least in 6.4-rc7 sparc64:allmodconfig does at least compile.
->
-> I think we clearly want to fix the fbdev regression you found, and
-> maybe bisect the atomic64_test as well to see if that was caused by
-> a recent patch to get it into a working state again.
+>> 在 2023/6/28 上午11:42, Jinyang He 写道:
+>>> On 2023-06-26 16:47, Tianrui Zhao wrote:
+>>>
+>>>> [snip]
+>>>
+>>>> +    ldx.d   t0, t1, t0
+>>>> +    csrwr    t0, LOONGARCH_CSR_PGDL
+>>>> +
+>>>> +    /* Mix GID and RID */
+>>>> +    csrrd        t1, LOONGARCH_CSR_GSTAT
+>>>> +    bstrpick.w    t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
+>>>> +    csrrd        t0, LOONGARCH_CSR_GTLBC
+>>>> +    bstrins.w    t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+>>>> +    csrwr        t0, LOONGARCH_CSR_GTLBC
+>>>> +
+>>>> +    /*
+>>>> +     * Switch to guest:
+>>>> +     *  GSTAT.PGM = 1, ERRCTL.ISERR = 0, TLBRPRMD.ISTLBR = 0
+>>>> +     *  ertn
+>>>> +     */
+>>>> +
+>>>> +    /*
+>>>> +     * Enable intr in root mode with future ertn so that host interrupt
+>>>> +     * can be responsed during VM runs
+>>>> +     * guest crmd comes from separate gcsr_CRMD register
+>>>> +     */
+>>>> +    ori    t0, zero, CSR_PRMD_PIE
+>>> li.w t0, CSR_PRMD_PIE
+>> Thanks for your advice, and I think it need not to replace it with "li.w" there, as it has the same meaning with "ori" instruction, and "ori" instruction is simple and clear enough. The same as the following "move" instructions. What do you think of it.
+> 
+> Just my 2c: I'd agree that pseudo-instructions should be used wherever possible and helping readability.
+"lu12i.w+srli.w" can be replaced by "li.w t0, KVM_GPGD" 
+we accept the suggestion two instructions should be replaced with pseudo-instruction.
 
-I have bisected this as well now and sent a trivial fix, see
-https://lore.kernel.org/lkml/20230628094938.2318171-1-arnd@kernel.org/
+For the instruction "ori    t0, zero, CSR_PRMD_PIE"
+what is advantage of this pseudo-instruction
+    li.w t0, CSR_PRMD_PIE
 
-      Arnd
+is "ori t0, zero, CSR_PRMD_PIE" hard to understand? It is basic arithmetic instr and easy to understand also. To be frank I do not see the advantage of using li.w, also there is no document that pseudo-instruction should be used with high priority.
+
+Regards
+Bibo Mao
+> 
+> FYI there were similar usages way before, but all were cleaned up with my previous commit 57ce5d3eefac ("LoongArch: Use the "move" pseudo-instruction where applicable").
+> 
+> Such usages apparently came from an era when the LoongArch toolchains didn't support any pseudo-instruction, and are less intuitive especially for someone not familiar with LoongArch assembly. Given that familiarity with LoongArch won't be widespread (unlike with e.g. RISC-V that are adopted more widely), we should optimize for readability when writing code; it's also a best practice in general because code is read way more often than written, and people care about semantics not unnecessary details like "how are moves like this or that materialized".
+> 
+
