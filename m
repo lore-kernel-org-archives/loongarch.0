@@ -1,92 +1,126 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F9FA923
-	for <loongarch@lists.linux.dev>; Wed, 28 Jun 2023 18:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gzBVL7uWfH/0QncUeiWSVvNT7tu19KKFpZm/SdtHfy0=; b=F0geF1mDFUhFwejscu79P5AerF
-	ChPxlz8AungTNw2nYlH8TmeT0FdBYZ403uLo6dwYbFZivePasVeM2QOKhl+SGZUnj3aelPYXtEfM9
-	SrOHM/3oUTni3eU+S6cGIy3fXu368hUaiU/EA6YN2NOx+dDC0fkki3YX0I7X5QXDEfuDII33co6YT
-	AgpMwEBC4ya/EPvRDl80CtdVgP3e2XagbMLqDsAoh6VP3gh2KZpEwz3m1/E0HTdSv3vSxKIUbldmu
-	z9Fsmk0Dd2L6fefBSyj6JHJ0VqW7vTaNglMS0xkY6KNSksqhU+OkIfDiDfBXKznANmEoK/ikyWU4U
-	7raG+AtA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qEaFx-0047Cx-Rw; Wed, 28 Jun 2023 18:51:09 +0000
-Date: Wed, 28 Jun 2023 19:51:09 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Hugh Dickins <hughd@google.com>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Richard Weinberger <richard@nod.at>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH v6 00/33] Split ptdesc from struct page
-Message-ID: <ZJyBHdcjuaykIRG9@casper.infradead.org>
-References: <20230627031431.29653-1-vishal.moola@gmail.com>
- <e8992eee-4140-427e-bacb-9449f346318@google.com>
- <ac1c162c-07d8-6084-44ca-a2c1a4183df2@redhat.com>
- <90e643ca-de72-2f4c-f4fe-35e06e1a9277@google.com>
- <26282cb8-b6b0-f3a0-e82d-b4fec45c5f72@redhat.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C7BD7EA
+	for <loongarch@lists.linux.dev>; Thu, 29 Jun 2023 00:34:49 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8Cx5cSn0Zxk3aUDAA--.6036S3;
+	Thu, 29 Jun 2023 08:34:47 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrM6m0ZxkUaIPAA--.57412S3;
+	Thu, 29 Jun 2023 08:34:46 +0800 (CST)
+Message-ID: <76fdc1e5-9f4b-1e5a-dbad-5214708b01f4@loongson.cn>
+Date: Thu, 29 Jun 2023 08:34:46 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <26282cb8-b6b0-f3a0-e82d-b4fec45c5f72@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v15 27/30] LoongArch: KVM: Implement vcpu world switch
+Content-Language: en-US
+To: WANG Xuerui <kernel@xen0n.name>, zhaotianrui <zhaotianrui@loongson.cn>,
+ Jinyang He <hejinyang@loongson.cn>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
+ tangyouling@loongson.cn
+References: <20230626084752.1138621-1-zhaotianrui@loongson.cn>
+ <20230626084752.1138621-28-zhaotianrui@loongson.cn>
+ <f648a182-7c26-5bbc-6ae5-584af26e9db1@loongson.cn>
+ <7017277c-3721-b417-5215-491efae7c8a9@loongson.cn>
+ <cfc87f85-3a09-8a9e-4258-4fb1fd8013ab@xen0n.name>
+ <30261345-45de-8511-e285-fe16ee408ba1@loongson.cn>
+ <baf5c93f-59ae-57eb-49e0-a0231dab325d@xen0n.name>
+From: bibo mao <maobibo@loongson.cn>
+In-Reply-To: <baf5c93f-59ae-57eb-49e0-a0231dab325d@xen0n.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxrM6m0ZxkUaIPAA--.57412S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxArWrJw13tF4fJr1xtrWUGFX_yoW5uw17pr
+	1xAay3GrW5Jr1kGw1UKw4UZFySyF1xJa15Xr18XasxJ3s8Kwn2gF1jgrn09Fn3Jr48JryU
+	Xr4jq3ZruF13ArXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Jr0_Gr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8q2NtUUUUU==
 
-On Wed, Jun 28, 2023 at 09:41:18AM +0200, David Hildenbrand wrote:
-> I'm not a friend of these "overlays"; it all only really makes sense to me
-> once we actually allocate the descriptors dynamically. Maybe some of the
-> existing/ongoing conversions were different (that's why I was asking for the
-> difference, as you said the "struct slab" thing was well received).
+
+
+在 2023/6/28 18:22, WANG Xuerui 写道:
+> On 2023/6/28 18:11, bibo mao wrote:
+>>
+>>
+>> 在 2023/6/28 17:51, WANG Xuerui 写道:
+>>> Hi,
+>>>
+>>> On 2023/6/28 16:34, zhaotianrui wrote:
+>>>>
+>>>> 在 2023/6/28 上午11:42, Jinyang He 写道:
+>>>>> On 2023-06-26 16:47, Tianrui Zhao wrote:
+>>>>>
+>>>>>> [snip]
+>>>>>
+>>>>>> +    ldx.d   t0, t1, t0
+>>>>>> +    csrwr    t0, LOONGARCH_CSR_PGDL
+>>>>>> +
+>>>>>> +    /* Mix GID and RID */
+>>>>>> +    csrrd        t1, LOONGARCH_CSR_GSTAT
+>>>>>> +    bstrpick.w    t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
+>>>>>> +    csrrd        t0, LOONGARCH_CSR_GTLBC
+>>>>>> +    bstrins.w    t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+>>>>>> +    csrwr        t0, LOONGARCH_CSR_GTLBC
+>>>>>> +
+>>>>>> +    /*
+>>>>>> +     * Switch to guest:
+>>>>>> +     *  GSTAT.PGM = 1, ERRCTL.ISERR = 0, TLBRPRMD.ISTLBR = 0
+>>>>>> +     *  ertn
+>>>>>> +     */
+>>>>>> +
+>>>>>> +    /*
+>>>>>> +     * Enable intr in root mode with future ertn so that host interrupt
+>>>>>> +     * can be responsed during VM runs
+>>>>>> +     * guest crmd comes from separate gcsr_CRMD register
+>>>>>> +     */
+>>>>>> +    ori    t0, zero, CSR_PRMD_PIE
+>>>>> li.w t0, CSR_PRMD_PIE
+>>>> Thanks for your advice, and I think it need not to replace it with "li.w" there, as it has the same meaning with "ori" instruction, and "ori" instruction is simple and clear enough. The same as the following "move" instructions. What do you think of it.
+>>>
+>>> Just my 2c: I'd agree that pseudo-instructions should be used wherever possible and helping readability.
+>> "lu12i.w+srli.w" can be replaced by "li.w t0, KVM_GPGD"
+>> we accept the suggestion two instructions should be replaced with pseudo-instruction.
+>>
+>> For the instruction "ori    t0, zero, CSR_PRMD_PIE"
+>> what is advantage of this pseudo-instruction
+>>      li.w t0, CSR_PRMD_PIE
+>>
+>> is "ori t0, zero, CSR_PRMD_PIE" hard to understand? It is basic arithmetic instr and easy to understand also. To be frank I do not see the advantage of using li.w, also there is no document that pseudo-instruction should be used with high priority.
 > 
-> If they are primarily only unnecessary churn for now (and unclear when/how
-> it will become useful), I share your opinion.
+> It depends on the reader. Sure the semantics are the same, but with "ori xx, zero, xx" someone's always going to wonder "why do 'x = 0 | something' when you can simply li.w", because even if it's easy to understand it's still an extra level of indirection.
+pseudo-instruction li.w/li.d is understandable, is there alias li.h/li.b instructions also or li is enough on LoongArch64 system?
 
-One of the reasons for doing these conversions "early" is that it helps
-people who work on this code know what fields they can actually use in
-their memory descriptor.  We have a _lot_ of historical baggage with
-people just using random bits in struct page for their own purposes
-without necessarily considering the effects on the rest of the system.
+ori $rd, $rj, imm12 can be used, however ori $rd, zero, imm12 should not be used by the description.
 
-By creating specific types for each user of struct page, we can see
-what's actually going on.  Before the ptdesc conversion started, I could
-not have told you which bits in struct page were used by the s390 code.
-I knew they were playing some fun games with the refcount (it's even
-documented in the s390 code!) but I didn't know they were using ...
-whetever it is; page->private to point to the kvm private data?
+I guess compiler guys want to remove using zero register in assemble language, so there is pseudo instruction here. is there similar pseudo instr for "xor $rd, ZERO, $rj" and "sub $rd, ZERO, $rj" to remove zero register also?  I do not get the  documentation and consensus information for pseudo instruction usage.
 
-So maybe it is harder for MM developers right now to see what fields in
-memdesc A overlap with which fields in memdesc B.  That _ought_ not to
-be a concern!  We document which fields are available in each memdesc,
-and have various assertions to trip when people make things not line up
-any more.  There can still be problems, of course; we haven't set the
-assertions quite tightly enough in some cases.
+Regards
+Bibo Mao
 
-People are going to keep adding crap to struct page, and they're going
-to keep misusing the crap that's in struct page.  That has to stop.
+> 
+> And I've given the historical and general software engineering perspective too; it's not something set in stone, but I'd expect general software development best practices and minimizing any *possible* reader confusion to be acceptable.
+> 
+
