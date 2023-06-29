@@ -1,38 +1,42 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A594D11C96;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184E314286;
 	Thu, 29 Jun 2023 12:20:02 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4573E1F8D6;
-	Thu, 29 Jun 2023 12:19:55 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 50F121FD67;
+	Thu, 29 Jun 2023 12:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1688041195; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=nwKCg0ASpMSj/N7nk6+LAWl9eqN5SgDZ9SSsI3CKIes=;
-	b=ifsv+rsuemSFYPhJ/STIdTvx6x75qUEhLLGZ2g9AvONK3jL91ZNzeWNAtZraZVcGWThcHM
-	EfQbM+qs5azyCMPqS9sZhBhwKPyBWCHJQhLVHCTMFRSDdi3SXNdEiGVeBJdlRqG6pE2rO7
-	z3oGS2FeItnucroHvhtx1EF9mKdmXIA=
+	t=1688041201; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q8/hObzYgPS0TDvHlNkxQWLSeXSJyMjTeBMLqYqFK4w=;
+	b=UPfSiLPg0fPgXj6DVWbIwAx8SsBG5GL3OD/7mLd65j8fwmU+DvPt3QzSfJKiRMSESoepX9
+	eM5NP2Jl7avazGdPsovrA89jdGZnFXHxxT3O/UdtnP6AQBQmMmB0fb0hdUmBE/YVBR8zBv
+	CQYBtniEcZ5wJ20vfbvuSi9ax+7JLg4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1688041195;
+	s=susede2_ed25519; t=1688041201;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=nwKCg0ASpMSj/N7nk6+LAWl9eqN5SgDZ9SSsI3CKIes=;
-	b=E6n/U6MQ4f+3rPbM2UsNu1qwtOXOlMais+WpB4FpCxfnJZvfgaxmYOknSshObU0+YcztfQ
-	wODdqbuTw1DsqWBw==
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q8/hObzYgPS0TDvHlNkxQWLSeXSJyMjTeBMLqYqFK4w=;
+	b=L3PyCj5jKQ5vE7MYne4nWCsAiDM0bCWXnp9ECQ/thRxLRW/+klbPAr42RqiLHE8RIsU2gZ
+	akbya49XJu79VVCQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CCBF713905;
-	Thu, 29 Jun 2023 12:19:54 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A0F3313905;
+	Thu, 29 Jun 2023 12:20:00 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 1lzwMOp2nWRlVAAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Thu, 29 Jun 2023 12:19:54 +0000
+	id uIppJvB2nWRlVAAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Thu, 29 Jun 2023 12:20:00 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: arnd@arndb.de,
 	deller@gmx.de,
@@ -56,11 +60,24 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-fbdev@vger.kernel.org,
 	linux-staging@lists.linux.dev,
 	linux-arch@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 00/12] arch,fbdev: Move screen_info into arch/
-Date: Thu, 29 Jun 2023 13:45:39 +0200
-Message-ID: <20230629121952.10559-1-tzimmermann@suse.de>
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 09/12] drivers: Add dependencies on CONFIG_ARCH_HAS_SCREEN_INFO
+Date: Thu, 29 Jun 2023 13:45:48 +0200
+Message-ID: <20230629121952.10559-10-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230629121952.10559-1-tzimmermann@suse.de>
+References: <20230629121952.10559-1-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -69,103 +86,141 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The variables screen_info and edid_info provide information about
-the system's screen, and possibly EDID data of the connected display.
-Both are defined and set by architecture code. But both variables are
-declared in non-arch header files. Dependencies are at bease loosely
-tracked. To resolve this, move the global state screen_info and its
-companion edid_info into arch/. Only declare them on architectures
-that define them. List dependencies on the variables in the Kconfig
-files. Also clean up the callers.
+Various files within drivers/ depend on the declaration of the
+screen_info variable. Add this information to Kconfig.
 
-Patch 1 to 4 resolve a number of unnecessary include statements of
-<linux/screen_info.h>. The header should only be included in source
-files that access struct screen_info.
+In the case of the dummy console, the dependency exists only
+on ARM. Ignore it on !ARM platforms.
 
-Patches 5 to 7 move the declaration of screen_info and edid_info to
-<asm-generic/screen_info.h>. Architectures that provide either set
-a Kconfig token to enable them.
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Javier Martinez Canillas <javierm@redhat.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/firmware/Kconfig      | 1 +
+ drivers/firmware/efi/Kconfig  | 1 +
+ drivers/gpu/drm/Kconfig       | 1 +
+ drivers/hv/Kconfig            | 1 +
+ drivers/video/console/Kconfig | 2 ++
+ drivers/video/fbdev/Kconfig   | 4 ++++
+ 6 files changed, 10 insertions(+)
 
-Patches 8 to 9 make users of screen_info depend on the architecture's
-feature.
-
-Finally, patches 10 to 12 rework fbdev's handling of firmware EDID
-data to make use of existing helpers and the refactored edid_info.
-
-Tested on x86-64. Built for a variety of platforms.
-
-Future directions: with the patchset in place, it will become possible
-to provide screen_info and edid_info only if there are users. Some
-architectures do this by testing for CONFIG_VT, CONFIG_DUMMY_CONSOLE,
-etc. A more uniform approach would be nice. We should also attempt
-to minimize access to the global screen_info as much as possible. To
-do so, some drivers, such as efifb and vesafb, would require an update.
-The firmware's EDID data could possibly made available outside of fbdev.
-For example, the simpledrm and ofdrm drivers could provide such data
-to userspace compositors.
-
-Thomas Zimmermann (12):
-  efi: Do not include <linux/screen_info.h> from EFI header
-  fbdev/sm712fb: Do not include <linux/screen_info.h>
-  sysfb: Do not include <linux/screen_info.h> from sysfb header
-  staging/sm750fb: Do not include <linux/screen_info.h>
-  arch: Remove trailing whitespaces
-  arch: Declare screen_info in <asm/screen_info.h>
-  arch/x86: Declare edid_info in <asm/screen_info.h>
-  drivers/firmware: Remove trailing whitespaces
-  drivers: Add dependencies on CONFIG_ARCH_HAS_SCREEN_INFO
-  fbdev/core: Use fb_is_primary_device() in fb_firmware_edid()
-  fbdev/core: Protect edid_info with CONFIG_ARCH_HAS_EDID_INFO
-  fbdev/core: Define empty fb_firmware_edid() in <linux/fb.h>
-
- arch/Kconfig                                  | 12 +++++++
- arch/alpha/Kconfig                            |  1 +
- arch/arm/Kconfig                              |  1 +
- arch/arm/kernel/efi.c                         |  2 ++
- arch/arm64/Kconfig                            |  1 +
- arch/arm64/kernel/efi.c                       |  1 +
- arch/csky/Kconfig                             |  1 +
- arch/hexagon/Kconfig                          |  1 +
- arch/ia64/Kconfig                             |  5 +--
- arch/loongarch/Kconfig                        |  1 +
- arch/mips/Kconfig                             |  1 +
- arch/nios2/Kconfig                            |  1 +
- arch/powerpc/Kconfig                          |  1 +
- arch/riscv/Kconfig                            |  1 +
- arch/sh/Kconfig                               |  7 ++--
- arch/sparc/Kconfig                            |  1 +
- arch/x86/Kconfig                              |  2 ++
- arch/xtensa/Kconfig                           |  1 +
- drivers/firmware/Kconfig                      |  3 +-
- drivers/firmware/efi/Kconfig                  |  1 +
- drivers/firmware/efi/libstub/efi-stub-entry.c |  2 ++
- drivers/firmware/efi/libstub/screen_info.c    |  2 ++
- drivers/gpu/drm/Kconfig                       |  1 +
- drivers/hv/Kconfig                            |  1 +
- drivers/staging/sm750fb/sm750.c               |  1 -
- drivers/staging/sm750fb/sm750_accel.c         |  1 -
- drivers/staging/sm750fb/sm750_cursor.c        |  1 -
- drivers/staging/sm750fb/sm750_hw.c            |  1 -
- drivers/video/console/Kconfig                 |  2 ++
- drivers/video/fbdev/Kconfig                   |  4 +++
- drivers/video/fbdev/core/fbmon.c              | 34 ++++++-------------
- drivers/video/fbdev/i810/i810-i2c.c           |  2 +-
- drivers/video/fbdev/intelfb/intelfbdrv.c      |  2 +-
- drivers/video/fbdev/nvidia/nv_i2c.c           |  2 +-
- drivers/video/fbdev/savage/savagefb-i2c.c     |  2 +-
- drivers/video/fbdev/sm712fb.c                 |  9 +++--
- include/asm-generic/Kbuild                    |  1 +
- include/asm-generic/screen_info.h             | 18 ++++++++++
- include/linux/efi.h                           |  3 +-
- include/linux/fb.h                            | 10 +++++-
- include/linux/screen_info.h                   |  2 +-
- include/linux/sysfb.h                         |  3 +-
- include/video/edid.h                          |  3 --
- 43 files changed, 105 insertions(+), 47 deletions(-)
- create mode 100644 include/asm-generic/screen_info.h
-
-
-base-commit: d2f0af8472494398a42153684b790b723a79f143
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 0432737bbb8b4..65bbf7422f1db 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -228,6 +228,7 @@ config QCOM_SCM_DOWNLOAD_MODE_DEFAULT
+ 
+ config SYSFB
+ 	bool
++	depends on ARCH_HAS_SCREEN_INFO
+ 	select BOOT_VESA_SUPPORT
+ 
+ config SYSFB_SIMPLEFB
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index 043ca31c114eb..963d305421e50 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -225,6 +225,7 @@ config EFI_DISABLE_PCI_DMA
+ config EFI_EARLYCON
+ 	def_bool y
+ 	depends on SERIAL_EARLYCON && !ARM && !IA64
++	depends on ARCH_HAS_SCREEN_INFO
+ 	select FONT_SUPPORT
+ 	select ARCH_USE_MEMREMAP_PROT
+ 
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index afb3b2f5f4253..63dfc3391d2ff 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -366,6 +366,7 @@ source "drivers/gpu/drm/sprd/Kconfig"
+ config DRM_HYPERV
+ 	tristate "DRM Support for Hyper-V synthetic video device"
+ 	depends on DRM && PCI && MMU && HYPERV
++	depends on ARCH_HAS_SCREEN_INFO
+ 	select DRM_KMS_HELPER
+ 	select DRM_GEM_SHMEM_HELPER
+ 	help
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index 00242107d62e0..3730c9b42a9bd 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -6,6 +6,7 @@ config HYPERV
+ 	tristate "Microsoft Hyper-V client drivers"
+ 	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
+ 		|| (ACPI && ARM64 && !CPU_BIG_ENDIAN)
++	depends on ARCH_HAS_SCREEN_INFO
+ 	select PARAVIRT
+ 	select X86_HV_CALLBACK_VECTOR if X86
+ 	select OF_EARLY_FLATTREE if OF
+diff --git a/drivers/video/console/Kconfig b/drivers/video/console/Kconfig
+index a2a88d42edf0c..b39e2ae039783 100644
+--- a/drivers/video/console/Kconfig
++++ b/drivers/video/console/Kconfig
+@@ -10,6 +10,7 @@ config VGA_CONSOLE
+ 	depends on !4xx && !PPC_8xx && !SPARC && !M68K && !PARISC &&  !SUPERH && \
+ 		(!ARM || ARCH_FOOTBRIDGE || ARCH_INTEGRATOR || ARCH_NETWINDER) && \
+ 		!ARM64 && !ARC && !MICROBLAZE && !OPENRISC && !S390 && !UML
++	depends on ARCH_HAS_SCREEN_INFO
+ 	select APERTURE_HELPERS if (DRM || FB || VFIO_PCI_CORE)
+ 	default y
+ 	help
+@@ -48,6 +49,7 @@ config SGI_NEWPORT_CONSOLE
+ 
+ config DUMMY_CONSOLE
+ 	bool
++	depends on ARCH_HAS_SCREEN_INFO || !ARM
+ 	default y
+ 
+ config DUMMY_CONSOLE_COLUMNS
+diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+index cecf15418632d..e11d85e802bc7 100644
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -655,6 +655,7 @@ config FB_UVESA
+ config FB_VESA
+ 	bool "VESA VGA graphics support"
+ 	depends on (FB = y) && X86
++	depends on ARCH_HAS_SCREEN_INFO
+ 	select APERTURE_HELPERS
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+@@ -669,6 +670,7 @@ config FB_VESA
+ config FB_EFI
+ 	bool "EFI-based Framebuffer Support"
+ 	depends on (FB = y) && !IA64 && EFI
++	depends on ARCH_HAS_SCREEN_INFO
+ 	select APERTURE_HELPERS
+ 	select DRM_PANEL_ORIENTATION_QUIRKS
+ 	select FB_CFB_FILLRECT
+@@ -1089,6 +1091,7 @@ config FB_CARILLO_RANCH
+ config FB_INTEL
+ 	tristate "Intel 830M/845G/852GM/855GM/865G/915G/945G/945GM/965G/965GM support"
+ 	depends on FB && PCI && X86 && AGP_INTEL && EXPERT
++	depends on ARCH_HAS_SCREEN_INFO
+ 	select FB_MODE_HELPERS
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+@@ -2185,6 +2188,7 @@ config FB_BROADSHEET
+ config FB_HYPERV
+ 	tristate "Microsoft Hyper-V Synthetic Video support"
+ 	depends on FB && HYPERV
++	depends on ARCH_HAS_SCREEN_INFO
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+ 	select FB_CFB_IMAGEBLIT
 -- 
 2.41.0
 
