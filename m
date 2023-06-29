@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A10579CD
-	for <loongarch@lists.linux.dev>; Thu, 29 Jun 2023 07:55:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 332156FAC
+	for <loongarch@lists.linux.dev>; Thu, 29 Jun 2023 07:55:58 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxTccDOZ1kPsUDAA--.6037S3;
+	by gateway (Coremail) with SMTP id _____8DxuMUDOZ1kS8UDAA--.6120S3;
 	Thu, 29 Jun 2023 15:55:47 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxzyP6OJ1kYGYQAA--.18424S18;
-	Thu, 29 Jun 2023 15:55:46 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxzyP6OJ1kYGYQAA--.18424S19;
+	Thu, 29 Jun 2023 15:55:47 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -24,9 +24,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	zhaotianrui@loongson.cn,
 	tangyouling@loongson.cn,
 	hejinyang@loongson.cn
-Subject: [PATCH v16 16/30] LoongArch: KVM: Implement update VM id function
-Date: Thu, 29 Jun 2023 15:55:24 +0800
-Message-Id: <20230629075538.4063701-17-zhaotianrui@loongson.cn>
+Subject: [PATCH v16 17/30] LoongArch: KVM: Implement virtual machine tlb operations
+Date: Thu, 29 Jun 2023 15:55:25 +0800
+Message-Id: <20230629075538.4063701-18-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230629075538.4063701-1-zhaotianrui@loongson.cn>
 References: <20230629075538.4063701-1-zhaotianrui@loongson.cn>
@@ -37,93 +37,61 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxzyP6OJ1kYGYQAA--.18424S18
+X-CM-TRANSID:AQAAf8AxzyP6OJ1kYGYQAA--.18424S19
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement kvm check vmid and update vmid, the vmid should be checked before
-vcpu enter guest.
+Implement LoongArch virtual machine tlb operations such as flush tlb by
+specific gpa parameter and flush all of the virt machines tlb.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vmid.c | 66 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 arch/loongarch/kvm/vmid.c
+ arch/loongarch/kvm/tlb.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 arch/loongarch/kvm/tlb.c
 
-diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
+diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
 new file mode 100644
-index 000000000000..380c25c5d12b
+index 000000000000..0bcbd80ac631
 --- /dev/null
-+++ b/arch/loongarch/kvm/vmid.c
-@@ -0,0 +1,66 @@
++++ b/arch/loongarch/kvm/tlb.c
+@@ -0,0 +1,34 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
 +
 +#include <linux/kvm_host.h>
-+#include "trace.h"
++#include <asm/tlb.h>
++#include <asm/kvm_csr.h>
 +
-+static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
++int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
 +{
-+	struct kvm_context *context;
-+	unsigned long vpid;
++	unsigned long flags;
 +
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	vpid = context->vpid_cache + 1;
-+	if (!(vpid & vpid_mask)) {
-+		/* finish round of 64 bit loop */
-+		if (unlikely(!vpid))
-+			vpid = vpid_mask + 1;
-+
-+		/* vpid 0 reserved for root */
-+		++vpid;
-+
-+		/* start new vpid cycle */
-+		kvm_flush_tlb_all();
-+	}
-+
-+	context->vpid_cache = vpid;
-+	vcpu->arch.vpid = vpid;
++	local_irq_save(flags);
++	gpa &= (PAGE_MASK << 1);
++	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
++	local_irq_restore(flags);
++	return 0;
 +}
 +
-+void _kvm_check_vmid(struct kvm_vcpu *vcpu)
++/**
++ * kvm_flush_tlb_all() - Flush all root TLB entries for
++ * guests.
++ *
++ * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
++ */
++void kvm_flush_tlb_all(void)
 +{
-+	struct kvm_context *context;
-+	bool migrated;
-+	unsigned long ver, old, vpid;
-+	int cpu;
++	unsigned long flags;
 +
-+	cpu = smp_processor_id();
-+	/*
-+	 * Are we entering guest context on a different CPU to last time?
-+	 * If so, the vCPU's guest TLB state on this CPU may be stale.
-+	 */
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	migrated = (vcpu->arch.last_exec_cpu != cpu);
-+	vcpu->arch.last_exec_cpu = cpu;
-+
-+	/*
-+	 * Check if our vpid is of an older version
-+	 *
-+	 * We also discard the stored vpid if we've executed on
-+	 * another CPU, as the guest mappings may have changed without
-+	 * hypervisor knowledge.
-+	 */
-+	ver = vcpu->arch.vpid & ~vpid_mask;
-+	old = context->vpid_cache  & ~vpid_mask;
-+	if (migrated || (ver != old)) {
-+		_kvm_update_vpid(vcpu, cpu);
-+		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
-+	}
-+
-+	/* Restore GSTAT(0x50).vpid */
-+	vpid = (vcpu->arch.vpid & vpid_mask)
-+		<< CSR_GSTAT_GID_SHIFT;
-+	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
++	local_irq_save(flags);
++	invtlb_all(INVTLB_ALLGID, 0, 0);
++	local_irq_restore(flags);
 +}
 -- 
 2.39.1
