@@ -1,192 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE62101D3
-	for <loongarch@lists.linux.dev>; Fri, 30 Jun 2023 10:01:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3EB9C433C0;
-	Fri, 30 Jun 2023 10:01:01 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.5
-Date: Fri, 30 Jun 2023 18:00:37 +0800
-Message-Id: <20230630100037.1071320-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A8314265;
+	Fri, 30 Jun 2023 11:53:46 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailnew.nyi.internal (Postfix) with ESMTP id C8F845842A1;
+	Fri, 30 Jun 2023 07:53:45 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Fri, 30 Jun 2023 07:53:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm1; t=1688126025; x=1688133225; bh=ya
+	Hy0NgB4QI7znLtjDpufXmMXzZcSHw23m7h8BkLYBc=; b=10KOp+CzUmojO7ZSQ7
+	q9c3tAJBmOd76hg6sonOk40OjKAR6/QOPiz7XUomr8IP6aN19s7N9Q20gnTBA8OU
+	H+ET1KWhVc0oqozGAYUdc7B70SAPMdGIyEmEipUjQs98dHfF9mAUgsaeXHru8OlA
+	Z6b+3BUsGbAouqrpsuvP8THkbsAzAbWArrjQjssrDfLJHYAxMJ1nD0US1BwUxLpH
+	Khsbp9i0wfMK4NjF83UPBZQU2Xe9X8o6q5JmvVGPeBGgXYJSti5i4d4Vr++XzGjN
+	1deBUgFU/w8tfA/bjpGKl2V8A3IgBHPWHWftg2j80IDtUUtjFI/5ldbjH9jVYmeY
+	G2pw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1688126025; x=1688133225; bh=yaHy0NgB4QI7z
+	nLtjDpufXmMXzZcSHw23m7h8BkLYBc=; b=VLzmPefoROKUnYgyH59xLO28GGD4n
+	I4lte/pn3WzX95H4eQRtTSBAb90fH5FqIscW92NizI9x3K9rvYkB4k9q6ajV1EbD
+	VxE8AOWeA5gd3Truhe/A9kaDx6LrP7Tl4Y9XFamiioeruNo4WJqflkjaHJ0nsHcv
+	J2r4IJGTVqOt1B1dMbybj/sbd/LzIbl5CzvfvEtuw8uPdvo7PAFEKVHhv2+1X9Xd
+	qEBjQf6xoQoJmFw77YwpNSZG5Kn1KzEpYegVmCRAHDr3owvr/EeqaPrEmVGD6Gmw
+	mfm5v+sxS/9Ml4UMUnNpdnRbqLCJ6zjTnHpvZojc13GhJnUu+kDlq3vDg==
+X-ME-Sender: <xms:SMKeZCxMqe5zxyzHHEyo_jowh1NvQkg3HAWm1oxMk5pEwCXuDt8nPQ>
+    <xme:SMKeZOQSC2GjFmKEVBEJ34bdcsM63u6r5Bbn1HzIVxPff5ENjvEYekcilieyCztL0
+    OOiy6d_8S9V2AG4VWM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrtdeigdeggecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:SMKeZEU7QF7lH3eivuj7P9AQVrp-KepGLUxX15AeZTjz07bNrMm_5Q>
+    <xmx:SMKeZIimGJWbUJHe4AXjoJoG2-DRyW8QkepPJWqWF6Y-rgF7svHorw>
+    <xmx:SMKeZEDcwFLycbP_cRSrtSET1YHYJvelMIMgwIjYVgEhFWn2ec6cwQ>
+    <xmx:ScKeZMj8q19ja7k4QwyGQviRl-VaDcpKWJEn2nnWWhOtIymUXjLwrw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 94900B60093; Fri, 30 Jun 2023 07:53:44 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Message-Id: <dd5aa01e-afad-48d2-bf4c-4a58b74f1644@app.fastmail.com>
+In-Reply-To: <ef7b3899-7d18-8018-47fa-aac0efaa61f4@suse.de>
+References: <20230629121952.10559-1-tzimmermann@suse.de>
+ <20230629121952.10559-8-tzimmermann@suse.de>
+ <80e3a583-805e-4e8f-a67b-ebe2e4b9a7e5@app.fastmail.com>
+ <d3de124c-6aa8-e930-e238-7bd6dd7929a6@suse.de>
+ <0dbbdfc4-0e91-4be4-9ca0-d8ba6f18453d@app.fastmail.com>
+ <ef7b3899-7d18-8018-47fa-aac0efaa61f4@suse.de>
+Date: Fri, 30 Jun 2023 13:53:24 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Thomas Zimmermann" <tzimmermann@suse.de>, "Helge Deller" <deller@gmx.de>,
+ "Daniel Vetter" <daniel@ffwll.ch>, "Dave Airlie" <airlied@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Kees Cook" <keescook@chromium.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Frederic Weisbecker" <frederic@kernel.org>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Ard Biesheuvel" <ardb@kernel.org>,
+ "Sami Tolvanen" <samitolvanen@google.com>,
+ "Juerg Haefliger" <juerg.haefliger@canonical.com>
+Subject: Re: [PATCH 07/12] arch/x86: Declare edid_info in <asm/screen_info.h>
+Content-Type: text/plain
 
-The following changes since commit 6995e2de6891c724bfeb2db33d7b87775f913ad1:
+On Fri, Jun 30, 2023, at 09:46, Thomas Zimmermann wrote:
+> Am 29.06.23 um 15:21 schrieb Arnd Bergmann:
+>> On Thu, Jun 29, 2023, at 15:01, Thomas Zimmermann wrote:
+>>> Am 29.06.23 um 14:35 schrieb Arnd Bergmann:
+>>>> On Thu, Jun 29, 2023, at 13:45, Thomas Zimmermann wrote:
+>
+>>>
+>>> FIRMWARE_EDID is a user-selectable feature, while ARCH_HAS_EDID_INFO
+>>> announces an architecture feature. They do different things.
+>> 
+>> I still have trouble seeing the difference.
+>
+> The idea here is that ARCH_HAS_ signals the architecture's support for 
+> the feature.  Drivers set 'depends on' in their Kconfig.
+>
+> Another Kconfig token, VIDEO_SCREEN_INFO or FIRMWARE_EDID, would then 
+> actually enable the feature.  Drivers select VIDEO_SCREEN_INFO or 
+> FIRMWARE_EDID and the architectures contains code like
 
-  Linux 6.4 (2023-06-25 16:29:58 -0700)
+Fair enough. In that case, I guess FIRMWARE_EDID will just depend on
+ARCH_HAS_EDID_INFO, or possibly "depends on FIRMWARE_EDID || EFI"
+after it starts calling into an EFI specific function, right?
 
-are available in the Git repository at:
+> #ifdef VIDEO_SCREEN_INFO
+> struct screen_info screen_info = {
+> 	/* set values here */
+> }
+> #endif
+>
+> This allows us to disable code that requires screen_info/edid_info, but 
+> also disable screen_info/edid_info unless such code has been enabled in 
+> the kernel config.
+>
+> Some architectures currently mimic this by guarding screen_info with 
+> ifdef CONFIG_VT or similar. I'd like to make this more flexible. The 
+> cost of a few more internal Kconfig tokens seems negligible.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.5
+I definitely get it for the screen_info, which needs the complexity.
+For ARCHARCH_HAS_EDID_INFO I would hope that it's never selected by
+anything other than x86, so I would still go with just a dependency
+on x86 for simplicity, but I don't mind having the extra symbol if that
+keeps it more consistent with how the screen_info is handled.
 
-for you to fetch changes up to 5ee35c769663cb1c5f26e12cad84904dc3002de8:
+>> I suppose you could use FIRMWARE_EDID on EFI or OF systems without
+>> the need for a global edid_info structure, but that would not
+>> share any code with the current fb_firmware_edid() function.
+>
+> The current code is build on top of screen_info and edid_info. I'd 
+> preferably not replace that, if possible.
 
-  LoongArch: Remove five DIE_* definitions in kdebug.h (2023-06-29 20:58:44 +0800)
+One way I could imagine this looking in the end would be
+something like
 
-----------------------------------------------------------------
-LoongArch changes for v6.5
+struct screen_info *fb_screen_info(struct device *dev)
+{
+      struct screen_info *si = NULL;
 
-1, Preliminary ClangBuiltLinux enablement;
-2, Add support to clone a time namespace;
-3, Add vector extensions support;
-4, Add SMT (Simultaneous Multi-Threading) support;
-5, Support dbar with different hints;
-6, Introduce hardware page table walker;
-7, Add jump-label implementation;
-8, Add rethook and uprobes support;
-9, Some bug fixes and other small changes.
+      if (IS_ENABLED(CONFIG_EFI))
+            si = efi_get_screen_info(dev);
 
-----------------------------------------------------------------
-Binbin Zhou (2):
-      dt-bindings: interrupt-controller: Add Loongson EIOINTC
-      irqchip/loongson-eiointc: Add DT init support
+      if (IS_ENABLED(CONFIG_ARCH_HAS_SCREEN_INFO) && !si)
+            si = screen_info;
 
-Dan Carpenter (1):
-      LoongArch: Delete unnecessary debugfs checking
+      return si;
+}
 
-Haoran Jiang (1):
-      LoongArch: Replace kretprobe with rethook
+corresponding to fb_firmware_edid(). With this, any driver
+that wants to access screen_info would call this function
+instead of using the global pointer, plus either NULL pointer
+check or a CONFIG_ARCH_HAS_SCREEN_INFO dependency.
 
-Huacai Chen (6):
-      Merge 'irq/loongarch-fixes-6.5' into loongarch-next
-      LoongArch: Set CPU#0 as the io master for FDT
-      LoongArch: Add vector extensions support
-      LoongArch: Add SMT (Simultaneous Multi-Threading) support
-      LoongArch: Support dbar with different hints
-      LoongArch: Introduce hardware page table walker
+This way we could completely eliminate the global screen_info
+on arm64, riscv, and loongarch but still use the efi and
+hyperv framebuffer/drm drivers.
 
-Jianmin Lv (3):
-      irqchip/loongson-pch-pic: Fix initialization of HT vector register
-      irqchip/loongson-liointc: Fix IRQ trigger polarity
-      irqchip/loongson-eiointc: Fix irq affinity setting during resume
-
-Liu Peibao (1):
-      irqchip/loongson-pch-pic: Fix potential incorrect hwirq assignment
-
-Tiezhu Yang (8):
-      LoongArch: Add support to clone a time namespace
-      LoongArch: Select HAVE_DEBUG_KMEMLEAK to support kmemleak
-      LoongArch: Move three functions from kprobes.c to inst.c
-      LoongArch: Check for AMO instructions in insns_not_supported()
-      LoongArch: Add larch_insn_gen_break() to generate break insns
-      LoongArch: Use larch_insn_gen_break() for kprobes
-      LoongArch: Add uprobes support
-      LoongArch: Remove five DIE_* definitions in kdebug.h
-
-WANG Rui (3):
-      LoongArch: Add guard for the larch_insn_gen_xxx functions
-      LoongArch: Calculate various sizes in the linker script
-      LoongArch: extable: Also recognize ABI names of registers
-
-WANG Xuerui (8):
-      LoongArch: Prepare for assemblers with proper FCSR class support
-      LoongArch: Make the CPUCFG&CSR ops simple aliases of compiler built-ins
-      LoongArch: Simplify the invtlb wrappers
-      LoongArch: Tweak CFLAGS for Clang compatibility
-      LoongArch: vDSO: Use CLANG_FLAGS instead of filtering out '--target='
-      LoongArch: Include KBUILD_CPPFLAGS in CHECKFLAGS invocation
-      LoongArch: Mark Clang LTO as working
-      Makefile: Add loongarch target flag for Clang compilation
-
-Yinbo Zhu (2):
-      irqchip/loongson-liointc: Add IRQCHIP_SKIP_SET_WAKE flag
-      LoongArch: Export some arch-specific pm interfaces
-
-Youling Tang (1):
-      LoongArch: Add jump-label implementation
-
- .../interrupt-controller/loongson,eiointc.yaml     |  59 ++++
- .../features/core/jump-labels/arch-support.txt     |   2 +-
- .../features/debug/kmemleak/arch-support.txt       |   2 +-
- arch/loongarch/Kconfig                             |  72 +++-
- arch/loongarch/Makefile                            |  23 +-
- arch/loongarch/include/asm/Kbuild                  |   1 -
- arch/loongarch/include/asm/acpi.h                  |  13 +-
- arch/loongarch/include/asm/asmmacro.h              | 393 +++++++++++++++++++++
- arch/loongarch/include/asm/barrier.h               | 130 +++----
- arch/loongarch/include/asm/cpu-features.h          |   2 +-
- arch/loongarch/include/asm/cpu-info.h              |   1 +
- arch/loongarch/include/asm/cpu.h                   |   2 +
- arch/loongarch/include/asm/fpregdef.h              |   7 +
- arch/loongarch/include/asm/fpu.h                   | 185 +++++++++-
- arch/loongarch/include/asm/gpr-num.h               |  30 ++
- arch/loongarch/include/asm/inst.h                  |  55 ++-
- arch/loongarch/include/asm/io.h                    |   2 +-
- arch/loongarch/include/asm/jump_label.h            |  50 +++
- arch/loongarch/include/asm/kdebug.h                |   5 -
- arch/loongarch/include/asm/kprobes.h               |   5 +-
- arch/loongarch/include/asm/loongarch.h             |  76 ++--
- arch/loongarch/include/asm/module.h                |   2 +-
- arch/loongarch/include/asm/page.h                  |   1 +
- arch/loongarch/include/asm/percpu.h                |   6 +-
- arch/loongarch/include/asm/pgtable.h               |   4 +-
- arch/loongarch/include/asm/qspinlock.h             |  18 +
- arch/loongarch/include/asm/suspend.h               |  10 +
- arch/loongarch/include/asm/tlb.h                   |  46 ++-
- arch/loongarch/include/asm/uprobes.h               |  36 ++
- arch/loongarch/include/asm/vdso/gettimeofday.h     |   9 +-
- arch/loongarch/include/asm/vdso/vdso.h             |  32 +-
- arch/loongarch/include/uapi/asm/hwcap.h            |   1 +
- arch/loongarch/include/uapi/asm/ptrace.h           |  16 +-
- arch/loongarch/include/uapi/asm/sigcontext.h       |  18 +
- arch/loongarch/kernel/Makefile                     |   8 +-
- arch/loongarch/kernel/acpi.c                       |  32 ++
- arch/loongarch/kernel/cpu-probe.c                  |  16 +
- arch/loongarch/kernel/efi-header.S                 |   6 +-
- arch/loongarch/kernel/fpu.S                        | 270 ++++++++++++++
- arch/loongarch/kernel/head.S                       |   8 +-
- arch/loongarch/kernel/inst.c                       |  83 ++++-
- arch/loongarch/kernel/jump_label.c                 |  22 ++
- arch/loongarch/kernel/kprobes.c                    |  96 +----
- arch/loongarch/kernel/proc.c                       |   2 +
- arch/loongarch/kernel/process.c                    |  12 +-
- arch/loongarch/kernel/ptrace.c                     | 110 ++++++
- arch/loongarch/kernel/rethook.c                    |  28 ++
- arch/loongarch/kernel/rethook.h                    |   8 +
- .../{kprobes_trampoline.S => rethook_trampoline.S} |   6 +-
- arch/loongarch/kernel/signal.c                     | 326 ++++++++++++++++-
- arch/loongarch/kernel/smp.c                        |  27 +-
- arch/loongarch/kernel/traps.c                      |  95 ++++-
- arch/loongarch/kernel/unaligned.c                  |   2 -
- arch/loongarch/kernel/uprobes.c                    | 153 ++++++++
- arch/loongarch/kernel/vdso.c                       |  98 ++++-
- arch/loongarch/kernel/vmlinux.lds.S                |   9 +
- arch/loongarch/lib/dump_tlb.c                      |   6 +-
- arch/loongarch/mm/tlb.c                            |  21 +-
- arch/loongarch/mm/tlbex.S                          |  27 +-
- arch/loongarch/power/suspend.c                     |   8 +-
- arch/loongarch/vdso/Makefile                       |   7 +-
- arch/loongarch/vdso/vgetcpu.c                      |   2 +-
- drivers/acpi/Kconfig                               |   2 +-
- drivers/irqchip/irq-loongson-eiointc.c             | 135 +++++--
- drivers/irqchip/irq-loongson-liointc.c             |  13 +-
- drivers/irqchip/irq-loongson-pch-pic.c             |  10 +-
- scripts/Makefile.clang                             |   1 +
- 67 files changed, 2549 insertions(+), 414 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
- create mode 100644 arch/loongarch/include/asm/jump_label.h
- create mode 100644 arch/loongarch/include/asm/qspinlock.h
- create mode 100644 arch/loongarch/include/asm/suspend.h
- create mode 100644 arch/loongarch/include/asm/uprobes.h
- create mode 100644 arch/loongarch/kernel/jump_label.c
- create mode 100644 arch/loongarch/kernel/rethook.c
- create mode 100644 arch/loongarch/kernel/rethook.h
- rename arch/loongarch/kernel/{kprobes_trampoline.S => rethook_trampoline.S} (93%)
- create mode 100644 arch/loongarch/kernel/uprobes.c
+    Arnd
