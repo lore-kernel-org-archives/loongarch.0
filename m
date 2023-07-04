@@ -1,88 +1,99 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 716155672
-	for <loongarch@lists.linux.dev>; Tue,  4 Jul 2023 12:53:50 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.108])
-	by gateway (Coremail) with SMTP id _____8DxxPBcFqRk0AQAAA--.54S3;
-	Tue, 04 Jul 2023 20:53:48 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.108])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax98xaFqRkXDAbAA--.63241S4;
-	Tue, 04 Jul 2023 20:53:48 +0800 (CST)
-From: Feiyang Chen <chenfeiyang@loongson.cn>
-To: chenhuacai@kernel.org
-Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
-	dvyukov@google.com,
-	andreyknvl@gmail.com,
-	loongarch@lists.linux.dev,
-	kasan-dev@googlegroups.com,
-	chris.chenfeiyang@gmail.com,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 2/2] LoongArch: Allow building with kcov coverage
-Date: Tue,  4 Jul 2023 20:53:32 +0800
-Message-Id: <8d10b1220434432dbc089fab8df4e1cca048cd0c.1688369658.git.chenfeiyang@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1688369658.git.chenfeiyang@loongson.cn>
-References: <cover.1688369658.git.chenfeiyang@loongson.cn>
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB93C6D18
+	for <loongarch@lists.linux.dev>; Tue,  4 Jul 2023 16:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1688487824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2FITFWtbRXE3gky2EO4aMziTa3J/r1+wMO4yc2vs7Pc=;
+	b=Yaj0XoGTnPY3jldtaJrBd3h0EFLc5QY5r2f1GcQiDU5Bwt+QkhnRA5Y3ClkBsx59aWT2Mc
+	O1BXRKMpVO9+Wb82xQFvJuf17h84NyATS9f4N1wgCJHvmtmtX5bmQkya0n1s8pMiouL+Iu
+	fyHZ1/QKZQcqnRr3IdPIPspTAWH3/GI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-38-8Jx3tgxNPvGsGkfZQeIHFQ-1; Tue, 04 Jul 2023 12:23:43 -0400
+X-MC-Unique: 8Jx3tgxNPvGsGkfZQeIHFQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f81dda24d3so63661845e9.1
+        for <loongarch@lists.linux.dev>; Tue, 04 Jul 2023 09:23:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688487822; x=1691079822;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2FITFWtbRXE3gky2EO4aMziTa3J/r1+wMO4yc2vs7Pc=;
+        b=jYezmJZaYbbv89/DV3zYN7rtRf1MTJ7T/JAqT1FyjNfpXIavSkwnrhkJqPplb4Y6Db
+         t4f40z+UGZBGfTV2rkt6ykPDCjebBTELGgxKPepYEeO7lLs1QGPifFi+yWM4qUTaJld3
+         NXXUpje9SCcqn4wZdPsutWsugS12nKoSOUUfIc7Zch2t058MruAMBIEPUAKKTw1yGgj3
+         rqO1kNy4lFG/bkLbymW7nUbP3oXkT6Mrmc9c/a+qUH5//nUqL1Xgyw4e5JjYnTL1pl/o
+         Gm4PG+BiH07HxTa3vCC3knHFvWWJZnD3PIMqrU8Ooj+7OQxAseOKIOGFV2EBaaP9bQAv
+         Wi0Q==
+X-Gm-Message-State: AC+VfDwm+21ovF21v2oHx7w438iy8/B4BnHvlJ3MllDcqj6mZ21oi3q5
+	PsRBERSxLvNrNAQPQzOSzeeWo2tw3YpJH6C9L8Z96Y7LhlWqkoCZYn8pxSUYna7eKEcpVQR44Kl
+	Oaa1p/uk84IpogjvQCjJp
+X-Received: by 2002:a05:600c:2145:b0:3fb:415f:a85b with SMTP id v5-20020a05600c214500b003fb415fa85bmr18158806wml.3.1688487822321;
+        Tue, 04 Jul 2023 09:23:42 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7T04nL74CM9kmUBFWNxbGLn7ruUc6nb3zVFQfaw7cBAYtqvH64gACvFSpImO/HrduwXThnBg==
+X-Received: by 2002:a05:600c:2145:b0:3fb:415f:a85b with SMTP id v5-20020a05600c214500b003fb415fa85bmr18158793wml.3.1688487821958;
+        Tue, 04 Jul 2023 09:23:41 -0700 (PDT)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id m21-20020a7bcb95000000b003faabd8fcb8sm24447459wmi.46.2023.07.04.09.23.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jul 2023 09:23:41 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de, deller@gmx.de,
+ daniel@ffwll.ch, airlied@gmail.com
+Cc: linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Catalin Marinas
+ <catalin.marinas@arm.com>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-riscv@lists.infradead.org, Will Deacon
+ <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ linux-arch@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-staging@lists.linux.dev, Russell King <linux@armlinux.org.uk>,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas
+ Zimmermann <tzimmermann@suse.de>, linux-alpha@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 01/12] efi: Do not include <linux/screen_info.h> from
+ EFI header
+In-Reply-To: <20230629121952.10559-2-tzimmermann@suse.de>
+References: <20230629121952.10559-1-tzimmermann@suse.de>
+ <20230629121952.10559-2-tzimmermann@suse.de>
+Date: Tue, 04 Jul 2023 18:23:40 +0200
+Message-ID: <87ilazlk6r.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax98xaFqRkXDAbAA--.63241S4
-X-CM-SenderInfo: hfkh0wphl1t03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XrWxur48WF4UGrW5try7Jwc_yoWkZwc_A3
-	y3tw48Gr1rGw48Cr4qgFyrJw1DAa1kWFnYkF9I9r17ZFy5X3WfGr45J345Zr1rK3yjgrs8
-	ZrW0qF98CrWjvosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb38YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
-	JVW8Jr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_
-	GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73
-	UjIFyTuYvjxU4AhLUUUUU
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-Add ARCH_HAS_KCOV to the LoongArch Kconfig. Also disable
-instrumentation of vdso.
+Thomas Zimmermann <tzimmermann@suse.de> writes:
 
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
----
- arch/loongarch/Kconfig       | 1 +
- arch/loongarch/vdso/Makefile | 2 ++
- 2 files changed, 3 insertions(+)
+> The header file <linux/efi.h> does not need anything from
+> <linux/screen_info.h>. Declare struct screen_info and remove
+> the include statements. Update a number of source files that
+> require struct screen_info's definition.
+>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> ---
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index ed9a148cdcde..4c21a961ab88 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -14,6 +14,7 @@ config LOONGARCH
- 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
- 	select ARCH_HAS_CPU_FINALIZE_INIT
- 	select ARCH_HAS_FORTIFY_SOURCE
-+	select ARCH_HAS_KCOV
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
-diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index 7bb794604af3..7dc87377688b 100644
---- a/arch/loongarch/vdso/Makefile
-+++ b/arch/loongarch/vdso/Makefile
-@@ -5,6 +5,8 @@ ifdef CONFIG_KASAN
- KASAN_SANITIZE := n
- endif
- 
-+KCOV_INSTRUMENT := n
-+
- # Include the generic Makefile to check the built vdso.
- include $(srctree)/lib/vdso/Makefile
- 
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+
 -- 
-2.39.3
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
