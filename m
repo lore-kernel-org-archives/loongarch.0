@@ -1,589 +1,326 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF540DF43
-	for <loongarch@lists.linux.dev>; Wed,  5 Jul 2023 19:45:36 +0000 (UTC)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 365JU7wQ014833;
-	Wed, 5 Jul 2023 19:44:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : from : to : cc : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=eV0jbK2WDEQS43HbEvcqWc8f5PWLc4h3jI7cxGtxApA=;
- b=082Yim9f87vZtRKB6C+VzOgr2FSGiknXvwN05wtlyhd/avPd3r1iwhL8y1rUU1ID4TTC
- oIV/OkL4EUvP3JluIEKcd0iL6PtMa1nyzOy/84r62yXTpvn8zRWfCdRohnLMUOuU58yB
- NUm6THnPDrQl1edbn/NH3OBQsSW/sEbpOUN4g9WB33PSQkJ6ZjBNTkFhjLzwsfcQhgUC
- wSVQ1TWsxHH/t0tI40Z8y86Olll85fzPdHwdFILgFPIUNoyYATvcqmmzQE97y9TiP6F8
- BLplaMykrPt7g56nXS4kFkoN36m78fud14O7DqDMchQetHZ94eSeftiGSFhXvbdELJTs Mg== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rneqqr13t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 05 Jul 2023 19:44:51 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 365Id8k7033293;
-	Wed, 5 Jul 2023 19:44:50 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3rjak699xb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 05 Jul 2023 19:44:50 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IZjwwL/3NXedoCSEOCpaOwlOpzdbBpxbNLJlaeMScvF9D/y7rYg8xpfwy2LYq84g61lL14guuQbhEO2++ErLBpER1AJ5SgXLMHVkSHf1LnGShcsbmRJmsIbFM54gWZ22UWNWLh1nlsd0vlqRaUr1hLmBe1wDTzjk4NjBrXcBLHdfoE7COZvAXkkuoTtdEsBmSsM977qrUVW8G3Czi8s7hu3jeEzP6oz9yCU6BZYsuhIoffO59VfoF/wG+RdvYom9KBlozNT7nGUXV+LrevVIbQ80oQo9jGEJfE1XIDKRHPY3f4gXkF0uJN+jcpLx4bU7gJdvH8OELQVgUEgAqsNgug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eV0jbK2WDEQS43HbEvcqWc8f5PWLc4h3jI7cxGtxApA=;
- b=U9s+bjh/84IjofYywawnMyikyAAIl/Qxa/OGwWxPOJylqz5wOHIXIpzrl0HlBOR4KIukZonFTiS8Wu0k+A0jqiV6PZf1ZQ7jeVIVRbHjsTu/Fgay0KAwVQZ2xrvWHws51WItYKJ6DONhmLCV/7snPj3bb6xFDkkH3G757KmVol3KdQydlnRpwIwtMiBRdFPt7cJxhbAlQtr3zFkXWqY6H6IkYcfgMkROb5C99BZ0cmakWn4ixRqWUrEbkISyAGnQq3yFaFbDjn567bm1xbK1K61XMsa6Yj2yfPTVnaMsjiDxnFIKC3BDsK9wq4Mo6eT8sUfD2yYKMmMKCT9/S3cm2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eV0jbK2WDEQS43HbEvcqWc8f5PWLc4h3jI7cxGtxApA=;
- b=v/R54tXJZUNUSEy6E4SxWVFlTD6FmXrDQzfwSQhcvnFacHjabrPKaeXb+eg9snHufqEBrAm/yeflIAs2Q6am1mfV2Tme1kmsBW6YneGFaKiIXZsSfBxDfWevenW2lBVVMTKD/telgm9CmZkPtLUJxJ2/itX5kN7Rdv2Hjg4XupM=
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by SN4PR10MB5542.namprd10.prod.outlook.com (2603:10b6:806:1e9::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.24; Wed, 5 Jul
- 2023 19:44:46 +0000
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::8b8f:b4b1:bb78:b048]) by CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::8b8f:b4b1:bb78:b048%5]) with mapi id 15.20.6565.016; Wed, 5 Jul 2023
- 19:44:46 +0000
-Message-ID: <c8b55b86-604e-6257-b1e1-9cc8d988181e@oracle.com>
-Date: Wed, 5 Jul 2023 14:44:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 12/13] s390/kexec: refactor for kernel/Kconfig.kexec
-Content-Language: en-US
-From: Eric DeVolder <eric.devolder@oracle.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        chenhuacai@kernel.org, geert@linux-m68k.org, tsbogend@alpha.franken.de,
-        James.Bottomley@hansenpartnership.com, deller@gmx.de,
-        ysato@users.sourceforge.jp, dalias@libc.org,
-        glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, kernel@xen0n.name, mpe@ellerman.id.au,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
-        keescook@chromium.org, paulmck@kernel.org, peterz@infradead.org,
-        frederic@kernel.org, akpm@linux-foundation.org, ardb@kernel.org,
-        samitolvanen@google.com, juerg.haefliger@canonical.com, arnd@arndb.de,
-        rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
-        sebastian.reichel@collabora.com, rppt@kernel.org,
-        kirill.shutemov@linux.intel.com, anshuman.khandual@arm.com,
-        ziy@nvidia.com, masahiroy@kernel.org, ndesaulniers@google.com,
-        mhiramat@kernel.org, ojeda@kernel.org, thunder.leizhen@huawei.com,
-        xin3.li@intel.com, tj@kernel.org, gregkh@linuxfoundation.org,
-        tsi@tuyoix.net, bhe@redhat.com, hbathini@linux.ibm.com,
-        sourabhjain@linux.ibm.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com
-References: <20230705142004.3605799-1-eric.devolder@oracle.com>
- <20230705142004.3605799-13-eric.devolder@oracle.com>
- <20230705154958.GA3643511@dev-arch.thelio-3990X>
- <891d6836-b331-13e0-20da-6a0a4d98293c@oracle.com>
-In-Reply-To: <891d6836-b331-13e0-20da-6a0a4d98293c@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0035.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2ae::11) To CO1PR10MB4531.namprd10.prod.outlook.com
- (2603:10b6:303:6c::22)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E00E7F
+	for <loongarch@lists.linux.dev>; Thu,  6 Jul 2023 02:04:40 +0000 (UTC)
+Received: from loongson.cn (unknown [10.40.46.158])
+	by gateway (Coremail) with SMTP id _____8Bx5fA2IaZkfrEAAA--.3005S3;
+	Thu, 06 Jul 2023 10:04:38 +0800 (CST)
+Received: from [192.168.124.126] (unknown [10.40.46.158])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjiMyIaZk2qQdAA--.48946S3;
+	Thu, 06 Jul 2023 10:04:35 +0800 (CST)
+Subject: Re: [PATCH v16 00/30] Add KVM LoongArch support
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>, hejinyang@loongson.cn
+References: <20230629075538.4063701-1-zhaotianrui@loongson.cn>
+From: zhaotianrui <zhaotianrui@loongson.cn>
+Message-ID: <36784395-36b7-c96d-0034-be7e5e17b2c2@loongson.cn>
+Date: Thu, 6 Jul 2023 10:04:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|SN4PR10MB5542:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6d78df0b-a920-44a6-a61b-08db7d90494f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	aZUxD0cxSpYYdQRs//zJ03dmeyeq7dZayyz4kjwhyyQywzDTI7qw5HZSicx0STrGCKdAyG+xY5htwgClZ6/yXVGVT8cUwoOvdu8V7Yq2p4x/SCoNqI6e8z92OgRs8TMlY48cnk10g4qzodZ8Z3Xp+Zghs5+XYMHhhl2T8fulqB1jIyv7xBqF3N2/kKgZfjeIXIygqCRO7DfvxmlV2h/k+hhjavoWQ1Hlko57A1UpdH7YLq4X9DUdMAUYdykccRH781WT8SEAirk19c1uzJl5Z/z+uaRAD5zkf1YYkHlAL+qFZzBGSCDFJrGGx0x21fKwCLSpkZeriYiZpG99S1JwNdv4WzylKYCqpM478S34mN3oi7DzjQVNf68UMYzfEJ7Nx4dHixX0CFyu4V1LfM3ib3MU2NhO75Na8XT+1ha2MVzOWgnk/V1feXPmMbBtUW1YD7foe5PcVXkW/bBodVhx2stokqA9Febc+c5Qn/dSeJacUkUFa+WPk/orOpADXSsWmyESDE7S2vKYG0x3GiDseQh1GcBjM55EI89t/7DcX/C7D1YuLdUgGDzF5Z5kl/UYqwVT4ngWqAqF7T1WZj+KbK6mVReZFhdjSr5Yu3kPm/or6AD2TxSocDqwNwNiUtqkAWEgRVg6Q/8lXcxKQCGG5g==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(366004)(39860400002)(396003)(376002)(136003)(451199021)(4326008)(316002)(41300700001)(31686004)(66556008)(66476007)(53546011)(66946007)(6916009)(86362001)(186003)(26005)(6506007)(6512007)(107886003)(83380400001)(2616005)(31696002)(2906002)(6666004)(6486002)(38100700002)(30864003)(478600001)(7366002)(7416002)(7406005)(5660300002)(8936002)(36756003)(8676002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?MS9yZWl4WEErVk1DQ1hHOThTZ0ZIQ1ViZUhVUzRFa0I0ZklvaXR6TnRDSzFH?=
- =?utf-8?B?Z1FXZ0hnbVVFemF5UkhvOG9FSlNoWThDeWltMTNZVW53VVVhc2dOZlBmRjU3?=
- =?utf-8?B?djNXb0tEYlkxQ0h2UjljNHE0Zzd0Vy9LdW9VZ0czYTMxTE1BWlJYVENScWU0?=
- =?utf-8?B?Z0d2VmNuTVlPM0FuQWljMEZxOWtpekltYks0T2ZxeklTSUt0Z1FFNHdIRi9h?=
- =?utf-8?B?bytrMGcxdHo4NlNBdldDTDRzTTBSVE01bDZOQ2pVZGFqM2xvaUh6NzVPQWJN?=
- =?utf-8?B?UTV1MzRzbC9FQkFvY3Z6ODZ2RGloNWlieklVTnhSY21LQkdnd1BUYWFXaG1x?=
- =?utf-8?B?QXB6azFsZXR3NS90OFpHL2dqek9qNGU4RFpMT0pwOVZZUW1IaEloZjBmQjht?=
- =?utf-8?B?eDJnYlI5WVBudnh4RU1ldWFBUkVVMG5xTkxITUM5OW1iTndlYmJxOFNBR3J2?=
- =?utf-8?B?UkUzd1VPcUlNVUNqd3JPeVJaM1UzU3hodUw2YjJVQ2VmVDFaODVCMWFOa0x6?=
- =?utf-8?B?cktQUTdkVnltOExLYzBlemk5aUlkSDBYbFpHbnNQazVVWFRpYkVFbTYyeEtq?=
- =?utf-8?B?MWl0Y0kxNytXb2lNd1VMRzNRdFpXRVpHV29rNGttUzFURmhnbmFUZnJoNDJI?=
- =?utf-8?B?WHFxS0ZjeWlXWmptZ1VZV1NMRTRNWk5Lajh1cXIvZkdwbVZjZkVWYi9CK1Q4?=
- =?utf-8?B?amlUa2ZlNFI5OWEzc3E5ZC9zdXRXMTJPbm02R2l1VTNOL1gydG02T29SNUZP?=
- =?utf-8?B?UHlkb1VYODFXT1RGbDVqdUZ5cWJucE02TDNYSXYrMFY5dDMyWlVlejYxNkVT?=
- =?utf-8?B?MFQ0SGNGd1ZIUVJZamVyaUp3ckJjdFppODUrRGxXQU5ldS9yNW1ZVEJ5a2Jt?=
- =?utf-8?B?R01tZmRocnhiVUQ2TlprZDIvODE1RGoyV2tRaUlSQWZnMnQrVmZkWHpHYUQ1?=
- =?utf-8?B?ZWpMSDVvdUkxaXBvYllvazNpRUtrczJWcXgyL3FnczRURzA2RE9LemJ6N1Fq?=
- =?utf-8?B?K0lwWmtpMXFLUTJXSTl1aktOVm9NcUhwR1lwazF4Z2VhaWZXTFNYQ2RMQ3Yw?=
- =?utf-8?B?Mm12TTVweTFYcHkrOVF2eEpPK1VRcWxKRUhhUWNKVlRiQk4yK2pKem9IdUlu?=
- =?utf-8?B?RndBUFhDdmY5Yytxa3k3ZGgyNFhWeVUrbVplVjgvclJod3ZFZmF2QXIxZFlV?=
- =?utf-8?B?eVRQYUhDWGJOYnQzRllWNWNTa2U3czlWMFBCNklZWEppN29kbXBBVkhjMTdL?=
- =?utf-8?B?ODNRbXZaSWpCNlZhZHhXZkRvelpWUVVWYTVWVW9YTXdlTnpaeFQrV1hwZTZJ?=
- =?utf-8?B?cnh6eWtIR3B1NWkrdzZMcGdhSEtoQ3l5Y1N2N2N1WWYwbnRDQk4yNWRucGp6?=
- =?utf-8?B?VEZaWEM3MUwxYzhsM2t5bHNGRFdRenVpNGw4NmZCSEpDTjVSSkVSSXJ0enZj?=
- =?utf-8?B?Q2tpSTVGMTZEV0NaaDhmMWtGZlQraUlXWXlWY0pUWElKNktlaEw3bDNPdnpV?=
- =?utf-8?B?TXRQL1dreU5nY3RYalN1K2tiL3U2TjBLTzlTUjBqbFcyL25WbjBwa3dkY1RS?=
- =?utf-8?B?cGoyUXZSMVFSUmx5a1NmSXplRG9QYWkyMXpSMkFtUmdYeUxSVVVJN1VtaVh1?=
- =?utf-8?B?N1ZqNm1YdVJWaHpPdllBQ0Z1elRhdStsUzlyK1U5bE1CdDNTMEhvYVk3amhN?=
- =?utf-8?B?elB1dWpPOTZjUXE2NG9oRFRiOThDMnVSZGVYazJZL2xIQWhVc0Q2bGl0ZWNN?=
- =?utf-8?B?UzhxMnBpcTNSZnE4Ym0wS212V2l6QlB1VzVqb2d0aXJCM3Q3WTJvUGRpUGdk?=
- =?utf-8?B?TW5xSUJ3SUZsR2hYLzZ4ZFd0UnoxdS9ybUtUMWpBNWpZM21uZ2s3RkdBVjVP?=
- =?utf-8?B?alovUDNsZXRxWEJDZ1RaQnhVSDFPbG1kTlYxUi9uNE9GQWszQjZZZmI0bGJJ?=
- =?utf-8?B?bTRsK0FQdC9RVloxSkl4dVNLTFpKZVdJOHBFZ1NKSDdqQzZGMCt4QnJCSjdw?=
- =?utf-8?B?Z1J5SUxHYitGSElaSWpvY1ZwT1pZbDU0d25KcjAvWWNyN3cyMTBCTUFwM0Jj?=
- =?utf-8?B?MVhzUmdIVkNMZDdCeHFGUVN0cmRvN2lWYytIRGtpeDdUVm5qUkVGekNNMWVq?=
- =?utf-8?B?TTFYK2V1OW9IL0M5di9keFBCczdoODh4blRkQ2dFZU9YYzZUZ2MwN2kxSThz?=
- =?utf-8?B?b3c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?utf-8?B?Si9ka3YrT2h6dUhHMnRDYVFtYlBvT0E5WHlURWowaEw3QVZNd0p2TUp2MzNK?=
- =?utf-8?B?RzZmTmo5NG10K0ozMlQ5c0tpaEVxdzZ5eDhaNHdudEptTDE1RVpKYk1yd0Fj?=
- =?utf-8?B?R2VIRW1pMnB0MzZ6QSs3NGFiZkZqa0V0Q2lEQnlFcFNFa0JlLzRIUkV4aWdj?=
- =?utf-8?B?ekp5Tmh5ck02MUY2dGtaN01Obk55ODVQS0dLWEZuNnVvbXp2UW4wek5wVFZK?=
- =?utf-8?B?alVRN0E4aUNxMVpVVzBJS3BrUlhOaGNjWDBDbUNLNHlVK3krZVdmeEJFSlU0?=
- =?utf-8?B?SFpMWXgvalF6REZWTXA4L21ERlN1VEtGV0tNUlp3MnBtTnpvOFZNUkFMTHhD?=
- =?utf-8?B?VzdCc1VVVlZncVBoc1BoMWxmNXB4WEltNThJRmV1WVFWNmo5OGFmemVkOTUy?=
- =?utf-8?B?elNGQy9YWVlKVzh0Ry9HcUVGLzM0RGlNSjhYQlRuQXBQeUFKMFdhRDVET2t2?=
- =?utf-8?B?VFNVdVEydnU0aWg4NEFlczVyS2g3dGFwVFJVZTNFeDFGYm43ZllTVk1nRHNq?=
- =?utf-8?B?N0UxcHY4bDJ2aHBIMjRra1dHSDVseS82NGZzOUx6QWRYOHlXTUxMbXQ2QnJ6?=
- =?utf-8?B?NVd6ZHdOYVVYdmU1azNaOU1henFPOWZiVTRkOVJ1TUU3RUNNeE9TY0pVZjhN?=
- =?utf-8?B?Q0ZHZ2NXYWg5SllDc0F2eW1wRUZTZWtidzQ2NTh2MG9XRE40aGV6N1FQc0tu?=
- =?utf-8?B?Y3VTSlF5ZEZtUVYyb21MZUI5cncxcjF2K3VvZ1JVMVNhR0IwdFRUUjFQT1di?=
- =?utf-8?B?NVVlNURnSnllR09uWFEzYzVwbmxJbWtMVHU0Z24vMWZXSjhsSWF2NHFjODZs?=
- =?utf-8?B?b0hSUkozc1VKZlJqaWw0QU1mWHJCOXUyNmt5K2ZGSDJ5bkNRdGhsVGFOcHFX?=
- =?utf-8?B?ODJEZVliTW1MWXJUTnQ3QmZSQmNpLzhuUzB3Tkh3dzFveUdyTzhtQWtFWUpY?=
- =?utf-8?B?Ulh3bVBpcFFUN1VEUUhoTWIweXJPMkRKWXVETStGZ2Q3UThYd1lYMnRTWG43?=
- =?utf-8?B?STNlK0w2WkVEV2h2aUJRalpaOVZWVnp5R1AvODlGaFJQME80ZnNkL3RYSlhu?=
- =?utf-8?B?U0ljMlhXek5QT3ptN0JtTCtRVFBEd2w3L1Q3QnBXTkFPS0s1WkpBNmwwdTBE?=
- =?utf-8?B?RnMzNUR0ditVNCs5cUdVNkRGcDVURnRGdEgvbXJmYUlzalFWc0YzMHZGaENq?=
- =?utf-8?B?YlJEU1NQaUg1TnQrRnFhUCtVbDJhQzBuNWI5MHlPZ2FQeWlLUGg0TGNvKzlw?=
- =?utf-8?B?ckh4UklURTFjZDNFOE8yWG4rKyttSjJwaFdyamNET3Ryek01NXNxckc2eGVD?=
- =?utf-8?B?bGpvdTdRaXRHbDV4dXRGY1ZES2NjcVJoYUkvSzVTWFZXWmNuaG53RnFzSk8r?=
- =?utf-8?B?dUFXdkJYMlN0OGZibVhpUldHa2RtbW9MUFJ3cldKQXN2M3FMZHNRWFJINDFC?=
- =?utf-8?B?STJTbmxmZzZpQm5ycFViV08xS0NmYTFBbU9GenRHZnY4aWZGMVJrTzc4UDl4?=
- =?utf-8?B?dzB2RVlPamJOMk4ydzhoVXBrQ1dPbzFHNkRDQ3lSVkNRSkpJVFBFZXE3U1Vo?=
- =?utf-8?B?c0UydUFzZzN4MDY2UWVZY1MzdzJ2VjN2WDc2S3lWZWY3UWlrRjN6dGQ1UVQr?=
- =?utf-8?B?bWpZSUJyek1sLy9ycGRXMG1ubGtEb1pESmhTVnpDRDNnT1ZRem0remJ4N2lJ?=
- =?utf-8?B?R1o5K1JaUjM5VGx6YlQ0Y1FOTWFIV3RYVVVsUzBmQ0hIZGNZQms0dUx1SWdn?=
- =?utf-8?B?VStJVXF6WW1FSk1OY1FxaHErUjBrc2hyL3ZKTlRnZm9DVnhlSHdmZmRvSENp?=
- =?utf-8?B?cm9RMWo4dHU1R0Q0cDE5R1owNU1GWndXMmp0RVQ4NjVBeWpkK3pmWVFZcUMz?=
- =?utf-8?B?cnBnUWJ2OVZiL1F4YWdmVkdMZXJtY1A0ZXdRL2szNlpKazJuUjVHb2VjbXFE?=
- =?utf-8?B?YVNJSkpmREtEeFJvL1dYSlZlZ3lObzlTQU5mNzJhYy9NaklGWjRKcm9Ia1dJ?=
- =?utf-8?B?SFZubi9QcENoZitxR0ZDUnE5dXlNdTJQYmdNRDRoaE1YSXU5MjYvVVd6dHRm?=
- =?utf-8?B?cmxUdjVMUEVQVVRnUkxCTXgremxMVTFJM0dPTWg1RnpCZzliSmwyV09STmk3?=
- =?utf-8?B?ZDdEVzNjYWxiTUVBZm9HbnZYRHNNRzVpc01LQXVIQzlvWGEwakt4dU9FZEZO?=
- =?utf-8?B?UFgzSDJjbjFNSDc4bFpYRUx4bkp0UUV3WHdhNkRWbWZaM0ZFcnUveWdxc0xS?=
- =?utf-8?B?QStxcU1YV1FsMFpmUG5oYWhUTUhLUGVaQVBlbUVyNXd5TXNFTTZ0d0o4Sms0?=
- =?utf-8?B?R21sRXhIRC9JckhrdUFBOFROcElGQzgrWnhYbHBHYUdDbHlEd1dLczFnZG5T?=
- =?utf-8?Q?eCtM2TjFxTvnwX6PU8VmORYUhT9qVXd2n9YtL5izrv+2m?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-1: 
-	RSg8COh8KMv9zmm6BiyCSzOIU9DuX+9ZR52u8GcfYMhDSivFvwlP/muheXasVYHms+DmrOJHfOGSDOfvBbKvboM3G8gODI/6RXnwWvxCOrsRBP50vgIU/Mv3ovVNVJj1T1ajgr4COO3fweeFru+3jzCqK6PdUC1U7kYJ++6qDI6D1H4T4NCiYqVAEQlAlQG28IixWJlg7vvc6hlgbGqjxXVzf4d2Y8Ey4wr0v7MsFYYXJAr3g34Cgxh+ib/SCLeZp67h/7t15UbU2INhxGetp7JS6O8viSSkUOwqOxhehj1107FrLcp3UCwhTrW55DeN5tOLsm8kxQHCg60Mg6uMTX0J9Ef1IAaoWZ8ehdTiMO+0kvFhHpV/SEt3+nerwu92CzmXQc8g2vLWnuDQtG9avF3+cGKWqGfAUvKtbJW078O6DsB6KiiUf7IfFKKT3yxn7G4avUY4F1AIyg==
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d78df0b-a920-44a6-a61b-08db7d90494f
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2023 19:44:46.4438
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: d6ODCCFmcmrDfb3fQBoPrTBqeCORdzcpbZzQ5vXXxqCzmSp7YtrZYkWXM6QmjfEc47Z2Zx8mNcjbZU/4JKtqaiF0syAtqjgOxrtBdvQi4bs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR10MB5542
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-05_10,2023-07-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2307050179
-X-Proofpoint-GUID: BkVD1xxSCy528DZdHFEVJL01V5VeAPCj
-X-Proofpoint-ORIG-GUID: BkVD1xxSCy528DZdHFEVJL01V5VeAPCj
+In-Reply-To: <20230629075538.4063701-1-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8AxjiMyIaZk2qQdAA--.48946S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj9fXoW3KF47Ar4fGF17XF1UtFW7Jrc_yoW8GrW8to
+	WfAFWjqr40gr10k34v9ws0kFWjqryxGr4rZ3srZa98GF4rJ345KFy3Kw4Yya4avF95Wr1U
+	G34UWw4DArZrJFn3l-sFpf9Il3svdjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUOb7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
+Ping message.
+Thanks for your reviewing. Could you please give us further suggestions 
+about LoongArch KVM patch series if you have other good advice. Thanks 
+very much.
 
+Tianrui Zhao
+�� 2023/6/29 ����3:55, Tianrui Zhao д��:
+> This series adds KVM LoongArch support. Loongson 3A5000 supports hardware
+> assisted virtualization. With cpu virtualization, there are separate
+> hw-supported user mode and kernel mode in guest mode. With memory
+> virtualization, there are two-level hw mmu table for guest mode and host
+> mode. Also there is separate hw cpu timer with consant frequency in
+> guest mode, so that vm can migrate between hosts with different freq.
+> Currently, we are able to boot LoongArch Linux Guests.
+>
+> Few key aspects of KVM LoongArch added by this series are:
+> 1. Enable kvm hardware function when kvm module is loaded.
+> 2. Implement VM and vcpu related ioctl interface such as vcpu create,
+>     vcpu run etc. GET_ONE_REG/SET_ONE_REG ioctl commands are use to
+>     get general registers one by one.
+> 3. Hardware access about MMU, timer and csr are emulated in kernel.
+> 4. Hardwares such as mmio and iocsr device are emulated in user space
+>     such as APIC, IPI, pci devices etc.
+>
+> The running environment of LoongArch virt machine:
+> 1. Cross tools to build kernel and uefi:
+>     $ wget https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz
+>     tar -vxf loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz  -C /opt
+>     export PATH=/opt/cross-tools/bin:$PATH
+>     export LD_LIBRARY_PATH=/opt/cross-tools/lib:$LD_LIBRARY_PATH
+>     export LD_LIBRARY_PATH=/opt/cross-tools/loongarch64-unknown-linux-gnu/lib/:$LD_LIBRARY_PATH
+> 2. This series is based on the linux source code:
+>     https://github.com/loongson/linux-loongarch-kvm
+>     Build command:
+>     git checkout kvm-loongarch
+>     make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu- loongson3_defconfig
+>     make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu-
+> 3. QEMU hypervisor with LoongArch supported:
+>     https://github.com/loongson/qemu
+>     Build command:
+>     git checkout kvm-loongarch
+>     ./configure --target-list="loongarch64-softmmu"  --enable-kvm
+>     make
+> 4. Uefi bios of LoongArch virt machine:
+>     Link: https://github.com/tianocore/edk2-platforms/tree/master/Platform/Loongson/LoongArchQemuPkg#readme
+> 5. you can also access the binary files we have already build:
+>     https://github.com/yangxiaojuan-loongson/qemu-binary
+> The command to boot loongarch virt machine:
+>     $ qemu-system-loongarch64 -machine virt -m 4G -cpu la464 \
+>     -smp 1 -bios QEMU_EFI.fd -kernel vmlinuz.efi -initrd ramdisk \
+>     -serial stdio   -monitor telnet:localhost:4495,server,nowait \
+>     -append "root=/dev/ram rdinit=/sbin/init console=ttyS0,115200" \
+>     --nographic
+>
+> Changes for v16:
+> 1. Free allocated memory of vmcs,kvm_loongarch_ops in kvm module init,
+> exit to avoid memory leak problem.
+> 2. Simplify some assemble codes in switch.S which are necessary to be
+> replaced with pseudo-instructions. And any other instructions do not need
+> to be replaced anymore.
+> 3. Add kvm_{save,restore}_guest_gprs macros to replace these ld.d,st.d
+> guest regs instructions when vcpu world switch.
+> 4. It is more secure to disable irq when flush guest tlb by gpa, so replace
+> preempt_disable with loacl_irq_save in kvm_flush_tlb_gpa.
+>
+> Changes for v15:
+> 1. Re-order some macros and variables in LoongArch kvm headers, put them
+> together which have the same meaning.
+> 2. Make some function definitions in one line, as it is not needed to split
+> them.
+> 3. Re-name some macros such as KVM_REG_LOONGARCH_GPR.
+>
+> Changes for v14:
+> 1. Remove the macro CONFIG_KVM_GENERIC_HARDWARE_ENABLING in
+> loongarch/kvm/main.c, as it is not useful.
+> 2. Add select KVM_GENERIC_HARDWARE_ENABLING in loongarch/kvm/Kconfig,
+> as it is used by virt/kvm.
+> 3. Fix the LoongArch KVM source link in MAINTAINERS.
+> 4. Improve LoongArch KVM documentation, such as add comment for
+> LoongArch kvm_regs.
+>
+> Changes for v13:
+> 1. Remove patch-28 "Implement probe virtualization when cpu init", as the
+> virtualization information about FPU,PMP,LSX in guest.options,options_dyn
+> is not used and the gcfg reg value can be read in kvm_hardware_enable, so
+> remove the previous cpu_probe_lvz function.
+> 2. Fix vcpu_enable_cap interface, it should return -EINVAL directly, as
+> FPU cap is enable by default, and do not support any other caps now.
+> 3. Simplify the jirl instruction with jr when without return addr,
+> simplify case HW0 ... HW7 statment in interrupt.c
+> 4. Rename host_stack,host_gp in kvm_vcpu_arch to host_sp,host_tp.
+> 5. Remove 'cpu' parameter in _kvm_check_requests, as 'cpu' is not used,
+> and remove 'cpu' parameter in kvm_check_vmid function, as it can get
+> cpu number by itself.
+>
+> Changes for v12:
+> 1. Improve the gcsr write/read/xchg interface to avoid the previous
+> instruction statment like parse_r and make the code easy understanding,
+> they are implemented in asm/insn-def.h and the instructions consistent
+> of "opcode" "rj" "rd" "simm14" arguments.
+> 2. Fix the maintainers list of LoongArch KVM.
+>
+> Changes for v11:
+> 1. Add maintainers for LoongArch KVM.
+>
+> Changes for v10:
+> 1. Fix grammatical problems in LoongArch documentation.
+> 2. It is not necessary to save or restore the LOONGARCH_CSR_PGD when
+> vcpu put and vcpu load, so we remove it.
+>
+> Changes for v9:
+> 1. Apply the new defined interrupt number macros in loongarch.h to kvm,
+> such as INT_SWI0, INT_HWI0, INT_TI, INT_IPI, etc. And remove the
+> previous unused macros.
+> 2. Remove unused variables in kvm_vcpu_arch, and reorder the variables
+> to make them more standard.
+>
+> Changes for v8:
+> 1. Adjust the cpu_data.guest.options structure, add the ases flag into
+> it, and remove the previous guest.ases. We do this to keep consistent
+> with host cpu_data.options structure.
+> 2. Remove the "#include <asm/kvm_host.h>" in some files which also
+> include the "<linux/kvm_host.h>". As linux/kvm_host.h already include
+> the asm/kvm_host.h.
+> 3. Fix some unstandard spelling and grammar errors in comments, and
+> improve a little code format to make it easier and standard.
+>
+> Changes for v7:
+> 1. Fix the kvm_save/restore_hw_gcsr compiling warnings reported by
+> kernel test robot. The report link is:
+> https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp@intel.com/
+> 2. Fix loongarch kvm trace related compiling problems.
+>
+> Changes for v6:
+> 1. Fix the Documentation/virt/kvm/api.rst compile warning about
+> loongarch parts.
+>
+> Changes for v5:
+> 1. Implement get/set mp_state ioctl interface, and only the
+> KVM_MP_STATE_RUNNABLE state is supported now, and other states
+> will be completed in the future. The state is also used when vcpu
+> run idle instruction, if vcpu state is changed to RUNNABLE, the
+> vcpu will have the possibility to be woken up.
+> 2. Supplement kvm document about loongarch-specific part, such as add
+> api introduction for GET/SET_ONE_REG, GET/SET_FPU, GET/SET_MP_STATE,
+> etc.
+> 3. Improve the kvm_switch_to_guest function in switch.S, remove the
+> previous tmp,tmp1 arguments and replace it with t0,t1 reg.
+>
+> Changes for v4:
+> 1. Add a csr_need_update flag in _vcpu_put, as most csr registers keep
+> unchanged during process context switch, so we need not to update it
+> every time. We can do this only if the soft csr is different form hardware.
+> That is to say all of csrs should update after vcpu enter guest, as for
+> set_csr_ioctl, we have written soft csr to keep consistent with hardware.
+> 2. Improve get/set_csr_ioctl interface, we set SW or HW or INVALID flag
+> for all csrs according to it's features when kvm init. In get/set_csr_ioctl,
+> if csr is HW, we use gcsrrd/ gcsrwr instruction to access it, else if csr is
+> SW, we use software to emulate it, and others return false.
+> 3. Add set_hw_gcsr function in csr_ops.S, and it is used in set_csr_ioctl.
+> We have splited hw gcsr into three parts, so we can calculate the code offset
+> by gcsrid and jump here to run the gcsrwr instruction. We use this function to
+> make the code easier and avoid to use the previous SET_HW_GCSR(XXX) interface.
+> 4. Improve kvm mmu functions, such as flush page table and make clean page table
+> interface.
+>
+> Changes for v3:
+> 1. Remove the vpid array list in kvm_vcpu_arch and use a vpid variable here,
+> because a vpid will never be recycled if a vCPU migrates from physical CPU A
+> to B and back to A.
+> 2. Make some constant variables in kvm_context to global such as vpid_mask,
+> guest_eentry, enter_guest, etc.
+> 3. Add some new tracepoints, such as kvm_trace_idle, kvm_trace_cache,
+> kvm_trace_gspr, etc.
+> 4. There are some duplicate codes in kvm_handle_exit and kvm_vcpu_run,
+> so we move it to a new function kvm_pre_enter_guest.
+> 5. Change the RESUME_HOST, RESUME_GUEST value, return 1 for resume guest
+> and "<= 0" for resume host.
+> 6. Fcsr and fpu registers are saved/restored together.
+>
+> Changes for v2:
+> 1. Seprate the original patch-01 and patch-03 into small patches, and the
+> patches mainly contain kvm module init, module exit, vcpu create, vcpu run,
+> etc.
+> 2. Remove the original KVM_{GET,SET}_CSRS ioctl in the kvm uapi header,
+> and we use the common KVM_{GET,SET}_ONE_REG to access register.
+> 3. Use BIT(x) to replace the "1 << n_bits" statement.
+>
+> Tianrui Zhao (30):
+>    LoongArch: KVM: Add kvm related header files
+>    LoongArch: KVM: Implement kvm module related interface
+>    LoongArch: KVM: Implement kvm hardware enable, disable interface
+>    LoongArch: KVM: Implement VM related functions
+>    LoongArch: KVM: Add vcpu related header files
+>    LoongArch: KVM: Implement vcpu create and destroy interface
+>    LoongArch: KVM: Implement vcpu run interface
+>    LoongArch: KVM: Implement vcpu handle exit interface
+>    LoongArch: KVM: Implement vcpu get, vcpu set registers
+>    LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
+>    LoongArch: KVM: Implement fpu related operations for vcpu
+>    LoongArch: KVM: Implement vcpu interrupt operations
+>    LoongArch: KVM: Implement misc vcpu related interfaces
+>    LoongArch: KVM: Implement vcpu load and vcpu put operations
+>    LoongArch: KVM: Implement vcpu status description
+>    LoongArch: KVM: Implement update VM id function
+>    LoongArch: KVM: Implement virtual machine tlb operations
+>    LoongArch: KVM: Implement vcpu timer operations
+>    LoongArch: KVM: Implement kvm mmu operations
+>    LoongArch: KVM: Implement handle csr excption
+>    LoongArch: KVM: Implement handle iocsr exception
+>    LoongArch: KVM: Implement handle idle exception
+>    LoongArch: KVM: Implement handle gspr exception
+>    LoongArch: KVM: Implement handle mmio exception
+>    LoongArch: KVM: Implement handle fpu exception
+>    LoongArch: KVM: Implement kvm exception vector
+>    LoongArch: KVM: Implement vcpu world switch
+>    LoongArch: KVM: Enable kvm config and add the makefile
+>    LoongArch: KVM: Supplement kvm document about LoongArch-specific part
+>    LoongArch: KVM: Add maintainers for LoongArch KVM
+>
+>   Documentation/virt/kvm/api.rst             |  70 +-
+>   MAINTAINERS                                |  12 +
+>   arch/loongarch/Kbuild                      |   1 +
+>   arch/loongarch/Kconfig                     |   2 +
+>   arch/loongarch/configs/loongson3_defconfig |   2 +
+>   arch/loongarch/include/asm/insn-def.h      |  55 ++
+>   arch/loongarch/include/asm/inst.h          |  16 +
+>   arch/loongarch/include/asm/kvm_csr.h       | 231 ++++++
+>   arch/loongarch/include/asm/kvm_host.h      | 251 ++++++
+>   arch/loongarch/include/asm/kvm_types.h     |  11 +
+>   arch/loongarch/include/asm/kvm_vcpu.h      |  97 +++
+>   arch/loongarch/include/asm/loongarch.h     |  20 +-
+>   arch/loongarch/include/uapi/asm/kvm.h      | 106 +++
+>   arch/loongarch/kernel/asm-offsets.c        |  32 +
+>   arch/loongarch/kvm/Kconfig                 |  39 +
+>   arch/loongarch/kvm/Makefile                |  22 +
+>   arch/loongarch/kvm/csr_ops.S               |  76 ++
+>   arch/loongarch/kvm/exit.c                  | 707 +++++++++++++++++
+>   arch/loongarch/kvm/interrupt.c             | 113 +++
+>   arch/loongarch/kvm/main.c                  | 361 +++++++++
+>   arch/loongarch/kvm/mmu.c                   | 725 +++++++++++++++++
+>   arch/loongarch/kvm/switch.S                | 256 ++++++
+>   arch/loongarch/kvm/timer.c                 | 266 +++++++
+>   arch/loongarch/kvm/tlb.c                   |  34 +
+>   arch/loongarch/kvm/trace.h                 | 168 ++++
+>   arch/loongarch/kvm/vcpu.c                  | 866 +++++++++++++++++++++
+>   arch/loongarch/kvm/vm.c                    |  76 ++
+>   arch/loongarch/kvm/vmid.c                  |  66 ++
+>   include/uapi/linux/kvm.h                   |   9 +
+>   29 files changed, 4676 insertions(+), 14 deletions(-)
+>   create mode 100644 arch/loongarch/include/asm/insn-def.h
+>   create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+>   create mode 100644 arch/loongarch/include/asm/kvm_host.h
+>   create mode 100644 arch/loongarch/include/asm/kvm_types.h
+>   create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
+>   create mode 100644 arch/loongarch/include/uapi/asm/kvm.h
+>   create mode 100644 arch/loongarch/kvm/Kconfig
+>   create mode 100644 arch/loongarch/kvm/Makefile
+>   create mode 100644 arch/loongarch/kvm/csr_ops.S
+>   create mode 100644 arch/loongarch/kvm/exit.c
+>   create mode 100644 arch/loongarch/kvm/interrupt.c
+>   create mode 100644 arch/loongarch/kvm/main.c
+>   create mode 100644 arch/loongarch/kvm/mmu.c
+>   create mode 100644 arch/loongarch/kvm/switch.S
+>   create mode 100644 arch/loongarch/kvm/timer.c
+>   create mode 100644 arch/loongarch/kvm/tlb.c
+>   create mode 100644 arch/loongarch/kvm/trace.h
+>   create mode 100644 arch/loongarch/kvm/vcpu.c
+>   create mode 100644 arch/loongarch/kvm/vm.c
+>   create mode 100644 arch/loongarch/kvm/vmid.c
+>
 
-On 7/5/23 11:23, Eric DeVolder wrote:
-> 
-> 
-> On 7/5/23 10:49, Nathan Chancellor wrote:
->> Hi Eric,
->>
->> On Wed, Jul 05, 2023 at 10:20:03AM -0400, Eric DeVolder wrote:
->>> The kexec and crash kernel options are provided in the common
->>> kernel/Kconfig.kexec. Utilize the common options and provide
->>> the ARCH_SUPPORTS_ and ARCH_SELECTS_ entries to recreate the
->>> equivalent set of KEXEC and CRASH options.
->>>
->>> NOTE: The original Kconfig has a KEXEC_SIG which depends on
->>> MODULE_SIG_FORMAT. However, attempts to keep the MODULE_SIG_FORMAT
->>> dependency (using the strategy outlined in this series, and other
->>> techniques) results in 'error: recursive dependency detected'
->>> on CRYPTO.
->>>
->>> Per Alexander Gordeev <agordeev@linux.ibm.com>: "the MODULE_SIG_FORMAT
->>> dependency was introduced with [git commit below] and in fact was not
->>> necessary, since s390 did/does not use mod_check_sig() anyway.
->>>
->>>   commit c8424e776b09 ("MODSIGN: Export module signature definitions")
->>>
->>> MODULE_SIG_FORMAT is needed to select SYSTEM_DATA_VERIFICATION. But
->>> SYSTEM_DATA_VERIFICATION is also selected by FS_VERITY*, so dropping
->>> MODULE_SIG_FORMAT does not hurt."
->>>
->>> Therefore, the solution is to drop the MODULE_SIG_FORMAT dependency
->>> from KEXEC_SIG. Still results in equivalent .config files for s390.
->>>
->>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->>> Acked-by: Alexander Gordeev <agordeev@linux.ibm.com>
->>> ---
->>>   arch/s390/Kconfig | 65 ++++++++++++++---------------------------------
->>>   1 file changed, 19 insertions(+), 46 deletions(-)
->>>
->>> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
->>> index 5b39918b7042..5d4fbbfdd1cd 100644
->>> --- a/arch/s390/Kconfig
->>> +++ b/arch/s390/Kconfig
->>> @@ -244,6 +244,25 @@ config PGTABLE_LEVELS
->>>   source "kernel/livepatch/Kconfig"
->>> +config ARCH_DEFAULT_KEXEC
->>> +    def_bool y
->>> +
->>> +config ARCH_SUPPORTS_KEXEC
->>> +    def_bool y
->>> +
->>> +config ARCH_SUPPORTS_KEXEC_FILE
->>> +    def_bool CRYPTO && CRYPTO_SHA256 && CRYPTO_SHA256_S390
->>> +
->>> +config ARCH_HAS_KEXEC_PURGATORY
->>> +    def_bool KEXEC_FILE
->>> +
->>> +config ARCH_SUPPORTS_CRASH_DUMP
->>> +    def_bool y
->>> +    help
->>> +      Refer to <file:Documentation/s390/zfcpdump.rst> for more details on this.
->>> +      This option also enables s390 zfcpdump.
->>> +      See also <file:Documentation/s390/zfcpdump.rst>
->>> +
->>>   menu "Processor type and features"
->>>   config HAVE_MARCH_Z10_FEATURES
->>> @@ -482,36 +501,6 @@ config SCHED_TOPOLOGY
->>>   source "kernel/Kconfig.hz"
->>> -config KEXEC
->>> -    def_bool y
->>> -    select KEXEC_CORE
->>> -
->>> -config KEXEC_FILE
->>> -    bool "kexec file based system call"
->>> -    select KEXEC_CORE
->>> -    depends on CRYPTO
->>> -    depends on CRYPTO_SHA256
->>> -    depends on CRYPTO_SHA256_S390
->>> -    help
->>> -      Enable the kexec file based system call. In contrast to the normal
->>> -      kexec system call this system call takes file descriptors for the
->>> -      kernel and initramfs as arguments.
->>> -
->>> -config ARCH_HAS_KEXEC_PURGATORY
->>> -    def_bool y
->>> -    depends on KEXEC_FILE
->>> -
->>> -config KEXEC_SIG
->>> -    bool "Verify kernel signature during kexec_file_load() syscall"
->>> -    depends on KEXEC_FILE && MODULE_SIG_FORMAT
->>> -    help
->>> -      This option makes kernel signature verification mandatory for
->>> -      the kexec_file_load() syscall.
->>> -
->>> -      In addition to that option, you need to enable signature
->>> -      verification for the corresponding kernel image type being
->>> -      loaded in order for this to work.
->>> -
->>>   config KERNEL_NOBP
->>>       def_bool n
->>>       prompt "Enable modified branch prediction for the kernel by default"
->>> @@ -733,22 +722,6 @@ config VFIO_AP
->>>   endmenu
->>> -menu "Dump support"
->>> -
->>> -config CRASH_DUMP
->>> -    bool "kernel crash dumps"
->>> -    select KEXEC
->>> -    help
->>> -      Generate crash dump after being started by kexec.
->>> -      Crash dump kernels are loaded in the main kernel with kexec-tools
->>> -      into a specially reserved region and then later executed after
->>> -      a crash by kdump/kexec.
->>> -      Refer to <file:Documentation/s390/zfcpdump.rst> for more details on this.
->>> -      This option also enables s390 zfcpdump.
->>> -      See also <file:Documentation/s390/zfcpdump.rst>
->>> -
->>> -endmenu
->>> -
->>>   config CCW
->>>       def_bool y
->>> -- 
->>> 2.31.1
->>>
->>
->> I just bisected the following build failure visible with 'ARCH=s390
->> allnoconfig' to this change as commit 842ce0e1dafa ("s390/kexec:
->> refactor for kernel/Kconfig.kexec") in -next.
->>
->>    arch/s390/kernel/machine_kexec.c:120:37: warning: 'struct kimage' declared inside parameter 
->> list will not be visible outside of this definition or declaration
->>      120 | static bool kdump_csum_valid(struct kimage *image)
->>          |                                     ^~~~~~
->>    arch/s390/kernel/machine_kexec.c:188:34: warning: 'struct kimage' declared inside parameter 
->> list will not be visible outside of this definition or declaration
->>      188 | int machine_kexec_prepare(struct kimage *image)
->>          |                                  ^~~~~~
->>    arch/s390/kernel/machine_kexec.c: In function 'machine_kexec_prepare':
->>    arch/s390/kernel/machine_kexec.c:192:18: error: invalid use of undefined type 'struct kimage'
->>      192 |         if (image->type == KEXEC_TYPE_CRASH)
->>          |                  ^~
->>    arch/s390/kernel/machine_kexec.c:192:28: error: 'KEXEC_TYPE_CRASH' undeclared (first use in 
->> this function); did you mean 'KEXEC_ON_CRASH'?
->>      192 |         if (image->type == KEXEC_TYPE_CRASH)
->>          |                            ^~~~~~~~~~~~~~~~
->>          |                            KEXEC_ON_CRASH
->>    arch/s390/kernel/machine_kexec.c:192:28: note: each undeclared identifier is reported only once 
->> for each function it appears in
->>    arch/s390/kernel/machine_kexec.c:196:18: error: invalid use of undefined type 'struct kimage'
->>      196 |         if (image->type != KEXEC_TYPE_DEFAULT)
->>          |                  ^~
->>    arch/s390/kernel/machine_kexec.c:196:28: error: 'KEXEC_TYPE_DEFAULT' undeclared (first use in 
->> this function); did you mean 'KEXEC_ARCH_DEFAULT'?
->>      196 |         if (image->type != KEXEC_TYPE_DEFAULT)
->>          |                            ^~~~~~~~~~~~~~~~~~
->>          |                            KEXEC_ARCH_DEFAULT
->>    In file included from arch/s390/include/asm/thread_info.h:31,
->>                     from include/linux/thread_info.h:60,
->>                     from arch/s390/include/asm/preempt.h:6,
->>                     from include/linux/preempt.h:79,
->>                     from arch/s390/include/asm/percpu.h:5,
->>                     from include/linux/irqflags.h:18,
->>                     from include/linux/rcupdate.h:26,
->>                     from include/linux/rculist.h:11,
->>                     from include/linux/pid.h:5,
->>                     from include/linux/sched.h:14,
->>                     from include/linux/ratelimit.h:6,
->>                     from include/linux/dev_printk.h:16,
->>                     from include/linux/device.h:15,
->>                     from arch/s390/kernel/machine_kexec.c:9:
->>    arch/s390/kernel/machine_kexec.c:200:48: error: invalid use of undefined type 'struct kimage'
->>      200 |         reboot_code_buffer = page_to_virt(image->control_code_page);
->>          |                                                ^~
->>    arch/s390/include/asm/page.h:186:58: note: in definition of macro '__va'
->>      186 | #define __va(x)                 ((void *)(unsigned long)(x))
->>          |                                                          ^
->>    arch/s390/include/asm/page.h:194:38: note: in expansion of macro 'pfn_to_phys'
->>      194 | #define pfn_to_virt(pfn)        __va(pfn_to_phys(pfn))
->>          |                                      ^~~~~~~~~~~
->>    arch/s390/include/asm/page.h:199:33: note: in expansion of macro 'pfn_to_virt'
->>      199 | #define page_to_virt(page)      pfn_to_virt(page_to_pfn(page))
->>          |                                 ^~~~~~~~~~~
->>    include/asm-generic/memory_model.h:64:21: note: in expansion of macro '__page_to_pfn'
->>       64 | #define page_to_pfn __page_to_pfn
->>          |                     ^~~~~~~~~~~~~
->>    arch/s390/kernel/machine_kexec.c:200:30: note: in expansion of macro 'page_to_virt'
->>      200 |         reboot_code_buffer = page_to_virt(image->control_code_page);
->>          |                              ^~~~~~~~~~~~
->>    arch/s390/kernel/machine_kexec.c: At top level:
->>    arch/s390/kernel/machine_kexec.c:207:35: warning: 'struct kimage' declared inside parameter 
->> list will not be visible outside of this definition or declaration
->>      207 | void machine_kexec_cleanup(struct kimage *image)
->>          |                                   ^~~~~~
->>    arch/s390/kernel/machine_kexec.c: In function '__do_machine_kexec':
->>    arch/s390/kernel/machine_kexec.c:243:40: error: invalid use of undefined type 'struct kimage'
->>      243 |         data_mover = page_to_phys(image->control_code_page);
->>          |                                        ^~
->>    arch/s390/include/asm/page.h:189:35: note: in definition of macro 'pfn_to_phys'
->>      189 | #define pfn_to_phys(pfn)        ((pfn) << PAGE_SHIFT)
->>          |                                   ^~~
->>    include/asm-generic/memory_model.h:64:21: note: in expansion of macro '__page_to_pfn'
->>       64 | #define page_to_pfn __page_to_pfn
->>          |                     ^~~~~~~~~~~~~
->>    arch/s390/kernel/machine_kexec.c:243:22: note: in expansion of macro 'page_to_phys'
->>      243 |         data_mover = page_to_phys(image->control_code_page);
->>          |                      ^~~~~~~~~~~~
->>    arch/s390/kernel/machine_kexec.c:244:36: error: invalid use of undefined type 'struct kimage'
->>      244 |         entry = virt_to_phys(&image->head);
->>          |                                    ^~
->>    In file included from arch/s390/kernel/machine_kexec.c:27:
->>    arch/s390/kernel/machine_kexec.c:252:40: error: invalid use of undefined type 'struct kimage'
->>      252 |                    unsigned long, image->start,
->>          |                                        ^~
->>    arch/s390/include/asm/stacktrace.h:101:32: note: in definition of macro 'CALL_LARGS_2'
->>      101 |         long arg2 = (long)(t2)(a2)
->>          |                                ^~
->>    arch/s390/include/asm/stacktrace.h:216:9: note: in expansion of macro 'CALL_LARGS_3'
->>      216 |         CALL_LARGS_##nr(__VA_ARGS__);                                   \
->>          |         ^~~~~~~~~~~
->>    arch/s390/kernel/machine_kexec.c:250:9: note: in expansion of macro 'call_nodat'
->>      250 |         call_nodat(3, void, (relocate_kernel_t)data_mover,
->>          |         ^~~~~~~~~~
->>    In file included from include/linux/irqflags.h:15:
->>    arch/s390/kernel/machine_kexec.c:252:40: error: invalid use of undefined type 'struct kimage'
->>      252 |                    unsigned long, image->start,
->>          |                                        ^~
->>    include/linux/typecheck.h:11:16: note: in definition of macro 'typecheck'
->>       11 |         typeof(x) __dummy2; \
->>          |                ^
->>    arch/s390/include/asm/stacktrace.h:136:9: note: in expansion of macro 'CALL_TYPECHECK_2'
->>      136 |         CALL_TYPECHECK_2(__VA_ARGS__);                                  \
->>          |         ^~~~~~~~~~~~~~~~
->>    arch/s390/include/asm/stacktrace.h:219:9: note: in expansion of macro 'CALL_TYPECHECK_3'
->>      219 |         CALL_TYPECHECK_##nr(__VA_ARGS__);                               \
->>          |         ^~~~~~~~~~~~~~~
->>    arch/s390/kernel/machine_kexec.c:250:9: note: in expansion of macro 'call_nodat'
->>      250 |         call_nodat(3, void, (relocate_kernel_t)data_mover,
->>          |         ^~~~~~~~~~
->>    include/linux/typecheck.h:12:25: warning: comparison of distinct pointer types lacks a cast
->>       12 |         (void)(&__dummy == &__dummy2); \
->>          |                         ^~
->>    arch/s390/include/asm/stacktrace.h:134:9: note: in expansion of macro 'typecheck'
->>      134 |         typecheck(t, a)
->>          |         ^~~~~~~~~
->>    arch/s390/include/asm/stacktrace.h:136:9: note: in expansion of macro 'CALL_TYPECHECK_2'
->>      136 |         CALL_TYPECHECK_2(__VA_ARGS__);                                  \
->>          |         ^~~~~~~~~~~~~~~~
->>    arch/s390/include/asm/stacktrace.h:219:9: note: in expansion of macro 'CALL_TYPECHECK_3'
->>      219 |         CALL_TYPECHECK_##nr(__VA_ARGS__);                               \
->>          |         ^~~~~~~~~~~~~~~
->>    arch/s390/kernel/machine_kexec.c:250:9: note: in expansion of macro 'call_nodat'
->>      250 |         call_nodat(3, void, (relocate_kernel_t)data_mover,
->>          |         ^~~~~~~~~~
->>    arch/s390/kernel/machine_kexec.c: At top level:
->>    arch/s390/kernel/machine_kexec.c:278:27: warning: 'struct kimage' declared inside parameter 
->> list will not be visible outside of this definition or declaration
->>      278 | void machine_kexec(struct kimage *image)
->>          |                           ^~~~~~
->>    arch/s390/kernel/machine_kexec.c: In function 'machine_kexec':
->>    arch/s390/kernel/machine_kexec.c:280:18: error: invalid use of undefined type 'struct kimage'
->>      280 |         if (image->type == KEXEC_TYPE_CRASH && !kdump_csum_valid(image))
->>          |                  ^~
->>    arch/s390/kernel/machine_kexec.c:280:28: error: 'KEXEC_TYPE_CRASH' undeclared (first use in 
->> this function); did you mean 'KEXEC_ON_CRASH'?
->>      280 |         if (image->type == KEXEC_TYPE_CRASH && !kdump_csum_valid(image))
->>          |                            ^~~~~~~~~~~~~~~~
->>          |                            KEXEC_ON_CRASH
->>    arch/s390/kernel/machine_kexec.c:280:66: error: passing argument 1 of 'kdump_csum_valid' from 
->> incompatible pointer type [-Werror=incompatible-pointer-types]
->>      280 |         if (image->type == KEXEC_TYPE_CRASH && !kdump_csum_valid(image))
->>          |                                                                  ^~~~~
->>          |                                                                  |
->>          |                                                                  struct kimage *
->>    arch/s390/kernel/machine_kexec.c:120:45: note: expected 'struct kimage *' but argument is of 
->> type 'struct kimage *'
->>      120 | static bool kdump_csum_valid(struct kimage *image)
->>          |                              ~~~~~~~~~~~~~~~^~~~~
->>    cc1: some warnings being treated as errors
->>
->> I don't think this change is equivalent for s390, which had
->>
->>    config KEXEC
->>        def_bool y
->>        select KEXEC_CORE
->>
->> but it is now the equivalent of
->>
->>    config KEXEC
->>        bool "Enable kexec system call"
->>        default y
->>
->> which enables KEXEC by default but it also allows KEXEC to be disabled
->> for s390 now, because it is a user-visible symbol, not one that is
->> unconditionally enabled no matter what. If s390 can tolerate KEXEC being
->> user selectable, then I assume the fix is just adjusting
->> arch/s390/kernel/Makefile to only build the machine_kexec files when
->> CONFIG_KEXEC_CORE is set:
->>
->> diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
->> index 6b2a051e1f8a..a06b39da95f0 100644
->> --- a/arch/s390/kernel/Makefile
->> +++ b/arch/s390/kernel/Makefile
->> @@ -37,10 +37,10 @@ CFLAGS_unwind_bc.o    += -fno-optimize-sibling-calls
->>   obj-y    := head64.o traps.o time.o process.o earlypgm.o early.o setup.o idle.o vtime.o
->>   obj-y    += processor.o syscall.o ptrace.o signal.o cpcmd.o ebcdic.o nmi.o
->>   obj-y    += debug.o irq.o ipl.o dis.o diag.o vdso.o cpufeature.o
->> -obj-y    += sysinfo.o lgr.o os_info.o machine_kexec.o
->> +obj-y    += sysinfo.o lgr.o os_info.o
->>   obj-y    += runtime_instr.o cache.o fpu.o dumpstack.o guarded_storage.o sthyi.o
->>   obj-y    += entry.o reipl.o relocate_kernel.o kdebugfs.o alternative.o
->> -obj-y    += nospec-branch.o ipl_vmparm.o machine_kexec_reloc.o unwind_bc.o
->> +obj-y    += nospec-branch.o ipl_vmparm.o unwind_bc.o
->>   obj-y    += smp.o text_amode31.o stacktrace.o abs_lowcore.o
->>   extra-y                += vmlinux.lds
->> @@ -66,6 +66,7 @@ obj-$(CONFIG_CRASH_DUMP)    += crash_dump.o
->>   obj-$(CONFIG_UPROBES)        += uprobes.o
->>   obj-$(CONFIG_JUMP_LABEL)    += jump_label.o
->> +obj-$(CONFIG_KEXEC_CORE)    += machine_kexec.o machine_kexec_reloc.o
->>   obj-$(CONFIG_KEXEC_FILE)    += machine_kexec_file.o kexec_image.o
->>   obj-$(CONFIG_KEXEC_FILE)    += kexec_elf.o
->>
->> Otherwise, the prompt for KEXEC could be made conditional on some ARCH
->> symbol so that architectures can opt out of it.
-> 
-> Nathan,
-> Thanks for looking at this! I've been receiving broken build info from Andrew's
-> machinery. I've investigated and learned that CRASH_DUMP can be specified without
-> KEXEC. I also realized that s390 originally had this right, but in the conversion
-> I did, I got it wrong.
-> 
-> This v4 series corrects that by having CRASH_DUMP select KEXEC.
-> 
-> The new KEXEC looks like:
-> 
-> config KEXEC
->      bool "Enable kexec system call"
->      default ARCH_DEFAULT_KEXEC
->      depends on ARCH_SUPPORTS_KEXEC
->      select KEXEC_CORE
-> 
-> which appears to be equivalent, I think the CRASH_DUMP issue is the root problem.
-> 
-> In a separate thread with Arnd Bergmann wrt/ arm build issues, he identifies
-> similar problems&solutions as you did, but points out that CRASH_DUMP might still
-> need some refinement; I'm looking into that.
-> 
-> The goal really is to make this series to result in equivalent configs as before,
-> but there are small problems in the conversion that are showing up that I'm working.
-
-Nathan,
-Thanks again for looking at this! Your feedback made me realize that relying on
-'olddefconfig' for equivalence has proven to be inadequate. As a result, I've
-retooled my testing environment to use olddefconfig, allnoconfig and allyesconfig.
-That enhancement has revealed a small number of issues, which I have now fixed.
-
-I'll be posting a v5 once I've worked through all architecture results.
-
-Thanks again!
-eric
-
-> 
-> 
->>
->> As an aside, is this intended for the 6.5 merge window? If not, it
->> shouldn't be in -next at this point, I was surprised to see new broken
->> builds.
->>
->> Cheers,
->> Nathan
-> I'm not going to pretend I know when this will make it...
-> eric
