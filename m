@@ -1,170 +1,261 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8C78622
-	for <loongarch@lists.linux.dev>; Fri,  7 Jul 2023 02:47:48 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8Cx5_HSfKdkHE8BAA--.5114S3;
-	Fri, 07 Jul 2023 10:47:47 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF8zRfKdk_2EgAA--.55042S3;
-	Fri, 07 Jul 2023 10:47:45 +0800 (CST)
-Message-ID: <bdc6eb71-482d-5dd6-d527-c2f2f68dfb38@loongson.cn>
-Date: Fri, 7 Jul 2023 10:47:45 +0800
+Received: from FRA01-MR2-obe.outbound.protection.outlook.com (mail-mr2fra01on2051.outbound.protection.outlook.com [40.107.9.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8137320E0
+	for <loongarch@lists.linux.dev>; Fri,  7 Jul 2023 05:58:39 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hwCCLoiFPbWYWQxR5T2J1/XlTJvoyFumyXZLIm5YVXyvfjrso9+GN0phQOoYYM8P+WbtLNTRoIm0CDO2Rf+Ak1LWYDmVWkg15p2Buitvw3vqeuM31ay7rfIKbsjw6DqHdQo9dv04MEY/TOI0YI8HfpED6Pzrzu7z93NM8u1RhoE7iLOg5rJAGugxm2ZQ5plqZcY0YS+v+MPPxAO5vytVR35kL2wkpxhrPCIRQdEtl27xmjQbSW3bnCM/jTLNFBSdqHAOqY8NDYRp4x7Sb0Q7eACttpOcLxUxPRjKXCh4D097nnX2JCPPZGqF9YvQVY3g1vs6OuB40Qm6rgqxkI+6EA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=02qhPvhImcEK+6g4xrq3f9VO3iQC8nPfxuPOsQJWvyM=;
+ b=f4RjT6wPf2jgnIlSJTlm2cSRu5ZAwVRafyNXdNSNJZ7RJVuiGVAhFpqtkG0pUQ1ibrs2N+yQ14oTP3FgmlJUReojJvOC7uI1JtqUR5AeppRktNidvaDUeNjoprX7SLgLIifjDei9Mi5mO+XSss+5t7uKSbvmf+csLO7yAleYs1XB3NhehG6LwdxGwMhWmzcnMJGzUYyUZ+Gc8sfO6BhhiO684bpbiAqQa33zhhYbVeqYWLJCzei8WwjbXV9O8s3bcqLe14Ya8GoO91flckg5qqQ94jGIp4i2JfIhVT7MSh7l7lATZNjqyzlJ3a0WlTvLgNe+qH7I4KEMYJ4HzxmAhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
+ dkim=pass header.d=csgroup.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=02qhPvhImcEK+6g4xrq3f9VO3iQC8nPfxuPOsQJWvyM=;
+ b=DKngXDpWYQ2kGy9uw1wIKkRMx0mjNq0EvRigxiMZtEsVBmV6kPKbsyUsKykw80hm43g+cQwV/qBjrm9O9s++i9LbrptmirWpLLuFMbbfctDFI3LpLSQHxi4WAP0xCPsiGD2LDF8f+8lAjK0w45pLr5Y2dt0egtyJZrHBQvAmYd32ZORR4N+Cgf6QMwrkZgG2Y2OyPiiKu/J4aGakch3jueFbAp9GU4PIfoWozeHyqppU3KQVcAIB2w+abI5VFOWTiaks+bo3BXMQzOwSpfMjF6/kIdsSKgTBPvb9CWVpy/O0pXlva15Fo2xCOveqVDBr3lR2rnC3C1sWhanWwSXO5A==
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
+ by PR0P264MB2360.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:1e3::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.25; Fri, 7 Jul
+ 2023 05:58:36 +0000
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::802b:33:561c:4217]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::802b:33:561c:4217%4]) with mapi id 15.20.6565.025; Fri, 7 Jul 2023
+ 05:58:36 +0000
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Eric DeVolder <eric.devolder@oracle.com>, "linux@armlinux.org.uk"
+	<linux@armlinux.org.uk>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>, "chenhuacai@kernel.org"
+	<chenhuacai@kernel.org>, "geert@linux-m68k.org" <geert@linux-m68k.org>,
+	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+	"James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@HansenPartnership.com>, "deller@gmx.de" <deller@gmx.de>,
+	"ysato@users.sourceforge.jp" <ysato@users.sourceforge.jp>, "dalias@libc.org"
+	<dalias@libc.org>, "glaubitz@physik.fu-berlin.de"
+	<glaubitz@physik.fu-berlin.de>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-ia64@vger.kernel.org"
+	<linux-ia64@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-m68k@lists.linux-m68k.org"
+	<linux-m68k@lists.linux-m68k.org>, "linux-mips@vger.kernel.org"
+	<linux-mips@vger.kernel.org>, "linux-parisc@vger.kernel.org"
+	<linux-parisc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "linux-sh@vger.kernel.org"
+	<linux-sh@vger.kernel.org>
+CC: "kernel@xen0n.name" <kernel@xen0n.name>, "mpe@ellerman.id.au"
+	<mpe@ellerman.id.au>, "npiggin@gmail.com" <npiggin@gmail.com>,
+	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "palmer@dabbelt.com"
+	<palmer@dabbelt.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+	"hca@linux.ibm.com" <hca@linux.ibm.com>, "gor@linux.ibm.com"
+	<gor@linux.ibm.com>, "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+	"svens@linux.ibm.com" <svens@linux.ibm.com>, "hpa@zytor.com" <hpa@zytor.com>,
+	"keescook@chromium.org" <keescook@chromium.org>, "paulmck@kernel.org"
+	<paulmck@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>,
+	"frederic@kernel.org" <frederic@kernel.org>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "ardb@kernel.org" <ardb@kernel.org>,
+	"samitolvanen@google.com" <samitolvanen@google.com>,
+	"juerg.haefliger@canonical.com" <juerg.haefliger@canonical.com>,
+	"arnd@arndb.de" <arnd@arndb.de>, "rmk+kernel@armlinux.org.uk"
+	<rmk+kernel@armlinux.org.uk>, "linus.walleij@linaro.org"
+	<linus.walleij@linaro.org>, "sebastian.reichel@collabora.com"
+	<sebastian.reichel@collabora.com>, "rppt@kernel.org" <rppt@kernel.org>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"anshuman.khandual@arm.com" <anshuman.khandual@arm.com>, "ziy@nvidia.com"
+	<ziy@nvidia.com>, "masahiroy@kernel.org" <masahiroy@kernel.org>,
+	"ndesaulniers@google.com" <ndesaulniers@google.com>, "mhiramat@kernel.org"
+	<mhiramat@kernel.org>, "ojeda@kernel.org" <ojeda@kernel.org>,
+	"thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>,
+	"xin3.li@intel.com" <xin3.li@intel.com>, "tj@kernel.org" <tj@kernel.org>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "tsi@tuyoix.net"
+	<tsi@tuyoix.net>, "bhe@redhat.com" <bhe@redhat.com>, "hbathini@linux.ibm.com"
+	<hbathini@linux.ibm.com>, "sourabhjain@linux.ibm.com"
+	<sourabhjain@linux.ibm.com>, "boris.ostrovsky@oracle.com"
+	<boris.ostrovsky@oracle.com>, "konrad.wilk@oracle.com"
+	<konrad.wilk@oracle.com>
+Subject: Re: [PATCH v5 02/13] x86/kexec: refactor for kernel/Kconfig.kexec
+Thread-Topic: [PATCH v5 02/13] x86/kexec: refactor for kernel/Kconfig.kexec
+Thread-Index: AQHZsFghBMLN4GfYGkC1z1JC7KCAn6+tz3AA
+Date: Fri, 7 Jul 2023 05:58:35 +0000
+Message-ID: <0d1097dd-f0cb-8518-cf88-e6afbd2a6a19@csgroup.eu>
+References: <20230706222027.189117-1-eric.devolder@oracle.com>
+ <20230706222027.189117-3-eric.devolder@oracle.com>
+In-Reply-To: <20230706222027.189117-3-eric.devolder@oracle.com>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=csgroup.eu;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MRZP264MB2988:EE_|PR0P264MB2360:EE_
+x-ms-office365-filtering-correlation-id: 9c542bb0-4e36-4de4-e4df-08db7eaf33fb
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ y/I3BvHXu9Rbyuk88lSsX+P5eGEpsSxVw1IctrZUePOblyeVBfDPRtj1ghGQa8aJ1ZUGjdWmtyX+QYOcLYO/PCDCbOtiwPW8CbVIfcA0jin5MMD3lDYR/IlAxgt3cN8CfgUwL9PCt10GO636PM42Ha8yUch/tZFeKPk4UMwAJJygA6e6o7YWfbV3vGC3KFCPR8Dku6cJWrUM7N10tqL0UFYpDTtD9O4g1aFbTS3tmKe4d6W+4+hDj1Uogjb/zmbCJDcxC4qsOO2CzWWZLSPP6VC+Osly2HSdEosbweiTKCxl4Fvube4GnDkYsT/EoKL2h/ujD2tC0oXv87i8iwhOk1KH5AePDO48wZN3Mm23LCbp3R7iRbyiHGoREBzIssm8HTz4V7DJfr4YYDJ22B7b1O135rDtYBkupiAHGtC9uYhUg5Ck8dSnwRYrqodxiOQ1F+54xn5JMQVo38bsWD/gavxlqgK56E8l/IGaAaAiiAvp4ElKJ53ddzhfs5Q5Nj/KP8ZzENLE+uajVcvk6HCNo8B5jALctHYy1TmEI3ykCVK9WXNreysqxwl1LjRaU6HeZ/CMSViUWLDleJfJKgq98/LQHjYUoKbAKNfFbLLjc8MM1caDvoZufiRGkpQ9Hebffdzov38wxA5HCHlGQ5AdqVXQhwpIhMkBrwQRa9twK1kB0xUNoP64wFJyJAsqJLKKmtPqM479LV4OpuOmKHaAYg==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(346002)(376002)(39850400004)(366004)(451199021)(66574015)(83380400001)(2616005)(2906002)(66476007)(64756008)(4326008)(66446008)(66556008)(6486002)(91956017)(76116006)(66946007)(316002)(110136005)(54906003)(478600001)(71200400001)(6512007)(5660300002)(7416002)(6506007)(44832011)(186003)(7366002)(41300700001)(8936002)(8676002)(7406005)(38100700002)(122000001)(921005)(36756003)(31696002)(38070700005)(86362001)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?K3FGWmlnRFVmYS9NRWZDS1NENzdMOFlRdFRZYmRZQ1N2R2tIWFVPQ2hLTDRh?=
+ =?utf-8?B?TURlZm82RWl1WUpUMUEzZWQzeit3L0x6RS9EUTNtREpMMlFjSW5ZSXZBS2Fp?=
+ =?utf-8?B?cnlvZlFYbURmV3FJQUZ2TGpJWFZxUXk3UG9TUlkrTERQMFFGU2FFWEZZVFVu?=
+ =?utf-8?B?TVRCV0JIbEVhZ3BWRVZmM0VvTEtXNU9wZkprTHZLbG16UGZHSlhtZjJhR2c4?=
+ =?utf-8?B?Y3dSbTlQMmdtd1gzenlIc1NpY3VEbXY3VDFaSkpWN3NoYXpWMndUMjVnM1hW?=
+ =?utf-8?B?Z3pKVUR2V2wyZFFhV05Na3c2aG1OT3RCemFqSUNQbVlOUXc4eVNhY3pFblJR?=
+ =?utf-8?B?RVFsdldUVTd2U05XK3ZsaG80cHYrYXQzUVZQZlprNUJrSXBiOU5zYmFEYlNp?=
+ =?utf-8?B?QTE3RmQwYVNHN2F1NnJZeXU2N0RoakRZeUFGSW83SGZMS2swMlZzUzJBbmVN?=
+ =?utf-8?B?NngxK1pZSWFwZldseHVtdEQ2dG9uM1RsRGZQQmZOTWV6cnlmdkJmdmhqVFBX?=
+ =?utf-8?B?bU13Z0duZ1l6NlJVRkI5UGVFdTVrRzFadVQzMGxCQWpUK2t2RitEOW9hNGtp?=
+ =?utf-8?B?T1B2NFYrY0hTUTBVSXo0YUI4eGZpWmNpNXJKQlBVNWpCRDZoM3RaTHRaZGZT?=
+ =?utf-8?B?eUE3U2ZjSFE2YzMyQ3FVNlBoVlcxNmRVOFZkMTJGdkxQU3lXclA3Ung1bm8z?=
+ =?utf-8?B?VVBNTkVldjNiY1BlN0FCWktRelBjdWJNSVF4OFRFNnhkaEZOTCtVYU13SU1Z?=
+ =?utf-8?B?Z1RpSFBheXJENU1GYytqY3VWaU92NklxbVJTUU9rNzJZU1JzdENycnZxNVZO?=
+ =?utf-8?B?YTBWRXFvUFZGU0NMV3gyZWpMNWhGc3FCRThFZlMycU5Qb20rMHVhTWdJN0xB?=
+ =?utf-8?B?RmhCMWdlRWp6VGJyc3hQekJyVjVDZys1dE1KSSs2RHd4OUxOUUNWR2pERHc1?=
+ =?utf-8?B?UnU3T3FxQ3JxV1FiTjJIOVBIZFBPWnpGc1ZHS3BNOHIzZWxKN2JiZlZOa3NW?=
+ =?utf-8?B?UHY4bU1yMkdPL2FMdC94ZW1VTnU0UkxUeDZFanVpdGhXQWgrOWZycXVna1Jy?=
+ =?utf-8?B?TXljQ0hZS2ZlRUNDbzNyeW1aWDdCeUp4R2Y3bmh1SHpLczVnbUZkMENhU0pF?=
+ =?utf-8?B?MXFic0NRVG1KMHBqcXVlSzZuelRJR0w4dUpNa3VFdlZiRDlsNllsMXpHaGJv?=
+ =?utf-8?B?ZnFoY2hoVEt6aEMveXg4amlLUVdYSFlVT211NFNyaHowVWdKT292MTRwbnlZ?=
+ =?utf-8?B?eDUvOVUwTkpBSXdIVnBoaS9yclNZSHQ3ZS9LR2NnZkpXZHBRby93Z1Jwc3Fr?=
+ =?utf-8?B?OGRFMzR0dGRoQm9CQjRKMGNpZkw2aWM0M0VhR29XK3hTeXFnVjM3SjlWcy9j?=
+ =?utf-8?B?NkpLRmFjOWxtTy9EZCs3YnV4TkJnUU5HbFBEOHNjbWtoTUgxS1hFWjR3QTZi?=
+ =?utf-8?B?Zk9UblU2VStPdWkrbGdkRHpQalVJYWtvUm1TaC9QYjBMV1FiRERrbGZOSVRS?=
+ =?utf-8?B?ZjNtcjFNWno4d0NpNHpzUVN6K2kvSitIU0ovM3drNjFCTXA1czlRUUdRYW5D?=
+ =?utf-8?B?UFlCREZXYXZOS0JudzhlUXQ5WE9TOUFCOW1jT044Q1ZtWTh1ZkNVd2N5ZXpL?=
+ =?utf-8?B?My9QRzE5dWNnWDdLN2dyS3pDWmRJMWdpV2k1ekZIZS9JQWRSb0x5VzFQY0Jr?=
+ =?utf-8?B?MVdnTk1kRFRyZ1JRTkZ3c2xPNmh2Z2plMGVMZjlvSVBKTEZQTXVJL1k0RDR4?=
+ =?utf-8?B?OCtRTWt1QTdkZHVKQS8yMDFjQ0V3THhoLzY4RGpFTkdiMEdaemF3ejVGdFBT?=
+ =?utf-8?B?bU1DSWhpa3VoZW0xSWhZbWdsVFdUQXc0STRGQjFzeEd4WUloVzJaMmczclFE?=
+ =?utf-8?B?aStpN1FDQ2Z1STkvRVE3TkNsdFJCMDFCS1BhYmFsM1hFa05qdWVqSThwTDQv?=
+ =?utf-8?B?L0h4OEpqTzdROFBJQmpiYmlIK1kyTUFjbTNrSm1NT1IvcW0zSlh3eHBGcVo3?=
+ =?utf-8?B?b0Y4dTJpaUlTekNpZTY2VHRMSWpQdWJ4VWJHVlRFZlNtTEdvYlZOOVB3LzQ2?=
+ =?utf-8?B?YlhYTGJCWWZIOXkyVUwvUTVxS1lsVks1Z2UzbXhWdHRoSUpZSkZoSEZBUHl3?=
+ =?utf-8?B?TmxhekxGd2tXZktLdzdCSFFUekxCVjRqcC9yYkxkSzk0RGU1VWxYWWd4WWNm?=
+ =?utf-8?B?OVd1VjRXa1QwbjA0c0RQa1lxdkdjT2JkUHV6S29QMU5JelQyK24wbUFRWU80?=
+ =?utf-8?B?TUV1TmtrbTFuWlRxZTViUko3UWhnPT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <87527B0D04FADE449B8AFEC50A7C121A@FRAP264.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v5] PCI: Align pci memory space base address with page
- size
-Content-Language: en-US
-From: bibo mao <maobibo@loongson.cn>
-To: Will Deacon <will@kernel.org>, loongson-kernel@lists.loongnix.cn
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn,
- Huacai Chen <chenhuacai@loongson.cn>
-Reply-To: Bjorn Helgaas <bhelgaas@google.com>,
- Huacai Chen <chenhuacai@kernel.org>
-References: <20230619014715.3792883-1-maobibo@loongson.cn>
- <f676d9e0-bb88-283a-5189-f1ae945ee4dd@loongson.cn>
-In-Reply-To: <f676d9e0-bb88-283a-5189-f1ae945ee4dd@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxF8zRfKdk_2EgAA--.55042S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWF4fJFyxZFWDWF4xtr4xAFc_yoWrWw48pF
-	yfA3ZrCrW8Jr13Gwsaq34kuFsxZ397KrW5Kry5Ca4rGF9ruryUCry5WryagayDArs8WrW0
-	qFn5KF1Yva15XacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
-	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU74lkDUUUU
+X-OriginatorOrg: csgroup.eu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c542bb0-4e36-4de4-e4df-08db7eaf33fb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2023 05:58:35.9187
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7F3eCRrz5tqGisTBukOVJkJfWWRYRylN0l8XStCTd7CAhNQ+RpETl1enP/jLPfYb1Jmj6JjHtZB/WnKzEJUNuh8A5h/UcYerWfQyDBCk/GI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR0P264MB2360
 
-Bjourn, Hucai,
-
-ping again.
-
-The is such issue on only LoongArch system since 16K page size is used.
-
-Should we add code in general framework  or in LoongArch specified code
-in v1?  
-
-If you do not think that it is problem, I can give up. LoongArch system
-is not only for myself own, I do not care about it also since LoongArch
-Maintainer think it is not a issue.
-
-Regards
-Bibo Mao
-
-在 2023/6/26 09:30, bibo mao 写道:
-> gentle ping.
-> 
-> 在 2023/6/19 09:47, Bibo Mao 写道:
->> Some PCI devices have only 4K memory space size, it is normal in general
->> machines and aligned with page size. However some architectures which
->> support different page size, default page size on LoongArch is 16K, and
->> ARM64 supports page size varying from 4K to 64K. On machines where larger
->> page size is use, memory space region of two different pci devices may be
->> in one page. It is not safe with mmu protection, also VFIO pci device
->> driver requires base address of pci memory space page aligned, so that it
->> can be memory mapped to qemu user space when it is passed-through to vm.
->>
->> It consumes more pci memory resource with page size alignment requirement,
->> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled by
->> different architectures, currently arm64/loongarch enable this option.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->> ---
->> Change history
->> v5: enable option PCI_MEMRES_PAGE_ALIGN on arm64. Verified on LoongArch
->> and pass to compile on arm64 with defconfig
->>
->> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory resource
->>     page aligned
->>
->> v3: move alignment requirement to generic pci code
->>
->> v2: add pci resource alignment requirement in arch specified function
->>     pcibios_align_resource on arm64/LoongArch platforms
->>
->> ---
->>  arch/arm64/Kconfig      | 1 +
->>  arch/loongarch/Kconfig  | 1 +
->>  drivers/pci/Kconfig     | 3 +++
->>  drivers/pci/setup-res.c | 7 +++++++
->>  4 files changed, 12 insertions(+)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 343e1e1cae10..24858bbf2b72 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -232,6 +232,7 @@ config ARM64
->>  	select OF_EARLY_FLATTREE
->>  	select PCI_DOMAINS_GENERIC if PCI
->>  	select PCI_ECAM if (ACPI && PCI)
->> +	select PCI_MEMRES_PAGE_ALIGN if PCI
->>  	select PCI_SYSCALL if PCI
->>  	select POWER_RESET
->>  	select POWER_SUPPLY
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index d38b066fc931..7dbde5e5b351 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -140,6 +140,7 @@ config LOONGARCH
->>  	select PCI_DOMAINS_GENERIC
->>  	select PCI_ECAM if ACPI
->>  	select PCI_LOONGSON
->> +	select PCI_MEMRES_PAGE_ALIGN
->>  	select PCI_MSI_ARCH_FALLBACKS
->>  	select PCI_QUIRKS
->>  	select PERF_USE_VMALLOC
->> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
->> index 9309f2469b41..9be5f85ff9dc 100644
->> --- a/drivers/pci/Kconfig
->> +++ b/drivers/pci/Kconfig
->> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
->>  config PCI_BRIDGE_EMUL
->>  	bool
->>  
->> +config PCI_MEMRES_PAGE_ALIGN
->> +	bool
->> +
->>  config PCI_IOV
->>  	bool "PCI IOV support"
->>  	select PCI_ATS
->> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
->> index 967f9a758923..6ad76734a670 100644
->> --- a/drivers/pci/setup-res.c
->> +++ b/drivers/pci/setup-res.c
->> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
->>  		return -EINVAL;
->>  	}
->>  
->> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
->> +	/*
->> +	 * force minimum page alignment for vfio pci usage
->> +	 */
->> +	if (res->flags & IORESOURCE_MEM)
->> +		align = max_t(resource_size_t, PAGE_SIZE, align);
->> +#endif
->>  	size = resource_size(res);
->>  	ret = _pci_assign_resource(dev, resno, size, align);
->>  
-> 
-> _______________________________________________
-> Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
-> To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
-
+DQoNCkxlIDA3LzA3LzIwMjMgw6AgMDA6MjAsIEVyaWMgRGVWb2xkZXIgYSDDqWNyaXTCoDoNCj4g
+VGhlIGtleGVjIGFuZCBjcmFzaCBrZXJuZWwgb3B0aW9ucyBhcmUgcHJvdmlkZWQgaW4gdGhlIGNv
+bW1vbg0KPiBrZXJuZWwvS2NvbmZpZy5rZXhlYy4gVXRpbGl6ZSB0aGUgY29tbW9uIG9wdGlvbnMg
+YW5kIHByb3ZpZGUNCj4gdGhlIEFSQ0hfU1VQUE9SVFNfIGFuZCBBUkNIX1NFTEVDVFNfIGVudHJp
+ZXMgdG8gcmVjcmVhdGUgdGhlDQo+IGVxdWl2YWxlbnQgc2V0IG9mIEtFWEVDIGFuZCBDUkFTSCBv
+cHRpb25zLg0KDQoNCldoeSBkbyB5b3UgbmVlZCB0byBkdXBsaWNhdGUgdGhlIEFSQ0hfU0VMRUNU
+U18gZW50cmllcyBpbiBlYWNoIA0KYXJjaGl0ZWN0dXJlID8NCg0KV2h5IG5vdCBkZWZpbmUgdGhl
+bSBpbiBhcmNoL0tjb25maWcgdGhlbiBzZWxlY3QgaWYgZnJvbSBlYWNoIGFyY2hpdGVjdHVyZSA/
+DQoNCkZvciBpbnN0YW5jZSBoZXJlIGZvciB4ODYgZm9yIEFSQ0hfU0VMRUNUU19LRVhFQ19GSUxF
+IGFsbCB5b3UnbGwgaGF2ZSB0byANCmRvIGlzOg0KCXNlbGVjdCBBUkNIX1NFTEVDVFNfS0VYRUNf
+RklMRSBpZiBLRVhFQ19GSUxFDQoJc2VsZWN0IEhBVkVfSU1BX0tFWEVDIGlmIElNQSAmJiBLRVhF
+Q19GSUxFDQoNCg0KQ2hyaXN0b3BoZQ0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBFcmljIERlVm9s
+ZGVyIDxlcmljLmRldm9sZGVyQG9yYWNsZS5jb20+DQo+IC0tLQ0KPiAgIGFyY2gveDg2L0tjb25m
+aWcgfCA5MiArKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0N
+Cj4gICAxIGZpbGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgNzMgZGVsZXRpb25zKC0pDQo+
+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvS2NvbmZpZyBiL2FyY2gveDg2L0tjb25maWcNCj4g
+aW5kZXggNzQyMmRiNDA5NzcwLi45NzY3YTM0M2Y3YzIgMTAwNjQ0DQo+IC0tLSBhL2FyY2gveDg2
+L0tjb25maWcNCj4gKysrIGIvYXJjaC94ODYvS2NvbmZpZw0KPiBAQCAtMjA0MCw4OCArMjA0MCwz
+NCBAQCBjb25maWcgRUZJX1JVTlRJTUVfTUFQDQo+ICAgDQo+ICAgc291cmNlICJrZXJuZWwvS2Nv
+bmZpZy5oeiINCj4gICANCj4gLWNvbmZpZyBLRVhFQw0KPiAtCWJvb2wgImtleGVjIHN5c3RlbSBj
+YWxsIg0KPiAtCXNlbGVjdCBLRVhFQ19DT1JFDQo+IC0JaGVscA0KPiAtCSAga2V4ZWMgaXMgYSBz
+eXN0ZW0gY2FsbCB0aGF0IGltcGxlbWVudHMgdGhlIGFiaWxpdHkgdG8gc2h1dGRvd24geW91cg0K
+PiAtCSAgY3VycmVudCBrZXJuZWwsIGFuZCB0byBzdGFydCBhbm90aGVyIGtlcm5lbC4gIEl0IGlz
+IGxpa2UgYSByZWJvb3QNCj4gLQkgIGJ1dCBpdCBpcyBpbmRlcGVuZGVudCBvZiB0aGUgc3lzdGVt
+IGZpcm13YXJlLiAgIEFuZCBsaWtlIGEgcmVib290DQo+IC0JICB5b3UgY2FuIHN0YXJ0IGFueSBr
+ZXJuZWwgd2l0aCBpdCwgbm90IGp1c3QgTGludXguDQo+IC0NCj4gLQkgIFRoZSBuYW1lIGNvbWVz
+IGZyb20gdGhlIHNpbWlsYXJpdHkgdG8gdGhlIGV4ZWMgc3lzdGVtIGNhbGwuDQo+IC0NCj4gLQkg
+IEl0IGlzIGFuIG9uZ29pbmcgcHJvY2VzcyB0byBiZSBjZXJ0YWluIHRoZSBoYXJkd2FyZSBpbiBh
+IG1hY2hpbmUNCj4gLQkgIGlzIHByb3Blcmx5IHNodXRkb3duLCBzbyBkbyBub3QgYmUgc3VycHJp
+c2VkIGlmIHRoaXMgY29kZSBkb2VzIG5vdA0KPiAtCSAgaW5pdGlhbGx5IHdvcmsgZm9yIHlvdS4g
+IEFzIG9mIHRoaXMgd3JpdGluZyB0aGUgZXhhY3QgaGFyZHdhcmUNCj4gLQkgIGludGVyZmFjZSBp
+cyBzdHJvbmdseSBpbiBmbHV4LCBzbyBubyBnb29kIHJlY29tbWVuZGF0aW9uIGNhbiBiZQ0KPiAt
+CSAgbWFkZS4NCj4gLQ0KPiAtY29uZmlnIEtFWEVDX0ZJTEUNCj4gLQlib29sICJrZXhlYyBmaWxl
+IGJhc2VkIHN5c3RlbSBjYWxsIg0KPiAtCXNlbGVjdCBLRVhFQ19DT1JFDQo+IC0Jc2VsZWN0IEhB
+VkVfSU1BX0tFWEVDIGlmIElNQQ0KPiAtCWRlcGVuZHMgb24gWDg2XzY0DQo+IC0JZGVwZW5kcyBv
+biBDUllQVE89eQ0KPiAtCWRlcGVuZHMgb24gQ1JZUFRPX1NIQTI1Nj15DQo+IC0JaGVscA0KPiAt
+CSAgVGhpcyBpcyBuZXcgdmVyc2lvbiBvZiBrZXhlYyBzeXN0ZW0gY2FsbC4gVGhpcyBzeXN0ZW0g
+Y2FsbCBpcw0KPiAtCSAgZmlsZSBiYXNlZCBhbmQgdGFrZXMgZmlsZSBkZXNjcmlwdG9ycyBhcyBz
+eXN0ZW0gY2FsbCBhcmd1bWVudA0KPiAtCSAgZm9yIGtlcm5lbCBhbmQgaW5pdHJhbWZzIGFzIG9w
+cG9zZWQgdG8gbGlzdCBvZiBzZWdtZW50cyBhcw0KPiAtCSAgYWNjZXB0ZWQgYnkgcHJldmlvdXMg
+c3lzdGVtIGNhbGwuDQo+ICtjb25maWcgQVJDSF9TVVBQT1JUU19LRVhFQw0KPiArCWRlZl9ib29s
+IHkNCj4gICANCj4gLWNvbmZpZyBBUkNIX0hBU19LRVhFQ19QVVJHQVRPUlkNCj4gLQlkZWZfYm9v
+bCBLRVhFQ19GSUxFDQo+ICtjb25maWcgQVJDSF9TVVBQT1JUU19LRVhFQ19GSUxFDQo+ICsJZGVm
+X2Jvb2wgWDg2XzY0ICYmIENSWVBUTyAmJiBDUllQVE9fU0hBMjU2DQo+ICAgDQo+IC1jb25maWcg
+S0VYRUNfU0lHDQo+IC0JYm9vbCAiVmVyaWZ5IGtlcm5lbCBzaWduYXR1cmUgZHVyaW5nIGtleGVj
+X2ZpbGVfbG9hZCgpIHN5c2NhbGwiDQo+ICtjb25maWcgQVJDSF9TRUxFQ1RTX0tFWEVDX0ZJTEUN
+Cj4gKwlkZWZfYm9vbCB5DQo+ICAgCWRlcGVuZHMgb24gS0VYRUNfRklMRQ0KPiAtCWhlbHANCj4g
+KwlzZWxlY3QgSEFWRV9JTUFfS0VYRUMgaWYgSU1BDQo+ICAgDQo+IC0JICBUaGlzIG9wdGlvbiBt
+YWtlcyB0aGUga2V4ZWNfZmlsZV9sb2FkKCkgc3lzY2FsbCBjaGVjayBmb3IgYSB2YWxpZA0KPiAt
+CSAgc2lnbmF0dXJlIG9mIHRoZSBrZXJuZWwgaW1hZ2UuICBUaGUgaW1hZ2UgY2FuIHN0aWxsIGJl
+IGxvYWRlZCB3aXRob3V0DQo+IC0JICBhIHZhbGlkIHNpZ25hdHVyZSB1bmxlc3MgeW91IGFsc28g
+ZW5hYmxlIEtFWEVDX1NJR19GT1JDRSwgdGhvdWdoIGlmDQo+IC0JICB0aGVyZSdzIGEgc2lnbmF0
+dXJlIHRoYXQgd2UgY2FuIGNoZWNrLCB0aGVuIGl0IG11c3QgYmUgdmFsaWQuDQo+ICtjb25maWcg
+QVJDSF9IQVNfS0VYRUNfUFVSR0FUT1JZDQo+ICsJZGVmX2Jvb2wgS0VYRUNfRklMRQ0KPiAgIA0K
+PiAtCSAgSW4gYWRkaXRpb24gdG8gdGhpcyBvcHRpb24sIHlvdSBuZWVkIHRvIGVuYWJsZSBzaWdu
+YXR1cmUNCj4gLQkgIHZlcmlmaWNhdGlvbiBmb3IgdGhlIGNvcnJlc3BvbmRpbmcga2VybmVsIGlt
+YWdlIHR5cGUgYmVpbmcNCj4gLQkgIGxvYWRlZCBpbiBvcmRlciBmb3IgdGhpcyB0byB3b3JrLg0K
+PiArY29uZmlnIEFSQ0hfU1VQUE9SVFNfS0VYRUNfU0lHDQo+ICsJZGVmX2Jvb2wgeQ0KPiAgIA0K
+PiAtY29uZmlnIEtFWEVDX1NJR19GT1JDRQ0KPiAtCWJvb2wgIlJlcXVpcmUgYSB2YWxpZCBzaWdu
+YXR1cmUgaW4ga2V4ZWNfZmlsZV9sb2FkKCkgc3lzY2FsbCINCj4gLQlkZXBlbmRzIG9uIEtFWEVD
+X1NJRw0KPiAtCWhlbHANCj4gLQkgIFRoaXMgb3B0aW9uIG1ha2VzIGtlcm5lbCBzaWduYXR1cmUg
+dmVyaWZpY2F0aW9uIG1hbmRhdG9yeSBmb3INCj4gLQkgIHRoZSBrZXhlY19maWxlX2xvYWQoKSBz
+eXNjYWxsLg0KPiArY29uZmlnIEFSQ0hfU1VQUE9SVFNfS0VYRUNfU0lHX0ZPUkNFDQo+ICsJZGVm
+X2Jvb2wgeQ0KPiAgIA0KPiAtY29uZmlnIEtFWEVDX0JaSU1BR0VfVkVSSUZZX1NJRw0KPiAtCWJv
+b2wgIkVuYWJsZSBiekltYWdlIHNpZ25hdHVyZSB2ZXJpZmljYXRpb24gc3VwcG9ydCINCj4gLQlk
+ZXBlbmRzIG9uIEtFWEVDX1NJRw0KPiAtCWRlcGVuZHMgb24gU0lHTkVEX1BFX0ZJTEVfVkVSSUZJ
+Q0FUSU9ODQo+IC0Jc2VsZWN0IFNZU1RFTV9UUlVTVEVEX0tFWVJJTkcNCj4gLQloZWxwDQo+IC0J
+ICBFbmFibGUgYnpJbWFnZSBzaWduYXR1cmUgdmVyaWZpY2F0aW9uIHN1cHBvcnQuDQo+ICtjb25m
+aWcgQVJDSF9TVVBQT1JUU19LRVhFQ19CWklNQUdFX1ZFUklGWV9TSUcNCj4gKwlkZWZfYm9vbCB5
+DQo+ICAgDQo+IC1jb25maWcgQ1JBU0hfRFVNUA0KPiAtCWJvb2wgImtlcm5lbCBjcmFzaCBkdW1w
+cyINCj4gLQlkZXBlbmRzIG9uIFg4Nl82NCB8fCAoWDg2XzMyICYmIEhJR0hNRU0pDQo+IC0JaGVs
+cA0KPiAtCSAgR2VuZXJhdGUgY3Jhc2ggZHVtcCBhZnRlciBiZWluZyBzdGFydGVkIGJ5IGtleGVj
+Lg0KPiAtCSAgVGhpcyBzaG91bGQgYmUgbm9ybWFsbHkgb25seSBzZXQgaW4gc3BlY2lhbCBjcmFz
+aCBkdW1wIGtlcm5lbHMNCj4gLQkgIHdoaWNoIGFyZSBsb2FkZWQgaW4gdGhlIG1haW4ga2VybmVs
+IHdpdGgga2V4ZWMtdG9vbHMgaW50bw0KPiAtCSAgYSBzcGVjaWFsbHkgcmVzZXJ2ZWQgcmVnaW9u
+IGFuZCB0aGVuIGxhdGVyIGV4ZWN1dGVkIGFmdGVyDQo+IC0JICBhIGNyYXNoIGJ5IGtkdW1wL2tl
+eGVjLiBUaGUgY3Jhc2ggZHVtcCBrZXJuZWwgbXVzdCBiZSBjb21waWxlZA0KPiAtCSAgdG8gYSBt
+ZW1vcnkgYWRkcmVzcyBub3QgdXNlZCBieSB0aGUgbWFpbiBrZXJuZWwgb3IgQklPUyB1c2luZw0K
+PiAtCSAgUEhZU0lDQUxfU1RBUlQsIG9yIGl0IG11c3QgYmUgYnVpbHQgYXMgYSByZWxvY2F0YWJs
+ZSBpbWFnZQ0KPiAtCSAgKENPTkZJR19SRUxPQ0FUQUJMRT15KS4NCj4gLQkgIEZvciBtb3JlIGRl
+dGFpbHMgc2VlIERvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2R1bXAva2R1bXAucnN0DQo+ICtj
+b25maWcgQVJDSF9TVVBQT1JUU19LRVhFQ19KVU1QDQo+ICsJZGVmX2Jvb2wgeQ0KPiAgIA0KPiAt
+Y29uZmlnIEtFWEVDX0pVTVANCj4gLQlib29sICJrZXhlYyBqdW1wIg0KPiAtCWRlcGVuZHMgb24g
+S0VYRUMgJiYgSElCRVJOQVRJT04NCj4gLQloZWxwDQo+IC0JICBKdW1wIGJldHdlZW4gb3JpZ2lu
+YWwga2VybmVsIGFuZCBrZXhlY2VkIGtlcm5lbCBhbmQgaW52b2tlDQo+IC0JICBjb2RlIGluIHBo
+eXNpY2FsIGFkZHJlc3MgbW9kZSB2aWEgS0VYRUMNCj4gK2NvbmZpZyBBUkNIX1NVUFBPUlRTX0NS
+QVNIX0RVTVANCj4gKwlkZWZfYm9vbCBYODZfNjQgfHwgKFg4Nl8zMiAmJiBISUdITUVNKQ0KPiAg
+IA0KPiAgIGNvbmZpZyBQSFlTSUNBTF9TVEFSVA0KPiAgIAloZXggIlBoeXNpY2FsIGFkZHJlc3Mg
+d2hlcmUgdGhlIGtlcm5lbCBpcyBsb2FkZWQiIGlmIChFWFBFUlQgfHwgQ1JBU0hfRFVNUCkNCg==
