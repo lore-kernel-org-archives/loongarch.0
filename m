@@ -1,108 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D5BC8F6
-	for <loongarch@lists.linux.dev>; Fri,  7 Jul 2023 15:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1688743627;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+8qlgKJYI7kB6D1e5SNd04VHZ2yM21oq3nfTt/gANL8=;
-	b=Xp3V7QpxR0t4kn3riQcIygCunUkXwI6NZ3Tna1R1/eSSKIttUgnUBIEMa0bUEAsweRM2gc
-	U6nnWomAy9UZxVmI7MDDjcPICPUqvUyj2cWWhWFPcUxqtL/gbiqKCzm2QxuPCdKnlNpwQG
-	VW5QSR7ucZvmaJXYRS7+9Gx7xwPi09M=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-75-knvlmZoBObahq80aADC0yg-1; Fri, 07 Jul 2023 11:27:05 -0400
-X-MC-Unique: knvlmZoBObahq80aADC0yg-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-31444df0fafso1019677f8f.2
-        for <loongarch@lists.linux.dev>; Fri, 07 Jul 2023 08:27:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E214D3FDB
+	for <loongarch@lists.linux.dev>; Sat,  8 Jul 2023 09:01:12 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-99384a80af7so307819766b.2
+        for <loongarch@lists.linux.dev>; Sat, 08 Jul 2023 02:01:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688806870; x=1691398870;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LsGY/iGtzaIgMwA9b3Ok3/pViuvT9eB2lCiEe6DAXmw=;
+        b=ZC9DXKQ4BCjmzF3p8pBZiMSzsDXlNUajNpgzbgfdEtdK3LaC1ilz7ERZEOO3wEXYtO
+         nedwYopczXsFZFxEDFH56U4HhmY5nnWxnzRiWbwLKPslIkGvcrut7zp8pUyBFf1lId5n
+         t+Sy72MHM4qeyZXeDmnZQiqzMVSqYXjlzIHl1tha3BDw4CVjC4BknFu1dC03RFTVkiTs
+         KqunWm00CvMHfOH655Q3VrboGu0bCWdEfUt4tqQ7Mlrf8rdHcpA+7iVyQv+orO/BOef6
+         ZFNyvFHHjxsMWN6gG5EXxKEDP4L3QsRDvTWrnbUSFuGPHmIuWV1piHPT+lOx9nbeoLla
+         d20w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688743624; x=1691335624;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+8qlgKJYI7kB6D1e5SNd04VHZ2yM21oq3nfTt/gANL8=;
-        b=atspKZW/S0PHGdj7z8/YYN50AY2nL6hiqlZuSbIqyslN7YY5EnWOrbacnKIYv0eMv9
-         FEqenBXDBNTQRBObMlucFYE7BIoAa1QeolGA6J27RNqHrCGiHg4tv+t9r+1iGw5Ga3bv
-         ix/hLHxC9O4zm92x6h7dYjjonmJn9SmetErvJBkkBipGMCUNbHIyCOfk4VGLQey+67jW
-         c7esrE0uxg72U7goa0ZroKWyAfavA59EdCD4HJ+CnjLGvDN+34B6Itab6ZvV50B+Yknp
-         iPoNziWuTCUMNcBoYrC4VnDPoUMsWAbnMhEOHzMV1snqpW+YMCzb/tG3RH3Y6cE2PeqQ
-         L8Ug==
-X-Gm-Message-State: ABy/qLbA/zwu1+h51qEyCOQ3Ts6Q3NYxRziadFHRGXibndW/UetLaaOj
-	+7OtrlvvJIex/R/tfVo+wRKtvzfCmLx37/uPpU4oz8t5ANaTYhktciq2t++PQcyFN+Q4IJnsCD2
-	o4mxeb+TdbsSgl7PORs6e
-X-Received: by 2002:adf:f052:0:b0:30a:a15d:eb2f with SMTP id t18-20020adff052000000b0030aa15deb2fmr4668084wro.3.1688743624752;
-        Fri, 07 Jul 2023 08:27:04 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlGmxd1jbrrvV1R0iu/TeFKW/e1nuXfI0DnXijMIXAlyALphvzgzqltgfOe8J565vUOEzxyvoA==
-X-Received: by 2002:adf:f052:0:b0:30a:a15d:eb2f with SMTP id t18-20020adff052000000b0030aa15deb2fmr4668074wro.3.1688743624480;
-        Fri, 07 Jul 2023 08:27:04 -0700 (PDT)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id bl1-20020adfe241000000b003143c9beeaesm4711005wrb.44.2023.07.07.08.27.04
+        d=1e100.net; s=20221208; t=1688806870; x=1691398870;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LsGY/iGtzaIgMwA9b3Ok3/pViuvT9eB2lCiEe6DAXmw=;
+        b=kFdsvscjmRBYDRPlMBOrGqaM/lA5xVqY6kSbuY5XG3WuIzKsSoHjuzhYW1T42ebgZz
+         GIgqBKCq6D+LAA4gREa8b2n/uNtkDGLOm6yMXEwaEtHHTD79w1FdzSmumW5dpkR69Yfg
+         yoRG2v1PtpESJeo4sZ6S6Q94q7gEXgfePCBKFwOmzldletHyecibFUjyCow5ChT/HtwL
+         NM13bSN0dBHiliztyma/2nlY4nc6fu7GbI/ZU1pLOmSRgd+YXpSgpBHHLPkFCG+s53QA
+         6A7S/5jvPRy5qFCpxOcWOtcA0gWzU5nCHkOptRf49R5lQ2Y0cWjJjEkeLBAQvSn9ljI5
+         PRAw==
+X-Gm-Message-State: ABy/qLYAjN+6KAaVJacRwzbNrvXgE5Pl093gyxcAuKwH1xOZ8I9Y1PYt
+	FA+OFS1ZRN5zCPgL9JmF9eAMc/qjyx6Xftf5
+X-Google-Smtp-Source: APBJJlGWA9cXPwJQzLfRKpd7yjMu6208psGsPf4ABVaoF4bcrbXZqLcg/CAKOOeOxS8x9SRa1CJCVQ==
+X-Received: by 2002:a17:906:3c46:b0:98d:d6b2:3377 with SMTP id i6-20020a1709063c4600b0098dd6b23377mr5344497ejg.30.1688806870400;
+        Sat, 08 Jul 2023 02:01:10 -0700 (PDT)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id g10-20020a17090613ca00b00992ae4cf3c1sm3204313ejc.186.2023.07.08.02.01.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jul 2023 08:27:04 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>, Thomas
- Zimmermann <tzimmermann@suse.de>
-Cc: linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King
- <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, Ard Biesheuvel
- <ardb@kernel.org>, Helge Deller <deller@gmx.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Richard Henderson
- <richard.henderson@linaro.org>, Ivan Kokshaysky
- <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman
- <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, linux-alpha@vger.kernel.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/4] vgacon: rework screen_info #ifdef checks
-In-Reply-To: <ff9bfcfa-fa3b-42d2-b429-059b5103bce2@app.fastmail.com>
-References: <20230707095415.1449376-1-arnd@kernel.org>
- <20230707095415.1449376-2-arnd@kernel.org>
- <87jzvbyh4p.fsf@minerva.mail-host-address-is-not-set>
- <ff9bfcfa-fa3b-42d2-b429-059b5103bce2@app.fastmail.com>
-Date: Fri, 07 Jul 2023 17:27:03 +0200
-Message-ID: <87bkgnyc6w.fsf@minerva.mail-host-address-is-not-set>
+        Sat, 08 Jul 2023 02:01:09 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	x86@kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Charlemagne Lasse <charlemagnelasse@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jun Yi <yijun@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH 1/2] locking/arch: Avoid variable shadowing in local_try_cmpxchg()
+Date: Sat,  8 Jul 2023 11:00:36 +0200
+Message-ID: <20230708090048.63046-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-"Arnd Bergmann" <arnd@arndb.de> writes:
+Several architectures define arch_try_local_cmpxchg macro using
+internal temporary variables named ___old, __old or _old. Remove
+temporary varible in local_try_cmpxchg to avoid variable shadowing.
 
-> On Fri, Jul 7, 2023, at 15:40, Javier Martinez Canillas wrote:
+No functional change intended.
 
-[...]
+Fixes: d994f2c8e241 ("locking/arch: Wire up local_try_cmpxchg()")
+Reported-by: Charlemagne Lasse <charlemagnelasse@gmail.com>
+Closes: https://lore.kernel.org/lkml/CAFGhKbyxtuk=LoW-E3yLXgcmR93m+Dfo5-u9oQA_YC5Fcy_t9g@mail.gmail.com/
+Cc: Will Deacon <will@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Jun Yi <yijun@loongson.cn>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+---
+ arch/loongarch/include/asm/local.h | 4 ++--
+ arch/mips/include/asm/local.h      | 4 ++--
+ arch/x86/include/asm/local.h       | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
->> And this is only used by mdacon (not supported by ia64), vgacon and
->> vga16fb (not supported by ia64 either).
->>
->> So this could just be guarded just by CONFIG_VGA_CONSOLE for ia64 ?
->
-> Right, I though about doing this more accurately, but in the end
-> went for the simplest change rather than spending much more time
-> trying to clean up the unused variables etc.
->
-> Let me know if you'd prefer me to respin this part, otherwise
-> I'd call the ia64 bit good enough for the purpose of the series.
->
-
-No need to re-spin, agreed that makes sense to keep it simpler.
-
+diff --git a/arch/loongarch/include/asm/local.h b/arch/loongarch/include/asm/local.h
+index 83e995b30e47..c49675852bdc 100644
+--- a/arch/loongarch/include/asm/local.h
++++ b/arch/loongarch/include/asm/local.h
+@@ -63,8 +63,8 @@ static inline long local_cmpxchg(local_t *l, long old, long new)
+ 
+ static inline bool local_try_cmpxchg(local_t *l, long *old, long new)
+ {
+-	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
+-	return try_cmpxchg_local(&l->a.counter, __old, new);
++	return try_cmpxchg_local(&l->a.counter,
++				 (typeof(l->a.counter) *) old, new);
+ }
+ 
+ #define local_xchg(l, n) (atomic_long_xchg((&(l)->a), (n)))
+diff --git a/arch/mips/include/asm/local.h b/arch/mips/include/asm/local.h
+index 5daf6fe8e3e9..e6ae3df0349d 100644
+--- a/arch/mips/include/asm/local.h
++++ b/arch/mips/include/asm/local.h
+@@ -101,8 +101,8 @@ static __inline__ long local_cmpxchg(local_t *l, long old, long new)
+ 
+ static __inline__ bool local_try_cmpxchg(local_t *l, long *old, long new)
+ {
+-	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
+-	return try_cmpxchg_local(&l->a.counter, __old, new);
++	return try_cmpxchg_local(&l->a.counter,
++				 (typeof(l->a.counter) *) old, new);
+ }
+ 
+ #define local_xchg(l, n) (atomic_long_xchg((&(l)->a), (n)))
+diff --git a/arch/x86/include/asm/local.h b/arch/x86/include/asm/local.h
+index 56d4ef604b91..635132a12778 100644
+--- a/arch/x86/include/asm/local.h
++++ b/arch/x86/include/asm/local.h
+@@ -127,8 +127,8 @@ static inline long local_cmpxchg(local_t *l, long old, long new)
+ 
+ static inline bool local_try_cmpxchg(local_t *l, long *old, long new)
+ {
+-	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
+-	return try_cmpxchg_local(&l->a.counter, __old, new);
++	return try_cmpxchg_local(&l->a.counter,
++				 (typeof(l->a.counter) *) old, new);
+ }
+ 
+ /* Always has a lock prefix */
 -- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+2.41.0
 
