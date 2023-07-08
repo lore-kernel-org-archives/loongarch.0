@@ -1,42 +1,43 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E214D3FDB
-	for <loongarch@lists.linux.dev>; Sat,  8 Jul 2023 09:01:12 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-99384a80af7so307819766b.2
-        for <loongarch@lists.linux.dev>; Sat, 08 Jul 2023 02:01:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47163236
+	for <loongarch@lists.linux.dev>; Sat,  8 Jul 2023 09:01:14 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-991da766865so341270266b.0
+        for <loongarch@lists.linux.dev>; Sat, 08 Jul 2023 02:01:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688806870; x=1691398870;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LsGY/iGtzaIgMwA9b3Ok3/pViuvT9eB2lCiEe6DAXmw=;
-        b=ZC9DXKQ4BCjmzF3p8pBZiMSzsDXlNUajNpgzbgfdEtdK3LaC1ilz7ERZEOO3wEXYtO
-         nedwYopczXsFZFxEDFH56U4HhmY5nnWxnzRiWbwLKPslIkGvcrut7zp8pUyBFf1lId5n
-         t+Sy72MHM4qeyZXeDmnZQiqzMVSqYXjlzIHl1tha3BDw4CVjC4BknFu1dC03RFTVkiTs
-         KqunWm00CvMHfOH655Q3VrboGu0bCWdEfUt4tqQ7Mlrf8rdHcpA+7iVyQv+orO/BOef6
-         ZFNyvFHHjxsMWN6gG5EXxKEDP4L3QsRDvTWrnbUSFuGPHmIuWV1piHPT+lOx9nbeoLla
-         d20w==
+        d=gmail.com; s=20221208; t=1688806873; x=1691398873;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nf6CWtf5sSzXSzp6IATkL8/vv+7S/TvwEjnbGt7d71E=;
+        b=OrM5pDnq+Vr/EwlVe+DD3mzWWS3F0uzrYAzk6uvTn8z23ssNUOzdUk4ODCstn8JiDC
+         0xzqEj7vmuAoxExq4m4ifummtrHEJwMOE8VxXlf8oA9CEoBQJi+mOrIgdgvL5c/BTHcC
+         sEglGaq9q9WelZBfYcIEFp1WTTF0fNvDH3LXjQPEkwSETrn+pYLvX7dvlqReqjEQwJNP
+         SF2Uwfs4OCTQhuy1nE9Oc+oSfRGWHjC0PcZ+qGhaupjOHy3D7BYy0dGiDl8n6b14XxC+
+         xNWhdJWZO371SuO0GLE531DUPKyiD6PNkJfr0UEiQwt2oozP+87OdpTXPYmch25HcoyX
+         BXUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688806870; x=1691398870;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LsGY/iGtzaIgMwA9b3Ok3/pViuvT9eB2lCiEe6DAXmw=;
-        b=kFdsvscjmRBYDRPlMBOrGqaM/lA5xVqY6kSbuY5XG3WuIzKsSoHjuzhYW1T42ebgZz
-         GIgqBKCq6D+LAA4gREa8b2n/uNtkDGLOm6yMXEwaEtHHTD79w1FdzSmumW5dpkR69Yfg
-         yoRG2v1PtpESJeo4sZ6S6Q94q7gEXgfePCBKFwOmzldletHyecibFUjyCow5ChT/HtwL
-         NM13bSN0dBHiliztyma/2nlY4nc6fu7GbI/ZU1pLOmSRgd+YXpSgpBHHLPkFCG+s53QA
-         6A7S/5jvPRy5qFCpxOcWOtcA0gWzU5nCHkOptRf49R5lQ2Y0cWjJjEkeLBAQvSn9ljI5
-         PRAw==
-X-Gm-Message-State: ABy/qLYAjN+6KAaVJacRwzbNrvXgE5Pl093gyxcAuKwH1xOZ8I9Y1PYt
-	FA+OFS1ZRN5zCPgL9JmF9eAMc/qjyx6Xftf5
-X-Google-Smtp-Source: APBJJlGWA9cXPwJQzLfRKpd7yjMu6208psGsPf4ABVaoF4bcrbXZqLcg/CAKOOeOxS8x9SRa1CJCVQ==
-X-Received: by 2002:a17:906:3c46:b0:98d:d6b2:3377 with SMTP id i6-20020a1709063c4600b0098dd6b23377mr5344497ejg.30.1688806870400;
-        Sat, 08 Jul 2023 02:01:10 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688806873; x=1691398873;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nf6CWtf5sSzXSzp6IATkL8/vv+7S/TvwEjnbGt7d71E=;
+        b=djs1qcK3EzBMy0OWj9HNlCB2hfVmnM8SiRwyHiB7/5uRdoV21BKUrnbYc3iNPJshNa
+         xo5Rf2UN4r6DwqBQ4e40D3dnLznofPJNphe8tjWsT4/fNy2E0dqeKVGgPF20KNBbvfxh
+         R048NYBCu1oxcZFX/AFW139e8eBJFXZhOi8kIMWKf+zb24BmchzPRvJFY1xwIpNKI2L7
+         eBa/mukdh6DumNZmKiL+FjZ+tWisHRagNFEgCdUfA8fLYhzwn2WeBJBi9DtKJiT8vy53
+         78SVBtqgtDtBP/VnqDyD9JyJ3t21kRi1CcFRY6zZeeJqHF7E0oA0QHfbP6HGWDgDe3yI
+         BYEw==
+X-Gm-Message-State: ABy/qLY0LsU7ZR3PYJJefMXnyXoExciTMD77V3Zjj9DvarVZvYIoDK0h
+	xrbL0leHbuBCeBd+3gNhli8wgzyIdcdZIZG8
+X-Google-Smtp-Source: APBJJlHvjbfghU+R1GVuA1W0C07GTu/GC7MEOE21FxMF61BP0T9NAF6jpjoHbxYT65YvPnfoueGJMA==
+X-Received: by 2002:a17:906:5185:b0:992:a9c3:244f with SMTP id y5-20020a170906518500b00992a9c3244fmr5233427ejk.4.1688806872534;
+        Sat, 08 Jul 2023 02:01:12 -0700 (PDT)
 Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id g10-20020a17090613ca00b00992ae4cf3c1sm3204313ejc.186.2023.07.08.02.01.08
+        by smtp.gmail.com with ESMTPSA id g10-20020a17090613ca00b00992ae4cf3c1sm3204313ejc.186.2023.07.08.02.01.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Jul 2023 02:01:09 -0700 (PDT)
+        Sat, 08 Jul 2023 02:01:12 -0700 (PDT)
 From: Uros Bizjak <ubizjak@gmail.com>
 To: loongarch@lists.linux.dev,
 	linux-mips@vger.kernel.org,
@@ -45,25 +46,21 @@ To: loongarch@lists.linux.dev,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Charlemagne Lasse <charlemagnelasse@gmail.com>,
-	Will Deacon <will@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jun Yi <yijun@loongson.cn>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 1/2] locking/arch: Avoid variable shadowing in local_try_cmpxchg()
-Date: Sat,  8 Jul 2023 11:00:36 +0200
-Message-ID: <20230708090048.63046-1-ubizjak@gmail.com>
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 2/2] perf/ring_buffer: Use local_try_cmpxchg in __perf_output_begin
+Date: Sat,  8 Jul 2023 11:00:37 +0200
+Message-ID: <20230708090048.63046-2-ubizjak@gmail.com>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230708090048.63046-1-ubizjak@gmail.com>
+References: <20230708090048.63046-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -72,81 +69,55 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Several architectures define arch_try_local_cmpxchg macro using
-internal temporary variables named ___old, __old or _old. Remove
-temporary varible in local_try_cmpxchg to avoid variable shadowing.
+Use local_try_cmpxchg instead of local_cmpxchg (*ptr, old, new) == old
+in __perf_output_begin.  x86 CMPXCHG instruction returns success in ZF
+flag, so this change saves a compare after cmpxchg (and related move
+instruction in front of cmpxchg).
+
+Also, try_cmpxchg implicitly assigns old *ptr value to "old" when cmpxchg
+fails. There is no need to re-read the value in the loop.
 
 No functional change intended.
 
-Fixes: d994f2c8e241 ("locking/arch: Wire up local_try_cmpxchg()")
-Reported-by: Charlemagne Lasse <charlemagnelasse@gmail.com>
-Closes: https://lore.kernel.org/lkml/CAFGhKbyxtuk=LoW-E3yLXgcmR93m+Dfo5-u9oQA_YC5Fcy_t9g@mail.gmail.com/
-Cc: Will Deacon <will@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Jun Yi <yijun@loongson.cn>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 ---
- arch/loongarch/include/asm/local.h | 4 ++--
- arch/mips/include/asm/local.h      | 4 ++--
- arch/x86/include/asm/local.h       | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ kernel/events/ring_buffer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/local.h b/arch/loongarch/include/asm/local.h
-index 83e995b30e47..c49675852bdc 100644
---- a/arch/loongarch/include/asm/local.h
-+++ b/arch/loongarch/include/asm/local.h
-@@ -63,8 +63,8 @@ static inline long local_cmpxchg(local_t *l, long old, long new)
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index a0433f37b024..fb1e180b5f0a 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -191,9 +191,10 @@ __perf_output_begin(struct perf_output_handle *handle,
  
- static inline bool local_try_cmpxchg(local_t *l, long *old, long new)
- {
--	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
--	return try_cmpxchg_local(&l->a.counter, __old, new);
-+	return try_cmpxchg_local(&l->a.counter,
-+				 (typeof(l->a.counter) *) old, new);
- }
+ 	perf_output_get_handle(handle);
  
- #define local_xchg(l, n) (atomic_long_xchg((&(l)->a), (n)))
-diff --git a/arch/mips/include/asm/local.h b/arch/mips/include/asm/local.h
-index 5daf6fe8e3e9..e6ae3df0349d 100644
---- a/arch/mips/include/asm/local.h
-+++ b/arch/mips/include/asm/local.h
-@@ -101,8 +101,8 @@ static __inline__ long local_cmpxchg(local_t *l, long old, long new)
++	offset = local_read(&rb->head);
+ 	do {
++		head = offset;
+ 		tail = READ_ONCE(rb->user_page->data_tail);
+-		offset = head = local_read(&rb->head);
+ 		if (!rb->overwrite) {
+ 			if (unlikely(!ring_buffer_has_space(head, tail,
+ 							    perf_data_size(rb),
+@@ -217,7 +218,7 @@ __perf_output_begin(struct perf_output_handle *handle,
+ 			head += size;
+ 		else
+ 			head -= size;
+-	} while (local_cmpxchg(&rb->head, offset, head) != offset);
++	} while (!local_try_cmpxchg(&rb->head, &offset, head));
  
- static __inline__ bool local_try_cmpxchg(local_t *l, long *old, long new)
- {
--	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
--	return try_cmpxchg_local(&l->a.counter, __old, new);
-+	return try_cmpxchg_local(&l->a.counter,
-+				 (typeof(l->a.counter) *) old, new);
- }
- 
- #define local_xchg(l, n) (atomic_long_xchg((&(l)->a), (n)))
-diff --git a/arch/x86/include/asm/local.h b/arch/x86/include/asm/local.h
-index 56d4ef604b91..635132a12778 100644
---- a/arch/x86/include/asm/local.h
-+++ b/arch/x86/include/asm/local.h
-@@ -127,8 +127,8 @@ static inline long local_cmpxchg(local_t *l, long old, long new)
- 
- static inline bool local_try_cmpxchg(local_t *l, long *old, long new)
- {
--	typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
--	return try_cmpxchg_local(&l->a.counter, __old, new);
-+	return try_cmpxchg_local(&l->a.counter,
-+				 (typeof(l->a.counter) *) old, new);
- }
- 
- /* Always has a lock prefix */
+ 	if (backward) {
+ 		offset = head;
 -- 
 2.41.0
 
