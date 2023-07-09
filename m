@@ -1,81 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057F817E1
-	for <loongarch@lists.linux.dev>; Sun,  9 Jul 2023 03:52:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A69EC433C8
-	for <loongarch@lists.linux.dev>; Sun,  9 Jul 2023 03:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C0917E1
+	for <loongarch@lists.linux.dev>; Sun,  9 Jul 2023 03:56:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE15C433C7
+	for <loongarch@lists.linux.dev>; Sun,  9 Jul 2023 03:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688874751;
-	bh=QbeU9C1eV5NDrPryCedGiMb3A34VmKXr6ljBa+OLAhs=;
+	s=k20201202; t=1688874968;
+	bh=7DPhvYhEG3m2WY9+vazYC8djvRRt8K9rL/HKTxj0QS8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WYNyV+8p4LLkjJajwdcyCCdrHGf6x3bPezuZTW5ir6p8sarcQODzBhXZNvKUVtRfw
-	 9Vg0kjGU/0sPmAfmLsvc962XTZrPTBrvUUIXXgdOZpA7bicilkkqod105NT92tmBEI
-	 +L/lKCzlwpg9SvMdCNLyEnhl720dgNAnUF7UJYn6YT/L7OR7FTk/Dmt5qi93v4T4+E
-	 hj0cA1kZ5mLlJhwev/dFZzGXIKuQEaqLDEYezI/MeAkEVnQsmMEHVN4hAWeUwm40Du
-	 mUl07Dh4xOcxxtRe6RHo60bGeLOlgIZ3kuG9w0ydckeDRml5HeSkYFwHcLtPru9WWv
-	 Y8xcXrZyqWiXA==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-51d7e8dd118so4512645a12.1
-        for <loongarch@lists.linux.dev>; Sat, 08 Jul 2023 20:52:30 -0700 (PDT)
-X-Gm-Message-State: ABy/qLY1H68GdtPo/KlukysRRFizhIOna7/G0H9T9qicYST4RnUPd5OM
-	VuFlMddrkjinARG792weacss0KZ1nYOSWxGAl5s=
-X-Google-Smtp-Source: APBJJlGNCUL6QDorEqtymyKx6PttpF9SBpMnoOu55iTaodjTA54nw7G5G8NBbW3t3qfwZPJ/SI56nv5qiI+a46v3Rc4=
-X-Received: by 2002:aa7:d3cc:0:b0:51e:ca7:a107 with SMTP id
- o12-20020aa7d3cc000000b0051e0ca7a107mr6981521edr.31.1688874748799; Sat, 08
- Jul 2023 20:52:28 -0700 (PDT)
+	b=PKcvWCrU0I1pDFybPh+gUUOW+JBjRqBcmIXX8QshmDuifdSsa1JfsNJ064wFem7Q7
+	 it7laySnxli942qTAg6dWko4yzeSFSfahQd3qVpVHz97afiuDTENsAgtNt8xgrIBJH
+	 LcfEQLYsTWXmwYlKvqel7yYQ94bIhJ+M2m8SeSbRkwI0HhYWwYnj80X+VlDsy0bYr4
+	 Nd7zykQ/Lfnq9HJ1HPMK742detZykJzCoutfGenxypm+0IckyGY6SJ9c+ACKrorVMf
+	 VV35cx2LEfRw4c9WFoRR7oJuliXV2sh1idJVirY4i7c2/duzoKpaFHgsv2ZBsLDLyf
+	 dT5gRyIb8veQQ==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-51d7f350758so4557782a12.3
+        for <loongarch@lists.linux.dev>; Sat, 08 Jul 2023 20:56:08 -0700 (PDT)
+X-Gm-Message-State: ABy/qLbfpBWifVUY6jXHNPrthyaC8RWMPSJskwzfFtP7U+EWNvqjWEeg
+	7gnNnlPKA0VI/llBAcCiSZXcaKyb9UE6dma4zyg=
+X-Google-Smtp-Source: APBJJlHekp1NZpVGYtjvcGTs34USKI+d2GvSLwRaINxjnYwlGXftr8692oNNQ8CRQjMLp4fs1jG3dXkGNdBZs1/JNYY=
+X-Received: by 2002:aa7:c0c6:0:b0:51e:166a:ac7f with SMTP id
+ j6-20020aa7c0c6000000b0051e166aac7fmr7183978edp.28.1688874966365; Sat, 08 Jul
+ 2023 20:56:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230701083247.177482-1-xry111@xry111.site>
-In-Reply-To: <20230701083247.177482-1-xry111@xry111.site>
+References: <cover.1688369658.git.chenfeiyang@loongson.cn> <8d10b1220434432dbc089fab8df4e1cca048cd0c.1688369658.git.chenfeiyang@loongson.cn>
+In-Reply-To: <8d10b1220434432dbc089fab8df4e1cca048cd0c.1688369658.git.chenfeiyang@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 9 Jul 2023 11:52:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H623HAbKBp5emSo_-gL-7bJmA3TfqkmajS+PKABPwUdYw@mail.gmail.com>
-Message-ID: <CAAhV-H623HAbKBp5emSo_-gL-7bJmA3TfqkmajS+PKABPwUdYw@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: loongson3_defconfig: Enable CONFIG_JUMP_LABEL
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Sun, 9 Jul 2023 11:55:55 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4yaJExw8zSYvEiHaXQJXfCkmwa4yuFfrrT51QT_25NJw@mail.gmail.com>
+Message-ID: <CAAhV-H4yaJExw8zSYvEiHaXQJXfCkmwa4yuFfrrT51QT_25NJw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] LoongArch: Allow building with kcov coverage
+To: Feiyang Chen <chenfeiyang@loongson.cn>
+Cc: dvyukov@google.com, andreyknvl@gmail.com, loongarch@lists.linux.dev, 
+	kasan-dev@googlegroups.com, chris.chenfeiyang@gmail.com, 
+	loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Ruoyao,
+Hi, Feiyang,
 
-This has already been enabled here [1] for the next cycle.
-
-[1] https://github.com/chenhuacai/linux/commit/03f4dca2d838b34aa8618b9d378a=
-fb706f810d56
+Please update Documentation/features/debug/kcov/arch-support.txt, thanks.
 
 Huacai
 
-On Sat, Jul 1, 2023 at 4:33=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
-:
+On Tue, Jul 4, 2023 at 8:53=E2=80=AFPM Feiyang Chen <chenfeiyang@loongson.c=
+n> wrote:
 >
-> As it's an optimization without any real disadvantages, let's enable it
-> like the defconfig of other architecture supporting it.
+> Add ARCH_HAS_KCOV to the LoongArch Kconfig. Also disable
+> instrumentation of vdso.
 >
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 > ---
->  arch/loongarch/configs/loongson3_defconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/loongarch/Kconfig       | 1 +
+>  arch/loongarch/vdso/Makefile | 2 ++
+>  2 files changed, 3 insertions(+)
 >
-> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/=
-configs/loongson3_defconfig
-> index 6cd26dd3c134..33a0f5f742f6 100644
-> --- a/arch/loongarch/configs/loongson3_defconfig
-> +++ b/arch/loongarch/configs/loongson3_defconfig
-> @@ -63,6 +63,7 @@ CONFIG_EFI_ZBOOT=3Dy
->  CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=3Dy
->  CONFIG_EFI_CAPSULE_LOADER=3Dm
->  CONFIG_EFI_TEST=3Dm
-> +CONFIG_JUMP_LABEL=3Dy
->  CONFIG_MODULES=3Dy
->  CONFIG_MODULE_FORCE_LOAD=3Dy
->  CONFIG_MODULE_UNLOAD=3Dy
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index ed9a148cdcde..4c21a961ab88 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -14,6 +14,7 @@ config LOONGARCH
+>         select ARCH_HAS_ACPI_TABLE_UPGRADE      if ACPI
+>         select ARCH_HAS_CPU_FINALIZE_INIT
+>         select ARCH_HAS_FORTIFY_SOURCE
+> +       select ARCH_HAS_KCOV
+>         select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+>         select ARCH_HAS_PTE_SPECIAL
+>         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index 7bb794604af3..7dc87377688b 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -5,6 +5,8 @@ ifdef CONFIG_KASAN
+>  KASAN_SANITIZE :=3D n
+>  endif
+>
+> +KCOV_INSTRUMENT :=3D n
+> +
+>  # Include the generic Makefile to check the built vdso.
+>  include $(srctree)/lib/vdso/Makefile
+>
 > --
-> 2.41.0
->
+> 2.39.3
 >
