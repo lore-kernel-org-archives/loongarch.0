@@ -1,182 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C387A1FCE
-	for <loongarch@lists.linux.dev>; Sun,  9 Jul 2023 09:20:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 393D1C433CB
-	for <loongarch@lists.linux.dev>; Sun,  9 Jul 2023 09:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688894411;
-	bh=VG+B59vQ3VEnkB+utkmYw7yH2sF0ifQ8bgRSUsIRrD4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=giPC6nD8Iw48PL9IvQU6ZlfTc/BvgX+J1y3vztdJaRELuMvhj2UZZzaEwcRW2IBGh
-	 ukKZiZteXeH2EkWAM67gGtt3bpksR1dJr89s14rJoibbXQHP6b84pGggH4gZhS6xG4
-	 C60m1ot+V5NsoG7FPRuSWV/pS97WgG+okbEffbxj32BAEkz6tlyo6CtVbuOCzhoOuD
-	 EqoxxUKMsOD2n1dbbkGUlWTPjWUt5h3+e5IFoEOn2Fnb9drZDhZr0zNEj2XCBt7jCV
-	 bCD7zoEL+0IOq8ZqEnVKFv1XVXLjQE4Y0XV9DBEwrLN609WLkKTKto7jsAP3DEdWbV
-	 On6dg6t5i0nDA==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-51de9c2bc77so4007342a12.3
-        for <loongarch@lists.linux.dev>; Sun, 09 Jul 2023 02:20:11 -0700 (PDT)
-X-Gm-Message-State: ABy/qLZ9mMeSBMmmNTpkTim5qRYQvc11r0WRO9V15LNhTq98vJaaOam/
-	JNkyVubn3vJjW3x96/Sj/9ukGMQ6w7IGy8Ikczs=
-X-Google-Smtp-Source: APBJJlExm8T9L2cQk2V06VYJo7Ahe9vTilfZXIMQGDzfjxB9UrSfHkE/BZ68TpSdKojhk/SWFAEPTkZnWsHxiToKxCw=
-X-Received: by 2002:aa7:c7d7:0:b0:51d:acda:2f4a with SMTP id
- o23-20020aa7c7d7000000b0051dacda2f4amr256334eds.37.1688894409342; Sun, 09 Jul
- 2023 02:20:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D5E3FD4
+	for <loongarch@lists.linux.dev>; Sun,  9 Jul 2023 12:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+ s=s29768273; t=1688907368; x=1689512168; i=markus.elfring@web.de;
+ bh=d80X359CQ6TRVOivq8e+n8yh+WXThV0qCLG/Vhf3YIk=;
+ h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:In-Reply-To;
+ b=iSSsx25Z3bCqlRR8Fi3UKAfk1uYXomGy27jJCf8h768O2zZI6mZlJ/O1lRo3hCRWEYwk3wJ
+ yiKTmyBSpnm4kiQ/SdfcoLXwvrZTs0CiMkJvvCTz9SZOVVGH28gwHy2AyvmL7TDKmUmhgBjQV
+ bi6ap3ULpRfyhafRVmJXkHpx7svLNVZAItidMpi/ybLPbL4E13UJ0m2iRlLVg+3PalZPcbD0R
+ ZS1C1HF5A+JHv3sLHBEqCawEaO084Wvlk2i5tmw/SGbuLtoQ6hksChXr9eOY1DBPxhmFi/6jT
+ Jr9FRIx3wVTPZghG7IUh1Pmx7bFHGc+/ooq3rAFVxU6p9BYOLpSQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.83]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MLifk-1qa9Ki3BwW-00Hv1E; Sun, 09
+ Jul 2023 14:56:08 +0200
+Message-ID: <6011256b-f4a9-a410-dc62-cb7a308bf07f@web.de>
+Date: Sun, 9 Jul 2023 14:56:07 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230619014715.3792883-1-maobibo@loongson.cn> <f676d9e0-bb88-283a-5189-f1ae945ee4dd@loongson.cn>
- <bdc6eb71-482d-5dd6-d527-c2f2f68dfb38@loongson.cn>
-In-Reply-To: <bdc6eb71-482d-5dd6-d527-c2f2f68dfb38@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 9 Jul 2023 17:19:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7_Rjv-ySorjbw0f4OiV4J0-N75fmUNBCmeJbeeydJu4Q@mail.gmail.com>
-Message-ID: <CAAhV-H7_Rjv-ySorjbw0f4OiV4J0-N75fmUNBCmeJbeeydJu4Q@mail.gmail.com>
-Subject: Re: [PATCH v5] PCI: Align pci memory space base address with page size
-To: Bjorn Helgaas <bhelgaas@google.com>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Will Deacon <will@kernel.org>, loongson-kernel@lists.loongnix.cn, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+To: donmor3000@hotmail.com, loongarch@lists.linux.dev,
+ kernel-janitors@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, LKML <linux-kernel@vger.kernel.org>
+References: <3ddf48d97c90e4203e328180763a0d8124890216.camel@hotmail.com>
+Subject: Re: [PATCH] loongarch: Fix broken CONFIG_CMDLINE
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <3ddf48d97c90e4203e328180763a0d8124890216.camel@hotmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Uno5zOiiz/MRNt3Bnsm4iISaF2PeB01IMyS6hl6W6OmAIGwIFw8
+ 3hT07syjb5quviV1ENUyuz7uYAU8YfFzrvx0j18A7lJ8EFlPFG9zkQpiV+TbtdHjruxnW+9
+ VInFxBDWTx7gDqyFYT8AlCcgayLMzoQeNJr1Dv+uSKIgZGQD4Wd6db+BJi7ZK2IASPIeSQ/
+ tZh0OOeLO9oT6Qp0q0UgQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:tVpbIxlJo18=;q44fjv9qy38DxpoObd7AqmGxD+R
+ WVfCSfDowTKv4PnJzwHnJFEOZqQ1JOddrD099IgI43GHAjGO5kEqLWWTW20mWs/KcggrBDMDg
+ ww7N6JDIpetIECNL4/19uOVvKM+NNbTozqrnP3vmys1LB/CUfOa039axgkQM/BFaDahPO3ZZP
+ 1nCLQjieUEj/2BSlo8b2OQsdX6z8JlvPhVrmKI4Szk3MpDLqcyP5bqT/tcROeXlu96icI5n5J
+ ckiY0Z0Oxcoj3Qr8/4HoCoDrdmPYiMNlp2HqJy5sv6RpQJRxNs8VMunc4i+1We1uR1hMK9gMx
+ kW2zYF47vvvs0kCGWWoHEKFPGDUc919Lcs76r9hAwOYUUY3INi1e9QzgU/kK/fUSCxaE0sNMB
+ nj4rLc+bfvA8g07+GMisrUr/zGa6CLAitvF4Rkqpv0PIkefx7M2/A24wVmiAV43QlPwAQKrf8
+ iUyBwTndbxhXs9dceqGU7iYH3RAfCLFBieq3Ol8S8WbLp7lqRcg6vfJTkWvQG9o17wPFbDD4Q
+ 8d+OmzvS2/5XSXtXoLa07tlWdNzFVYywdZ8XV+NrKk1R0QjGrwxv/2UR97utGw4EXTI7yOLae
+ cx1CWLzx8xtbVf3SRx6AE+LaTJ5ZUBuJ0SjT2TOPMsDuHcTFPGLkJa88fpM3/sQQqpV0LDLB+
+ GhwxTaxS/LqpXhLcxdidHHjg+1Pcbd/xBTns2iADSSWFftCkrUKtjbs2oDfZbsQ8JltH8zxcW
+ LxJaQg5CP6kqk9+Rmmng9ZQTSKZCVcRvJA2Pw1DewDzSD3V+xovUtkupPiUiaO/zjlup9xmqB
+ ZT8LYEEylxN/bpy81iw4bqWt2lm9YxLheOfCasq+XTsN5EAGI24g0wFHK3IyNkGJ4yRAWIpbC
+ tufQBvJ97I21TA9yCXvDmL/xhTe6kIstJBwKBKFjpNaL5Hf3TEd7JHxWl2VmcQ/93OpW95JpJ
+ 827N2g==
 
-On Fri, Jul 7, 2023 at 10:47=E2=80=AFAM bibo mao <maobibo@loongson.cn> wrot=
-e:
->
-> Bjourn, Hucai,
->
-> ping again.
->
-> The is such issue on only LoongArch system since 16K page size is used.
->
-> Should we add code in general framework  or in LoongArch specified code
-> in v1?
-Though I still don't know why others have no problems. But it is
-surely a bug on LoongArch. So if Bjorn has no objections, please use
-the old method (just like v1 but you can simply align to page size
-unconditionally).
+> This patch tends to fix CONFIG_CMDLINE, which is not working with
+> CONFIG_CMDLINE_EXTEND or CONFIG_CMDLINE_BOOTLOADER. Some code is absent
+> in
+> arch/loongarch/kernel/setup.c, which should handle built-in command
+> lines
+> in CONFIG_CMDLINE. The absence of such code causes CONFIG_CMDLINE not
+> working if CONFIG_CMDLINE_EXTEND or CONFIG_CMDLINE_BOOTLOADER is set to
+> Y.
+=E2=80=A6
 
-Huacai
->
-> If you do not think that it is problem, I can give up. LoongArch system
-> is not only for myself own, I do not care about it also since LoongArch
-> Maintainer think it is not a issue.
->
-> Regards
-> Bibo Mao
->
-> =E5=9C=A8 2023/6/26 09:30, bibo mao =E5=86=99=E9=81=93:
-> > gentle ping.
-> >
-> > =E5=9C=A8 2023/6/19 09:47, Bibo Mao =E5=86=99=E9=81=93:
-> >> Some PCI devices have only 4K memory space size, it is normal in gener=
-al
-> >> machines and aligned with page size. However some architectures which
-> >> support different page size, default page size on LoongArch is 16K, an=
-d
-> >> ARM64 supports page size varying from 4K to 64K. On machines where lar=
-ger
-> >> page size is use, memory space region of two different pci devices may=
- be
-> >> in one page. It is not safe with mmu protection, also VFIO pci device
-> >> driver requires base address of pci memory space page aligned, so that=
- it
-> >> can be memory mapped to qemu user space when it is passed-through to v=
-m.
-> >>
-> >> It consumes more pci memory resource with page size alignment requirem=
-ent,
-> >> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled by
-> >> different architectures, currently arm64/loongarch enable this option.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> >> ---
-> >> Change history
-> >> v5: enable option PCI_MEMRES_PAGE_ALIGN on arm64. Verified on LoongArc=
-h
-> >> and pass to compile on arm64 with defconfig
-> >>
-> >> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory resour=
-ce
-> >>     page aligned
-> >>
-> >> v3: move alignment requirement to generic pci code
-> >>
-> >> v2: add pci resource alignment requirement in arch specified function
-> >>     pcibios_align_resource on arm64/LoongArch platforms
-> >>
-> >> ---
-> >>  arch/arm64/Kconfig      | 1 +
-> >>  arch/loongarch/Kconfig  | 1 +
-> >>  drivers/pci/Kconfig     | 3 +++
-> >>  drivers/pci/setup-res.c | 7 +++++++
-> >>  4 files changed, 12 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> >> index 343e1e1cae10..24858bbf2b72 100644
-> >> --- a/arch/arm64/Kconfig
-> >> +++ b/arch/arm64/Kconfig
-> >> @@ -232,6 +232,7 @@ config ARM64
-> >>      select OF_EARLY_FLATTREE
-> >>      select PCI_DOMAINS_GENERIC if PCI
-> >>      select PCI_ECAM if (ACPI && PCI)
-> >> +    select PCI_MEMRES_PAGE_ALIGN if PCI
-> >>      select PCI_SYSCALL if PCI
-> >>      select POWER_RESET
-> >>      select POWER_SUPPLY
-> >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> >> index d38b066fc931..7dbde5e5b351 100644
-> >> --- a/arch/loongarch/Kconfig
-> >> +++ b/arch/loongarch/Kconfig
-> >> @@ -140,6 +140,7 @@ config LOONGARCH
-> >>      select PCI_DOMAINS_GENERIC
-> >>      select PCI_ECAM if ACPI
-> >>      select PCI_LOONGSON
-> >> +    select PCI_MEMRES_PAGE_ALIGN
-> >>      select PCI_MSI_ARCH_FALLBACKS
-> >>      select PCI_QUIRKS
-> >>      select PERF_USE_VMALLOC
-> >> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> >> index 9309f2469b41..9be5f85ff9dc 100644
-> >> --- a/drivers/pci/Kconfig
-> >> +++ b/drivers/pci/Kconfig
-> >> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
-> >>  config PCI_BRIDGE_EMUL
-> >>      bool
-> >>
-> >> +config PCI_MEMRES_PAGE_ALIGN
-> >> +    bool
-> >> +
-> >>  config PCI_IOV
-> >>      bool "PCI IOV support"
-> >>      select PCI_ATS
-> >> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> >> index 967f9a758923..6ad76734a670 100644
-> >> --- a/drivers/pci/setup-res.c
-> >> +++ b/drivers/pci/setup-res.c
-> >> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, int =
-resno)
-> >>              return -EINVAL;
-> >>      }
-> >>
-> >> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
-> >> +    /*
-> >> +     * force minimum page alignment for vfio pci usage
-> >> +     */
-> >> +    if (res->flags & IORESOURCE_MEM)
-> >> +            align =3D max_t(resource_size_t, PAGE_SIZE, align);
-> >> +#endif
-> >>      size =3D resource_size(res);
-> >>      ret =3D _pci_assign_resource(dev, resno, size, align);
-> >>
-> >
-> > _______________________________________________
-> > Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
-> > To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
->
->
+Please choose an imperative change suggestion.
+
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.4#n94
+
+
+> Signed-off-by: donmor <donmor3000@hotmail.com>
+
+Would a more unique real name be more appropriate here?
+
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.4#n411
+
+Regards,
+Markus
