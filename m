@@ -1,106 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823DE17C4;
-	Mon, 10 Jul 2023 04:41:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC09C43395;
-	Mon, 10 Jul 2023 04:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688964064;
-	bh=mv//6hNwk9M6NPBEMlu0lBzYoJfCRXlFZFV1BMnomHs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hQ3xhU9RyNnpwHFmPtb1JEi3QSDyRc+Ly9ZHnskvF9AW1crjOxtyXBpBB1xRUrkm+
-	 HenjCvTqG+UIgFfclX24vhuAEUFeu6yICjXLff88N6L+mCavjsgzU/owu8tCizjpAn
-	 ewhmtMvqvswX+NzQhHx+kO39OTkwbH7caDD6KCupnl6zqs9QcT21mUfZNB89GRIHU4
-	 eRy+hK2lLwdTuBFN3pwXWHa/CE7e/RSkDIFwW+JrSuTMT3YTlVzM5qjwkBccdR2iiW
-	 9PiJIDgy7IP2STq2gpSGpHEefnaycIBtUZ5Gt4kYf3ub4E0Q+zv0iDw2LlYANSE62G
-	 oC0h4T1xqQmHw==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-51cff235226so7900461a12.0;
-        Sun, 09 Jul 2023 21:41:04 -0700 (PDT)
-X-Gm-Message-State: ABy/qLaYlKJHN/OnxY7wuxNBv0A6dgouh9RL1SonoEwBDy3hq4ksEdGs
-	jdVre5ERYv9JE73Bk+jsxeHuZGIUvsfwEzCVQAE=
-X-Google-Smtp-Source: APBJJlE24fzgM5W0er2eZb1A+JkFH2SlI7nTJD6AILFEyjyQ2t6Gb3sEBHHiyn/fNNkYY0OvDUVpzlHRv4JgWAldyYg=
-X-Received: by 2002:a05:6402:4304:b0:51e:4a1e:5f7a with SMTP id
- m4-20020a056402430400b0051e4a1e5f7amr8606822edc.4.1688964062079; Sun, 09 Jul
- 2023 21:41:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3384023A8
+	for <loongarch@lists.linux.dev>; Mon, 10 Jul 2023 04:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1688964317; bh=nIwe2M/K3NQxgFY9TidL4zat/EkEm3ppvGS805ltn0Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IgmaXU1t56yfNOvUBbXMAV5UkrjaHK6Vsn4HnnThZx5mazGwlEeGxejhyB4Zheo5c
+	 DThGe01Wvw7ZpeECCJVYhXUNa3w5uCjz6DQd9anvI0LG+mc+uzBLIBeOKK7o7C70Sc
+	 HRuacz4YfI3J0RbA8pgIXpvPX0SxTwwjNLfxq1jw=
+Received: from [100.100.34.13] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0F71F600AE;
+	Mon, 10 Jul 2023 12:45:17 +0800 (CST)
+Message-ID: <51181fd7-fc1f-2222-9b8a-8ce44fe85ea5@xen0n.name>
+Date: Mon, 10 Jul 2023 12:45:16 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230710015120.44818-1-jianghaoran@kylinos.cn>
-In-Reply-To: <20230710015120.44818-1-jianghaoran@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 10 Jul 2023 12:40:50 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6s3N=-brDz24PfrtEKNFjvnLjbDR2NpOVDF_fN7rA53A@mail.gmail.com>
-Message-ID: <CAAhV-H6s3N=-brDz24PfrtEKNFjvnLjbDR2NpOVDF_fN7rA53A@mail.gmail.com>
-Subject: Re: [PATCH] samples/bpf: Fix compilation failure for samples/bpf on
- Loongarch Fedora
-To: Haoran Jiang <jianghaoran@kylinos.cn>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	llvm@lists.linux.dev, bpf@vger.kernel.org, trix@redhat.com, 
-	ndesaulniers@google.com, nathan@kernel.org, jolsa@kernel.org, 
-	haoluo@google.com, sdf@google.com, kpsingh@kernel.org, 
-	john.fastabend@gmail.com, yhs@fb.com, song@kernel.org, martin.lau@linux.dev, 
-	andrii@kernel.org, daniel@iogearbox.net, ast@kernel.org, kernel@xen0n.name, 
-	yangtiezhu@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH] LoongArch: Fix module relocation error with binutils 2.41
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+References: <20230710042924.2518198-1-chenhuacai@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230710042924.2518198-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Please use LoongArch instead of Loongarch in the title and commit message.
+On 2023/7/10 12:29, Huacai Chen wrote:
+> Binutils 2.41 enable linker relaxation by default, but kernel module
 
-Huacai
+"enables" / "will enable"
 
-On Mon, Jul 10, 2023 at 10:08=E2=80=AFAM Haoran Jiang <jianghaoran@kylinos.=
-cn> wrote:
->
-> When building the latest samples/bpf on Loongarch Fedora
->
->      make M=3Dsamples/bpf
->
-> There are compilation errors as follows:
->
-> In file included from ./linux/samples/bpf/sockex2_kern.c:2:
-> In file included from ./include/uapi/linux/in.h:25:
-> In file included from ./include/linux/socket.h:8:
-> In file included from ./include/linux/uio.h:9:
-> In file included from ./include/linux/thread_info.h:60:
-> In file included from ./arch/loongarch/include/asm/thread_info.h:15:
-> In file included from ./arch/loongarch/include/asm/processor.h:13:
-> In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
-> ./arch/loongarch/include/asm/loongarch.h:13:10: fatal error: 'larchintrin=
-.h' file not found
->          ^~~~~~~~~~~~~~~
-> 1 error generated.
->
-> larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
-> and the header file location is specified at compile time.
->
-> Test on Loongarch Fedora:
-> https://github.com/fedora-remix-loongarch/releases-info
->
-> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> loader doesn't support that, so disable it. Otherwise we get such an
+> error when loading modules: "Unknown relocation type 102".
+
+IMO it could be better to also justify the disabling (instead of adding 
+proper support): linker relaxation is relatively large complexity that 
+may or may not bring a similar gain, and we don't really want to include 
+this linker pass in the kernel.
+
+> 
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->  samples/bpf/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 615f24ebc49c..b301796a3862 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -434,7 +434,7 @@ $(obj)/%.o: $(src)/%.c
->         @echo "  CLANG-bpf " $@
->         $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS=
-) \
->                 -I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
-> -               -I$(LIBBPF_INCLUDE) \
-> +               -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
->                 -D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-poi=
-nter-sign \
->                 -D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-=
-types \
->                 -Wno-gnu-variable-sized-type-not-at-end \
-> --
-> 2.27.0
->
+>   arch/loongarch/Makefile | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index 09ba338a64de..7466d3b15db8 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -68,6 +68,8 @@ LDFLAGS_vmlinux			+= -static -n -nostdlib
+>   ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
+>   cflags-y			+= $(call cc-option,-mexplicit-relocs)
+>   KBUILD_CFLAGS_KERNEL		+= $(call cc-option,-mdirect-extern-access)
+> +KBUILD_AFLAGS_MODULE		+= $(call cc-option,-mno-relax) $(call cc-option,-Wa$(comma)-mno-relax)
+> +KBUILD_CFLAGS_MODULE		+= $(call cc-option,-mno-relax) $(call cc-option,-Wa$(comma)-mno-relax)
+>   else
+>   cflags-y			+= $(call cc-option,-mno-explicit-relocs)
+>   KBUILD_AFLAGS_KERNEL		+= -Wa,-mla-global-with-pcrel
+
+The code changes are good. With the commit message improved:
+
+Reviewed-by: WANG Xuerui <git@xen0n.name>
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
