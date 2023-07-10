@@ -1,110 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F51623CC;
-	Mon, 10 Jul 2023 05:54:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DDBFC433C8;
-	Mon, 10 Jul 2023 05:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F0633EE
+	for <loongarch@lists.linux.dev>; Mon, 10 Jul 2023 07:53:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0482C433C8
+	for <loongarch@lists.linux.dev>; Mon, 10 Jul 2023 07:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688968491;
-	bh=5bo3Dd1S/+UX7zKX7SU1eVf31BEHvcpAG9FLa5nnBkc=;
+	s=k20201202; t=1688975616;
+	bh=Qmnrxtp2tVTiIKeDr6PzWwhoq+AXMYmOqhQmbX2jJEA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hPn6f7tiRIl6O3bjLxUjlDrP1U+Q6T7MR6V5pMw0hfvhRAi66DsEgFcyqOoxNzFfM
-	 g/9jYTDvUt7NXkIyaZNjXRe+T5UCHmqAIAoWEFBLNSYMSdys8Jkro6KAGcqBkkDgcg
-	 wy/jO9Two/zAxxTTX2QA3OHQBvDyrUY+tFwVB4lw6X6zgzQ45+m4ya4qlz6MR6OQCl
-	 Uj8bWAwt8Z2vuiiLf8Fzat5byW1XQen+nY04iwqGj6XcqffdfSkq7cVBLQfWlKGTZw
-	 wmvbqPFEU3NcOosIW954LwhBYNqe1Xzoi7XFfruxfjJTTWaYBokrJKE+LfECOQ4AaZ
-	 IffHKgEbJ5IzQ==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-4fb960b7c9dso6167265e87.0;
-        Sun, 09 Jul 2023 22:54:51 -0700 (PDT)
-X-Gm-Message-State: ABy/qLYgfUo0rxfVi5Yz+8hdnrK1/6akiiI117S9eR6Z7Ziji4vyPWnq
-	kvFmjUTvUN4YBektZ7XITAYP0Rf0yN7yOXs1XiM=
-X-Google-Smtp-Source: APBJJlFAeRupkRBF6nv00OnjiXB1Q4Wb23ZbuARfTFW1WElFD40u6AjhzB2s7kDTNHYx/CIFbLiRYKNSdHdoJSZDha0=
-X-Received: by 2002:a05:6512:110e:b0:4fb:7665:9b0d with SMTP id
- l14-20020a056512110e00b004fb76659b0dmr10569131lfg.12.1688968489141; Sun, 09
- Jul 2023 22:54:49 -0700 (PDT)
+	b=me5X+1vMmbkCFoCblOI/6sz+FZwvBOq4e/BYklHzHPC7pwS+qVuFmXBpgx8JrIa0r
+	 V7KTIKh+Rf597EnmBiZTTmH1JX0HJsImSgY3iimRTVpPHrBVnkeaojDt+gPt61T4gW
+	 RshlctRNBefMm4u2EiUGZQ1mxejx8DTWSLZQbbyMIsUqzg9YyFInm2+c0cNGCm1Kxd
+	 DCApn7BLIf6hIgfWTKdEZ4LUydtYcX/Ou6G8SjnEpI8o/I4D4uDULgRv3DlNPg72+f
+	 WKsBPDc/0VFBNUzsC2mW8wlwHoWs4Y8Eb0vL/F724lcDCAWwk4EJe7EB/VO3Cj8vlN
+	 inlniG9oCh0aA==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-4faaaa476a9so6407788e87.2
+        for <loongarch@lists.linux.dev>; Mon, 10 Jul 2023 00:53:36 -0700 (PDT)
+X-Gm-Message-State: ABy/qLZu5boapANzSx7loJl2F3RD6ITRBCFP+eXJ3eTzMqAI9Sr77kYW
+	5thuTjhJM4EIQB1T/8wNkRsJDGHBd/31mrahGvA=
+X-Google-Smtp-Source: APBJJlGrklgwHO1qTgGjnKuzcyOdT3q0J8ogI9MWBIiWxlqTGfnoiRQZ9grmnfmcQOLwKf0YrCEcsSSO40htVXcdsY0=
+X-Received: by 2002:ac2:4e07:0:b0:4f9:5a0c:85b8 with SMTP id
+ e7-20020ac24e07000000b004f95a0c85b8mr10308007lfr.36.1688975614593; Mon, 10
+ Jul 2023 00:53:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAhV-H6s3N=-brDz24PfrtEKNFjvnLjbDR2NpOVDF_fN7rA53A@mail.gmail.com>
- <20230710052750.259595-1-jianghaoran@kylinos.cn>
-In-Reply-To: <20230710052750.259595-1-jianghaoran@kylinos.cn>
+References: <MEYP282MB2597CD6E861D659E3218148DD933A@MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM>
+ <CAAhV-H5P_NgJ5kTQ1iO-eL577D=-COjEZ6u9_OgvrHpWJLqsXw@mail.gmail.com> <62e81ce06e69d549b12d1145429730f8b27ad156.camel@hotmail.com>
+In-Reply-To: <62e81ce06e69d549b12d1145429730f8b27ad156.camel@hotmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 10 Jul 2023 13:54:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7orsUHDZuwcTUeWYbizcWRG4k_BPy53W7PT_MQ_2SXgw@mail.gmail.com>
-Message-ID: <CAAhV-H7orsUHDZuwcTUeWYbizcWRG4k_BPy53W7PT_MQ_2SXgw@mail.gmail.com>
-Subject: Re: [PATCH v2] samples/bpf: Fix compilation failure for samples/bpf
- on LoongArch Fedora
-To: Haoran Jiang <jianghaoran@kylinos.cn>
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, haoluo@google.com, john.fastabend@gmail.com, 
-	jolsa@kernel.org, kernel@xen0n.name, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, loongarch@lists.linux.dev, 
-	martin.lau@linux.dev, nathan@kernel.org, ndesaulniers@google.com, 
-	sdf@google.com, song@kernel.org, trix@redhat.com, yangtiezhu@loongson.cn, 
-	yhs@fb.com
+Date: Mon, 10 Jul 2023 15:53:22 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7ihMnYD3LZi4kfJ1SQHxpX=j8D39Riinbvbb0AMo2oDg@mail.gmail.com>
+Message-ID: <CAAhV-H7ihMnYD3LZi4kfJ1SQHxpX=j8D39Riinbvbb0AMo2oDg@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: Make CONFIG_CMDLINE work with
+ CONFIG_CMDLINE_EXTEND and CONFIG_CMDLINE_BOOTLOADER
+To: donmor <donmor3000@hotmail.com>
+Cc: "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, "kernel@xen0n.name" <kernel@xen0n.name>, 
+	"yangtiezhu@loongson.cn" <yangtiezhu@loongson.cn>, "zhoubinbin@loongson.cn" <zhoubinbin@loongson.cn>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"ardb@kernel.org" <ardb@kernel.org>, "tangyouling@loongson.cn" <tangyouling@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+On Mon, Jul 10, 2023 at 1:35=E2=80=AFAM =E2=80=8E donmor <donmor3000@hotmai=
+l.com> wrote:
+>
+> =E5=9C=A8 2023-07-09=E6=98=9F=E6=9C=9F=E6=97=A5=E7=9A=84 23:30 +0800=EF=
+=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
+> > How to reproduce? If you use UEFI firmware, this is handled in
+> > drivers/firmware/efi/libstub/efi-stub.c; if you use non-UEFI firmware,
+> > this is handled in drivers/of/fdt.c.
+>
+> In fact it 's not command line retrieved from efi or fdt, but the built-i=
+n
+> command line to be concerned. CONFIG_CMDLINE was never been touched durin=
+g
+> boot on loongarch, unless CONFIG_CMDLINE_FORCE is set because there is co=
+de
+> handling this. There should be code handling CONFIG_CMDLINE_FORCE and
+> CONFIG_CMDLINE_EXTEND as well but is absent by now.
 
-On Mon, Jul 10, 2023 at 1:34=E2=80=AFPM Haoran Jiang <jianghaoran@kylinos.c=
-n> wrote:
->
-> When building the latest samples/bpf on LoongArch Fedora
->
->      make M=3Dsamples/bpf
->
-> There are compilation errors as follows:
->
-> In file included from ./linux/samples/bpf/sockex2_kern.c:2:
-> In file included from ./include/uapi/linux/in.h:25:
-> In file included from ./include/linux/socket.h:8:
-> In file included from ./include/linux/uio.h:9:
-> In file included from ./include/linux/thread_info.h:60:
-> In file included from ./arch/loongarch/include/asm/thread_info.h:15:
-> In file included from ./arch/loongarch/include/asm/processor.h:13:
-> In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
-> ./arch/loongarch/include/asm/loongarch.h:13:10: fatal error: 'larchintrin=
-.h' file not found
->          ^~~~~~~~~~~~~~~
-> 1 error generated.
->
-> larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
-> and the header file location is specified at compile time.
->
-> Test on LoongArch Fedora:
-> https://github.com/fedora-remix-loongarch/releases-info
->
-> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
->
-> ---
-> v2:
-> use LoongArch instead of Loongarch in the title and commit message.
-> ---
->  samples/bpf/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 615f24ebc49c..b301796a3862 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -434,7 +434,7 @@ $(obj)/%.o: $(src)/%.c
->         @echo "  CLANG-bpf " $@
->         $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS=
-) \
->                 -I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
-> -               -I$(LIBBPF_INCLUDE) \
-> +               -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
->                 -D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-poi=
-nter-sign \
->                 -D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-=
-types \
->                 -Wno-gnu-variable-sized-type-not-at-end \
-> --
-> 2.27.0
->
->
+I mean the code in drivers/of/fdt.c already handles
+CONFIG_CMDLINE_EXTEND and CONFIG_CMDLINE_FORCE, understand?
+
+On the other hand, I found that for non-FDT system
+CONFIG_CMDLINE_FORCE indeed doesn't work, but
+CONFIG_CMDLINE_BOOTLOADER works, so you needn't fix
+CONFIG_CMDLINE_BOOTLOADER, and you need add "goto out" in the "if
+(initial_boot_params)" condition.
+
+Huacai
