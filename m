@@ -1,85 +1,106 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ACA79DE
-	for <loongarch@lists.linux.dev>; Sun,  9 Jul 2023 18:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
- s=s29768273; t=1688926385; x=1689531185; i=markus.elfring@web.de;
- bh=y0E6xhBz64itHSeGzLGsNiXOkdDpNEO7RfR9bqjCwRY=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=XsXpKitaKm+aQec94AC2AraUvZjIDfWCHJCGuwaerPgVsXlvZ5d2Hm6YUXLkjxLYxP4pxB3
- m4XeTr2V1nvQrk9i6CVHO9DcLjgjyZBGokYp/94b6ZCsvrbRigbIUDUCPGr1MWz7KnORyffmz
- /55NAg7Xgrz0LkVSzyQ0KlnT9LAavEpugCcCOeBMGbbJ9aF612kfALCKflSnfsflc8elZFmcm
- 6df7QWJuV2i/ogQ0BmYHUcUUF9qn8KQUdNRHcnj24Cutw6Ipau6bWJm/OrIdrKVLutDubPvZY
- TYAVSx3EtkT+soyHInjsRABdcQHaEv7+XcU/ocqenV94/ETE4HvA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.90.83]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MNfYN-1qbzjO2KL5-00OnfT; Sun, 09
- Jul 2023 20:13:05 +0200
-Message-ID: <fb5bd2d8-5a65-9687-8dff-cccd28e136c6@web.de>
-Date: Sun, 9 Jul 2023 20:13:02 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBFA17D2;
+	Mon, 10 Jul 2023 03:11:35 +0000 (UTC)
+X-UUID: 06188fefb575434da11446c1d3861c80-20230710
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.27,REQID:809c74b7-40f3-4e1c-85dc-7d90e1d84bb3,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-INFO: VERSION:1.1.27,REQID:809c74b7-40f3-4e1c-85dc-7d90e1d84bb3,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:01c9525,CLOUDID:ba820968-314d-4083-81b6-6a74159151eb,B
+	ulkID:230710095658WWG00CKR,BulkQuantity:0,Recheck:0,SF:44|24|17|19|102,TC:
+	nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
+	I:0,OSA:0,AV:0,LES:1,SPR:NO
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,
+	TF_CID_SPAM_FSI
+X-UUID: 06188fefb575434da11446c1d3861c80-20230710
+X-User: jianghaoran@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.12)] by mailgw
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
+	with ESMTP id 1691520724; Mon, 10 Jul 2023 09:56:57 +0800
+From: Haoran Jiang <jianghaoran@kylinos.cn>
+To: linux-kernel@vger.kernel.org
+Cc: loongarch@lists.linux.dev,
+	llvm@lists.linux.dev,
+	bpf@vger.kernel.org,
+	chenhuacai@kernel.org,
+	trix@redhat.com,
+	ndesaulniers@google.com,
+	nathan@kernel.org,
+	jolsa@kernel.org,
+	haoluo@google.com,
+	sdf@google.com,
+	kpsingh@kernel.org,
+	john.fastabend@gmail.com,
+	yhs@fb.com,
+	song@kernel.org,
+	martin.lau@linux.dev,
+	andrii@kernel.org,
+	daniel@iogearbox.net,
+	ast@kernel.org,
+	kernel@xen0n.name,
+	yangtiezhu@loongson.cn
+Subject: [PATCH] samples/bpf: Fix compilation failure for samples/bpf on Loongarch Fedora
+Date: Mon, 10 Jul 2023 09:51:20 +0800
+Message-Id: <20230710015120.44818-1-jianghaoran@kylinos.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: loongarch: Make CONFIG_CMDLINE work with CONFIG_CMDLINE_EXTEND
- and CONFIG_CMDLINE_BOOTLOADER
-Content-Language: en-GB
-To: Dong Zhihong <donmor3000@hotmail.com>, loongarch@lists.linux.dev,
- kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
- Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Tiezhu Yang <yangtiezhu@loongson.cn>,
- Wang Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>
-References: <MEYP282MB2597CD6E861D659E3218148DD933A@MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM>
- <380911b1-13b0-2c69-7adf-f40abb604c6c@web.de>
- <93faf53150732ac776e68e34709a9aa8c88b5944.camel@hotmail.com>
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <93faf53150732ac776e68e34709a9aa8c88b5944.camel@hotmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Wa+c3TJRAoPTf8jNCojyDZ0/FsMyzz0h5wbzgfIlbBvuZDKoc1Q
- pYjos65A+Plc+JUG1eqIIFdAtqXGllkxOZjACxe9r87hSzd+5lD1IXJepxxcLP85J1ieYGY
- q8IkiqGF7O5u5huBLSYiJwVDlS0ltuKOps2NTQtXKZYyacXW4EPan5Zpezm1ENU0DpEY5vj
- dRSDogTr0ombVv+wQI+Bg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nvG7XtV/ed8=;LS1GkNSsyEfc9bUeN4SrLxF6Pod
- r9ZJWv7g+q2nojtT6pa0RkMl5ryJyZrLUp4J3yo6WbJzw/921cUGnh6yE1qn3C35geW0GSUbv
- RpyPFZaAjJiH1bOk7XyYuSsciIamct5b+y1B+2gc/BA3FpMoTIoWruqADLFqM46k6nCV5vkg7
- 4T1MZdeeIcaPNAztYQ1opcLUpt6OxFvGOmKPBQ9mLG3nv/u9Zg62AwL8oT00OXoek+0saaRoH
- drNneXkdnfefcOhfaK/q5LiUPllySLJaAytwWQ8otFPXDCaB8UJambH82dBmlKE4qge2PNdW+
- HuUOGHmgUk5Vha7j9UT+OI5kHUnofq2zSORpGlzMpFIJ+22IGtySMZawAUlu5yKrH3ptUOJRv
- pWwySbkPUeyzDNG6nINMXJF1y7C1pRQ+RtSIuNUJ05s5MlJyFn1AynfAUgEn87MqKZEnMRhMU
- F9cBsdSKsKWsTTYYsy7aP+l9bTkQlms0gavTDpm4yuFwS8mALNTXPy+pT9FOzSRudg+AN7O1Y
- HAxVGOtmDpEcFzrZhrMsNKyz9Uos/hECtjPPPhF9fc3fimUlBVR05nCMmQtA6Ls+dZ0jrLsho
- NGUuR4K4F0FaPkWWTgC2y2pSF5L8naU5D4x1KGVD5MaMTTLx53MlFXVy7LWJG+S3pP5DC5Bwb
- sbbLWBFEw38gss5SNxAAkzlh4YpWfojQOd8M0/4IS+tN8PBKgCcWhXYlfMraYuimsSckif2rg
- sWLOQQSC5DBe2p2CAY1+dvNckxG4PN9ZaCDho4oGBUTywlO6ti4o8xZ6Tg+C7uwcaboXIZH2V
- 7ktgNWL6RXMVW54YwdsVH+3LVed0RQH0G3fR2JBuJMNEMz0YOfblLSX0tyKmM3YmcCXSJLNk/
- BhJERjMxnjUA6TlBkO6LMVVcVfs8XDdjRHqiBnDyO8BHAX7VjmYA38SyE7X3OzPY6zc2pm/8P
- l5+/XzDbs67GxJOavDnLuj/ahUY=
+Content-Transfer-Encoding: 8bit
 
-> Also, a feature shown in config should be functioning,
+When building the latest samples/bpf on Loongarch Fedora
 
-We may hope so.
+     make M=samples/bpf
 
+There are compilation errors as follows:
 
-> or be considered buggy
+In file included from ./linux/samples/bpf/sockex2_kern.c:2:
+In file included from ./include/uapi/linux/in.h:25:
+In file included from ./include/linux/socket.h:8:
+In file included from ./include/linux/uio.h:9:
+In file included from ./include/linux/thread_info.h:60:
+In file included from ./arch/loongarch/include/asm/thread_info.h:15:
+In file included from ./arch/loongarch/include/asm/processor.h:13:
+In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
+./arch/loongarch/include/asm/loongarch.h:13:10: fatal error: 'larchintrin.h' file not found
+         ^~~~~~~~~~~~~~~
+1 error generated.
 
-This can happen.
+larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
+and the header file location is specified at compile time.
 
+Test on Loongarch Fedora:
+https://github.com/fedora-remix-loongarch/releases-info
 
-> and get fixed.
+Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+---
+ samples/bpf/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Such an action can occasionally become desirable.
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 615f24ebc49c..b301796a3862 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -434,7 +434,7 @@ $(obj)/%.o: $(src)/%.c
+ 	@echo "  CLANG-bpf " $@
+ 	$(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS) \
+ 		-I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
+-		-I$(LIBBPF_INCLUDE) \
++		-I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
+ 		-D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign \
+ 		-D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-types \
+ 		-Wno-gnu-variable-sized-type-not-at-end \
+-- 
+2.27.0
 
-Under which circumstances would you get into the mood to enhance descriptions
-another bit (also according to the published Linux development requirements)
-for the presented change possibilities?
-
-Regards,
-Markus
