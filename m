@@ -1,123 +1,191 @@
-Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2169.outbound.protection.outlook.com [40.92.62.169])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8782712B6B
-	for <loongarch@lists.linux.dev>; Mon, 10 Jul 2023 16:04:56 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f0enLWpvhIWQF7J6vX36Du4HZioC6JgL+67+pQFCKw950sc+X3lMF8QK8ZA6nkBB66uMt53ZMY8GlYJmXmHhc2o0aKQXe7i6eloB8YbM72aWiriHWwA3xFarIcuPKZLYcXfbHEGP2ESspac+8ihUBxjY6kp/55DDwajzHpgycrLs/XkNyPUsfib5yT4EcOQKaK2FacOYJCcg77a0vwJPld3KjTOWRr+CQmP+dUito6mc1uC8SgFJ5GPLhvl5zoPpnD4mSERG/om7LvPmaeIG2EM3hfksTVk2wiD9/8uP6iAR21eQ7n5SawpDzFgHHh/bdFlJ5CXjss/1cW8BlP2m3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=khz19YuBasUavwaUrd1V3BRA/xnJ14MsksuIKTDvg9k=;
- b=CUT4AqQSthPiVqysh9qdXnw40iSlrwxholsV8MbEqUFsWPfZ80/cP7GCW+LFbAIDGbtoqQQeAlb4ANrE3Qrkv70cxYZHc5MIlFddzJwe9Rwv5nllCso0hmU+kDTHKsoKGgQydbhNhIg6q4f/R1GlSjGbzksv4uxJ4969jQgcpB8t/H+jFP/ynTlEF55uwT5n8TNrt1PPB7smkb23jRw/b+XfTUvuCiZ0AH37Pe5iohkNr1y3o+XB1CNwuo88AxHgFH/mKTYN9rwn0nxYRklYAN4hieU57Bt92ECcrWNjNDozhvZC0p9SA0a3F3E1tarYMWlwi467BYX+DrDZWF2EYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=khz19YuBasUavwaUrd1V3BRA/xnJ14MsksuIKTDvg9k=;
- b=ZaVYGdRY6ASxsKJmUWXHTyDgtRwChKuPxOS5e883tdHkDkfcdeCHanZC1KLPAnCfPssjxRQe0qqQ6M3pzKpDzBzXiWUPjpMsPxBX/DS2b8bub+lOeFQyGmHMGdFDllnLaBOk+nUj0L+a4eI/U9X9gUlswbZHWfNbuGIi4/qU9Ov/pBa2ZQ1hfyJ85EZVUnunILSUAUFK/nRp07N8bJ0so8BiMMgjiPoJmcN1GhXGY9pjDcxAxRqV/5iVBu8jO4uGEkafp6BGDttfXvXDIdPfmJnjoxi8K1UacjRMkcsJJze9f78yjEUa4I08hv8lJLla+OPLX9lQmmPLpHXj2IB1oA==
-Received: from MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:128::9)
- by SYYP282MB2128.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:de::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.30; Mon, 10 Jul
- 2023 16:04:51 +0000
-Received: from MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
- ([fe80::46f9:569d:f1c:4f6f]) by MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
- ([fe80::46f9:569d:f1c:4f6f%4]) with mapi id 15.20.6565.028; Mon, 10 Jul 2023
- 16:04:51 +0000
-From: =?utf-8?B?4oCOIGRvbm1vcg==?= <donmor3000@hotmail.com>
-To: "chenhuacai@kernel.org" <chenhuacai@kernel.org>
-CC: "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"kernel@xen0n.name" <kernel@xen0n.name>, "yangtiezhu@loongson.cn"
-	<yangtiezhu@loongson.cn>, "zhoubinbin@loongson.cn" <zhoubinbin@loongson.cn>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "ardb@kernel.org"
-	<ardb@kernel.org>, "tangyouling@loongson.cn" <tangyouling@loongson.cn>
-Subject: Re: [PATCH] loongarch: Make CONFIG_CMDLINE work with
- CONFIG_CMDLINE_EXTEND and CONFIG_CMDLINE_BOOTLOADER
-Thread-Topic: [PATCH] loongarch: Make CONFIG_CMDLINE work with
- CONFIG_CMDLINE_EXTEND and CONFIG_CMDLINE_BOOTLOADER
-Thread-Index: AQHZsmnnf7L6P8pq70KmLgqGjaEZu6+xj+EAgAAiuACAAO/FAIAAiVAA
-Date: Mon, 10 Jul 2023 16:04:51 +0000
-Message-ID: <ed74894e05c2541b436fbb29596d106fe569402f.camel@hotmail.com>
-References:
- <MEYP282MB2597CD6E861D659E3218148DD933A@MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM>
-	 <CAAhV-H5P_NgJ5kTQ1iO-eL577D=-COjEZ6u9_OgvrHpWJLqsXw@mail.gmail.com>
-	 <62e81ce06e69d549b12d1145429730f8b27ad156.camel@hotmail.com>
-	 <CAAhV-H7ihMnYD3LZi4kfJ1SQHxpX=j8D39Riinbvbb0AMo2oDg@mail.gmail.com>
-In-Reply-To:
- <CAAhV-H7ihMnYD3LZi4kfJ1SQHxpX=j8D39Riinbvbb0AMo2oDg@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn: [6J3E3MSCUKz5Y8W5PYEaDfRgI2ThDDRHdFhAaGqn9pdh0wEpmoBCPKIf/D+JKPct]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MEYP282MB2597:EE_|SYYP282MB2128:EE_
-x-ms-office365-filtering-correlation-id: 9dfd1ffb-1ded-48d4-7536-08db815f64f0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- vOh/CiF+fYx77g9QsV3CxQqOduC0KJm6bvbH/3Ker28CV4ry1qGl6kzU81CoJqm/I+tViegM6jrF5QHpMPkQXt+jprrjwh21XKEvDgJeCaQrqtnjtkD99+WRm4XupHSvU558oRp+5gnM8TnqEhOz+qTWtAtWOhV0j9/WcvhyxOe6fJUN+HwdcYfTgRr2BapN12KxMaN6lJo/63LLttnCpJS1Kc0G9sNgE9NB2ks9BvOTOb1U1kpg0P7WA9WbkeNadmMsfGjS8DzUrqwz1qtPODH3KS1cWSsKTVvtyq/aWf0xfKNyZLNUJ6i8zUGjzIWgOJkJiyuk6X5Td9qVqGYWIUgNrCvgybzf+RQlmHRMqxDWZLRfp7WGgrCpek9+7lwPlEk/RElvDs/1bIOuAuK2Ir/tuAuEXLTHZ4iP7BSz+4MyLcP4YRNV1ennKbKqHRmwz7JK0WeLpwBDy9Ko/H6f5hcSRIStL/0JzD5NEEIaO6e7D3rkOXSG74ywwC//0cr9jmw2jCN1oE+U47cO3vfriq3dPvSCpvK/nZDaJBQAv54kV3Uu78twgW0NgJPr+7Wl
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dDltMEFDUjBKR284TlhnS2FPZ2o4V0l2d3V4WFRPTkI2alRSYjYycnFuSXJv?=
- =?utf-8?B?WTkvSHBKNjlKbE91RXlIVmtOVXNQeXovZThtWVBacklHUm5mTGZocFdBS3R4?=
- =?utf-8?B?YzdoaW1XN1hhUit1OEMvTDBnQWJWaWlGMmdCNDNVQWhQWkJON2t4dWpEWWhU?=
- =?utf-8?B?T3lFSVBUY1lCa21MZzJoUTZ2OUdKS1QyclpNTXhxelRtcHRMeHJpbWJKejNv?=
- =?utf-8?B?UDhncWZQVk1MK0VIdFU0UVhGTFlyQjAyd0VWaGFyMTdxMVJPODBqd05nSWlx?=
- =?utf-8?B?ODV5WG1pTmZvcXhJM3F5a2FZVHd6VHg3WlZnK1F5SURxMmFRaDJ0cTAvK1pu?=
- =?utf-8?B?Ulo0RWlsekh3RU5sZ0V6NVM2SXNnSHRkZzZKTjJCaGMyT1FscnNQVEFLV25Q?=
- =?utf-8?B?RUFkY0lDMFVabGdVbHhnNFdsQWJZb05DeExIY3didmN0bDMyUEluYVRlL0pr?=
- =?utf-8?B?bGV3dDdEYlRrYzYxQTliUnNRbGtYbEhETnhHcXlsWlNDMjNEcWFIby9Md3hD?=
- =?utf-8?B?cm1TeDR3SDVQR3MvTkVjZTZOSTcybW1BbHYwa2ZtVHB5N0pLaWVsSVBxOHl3?=
- =?utf-8?B?bDBqTUdkeEdNZkdKd2FYWUhxaUJrNGNMOHhOWlRLeTNLNE1hcUg0YVNNYmps?=
- =?utf-8?B?NjBMakJLQ09od3lDU0l5YUNqM2RHZXlvTEw1V0N5SERIQTZGOThPU3NYYW84?=
- =?utf-8?B?R3B1ZjBpNU55ZDVUZ2EyK0N0aUZDWmZPdUVYbUJoaUJqYnB2bUdzZHFZRHdY?=
- =?utf-8?B?Ym83TjRWTDFoM1Z6SzJMdU5GSllIdkVGL3Rsa3NlT1d1UTk4eDlzRjZIZENY?=
- =?utf-8?B?OThUZWwzTWdmenJNcHNiSmJ0Z1piUVFlMzBoMXlmenJ4bVRoL3E4a3RYTnph?=
- =?utf-8?B?blNaQ0lFS0dVUzQ1aTV0NW5nMlAzUUpRZWZMRGxLekNJMVdtbVhrTVJNSzd5?=
- =?utf-8?B?SjRGVXlSK2ZNNXZtU2dPWU9YS0thcFFjVXhqcEVqaXEva0N2TjhoNGVFa3hw?=
- =?utf-8?B?TXRkK2VSNExGUUh6azRqVUFkVEd4RVBWWXdkZi9iL1k1aXYrRkRqM1JiYW81?=
- =?utf-8?B?SThWbmM5QzltTk0yeE9ncW5IN05EL2pDUTVvTDdNanlJWlRZMmJka3l4c1lP?=
- =?utf-8?B?VE1ZZFQ2aGc0TE1ONzNsMXpjVDRMWFAraHh4UENXVjIrMUNpUVBGZXFqTTRF?=
- =?utf-8?B?ZWtKaFk5MmhERWdGNVpLcGlqaVo3by91UXhyTlhrNkIyUVNzMEFhMFNnRkJG?=
- =?utf-8?B?RTJvQVIzNkFKTFRMcjRzL1RYbWVFZmpRUGljOVRvaURSZDMxRVZUbkJjZGsr?=
- =?utf-8?B?aXp1K1ZoWGlZS1Z2cUl1d0x0NWthaWZ2QWNVMkxMK3hEVWw4QjZzK01YRjJk?=
- =?utf-8?B?TnpmYS9lMmd6N2Z4TlZvdytIUXNDUFRxWnJmdVUxR0RKOURQVXVyTTNsZXlD?=
- =?utf-8?B?SUtwdDg0Z0lHSkhMazVEUklLS0pWQW94QTkxQTV3bEl1eno3M0hvZVNNejJD?=
- =?utf-8?B?bW9BRDUwek9jRE1yNFNvR2xKdW5vT0JpVWcrRTZDZ1pMZFdkbmFOUUpheThT?=
- =?utf-8?B?TjFqblVRcHlmbGxlRWxObG1LeVIwcEJ3ZkJXb1NkSWExaGplSldFbDIyTWND?=
- =?utf-8?B?T21mQ0ZVc3dxT1cvQlUwS3dKOU1rZnhzc3pNeTE0OG1vajkzRXg4d011TlVK?=
- =?utf-8?B?aVFIME4vSXExNXUvSitFMjFPVVkzdnExSXlmMTQ2cW1vTkxmQ1kzcGRyTkZw?=
- =?utf-8?Q?7v1S2ftwitYtDns6l4=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <266AD3AFD25AC84E8A82BD6833AB500A@AUSP282.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936A813AD8
+	for <loongarch@lists.linux.dev>; Mon, 10 Jul 2023 20:44:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=xDSJ2LI5HRZuClnGzt1hdoG45riL6n6McweKjX1Jt7o=; b=QnpOdXItCSyXnIcQN4lLoMCi9G
+	APaag4+NpG4VceTEAmfTs2AOr/sDMZ9JgR+lDE7sfAZT/YiLnVm22GAjpbaGpR8xtfeOhQzCMjKl1
+	r0gg/00IPWfEt6lwVEPvjMR1uhgVz+a2WkI9MD+ql+GK0Oc82um2HYSxnWMhQSpOszmb3/OWThI0C
+	d8GUGPnQzwS9007VurYnDf3NiHRiSoR6hTvrTPW3iDyRonBG5R0gD2+fLJX63iJSMNgdxcjw6L0Mu
+	7S57uDsLbv1vM8m1P2Op8/b5WltnHiilk1ZZXyNsfar3UJejwaHfmnxtaK4ql6GgGTXpTZDklziHi
+	ovW2HfbA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qIxjS-00EupA-Nc; Mon, 10 Jul 2023 20:43:42 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Mike Rapoport <rppt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: [PATCH v5 14/38] loongarch: Implement the new page table range API
+Date: Mon, 10 Jul 2023 21:43:15 +0100
+Message-Id: <20230710204339.3554919-15-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20230710204339.3554919-1-willy@infradead.org>
+References: <20230710204339.3554919-1-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dfd1ffb-1ded-48d4-7536-08db815f64f0
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2023 16:04:51.8351
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SYYP282MB2128
+Content-Transfer-Encoding: 8bit
 
-5ZyoIDIwMjMtMDctMTDmmJ/mnJ/kuIDnmoQgMTU6NTMgKzA4MDDvvIxIdWFjYWkgQ2hlbuWGmemB
-k++8mg0KPiANCj4gT24gdGhlIG90aGVyIGhhbmQsIEkgZm91bmQgdGhhdCBmb3Igbm9uLUZEVCBz
-eXN0ZW0NCj4gQ09ORklHX0NNRExJTkVfRk9SQ0UgaW5kZWVkIGRvZXNuJ3Qgd29yaywgYnV0DQo+
-IENPTkZJR19DTURMSU5FX0JPT1RMT0FERVIgd29ya3MsIHNvIHlvdSBuZWVkbid0IGZpeA0KPiBD
-T05GSUdfQ01ETElORV9CT09UTE9BREVSLCBhbmQgeW91IG5lZWQgYWRkICJnb3RvIG91dCIgaW4g
-dGhlICJpZg0KPiAoaW5pdGlhbF9ib290X3BhcmFtcykiIGNvbmRpdGlvbi4NCj4gDQo+IEh1YWNh
-aQ0KDQpBbmQgSXQgaXMgQ09ORklHX0NNRExJTkVfRk9SQ0UgYnV0IG5vdCBDT05GSUdfQ01ETElO
-RV9CT09UTE9BREVSDQp0aGF0IGRvZXMgd29yay4NCg0KZG9ubW9yDQo=
+Add update_mmu_cache_range() and change _PFN_SHIFT to PFN_PTE_SHIFT.
+It would probably be more efficient to implement __update_tlb() by
+flushing the entire folio instead of calling __update_tlb() N times,
+but I'll leave that for someone who understands the architecture better.
+
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+---
+ arch/loongarch/include/asm/cacheflush.h   |  1 +
+ arch/loongarch/include/asm/pgtable-bits.h |  4 +--
+ arch/loongarch/include/asm/pgtable.h      | 33 ++++++++++++-----------
+ arch/loongarch/mm/pgtable.c               |  2 +-
+ arch/loongarch/mm/tlb.c                   |  2 +-
+ 5 files changed, 23 insertions(+), 19 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
+index 0681788eb474..88a44da50a3b 100644
+--- a/arch/loongarch/include/asm/cacheflush.h
++++ b/arch/loongarch/include/asm/cacheflush.h
+@@ -47,6 +47,7 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
+ #define flush_cache_vmap(start, end)			do { } while (0)
+ #define flush_cache_vunmap(start, end)			do { } while (0)
+ #define flush_icache_page(vma, page)			do { } while (0)
++#define flush_icache_pages(vma, page)			do { } while (0)
+ #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
+ #define flush_dcache_page(page)				do { } while (0)
+ #define flush_dcache_mmap_lock(mapping)			do { } while (0)
+diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
+index de46a6b1e9f1..35348d4c4209 100644
+--- a/arch/loongarch/include/asm/pgtable-bits.h
++++ b/arch/loongarch/include/asm/pgtable-bits.h
+@@ -50,12 +50,12 @@
+ #define _PAGE_NO_EXEC		(_ULCAST_(1) << _PAGE_NO_EXEC_SHIFT)
+ #define _PAGE_RPLV		(_ULCAST_(1) << _PAGE_RPLV_SHIFT)
+ #define _CACHE_MASK		(_ULCAST_(3) << _CACHE_SHIFT)
+-#define _PFN_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
++#define PFN_PTE_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
+ 
+ #define _PAGE_USER	(PLV_USER << _PAGE_PLV_SHIFT)
+ #define _PAGE_KERN	(PLV_KERN << _PAGE_PLV_SHIFT)
+ 
+-#define _PFN_MASK (~((_ULCAST_(1) << (_PFN_SHIFT)) - 1) & \
++#define _PFN_MASK (~((_ULCAST_(1) << (PFN_PTE_SHIFT)) - 1) & \
+ 		  ((_ULCAST_(1) << (_PAGE_PFN_END_SHIFT)) - 1))
+ 
+ /*
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index 38afeb7dd58b..e7cf25e452c0 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -237,9 +237,9 @@ extern pmd_t mk_pmd(struct page *page, pgprot_t prot);
+ extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pmd_t pmd);
+ 
+ #define pte_page(x)		pfn_to_page(pte_pfn(x))
+-#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> _PFN_SHIFT))
+-#define pfn_pte(pfn, prot)	__pte(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
+-#define pfn_pmd(pfn, prot)	__pmd(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
++#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> PFN_PTE_SHIFT))
++#define pfn_pte(pfn, prot)	__pte(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
++#define pfn_pmd(pfn, prot)	__pmd(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
+ 
+ /*
+  * Initialize a new pgd / pud / pmd table with invalid pointers.
+@@ -334,19 +334,13 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ 	}
+ }
+ 
+-static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+-			      pte_t *ptep, pte_t pteval)
+-{
+-	set_pte(ptep, pteval);
+-}
+-
+ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+ {
+ 	/* Preserve global status for the pair */
+ 	if (pte_val(*ptep_buddy(ptep)) & _PAGE_GLOBAL)
+-		set_pte_at(mm, addr, ptep, __pte(_PAGE_GLOBAL));
++		set_pte(ptep, __pte(_PAGE_GLOBAL));
+ 	else
+-		set_pte_at(mm, addr, ptep, __pte(0));
++		set_pte(ptep, __pte(0));
+ }
+ 
+ #define PGD_T_LOG2	(__builtin_ffs(sizeof(pgd_t)) - 1)
+@@ -445,11 +439,20 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ extern void __update_tlb(struct vm_area_struct *vma,
+ 			unsigned long address, pte_t *ptep);
+ 
+-static inline void update_mmu_cache(struct vm_area_struct *vma,
+-			unsigned long address, pte_t *ptep)
++static inline void update_mmu_cache_range(struct vm_fault *vmf,
++		struct vm_area_struct *vma, unsigned long address,
++		pte_t *ptep, unsigned int nr)
+ {
+-	__update_tlb(vma, address, ptep);
++	for (;;) {
++		__update_tlb(vma, address, ptep);
++		if (--nr == 0)
++			break;
++		address += PAGE_SIZE;
++		ptep++;
++	}
+ }
++#define update_mmu_cache(vma, addr, ptep) \
++	update_mmu_cache_range(NULL, vma, addr, ptep, 1)
+ 
+ #define __HAVE_ARCH_UPDATE_MMU_TLB
+ #define update_mmu_tlb	update_mmu_cache
+@@ -462,7 +465,7 @@ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
+ 
+ static inline unsigned long pmd_pfn(pmd_t pmd)
+ {
+-	return (pmd_val(pmd) & _PFN_MASK) >> _PFN_SHIFT;
++	return (pmd_val(pmd) & _PFN_MASK) >> PFN_PTE_SHIFT;
+ }
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
+index 36a6dc0148ae..1260cf30e3ee 100644
+--- a/arch/loongarch/mm/pgtable.c
++++ b/arch/loongarch/mm/pgtable.c
+@@ -107,7 +107,7 @@ pmd_t mk_pmd(struct page *page, pgprot_t prot)
+ {
+ 	pmd_t pmd;
+ 
+-	pmd_val(pmd) = (page_to_pfn(page) << _PFN_SHIFT) | pgprot_val(prot);
++	pmd_val(pmd) = (page_to_pfn(page) << PFN_PTE_SHIFT) | pgprot_val(prot);
+ 
+ 	return pmd;
+ }
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index 00bb563e3c89..eb8572e201ea 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -252,7 +252,7 @@ static void output_pgtable_bits_defines(void)
+ 	pr_define("_PAGE_WRITE_SHIFT %d\n", _PAGE_WRITE_SHIFT);
+ 	pr_define("_PAGE_NO_READ_SHIFT %d\n", _PAGE_NO_READ_SHIFT);
+ 	pr_define("_PAGE_NO_EXEC_SHIFT %d\n", _PAGE_NO_EXEC_SHIFT);
+-	pr_define("_PFN_SHIFT %d\n", _PFN_SHIFT);
++	pr_define("PFN_PTE_SHIFT %d\n", PFN_PTE_SHIFT);
+ 	pr_debug("\n");
+ }
+ 
+-- 
+2.39.2
+
