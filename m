@@ -1,134 +1,104 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4249D4410;
-	Tue, 11 Jul 2023 10:44:52 +0000 (UTC)
-X-UUID: 5ab2eed8384245e190523efe0c7c4026-20230711
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.27,REQID:232bb03d-c028-437f-8d8f-aa2a3e0548cf,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:6
-X-CID-INFO: VERSION:1.1.27,REQID:232bb03d-c028-437f-8d8f-aa2a3e0548cf,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:6
-X-CID-META: VersionHash:01c9525,CLOUDID:aef8deda-b4fa-43c8-9c3e-0d3fabd03ec0,B
-	ulkID:230711184442Q5F2LS16,BulkQuantity:0,Recheck:0,SF:24|17|19|42|38|102,
-	TC:nil,Content:1,EDM:-3,IP:-2,URL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-	,OSI:0,OSA:0,AV:0,LES:1,SPR:NO
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
-	TF_CID_SPAM_ULS
-X-UUID: 5ab2eed8384245e190523efe0c7c4026-20230711
-X-User: jianghaoran@kylinos.cn
-Received: from [172.30.60.211] [(39.156.73.12)] by mailgw
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1961543371; Tue, 11 Jul 2023 18:44:40 +0800
-Message-ID: <b470ee4c7681eb37c45bb2ff38342281f89bb1ae.camel@kylinos.cn>
-Subject: =?gb2312?Q?=BB=D8=B8=B4=A3=BA=5BPATCH?= v2] samples/bpf: Fix
- compilation failure for samples/bpf on LoongArch Fedora
-From: "jianghaoran@kylinos.cn" <jianghaoran@kylinos.cn>
-To: Daniel Borkmann <daniel@iogearbox.net>, Huacai Chen
- <chenhuacai@kernel.org>
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
- haoluo@google.com,  john.fastabend@gmail.com, jolsa@kernel.org,
- kernel@xen0n.name, kpsingh@kernel.org,  linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, loongarch@lists.linux.dev,  martin.lau@linux.dev,
- nathan@kernel.org, ndesaulniers@google.com, sdf@google.com, 
- song@kernel.org, trix@redhat.com, yangtiezhu@loongson.cn, yhs@fb.com
-Date: Tue, 11 Jul 2023 18:39:03 +0800
-In-Reply-To: <7ecc42aa-4a0f-77f7-a2ad-236270137b6e@iogearbox.net>
-References: 
-	<CAAhV-H6s3N=-brDz24PfrtEKNFjvnLjbDR2NpOVDF_fN7rA53A@mail.gmail.com>
-	 <20230710052750.259595-1-jianghaoran@kylinos.cn>
-	 <CAAhV-H7orsUHDZuwcTUeWYbizcWRG4k_BPy53W7PT_MQ_2SXgw@mail.gmail.com>
-	 <7ecc42aa-4a0f-77f7-a2ad-236270137b6e@iogearbox.net>
-Content-Type: text/plain; charset="euc-tw"
-User-Agent: Evolution 3.36.1-2kord0k2.3.2 
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CECD618C03
+	for <loongarch@lists.linux.dev>; Tue, 11 Jul 2023 12:19:18 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.108])
+	by gateway (Coremail) with SMTP id _____8AxjuvESK1kKYEDAA--.7333S3;
+	Tue, 11 Jul 2023 20:19:16 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.108])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniPDSK1kBa0oAA--.9337S2;
+	Tue, 11 Jul 2023 20:19:16 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Yingkun Meng <mengyingkun@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v3 0/2] New driver for the Loongson LS2X APB DMA Controller
+Date: Tue, 11 Jul 2023 20:18:59 +0800
+Message-Id: <cover.1689075791.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxniPDSK1kBa0oAA--.9337S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur43WFW7JFyDJw18ArWfXrc_yoW8GF4rpa
+	y3ua9akFyjqFW3CrZ3Ga48ur1fZ3WfJ39rWa9xAw1UZ3y7Cryjq3yfKanY9FWUCayIqFWj
+	vFZ5GFyUCFnrZrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8PCzJUUUUU==
 
-=C7=E3 2023-07-11=D1=D3=DF=E6=C4=A8=CE=FB 09:39 +0200=A1=A2Daniel Borkmann=
-=8E=A3=A1=FA=E7=AC=A1=A8
-> On 7/10/23 7:54 AM, Huacai Chen wrote:
-> > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> >=20
-> > On Mon, Jul 10, 2023 at 1:34PM Haoran Jiang <
-> > jianghaoran@kylinos.cn> wrote:
-> > > When building the latest samples/bpf on LoongArch Fedora
-> > >=20
-> > >       make M=3Dsamples/bpf
-> > >=20
-> > > There are compilation errors as follows:
-> > >=20
-> > > In file included from ./linux/samples/bpf/sockex2_kern.c:2:
-> > > In file included from ./include/uapi/linux/in.h:25:
-> > > In file included from ./include/linux/socket.h:8:
-> > > In file included from ./include/linux/uio.h:9:
-> > > In file included from ./include/linux/thread_info.h:60:
-> > > In file included from
-> > > ./arch/loongarch/include/asm/thread_info.h:15:
-> > > In file included from
-> > > ./arch/loongarch/include/asm/processor.h:13:
-> > > In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
-> > > ./arch/loongarch/include/asm/loongarch.h:13:10: fatal error:
-> > > 'larchintrin.h' file not found
-> > >           ^~~~~~~~~~~~~~~
-> > > 1 error generated.
-> > >=20
-> > > larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
-> > > and the header file location is specified at compile time.
-> > >=20
-> > > Test on LoongArch Fedora:
-> > > https://github.com/fedora-remix-loongarch/releases-info
-> > >=20
-> > > Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> > >=20
-> > > ---
-> > > v2:
-> > > use LoongArch instead of Loongarch in the title and commit
-> > > message.
-> > > ---
-> > >   samples/bpf/Makefile | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> > > index 615f24ebc49c..b301796a3862 100644
-> > > --- a/samples/bpf/Makefile
-> > > +++ b/samples/bpf/Makefile
-> > > @@ -434,7 +434,7 @@ $(obj)/%.o: $(src)/%.c
-> > >          @echo "  CLANG-bpf " $@
-> > >          $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)
-> > > $(BPF_EXTRA_CFLAGS) \
-> > >                  -I$(obj)
-> > > -I$(srctree)/tools/testing/selftests/bpf/ \
-> > > -               -I$(LIBBPF_INCLUDE) \
-> > > +               -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
->=20
-> There's still one location in XDP_SAMPLE_CFLAGS, do we need the
-> $(CLANG_SYS_INCLUDES)
-> there as well?
+Hi all:
 
-XDP_SAMPLE_CFLAGS only affects the compilation of xdp_sample_user.c. It
-is a user-mode application=A1=A2the associated header files of clang are no=
-t
-used. larchintrin.h will only be included in *.bpf.c and *kern.c
-files.So I don't think $(CLANG_SYS_INCLUDES) needs to be included here.
+This patchset introduces you to the LS2X apbdma controller.
 
->=20
-> > >                  -D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value=20
-> > > -Wno-pointer-sign \
-> > >                  -D__TARGET_ARCH_$(SRCARCH) -Wno-compare-
-> > > distinct-pointer-types \
-> > >                  -Wno-gnu-variable-sized-type-not-at-end \
-> > > --
-> > > 2.27.0
-> > >=20
-> > >=20
+The Loongson LS2X APB DMA controller is available on Loongson-2K chips.
+It is a single-channel, configurable DMA controller IP core based on the
+AXI bus, whose main function is to integrate DMA functionality on a chip
+dedicated to carrying data between memory and peripherals in APB bus
+(e.g. nand).
+
+Thanks.
+
+----
+V3:
+patch(1/2)
+  - Add clocks property;
+  - Drop dma-channels property, for we are single-channel dmac.
+patch(2/2)
+  - Add clk support. 
+
+Link to V2:
+https://lore.kernel.org/dmaengine/cover.1686192243.git.zhoubinbin@loongson.cn/
+
+V2:
+patch(1/2)
+  - Minor changes from Conor;
+  - Add Reviewed-by tag.
+patch(2/2)
+  - Fix build errors from lkp@intel.com.
+
+Link to V1:
+https://lore.kernel.org/dmaengine/cover.1685448898.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: dmaengine: Add Loongson LS2X APB DMA controller
+  dmaengine: ls2x-apb: new driver for the Loongson LS2X APB DMA
+    controller
+
+ .../bindings/dma/loongson,ls2x-apbdma.yaml    |  62 ++
+ MAINTAINERS                                   |   7 +
+ drivers/dma/Kconfig                           |  14 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/ls2x-apb-dma.c                    | 684 ++++++++++++++++++
+ 5 files changed, 768 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
+ create mode 100644 drivers/dma/ls2x-apb-dma.c
+
+-- 
+2.39.3
 
