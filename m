@@ -1,116 +1,107 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A670D174C9;
-	Tue, 11 Jul 2023 07:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=Jvs47pnLFbOZN+azKq1C5wj2WCQusgiaHr3c6gc02MA=; b=TpKJPkSbUuCRkZ5xDjO8ka1TrN
-	vG6Gfqk1XHRrSmiWuno8oVr93rlUi4n94wEe9hVDazeG9JY1DlTiz72QvjH3kh/dhh3zsUx4HcZ2U
-	Hj8IC/7NNEDJXXtIAtW6OZ37fv+T5E6v9sRoI0epkQmgZdORzqWn5QiROxqN1/0/orQxMTOQbGEpa
-	6gC82FusuIfdoR1+0Fwp+vZt8ap5DEZNyFcx5MGQUpjP1o3Z3X3NXYDWEIMQd2hWbiZohtj398blq
-	yHA//54Bl2ycuwdbP8Idz6fMVqyE9lu/2mKQwhuzPjgAinfopG5GjHsAVGHxsKDMFVXRWAmG+pGtb
-	vl0CcZOA==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1qJ7yP-0007pp-CJ; Tue, 11 Jul 2023 09:39:49 +0200
-Received: from [85.1.206.226] (helo=linux.home)
-	by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1qJ7yO-000Xjb-L2; Tue, 11 Jul 2023 09:39:48 +0200
-Subject: Re: [PATCH v2] samples/bpf: Fix compilation failure for samples/bpf
- on LoongArch Fedora
-To: Huacai Chen <chenhuacai@kernel.org>, Haoran Jiang <jianghaoran@kylinos.cn>
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
- haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org,
- kernel@xen0n.name, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, loongarch@lists.linux.dev, martin.lau@linux.dev,
- nathan@kernel.org, ndesaulniers@google.com, sdf@google.com, song@kernel.org,
- trix@redhat.com, yangtiezhu@loongson.cn, yhs@fb.com
-References: <CAAhV-H6s3N=-brDz24PfrtEKNFjvnLjbDR2NpOVDF_fN7rA53A@mail.gmail.com>
- <20230710052750.259595-1-jianghaoran@kylinos.cn>
- <CAAhV-H7orsUHDZuwcTUeWYbizcWRG4k_BPy53W7PT_MQ_2SXgw@mail.gmail.com>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <7ecc42aa-4a0f-77f7-a2ad-236270137b6e@iogearbox.net>
-Date: Tue, 11 Jul 2023 09:39:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3360E17723
+	for <loongarch@lists.linux.dev>; Tue, 11 Jul 2023 09:13:43 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxY_BFHa1kInIDAA--.10055S3;
+	Tue, 11 Jul 2023 17:13:41 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxvM5EHa1kgHAoAA--.49364S2;
+	Tue, 11 Jul 2023 17:13:40 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kselftest@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v6] selftests/clone3: Fix broken test under !CONFIG_TIME_NS
+Date: Tue, 11 Jul 2023 17:13:34 +0800
+Message-Id: <1689066814-13295-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8CxvM5EHa1kgHAoAA--.49364S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kw4UZr1xJFy3trW7GF47Jrc_yoW8trW5pF
+	yxZw1DKFWFga17tFyDZw1qgFWrGF4kXrW0qF4UZ34UAr1fWryrZr4xKa48JFyUK3yFv39Y
+	yFyfGF47uF1UXagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jYSoJUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7orsUHDZuwcTUeWYbizcWRG4k_BPy53W7PT_MQ_2SXgw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.8/26965/Mon Jul 10 09:29:40 2023)
 
-On 7/10/23 7:54 AM, Huacai Chen wrote:
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> 
-> On Mon, Jul 10, 2023 at 1:34 PM Haoran Jiang <jianghaoran@kylinos.cn> wrote:
->>
->> When building the latest samples/bpf on LoongArch Fedora
->>
->>       make M=samples/bpf
->>
->> There are compilation errors as follows:
->>
->> In file included from ./linux/samples/bpf/sockex2_kern.c:2:
->> In file included from ./include/uapi/linux/in.h:25:
->> In file included from ./include/linux/socket.h:8:
->> In file included from ./include/linux/uio.h:9:
->> In file included from ./include/linux/thread_info.h:60:
->> In file included from ./arch/loongarch/include/asm/thread_info.h:15:
->> In file included from ./arch/loongarch/include/asm/processor.h:13:
->> In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
->> ./arch/loongarch/include/asm/loongarch.h:13:10: fatal error: 'larchintrin.h' file not found
->>           ^~~~~~~~~~~~~~~
->> 1 error generated.
->>
->> larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
->> and the header file location is specified at compile time.
->>
->> Test on LoongArch Fedora:
->> https://github.com/fedora-remix-loongarch/releases-info
->>
->> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
->>
->> ---
->> v2:
->> use LoongArch instead of Loongarch in the title and commit message.
->> ---
->>   samples/bpf/Makefile | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
->> index 615f24ebc49c..b301796a3862 100644
->> --- a/samples/bpf/Makefile
->> +++ b/samples/bpf/Makefile
->> @@ -434,7 +434,7 @@ $(obj)/%.o: $(src)/%.c
->>          @echo "  CLANG-bpf " $@
->>          $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS) \
->>                  -I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
->> -               -I$(LIBBPF_INCLUDE) \
->> +               -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
+When execute the following command to test clone3 under !CONFIG_TIME_NS:
 
-There's still one location in XDP_SAMPLE_CFLAGS, do we need the $(CLANG_SYS_INCLUDES)
-there as well?
+  # make headers && cd tools/testing/selftests/clone3 && make && ./clone3
 
->>                  -D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign \
->>                  -D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-types \
->>                  -Wno-gnu-variable-sized-type-not-at-end \
->> --
->> 2.27.0
->>
->>
+we can see the following error info:
+
+  # [7538] Trying clone3() with flags 0x80 (size 0)
+  # Invalid argument - Failed to create new process
+  # [7538] clone3() with flags says: -22 expected 0
+  not ok 18 [7538] Result (-22) is different than expected (0)
+  ...
+  # Totals: pass:18 fail:1 xfail:0 xpass:0 skip:0 error:0
+
+This is because if CONFIG_TIME_NS is not set, but the flag
+CLONE_NEWTIME (0x80) is used to clone a time namespace, it
+will return -EINVAL in copy_time_ns().
+
+If kernel does not support CONFIG_TIME_NS, /proc/self/ns/time
+will be not exist, and then we should skip clone3() test with
+CLONE_NEWTIME.
+
+With this patch under !CONFIG_TIME_NS:
+
+  # make headers && cd tools/testing/selftests/clone3 && make && ./clone3
+  ...
+  # Time namespaces are not supported
+  ok 18 # SKIP Skipping clone3() with CLONE_NEWTIME
+  ...
+  # Totals: pass:18 fail:0 xfail:0 xpass:0 skip:1 error:0
+
+Fixes: 515bddf0ec41 ("selftests/clone3: test clone3 with CLONE_NEWTIME")
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+v6: Rebase on 6.5-rc1 and update the commit message
+
+ tools/testing/selftests/clone3/clone3.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
+index e60cf4d..1c61e3c 100644
+--- a/tools/testing/selftests/clone3/clone3.c
++++ b/tools/testing/selftests/clone3/clone3.c
+@@ -196,7 +196,12 @@ int main(int argc, char *argv[])
+ 			CLONE3_ARGS_NO_TEST);
+ 
+ 	/* Do a clone3() in a new time namespace */
+-	test_clone3(CLONE_NEWTIME, 0, 0, CLONE3_ARGS_NO_TEST);
++	if (access("/proc/self/ns/time", F_OK) == 0) {
++		test_clone3(CLONE_NEWTIME, 0, 0, CLONE3_ARGS_NO_TEST);
++	} else {
++		ksft_print_msg("Time namespaces are not supported\n");
++		ksft_test_result_skip("Skipping clone3() with CLONE_NEWTIME\n");
++	}
+ 
+ 	/* Do a clone3() with exit signal (SIGCHLD) in flags */
+ 	test_clone3(SIGCHLD, 0, -EINVAL, CLONE3_ARGS_NO_TEST);
+-- 
+2.1.0
 
