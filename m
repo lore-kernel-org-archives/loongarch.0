@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B21F18019
-	for <loongarch@lists.linux.dev>; Tue, 11 Jul 2023 09:57:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64F85182A4
+	for <loongarch@lists.linux.dev>; Tue, 11 Jul 2023 09:57:14 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxHOt3J61k+nUDAA--.4768S3;
-	Tue, 11 Jul 2023 17:57:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxV_F5J61kB3YDAA--.10203S3;
+	Tue, 11 Jul 2023 17:57:13 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx3yN2J61kzH4oAA--.9186S2;
-	Tue, 11 Jul 2023 17:57:11 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx3yN2J61kzH4oAA--.9186S4;
+	Tue, 11 Jul 2023 17:57:12 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Shuah Khan <shuah@kernel.org>,
 	Shuah Khan <skhan@linuxfoundation.org>,
@@ -15,43 +15,165 @@ Cc: linux-kselftest@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v2 0/2] Modify vDSO selftests
-Date: Tue, 11 Jul 2023 17:57:03 +0800
-Message-Id: <1689069425-17414-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 2/2] selftests/vDSO: Get version and name for all archs
+Date: Tue, 11 Jul 2023 17:57:05 +0800
+Message-Id: <1689069425-17414-3-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8Bx3yN2J61kzH4oAA--.9186S2
+In-Reply-To: <1689069425-17414-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1689069425-17414-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8Bx3yN2J61kzH4oAA--.9186S4
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
-	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
-	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j0sjUUUUUU=
+X-Coremail-Antispam: 1Uk129KBj93XoWxuFy5Gw1UAFWkKF1kGF48uFX_yoWrAw13pa
+	n7Kry2kw48tayYgw1Iyw1Dur4rJrn7Ga18Aw48AFW3AF47Zw48JrWDGFyrX3ZxurWvvrs8
+	u3WFgr4F9aykJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjxU4AhLUUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-v2: Rebase on 6.5-rc1 and update the commit message
+It could not find __vdso_getcpu and __vdso_gettimeofday when test
+getcpu and gettimeofday on LoongArch.
 
-Tiezhu Yang (2):
-  selftests/vDSO: Add support for LoongArch
-  selftests/vDSO: Get version and name for all archs
+  # make headers && cd tools/testing/selftests/vDSO && make
+  # ./vdso_test_getcpu
+  Could not find __vdso_getcpu
+  # ./vdso_test_gettimeofday
+  Could not find __vdso_gettimeofday
 
- tools/testing/selftests/vDSO/vdso_config.h         |  6 ++++-
+One simple way is to add LoongArch case to define version and name,
+just like commit d942f231afc0 ("selftests/vDSO: Add riscv getcpu &
+gettimeofday test"), but it is not the best way.
+
+Since each architecture has already defined names and versions in
+vdso_config.h, it is proper to include vdso_config.h to get version
+and name for all archs.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
  tools/testing/selftests/vDSO/vdso_test_getcpu.c    | 16 +++++--------
  .../selftests/vDSO/vdso_test_gettimeofday.c        | 26 ++++++----------------
- 3 files changed, 18 insertions(+), 30 deletions(-)
+ 2 files changed, 13 insertions(+), 29 deletions(-)
 
+diff --git a/tools/testing/selftests/vDSO/vdso_test_getcpu.c b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
+index 1df5d05..b758f68 100644
+--- a/tools/testing/selftests/vDSO/vdso_test_getcpu.c
++++ b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
+@@ -13,13 +13,7 @@
+ 
+ #include "../kselftest.h"
+ #include "parse_vdso.h"
+-
+-#if defined(__riscv)
+-const char *version = "LINUX_4.15";
+-#else
+-const char *version = "LINUX_2.6";
+-#endif
+-const char *name = "__vdso_getcpu";
++#include "vdso_config.h"
+ 
+ struct getcpu_cache;
+ typedef long (*getcpu_t)(unsigned int *, unsigned int *,
+@@ -27,6 +21,8 @@ typedef long (*getcpu_t)(unsigned int *, unsigned int *,
+ 
+ int main(int argc, char **argv)
+ {
++	const char *version = versions[VDSO_VERSION];
++	const char **name = (const char **)&names[VDSO_NAMES];
+ 	unsigned long sysinfo_ehdr;
+ 	unsigned int cpu, node;
+ 	getcpu_t get_cpu;
+@@ -40,9 +36,9 @@ int main(int argc, char **argv)
+ 
+ 	vdso_init_from_sysinfo_ehdr(getauxval(AT_SYSINFO_EHDR));
+ 
+-	get_cpu = (getcpu_t)vdso_sym(version, name);
++	get_cpu = (getcpu_t)vdso_sym(version, name[4]);
+ 	if (!get_cpu) {
+-		printf("Could not find %s\n", name);
++		printf("Could not find %s\n", name[4]);
+ 		return KSFT_SKIP;
+ 	}
+ 
+@@ -50,7 +46,7 @@ int main(int argc, char **argv)
+ 	if (ret == 0) {
+ 		printf("Running on CPU %u node %u\n", cpu, node);
+ 	} else {
+-		printf("%s failed\n", name);
++		printf("%s failed\n", name[4]);
+ 		return KSFT_FAIL;
+ 	}
+ 
+diff --git a/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c b/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
+index e411f28..ee4f1ca 100644
+--- a/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
++++ b/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
+@@ -18,25 +18,13 @@
+ 
+ #include "../kselftest.h"
+ #include "parse_vdso.h"
+-
+-/*
+- * ARM64's vDSO exports its gettimeofday() implementation with a different
+- * name and version from other architectures, so we need to handle it as
+- * a special case.
+- */
+-#if defined(__aarch64__)
+-const char *version = "LINUX_2.6.39";
+-const char *name = "__kernel_gettimeofday";
+-#elif defined(__riscv)
+-const char *version = "LINUX_4.15";
+-const char *name = "__vdso_gettimeofday";
+-#else
+-const char *version = "LINUX_2.6";
+-const char *name = "__vdso_gettimeofday";
+-#endif
++#include "vdso_config.h"
+ 
+ int main(int argc, char **argv)
+ {
++	const char *version = versions[VDSO_VERSION];
++	const char **name = (const char **)&names[VDSO_NAMES];
++
+ 	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
+ 	if (!sysinfo_ehdr) {
+ 		printf("AT_SYSINFO_EHDR is not present!\n");
+@@ -47,10 +35,10 @@ int main(int argc, char **argv)
+ 
+ 	/* Find gettimeofday. */
+ 	typedef long (*gtod_t)(struct timeval *tv, struct timezone *tz);
+-	gtod_t gtod = (gtod_t)vdso_sym(version, name);
++	gtod_t gtod = (gtod_t)vdso_sym(version, name[0]);
+ 
+ 	if (!gtod) {
+-		printf("Could not find %s\n", name);
++		printf("Could not find %s\n", name[0]);
+ 		return KSFT_SKIP;
+ 	}
+ 
+@@ -61,7 +49,7 @@ int main(int argc, char **argv)
+ 		printf("The time is %lld.%06lld\n",
+ 		       (long long)tv.tv_sec, (long long)tv.tv_usec);
+ 	} else {
+-		printf("%s failed\n", name);
++		printf("%s failed\n", name[0]);
+ 		return KSFT_FAIL;
+ 	}
+ 
 -- 
 2.1.0
 
