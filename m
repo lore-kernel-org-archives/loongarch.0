@@ -1,36 +1,26 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936A813AD8
-	for <loongarch@lists.linux.dev>; Mon, 10 Jul 2023 20:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=xDSJ2LI5HRZuClnGzt1hdoG45riL6n6McweKjX1Jt7o=; b=QnpOdXItCSyXnIcQN4lLoMCi9G
-	APaag4+NpG4VceTEAmfTs2AOr/sDMZ9JgR+lDE7sfAZT/YiLnVm22GAjpbaGpR8xtfeOhQzCMjKl1
-	r0gg/00IPWfEt6lwVEPvjMR1uhgVz+a2WkI9MD+ql+GK0Oc82um2HYSxnWMhQSpOszmb3/OWThI0C
-	d8GUGPnQzwS9007VurYnDf3NiHRiSoR6hTvrTPW3iDyRonBG5R0gD2+fLJX63iJSMNgdxcjw6L0Mu
-	7S57uDsLbv1vM8m1P2Op8/b5WltnHiilk1ZZXyNsfar3UJejwaHfmnxtaK4ql6GgGTXpTZDklziHi
-	ovW2HfbA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qIxjS-00EupA-Nc; Mon, 10 Jul 2023 20:43:42 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	linux-arch@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Mike Rapoport <rppt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: [PATCH v5 14/38] loongarch: Implement the new page table range API
-Date: Mon, 10 Jul 2023 21:43:15 +0100
-Message-Id: <20230710204339.3554919-15-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20230710204339.3554919-1-willy@infradead.org>
-References: <20230710204339.3554919-1-willy@infradead.org>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D238C171B8
+	for <loongarch@lists.linux.dev>; Tue, 11 Jul 2023 07:11:05 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.108])
+	by gateway (Coremail) with SMTP id _____8DxPOuBAK1kTGoDAA--.4637S3;
+	Tue, 11 Jul 2023 15:10:57 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.108])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF81_AK1k308oAA--.46365S2;
+	Tue, 11 Jul 2023 15:10:56 +0800 (CST)
+From: Feiyang Chen <chenfeiyang@loongson.cn>
+To: chenhuacai@kernel.org
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
+	dvyukov@google.com,
+	andreyknvl@gmail.com,
+	corbet@lwn.net,
+	loongarch@lists.linux.dev,
+	kasan-dev@googlegroups.com,
+	loongson-kernel@lists.loongnix.cn,
+	chris.chenfeiyang@gmail.com
+Subject: [PATCH v2 0/2] LoongArch: Allow building with kcov coverage
+Date: Tue, 11 Jul 2023 15:10:41 +0800
+Message-Id: <20230711071043.4119353-1-chenfeiyang@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,154 +28,35 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxF81_AK1k308oAA--.46365S2
+X-CM-SenderInfo: hfkh0wphl1t03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIx
+	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-Add update_mmu_cache_range() and change _PFN_SHIFT to PFN_PTE_SHIFT.
-It would probably be more efficient to implement __update_tlb() by
-flushing the entire folio instead of calling __update_tlb() N times,
-but I'll leave that for someone who understands the architecture better.
+Provide kaslr_offset() and allow building with kcov.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
----
- arch/loongarch/include/asm/cacheflush.h   |  1 +
- arch/loongarch/include/asm/pgtable-bits.h |  4 +--
- arch/loongarch/include/asm/pgtable.h      | 33 ++++++++++++-----------
- arch/loongarch/mm/pgtable.c               |  2 +-
- arch/loongarch/mm/tlb.c                   |  2 +-
- 5 files changed, 23 insertions(+), 19 deletions(-)
+Feiyang Chen (2):
+  LoongArch: Provide kaslr_offset() to get kernel offset
+  LoongArch: Allow building with kcov coverage
 
-diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
-index 0681788eb474..88a44da50a3b 100644
---- a/arch/loongarch/include/asm/cacheflush.h
-+++ b/arch/loongarch/include/asm/cacheflush.h
-@@ -47,6 +47,7 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
- #define flush_cache_vmap(start, end)			do { } while (0)
- #define flush_cache_vunmap(start, end)			do { } while (0)
- #define flush_icache_page(vma, page)			do { } while (0)
-+#define flush_icache_pages(vma, page)			do { } while (0)
- #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
- #define flush_dcache_page(page)				do { } while (0)
- #define flush_dcache_mmap_lock(mapping)			do { } while (0)
-diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
-index de46a6b1e9f1..35348d4c4209 100644
---- a/arch/loongarch/include/asm/pgtable-bits.h
-+++ b/arch/loongarch/include/asm/pgtable-bits.h
-@@ -50,12 +50,12 @@
- #define _PAGE_NO_EXEC		(_ULCAST_(1) << _PAGE_NO_EXEC_SHIFT)
- #define _PAGE_RPLV		(_ULCAST_(1) << _PAGE_RPLV_SHIFT)
- #define _CACHE_MASK		(_ULCAST_(3) << _CACHE_SHIFT)
--#define _PFN_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
-+#define PFN_PTE_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
- 
- #define _PAGE_USER	(PLV_USER << _PAGE_PLV_SHIFT)
- #define _PAGE_KERN	(PLV_KERN << _PAGE_PLV_SHIFT)
- 
--#define _PFN_MASK (~((_ULCAST_(1) << (_PFN_SHIFT)) - 1) & \
-+#define _PFN_MASK (~((_ULCAST_(1) << (PFN_PTE_SHIFT)) - 1) & \
- 		  ((_ULCAST_(1) << (_PAGE_PFN_END_SHIFT)) - 1))
- 
- /*
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 38afeb7dd58b..e7cf25e452c0 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -237,9 +237,9 @@ extern pmd_t mk_pmd(struct page *page, pgprot_t prot);
- extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pmd_t pmd);
- 
- #define pte_page(x)		pfn_to_page(pte_pfn(x))
--#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> _PFN_SHIFT))
--#define pfn_pte(pfn, prot)	__pte(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
--#define pfn_pmd(pfn, prot)	__pmd(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
-+#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> PFN_PTE_SHIFT))
-+#define pfn_pte(pfn, prot)	__pte(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
-+#define pfn_pmd(pfn, prot)	__pmd(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
- 
- /*
-  * Initialize a new pgd / pud / pmd table with invalid pointers.
-@@ -334,19 +334,13 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
- 	}
- }
- 
--static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
--			      pte_t *ptep, pte_t pteval)
--{
--	set_pte(ptep, pteval);
--}
--
- static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
- {
- 	/* Preserve global status for the pair */
- 	if (pte_val(*ptep_buddy(ptep)) & _PAGE_GLOBAL)
--		set_pte_at(mm, addr, ptep, __pte(_PAGE_GLOBAL));
-+		set_pte(ptep, __pte(_PAGE_GLOBAL));
- 	else
--		set_pte_at(mm, addr, ptep, __pte(0));
-+		set_pte(ptep, __pte(0));
- }
- 
- #define PGD_T_LOG2	(__builtin_ffs(sizeof(pgd_t)) - 1)
-@@ -445,11 +439,20 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- extern void __update_tlb(struct vm_area_struct *vma,
- 			unsigned long address, pte_t *ptep);
- 
--static inline void update_mmu_cache(struct vm_area_struct *vma,
--			unsigned long address, pte_t *ptep)
-+static inline void update_mmu_cache_range(struct vm_fault *vmf,
-+		struct vm_area_struct *vma, unsigned long address,
-+		pte_t *ptep, unsigned int nr)
- {
--	__update_tlb(vma, address, ptep);
-+	for (;;) {
-+		__update_tlb(vma, address, ptep);
-+		if (--nr == 0)
-+			break;
-+		address += PAGE_SIZE;
-+		ptep++;
-+	}
- }
-+#define update_mmu_cache(vma, addr, ptep) \
-+	update_mmu_cache_range(NULL, vma, addr, ptep, 1)
- 
- #define __HAVE_ARCH_UPDATE_MMU_TLB
- #define update_mmu_tlb	update_mmu_cache
-@@ -462,7 +465,7 @@ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
- 
- static inline unsigned long pmd_pfn(pmd_t pmd)
- {
--	return (pmd_val(pmd) & _PFN_MASK) >> _PFN_SHIFT;
-+	return (pmd_val(pmd) & _PFN_MASK) >> PFN_PTE_SHIFT;
- }
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
-index 36a6dc0148ae..1260cf30e3ee 100644
---- a/arch/loongarch/mm/pgtable.c
-+++ b/arch/loongarch/mm/pgtable.c
-@@ -107,7 +107,7 @@ pmd_t mk_pmd(struct page *page, pgprot_t prot)
- {
- 	pmd_t pmd;
- 
--	pmd_val(pmd) = (page_to_pfn(page) << _PFN_SHIFT) | pgprot_val(prot);
-+	pmd_val(pmd) = (page_to_pfn(page) << PFN_PTE_SHIFT) | pgprot_val(prot);
- 
- 	return pmd;
- }
-diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-index 00bb563e3c89..eb8572e201ea 100644
---- a/arch/loongarch/mm/tlb.c
-+++ b/arch/loongarch/mm/tlb.c
-@@ -252,7 +252,7 @@ static void output_pgtable_bits_defines(void)
- 	pr_define("_PAGE_WRITE_SHIFT %d\n", _PAGE_WRITE_SHIFT);
- 	pr_define("_PAGE_NO_READ_SHIFT %d\n", _PAGE_NO_READ_SHIFT);
- 	pr_define("_PAGE_NO_EXEC_SHIFT %d\n", _PAGE_NO_EXEC_SHIFT);
--	pr_define("_PFN_SHIFT %d\n", _PFN_SHIFT);
-+	pr_define("PFN_PTE_SHIFT %d\n", PFN_PTE_SHIFT);
- 	pr_debug("\n");
- }
- 
+ Documentation/features/debug/kcov/arch-support.txt | 2 +-
+ arch/loongarch/Kconfig                             | 2 ++
+ arch/loongarch/include/asm/setup.h                 | 6 ++++++
+ arch/loongarch/vdso/Makefile                       | 2 ++
+ 4 files changed, 11 insertions(+), 1 deletion(-)
+
 -- 
-2.39.2
+2.39.3
 
