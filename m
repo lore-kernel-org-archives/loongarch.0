@@ -1,158 +1,116 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6230F171DA
-	for <loongarch@lists.linux.dev>; Tue, 11 Jul 2023 07:32:05 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxEvB0Ba1kvWsDAA--.8923S3;
-	Tue, 11 Jul 2023 15:32:04 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c5wBa1k_1QoAA--.48833S4;
-	Tue, 11 Jul 2023 15:32:03 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 2/2] Documentation/features: Refresh support files for 6.5
-Date: Tue, 11 Jul 2023 15:32:00 +0800
-Message-Id: <1689060720-4628-3-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1689060720-4628-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1689060720-4628-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8Cx_c5wBa1k_1QoAA--.48833S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAw13WFWUGFWDCF4fAryrGrX_yoWrAFy7pa
-	sruws3Jr4fJr1Yy3yDXF12qF4UJa98Ga12gF4jyry8WF4DCF93Zr4SyFZ5ZFn8ZayrXFWU
-	Wr4vq34Yyr4fA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A670D174C9;
+	Tue, 11 Jul 2023 07:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=Jvs47pnLFbOZN+azKq1C5wj2WCQusgiaHr3c6gc02MA=; b=TpKJPkSbUuCRkZ5xDjO8ka1TrN
+	vG6Gfqk1XHRrSmiWuno8oVr93rlUi4n94wEe9hVDazeG9JY1DlTiz72QvjH3kh/dhh3zsUx4HcZ2U
+	Hj8IC/7NNEDJXXtIAtW6OZ37fv+T5E6v9sRoI0epkQmgZdORzqWn5QiROxqN1/0/orQxMTOQbGEpa
+	6gC82FusuIfdoR1+0Fwp+vZt8ap5DEZNyFcx5MGQUpjP1o3Z3X3NXYDWEIMQd2hWbiZohtj398blq
+	yHA//54Bl2ycuwdbP8Idz6fMVqyE9lu/2mKQwhuzPjgAinfopG5GjHsAVGHxsKDMFVXRWAmG+pGtb
+	vl0CcZOA==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1qJ7yP-0007pp-CJ; Tue, 11 Jul 2023 09:39:49 +0200
+Received: from [85.1.206.226] (helo=linux.home)
+	by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1qJ7yO-000Xjb-L2; Tue, 11 Jul 2023 09:39:48 +0200
+Subject: Re: [PATCH v2] samples/bpf: Fix compilation failure for samples/bpf
+ on LoongArch Fedora
+To: Huacai Chen <chenhuacai@kernel.org>, Haoran Jiang <jianghaoran@kylinos.cn>
+Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+ haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org,
+ kernel@xen0n.name, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, loongarch@lists.linux.dev, martin.lau@linux.dev,
+ nathan@kernel.org, ndesaulniers@google.com, sdf@google.com, song@kernel.org,
+ trix@redhat.com, yangtiezhu@loongson.cn, yhs@fb.com
+References: <CAAhV-H6s3N=-brDz24PfrtEKNFjvnLjbDR2NpOVDF_fN7rA53A@mail.gmail.com>
+ <20230710052750.259595-1-jianghaoran@kylinos.cn>
+ <CAAhV-H7orsUHDZuwcTUeWYbizcWRG4k_BPy53W7PT_MQ_2SXgw@mail.gmail.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <7ecc42aa-4a0f-77f7-a2ad-236270137b6e@iogearbox.net>
+Date: Tue, 11 Jul 2023 09:39:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <CAAhV-H7orsUHDZuwcTUeWYbizcWRG4k_BPy53W7PT_MQ_2SXgw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26965/Mon Jul 10 09:29:40 2023)
 
-Run the refresh script [1] to document the recent feature additions.
+On 7/10/23 7:54 AM, Huacai Chen wrote:
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> 
+> On Mon, Jul 10, 2023 at 1:34 PM Haoran Jiang <jianghaoran@kylinos.cn> wrote:
+>>
+>> When building the latest samples/bpf on LoongArch Fedora
+>>
+>>       make M=samples/bpf
+>>
+>> There are compilation errors as follows:
+>>
+>> In file included from ./linux/samples/bpf/sockex2_kern.c:2:
+>> In file included from ./include/uapi/linux/in.h:25:
+>> In file included from ./include/linux/socket.h:8:
+>> In file included from ./include/linux/uio.h:9:
+>> In file included from ./include/linux/thread_info.h:60:
+>> In file included from ./arch/loongarch/include/asm/thread_info.h:15:
+>> In file included from ./arch/loongarch/include/asm/processor.h:13:
+>> In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
+>> ./arch/loongarch/include/asm/loongarch.h:13:10: fatal error: 'larchintrin.h' file not found
+>>           ^~~~~~~~~~~~~~~
+>> 1 error generated.
+>>
+>> larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
+>> and the header file location is specified at compile time.
+>>
+>> Test on LoongArch Fedora:
+>> https://github.com/fedora-remix-loongarch/releases-info
+>>
+>> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+>>
+>> ---
+>> v2:
+>> use LoongArch instead of Loongarch in the title and commit message.
+>> ---
+>>   samples/bpf/Makefile | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+>> index 615f24ebc49c..b301796a3862 100644
+>> --- a/samples/bpf/Makefile
+>> +++ b/samples/bpf/Makefile
+>> @@ -434,7 +434,7 @@ $(obj)/%.o: $(src)/%.c
+>>          @echo "  CLANG-bpf " $@
+>>          $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS) \
+>>                  -I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
+>> -               -I$(LIBBPF_INCLUDE) \
+>> +               -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
 
-[1] Documentation/features/scripts/features-refresh.sh
+There's still one location in XDP_SAMPLE_CFLAGS, do we need the $(CLANG_SYS_INCLUDES)
+there as well?
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- Documentation/features/debug/kprobes-on-ftrace/arch-support.txt | 2 +-
- Documentation/features/debug/kprobes/arch-support.txt           | 2 +-
- Documentation/features/debug/kretprobes/arch-support.txt        | 2 +-
- Documentation/features/debug/stackprotector/arch-support.txt    | 2 +-
- Documentation/features/debug/uprobes/arch-support.txt           | 2 +-
- Documentation/features/locking/lockdep/arch-support.txt         | 2 +-
- Documentation/features/vm/ELF-ASLR/arch-support.txt             | 4 ++--
- 7 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
-index bcc29d3..38a0a54 100644
---- a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
-+++ b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
-@@ -13,7 +13,7 @@
-     |        csky: |  ok  |
-     |     hexagon: | TODO |
-     |        ia64: | TODO |
--    |   loongarch: | TODO |
-+    |   loongarch: |  ok  |
-     |        m68k: | TODO |
-     |  microblaze: | TODO |
-     |        mips: | TODO |
-diff --git a/Documentation/features/debug/kprobes/arch-support.txt b/Documentation/features/debug/kprobes/arch-support.txt
-index 8a77d62..aad83b5 100644
---- a/Documentation/features/debug/kprobes/arch-support.txt
-+++ b/Documentation/features/debug/kprobes/arch-support.txt
-@@ -13,7 +13,7 @@
-     |        csky: |  ok  |
-     |     hexagon: | TODO |
-     |        ia64: |  ok  |
--    |   loongarch: | TODO |
-+    |   loongarch: |  ok  |
-     |        m68k: | TODO |
-     |  microblaze: | TODO |
-     |        mips: |  ok  |
-diff --git a/Documentation/features/debug/kretprobes/arch-support.txt b/Documentation/features/debug/kretprobes/arch-support.txt
-index cf4723c..6138001 100644
---- a/Documentation/features/debug/kretprobes/arch-support.txt
-+++ b/Documentation/features/debug/kretprobes/arch-support.txt
-@@ -13,7 +13,7 @@
-     |        csky: |  ok  |
-     |     hexagon: | TODO |
-     |        ia64: |  ok  |
--    |   loongarch: | TODO |
-+    |   loongarch: |  ok  |
-     |        m68k: | TODO |
-     |  microblaze: | TODO |
-     |        mips: |  ok  |
-diff --git a/Documentation/features/debug/stackprotector/arch-support.txt b/Documentation/features/debug/stackprotector/arch-support.txt
-index 71cd4ba..4c64c5d 100644
---- a/Documentation/features/debug/stackprotector/arch-support.txt
-+++ b/Documentation/features/debug/stackprotector/arch-support.txt
-@@ -13,7 +13,7 @@
-     |        csky: |  ok  |
-     |     hexagon: | TODO |
-     |        ia64: | TODO |
--    |   loongarch: | TODO |
-+    |   loongarch: |  ok  |
-     |        m68k: | TODO |
-     |  microblaze: | TODO |
-     |        mips: |  ok  |
-diff --git a/Documentation/features/debug/uprobes/arch-support.txt b/Documentation/features/debug/uprobes/arch-support.txt
-index d53f2f9..24c8423 100644
---- a/Documentation/features/debug/uprobes/arch-support.txt
-+++ b/Documentation/features/debug/uprobes/arch-support.txt
-@@ -13,7 +13,7 @@
-     |        csky: |  ok  |
-     |     hexagon: | TODO |
-     |        ia64: | TODO |
--    |   loongarch: | TODO |
-+    |   loongarch: |  ok  |
-     |        m68k: | TODO |
-     |  microblaze: | TODO |
-     |        mips: |  ok  |
-diff --git a/Documentation/features/locking/lockdep/arch-support.txt b/Documentation/features/locking/lockdep/arch-support.txt
-index ddb9452..a36e2316 100644
---- a/Documentation/features/locking/lockdep/arch-support.txt
-+++ b/Documentation/features/locking/lockdep/arch-support.txt
-@@ -19,7 +19,7 @@
-     |        mips: |  ok  |
-     |       nios2: | TODO |
-     |    openrisc: |  ok  |
--    |      parisc: | TODO |
-+    |      parisc: |  ok  |
-     |     powerpc: |  ok  |
-     |       riscv: |  ok  |
-     |        s390: |  ok  |
-diff --git a/Documentation/features/vm/ELF-ASLR/arch-support.txt b/Documentation/features/vm/ELF-ASLR/arch-support.txt
-index 8d6ded2..47909c3 100644
---- a/Documentation/features/vm/ELF-ASLR/arch-support.txt
-+++ b/Documentation/features/vm/ELF-ASLR/arch-support.txt
-@@ -11,10 +11,10 @@
-     |         arc: | TODO |
-     |         arm: |  ok  |
-     |       arm64: |  ok  |
--    |        csky: | TODO |
-+    |        csky: |  ok  |
-     |     hexagon: | TODO |
-     |        ia64: | TODO |
--    |   loongarch: | TODO |
-+    |   loongarch: |  ok  |
-     |        m68k: | TODO |
-     |  microblaze: | TODO |
-     |        mips: |  ok  |
--- 
-2.1.0
+>>                  -D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign \
+>>                  -D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-types \
+>>                  -Wno-gnu-variable-sized-type-not-at-end \
+>> --
+>> 2.27.0
+>>
+>>
 
