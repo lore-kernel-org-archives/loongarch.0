@@ -1,11 +1,11 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF9EE7F9
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFA20810
 	for <loongarch@lists.linux.dev>; Wed, 12 Jul 2023 03:16:24 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.9.158])
-	by gateway (Coremail) with SMTP id _____8BxpPAGG65kfccDAA--.10812S3;
+	by gateway (Coremail) with SMTP id _____8CxLOsGG65keMcDAA--.5571S3;
 	Wed, 12 Jul 2023 11:16:22 +0800 (CST)
 Received: from kvm-1-158.loongson.cn (unknown [10.2.9.158])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxWM0GG65kA7cpAA--.53483S3;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxWM0GG65kA7cpAA--.53483S2;
 	Wed, 12 Jul 2023 11:16:22 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
@@ -17,12 +17,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH 1/3] mm/percpu: Remove some local variables in pcpu_populate_pte
-Date: Wed, 12 Jul 2023 11:16:20 +0800
-Message-Id: <20230712031622.1888321-2-maobibo@loongson.cn>
+Subject: [PATCH 0/3] LoongArch: mm: Code cleanup with populate pte
+Date: Wed, 12 Jul 2023 11:16:19 +0800
+Message-Id: <20230712031622.1888321-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20230712031622.1888321-1-maobibo@loongson.cn>
-References: <20230712031622.1888321-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -30,81 +28,41 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxWM0GG65kA7cpAA--.53483S3
+X-CM-TRANSID:AQAAf8CxWM0GG65kA7cpAA--.53483S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFWrCr1UWw4fXrWUJr13trc_yoW8Xr4Up3
-	93W3s29r4fJwnrGan3Gas8Wr17Xw4rta4Fk3srXr1rZ3W3ZrnxWr4jyw42ga42yFWfZF1x
-	Jr45Ja9rAan0v3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
-	WrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jYmhrUUUUU=
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZrWkAryDAw4kJF1fKr1ruFX_yoWxAFb_Xa
+	4ftasYkr4xXayUKay8KF4rJFWjkF4v9F1qyFykJFW7GFy3Jw1UJF42yan8Za4q9FW7trs5
+	Aw45ArnYvw129osvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
 
-In function pcpu_populate_pte there are already variable defined,
-it can be reused for later use, here remove duplicated local
-variables.
+There are some confusion between pdg and p4d when populate pte for
+kernel address space. This patch modifies this issue and adds unified
+function for pcpu and fixmap populate pte.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- mm/percpu.c | 24 +++++++++---------------
- 1 file changed, 9 insertions(+), 15 deletions(-)
+Bibo Mao (3):
+  mm/percpu: Remove some local variables in pcpu_populate_pte
+  LoongArch: Code cleanup in function pcpu_populate_pte
+  LoongArch: mm: Add unified function populate_kernel_pte
 
-diff --git a/mm/percpu.c b/mm/percpu.c
-index 28e07ede46f6..85e3f9b2a61f 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -3189,32 +3189,26 @@ void __init __weak pcpu_populate_pte(unsigned long addr)
- 	pmd_t *pmd;
- 
- 	if (pgd_none(*pgd)) {
--		p4d_t *new;
--
--		new = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
--		if (!new)
-+		p4d = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
-+		if (!p4d)
- 			goto err_alloc;
--		pgd_populate(&init_mm, pgd, new);
-+		pgd_populate(&init_mm, pgd, p4d);
- 	}
- 
- 	p4d = p4d_offset(pgd, addr);
- 	if (p4d_none(*p4d)) {
--		pud_t *new;
--
--		new = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
--		if (!new)
-+		pud = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
-+		if (!pud)
- 			goto err_alloc;
--		p4d_populate(&init_mm, p4d, new);
-+		p4d_populate(&init_mm, p4d, pud);
- 	}
- 
- 	pud = pud_offset(p4d, addr);
- 	if (pud_none(*pud)) {
--		pmd_t *new;
--
--		new = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
--		if (!new)
-+		pmd = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
-+		if (!pmd)
- 			goto err_alloc;
--		pud_populate(&init_mm, pud, new);
-+		pud_populate(&init_mm, pud, pmd);
- 	}
- 
- 	pmd = pmd_offset(pud, addr);
+ arch/loongarch/include/asm/pgalloc.h |  1 +
+ arch/loongarch/kernel/numa.c         | 35 ++-----------------
+ arch/loongarch/mm/init.c             | 52 ++++++++++++++++------------
+ mm/percpu.c                          | 24 +++++--------
+ 4 files changed, 42 insertions(+), 70 deletions(-)
+
 -- 
 2.27.0
 
