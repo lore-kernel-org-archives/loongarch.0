@@ -1,107 +1,168 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 919EE7C
-	for <loongarch@lists.linux.dev>; Thu, 13 Jul 2023 03:05:22 +0000 (UTC)
-Received: from loongson.cn (unknown [117.82.195.59])
-	by gateway (Coremail) with SMTP id _____8DxqOrwaa9k0UEEAA--.2365S3;
-	Thu, 13 Jul 2023 11:05:20 +0800 (CST)
-Received: from localhost.localdomain (unknown [117.82.195.59])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxriPuaa9kSZ4rAA--.16906S2;
-	Thu, 13 Jul 2023 11:05:20 +0800 (CST)
-From: WANG Rui <wangrui@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: Jun Yi <yijun@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	WANG Rui <wangrui@loongson.cn>,
-	stable@vger.kernel.org,
-	Weihao Li <liweihao@loongson.cn>
-Subject: [PATCH] LoongArch: Fix return value underflow in exception path
-Date: Thu, 13 Jul 2023 11:04:53 +0800
-Message-ID: <20230713030453.7404-1-wangrui@loongson.cn>
-X-Mailer: git-send-email 2.41.0
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF34ECE
+	for <loongarch@lists.linux.dev>; Thu, 13 Jul 2023 04:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=HCCbc9dS3Rkl9GwfyawmEYlu85U025YSKjXy+dXGU4U=; b=zecyfIoWoTPG8HH87lSCM6SrOo
+	xCwN+29/7tJ+JvYobmj86mTFFrmYjFH8XKABvuGXMH3oV2ROR4cVbFZwITMfJCfSNZs9X+j4u8x6k
+	z4zF6H2gesYCwWvvv7KnCMkfScvi4GpS8V/3krl2pp0CVssjdMnAX437CvVjc/56ivYM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1qJnUo-001CT0-Bs; Thu, 13 Jul 2023 06:00:02 +0200
+Date: Thu, 13 Jul 2023 06:00:02 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Feiyang Chen <chenfeiyang@loongson.cn>
+Cc: hkallweit1@gmail.com, peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+	chenhuacai@loongson.cn, linux@armlinux.org.uk, dongbiao@loongson.cn,
+	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org,
+	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+Subject: Re: [RFC PATCH 01/10] net: phy: Add driver for Loongson PHY
+Message-ID: <9e0b3466-10e1-4267-ab9b-d9f8149b6b6b@lunn.ch>
+References: <cover.1689215889.git.chenfeiyang@loongson.cn>
+ <be1874e517f4f4cc50906f18689a0add3594c2e0.1689215889.git.chenfeiyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxriPuaa9kSZ4rAA--.16906S2
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CrWxZFW3KFW3tw45Gw47WrX_yoW8Zw4fpr
-	y7Arn7KF48WFyfZa4YvF9YqrWrXF47Ww17uF4xAryrGa4DZFn5uryrGasxXFs0q395Xr10
-	qr1rKF4rCF48JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be1874e517f4f4cc50906f18689a0add3594c2e0.1689215889.git.chenfeiyang@loongson.cn>
 
-This patch fixes an underflow issue in the return value within the
-exception path, specifically at .Llt8 when the remaining length is less
-than 8 bytes.
+On Thu, Jul 13, 2023 at 10:46:53AM +0800, Feiyang Chen wrote:
+> Add support for the Loongson PHY.
+> 
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> ---
+>  drivers/net/phy/Kconfig        |  5 +++
+>  drivers/net/phy/Makefile       |  1 +
+>  drivers/net/phy/loongson-phy.c | 69 ++++++++++++++++++++++++++++++++++
 
-Cc: stable@vger.kernel.org
-Fixes: 8941e93ca590 ("LoongArch: Optimize memory ops (memset/memcpy/memmove)")
-Reported-by: Weihao Li <liweihao@loongson.cn>
-Signed-off-by: WANG Rui <wangrui@loongson.cn>
----
- arch/loongarch/lib/clear_user.S | 3 ++-
- arch/loongarch/lib/copy_user.S  | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+Please drop -phy from the filename. No other phy driver does this.
 
-diff --git a/arch/loongarch/lib/clear_user.S b/arch/loongarch/lib/clear_user.S
-index fd1d62b244f2..9dcf71719387 100644
---- a/arch/loongarch/lib/clear_user.S
-+++ b/arch/loongarch/lib/clear_user.S
-@@ -108,6 +108,7 @@ SYM_FUNC_START(__clear_user_fast)
- 	addi.d	a3, a2, -8
- 	bgeu	a0, a3, .Llt8
- 15:	st.d	zero, a0, 0
-+	addi.d	a0, a0, 8
- 
- .Llt8:
- 16:	st.d	zero, a2, -8
-@@ -188,7 +189,7 @@ SYM_FUNC_START(__clear_user_fast)
- 	_asm_extable 13b, .L_fixup_handle_0
- 	_asm_extable 14b, .L_fixup_handle_1
- 	_asm_extable 15b, .L_fixup_handle_0
--	_asm_extable 16b, .L_fixup_handle_1
-+	_asm_extable 16b, .L_fixup_handle_0
- 	_asm_extable 17b, .L_fixup_handle_s0
- 	_asm_extable 18b, .L_fixup_handle_s0
- 	_asm_extable 19b, .L_fixup_handle_s0
-diff --git a/arch/loongarch/lib/copy_user.S b/arch/loongarch/lib/copy_user.S
-index b21f6d5d38f5..fecd08cad702 100644
---- a/arch/loongarch/lib/copy_user.S
-+++ b/arch/loongarch/lib/copy_user.S
-@@ -136,6 +136,7 @@ SYM_FUNC_START(__copy_user_fast)
- 	bgeu	a1, a4, .Llt8
- 30:	ld.d	t0, a1, 0
- 31:	st.d	t0, a0, 0
-+	addi.d	a0, a0, 8
- 
- .Llt8:
- 32:	ld.d	t0, a3, -8
-@@ -246,7 +247,7 @@ SYM_FUNC_START(__copy_user_fast)
- 	_asm_extable 30b, .L_fixup_handle_0
- 	_asm_extable 31b, .L_fixup_handle_0
- 	_asm_extable 32b, .L_fixup_handle_0
--	_asm_extable 33b, .L_fixup_handle_1
-+	_asm_extable 33b, .L_fixup_handle_0
- 	_asm_extable 34b, .L_fixup_handle_s0
- 	_asm_extable 35b, .L_fixup_handle_s0
- 	_asm_extable 36b, .L_fixup_handle_s0
--- 
-2.41.0
+>  drivers/net/phy/phy_device.c   | 16 ++++++++
+>  include/linux/phy.h            |  2 +
+>  5 files changed, 93 insertions(+)
+>  create mode 100644 drivers/net/phy/loongson-phy.c
+> 
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index 93b8efc79227..4f8ea32cbc68 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -202,6 +202,11 @@ config INTEL_XWAY_PHY
+>  	  PEF 7061, PEF 7071 and PEF 7072 or integrated into the Intel
+>  	  SoCs xRX200, xRX300, xRX330, xRX350 and xRX550.
+>  
+> +config LOONGSON_PHY
+> +	tristate "Loongson PHY driver"
+> +	help
+> +	  Supports the Loongson PHY.
+> +
+>  config LSI_ET1011C_PHY
+>  	tristate "LSI ET1011C PHY"
+>  	help
+> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> index f289ab16a1da..f775373e12b7 100644
+> --- a/drivers/net/phy/Makefile
+> +++ b/drivers/net/phy/Makefile
+> @@ -62,6 +62,7 @@ obj-$(CONFIG_DP83TD510_PHY)	+= dp83td510.o
+>  obj-$(CONFIG_FIXED_PHY)		+= fixed_phy.o
+>  obj-$(CONFIG_ICPLUS_PHY)	+= icplus.o
+>  obj-$(CONFIG_INTEL_XWAY_PHY)	+= intel-xway.o
+> +obj-$(CONFIG_LOONGSON_PHY)	+= loongson-phy.o
+>  obj-$(CONFIG_LSI_ET1011C_PHY)	+= et1011c.o
+>  obj-$(CONFIG_LXT_PHY)		+= lxt.o
+>  obj-$(CONFIG_MARVELL_10G_PHY)	+= marvell10g.o
+> diff --git a/drivers/net/phy/loongson-phy.c b/drivers/net/phy/loongson-phy.c
+> new file mode 100644
+> index 000000000000..d4aefa2110f8
+> --- /dev/null
+> +++ b/drivers/net/phy/loongson-phy.c
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * LS7A PHY driver
+> + *
+> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+> + *
+> + * Author: Zhang Baoqi <zhangbaoqi@loongson.cn>
+> + */
+> +
+> +#include <linux/mii.h>
+> +#include <linux/module.h>
+> +#include <linux/netdevice.h>
+> +#include <linux/pci.h>
+> +#include <linux/phy.h>
+> +
+> +#define PHY_ID_LS7A2000		0x00061ce0
 
+What is Loongson OUI?
+
+> +#define GNET_REV_LS7A2000	0x00
+> +
+> +static int ls7a2000_config_aneg(struct phy_device *phydev)
+> +{
+> +	if (phydev->speed == SPEED_1000)
+> +		phydev->autoneg = AUTONEG_ENABLE;
+
+Please explain.
+
+> +
+> +	if (linkmode_test_bit(ETHTOOL_LINK_MODE_10baseT_Full_BIT,
+> +	    phydev->advertising) ||
+> +	    linkmode_test_bit(ETHTOOL_LINK_MODE_100baseT_Full_BIT,
+> +	    phydev->advertising) ||
+> +	    linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
+> +	    phydev->advertising))
+> +	    return genphy_config_aneg(phydev);
+> +
+> +	netdev_info(phydev->attached_dev, "Parameter Setting Error\n");
+
+This also needs explaining. How can it be asked to do something it
+does not support?
+
+> +	return -1;
+
+Always use error codes. In this case EINVAL.
+
+> +}
+> +
+> +int ls7a2000_match_phy_device(struct phy_device *phydev)
+> +{
+> +	struct net_device *ndev;
+> +	struct pci_dev *pdev;
+> +
+> +	if ((phydev->phy_id & 0xfffffff0) != PHY_ID_LS7A2000)
+> +		return 0;
+> +
+> +	ndev = phydev->mdio.bus->priv;
+> +	pdev = to_pci_dev(ndev->dev.parent);
+> +
+> +	return pdev->revision == GNET_REV_LS7A2000;
+
+That is very unusual. Why is the PHY ID not sufficient?
+
+> +}
+> +
+> +static struct phy_driver loongson_phy_driver[] = {
+> +	{
+> +		PHY_ID_MATCH_MODEL(PHY_ID_LS7A2000),
+> +		.name			= "LS7A2000 PHY",
+> +		.features		= PHY_LOONGSON_FEATURES,
+
+So what are the capabilities of this PHY? You seem to have some very
+odd hacks here, and no explanation of why they are needed. If you do
+something which no other device does, you need to explain it.
+
+Does the PHY itself only support full duplex? No half duplex? Does the
+PHY support autoneg? Does it support fixed settings? What does
+genphy_read_abilities() return for this PHY?
+
+	Andrew
