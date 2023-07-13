@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D44D388
-	for <loongarch@lists.linux.dev>; Thu, 13 Jul 2023 02:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08FAE62B
+	for <loongarch@lists.linux.dev>; Thu, 13 Jul 2023 02:47:14 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.109.108])
-	by gateway (Coremail) with SMTP id _____8BxY_CuZa9krD8EAA--.12059S3;
-	Thu, 13 Jul 2023 10:47:10 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxRvGxZa9kyD8EAA--.12229S3;
+	Thu, 13 Jul 2023 10:47:13 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.109.108])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c6sZa9kuJcrAA--.57200S3;
-	Thu, 13 Jul 2023 10:47:10 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c6sZa9kuJcrAA--.57200S6;
+	Thu, 13 Jul 2023 10:47:12 +0800 (CST)
 From: Feiyang Chen <chenfeiyang@loongson.cn>
 To: andrew@lunn.ch,
 	hkallweit1@gmail.com,
@@ -21,9 +21,9 @@ Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
 	netdev@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	chris.chenfeiyang@gmail.com
-Subject: [RFC PATCH 01/10] net: phy: Add driver for Loongson PHY
-Date: Thu, 13 Jul 2023 10:46:53 +0800
-Message-Id: <be1874e517f4f4cc50906f18689a0add3594c2e0.1689215889.git.chenfeiyang@loongson.cn>
+Subject: [RFC PATCH 04/10] net: stmmac: dwmac1000: Add multi-channel support
+Date: Thu, 13 Jul 2023 10:46:56 +0800
+Message-Id: <b2e287d99da1f5ee76cd80bce34879cc7f773b5c.1689215889.git.chenfeiyang@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1689215889.git.chenfeiyang@loongson.cn>
 References: <cover.1689215889.git.chenfeiyang@loongson.cn>
@@ -34,194 +34,277 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx_c6sZa9kuJcrAA--.57200S3
+X-CM-TRANSID:AQAAf8Cx_c6sZa9kuJcrAA--.57200S6
 X-CM-SenderInfo: hfkh0wphl1t03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Jw4DAF1rtryUWF4DAw1UArc_yoWxXrW7pw
-	4kAa47ArWDJa12ya15JrWDCr1Yvw4fu34xJrWakwn0ka4kCFy5ZrnFkFWDJrZ5ZrWkXFWF
-	gr9YkasFkFZ8WwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3Xr1fAF15GF17ZFW5KF1DXFc_yoWfZF4Dpa
+	y5t3s5XFyrtr4fZ3WkJws8Xry5J34agrWxuF4fG3yS9a1a9r1agrs0gayjyF13CFZ7Ar9I
+	qrWYvw17Wr1UArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jxKsUUUUUU=
 
-Add support for the Loongson PHY.
+Some platforms have dwmac1000 implementations that support multi-
+channel. Extend the functions to add multi-channel support.
 
 Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 ---
- drivers/net/phy/Kconfig        |  5 +++
- drivers/net/phy/Makefile       |  1 +
- drivers/net/phy/loongson-phy.c | 69 ++++++++++++++++++++++++++++++++++
- drivers/net/phy/phy_device.c   | 16 ++++++++
- include/linux/phy.h            |  2 +
- 5 files changed, 93 insertions(+)
- create mode 100644 drivers/net/phy/loongson-phy.c
+ .../ethernet/stmicro/stmmac/dwmac1000_core.c  |  1 +
+ .../ethernet/stmicro/stmmac/dwmac1000_dma.c   | 64 +++++++++++++++++--
+ .../net/ethernet/stmicro/stmmac/dwmac_lib.c   | 28 ++++----
+ include/linux/stmmac.h                        |  1 +
+ 4 files changed, 73 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 93b8efc79227..4f8ea32cbc68 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -202,6 +202,11 @@ config INTEL_XWAY_PHY
- 	  PEF 7061, PEF 7071 and PEF 7072 or integrated into the Intel
- 	  SoCs xRX200, xRX300, xRX330, xRX350 and xRX550.
- 
-+config LOONGSON_PHY
-+	tristate "Loongson PHY driver"
-+	help
-+	  Supports the Loongson PHY.
-+
- config LSI_ET1011C_PHY
- 	tristate "LSI ET1011C PHY"
- 	help
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index f289ab16a1da..f775373e12b7 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -62,6 +62,7 @@ obj-$(CONFIG_DP83TD510_PHY)	+= dp83td510.o
- obj-$(CONFIG_FIXED_PHY)		+= fixed_phy.o
- obj-$(CONFIG_ICPLUS_PHY)	+= icplus.o
- obj-$(CONFIG_INTEL_XWAY_PHY)	+= intel-xway.o
-+obj-$(CONFIG_LOONGSON_PHY)	+= loongson-phy.o
- obj-$(CONFIG_LSI_ET1011C_PHY)	+= et1011c.o
- obj-$(CONFIG_LXT_PHY)		+= lxt.o
- obj-$(CONFIG_MARVELL_10G_PHY)	+= marvell10g.o
-diff --git a/drivers/net/phy/loongson-phy.c b/drivers/net/phy/loongson-phy.c
-new file mode 100644
-index 000000000000..d4aefa2110f8
---- /dev/null
-+++ b/drivers/net/phy/loongson-phy.c
-@@ -0,0 +1,69 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * LS7A PHY driver
-+ *
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ *
-+ * Author: Zhang Baoqi <zhangbaoqi@loongson.cn>
-+ */
-+
-+#include <linux/mii.h>
-+#include <linux/module.h>
-+#include <linux/netdevice.h>
-+#include <linux/pci.h>
-+#include <linux/phy.h>
-+
-+#define PHY_ID_LS7A2000		0x00061ce0
-+#define GNET_REV_LS7A2000	0x00
-+
-+static int ls7a2000_config_aneg(struct phy_device *phydev)
-+{
-+	if (phydev->speed == SPEED_1000)
-+		phydev->autoneg = AUTONEG_ENABLE;
-+
-+	if (linkmode_test_bit(ETHTOOL_LINK_MODE_10baseT_Full_BIT,
-+	    phydev->advertising) ||
-+	    linkmode_test_bit(ETHTOOL_LINK_MODE_100baseT_Full_BIT,
-+	    phydev->advertising) ||
-+	    linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
-+	    phydev->advertising))
-+	    return genphy_config_aneg(phydev);
-+
-+	netdev_info(phydev->attached_dev, "Parameter Setting Error\n");
-+	return -1;
-+}
-+
-+int ls7a2000_match_phy_device(struct phy_device *phydev)
-+{
-+	struct net_device *ndev;
-+	struct pci_dev *pdev;
-+
-+	if ((phydev->phy_id & 0xfffffff0) != PHY_ID_LS7A2000)
-+		return 0;
-+
-+	ndev = phydev->mdio.bus->priv;
-+	pdev = to_pci_dev(ndev->dev.parent);
-+
-+	return pdev->revision == GNET_REV_LS7A2000;
-+}
-+
-+static struct phy_driver loongson_phy_driver[] = {
-+	{
-+		PHY_ID_MATCH_MODEL(PHY_ID_LS7A2000),
-+		.name			= "LS7A2000 PHY",
-+		.features		= PHY_LOONGSON_FEATURES,
-+		.config_aneg		= ls7a2000_config_aneg,
-+		.match_phy_device	= ls7a2000_match_phy_device,
-+	},
-+};
-+module_phy_driver(loongson_phy_driver);
-+
-+static struct mdio_device_id __maybe_unused loongson_tbl[] = {
-+	{ PHY_ID_MATCH_MODEL(PHY_ID_LS7A2000) },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(mdio, loongson_tbl);
-+
-+MODULE_DESCRIPTION("Loongson PHY driver");
-+MODULE_AUTHOR("Zhang Baoqi <zhangbaoqi@loongson.cn>");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 53598210be6c..00568608118a 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -146,6 +146,15 @@ static const int phy_eee_cap1_features_array[] = {
- __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_eee_cap1_features) __ro_after_init;
- EXPORT_SYMBOL_GPL(phy_eee_cap1_features);
- 
-+static const int phy_10_100_1000_full_features_array[] = {
-+	ETHTOOL_LINK_MODE_10baseT_Full_BIT,
-+	ETHTOOL_LINK_MODE_100baseT_Full_BIT,
-+	ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
-+};
-+
-+__ETHTOOL_DECLARE_LINK_MODE_MASK(phy_loongson_features) __ro_after_init;
-+EXPORT_SYMBOL_GPL(phy_loongson_features);
-+
- static void features_init(void)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 9015a61f804c..a9b42a122ed6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -562,6 +562,7 @@ int dwmac1000_setup(struct stmmac_priv *priv)
  {
- 	/* 10/100 half/full*/
-@@ -230,6 +239,13 @@ static void features_init(void)
- 	linkmode_set_bit_array(phy_eee_cap1_features_array,
- 			       ARRAY_SIZE(phy_eee_cap1_features_array),
- 			       phy_eee_cap1_features);
-+	/* 10/100/1000 full */
-+	linkmode_set_bit_array(phy_basic_ports_array,
-+			       ARRAY_SIZE(phy_basic_ports_array),
-+			       phy_loongson_features);
-+	linkmode_set_bit_array(phy_10_100_1000_full_features_array,
-+			       ARRAY_SIZE(phy_10_100_1000_full_features_array),
-+			       phy_loongson_features);
+ 	dev_info(priv->device, "\tDWMAC1000\n");
  
++	priv->plat->dwmac_is_loongson = false;
+ 	priv->plat->dwmac_regs = &dwmac_default_dma_regs;
+ 
+ 	return _dwmac1000_setup(priv);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+index ce0e6ca6f3a2..efb219999a20 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+@@ -111,13 +111,61 @@ static void dwmac1000_dma_init(struct stmmac_priv *priv, void __iomem *ioaddr,
+ 	writel(DMA_INTR_DEFAULT_MASK, ioaddr + DMA_INTR_ENA);
  }
  
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 6478838405a0..6bdb2a479755 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -54,6 +54,7 @@ extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_10gbit_features) __ro_after_init;
- extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_10gbit_fec_features) __ro_after_init;
- extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_10gbit_full_features) __ro_after_init;
- extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_eee_cap1_features) __ro_after_init;
-+extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_loongson_features) __ro_after_init;
++void dwmac1000_dma_init_channel(struct stmmac_priv *priv, void __iomem *ioaddr,
++				struct stmmac_dma_cfg *dma_cfg,
++				u32 chan)
++{
++	u32 value;
++	int txpbl = dma_cfg->txpbl ?: dma_cfg->pbl;
++	int rxpbl = dma_cfg->rxpbl ?: dma_cfg->pbl;
++
++	if (!priv->plat->dwmac_is_loongson)
++		return;
++
++	/* common channel control register config */
++	value = readl(ioaddr + DMA_BUS_MODE + chan * DMA_CHAN_OFFSET);
++
++	/*
++	 * Set the DMA PBL (Programmable Burst Length) mode.
++	 *
++	 * Note: before stmmac core 3.50 this mode bit was 4xPBL, and
++	 * post 3.5 mode bit acts as 8*PBL.
++	 */
++	if (dma_cfg->pblx8)
++		value |= DMA_BUS_MODE_MAXPBL;
++	value |= DMA_BUS_MODE_USP;
++	value &= ~(DMA_BUS_MODE_PBL_MASK | DMA_BUS_MODE_RPBL_MASK);
++	value |= (txpbl << DMA_BUS_MODE_PBL_SHIFT);
++	value |= (rxpbl << DMA_BUS_MODE_RPBL_SHIFT);
++
++	/* Set the Fixed burst mode */
++	if (dma_cfg->fixed_burst)
++		value |= DMA_BUS_MODE_FB;
++
++	/* Mixed Burst has no effect when fb is set */
++	if (dma_cfg->mixed_burst)
++		value |= DMA_BUS_MODE_MB;
++
++	value |= DMA_BUS_MODE_ATDS;
++
++	if (dma_cfg->aal)
++		value |= DMA_BUS_MODE_AAL;
++
++	writel(value, ioaddr + DMA_BUS_MODE + chan * DMA_CHAN_OFFSET);
++
++	/* Mask interrupts by writing to CSR7 */
++	writel(DMA_INTR_DEFAULT_MASK,
++	       ioaddr + DMA_INTR_ENA + chan * DMA_CHAN_OFFSET);
++}
++
+ static void dwmac1000_dma_init_rx(struct stmmac_priv *priv,
+ 				  void __iomem *ioaddr,
+ 				  struct stmmac_dma_cfg *dma_cfg,
+ 				  dma_addr_t dma_rx_phy, u32 chan)
+ {
+ 	/* RX descriptor base address list must be written into DMA CSR3 */
+-	writel(lower_32_bits(dma_rx_phy), ioaddr + DMA_RCV_BASE_ADDR);
++	writel(lower_32_bits(dma_rx_phy), ioaddr + DMA_RCV_BASE_ADDR +
++		chan * DMA_CHAN_OFFSET);
+ }
  
- #define PHY_BASIC_FEATURES ((unsigned long *)&phy_basic_features)
- #define PHY_BASIC_T1_FEATURES ((unsigned long *)&phy_basic_t1_features)
-@@ -65,6 +66,7 @@ extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_eee_cap1_features) __ro_after_init;
- #define PHY_10GBIT_FEC_FEATURES ((unsigned long *)&phy_10gbit_fec_features)
- #define PHY_10GBIT_FULL_FEATURES ((unsigned long *)&phy_10gbit_full_features)
- #define PHY_EEE_CAP1_FEATURES ((unsigned long *)&phy_eee_cap1_features)
-+#define PHY_LOONGSON_FEATURES ((unsigned long *)&phy_loongson_features)
+ static void dwmac1000_dma_init_tx(struct stmmac_priv *priv,
+@@ -126,7 +174,8 @@ static void dwmac1000_dma_init_tx(struct stmmac_priv *priv,
+ 				  dma_addr_t dma_tx_phy, u32 chan)
+ {
+ 	/* TX descriptor base address list must be written into DMA CSR4 */
+-	writel(lower_32_bits(dma_tx_phy), ioaddr + DMA_TX_BASE_ADDR);
++	writel(lower_32_bits(dma_tx_phy), ioaddr + DMA_TX_BASE_ADDR +
++		chan * DMA_CHAN_OFFSET);
+ }
  
- extern const int phy_basic_ports_array[3];
- extern const int phy_fibre_port_array[1];
+ static u32 dwmac1000_configure_fc(u32 csr6, int rxfifosz)
+@@ -154,7 +203,7 @@ static void dwmac1000_dma_operation_mode_rx(struct stmmac_priv *priv,
+ 					    void __iomem *ioaddr, int mode,
+ 					    u32 channel, int fifosz, u8 qmode)
+ {
+-	u32 csr6 = readl(ioaddr + DMA_CONTROL);
++	u32 csr6 = readl(ioaddr + DMA_CONTROL + channel * DMA_CHAN_OFFSET);
+ 
+ 	if (mode == SF_DMA_MODE) {
+ 		pr_debug("GMAC: enable RX store and forward mode\n");
+@@ -176,14 +225,14 @@ static void dwmac1000_dma_operation_mode_rx(struct stmmac_priv *priv,
+ 	/* Configure flow control based on rx fifo size */
+ 	csr6 = dwmac1000_configure_fc(csr6, fifosz);
+ 
+-	writel(csr6, ioaddr + DMA_CONTROL);
++	writel(csr6, ioaddr + DMA_CONTROL + channel * DMA_CHAN_OFFSET);
+ }
+ 
+ static void dwmac1000_dma_operation_mode_tx(struct stmmac_priv *priv,
+ 					    void __iomem *ioaddr, int mode,
+ 					    u32 channel, int fifosz, u8 qmode)
+ {
+-	u32 csr6 = readl(ioaddr + DMA_CONTROL);
++	u32 csr6 = readl(ioaddr + DMA_CONTROL + channel * DMA_CHAN_OFFSET);
+ 
+ 	if (mode == SF_DMA_MODE) {
+ 		pr_debug("GMAC: enable TX store and forward mode\n");
+@@ -210,7 +259,7 @@ static void dwmac1000_dma_operation_mode_tx(struct stmmac_priv *priv,
+ 			csr6 |= DMA_CONTROL_TTC_256;
+ 	}
+ 
+-	writel(csr6, ioaddr + DMA_CONTROL);
++	writel(csr6, ioaddr + DMA_CONTROL + channel * DMA_CHAN_OFFSET);
+ }
+ 
+ static void dwmac1000_dump_dma_regs(struct stmmac_priv *priv,
+@@ -273,12 +322,13 @@ static int dwmac1000_get_hw_feature(struct stmmac_priv *priv,
+ static void dwmac1000_rx_watchdog(struct stmmac_priv *priv,
+ 				  void __iomem *ioaddr, u32 riwt, u32 queue)
+ {
+-	writel(riwt, ioaddr + DMA_RX_WATCHDOG);
++	writel(riwt, ioaddr + DMA_RX_WATCHDOG + queue * DMA_CHAN_OFFSET);
+ }
+ 
+ const struct stmmac_dma_ops dwmac1000_dma_ops = {
+ 	.reset = dwmac_dma_reset,
+ 	.init = dwmac1000_dma_init,
++	.init_chan = dwmac1000_dma_init_channel,
+ 	.init_rx_chan = dwmac1000_dma_init_rx,
+ 	.init_tx_chan = dwmac1000_dma_init_tx,
+ 	.axi = dwmac1000_dma_axi,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c b/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
+index 266f64148c1a..99838497b183 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
+@@ -71,63 +71,63 @@ int dwmac_dma_reset(void __iomem *ioaddr)
+ void dwmac_enable_dma_transmission(struct stmmac_priv *priv,
+ 				   void __iomem *ioaddr, u32 chan)
+ {
+-	writel(1, ioaddr + DMA_XMT_POLL_DEMAND);
++	writel(1, ioaddr + DMA_XMT_POLL_DEMAND + chan * DMA_CHAN_OFFSET);
+ }
+ 
+ void dwmac_enable_dma_irq(struct stmmac_priv *priv, void __iomem *ioaddr,
+ 			  u32 chan, bool rx, bool tx)
+ {
+-	u32 value = readl(ioaddr + DMA_INTR_ENA);
++	u32 value = readl(ioaddr + DMA_INTR_ENA + chan * DMA_CHAN_OFFSET);
+ 
+ 	if (rx)
+ 		value |= DMA_INTR_DEFAULT_RX;
+ 	if (tx)
+ 		value |= DMA_INTR_DEFAULT_TX;
+ 
+-	writel(value, ioaddr + DMA_INTR_ENA);
++	writel(value, ioaddr + DMA_INTR_ENA + chan * DMA_CHAN_OFFSET);
+ }
+ 
+ void dwmac_disable_dma_irq(struct stmmac_priv *priv, void __iomem *ioaddr,
+ 			   u32 chan, bool rx, bool tx)
+ {
+-	u32 value = readl(ioaddr + DMA_INTR_ENA);
++	u32 value = readl(ioaddr + DMA_INTR_ENA + chan * DMA_CHAN_OFFSET);
+ 
+ 	if (rx)
+ 		value &= ~DMA_INTR_DEFAULT_RX;
+ 	if (tx)
+ 		value &= ~DMA_INTR_DEFAULT_TX;
+ 
+-	writel(value, ioaddr + DMA_INTR_ENA);
++	writel(value, ioaddr + DMA_INTR_ENA + chan * DMA_CHAN_OFFSET);
+ }
+ 
+ void dwmac_dma_start_tx(struct stmmac_priv *priv, void __iomem *ioaddr,
+ 			u32 chan)
+ {
+-	u32 value = readl(ioaddr + DMA_CONTROL);
++	u32 value = readl(ioaddr + DMA_CONTROL + chan * DMA_CHAN_OFFSET);
+ 	value |= DMA_CONTROL_ST;
+-	writel(value, ioaddr + DMA_CONTROL);
++	writel(value, ioaddr + DMA_CONTROL + chan * DMA_CHAN_OFFSET);
+ }
+ 
+ void dwmac_dma_stop_tx(struct stmmac_priv *priv, void __iomem *ioaddr, u32 chan)
+ {
+-	u32 value = readl(ioaddr + DMA_CONTROL);
++	u32 value = readl(ioaddr + DMA_CONTROL + chan * DMA_CHAN_OFFSET);
+ 	value &= ~DMA_CONTROL_ST;
+-	writel(value, ioaddr + DMA_CONTROL);
++	writel(value, ioaddr + DMA_CONTROL + chan * DMA_CHAN_OFFSET);
+ }
+ 
+ void dwmac_dma_start_rx(struct stmmac_priv *priv, void __iomem *ioaddr,
+ 			u32 chan)
+ {
+-	u32 value = readl(ioaddr + DMA_CONTROL);
++	u32 value = readl(ioaddr + DMA_CONTROL + chan * DMA_CHAN_OFFSET);
+ 	value |= DMA_CONTROL_SR;
+-	writel(value, ioaddr + DMA_CONTROL);
++	writel(value, ioaddr + DMA_CONTROL + chan * DMA_CHAN_OFFSET);
+ }
+ 
+ void dwmac_dma_stop_rx(struct stmmac_priv *priv, void __iomem *ioaddr, u32 chan)
+ {
+-	u32 value = readl(ioaddr + DMA_CONTROL);
++	u32 value = readl(ioaddr + DMA_CONTROL + chan * DMA_CHAN_OFFSET);
+ 	value &= ~DMA_CONTROL_SR;
+-	writel(value, ioaddr + DMA_CONTROL);
++	writel(value, ioaddr + DMA_CONTROL + chan * DMA_CHAN_OFFSET);
+ }
+ 
+ #ifdef DWMAC_DMA_DEBUG
+@@ -205,7 +205,7 @@ int dwmac_dma_interrupt(struct stmmac_priv *priv, void __iomem *ioaddr,
+ {
+ 	int ret = 0;
+ 	/* read the status register (CSR5) */
+-	u32 intr_status = readl(ioaddr + DMA_STATUS);
++	u32 intr_status = readl(ioaddr + DMA_STATUS + chan * DMA_CHAN_OFFSET);
+ 
+ #ifdef DWMAC_DMA_DEBUG
+ 	/* Enable it to monitor DMA rx/tx status in case of critical problems */
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index eafe85e45977..ff539681a3a4 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -340,6 +340,7 @@ struct plat_stmmacenet_data {
+ 	bool sph_disable;
+ 	bool serdes_up_after_phy_linkup;
+ 	const struct dwmac4_addrs *dwmac4_addrs;
++	bool dwmac_is_loongson;
+ 	const struct dwmac_regs *dwmac_regs;
+ };
+ #endif
 -- 
 2.39.3
 
