@@ -1,15 +1,15 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D434E100D3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32389100D5
 	for <loongarch@lists.linux.dev>; Thu, 13 Jul 2023 09:40:36 +0000 (UTC)
-Received: from dggpemm500001.china.huawei.com (unknown [172.30.72.53])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4R1qMg1LkQz18Lnh;
-	Thu, 13 Jul 2023 17:39:59 +0800 (CST)
+Received: from dggpemm500001.china.huawei.com (unknown [172.30.72.57])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R1qLp2H4wzVjg5;
+	Thu, 13 Jul 2023 17:39:14 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  dggpemm500001.china.huawei.com (7.185.36.107) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Thu, 13 Jul 2023 17:40:33 +0800
+ 15.1.2507.27; Thu, 13 Jul 2023 17:40:27 +0800
 From: Kefeng Wang <wangkefeng.wang@huawei.com>
 To: <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
 	<surenb@google.com>
@@ -30,9 +30,9 @@ CC: Russell King <linux@armlinux.org.uk>, Catalin Marinas
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>, Kefeng Wang
 	<wangkefeng.wang@huawei.com>
-Subject: [PATCH rfc -next 10/10] loongarch: mm: try VMA lock-based page fault handling first
-Date: Thu, 13 Jul 2023 17:53:38 +0800
-Message-ID: <20230713095339.189715-11-wangkefeng.wang@huawei.com>
+Subject: [PATCH rfc -next 05/10] powerpc: mm: use try_vma_locked_page_fault()
+Date: Thu, 13 Jul 2023 17:53:33 +0800
+Message-ID: <20230713095339.189715-6-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230713095339.189715-1-wangkefeng.wang@huawei.com>
 References: <20230713095339.189715-1-wangkefeng.wang@huawei.com>
@@ -49,85 +49,106 @@ X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  dggpemm500001.china.huawei.com (7.185.36.107)
 X-CFilter-Loop: Reflected
 
-Attempt VMA lock-based page fault handling first, and fall back
-to the existing mmap_lock-based handling if that fails.
+Use new try_vma_locked_page_fault() helper to simplify code.
+No functional change intended.
 
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- arch/loongarch/Kconfig    |  1 +
- arch/loongarch/mm/fault.c | 26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ arch/powerpc/mm/fault.c | 54 +++++++++++++++++------------------------
+ 1 file changed, 22 insertions(+), 32 deletions(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 397203e18800..afb0ccabab97 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -53,6 +53,7 @@ config LOONGARCH
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
- 	select ARCH_SUPPORTS_NUMA_BALANCING
-+	select ARCH_SUPPORTS_PER_VMA_LOCK
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF
- 	select ARCH_USE_QUEUED_RWLOCKS
-diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-index cde2ea0119fa..7e54bc48813e 100644
---- a/arch/loongarch/mm/fault.c
-+++ b/arch/loongarch/mm/fault.c
-@@ -136,6 +136,17 @@ static inline bool access_error(unsigned int flags, struct pt_regs *regs,
- 	return false;
- }
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 82954d0e6906..dd4832a3cf10 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -391,6 +391,23 @@ static int page_fault_is_bad(unsigned long err)
+ #define page_fault_is_bad(__err)	((__err) & DSISR_BAD_FAULT_32S)
+ #endif
  
 +#ifdef CONFIG_PER_VMA_LOCK
 +int arch_vma_check_access(struct vm_area_struct *vma,
 +			  struct vm_locked_fault *vmlf)
 +{
-+	if (unlikely(access_error(vmlf->fault_flags, vmlf->regs, vmlf->address,
-+		     vma)))
++	int is_exec = TRAP(vmlf->regs) == INTERRUPT_INST_STORAGE;
++	int is_write = page_fault_is_write(vmlf->fault_code);
++
++	if (unlikely(access_pkey_error(is_write, is_exec,
++				(vmlf->fault_code & DSISR_KEYFAULT), vma)))
++		return -EINVAL;
++
++	if (unlikely(access_error(is_write, is_exec, vma)))
 +		return -EINVAL;
 +	return 0;
 +}
 +#endif
 +
  /*
-  * This routine handles page faults.  It determines the address,
-  * and the problem, and then passes it off to one of the appropriate
-@@ -149,6 +160,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 	struct task_struct *tsk = current;
- 	struct mm_struct *mm = tsk->mm;
- 	struct vm_area_struct *vma = NULL;
+  * For 600- and 800-family processors, the error_code parameter is DSISR
+  * for a data fault, SRR1 for an instruction fault.
+@@ -413,6 +430,7 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	int is_write = page_fault_is_write(error_code);
+ 	vm_fault_t fault, major = 0;
+ 	bool kprobe_fault = kprobe_page_fault(regs, 11);
 +	struct vm_locked_fault vmlf;
- 	vm_fault_t fault;
  
- 	if (kprobe_page_fault(regs, current->thread.trap_nr))
-@@ -183,6 +195,19 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 		flags |= FAULT_FLAG_WRITE;
+ 	if (unlikely(debugger_fault_handler(regs) || kprobe_fault))
+ 		return 0;
+@@ -469,41 +487,15 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	if (is_exec)
+ 		flags |= FAULT_FLAG_INSTRUCTION;
  
- 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-+
-+	VM_LOCKED_FAULT_INIT(vmlf, mm, address, flags, 0, regs, 0);
+-#ifdef CONFIG_PER_VMA_LOCK
+-	if (!(flags & FAULT_FLAG_USER))
+-		goto lock_mmap;
+-
+-	vma = lock_vma_under_rcu(mm, address);
+-	if (!vma)
+-		goto lock_mmap;
+-
+-	if (unlikely(access_pkey_error(is_write, is_exec,
+-				       (error_code & DSISR_KEYFAULT), vma))) {
+-		vma_end_read(vma);
+-		goto lock_mmap;
+-	}
+-
+-	if (unlikely(access_error(is_write, is_exec, vma))) {
+-		vma_end_read(vma);
+-		goto lock_mmap;
+-	}
+-
+-	fault = handle_mm_fault(vma, address, flags | FAULT_FLAG_VMA_LOCK, regs);
+-	if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
+-		vma_end_read(vma);
+-
+-	if (!(fault & VM_FAULT_RETRY)) {
+-		count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
++	VM_LOCKED_FAULT_INIT(vmlf, mm, address, flags, 0, regs, error_code);
 +	if (try_vma_locked_page_fault(&vmlf, &fault))
 +		goto retry;
 +	else if (!(fault | VM_FAULT_RETRY))
-+		goto done;
-+
-+	if (fault_signal_pending(fault, regs)) {
-+		if (!user_mode(regs))
-+			no_context(regs, address);
-+		return;
-+	}
-+
- retry:
- 	vma = lock_mm_and_find_vma(mm, address, regs);
- 	if (unlikely(!vma))
-@@ -223,6 +248,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
+ 		goto done;
+-	}
+-	count_vm_vma_lock_event(VMA_LOCK_RETRY);
  
- 	mmap_read_unlock(mm);
+ 	if (fault_signal_pending(fault, regs))
+ 		return user_mode(regs) ? 0 : SIGBUS;
  
-+done:
- 	if (unlikely(fault & VM_FAULT_ERROR)) {
- 		if (fault & VM_FAULT_OOM) {
- 			do_out_of_memory(regs, address);
+-lock_mmap:
+-#endif /* CONFIG_PER_VMA_LOCK */
+-
+ 	/* When running in the kernel we expect faults to occur only to
+ 	 * addresses in user space.  All other faults represent errors in the
+ 	 * kernel and should generate an OOPS.  Unfortunately, in the case of an
+@@ -552,9 +544,7 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
+ 
+ 	mmap_read_unlock(current->mm);
+ 
+-#ifdef CONFIG_PER_VMA_LOCK
+ done:
+-#endif
+ 	if (unlikely(fault & VM_FAULT_ERROR))
+ 		return mm_fault_error(regs, address, fault);
+ 
 -- 
 2.27.0
 
