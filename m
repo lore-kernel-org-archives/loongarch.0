@@ -1,59 +1,138 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2C113ADD
-	for <loongarch@lists.linux.dev>; Fri, 14 Jul 2023 18:49:03 +0000 (UTC)
-Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id DF62A2DC;
-	Fri, 14 Jul 2023 18:43:19 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DF62A2DC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1689360200; bh=Bon09mDec0urmze6A54Y2o0448k0+MpKSg6TVjXG9To=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Lu/g8sRPv5SNvVNKReUrV1WPAeOeQ5DQQ/bg7mLy28xrFc+z7k91E2MOwDuNUXIqE
-	 jHTeOK4XWFlx4Rdnh/lqIyWHMo37F2ngTIyzMdEwgGwx53CZ62ROUIUJORcSmkp4WM
-	 de73dQN4F4XGWlLMlwz6OxaeEQpxvY4rIbcmrbkRK4WJDQ0H9cquA+Y2Uf9YcF+zSF
-	 QYfLPqjn1l+KfYTMf0Z4ypa+csKDiT7Qlb9QFhwx/VsZYFG4VyvV43dW42Nz8BKYKt
-	 ULv/uq7yOrgsqnLUe90UmrVVqxOkAGwr9Hg55u7fjsOCkT31lzZQNp8cfsWGEs/Cgg
-	 LT9cIE/KizO0g==
-From: Jonathan Corbet <corbet@lwn.net>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: linux-doc@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH 0/2] Update Documentation/features
-In-Reply-To: <1689060720-4628-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1689060720-4628-1-git-send-email-yangtiezhu@loongson.cn>
-Date: Fri, 14 Jul 2023 12:43:19 -0600
-Message-ID: <87bkge1ghk.fsf@meer.lwn.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2671D134CB
+	for <loongarch@lists.linux.dev>; Fri, 14 Jul 2023 19:56:26 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id DEDF05C009D;
+	Fri, 14 Jul 2023 15:56:25 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Fri, 14 Jul 2023 15:56:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+	1689364585; x=1689450985; bh=bIDbQfxsNuvf3d9r/rOpxa+WmMoPtn+8jD3
+	nk1eOuRM=; b=SGMembvX6/sAHfuOugqH9axbat/QoJ0k31uIq0vHq0+0ZRq9/bm
+	OXE4fsjATB99uYFbcAOqgiYTHo/G6oDsB/CtG/4tOHM+S4lOaCWbNGhHggOsAJTg
+	R9x3L8nKHjrq8GlGVIJ3q52beg3LfkH49h4safD8f3/9/UWoGrvEiu/G8GQeWhsj
+	QBINygCvMVi3GocH49248OkLx/g7BcAV1u7sIyM14bQ44Jjn/2m2h0UISKDEyaOz
+	LiZL8ngaiTLV0m38ocWnY5LlNGr8kj6VSMgo6BbX4AuPvRR9+inBIg2TDeq3EBVa
+	XU1pvnDy1aQqp4RoKfvE7UAdu5l/KSmdn0g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1689364585; x=1689450985; bh=bIDbQfxsNuvf3d9r/rOpxa+WmMoPtn+8jD3
+	nk1eOuRM=; b=OQUfHU85i/3qDShDvTCgfTD7feljdTJdTsnuo5ejQBoyPs0P2uv
+	Z8yhnO9uqNgQP4P4ilW2vOODiZuuT114HqvMR+jVhEzUGMPzGFNZb9y/2mM11JH3
+	iSO1XktS3kXfIxO1sn/yYGVQonR1mWZCYIIOrqoVRNzaSTphNKiVsgzIBPIScgWb
+	Z9v0Zo8pgQ6o2JVPgvhPnhBB/uIl9i84xc840h50R0HRvBf8iSsayfWcg5bT1Eec
+	vVXCtmEw6o+6btBP99+xmA290mk9/QTtkdDPF9AJWxPcVzskgP+PvHPr+w/oRip3
+	0GmREp6JTbBoHvyZLHHMGxmDM7Lx70sI4ew==
+X-ME-Sender: <xms:aKixZINAaHZB2npjlr6kbwwcGSVaR5zGuNyYmH16wvpA4A1Iul-Z-A>
+    <xme:aKixZO9FE28zzxsHMXwW1FYewcFTJPhJbLC0HpzLgAg6Gu9oCDArV6KFkUHtSfJNl
+    EUoJjSEoSDY6FTMNnw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrfeeigddugeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpefgkeeuleegieeghfduudeltdekfeffjeeuleehleefudettddtgfevueef
+    feeigeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:aKixZPTYvU0vcmCP_r2Hf20okR3zUmuZi9AmprKDUWqxyEYbhddrMw>
+    <xmx:aKixZAsElIgnNOVEibh3rfmvgRbV4aiLiBiVdTJDz0occUAMdxRP6Q>
+    <xmx:aKixZAdfD6MDZtpCirPQ9q2-7iBk7Zcv9Ts7-dfZxNFt69I6d2fbWA>
+    <xmx:aaixZHzmJD_NpvGaWn6kqZWRXRbs2qeuuJsh2383wclZmbiiFdiBMw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 66359B60086; Fri, 14 Jul 2023 15:56:24 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-531-gfdfa13a06d-fm-20230703.001-gfdfa13a0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Message-Id: <bf997965-71d1-4949-8cbc-de46ac6a1283@app.fastmail.com>
+In-Reply-To: 
+ <CAP-5=fWmPQ9vtH1t9pSPCPBiOFxQQe43C7Bk4amLS08ASAnwGg@mail.gmail.com>
+References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
+ <1412dbaf-56f4-418b-85ea-681b1c44cc26@app.fastmail.com>
+ <CAP-5=fWmPQ9vtH1t9pSPCPBiOFxQQe43C7Bk4amLS08ASAnwGg@mail.gmail.com>
+Date: Fri, 14 Jul 2023 21:56:04 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ian Rogers" <irogers@google.com>, "Tiezhu Yang" <yangtiezhu@loongson.cn>
+Cc: linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 0/2] Unify uapi bitsperlong.h
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Tiezhu Yang <yangtiezhu@loongson.cn> writes:
-
-> This patch series is based on 6.5-rc1, it also applies cleanly to
-> DOCUMENTATION tree: git.lwn.net/linux.git docs-next
+On Fri, Jul 14, 2023, at 20:34, Ian Rogers wrote:
+> On Thu, Jun 22, 2023 at 8:10=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> =
+wrote:
+>>
+>> On Thu, Jun 22, 2023, at 16:13, Tiezhu Yang wrote:
+>> > v3:
+>> >   -- Check the definition of __BITS_PER_LONG first at
+>> >      the beginning of uapi/asm-generic/bitsperlong.h
+>> >
 >
-> Tiezhu Yang (2):
->   Documentation/features: Check ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
->   Documentation/features: Refresh support files for 6.5
+> Thanks for doing this cleanup! I just wanted to report an issue I ran
+> into with building the Linux perf tool. The header guard in:
+> tools/include/asm-generic/bitsperlong.h
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/tools/include/asm-generic/bitsperlong.h
 >
->  Documentation/features/debug/kprobes-on-ftrace/arch-support.txt | 2 +-
->  Documentation/features/debug/kprobes/arch-support.txt           | 2 +-
->  Documentation/features/debug/kretprobes/arch-support.txt        | 2 +-
->  Documentation/features/debug/stackprotector/arch-support.txt    | 2 +-
->  Documentation/features/debug/uprobes/arch-support.txt           | 2 +-
->  Documentation/features/locking/lockdep/arch-support.txt         | 2 +-
->  Documentation/features/vm/ELF-ASLR/arch-support.txt             | 5 +++--
->  7 files changed, 9 insertions(+), 8 deletions(-)
+> Caused an issue with building:
+> tools/perf/util/cs-etm.c
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/tools/perf/util/cs-etm.c
 >
+> The issue was that cs-etm.c would #include a system header, which
+> would transitively include a header with the same header guard. This
+> led to the tools/include/asm-generic/bitsperlong.h being ignored and
+> the compilation of tools/perf/util/cs-etm.c failing due to a missing
+> define. My local workaround is:
+>
+> ```
+> diff --git a/tools/include/asm-generic/bitsperlong.h
+> b/tools/include/asm-generic/bitsperlong.h
+> index 2093d56ddd11..88508a35cb45 100644
+> --- a/tools/include/asm-generic/bitsperlong.h
+> +++ b/tools/include/asm-generic/bitsperlong.h
+> @@ -1,6 +1,6 @@
+> /* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef __ASM_GENERIC_BITS_PER_LONG
+> -#define __ASM_GENERIC_BITS_PER_LONG
+> +#ifndef __LINUX_TOOLS_ASM_GENERIC_BITS_PER_LONG
+> +#define __LINUX_TOOLS_ASM_GENERIC_BITS_PER_LONG
+> #include <uapi/asm-generic/bitsperlong.h>
+> @@ -21,4 +21,4 @@
+> #define small_const_nbits(nbits) \
+> (__builtin_constant_p(nbits) && (nbits) <=3D BITS_PER_LONG && (nbits) =
+> 0)
+> -#endif /* __ASM_GENERIC_BITS_PER_LONG */
+> +#endif /* __LINUX_TOOLS_ASM_GENERIC_BITS_PER_LONG */
+> ```
+>
+> I'm not sure if a wider fix is necessary for this, but I thought it
+> worthwhile to report that there are potential issues. I don't think we
+> can use #pragma once, as an alternative to header guards, to avoid
+> this kind of name collision.
 
-Series applied, thanks.
+Thanks for the report! I think the correct fix is to update
+the tools/include/ headers to have the same change as the kernel
+itself. I don't know why we end up including both, that sounds
+like a separate issue but should normally be harmless as long
+as the contents are the same.
 
-jon
+      Arnd
