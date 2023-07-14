@@ -1,138 +1,116 @@
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2671D134CB
-	for <loongarch@lists.linux.dev>; Fri, 14 Jul 2023 19:56:26 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id DEDF05C009D;
-	Fri, 14 Jul 2023 15:56:25 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Fri, 14 Jul 2023 15:56:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-	1689364585; x=1689450985; bh=bIDbQfxsNuvf3d9r/rOpxa+WmMoPtn+8jD3
-	nk1eOuRM=; b=SGMembvX6/sAHfuOugqH9axbat/QoJ0k31uIq0vHq0+0ZRq9/bm
-	OXE4fsjATB99uYFbcAOqgiYTHo/G6oDsB/CtG/4tOHM+S4lOaCWbNGhHggOsAJTg
-	R9x3L8nKHjrq8GlGVIJ3q52beg3LfkH49h4safD8f3/9/UWoGrvEiu/G8GQeWhsj
-	QBINygCvMVi3GocH49248OkLx/g7BcAV1u7sIyM14bQ44Jjn/2m2h0UISKDEyaOz
-	LiZL8ngaiTLV0m38ocWnY5LlNGr8kj6VSMgo6BbX4AuPvRR9+inBIg2TDeq3EBVa
-	XU1pvnDy1aQqp4RoKfvE7UAdu5l/KSmdn0g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1689364585; x=1689450985; bh=bIDbQfxsNuvf3d9r/rOpxa+WmMoPtn+8jD3
-	nk1eOuRM=; b=OQUfHU85i/3qDShDvTCgfTD7feljdTJdTsnuo5ejQBoyPs0P2uv
-	Z8yhnO9uqNgQP4P4ilW2vOODiZuuT114HqvMR+jVhEzUGMPzGFNZb9y/2mM11JH3
-	iSO1XktS3kXfIxO1sn/yYGVQonR1mWZCYIIOrqoVRNzaSTphNKiVsgzIBPIScgWb
-	Z9v0Zo8pgQ6o2JVPgvhPnhBB/uIl9i84xc840h50R0HRvBf8iSsayfWcg5bT1Eec
-	vVXCtmEw6o+6btBP99+xmA290mk9/QTtkdDPF9AJWxPcVzskgP+PvHPr+w/oRip3
-	0GmREp6JTbBoHvyZLHHMGxmDM7Lx70sI4ew==
-X-ME-Sender: <xms:aKixZINAaHZB2npjlr6kbwwcGSVaR5zGuNyYmH16wvpA4A1Iul-Z-A>
-    <xme:aKixZO9FE28zzxsHMXwW1FYewcFTJPhJbLC0HpzLgAg6Gu9oCDArV6KFkUHtSfJNl
-    EUoJjSEoSDY6FTMNnw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrfeeigddugeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpefgkeeuleegieeghfduudeltdekfeffjeeuleehleefudettddtgfevueef
-    feeigeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:aKixZPTYvU0vcmCP_r2Hf20okR3zUmuZi9AmprKDUWqxyEYbhddrMw>
-    <xmx:aKixZAsElIgnNOVEibh3rfmvgRbV4aiLiBiVdTJDz0occUAMdxRP6Q>
-    <xmx:aKixZAdfD6MDZtpCirPQ9q2-7iBk7Zcv9Ts7-dfZxNFt69I6d2fbWA>
-    <xmx:aaixZHzmJD_NpvGaWn6kqZWRXRbs2qeuuJsh2383wclZmbiiFdiBMw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 66359B60086; Fri, 14 Jul 2023 15:56:24 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-531-gfdfa13a06d-fm-20230703.001-gfdfa13a0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81E52C80
+	for <loongarch@lists.linux.dev>; Fri, 14 Jul 2023 22:57:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C28C433C8;
+	Fri, 14 Jul 2023 22:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689375444;
+	bh=P8clI5KtqQRzgFfns22g81I3g6E4+6MLCwEqWyZYU68=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qjATGNeW2AnMB8iSVCidFlZhH9OfkN7bAt2p7ldacOlxk00MBC0K43n0wGgdC/kES
+	 5er615dq9DLL0q9cE1VNLaWlbFSi2IfYsicV7umDzTZyH4W2s60ky3l5tGI2zapesZ
+	 a6IFRb5wsW2IyAbgdPu3qj324ZAqxXKa5uD5MSOHkbg0ycP0RX1WKos7Wx9s9h14c7
+	 mr09nK6DvKTxBa912H2K859rBf/1exfAJQyuctMgVjw5UcRvPGqHIzg/7kZ1W2WHDS
+	 fPdS6OedIvs2Ff2PDWFgTKxBrTglm+398FEIc7xd983iXS7+gUDgWarryvZetDtEg3
+	 d1Xp1VJIV7NTA==
+Date: Fri, 14 Jul 2023 23:57:06 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
+	Balbir Singh <bsingharora@gmail.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Cyrill Gorcunov <gorcunov@gmail.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Eugene Syromiatnikov <esyr@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	"H . J . Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	Nadav Amit <nadav.amit@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Pavel Machek <pavel@ucw.cz>, Peter Zijlstra <peterz@infradead.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Weijiang Yang <weijiang.yang@intel.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	John Allen <john.allen@amd.com>, kcc@google.com, eranian@google.com,
+	rppt@kernel.org, jamorris@linux.microsoft.com,
+	dethoma@microsoft.com, akpm@linux-foundation.org,
+	Andrew.Cooper3@citrix.com, christina.schimpe@intel.com,
+	david@redhat.com, debug@rivosinc.com, szabolcs.nagy@arm.com,
+	torvalds@linux-foundation.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
+	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	Linus Torvalds <torvalds@linuxfoundation.org>
+Subject: Re: [PATCH v9 01/42] mm: Rename arch pte_mkwrite()'s to
+ pte_mkwrite_novma()
+Message-ID: <b389274a-abed-40dc-8e33-7ce922ea9b61@sirena.org.uk>
+References: <20230613001108.3040476-1-rick.p.edgecombe@intel.com>
+ <20230613001108.3040476-2-rick.p.edgecombe@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <bf997965-71d1-4949-8cbc-de46ac6a1283@app.fastmail.com>
-In-Reply-To: 
- <CAP-5=fWmPQ9vtH1t9pSPCPBiOFxQQe43C7Bk4amLS08ASAnwGg@mail.gmail.com>
-References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
- <1412dbaf-56f4-418b-85ea-681b1c44cc26@app.fastmail.com>
- <CAP-5=fWmPQ9vtH1t9pSPCPBiOFxQQe43C7Bk4amLS08ASAnwGg@mail.gmail.com>
-Date: Fri, 14 Jul 2023 21:56:04 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ian Rogers" <irogers@google.com>, "Tiezhu Yang" <yangtiezhu@loongson.cn>
-Cc: linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
- loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 0/2] Unify uapi bitsperlong.h
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Om+vkuYZS0OLKEiC"
+Content-Disposition: inline
+In-Reply-To: <20230613001108.3040476-2-rick.p.edgecombe@intel.com>
+X-Cookie: Preserve the old, but know the new.
 
-On Fri, Jul 14, 2023, at 20:34, Ian Rogers wrote:
-> On Thu, Jun 22, 2023 at 8:10=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->>
->> On Thu, Jun 22, 2023, at 16:13, Tiezhu Yang wrote:
->> > v3:
->> >   -- Check the definition of __BITS_PER_LONG first at
->> >      the beginning of uapi/asm-generic/bitsperlong.h
->> >
->
-> Thanks for doing this cleanup! I just wanted to report an issue I ran
-> into with building the Linux perf tool. The header guard in:
-> tools/include/asm-generic/bitsperlong.h
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/tools/include/asm-generic/bitsperlong.h
->
-> Caused an issue with building:
-> tools/perf/util/cs-etm.c
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/tools/perf/util/cs-etm.c
->
-> The issue was that cs-etm.c would #include a system header, which
-> would transitively include a header with the same header guard. This
-> led to the tools/include/asm-generic/bitsperlong.h being ignored and
-> the compilation of tools/perf/util/cs-etm.c failing due to a missing
-> define. My local workaround is:
->
-> ```
-> diff --git a/tools/include/asm-generic/bitsperlong.h
-> b/tools/include/asm-generic/bitsperlong.h
-> index 2093d56ddd11..88508a35cb45 100644
-> --- a/tools/include/asm-generic/bitsperlong.h
-> +++ b/tools/include/asm-generic/bitsperlong.h
-> @@ -1,6 +1,6 @@
-> /* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef __ASM_GENERIC_BITS_PER_LONG
-> -#define __ASM_GENERIC_BITS_PER_LONG
-> +#ifndef __LINUX_TOOLS_ASM_GENERIC_BITS_PER_LONG
-> +#define __LINUX_TOOLS_ASM_GENERIC_BITS_PER_LONG
-> #include <uapi/asm-generic/bitsperlong.h>
-> @@ -21,4 +21,4 @@
-> #define small_const_nbits(nbits) \
-> (__builtin_constant_p(nbits) && (nbits) <=3D BITS_PER_LONG && (nbits) =
-> 0)
-> -#endif /* __ASM_GENERIC_BITS_PER_LONG */
-> +#endif /* __LINUX_TOOLS_ASM_GENERIC_BITS_PER_LONG */
-> ```
->
-> I'm not sure if a wider fix is necessary for this, but I thought it
-> worthwhile to report that there are potential issues. I don't think we
-> can use #pragma once, as an alternative to header guards, to avoid
-> this kind of name collision.
 
-Thanks for the report! I think the correct fix is to update
-the tools/include/ headers to have the same change as the kernel
-itself. I don't know why we end up including both, that sounds
-like a separate issue but should normally be harmless as long
-as the contents are the same.
+--Om+vkuYZS0OLKEiC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-      Arnd
+On Mon, Jun 12, 2023 at 05:10:27PM -0700, Rick Edgecombe wrote:
+> The x86 Shadow stack feature includes a new type of memory called shadow
+> stack. This shadow stack memory has some unusual properties, which requires
+> some core mm changes to function properly.
+
+This seems to break sparc64_defconfig when applied on top of v6.5-rc1:
+
+In file included from /home/broonie/git/bisect/include/linux/mm.h:29,
+                 from /home/broonie/git/bisect/net/core/skbuff.c:40:
+/home/broonie/git/bisect/include/linux/pgtable.h: In function 'pmd_mkwrite':
+/home/broonie/git/bisect/include/linux/pgtable.h:528:9: error: implicit declaration of function 'pmd_mkwrite_novma'; did you mean 'pte_mkwrite_novma'? [-Werror=implicit-function-declaration]
+  return pmd_mkwrite_novma(pmd);
+         ^~~~~~~~~~~~~~~~~
+         pte_mkwrite_novma
+/home/broonie/git/bisect/include/linux/pgtable.h:528:9: error: incompatible types when returning type 'int' but 'pmd_t' {aka 'struct <anonymous>'} was expected
+  return pmd_mkwrite_novma(pmd);
+         ^~~~~~~~~~~~~~~~~~~~~~
+
+The same issue seems to apply with the version that was in -next based
+on v6.4-rc4 too.
+
+--Om+vkuYZS0OLKEiC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmSx0sEACgkQJNaLcl1U
+h9Cgsgf+I5DDysBO4SJ+jmxeXww6HYCycJsoc6oA/wVf/wO7aTv89RFcAPpwMOoq
+jZKiD/xiUtCMUcNE+ZtCQIYVymIrK1BBcNPzgflt5fa50gm53Hp2mcNFaUeriWjC
+x2DfyH1wsfgAjwv14aKu1m59Y7xdhIQWZ4HTezaEFND/3GQTrvGy8tHMDL07GKWz
+qL1gMkJ7kYVKEAf86IsSwbDBcSa/SV5cLbsL4S5GEm5K/hQcLwUqSw4WYuMLfNip
+Eb4Napl5JYGKJcb/IQIm/PGQbmnKgijPg7mR0lvF6RWZk39wCFxKQizahf6cRCwv
+HSMmlXJHILeOK57vaStYZJvapWZzdg==
+=/plS
+-----END PGP SIGNATURE-----
+
+--Om+vkuYZS0OLKEiC--
