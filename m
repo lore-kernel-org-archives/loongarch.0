@@ -1,163 +1,228 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD537F4
-	for <loongarch@lists.linux.dev>; Fri, 14 Jul 2023 01:52:51 +0000 (UTC)
-Received: from dggpemm500001.china.huawei.com (unknown [172.30.72.53])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4R2DxQ4ZhTz18LhT;
-	Fri, 14 Jul 2023 09:52:10 +0800 (CST)
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemm500001.china.huawei.com (7.185.36.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 14 Jul 2023 09:52:45 +0800
-Message-ID: <6f06f7d5-7d84-815e-699b-eef684e014b0@huawei.com>
-Date: Fri, 14 Jul 2023 09:52:45 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E849DEA3
+	for <loongarch@lists.linux.dev>; Fri, 14 Jul 2023 02:15:41 +0000 (UTC)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2b703cbfaf5so20745711fa.1
+        for <loongarch@lists.linux.dev>; Thu, 13 Jul 2023 19:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689300940; x=1691892940;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uvLsHbiV1m3ahEGSt2agvJr5YDwUu2gET6Rpx6KCX04=;
+        b=dmqjWzza1wAwFTCJ33XVDfIRamgYGV+vd0l2GlZbK/m2XPHBAuubZwNOIOGsub5/17
+         fPvPtA+EO6dQLPhIkl1EJ4Ujb8EZXW3sZCYCzTarExLPiYv68SjDJViYQKkEMkAU1E4L
+         NY8RX4r/EnS6ud9CgXTaHBoLgZL1m6R9hiDBPaJ+lxHvySVsVtDKNfbbV7zJPDNjCQMw
+         dvrbigI2hT7voB9Jn6V5fknejMZjhZrSLVYRgMMAXw2H4UcvqwBE6n3sKNU7DXY40NB4
+         PuzNIWZ3ItGx53D+HyV7/BuWlCUWsUT82HNcomdV2kOZXfYFr7hiXtJ1vqeFjQCUjVFM
+         9pFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689300940; x=1691892940;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uvLsHbiV1m3ahEGSt2agvJr5YDwUu2gET6Rpx6KCX04=;
+        b=LV1pbYV/MINmgf57amgiodReYqX5Sg3NmnGW0zYYdNi6K2l4fNmxxWoV7qyi1ADVLx
+         2LQsVHILXGtszsHZ1DgjYAoTdty2J0SL6Kmz9kS9TGqcFqgC+hf+U6NOTAXbnbazZ0Jf
+         cA1+rcGtbDuwCVFrlEdNPlbd+B3gYm9j4ltnrPzTHN1e6d9r6IUrqts39LU+lf+DPtYc
+         RB/v03otG4w1U4K9R1etow5YfSMClzCLQzoRr/oKroe0kpjGYNpp3gYoqv1ZIxaaDeTa
+         NyiVB1Wnl+qflS3WXIwUD7RtnLJ6+Fy8M3S7tYpRCHG8dzyd7vr8CtYqQw0oGQFrK7ci
+         zI6g==
+X-Gm-Message-State: ABy/qLZ0jCGkP6/bC/RdojqIDXVefnLMWDipyAC+npDY57Jri6Ufwnc2
+	liWsrlHc5YktT4p92o6Bl98BYoM1HqnRPy2W98k=
+X-Google-Smtp-Source: APBJJlGjMamGsT7Sh1MrmaXBEdtJb+aNAcDl1ChNizFCfRZe36iePDaAGAYQK43pKb6GQMAIp/hty54XbLwRkqrgbsc=
+X-Received: by 2002:a2e:8082:0:b0:2b3:47b3:3c39 with SMTP id
+ i2-20020a2e8082000000b002b347b33c39mr3034279ljg.23.1689300939288; Thu, 13 Jul
+ 2023 19:15:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH rfc -next 01/10] mm: add a generic VMA lock-based page
- fault handler
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>, Matthew Wilcox
-	<willy@infradead.org>
-CC: <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, Russell
- King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
-	<kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
-	<npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexander Gordeev
-	<agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
-	<svens@linux.ibm.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy
- Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>
-References: <20230713095339.189715-1-wangkefeng.wang@huawei.com>
- <20230713095339.189715-2-wangkefeng.wang@huawei.com>
- <ZLAjFQGgcjt4ykS7@casper.infradead.org>
- <CAJuCfpGBaAJof=5-Xh1saoN9dhOauMiHBZzb0crVNn9OyOeZHw@mail.gmail.com>
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-In-Reply-To: <CAJuCfpGBaAJof=5-Xh1saoN9dhOauMiHBZzb0crVNn9OyOeZHw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.243]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500001.china.huawei.com (7.185.36.107)
-X-CFilter-Loop: Reflected
+References: <cover.1689215889.git.chenfeiyang@loongson.cn> <be1874e517f4f4cc50906f18689a0add3594c2e0.1689215889.git.chenfeiyang@loongson.cn>
+ <9e0b3466-10e1-4267-ab9b-d9f8149b6b6b@lunn.ch>
+In-Reply-To: <9e0b3466-10e1-4267-ab9b-d9f8149b6b6b@lunn.ch>
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date: Fri, 14 Jul 2023 10:15:27 +0800
+Message-ID: <CACWXhKkX-syR01opOky=t-b8C3nhV5f_WNfCQ-kOE+4o0xh4tA@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/10] net: phy: Add driver for Loongson PHY
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>, hkallweit1@gmail.com, peppe.cavallaro@st.com, 
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com, chenhuacai@loongson.cn, 
+	linux@armlinux.org.uk, dongbiao@loongson.cn, 
+	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jul 13, 2023 at 12:00=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote=
+:
+>
+> On Thu, Jul 13, 2023 at 10:46:53AM +0800, Feiyang Chen wrote:
+> > Add support for the Loongson PHY.
+> >
+> > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> > ---
+> >  drivers/net/phy/Kconfig        |  5 +++
+> >  drivers/net/phy/Makefile       |  1 +
+> >  drivers/net/phy/loongson-phy.c | 69 ++++++++++++++++++++++++++++++++++
+>
+> Please drop -phy from the filename. No other phy driver does this.
+>
 
+Hi, Andrew,
 
-On 2023/7/14 4:12, Suren Baghdasaryan wrote:
-> On Thu, Jul 13, 2023 at 9:15 AM Matthew Wilcox <willy@infradead.org> wrote:
->>
->>> +int try_vma_locked_page_fault(struct vm_locked_fault *vmlf, vm_fault_t *ret)
->>> +{
->>> +     struct vm_area_struct *vma;
->>> +     vm_fault_t fault;
->>
->>
->> On Thu, Jul 13, 2023 at 05:53:29PM +0800, Kefeng Wang wrote:
->>> +#define VM_LOCKED_FAULT_INIT(_name, _mm, _address, _fault_flags, _vm_flags, _regs, _fault_code) \
->>> +     _name.mm                = _mm;                  \
->>> +     _name.address           = _address;             \
->>> +     _name.fault_flags       = _fault_flags;         \
->>> +     _name.vm_flags          = _vm_flags;            \
->>> +     _name.regs              = _regs;                \
->>> +     _name.fault_code        = _fault_code
->>
->> More consolidated code is a good idea; no question.  But I don't think
->> this is the right way to do it.
+OK.
 
-I agree it is not good enough, but the arch's vma check acess has
-different implementation, some use vm flags, some need fault code and
-regs, and some use both :(
+> >  drivers/net/phy/phy_device.c   | 16 ++++++++
+> >  include/linux/phy.h            |  2 +
+> >  5 files changed, 93 insertions(+)
+> >  create mode 100644 drivers/net/phy/loongson-phy.c
+> >
+> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> > index 93b8efc79227..4f8ea32cbc68 100644
+> > --- a/drivers/net/phy/Kconfig
+> > +++ b/drivers/net/phy/Kconfig
+> > @@ -202,6 +202,11 @@ config INTEL_XWAY_PHY
+> >         PEF 7061, PEF 7071 and PEF 7072 or integrated into the Intel
+> >         SoCs xRX200, xRX300, xRX330, xRX350 and xRX550.
+> >
+> > +config LOONGSON_PHY
+> > +     tristate "Loongson PHY driver"
+> > +     help
+> > +       Supports the Loongson PHY.
+> > +
+> >  config LSI_ET1011C_PHY
+> >       tristate "LSI ET1011C PHY"
+> >       help
+> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> > index f289ab16a1da..f775373e12b7 100644
+> > --- a/drivers/net/phy/Makefile
+> > +++ b/drivers/net/phy/Makefile
+> > @@ -62,6 +62,7 @@ obj-$(CONFIG_DP83TD510_PHY) +=3D dp83td510.o
+> >  obj-$(CONFIG_FIXED_PHY)              +=3D fixed_phy.o
+> >  obj-$(CONFIG_ICPLUS_PHY)     +=3D icplus.o
+> >  obj-$(CONFIG_INTEL_XWAY_PHY) +=3D intel-xway.o
+> > +obj-$(CONFIG_LOONGSON_PHY)   +=3D loongson-phy.o
+> >  obj-$(CONFIG_LSI_ET1011C_PHY)        +=3D et1011c.o
+> >  obj-$(CONFIG_LXT_PHY)                +=3D lxt.o
+> >  obj-$(CONFIG_MARVELL_10G_PHY)        +=3D marvell10g.o
+> > diff --git a/drivers/net/phy/loongson-phy.c b/drivers/net/phy/loongson-=
+phy.c
+> > new file mode 100644
+> > index 000000000000..d4aefa2110f8
+> > --- /dev/null
+> > +++ b/drivers/net/phy/loongson-phy.c
+> > @@ -0,0 +1,69 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * LS7A PHY driver
+> > + *
+> > + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+> > + *
+> > + * Author: Zhang Baoqi <zhangbaoqi@loongson.cn>
+> > + */
+> > +
+> > +#include <linux/mii.h>
+> > +#include <linux/module.h>
+> > +#include <linux/netdevice.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/phy.h>
+> > +
+> > +#define PHY_ID_LS7A2000              0x00061ce0
+>
+> What is Loongson OUI?
+>
 
->>
->>> +int __weak arch_vma_check_access(struct vm_area_struct *vma,
->>> +                              struct vm_locked_fault *vmlf);
->>
->> This should be:
->>
->> #ifndef vma_check_access
->> bool vma_check_access(struct vm_area_struct *vma, )
->> {
->>          return (vma->vm_flags & vm_flags) == 0;
->> }
->> #endif
->>
->> and then arches which want to do something different can just define
->> vma_check_access.
+Currently, we do not have an OUI for Loongson, but we are in the
+process of applying for one.
 
-Ok, I could convert to use this way.
+> > +#define GNET_REV_LS7A2000    0x00
+> > +
+> > +static int ls7a2000_config_aneg(struct phy_device *phydev)
+> > +{
+> > +     if (phydev->speed =3D=3D SPEED_1000)
+> > +             phydev->autoneg =3D AUTONEG_ENABLE;
+>
+> Please explain.
+>
 
->>
->>> +int try_vma_locked_page_fault(struct vm_locked_fault *vmlf, vm_fault_t *ret)
->>> +{
->>> +     struct vm_area_struct *vma;
->>> +     vm_fault_t fault;
->>
->> Declaring the vmf in this function and then copying it back is just wrong.
->> We need to declare vm_fault_t earlier (in the arch fault handler) and
->> pass it in.
+The PHY itself supports half-duplex, but there are issues with the
+controller used in the 7A2000 chip. Moreover, the controller only
+supports auto-negotiation for gigabit speeds.
 
-Actually I passed the vm_fault_t *ret(in the arch fault handler), we
-could directly use *ret instead of a new local variable, and no copy.
-> 
-> Did you mean to say "we need to declare vmf (struct vm_fault) earlier
-> (in the arch fault handler) and pass it in." ?
-> 
->>   I don't think that creating struct vm_locked_fault is the
->> right idea either.
+> > +
+> > +     if (linkmode_test_bit(ETHTOOL_LINK_MODE_10baseT_Full_BIT,
+> > +         phydev->advertising) ||
+> > +         linkmode_test_bit(ETHTOOL_LINK_MODE_100baseT_Full_BIT,
+> > +         phydev->advertising) ||
+> > +         linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
+> > +         phydev->advertising))
+> > +         return genphy_config_aneg(phydev);
+> > +
+> > +     netdev_info(phydev->attached_dev, "Parameter Setting Error\n");
+>
+> This also needs explaining. How can it be asked to do something it
+> does not support?
+>
 
-As mentioned above for vma check access, we need many arguments for a 
-function, a new struct looks possible better, is there better solution
-or any suggestion?
+Perhaps I missed something, but I think that if someone uses ethtool,
+they can request it to perform actions or configurations that the
+tool does not support.
 
-Thanks.
+> > +     return -1;
+>
+> Always use error codes. In this case EINVAL.
+>
 
->>
->>> +     if (!(vmlf->fault_flags & FAULT_FLAG_USER))
->>> +             return -EINVAL;
->>> +
->>> +     vma = lock_vma_under_rcu(vmlf->mm, vmlf->address);
->>> +     if (!vma)
->>> +             return -EINVAL;
->>> +
->>> +     if (arch_vma_check_access(vma, vmlf)) {
->>> +             vma_end_read(vma);
->>> +             return -EINVAL;
->>> +     }
->>> +
->>> +     fault = handle_mm_fault(vma, vmlf->address,
->>> +                             vmlf->fault_flags | FAULT_FLAG_VMA_LOCK,
->>> +                             vmlf->regs);
->>> +     *ret = fault;
->>> +
->>> +     if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
->>> +             vma_end_read(vma);
->>> +
->>> +     if ((fault & VM_FAULT_RETRY))
->>> +             count_vm_vma_lock_event(VMA_LOCK_RETRY);
->>> +     else
->>> +             count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
->>> +
->>> +     return 0;
->>> +}
->>> +
->>>   #endif /* CONFIG_PER_VMA_LOCK */
->>>
->>>   #ifndef __PAGETABLE_P4D_FOLDED
->>> --
->>> 2.27.0
->>>
->>>
+OK.
+
+> > +}
+> > +
+> > +int ls7a2000_match_phy_device(struct phy_device *phydev)
+> > +{
+> > +     struct net_device *ndev;
+> > +     struct pci_dev *pdev;
+> > +
+> > +     if ((phydev->phy_id & 0xfffffff0) !=3D PHY_ID_LS7A2000)
+> > +             return 0;
+> > +
+> > +     ndev =3D phydev->mdio.bus->priv;
+> > +     pdev =3D to_pci_dev(ndev->dev.parent);
+> > +
+> > +     return pdev->revision =3D=3D GNET_REV_LS7A2000;
+>
+> That is very unusual. Why is the PHY ID not sufficient?
+>
+
+To work around the controller's issues, we enable the usage of this
+driver specifically for a certain version of the 7A2000 chip.
+
+> > +}
+> > +
+> > +static struct phy_driver loongson_phy_driver[] =3D {
+> > +     {
+> > +             PHY_ID_MATCH_MODEL(PHY_ID_LS7A2000),
+> > +             .name                   =3D "LS7A2000 PHY",
+> > +             .features               =3D PHY_LOONGSON_FEATURES,
+>
+> So what are the capabilities of this PHY? You seem to have some very
+> odd hacks here, and no explanation of why they are needed. If you do
+> something which no other device does, you need to explain it.
+>
+> Does the PHY itself only support full duplex? No half duplex? Does the
+> PHY support autoneg? Does it support fixed settings? What does
+> genphy_read_abilities() return for this PHY?
+>
+
+As mentioned earlier, this driver is specifically designed for the PHY
+on the problematic 7A2000 chip. Therefore, we assume that this PHY only
+supports full- duplex mode and performs auto-negotiation exclusively for
+gigabit speeds.
+
+Thanks,
+Feiyang
+
+>         Andrew
