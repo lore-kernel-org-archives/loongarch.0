@@ -1,53 +1,53 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF56809
-	for <loongarch@lists.linux.dev>; Fri, 14 Jul 2023 02:16:32 +0000 (UTC)
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2b6ff1ada5dso21376131fa.2
-        for <loongarch@lists.linux.dev>; Thu, 13 Jul 2023 19:16:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55914809
+	for <loongarch@lists.linux.dev>; Fri, 14 Jul 2023 02:24:51 +0000 (UTC)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2b703a0453fso21350171fa.3
+        for <loongarch@lists.linux.dev>; Thu, 13 Jul 2023 19:24:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689300990; x=1691892990;
+        d=gmail.com; s=20221208; t=1689301489; x=1691893489;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E4cbxLvx9uukqwC3ST3XVi//0HD0ikRNdUx1Ub10ekE=;
-        b=jMTvlQrsZDr6AKA/H9kXnJZ4BZD3H+pxm0xSo2oNJPXj+DmDtBWEQqgFcvrN6UH+as
-         nOIuPnE5typjxKOAy4rfJ7i/aFzSbHXltTW5kqef+gf3XlZ3m7PCbtCPu68SAK443BbR
-         UjXb9J031SvOKGPzM3vEkcDKTR2iQxEhLuQRsYwJeTgkXCiCMTxSCoR0EBrahnJsvUMR
-         FM+IA3iL+l40v0qU6EVDibVKJKc8KoL1i8FARTdHTt91Tm++M3cEji3eSmE298h95P96
-         MgKDkAPytf4A3HiZIIDoRcrpHkrhPUSWjehWYnRJn89gcTOT5YqM8uHvpIp028bNFl+h
-         wgxA==
+        bh=M9/7mfBIOMb+0hsVybGzj7u7Q1iyZTD8c3lirpC/46Y=;
+        b=U4ODQg+ob9z9R6ODl9EA8LoTWZcugc30CyNuggR1KwgPeyo/UkuYiejlm5rWtfRdJR
+         t4c9g6DPxyaqkhVBxjy0y+Zr6VvnrTvQEMH4iuELrAh1rY0UwWKjY0RPFUA5DVS2HM38
+         jht4I5BYurb/wp9dbAR7N9/j0fe5uB6XD3MMo1mhZbu1bWD6fNjRd4k0ojSjwUESU5zv
+         zzswnWL3VKDmRRtSFnINzv4cyBv6Ryy7WJ0AizhyJuzAtHLLw5ey4YS+3TFia5T2Cbay
+         pkfHV7OEw8ZlvR+gPjCSPj1Q4FJXJCGyHc5t5YJCuXV+PIBF0QB+8DvhusMz1UjMhRkl
+         ZeJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689300990; x=1691892990;
+        d=1e100.net; s=20221208; t=1689301489; x=1691893489;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E4cbxLvx9uukqwC3ST3XVi//0HD0ikRNdUx1Ub10ekE=;
-        b=SIqwoTtMsmKQxnov9YoaOT3jxFBcAOl5v7FNhLTAAc8YZZWUWXKchekty7MJumwl0n
-         qEyBhaDAmmopUUSKYjAyrUszdiVwyITgmIOZV3XEH5jUtiDyyZrVRhtMUKkG7S98yTEs
-         zJRri2GT4kCRCHajB68coKtCwRjJB6txFHOiWi4k2D5p/K18RkoDR8AGAoAA0fJR10aD
-         0n+ddjp7o3rDYWXpwmKK+EhmrvAWldXWMeLpVXJyyUGletg2eLJ1DrWXBogLGO909Pv+
-         lZwFCBKcDVyMcgG0o7UO4pS5jkYu/fxJE2Xf6XIXVet6hRgqfoh2Mt4fcQgOOP47qNfY
-         qATQ==
-X-Gm-Message-State: ABy/qLaYfKTKuu2MrPQF80tpujB7w7BrDXbdyA9cFVt3zY5iOziXmTTk
-	lFF1DLblhdxspuOC8GzVPUXzD9NcqZdCyunLBdg=
-X-Google-Smtp-Source: APBJJlHIpHlJOcS+oulRd+xIOlCCQm1kL+13HmXP2W6vLtW443zx5o6D0wzT5oPeRQA9am54WYO7dv9mE72JhlFi3UU=
-X-Received: by 2002:a2e:9691:0:b0:2b6:3651:f12f with SMTP id
- q17-20020a2e9691000000b002b63651f12fmr2884902lji.3.1689300990481; Thu, 13 Jul
- 2023 19:16:30 -0700 (PDT)
+        bh=M9/7mfBIOMb+0hsVybGzj7u7Q1iyZTD8c3lirpC/46Y=;
+        b=iEtkDgB7MmOUDZkFSexXkrj8/pYFZpb8x1jke1zuH2JYARTbhNxO+DKcnJYHx7tvvn
+         aRbWfhkbM7IHPsiiloMLaFrMtlz2mnrWDFq2qMWWSMVMWQe/9t1ainN4CIA6VbAIR4SX
+         Lck/Bi8GYSn201IsFq0/21KQ5hB35YqwneuxT7Ox5UodwLTEZ2KQXUUcYqbey6IfJPtc
+         eFh45OFcYkOKKAufCEzOOHiVRE5Kwi2FjHwNIOYqCcT4FMFpugRtg1m/D9Znh+sLYANj
+         y3uxq39snJyTBf0gPfAxNvDyYNzaU/viuUR8GtIvFO1MDeZg/5zdugX4RfTbO/eqgevW
+         crtA==
+X-Gm-Message-State: ABy/qLa9EnjDP/eqroDl0TX3z2fWtAJEN0VahaO1Cwk23XOZc/xy2+Ta
+	5zgLz2soxGHHf6I71zcz0BqdPfJBEeSxRkVWhUQtolOx2uPJc1N/
+X-Google-Smtp-Source: APBJJlH3CrRs4nvBhPDbsLVdh5lnDzW0lZ0uvsiYM0vGsb5/s+afJZBSYr5uQrKos+aMl17VAoQMFiViwJhYoDEa0fc=
+X-Received: by 2002:a2e:8693:0:b0:2b6:dac0:affe with SMTP id
+ l19-20020a2e8693000000b002b6dac0affemr3244830lji.31.1689301488784; Thu, 13
+ Jul 2023 19:24:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1689215889.git.chenfeiyang@loongson.cn> <a200a15b1178dd8f6b80a925b927d30d4e841c3c.1689215889.git.chenfeiyang@loongson.cn>
- <0ed12e00-4ca8-43dd-a383-ba6380f21418@lunn.ch>
-In-Reply-To: <0ed12e00-4ca8-43dd-a383-ba6380f21418@lunn.ch>
+References: <cover.1689215889.git.chenfeiyang@loongson.cn> <98b53d15bb983c309f79acf9619b88ea4fbb8f14.1689215889.git.chenfeiyang@loongson.cn>
+ <e491227b-81a1-4363-b810-501511939f1b@lunn.ch>
+In-Reply-To: <e491227b-81a1-4363-b810-501511939f1b@lunn.ch>
 From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Fri, 14 Jul 2023 10:16:17 +0800
-Message-ID: <CACWXhKnZcY+hA-QQco911G5E5Zs4MJPN+xA8iRX6BfhfgSDr+A@mail.gmail.com>
-Subject: Re: [RFC PATCH 02/10] net: stmmac: Pass stmmac_priv and chan in some callbacks
+Date: Fri, 14 Jul 2023 10:24:37 +0800
+Message-ID: <CACWXhKmLRK5aGNwDyt5uc0TK8ZXZKuDQuSXW6jku+Ofh73GUvw@mail.gmail.com>
+Subject: Re: [RFC PATCH 10/10] net: stmmac: dwmac-loongson: Add GNET support
 To: Andrew Lunn <andrew@lunn.ch>
 Cc: Feiyang Chen <chenfeiyang@loongson.cn>, hkallweit1@gmail.com, peppe.cavallaro@st.com, 
 	alexandre.torgue@foss.st.com, joabreu@synopsys.com, chenhuacai@loongson.cn, 
@@ -57,24 +57,57 @@ Cc: Feiyang Chen <chenfeiyang@loongson.cn>, hkallweit1@gmail.com, peppe.cavallar
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 13, 2023 at 12:02=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote=
+On Thu, Jul 13, 2023 at 12:07=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote=
 :
 >
-> On Thu, Jul 13, 2023 at 10:46:54AM +0800, Feiyang Chen wrote:
-> > Like commit 1d84b487bc2d90 ("net: stmmac: Pass stmmac_priv in some
-> > callbacks"), passing stmmac_priv and chan to more callbacks and
-> > adjust the callbacks accordingly.
+> On Thu, Jul 13, 2023 at 10:49:38AM +0800, Feiyang Chen wrote:
+> > Add GNET support. Use the fix_mac_speed() callback to workaround
+> > issues with the Loongson PHY.
 >
-> Commit messages don't say what a patch does, you can see that from
-> reading the patch. The commit message should explain why it is doing
-> something.
+> What are the issues?
 >
 
 Hi, Andrew,
 
-Alright, I will make improvements in the next version.
+There is an issue with the synchronization between the network card
+and the PHY. In the case of gigabit operation, if the PHY's speed
+changes, the network card's speed remains unaffected. Hence, it is
+necessary to initiate a re-negotiation process with the PHY to align
+the link speeds properly.
+
+> > +static void loongson_gnet_fix_speed(void *priv, unsigned int speed)
+> > +{
+> > +     struct net_device *ndev =3D (struct net_device *)(*(unsigned long=
+ *)priv);
+> > +     struct stmmac_priv *ptr =3D netdev_priv(ndev);
+> > +
+> > +     if (speed =3D=3D SPEED_1000)
+> > +             if (readl(ptr->ioaddr + MAC_CTRL_REG) & (1 << 15) /* PS *=
+/)
+> > +                     phy_restart_aneg(ndev->phydev);
+>
+> This needs a comment at least, but if you explain what is actually
+> FUBAR in this PHY, we might be able to tell you a better way to work
+> around its problems.
+>
+> > +static int loongson_gnet_data(struct pci_dev *pdev,
+> > +                           struct plat_stmmacenet_data *plat)
+> > +{
+> > +     common_default_data(pdev, plat);
+> > +
+> > +     plat->mdio_bus_data->phy_mask =3D 0xfffffffb;
+> > +
+> > +     plat->phy_addr =3D 2;
+> > +     plat->phy_interface =3D PHY_INTERFACE_MODE_GMII;
+>
+> You would normally get this from DT. Is the PHY integrated? Is it
+> really using GMII, or would PHY_INTERFACE_MODE_INTERNAL be better?
+>
+
+Yes, the PHY is integrated. I'll try to use PHY_INTERFACE_MODE_INTERNAL
+later.
 
 Thanks,
 Feiyang
 
->         Andrew
+>        Andrew
