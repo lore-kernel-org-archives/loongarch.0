@@ -1,874 +1,219 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C94E547
-	for <loongarch@lists.linux.dev>; Tue, 18 Jul 2023 09:24:17 +0000 (UTC)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5701eaf0d04so52801127b3.2
-        for <loongarch@lists.linux.dev>; Tue, 18 Jul 2023 02:24:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55D210789
+	for <loongarch@lists.linux.dev>; Tue, 18 Jul 2023 14:31:32 +0000 (UTC)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5703d12ab9aso61286197b3.2
+        for <loongarch@lists.linux.dev>; Tue, 18 Jul 2023 07:31:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689672256; x=1692264256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0wPQMXrZHHU4VHijmwsb5c+o14pJQBCyR6/K0nxLxeo=;
-        b=kv5d5/s9xksVM+/RtyFy7j7iu+ckSCCqJeWE7xlEtjlQaERFYExpm2dyOkduX9CupM
-         hyGEdKV3W5CJH5uHgZ0WeDRf+DBY4dNUKPs2VD0jsFwvqaTDTIGcY1ttnlbuKblIrN2N
-         fY0lO5jsLcPB76hkZKganoJNe9orwqS2FrgtPK/hqNWaZNGzmPz5bBmGAwlH2l3/vleB
-         4gNxfP0olKYZzsJtLEcerXZ97QRsf3qMtZ59tF7kk8ujYPkaCUER2RZV3sdjnzV0RuS1
-         AZ2h7phk3SVUEKNvNjlQqw+PfcYlY4OeZYQJGoEVKgdYe6NaEUndmVTUSGqB7XjSBTec
-         +5eg==
+        d=gmail.com; s=20221208; t=1689690691; x=1692282691;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rjpIeqow7KavnD0/SRlgq73LQricx6uLDxJMeUQiZ4Q=;
+        b=PPKZxxlbX67hKoW02aRYjLt7DnZCbtwFM52WyDMWojmxap2OFcv4VhrJtfyoOPmaY5
+         K3dJSnLIcwzPAUuVeAVZE15JOcbVf/Qk9xdCGyrEZo01HRCrRhKm9glg7WIENRWIlzkW
+         1HXFRWSXZ2Fd8fnQpyJVPZFoZ46mf5PgkuFBA6+w2T2zku8i2GfGbTAe81O7LAsxB8A6
+         kXkizNhQjyq3zL101Xsj2UU6LDY34TOft7WkNZNGNcEoEQwO84n5ZOBk2ijX78886e8/
+         I66q5/Avp/9sseOt8mtApcdHGoPNhCPiUukAB3GtCkY6OGImiwuASUlXC0o61p15M4k8
+         sYqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689672256; x=1692264256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0wPQMXrZHHU4VHijmwsb5c+o14pJQBCyR6/K0nxLxeo=;
-        b=cSUcitdBEBw8Fjsqyewn+VMPIy08JxU9hBCkfpO9IZ2yUoSakFabiuV0IM1SMNhdXK
-         gXsJBsUXjuT0zD1gNrhusYN8uEjJVXwO+tXL7bqxit2fJcJiv0afE3H6dQy/o2QkzMy0
-         K+at0nUZ8vs+cOd2LvR1a8g+YOvusoHFpTcSv+YdyolYU1BWlDCYKIQKs9hlU3bkpL2Y
-         ZMBgLk5fp3szHPtWezis/WDiAFEEkI2SnHGvavn6GkDnYqC5JC3dPNwl8CycRN3Mk/d7
-         AXhY6S/VoDCtXb5taTbLHOFLrLao3i24w3OHMpEmcRcTJk/eAG9TcPCCfOqnpPTXEYCg
-         janw==
-X-Gm-Message-State: ABy/qLY3IWV7Uc0gAGArZLgTGVAXBtujHErOncDl5Bd/Z8x2wLOPtDKU
-	BbnDcR1oXdTUauGfFOPPpT+AwEo1V2leX6PC2ow=
-X-Google-Smtp-Source: APBJJlFht+l+R3L9LPkc98A/HzSDVi7nrZFS6Gtm0h89//9xnxj88EVdqYNXJONpac4SfaOYcJDNSe5BUVO639LO3Og=
-X-Received: by 2002:a81:54c2:0:b0:576:8d7f:d163 with SMTP id
- i185-20020a8154c2000000b005768d7fd163mr15557147ywb.8.1689672256006; Tue, 18
- Jul 2023 02:24:16 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689690691; x=1692282691;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rjpIeqow7KavnD0/SRlgq73LQricx6uLDxJMeUQiZ4Q=;
+        b=Z1wcf1SCWePVVHRdWTl8Dr2ZqN+f07Kd19paZE96qjHgoNgs79SVuJtHtBI6mch3Ve
+         tOc72wYVI28j7E6NCCRRmXCkc1LFZaw8vZEBKoBw3gOC7VbwsIRe+cfnkqPrfaMwHXNS
+         Ry03m2z2KnDCJT+xM5G6k67oCQ5yhbDL6JMhJjhGhfS+5dwQW/PYCJgMh2GhmIVOgb+0
+         GcEOoBZvTlC1B9/U0DrF7OV6UsZ0w6pYpxcQVC1fNO6lo1qPBpg9zTLi7on6KdKmIwcp
+         94vuFW0sPrBtah2dFirs8SqMAe8c8n3QIo5R6FhfGHmflLw74snrABMLPRqiya0Ck1FL
+         h4Ug==
+X-Gm-Message-State: ABy/qLZVrebqWz3CWm0lI64WJ75p3lVQ6BsqWX81LwLF5XGFuXqt/xkd
+	4Bd/RjlzMqsOGqzmkQ9h8FBYAXH+9+sORayeYag=
+X-Google-Smtp-Source: APBJJlHbP2K9+0wdcMRs1ip81cmcwyNZLOlC7o4iriCt43sinSc0iTV9tvvNKQBkROzB3Os0KlriLnI/3+rVCADyVIc=
+X-Received: by 2002:a5b:4d2:0:b0:cf0:8fde:c326 with SMTP id
+ u18-20020a5b04d2000000b00cf08fdec326mr35365ybp.42.1689690691401; Tue, 18 Jul
+ 2023 07:31:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1689075791.git.zhoubinbin@loongson.cn> <b282ef7c5d1841886a80b2b6502c735f2f0254c9.1689075791.git.zhoubinbin@loongson.cn>
- <80A5D36E-0417-4048-8324-ACFC08FC2CED@gmail.com>
-In-Reply-To: <80A5D36E-0417-4048-8324-ACFC08FC2CED@gmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 18 Jul 2023 17:24:04 +0800
-Message-ID: <CAMpQs4LBz63bTRLq-zU-JosE2HS29vXStEZA5unCAXSQF=tz3g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] dmaengine: ls2x-apb: new driver for the Loongson
- LS2X APB DMA controller
-To: michael5hzg <michael5hzg@gmail.com>
-Cc: "zhoubinbin@loongson.cn" <zhoubinbin@loongson.cn>, 
-	"chenhuacai@loongson.cn" <chenhuacai@loongson.cn>, "vkoul@kernel.org" <vkoul@kernel.org>, 
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, 
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>, 
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
-	"loongson-kernel@lists.loongnix.cn" <loongson-kernel@lists.loongnix.cn>, "kernel@xen0n.name" <kernel@xen0n.name>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
-	"mengyingkun@loongson.cn" <mengyingkun@loongson.cn>
+References: <20230710141408.9998-1-zhiguangni01@gmail.com>
+In-Reply-To: <20230710141408.9998-1-zhiguangni01@gmail.com>
+From: Liam Ni <zhiguangni01@gmail.com>
+Date: Tue, 18 Jul 2023 22:31:20 +0800
+Message-ID: <CACZJ9cXGhMhmVCJ6Yn9GHGjY3KAGi+Px9Sr63_+inwU6Fg99nA@mail.gmail.com>
+Subject: Re: [PATCH V3] [PATCH V3] NUMA:Improve the efficiency of calculating
+ pages loss
+To: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Cc: zhoubinbin@loongson.cn, chenfeiyang@loongson.cn, jiaxun.yang@flygoat.com, 
+	rppt@kernel.org, akpm@linux-foundation.org, hpa@zytor.com, x86@kernel.org, 
+	bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, peterz@infradead.org, 
+	luto@kernel.org, dave.hansen@linux.intel.com, kernel@xen0n.name, 
+	chenhuacai@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 18, 2023 at 4:43=E2=80=AFPM michael5hzg <michael5hzg@gmail.com>=
- wrote:
+Friendly ping
+
+On Mon, 10 Jul 2023 at 22:14, Liam Ni <zhiguangni01@gmail.com> wrote:
 >
-> The Loongson LS2X APB DMA controller is available on Loongson-2K chips.
+> The number of pages in memblock that doesn't have the node
+> assigned,which also means that these pages are not in numa_info.
+> So these pages can represent the number of lose pages.
 >
-> It is a single-channel, configurable DMA controller IP core based on the
-> AXI bus, whose main function is to integrate DMA functionality on a chip
-> dedicated to carrying data between memory and peripherals in APB bus
-> (e.g. nand).
+> V2:https://lore.kernel.org/all/20230619075315.49114-1-zhiguangni01@gmail.com/
+> V1:https://lore.kernel.org/all/20230615142016.419570-1-zhiguangni01@gmail.com/
 >
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+> Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
 > ---
-> MAINTAINERS                |   1 +
-> drivers/dma/Kconfig        |  14 +
-> drivers/dma/Makefile       |   1 +
-> drivers/dma/ls2x-apb-dma.c | 684 +++++++++++++++++++++++++++++++++++++
-> 4 files changed, 700 insertions(+)
-> create mode 100644 drivers/dma/ls2x-apb-dma.c
+>  arch/loongarch/kernel/numa.c | 23 ++++++++---------------
+>  arch/x86/mm/numa.c           | 26 +++++++-------------------
+>  include/linux/mm.h           |  1 +
+>  mm/mm_init.c                 | 20 ++++++++++++++++++++
+>  4 files changed, 36 insertions(+), 34 deletions(-)
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 60a411936ba7..709c2e9d5f5f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12248,6 +12248,7 @@ M:  Binbin Zhou <zhoubinbin@loongson.cn>
-> L:  dmaengine@vger.kernel.org
-> S:  Maintained
-> F:  Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
-> +F:  drivers/dma/ls2x-apb-dma.c
+> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+> index 708665895b47..0239891e4d19 100644
+> --- a/arch/loongarch/kernel/numa.c
+> +++ b/arch/loongarch/kernel/numa.c
+> @@ -262,25 +262,18 @@ static void __init node_mem_init(unsigned int node)
+>   * Sanity check to catch more bad NUMA configurations (they are amazingly
+>   * common).  Make sure the nodes cover all memory.
+>   */
+> -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+> +static bool __init memblock_validate_numa_coverage(const u64 limit)
+>  {
+> -       int i;
+> -       u64 numaram, biosram;
+> +       u64 lo_pg;
 >
-> LOONGSON LS2X I2C DRIVER
-> M:  Binbin Zhou <zhoubinbin@loongson.cn>
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 644c188d6a11..9b41b59ba2b4 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -376,6 +376,20 @@ config LPC18XX_DMAMUX
-> Enable support for DMA on NXP LPC18xx/43xx platforms
-> with PL080 and multiplexed DMA request lines.
+> -       numaram = 0;
+> -       for (i = 0; i < mi->nr_blks; i++) {
+> -               u64 s = mi->blk[i].start >> PAGE_SHIFT;
+> -               u64 e = mi->blk[i].end >> PAGE_SHIFT;
+> +       lo_pg = max_pfn - calculate_without_node_pages_in_range();
 >
-> +config LS2X_APB_DMA
-> +  tristate "Loongson LS2X APB DMA support"
-> +  depends on LOONGARCH || COMPILE_TEST
-> +  select DMA_ENGINE
-> +  select DMA_VIRTUAL_CHANNELS
-> +  help
-> +    Support for the Loongson LS2X APB DMA controller driver. The
-> +    DMA controller is having single DMA channel which can be
-> +    configured for different peripherals like audio, nand, sdio
-> +    etc which is in APB bus.
-> +
-> +    This DMA controller transfers data from memory to peripheral fifo.
-> +    It does not support memory to memory data transfer.
-> +
-> config MCF_EDMA
-> tristate "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
-> depends on M5441x || COMPILE_TEST
-> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> index a4fd1ce29510..9b28ddb1ea3b 100644
-> --- a/drivers/dma/Makefile
-> +++ b/drivers/dma/Makefile
-> @@ -46,6 +46,7 @@ obj-$(CONFIG_INTEL_IOATDMA) +=3D ioat/
-> obj-y +=3D idxd/
-> obj-$(CONFIG_K3_DMA) +=3D k3dma.o
-> obj-$(CONFIG_LPC18XX_DMAMUX) +=3D lpc18xx-dmamux.o
-> +obj-$(CONFIG_LS2X_APB_DMA) +=3D ls2x-apb-dma.o
-> obj-$(CONFIG_MILBEAUT_HDMAC) +=3D milbeaut-hdmac.o
-> obj-$(CONFIG_MILBEAUT_XDMAC) +=3D milbeaut-xdmac.o
-> obj-$(CONFIG_MMP_PDMA) +=3D mmp_pdma.o
-> diff --git a/drivers/dma/ls2x-apb-dma.c b/drivers/dma/ls2x-apb-dma.c
-> new file mode 100644
-> index 000000000000..b3efe86e4330
-> --- /dev/null
-> +++ b/drivers/dma/ls2x-apb-dma.c
-> @@ -0,0 +1,684 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Driver for the Loongson LS2X APB DMA Controller
-> + *
-> + * Copyright (C) 2017-2023 Loongson Corporation
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/dmapool.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/io-64-nonatomic-lo-hi.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_dma.h>
-> +
-> +#include "dmaengine.h"
-> +#include "virt-dma.h"
-> +
-> +/* Global Configuration Register */
-> +#define LDMA_ORDER_ERG    0x0
-> +
-> +/* Bitfield definitions */
-> +
-> +/* Bitfields in Global Configuration Register */
-> +#define LDMA_64BIT_EN    BIT(0) /* 1: 64 bit support */
-> +#define LDMA_UNCOHERENT_EN  BIT(1) /* 0: cache, 1: uncache */
-> +#define LDMA_ASK_VALID    BIT(2)
-> +#define LDMA_START    BIT(3) /* DMA start operation */
-> +#define LDMA_STOP    BIT(4) /* DMA stop operation */
-> +#define LDMA_CONFIG_MASK  GENMASK(4, 0) /* DMA controller config bits ma=
-sk */
-> +
-> +/* Bitfields in ndesc_addr field of HW decriptor */
-> +#define LDMA_DESC_EN    BIT(0) /*1: The next descriptor is valid */
-> +#define LDMA_DESC_ADDR_LOW  GENMASK(31, 1)
-> +
-> +/* Bitfields in cmd field of HW decriptor */
-> +#define LDMA_INT    BIT(1) /* Enable DMA interrupts */
-> +#define LDMA_DATA_DIRECTION  BIT(12) /* 1: write to device, 0: read from=
- device */
-> +
-> +/*--  descriptors  -----------------------------------------------------=
-*/
-> +
-> +/*
-> + * struct ls2x_dma_hw_desc - DMA HW descriptor
-> + * @ndesc_addr: the next descriptor low address.
-> + * @mem_addr: memory low address.
-> + * @apb_addr: device buffer address.
-> + * @len: length of a piece of carried content, in words.
-> + * @step_len: length between two moved memory data blocks.
-> + * @step_times: number of blocks to be carried in a single DMA operation=
-.
-> + * @cmd: descriptor command or state.
-> + * @stats: DMA status.
-> + * @high_ndesc_addr: the next descriptor high address.
-> + * @high_mem_addr: memory high address.
-> + * @reserved: reserved
-> + */
-> +struct ls2x_dma_hw_desc {
-> +  u32 ndesc_addr;
-> +  u32 mem_addr;
-> +  u32 apb_addr;
-> +  u32 len;
-> +  u32 step_len;
-> +  u32 step_times;
-> +  u32 cmd;
-> +  u32 stats;
-> +  u32 high_ndesc_addr;
-> +  u32 high_mem_addr;
-> +  u32 reserved[2];
-> +} __packed;
-> +
-> +/*
-> + * struct ls2x_dma_sg - ls2x dma scatter gather entry
-> + * @hw: the pointer to DMA HW descriptor.
-> + * @llp: physical address of the DMA HW descriptor.
-> + * @phys: destination or source address(mem).
-> + * @len: number of Bytes to read.
-> + */
-> +struct ls2x_dma_sg {
-> +  struct ls2x_dma_hw_desc  *hw;
-> +  dma_addr_t    llp;
-> +  dma_addr_t    phys;
-> +  u32      len;
-> +};
-> +
-> +/*
-> + * struct ls2x_dma_desc - software descriptor
-> + * @vdesc: pointer to the virtual dma descriptor.
-> + * @cyclic: flag to dma cyclic
-> + * @sglen: number of sg entries.
-> + * @direction: transfer direction, to or from device.
-> + * @status: dma controller status.
-> + * @sg: array of sgs.
-> + */
-> +struct ls2x_dma_desc {
-> +  struct virt_dma_desc    vdesc;
-> +  bool        cyclic;
-> +  u32        sglen;
-> +  enum dma_transfer_direction  direction;
-> +  enum dma_status      status;
-> +  struct ls2x_dma_sg    sg[];
-> +};
-> +
-> +/*--  Channels  --------------------------------------------------------=
-*/
-> +
-> +/*
-> + * struct ls2x_dma_chan - internal representation of an LS2X APB DMA cha=
-nnel
-> + * @vchan: virtual dma channel entry.
-> + * @desc: pointer to the ls2x sw dma descriptor.
-> + * @pool: hw desc table
-> + * @irq: irq line
-> + * @sconfig: configuration for slave transfers, passed via .device_confi=
-g
-> + */
-> +struct ls2x_dma_chan {
-> +  struct virt_dma_chan  vchan;
-> +  struct ls2x_dma_desc  *desc;
-> +  void      *pool;
-> +  int      irq;
-> +  struct dma_slave_config  sconfig;
-> +};
-> +
-> +/*--  Controller  ------------------------------------------------------=
-*/
-> +
-> +/*
-> + * struct ls2x_dma_priv - LS2X APB DMAC specific information
-> + * @ddev: dmaengine dma_device object members
-> + * @dma_clk: DMAC clock source
-> + * @regs: memory mapped register base
-> + * @lchan: channel to store ls2x_dma_chan structures
-> + */
-> +struct ls2x_dma_priv {
-> +  struct dma_device  ddev;
-> +  struct clk    *dma_clk;
-> +  void __iomem    *regs;
-> +  struct ls2x_dma_chan  lchan;
-> +};
-> +
-> +/*--  Helper functions  ------------------------------------------------=
-*/
-> +
-> +static inline struct ls2x_dma_desc *to_ldma_desc(struct virt_dma_desc *v=
-desc)
-> +{
-> +  return container_of(vdesc, struct ls2x_dma_desc, vdesc);
-> +}
-> +
-> +static inline struct ls2x_dma_chan *to_ldma_chan(struct dma_chan *chan)
-> +{
-> +  return container_of(chan, struct ls2x_dma_chan, vchan.chan);
-> +}
-> +
-> +static inline struct ls2x_dma_priv *to_ldma_priv(struct dma_device *ddev=
-)
-> +{
-> +  return container_of(ddev, struct ls2x_dma_priv, ddev);
-> +}
-> +
-> +static struct device *chan2dev(struct dma_chan *chan)
-> +{
-> +  return &chan->dev->device;
-> +}
-> +
-> +static void ls2x_dma_desc_free(struct virt_dma_desc *vdesc)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(vdesc->tx.chan);
-> +  struct ls2x_dma_desc *desc =3D to_ldma_desc(vdesc);
-> +  int i;
-> +
-> +  for (i =3D 0; i < desc->sglen; i++) {
-> +    if (desc->sg[i].hw)
-> +      dma_pool_free(lchan->pool, desc->sg[i].hw,
-> +              desc->sg[i].llp);
-> +  }
-> +
-> +  kfree(desc);
-> +}
-> +
-> +static void ls2x_dma_write_cmd(struct ls2x_dma_chan *lchan, bool cmd)
-> +{
-> +  u64 val =3D 0;
-> +  struct ls2x_dma_priv *priv =3D to_ldma_priv(lchan->vchan.chan.device);
-> +
-> +  val =3D lo_hi_readq(priv->regs + LDMA_ORDER_ERG) & ~LDMA_CONFIG_MASK;
-> +  val |=3D LDMA_64BIT_EN | cmd;
-> +  lo_hi_writeq(val, priv->regs + LDMA_ORDER_ERG);
-> +}
-> +
-> +static void ls2x_dma_start_transfer(struct ls2x_dma_chan *lchan)
-> +{
-> +  struct ls2x_dma_priv *priv =3D to_ldma_priv(lchan->vchan.chan.device);
-> +  struct ls2x_dma_sg *ldma_sg;
-> +  struct virt_dma_desc *vdesc;
-> +  u64 val;
-> +
-> +  /* Get the next descriptor */
-> +  vdesc =3D vchan_next_desc(&lchan->vchan);
-> +  if (!vdesc) {
-> +    lchan->desc =3D NULL;
-> +    return;
-> +  }
-> +
-> +  list_del(&vdesc->node);
-> +  lchan->desc =3D to_ldma_desc(vdesc);
-> +  ldma_sg =3D &lchan->desc->sg[0];
-> +
-> +  /* Start DMA */
-> +  lo_hi_writeq(0, priv->regs + LDMA_ORDER_ERG);
-> +  val =3D (ldma_sg->llp & ~LDMA_CONFIG_MASK) | LDMA_64BIT_EN | LDMA_STAR=
-T;
-> +  lo_hi_writeq(val, priv->regs + LDMA_ORDER_ERG);
-> +}
-> +
-> +static void ls2x_dma_fill_desc(struct ls2x_dma_chan *lchan, u32 i,
-> +             struct ls2x_dma_desc *desc)
-> +{
-> +  struct ls2x_dma_sg *ldma_sg =3D &desc->sg[i];
-> +
-> +  ldma_sg->hw->mem_addr =3D lower_32_bits(ldma_sg->phys);
-> +  ldma_sg->hw->high_mem_addr =3D upper_32_bits(ldma_sg->phys);
-> +  /* Word count register takes input in words */
-> +  ldma_sg->hw->len =3D ldma_sg->len >> 2;
-> +  ldma_sg->hw->step_len =3D 0;
-> +  ldma_sg->hw->step_times =3D 1;
-> +
-> +  if (desc->direction =3D=3D DMA_MEM_TO_DEV) {
-> +    ldma_sg->hw->cmd =3D LDMA_INT | LDMA_DATA_DIRECTION;
-> +    ldma_sg->hw->apb_addr =3D lchan->sconfig.dst_addr;
-> +  } else {
-> +    ldma_sg->hw->cmd =3D LDMA_INT;
-> +    ldma_sg->hw->apb_addr =3D lchan->sconfig.src_addr;
-> +  }
-> +
-> +  /* lets make a link list */
-> +  if (i) {
-> +    desc->sg[i - 1].hw->ndesc_addr =3D ldma_sg->llp | LDMA_DESC_EN;
-> +    desc->sg[i - 1].hw->high_ndesc_addr =3D upper_32_bits(ldma_sg->llp);
-> +  }
-> +}
-> +
-> +/*--  DMA Engine API  --------------------------------------------------=
-*/
-> +
-> +/*
-> + * ls2x_dma_alloc_chan_resources - allocate resources for DMA channel
-> + * @chan: allocate descriptor resources for this channel
-> + *
-> + * return - the number of allocated descriptors
-> + */
-> +static int ls2x_dma_alloc_chan_resources(struct dma_chan *chan)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +
-> +  /* Create a pool of consistent memory blocks for hardware descriptors =
-*/
-> +  lchan->pool =3D dma_pool_create(dev_name(chan2dev(chan)),
-> +              chan->device->dev, PAGE_SIZE,
-> +              __alignof__(struct ls2x_dma_hw_desc), 0);
-> +  if (!lchan->pool) {
-> +    dev_err(chan2dev(chan), "No memory for descriptors\n");
-> +    return -ENOMEM;
-> +  }
-> +
-> +  return 1;
-> +}
-> +
-> +/*
-> + * ls2x_dma_free_chan_resources - free all channel resources
-> + * @chan: DMA channel
-> + */
-> +static void ls2x_dma_free_chan_resources(struct dma_chan *chan)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +
-> +  vchan_free_chan_resources(to_virt_chan(chan));
-> +  dma_pool_destroy(lchan->pool);
-> +  lchan->pool =3D NULL;
-> +}
-> +
-> +/*
-> + * ls2x_dma_prep_slave_sg - prepare descriptors for a DMA_SLAVE transact=
-ion
-> + * @chan: DMA channel
-> + * @sgl: scatterlist to transfer to/from
-> + * @sg_len: number of entries in @scatterlist
-> + * @direction: DMA direction
-> + * @flags: tx descriptor status flags
-> + * @context: transaction context (ignored)
-> + *
-> + * Return: Async transaction descriptor on success and NULL on failure
-> + */
-> +static struct dma_async_tx_descriptor *
-> +ls2x_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
-> +           u32 sg_len, enum dma_transfer_direction direction,
-> +           unsigned long flags, void *context)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +  struct ls2x_dma_desc *desc;
-> +  struct scatterlist *sg;
-> +  int i;
-> +
-> +  if (unlikely(!sg_len || !is_slave_direction(direction)))
-> +    return NULL;
-> +
-> +  desc =3D kzalloc(struct_size(desc, sg, sg_len), GFP_ATOMIC);
-> +  if (!desc)
-> +    return NULL;
-> +  desc->sglen =3D sg_len;
-> +  desc->direction =3D direction;
-> +
-> +  for_each_sg(sgl, sg, sg_len, i) {
-> +    struct ls2x_dma_sg *ldma_sg =3D &desc->sg[i];
-> +
-> +    /* Allocate DMA capable memory for hardware descriptor */
-> +    ldma_sg->hw =3D dma_pool_alloc(lchan->pool, GFP_NOWAIT, &ldma_sg->ll=
-p);
-> +    if (!ldma_sg->hw) {
-> +      desc->sglen =3D i;
-> +      ls2x_dma_desc_free(&desc->vdesc);
-> +      return NULL;
-> +    }
-> +
-> +    ldma_sg->phys =3D sg_dma_address(sg);
-> +    ldma_sg->len =3D sg_dma_len(sg);
-> +
-> +    ls2x_dma_fill_desc(lchan, i, desc);
-> +  }
-> +
-> +  /* Setting the last descriptor enable bit */
-> +  desc->sg[sg_len - 1].hw->ndesc_addr &=3D ~LDMA_DESC_EN;
-> +  desc->status =3D DMA_IN_PROGRESS;
-> +
-> +  return vchan_tx_prep(&lchan->vchan, &desc->vdesc, flags);
-> +}
-> +
-> +/*
-> + * ls2x_dma_prep_dma_cyclic - prepare the cyclic DMA transfer
-> + * @chan: the DMA channel to prepare
-> + * @buf_addr: physical DMA address where the buffer starts
-> + * @buf_len: total number of bytes for the entire buffer
-> + * @period_len: number of bytes for each period
-> + * @direction: transfer direction, to or from device
-> + * @flags: tx descriptor status flags
-> + *
-> + * Return: Async transaction descriptor on success and NULL on failure
-> + */
-> +static struct dma_async_tx_descriptor *
-> +ls2x_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr, siz=
-e_t buf_len,
-> +       size_t period_len, enum dma_transfer_direction direction,
-> +       unsigned long flags)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +  struct ls2x_dma_desc *desc;
-> +  u32 periods;
-> +  int i;
-> +
-> +  if (unlikely(!buf_len || !period_len))
-> +    return NULL;
-> +
-> +  if (unlikely(!is_slave_direction(direction)))
-> +    return NULL;
-> +
-> +  periods =3D buf_len / period_len;
-> +  desc =3D kzalloc(struct_size(desc, sg, periods), GFP_ATOMIC);
-> +  if (!desc)
-> +    return NULL;
-> +  desc->sglen =3D periods;
-> +  desc->direction =3D direction;
-> +
-> +  /* Build cyclic linked list */
-> +  for (i =3D 0; i < periods; i++) {
-> +    struct ls2x_dma_sg *ldma_sg =3D &desc->sg[i];
-> +
-> +    /* Allocate DMA capable memory for hardware descriptor */
-> +    ldma_sg->hw =3D dma_pool_alloc(lchan->pool, GFP_NOWAIT, &ldma_sg->ll=
-p);
-> +    if (!ldma_sg->hw) {
-> +      desc->sglen =3D i;
-> +      ls2x_dma_desc_free(&desc->vdesc);
-> +      return NULL;
-> +    }
-> +
-> +    ldma_sg->phys =3D buf_addr + period_len * i;
-> +    ldma_sg->len =3D period_len;
-> +
-> +    ls2x_dma_fill_desc(lchan, i, desc);
-> +  }
-> +
-> +  /* Lets make a cyclic list */
-> +  desc->sg[periods - 1].hw->ndesc_addr =3D desc->sg[0].llp | LDMA_DESC_E=
-N;
-> +  desc->sg[periods - 1].hw->high_ndesc_addr =3D upper_32_bits(desc->sg[0=
-].llp);
-> +  desc->cyclic =3D true;
-> +  desc->status =3D DMA_IN_PROGRESS;
-> +
-> +  return vchan_tx_prep(&lchan->vchan, &desc->vdesc, flags);
-> +}
-> +
-> +/*
-> + * ls2x_slave_config - set slave configuration for channel
-> + * @chan: dma channel
-> + * @cfg: slave configuration
-> + *
-> + * Sets slave configuration for channel
-> + */
-> +static int ls2x_dma_slave_config(struct dma_chan *chan,
-> +         struct dma_slave_config *config)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +
-> +  memcpy(&lchan->sconfig, config, sizeof(*config));
-> +  return 0;
-> +}
-> +
-> +/*
-> + * ls2x_dma_issue_pending - push pending transactions to the hardware
-> + * @chan: channel
-> + *
-> + * When this function is called, all pending transactions are pushed to =
-the
-> + * hardware and executed.
-> + */
-> +static void ls2x_dma_issue_pending(struct dma_chan *chan)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +  unsigned long flags;
-> +
-> +  spin_lock_irqsave(&lchan->vchan.lock, flags);
-> +  if (vchan_issue_pending(&lchan->vchan) && !lchan->desc)
-> +    ls2x_dma_start_transfer(lchan);
-> +  spin_unlock_irqrestore(&lchan->vchan.lock, flags);
-> +}
-> +
-> +/*
-> + * ls2x_dma_terminate_all - terminate all transactions
-> + * @chan: channel
-> + *
-> + * Stops all DMA transactions.
-> + */
-> +static int ls2x_dma_terminate_all(struct dma_chan *chan)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +  unsigned long flags;
-> +  LIST_HEAD(head);
-> +
-> +  spin_lock_irqsave(&lchan->vchan.lock, flags);
-> +  /* Setting stop cmd */
-> +  ls2x_dma_write_cmd(lchan, LDMA_STOP);
-> +  if (lchan->desc) {
-> +    vchan_terminate_vdesc(&lchan->desc->vdesc);
-> +    lchan->desc =3D NULL;
-> +  }
-> +
-> +  vchan_get_all_descriptors(&lchan->vchan, &head);
-> +  spin_unlock_irqrestore(&lchan->vchan.lock, flags);
-> +
-> +  vchan_dma_desc_free_list(&lchan->vchan, &head);
-> +  return 0;
-> +}
-> +
-> +/*
-> + * ls2x_dma_synchronize - Synchronizes the termination of transfers to t=
-he
-> + * current context.
-> + * @chan: channel
-> + */
-> +static void ls2x_dma_synchronize(struct dma_chan *chan)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +
-> +  vchan_synchronize(&lchan->vchan);
-> +}
-> +
-> +static int ls2x_dma_pause(struct dma_chan *chan)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +  unsigned long flags;
-> +
-> +  spin_lock_irqsave(&lchan->vchan.lock, flags);
-> +  if (lchan->desc && lchan->desc->status =3D=3D DMA_IN_PROGRESS) {
-> +    ls2x_dma_write_cmd(lchan, LDMA_STOP);
-> +    lchan->desc->status =3D DMA_PAUSED;
-> +  }
-> +  spin_unlock_irqrestore(&lchan->vchan.lock, flags);
-> +
-> +  return 0;
-> +}
-> +
-> +static int ls2x_dma_resume(struct dma_chan *chan)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> +  unsigned long flags;
-> +
-> +  spin_lock_irqsave(&lchan->vchan.lock, flags);
-> +  if (lchan->desc && lchan->desc->status =3D=3D DMA_PAUSED) {
-> +    lchan->desc->status =3D DMA_IN_PROGRESS;
-> +    ls2x_dma_write_cmd(lchan, LDMA_START);
-> +  }
-> +  spin_unlock_irqrestore(&lchan->vchan.lock, flags);
-> +
-> +  return 0;
-> +}
-> +
-> +/*
-> + * of_ls2x_dma_xlate - Translation function
-> + * @dma_spec: Pointer to DMA specifier as found in the device tree
-> + * @ofdma: Pointer to DMA controller data
-> + *
-> + * Return: DMA channel pointer on success and NULL on error
-> + */
-> +static struct dma_chan *of_ls2x_dma_xlate(struct of_phandle_args *dma_sp=
-ec,
-> +            struct of_dma *ofdma)
-> +{
-> +  struct ls2x_dma_priv *priv =3D ofdma->of_dma_data;
-> +  struct ls2x_dma_chan *lchan;
-> +
-> +  /* We are single channel DMA, just get the channel from priv. */
-> +  lchan =3D &priv->lchan;
-> +  if (!lchan)
-> +    return NULL;
-> +
-> +  return dma_get_slave_channel(&lchan->vchan.chan);
-> +}
-> +
-> +/*
-> + * ls2x_dma_isr - LS2X DMA Interrupt handler
-> + * @irq: IRQ number
-> + * @dev_id: Pointer to ls2x_dma_chan
-> + *
-> + * Return: IRQ_HANDLED/IRQ_NONE
-> + */
-> +static irqreturn_t ls2x_dma_isr(int irq, void *dev_id)
-> +{
-> +  struct ls2x_dma_chan *lchan =3D dev_id;
-> +  struct ls2x_dma_desc *desc;
-> +
-> +  spin_lock(&lchan->vchan.lock);
-> +  desc =3D lchan->desc;
-> +  if (desc) {
-> +    if (desc->cyclic) {
-> +      vchan_cyclic_callback(&desc->vdesc);
-> +    } else {
-> +      desc->status =3D DMA_COMPLETE;
-> +      vchan_cookie_complete(&desc->vdesc);
-> +      ls2x_dma_start_transfer(lchan);
-> +    }
-> +
-> +    /* ls2x_dma_start_transfer() updates lchan->desc */
-> +    if (!lchan->desc)
-> +      ls2x_dma_write_cmd(lchan, LDMA_STOP);
-> +  }
-> +  spin_unlock(&lchan->vchan.lock);
-> +
-> +  return IRQ_HANDLED;
-> +}
-> +
-> +static int ls2x_dma_chan_init(struct platform_device *pdev,
-> +            struct ls2x_dma_priv *priv)
-> +{
-> +  struct device *dev =3D &pdev->dev;
-> +  struct ls2x_dma_chan *lchan =3D &priv->lchan;
-> +  int ret;
-> +
-> +  lchan->irq =3D platform_get_irq(pdev, 0);
-> +  if (lchan->irq < 0)
-> +    return lchan->irq;
-> +
-> +  ret =3D devm_request_irq(dev, lchan->irq, ls2x_dma_isr, IRQF_TRIGGER_R=
-ISING,
-> +             dev_name(&pdev->dev), lchan);
-> +  if (ret)
-> +    return ret;
-> +
-> +  /* Initialize channels related values */
-> +  INIT_LIST_HEAD(&priv->ddev.channels);
-> +  lchan =3D &priv->lchan;
-> +  lchan->vchan.desc_free =3D ls2x_dma_desc_free;
-> +  vchan_init(&lchan->vchan, &priv->ddev);
-> +
-> +  return 0;
-> +}
-> +
-> +/*
-> + * ls2x_dma_probe - Driver probe function
-> + * @pdev: Pointer to the platform_device structure
-> + *
-> + * Return: '0' on success and failure value on error
-> + */
-> +static int ls2x_dma_probe(struct platform_device *pdev)
-> +{
-> +  int ret;
-> +  struct dma_device *ddev;
-> +  struct ls2x_dma_priv *priv;
-> +  struct device *dev =3D &pdev->dev;
-> +
-> +  priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +  if (!priv)
-> +    return -ENOMEM;
-> +
-> +  priv->regs =3D devm_platform_ioremap_resource(pdev, 0);
-> +  if (IS_ERR(priv->regs))
-> +    return dev_err_probe(dev, PTR_ERR(priv->regs),
-> +             "devm_platform_ioremap_resource failed.\n");
-> +
-> +  priv->dma_clk =3D devm_clk_get(&pdev->dev, NULL);
-> +  if (IS_ERR(priv->dma_clk))
-> +    return dev_err_probe(dev, PTR_ERR(priv->dma_clk), "devm_clk_get fail=
-ed.\n");
-> +
-> +  ret =3D clk_prepare_enable(priv->dma_clk);
-> +  if (ret)
-> +    return dev_err_probe(dev, ret, "clk_prepare_enable failed.\n");
-> +
-> +  ret =3D ls2x_dma_chan_init(pdev, priv);
-> +  if (ret)
-> +    goto disable_clk;
-> +
-> +  ddev =3D &priv->ddev;
-> +  ddev->dev =3D dev;
-> +  dma_cap_zero(ddev->cap_mask);
-> +  dma_cap_set(DMA_SLAVE, ddev->cap_mask);
-> +  dma_cap_set(DMA_CYCLIC, ddev->cap_mask);
-> +
-> +  ddev->device_alloc_chan_resources =3D ls2x_dma_alloc_chan_resources;
-> +  ddev->device_free_chan_resources =3D ls2x_dma_free_chan_resources;
-> +  ddev->device_tx_status =3D dma_cookie_status;
-> +  ddev->device_issue_pending =3D ls2x_dma_issue_pending;
-> +  ddev->device_prep_slave_sg =3D ls2x_dma_prep_slave_sg;
-> +  ddev->device_prep_dma_cyclic =3D ls2x_dma_prep_dma_cyclic;
-> +  ddev->device_config =3D ls2x_dma_slave_config;
-> +  ddev->device_terminate_all =3D ls2x_dma_terminate_all;
-> +  ddev->device_synchronize =3D ls2x_dma_synchronize;
-> +  ddev->device_pause =3D ls2x_dma_pause;
-> +  ddev->device_resume =3D ls2x_dma_resume;
-> +
-> +  ddev->src_addr_widths =3D BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
-> +  ddev->dst_addr_widths =3D BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
-> +  ddev->directions =3D BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-> +
-> +  ret =3D dma_async_device_register(&priv->ddev);
-> +  if (ret < 0)
-> +    goto disable_clk;
-> +
-> +  ret =3D of_dma_controller_register(dev->of_node, of_ls2x_dma_xlate, pr=
-iv);
-> +  if (ret < 0)
-> +    goto unregister_dmac;
-> +
-> +  platform_set_drvdata(pdev, priv);
-> +
-> +  dev_info(dev, "Loongson LS2X APB DMA driver registered successfully.\n=
-");
-> +  return 0;
-> +
-> +unregister_dmac:
-> +  dma_async_device_unregister(&priv->ddev);
-> +disable_clk:
-> +  clk_disable_unprepare(priv->dma_clk);
-> +
-> +  return ret;
-> +}
-> +
-> +/*
-> + * ls2x_dma_remove - Driver remove function
-> + * @pdev: Pointer to the platform_device structure
-> + *
-> + * Return: Always '0'
-> + */
-> +static int ls2x_dma_remove(struct platform_device *pdev)
-> +{
-> +  struct ls2x_dma_priv *priv =3D platform_get_drvdata(pdev);
-> +
-> +  of_dma_controller_free(pdev->dev.of_node);
-> +  dma_async_device_unregister(&priv->ddev);
-> +  clk_disable_unprepare(priv->dma_clk);
-> +
-> +  return 0;
-> +}
-> +
-> +static const struct of_device_id ls2x_dma_of_match_table[] =3D {
-> +  { .compatible =3D "loongson,ls2k1000-apbdma" },
-> I think it can works with both  2k500 and 2k1000  without any distinction=
-=EF=BC=8C use "loongson,ls2k-apbdma" maybe more suitable ?
-
-Hi:
-
-Yes, they really don't differ at the driver level.
-
-But, firstly, I think the compatible attribute should be used to
-describe the specific SOC.
-Besides,  the Loongson-2K series has more than just the LS2K0500 and
-LS2K1000. For example, LS2K2000, and it doesn't apply to this driver.
-
-So, the fallback compatibles might be a better choice for us.
-
-Thanks.
-Binbin
-
-
+> -               numaram += e - s;
+> -               numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+> -               if ((s64)numaram < 0)
+> -                       numaram = 0;
+> +       /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
+> +       if (lo_pg >= limit) {
+> +               pr_err("NUMA: We lost 1m size page.\n");
+> +               return false;
+>         }
+> -       max_pfn = max_low_pfn;
+> -       biosram = max_pfn - absent_pages_in_range(0, max_pfn);
 >
-> +  { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ls2x_dma_of_match_table);
+> -       BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
+>         return true;
+>  }
+>
+> @@ -428,7 +421,7 @@ int __init init_numa_memory(void)
+>                 return -EINVAL;
+>
+>         init_node_memblock();
+> -       if (numa_meminfo_cover_memory(&numa_meminfo) == false)
+> +       if (memblock_validate_numa_coverage(SZ_1M) == false)
+>                 return -EINVAL;
+>
+>         for_each_node_mask(node, node_possible_map) {
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index 2aadb2019b4f..14feec144675 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -451,30 +451,18 @@ EXPORT_SYMBOL(__node_distance);
+>   * Sanity check to catch more bad NUMA configurations (they are amazingly
+>   * common).  Make sure the nodes cover all memory.
+>   */
+> -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+> +static bool __init memblock_validate_numa_coverage(const u64 limit)
+>  {
+> -       u64 numaram, e820ram;
+> -       int i;
+> +       u64 lo_pg;
+>
+> -       numaram = 0;
+> -       for (i = 0; i < mi->nr_blks; i++) {
+> -               u64 s = mi->blk[i].start >> PAGE_SHIFT;
+> -               u64 e = mi->blk[i].end >> PAGE_SHIFT;
+> -               numaram += e - s;
+> -               numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+> -               if ((s64)numaram < 0)
+> -                       numaram = 0;
+> -       }
+> -
+> -       e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
+> +       lo_pg = max_pfn - calculate_without_node_pages_in_range();
+>
+>         /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
+> -       if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
+> -               printk(KERN_ERR "NUMA: nodes only cover %LuMB of your %LuMB e820 RAM. Not used.\n",
+> -                      (numaram << PAGE_SHIFT) >> 20,
+> -                      (e820ram << PAGE_SHIFT) >> 20);
+> +       if (lo_pg >= limit) {
+> +               pr_err("NUMA: We lost 1m size page.\n");
+>                 return false;
+>         }
 > +
-> +static struct platform_driver ls2x_dmac_driver =3D {
-> +  .probe    =3D ls2x_dma_probe,
-> +  .remove    =3D ls2x_dma_remove,
-> +  .driver =3D {
-> +    .name  =3D "ls2x-apbdma",
-> +    .of_match_table  =3D ls2x_dma_of_match_table,
-> +  },
-> +};
-> +module_platform_driver(ls2x_dmac_driver);
+>         return true;
+>  }
+>
+> @@ -583,7 +571,7 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
+>                         return -EINVAL;
+>                 }
+>         }
+> -       if (!numa_meminfo_cover_memory(mi))
+> +       if (!memblock_validate_numa_coverage(SZ_1M))
+>                 return -EINVAL;
+>
+>         /* Finally register nodes. */
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0daef3f2f029..b32457ad1ae3 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3043,6 +3043,7 @@ unsigned long __absent_pages_in_range(int nid, unsigned long start_pfn,
+>                                                 unsigned long end_pfn);
+>  extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+>                                                 unsigned long end_pfn);
+> +extern unsigned long calculate_without_node_pages_in_range(void);
+>  extern void get_pfn_range_for_nid(unsigned int nid,
+>                         unsigned long *start_pfn, unsigned long *end_pfn);
+>
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index 3ddd18a89b66..13a4883787e3 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -1132,6 +1132,26 @@ static void __init adjust_zone_range_for_zone_movable(int nid,
+>         }
+>  }
+>
+> +/**
+> + * @start_pfn: The start PFN to start searching for holes
+> + * @end_pfn: The end PFN to stop searching for holes
+> + *
+> + * Return: Return the number of page frames without node assigned within a range.
+> + */
+> +unsigned long __init calculate_without_node_pages_in_range(void)
+> +{
+> +       unsigned long num_pages;
+> +       unsigned long start_pfn, end_pfn;
+> +       int nid, i;
 > +
-> +MODULE_DESCRIPTION("Loongson LS2X APB DMA Controller driver");
-> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
-> +MODULE_LICENSE("GPL");
+> +       for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+> +               if (nid == NUMA_NO_NODE)
+> +                       num_pages += end_pfn - start_pfn;
+> +       }
+> +
+> +       return num_pages;
+> +}
+> +
+>  /*
+>   * Return the number of holes in a range on a node. If nid is MAX_NUMNODES,
+>   * then all holes in the requested range will be accounted for.
 > --
-> 2.39.3
->
+> 2.25.1
 >
