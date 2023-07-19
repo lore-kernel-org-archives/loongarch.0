@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D64125AD
-	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 14:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D127614AA8
+	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 14:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1689776231;
+	s=mimecast20190719; t=1689776638;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YjdFQRNR08a24eSSE2jcx3RnjwPdI3D1UG9L8u3hsoE=;
-	b=FWguGfwOO+rfjs0fvFjrSrzQ32kjEPT8o8EekxSSjdUeLTnsXWYM0nd6YMEMHuPUN0EVYE
-	lFM0Qbd2QSn5B7CaU296PsZiorG6xTgOmjiO8mppIyDzasutEqBcqNNcUaB86UlJEEIAq5
-	LWw7EaryBsiA4dajwANVCpkbAmntw5s=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=AYL0WxfELPHjwx6ZiDqavEiQQIijrcopNRfhrvLV03A=;
+	b=Fy8i5nOuJc9vT64qGI1h402ACgpl6AB64fP+pSezsKXU7oX0ASaTIrY6cxryrL9cV8OvNU
+	v0sIZeURGjZ3itQ6NPF0MFxRumgHZwjZfMTfec/c/ZD6nxw8e6l3CXc8VJBtqU8rK9ljTf
+	QgQvU5p0Ucau8pjJq5qE+94Kp1SQ6E8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-286-ZuxITl1nP7GTPoxHsrwsbw-1; Wed, 19 Jul 2023 10:17:10 -0400
-X-MC-Unique: ZuxITl1nP7GTPoxHsrwsbw-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-3fc08d6a40cso39427845e9.0
-        for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 07:17:10 -0700 (PDT)
+ us-mta-402-66BqVZIUMxOR5Lgihhl_RQ-1; Wed, 19 Jul 2023 10:23:56 -0400
+X-MC-Unique: 66BqVZIUMxOR5Lgihhl_RQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-3fc07d4c63eso3737075e9.1
+        for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 07:23:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689776229; x=1690381029;
+        d=1e100.net; s=20221208; t=1689776635; x=1690381435;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YjdFQRNR08a24eSSE2jcx3RnjwPdI3D1UG9L8u3hsoE=;
-        b=WUMOYRxTmD3QRttYzYA7oZmdFYs323wa2SHCiHlY3cR2DPmFlKQl+mqxO73lAZ1m34
-         x9eKHtAsFkPM8NfaGbdCCVCooJ5N62fzFOz+ghwEE8ZHtK+hEBb04IK4L17ZmC3DkmGt
-         tFcq5bmwQNVVcXfQutf//RqP4eF4FK+aT4+eSzmqkNUr9H0MEqKjdlNuVY5rmZHWzFKb
-         McROd8R5kkuLbmzbIvXsOmYv3G83KTyKyLpDgGUU1Fp5BN67R0vrgnpm07MkkGLPtwLV
-         fw35/4hHB0pq8gHfJYYaaa0lkmkH0cv85458PkdCQ7kIvUnnI13aaRMUtop6HsNafLAP
-         /ygw==
-X-Gm-Message-State: ABy/qLbOmdLY8yswcJuK5LwUdHwFBhh1G4vQ8Kz8wVJ9FLQO7wb1R5uq
-	VO12wGmtVv0kZthqlYgSrjRJiVRhLPFCdAN2nGncYaS3jFN3fVJiffk3TY4oZV9POcR8+ea4Ksk
-	7LHWR4XomCNJjMoinHemH
-X-Received: by 2002:a05:600c:3651:b0:3fc:627:ea31 with SMTP id y17-20020a05600c365100b003fc0627ea31mr2123087wmq.38.1689776229114;
-        Wed, 19 Jul 2023 07:17:09 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHY6b0TgUW8MDG3POksnXdAxeQBRH+KD9U9aN090eyMWJPzhTreLBf0F2Av+qSumHgaL9gGUQ==
-X-Received: by 2002:a05:600c:3651:b0:3fc:627:ea31 with SMTP id y17-20020a05600c365100b003fc0627ea31mr2123053wmq.38.1689776228833;
-        Wed, 19 Jul 2023 07:17:08 -0700 (PDT)
+        bh=AYL0WxfELPHjwx6ZiDqavEiQQIijrcopNRfhrvLV03A=;
+        b=BrsDszk1DmFi8LP3CYn9C722RutPr3FLwELK7Qfx8j/B+m5FA3K6U2ea7yHfBui031
+         Un0WgoEYU5WIa5T/NBGR4cG3Xq1WeCx0zsFqQPmWKUpJRW2WBCN6VOMxCa/V+yUxkbg9
+         MoMZ0QlFlDIS4gkl0C4AzHzGyLYMIiZoxe38tLGstM71oCxHJOw31yCUUVx5pCZ2q24c
+         Z4waafW5lC+IY/6PYJJ/9BbexkTasKN/SWnJvhxALaIJebcMQuZmFhx+PyGv3KVPd6AM
+         m2w1TGa3klNvEKnBF5yC+7B8FJA9bYEp+OiNkAxVjVXHG0pbgK5/3FFSu7+1qf0dQfjS
+         OVdw==
+X-Gm-Message-State: ABy/qLaCkUu2OWLhkzGW8ztCyk3P7YaLYfLmCK8QqSclsx/IcVvx3Pxl
+	I6fCNUmy78XGf8+WsPktGZj+RgLJjFBDCmTjbEoDGjMv5RxU66R/o4sXvsfwKWl4ntaHUuzz7xU
+	uKCoxDt6jLpBXPNQWQ/V7
+X-Received: by 2002:adf:f406:0:b0:317:15f5:a1cc with SMTP id g6-20020adff406000000b0031715f5a1ccmr41819wro.22.1689776635705;
+        Wed, 19 Jul 2023 07:23:55 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHAuWaDn4wkaE25f0gFYugdobiggD0h46Z8p4U2s3LOHj24u3Bx+1zUs1XU1djJ3aSjiu0SQg==
+X-Received: by 2002:adf:f406:0:b0:317:15f5:a1cc with SMTP id g6-20020adff406000000b0031715f5a1ccmr41757wro.22.1689776635405;
+        Wed, 19 Jul 2023 07:23:55 -0700 (PDT)
 Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id h21-20020a1ccc15000000b003fbacc853ccsm1833816wmb.18.2023.07.19.07.17.08
+        by smtp.gmail.com with ESMTPSA id q19-20020a056000137300b003143d80d11dsm5429196wrz.112.2023.07.19.07.23.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jul 2023 07:17:08 -0700 (PDT)
+        Wed, 19 Jul 2023 07:23:54 -0700 (PDT)
 From: Javier Martinez Canillas <javierm@redhat.com>
 To: Arnd Bergmann <arnd@kernel.org>, linux-fbdev@vger.kernel.org, Thomas
  Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>
@@ -71,12 +71,12 @@ Cc: Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
  linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
  linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
  linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 6/9] vgacon: clean up global screen_info instances
-In-Reply-To: <20230719123944.3438363-7-arnd@kernel.org>
+Subject: Re: [PATCH v2 7/9] vga16fb: drop powerpc support
+In-Reply-To: <20230719123944.3438363-8-arnd@kernel.org>
 References: <20230719123944.3438363-1-arnd@kernel.org>
- <20230719123944.3438363-7-arnd@kernel.org>
-Date: Wed, 19 Jul 2023 16:17:07 +0200
-Message-ID: <87cz0ohtp8.fsf@minerva.mail-host-address-is-not-set>
+ <20230719123944.3438363-8-arnd@kernel.org>
+Date: Wed, 19 Jul 2023 16:23:53 +0200
+Message-ID: <87a5vshtdy.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -91,35 +91,25 @@ Arnd Bergmann <arnd@kernel.org> writes:
 
 > From: Arnd Bergmann <arnd@arndb.de>
 >
-> To prepare for completely separating the VGA console screen_info from
-> the one used in EFI/sysfb, rename the vgacon instances and make them
-> local as much as possible.
+> I noticed that commit 0db5b61e0dc07 ("fbdev/vga16fb: Create
+> EGA/VGA devices in sysfb code") broke vga16fb on non-x86 platforms,
+> because the sysfb code never creates a vga-framebuffer device when
+> screen_info.orig_video_isVGA is set to '1' instead of VIDEO_TYPE_VGAC.
 >
-> ia64 and arm both have confurations with vgacon and efi, but the contents
-
-is this a typo for configurations ?
-
-> never overlaps because ia64 has no EFI framebuffer, and arm only has
-> vga console on legacy platforms without EFI. Renaming these is required
-> before the EFI screen_info can be moved into drivers/firmware.
+> However, it turns out that the only architecture that has allowed
+> building vga16fb in the past 20 years is powerpc, and this only worked
+> on two 32-bit platforms and never on 64-bit powerpc. The last machine
+> that actually used this was removed in linux-3.10, so this is all dead
+> code and can be removed.
 >
-> The ia64 vga console is actually registered in two places from
-> setup_arch(), but one of them is wrong, so drop the one in pcdp.c and
-> the fix the one in setup.c to use the correct conditional.
+> The big-endian support in vga16fb.c could also be removed, but I'd just
+> leave this in place.
 >
-
-s/the fix the/fix the
-
-> x86 has to keep them together, as the boot protocol is used to switch
-> between VGA text console and framebuffer through the screen_info data.
->
+> Fixes: 933ee7119fb14 ("powerpc: remove PReP platform")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
 
-Patch looks good to me, but I'm not that familiar with some of the arches
-to give a proper reviewed-by.
-
-Acked-by: Javier Martinez Canillas <javierm@redhat.com>
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
 -- 
 Best regards,
