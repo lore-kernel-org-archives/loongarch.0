@@ -1,72 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891F1C8C7
-	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 07:22:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D97C433C7
-	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 07:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689751348;
-	bh=v+KzWx3A540NW8aAgQGBA0OhgGvyrwyOdzXHhvq2quA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NHG0AIdGyV6plj0mYiDIUa1yfQ5R7aui2+xWEKeiQzUzb0dxb6CtzvOOZUtFUK94I
-	 /HVFlu8bollcLb61dFxUa85WDSiDjERnKi1ERRX0y9/438ka1Q/IeHiRVb7VjqUoI3
-	 5yyVH21Ou7O+MCquJtxgpf+7lz4qHbMVyayzg2aCqjbpI94Ikpuxv4jla7WwvnjaVp
-	 plzW8C/0FqZaWEC0XX6N9vNvircV3o+ZxJIC9K5bHt/qfqW8MYwTJ56N+WpmdEjE/m
-	 HMTpWhR5yxsd3ZVqKjf9Pm/zb8ZYfmlrLBm+qFASmOHzv7sZqXghzgmSbS2ZYCkzqq
-	 Cess+QHAYBsjw==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5217bb5ae05so5506405a12.0
-        for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 00:22:27 -0700 (PDT)
-X-Gm-Message-State: ABy/qLZWwAoy9LYe9cyF+aCkoM8j2fHUh2Nugk94Ys0RITBBQTfo0iBS
-	Q+15K7dfPxjEAtoM1pq0XfNmF9cwY7b/Lu47xWU=
-X-Google-Smtp-Source: APBJJlGgFowu6dGDg4naL/LQVEuvtSanlod0S5HMByJDn7shqAJ5E7r/8oPECUcfYfFdSH/QCwseM85/5g1ZvbZFZ1c=
-X-Received: by 2002:a50:ef0c:0:b0:51d:d16f:7e52 with SMTP id
- m12-20020a50ef0c000000b0051dd16f7e52mr1734736eds.29.1689751346283; Wed, 19
- Jul 2023 00:22:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985893D87
+	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 08:33:48 +0000 (UTC)
+X-UUID: 3439a2eb271147a5a78e7a938c3948d3-20230719
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.28,REQID:eba608f6-b7f5-4435-a8c7-db8af9869d8f,IP:25,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-15
+X-CID-INFO: VERSION:1.1.28,REQID:eba608f6-b7f5-4435-a8c7-db8af9869d8f,IP:25,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-15
+X-CID-META: VersionHash:176cd25,CLOUDID:f617c5dc-dc79-4898-9235-1134b97257a8,B
+	ulkID:2307191614510XI4YAKB,BulkQuantity:1,Recheck:0,SF:17|19|44|38|24|102,
+	TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:40,QS:nil,BEC:nil,COL:0,
+	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 3439a2eb271147a5a78e7a938c3948d3-20230719
+X-User: lienze@kylinos.cn
+Received: from ubuntu.. [(39.156.73.12)] by mailgw
+	(envelope-from <lienze@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1885092020; Wed, 19 Jul 2023 16:28:18 +0800
+From: Enze Li <lienze@kylinos.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	glider@google.com,
+	elver@google.com,
+	akpm@linux-foundation.org,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org
+Cc: zhangqing@loongson.cn,
+	yangtiezhu@loongson.cn,
+	dvyukov@google.com,
+	Enze Li <lienze@kylinos.cn>
+Subject: [PATCH 0/4] Add KFENCE support for LoongArch
+Date: Wed, 19 Jul 2023 16:27:28 +0800
+Message-Id: <20230719082732.2189747-1-lienze@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230718153348.3340811-1-chenhuacai@loongson.cn> <261edc6c-e339-faeb-3045-bfe6604d1aef@web.de>
-In-Reply-To: <261edc6c-e339-faeb-3045-bfe6604d1aef@web.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 19 Jul 2023 15:22:13 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5nNMmYZQXvoog85cgMUd+gM2QMaG3cUhYk_iGzjB=B4Q@mail.gmail.com>
-Message-ID: <CAAhV-H5nNMmYZQXvoog85cgMUd+gM2QMaG3cUhYk_iGzjB=B4Q@mail.gmail.com>
-Subject: Re: [PATCH v5] LoongArch: Fix CONFIG_CMDLINE_EXTEND and
- CONFIG_CMDLINE_BOOTLOADER handling
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Zhihong Dong <donmor3000@hotmail.com>, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn, kernel-janitors@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Markus,
+Hi all,
 
-On Wed, Jul 19, 2023 at 2:51=E2=80=AFPM Markus Elfring <Markus.Elfring@web.=
-de> wrote:
->
-> >                                                   =E2=80=A6, so this pa=
-tch add
-> > some code to fix it.
->
-> Would you like to avoid a typo here?
->
-> Will any other imperative change description variant become more helpful?
-Thank you for pointing this out, but since Zhihong is the original
-author, I don't want to completely rewrite the commit message, so just
-fix the typo...
+This patchset adds KFENCE support on LoongArch.
 
-Huacai
->
-> See also:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/process/submitting-patches.rst?h=3Dv6.5-rc2#n94
->
-> Regards,
-> Markus
+To run the testcases, you will need to enable the following options,
+
+-> Kernel hacking
+   [*] Tracers
+       [*] Support for tracing block IO actions (NEW)
+   -> Kernel Testing and Coverage
+      <*> KUnit - Enable support for unit tests
+
+and then,
+
+-> Kernel hacking
+   -> Memory Debugging
+      [*] KFENCE: low-overhead sampling-based memory safety error detector (NEW)
+          <*> KFENCE integration test suite (NEW)
+
+With these options enabled, KFENCE will be tested during kernel startup.
+And normally, you might get the following feedback,
+
+========================================================
+[   35.326363 ] # kfence: pass:23 fail:0 skip:2 total:25
+[   35.326486 ] # Totals: pass:23 fail:0 skip:2 total:25
+[   35.326621 ] ok 1 kfence
+========================================================
+
+you might notice that 2 testcases have been skipped.  If you tend to run
+all testcases, please enable CONFIG_INIT_ON_FREE_DEFAULT_ON, you can
+find it here,
+
+-> Security options
+   -> Kernel hardening options
+      -> Memory initialization
+         [*] Enable heap memory zeroing on free by default
+
+and you might get all testcases passed.
+========================================================
+[   35.531860 ] # kfence: pass:25 fail:0 skip:0 total:25
+[   35.531999 ] # Totals: pass:25 fail:0 skip:0 total:25
+[   35.532135 ] ok 1 kfence
+========================================================
+
+Thanks,
+Enze
+
+Enze Li (4):
+  LoongArch: mm: Add page table mapped mode support
+  LoongArch: Get stack without NMI when providing regs parameter
+  KFENCE: Deferring the assignment of the local variable addr
+  LoongArch: Add KFENCE support
+
+ arch/loongarch/Kconfig               |  1 +
+ arch/loongarch/include/asm/kfence.h  | 62 ++++++++++++++++++++++++++++
+ arch/loongarch/include/asm/page.h    | 10 +++++
+ arch/loongarch/include/asm/pgtable.h | 12 ++++++
+ arch/loongarch/kernel/stacktrace.c   | 16 ++++---
+ arch/loongarch/mm/fault.c            | 22 ++++++----
+ arch/loongarch/mm/pgtable.c          | 25 +++++++++++
+ mm/kfence/core.c                     |  5 ++-
+ 8 files changed, 137 insertions(+), 16 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kfence.h
+
+-- 
+2.34.1
+
