@@ -1,28 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4AD156CA
-	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 15:06:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 941AAC433C9
-	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 15:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689779214;
-	bh=kUIBro8VYIEkHE5j0/agoPvwIueb/Dl6A+asw1DqHtY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qqgFzyb1Q6LF7MPggU2bQnt2PduSRwyoWsnAyQPFnL7+kOVE2ZXPW1+VgUQ/m/WKN
-	 pfvUpfs4lOq1epjUqEPn0//6r6xexKUXK6rWTNZHEQtmB4K4mrT8ZAwukM52j84l+s
-	 AfF+vEDjKVEJmh8871y2yhiM8v1jASJ3EHrlLsi04qSb9k7YTGvRbo1jrhrB4MEoGK
-	 b1QRl4gwEgmmW6ITAAAXk12wZki6qonYp5+D3kLxgy99FMoNMMdYYne0K+iRS8NZ9C
-	 fdrEy7bXZrQ5Vj1XpWfo89EmiBvmQU/qrfmFtYWkvDjkoqce7gXpyHriwXSdgu3LQY
-	 nwQG6OU/D7SSA==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5216f44d881so7520288a12.1
-        for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 08:06:54 -0700 (PDT)
-X-Gm-Message-State: ABy/qLZvwGSMTX5Ywc8LGEBzl0OqUJoQZIzFANDG+Ce/u6efvuNyCJ//
-	z5WS/2FtQGhlPGDLvgg1N3DVk/kvqO52ECz6XQk=
-X-Google-Smtp-Source: APBJJlFIWF/JGtjaWiG8xG1Xidqf9LjssEXWxsrj4ORgGERwBC9Whsl8zR9B/GHY7ZNedscei3fl6EnpikXH+bdIBsA=
-X-Received: by 2002:aa7:c1cc:0:b0:51e:ca0:8a2e with SMTP id
- d12-20020aa7c1cc000000b0051e0ca08a2emr2687589edp.36.1689779212858; Wed, 19
- Jul 2023 08:06:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1819C11C93
+	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 15:08:46 +0000 (UTC)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-4fb863edcb6so11876234e87.0
+        for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 08:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1689779325; x=1692371325;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MFOc8wXCTX40R5n/QN5jnRi3zJ4EfVz1XUBftc9gujI=;
+        b=k6Dzz3u+unngYvZlWXAMg/7wjM26zDJELKmq670GNyLD9qen7N5jRuhLbPJWEd8v9k
+         wwbzSB++iejuKh2vEbBqh23UjTRMtyFfzZNzBKxizoQOAN/7rUzllO9jfx6hpm9i2LuN
+         9Q9Zph02XUxM+I6sy6fr7B0APwQ+FChwvqo+keI3xRxme5ol7xrRvx94cT5Kw6/sUh1N
+         jR9f3NhPZ2LVxT0+063M+J5XrsUGkgmlkE4UoxkbrCqDuEUzhYxRjFv4M07iQOLRcZ7G
+         NHP4vPu97B6hRzYa7RHx+CkPKzzmgTgN+6hwkuYOGYsuh/Ah3YBOL8UHxTVTWGQ5GZx1
+         xOiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689779325; x=1692371325;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MFOc8wXCTX40R5n/QN5jnRi3zJ4EfVz1XUBftc9gujI=;
+        b=JDoV1EkBb8Ofxz3iwejBkAckXG2L/QDKlEo3HAy7+yc/7vlEHiTalSWpFFBBZA46MU
+         8ibIAwksCXkt+MysCsB3l9ScWoR+rUNTuzZuHq9pFFPo2zgrFmzkopqVX9dGcXGpjpZt
+         KWqcg2uV8dXe1DhPSscqNgHb5nMa6aZ+cAA3hmwtyXn2lQNmEDzT03r4iNImdPbrfsHq
+         GpJ97/9pt7kPqgcq04gNZvfvgcHVymzqz14YI214cmdel4r9dFc2kmBDExFulks5CIzz
+         ius97odsDqnqRzfZPK+IEYhW4h6gZzx7QNihsEE3JvrGhKP1NT7W2lMCrW4b9IRmYthy
+         SiqA==
+X-Gm-Message-State: ABy/qLbrdUd0Ef+Qj5gWmAb4VocOXph5sjItzXRQTIJ3JtHcncm8MvSK
+	h6TdySRRAsjVetkT743FqAfcr8sKmvg0lljoeV+mCg==
+X-Google-Smtp-Source: APBJJlE8s+M855VZ6L+2ujTJXYs8tsRjy3wtCPDGaQRCXcBrm84s52ygjnsO9ygWffOOJq7iw34bVREN1ZqhcJhPm2A=
+X-Received: by 2002:a19:5f1e:0:b0:4fb:77d6:89c3 with SMTP id
+ t30-20020a195f1e000000b004fb77d689c3mr134036lfb.12.1689779324718; Wed, 19 Jul
+ 2023 08:08:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -30,15 +42,14 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20230719082732.2189747-1-lienze@kylinos.cn> <20230719082732.2189747-4-lienze@kylinos.cn>
- <CANpmjNOHL8EMP+E9w5wxMJ+PUbxYZh2DMaEocfHP1ATQn64+ng@mail.gmail.com>
-In-Reply-To: <CANpmjNOHL8EMP+E9w5wxMJ+PUbxYZh2DMaEocfHP1ATQn64+ng@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 19 Jul 2023 23:06:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7Ca08Aj1y5HHUsUreOdBTQwVu=H+3nFOUjiUiq5aR76g@mail.gmail.com>
-Message-ID: <CAAhV-H7Ca08Aj1y5HHUsUreOdBTQwVu=H+3nFOUjiUiq5aR76g@mail.gmail.com>
+ <CANpmjNOHL8EMP+E9w5wxMJ+PUbxYZh2DMaEocfHP1ATQn64+ng@mail.gmail.com> <CAAhV-H7Ca08Aj1y5HHUsUreOdBTQwVu=H+3nFOUjiUiq5aR76g@mail.gmail.com>
+In-Reply-To: <CAAhV-H7Ca08Aj1y5HHUsUreOdBTQwVu=H+3nFOUjiUiq5aR76g@mail.gmail.com>
+From: Marco Elver <elver@google.com>
+Date: Wed, 19 Jul 2023 17:08:07 +0200
+Message-ID: <CANpmjNNKa7yevuGeOOHtABGiSxF+8GQQudf6_9-CwT4aYD=6=w@mail.gmail.com>
 Subject: Re: [PATCH 3/4] KFENCE: Deferring the assignment of the local
  variable addr
-To: Marco Elver <elver@google.com>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Enze Li <lienze@kylinos.cn>, kernel@xen0n.name, loongarch@lists.linux.dev, 
 	glider@google.com, akpm@linux-foundation.org, kasan-dev@googlegroups.com, 
 	linux-mm@kvack.org, zhangqing@loongson.cn, yangtiezhu@loongson.cn, 
@@ -46,60 +57,38 @@ Cc: Enze Li <lienze@kylinos.cn>, kernel@xen0n.name, loongarch@lists.linux.dev,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Marco,
+On Wed, 19 Jul 2023 at 17:06, Huacai Chen <chenhuacai@kernel.org> wrote:
+>
+> Hi, Marco,
+>
+> On Wed, Jul 19, 2023 at 6:55=E2=80=AFPM Marco Elver <elver@google.com> wr=
+ote:
+> >
+> > On Wed, 19 Jul 2023 at 10:28, Enze Li <lienze@kylinos.cn> wrote:
+> > >
+> > > The LoongArch architecture is different from other architectures.
+> > > It needs to update __kfence_pool during arch_kfence_init_pool.
+> > >
+> > > This patch modifies the assignment location of the local variable add=
+r
+> > > in the kfence_init_pool function to support the case of updating
+> > > __kfence_pool in arch_kfence_init_pool.
+> > >
+> > > Signed-off-by: Enze Li <lienze@kylinos.cn>
+> >
+> > I think it's fair to allow this use case.
+> >
+> > However, please make sure that when your arch_kfence_init_pool()
+> > fails, it is still possible to free the memblock allocated memory
+> > properly.
+> >
+> > Acked-by: Marco Elver <elver@google.com>
+> Does Acked-by means this patch can go through loongarch tree together
+> with other patches? If this patch should go through kfence tree, then
+> the others should wait for some time.
 
-On Wed, Jul 19, 2023 at 6:55=E2=80=AFPM Marco Elver <elver@google.com> wrot=
-e:
->
-> On Wed, 19 Jul 2023 at 10:28, Enze Li <lienze@kylinos.cn> wrote:
-> >
-> > The LoongArch architecture is different from other architectures.
-> > It needs to update __kfence_pool during arch_kfence_init_pool.
-> >
-> > This patch modifies the assignment location of the local variable addr
-> > in the kfence_init_pool function to support the case of updating
-> > __kfence_pool in arch_kfence_init_pool.
-> >
-> > Signed-off-by: Enze Li <lienze@kylinos.cn>
->
-> I think it's fair to allow this use case.
->
-> However, please make sure that when your arch_kfence_init_pool()
-> fails, it is still possible to free the memblock allocated memory
-> properly.
->
-> Acked-by: Marco Elver <elver@google.com>
-Does Acked-by means this patch can go through loongarch tree together
-with other patches? If this patch should go through kfence tree, then
-the others should wait for some time.
+It can go through loongarch tree. I don't think there are conflicts
+with -mm around the patch's location right now.
 
-Huacai
->
-> > ---
-> >  mm/kfence/core.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/mm/kfence/core.c b/mm/kfence/core.c
-> > index dad3c0eb70a0..e124ffff489f 100644
-> > --- a/mm/kfence/core.c
-> > +++ b/mm/kfence/core.c
-> > @@ -566,13 +566,14 @@ static void rcu_guarded_free(struct rcu_head *h)
-> >   */
-> >  static unsigned long kfence_init_pool(void)
-> >  {
-> > -       unsigned long addr =3D (unsigned long)__kfence_pool;
-> > +       unsigned long addr;
-> >         struct page *pages;
-> >         int i;
-> >
-> >         if (!arch_kfence_init_pool())
-> > -               return addr;
-> > +               return (unsigned long)__kfence_pool;
-> >
-> > +       addr =3D (unsigned long)__kfence_pool;
-> >         pages =3D virt_to_page(__kfence_pool);
-> >
-> >         /*
-> > --
-> > 2.34.1
-> >
+Thanks,
+-- Marco
