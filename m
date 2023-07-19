@@ -1,103 +1,215 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8938830
-	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 10:55:28 +0000 (UTC)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-4fbbfaacfc1so11165476e87.1
-        for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 03:55:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689764127; x=1692356127;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=crS3CSY6szxFlGqC0R3v++4ayIAdFFaeNUOCZ6hKf28=;
-        b=ZiKC0YFsXf/R3jipNPfVIY5KgeG84dUlqbCtWAg6V8AGXiMt6ZSY+4RwN/+5X/ARVp
-         ohUibp4WtghvVVtTMu1cmE4QEm32WEIhkPkIr/YkCJMNlrvmfkud2ckKdtu/1MLNWqYW
-         gnpxURiqZXCNRB9z1xVBXfLF0A/W7mBkwHlmkH/mVu2FrpxYHTebt02mTQTdmy+23CLg
-         tcBcB/K2MKP8W+B+r0cNtH0W3bKDGhds3yUjs3kCzuiq9Wx58Q//fwKGMc5J1cQiGudL
-         N796KqjiS3J+cB6dy9MmerW57k0y0RuOtMfuYXA5iQ2lnwI8G34VRu8c5S4uQmiWUWS3
-         mYJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689764127; x=1692356127;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=crS3CSY6szxFlGqC0R3v++4ayIAdFFaeNUOCZ6hKf28=;
-        b=VYxrImRMhEYGWoHmANt41+71aBVsK1j74cxzhkcIhtVojzD9zzV3BtdfQ5sUzF7Fos
-         u/ZIsq4nH01tIarBtWkggyOl7Z2RGddwHuhCXOBe9zKkn+6Dh2yVTtR/m2xQbL9qEYk1
-         q2izeHkLina54fjhTwhyhFgJAJTYUG+DOgfZGD5m+hgeTbSxfHzpV0tr9nZFksvt3WrT
-         rKReT7qwRTmEugFC+l9WM5eoqtb8TiDlNbPifQFFNrTbjaY/yOFoA7vDGUwEzSzM6cdn
-         GjSbCcIhRgDDDqFszbJGilvAMoTZ+UKr/Rt2J5Vqag3DEwszvI6nwLq2nR9sZadYgHO5
-         vcdw==
-X-Gm-Message-State: ABy/qLZsBZgrtF7VTOFhzw3D7G3ne7eaGWNu9R4qytKNNI2x3MNxf+cQ
-	CP+nmUPZyBuYRHYTP8mssnrtw5xijpHWhAAAaufwww==
-X-Google-Smtp-Source: APBJJlHdvyvpRFFm1VTfzH+Tt0JUWjZvrNpoITi8/TcyUtirJ5DyLJrCuQnUxjvJp89HvM/AkCXAzbja2xsmXHz5sqc=
-X-Received: by 2002:ac2:4e8e:0:b0:4f8:b349:6938 with SMTP id
- o14-20020ac24e8e000000b004f8b3496938mr10924928lfr.65.1689764126796; Wed, 19
- Jul 2023 03:55:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98720101E6
+	for <loongarch@lists.linux.dev>; Wed, 19 Jul 2023 12:40:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE75DC433C8;
+	Wed, 19 Jul 2023 12:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689770405;
+	bh=DIdJB1tKscR1rR3ujrBSJpnHyT/V+Wqlv5mxqgqFyfo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JrzZEGAAyAH1UDXHME4ojHdWqSujNUNi7s/2QLjU4KPdJmC4YzkCnfpLJWsy1giIi
+	 4GfKf/YtkVIiRQh3ABlUkf77h0sv4JdaKf/Vl1FPgqFZ7Q9AP+FJHMyVanaiYlHRyn
+	 XhjbT1VbweWLETJajH46boExznIVXhvkYxrEgo9zFKUJiFKlNAz6apD8S1DPsT367D
+	 TDWhXjATRbaPWUN7/4LHlap/dNyW9Fz5CEvycj2DQjpc0EtPyXvbYt5ePy6xhhwmbd
+	 /BIf4DyZD3QTQDe2SgMuY/ua/2MJlpwAR6VLqGrW9QwblGXER1IPEh6DejVsQa5tGr
+	 UD0g9QPf5fqPw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Helge Deller <deller@gmx.de>,
+	Javier Martinez Canillas <javierm@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Deepak Rawat <drawat.floss@gmail.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guo Ren <guoren@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Khalid Aziz <khalid@gonehiking.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Wei Liu <wei.liu@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	x86@kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-efi@vger.kernel.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 0/9] video: screen_info cleanups
+Date: Wed, 19 Jul 2023 14:39:35 +0200
+Message-Id: <20230719123944.3438363-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230719082732.2189747-1-lienze@kylinos.cn> <20230719082732.2189747-4-lienze@kylinos.cn>
-In-Reply-To: <20230719082732.2189747-4-lienze@kylinos.cn>
-From: Marco Elver <elver@google.com>
-Date: Wed, 19 Jul 2023 12:54:49 +0200
-Message-ID: <CANpmjNOHL8EMP+E9w5wxMJ+PUbxYZh2DMaEocfHP1ATQn64+ng@mail.gmail.com>
-Subject: Re: [PATCH 3/4] KFENCE: Deferring the assignment of the local
- variable addr
-To: Enze Li <lienze@kylinos.cn>
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev, 
-	glider@google.com, akpm@linux-foundation.org, kasan-dev@googlegroups.com, 
-	linux-mm@kvack.org, zhangqing@loongson.cn, yangtiezhu@loongson.cn, 
-	dvyukov@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 19 Jul 2023 at 10:28, Enze Li <lienze@kylinos.cn> wrote:
->
-> The LoongArch architecture is different from other architectures.
-> It needs to update __kfence_pool during arch_kfence_init_pool.
->
-> This patch modifies the assignment location of the local variable addr
-> in the kfence_init_pool function to support the case of updating
-> __kfence_pool in arch_kfence_init_pool.
->
-> Signed-off-by: Enze Li <lienze@kylinos.cn>
+From: Arnd Bergmann <arnd@arndb.de>
 
-I think it's fair to allow this use case.
+I refreshed the first four patches that I sent before with very minor
+updates, and then added some more to further disaggregate the use
+of screen_info:
 
-However, please make sure that when your arch_kfence_init_pool()
-fails, it is still possible to free the memblock allocated memory
-properly.
+ - I found that powerpc wasn't using vga16fb any more
 
-Acked-by: Marco Elver <elver@google.com>
+ - vgacon can be almost entirely separated from the global
+   screen_info, except on x86
 
-> ---
->  mm/kfence/core.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/kfence/core.c b/mm/kfence/core.c
-> index dad3c0eb70a0..e124ffff489f 100644
-> --- a/mm/kfence/core.c
-> +++ b/mm/kfence/core.c
-> @@ -566,13 +566,14 @@ static void rcu_guarded_free(struct rcu_head *h)
->   */
->  static unsigned long kfence_init_pool(void)
->  {
-> -       unsigned long addr = (unsigned long)__kfence_pool;
-> +       unsigned long addr;
->         struct page *pages;
->         int i;
->
->         if (!arch_kfence_init_pool())
-> -               return addr;
-> +               return (unsigned long)__kfence_pool;
->
-> +       addr = (unsigned long)__kfence_pool;
->         pages = virt_to_page(__kfence_pool);
->
->         /*
-> --
-> 2.34.1
->
+ - similarly, the EFI framebuffer initialization can be
+   kept separate, except on x86.
+
+I did extensive build testing on arm/arm64/x86 and the normal built bot
+testing for the other architectures.
+
+Which tree should this get merged through?
+
+Link: https://lore.kernel.org/lkml/20230707095415.1449376-1-arnd@kernel.org/
+
+Arnd Bergmann (9):
+  vgacon: rework Kconfig dependencies
+  vgacon: rework screen_info #ifdef checks
+  dummycon: limit Arm console size hack to footbridge
+  vgacon, arch/*: remove unused screen_info definitions
+  vgacon: remove screen_info dependency
+  vgacon: clean up global screen_info instances
+  vga16fb: drop powerpc support
+  hyperv: avoid dependency on screen_info
+  efi: move screen_info into efi init code
+
+ arch/alpha/kernel/proto.h                     |  2 +
+ arch/alpha/kernel/setup.c                     |  8 +--
+ arch/alpha/kernel/sys_sio.c                   |  8 ++-
+ arch/arm/include/asm/setup.h                  |  5 ++
+ arch/arm/kernel/atags_parse.c                 | 20 +++---
+ arch/arm/kernel/efi.c                         |  6 --
+ arch/arm/kernel/setup.c                       |  7 +-
+ arch/arm64/kernel/efi.c                       |  4 --
+ arch/arm64/kernel/image-vars.h                |  2 +
+ arch/csky/kernel/setup.c                      | 12 ----
+ arch/hexagon/kernel/Makefile                  |  2 -
+ arch/hexagon/kernel/screen_info.c             |  3 -
+ arch/ia64/kernel/setup.c                      | 51 +++++++-------
+ arch/loongarch/kernel/efi.c                   |  3 +-
+ arch/loongarch/kernel/image-vars.h            |  2 +
+ arch/loongarch/kernel/setup.c                 |  3 -
+ arch/mips/jazz/setup.c                        |  9 ---
+ arch/mips/kernel/setup.c                      | 11 ---
+ arch/mips/mti-malta/malta-setup.c             |  4 +-
+ arch/mips/sibyte/swarm/setup.c                | 26 ++++---
+ arch/mips/sni/setup.c                         | 18 ++---
+ arch/nios2/kernel/setup.c                     |  5 --
+ arch/powerpc/kernel/setup-common.c            | 16 -----
+ arch/riscv/kernel/setup.c                     | 12 ----
+ arch/sh/kernel/setup.c                        |  5 --
+ arch/sparc/kernel/setup_32.c                  | 13 ----
+ arch/sparc/kernel/setup_64.c                  | 13 ----
+ arch/x86/kernel/setup.c                       |  2 +-
+ arch/xtensa/kernel/setup.c                    | 12 ----
+ drivers/firmware/efi/efi-init.c               | 14 +++-
+ drivers/firmware/efi/libstub/efi-stub-entry.c |  8 ++-
+ drivers/firmware/pcdp.c                       |  1 -
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c       |  7 +-
+ drivers/hv/vmbus_drv.c                        |  6 +-
+ drivers/video/console/Kconfig                 | 11 +--
+ drivers/video/console/dummycon.c              |  2 +-
+ drivers/video/console/vgacon.c                | 68 +++++++++++--------
+ drivers/video/fbdev/Kconfig                   |  2 +-
+ drivers/video/fbdev/hyperv_fb.c               |  8 +--
+ drivers/video/fbdev/vga16fb.c                 |  9 +--
+ include/linux/console.h                       |  7 ++
+ 41 files changed, 178 insertions(+), 249 deletions(-)
+ delete mode 100644 arch/hexagon/kernel/screen_info.c
+
+-- 
+2.39.2
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Cain <bcain@quicinc.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Deepak Rawat <drawat.floss@gmail.com>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Javier Martinez Canillas <javierm@redhat.com>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Khalid Aziz <khalid@gonehiking.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: x86@kernel.org
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-efi@vger.kernel.org
+Cc: linux-csky@vger.kernel.org
+Cc: linux-hexagon@vger.kernel.org
+Cc: linux-ia64@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
+
