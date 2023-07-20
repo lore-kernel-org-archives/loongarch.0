@@ -1,216 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2178.outbound.protection.outlook.com [40.92.62.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC92F174D5;
-	Thu, 20 Jul 2023 08:54:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7CBDC433C8;
-	Thu, 20 Jul 2023 08:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689843264;
-	bh=nLUVvJJOl4QJGI6Kn3sQ8QCjl89R0J5mJFa8dm5XKOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PuKy3faF1XLn+PHZ7cjaF0uhzIpt8UmxXHlCkcxcysHntuAtgxenMOR0jiqzOaym1
-	 WMWgGa+uRvXPjZrWBFBGv038GXrBCyQv80gd0Hc45CQIyyzeMQ82Xaq3ITNm+SYtxo
-	 7gvtuugiUYygCScpbVFonOTqCAun5VzD6KVdXP8kD65xKrylzVr11GmSFEDCzkxtVT
-	 Q5YLU8AzeJyj7oiLMJZZJ6aCwC/Qi2kX+Q8rqNd9QgbjenTCySbXtXzS2WeAv6NkFU
-	 XQgNFCeQsS6eP/C71+pUsdXl355/AKUAswk/sIPsN/gxf6FufuEDrrFaYRAvJ0ZCdI
-	 ibNd7XIk2nm/g==
-Date: Thu, 20 Jul 2023 11:53:52 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-Message-ID: <20230720085352.GN1901145@kernel.org>
-References: <20230601101257.530867-1-rppt@kernel.org>
- <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
- <ZHjgIH3aX9dCvVZc@moria.home.lan>
- <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
- <20230605092040.GB3460@kernel.org>
- <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72CC174E9
+	for <loongarch@lists.linux.dev>; Thu, 20 Jul 2023 11:45:03 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D17ipNmXDSku29Iv6LWxB00DpvXxS2prySG/MCEBXXbJYp04TqZmEf4JTNgVUwm20lvLREUuS360EGF8e9UTtXmccsSSlJcV8jpmiv8XH2zbS0FGT+i5mRRUTiHQyzu9gbo2/jWtVZC43IUPcIL15vUFA9ti02oQKBS+mq8YoH4O6LGCGwMMLbV4eHp6/ZRKnnpUu8FXiL7L9cRde/nBX9dbhphxx274g+sL/0emotVVjQstrZvXe9XEx7U8H22BMINT/PRDULnT41MehN6jtO05FU5N72mDLTY03dLVFQHdwV6J8uI1gNPQYXdLau3ZxjpH/yMG/YDk6VUrfTcvZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ln1gmJAeOr68tqxOplSLgVqBDUhCYE1OfNqsZfdW6hA=;
+ b=c61Gc5V00lIaBwSQ/rLLOb31ehjeK79wPt6WRwGBpO/4B9mSk2VEMk51wqujcSb/NMCpHJjYxkm9busx9DF5UVoJB6xnIOGp4cT6HFnwhGPhwqaWKYhJ0PSE38Zdv5xNlSxDfDASeaCBGs+cz3GPjKt8NGRdjsXsyMc1+morztMKOKhV0raVOuB0mxIBXojxYcOPoUoY+yxrRgU5ZdcaFIQ+ohfX2rZv7Ty816CMps1O7VRTVHJF6UdSOYomTHzfJlv23MRirzLAQkMe1fucM+ibeL6GM27cirus/eZBcF9FUc0kVpkAKIeDTiSAnWy6XQ3ffubluKKVURMS5mDJig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ln1gmJAeOr68tqxOplSLgVqBDUhCYE1OfNqsZfdW6hA=;
+ b=vNv5DAQFX3xWYlzlKpDscJCg2s3OyGrzdq4QoQs1Ms08H2LVmqjKhQwLP67Kg856TPlyhzYrW6iIxDRobM5Vn+21VZGiAx7qbRYDtNG1Y9xXCC+F4tlsBzJULqCNhfpNJfxOg1z/Uit+Z5tb7HtRPocAUdwLS2uau5GTmEyY9yBj0i3zGXqSzTSds2llBOo9P59mHE9SHiARo0MnjjU39NGsAifbrBaVZ1kgSUUGiejjU71PViFZuJHX34NTfvqVB4McUWIphsZgNK3xuoeZcPHZY89W/F/lER/rJ9iEyjiUsZKJtNMuFyoqvhQ8uPH8600MktUeHBqFIv+gi57IgQ==
+Received: from MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:128::9)
+ by SY4P282MB2234.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:f8::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6609.28; Thu, 20 Jul 2023 11:44:58 +0000
+Received: from MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::f263:312b:1b6c:512b]) by MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::f263:312b:1b6c:512b%5]) with mapi id 15.20.6609.026; Thu, 20 Jul 2023
+ 11:44:58 +0000
+From: Dong Zhihong <donmor3000@hotmail.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: ardb@kernel.org,
+	tangyouling@loongson.cn,
+	zhoubinbin@loongson.cn,
+	yangtiezhu@loongson.cn,
+	donmor3000@hotmail.com,
+	tglx@linutronix.de,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6] LoongArch: Fix CONFIG_CMDLINE_EXTEND and CONFIG_CMDLINE_BOOTLOADER on non-FDT systems
+Date: Thu, 20 Jul 2023 19:43:10 +0800
+Message-ID:
+ <MEYP282MB2597CE76DFC2B421C1A4594CD93EA@MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [RSe+R+d4Oncy5BV0uq955c0xbVFqkgrvwCJqlvR970RDa0gsun33SaFbeXTDZdQZ]
+X-ClientProxiedBy: SG2PR02CA0015.apcprd02.prod.outlook.com
+ (2603:1096:3:17::27) To MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:220:128::9)
+X-Microsoft-Original-Message-ID:
+ <20230720114309.4022651-1-donmor3000@hotmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MEYP282MB2597:EE_|SY4P282MB2234:EE_
+X-MS-Office365-Filtering-Correlation-Id: 881b366a-78d6-49a0-a90c-08db8916be8f
+X-MS-Exchange-SLBlob-MailProps:
+	Cq7lScuPrnoM1/t0WSu07T06taLkTSGCyjvTllJfY5bVLCXkWx11mBxa1FgaM5y195hoG4w6YPHHhaHnYvyEVhHTRhtR8VBe5SHrU/NhuQyXqzwa9f/bqWuJ+vkpT3KrcH07TtvJ9W64dryaT2B+waz4bn0+rhSA/Roxrq4UNnBZsV10m07zlVi1WFDv+Yc5pgAK9iSgZAywJ3Ug5bJnRXwiQN6Wd7bgIf/+euA/xijQS5W4xI2YnbUMZkimgVIea7huy7RbIjKDWXaM1t8xvxU10b6EFsoiEndkTWO16bXbADuKas3pFOOfShdAWbs8ATpds4vVt6fJT7w3/m4xC3KsPXQMtJoc7tnndli1UtjhlVtWynlW8JKK1vC70zH0mmOd045chP6m9oXh21Gh/XdL01hBDQ6vS8pfIn1PChCWQ2hx1bQGJ7K7ZVSnsxVjkuPfJV+kj0C6CeJTMWtVc3bwsuwhVZOs/HVzLZibOABM4Wci6VGHx/oEVf1MvsdYEyO+EJr5Q+7d0XeHKHww7OUDHwEcYlcebAZEUZ4Vldsz4liWjgvREnh3CuJhQDQ/fJU0StsZtsjFIuGYVPxk0rae4Dvb0APvZDt6QCL67l3exmkcQQlGaVxL1Bb2JGkjcHhU7sOviPM1WsQMZwOnIo4kF8T3O8QvGwN68eLxRTARz8ZchUQS2I3TIKUYA7i+u2AgLmg1jq/VUsLjthwtwfykKJh2POuzzXvFgWTxAMTrR+9C+BWCjE4VsSIkDI0NFlFFXyUnO6Q=
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	VV5mUiI+6Km6B/MgntKbEC/V3m96Yec0bNlJDaacMK5Sl07kgDIkK4L0JWC25Dj5isWZmw12HRmKGoZr0KMiAXZIJiN+K+KWL2w69TStylaXSuMrxGkv12GeGrGgLn3MY5khN3glMxGdFQL7L3f1Kgh33G4/tGujPVvoyTJHJX6i6LHCYqMcF8LhmceglSbGIwJo+chLKG5xTSpdPEVmyeJgVGRNSCtdRJr3yVMsj44vR2SQqYfsfszvkRT3AzTs5ekJ9BDg/KLG6e8c+y/yeR5DxjezwJp2DD373Ex+A0xg4TcZwmFaOXhY/e6EHxPpiXtU1DGcONRrRdPp12Vi1jji2YQ60aCbWIqOvRBJQEADfu9JWUUwq1IB0d4c7LJ7Wmiq1zCQLmcI+QlZ5Ng2fXLsePR6rYdniA/yonuxdEw6NVDUnshbMTpa2F7OvCtrS7OGa6o174PJSdvjKksn3BnBKPVKzq7mJ/O5+Zwn3JXCoyLQ/DV6kFHuLmzrdoOROCHP+V0+t8maWJe3ESrfnS9C5xjzlDHybXZ+rAs9eiCdNVyAkLm8q73aJCHWbAWqjUsRE6CKCG1FzE3CW4DXVOQmt0tNUjgDykL76lvFQKV3dnTAulTMaLaqaKG2aeeO
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SSwWkEkdnNjWT1L1uwz8Qf/phyYwqNt787VauY+ISjEB0DKv1pMEPr/MQPcV?=
+ =?us-ascii?Q?LTyfBnUwXN6tCG9G+vdQPmFuwnj3+ZMMQnKZJGbQyacQVsm2empYtooK59AC?=
+ =?us-ascii?Q?4AGDnw9yGobiEMhVhDNWVb7yJjVzyT0DtBkHcbbNoFzsQASWsn/Vwbcj3uVe?=
+ =?us-ascii?Q?o000v3+HWIGx1dGjWG0lsMyac1vToEhhF1jXR3pX6LQqrQzJv/ZyduRWQp90?=
+ =?us-ascii?Q?ymzjQSYtGPchjnJaxPdfef+58SUIGT9nY1QN7hnS75js7hscqWhMW7BZDb/S?=
+ =?us-ascii?Q?sGBIG6E3wjSHJLyQ7EA9Latuu/Nj/mqqWIA9ZoHzvetKEux0KNf3b37TCHA0?=
+ =?us-ascii?Q?cio9HOLYNR/ImoAJ9ufToVvU2rNsWkTN8IQ5vi64dTn8DvcOfFxm3izvJbX+?=
+ =?us-ascii?Q?IqGRhUIBUswGjk8JMg6tlaOXC2ZfWnCT9wAbHlJVGIjfCKVePx1nhSWS1Kk9?=
+ =?us-ascii?Q?5ZaLDJmHzccxJp0UcMh4skqihY/8WEbI+zttvCRlUoAgUzj52X69hHlN5bRi?=
+ =?us-ascii?Q?g7ixoawwY9FIxK/88EVbfVpGrNk51btCgRt1NXpkgztfBqvC02A3z987FMjo?=
+ =?us-ascii?Q?ZLvsbD0IdzkxR+xv4wqCE5y+/Dek3NoGEaG4ztRPs/uxkd9KrDIOeY6+Qk7S?=
+ =?us-ascii?Q?ATy8ajOYeXSO0OiFEtqxYDRDk7q7IyhmEx8U5Og9FNpacj84+U2er9jJa4nN?=
+ =?us-ascii?Q?Dmt572ldaG/Y/UgRt8fu/I82frIlYWKAOWzH168OLcmjYeAbVhs40L4zHr66?=
+ =?us-ascii?Q?d9mebKCdteh0ig4592wpjOA1cr1t4NNWgCXj0os9IzDLAwFHsp++CFHxpUV4?=
+ =?us-ascii?Q?8L346e62zdpkHE8BgFct3rt79VZiuK2o6CmJzGf/TH+Ff9qi4u3h7phEXDKO?=
+ =?us-ascii?Q?5FiA/DwFDMr40fIoDbh2XTfGrAz127PKinGIoMPFfjW0vqrJH+ERblKDcs3/?=
+ =?us-ascii?Q?P1/PT64gYmGpsTiexVK/pfgNQCBArN83peYzAe6JtrPqC8GzSH9AYS3+U8X6?=
+ =?us-ascii?Q?L2B0sLKTjXHELD3DSYOPmu1ZLEtugzBsULfMOM8u7JnrDwHGWueaWjYI7twK?=
+ =?us-ascii?Q?BZXOvY2MwfS9HkeLsknwuUIAin1S0DfZ+AvxdJGEjYlUKab3GRbcHR6DSXJ0?=
+ =?us-ascii?Q?wB3YKoYTd7USqyGsxzPlBvYFXxy11MfqHMQGx0TQQL6A7B7hXqXTpM6bs9Ph?=
+ =?us-ascii?Q?V0j7vYwX6TfKUL7PX0uhu1pTJggsEYYhFScmTUIyashvppxBTa/Kj32mmshK?=
+ =?us-ascii?Q?ECRMuTo+iuxrkJU/p8kA4mwRRVttdOl97VCZZTTXwzTBCHTK41qKIfxbBgA1?=
+ =?us-ascii?Q?ENo=3D?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 881b366a-78d6-49a0-a90c-08db8916be8f
+X-MS-Exchange-CrossTenant-AuthSource: MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 11:44:58.7267
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY4P282MB2234
 
-On Mon, Jun 05, 2023 at 11:09:34AM +0100, Mark Rutland wrote:
-> On Mon, Jun 05, 2023 at 12:20:40PM +0300, Mike Rapoport wrote:
-> > On Fri, Jun 02, 2023 at 10:35:09AM +0100, Mark Rutland wrote:
-> > > On Thu, Jun 01, 2023 at 02:14:56PM -0400, Kent Overstreet wrote:
-> > > > On Thu, Jun 01, 2023 at 05:12:03PM +0100, Mark Rutland wrote:
-> > > > > For a while I have wanted to give kprobes its own allocator so that it can work
-> > > > > even with CONFIG_MODULES=n, and so that it doesn't have to waste VA space in
-> > > > > the modules area.
-> > > > > 
-> > > > > Given that, I think these should have their own allocator functions that can be
-> > > > > provided independently, even if those happen to use common infrastructure.
-> > > > 
-> > > > How much memory can kprobes conceivably use? I think we also want to try
-> > > > to push back on combinatorial new allocators, if we can.
-> > > 
-> > > That depends on who's using it, and how (e.g. via BPF).
-> > > 
-> > > To be clear, I'm not necessarily asking for entirely different allocators, but
-> > > I do thinkg that we want wrappers that can at least pass distinct start+end
-> > > parameters to a common allocator, and for arm64's modules code I'd expect that
-> > > we'd keep the range falblack logic out of the common allcoator, and just call
-> > > it twice.
-> > > 
-> > > > > > Several architectures override module_alloc() because of various
-> > > > > > constraints where the executable memory can be located and this causes
-> > > > > > additional obstacles for improvements of code allocation.
-> > > > > > 
-> > > > > > This set splits code allocation from modules by introducing
-> > > > > > jit_text_alloc(), jit_data_alloc() and jit_free() APIs, replaces call
-> > > > > > sites of module_alloc() and module_memfree() with the new APIs and
-> > > > > > implements core text and related allocation in a central place.
-> > > > > > 
-> > > > > > Instead of architecture specific overrides for module_alloc(), the
-> > > > > > architectures that require non-default behaviour for text allocation must
-> > > > > > fill jit_alloc_params structure and implement jit_alloc_arch_params() that
-> > > > > > returns a pointer to that structure. If an architecture does not implement
-> > > > > > jit_alloc_arch_params(), the defaults compatible with the current
-> > > > > > modules::module_alloc() are used.
-> > > > > 
-> > > > > As above, I suspect that each of the callsites should probably be using common
-> > > > > infrastructure, but I don't think that a single jit_alloc_arch_params() makes
-> > > > > sense, since the parameters for each case may need to be distinct.
-> > > > 
-> > > > I don't see how that follows. The whole point of function parameters is
-> > > > that they may be different :)
-> > > 
-> > > What I mean is that jit_alloc_arch_params() tries to aggregate common
-> > > parameters, but they aren't actually common (e.g. the actual start+end range
-> > > for allocation).
-> > 
-> > jit_alloc_arch_params() tries to aggregate architecture constraints and
-> > requirements for allocations of executable memory and this exactly what
-> > the first 6 patches of this set do.
-> > 
-> > A while ago Thomas suggested to use a structure that parametrizes
-> > architecture constraints by the memory type used in modules [1] and Song
-> > implemented the infrastructure for it and x86 part [2].
-> > 
-> > I liked the idea of defining parameters in a single structure, but I
-> > thought that approaching the problem from the arch side rather than from
-> > modules perspective will be better starting point, hence these patches.
-> > 
-> > I don't see a fundamental reason why a single structure cannot describe
-> > what is needed for different code allocation cases, be it modules, kprobes
-> > or bpf. There is of course an assumption that the core allocations will be
-> > the same for all the users, and it seems to me that something like 
-> > 
-> > * allocate physical memory if allocator caches are empty
-> > * map it in vmalloc or modules address space
-> > * return memory from the allocator cache to the caller
-> > 
-> > will work for all usecases.
-> > 
-> > We might need separate caches for different cases on different
-> > architectures, and a way to specify what cache should be used in the
-> > allocator API, but that does not contradict a single structure for arch
-> > specific parameters, but only makes it more elaborate, e.g. something like
-> > 
-> > enum jit_type {
-> > 	JIT_MODULES_TEXT,
-> > 	JIT_MODULES_DATA,
-> > 	JIT_KPROBES,
-> > 	JIT_FTRACE,
-> > 	JIT_BPF,
-> > 	JIT_TYPE_MAX,
-> > };
-> > 
-> > struct jit_alloc_params {
-> > 	struct jit_range	ranges[JIT_TYPE_MAX];
-> > 	/* ... */
-> > };
-> > 
-> > > > Can you give more detail on what parameters you need? If the only extra
-> > > > parameter is just "does this allocation need to live close to kernel
-> > > > text", that's not that big of a deal.
-> > > 
-> > > My thinking was that we at least need the start + end for each caller. That
-> > > might be it, tbh.
-> > 
-> > Do you mean that modules will have something like
-> > 
-> > 	jit_text_alloc(size, MODULES_START, MODULES_END);
-> > 
-> > and kprobes will have
-> > 
-> > 	jit_text_alloc(size, KPROBES_START, KPROBES_END);
-> > ?
-> 
-> Yes.
-> 
-> > It sill can be achieved with a single jit_alloc_arch_params(), just by
-> > adding enum jit_type parameter to jit_text_alloc().
-> 
-> That feels backwards to me; it centralizes a bunch of information about
-> distinct users to be able to shove that into a static array, when the callsites
-> can pass that information. 
-> 
-> What's *actually* common after separating out the ranges? Is it just the
-> permissions?
+On FDT systems these command line processing are already taken care of
+by early_init_dt_scan_chosen(). Add similar handling to the non-FDT
+code path to allow these config options to work for non-FDT boxes too.
 
-Even if for some architecture the only common thing are the permissions,
-having a definition for code allocations in a single place an improvement.
-The diffstat of the patches is indeed positive (even without comments), but
-having a single structure that specifies how the code should be allocated
-would IMHO actually reduce the maintenance burden.
+Signed-off-by: Dong Zhihong <donmor3000@hotmail.com>
+---
+v5 -> v6: Update commit message (Xuerui)
+v4 -> v5: Update commit message and adjust the code logic (Huacai)
+v3 -> v4: Make CONFIG_CMDLINE appended to the end of command line (Huacai);
+	Removed unnecessary #ifdef since CONFIG_CMDLINE is always a string on
+	LoongArch
+	Reworded comments
+	Reworded the subject of commit message (Huacai)
+v2 -> v3: Reworded the commit message again to make it imperative (Ruoyao)
+v1 -> v2: Reworded the commit message so it's more imperative (Markus);
+	Added `goto out` to FDT part (Huacai)
 
-And features like caching of large pages and sub-page size allocations are
-surely will be easier to opt-in this way.
+ arch/loongarch/kernel/setup.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 78a00359bde3..49cb8e06f9e5 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -332,9 +332,25 @@ static void __init bootcmdline_init(char **cmdline_p)
+ 			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
  
-> If we want this to be able to share allocations and so on, why can't we do this
-> like a kmem_cache, and have the callsite pass a pointer to the allocator data?
-> That would make it easy for callsites to share an allocator or use a distinct
-> one.
-
-I've looked into doing this like a kmem_cache with call sites passing the
-allocator data, and this gets really hairy. For each user we need to pass
-the arch specific parameters to that user, create a cache there and only
-then the cache can be used. Since we don't have hooks to setup any of the
-users in the arch code, the initialization gets more complex than shoving
-everything into an array.
-
-I think that jit_alloc(type, size) is the best way to move forward to let
-different users choose their ranges and potentially caches. Differentiation
-by the API name will explode even now and it'll get worse if/when new users
-will show up and we can't even force users to avoid using PC-relative
-addressing because, e.g. RISC-V explicitly switched their BPF JIT to use
-that.
+ 		strlcat(boot_command_line, init_command_line, COMMAND_LINE_SIZE);
++		goto out;
+ 	}
+ #endif
  
-> Thanks,
-> Mark.
-
++	/*
++	 * Append built-in command to the retrieved one if
++	 * CONFIG_CMDLINE_EXTEND is enabled.
++	 */
++	if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
++		strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
++		strlcat(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
++	}
++
++	/*
++	 * Use built-in command line if nothing is retrieved from boot loader.
++	 */
++	if (IS_ENABLED(CONFIG_CMDLINE_BOOTLOADER) && !boot_command_line[0])
++		strscpy(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
++
+ out:
+ 	*cmdline_p = boot_command_line;
+ }
 -- 
-Sincerely yours,
-Mike.
+2.25.1
+
