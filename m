@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3B8B5246
-	for <loongarch@lists.linux.dev>; Thu, 20 Jul 2023 06:28:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE80A5CBD
+	for <loongarch@lists.linux.dev>; Thu, 20 Jul 2023 06:28:24 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxLOsD1Lhkl40HAA--.13995S3;
-	Thu, 20 Jul 2023 14:28:19 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxIvAA1LhkII0HAA--.18415S3;
+	Thu, 20 Jul 2023 14:28:16 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxvM7907hkHU81AA--.16059S18;
-	Thu, 20 Jul 2023 14:28:19 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxvM7907hkHU81AA--.16059S6;
+	Thu, 20 Jul 2023 14:28:16 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v17 16/30] LoongArch: KVM: Implement update VM id function
-Date: Thu, 20 Jul 2023 14:27:59 +0800
-Message-Id: <20230720062813.4126751-17-zhaotianrui@loongson.cn>
+Subject: [PATCH v17 04/30] LoongArch: KVM: Implement VM related functions
+Date: Thu, 20 Jul 2023 14:27:47 +0800
+Message-Id: <20230720062813.4126751-5-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
 References: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
@@ -35,93 +35,105 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxvM7907hkHU81AA--.16059S18
+X-CM-TRANSID:AQAAf8CxvM7907hkHU81AA--.16059S6
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement kvm check vmid and update vmid, the vmid should be checked before
-vcpu enter guest.
+Implement LoongArch VM operations: Init and destroy vm interface,
+allocating memory page to save the vm pgd when init vm. Implement
+vm check extension, such as getting vcpu number info, memory slots
+info, and fpu info. And implement vm status description.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vmid.c | 66 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 arch/loongarch/kvm/vmid.c
+ arch/loongarch/kvm/vm.c | 76 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 arch/loongarch/kvm/vm.c
 
-diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
 new file mode 100644
-index 000000000000..fc25ddc3b74a
+index 000000000000..bde78f063305
 --- /dev/null
-+++ b/arch/loongarch/kvm/vmid.c
-@@ -0,0 +1,66 @@
++++ b/arch/loongarch/kvm/vm.c
+@@ -0,0 +1,76 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
 +
 +#include <linux/kvm_host.h>
-+#include "trace.h"
 +
-+static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
++const struct _kvm_stats_desc kvm_vm_stats_desc[] = {
++	KVM_GENERIC_VM_STATS(),
++};
++
++const struct kvm_stats_header kvm_vm_stats_header = {
++	.name_size = KVM_STATS_NAME_SIZE,
++	.num_desc = ARRAY_SIZE(kvm_vm_stats_desc),
++	.id_offset =  sizeof(struct kvm_stats_header),
++	.desc_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE,
++	.data_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE +
++					sizeof(kvm_vm_stats_desc),
++};
++
++int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
 +{
-+	struct kvm_context *context;
-+	unsigned long vpid;
++	/* Allocate page table to map GPA -> RPA */
++	kvm->arch.pgd = kvm_pgd_alloc();
++	if (!kvm->arch.pgd)
++		return -ENOMEM;
 +
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	vpid = context->vpid_cache + 1;
-+	if (!(vpid & vpid_mask)) {
-+		/* finish round of 64 bit loop */
-+		if (unlikely(!vpid))
-+			vpid = vpid_mask + 1;
-+
-+		/* vpid 0 reserved for root */
-+		++vpid;
-+
-+		/* start new vpid cycle */
-+		kvm_flush_tlb_all();
-+	}
-+
-+	context->vpid_cache = vpid;
-+	vcpu->arch.vpid = vpid;
++	kvm_init_vmcs(kvm);
++	kvm->arch.gpa_size = BIT(cpu_vabits - 1);
++	return 0;
 +}
 +
-+void _kvm_check_vmid(struct kvm_vcpu *vcpu)
++void kvm_arch_destroy_vm(struct kvm *kvm)
 +{
-+	struct kvm_context *context;
-+	bool migrated;
-+	unsigned long ver, old, vpid;
-+	int cpu;
++	kvm_destroy_vcpus(kvm);
++	_kvm_destroy_mm(kvm);
++}
 +
-+	cpu = smp_processor_id();
-+	/*
-+	 * Are we entering guest context on a different CPU to last time?
-+	 * If so, the vCPU's guest TLB state on this CPU may be stale.
-+	 */
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	migrated = (vcpu->cpu != cpu);
++int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
++{
++	int r;
 +
-+	/*
-+	 * Check if our vpid is of an older version
-+	 *
-+	 * We also discard the stored vpid if we've executed on
-+	 * another CPU, as the guest mappings may have changed without
-+	 * hypervisor knowledge.
-+	 */
-+	ver = vcpu->arch.vpid & ~vpid_mask;
-+	old = context->vpid_cache  & ~vpid_mask;
-+	if (migrated || (ver != old)) {
-+		_kvm_update_vpid(vcpu, cpu);
-+		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
-+		vcpu->cpu = cpu;
++	switch (ext) {
++	case KVM_CAP_ONE_REG:
++	case KVM_CAP_ENABLE_CAP:
++	case KVM_CAP_READONLY_MEM:
++	case KVM_CAP_SYNC_MMU:
++	case KVM_CAP_IMMEDIATE_EXIT:
++	case KVM_CAP_IOEVENTFD:
++	case KVM_CAP_MP_STATE:
++		r = 1;
++		break;
++	case KVM_CAP_NR_VCPUS:
++		r = num_online_cpus();
++		break;
++	case KVM_CAP_MAX_VCPUS:
++		r = KVM_MAX_VCPUS;
++		break;
++	case KVM_CAP_MAX_VCPU_ID:
++		r = KVM_MAX_VCPU_IDS;
++		break;
++	case KVM_CAP_NR_MEMSLOTS:
++		r = KVM_USER_MEM_SLOTS;
++		break;
++	default:
++		r = 0;
++		break;
 +	}
 +
-+	/* Restore GSTAT(0x50).vpid */
-+	vpid = (vcpu->arch.vpid & vpid_mask)
-+		<< CSR_GSTAT_GID_SHIFT;
-+	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
++	return r;
++}
++
++int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
++{
++	return -ENOIOCTLCMD;
 +}
 -- 
 2.39.1
