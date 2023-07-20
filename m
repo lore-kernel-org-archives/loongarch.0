@@ -1,156 +1,255 @@
-Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2178.outbound.protection.outlook.com [40.92.62.178])
+Received: from mailout.easymail.ca (mailout.easymail.ca [64.68.200.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72CC174E9
-	for <loongarch@lists.linux.dev>; Thu, 20 Jul 2023 11:45:03 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D17ipNmXDSku29Iv6LWxB00DpvXxS2prySG/MCEBXXbJYp04TqZmEf4JTNgVUwm20lvLREUuS360EGF8e9UTtXmccsSSlJcV8jpmiv8XH2zbS0FGT+i5mRRUTiHQyzu9gbo2/jWtVZC43IUPcIL15vUFA9ti02oQKBS+mq8YoH4O6LGCGwMMLbV4eHp6/ZRKnnpUu8FXiL7L9cRde/nBX9dbhphxx274g+sL/0emotVVjQstrZvXe9XEx7U8H22BMINT/PRDULnT41MehN6jtO05FU5N72mDLTY03dLVFQHdwV6J8uI1gNPQYXdLau3ZxjpH/yMG/YDk6VUrfTcvZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ln1gmJAeOr68tqxOplSLgVqBDUhCYE1OfNqsZfdW6hA=;
- b=c61Gc5V00lIaBwSQ/rLLOb31ehjeK79wPt6WRwGBpO/4B9mSk2VEMk51wqujcSb/NMCpHJjYxkm9busx9DF5UVoJB6xnIOGp4cT6HFnwhGPhwqaWKYhJ0PSE38Zdv5xNlSxDfDASeaCBGs+cz3GPjKt8NGRdjsXsyMc1+morztMKOKhV0raVOuB0mxIBXojxYcOPoUoY+yxrRgU5ZdcaFIQ+ohfX2rZv7Ty816CMps1O7VRTVHJF6UdSOYomTHzfJlv23MRirzLAQkMe1fucM+ibeL6GM27cirus/eZBcF9FUc0kVpkAKIeDTiSAnWy6XQ3ffubluKKVURMS5mDJig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ln1gmJAeOr68tqxOplSLgVqBDUhCYE1OfNqsZfdW6hA=;
- b=vNv5DAQFX3xWYlzlKpDscJCg2s3OyGrzdq4QoQs1Ms08H2LVmqjKhQwLP67Kg856TPlyhzYrW6iIxDRobM5Vn+21VZGiAx7qbRYDtNG1Y9xXCC+F4tlsBzJULqCNhfpNJfxOg1z/Uit+Z5tb7HtRPocAUdwLS2uau5GTmEyY9yBj0i3zGXqSzTSds2llBOo9P59mHE9SHiARo0MnjjU39NGsAifbrBaVZ1kgSUUGiejjU71PViFZuJHX34NTfvqVB4McUWIphsZgNK3xuoeZcPHZY89W/F/lER/rJ9iEyjiUsZKJtNMuFyoqvhQ8uPH8600MktUeHBqFIv+gi57IgQ==
-Received: from MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:128::9)
- by SY4P282MB2234.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:f8::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6609.28; Thu, 20 Jul 2023 11:44:58 +0000
-Received: from MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
- ([fe80::f263:312b:1b6c:512b]) by MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
- ([fe80::f263:312b:1b6c:512b%5]) with mapi id 15.20.6609.026; Thu, 20 Jul 2023
- 11:44:58 +0000
-From: Dong Zhihong <donmor3000@hotmail.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: ardb@kernel.org,
-	tangyouling@loongson.cn,
-	zhoubinbin@loongson.cn,
-	yangtiezhu@loongson.cn,
-	donmor3000@hotmail.com,
-	tglx@linutronix.de,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6] LoongArch: Fix CONFIG_CMDLINE_EXTEND and CONFIG_CMDLINE_BOOTLOADER on non-FDT systems
-Date: Thu, 20 Jul 2023 19:43:10 +0800
-Message-ID:
- <MEYP282MB2597CE76DFC2B421C1A4594CD93EA@MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [RSe+R+d4Oncy5BV0uq955c0xbVFqkgrvwCJqlvR970RDa0gsun33SaFbeXTDZdQZ]
-X-ClientProxiedBy: SG2PR02CA0015.apcprd02.prod.outlook.com
- (2603:1096:3:17::27) To MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:128::9)
-X-Microsoft-Original-Message-ID:
- <20230720114309.4022651-1-donmor3000@hotmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2572FA2E
+	for <loongarch@lists.linux.dev>; Thu, 20 Jul 2023 18:49:46 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout.easymail.ca (Postfix) with ESMTP id C37EA61FBF;
+	Thu, 20 Jul 2023 18:49:45 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at emo09-pco.easydns.vpn
+Received: from mailout.easymail.ca ([127.0.0.1])
+	by localhost (emo09-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id EgNO-Y6m_DM9; Thu, 20 Jul 2023 18:49:45 +0000 (UTC)
+Received: from mail.gonehiking.org (unknown [38.15.45.1])
+	by mailout.easymail.ca (Postfix) with ESMTPA id 03D9261DE6;
+	Thu, 20 Jul 2023 18:49:45 +0000 (UTC)
+Received: from [192.168.1.4] (internal [192.168.1.4])
+	by mail.gonehiking.org (Postfix) with ESMTP id 960493EED6;
+	Thu, 20 Jul 2023 12:49:43 -0600 (MDT)
+Message-ID: <392b33e3-18b2-73b6-f804-7a7ec1de0b99@gonehiking.org>
+Date: Thu, 20 Jul 2023 12:49:43 -0600
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MEYP282MB2597:EE_|SY4P282MB2234:EE_
-X-MS-Office365-Filtering-Correlation-Id: 881b366a-78d6-49a0-a90c-08db8916be8f
-X-MS-Exchange-SLBlob-MailProps:
-	Cq7lScuPrnoM1/t0WSu07T06taLkTSGCyjvTllJfY5bVLCXkWx11mBxa1FgaM5y195hoG4w6YPHHhaHnYvyEVhHTRhtR8VBe5SHrU/NhuQyXqzwa9f/bqWuJ+vkpT3KrcH07TtvJ9W64dryaT2B+waz4bn0+rhSA/Roxrq4UNnBZsV10m07zlVi1WFDv+Yc5pgAK9iSgZAywJ3Ug5bJnRXwiQN6Wd7bgIf/+euA/xijQS5W4xI2YnbUMZkimgVIea7huy7RbIjKDWXaM1t8xvxU10b6EFsoiEndkTWO16bXbADuKas3pFOOfShdAWbs8ATpds4vVt6fJT7w3/m4xC3KsPXQMtJoc7tnndli1UtjhlVtWynlW8JKK1vC70zH0mmOd045chP6m9oXh21Gh/XdL01hBDQ6vS8pfIn1PChCWQ2hx1bQGJ7K7ZVSnsxVjkuPfJV+kj0C6CeJTMWtVc3bwsuwhVZOs/HVzLZibOABM4Wci6VGHx/oEVf1MvsdYEyO+EJr5Q+7d0XeHKHww7OUDHwEcYlcebAZEUZ4Vldsz4liWjgvREnh3CuJhQDQ/fJU0StsZtsjFIuGYVPxk0rae4Dvb0APvZDt6QCL67l3exmkcQQlGaVxL1Bb2JGkjcHhU7sOviPM1WsQMZwOnIo4kF8T3O8QvGwN68eLxRTARz8ZchUQS2I3TIKUYA7i+u2AgLmg1jq/VUsLjthwtwfykKJh2POuzzXvFgWTxAMTrR+9C+BWCjE4VsSIkDI0NFlFFXyUnO6Q=
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	VV5mUiI+6Km6B/MgntKbEC/V3m96Yec0bNlJDaacMK5Sl07kgDIkK4L0JWC25Dj5isWZmw12HRmKGoZr0KMiAXZIJiN+K+KWL2w69TStylaXSuMrxGkv12GeGrGgLn3MY5khN3glMxGdFQL7L3f1Kgh33G4/tGujPVvoyTJHJX6i6LHCYqMcF8LhmceglSbGIwJo+chLKG5xTSpdPEVmyeJgVGRNSCtdRJr3yVMsj44vR2SQqYfsfszvkRT3AzTs5ekJ9BDg/KLG6e8c+y/yeR5DxjezwJp2DD373Ex+A0xg4TcZwmFaOXhY/e6EHxPpiXtU1DGcONRrRdPp12Vi1jji2YQ60aCbWIqOvRBJQEADfu9JWUUwq1IB0d4c7LJ7Wmiq1zCQLmcI+QlZ5Ng2fXLsePR6rYdniA/yonuxdEw6NVDUnshbMTpa2F7OvCtrS7OGa6o174PJSdvjKksn3BnBKPVKzq7mJ/O5+Zwn3JXCoyLQ/DV6kFHuLmzrdoOROCHP+V0+t8maWJe3ESrfnS9C5xjzlDHybXZ+rAs9eiCdNVyAkLm8q73aJCHWbAWqjUsRE6CKCG1FzE3CW4DXVOQmt0tNUjgDykL76lvFQKV3dnTAulTMaLaqaKG2aeeO
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SSwWkEkdnNjWT1L1uwz8Qf/phyYwqNt787VauY+ISjEB0DKv1pMEPr/MQPcV?=
- =?us-ascii?Q?LTyfBnUwXN6tCG9G+vdQPmFuwnj3+ZMMQnKZJGbQyacQVsm2empYtooK59AC?=
- =?us-ascii?Q?4AGDnw9yGobiEMhVhDNWVb7yJjVzyT0DtBkHcbbNoFzsQASWsn/Vwbcj3uVe?=
- =?us-ascii?Q?o000v3+HWIGx1dGjWG0lsMyac1vToEhhF1jXR3pX6LQqrQzJv/ZyduRWQp90?=
- =?us-ascii?Q?ymzjQSYtGPchjnJaxPdfef+58SUIGT9nY1QN7hnS75js7hscqWhMW7BZDb/S?=
- =?us-ascii?Q?sGBIG6E3wjSHJLyQ7EA9Latuu/Nj/mqqWIA9ZoHzvetKEux0KNf3b37TCHA0?=
- =?us-ascii?Q?cio9HOLYNR/ImoAJ9ufToVvU2rNsWkTN8IQ5vi64dTn8DvcOfFxm3izvJbX+?=
- =?us-ascii?Q?IqGRhUIBUswGjk8JMg6tlaOXC2ZfWnCT9wAbHlJVGIjfCKVePx1nhSWS1Kk9?=
- =?us-ascii?Q?5ZaLDJmHzccxJp0UcMh4skqihY/8WEbI+zttvCRlUoAgUzj52X69hHlN5bRi?=
- =?us-ascii?Q?g7ixoawwY9FIxK/88EVbfVpGrNk51btCgRt1NXpkgztfBqvC02A3z987FMjo?=
- =?us-ascii?Q?ZLvsbD0IdzkxR+xv4wqCE5y+/Dek3NoGEaG4ztRPs/uxkd9KrDIOeY6+Qk7S?=
- =?us-ascii?Q?ATy8ajOYeXSO0OiFEtqxYDRDk7q7IyhmEx8U5Og9FNpacj84+U2er9jJa4nN?=
- =?us-ascii?Q?Dmt572ldaG/Y/UgRt8fu/I82frIlYWKAOWzH168OLcmjYeAbVhs40L4zHr66?=
- =?us-ascii?Q?d9mebKCdteh0ig4592wpjOA1cr1t4NNWgCXj0os9IzDLAwFHsp++CFHxpUV4?=
- =?us-ascii?Q?8L346e62zdpkHE8BgFct3rt79VZiuK2o6CmJzGf/TH+Ff9qi4u3h7phEXDKO?=
- =?us-ascii?Q?5FiA/DwFDMr40fIoDbh2XTfGrAz127PKinGIoMPFfjW0vqrJH+ERblKDcs3/?=
- =?us-ascii?Q?P1/PT64gYmGpsTiexVK/pfgNQCBArN83peYzAe6JtrPqC8GzSH9AYS3+U8X6?=
- =?us-ascii?Q?L2B0sLKTjXHELD3DSYOPmu1ZLEtugzBsULfMOM8u7JnrDwHGWueaWjYI7twK?=
- =?us-ascii?Q?BZXOvY2MwfS9HkeLsknwuUIAin1S0DfZ+AvxdJGEjYlUKab3GRbcHR6DSXJ0?=
- =?us-ascii?Q?wB3YKoYTd7USqyGsxzPlBvYFXxy11MfqHMQGx0TQQL6A7B7hXqXTpM6bs9Ph?=
- =?us-ascii?Q?V0j7vYwX6TfKUL7PX0uhu1pTJggsEYYhFScmTUIyashvppxBTa/Kj32mmshK?=
- =?us-ascii?Q?ECRMuTo+iuxrkJU/p8kA4mwRRVttdOl97VCZZTTXwzTBCHTK41qKIfxbBgA1?=
- =?us-ascii?Q?ENo=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 881b366a-78d6-49a0-a90c-08db8916be8f
-X-MS-Exchange-CrossTenant-AuthSource: MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 11:44:58.7267
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY4P282MB2234
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Reply-To: khalid@gonehiking.org
+Subject: Re: [PATCH v2 2/9] vgacon: rework screen_info #ifdef checks
+Content-Language: en-US
+To: Arnd Bergmann <arnd@kernel.org>, linux-fbdev@vger.kernel.org,
+ Thomas Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>,
+ Javier Martinez Canillas <javierm@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Daniel Vetter <daniel@ffwll.ch>, Dave Hansen <dave.hansen@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Deepak Rawat <drawat.floss@gmail.com>,
+ Dexuan Cui <decui@microsoft.com>, Dinh Nguyen <dinguyen@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guo Ren
+ <guoren@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Linus Walleij <linus.walleij@linaro.org>, Matt Turner <mattst88@gmail.com>,
+ Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, WANG Xuerui <kernel@xen0n.name>,
+ Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, x86@kernel.org,
+ linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20230719123944.3438363-1-arnd@kernel.org>
+ <20230719123944.3438363-3-arnd@kernel.org>
+From: Khalid Aziz <khalid@gonehiking.org>
+In-Reply-To: <20230719123944.3438363-3-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On FDT systems these command line processing are already taken care of
-by early_init_dt_scan_chosen(). Add similar handling to the non-FDT
-code path to allow these config options to work for non-FDT boxes too.
+On 7/19/23 6:39 AM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> On non-x86 architectures, the screen_info variable is generally only
+> used for the VGA console where supported, and in some cases the EFI
+> framebuffer or vga16fb.
+> 
+> Now that we have a definite list of which architectures actually use it
+> for what, use consistent #ifdef checks so the global variable is only
+> defined when it is actually used on those architectures.
+> 
+> Loongarch and riscv have no support for vgacon or vga16fb, but
+> they support EFI firmware, so only that needs to be checked, and the
+> initialization can be removed because that is handled by EFI.
+> IA64 has both vgacon and EFI, though EFI apparently never uses
+> a framebuffer here.
+> 
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Dong Zhihong <donmor3000@hotmail.com>
----
-v5 -> v6: Update commit message (Xuerui)
-v4 -> v5: Update commit message and adjust the code logic (Huacai)
-v3 -> v4: Make CONFIG_CMDLINE appended to the end of command line (Huacai);
-	Removed unnecessary #ifdef since CONFIG_CMDLINE is always a string on
-	LoongArch
-	Reworded comments
-	Reworded the subject of commit message (Huacai)
-v2 -> v3: Reworded the commit message again to make it imperative (Ruoyao)
-v1 -> v2: Reworded the commit message so it's more imperative (Markus);
-	Added `goto out` to FDT part (Huacai)
 
- arch/loongarch/kernel/setup.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Reviewed-by: Khalid Aziz <khalid@gonehiking.org>
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 78a00359bde3..49cb8e06f9e5 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -332,9 +332,25 @@ static void __init bootcmdline_init(char **cmdline_p)
- 			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
- 
- 		strlcat(boot_command_line, init_command_line, COMMAND_LINE_SIZE);
-+		goto out;
- 	}
- #endif
- 
-+	/*
-+	 * Append built-in command to the retrieved one if
-+	 * CONFIG_CMDLINE_EXTEND is enabled.
-+	 */
-+	if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
-+		strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
-+		strlcat(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-+	}
-+
-+	/*
-+	 * Use built-in command line if nothing is retrieved from boot loader.
-+	 */
-+	if (IS_ENABLED(CONFIG_CMDLINE_BOOTLOADER) && !boot_command_line[0])
-+		strscpy(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-+
- out:
- 	*cmdline_p = boot_command_line;
- }
--- 
-2.25.1
+> ---
+> v2 changes:
+>   - split out mips/jazz change
+>   - improve ia64 #ifdef changes
+> ---
+>   arch/alpha/kernel/setup.c      |  2 ++
+>   arch/alpha/kernel/sys_sio.c    |  2 ++
+>   arch/ia64/kernel/setup.c       |  6 ++++++
+>   arch/loongarch/kernel/setup.c  |  2 ++
+>   arch/mips/kernel/setup.c       |  2 +-
+>   arch/mips/sibyte/swarm/setup.c |  2 +-
+>   arch/mips/sni/setup.c          |  2 +-
+>   arch/riscv/kernel/setup.c      | 11 ++---------
+>   8 files changed, 17 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
+> index b650ff1cb022e..b4d2297765c02 100644
+> --- a/arch/alpha/kernel/setup.c
+> +++ b/arch/alpha/kernel/setup.c
+> @@ -131,6 +131,7 @@ static void determine_cpu_caches (unsigned int);
+>   
+>   static char __initdata command_line[COMMAND_LINE_SIZE];
+>   
+> +#ifdef CONFIG_VGA_CONSOLE
+>   /*
+>    * The format of "screen_info" is strange, and due to early
+>    * i386-setup code. This is just enough to make the console
+> @@ -147,6 +148,7 @@ struct screen_info screen_info = {
+>   };
+>   
+>   EXPORT_SYMBOL(screen_info);
+> +#endif
+>   
+>   /*
+>    * The direct map I/O window, if any.  This should be the same
+> diff --git a/arch/alpha/kernel/sys_sio.c b/arch/alpha/kernel/sys_sio.c
+> index 7c420d8dac53d..7de8a5d2d2066 100644
+> --- a/arch/alpha/kernel/sys_sio.c
+> +++ b/arch/alpha/kernel/sys_sio.c
+> @@ -57,11 +57,13 @@ sio_init_irq(void)
+>   static inline void __init
+>   alphabook1_init_arch(void)
+>   {
+> +#ifdef CONFIG_VGA_CONSOLE
+>   	/* The AlphaBook1 has LCD video fixed at 800x600,
+>   	   37 rows and 100 cols. */
+>   	screen_info.orig_y = 37;
+>   	screen_info.orig_video_cols = 100;
+>   	screen_info.orig_video_lines = 37;
+> +#endif
+>   
+>   	lca_init_arch();
+>   }
+> diff --git a/arch/ia64/kernel/setup.c b/arch/ia64/kernel/setup.c
+> index 5a55ac82c13a4..d2c66efdde560 100644
+> --- a/arch/ia64/kernel/setup.c
+> +++ b/arch/ia64/kernel/setup.c
+> @@ -86,9 +86,13 @@ EXPORT_SYMBOL(local_per_cpu_offset);
+>   #endif
+>   unsigned long ia64_cycles_per_usec;
+>   struct ia64_boot_param *ia64_boot_param;
+> +#if defined(CONFIG_VGA_CONSOLE) || defined(CONFIG_EFI)
+>   struct screen_info screen_info;
+> +#endif
+> +#ifdef CONFIG_VGA_CONSOLE
+>   unsigned long vga_console_iobase;
+>   unsigned long vga_console_membase;
+> +#endif
+>   
+>   static struct resource data_resource = {
+>   	.name	= "Kernel data",
+> @@ -497,6 +501,7 @@ early_console_setup (char *cmdline)
+>   static void __init
+>   screen_info_setup(void)
+>   {
+> +#ifdef CONFIG_VGA_CONSOLE
+>   	unsigned int orig_x, orig_y, num_cols, num_rows, font_height;
+>   
+>   	memset(&screen_info, 0, sizeof(screen_info));
+> @@ -525,6 +530,7 @@ screen_info_setup(void)
+>   	screen_info.orig_video_mode = 3;	/* XXX fake */
+>   	screen_info.orig_video_isVGA = 1;	/* XXX fake */
+>   	screen_info.orig_video_ega_bx = 3;	/* XXX fake */
+> +#endif
+>   }
+>   
+>   static inline void
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> index 95e6b579dfdd1..77e7a3722caa6 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -57,7 +57,9 @@
+>   #define SMBIOS_CORE_PACKAGE_OFFSET	0x23
+>   #define LOONGSON_EFI_ENABLE		(1 << 3)
+>   
+> +#ifdef CONFIG_EFI
+>   struct screen_info screen_info __section(".data");
+> +#endif
+>   
+>   unsigned long fw_arg0, fw_arg1, fw_arg2;
+>   DEFINE_PER_CPU(unsigned long, kernelsp);
+> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+> index cb871eb784a7c..1aba7dc95132c 100644
+> --- a/arch/mips/kernel/setup.c
+> +++ b/arch/mips/kernel/setup.c
+> @@ -54,7 +54,7 @@ struct cpuinfo_mips cpu_data[NR_CPUS] __read_mostly;
+>   
+>   EXPORT_SYMBOL(cpu_data);
+>   
+> -#ifdef CONFIG_VT
+> +#ifdef CONFIG_VGA_CONSOLE
+>   struct screen_info screen_info;
+>   #endif
+>   
+> diff --git a/arch/mips/sibyte/swarm/setup.c b/arch/mips/sibyte/swarm/setup.c
+> index 76683993cdd3a..37df504d3ecbb 100644
+> --- a/arch/mips/sibyte/swarm/setup.c
+> +++ b/arch/mips/sibyte/swarm/setup.c
+> @@ -129,7 +129,7 @@ void __init plat_mem_setup(void)
+>   	if (m41t81_probe())
+>   		swarm_rtc_type = RTC_M41T81;
+>   
+> -#ifdef CONFIG_VT
+> +#ifdef CONFIG_VGA_CONSOLE
+>   	screen_info = (struct screen_info) {
+>   		.orig_video_page	= 52,
+>   		.orig_video_mode	= 3,
+> diff --git a/arch/mips/sni/setup.c b/arch/mips/sni/setup.c
+> index efad85c8c823b..9984cf91be7d0 100644
+> --- a/arch/mips/sni/setup.c
+> +++ b/arch/mips/sni/setup.c
+> @@ -38,7 +38,7 @@ extern void sni_machine_power_off(void);
+>   
+>   static void __init sni_display_setup(void)
+>   {
+> -#if defined(CONFIG_VT) && defined(CONFIG_VGA_CONSOLE) && defined(CONFIG_FW_ARC)
+> +#if defined(CONFIG_VGA_CONSOLE) && defined(CONFIG_FW_ARC)
+>   	struct screen_info *si = &screen_info;
+>   	DISPLAY_STATUS *di;
+>   
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index 971fe776e2f8b..a3dbe13f45fb3 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -39,15 +39,8 @@
+>   
+>   #include "head.h"
+>   
+> -#if defined(CONFIG_DUMMY_CONSOLE) || defined(CONFIG_EFI)
+> -struct screen_info screen_info __section(".data") = {
+> -	.orig_video_lines	= 30,
+> -	.orig_video_cols	= 80,
+> -	.orig_video_mode	= 0,
+> -	.orig_video_ega_bx	= 0,
+> -	.orig_video_isVGA	= 1,
+> -	.orig_video_points	= 8
+> -};
+> +#if defined(CONFIG_EFI)
+> +struct screen_info screen_info __section(".data");
+>   #endif
+>   
+>   /*
 
