@@ -1,11 +1,11 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6205311C8F
-	for <loongarch@lists.linux.dev>; Thu, 20 Jul 2023 06:28:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE20C11C8F
+	for <loongarch@lists.linux.dev>; Thu, 20 Jul 2023 06:29:04 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Bx5fAG1Lhk840HAA--.19447S3;
-	Thu, 20 Jul 2023 14:28:22 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxtPAH1LhkGY4HAA--.19754S3;
+	Thu, 20 Jul 2023 14:28:23 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxvM7907hkHU81AA--.16059S28;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxvM7907hkHU81AA--.16059S31;
 	Thu, 20 Jul 2023 14:28:22 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
@@ -21,10 +21,11 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn
-Subject: [PATCH v17 26/30] LoongArch: KVM: Implement kvm exception vector
-Date: Thu, 20 Jul 2023 14:28:09 +0800
-Message-Id: <20230720062813.4126751-27-zhaotianrui@loongson.cn>
+	zhaotianrui@loongson.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH v17 29/30] LoongArch: KVM: Supplement kvm document about LoongArch-specific part
+Date: Thu, 20 Jul 2023 14:28:12 +0800
+Message-Id: <20230720062813.4126751-30-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
 References: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
@@ -35,75 +36,203 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxvM7907hkHU81AA--.16059S28
+X-CM-TRANSID:AQAAf8CxvM7907hkHU81AA--.16059S31
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement kvm exception vector, using _kvm_fault_tables array to save
-the handle function pointer and it is used when vcpu handle exit.
+Supplement kvm document about LoongArch-specific part, such as add
+api introduction for GET/SET_ONE_REG, GET/SET_FPU, GET/SET_MP_STATE,
+etc.
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 46 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ Documentation/virt/kvm/api.rst | 70 +++++++++++++++++++++++++++++-----
+ 1 file changed, 61 insertions(+), 9 deletions(-)
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 17e94ecec140..b49b99888424 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -657,3 +657,49 @@ static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
- 	kvm_own_fpu(vcpu);
- 	return RESUME_GUEST;
- }
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index c0ddd3035462..8ad10ec17ab1 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -416,6 +416,13 @@ Reads the general purpose registers from the vcpu.
+ 	__u64 pc;
+   };
+ 
++  /* LoongArch */
++  struct kvm_regs {
++	/* out (KVM_GET_REGS) / in (KVM_SET_REGS) */
++        unsigned long gpr[32];
++        unsigned long pc;
++  };
 +
-+/*
-+ * Loongarch KVM callback handling for not implemented guest exiting
-+ */
-+static int _kvm_fault_ni(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long estat, badv;
-+	unsigned int exccode, inst;
+ 
+ 4.12 KVM_SET_REGS
+ -----------------
+@@ -506,7 +513,7 @@ translation mode.
+ ------------------
+ 
+ :Capability: basic
+-:Architectures: x86, ppc, mips, riscv
++:Architectures: x86, ppc, mips, riscv, loongarch
+ :Type: vcpu ioctl
+ :Parameters: struct kvm_interrupt (in)
+ :Returns: 0 on success, negative on failure.
+@@ -592,6 +599,14 @@ b) KVM_INTERRUPT_UNSET
+ 
+ This is an asynchronous vcpu ioctl and can be invoked from any thread.
+ 
++LOONGARCH:
++^^^^^^^^^^
 +
-+	/*
-+	 *  Fetch the instruction.
-+	 */
-+	badv = vcpu->arch.badv;
-+	estat = vcpu->arch.host_estat;
-+	exccode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-+	inst = vcpu->arch.badi;
-+	kvm_err("Exccode: %d PC=%#lx inst=0x%08x BadVaddr=%#lx estat=%#lx\n",
-+			exccode, vcpu->arch.pc, inst, badv, read_gcsr_estat());
-+	kvm_arch_vcpu_dump_regs(vcpu);
-+	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++Queues an external interrupt to be injected into the virtual CPU. A negative
++interrupt number dequeues the interrupt.
 +
-+	return RESUME_HOST;
-+}
++This is an asynchronous vcpu ioctl and can be invoked from any thread.
 +
-+static exit_handle_fn _kvm_fault_tables[EXCCODE_INT_START] = {
-+	[EXCCODE_TLBL]			= _kvm_handle_read_fault,
-+	[EXCCODE_TLBI]			= _kvm_handle_read_fault,
-+	[EXCCODE_TLBS]			= _kvm_handle_write_fault,
-+	[EXCCODE_TLBM]			= _kvm_handle_write_fault,
-+	[EXCCODE_FPDIS]			= _kvm_handle_fpu_disabled,
-+	[EXCCODE_GSPR]			= _kvm_handle_gspr,
-+};
+ 
+ 4.17 KVM_DEBUG_GUEST
+ --------------------
+@@ -737,7 +752,7 @@ signal mask.
+ ----------------
+ 
+ :Capability: basic
+-:Architectures: x86
++:Architectures: x86, loongarch
+ :Type: vcpu ioctl
+ :Parameters: struct kvm_fpu (out)
+ :Returns: 0 on success, -1 on error
+@@ -746,7 +761,7 @@ Reads the floating point state from the vcpu.
+ 
+ ::
+ 
+-  /* for KVM_GET_FPU and KVM_SET_FPU */
++  /* x86: for KVM_GET_FPU and KVM_SET_FPU */
+   struct kvm_fpu {
+ 	__u8  fpr[8][16];
+ 	__u16 fcw;
+@@ -761,12 +776,21 @@ Reads the floating point state from the vcpu.
+ 	__u32 pad2;
+   };
+ 
++  /* LoongArch: for KVM_GET_FPU and KVM_SET_FPU */
++  struct kvm_fpu {
++        __u32 fcsr;
++        __u64 fcc;
++        struct kvm_fpureg {
++                __u64 val64[4];
++        }fpr[32];
++  };
 +
-+void _kvm_init_fault(void)
-+{
-+	int i;
+ 
+ 4.23 KVM_SET_FPU
+ ----------------
+ 
+ :Capability: basic
+-:Architectures: x86
++:Architectures: x86, loongarch
+ :Type: vcpu ioctl
+ :Parameters: struct kvm_fpu (in)
+ :Returns: 0 on success, -1 on error
+@@ -775,7 +799,7 @@ Writes the floating point state to the vcpu.
+ 
+ ::
+ 
+-  /* for KVM_GET_FPU and KVM_SET_FPU */
++  /* x86: for KVM_GET_FPU and KVM_SET_FPU */
+   struct kvm_fpu {
+ 	__u8  fpr[8][16];
+ 	__u16 fcw;
+@@ -790,6 +814,15 @@ Writes the floating point state to the vcpu.
+ 	__u32 pad2;
+   };
+ 
++  /* LoongArch: for KVM_GET_FPU and KVM_SET_FPU */
++  struct kvm_fpu {
++        __u32 fcsr;
++        __u64 fcc;
++        struct kvm_fpureg {
++                __u64 val64[4];
++        }fpr[32];
++  };
 +
-+	for (i = 0; i < EXCCODE_INT_START; i++)
-+		if (!_kvm_fault_tables[i])
-+			_kvm_fault_tables[i] = _kvm_fault_ni;
-+}
+ 
+ 4.24 KVM_CREATE_IRQCHIP
+ -----------------------
+@@ -1387,7 +1420,7 @@ documentation when it pops into existence).
+ -------------------
+ 
+ :Capability: KVM_CAP_ENABLE_CAP
+-:Architectures: mips, ppc, s390, x86
++:Architectures: mips, ppc, s390, x86, loongarch
+ :Type: vcpu ioctl
+ :Parameters: struct kvm_enable_cap (in)
+ :Returns: 0 on success; -1 on error
+@@ -1442,7 +1475,7 @@ for vm-wide capabilities.
+ ---------------------
+ 
+ :Capability: KVM_CAP_MP_STATE
+-:Architectures: x86, s390, arm64, riscv
++:Architectures: x86, s390, arm64, riscv, loongarch
+ :Type: vcpu ioctl
+ :Parameters: struct kvm_mp_state (out)
+ :Returns: 0 on success; -1 on error
+@@ -1460,7 +1493,7 @@ Possible values are:
+ 
+    ==========================    ===============================================
+    KVM_MP_STATE_RUNNABLE         the vcpu is currently running
+-                                 [x86,arm64,riscv]
++                                 [x86,arm64,riscv,loongarch]
+    KVM_MP_STATE_UNINITIALIZED    the vcpu is an application processor (AP)
+                                  which has not yet received an INIT signal [x86]
+    KVM_MP_STATE_INIT_RECEIVED    the vcpu has received an INIT signal, and is
+@@ -1516,11 +1549,14 @@ For riscv:
+ The only states that are valid are KVM_MP_STATE_STOPPED and
+ KVM_MP_STATE_RUNNABLE which reflect if the vcpu is paused or not.
+ 
++On LoongArch, only the KVM_MP_STATE_RUNNABLE state is used to reflect
++whether the vcpu is runnable.
 +
-+int _kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
-+{
-+	return _kvm_fault_tables[fault](vcpu);
-+}
+ 4.39 KVM_SET_MP_STATE
+ ---------------------
+ 
+ :Capability: KVM_CAP_MP_STATE
+-:Architectures: x86, s390, arm64, riscv
++:Architectures: x86, s390, arm64, riscv, loongarch
+ :Type: vcpu ioctl
+ :Parameters: struct kvm_mp_state (in)
+ :Returns: 0 on success; -1 on error
+@@ -1538,6 +1574,9 @@ For arm64/riscv:
+ The only states that are valid are KVM_MP_STATE_STOPPED and
+ KVM_MP_STATE_RUNNABLE which reflect if the vcpu should be paused or not.
+ 
++On LoongArch, only the KVM_MP_STATE_RUNNABLE state is used to reflect
++whether the vcpu is runnable.
++
+ 4.40 KVM_SET_IDENTITY_MAP_ADDR
+ ------------------------------
+ 
+@@ -2839,6 +2878,19 @@ Following are the RISC-V D-extension registers:
+   0x8020 0000 0600 0020 fcsr      Floating point control and status register
+ ======================= ========= =============================================
+ 
++LoongArch registers are mapped using the lower 32 bits. The upper 16 bits of
++that is the register group type.
++
++LoongArch csr registers are used to control guest cpu or get status of guest
++cpu, and they have the following id bit patterns::
++
++  0x9030 0000 0001 00 <reg:5> <sel:3>   (64-bit)
++
++LoongArch KVM control registers are used to implement some new defined functions
++such as set vcpu counter or reset vcpu, and they have the following id bit patterns::
++
++  0x9030 0000 0002 <reg:16>
++
+ 
+ 4.69 KVM_GET_ONE_REG
+ --------------------
 -- 
 2.39.1
 
