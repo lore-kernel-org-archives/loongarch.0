@@ -1,393 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F3C7F
-	for <loongarch@lists.linux.dev>; Fri, 21 Jul 2023 03:19:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B9EC433CA
-	for <loongarch@lists.linux.dev>; Fri, 21 Jul 2023 03:19:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689909564;
-	bh=V/OXNG6zPguF5qEXosea/5A6BJp3v4nag/2pRCLc2+I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rJMBGazvmlP0TdSDaKPYbCDFevCHREuL6Y3GIPYynjYg8ApPxaJxgVUUusYw5ww3k
-	 YfEkygf8jbyB7sKSb+LUcjf0lVys3HWMUQkQXvJhOAuLDes7sUAXo+fQBX7EmXiyNm
-	 jcZkwCui1kDcm2H8XwuOjx5+LqrYZ4Dwk+OcVeBliVtt8stEoicyR69v3glmBA4Uz1
-	 q/R3/ayODCAUGF+RzdL9TDkg5sTqc8n6+7bItUYFXeNenIXcCst5pPohmx0GkT3OTN
-	 LKqI4DpYyjy/WfdZWU40GTKzlRKrOm8CdXWXDsCiKOsuGTeUkWbHSeV4eZj2OoDI60
-	 9ZmfFkk4ypwZg==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5216569f9e3so2059001a12.0
-        for <loongarch@lists.linux.dev>; Thu, 20 Jul 2023 20:19:24 -0700 (PDT)
-X-Gm-Message-State: ABy/qLYOwbuRQYogsmS8k1CyyBiRaxyFXVvkIEYXptZuC60mu63H515M
-	iIlYk6USZi1FdI8fgGQS/2WHPabyU3krjsCobJQ=
-X-Google-Smtp-Source: APBJJlHtcQArfaoivwJcVMJUjBCPE2XGcT7dnhNaBhtR09ldTNaYe3BWrdF9AiL0C8O3ki6SeK6xXf45KZRMwmzqOcM=
-X-Received: by 2002:aa7:dcc7:0:b0:515:1e50:5498 with SMTP id
- w7-20020aa7dcc7000000b005151e505498mr505713edu.15.1689909562263; Thu, 20 Jul
- 2023 20:19:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039C17F
+	for <loongarch@lists.linux.dev>; Fri, 21 Jul 2023 03:31:22 +0000 (UTC)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2b6fdaf6eefso22463041fa.0
+        for <loongarch@lists.linux.dev>; Thu, 20 Jul 2023 20:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689910281; x=1690515081;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XbOON96upa6k53R9l08Y+2UTTKiBbgr6Ap/sJhxCabE=;
+        b=SWUTt4VJV+ShgNIPyX+c4nnJaITbU1PRgbtQp66ortlICeR0M5oQz/Xd7GCGwZsZah
+         syfBSjvf8Pg/qWq846DspxIQRMVympJP+LEXNtaWu+oaRgjCL4C2gAT2XWJoz6TZuR6M
+         z8/m4Mfea274qp8PH1V7k1VvAmY92bl5+1hVk5sYWK+QUJXtkiLUQJASQ5pe8slfSlwL
+         D12PTGYOZZyPml8TUcYL1Nhf1+AlE2XkzwUSY/RFAIyxWGbnXiUYcYD31lx8wYxT5Jo0
+         GS/0tt1Bg2RwRnhGPZInJZk8Ui4sbe3EYjscauaeuYITkgMynIkuVcXhH0Bslje43zlE
+         4p1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689910281; x=1690515081;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XbOON96upa6k53R9l08Y+2UTTKiBbgr6Ap/sJhxCabE=;
+        b=i4NbvgGEgpyiYZwednLXUT6ReoiLq6aD6ZZetS7tvtLZbU0DoQCN4tLHE0MOWWjcAq
+         0TPdyYMiOmMFpLeo9a5JoHYOVMNtmwFtW7Zms/400kiy8dDmWiGwewlj63bjV58jKoq2
+         l6vTXXHYRzQHtpzbZyQGwvjtoSW7ZqRtdnqHoIrDAfkBcWtWKjsrfyZnfOEaydI10sVj
+         kBjEO0EZw0zrcqwPC0oQMNE9Oyid6vBSbzJJ6A4hRnIKYti6OMluCxtHexHGWWIdto4P
+         /ytxGyeWunRhizCwlqANdXfgGquXFTuqXaaiQtYPZ5sDK4CnHN4gBmgg+/G4Xxu92ApW
+         K2dQ==
+X-Gm-Message-State: ABy/qLbkhagfxZe2Gs6iPQ1gXNZbzSd61PJX3o2uXcpv6jggKsGeoFIt
+	M2GxVhsKC6bf7V8XsqbV1KwSnkKXS4pzkoZKJuk=
+X-Google-Smtp-Source: APBJJlFdN6vOP4o9SsarreD7XEo5cbC8/gcapL/yEfoErw7pb580B0aAKYuToxCr/XqiAAwx1KCyZFjvxdUr6Oj9pyk=
+X-Received: by 2002:a2e:9dc4:0:b0:2b6:cca1:975f with SMTP id
+ x4-20020a2e9dc4000000b002b6cca1975fmr555990ljj.13.1689910280373; Thu, 20 Jul
+ 2023 20:31:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230719082732.2189747-1-lienze@kylinos.cn> <20230719082732.2189747-5-lienze@kylinos.cn>
- <CAAhV-H71sv+VeLfNzuiqitYcuB4rHnho=dRYQftwo1__3bLZSQ@mail.gmail.com> <87lefaez31.fsf@kylinos.cn>
-In-Reply-To: <87lefaez31.fsf@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 21 Jul 2023 11:19:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6FoC1v9f9Vkq9rzk=0j88RczLgiYTiBUBNDwx3B=3tYA@mail.gmail.com>
-Message-ID: <CAAhV-H6FoC1v9f9Vkq9rzk=0j88RczLgiYTiBUBNDwx3B=3tYA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] LoongArch: Add KFENCE support
-To: Enze Li <lienze@kylinos.cn>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, glider@google.com, 
-	elver@google.com, akpm@linux-foundation.org, kasan-dev@googlegroups.com, 
-	linux-mm@kvack.org, zhangqing@loongson.cn, yangtiezhu@loongson.cn, 
-	dvyukov@google.com
+References: <cover.1689215889.git.chenfeiyang@loongson.cn> <be1874e517f4f4cc50906f18689a0add3594c2e0.1689215889.git.chenfeiyang@loongson.cn>
+ <9e0b3466-10e1-4267-ab9b-d9f8149b6b6b@lunn.ch> <CACWXhKkX-syR01opOky=t-b8C3nhV5f_WNfCQ-kOE+4o0xh4tA@mail.gmail.com>
+ <3cff46b0-5621-4881-8e70-362bb7a70ed1@lunn.ch> <CACWXhKk23muXROj6OrmeFna88ViJHA_7QpQZoWiFgzEPb4pLWQ@mail.gmail.com>
+ <9568c4ad-e10f-4b76-8766-ec621f788c40@lunn.ch>
+In-Reply-To: <9568c4ad-e10f-4b76-8766-ec621f788c40@lunn.ch>
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date: Fri, 21 Jul 2023 11:31:08 +0800
+Message-ID: <CACWXhKkoJHT8HNb-h_1PJTT1rE-TQxByd98qS0Zka5yg2_WsXw@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/10] net: phy: Add driver for Loongson PHY
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>, hkallweit1@gmail.com, peppe.cavallaro@st.com, 
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com, chenhuacai@loongson.cn, 
+	linux@armlinux.org.uk, dongbiao@loongson.cn, 
+	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org, 
+	loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Enze,
+On Mon, Jul 17, 2023 at 8:22=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > > > > > +#define PHY_ID_LS7A2000              0x00061ce0
+> > > > >
+> > > > > What is Loongson OUI?
+> > > > >
+> > > >
+> > > > Currently, we do not have an OUI for Loongson, but we are in the
+> > > > process of applying for one.
+> > >
+> > > Is the value 0x00061ce0 baked into the silicon? Or can it be changed
+> > > once you have an OUI?
+> > >
+> >
+> > Hi, Andrew,
+> >
+> > The value is baked into the silicon.
+>
+> O.K. Thanks. Do you have an idea how long it will take to get an OUI?
+>
+> Does the PCI ID uniquely identify the MAC+PHY combination?
+>
 
-On Fri, Jul 21, 2023 at 11:14=E2=80=AFAM Enze Li <lienze@kylinos.cn> wrote:
->
-> On Wed, Jul 19 2023 at 11:27:50 PM +0800, Huacai Chen wrote:
->
-> > Hi, Enze,
-> >
-> > On Wed, Jul 19, 2023 at 4:34=E2=80=AFPM Enze Li <lienze@kylinos.cn> wro=
-te:
-> >>
-> >> The LoongArch architecture is quite different from other architectures=
-.
-> >> When the allocating of KFENCE itself is done, it is mapped to the dire=
-ct
-> >> mapping configuration window [1] by default on LoongArch.  It means th=
-at
-> >> it is not possible to use the page table mapped mode which required by
-> >> the KFENCE system and therefore it should be remapped to the appropria=
-te
-> >> region.
-> >>
-> >> This patch adds architecture specific implementation details for KFENC=
-E.
-> >> In particular, this implements the required interface in <asm/kfence.h=
->.
-> >>
-> >> Tested this patch by using the testcases and all passed.
-> >>
-> >> [1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-=
-EN.html#virtual-address-space-and-address-translation-mode
-> >>
-> >> Signed-off-by: Enze Li <lienze@kylinos.cn>
-> >> ---
-> >>  arch/loongarch/Kconfig               |  1 +
-> >>  arch/loongarch/include/asm/kfence.h  | 62 +++++++++++++++++++++++++++=
-+
-> >>  arch/loongarch/include/asm/pgtable.h |  6 +++
-> >>  arch/loongarch/mm/fault.c            | 22 ++++++----
-> >>  4 files changed, 83 insertions(+), 8 deletions(-)
-> >>  create mode 100644 arch/loongarch/include/asm/kfence.h
-> >>
-> >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> >> index 5411e3a4eb88..db27729003d3 100644
-> >> --- a/arch/loongarch/Kconfig
-> >> +++ b/arch/loongarch/Kconfig
-> >> @@ -93,6 +93,7 @@ config LOONGARCH
-> >>         select HAVE_ARCH_JUMP_LABEL
-> >>         select HAVE_ARCH_JUMP_LABEL_RELATIVE
-> >>         select HAVE_ARCH_KASAN
-> >> +       select HAVE_ARCH_KFENCE if 64BIT
-> > "if 64BIT" can be dropped here.
-> >
->
-> Fixed.
->
-> >>         select HAVE_ARCH_MMAP_RND_BITS if MMU
-> >>         select HAVE_ARCH_SECCOMP_FILTER
-> >>         select HAVE_ARCH_TRACEHOOK
-> >> diff --git a/arch/loongarch/include/asm/kfence.h b/arch/loongarch/incl=
-ude/asm/kfence.h
-> >> new file mode 100644
-> >> index 000000000000..2a85acc2bc70
-> >> --- /dev/null
-> >> +++ b/arch/loongarch/include/asm/kfence.h
-> >> @@ -0,0 +1,62 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> +/*
-> >> + * KFENCE support for LoongArch.
-> >> + *
-> >> + * Author: Enze Li <lienze@kylinos.cn>
-> >> + * Copyright (C) 2022-2023 KylinSoft Corporation.
-> >> + */
-> >> +
-> >> +#ifndef _ASM_LOONGARCH_KFENCE_H
-> >> +#define _ASM_LOONGARCH_KFENCE_H
-> >> +
-> >> +#include <linux/kfence.h>
-> >> +#include <asm/pgtable.h>
-> >> +#include <asm/tlb.h>
-> >> +
-> >> +static inline char *arch_kfence_init_pool(void)
-> >> +{
-> >> +       char *__kfence_pool_orig =3D __kfence_pool;
-> > I prefer kfence_pool than __kfence_pool_orig here.
-> >
->
-> Fixed.
->
-> >> +       struct vm_struct *area;
-> >> +       int err;
-> >> +
-> >> +       area =3D __get_vm_area_caller(KFENCE_POOL_SIZE, VM_IOREMAP,
-> >> +                                   KFENCE_AREA_START, KFENCE_AREA_END=
-,
-> >> +                                   __builtin_return_address(0));
-> >> +       if (!area)
-> >> +               return NULL;
-> >> +
-> >> +       __kfence_pool =3D (char *)area->addr;
-> >> +       err =3D ioremap_page_range((unsigned long)__kfence_pool,
-> >> +                                (unsigned long)__kfence_pool + KFENCE=
-_POOL_SIZE,
-> >> +                                virt_to_phys((void *)__kfence_pool_or=
-ig),
-> >> +                                PAGE_KERNEL);
-> >> +       if (err) {
-> >> +               free_vm_area(area);
-> >> +               return NULL;
-> >> +       }
-> >> +
-> >> +       return __kfence_pool;
-> >> +}
-> >> +
-> >> +/* Protect the given page and flush TLB. */
-> >> +static inline bool kfence_protect_page(unsigned long addr, bool prote=
-ct)
-> >> +{
-> >> +       pte_t *pte =3D virt_to_kpte(addr);
-> >> +
-> >> +       if (WARN_ON(!pte) || pte_none(*pte))
-> >> +               return false;
-> >> +
-> >> +       if (protect)
-> >> +               set_pte(pte, __pte(pte_val(*pte) & ~(_PAGE_VALID | _PA=
-GE_PRESENT)));
-> >> +       else
-> >> +               set_pte(pte, __pte(pte_val(*pte) | (_PAGE_VALID | _PAG=
-E_PRESENT)));
-> >> +
-> >> +       /* Flush this CPU's TLB. */
-> >> +       preempt_disable();
-> >> +       local_flush_tlb_one(addr);
-> >> +       preempt_enable();
-> >> +
-> >> +       return true;
-> >> +}
-> >> +
-> >> +#endif /* _ASM_LOONGARCH_KFENCE_H */
-> >> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/inc=
-lude/asm/pgtable.h
-> >> index 0fc074b8bd48..5a9c81298fe3 100644
-> >> --- a/arch/loongarch/include/asm/pgtable.h
-> >> +++ b/arch/loongarch/include/asm/pgtable.h
-> >> @@ -85,7 +85,13 @@ extern unsigned long zero_page_mask;
-> >>  #define MODULES_VADDR  (vm_map_base + PCI_IOSIZE + (2 * PAGE_SIZE))
-> >>  #define MODULES_END    (MODULES_VADDR + SZ_256M)
-> >>
-> >> +#ifdef CONFIG_KFENCE
-> >> +#define KFENCE_AREA_START      MODULES_END
-> >> +#define KFENCE_AREA_END                (KFENCE_AREA_START + SZ_512M)
-> > Why you choose 512M here?
-> >
->
-> One day I noticed that 512M can hold 16K (default 255) KFENCE objects,
-> which should be more than enough and I think this should be appropriate.
->
-> As far as I see, KFENCE system does not have the upper limit of this
-> value(CONFIG_KFENCE_NUM_OBJECTS), which could theoretically be any
-> number.  There's another way, how about setting this value to be
-> determined by the configuration, like this,
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->  +#define KFENCE_AREA_END \
->  + (KFENCE_AREA_START + (CONFIG_KFENCE_NUM_OBJECTS + 1) * 2 * PAGE_SIZE)
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-How does other archs configure the size?
+Hi, Andrew,
 
->
-> >> +#define VMALLOC_START          KFENCE_AREA_END
-> >> +#else
-> >>  #define VMALLOC_START  MODULES_END
-> >> +#endif
-> > I don't like to put KFENCE_AREA between module and vmalloc range (it
-> > may cause some problems), can we put it after vmemmap?
->
-> I found that there is not enough space after vmemmap and that these
-> spaces are affected by KASAN. As follows,
->
-> Without KASAN
-> ###### module 0xffff800002008000~0xffff800012008000
-> ###### malloc 0xffff800032008000~0xfffffefffe000000
-> ###### vmemmap 0xffffff0000000000~0xffffffffffffffff
->
-> With KASAN
-> ###### module 0xffff800002008000~0xffff800012008000
-> ###### malloc 0xffff800032008000~0xffffbefffe000000
-> ###### vmemmap 0xffffbf0000000000~0xffffbfffffffffff
->
-> What about put it before MODULES_START?
-I temporarily drop KASAN in linux-next for you. You can update a new
-patch version without KASAN (still, put KFENCE after vmemmap), and
-then we can improve further.
+Sorry, I currently don't have an exact timeline for when the OUI will
+be available. The next hardware version will address these bugs, so
+we won't be going with this driver.
 
-Huacai
+> > > > The PHY itself supports half-duplex, but there are issues with the
+> > > > controller used in the 7A2000 chip. Moreover, the controller only
+> > > > supports auto-negotiation for gigabit speeds.
+> > >
+> > > So you can force 10/100/1000, but auto neg only succeeds for 1G?
+> > >
+> > > Are the LP autoneg values available for genphy_read_lpa() to read? If
+> > > the LP values are available, maybe the PHY driver can resolve the
+> > > autoneg for 10 an 100.
+> > >
+> >
+> > I apologize for the confusion caused by my previous description. To
+> > clarify, the PHY supports auto-negotiation and non-auto-negotiation
+> > for 10/100, but non-auto-negotiation for 1000 does not work correctly.
 >
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -82,7 +82,14 @@ extern unsigned long zero_page_mask;
->   * Avoid the first couple of pages so NULL pointer dereferences will
->   * still reliably trap.
->   */
-> +#ifdef CONFIG_KFENCE
-> +#define KFENCE_AREA_START      (vm_map_base + PCI_IOSIZE + (2 * PAGE_SIZ=
-E))
-> +#define KFENCE_AREA_END        \
-> +       (KFENCE_AREA_START + (CONFIG_KFENCE_NUM_OBJECTS + 1) * 2 * PAGE_S=
-IZE)
-> +#define MODULES_VADDR  KFENCE_AREA_END
-> +#else
->  #define MODULES_VADDR  (vm_map_base + PCI_IOSIZE + (2 * PAGE_SIZE))
-> +#endif
->  #define MODULES_END    (MODULES_VADDR + SZ_256M)
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
+> So you can force 10/100, but auto-neg 10/100/1000.
 >
-> Best Regards,
-> Enze
+> So i would suggest .get_features() indicates normal 10/100/1000
+> operation. Have your .config_aneg function which is used for both
+> auto-neg and forced configuration check for phydev->autoneg =3D=3D
+> AUTONEG_DISABLE and phydev->speed =3D=3D SPEED_1000 and return
+> -EOPNOTSUPP. Otherwise call genphy_config_aneg().
 >
-> >>
-> >>  #ifndef CONFIG_KASAN
-> >>  #define VMALLOC_END    \
-> >> diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-> >> index da5b6d518cdb..c0319128b221 100644
-> >> --- a/arch/loongarch/mm/fault.c
-> >> +++ b/arch/loongarch/mm/fault.c
-> >> @@ -23,6 +23,7 @@
-> >>  #include <linux/kprobes.h>
-> >>  #include <linux/perf_event.h>
-> >>  #include <linux/uaccess.h>
-> >> +#include <linux/kfence.h>
-> >>
-> >>  #include <asm/branch.h>
-> >>  #include <asm/mmu_context.h>
-> >> @@ -30,7 +31,8 @@
-> >>
-> >>  int show_unhandled_signals =3D 1;
-> >>
-> >> -static void __kprobes no_context(struct pt_regs *regs, unsigned long =
-address)
-> >> +static void __kprobes no_context(struct pt_regs *regs, unsigned long =
-address,
-> >> +                                unsigned long write)
-> >>  {
-> >>         const int field =3D sizeof(unsigned long) * 2;
-> >>
-> >> @@ -38,6 +40,9 @@ static void __kprobes no_context(struct pt_regs *reg=
-s, unsigned long address)
-> >>         if (fixup_exception(regs))
-> >>                 return;
-> >>
-> >> +       if (kfence_handle_page_fault(address, write, regs))
-> >> +               return;
-> >> +
-> >>         /*
-> >>          * Oops. The kernel tried to access some bad page. We'll have =
-to
-> >>          * terminate things with extreme prejudice.
-> >> @@ -51,14 +56,15 @@ static void __kprobes no_context(struct pt_regs *r=
-egs, unsigned long address)
-> >>         die("Oops", regs);
-> >>  }
-> >>
-> >> -static void __kprobes do_out_of_memory(struct pt_regs *regs, unsigned=
- long address)
-> >> +static void __kprobes do_out_of_memory(struct pt_regs *regs, unsigned=
- long address,
-> >> +                                      unsigned long write)
-> >>  {
-> >>         /*
-> >>          * We ran out of memory, call the OOM killer, and return the u=
-serspace
-> >>          * (which will retry the fault, or kill us if we got oom-kille=
-d).
-> >>          */
-> >>         if (!user_mode(regs)) {
-> >> -               no_context(regs, address);
-> >> +               no_context(regs, address, write);
-> >>                 return;
-> >>         }
-> >>         pagefault_out_of_memory();
-> >> @@ -69,7 +75,7 @@ static void __kprobes do_sigbus(struct pt_regs *regs=
-,
-> >>  {
-> >>         /* Kernel mode? Handle exceptions or die */
-> >>         if (!user_mode(regs)) {
-> >> -               no_context(regs, address);
-> >> +               no_context(regs, address, write);
-> >>                 return;
-> >>         }
-> >>
-> >> @@ -90,7 +96,7 @@ static void __kprobes do_sigsegv(struct pt_regs *reg=
-s,
-> >>
-> >>         /* Kernel mode? Handle exceptions or die */
-> >>         if (!user_mode(regs)) {
-> >> -               no_context(regs, address);
-> >> +               no_context(regs, address, write);
-> >>                 return;
-> >>         }
-> >>
-> >> @@ -149,7 +155,7 @@ static void __kprobes __do_page_fault(struct pt_re=
-gs *regs,
-> >>          */
-> >>         if (address & __UA_LIMIT) {
-> >>                 if (!user_mode(regs))
-> >> -                       no_context(regs, address);
-> >> +                       no_context(regs, address, write);
-> >>                 else
-> >>                         do_sigsegv(regs, write, address, si_code);
-> >>                 return;
-> >> @@ -211,7 +217,7 @@ static void __kprobes __do_page_fault(struct pt_re=
-gs *regs,
-> >>
-> >>         if (fault_signal_pending(fault, regs)) {
-> >>                 if (!user_mode(regs))
-> >> -                       no_context(regs, address);
-> >> +                       no_context(regs, address, write);
-> >>                 return;
-> >>         }
-> >>
-> >> @@ -232,7 +238,7 @@ static void __kprobes __do_page_fault(struct pt_re=
-gs *regs,
-> >>         if (unlikely(fault & VM_FAULT_ERROR)) {
-> >>                 mmap_read_unlock(mm);
-> >>                 if (fault & VM_FAULT_OOM) {
-> >> -                       do_out_of_memory(regs, address);
-> >> +                       do_out_of_memory(regs, address, write);
-> >>                         return;
-> >>                 } else if (fault & VM_FAULT_SIGSEGV) {
-> >>                         do_sigsegv(regs, write, address, si_code);
-> >> --
-> >> 2.34.1
-> >>
-> >>
+
+Well, can I return -EINVAL in the .set_link_ksettings callback?
+Considering that our next hardware version will have the OUI
+allocated and these bugs fixed, I won't submit this driver in
+the next patch version. I believe we can just use the generic
+PHY for now.
+
+> > > So what does genphy_read_abilities() return?
+> > >
+> > > Nobody else going to use PHY_LOONGSON_FEATURES, so i would prefer not
+> > > to add it to the core. If your PHY is designed correctly,
+> > > genphy_read_abilities() should determine what the PHY can do from its
+> > > registers. If the registers are wrong, it is better to add a
+> > > .get_features function.
+> > >
+> >
+> > genphy_read_abilities() returns 0, and it seems to be working fine.
+> > The registers are incorrect, so I will use the .get_features function
+> > to clear some of the half-duplex bits.
+>
+> You said above that the PHY supports half duplex, the MAC has problems
+> with half duplex. So it should be the MAC which indicates it does not
+> unsupported half duplex link modes.
+>
+> So you need to modify phylink_config.mac_capabilities before
+> phylink_create() is called. There is already
+>
+>         /* Half-Duplex can only work with single queue */
+>         if (priv->plat->tx_queues_to_use > 1)
+>                 priv->phylink_config.mac_capabilities &=3D
+>                         ~(MAC_10HD | MAC_100HD | MAC_1000HD);
+>
+> so you just need to add a quirk for your broken hardware.
+>
+
+OK.
+
+Thanks,
+Feiyang
+
+>         Andrew
 >
