@@ -1,81 +1,70 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF94014F65
-	for <loongarch@lists.linux.dev>; Fri, 21 Jul 2023 09:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=n2ya+3wv8jlczPXmlimqLrLH9/Ez775zVSF3ryo6ya8=; b=gZUK/sCwsgKLq6AaJihMcqTpV9
-	jEkXpv8SPa8WmSKqPULOsh+M2WKsOBZn330nebkaapwqw9NMD6t0OJsYsAlOkeAUd/GBQzFxPq4hl
-	0383KD06xfEOBDYQPUKFndWAVr56nTWSD6QG62q5WRnIvTXL/nJ55ZRzeniCPLyAHhMI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1qMm3n-001rYH-Ru; Fri, 21 Jul 2023 11:04:27 +0200
-Date: Fri, 21 Jul 2023 11:04:27 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Cc: Feiyang Chen <chenfeiyang@loongson.cn>, hkallweit1@gmail.com,
-	peppe.cavallaro@st.com, alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com, chenhuacai@loongson.cn, linux@armlinux.org.uk,
-	dongbiao@loongson.cn, loongson-kernel@lists.loongnix.cn,
-	netdev@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [RFC PATCH 01/10] net: phy: Add driver for Loongson PHY
-Message-ID: <24d49ab1-c2e4-4878-a4f6-8d1f405f2407@lunn.ch>
-References: <cover.1689215889.git.chenfeiyang@loongson.cn>
- <be1874e517f4f4cc50906f18689a0add3594c2e0.1689215889.git.chenfeiyang@loongson.cn>
- <9e0b3466-10e1-4267-ab9b-d9f8149b6b6b@lunn.ch>
- <CACWXhKkX-syR01opOky=t-b8C3nhV5f_WNfCQ-kOE+4o0xh4tA@mail.gmail.com>
- <3cff46b0-5621-4881-8e70-362bb7a70ed1@lunn.ch>
- <CACWXhKk23muXROj6OrmeFna88ViJHA_7QpQZoWiFgzEPb4pLWQ@mail.gmail.com>
- <9568c4ad-e10f-4b76-8766-ec621f788c40@lunn.ch>
- <CACWXhKkoJHT8HNb-h_1PJTT1rE-TQxByd98qS0Zka5yg2_WsXw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759EF3D78
+	for <loongarch@lists.linux.dev>; Fri, 21 Jul 2023 10:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+ s=s29768273; t=1689935859; x=1690540659; i=markus.elfring@web.de;
+ bh=nETbZNkW2UeKwCzrV/muEGWDHTMFY3L9Pv2JULzOo1Y=;
+ h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:In-Reply-To;
+ b=cru+pI/H+Nl77t0ztRjNcN9O4+TfwldjhVWj/SnNT9yxJyLBNSPd5gGXXGJ/iS/5iOwv2HY
+ eCAIn4rAjwAvoTkf8Wt/7zv0ofXHyFzgW+tdBgCapTXtOxhGGRNzk6vBuPmUJWmyH3FR8TwxF
+ oNJRnx0QV6rsN/X6sngEjAGUl6IJhxbsmgqJc/zTOr/TWa7VUD0va6M8DihMo/lkjniAtWMXG
+ knHVLwcC9VmzFv+Ezl+RVPZBLkpblKJ9SMSu3HZ2tZr0aHrKyNzGQ0LazoQ2Uzv7Jj00ojYWv
+ WRV2qaKUfXTObLuDMBVdMYHOhBI6GOR5H6rprmRHRsY/bNIangUg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.83]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N4621-1pwm8Y3LNJ-00ztDZ; Fri, 21
+ Jul 2023 12:37:39 +0200
+Message-ID: <dc47d6a7-b0d6-9497-db95-f5c4fb331a15@web.de>
+Date: Fri, 21 Jul 2023 12:37:28 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACWXhKkoJHT8HNb-h_1PJTT1rE-TQxByd98qS0Zka5yg2_WsXw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+To: Dong Zhihong <donmor3000@hotmail.com>, loongarch@lists.linux.dev,
+ kernel-janitors@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+ Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Tiezhu Yang <yangtiezhu@loongson.cn>,
+ Wang Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <MEYP282MB2597CE76DFC2B421C1A4594CD93EA@MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM>
+Subject: Re: [PATCH v6] LoongArch: Fix CONFIG_CMDLINE_EXTEND and
+ CONFIG_CMDLINE_BOOTLOADER on non-FDT systems
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <MEYP282MB2597CE76DFC2B421C1A4594CD93EA@MEYP282MB2597.AUSP282.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xsB1ihtbSX9m9Uvcy4/YgkOzblRhWP2gNSPTYmMx6vIXgAZCqTl
+ s2ktzH4x5M6UqEhCP0ObmSBbErbvApOwjcA+EO9Vc+r17Pu4TXLKNXkxM8/sdqNwVyYgAod
+ fR5ot3VaIVPdJi5sW3gx0asqxSmk4TkihnDAQ4w0BJHwZOs1Zy/X7sSCLBekW18zkkNOzmB
+ Dg+8oVsnUWEm369m5gJbA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:PeGV99X4igU=;sK29NYy9G1eu4C/wUmR082lD8li
+ jmFF6tbKdcHj1oDdiyyCR/Rgh/OST7zJbhKWZFU4Ayp0eDB9jKzzw4KPczffghpyBQksmuRFm
+ lxApUd1V47Z4a4/1Eee1Cgqtxxp+TfJ6DmlxI4KQWgv4oX+3gvOWHXGXfpo4qHoCEw/f619j7
+ xSIdyY6e8dMfsm/Ywgino8vxABH7+OIVaaIBTIogfCrIWwDtf87F6/6otZmsea/6fiG3AEhFI
+ aPY9pPW4k4Hn1lux/og6Zj/KzWfts7zKIxC/HPOgWtx/ms9wL7abp9HN9eyjqOaUEqQNSPLyj
+ Pb2qFmBZOW8k/1NZP3nEwCxHgv+dEveZCDssRwmQa4st/VoRkPbt7/VTWFc5i1gzyln5/9mjB
+ JaqJLKKdCMI0rr1Pj0ceRN+K31y9Oa822t6olojqsJnNCZezoa0CZFVBuFFLgrUBTSEhajZgO
+ CHIQRndSraCq/5Nsm+iVzMJKkDiTsixrwW5ZGncGh6VkS681ompr2HoME8lDT7DZX7Vxq5WUP
+ bGLm4zu4rFKaSrdptAlMq6glIzbU59rgaRGht3n/+5Onbs9gk2IDUxMUaJApSYRpb5wxKMhTe
+ 6SC9YHs29MwOSki9FvI5ukvTd7GiErgmj8QNt/FryP7H8Ve/yiGS9VdwHNvE4OEFiVtRl51Zn
+ pbsvUvVnpx930yZag4TxS1tmNEZwC1b6fU7rBXY1O0NteAn9yoWnzSxBsiknzmLbqyraZC273
+ HYsLRg3Dh0lITbhohLWjcX/IzCcqW3yMmreCASdmJ8HeXDGVLErBXhL+9PuyPz42Y0ajCLd4M
+ cZ8wk8IzRh7jIAog9bRFt6WsRkKGnut6mzoEmZx3cFkl0C22bjHxvu9KFU4Ril/7AoyfB81Jh
+ RQljacJ9/rKeKlbjsKgZLk07dSdiB4Nhql3CuQtNAsNQgfOabnfBW4XZHZykQKO+mKatIvkqJ
+ xAIzfg==
 
-> Hi, Andrew,
-> 
-> Sorry, I currently don't have an exact timeline for when the OUI will
-> be available. The next hardware version will address these bugs, so
-> we won't be going with this driver.
+> On FDT systems these command line processing are already taken care of
+=E2=80=A6
 
-Not having an OUI breaks the standard. So i was actually thinking you
-should trap the reads to the ID registers in the MDIO bus driver and
-return valid values. Some Marvell Ethernet switch integrated PHYs have
-a valid OUI, and no device part. We trap those and insert valid
-values. So there is some president for doing this. Doing this would
-also allow you to avoid the PHY driver poking around the MAC drivers
-PCI bus.
+Does this description approach contain still another wording weakness?
 
-> > So i would suggest .get_features() indicates normal 10/100/1000
-> > operation. Have your .config_aneg function which is used for both
-> > auto-neg and forced configuration check for phydev->autoneg ==
-> > AUTONEG_DISABLE and phydev->speed == SPEED_1000 and return
-> > -EOPNOTSUPP. Otherwise call genphy_config_aneg().
-> >
-> 
-> Well, can I return -EINVAL in the .set_link_ksettings callback?
-
-If the PHY is broken, the PHY should do it. If the MAC is broken, the
-MAC should do it. We have clean separation here, even when the
-hardware is integrated.
-
-> Considering that our next hardware version will have the OUI
-> allocated and these bugs fixed, I won't submit this driver in
-> the next patch version. I believe we can just use the generic
-> PHY for now.
-
-The problem with the generic driver is you cannot have workarounds in
-it. You don't want to put PHY workarounds in the MAC driver.
-
-    Andrew
-
+Regards,
+Markus
