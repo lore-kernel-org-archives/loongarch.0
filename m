@@ -1,418 +1,67 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFE4EBD
-	for <loongarch@lists.linux.dev>; Sun, 23 Jul 2023 07:34:24 +0000 (UTC)
-X-UUID: 03ea0833cfc34e699fa3ba5a09395578-20230723
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.28,REQID:d0d69a12-911b-4bc0-b4f9-f8d6f42fbb37,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.28,REQID:d0d69a12-911b-4bc0-b4f9-f8d6f42fbb37,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:176cd25,CLOUDID:c15ef98e-7caa-48c2-8dbb-206f0389473c,B
-	ulkID:230721111347J28IJWE1,BulkQuantity:2,Recheck:0,SF:24|17|19|44|102,TC:
-	nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI
-	:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULS,
-	TF_CID_SPAM_SNR
-X-UUID: 03ea0833cfc34e699fa3ba5a09395578-20230723
-X-User: lienze@kylinos.cn
-Received: from ubuntu [(39.156.73.12)] by mailgw
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1903500873; Sun, 23 Jul 2023 15:34:15 +0800
-From: Enze Li <lienze@kylinos.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name,  loongarch@lists.linux.dev,  glider@google.com,
-  elver@google.com,  akpm@linux-foundation.org,
-  kasan-dev@googlegroups.com,  linux-mm@kvack.org,  zhangqing@loongson.cn,
-  yangtiezhu@loongson.cn,  dvyukov@google.com
-Subject: Re: [PATCH 4/4] LoongArch: Add KFENCE support
-In-Reply-To: <CAAhV-H6FoC1v9f9Vkq9rzk=0j88RczLgiYTiBUBNDwx3B=3tYA@mail.gmail.com>
-	(Huacai Chen's message of "Fri, 21 Jul 2023 11:19:10 +0800")
-References: <20230719082732.2189747-1-lienze@kylinos.cn>
-	<20230719082732.2189747-5-lienze@kylinos.cn>
-	<CAAhV-H71sv+VeLfNzuiqitYcuB4rHnho=dRYQftwo1__3bLZSQ@mail.gmail.com>
-	<87lefaez31.fsf@kylinos.cn>
-	<CAAhV-H6FoC1v9f9Vkq9rzk=0j88RczLgiYTiBUBNDwx3B=3tYA@mail.gmail.com>
-Date: Sun, 23 Jul 2023 15:34:08 +0800
-Message-ID: <87h6pvaxov.fsf@kylinos.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9146C7F;
+	Sun, 23 Jul 2023 11:13:11 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qNX1N-0006H6-2e; Sun, 23 Jul 2023 13:13:05 +0200
+Message-ID: <d8471890-feb8-8953-a97d-5fc6b1f22d65@leemhuis.info>
+Date: Sun, 23 Jul 2023 13:13:04 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Fwd: PCI: Loongson: 8b3517f88ff2 breaks PCIe on some system
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Huacai Chen
+ <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>,
+ jiaxun.yang@flygoat.com, Aurelien Jarno <aurel32@debian.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux PCI <linux-pci@vger.kernel.org>,
+ Linux Loongarch <loongarch@lists.linux.dev>
+References: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690110791;00b7bf19;
+X-HE-SMSGID: 1qNX1N-0006H6-2e
 
-On Fri, Jul 21 2023 at 11:19:10 AM +0800, Huacai Chen wrote:
+On 23.07.23 04:03, Bagas Sanjaya wrote:
+> 
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+>> After 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") backported to stable, we have received multiple regression reports including one from Debian build farm[1] that some systems failed to initialize some PCIe devices.
+>>
+>> I was able to reproduce on one of my Loongson-3A4000+7A system. It seems like the root cause is firmware on those systems didn't set MRRS properly but 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") assumed firmware's maximum MRRS is always valid.
+>>
+>> [1]: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
+> 
+> See Bugzilla for the full thread.
+> 
+> The linked Debian BTS entry have debugging details on this regression
+> (boot log, cpuinfo, and lspci).
+> 
+> Anyway, I'm adding this regression to regzbot:
+> 
+> #regzbot introduced: 8b3517f88ff298 https://bugzilla.kernel.org/show_bug.cgi?id=217680
+> #regzbot title: LS7A MRRS quirk fails to initialize PCIe devices
+> #regzbot link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
 
-> Hi, Enze,
->
-> On Fri, Jul 21, 2023 at 11:14=E2=80=AFAM Enze Li <lienze@kylinos.cn> wrot=
-e:
->>
->> On Wed, Jul 19 2023 at 11:27:50 PM +0800, Huacai Chen wrote:
->>
->> > Hi, Enze,
->> >
->> > On Wed, Jul 19, 2023 at 4:34=E2=80=AFPM Enze Li <lienze@kylinos.cn> wr=
-ote:
->> >>
->> >> The LoongArch architecture is quite different from other architecture=
-s.
->> >> When the allocating of KFENCE itself is done, it is mapped to the dir=
-ect
->> >> mapping configuration window [1] by default on LoongArch.  It means t=
-hat
->> >> it is not possible to use the page table mapped mode which required by
->> >> the KFENCE system and therefore it should be remapped to the appropri=
-ate
->> >> region.
->> >>
->> >> This patch adds architecture specific implementation details for KFEN=
-CE.
->> >> In particular, this implements the required interface in <asm/kfence.=
-h>.
->> >>
->> >> Tested this patch by using the testcases and all passed.
->> >>
->> >> [1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1=
--EN.html#virtual-address-space-and-address-translation-mode
->> >>
->> >> Signed-off-by: Enze Li <lienze@kylinos.cn>
->> >> ---
->> >>  arch/loongarch/Kconfig               |  1 +
->> >>  arch/loongarch/include/asm/kfence.h  | 62 ++++++++++++++++++++++++++=
-++
->> >>  arch/loongarch/include/asm/pgtable.h |  6 +++
->> >>  arch/loongarch/mm/fault.c            | 22 ++++++----
->> >>  4 files changed, 83 insertions(+), 8 deletions(-)
->> >>  create mode 100644 arch/loongarch/include/asm/kfence.h
->> >>
->> >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> >> index 5411e3a4eb88..db27729003d3 100644
->> >> --- a/arch/loongarch/Kconfig
->> >> +++ b/arch/loongarch/Kconfig
->> >> @@ -93,6 +93,7 @@ config LOONGARCH
->> >>         select HAVE_ARCH_JUMP_LABEL
->> >>         select HAVE_ARCH_JUMP_LABEL_RELATIVE
->> >>         select HAVE_ARCH_KASAN
->> >> +       select HAVE_ARCH_KFENCE if 64BIT
->> > "if 64BIT" can be dropped here.
->> >
->>
->> Fixed.
->>
->> >>         select HAVE_ARCH_MMAP_RND_BITS if MMU
->> >>         select HAVE_ARCH_SECCOMP_FILTER
->> >>         select HAVE_ARCH_TRACEHOOK
->> >> diff --git a/arch/loongarch/include/asm/kfence.h b/arch/loongarch/inc=
-lude/asm/kfence.h
->> >> new file mode 100644
->> >> index 000000000000..2a85acc2bc70
->> >> --- /dev/null
->> >> +++ b/arch/loongarch/include/asm/kfence.h
->> >> @@ -0,0 +1,62 @@
->> >> +/* SPDX-License-Identifier: GPL-2.0 */
->> >> +/*
->> >> + * KFENCE support for LoongArch.
->> >> + *
->> >> + * Author: Enze Li <lienze@kylinos.cn>
->> >> + * Copyright (C) 2022-2023 KylinSoft Corporation.
->> >> + */
->> >> +
->> >> +#ifndef _ASM_LOONGARCH_KFENCE_H
->> >> +#define _ASM_LOONGARCH_KFENCE_H
->> >> +
->> >> +#include <linux/kfence.h>
->> >> +#include <asm/pgtable.h>
->> >> +#include <asm/tlb.h>
->> >> +
->> >> +static inline char *arch_kfence_init_pool(void)
->> >> +{
->> >> +       char *__kfence_pool_orig =3D __kfence_pool;
->> > I prefer kfence_pool than __kfence_pool_orig here.
->> >
->>
->> Fixed.
->>
->> >> +       struct vm_struct *area;
->> >> +       int err;
->> >> +
->> >> +       area =3D __get_vm_area_caller(KFENCE_POOL_SIZE, VM_IOREMAP,
->> >> +                                   KFENCE_AREA_START, KFENCE_AREA_EN=
-D,
->> >> +                                   __builtin_return_address(0));
->> >> +       if (!area)
->> >> +               return NULL;
->> >> +
->> >> +       __kfence_pool =3D (char *)area->addr;
->> >> +       err =3D ioremap_page_range((unsigned long)__kfence_pool,
->> >> +                                (unsigned long)__kfence_pool + KFENC=
-E_POOL_SIZE,
->> >> +                                virt_to_phys((void *)__kfence_pool_o=
-rig),
->> >> +                                PAGE_KERNEL);
->> >> +       if (err) {
->> >> +               free_vm_area(area);
->> >> +               return NULL;
->> >> +       }
->> >> +
->> >> +       return __kfence_pool;
->> >> +}
->> >> +
->> >> +/* Protect the given page and flush TLB. */
->> >> +static inline bool kfence_protect_page(unsigned long addr, bool prot=
-ect)
->> >> +{
->> >> +       pte_t *pte =3D virt_to_kpte(addr);
->> >> +
->> >> +       if (WARN_ON(!pte) || pte_none(*pte))
->> >> +               return false;
->> >> +
->> >> +       if (protect)
->> >> +               set_pte(pte, __pte(pte_val(*pte) & ~(_PAGE_VALID | _P=
-AGE_PRESENT)));
->> >> +       else
->> >> +               set_pte(pte, __pte(pte_val(*pte) | (_PAGE_VALID | _PA=
-GE_PRESENT)));
->> >> +
->> >> +       /* Flush this CPU's TLB. */
->> >> +       preempt_disable();
->> >> +       local_flush_tlb_one(addr);
->> >> +       preempt_enable();
->> >> +
->> >> +       return true;
->> >> +}
->> >> +
->> >> +#endif /* _ASM_LOONGARCH_KFENCE_H */
->> >> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/in=
-clude/asm/pgtable.h
->> >> index 0fc074b8bd48..5a9c81298fe3 100644
->> >> --- a/arch/loongarch/include/asm/pgtable.h
->> >> +++ b/arch/loongarch/include/asm/pgtable.h
->> >> @@ -85,7 +85,13 @@ extern unsigned long zero_page_mask;
->> >>  #define MODULES_VADDR  (vm_map_base + PCI_IOSIZE + (2 * PAGE_SIZE))
->> >>  #define MODULES_END    (MODULES_VADDR + SZ_256M)
->> >>
->> >> +#ifdef CONFIG_KFENCE
->> >> +#define KFENCE_AREA_START      MODULES_END
->> >> +#define KFENCE_AREA_END                (KFENCE_AREA_START + SZ_512M)
->> > Why you choose 512M here?
->> >
->>
->> One day I noticed that 512M can hold 16K (default 255) KFENCE objects,
->> which should be more than enough and I think this should be appropriate.
->>
->> As far as I see, KFENCE system does not have the upper limit of this
->> value(CONFIG_KFENCE_NUM_OBJECTS), which could theoretically be any
->> number.  There's another way, how about setting this value to be
->> determined by the configuration, like this,
->>
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>  +#define KFENCE_AREA_END \
->>  + (KFENCE_AREA_START + (CONFIG_KFENCE_NUM_OBJECTS + 1) * 2 * PAGE_SIZE)
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> How does other archs configure the size?
->
+FWIW & TWIMC, a fix for this is in the works already afaics:
 
-They all use the same one with a macro named KFENCE_POOL_SIZE defined
-like this during kernel startup,
+#regzbot monitor:
+https://lore.kernel.org/all/20230718133259.2867432-1-jiaxun.yang@flygoat.com/
+#regzbot fix: pci: loongson: Workaround MIPS firmware MRRS settings
 
-#define KFENCE_POOL_SIZE ((CONFIG_KFENCE_NUM_OBJECTS + 1) * 2 * PAGE_SIZE)
-
-For now, we do not need to consider the KASAN region, and get enough
-address space after vmemmap, this will not be a problem.
-
->>
->> >> +#define VMALLOC_START          KFENCE_AREA_END
->> >> +#else
->> >>  #define VMALLOC_START  MODULES_END
->> >> +#endif
->> > I don't like to put KFENCE_AREA between module and vmalloc range (it
->> > may cause some problems), can we put it after vmemmap?
->>
->> I found that there is not enough space after vmemmap and that these
->> spaces are affected by KASAN. As follows,
->>
->> Without KASAN
->> ###### module 0xffff800002008000~0xffff800012008000
->> ###### malloc 0xffff800032008000~0xfffffefffe000000
->> ###### vmemmap 0xffffff0000000000~0xffffffffffffffff
->>
->> With KASAN
->> ###### module 0xffff800002008000~0xffff800012008000
->> ###### malloc 0xffff800032008000~0xffffbefffe000000
->> ###### vmemmap 0xffffbf0000000000~0xffffbfffffffffff
->>
->> What about put it before MODULES_START?
-> I temporarily drop KASAN in linux-next for you. You can update a new
-> patch version without KASAN (still, put KFENCE after vmemmap), and
-> then we can improve further.
->
-> Huacai
-
-Thank you so much. :)
-
-The v2 of the patchset is on the way.
-
-Best Regards,
-Enze
-
->>
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
->> --- a/arch/loongarch/include/asm/pgtable.h
->> +++ b/arch/loongarch/include/asm/pgtable.h
->> @@ -82,7 +82,14 @@ extern unsigned long zero_page_mask;
->>   * Avoid the first couple of pages so NULL pointer dereferences will
->>   * still reliably trap.
->>   */
->> +#ifdef CONFIG_KFENCE
->> +#define KFENCE_AREA_START      (vm_map_base + PCI_IOSIZE + (2 * PAGE_SI=
-ZE))
->> +#define KFENCE_AREA_END        \
->> +       (KFENCE_AREA_START + (CONFIG_KFENCE_NUM_OBJECTS + 1) * 2 * PAGE_=
-SIZE)
->> +#define MODULES_VADDR  KFENCE_AREA_END
->> +#else
->>  #define MODULES_VADDR  (vm_map_base + PCI_IOSIZE + (2 * PAGE_SIZE))
->> +#endif
->>  #define MODULES_END    (MODULES_VADDR + SZ_256M)
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
->>
->> Best Regards,
->> Enze
->>
->> >>
->> >>  #ifndef CONFIG_KASAN
->> >>  #define VMALLOC_END    \
->> >> diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
->> >> index da5b6d518cdb..c0319128b221 100644
->> >> --- a/arch/loongarch/mm/fault.c
->> >> +++ b/arch/loongarch/mm/fault.c
->> >> @@ -23,6 +23,7 @@
->> >>  #include <linux/kprobes.h>
->> >>  #include <linux/perf_event.h>
->> >>  #include <linux/uaccess.h>
->> >> +#include <linux/kfence.h>
->> >>
->> >>  #include <asm/branch.h>
->> >>  #include <asm/mmu_context.h>
->> >> @@ -30,7 +31,8 @@
->> >>
->> >>  int show_unhandled_signals =3D 1;
->> >>
->> >> -static void __kprobes no_context(struct pt_regs *regs, unsigned long=
- address)
->> >> +static void __kprobes no_context(struct pt_regs *regs, unsigned long=
- address,
->> >> +                                unsigned long write)
->> >>  {
->> >>         const int field =3D sizeof(unsigned long) * 2;
->> >>
->> >> @@ -38,6 +40,9 @@ static void __kprobes no_context(struct pt_regs *re=
-gs, unsigned long address)
->> >>         if (fixup_exception(regs))
->> >>                 return;
->> >>
->> >> +       if (kfence_handle_page_fault(address, write, regs))
->> >> +               return;
->> >> +
->> >>         /*
->> >>          * Oops. The kernel tried to access some bad page. We'll have=
- to
->> >>          * terminate things with extreme prejudice.
->> >> @@ -51,14 +56,15 @@ static void __kprobes no_context(struct pt_regs *=
-regs, unsigned long address)
->> >>         die("Oops", regs);
->> >>  }
->> >>
->> >> -static void __kprobes do_out_of_memory(struct pt_regs *regs, unsigne=
-d long address)
->> >> +static void __kprobes do_out_of_memory(struct pt_regs *regs, unsigne=
-d long address,
->> >> +                                      unsigned long write)
->> >>  {
->> >>         /*
->> >>          * We ran out of memory, call the OOM killer, and return the =
-userspace
->> >>          * (which will retry the fault, or kill us if we got oom-kill=
-ed).
->> >>          */
->> >>         if (!user_mode(regs)) {
->> >> -               no_context(regs, address);
->> >> +               no_context(regs, address, write);
->> >>                 return;
->> >>         }
->> >>         pagefault_out_of_memory();
->> >> @@ -69,7 +75,7 @@ static void __kprobes do_sigbus(struct pt_regs *reg=
-s,
->> >>  {
->> >>         /* Kernel mode? Handle exceptions or die */
->> >>         if (!user_mode(regs)) {
->> >> -               no_context(regs, address);
->> >> +               no_context(regs, address, write);
->> >>                 return;
->> >>         }
->> >>
->> >> @@ -90,7 +96,7 @@ static void __kprobes do_sigsegv(struct pt_regs *re=
-gs,
->> >>
->> >>         /* Kernel mode? Handle exceptions or die */
->> >>         if (!user_mode(regs)) {
->> >> -               no_context(regs, address);
->> >> +               no_context(regs, address, write);
->> >>                 return;
->> >>         }
->> >>
->> >> @@ -149,7 +155,7 @@ static void __kprobes __do_page_fault(struct pt_r=
-egs *regs,
->> >>          */
->> >>         if (address & __UA_LIMIT) {
->> >>                 if (!user_mode(regs))
->> >> -                       no_context(regs, address);
->> >> +                       no_context(regs, address, write);
->> >>                 else
->> >>                         do_sigsegv(regs, write, address, si_code);
->> >>                 return;
->> >> @@ -211,7 +217,7 @@ static void __kprobes __do_page_fault(struct pt_r=
-egs *regs,
->> >>
->> >>         if (fault_signal_pending(fault, regs)) {
->> >>                 if (!user_mode(regs))
->> >> -                       no_context(regs, address);
->> >> +                       no_context(regs, address, write);
->> >>                 return;
->> >>         }
->> >>
->> >> @@ -232,7 +238,7 @@ static void __kprobes __do_page_fault(struct pt_r=
-egs *regs,
->> >>         if (unlikely(fault & VM_FAULT_ERROR)) {
->> >>                 mmap_read_unlock(mm);
->> >>                 if (fault & VM_FAULT_OOM) {
->> >> -                       do_out_of_memory(regs, address);
->> >> +                       do_out_of_memory(regs, address, write);
->> >>                         return;
->> >>                 } else if (fault & VM_FAULT_SIGSEGV) {
->> >>                         do_sigsegv(regs, write, address, si_code);
->> >> --
->> >> 2.34.1
->> >>
->> >>
->>
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
