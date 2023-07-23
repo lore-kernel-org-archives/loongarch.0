@@ -1,131 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D437125A0
-	for <loongarch@lists.linux.dev>; Sat, 22 Jul 2023 07:22:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F2AC433C7;
-	Sat, 22 Jul 2023 07:22:10 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Allow usage of LSX/LASX in the kernel
-Date: Sat, 22 Jul 2023 15:22:01 +0800
-Message-Id: <20230722072201.2677516-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA787E4;
+	Sun, 23 Jul 2023 02:03:10 +0000 (UTC)
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-668711086f4so2061906b3a.1;
+        Sat, 22 Jul 2023 19:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690077790; x=1690682590;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eg6TbyeOVcQsY9Q8Ckx4fXoTDSkrQFOQaolkev87oCg=;
+        b=HcXcQ5nDr9I47fFsVtJ9AdboECTu8+ij46DkwZYqdSK3Xu/XVL7BgQ6jwIcOtENl3V
+         uy0dh4QSZKmo6QmuT5oLISmW4F5b5eTvDnEr4OoAD7aSsjMKkuPaFVpdHnGSLw4ds0Qa
+         Z71gF38sgVm0qtYl3v30RAPcd7Up5VwRaYLSHeqvEW53otBzJf8rofWxVRvdDpEqUxqy
+         aKy01wNb7M8sJeiL001UhB4OjTYpw/Xn3gET00jnPBIrpOjbxO8pbcooyWK9Ilq5/Ln3
+         G+G9tFhm0ogSIdqUTdJDsP2Z2Q/MJ0kdDwUkhHu2VeZe/YsEZ9L6ng8HUyH6wK3qDfuA
+         b6TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690077790; x=1690682590;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eg6TbyeOVcQsY9Q8Ckx4fXoTDSkrQFOQaolkev87oCg=;
+        b=Leudvv+WJeL1Zl2HnlDCu2IFR0vd7BvDcVgswM/P6G8SZCwaiy3AgX+eLEE9qNj6nf
+         B2bgJnw6//au8SkSxwKW3demdYeYTvRmDoOcRqvynO8MRVc0rDkT/2Y5mp9fez47P0Kd
+         ekSSDZAo+HD5AZQKHyivTXFnoFjnhpAN+sdDqltTViDdohzQgVoIKHR/dzaOtr3CDrdt
+         XOjQRzbjBzYBlPbdUvvjo39gIkakvmc8Q4Md4x7tOYGJR/iBWtZp+SwpRsWfov2Y5n5C
+         +U56ay+guLmViRkx78iy9KiC8kZ6kHop2Kn1b3tTIW1Uvy6LjO/r4ZZwQXvBb4ntJPjH
+         jBvA==
+X-Gm-Message-State: ABy/qLZf51+LCf58LsX3QksO7kS+rYWBFmANa+qH7IyKD4Y7uskw1t1P
+	ghhgT/1v7eiHihEa5h6Ac5A=
+X-Google-Smtp-Source: APBJJlGnc1N/Fmf+WcuRP0kVxZ9IoI6ZEidxjh5Pxa5hR3B6RiMbbtYo5KPj5HwB5oAjC+X9qXBtgA==
+X-Received: by 2002:a05:6a21:999f:b0:12b:40d3:aeb1 with SMTP id ve31-20020a056a21999f00b0012b40d3aeb1mr9860694pzb.25.1690077790204;
+        Sat, 22 Jul 2023 19:03:10 -0700 (PDT)
+Received: from [192.168.0.104] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id y8-20020a62b508000000b00663b712bfbdsm5145424pfe.57.2023.07.22.19.03.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Jul 2023 19:03:09 -0700 (PDT)
+Message-ID: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
+Date: Sun, 23 Jul 2023 09:03:03 +0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas
+ <bhelgaas@google.com>, jiaxun.yang@flygoat.com,
+ Aurelien Jarno <aurel32@debian.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux PCI <linux-pci@vger.kernel.org>,
+ Linux Loongarch <loongarch@lists.linux.dev>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: PCI: Loongson: 8b3517f88ff2 breaks PCIe on some system
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Allow usage of LSX/LASX in the kernel by extending kernel_fpu_begin()
-and kernel_fpu_end().
+Hi,
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/kfpu.c | 55 +++++++++++++++++++++++++++++++++---
- 1 file changed, 51 insertions(+), 4 deletions(-)
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
-index 5c46ae8c6cac..ec5b28e570c9 100644
---- a/arch/loongarch/kernel/kfpu.c
-+++ b/arch/loongarch/kernel/kfpu.c
-@@ -8,19 +8,40 @@
- #include <asm/fpu.h>
- #include <asm/smp.h>
- 
-+static unsigned int euen_mask = CSR_EUEN_FPEN;
-+
-+/*
-+ * The critical section between kernel_fpu_begin() and kernel_fpu_end()
-+ * is non-reentrant. It is the caller's responsibility to avoid reentrance.
-+ * See drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c as an example.
-+ */
- static DEFINE_PER_CPU(bool, in_kernel_fpu);
-+static DEFINE_PER_CPU(unsigned int, euen_current);
- 
- void kernel_fpu_begin(void)
- {
-+	unsigned int *euen_curr;
-+
- 	preempt_disable();
- 
- 	WARN_ON(this_cpu_read(in_kernel_fpu));
- 
- 	this_cpu_write(in_kernel_fpu, true);
-+	euen_curr = this_cpu_ptr(&euen_current);
- 
--	if (!is_fpu_owner())
--		enable_fpu();
-+	*euen_curr = csr_xchg32(euen_mask, euen_mask, LOONGARCH_CSR_EUEN);
-+
-+#ifdef CONFIG_CPU_HAS_LASX
-+	if (*euen_curr & CSR_EUEN_LASXEN)
-+		_save_lasx(&current->thread.fpu);
-+	else
-+#endif
-+#ifdef CONFIG_CPU_HAS_LSX
-+	if (*euen_curr & CSR_EUEN_LSXEN)
-+		_save_lsx(&current->thread.fpu);
- 	else
-+#endif
-+	if (*euen_curr & CSR_EUEN_FPEN)
- 		_save_fp(&current->thread.fpu);
- 
- 	write_fcsr(LOONGARCH_FCSR0, 0);
-@@ -29,15 +50,41 @@ EXPORT_SYMBOL_GPL(kernel_fpu_begin);
- 
- void kernel_fpu_end(void)
- {
-+	unsigned int *euen_curr;
-+
- 	WARN_ON(!this_cpu_read(in_kernel_fpu));
- 
--	if (!is_fpu_owner())
--		disable_fpu();
-+	euen_curr = this_cpu_ptr(&euen_current);
-+
-+#ifdef CONFIG_CPU_HAS_LASX
-+	if (*euen_curr & CSR_EUEN_LASXEN)
-+		_restore_lasx(&current->thread.fpu);
- 	else
-+#endif
-+#ifdef CONFIG_CPU_HAS_LSX
-+	if (*euen_curr & CSR_EUEN_LSXEN)
-+		_restore_lsx(&current->thread.fpu);
-+	else
-+#endif
-+	if (*euen_curr & CSR_EUEN_FPEN)
- 		_restore_fp(&current->thread.fpu);
- 
-+	*euen_curr = csr_xchg32(*euen_curr, euen_mask, LOONGARCH_CSR_EUEN);
-+
- 	this_cpu_write(in_kernel_fpu, false);
- 
- 	preempt_enable();
- }
- EXPORT_SYMBOL_GPL(kernel_fpu_end);
-+
-+static int __init init_euen_mask(void)
-+{
-+	if (cpu_has_lsx)
-+		euen_mask |= CSR_EUEN_LSXEN;
-+
-+	if (cpu_has_lasx)
-+		euen_mask |= CSR_EUEN_LASXEN;
-+
-+	return 0;
-+}
-+arch_initcall(init_euen_mask);
+> After 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") backported to stable, we have received multiple regression reports including one from Debian build farm[1] that some systems failed to initialize some PCIe devices.
+> 
+> I was able to reproduce on one of my Loongson-3A4000+7A system. It seems like the root cause is firmware on those systems didn't set MRRS properly but 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") assumed firmware's maximum MRRS is always valid.
+> 
+> [1]: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
+
+See Bugzilla for the full thread.
+
+The linked Debian BTS entry have debugging details on this regression
+(boot log, cpuinfo, and lspci).
+
+Anyway, I'm adding this regression to regzbot:
+
+#regzbot introduced: 8b3517f88ff298 https://bugzilla.kernel.org/show_bug.cgi?id=217680
+#regzbot title: LS7A MRRS quirk fails to initialize PCIe devices
+#regzbot link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217680
+
 -- 
-2.39.3
-
+An old man doll... just what I always wanted! - Clara
