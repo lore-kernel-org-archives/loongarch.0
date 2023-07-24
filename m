@@ -1,67 +1,131 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9146C7F;
-	Sun, 23 Jul 2023 11:13:11 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qNX1N-0006H6-2e; Sun, 23 Jul 2023 13:13:05 +0200
-Message-ID: <d8471890-feb8-8953-a97d-5fc6b1f22d65@leemhuis.info>
-Date: Sun, 23 Jul 2023 13:13:04 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC80569E
+	for <loongarch@lists.linux.dev>; Mon, 24 Jul 2023 12:07:59 +0000 (UTC)
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6b9ed0831bcso3278562a34.0
+        for <loongarch@lists.linux.dev>; Mon, 24 Jul 2023 05:07:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690200478; x=1690805278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9nNGOJzgymf6gQYpdxd2UIkw90HSJ+oAIVzOwuAShWk=;
+        b=NEqNdUZWlL0Lu29K6gG4M+BY6c9LNMkTkDzRv8UAGIjyJcHuipKqp5oYNq94bmxIV3
+         Og1lVhfe4XIRhyMKUAB1YahJk8leHGb+VEFR6+Csxmybno6z9daTjqe7FzYy56/vU0LN
+         6wsqRGCcT6lncz0Qkyyf74vxXs1X+uZBlf4CLzFM3QiYo/OxeCGVrrmyaw9H0IaAV+Nm
+         bO9rsJ8DMHp86zqh+93XSET7Ld21qjSoddPhGWkJba7OQS6xs8D3OD3d9CDtc5rWwdkG
+         UEYuM65BAyWfjfNdDUA/LH4Qi2WQxjAe5zdOKmX04bKSpyHeEKx0xG1UOvzseTBUNwwL
+         KXAw==
+X-Gm-Message-State: ABy/qLawKHxiKTkYELfXr+wDVwSTb92f+GoZHUOehKd2iy8tfU3RnXjk
+	u4hnmdBW1JAxv5/TJm9ZHrqbeit6u5vX6g==
+X-Google-Smtp-Source: APBJJlHiz8IqzMGlcbhNTg6Npsm5R2/mHryT+tM4hiAwDnPMQoCEpUtTPMXKUNCxN/wsZkp0XItyrA==
+X-Received: by 2002:a05:6830:1bd5:b0:6b9:5153:7cd7 with SMTP id v21-20020a0568301bd500b006b951537cd7mr7911789ota.20.1690200478224;
+        Mon, 24 Jul 2023 05:07:58 -0700 (PDT)
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com. [209.85.210.42])
+        by smtp.gmail.com with ESMTPSA id v7-20020a05683011c700b006b1570a7674sm3878587otq.29.2023.07.24.05.07.57
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jul 2023 05:07:58 -0700 (PDT)
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6b9b89627c3so3267785a34.1
+        for <loongarch@lists.linux.dev>; Mon, 24 Jul 2023 05:07:57 -0700 (PDT)
+X-Received: by 2002:a25:238e:0:b0:d05:abaf:9933 with SMTP id
+ j136-20020a25238e000000b00d05abaf9933mr7019302ybj.36.1690200457350; Mon, 24
+ Jul 2023 05:07:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: Fwd: PCI: Loongson: 8b3517f88ff2 breaks PCIe on some system
-Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Huacai Chen
- <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>,
- jiaxun.yang@flygoat.com, Aurelien Jarno <aurel32@debian.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux PCI <linux-pci@vger.kernel.org>,
- Linux Loongarch <loongarch@lists.linux.dev>
-References: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690110791;00b7bf19;
-X-HE-SMSGID: 1qNX1N-0006H6-2e
+References: <20230719123944.3438363-1-arnd@kernel.org> <20230719123944.3438363-2-arnd@kernel.org>
+ <87pm4lj1w3.fsf@mail.lhotse> <19631e74-415e-4dcb-b79d-33dcf03d2dfc@app.fastmail.com>
+In-Reply-To: <19631e74-415e-4dcb-b79d-33dcf03d2dfc@app.fastmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 24 Jul 2023 14:07:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVszR+oZi8x8L0iXx=ydTiaNUZxToBSdf=2ZH5t85+D_Q@mail.gmail.com>
+Message-ID: <CAMuHMdVszR+oZi8x8L0iXx=ydTiaNUZxToBSdf=2ZH5t85+D_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] vgacon: rework Kconfig dependencies
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Arnd Bergmann <arnd@kernel.org>, linux-fbdev@vger.kernel.org, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>, 
+	Javier Martinez Canillas <javierm@redhat.com>, "David S . Miller" <davem@davemloft.net>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Brian Cain <bcain@quicinc.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Daniel Vetter <daniel@ffwll.ch>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dave Airlie <airlied@gmail.com>, 
+	Deepak Rawat <drawat.floss@gmail.com>, Dexuan Cui <decui@microsoft.com>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	guoren <guoren@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Khalid Aziz <khalid@gonehiking.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Russell King <linux@armlinux.org.uk>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	WANG Xuerui <kernel@xen0n.name>, Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, 
+	x86@kernel.org, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org, 
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-hexagon@vger.kernel.org, 
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 23.07.23 04:03, Bagas Sanjaya wrote:
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
-> 
->> After 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") backported to stable, we have received multiple regression reports including one from Debian build farm[1] that some systems failed to initialize some PCIe devices.
->>
->> I was able to reproduce on one of my Loongson-3A4000+7A system. It seems like the root cause is firmware on those systems didn't set MRRS properly but 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") assumed firmware's maximum MRRS is always valid.
->>
->> [1]: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
-> 
-> See Bugzilla for the full thread.
-> 
-> The linked Debian BTS entry have debugging details on this regression
-> (boot log, cpuinfo, and lspci).
-> 
-> Anyway, I'm adding this regression to regzbot:
-> 
-> #regzbot introduced: 8b3517f88ff298 https://bugzilla.kernel.org/show_bug.cgi?id=217680
-> #regzbot title: LS7A MRRS quirk fails to initialize PCIe devices
-> #regzbot link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
+Hi Arnd,
 
-FWIW & TWIMC, a fix for this is in the works already afaics:
+On Fri, Jul 21, 2023 at 10:29=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrot=
+e:
+> On Fri, Jul 21, 2023, at 06:59, Michael Ellerman wrote:
+> > Arnd Bergmann <arnd@kernel.org> writes:
+> >> From: Arnd Bergmann <arnd@arndb.de>
+> >>
+> >> The list of dependencies here is phrased as an opt-out, but this is mi=
+ssing
+> >> a lot of architectures that don't actually support VGA consoles, and s=
+ome
+> >> of the entries are stale:
+> >>
+> >>  - powerpc used to support VGA consoles in the old arch/ppc codebase, =
+but
+> >>    the merged arch/powerpc never did
+> >
+> > Not disputing this, but how did you come to that conclusion? I grepped
+> > around and couldn't convince myself whether it can work on powerpc or
+> > not. ie. currently it's possible to enable CONFIG_VGA_CONSOLE and
+> > powerpc does have a struct screen_info defined which seems like it woul=
+d
+> > allow vgacon_startup() to complete.
+>
+> The VGA console needs both screen_info and vga_con to work. In arch/ppc
+> we had both, but in arch/powerpc we only retained the screen_info:
+>
+> $ git grep vga_con v2.6.26 -- arch/ppc arch/ppc64 arch/powerpc
+> v2.6.26:arch/ppc/platforms/pplus.c:     conswitchp =3D &vga_con;
+> v2.6.26:arch/ppc/platforms/prep_setup.c:        conswitchp =3D &vga_con;
+>
+> so after arch/ppc was removed, this became impossible to use on both
+> pplus and prep. These two platforms were also (as far as I can tell)
+> the only ones to support vga16fb as an alternative to vgacon, but
+> both platforms were removed later on.
 
-#regzbot monitor:
-https://lore.kernel.org/all/20230718133259.2867432-1-jiaxun.yang@flygoat.com/
-#regzbot fix: pci: loongson: Workaround MIPS firmware MRRS settings
+I did use vgacon and vga16fb on CHRP on a second video card
+(initialized using Gabriel Paubert's x86 BIOS emulator), but that was
+definitely before the advent of arch/powerpc/.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
