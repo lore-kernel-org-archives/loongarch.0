@@ -1,124 +1,445 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348557C
-	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 02:03:04 +0000 (UTC)
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-4fddd4e942eso7159479e87.3
-        for <loongarch@lists.linux.dev>; Mon, 24 Jul 2023 19:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690250583; x=1690855383;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4jXcFWAgGAflI6kUVxjxEkNlmkyw4QSOaHS8DdvHCGs=;
-        b=i6MjFuhFxFhGZJwQwP043dtGCjxRHgIEtvjyb0w8NbNVKbPO5tYR2SvZsTjrM7xKQY
-         uwlM3l7pukdL6uCb6XRsllO6IebZCLte/l8pDPgmtQ2ACENK1qSiBWTZ5Ni6IB2VKzg6
-         TEWEJfepNUaHfo0fne2LApN/I4DMQzHMh9uCX+E6hSlQR3ECko9/XSzKccvOKVriyiOp
-         yrXmkHrM0RuSBCKEm7dm1DON1/81SEFry/wQBwHQfoziXCtDnxJzYyLQt9eJPXseq5g7
-         QEaqlrCB07OxftOHUQOjvYKfrZWUqNTbcolz9PPOjdKexlaTIkI70y3MyZReEsFXqPrj
-         0xpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690250583; x=1690855383;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4jXcFWAgGAflI6kUVxjxEkNlmkyw4QSOaHS8DdvHCGs=;
-        b=HjZVnPuSXLnf+DT8OI0kJOMIfIicOYxzizWAbmocqet+71Sg8lrpt9cs69DF9UA0Kf
-         JFEilp6JB8AzcqQ11mfoW7NotjGPzHfHNd4CnWyazhSrtO5RCSuLkiZybsauWGJxvA4+
-         +xGsMdBMs6W1gq8YhuzLe7oYUwhMrLf2tvRE17JNA+Hra9W2HHYeWIN8HKQFvdXL++ET
-         Nbm5sXowcklzZbiKfLp6EqQ1rhl3rh+HtKHfCxrHEhpwUqlXPmGGJv+xnkFWCm5bQSCc
-         1GOH5L1auJC2/iSLjF1VBL48ccqLIgl76RVNAwMRuDXX084mJLIMdKojA0O1kNBBqVsC
-         DeEA==
-X-Gm-Message-State: ABy/qLb1nnLIl9SVqBiVjq0KSv62H85it89OzSKityCqJpB+NYDBuZ8h
-	yu23LzeGZOeLHbjQQV8zw8w82SKhWjnJSspgees=
-X-Google-Smtp-Source: APBJJlHClHq8ILDWSvrqrA1ckSZ+wKew32udmYxuo/aAKLTXnHoMwBTe+CBPrB1qhEWorO4SE4k1Jm4AqxW26x0JcWo=
-X-Received: by 2002:a2e:3818:0:b0:2b6:ee99:fffc with SMTP id
- f24-20020a2e3818000000b002b6ee99fffcmr6985224lja.36.1690250582501; Mon, 24
- Jul 2023 19:03:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7817C
+	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 02:06:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3509C433CC
+	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 02:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690250774;
+	bh=ois5k9gPoIaKZCGKzTkyScImYAWp5bQd9Mdm5Hp6d1E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DsRSOBxtNTUU1FSe+YIsf70k2OWHEFuh1ttdDvf26SJJiNTohwc10gS8SlmNKU1fG
+	 cpt9l27O76LWqeF6OGaHzrGoxtOpjv/PFJMQMNOeosOHP/lWyGoB4PC9ambNlD/dE/
+	 i94qH+ILxjfy/4or5CUcTqgjsztZuEJBLqxSKIo+nVcaLERYcyIHywqFiPkq6YqnYt
+	 pEhR2Iszu0/jobtSQytG0bVSshJvzhRc2TUiJ2YoaGV2QAAahoFu4lD4mFVXzJ12v/
+	 iLkHuXrFuuxbvi4/CheFZqT/+vaQ2vZsz4eRqHwD4/XdNEMUcfoKDlO3MBrTteijl2
+	 CGtjZDDskDfDA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-51e526e0fe4so7870886a12.3
+        for <loongarch@lists.linux.dev>; Mon, 24 Jul 2023 19:06:14 -0700 (PDT)
+X-Gm-Message-State: ABy/qLZ3MEyrobBb4rkWeR3xtgpgdnAT3szDZ0YVL1RBuErd79QVMSGd
+	Mo6/bOyZcRm8rEoc6DZq5e8/fVpBpUBMeHv7Wr8=
+X-Google-Smtp-Source: APBJJlFzQLl/oKHwvKDek4rbQrc7O0kbqUd6YlripVbyV4sF1mfNyYiQ73p8M51+0sUJQD8A5nDoO91rZdX596E3G4M=
+X-Received: by 2002:a17:906:7396:b0:987:e23f:6d7a with SMTP id
+ f22-20020a170906739600b00987e23f6d7amr11431395ejl.25.1690250772773; Mon, 24
+ Jul 2023 19:06:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1689215889.git.chenfeiyang@loongson.cn> <be1874e517f4f4cc50906f18689a0add3594c2e0.1689215889.git.chenfeiyang@loongson.cn>
- <9e0b3466-10e1-4267-ab9b-d9f8149b6b6b@lunn.ch> <CACWXhKkX-syR01opOky=t-b8C3nhV5f_WNfCQ-kOE+4o0xh4tA@mail.gmail.com>
- <3cff46b0-5621-4881-8e70-362bb7a70ed1@lunn.ch> <CACWXhKk23muXROj6OrmeFna88ViJHA_7QpQZoWiFgzEPb4pLWQ@mail.gmail.com>
- <9568c4ad-e10f-4b76-8766-ec621f788c40@lunn.ch> <CACWXhKkoJHT8HNb-h_1PJTT1rE-TQxByd98qS0Zka5yg2_WsXw@mail.gmail.com>
- <24d49ab1-c2e4-4878-a4f6-8d1f405f2407@lunn.ch>
-In-Reply-To: <24d49ab1-c2e4-4878-a4f6-8d1f405f2407@lunn.ch>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Tue, 25 Jul 2023 10:02:50 +0800
-Message-ID: <CACWXhKmwjXb_71hmGfKh7NCC3iAhFTB1uEVhY0qq8kz24o3TYg@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/10] net: phy: Add driver for Loongson PHY
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Feiyang Chen <chenfeiyang@loongson.cn>, hkallweit1@gmail.com, peppe.cavallaro@st.com, 
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com, chenhuacai@loongson.cn, 
-	linux@armlinux.org.uk, dongbiao@loongson.cn, 
-	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org, 
-	loongarch@lists.linux.dev
+References: <20230719082732.2189747-1-lienze@kylinos.cn> <20230719082732.2189747-2-lienze@kylinos.cn>
+ <CAAhV-H5pWmd2owMgH9hiqxoWpeAOKGv_=j2V-urA+D87_uCMyg@mail.gmail.com>
+ <87pm4mf1xl.fsf@kylinos.cn> <CAAhV-H4+8_gBMMdLhx=uEAsCN5wK7kFONsKDyGPqm0kxW8FU=A@mail.gmail.com>
+ <87lef7ayha.fsf@kylinos.cn>
+In-Reply-To: <87lef7ayha.fsf@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 25 Jul 2023 10:06:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7mpjeqnv1MXn--EPDUam6TTcHwqiMsEL4OsmAFS5XNMA@mail.gmail.com>
+Message-ID: <CAAhV-H7mpjeqnv1MXn--EPDUam6TTcHwqiMsEL4OsmAFS5XNMA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] LoongArch: mm: Add page table mapped mode support
+To: Enze Li <lienze@kylinos.cn>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, glider@google.com, 
+	elver@google.com, akpm@linux-foundation.org, kasan-dev@googlegroups.com, 
+	linux-mm@kvack.org, zhangqing@loongson.cn, yangtiezhu@loongson.cn, 
+	dvyukov@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 21, 2023 at 5:04=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
+On Sun, Jul 23, 2023 at 3:17=E2=80=AFPM Enze Li <lienze@kylinos.cn> wrote:
 >
-> > Hi, Andrew,
+> On Fri, Jul 21 2023 at 10:21:38 AM +0800, Huacai Chen wrote:
+>
+> > On Fri, Jul 21, 2023 at 10:12=E2=80=AFAM Enze Li <lienze@kylinos.cn> wr=
+ote:
+> >>
+> >> On Wed, Jul 19 2023 at 11:29:37 PM +0800, Huacai Chen wrote:
+> >>
+> >> > Hi, Enze,
+> >> >
+> >> > On Wed, Jul 19, 2023 at 4:34=E2=80=AFPM Enze Li <lienze@kylinos.cn> =
+wrote:
+> >> >>
+> >> >> According to LoongArch documentation online, there are two types of=
+ address
+> >> >> translation modes: direct mapped address translation mode (direct m=
+apped mode)
+> >> >> and page table mapped address translation mode (page table mapped m=
+ode).
+> >> >>
+> >> >> Currently, the upstream code only supports DMM (Direct Mapped Mode)=
+.
+> >> >> This patch adds a function that determines whether PTMM (Page Table
+> >> >> Mapped Mode) should be used, and also adds the corresponding handle=
+r
+> >> >> funcitons for both modes.
+> >> >>
+> >> >> For more details on the two modes, see [1].
+> >> >>
+> >> >> [1]
+> >> >> https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-E=
+N.html#virtual-address-space-and-address-translation-mode
+> >> >>
+> >> >> Signed-off-by: Enze Li <lienze@kylinos.cn>
+> >> >> ---
+> >> >>  arch/loongarch/include/asm/page.h    | 10 ++++++++++
+> >> >>  arch/loongarch/include/asm/pgtable.h |  6 ++++++
+> >> >>  arch/loongarch/mm/pgtable.c          | 25 ++++++++++++++++++++++++=
++
+> >> >>  3 files changed, 41 insertions(+)
+> >> >>
+> >> >> diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/inc=
+lude/asm/page.h
+> >> >> index 26e8dccb6619..05919be15801 100644
+> >> >> --- a/arch/loongarch/include/asm/page.h
+> >> >> +++ b/arch/loongarch/include/asm/page.h
+> >> >> @@ -84,7 +84,17 @@ typedef struct { unsigned long pgprot; } pgprot_=
+t;
+> >> >>  #define sym_to_pfn(x)          __phys_to_pfn(__pa_symbol(x))
+> >> >>
+> >> >>  #define virt_to_pfn(kaddr)     PFN_DOWN(PHYSADDR(kaddr))
+> >> >> +
+> >> >> +#ifdef CONFIG_64BIT
+> >> >> +#define virt_to_page(kaddr)                                       =
+     \
+> >> >> +({                                                                =
+     \
+> >> >> +       is_PTMM_addr((unsigned long)kaddr) ?                       =
+     \
+> >> >> +       PTMM_virt_to_page((unsigned long)kaddr) :                  =
+     \
+> >> >> +       DMM_virt_to_page((unsigned long)kaddr);                    =
+     \
+> >> >> +})
+> >> > 1, Rename these helpers to
+> >> > is_dmw_addr()/dmw_virt_to_page()/tlb_virt_to_page() will be better.
+> >> > 2, These helpers are so simple so can be defined as inline function =
+or
+> >> > macros in page.h.
+> >>
+> >> Hi Huacai,
+> >>
+> >> Except for tlb_virt_to_page(), the remaining two modifications are eas=
+y.
+> >>
+> >> I've run into a lot of problems when trying to make tlb_virt_to_page()
+> >> as a macro or inline function.  That's because we need to export this
+> >> symbol in order for it to be used by the module that called the
+> >> virt_to_page() function, other wise, we got the following errors,
+> >>
+> >> ----------------------------------------------------------------------=
+-
+> >>   MODPOST Module.symvers
+> >> ERROR: modpost: "tlb_virt_to_page" [fs/hfsplus/hfsplus.ko] undefined!
+> >> ERROR: modpost: "tlb_virt_to_page" [fs/smb/client/cifs.ko] undefined!
+> >> ERROR: modpost: "tlb_virt_to_page" [crypto/gcm.ko] undefined!
+> >> ERROR: modpost: "tlb_virt_to_page" [crypto/ccm.ko] undefined!
+> >> ERROR: modpost: "tlb_virt_to_page" [crypto/essiv.ko] undefined!
+> >> ERROR: modpost: "tlb_virt_to_page" [lib/crypto/libchacha20poly1305.ko]=
+ undefined!
+> >> ERROR: modpost: "tlb_virt_to_page" [drivers/gpu/drm/ttm/ttm.ko] undefi=
+ned!
+> >> ERROR: modpost: "tlb_virt_to_page" [drivers/gpu/drm/amd/amdgpu/amdgpu.=
+ko] undefined!
+> >> ERROR: modpost: "tlb_virt_to_page" [drivers/scsi/iscsi_tcp.ko] undefin=
+ed!
+> >> ERROR: modpost: "tlb_virt_to_page" [drivers/scsi/qla2xxx/qla2xxx.ko] u=
+ndefined!
+> >> WARNING: modpost: suppressed 44 unresolved symbol warnings because the=
+re were too many)
+> >> ----------------------------------------------------------------------=
+-
+> >>
+> >> It seems to me that wrapping it into a common function might be the on=
+ly
+> >> way to successfully compile or link with this modification.
+> >>
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> --- a/arch/loongarch/include/asm/pgtable.h
+> >> +++ b/arch/loongarch/include/asm/pgtable.h
+> >> @@ -360,6 +360,8 @@ static inline void pte_clear(struct mm_struct *mm,=
+ unsigned long addr, pte_t *pt
+> >>  #define PMD_T_LOG2     (__builtin_ffs(sizeof(pmd_t)) - 1)
+> >>  #define PTE_T_LOG2     (__builtin_ffs(sizeof(pte_t)) - 1)
+> >>
+> >> +inline struct page *tlb_virt_to_page(unsigned long kaddr);
+> >> +
+> >>
+> >> --- a/arch/loongarch/mm/pgtable.c
+> >> +++ b/arch/loongarch/mm/pgtable.c
+> >> @@ -9,6 +9,12 @@
+> >>  #include <asm/pgtable.h>
+> >>  #include <asm/tlbflush.h>
+> >>
+> >> +inline struct page *tlb_virt_to_page(unsigned long kaddr)
+> >> +{
+> >> +       return pte_page(*virt_to_kpte(kaddr));
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(tlb_virt_to_page);
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>
+> >> WDYT?
+> >>
+> >> Best Regards,
+> >> Enze
+> > If you define "static inline" functions in page.h, there will be no pro=
+blems.
 > >
-> > Sorry, I currently don't have an exact timeline for when the OUI will
-> > be available. The next hardware version will address these bugs, so
-> > we won't be going with this driver.
 >
-> Not having an OUI breaks the standard. So i was actually thinking you
-> should trap the reads to the ID registers in the MDIO bus driver and
-> return valid values. Some Marvell Ethernet switch integrated PHYs have
-> a valid OUI, and no device part. We trap those and insert valid
-> values. So there is some president for doing this. Doing this would
-> also allow you to avoid the PHY driver poking around the MAC drivers
-> PCI bus.
+> Hi Huacai,
 >
-> > > So i would suggest .get_features() indicates normal 10/100/1000
-> > > operation. Have your .config_aneg function which is used for both
-> > > auto-neg and forced configuration check for phydev->autoneg =3D=3D
-> > > AUTONEG_DISABLE and phydev->speed =3D=3D SPEED_1000 and return
-> > > -EOPNOTSUPP. Otherwise call genphy_config_aneg().
-> > >
-> >
-> > Well, can I return -EINVAL in the .set_link_ksettings callback?
+> After failed over and over and over again, I think I've found the reason
+> why we can't define tlb_virt_to_page as macro or inline function in
+> asm/page.h or asm/pgtable.h. :)
 >
-> If the PHY is broken, the PHY should do it. If the MAC is broken, the
-> MAC should do it. We have clean separation here, even when the
-> hardware is integrated.
+> I'll go through this step by step.
 >
-
-Hi, Andrew,
-
-I get it. To be honest, I'm not familiar with the hardware, so I asked
-the colleague who designed this chip. The real problem is the same as I
-described in Patch 10 - the Ethernet controller doesn't work well with
-the PHY. If the controller works properly, we can force 1000. Are there
-any methods to work around this problem in the MAC driver?
-
-> > Considering that our next hardware version will have the OUI
-> > allocated and these bugs fixed, I won't submit this driver in
-> > the next patch version. I believe we can just use the generic
-> > PHY for now.
+> If I put tlb_virt_to_page in asm/page.h as following,
 >
-> The problem with the generic driver is you cannot have workarounds in
-> it. You don't want to put PHY workarounds in the MAC driver.
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> +static inline struct page *tlb_virt_to_page(unsigned long kaddr)
+> +{
+> +       return pte_page(*virt_to_kpte(kaddr));
+> +}
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
 >
-
-Sure, we should not put PHY workarounds in the MAC driver and vice
-versa.
-
-This PHY driver was designed to solve two problems at first:
-1. We cannot force 1000.
-2. We cannot use half duplex.
-
-Now, we are sure that the MAC is broken, not the PHY, so I think we
-can solve these problems in the MAC driver.
-
-Thanks,
-Feiyang
-
->     Andrew
+> and compile kernel, gcc says to me the following error.
 >
+> --------------------------------------------------------------------
+>   CC      arch/loongarch/kernel/asm-offsets.s
+> In file included from ./include/linux/shm.h:6,
+>                  from ./include/linux/sched.h:16,
+>                  from arch/loongarch/kernel/asm-offsets.c:8:
+> ./arch/loongarch/include/asm/page.h: In function =E2=80=98tlb_virt_to_pag=
+e=E2=80=99:
+> ./arch/loongarch/include/asm/page.h:126:16: error: implicit declaration o=
+f function =E2=80=98pte_page=E2=80=99 [-Werror=3Dimplicit-function-declarat=
+ion]
+>   126 |         return pte_page(*virt_to_kpte(kaddr));
+>       |                ^~~~~~~~
+> ---------------------------------------------------------------------
+>
+> "pte_page" is declared in asm/pgtable.h, so I put "#include
+> <asm/pgtable.h>" ahead, like this,
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> +#include <asm/pgtable.h>
+> +static inline struct page *tlb_virt_to_page(unsigned long kaddr)
+> +{
+> +       return pte_page(*virt_to_kpte(kaddr));
+> +}
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>
+> then compile again, gcc says,
+>
+> ---------------------------------------------------------------------
+>   CC      arch/loongarch/kernel/asm-offsets.s
+> In file included from ./arch/loongarch/include/asm/page.h:98,
+>                  from ./include/linux/shm.h:6,
+>                  from ./include/linux/sched.h:16,
+>                  from arch/loongarch/kernel/asm-offsets.c:8:
+> ./arch/loongarch/include/asm/page.h: In function =E2=80=98tlb_virt_to_pag=
+e=E2=80=99:
+> ./arch/loongarch/include/asm/page.h:127:26: error: implicit declaration o=
+f function =E2=80=98virt_to_kpte=E2=80=99; did you mean =E2=80=98virt_to_pf=
+n=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+>   127 |         return pte_page(*virt_to_kpte(kaddr));
+>       |                          ^~~~~~~~~~~~
+> ---------------------------------------------------------------------
+>
+> "virt_to_kpte" is defined in linux/pgtable.h, consequently I add "#includ=
+e
+> <linux/pgtable.h>" as well,
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> +#include <asm/pgtable.h>
+> +#include <linux/pgtable.h>
+> +static inline struct page *tlb_virt_to_page(unsigned long kaddr)
+> +{
+> +       return pte_page(*virt_to_kpte(kaddr));
+> +}
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>
+> and continue,
+>
+> ---------------------------------------------------------------------
+>   CC      arch/loongarch/kernel/asm-offsets.s
+>   CALL    scripts/checksyscalls.sh
+>   CC      arch/loongarch/vdso/vgetcpu.o
+>   CC      arch/loongarch/vdso/vgettimeofday.o
+> In file included from ./arch/loongarch/include/asm/page.h:124,
+>                  from ./include/linux/mm_types_task.h:16,
+>                  from ./include/linux/mm_types.h:5,
+>                  from ./include/linux/mmzone.h:22,
+>                  from ./include/linux/gfp.h:7,
+>                  from ./include/linux/mm.h:7,
+>                  from ./arch/loongarch/include/asm/vdso.h:10,
+>                  from arch/loongarch/vdso/vgetcpu.c:6:
+> ./arch/loongarch/include/asm/pgtable.h: In function =E2=80=98pte_accessib=
+le=E2=80=99:
+> ./arch/loongarch/include/asm/pgtable.h:436:40: error: invalid use of unde=
+fined type =E2=80=98struct mm_struct=E2=80=99
+>   436 |                         atomic_read(&mm->tlb_flush_pending))
+>       |                                        ^~
+> ---------------------------------------------------------------------
+>
+> The first line above shows that it compiled successfully for the
+> asm-offsets module.  That's fair enough.  Actually, the point is the
+> next one (invalid use of undefined type 'struct mm_struct').
+>
+> As we all know, before the compiler compiles, it expands the header
+> files first.  For this example, it firstly expands from the header file
+> vdso.h, then the mm.h file and so on.  We can see that the line 436 of
+> asm/pgtable.h are using 'struct mm_struct'.  When we backtrack to a file
+> that has been previously expanded, it's obvious that the definition of
+> mm_struct does not appear in the expanded file.  Instead, it appears
+> afterward (mm_types.h).
+>
+> To be clear, I'll exemplify this case with a cheap ASCII diagram.
+>
+>                                                                  ... <-|
+>                     we're using 'mm_struct' here >>>   asm/pgtable.h <-|
+>                                                                  ... <-|
+>                                                                        |
+>                                                                |->...  |
+>                                                                |->asm/pag=
+e.h
+>                                                                |->...
+>                                                        |->...  |
+>                                          |->...        |->mm_types_task.h
+>                              |->...      |->mm_types.h-|->...
+>                     |->...   |->mmzone.h-|->... |
+>             |->...  |->gfp.h-|->...             |
+>   |->...    |->mm.h-|->...            But 'mm_struct' is defined here.
+>   |->vdso.h-|->...
+>   |->...
+> vgetcpu.c
+>
+> I've also tried to include mm_types.h in advance, but in this case that
+> doesn't work because the _LINUX_MM_TYPES_H macro already exists.
+> The "forward declaration" was also taken into account, in the end it was
+> found to be unavailable as well.
+>
+> In summary, I'm afraid that rewriting tlb_virt_to_page in asm/page.h as
+> a macro or inline function is not possible.  The root case of this is
+> that both 'struct mm_struct' and 'virt_to_kpte' belong to high-level
+> data structures, and if they are referenced in asm/page.h at the
+> low-level, dependency problems arise.
+>
+> Anyway, we can at least define it as a normal function in asm/pgtable.h,
+> is that Okay with you?
+>
+> It may be a bit wordy, so please bear with me.  In addition, all of the
+> above is my understanding, am I missing something?
+Well, you can define the helpers in .c files at present, but I have
+another question.
+
+Though other archs (e.g., RISC-V) have no DMW addresses, they still
+have linear area. In other words, both LoongArch and RISC-V have
+linear area and vmalloc-like areas. The only difference is LoongArch's
+linear area is DMW-mapped but RISC-V's linear area is TLB-mapped.
+
+For linear area, the translation is pfn_to_page(virt_to_pfn(kaddr)),
+no matter LoongArch or RISC-V;
+For vmalloc-like areas, the translation is
+pte_page(*virt_to_kpte(kaddr)), no matter LoongArch or RISC-V.
+
+My question is: why RISC-V only care about the linear area for
+virt_to_page(), but you are caring about the vmalloc-like areas?
+
+Huacai
+>
+> Best Regards,
+> Enze
+>
+> >>
+> >> > 3, CONFIG_64BIT can be removed here.
+> >> >
+> >> > Huacai
+> >> >
+> >> >> +#else
+> >> >>  #define virt_to_page(kaddr)    pfn_to_page(virt_to_pfn(kaddr))
+> >> >> +#endif
+> >> >>
+> >> >>  extern int __virt_addr_valid(volatile void *kaddr);
+> >> >>  #define virt_addr_valid(kaddr) __virt_addr_valid((volatile void *)=
+(kaddr))
+> >> >> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/=
+include/asm/pgtable.h
+> >> >> index ed6a37bb55b5..0fc074b8bd48 100644
+> >> >> --- a/arch/loongarch/include/asm/pgtable.h
+> >> >> +++ b/arch/loongarch/include/asm/pgtable.h
+> >> >> @@ -360,6 +360,12 @@ static inline void pte_clear(struct mm_struct =
+*mm, unsigned long addr, pte_t *pt
+> >> >>  #define PMD_T_LOG2     (__builtin_ffs(sizeof(pmd_t)) - 1)
+> >> >>  #define PTE_T_LOG2     (__builtin_ffs(sizeof(pte_t)) - 1)
+> >> >>
+> >> >> +#ifdef CONFIG_64BIT
+> >> >> +struct page *DMM_virt_to_page(unsigned long kaddr);
+> >> >> +struct page *PTMM_virt_to_page(unsigned long kaddr);
+> >> >> +bool is_PTMM_addr(unsigned long kaddr);
+> >> >> +#endif
+> >> >> +
+> >> >>  extern pgd_t swapper_pg_dir[];
+> >> >>  extern pgd_t invalid_pg_dir[];
+> >> >>
+> >> >> diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtabl=
+e.c
+> >> >> index 36a6dc0148ae..4c6448f996b6 100644
+> >> >> --- a/arch/loongarch/mm/pgtable.c
+> >> >> +++ b/arch/loongarch/mm/pgtable.c
+> >> >> @@ -9,6 +9,31 @@
+> >> >>  #include <asm/pgtable.h>
+> >> >>  #include <asm/tlbflush.h>
+> >> >>
+> >> >> +#ifdef CONFIG_64BIT
+> >> >> +/* DMM stands for Direct Mapped Mode. */
+> >> >> +struct page *DMM_virt_to_page(unsigned long kaddr)
+> >> >> +{
+> >> >> +       return pfn_to_page(virt_to_pfn(kaddr));
+> >> >> +}
+> >> >> +EXPORT_SYMBOL_GPL(DMM_virt_to_page);
+> >> >> +
+> >> >> +/* PTMM stands for Page Table Mapped Mode. */
+> >> >> +struct page *PTMM_virt_to_page(unsigned long kaddr)
+> >> >> +{
+> >> >> +       return pte_page(*virt_to_kpte(kaddr));
+> >> >> +}
+> >> >> +EXPORT_SYMBOL_GPL(PTMM_virt_to_page);
+> >> >> +
+> >> >> +bool is_PTMM_addr(unsigned long kaddr)
+> >> >> +{
+> >> >> +       if (unlikely((kaddr & GENMASK(BITS_PER_LONG - 1, cpu_vabits=
+)) =3D=3D
+> >> >> +                    GENMASK(BITS_PER_LONG - 1, cpu_vabits)))
+> >> >> +               return true;
+> >> >> +       return false;
+> >> >> +}
+> >> >> +EXPORT_SYMBOL_GPL(is_PTMM_addr);
+> >> >> +#endif
+> >> >> +
+> >> >>  pgd_t *pgd_alloc(struct mm_struct *mm)
+> >> >>  {
+> >> >>         pgd_t *ret, *init;
+> >> >> --
+> >> >> 2.34.1
+> >> >>
+> >> >>
+> >>
