@@ -1,91 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55337539D
-	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 07:12:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20763C433C7
-	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 07:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5042D8F71
+	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 07:39:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3ECCC433CB
+	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 07:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690269164;
-	bh=aI7ZxYAZWlJJwjCBT+ee6LoTaj892FuVBC7Fojf9VzI=;
+	s=k20201202; t=1690270750;
+	bh=yCZDIdxMjNkX9lOuzDqn+3Yh/GccWI0M6b3O0aS8Dnk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hW7g3w5Kw0pS/hSdNwEre8jz9hbCE0eq3Kl32QphLESsVFtWgQKDSDFoFT/nzfV/n
-	 m4WHOWapcyYVx1IlKAk9/Ux3pXV50OF/s0j36pltbH1j7LUaLgr83pa4rj0SxeoE/H
-	 UqgtPbWREZBOXWUSNG5sbdj3Q2OV2VZiIS5+qHFhDbEeopuRJRN7IB7jACs4pDf7YT
-	 m9KEdQfxoMgpCWtFO8Kq+9g3oFBAnXRVWd47iZmgR0Yi3dQiyBnE1ylwTQuePFGD0t
-	 Ww+u4dnnjQlidonfcykAARagZjjkb9df9zCcG+RyNWkWk/7Sft8A3tkQbVLCDe7Xg/
-	 oWExfwr2c3k0Q==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-51cff235226so10925124a12.0
-        for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 00:12:44 -0700 (PDT)
-X-Gm-Message-State: ABy/qLYZlIvOWIl3fqz7wWuIGrH50ZEg7/4lEgJ6DAsVQjT7oOlBRIvg
-	yL+dd8nN4U985uMSnBtl1OJBFYEBHHgv+fiuGo0=
-X-Google-Smtp-Source: APBJJlHQPOq5U9UiunyY1ciPlHNXhaZTj9WL96PQqOavAh1qrAHgwh701yOcTY56SwThmVOTkw7K25bIWNxzspX06+4=
-X-Received: by 2002:a05:6402:2802:b0:51e:588b:20ca with SMTP id
- h2-20020a056402280200b0051e588b20camr1618231ede.8.1690269162359; Tue, 25 Jul
- 2023 00:12:42 -0700 (PDT)
+	b=Zx0mGrx5lLFOHOubu3kmvBw5iso+CgZlqhi0zdgLXgkchl8wzm7yeU+fOZ5DHrFUr
+	 ZeeVb9VUOL2pmKVFgjL4+yHps/WO4c8620PSoURm0mA0z36SzppYyYvGPN0u/Nps+W
+	 uRTAcgU+h+wjbsGZq4Sb/moiKn8HVhhPz6m92gJ3dYErPpqbKSz2wkUGjiF5cN+xUS
+	 qW/r2GqomC9D6/hkecwIbWA3I1sV8CwVJUVL8Yl4yzXFRDk48X4mVI4OpoBCoFQzdv
+	 Lf7jZ/Ks96cAE+uxDN+4AlaUbNfc3JTdlji3fOyX1hZnSEZagAxVnv5f1qE1sGBBjg
+	 L+DIQv+O8dGVA==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-52229d3b8c8so2994533a12.2
+        for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 00:39:10 -0700 (PDT)
+X-Gm-Message-State: ABy/qLYAJwyBFb3zS95pk3CKfWGuH0tEg97VGCWEV7AFfjZwyZz3xTza
+	8Th2k4Rz0FvPF+vTmoLPglKCX2gD4H/d1U9SxkM=
+X-Google-Smtp-Source: APBJJlGfOeA/cNCsfW7zqUu1/yyOkDp8wAPMr94iW/szwgNAVeCIhoD332p4Ry20VaewkC8s6jDmdOz9dAg6W3S6XAw=
+X-Received: by 2002:aa7:c394:0:b0:521:a740:29b7 with SMTP id
+ k20-20020aa7c394000000b00521a74029b7mr10427977edq.36.1690270748946; Tue, 25
+ Jul 2023 00:39:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1690268708-5899-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1690268708-5899-1-git-send-email-yangtiezhu@loongson.cn>
+References: <20230725061451.1231480-1-lienze@kylinos.cn> <20230725061451.1231480-2-lienze@kylinos.cn>
+In-Reply-To: <20230725061451.1231480-2-lienze@kylinos.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 25 Jul 2023 15:12:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H65jzk+PpuXBH79Q2XwYVzFdL55vFUhXTD1R4iUQ3zd-g@mail.gmail.com>
-Message-ID: <CAAhV-H65jzk+PpuXBH79Q2XwYVzFdL55vFUhXTD1R4iUQ3zd-g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] LoongArch: BPF: Fix check condition to call
- lu32id in move_imm()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
-	stable@vger.kernel.org, #@web.codeaurora.org, 6.1@web.codeaurora.org
+Date: Tue, 25 Jul 2023 15:38:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7ymPQkHUzqs-D03cT=JgkJd_=ZXjCVB1v_hhfop4pqYA@mail.gmail.com>
+Message-ID: <CAAhV-H7ymPQkHUzqs-D03cT=JgkJd_=ZXjCVB1v_hhfop4pqYA@mail.gmail.com>
+Subject: Re: [PATCH 1/4 v2] LoongArch: mm: Add page table mapped mode support
+To: Enze Li <lienze@kylinos.cn>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, glider@google.com, 
+	elver@google.com, akpm@linux-foundation.org, kasan-dev@googlegroups.com, 
+	linux-mm@kvack.org, zhangqing@loongson.cn, yangtiezhu@loongson.cn, 
+	dvyukov@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Queued for loongarch-next, thanks.
+Hi, Enze,
+
+On Tue, Jul 25, 2023 at 2:15=E2=80=AFPM Enze Li <lienze@kylinos.cn> wrote:
+>
+> According to LoongArch documentation online, there are two types of addre=
+ss
+> translation modes: direct mapped address translation mode (direct mapped =
+mode)
+> and page table mapped address translation mode (page table mapped mode).
+>
+> Currently, the upstream kernel only supports direct mapped mode.
+> This patch adds a function that determines whether page table mapped
+> mode should be used, and also adds the corresponding handler functions
+> for both modes.
+>
+> For more details on the two modes, see [1].
+>
+> [1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.=
+html#virtual-address-space-and-address-translation-mode
+>
+> Signed-off-by: Enze Li <lienze@kylinos.cn>
+> ---
+>  arch/loongarch/include/asm/page.h    | 19 ++++++++++++++++++-
+>  arch/loongarch/include/asm/pgtable.h |  2 ++
+>  arch/loongarch/mm/pgtable.c          |  6 ++++++
+>  3 files changed, 26 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/a=
+sm/page.h
+> index 26e8dccb6619..e43a2385b2cd 100644
+> --- a/arch/loongarch/include/asm/page.h
+> +++ b/arch/loongarch/include/asm/page.h
+> @@ -32,6 +32,7 @@
+>
+>  #include <linux/kernel.h>
+>  #include <linux/pfn.h>
+> +#include <asm/cpu-features.h>
+>
+>  /*
+>   * It's normally defined only for FLATMEM config but it's
+> @@ -84,7 +85,23 @@ typedef struct { unsigned long pgprot; } pgprot_t;
+>  #define sym_to_pfn(x)          __phys_to_pfn(__pa_symbol(x))
+>
+>  #define virt_to_pfn(kaddr)     PFN_DOWN(PHYSADDR(kaddr))
+> -#define virt_to_page(kaddr)    pfn_to_page(virt_to_pfn(kaddr))
+> +
+> +static inline bool is_tlb_addr(unsigned long kaddr)
+> +{
+> +       if (unlikely((kaddr & GENMASK(BITS_PER_LONG - 1, cpu_vabits)) =3D=
+=3D
+> +                    GENMASK(BITS_PER_LONG - 1, cpu_vabits)))
+> +               return true;
+> +       return false;
+I think this helper can simply "return (kaddr >=3D vm_map_base)"? If so,
+we can even remove this helper and use the simple condition in
+virt_to_page().
+
+> +}
+> +
+> +#define dwm_virt_to_page(kaddr)        pfn_to_page(virt_to_pfn(kaddr))
+This should be "dmw", not "dwm", and since tlb_virt_to_page is in .c
+file, this one should also be there.
 
 Huacai
-
-On Tue, Jul 25, 2023 at 3:05=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+> +
+> +#define virt_to_page(kaddr)                                            \
+> +({                                                                     \
+> +       is_tlb_addr((unsigned long)kaddr) ?                             \
+> +       tlb_virt_to_page((unsigned long)kaddr) :                        \
+> +       dwm_virt_to_page((unsigned long)kaddr);                         \
+> +})
 >
-> As the code comment says, the initial aim is to reduce one instruction
-> in some corner cases, if bit[51:31] is all 0 or all 1, no need to call
-> lu32id, that is to say, it should call lu32id only if bit[51:31] is not
-> all 0 and not all 1. The current code always call lu32id, the result is
-> right but the logic is unexpected and wrong, fix it.
+>  extern int __virt_addr_valid(volatile void *kaddr);
+>  #define virt_addr_valid(kaddr) __virt_addr_valid((volatile void *)(kaddr=
+))
+> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
+e/asm/pgtable.h
+> index 38afeb7dd58b..98a0c98de9d1 100644
+> --- a/arch/loongarch/include/asm/pgtable.h
+> +++ b/arch/loongarch/include/asm/pgtable.h
+> @@ -353,6 +353,8 @@ static inline void pte_clear(struct mm_struct *mm, un=
+signed long addr, pte_t *pt
+>  #define PMD_T_LOG2     (__builtin_ffs(sizeof(pmd_t)) - 1)
+>  #define PTE_T_LOG2     (__builtin_ffs(sizeof(pte_t)) - 1)
 >
-> Cc: stable@vger.kernel.org # 6.1
-> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> Reported-by: Colin King (gmail) <colin.i.king@gmail.com>
-> Closes: https://lore.kernel.org/all/bcf97046-e336-712a-ac68-7fd194f2953e@=
-gmail.com/
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/net/bpf_jit.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> +inline struct page *tlb_virt_to_page(unsigned long kaddr);
+> +
+>  extern pgd_t swapper_pg_dir[];
+>  extern pgd_t invalid_pg_dir[];
 >
-> diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-> index c335dc4..6858633 100644
-> --- a/arch/loongarch/net/bpf_jit.h
-> +++ b/arch/loongarch/net/bpf_jit.h
-> @@ -150,7 +150,7 @@ static inline void move_imm(struct jit_ctx *ctx, enum=
- loongarch_gpr rd, long imm
->                          * no need to call lu32id to do a new filled oper=
-ation.
->                          */
->                         imm_51_31 =3D (imm >> 31) & 0x1fffff;
-> -                       if (imm_51_31 !=3D 0 || imm_51_31 !=3D 0x1fffff) =
-{
-> +                       if (imm_51_31 !=3D 0 && imm_51_31 !=3D 0x1fffff) =
-{
->                                 /* lu32id rd, imm_51_32 */
->                                 imm_51_32 =3D (imm >> 32) & 0xfffff;
->                                 emit_insn(ctx, lu32id, rd, imm_51_32);
+> diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
+> index 36a6dc0148ae..20e7425d235d 100644
+> --- a/arch/loongarch/mm/pgtable.c
+> +++ b/arch/loongarch/mm/pgtable.c
+> @@ -9,6 +9,12 @@
+>  #include <asm/pgtable.h>
+>  #include <asm/tlbflush.h>
+>
+> +inline struct page *tlb_virt_to_page(unsigned long kaddr)
+> +{
+> +       return pte_page(*virt_to_kpte(kaddr));
+> +}
+> +EXPORT_SYMBOL_GPL(tlb_virt_to_page);
+> +
+>  pgd_t *pgd_alloc(struct mm_struct *mm)
+>  {
+>         pgd_t *ret, *init;
 > --
-> 2.1.0
+> 2.34.1
 >
 >
