@@ -1,45 +1,14 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE468BE3
-	for <loongarch@lists.linux.dev>; Mon, 24 Jul 2023 12:27:30 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-31765792c7cso243687f8f.0
-        for <loongarch@lists.linux.dev>; Mon, 24 Jul 2023 05:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690201648; x=1690806448;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SWM93a9xu6qm4bqV/ft0sQuj37BqnW4nnz/nyihWvyk=;
-        b=qO7HYU0kl3lmlv91vLm2frzUvgIIcr/xv62HYg7vRMOsA1rTV4UhDhHJJNY/UNXSk7
-         Oyi+xR1ONajaFHBdjsY59qfuIrsEDNEAazUdOxkHqpwgo3S6YmmTHrQWTyxnxNnc+g0L
-         hFn0Rg8R+Dmahmdg6llDxzFXBoN3nYT+gE4DJ+XpEM0kPFc1g0Ybnf7JInOg5vigE1Hh
-         DVbpXQt9I5Eamy1WuJUut768365Of4jeJsu9Qt0MGPqPA2ANeTZ2lJo9aeECHfhGhjK8
-         qLZjtzNdhWHcOLrYRMTzYuHl18I5nhOawkZPfqJwB2ekPZWV8gkwdLtkLJMKIAqBB3sB
-         3bDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690201648; x=1690806448;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SWM93a9xu6qm4bqV/ft0sQuj37BqnW4nnz/nyihWvyk=;
-        b=JzgfGUi4BhgDFqA/6SsWo8nlU+bZToGKICFXXEMZcAX1MZ38IZAAHpRyeTi/r38u5k
-         AFECvismjgUS90qCh2tRV8ufRoFXCcjRzlV899zwMr4RDKXTOCwo3miVM3QI3QZwLyZp
-         H8WE0Ep/pd4z0oP4FeuSVaFPOIWQeFDxiB19PTIKT5tjef0sgwGPAHgy2nYVrfZyRDzE
-         AieKWPG22Ihjn+RWLjt/mEm6Lhujkffm886kaJ8XdC4rXrgPphqjG1Prn17yDygC8mIu
-         zw9rlW75VtpTg3vVK5gBHIdzGp/r/yl5HIkHfL6gV+ZIPLGgf51AVSXSY5DEwnNVUA+6
-         G9rQ==
-X-Gm-Message-State: ABy/qLanhIk5rI3bfK5XJi6uS0FcaB91MeaTok7DiJA1BiNDwO5HJRNI
-	8qHvBrM8hRZXBgpHn9Nppco=
-X-Google-Smtp-Source: APBJJlFfX4JupHVdcocdDdxAtai6IVeZqCcBHiRZQ08wzVfXyG/pYCDFjufiN62ne4tPmWbdTZmFdA==
-X-Received: by 2002:a5d:69c3:0:b0:315:96ca:dcab with SMTP id s3-20020a5d69c3000000b0031596cadcabmr8418583wrw.35.1690201648414;
-        Mon, 24 Jul 2023 05:27:28 -0700 (PDT)
-Received: from [192.168.0.101] (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.googlemail.com with ESMTPSA id n8-20020adfe348000000b00315af025098sm12840340wrj.46.2023.07.24.05.27.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jul 2023 05:27:27 -0700 (PDT)
-Message-ID: <bcf97046-e336-712a-ac68-7fd194f2953e@gmail.com>
-Date: Mon, 24 Jul 2023 13:27:26 +0100
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C83C7C
+	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 00:36:23 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8BxnusGGb9kZXsJAA--.21403S3;
+	Tue, 25 Jul 2023 08:36:22 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c4GGb9k_fE5AA--.25539S3;
+	Tue, 25 Jul 2023 08:36:22 +0800 (CST)
+Message-ID: <8d22477f-d7e4-b151-f72b-cea3f1ef3ef3@loongson.cn>
+Date: Tue, 25 Jul 2023 08:36:22 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,41 +16,55 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
+ Thunderbird/102.12.0
+Subject: Re: [PATCH 0/3] LoongArch: mm: Code cleanup with populate pte
 Content-Language: en-US
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Youling Tang <tangyouling@loongson.cn>,
- Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
- "bpf@vger.kernel.org >> bpf" <bpf@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From: "Colin King (gmail)" <colin.i.king@gmail.com>
-Subject: re: LoongArch: Add BPF JIT support
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: bibo mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ WANG Xuerui <kernel@xen0n.name>
+References: <20230712031622.1888321-1-maobibo@loongson.cn>
+In-Reply-To: <20230712031622.1888321-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cx_c4GGb9k_fE5AA--.25539S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZFWDGrW5Kw1rXF1kKF18CrX_yoWxKFg_XF
+	yftasYkr4xXayUKFWvgF4rJryUCF4kAF1ktFyDJFW7JasrJr17Jr4UAan8Zas0vFW7trs8
+	Aw45ArnYywnrKosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
 
-Hi,
+slightly ping.
 
-Static analysis with clang scan build on arch/loongarch/net/bpf_jit.h 
-has detected a potential issue with the following commit:
+在 2023/7/12 11:16, Bibo Mao 写道:
+> There are some confusion between pdg and p4d when populate pte for
+> kernel address space. This patch modifies this issue and adds unified
+> function for pcpu and fixmap populate pte.
+> 
+> Bibo Mao (3):
+>   mm/percpu: Remove some local variables in pcpu_populate_pte
+>   LoongArch: Code cleanup in function pcpu_populate_pte
+>   LoongArch: mm: Add unified function populate_kernel_pte
+> 
+>  arch/loongarch/include/asm/pgalloc.h |  1 +
+>  arch/loongarch/kernel/numa.c         | 35 ++-----------------
+>  arch/loongarch/mm/init.c             | 52 ++++++++++++++++------------
+>  mm/percpu.c                          | 24 +++++--------
+>  4 files changed, 42 insertions(+), 70 deletions(-)
+> 
 
-commit 5dc615520c4dfb358245680f1904bad61116648e
-Author: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date:   Wed Oct 12 16:36:20 2022 +0800
-
-     LoongArch: Add BPF JIT support
-
-This issue is as follows:
-
-arch/loongarch/net/bpf_jit.h:153:23: warning: Logical disjunction always 
-evaluates to true: imm_51_31 != 0 || imm_51_31 != 0x1fffff. 
-[incorrectLogicOperator]
-    if (imm_51_31 != 0 || imm_51_31 != 0x1fffff) {
-
-
-The statement seems to be always true. I suspect it should it be instead:
-
-    if (imm_51_31 != 0 && imm_51_31 != 0x1fffff) {
-
-regards,
-
-Colin
