@@ -1,182 +1,118 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-30.mta1.migadu.com (out-30.mta1.migadu.com [95.215.58.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931EE110B
-	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 04:41:47 +0000 (UTC)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-d10354858e8so1915608276.2
-        for <loongarch@lists.linux.dev>; Mon, 24 Jul 2023 21:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690260106; x=1690864906;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4tFc7lI8l/TAp6N4SH/RnjHMrhDjcjpOS0NvhRjK3tI=;
-        b=syg9IyMH/gqJY1k4LT3S6JMx0fSLcgE37Cs+8KWCUO35fKCYg0MuLIIi0nsu37jtyV
-         JWnNbNndjflxoqEknhV3drMoPO1rLP5Mf2NwuEGG3uNqc6WCc3lC70F16ZnEeLC+MDXA
-         tlBtkvCExRePxNsWSrYSlIqtWo9fJaFXM7OzUrScUdzQ6XIpjZwJMknKg/XaSKKfA+Pp
-         NHjPm93xL9xpQDR+q+3gjlysNDu5FD2n2xMli6SN590GUy6WkS3ghg4fMC/PcVORHv0z
-         7pZwaHoSCWcs0DC0U/7aDMkjw3lDyZjRkGaSMnnCoKZ6Eh2nJ1AJW7AcIEll2MImoPAy
-         2Dhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690260106; x=1690864906;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4tFc7lI8l/TAp6N4SH/RnjHMrhDjcjpOS0NvhRjK3tI=;
-        b=OBfFhz+NoHpnwKKoHHgf7cqHIJVG/g0fZsHtxTv6R+6LENXogGloQGMxsg+sExhsdr
-         bhfJZnrAS5Lq2luFX2+QyiipMYqfE4sNDgb6Lw5AVtHOKMKPyCX1EGBSe/fEeO4D40DV
-         PxThqLVGc7tB0UwZ+mXNcv1/N+wTyVefwlZq86bSaJzNv8SrYom/DpnoX6guTmxq70kK
-         VqPUFxPuZJDesAIuZBRtCo/48qu4f1qMcBwBUb8U4MGWi9wdoRkybRs4dvg8xEBwdmSG
-         jQcNMjZ1JmS0NhaI1qs4C7uTpP72ks0Q9PTtKpdX7+7J8bYhAfOLQn71iqeG0OMHShWy
-         l2CQ==
-X-Gm-Message-State: ABy/qLYMfHOIoMfFUj8mA3yDZSt04ftFMF7hYZpxZLPn0viij1HutGHv
-	Zv25bvk9XSj3g7GBvE7WMd2QqQ==
-X-Google-Smtp-Source: APBJJlHQLTh3cgEYO+DVAD/fw8XSxxaq77z0mK7JibK/JjnN3wjA/kyDdlXYpJW7FLCpf9E01rW5SQ==
-X-Received: by 2002:a25:2342:0:b0:d0d:2d17:3f11 with SMTP id j63-20020a252342000000b00d0d2d173f11mr5304231ybj.17.1690260106082;
-        Mon, 24 Jul 2023 21:41:46 -0700 (PDT)
-Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id z16-20020a25e310000000b00c71e4833957sm2656725ybd.63.2023.07.24.21.41.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jul 2023 21:41:45 -0700 (PDT)
-Date: Mon, 24 Jul 2023 21:41:36 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@ripple.attlocal.net
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, 
-    Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-    linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-    linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-    loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-    linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-    linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-    linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-    sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
-    xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
-    Hugh Dickins <hughd@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-    Huacai Chen <chenhuacai@kernel.org>, 
-    Geert Uytterhoeven <geert@linux-m68k.org>, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
-    David Hildenbrand <david@redhat.com>, 
-    Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-    Paul Walmsley <paul.walmsley@sifive.com>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Richard Weinberger <richard@nod.at>, 
-    Yoshinori Sato <ysato@users.sourceforge.jp>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, 
-    Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH mm-unstable v7 00/31] Split ptdesc from struct page
-In-Reply-To: <20230725042051.36691-1-vishal.moola@gmail.com>
-Message-ID: <5296514f-cdd1-9526-2e83-a21e76e86e5@google.com>
-References: <20230725042051.36691-1-vishal.moola@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4E215C0
+	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 06:07:45 +0000 (UTC)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1690265264;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9RhR3Z+kw1Y/Wd/w+yq7BdbxI7CNxW0pkaVU5PxwFqo=;
+	b=Z1mmOZtv2jbqNze2prcEPMtDaBP+yh6AcU5wgRgGPLE53INartfSH86VP3UTVDg6Sd9/Mv
+	9AlKlsmDHJZyemDn2KQjK5RIfe6w7ygPEqi+vSfVhn2nOF5BcFYNaFs1h5KW6yureqQxL1
+	UeHKGIvS3VQGsfoNxCHnlyImPxX6HBo=
+From: Enze Li <enze.li@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Enze Li <lienze@kylinos.cn>,  kernel@xen0n.name,
+  loongarch@lists.linux.dev,  glider@google.com,  elver@google.com,
+  akpm@linux-foundation.org,  kasan-dev@googlegroups.com,
+  linux-mm@kvack.org,  zhangqing@loongson.cn,  yangtiezhu@loongson.cn,
+  dvyukov@google.com
+Subject: Re: [PATCH 1/4] LoongArch: mm: Add page table mapped mode support
+In-Reply-To: <CAAhV-H7mpjeqnv1MXn--EPDUam6TTcHwqiMsEL4OsmAFS5XNMA@mail.gmail.com>
+	(Huacai Chen's message of "Tue, 25 Jul 2023 10:06:01 +0800")
+References: <20230719082732.2189747-1-lienze@kylinos.cn>
+	<20230719082732.2189747-2-lienze@kylinos.cn>
+	<CAAhV-H5pWmd2owMgH9hiqxoWpeAOKGv_=j2V-urA+D87_uCMyg@mail.gmail.com>
+	<87pm4mf1xl.fsf@kylinos.cn>
+	<CAAhV-H4+8_gBMMdLhx=uEAsCN5wK7kFONsKDyGPqm0kxW8FU=A@mail.gmail.com>
+	<87lef7ayha.fsf@kylinos.cn>
+	<CAAhV-H7mpjeqnv1MXn--EPDUam6TTcHwqiMsEL4OsmAFS5XNMA@mail.gmail.com>
+Date: Tue, 25 Jul 2023 14:07:27 +0800
+Message-ID: <87bkg0zfq8.fsf@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 24 Jul 2023, Vishal Moola (Oracle) wrote:
+On Tue, Jul 25 2023 at 10:06:01 AM +0800, Huacai Chen wrote:
 
-> The MM subsystem is trying to shrink struct page. This patchset
-> introduces a memory descriptor for page table tracking - struct ptdesc.
-> 
-> This patchset introduces ptdesc, splits ptdesc from struct page, and
-> converts many callers of page table constructor/destructors to use ptdescs.
-> 
-> Ptdesc is a foundation to further standardize page tables, and eventually
-> allow for dynamic allocation of page tables independent of struct page.
-> However, the use of pages for page table tracking is quite deeply
-> ingrained and varied across archictectures, so there is still a lot of
-> work to be done before that can happen.
+> On Sun, Jul 23, 2023 at 3:17=E2=80=AFPM Enze Li <lienze@kylinos.cn> wrote:
+>>
+>> On Fri, Jul 21 2023 at 10:21:38 AM +0800, Huacai Chen wrote:
+>>
+>> > On Fri, Jul 21, 2023 at 10:12=E2=80=AFAM Enze Li <lienze@kylinos.cn> w=
+rote:
+>> >>
+>> >> On Wed, Jul 19 2023 at 11:29:37 PM +0800, Huacai Chen wrote:
+>> >>
+>> >> > Hi, Enze,
+>> >> >
+>> >> > On Wed, Jul 19, 2023 at 4:34=E2=80=AFPM Enze Li <lienze@kylinos.cn>=
+ wrote:
 
-Others may differ, but it remains the case that I see no point to this
-patchset, until the minimal descriptor that replaces struct page is
-working, and struct page then becomes just overhead.  Until that time,
-let architectures continue to use struct page as they do - whyever not?
+<snip>
 
-Hugh
+>> I've also tried to include mm_types.h in advance, but in this case that
+>> doesn't work because the _LINUX_MM_TYPES_H macro already exists.
+>> The "forward declaration" was also taken into account, in the end it was
+>> found to be unavailable as well.
+>>
+>> In summary, I'm afraid that rewriting tlb_virt_to_page in asm/page.h as
+>> a macro or inline function is not possible.  The root case of this is
+>> that both 'struct mm_struct' and 'virt_to_kpte' belong to high-level
+>> data structures, and if they are referenced in asm/page.h at the
+>> low-level, dependency problems arise.
+>>
+>> Anyway, we can at least define it as a normal function in asm/pgtable.h,
+>> is that Okay with you?
+>>
+>> It may be a bit wordy, so please bear with me.  In addition, all of the
+>> above is my understanding, am I missing something?
+> Well, you can define the helpers in .c files at present, but I have
+> another question.
+>
+> Though other archs (e.g., RISC-V) have no DMW addresses, they still
+> have linear area. In other words, both LoongArch and RISC-V have
+> linear area and vmalloc-like areas. The only difference is LoongArch's
+> linear area is DMW-mapped but RISC-V's linear area is TLB-mapped.
+>
+> For linear area, the translation is pfn_to_page(virt_to_pfn(kaddr)),
+> no matter LoongArch or RISC-V;
+> For vmalloc-like areas, the translation is
+> pte_page(*virt_to_kpte(kaddr)), no matter LoongArch or RISC-V.
+>
 
-> 
-> This is rebased on mm-unstable.
-> 
-> v7:
->   Drop s390 gmap ptdesc conversions - gmap is unecessary complication
->     that can be dealt with later
->   Be more thorough with ptdesc struct sanity checks and comments
->   Rebase onto mm-unstable
-> 
-> Vishal Moola (Oracle) (31):
->   mm: Add PAGE_TYPE_OP folio functions
->   pgtable: Create struct ptdesc
->   mm: add utility functions for ptdesc
->   mm: Convert pmd_pgtable_page() callers to use pmd_ptdesc()
->   mm: Convert ptlock_alloc() to use ptdescs
->   mm: Convert ptlock_ptr() to use ptdescs
->   mm: Convert pmd_ptlock_init() to use ptdescs
->   mm: Convert ptlock_init() to use ptdescs
->   mm: Convert pmd_ptlock_free() to use ptdescs
->   mm: Convert ptlock_free() to use ptdescs
->   mm: Create ptdesc equivalents for pgtable_{pte,pmd}_page_{ctor,dtor}
->   powerpc: Convert various functions to use ptdescs
->   x86: Convert various functions to use ptdescs
->   s390: Convert various pgalloc functions to use ptdescs
->   mm: Remove page table members from struct page
->   pgalloc: Convert various functions to use ptdescs
->   arm: Convert various functions to use ptdescs
->   arm64: Convert various functions to use ptdescs
->   csky: Convert __pte_free_tlb() to use ptdescs
->   hexagon: Convert __pte_free_tlb() to use ptdescs
->   loongarch: Convert various functions to use ptdescs
->   m68k: Convert various functions to use ptdescs
->   mips: Convert various functions to use ptdescs
->   nios2: Convert __pte_free_tlb() to use ptdescs
->   openrisc: Convert __pte_free_tlb() to use ptdescs
->   riscv: Convert alloc_{pmd, pte}_late() to use ptdescs
->   sh: Convert pte_free_tlb() to use ptdescs
->   sparc64: Convert various functions to use ptdescs
->   sparc: Convert pgtable_pte_page_{ctor, dtor}() to ptdesc equivalents
->   um: Convert {pmd, pte}_free_tlb() to use ptdescs
->   mm: Remove pgtable_{pmd, pte}_page_{ctor, dtor}() wrappers
-> 
->  Documentation/mm/split_page_table_lock.rst    |  12 +-
->  .../zh_CN/mm/split_page_table_lock.rst        |  14 +-
->  arch/arm/include/asm/tlb.h                    |  12 +-
->  arch/arm/mm/mmu.c                             |   7 +-
->  arch/arm64/include/asm/tlb.h                  |  14 +-
->  arch/arm64/mm/mmu.c                           |   7 +-
->  arch/csky/include/asm/pgalloc.h               |   4 +-
->  arch/hexagon/include/asm/pgalloc.h            |   8 +-
->  arch/loongarch/include/asm/pgalloc.h          |  27 ++--
->  arch/loongarch/mm/pgtable.c                   |   7 +-
->  arch/m68k/include/asm/mcf_pgalloc.h           |  47 +++---
->  arch/m68k/include/asm/sun3_pgalloc.h          |   8 +-
->  arch/m68k/mm/motorola.c                       |   4 +-
->  arch/mips/include/asm/pgalloc.h               |  32 ++--
->  arch/mips/mm/pgtable.c                        |   8 +-
->  arch/nios2/include/asm/pgalloc.h              |   8 +-
->  arch/openrisc/include/asm/pgalloc.h           |   8 +-
->  arch/powerpc/mm/book3s64/mmu_context.c        |  10 +-
->  arch/powerpc/mm/book3s64/pgtable.c            |  32 ++--
->  arch/powerpc/mm/pgtable-frag.c                |  56 +++----
->  arch/riscv/include/asm/pgalloc.h              |   8 +-
->  arch/riscv/mm/init.c                          |  16 +-
->  arch/s390/include/asm/pgalloc.h               |   4 +-
->  arch/s390/include/asm/tlb.h                   |   4 +-
->  arch/s390/mm/pgalloc.c                        | 128 +++++++--------
->  arch/sh/include/asm/pgalloc.h                 |   9 +-
->  arch/sparc/mm/init_64.c                       |  17 +-
->  arch/sparc/mm/srmmu.c                         |   5 +-
->  arch/um/include/asm/pgalloc.h                 |  18 +--
->  arch/x86/mm/pgtable.c                         |  47 +++---
->  arch/x86/xen/mmu_pv.c                         |   2 +-
->  include/asm-generic/pgalloc.h                 |  88 +++++-----
->  include/asm-generic/tlb.h                     |  11 ++
->  include/linux/mm.h                            | 151 +++++++++++++-----
->  include/linux/mm_types.h                      |  18 ---
->  include/linux/page-flags.h                    |  30 +++-
->  include/linux/pgtable.h                       |  80 ++++++++++
->  mm/memory.c                                   |   8 +-
->  38 files changed, 585 insertions(+), 384 deletions(-)
-> 
-> -- 
-> 2.40.1
+Hi Huacai,
+
+Thanks for your reply.
+
+> My question is: why RISC-V only care about the linear area for
+> virt_to_page(), but you are caring about the vmalloc-like areas?
+
+This patch is a preparation to make LoongArch support KFENCE.
+
+One of the core principles of KFENCE is that pages are tagged in the PTE
+and then synchronized to the TLB.  When the MMU detects an improper
+access, it can generate an interrupt signal, which is subsequently
+handled by a handler function (kfence_handle_page_fault) provided by
+KFENCE.  In short, KFENCE requires the support of the TLB.
+
+There's no need to take this into account on RISC-V because TLB mapping
+is already supported in linear area.
+
+Best Regards,
+Enze
+
+>
+> Huacai
+
+<snip>
