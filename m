@@ -1,70 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3E0156DD
-	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 09:55:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEA4AC433C7;
-	Tue, 25 Jul 2023 09:55:19 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Only fiddle with CHECKFLAGS if `need-compiler'
-Date: Tue, 25 Jul 2023 17:54:51 +0800
-Message-Id: <20230725095451.992522-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF8C1F163
+	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 11:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Qs9aIHxvGs/ZvYLXe8hAdFKBmlXaFFAnAGBJ7IDUsxo=; b=RB00+q9B5TjXtH5OkWXuFm9gq9
+	z5JLXBEJgGoDx5tPePtZcy15IzEDbI7Lys/qpaTDiPfwFjT4H0jdzO1mQBoe84ljUVCtUpQXztZ36
+	Fb4xT1dvOGsjVwbMqB7XIBEmrfmsXFlDdQvdhuAq8q/mD3hJ29tRrOcNiQit+o+xSg7yejRjE/WjM
+	ZkmIxoW42W2pjoldglKhUfkGE91ozKMx8SLyPzZDct1ZyIMJyhAUd3QdvtjhHzlpry16lSiy+waC2
+	b9PsC+8qGR3lbBSBDT+huwrgBdTEnd0jO/yDf1JwBiJnhS/J4lyGAnkI+Ukji+0rjJ/tQzXYPECI8
+	VZD/WBrw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qOGZI-005Quq-N5; Tue, 25 Jul 2023 11:51:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F2A8C300137;
+	Tue, 25 Jul 2023 13:51:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D8F252612ABE5; Tue, 25 Jul 2023 13:51:06 +0200 (CEST)
+Date: Tue, 25 Jul 2023 13:51:06 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v1 4/6] objtool/LoongArch: Enable orc to be built
+Message-ID: <20230725115106.GC3765278@hirez.programming.kicks-ass.net>
+References: <1690272910-11869-1-git-send-email-yangtiezhu@loongson.cn>
+ <1690272910-11869-5-git-send-email-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1690272910-11869-5-git-send-email-yangtiezhu@loongson.cn>
 
-This is a port of commit 4fe4a6374c4db9ae2b ("MIPS: Only fiddle with
-CHECKFLAGS if `need-compiler'") to LoongArch.
+On Tue, Jul 25, 2023 at 04:15:08PM +0800, Tiezhu Yang wrote:
 
-We have originally guarded fiddling with CHECKFLAGS in our arch Makefile
-by checking for the CONFIG_LOONGARCH variable, not set for targets such
-as `distclean', etc. that neither include `.config' nor use the compiler.
+Previous Changelog had:
 
-Starting from commit 805b2e1d427aab4 ("kbuild: include Makefile.compiler
-only when compiler is needed") we have had a generic `need-compiler'
-variable explicitly telling us if the compiler will be used and thus its
-capabilities need to be checked and expressed in the form of compilation
-flags.  If this variable is not set, then `make' functions such as
-`cc-option' are undefined, causing all kinds of weirdness to happen if
-we expect specific results to be returned.
+> Define update_cfi_state() as a weak function which may be overwritten
+> by the arch-specific implementation.
 
-It doesn't cause problems on LoongArch now. But as a guard we replace
-the check for CONFIG_LOONGARCH with one for `need-compiler' instead, so
-as to prevent the compiler from being ever called for CHECKFLAGS when
-not needed.
+And then this patch does:
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +int update_cfi_state(struct instruction *insn,
+> +		     struct instruction *next_insn,
+> +		     struct cfi_state *cfi, struct stack_op *op)
+> +{
+> +	struct cfi_reg *cfa = &cfi->cfa;
+> +	struct cfi_reg *regs = cfi->regs;
+> +
+> +	/* ignore UNWIND_HINT_UNDEFINED regions */
+> +	if (cfi->force_undefined)
+> +		return 0;
+> +
+> +	/* stack operations don't make sense with an undefined CFA */
+> +	if (cfa->base == CFI_UNDEFINED) {
+> +		if (insn_func(insn)) {
+> +			WARN_INSN(insn, "undefined stack state");
+> +			return -1;
+> +		}
+> +		return 0;
+> +	}
+> +
+> +	if (cfi->type == UNWIND_HINT_TYPE_REGS ||
+> +	    cfi->type == UNWIND_HINT_TYPE_REGS_PARTIAL)
+> +		return update_cfi_state_regs(insn, cfi, op);
+> +
+> +	switch (op->dest.type) {
+> +	case OP_DEST_REG:
+> +		switch (op->src.type) {
+> +		case OP_SRC_ADD:
+> +			if (op->dest.reg == CFI_SP && op->src.reg == CFI_SP) {
+> +				/* addi.d sp,sp,si12 */
+> +				cfi->stack_size -= op->src.offset;
+> +				if (cfa->base == CFI_SP)
+> +					cfa->offset -= op->src.offset;
+> +			} else if (op->dest.reg == CFI_FP && op->src.reg == CFI_SP) {
+> +				/* addi.d fp,sp,si12 */
+> +				if (cfa->base == CFI_SP && cfa->offset == op->src.offset) {
+> +					cfa->base = CFI_FP;
+> +					cfa->offset = 0;
+> +				}
+> +			} else if (op->dest.reg == CFI_SP && op->src.reg == CFI_FP) {
+> +				/* addi.d sp,fp,si12 */
+> +				if (cfa->base == CFI_FP && cfa->offset == 0) {
+> +					cfa->base = CFI_SP;
+> +					cfa->offset = -op->src.offset;
+> +				}
+> +			}
+> +			break;
+> +		case OP_SRC_REG_INDIRECT:
+> +			/* ld.d rd,sp,si12 */
+> +			if (op->src.reg == CFI_SP &&
+> +			    op->src.offset == (regs[op->dest.reg].offset + cfi->stack_size)) {
+> +				restore_reg(cfi, op->dest.reg);
+> +				/* GCC may not restore sp, we adjust it directly. */
+> +				if (cfa->base == CFI_FP && cfa->offset == 0) {
+> +					cfa->base = CFI_SP;
+> +					cfa->offset = cfi->stack_size;
+> +				}
+> +			}
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +		break;
+> +	case OP_DEST_REG_INDIRECT:
+> +		if (op->src.type == OP_SRC_REG)
+> +			/* st.d rd,sp,si12 */
+> +			if (op->dest.offset)
+> +				save_reg(cfi, op->src.reg, CFI_CFA,
+> +					 op->dest.offset - cfi->stack_size);
+> +		break;
+> +	default:
+> +		WARN_FUNC("unknown stack-related instruction", insn->sec, insn->offset);
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 7811d43ed24a..cb40d36fac20 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -116,7 +116,7 @@ KBUILD_CFLAGS += -isystem $(shell $(CC) -print-file-name=include)
- 
- KBUILD_LDFLAGS	+= -m $(ld-emul)
- 
--ifdef CONFIG_LOONGARCH
-+ifdef need-compiler
- CHECKFLAGS += $(shell $(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) -dM -E -x c /dev/null | \
- 	grep -E -vw '__GNUC_(MINOR_|PATCHLEVEL_)?_' | \
- 	sed -e "s/^\#define /-D'/" -e "s/ /'='/" -e "s/$$/'/" -e 's/\$$/&&/g')
--- 
-2.39.3
+Why ?!? what is the actual irreconcilable difference?
 
+If you want us to review this, you'll have to explain things.
