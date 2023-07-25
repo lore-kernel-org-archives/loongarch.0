@@ -1,291 +1,78 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C378F4A
-	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 06:15:28 +0000 (UTC)
-X-UUID: 3f0d37b293b84437aff8eecdace72e24-20230725
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.28,REQID:d8a88afa-7b8d-4f33-a7ea-af79e1cee8d2,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.28,REQID:d8a88afa-7b8d-4f33-a7ea-af79e1cee8d2,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:176cd25,CLOUDID:1d6ec1b3-a467-4aa9-9e04-f584452e3794,B
-	ulkID:230725141514S69XBC26,BulkQuantity:0,Recheck:0,SF:38|24|17|19|44|102,
-	TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-	,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,
-	TF_CID_SPAM_FSI
-X-UUID: 3f0d37b293b84437aff8eecdace72e24-20230725
-X-User: lienze@kylinos.cn
-Received: from ubuntu.. [(39.156.73.12)] by mailgw
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 755063753; Tue, 25 Jul 2023 14:15:12 +0800
-From: Enze Li <lienze@kylinos.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1539D8F5E
+	for <loongarch@lists.linux.dev>; Tue, 25 Jul 2023 07:05:35 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxCPI9dL9kbpwJAA--.23936S3;
+	Tue, 25 Jul 2023 15:05:33 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHCM8dL9kxkc6AA--.7400S2;
+	Tue, 25 Jul 2023 15:05:32 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: bpf@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	glider@google.com,
-	elver@google.com,
-	akpm@linux-foundation.org,
-	kasan-dev@googlegroups.com,
-	linux-mm@kvack.org
-Cc: zhangqing@loongson.cn,
-	yangtiezhu@loongson.cn,
-	dvyukov@google.com,
-	Enze Li <lienze@kylinos.cn>
-Subject: [PATCH 4/4 v2] LoongArch: Add KFENCE support
-Date: Tue, 25 Jul 2023 14:14:51 +0800
-Message-Id: <20230725061451.1231480-5-lienze@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230725061451.1231480-1-lienze@kylinos.cn>
-References: <20230725061451.1231480-1-lienze@kylinos.cn>
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	stable@vger.kernel.org # 6.1
+Subject: [PATCH bpf-next] LoongArch: BPF: Fix check condition to call lu32id in move_imm()
+Date: Tue, 25 Jul 2023 15:05:08 +0800
+Message-Id: <1690268708-5899-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8BxHCM8dL9kxkc6AA--.7400S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CF15Cr4DKF1xuF47Xw15Jrc_yoW8Gr1xp3
+	97urn7JrZrWrnrZ3WDGay3WF47JrZ7Ww40ga1qk34rCFsxWr1DXr1F93yDA3Wkta1YyayS
+	qrWqkwnIgFWkAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The LoongArch architecture is quite different from other architectures.
-When the allocating of KFENCE itself is done, it is mapped to the direct
-mapping configuration window [1] by default on LoongArch.  It means that
-it is not possible to use the page table mapped mode which required by
-the KFENCE system and therefore it should be remapped to the appropriate
-region.
+As the code comment says, the initial aim is to reduce one instruction
+in some corner cases, if bit[51:31] is all 0 or all 1, no need to call
+lu32id, that is to say, it should call lu32id only if bit[51:31] is not
+all 0 and not all 1. The current code always call lu32id, the result is
+right but the logic is unexpected and wrong, fix it.
 
-This patch adds architecture specific implementation details for KFENCE.
-In particular, this implements the required interface in <asm/kfence.h>.
-
-Tested this patch by running the testcases and all passed.
-
-[1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#virtual-address-space-and-address-translation-mode
-
-Signed-off-by: Enze Li <lienze@kylinos.cn>
+Cc: stable@vger.kernel.org # 6.1
+Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+Reported-by: Colin King (gmail) <colin.i.king@gmail.com>
+Closes: https://lore.kernel.org/all/bcf97046-e336-712a-ac68-7fd194f2953e@gmail.com/
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/Kconfig               |  1 +
- arch/loongarch/include/asm/kfence.h  | 62 ++++++++++++++++++++++++++++
- arch/loongarch/include/asm/pgtable.h | 14 ++++++-
- arch/loongarch/mm/fault.c            | 22 ++++++----
- 4 files changed, 90 insertions(+), 9 deletions(-)
- create mode 100644 arch/loongarch/include/asm/kfence.h
+ arch/loongarch/net/bpf_jit.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 70635ea3d1e4..5b63b16be49e 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -91,6 +91,7 @@ config LOONGARCH
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_JUMP_LABEL_RELATIVE
-+	select HAVE_ARCH_KFENCE
- 	select HAVE_ARCH_MMAP_RND_BITS if MMU
- 	select HAVE_ARCH_SECCOMP_FILTER
- 	select HAVE_ARCH_TRACEHOOK
-diff --git a/arch/loongarch/include/asm/kfence.h b/arch/loongarch/include/asm/kfence.h
-new file mode 100644
-index 000000000000..fb39076fe4d7
---- /dev/null
-+++ b/arch/loongarch/include/asm/kfence.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * KFENCE support for LoongArch.
-+ *
-+ * Author: Enze Li <lienze@kylinos.cn>
-+ * Copyright (C) 2022-2023 KylinSoft Corporation.
-+ */
-+
-+#ifndef _ASM_LOONGARCH_KFENCE_H
-+#define _ASM_LOONGARCH_KFENCE_H
-+
-+#include <linux/kfence.h>
-+#include <asm/pgtable.h>
-+#include <asm/tlb.h>
-+
-+static inline bool arch_kfence_init_pool(void)
-+{
-+	char *kfence_pool = __kfence_pool;
-+	struct vm_struct *area;
-+	int err;
-+
-+	area = __get_vm_area_caller(KFENCE_POOL_SIZE, VM_IOREMAP,
-+				    KFENCE_AREA_START, KFENCE_AREA_END,
-+				    __builtin_return_address(0));
-+	if (!area)
-+		return false;
-+
-+	__kfence_pool = (char *)area->addr;
-+	err = ioremap_page_range((unsigned long)__kfence_pool,
-+				 (unsigned long)__kfence_pool + KFENCE_POOL_SIZE,
-+				 virt_to_phys((void *)kfence_pool),
-+				 PAGE_KERNEL);
-+	if (err) {
-+		free_vm_area(area);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+/* Protect the given page and flush TLB. */
-+static inline bool kfence_protect_page(unsigned long addr, bool protect)
-+{
-+	pte_t *pte = virt_to_kpte(addr);
-+
-+	if (WARN_ON(!pte) || pte_none(*pte))
-+		return false;
-+
-+	if (protect)
-+		set_pte(pte, __pte(pte_val(*pte) & ~(_PAGE_VALID | _PAGE_PRESENT)));
-+	else
-+		set_pte(pte, __pte(pte_val(*pte) | (_PAGE_VALID | _PAGE_PRESENT)));
-+
-+	/* Flush this CPU's TLB. */
-+	preempt_disable();
-+	local_flush_tlb_one(addr);
-+	preempt_enable();
-+
-+	return true;
-+}
-+
-+#endif /* _ASM_LOONGARCH_KFENCE_H */
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 98a0c98de9d1..2702a6ba7122 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -77,6 +77,13 @@ extern unsigned long zero_page_mask;
- 	(virt_to_page((void *)(empty_zero_page + (((unsigned long)(vaddr)) & zero_page_mask))))
- #define __HAVE_COLOR_ZERO_PAGE
- 
-+#ifdef CONFIG_KFENCE
-+#define KFENCE_AREA_SIZE \
-+	(((CONFIG_KFENCE_NUM_OBJECTS + 1) * 2 + 2) * PAGE_SIZE)
-+#else
-+#define KFENCE_AREA_SIZE	0
-+#endif
-+
- /*
-  * TLB refill handlers may also map the vmalloc area into xkvrange.
-  * Avoid the first couple of pages so NULL pointer dereferences will
-@@ -88,11 +95,16 @@ extern unsigned long zero_page_mask;
- #define VMALLOC_START	MODULES_END
- #define VMALLOC_END	\
- 	(vm_map_base +	\
--	 min(PTRS_PER_PGD * PTRS_PER_PUD * PTRS_PER_PMD * PTRS_PER_PTE * PAGE_SIZE, (1UL << cpu_vabits)) - PMD_SIZE - VMEMMAP_SIZE)
-+	 min(PTRS_PER_PGD * PTRS_PER_PUD * PTRS_PER_PMD * PTRS_PER_PTE * PAGE_SIZE, (1UL << cpu_vabits)) - PMD_SIZE - VMEMMAP_SIZE - KFENCE_AREA_SIZE)
- 
- #define vmemmap		((struct page *)((VMALLOC_END + PMD_SIZE) & PMD_MASK))
- #define VMEMMAP_END	((unsigned long)vmemmap + VMEMMAP_SIZE - 1)
- 
-+#ifdef CONFIG_KFENCE
-+#define KFENCE_AREA_START	VMEMMAP_END
-+#define KFENCE_AREA_END		(KFENCE_AREA_START + KFENCE_AREA_SIZE)
-+#endif
-+
- #define pte_ERROR(e) \
- 	pr_err("%s:%d: bad pte %016lx.\n", __FILE__, __LINE__, pte_val(e))
- #ifndef __PAGETABLE_PMD_FOLDED
-diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-index da5b6d518cdb..c0319128b221 100644
---- a/arch/loongarch/mm/fault.c
-+++ b/arch/loongarch/mm/fault.c
-@@ -23,6 +23,7 @@
- #include <linux/kprobes.h>
- #include <linux/perf_event.h>
- #include <linux/uaccess.h>
-+#include <linux/kfence.h>
- 
- #include <asm/branch.h>
- #include <asm/mmu_context.h>
-@@ -30,7 +31,8 @@
- 
- int show_unhandled_signals = 1;
- 
--static void __kprobes no_context(struct pt_regs *regs, unsigned long address)
-+static void __kprobes no_context(struct pt_regs *regs, unsigned long address,
-+				 unsigned long write)
- {
- 	const int field = sizeof(unsigned long) * 2;
- 
-@@ -38,6 +40,9 @@ static void __kprobes no_context(struct pt_regs *regs, unsigned long address)
- 	if (fixup_exception(regs))
- 		return;
- 
-+	if (kfence_handle_page_fault(address, write, regs))
-+		return;
-+
- 	/*
- 	 * Oops. The kernel tried to access some bad page. We'll have to
- 	 * terminate things with extreme prejudice.
-@@ -51,14 +56,15 @@ static void __kprobes no_context(struct pt_regs *regs, unsigned long address)
- 	die("Oops", regs);
- }
- 
--static void __kprobes do_out_of_memory(struct pt_regs *regs, unsigned long address)
-+static void __kprobes do_out_of_memory(struct pt_regs *regs, unsigned long address,
-+				       unsigned long write)
- {
- 	/*
- 	 * We ran out of memory, call the OOM killer, and return the userspace
- 	 * (which will retry the fault, or kill us if we got oom-killed).
- 	 */
- 	if (!user_mode(regs)) {
--		no_context(regs, address);
-+		no_context(regs, address, write);
- 		return;
- 	}
- 	pagefault_out_of_memory();
-@@ -69,7 +75,7 @@ static void __kprobes do_sigbus(struct pt_regs *regs,
- {
- 	/* Kernel mode? Handle exceptions or die */
- 	if (!user_mode(regs)) {
--		no_context(regs, address);
-+		no_context(regs, address, write);
- 		return;
- 	}
- 
-@@ -90,7 +96,7 @@ static void __kprobes do_sigsegv(struct pt_regs *regs,
- 
- 	/* Kernel mode? Handle exceptions or die */
- 	if (!user_mode(regs)) {
--		no_context(regs, address);
-+		no_context(regs, address, write);
- 		return;
- 	}
- 
-@@ -149,7 +155,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 	 */
- 	if (address & __UA_LIMIT) {
- 		if (!user_mode(regs))
--			no_context(regs, address);
-+			no_context(regs, address, write);
- 		else
- 			do_sigsegv(regs, write, address, si_code);
- 		return;
-@@ -211,7 +217,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 
- 	if (fault_signal_pending(fault, regs)) {
- 		if (!user_mode(regs))
--			no_context(regs, address);
-+			no_context(regs, address, write);
- 		return;
- 	}
- 
-@@ -232,7 +238,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 	if (unlikely(fault & VM_FAULT_ERROR)) {
- 		mmap_read_unlock(mm);
- 		if (fault & VM_FAULT_OOM) {
--			do_out_of_memory(regs, address);
-+			do_out_of_memory(regs, address, write);
- 			return;
- 		} else if (fault & VM_FAULT_SIGSEGV) {
- 			do_sigsegv(regs, write, address, si_code);
+diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
+index c335dc4..6858633 100644
+--- a/arch/loongarch/net/bpf_jit.h
++++ b/arch/loongarch/net/bpf_jit.h
+@@ -150,7 +150,7 @@ static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm
+ 			 * no need to call lu32id to do a new filled operation.
+ 			 */
+ 			imm_51_31 = (imm >> 31) & 0x1fffff;
+-			if (imm_51_31 != 0 || imm_51_31 != 0x1fffff) {
++			if (imm_51_31 != 0 && imm_51_31 != 0x1fffff) {
+ 				/* lu32id rd, imm_51_32 */
+ 				imm_51_32 = (imm >> 32) & 0xfffff;
+ 				emit_insn(ctx, lu32id, rd, imm_51_32);
 -- 
-2.34.1
+2.1.0
 
