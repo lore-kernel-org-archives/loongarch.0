@@ -1,229 +1,160 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8078462;
-	Tue, 25 Jul 2023 23:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690328087; x=1721864087;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C5xyKe5/WjYZUNBE8/1FHjpgxl/fMdUuo5xkgVP7J8Y=;
-  b=UPQXMs0USTB8L2B/Amv3cA2QoExmySwNxseJ0NQaFbzackDHLyQs7dxs
-   bgEJqJrbcGwKYjyLeZrk3UomupTcZ8uggHZk42McBht/srznDV9354r7o
-   SoUkO/4Pf/rvLu9Al4+5pSdv3mhKYt1aqwje0W38XWIl1Q81GIhNaLtwq
-   WN47IZW6thQxhXwcBkqomNwNKjMX0S6LY5YVU506EU9ioJjUxdvqEedR0
-   I5I+8tGor0wuSQmBRKwnwK5xatq7uXSz/LoEwRsDMiCPEzkg4mclWV4Nt
-   JEUkPOi9zePhlsgjZ8R+BAvmxWR2XaDjavhcczC63NzcoPGlij87HCj0w
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="366747672"
-X-IronPort-AV: E=Sophos;i="6.01,231,1684825200"; 
-   d="scan'208";a="366747672"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2023 16:34:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="755945611"
-X-IronPort-AV: E=Sophos;i="6.01,231,1684825200"; 
-   d="scan'208";a="755945611"
-Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 25 Jul 2023 16:34:40 -0700
-Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qORY7-0000Qn-2W;
-	Tue, 25 Jul 2023 23:34:39 +0000
-Date: Wed, 26 Jul 2023 07:33:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
-	Hugh Dickins <hughd@google.com>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH mm-unstable v7 12/31] powerpc: Convert various functions
- to use ptdescs
-Message-ID: <202307260706.qNPJSnjR-lkp@intel.com>
-References: <20230725042051.36691-13-vishal.moola@gmail.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E2F1108
+	for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 02:59:11 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8Dx6er9i8BktgcKAA--.19487S3;
+	Wed, 26 Jul 2023 10:59:09 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx5sz6i8BkwEY7AA--.7565S3;
+	Wed, 26 Jul 2023 10:59:07 +0800 (CST)
+Subject: Re: [PATCH 2/4 v2] LoongArch: Get stack without NMI when providing
+ regs parameter
+To: Enze Li <lienze@kylinos.cn>, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev, glider@google.com, elver@google.com,
+ akpm@linux-foundation.org, kasan-dev@googlegroups.com, linux-mm@kvack.org
+Cc: yangtiezhu@loongson.cn, dvyukov@google.com
+References: <20230725061451.1231480-1-lienze@kylinos.cn>
+ <20230725061451.1231480-3-lienze@kylinos.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <e325ac53-ba3f-db7a-ccc2-5cfadf6462b9@loongson.cn>
+Date: Wed, 26 Jul 2023 10:59:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230725042051.36691-13-vishal.moola@gmail.com>
+In-Reply-To: <20230725061451.1231480-3-lienze@kylinos.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8Dx5sz6i8BkwEY7AA--.7565S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZr45Wr1UGry5tF47Jw13GFX_yoWrCr1kpr
+	Z7CFZ3G3yUZrWIyr17Jr1UXryYyF4vga1UuF1xCa4fGr43JryUt34jgFy5Xr1DCrW8A3yU
+	Xry5tF1q9ws0yagCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
-Hi Vishal,
+On 2023-07-25 14:14, Enze Li wrote:
 
-kernel test robot noticed the following build errors:
+> Currently, arch_stack_walk() can only get the full stack information
+> including NMI.  This is because the implementation of arch_stack_walk()
+> is forced to ignore the information passed by the regs parameter and use
+> the current stack information instead.
+>
+> For some detection systems like KFENCE, only partial stack information
+> is needed.  In particular, the stack frame where the interrupt occurred.
+>
+> To support KFENCE, this patch modifies the implementation of the
+> arch_stack_walk() function so that if this function is called with the
+> regs argument passed, it retains all the stack information in regs and
+> uses it to provide accurate information.
+>
+> Before the patch applied, I get,
+> [    1.531195 ] ==================================================================
+> [    1.531442 ] BUG: KFENCE: out-of-bounds read in stack_trace_save_regs+0x48/0x6c
+> [    1.531442 ]
+> [    1.531900 ] Out-of-bounds read at 0xffff800012267fff (1B left of kfence-#12):
+> [    1.532046 ]  stack_trace_save_regs+0x48/0x6c
+> [    1.532169 ]  kfence_report_error+0xa4/0x528
+> [    1.532276 ]  kfence_handle_page_fault+0x124/0x270
+> [    1.532388 ]  no_context+0x50/0x94
+> [    1.532453 ]  do_page_fault+0x1a8/0x36c
+> [    1.532524 ]  tlb_do_page_fault_0+0x118/0x1b4
+> [    1.532623 ]  test_out_of_bounds_read+0xa0/0x1d8
+> [    1.532745 ]  kunit_generic_run_threadfn_adapter+0x1c/0x28
+> [    1.532854 ]  kthread+0x124/0x130
+> [    1.532922 ]  ret_from_kernel_thread+0xc/0xa4
+> <snip>
+>
+> With this patch applied, I get the correct stack information.
+> [    1.320220 ] ==================================================================
+> [    1.320401 ] BUG: KFENCE: out-of-bounds read in test_out_of_bounds_read+0xa8/0x1d8
+> [    1.320401 ]
+> [    1.320898 ] Out-of-bounds read at 0xffff800012257fff (1B left of kfence-#10):
+> [    1.321134 ]  test_out_of_bounds_read+0xa8/0x1d8
+> [    1.321264 ]  kunit_generic_run_threadfn_adapter+0x1c/0x28
+> [    1.321392 ]  kthread+0x124/0x130
+> [    1.321459 ]  ret_from_kernel_thread+0xc/0xa4
+> <snip>
+>
+> Signed-off-by: Enze Li <lienze@kylinos.cn>
+> ---
+>   arch/loongarch/kernel/stacktrace.c | 20 ++++++++++++++------
+>   1 file changed, 14 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/stacktrace.c
+> index 2463d2fea21f..9dab30ae68ec 100644
+> --- a/arch/loongarch/kernel/stacktrace.c
+> +++ b/arch/loongarch/kernel/stacktrace.c
+> @@ -18,16 +18,24 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+>   	struct pt_regs dummyregs;
+>   	struct unwind_state state;
+>   
+> -	regs = &dummyregs;
+> -
+>   	if (task == current) {
+> -		regs->regs[3] = (unsigned long)__builtin_frame_address(0);
+> -		regs->csr_era = (unsigned long)__builtin_return_address(0);
+> +		if (regs)
+> +			memcpy(&dummyregs, regs, sizeof(*regs));
+> +		else {
+> +			dummyregs.regs[3] = (unsigned long)__builtin_frame_address(0);
+> +			dummyregs.csr_era = (unsigned long)__builtin_return_address(0);
+> +		}
+>   	} else {
+> -		regs->regs[3] = thread_saved_fp(task);
+> -		regs->csr_era = thread_saved_ra(task);
+> +		if (regs)
+> +			memcpy(&dummyregs, regs, sizeof(*regs));
+> +		else {
+> +			dummyregs.regs[3] = thread_saved_fp(task);
+> +			dummyregs.csr_era = thread_saved_ra(task);
+> +		}
+>   	}
+>   
+> +	regs = &dummyregs;
+> +
 
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on next-20230725]
-[cannot apply to powerpc/next powerpc/fixes s390/features geert-m68k/for-next geert-m68k/for-linus linus/master v6.5-rc3]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+if (!regs) {
+     regs = &dummyregs;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vishal-Moola-Oracle/mm-Add-PAGE_TYPE_OP-folio-functions/20230725-122458
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20230725042051.36691-13-vishal.moola%40gmail.com
-patch subject: [PATCH mm-unstable v7 12/31] powerpc: Convert various functions to use ptdescs
-config: powerpc-randconfig-r034-20230725 (https://download.01.org/0day-ci/archive/20230726/202307260706.qNPJSnjR-lkp@intel.com/config)
-compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
-reproduce: (https://download.01.org/0day-ci/archive/20230726/202307260706.qNPJSnjR-lkp@intel.com/reproduce)
+     if (task == current) {
+         regs->regs[3] = (unsigned long)__builtin_frame_address(0);
+         regs->csr_era = (unsigned long)__builtin_return_address(0);
+     } else {
+         regs->regs[3] = thread_saved_fp(task);
+         regs->csr_era = thread_saved_ra(task);
+     }
+     regs->regs[1] = 0;
+}
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202307260706.qNPJSnjR-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from arch/powerpc/mm/pgtable-frag.c:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/powerpc/include/asm/hardirq.h:6:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:672:
-   arch/powerpc/include/asm/io-defs.h:45:1: error: performing pointer arithmetic on a null pointer has undefined behavior [-Werror,-Wnull-pointer-arithmetic]
-      45 | DEF_PCI_AC_NORET(insw, (unsigned long p, void *b, unsigned long c),
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      46 |                  (p, b, c), pio, p)
-         |                  ~~~~~~~~~~~~~~~~~~
-   arch/powerpc/include/asm/io.h:669:3: note: expanded from macro 'DEF_PCI_AC_NORET'
-     669 |                 __do_##name al;                                 \
-         |                 ^~~~~~~~~~~~~~
-   <scratch space>:40:1: note: expanded from here
-      40 | __do_insw
-         | ^
-   arch/powerpc/include/asm/io.h:610:56: note: expanded from macro '__do_insw'
-     610 | #define __do_insw(p, b, n)      readsw((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
-         |                                        ~~~~~~~~~~~~~~~~~~~~~^
-   In file included from arch/powerpc/mm/pgtable-frag.c:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/powerpc/include/asm/hardirq.h:6:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:672:
-   arch/powerpc/include/asm/io-defs.h:47:1: error: performing pointer arithmetic on a null pointer has undefined behavior [-Werror,-Wnull-pointer-arithmetic]
-      47 | DEF_PCI_AC_NORET(insl, (unsigned long p, void *b, unsigned long c),
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      48 |                  (p, b, c), pio, p)
-         |                  ~~~~~~~~~~~~~~~~~~
-   arch/powerpc/include/asm/io.h:669:3: note: expanded from macro 'DEF_PCI_AC_NORET'
-     669 |                 __do_##name al;                                 \
-         |                 ^~~~~~~~~~~~~~
-   <scratch space>:42:1: note: expanded from here
-      42 | __do_insl
-         | ^
-   arch/powerpc/include/asm/io.h:611:56: note: expanded from macro '__do_insl'
-     611 | #define __do_insl(p, b, n)      readsl((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
-         |                                        ~~~~~~~~~~~~~~~~~~~~~^
-   In file included from arch/powerpc/mm/pgtable-frag.c:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/powerpc/include/asm/hardirq.h:6:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:672:
-   arch/powerpc/include/asm/io-defs.h:49:1: error: performing pointer arithmetic on a null pointer has undefined behavior [-Werror,-Wnull-pointer-arithmetic]
-      49 | DEF_PCI_AC_NORET(outsb, (unsigned long p, const void *b, unsigned long c),
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      50 |                  (p, b, c), pio, p)
-         |                  ~~~~~~~~~~~~~~~~~~
-   arch/powerpc/include/asm/io.h:669:3: note: expanded from macro 'DEF_PCI_AC_NORET'
-     669 |                 __do_##name al;                                 \
-         |                 ^~~~~~~~~~~~~~
-   <scratch space>:44:1: note: expanded from here
-      44 | __do_outsb
-         | ^
-   arch/powerpc/include/asm/io.h:612:58: note: expanded from macro '__do_outsb'
-     612 | #define __do_outsb(p, b, n)     writesb((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
-         |                                         ~~~~~~~~~~~~~~~~~~~~~^
-   In file included from arch/powerpc/mm/pgtable-frag.c:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/powerpc/include/asm/hardirq.h:6:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:672:
-   arch/powerpc/include/asm/io-defs.h:51:1: error: performing pointer arithmetic on a null pointer has undefined behavior [-Werror,-Wnull-pointer-arithmetic]
-      51 | DEF_PCI_AC_NORET(outsw, (unsigned long p, const void *b, unsigned long c),
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      52 |                  (p, b, c), pio, p)
-         |                  ~~~~~~~~~~~~~~~~~~
-   arch/powerpc/include/asm/io.h:669:3: note: expanded from macro 'DEF_PCI_AC_NORET'
-     669 |                 __do_##name al;                                 \
-         |                 ^~~~~~~~~~~~~~
-   <scratch space>:46:1: note: expanded from here
-      46 | __do_outsw
-         | ^
-   arch/powerpc/include/asm/io.h:613:58: note: expanded from macro '__do_outsw'
-     613 | #define __do_outsw(p, b, n)     writesw((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
-         |                                         ~~~~~~~~~~~~~~~~~~~~~^
-   In file included from arch/powerpc/mm/pgtable-frag.c:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/powerpc/include/asm/hardirq.h:6:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:672:
-   arch/powerpc/include/asm/io-defs.h:53:1: error: performing pointer arithmetic on a null pointer has undefined behavior [-Werror,-Wnull-pointer-arithmetic]
-      53 | DEF_PCI_AC_NORET(outsl, (unsigned long p, const void *b, unsigned long c),
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      54 |                  (p, b, c), pio, p)
-         |                  ~~~~~~~~~~~~~~~~~~
-   arch/powerpc/include/asm/io.h:669:3: note: expanded from macro 'DEF_PCI_AC_NORET'
-     669 |                 __do_##name al;                                 \
-         |                 ^~~~~~~~~~~~~~
-   <scratch space>:48:1: note: expanded from here
-      48 | __do_outsl
-         | ^
-   arch/powerpc/include/asm/io.h:614:58: note: expanded from macro '__do_outsl'
-     614 | #define __do_outsl(p, b, n)     writesl((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
-         |                                         ~~~~~~~~~~~~~~~~~~~~~^
->> arch/powerpc/mm/pgtable-frag.c:125:22: error: use of undeclared identifier 'page'
-     125 |         BUG_ON(atomic_read(&page->pt_frag_refcount) <= 0);
-         |                             ^
-   7 errors generated.
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for HOTPLUG_CPU
-   Depends on [n]: SMP [=y] && (PPC_PSERIES [=n] || PPC_PMAC [=n] || PPC_POWERNV [=n] || FSL_SOC_BOOKE [=n])
-   Selected by [y]:
-   - PM_SLEEP_SMP [=y] && SMP [=y] && (ARCH_SUSPEND_POSSIBLE [=y] || ARCH_HIBERNATION_POSSIBLE [=y]) && PM_SLEEP [=y]
+BTW, I remembered that __unwind_start() deals with this issue in regs,
+task and current. arch_stack_walk() is unnecessary to provide current
+or task regs if we fix the unwind_start() skip its parent frame
+(caller is arch_stack_walk). But the current state is better, I think.
 
 
-vim +/page +125 arch/powerpc/mm/pgtable-frag.c
+Thanks,
 
-0203dd58d897cbd Hugh Dickins          2023-07-11  117  
-a95d133c8643cae Christophe Leroy      2018-11-29  118  void pte_fragment_free(unsigned long *table, int kernel)
-a95d133c8643cae Christophe Leroy      2018-11-29  119  {
-e18a6b21f4c0c0c Vishal Moola (Oracle  2023-07-24  120) 	struct ptdesc *ptdesc = virt_to_ptdesc(table);
-a95d133c8643cae Christophe Leroy      2018-11-29  121  
-e18a6b21f4c0c0c Vishal Moola (Oracle  2023-07-24  122) 	if (pagetable_is_reserved(ptdesc))
-e18a6b21f4c0c0c Vishal Moola (Oracle  2023-07-24  123) 		return free_reserved_ptdesc(ptdesc);
-645d5ce2f7d6cb4 Aneesh Kumar K.V      2020-07-09  124  
-a95d133c8643cae Christophe Leroy      2018-11-29 @125  	BUG_ON(atomic_read(&page->pt_frag_refcount) <= 0);
-e18a6b21f4c0c0c Vishal Moola (Oracle  2023-07-24  126) 	if (atomic_dec_and_test(&ptdesc->pt_frag_refcount)) {
-0203dd58d897cbd Hugh Dickins          2023-07-11  127  		if (kernel)
-e18a6b21f4c0c0c Vishal Moola (Oracle  2023-07-24  128) 			pagetable_free(ptdesc);
-e18a6b21f4c0c0c Vishal Moola (Oracle  2023-07-24  129) 		else if (folio_test_clear_active(ptdesc_folio(ptdesc)))
-e18a6b21f4c0c0c Vishal Moola (Oracle  2023-07-24  130) 			call_rcu(&ptdesc->pt_rcu_head, pte_free_now);
-0203dd58d897cbd Hugh Dickins          2023-07-11  131  		else
-e18a6b21f4c0c0c Vishal Moola (Oracle  2023-07-24  132) 			pte_free_now(&ptdesc->pt_rcu_head);
-0203dd58d897cbd Hugh Dickins          2023-07-11  133  	}
-a95d133c8643cae Christophe Leroy      2018-11-29  134  }
-0203dd58d897cbd Hugh Dickins          2023-07-11  135  
+Jinyang
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>   	regs->regs[1] = 0;
+>   	for (unwind_start(&state, task, regs);
+>   	     !unwind_done(&state) && !unwind_error(&state); unwind_next_frame(&state)) {
+
