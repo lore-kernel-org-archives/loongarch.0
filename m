@@ -1,160 +1,75 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E2F1108
-	for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 02:59:11 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8Dx6er9i8BktgcKAA--.19487S3;
-	Wed, 26 Jul 2023 10:59:09 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx5sz6i8BkwEY7AA--.7565S3;
-	Wed, 26 Jul 2023 10:59:07 +0800 (CST)
-Subject: Re: [PATCH 2/4 v2] LoongArch: Get stack without NMI when providing
- regs parameter
-To: Enze Li <lienze@kylinos.cn>, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev, glider@google.com, elver@google.com,
- akpm@linux-foundation.org, kasan-dev@googlegroups.com, linux-mm@kvack.org
-Cc: yangtiezhu@loongson.cn, dvyukov@google.com
-References: <20230725061451.1231480-1-lienze@kylinos.cn>
- <20230725061451.1231480-3-lienze@kylinos.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <e325ac53-ba3f-db7a-ccc2-5cfadf6462b9@loongson.cn>
-Date: Wed, 26 Jul 2023 10:59:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31426FBC
+	for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 06:29:17 +0000 (UTC)
+X-UUID: 298248b7ac0046aba6541fdef59d3975-20230726
+X-CID-UNFAMILIAR: 1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.28,REQID:31363ec0-5fda-4b34-ba66-addfbed97a15,IP:25,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:28
+X-CID-INFO: VERSION:1.1.28,REQID:31363ec0-5fda-4b34-ba66-addfbed97a15,IP:25,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_HamU,ACTION
+	:release,TS:28
+X-CID-META: VersionHash:176cd25,CLOUDID:effeccb3-a467-4aa9-9e04-f584452e3794,B
+	ulkID:23072614290472T5GNHT,BulkQuantity:0,Recheck:0,SF:24|16|19|44|102,TC:
+	nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
+	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_USA,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 298248b7ac0046aba6541fdef59d3975-20230726
+X-User: zhaochenguang@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.12)] by mailgw
+	(envelope-from <zhaochenguang@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
+	with ESMTP id 1987773905; Wed, 26 Jul 2023 14:29:04 +0800
+From: zhaochenguang <zhaochenguang@kylinos.cn>
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	zhaochenguang@kylinos.cn
+Subject: [PATCH] LoongArch: eBPF: Restrict bpf_probe_read{, str}() only to archs where they work
+Date: Wed, 26 Jul 2023 14:29:02 +0800
+Message-Id: <20230726062902.566312-1-zhaochenguang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230725061451.1231480-3-lienze@kylinos.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Dx5sz6i8BkwEY7AA--.7565S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZr45Wr1UGry5tF47Jw13GFX_yoWrCr1kpr
-	Z7CFZ3G3yUZrWIyr17Jr1UXryYyF4vga1UuF1xCa4fGr43JryUt34jgFy5Xr1DCrW8A3yU
-	Xry5tF1q9ws0yagCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
-On 2023-07-25 14:14, Enze Li wrote:
+When we run nettrace on LoongArch, there is a problem that
+ERROR: failed to load kprobe-based eBPF
+ERROR: failed to load kprobe-based bpf
 
-> Currently, arch_stack_walk() can only get the full stack information
-> including NMI.  This is because the implementation of arch_stack_walk()
-> is forced to ignore the information passed by the regs parameter and use
-> the current stack information instead.
->
-> For some detection systems like KFENCE, only partial stack information
-> is needed.  In particular, the stack frame where the interrupt occurred.
->
-> To support KFENCE, this patch modifies the implementation of the
-> arch_stack_walk() function so that if this function is called with the
-> regs argument passed, it retains all the stack information in regs and
-> uses it to provide accurate information.
->
-> Before the patch applied, I get,
-> [    1.531195 ] ==================================================================
-> [    1.531442 ] BUG: KFENCE: out-of-bounds read in stack_trace_save_regs+0x48/0x6c
-> [    1.531442 ]
-> [    1.531900 ] Out-of-bounds read at 0xffff800012267fff (1B left of kfence-#12):
-> [    1.532046 ]  stack_trace_save_regs+0x48/0x6c
-> [    1.532169 ]  kfence_report_error+0xa4/0x528
-> [    1.532276 ]  kfence_handle_page_fault+0x124/0x270
-> [    1.532388 ]  no_context+0x50/0x94
-> [    1.532453 ]  do_page_fault+0x1a8/0x36c
-> [    1.532524 ]  tlb_do_page_fault_0+0x118/0x1b4
-> [    1.532623 ]  test_out_of_bounds_read+0xa0/0x1d8
-> [    1.532745 ]  kunit_generic_run_threadfn_adapter+0x1c/0x28
-> [    1.532854 ]  kthread+0x124/0x130
-> [    1.532922 ]  ret_from_kernel_thread+0xc/0xa4
-> <snip>
->
-> With this patch applied, I get the correct stack information.
-> [    1.320220 ] ==================================================================
-> [    1.320401 ] BUG: KFENCE: out-of-bounds read in test_out_of_bounds_read+0xa8/0x1d8
-> [    1.320401 ]
-> [    1.320898 ] Out-of-bounds read at 0xffff800012257fff (1B left of kfence-#10):
-> [    1.321134 ]  test_out_of_bounds_read+0xa8/0x1d8
-> [    1.321264 ]  kunit_generic_run_threadfn_adapter+0x1c/0x28
-> [    1.321392 ]  kthread+0x124/0x130
-> [    1.321459 ]  ret_from_kernel_thread+0xc/0xa4
-> <snip>
->
-> Signed-off-by: Enze Li <lienze@kylinos.cn>
-> ---
->   arch/loongarch/kernel/stacktrace.c | 20 ++++++++++++++------
->   1 file changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/stacktrace.c
-> index 2463d2fea21f..9dab30ae68ec 100644
-> --- a/arch/loongarch/kernel/stacktrace.c
-> +++ b/arch/loongarch/kernel/stacktrace.c
-> @@ -18,16 +18,24 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
->   	struct pt_regs dummyregs;
->   	struct unwind_state state;
->   
-> -	regs = &dummyregs;
-> -
->   	if (task == current) {
-> -		regs->regs[3] = (unsigned long)__builtin_frame_address(0);
-> -		regs->csr_era = (unsigned long)__builtin_return_address(0);
-> +		if (regs)
-> +			memcpy(&dummyregs, regs, sizeof(*regs));
-> +		else {
-> +			dummyregs.regs[3] = (unsigned long)__builtin_frame_address(0);
-> +			dummyregs.csr_era = (unsigned long)__builtin_return_address(0);
-> +		}
->   	} else {
-> -		regs->regs[3] = thread_saved_fp(task);
-> -		regs->csr_era = thread_saved_ra(task);
-> +		if (regs)
-> +			memcpy(&dummyregs, regs, sizeof(*regs));
-> +		else {
-> +			dummyregs.regs[3] = thread_saved_fp(task);
-> +			dummyregs.csr_era = thread_saved_ra(task);
-> +		}
->   	}
->   
-> +	regs = &dummyregs;
-> +
+Because ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE dose not exist,
+so we enable it.
 
-if (!regs) {
-     regs = &dummyregs;
+The patch reference upstream id 0ebeea8ca8a4d1d453ad299aef0507dab04f6e8d.
 
-     if (task == current) {
-         regs->regs[3] = (unsigned long)__builtin_frame_address(0);
-         regs->csr_era = (unsigned long)__builtin_return_address(0);
-     } else {
-         regs->regs[3] = thread_saved_fp(task);
-         regs->csr_era = thread_saved_ra(task);
-     }
-     regs->regs[1] = 0;
-}
+Signed-off-by: zhaochenguang <zhaochenguang@kylinos.cn>
+---
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-BTW, I remembered that __unwind_start() deals with this issue in regs,
-task and current. arch_stack_walk() is unnecessary to provide current
-or task regs if we fix the unwind_start() skip its parent frame
-(caller is arch_stack_walk). But the current state is better, I think.
-
-
-Thanks,
-
-Jinyang
-
->   	regs->regs[1] = 0;
->   	for (unwind_start(&state, task, regs);
->   	     !unwind_done(&state) && !unwind_error(&state); unwind_next_frame(&state)) {
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 903096bd87f8..4a156875e9cc 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -11,6 +11,7 @@ config LOONGARCH
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_PTE_SPECIAL
++	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
+ 	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+-- 
+2.25.1
 
