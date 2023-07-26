@@ -1,88 +1,98 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE221363
-	for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 07:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1690356063;
-	bh=xKmoC7w1avaQZLZw1nd7d8Fje+BhvbgbhJZnag/Cd58=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HJYPTpA+UP6KYzhdmVpDWQQYs+jkqxpCC/Enh2FcZuRPv6XOsya/9sEqTWraHSXOF
-	 VBZ/7DMcww6N3tkH8Wp7pVSNtI/Lsa68FhPcdMSaCd/OsTf/CIDm5R96x2aEndXxC0
-	 HBMNsFdD9BqGrYWzJ9SyerbopcanNAAphSWKBM6I=
-Received: from [192.168.124.11] (unknown [61.150.43.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id B4816659A1;
-	Wed, 26 Jul 2023 03:21:01 -0400 (EDT)
-Message-ID: <174b4c41d10fa1b31821482ec737733ca4633464.camel@xry111.site>
-Subject: Re: [PATCH] ASoC: loongson: mark OF related data as maybe unused
-From: Xi Ruoyao <xry111@xry111.site>
-To: YingKun Meng <mengyingkun@loongson.cn>, broonie@kernel.org, 
-	lgirdwood@gmail.com
-Cc: krzysztof.kozlowski@linaro.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn, kernel test
- robot <lkp@intel.com>
-Date: Wed, 26 Jul 2023 15:20:59 +0800
-In-Reply-To: <20230726070648.700754-1-mengyingkun@loongson.cn>
-References: <20230726070648.700754-1-mengyingkun@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669D09448
+	for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 07:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1690356834; bh=XcZL0UiYpctgNqxRKPIYWTpapEbyjnHQl0vSOz4L+S8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sOFrT84lpq+9LFYaPO2jYEMW81bGQf13vrHET4eYePr+RwYlbrJSUcH9eaexSChJQ
+	 4wSQirGWca2fWQHRgQJEUVD5B45iQFYUA2hbyUXlbRRpH++ZHJyzMejXyP2QkjprAj
+	 Egqz3rcEluWWukUlPtXMQj1BRiwDvlHYga7QDbVw=
+Received: from [100.100.34.13] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2B45D60112;
+	Wed, 26 Jul 2023 15:33:54 +0800 (CST)
+Message-ID: <504c5fc7-57d3-f36a-b9e7-801d7e40bc60@xen0n.name>
+Date: Wed, 26 Jul 2023 15:33:53 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [PATCH] LoongArch: eBPF: Restrict bpf_probe_read{, str}() only to
+ archs where they work
+Content-Language: en-US
+To: zhaochenguang <zhaochenguang@kylinos.cn>, chenhuacai@kernel.org
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20230726062902.566312-1-zhaochenguang@kylinos.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230726062902.566312-1-zhaochenguang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2023-07-26 at 15:06 +0800, YingKun Meng wrote:
-> The ASoC Sound Card driver can be compile tested with !CONFIG_OF
-> making 'loongson_asoc_dt_ids' unused:
->=20
-> sound/soc/loongson/loongson_card.c:200:34: warning: unused variable
-> 'loongson_asoc_dt_ids' [-Wunused-const-variable]
+On 2023/7/26 14:29, zhaochenguang wrote:
+> When we run nettrace on LoongArch, there is a problem that
+> ERROR: failed to load kprobe-based eBPF
+> ERROR: failed to load kprobe-based bpf
+> 
+> Because ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE dose not exist,
+> so we enable it.
+> 
+> The patch reference upstream id 0ebeea8ca8a4d1d453ad299aef0507dab04f6e8d.
 
-Hmm, why not guard the definition with #ifdef CONFIG_OF instead?
+The description is a bit hard to follow. Rephrasing a bit:
 
-Source text is first and foremost for the human reader, not for the
-compiler, and an ifdef clearly shows the condition when the definition
-is not used.
+"Currently nettrace does not work on LoongArch due to missing 
+bpf_probe_read{,str}() support, with the error message:
 
-> Here we solve it in the same way as [1].
->=20
-> [1] https://lore.kernel.org/all/20201125164452.89239-1-krzk@kernel.org/
->=20
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202307242008.xqdjgk04-lkp@i=
-ntel.com
-> Fixes: d24028606e76 ("ASoC: loongson: Add Loongson ASoC Sound Card Suppor=
-t")
-> Signed-off-by: YingKun Meng <mengyingkun@loongson.cn>
+     ERROR: failed to load kprobe-based eBPF
+     ERROR: failed to load kprobe-based bpf
+
+According to commit 0ebeea8ca8a4d ("bpf: Restrict bpf_probe_read{, 
+str}() only to archs where they work"), we only need to select 
+CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE to add said support, 
+because LoongArch does have non-overlapping address ranges for kernel 
+and userspace."
+
+Also, the patch subject does not make sense. Looking at precedents such 
+as commit 66633abd0642f ("MIPS/bpf: Enable bpf_probe_read{, str}() on 
+MIPS again") and commit d195b1d1d1196 ("powerpc/bpf: Enable 
+bpf_probe_read{, str}() on powerpc again"), we can instead re-title the 
+commit as "LoongArch/bpf: Enable bpf_probe_read{, str}() on LoongArch". 
+(No "again" because commit 0ebeea8ca8a4d actually predated the LoongArch 
+port.)
+
+> 
+> Signed-off-by: zhaochenguang <zhaochenguang@kylinos.cn>
 > ---
-> =C2=A0sound/soc/loongson/loongson_card.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/sound/soc/loongson/loongson_card.c b/sound/soc/loongson/loon=
-gson_card.c
-> index 9ded16329747..7dd7adc13484 100644
-> --- a/sound/soc/loongson/loongson_card.c
-> +++ b/sound/soc/loongson/loongson_card.c
-> @@ -197,7 +197,7 @@ static int loongson_asoc_card_probe(struct platform_d=
-evice *pdev)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return ret;
-> =C2=A0}
-> =C2=A0
-> -static const struct of_device_id loongson_asoc_dt_ids[] =3D {
-> +static const struct of_device_id loongson_asoc_dt_ids[] __maybe_unused =
-=3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "loongs=
-on,ls-audio-card" },
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{ /* sentinel */ },
-> =C2=A0};
+>   arch/loongarch/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 903096bd87f8..4a156875e9cc 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -11,6 +11,7 @@ config LOONGARCH
+>   	select ARCH_ENABLE_MEMORY_HOTREMOVE
+>   	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+>   	select ARCH_HAS_PTE_SPECIAL
+> +	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Please keep the list in alphabetical order by moving this one line above.
+
+>   	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>   	select ARCH_INLINE_READ_LOCK if !PREEMPTION
+>   	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
