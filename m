@@ -1,98 +1,82 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669D09448
-	for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 07:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1690356834; bh=XcZL0UiYpctgNqxRKPIYWTpapEbyjnHQl0vSOz4L+S8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sOFrT84lpq+9LFYaPO2jYEMW81bGQf13vrHET4eYePr+RwYlbrJSUcH9eaexSChJQ
-	 4wSQirGWca2fWQHRgQJEUVD5B45iQFYUA2hbyUXlbRRpH++ZHJyzMejXyP2QkjprAj
-	 Egqz3rcEluWWukUlPtXMQj1BRiwDvlHYga7QDbVw=
-Received: from [100.100.34.13] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2B45D60112;
-	Wed, 26 Jul 2023 15:33:54 +0800 (CST)
-Message-ID: <504c5fc7-57d3-f36a-b9e7-801d7e40bc60@xen0n.name>
-Date: Wed, 26 Jul 2023 15:33:53 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792F99456
+	for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 08:05:40 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-52229d3b8c8so4743020a12.2
+        for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 01:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690358738; x=1690963538;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wAHUQ8fB6FGgHFeTYFJpEoe7c/sqaC3KeyYejkkBsfE=;
+        b=k+qqrxnCxTnSv0JS4TM2MVG/86jPA2QGCR8vVSQrKTNLIZvoCHFAGNtvHwYlWne+nR
+         u2VVErVNZtfbA2qmx+I044+t2dS5XFCTw/KW/aFZQa0LNkau5oZMVKgPaaIhynMFZx8T
+         C1PqB14vPiE8Jpjtn6Rrn3fzZX9Hd1yiTMYn8b/9vl6YN5JMbYDspJe0Cl7pgdqhIBry
+         xadJ40gaCvOs0EWSI6ycFpglFFFrV+57ulGbWf1HblyUSzC1FnhduZrgrQfwUZDK7ozp
+         5rZ5LocqVPzCzj8RLhAsYjFvayK1Xn4rkk0FO400T2RsYwJtPOXQpuOoG+tckeR+sozb
+         LkCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690358738; x=1690963538;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wAHUQ8fB6FGgHFeTYFJpEoe7c/sqaC3KeyYejkkBsfE=;
+        b=IjZhJBTSubqMFpR2ZxXyngVrrzpDvgxQY3CHjbhRoATvFOc/iuoYRVnlQgn7Gsu4b9
+         GcFoODOi/RoU1NjxHwQtpjjvFBpdldFROAi2xbj7nKPa/11bnvtRJDUsMIZOjC3Lydao
+         DtOxI0/VOwQPagSLsjP6Mmc6xWjj8Glq0NjnIB+Si0Tmk+Vu4yAGid2UhVoGQAOr/fp9
+         Rnt2rlEOs/272Cbrmm5BY3s1dcbjExgBw3w6mU1J/aKd6+mfhXCvV8dmek03CegT2mjR
+         YyYZ9iqtBkhvTtlIqoQcKrCGI+nKg+u7S83GYl12Nq4kI1PI8ZkIMEH7fK9sgAsaXfLa
+         164w==
+X-Gm-Message-State: ABy/qLYs/C4DoA9ckTSRYiho/P874xVEzzKrn68JaKThmkoOAMMcEjf4
+	kQgR+kVHL87sxkvl8/ioDP5PGg==
+X-Google-Smtp-Source: APBJJlGXqrlH1L3HW/5n5DFFk+S3iCmieB/iM2I8GQM6MuItXN4lAIxlK+OxT+lcgGKQKjfcjjHvww==
+X-Received: by 2002:a17:906:7692:b0:987:498a:87f6 with SMTP id o18-20020a170906769200b00987498a87f6mr875048ejm.34.1690358738498;
+        Wed, 26 Jul 2023 01:05:38 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id jt14-20020a170906ca0e00b00992e51fecfbsm9380573ejb.64.2023.07.26.01.05.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jul 2023 01:05:38 -0700 (PDT)
+Message-ID: <1ad985f9-2738-8b42-a8e2-c2312ec57d9e@linaro.org>
+Date: Wed, 26 Jul 2023 10:05:34 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH] LoongArch: eBPF: Restrict bpf_probe_read{, str}() only to
- archs where they work
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] ASoC: loongson: mark OF related data as maybe unused
 Content-Language: en-US
-To: zhaochenguang <zhaochenguang@kylinos.cn>, chenhuacai@kernel.org
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20230726062902.566312-1-zhaochenguang@kylinos.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230726062902.566312-1-zhaochenguang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Xi Ruoyao <xry111@xry111.site>, YingKun Meng <mengyingkun@loongson.cn>,
+ broonie@kernel.org, lgirdwood@gmail.com
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ loongson-kernel@lists.loongnix.cn, kernel test robot <lkp@intel.com>
+References: <20230726070648.700754-1-mengyingkun@loongson.cn>
+ <174b4c41d10fa1b31821482ec737733ca4633464.camel@xry111.site>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <174b4c41d10fa1b31821482ec737733ca4633464.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2023/7/26 14:29, zhaochenguang wrote:
-> When we run nettrace on LoongArch, there is a problem that
-> ERROR: failed to load kprobe-based eBPF
-> ERROR: failed to load kprobe-based bpf
+On 26/07/2023 09:20, Xi Ruoyao wrote:
+> On Wed, 2023-07-26 at 15:06 +0800, YingKun Meng wrote:
+>> The ASoC Sound Card driver can be compile tested with !CONFIG_OF
+>> making 'loongson_asoc_dt_ids' unused:
+>>
+>> sound/soc/loongson/loongson_card.c:200:34: warning: unused variable
+>> 'loongson_asoc_dt_ids' [-Wunused-const-variable]
 > 
-> Because ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE dose not exist,
-> so we enable it.
+> Hmm, why not guard the definition with #ifdef CONFIG_OF instead?
 > 
-> The patch reference upstream id 0ebeea8ca8a4d1d453ad299aef0507dab04f6e8d.
+> Source text is first and foremost for the human reader, not for the
+> compiler, and an ifdef clearly shows the condition when the definition
+> is not used.
 
-The description is a bit hard to follow. Rephrasing a bit:
+Rather drop of_match_ptr so this can be used also on ACPI.
 
-"Currently nettrace does not work on LoongArch due to missing 
-bpf_probe_read{,str}() support, with the error message:
-
-     ERROR: failed to load kprobe-based eBPF
-     ERROR: failed to load kprobe-based bpf
-
-According to commit 0ebeea8ca8a4d ("bpf: Restrict bpf_probe_read{, 
-str}() only to archs where they work"), we only need to select 
-CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE to add said support, 
-because LoongArch does have non-overlapping address ranges for kernel 
-and userspace."
-
-Also, the patch subject does not make sense. Looking at precedents such 
-as commit 66633abd0642f ("MIPS/bpf: Enable bpf_probe_read{, str}() on 
-MIPS again") and commit d195b1d1d1196 ("powerpc/bpf: Enable 
-bpf_probe_read{, str}() on powerpc again"), we can instead re-title the 
-commit as "LoongArch/bpf: Enable bpf_probe_read{, str}() on LoongArch". 
-(No "again" because commit 0ebeea8ca8a4d actually predated the LoongArch 
-port.)
-
-> 
-> Signed-off-by: zhaochenguang <zhaochenguang@kylinos.cn>
-> ---
->   arch/loongarch/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 903096bd87f8..4a156875e9cc 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -11,6 +11,7 @@ config LOONGARCH
->   	select ARCH_ENABLE_MEMORY_HOTREMOVE
->   	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
->   	select ARCH_HAS_PTE_SPECIAL
-> +	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-
-Please keep the list in alphabetical order by moving this one line above.
-
->   	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
->   	select ARCH_INLINE_READ_LOCK if !PREEMPTION
->   	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+Best regards,
+Krzysztof
 
