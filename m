@@ -1,41 +1,25 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31426FBC
-	for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 06:29:17 +0000 (UTC)
-X-UUID: 298248b7ac0046aba6541fdef59d3975-20230726
-X-CID-UNFAMILIAR: 1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.28,REQID:31363ec0-5fda-4b34-ba66-addfbed97a15,IP:25,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:28
-X-CID-INFO: VERSION:1.1.28,REQID:31363ec0-5fda-4b34-ba66-addfbed97a15,IP:25,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_HamU,ACTION
-	:release,TS:28
-X-CID-META: VersionHash:176cd25,CLOUDID:effeccb3-a467-4aa9-9e04-f584452e3794,B
-	ulkID:23072614290472T5GNHT,BulkQuantity:0,Recheck:0,SF:24|16|19|44|102,TC:
-	nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
-	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_USA,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 298248b7ac0046aba6541fdef59d3975-20230726
-X-User: zhaochenguang@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.12)] by mailgw
-	(envelope-from <zhaochenguang@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
-	with ESMTP id 1987773905; Wed, 26 Jul 2023 14:29:04 +0800
-From: zhaochenguang <zhaochenguang@kylinos.cn>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	loongarch@lists.linux.dev,
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C70A79F3
+	for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 07:07:57 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.124])
+	by gateway (Coremail) with SMTP id _____8AxCPJLxsBkyxoKAA--.25134S3;
+	Wed, 26 Jul 2023 15:07:55 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.124])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxzyNFxsBkpW87AA--.53138S4;
+	Wed, 26 Jul 2023 15:07:52 +0800 (CST)
+From: YingKun Meng <mengyingkun@loongson.cn>
+To: broonie@kernel.org,
+	lgirdwood@gmail.com
+Cc: krzysztof.kozlowski@linaro.org,
 	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	zhaochenguang@kylinos.cn
-Subject: [PATCH] LoongArch: eBPF: Restrict bpf_probe_read{, str}() only to archs where they work
-Date: Wed, 26 Jul 2023 14:29:02 +0800
-Message-Id: <20230726062902.566312-1-zhaochenguang@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn,
+	YingKun Meng <mengyingkun@loongson.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] ASoC: loongson: mark OF related data as maybe unused
+Date: Wed, 26 Jul 2023 15:06:48 +0800
+Message-Id: <20230726070648.700754-1-mengyingkun@loongson.cn>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,33 +27,55 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxzyNFxsBkpW87AA--.53138S4
+X-CM-SenderInfo: 5phqw55lqjy33q6o00pqjv00gofq/1tbiAQAEDGS-S68JLwABsR
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zw1rCr45WryDGF48CF4rJFc_yoW8Jw4kpw
+	nxA3yqgrWYgr45Aws5JrWrAa4xC3s8Z3ZxGa17Gw1rKr9rA3WDu3s3JF42vF42vryUGFyU
+	Xr97GrWFk3WDWFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-When we run nettrace on LoongArch, there is a problem that
-ERROR: failed to load kprobe-based eBPF
-ERROR: failed to load kprobe-based bpf
+The ASoC Sound Card driver can be compile tested with !CONFIG_OF
+making 'loongson_asoc_dt_ids' unused:
 
-Because ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE dose not exist,
-so we enable it.
+sound/soc/loongson/loongson_card.c:200:34: warning: unused variable 'loongson_asoc_dt_ids' [-Wunused-const-variable]
 
-The patch reference upstream id 0ebeea8ca8a4d1d453ad299aef0507dab04f6e8d.
+Here we solve it in the same way as [1].
 
-Signed-off-by: zhaochenguang <zhaochenguang@kylinos.cn>
+[1] https://lore.kernel.org/all/20201125164452.89239-1-krzk@kernel.org/
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202307242008.xqdjgk04-lkp@intel.com
+Fixes: d24028606e76 ("ASoC: loongson: Add Loongson ASoC Sound Card Support")
+Signed-off-by: YingKun Meng <mengyingkun@loongson.cn>
 ---
- arch/loongarch/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/loongson/loongson_card.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 903096bd87f8..4a156875e9cc 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -11,6 +11,7 @@ config LOONGARCH
- 	select ARCH_ENABLE_MEMORY_HOTREMOVE
- 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
- 	select ARCH_HAS_PTE_SPECIAL
-+	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
- 	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+diff --git a/sound/soc/loongson/loongson_card.c b/sound/soc/loongson/loongson_card.c
+index 9ded16329747..7dd7adc13484 100644
+--- a/sound/soc/loongson/loongson_card.c
++++ b/sound/soc/loongson/loongson_card.c
+@@ -197,7 +197,7 @@ static int loongson_asoc_card_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
+-static const struct of_device_id loongson_asoc_dt_ids[] = {
++static const struct of_device_id loongson_asoc_dt_ids[] __maybe_unused = {
+ 	{ .compatible = "loongson,ls-audio-card" },
+ 	{ /* sentinel */ },
+ };
 -- 
-2.25.1
+2.33.0
 
