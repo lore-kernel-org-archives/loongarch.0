@@ -1,33 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F611C9E4;
-	Thu, 27 Jul 2023 21:36:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D72AC433C8;
-	Thu, 27 Jul 2023 21:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690493811;
-	bh=duAwVmFYmsUINs8hFVbW/zohvuZX6TUh3Gnxn1i9JaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VnkrMICyDKHI52bpNsVeWb1AIXCLlOc90Zm+WJzG7JhU/D/eh32guTyhJs9VbOXeY
-	 VLunSyQzAZmzTpbjTD0/0bwVy6AP11F0L45gerinT+7xNzw+bUWgc1NJDEOd0uEw7k
-	 0oizeR8ID0C2ayjOTINy9zIDUAhG5c3tNnJg2rSvPeFBObmg5Lisx+nvXBwG4+Xl67
-	 qM9qBKsNHyW1L5vzqBQ1hNJg2A3IUp0YOwTv0VvVK+IsuC1joDQwV/a5XSzbXqGwPQ
-	 WEEaOEhQLooEPvMJ6QS2mIGeMoxc3tmMofUdWTZQq7jpKKXznadVu7vzJ5i57P+phO
-	 A0wy5jcHn6vKQ==
-Date: Thu, 27 Jul 2023 14:36:48 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64,
- riscv and loongarch
-Message-ID: <20230727213648.GA354736@dev-arch.thelio-3990X>
-References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
- <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AEB3D68
+	for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 23:08:13 +0000 (UTC)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-563f752774fso865715a12.1
+        for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 16:08:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690499293; x=1691104093;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UBYOBoJLYiNWyPBZ8JtjEPNaBvs8n9DfL50KMt5h7Ws=;
+        b=TW0iL3mrIm54XwfUz+EJV2cICCYRH49ccpHRmXzGvXT4A7hJr3UV/RBMkrqZcYwAAw
+         L4QNlaxXI0LdVwgwPzdiy4fc1QKhj4jHTt0VSmNVaNtRxJs0GFzkZDKX6DMg3PXmaG7M
+         LJCOBpMV4ZHWjJlDwS1foSSce//SXGygdQL1vwfb0hsV/DBuGenykX7CIrcNf3Mex0eA
+         hkJWWhxEJfV3mMhC+R/ihdzEh4DlYW6jf/+hBUZO7yRv+aVIwrkNTZlbAU+c/djQAn5g
+         4SRXzmWdOX0yJPWkUwWR2WK/ET0ZuBLTFbncC0TeoxVE5ozISmfrb4V9YFtc+I6jNcNf
+         HKJQ==
+X-Gm-Message-State: ABy/qLbheGwpcM2G04kk1iz17BnYups6PiXFlsh0EeZXvNE3bcb+/L96
+	LMRTf+l0Jx26UhQBbr53x0k=
+X-Google-Smtp-Source: APBJJlGz/uqkDGdyOYbooK4qi3urMgjXZdj674zcDvx65lAKgWJKRtnlfPgUlQsBJq29niDw8iMIwQ==
+X-Received: by 2002:a17:90a:bb12:b0:267:faba:705 with SMTP id u18-20020a17090abb1200b00267faba0705mr8961pjr.10.1690499292643;
+        Thu, 27 Jul 2023 16:08:12 -0700 (PDT)
+Received: from snowbird ([199.73.127.3])
+        by smtp.gmail.com with ESMTPSA id m8-20020a17090a4d8800b0026822cb85casm1631801pjh.18.2023.07.27.16.08.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jul 2023 16:08:12 -0700 (PDT)
+Date: Thu, 27 Jul 2023 16:08:07 -0700
+From: Dennis Zhou <dennis@kernel.org>
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, WANG Xuerui <kernel@xen0n.name>
+Subject: Re: [PATCH 1/3] mm/percpu: Remove some local variables in
+ pcpu_populate_pte
+Message-ID: <ZML414eLkT78bO5G@snowbird>
+References: <20230712031622.1888321-1-maobibo@loongson.cn>
+ <20230712031622.1888321-2-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,69 +47,72 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <20230712031622.1888321-2-maobibo@loongson.cn>
 
-Hi Tiezhu and Arnd,
+Hello,
 
-On Thu, Jun 22, 2023 at 10:13:38PM +0800, Tiezhu Yang wrote:
-> Now we specify the minimal version of GCC as 5.1 and Clang/LLVM as 11.0.0
-> in Documentation/process/changes.rst, __CHAR_BIT__ and __SIZEOF_LONG__ are
-> usable, it is probably fine to unify the definition of __BITS_PER_LONG as
-> (__CHAR_BIT__ * __SIZEOF_LONG__) in asm-generic uapi bitsperlong.h.
+On Wed, Jul 12, 2023 at 11:16:20AM +0800, Bibo Mao wrote:
+> In function pcpu_populate_pte there are already variable defined,
+> it can be reused for later use, here remove duplicated local
+> variables.
 > 
-> In order to keep safe and avoid regression, only unify uapi bitsperlong.h
-> for some archs such as arm64, riscv and loongarch which are using newer
-> toolchains that have the definitions of __CHAR_BIT__ and __SIZEOF_LONG__.
-> 
-> Suggested-by: Xi Ruoyao <xry111@xry111.site>
-> Link: https://lore.kernel.org/all/d3e255e4746de44c9903c4433616d44ffcf18d1b.camel@xry111.site/
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Link: https://lore.kernel.org/linux-arch/a3a4f48a-07d4-4ed9-bc53-5d383428bdd2@app.fastmail.com/
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  arch/arm64/include/uapi/asm/bitsperlong.h          | 24 ----------------------
->  arch/loongarch/include/uapi/asm/bitsperlong.h      |  9 --------
->  arch/riscv/include/uapi/asm/bitsperlong.h          | 14 -------------
->  include/uapi/asm-generic/bitsperlong.h             | 13 +++++++++++-
->  tools/arch/arm64/include/uapi/asm/bitsperlong.h    | 24 ----------------------
->  .../arch/loongarch/include/uapi/asm/bitsperlong.h  |  9 --------
->  tools/arch/riscv/include/uapi/asm/bitsperlong.h    | 14 -------------
->  tools/include/uapi/asm-generic/bitsperlong.h       | 14 ++++++++++++-
->  tools/include/uapi/asm/bitsperlong.h               |  6 ------
->  9 files changed, 25 insertions(+), 102 deletions(-)
->  delete mode 100644 arch/arm64/include/uapi/asm/bitsperlong.h
->  delete mode 100644 arch/loongarch/include/uapi/asm/bitsperlong.h
->  delete mode 100644 arch/riscv/include/uapi/asm/bitsperlong.h
->  delete mode 100644 tools/arch/arm64/include/uapi/asm/bitsperlong.h
->  delete mode 100644 tools/arch/loongarch/include/uapi/asm/bitsperlong.h
->  delete mode 100644 tools/arch/riscv/include/uapi/asm/bitsperlong.h
+>  mm/percpu.c | 24 +++++++++---------------
+>  1 file changed, 9 insertions(+), 15 deletions(-)
+> 
+> diff --git a/mm/percpu.c b/mm/percpu.c
+> index 28e07ede46f6..85e3f9b2a61f 100644
+> --- a/mm/percpu.c
+> +++ b/mm/percpu.c
+> @@ -3189,32 +3189,26 @@ void __init __weak pcpu_populate_pte(unsigned long addr)
+>  	pmd_t *pmd;
+>  
+>  	if (pgd_none(*pgd)) {
+> -		p4d_t *new;
+> -
+> -		new = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
+> -		if (!new)
+> +		p4d = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
+> +		if (!p4d)
+>  			goto err_alloc;
+> -		pgd_populate(&init_mm, pgd, new);
+> +		pgd_populate(&init_mm, pgd, p4d);
+>  	}
+>  
+>  	p4d = p4d_offset(pgd, addr);
+>  	if (p4d_none(*p4d)) {
+> -		pud_t *new;
+> -
+> -		new = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
+> -		if (!new)
+> +		pud = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
+> +		if (!pud)
+>  			goto err_alloc;
+> -		p4d_populate(&init_mm, p4d, new);
+> +		p4d_populate(&init_mm, p4d, pud);
+>  	}
+>  
+>  	pud = pud_offset(p4d, addr);
+>  	if (pud_none(*pud)) {
+> -		pmd_t *new;
+> -
+> -		new = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
+> -		if (!new)
+> +		pmd = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
+> +		if (!pmd)
+>  			goto err_alloc;
+> -		pud_populate(&init_mm, pud, new);
+> +		pud_populate(&init_mm, pud, pmd);
+>  	}
+>  
+>  	pmd = pmd_offset(pud, addr);
+> -- 
+> 2.27.0
+> 
 
-I think this change has backwards compatibility concerns, as it breaks
-building certain host tools on the stable releases (at least 6.4 and
-6.1, as that is where I noticed this). I see the following error on my
-aarch64 system:
+I've pulled this, but the other 2 are part of loongarch and should be
+reviewed and pulled by those maintainers.
 
-  $ make -skj"$(nproc)" ARCH=x86_64 CROSS_COMPILE=x86_64-linux- mrproper defconfig prepare
-  In file included from /usr/include/asm/bitsperlong.h:1,
-                   from /usr/include/asm-generic/int-ll64.h:12,
-                   from /usr/include/asm-generic/types.h:7,
-                   from /usr/include/asm/types.h:1,
-                   from tools/include/linux/types.h:13,
-                   from tools/arch/x86/include/asm/orc_types.h:9,
-                   from scripts/sorttable.h:96,
-                   from scripts/sorttable.c:201:
-  tools/include/asm-generic/bitsperlong.h:14:2: error: #error Inconsistent word size. Check asm/bitsperlong.h
-     14 | #error Inconsistent word size. Check asm/bitsperlong.h
-        |  ^~~~~
-
-A reverse bisect of 6.4 to 6.5-rc1 points to this patch. This Fedora
-rawhide container has kernel-headers 6.5.0-0.rc2.git0.1.fc39 and the
-error disappears when I downgrade to 6.4.0-0.rc7.git0.1.fc39. I have not
-done a ton of triage/debugging so far, as I am currently hunting down
-other regressions, but I figured I would get an initial report out,
-since I noticed it when validating LLVM from the new release/17.x
-branch. If there is any additional information I can provide or patches
-I can test, I am more than happy to do so.
-
-Cheers,
-Nathan
+Thanks,
+Dennis
