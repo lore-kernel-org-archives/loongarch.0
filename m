@@ -1,95 +1,148 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C863DC2FC
-	for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 10:58:22 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxXevMTcJkhbEKAA--.21301S3;
-	Thu, 27 Jul 2023 18:58:20 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF83MTcJkvPs8AA--.29457S3;
-	Thu, 27 Jul 2023 18:58:20 +0800 (CST)
-Subject: Re: [PATCH v1 4/6] objtool/LoongArch: Enable orc to be built
-To: Peter Zijlstra <peterz@infradead.org>
-References: <1690272910-11869-1-git-send-email-yangtiezhu@loongson.cn>
- <1690272910-11869-5-git-send-email-yangtiezhu@loongson.cn>
- <20230725115106.GC3765278@hirez.programming.kicks-ass.net>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <936a4873-bfe6-cabc-fa63-b8ba14857243@loongson.cn>
-Date: Thu, 27 Jul 2023 18:58:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mgamail.intel.com (unknown [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F81827124;
+	Thu, 27 Jul 2023 16:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690475976; x=1722011976;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=h+4dCkLMPc4K9vhEve+IB/2UKNL6/ESbbvqGzEUUYbo=;
+  b=TWaMajwusGBlM/73JRYYkaf42PX/kaYMimYH2+aHz7qdP8QcYYwpg+th
+   L+dnO7rI/LQtaToZZ9dJpIvxDwzpLXZQ1QbAo5Klb1EjBxwI3w0WLRVT4
+   zXdj3QShEOQXVs9xesAu66asyvPuesv4sS7702ZCxc4JtAcU7GwRNklOY
+   9bKRAYqt7jj+L4gpLYXVvTtuUzOptw5dcrPvsjbLIK4qTES+WXfXxwyZN
+   4s0hpfJSVLKR+g9RNN+cOwh7jVahlq4mfbae4cs59rQwjPFf0VDkA6vx5
+   NwWNdtCHSFyjZZ3N9Vp2cevn/pcBNt1CTuqo3AcTvQlGR5eI8MD+zmxz7
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="348643857"
+X-IronPort-AV: E=Sophos;i="6.01,235,1684825200"; 
+   d="scan'208";a="348643857"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2023 09:36:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="817177974"
+X-IronPort-AV: E=Sophos;i="6.01,235,1684825200"; 
+   d="scan'208";a="817177974"
+Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Jul 2023 09:36:24 -0700
+Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qP3yP-0002Pn-0r;
+	Thu, 27 Jul 2023 16:36:24 +0000
+Date: Fri, 28 Jul 2023 00:35:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Feiyang Chen <chenfeiyang@loongson.cn>, andrew@lunn.ch,
+	hkallweit1@gmail.com, peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+	chenhuacai@loongson.cn
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Feiyang Chen <chenfeiyang@loongson.cn>, linux@armlinux.org.uk,
+	dongbiao@loongson.cn, loongson-kernel@lists.loongnix.cn,
+	netdev@vger.kernel.org, loongarch@lists.linux.dev,
+	chris.chenfeiyang@gmail.com
+Subject: Re: [PATCH v2 03/10] net: stmmac: dwmac1000: Add multi-channel
+ support
+Message-ID: <202307280004.UhGTxBbU-lkp@intel.com>
+References: <373259d4ac9ac0b9e1e64ad96d60a9bbd35b85aa.1690439335.git.chenfeiyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230725115106.GC3765278@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxF83MTcJkvPs8AA--.29457S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruFWrtr4kJw4kWw1kGw1fZrc_yoWkWwb_uw
-	1fZ34kC34DKF4fJan8Kay5ZasrGr1UtFs5JryqvFZFq3WkJrWkCw4kGr93ZrWfXayrtF90
-	qrnFqw13Wr9rZosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXU
-	UUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <373259d4ac9ac0b9e1e64ad96d60a9bbd35b85aa.1690439335.git.chenfeiyang@loongson.cn>
+
+Hi Feiyang,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on net/main]
+[also build test WARNING on linus/master v6.5-rc3]
+[cannot apply to sunxi/sunxi/for-next net-next/main horms-ipvs/master next-20230727]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Feiyang-Chen/net-stmmac-Pass-stmmac_priv-and-chan-in-some-callbacks/20230727-155954
+base:   net/main
+patch link:    https://lore.kernel.org/r/373259d4ac9ac0b9e1e64ad96d60a9bbd35b85aa.1690439335.git.chenfeiyang%40loongson.cn
+patch subject: [PATCH v2 03/10] net: stmmac: dwmac1000: Add multi-channel support
+config: i386-buildonly-randconfig-r006-20230727 (https://download.01.org/0day-ci/archive/20230728/202307280004.UhGTxBbU-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce: (https://download.01.org/0day-ci/archive/20230728/202307280004.UhGTxBbU-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202307280004.UhGTxBbU-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c:114:6: warning: no previous prototype for function 'dwmac1000_dma_init_channel' [-Wmissing-prototypes]
+   void dwmac1000_dma_init_channel(struct stmmac_priv *priv, void __iomem *ioaddr,
+        ^
+   drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c:114:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void dwmac1000_dma_init_channel(struct stmmac_priv *priv, void __iomem *ioaddr,
+   ^
+   static 
+   1 warning generated.
 
 
+vim +/dwmac1000_dma_init_channel +114 drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
 
-On 07/25/2023 07:51 PM, Peter Zijlstra wrote:
-> On Tue, Jul 25, 2023 at 04:15:08PM +0800, Tiezhu Yang wrote:
->
-> Previous Changelog had:
->
->> Define update_cfi_state() as a weak function which may be overwritten
->> by the arch-specific implementation.
->
-> And then this patch does:
->
->> +int update_cfi_state(struct instruction *insn,
->> +		     struct instruction *next_insn,
->> +		     struct cfi_state *cfi, struct stack_op *op)
->> +{
->> +	struct cfi_reg *cfa = &cfi->cfa;
->> +	struct cfi_reg *regs = cfi->regs;
+   113	
+ > 114	void dwmac1000_dma_init_channel(struct stmmac_priv *priv, void __iomem *ioaddr,
+   115					struct stmmac_dma_cfg *dma_cfg,
+   116					u32 chan)
+   117	{
+   118		u32 value;
+   119		int txpbl = dma_cfg->txpbl ?: dma_cfg->pbl;
+   120		int rxpbl = dma_cfg->rxpbl ?: dma_cfg->pbl;
+   121	
+   122		if (!priv->plat->dwmac_is_loongson)
+   123			return;
+   124	
+   125		/* common channel control register config */
+   126		value = readl(ioaddr + DMA_BUS_MODE + chan * DMA_CHAN_OFFSET);
+   127	
+   128		/*
+   129		 * Set the DMA PBL (Programmable Burst Length) mode.
+   130		 *
+   131		 * Note: before stmmac core 3.50 this mode bit was 4xPBL, and
+   132		 * post 3.5 mode bit acts as 8*PBL.
+   133		 */
+   134		if (dma_cfg->pblx8)
+   135			value |= DMA_BUS_MODE_MAXPBL;
+   136		value |= DMA_BUS_MODE_USP;
+   137		value &= ~(DMA_BUS_MODE_PBL_MASK | DMA_BUS_MODE_RPBL_MASK);
+   138		value |= (txpbl << DMA_BUS_MODE_PBL_SHIFT);
+   139		value |= (rxpbl << DMA_BUS_MODE_RPBL_SHIFT);
+   140	
+   141		/* Set the Fixed burst mode */
+   142		if (dma_cfg->fixed_burst)
+   143			value |= DMA_BUS_MODE_FB;
+   144	
+   145		/* Mixed Burst has no effect when fb is set */
+   146		if (dma_cfg->mixed_burst)
+   147			value |= DMA_BUS_MODE_MB;
+   148	
+   149		value |= DMA_BUS_MODE_ATDS;
+   150	
+   151		if (dma_cfg->aal)
+   152			value |= DMA_BUS_MODE_AAL;
+   153	
+   154		writel(value, ioaddr + DMA_BUS_MODE + chan * DMA_CHAN_OFFSET);
+   155	
+   156		/* Mask interrupts by writing to CSR7 */
+   157		writel(DMA_INTR_DEFAULT_MASK,
+   158		       ioaddr + DMA_INTR_ENA + chan * DMA_CHAN_OFFSET);
+   159	}
+   160	
 
-...
-
->> +	default:
->> +		WARN_FUNC("unknown stack-related instruction", insn->sec, insn->offset);
->> +		return -1;
->> +	}
->> +
->> +	return 0;
->> +}
->
-> Why ?!? what is the actual irreconcilable difference?
-
-I went in deeper to analysis the code and did more test,
-the conclusion is that there is no need to define the
-arch-specific update_cfi_state(), although it seems simpler
-than the generic update_cfi_state(), the generic function
-can handle all the cases and works well.
-
-> If you want us to review this, you'll have to explain things.
-
-I will drop the related changes in the next version, thank you.
-
-Thanks,
-Tiezhu
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
