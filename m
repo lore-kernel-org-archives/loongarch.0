@@ -1,85 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E197715A6
-	for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 01:42:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B3CC433CD
-	for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 01:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690422172;
-	bh=fnyD6OA/d3s1ns0TdP0ragt14ud6rvUe8gaOSFG9Xis=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jTCWd/B5ufFb66j65JX4gQqtRFhJIASJOyKF0W2fTymwPeWZsPKVhuFpGRoCu1ETw
-	 L3eptu5be5CR3eEZvfBUEE6BtkSUe9Bw88z/4xBPeIJtfzrWKgaddCUWcIQx5Hu1Ao
-	 w505jfZiGHsxF+wDAuYJd/gLigChV31jIphry54HsLlLuzd13ofJZCXcbBdu++UOgz
-	 Ms1v6FK4c8ck/LkPpQXV0PaLPVeXMFFRmQepkO2zFY49yaPKWfUjlNdc3+vg6EjtyZ
-	 1spKhu59rdRhaJlUX09lWZbHuDajLSZ+h3V3c6/ntDGpS90oDJj5Q/axAKXqvl8m6w
-	 pIZ23lXWm06ew==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4fe0e34f498so667516e87.2
-        for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 18:42:52 -0700 (PDT)
-X-Gm-Message-State: ABy/qLbpDJgFdywo+OvNPlcGpN1yqaaXCpsCvnjoCRgO1XViPf/SpIKX
-	aF53h6b6fpGJq2FWvnQq/O4ZEMsyxYgCc5LRj9Y=
-X-Google-Smtp-Source: APBJJlEn7GDtajpdztTUz0vSEGQIXdTAPROIGyBvbE/CFlfx6C330B9ytc1hr3TXbd6Uc4zNKYm2knSsOcB7rZbv/8U=
-X-Received: by 2002:ac2:5e6a:0:b0:4f8:49a8:a0e2 with SMTP id
- a10-20020ac25e6a000000b004f849a8a0e2mr444073lfr.16.1690422170176; Wed, 26 Jul
- 2023 18:42:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707481864
+	for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 04:26:55 +0000 (UTC)
+X-UUID: c4e8c336545c474ea839337dc23b5787-20230727
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.28,REQID:850f6a67-5831-4174-8832-648d3776833c,IP:15,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:5
+X-CID-INFO: VERSION:1.1.28,REQID:850f6a67-5831-4174-8832-648d3776833c,IP:15,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-META: VersionHash:176cd25,CLOUDID:a66a8142-d291-4e62-b539-43d7d78362ba,B
+	ulkID:230727122127Z5FPABKC,BulkQuantity:0,Recheck:0,SF:44|24|17|19|102,TC:
+	nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
+	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: c4e8c336545c474ea839337dc23b5787-20230727
+X-User: zhaochenguang@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.12)] by mailgw
+	(envelope-from <zhaochenguang@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
+	with ESMTP id 1520879759; Thu, 27 Jul 2023 12:21:26 +0800
+From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	zhaochenguang@kylinos.cn
+Subject: [PATCH v2] LoongArch/bpf: Enable bpf_probe_read{, str}() on LoongArch
+Date: Thu, 27 Jul 2023 12:21:25 +0800
+Message-Id: <20230727042125.884988-1-zhaochenguang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230726062902.566312-1-zhaochenguang@kylinos.cn>
-In-Reply-To: <20230726062902.566312-1-zhaochenguang@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 27 Jul 2023 09:42:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5avspxtEQ7_bEXoLGK5q3AK0-nbw9JGs6QttkmLG5dYA@mail.gmail.com>
-Message-ID: <CAAhV-H5avspxtEQ7_bEXoLGK5q3AK0-nbw9JGs6QttkmLG5dYA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: eBPF: Restrict bpf_probe_read{, str}() only to
- archs where they work
-To: zhaochenguang <zhaochenguang@kylinos.cn>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Currently nettrace does not work on LoongArch due to missing
+bpf_probe_read{,str}() support, with the error message:
 
-Usually, your E-mail format should be
-Chenguang Zhao <zhaochenguang@kylinos.cn>
+     ERROR: failed to load kprobe-based eBPF
+     ERROR: failed to load kprobe-based bpf
 
-Huacai
+According to commit 0ebeea8ca8a4d ("bpf: Restrict bpf_probe_read{,
+str}() only to archs where they work"), we only need to select
+CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE to add said support,
+because LoongArch does have non-overlapping address ranges for kernel
+and userspace.
 
-On Wed, Jul 26, 2023 at 2:29=E2=80=AFPM zhaochenguang <zhaochenguang@kylino=
-s.cn> wrote:
->
-> When we run nettrace on LoongArch, there is a problem that
-> ERROR: failed to load kprobe-based eBPF
-> ERROR: failed to load kprobe-based bpf
->
-> Because ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE dose not exist,
-> so we enable it.
->
-> The patch reference upstream id 0ebeea8ca8a4d1d453ad299aef0507dab04f6e8d.
->
-> Signed-off-by: zhaochenguang <zhaochenguang@kylinos.cn>
-> ---
->  arch/loongarch/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 903096bd87f8..4a156875e9cc 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -11,6 +11,7 @@ config LOONGARCH
->         select ARCH_ENABLE_MEMORY_HOTREMOVE
->         select ARCH_HAS_ACPI_TABLE_UPGRADE      if ACPI
->         select ARCH_HAS_PTE_SPECIAL
-> +       select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
->         select ARCH_INLINE_READ_LOCK if !PREEMPTION
->         select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
-> --
-> 2.25.1
->
->
+Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+---
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 903096bd87f8..4a156875e9cc 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -11,6 +11,7 @@ config LOONGARCH
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_PTE_SPECIAL
++	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
+ 	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+-- 
+2.25.1
+
