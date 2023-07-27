@@ -1,77 +1,83 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707481864
-	for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 04:26:55 +0000 (UTC)
-X-UUID: c4e8c336545c474ea839337dc23b5787-20230727
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.28,REQID:850f6a67-5831-4174-8832-648d3776833c,IP:15,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:5
-X-CID-INFO: VERSION:1.1.28,REQID:850f6a67-5831-4174-8832-648d3776833c,IP:15,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:5
-X-CID-META: VersionHash:176cd25,CLOUDID:a66a8142-d291-4e62-b539-43d7d78362ba,B
-	ulkID:230727122127Z5FPABKC,BulkQuantity:0,Recheck:0,SF:44|24|17|19|102,TC:
-	nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
-	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: c4e8c336545c474ea839337dc23b5787-20230727
-X-User: zhaochenguang@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.12)] by mailgw
-	(envelope-from <zhaochenguang@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
-	with ESMTP id 1520879759; Thu, 27 Jul 2023 12:21:26 +0800
-From: Chenguang Zhao <zhaochenguang@kylinos.cn>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	zhaochenguang@kylinos.cn
-Subject: [PATCH v2] LoongArch/bpf: Enable bpf_probe_read{, str}() on LoongArch
-Date: Thu, 27 Jul 2023 12:21:25 +0800
-Message-Id: <20230727042125.884988-1-zhaochenguang@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DC1A941
+	for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 06:16:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C4DAC433C7
+	for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 06:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690438614;
+	bh=0u5dKLdzEDZbgSk/MVboHGJ1y2URwAqm+KVO+8/WIc4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YjMOO7/zK1ptmQ2eJZY2/w1CylXNT51YJPf7GZkK3Avtd16Eidc1G91BrftdPvVyj
+	 PL6aMz+yZPq7hWCYLeJ+PYlL3/C4StQB971Lsr7Eepc+66vDP1kADVUlKq/Aro4vBH
+	 lOZo0aU7lMGxU01RNg2C+j3g09HfCie5PFqVLcKmRQTab/iGVNOR6h6mTLcW4yZdXw
+	 0EGhkSVtk67TMN/kkg2mkgLD1dbvfCfzkAoxpiWe3Wk6b/06QWV1Ht7VY16eacSHIL
+	 yc4F/NbDaYXlXp/o8jGSPSsUTcDMo6GyauvyYJSyo5OdXw4HIgD6GfYcDlu46NCvKX
+	 cb8Ey2/uFzLbw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-51bece5d935so708049a12.1
+        for <loongarch@lists.linux.dev>; Wed, 26 Jul 2023 23:16:54 -0700 (PDT)
+X-Gm-Message-State: ABy/qLbs0Rw5HyUzwNIdVLEP3AlSQU35kgp49ejMZQ3r7KhKjjarD88t
+	jkePbQWBlbE5Ajxql7+w8nw/0ejo6yDbvLz4lMU=
+X-Google-Smtp-Source: APBJJlGYnWtVs+fnABK57qFLoh/r+fFmn/JbZgwI3j6LEHG8OqFrjDwoQz1ZzQcxB6MJncvN/eFqINTm625RMLy8zRY=
+X-Received: by 2002:a05:6402:31e8:b0:51e:4bd6:ce4a with SMTP id
+ dy8-20020a05640231e800b0051e4bd6ce4amr1059655edb.11.1690438612612; Wed, 26
+ Jul 2023 23:16:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230727042125.884988-1-zhaochenguang@kylinos.cn>
+In-Reply-To: <20230727042125.884988-1-zhaochenguang@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 27 Jul 2023 14:16:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Vn1Mf8L_+QaCJJaQLLxKe5Sg9tJ4A5KkDuupdnfQHDw@mail.gmail.com>
+Message-ID: <CAAhV-H4Vn1Mf8L_+QaCJJaQLLxKe5Sg9tJ4A5KkDuupdnfQHDw@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch/bpf: Enable bpf_probe_read{, str}() on LoongArch
+To: Chenguang Zhao <zhaochenguang@kylinos.cn>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently nettrace does not work on LoongArch due to missing
-bpf_probe_read{,str}() support, with the error message:
+Queued for loongarch-next, thanks.
 
-     ERROR: failed to load kprobe-based eBPF
-     ERROR: failed to load kprobe-based bpf
+Huacai
 
-According to commit 0ebeea8ca8a4d ("bpf: Restrict bpf_probe_read{,
-str}() only to archs where they work"), we only need to select
-CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE to add said support,
-because LoongArch does have non-overlapping address ranges for kernel
-and userspace.
-
-Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
----
- arch/loongarch/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 903096bd87f8..4a156875e9cc 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -11,6 +11,7 @@ config LOONGARCH
- 	select ARCH_ENABLE_MEMORY_HOTREMOVE
- 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
- 	select ARCH_HAS_PTE_SPECIAL
-+	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
- 	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
--- 
-2.25.1
-
+On Thu, Jul 27, 2023 at 12:21=E2=80=AFPM Chenguang Zhao
+<zhaochenguang@kylinos.cn> wrote:
+>
+> Currently nettrace does not work on LoongArch due to missing
+> bpf_probe_read{,str}() support, with the error message:
+>
+>      ERROR: failed to load kprobe-based eBPF
+>      ERROR: failed to load kprobe-based bpf
+>
+> According to commit 0ebeea8ca8a4d ("bpf: Restrict bpf_probe_read{,
+> str}() only to archs where they work"), we only need to select
+> CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE to add said support,
+> because LoongArch does have non-overlapping address ranges for kernel
+> and userspace.
+>
+> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+> ---
+>  arch/loongarch/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 903096bd87f8..4a156875e9cc 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -11,6 +11,7 @@ config LOONGARCH
+>         select ARCH_ENABLE_MEMORY_HOTREMOVE
+>         select ARCH_HAS_ACPI_TABLE_UPGRADE      if ACPI
+>         select ARCH_HAS_PTE_SPECIAL
+> +       select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>         select ARCH_INLINE_READ_LOCK if !PREEMPTION
+>         select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+> --
+> 2.25.1
+>
