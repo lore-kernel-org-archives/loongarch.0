@@ -1,73 +1,145 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96EF1094D
-	for <loongarch@lists.linux.dev>; Fri, 28 Jul 2023 09:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=OOpOWmhCbjr6DLFBLZM5epBTVAua+KkWnAWWHmmwNIQ=; b=T7rzbU9/C3bE7gmzAm3BpcASwu
-	rRSGUd9Ajb+kDlNJ4Ci7nfa5EePHDDHNjAsrz2+57hhQpEkAmtTpXRsA0LK/tDpTJem+rnYF0l2mV
-	gCyVxKVAUqLUq0Gf9nDkeYUzNyIAAGSsqf/PYzT8I3Ur9iau/qpB71MSUt5dTM+ExrqsqZaA+HnJV
-	U4TnhaibMqeEioab07Es3Q7tqIJspfPbZY5A8Cv5qlqRvy+EDdOsHgndR/r1dyWO4pKRaL3rmZcJJ
-	RtObWMe2vqJGUUzXug2bybsXPKgsFiHUXu83IaADi0XZmW9D3MT7XUZWn2Ns9ajH2Ar/Sifc0LFqz
-	K8AWRZEg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38718)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qPJhi-0006yW-0B;
-	Fri, 28 Jul 2023 10:24:10 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qPJhe-0004nh-OK; Fri, 28 Jul 2023 10:24:06 +0100
-Date: Fri, 28 Jul 2023 10:24:06 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Feiyang Chen <chenfeiyang@loongson.cn>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com,
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-	chenhuacai@loongson.cn, dongbiao@loongson.cn,
-	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org,
-	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
-Subject: Re: [PATCH v2 06/10] net: stmmac: Add Loongson HWIF entry
-Message-ID: <ZMOJNtClcAlWwZpP@shell.armlinux.org.uk>
-References: <cover.1690439335.git.chenfeiyang@loongson.cn>
- <7cae63ede2792cb2a7189f251b282aecbb0945b1.1690439335.git.chenfeiyang@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFB1125AD
+	for <loongarch@lists.linux.dev>; Fri, 28 Jul 2023 11:00:53 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 108A65C0066;
+	Fri, 28 Jul 2023 07:00:53 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Fri, 28 Jul 2023 07:00:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm2; t=1690542053; x=1690628453; bh=aG
+	D+6R9Vm1NeP/bPyAZllb14ByPMwMXIFJA/NEvaiVE=; b=cotDhuNDr0YdeeMx0d
+	UpVXUIPz1hjY4yYy/dnA3e1r/9d7E5GYLiavPpr1gDeCaFX/Q5kR+i4TIsK5giXU
+	+ChoeRBuD40R5J1YrTcQROznGofNtQ+1+gtWR2SLzB6QnMgqUjJ1GHsZmhZE1mA8
+	1n9PSX7M4PTwn11+XxyijK95PLvq28uN4ddc28p/Db7p2PlbLdd1wn8Jzp9i5nNK
+	9nP+49kfaWjxlPGvas7o1wR4c/se1lUmbAdrvQensjSjozaYOjlQM1rs3HjlyU0h
+	42CHkbCNhCOyNVVo+UgnO8Uipx3b93AuT/LnPI9lzCrYho2RCKU0bV8zyCFzhEpF
+	VTCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; t=1690542053; x=1690628453; bh=aGD+6R9Vm1NeP
+	/bPyAZllb14ByPMwMXIFJA/NEvaiVE=; b=RdzJctVvatl9LSxuHLnm32ABwvRoN
+	nKW167qdMmXWS7lhYWvDRZgRMl2yLjJr2LzFu/5RrcmOSuyBYMMIcs1gZwRenqAX
+	pwxwVF8X6DohznfsBzA1TpgdjFvXpUZ+D5N4Hw+1mMbXJSFRIypv5h5oFyIXyZRL
+	SpevCyzvT+mbMaSr2Nr5wJIhm8qJBUSwpj7CxVUQecyLIfPR9CZDKeG1RmxpQrpl
+	MyS4KNXqOoBJfhbksYFudgOMY1bOBv7xN8uDj8ZIKsFw9qhFPgF0hUFJYjID4UmN
+	q6U+4/qs3kiGxaRhqKkqIZZ+U6wHjsAZYupQ3jcdDUWXR2X9ebjfFOLBg==
+X-ME-Sender: <xms:45_DZDzl-pkPwwvUPnWtK80ePiDVAQi5snbDEC0bKkqedn2MFuVrbQ>
+    <xme:45_DZLSeDZ1pPDBejWqVMzOZn9TnBFuzQOizZ3SVdTXWadshN_kSX4UN4-0QOnH1D
+    nvQ3qR8F9cNWyOaubM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrieeigdeffecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
+    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:45_DZNWisnhG9YvxOULy6tvJlnL15A_qQhWq5SEafh2H9Epg0SMlKg>
+    <xmx:45_DZNgemvn5LVUemNdLo8ut5g-TGREvi00HMdOsounjYZpokJDDGw>
+    <xmx:45_DZFD2uLncDi4ocuQHBPD8DJsKsFGponOSn6ck4UElnLQLKOUT8w>
+    <xmx:5Z_DZJ3q0-pertTRaIwzKz0yKDc-qy5BpHmJ6EgEW9-wbKGOLqEngw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 40AB5B60089; Fri, 28 Jul 2023 07:00:51 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-592-ga9d4a09b4b-fm-defalarms-20230725.001-ga9d4a09b
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7cae63ede2792cb2a7189f251b282aecbb0945b1.1690439335.git.chenfeiyang@loongson.cn>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Mime-Version: 1.0
+Message-Id: <1777400a-4d9c-4bdb-9d3b-f8808ef054cc@app.fastmail.com>
+In-Reply-To: <20230727213648.GA354736@dev-arch.thelio-3990X>
+References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
+ <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
+ <20230727213648.GA354736@dev-arch.thelio-3990X>
+Date: Fri, 28 Jul 2023 13:00:30 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Nathan Chancellor" <nathan@kernel.org>,
+ "Tiezhu Yang" <yangtiezhu@loongson.cn>
+Cc: linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64, riscv and
+ loongarch
+Content-Type: text/plain
 
-On Thu, Jul 27, 2023 at 03:18:06PM +0800, Feiyang Chen wrote:
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index e8619853b6d6..829de274e75d 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -3505,17 +3505,21 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
->  {
->  	struct stmmac_priv *priv = netdev_priv(dev);
->  	enum request_irq_err irq_err;
-> +	unsigned long flags = 0;
->  	cpumask_t cpu_mask;
->  	int irq_idx = 0;
->  	char *int_name;
->  	int ret;
->  	int i;
->  
-> +	if (priv->plat->has_lgmac)
-> +		flags |= IRQF_TRIGGER_RISING;
+On Thu, Jul 27, 2023, at 23:36, Nathan Chancellor wrote:
+> Hi Tiezhu and Arnd,
+>
+> On Thu, Jun 22, 2023 at 10:13:38PM +0800, Tiezhu Yang wrote:
+>> Now we specify the minimal version of GCC as 5.1 and Clang/LLVM as 11.0.0
+>> in Documentation/process/changes.rst, __CHAR_BIT__ and __SIZEOF_LONG__ are
+>> usable, it is probably fine to unify the definition of __BITS_PER_LONG as
+>> (__CHAR_BIT__ * __SIZEOF_LONG__) in asm-generic uapi bitsperlong.h.
+>> 
+>> In order to keep safe and avoid regression, only unify uapi bitsperlong.h
+>> for some archs such as arm64, riscv and loongarch which are using newer
+>> toolchains that have the definitions of __CHAR_BIT__ and __SIZEOF_LONG__.
+>> 
+>> Suggested-by: Xi Ruoyao <xry111@xry111.site>
+>> Link: https://lore.kernel.org/all/d3e255e4746de44c9903c4433616d44ffcf18d1b.camel@xry111.site/
+>> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+>> Link: https://lore.kernel.org/linux-arch/a3a4f48a-07d4-4ed9-bc53-5d383428bdd2@app.fastmail.com/
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
 
-Can this be described in firmware?
+>
+> I think this change has backwards compatibility concerns, as it breaks
+> building certain host tools on the stable releases (at least 6.4 and
+> 6.1, as that is where I noticed this). I see the following error on my
+> aarch64 system:
+>
+>   $ make -skj"$(nproc)" ARCH=x86_64 CROSS_COMPILE=x86_64-linux- 
+> mrproper defconfig prepare
+>   In file included from /usr/include/asm/bitsperlong.h:1,
+>                    from /usr/include/asm-generic/int-ll64.h:12,
+>                    from /usr/include/asm-generic/types.h:7,
+>                    from /usr/include/asm/types.h:1,
+>                    from tools/include/linux/types.h:13,
+>                    from tools/arch/x86/include/asm/orc_types.h:9,
+>                    from scripts/sorttable.h:96,
+>                    from scripts/sorttable.c:201:
+>   tools/include/asm-generic/bitsperlong.h:14:2: error: #error 
+> Inconsistent word size. Check asm/bitsperlong.h
+>      14 | #error Inconsistent word size. Check asm/bitsperlong.h
+>         |  ^~~~~
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Thanks for the report. I'm still struggling to figure out what
+exactly is going wrong here, and if this is a bug in the patch
+I merged, or an existing bug that now causes a build failure instead
+of some other problem.
+
+> A reverse bisect of 6.4 to 6.5-rc1 points to this patch. This Fedora
+> rawhide container has kernel-headers 6.5.0-0.rc2.git0.1.fc39 and the
+> error disappears when I downgrade to 6.4.0-0.rc7.git0.1.fc39. I have not
+> done a ton of triage/debugging so far, as I am currently hunting down
+> other regressions, but I figured I would get an initial report out,
+> since I noticed it when validating LLVM from the new release/17.x
+> branch. If there is any additional information I can provide or patches
+> I can test, I am more than happy to do so.
+
+One thing I think is going wrong here is that scripts/sorttable.c is
+meant to run on the host (arm64) but includes the target (x86)
+orc_Types.h header and the kernel-internal asm/bitsperlong.h instead
+of the uapi version. The sanity check in the kernel-side header
+is intended to cross-check the CONFIG_64BIT value against the
+__BITS_PER_LONG constant from the header.
+
+My first guess would be that this only worked by accident if the headers
+defaulted to "#define __BITS_PER_LONG 32" in and #undef CONFIG_64BIT"
+when include/generated/autoconf.h, but now the __BITS_PER_LONG value
+is actually correct.
+
+       Arnd
