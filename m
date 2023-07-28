@@ -1,142 +1,230 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F17AD45
-	for <loongarch@lists.linux.dev>; Fri, 28 Jul 2023 06:17:47 +0000 (UTC)
-X-UUID: 396d4dbed1354d1eab9d06acfbe96f85-20230728
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.28,REQID:475f62b3-5a79-4e92-8548-a55a316fe131,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:6
-X-CID-INFO: VERSION:1.1.28,REQID:475f62b3-5a79-4e92-8548-a55a316fe131,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:6
-X-CID-META: VersionHash:176cd25,CLOUDID:18c58c42-d291-4e62-b539-43d7d78362ba,B
-	ulkID:230728112732139381RX,BulkQuantity:2,Recheck:0,SF:24|17|19|43|102,TC:
-	nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI
-	:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
-	TF_CID_SPAM_ULS
-X-UUID: 396d4dbed1354d1eab9d06acfbe96f85-20230728
-Received: from ubuntu [(39.156.73.12)] by mailgw
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 189198503; Fri, 28 Jul 2023 14:01:35 +0800
-From: Enze Li <lienze@kylinos.cn>
-To: Jackie Liu <liu.yun@linux.dev>
-Cc: chenhuacai@kernel.org,  kernel@xen0n.name,  loongarch@lists.linux.dev,
-  glider@google.com,  elver@google.com,  akpm@linux-foundation.org,
-  kasan-dev@googlegroups.com,  linux-mm@kvack.org,  zhangqing@loongson.cn,
-  yangtiezhu@loongson.cn,  dvyukov@google.com
-Subject: Re: [PATCH 4/4 v2] LoongArch: Add KFENCE support
-In-Reply-To: <fa3dcc1b-03b2-567c-b143-8e3a100af9f6@linux.dev> (Jackie Liu's
-	message of "Tue, 25 Jul 2023 22:34:50 +0800")
-References: <20230725061451.1231480-1-lienze@kylinos.cn>
-	<20230725061451.1231480-5-lienze@kylinos.cn>
-	<fa3dcc1b-03b2-567c-b143-8e3a100af9f6@linux.dev>
-Date: Fri, 28 Jul 2023 14:01:25 +0800
-Message-ID: <87sf98a822.fsf@kylinos.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E32B1FAF
+	for <loongarch@lists.linux.dev>; Fri, 28 Jul 2023 06:51:57 +0000 (UTC)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 36S6aWo4108548;
+	Fri, 28 Jul 2023 01:36:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1690526192;
+	bh=Xa3mV8uDoKOc/m3VZ//d94y15mSePbo/tXuV/Va/m7c=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=blQGGynYQzzeYtcVVoZ6HWXFCQ5vlm5B/2O0JcDTu/w1fUd8rbuXxJLORzl0Px9Dk
+	 EXB9xdZv3GDzJMB2iFh4YsqRggap8ji3qr1mDqTJlfVxEkohy/ZCx+wBfRhtDpN1F8
+	 4zlaOl5B3Hj8Ht115/2wvYZN7ChS4mBeF5jmA/4A=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 36S6aWuL013351
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 28 Jul 2023 01:36:32 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 28
+ Jul 2023 01:36:32 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 28 Jul 2023 01:36:32 -0500
+Received: from [172.24.227.83] (ileaxei01-snat.itg.ti.com [10.180.69.5])
+	by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 36S6aSKi075959;
+	Fri, 28 Jul 2023 01:36:28 -0500
+Message-ID: <81d9887c-cd0a-cb90-957e-eeaa2ae94967@ti.com>
+Date: Fri, 28 Jul 2023 12:06:27 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 06/10] net: stmmac: Add Loongson HWIF entry
+Content-Language: en-US
+To: Feiyang Chen <chenfeiyang@loongson.cn>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <peppe.cavallaro@st.com>,
+        <alexandre.torgue@foss.st.com>, <joabreu@synopsys.com>,
+        <chenhuacai@loongson.cn>
+CC: <linux@armlinux.org.uk>, <dongbiao@loongson.cn>,
+        <loongson-kernel@lists.loongnix.cn>, <netdev@vger.kernel.org>,
+        <loongarch@lists.linux.dev>, <chris.chenfeiyang@gmail.com>
+References: <cover.1690439335.git.chenfeiyang@loongson.cn>
+ <7cae63ede2792cb2a7189f251b282aecbb0945b1.1690439335.git.chenfeiyang@loongson.cn>
+From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+In-Reply-To: <7cae63ede2792cb2a7189f251b282aecbb0945b1.1690439335.git.chenfeiyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, Jul 25 2023 at 10:34:50 PM +0800, Jackie Liu wrote:
 
-> =E5=9C=A8 2023/7/25 14:14, Enze Li =E5=86=99=E9=81=93:
->> The LoongArch architecture is quite different from other architectures.
->> When the allocating of KFENCE itself is done, it is mapped to the direct
->> mapping configuration window [1] by default on LoongArch.  It means that
->> it is not possible to use the page table mapped mode which required by
->> the KFENCE system and therefore it should be remapped to the appropriate
->> region.
->>
->> This patch adds architecture specific implementation details for KFENCE.
->> In particular, this implements the required interface in <asm/kfence.h>.
->>
->> Tested this patch by running the testcases and all passed.
->>
->> [1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN=
-.html#virtual-address-space-and-address-translation-mode
->>
->> Signed-off-by: Enze Li <lienze@kylinos.cn>
->> ---
->>   arch/loongarch/Kconfig               |  1 +
->>   arch/loongarch/include/asm/kfence.h  | 62 ++++++++++++++++++++++++++++
->>   arch/loongarch/include/asm/pgtable.h | 14 ++++++-
->>   arch/loongarch/mm/fault.c            | 22 ++++++----
->>   4 files changed, 90 insertions(+), 9 deletions(-)
->>   create mode 100644 arch/loongarch/include/asm/kfence.h
->>
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index 70635ea3d1e4..5b63b16be49e 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -91,6 +91,7 @@ config LOONGARCH
->>   	select HAVE_ARCH_AUDITSYSCALL
->>   	select HAVE_ARCH_JUMP_LABEL
->>   	select HAVE_ARCH_JUMP_LABEL_RELATIVE
->> +	select HAVE_ARCH_KFENCE
->>   	select HAVE_ARCH_MMAP_RND_BITS if MMU
->>   	select HAVE_ARCH_SECCOMP_FILTER
->>   	select HAVE_ARCH_TRACEHOOK
->> diff --git a/arch/loongarch/include/asm/kfence.h b/arch/loongarch/includ=
-e/asm/kfence.h
->> new file mode 100644
->> index 000000000000..fb39076fe4d7
->> --- /dev/null
->> +++ b/arch/loongarch/include/asm/kfence.h
->> @@ -0,0 +1,62 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * KFENCE support for LoongArch.
->> + *
->> + * Author: Enze Li <lienze@kylinos.cn>
->> + * Copyright (C) 2022-2023 KylinSoft Corporation.
->> + */
->> +
->> +#ifndef _ASM_LOONGARCH_KFENCE_H
->> +#define _ASM_LOONGARCH_KFENCE_H
->> +
->> +#include <linux/kfence.h>
->> +#include <asm/pgtable.h>
->> +#include <asm/tlb.h>
->> +
->> +static inline bool arch_kfence_init_pool(void)
->> +{
->> +	char *kfence_pool =3D __kfence_pool;
->> +	struct vm_struct *area;
->> +	int err;
->> +
->> +	area =3D __get_vm_area_caller(KFENCE_POOL_SIZE, VM_IOREMAP,
->> +				    KFENCE_AREA_START, KFENCE_AREA_END,
->> +				    __builtin_return_address(0));
->> +	if (!area)
->> +		return false;
->> +
->> +	__kfence_pool =3D (char *)area->addr;
->
-> I think there should be something wrong here.
->
->> +	err =3D ioremap_page_range((unsigned long)__kfence_pool,
->> +				 (unsigned long)__kfence_pool + KFENCE_POOL_SIZE,
->> +				 virt_to_phys((void *)kfence_pool),
->> +				 PAGE_KERNEL);
->> +	if (err) {
->> +		free_vm_area(area);
->
-> If err > 0, return area->addr here, It's not correct.
 
-Hi Jackie,
+On 7/27/23 12:48 PM, Feiyang Chen wrote:
+> Add a new entry to HWIF table for Loongson.
+> 
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/common.h  |  3 ++
+>  .../ethernet/stmicro/stmmac/dwmac1000_dma.c   |  6 +++
+>  drivers/net/ethernet/stmicro/stmmac/hwif.c    | 48 ++++++++++++++++++-
+>  .../net/ethernet/stmicro/stmmac/stmmac_main.c | 25 ++++++----
+>  include/linux/stmmac.h                        |  1 +
+>  5 files changed, 73 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+> index 16e67c18b6f7..267f9a7913ac 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/common.h
+> +++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+> @@ -29,11 +29,13 @@
+>  /* Synopsys Core versions */
+>  #define	DWMAC_CORE_3_40		0x34
+>  #define	DWMAC_CORE_3_50		0x35
+> +#define	DWMAC_CORE_3_70		0x37
+>  #define	DWMAC_CORE_4_00		0x40
+>  #define DWMAC_CORE_4_10		0x41
+>  #define DWMAC_CORE_5_00		0x50
+>  #define DWMAC_CORE_5_10		0x51
+>  #define DWMAC_CORE_5_20		0x52
+> +#define DWLGMAC_CORE_1_00	0x10
+>  #define DWXGMAC_CORE_2_10	0x21
+>  #define DWXLGMAC_CORE_2_00	0x20
+>  
+> @@ -547,6 +549,7 @@ int dwmac1000_setup(struct stmmac_priv *priv);
+>  int dwmac4_setup(struct stmmac_priv *priv);
+>  int dwxgmac2_setup(struct stmmac_priv *priv);
+>  int dwxlgmac2_setup(struct stmmac_priv *priv);
+> +int dwmac_loongson_setup(struct stmmac_priv *priv);
+>  
+>  void stmmac_set_mac_addr(void __iomem *ioaddr, const u8 addr[6],
+>  			 unsigned int high, unsigned int low);
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+> index 7aa450d6a81a..5da5f111d7e0 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+> @@ -172,6 +172,12 @@ static void dwmac1000_dma_init_rx(struct stmmac_priv *priv,
+>  		       chan * DMA_CHAN_OFFSET);
+>  		writel(upper_32_bits(dma_rx_phy), ioaddr + DMA_RCV_BASE_ADDR_HI +
+>  		       chan * DMA_CHAN_OFFSET);
+> +		if (priv->plat->has_lgmac) {
+> +			writel(upper_32_bits(dma_rx_phy),
+> +			       ioaddr + DMA_RCV_BASE_ADDR_SHADOW1);
+> +			writel(upper_32_bits(dma_rx_phy),
+> +			       ioaddr + DMA_RCV_BASE_ADDR_SHADOW2);
+> +		}
+>  	} else {
+>  		/* RX descriptor base address list must be written into DMA CSR3 */
+>  		writel(lower_32_bits(dma_rx_phy), ioaddr + DMA_RCV_BASE_ADDR +
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+> index b8ba8f2d8041..b376ac4f80d5 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+> @@ -58,7 +58,8 @@ static int stmmac_dwmac1_quirks(struct stmmac_priv *priv)
+>  		dev_info(priv->device, "Enhanced/Alternate descriptors\n");
+>  
+>  		/* GMAC older than 3.50 has no extended descriptors */
+> -		if (priv->synopsys_id >= DWMAC_CORE_3_50) {
+> +		if (priv->synopsys_id >= DWMAC_CORE_3_50 ||
+> +		    priv->plat->has_lgmac) {>  			dev_info(priv->device, "Enabled extended descriptors\n");
+>  			priv->extend_desc = 1;
+>  		} else {
+> @@ -104,6 +105,7 @@ static const struct stmmac_hwif_entry {
+>  	bool gmac;
+>  	bool gmac4;
+>  	bool xgmac;
+> +	bool lgmac;
 
-Good catch!  I'll fix this issue in v3.
+Similar to Andrew's comment on dwmac_is_loongson, can lgmac also be
+renamed to some other name? 
 
-Cheers!
-Enze
+I believe the 'gmac' and 'xgmac' refer to 1Gbps and 10Gbps which sounds generic,
+while 'lgmac' sounds vendor specific. 
 
+>  	u32 min_id;
+>  	u32 dev_id;
+>  	const struct stmmac_regs_off regs;
+
+
+[...]
+
+> +	}, {
+> +		.gmac = true,
+> +		.gmac4 = false,
+> +		.xgmac = false,
+> +		.lgmac = true,
+> +		.min_id = DWLGMAC_CORE_1_00,
+> +		.regs = {
+> +			.ptp_off = PTP_GMAC3_X_OFFSET,
+> +			.mmc_off = MMC_GMAC3_X_OFFSET,
+> +		},
+> +		.desc = NULL,
+> +		.dma = &dwmac1000_dma_ops,
+> +		.mac = &dwmac1000_ops,
+> +		.hwtimestamp = &stmmac_ptp,
+> +		.mode = NULL,
+> +		.tc = NULL,
+> +		.setup = dwmac_loongson_setup,
+> +		.quirks = stmmac_dwmac1_quirks,
+> +	}, {
+> +		.gmac = true,
+> +		.gmac4 = false,
+> +		.xgmac = false,
+> +		.lgmac = true,
+> +		.min_id = DWMAC_CORE_3_50,
+> +		.regs = {
+> +			.ptp_off = PTP_GMAC3_X_OFFSET,
+> +			.mmc_off = MMC_GMAC3_X_OFFSET,
+> +		},
+> +		.desc = NULL,
+> +		.dma = &dwmac1000_dma_ops,
+> +		.mac = &dwmac1000_ops,
+> +		.hwtimestamp = &stmmac_ptp,
+> +		.mode = NULL,
+> +		.tc = NULL,
+> +		.setup = dwmac1000_setup,
+> +		.quirks = stmmac_dwmac1_quirks,
+>  	},
+>  };
+>  
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index e8619853b6d6..829de274e75d 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -3505,17 +3505,21 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
+>  {
+>  	struct stmmac_priv *priv = netdev_priv(dev);
+>  	enum request_irq_err irq_err;
+> +	unsigned long flags = 0;
+>  	cpumask_t cpu_mask;
+>  	int irq_idx = 0;
+>  	char *int_name;
+>  	int ret;
+>  	int i;
+>  
+> +	if (priv->plat->has_lgmac)
+> +		flags |= IRQF_TRIGGER_RISING;
+
+How about introducing a struct member such as "irq_flags"?
+
+> +
+>  	/* For common interrupt */
+>  	int_name = priv->int_name_mac;
+>  	sprintf(int_name, "%s:%s", dev->name, "mac");
+>  	ret = request_irq(dev->irq, stmmac_mac_interrupt,
+> -			  0, int_name, dev);
+> +			  flags, int_name, dev);
+
+[...]
+
+> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+> index 46bccc34814d..e21076f57205 100644
+> --- a/include/linux/stmmac.h
+> +++ b/include/linux/stmmac.h
+> @@ -344,5 +344,6 @@ struct plat_stmmacenet_data {
+>  	bool has_integrated_pcs;
+>  	const struct dwmac_regs *dwmac_regs;
+>  	bool dwmac_is_loongson;
+> +	int has_lgmac;
+>  };
+>  #endif
+
+-- 
+Regards,
+Ravi
