@@ -1,118 +1,135 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AEB3D68
-	for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 23:08:13 +0000 (UTC)
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-563f752774fso865715a12.1
-        for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 16:08:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690499293; x=1691104093;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UBYOBoJLYiNWyPBZ8JtjEPNaBvs8n9DfL50KMt5h7Ws=;
-        b=TW0iL3mrIm54XwfUz+EJV2cICCYRH49ccpHRmXzGvXT4A7hJr3UV/RBMkrqZcYwAAw
-         L4QNlaxXI0LdVwgwPzdiy4fc1QKhj4jHTt0VSmNVaNtRxJs0GFzkZDKX6DMg3PXmaG7M
-         LJCOBpMV4ZHWjJlDwS1foSSce//SXGygdQL1vwfb0hsV/DBuGenykX7CIrcNf3Mex0eA
-         hkJWWhxEJfV3mMhC+R/ihdzEh4DlYW6jf/+hBUZO7yRv+aVIwrkNTZlbAU+c/djQAn5g
-         4SRXzmWdOX0yJPWkUwWR2WK/ET0ZuBLTFbncC0TeoxVE5ozISmfrb4V9YFtc+I6jNcNf
-         HKJQ==
-X-Gm-Message-State: ABy/qLbheGwpcM2G04kk1iz17BnYups6PiXFlsh0EeZXvNE3bcb+/L96
-	LMRTf+l0Jx26UhQBbr53x0k=
-X-Google-Smtp-Source: APBJJlGz/uqkDGdyOYbooK4qi3urMgjXZdj674zcDvx65lAKgWJKRtnlfPgUlQsBJq29niDw8iMIwQ==
-X-Received: by 2002:a17:90a:bb12:b0:267:faba:705 with SMTP id u18-20020a17090abb1200b00267faba0705mr8961pjr.10.1690499292643;
-        Thu, 27 Jul 2023 16:08:12 -0700 (PDT)
-Received: from snowbird ([199.73.127.3])
-        by smtp.gmail.com with ESMTPSA id m8-20020a17090a4d8800b0026822cb85casm1631801pjh.18.2023.07.27.16.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 16:08:12 -0700 (PDT)
-Date: Thu, 27 Jul 2023 16:08:07 -0700
-From: Dennis Zhou <dennis@kernel.org>
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, WANG Xuerui <kernel@xen0n.name>
-Subject: Re: [PATCH 1/3] mm/percpu: Remove some local variables in
- pcpu_populate_pte
-Message-ID: <ZML414eLkT78bO5G@snowbird>
-References: <20230712031622.1888321-1-maobibo@loongson.cn>
- <20230712031622.1888321-2-maobibo@loongson.cn>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21F267C
+	for <loongarch@lists.linux.dev>; Fri, 28 Jul 2023 01:13:36 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8AxFvE_FsNkxgoLAA--.27368S3;
+	Fri, 28 Jul 2023 09:13:35 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX889FsNkfrA9AA--.32888S3;
+	Fri, 28 Jul 2023 09:13:34 +0800 (CST)
+Message-ID: <893f8801-b36d-8146-93a6-e97b29826980@loongson.cn>
+Date: Fri, 28 Jul 2023 09:13:33 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230712031622.1888321-2-maobibo@loongson.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 1/3] mm/percpu: Remove some local variables in
+ pcpu_populate_pte
+To: Dennis Zhou <dennis@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+ Andrew Morton <akpm@linux-foundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ WANG Xuerui <kernel@xen0n.name>
+References: <20230712031622.1888321-1-maobibo@loongson.cn>
+ <20230712031622.1888321-2-maobibo@loongson.cn> <ZML414eLkT78bO5G@snowbird>
+Content-Language: en-US
+From: bibo mao <maobibo@loongson.cn>
+In-Reply-To: <ZML414eLkT78bO5G@snowbird>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxX889FsNkfrA9AA--.32888S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFy3GFyfCFy8Kr15Xw4UKFX_yoW8ZrW7pr
+	Z3Ga4v9F48JrnrKws3Xas8WrnxXw4rKa40k3ZrW3WrZwnIvrn7Kr4UKr13K342vFyxXF4x
+	tF45JasrCa1qvacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8r9N3UU
+	UUU==
 
-Hello,
 
-On Wed, Jul 12, 2023 at 11:16:20AM +0800, Bibo Mao wrote:
-> In function pcpu_populate_pte there are already variable defined,
-> it can be reused for later use, here remove duplicated local
-> variables.
+
+在 2023/7/28 07:08, Dennis Zhou 写道:
+> Hello,
 > 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  mm/percpu.c | 24 +++++++++---------------
->  1 file changed, 9 insertions(+), 15 deletions(-)
+> On Wed, Jul 12, 2023 at 11:16:20AM +0800, Bibo Mao wrote:
+>> In function pcpu_populate_pte there are already variable defined,
+>> it can be reused for later use, here remove duplicated local
+>> variables.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>  mm/percpu.c | 24 +++++++++---------------
+>>  1 file changed, 9 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/mm/percpu.c b/mm/percpu.c
+>> index 28e07ede46f6..85e3f9b2a61f 100644
+>> --- a/mm/percpu.c
+>> +++ b/mm/percpu.c
+>> @@ -3189,32 +3189,26 @@ void __init __weak pcpu_populate_pte(unsigned long addr)
+>>  	pmd_t *pmd;
+>>  
+>>  	if (pgd_none(*pgd)) {
+>> -		p4d_t *new;
+>> -
+>> -		new = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
+>> -		if (!new)
+>> +		p4d = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
+>> +		if (!p4d)
+>>  			goto err_alloc;
+>> -		pgd_populate(&init_mm, pgd, new);
+>> +		pgd_populate(&init_mm, pgd, p4d);
+>>  	}
+>>  
+>>  	p4d = p4d_offset(pgd, addr);
+>>  	if (p4d_none(*p4d)) {
+>> -		pud_t *new;
+>> -
+>> -		new = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
+>> -		if (!new)
+>> +		pud = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
+>> +		if (!pud)
+>>  			goto err_alloc;
+>> -		p4d_populate(&init_mm, p4d, new);
+>> +		p4d_populate(&init_mm, p4d, pud);
+>>  	}
+>>  
+>>  	pud = pud_offset(p4d, addr);
+>>  	if (pud_none(*pud)) {
+>> -		pmd_t *new;
+>> -
+>> -		new = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
+>> -		if (!new)
+>> +		pmd = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
+>> +		if (!pmd)
+>>  			goto err_alloc;
+>> -		pud_populate(&init_mm, pud, new);
+>> +		pud_populate(&init_mm, pud, pmd);
+>>  	}
+>>  
+>>  	pmd = pmd_offset(pud, addr);
+>> -- 
+>> 2.27.0
+>>
 > 
-> diff --git a/mm/percpu.c b/mm/percpu.c
-> index 28e07ede46f6..85e3f9b2a61f 100644
-> --- a/mm/percpu.c
-> +++ b/mm/percpu.c
-> @@ -3189,32 +3189,26 @@ void __init __weak pcpu_populate_pte(unsigned long addr)
->  	pmd_t *pmd;
->  
->  	if (pgd_none(*pgd)) {
-> -		p4d_t *new;
-> -
-> -		new = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
-> -		if (!new)
-> +		p4d = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
-> +		if (!p4d)
->  			goto err_alloc;
-> -		pgd_populate(&init_mm, pgd, new);
-> +		pgd_populate(&init_mm, pgd, p4d);
->  	}
->  
->  	p4d = p4d_offset(pgd, addr);
->  	if (p4d_none(*p4d)) {
-> -		pud_t *new;
-> -
-> -		new = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
-> -		if (!new)
-> +		pud = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
-> +		if (!pud)
->  			goto err_alloc;
-> -		p4d_populate(&init_mm, p4d, new);
-> +		p4d_populate(&init_mm, p4d, pud);
->  	}
->  
->  	pud = pud_offset(p4d, addr);
->  	if (pud_none(*pud)) {
-> -		pmd_t *new;
-> -
-> -		new = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
-> -		if (!new)
-> +		pmd = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
-> +		if (!pmd)
->  			goto err_alloc;
-> -		pud_populate(&init_mm, pud, new);
-> +		pud_populate(&init_mm, pud, pmd);
->  	}
->  
->  	pmd = pmd_offset(pud, addr);
-> -- 
-> 2.27.0
+> I've pulled this, but the other 2 are part of loongarch and should be
+> reviewed and pulled by those maintainers.
+Dennis,
+
+Thanks for your feedback.
+
+Huacai,
+
+Could you give some review comments about the remaining 2 patches?
+
+Regards
+Bibo Mao
+
 > 
+> Thanks,
+> Dennis
 
-I've pulled this, but the other 2 are part of loongarch and should be
-reviewed and pulled by those maintainers.
-
-Thanks,
-Dennis
