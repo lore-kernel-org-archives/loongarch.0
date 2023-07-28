@@ -1,135 +1,119 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21F267C
-	for <loongarch@lists.linux.dev>; Fri, 28 Jul 2023 01:13:36 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8AxFvE_FsNkxgoLAA--.27368S3;
-	Fri, 28 Jul 2023 09:13:35 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX889FsNkfrA9AA--.32888S3;
-	Fri, 28 Jul 2023 09:13:34 +0800 (CST)
-Message-ID: <893f8801-b36d-8146-93a6-e97b29826980@loongson.cn>
-Date: Fri, 28 Jul 2023 09:13:33 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EB957C
+	for <loongarch@lists.linux.dev>; Fri, 28 Jul 2023 01:31:36 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxyepvGsNkzQ0LAA--.17966S3;
+	Fri, 28 Jul 2023 09:31:27 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjiNuGsNkELg9AA--.58652S3;
+	Fri, 28 Jul 2023 09:31:27 +0800 (CST)
+Subject: Re: [PATCH v1 4/6] objtool/LoongArch: Enable orc to be built
+To: Peter Zijlstra <peterz@infradead.org>
+References: <1690272910-11869-1-git-send-email-yangtiezhu@loongson.cn>
+ <1690272910-11869-5-git-send-email-yangtiezhu@loongson.cn>
+ <20230725115609.GD3765278@hirez.programming.kicks-ass.net>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <d49af603-82cf-a88e-37db-1c031c5f8881@loongson.cn>
+Date: Fri, 28 Jul 2023 09:31:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 1/3] mm/percpu: Remove some local variables in
- pcpu_populate_pte
-To: Dennis Zhou <dennis@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
- Andrew Morton <akpm@linux-foundation.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- WANG Xuerui <kernel@xen0n.name>
-References: <20230712031622.1888321-1-maobibo@loongson.cn>
- <20230712031622.1888321-2-maobibo@loongson.cn> <ZML414eLkT78bO5G@snowbird>
-Content-Language: en-US
-From: bibo mao <maobibo@loongson.cn>
-In-Reply-To: <ZML414eLkT78bO5G@snowbird>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxX889FsNkfrA9AA--.32888S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KFy3GFyfCFy8Kr15Xw4UKFX_yoW8ZrW7pr
-	Z3Ga4v9F48JrnrKws3Xas8WrnxXw4rKa40k3ZrW3WrZwnIvrn7Kr4UKr13K342vFyxXF4x
-	tF45JasrCa1qvacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+In-Reply-To: <20230725115609.GD3765278@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8AxjiNuGsNkELg9AA--.58652S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFykXr4DtrWUJF4xuFWrXrc_yoW8tr13pa
+	4DGayxKFWxtr15G3ZaqanrCFySgwnagrWxCryku3y7XF9a9rn7GFyIvr1j9F1DZ3sa9a42
+	vay7tr1DJF1FvFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
 	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
 	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
 	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
 	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8r9N3UU
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
 	UUU==
 
 
 
-在 2023/7/28 07:08, Dennis Zhou 写道:
-> Hello,
-> 
-> On Wed, Jul 12, 2023 at 11:16:20AM +0800, Bibo Mao wrote:
->> In function pcpu_populate_pte there are already variable defined,
->> it can be reused for later use, here remove duplicated local
->> variables.
+On 07/25/2023 07:56 PM, Peter Zijlstra wrote:
+> On Tue, Jul 25, 2023 at 04:15:08PM +0800, Tiezhu Yang wrote:
+>
+>> +void arch_write_orc(struct elf *elf, struct orc_entry *orc)
+>> +{
+>> +	orc->ra_offset = bswap_if_needed(elf, orc->ra_offset);
+>> +}
+>
+> This hardly 'writes' anything, all it does is a bswap.
+>
+>> diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
+>> index 1eff7e0a..6975056 100644
+>> --- a/tools/objtool/orc_gen.c
+>> +++ b/tools/objtool/orc_gen.c
+>> @@ -14,6 +14,8 @@
+>>  #include <objtool/warn.h>
+>>  #include <objtool/endianness.h>
 >>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>  mm/percpu.c | 24 +++++++++---------------
->>  1 file changed, 9 insertions(+), 15 deletions(-)
+>> +void __weak arch_write_orc(struct elf *elf, struct orc_entry *orc) {}
+>
+> And for that you need a weak function? What's wrong with an inline if
+> anything?
+>
+>>  static int write_orc_entry(struct elf *elf, struct section *orc_sec,
+>>  			   struct section *ip_sec, unsigned int idx,
+>>  			   struct section *insn_sec, unsigned long insn_off,
+>> @@ -26,6 +28,7 @@ static int write_orc_entry(struct elf *elf, struct section *orc_sec,
+>>  	memcpy(orc, o, sizeof(*orc));
+>>  	orc->sp_offset = bswap_if_needed(elf, orc->sp_offset);
+>>  	orc->bp_offset = bswap_if_needed(elf, orc->bp_offset);
+>> +	arch_write_orc(elf, orc);
+>
+> Why can't this simply be:
+>
+> 	orc->ra_offset = bswap_if_needed(elf, orc->ra_offset);
+>
+> AFAICT this won't actually do anything for x86 and I don't think Power
+> got around to doing ORC yet.
+>
 >>
->> diff --git a/mm/percpu.c b/mm/percpu.c
->> index 28e07ede46f6..85e3f9b2a61f 100644
->> --- a/mm/percpu.c
->> +++ b/mm/percpu.c
->> @@ -3189,32 +3189,26 @@ void __init __weak pcpu_populate_pte(unsigned long addr)
->>  	pmd_t *pmd;
->>  
->>  	if (pgd_none(*pgd)) {
->> -		p4d_t *new;
->> -
->> -		new = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
->> -		if (!new)
->> +		p4d = memblock_alloc(P4D_TABLE_SIZE, P4D_TABLE_SIZE);
->> +		if (!p4d)
->>  			goto err_alloc;
->> -		pgd_populate(&init_mm, pgd, new);
->> +		pgd_populate(&init_mm, pgd, p4d);
->>  	}
->>  
->>  	p4d = p4d_offset(pgd, addr);
->>  	if (p4d_none(*p4d)) {
->> -		pud_t *new;
->> -
->> -		new = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
->> -		if (!new)
->> +		pud = memblock_alloc(PUD_TABLE_SIZE, PUD_TABLE_SIZE);
->> +		if (!pud)
->>  			goto err_alloc;
->> -		p4d_populate(&init_mm, p4d, new);
->> +		p4d_populate(&init_mm, p4d, pud);
->>  	}
->>  
->>  	pud = pud_offset(p4d, addr);
->>  	if (pud_none(*pud)) {
->> -		pmd_t *new;
->> -
->> -		new = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
->> -		if (!new)
->> +		pmd = memblock_alloc(PMD_TABLE_SIZE, PMD_TABLE_SIZE);
->> +		if (!pmd)
->>  			goto err_alloc;
->> -		pud_populate(&init_mm, pud, new);
->> +		pud_populate(&init_mm, pud, pmd);
->>  	}
->>  
->>  	pmd = pmd_offset(pud, addr);
->> -- 
->> 2.27.0
->>
-> 
-> I've pulled this, but the other 2 are part of loongarch and should be
-> reviewed and pulled by those maintainers.
-Dennis,
+>>  	/* populate reloc for ip */
+>>  	if (!elf_init_reloc_text_sym(elf, ip_sec, idx * sizeof(int), idx,
+>
+> Again, not much explaination for why you did things
+>
 
-Thanks for your feedback.
+The initial aim is to keep consistent with the above two lines,
+but for now, I think there is no need to call bswap_if_needed()
+for LoongArch, the related changes are not necessary, I will
+drop them too.
 
-Huacai,
+LoongArch is little-endian, the __BYTE_ORDER is defined as
+__LITTLE_ENDIAN, and elf->ehdr.e_ident[EI_DATA] is 1 which
+is equal with ELFDATA2LSB, so need_bswap() returns false.
 
-Could you give some review comments about the remaining 2 patches?
+static inline bool need_bswap(struct elf *elf)
+{
+	return (__BYTE_ORDER == __LITTLE_ENDIAN) ^
+	       (elf->ehdr.e_ident[EI_DATA] == ELFDATA2LSB);
+}
 
-Regards
-Bibo Mao
+Thank you very much for your review, sorry for that.
 
-> 
-> Thanks,
-> Dennis
+Thanks,
+Tiezhu
 
