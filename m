@@ -1,119 +1,102 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EB957C
-	for <loongarch@lists.linux.dev>; Fri, 28 Jul 2023 01:31:36 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxyepvGsNkzQ0LAA--.17966S3;
-	Fri, 28 Jul 2023 09:31:27 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjiNuGsNkELg9AA--.58652S3;
-	Fri, 28 Jul 2023 09:31:27 +0800 (CST)
-Subject: Re: [PATCH v1 4/6] objtool/LoongArch: Enable orc to be built
-To: Peter Zijlstra <peterz@infradead.org>
-References: <1690272910-11869-1-git-send-email-yangtiezhu@loongson.cn>
- <1690272910-11869-5-git-send-email-yangtiezhu@loongson.cn>
- <20230725115609.GD3765278@hirez.programming.kicks-ass.net>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <d49af603-82cf-a88e-37db-1c031c5f8881@loongson.cn>
-Date: Fri, 28 Jul 2023 09:31:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75A07C
+	for <loongarch@lists.linux.dev>; Fri, 28 Jul 2023 01:36:22 +0000 (UTC)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-4f954d7309fso1978193e87.1
+        for <loongarch@lists.linux.dev>; Thu, 27 Jul 2023 18:36:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690508180; x=1691112980;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YBY4dqR8k6VkxPBBD1QDAVOvsIKWDS67oRxcN+6z7R4=;
+        b=OdXU97AfLvUjjWYfRGF8Yq2orD02N8VH5dISv4o2HIBNcxoXWkX0dJWzFa6N+FAxzC
+         XB6+d+XSAX88Vzj1vwNT68ObRxmYsUN7wWafRYg9qahGBj6VP8MqcyRus5JFOFvX8VRC
+         uVtB2stZhsqBnqSY/tm6xpSV+GkpN5KKQqRC+JBRRokPF54a5T8jnQvyctiahw0d71Qd
+         0hQ0GMbCe6UfzOAyxLf99/Z0bEmOyNSGhKot0M+En7SklvlCxQFFjsqz9aM8gnY9hMpz
+         FrUQxTHe5OWx9oRUIn1NG9V55JWWMYJ8GG9QPJGdTs+xWzwsrBlaXN159fMJ93JE4y+N
+         zPQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690508180; x=1691112980;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YBY4dqR8k6VkxPBBD1QDAVOvsIKWDS67oRxcN+6z7R4=;
+        b=Ni5jUBzZB/K5nHRcN8ITWH8UcrEgvQNK0wNXE7UTT9YkLpMwS0O9CdX90uSDO4jbVg
+         5bYsKo8q5plgrAqD6yZejj5OHv9k1r/0WoZr4xgMHIoqynX1YXdnQZN5txK9tGtA9off
+         cUOVV94VGBeXFK6c3Li3VxfmxUnZzlEAzmePa6+CwXMaaskwxyZigIc5FAV8Up+5B7gR
+         SN+NpUwiPBZVHHv0VgHqRS7kKBmEZBYSUQrBnsymZCm12KNApRTTSvw5rjhDS+Rm1h+h
+         tv8gly/T85Y08EAp1AULYlqWd7vznwPhYjVsypSr1Snrjp2bOZ656nQROdkHoMBb3L0r
+         NxjA==
+X-Gm-Message-State: ABy/qLa87SRldo/HRxxOFp/P/9RVsQXpZswiMZmekAvXd323zq1bj9f2
+	6o5cMaK1mL0oHJGxTwaRUigQn/Jtv9MJ9rU5keI=
+X-Google-Smtp-Source: APBJJlHgwB5gToyjMVHyY8YGLO7HADwdYYX5FTUcl+sxURYeMOlncTnSwDZJa6Zi/Zx1j8hiJcxH6uvOGCgmmHey1cw=
+X-Received: by 2002:ac2:5055:0:b0:4f9:dac6:2f3d with SMTP id
+ a21-20020ac25055000000b004f9dac62f3dmr345770lfm.13.1690508180156; Thu, 27 Jul
+ 2023 18:36:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230725115609.GD3765278@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8AxjiNuGsNkELg9AA--.58652S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFykXr4DtrWUJF4xuFWrXrc_yoW8tr13pa
-	4DGayxKFWxtr15G3ZaqanrCFySgwnagrWxCryku3y7XF9a9rn7GFyIvr1j9F1DZ3sa9a42
-	vay7tr1DJF1FvFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
+References: <cover.1690439335.git.chenfeiyang@loongson.cn> <DM4PR12MB50880AA9F0C93F86B0A7A308D301A@DM4PR12MB5088.namprd12.prod.outlook.com>
+In-Reply-To: <DM4PR12MB50880AA9F0C93F86B0A7A308D301A@DM4PR12MB5088.namprd12.prod.outlook.com>
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date: Fri, 28 Jul 2023 09:36:08 +0800
+Message-ID: <CACWXhK=qGZA=_5PyTpjfdUmtBabtYo7eammoeX87y6vQ+B3NQw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] stmmac: Add Loongson platform support
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>, "andrew@lunn.ch" <andrew@lunn.ch>, 
+	"hkallweit1@gmail.com" <hkallweit1@gmail.com>, "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>, 
+	"alexandre.torgue@foss.st.com" <alexandre.torgue@foss.st.com>, 
+	"chenhuacai@loongson.cn" <chenhuacai@loongson.cn>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, 
+	"dongbiao@loongson.cn" <dongbiao@loongson.cn>, 
+	"loongson-kernel@lists.loongnix.cn" <loongson-kernel@lists.loongnix.cn>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 07/25/2023 07:56 PM, Peter Zijlstra wrote:
-> On Tue, Jul 25, 2023 at 04:15:08PM +0800, Tiezhu Yang wrote:
+On Thu, Jul 27, 2023 at 5:02=E2=80=AFPM Jose Abreu <Jose.Abreu@synopsys.com=
+> wrote:
 >
->> +void arch_write_orc(struct elf *elf, struct orc_entry *orc)
->> +{
->> +	orc->ra_offset = bswap_if_needed(elf, orc->ra_offset);
->> +}
+> From: Feiyang Chen <chenfeiyang@loongson.cn>
+> Date: Thu, Jul 27, 2023 at 08:15:44
 >
-> This hardly 'writes' anything, all it does is a bswap.
+> > Extend stmmac functions and macros for Loongson DWMAC.
+> > Add LS7A support for dwmac_loongson.
+> >
+> > Feiyang Chen (10):
+> >   net: stmmac: Pass stmmac_priv and chan in some callbacks
+> >   net: stmmac: dwmac1000: Allow platforms to choose some register
+> >     offsets
+> >   net: stmmac: dwmac1000: Add multi-channel support
+> >   net: stmmac: dwmac1000: Add 64-bit DMA support
+> >   net: stmmac: dwmac1000: Add Loongson register definitions
+> >   net: stmmac: Add Loongson HWIF entry
+> >   net: stmmac: dwmac-loongson: Add LS7A support
+> >   net: stmmac: dwmac-loongson: Disable flow control for GMAC
+> >   net: stmmac: dwmac-loongson: Add 64-bit DMA and multi-vector support
+> >   net: stmmac: dwmac-loongson: Add GNET support
 >
->> diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
->> index 1eff7e0a..6975056 100644
->> --- a/tools/objtool/orc_gen.c
->> +++ b/tools/objtool/orc_gen.c
->> @@ -14,6 +14,8 @@
->>  #include <objtool/warn.h>
->>  #include <objtool/endianness.h>
->>
->> +void __weak arch_write_orc(struct elf *elf, struct orc_entry *orc) {}
+> I took a quick look at your patches and I'm thinking whether this is the =
+correct way to go.
+> You are mixing up the stmmac generic layer by adding the Loongson HWIF en=
+try.
+> The whole idea of HWIF was to have it independent of vendor specific logi=
+c.
 >
-> And for that you need a weak function? What's wrong with an inline if
-> anything?
->
->>  static int write_orc_entry(struct elf *elf, struct section *orc_sec,
->>  			   struct section *ip_sec, unsigned int idx,
->>  			   struct section *insn_sec, unsigned long insn_off,
->> @@ -26,6 +28,7 @@ static int write_orc_entry(struct elf *elf, struct section *orc_sec,
->>  	memcpy(orc, o, sizeof(*orc));
->>  	orc->sp_offset = bswap_if_needed(elf, orc->sp_offset);
->>  	orc->bp_offset = bswap_if_needed(elf, orc->bp_offset);
->> +	arch_write_orc(elf, orc);
->
-> Why can't this simply be:
->
-> 	orc->ra_offset = bswap_if_needed(elf, orc->ra_offset);
->
-> AFAICT this won't actually do anything for x86 and I don't think Power
-> got around to doing ORC yet.
->
->>
->>  	/* populate reloc for ip */
->>  	if (!elf_init_reloc_text_sym(elf, ip_sec, idx * sizeof(int), idx,
->
-> Again, not much explaination for why you did things
+> Can you devise another alternative without mixing up the HWIF?
 >
 
-The initial aim is to keep consistent with the above two lines,
-but for now, I think there is no need to call bswap_if_needed()
-for LoongArch, the related changes are not necessary, I will
-drop them too.
+Hi, Jose,
 
-LoongArch is little-endian, the __BYTE_ORDER is defined as
-__LITTLE_ENDIAN, and elf->ehdr.e_ident[EI_DATA] is 1 which
-is equal with ELFDATA2LSB, so need_bswap() returns false.
-
-static inline bool need_bswap(struct elf *elf)
-{
-	return (__BYTE_ORDER == __LITTLE_ENDIAN) ^
-	       (elf->ehdr.e_ident[EI_DATA] == ELFDATA2LSB);
-}
-
-Thank you very much for your review, sorry for that.
+OK, I will try.
 
 Thanks,
-Tiezhu
+Feiyang
 
+> Thanks,
+> Jose
