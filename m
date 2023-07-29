@@ -1,74 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75802198
-	for <loongarch@lists.linux.dev>; Sat, 29 Jul 2023 03:17:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97EBBC433C8;
-	Sat, 29 Jul 2023 03:17:11 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.5-rc4
-Date: Sat, 29 Jul 2023 11:16:48 +0800
-Message-Id: <20230729031648.539276-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DEA17E9
+	for <loongarch@lists.linux.dev>; Sat, 29 Jul 2023 08:01:40 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id C5A83320084E;
+	Sat, 29 Jul 2023 04:01:38 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Sat, 29 Jul 2023 04:01:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm2; t=1690617698; x=1690704098; bh=it
+	VztlhsdL+TgE9iBCuYgyv0QZn1iL7TtRpdZyaCyBM=; b=K3GKtYlR7bONoMs4wU
+	CtMwcBikuXune0t+aupcKbSwA4l3JefblqM5Bcbol9fRmprrs9u4912e0lGX3ILK
+	V/yQI8s81nl0XsCw8yY0fXLgkOT6sFtYgdkKK4nwBorUkM7jECQgf4z1bpB7BHeO
+	hn05aiGWl0AwWVSvSn8s91zQZ+db77RD5ksoPFyYjqk7ImL5Le3PqANFvvXxL4Hc
+	trXh8GlrZBvwLyGNgtOIvjjo++yQkMp0ilkmDQ7T8rtc4kR+xZ9KsXOoxvwngWcA
+	lA1MWEWSbKV6oGPtbl2SrQPLNWV8FWm/xFUl9lBUfT80SMLpx3+W8a5ucfrYE+2G
+	4sGg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; t=1690617698; x=1690704098; bh=itVztlhsdL+Tg
+	E9iBCuYgyv0QZn1iL7TtRpdZyaCyBM=; b=0EOha8fZdjiqo0sg0OE922E1vqSVw
+	+ceoOUMLM5u2ACPky1JbpH8YFeYIC9agJHTtN010wkgUVVd/5bTEuk7MEmjG6X9T
+	WYLgjJHPGw+oOf2iM9Dxs9ywojkZCfUtLD97U76zgO2VvZc/fMRMnkxaV3HJmESZ
+	lXjPgMewH0qsUQr66Pu+dFdOiBPQgM5NAB9+UXpy/p7/76T4RN8ONL2TobOg10lH
+	olf6mBp5b0HljZG8Kp1GAf5kKpruxSQZQdDCO6/2LVBKYAiHJ8iPaIh5mEjHfrqr
+	bYhmUnDByaTnHkJ3/fHKgCZ4iZYhyoTwG4C05f48271jY6XskqHF6UUDg==
+X-ME-Sender: <xms:YMfEZOgmoC8fMwpRtqguwWHfyQKl-7UeMtBC39dsAe0c9t1lQpunHw>
+    <xme:YMfEZPAc-3--76K-fdqkti-PMOKtC-XfagYouBNBru_pv3eykbqlBfsyMGGLDt_ng
+    oJ-Ab7KZ-AD42FgVN0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrieejgdduvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
+    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:YMfEZGFKi96I8nhFNkV3ostG1V7qBlsT9acoWLLwjt3ANUqmr4KuZg>
+    <xmx:YMfEZHQ9cdqcX_EWp_CR_hsrViZG93sHzHy4j5gjJf2YvFjqFFJwtQ>
+    <xmx:YMfEZLwmoTryi4H9-c7XvfYgbgMjl0olpaD042Rzmw0TDIdChPYApw>
+    <xmx:YsfEZCmNleOV9eCoTRRqHQb7sxX1hOhGi7FevuE1mprIUcWcq3xOQQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 14AD1B6008D; Sat, 29 Jul 2023 04:01:36 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-592-ga9d4a09b4b-fm-defalarms-20230725.001-ga9d4a09b
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Message-Id: <e7a792d9-39b9-440a-9c22-99e25b25a396@app.fastmail.com>
+In-Reply-To: <20230728234429.GA611252@dev-arch.thelio-3990X>
+References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
+ <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
+ <20230727213648.GA354736@dev-arch.thelio-3990X>
+ <1777400a-4d9c-4bdb-9d3b-f8808ef054cc@app.fastmail.com>
+ <20230728173103.GA1299743@dev-arch.thelio-3990X>
+ <a2fa1a31-e8bb-4659-9631-398b564e7c2b@app.fastmail.com>
+ <20230728234429.GA611252@dev-arch.thelio-3990X>
+Date: Sat, 29 Jul 2023 09:59:23 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Nathan Chancellor" <nathan@kernel.org>
+Cc: "Tiezhu Yang" <yangtiezhu@loongson.cn>,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64, riscv and
+ loongarch
+Content-Type: text/plain
 
-The following changes since commit 6eaae198076080886b9e7d57f4ae06fa782f90ef:
+On Sat, Jul 29, 2023, at 01:44, Nathan Chancellor wrote:
+> On Fri, Jul 28, 2023 at 10:56:38PM +0200, Arnd Bergmann wrote:
 
-  Linux 6.5-rc3 (2023-07-23 15:24:10 -0700)
+>     DESCEND objtool
+>   In file included from 
+> /usr/include/aarch64-linux-gnu/asm/bitsperlong.h:1,
+>                    from /usr/include/asm-generic/int-ll64.h:12,
+>                    from /usr/include/asm-generic/types.h:7,
+>                    from /usr/include/aarch64-linux-gnu/asm/types.h:1,
+>                    from /linux-stable/tools/include/linux/types.h:13,
+>                    from 
+> /linux-stable/tools/arch/x86/include/asm/orc_types.h:9,
+>                    from /linux-stable/scripts/sorttable.h:96,
+>                    from /linux-stable/scripts/sorttable.c:201:
+>   /linux-stable/tools/include/asm-generic/bitsperlong.h:14:2: error: 
+> #error Inconsistent word size. Check asm/bitsperlong.h
+>      14 | #error Inconsistent word size. Check asm/bitsperlong.h
+>         |  ^~~~~
+>   make[3]: *** [/linux-stable/scripts/Makefile.host:114: 
+> scripts/sorttable] Error 1
+>   ...
+>
+>> I also noticed that your command line includes CROSS_COMPILE=x86_64-linux-
+>> rather than CROSS_COMPILE=x86_64-linux-gnu-
+>
+> Right, as I was reproducing this with your kernel.org GCC for
+> CROSS_COMPILE and Fedora's GCC for HOSTCC, since I wanted to make sure
+> this was not some issue with clang (which it does not appear to be).
 
-are available in the Git repository at:
+Ok, it's beginning to make more sense to me now. I see
+that the tools/arch/x86/include/asm/orc_types.h comes from
+the x86_64 target build and is intentional, as sorttable.c
+needs to access the ORC information. Here the Makefile does
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.5-1
+ifdef CONFIG_UNWINDER_ORC
+ifeq ($(ARCH),x86_64)
+ARCH := x86
+endif
+HOSTCFLAGS_sorttable.o += -I$(srctree)/tools/arch/x86/include
+HOSTCFLAGS_sorttable.o += -DUNWINDER_ORC_ENABLED
+endif
 
-for you to fetch changes up to 1e74ae32805b6630c78bd7fb746fbfe936fb8f86:
+in order to get the ORC definitions from asm/orc_types.h, but
+then it looks like it also gets the uapi/asm/bitsperlong.h
+header from there which contains
 
-  LoongArch: Cleanup __builtin_constant_p() checking for cpu_has_* (2023-07-28 10:30:42 +0800)
+#if defined(__x86_64__) && !defined(__ILP32__)
+# define __BITS_PER_LONG 64
+#else
+# define __BITS_PER_LONG 32
+#endif
 
-----------------------------------------------------------------
-LoongArch fixes for v6.5-rc4
+and this would set __BITS_PER_LONG to 32 on arm64.
 
-Some bug fixes for build system, builtin cmdline handling, bpf and
-{copy, clear}_user, together with a trivial cleanup.
+However, I don't see this actually being included on my
+machine. Can you dump the sorttable.c preprocessor output
+with your setup, using -fdirectives-only, so we can see
+which of the two (__BITS_PER_LONG or BITS_PER_LONG) is
+actually wrong and triggers the sanity check?
 
-----------------------------------------------------------------
-Chenguang Zhao (1):
-      LoongArch: BPF: Enable bpf_probe_read{, str}() on LoongArch
+What I see on my machine is that both definitions come
+from the local tools/include/ headers, not from the
+installed system headers, so I'm still doing something
+wrong in my installation:
 
-Huacai Chen (3):
-      LoongArch: Only fiddle with CHECKFLAGS if `need-compiler'
-      LoongArch: Fix module relocation error with binutils 2.41
-      LoongArch: Cleanup __builtin_constant_p() checking for cpu_has_*
+./tools/include/uapi/asm-generic/bitsperlong.h
+#define __BITS_PER_LONG (__CHAR_BIT__ * __SIZEOF_LONG__)
 
-Tiezhu Yang (1):
-      LoongArch: BPF: Fix check condition to call lu32id in move_imm()
+./tools/include/asm-generic/bitsperlong.h
+#define BITS_PER_LONG (__CHAR_BIT__ * __SIZEOF_LONG__)
 
-WANG Rui (1):
-      LoongArch: Fix return value underflow in exception path
+Neither of these files actually contains the sanity
+check in linux-6.5-rc3, and comparing these is clearly
+nonsensical, as they are defined the same way (rather
+than checking CONFIG_64BIT), but also I don't see why
+there is both a uapi/ version and a non-uapi version
+in what is meant to be a userspace header.
 
-Zhihong Dong (1):
-      LoongArch: Fix CMDLINE_EXTEND and CMDLINE_BOOTLOADER handling
-
- arch/loongarch/Kconfig           |  1 +
- arch/loongarch/Makefile          |  4 +++-
- arch/loongarch/include/asm/fpu.h | 15 ++++-----------
- arch/loongarch/kernel/setup.c    | 16 ++++++++++++++++
- arch/loongarch/lib/clear_user.S  |  3 ++-
- arch/loongarch/lib/copy_user.S   |  3 ++-
- arch/loongarch/net/bpf_jit.h     |  2 +-
- 7 files changed, 29 insertions(+), 15 deletions(-)
+     Arnd
