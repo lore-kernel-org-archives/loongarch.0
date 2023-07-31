@@ -1,43 +1,43 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7C41D2E2
-	for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 17:04:27 +0000 (UTC)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-bff89873d34so3787494276.2
-        for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 10:04:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE381D2E2
+	for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 17:04:29 +0000 (UTC)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-d16639e16e6so3788765276.3
+        for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 10:04:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690823066; x=1691427866;
+        d=gmail.com; s=20221208; t=1690823068; x=1691427868;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DOzSOLTncjJXn0AvJQqE6PD7zrtBe8MIuyz5zw7TzDY=;
-        b=f6adceAKsPvui0l7VSUiRnWj+VnC8V29gRyKPW/KXba4L11duKnXDkkl9h+DOUEe82
-         /+uFEmkPUA7pfwVfanOSjRVPX3wfPLVY3FZPvGi3VyyqlsToEnHzzIylic2yHwlsDcH3
-         W3JP9R5mJExPbkEH69AGyH0gizw4AowCqMoujs5LGqqMzZnJK/dPFOzk0elvmdxwimx1
-         zHO/RBskNqXdsMC9zN3IXGN1/Qatnc3KRzwrgmn/b1CAPxkc6smcQgcPCS+F4TUkpdDt
-         7sG/wG+FEbTCZLXxJ46EURhFx988hfZQfl6N1HhCumdsXb4Bqj21mhmFktRwf8yfQcyF
-         sVPg==
+        bh=0AnRv7d38hHUVaoAGins0CaWMMRgzo0GwUb20Y9YoSw=;
+        b=NCurFfzESiDx9LJv2ZuGZQRVSVONypfRSwp3UCPEimaJ0icLYx3MO5YhqaCkZBIR4Z
+         l/oM16YnfTb6kc+h35gY+zFIGDLtxKkoqGrDMVFkoTTTXsh+xxxFI4aLUNlB4KO70CwF
+         WRXyA1UJf7HH1gQrjYriX6iIExSZBg+JSpTH9iwwtWaRApzq4XeZb8/+i18fB7X+SbC5
+         QNboB3mts09Ey/BGMzFFSqcMjH751GJumhdsMsGsSdMw+HfAwMqxwq/99BYNjLDy4Uwv
+         T3I5GqlbCblT84V09f9Mmwx3a1PPDI4Kl+kA59SDykK80t9C+rJKaVJTL/sIPY4ok+Qa
+         Stkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690823066; x=1691427866;
+        d=1e100.net; s=20221208; t=1690823068; x=1691427868;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DOzSOLTncjJXn0AvJQqE6PD7zrtBe8MIuyz5zw7TzDY=;
-        b=IWBZmpgAOXm035P25u3wQYPFW/Gcoxuxj3XJnjjOLtAQQ3eroyp95eSKRCqxFiSiik
-         sgRql/D2JW865JHnno6Dvtoffsiucasn2jHrdmixZHo41uzh6zsiWdwL4OrNJ6J2k6mQ
-         LxQsEJgLYhQ7SzUijFNZ3ZKSMD6g6x68PH38f0gM6MfddTEFrCTVAGjI7x3jkm+F+4Ua
-         Q6EXgyZiooUjSEAxg2Z/xxJlOaszPLPthSukQ4z5WWBrvrx769bNV4KWDDA/eAhjrG8k
-         NkL82svtCmLcalvymOdSQ7epHcjJpw1XozGWTaOr9SGjx1YETSSizXmkFplhY5Adzo8C
-         JwHA==
-X-Gm-Message-State: ABy/qLYP9Az9MK/+3Z0LmLJliXJ0urrp5ghgU/NV8NSehPxKWqQtiN/Q
-	FZh4idBmOEJjiVqlmIiDGAs=
-X-Google-Smtp-Source: APBJJlE4T05ogdyrjIbBXTs0RpkDVTPnYG3Ig2UA6lH+KuSSQ9n98n0kBdmmWfFoFgc9s9NgVox+UA==
-X-Received: by 2002:a25:ada4:0:b0:d0a:8973:b1c with SMTP id z36-20020a25ada4000000b00d0a89730b1cmr247583ybi.12.1690823066447;
-        Mon, 31 Jul 2023 10:04:26 -0700 (PDT)
+        bh=0AnRv7d38hHUVaoAGins0CaWMMRgzo0GwUb20Y9YoSw=;
+        b=TZPsTqAv5WKWMSNAm154DGdFc+/ygZcGlc0fLsZYBS/uvfR9Re5F6uYiWwY/JAyANs
+         ppdeSFudNtXdNJU6D05JI/Kg4b77GWrmWtj/ofRAcpKix7gwHEj3Zv1JFHk7dbeULarI
+         JG8X9g3mrPHawsCpnshsvi5dZiGFM5O/og/IQocc/FoBjKdJfdo1G6ToYOqqumkF5Pro
+         wIOVxhGA0rcVWgUUbrQQctf4fnkeyNETdFSIk8R3Ka/5XyoHYmddEj1GEn9vEvxbXBOe
+         3Wz5Hc/NiL7JLJaofviNnQeRZSkpr22wfpC/3Q2mVeViCiiVZlJSdCyV/uw+VeStw8ar
+         3MrA==
+X-Gm-Message-State: ABy/qLbTGgFTaNsocIOG+H0nfruNpYOGhM5KRH1MwLjvxQuBoR6ZVkjW
+	gb7WfMSI/41nvEPi3N9+DJIlqyZf946ixQ==
+X-Google-Smtp-Source: APBJJlH2OMZz7Ho/ZKKTbee+QNJ7Mj2bTW6BCb3XUatLH/MvStrEwd2dCkY4APrPVNcSGvWAfXuhUw==
+X-Received: by 2002:a25:acd2:0:b0:c6d:f875:520e with SMTP id x18-20020a25acd2000000b00c6df875520emr7715849ybd.49.1690823068568;
+        Mon, 31 Jul 2023 10:04:28 -0700 (PDT)
 Received: from unknowna0e70b2ca394.attlocal.net ([2600:1700:2f7d:1800::16])
-        by smtp.googlemail.com with ESMTPSA id x31-20020a25ac9f000000b00c832ad2e2eesm2511833ybi.60.2023.07.31.10.04.24
+        by smtp.googlemail.com with ESMTPSA id x31-20020a25ac9f000000b00c832ad2e2eesm2511833ybi.60.2023.07.31.10.04.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 10:04:26 -0700 (PDT)
+        Mon, 31 Jul 2023 10:04:28 -0700 (PDT)
 From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Matthew Wilcox <willy@infradead.org>
@@ -60,11 +60,11 @@ Cc: linux-mm@kvack.org,
 	kvm@vger.kernel.org,
 	Hugh Dickins <hughd@google.com>,
 	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCH mm-unstable v8 24/31] nios2: Convert __pte_free_tlb() to use ptdescs
-Date: Mon, 31 Jul 2023 10:03:25 -0700
-Message-Id: <20230731170332.69404-25-vishal.moola@gmail.com>
+	Jonas Bonn <jonas@southpole.se>,
+	Mike Rapoport <rppt@kernel.org>
+Subject: [PATCH mm-unstable v8 25/31] openrisc: Convert __pte_free_tlb() to use ptdescs
+Date: Mon, 31 Jul 2023 10:03:26 -0700
+Message-Id: <20230731170332.69404-26-vishal.moola@gmail.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230731170332.69404-1-vishal.moola@gmail.com>
 References: <20230731170332.69404-1-vishal.moola@gmail.com>
@@ -81,30 +81,29 @@ ptdesc equivalents.
 
 Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
 ---
- arch/nios2/include/asm/pgalloc.h | 8 ++++----
+ arch/openrisc/include/asm/pgalloc.h | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/nios2/include/asm/pgalloc.h b/arch/nios2/include/asm/pgalloc.h
-index ecd1657bb2ce..ce6bb8e74271 100644
---- a/arch/nios2/include/asm/pgalloc.h
-+++ b/arch/nios2/include/asm/pgalloc.h
-@@ -28,10 +28,10 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmd,
+diff --git a/arch/openrisc/include/asm/pgalloc.h b/arch/openrisc/include/asm/pgalloc.h
+index b7b2b8d16fad..c6a73772a546 100644
+--- a/arch/openrisc/include/asm/pgalloc.h
++++ b/arch/openrisc/include/asm/pgalloc.h
+@@ -66,10 +66,10 @@ extern inline pgd_t *pgd_alloc(struct mm_struct *mm)
  
- extern pgd_t *pgd_alloc(struct mm_struct *mm);
+ extern pte_t *pte_alloc_one_kernel(struct mm_struct *mm);
  
--#define __pte_free_tlb(tlb, pte, addr)				\
--	do {							\
--		pgtable_pte_page_dtor(pte);			\
--		tlb_remove_page((tlb), (pte));			\
-+#define __pte_free_tlb(tlb, pte, addr)					\
-+	do {								\
-+		pagetable_pte_dtor(page_ptdesc(pte));			\
-+		tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
- 	} while (0)
+-#define __pte_free_tlb(tlb, pte, addr)	\
+-do {					\
+-	pgtable_pte_page_dtor(pte);	\
+-	tlb_remove_page((tlb), (pte));	\
++#define __pte_free_tlb(tlb, pte, addr)				\
++do {								\
++	pagetable_pte_dtor(page_ptdesc(pte));			\
++	tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
+ } while (0)
  
- #endif /* _ASM_NIOS2_PGALLOC_H */
+ #endif
 -- 
 2.40.1
 
