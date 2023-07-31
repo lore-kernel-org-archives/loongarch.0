@@ -1,90 +1,158 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0A418C31
-	for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 15:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HtZw09ZfN/qm3cJW6/ew7Q7QbvBXAckrD8yQ+RvhMTo=; b=QTS+m2u8id7jB2S6mrkds4VPFA
-	5gXjpbyK69idLB7B+LJwi87EgqnP9HSwu4RX8DLTNOJh6C7xvWTHG7BLyzNUtWki5WFxtpKgo1W/X
-	wxbZkzIRcbGsK21An6kdFCRpd62LrTUh8w/hhw/r2TdozTf3HLfsRYkS58UZlNTzul+poer2ykloD
-	Fsa4TeLl7V6sDZ2Fdvcu+bM4EvWEUMlvZoKJAF8dhPqkhLE7Vs4jxcPZqkOwBTrb1C7zzcSWRKOyF
-	F5bB4NMLzfOSIAupFcl2gCqAlRxKdAqge0AR0yJsnLOBZ7c0/1Cao1AkemuLXtTo1ZNRAR3VpQ9Wu
-	OSkDeFcg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48650)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qQUdQ-0002kM-1d;
-	Mon, 31 Jul 2023 16:16:36 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qQUdM-00089X-8X; Mon, 31 Jul 2023 16:16:32 +0100
-Date: Mon, 31 Jul 2023 16:16:32 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Cc: Feiyang Chen <chenfeiyang@loongson.cn>, andrew@lunn.ch,
-	hkallweit1@gmail.com, peppe.cavallaro@st.com,
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-	chenhuacai@loongson.cn, dongbiao@loongson.cn,
-	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v2 06/10] net: stmmac: Add Loongson HWIF entry
-Message-ID: <ZMfQUI1BOd1RWM4u@shell.armlinux.org.uk>
-References: <cover.1690439335.git.chenfeiyang@loongson.cn>
- <7cae63ede2792cb2a7189f251b282aecbb0945b1.1690439335.git.chenfeiyang@loongson.cn>
- <ZMOJNtClcAlWwZpP@shell.armlinux.org.uk>
- <CACWXhKmcFCHQsjc-7BU5VkNyJ70v6iEg2iQ11i-qS3VchvKCJA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E02819BB0;
+	Mon, 31 Jul 2023 16:04:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC273C433C7;
+	Mon, 31 Jul 2023 16:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690819444;
+	bh=5mjxkRGYdDJHi8iwtbjaqm+ZNCwOd9w23JucUBfspJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IsmshpuMt1cGOfRI5e/3xtukcr4V0We1YeC5wgMpz8W+RgsWHtFaqOAQtAPALNj9U
+	 2R9y3xAC3kuregKU/3WvvqNt6xi4ujaay08GQOOmiKl0CstMwYlAbsVesU/0ntB2bM
+	 AWLnvPC6bQ880pLICLLUzYb5Gndqj5nND6Nyq0/fac/Me4PTRDzaltX5SaM3WqLnik
+	 65rkjwWALQbwb05YmTKdaishaSzwx6hYePIJ6htVXei03FGUIRmZt55uX+UG+cb0DI
+	 dIEhkXlD6c0ivqDvlf0L0cPy1q5c79cwAx6c/o4hF2xPDzbG3OYNyyUmHEUJGuPbj6
+	 3ZUtXa3EY5ulQ==
+Date: Mon, 31 Jul 2023 09:04:02 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+	Linux-Arch <linux-arch@vger.kernel.org>, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 1/2] asm-generic: Unify uapi bitsperlong.h for arm64,
+ riscv and loongarch
+Message-ID: <20230731160402.GB1823389@dev-arch.thelio-3990X>
+References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
+ <1687443219-11946-2-git-send-email-yangtiezhu@loongson.cn>
+ <20230727213648.GA354736@dev-arch.thelio-3990X>
+ <1777400a-4d9c-4bdb-9d3b-f8808ef054cc@app.fastmail.com>
+ <20230728173103.GA1299743@dev-arch.thelio-3990X>
+ <a2fa1a31-e8bb-4659-9631-398b564e7c2b@app.fastmail.com>
+ <20230728234429.GA611252@dev-arch.thelio-3990X>
+ <e7a792d9-39b9-440a-9c22-99e25b25a396@app.fastmail.com>
+ <20230729174617.GA1229655@dev-arch.thelio-3990X>
+ <6d6641b6-748e-412c-a139-35fc873a6a1b@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACWXhKmcFCHQsjc-7BU5VkNyJ70v6iEg2iQ11i-qS3VchvKCJA@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <6d6641b6-748e-412c-a139-35fc873a6a1b@app.fastmail.com>
 
-On Mon, Jul 31, 2023 at 05:46:57PM +0800, Feiyang Chen wrote:
-> On Fri, Jul 28, 2023 at 5:24 PM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Thu, Jul 27, 2023 at 03:18:06PM +0800, Feiyang Chen wrote:
-> > > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> > > index e8619853b6d6..829de274e75d 100644
-> > > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> > > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> > > @@ -3505,17 +3505,21 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
-> > >  {
-> > >       struct stmmac_priv *priv = netdev_priv(dev);
-> > >       enum request_irq_err irq_err;
-> > > +     unsigned long flags = 0;
-> > >       cpumask_t cpu_mask;
-> > >       int irq_idx = 0;
-> > >       char *int_name;
-> > >       int ret;
-> > >       int i;
-> > >
-> > > +     if (priv->plat->has_lgmac)
-> > > +             flags |= IRQF_TRIGGER_RISING;
-> >
-> > Can this be described in firmware?
-> >
+On Sat, Jul 29, 2023 at 11:12:26PM +0200, Arnd Bergmann wrote:
+> On Sat, Jul 29, 2023, at 19:46, Nathan Chancellor wrote:
+> > On Sat, Jul 29, 2023 at 09:59:23AM +0200, Arnd Bergmann wrote:
+> >> On Sat, Jul 29, 2023, at 01:44, Nathan Chancellor wrote:
 > 
-> Hi, Russell,
+> >> 
+> >> in order to get the ORC definitions from asm/orc_types.h, but
+> >> then it looks like it also gets the uapi/asm/bitsperlong.h
+> >> header from there which contains
+> >> 
+> >> #if defined(__x86_64__) && !defined(__ILP32__)
+> >> # define __BITS_PER_LONG 64
+> >> #else
+> >> # define __BITS_PER_LONG 32
+> >> #endif
+> >> 
+> >> and this would set __BITS_PER_LONG to 32 on arm64.
+> >> 
+> >> However, I don't see this actually being included on my
+> >> machine. Can you dump the sorttable.c preprocessor output
+> >> with your setup, using -fdirectives-only, so we can see
+> >> which of the two (__BITS_PER_LONG or BITS_PER_LONG) is
+> >> actually wrong and triggers the sanity check?
+> >
+> > Sure thing, this is the output of:
+> >
+> >   $ gcc -I/linux-stable/tools/include 
+> > -I/linux-stable/tools/arch/x86/include -DUNWINDER_ORC_ENABLED -I 
+> > ./scripts -E -fdirectives-only /linux-stable/scripts/sorttable.c
+> >
+> > https://gist.github.com/nathanchance/d2c3e58230930317dc84aff80fef38bf
 > 
-> I'm not sure, could you explain what you mean?
+> Ok, so what we get is that the system-wide
+> /usr/include/aarch64-linux-gnu/asm/bitsperlong.h
+> 
+> includes the source tree file 
+> tools/include/asm-generic/bitsperlong.h
+> 
+> which in the old kernels only has the "32" fallback value.
 
-Modern systems describe the IRQ triggering in firmware for the OS
-such as DT. Does your implementation have any firmware that can
-do this kind of description for you (e.g. DT, ACPI?)
+Ah, makes perfect sense.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> >> What I see on my machine is that both definitions come
+> >> from the local tools/include/ headers, not from the
+> >> installed system headers, so I'm still doing something
+> >> wrong in my installation:
+> >
+> > Just to make sure, you have the 6.5-rc1+ headers installed and you are
+> > attempting to build the host tools from an earlier Linux release than
+> > 6.5-rc1? I don't see a problem with building these host programs on
+> > mainline/6.5, I see this issue when building them in older stable
+> > releases (my reproduction so far has been on 6.4 but I see it when
+> > building all currently supported long term stable releases) when I have
+> > the 6.5-rc1+ headers installed.
+> 
+> Ok, I see. I missed that part of your description earlier.
+> 
+> >
+> > which seems to be where the mismatch is coming from?
+> 
+> Right, exactly.
+> 
+> >> ./tools/include/asm-generic/bitsperlong.h
+> >> #define BITS_PER_LONG (__CHAR_BIT__ * __SIZEOF_LONG__)
+> >> 
+> >> Neither of these files actually contains the sanity
+> >> check in linux-6.5-rc3, and comparing these is clearly
+> >> nonsensical, as they are defined the same way (rather
+> >> than checking CONFIG_64BIT), but also I don't see why
+> >> there is both a uapi/ version and a non-uapi version
+> >> in what is meant to be a userspace header.
+> >
+> > May be worth looping in the tools/ folks, since that whole directory is
+> > rather special IMO...
+> 
+> I think the good news is that this only happens because
+> the tools/ directory contains a copy of the kernel headers
+> including that sanity check, and other user space won't
+> suffer from it because they don't contain copies of kernel
+> internal headers.
+
+Yeah, I think you are correct.
+
+> Reverting the change might still end up being the easiest way
+> out regardless, but it does seem like we should be able
+> to address this in the tools directory by making sure it doesn't
+> mix the installed headers with the local ones.
+
+Agreed, although you do make a good point below that we would need the
+fix in the stable trees, which adds additional complexity when it comes
+to things like bisecting. It is already hard enough with all the various
+clang behavior changes we have had to adapt to over the years...
+
+> Part of the problem I think is that the installed 
+> /usr/include/asm-generic/int-ll64.h includes
+> /usr/include/aarch64-linux-gnu/asm/bitsperlong.h, so both
+> of them are the uapi headers, but this one has an
+> "include <asm-generic/bitsperlong.h>" that expects the
+> uapi version but instead gets the kernel version from
+> the tools directory. We could override this by adding
+> a working tools/include/asm-generic/bitsperlong.h header,
+> but that has to be backported to the stable kernels then.
+
+but this does not sound like it would be the end of the world, I do not
+have to bisect too often and even if I have to, using a userspace
+without these headers is generally possible.
+
+Cheers,
+Nathan
