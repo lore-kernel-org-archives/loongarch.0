@@ -1,154 +1,67 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2417119BC4
-	for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 16:22:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1690820551; bh=KXu0pOSJ+Yi7H0N8jumb2xkFoohQyaUvR6lhW0va5Ts=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZTlXul5QjkJDbwZKFvqqsa2YhpTRwjsyKvlrXBT9TrlOFnZdDUjvMZ4/katyWQ6/D
-	 htWKfeZ7hMQ/hnFhOI3nn+xCtHgsKjspOHeSq7YFP8agvzvgVdZonO1L3afJmNt6Bd
-	 bprSnmRBShnjws/v6MguTHhSyqC2sI7e6+c6vgtY=
-Received: from [192.168.9.172] (unknown [101.88.28.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28A68BEE
+	for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 16:39:23 +0000 (UTC)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E063C600A6;
-	Tue,  1 Aug 2023 00:22:30 +0800 (CST)
-Message-ID: <94bd0300-a920-a0d7-244b-6caeba5fff26@xen0n.name>
-Date: Tue, 1 Aug 2023 00:22:30 +0800
+	by ms.lwn.net (Postfix) with ESMTPSA id 5C6F92B0;
+	Mon, 31 Jul 2023 16:31:15 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5C6F92B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1690821075; bh=WuhGN+0w12HzEnIjIyqr3pVITUuBo6hhUZepmI9V0I4=;
+	h=From:To:Subject:In-Reply-To:References:Date:From;
+	b=F4xaU+0GfW9MY8ozX0wGQOiP60L0TdKARqQ38plJBvqkJQhrIpZfZ3Wt40ySFvciR
+	 zTasFRcmCw3DPBwPgF598lm5UpFGFiWGvTtmiGubF26NtL6qKleYe3aKzsHEGy/aHa
+	 4jWQulSZl/89wXLqRbaajJ70FSVcgL2fo6fAcnc1uxaiLMIkoJW5IcFLd03FJ9VEvs
+	 WeBa4hVullBOXc0pgzlCmPyO70m9oJzMb2LM/bV2hn0TGsLN5+fkNonY3bbcSzKF/W
+	 FS2Po45yZjlS8r9G6mcCQa88DNZoWT0aLgalLooVqEC2EekBCEquAu1Ip1K8rUEbpM
+	 pH/ou6e6BgTCg==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Costa Shulyupin <costa.shul@redhat.com>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Alex Shi
+ <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, Thomas Gleixner
+ <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, Vineet Gupta
+ <vgupta@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Costa
+ Shulyupin <costa.shul@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>,
+ Wu XiangCheng <bobwxc@email.cn>, "open list:DOCUMENTATION"
+ <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:LOONGARCH" <loongarch@lists.linux.dev>
+Subject: Re: [PATCH v3] docs: move loongarch under arch
+In-Reply-To: <20230717192456.453124-1-costa.shul@redhat.com>
+References: <87edl6wr9p.fsf@meer.lwn.net>
+ <20230717192456.453124-1-costa.shul@redhat.com>
+Date: Mon, 31 Jul 2023 10:31:14 -0600
+Message-ID: <87tttkcab1.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] LoongArch: Allow usage of LSX/LASX in the kernel
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
- Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-References: <20230722072201.2677516-1-chenhuacai@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230722072201.2677516-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 7/22/23 15:22, Huacai Chen wrote:
-> Allow usage of LSX/LASX in the kernel by extending kernel_fpu_begin()
-> and kernel_fpu_end().
+Costa Shulyupin <costa.shul@redhat.com> writes:
+
+> and fix all in-tree references.
 >
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Architecture-specific documentation is being moved into Documentation/arch/
+> as a way of cleaning up the top-level documentation directory and making
+> the docs hierarchy more closely match the source hierarchy.
+>
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+>
 > ---
->   arch/loongarch/kernel/kfpu.c | 55 +++++++++++++++++++++++++++++++++---
->   1 file changed, 51 insertions(+), 4 deletions(-)
 >
-> diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
-> index 5c46ae8c6cac..ec5b28e570c9 100644
-> --- a/arch/loongarch/kernel/kfpu.c
-> +++ b/arch/loongarch/kernel/kfpu.c
-> @@ -8,19 +8,40 @@
->   #include <asm/fpu.h>
->   #include <asm/smp.h>
->   
-> +static unsigned int euen_mask = CSR_EUEN_FPEN;
-> +
-> +/*
-> + * The critical section between kernel_fpu_begin() and kernel_fpu_end()
-> + * is non-reentrant. It is the caller's responsibility to avoid reentrance.
-> + * See drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c as an example.
-> + */
->   static DEFINE_PER_CPU(bool, in_kernel_fpu);
-> +static DEFINE_PER_CPU(unsigned int, euen_current);
->   
->   void kernel_fpu_begin(void)
->   {
-> +	unsigned int *euen_curr;
-> +
->   	preempt_disable();
->   
->   	WARN_ON(this_cpu_read(in_kernel_fpu));
->   
->   	this_cpu_write(in_kernel_fpu, true);
-> +	euen_curr = this_cpu_ptr(&euen_current);
->   
-> -	if (!is_fpu_owner())
-> -		enable_fpu();
-> +	*euen_curr = csr_xchg32(euen_mask, euen_mask, LOONGARCH_CSR_EUEN);
-> +
-> +#ifdef CONFIG_CPU_HAS_LASX
-> +	if (*euen_curr & CSR_EUEN_LASXEN)
-> +		_save_lasx(&current->thread.fpu);
-> +	else
-> +#endif
-> +#ifdef CONFIG_CPU_HAS_LSX
-> +	if (*euen_curr & CSR_EUEN_LSXEN)
-> +		_save_lsx(&current->thread.fpu);
->   	else
-> +#endif
-> +	if (*euen_curr & CSR_EUEN_FPEN)
->   		_save_fp(&current->thread.fpu);
->   
->   	write_fcsr(LOONGARCH_FCSR0, 0);
-> @@ -29,15 +50,41 @@ EXPORT_SYMBOL_GPL(kernel_fpu_begin);
->   
->   void kernel_fpu_end(void)
->   {
-> +	unsigned int *euen_curr;
-> +
->   	WARN_ON(!this_cpu_read(in_kernel_fpu));
->   
-> -	if (!is_fpu_owner())
-> -		disable_fpu();
-> +	euen_curr = this_cpu_ptr(&euen_current);
-> +
-> +#ifdef CONFIG_CPU_HAS_LASX
-> +	if (*euen_curr & CSR_EUEN_LASXEN)
-> +		_restore_lasx(&current->thread.fpu);
->   	else
-> +#endif
-> +#ifdef CONFIG_CPU_HAS_LSX
-> +	if (*euen_curr & CSR_EUEN_LSXEN)
-> +		_restore_lsx(&current->thread.fpu);
-> +	else
-> +#endif
-> +	if (*euen_curr & CSR_EUEN_FPEN)
->   		_restore_fp(&current->thread.fpu);
->   
-> +	*euen_curr = csr_xchg32(*euen_curr, euen_mask, LOONGARCH_CSR_EUEN);
-> +
->   	this_cpu_write(in_kernel_fpu, false);
->   
->   	preempt_enable();
->   }
->   EXPORT_SYMBOL_GPL(kernel_fpu_end);
-> +
-> +static int __init init_euen_mask(void)
-> +{
-> +	if (cpu_has_lsx)
-> +		euen_mask |= CSR_EUEN_LSXEN;
-> +
-> +	if (cpu_has_lasx)
-> +		euen_mask |= CSR_EUEN_LASXEN;
-> +
-> +	return 0;
-> +}
-> +arch_initcall(init_euen_mask);
+> Changes:
+> v3: fixed typo in drivers/irqchip/Kconfig
+> v2: added fix of MAINTAINERS and drivers/irqchip/Kconfig
+>
+> I'll continue with the rest architectures.
+> Thank you.
+> ---
 
-I've stressed this code a bit with my RAID5/6 LASX patch applied, then 
-running $(nproc) copies of vector workload while letting the kernel 
-repeatedly scrub a RAID6 array created from a bunch of loop devices, and 
-there wasn't signs of context corruption either side. Although I only 
-tested for a few minutes (so a Tested-by isn't appropriate yet), the 
-code LGTM nevertheless, so...
+Applied, thanks.
 
-Reviewed-by: WANG Xuerui <git@xen0n.name>
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+jon
