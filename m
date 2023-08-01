@@ -1,106 +1,128 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEDF7E
-	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 03:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1690859472;
-	bh=o5T+kQNuX4fm5oyHji4BaVyoYdYzeQvuWfMgaOEgsDI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EWqvVrxikyW8hDHE1M0bLV4dBqFku6M5JFxdkgExjh7V77P1QoTCtCX4zWjjg73Pr
-	 6Bp+lbzY4tT9Q4m9YpVlcv/1q7amCHf9BsrXXPUMZR6CRtZcQbjidfOm1Jwl7QVazx
-	 AIsGZtocu/lItXMvJR45uPjQSeJ6NCp+9S7w3jkE=
-Received: from [IPv6:240e:358:11f9:8b00:dc73:854d:832e:3] (unknown [IPv6:240e:358:11f9:8b00:dc73:854d:832e:3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 75EA46599C;
-	Mon, 31 Jul 2023 23:11:02 -0400 (EDT)
-Message-ID: <8573346a40ff1490cdc15d5e11d982a06e98d3bb.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Fixup cmpxchg sematic for memory barrier
-From: Xi Ruoyao <xry111@xry111.site>
-To: guoren@kernel.org, chenhuacai@kernel.or, kernel@xen0n.name,
- arnd@arndb.de,  andi.shyti@linux.intel.com, wangrui@loongson.cn,
- andrzej.hajda@intel.com,  peterz@infradead.org, will@kernel.org,
- boqun.feng@gmail.com, mark.rutland@arm.com
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren
-	 <guoren@linux.alibaba.com>
-Date: Tue, 01 Aug 2023 11:10:55 +0800
-In-Reply-To: <20230801011554.3950435-1-guoren@kernel.org>
-References: <20230801011554.3950435-1-guoren@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8907E
+	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 03:20:12 +0000 (UTC)
+X-UUID: 00eaf5245e3442bda9c7ec9a9182a597-20230801
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.28,REQID:7e67ea3d-041b-43b2-a9c6-58361bb94025,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-INFO: VERSION:1.1.28,REQID:7e67ea3d-041b-43b2-a9c6-58361bb94025,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:176cd25,CLOUDID:fa48bfa0-0933-4333-8d4f-6c3c53ebd55b,B
+	ulkID:230801105842MI9Q464W,BulkQuantity:0,Recheck:0,SF:19|44|38|24|17|102,
+	TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+	,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULS
+X-UUID: 00eaf5245e3442bda9c7ec9a9182a597-20230801
+X-User: lienze@kylinos.cn
+Received: from ubuntu.. [(39.156.73.12)] by mailgw
+	(envelope-from <lienze@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 440130864; Tue, 01 Aug 2023 10:58:41 +0800
+From: Enze Li <lienze@kylinos.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	glider@google.com,
+	elver@google.com,
+	akpm@linux-foundation.org,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org
+Cc: zhangqing@loongson.cn,
+	yangtiezhu@loongson.cn,
+	dvyukov@google.com,
+	Enze Li <lienze@kylinos.cn>
+Subject: [PATCH 2/4 v3] LoongArch: mm: Add page table mapped mode support
+Date: Tue,  1 Aug 2023 10:58:13 +0800
+Message-Id: <20230801025815.2436293-3-lienze@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230801025815.2436293-1-lienze@kylinos.cn>
+References: <20230801025815.2436293-1-lienze@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-T24gTW9uLCAyMDIzLTA3LTMxIGF0IDIxOjE1IC0wNDAwLCBndW9yZW5Aa2VybmVsLm9yZyB3cm90
-ZToKPiBGcm9tOiBHdW8gUmVuIDxndW9yZW5AbGludXguYWxpYmFiYS5jb20+Cj4gCj4gV2hlbiBj
-bXB4Y2hnIGZhaWxlZCwgbm8gbWVtb3J5IGJhcnJpZXIgd2FzIG5lZWRlZCB0byB0YWtlLiBPbmx5
-Cj4gd2hlbiBjbXB4Y2hnIHN1Y2Nlc3MgYW5kIHRoZSBuZXcgdmFsdWUgaXMgd3JpdHRlbiwgdGhl
-biB0aGUgbWVtb3J5Cj4gYmFycmllcnMgbmVlZGVkLgo+IAo+IMKgLSBjbXB4Y2hnX2FzbTrCoMKg
-IFVubmVjZXNzYXJ5IF9fV0VBS19MTFNDX1dCIGZvciB0aGUgZmFpbCBwYXRoIHdvdWxkCj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWR1Y2UgdGhlIHBlcmZvcm1hbmNlIG9m
-IHRoZSBjbXB4Y2hnIGxvb3AgdHJ5aW5nLgoKSSdtIG5vdCBhbiBleHBlcnQgaW4gbWVtb3J5IG1v
-ZGVscywgYnV0IGluIHByYWN0aWNlIHRoaXMgYmFycmllciBpcwpyZWFsbHkgbmVlZGVkIG9yIGNt
-cHhjaGcgd2lsbCBiZSAibm90IGF0b21pYyIuICBTZWUKaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
-bGludXgtbWlwcy8xZDQ5ZGExMS01MWQ1LWUxNDgtY2IwMi05YmQwZWU1N2ZhZTZAZmx5Z29hdC5j
-b20vLgoKPiDCoC0gY21weGNoZ19zbWFsbDogTWlzcyBhbiBuZWNlc3NhcnkgX19XRUFLX0xMU0Nf
-V0Igd2hlbiBzYyBzdWNjZWVkcy4KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IEl0J3MgYSBidWcgYmVjYXVzZSB0aGVyZSBpcyBubyBtZW1vcnkgc3luY2hyb25pemF0aW9uCj4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3aGVuIHNjIHN1Y2NlZWRzLgo+IAo+
-IFNpZ25lZC1vZmYtYnk6IEd1byBSZW4gPGd1b3JlbkBsaW51eC5hbGliYWJhLmNvbT4KPiBTaWdu
-ZWQtb2ZmLWJ5OiBHdW8gUmVuIDxndW9yZW5Aa2VybmVsLm9yZz4KPiAtLS0KPiDCoGFyY2gvbG9v
-bmdhcmNoL2luY2x1ZGUvYXNtL2NtcHhjaGcuaCB8IDYgKystLS0tCj4gwqAxIGZpbGUgY2hhbmdl
-ZCwgMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNo
-L2xvb25nYXJjaC9pbmNsdWRlL2FzbS9jbXB4Y2hnLmggYi9hcmNoL2xvb25nYXJjaC9pbmNsdWRl
-L2FzbS9jbXB4Y2hnLmgKPiBpbmRleCA5NzlmZGU2MWJiYTguLjZhMDViOTI4MTRiNiAxMDA2NDQK
-PiAtLS0gYS9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9jbXB4Y2hnLmgKPiArKysgYi9hcmNo
-L2xvb25nYXJjaC9pbmNsdWRlL2FzbS9jbXB4Y2hnLmgKPiBAQCAtMTAyLDggKzEwMiw4IEBAIF9f
-YXJjaF94Y2hnKHZvbGF0aWxlIHZvaWQgKnB0ciwgdW5zaWduZWQgbG9uZyB4LCBpbnQgc2l6ZSkK
-PiDCoMKgwqDCoMKgwqDCoMKgIsKgwqDCoMKgwqDCoMKgbW92ZcKgwqDCoMKgJHQwLCAlejTCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBcbiLCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoFwKPiDCoMKgwqDCoMKgwqDCoMKgIsKgwqDCoMKgwqDCoMKgIiBzdCAi
-wqDCoCR0MCwgJTHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoFxuIsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgXAo+IMKgwqDCoMKgwqDCoMKgwqAiwqDC
-oMKgwqDCoMKgwqBiZXF6wqDCoMKgwqAkdDAsIDFiwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBcbiLCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFwKPiAt
-wqDCoMKgwqDCoMKgwqAiMjrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBcbiLCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoFwKPiDCoMKgwqDCoMKgwqDCoMKgX19XRUFLX0xMU0NfTULC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgXAo+ICvCoMKgwqDCoMKg
-wqDCoCIyOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFxuIsKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgXAo+IMKgwqDCoMKgwqDCoMKgwqA6ICI9JnIiIChfX3JldCksICI9WkIiKCpt
-KcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBcCj4gwqDCoMKgwqDCoMKgwqDCoDogIlpCIigqbSksICJKciIg
-KG9sZCksICJKciIgKG5ldynCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBcCj4gwqDCoMKgwqDCoMKgwqDCoDogInQwIiwgIm1lbW9yeSIp
-O8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgXAo+IEBAIC0xNDgsMTAgKzE0OCw4
-IEBAIHN0YXRpYyBpbmxpbmUgdW5zaWduZWQgaW50IF9fY21weGNoZ19zbWFsbCh2b2xhdGlsZSB2
-b2lkICpwdHIsIHVuc2lnbmVkIGludCBvbGQsCj4gwqDCoMKgwqDCoMKgwqDCoCLCoMKgwqDCoMKg
-wqDCoG9ywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCUxLCAlMSwgJXo2wqDCoMKgwqDCoFxu
-Igo+IMKgwqDCoMKgwqDCoMKgwqAiwqDCoMKgwqDCoMKgwqBzYy53wqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgJTEsICUywqDCoMKgwqDCoMKgwqDCoMKgwqBcbiIKPiDCoMKgwqDCoMKgwqDCoMKgIsKg
-wqDCoMKgwqDCoMKgYmVxesKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCUxLCAxYsKgwqDCoMKgwqDC
-oMKgwqDCoMKgXG4iCj4gLcKgwqDCoMKgwqDCoMKgIsKgwqDCoMKgwqDCoMKgYsKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoDNmwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFxuIgo+IC3C
-oMKgwqDCoMKgwqDCoCIyOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgXG4iCj4gwqDCoMKgwqDCoMKgwqDCoF9f
-V0VBS19MTFNDX01CCj4gLcKgwqDCoMKgwqDCoMKgIjM6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBcbiIKPiAr
-wqDCoMKgwqDCoMKgwqAiMjrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFxuIgo+IMKgwqDCoMKgwqDCoMKgwqA6
-ICI9JnIiIChvbGQzMiksICI9JnIiICh0ZW1wKSwgIj1aQyIgKCpwdHIzMikKPiDCoMKgwqDCoMKg
-wqDCoMKgOiAiWkMiICgqcHRyMzIpLCAiSnIiIChtYXNrKSwgIkpyIiAob2xkKSwgIkpyIiAobmV3
-KQo+IMKgwqDCoMKgwqDCoMKgwqA6ICJtZW1vcnkiKTsKCi0tIApYaSBSdW95YW8gPHhyeTExMUB4
-cnkxMTEuc2l0ZT4KU2Nob29sIG9mIEFlcm9zcGFjZSBTY2llbmNlIGFuZCBUZWNobm9sb2d5LCBY
-aWRpYW4gVW5pdmVyc2l0eQo=
+According to LoongArch documentation online, there are two types of address
+translation modes: direct mapped address translation mode (direct mapped mode)
+and page table mapped address translation mode (page table mapped mode).
+
+Currently, the upstream kernel only supports direct mapped mode.
+This patch adds a function that determines whether page table mapped
+mode should be used, and also adds the corresponding handler functions
+for both modes.
+
+For more details on the two modes, see [1].
+
+[1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#virtual-address-space-and-address-translation-mode
+
+Signed-off-by: Enze Li <lienze@kylinos.cn>
+---
+ arch/loongarch/include/asm/page.h    | 8 +++++++-
+ arch/loongarch/include/asm/pgtable.h | 3 +++
+ arch/loongarch/mm/pgtable.c          | 7 +++++++
+ 3 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
+index 26e8dccb6619..a256fd6cb7bb 100644
+--- a/arch/loongarch/include/asm/page.h
++++ b/arch/loongarch/include/asm/page.h
+@@ -84,7 +84,13 @@ typedef struct { unsigned long pgprot; } pgprot_t;
+ #define sym_to_pfn(x)		__phys_to_pfn(__pa_symbol(x))
+ 
+ #define virt_to_pfn(kaddr)	PFN_DOWN(PHYSADDR(kaddr))
+-#define virt_to_page(kaddr)	pfn_to_page(virt_to_pfn(kaddr))
++
++#define virt_to_page(kaddr)						\
++({									\
++	((unsigned long)kaddr >= vm_map_base) ?				\
++	tlb_virt_to_page((unsigned long)kaddr) :			\
++	dmw_virt_to_page((unsigned long)kaddr);				\
++})
+ 
+ extern int __virt_addr_valid(volatile void *kaddr);
+ #define virt_addr_valid(kaddr)	__virt_addr_valid((volatile void *)(kaddr))
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index 38afeb7dd58b..716a7fcab15e 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -353,6 +353,9 @@ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *pt
+ #define PMD_T_LOG2	(__builtin_ffs(sizeof(pmd_t)) - 1)
+ #define PTE_T_LOG2	(__builtin_ffs(sizeof(pte_t)) - 1)
+ 
++inline struct page *tlb_virt_to_page(unsigned long kaddr);
++#define dmw_virt_to_page(kaddr)	pfn_to_page(virt_to_pfn(kaddr))
++
+ extern pgd_t swapper_pg_dir[];
+ extern pgd_t invalid_pg_dir[];
+ 
+diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
+index 36a6dc0148ae..fea8fd2cf141 100644
+--- a/arch/loongarch/mm/pgtable.c
++++ b/arch/loongarch/mm/pgtable.c
+@@ -9,6 +9,13 @@
+ #include <asm/pgtable.h>
+ #include <asm/tlbflush.h>
+ 
++
++inline struct page *tlb_virt_to_page(unsigned long kaddr)
++{
++	return pte_page(*virt_to_kpte(kaddr));
++}
++EXPORT_SYMBOL_GPL(tlb_virt_to_page);
++
+ pgd_t *pgd_alloc(struct mm_struct *mm)
+ {
+ 	pgd_t *ret, *init;
+-- 
+2.34.1
 
