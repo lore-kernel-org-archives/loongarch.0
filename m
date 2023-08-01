@@ -1,106 +1,82 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43787200AC
-	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 18:56:15 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.43])
-	by gateway (Coremail) with SMTP id _____8AxV_FLVclk60sOAA--.34200S3;
-	Wed, 02 Aug 2023 02:56:12 +0800 (CST)
-Received: from openarena.loongson.cn (unknown [10.20.42.43])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF81JVclkyWREAA--.44250S2;
-	Wed, 02 Aug 2023 02:56:09 +0800 (CST)
-From: Sui Jingfeng <suijingfeng@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Sui Jingfeng <suijingfeng@loongson.cn>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Li Yi <liyi@loongson.cn>,
-	linux-pci@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] LoongArch: Remove vgaarb related workarounds
-Date: Wed,  2 Aug 2023 02:56:07 +0800
-Message-Id: <20230801185607.703295-1-suijingfeng@loongson.cn>
-X-Mailer: git-send-email 2.34.1
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B724F440C
+	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 23:17:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E7F5C43397
+	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 23:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690931842;
+	bh=xM9+38xkTaN7YlIeDutwYzXFMh5cVl6szD/Pylq4X8c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WrzRq8qLP1GUdOwsqs5cbpqjL+mV23IX8e3uQwhDcMU7RXaeBrsr+J9mqo6FFsY0Z
+	 Exi0sgw4Q0aOinGyJGU5RyBeTzFNcXV+eVTasfFRj5PK49SDxbF+GNGsSGS7leFhAf
+	 7x3zBNZSxX+H3kNUtKs9BkllbkGAGec3BgF+0vBL4s9aYxJ5TMMTFgwFAeF0TOncaN
+	 qX1n0F1Lf8K21aRZBl+RQ8Wqaw9s9b7KRokhbHLv4tHu0nVhXTgV6s3VsRSp5hfL+9
+	 YXK+vN4dxMSPGIeOxcfVpAyHHn0icLLM/RyhEZAd0mV6D6pE5+GCFvKMNcXbNvrqcM
+	 5L1qREEpa7Q/A==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-522382c4840so8918206a12.2
+        for <loongarch@lists.linux.dev>; Tue, 01 Aug 2023 16:17:22 -0700 (PDT)
+X-Gm-Message-State: ABy/qLZxDoONlJuCTG5gExipwXPB6QYAnZ74GsQUVIu70WJOgbhvgJp1
+	6BAXrdE2Bt9Qh6pXceINPlI+8dIavS97VejdVF8=
+X-Google-Smtp-Source: APBJJlHzSbvLp0zlo6ebxGrDPbALgU9POa6/C72klCXoxCkytUo1BaqN3c7kRdocGUEpjAyzR6c6IQsemqRni073Dfw=
+X-Received: by 2002:a05:6402:1650:b0:522:216a:28d4 with SMTP id
+ s16-20020a056402165000b00522216a28d4mr3598861edx.7.1690931840292; Tue, 01 Aug
+ 2023 16:17:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxF81JVclkyWREAA--.44250S2
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CFy5Xr13GrWUtrWUAw4xuFX_yoW8CF13pF
-	nI9Fs7KrWfGr18GwnIyr17WryDZ3ZrA347uFWaka40kr13Zw1Fq393Ar93Xr4fJa9rXFWx
-	ZFs8Cw48KF4DtabCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8RuWPUUUUU==
+References: <20230801011554.3950435-1-guoren@kernel.org> <CAHirt9ht8AsE=FC8+222JDZXH3T58uLt+o=_pq+1zBhv1MKRjg@mail.gmail.com>
+ <CAJF2gTRa5erHomJzLgUFO4SGqd5zSDwn6r3WN7kM8aWpv1vesg@mail.gmail.com>
+ <CAJF2gTQ1hV1vipAo3H4X4WiPO84kVVFZcdGq7u4f0bVTry_akQ@mail.gmail.com>
+ <CAHirt9gVqE=9vviJEY=kY=booVRmFPHrnFsKCXPXnXiWTB8bZQ@mail.gmail.com>
+ <CAJF2gTR2ON33wc87iV564rkDbNiE56h_t0kzKKXdJtGqgJ1sOQ@mail.gmail.com> <CAHirt9i_osW_Dy5jNAnNOKrm-+38qN7SF+8ofNHePMAYhRKHsA@mail.gmail.com>
+In-Reply-To: <CAHirt9i_osW_Dy5jNAnNOKrm-+38qN7SF+8ofNHePMAYhRKHsA@mail.gmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Tue, 1 Aug 2023 19:17:08 -0400
+X-Gmail-Original-Message-ID: <CAJF2gTSLD3jwzV59dGj_RENCvE0zMOAkLHqmT55bxL-4vA1wkA@mail.gmail.com>
+Message-ID: <CAJF2gTSLD3jwzV59dGj_RENCvE0zMOAkLHqmT55bxL-4vA1wkA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fixup cmpxchg sematic for memory barrier
+To: WANG Rui <wangrui@loongson.cn>
+Cc: chenhuacai@kernel.or, kernel@xen0n.name, arnd@arndb.de, 
+	andi.shyti@linux.intel.com, andrzej.hajda@intel.com, peterz@infradead.org, 
+	will@kernel.org, boqun.feng@gmail.com, mark.rutland@arm.com, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Guo Ren <guoren@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When we have a better approach[1] to handle multiple video cards problems
-on Loongarch, we want to drop the vgaarb related workaround.
+On Tue, Aug 1, 2023 at 12:37=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wrot=
+e:
+>
+> On Tue, Aug 1, 2023 at 6:50=E2=80=AFPM Guo Ren <guoren@kernel.org> wrote:
+> >
+> > On Tue, Aug 1, 2023 at 5:32=E2=80=AFPM WANG Rui <wangrui@loongson.cn> w=
+rote:
+> > > No. LL and LL won't reorder because LL implies a memory barrier(thoug=
+h
+> > > not acquire semantics).
+> > That means we could remove __WEAK_LLSC_MB totally, right?
+>
+> More precisely, __WEAK_LLSC_MB is intended to prevent reordering
+> between LL and normal LD used to fetch the expected value for cmpxchg.
+Oh, that's unnecessary when cmpxchg fails.
 
-[1] https://patchwork.freedesktop.org/patch/550708/?series=121740&rev=1
+Maybe you treat cmpxchg as a CoRR antidote in coincidence. Please
+solve the CoRR problem by READ_ONCE.
 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Li Yi <liyi@loongson.cn>
-Cc: linux-pci@vger.kernel.org
-Cc: loongson-kernel@lists.loongnix.cn
-Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
----
- arch/loongarch/pci/pci.c | 19 -------------------
- 1 file changed, 19 deletions(-)
+See alpha architecture.
 
-diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-index 2726639150bc..4319b5d75872 100644
---- a/arch/loongarch/pci/pci.c
-+++ b/arch/loongarch/pci/pci.c
-@@ -8,13 +8,10 @@
- #include <linux/acpi.h>
- #include <linux/types.h>
- #include <linux/pci.h>
--#include <linux/vgaarb.h>
- #include <asm/cacheflush.h>
- #include <asm/loongson.h>
- 
- #define PCI_DEVICE_ID_LOONGSON_HOST     0x7a00
--#define PCI_DEVICE_ID_LOONGSON_DC1      0x7a06
--#define PCI_DEVICE_ID_LOONGSON_DC2      0x7a36
- 
- int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
- 						int reg, int len, u32 *val)
-@@ -82,19 +79,3 @@ int pcibios_alloc_irq(struct pci_dev *dev)
- 		return 0;
- 	return acpi_pci_irq_enable(dev);
- }
--
--static void pci_fixup_vgadev(struct pci_dev *pdev)
--{
--	struct pci_dev *devp = NULL;
--
--	while ((devp = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, devp))) {
--		if (devp->vendor != PCI_VENDOR_ID_LOONGSON) {
--			vga_set_default_device(devp);
--			dev_info(&pdev->dev,
--				"Overriding boot device as %X:%X\n",
--				devp->vendor, devp->device);
--		}
--	}
--}
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC1, pci_fixup_vgadev);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC2, pci_fixup_vgadev);
--- 
-2.34.1
+>
+> Regards,
+> --
+> WANG Rui
+>
 
+
+--=20
+Best Regards
+ Guo Ren
