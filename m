@@ -1,98 +1,100 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 191627E
-	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 03:32:07 +0000 (UTC)
-Received: from loongson.cn (unknown [209.85.128.49])
-	by gateway (Coremail) with SMTP id _____8BxXeu1fMhkr9QNAA--.27403S3;
-	Tue, 01 Aug 2023 11:32:06 +0800 (CST)
-Received: from mail-wm1-f49.google.com (unknown [209.85.128.49])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxxsyyfMhk54BDAA--.21898S3;
-	Tue, 01 Aug 2023 11:32:03 +0800 (CST)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-3fe1a17f983so19687535e9.3
-        for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 20:32:03 -0700 (PDT)
-X-Gm-Message-State: ABy/qLYr/FlQ8zl2TOA5ODrfyenJTnxcJhMfvTqAOipr8bSZWMuhvTF9
-	ikoqX4s3Dm/JbgBSghGfEQiWRS3CZugso6Yat7YkQQ==
-X-Google-Smtp-Source: APBJJlGR2xCzEbR0KfLvULAvj4Q/rRacHyeQ3FRpG/PeA9oezM1aq7UPOCn9hCun1wnjhnQ09KzsW9iG/Ng+J4KnFBA=
-X-Received: by 2002:a1c:ed0f:0:b0:3fe:1c05:3c8f with SMTP id
- l15-20020a1ced0f000000b003fe1c053c8fmr1260964wmh.35.1690856982158; Mon, 31
- Jul 2023 19:29:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A94916AB1;
+	Tue,  1 Aug 2023 06:30:57 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxpPCdpshk6OUNAA--.32922S3;
+	Tue, 01 Aug 2023 14:30:53 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPCOcpshk8pVDAA--.26385S2;
+	Tue, 01 Aug 2023 14:30:52 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>
+Cc: loongarch@lists.linux.dev,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH] LoongArch: Error out if clang version is less than 17.0.0
+Date: Tue,  1 Aug 2023 14:30:46 +0800
+Message-Id: <1690871446-23713-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxPCOcpshk8pVDAA--.26385S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7AFykXFW8JryfCr47CFWrtFc_yoW8Cr4fpr
+	1rZw1DKr4kXryFvrZ7J34DWryY9F97JryIgFyUJryUWry2qws5WrW8KrWagFZrZws7Zay0
+	gryxG3WS9FyUA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20230801011554.3950435-1-guoren@kernel.org>
-In-Reply-To: <20230801011554.3950435-1-guoren@kernel.org>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Tue, 1 Aug 2023 10:29:31 +0800
-X-Gmail-Original-Message-ID: <CAHirt9ht8AsE=FC8+222JDZXH3T58uLt+o=_pq+1zBhv1MKRjg@mail.gmail.com>
-Message-ID: <CAHirt9ht8AsE=FC8+222JDZXH3T58uLt+o=_pq+1zBhv1MKRjg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fixup cmpxchg sematic for memory barrier
-To: guoren@kernel.org
-Cc: chenhuacai@kernel.or, kernel@xen0n.name, arnd@arndb.de, 
-	andi.shyti@linux.intel.com, andrzej.hajda@intel.com, peterz@infradead.org, 
-	will@kernel.org, boqun.feng@gmail.com, mark.rutland@arm.com, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8BxxsyyfMhk54BDAA--.21898S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XFWxJry7Kw1kur13tr4fJFc_yoWkArg_Wa
-	17Cw4Uuw4xXa13tanxKryfJr1qqa1xAFn3uaySqr1fAFn8Jw43Z397X3W3Zr17K3y8Xrs8
-	u3ySqr90kr1j9osvyTuYvTs0mTUanT9S1TB71UUUU1UqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_GFv_Wrylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4L0eDUUUU
 
-Hello,
+On my test machine, the clang version is 16.0.4, when build kernel
+with clang:
 
-On Tue, Aug 1, 2023 at 9:16=E2=80=AFAM <guoren@kernel.org> wrote:
-> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/includ=
-e/asm/cmpxchg.h
-> index 979fde61bba8..6a05b92814b6 100644
-> --- a/arch/loongarch/include/asm/cmpxchg.h
-> +++ b/arch/loongarch/include/asm/cmpxchg.h
-> @@ -102,8 +102,8 @@ __arch_xchg(volatile void *ptr, unsigned long x, int =
-size)
->         "       move    $t0, %z4                        \n"             \
->         "       " st "  $t0, %1                         \n"             \
->         "       beqz    $t0, 1b                         \n"             \
-> -       "2:                                             \n"             \
->         __WEAK_LLSC_MB                                                  \
-> +       "2:                                             \n"             \
+  make CC=clang loongson3_defconfig
+  make CC=clang
 
-Thanks for the patch.
+there exist many errors such as:
 
-This would look pretty good if it weren't for the special memory
-barrier semantics of the LoongArch's LL and SC instructions.
+  clang-16: error: argument unused during compilation: '-mabi=lp64s'
+  error: unknown register name 'a0' in asm
+  error: unknown register name 't0' in asm
 
-The LL/SC memory barrier behavior of LoongArch:
+the above issues have been fixed in the upstream llvm project recently,
+it works well when update clang version to 17.0.0:
 
-* LL: <memory-barrier> + <load-exclusive>
-* SC: <store-conditional> + <memory-barrier>
+  make CC=clang loongson3_defconfig
+  make CC=clang menuconfig (set CONFIG_MODULES=n and CONFIG_RELOCATABLE=n)
+  make CC=clang
 
-and the LoongArch's weak memory model allows load/load reorder for the
-same address.
+thus 17.0.0 is the minimal clang version to build kernel on LoongArch,
+it is better to error out if clang version is less than 17.0.0, then
+we can do the right thing to update clang version and avoid wasting
+time to analysis kernel errors.
 
-So, the __WEAK_LLSC_MB[1] is used to prevent load/load reorder and no
-explicit barrier instruction is required after SC.
+By the way, the clang 17.0.0 still have some issues to build kernel on
+LoongArch, you need to unset CONFIG_MODULES and CONFIG_RELOCATABLE to
+avoid build errors. Additionally, if you want a workable kernel, some
+modules should be set as y instead of m if CONFIG_MODULES=n.
 
-[1] https://lore.kernel.org/loongarch/20230516124536.535343-1-chenhuacai@lo=
-ongson.cn/
+Link: https://github.com/ClangBuiltLinux/linux/issues/1787
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Regards,
---
-WANG Rui
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index b1e5db5..f07f62a 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -10,6 +10,12 @@ KBUILD_DEFCONFIG := loongson3_defconfig
+ image-name-y			:= vmlinux
+ image-name-$(CONFIG_EFI_ZBOOT)	:= vmlinuz
+ 
++ifdef CONFIG_CC_IS_CLANG
++  ifneq ($(call clang-min-version, 170000),y)
++    $(error Sorry, you need a newer clang version >= 17.0.0)
++  endif
++endif
++
+ ifndef CONFIG_EFI_STUB
+ KBUILD_IMAGE	:= $(boot)/vmlinux.elf
+ else
+-- 
+2.1.0
 
