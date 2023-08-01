@@ -1,74 +1,56 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E424DC7B
-	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 16:37:11 +0000 (UTC)
-Received: from loongson.cn (unknown [209.85.128.52])
-	by gateway (Coremail) with SMTP id _____8AxV_G0NMlkUzcOAA--.34042S3;
-	Wed, 02 Aug 2023 00:37:09 +0800 (CST)
-Received: from mail-wm1-f52.google.com (unknown [209.85.128.52])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c6yNMlksjREAA--.46489S3;
-	Wed, 02 Aug 2023 00:37:08 +0800 (CST)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3fbf1b82d9cso54457905e9.2
-        for <loongarch@lists.linux.dev>; Tue, 01 Aug 2023 09:37:07 -0700 (PDT)
-X-Gm-Message-State: ABy/qLY/oI097IjgfNiM1cB6WU69CN0JQGerFVzJP2IRwN/Wl52IRaw2
-	fywBmQs1jpvOCpHpsaXLBFmMP0QUNCVobrwbugTFlg==
-X-Google-Smtp-Source: APBJJlEsXFVOA032jyj+Dhjdy9psDoGBoLGpotcERoVd/vis5xhG8Jrqhh+KxnT4tElWJUoX0rM/yvzkLUKc5S3mBMA=
-X-Received: by 2002:a05:600c:141:b0:3fb:fca1:1965 with SMTP id
- w1-20020a05600c014100b003fbfca11965mr2677036wmm.18.1690907825594; Tue, 01 Aug
- 2023 09:37:05 -0700 (PDT)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D195C4DC9B;
+	Tue,  1 Aug 2023 16:53:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E74BC433C8;
+	Tue,  1 Aug 2023 16:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690908802;
+	bh=BkWqBhDYPEqAwt1g3ViRliirqnUaKD5LRWPIiBLWGmg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AQimNDN+S32Wcs+ioSSsu/LymACiSkIideOqRPDur3eTHop/2vD0Mgytks+WcY8Dt
+	 UdUqV1AWPD6OFJspWg6kPgvEJ6MWKvsZrwB5zPAqpYTpSgzJoBBqBO7/yjsWGhHPAS
+	 o7z0M+SPzipXGdMZd97uCbEK68sz208wegcbI4aRGevRoxCnMhLESGc3pte3xv0mGI
+	 NK0BXAhC0x9R9drqlakeTNtKaW+uqFh7u/uJHN7DwRINECXGyoH8ItUKVA9BBq5wQT
+	 cEvs5doKEWYtefs8ObDtZqu2TLvcnVuACHXa7PTpKe8JsdfkG2hM/b6I3SuESW3Qz5
+	 bijvXc4Tdwfbw==
+Date: Tue, 1 Aug 2023 09:53:21 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: kernel test robot <lkp@intel.com>, <oe-kbuild-all@lists.linux.dev>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ loongarch@lists.linux.dev
+Subject: Re: [alobakin:iavf-pp-frag 11/28] net/core/page_pool.c:582:9:
+ sparse: sparse: incorrect type in argument 1 (different address spaces)
+Message-ID: <20230801095321.3ce734c1@kernel.org>
+In-Reply-To: <217dc739-05f5-a708-d358-ba331325d0cd@intel.com>
+References: <202307292029.cFz0s8Hh-lkp@intel.com>
+	<217dc739-05f5-a708-d358-ba331325d0cd@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230801011554.3950435-1-guoren@kernel.org> <CAHirt9ht8AsE=FC8+222JDZXH3T58uLt+o=_pq+1zBhv1MKRjg@mail.gmail.com>
- <CAJF2gTRa5erHomJzLgUFO4SGqd5zSDwn6r3WN7kM8aWpv1vesg@mail.gmail.com>
- <CAJF2gTQ1hV1vipAo3H4X4WiPO84kVVFZcdGq7u4f0bVTry_akQ@mail.gmail.com>
- <CAHirt9gVqE=9vviJEY=kY=booVRmFPHrnFsKCXPXnXiWTB8bZQ@mail.gmail.com> <CAJF2gTR2ON33wc87iV564rkDbNiE56h_t0kzKKXdJtGqgJ1sOQ@mail.gmail.com>
-In-Reply-To: <CAJF2gTR2ON33wc87iV564rkDbNiE56h_t0kzKKXdJtGqgJ1sOQ@mail.gmail.com>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Wed, 2 Aug 2023 00:36:54 +0800
-X-Gmail-Original-Message-ID: <CAHirt9i_osW_Dy5jNAnNOKrm-+38qN7SF+8ofNHePMAYhRKHsA@mail.gmail.com>
-Message-ID: <CAHirt9i_osW_Dy5jNAnNOKrm-+38qN7SF+8ofNHePMAYhRKHsA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fixup cmpxchg sematic for memory barrier
-To: Guo Ren <guoren@kernel.org>
-Cc: chenhuacai@kernel.or, kernel@xen0n.name, arnd@arndb.de, 
-	andi.shyti@linux.intel.com, andrzej.hajda@intel.com, peterz@infradead.org, 
-	will@kernel.org, boqun.feng@gmail.com, mark.rutland@arm.com, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8Ax3c6yNMlksjREAA--.46489S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUBvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwI
-	xGrwCF54CYxVAaw2AFwI0_JF0_Jw1l4c8EcI0Ec7CjxVAaw2AFwI0_JF0_Jw1l4I8I3I0E
-	4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGw
-	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
-	MIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-	87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UE-erUUUUU=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 1, 2023 at 6:50=E2=80=AFPM Guo Ren <guoren@kernel.org> wrote:
->
-> On Tue, Aug 1, 2023 at 5:32=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wro=
-te:
-> > No. LL and LL won't reorder because LL implies a memory barrier(though
-> > not acquire semantics).
-> That means we could remove __WEAK_LLSC_MB totally, right?
+On Tue, 1 Aug 2023 15:46:22 +0200 Alexander Lobakin wrote:
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202307292029.cFz0s8Hh-lkp@intel.com/  
+> 
+> Jakub, could you take a look, is this warning reasonable?
 
-More precisely, __WEAK_LLSC_MB is intended to prevent reordering
-between LL and normal LD used to fetch the expected value for cmpxchg.
+Doesn't look legit to me. I can't repro it on x86 and:
 
-Regards,
---=20
-WANG Rui
+$ head .config
+#
+# Automatically generated file; DO NOT EDIT.
+# Linux/loongarch 6.5.0-rc3 Kernel Configuration
+#
+CONFIG_CC_VERSION_TEXT="loongarch64-linux-gcc (GCC) 12.3.0"
 
+Adding loongarch to CC, it must be arch specific ?
