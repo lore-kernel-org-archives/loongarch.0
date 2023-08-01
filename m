@@ -1,76 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605131EA9A
-	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 08:12:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34E84C433C8
-	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 08:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690877548;
-	bh=S4ClZ9wZytkvBMl0VCI/3sRI2qL/K3gdkOl/wEs//Fw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MeAvPvPQnx59icnMaHIUNR06QOyOQb49RChUxDxFPR9p/vHVAfjLArG3KaSJ/S3ux
-	 vu+4TeigcGcKRs4MUEj4lByU4HJbT0FSCXdy/Jxx4CA/rvU9HgJynakXBXYVndZe8V
-	 B89RahJ+7Yr+wvCraukvBUV5fHtxmrp5RmDljHrlegiUhSOi8MB9bD0zZBhTgtukzc
-	 lPJn10x87HB2Nno7wLajgzW3SJcVaR9FspMHagLndrIOm5NlPU+v/l5DCWhsUdrpOn
-	 dSIFVBWdwqOzFYhyFGNS8kcLDMA2s6VaGoDCoH02EgPpEz6h3YJo7vgyo9cRKnf1ON
-	 vB1740SAZldoQ==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-51e429e1eabso7402681a12.2
-        for <loongarch@lists.linux.dev>; Tue, 01 Aug 2023 01:12:28 -0700 (PDT)
-X-Gm-Message-State: ABy/qLZDh021TSOnRQvE8+gGDjq4O1bOuSd/+A9UT3GOdKrE/LQbKfB1
-	hzwpbh7O+qVQhAXmcib1HKATw44P8xCmVz9fKFA=
-X-Google-Smtp-Source: APBJJlFPyt0iU2cDmNKxrPc1kzDkaWeQg8wI4ZBK8X4hl+wU5aX4LmR3ugB1KoQ8cYkzquTsPv4TlGk1aUZxvuEvmDs=
-X-Received: by 2002:aa7:cd0a:0:b0:522:bbc1:a343 with SMTP id
- b10-20020aa7cd0a000000b00522bbc1a343mr1760339edw.6.1690877546479; Tue, 01 Aug
- 2023 01:12:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E541EA9A
+	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 08:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1690877618; bh=mraxCdf54QCswqY/hVvj/lsk8PCBowrkVyh11XY1zrg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZHhoH84x9LucBwVbW7ARUz47wTF+ZIwCImsaHs0hSezFLkuVGY3DX2jDEVIxb3t33
+	 nwWxE7iEqCUDh5FAeyxALOEyx8lssi++gVG8OshaZYXw00DGpUjzbbIlUnT1coQ4hR
+	 gRAd7W56iqhkbhEFYxbGWnhLxNELtrJ4uLCZ8Rz0=
+Received: from ld50.lan (unknown [101.88.28.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 66677600D4;
+	Tue,  1 Aug 2023 16:13:38 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Song Liu <song@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	linux-raid@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH 0/3] raid5, raid6: Accelerate RAID math with LoongArch SIMD
+Date: Tue,  1 Aug 2023 16:13:32 +0800
+Message-Id: <20230801081335.523097-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230614083326.9822-1-luojianhong@cdjrlc.com> <a69170cb55cfc73e378b40ccf1d9c16f@208suo.com>
-In-Reply-To: <a69170cb55cfc73e378b40ccf1d9c16f@208suo.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 1 Aug 2023 16:12:14 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7QmrJGn6=Me64bE9t-tq+Gr0jyNc4jH6fshNmhCY8AOQ@mail.gmail.com>
-Message-ID: <CAAhV-H7QmrJGn6=Me64bE9t-tq+Gr0jyNc4jH6fshNmhCY8AOQ@mail.gmail.com>
-Subject: Re: [PATCH] soc: loongson: Remove unneeded semicolon from loongson2_soc_die_attr()
-To: baomingtong001@208suo.com
-Cc: zhuyinbo@loongson.cn, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Mingtong,
+From: WANG Xuerui <git@xen0n.name>
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-And please resend this patch, cc Arnd and soc@kernel.org, because that
-is the most appropriate list for this patch.
+Hi,
 
-Huacai
+Seeing the LoongArch port recently (finally!) gained the ability to use
+the vector units, I've subsequently ported the RAID5/6 math to LSX and
+LASX (which are LoongArch's 128-bit and 256-bit SIMD extensions), with
+nice speedups observed. They are reasonably straight-forward conversions
+of existing code, and I hope the comments I put in there are helpful
+enough for anyone not familiar with LoongArch assembly to get a rough
+picture of how things work here. Performance numbers are included in
+each commit's commit message.
 
-On Wed, Jun 14, 2023 at 4:42=E2=80=AFPM <baomingtong001@208suo.com> wrote:
->
-> ./drivers/soc/loongson/loongson2_guts.c:73:2-3: Unneeded semicolon
->
-> Signed-off-by: Mingtong Bao <baomingtong001@208suo.com>
-> ---
->   drivers/soc/loongson/loongson2_guts.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/soc/loongson/loongson2_guts.c
-> b/drivers/soc/loongson/loongson2_guts.c
-> index bace4bc8e03b..afa559396013 100644
-> --- a/drivers/soc/loongson/loongson2_guts.c
-> +++ b/drivers/soc/loongson/loongson2_guts.c
-> @@ -70,7 +70,7 @@ static const struct loongson2_soc_die_attr
-> *loongson2_soc_die_match(
->           if (matches->svr =3D=3D (svr & matches->mask))
->               return matches;
->           matches++;
-> -    };
-> +    }
->
->       return NULL;
->   }
->
+This series needs [1] ("LoongArch: Allow usage of LSX/LASX in the
+kernel") as a prerequisite, or the vector context would likely get
+corrupted by the vector-unaware kernel_fpu_{begin,end} calls. I tested
+the changes on top of next-20230731 with the raid6test build fixes [2]
+applied, but the series should apply cleanly to v6.5-rc4 (or maybe any
+other tag) too.
+
+[1]: https://lore.kernel.org/loongarch/20230722072201.2677516-1-chenhuacai@loongson.cn/
+[2]: https://lore.kernel.org/linux-raid/20230731104911.411964-1-kernel@xen0n.name/
+
+WANG Xuerui (3):
+  LoongArch: Add SIMD-optimized XOR routines
+  raid6: Add LoongArch SIMD syndrome calculation
+  raid6: Add LoongArch SIMD recovery implementation
+
+ arch/loongarch/include/asm/xor.h      |  68 ++++
+ arch/loongarch/include/asm/xor_simd.h |  42 +++
+ arch/loongarch/lib/Makefile           |   3 +
+ arch/loongarch/lib/xor_simd.c         |  92 +++++
+ arch/loongarch/lib/xor_simd.h         |  46 +++
+ arch/loongarch/lib/xor_simd_glue.c    |  71 ++++
+ arch/loongarch/lib/xor_template.c     | 109 ++++++
+ include/linux/raid/pq.h               |   4 +
+ lib/raid6/Makefile                    |   1 +
+ lib/raid6/algos.c                     |  16 +
+ lib/raid6/loongarch.h                 |  38 ++
+ lib/raid6/loongarch_simd.c            | 417 +++++++++++++++++++++
+ lib/raid6/recov_loongarch_simd.c      | 501 ++++++++++++++++++++++++++
+ lib/raid6/test/Makefile               |  12 +
+ 14 files changed, 1420 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/xor.h
+ create mode 100644 arch/loongarch/include/asm/xor_simd.h
+ create mode 100644 arch/loongarch/lib/xor_simd.c
+ create mode 100644 arch/loongarch/lib/xor_simd.h
+ create mode 100644 arch/loongarch/lib/xor_simd_glue.c
+ create mode 100644 arch/loongarch/lib/xor_template.c
+ create mode 100644 lib/raid6/loongarch.h
+ create mode 100644 lib/raid6/loongarch_simd.c
+ create mode 100644 lib/raid6/recov_loongarch_simd.c
+
+
+base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+prerequisite-patch-id: 85d08a9828893250ae78dbca9d6e6f8dac755f61
+prerequisite-patch-id: fe0bba41e0bbc676454365ed16fb13fc0aac6ee0
+prerequisite-patch-id: 84ef8212b74e696ce019255bbfd9679d7516f7f7
+prerequisite-patch-id: b1f8fc4e4acdaff7f821a9fcbd063475178e037b
+prerequisite-patch-id: 82aacbf27f249fdefe40dd6bcc712e5795256926
+prerequisite-patch-id: ae4e026e18f92ffcc93f6b135a3bd48fbdded39a
+-- 
+2.40.0
+
