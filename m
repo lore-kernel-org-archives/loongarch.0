@@ -1,177 +1,238 @@
-Received: from mgamail.intel.com (unknown [134.134.136.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904342CA5;
-	Tue,  1 Aug 2023 17:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690909863; x=1722445863;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=SzlHGGA/fKfmRQEpuN9sfh+VaTRDK0EafuBCLif5ssw=;
-  b=YE8mwBDPwgMEyJGQq0pW/bhpO7aXT+EO/xYv17yqvr779WxwVaz/SeK1
-   tr0vEr7OHqQPHTmjHSt6N1HnQpr1B8mSSiijOsq6OKLkTENP8LfAdEf8d
-   eC6INhE+4BG84+Y2YGAGjSgSg1VN0Y4VwI8GZHpuOCyEJ8ti5K2O0mHqV
-   aIVCdIa+/o//NqPSbyP0IpS0xELca1rk7HmnOLGTRnp7YqPPNFKkONzWr
-   fmI3+rPoJ/T09ya7zifm7ziF/Omg6OoCZhHbWGE/8ih2dRVrumCBm8Aw/
-   P+gK3BM93XRPEqBn9xi0nLpzUz0Gxkyt2uYepgBjIw61XJeLUvCKR4YbR
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="359403156"
-X-IronPort-AV: E=Sophos;i="6.01,247,1684825200"; 
-   d="scan'208";a="359403156"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 10:05:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="975378637"
-X-IronPort-AV: E=Sophos;i="6.01,247,1684825200"; 
-   d="scan'208";a="975378637"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga006.fm.intel.com with ESMTP; 01 Aug 2023 10:05:45 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 1 Aug 2023 10:05:45 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Tue, 1 Aug 2023 10:05:45 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.102)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Tue, 1 Aug 2023 10:05:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fvJd7ROBIhkR2OPPqEO6WmUvl+xTrBiFZFAjlXpbt0iFMAfCKbHM1RHWmJivy5Rzu0BXCDbTM+wMMY1Y/iXnh8+pqQaCX3aPIbJeu0P0tYF841LIo9gwt+9HpGf/jigXE17qF0xWi+SRNSHLx828gGpkERuvNBUZxEYUW6+39yMz7BncDNhM/TLgYmqeLwB+YpAY8bPsdh9uf+lY1fsC3+BDo57xO6h87OwSRofhKkDdmYmlRJzDJs298OMz63mUQkJAdUsXzkrskpXasIrQsbAI3Ay1etLVEzq566PEvzETgnIZ7n0U9UKq3eW8O/Zuw8uqHaq60una/LBDzVwliw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=202Id9PscutiZ0TJHd7msuLArz2ymcowLpgF9wUtQoo=;
- b=ZnI5oeL4Bqhmfe5z6ioXRLVNaF505Orn8gR92W3QVcpntguvaPkGT8r8rXuDdTZXh/WNh6A1zU/oTA/tIJfnP2EeqWZ7+s+mkRSgtskIzs96sogNJMHGbrR3RecxxTMi2vDtib9pvuZhAkGluhW3Sz5B4mtXKKNwJeTvyGqYGWVco0hMs+e1N4Tmu2mMxBmzkiSlYid10jloZUuOB4lkvIrMOAC3b2kW+ZVhvH4HyPSsv/4iqC2LVsXvOG0uXj1Aa15jweBUeSt6fQQlG1Wy+qSV+lewRtc2QJU7mZK5/O4PeG60q6VYFt7h4CQcBjsCqVho4xsQ7jWI+h0QVJeSUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM6PR11MB3625.namprd11.prod.outlook.com (2603:10b6:5:13a::21)
- by CH3PR11MB8383.namprd11.prod.outlook.com (2603:10b6:610:171::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.44; Tue, 1 Aug
- 2023 17:05:43 +0000
-Received: from DM6PR11MB3625.namprd11.prod.outlook.com
- ([fe80::44ff:6a5:9aa4:124a]) by DM6PR11MB3625.namprd11.prod.outlook.com
- ([fe80::44ff:6a5:9aa4:124a%7]) with mapi id 15.20.6631.043; Tue, 1 Aug 2023
- 17:05:43 +0000
-Message-ID: <5dd6005a-31cd-242b-f48b-2b5c4e0567da@intel.com>
-Date: Tue, 1 Aug 2023 19:03:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [alobakin:iavf-pp-frag 11/28] net/core/page_pool.c:582:9: sparse:
- sparse: incorrect type in argument 1 (different address spaces)
-Content-Language: en-US
-To: Jakub Kicinski <kuba@kernel.org>
-CC: kernel test robot <lkp@intel.com>, <oe-kbuild-all@lists.linux.dev>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	<loongarch@lists.linux.dev>
-References: <202307292029.cFz0s8Hh-lkp@intel.com>
- <217dc739-05f5-a708-d358-ba331325d0cd@intel.com>
- <20230801095321.3ce734c1@kernel.org>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-In-Reply-To: <20230801095321.3ce734c1@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BE1P281CA0131.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:7a::8) To DM6PR11MB3625.namprd11.prod.outlook.com
- (2603:10b6:5:13a::21)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CC6200AC
+	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 18:28:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C48F7C433C7;
+	Tue,  1 Aug 2023 18:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690914505;
+	bh=qq2hMF7w/Pu7ZdsWOzCQ/stYxKwx7YuIUPzmiH4iKFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PKz/e16630V597EjDfkzZ4FqELQFi+WWbwlEAzJIVenElrtf0oF2UV0oeBb3DF45q
+	 NubYDLPbeRUMjzPuHt2k9dXiv5/euhOYZw7A0OjvqwyV02K4h43pJn6iCc0+VD/426
+	 FwyYUsjxPsuTkQaWDCprvprm5c0LPsRLo18a8Nli36hcawDX4oUQ0edl3kmaQP6cye
+	 ugyHflDH9cN7RdDF15nek+YsXS9vHaU77xPtSF3B+KAoebhEspOXkF0cZMjGLjl9TN
+	 H4V4QWKyo38S0sABROSo0U3j9izcKZGoqRUMJ/6hG8gvfGenYRZpaDTIm0bR9uIq63
+	 vIVI4UMOXjkUw==
+Date: Tue, 1 Aug 2023 23:58:21 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, dmaengine@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, Yingkun Meng <mengyingkun@loongson.cn>
+Subject: Re: [PATCH v3 2/2] dmaengine: ls2x-apb: new driver for the Loongson
+ LS2X APB DMA controller
+Message-ID: <ZMlOxZ1ML+tlRkna@matsya>
+References: <cover.1689075791.git.zhoubinbin@loongson.cn>
+ <b282ef7c5d1841886a80b2b6502c735f2f0254c9.1689075791.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3625:EE_|CH3PR11MB8383:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0be09ddc-d616-40c2-52a4-08db92b18a60
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7ms7+dBiopcuzObcw2lMyUyTUKvGQcUD0m0ZzQLeEhKO1x1riisO18m7367nDWe/A0TNjFO1GxrokWMW8zLqHyH61cVUIZOG/nWI+rPqZRQgKSouHfhG++bQDR4+HcQpsAUwe6VhXxh8Gcqq0D7YBh1ssPvgUly3ug4xRJv5xy5AZjtvzQ5Zuw0X9XiFVyX2GIGqoez9cMb1bRnG4BTPKCzwh0+lXDlA47rEvGHqFTuqwgb4+76YZ+V2kOrq4fba5GZ7kfGwRCEID/OpA9FkwrA3BLHAxwIE7QzIoSGdZcBcnEGQyPK1+FGRqS7arM8Qd3SXs/kRdEQp2bOI5ee0Ae/PgxBSLnOsWMELc86Y8lKz7WG/6eLnFzs+nJ2Z05btx+YcxjKm8YFNki46m8L6gw9gY/azvPY2orvVGu8zZTLQQ70i2E0AUIOthw2TgVMvkXWS3pj4f7AYsO+aJC2F/lS/JtGCFdgcU2qs+V/L9prZwOTwKTIEV0FGQF8UPnpp004loCYDjRjL6VCWd05p/7AXNLWXRA75fYLJxRG2PBXbnUetOQmzdNnpam7v1HmDrT+ETsathvHUZ3l9ipaeh/5nTl8rUis7Ms8K+22O0y++uGemFVm8b2ITZHAeWdwv6+IJTedJLily+oCK7WzjLg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3625.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(39860400002)(346002)(136003)(376002)(366004)(451199021)(38100700002)(6506007)(5660300002)(6916009)(4326008)(66946007)(66476007)(66556008)(82960400001)(54906003)(6512007)(966005)(478600001)(2906002)(2616005)(8936002)(8676002)(6486002)(41300700001)(31686004)(36756003)(31696002)(186003)(316002)(86362001)(6666004)(26005)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cXNwRVBxKzRtaE5xRkg3OTBZdGtOTWFWcFlQaDBva0ErSjJmNHgrM1FWT3FF?=
- =?utf-8?B?cVFrcU9RZ1QvZmtYV3laaG1DbkVreDJ3K25pcER3MGVkWjk0VzRaOEY2ZVdI?=
- =?utf-8?B?V1ZYa2tYbTM4REFKb3JSOEUveUlCZmUzaEhWN3kxdUhRanVhSEZydzNIVkFU?=
- =?utf-8?B?dENTY0gzdDYveUxzdFpUanZNdDh5L3hmeDhmbHIxc0wrcE50MWFBRjZGNVNu?=
- =?utf-8?B?Q1NqWGR0THMxRDFUaXJ6UlJBSXFZY0FRMXZURkRwbG43dlY4SU5oQlVqQXRV?=
- =?utf-8?B?c01NQ09QYWR5eHRpMHBLeUJLSG9KTGVXWVdsN0Q1VWxaWHRTeGpFN08yS0Nk?=
- =?utf-8?B?Q2pNV3J3OFRrZUo1YUJuc1VSWjI3VVl5YXlMOUlYS1YyMFUxWDNaeUcvaFVy?=
- =?utf-8?B?ZnFvQlA5eUZqSGVFRys5WjJ0NDBUQWl6N3VYeEJZZ3I3ODdNd3gxUFNDbTgx?=
- =?utf-8?B?UGRJTW1LQnZVZkxhYWIrVmxaUTFQbnVtOEFudDN1L1VzQ1hlRVVEaUNvdis4?=
- =?utf-8?B?MXBaR2lqL3VQZnFjSXkrZStwbXBZTExsRitFTU5sM3JnUzRHb3FWemNiMFl6?=
- =?utf-8?B?YTlIOUk1L0RHbjROU2RQL1hYZkwzczhiSER1Y3JKY2xJZ3FZMytSVFRINnFt?=
- =?utf-8?B?ejBDZFZwdHlwNGtxM2dadWVtNEZDdmJXRlpXN0UvQXh2c3kxL0dHU1M4Q3Vn?=
- =?utf-8?B?ZUpRUWsrMFhUR0hDQ1FaWW9MeERNamlwSVNjWm00REtDdU14YjBSOTVraDNr?=
- =?utf-8?B?cG9sOUJnNHRZd1hscGhPRU51c2MrNmhudHFGajR2ekx1QnlzZDAxSENQdXA4?=
- =?utf-8?B?d3l2cVJKeDlWUWpONlNIN3pNenAwQ2hLdCs0QTBQeHlHUjlWd2VpRjJ6ZkZ3?=
- =?utf-8?B?ZkZoMmV2U1RxZTJndlVnYnp5Rjh3azZmQVgvTVlNc2JyZDNLVUludVpIZjhv?=
- =?utf-8?B?K1BBM1FQdUdQcGtoV2lFTHM5UXZSWUJYUUMxWWt6MW9vZHp5dERpUFVrcFZ1?=
- =?utf-8?B?RkltYUIreHdUaUxZSERURldReVQyckU1VE5ZZFJoYTNWRWU3Umwzb2Ureklm?=
- =?utf-8?B?NmlXa3gzVEJwaHBHSm1vSnZ0eGZEY0kxZ1JGOXlRVzE5VGdzMmVCWFlNbDdU?=
- =?utf-8?B?R3lwZnowOUkwWXVPVEtCNDFYeFRRT2FrclltL2psT3pTNld6WW5hclJJWWYv?=
- =?utf-8?B?TTIyUUdFLzFydFJXQllzWXE1MEMyZGwyck5SdWd0eG96bS9Ja0lQaTY4L3Jv?=
- =?utf-8?B?VnE2SlVUTGpwRUZac3B3NlFuT3JBZGZwV2FvUno3YXE5OVFNaXBPQ21NRWZM?=
- =?utf-8?B?VnZrRmlMZkF0UEV3cjRDZytUck9seGMwU0YvaHhhVS9sQ0FjQW9CV1Q3UEty?=
- =?utf-8?B?aW5wUFlQZVQ5Uk5vQmlWZjY1UWNJYk5qODZVam5iWVlXUDdsRVRSOC9XQnVX?=
- =?utf-8?B?eHBOSlFGa1d4S1hqSUIxWjAyK0R0WXNpdUkybUloRW5PTXJNSTYrWFlIcGRm?=
- =?utf-8?B?U0NzS2JkaDdubWU3NFBZL28yN1huUGJhVFI2THhObG5PNVJPa0M3WjFyMWVx?=
- =?utf-8?B?MndSR1N0c1Z5SmRsU0ttZHpwOXF1VnI5VHlSWE9DK0pueUEyc0UxTjBHZm1N?=
- =?utf-8?B?dVJ4OXM3Uzc2MmxMdjZ4ZGN6SUZnZG56aFFoblpHcFRBZ2p6eVJ5NjR1S3hV?=
- =?utf-8?B?ZTlsSjd4MTE0Qm15dm9jSjY3TDdRblE0QTlPdVNOMlpmVGdaa1JnQW5xYlUw?=
- =?utf-8?B?bm9Fa2xLT0xzcERNcHF5NkxNYTU5ZW80dWlKa1hQWHdja093OUpWVmo3dWl6?=
- =?utf-8?B?UTM3ZWpVRnloZXZ3TmR0Sy9RY29SSkNpQzNKeXplWjRXa2U2TldKUGczeXBM?=
- =?utf-8?B?SEM0OEM0YjU0VVdUVG4vRmcydHJaWFl3b2l0Slk5OTJtams2N0FDRHdDaGMy?=
- =?utf-8?B?cXJKUUR5ZUlMUE01VHZvQW1MVnJSNHZtRzYydTZwR1ROcTJzRlpoaDZ6VEkx?=
- =?utf-8?B?bnFkWDVyaTl1UVdCRVczekJzS1Q3QndxdERMZmFVUWhWY0cyWm1mL21KODMr?=
- =?utf-8?B?dk5KYXRGMWtoQ3NTaE5oTUVWMW4zSFJlZHJsOUNZZUFCWlVxOEhmYmdoL2tZ?=
- =?utf-8?B?MGM1K1RJd3FxQ3VONkIrelFkMXlLQ0t0eFhldDlHZEN5UTNVYm44RDJhR1pX?=
- =?utf-8?Q?Z/2bE1B834nNkJOEXdAauMM=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0be09ddc-d616-40c2-52a4-08db92b18a60
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3625.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2023 17:05:43.4110
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mS3dxvU6kNGryRYWTfLcAtqkOcryFE5uQUOzbWo0tBAqTW4l53/50sH3mW/m4KnX7p6keuHfXMyV/3PBQVnPPbsKrF2cgx49n/7eJK8K5qY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8383
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b282ef7c5d1841886a80b2b6502c735f2f0254c9.1689075791.git.zhoubinbin@loongson.cn>
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Tue, 1 Aug 2023 09:53:21 -0700
-
-> On Tue, 1 Aug 2023 15:46:22 +0200 Alexander Lobakin wrote:
->>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>> the same patch/commit), kindly add following tags
->>> | Reported-by: kernel test robot <lkp@intel.com>
->>> | Closes: https://lore.kernel.org/oe-kbuild-all/202307292029.cFz0s8Hh-lkp@intel.com/  
->>
->> Jakub, could you take a look, is this warning reasonable?
+On 11-07-23, 20:19, Binbin Zhou wrote:
+> The Loongson LS2X APB DMA controller is available on Loongson-2K chips.
 > 
-> Doesn't look legit to me. I can't repro it on x86 and:
+> It is a single-channel, configurable DMA controller IP core based on the
+> AXI bus, whose main function is to integrate DMA functionality on a chip
+> dedicated to carrying data between memory and peripherals in APB bus
+> (e.g. nand).
 > 
-> $ head .config
-> #
-> # Automatically generated file; DO NOT EDIT.
-> # Linux/loongarch 6.5.0-rc3 Kernel Configuration
-> #
-> CONFIG_CC_VERSION_TEXT="loongarch64-linux-gcc (GCC) 12.3.0"
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+> ---
+>  MAINTAINERS                |   1 +
+>  drivers/dma/Kconfig        |  14 +
+>  drivers/dma/Makefile       |   1 +
+>  drivers/dma/ls2x-apb-dma.c | 684 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 700 insertions(+)
+>  create mode 100644 drivers/dma/ls2x-apb-dma.c
 > 
-> Adding loongarch to CC, it must be arch specific ?
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 60a411936ba7..709c2e9d5f5f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12248,6 +12248,7 @@ M:	Binbin Zhou <zhoubinbin@loongson.cn>
+>  L:	dmaengine@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
+> +F:	drivers/dma/ls2x-apb-dma.c
+>  
+>  LOONGSON LS2X I2C DRIVER
+>  M:	Binbin Zhou <zhoubinbin@loongson.cn>
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 644c188d6a11..9b41b59ba2b4 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -376,6 +376,20 @@ config LPC18XX_DMAMUX
+>  	  Enable support for DMA on NXP LPC18xx/43xx platforms
+>  	  with PL080 and multiplexed DMA request lines.
+>  
+> +config LS2X_APB_DMA
+> +	tristate "Loongson LS2X APB DMA support"
+> +	depends on LOONGARCH || COMPILE_TEST
+> +	select DMA_ENGINE
+> +	select DMA_VIRTUAL_CHANNELS
+> +	help
+> +	  Support for the Loongson LS2X APB DMA controller driver. The
+> +	  DMA controller is having single DMA channel which can be
+> +	  configured for different peripherals like audio, nand, sdio
+> +	  etc which is in APB bus.
+> +
+> +	  This DMA controller transfers data from memory to peripheral fifo.
+> +	  It does not support memory to memory data transfer.
+> +
+>  config MCF_EDMA
+>  	tristate "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
+>  	depends on M5441x || COMPILE_TEST
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index a4fd1ce29510..9b28ddb1ea3b 100644
+> --- a/drivers/dma/Makefile
+> +++ b/drivers/dma/Makefile
+> @@ -46,6 +46,7 @@ obj-$(CONFIG_INTEL_IOATDMA) += ioat/
+>  obj-y += idxd/
+>  obj-$(CONFIG_K3_DMA) += k3dma.o
+>  obj-$(CONFIG_LPC18XX_DMAMUX) += lpc18xx-dmamux.o
+> +obj-$(CONFIG_LS2X_APB_DMA) += ls2x-apb-dma.o
+>  obj-$(CONFIG_MILBEAUT_HDMAC) += milbeaut-hdmac.o
+>  obj-$(CONFIG_MILBEAUT_XDMAC) += milbeaut-xdmac.o
+>  obj-$(CONFIG_MMP_PDMA) += mmp_pdma.o
+> diff --git a/drivers/dma/ls2x-apb-dma.c b/drivers/dma/ls2x-apb-dma.c
+> new file mode 100644
+> index 000000000000..b3efe86e4330
+> --- /dev/null
+> +++ b/drivers/dma/ls2x-apb-dma.c
+> @@ -0,0 +1,684 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Driver for the Loongson LS2X APB DMA Controller
+> + *
+> + * Copyright (C) 2017-2023 Loongson Corporation
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/dmapool.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
 
-Took a look, sounds like something's wrong inside this_cpu_read() on
-this architecture (probably with some not-widely-used options enabled),
-dunno. Will wait for the architecture folks, there's nothing to fix in
-your patch (fully legit and ordinary lockdep expression).
+drop this header, of.h should suffice
 
-Thanks,
-Olek
+> +/*
+> + * struct ls2x_dma_hw_desc - DMA HW descriptor
+> + * @ndesc_addr: the next descriptor low address.
+> + * @mem_addr: memory low address.
+> + * @apb_addr: device buffer address.
+> + * @len: length of a piece of carried content, in words.
+> + * @step_len: length between two moved memory data blocks.
+> + * @step_times: number of blocks to be carried in a single DMA operation.
+> + * @cmd: descriptor command or state.
+> + * @stats: DMA status.
+> + * @high_ndesc_addr: the next descriptor high address.
+> + * @high_mem_addr: memory high address.
+> + * @reserved: reserved
+> + */
+> +struct ls2x_dma_hw_desc {
+> +	u32 ndesc_addr;
+> +	u32 mem_addr;
+> +	u32 apb_addr;
+
+why not use dma_addr_t for this?
+
+> +static void ls2x_dma_start_transfer(struct ls2x_dma_chan *lchan)
+> +{
+> +	struct ls2x_dma_priv *priv = to_ldma_priv(lchan->vchan.chan.device);
+> +	struct ls2x_dma_sg *ldma_sg;
+> +	struct virt_dma_desc *vdesc;
+> +	u64 val;
+> +
+> +	/* Get the next descriptor */
+> +	vdesc = vchan_next_desc(&lchan->vchan);
+> +	if (!vdesc) {
+> +		lchan->desc = NULL;
+> +		return;
+> +	}
+> +
+> +	list_del(&vdesc->node);
+> +	lchan->desc = to_ldma_desc(vdesc);
+> +	ldma_sg = &lchan->desc->sg[0];
+> +
+> +	/* Start DMA */
+> +	lo_hi_writeq(0, priv->regs + LDMA_ORDER_ERG);
+> +	val = (ldma_sg->llp & ~LDMA_CONFIG_MASK) | LDMA_64BIT_EN | LDMA_START;
+> +	lo_hi_writeq(val, priv->regs + LDMA_ORDER_ERG);
+> +}
+> +
+> +static void ls2x_dma_fill_desc(struct ls2x_dma_chan *lchan, u32 i,
+> +			       struct ls2x_dma_desc *desc)
+
+pls align this one to precceding open brace (hint: checkpatch.pl
+--strict would warn you about this)
+
+> +{
+> +	struct ls2x_dma_sg *ldma_sg = &desc->sg[i];
+> +
+> +	ldma_sg->hw->mem_addr = lower_32_bits(ldma_sg->phys);
+> +	ldma_sg->hw->high_mem_addr = upper_32_bits(ldma_sg->phys);
+> +	/* Word count register takes input in words */
+> +	ldma_sg->hw->len = ldma_sg->len >> 2;
+> +	ldma_sg->hw->step_len = 0;
+> +	ldma_sg->hw->step_times = 1;
+> +
+> +	if (desc->direction == DMA_MEM_TO_DEV) {
+> +		ldma_sg->hw->cmd = LDMA_INT | LDMA_DATA_DIRECTION;
+> +		ldma_sg->hw->apb_addr = lchan->sconfig.dst_addr;
+> +	} else {
+> +		ldma_sg->hw->cmd = LDMA_INT;
+> +		ldma_sg->hw->apb_addr = lchan->sconfig.src_addr;
+
+only addr are used here, what about data width, why is that ignored?
+
+> +	}
+> +
+> +	/* lets make a link list */
+> +	if (i) {
+
+what does i refer to here..?
+
+> +/*
+> + * of_ls2x_dma_xlate - Translation function
+> + * @dma_spec: Pointer to DMA specifier as found in the device tree
+> + * @ofdma: Pointer to DMA controller data
+> + *
+> + * Return: DMA channel pointer on success and NULL on error
+> + */
+> +static struct dma_chan *of_ls2x_dma_xlate(struct of_phandle_args *dma_spec,
+> +					  struct of_dma *ofdma)
+> +{
+> +	struct ls2x_dma_priv *priv = ofdma->of_dma_data;
+> +	struct ls2x_dma_chan *lchan;
+> +
+> +	/* We are single channel DMA, just get the channel from priv. */
+> +	lchan = &priv->lchan;
+> +	if (!lchan)
+> +		return NULL;
+> +
+> +	return dma_get_slave_channel(&lchan->vchan.chan);
+> +}
+
+why not use generic xlate?
+-- 
+~Vinod
