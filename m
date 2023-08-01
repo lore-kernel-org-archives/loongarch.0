@@ -1,231 +1,91 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDDB1D2E2
-	for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 17:04:43 +0000 (UTC)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-d35a9d7a5bdso499123276.0
-        for <loongarch@lists.linux.dev>; Mon, 31 Jul 2023 10:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690823082; x=1691427882;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ge3Da1dLlbVImV5jdD/HZRx7aISFPvIvfEGvqleo2SA=;
-        b=ioOMbbu3JES3j1Jj+JW3855XW3Ov65AQm8O9lv95JxDcPPS6IwntjHfsaaLCwjHL5b
-         OuA4j3AMcOeG2v6VKrbkSXabyBKoN8KuyYIoDCC1YD5I/RC4KqKt3ITSQwKezbQCp/8J
-         AR8EjEBjRuz0BKnlQIU6Pu2fINdNhuBPDReykf5gMLB8b4rp/cimT4edf9bEDyME9O7d
-         VFOstOotn1+dDzfuistQZkRoPkOh7Uzd/ZqgsVXJ0Zgg3bR5ReggCo1obemCJNhIS+t9
-         Ue+OH0jfGRqmyKjIxlmOMTrVnVAvQzQZxHF6PwZledF5BBiAWirHuHl+9jo5QzXuxUnf
-         6Gng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690823082; x=1691427882;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ge3Da1dLlbVImV5jdD/HZRx7aISFPvIvfEGvqleo2SA=;
-        b=aH1rCW4iAH76d+F1z12vPfpGwCzRWMU7XsSsgUZeKtYHBHSyQ9CyX1Ttlr+bgT97I2
-         EXlDcu6QflxeSJN7kqXXwlLzIifvGpUfHIsiwHT0T7O8/DTcXMd+xSYUhvjRyJspuCBf
-         DaLRC9usfMPFr6Jwkeq8f50XUd9O7fv4QbR2iXzIdiF6fy9YDd239fPNdzGgLDDl2iI4
-         E2tj4INxXON9WwbMo2eSwSByi+kFm4HCkhQ1rcAfLzR4qy54KEjLiIIVvKflwCZFp6Bc
-         vL6It77bP1Vo97g0ml/KZ7VzyAhTBHiqF/VjL3jYUdCXnnOF6VIebJWcN5RWhnDurCSE
-         uoag==
-X-Gm-Message-State: ABy/qLbml8MMWHInrAoSzkW3waA7Q7zxBPhU07CBoUsyI64uKq64olZz
-	puFHmqepHH5MYI/ppPPpzVy4P/uhH1nPGw==
-X-Google-Smtp-Source: APBJJlF0vgCAeh2GJq7nS2h9EAm5JTHFkJPU6wpVfPXTMfmv7gc4qDUX7Q6WDvp5wiH1WM3Qyv6c4g==
-X-Received: by 2002:a25:d68d:0:b0:d0f:ea4b:1dff with SMTP id n135-20020a25d68d000000b00d0fea4b1dffmr10302787ybg.8.1690823081905;
-        Mon, 31 Jul 2023 10:04:41 -0700 (PDT)
-Received: from unknowna0e70b2ca394.attlocal.net ([2600:1700:2f7d:1800::16])
-        by smtp.googlemail.com with ESMTPSA id x31-20020a25ac9f000000b00c832ad2e2eesm2511833ybi.60.2023.07.31.10.04.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 10:04:41 -0700 (PDT)
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	xen-devel@lists.xenproject.org,
-	kvm@vger.kernel.org,
-	Hugh Dickins <hughd@google.com>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH mm-unstable v8 31/31] mm: Remove pgtable_{pmd, pte}_page_{ctor, dtor}() wrappers
-Date: Mon, 31 Jul 2023 10:03:32 -0700
-Message-Id: <20230731170332.69404-32-vishal.moola@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230731170332.69404-1-vishal.moola@gmail.com>
-References: <20230731170332.69404-1-vishal.moola@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074477E
+	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 01:16:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A374C433C7;
+	Tue,  1 Aug 2023 01:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690852565;
+	bh=S11F+NWoAl/iB4WLBF7AD+NtSYu1hrv1RpQ5SOg0s/o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TYv+1xxilTBwlcwqNalAZyf60X+M3peXB9sCH4spd2jQPMYKSx99CxMtwdQgIeRMA
+	 uaYeT6jI0iYT2IzkC5vDnn5xJfple7xf8dcjAdEinh82wr/JZ4P/PqQjKJg1ZhTGRH
+	 9FPp/VzxhdBBcwcAXdGoQ6ZsYBFwiJi16jOSo3vXsLnLAs5NwwyXfu4CW2hVtVXO0y
+	 nqXPeqAxHvktaFmL9TSaVWwbXW01xIRkb0+uEZXKeLQRwaj/rSDWwkKfEDqgvE+7rT
+	 opnOaqVbyE4UJE+z/+EsrsE+G80WsJdz2JLHpqWmcvVwGzj5Kxp5H22BO61GZH1DjC
+	 A981TCiaX6FHQ==
+From: guoren@kernel.org
+To: chenhuacai@kernel.or,
+	kernel@xen0n.name,
+	arnd@arndb.de,
+	andi.shyti@linux.intel.com,
+	wangrui@loongson.cn,
+	andrzej.hajda@intel.com,
+	peterz@infradead.org,
+	will@kernel.org,
+	boqun.feng@gmail.com,
+	mark.rutland@arm.com,
+	guoren@kernel.org
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH] LoongArch: Fixup cmpxchg sematic for memory barrier
+Date: Mon, 31 Jul 2023 21:15:54 -0400
+Message-Id: <20230801011554.3950435-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-These functions are no longer necessary. Remove them and cleanup
-Documentation referencing them.
+From: Guo Ren <guoren@linux.alibaba.com>
 
-Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+When cmpxchg failed, no memory barrier was needed to take. Only
+when cmpxchg success and the new value is written, then the memory
+barriers needed.
+
+ - cmpxchg_asm:   Unnecessary __WEAK_LLSC_WB for the fail path would
+		  reduce the performance of the cmpxchg loop trying.
+ - cmpxchg_small: Miss an necessary __WEAK_LLSC_WB when sc succeeds.
+		  It's a bug because there is no memory synchronization
+		  when sc succeeds.
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Guo Ren <guoren@kernel.org>
 ---
- Documentation/mm/split_page_table_lock.rst    | 12 +++++------
- .../zh_CN/mm/split_page_table_lock.rst        | 14 ++++++-------
- include/linux/mm.h                            | 20 -------------------
- 3 files changed, 13 insertions(+), 33 deletions(-)
+ arch/loongarch/include/asm/cmpxchg.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/mm/split_page_table_lock.rst b/Documentation/mm/split_page_table_lock.rst
-index a834fad9de12..e4f6972eb6c0 100644
---- a/Documentation/mm/split_page_table_lock.rst
-+++ b/Documentation/mm/split_page_table_lock.rst
-@@ -58,7 +58,7 @@ Support of split page table lock by an architecture
- ===================================================
- 
- There's no need in special enabling of PTE split page table lock: everything
--required is done by pgtable_pte_page_ctor() and pgtable_pte_page_dtor(), which
-+required is done by pagetable_pte_ctor() and pagetable_pte_dtor(), which
- must be called on PTE table allocation / freeing.
- 
- Make sure the architecture doesn't use slab allocator for page table
-@@ -68,8 +68,8 @@ This field shares storage with page->ptl.
- PMD split lock only makes sense if you have more than two page table
- levels.
- 
--PMD split lock enabling requires pgtable_pmd_page_ctor() call on PMD table
--allocation and pgtable_pmd_page_dtor() on freeing.
-+PMD split lock enabling requires pagetable_pmd_ctor() call on PMD table
-+allocation and pagetable_pmd_dtor() on freeing.
- 
- Allocation usually happens in pmd_alloc_one(), freeing in pmd_free() and
- pmd_free_tlb(), but make sure you cover all PMD table allocation / freeing
-@@ -77,7 +77,7 @@ paths: i.e X86_PAE preallocate few PMDs on pgd_alloc().
- 
- With everything in place you can set CONFIG_ARCH_ENABLE_SPLIT_PMD_PTLOCK.
- 
--NOTE: pgtable_pte_page_ctor() and pgtable_pmd_page_ctor() can fail -- it must
-+NOTE: pagetable_pte_ctor() and pagetable_pmd_ctor() can fail -- it must
- be handled properly.
- 
- page->ptl
-@@ -97,7 +97,7 @@ trick:
-    split lock with enabled DEBUG_SPINLOCK or DEBUG_LOCK_ALLOC, but costs
-    one more cache line for indirect access;
- 
--The spinlock_t allocated in pgtable_pte_page_ctor() for PTE table and in
--pgtable_pmd_page_ctor() for PMD table.
-+The spinlock_t allocated in pagetable_pte_ctor() for PTE table and in
-+pagetable_pmd_ctor() for PMD table.
- 
- Please, never access page->ptl directly -- use appropriate helper.
-diff --git a/Documentation/translations/zh_CN/mm/split_page_table_lock.rst b/Documentation/translations/zh_CN/mm/split_page_table_lock.rst
-index 4fb7aa666037..a2c288670a24 100644
---- a/Documentation/translations/zh_CN/mm/split_page_table_lock.rst
-+++ b/Documentation/translations/zh_CN/mm/split_page_table_lock.rst
-@@ -56,16 +56,16 @@ Hugetlb特定的辅助函数:
- 架构对分页表锁的支持
- ====================
- 
--没有必要特别启用PTE分页表锁：所有需要的东西都由pgtable_pte_page_ctor()
--和pgtable_pte_page_dtor()完成，它们必须在PTE表分配/释放时被调用。
-+没有必要特别启用PTE分页表锁：所有需要的东西都由pagetable_pte_ctor()
-+和pagetable_pte_dtor()完成，它们必须在PTE表分配/释放时被调用。
- 
- 确保架构不使用slab分配器来分配页表：slab使用page->slab_cache来分配其页
- 面。这个区域与page->ptl共享存储。
- 
- PMD分页锁只有在你有两个以上的页表级别时才有意义。
- 
--启用PMD分页锁需要在PMD表分配时调用pgtable_pmd_page_ctor()，在释放时调
--用pgtable_pmd_page_dtor()。
-+启用PMD分页锁需要在PMD表分配时调用pagetable_pmd_ctor()，在释放时调
-+用pagetable_pmd_dtor()。
- 
- 分配通常发生在pmd_alloc_one()中，释放发生在pmd_free()和pmd_free_tlb()
- 中，但要确保覆盖所有的PMD表分配/释放路径：即X86_PAE在pgd_alloc()中预先
-@@ -73,7 +73,7 @@ PMD分页锁只有在你有两个以上的页表级别时才有意义。
- 
- 一切就绪后，你可以设置CONFIG_ARCH_ENABLE_SPLIT_PMD_PTLOCK。
- 
--注意：pgtable_pte_page_ctor()和pgtable_pmd_page_ctor()可能失败--必
-+注意：pagetable_pte_ctor()和pagetable_pmd_ctor()可能失败--必
- 须正确处理。
- 
- page->ptl
-@@ -90,7 +90,7 @@ page->ptl用于访问分割页表锁，其中'page'是包含该表的页面struc
-    的指针并动态分配它。这允许在启用DEBUG_SPINLOCK或DEBUG_LOCK_ALLOC的
-    情况下使用分页锁，但由于间接访问而多花了一个缓存行。
- 
--PTE表的spinlock_t分配在pgtable_pte_page_ctor()中，PMD表的spinlock_t
--分配在pgtable_pmd_page_ctor()中。
-+PTE表的spinlock_t分配在pagetable_pte_ctor()中，PMD表的spinlock_t
-+分配在pagetable_pmd_ctor()中。
- 
- 请不要直接访问page->ptl - -使用适当的辅助函数。
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index bd3d99d81984..e4e34ecbc2ea 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2913,11 +2913,6 @@ static inline bool pagetable_pte_ctor(struct ptdesc *ptdesc)
- 	return true;
- }
- 
--static inline bool pgtable_pte_page_ctor(struct page *page)
--{
--	return pagetable_pte_ctor(page_ptdesc(page));
--}
--
- static inline void pagetable_pte_dtor(struct ptdesc *ptdesc)
- {
- 	struct folio *folio = ptdesc_folio(ptdesc);
-@@ -2927,11 +2922,6 @@ static inline void pagetable_pte_dtor(struct ptdesc *ptdesc)
- 	lruvec_stat_sub_folio(folio, NR_PAGETABLE);
- }
- 
--static inline void pgtable_pte_page_dtor(struct page *page)
--{
--	pagetable_pte_dtor(page_ptdesc(page));
--}
--
- pte_t *__pte_offset_map(pmd_t *pmd, unsigned long addr, pmd_t *pmdvalp);
- static inline pte_t *pte_offset_map(pmd_t *pmd, unsigned long addr)
- {
-@@ -3038,11 +3028,6 @@ static inline bool pagetable_pmd_ctor(struct ptdesc *ptdesc)
- 	return true;
- }
- 
--static inline bool pgtable_pmd_page_ctor(struct page *page)
--{
--	return pagetable_pmd_ctor(page_ptdesc(page));
--}
--
- static inline void pagetable_pmd_dtor(struct ptdesc *ptdesc)
- {
- 	struct folio *folio = ptdesc_folio(ptdesc);
-@@ -3052,11 +3037,6 @@ static inline void pagetable_pmd_dtor(struct ptdesc *ptdesc)
- 	lruvec_stat_sub_folio(folio, NR_PAGETABLE);
- }
- 
--static inline void pgtable_pmd_page_dtor(struct page *page)
--{
--	pagetable_pmd_dtor(page_ptdesc(page));
--}
--
- /*
-  * No scalability reason to split PUD locks yet, but follow the same pattern
-  * as the PMD locks to make it easier if we decide to.  The VM should not be
+diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
+index 979fde61bba8..6a05b92814b6 100644
+--- a/arch/loongarch/include/asm/cmpxchg.h
++++ b/arch/loongarch/include/asm/cmpxchg.h
+@@ -102,8 +102,8 @@ __arch_xchg(volatile void *ptr, unsigned long x, int size)
+ 	"	move	$t0, %z4			\n"		\
+ 	"	" st "	$t0, %1				\n"		\
+ 	"	beqz	$t0, 1b				\n"		\
+-	"2:						\n"		\
+ 	__WEAK_LLSC_MB							\
++	"2:						\n"		\
+ 	: "=&r" (__ret), "=ZB"(*m)					\
+ 	: "ZB"(*m), "Jr" (old), "Jr" (new)				\
+ 	: "t0", "memory");						\
+@@ -148,10 +148,8 @@ static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned int old,
+ 	"	or		%1, %1, %z6	\n"
+ 	"	sc.w		%1, %2		\n"
+ 	"	beqz		%1, 1b		\n"
+-	"	b		3f		\n"
+-	"2:					\n"
+ 	__WEAK_LLSC_MB
+-	"3:					\n"
++	"2:					\n"
+ 	: "=&r" (old32), "=&r" (temp), "=ZC" (*ptr32)
+ 	: "ZC" (*ptr32), "Jr" (mask), "Jr" (old), "Jr" (new)
+ 	: "memory");
 -- 
-2.40.1
+2.36.1
 
