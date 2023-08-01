@@ -1,87 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5321E531
-	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 10:49:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26190C433CC
-	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 10:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B5A46A0
+	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 10:54:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F83C433C7
+	for <loongarch@lists.linux.dev>; Tue,  1 Aug 2023 10:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690886999;
-	bh=u7I+zdXZxktdq8ChnbQrPRnPNrQrNqrJr3UZE+w6xVM=;
+	s=k20201202; t=1690887267;
+	bh=VO7pcsxb+oB+wsS8Ud4w4F+HV0+ydxKFE3sGoD1VYDM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YEg8q8AGO7PDRDEJdoUZsaCFcZLFriVWXApTzTAVI4en+f56NOAPhRiRI7jyTg0oh
-	 igyeJjI16GfahMSl5ri8osu7DEK1txIPZvIydHfEZ32Ot7cU5t61U9sUUMmx4q2/xc
-	 NCH1wbq346XELm23p2LOi8eUTU2+pYpIR6sfDC7Dau3fapXStyv4X7dUoxb2zMygXt
-	 eIxvk7ChiKlKyCSRqEdOXXN8OtcGoI3EiMwRUI3REjYEhGwTTcfaL+VlqW4fyDeDvX
-	 DfT6aj3Nf0MT+a8JR9Op4KlXpHdOdkzXYI9hqZmmgkQoDFAYJMvsm6SgrtAirccr5V
-	 mwZZ9x1VBMiBw==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-522ab301692so5429546a12.2
-        for <loongarch@lists.linux.dev>; Tue, 01 Aug 2023 03:49:59 -0700 (PDT)
-X-Gm-Message-State: ABy/qLboxzTBw5izicEBcJcP62/VPSkUwq/r+emH5V9lQQwIN6HGskkc
-	rHtF+OhtKzMvsOocdcA13+D9Rv6if+k8wLAPu7A=
-X-Google-Smtp-Source: APBJJlGmfOzudB4zLRHM997HtkvDTsRmGasa+lA5ovwZauli5GP+7Ze4kTI2UNbtuJnb5revLg7J6IglOClWqNcHT40=
-X-Received: by 2002:aa7:d507:0:b0:522:3a28:feca with SMTP id
- y7-20020aa7d507000000b005223a28fecamr2581715edq.24.1690886997423; Tue, 01 Aug
- 2023 03:49:57 -0700 (PDT)
+	b=LvsYD/hTg82xvObqT/fOTuY/qbEyrDy2SiPENS5hu4V2VV+Wb2p+Cpn/ufHQXK8A/
+	 iqzqoxFbb9DkGLkDaQsLprSKQ9Wl7kTgUPk63stF57ZKx2izMAU1qDtaY7JTenp2ai
+	 7x9dH1p4cdmmkH6UosrkXjt3czFgdzrT58WO9IC7nkPwtrB8kuy5FSmCit6CJ8IGUW
+	 jSgInZdEghSOynt3rlrHieQGbTasBh4gk4tmbxtx+KEKuDhgKBAfhbFda9CCVtS6Mh
+	 B7lpMyYk4VCTVTgipPjwgVAsiqhXacDMQSjN8O2t5OH8gG6Vj6vtOJiw09/CZTX9hX
+	 RpLT7chS3o5Lg==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-51a52a7d859so13985305a12.0
+        for <loongarch@lists.linux.dev>; Tue, 01 Aug 2023 03:54:26 -0700 (PDT)
+X-Gm-Message-State: ABy/qLamzYSrMoWR28aDtcermX1Rj439u0nQeyLqpe4xG/SoagmG8eHI
+	ylLcJDGO1CT3lnUCRHy48ScuVGGBPjy/mJj14/k=
+X-Google-Smtp-Source: APBJJlFukzChUGvsSOXUWygUB+0GArc3ZLcnrvtrngLoHxRu+4XYsAq8yQC+cOozTfOJnJ5RtEFuOWHH+6HmrOhgMKM=
+X-Received: by 2002:aa7:c309:0:b0:522:3a1d:c233 with SMTP id
+ l9-20020aa7c309000000b005223a1dc233mr3075933edq.11.1690887265380; Tue, 01 Aug
+ 2023 03:54:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230801011554.3950435-1-guoren@kernel.org> <CAHirt9ht8AsE=FC8+222JDZXH3T58uLt+o=_pq+1zBhv1MKRjg@mail.gmail.com>
- <CAJF2gTRa5erHomJzLgUFO4SGqd5zSDwn6r3WN7kM8aWpv1vesg@mail.gmail.com>
- <CAJF2gTQ1hV1vipAo3H4X4WiPO84kVVFZcdGq7u4f0bVTry_akQ@mail.gmail.com> <CAHirt9gVqE=9vviJEY=kY=booVRmFPHrnFsKCXPXnXiWTB8bZQ@mail.gmail.com>
-In-Reply-To: <CAHirt9gVqE=9vviJEY=kY=booVRmFPHrnFsKCXPXnXiWTB8bZQ@mail.gmail.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Tue, 1 Aug 2023 18:49:45 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTR2ON33wc87iV564rkDbNiE56h_t0kzKKXdJtGqgJ1sOQ@mail.gmail.com>
-Message-ID: <CAJF2gTR2ON33wc87iV564rkDbNiE56h_t0kzKKXdJtGqgJ1sOQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fixup cmpxchg sematic for memory barrier
-To: WANG Rui <wangrui@loongson.cn>
-Cc: chenhuacai@kernel.or, kernel@xen0n.name, arnd@arndb.de, 
-	andi.shyti@linux.intel.com, andrzej.hajda@intel.com, peterz@infradead.org, 
-	will@kernel.org, boqun.feng@gmail.com, mark.rutland@arm.com, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@linux.alibaba.com>
+References: <20230801081335.523097-1-kernel@xen0n.name>
+In-Reply-To: <20230801081335.523097-1-kernel@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 1 Aug 2023 18:54:12 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Tq7E5sSHUq+FSgs-GpHSMmmp=KDPBpKJt1vXRkMv9Cw@mail.gmail.com>
+Message-ID: <CAAhV-H6Tq7E5sSHUq+FSgs-GpHSMmmp=KDPBpKJt1vXRkMv9Cw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] raid5, raid6: Accelerate RAID math with LoongArch SIMD
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Song Liu <song@kernel.org>, linux-raid@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 1, 2023 at 5:32=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wrote=
-:
->
-> Hello,
->
-> On Tue, Aug 1, 2023 at 5:05=E2=80=AFPM Guo Ren <guoren@kernel.org> wrote:
-> >
-> > > The CoRR problem would cause wider problems than this.For this case,
-> > > do you mean your LL -> LL would be reordered?
-> > >
-> > > CPU 0
-> > >           CPU1
-> > > LL(2) (set ex-monitor)
-> > >
-> > >                 store (break the ex-monitor)
-> > > LL(1) (reordered instruction set ex-monitor
-> > > SC(3) (successes ?)
-> > Sorry for the mail client reformat, I mean:
-> >
-> > CPU0  LL(2) (set ex-monitor)
-> > CPU1  STORE (break the ex-monitor)
-> > CPU0  LL(1) (reordered instruction set ex-monitor
-> > CPU0  SC(3) (success?)
->
-> No. LL and LL won't reorder because LL implies a memory barrier(though
-> not acquire semantics).
-That means we could remove __WEAK_LLSC_MB totally, right?
+Hi, Xuerui,
 
+On Tue, Aug 1, 2023 at 4:13=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wrot=
+e:
 >
-> Regards,
+> From: WANG Xuerui <git@xen0n.name>
+>
+> Hi,
+>
+> Seeing the LoongArch port recently (finally!) gained the ability to use
+> the vector units, I've subsequently ported the RAID5/6 math to LSX and
+> LASX (which are LoongArch's 128-bit and 256-bit SIMD extensions), with
+> nice speedups observed. They are reasonably straight-forward conversions
+> of existing code, and I hope the comments I put in there are helpful
+> enough for anyone not familiar with LoongArch assembly to get a rough
+> picture of how things work here. Performance numbers are included in
+> each commit's commit message.
+>
+> This series needs [1] ("LoongArch: Allow usage of LSX/LASX in the
+> kernel") as a prerequisite, or the vector context would likely get
+> corrupted by the vector-unaware kernel_fpu_{begin,end} calls. I tested
+> the changes on top of next-20230731 with the raid6test build fixes [2]
+> applied, but the series should apply cleanly to v6.5-rc4 (or maybe any
+> other tag) too.
+Thank you for your patches, but the kernel coding style prefers /* ...
+*/ rather than // ...
+
+Huacai
+>
+> [1]: https://lore.kernel.org/loongarch/20230722072201.2677516-1-chenhuaca=
+i@loongson.cn/
+> [2]: https://lore.kernel.org/linux-raid/20230731104911.411964-1-kernel@xe=
+n0n.name/
+>
+> WANG Xuerui (3):
+>   LoongArch: Add SIMD-optimized XOR routines
+>   raid6: Add LoongArch SIMD syndrome calculation
+>   raid6: Add LoongArch SIMD recovery implementation
+>
+>  arch/loongarch/include/asm/xor.h      |  68 ++++
+>  arch/loongarch/include/asm/xor_simd.h |  42 +++
+>  arch/loongarch/lib/Makefile           |   3 +
+>  arch/loongarch/lib/xor_simd.c         |  92 +++++
+>  arch/loongarch/lib/xor_simd.h         |  46 +++
+>  arch/loongarch/lib/xor_simd_glue.c    |  71 ++++
+>  arch/loongarch/lib/xor_template.c     | 109 ++++++
+>  include/linux/raid/pq.h               |   4 +
+>  lib/raid6/Makefile                    |   1 +
+>  lib/raid6/algos.c                     |  16 +
+>  lib/raid6/loongarch.h                 |  38 ++
+>  lib/raid6/loongarch_simd.c            | 417 +++++++++++++++++++++
+>  lib/raid6/recov_loongarch_simd.c      | 501 ++++++++++++++++++++++++++
+>  lib/raid6/test/Makefile               |  12 +
+>  14 files changed, 1420 insertions(+)
+>  create mode 100644 arch/loongarch/include/asm/xor.h
+>  create mode 100644 arch/loongarch/include/asm/xor_simd.h
+>  create mode 100644 arch/loongarch/lib/xor_simd.c
+>  create mode 100644 arch/loongarch/lib/xor_simd.h
+>  create mode 100644 arch/loongarch/lib/xor_simd_glue.c
+>  create mode 100644 arch/loongarch/lib/xor_template.c
+>  create mode 100644 lib/raid6/loongarch.h
+>  create mode 100644 lib/raid6/loongarch_simd.c
+>  create mode 100644 lib/raid6/recov_loongarch_simd.c
+>
+>
+> base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+> prerequisite-patch-id: 85d08a9828893250ae78dbca9d6e6f8dac755f61
+> prerequisite-patch-id: fe0bba41e0bbc676454365ed16fb13fc0aac6ee0
+> prerequisite-patch-id: 84ef8212b74e696ce019255bbfd9679d7516f7f7
+> prerequisite-patch-id: b1f8fc4e4acdaff7f821a9fcbd063475178e037b
+> prerequisite-patch-id: 82aacbf27f249fdefe40dd6bcc712e5795256926
+> prerequisite-patch-id: ae4e026e18f92ffcc93f6b135a3bd48fbdded39a
 > --
-> WANG Rui
+> 2.40.0
 >
-
-
---=20
-Best Regards
- Guo Ren
