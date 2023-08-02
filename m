@@ -1,105 +1,147 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E3A9EDA
-	for <loongarch@lists.linux.dev>; Wed,  2 Aug 2023 02:23:41 +0000 (UTC)
-Received: from loongson.cn (unknown [209.85.221.54])
-	by gateway (Coremail) with SMTP id _____8AxV_Ekvslk3YsOAA--.34734S3;
-	Wed, 02 Aug 2023 10:23:33 +0800 (CST)
-Received: from mail-wr1-f54.google.com (unknown [209.85.221.54])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxbSMivslkVtdEAA--.64339S3;
-	Wed, 02 Aug 2023 10:23:31 +0800 (CST)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-31771a876b5so5340258f8f.3
-        for <loongarch@lists.linux.dev>; Tue, 01 Aug 2023 19:23:31 -0700 (PDT)
-X-Gm-Message-State: ABy/qLbtjx/WT4GqLHqFFNT9FlG9iYk1tKawPw2pdorWl9Eeb85eExyk
-	w47CfJEHS62HmgmLkzXrFuml6cBYq9YBZVPTN/icZQ==
-X-Google-Smtp-Source: APBJJlF1uWj6wIOqIFlfDDRCiTD78Qq9g6nbp+t0la6vtmj1Gk53kAMeZOdghLi9R93+HK/Wj4Dz9sqyDT30UvH5UyU=
-X-Received: by 2002:a05:6000:11c5:b0:317:594a:dbde with SMTP id
- i5-20020a05600011c500b00317594adbdemr3350887wrx.20.1690943009317; Tue, 01 Aug
- 2023 19:23:29 -0700 (PDT)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359787E6;
+	Wed,  2 Aug 2023 02:46:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE2E5C433C7;
+	Wed,  2 Aug 2023 02:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690944368;
+	bh=HnyEuLoO+VDuqcAShwayzrYa97t99kvrkI3g8nRH1bE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LMopKQllqF6Rron/qahG6z+UEuJwBxvo5RihH5w3huG2b4uIaKRh1R610l1VHaqLn
+	 OhRxlj7cU9zvuKincTSSr0Rd3KPk/OsMsJECy2YSJ14wr1RZzGapY0XgwnzaMKd9Jn
+	 xawTu8ZtgqouoAO3ueUxn2rGB09tQHSbUYKN2Q19k19Gaa4fBIz7kcklHtUjWvn8Lj
+	 QfkNGXPwe0iBW2uBPG96AttICFGGYh6xBNtoRO4OBKwmen2dZ0K55kuqqbjGiURcRm
+	 oWqt6KFR+Bjq3QU6Mq+fKfFp9bBjr9Cnsjw/6VZvwH0BCukp1XMj9z8y9JtjGDshlX
+	 qOml0V3Kmcu/A==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-51bece5d935so8974209a12.1;
+        Tue, 01 Aug 2023 19:46:07 -0700 (PDT)
+X-Gm-Message-State: ABy/qLaOIEHselsj215MlnzH+KMSInE4JL33HFV1tDOUPM9LyKU8oy2q
+	iRLzP5IcJ3tkDhwmS4BzgKEuNDsIBQpSNar+3Pg=
+X-Google-Smtp-Source: APBJJlFuiC7ZzXS/kRnzvzMpMllUD8gfEnDXCb/hhlZigEgSGAVYYR5o0GTxYcx/i8l0nWh8fGyQova7C3051NeSTcs=
+X-Received: by 2002:aa7:cf8e:0:b0:522:219b:ce05 with SMTP id
+ z14-20020aa7cf8e000000b00522219bce05mr3687014edx.7.1690944366224; Tue, 01 Aug
+ 2023 19:46:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230801011554.3950435-1-guoren@kernel.org> <CAHirt9ht8AsE=FC8+222JDZXH3T58uLt+o=_pq+1zBhv1MKRjg@mail.gmail.com>
- <CAJF2gTRa5erHomJzLgUFO4SGqd5zSDwn6r3WN7kM8aWpv1vesg@mail.gmail.com>
- <CAJF2gTQ1hV1vipAo3H4X4WiPO84kVVFZcdGq7u4f0bVTry_akQ@mail.gmail.com>
- <CAHirt9gVqE=9vviJEY=kY=booVRmFPHrnFsKCXPXnXiWTB8bZQ@mail.gmail.com>
- <CAJF2gTR2ON33wc87iV564rkDbNiE56h_t0kzKKXdJtGqgJ1sOQ@mail.gmail.com>
- <CAHirt9i_osW_Dy5jNAnNOKrm-+38qN7SF+8ofNHePMAYhRKHsA@mail.gmail.com> <CAJF2gTSLD3jwzV59dGj_RENCvE0zMOAkLHqmT55bxL-4vA1wkA@mail.gmail.com>
-In-Reply-To: <CAJF2gTSLD3jwzV59dGj_RENCvE0zMOAkLHqmT55bxL-4vA1wkA@mail.gmail.com>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Wed, 2 Aug 2023 10:23:18 +0800
-X-Gmail-Original-Message-ID: <CAHirt9iiA_zdBbmnmMNAEmvKBU-1imRxD7wG-0OmnPTsG2RJMA@mail.gmail.com>
-Message-ID: <CAHirt9iiA_zdBbmnmMNAEmvKBU-1imRxD7wG-0OmnPTsG2RJMA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fixup cmpxchg sematic for memory barrier
-To: Guo Ren <guoren@kernel.org>
-Cc: chenhuacai@kernel.or, kernel@xen0n.name, arnd@arndb.de, 
-	andi.shyti@linux.intel.com, andrzej.hajda@intel.com, peterz@infradead.org, 
-	will@kernel.org, boqun.feng@gmail.com, mark.rutland@arm.com, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@linux.alibaba.com>
+References: <1690871446-23713-1-git-send-email-yangtiezhu@loongson.cn> <20230801134034.GA3831650@dev-arch.thelio-3990X>
+In-Reply-To: <20230801134034.GA3831650@dev-arch.thelio-3990X>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 2 Aug 2023 10:45:53 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7MeiZpSh28j2TDSwS1ae0L+rGMA7hi+MV2Z3uCiguLkw@mail.gmail.com>
+Message-ID: <CAAhV-H7MeiZpSh28j2TDSwS1ae0L+rGMA7hi+MV2Z3uCiguLkw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Error out if clang version is less than 17.0.0
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Nick Desaulniers <ndesaulniers@google.com>, 
+	loongarch@lists.linux.dev, llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8CxbSMivslkVtdEAA--.64339S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWrtw4xtrW3tr1UKFWrKFyDArc_yoW8JrWDpr
-	WIyFs0gFZ7Xw40ywsakw48ZFyrtwnaqF17X3sa9rZFyFyav343trW7Gry3XrsxZr93Gw1Y
-	v3yq934FvFyDZFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWU
-	AwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
-	AFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xII
-	jxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
-	A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU
-	0xZFpf9x07jbPEfUUUUU=
 
-On Wed, Aug 2, 2023 at 7:17=E2=80=AFAM Guo Ren <guoren@kernel.org> wrote:
+Hi,
+
+On Tue, Aug 1, 2023 at 9:40=E2=80=AFPM Nathan Chancellor <nathan@kernel.org=
+> wrote:
 >
-> On Tue, Aug 1, 2023 at 12:37=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wr=
-ote:
+> Hi Tiezhu,
+>
+> On Tue, Aug 01, 2023 at 02:30:46PM +0800, Tiezhu Yang wrote:
+> > On my test machine, the clang version is 16.0.4, when build kernel
+> > with clang:
 > >
-> > On Tue, Aug 1, 2023 at 6:50=E2=80=AFPM Guo Ren <guoren@kernel.org> wrot=
-e:
-> > >
-> > > On Tue, Aug 1, 2023 at 5:32=E2=80=AFPM WANG Rui <wangrui@loongson.cn>=
- wrote:
-> > > > No. LL and LL won't reorder because LL implies a memory barrier(tho=
-ugh
-> > > > not acquire semantics).
-> > > That means we could remove __WEAK_LLSC_MB totally, right?
+> >   make CC=3Dclang loongson3_defconfig
+> >   make CC=3Dclang
 > >
-> > More precisely, __WEAK_LLSC_MB is intended to prevent reordering
-> > between LL and normal LD used to fetch the expected value for cmpxchg.
-> Oh, that's unnecessary when cmpxchg fails.
+> > there exist many errors such as:
+> >
+> >   clang-16: error: argument unused during compilation: '-mabi=3Dlp64s'
+> >   error: unknown register name 'a0' in asm
+> >   error: unknown register name 't0' in asm
+> >
+> > the above issues have been fixed in the upstream llvm project recently,
+> > it works well when update clang version to 17.0.0:
+> >
+> >   make CC=3Dclang loongson3_defconfig
+> >   make CC=3Dclang menuconfig (set CONFIG_MODULES=3Dn and CONFIG_RELOCAT=
+ABLE=3Dn)
+> >   make CC=3Dclang
+> >
+> > thus 17.0.0 is the minimal clang version to build kernel on LoongArch,
+> > it is better to error out if clang version is less than 17.0.0, then
+> > we can do the right thing to update clang version and avoid wasting
+> > time to analysis kernel errors.
+> >
+> > By the way, the clang 17.0.0 still have some issues to build kernel on
+> > LoongArch, you need to unset CONFIG_MODULES and CONFIG_RELOCATABLE to
+> > avoid build errors. Additionally, if you want a workable kernel, some
+> > modules should be set as y instead of m if CONFIG_MODULES=3Dn.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1787
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > ---
+> >  arch/loongarch/Makefile | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> > index b1e5db5..f07f62a 100644
+> > --- a/arch/loongarch/Makefile
+> > +++ b/arch/loongarch/Makefile
+> > @@ -10,6 +10,12 @@ KBUILD_DEFCONFIG :=3D loongson3_defconfig
+> >  image-name-y                 :=3D vmlinux
+> >  image-name-$(CONFIG_EFI_ZBOOT)       :=3D vmlinuz
+> >
+> > +ifdef CONFIG_CC_IS_CLANG
+> > +  ifneq ($(call clang-min-version, 170000),y)
+> > +    $(error Sorry, you need a newer clang version >=3D 17.0.0)
+> > +  endif
+> > +endif
+> > +
 >
-> Maybe you treat cmpxchg as a CoRR antidote in coincidence. Please
-> solve the CoRR problem by READ_ONCE.
+> Thanks for the patch! I agree that we should restrict LoongArch to LLVM
+> 17 and newer. However, there is already existing infrastructure for this
+> type of check in Kconfig, so we don't need to add anything to
+> arch/loongarch. Just modify scripts/min-tool-version.sh like so then
+> there will be a message during configuration time that the compiler is
+> too old.
 >
-> See alpha architecture.
+> diff --git a/scripts/min-tool-version.sh b/scripts/min-tool-version.sh
+> index 2ade63149466..572c0526ad61 100755
+> --- a/scripts/min-tool-version.sh
+> +++ b/scripts/min-tool-version.sh
+> @@ -26,6 +26,8 @@ gcc)
+>  llvm)
+>         if [ "$SRCARCH" =3D s390 ]; then
+>                 echo 15.0.0
+> +       elif [ "$SRCARCH" =3D loongarch ]; then
+> +               echo 17.0.0
+>         else
+>                 echo 11.0.0
+>         fi
+>
+> ***
+> *** C compiler is too old.
+> ***   Your Clang version:    16.0.6
+> ***   Minimum Clang version: 17.0.0
+> ***
+> scripts/Kconfig.include:44: Sorry, this C compiler is not supported.
+This method is better, but since Clang17 cannot build a
+full-functional kernel (CONFIG_MODULES, may be solved in Clang18), I
+suggest "fix" it in future until all features can be enabled.
 
-Unfortunately, the LL instruction has no acquire semantics. Even if
-our kernel team improves READ_ONCE, it cannot prevent reordering
-between LL and READ_ONCE after cmpxchg fails.
-
-LL (<memory-barrier> + <load-exclusive>); WEAK_LLSC_MB; READ_ONCE
-(<normal-load>); ...
-
-vs
-
-LL (<memory-barrier> + <load-exclusive>); READ_ONCE (<normal-load> +
-<memory-barrier>); ...
-
-Improving READ_ONCE is really important.
-
-Regards,
---=20
-WANG Rui
-
+Huacai
+>
+> >  ifndef CONFIG_EFI_STUB
+> >  KBUILD_IMAGE :=3D $(boot)/vmlinux.elf
+> >  else
+> > --
+> > 2.1.0
+> >
+> >
+>
+> Cheers,
+> Nathan
