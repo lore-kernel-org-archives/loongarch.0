@@ -1,50 +1,50 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FD579FF
-	for <loongarch@lists.linux.dev>; Wed,  2 Aug 2023 17:01:36 +0000 (UTC)
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1bba7a32a40so1241025ad.0
-        for <loongarch@lists.linux.dev>; Wed, 02 Aug 2023 10:01:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD44F9F2
+	for <loongarch@lists.linux.dev>; Wed,  2 Aug 2023 18:07:41 +0000 (UTC)
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5843fed1e88so294797b3.0
+        for <loongarch@lists.linux.dev>; Wed, 02 Aug 2023 11:07:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690995696; x=1691600496;
+        d=google.com; s=20221208; t=1690999661; x=1691604461;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uoCuB3mffhSds51iMp00O5xm+yzIoOPBsVBHjFLh+kk=;
-        b=KLHPbrCvHeyGLM2mw8D5f6rzBwkaj3O8dVqo8w7auH/ZjSB06l2wTkYC5pFLHf/78U
-         5h8Frwj4ZSV54PbzQvd+uXOKXkwOmgjwEu90JEHUoJUxwWxSqbk0T2DrxN+GkE60zh7B
-         hVQQbPhTOOd7h08BeGFSpCTp41ZpkKcaJOJfWvHgm9lPTMiVCxJAe66XjXBKR1V9KMFW
-         4r9yr9u6C7TVLn2QStyR38cAdCj+fJaYtTsO1ZEym7WH4ByLunYi25lH1aj4eeWNla8Q
-         nqyiuY6+o/3nPaNg/RiYAe9+5rTbvOU74ZvT0zz4vknk6DL0cOcQyOa57BUKgB0wDf31
-         2mKw==
+        bh=aYBq5Q96CpGkfQxAbNmYKZm5+ExWaPEyMZGk2PekfWQ=;
+        b=kMvB8NwzZ2f28utg/bipBg/XV00In0z3HmKG57aADZb87Dfjxd94GUHXl9mRml5Bew
+         pCQkyWj5/7EK2/cuY962nxJnZjnNrW4WnZb98E1jZCCTGJkWbBKrTLm0eYnLGehu1pbf
+         p13/kRJ/W1XK5AqpAaod4tXiTgI9cWWV+bh2OCYyE/DhukaPEwQltpxce9GMftu7gL81
+         x2hn6z2yZpnKDo84U+sk7AGhtVFEHM0q+FppCyR1gbnN9i6LoLe43MjIbnBw4kCgMIru
+         nfDY93evr9w1jWlS3VQ6gwSLHPgtE9uPRpfkANHF5fEF824fdvWP8t3ME9ZyPv43k7uy
+         FMbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690995696; x=1691600496;
+        d=1e100.net; s=20221208; t=1690999661; x=1691604461;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uoCuB3mffhSds51iMp00O5xm+yzIoOPBsVBHjFLh+kk=;
-        b=lvKFLiLUhRlIM1ttje2Etyv9Y7gO032JodW/KbOh8gJY4+HZwQY8cCvNaHkDE9wzBV
-         ElZLV0vbiy0ZimRjuX172iyaB6kmYBM/LLAzIG/RdMLDuHCmHNWpgjf/2GXcvpDJ89iW
-         cyjXxRJoTsKQn4jPSlh/imLeSy3OJczdxokwD6hQuERxdSbUeAZqu/6/B1jEPvOYTUAc
-         lM6QNZJpSPZ3FsO8nqgmGWTxP7GSoF7ONRHO/yoHyiHjKcY3KXO11/auTAfR/xGAxJa6
-         ws5ylO13wl9EvSZqWEcTk9HmIJBYgjJ7UMawjb4czHcg70flz/PtXS+5Q/pWJyWKRLEE
-         liQg==
-X-Gm-Message-State: ABy/qLbsqp6D+WuShHVco2NoDMkhaWa2tVXeE5L1Hi3mBh2B6ANmoOVj
-	GOuZtBNvJznHvYj0tLH/S0epoo13I4g=
-X-Google-Smtp-Source: APBJJlHiO+JpDgTKgRQGQ+Hh7FpiBTRtLukpNuLqe7/AFsaAEDroKU0qv4eRDCr6/t6SMvae6PfaaoF5yL0=
+        bh=aYBq5Q96CpGkfQxAbNmYKZm5+ExWaPEyMZGk2PekfWQ=;
+        b=VMXRg4Cr9f0hwlbbMCC3wk6i1AJJhM/PUKVuALHnCGDe7xGB5cWA22zggqC+DBeqzr
+         qU7v9c+Ly0+JnhAxMaB2AJliPmCM3dJ/P+dxvUYywUNK0dnLEpn589SeEGcl1SBXgRa+
+         INT678Vxr5Z9nhy2d6D+ljjj6dJ9kX5oOx4voFXL6dp6kJ2o6Vy8PXbUwUnLYH9L3nrE
+         sCM6NsX4zHcw0EkOrlF2ob35sODqKQsgUId26uaiUHF+9Ow76rHWq5H1pedVRcLFcvAu
+         xqNMjL520s+zpd9lm9Ma2horABRD93eS+sWfeC0MeLfPsq733188BJhkdid2Qol5lpC1
+         Efuw==
+X-Gm-Message-State: ABy/qLZHNNR7opRk7bbxOyQuAa4FQIzpJVtzGgAFjUc1GUijQk3/HT2Y
+	InyJoF4DcPG4pBGK2GWAYmiVzYYrduQ=
+X-Google-Smtp-Source: APBJJlGzmmAki8FPLA/Kt+NIeDgBabhk3tAwqfYiA2SUVE/7ybvjUDLbrjET1osZSWgDiQS5Pi9ozpujd5s=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:f682:b0:1b1:7336:2637 with SMTP id
- l2-20020a170902f68200b001b173362637mr92471plg.11.1690995695687; Wed, 02 Aug
- 2023 10:01:35 -0700 (PDT)
-Date: Wed, 2 Aug 2023 10:01:34 -0700
-In-Reply-To: <20230801020206.1957986-2-zhaotianrui@loongson.cn>
+ (user=seanjc job=sendgmr) by 2002:a81:441d:0:b0:586:4eae:b942 with SMTP id
+ r29-20020a81441d000000b005864eaeb942mr88301ywa.4.1690999660863; Wed, 02 Aug
+ 2023 11:07:40 -0700 (PDT)
+Date: Wed, 2 Aug 2023 11:07:39 -0700
+In-Reply-To: <20230801020206.1957986-3-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-References: <20230801020206.1957986-1-zhaotianrui@loongson.cn> <20230801020206.1957986-2-zhaotianrui@loongson.cn>
-Message-ID: <ZMqL7qPyngxOH4Y0@google.com>
-Subject: Re: [PATCH v1 1/4] selftests: kvm: Add kvm selftests header files for LoongArch
+References: <20230801020206.1957986-1-zhaotianrui@loongson.cn> <20230801020206.1957986-3-zhaotianrui@loongson.cn>
+Message-ID: <ZMqba0j82Di+P+LI@google.com>
+Subject: Re: [PATCH v1 2/4] selftests: kvm: Add processor tests for LoongArch KVM
 From: Sean Christopherson <seanjc@google.com>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>
 Cc: Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
@@ -54,95 +54,203 @@ Cc: Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-ke
 Content-Type: text/plain; charset="us-ascii"
 
 On Tue, Aug 01, 2023, Tianrui Zhao wrote:
-> Add kvm selftests header files for LoongArch, including processor.h,
-> sysreg.h, and kvm_util_base.h. Those mainly contain LoongArch CSR
-> register defines and page table information.
+> Add processor tests for LoongArch KVM, including vcpu initialize
+
+Nit, AFAICT these aren't tests, this is simply the core KVM selftests support
+for LoongArch.
+
+> and tlb refill exception handler.
 > 
 > Based-on: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
 > Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 > ---
->  .../selftests/kvm/include/kvm_util_base.h     |  5 ++
->  .../kvm/include/loongarch/processor.h         | 28 ++++++
->  .../selftests/kvm/include/loongarch/sysreg.h  | 89 +++++++++++++++++++
->  3 files changed, 122 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/processor.h
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/sysreg.h
+>  .../selftests/kvm/lib/loongarch/exception.S   |  27 ++
+>  .../selftests/kvm/lib/loongarch/processor.c   | 367 ++++++++++++++++++
+>  2 files changed, 394 insertions(+)
+>  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
+>  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
 > 
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util_base.h b/tools/testing/selftests/kvm/include/kvm_util_base.h
-> index 07732a157ccd..8747127e0bab 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util_base.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util_base.h
-> @@ -197,6 +197,11 @@ extern enum vm_guest_mode vm_mode_default;
->  #define MIN_PAGE_SHIFT			12U
->  #define ptes_per_page(page_size)	((page_size) / 8)
->  
-> +#elif defined(__loongarch__)
-> +#define VM_MODE_DEFAULT			VM_MODE_P36V47_16K
-> +#define MIN_PAGE_SHIFT			14U
-> +#define ptes_per_page(page_size)	((page_size) / 8)
-> +
->  #endif
->  
->  #define MIN_PAGE_SIZE		(1U << MIN_PAGE_SHIFT)
-> diff --git a/tools/testing/selftests/kvm/include/loongarch/processor.h b/tools/testing/selftests/kvm/include/loongarch/processor.h
+> diff --git a/tools/testing/selftests/kvm/lib/loongarch/exception.S b/tools/testing/selftests/kvm/lib/loongarch/exception.S
 > new file mode 100644
-> index 000000000000..d67796af51a0
+> index 000000000000..19dc50993da4
 > --- /dev/null
-> +++ b/tools/testing/selftests/kvm/include/loongarch/processor.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * LoongArch processor specific defines
+> +++ b/tools/testing/selftests/kvm/lib/loongarch/exception.S
+> @@ -0,0 +1,27 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#include "sysreg.h"
+> +
+> +/* address of refill exception should be 4K aligned */
+> +.align  12
 
-Nit, my preference is to not bother with these types of comments, it should be
-quite obvious from the file name that that everything in here is LoongArch
-specific.
+.align works on bytes, not on shifts.  I.e. this will make handle_tlb_refill
+12-byte aligned, not 4096-byte aligned.
+
+> +.global handle_tlb_refill
+> +handle_tlb_refill:
+> +	csrwr	t0, LOONGARCH_CSR_TLBRSAVE
+> +	csrrd	t0, LOONGARCH_CSR_PGD
+> +	lddir	t0, t0, 3
+> +	lddir	t0, t0, 1
+> +	ldpte	t0, 0
+> +	ldpte	t0, 1
+> +	tlbfill
+> +	csrrd	t0, LOONGARCH_CSR_TLBRSAVE
+> +	ertn
+> +
+> +/* address of general exception should be 4K aligned */
+> +.align  12
+
+Same thing here.
+
+> +.global handle_exception
+> +handle_exception:
+> +1:
+> +	nop
+> +	b	1b
+> +	nop
+> +	ertn
+> diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+> new file mode 100644
+> index 000000000000..2e50b6e2c556
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+> @@ -0,0 +1,367 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * KVM selftest LoongArch library code, including CPU-related functions.
+> + *
+
+Again, unnecessary IMO.  If you do keep the comment, the extra line with a bare
+asterisk should be dropped.
 
 > + */
-> +#ifndef SELFTEST_KVM_PROCESSOR_H
-> +#define SELFTEST_KVM_PROCESSOR_H
 > +
+> +#include <assert.h>
+> +#include <linux/bitfield.h>
 > +#include <linux/compiler.h>
-> +#define _PAGE_VALID_SHIFT	0
-> +#define _PAGE_DIRTY_SHIFT	1
-> +#define _PAGE_PLV_SHIFT		2  /* 2~3, two bits */
-> +#define _CACHE_SHIFT		4  /* 4~5, two bits */
-> +#define _PAGE_PRESENT_SHIFT	7
-> +#define _PAGE_WRITE_SHIFT	8
 > +
-> +#define PLV_KERN		0
-> +#define PLV_USER		3
-> +#define PLV_MASK		0x3
+> +#include "kvm_util.h"
+> +#include "processor.h"
+> +#include "sysreg.h"
 > +
-> +#define _PAGE_VALID		(0x1UL << _PAGE_VALID_SHIFT)
-> +#define _PAGE_PRESENT		(0x1UL << _PAGE_PRESENT_SHIFT)
-> +#define _PAGE_WRITE		(0x1UL << _PAGE_WRITE_SHIFT)
-> +#define _PAGE_DIRTY		(0x1UL << _PAGE_DIRTY_SHIFT)
-> +#define _PAGE_USER		(PLV_USER << _PAGE_PLV_SHIFT)
-> +#define __READABLE		(_PAGE_VALID)
-> +#define __WRITEABLE		(_PAGE_DIRTY | _PAGE_WRITE)
-> +#define _CACHE_CC		(0x1UL << _CACHE_SHIFT) /* Coherent Cached */
-> +#endif
-> diff --git a/tools/testing/selftests/kvm/include/loongarch/sysreg.h b/tools/testing/selftests/kvm/include/loongarch/sysreg.h
-> new file mode 100644
-> index 000000000000..04f53674c9d8
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/include/loongarch/sysreg.h
+> +#define DEFAULT_LOONGARCH_GUEST_STACK_VADDR_MIN		0xac0000
 
-Any reason these can't simply go in processor.h?  Neither file is particular large,
-especially for CPU definition files.
+Why diverge from the common?
 
-> @@ -0,0 +1,89 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef SELFTEST_KVM_SYSREG_H
-> +#define SELFTEST_KVM_SYSREG_H
+	#define DEFAULT_GUEST_STACK_VADDR_MIN	0xab6000
+
+AFAIK, the common value is also mostly arbitrary, but that just makes it even
+more confusing as to why LoongArch needs to bump the min by 0x4000.
+
+> +uint64_t *virt_get_pte_hva(struct kvm_vm *vm, vm_vaddr_t gva)
+> +{
+> +	uint64_t *ptep;
 > +
-> +/*
-> + * note that this declaration raises a checkpatch warning, but
-> + * no good way to avoid it.
-> + */
+> +	if (!vm->pgd_created)
+> +		goto unmapped_gva;
+> +
+> +	ptep = addr_gpa2hva(vm, vm->pgd) + pgd_index(vm, gva) * 8;
+> +	if (!ptep)
+> +		goto unmapped_gva;
+> +
+> +	switch (vm->pgtable_levels) {
+> +	case 4:
+> +		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pud_index(vm, gva) * 8;
+> +		if (!ptep)
+> +			goto unmapped_gva;
 
-Definitely drop this comment, once the patch is applied the fact that checkpatch
-complains is irrelevant.
+This wants a "fallthrough" annotation.
 
-> +#define zero	$r0
+> +	case 3:
+> +		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pmd_index(vm, gva) * 8;
+> +		if (!ptep)
+> +			goto unmapped_gva;
+> +	case 2:
+> +		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pte_index(vm, gva) * 8;
+> +		if (!ptep)
+> +			goto unmapped_gva;
+> +		break;
+> +	default:
+> +		TEST_FAIL("Page table levels must be 2, 3, or 4");
+
+Obviously it shouldn't come up, but print the actual pgtable_levels to make debug
+a wee bit easier e.g.
+		TEST_FAIL("Got %u page table levels, expected 2, 3, or 4",
+			  vm->pgtable_levels);
+
+Mostly out of curiosity, but also because it looks like this was heavily copy+pasted
+from ARM: does LoongArch actually support 2-level page tables?
+> +static void loongarch_set_csr(struct kvm_vcpu *vcpu, uint64_t id, uint64_t val)
+> +{
+> +	uint64_t csrid;
+> +
+> +	csrid = KVM_REG_LOONGARCH_CSR | KVM_REG_SIZE_U64 | 8 * id;
+> +	vcpu_set_reg(vcpu, csrid, val);
+> +}
+> +
+> +static void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
+> +{
+> +	unsigned long val;
+> +	int width;
+> +	struct kvm_vm *vm = vcpu->vm;
+> +
+> +	switch (vm->mode) {
+> +	case VM_MODE_P48V48_16K:
+> +	case VM_MODE_P40V48_16K:
+> +	case VM_MODE_P36V48_16K:
+> +	case VM_MODE_P36V47_16K:
+> +		break;
+> +
+> +	default:
+> +		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
+> +	}
+> +
+> +	/* user mode and page enable mode */
+> +	val = PLV_USER | CSR_CRMD_PG;
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_CRMD, val);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PRMD, val);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_EUEN, 1);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_ECFG, 0);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_TCFG, 0);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_ASID, 1);
+> +
+> +	width = vm->page_shift - 3;
+> +	val = 0;
+> +	switch (vm->pgtable_levels) {
+> +	case 4:
+> +		/* pud page shift and width */
+> +		val = (vm->page_shift + width * 2) << 20 | (width << 25);
+> +	case 3:
+> +		/* pmd page shift and width */
+> +		val |= (vm->page_shift + width) << 10 | (width << 15);
+> +	case 2:
+> +		/* pte page shift and width */
+> +		val |= vm->page_shift | width << 5;
+> +		break;
+> +	default:
+> +		TEST_FAIL("Page table levels must be 2, 3, or 4");
+> +	}
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PWCTL0, val);
+> +
+> +	/* pgd page shift and width */
+> +	val = (vm->page_shift + width * (vm->pgtable_levels - 1)) | width << 6;
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PWCTL1, val);
+> +
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PGDL, vm->pgd);
+> +
+> +	extern void handle_tlb_refill(void);
+> +	extern void handle_exception(void);
+
+Eww.  I get that it's probably undesirable to expose these via processor.h, but
+at least declare them outside of the function.
+
+> +struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
+> +				  void *guest_code)
+> +{
+> +	return loongarch_vcpu_add(vm, vcpu_id, guest_code);
+
+Please drop the single-line passthrough, i.e. drop loongarch_vcpu_add().  I'm
+guessing you copy+pasted much of this from ARM.  ARM's passthrough isn't a pure
+passthrough, which is directly related to why the "passthrough" is ok: there are
+other callers to aarch64_vcpu_add() that pass a non-NULL @source.
