@@ -1,191 +1,92 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAE88474
-	for <loongarch@lists.linux.dev>; Wed,  2 Aug 2023 15:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=wBzUOAudwvibgR05xcILaDI1lHt6uM+gLVFXP8bsuc0=; b=Ha9s/sKNhdfeybdIYofHo+zqU+
-	ot8ZgcRg0OXHpTfLXK7qTZ+NFCab/7cCF/cAPpEv7EwGg0NVhtKlv8fxjnbEEnrV9RHLiHvYRTLVx
-	sKmKQRJX6gkR36XaRIHbh6MMjX8PV5CP8uci9/fOC0QF8+vUc8adPFYjIwD4ccpBFnRTaxDRL0lY2
-	25G6tjp5LzEW8RBGuX20uqsI2hpOBlD0vRBc4n70B5Iqq/RJnjpiIstoVFEDu5/MUkD0ghh+fDtGi
-	KdyynwzxrxNTdwR79IRw0WeUOQ0RWGwgXQrNVErQWXyR3bFnYu0BtiALQ5p2J4wGQ6keaOBySlAsV
-	2x50BKdA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qRDY9-00FfjV-D6; Wed, 02 Aug 2023 15:14:09 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	linux-arch@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Mike Rapoport <rppt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: [PATCH v6 14/38] loongarch: Implement the new page table range API
-Date: Wed,  2 Aug 2023 16:13:42 +0100
-Message-Id: <20230802151406.3735276-15-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20230802151406.3735276-1-willy@infradead.org>
-References: <20230802151406.3735276-1-willy@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDA079FF
+	for <loongarch@lists.linux.dev>; Wed,  2 Aug 2023 16:58:18 +0000 (UTC)
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-d114bc2057fso11242276.3
+        for <loongarch@lists.linux.dev>; Wed, 02 Aug 2023 09:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1690995498; x=1691600298;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PzbCDXFnk3w2SSf45TXB2yxLMTvmATReUsA4zCcZwws=;
+        b=lyoh2SBz23Xi/1oythXCvD4eYT/mDAOe1c1NCuMnLDbp/ZF1fVWTZSS7U8LfcMunzP
+         jkvpro9VFgWnjS2rIuQKBJORICyNhyf5NOWNBck6eMYluV3+8yr9OmHJ345iUgzR1c0R
+         tRd6tvQUb71r2RPXSvUWe2DEcA4tQcmDlsNvbWIQUYfsb6stBllbtNrWVjJy6HEnXGoJ
+         zZat4XSMBiInPICo94A+caZSdOnVvOcAzZvymmXkKrO3bOSubnDyPyZ+k50A3aT/BK3z
+         AucwqqUgcTPSCT8zRp6TNveYxdxmpZNU2X3TsgfbiaSFvqUqk0vEnyCDp0KIvCrp74RX
+         u5EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690995498; x=1691600298;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PzbCDXFnk3w2SSf45TXB2yxLMTvmATReUsA4zCcZwws=;
+        b=i95kANlKBr/7Pw5irUW6UCoLiVc3YFOedvprSbP9SmZQQa1qjLJbaHPi7JGX2DbHDB
+         w3YXzrmKCpgEKQgtZjurW7ei7j5SkVK5a95nBU6s+Nm3/IUV1uzpqeHfRpTl3depwU6M
+         V4j4AsTFKHSbKn7ZduutH8MokdLxasvGSxxpajGBMWbcJoxmay6tFzr1LP32uLh8lF5i
+         eBTjyL1b8u+G9WvjZr0wGWRjkTS7EzBn6FiQ3Q4gDbmUG0o72lBR6pL+ZaNgE25GFjTC
+         yt58qc/9mox1eb1x7lCzXIYzj81Ki+6qGBVk41X76XtbOL+9HxT2lvJpRqH0q1rY+sXy
+         zIhA==
+X-Gm-Message-State: ABy/qLaBYWPhE3jSjteBNVEuCeFtddV5uIAce/dIrxnIW7cCwimek0Kt
+	gFRT9F92bS7CmqBDBCHQEQFzfxnJkdQ=
+X-Google-Smtp-Source: APBJJlE6rEuH8LasDnQfODkiDH09tFBtZ4sbu1M/IsR0DKMHMrqdBmEz7WgWDwSbKp4OvDE+w/rV2l2PoNk=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:4109:0:b0:d10:c94a:be7e with SMTP id
+ o9-20020a254109000000b00d10c94abe7emr109911yba.8.1690995497821; Wed, 02 Aug
+ 2023 09:58:17 -0700 (PDT)
+Date: Wed, 2 Aug 2023 09:58:16 -0700
+In-Reply-To: <20230801020206.1957986-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20230801020206.1957986-1-zhaotianrui@loongson.cn>
+Message-ID: <ZMqLKAWRapQjGgWR@google.com>
+Subject: Re: [PATCH v1 0/4] selftests: kvm: Add LoongArch support
+From: Sean Christopherson <seanjc@google.com>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, Vishal Annapurve <vannapurve@google.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Peter Xu <peterx@redhat.com>, Vipin Sharma <vipinsh@google.com>, maobibo@loongson.cn
+Content-Type: text/plain; charset="us-ascii"
 
-Add update_mmu_cache_range() and change _PFN_SHIFT to PFN_PTE_SHIFT.
-It would probably be more efficient to implement __update_tlb() by
-flushing the entire folio instead of calling __update_tlb() N times,
-but I'll leave that for someone who understands the architecture better.
+Please use "KVM: selftests:" for the scope.  There's no "official" requirement,
+but I've been heavily pushing "KVM: selftests:" and no one has objected or
+suggested an alternative, and I'd really like all of KVM selftests to use a
+consistent scope.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
----
- arch/loongarch/include/asm/cacheflush.h   |  1 +
- arch/loongarch/include/asm/pgtable-bits.h |  4 +--
- arch/loongarch/include/asm/pgtable.h      | 33 ++++++++++++-----------
- arch/loongarch/mm/pgtable.c               |  2 +-
- arch/loongarch/mm/tlb.c                   |  2 +-
- 5 files changed, 23 insertions(+), 19 deletions(-)
+On Tue, Aug 01, 2023, Tianrui Zhao wrote:
+> This patch series base on the Linux LoongArch KVM patch:
+> Based-on: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
 
-diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
-index 0681788eb474..88a44da50a3b 100644
---- a/arch/loongarch/include/asm/cacheflush.h
-+++ b/arch/loongarch/include/asm/cacheflush.h
-@@ -47,6 +47,7 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
- #define flush_cache_vmap(start, end)			do { } while (0)
- #define flush_cache_vunmap(start, end)			do { } while (0)
- #define flush_icache_page(vma, page)			do { } while (0)
-+#define flush_icache_pages(vma, page)			do { } while (0)
- #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
- #define flush_dcache_page(page)				do { } while (0)
- #define flush_dcache_mmap_lock(mapping)			do { } while (0)
-diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
-index de46a6b1e9f1..35348d4c4209 100644
---- a/arch/loongarch/include/asm/pgtable-bits.h
-+++ b/arch/loongarch/include/asm/pgtable-bits.h
-@@ -50,12 +50,12 @@
- #define _PAGE_NO_EXEC		(_ULCAST_(1) << _PAGE_NO_EXEC_SHIFT)
- #define _PAGE_RPLV		(_ULCAST_(1) << _PAGE_RPLV_SHIFT)
- #define _CACHE_MASK		(_ULCAST_(3) << _CACHE_SHIFT)
--#define _PFN_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
-+#define PFN_PTE_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
- 
- #define _PAGE_USER	(PLV_USER << _PAGE_PLV_SHIFT)
- #define _PAGE_KERN	(PLV_KERN << _PAGE_PLV_SHIFT)
- 
--#define _PFN_MASK (~((_ULCAST_(1) << (_PFN_SHIFT)) - 1) & \
-+#define _PFN_MASK (~((_ULCAST_(1) << (PFN_PTE_SHIFT)) - 1) & \
- 		  ((_ULCAST_(1) << (_PAGE_PFN_END_SHIFT)) - 1))
- 
- /*
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 38afeb7dd58b..e7cf25e452c0 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -237,9 +237,9 @@ extern pmd_t mk_pmd(struct page *page, pgprot_t prot);
- extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pmd_t pmd);
- 
- #define pte_page(x)		pfn_to_page(pte_pfn(x))
--#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> _PFN_SHIFT))
--#define pfn_pte(pfn, prot)	__pte(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
--#define pfn_pmd(pfn, prot)	__pmd(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
-+#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> PFN_PTE_SHIFT))
-+#define pfn_pte(pfn, prot)	__pte(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
-+#define pfn_pmd(pfn, prot)	__pmd(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
- 
- /*
-  * Initialize a new pgd / pud / pmd table with invalid pointers.
-@@ -334,19 +334,13 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
- 	}
- }
- 
--static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
--			      pte_t *ptep, pte_t pteval)
--{
--	set_pte(ptep, pteval);
--}
--
- static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
- {
- 	/* Preserve global status for the pair */
- 	if (pte_val(*ptep_buddy(ptep)) & _PAGE_GLOBAL)
--		set_pte_at(mm, addr, ptep, __pte(_PAGE_GLOBAL));
-+		set_pte(ptep, __pte(_PAGE_GLOBAL));
- 	else
--		set_pte_at(mm, addr, ptep, __pte(0));
-+		set_pte(ptep, __pte(0));
- }
- 
- #define PGD_T_LOG2	(__builtin_ffs(sizeof(pgd_t)) - 1)
-@@ -445,11 +439,20 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- extern void __update_tlb(struct vm_area_struct *vma,
- 			unsigned long address, pte_t *ptep);
- 
--static inline void update_mmu_cache(struct vm_area_struct *vma,
--			unsigned long address, pte_t *ptep)
-+static inline void update_mmu_cache_range(struct vm_fault *vmf,
-+		struct vm_area_struct *vma, unsigned long address,
-+		pte_t *ptep, unsigned int nr)
- {
--	__update_tlb(vma, address, ptep);
-+	for (;;) {
-+		__update_tlb(vma, address, ptep);
-+		if (--nr == 0)
-+			break;
-+		address += PAGE_SIZE;
-+		ptep++;
-+	}
- }
-+#define update_mmu_cache(vma, addr, ptep) \
-+	update_mmu_cache_range(NULL, vma, addr, ptep, 1)
- 
- #define __HAVE_ARCH_UPDATE_MMU_TLB
- #define update_mmu_tlb	update_mmu_cache
-@@ -462,7 +465,7 @@ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
- 
- static inline unsigned long pmd_pfn(pmd_t pmd)
- {
--	return (pmd_val(pmd) & _PFN_MASK) >> _PFN_SHIFT;
-+	return (pmd_val(pmd) & _PFN_MASK) >> PFN_PTE_SHIFT;
- }
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
-index 36a6dc0148ae..1260cf30e3ee 100644
---- a/arch/loongarch/mm/pgtable.c
-+++ b/arch/loongarch/mm/pgtable.c
-@@ -107,7 +107,7 @@ pmd_t mk_pmd(struct page *page, pgprot_t prot)
- {
- 	pmd_t pmd;
- 
--	pmd_val(pmd) = (page_to_pfn(page) << _PFN_SHIFT) | pgprot_val(prot);
-+	pmd_val(pmd) = (page_to_pfn(page) << PFN_PTE_SHIFT) | pgprot_val(prot);
- 
- 	return pmd;
- }
-diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-index 00bb563e3c89..eb8572e201ea 100644
---- a/arch/loongarch/mm/tlb.c
-+++ b/arch/loongarch/mm/tlb.c
-@@ -252,7 +252,7 @@ static void output_pgtable_bits_defines(void)
- 	pr_define("_PAGE_WRITE_SHIFT %d\n", _PAGE_WRITE_SHIFT);
- 	pr_define("_PAGE_NO_READ_SHIFT %d\n", _PAGE_NO_READ_SHIFT);
- 	pr_define("_PAGE_NO_EXEC_SHIFT %d\n", _PAGE_NO_EXEC_SHIFT);
--	pr_define("_PFN_SHIFT %d\n", _PFN_SHIFT);
-+	pr_define("PFN_PTE_SHIFT %d\n", PFN_PTE_SHIFT);
- 	pr_debug("\n");
- }
- 
--- 
-2.40.1
+Is there an actual dependency?  I ask because I'm shepherding along a series[*]
+that will silently conflict with the ucall support, and in a way with the Makefile
+changes.
 
+If there's no hard dependency, one option would be take this series through
+kvm-x86/selftests (my topic branch for KVM selftests changes) along with the
+guest printf series, e.g. so that we don't end up with a mess in linux-next and/or
+come the 6.6 merge window.
+
+https://lore.kernel.org/all/20230731203026.1192091-1-seanjc@google.com
+
+>  tools/testing/selftests/kvm/Makefile          |  11 +
+>  .../selftests/kvm/include/kvm_util_base.h     |   5 +
+>  .../kvm/include/loongarch/processor.h         |  28 ++
+>  .../selftests/kvm/include/loongarch/sysreg.h  |  89 +++++
+>  .../selftests/kvm/lib/loongarch/exception.S   |  27 ++
+>  .../selftests/kvm/lib/loongarch/processor.c   | 367 ++++++++++++++++++
+>  .../selftests/kvm/lib/loongarch/ucall.c       |  44 +++
+>  7 files changed, 571 insertions(+)
+>  create mode 100644 tools/testing/selftests/kvm/include/loongarch/processor.h
+>  create mode 100644 tools/testing/selftests/kvm/include/loongarch/sysreg.h
+>  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
+>  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
+>  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/ucall.c
+> 
+> -- 
+> 2.39.1
+> 
