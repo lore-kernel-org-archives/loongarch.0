@@ -1,143 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B813E8BF3
-	for <loongarch@lists.linux.dev>; Wed,  2 Aug 2023 15:12:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37963C433CD
-	for <loongarch@lists.linux.dev>; Wed,  2 Aug 2023 15:12:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690989157;
-	bh=Okcpc7Ru28gWwgJAhdc4dXD3GudgvC63PW18G2qLEFo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KTXzkScCftV8ORhHa3KqKf2yEP0SVRqfEaC4w59JKAZ3AWeshrbeUN8/aqhOo0i21
-	 fqmyNbXiovVjQ6cYEW7v5inMqJYgQFEJnfbPLRGkQwYtPx6fo9B1BQd7uflj2S/TG7
-	 050ua8EtWTfGJGGFjx/epnp9+nw0vEfmL4rZyGcDKqZockRzwUQL89KLbqagUFX4wm
-	 wikNFLK6iNhCVPguIesC2A0kAykwIUuj7PRCU7o9C9xllyGbvnmqzBGM+V8ItveGAI
-	 vGavUBSZ1+aWMZBagFxUdrNltjBTkYMgQbPDnviPu8KAUppBUT2aj75OHdqSRKQfaz
-	 ThXvkPqll3aeQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-52222562f1eso10189077a12.3
-        for <loongarch@lists.linux.dev>; Wed, 02 Aug 2023 08:12:37 -0700 (PDT)
-X-Gm-Message-State: ABy/qLZ3AVZvD19EPC8O+Y2+Raj/PifsNxh9cb+PKVUENYAMan3t8DKi
-	VGQmK0Ft9FbwN0x1SivY7dczC8EV8vLr5rcz+5E=
-X-Google-Smtp-Source: APBJJlEp1/J3UDUUrL9ltHLTJwCY/UofAqmcg4h1pgHXJ1W0LOEh+9QJ7WsW+xZ6SWeNMPOxVYD1LP80S8qoovQExyY=
-X-Received: by 2002:aa7:dcc3:0:b0:522:31d5:ee8e with SMTP id
- w3-20020aa7dcc3000000b0052231d5ee8emr5771244edu.8.1690989155487; Wed, 02 Aug
- 2023 08:12:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAE88474
+	for <loongarch@lists.linux.dev>; Wed,  2 Aug 2023 15:14:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=wBzUOAudwvibgR05xcILaDI1lHt6uM+gLVFXP8bsuc0=; b=Ha9s/sKNhdfeybdIYofHo+zqU+
+	ot8ZgcRg0OXHpTfLXK7qTZ+NFCab/7cCF/cAPpEv7EwGg0NVhtKlv8fxjnbEEnrV9RHLiHvYRTLVx
+	sKmKQRJX6gkR36XaRIHbh6MMjX8PV5CP8uci9/fOC0QF8+vUc8adPFYjIwD4ccpBFnRTaxDRL0lY2
+	25G6tjp5LzEW8RBGuX20uqsI2hpOBlD0vRBc4n70B5Iqq/RJnjpiIstoVFEDu5/MUkD0ghh+fDtGi
+	KdyynwzxrxNTdwR79IRw0WeUOQ0RWGwgXQrNVErQWXyR3bFnYu0BtiALQ5p2J4wGQ6keaOBySlAsV
+	2x50BKdA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qRDY9-00FfjV-D6; Wed, 02 Aug 2023 15:14:09 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Mike Rapoport <rppt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: [PATCH v6 14/38] loongarch: Implement the new page table range API
+Date: Wed,  2 Aug 2023 16:13:42 +0100
+Message-Id: <20230802151406.3735276-15-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20230802151406.3735276-1-willy@infradead.org>
+References: <20230802151406.3735276-1-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230801025815.2436293-1-lienze@kylinos.cn>
-In-Reply-To: <20230801025815.2436293-1-lienze@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 2 Aug 2023 23:12:23 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6FqreZtuOXYayhu=bLZeij+fxygbK5Mpw_kVuPTvdbWw@mail.gmail.com>
-Message-ID: <CAAhV-H6FqreZtuOXYayhu=bLZeij+fxygbK5Mpw_kVuPTvdbWw@mail.gmail.com>
-Subject: Re: [PATCH 0/4 v3] Add KFENCE support for LoongArch
-To: Enze Li <lienze@kylinos.cn>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, glider@google.com, 
-	elver@google.com, akpm@linux-foundation.org, kasan-dev@googlegroups.com, 
-	linux-mm@kvack.org, zhangqing@loongson.cn, yangtiezhu@loongson.cn, 
-	dvyukov@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Enze,
+Add update_mmu_cache_range() and change _PFN_SHIFT to PFN_PTE_SHIFT.
+It would probably be more efficient to implement __update_tlb() by
+flushing the entire folio instead of calling __update_tlb() N times,
+but I'll leave that for someone who understands the architecture better.
 
-I applied this series (with some small modifications) together with KASAN a=
-t:
-https://github.com/chenhuacai/linux/commits/loongarch-next
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+---
+ arch/loongarch/include/asm/cacheflush.h   |  1 +
+ arch/loongarch/include/asm/pgtable-bits.h |  4 +--
+ arch/loongarch/include/asm/pgtable.h      | 33 ++++++++++++-----------
+ arch/loongarch/mm/pgtable.c               |  2 +-
+ arch/loongarch/mm/tlb.c                   |  2 +-
+ 5 files changed, 23 insertions(+), 19 deletions(-)
 
-Please confirm everything works well for you.
+diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
+index 0681788eb474..88a44da50a3b 100644
+--- a/arch/loongarch/include/asm/cacheflush.h
++++ b/arch/loongarch/include/asm/cacheflush.h
+@@ -47,6 +47,7 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
+ #define flush_cache_vmap(start, end)			do { } while (0)
+ #define flush_cache_vunmap(start, end)			do { } while (0)
+ #define flush_icache_page(vma, page)			do { } while (0)
++#define flush_icache_pages(vma, page)			do { } while (0)
+ #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
+ #define flush_dcache_page(page)				do { } while (0)
+ #define flush_dcache_mmap_lock(mapping)			do { } while (0)
+diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
+index de46a6b1e9f1..35348d4c4209 100644
+--- a/arch/loongarch/include/asm/pgtable-bits.h
++++ b/arch/loongarch/include/asm/pgtable-bits.h
+@@ -50,12 +50,12 @@
+ #define _PAGE_NO_EXEC		(_ULCAST_(1) << _PAGE_NO_EXEC_SHIFT)
+ #define _PAGE_RPLV		(_ULCAST_(1) << _PAGE_RPLV_SHIFT)
+ #define _CACHE_MASK		(_ULCAST_(3) << _CACHE_SHIFT)
+-#define _PFN_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
++#define PFN_PTE_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
+ 
+ #define _PAGE_USER	(PLV_USER << _PAGE_PLV_SHIFT)
+ #define _PAGE_KERN	(PLV_KERN << _PAGE_PLV_SHIFT)
+ 
+-#define _PFN_MASK (~((_ULCAST_(1) << (_PFN_SHIFT)) - 1) & \
++#define _PFN_MASK (~((_ULCAST_(1) << (PFN_PTE_SHIFT)) - 1) & \
+ 		  ((_ULCAST_(1) << (_PAGE_PFN_END_SHIFT)) - 1))
+ 
+ /*
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index 38afeb7dd58b..e7cf25e452c0 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -237,9 +237,9 @@ extern pmd_t mk_pmd(struct page *page, pgprot_t prot);
+ extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pmd_t pmd);
+ 
+ #define pte_page(x)		pfn_to_page(pte_pfn(x))
+-#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> _PFN_SHIFT))
+-#define pfn_pte(pfn, prot)	__pte(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
+-#define pfn_pmd(pfn, prot)	__pmd(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
++#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> PFN_PTE_SHIFT))
++#define pfn_pte(pfn, prot)	__pte(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
++#define pfn_pmd(pfn, prot)	__pmd(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
+ 
+ /*
+  * Initialize a new pgd / pud / pmd table with invalid pointers.
+@@ -334,19 +334,13 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ 	}
+ }
+ 
+-static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+-			      pte_t *ptep, pte_t pteval)
+-{
+-	set_pte(ptep, pteval);
+-}
+-
+ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+ {
+ 	/* Preserve global status for the pair */
+ 	if (pte_val(*ptep_buddy(ptep)) & _PAGE_GLOBAL)
+-		set_pte_at(mm, addr, ptep, __pte(_PAGE_GLOBAL));
++		set_pte(ptep, __pte(_PAGE_GLOBAL));
+ 	else
+-		set_pte_at(mm, addr, ptep, __pte(0));
++		set_pte(ptep, __pte(0));
+ }
+ 
+ #define PGD_T_LOG2	(__builtin_ffs(sizeof(pgd_t)) - 1)
+@@ -445,11 +439,20 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ extern void __update_tlb(struct vm_area_struct *vma,
+ 			unsigned long address, pte_t *ptep);
+ 
+-static inline void update_mmu_cache(struct vm_area_struct *vma,
+-			unsigned long address, pte_t *ptep)
++static inline void update_mmu_cache_range(struct vm_fault *vmf,
++		struct vm_area_struct *vma, unsigned long address,
++		pte_t *ptep, unsigned int nr)
+ {
+-	__update_tlb(vma, address, ptep);
++	for (;;) {
++		__update_tlb(vma, address, ptep);
++		if (--nr == 0)
++			break;
++		address += PAGE_SIZE;
++		ptep++;
++	}
+ }
++#define update_mmu_cache(vma, addr, ptep) \
++	update_mmu_cache_range(NULL, vma, addr, ptep, 1)
+ 
+ #define __HAVE_ARCH_UPDATE_MMU_TLB
+ #define update_mmu_tlb	update_mmu_cache
+@@ -462,7 +465,7 @@ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
+ 
+ static inline unsigned long pmd_pfn(pmd_t pmd)
+ {
+-	return (pmd_val(pmd) & _PFN_MASK) >> _PFN_SHIFT;
++	return (pmd_val(pmd) & _PFN_MASK) >> PFN_PTE_SHIFT;
+ }
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
+index 36a6dc0148ae..1260cf30e3ee 100644
+--- a/arch/loongarch/mm/pgtable.c
++++ b/arch/loongarch/mm/pgtable.c
+@@ -107,7 +107,7 @@ pmd_t mk_pmd(struct page *page, pgprot_t prot)
+ {
+ 	pmd_t pmd;
+ 
+-	pmd_val(pmd) = (page_to_pfn(page) << _PFN_SHIFT) | pgprot_val(prot);
++	pmd_val(pmd) = (page_to_pfn(page) << PFN_PTE_SHIFT) | pgprot_val(prot);
+ 
+ 	return pmd;
+ }
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index 00bb563e3c89..eb8572e201ea 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -252,7 +252,7 @@ static void output_pgtable_bits_defines(void)
+ 	pr_define("_PAGE_WRITE_SHIFT %d\n", _PAGE_WRITE_SHIFT);
+ 	pr_define("_PAGE_NO_READ_SHIFT %d\n", _PAGE_NO_READ_SHIFT);
+ 	pr_define("_PAGE_NO_EXEC_SHIFT %d\n", _PAGE_NO_EXEC_SHIFT);
+-	pr_define("_PFN_SHIFT %d\n", _PFN_SHIFT);
++	pr_define("PFN_PTE_SHIFT %d\n", PFN_PTE_SHIFT);
+ 	pr_debug("\n");
+ }
+ 
+-- 
+2.40.1
 
-Huacai
-
-On Tue, Aug 1, 2023 at 10:59=E2=80=AFAM Enze Li <lienze@kylinos.cn> wrote:
->
-> Hi all,
->
-> This patchset adds KFENCE support on LoongArch.
->
-> To run the testcases, you will need to enable the following options,
->
-> -> Kernel hacking
->    [*] Tracers
->        [*] Support for tracing block IO actions (NEW)
->    -> Kernel Testing and Coverage
->       <*> KUnit - Enable support for unit tests
->
-> and then,
->
-> -> Kernel hacking
->    -> Memory Debugging
->       [*] KFENCE: low-overhead sampling-based memory safety error detecto=
-r (NEW)
->           <*> KFENCE integration test suite (NEW)
->
-> With these options enabled, KFENCE will be tested during kernel startup.
-> And normally, you might get the following feedback,
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> [   35.326363 ] # kfence: pass:23 fail:0 skip:2 total:25
-> [   35.326486 ] # Totals: pass:23 fail:0 skip:2 total:25
-> [   35.326621 ] ok 1 kfence
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
->
-> you might notice that 2 testcases have been skipped.  If you tend to run
-> all testcases, please enable CONFIG_INIT_ON_FREE_DEFAULT_ON, you can
-> find it here,
->
-> -> Security options
->    -> Kernel hardening options
->       -> Memory initialization
->          [*] Enable heap memory zeroing on free by default
->
-> and you might get all testcases passed.
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> [   35.531860 ] # kfence: pass:25 fail:0 skip:0 total:25
-> [   35.531999 ] # Totals: pass:25 fail:0 skip:0 total:25
-> [   35.532135 ] ok 1 kfence
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
->
-> v3:
->    * Address Huacai's comments.
->    * Fix a bug that Jackie Liu pointed out.
->    * Rewrite arch_stack_walk() with the suggestion of Jinyang He.
->
-> v2:
->    * Address Huacai's comments.
->    * Fix typos in commit message.
->
-> Thanks,
-> Enze
->
-> Enze Li (4):
->   KFENCE: Defer the assignment of the local variable addr
->   LoongArch: mm: Add page table mapped mode support
->   LoongArch: Get stack without NMI when providing regs parameter
->   LoongArch: Add KFENCE support
->
->  arch/loongarch/Kconfig               |  1 +
->  arch/loongarch/include/asm/kfence.h  | 66 ++++++++++++++++++++++++++++
->  arch/loongarch/include/asm/page.h    |  8 +++-
->  arch/loongarch/include/asm/pgtable.h | 16 ++++++-
->  arch/loongarch/kernel/stacktrace.c   | 18 ++++----
->  arch/loongarch/mm/fault.c            | 22 ++++++----
->  arch/loongarch/mm/pgtable.c          |  7 +++
->  mm/kfence/core.c                     |  5 ++-
->  8 files changed, 123 insertions(+), 20 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/kfence.h
->
-> --
-> 2.34.1
->
