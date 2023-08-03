@@ -1,693 +1,426 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC1A63BC
-	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 19:56:07 +0000 (UTC)
-Received: from [192.168.0.2] (ip5f5ae940.dynamic.kabel-deutschland.de [95.90.233.64])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7B10261E5FE09;
-	Thu,  3 Aug 2023 21:49:41 +0200 (CEST)
-Message-ID: <1363eb24-e209-6617-c205-19f13aa97b95@molgen.mpg.de>
-Date: Thu, 3 Aug 2023 21:49:41 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D24AEA0
+	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 23:08:58 +0000 (UTC)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1b8ad356f03so10751365ad.1
+        for <loongarch@lists.linux.dev>; Thu, 03 Aug 2023 16:08:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1691104138; x=1691708938;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jZFR6hR4MgixZPi5Vx/h6mh3aFizC5jpLVjbFDuTXzk=;
+        b=Yrtl0fTOBqR41ImU0+amCbPztuZDGzUVxCdl3x0hw6hwOIv/8k3m9WQO/mttMu369L
+         zZlwEoO4tNu+89BRw7b4JSzisHqdfF51BYFauemtPvhBnCBJ3j9RdTR0bcfq39FJx3ux
+         vQ0ingPHXd5bSZBRYqP4s4/XhMbsdipJBQ+m0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691104138; x=1691708938;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jZFR6hR4MgixZPi5Vx/h6mh3aFizC5jpLVjbFDuTXzk=;
+        b=SbVWK6f0uF+bTzU6Dp1tMPnI0eyqBA3SablyoQAbDkRrmyphb5JwasjPJ/69JmipV4
+         DOquunK97UWQ4I0ULT9VboufPLwjgl53V+5Xrhbk+FOtZt7FLK8o4fiFmZznXj8cvRqs
+         UA71WVpndOvshj5hADGhVofngrrqstiZOpZEe7KEfF7td+eynjs1rCAsykATnr5Sf/IA
+         phutMAP+S57w35ULUE2VQ3hmZtzRGtQbtkpTor3sq1XDGw/huyKoCahUKmpn+kvOohIk
+         DpAEqryY9z8Kl2tU/ZBKhlxE9cBd3RsbK0rMd2ZK6X8u12PVXZvFXeXnDi8PJSPSnIhS
+         TY5w==
+X-Gm-Message-State: AOJu0YwuuCLlEqNt/8AOJBiGh42jAtPVDrjx9Pg2tzkx8WNuCgnYgnOd
+	CZ8C+pGcQonFwmMzjO4JSke9MA==
+X-Google-Smtp-Source: AGHT+IHpt3GmqxmUYWeyDxrjsC/U+hfzZspynC8VLCIFtP8cNsZp90XHIeRqwjI5dpuN/mozNLSnNg==
+X-Received: by 2002:a17:902:6909:b0:1b8:9002:c9ee with SMTP id j9-20020a170902690900b001b89002c9eemr114243plk.1.1691104137546;
+        Thu, 03 Aug 2023 16:08:57 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:7e35:e6d0:7bbf:64])
+        by smtp.gmail.com with ESMTPSA id q16-20020a170902dad000b001adf6b21c77sm369405plx.107.2023.08.03.16.08.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Aug 2023 16:08:57 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Petr Mladek <pmladek@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Gaosheng Cui <cuigaosheng1@huawei.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Guo Ren <guoren@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Jinyang He <hejinyang@loongson.cn>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Lecopzer Chen <lecopzer.chen@mediatek.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pingfan Liu <kernelfans@gmail.com>,
+	Qing Zhang <zhangqing@loongson.cn>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Rix <trix@redhat.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v3 1/2] nmi_backtrace: Allow excluding an arbitrary CPU
+Date: Thu,  3 Aug 2023 16:07:57 -0700
+Message-ID: <20230803160649.v3.1.Ia35521b91fc781368945161d7b28538f9996c182@changeid>
+X-Mailer: git-send-email 2.41.0.585.gd2178a4bd4-goog
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.1
-Subject: Re: [PATCH v2 3/3] raid6: Add LoongArch SIMD recovery implementation
-Content-Language: en-US
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Song Liu <song@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- linux-raid@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
-References: <20230803170858.781245-1-kernel@xen0n.name>
- <20230803170858.781245-4-kernel@xen0n.name>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20230803170858.781245-4-kernel@xen0n.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Dear Xuerui,
+The APIs that allow backtracing across CPUs have always had a way to
+exclude the current CPU. This convenience means callers didn't need to
+find a place to allocate a CPU mask just to handle the common case.
 
+Let's extend the API to take a CPU ID to exclude instead of just a
+boolean. This isn't any more complex for the API to handle and allows
+the hardlockup detector to exclude a different CPU (the one it already
+did a trace for) without needing to find space for a CPU mask.
 
-Thank you for your patches.
+Arguably, this new API also encourages safer behavior. Specifically if
+the caller wants to avoid tracing the current CPU (maybe because they
+already traced the current CPU) this makes it more obvious to the
+caller that they need to make sure that the current CPU ID can't
+change.
 
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Am 03.08.23 um 19:08 schrieb WANG Xuerui:
-> From: WANG Xuerui <git@xen0n.name>
-> 
-> Similar to the syndrome calculation, the recovery algorithms also work
-> on 64 bytes at a time to align with the L1 cache line size of current
-> and future LoongArch cores (that we care about). Which means
-> unrolled-by-4 LSX and unrolled-by-2 LASX code.
-> 
-> The assembly is originally based on the x86 SSSE3/AVX2 ports, but
-> register allocation has been redone to take advantage of LSX/LASX's 32
-> vector registers, and instruction sequence has been optimized to suit
-> (e.g. LoongArch can perform per-byte srl and andi on vectors, but x86
-> cannot).
-> 
-> Performance numbers measured by instrumenting the raid6test code:
+Changes in v3:
+- ("nmi_backtrace: Allow excluding an arbitrary CPU") new for v3.
 
-It’d be great, if you also documented your test setup. That’s always 
-good for benchmarking numbers.
+ arch/arm/include/asm/irq.h       |  2 +-
+ arch/arm/kernel/smp.c            |  4 ++--
+ arch/loongarch/include/asm/irq.h |  2 +-
+ arch/loongarch/kernel/process.c  |  4 ++--
+ arch/mips/include/asm/irq.h      |  2 +-
+ arch/mips/kernel/process.c       |  4 ++--
+ arch/powerpc/include/asm/irq.h   |  2 +-
+ arch/powerpc/kernel/stacktrace.c |  4 ++--
+ arch/powerpc/kernel/watchdog.c   |  4 ++--
+ arch/sparc/include/asm/irq_64.h  |  2 +-
+ arch/sparc/kernel/process_64.c   |  6 +++---
+ arch/x86/include/asm/irq.h       |  2 +-
+ arch/x86/kernel/apic/hw_nmi.c    |  4 ++--
+ include/linux/nmi.h              | 12 ++++++------
+ kernel/watchdog.c                |  2 +-
+ lib/nmi_backtrace.c              |  6 +++---
+ 16 files changed, 31 insertions(+), 31 deletions(-)
 
->> lasx  2data: 354.987 MiB/s
->> lasx  datap: 350.430 MiB/s
->> lsx   2data: 340.026 MiB/s
->> lsx   datap: 337.318 MiB/s
->> intx1 2data: 164.280 MiB/s
->> intx1 datap: 187.966 MiB/s
+diff --git a/arch/arm/include/asm/irq.h b/arch/arm/include/asm/irq.h
+index 18605f1b3580..26c1d2ced4ce 100644
+--- a/arch/arm/include/asm/irq.h
++++ b/arch/arm/include/asm/irq.h
+@@ -32,7 +32,7 @@ void handle_IRQ(unsigned int, struct pt_regs *);
+ #include <linux/cpumask.h>
+ 
+ extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
+-					   bool exclude_self);
++					   int exclude_cpu);
+ #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+ #endif
+ 
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 6756203e45f3..3431c0553f45 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -846,7 +846,7 @@ static void raise_nmi(cpumask_t *mask)
+ 	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
+ }
+ 
+-void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
++void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+ {
+-	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_nmi);
++	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, raise_nmi);
+ }
+diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
+index a115e8999c69..218b4da0ea90 100644
+--- a/arch/loongarch/include/asm/irq.h
++++ b/arch/loongarch/include/asm/irq.h
+@@ -40,7 +40,7 @@ void spurious_interrupt(void);
+ #define NR_IRQS_LEGACY 16
+ 
+ #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+-void arch_trigger_cpumask_backtrace(const struct cpumask *mask, bool exclude_self);
++void arch_trigger_cpumask_backtrace(const struct cpumask *mask, int exclude_cpu);
+ 
+ #define MAX_IO_PICS 2
+ #define NR_IRQS	(64 + (256 * MAX_IO_PICS))
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 2e04eb07abb6..778e8d09953e 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -345,9 +345,9 @@ static void raise_backtrace(cpumask_t *mask)
+ 	}
+ }
+ 
+-void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
++void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+ {
+-	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_backtrace);
++	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, raise_backtrace);
+ }
+ 
+ #ifdef CONFIG_64BIT
+diff --git a/arch/mips/include/asm/irq.h b/arch/mips/include/asm/irq.h
+index 75abfa834ab7..3a848e7e69f7 100644
+--- a/arch/mips/include/asm/irq.h
++++ b/arch/mips/include/asm/irq.h
+@@ -77,7 +77,7 @@ extern int cp0_fdc_irq;
+ extern int get_c0_fdc_int(void);
+ 
+ void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
+-				    bool exclude_self);
++				    int exclude_cpu);
+ #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+ 
+ #endif /* _ASM_IRQ_H */
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index a3225912c862..5387ed0a5186 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -750,9 +750,9 @@ static void raise_backtrace(cpumask_t *mask)
+ 	}
+ }
+ 
+-void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
++void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+ {
+-	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_backtrace);
++	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, raise_backtrace);
+ }
+ 
+ int mips_get_process_fp_mode(struct task_struct *task)
+diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
+index f257cacb49a9..ba1a5974e714 100644
+--- a/arch/powerpc/include/asm/irq.h
++++ b/arch/powerpc/include/asm/irq.h
+@@ -55,7 +55,7 @@ int irq_choose_cpu(const struct cpumask *mask);
+ 
+ #if defined(CONFIG_PPC_BOOK3S_64) && defined(CONFIG_NMI_IPI)
+ extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
+-					   bool exclude_self);
++					   int exclude_cpu);
+ #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+ #endif
+ 
+diff --git a/arch/powerpc/kernel/stacktrace.c b/arch/powerpc/kernel/stacktrace.c
+index 5de8597eaab8..b15f15dcacb5 100644
+--- a/arch/powerpc/kernel/stacktrace.c
++++ b/arch/powerpc/kernel/stacktrace.c
+@@ -221,8 +221,8 @@ static void raise_backtrace_ipi(cpumask_t *mask)
+ 	}
+ }
+ 
+-void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
++void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+ {
+-	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_backtrace_ipi);
++	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, raise_backtrace_ipi);
+ }
+ #endif /* defined(CONFIG_PPC_BOOK3S_64) && defined(CONFIG_NMI_IPI) */
+diff --git a/arch/powerpc/kernel/watchdog.c b/arch/powerpc/kernel/watchdog.c
+index edb2dd1f53eb..8c464a5d8246 100644
+--- a/arch/powerpc/kernel/watchdog.c
++++ b/arch/powerpc/kernel/watchdog.c
+@@ -245,7 +245,7 @@ static void watchdog_smp_panic(int cpu)
+ 			__cpumask_clear_cpu(c, &wd_smp_cpus_ipi);
+ 		}
+ 	} else {
+-		trigger_allbutself_cpu_backtrace();
++		trigger_allbutcpu_cpu_backtrace(cpu);
+ 		cpumask_clear(&wd_smp_cpus_ipi);
+ 	}
+ 
+@@ -416,7 +416,7 @@ DEFINE_INTERRUPT_HANDLER_NMI(soft_nmi_interrupt)
+ 		xchg(&__wd_nmi_output, 1); // see wd_lockup_ipi
+ 
+ 		if (sysctl_hardlockup_all_cpu_backtrace)
+-			trigger_allbutself_cpu_backtrace();
++			trigger_allbutcpu_cpu_backtrace(cpu);
+ 
+ 		if (hardlockup_panic)
+ 			nmi_panic(regs, "Hard LOCKUP");
+diff --git a/arch/sparc/include/asm/irq_64.h b/arch/sparc/include/asm/irq_64.h
+index b436029f1ced..8c4c0c87f998 100644
+--- a/arch/sparc/include/asm/irq_64.h
++++ b/arch/sparc/include/asm/irq_64.h
+@@ -87,7 +87,7 @@ static inline unsigned long get_softint(void)
+ }
+ 
+ void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
+-				    bool exclude_self);
++				    int exclude_cpu);
+ #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+ 
+ extern void *hardirq_stack[NR_CPUS];
+diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
+index b51d8fb0ecdc..1ea3f37fa985 100644
+--- a/arch/sparc/kernel/process_64.c
++++ b/arch/sparc/kernel/process_64.c
+@@ -236,7 +236,7 @@ static void __global_reg_poll(struct global_reg_snapshot *gp)
+ 	}
+ }
+ 
+-void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
++void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+ {
+ 	struct thread_info *tp = current_thread_info();
+ 	struct pt_regs *regs = get_irq_regs();
+@@ -252,7 +252,7 @@ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+ 
+ 	memset(global_cpu_snapshot, 0, sizeof(global_cpu_snapshot));
+ 
+-	if (cpumask_test_cpu(this_cpu, mask) && !exclude_self)
++	if (cpumask_test_cpu(this_cpu, mask) && this_cpu != exclude_cpu)
+ 		__global_reg_self(tp, regs, this_cpu);
+ 
+ 	smp_fetch_global_regs();
+@@ -260,7 +260,7 @@ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+ 	for_each_cpu(cpu, mask) {
+ 		struct global_reg_snapshot *gp;
+ 
+-		if (exclude_self && cpu == this_cpu)
++		if (cpu == exclude_cpu)
+ 			continue;
+ 
+ 		gp = &global_cpu_snapshot[cpu].reg;
+diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
+index 29e083b92813..836c170d3087 100644
+--- a/arch/x86/include/asm/irq.h
++++ b/arch/x86/include/asm/irq.h
+@@ -42,7 +42,7 @@ extern void init_ISA_irqs(void);
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+ void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
+-				    bool exclude_self);
++				    int exclude_cpu);
+ 
+ #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+ #endif
+diff --git a/arch/x86/kernel/apic/hw_nmi.c b/arch/x86/kernel/apic/hw_nmi.c
+index 34a992e275ef..d6e01f924299 100644
+--- a/arch/x86/kernel/apic/hw_nmi.c
++++ b/arch/x86/kernel/apic/hw_nmi.c
+@@ -34,9 +34,9 @@ static void nmi_raise_cpu_backtrace(cpumask_t *mask)
+ 	apic->send_IPI_mask(mask, NMI_VECTOR);
+ }
+ 
+-void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
++void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+ {
+-	nmi_trigger_cpumask_backtrace(mask, exclude_self,
++	nmi_trigger_cpumask_backtrace(mask, exclude_cpu,
+ 				      nmi_raise_cpu_backtrace);
+ }
+ 
+diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+index e3e6a64b98e0..00982b133dc1 100644
+--- a/include/linux/nmi.h
++++ b/include/linux/nmi.h
+@@ -157,31 +157,31 @@ static inline void touch_nmi_watchdog(void)
+ #ifdef arch_trigger_cpumask_backtrace
+ static inline bool trigger_all_cpu_backtrace(void)
+ {
+-	arch_trigger_cpumask_backtrace(cpu_online_mask, false);
++	arch_trigger_cpumask_backtrace(cpu_online_mask, -1);
+ 	return true;
+ }
+ 
+-static inline bool trigger_allbutself_cpu_backtrace(void)
++static inline bool trigger_allbutcpu_cpu_backtrace(int exclude_cpu)
+ {
+-	arch_trigger_cpumask_backtrace(cpu_online_mask, true);
++	arch_trigger_cpumask_backtrace(cpu_online_mask, exclude_cpu);
+ 	return true;
+ }
+ 
+ static inline bool trigger_cpumask_backtrace(struct cpumask *mask)
+ {
+-	arch_trigger_cpumask_backtrace(mask, false);
++	arch_trigger_cpumask_backtrace(mask, -1);
+ 	return true;
+ }
+ 
+ static inline bool trigger_single_cpu_backtrace(int cpu)
+ {
+-	arch_trigger_cpumask_backtrace(cpumask_of(cpu), false);
++	arch_trigger_cpumask_backtrace(cpumask_of(cpu), -1);
+ 	return true;
+ }
+ 
+ /* generic implementation */
+ void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
+-				   bool exclude_self,
++				   int exclude_cpu,
+ 				   void (*raise)(cpumask_t *mask));
+ bool nmi_cpu_backtrace(struct pt_regs *regs);
+ 
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index be38276a365f..085d7a78f62f 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -523,7 +523,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ 			dump_stack();
+ 
+ 		if (softlockup_all_cpu_backtrace) {
+-			trigger_allbutself_cpu_backtrace();
++			trigger_allbutcpu_cpu_backtrace(smp_processor_id());
+ 			clear_bit_unlock(0, &soft_lockup_nmi_warn);
+ 		}
+ 
+diff --git a/lib/nmi_backtrace.c b/lib/nmi_backtrace.c
+index 5274bbb026d7..33c154264bfe 100644
+--- a/lib/nmi_backtrace.c
++++ b/lib/nmi_backtrace.c
+@@ -34,7 +34,7 @@ static unsigned long backtrace_flag;
+  * they are passed being updated as a side effect of this call.
+  */
+ void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
+-				   bool exclude_self,
++				   int exclude_cpu,
+ 				   void (*raise)(cpumask_t *mask))
+ {
+ 	int i, this_cpu = get_cpu();
+@@ -49,8 +49,8 @@ void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
+ 	}
+ 
+ 	cpumask_copy(to_cpumask(backtrace_mask), mask);
+-	if (exclude_self)
+-		cpumask_clear_cpu(this_cpu, to_cpumask(backtrace_mask));
++	if (exclude_cpu != -1)
++		cpumask_clear_cpu(exclude_cpu, to_cpumask(backtrace_mask));
+ 
+ 	/*
+ 	 * Don't try to send an NMI to this cpu; it may work on some
+-- 
+2.41.0.585.gd2178a4bd4-goog
 
-So the speed is more than doubled. Nice job! The lasx implementation is 
-always the fastest. Is it therefore the preferred one? Or does it come 
-with higher power consumption?
-
-> Signed-off-by: WANG Xuerui <git@xen0n.name>
-
-Out of curiosity, what is your “first” name?
-
-> ---
->   include/linux/raid/pq.h          |   2 +
->   lib/raid6/Makefile               |   2 +-
->   lib/raid6/algos.c                |   8 +
->   lib/raid6/recov_loongarch_simd.c | 515 +++++++++++++++++++++++++++++++
->   lib/raid6/test/Makefile          |   2 +-
->   5 files changed, 527 insertions(+), 2 deletions(-)
->   create mode 100644 lib/raid6/recov_loongarch_simd.c
-
-
-Kind regards,
-
-Paul
-
-
-> diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
-> index 8744474858487..006e18decfad0 100644
-> --- a/include/linux/raid/pq.h
-> +++ b/include/linux/raid/pq.h
-> @@ -125,6 +125,8 @@ extern const struct raid6_recov_calls raid6_recov_avx2;
->   extern const struct raid6_recov_calls raid6_recov_avx512;
->   extern const struct raid6_recov_calls raid6_recov_s390xc;
->   extern const struct raid6_recov_calls raid6_recov_neon;
-> +extern const struct raid6_recov_calls raid6_recov_lsx;
-> +extern const struct raid6_recov_calls raid6_recov_lasx;
->   
->   extern const struct raid6_calls raid6_neonx1;
->   extern const struct raid6_calls raid6_neonx2;
-> diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-> index 2b9ebe1054806..035b0a4db476a 100644
-> --- a/lib/raid6/Makefile
-> +++ b/lib/raid6/Makefile
-> @@ -9,7 +9,7 @@ raid6_pq-$(CONFIG_ALTIVEC) += altivec1.o altivec2.o altivec4.o altivec8.o \
->                                 vpermxor1.o vpermxor2.o vpermxor4.o vpermxor8.o
->   raid6_pq-$(CONFIG_KERNEL_MODE_NEON) += neon.o neon1.o neon2.o neon4.o neon8.o recov_neon.o recov_neon_inner.o
->   raid6_pq-$(CONFIG_S390) += s390vx8.o recov_s390xc.o
-> -raid6_pq-$(CONFIG_LOONGARCH) += loongarch_simd.o
-> +raid6_pq-$(CONFIG_LOONGARCH) += loongarch_simd.o recov_loongarch_simd.o
->   
->   hostprogs	+= mktables
->   
-> diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
-> index 739c7ebcae1a2..0ec534faf019b 100644
-> --- a/lib/raid6/algos.c
-> +++ b/lib/raid6/algos.c
-> @@ -111,6 +111,14 @@ const struct raid6_recov_calls *const raid6_recov_algos[] = {
->   #endif
->   #if defined(CONFIG_KERNEL_MODE_NEON)
->   	&raid6_recov_neon,
-> +#endif
-> +#ifdef CONFIG_LOONGARCH
-> +#ifdef CONFIG_CPU_HAS_LASX
-> +	&raid6_recov_lasx,
-> +#endif
-> +#ifdef CONFIG_CPU_HAS_LSX
-> +	&raid6_recov_lsx,
-> +#endif
->   #endif
->   	&raid6_recov_intx1,
->   	NULL
-> diff --git a/lib/raid6/recov_loongarch_simd.c b/lib/raid6/recov_loongarch_simd.c
-> new file mode 100644
-> index 0000000000000..de9d53e81bd2d
-> --- /dev/null
-> +++ b/lib/raid6/recov_loongarch_simd.c
-> @@ -0,0 +1,515 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * RAID6 recovery algorithms in LoongArch SIMD (LSX & LASX)
-> + *
-> + * Copyright (C) 2023 WANG Xuerui <git@xen0n.name>
-> + *
-> + * Originally based on recov_avx2.c and recov_ssse3.c:
-> + *
-> + * Copyright (C) 2012 Intel Corporation
-> + * Author: Jim Kukunas <james.t.kukunas@linux.intel.com>
-> + */
-> +
-> +#include <linux/raid/pq.h>
-> +#include "loongarch.h"
-> +
-> +/*
-> + * Unlike with the syndrome calculation algorithms, there's no boot-time
-> + * selection of recovery algorithms by benchmarking, so we have to specify
-> + * the priorities and hope the future cores will all have decent vector
-> + * support (i.e. no LASX slower than LSX, or even scalar code).
-> + */
-> +
-> +#ifdef CONFIG_CPU_HAS_LSX
-> +static int raid6_has_lsx(void)
-> +{
-> +	return cpu_has_lsx;
-> +}
-> +
-> +static void raid6_2data_recov_lsx(int disks, size_t bytes, int faila,
-> +				  int failb, void **ptrs)
-> +{
-> +	u8 *p, *q, *dp, *dq;
-> +	const u8 *pbmul;	/* P multiplier table for B data */
-> +	const u8 *qmul;		/* Q multiplier table (for both) */
-> +
-> +	p = (u8 *)ptrs[disks-2];
-> +	q = (u8 *)ptrs[disks-1];
-> +
-> +	/*
-> +	 * Compute syndrome with zero for the missing data pages
-> +	 * Use the dead data pages as temporary storage for
-> +	 * delta p and delta q
-> +	 */
-> +	dp = (u8 *)ptrs[faila];
-> +	ptrs[faila] = (void *)raid6_empty_zero_page;
-> +	ptrs[disks-2] = dp;
-> +	dq = (u8 *)ptrs[failb];
-> +	ptrs[failb] = (void *)raid6_empty_zero_page;
-> +	ptrs[disks-1] = dq;
-> +
-> +	raid6_call.gen_syndrome(disks, bytes, ptrs);
-> +
-> +	/* Restore pointer table */
-> +	ptrs[faila]   = dp;
-> +	ptrs[failb]   = dq;
-> +	ptrs[disks-2] = p;
-> +	ptrs[disks-1] = q;
-> +
-> +	/* Now, pick the proper data tables */
-> +	pbmul = raid6_vgfmul[raid6_gfexi[failb-faila]];
-
-Should spaces be put around the operator?
-
-> +	qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila] ^
-> +		raid6_gfexp[failb]]];
-> +
-> +	kernel_fpu_begin();
-> +
-> +	/*
-> +	 * vr20, vr21: qmul
-> +	 * vr22, vr23: pbmul
-> +	 */
-> +	asm volatile("vld $vr20, %0" : : "m" (qmul[0]));
-> +	asm volatile("vld $vr21, %0" : : "m" (qmul[16]));
-> +	asm volatile("vld $vr22, %0" : : "m" (pbmul[0]));
-> +	asm volatile("vld $vr23, %0" : : "m" (pbmul[16]));
-> +
-> +	while (bytes) {
-> +		/* vr4 - vr7: Q */
-> +		asm volatile("vld $vr4, %0" : : "m" (q[0]));
-> +		asm volatile("vld $vr5, %0" : : "m" (q[16]));
-> +		asm volatile("vld $vr6, %0" : : "m" (q[32]));
-> +		asm volatile("vld $vr7, %0" : : "m" (q[48]));
-> +		/*  vr4 - vr7: Q + Qxy */
-> +		asm volatile("vld $vr8, %0" : : "m" (dq[0]));
-> +		asm volatile("vld $vr9, %0" : : "m" (dq[16]));
-> +		asm volatile("vld $vr10, %0" : : "m" (dq[32]));
-> +		asm volatile("vld $vr11, %0" : : "m" (dq[48]));
-> +		asm volatile("vxor.v $vr4, $vr4, $vr8");
-> +		asm volatile("vxor.v $vr5, $vr5, $vr9");
-> +		asm volatile("vxor.v $vr6, $vr6, $vr10");
-> +		asm volatile("vxor.v $vr7, $vr7, $vr11");
-> +		/* vr0 - vr3: P */
-> +		asm volatile("vld $vr0, %0" : : "m" (p[0]));
-> +		asm volatile("vld $vr1, %0" : : "m" (p[16]));
-> +		asm volatile("vld $vr2, %0" : : "m" (p[32]));
-> +		asm volatile("vld $vr3, %0" : : "m" (p[48]));
-> +		/* vr0 - vr3: P + Pxy */
-> +		asm volatile("vld $vr8, %0" : : "m" (dp[0]));
-> +		asm volatile("vld $vr9, %0" : : "m" (dp[16]));
-> +		asm volatile("vld $vr10, %0" : : "m" (dp[32]));
-> +		asm volatile("vld $vr11, %0" : : "m" (dp[48]));
-> +		asm volatile("vxor.v $vr0, $vr0, $vr8");
-> +		asm volatile("vxor.v $vr1, $vr1, $vr9");
-> +		asm volatile("vxor.v $vr2, $vr2, $vr10");
-> +		asm volatile("vxor.v $vr3, $vr3, $vr11");
-> +
-> +		/* vr8 - vr11: higher 4 bits of each byte of (Q + Qxy) */
-> +		asm volatile("vsrli.b $vr8, $vr4, 4");
-> +		asm volatile("vsrli.b $vr9, $vr5, 4");
-> +		asm volatile("vsrli.b $vr10, $vr6, 4");
-> +		asm volatile("vsrli.b $vr11, $vr7, 4");
-> +		/* vr4 - vr7: lower 4 bits of each byte of (Q + Qxy) */
-> +		asm volatile("vandi.b $vr4, $vr4, 0x0f");
-> +		asm volatile("vandi.b $vr5, $vr5, 0x0f");
-> +		asm volatile("vandi.b $vr6, $vr6, 0x0f");
-> +		asm volatile("vandi.b $vr7, $vr7, 0x0f");
-> +		/* lookup from qmul[0] */
-> +		asm volatile("vshuf.b $vr4, $vr20, $vr20, $vr4");
-> +		asm volatile("vshuf.b $vr5, $vr20, $vr20, $vr5");
-> +		asm volatile("vshuf.b $vr6, $vr20, $vr20, $vr6");
-> +		asm volatile("vshuf.b $vr7, $vr20, $vr20, $vr7");
-> +		/* lookup from qmul[16] */
-> +		asm volatile("vshuf.b $vr8, $vr21, $vr21, $vr8");
-> +		asm volatile("vshuf.b $vr9, $vr21, $vr21, $vr9");
-> +		asm volatile("vshuf.b $vr10, $vr21, $vr21, $vr10");
-> +		asm volatile("vshuf.b $vr11, $vr21, $vr21, $vr11");
-> +		/* vr16 - vr19: B(Q + Qxy) */
-> +		asm volatile("vxor.v $vr16, $vr8, $vr4");
-> +		asm volatile("vxor.v $vr17, $vr9, $vr5");
-> +		asm volatile("vxor.v $vr18, $vr10, $vr6");
-> +		asm volatile("vxor.v $vr19, $vr11, $vr7");
-> +
-> +		/* vr4 - vr7: higher 4 bits of each byte of (P + Pxy) */
-> +		asm volatile("vsrli.b $vr4, $vr0, 4");
-> +		asm volatile("vsrli.b $vr5, $vr1, 4");
-> +		asm volatile("vsrli.b $vr6, $vr2, 4");
-> +		asm volatile("vsrli.b $vr7, $vr3, 4");
-> +		/* vr12 - vr15: lower 4 bits of each byte of (P + Pxy) */
-> +		asm volatile("vandi.b $vr12, $vr0, 0x0f");
-> +		asm volatile("vandi.b $vr13, $vr1, 0x0f");
-> +		asm volatile("vandi.b $vr14, $vr2, 0x0f");
-> +		asm volatile("vandi.b $vr15, $vr3, 0x0f");
-> +		/* lookup from pbmul[0] */
-> +		asm volatile("vshuf.b $vr12, $vr22, $vr22, $vr12");
-> +		asm volatile("vshuf.b $vr13, $vr22, $vr22, $vr13");
-> +		asm volatile("vshuf.b $vr14, $vr22, $vr22, $vr14");
-> +		asm volatile("vshuf.b $vr15, $vr22, $vr22, $vr15");
-> +		/* lookup from pbmul[16] */
-> +		asm volatile("vshuf.b $vr4, $vr23, $vr23, $vr4");
-> +		asm volatile("vshuf.b $vr5, $vr23, $vr23, $vr5");
-> +		asm volatile("vshuf.b $vr6, $vr23, $vr23, $vr6");
-> +		asm volatile("vshuf.b $vr7, $vr23, $vr23, $vr7");
-> +		/* vr4 - vr7: A(P + Pxy) */
-> +		asm volatile("vxor.v $vr4, $vr4, $vr12");
-> +		asm volatile("vxor.v $vr5, $vr5, $vr13");
-> +		asm volatile("vxor.v $vr6, $vr6, $vr14");
-> +		asm volatile("vxor.v $vr7, $vr7, $vr15");
-> +
-> +		/* vr4 - vr7: A(P + Pxy) + B(Q + Qxy) = Dx */
-> +		asm volatile("vxor.v $vr4, $vr4, $vr16");
-> +		asm volatile("vxor.v $vr5, $vr5, $vr17");
-> +		asm volatile("vxor.v $vr6, $vr6, $vr18");
-> +		asm volatile("vxor.v $vr7, $vr7, $vr19");
-> +		asm volatile("vst $vr4, %0" : "=m" (dq[0]));
-> +		asm volatile("vst $vr5, %0" : "=m" (dq[16]));
-> +		asm volatile("vst $vr6, %0" : "=m" (dq[32]));
-> +		asm volatile("vst $vr7, %0" : "=m" (dq[48]));
-> +
-> +		/* vr0 - vr3: P + Pxy + Dx = Dy */
-> +		asm volatile("vxor.v $vr0, $vr0, $vr4");
-> +		asm volatile("vxor.v $vr1, $vr1, $vr5");
-> +		asm volatile("vxor.v $vr2, $vr2, $vr6");
-> +		asm volatile("vxor.v $vr3, $vr3, $vr7");
-> +		asm volatile("vst $vr0, %0" : "=m" (dp[0]));
-> +		asm volatile("vst $vr1, %0" : "=m" (dp[16]));
-> +		asm volatile("vst $vr2, %0" : "=m" (dp[32]));
-> +		asm volatile("vst $vr3, %0" : "=m" (dp[48]));
-> +
-> +		bytes -= 64;
-> +		p += 64;
-> +		q += 64;
-> +		dp += 64;
-> +		dq += 64;
-> +	}
-> +
-> +	kernel_fpu_end();
-> +}
-> +
-> +static void raid6_datap_recov_lsx(int disks, size_t bytes, int faila,
-> +				  void **ptrs)
-> +{
-> +	u8 *p, *q, *dq;
-> +	const u8 *qmul;		/* Q multiplier table */
-> +
-> +	p = (u8 *)ptrs[disks-2];
-> +	q = (u8 *)ptrs[disks-1];
-> +
-> +	/*
-> +	 * Compute syndrome with zero for the missing data page
-> +	 * Use the dead data page as temporary storage for delta q
-> +	 */
-> +	dq = (u8 *)ptrs[faila];
-> +	ptrs[faila] = (void *)raid6_empty_zero_page;
-> +	ptrs[disks-1] = dq;
-> +
-> +	raid6_call.gen_syndrome(disks, bytes, ptrs);
-> +
-> +	/* Restore pointer table */
-> +	ptrs[faila]   = dq;
-> +	ptrs[disks-1] = q;
-> +
-> +	/* Now, pick the proper data tables */
-> +	qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila]]];
-
-Only one space after qmul?
-
-> +
-> +	kernel_fpu_begin();
-> +
-> +	/* vr22, vr23: qmul */
-> +	asm volatile("vld $vr22, %0" : : "m" (qmul[0]));
-> +	asm volatile("vld $vr23, %0" : : "m" (qmul[16]));
-> +
-> +	while (bytes) {
-> +		/* vr0 - vr3: P + Dx */
-> +		asm volatile("vld $vr0, %0" : : "m" (p[0]));
-> +		asm volatile("vld $vr1, %0" : : "m" (p[16]));
-> +		asm volatile("vld $vr2, %0" : : "m" (p[32]));
-> +		asm volatile("vld $vr3, %0" : : "m" (p[48]));
-> +		/* vr4 - vr7: Qx */
-> +		asm volatile("vld $vr4, %0" : : "m" (dq[0]));
-> +		asm volatile("vld $vr5, %0" : : "m" (dq[16]));
-> +		asm volatile("vld $vr6, %0" : : "m" (dq[32]));
-> +		asm volatile("vld $vr7, %0" : : "m" (dq[48]));
-> +		/* vr4 - vr7: Q + Qx */
-> +		asm volatile("vld $vr8, %0" : : "m" (q[0]));
-> +		asm volatile("vld $vr9, %0" : : "m" (q[16]));
-> +		asm volatile("vld $vr10, %0" : : "m" (q[32]));
-> +		asm volatile("vld $vr11, %0" : : "m" (q[48]));
-> +		asm volatile("vxor.v $vr4, $vr4, $vr8");
-> +		asm volatile("vxor.v $vr5, $vr5, $vr9");
-> +		asm volatile("vxor.v $vr6, $vr6, $vr10");
-> +		asm volatile("vxor.v $vr7, $vr7, $vr11");
-> +
-> +		/* vr8 - vr11: higher 4 bits of each byte of (Q + Qx) */
-> +		asm volatile("vsrli.b $vr8, $vr4, 4");
-> +		asm volatile("vsrli.b $vr9, $vr5, 4");
-> +		asm volatile("vsrli.b $vr10, $vr6, 4");
-> +		asm volatile("vsrli.b $vr11, $vr7, 4");
-> +		/* vr4 - vr7: lower 4 bits of each byte of (Q + Qx) */
-> +		asm volatile("vandi.b $vr4, $vr4, 0x0f");
-> +		asm volatile("vandi.b $vr5, $vr5, 0x0f");
-> +		asm volatile("vandi.b $vr6, $vr6, 0x0f");
-> +		asm volatile("vandi.b $vr7, $vr7, 0x0f");
-> +		/* lookup from qmul[0] */
-> +		asm volatile("vshuf.b $vr4, $vr22, $vr22, $vr4");
-> +		asm volatile("vshuf.b $vr5, $vr22, $vr22, $vr5");
-> +		asm volatile("vshuf.b $vr6, $vr22, $vr22, $vr6");
-> +		asm volatile("vshuf.b $vr7, $vr22, $vr22, $vr7");
-> +		/* lookup from qmul[16] */
-> +		asm volatile("vshuf.b $vr8, $vr23, $vr23, $vr8");
-> +		asm volatile("vshuf.b $vr9, $vr23, $vr23, $vr9");
-> +		asm volatile("vshuf.b $vr10, $vr23, $vr23, $vr10");
-> +		asm volatile("vshuf.b $vr11, $vr23, $vr23, $vr11");
-> +		/* vr4 - vr7: qmul(Q + Qx) = Dx */
-> +		asm volatile("vxor.v $vr4, $vr4, $vr8");
-> +		asm volatile("vxor.v $vr5, $vr5, $vr9");
-> +		asm volatile("vxor.v $vr6, $vr6, $vr10");
-> +		asm volatile("vxor.v $vr7, $vr7, $vr11");
-> +		asm volatile("vst $vr4, %0" : "=m" (dq[0]));
-> +		asm volatile("vst $vr5, %0" : "=m" (dq[16]));
-> +		asm volatile("vst $vr6, %0" : "=m" (dq[32]));
-> +		asm volatile("vst $vr7, %0" : "=m" (dq[48]));
-> +
-> +		/* vr0 - vr3: P + Dx + Dx = P */
-> +		asm volatile("vxor.v $vr0, $vr0, $vr4");
-> +		asm volatile("vxor.v $vr1, $vr1, $vr5");
-> +		asm volatile("vxor.v $vr2, $vr2, $vr6");
-> +		asm volatile("vxor.v $vr3, $vr3, $vr7");
-> +		asm volatile("vst $vr0, %0" : "=m" (p[0]));
-> +		asm volatile("vst $vr1, %0" : "=m" (p[16]));
-> +		asm volatile("vst $vr2, %0" : "=m" (p[32]));
-> +		asm volatile("vst $vr3, %0" : "=m" (p[48]));
-> +
-> +		bytes -= 64;
-> +		p += 64;
-> +		q += 64;
-> +		dq += 64;
-> +	}
-> +
-> +	kernel_fpu_end();
-> +}
-> +
-> +const struct raid6_recov_calls raid6_recov_lsx = {
-> +	.data2 = raid6_2data_recov_lsx,
-> +	.datap = raid6_datap_recov_lsx,
-> +	.valid = raid6_has_lsx,
-> +	.name = "lsx",
-> +	.priority = 1,
-> +};
-> +#endif /* CONFIG_CPU_HAS_LSX */
-> +
-> +#ifdef CONFIG_CPU_HAS_LASX
-> +static int raid6_has_lasx(void)
-> +{
-> +	return cpu_has_lasx;
-> +}
-> +
-> +static void raid6_2data_recov_lasx(int disks, size_t bytes, int faila,
-> +				   int failb, void **ptrs)
-> +{
-> +	u8 *p, *q, *dp, *dq;
-> +	const u8 *pbmul;	/* P multiplier table for B data */
-> +	const u8 *qmul;		/* Q multiplier table (for both) */
-> +
-> +	p = (u8 *)ptrs[disks-2];
-> +	q = (u8 *)ptrs[disks-1];
-> +
-> +	/*
-> +	 * Compute syndrome with zero for the missing data pages
-> +	 * Use the dead data pages as temporary storage for
-> +	 * delta p and delta q
-> +	 */
-> +	dp = (u8 *)ptrs[faila];
-> +	ptrs[faila] = (void *)raid6_empty_zero_page;
-> +	ptrs[disks-2] = dp;
-> +	dq = (u8 *)ptrs[failb];
-> +	ptrs[failb] = (void *)raid6_empty_zero_page;
-> +	ptrs[disks-1] = dq;
-> +
-> +	raid6_call.gen_syndrome(disks, bytes, ptrs);
-> +
-> +	/* Restore pointer table */
-> +	ptrs[faila]   = dp;
-> +	ptrs[failb]   = dq;
-> +	ptrs[disks-2] = p;
-> +	ptrs[disks-1] = q;
-> +
-> +	/* Now, pick the proper data tables */
-> +	pbmul = raid6_vgfmul[raid6_gfexi[failb-faila]];
-
-Ditto.
-
-> +	qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila] ^
-> +		raid6_gfexp[failb]]];
-> +
-> +	kernel_fpu_begin();
-> +
-> +	/*
-> +	 * xr20, xr21: qmul
-> +	 * xr22, xr23: pbmul
-> +	 */
-> +	asm volatile("vld $vr20, %0" : : "m" (qmul[0]));
-> +	asm volatile("vld $vr21, %0" : : "m" (qmul[16]));
-> +	asm volatile("vld $vr22, %0" : : "m" (pbmul[0]));
-> +	asm volatile("vld $vr23, %0" : : "m" (pbmul[16]));
-> +	asm volatile("xvreplve0.q $xr20, $xr20");
-> +	asm volatile("xvreplve0.q $xr21, $xr21");
-> +	asm volatile("xvreplve0.q $xr22, $xr22");
-> +	asm volatile("xvreplve0.q $xr23, $xr23");
-> +
-> +	while (bytes) {
-> +		/* xr0, xr1: Q */
-> +		asm volatile("xvld $xr0, %0" : : "m" (q[0]));
-> +		asm volatile("xvld $xr1, %0" : : "m" (q[32]));
-> +		/* xr0, xr1: Q + Qxy */
-> +		asm volatile("xvld $xr4, %0" : : "m" (dq[0]));
-> +		asm volatile("xvld $xr5, %0" : : "m" (dq[32]));
-> +		asm volatile("xvxor.v $xr0, $xr0, $xr4");
-> +		asm volatile("xvxor.v $xr1, $xr1, $xr5");
-> +		/* xr2, xr3: P */
-> +		asm volatile("xvld $xr2, %0" : : "m" (p[0]));
-> +		asm volatile("xvld $xr3, %0" : : "m" (p[32]));
-> +		/* xr2, xr3: P + Pxy */
-> +		asm volatile("xvld $xr4, %0" : : "m" (dp[0]));
-> +		asm volatile("xvld $xr5, %0" : : "m" (dp[32]));
-> +		asm volatile("xvxor.v $xr2, $xr2, $xr4");
-> +		asm volatile("xvxor.v $xr3, $xr3, $xr5");
-> +
-> +		/* xr4, xr5: higher 4 bits of each byte of (Q + Qxy) */
-> +		asm volatile("xvsrli.b $xr4, $xr0, 4");
-> +		asm volatile("xvsrli.b $xr5, $xr1, 4");
-> +		/* xr0, xr1: lower 4 bits of each byte of (Q + Qxy) */
-> +		asm volatile("xvandi.b $xr0, $xr0, 0x0f");
-> +		asm volatile("xvandi.b $xr1, $xr1, 0x0f");
-> +		/* lookup from qmul[0] */
-> +		asm volatile("xvshuf.b $xr0, $xr20, $xr20, $xr0");
-> +		asm volatile("xvshuf.b $xr1, $xr20, $xr20, $xr1");
-> +		/* lookup from qmul[16] */
-> +		asm volatile("xvshuf.b $xr4, $xr21, $xr21, $xr4");
-> +		asm volatile("xvshuf.b $xr5, $xr21, $xr21, $xr5");
-> +		/* xr6, xr7: B(Q + Qxy) */
-> +		asm volatile("xvxor.v $xr6, $xr4, $xr0");
-> +		asm volatile("xvxor.v $xr7, $xr5, $xr1");
-> +
-> +		/* xr4, xr5: higher 4 bits of each byte of (P + Pxy) */
-> +		asm volatile("xvsrli.b $xr4, $xr2, 4");
-> +		asm volatile("xvsrli.b $xr5, $xr3, 4");
-> +		/* xr0, xr1: lower 4 bits of each byte of (P + Pxy) */
-> +		asm volatile("xvandi.b $xr0, $xr2, 0x0f");
-> +		asm volatile("xvandi.b $xr1, $xr3, 0x0f");
-> +		/* lookup from pbmul[0] */
-> +		asm volatile("xvshuf.b $xr0, $xr22, $xr22, $xr0");
-> +		asm volatile("xvshuf.b $xr1, $xr22, $xr22, $xr1");
-> +		/* lookup from pbmul[16] */
-> +		asm volatile("xvshuf.b $xr4, $xr23, $xr23, $xr4");
-> +		asm volatile("xvshuf.b $xr5, $xr23, $xr23, $xr5");
-> +		/* xr0, xr1: A(P + Pxy) */
-> +		asm volatile("xvxor.v $xr0, $xr0, $xr4");
-> +		asm volatile("xvxor.v $xr1, $xr1, $xr5");
-> +
-> +		/* xr0, xr1: A(P + Pxy) + B(Q + Qxy) = Dx */
-> +		asm volatile("xvxor.v $xr0, $xr0, $xr6");
-> +		asm volatile("xvxor.v $xr1, $xr1, $xr7");
-> +
-> +		/* xr2, xr3: P + Pxy + Dx = Dy */
-> +		asm volatile("xvxor.v $xr2, $xr2, $xr0");
-> +		asm volatile("xvxor.v $xr3, $xr3, $xr1");
-> +
-> +		asm volatile("xvst $xr0, %0" : "=m" (dq[0]));
-> +		asm volatile("xvst $xr1, %0" : "=m" (dq[32]));
-> +		asm volatile("xvst $xr2, %0" : "=m" (dp[0]));
-> +		asm volatile("xvst $xr3, %0" : "=m" (dp[32]));
-> +
-> +		bytes -= 64;
-> +		p += 64;
-> +		q += 64;
-> +		dp += 64;
-> +		dq += 64;
-> +	}
-> +
-> +	kernel_fpu_end();
-> +}
-> +
-> +static void raid6_datap_recov_lasx(int disks, size_t bytes, int faila,
-> +				   void **ptrs)
-> +{
-> +	u8 *p, *q, *dq;
-> +	const u8 *qmul;		/* Q multiplier table */
-> +
-> +	p = (u8 *)ptrs[disks-2];
-> +	q = (u8 *)ptrs[disks-1];
-> +
-> +	/*
-> +	 * Compute syndrome with zero for the missing data page
-> +	 * Use the dead data page as temporary storage for delta q
-> +	 */
-> +	dq = (u8 *)ptrs[faila];
-> +	ptrs[faila] = (void *)raid6_empty_zero_page;
-> +	ptrs[disks-1] = dq;
-> +
-> +	raid6_call.gen_syndrome(disks, bytes, ptrs);
-> +
-> +	/* Restore pointer table */
-> +	ptrs[faila]   = dq;
-> +	ptrs[disks-1] = q;
-> +
-> +	/* Now, pick the proper data tables */
-> +	qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila]]];
-
-Ditto.
-
-> +
-> +	kernel_fpu_begin();
-> +
-> +	/* xr22, xr23: qmul */
-> +	asm volatile("vld $vr22, %0" : : "m" (qmul[0]));
-> +	asm volatile("xvreplve0.q $xr22, $xr22");
-> +	asm volatile("vld $vr23, %0" : : "m" (qmul[16]));
-> +	asm volatile("xvreplve0.q $xr23, $xr23");
-> +
-> +	while (bytes) {
-> +		/* xr0, xr1: P + Dx */
-> +		asm volatile("xvld $xr0, %0" : : "m" (p[0]));
-> +		asm volatile("xvld $xr1, %0" : : "m" (p[32]));
-> +		/* xr2, xr3: Qx */
-> +		asm volatile("xvld $xr2, %0" : : "m" (dq[0]));
-> +		asm volatile("xvld $xr3, %0" : : "m" (dq[32]));
-> +		/* xr2, xr3: Q + Qx */
-> +		asm volatile("xvld $xr4, %0" : : "m" (q[0]));
-> +		asm volatile("xvld $xr5, %0" : : "m" (q[32]));
-> +		asm volatile("xvxor.v $xr2, $xr2, $xr4");
-> +		asm volatile("xvxor.v $xr3, $xr3, $xr5");
-> +
-> +		/* xr4, xr5: higher 4 bits of each byte of (Q + Qx) */
-> +		asm volatile("xvsrli.b $xr4, $xr2, 4");
-> +		asm volatile("xvsrli.b $xr5, $xr3, 4");
-> +		/* xr2, xr3: lower 4 bits of each byte of (Q + Qx) */
-> +		asm volatile("xvandi.b $xr2, $xr2, 0x0f");
-> +		asm volatile("xvandi.b $xr3, $xr3, 0x0f");
-> +		/* lookup from qmul[0] */
-> +		asm volatile("xvshuf.b $xr2, $xr22, $xr22, $xr2");
-> +		asm volatile("xvshuf.b $xr3, $xr22, $xr22, $xr3");
-> +		/* lookup from qmul[16] */
-> +		asm volatile("xvshuf.b $xr4, $xr23, $xr23, $xr4");
-> +		asm volatile("xvshuf.b $xr5, $xr23, $xr23, $xr5");
-> +		/* xr2, xr3: qmul(Q + Qx) = Dx */
-> +		asm volatile("xvxor.v $xr2, $xr2, $xr4");
-> +		asm volatile("xvxor.v $xr3, $xr3, $xr5");
-> +
-> +		/* xr0, xr1: P + Dx + Dx = P */
-> +		asm volatile("xvxor.v $xr0, $xr0, $xr2");
-> +		asm volatile("xvxor.v $xr1, $xr1, $xr3");
-> +
-> +		asm volatile("xvst $xr2, %0" : "=m" (dq[0]));
-> +		asm volatile("xvst $xr3, %0" : "=m" (dq[32]));
-> +		asm volatile("xvst $xr0, %0" : "=m" (p[0]));
-> +		asm volatile("xvst $xr1, %0" : "=m" (p[32]));
-> +
-> +		bytes -= 64;
-> +		p += 64;
-> +		q += 64;
-> +		dq += 64;
-> +	}
-> +
-> +	kernel_fpu_end();
-> +}
-> +
-> +const struct raid6_recov_calls raid6_recov_lasx = {
-> +	.data2 = raid6_2data_recov_lasx,
-> +	.datap = raid6_datap_recov_lasx,
-> +	.valid = raid6_has_lasx,
-> +	.name = "lasx",
-> +	.priority = 2,
-> +};
-> +#endif /* CONFIG_CPU_HAS_LASX */
-> diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
-> index 7b244bce32b3d..2abe0076a636c 100644
-> --- a/lib/raid6/test/Makefile
-> +++ b/lib/raid6/test/Makefile
-> @@ -65,7 +65,7 @@ else ifeq ($(HAS_ALTIVEC),yes)
->           OBJS += altivec1.o altivec2.o altivec4.o altivec8.o \
->                   vpermxor1.o vpermxor2.o vpermxor4.o vpermxor8.o
->   else ifeq ($(ARCH),loongarch64)
-> -        OBJS += loongarch_simd.o
-> +        OBJS += loongarch_simd.o recov_loongarch_simd.o
->   endif
->   
->   .c.o:
-
-
-Kind regards,
-
-Paul
-
-
-PS: I brought up the raid speed tests in the past, and Borislav called 
-them a random number generator [1]. ;-)
-
-
-[1]: https://lore.kernel.org/all/20210406124126.GM17806@zn.tnic/
