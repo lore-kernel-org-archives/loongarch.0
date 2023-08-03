@@ -1,20 +1,20 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D66524168
-	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 17:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB251ED5B
+	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 17:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1691082542; bh=5dpgIOxLRmBYn5HXPpB1JJzKTYnTf5xnIvQxbuNWheI=;
+	t=1691082548; bh=Y/ZHs+Xvr+5cqrLc7ZgvcwY752J3qROV7h7a+xic9GM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tm0Hmr5DJvhgQYsy16JDdRpdHEhNezURgcQsDo71j9uDap45VgzKOE5aS/slA0rDq
-	 j3xZfhDkjJmVXGMIIVRoOAoaLQYQ+YzXhWFk0LYuPcfGEOky4oBKxEJmMnNS/lAm2X
-	 6HPNLOkjZd8LZd3/x1s5i1xsLigcI27UJQAU4D/I=
+	b=d/fSwmLN6lAReNYxNXr8CbAmwsl3SyXp76GceS6MydWNVaSzxFdZj/gVJo5ReXpOo
+	 8w1zoSf2w6draEKMlDj2PCLj6ZIvD5AyYFY/6Ob2SLInZiu9P9j9X1kMBPvC8AgANr
+	 jOOQf4NuIePeu84mJykjnFB3H1he9yOoftqQcGFM=
 Received: from ld50.lan (unknown [101.88.28.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 77EDA6015A;
-	Fri,  4 Aug 2023 01:09:02 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 364C3601A3;
+	Fri,  4 Aug 2023 01:09:08 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Song Liu <song@kernel.org>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v2 1/3] LoongArch: Add SIMD-optimized XOR routines
-Date: Fri,  4 Aug 2023 01:08:56 +0800
-Message-Id: <20230803170858.781245-2-kernel@xen0n.name>
+Subject: [PATCH v2 3/3] raid6: Add LoongArch SIMD recovery implementation
+Date: Fri,  4 Aug 2023 01:08:58 +0800
+Message-Id: <20230803170858.781245-4-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230803170858.781245-1-kernel@xen0n.name>
 References: <20230803170858.781245-1-kernel@xen0n.name>
@@ -38,517 +38,615 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Add LSX and LASX implementations of xor operations, operating on 64
-bytes (one L1 cache line) at a time, for a balance between memory
-utilization and instruction mix. Huacai confirmed that all future
-LoongArch implementations by Loongson (that we care) will likely also
-feature 64-byte cache lines, and experiments show no throughput
-improvement with further unrolling.
+Similar to the syndrome calculation, the recovery algorithms also work
+on 64 bytes at a time to align with the L1 cache line size of current
+and future LoongArch cores (that we care about). Which means
+unrolled-by-4 LSX and unrolled-by-2 LASX code.
 
-Performance numbers measured during system boot on a 3A5000 @ 2.5GHz:
+The assembly is originally based on the x86 SSSE3/AVX2 ports, but
+register allocation has been redone to take advantage of LSX/LASX's 32
+vector registers, and instruction sequence has been optimized to suit
+(e.g. LoongArch can perform per-byte srl and andi on vectors, but x86
+cannot).
 
-> 8regs           : 12702 MB/sec
-> 8regs_prefetch  : 10920 MB/sec
-> 32regs          : 12686 MB/sec
-> 32regs_prefetch : 10918 MB/sec
-> lsx             : 17589 MB/sec
-> lasx            : 26116 MB/sec
+Performance numbers measured by instrumenting the raid6test code:
+
+> lasx  2data: 354.987 MiB/s
+> lasx  datap: 350.430 MiB/s
+> lsx   2data: 340.026 MiB/s
+> lsx   datap: 337.318 MiB/s
+> intx1 2data: 164.280 MiB/s
+> intx1 datap: 187.966 MiB/s
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/include/asm/xor.h      |  68 ++++++++++++++++
- arch/loongarch/include/asm/xor_simd.h |  42 ++++++++++
- arch/loongarch/lib/Makefile           |   3 +
- arch/loongarch/lib/xor_simd.c         |  93 ++++++++++++++++++++++
- arch/loongarch/lib/xor_simd.h         |  46 +++++++++++
- arch/loongarch/lib/xor_simd_glue.c    |  71 +++++++++++++++++
- arch/loongarch/lib/xor_template.c     | 110 ++++++++++++++++++++++++++
- 7 files changed, 433 insertions(+)
- create mode 100644 arch/loongarch/include/asm/xor.h
- create mode 100644 arch/loongarch/include/asm/xor_simd.h
- create mode 100644 arch/loongarch/lib/xor_simd.c
- create mode 100644 arch/loongarch/lib/xor_simd.h
- create mode 100644 arch/loongarch/lib/xor_simd_glue.c
- create mode 100644 arch/loongarch/lib/xor_template.c
+ include/linux/raid/pq.h          |   2 +
+ lib/raid6/Makefile               |   2 +-
+ lib/raid6/algos.c                |   8 +
+ lib/raid6/recov_loongarch_simd.c | 515 +++++++++++++++++++++++++++++++
+ lib/raid6/test/Makefile          |   2 +-
+ 5 files changed, 527 insertions(+), 2 deletions(-)
+ create mode 100644 lib/raid6/recov_loongarch_simd.c
 
-diff --git a/arch/loongarch/include/asm/xor.h b/arch/loongarch/include/asm/xor.h
-new file mode 100644
-index 0000000000000..12467fffee468
---- /dev/null
-+++ b/arch/loongarch/include/asm/xor.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2023 WANG Xuerui <git@xen0n.name>
-+ */
-+#ifndef _ASM_LOONGARCH_XOR_H
-+#define _ASM_LOONGARCH_XOR_H
-+
-+#include <asm/cpu-features.h>
-+#include <asm/xor_simd.h>
-+
-+#ifdef CONFIG_CPU_HAS_LSX
-+static struct xor_block_template xor_block_lsx = {
-+	.name = "lsx",
-+	.do_2 = xor_lsx_2,
-+	.do_3 = xor_lsx_3,
-+	.do_4 = xor_lsx_4,
-+	.do_5 = xor_lsx_5,
-+};
-+
-+#define XOR_SPEED_LSX()					\
-+	do {						\
-+		if (cpu_has_lsx)			\
-+			xor_speed(&xor_block_lsx);	\
-+	} while (0)
-+#else /* CONFIG_CPU_HAS_LSX */
-+#define XOR_SPEED_LSX()
-+#endif /* CONFIG_CPU_HAS_LSX */
-+
-+#ifdef CONFIG_CPU_HAS_LASX
-+static struct xor_block_template xor_block_lasx = {
-+	.name = "lasx",
-+	.do_2 = xor_lasx_2,
-+	.do_3 = xor_lasx_3,
-+	.do_4 = xor_lasx_4,
-+	.do_5 = xor_lasx_5,
-+};
-+
-+#define XOR_SPEED_LASX()					\
-+	do {							\
-+		if (cpu_has_lasx)				\
-+			xor_speed(&xor_block_lasx);		\
-+	} while (0)
-+#else /* CONFIG_CPU_HAS_LASX */
-+#define XOR_SPEED_LASX()
-+#endif /* CONFIG_CPU_HAS_LASX */
-+
-+/*
-+ * For grins, also test the generic routines.
-+ *
-+ * More importantly: it cannot be ruled out at this point of time, that some
-+ * future (maybe reduced) models could run the vector algorithms slower than
-+ * the scalar ones, maybe for errata or micro-op reasons. It may be
-+ * appropriate to revisit this after one or two more uarch generations.
-+ */
-+#include <asm-generic/xor.h>
-+
-+#undef XOR_TRY_TEMPLATES
-+#define XOR_TRY_TEMPLATES				\
-+do {							\
-+	xor_speed(&xor_block_8regs);			\
-+	xor_speed(&xor_block_8regs_p);			\
-+	xor_speed(&xor_block_32regs);			\
-+	xor_speed(&xor_block_32regs_p);			\
-+	XOR_SPEED_LSX();				\
-+	XOR_SPEED_LASX();				\
-+} while (0)
-+
-+#endif /* _ASM_LOONGARCH_XOR_H */
-diff --git a/arch/loongarch/include/asm/xor_simd.h b/arch/loongarch/include/asm/xor_simd.h
-new file mode 100644
-index 0000000000000..a087e4ded5303
---- /dev/null
-+++ b/arch/loongarch/include/asm/xor_simd.h
-@@ -0,0 +1,42 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2023 WANG Xuerui <git@xen0n.name>
-+ */
-+#ifndef _ASM_LOONGARCH_XOR_SIMD_H
-+#define _ASM_LOONGARCH_XOR_SIMD_H
-+
-+#ifdef CONFIG_CPU_HAS_LSX
-+void xor_lsx_2(unsigned long bytes, unsigned long * __restrict p1,
-+	       const unsigned long * __restrict p2);
-+void xor_lsx_3(unsigned long bytes, unsigned long * __restrict p1,
-+	       const unsigned long * __restrict p2,
-+	       const unsigned long * __restrict p3);
-+void xor_lsx_4(unsigned long bytes, unsigned long * __restrict p1,
-+	       const unsigned long * __restrict p2,
-+	       const unsigned long * __restrict p3,
-+	       const unsigned long * __restrict p4);
-+void xor_lsx_5(unsigned long bytes, unsigned long * __restrict p1,
-+	       const unsigned long * __restrict p2,
-+	       const unsigned long * __restrict p3,
-+	       const unsigned long * __restrict p4,
-+	       const unsigned long * __restrict p5);
-+#endif /* CONFIG_CPU_HAS_LSX */
-+
-+#ifdef CONFIG_CPU_HAS_LASX
-+void xor_lasx_2(unsigned long bytes, unsigned long * __restrict p1,
-+	        const unsigned long * __restrict p2);
-+void xor_lasx_3(unsigned long bytes, unsigned long * __restrict p1,
-+	        const unsigned long * __restrict p2,
-+	        const unsigned long * __restrict p3);
-+void xor_lasx_4(unsigned long bytes, unsigned long * __restrict p1,
-+	        const unsigned long * __restrict p2,
-+	        const unsigned long * __restrict p3,
-+	        const unsigned long * __restrict p4);
-+void xor_lasx_5(unsigned long bytes, unsigned long * __restrict p1,
-+	        const unsigned long * __restrict p2,
-+	        const unsigned long * __restrict p3,
-+	        const unsigned long * __restrict p4,
-+	        const unsigned long * __restrict p5);
-+#endif /* CONFIG_CPU_HAS_LASX */
-+
-+#endif /* _ASM_LOONGARCH_XOR_SIMD_H */
-diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
-index d60d4e096cfa9..045a3ed6ecd70 100644
---- a/arch/loongarch/lib/Makefile
-+++ b/arch/loongarch/lib/Makefile
-@@ -6,4 +6,7 @@
- lib-y	+= delay.o memset.o memcpy.o memmove.o \
- 	   clear_user.o copy_user.o csum.o dump_tlb.o unaligned.o
+diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
+index 8744474858487..006e18decfad0 100644
+--- a/include/linux/raid/pq.h
++++ b/include/linux/raid/pq.h
+@@ -125,6 +125,8 @@ extern const struct raid6_recov_calls raid6_recov_avx2;
+ extern const struct raid6_recov_calls raid6_recov_avx512;
+ extern const struct raid6_recov_calls raid6_recov_s390xc;
+ extern const struct raid6_recov_calls raid6_recov_neon;
++extern const struct raid6_recov_calls raid6_recov_lsx;
++extern const struct raid6_recov_calls raid6_recov_lasx;
  
-+obj-$(CONFIG_CPU_HAS_LSX) += xor_simd.o xor_simd_glue.o
-+
- obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
-+
-diff --git a/arch/loongarch/lib/xor_simd.c b/arch/loongarch/lib/xor_simd.c
+ extern const struct raid6_calls raid6_neonx1;
+ extern const struct raid6_calls raid6_neonx2;
+diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
+index 2b9ebe1054806..035b0a4db476a 100644
+--- a/lib/raid6/Makefile
++++ b/lib/raid6/Makefile
+@@ -9,7 +9,7 @@ raid6_pq-$(CONFIG_ALTIVEC) += altivec1.o altivec2.o altivec4.o altivec8.o \
+                               vpermxor1.o vpermxor2.o vpermxor4.o vpermxor8.o
+ raid6_pq-$(CONFIG_KERNEL_MODE_NEON) += neon.o neon1.o neon2.o neon4.o neon8.o recov_neon.o recov_neon_inner.o
+ raid6_pq-$(CONFIG_S390) += s390vx8.o recov_s390xc.o
+-raid6_pq-$(CONFIG_LOONGARCH) += loongarch_simd.o
++raid6_pq-$(CONFIG_LOONGARCH) += loongarch_simd.o recov_loongarch_simd.o
+ 
+ hostprogs	+= mktables
+ 
+diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
+index 739c7ebcae1a2..0ec534faf019b 100644
+--- a/lib/raid6/algos.c
++++ b/lib/raid6/algos.c
+@@ -111,6 +111,14 @@ const struct raid6_recov_calls *const raid6_recov_algos[] = {
+ #endif
+ #if defined(CONFIG_KERNEL_MODE_NEON)
+ 	&raid6_recov_neon,
++#endif
++#ifdef CONFIG_LOONGARCH
++#ifdef CONFIG_CPU_HAS_LASX
++	&raid6_recov_lasx,
++#endif
++#ifdef CONFIG_CPU_HAS_LSX
++	&raid6_recov_lsx,
++#endif
+ #endif
+ 	&raid6_recov_intx1,
+ 	NULL
+diff --git a/lib/raid6/recov_loongarch_simd.c b/lib/raid6/recov_loongarch_simd.c
 new file mode 100644
-index 0000000000000..84cd24b728c47
+index 0000000000000..de9d53e81bd2d
 --- /dev/null
-+++ b/arch/loongarch/lib/xor_simd.c
-@@ -0,0 +1,93 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
++++ b/lib/raid6/recov_loongarch_simd.c
+@@ -0,0 +1,515 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * LoongArch SIMD XOR operations
++ * RAID6 recovery algorithms in LoongArch SIMD (LSX & LASX)
 + *
 + * Copyright (C) 2023 WANG Xuerui <git@xen0n.name>
++ *
++ * Originally based on recov_avx2.c and recov_ssse3.c:
++ *
++ * Copyright (C) 2012 Intel Corporation
++ * Author: Jim Kukunas <james.t.kukunas@linux.intel.com>
 + */
 +
-+#include "xor_simd.h"
++#include <linux/raid/pq.h>
++#include "loongarch.h"
 +
 +/*
-+ * Process one cache line (64 bytes) per loop. This is assuming all future
-+ * popular LoongArch cores are similar performance-characteristics-wise to the
-+ * current models.
++ * Unlike with the syndrome calculation algorithms, there's no boot-time
++ * selection of recovery algorithms by benchmarking, so we have to specify
++ * the priorities and hope the future cores will all have decent vector
++ * support (i.e. no LASX slower than LSX, or even scalar code).
 + */
-+#define LINE_WIDTH 64
 +
 +#ifdef CONFIG_CPU_HAS_LSX
++static int raid6_has_lsx(void)
++{
++	return cpu_has_lsx;
++}
 +
-+#define LD(reg, base, offset)	\
-+	"vld $vr" #reg ", %[" #base "], " #offset "\n\t"
-+#define ST(reg, base, offset)	\
-+	"vst $vr" #reg ", %[" #base "], " #offset "\n\t"
-+#define XOR(dj, k)	"vxor.v $vr" #dj ", $vr" #dj ", $vr" #k "\n\t"
++static void raid6_2data_recov_lsx(int disks, size_t bytes, int faila,
++				  int failb, void **ptrs)
++{
++	u8 *p, *q, *dp, *dq;
++	const u8 *pbmul;	/* P multiplier table for B data */
++	const u8 *qmul;		/* Q multiplier table (for both) */
 +
-+#define LD_INOUT_LINE(base)	\
-+	LD(0, base, 0)		\
-+	LD(1, base, 16)		\
-+	LD(2, base, 32)		\
-+	LD(3, base, 48)
++	p = (u8 *)ptrs[disks-2];
++	q = (u8 *)ptrs[disks-1];
 +
-+#define LD_AND_XOR_LINE(base)	\
-+	LD(4, base, 0)		\
-+	LD(5, base, 16)		\
-+	LD(6, base, 32)		\
-+	LD(7, base, 48)		\
-+	XOR(0, 4)		\
-+	XOR(1, 5)		\
-+	XOR(2, 6)		\
-+	XOR(3, 7)
++	/*
++	 * Compute syndrome with zero for the missing data pages
++	 * Use the dead data pages as temporary storage for
++	 * delta p and delta q
++	 */
++	dp = (u8 *)ptrs[faila];
++	ptrs[faila] = (void *)raid6_empty_zero_page;
++	ptrs[disks-2] = dp;
++	dq = (u8 *)ptrs[failb];
++	ptrs[failb] = (void *)raid6_empty_zero_page;
++	ptrs[disks-1] = dq;
 +
-+#define ST_LINE(base)		\
-+	ST(0, base, 0)		\
-+	ST(1, base, 16)		\
-+	ST(2, base, 32)		\
-+	ST(3, base, 48)
++	raid6_call.gen_syndrome(disks, bytes, ptrs);
 +
-+#define XOR_FUNC_NAME(nr) __xor_lsx_##nr
-+#include "xor_template.c"
++	/* Restore pointer table */
++	ptrs[faila]   = dp;
++	ptrs[failb]   = dq;
++	ptrs[disks-2] = p;
++	ptrs[disks-1] = q;
 +
-+#undef LD
-+#undef ST
-+#undef XOR
-+#undef LD_INOUT_LINE
-+#undef LD_AND_XOR_LINE
-+#undef ST_LINE
-+#undef XOR_FUNC_NAME
++	/* Now, pick the proper data tables */
++	pbmul = raid6_vgfmul[raid6_gfexi[failb-faila]];
++	qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila] ^
++		raid6_gfexp[failb]]];
 +
++	kernel_fpu_begin();
++
++	/*
++	 * vr20, vr21: qmul
++	 * vr22, vr23: pbmul
++	 */
++	asm volatile("vld $vr20, %0" : : "m" (qmul[0]));
++	asm volatile("vld $vr21, %0" : : "m" (qmul[16]));
++	asm volatile("vld $vr22, %0" : : "m" (pbmul[0]));
++	asm volatile("vld $vr23, %0" : : "m" (pbmul[16]));
++
++	while (bytes) {
++		/* vr4 - vr7: Q */
++		asm volatile("vld $vr4, %0" : : "m" (q[0]));
++		asm volatile("vld $vr5, %0" : : "m" (q[16]));
++		asm volatile("vld $vr6, %0" : : "m" (q[32]));
++		asm volatile("vld $vr7, %0" : : "m" (q[48]));
++		/*  vr4 - vr7: Q + Qxy */
++		asm volatile("vld $vr8, %0" : : "m" (dq[0]));
++		asm volatile("vld $vr9, %0" : : "m" (dq[16]));
++		asm volatile("vld $vr10, %0" : : "m" (dq[32]));
++		asm volatile("vld $vr11, %0" : : "m" (dq[48]));
++		asm volatile("vxor.v $vr4, $vr4, $vr8");
++		asm volatile("vxor.v $vr5, $vr5, $vr9");
++		asm volatile("vxor.v $vr6, $vr6, $vr10");
++		asm volatile("vxor.v $vr7, $vr7, $vr11");
++		/* vr0 - vr3: P */
++		asm volatile("vld $vr0, %0" : : "m" (p[0]));
++		asm volatile("vld $vr1, %0" : : "m" (p[16]));
++		asm volatile("vld $vr2, %0" : : "m" (p[32]));
++		asm volatile("vld $vr3, %0" : : "m" (p[48]));
++		/* vr0 - vr3: P + Pxy */
++		asm volatile("vld $vr8, %0" : : "m" (dp[0]));
++		asm volatile("vld $vr9, %0" : : "m" (dp[16]));
++		asm volatile("vld $vr10, %0" : : "m" (dp[32]));
++		asm volatile("vld $vr11, %0" : : "m" (dp[48]));
++		asm volatile("vxor.v $vr0, $vr0, $vr8");
++		asm volatile("vxor.v $vr1, $vr1, $vr9");
++		asm volatile("vxor.v $vr2, $vr2, $vr10");
++		asm volatile("vxor.v $vr3, $vr3, $vr11");
++
++		/* vr8 - vr11: higher 4 bits of each byte of (Q + Qxy) */
++		asm volatile("vsrli.b $vr8, $vr4, 4");
++		asm volatile("vsrli.b $vr9, $vr5, 4");
++		asm volatile("vsrli.b $vr10, $vr6, 4");
++		asm volatile("vsrli.b $vr11, $vr7, 4");
++		/* vr4 - vr7: lower 4 bits of each byte of (Q + Qxy) */
++		asm volatile("vandi.b $vr4, $vr4, 0x0f");
++		asm volatile("vandi.b $vr5, $vr5, 0x0f");
++		asm volatile("vandi.b $vr6, $vr6, 0x0f");
++		asm volatile("vandi.b $vr7, $vr7, 0x0f");
++		/* lookup from qmul[0] */
++		asm volatile("vshuf.b $vr4, $vr20, $vr20, $vr4");
++		asm volatile("vshuf.b $vr5, $vr20, $vr20, $vr5");
++		asm volatile("vshuf.b $vr6, $vr20, $vr20, $vr6");
++		asm volatile("vshuf.b $vr7, $vr20, $vr20, $vr7");
++		/* lookup from qmul[16] */
++		asm volatile("vshuf.b $vr8, $vr21, $vr21, $vr8");
++		asm volatile("vshuf.b $vr9, $vr21, $vr21, $vr9");
++		asm volatile("vshuf.b $vr10, $vr21, $vr21, $vr10");
++		asm volatile("vshuf.b $vr11, $vr21, $vr21, $vr11");
++		/* vr16 - vr19: B(Q + Qxy) */
++		asm volatile("vxor.v $vr16, $vr8, $vr4");
++		asm volatile("vxor.v $vr17, $vr9, $vr5");
++		asm volatile("vxor.v $vr18, $vr10, $vr6");
++		asm volatile("vxor.v $vr19, $vr11, $vr7");
++
++		/* vr4 - vr7: higher 4 bits of each byte of (P + Pxy) */
++		asm volatile("vsrli.b $vr4, $vr0, 4");
++		asm volatile("vsrli.b $vr5, $vr1, 4");
++		asm volatile("vsrli.b $vr6, $vr2, 4");
++		asm volatile("vsrli.b $vr7, $vr3, 4");
++		/* vr12 - vr15: lower 4 bits of each byte of (P + Pxy) */
++		asm volatile("vandi.b $vr12, $vr0, 0x0f");
++		asm volatile("vandi.b $vr13, $vr1, 0x0f");
++		asm volatile("vandi.b $vr14, $vr2, 0x0f");
++		asm volatile("vandi.b $vr15, $vr3, 0x0f");
++		/* lookup from pbmul[0] */
++		asm volatile("vshuf.b $vr12, $vr22, $vr22, $vr12");
++		asm volatile("vshuf.b $vr13, $vr22, $vr22, $vr13");
++		asm volatile("vshuf.b $vr14, $vr22, $vr22, $vr14");
++		asm volatile("vshuf.b $vr15, $vr22, $vr22, $vr15");
++		/* lookup from pbmul[16] */
++		asm volatile("vshuf.b $vr4, $vr23, $vr23, $vr4");
++		asm volatile("vshuf.b $vr5, $vr23, $vr23, $vr5");
++		asm volatile("vshuf.b $vr6, $vr23, $vr23, $vr6");
++		asm volatile("vshuf.b $vr7, $vr23, $vr23, $vr7");
++		/* vr4 - vr7: A(P + Pxy) */
++		asm volatile("vxor.v $vr4, $vr4, $vr12");
++		asm volatile("vxor.v $vr5, $vr5, $vr13");
++		asm volatile("vxor.v $vr6, $vr6, $vr14");
++		asm volatile("vxor.v $vr7, $vr7, $vr15");
++
++		/* vr4 - vr7: A(P + Pxy) + B(Q + Qxy) = Dx */
++		asm volatile("vxor.v $vr4, $vr4, $vr16");
++		asm volatile("vxor.v $vr5, $vr5, $vr17");
++		asm volatile("vxor.v $vr6, $vr6, $vr18");
++		asm volatile("vxor.v $vr7, $vr7, $vr19");
++		asm volatile("vst $vr4, %0" : "=m" (dq[0]));
++		asm volatile("vst $vr5, %0" : "=m" (dq[16]));
++		asm volatile("vst $vr6, %0" : "=m" (dq[32]));
++		asm volatile("vst $vr7, %0" : "=m" (dq[48]));
++
++		/* vr0 - vr3: P + Pxy + Dx = Dy */
++		asm volatile("vxor.v $vr0, $vr0, $vr4");
++		asm volatile("vxor.v $vr1, $vr1, $vr5");
++		asm volatile("vxor.v $vr2, $vr2, $vr6");
++		asm volatile("vxor.v $vr3, $vr3, $vr7");
++		asm volatile("vst $vr0, %0" : "=m" (dp[0]));
++		asm volatile("vst $vr1, %0" : "=m" (dp[16]));
++		asm volatile("vst $vr2, %0" : "=m" (dp[32]));
++		asm volatile("vst $vr3, %0" : "=m" (dp[48]));
++
++		bytes -= 64;
++		p += 64;
++		q += 64;
++		dp += 64;
++		dq += 64;
++	}
++
++	kernel_fpu_end();
++}
++
++static void raid6_datap_recov_lsx(int disks, size_t bytes, int faila,
++				  void **ptrs)
++{
++	u8 *p, *q, *dq;
++	const u8 *qmul;		/* Q multiplier table */
++
++	p = (u8 *)ptrs[disks-2];
++	q = (u8 *)ptrs[disks-1];
++
++	/*
++	 * Compute syndrome with zero for the missing data page
++	 * Use the dead data page as temporary storage for delta q
++	 */
++	dq = (u8 *)ptrs[faila];
++	ptrs[faila] = (void *)raid6_empty_zero_page;
++	ptrs[disks-1] = dq;
++
++	raid6_call.gen_syndrome(disks, bytes, ptrs);
++
++	/* Restore pointer table */
++	ptrs[faila]   = dq;
++	ptrs[disks-1] = q;
++
++	/* Now, pick the proper data tables */
++	qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila]]];
++
++	kernel_fpu_begin();
++
++	/* vr22, vr23: qmul */
++	asm volatile("vld $vr22, %0" : : "m" (qmul[0]));
++	asm volatile("vld $vr23, %0" : : "m" (qmul[16]));
++
++	while (bytes) {
++		/* vr0 - vr3: P + Dx */
++		asm volatile("vld $vr0, %0" : : "m" (p[0]));
++		asm volatile("vld $vr1, %0" : : "m" (p[16]));
++		asm volatile("vld $vr2, %0" : : "m" (p[32]));
++		asm volatile("vld $vr3, %0" : : "m" (p[48]));
++		/* vr4 - vr7: Qx */
++		asm volatile("vld $vr4, %0" : : "m" (dq[0]));
++		asm volatile("vld $vr5, %0" : : "m" (dq[16]));
++		asm volatile("vld $vr6, %0" : : "m" (dq[32]));
++		asm volatile("vld $vr7, %0" : : "m" (dq[48]));
++		/* vr4 - vr7: Q + Qx */
++		asm volatile("vld $vr8, %0" : : "m" (q[0]));
++		asm volatile("vld $vr9, %0" : : "m" (q[16]));
++		asm volatile("vld $vr10, %0" : : "m" (q[32]));
++		asm volatile("vld $vr11, %0" : : "m" (q[48]));
++		asm volatile("vxor.v $vr4, $vr4, $vr8");
++		asm volatile("vxor.v $vr5, $vr5, $vr9");
++		asm volatile("vxor.v $vr6, $vr6, $vr10");
++		asm volatile("vxor.v $vr7, $vr7, $vr11");
++
++		/* vr8 - vr11: higher 4 bits of each byte of (Q + Qx) */
++		asm volatile("vsrli.b $vr8, $vr4, 4");
++		asm volatile("vsrli.b $vr9, $vr5, 4");
++		asm volatile("vsrli.b $vr10, $vr6, 4");
++		asm volatile("vsrli.b $vr11, $vr7, 4");
++		/* vr4 - vr7: lower 4 bits of each byte of (Q + Qx) */
++		asm volatile("vandi.b $vr4, $vr4, 0x0f");
++		asm volatile("vandi.b $vr5, $vr5, 0x0f");
++		asm volatile("vandi.b $vr6, $vr6, 0x0f");
++		asm volatile("vandi.b $vr7, $vr7, 0x0f");
++		/* lookup from qmul[0] */
++		asm volatile("vshuf.b $vr4, $vr22, $vr22, $vr4");
++		asm volatile("vshuf.b $vr5, $vr22, $vr22, $vr5");
++		asm volatile("vshuf.b $vr6, $vr22, $vr22, $vr6");
++		asm volatile("vshuf.b $vr7, $vr22, $vr22, $vr7");
++		/* lookup from qmul[16] */
++		asm volatile("vshuf.b $vr8, $vr23, $vr23, $vr8");
++		asm volatile("vshuf.b $vr9, $vr23, $vr23, $vr9");
++		asm volatile("vshuf.b $vr10, $vr23, $vr23, $vr10");
++		asm volatile("vshuf.b $vr11, $vr23, $vr23, $vr11");
++		/* vr4 - vr7: qmul(Q + Qx) = Dx */
++		asm volatile("vxor.v $vr4, $vr4, $vr8");
++		asm volatile("vxor.v $vr5, $vr5, $vr9");
++		asm volatile("vxor.v $vr6, $vr6, $vr10");
++		asm volatile("vxor.v $vr7, $vr7, $vr11");
++		asm volatile("vst $vr4, %0" : "=m" (dq[0]));
++		asm volatile("vst $vr5, %0" : "=m" (dq[16]));
++		asm volatile("vst $vr6, %0" : "=m" (dq[32]));
++		asm volatile("vst $vr7, %0" : "=m" (dq[48]));
++
++		/* vr0 - vr3: P + Dx + Dx = P */
++		asm volatile("vxor.v $vr0, $vr0, $vr4");
++		asm volatile("vxor.v $vr1, $vr1, $vr5");
++		asm volatile("vxor.v $vr2, $vr2, $vr6");
++		asm volatile("vxor.v $vr3, $vr3, $vr7");
++		asm volatile("vst $vr0, %0" : "=m" (p[0]));
++		asm volatile("vst $vr1, %0" : "=m" (p[16]));
++		asm volatile("vst $vr2, %0" : "=m" (p[32]));
++		asm volatile("vst $vr3, %0" : "=m" (p[48]));
++
++		bytes -= 64;
++		p += 64;
++		q += 64;
++		dq += 64;
++	}
++
++	kernel_fpu_end();
++}
++
++const struct raid6_recov_calls raid6_recov_lsx = {
++	.data2 = raid6_2data_recov_lsx,
++	.datap = raid6_datap_recov_lsx,
++	.valid = raid6_has_lsx,
++	.name = "lsx",
++	.priority = 1,
++};
 +#endif /* CONFIG_CPU_HAS_LSX */
 +
 +#ifdef CONFIG_CPU_HAS_LASX
++static int raid6_has_lasx(void)
++{
++	return cpu_has_lasx;
++}
 +
-+#define LD(reg, base, offset)	\
-+	"xvld $xr" #reg ", %[" #base "], " #offset "\n\t"
-+#define ST(reg, base, offset)	\
-+	"xvst $xr" #reg ", %[" #base "], " #offset "\n\t"
-+#define XOR(dj, k)	"xvxor.v $xr" #dj ", $xr" #dj ", $xr" #k "\n\t"
++static void raid6_2data_recov_lasx(int disks, size_t bytes, int faila,
++				   int failb, void **ptrs)
++{
++	u8 *p, *q, *dp, *dq;
++	const u8 *pbmul;	/* P multiplier table for B data */
++	const u8 *qmul;		/* Q multiplier table (for both) */
 +
-+#define LD_INOUT_LINE(base)	\
-+	LD(0, base, 0)		\
-+	LD(1, base, 32)
++	p = (u8 *)ptrs[disks-2];
++	q = (u8 *)ptrs[disks-1];
 +
-+#define LD_AND_XOR_LINE(base)	\
-+	LD(2, base, 0)		\
-+	LD(3, base, 32)		\
-+	XOR(0, 2)		\
-+	XOR(1, 3)
++	/*
++	 * Compute syndrome with zero for the missing data pages
++	 * Use the dead data pages as temporary storage for
++	 * delta p and delta q
++	 */
++	dp = (u8 *)ptrs[faila];
++	ptrs[faila] = (void *)raid6_empty_zero_page;
++	ptrs[disks-2] = dp;
++	dq = (u8 *)ptrs[failb];
++	ptrs[failb] = (void *)raid6_empty_zero_page;
++	ptrs[disks-1] = dq;
 +
-+#define ST_LINE(base)		\
-+	ST(0, base, 0)		\
-+	ST(1, base, 32)
++	raid6_call.gen_syndrome(disks, bytes, ptrs);
 +
-+#define XOR_FUNC_NAME(nr) __xor_lasx_##nr
-+#include "xor_template.c"
++	/* Restore pointer table */
++	ptrs[faila]   = dp;
++	ptrs[failb]   = dq;
++	ptrs[disks-2] = p;
++	ptrs[disks-1] = q;
 +
-+#undef LD
-+#undef ST
-+#undef XOR
-+#undef LD_INOUT_LINE
-+#undef LD_AND_XOR_LINE
-+#undef ST_LINE
-+#undef XOR_FUNC_NAME
++	/* Now, pick the proper data tables */
++	pbmul = raid6_vgfmul[raid6_gfexi[failb-faila]];
++	qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila] ^
++		raid6_gfexp[failb]]];
 +
++	kernel_fpu_begin();
++
++	/*
++	 * xr20, xr21: qmul
++	 * xr22, xr23: pbmul
++	 */
++	asm volatile("vld $vr20, %0" : : "m" (qmul[0]));
++	asm volatile("vld $vr21, %0" : : "m" (qmul[16]));
++	asm volatile("vld $vr22, %0" : : "m" (pbmul[0]));
++	asm volatile("vld $vr23, %0" : : "m" (pbmul[16]));
++	asm volatile("xvreplve0.q $xr20, $xr20");
++	asm volatile("xvreplve0.q $xr21, $xr21");
++	asm volatile("xvreplve0.q $xr22, $xr22");
++	asm volatile("xvreplve0.q $xr23, $xr23");
++
++	while (bytes) {
++		/* xr0, xr1: Q */
++		asm volatile("xvld $xr0, %0" : : "m" (q[0]));
++		asm volatile("xvld $xr1, %0" : : "m" (q[32]));
++		/* xr0, xr1: Q + Qxy */
++		asm volatile("xvld $xr4, %0" : : "m" (dq[0]));
++		asm volatile("xvld $xr5, %0" : : "m" (dq[32]));
++		asm volatile("xvxor.v $xr0, $xr0, $xr4");
++		asm volatile("xvxor.v $xr1, $xr1, $xr5");
++		/* xr2, xr3: P */
++		asm volatile("xvld $xr2, %0" : : "m" (p[0]));
++		asm volatile("xvld $xr3, %0" : : "m" (p[32]));
++		/* xr2, xr3: P + Pxy */
++		asm volatile("xvld $xr4, %0" : : "m" (dp[0]));
++		asm volatile("xvld $xr5, %0" : : "m" (dp[32]));
++		asm volatile("xvxor.v $xr2, $xr2, $xr4");
++		asm volatile("xvxor.v $xr3, $xr3, $xr5");
++
++		/* xr4, xr5: higher 4 bits of each byte of (Q + Qxy) */
++		asm volatile("xvsrli.b $xr4, $xr0, 4");
++		asm volatile("xvsrli.b $xr5, $xr1, 4");
++		/* xr0, xr1: lower 4 bits of each byte of (Q + Qxy) */
++		asm volatile("xvandi.b $xr0, $xr0, 0x0f");
++		asm volatile("xvandi.b $xr1, $xr1, 0x0f");
++		/* lookup from qmul[0] */
++		asm volatile("xvshuf.b $xr0, $xr20, $xr20, $xr0");
++		asm volatile("xvshuf.b $xr1, $xr20, $xr20, $xr1");
++		/* lookup from qmul[16] */
++		asm volatile("xvshuf.b $xr4, $xr21, $xr21, $xr4");
++		asm volatile("xvshuf.b $xr5, $xr21, $xr21, $xr5");
++		/* xr6, xr7: B(Q + Qxy) */
++		asm volatile("xvxor.v $xr6, $xr4, $xr0");
++		asm volatile("xvxor.v $xr7, $xr5, $xr1");
++
++		/* xr4, xr5: higher 4 bits of each byte of (P + Pxy) */
++		asm volatile("xvsrli.b $xr4, $xr2, 4");
++		asm volatile("xvsrli.b $xr5, $xr3, 4");
++		/* xr0, xr1: lower 4 bits of each byte of (P + Pxy) */
++		asm volatile("xvandi.b $xr0, $xr2, 0x0f");
++		asm volatile("xvandi.b $xr1, $xr3, 0x0f");
++		/* lookup from pbmul[0] */
++		asm volatile("xvshuf.b $xr0, $xr22, $xr22, $xr0");
++		asm volatile("xvshuf.b $xr1, $xr22, $xr22, $xr1");
++		/* lookup from pbmul[16] */
++		asm volatile("xvshuf.b $xr4, $xr23, $xr23, $xr4");
++		asm volatile("xvshuf.b $xr5, $xr23, $xr23, $xr5");
++		/* xr0, xr1: A(P + Pxy) */
++		asm volatile("xvxor.v $xr0, $xr0, $xr4");
++		asm volatile("xvxor.v $xr1, $xr1, $xr5");
++
++		/* xr0, xr1: A(P + Pxy) + B(Q + Qxy) = Dx */
++		asm volatile("xvxor.v $xr0, $xr0, $xr6");
++		asm volatile("xvxor.v $xr1, $xr1, $xr7");
++
++		/* xr2, xr3: P + Pxy + Dx = Dy */
++		asm volatile("xvxor.v $xr2, $xr2, $xr0");
++		asm volatile("xvxor.v $xr3, $xr3, $xr1");
++
++		asm volatile("xvst $xr0, %0" : "=m" (dq[0]));
++		asm volatile("xvst $xr1, %0" : "=m" (dq[32]));
++		asm volatile("xvst $xr2, %0" : "=m" (dp[0]));
++		asm volatile("xvst $xr3, %0" : "=m" (dp[32]));
++
++		bytes -= 64;
++		p += 64;
++		q += 64;
++		dp += 64;
++		dq += 64;
++	}
++
++	kernel_fpu_end();
++}
++
++static void raid6_datap_recov_lasx(int disks, size_t bytes, int faila,
++				   void **ptrs)
++{
++	u8 *p, *q, *dq;
++	const u8 *qmul;		/* Q multiplier table */
++
++	p = (u8 *)ptrs[disks-2];
++	q = (u8 *)ptrs[disks-1];
++
++	/*
++	 * Compute syndrome with zero for the missing data page
++	 * Use the dead data page as temporary storage for delta q
++	 */
++	dq = (u8 *)ptrs[faila];
++	ptrs[faila] = (void *)raid6_empty_zero_page;
++	ptrs[disks-1] = dq;
++
++	raid6_call.gen_syndrome(disks, bytes, ptrs);
++
++	/* Restore pointer table */
++	ptrs[faila]   = dq;
++	ptrs[disks-1] = q;
++
++	/* Now, pick the proper data tables */
++	qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila]]];
++
++	kernel_fpu_begin();
++
++	/* xr22, xr23: qmul */
++	asm volatile("vld $vr22, %0" : : "m" (qmul[0]));
++	asm volatile("xvreplve0.q $xr22, $xr22");
++	asm volatile("vld $vr23, %0" : : "m" (qmul[16]));
++	asm volatile("xvreplve0.q $xr23, $xr23");
++
++	while (bytes) {
++		/* xr0, xr1: P + Dx */
++		asm volatile("xvld $xr0, %0" : : "m" (p[0]));
++		asm volatile("xvld $xr1, %0" : : "m" (p[32]));
++		/* xr2, xr3: Qx */
++		asm volatile("xvld $xr2, %0" : : "m" (dq[0]));
++		asm volatile("xvld $xr3, %0" : : "m" (dq[32]));
++		/* xr2, xr3: Q + Qx */
++		asm volatile("xvld $xr4, %0" : : "m" (q[0]));
++		asm volatile("xvld $xr5, %0" : : "m" (q[32]));
++		asm volatile("xvxor.v $xr2, $xr2, $xr4");
++		asm volatile("xvxor.v $xr3, $xr3, $xr5");
++
++		/* xr4, xr5: higher 4 bits of each byte of (Q + Qx) */
++		asm volatile("xvsrli.b $xr4, $xr2, 4");
++		asm volatile("xvsrli.b $xr5, $xr3, 4");
++		/* xr2, xr3: lower 4 bits of each byte of (Q + Qx) */
++		asm volatile("xvandi.b $xr2, $xr2, 0x0f");
++		asm volatile("xvandi.b $xr3, $xr3, 0x0f");
++		/* lookup from qmul[0] */
++		asm volatile("xvshuf.b $xr2, $xr22, $xr22, $xr2");
++		asm volatile("xvshuf.b $xr3, $xr22, $xr22, $xr3");
++		/* lookup from qmul[16] */
++		asm volatile("xvshuf.b $xr4, $xr23, $xr23, $xr4");
++		asm volatile("xvshuf.b $xr5, $xr23, $xr23, $xr5");
++		/* xr2, xr3: qmul(Q + Qx) = Dx */
++		asm volatile("xvxor.v $xr2, $xr2, $xr4");
++		asm volatile("xvxor.v $xr3, $xr3, $xr5");
++
++		/* xr0, xr1: P + Dx + Dx = P */
++		asm volatile("xvxor.v $xr0, $xr0, $xr2");
++		asm volatile("xvxor.v $xr1, $xr1, $xr3");
++
++		asm volatile("xvst $xr2, %0" : "=m" (dq[0]));
++		asm volatile("xvst $xr3, %0" : "=m" (dq[32]));
++		asm volatile("xvst $xr0, %0" : "=m" (p[0]));
++		asm volatile("xvst $xr1, %0" : "=m" (p[32]));
++
++		bytes -= 64;
++		p += 64;
++		q += 64;
++		dq += 64;
++	}
++
++	kernel_fpu_end();
++}
++
++const struct raid6_recov_calls raid6_recov_lasx = {
++	.data2 = raid6_2data_recov_lasx,
++	.datap = raid6_datap_recov_lasx,
++	.valid = raid6_has_lasx,
++	.name = "lasx",
++	.priority = 2,
++};
 +#endif /* CONFIG_CPU_HAS_LASX */
-diff --git a/arch/loongarch/lib/xor_simd.h b/arch/loongarch/lib/xor_simd.h
-new file mode 100644
-index 0000000000000..161b8d3875c7a
---- /dev/null
-+++ b/arch/loongarch/lib/xor_simd.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Simple interface to link xor_simd.c and xor_simd_glue.c
-+ *
-+ * Separating these files ensures that no SIMD instructions are run outside of
-+ * the kfpu critical section.
-+ */
-+
-+#ifndef __LOONGARCH_LIB_XOR_SIMD_H
-+#define __LOONGARCH_LIB_XOR_SIMD_H
-+
-+#ifdef CONFIG_CPU_HAS_LSX
-+void __xor_lsx_2(unsigned long bytes, unsigned long * __restrict p1,
-+		 const unsigned long * __restrict p2);
-+void __xor_lsx_3(unsigned long bytes, unsigned long * __restrict p1,
-+		 const unsigned long * __restrict p2,
-+		 const unsigned long * __restrict p3);
-+void __xor_lsx_4(unsigned long bytes, unsigned long * __restrict p1,
-+		 const unsigned long * __restrict p2,
-+		 const unsigned long * __restrict p3,
-+		 const unsigned long * __restrict p4);
-+void __xor_lsx_5(unsigned long bytes, unsigned long * __restrict p1,
-+		 const unsigned long * __restrict p2,
-+		 const unsigned long * __restrict p3,
-+		 const unsigned long * __restrict p4,
-+		 const unsigned long * __restrict p5);
-+#endif /* CONFIG_CPU_HAS_LSX */
-+
-+#ifdef CONFIG_CPU_HAS_LASX
-+void __xor_lasx_2(unsigned long bytes, unsigned long * __restrict p1,
-+		  const unsigned long * __restrict p2);
-+void __xor_lasx_3(unsigned long bytes, unsigned long * __restrict p1,
-+		  const unsigned long * __restrict p2,
-+		  const unsigned long * __restrict p3);
-+void __xor_lasx_4(unsigned long bytes, unsigned long * __restrict p1,
-+		  const unsigned long * __restrict p2,
-+		  const unsigned long * __restrict p3,
-+		  const unsigned long * __restrict p4);
-+void __xor_lasx_5(unsigned long bytes, unsigned long * __restrict p1,
-+		  const unsigned long * __restrict p2,
-+		  const unsigned long * __restrict p3,
-+		  const unsigned long * __restrict p4,
-+		  const unsigned long * __restrict p5);
-+#endif /* CONFIG_CPU_HAS_LASX */
-+
-+#endif /* __LOONGARCH_LIB_XOR_SIMD_H */
-diff --git a/arch/loongarch/lib/xor_simd_glue.c b/arch/loongarch/lib/xor_simd_glue.c
-new file mode 100644
-index 0000000000000..6f1832862cbbd
---- /dev/null
-+++ b/arch/loongarch/lib/xor_simd_glue.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+//
-+// Loongson SIMD XOR operations
-+//
-+// Copyright 2023 WANG Xuerui <git@xen0n.name>
-+
-+#include <linux/export.h>
-+#include <linux/sched.h>
-+#include <asm/fpu.h>
-+#include <asm/xor_simd.h>
-+#include "xor_simd.h"
-+
-+#define MAKE_XOR_GLUE_2(flavor)							\
-+void xor_##flavor##_2(unsigned long bytes, unsigned long * __restrict p1,	\
-+		      const unsigned long * __restrict p2)			\
-+{										\
-+	kernel_fpu_begin();							\
-+	__xor_##flavor##_2(bytes, p1, p2);					\
-+	kernel_fpu_end();							\
-+}										\
-+EXPORT_SYMBOL_GPL(xor_##flavor##_2)
-+
-+#define MAKE_XOR_GLUE_3(flavor)							\
-+void xor_##flavor##_3(unsigned long bytes, unsigned long * __restrict p1,	\
-+		      const unsigned long * __restrict p2,			\
-+		      const unsigned long * __restrict p3)			\
-+{										\
-+	kernel_fpu_begin();							\
-+	__xor_##flavor##_3(bytes, p1, p2, p3);					\
-+	kernel_fpu_end();							\
-+}										\
-+EXPORT_SYMBOL_GPL(xor_##flavor##_3)
-+
-+#define MAKE_XOR_GLUE_4(flavor)							\
-+void xor_##flavor##_4(unsigned long bytes, unsigned long * __restrict p1,	\
-+		      const unsigned long * __restrict p2,			\
-+		      const unsigned long * __restrict p3,			\
-+		      const unsigned long * __restrict p4)			\
-+{										\
-+	kernel_fpu_begin();							\
-+	__xor_##flavor##_4(bytes, p1, p2, p3, p4);				\
-+	kernel_fpu_end();							\
-+}										\
-+EXPORT_SYMBOL_GPL(xor_##flavor##_4)
-+
-+#define MAKE_XOR_GLUE_5(flavor)							\
-+void xor_##flavor##_5(unsigned long bytes, unsigned long * __restrict p1,	\
-+		      const unsigned long * __restrict p2,			\
-+		      const unsigned long * __restrict p3,			\
-+		      const unsigned long * __restrict p4,			\
-+		      const unsigned long * __restrict p5)			\
-+{										\
-+	kernel_fpu_begin();							\
-+	__xor_##flavor##_5(bytes, p1, p2, p3, p4, p5);				\
-+	kernel_fpu_end();							\
-+}										\
-+EXPORT_SYMBOL_GPL(xor_##flavor##_5)
-+
-+#define MAKE_XOR_GLUES(flavor)		\
-+	MAKE_XOR_GLUE_2(flavor);	\
-+	MAKE_XOR_GLUE_3(flavor);	\
-+	MAKE_XOR_GLUE_4(flavor);	\
-+	MAKE_XOR_GLUE_5(flavor)
-+
-+#ifdef CONFIG_CPU_HAS_LSX
-+MAKE_XOR_GLUES(lsx);
-+#endif
-+
-+#ifdef CONFIG_CPU_HAS_LASX
-+MAKE_XOR_GLUES(lasx);
-+#endif
-diff --git a/arch/loongarch/lib/xor_template.c b/arch/loongarch/lib/xor_template.c
-new file mode 100644
-index 0000000000000..0358ced7fe333
---- /dev/null
-+++ b/arch/loongarch/lib/xor_template.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2023 WANG Xuerui <git@xen0n.name>
-+ *
-+ * Template for XOR operations, instantiated in xor_simd.c.
-+ *
-+ * Expected preprocessor definitions:
-+ *
-+ * - LINE_WIDTH
-+ * - XOR_FUNC_NAME(nr)
-+ * - LD_INOUT_LINE(buf)
-+ * - LD_AND_XOR_LINE(buf)
-+ * - ST_LINE(buf)
-+ */
-+
-+void XOR_FUNC_NAME(2)(unsigned long bytes,
-+		      unsigned long * __restrict v1,
-+		      const unsigned long * __restrict v2)
-+{
-+	unsigned long lines = bytes / LINE_WIDTH;
-+
-+	do {
-+		__asm__ __volatile__ (
-+			LD_INOUT_LINE(v1)
-+			LD_AND_XOR_LINE(v2)
-+			ST_LINE(v1)
-+		: : [v1] "r"(v1), [v2] "r"(v2) : "memory"
-+		);
-+
-+		v1 += LINE_WIDTH / sizeof(unsigned long);
-+		v2 += LINE_WIDTH / sizeof(unsigned long);
-+	} while (--lines > 0);
-+}
-+
-+void XOR_FUNC_NAME(3)(unsigned long bytes,
-+		      unsigned long * __restrict v1,
-+		      const unsigned long * __restrict v2,
-+		      const unsigned long * __restrict v3)
-+{
-+	unsigned long lines = bytes / LINE_WIDTH;
-+
-+	do {
-+		__asm__ __volatile__ (
-+			LD_INOUT_LINE(v1)
-+			LD_AND_XOR_LINE(v2)
-+			LD_AND_XOR_LINE(v3)
-+			ST_LINE(v1)
-+		: : [v1] "r"(v1), [v2] "r"(v2), [v3] "r"(v3) : "memory"
-+		);
-+
-+		v1 += LINE_WIDTH / sizeof(unsigned long);
-+		v2 += LINE_WIDTH / sizeof(unsigned long);
-+		v3 += LINE_WIDTH / sizeof(unsigned long);
-+	} while (--lines > 0);
-+}
-+
-+void XOR_FUNC_NAME(4)(unsigned long bytes,
-+		      unsigned long * __restrict v1,
-+		      const unsigned long * __restrict v2,
-+		      const unsigned long * __restrict v3,
-+		      const unsigned long * __restrict v4)
-+{
-+	unsigned long lines = bytes / LINE_WIDTH;
-+
-+	do {
-+		__asm__ __volatile__ (
-+			LD_INOUT_LINE(v1)
-+			LD_AND_XOR_LINE(v2)
-+			LD_AND_XOR_LINE(v3)
-+			LD_AND_XOR_LINE(v4)
-+			ST_LINE(v1)
-+		: : [v1] "r"(v1), [v2] "r"(v2), [v3] "r"(v3), [v4] "r"(v4)
-+		: "memory"
-+		);
-+
-+		v1 += LINE_WIDTH / sizeof(unsigned long);
-+		v2 += LINE_WIDTH / sizeof(unsigned long);
-+		v3 += LINE_WIDTH / sizeof(unsigned long);
-+		v4 += LINE_WIDTH / sizeof(unsigned long);
-+	} while (--lines > 0);
-+}
-+
-+void XOR_FUNC_NAME(5)(unsigned long bytes,
-+		      unsigned long * __restrict v1,
-+		      const unsigned long * __restrict v2,
-+		      const unsigned long * __restrict v3,
-+		      const unsigned long * __restrict v4,
-+		      const unsigned long * __restrict v5)
-+{
-+	unsigned long lines = bytes / LINE_WIDTH;
-+
-+	do {
-+		__asm__ __volatile__ (
-+			LD_INOUT_LINE(v1)
-+			LD_AND_XOR_LINE(v2)
-+			LD_AND_XOR_LINE(v3)
-+			LD_AND_XOR_LINE(v4)
-+			LD_AND_XOR_LINE(v5)
-+			ST_LINE(v1)
-+		: : [v1] "r"(v1), [v2] "r"(v2), [v3] "r"(v3), [v4] "r"(v4),
-+		    [v5] "r"(v5) : "memory"
-+		);
-+
-+		v1 += LINE_WIDTH / sizeof(unsigned long);
-+		v2 += LINE_WIDTH / sizeof(unsigned long);
-+		v3 += LINE_WIDTH / sizeof(unsigned long);
-+		v4 += LINE_WIDTH / sizeof(unsigned long);
-+		v5 += LINE_WIDTH / sizeof(unsigned long);
-+	} while (--lines > 0);
-+}
+diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
+index 7b244bce32b3d..2abe0076a636c 100644
+--- a/lib/raid6/test/Makefile
++++ b/lib/raid6/test/Makefile
+@@ -65,7 +65,7 @@ else ifeq ($(HAS_ALTIVEC),yes)
+         OBJS += altivec1.o altivec2.o altivec4.o altivec8.o \
+                 vpermxor1.o vpermxor2.o vpermxor4.o vpermxor8.o
+ else ifeq ($(ARCH),loongarch64)
+-        OBJS += loongarch_simd.o
++        OBJS += loongarch_simd.o recov_loongarch_simd.o
+ endif
+ 
+ .c.o:
 -- 
 2.40.0
 
