@@ -1,265 +1,106 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AEB96D1B
-	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 06:32:11 +0000 (UTC)
-Received: from loongson.cn (unknown [10.40.46.158])
-	by gateway (Coremail) with SMTP id _____8CxfOrnSctkL4UPAA--.9014S3;
-	Thu, 03 Aug 2023 14:32:08 +0800 (CST)
-Received: from [192.168.124.126] (unknown [10.40.46.158])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPCPjSctk0MRGAA--.33140S3;
-	Thu, 03 Aug 2023 14:32:05 +0800 (CST)
-Subject: Re: [PATCH v1 2/4] selftests: kvm: Add processor tests for LoongArch
- KVM
-To: Sean Christopherson <seanjc@google.com>
-Cc: Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Vishal Annapurve <vannapurve@google.com>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Peter Xu <peterx@redhat.com>,
- Vipin Sharma <vipinsh@google.com>, maobibo@loongson.cn
-References: <20230801020206.1957986-1-zhaotianrui@loongson.cn>
- <20230801020206.1957986-3-zhaotianrui@loongson.cn>
- <ZMqba0j82Di+P+LI@google.com>
-From: zhaotianrui <zhaotianrui@loongson.cn>
-Message-ID: <d9939cb6-c193-26e3-4717-17e9f6640e24@loongson.cn>
-Date: Thu, 3 Aug 2023 14:32:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F0246D1B
+	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 06:37:21 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.201])
+	by gateway (Coremail) with SMTP id _____8Cxh+ggS8tkDYYPAA--.195S3;
+	Thu, 03 Aug 2023 14:37:20 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.20.42.201])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF80aS8tkMsZGAA--.49295S2;
+	Thu, 03 Aug 2023 14:37:17 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	soc@kernel.org,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>,
+	wanghongliang@loongson.cn,
+	Liu Peibao <liupeibao@loongson.cn>,
+	loongson-kernel@lists.loongnix.cn,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	loongarch@lists.linux.dev,
+	Liu Yun <liuyun@loongson.cn>
+Subject: [PATCH v6 0/2] soc: loongson2_pm: add power management support
+Date: Thu,  3 Aug 2023 14:37:01 +0800
+Message-Id: <20230803063703.5659-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ZMqba0j82Di+P+LI@google.com>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8DxPCPjSctk0MRGAA--.33140S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Gr1UWr48Ar1Uuw13Jw17twc_yoWxKw45pF
-	yxCFn3WF4xJr1xJ3srXwn8ZF1ftrsakryjyry3KFyjvrsFv34fJ348KFZxWFy3uwsY9w4F
-	v3WYqa13ZF45t3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2rgADU
-	UUU
+X-CM-TRANSID:AQAAf8CxF80aS8tkMsZGAA--.49295S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
+Loongson-2 platform support Power Management Controller (ACPI) and this
+series patch was to add PM driver that base on dts and PM binding support.
 
-ÔÚ 2023/8/3 ÉÏÎç2:07, Sean Christopherson Ð´µÀ:
-> On Tue, Aug 01, 2023, Tianrui Zhao wrote:
->> Add processor tests for LoongArch KVM, including vcpu initialize
-> Nit, AFAICT these aren't tests, this is simply the core KVM selftests support
-> for LoongArch.
-Thanks, I will fix this comment.
->
->> and tlb refill exception handler.
->>
->> Based-on: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
->> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
->> ---
->>   .../selftests/kvm/lib/loongarch/exception.S   |  27 ++
->>   .../selftests/kvm/lib/loongarch/processor.c   | 367 ++++++++++++++++++
->>   2 files changed, 394 insertions(+)
->>   create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
->>   create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
->>
->> diff --git a/tools/testing/selftests/kvm/lib/loongarch/exception.S b/tools/testing/selftests/kvm/lib/loongarch/exception.S
->> new file mode 100644
->> index 000000000000..19dc50993da4
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/lib/loongarch/exception.S
->> @@ -0,0 +1,27 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +
->> +#include "sysreg.h"
->> +
->> +/* address of refill exception should be 4K aligned */
->> +.align  12
-> .align works on bytes, not on shifts.  I.e. this will make handle_tlb_refill
-> 12-byte aligned, not 4096-byte aligned.
-Thanks, I will fix it to .balign 4096.
->
->> +.global handle_tlb_refill
->> +handle_tlb_refill:
->> +	csrwr	t0, LOONGARCH_CSR_TLBRSAVE
->> +	csrrd	t0, LOONGARCH_CSR_PGD
->> +	lddir	t0, t0, 3
->> +	lddir	t0, t0, 1
->> +	ldpte	t0, 0
->> +	ldpte	t0, 1
->> +	tlbfill
->> +	csrrd	t0, LOONGARCH_CSR_TLBRSAVE
->> +	ertn
->> +
->> +/* address of general exception should be 4K aligned */
->> +.align  12
-> Same thing here.
-I will fix it too.
->
->> +.global handle_exception
->> +handle_exception:
->> +1:
->> +	nop
->> +	b	1b
->> +	nop
->> +	ertn
->> diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tools/testing/selftests/kvm/lib/loongarch/processor.c
->> new file mode 100644
->> index 000000000000..2e50b6e2c556
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
->> @@ -0,0 +1,367 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * KVM selftest LoongArch library code, including CPU-related functions.
->> + *
-> Again, unnecessary IMO.  If you do keep the comment, the extra line with a bare
-> asterisk should be dropped.
-Thanks, I will remove this comment.
->
->> + */
->> +
->> +#include <assert.h>
->> +#include <linux/bitfield.h>
->> +#include <linux/compiler.h>
->> +
->> +#include "kvm_util.h"
->> +#include "processor.h"
->> +#include "sysreg.h"
->> +
->> +#define DEFAULT_LOONGARCH_GUEST_STACK_VADDR_MIN		0xac0000
-> Why diverge from the common?
->
-> 	#define DEFAULT_GUEST_STACK_VADDR_MIN	0xab6000
->
-> AFAIK, the common value is also mostly arbitrary, but that just makes it even
-> more confusing as to why LoongArch needs to bump the min by 0x4000.
-This is reference from ARM, and I will fix it to use the the common value.
->
->> +uint64_t *virt_get_pte_hva(struct kvm_vm *vm, vm_vaddr_t gva)
->> +{
->> +	uint64_t *ptep;
->> +
->> +	if (!vm->pgd_created)
->> +		goto unmapped_gva;
->> +
->> +	ptep = addr_gpa2hva(vm, vm->pgd) + pgd_index(vm, gva) * 8;
->> +	if (!ptep)
->> +		goto unmapped_gva;
->> +
->> +	switch (vm->pgtable_levels) {
->> +	case 4:
->> +		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pud_index(vm, gva) * 8;
->> +		if (!ptep)
->> +			goto unmapped_gva;
-> This wants a "fallthrough" annotation.
-Thanks, I will add the "fallthrough" annotation.
->
->> +	case 3:
->> +		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pmd_index(vm, gva) * 8;
->> +		if (!ptep)
->> +			goto unmapped_gva;
->> +	case 2:
->> +		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pte_index(vm, gva) * 8;
->> +		if (!ptep)
->> +			goto unmapped_gva;
->> +		break;
->> +	default:
->> +		TEST_FAIL("Page table levels must be 2, 3, or 4");
-> Obviously it shouldn't come up, but print the actual pgtable_levels to make debug
-> a wee bit easier e.g.
-> 		TEST_FAIL("Got %u page table levels, expected 2, 3, or 4",
-> 			  vm->pgtable_levels);
-Thanks, I will also print the actual pgtable_levels in this debug function.
->
-> Mostly out of curiosity, but also because it looks like this was heavily copy+pasted
-> from ARM: does LoongArch actually support 2-level page tables?
-Yes, this codes are mostly copy pasted from ARM, but LoongArch does not 
-support 2-levels page tables, it only support 3-level and 4-level page 
-tables, and I will fix it.
->> +static void loongarch_set_csr(struct kvm_vcpu *vcpu, uint64_t id, uint64_t val)
->> +{
->> +	uint64_t csrid;
->> +
->> +	csrid = KVM_REG_LOONGARCH_CSR | KVM_REG_SIZE_U64 | 8 * id;
->> +	vcpu_set_reg(vcpu, csrid, val);
->> +}
->> +
->> +static void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
->> +{
->> +	unsigned long val;
->> +	int width;
->> +	struct kvm_vm *vm = vcpu->vm;
->> +
->> +	switch (vm->mode) {
->> +	case VM_MODE_P48V48_16K:
->> +	case VM_MODE_P40V48_16K:
->> +	case VM_MODE_P36V48_16K:
->> +	case VM_MODE_P36V47_16K:
->> +		break;
->> +
->> +	default:
->> +		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
->> +	}
->> +
->> +	/* user mode and page enable mode */
->> +	val = PLV_USER | CSR_CRMD_PG;
->> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_CRMD, val);
->> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PRMD, val);
->> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_EUEN, 1);
->> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_ECFG, 0);
->> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_TCFG, 0);
->> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_ASID, 1);
->> +
->> +	width = vm->page_shift - 3;
->> +	val = 0;
->> +	switch (vm->pgtable_levels) {
->> +	case 4:
->> +		/* pud page shift and width */
->> +		val = (vm->page_shift + width * 2) << 20 | (width << 25);
->> +	case 3:
->> +		/* pmd page shift and width */
->> +		val |= (vm->page_shift + width) << 10 | (width << 15);
->> +	case 2:
->> +		/* pte page shift and width */
->> +		val |= vm->page_shift | width << 5;
->> +		break;
->> +	default:
->> +		TEST_FAIL("Page table levels must be 2, 3, or 4");
->> +	}
->> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PWCTL0, val);
->> +
->> +	/* pgd page shift and width */
->> +	val = (vm->page_shift + width * (vm->pgtable_levels - 1)) | width << 6;
->> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PWCTL1, val);
->> +
->> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PGDL, vm->pgd);
->> +
->> +	extern void handle_tlb_refill(void);
->> +	extern void handle_exception(void);
-> Eww.  I get that it's probably undesirable to expose these via processor.h, but
-> at least declare them outside of the function.
-Thanks, I will declare them outside of the function.
->
->> +struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
->> +				  void *guest_code)
->> +{
->> +	return loongarch_vcpu_add(vm, vcpu_id, guest_code);
-> Please drop the single-line passthrough, i.e. drop loongarch_vcpu_add().  I'm
-> guessing you copy+pasted much of this from ARM.  ARM's passthrough isn't a pure
-> passthrough, which is directly related to why the "passthrough" is ok: there are
-> other callers to aarch64_vcpu_add() that pass a non-NULL @source.
-Yes, this is also copy pasted from ARM, and I will drop the 
-loongarch_vcpu_add() function and move the content of it to here.
+Change in v6:
+		1. The patch "[PATCH v3 1/3] loongarch: export some arch-specific
+		   pm interfaces" had been merged into mainline tree in v6.5-rc1
+		   thus this v6 series patch need drop it and need depend on it
+		   and it's patch link was:
+https://lore.kernel.org/all/20230615091757.24686-2-zhuyinbo@loongson.cn/
+		2. Adding Ulf Hansson to Cc.
+		3. Adding soc@kernel.org to Cc.
+		4. Keep indented with one tab +2 spaces in Kconfig help text.
+Change in v5:
+		1. The patch "[PATCH v3 1/3] loongarch: export some arch-specific
+		   pm interfaces" had been merged into linux-next tree thus this
+		   v4 series patch need drop it and need depend on it and it's
+		   patch link was:
+https://lore.kernel.org/all/20230615091757.24686-2-zhuyinbo@loongson.cn/
+		2. Swap the positions of compatible for 2k1000 and 2k0500.
+Change in v4:
+		1. The patch "[PATCH v3 1/3] loongarch: export some arch-specific
+		   pm interfaces" had been merged into linux-next tree thus this
+		   v4 series patch need drop it and need depend on it and it's
+		   patch link was:
+https://lore.kernel.org/all/20230615091757.24686-2-zhuyinbo@loongson.cn/
+		2. Remove the pmc label in dt-binding patch.
+		3. Add the Co-developed-by for driver patch.
+		4. Simplify the loongson2_suspend_valid_state that "return
+		   (state == PM_SUSPEND_MEM)".
+		5. Use Using loongson2_pm_irq_enable() to replace.
+		   loongson2_power_button_irq_enable().
+		6. Remove the "oneOf" in dt-bindings patch.
+		7. Replace "suspend-address" that use "loongson,suspend-address".
+		8. Use u64 type that for "loongson,suspend-address".
+		9. Rename "pm" to "power-mangement" in dt-bindings patch.
+		10. Add the reivewed-by for dt-bindings patch.
+Change in v3:
+		1. Reword the [1/3] patch commit log and title.
+		2. Use the old naming for suspend interface for the [1/3] and
+		   [3/3] patch.
+		3. Combine some small function in the driver patch.
+		4. Rename 'pwrbt' to 'button' in the driver patch.
+		5. Use the specific compatible in yaml file.
+Change in v2:
+		1. Fixup the "suspend-address" description.
+		2. Remove the "return -EINVAL" in PM driver probe when firmware
+		   no configure "suspend-address" property in dts in oder to
+		   other PM state to work.
+
+Yinbo Zhu (2):
+  soc: dt-bindings: add loongson-2 pm
+  soc: loongson2_pm: add power management support
+
+ .../soc/loongson/loongson,ls2k-pmc.yaml       |  52 +++++
+ MAINTAINERS                                   |   7 +
+ drivers/soc/loongson/Kconfig                  |  10 +
+ drivers/soc/loongson/Makefile                 |   1 +
+ drivers/soc/loongson/loongson2_pm.c           | 215 ++++++++++++++++++
+ 5 files changed, 285 insertions(+)
+
+-- 
+2.20.1
 
