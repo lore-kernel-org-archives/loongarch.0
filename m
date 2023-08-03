@@ -1,250 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FB81E528
-	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 13:24:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D50C433C8;
-	Thu,  3 Aug 2023 13:24:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691069067;
-	bh=qGrDHIK6/xOdKDdS35eaB+Wxl3ioAdvC30LumONWttM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OAZ5MQgI9ORotPQHTCd55M90Nt8CEoKFC+5M/kTtUlN6k1YM3S7MPweUi/ctHu3ww
-	 GSx/l227S/+XtqqfbgdhyXZAU/jqkzc4vjw7sIOwt3HtUirxmAiSujwo+cULPQCl4f
-	 b3u/cWgZjUMXPIsebTaghJAqdhU85gD02tKF1ixNDQrO64AxYzucRJFyLQgZi8fOjy
-	 9+AFn4wFjx7/C2Q3KHx7HZ45vWLqtqrmmIVdYrucWfhCtmYiaFEdvaO4OfUGH6BxbH
-	 DllSnsiSwdsiOml/JawbKYRqq112XLbP6MiREwkg/4H06xkVHeJ5Hmkv6jGXAxrofO
-	 2/QHtRS86OFrw==
-Date: Thu, 3 Aug 2023 18:54:24 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>, dmaengine@vger.kernel.org,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev, Yingkun Meng <mengyingkun@loongson.cn>
-Subject: Re: [PATCH v3 2/2] dmaengine: ls2x-apb: new driver for the Loongson
- LS2X APB DMA controller
-Message-ID: <ZMuqiHS86/TUaYSF@matsya>
-References: <cover.1689075791.git.zhoubinbin@loongson.cn>
- <b282ef7c5d1841886a80b2b6502c735f2f0254c9.1689075791.git.zhoubinbin@loongson.cn>
- <ZMlOxZ1ML+tlRkna@matsya>
- <CAMpQs4LnZZAtv0Z4LBd-4fg9WkV8jgPxZ8S2a6RA9mTb4Qj8GA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD9A1F93A
+	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 14:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eFzPVtf9sNMYHpdawahhRpgrMEJ5xpp5eSnUaUgU15E=; b=tyJaCEOIc+Cr6kqgV54/imHjCI
+	T2wC0RykQck0LS2kKsDRpOc4D5zZNdVk96H0ND8DH55aDXIuvMT2ZOGTY40nZjTY6uKiELRoFtEPn
+	qpmgThvKofF6pQmzmnsLj1yaHpVRqV4X/9QZ+bwzykLGacvR1mT3LocDZ6xM4NBAhUu1Vsqt7tdza
+	prGqYziVkS2YwcDTbW2lGskQ9ixCH8qe/jaUuTPbQWJTChfwFuPBXpRfqZxpOL9fv7Mcgox0Bi1cb
+	IY91J643NdsInx7tp67gdkPjWzzhac9d7uVruQJtAk8EgWf1NLtFUFVv6Mh5RnqlTjp8Yz5ClixCx
+	vG2lC6nA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47956)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1qRZC9-000711-0f;
+	Thu, 03 Aug 2023 15:20:53 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1qRZC5-0002za-CX; Thu, 03 Aug 2023 15:20:49 +0100
+Date: Thu, 3 Aug 2023 15:20:49 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Feiyang Chen <chenfeiyang@loongson.cn>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+	chenhuacai@loongson.cn, dongbiao@loongson.cn,
+	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org,
+	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+Subject: Re: [PATCH v3 13/16] net: stmmac: dwmac-loongson: Add 64-bit DMA and
+ multi-vector support
+Message-ID: <ZMu3wTCzffo1EgNY@shell.armlinux.org.uk>
+References: <cover.1691047285.git.chenfeiyang@loongson.cn>
+ <48ceed6b5d7b32c2e46b79fa597466b9212f745e.1691047285.git.chenfeiyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpQs4LnZZAtv0Z4LBd-4fg9WkV8jgPxZ8S2a6RA9mTb4Qj8GA@mail.gmail.com>
+In-Reply-To: <48ceed6b5d7b32c2e46b79fa597466b9212f745e.1691047285.git.chenfeiyang@loongson.cn>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 03-08-23, 20:14, Binbin Zhou wrote:
-> Hi Vinod:
+On Thu, Aug 03, 2023 at 07:30:34PM +0800, Feiyang Chen wrote:
+> Set 64-Bit DMA for specific versions. Request allocation for multi-
+> vector interrupts for DWLGMAC_CORE_1_00. If it fails, fallback to
+> request allocation for single interrupts.
 > 
-> Thanks for your reply.
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> ---
+>  .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 83 ++++++++++++++++++-
+>  1 file changed, 81 insertions(+), 2 deletions(-)
 > 
-> On Wed, Aug 2, 2023 at 2:28 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 11-07-23, 20:19, Binbin Zhou wrote:
-> > > The Loongson LS2X APB DMA controller is available on Loongson-2K chips.
-> > >
-> > > It is a single-channel, configurable DMA controller IP core based on the
-> > > AXI bus, whose main function is to integrate DMA functionality on a chip
-> > > dedicated to carrying data between memory and peripherals in APB bus
-> > > (e.g. nand).
-> > >
-> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > > Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
-> > > ---
-> > >  MAINTAINERS                |   1 +
-> > >  drivers/dma/Kconfig        |  14 +
-> > >  drivers/dma/Makefile       |   1 +
-> > >  drivers/dma/ls2x-apb-dma.c | 684 +++++++++++++++++++++++++++++++++++++
-> > >  4 files changed, 700 insertions(+)
-> > >  create mode 100644 drivers/dma/ls2x-apb-dma.c
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 60a411936ba7..709c2e9d5f5f 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -12248,6 +12248,7 @@ M:    Binbin Zhou <zhoubinbin@loongson.cn>
-> > >  L:   dmaengine@vger.kernel.org
-> > >  S:   Maintained
-> > >  F:   Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
-> > > +F:   drivers/dma/ls2x-apb-dma.c
-> > >
-> > >  LOONGSON LS2X I2C DRIVER
-> > >  M:   Binbin Zhou <zhoubinbin@loongson.cn>
-> > > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> > > index 644c188d6a11..9b41b59ba2b4 100644
-> > > --- a/drivers/dma/Kconfig
-> > > +++ b/drivers/dma/Kconfig
-> > > @@ -376,6 +376,20 @@ config LPC18XX_DMAMUX
-> > >         Enable support for DMA on NXP LPC18xx/43xx platforms
-> > >         with PL080 and multiplexed DMA request lines.
-> > >
-> > > +config LS2X_APB_DMA
-> > > +     tristate "Loongson LS2X APB DMA support"
-> > > +     depends on LOONGARCH || COMPILE_TEST
-> > > +     select DMA_ENGINE
-> > > +     select DMA_VIRTUAL_CHANNELS
-> > > +     help
-> > > +       Support for the Loongson LS2X APB DMA controller driver. The
-> > > +       DMA controller is having single DMA channel which can be
-> > > +       configured for different peripherals like audio, nand, sdio
-> > > +       etc which is in APB bus.
-> > > +
-> > > +       This DMA controller transfers data from memory to peripheral fifo.
-> > > +       It does not support memory to memory data transfer.
-> > > +
-> > >  config MCF_EDMA
-> > >       tristate "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
-> > >       depends on M5441x || COMPILE_TEST
-> > > diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> > > index a4fd1ce29510..9b28ddb1ea3b 100644
-> > > --- a/drivers/dma/Makefile
-> > > +++ b/drivers/dma/Makefile
-> > > @@ -46,6 +46,7 @@ obj-$(CONFIG_INTEL_IOATDMA) += ioat/
-> > >  obj-y += idxd/
-> > >  obj-$(CONFIG_K3_DMA) += k3dma.o
-> > >  obj-$(CONFIG_LPC18XX_DMAMUX) += lpc18xx-dmamux.o
-> > > +obj-$(CONFIG_LS2X_APB_DMA) += ls2x-apb-dma.o
-> > >  obj-$(CONFIG_MILBEAUT_HDMAC) += milbeaut-hdmac.o
-> > >  obj-$(CONFIG_MILBEAUT_XDMAC) += milbeaut-xdmac.o
-> > >  obj-$(CONFIG_MMP_PDMA) += mmp_pdma.o
-> > > diff --git a/drivers/dma/ls2x-apb-dma.c b/drivers/dma/ls2x-apb-dma.c
-> > > new file mode 100644
-> > > index 000000000000..b3efe86e4330
-> > > --- /dev/null
-> > > +++ b/drivers/dma/ls2x-apb-dma.c
-> > > @@ -0,0 +1,684 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +/*
-> > > + * Driver for the Loongson LS2X APB DMA Controller
-> > > + *
-> > > + * Copyright (C) 2017-2023 Loongson Corporation
-> > > + */
-> > > +
-> > > +#include <linux/clk.h>
-> > > +#include <linux/dma-mapping.h>
-> > > +#include <linux/dmapool.h>
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/io-64-nonatomic-lo-hi.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_device.h>
-> >
-> > drop this header, of.h should suffice
-> 
-> OK, I wil fix it.
-> >
-> > > +/*
-> > > + * struct ls2x_dma_hw_desc - DMA HW descriptor
-> > > + * @ndesc_addr: the next descriptor low address.
-> > > + * @mem_addr: memory low address.
-> > > + * @apb_addr: device buffer address.
-> > > + * @len: length of a piece of carried content, in words.
-> > > + * @step_len: length between two moved memory data blocks.
-> > > + * @step_times: number of blocks to be carried in a single DMA operation.
-> > > + * @cmd: descriptor command or state.
-> > > + * @stats: DMA status.
-> > > + * @high_ndesc_addr: the next descriptor high address.
-> > > + * @high_mem_addr: memory high address.
-> > > + * @reserved: reserved
-> > > + */
-> > > +struct ls2x_dma_hw_desc {
-> > > +     u32 ndesc_addr;
-> > > +     u32 mem_addr;
-> > > +     u32 apb_addr;
-> >
-> > why not use dma_addr_t for this?
-> 
-> apb_addr is the address of the register in the APB device that is used
-> for DMA access, it is 32-bit.
-> >
-> > > +static void ls2x_dma_start_transfer(struct ls2x_dma_chan *lchan)
-> > > +{
-> > > +     struct ls2x_dma_priv *priv = to_ldma_priv(lchan->vchan.chan.device);
-> > > +     struct ls2x_dma_sg *ldma_sg;
-> > > +     struct virt_dma_desc *vdesc;
-> > > +     u64 val;
-> > > +
-> > > +     /* Get the next descriptor */
-> > > +     vdesc = vchan_next_desc(&lchan->vchan);
-> > > +     if (!vdesc) {
-> > > +             lchan->desc = NULL;
-> > > +             return;
-> > > +     }
-> > > +
-> > > +     list_del(&vdesc->node);
-> > > +     lchan->desc = to_ldma_desc(vdesc);
-> > > +     ldma_sg = &lchan->desc->sg[0];
-> > > +
-> > > +     /* Start DMA */
-> > > +     lo_hi_writeq(0, priv->regs + LDMA_ORDER_ERG);
-> > > +     val = (ldma_sg->llp & ~LDMA_CONFIG_MASK) | LDMA_64BIT_EN | LDMA_START;
-> > > +     lo_hi_writeq(val, priv->regs + LDMA_ORDER_ERG);
-> > > +}
-> > > +
-> > > +static void ls2x_dma_fill_desc(struct ls2x_dma_chan *lchan, u32 i,
-> > > +                            struct ls2x_dma_desc *desc)
-> >
-> > pls align this one to precceding open brace (hint: checkpatch.pl
-> > --strict would warn you about this)
-> 
-> OK, I'll check again.
-> >
-> > > +{
-> > > +     struct ls2x_dma_sg *ldma_sg = &desc->sg[i];
-> > > +
-> > > +     ldma_sg->hw->mem_addr = lower_32_bits(ldma_sg->phys);
-> > > +     ldma_sg->hw->high_mem_addr = upper_32_bits(ldma_sg->phys);
-> > > +     /* Word count register takes input in words */
-> > > +     ldma_sg->hw->len = ldma_sg->len >> 2;
-> > > +     ldma_sg->hw->step_len = 0;
-> > > +     ldma_sg->hw->step_times = 1;
-> > > +
-> > > +     if (desc->direction == DMA_MEM_TO_DEV) {
-> > > +             ldma_sg->hw->cmd = LDMA_INT | LDMA_DATA_DIRECTION;
-> > > +             ldma_sg->hw->apb_addr = lchan->sconfig.dst_addr;
-> > > +     } else {
-> > > +             ldma_sg->hw->cmd = LDMA_INT;
-> > > +             ldma_sg->hw->apb_addr = lchan->sconfig.src_addr;
-> >
-> > only addr are used here, what about data width, why is that ignored?
-> 
-> LS2X DMAC limits data handling to words (4 Bytes).
-> Therefore, our solution is to assign the data length at the slave side
-> directly to hw->len (converted to word) and give it to the DMA
-> controller for one-time processing.
-> In which, hw->len represents the length of a piece of content being
-> carried in words. It is 32 bits, and the max can be up to 4G words.
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> index c7790f73fe18..18bca996e1cb 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> @@ -6,11 +6,15 @@
+>  #include <linux/pci.h>
+>  #include <linux/dmi.h>
+>  #include <linux/device.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/of_irq.h>
+> +#include "dwmac1000.h"
+>  #include "stmmac.h"
+>  
+>  struct stmmac_pci_info {
+>  	int (*setup)(struct pci_dev *pdev, struct plat_stmmacenet_data *plat);
+> +	int (*config)(struct pci_dev *pdev, struct plat_stmmacenet_data *plat,
+> +		      struct stmmac_resources *res);
+>  };
+>  
+>  static void loongson_default_data(struct pci_dev *pdev,
+> @@ -66,14 +70,54 @@ static int loongson_gmac_data(struct pci_dev *pdev,
+>  	return 0;
+>  }
+>  
+> +static int loongson_gmac_config(struct pci_dev *pdev,
+> +				struct plat_stmmacenet_data *plat,
+> +				struct stmmac_resources *res)
+> +{
+> +	u32 version = readl(res->addr + GMAC_VERSION);
+> +
+> +	switch (version & 0xff) {
+> +	case DWLGMAC_CORE_1_00:
+> +		plat->multi_msi_en = 1;
+> +		plat->rx_queues_to_use = 8;
+> +		plat->tx_queues_to_use = 8;
+> +		plat->fix_channel_num = true;
+> +		break;
+> +	case DWMAC_CORE_3_50:
+> +	case DWMAC_CORE_3_70:
+> +		if (version & 0x00008000) {
+> +			plat->host_dma_width = 64;
+> +			plat->dma_cfg->dma64 = true;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	plat->dma_reset_times = 5;
+> +
+> +	return 0;
+> +}
+> +
+>  static struct stmmac_pci_info loongson_gmac_pci_info = {
+>  	.setup = loongson_gmac_data,
+> +	.config = loongson_gmac_config,
+>  };
+>  
+> +static u32 get_irq_type(struct device_node *np)
+> +{
+> +	struct of_phandle_args oirq;
+> +
+> +	if (np && of_irq_parse_one(np, 0, &oirq) == 0 && oirq.args_count == 2)
+> +		return oirq.args[1];
+> +
+> +	return IRQF_TRIGGER_RISING;
+> +}
+> +
 
-SO you should update capabilities and also check in slave config and
-reject anything which you dont support
+I do wish that there was some IRQ maintainer I could bounce this over to
+for them to comment on, because I don't believe that this should be
+necessary in any driver - the irq subsystem should configure the IRQ
+accordingly before the driver is probed.
 
-> >
-> > > +     }
-> > > +
-> > > +     /* lets make a link list */
-> > > +     if (i) {
-> >
-> > what does i refer to here..?
-> 
-> The 'i' represents the sg item in the scatterlist.
-> If there is only one item in the scatterlist (i == 0), nothing is
-> done. Otherwise, let's make a linked list.
-> Perhaps I should have used a more meaningful name, e.g., sg_index.
+But since I don't know that code, and can't be bothered at this point
+to read through it and DT yet again, I don't feel qualified to comment
+on this...
 
-better
+Maybe someone else can be bothered to comment on it...
+
+If not, then I suppose it will have to do as-is, and maybe someone at
+a later date can fix it if it needs fixing.
+
 -- 
-~Vinod
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
