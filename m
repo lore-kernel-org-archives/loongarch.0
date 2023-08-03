@@ -1,61 +1,108 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA2423BF1
-	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 15:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=jCAiSqaGsyEXa1saYHFC6ILd7caWomJV0vmU/Co95go=; b=oHoffxjPgEK2XvtWGF3dqqI5Ul
-	UFyFK3spxyTbQAf62BCTcK0dOTMtUSP/M9KXLggvtFBzljGxWz8vISUXOXJDU/OKM5Zu8uDhkKryF
-	QO8/8hIisPdM0SCw5ZpCCtGNyFxb3YsoOqOUSUxqTSj80n78n5IhSgzkKCDnpW1BnVDE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1qRaT3-00302X-LV; Thu, 03 Aug 2023 17:42:25 +0200
-Date: Thu, 3 Aug 2023 17:42:25 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Feiyang Chen <chenfeiyang@loongson.cn>, hkallweit1@gmail.com,
-	peppe.cavallaro@st.com, alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com, chenhuacai@loongson.cn, dongbiao@loongson.cn,
-	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org,
-	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
-Subject: Re: [PATCH v3 13/16] net: stmmac: dwmac-loongson: Add 64-bit DMA and
- multi-vector support
-Message-ID: <9d13989c-fc79-404c-a88b-94e5ed7f97d0@lunn.ch>
-References: <cover.1691047285.git.chenfeiyang@loongson.cn>
- <48ceed6b5d7b32c2e46b79fa597466b9212f745e.1691047285.git.chenfeiyang@loongson.cn>
- <ZMu3wTCzffo1EgNY@shell.armlinux.org.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7972A1ED55
+	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 17:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1691082541; bh=tDRhfzXpaq1fM0TjibW5Ku2JH48WhEQAG8YGXEYj5Rw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ImA3znyX3XeTUoqvroanVe5hjFQ93AWdOSWo/9O92RDhSo/eOIFpyVxdyip3ePSb9
+	 KhqkVxFUa13oabUg6hOv+c+Bj00ceDTuoyUolOL/OSzakdVgbdeTfMLD17+3i/+Wvm
+	 4Nk1jVfMwJeuViYZOK5cvU+2UmbCJlZSSXu3anEk=
+Received: from ld50.lan (unknown [101.88.28.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id A0324600A6;
+	Fri,  4 Aug 2023 01:09:00 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Song Liu <song@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	linux-raid@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH v2 0/3] raid5, raid6: Accelerate RAID math with LoongArch SIMD
+Date: Fri,  4 Aug 2023 01:08:55 +0800
+Message-Id: <20230803170858.781245-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZMu3wTCzffo1EgNY@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-> > +static u32 get_irq_type(struct device_node *np)
-> > +{
-> > +	struct of_phandle_args oirq;
-> > +
-> > +	if (np && of_irq_parse_one(np, 0, &oirq) == 0 && oirq.args_count == 2)
-> > +		return oirq.args[1];
-> > +
-> > +	return IRQF_TRIGGER_RISING;
-> > +}
-> > +
-> 
-> I do wish that there was some IRQ maintainer I could bounce this over to
-> for them to comment on, because I don't believe that this should be
-> necessary in any driver - the irq subsystem should configure the IRQ
-> accordingly before the driver is probed.
+From: WANG Xuerui <git@xen0n.name>
 
-I agree with you, this is very likely to be wrong.
+Hi,
 
-Feiyang, please look at other drivers and copy with they do.
+Seeing the LoongArch port recently (finally!) gained the ability to use
+the vector units, I've subsequently ported the RAID5/6 math to LSX and
+LASX (which are LoongArch's 128-bit and 256-bit SIMD extensions), with
+nice speedups observed. They are reasonably straight-forward conversions
+of existing code, and I hope the comments I put in there are helpful
+enough for anyone not familiar with LoongArch assembly to get a rough
+picture of how things work here. Performance numbers are included in
+each commit's commit message.
 
-	Andrew
+This series needs [1] ("LoongArch: Allow usage of LSX/LASX in the
+kernel") as a prerequisite, or the vector context would likely get
+corrupted by the vector-unaware kernel_fpu_{begin,end} calls. I tested
+the changes on top of next-20230731 with the raid6test build fixes [2]
+applied, but the series should apply cleanly to v6.5-rc4 (or maybe any
+other tag) too; it doesn't depend on the raid6test fixes.
+The base-commit and prerequisite-patch-id info is available for
+minimally recreating a working configuration for both the kernel and
+raid6test tool.
+
+[1]: https://lore.kernel.org/loongarch/20230722072201.2677516-1-chenhuacai@loongson.cn/
+[2]: https://lore.kernel.org/linux-raid/20230731104911.411964-1-kernel@xen0n.name/
+
+Changes in v2 (no functional change):
+
+- minor commit message tweaks
+- changed comment style from // to /* */ throughout
+
+WANG Xuerui (3):
+  LoongArch: Add SIMD-optimized XOR routines
+  raid6: Add LoongArch SIMD syndrome calculation
+  raid6: Add LoongArch SIMD recovery implementation
+
+ arch/loongarch/include/asm/xor.h      |  68 ++++
+ arch/loongarch/include/asm/xor_simd.h |  42 +++
+ arch/loongarch/lib/Makefile           |   3 +
+ arch/loongarch/lib/xor_simd.c         |  93 +++++
+ arch/loongarch/lib/xor_simd.h         |  46 +++
+ arch/loongarch/lib/xor_simd_glue.c    |  71 ++++
+ arch/loongarch/lib/xor_template.c     | 110 ++++++
+ include/linux/raid/pq.h               |   4 +
+ lib/raid6/Makefile                    |   1 +
+ lib/raid6/algos.c                     |  16 +
+ lib/raid6/loongarch.h                 |  38 ++
+ lib/raid6/loongarch_simd.c            | 422 +++++++++++++++++++++
+ lib/raid6/recov_loongarch_simd.c      | 515 ++++++++++++++++++++++++++
+ lib/raid6/test/Makefile               |  12 +
+ 14 files changed, 1441 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/xor.h
+ create mode 100644 arch/loongarch/include/asm/xor_simd.h
+ create mode 100644 arch/loongarch/lib/xor_simd.c
+ create mode 100644 arch/loongarch/lib/xor_simd.h
+ create mode 100644 arch/loongarch/lib/xor_simd_glue.c
+ create mode 100644 arch/loongarch/lib/xor_template.c
+ create mode 100644 lib/raid6/loongarch.h
+ create mode 100644 lib/raid6/loongarch_simd.c
+ create mode 100644 lib/raid6/recov_loongarch_simd.c
+
+
+base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+prerequisite-patch-id: 85d08a9828893250ae78dbca9d6e6f8dac755f61
+prerequisite-patch-id: fe0bba41e0bbc676454365ed16fb13fc0aac6ee0
+prerequisite-patch-id: 84ef8212b74e696ce019255bbfd9679d7516f7f7
+prerequisite-patch-id: b1f8fc4e4acdaff7f821a9fcbd063475178e037b
+prerequisite-patch-id: 82aacbf27f249fdefe40dd6bcc712e5795256926
+prerequisite-patch-id: ae4e026e18f92ffcc93f6b135a3bd48fbdded39a
+-- 
+2.40.0
+
