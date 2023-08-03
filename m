@@ -1,105 +1,161 @@
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5219454
-	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 07:45:16 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.west.internal (Postfix) with ESMTP id 357E53200985;
-	Thu,  3 Aug 2023 03:45:14 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Thu, 03 Aug 2023 03:45:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm2; t=1691048713; x=1691135113; bh=oC
-	7D+18iBZjjvCY62LFO9NAYOEDXUELI72sm1PfCWkI=; b=UYyl48QdjUaFOz2tJq
-	imJnoNfXEW2jLvZGePuK9g36mnmzh0iPMibe8LZQtFLYuioYhjvxqFP38nO4hjsQ
-	3f5OeSii24KWWW5MG14hKNADUPLd1MGflAmjj+D30F+US4y8LMb41spY4v5JDSfw
-	+xPN8YS9M/VpomkO8clbR5LBoT/e300g/esZJ+VGmNxkQTsKL8Vn07nfaLAx3D5I
-	AW8X6pqmubrmyNz0FFlOKwm5uKcEBRIY8hRs+w0HJffvLq5KKYoi9SnApasRk0i6
-	jy/pj5M+snFX3uSUGR98vseYJ8k3QqxutZ+1YC8PNSg68Z0eZiAZHYKYOGcxOxBJ
-	0/gQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1691048713; x=1691135113; bh=oC7D+18iBZjjv
-	CY62LFO9NAYOEDXUELI72sm1PfCWkI=; b=bNJo8R0DJDfGmIf/rkjYEjz82apwj
-	gpTE9MAMKSJaYmpdyEtnTsY4k7B1ow0D2HHbMPOx2FsKHiPdFjv7eZvyAGtXSfU8
-	ZGlEH8SkyGpLXyD+mkaf2I9agmIkw7xZ+nQqljV0LIR3OMFHpT1GDqvi9caoWb3C
-	M9aymR2awNZhpf2b0397uMQLc1EMfqEPIwK5xbU7wLWB4JJKBAvaZiKJDx3bJLo6
-	bXH/dX+gyaUCSW2dqHpCqWmowt2z4zFiKDCIRyaAwcmocn68HyaYZiHOE9hIcCmb
-	h8xdZ2THXQkgKX3UZ/4ypF1n7/hrdfS7ykkmSEvMlUj5vPraTN1I2+ODg==
-X-ME-Sender: <xms:CFvLZDRTq-ikE1JvxFS4rjPovecGPfURswu-gep2zqf1xjrjQbWKYA>
-    <xme:CFvLZExBmRGF57c0cfPINKqvgeA4m-yZ2GTuJe1y4c7rJQtlCu-AE-v8_yfHGxjTk
-    syOS8ImcYb9r1gAH7g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrkedugdduvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:CFvLZI1tW0Al3UxBK07DgjYdCcn59IaxQVgbuSiX3SUrr4bIY2bttA>
-    <xmx:CFvLZDC_ORQhNbucjfWsc0FxRlHzgJ-ASv_0ip1AehGgPaK-vY4zoQ>
-    <xmx:CFvLZMhL35qDy1rqMwe5PqLw4L3GNnV6yxNFo-j2qxDMyRlTMHlURw>
-    <xmx:CVvLZLSt1m2ZkQNW_uj_Qq-3VqqGa-DldvzMzqXq15NZsNgWHexjbg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id AD37DB6008D; Thu,  3 Aug 2023 03:45:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28889440
+	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 08:06:09 +0000 (UTC)
+X-UUID: 31d6717c58ef4209b175782d51f77270-20230803
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.28,REQID:6068e0c5-4592-4c2a-864d-cdc44bfed288,IP:25,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:10
+X-CID-INFO: VERSION:1.1.28,REQID:6068e0c5-4592-4c2a-864d-cdc44bfed288,IP:25,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:10
+X-CID-META: VersionHash:176cd25,CLOUDID:2f581ab4-a467-4aa9-9e04-f584452e3794,B
+	ulkID:230802231252IHNI1SQW,BulkQuantity:1,Recheck:0,SF:19|44|24|17|102,TC:
+	nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI
+	:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULS
+X-UUID: 31d6717c58ef4209b175782d51f77270-20230803
+Received: from ubuntu [(39.156.73.12)] by mailgw
+	(envelope-from <lienze@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 166434915; Thu, 03 Aug 2023 16:05:58 +0800
+From: Enze Li <lienze@kylinos.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name,  loongarch@lists.linux.dev,  glider@google.com,
+  elver@google.com,  akpm@linux-foundation.org,
+  kasan-dev@googlegroups.com,  linux-mm@kvack.org,  zhangqing@loongson.cn,
+  yangtiezhu@loongson.cn,  dvyukov@google.com
+Subject: Re: [PATCH 0/4 v3] Add KFENCE support for LoongArch
+In-Reply-To: <CAAhV-H6FqreZtuOXYayhu=bLZeij+fxygbK5Mpw_kVuPTvdbWw@mail.gmail.com>
+	(Huacai Chen's message of "Wed, 2 Aug 2023 23:12:23 +0800")
+References: <20230801025815.2436293-1-lienze@kylinos.cn>
+	<CAAhV-H6FqreZtuOXYayhu=bLZeij+fxygbK5Mpw_kVuPTvdbWw@mail.gmail.com>
+Date: Thu, 03 Aug 2023 16:05:45 +0800
+Message-ID: <87a5v83606.fsf@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <193f9138-57e0-4d4b-8225-54d38be9bfbc@app.fastmail.com>
-In-Reply-To: <20230803063703.5659-2-zhuyinbo@loongson.cn>
-References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
- <20230803063703.5659-2-zhuyinbo@loongson.cn>
-Date: Thu, 03 Aug 2023 09:44:52 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
- "Ulf Hansson" <ulf.hansson@linaro.org>
-Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
- "Liu Peibao" <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev, "Liu Yun" <liuyun@loongson.cn>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v6 1/2] soc: dt-bindings: add loongson-2 pm
-Content-Type: text/plain
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 3, 2023, at 08:37, Yinbo Zhu wrote:
+On Wed, Aug 02 2023 at 11:12:23 PM +0800, Huacai Chen wrote:
 
-> +  loongson,suspend-address:
-> +    $ref: /schemas/types.yaml#/definitions/uint64
-> +    description:
-> +      The "loongson,suspend-address" is a deep sleep state (Suspend To
-> +      RAM) firmware entry address which was jumped from kernel and it's
-> +      value was dependent on specific platform firmware code. In
-> +      addition, the PM need according to it to indicate that current
-> +      SoC whether support Suspend To RAM.
-> +
+> Hi, Enze,
+>
+> I applied this series (with some small modifications) together with KASAN=
+ at:
+> https://github.com/chenhuacai/linux/commits/loongarch-next
+>
+> Please confirm everything works well for you.
 
-I just commented on this in the driver patch, assuming this
-was an MMIO address, but I'm even more confused now, since
-we try hard to not rely on being able to just interface with
-firmware like this.
+Hi Huacai,
 
-If this is executable code, where does this actually reside?
-Is this some SRAM that needs to execute the suspend logic
-in order to shut down memory and cache controllers? Or is
-this a runtime firmware interface similar to how UEFI handles
-its runtime services to keep the implementation out of
-the kernel?
+Thanks for your patience these days.
 
-Does the code work with both traditional suspend-to-ram and
-modern suspend-to-idle logic?
+I've tested this on both a physical machine and a qemu VM.  It works
+well.
 
-      Arnd
+BTW, if there're any modifications, bugs or improvments to KFENCE on
+LoongArch in the future, feel free to Cc me.  I'll appreciate it. :)
+
+Best Regards,
+Enze
+
+>
+> Huacai
+>
+> On Tue, Aug 1, 2023 at 10:59=E2=80=AFAM Enze Li <lienze@kylinos.cn> wrote:
+>>
+>> Hi all,
+>>
+>> This patchset adds KFENCE support on LoongArch.
+>>
+>> To run the testcases, you will need to enable the following options,
+>>
+>> -> Kernel hacking
+>>    [*] Tracers
+>>        [*] Support for tracing block IO actions (NEW)
+>>    -> Kernel Testing and Coverage
+>>       <*> KUnit - Enable support for unit tests
+>>
+>> and then,
+>>
+>> -> Kernel hacking
+>>    -> Memory Debugging
+>>       [*] KFENCE: low-overhead sampling-based memory safety error detect=
+or (NEW)
+>>           <*> KFENCE integration test suite (NEW)
+>>
+>> With these options enabled, KFENCE will be tested during kernel startup.
+>> And normally, you might get the following feedback,
+>>
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+>> [   35.326363 ] # kfence: pass:23 fail:0 skip:2 total:25
+>> [   35.326486 ] # Totals: pass:23 fail:0 skip:2 total:25
+>> [   35.326621 ] ok 1 kfence
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+>>
+>> you might notice that 2 testcases have been skipped.  If you tend to run
+>> all testcases, please enable CONFIG_INIT_ON_FREE_DEFAULT_ON, you can
+>> find it here,
+>>
+>> -> Security options
+>>    -> Kernel hardening options
+>>       -> Memory initialization
+>>          [*] Enable heap memory zeroing on free by default
+>>
+>> and you might get all testcases passed.
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+>> [   35.531860 ] # kfence: pass:25 fail:0 skip:0 total:25
+>> [   35.531999 ] # Totals: pass:25 fail:0 skip:0 total:25
+>> [   35.532135 ] ok 1 kfence
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+>>
+>> v3:
+>>    * Address Huacai's comments.
+>>    * Fix a bug that Jackie Liu pointed out.
+>>    * Rewrite arch_stack_walk() with the suggestion of Jinyang He.
+>>
+>> v2:
+>>    * Address Huacai's comments.
+>>    * Fix typos in commit message.
+>>
+>> Thanks,
+>> Enze
+>>
+>> Enze Li (4):
+>>   KFENCE: Defer the assignment of the local variable addr
+>>   LoongArch: mm: Add page table mapped mode support
+>>   LoongArch: Get stack without NMI when providing regs parameter
+>>   LoongArch: Add KFENCE support
+>>
+>>  arch/loongarch/Kconfig               |  1 +
+>>  arch/loongarch/include/asm/kfence.h  | 66 ++++++++++++++++++++++++++++
+>>  arch/loongarch/include/asm/page.h    |  8 +++-
+>>  arch/loongarch/include/asm/pgtable.h | 16 ++++++-
+>>  arch/loongarch/kernel/stacktrace.c   | 18 ++++----
+>>  arch/loongarch/mm/fault.c            | 22 ++++++----
+>>  arch/loongarch/mm/pgtable.c          |  7 +++
+>>  mm/kfence/core.c                     |  5 ++-
+>>  8 files changed, 123 insertions(+), 20 deletions(-)
+>>  create mode 100644 arch/loongarch/include/asm/kfence.h
+>>
+>> --
+>> 2.34.1
+>>
