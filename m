@@ -1,25 +1,30 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082997E
-	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 09:03:24 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.43])
-	by gateway (Coremail) with SMTP id _____8CxtPBVbctkk5kPAA--.36886S3;
-	Thu, 03 Aug 2023 17:03:18 +0800 (CST)
-Received: from openarena.loongson.cn (unknown [10.20.42.43])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxzyNUbctkR_VGAA--.11096S2;
-	Thu, 03 Aug 2023 17:03:16 +0800 (CST)
-From: Sui Jingfeng <suijingfeng@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Sui Jingfeng <suijingfeng@loongson.cn>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: loongson3_defconfig: Compile ast drm driver as module by default
-Date: Thu,  3 Aug 2023 17:03:16 +0800
-Message-Id: <20230803090316.971075-1-suijingfeng@loongson.cn>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B23A18B19
+	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 11:28:59 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.245])
+	by gateway (Coremail) with SMTP id _____8AxqOh4j8tklawPAA--.480S3;
+	Thu, 03 Aug 2023 19:28:57 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.245])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLCN1j8tk4R1HAA--.33555S2;
+	Thu, 03 Aug 2023 19:28:55 +0800 (CST)
+From: Feiyang Chen <chenfeiyang@loongson.cn>
+To: andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com,
+	chenhuacai@loongson.cn
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
+	linux@armlinux.org.uk,
+	dongbiao@loongson.cn,
+	loongson-kernel@lists.loongnix.cn,
+	netdev@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	chris.chenfeiyang@gmail.com
+Subject: [PATCH v3 00/16] stmmac: Add Loongson platform support
+Date: Thu,  3 Aug 2023 19:28:02 +0800
+Message-Id: <cover.1691047285.git.chenfeiyang@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -27,47 +32,85 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxzyNUbctkR_VGAA--.11096S2
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZw1Utw1kGF1kZFW3CF4UGFX_yoW3Krb_Ja
-	42ka1Uur4FyayDWw1xX3yruws0v3WUJF1SyFnrXr1xX3Wjyr1aqr1vq343CFn0g34DGrW5
-	XaykJFyDCF10qosvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2AR6DUUUU
+X-CM-TRANSID:AQAAf8CxLCN1j8tk4R1HAA--.33555S2
+X-CM-SenderInfo: hfkh0wphl1t03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxuF4xJFWDCFWkAF4rJr1rXwc_yoW5CFWDpF
+	9rAa4Ygr97Xr1xJ3Z3Jw1kXF95WayIqr45Ww4IqrsakFWxtr90qrnI9FWrtF17ZrWDZFya
+	qr1UuwnxCF1qkwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2qg4DUUUU
 
-ASpeed GPU is typically found on the Loongson server platform,
-as a peripheral device driver, it generally should be compiled as a module.
+Extend stmmac functions and macros for Loongson DWMAC.
+Add LS7A support for dwmac_loongson.
 
-Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2 -> v3:
+* Avoid macros accessing variables that are not passed to them.
+* Implement a new struct to support 64-bit DMA.
+* Use feature names rather than 'lgmac' and 'dwmac_is_loongson'.
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 6cd26dd3c134..dbf16aa85d8f 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -640,7 +640,7 @@ CONFIG_DRM_AMDGPU=m
- CONFIG_DRM_AMDGPU_SI=y
- CONFIG_DRM_AMDGPU_CIK=y
- CONFIG_DRM_AMDGPU_USERPTR=y
--CONFIG_DRM_AST=y
-+CONFIG_DRM_AST=m
- CONFIG_DRM_QXL=m
- CONFIG_DRM_VIRTIO_GPU=m
- CONFIG_FB=y
+Feiyang Chen (16):
+  net: stmmac: Pass stmmac_priv and chan in some callbacks
+  net: stmmac: dwmac1000: Allow platforms to choose some register
+    offsets
+  net: stmmac: dwmac1000: Add multi-channel support
+  net: stmmac: dwmac1000: Add 64-bit DMA support
+  net: stmmac: dwmac1000: Add Loongson register definitions
+  net: stmmac: dwmac1000: Fix channel numbers for Loongson
+  net: stmmac: dwmac1000: Add multiple retries for DMA reset
+  net: stmmac: dwmac1000: Allow platforms to set control value
+  net: stmmac: Allow platforms to set irq_flags
+  net: stmmac: Add Loongson HWIF entry
+  net: stmmac: dwmac-loongson: Refactor code for loongson_dwmac_probe()
+  net: stmmac: dwmac-loongson: Add LS7A support
+  net: stmmac: dwmac-loongson: Add 64-bit DMA and multi-vector support
+  net: stmmac: dwmac-loongson: Disable flow control for GMAC
+  net: stmmac: dwmac-loongson: Use single queue for GMAC
+  net: stmmac: dwmac-loongson: Add GNET support
+
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +-
+ .../net/ethernet/stmicro/stmmac/chain_mode.c  |  29 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h  |   4 +
+ drivers/net/ethernet/stmicro/stmmac/descs.h   |   7 +
+ .../net/ethernet/stmicro/stmmac/descs_com.h   |  47 ++-
+ .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 292 ++++++++++++++----
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  22 +-
+ .../ethernet/stmicro/stmmac/dwmac1000_core.c  |  24 +-
+ .../ethernet/stmicro/stmmac/dwmac1000_dma.c   | 135 ++++++--
+ .../ethernet/stmicro/stmmac/dwmac100_core.c   |  12 +-
+ .../ethernet/stmicro/stmmac/dwmac100_dma.c    |  24 +-
+ .../net/ethernet/stmicro/stmmac/dwmac4_core.c |  11 +-
+ .../ethernet/stmicro/stmmac/dwmac4_descs.c    |  17 +-
+ .../net/ethernet/stmicro/stmmac/dwmac4_dma.c  |   8 +-
+ .../net/ethernet/stmicro/stmmac/dwmac4_dma.h  |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac4_lib.c  |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac_dma.h   |  62 +---
+ .../net/ethernet/stmicro/stmmac/dwmac_lib.c   | 244 +++++++++++++--
+ .../ethernet/stmicro/stmmac/dwxgmac2_core.c   |  11 +-
+ .../ethernet/stmicro/stmmac/dwxgmac2_descs.c  |  17 +-
+ .../ethernet/stmicro/stmmac/dwxgmac2_dma.c    |  10 +-
+ .../net/ethernet/stmicro/stmmac/enh_desc.c    |  38 ++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.c    |  44 ++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h    |  71 +++--
+ .../net/ethernet/stmicro/stmmac/norm_desc.c   |  17 +-
+ .../net/ethernet/stmicro/stmmac/ring_mode64.c | 159 ++++++++++
+ .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   6 +
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  34 +-
+ include/linux/stmmac.h                        |  70 +++++
+ 29 files changed, 1117 insertions(+), 304 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/ring_mode64.c
+
 -- 
-2.34.1
+2.39.3
 
