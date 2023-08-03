@@ -1,99 +1,110 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E2FFC07
-	for <loongarch@lists.linux.dev>; Wed,  2 Aug 2023 18:10:53 +0000 (UTC)
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1bb962ada0dso1053915ad.2
-        for <loongarch@lists.linux.dev>; Wed, 02 Aug 2023 11:10:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEFC7F
+	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 01:34:00 +0000 (UTC)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-4fe1489ced6so785939e87.0
+        for <loongarch@lists.linux.dev>; Wed, 02 Aug 2023 18:34:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690999853; x=1691604653;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hNOi1ejB1pS9dlnPvTd4BYpS5FGTlhXd3925hg/0fm0=;
-        b=1OE6veZg59gsoeCLHSoB+UkPlLRLs1s07mLxso/osH78WHkdAyjyM4PFg5Fl4ie4bF
-         8Qo+8PDNUg50lP5ODwwCYp4j7hvQjDe7PTVUeYd+qQ8VWZ0FPNt4U58Lca5UL+4tPn+h
-         P2AQIfN8/ciTQ7eTvI9WfNCJ2Yw8sJqnjprqmUrBmOebKgbeUxbvIcy83OAqQuxMlUHz
-         Ka/cmhhuQX+2eepM+r+ZZwEm9yWdteKzIfjvrX0OC7HWPhtD3ANjTNIcySs2o1S1qbtD
-         6F64Y2wQS7ACru2HtGrPU40xivGqU91vFZx/cKdsS27iWoCyFLSe/lPv3rzAL4XHHGha
-         Kwdw==
+        d=gmail.com; s=20221208; t=1691026438; x=1691631238;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m5IS5UuGfFv9Y3MJ14DxTeVzX6uKjci9jhbxi32mlnM=;
+        b=KOn3G9TR11J16Hu4s6NRwAivMOilaasb7pvv2HlVSR89WSNni4x0NxIPwoahtOx0ZX
+         TEGtXn5LIi5ABHAuYFMQa6ENDzfeegxStNeVZGzt/Wo12hYEpCxIXxAffqASY3XTi7J+
+         WneAxvUspHTlu6hiKMONj3KXIxSMkSpLiTAoItJACVvtSKKJowxgsOPDTAEauNGg/YWw
+         VuIE08S9fbWZtLvwPN04l1E/3VfyiL3sGHwoinPce/ySfChxty89YQjvXxyCzd3DRazg
+         rCugiDfapYf9w3KhoBshfWJOS8UQimAcx+qmn5Xh/8Mvk5FcdbXughInsULjsuAhaEJ/
+         Wb8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690999853; x=1691604653;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hNOi1ejB1pS9dlnPvTd4BYpS5FGTlhXd3925hg/0fm0=;
-        b=iJ3tWrKB7jU/SDi2u9UrrtvQLYbawH+c2t7xrHrET9U3I0SV2W43YnsRO0MXb+VXIa
-         XURx592lyq6lVv6U/dRQ/8f3qWAwDc/n6WMIhRyl9rUA9k8N8mgwkJDQWOCOs540DU5H
-         pGsgcKqCdyxGVkKzbedcmS1dLWxAMgTZMfhjVYyG6rjiIpJ27c0Fnpd6CbrHhuvMEhW2
-         gNVUloyX3z/CHNp+IDAXvVRM1DMI51dixuUqUsTEKJ/IoyThWcDImv/tl51Hz1v0OKZY
-         rT7X1wXr0hOq3Cn+MJpcNH36BL49Nl8PgPPgZ+2+b/iBWBtind7IY9BHRo6Qv5SvPNay
-         edPQ==
-X-Gm-Message-State: ABy/qLa6ClLgGU8yoCZRpP4ZegRMtssOSdCAzqkfSp7jEM3Ka+/kEWtN
-	nN+wYM0OdXxGmv6ObC2aPIl/dHkFJcw=
-X-Google-Smtp-Source: APBJJlF95ARaqLNa81cSoeQ/yVAVuvkJNFxH1E7bSipo61hU/hVILuvCTY7msX2mF/eehqZ1FtZW+rjYsqE=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:e5c1:b0:1b7:edcd:8dcf with SMTP id
- u1-20020a170902e5c100b001b7edcd8dcfmr98453plf.4.1690999853513; Wed, 02 Aug
- 2023 11:10:53 -0700 (PDT)
-Date: Wed, 2 Aug 2023 11:10:51 -0700
-In-Reply-To: <20230801020206.1957986-5-zhaotianrui@loongson.cn>
+        d=1e100.net; s=20221208; t=1691026438; x=1691631238;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m5IS5UuGfFv9Y3MJ14DxTeVzX6uKjci9jhbxi32mlnM=;
+        b=Pnc8t8ShAOrw0iaddD76PZ4GcQgKRpEvHaGrMMjVIs5qoiy0BqkZofTaNoat00uPHD
+         Yd8H8XPYAEUN4V5lMEMgBoy9Y2RirWnQmjBS26a9aLeVqZ3Nzuw8DWjKPhuiNRL3gx1U
+         pfNbOQ91K5FgykKAx71Xoh3iAq/KZONIvCkodI5mmN7uoKF1NfuOd6m9hg8v3re4T2Qz
+         3cK5ECZphVPxNySBiU8rGx4yWtqEu2Uw6EJcYMjVY/02A1PlC2/45QbVqqb44jvCkQnb
+         Zy13DSiI/FEF5GYLtafAF3SUo1yDCAfjVggx0LdsorSuTqsxNdLR4PiG0mMFnjw1Ut/f
+         ohyg==
+X-Gm-Message-State: ABy/qLYlVvc1ivt+2tMua+OZzinsFBhKNzJG+vwALg9awJtMnGBT9YPL
+	0nf6VlD9giQ3uBjVNdhzyUEmhfw34oQS7dIkSZk=
+X-Google-Smtp-Source: APBJJlFLl57plNWBNHcf1ry/AhGY0pCUEcFSr8oYD0sCjx2Fr43+JHjRQaPGVt+rqe/VHP4iJ7Y3P9nBcmcYvBbWNGs=
+X-Received: by 2002:ac2:5edd:0:b0:4fe:1e74:3f3e with SMTP id
+ d29-20020ac25edd000000b004fe1e743f3emr5132380lfq.48.1691026437970; Wed, 02
+ Aug 2023 18:33:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20230801020206.1957986-1-zhaotianrui@loongson.cn> <20230801020206.1957986-5-zhaotianrui@loongson.cn>
-Message-ID: <ZMqcKzrSsw9WGeTC@google.com>
-Subject: Re: [PATCH v1 4/4] selftests: kvm: Add LoongArch tests into makefile
-From: Sean Christopherson <seanjc@google.com>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Vishal Annapurve <vannapurve@google.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Peter Xu <peterx@redhat.com>, Vipin Sharma <vipinsh@google.com>, maobibo@loongson.cn
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <cover.1690439335.git.chenfeiyang@loongson.cn> <7cae63ede2792cb2a7189f251b282aecbb0945b1.1690439335.git.chenfeiyang@loongson.cn>
+ <ZMOJNtClcAlWwZpP@shell.armlinux.org.uk> <CACWXhKmcFCHQsjc-7BU5VkNyJ70v6iEg2iQ11i-qS3VchvKCJA@mail.gmail.com>
+ <ZMfQUI1BOd1RWM4u@shell.armlinux.org.uk>
+In-Reply-To: <ZMfQUI1BOd1RWM4u@shell.armlinux.org.uk>
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date: Thu, 3 Aug 2023 09:33:45 +0800
+Message-ID: <CACWXhKmb6iw+Y8teNVR7J_vTqPEezExixRHvV2kGVDV4X_4HBA@mail.gmail.com>
+Subject: Re: [PATCH v2 06/10] net: stmmac: Add Loongson HWIF entry
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>, andrew@lunn.ch, hkallweit1@gmail.com, 
+	peppe.cavallaro@st.com, alexandre.torgue@foss.st.com, joabreu@synopsys.com, 
+	chenhuacai@loongson.cn, dongbiao@loongson.cn, 
+	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 01, 2023, Tianrui Zhao wrote:
-> Add LoongArch tests into selftests/kvm makefile.
+On Mon, Jul 31, 2023 at 11:16=E2=80=AFPM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Jul 31, 2023 at 05:46:57PM +0800, Feiyang Chen wrote:
+> > On Fri, Jul 28, 2023 at 5:24=E2=80=AFPM Russell King (Oracle)
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > On Thu, Jul 27, 2023 at 03:18:06PM +0800, Feiyang Chen wrote:
+> > > > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/dr=
+ivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > > > index e8619853b6d6..829de274e75d 100644
+> > > > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > > > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > > > @@ -3505,17 +3505,21 @@ static int stmmac_request_irq_multi_msi(str=
+uct net_device *dev)
+> > > >  {
+> > > >       struct stmmac_priv *priv =3D netdev_priv(dev);
+> > > >       enum request_irq_err irq_err;
+> > > > +     unsigned long flags =3D 0;
+> > > >       cpumask_t cpu_mask;
+> > > >       int irq_idx =3D 0;
+> > > >       char *int_name;
+> > > >       int ret;
+> > > >       int i;
+> > > >
+> > > > +     if (priv->plat->has_lgmac)
+> > > > +             flags |=3D IRQF_TRIGGER_RISING;
+> > >
+> > > Can this be described in firmware?
+> > >
+> >
+> > Hi, Russell,
+> >
+> > I'm not sure, could you explain what you mean?
+>
+> Modern systems describe the IRQ triggering in firmware for the OS
+> such as DT. Does your implementation have any firmware that can
+> do this kind of description for you (e.g. DT, ACPI?)
+>
 
-Please elaborate on how the lists of tests was chosen.  E.g. explaing why
-LoongArch isn't supporting kvm_binary_stats_test, rseq_test, etc.
+Hi, Russell,
 
-> Based-on: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> ---
->  tools/testing/selftests/kvm/Makefile | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index c692cc86e7da..36a808c0dd4c 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -55,6 +55,10 @@ LIBKVM_s390x += lib/s390x/ucall.c
->  LIBKVM_riscv += lib/riscv/processor.c
->  LIBKVM_riscv += lib/riscv/ucall.c
->  
-> +LIBKVM_loongarch += lib/loongarch/processor.c
-> +LIBKVM_loongarch += lib/loongarch/ucall.c
-> +LIBKVM_loongarch += lib/loongarch/exception.S
-> +
->  # Non-compiled test targets
->  TEST_PROGS_x86_64 += x86_64/nx_huge_pages_test.sh
->  
-> @@ -181,6 +185,13 @@ TEST_GEN_PROGS_riscv += kvm_page_table_test
->  TEST_GEN_PROGS_riscv += set_memory_region_test
->  TEST_GEN_PROGS_riscv += kvm_binary_stats_test
->  
-> +TEST_GEN_PROGS_loongarch += kvm_create_max_vcpus
-> +TEST_GEN_PROGS_loongarch += demand_paging_test
-> +TEST_GEN_PROGS_loongarch += kvm_page_table_test
-> +TEST_GEN_PROGS_loongarch += set_memory_region_test
-> +TEST_GEN_PROGS_loongarch += memslot_modification_stress_test
-> +TEST_GEN_PROGS_loongarch += memslot_perf_test
-> +
->  TEST_PROGS += $(TEST_PROGS_$(ARCH_DIR))
->  TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(ARCH_DIR))
->  TEST_GEN_PROGS_EXTENDED += $(TEST_GEN_PROGS_EXTENDED_$(ARCH_DIR))
-> -- 
-> 2.39.1
-> 
+I see. I think I can get this from DT.
+
+Thanks,
+Feiyang
+
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
