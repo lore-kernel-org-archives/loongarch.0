@@ -1,107 +1,162 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A4292585
-	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 06:52:20 +0000 (UTC)
-Received: from loongson.cn (unknown [10.40.46.158])
-	by gateway (Coremail) with SMTP id _____8CxLOujTstk+oYPAA--.30752S3;
-	Thu, 03 Aug 2023 14:52:19 +0800 (CST)
-Received: from [192.168.124.126] (unknown [10.40.46.158])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHCOiTstkNcpGAA--.32882S3;
-	Thu, 03 Aug 2023 14:52:19 +0800 (CST)
-Subject: Re: [PATCH v1 4/4] selftests: kvm: Add LoongArch tests into makefile
-To: Sean Christopherson <seanjc@google.com>
-Cc: Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Vishal Annapurve <vannapurve@google.com>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Peter Xu <peterx@redhat.com>,
- Vipin Sharma <vipinsh@google.com>, maobibo@loongson.cn
-References: <20230801020206.1957986-1-zhaotianrui@loongson.cn>
- <20230801020206.1957986-5-zhaotianrui@loongson.cn>
- <ZMqcKzrSsw9WGeTC@google.com>
-From: zhaotianrui <zhaotianrui@loongson.cn>
-Message-ID: <37029e59-78f7-d9e8-7ee9-4a221141111a@loongson.cn>
-Date: Thu, 3 Aug 2023 14:52:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C97A8F6B
+	for <loongarch@lists.linux.dev>; Thu,  3 Aug 2023 07:03:12 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id 55D1C320099A;
+	Thu,  3 Aug 2023 03:03:10 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 03 Aug 2023 03:03:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm2; t=1691046189; x=1691132589; bh=5S
+	kTpiwI76j0iv1Bz8lF8A+JaMZXfVN77EuT9JyTy+A=; b=jU6TSIhH7ZrRg1PEA0
+	qzNVnEaJWGbrFhZmrmv5OR71Sm79X1rE5hNEfGohLjsolv+gLVAef8nmzMvRKYUd
+	0R1YLra8Mpe4jaYd6QdFO8WC0NDkbNe+vkxtXr11EvrfmM1UQ38zqH0dCBGLqfhX
+	Cbs7ZM+Jxrf61cKvw+kBp1SXL0ujiFUCELGAwxqDU9xlk4Mcru3cgZSgF0LAk2R7
+	WCsPJ0a5Ub3PqGAag3QmngLFwfEZn67K4t5jSylXzeJbuOVeGT6+UsR+Nw92m2B9
+	TEiRW6uH8Talm4MDK6jW8MMFSijvExJKJ/GbuhVRfYphnN3r1IjQoFqdGm21+BY3
+	IBKA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; t=1691046189; x=1691132589; bh=5SkTpiwI76j0i
+	v1Bz8lF8A+JaMZXfVN77EuT9JyTy+A=; b=kjDsUJGzVeWOqS09TcFWWuLXwGgGl
+	llB92w3a7K9vbrG+pLOTqu5eaVkACxGVUcFU5N6N9KiIrkzLQtEdrlt7skPw/FRT
+	0E7MwI+MRmEfkNxU8tv3ETa/9h4eRNWaICvV9dMHILnl4/YsPXDzSLApygmEZloy
+	3Gig6ZUplmHR/O5MMRxL5qZIVSVAZOfTZpp9hBnaKDO+LDfTj8bHMl5lQP6L00S5
+	eyzjXtQHv9y8LE0M/0PVnrtk2cQdnLR1Cg359SP3r+fjZ/z3cXtk9lU0u27RRMTI
+	qCo3DN7Jn6dNAJxH+Ab7uopkknZNs/L8vKsm5T5g2lDC6sZs3vg0cZKYQ==
+X-ME-Sender: <xms:LFHLZJGtQm9EYLlFp8H6fbRp1nNmnG-reMyDxsav0NnrK1E5l6FKnw>
+    <xme:LFHLZOVI9k7Z2gyoR3Qhb_c9x7Tbg7EsyxPeR-DxLFkgiIGjIr_HLbUERJYkYd65e
+    NDiHiyopNeaIl-ZVCM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrkedugdduudefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:LFHLZLIf16Rgi6v0w8j3MNlzrCwjPRNy9NDtczmH5M76-thA7r4zNw>
+    <xmx:LFHLZPHWDU-rbReG3H666yKM391Qbd5NZtNvaINcv99zUhrQ2IETHQ>
+    <xmx:LFHLZPXOcHjAnQScHt4zWRhf5XGL5Eeni2NYOB0CDmXQ5YGM0Fng-w>
+    <xmx:LVHLZItWNEY2hx1vkfcMKjiluOjOFRGuyb4CupRgRs1HOKV3ftTaNQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id B3955B60089; Thu,  3 Aug 2023 03:03:08 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <ZMqcKzrSsw9WGeTC@google.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8BxHCOiTstkNcpGAA--.32882S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uF48Jr13XrW3GrWfAFWDGFX_yoW8uw1Upa
-	48CF1qyFWxur47Gw1xWw4DZan7Gr92gF40gFyfK348uwnxJ34xJr17KasrGFsY9w4jqa1a
-	v3WFgFnF9ayDA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE
-	7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8
-	JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-	daVFxhVjvjDU0xZFpf9x07jFRRiUUUUU=
+Mime-Version: 1.0
+Message-Id: <4fef9725-7aea-43fb-b8ef-d20a4c6d9a68@app.fastmail.com>
+In-Reply-To: <20230803063703.5659-3-zhuyinbo@loongson.cn>
+References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
+ <20230803063703.5659-3-zhuyinbo@loongson.cn>
+Date: Thu, 03 Aug 2023 09:02:47 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
+ "Ulf Hansson" <ulf.hansson@linaro.org>
+Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+ "Liu Peibao" <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
+ loongarch@lists.linux.dev, "Liu Yun" <liuyun@loongson.cn>
+Subject: Re: [PATCH v6 2/2] soc: loongson2_pm: add power management support
+Content-Type: text/plain
 
-
-ÔÚ 2023/8/3 ÉÏÎç2:10, Sean Christopherson Ð´µÀ:
-> On Tue, Aug 01, 2023, Tianrui Zhao wrote:
->> Add LoongArch tests into selftests/kvm makefile.
-> Please elaborate on how the lists of tests was chosen.  E.g. explaing why
-> LoongArch isn't supporting kvm_binary_stats_test, rseq_test, etc.
-The kvm_binary_stats_test is supported by LoongArch and we will add it 
-later, but the rseq_test is not supported by LoongArch and the glibc, so 
-we do not add it.
-
-Thanks
-Tianrui Zhao
+On Thu, Aug 3, 2023, at 08:37, Yinbo Zhu wrote:
+> The Loongson-2's power management controller was ACPI, supports ACPI
+> S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
+> Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
+> (USB, GMAC, PWRBTN, etc.). This driver was to add power management
+> controller support that base on dts for Loongson-2 series SoCs.
 >
->> Based-on: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
->> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
->> ---
->>   tools/testing/selftests/kvm/Makefile | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
->> index c692cc86e7da..36a808c0dd4c 100644
->> --- a/tools/testing/selftests/kvm/Makefile
->> +++ b/tools/testing/selftests/kvm/Makefile
->> @@ -55,6 +55,10 @@ LIBKVM_s390x += lib/s390x/ucall.c
->>   LIBKVM_riscv += lib/riscv/processor.c
->>   LIBKVM_riscv += lib/riscv/ucall.c
->>   
->> +LIBKVM_loongarch += lib/loongarch/processor.c
->> +LIBKVM_loongarch += lib/loongarch/ucall.c
->> +LIBKVM_loongarch += lib/loongarch/exception.S
->> +
->>   # Non-compiled test targets
->>   TEST_PROGS_x86_64 += x86_64/nx_huge_pages_test.sh
->>   
->> @@ -181,6 +185,13 @@ TEST_GEN_PROGS_riscv += kvm_page_table_test
->>   TEST_GEN_PROGS_riscv += set_memory_region_test
->>   TEST_GEN_PROGS_riscv += kvm_binary_stats_test
->>   
->> +TEST_GEN_PROGS_loongarch += kvm_create_max_vcpus
->> +TEST_GEN_PROGS_loongarch += demand_paging_test
->> +TEST_GEN_PROGS_loongarch += kvm_page_table_test
->> +TEST_GEN_PROGS_loongarch += set_memory_region_test
->> +TEST_GEN_PROGS_loongarch += memslot_modification_stress_test
->> +TEST_GEN_PROGS_loongarch += memslot_perf_test
->> +
->>   TEST_PROGS += $(TEST_PROGS_$(ARCH_DIR))
->>   TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(ARCH_DIR))
->>   TEST_GEN_PROGS_EXTENDED += $(TEST_GEN_PROGS_EXTENDED_$(ARCH_DIR))
->> -- 
->> 2.39.1
->>
+> Co-developed-by: Liu Yun <liuyun@loongson.cn>
+> Signed-off-by: Liu Yun <liuyun@loongson.cn>
+> Co-developed-by: Liu Peibao <liupeibao@loongson.cn>
+> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+> Cc: soc@kernel.org
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 
+I'm still waiting for Ulf to take a look here to see whether
+this should be in drivers/genpd instead, but he might still
+be on vacation.
+
+A few minor comments from me in the meantime:
+
+> +#define loongson2_pm_readw(reg)		readw(loongson2_pm.base + reg)
+> +#define loongson2_pm_readl(reg)		readl(loongson2_pm.base + reg)
+> +#define loongson2_pm_writew(val, reg)	writew(val, loongson2_pm.base + 
+> reg)
+> +#define loongson2_pm_writel(val, reg)	writel(val, loongson2_pm.base + 
+> reg)
+
+I would prefer these to be 'static inline' functions rather than
+macros, or you can just open-code them, as each macro is only
+used once at the moment.
+
+> +static irqreturn_t loongson2_pm_irq_handler(int irq, void *dev_id)
+> +{
+> +	u16 status = loongson2_pm_readw(LOONGSON2_PM1_STS_REG);
+> +
+> +	if (!loongson2_pm.suspended && (status & LOONGSON2_PM1_PWRBTN_STS)) {
+> +		pr_info("Power Button pressed...\n");
+
+The message is probably more appropriate as a pr_debug() than
+pr_info().
+
+> +static int __maybe_unused loongson2_pm_suspend(struct device *dev)
+> +{
+> +	loongson2_pm.suspended = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused loongson2_pm_resume(struct device *dev)
+> +{
+> +	loongson2_pm.suspended = false;
+> +
+> +	return 0;
+> +}
+> +static SIMPLE_DEV_PM_OPS(loongson2_pm_ops, loongson2_pm_suspend, 
+> loongson2_pm_resume);
+
+Please change this to DEFINE_SIMPLE_DEV_PM_OPS() and remove the
+__maybe_unused, this is what all drivers should have these days.
+
+> +
+> +static int loongson2_pm_probe(struct platform_device *pdev)
+> +{
+> +	int irq, retval;
+> +	u64 suspend_addr;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	loongson2_pm.base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(loongson2_pm.base))
+> +		return PTR_ERR(loongson2_pm.base);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	if (!device_property_read_u64(dev, "loongson,suspend-address", 
+> &suspend_addr))
+> +		loongson_sysconf.suspend_addr = (u64)phys_to_virt(suspend_addr);
+> +	else
+
+Having a custom "loongson,suspend-address" property here feels wrong
+to me. Can't this be moved into the "regs" property that holds
+the other mmio registers?
+
+    Arnd
