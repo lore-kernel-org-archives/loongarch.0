@@ -1,135 +1,94 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601FBBA3B
-	for <loongarch@lists.linux.dev>; Fri,  4 Aug 2023 15:02:22 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E6C0921888;
-	Fri,  4 Aug 2023 15:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1691161334; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VNWjSzFu/PyMqv6O223Z6nS9JKkdr9V4bRYfAQix7nk=;
-	b=lk1XMNHdUBmmPgv2SbCy1HPgNADs5W9jPaKQk5f95D0ji/Kgs8ioTEuIp8biBXwjs1qmZ1
-	DiFaVY7HQOUrW/Ni/kuVUUuHlF9fOwxllYFqY0tab1QiufzfgVh4ZneVj/CAfbnw8UZCx8
-	C9Flw2p3O6/4ZMw5+YhH870Kk2vgfAg=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B586B133B5;
-	Fri,  4 Aug 2023 15:02:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id o4i3K/YSzWSpRwAAMHmgww
-	(envelope-from <mhocko@suse.com>); Fri, 04 Aug 2023 15:02:14 +0000
-Date: Fri, 4 Aug 2023 17:02:14 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Gaosheng Cui <cuigaosheng1@huawei.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Jinyang He <hejinyang@loongson.cn>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Lecopzer Chen <lecopzer.chen@mediatek.com>,
-	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pingfan Liu <kernelfans@gmail.com>,
-	Qing Zhang <zhangqing@loongson.cn>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Tom Rix <trix@redhat.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v3 1/2] nmi_backtrace: Allow excluding an arbitrary CPU
-Message-ID: <ZM0S9gKBBiu83kFq@dhcp22.suse.cz>
-References: <20230803160649.v3.1.Ia35521b91fc781368945161d7b28538f9996c182@changeid>
- <ZMytyEoCARgP9VR8@dhcp22.suse.cz>
- <CAD=FV=UQ18JG-sMBJHrhXByCWYSgOpCq8tL=3R8pT8CnFEa=pA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C361513ADF;
+	Fri,  4 Aug 2023 15:26:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD38C433CB;
+	Fri,  4 Aug 2023 15:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1691162764;
+	bh=WvZAHorDIpiciLffkFVJw3h0wT4JjJwW3b25V9pJ9jc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rdgdWpwsgCrdio72CLu/5c47JmPJbC6pDJ9yd7X3ODpdKiXDv3a0AEludD6OO3h0Y
+	 kaaYjSPQ59gET1u3Dj4nloSvhNDFGqXLNNVZ3mvvWHmcfbw/eG5x3Q+n0IpgAqZAg6
+	 fL/++eStQJ5/amosKRZFt4besY0Ga/gHOArYUSlDGugZ7nNU+5cmvtKXAQKS3mhIDG
+	 ynkDtScRIaENlSn+ScpKQWq/S4phsR+kHrE0PirPoeN3/UVCaQFIKLmdDHCLA823F+
+	 oUIVDvVxYzZh7KAOdIYXKtrtsAosCu6wdRTZtM37y0ri6LDkidXfMmoYmVkOYrJrxY
+	 Zal2WDdHSB1uA==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-51a52a7d859so7099508a12.0;
+        Fri, 04 Aug 2023 08:26:04 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yyq4zcanZ05RyHXjwafdFG7o7S4KzFJFNqqow62JBpOt/2Gkrvt
+	ZxexelxX2STUutBe6NITry3i8Altw1gCMlt5H3g=
+X-Google-Smtp-Source: AGHT+IHgYIxDUocD7XElmW9huTw2tiWuHOgemRBa6n1ZRjbTHykdamk6R3XLjPmb3ulxLHxs7ZYARKgDoOxCKmOvacg=
+X-Received: by 2002:a05:6402:3509:b0:522:ddeb:cdcb with SMTP id
+ b9-20020a056402350900b00522ddebcdcbmr58574edd.18.1691162762460; Fri, 04 Aug
+ 2023 08:26:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=UQ18JG-sMBJHrhXByCWYSgOpCq8tL=3R8pT8CnFEa=pA@mail.gmail.com>
+References: <20230804125609.2054719-1-kernel@xen0n.name>
+In-Reply-To: <20230804125609.2054719-1-kernel@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 4 Aug 2023 23:25:50 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5g-jmeQMhicrqhpStV9n0Z-EZ1dZAsuT2hmOaHki4ucg@mail.gmail.com>
+Message-ID: <CAAhV-H5g-jmeQMhicrqhpStV9n0Z-EZ1dZAsuT2hmOaHki4ucg@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Drop -ffreestanding from CFLAGS
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>, 
+	Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri 04-08-23 06:56:51, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Aug 4, 2023 at 12:50 AM Michal Hocko <mhocko@suse.com> wrote:
-> >
-> > On Thu 03-08-23 16:07:57, Douglas Anderson wrote:
-> > > The APIs that allow backtracing across CPUs have always had a way to
-> > > exclude the current CPU. This convenience means callers didn't need to
-> > > find a place to allocate a CPU mask just to handle the common case.
-> > >
-> > > Let's extend the API to take a CPU ID to exclude instead of just a
-> > > boolean. This isn't any more complex for the API to handle and allows
-> > > the hardlockup detector to exclude a different CPU (the one it already
-> > > did a trace for) without needing to find space for a CPU mask.
-> > >
-> > > Arguably, this new API also encourages safer behavior. Specifically if
-> > > the caller wants to avoid tracing the current CPU (maybe because they
-> > > already traced the current CPU) this makes it more obvious to the
-> > > caller that they need to make sure that the current CPU ID can't
-> > > change.
-> >
-> > Yes, this looks like the best way forward.
-> >
-> > It would have been slightly safer to modify arch_trigger_cpumask_backtrace
-> > by switching arguments so that some leftovers are captured easier.
-> 
-> I'm not sure I understand. Oh, you're saying make the prototype of
-> arch_trigger_cpumask_backtrace() incompatible so that if someone is
-> directly calling it then it'll be a compile-time error? 
+Hi, Xuerui,
 
-exactly. bool to int promotion would be too easy to miss while the
-pointer to int would complain loudly.
+On Fri, Aug 4, 2023 at 8:56=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wrot=
+e:
+>
+> From: WANG Xuerui <git@xen0n.name>
+>
+> As explained by Nick in the original issue: the kernel usually does a
+> good job of providing library helpers that have similar semantics as
+> their ordinary userspace libc equivalents, but -ffreestanding disables
+> such libcall optimization and other related features in the compiler,
+> which can lead to unexpected things such as CONFIG_FORTIFY_SOURCE not
+> working (!).
+>
+> As it turns out to be the case, removing the flag does not impact the
+> LoongArch kernel's normal operation at all; so just remove it to
+> restore expected libcall semantics globally on this architecture.
+>
+Not all processors support unaligned access, so we need the
+alternative mechanism to select memset/memcpy/memmove implementations.
+If remove -ffreestanding, the builtin implementation cannot be used on
+all hardware.
 
-> I guess the
-> hope is that nobody is calling that directly and they're calling
-> through the trigger_...() functions.
+Huacai
 
-Hope is one thing, being preventive another.
-
-> For now I'm going to leave this alone.
-
-If you are going to send another version then please consider this. Not
-a hard requirement but better.
- 
-
--- 
-Michal Hocko
-SUSE Labs
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/1897
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: WANG Xuerui <git@xen0n.name>
+> ---
+>  arch/loongarch/Makefile | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index b1e5db51b61c..db0d7210272d 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -83,7 +83,6 @@ KBUILD_CFLAGS_KERNEL          +=3D -fPIE
+>  LDFLAGS_vmlinux                        +=3D -static -pie --no-dynamic-li=
+nker -z notext
+>  endif
+>
+> -cflags-y +=3D -ffreestanding
+>  cflags-y +=3D $(call cc-option, -mno-check-zero-division)
+>
+>  load-y         =3D 0x9000000000200000
+> --
+> 2.40.0
+>
