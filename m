@@ -1,196 +1,442 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297991FD0
-	for <loongarch@lists.linux.dev>; Fri,  4 Aug 2023 06:24:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1691130253; bh=Ml+2o2coZyFwXLt1pDiShFgGa38mdGTl6NbjJ3zSPR0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jPL8PmVG9vYf+Dvnn6yL8DKdoJdeSVtwqngcjpDmbGCAfphQMyJ8Bld8gxFn+K3/Y
-	 csrmLcih49YCU9tyCFJOAy+Hqfwjlu1fZzf+afNXBBGLycuo0p82FngYv+mZiMmEIM
-	 FdkvcBhRxqIa7CbLTWIiJmLmfxHqx0BTUR3g9/Us=
-Received: from [100.100.34.13] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C3B6FAD
+	for <loongarch@lists.linux.dev>; Fri,  4 Aug 2023 07:50:38 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 6ABE5600CE;
-	Fri,  4 Aug 2023 14:24:13 +0800 (CST)
-Message-ID: <32a2ee70-c964-5a1e-06b5-d64c43384f2c@xen0n.name>
-Date: Fri, 4 Aug 2023 14:24:12 +0800
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 186B221866;
+	Fri,  4 Aug 2023 07:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1691135433; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TWMlbWBIl4ADD8tbSvSsJ/OHirnRKZ3VuNE+1LXNH6g=;
+	b=eTMPwB7TVSeyowJOlx6AWLStHvNNNeX2IbpExdSA9nuPuJkwgAutxAWnQxtBnjM61In5Lk
+	MaIc1IVCxhaNTo17Gnt4Sw9kixBuYpsfxhkT1wQYdfGsLtqOkn8i3K+zwh8QSjrfE43b7G
+	xk5t03O1wqVhCM/AGzhjxUdgNnIWUcM=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E06CE13904;
+	Fri,  4 Aug 2023 07:50:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 2NQ0NsitzGQ5ZQAAMHmgww
+	(envelope-from <mhocko@suse.com>); Fri, 04 Aug 2023 07:50:32 +0000
+Date: Fri, 4 Aug 2023 09:50:32 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Gaosheng Cui <cuigaosheng1@huawei.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Jinyang He <hejinyang@loongson.cn>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Lecopzer Chen <lecopzer.chen@mediatek.com>,
+	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pingfan Liu <kernelfans@gmail.com>,
+	Qing Zhang <zhangqing@loongson.cn>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Tom Rix <trix@redhat.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v3 1/2] nmi_backtrace: Allow excluding an arbitrary CPU
+Message-ID: <ZMytyEoCARgP9VR8@dhcp22.suse.cz>
+References: <20230803160649.v3.1.Ia35521b91fc781368945161d7b28538f9996c182@changeid>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v2 3/3] raid6: Add LoongArch SIMD recovery implementation
-Content-Language: en-US
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Song Liu <song@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- linux-raid@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
-References: <20230803170858.781245-1-kernel@xen0n.name>
- <20230803170858.781245-4-kernel@xen0n.name>
- <1363eb24-e209-6617-c205-19f13aa97b95@molgen.mpg.de>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <1363eb24-e209-6617-c205-19f13aa97b95@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230803160649.v3.1.Ia35521b91fc781368945161d7b28538f9996c182@changeid>
 
-Hi,
+On Thu 03-08-23 16:07:57, Douglas Anderson wrote:
+> The APIs that allow backtracing across CPUs have always had a way to
+> exclude the current CPU. This convenience means callers didn't need to
+> find a place to allocate a CPU mask just to handle the common case.
+> 
+> Let's extend the API to take a CPU ID to exclude instead of just a
+> boolean. This isn't any more complex for the API to handle and allows
+> the hardlockup detector to exclude a different CPU (the one it already
+> did a trace for) without needing to find space for a CPU mask.
+> 
+> Arguably, this new API also encourages safer behavior. Specifically if
+> the caller wants to avoid tracing the current CPU (maybe because they
+> already traced the current CPU) this makes it more obvious to the
+> caller that they need to make sure that the current CPU ID can't
+> change.
 
-On 2023/8/4 03:49, Paul Menzel wrote:
-> Dear Xuerui,
-> 
-> 
-> Thank you for your patches.
-> 
-> 
-> Am 03.08.23 um 19:08 schrieb WANG Xuerui:
->> From: WANG Xuerui <git@xen0n.name>
->>
->> Similar to the syndrome calculation, the recovery algorithms also work
->> on 64 bytes at a time to align with the L1 cache line size of current
->> and future LoongArch cores (that we care about). Which means
->> unrolled-by-4 LSX and unrolled-by-2 LASX code.
->>
->> The assembly is originally based on the x86 SSSE3/AVX2 ports, but
->> register allocation has been redone to take advantage of LSX/LASX's 32
->> vector registers, and instruction sequence has been optimized to suit
->> (e.g. LoongArch can perform per-byte srl and andi on vectors, but x86
->> cannot).
->>
->> Performance numbers measured by instrumenting the raid6test code:
-> 
-> It’d be great, if you also documented your test setup. That’s always 
-> good for benchmarking numbers.
-> 
+Yes, this looks like the best way forward.
 
-Ah they're the same as described in the previous patches: a Loongson 
-3A5000 + 7A1000 board (the Lemote A2101 board to be precise), with the 
-3A5000 clocked at 2.5GHz. I'll amend the description in v3.
+It would have been slightly safer to modify arch_trigger_cpumask_backtrace
+by switching arguments so that some leftovers are captured easier.
 
->>> lasx  2data: 354.987 MiB/s
->>> lasx  datap: 350.430 MiB/s
->>> lsx   2data: 340.026 MiB/s
->>> lsx   datap: 337.318 MiB/s
->>> intx1 2data: 164.280 MiB/s
->>> intx1 datap: 187.966 MiB/s
-> 
-> So the speed is more than doubled. Nice job! The lasx implementation is 
-> always the fastest. Is it therefore the preferred one? Or does it come 
-> with higher power consumption?
+You also have this leftover
+diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+index 00982b133dc1..9f1743ee2b28 100644
+--- a/include/linux/nmi.h
++++ b/include/linux/nmi.h
+@@ -190,10 +190,6 @@ static inline bool trigger_all_cpu_backtrace(void)
+ {
+ 	return false;
+ }
+-static inline bool trigger_allbutself_cpu_backtrace(void)
+-{
+-	return false;
+-}
+ static inline bool trigger_cpumask_backtrace(struct cpumask *mask)
+ {
+ 	return false;
 
-According to my experiments and other public info regarding the LA464 
-micro-architecture such as [1], this should be the case for LA464, with 
-no power consumption worries.
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-(Both LASX and LSX are handled by the same vector unit on LA464, so 
-whenever LASX is available it should be preferred, as it's LSX that 
-would be purely wasteful in this case: a full 256-bit result would get 
-computed regardless.)
+Anyway
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-[1]: 
-https://chipsandcheese.com/2023/04/09/loongsons-3a5000-chinas-best-shot/
-
+> ---
 > 
->> Signed-off-by: WANG Xuerui <git@xen0n.name>
+> Changes in v3:
+> - ("nmi_backtrace: Allow excluding an arbitrary CPU") new for v3.
 > 
-> Out of curiosity, what is your “first” name?
-
-My first name / given name is "Xuerui"; I usually prefer having my 
-romanized name in "native-endian" whenever it's convenient ;-)
-
+>  arch/arm/include/asm/irq.h       |  2 +-
+>  arch/arm/kernel/smp.c            |  4 ++--
+>  arch/loongarch/include/asm/irq.h |  2 +-
+>  arch/loongarch/kernel/process.c  |  4 ++--
+>  arch/mips/include/asm/irq.h      |  2 +-
+>  arch/mips/kernel/process.c       |  4 ++--
+>  arch/powerpc/include/asm/irq.h   |  2 +-
+>  arch/powerpc/kernel/stacktrace.c |  4 ++--
+>  arch/powerpc/kernel/watchdog.c   |  4 ++--
+>  arch/sparc/include/asm/irq_64.h  |  2 +-
+>  arch/sparc/kernel/process_64.c   |  6 +++---
+>  arch/x86/include/asm/irq.h       |  2 +-
+>  arch/x86/kernel/apic/hw_nmi.c    |  4 ++--
+>  include/linux/nmi.h              | 12 ++++++------
+>  kernel/watchdog.c                |  2 +-
+>  lib/nmi_backtrace.c              |  6 +++---
+>  16 files changed, 31 insertions(+), 31 deletions(-)
 > 
->> ---
->>   include/linux/raid/pq.h          |   2 +
->>   lib/raid6/Makefile               |   2 +-
->>   lib/raid6/algos.c                |   8 +
->>   lib/raid6/recov_loongarch_simd.c | 515 +++++++++++++++++++++++++++++++
->>   lib/raid6/test/Makefile          |   2 +-
->>   5 files changed, 527 insertions(+), 2 deletions(-)
->>   create mode 100644 lib/raid6/recov_loongarch_simd.c
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> [snip]
->> +
->> +    /* Now, pick the proper data tables */
->> +    pbmul = raid6_vgfmul[raid6_gfexi[failb-faila]];
-> 
-> Should spaces be put around the operator?
-
-Hmm, AFAICS almost all raid6 files "inherit" the scalar reference 
-implementation's coding style, that happens to differ from the 
-documented one. But given I already adjusted some of the comments, I 
-think it would be best to also touch these too. Thanks for spotting this 
-(and the others below).
-
-> 
->> +    qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila] ^
->> +        raid6_gfexp[failb]]];
->> +
->> [snip]
->> +
->> +    /* Now, pick the proper data tables */
->> +    qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila]]];
-> 
-> Only one space after qmul?
-
-As explained above; I'll fix this one and others in v3.
-
-> [snip]
->> +    /* Now, pick the proper data tables */
->> +    pbmul = raid6_vgfmul[raid6_gfexi[failb-faila]];
-> 
-> Ditto.
-> 
-> [snip]
->> +    /* Now, pick the proper data tables */
->> +    qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila]]];
-> 
-> Ditto.
-> 
-> [snip]
->> diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
->> index 7b244bce32b3d..2abe0076a636c 100644
->> --- a/lib/raid6/test/Makefile
->> +++ b/lib/raid6/test/Makefile
->> @@ -65,7 +65,7 @@ else ifeq ($(HAS_ALTIVEC),yes)
->>           OBJS += altivec1.o altivec2.o altivec4.o altivec8.o \
->>                   vpermxor1.o vpermxor2.o vpermxor4.o vpermxor8.o
->>   else ifeq ($(ARCH),loongarch64)
->> -        OBJS += loongarch_simd.o
->> +        OBJS += loongarch_simd.o recov_loongarch_simd.o
->>   endif
->>   .c.o:
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> PS: I brought up the raid speed tests in the past, and Borislav called 
-> them a random number generator [1]. ;-)
-> 
-> 
-> [1]: https://lore.kernel.org/all/20210406124126.GM17806@zn.tnic/
-
-Interesting, so the reason I've yet to observe such wild fluctuations 
-may simply be that I didn't reboot that rig as many times. :D
-
-And thanks for the review! I'll send v3 some time later (and stress the 
-code more meanwhile).
+> diff --git a/arch/arm/include/asm/irq.h b/arch/arm/include/asm/irq.h
+> index 18605f1b3580..26c1d2ced4ce 100644
+> --- a/arch/arm/include/asm/irq.h
+> +++ b/arch/arm/include/asm/irq.h
+> @@ -32,7 +32,7 @@ void handle_IRQ(unsigned int, struct pt_regs *);
+>  #include <linux/cpumask.h>
+>  
+>  extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
+> -					   bool exclude_self);
+> +					   int exclude_cpu);
+>  #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+>  #endif
+>  
+> diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+> index 6756203e45f3..3431c0553f45 100644
+> --- a/arch/arm/kernel/smp.c
+> +++ b/arch/arm/kernel/smp.c
+> @@ -846,7 +846,7 @@ static void raise_nmi(cpumask_t *mask)
+>  	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
+>  }
+>  
+> -void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+> +void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+>  {
+> -	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_nmi);
+> +	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, raise_nmi);
+>  }
+> diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
+> index a115e8999c69..218b4da0ea90 100644
+> --- a/arch/loongarch/include/asm/irq.h
+> +++ b/arch/loongarch/include/asm/irq.h
+> @@ -40,7 +40,7 @@ void spurious_interrupt(void);
+>  #define NR_IRQS_LEGACY 16
+>  
+>  #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+> -void arch_trigger_cpumask_backtrace(const struct cpumask *mask, bool exclude_self);
+> +void arch_trigger_cpumask_backtrace(const struct cpumask *mask, int exclude_cpu);
+>  
+>  #define MAX_IO_PICS 2
+>  #define NR_IRQS	(64 + (256 * MAX_IO_PICS))
+> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+> index 2e04eb07abb6..778e8d09953e 100644
+> --- a/arch/loongarch/kernel/process.c
+> +++ b/arch/loongarch/kernel/process.c
+> @@ -345,9 +345,9 @@ static void raise_backtrace(cpumask_t *mask)
+>  	}
+>  }
+>  
+> -void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+> +void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+>  {
+> -	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_backtrace);
+> +	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, raise_backtrace);
+>  }
+>  
+>  #ifdef CONFIG_64BIT
+> diff --git a/arch/mips/include/asm/irq.h b/arch/mips/include/asm/irq.h
+> index 75abfa834ab7..3a848e7e69f7 100644
+> --- a/arch/mips/include/asm/irq.h
+> +++ b/arch/mips/include/asm/irq.h
+> @@ -77,7 +77,7 @@ extern int cp0_fdc_irq;
+>  extern int get_c0_fdc_int(void);
+>  
+>  void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
+> -				    bool exclude_self);
+> +				    int exclude_cpu);
+>  #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+>  
+>  #endif /* _ASM_IRQ_H */
+> diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+> index a3225912c862..5387ed0a5186 100644
+> --- a/arch/mips/kernel/process.c
+> +++ b/arch/mips/kernel/process.c
+> @@ -750,9 +750,9 @@ static void raise_backtrace(cpumask_t *mask)
+>  	}
+>  }
+>  
+> -void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+> +void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+>  {
+> -	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_backtrace);
+> +	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, raise_backtrace);
+>  }
+>  
+>  int mips_get_process_fp_mode(struct task_struct *task)
+> diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
+> index f257cacb49a9..ba1a5974e714 100644
+> --- a/arch/powerpc/include/asm/irq.h
+> +++ b/arch/powerpc/include/asm/irq.h
+> @@ -55,7 +55,7 @@ int irq_choose_cpu(const struct cpumask *mask);
+>  
+>  #if defined(CONFIG_PPC_BOOK3S_64) && defined(CONFIG_NMI_IPI)
+>  extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
+> -					   bool exclude_self);
+> +					   int exclude_cpu);
+>  #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+>  #endif
+>  
+> diff --git a/arch/powerpc/kernel/stacktrace.c b/arch/powerpc/kernel/stacktrace.c
+> index 5de8597eaab8..b15f15dcacb5 100644
+> --- a/arch/powerpc/kernel/stacktrace.c
+> +++ b/arch/powerpc/kernel/stacktrace.c
+> @@ -221,8 +221,8 @@ static void raise_backtrace_ipi(cpumask_t *mask)
+>  	}
+>  }
+>  
+> -void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+> +void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+>  {
+> -	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_backtrace_ipi);
+> +	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, raise_backtrace_ipi);
+>  }
+>  #endif /* defined(CONFIG_PPC_BOOK3S_64) && defined(CONFIG_NMI_IPI) */
+> diff --git a/arch/powerpc/kernel/watchdog.c b/arch/powerpc/kernel/watchdog.c
+> index edb2dd1f53eb..8c464a5d8246 100644
+> --- a/arch/powerpc/kernel/watchdog.c
+> +++ b/arch/powerpc/kernel/watchdog.c
+> @@ -245,7 +245,7 @@ static void watchdog_smp_panic(int cpu)
+>  			__cpumask_clear_cpu(c, &wd_smp_cpus_ipi);
+>  		}
+>  	} else {
+> -		trigger_allbutself_cpu_backtrace();
+> +		trigger_allbutcpu_cpu_backtrace(cpu);
+>  		cpumask_clear(&wd_smp_cpus_ipi);
+>  	}
+>  
+> @@ -416,7 +416,7 @@ DEFINE_INTERRUPT_HANDLER_NMI(soft_nmi_interrupt)
+>  		xchg(&__wd_nmi_output, 1); // see wd_lockup_ipi
+>  
+>  		if (sysctl_hardlockup_all_cpu_backtrace)
+> -			trigger_allbutself_cpu_backtrace();
+> +			trigger_allbutcpu_cpu_backtrace(cpu);
+>  
+>  		if (hardlockup_panic)
+>  			nmi_panic(regs, "Hard LOCKUP");
+> diff --git a/arch/sparc/include/asm/irq_64.h b/arch/sparc/include/asm/irq_64.h
+> index b436029f1ced..8c4c0c87f998 100644
+> --- a/arch/sparc/include/asm/irq_64.h
+> +++ b/arch/sparc/include/asm/irq_64.h
+> @@ -87,7 +87,7 @@ static inline unsigned long get_softint(void)
+>  }
+>  
+>  void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
+> -				    bool exclude_self);
+> +				    int exclude_cpu);
+>  #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+>  
+>  extern void *hardirq_stack[NR_CPUS];
+> diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
+> index b51d8fb0ecdc..1ea3f37fa985 100644
+> --- a/arch/sparc/kernel/process_64.c
+> +++ b/arch/sparc/kernel/process_64.c
+> @@ -236,7 +236,7 @@ static void __global_reg_poll(struct global_reg_snapshot *gp)
+>  	}
+>  }
+>  
+> -void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+> +void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+>  {
+>  	struct thread_info *tp = current_thread_info();
+>  	struct pt_regs *regs = get_irq_regs();
+> @@ -252,7 +252,7 @@ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+>  
+>  	memset(global_cpu_snapshot, 0, sizeof(global_cpu_snapshot));
+>  
+> -	if (cpumask_test_cpu(this_cpu, mask) && !exclude_self)
+> +	if (cpumask_test_cpu(this_cpu, mask) && this_cpu != exclude_cpu)
+>  		__global_reg_self(tp, regs, this_cpu);
+>  
+>  	smp_fetch_global_regs();
+> @@ -260,7 +260,7 @@ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+>  	for_each_cpu(cpu, mask) {
+>  		struct global_reg_snapshot *gp;
+>  
+> -		if (exclude_self && cpu == this_cpu)
+> +		if (cpu == exclude_cpu)
+>  			continue;
+>  
+>  		gp = &global_cpu_snapshot[cpu].reg;
+> diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
+> index 29e083b92813..836c170d3087 100644
+> --- a/arch/x86/include/asm/irq.h
+> +++ b/arch/x86/include/asm/irq.h
+> @@ -42,7 +42,7 @@ extern void init_ISA_irqs(void);
+>  
+>  #ifdef CONFIG_X86_LOCAL_APIC
+>  void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
+> -				    bool exclude_self);
+> +				    int exclude_cpu);
+>  
+>  #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+>  #endif
+> diff --git a/arch/x86/kernel/apic/hw_nmi.c b/arch/x86/kernel/apic/hw_nmi.c
+> index 34a992e275ef..d6e01f924299 100644
+> --- a/arch/x86/kernel/apic/hw_nmi.c
+> +++ b/arch/x86/kernel/apic/hw_nmi.c
+> @@ -34,9 +34,9 @@ static void nmi_raise_cpu_backtrace(cpumask_t *mask)
+>  	apic->send_IPI_mask(mask, NMI_VECTOR);
+>  }
+>  
+> -void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+> +void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+>  {
+> -	nmi_trigger_cpumask_backtrace(mask, exclude_self,
+> +	nmi_trigger_cpumask_backtrace(mask, exclude_cpu,
+>  				      nmi_raise_cpu_backtrace);
+>  }
+>  
+> diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+> index e3e6a64b98e0..00982b133dc1 100644
+> --- a/include/linux/nmi.h
+> +++ b/include/linux/nmi.h
+> @@ -157,31 +157,31 @@ static inline void touch_nmi_watchdog(void)
+>  #ifdef arch_trigger_cpumask_backtrace
+>  static inline bool trigger_all_cpu_backtrace(void)
+>  {
+> -	arch_trigger_cpumask_backtrace(cpu_online_mask, false);
+> +	arch_trigger_cpumask_backtrace(cpu_online_mask, -1);
+>  	return true;
+>  }
+>  
+> -static inline bool trigger_allbutself_cpu_backtrace(void)
+> +static inline bool trigger_allbutcpu_cpu_backtrace(int exclude_cpu)
+>  {
+> -	arch_trigger_cpumask_backtrace(cpu_online_mask, true);
+> +	arch_trigger_cpumask_backtrace(cpu_online_mask, exclude_cpu);
+>  	return true;
+>  }
+>  
+>  static inline bool trigger_cpumask_backtrace(struct cpumask *mask)
+>  {
+> -	arch_trigger_cpumask_backtrace(mask, false);
+> +	arch_trigger_cpumask_backtrace(mask, -1);
+>  	return true;
+>  }
+>  
+>  static inline bool trigger_single_cpu_backtrace(int cpu)
+>  {
+> -	arch_trigger_cpumask_backtrace(cpumask_of(cpu), false);
+> +	arch_trigger_cpumask_backtrace(cpumask_of(cpu), -1);
+>  	return true;
+>  }
+>  
+>  /* generic implementation */
+>  void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
+> -				   bool exclude_self,
+> +				   int exclude_cpu,
+>  				   void (*raise)(cpumask_t *mask));
+>  bool nmi_cpu_backtrace(struct pt_regs *regs);
+>  
+> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+> index be38276a365f..085d7a78f62f 100644
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -523,7 +523,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+>  			dump_stack();
+>  
+>  		if (softlockup_all_cpu_backtrace) {
+> -			trigger_allbutself_cpu_backtrace();
+> +			trigger_allbutcpu_cpu_backtrace(smp_processor_id());
+>  			clear_bit_unlock(0, &soft_lockup_nmi_warn);
+>  		}
+>  
+> diff --git a/lib/nmi_backtrace.c b/lib/nmi_backtrace.c
+> index 5274bbb026d7..33c154264bfe 100644
+> --- a/lib/nmi_backtrace.c
+> +++ b/lib/nmi_backtrace.c
+> @@ -34,7 +34,7 @@ static unsigned long backtrace_flag;
+>   * they are passed being updated as a side effect of this call.
+>   */
+>  void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
+> -				   bool exclude_self,
+> +				   int exclude_cpu,
+>  				   void (*raise)(cpumask_t *mask))
+>  {
+>  	int i, this_cpu = get_cpu();
+> @@ -49,8 +49,8 @@ void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
+>  	}
+>  
+>  	cpumask_copy(to_cpumask(backtrace_mask), mask);
+> -	if (exclude_self)
+> -		cpumask_clear_cpu(this_cpu, to_cpumask(backtrace_mask));
+> +	if (exclude_cpu != -1)
+> +		cpumask_clear_cpu(exclude_cpu, to_cpumask(backtrace_mask));
+>  
+>  	/*
+>  	 * Don't try to send an NMI to this cpu; it may work on some
+> -- 
+> 2.41.0.585.gd2178a4bd4-goog
 
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+Michal Hocko
+SUSE Labs
