@@ -1,195 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE211DA2B;
-	Fri,  4 Aug 2023 20:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691182070; x=1722718070;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Nrb38CB1CxDtNRUV9CDVvs0KpO65X9nDYACTZ4KB2xA=;
-  b=mVc0MhXbHwZzGij6VTSTZ012Gpi297m0yg9kazbB2Wf0BamCj5QqZFSS
-   kJ7pen4aWRWtvUjrWyNgURzChUVZbEVEA+NbEn3ph5xhBHkkjIT5oJ6k7
-   vZuby+PYlGtNjZnAeQVfgYghUATHEvVcAW2tnrqFmXL044E9AVcdPD1Nw
-   u1HboNXKF37MWIu9BrfrlC96Y1CaKW7VvhbCm4yctOOBrk8Mu1gZ7B9kp
-   HXG5B4XjnRVs6tzkZCaD0/uFeF148wmsqSCG3h1CCRpC584FL/iYtX7Ai
-   Z6HN6RAXwa6H6wVcgbuxnKmJjcDiiQVT0UjxjzB4omSCtcq1292/SQHoQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="373897677"
-X-IronPort-AV: E=Sophos;i="6.01,256,1684825200"; 
-   d="scan'208";a="373897677"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 13:47:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="759708543"
-X-IronPort-AV: E=Sophos;i="6.01,256,1684825200"; 
-   d="scan'208";a="759708543"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 04 Aug 2023 13:47:46 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qS1i5-000360-3C;
-	Fri, 04 Aug 2023 20:47:45 +0000
-Date: Sat, 5 Aug 2023 04:46:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>,
-	loongarch@lists.linux.dev, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>,
-	Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH] LoongArch: Drop -ffreestanding from CFLAGS
-Message-ID: <202308050433.0KAmYqQ2-lkp@intel.com>
-References: <20230804125609.2054719-1-kernel@xen0n.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18BC1FAE
+	for <loongarch@lists.linux.dev>; Sat,  5 Aug 2023 06:14:21 +0000 (UTC)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-4fe3678010eso4760097e87.3
+        for <loongarch@lists.linux.dev>; Fri, 04 Aug 2023 23:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691216059; x=1691820859;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UKa1gFCEYJcpfcdueW8n7utVtoVqZuZPA9jW6WxZmK8=;
+        b=XDc4jAOG1IHe1+C2tA4Ik7dK3fmto5DAG8lnnJnqxVEGXS+Yc39wa0va0N3yCbEpe3
+         siMrZdIxy8ySK2wRWpG65KNJxhEaaw6eghzcwwqWT/4+B2zBBvwAbwlzLg3tKrHZLIB6
+         zQmnOPTRjh3xOYBiQ87I8uVDQyeAdcgF8LuTrc9ymFxYBOpMgx/VQuiskEe5B6o384Qt
+         CWmZx9vzrvhCr8HNBP2SrjB650ccW3snuI4HTi5b4DCir7KJbojp/6BiqB0ozu4nr9+K
+         9T4vgaKdtk+IiURM21HUStoVz/8Og6tI9Z//9AQDRUEIsYuq/HGZqhj7YCFuByj33YlQ
+         IITA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691216059; x=1691820859;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UKa1gFCEYJcpfcdueW8n7utVtoVqZuZPA9jW6WxZmK8=;
+        b=kFw0MRtLcnHTNWROfXTUYMTMfTw2cRsMloCQufl1hyaPNPrZtl1M1UQctEIdvAItQd
+         Ow1c5M4i3mbYrk7rqjQMtBDrvwSggPD9sYykOgxqboTf6o6XFsHvpUIV4BkOSIokIgFg
+         0GtBfQDcdr6g1t56Kaxig8CBqISgHfjtE4hK5lkVeJf+nUGJ69TH4e1a5sZoRvJM1N2e
+         QK7veY32lN2onQgCuBvErO0gWWEaAFTkTUaqmY8TzHfELD8217/QpnXXIJWSDrcOJ9qK
+         NiYDakIA/cxR/mJOZs140VhOPtT4S/3PRUgTVVKg/dblV8XoXpoGZJNiMCouxjFyq+82
+         kF4w==
+X-Gm-Message-State: AOJu0YxKBv910Fke4k7oKl4C6nObbMBde0i9tY2FalJYWD89ezRmNe6c
+	os0YqCusTfNPbROyw0R6J8wtkjlNboqrlO7/szc=
+X-Google-Smtp-Source: AGHT+IGTTqwv+OJxqTA8sft4Lmd7dfjxsF/kWcDIC/kMk0awlZAWX1qMnB/h9udQgZuXBWB9kBwstvy8ACDkHMW0lqA=
+X-Received: by 2002:ac2:4e97:0:b0:4fb:8987:734e with SMTP id
+ o23-20020ac24e97000000b004fb8987734emr2376834lfr.68.1691216059117; Fri, 04
+ Aug 2023 23:14:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230804125609.2054719-1-kernel@xen0n.name>
+References: <cover.1691047285.git.chenfeiyang@loongson.cn> <DM4PR12MB5088C3C2209B392C9CED2C9ED309A@DM4PR12MB5088.namprd12.prod.outlook.com>
+In-Reply-To: <DM4PR12MB5088C3C2209B392C9CED2C9ED309A@DM4PR12MB5088.namprd12.prod.outlook.com>
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date: Sat, 5 Aug 2023 14:14:07 +0800
+Message-ID: <CACWXhKmmJxWuVWN51jn6fKtJ-2Gntb67hFq77qa7p_F8+WpnVQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/16] stmmac: Add Loongson platform support
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>, "andrew@lunn.ch" <andrew@lunn.ch>, 
+	"hkallweit1@gmail.com" <hkallweit1@gmail.com>, "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>, 
+	"alexandre.torgue@foss.st.com" <alexandre.torgue@foss.st.com>, 
+	"chenhuacai@loongson.cn" <chenhuacai@loongson.cn>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, 
+	"dongbiao@loongson.cn" <dongbiao@loongson.cn>, 
+	"loongson-kernel@lists.loongnix.cn" <loongson-kernel@lists.loongnix.cn>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi WANG,
+On Sat, Aug 5, 2023 at 1:26=E2=80=AFAM Jose Abreu <Jose.Abreu@synopsys.com>=
+ wrote:
+>
+> From: Feiyang Chen <chenfeiyang@loongson.cn>
+> Date: Thu, Aug 03, 2023 at 12:28:02
+>
+> > Extend stmmac functions and macros for Loongson DWMAC.
+> > Add LS7A support for dwmac_loongson.
+> >
+> > v2 -> v3:
+> > * Avoid macros accessing variables that are not passed to them.
+> > * Implement a new struct to support 64-bit DMA.
+> > * Use feature names rather than 'lgmac' and 'dwmac_is_loongson'.
+>
+> This is still mixing up with HWIF.
+>
+> As I tried to highlight before, if you are using a custom IP,
+> you need custom callbacks.
+>
+> As far as I saw, you are mixing dwmac1000_core with
+> Loongson registers, which is not what I believe is the best approach.
+>
 
-kernel test robot noticed the following build warnings:
+Hi, Jose,
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.5-rc4]
-[cannot apply to next-20230804]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The problem we encounter is that we have three different layouts of
+register maps. To avoid mixing up with HWIF, we should use three sets
+of callbacks with rather similar logic. Maybe I can extract the common
+code blocks to functions, create two additional sets of callbacks,
+namely dwmac1000_loongson and dwmac1000_loongson64, and then have the
+three sets share these functions?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/WANG-Xuerui/LoongArch-Drop-ffreestanding-from-CFLAGS/20230804-205642
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20230804125609.2054719-1-kernel%40xen0n.name
-patch subject: [PATCH] LoongArch: Drop -ffreestanding from CFLAGS
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20230805/202308050433.0KAmYqQ2-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20230805/202308050433.0KAmYqQ2-lkp@intel.com/reproduce)
+> I understand that stmmac is confusing and needs a lot of revamp.
+> Perhaps we can switch to regmaps first? This way you would have
+> a lot more flexibility.
+>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308050433.0KAmYqQ2-lkp@intel.com/
+If we switch to regmaps, we still need three sets, and I think I need
+to revamp more :)
 
-All warnings (new ones prefixed by >>):
+Thanks,
+Feiyang
 
-   In file included from include/linux/irqflags.h:18,
-                    from include/linux/spinlock.h:59,
-                    from include/linux/debugobjects.h:6,
-                    from include/linux/timer.h:8,
-                    from include/linux/workqueue.h:9,
-                    from drivers/media/usb/em28xx/em28xx.h:21,
-                    from drivers/media/usb/em28xx/em28xx-audio.c:14:
-   arch/loongarch/include/asm/percpu.h:20:4: error: #error compiler support for the model attribute is necessary when a recent assembler is used
-      20 | #  error compiler support for the model attribute is necessary when a recent assembler is used
-         |    ^~~~~
-   drivers/media/usb/em28xx/em28xx-audio.c: In function 'em28xx_audio_init':
->> drivers/media/usb/em28xx/em28xx-audio.c:808:29: warning: variable 'devnr' set but not used [-Wunused-but-set-variable]
-     808 |         static int          devnr;
-         |                             ^~~~~
-   drivers/media/usb/em28xx/em28xx-audio.c: At top level:
-   drivers/media/usb/em28xx/em28xx-audio.c:47:12: warning: 'index' defined but not used [-Wunused-variable]
-      47 | static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;
-         |            ^~~~~
-
-
-vim +/devnr +808 drivers/media/usb/em28xx/em28xx-audio.c
-
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  801  
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  802  static int em28xx_audio_init(struct em28xx *dev)
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  803  {
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  804  	struct em28xx_audio *adev = &dev->adev;
-c6d48134cb2682 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2016-12-07  805  	struct usb_device *udev = interface_to_usbdev(dev->intf);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  806  	struct snd_pcm      *pcm;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  807  	struct snd_card     *card;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12 @808  	static int          devnr;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  809  	int		    err;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  810  
-c5874208ff78a5 drivers/media/usb/em28xx/em28xx-audio.c   Frank Schaefer        2014-09-13  811  	if (dev->usb_audio_type != EM28XX_USB_AUDIO_VENDOR) {
-9f90f5371f52b4 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2018-03-03  812  		/*
-9f90f5371f52b4 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2018-03-03  813  		 * This device does not support the extension (in this case
-9f90f5371f52b4 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2018-03-03  814  		 * the device is expecting the snd-usb-audio module or
-9f90f5371f52b4 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2018-03-03  815  		 * doesn't have analog audio support at all)
-9f90f5371f52b4 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2018-03-03  816  		 */
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  817  		return 0;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  818  	}
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  819  
-29b05e22f5c68c drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2016-12-07  820  	dev_info(&dev->intf->dev, "Binding audio extension\n");
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  821  
-47677e51e2a404 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-03-05  822  	kref_get(&dev->ref);
-47677e51e2a404 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-03-05  823  
-29b05e22f5c68c drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2016-12-07  824  	dev_info(&dev->intf->dev,
-ce8591ff023ef8 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2016-10-20  825  		 "em28xx-audio.c: Copyright (C) 2006 Markus Rechberger\n");
-29b05e22f5c68c drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2016-12-07  826  	dev_info(&dev->intf->dev,
-ce8591ff023ef8 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2016-10-20  827  		 "em28xx-audio.c: Copyright (C) 2007-2016 Mauro Carvalho Chehab\n");
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  828  
-29b05e22f5c68c drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2016-12-07  829  	err = snd_card_new(&dev->intf->dev, index[devnr], "Em28xx Audio",
-e735688875208f drivers/media/usb/em28xx/em28xx-audio.c   Takashi Iwai          2014-01-29  830  			   THIS_MODULE, 0, &card);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  831  	if (err < 0)
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  832  		return err;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  833  
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  834  	spin_lock_init(&adev->slock);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  835  	adev->sndcard = card;
-c6d48134cb2682 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2016-12-07  836  	adev->udev = udev;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  837  
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  838  	err = snd_pcm_new(card, "Em28xx Audio", 0, 0, 1, &pcm);
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  839  	if (err < 0)
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  840  		goto card_free;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  841  
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  842  	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE, &snd_em28xx_pcm_capture);
-2abb1b2daf88ee drivers/media/usb/em28xx/em28xx-audio.c   Takashi Iwai          2019-12-10  843  	snd_pcm_set_managed_buffer_all(pcm, SNDRV_DMA_TYPE_VMALLOC, NULL, 0, 0);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  844  	pcm->info_flags = 0;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  845  	pcm->private_data = dev;
-cc1e6315e83db0 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2018-09-10  846  	strscpy(pcm->name, "Empia 28xx Capture", sizeof(pcm->name));
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  847  
-cc1e6315e83db0 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2018-09-10  848  	strscpy(card->driver, "Em28xx-Audio", sizeof(card->driver));
-cc1e6315e83db0 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2018-09-10  849  	strscpy(card->shortname, "Em28xx Audio", sizeof(card->shortname));
-cc1e6315e83db0 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2018-09-10  850  	strscpy(card->longname, "Empia Em28xx Audio", sizeof(card->longname));
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  851  
-a5c075cfd2386a drivers/media/usb/em28xx/em28xx-audio.c   Frank Schaefer        2014-03-24  852  	INIT_WORK(&adev->wq_trigger, audio_trigger);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  853  
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  854  	if (dev->audio_mode.ac97 != EM28XX_NO_AC97) {
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  855  		em28xx_cvol_new(card, dev, "Video", AC97_VIDEO);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  856  		em28xx_cvol_new(card, dev, "Line In", AC97_LINE);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  857  		em28xx_cvol_new(card, dev, "Phone", AC97_PHONE);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  858  		em28xx_cvol_new(card, dev, "Microphone", AC97_MIC);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  859  		em28xx_cvol_new(card, dev, "CD", AC97_CD);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  860  		em28xx_cvol_new(card, dev, "AUX", AC97_AUX);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  861  		em28xx_cvol_new(card, dev, "PCM", AC97_PCM);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  862  
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  863  		em28xx_cvol_new(card, dev, "Master", AC97_MASTER);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  864  		em28xx_cvol_new(card, dev, "Line", AC97_HEADPHONE);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  865  		em28xx_cvol_new(card, dev, "Mono", AC97_MASTER_MONO);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  866  		em28xx_cvol_new(card, dev, "LFE", AC97_CENTER_LFE_MASTER);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  867  		em28xx_cvol_new(card, dev, "Surround", AC97_SURROUND_MASTER);
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  868  	}
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  869  
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  870  	err = em28xx_audio_urb_init(dev);
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  871  	if (err)
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  872  		goto card_free;
-966f4163751b45 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  873  
-6d79468dd85375 drivers/media/video/em28xx/em28xx-audio.c Mauro Carvalho Chehab 2008-01-05  874  	err = snd_card_register(card);
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  875  	if (err < 0)
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  876  		goto urb_free;
-6d79468dd85375 drivers/media/video/em28xx/em28xx-audio.c Mauro Carvalho Chehab 2008-01-05  877  
-29b05e22f5c68c drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2016-12-07  878  	dev_info(&dev->intf->dev, "Audio extension successfully initialized\n");
-a52932b405f230 drivers/media/video/em28xx/em28xx-audio.c Markus Rechberger     2008-01-05  879  	return 0;
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  880  
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  881  urb_free:
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  882  	em28xx_audio_free_urb(dev);
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  883  
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  884  card_free:
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  885  	snd_card_free(card);
-452f236fcf845b drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-14  886  	adev->sndcard = NULL;
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  887  
-0cd03a0cb20c75 drivers/media/usb/em28xx/em28xx-audio.c   Mauro Carvalho Chehab 2014-01-12  888  	return err;
-a52932b405f230 drivers/media/video/em28xx/em28xx-audio.c Markus Rechberger     2008-01-05  889  }
-a52932b405f230 drivers/media/video/em28xx/em28xx-audio.c Markus Rechberger     2008-01-05  890  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Thanks,
+> Jose
