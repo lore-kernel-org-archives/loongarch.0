@@ -1,23 +1,23 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.65.219])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303011C26
-	for <loongarch@lists.linux.dev>; Sun,  6 Aug 2023 06:29:41 +0000 (UTC)
-X-QQ-mid: bizesmtp82t1691303290tyci8an5
-Received: from [198.18.0.1] ( [171.43.248.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429751FAF
+	for <loongarch@lists.linux.dev>; Sun,  6 Aug 2023 06:48:15 +0000 (UTC)
+X-QQ-mid: bizesmtpipv603t1691304400trd0
+Received: from [198.18.0.1] ( [255.163.185.0])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sun, 06 Aug 2023 14:28:08 +0800 (CST)
+	id ; Sun, 06 Aug 2023 14:46:37 +0800 (CST)
 X-QQ-SSF: 01400000000000C0G000000A0000000
-X-QQ-FEAT: LE7C6P2vL8TbfJoAf2tt4HyZB+ZnXWXIz3lYYRdO+nDY+F0KACsH5wnTPTKwT
-	w/cVnwCT+T44QnkkcsLPHhiZWQii6mITaWAoaivMYl1uve9Qdpn8Hf9UadwNsSOHby4aIdb
-	Ix7khsaM0NI4K+VAX0QVHwSYHz/yYVXx8U9jAPzETH+r1rIs+N2T+djoLVG4hRe5ph7jrd4
-	nJ6n7hdoSpbBPJHf4al2Kcv3lmnWGDM/QvFeGY4cnL3LZqqba5HeWbwRPn1HWeNU+yycxlt
-	XNr5L1sRiuZbyeDDKSg0yHiHoNM+BybCzGb3IofdIE5Dr4qEQF87pdeTQJujI7oKasQTNfo
-	gKZMBiHgSpB3N+7M20eoXY9vfmr7AnOmj9PrxyNFcXe9cbEtSo=
+X-QQ-FEAT: FVl8EHhfVR7Zhhti4TDR8LzsiRC+Xa2NJFZt4azR8KRKmUQK4Ik6YdfYbB7Jd
+	Y8s6F6oBY2HJduakjJk0xYrrrCEJaiIBOVsb50RyH8NIwetP1GxcYQgBKHf8wbIpqHVKrbf
+	7O30LiD6XG0uK+hPUAWEnbvmZut7j+fjfpUwjTZcVhCqLTg31sAbL2PvsQz0MwYb3aFkpP+
+	+omYh53UvRvtZ/uZml9sVibMexRv8gYlGvorLD4nyKMChDSJjsfwovZFK/quwP2f6mWurSJ
+	g3bdqzrNsLw1+DpETxiu53FITm8/tcYwzWvmCid8vv1vtjQQPxPy4sD1/rMH5CPLgflDZNV
+	fFh72LJmAtwwf9Rwd/E4jDYLIaNlyPxEKO6pkbQI6SPRq92RSRL/qi9b6PPLA==
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15949324978880403945
-Message-ID: <D9FCB210637F0951+a578b08d-3ec4-4374-927b-8c81eeac639b@uniontech.com>
-Date: Sun, 6 Aug 2023 14:28:09 +0800
+X-BIZMAIL-ID: 6625185426042604506
+Message-ID: <367239C38ED9D19C+9ef16061-9057-482c-bd8c-0b9ede71cfa7@uniontech.com>
+Date: Sun, 6 Aug 2023 14:46:38 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -25,7 +25,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 05/30] LoongArch: KVM: Add vcpu related header files
+Subject: Re: [PATCH v18 05/30] LoongArch: KVM: Add vcpu related header files
 To: Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org,
  kvm@vger.kernel.org
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
@@ -35,16 +35,18 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
  Alex Deucher <alexander.deucher@amd.com>,
  Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
  Xi Ruoyao <xry111@xry111.site>
-References: <20230720062813.4126751-1-zhaotianrui@loongson.cn>
- <20230720062813.4126751-6-zhaotianrui@loongson.cn>
+References: <20230803022138.2736430-1-zhaotianrui@loongson.cn>
+ <20230803022138.2736430-6-zhaotianrui@loongson.cn>
 From: Chen Linxuan <chenlinxuan@uniontech.com>
-In-Reply-To: <20230720062813.4126751-6-zhaotianrui@loongson.cn>
+In-Reply-To: <20230803022138.2736430-6-zhaotianrui@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz6a-1
+Feedback-ID: bizesmtpipv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-On 2023/7/20 14:27, Tianrui Zhao wrote:
+I notice that v18 is released. So I resend my comment on v17 again.
+
+On 2023/8/3 10:21, Tianrui Zhao wrote:
 > Add LoongArch vcpu related header files, including vcpu csr
 > information, irq number defines, and some vcpu interfaces.
 > 
@@ -53,10 +55,10 @@ On 2023/7/20 14:27, Tianrui Zhao wrote:
 > ---
 >   arch/loongarch/include/asm/insn-def.h  |  55 ++++++
 >   arch/loongarch/include/asm/kvm_csr.h   | 252 +++++++++++++++++++++++++
->   arch/loongarch/include/asm/kvm_vcpu.h  |  96 ++++++++++
+>   arch/loongarch/include/asm/kvm_vcpu.h  |  95 ++++++++++
 >   arch/loongarch/include/asm/loongarch.h |  20 +-
 >   arch/loongarch/kvm/trace.h             | 168 +++++++++++++++++
->   5 files changed, 586 insertions(+), 5 deletions(-)
+>   5 files changed, 585 insertions(+), 5 deletions(-)
 >   create mode 100644 arch/loongarch/include/asm/insn-def.h
 >   create mode 100644 arch/loongarch/include/asm/kvm_csr.h
 >   create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
@@ -395,10 +397,10 @@ toolchain seems to be never going to happen in real world.
 > +#endif	/* __ASM_LOONGARCH_KVM_CSR_H__ */
 > diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
 > new file mode 100644
-> index 000000000000..5101e2817a78
+> index 000000000000..3d23a656fea3
 > --- /dev/null
 > +++ b/arch/loongarch/include/asm/kvm_vcpu.h
-> @@ -0,0 +1,96 @@
+> @@ -0,0 +1,95 @@
 > +/* SPDX-License-Identifier: GPL-2.0 */
 > +/*
 > + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
@@ -473,7 +475,6 @@ toolchain seems to be never going to happen in real world.
 > +
 > +void kvm_acquire_timer(struct kvm_vcpu *vcpu);
 > +void kvm_reset_timer(struct kvm_vcpu *vcpu);
-> +enum hrtimer_restart kvm_count_timeout(struct kvm_vcpu *vcpu);
 > +void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
 > +void kvm_restore_timer(struct kvm_vcpu *vcpu);
 > +void kvm_save_timer(struct kvm_vcpu *vcpu);
