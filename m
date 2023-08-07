@@ -1,61 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808C020FE
-	for <loongarch@lists.linux.dev>; Mon,  7 Aug 2023 16:19:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F04F3C433C7
-	for <loongarch@lists.linux.dev>; Mon,  7 Aug 2023 16:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691425162;
-	bh=RCjQ6vti5d4rtFH23MxMIY1p9y9CRqE3VIV6VqW/Gnw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Hd6un6urbdSo8Id+eeRkX5erMb52evs3hyzmavrkSLipkH5JoeSegYAEleIKPgW8m
-	 eCqpQ8tyFKTDbrkIQOjcWFCbDCEadL5BE90GhYhrWrKy8DyiNtUDpVCb9wKrAIN0n5
-	 GR3e9SYrnuWs5166VSW3z07LbOZpKHk0AQIQaCtKp0/UYVSLdJYe2zZvVRnsMihyBu
-	 ADfcyrjrnmObHekPQk6C50rl3YxKen9FjqX8MJzqWVLxZT1XGFINUlKXJpDWYtN/rn
-	 tddHOn4K4Y2Gzh6HOUU0dLMeFYkFyOqXuQ/o21jOnQ01Es7EisJUW8QrEh1CO2SWZq
-	 84VHtIHuToTcQ==
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6b9e478e122so3910931a34.1
-        for <loongarch@lists.linux.dev>; Mon, 07 Aug 2023 09:19:21 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yx1+w6a5Q+pd32ss0RePDS7Z2IKyFDSDu0hXG/sSIBBK/U5Tx7z
-	jQvv4h1ZzVAjmtix1XwJ9AwcrYoVT+/Y2K97Dkc=
-X-Google-Smtp-Source: AGHT+IFvChfuLszjtoRr3uXfgd3k35TSz6VMm1GNzaFKTSum1bvO419fx3Nk4Q1aAYASirJws2c6fASuYHU6yNRU7cI=
-X-Received: by 2002:a05:6870:96aa:b0:1be:ccce:7993 with SMTP id
- o42-20020a05687096aa00b001beccce7993mr11267917oaq.40.1691425161242; Mon, 07
- Aug 2023 09:19:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353EA2C9C
+	for <loongarch@lists.linux.dev>; Mon,  7 Aug 2023 16:36:38 +0000 (UTC)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-522bd411679so6118328a12.0
+        for <loongarch@lists.linux.dev>; Mon, 07 Aug 2023 09:36:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691426196; x=1692030996;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PZNcpOl8CEiyqW/ZOb/0XcvAH0YrJ+P7c3vLK34uSAU=;
+        b=p+tvWBWwjHGrwcist+ERw9YfHaq9zpl05ImB2qAvYkl732NZFX8xD9wURvjqtCVJ1j
+         f5qbn/zlJNV6GNzz6n8+mAMJaBmpwk6+UVEKF6KWKUWEFm/F9u8VY8GQrgo2LxfeBZvN
+         Q25ySkdvCjrYg1Bcz4X891+wn78TNlj5vCAcuaen/d9ZcFRwWOOdiM/IHn+hB+Sp5QbU
+         7KEoIxqB/oC0PKxqJkad8mWMRJdrUlFbGS3ml6DKgWCGfEOr7lCPVn0QEw8jmqV+iO3y
+         DCv0CWe6Fi+dWUg+QwUzhxPuhEjT/J6XbuR1v14rXzF9ymm5RSsS8aqzuc3ChKdKQDuo
+         ZzhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691426196; x=1692030996;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PZNcpOl8CEiyqW/ZOb/0XcvAH0YrJ+P7c3vLK34uSAU=;
+        b=MHDyNYWu2x4Erpq8acrHiKitBjIXimY79y9mmStYcpPZaVSnG2fIVCtl54nxCTURqP
+         aji6qiH0yvdjUCpKwAyGwX4BXTphPiUFKhCWwYTZQ4SMfLJ/1FPvYa11dAk41c66ML9Q
+         q5Y4CPtlhkr371C0ddXGMnX9zSpzWBRDxN/vfb0EsmhBtLAxGx6uwSmJvUIsUEG8tDoe
+         veWgLE1tq9cAFVZFYLu5buw2o8+MdB5MTeYP1ndOkmNbFsZZodvqUjiE8mgCeoagK5Fb
+         EqihvU5lTvYqUDe/Sd6MaeoXFztNayh/QcV7+xd8m3sjf1ne7ozJwqqLf6imNAG5ltz0
+         K4Jg==
+X-Gm-Message-State: AOJu0YyZMs3XZqshFOAKcoziVvkQuSVn+Nor1jex+ViaGe4HjYuEb5SY
+	/XqGu3sCaF4xKC98zNj8DytNS1f9jDOtKjEtPKM=
+X-Google-Smtp-Source: AGHT+IG6xEN7hWZW963ar6a6y/IZv7TEMEGaFqOpr/N9QzXhbQky+esm5rTRkDEeHyn3BVgzlYOqaXCi0RXhkI/5nGE=
+X-Received: by 2002:aa7:c7d9:0:b0:522:2711:863 with SMTP id
+ o25-20020aa7c7d9000000b0052227110863mr9220038eds.1.1691426196109; Mon, 07 Aug
+ 2023 09:36:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230807154250.998765-1-masahiroy@kernel.org> <20230807154250.998765-3-masahiroy@kernel.org>
- <CAAhV-H7VzqPBYD0o1qAY7v7z+G9xOMq+yOR9ZTcO1SKfCXVZ0g@mail.gmail.com>
-In-Reply-To: <CAAhV-H7VzqPBYD0o1qAY7v7z+G9xOMq+yOR9ZTcO1SKfCXVZ0g@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 8 Aug 2023 01:18:44 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATnGTZEBokjcqzVyRugn0zQfodED8Jhq8AQdz5qXJMr0w@mail.gmail.com>
-Message-ID: <CAK7LNATnGTZEBokjcqzVyRugn0zQfodED8Jhq8AQdz5qXJMr0w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] loongarch: remove <asm/export.h>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20230731084458.28096-1-ubizjak@gmail.com> <4d4dd1e8-042a-561a-4ffc-529638cb0780@csgroup.eu>
+In-Reply-To: <4d4dd1e8-042a-561a-4ffc-529638cb0780@csgroup.eu>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Mon, 7 Aug 2023 18:36:24 +0200
+Message-ID: <CAFULd4YByT++kV21nZGE+ME9B2KQtQYNRz6Ar2awoLws-JznUw@mail.gmail.com>
+Subject: Re: [PATCH] locking/arch: Rewrite local_add_unless as static inline function
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, 
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Jun Yi <yijun@loongson.cn>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 8, 2023 at 12:56=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
+On Mon, Aug 7, 2023 at 6:13=E2=80=AFPM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
 >
-> Hi, Masahiro,
 >
-> Is this series only for linux-next (6.6), or also needed by 6.5?
+>
+> Le 31/07/2023 =C3=A0 10:42, Uros Bizjak a =C3=A9crit :
+> > Rewrite local_add_unless as a static inline function with boolean
+> > return value, similar to arch_atomic_add_unless arch fallbacks.
+> >
+> > The function is currently unused.
+>
+> Is it worth keeping the function if it is not used ?
 
-I meant it for  linux-next (6.6).
+We already have plenty of these kinds of unused locking functions in
+arch/*/include/asm/atomic.h, so I thought we could leave this one as
+well.
 
-Code clean-up can wait for the next MW.
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Uros.
