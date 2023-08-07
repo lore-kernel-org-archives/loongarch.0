@@ -1,141 +1,53 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755182106
-	for <loongarch@lists.linux.dev>; Mon,  7 Aug 2023 07:03:52 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AEB210D;
+	Mon,  7 Aug 2023 07:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1691392638;
+	bh=+OenNrBzAmqFCbFqHNyWHPn56bzmSEBQTvxhWepBQiA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=VRJ1o5A9UvpCUETjuIkPFZjnkaR0N0Zss8H5NkKo0TFrWaQtMpDI//g3JxQRUlTmk
+	 bLTUri9IuPCHa1ZxfbJlcHJTPQnNKCtQifWMgtbNhlmc6ixF0DzNbG2sozy2SmgWiB
+	 1d9qypQ1r3O0MikTFYD0MqpxUvORLTGj5UGiFXx0=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6CB1C2189B;
-	Mon,  7 Aug 2023 07:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1691391824; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qBVvdfQ+7uAuAbXARcqoglYVEWjC2ubdJ2O+ToyhcnU=;
-	b=SpNvqN9W8w6c37IfcNk3eNCCy+0l0bY2sLCvSbaXXbOq+nOiCcs5cLMdA3n9BIlH9vi8jv
-	8ByLlL96TK8WiF7qhIOzvIwWLjdpbTOwSIgsMSMdc2Zhix/B3WxC9HUozdEXzDUtH3HOia
-	ikj4S2h/luSXV1azSnZY+DCjxmABQiQ=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 43F6D13910;
-	Mon,  7 Aug 2023 07:03:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 2asJEFCX0GQwWAAAMHmgww
-	(envelope-from <mhocko@suse.com>); Mon, 07 Aug 2023 07:03:44 +0000
-Date: Mon, 7 Aug 2023 09:03:43 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Gaosheng Cui <cuigaosheng1@huawei.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Jinyang He <hejinyang@loongson.cn>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Lecopzer Chen <lecopzer.chen@mediatek.com>,
-	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pingfan Liu <kernelfans@gmail.com>,
-	Qing Zhang <zhangqing@loongson.cn>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Tom Rix <trix@redhat.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v3 1/2] nmi_backtrace: Allow excluding an arbitrary CPU
-Message-ID: <ZNCXT+nRHnTKJX0y@dhcp22.suse.cz>
-References: <20230803160649.v3.1.Ia35521b91fc781368945161d7b28538f9996c182@changeid>
- <ZMytyEoCARgP9VR8@dhcp22.suse.cz>
- <CAD=FV=UQ18JG-sMBJHrhXByCWYSgOpCq8tL=3R8pT8CnFEa=pA@mail.gmail.com>
- <ZM0S9gKBBiu83kFq@dhcp22.suse.cz>
- <CAD=FV=XhksUsBKjkD08YxdmxvvbgoZH-va7WnPptkYA6EOpPsg@mail.gmail.com>
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 46BC1659AD;
+	Mon,  7 Aug 2023 03:17:05 -0400 (EDT)
+Message-ID: <254baed00504ef3cec36e58540a3fdcca346a407.camel@xry111.site>
+Subject: Re: [PATCH v2] LoongArch: Replace -ffreestanding with finer-grained
+ -fno-builtin's
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
+ llvm@lists.linux.dev, linux-kernel@vger.kernel.org, WANG Xuerui
+ <git@xen0n.name>,  Nick Desaulniers <ndesaulniers@google.com>
+Date: Mon, 07 Aug 2023 15:16:59 +0800
+In-Reply-To: <d591bfef-9146-abf6-04d0-96600ebb7a15@xen0n.name>
+References: <20230806083021.2243574-1-kernel@xen0n.name>
+	 <CAAhV-H4ypd-+z-KbeGM6C_mNk0aggk2yhdDik-XfPNWqsO=j=A@mail.gmail.com>
+	 <d591bfef-9146-abf6-04d0-96600ebb7a15@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=XhksUsBKjkD08YxdmxvvbgoZH-va7WnPptkYA6EOpPsg@mail.gmail.com>
 
-On Fri 04-08-23 09:06:07, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Aug 4, 2023 at 8:02 AM Michal Hocko <mhocko@suse.com> wrote:
-> >
-> > > > It would have been slightly safer to modify arch_trigger_cpumask_backtrace
-> > > > by switching arguments so that some leftovers are captured easier.
-> > >
-> > > I'm not sure I understand. Oh, you're saying make the prototype of
-> > > arch_trigger_cpumask_backtrace() incompatible so that if someone is
-> > > directly calling it then it'll be a compile-time error?
-> >
-> > exactly. bool to int promotion would be too easy to miss while the
-> > pointer to int would complain loudly.
-> >
-> > > I guess the
-> > > hope is that nobody is calling that directly and they're calling
-> > > through the trigger_...() functions.
-> >
-> > Hope is one thing, being preventive another.
-> >
-> > > For now I'm going to leave this alone.
-> >
-> > If you are going to send another version then please consider this. Not
-> > a hard requirement but better.
-> 
-> If I do send another version, do you have any suggestions for how to
-> change this to make it incompatible?
+On Sun, 2023-08-06 at 18:31 +0800, WANG Xuerui wrote:
+> > > +cflags-y +=3D -fno-builtin-memcpy -fno-builtin-memmove -fno-builtin-=
+memset
 
-I would swap parameters as this seems simplest.
+Can we only apply them for GCC <=3D 13?  I think with GCC 14 the built-in
+implementations are quite reasonable (well, maybe it's some human ego
+because I wrote them :).
 
-> I guess swapping the order of the
-> parameters would be best? I considered doing that for v4 but I felt
-> like long term the current order of the parameters was better.
-
-Yes the current ordering is better but having it other way around is not
-really horrendous either.
-
-> I also
-> considered a rename, but that different problems. ;-) If I rename both
-> the #define and the function then if someone has an out-of-tree patch
-> adding arch_trigger_cpumask_backtrace() for another architecture, like
-> say arm64, then there would be no compile-time failure indicating that
-> the out-of-tree patch needs updating. I could rename the functions but
-> _not_ the #define, I guess?
-
-I think that swapping would be simplest as the type mismatch should
-catch also pending out-of-tree potential implementations.
-
--- 
-Michal Hocko
-SUSE Labs
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
