@@ -1,93 +1,141 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97ED32106
-	for <loongarch@lists.linux.dev>; Mon,  7 Aug 2023 06:51:42 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Cxh+h9lNBk+dwRAA--.4227S3;
-	Mon, 07 Aug 2023 14:51:41 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxJ8x5lNBkwspMAA--.23544S6;
-	Mon, 07 Aug 2023 14:51:39 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: Shuah Khan <shuah@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Sean Christopherson <seanjc@google.com>
-Cc: Vishal Annapurve <vannapurve@google.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755182106
+	for <loongarch@lists.linux.dev>; Mon,  7 Aug 2023 07:03:52 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6CB1C2189B;
+	Mon,  7 Aug 2023 07:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1691391824; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qBVvdfQ+7uAuAbXARcqoglYVEWjC2ubdJ2O+ToyhcnU=;
+	b=SpNvqN9W8w6c37IfcNk3eNCCy+0l0bY2sLCvSbaXXbOq+nOiCcs5cLMdA3n9BIlH9vi8jv
+	8ByLlL96TK8WiF7qhIOzvIwWLjdpbTOwSIgsMSMdc2Zhix/B3WxC9HUozdEXzDUtH3HOia
+	ikj4S2h/luSXV1azSnZY+DCjxmABQiQ=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 43F6D13910;
+	Mon,  7 Aug 2023 07:03:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 2asJEFCX0GQwWAAAMHmgww
+	(envelope-from <mhocko@suse.com>); Mon, 07 Aug 2023 07:03:44 +0000
+Date: Mon, 7 Aug 2023 09:03:43 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Gaosheng Cui <cuigaosheng1@huawei.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Jinyang He <hejinyang@loongson.cn>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Lecopzer Chen <lecopzer.chen@mediatek.com>,
+	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pingfan Liu <kernelfans@gmail.com>,
+	Qing Zhang <zhangqing@loongson.cn>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Tom Rix <trix@redhat.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Valentin Schneider <vschneid@redhat.com>,
 	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Peter Xu <peterx@redhat.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	maobibo@loongson.cn,
-	zhaotianrui@loongson.cn
-Subject: [PATCH v2 4/4] KVM: selftests: Add test cases supported by LoongArch into makefile
-Date: Mon,  7 Aug 2023 14:51:37 +0800
-Message-Id: <20230807065137.3408970-5-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230807065137.3408970-1-zhaotianrui@loongson.cn>
-References: <20230807065137.3408970-1-zhaotianrui@loongson.cn>
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v3 1/2] nmi_backtrace: Allow excluding an arbitrary CPU
+Message-ID: <ZNCXT+nRHnTKJX0y@dhcp22.suse.cz>
+References: <20230803160649.v3.1.Ia35521b91fc781368945161d7b28538f9996c182@changeid>
+ <ZMytyEoCARgP9VR8@dhcp22.suse.cz>
+ <CAD=FV=UQ18JG-sMBJHrhXByCWYSgOpCq8tL=3R8pT8CnFEa=pA@mail.gmail.com>
+ <ZM0S9gKBBiu83kFq@dhcp22.suse.cz>
+ <CAD=FV=XhksUsBKjkD08YxdmxvvbgoZH-va7WnPptkYA6EOpPsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxJ8x5lNBkwspMAA--.23544S6
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+In-Reply-To: <CAD=FV=XhksUsBKjkD08YxdmxvvbgoZH-va7WnPptkYA6EOpPsg@mail.gmail.com>
 
-Add test cases supported by LoongArch into makefile.
-LoongArch supports some KVM common tests, such as:
-  kvm_create_max_vcpus
-  demand_paging_test
-  kvm_page_table_test
-  set_memory_region_test
-  memslot_modification_stress_test
-  memslot_perf_test
-  kvm_binary_stats_test
-And some test cases are not supported by LoongArch. for example,
-we do not support the rseq_test, as the glibc do not support it.
+On Fri 04-08-23 09:06:07, Doug Anderson wrote:
+> Hi,
+> 
+> On Fri, Aug 4, 2023 at 8:02 AM Michal Hocko <mhocko@suse.com> wrote:
+> >
+> > > > It would have been slightly safer to modify arch_trigger_cpumask_backtrace
+> > > > by switching arguments so that some leftovers are captured easier.
+> > >
+> > > I'm not sure I understand. Oh, you're saying make the prototype of
+> > > arch_trigger_cpumask_backtrace() incompatible so that if someone is
+> > > directly calling it then it'll be a compile-time error?
+> >
+> > exactly. bool to int promotion would be too easy to miss while the
+> > pointer to int would complain loudly.
+> >
+> > > I guess the
+> > > hope is that nobody is calling that directly and they're calling
+> > > through the trigger_...() functions.
+> >
+> > Hope is one thing, being preventive another.
+> >
+> > > For now I'm going to leave this alone.
+> >
+> > If you are going to send another version then please consider this. Not
+> > a hard requirement but better.
+> 
+> If I do send another version, do you have any suggestions for how to
+> change this to make it incompatible?
 
-Based-on: <20230803022138.2736430-1-zhaotianrui@loongson.cn>
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- tools/testing/selftests/kvm/Makefile | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+I would swap parameters as this seems simplest.
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index c692cc86e7da..96bf53565a32 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -55,6 +55,10 @@ LIBKVM_s390x += lib/s390x/ucall.c
- LIBKVM_riscv += lib/riscv/processor.c
- LIBKVM_riscv += lib/riscv/ucall.c
- 
-+LIBKVM_loongarch += lib/loongarch/processor.c
-+LIBKVM_loongarch += lib/loongarch/ucall.c
-+LIBKVM_loongarch += lib/loongarch/exception.S
-+
- # Non-compiled test targets
- TEST_PROGS_x86_64 += x86_64/nx_huge_pages_test.sh
- 
-@@ -181,6 +185,14 @@ TEST_GEN_PROGS_riscv += kvm_page_table_test
- TEST_GEN_PROGS_riscv += set_memory_region_test
- TEST_GEN_PROGS_riscv += kvm_binary_stats_test
- 
-+TEST_GEN_PROGS_loongarch += kvm_create_max_vcpus
-+TEST_GEN_PROGS_loongarch += demand_paging_test
-+TEST_GEN_PROGS_loongarch += kvm_page_table_test
-+TEST_GEN_PROGS_loongarch += set_memory_region_test
-+TEST_GEN_PROGS_loongarch += memslot_modification_stress_test
-+TEST_GEN_PROGS_loongarch += memslot_perf_test
-+TEST_GEN_PROGS_loongarch += kvm_binary_stats_test
-+
- TEST_PROGS += $(TEST_PROGS_$(ARCH_DIR))
- TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(ARCH_DIR))
- TEST_GEN_PROGS_EXTENDED += $(TEST_GEN_PROGS_EXTENDED_$(ARCH_DIR))
+> I guess swapping the order of the
+> parameters would be best? I considered doing that for v4 but I felt
+> like long term the current order of the parameters was better.
+
+Yes the current ordering is better but having it other way around is not
+really horrendous either.
+
+> I also
+> considered a rename, but that different problems. ;-) If I rename both
+> the #define and the function then if someone has an out-of-tree patch
+> adding arch_trigger_cpumask_backtrace() for another architecture, like
+> say arm64, then there would be no compile-time failure indicating that
+> the out-of-tree patch needs updating. I could rename the functions but
+> _not_ the #define, I guess?
+
+I think that swapping would be simplest as the type mismatch should
+catch also pending out-of-tree potential implementations.
+
 -- 
-2.39.1
-
+Michal Hocko
+SUSE Labs
