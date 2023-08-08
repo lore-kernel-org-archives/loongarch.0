@@ -1,110 +1,73 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6ED12B6C
-	for <loongarch@lists.linux.dev>; Tue,  8 Aug 2023 14:55:24 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.west.internal (Postfix) with ESMTP id 92B0432007F1;
-	Tue,  8 Aug 2023 10:55:22 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Tue, 08 Aug 2023 10:55:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1691506522; x=1691592922; bh=qM
-	9p1VvgDQ68BCFOyyrSFNt07dndXA3zR/iN+rXNXdE=; b=EGvnh+3YW6raxmHExk
-	l+oplb/Rkv4u8bnBVVIcjFu0rID8pDt3FBe2kyXloio02v/T9zaVNJxY2sBnlsK8
-	GFxVzE08v6CIZ9RZ0MUZ8vP/vAztFKNM8pGkWBPTZGQeLuEkvolxOfuVQZGlqy9b
-	WTBQfgJqeofF2qeCRrcXdCmPiuAcc3jcQJbssNnsx8ifl3hlXSLqpkoXiF/PE/Wp
-	/LiSQXnH4YSxWIRLN5HhfgJJijd19hloeFviZklGXKvo4/nxaPUz3rV5d5NFlaTI
-	3i91aP7VkQdDAwDRORO0bBpNCwrV2OZZFiUL/Ph+/QswHuVbXcWEh6Q2Uu863IlJ
-	HNgQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1691506522; x=1691592922; bh=qM9p1VvgDQ68B
-	CFOyyrSFNt07dndXA3zR/iN+rXNXdE=; b=iiAxVSVeGknxHB2f4jAZeQExin81r
-	4FSRXd4RztPI9LtZbwVufhsvY8z34Hw5Cgq9LQEiaU+B9NGk+6u6Z8UVQGjIO+cp
-	YIMpPs6nfMl+NLnIiTnDnwZRihb40DmaA47cg0HJZBBunIlhh0v1tk7cI4ktMhfB
-	zeotgq0FTeTfgnZeT/wwWi7JMKVv62ozjPpftlpmE1aizCi0DXK7V3ZNqi8xXHel
-	WRNbaHePp4CmPNIWkWT7TVCtq+PsSWArSISk/Nwz8d/8tDXyAq/yeUzgKYr2j/Jk
-	RKKwMflAoXoX5/qaxulswaz2c/pXyXKGjz2/l0qQtRrjwM53xed4VPYrg==
-X-ME-Sender: <xms:WFfSZFn8QXJQBZxWujkpLrCDAvk8i7qOs4jyV1N-xjOY16_67vtKFg>
-    <xme:WFfSZA2E0gb7XUYmwJuW4BGgfSzZMpyd3OoA967QQBGTRN4iajSjU_h7NYlxZhryO
-    dtbRANsvnI0bY-76kM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrledvgdekudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:WFfSZLo_ogOFHX6UVKrYjJM2u8mal53AaC42v-l3zX-woAB6nYHNaA>
-    <xmx:WFfSZFmqsaEYE3OM4ZAiuW-lYv4KcxeEgU2YkrdEZibHMa-25xC2Gw>
-    <xmx:WFfSZD1CAeyZjgxeehOdtm1TwIDclaDKbNgPzZdnVWSFucjQnqg6pQ>
-    <xmx:WlfSZBOhyzm43yCApWoWXfPZxu-tKzrSHCK0a3Tgrn40b4obY5epqw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 9C683B60089; Tue,  8 Aug 2023 10:55:20 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E24F15495
+	for <loongarch@lists.linux.dev>; Tue,  8 Aug 2023 20:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=6eKGWV+qXBOmXib4CH5Q5ZonD3D+jdcD2iPRNMQYDUk=; b=a3g8FEOddyrqjCqTRZ1q+zPw7z
+	fkLukIqE640YENNCXDa8maIEuKT2w71FPQ2faM0KUkRDtkJVGLEFUd3RBRGFOPYWKyH6cVq36oTYm
+	kZJV8HgqNXCMieknQrGI397rm6F2V+TGepvWdhRDPsrJBzLFg6dj7AsdyA39J3lCdNupkftNuKekA
+	LEd9qgfK8OxNusous4QBhGmmB7oCa5IX0c6mmFxkuKqaobANr1GIcg3hgt4Otl/XSBdCtj6jdJuwG
+	Oez1iaXSEW/LfZBIakcEQbbDXE0qt0HZU8Eban0MerDMozdKZNVePY60Mm7VRNrGGv93+TlEf/b78
+	rNxcd2ew==;
+Received: from [2601:1c2:980:9ec0::2764]
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1qTTni-003Se7-0L;
+	Tue, 08 Aug 2023 20:59:34 +0000
+Message-ID: <3c11047c-0ef7-2316-6d77-70aca59b555d@infradead.org>
+Date: Tue, 8 Aug 2023 13:59:33 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <8e6dce33-980a-4e63-9a8b-b681e3f9bf83@app.fastmail.com>
-In-Reply-To: 
- <CAPDyKFo7p=aEWWrW2OGbhN1tFjHanpqjLApzCMipdPSzE+NknQ@mail.gmail.com>
-References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
- <20230803063703.5659-3-zhuyinbo@loongson.cn>
- <4fef9725-7aea-43fb-b8ef-d20a4c6d9a68@app.fastmail.com>
- <CAPDyKFo7p=aEWWrW2OGbhN1tFjHanpqjLApzCMipdPSzE+NknQ@mail.gmail.com>
-Date: Tue, 08 Aug 2023 16:55:00 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ulf Hansson" <ulf.hansson@linaro.org>
-Cc: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
- "Jianmin Lv" <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
- "Liu Peibao" <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev, "Liu Yun" <liuyun@loongson.cn>
-Subject: Re: [PATCH v6 2/2] soc: loongson2_pm: add power management support
-Content-Type: text/plain
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v2] LoongArch: Remove redundant "source
+ drivers/firmware/Kconfig"
+Content-Language: en-US
+To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ linux-kernel@vger.kernel.org
+References: <20230808075505.2481-1-xry111@xry111.site>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230808075505.2481-1-xry111@xry111.site>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 8, 2023, at 16:42, Ulf Hansson wrote:
-> On Thu, 3 Aug 2023 at 09:03, Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> On Thu, Aug 3, 2023, at 08:37, Yinbo Zhu wrote:
->> > The Loongson-2's power management controller was ACPI, supports ACPI
->> > S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
->> > Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
->> > (USB, GMAC, PWRBTN, etc.). This driver was to add power management
->> > controller support that base on dts for Loongson-2 series SoCs.
->> >
->> > Co-developed-by: Liu Yun <liuyun@loongson.cn>
->> > Signed-off-by: Liu Yun <liuyun@loongson.cn>
->> > Co-developed-by: Liu Peibao <liupeibao@loongson.cn>
->> > Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
->> > Cc: soc@kernel.org
->> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
->> > Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
->>
->> I'm still waiting for Ulf to take a look here to see whether
->> this should be in drivers/genpd instead, but he might still
->> be on vacation.
->
-> I don't think this belongs in drivers/genpd/ as it's not a genpd
-> provider. Besides that, no further comments from me at this point.
 
-Ok, thanks!
 
-Let's try to finish discussing the suspend-address question
-and merge it through the soc tree once that is resolved then.
+On 8/8/23 00:55, Xi Ruoyao wrote:
+> In drivers/Kconfig, drivers/firmware/Kconfig is sourced for all ports so
+> there is no need to source it in the port-specific Kconfig file.  And
+> sourcing it here also caused the "Firmware Drivers" menu appeared two
+> times: once in the "Device Drivers" menu, another time in the toplevel
+> menu.  This was really puzzling.
+> 
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 
-     Arnd
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  arch/loongarch/Kconfig | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index e71d5bf2cee0..465759f6b0ed 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -662,5 +662,3 @@ source "kernel/power/Kconfig"
+>  source "drivers/acpi/Kconfig"
+>  
+>  endmenu
+> -
+> -source "drivers/firmware/Kconfig"
+
+-- 
+~Randy
