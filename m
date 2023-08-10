@@ -1,258 +1,277 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B43FED0
-	for <loongarch@lists.linux.dev>; Thu, 10 Aug 2023 04:08:57 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8Dxg_DWYtRkr10UAA--.44389S3;
-	Thu, 10 Aug 2023 12:08:54 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx4eTWYtRk225SAA--.9503S3;
-	Thu, 10 Aug 2023 12:08:54 +0800 (CST)
-Message-ID: <b4b21efb-a0c7-4625-91e7-4d0c5b80a249@loongson.cn>
-Date: Thu, 10 Aug 2023 12:08:54 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC8B10F0
+	for <loongarch@lists.linux.dev>; Thu, 10 Aug 2023 04:27:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1EADC43391
+	for <loongarch@lists.linux.dev>; Thu, 10 Aug 2023 04:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1691641646;
+	bh=fPA9xRRA6+BAzg1S3f5+BWPETMEsncjG024BmrqNAgI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=l23DgUnP+uHFzPuwOLTz76EpvJhfndAwbaHSLUrF6widmZs5ojzgTyRcnun5fCBOw
+	 yecRrxCbA/421+sXu7IaJ/tgYXywm8Lnse7E4K9p80nw+EvgUPfqCpYqFPGS9RMjI4
+	 Tb1Ehve+4Ojq95Ti3GfD2opV1viKIoOdcJaQXZhAcFhDJUjDxrlNLm6i/5T4FNHcMG
+	 DKxuik8q5xdkSkJ5kc3eXgThWpRhgYSYj35O/NNQ6Uw4gggUZlZtTTThfLx2r8/Bkd
+	 BIgFtKZUbpbGhvMkbJbtNxwXbBPVTegwhYGkmYza/iSgf61fRdBqiXoJtkLftIsvmz
+	 isJzIdvPrheug==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-99bfcf4c814so74385266b.0
+        for <loongarch@lists.linux.dev>; Wed, 09 Aug 2023 21:27:25 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzLUfCwk2/K4t6zouZdLOAZi8BZ9ziqeRMHpre85P/+sJoySBGP
+	Xwkk8cwaYsFa1AI9eYguhmjVamUuAGO+FokgmZo=
+X-Google-Smtp-Source: AGHT+IFB9Cpc8XTuN88wcX4sLDnjrEO81HoYsjBr+Nl8UlL/7LtZzyv3JjbSmr+06NF3+liJIWF2AmB0MLtABGM5hms=
+X-Received: by 2002:a17:906:11e:b0:99b:dca9:5b8f with SMTP id
+ 30-20020a170906011e00b0099bdca95b8fmr1096110eje.56.1691641644091; Wed, 09 Aug
+ 2023 21:27:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 3/3] LoongArch: mm: Add unified function
- populate_kernel_pte
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
- Christoph Lameter <cl@linux.com>, Andrew Morton <akpm@linux-foundation.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- WANG Xuerui <kernel@xen0n.name>
-References: <20230712031622.1888321-1-maobibo@loongson.cn>
- <20230712031622.1888321-4-maobibo@loongson.cn>
+References: <20230712031622.1888321-1-maobibo@loongson.cn> <20230712031622.1888321-4-maobibo@loongson.cn>
  <CAAhV-H5pHoFo7i8EpacLU=AWKKPckssJN1aThi+Bb8PPHn0gkA@mail.gmail.com>
- <e6139ffa-92e5-8247-ba0b-71def4795104@loongson.cn>
- <CAAhV-H7Y9SGaLA3+x8-kMg0eWW3UeGLTGMnmcTp7xftJPiJSoA@mail.gmail.com>
-Content-Language: en-US
-From: bibo mao <maobibo@loongson.cn>
-In-Reply-To: <CAAhV-H7Y9SGaLA3+x8-kMg0eWW3UeGLTGMnmcTp7xftJPiJSoA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx4eTWYtRk225SAA--.9503S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3JFW7Xry7Gw4kGF17Gw1fKrX_yoWxXw4kpr
-	ZrG3WvvF4UXryDC39Fqw1Fgrn7tw1kK3W5WFnrG3W8Z3sFqFnrGF1kJw17ury0yFWfAF48
-	Xr15Kanxuayqq3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
+ <e6139ffa-92e5-8247-ba0b-71def4795104@loongson.cn> <CAAhV-H7Y9SGaLA3+x8-kMg0eWW3UeGLTGMnmcTp7xftJPiJSoA@mail.gmail.com>
+ <b4b21efb-a0c7-4625-91e7-4d0c5b80a249@loongson.cn>
+In-Reply-To: <b4b21efb-a0c7-4625-91e7-4d0c5b80a249@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 10 Aug 2023 12:27:11 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7kBP-qME2mxwQKqYeggWu4ApqAJukz3eZxfqsYzRvGEA@mail.gmail.com>
+Message-ID: <CAAhV-H7kBP-qME2mxwQKqYeggWu4ApqAJukz3eZxfqsYzRvGEA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] LoongArch: mm: Add unified function populate_kernel_pte
+To: bibo mao <maobibo@loongson.cn>
+Cc: Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	WANG Xuerui <kernel@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Aug 10, 2023 at 12:09=E2=80=AFPM bibo mao <maobibo@loongson.cn> wro=
+te:
+>
+>
+>
+> =E5=9C=A8 2023/8/2 15:25, Huacai Chen =E5=86=99=E9=81=93:
+> > On Tue, Aug 1, 2023 at 9:22=E2=80=AFAM bibo mao <maobibo@loongson.cn> w=
+rote:
+> >>
+> >>
+> >>
+> >> =E5=9C=A8 2023/7/31 22:15, Huacai Chen =E5=86=99=E9=81=93:
+> >>> On Wed, Jul 12, 2023 at 11:16=E2=80=AFAM Bibo Mao <maobibo@loongson.c=
+n> wrote:
+> >>>>
+> >>>> Function pcpu_populate_pte and fixmap_pte are similar, they populate
+> >>>> one page from kernel address space. And there is confusion between
+> >>>> pgd and p4d in function fixmap_pte, such as pgd_none always returns
+> >>>> zero. This patch adds unified function populate_kernel_pte and repla=
+ces
+> >>>> pcpu_populate_pte and fixmap_pte.
+> >>>>
+> >>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >>>> ---
+> >>>>  arch/loongarch/include/asm/pgalloc.h |  1 +
+> >>>>  arch/loongarch/kernel/numa.c         | 40 +--------------------
+> >>>>  arch/loongarch/mm/init.c             | 52 ++++++++++++++++---------=
+---
+> >>>>  3 files changed, 32 insertions(+), 61 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongarch/i=
+nclude/asm/pgalloc.h
+> >>>> index af1d1e4a6965..ca17b573dba6 100644
+> >>>> --- a/arch/loongarch/include/asm/pgalloc.h
+> >>>> +++ b/arch/loongarch/include/asm/pgalloc.h
+> >>>> @@ -91,4 +91,5 @@ static inline pud_t *pud_alloc_one(struct mm_struc=
+t *mm, unsigned long address)
+> >>>>
+> >>>>  #endif /* __PAGETABLE_PUD_FOLDED */
+> >>>>
+> >>>> +extern pte_t * __init populate_kernel_pte(unsigned long addr);
+> >>>>  #endif /* _ASM_PGALLOC_H */
+> >>>> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/nu=
+ma.c
+> >>>> index 778e1c20bfb0..24a693b76873 100644
+> >>>> --- a/arch/loongarch/kernel/numa.c
+> >>>> +++ b/arch/loongarch/kernel/numa.c
+> >>>> @@ -67,46 +67,8 @@ static int __init pcpu_cpu_distance(unsigned int =
+from, unsigned int to)
+> >>>>
+> >>>>  void __init pcpu_populate_pte(unsigned long addr)
+> >>>>  {
+> >>>> -       pgd_t *pgd =3D pgd_offset_k(addr);
+> >>>> -       p4d_t *p4d =3D p4d_offset(pgd, addr);
+> >>>> -       pud_t *pud;
+> >>>> -       pmd_t *pmd;
+> >>>> -
+> >>>> -       if (p4d_none(*p4d)) {
+> >>>> -               pud =3D memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
+> >>>> -               if (!pud)
+> >>>> -                       goto err_alloc;
+> >>>> -               p4d_populate(&init_mm, p4d, pud);
+> >>>> -#ifndef __PAGETABLE_PUD_FOLDED
+> >>>> -               pud_init(pud);
+> >>>> -#endif
+> >>>> -       }
+> >>>> -
+> >>>> -       pud =3D pud_offset(p4d, addr);
+> >>>> -       if (pud_none(*pud)) {
+> >>>> -               pmd =3D memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
+> >>>> -               if (!pmd)
+> >>>> -                       goto err_alloc;
+> >>>> -               pud_populate(&init_mm, pud, pmd);
+> >>>> -#ifndef __PAGETABLE_PMD_FOLDED
+> >>>> -               pmd_init(pmd);
+> >>>> -#endif
+> >>>> -       }
+> >>>> -
+> >>>> -       pmd =3D pmd_offset(pud, addr);
+> >>>> -       if (!pmd_present(*pmd)) {
+> >>>> -               pte_t *pte;
+> >>>> -
+> >>>> -               pte =3D memblock_alloc(PAGE_SIZE, PAGE_SIZE);
+> >>>> -               if (!pte)
+> >>>> -                       goto err_alloc;
+> >>>> -               pmd_populate_kernel(&init_mm, pmd, pte);
+> >>>> -       }
+> >>>> -
+> >>>> +       populate_kernel_pte(addr);
+> >>>>         return;
+> >>>> -
+> >>>> -err_alloc:
+> >>>> -       panic("%s: Failed to allocate memory\n", __func__);
+> >>>>  }
+> >>>>
+> >>>>  void __init setup_per_cpu_areas(void)
+> >>>> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> >>>> index 3b7d8129570b..6cd2948373ae 100644
+> >>>> --- a/arch/loongarch/mm/init.c
+> >>>> +++ b/arch/loongarch/mm/init.c
+> >>>> @@ -191,46 +191,49 @@ void vmemmap_free(unsigned long start, unsigne=
+d long end, struct vmem_altmap *al
+> >>>>  #endif
+> >>>>  #endif
+> >>>>
+> >>>> -static pte_t *fixmap_pte(unsigned long addr)
+> >>>> +pte_t * __init populate_kernel_pte(unsigned long addr)
+> >>>>  {
+> >>>> -       pgd_t *pgd;
+> >>>> -       p4d_t *p4d;
+> >>>> +       pgd_t *pgd =3D pgd_offset_k(addr);
+> >>>> +       p4d_t *p4d =3D p4d_offset(pgd, addr);
+> >>>>         pud_t *pud;
+> >>>>         pmd_t *pmd;
+> >>>>
+> >>>> -       pgd =3D pgd_offset_k(addr);
+> >>>> -       p4d =3D p4d_offset(pgd, addr);
+> >>>> -
+> >>>> -       if (pgd_none(*pgd)) {
+> >>>> -               pud_t *new __maybe_unused;
+> >>>> -
+> >>>> -               new =3D memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
+> >>>> -               pgd_populate(&init_mm, pgd, new);
+> >>>> +       if (p4d_none(*p4d)) {
+> >>>> +               pud =3D memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
+> >>>> +               if (!pud)
+> >>>> +                       goto err_alloc;
+> >>>> +               p4d_populate(&init_mm, p4d, pud);
+> >>>>  #ifndef __PAGETABLE_PUD_FOLDED
+> >>>> -               pud_init(new);
+> >>>> +               pud_init(pud);
+> >>>>  #endif
+> >>>>         }
+> >>>>
+> >>>>         pud =3D pud_offset(p4d, addr);
+> >>>>         if (pud_none(*pud)) {
+> >>>> -               pmd_t *new __maybe_unused;
+> >>>> -
+> >>>> -               new =3D memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
+> >>>> -               pud_populate(&init_mm, pud, new);
+> >>>> +               pmd =3D memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
+> >>>> +               if (!pmd)
+> >>>> +                       goto err_alloc;
+> >>>> +               pud_populate(&init_mm, pud, pmd);
+> >>>>  #ifndef __PAGETABLE_PMD_FOLDED
+> >>>> -               pmd_init(new);
+> >>>> +               pmd_init(pmd);
+> >>>>  #endif
+> >>>>         }
+> >>>>
+> >>>>         pmd =3D pmd_offset(pud, addr);
+> >>>> -       if (pmd_none(*pmd)) {
+> >>>> -               pte_t *new __maybe_unused;
+> >>>> +       if (!pmd_present(*pmd)) {
+> >>>> +               pte_t *pte;
+> >>>>
+> >>>> -               new =3D memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
+> >>>> -               pmd_populate_kernel(&init_mm, pmd, new);
+> >>>> +               pte =3D memblock_alloc(PAGE_SIZE, PAGE_SIZE);
+> >>> I don't think memblock_alloc_low() here can be replaced by memblock_a=
+lloc().
+> >> Can you share me the points that pte table must be allocated with memb=
+lock_alloc_low
+> >> in this place?
+> > I forget the reason now, so if you confirm memblock_alloc() works well
+> > here, you can use it. But please don't use memblock_alloc_raw().
+> what a mess, there is more comments if there is special reason, else ever=
+yone can
+> forgot by elapsed time.
+>
+> why the function memblock_alloc_raw can not be use? there is one useless =
+page copy.
+This is not a performance critical path, keeping consistency with
+mm/percpu.c can make life easier.
 
+Huacai
 
-在 2023/8/2 15:25, Huacai Chen 写道:
-> On Tue, Aug 1, 2023 at 9:22 AM bibo mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> 在 2023/7/31 22:15, Huacai Chen 写道:
->>> On Wed, Jul 12, 2023 at 11:16 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> Function pcpu_populate_pte and fixmap_pte are similar, they populate
->>>> one page from kernel address space. And there is confusion between
->>>> pgd and p4d in function fixmap_pte, such as pgd_none always returns
->>>> zero. This patch adds unified function populate_kernel_pte and replaces
->>>> pcpu_populate_pte and fixmap_pte.
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>  arch/loongarch/include/asm/pgalloc.h |  1 +
->>>>  arch/loongarch/kernel/numa.c         | 40 +--------------------
->>>>  arch/loongarch/mm/init.c             | 52 ++++++++++++++++------------
->>>>  3 files changed, 32 insertions(+), 61 deletions(-)
->>>>
->>>> diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongarch/include/asm/pgalloc.h
->>>> index af1d1e4a6965..ca17b573dba6 100644
->>>> --- a/arch/loongarch/include/asm/pgalloc.h
->>>> +++ b/arch/loongarch/include/asm/pgalloc.h
->>>> @@ -91,4 +91,5 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
->>>>
->>>>  #endif /* __PAGETABLE_PUD_FOLDED */
->>>>
->>>> +extern pte_t * __init populate_kernel_pte(unsigned long addr);
->>>>  #endif /* _ASM_PGALLOC_H */
->>>> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
->>>> index 778e1c20bfb0..24a693b76873 100644
->>>> --- a/arch/loongarch/kernel/numa.c
->>>> +++ b/arch/loongarch/kernel/numa.c
->>>> @@ -67,46 +67,8 @@ static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
->>>>
->>>>  void __init pcpu_populate_pte(unsigned long addr)
->>>>  {
->>>> -       pgd_t *pgd = pgd_offset_k(addr);
->>>> -       p4d_t *p4d = p4d_offset(pgd, addr);
->>>> -       pud_t *pud;
->>>> -       pmd_t *pmd;
->>>> -
->>>> -       if (p4d_none(*p4d)) {
->>>> -               pud = memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
->>>> -               if (!pud)
->>>> -                       goto err_alloc;
->>>> -               p4d_populate(&init_mm, p4d, pud);
->>>> -#ifndef __PAGETABLE_PUD_FOLDED
->>>> -               pud_init(pud);
->>>> -#endif
->>>> -       }
->>>> -
->>>> -       pud = pud_offset(p4d, addr);
->>>> -       if (pud_none(*pud)) {
->>>> -               pmd = memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
->>>> -               if (!pmd)
->>>> -                       goto err_alloc;
->>>> -               pud_populate(&init_mm, pud, pmd);
->>>> -#ifndef __PAGETABLE_PMD_FOLDED
->>>> -               pmd_init(pmd);
->>>> -#endif
->>>> -       }
->>>> -
->>>> -       pmd = pmd_offset(pud, addr);
->>>> -       if (!pmd_present(*pmd)) {
->>>> -               pte_t *pte;
->>>> -
->>>> -               pte = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
->>>> -               if (!pte)
->>>> -                       goto err_alloc;
->>>> -               pmd_populate_kernel(&init_mm, pmd, pte);
->>>> -       }
->>>> -
->>>> +       populate_kernel_pte(addr);
->>>>         return;
->>>> -
->>>> -err_alloc:
->>>> -       panic("%s: Failed to allocate memory\n", __func__);
->>>>  }
->>>>
->>>>  void __init setup_per_cpu_areas(void)
->>>> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
->>>> index 3b7d8129570b..6cd2948373ae 100644
->>>> --- a/arch/loongarch/mm/init.c
->>>> +++ b/arch/loongarch/mm/init.c
->>>> @@ -191,46 +191,49 @@ void vmemmap_free(unsigned long start, unsigned long end, struct vmem_altmap *al
->>>>  #endif
->>>>  #endif
->>>>
->>>> -static pte_t *fixmap_pte(unsigned long addr)
->>>> +pte_t * __init populate_kernel_pte(unsigned long addr)
->>>>  {
->>>> -       pgd_t *pgd;
->>>> -       p4d_t *p4d;
->>>> +       pgd_t *pgd = pgd_offset_k(addr);
->>>> +       p4d_t *p4d = p4d_offset(pgd, addr);
->>>>         pud_t *pud;
->>>>         pmd_t *pmd;
->>>>
->>>> -       pgd = pgd_offset_k(addr);
->>>> -       p4d = p4d_offset(pgd, addr);
->>>> -
->>>> -       if (pgd_none(*pgd)) {
->>>> -               pud_t *new __maybe_unused;
->>>> -
->>>> -               new = memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
->>>> -               pgd_populate(&init_mm, pgd, new);
->>>> +       if (p4d_none(*p4d)) {
->>>> +               pud = memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
->>>> +               if (!pud)
->>>> +                       goto err_alloc;
->>>> +               p4d_populate(&init_mm, p4d, pud);
->>>>  #ifndef __PAGETABLE_PUD_FOLDED
->>>> -               pud_init(new);
->>>> +               pud_init(pud);
->>>>  #endif
->>>>         }
->>>>
->>>>         pud = pud_offset(p4d, addr);
->>>>         if (pud_none(*pud)) {
->>>> -               pmd_t *new __maybe_unused;
->>>> -
->>>> -               new = memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
->>>> -               pud_populate(&init_mm, pud, new);
->>>> +               pmd = memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
->>>> +               if (!pmd)
->>>> +                       goto err_alloc;
->>>> +               pud_populate(&init_mm, pud, pmd);
->>>>  #ifndef __PAGETABLE_PMD_FOLDED
->>>> -               pmd_init(new);
->>>> +               pmd_init(pmd);
->>>>  #endif
->>>>         }
->>>>
->>>>         pmd = pmd_offset(pud, addr);
->>>> -       if (pmd_none(*pmd)) {
->>>> -               pte_t *new __maybe_unused;
->>>> +       if (!pmd_present(*pmd)) {
->>>> +               pte_t *pte;
->>>>
->>>> -               new = memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
->>>> -               pmd_populate_kernel(&init_mm, pmd, new);
->>>> +               pte = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
->>> I don't think memblock_alloc_low() here can be replaced by memblock_alloc().
->> Can you share me the points that pte table must be allocated with memblock_alloc_low
->> in this place?
-> I forget the reason now, so if you confirm memblock_alloc() works well
-> here, you can use it. But please don't use memblock_alloc_raw().
-what a mess, there is more comments if there is special reason, else everyone can
-forgot by elapsed time.
-
-why the function memblock_alloc_raw can not be use? there is one useless page copy.
-
-Regards
-Bibo Mao
-
-
-> 
-> Huacai
->>
->> Regards
->> Bibo Mao
->>>
->>>
->>> Huacai
->>>> +               if (!pte)
->>>> +                       goto err_alloc;
->>>> +               pmd_populate_kernel(&init_mm, pmd, pte);
->>>>         }
->>>>
->>>>         return pte_offset_kernel(pmd, addr);
->>>> +
->>>> +err_alloc:
->>>> +       panic("%s: Failed to allocate memory\n", __func__);
->>>> +       return NULL;
->>>>  }
->>>>
->>>>  void __init __set_fixmap(enum fixed_addresses idx,
->>>> @@ -241,7 +244,12 @@ void __init __set_fixmap(enum fixed_addresses idx,
->>>>
->>>>         BUG_ON(idx <= FIX_HOLE || idx >= __end_of_fixed_addresses);
->>>>
->>>> -       ptep = fixmap_pte(addr);
->>>> +       /*
->>>> +        * Now only FIX_EARLYCON_MEM_BASE fixed map is used
->>>> +        * __set_fixmap must be called before mem_init since function
->>>> +        * populate_kernel_pte allocates memory with memblock_alloc method.
->>>> +        */
->>>> +       ptep = populate_kernel_pte(addr);
->>>>         if (!pte_none(*ptep)) {
->>>>                 pte_ERROR(*ptep);
->>>>                 return;
->>>> --
->>>> 2.27.0
->>>>
->>
->>
-
+>
+> Regards
+> Bibo Mao
+>
+>
+> >
+> > Huacai
+> >>
+> >> Regards
+> >> Bibo Mao
+> >>>
+> >>>
+> >>> Huacai
+> >>>> +               if (!pte)
+> >>>> +                       goto err_alloc;
+> >>>> +               pmd_populate_kernel(&init_mm, pmd, pte);
+> >>>>         }
+> >>>>
+> >>>>         return pte_offset_kernel(pmd, addr);
+> >>>> +
+> >>>> +err_alloc:
+> >>>> +       panic("%s: Failed to allocate memory\n", __func__);
+> >>>> +       return NULL;
+> >>>>  }
+> >>>>
+> >>>>  void __init __set_fixmap(enum fixed_addresses idx,
+> >>>> @@ -241,7 +244,12 @@ void __init __set_fixmap(enum fixed_addresses i=
+dx,
+> >>>>
+> >>>>         BUG_ON(idx <=3D FIX_HOLE || idx >=3D __end_of_fixed_addresse=
+s);
+> >>>>
+> >>>> -       ptep =3D fixmap_pte(addr);
+> >>>> +       /*
+> >>>> +        * Now only FIX_EARLYCON_MEM_BASE fixed map is used
+> >>>> +        * __set_fixmap must be called before mem_init since functio=
+n
+> >>>> +        * populate_kernel_pte allocates memory with memblock_alloc =
+method.
+> >>>> +        */
+> >>>> +       ptep =3D populate_kernel_pte(addr);
+> >>>>         if (!pte_none(*ptep)) {
+> >>>>                 pte_ERROR(*ptep);
+> >>>>                 return;
+> >>>> --
+> >>>> 2.27.0
+> >>>>
+> >>
+> >>
+>
+>
