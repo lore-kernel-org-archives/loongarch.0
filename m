@@ -1,38 +1,36 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDDB11C98
-	for <loongarch@lists.linux.dev>; Wed,  9 Aug 2023 11:58:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB9E815
+	for <loongarch@lists.linux.dev>; Thu, 10 Aug 2023 03:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1691582337;
-	bh=swOtItoGXcio+rkfCJirv3aPyWeCVIZY3EQMvLjH/08=;
+	s=default; t=1691637640;
+	bh=ZRjJK9TO0Kh+oqy8NFNgUNVHu1d04LQHN4wnO364oMU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KZyjv/NYdyOILFPhqqmcuZeTpQfn+QjhnJtpxkjS+pEYj0IpLVgOOtukYWosIrf8w
-	 2V5U8VzLszMWqYg5/6gdujsHbA1MMnCZyETTndlFumc9J0f2k+NAi7cMQtMFWiTYa9
-	 3mIuybI6KVqlvxNs3W0EEEIXsFDzzLCtXXraZXBk=
-Received: from [IPv6:2409:8a0c:2a4:2170:40dc:a500:81f0:2] (unknown [IPv6:2409:8a0c:2a4:2170:40dc:a500:81f0:2])
+	b=i7NJL4nYaNSqA2zY3DyYUXUi33suyrd5kzo3KjY4dLOL9XqSBO6+U4tYHPvsrpDVh
+	 4hSOYE1rI0iuEBUUaMlSRbL5/Tn4ZHkdcGusTSdxp2kB5/W8u9b4iDcaiX8V8bjbm1
+	 sOZIO62fkRJ3/BTq1b27ZrupdxjxuecXcnllQeP8=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 9E02D659AD;
-	Wed,  9 Aug 2023 07:58:53 -0400 (EDT)
-Message-ID: <0d491d44407051993e5b68b6f9ef67d4060db6c4.camel@xry111.site>
-Subject: Re: [PATCH v1 5/6] objtool: Add skipped member in struct reloc
+	by xry111.site (Postfix) with ESMTPSA id 5AF79659AD;
+	Wed,  9 Aug 2023 23:20:37 -0400 (EDT)
+Message-ID: <ce4cee2d76340d1776560c124c1894080ded13bb.camel@xry111.site>
+Subject: Re: [PATCH V2] LoongArch: Fix module relocation error with binutils
+ 2.41
 From: Xi Ruoyao <xry111@xry111.site>
-To: Peter Zijlstra <peterz@infradead.org>, Tiezhu Yang
- <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>,  loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org,  loongson-kernel@lists.loongnix.cn
-Date: Wed, 09 Aug 2023 19:58:20 +0800
-In-Reply-To: <b6b596a1311d9a26e19ee831a2f8161c175c4ad6.camel@xry111.site>
-References: <1690272910-11869-1-git-send-email-yangtiezhu@loongson.cn>
-	 <1690272910-11869-6-git-send-email-yangtiezhu@loongson.cn>
-	 <20230725115959.GE3765278@hirez.programming.kicks-ass.net>
-	 <b111cb87-3f30-860a-640b-2f7264a16838@loongson.cn>
-	 <20230803121103.GE214207@hirez.programming.kicks-ass.net>
-	 <b6b596a1311d9a26e19ee831a2f8161c175c4ad6.camel@xry111.site>
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li
+ <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang
+ <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn, WANG
+ Xuerui <git@xen0n.name>, stable@vger.kernel.org
+Date: Thu, 10 Aug 2023 11:20:35 +0800
+In-Reply-To: <20230710050024.2519893-1-chenhuacai@loongson.cn>
+References: <20230710050024.2519893-1-chenhuacai@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 
@@ -43,48 +41,53 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Wed, 2023-08-09 at 19:51 +0800, Xi Ruoyao wrote:
-> On Thu, 2023-08-03 at 14:11 +0200, Peter Zijlstra wrote:
-> > On Thu, Aug 03, 2023 at 07:36:24PM +0800, Tiezhu Yang wrote:
-> >=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0".long " __stringify_label(c) "b - .\n\t"=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 \
-> >=20
-> > > I discussed offline with the engineers who are familiar with gnu
-> > > assembler of LoongArch, maybe it can modify the gnu assembler
-> > > to use R_LARCH_32_PCREL to replace a pair of R_LARCH_ADD32 and
-> > > R_LARCH_SUB32, then I will test it again and drop this change if
-> > > possible.
+Can we backport this patch into stable?  It fixes a build error with
+binutils >=3D 2.41.
+
+On Mon, 2023-07-10 at 13:00 +0800, Huacai Chen wrote:
+> Binutils 2.41 enables linker relaxation by default, but the kernel
+> module loader doesn't support that, so just disable it. Otherwise we
+> get such an error when loading modules:
 >=20
-> Hmm, but I don't like the idea to disallow users having GAS <=3D 2.41 fro=
-m
-> using ORC unwinder.
+> "Unknown relocation type 102"
 >=20
-> Can we emit the R_LARCH_32_PCREL reloc with an explicit .reloc
-> directive?
+> As an alternative, we could add linker relaxation support in the kernel
+> module loader. But it is relatively large complexity that may or may not
+> bring a similar gain, and we don't really want to include this linker
+> pass in the kernel.
+>=20
+> Reviewed-by: WANG Xuerui <git@xen0n.name>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> =C2=A0arch/loongarch/Makefile | 2 ++
+> =C2=A01 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index 09ba338a64de..7466d3b15db8 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -68,6 +68,8 @@ LDFLAGS_vmlinux=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0+=3D -static -n -nostdlib
+> =C2=A0ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
+> =C2=A0cflags-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0+=3D $(call cc-option,-mexplicit-relocs)
+> =C2=A0KBUILD_CFLAGS_KERNEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0+=3D $(call cc-option,-mdirect-extern-access)
+> +KBUILD_AFLAGS_MODULE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0+=3D $(call cc-option,-mno-relax) $(call cc-option,-Wa$(comm=
+a)-mno-relax)
+> +KBUILD_CFLAGS_MODULE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0+=3D $(call cc-option,-mno-relax) $(call cc-option,-Wa$(comm=
+a)-mno-relax)
+> =C2=A0else
+> =C2=A0cflags-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0+=3D $(call cc-option,-mno-explicit-relocs)
+> =C2=A0KBUILD_AFLAGS_KERNEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0+=3D -Wa,-mla-global-with-pcrel
 
-Answering myself: "maybe", I've written a simple PoC:
-
-$ cat t.s
-.global main
-main:
-  la.pcrel $t0, f
-  ld.w     $t1, $t0, 0
-  ldx.d    $a0, $t1, $t0
-  jr       $ra
-
-t:
-  .dword   42
-  .zero    64
-
-f:
-  .reloc   f, R_LARCH_32_PCREL, t
-  .word    0
-$ ./a.out
-$ echo $?
-42
 --=20
 Xi Ruoyao <xry111@xry111.site>
 School of Aerospace Science and Technology, Xidian University
