@@ -1,94 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0998833
-	for <loongarch@lists.linux.dev>; Fri, 11 Aug 2023 22:12:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E32E2C433CA
-	for <loongarch@lists.linux.dev>; Fri, 11 Aug 2023 22:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8DF2F4E
+	for <loongarch@lists.linux.dev>; Fri, 11 Aug 2023 22:55:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB14C433C7;
+	Fri, 11 Aug 2023 22:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691791968;
-	bh=ztw9IXTA9/o6jaHf5DITJvd7l5VINrbwaZzjvo3d3O0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uUPFTBB08EOS4nMKfiFUUOzChah5Dg/RYwu7Ik5rWGcDHWm/jxfltkBZis4rcmkUJ
-	 3Lp+qPAdbRZbdEyja4szRTUwd+le6KB4L6gvHIM0NoRUFYFlq+dJI9Y3KpAk27Se8b
-	 IDTvENSEUg9/1NNW/r0MEWv9b/M+aSD/Wzt0aeP6eJLRdZnflqAHb4ahOWvI6iVfc3
-	 X+Y4GaruaHkvXAheF5TC0Gmuy2E6kQLMQprZwHnXZRirMGrqDFELxLSTRx5JmHEV1w
-	 UXOKBzOQjBi2pJbJsA87zJTXgz7EigE/l2LaQ5cVHa2jnPGdlQH+jVm2ckDwqUgbiS
-	 yHzoGFkDK12Ww==
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6bca857accbso2251439a34.0
-        for <loongarch@lists.linux.dev>; Fri, 11 Aug 2023 15:12:48 -0700 (PDT)
-X-Gm-Message-State: AOJu0YydhfANU/XHI/Aaqe8EhDK5beul/SioCSp/xxUrvcezVH1KCJ7H
-	OZFVvKAhrSGGn8HXhvJt0V69XAwcJtxdgOl/HRY=
-X-Google-Smtp-Source: AGHT+IEfdh6kicIrknsxiZKaSFGvZfQmiVUjcpL/vCCk+9ZURRj1QpbiA7Cy9bUe7RrCZOfhVLBG72d4hMvpBQTz44w=
-X-Received: by 2002:a05:6870:82a4:b0:1c0:d0e8:8ff0 with SMTP id
- q36-20020a05687082a400b001c0d0e88ff0mr3207005oae.17.1691791968250; Fri, 11
- Aug 2023 15:12:48 -0700 (PDT)
+	s=k20201202; t=1691794504;
+	bh=Q7V6f7/a5wP37cs01XRxe2wZwIO73qbygkYyOw3BkFQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZYWoaL8RsWyaAYVEnKcLFqSuK0f1ISsWkHQLVktDvPTAoOzkLQ8IlCzMeESoIHxn7
+	 Dh6VXuaZyGKX6CVbCr3t08TF8cNcFQKFqyGzg50Wg1wPDJixzknxolW1mE4SvgR4UH
+	 UgHUJqDKw/ftaxOFbQFijVoiMIcTGL+dRRuksMkkEpo/q+9Lv7UIVGMCbKkuNbSsS9
+	 fBE5bv9eKazXyhOHbtekF77k1uSBa2kt3CWj5XzjozvWmRxFB2HTln0U5Cht9XaEO+
+	 TaGqa61nOqPs+ZrSVlExJ/V7WP1Y1NlXj8d2XBEvO4cDJeULK7BGPNJ0K1eESooaEM
+	 R2MW1qpf7FP+Q==
+Date: Fri, 11 Aug 2023 17:55:00 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sui Jingfeng <suijingfeng@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Li Yi <liyi@loongson.cn>, linux-pci@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH] LoongArch: Remove vgaarb related workarounds
+Message-ID: <20230811225500.GA118486@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230810141947.1236730-1-arnd@kernel.org> <20230810141947.1236730-16-arnd@kernel.org>
-In-Reply-To: <20230810141947.1236730-16-arnd@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 12 Aug 2023 07:12:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARfEmFk0Du4Hed19eX_G6tUC5wG0zP+L1AyvdpOF4ybXQ@mail.gmail.com>
-Message-ID: <CAK7LNARfEmFk0Du4Hed19eX_G6tUC5wG0zP+L1AyvdpOF4ybXQ@mail.gmail.com>
-Subject: Re: [PATCH 15/17] arch: fix asm-offsets.c building with -Wmissing-prototypes
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	"David S. Miller" <davem@davemloft.net>, Al Viro <viro@zeniv.linux.org.uk>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, Qing Zhang <zhangqing@loongson.cn>, 
-	Donglin Peng <pengdonglin@sangfor.com.cn>, Qi Hu <huqi@loongson.cn>, 
-	linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230801185607.703295-1-suijingfeng@loongson.cn>
 
-On Sat, Aug 12, 2023 at 3:30=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wro=
-te:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> When -Wmissing-prototypes is enabled, the some asm-offsets.c files fail
-> to build, even when this warning is disabled in the Makefile for normal
-> files:
->
-> arch/sparc/kernel/asm-offsets.c:22:5: error: no previous prototype for 's=
-parc32_foo' [-Werror=3Dmissing-prototypes]
-> arch/sparc/kernel/asm-offsets.c:48:5: error: no previous prototype for 'f=
-oo' [-Werror=3Dmissing-prototypes]
->
-> Address this by making use of the same trick we have on other architectur=
-es,
-> renaming the unused global function to main(), which has an implicit
-> prototype.
+On Wed, Aug 02, 2023 at 02:56:07AM +0800, Sui Jingfeng wrote:
+> When we have a better approach[1] to handle multiple video cards problems
+> on Loongarch, we want to drop the vgaarb related workaround.
+> 
+> [1] https://patchwork.freedesktop.org/patch/550708/?series=121740&rev=1
 
+If I understand correctly, this patch depends on [1].  The way you do
+this is to send both patches in a single series, e.g.,
 
-main() only works for one function call, but
-there are some cases where splitting the code
-into some functions makes the code cleaner.
+  [PATCH 0/2] <cover letter>
+  [PATCH 1/2] PCI/VGA: Make the vga_is_firmware_default() less arch-independent
+  [PATCH 2/2] LoongArch: Remove vgaarb related workarounds
 
-
-
-
-> On loongarch, there are many functions in this file, so the trick does
-> not work, adding explicit declarations works around it in a slightly
-> more ugly way but is the best I could come up with here.
-
-I do not like repeating the function names.
-
-Could you try "static + __used" as in
-arch/x86/kernel/asm-offsets.c ?
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Li Yi <liyi@loongson.cn>
+> Cc: linux-pci@vger.kernel.org
+> Cc: loongson-kernel@lists.loongnix.cn
+> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+> ---
+>  arch/loongarch/pci/pci.c | 19 -------------------
+>  1 file changed, 19 deletions(-)
+> 
+> diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
+> index 2726639150bc..4319b5d75872 100644
+> --- a/arch/loongarch/pci/pci.c
+> +++ b/arch/loongarch/pci/pci.c
+> @@ -8,13 +8,10 @@
+>  #include <linux/acpi.h>
+>  #include <linux/types.h>
+>  #include <linux/pci.h>
+> -#include <linux/vgaarb.h>
+>  #include <asm/cacheflush.h>
+>  #include <asm/loongson.h>
+>  
+>  #define PCI_DEVICE_ID_LOONGSON_HOST     0x7a00
+> -#define PCI_DEVICE_ID_LOONGSON_DC1      0x7a06
+> -#define PCI_DEVICE_ID_LOONGSON_DC2      0x7a36
+>  
+>  int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
+>  						int reg, int len, u32 *val)
+> @@ -82,19 +79,3 @@ int pcibios_alloc_irq(struct pci_dev *dev)
+>  		return 0;
+>  	return acpi_pci_irq_enable(dev);
+>  }
+> -
+> -static void pci_fixup_vgadev(struct pci_dev *pdev)
+> -{
+> -	struct pci_dev *devp = NULL;
+> -
+> -	while ((devp = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, devp))) {
+> -		if (devp->vendor != PCI_VENDOR_ID_LOONGSON) {
+> -			vga_set_default_device(devp);
+> -			dev_info(&pdev->dev,
+> -				"Overriding boot device as %X:%X\n",
+> -				devp->vendor, devp->device);
+> -		}
+> -	}
+> -}
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC1, pci_fixup_vgadev);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC2, pci_fixup_vgadev);
+> -- 
+> 2.34.1
+> 
