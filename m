@@ -1,182 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F906219DA
-	for <loongarch@lists.linux.dev>; Fri, 11 Aug 2023 20:49:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B63C433C7;
-	Fri, 11 Aug 2023 20:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0998833
+	for <loongarch@lists.linux.dev>; Fri, 11 Aug 2023 22:12:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E32E2C433CA
+	for <loongarch@lists.linux.dev>; Fri, 11 Aug 2023 22:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691786981;
-	bh=rV9vbzJcsDLbrTR0r62C6mgt6aJt3bQ6a1I4S900+ww=;
-	h=From:To:Cc:Subject:Date:From;
-	b=T0bAa0PN1KA5EthJaDC9+dL6YBE6UjrSrya80R1VV6DSTfajxLg5cWsfwKpF3td/O
-	 UcISOPLdoMSw4gSAmBW86S3QQFiKaHRQpAvSr8P4jFCkiUzQCah09SKYOKTundA/L9
-	 4YVzBescJsuOVOxgn4nOhi/hvmWMBAy2GH/KKyhL14fQD/IsL2G27Q/8asbXy09I+h
-	 CSwl2zppsK27+7US684h4qL69LpJtKIK1s3OjZ4rb5JGd3Ug+1vrvIb7SpEpj0t6CG
-	 XTyo27PT57hcpSizPl/ZLuy60M9MRzd+GeoA8SIijIBp7kHSv1qAhM0euWs8NZ0nCV
-	 vchy9g/BjCiKA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev,
-	WANG Xuerui <kernel@xen0n.name>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH] asm-generic: partially revert "Unify uapi bitsperlong.h for arm64, riscv and loongarch"
-Date: Fri, 11 Aug 2023 22:49:07 +0200
-Message-Id: <20230811204930.1529925-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=k20201202; t=1691791968;
+	bh=ztw9IXTA9/o6jaHf5DITJvd7l5VINrbwaZzjvo3d3O0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uUPFTBB08EOS4nMKfiFUUOzChah5Dg/RYwu7Ik5rWGcDHWm/jxfltkBZis4rcmkUJ
+	 3Lp+qPAdbRZbdEyja4szRTUwd+le6KB4L6gvHIM0NoRUFYFlq+dJI9Y3KpAk27Se8b
+	 IDTvENSEUg9/1NNW/r0MEWv9b/M+aSD/Wzt0aeP6eJLRdZnflqAHb4ahOWvI6iVfc3
+	 X+Y4GaruaHkvXAheF5TC0Gmuy2E6kQLMQprZwHnXZRirMGrqDFELxLSTRx5JmHEV1w
+	 UXOKBzOQjBi2pJbJsA87zJTXgz7EigE/l2LaQ5cVHa2jnPGdlQH+jVm2ckDwqUgbiS
+	 yHzoGFkDK12Ww==
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6bca857accbso2251439a34.0
+        for <loongarch@lists.linux.dev>; Fri, 11 Aug 2023 15:12:48 -0700 (PDT)
+X-Gm-Message-State: AOJu0YydhfANU/XHI/Aaqe8EhDK5beul/SioCSp/xxUrvcezVH1KCJ7H
+	OZFVvKAhrSGGn8HXhvJt0V69XAwcJtxdgOl/HRY=
+X-Google-Smtp-Source: AGHT+IEfdh6kicIrknsxiZKaSFGvZfQmiVUjcpL/vCCk+9ZURRj1QpbiA7Cy9bUe7RrCZOfhVLBG72d4hMvpBQTz44w=
+X-Received: by 2002:a05:6870:82a4:b0:1c0:d0e8:8ff0 with SMTP id
+ q36-20020a05687082a400b001c0d0e88ff0mr3207005oae.17.1691791968250; Fri, 11
+ Aug 2023 15:12:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230810141947.1236730-1-arnd@kernel.org> <20230810141947.1236730-16-arnd@kernel.org>
+In-Reply-To: <20230810141947.1236730-16-arnd@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 12 Aug 2023 07:12:12 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARfEmFk0Du4Hed19eX_G6tUC5wG0zP+L1AyvdpOF4ybXQ@mail.gmail.com>
+Message-ID: <CAK7LNARfEmFk0Du4Hed19eX_G6tUC5wG0zP+L1AyvdpOF4ybXQ@mail.gmail.com>
+Subject: Re: [PATCH 15/17] arch: fix asm-offsets.c building with -Wmissing-prototypes
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	"David S. Miller" <davem@davemloft.net>, Al Viro <viro@zeniv.linux.org.uk>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>, Qing Zhang <zhangqing@loongson.cn>, 
+	Donglin Peng <pengdonglin@sangfor.com.cn>, Qi Hu <huqi@loongson.cn>, 
+	linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Sat, Aug 12, 2023 at 3:30=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wro=
+te:
+>
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> When -Wmissing-prototypes is enabled, the some asm-offsets.c files fail
+> to build, even when this warning is disabled in the Makefile for normal
+> files:
+>
+> arch/sparc/kernel/asm-offsets.c:22:5: error: no previous prototype for 's=
+parc32_foo' [-Werror=3Dmissing-prototypes]
+> arch/sparc/kernel/asm-offsets.c:48:5: error: no previous prototype for 'f=
+oo' [-Werror=3Dmissing-prototypes]
+>
+> Address this by making use of the same trick we have on other architectur=
+es,
+> renaming the unused global function to main(), which has an implicit
+> prototype.
 
-Unifying the asm-generic headers across 32-bit and 64-bit architectures
-based on the compiler provided macros was a good idea and appears to work
-with all user space, but it caused a regression when building old kernels
-on systems that have the new headers installed in /usr/include, as this
-combination trips an inconsistency in the kernel's own tools/include
-headers that are a mix of userspace and kernel-internal headers.
 
-This affects kernel builds on arm64, riscv64 and loongarch64 systems that
-might end up using the "#define __BITS_PER_LONG 32" default from the old
-tools headers. Backporting the commit into stable kernels would address
-this, but it would still break building kernels without that backport,
-and waste time for developers trying to understand the problem.
+main() only works for one function call, but
+there are some cases where splitting the code
+into some functions makes the code cleaner.
 
-arm64 build machines are rather common, and on riscv64 this can also
-happen in practice, but loongarch64 is probably new enough to not
-be used much for building old kernels, so only revert the bits
-for arm64 and riscv.
 
-Link: https://lore.kernel.org/all/20230731160402.GB1823389@dev-arch.thelio-3990X/
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Fixes: 8386f58f8deda ("asm-generic: Unify uapi bitsperlong.h for arm64, riscv and loongarch")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm64/include/uapi/asm/bitsperlong.h     | 24 +++++++++++++++++++
- arch/riscv/include/uapi/asm/bitsperlong.h     | 14 +++++++++++
- .../arch/arm64/include/uapi/asm/bitsperlong.h | 24 +++++++++++++++++++
- .../arch/riscv/include/uapi/asm/bitsperlong.h | 14 +++++++++++
- 4 files changed, 76 insertions(+)
- create mode 100644 arch/arm64/include/uapi/asm/bitsperlong.h
- create mode 100644 arch/riscv/include/uapi/asm/bitsperlong.h
- create mode 100644 tools/arch/arm64/include/uapi/asm/bitsperlong.h
- create mode 100644 tools/arch/riscv/include/uapi/asm/bitsperlong.h
 
-diff --git a/arch/arm64/include/uapi/asm/bitsperlong.h b/arch/arm64/include/uapi/asm/bitsperlong.h
-new file mode 100644
-index 0000000000000..485d60bee26ca
---- /dev/null
-+++ b/arch/arm64/include/uapi/asm/bitsperlong.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (C) 2012 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#ifndef __ASM_BITSPERLONG_H
-+#define __ASM_BITSPERLONG_H
-+
-+#define __BITS_PER_LONG 64
-+
-+#include <asm-generic/bitsperlong.h>
-+
-+#endif	/* __ASM_BITSPERLONG_H */
-diff --git a/arch/riscv/include/uapi/asm/bitsperlong.h b/arch/riscv/include/uapi/asm/bitsperlong.h
-new file mode 100644
-index 0000000000000..7d0b32e3b7017
---- /dev/null
-+++ b/arch/riscv/include/uapi/asm/bitsperlong.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-+/*
-+ * Copyright (C) 2012 ARM Ltd.
-+ * Copyright (C) 2015 Regents of the University of California
-+ */
-+
-+#ifndef _UAPI_ASM_RISCV_BITSPERLONG_H
-+#define _UAPI_ASM_RISCV_BITSPERLONG_H
-+
-+#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
-+
-+#include <asm-generic/bitsperlong.h>
-+
-+#endif /* _UAPI_ASM_RISCV_BITSPERLONG_H */
-diff --git a/tools/arch/arm64/include/uapi/asm/bitsperlong.h b/tools/arch/arm64/include/uapi/asm/bitsperlong.h
-new file mode 100644
-index 0000000000000..485d60bee26ca
---- /dev/null
-+++ b/tools/arch/arm64/include/uapi/asm/bitsperlong.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (C) 2012 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#ifndef __ASM_BITSPERLONG_H
-+#define __ASM_BITSPERLONG_H
-+
-+#define __BITS_PER_LONG 64
-+
-+#include <asm-generic/bitsperlong.h>
-+
-+#endif	/* __ASM_BITSPERLONG_H */
-diff --git a/tools/arch/riscv/include/uapi/asm/bitsperlong.h b/tools/arch/riscv/include/uapi/asm/bitsperlong.h
-new file mode 100644
-index 0000000000000..0b9b58b57ff6e
---- /dev/null
-+++ b/tools/arch/riscv/include/uapi/asm/bitsperlong.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2012 ARM Ltd.
-+ * Copyright (C) 2015 Regents of the University of California
-+ */
-+
-+#ifndef _UAPI_ASM_RISCV_BITSPERLONG_H
-+#define _UAPI_ASM_RISCV_BITSPERLONG_H
-+
-+#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
-+
-+#include <asm-generic/bitsperlong.h>
-+
-+#endif /* _UAPI_ASM_RISCV_BITSPERLONG_H */
--- 
-2.39.2
 
+> On loongarch, there are many functions in this file, so the trick does
+> not work, adding explicit declarations works around it in a slightly
+> more ugly way but is the best I could come up with here.
+
+I do not like repeating the function names.
+
+Could you try "static + __used" as in
+arch/x86/kernel/asm-offsets.c ?
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
