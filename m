@@ -1,54 +1,56 @@
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7E21CCBD
-	for <loongarch@lists.linux.dev>; Sat, 12 Aug 2023 08:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB0C1CCCC
+	for <loongarch@lists.linux.dev>; Sat, 12 Aug 2023 12:25:28 +0000 (UTC)
 Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 53EDC580361;
-	Sat, 12 Aug 2023 04:02:32 -0400 (EDT)
+	by mailout.nyi.internal (Postfix) with ESMTP id D7A935C00F2;
+	Sat, 12 Aug 2023 08:25:27 -0400 (EDT)
 Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Sat, 12 Aug 2023 04:02:32 -0400
+  by compute6.internal (MEProxy); Sat, 12 Aug 2023 08:25:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1691827352; x=1691834552; bh=B7
-	pOJdGFDOf/BCasjh0dVOxmA3Mm35lZV2aH6kqC0w8=; b=F8VTMnEu+WAEaSI8ev
-	8dpIfLM4+oZGC3Fvpn68KvPIKWsfcU17SQhjwHufScXsMsXDuwt6XeedGUhblfys
-	hs4xce37xNWNfWz8ej1A5ttaAvhOmMOB9IsLSlLkKJvdTPf8pe8EK/EKye4odYV3
-	iy0q7v1DVZZC2m89e6fF8SXEcU9ZTHRRD4NDR38GwL+pLR3MBK5Wg/T9GKyH0Sd+
-	g5MnZwZwhYg6nK5jXydKxkuqxQ4dCh2n1DIO6sGkaB6ILOYrbarjNwmRThbHDQoQ
-	1qCixnwaubCrx4LoC9y/tkCZnWvuaCmjXATLNxjkdSLgyNKu8b7A8D9PrJ+WT9kC
-	9bIg==
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+	1691843127; x=1691929527; bh=+DE7K+FkDwlmdeL3CpVV/dlir8qOYF4EGSw
+	DTQ8Iztc=; b=JArr1yVWNA+hyM/8PmwyBL5cCOeyn7ppUeMvEj3q6erbi0eVawO
+	867hmjCwtRzshjj2II9l4BZKRuGGCWLMkuP/Tz/OAalpUsmZM1BJGT78l2AG0a7d
+	gIR73l20BuTSrI5WwqBqiou8kAjZCn4k+C8idCsQE+gb5gn6UUA9mKj46tB92fj5
+	esXxYeS5cZLNSKqyZBfQM8S5e4522oHRV0grJaSo3Y7WR0DwZXZ02YsllhwdAwrP
+	Q0IflLIBUqovRLVQ784WxamIL05exxJ5WruA/DK7ljvJndImRdIqE9o+MMDk+YKp
+	vAXNEpdE8rvzXzC1CM81oyXljQQcVSJi+mw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1691827352; x=1691834552; bh=B7pOJdGFDOf/B
-	Casjh0dVOxmA3Mm35lZV2aH6kqC0w8=; b=c/aTYYn0Z+cUZ0NUCJyxNWN19dfUg
-	zkqsvmm3RuR5hIpA4ulOuDJXk+/83/3VaTcoCM//o6Ejm5/10o00E18HZJtG2gjG
-	6ZD6EGdHPChzsNs8ZKlj3wVJzWX+8UIRfbTT87iX5r3/vwD6ozaK1rEEeh1mVM/7
-	ra8F2i5GMdsnVTdDrdjlBljSZ6ErxvHL5socxr9xLP9SiAqbHq+clCY8FxlbffSt
-	t/wYBLNxLxzyLcJOnLcaAVUvkAV5XyzC8eUdOSrWMUCz7WvMZW+ySI1H9VAu8OQw
-	u5wsUq03BMEVxII/bvgwpjG1G4TqNwrLfsdkTzjkHEit7bawAdaWny+NA==
-X-ME-Sender: <xms:lDzXZATraP3ZZ30zeDvLHggEXgACbDwq6WZEn9H5Pxv5O7fJZgN-1g>
-    <xme:lDzXZNzEd5ApK265BQp2jyMbtIjXWUUk-EQ4i2TIeOVzMnojFPXp0tcfjkGjcF-BV
-    BkVhX5oezoCsQ0RLA8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrleelgdduvdehucetufdoteggodetrfdotf
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1691843127; x=1691929527; bh=+DE7K+FkDwlmdeL3CpVV/dlir8qOYF4EGSw
+	DTQ8Iztc=; b=Az+t/QSiqKmMPqKtoziHfe7jvt4TJZzOE1fILZdhkcUAndG4fn8
+	eAreGmEkLX/xwFMV0GsoLrVMOhFDfXCIJD3LJ/0phyC2Q8PDF1n7Cxq1tuE4L7G3
+	9sDzitcmlA8w8LoYLCUxLxF+YLQj6fDGzTSfNN8Axz7WJbkXKFqHM5OEoTyzLQek
+	Ff+9ZflUFUQmEyZNs5D0IUgSCQeLiABn/iMNOpkAPEE8DxrbtuihPDk8qR1qEjN5
+	Y+tjaINHK7bM0/uSb3RlrvuJJb/KXXMGdOBsej/cCwkKqyy3sW7mLqKaZET0DGhf
+	gQoJPttwz9jPteAjvxC47AVo3AX0ZLrLjGg==
+X-ME-Sender: <xms:NnrXZIzvzHGDioQfqPjdOYWvVqV7l4pnddLNQ9kqdvM7IZ5lS267EQ>
+    <xme:NnrXZMTifxguaVpAQlXXwXslDwd56SoT_D1BJsSPRC08gVTabjHd5tg5qWZAMTTAM
+    13ktE_tmuUa2w22Pxo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddttddghedtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:lDzXZN3RDFhUYL5CdRmcDHLd0GstqaBIOVltd_DYF6yURxVhph5pLg>
-    <xmx:lDzXZEBVoWRKU5vHFm1ry0MHXHCkhvfn437jYMw8d9jeyK3WoRORsQ>
-    <xmx:lDzXZJiQjB7YnsdHMe0qXCv5ZiPTJN47Loj4zXcgJPZpRfqeXqacsw>
-    <xmx:mDzXZKK2u_iymKCkBM9SdskqG7gJ76GE3P_8rJMuOXVnDraQ-7hFrw>
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeettedttdefhfekueduvedutdejudetgfekgfegfefhjeejteegveehtdeh
+    veejgfenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhlihhnuhigqdhmihhpshdroh
+    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegr
+    rhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:NnrXZKX9P1BhvMJDQMMiY_IYIPZHOeNBSEWK5rOrNIWPbKu4bpWFiA>
+    <xmx:NnrXZGipINhmUz8Wv4-kl9WFBgJe4FtJ4ccxqF68HUAyxkE0vI43KQ>
+    <xmx:NnrXZKBVP_aSNVnYmUKzXmng-IlmF0BY_vpf_iyUsGyelQuMHLJVrg>
+    <xmx:N3rXZGzh1zo1LBJT5Oeh7YcR2sxGyGV06W2jhv1PJY6SUMznMbBNsg>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 3DD63B60089; Sat, 12 Aug 2023 04:02:28 -0400 (EDT)
+	id A7436B60089; Sat, 12 Aug 2023 08:25:26 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
 Precedence: bulk
@@ -57,88 +59,90 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-Message-Id: <13f9c06a-f840-4010-ae2f-97d8b2883e76@app.fastmail.com>
-In-Reply-To: <ZNaVYh2qi0VQQKWf@antec>
-References: <20230810141947.1236730-1-arnd@kernel.org>
- <20230810141947.1236730-17-arnd@kernel.org> <ZNaVYh2qi0VQQKWf@antec>
-Date: Sat, 12 Aug 2023 10:02:07 +0200
+Message-Id: <6d7335b4-63e2-4a7e-9620-8a0012558dfd@app.fastmail.com>
+In-Reply-To: <8efeac46-ebb7-fa05-3d88-7c21acd59c8b@loongson.cn>
+References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
+ <20230803063703.5659-2-zhuyinbo@loongson.cn>
+ <193f9138-57e0-4d4b-8225-54d38be9bfbc@app.fastmail.com>
+ <8efeac46-ebb7-fa05-3d88-7c21acd59c8b@loongson.cn>
+Date: Sat, 12 Aug 2023 14:25:05 +0200
 From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Stafford Horne" <shorne@gmail.com>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Andrew Morton" <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, "Matt Turner" <mattst88@gmail.com>,
- "Vineet Gupta" <vgupta@kernel.org>,
- "Russell King" <linux@armlinux.org.uk>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, guoren <guoren@kernel.org>,
- "Brian Cain" <bcain@quicinc.com>, "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Michal Simek" <monstr@monstr.eu>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Dinh Nguyen" <dinguyen@kernel.org>, "Jonas Bonn" <jonas@southpole.se>,
- "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Helge Deller" <deller@gmx.de>, "Michael Ellerman" <mpe@ellerman.id.au>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Heiko Carstens" <hca@linux.ibm.com>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- x86@kernel.org, "Borislav Petkov" <bp@alien8.de>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Guenter Roeck" <linux@roeck-us.net>,
- "Stephen Rothwell" <sfr@canb.auug.org.au>,
- linux-next <linux-next@vger.kernel.org>, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org,
- "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
- sparclinux@vger.kernel.org,
- "Richard Henderson" <richard.henderson@linaro.org>,
- "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
- "Stefan Kristiansson" <stefan.kristiansson@saunalahti.fi>,
- "Yoshinori Sato" <ysato@users.sourceforge.jp>,
- "Rich Felker" <dalias@libc.org>,
- "David S . Miller" <davem@davemloft.net>,
- "Chris Zankel" <chris@zankel.net>, "Max Filippov" <jcmvbkbc@gmail.com>,
- "Christian Brauner" <brauner@kernel.org>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>,
- "Youling Tang" <tangyouling@loongson.cn>,
- "Tiezhu Yang" <yangtiezhu@loongson.cn>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Randy Dunlap" <rdunlap@infradead.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Miguel Ojeda" <ojeda@kernel.org>,
- "Zhen Lei" <thunder.leizhen@huawei.com>, "Xin Li" <xin3.li@intel.com>,
- "Nhat Pham" <nphamcs@gmail.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Marc_Aur=C3=A8le_La_France?= <tsi@tuyoix.net>,
- "Johannes Weiner" <hannes@cmpxchg.org>, linux-parisc@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 16/17] [RFC] arch: turn -Wmissing-prototypes off conditionally
-Content-Type: text/plain
+To: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
+ "Ulf Hansson" <ulf.hansson@linaro.org>
+Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+ "Liu Peibao" <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
+ loongarch@lists.linux.dev, "Liu Yun" <liuyun@loongson.cn>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v6 1/2] soc: dt-bindings: add loongson-2 pm
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 11, 2023, at 22:09, Stafford Horne wrote:
-> On Thu, Aug 10, 2023 at 04:19:34PM +0200, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
-
->> arch/openrisc/mm/fault.c:44:17: error: no previous prototype for 'do_page_fault' [-Werror=missing-prototypes]
->> arch/openrisc/mm/tlb.c:188:13: error: no previous prototype for 'tlb_init' [-Werror=missing-prototypes]
+On Fri, Aug 4, 2023, at 04:54, Yinbo Zhu wrote:
+> =E5=9C=A8 2023/8/3 =E4=B8=8B=E5=8D=883:44, Arnd Bergmann =E5=86=99=E9=81=
+=93:
+>> On Thu, Aug 3, 2023, at 08:37, Yinbo Zhu wrote:
+>>=20
+>>> +  loongson,suspend-address:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint64
+>>> +    description:
+>>> +      The "loongson,suspend-address" is a deep sleep state (Suspend=
+ To
+>>> +      RAM) firmware entry address which was jumped from kernel and =
+it's
+>>> +      value was dependent on specific platform firmware code. In
+>>> +      addition, the PM need according to it to indicate that current
+>>> +      SoC whether support Suspend To RAM.
+>>> +
+>>=20
+>> I just commented on this in the driver patch, assuming this
+>> was an MMIO address, but I'm even more confused now, since
+>> we try hard to not rely on being able to just interface with
+>> firmware like this.
+>>=20
+>> If this is executable code, where does this actually reside?
 >
-> I'll try to get these fixed for 6.6.  I was looking at them recently but did not
-> actually make any changes and just put on my TODO.  Your series moves it up in
-> priority and it should be easy to get the fixes out.
+>
+> Pmon firmware code.
+>
+>> Is this some SRAM that needs to execute the suspend logic
+>> in order to shut down memory and cache controllers?=20
+>
+>
+> Yes, The suspend-to-ram after into pmon firmware code and set
+> self-refresh mode in memory controller and ensure that memory data is
+> not lost then shut down memory controller.
 
-Thanks!
+I'm sorry I missed your reply earlier, getting back to the
+thread now. So it's clear that this code needs to run in a
+special memory from your description, but I'm still trying
+to understand the details better.
 
-Since we already have the majority of architecture maintainers stepping
-in to fix the warnings, I wonder if I should just drop my patch 16/17
-completely and let the others handle it as well rather than shutting up
-the warnings. Only the asm-offsets change is really needed to compile
-test most of the kernel even with CONFIG_WERROR, and without that this
-is just some harmless output.
+I found https://github.com/loongson-community/pmon source
+code, and a reference to its origin at LSI Logic at
+https://www.linux-mips.org/wiki/PMON but otherwise have
+no idea about what this actually is, or how it relates
+to your UEFI firmware. Did you add UEFI support to PMON,
+or do you use it as a first stage loader that loads
+the actual UEFI implementation (EDK2 or u-boot, I guess)?
 
-    Arnd
+>> Or is
+>> this a runtime firmware interface similar to how UEFI handles
+>> its runtime services to keep the implementation out of
+>> the kernel?
+>
+>
+> No, The main cpu and other cpu will offline that after into firmware a=
+nd
+> finished Corresponding operations, the pmon firmware will not run.
+
+I'm still trying to understand your explanations here.
+You say that pmon no longer runs, but that seems to contradict
+what you said earlier about branching into pmon firmware code
+for suspend.
+
+Is this executing directly from ROM then?
+
+       Arnd
