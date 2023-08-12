@@ -1,100 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8DF2F4E
-	for <loongarch@lists.linux.dev>; Fri, 11 Aug 2023 22:55:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB14C433C7;
-	Fri, 11 Aug 2023 22:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691794504;
-	bh=Q7V6f7/a5wP37cs01XRxe2wZwIO73qbygkYyOw3BkFQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZYWoaL8RsWyaAYVEnKcLFqSuK0f1ISsWkHQLVktDvPTAoOzkLQ8IlCzMeESoIHxn7
-	 Dh6VXuaZyGKX6CVbCr3t08TF8cNcFQKFqyGzg50Wg1wPDJixzknxolW1mE4SvgR4UH
-	 UgHUJqDKw/ftaxOFbQFijVoiMIcTGL+dRRuksMkkEpo/q+9Lv7UIVGMCbKkuNbSsS9
-	 fBE5bv9eKazXyhOHbtekF77k1uSBa2kt3CWj5XzjozvWmRxFB2HTln0U5Cht9XaEO+
-	 TaGqa61nOqPs+ZrSVlExJ/V7WP1Y1NlXj8d2XBEvO4cDJeULK7BGPNJ0K1eESooaEM
-	 R2MW1qpf7FP+Q==
-Date: Fri, 11 Aug 2023 17:55:00 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sui Jingfeng <suijingfeng@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Li Yi <liyi@loongson.cn>, linux-pci@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH] LoongArch: Remove vgaarb related workarounds
-Message-ID: <20230811225500.GA118486@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C8F1CCBB
+	for <loongarch@lists.linux.dev>; Sat, 12 Aug 2023 07:46:35 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 208215C0107;
+	Sat, 12 Aug 2023 03:46:35 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Sat, 12 Aug 2023 03:46:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+	1691826395; x=1691912795; bh=1R5ctzAAcNQB2V3jKP5T5hiyB+DhvFuEPAC
+	bmvPmK50=; b=nutKGvY0eL724xeuBxbBKl0Lec4UQ/Xr1efX8oPnh3bNyR0UoNO
+	v9Q12UKvjSXBbu1l17dDf0VeRYYb0vXDtpXo+AhMNW17vQtsq/L75I7dqtD19i0N
+	P2ntguCjM5MM5W0/YwsFakxFRPMgy6XlaEG0LWeJEDrFEA9qQSznAvNUZUs4FcQl
+	u1KIoMb6ZAn1VXGb8/MFetNgd1tsG3uefwtHIyOPFoGuUqIdHJvyXo82DM5U5I+x
+	SPfb5zRu50Gk1rEvEQqHRDYprHdMe/b7Ve1FKBVrNBpX+174T3eSodjhwVRxQr+q
+	c5l3rdBpbLYcpZEg9Ol1rHUpmPW5dpzQw1g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1691826395; x=1691912795; bh=1R5ctzAAcNQB2V3jKP5T5hiyB+DhvFuEPAC
+	bmvPmK50=; b=diWSONk0HiGIuLezERYrIYMjKKhl3BQP8CTGfYdlqm4QtJLGRCv
+	PVGdgm7W7PrF92/cjijSeY/GwmlJoby0jMMcilXK0FDsjx3hQpnBkLTPgwxpZJ+8
+	Rms2gABVgt74xlWLBeh32YC5FAFJhTwGwxXiaGscO8F4aeCzB79rfxBSdKu95G62
+	0bOtEeKhGJr4tnc+AszIZCae7zHYXbYdE/tAx+NuCWDXAT9+b4rDI6hUl+YuKTPE
+	DUkZb7Jm5s5UIELgg398zJrI1ehkCOpVgKk0t1wu85St3q90PMrP4xayfvVmfxvB
+	+mq87fa4hw3scj5WO9Ui/nn56oPhDcKaGTw==
+X-ME-Sender: <xms:2DjXZGrcm1nooPaeGiP_UR05ZxqRL9hT_gakPrOkql5l1NX68WDWDQ>
+    <xme:2DjXZEoxEpXce4Bb4Ao9Rhr3HkWqwjDkZ13jaDMd53AjmuBmZmMAaQwV4yXcSNcKO
+    kJpNn__j4mWyHyartc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrleelgdduvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:2DjXZLPQn2TqVIgyW6-tQwUG8P8Lw73P-zLqJCOCzSQ_OIuJtfkxzQ>
+    <xmx:2DjXZF4adFG0j0n9wRWuI42R43VpsvtE7VWE70ehnMhOYpN_4lUYCQ>
+    <xmx:2DjXZF5yCw1jmpp8FFpxkysER-4QrzZer5AK3I-Pc5hFGAMvs80Gpw>
+    <xmx:2zjXZJoaKMbDInL_qMZSv86qcrRWO5LB4IgX5rtggdWg9zUAfOpMGQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id E936CB60089; Sat, 12 Aug 2023 03:46:31 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230801185607.703295-1-suijingfeng@loongson.cn>
+Mime-Version: 1.0
+Message-Id: <3a1c5033-5ce2-4d0b-91be-3b612512f53c@app.fastmail.com>
+In-Reply-To: 
+ <CAK7LNARfEmFk0Du4Hed19eX_G6tUC5wG0zP+L1AyvdpOF4ybXQ@mail.gmail.com>
+References: <20230810141947.1236730-1-arnd@kernel.org>
+ <20230810141947.1236730-16-arnd@kernel.org>
+ <CAK7LNARfEmFk0Du4Hed19eX_G6tUC5wG0zP+L1AyvdpOF4ybXQ@mail.gmail.com>
+Date: Sat, 12 Aug 2023 09:46:11 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Andrew Morton" <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ "Richard Henderson" <richard.henderson@linaro.org>,
+ "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
+ "Matt Turner" <mattst88@gmail.com>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, "David S . Miller" <davem@davemloft.net>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Steven Rostedt" <rostedt@goodmis.org>, "Qing Zhang" <zhangqing@loongson.cn>,
+ "Donglin Peng" <pengdonglin@sangfor.com.cn>, "Qi Hu" <huqi@loongson.cn>,
+ linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, sparclinux@vger.kernel.org
+Subject: Re: [PATCH 15/17] arch: fix asm-offsets.c building with -Wmissing-prototypes
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 02, 2023 at 02:56:07AM +0800, Sui Jingfeng wrote:
-> When we have a better approach[1] to handle multiple video cards problems
-> on Loongarch, we want to drop the vgaarb related workaround.
-> 
-> [1] https://patchwork.freedesktop.org/patch/550708/?series=121740&rev=1
+On Sat, Aug 12, 2023, at 00:12, Masahiro Yamada wrote:
+> On Sat, Aug 12, 2023 at 3:30=E2=80=AFAM Arnd Bergmann <arnd@kernel.org=
+> wrote:
+>>
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> When -Wmissing-prototypes is enabled, the some asm-offsets.c files fa=
+il
+>> to build, even when this warning is disabled in the Makefile for norm=
+al
+>> files:
+>>
+>> arch/sparc/kernel/asm-offsets.c:22:5: error: no previous prototype fo=
+r 'sparc32_foo' [-Werror=3Dmissing-prototypes]
+>> arch/sparc/kernel/asm-offsets.c:48:5: error: no previous prototype fo=
+r 'foo' [-Werror=3Dmissing-prototypes]
+>>
+>> Address this by making use of the same trick we have on other archite=
+ctures,
+>> renaming the unused global function to main(), which has an implicit
+>> prototype.
+>
+>
+> main() only works for one function call, but
+> there are some cases where splitting the code
+> into some functions makes the code cleaner.
 
-If I understand correctly, this patch depends on [1].  The way you do
-this is to send both patches in a single series, e.g.,
+Right, I went with main() as that is already used on a couple
+of architectures.
 
-  [PATCH 0/2] <cover letter>
-  [PATCH 1/2] PCI/VGA: Make the vga_is_firmware_default() less arch-independent
-  [PATCH 2/2] LoongArch: Remove vgaarb related workarounds
+>> On loongarch, there are many functions in this file, so the trick does
+>> not work, adding explicit declarations works around it in a slightly
+>> more ugly way but is the best I could come up with here.
+>
+> I do not like repeating the function names.
+>
+> Could you try "static + __used" as in
+> arch/x86/kernel/asm-offsets.c ?
 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Li Yi <liyi@loongson.cn>
-> Cc: linux-pci@vger.kernel.org
-> Cc: loongson-kernel@lists.loongnix.cn
-> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
-> ---
->  arch/loongarch/pci/pci.c | 19 -------------------
->  1 file changed, 19 deletions(-)
-> 
-> diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-> index 2726639150bc..4319b5d75872 100644
-> --- a/arch/loongarch/pci/pci.c
-> +++ b/arch/loongarch/pci/pci.c
-> @@ -8,13 +8,10 @@
->  #include <linux/acpi.h>
->  #include <linux/types.h>
->  #include <linux/pci.h>
-> -#include <linux/vgaarb.h>
->  #include <asm/cacheflush.h>
->  #include <asm/loongson.h>
->  
->  #define PCI_DEVICE_ID_LOONGSON_HOST     0x7a00
-> -#define PCI_DEVICE_ID_LOONGSON_DC1      0x7a06
-> -#define PCI_DEVICE_ID_LOONGSON_DC2      0x7a36
->  
->  int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
->  						int reg, int len, u32 *val)
-> @@ -82,19 +79,3 @@ int pcibios_alloc_irq(struct pci_dev *dev)
->  		return 0;
->  	return acpi_pci_irq_enable(dev);
->  }
-> -
-> -static void pci_fixup_vgadev(struct pci_dev *pdev)
-> -{
-> -	struct pci_dev *devp = NULL;
-> -
-> -	while ((devp = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, devp))) {
-> -		if (devp->vendor != PCI_VENDOR_ID_LOONGSON) {
-> -			vga_set_default_device(devp);
-> -			dev_info(&pdev->dev,
-> -				"Overriding boot device as %X:%X\n",
-> -				devp->vendor, devp->device);
-> -		}
-> -	}
-> -}
-> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC1, pci_fixup_vgadev);
-> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC2, pci_fixup_vgadev);
-> -- 
-> 2.34.1
-> 
+Sure, that should work, I had not noticed x86 doing it like this
+and I agree it's slightly nicer.
+
+In this case, Thomas Bogendoerfer already merged my patch for MIPS
+in 6.5. The loongarch file I change here is a copy of the same file,
+so we probably want them to stay consistent, either keeping my
+change for now, or reworking mips along the same lines.
+
+    Arnd
