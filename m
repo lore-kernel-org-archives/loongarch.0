@@ -1,96 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725788488
-	for <loongarch@lists.linux.dev>; Sun, 13 Aug 2023 15:53:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E19BC433C7;
-	Sun, 13 Aug 2023 15:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAB52564
+	for <loongarch@lists.linux.dev>; Sun, 13 Aug 2023 17:20:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4648DC433C9
+	for <loongarch@lists.linux.dev>; Sun, 13 Aug 2023 17:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691941986;
-	bh=0/ELVUXgEaIea3krA/54nT4bkBgXmis9VnIpScrVMzA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BDHIOZpwbooJgRKFqvbXt4946xedoEekcJ/f9Zm/R07XgBWDAiUh2ImO+6KTGnJ4x
-	 XQqq96pBTxM3oz5aHsT/Y+X4vRnEbBdfjMD/KgTmXCllNNv0NWPvq2dsFmEBURWoP9
-	 I1qsblgvoWpQ7SpzlegxfOLUdTEjy+rZ6Ovb3B6qVBnLREc7pE+jwFZx0ROLq7BBJT
-	 hnab9Zu0WLdv0HzuhDuZmmz1JA1soagxQ+z5GNXv1qqkYQMgw8r+VreVXQnhaal5wX
-	 MD9g7Gw+KU2sBwA5cQ1UMlN04MFgRj081SSdc3xuzcP9cfi3vCDIa5jY+nKejHymQr
-	 +iESFC5ACz5Bg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Zhihong Dong <donmor3000@hotmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	zhoubinbin@loongson.cn,
-	tangyouling@loongson.cn,
-	ardb@kernel.org,
-	tglx@linutronix.de,
-	yangtiezhu@loongson.cn,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.4 52/54] LoongArch: Fix CMDLINE_EXTEND and CMDLINE_BOOTLOADER handling
-Date: Sun, 13 Aug 2023 11:49:31 -0400
-Message-Id: <20230813154934.1067569-52-sashal@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230813154934.1067569-1-sashal@kernel.org>
-References: <20230813154934.1067569-1-sashal@kernel.org>
+	s=k20201202; t=1691947221;
+	bh=4XjJ/m1q8Bs92xYp1IMaLNP82sMw8APWOQV52SF+PY8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BAxuFpuXwCCDvy2GqC3juGxG3ZWWR24UXBAQFTvHjtPXP9mpCfEfmiH0CsvINue34
+	 AKNe6DBNYmljF9cazzkMmgLEZYpvmtuIb4okXMhgZCKGEYa0kAFWCN226dgzv97G5l
+	 K9bSymGJLp+8FFjwTrohpn1cwt9g1t1+AXUbyu0RXtPY1qlGDg0HyfgNHwtjiRWkDY
+	 CxWEYd1fKdUIZEMUeE1S1wVraQ/5SanvKsCQ/9ZW7XEgFrZcr0Y2dfycwK8t448BYa
+	 3GHw762q8tBLaP4TKWUfVYdyD4aROanIBS80JHtCfK3T2gP/oIKCULU2wjbg2OSluw
+	 hU83GroB2NlrQ==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-4fe28e4671dso5536676e87.0
+        for <loongarch@lists.linux.dev>; Sun, 13 Aug 2023 10:20:21 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzsNAE+YX8K17TajJUaDyJoI4qPLkmjaJwbzZi+GwM9N4zvJxIJ
+	ksPpAaNpyLRqacx/teZzT0u6kWxd//Iu0ULWcnM=
+X-Google-Smtp-Source: AGHT+IFiLEp9CF0ecmdJzWRfveOAbYiAjQhrssR/IIlpTn4KLDoA7SQlBMgIFFB33cO5A/k745EPwfJcHOV85lr4nY8=
+X-Received: by 2002:a05:6512:33d5:b0:4fe:3364:6c20 with SMTP id
+ d21-20020a05651233d500b004fe33646c20mr6003187lfg.16.1691947219316; Sun, 13
+ Aug 2023 10:20:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.4.10
-Content-Transfer-Encoding: 8bit
+References: <20230804124611.2051048-1-kernel@xen0n.name> <CAAhV-H681+pput57E2vHz_V7A_oNy1Av6aCDN6eP0wBQqo7kAg@mail.gmail.com>
+In-Reply-To: <CAAhV-H681+pput57E2vHz_V7A_oNy1Av6aCDN6eP0wBQqo7kAg@mail.gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Sun, 13 Aug 2023 21:20:06 +0400
+X-Gmail-Original-Message-ID: <CAPhsuW5J_wUGmU+1tvzTqmpJSRrJicXoNmp+-ftDuHuhBcbkqA@mail.gmail.com>
+Message-ID: <CAPhsuW5J_wUGmU+1tvzTqmpJSRrJicXoNmp+-ftDuHuhBcbkqA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] raid5, raid6: Accelerate RAID math with LoongArch SIMD
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, linux-raid@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	WANG Xuerui <git@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Zhihong Dong <donmor3000@hotmail.com>
+On Fri, Aug 4, 2023 at 7:27=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
+wrote:
+>
+> Hi, Xuerui and Song,
+>
+> This series looks good to me, if no one has objections, I will queue
+> for loongarch-next.
 
-[ Upstream commit 83da30d73b86ab5898fb84f8b49c11557c3fcc67 ]
+Sorry for the delayed response. This set looks good to me. You can add
 
-On FDT systems these command line processing are already taken care of
-by early_init_dt_scan_chosen(). Add similar handling to the ACPI (non-
-FDT) code path to allow these config options to work for ACPI (non-FDT)
-systems too.
+Acked-by: Song Liu <song@kernel.org>
 
-Signed-off-by: Zhihong Dong <donmor3000@hotmail.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/kernel/setup.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 4444b13418f0e..a013da0e551a5 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -332,9 +332,25 @@ static void __init bootcmdline_init(char **cmdline_p)
- 			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
- 
- 		strlcat(boot_command_line, init_command_line, COMMAND_LINE_SIZE);
-+		goto out;
- 	}
- #endif
- 
-+	/*
-+	 * Append built-in command line to the bootloader command line if
-+	 * CONFIG_CMDLINE_EXTEND is enabled.
-+	 */
-+	if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
-+		strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
-+		strlcat(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-+	}
-+
-+	/*
-+	 * Use built-in command line if the bootloader command line is empty.
-+	 */
-+	if (IS_ENABLED(CONFIG_CMDLINE_BOOTLOADER) && !boot_command_line[0])
-+		strscpy(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-+
- out:
- 	*cmdline_p = boot_command_line;
- }
--- 
-2.40.1
-
+Thanks,
+Song
