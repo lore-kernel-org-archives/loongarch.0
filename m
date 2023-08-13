@@ -1,148 +1,87 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB0C1CCCC
-	for <loongarch@lists.linux.dev>; Sat, 12 Aug 2023 12:25:28 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id D7A935C00F2;
-	Sat, 12 Aug 2023 08:25:27 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Sat, 12 Aug 2023 08:25:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-	1691843127; x=1691929527; bh=+DE7K+FkDwlmdeL3CpVV/dlir8qOYF4EGSw
-	DTQ8Iztc=; b=JArr1yVWNA+hyM/8PmwyBL5cCOeyn7ppUeMvEj3q6erbi0eVawO
-	867hmjCwtRzshjj2II9l4BZKRuGGCWLMkuP/Tz/OAalpUsmZM1BJGT78l2AG0a7d
-	gIR73l20BuTSrI5WwqBqiou8kAjZCn4k+C8idCsQE+gb5gn6UUA9mKj46tB92fj5
-	esXxYeS5cZLNSKqyZBfQM8S5e4522oHRV0grJaSo3Y7WR0DwZXZ02YsllhwdAwrP
-	Q0IflLIBUqovRLVQ784WxamIL05exxJ5WruA/DK7ljvJndImRdIqE9o+MMDk+YKp
-	vAXNEpdE8rvzXzC1CM81oyXljQQcVSJi+mw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1691843127; x=1691929527; bh=+DE7K+FkDwlmdeL3CpVV/dlir8qOYF4EGSw
-	DTQ8Iztc=; b=Az+t/QSiqKmMPqKtoziHfe7jvt4TJZzOE1fILZdhkcUAndG4fn8
-	eAreGmEkLX/xwFMV0GsoLrVMOhFDfXCIJD3LJ/0phyC2Q8PDF1n7Cxq1tuE4L7G3
-	9sDzitcmlA8w8LoYLCUxLxF+YLQj6fDGzTSfNN8Axz7WJbkXKFqHM5OEoTyzLQek
-	Ff+9ZflUFUQmEyZNs5D0IUgSCQeLiABn/iMNOpkAPEE8DxrbtuihPDk8qR1qEjN5
-	Y+tjaINHK7bM0/uSb3RlrvuJJb/KXXMGdOBsej/cCwkKqyy3sW7mLqKaZET0DGhf
-	gQoJPttwz9jPteAjvxC47AVo3AX0ZLrLjGg==
-X-ME-Sender: <xms:NnrXZIzvzHGDioQfqPjdOYWvVqV7l4pnddLNQ9kqdvM7IZ5lS267EQ>
-    <xme:NnrXZMTifxguaVpAQlXXwXslDwd56SoT_D1BJsSPRC08gVTabjHd5tg5qWZAMTTAM
-    13ktE_tmuUa2w22Pxo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddttddghedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeettedttdefhfekueduvedutdejudetgfekgfegfefhjeejteegveehtdeh
-    veejgfenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhlihhnuhigqdhmihhpshdroh
-    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegr
-    rhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:NnrXZKX9P1BhvMJDQMMiY_IYIPZHOeNBSEWK5rOrNIWPbKu4bpWFiA>
-    <xmx:NnrXZGipINhmUz8Wv4-kl9WFBgJe4FtJ4ccxqF68HUAyxkE0vI43KQ>
-    <xmx:NnrXZKBVP_aSNVnYmUKzXmng-IlmF0BY_vpf_iyUsGyelQuMHLJVrg>
-    <xmx:N3rXZGzh1zo1LBJT5Oeh7YcR2sxGyGV06W2jhv1PJY6SUMznMbBNsg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id A7436B60089; Sat, 12 Aug 2023 08:25:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4038825
+	for <loongarch@lists.linux.dev>; Sun, 13 Aug 2023 15:52:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49CA9C433C9;
+	Sun, 13 Aug 2023 15:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1691941979;
+	bh=wipUm36EeLOhsTYkjnhUDKD8iAG8BWULxaga3ruaIlY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=P+8Z8E/D7OruKMbN2nbh2306aZzGCluFm8vMUEkTdAT6iAugXp6g6LqWvF3lRHMIi
+	 1MafmUMtge8UUiPEG6G/dw+EKAqo1rqX4kK6Ksn5u7CVSHlLt7AEJnoCnIIGCukkvr
+	 f2d9BfbFL+hzGFb71Hb0URUjbD/1cWmGE2ldoUhDCGBLiJSAodSvMR5yloKWNuh09n
+	 tailTglVIQu855KMWl4/By41ctZ6Xz3y8LDgv4F6AqOpa3o5XKpoNOiO4EvrjoHApV
+	 gbymAHcJ3OqCam2MO3PKEIU95ZsIwrcO1ehNCkxB6q4G4glvjeQ+P+mXzYdsNuEAHH
+	 JOeOwEaHdkyOQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	chenhuacai@kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.4 51/54] LoongArch: Only fiddle with CHECKFLAGS if `need-compiler'
+Date: Sun, 13 Aug 2023 11:49:30 -0400
+Message-Id: <20230813154934.1067569-51-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230813154934.1067569-1-sashal@kernel.org>
+References: <20230813154934.1067569-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <6d7335b4-63e2-4a7e-9620-8a0012558dfd@app.fastmail.com>
-In-Reply-To: <8efeac46-ebb7-fa05-3d88-7c21acd59c8b@loongson.cn>
-References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
- <20230803063703.5659-2-zhuyinbo@loongson.cn>
- <193f9138-57e0-4d4b-8225-54d38be9bfbc@app.fastmail.com>
- <8efeac46-ebb7-fa05-3d88-7c21acd59c8b@loongson.cn>
-Date: Sat, 12 Aug 2023 14:25:05 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
- "Ulf Hansson" <ulf.hansson@linaro.org>
-Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
- "Liu Peibao" <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev, "Liu Yun" <liuyun@loongson.cn>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v6 1/2] soc: dt-bindings: add loongson-2 pm
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.4.10
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 4, 2023, at 04:54, Yinbo Zhu wrote:
-> =E5=9C=A8 2023/8/3 =E4=B8=8B=E5=8D=883:44, Arnd Bergmann =E5=86=99=E9=81=
-=93:
->> On Thu, Aug 3, 2023, at 08:37, Yinbo Zhu wrote:
->>=20
->>> +  loongson,suspend-address:
->>> +    $ref: /schemas/types.yaml#/definitions/uint64
->>> +    description:
->>> +      The "loongson,suspend-address" is a deep sleep state (Suspend=
- To
->>> +      RAM) firmware entry address which was jumped from kernel and =
-it's
->>> +      value was dependent on specific platform firmware code. In
->>> +      addition, the PM need according to it to indicate that current
->>> +      SoC whether support Suspend To RAM.
->>> +
->>=20
->> I just commented on this in the driver patch, assuming this
->> was an MMIO address, but I'm even more confused now, since
->> we try hard to not rely on being able to just interface with
->> firmware like this.
->>=20
->> If this is executable code, where does this actually reside?
->
->
-> Pmon firmware code.
->
->> Is this some SRAM that needs to execute the suspend logic
->> in order to shut down memory and cache controllers?=20
->
->
-> Yes, The suspend-to-ram after into pmon firmware code and set
-> self-refresh mode in memory controller and ensure that memory data is
-> not lost then shut down memory controller.
+From: Huacai Chen <chenhuacai@loongson.cn>
 
-I'm sorry I missed your reply earlier, getting back to the
-thread now. So it's clear that this code needs to run in a
-special memory from your description, but I'm still trying
-to understand the details better.
+[ Upstream commit 54c2c9df083fe1d4a9df54d9876f32582ce6d77a ]
 
-I found https://github.com/loongson-community/pmon source
-code, and a reference to its origin at LSI Logic at
-https://www.linux-mips.org/wiki/PMON but otherwise have
-no idea about what this actually is, or how it relates
-to your UEFI firmware. Did you add UEFI support to PMON,
-or do you use it as a first stage loader that loads
-the actual UEFI implementation (EDK2 or u-boot, I guess)?
+This is a port of commit 4fe4a6374c4db9ae2b ("MIPS: Only fiddle with
+CHECKFLAGS if `need-compiler'") to LoongArch.
 
->> Or is
->> this a runtime firmware interface similar to how UEFI handles
->> its runtime services to keep the implementation out of
->> the kernel?
->
->
-> No, The main cpu and other cpu will offline that after into firmware a=
-nd
-> finished Corresponding operations, the pmon firmware will not run.
+We have originally guarded fiddling with CHECKFLAGS in our arch Makefile
+by checking for the CONFIG_LOONGARCH variable, not set for targets such
+as `distclean', etc. that neither include `.config' nor use the compiler.
 
-I'm still trying to understand your explanations here.
-You say that pmon no longer runs, but that seems to contradict
-what you said earlier about branching into pmon firmware code
-for suspend.
+Starting from commit 805b2e1d427aab4 ("kbuild: include Makefile.compiler
+only when compiler is needed") we have had a generic `need-compiler'
+variable explicitly telling us if the compiler will be used and thus its
+capabilities need to be checked and expressed in the form of compilation
+flags.  If this variable is not set, then `make' functions such as
+`cc-option' are undefined, causing all kinds of weirdness to happen if
+we expect specific results to be returned.
 
-Is this executing directly from ROM then?
+It doesn't cause problems on LoongArch now. But as a guard we replace
+the check for CONFIG_LOONGARCH with one for `need-compiler' instead, so
+as to prevent the compiler from being ever called for CHECKFLAGS when
+not needed.
 
-       Arnd
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 63a637fdf6c28..95629322241f5 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -106,7 +106,7 @@ KBUILD_CFLAGS += -isystem $(shell $(CC) -print-file-name=include)
+ 
+ KBUILD_LDFLAGS	+= -m $(ld-emul)
+ 
+-ifdef CONFIG_LOONGARCH
++ifdef need-compiler
+ CHECKFLAGS += $(shell $(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) -dM -E -x c /dev/null | \
+ 	grep -E -vw '__GNUC_(MINOR_|PATCHLEVEL_)?_' | \
+ 	sed -e "s/^\#define /-D'/" -e "s/ /'='/" -e "s/$$/'/" -e 's/\$$/&&/g')
+-- 
+2.40.1
+
