@@ -1,22 +1,66 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0E5AD47
-	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 11:57:57 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.201])
-	by gateway (Coremail) with SMTP id _____8Bxd+jDFtpkcyoYAA--.13837S3;
-	Mon, 14 Aug 2023 19:57:55 +0800 (CST)
-Received: from [10.20.42.201] (unknown [10.20.42.201])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrM6_FtpkXuZZAA--.24469S3;
-	Mon, 14 Aug 2023 19:57:51 +0800 (CST)
-Subject: Re: [PATCH v6 1/2] soc: dt-bindings: add loongson-2 pm
-To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
- Liu Peibao <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev, Liu Yun <liuyun@loongson.cn>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, zhuyinbo@loongson.cn
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D80DAD29
+	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 13:42:09 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 102A65C0072;
+	Mon, 14 Aug 2023 09:42:08 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Mon, 14 Aug 2023 09:42:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+	1692020528; x=1692106928; bh=JtLQE1XjIOUZcTeTsP5whAkN0vSfae5cywo
+	2KZQ9oJA=; b=Hu8nMt5o8LJapF9LALNUvc6uTUsBVbRUOS7ySwTg+z7NHo6rqpF
+	/LN875sB3oFHQTsFvw9CPGWU+u7FopQZ6CiQNZe3dzZvsDF0UYimGNIfXCQ/SVet
+	a//79hYibjZnoaYwsVix0301198piZ7hyLZE6r6p3p/CnGzXj5CoQtV1y1yhPd60
+	+3utgJ7Hc8mEyzkdj4BOd2JB0SwI+qaKT9SqSnbfvBxRUq0Bkoa/H96WHAz34JLJ
+	9k/W71Che1sm8cn0otOaC7iK9q2EkG401/fjuS7SQgIDx6vhzZ4p9ttcELkXZ63k
+	do6aQ1vUlLQ02pXcr4HqMkuR8xl1JBP2VaQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1692020528; x=1692106928; bh=JtLQE1XjIOUZcTeTsP5whAkN0vSfae5cywo
+	2KZQ9oJA=; b=01YlBOWjN+e1GbWAOx3Ax+EupWSIxIfqoSedd53cZvYGLAvuH/A
+	QjGCbYul5IctD6w9a3kd8K6lM3SIEPyEYTYB1jmpGcsUk1qcSCU8YyJkFuz7tq33
+	ehRMmZsA+ogfmBgyalmyhnHHlC/B2zegZzYJe9p+6/kV8dazEhznKCTvABTpOUtH
+	G/VQOSBjjXbLPi6yolCaStLDedP7fsW0kY0BdQyx3qylxJDegdYYdmuGl5Ev1OHi
+	4bA/CE1H9DX+iCl3bhnwIj1RUdveoHFVWycEOudU14tbhkWsXCmDP9ZbFq0mMiRJ
+	SqkME+1SLo3IJp4aOYVtTdzTrDVOuTi9w3Q==
+X-ME-Sender: <xms:Ly_aZA6FBRQG91ir1YblSsCKmlE0GAAuNXnXuebFzT1IHe4lSvqm0A>
+    <xme:Ly_aZB5XwpC8OI8RPOMPkNvAGjfu1RMJNmp4qMvq4-cXLxYIphSHYk1576oaRYkPm
+    FdO_-w5NZTv4nO2jjk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddtgedgieejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeettedttdefhfekueduvedutdejudetgfekgfegfefhjeejteegveehtdeh
+    veejgfenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhlihhnuhigqdhmihhpshdroh
+    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegr
+    rhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:Ly_aZPdjDIjzWkp91VBvj4_-RGiPcA7UlyBa2Vooy8vUKT24gOScsQ>
+    <xmx:Ly_aZFLmra1lC_zMbs0Ahvyc-j2KfEBjYn__eaOq1z08kGSDWsyBXg>
+    <xmx:Ly_aZEKB1NsYWLJnm8L_5SXCD3D9YBczegVJOzwtGXJsPUWZutVdyQ>
+    <xmx:MC_aZHY5T_hJwz4SLQ_AEy7fOWE5fcSiiwatXkIqV3DV3yE7br7jIA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 032FFB6008D; Mon, 14 Aug 2023 09:42:07 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0
+Message-Id: <e04cf26e-2e38-4e87-b7b4-23dafadee00d@app.fastmail.com>
+In-Reply-To: <71c53c37-a0a6-6b11-31d5-4455d2309927@loongson.cn>
 References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
  <20230803063703.5659-2-zhuyinbo@loongson.cn>
  <193f9138-57e0-4d4b-8225-54d38be9bfbc@app.fastmail.com>
@@ -24,141 +68,112 @@ References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
  <6d7335b4-63e2-4a7e-9620-8a0012558dfd@app.fastmail.com>
  <0616585d-1459-b6ef-375b-890426004e01@loongson.cn>
  <19feb595-e22a-4304-9b88-b5cb55949cd8@app.fastmail.com>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <71c53c37-a0a6-6b11-31d5-4455d2309927@loongson.cn>
-Date: Mon, 14 Aug 2023 19:57:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <19feb595-e22a-4304-9b88-b5cb55949cd8@app.fastmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxrM6_FtpkXuZZAA--.24469S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+ <71c53c37-a0a6-6b11-31d5-4455d2309927@loongson.cn>
+Date: Mon, 14 Aug 2023 15:41:37 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
+ "Ulf Hansson" <ulf.hansson@linaro.org>
+Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+ "Liu Peibao" <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
+ loongarch@lists.linux.dev, "Liu Yun" <liuyun@loongson.cn>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v6 1/2] soc: dt-bindings: add loongson-2 pm
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-
-
-在 2023/8/14 下午4:19, Arnd Bergmann 写道:
-> On Mon, Aug 14, 2023, at 09:57, Yinbo Zhu wrote:
->> 在 2023/8/12 下午8:25, Arnd Bergmann 写道:
->>> On Fri, Aug 4, 2023, at 04:54, Yinbo Zhu wrote:
->>>> 在 2023/8/3 下午3:44, Arnd Bergmann 写道:
->>>>> On Thu, Aug 3, 2023, at 08:37, Yinbo Zhu wrote:
->>>>
->>>>> Is this some SRAM that needs to execute the suspend logic
->>>>> in order to shut down memory and cache controllers?
->>>>
->>>>
->>>> Yes, The suspend-to-ram after into pmon firmware code and set
->>>> self-refresh mode in memory controller and ensure that memory data is
->>>> not lost then shut down memory controller.
+On Mon, Aug 14, 2023, at 13:57, Yinbo Zhu wrote:
+> =E5=9C=A8 2023/8/14 =E4=B8=8B=E5=8D=884:19, Arnd Bergmann =E5=86=99=E9=
+=81=93:
+>> On Mon, Aug 14, 2023, at 09:57, Yinbo Zhu wrote:
+>>> =E5=9C=A8 2023/8/12 =E4=B8=8B=E5=8D=888:25, Arnd Bergmann =E5=86=99=E9=
+=81=93:
+>>>> I found https://github.com/loongson-community/pmon source
+>>>> code, and a reference to its origin at LSI Logic at
+>>>> https://www.linux-mips.org/wiki/PMON but otherwise have
+>>>> no idea about what this actually is, or how it relates
+>>>> to your UEFI firmware. Did you add UEFI support to PMON,
+>>>> or do you use it as a first stage loader that loads
+>>>> the actual UEFI implementation (EDK2 or u-boot, I guess)?
 >>>
->>> I'm sorry I missed your reply earlier, getting back to the
->>> thread now. So it's clear that this code needs to run in a
->>> special memory from your description, but I'm still trying
->>> to understand the details better.
 >>>
->>> I found https://github.com/loongson-community/pmon source
->>> code, and a reference to its origin at LSI Logic at
->>> https://www.linux-mips.org/wiki/PMON but otherwise have
->>> no idea about what this actually is, or how it relates
->>> to your UEFI firmware. Did you add UEFI support to PMON,
->>> or do you use it as a first stage loader that loads
->>> the actual UEFI implementation (EDK2 or u-boot, I guess)?
->>
->>
->> Pmon and uefi are two different firmware, and there is no connection
->> between them.
-> 
-> It sounds like we still have problems with terminology. >
-> I don't think categorizing UEFI as a firmware is correct,
+>>> Pmon and uefi are two different firmware, and there is no connection
+>>> between them.
+>>=20
+>> It sounds like we still have problems with terminology. >
+>> I don't think categorizing UEFI as a firmware is correct,
+>
+>
+> Sorry to have confused you, uefi firmware is our internal name, which =
+is
+> actually what you referred to as EDK2, the EDK2 need use UEFI.
 
+Ok
 
-Sorry to have confused you, uefi firmware is our internal name, which is
-actually what you referred to as EDK2, the EDK2 need use UEFI.
+>> it's the interface used by various firmware implementations
+>> to load the operating system. As far as I understand,
+>> loongarch currently mandates the use of UEFI in whichever
+>> firmware is used, so if you have Pmon installed in ROM > and Pmon doe=
+s not itself implement UEFI, it would have
+>> to load some other firmware such as u-boot in order to
+>> load a kernel through the UEFI protocol, right?
+>
+>
+> PMON is an independent firmware and loader that can directly load the
+> operating system and it does not require the use of UEFI.
+>>=20
+>> Has the assumption that loongarch requires UEFI changed?
+>
+>
+> LoongArch embedded board was use Pmon firmware, The other one uses UEFI
+> firmware (EDK2) on LoongArch platform.
 
-> it's the interface used by various firmware implementations
-> to load the operating system. As far as I understand,
-> loongarch currently mandates the use of UEFI in whichever
-> firmware is used, so if you have Pmon installed in ROM > and Pmon does not itself implement UEFI, it would have
-> to load some other firmware such as u-boot in order to
-> load a kernel through the UEFI protocol, right?
+I'm pretty sure we discussed this when the loongarch port
+was originally merged, with the decisionto just use UEFI for
+booting any kernel, as the legacy entry point for the ACPI
+based environment was not really well-defined and the UEFI
+stub was an easy alternative to have more commonality
+with other architectures.
 
+I see this was already extended for embedded CPUs to use
+the uefi stub with DT in commit 88d4d957edc70 ("LoongArch: Add
+FDT booting support from efi system table"), which seems like
+the right direction.
 
-PMON is an independent firmware and loader that can directly load the
-operating system and it does not require the use of UEFI.
+Can you explain why this board would want yet another method
+for entering the kernel? Is there any documentation for the
+boot protocol?
 
-> 
-> Has the assumption that loongarch requires UEFI changed?
-
-
-LoongArch embedded board was use Pmon firmware, The other one uses UEFI
-firmware (EDK2) on LoongArch platform.
-
-> 
->>>>> Or is
->>>>> this a runtime firmware interface similar to how UEFI handles
->>>>> its runtime services to keep the implementation out of
->>>>> the kernel?
->>>>
->>>>
->>>> No, The main cpu and other cpu will offline that after into firmware and
->>>> finished Corresponding operations, the pmon firmware will not run.
+>>>> Is this executing directly from ROM then?
 >>>
->>> I'm still trying to understand your explanations here.
->>> You say that pmon no longer runs, but that seems to contradict
->>> what you said earlier about branching into pmon firmware code
->>> for suspend.
->>
->>
->> It's not contradictory.  The suspend-to-ram is that from kernel goto to
->> pmon firmware code, then pmon finished corresponding operations, which
->> was to set self-refresh mode in memory controller, then memory HW will
->> maintain its own data and no longer requires software processing, pmon
->> firmware will not run.
-> 
-> That is what I mean with a "runtime firmware interface", i.e. you
-> jump into firmware in order to request services from it. Clearly the
-> firmware itself does not run while the OS is executing code, but it is
-> still there and waiting to be called here, which is similar to
-> things like UEFI runtime services, PowerPC RTAS, Arm EL3/trustzone
-> based firmware or x86 SMM firmware, except that this is much less
-> formalized and only consists of an entry point with undocument
-> calling conventions.
-> 
->>> Is this executing directly from ROM then?
->>
->> Yes.
-> 
-> Is this the only runtime call into the firmware, 
+>>> Yes.
+>>=20
+>> Is this the only runtime call into the firmware,=20
+>
+>
+> Only when suspend-to-ram occurs, the kernel will call into the firmwar=
+e.
+> No other case.
 
+Ok
 
-Only when suspend-to-ram occurs, the kernel will call into the firmware.
-No other case.
+>> or are there
+>> others that are either already called from mainline kernels
+>> or in your downsteam implementation?
+>>=20
+>> How do you ensure that the DTB matches the actual ROM code
+>> after rebuilding Pmon? Does Pmon itself fill that field with
+>> the correct address, or do you rely on it being a hardcoded
+>> constant?
+>
+>
+> Use Pmon, firmware team will always ensure that DTB matches the actual
+> ROM code.  The "suspend-address" of dtb and pmon entry address will
+> synchronized modification by firmware team.
 
-> or are there
-> others that are either already called from mainline kernels
-> or in your downsteam implementation?
-> 
-> How do you ensure that the DTB matches the actual ROM code
-> after rebuilding Pmon? Does Pmon itself fill that field with
-> the correct address, or do you rely on it being a hardcoded
-> constant?
+Ok.  So it's linked against libfdt to fill the dtb information,
+or do you have to provide a dtb blob that matches the firmware?
 
-
-Use Pmon, firmware team will always ensure that DTB matches the actual
-ROM code.  The "suspend-address" of dtb and pmon entry address will
-synchronized modification by firmware team.
-
-Thanks,
-Yinbo
-
+      Arnd
