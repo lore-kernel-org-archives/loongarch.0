@@ -1,179 +1,228 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D80DAD29
-	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 13:42:09 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id 102A65C0072;
-	Mon, 14 Aug 2023 09:42:08 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Mon, 14 Aug 2023 09:42:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-	1692020528; x=1692106928; bh=JtLQE1XjIOUZcTeTsP5whAkN0vSfae5cywo
-	2KZQ9oJA=; b=Hu8nMt5o8LJapF9LALNUvc6uTUsBVbRUOS7ySwTg+z7NHo6rqpF
-	/LN875sB3oFHQTsFvw9CPGWU+u7FopQZ6CiQNZe3dzZvsDF0UYimGNIfXCQ/SVet
-	a//79hYibjZnoaYwsVix0301198piZ7hyLZE6r6p3p/CnGzXj5CoQtV1y1yhPd60
-	+3utgJ7Hc8mEyzkdj4BOd2JB0SwI+qaKT9SqSnbfvBxRUq0Bkoa/H96WHAz34JLJ
-	9k/W71Che1sm8cn0otOaC7iK9q2EkG401/fjuS7SQgIDx6vhzZ4p9ttcELkXZ63k
-	do6aQ1vUlLQ02pXcr4HqMkuR8xl1JBP2VaQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1692020528; x=1692106928; bh=JtLQE1XjIOUZcTeTsP5whAkN0vSfae5cywo
-	2KZQ9oJA=; b=01YlBOWjN+e1GbWAOx3Ax+EupWSIxIfqoSedd53cZvYGLAvuH/A
-	QjGCbYul5IctD6w9a3kd8K6lM3SIEPyEYTYB1jmpGcsUk1qcSCU8YyJkFuz7tq33
-	ehRMmZsA+ogfmBgyalmyhnHHlC/B2zegZzYJe9p+6/kV8dazEhznKCTvABTpOUtH
-	G/VQOSBjjXbLPi6yolCaStLDedP7fsW0kY0BdQyx3qylxJDegdYYdmuGl5Ev1OHi
-	4bA/CE1H9DX+iCl3bhnwIj1RUdveoHFVWycEOudU14tbhkWsXCmDP9ZbFq0mMiRJ
-	SqkME+1SLo3IJp4aOYVtTdzTrDVOuTi9w3Q==
-X-ME-Sender: <xms:Ly_aZA6FBRQG91ir1YblSsCKmlE0GAAuNXnXuebFzT1IHe4lSvqm0A>
-    <xme:Ly_aZB5XwpC8OI8RPOMPkNvAGjfu1RMJNmp4qMvq4-cXLxYIphSHYk1576oaRYkPm
-    FdO_-w5NZTv4nO2jjk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddtgedgieejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeettedttdefhfekueduvedutdejudetgfekgfegfefhjeejteegveehtdeh
-    veejgfenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhlihhnuhigqdhmihhpshdroh
-    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegr
-    rhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:Ly_aZPdjDIjzWkp91VBvj4_-RGiPcA7UlyBa2Vooy8vUKT24gOScsQ>
-    <xmx:Ly_aZFLmra1lC_zMbs0Ahvyc-j2KfEBjYn__eaOq1z08kGSDWsyBXg>
-    <xmx:Ly_aZEKB1NsYWLJnm8L_5SXCD3D9YBczegVJOzwtGXJsPUWZutVdyQ>
-    <xmx:MC_aZHY5T_hJwz4SLQ_AEy7fOWE5fcSiiwatXkIqV3DV3yE7br7jIA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 032FFB6008D; Mon, 14 Aug 2023 09:42:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0A5C2C1
+	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 16:00:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E1E2C433C8;
+	Mon, 14 Aug 2023 16:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692028816;
+	bh=jhjaS/2Y9cwyx9ts23hmnkLwn6OVV/aozByHwgTXnW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tt7RxJi+gxkL2yCcnmyoOFprL73XugXUVREtoBV3EASp64W/qhZkt7Mc7T5WdejI2
+	 FNF3cINVYKlcQp4lbBCCnzBs9sQKkn3V1P1URs+eZGPq/WVnD/6XFtV4AqXlVT8OqE
+	 xA6mJBV9TK1fQBJVains9cIXKguOwxD992ctwFhwqu5lM4KMQm4+o4qm3tzODLRdDW
+	 0e+gZtrL1LZ+RfEMIh3sCydLyiSUsmkj00KQtZ8VuM5c35XrA/recr6ZeVviLFIaBy
+	 nT3QZzAtJ/q7/Q8L7n0mq8ZxTC19iON58m+xD3wM5Sg9vw7m0o/jzDO8VrQ6kiXPBm
+	 GKHeXxQOxAilg==
+Date: Mon, 14 Aug 2023 18:59:11 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Liam Ni <zhiguangni01@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, zhoubinbin@loongson.cn,
+	chenfeiyang@loongson.cn, jiaxun.yang@flygoat.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org,
+	luto@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+	kernel@xen0n.name, chenhuacai@kernel.org
+Subject: Re: [RESEND PATCH V3] NUMA:Improve the efficiency of calculating
+ pages loss
+Message-ID: <20230814155911.GN2607694@kernel.org>
+References: <CACZJ9cUXiWxDb6hF4JFhWe7Np82k6LopVQ+_AoGFOccN4kjJqA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <e04cf26e-2e38-4e87-b7b4-23dafadee00d@app.fastmail.com>
-In-Reply-To: <71c53c37-a0a6-6b11-31d5-4455d2309927@loongson.cn>
-References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
- <20230803063703.5659-2-zhuyinbo@loongson.cn>
- <193f9138-57e0-4d4b-8225-54d38be9bfbc@app.fastmail.com>
- <8efeac46-ebb7-fa05-3d88-7c21acd59c8b@loongson.cn>
- <6d7335b4-63e2-4a7e-9620-8a0012558dfd@app.fastmail.com>
- <0616585d-1459-b6ef-375b-890426004e01@loongson.cn>
- <19feb595-e22a-4304-9b88-b5cb55949cd8@app.fastmail.com>
- <71c53c37-a0a6-6b11-31d5-4455d2309927@loongson.cn>
-Date: Mon, 14 Aug 2023 15:41:37 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
- "Ulf Hansson" <ulf.hansson@linaro.org>
-Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
- "Liu Peibao" <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev, "Liu Yun" <liuyun@loongson.cn>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v6 1/2] soc: dt-bindings: add loongson-2 pm
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACZJ9cUXiWxDb6hF4JFhWe7Np82k6LopVQ+_AoGFOccN4kjJqA@mail.gmail.com>
 
-On Mon, Aug 14, 2023, at 13:57, Yinbo Zhu wrote:
-> =E5=9C=A8 2023/8/14 =E4=B8=8B=E5=8D=884:19, Arnd Bergmann =E5=86=99=E9=
-=81=93:
->> On Mon, Aug 14, 2023, at 09:57, Yinbo Zhu wrote:
->>> =E5=9C=A8 2023/8/12 =E4=B8=8B=E5=8D=888:25, Arnd Bergmann =E5=86=99=E9=
-=81=93:
->>>> I found https://github.com/loongson-community/pmon source
->>>> code, and a reference to its origin at LSI Logic at
->>>> https://www.linux-mips.org/wiki/PMON but otherwise have
->>>> no idea about what this actually is, or how it relates
->>>> to your UEFI firmware. Did you add UEFI support to PMON,
->>>> or do you use it as a first stage loader that loads
->>>> the actual UEFI implementation (EDK2 or u-boot, I guess)?
->>>
->>>
->>> Pmon and uefi are two different firmware, and there is no connection
->>> between them.
->>=20
->> It sounds like we still have problems with terminology. >
->> I don't think categorizing UEFI as a firmware is correct,
->
->
-> Sorry to have confused you, uefi firmware is our internal name, which =
-is
-> actually what you referred to as EDK2, the EDK2 need use UEFI.
+On Fri, Aug 04, 2023 at 11:32:51PM +0800, Liam Ni wrote:
+> Optimize the way of calculating missing pages.
+> 
+> In the previous implementation, We calculate missing pages as follows:
+> 1. calculate numaram by traverse all the numa_meminfo's and for each of
+> them traverse all the regions in memblock.memory to prepare for
+> counting missing pages.
+> 
+> 2. Traverse all the regions in memblock.memory again to get e820ram.
+> 
+> 3. the missing page is (e820ram - numaram )
+> 
+> But,it's enough to count memory in ‘memblock.memory’ that doesn't have
+> the node assigned.
+> 
+> V2:https://lore.kernel.org/all/20230619075315.49114-1-zhiguangni01@gmail.com/
+> V1:https://lore.kernel.org/all/20230615142016.419570-1-zhiguangni01@gmail.com/
+> 
+> Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
+> ---
+>  arch/loongarch/kernel/numa.c | 23 ++++++++---------------
+>  arch/x86/mm/numa.c           | 26 +++++++-------------------
+>  include/linux/mm.h           |  1 +
+>  mm/mm_init.c                 | 20 ++++++++++++++++++++
+>  4 files changed, 36 insertions(+), 34 deletions(-)
+> 
+> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+> index 708665895b47..0239891e4d19 100644
+> --- a/arch/loongarch/kernel/numa.c
+> +++ b/arch/loongarch/kernel/numa.c
+> @@ -262,25 +262,18 @@ static void __init node_mem_init(unsigned int node)
+>   * Sanity check to catch more bad NUMA configurations (they are amazingly
+>   * common).  Make sure the nodes cover all memory.
+>   */
+> -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+> +static bool __init memblock_validate_numa_coverage(const u64 limit)
 
-Ok
+There is no need to have arch specific memblock_validate_numa_coverage().
+You can add this function to memblock and call it from NUMA initialization
+instead of numa_meminfo_cover_memory().
 
->> it's the interface used by various firmware implementations
->> to load the operating system. As far as I understand,
->> loongarch currently mandates the use of UEFI in whichever
->> firmware is used, so if you have Pmon installed in ROM > and Pmon doe=
-s not itself implement UEFI, it would have
->> to load some other firmware such as u-boot in order to
->> load a kernel through the UEFI protocol, right?
->
->
-> PMON is an independent firmware and loader that can directly load the
-> operating system and it does not require the use of UEFI.
->>=20
->> Has the assumption that loongarch requires UEFI changed?
->
->
-> LoongArch embedded board was use Pmon firmware, The other one uses UEFI
-> firmware (EDK2) on LoongArch platform.
+The memblock_validate_numa_coverage() will count all the pages without node
+ID set and compare to the threshold provided by the architectures.
 
-I'm pretty sure we discussed this when the loongarch port
-was originally merged, with the decisionto just use UEFI for
-booting any kernel, as the legacy entry point for the ACPI
-based environment was not really well-defined and the UEFI
-stub was an easy alternative to have more commonality
-with other architectures.
+>  {
+> -       int i;
+> -       u64 numaram, biosram;
+> +       u64 lo_pg;
+> 
+> -       numaram = 0;
+> -       for (i = 0; i < mi->nr_blks; i++) {
+> -               u64 s = mi->blk[i].start >> PAGE_SHIFT;
+> -               u64 e = mi->blk[i].end >> PAGE_SHIFT;
+> +       lo_pg = max_pfn - calculate_without_node_pages_in_range();
+> 
+> -               numaram += e - s;
+> -               numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+> -               if ((s64)numaram < 0)
+> -                       numaram = 0;
+> +       /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
+> +       if (lo_pg >= limit) {
+> +               pr_err("NUMA: We lost 1m size page.\n");
+> +               return false;
+>         }
+> -       max_pfn = max_low_pfn;
+> -       biosram = max_pfn - absent_pages_in_range(0, max_pfn);
+> 
+> -       BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
+>         return true;
+>  }
+> 
+> @@ -428,7 +421,7 @@ int __init init_numa_memory(void)
+>                 return -EINVAL;
+> 
+>         init_node_memblock();
+> -       if (numa_meminfo_cover_memory(&numa_meminfo) == false)
+> +       if (memblock_validate_numa_coverage(SZ_1M) == false)
+>                 return -EINVAL;
+> 
+>         for_each_node_mask(node, node_possible_map) {
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index 2aadb2019b4f..14feec144675 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -451,30 +451,18 @@ EXPORT_SYMBOL(__node_distance);
+>   * Sanity check to catch more bad NUMA configurations (they are amazingly
+>   * common).  Make sure the nodes cover all memory.
+>   */
+> -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+> +static bool __init memblock_validate_numa_coverage(const u64 limit)
+>  {
+> -       u64 numaram, e820ram;
+> -       int i;
+> +       u64 lo_pg;
+> 
+> -       numaram = 0;
+> -       for (i = 0; i < mi->nr_blks; i++) {
+> -               u64 s = mi->blk[i].start >> PAGE_SHIFT;
+> -               u64 e = mi->blk[i].end >> PAGE_SHIFT;
+> -               numaram += e - s;
+> -               numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+> -               if ((s64)numaram < 0)
+> -                       numaram = 0;
+> -       }
+> -
+> -       e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
+> +       lo_pg = max_pfn - calculate_without_node_pages_in_range();
+> 
+>         /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
+> -       if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
+> -               printk(KERN_ERR "NUMA: nodes only cover %LuMB of your
+> %LuMB e820 RAM. Not used.\n",
+> -                      (numaram << PAGE_SHIFT) >> 20,
+> -                      (e820ram << PAGE_SHIFT) >> 20);
+> +       if (lo_pg >= limit) {
+> +               pr_err("NUMA: We lost 1m size page.\n");
+>                 return false;
+>         }
+> +
+>         return true;
+>  }
+> 
+> @@ -583,7 +571,7 @@ static int __init numa_register_memblks(struct
+> numa_meminfo *mi)
+>                         return -EINVAL;
+>                 }
+>         }
+> -       if (!numa_meminfo_cover_memory(mi))
+> +       if (!memblock_validate_numa_coverage(SZ_1M))
+>                 return -EINVAL;
+> 
+>         /* Finally register nodes. */
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0daef3f2f029..b32457ad1ae3 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3043,6 +3043,7 @@ unsigned long __absent_pages_in_range(int nid,
+> unsigned long start_pfn,
+>                                                 unsigned long end_pfn);
+>  extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+>                                                 unsigned long end_pfn);
+> +extern unsigned long calculate_without_node_pages_in_range(void);
+>  extern void get_pfn_range_for_nid(unsigned int nid,
+>                         unsigned long *start_pfn, unsigned long *end_pfn);
+> 
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index 3ddd18a89b66..13a4883787e3 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -1132,6 +1132,26 @@ static void __init
+> adjust_zone_range_for_zone_movable(int nid,
+>         }
+>  }
+> 
+> +/**
+> + * @start_pfn: The start PFN to start searching for holes
+> + * @end_pfn: The end PFN to stop searching for holes
+> + *
+> + * Return: Return the number of page frames without node assigned
+> within a range.
+> + */
+> +unsigned long __init calculate_without_node_pages_in_range(void)
+> +{
+> +       unsigned long num_pages;
+> +       unsigned long start_pfn, end_pfn;
+> +       int nid, i;
+> +
+> +       for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+> +               if (nid == NUMA_NO_NODE)
+> +                       num_pages += end_pfn - start_pfn;
+> +       }
+> +
+> +       return num_pages;
+> +}
+> +
+>  /*
+>   * Return the number of holes in a range on a node. If nid is MAX_NUMNODES,
+>   * then all holes in the requested range will be accounted for.
+> --
+> 2.25.1
 
-I see this was already extended for embedded CPUs to use
-the uefi stub with DT in commit 88d4d957edc70 ("LoongArch: Add
-FDT booting support from efi system table"), which seems like
-the right direction.
-
-Can you explain why this board would want yet another method
-for entering the kernel? Is there any documentation for the
-boot protocol?
-
->>>> Is this executing directly from ROM then?
->>>
->>> Yes.
->>=20
->> Is this the only runtime call into the firmware,=20
->
->
-> Only when suspend-to-ram occurs, the kernel will call into the firmwar=
-e.
-> No other case.
-
-Ok
-
->> or are there
->> others that are either already called from mainline kernels
->> or in your downsteam implementation?
->>=20
->> How do you ensure that the DTB matches the actual ROM code
->> after rebuilding Pmon? Does Pmon itself fill that field with
->> the correct address, or do you rely on it being a hardcoded
->> constant?
->
->
-> Use Pmon, firmware team will always ensure that DTB matches the actual
-> ROM code.  The "suspend-address" of dtb and pmon entry address will
-> synchronized modification by firmware team.
-
-Ok.  So it's linked against libfdt to fill the dtb information,
-or do you have to provide a dtb blob that matches the firmware?
-
-      Arnd
+-- 
+Sincerely yours,
+Mike.
