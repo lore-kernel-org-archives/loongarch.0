@@ -1,59 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAB52564
-	for <loongarch@lists.linux.dev>; Sun, 13 Aug 2023 17:20:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4648DC433C9
-	for <loongarch@lists.linux.dev>; Sun, 13 Aug 2023 17:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691947221;
-	bh=4XjJ/m1q8Bs92xYp1IMaLNP82sMw8APWOQV52SF+PY8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BAxuFpuXwCCDvy2GqC3juGxG3ZWWR24UXBAQFTvHjtPXP9mpCfEfmiH0CsvINue34
-	 AKNe6DBNYmljF9cazzkMmgLEZYpvmtuIb4okXMhgZCKGEYa0kAFWCN226dgzv97G5l
-	 K9bSymGJLp+8FFjwTrohpn1cwt9g1t1+AXUbyu0RXtPY1qlGDg0HyfgNHwtjiRWkDY
-	 CxWEYd1fKdUIZEMUeE1S1wVraQ/5SanvKsCQ/9ZW7XEgFrZcr0Y2dfycwK8t448BYa
-	 3GHw762q8tBLaP4TKWUfVYdyD4aROanIBS80JHtCfK3T2gP/oIKCULU2wjbg2OSluw
-	 hU83GroB2NlrQ==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-4fe28e4671dso5536676e87.0
-        for <loongarch@lists.linux.dev>; Sun, 13 Aug 2023 10:20:21 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzsNAE+YX8K17TajJUaDyJoI4qPLkmjaJwbzZi+GwM9N4zvJxIJ
-	ksPpAaNpyLRqacx/teZzT0u6kWxd//Iu0ULWcnM=
-X-Google-Smtp-Source: AGHT+IFiLEp9CF0ecmdJzWRfveOAbYiAjQhrssR/IIlpTn4KLDoA7SQlBMgIFFB33cO5A/k745EPwfJcHOV85lr4nY8=
-X-Received: by 2002:a05:6512:33d5:b0:4fe:3364:6c20 with SMTP id
- d21-20020a05651233d500b004fe33646c20mr6003187lfg.16.1691947219316; Sun, 13
- Aug 2023 10:20:19 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440C44684
+	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 03:06:10 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxFvEbmtlkGt8XAA--.49190S3;
+	Mon, 14 Aug 2023 11:06:03 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxxswamtlkd0RZAA--.558S3;
+	Mon, 14 Aug 2023 11:06:02 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Remove noreturn attribute for die()
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <1690871581-23944-1-git-send-email-yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <c1f07d2a-8b91-667a-d978-63687396bacd@loongson.cn>
+Date: Mon, 14 Aug 2023 11:06:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230804124611.2051048-1-kernel@xen0n.name> <CAAhV-H681+pput57E2vHz_V7A_oNy1Av6aCDN6eP0wBQqo7kAg@mail.gmail.com>
-In-Reply-To: <CAAhV-H681+pput57E2vHz_V7A_oNy1Av6aCDN6eP0wBQqo7kAg@mail.gmail.com>
-From: Song Liu <song@kernel.org>
-Date: Sun, 13 Aug 2023 21:20:06 +0400
-X-Gmail-Original-Message-ID: <CAPhsuW5J_wUGmU+1tvzTqmpJSRrJicXoNmp+-ftDuHuhBcbkqA@mail.gmail.com>
-Message-ID: <CAPhsuW5J_wUGmU+1tvzTqmpJSRrJicXoNmp+-ftDuHuhBcbkqA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] raid5, raid6: Accelerate RAID math with LoongArch SIMD
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, linux-raid@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	WANG Xuerui <git@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1690871581-23944-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Bxxswamtlkd0RZAA--.558S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWruw4UAw43WFW8Zry8AFW8uFX_yoWDCwc_Cw
+	1xJa93Kw48uFZYg3WDGa4fXFykWw4UKr95Xw1DXrW7W34ayws8Ww4kur9IvF48XFsY9Fs0
+	kFZ3ta43ArnF9osvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UMpBfU
+	UUUU=
 
-On Fri, Aug 4, 2023 at 7:27=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
-wrote:
+
+
+On 08/01/2023 02:33 PM, Tiezhu Yang wrote:
+> If notify_die() returns NOTIFY_STOP, there is no need to call
+> make_task_dead(), we can remove noreturn attribute for die(),
+> this is similar with arm64, riscv and csky.
 >
-> Hi, Xuerui and Song,
+> While at it, modify the die() declaration in ptrace.h to fix
+> the following checkpatch warnings:
 >
-> This series looks good to me, if no one has objections, I will queue
-> for loongarch-next.
+>   WARNING: function definition argument 'const char *' should also have an identifier name
+>   WARNING: function definition argument 'struct pt_regs *' should also have an identifier name
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/ptrace.h |  2 +-
+>  arch/loongarch/kernel/traps.c       | 12 ++++++------
+>  2 files changed, 7 insertions(+), 7 deletions(-)
 
-Sorry for the delayed response. This set looks good to me. You can add
+There is a similar patch for MIPS, here is the discussion,
+https://lore.kernel.org/all/alpine.DEB.2.21.2308132148500.8596@angie.orcam.me.uk/
 
-Acked-by: Song Liu <song@kernel.org>
+As suggested by Maciej W. Rozycki, I will update the commit message and 
+split it into two patches, then I will send v2 later.
 
 Thanks,
-Song
+Tiezhu
+
