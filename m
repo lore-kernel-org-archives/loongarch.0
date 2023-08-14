@@ -1,113 +1,164 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C06B6A958
-	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 09:35:12 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxXetO9dlkGxUYAA--.44526S3;
-	Mon, 14 Aug 2023 17:35:10 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLCNN9dlkgLtZAA--.5447S3;
-	Mon, 14 Aug 2023 17:35:10 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 1/2] LoongArch: Remove noreturn attribute for die()
-Date: Mon, 14 Aug 2023 17:35:03 +0800
-Message-Id: <1692005704-19126-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1692005704-19126-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1692005704-19126-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8CxLCNN9dlkgLtZAA--.5447S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXry8KF4kZry5XrW3try7Jwc_yoW5Gr1DpF
-	ZrCa4DGFWUCFs5XFyDJF4DuFy5JrZ5G3429wnF93yF9FnIqw1rXr1kGrWqvF4rt3yrWrW0
-	qFWFgw1SqFZxAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07URBT5UUUUU=
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0E5AD47
+	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 11:57:57 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.201])
+	by gateway (Coremail) with SMTP id _____8Bxd+jDFtpkcyoYAA--.13837S3;
+	Mon, 14 Aug 2023 19:57:55 +0800 (CST)
+Received: from [10.20.42.201] (unknown [10.20.42.201])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrM6_FtpkXuZZAA--.24469S3;
+	Mon, 14 Aug 2023 19:57:51 +0800 (CST)
+Subject: Re: [PATCH v6 1/2] soc: dt-bindings: add loongson-2 pm
+To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
+ Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+ Liu Peibao <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
+ loongarch@lists.linux.dev, Liu Yun <liuyun@loongson.cn>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, zhuyinbo@loongson.cn
+References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
+ <20230803063703.5659-2-zhuyinbo@loongson.cn>
+ <193f9138-57e0-4d4b-8225-54d38be9bfbc@app.fastmail.com>
+ <8efeac46-ebb7-fa05-3d88-7c21acd59c8b@loongson.cn>
+ <6d7335b4-63e2-4a7e-9620-8a0012558dfd@app.fastmail.com>
+ <0616585d-1459-b6ef-375b-890426004e01@loongson.cn>
+ <19feb595-e22a-4304-9b88-b5cb55949cd8@app.fastmail.com>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <71c53c37-a0a6-6b11-31d5-4455d2309927@loongson.cn>
+Date: Mon, 14 Aug 2023 19:57:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <19feb595-e22a-4304-9b88-b5cb55949cd8@app.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxrM6_FtpkXuZZAA--.24469S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-If notify_die() returns NOTIFY_STOP, honor the return value from the
-handler chain invocation in die() as, through a debugger, the fault
-may have been fixed. It makes sense even if ignoring the event will
-make the system unstable, by allowing access through a debugger it
-has been compromised already anyway. So we can remove the noreturn
-attribute for die() to make our port consistent with x86, arm64,
-riscv and csky.
 
-Commit 20c0d2d44029 ("[PATCH] i386: pass proper trap numbers to die
-chain handlers") may be the earliest of similar changes.
 
-Link: https://lore.kernel.org/all/alpine.DEB.2.21.2308132148500.8596@angie.orcam.me.uk/
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/ptrace.h |  2 +-
- arch/loongarch/kernel/traps.c       | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+在 2023/8/14 下午4:19, Arnd Bergmann 写道:
+> On Mon, Aug 14, 2023, at 09:57, Yinbo Zhu wrote:
+>> 在 2023/8/12 下午8:25, Arnd Bergmann 写道:
+>>> On Fri, Aug 4, 2023, at 04:54, Yinbo Zhu wrote:
+>>>> 在 2023/8/3 下午3:44, Arnd Bergmann 写道:
+>>>>> On Thu, Aug 3, 2023, at 08:37, Yinbo Zhu wrote:
+>>>>
+>>>>> Is this some SRAM that needs to execute the suspend logic
+>>>>> in order to shut down memory and cache controllers?
+>>>>
+>>>>
+>>>> Yes, The suspend-to-ram after into pmon firmware code and set
+>>>> self-refresh mode in memory controller and ensure that memory data is
+>>>> not lost then shut down memory controller.
+>>>
+>>> I'm sorry I missed your reply earlier, getting back to the
+>>> thread now. So it's clear that this code needs to run in a
+>>> special memory from your description, but I'm still trying
+>>> to understand the details better.
+>>>
+>>> I found https://github.com/loongson-community/pmon source
+>>> code, and a reference to its origin at LSI Logic at
+>>> https://www.linux-mips.org/wiki/PMON but otherwise have
+>>> no idea about what this actually is, or how it relates
+>>> to your UEFI firmware. Did you add UEFI support to PMON,
+>>> or do you use it as a first stage loader that loads
+>>> the actual UEFI implementation (EDK2 or u-boot, I guess)?
+>>
+>>
+>> Pmon and uefi are two different firmware, and there is no connection
+>> between them.
+> 
+> It sounds like we still have problems with terminology. >
+> I don't think categorizing UEFI as a firmware is correct,
 
-diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-index 35f0958..164bc90 100644
---- a/arch/loongarch/include/asm/ptrace.h
-+++ b/arch/loongarch/include/asm/ptrace.h
-@@ -162,7 +162,7 @@ static inline void regs_set_return_value(struct pt_regs *regs, unsigned long val
- #define instruction_pointer(regs) ((regs)->csr_era)
- #define profile_pc(regs) instruction_pointer(regs)
- 
--extern void die(const char *, struct pt_regs *) __noreturn;
-+extern void die(const char *, struct pt_regs *);
- 
- static inline void die_if_kernel(const char *str, struct pt_regs *regs)
- {
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 8fb5e7a..bbdfc5b 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -383,16 +383,15 @@ void show_registers(struct pt_regs *regs)
- 
- static DEFINE_RAW_SPINLOCK(die_lock);
- 
--void __noreturn die(const char *str, struct pt_regs *regs)
-+void die(const char *str, struct pt_regs *regs)
- {
- 	static int die_counter;
--	int sig = SIGSEGV;
-+	int ret;
- 
- 	oops_enter();
- 
--	if (notify_die(DIE_OOPS, str, regs, 0, current->thread.trap_nr,
--		       SIGSEGV) == NOTIFY_STOP)
--		sig = 0;
-+	ret = notify_die(DIE_OOPS, str, regs, 0,
-+			 current->thread.trap_nr, SIGSEGV);
- 
- 	console_verbose();
- 	raw_spin_lock_irq(&die_lock);
-@@ -414,7 +413,8 @@ void __noreturn die(const char *str, struct pt_regs *regs)
- 	if (panic_on_oops)
- 		panic("Fatal exception");
- 
--	make_task_dead(sig);
-+	if (ret != NOTIFY_STOP)
-+		make_task_dead(SIGSEGV);
- }
- 
- static inline void setup_vint_size(unsigned int size)
--- 
-2.1.0
+
+Sorry to have confused you, uefi firmware is our internal name, which is
+actually what you referred to as EDK2, the EDK2 need use UEFI.
+
+> it's the interface used by various firmware implementations
+> to load the operating system. As far as I understand,
+> loongarch currently mandates the use of UEFI in whichever
+> firmware is used, so if you have Pmon installed in ROM > and Pmon does not itself implement UEFI, it would have
+> to load some other firmware such as u-boot in order to
+> load a kernel through the UEFI protocol, right?
+
+
+PMON is an independent firmware and loader that can directly load the
+operating system and it does not require the use of UEFI.
+
+> 
+> Has the assumption that loongarch requires UEFI changed?
+
+
+LoongArch embedded board was use Pmon firmware, The other one uses UEFI
+firmware (EDK2) on LoongArch platform.
+
+> 
+>>>>> Or is
+>>>>> this a runtime firmware interface similar to how UEFI handles
+>>>>> its runtime services to keep the implementation out of
+>>>>> the kernel?
+>>>>
+>>>>
+>>>> No, The main cpu and other cpu will offline that after into firmware and
+>>>> finished Corresponding operations, the pmon firmware will not run.
+>>>
+>>> I'm still trying to understand your explanations here.
+>>> You say that pmon no longer runs, but that seems to contradict
+>>> what you said earlier about branching into pmon firmware code
+>>> for suspend.
+>>
+>>
+>> It's not contradictory.  The suspend-to-ram is that from kernel goto to
+>> pmon firmware code, then pmon finished corresponding operations, which
+>> was to set self-refresh mode in memory controller, then memory HW will
+>> maintain its own data and no longer requires software processing, pmon
+>> firmware will not run.
+> 
+> That is what I mean with a "runtime firmware interface", i.e. you
+> jump into firmware in order to request services from it. Clearly the
+> firmware itself does not run while the OS is executing code, but it is
+> still there and waiting to be called here, which is similar to
+> things like UEFI runtime services, PowerPC RTAS, Arm EL3/trustzone
+> based firmware or x86 SMM firmware, except that this is much less
+> formalized and only consists of an entry point with undocument
+> calling conventions.
+> 
+>>> Is this executing directly from ROM then?
+>>
+>> Yes.
+> 
+> Is this the only runtime call into the firmware, 
+
+
+Only when suspend-to-ram occurs, the kernel will call into the firmware.
+No other case.
+
+> or are there
+> others that are either already called from mainline kernels
+> or in your downsteam implementation?
+> 
+> How do you ensure that the DTB matches the actual ROM code
+> after rebuilding Pmon? Does Pmon itself fill that field with
+> the correct address, or do you rely on it being a hardcoded
+> constant?
+
+
+Use Pmon, firmware team will always ensure that DTB matches the actual
+ROM code.  The "suspend-address" of dtb and pmon entry address will
+synchronized modification by firmware team.
+
+Thanks,
+Yinbo
 
