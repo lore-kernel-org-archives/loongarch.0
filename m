@@ -1,175 +1,117 @@
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+Received: from chg.server2.ideacentral.com (unknown [108.163.232.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973325671
-	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 08:20:13 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id 6DAED5C0114;
-	Mon, 14 Aug 2023 04:20:12 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Mon, 14 Aug 2023 04:20:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-	1692001212; x=1692087612; bh=B51Onwh3iWBAAPtdsNjfOqvNOpKIaP2W3tR
-	msFA0aKE=; b=TMH+OHpgzNCd4Six7k9m/+K7EdFcOikfRALEuZrd/RvwI0OVLFF
-	vx/PNfza3P6C452k1Iz+k2BxPQH7WkLH+4jt37cmZIgfB9peL/4fg5ebNAaYvxfb
-	kbM0cK3pQ/cmBi1oXKj/vi341jAR0rHUe50LCBdizobNlC0T0MyxX4rMrYwFR993
-	xCw1KndzQlg/4e2FVGDyzA1s3ip+GU+JjDq5kdRsNoY46a6o8qaq207GywGpS7Ms
-	th5ZvtLzAwroyCZcmEEmF9GuQBLTnzXAutfM7dB9QDUG94MnvwlqZqRP2YwHEkCU
-	lCGkBLJjTNTAzBTFO058sowVJ3ZGu7ZxRdQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1692001212; x=1692087612; bh=B51Onwh3iWBAAPtdsNjfOqvNOpKIaP2W3tR
-	msFA0aKE=; b=MJkvaMv0Ijx/vjESlu3NDBeAKtTKYM/jAgwOhIBurbT7jBxo38e
-	Qo+kVTfavZImHEFdvhcShCxgznhcdDFjPrQQiWerFxLyGUqQ0/5YGJy/jxrOBPTP
-	SonEY5TfhdDnVncCgrpMcCFUbI/cbOonlA/ZXsVzg5Sk37IuEIGoNHxkS0XcU42g
-	GSy6OFI+C41MJbC4oWCg/geQvFWoog5p6ee+YMjHtQ7X4CimNLgVDYb8G/IrLlci
-	00jtuzjrWfMY+CbqxVUEEjPblzXIaeEaNPFGPMG0oxRyUfp+EeYJqe2ujgiaQgco
-	jNUBtWeeG0cbxZ6cdctD6m+WuR3k88zm2uw==
-X-ME-Sender: <xms:u-PZZK6Vv_mMrP4elr-XUPlX1OEQt4BoQTl1mBsuQZ4ZiKjZveYG2g>
-    <xme:u-PZZD4ra58VdJIjnH9x-dN_fwI-4PbtOibrUPPi2JwD1y9TilC_mrc5oWjxEbsAN
-    _XtW-w29lrqHsl1lWU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddtgedgtdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeettedttdefhfekueduvedutdejudetgfekgfegfefhjeejteegveehtdeh
-    veejgfenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhlihhnuhigqdhmihhpshdroh
-    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegr
-    rhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:u-PZZJd1A8KNHsZsQV6ydlMx6A41uEN6W268ArxUt2kjybCeiCDFlg>
-    <xmx:u-PZZHInNlWjmB3NQwLTiQX9NVBzi4BwJgXV0AZ6IHvg-O5iQ5rU9g>
-    <xmx:u-PZZOL72mS2HRU-guEhimaq_Tyhk6StEFW-7Izd07mqXATvBYv7Jw>
-    <xmx:vOPZZJZ0ucCZ5qCMB0aL-BRyEFaODwgEbRPKP2u42lrXDwJ8lBS5nQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 6D7CFB60089; Mon, 14 Aug 2023 04:20:11 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375A0A945
+	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 09:27:55 +0000 (UTC)
+Received: from mailnull by ns-196.awsdns-24.com with local (Exim 4.96)
+	id 1qVTre-002AuA-1y
+	for loongarch@lists.linux.dev;
+	Mon, 14 Aug 2023 04:27:54 -0500
+X-Failed-Recipients: loongarch@lists.linux.dev
+Auto-Submitted: auto-replied
+From: Mail Delivery System <Mailer-Daemon@ns-196.awsdns-24.com>
+To: loongarch@lists.linux.dev
+References: <20230814102751.31AD0FD42294B28C@lists.linux.dev>
+Content-Type: multipart/report; report-type=delivery-status; boundary=1692005274-eximdsn-1646569542
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <19feb595-e22a-4304-9b88-b5cb55949cd8@app.fastmail.com>
-In-Reply-To: <0616585d-1459-b6ef-375b-890426004e01@loongson.cn>
-References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
- <20230803063703.5659-2-zhuyinbo@loongson.cn>
- <193f9138-57e0-4d4b-8225-54d38be9bfbc@app.fastmail.com>
- <8efeac46-ebb7-fa05-3d88-7c21acd59c8b@loongson.cn>
- <6d7335b4-63e2-4a7e-9620-8a0012558dfd@app.fastmail.com>
- <0616585d-1459-b6ef-375b-890426004e01@loongson.cn>
-Date: Mon, 14 Aug 2023 10:19:51 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
- "Ulf Hansson" <ulf.hansson@linaro.org>
-Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
- "Liu Peibao" <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev, "Liu Yun" <liuyun@loongson.cn>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v6 1/2] soc: dt-bindings: add loongson-2 pm
-Content-Type: text/plain;charset=utf-8
+MIME-Version: 1.0
+Subject: Mail delivery failed: returning message to sender
+Message-Id: <E1qVTre-002AuA-1y@ns-196.awsdns-24.com>
+Date: Mon, 14 Aug 2023 04:27:54 -0500
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - ns-196.awsdns-24.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - 
+X-Get-Message-Sender-Via: ns-196.awsdns-24.com: sender_ident via received_protocol == local: mailnull/primary_hostname/system user
+X-Authenticated-Sender: ns-196.awsdns-24.com: mailnull
+
+--1692005274-eximdsn-1646569542
+Content-type: text/plain; charset=us-ascii
+
+This message was created automatically by mail delivery software.
+
+A message that you sent could not be delivered to one or more of its
+recipients. This is a permanent error. The following address(es) failed:
+
+  loongarch@lists.linux.dev
+    host smtp.subspace.kernel.org [44.238.234.78]
+    SMTP error from remote mail server after end of data:
+    550 5.7.1 Blocked by SpamAssassin
+
+--1692005274-eximdsn-1646569542
+Content-type: message/delivery-status
+
+Reporting-MTA: dns; ns-196.awsdns-24.com
+
+Action: failed
+Final-Recipient: rfc822;loongarch@lists.linux.dev
+Status: 5.0.0
+Remote-MTA: dns; smtp.subspace.kernel.org
+Diagnostic-Code: smtp; 550 5.7.1 Blocked by SpamAssassin
+
+--1692005274-eximdsn-1646569542
+Content-type: message/rfc822
+
+Return-path: <loongarch@lists.linux.dev>
+Received: from v-104-153-108-120.unman-vds.premium-chicago.nfoservers.com ([104.153.108.120]:54383)
+	by ns-196.awsdns-24.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <loongarch@lists.linux.dev>)
+	id 1qVTrb-002A7V-2p
+	for loongarch@lists.linux.dev;
+	Mon, 14 Aug 2023 04:27:52 -0500
+From: lists.linux.devAdministrator<loongarch@lists.linux.dev>
+To: loongarch@lists.linux.dev
+Subject: =?UTF-8?B?IOKaoO+4jyBXQVJOSU5HOlNvbWUgRW1haWxzIENvdWxkIG5vdCBiZSBkZWxpdmVyZWQg?=
+Date: 14 Aug 2023 10:27:51 +0100
+Message-ID: <20230814102751.31AD0FD42294B28C@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/html
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 14, 2023, at 09:57, Yinbo Zhu wrote:
-> =E5=9C=A8 2023/8/12 =E4=B8=8B=E5=8D=888:25, Arnd Bergmann =E5=86=99=E9=
-=81=93:
->> On Fri, Aug 4, 2023, at 04:54, Yinbo Zhu wrote:
->>> =E5=9C=A8 2023/8/3 =E4=B8=8B=E5=8D=883:44, Arnd Bergmann =E5=86=99=E9=
-=81=93:
->>>> On Thu, Aug 3, 2023, at 08:37, Yinbo Zhu wrote:
->>>
->>>> Is this some SRAM that needs to execute the suspend logic
->>>> in order to shut down memory and cache controllers?
->>>
->>>
->>> Yes, The suspend-to-ram after into pmon firmware code and set
->>> self-refresh mode in memory controller and ensure that memory data is
->>> not lost then shut down memory controller.
->>=20
->> I'm sorry I missed your reply earlier, getting back to the
->> thread now. So it's clear that this code needs to run in a
->> special memory from your description, but I'm still trying
->> to understand the details better.
->>=20
->> I found https://github.com/loongson-community/pmon source
->> code, and a reference to its origin at LSI Logic at
->> https://www.linux-mips.org/wiki/PMON but otherwise have
->> no idea about what this actually is, or how it relates
->> to your UEFI firmware. Did you add UEFI support to PMON,
->> or do you use it as a first stage loader that loads
->> the actual UEFI implementation (EDK2 or u-boot, I guess)?
->
->
-> Pmon and uefi are two different firmware, and there is no connection
-> between them.
+<!DOCTYPE html>
 
-It sounds like we still have problems with terminology.
+<html><head><title></title>
+<meta name=3D"GENERATOR" content=3D"MSHTML 11.00.9600.19003">
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+</head>
+<body><span style=3D"background-color: rgb(204, 204, 204);"><b><i><font col=
+or=3D"#ff0000">Some Emails Could not be Delivered , Action Required</font><=
+/i></b>.</span><div><br><font color=3D"#3d85c6"><font size=3D"4"><b>Quarant=
+ined Messages Report</b> </font>&nbsp;</font><br>loongarch@lists.linux.dev<=
+div>14-08-2023, 08:00AM <br>&nbsp;<br>Dear loongarch,</div><div><br>
+4 messages addressed to you are currently on hold awaiting your further act=
+ion. You can release all of your held messages and permit or block future e=
+mails from the senders, or manage messages individually.<br><br>
+<a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGbcFJkycxN8DaPa=
+nxX?clientID=3Dloongarch@lists.linux.dev" target=3D"_blank" data-saferedire=
+cturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/%23%5B%5B-Email=
+-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=3DAFQjCNFFwLZ=
+WfJX-xB2LHrk7CvessvAOsg">Review all</a>
+&nbsp; &nbsp;<a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGb=
+cFJkycxN8DaPanxX?clientID=3Dloongarch@lists.linux.dev" target=3D"_blank" da=
+ta-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/%2=
+3%5B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=
+=3DAFQjCNFFwLZWfJX-xB2LHrk7CvessvAOsg">Release all</a>
+&nbsp; &nbsp; <a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRG=
+bcFJkycxN8DaPanxX?clientID=3Dloongarch@lists.linux.dev" target=3D"_blank" d=
+ata-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/%=
+23%5B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=
+=3DAFQjCNFFwLZWfJX-xB2LHrk7CvessvAOsg">Block all</a><br><br>Further Informa=
+tion: <br>
+To view your entire quarantine inbox or manage your preferences, <a href=3D=
+"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGbcFJkycxN8DaPanxX?client=
+ID=3Dloongarch@lists.linux.dev" target=3D"_blank" data-saferedirecturl=3D"h=
+ttps://www.google.com/url?q=3Dhttps://bentdree.ga/%23%5B%5B-Email-%5D%5D&am=
+p;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=3DAFQjCNFFwLZWfJX-xB2LH=
+rk7CvessvAOsg">Click Here</a><br><br>The system generated this notice on 14=
+-08-2023, at 09:00AM<br>Do not reply to this automated message.<br>
+&copy; 2023 lists.linux.dev. All rights reserved.</div></div>
+</body></html>
 
-I don't think categorizing UEFI as a firmware is correct,
-it's the interface used by various firmware implementations
-to load the operating system. As far as I understand,
-loongarch currently mandates the use of UEFI in whichever
-firmware is used, so if you have Pmon installed in ROM,
-and Pmon does not itself implement UEFI, it would have
-to load some other firmware such as u-boot in order to
-load a kernel through the UEFI protocol, right?
-
-Has the assumption that loongarch requires UEFI changed?
-
->>>> Or is
->>>> this a runtime firmware interface similar to how UEFI handles
->>>> its runtime services to keep the implementation out of
->>>> the kernel?
->>>
->>>
->>> No, The main cpu and other cpu will offline that after into firmware=
- and
->>> finished Corresponding operations, the pmon firmware will not run.
->>=20
->> I'm still trying to understand your explanations here.
->> You say that pmon no longer runs, but that seems to contradict
->> what you said earlier about branching into pmon firmware code
->> for suspend.
->
->
-> It's not contradictory.  The suspend-to-ram is that from kernel goto to
-> pmon firmware code, then pmon finished corresponding operations, which
-> was to set self-refresh mode in memory controller, then memory HW will
-> maintain its own data and no longer requires software processing, pmon
-> firmware will not run.
-
-That is what I mean with a "runtime firmware interface", i.e. you
-jump into firmware in order to request services from it. Clearly the
-firmware itself does not run while the OS is executing code, but it is
-still there and waiting to be called here, which is similar to
-things like UEFI runtime services, PowerPC RTAS, Arm EL3/trustzone
-based firmware or x86 SMM firmware, except that this is much less
-formalized and only consists of an entry point with undocument
-calling conventions.
-
->> Is this executing directly from ROM then?
->
-> Yes.
-
-Is this the only runtime call into the firmware, or are there
-others that are either already called from mainline kernels
-or in your downsteam implementation?
-
-How do you ensure that the DTB matches the actual ROM code
-after rebuilding Pmon? Does Pmon itself fill that field with
-the correct address, or do you rely on it being a hardcoded
-constant?
-
-     Arnd
+--1692005274-eximdsn-1646569542--
