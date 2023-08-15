@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A53B3BE71
-	for <loongarch@lists.linux.dev>; Tue, 15 Aug 2023 08:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65FFDBE78
+	for <loongarch@lists.linux.dev>; Tue, 15 Aug 2023 08:51:24 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.109.245])
-	by gateway (Coremail) with SMTP id _____8Cx5_GKPNtkfrIYAA--.50748S3;
-	Tue, 15 Aug 2023 16:51:22 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxfOqLPNtkhrIYAA--.23855S3;
+	Tue, 15 Aug 2023 16:51:23 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.109.245])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxviOHPNtkGQhbAA--.51617S3;
-	Tue, 15 Aug 2023 16:51:21 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxviOHPNtkGQhbAA--.51617S4;
+	Tue, 15 Aug 2023 16:51:22 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Hongliang Wang <wanghongliang@loongson.cn>,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v2 5/7] LoongArch: dts: DeviceTree for Loongson-2K1000
-Date: Tue, 15 Aug 2023 16:51:11 +0800
-Message-Id: <dcd87b8934c9b9869ffb24b3c904905587dcaa42.1692088166.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v2 6/7] LoongArch: dts: DeviceTree for Loongson-2K2000
+Date: Tue, 15 Aug 2023 16:51:12 +0800
+Message-Id: <2ac742417ed23a258500f0506250a1343174ae00.1692088166.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1692088166.git.zhoubinbin@loongson.cn>
 References: <cover.1692088166.git.zhoubinbin@loongson.cn>
@@ -34,16 +34,16 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxviOHPNtkGQhbAA--.51617S3
+X-CM-TRANSID:AQAAf8DxviOHPNtkGQhbAA--.51617S4
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfJrW5ZF45Xw4rJr4kXF4fWFX_yoW8GF1xWo
-	ZIyF4rtrW8K34UZws7XF1fG3W7Gr1DKF4agrWjvF1fGr4Fkw47Jas5Zw4Yk34j9rWrtryD
-	Z34I9FW5JwsFvr4kl-sFpf9Il3svdjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYK7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
+X-Coremail-Antispam: 1Uk129KBj93XoWxKw15Ar48JFykZw48Jry3KFX_yoWfZrWrpF
+	y7Cw4DWr40qr1jk3y5AFWUtF1DJasYkF95Ww1kAFW8Gr97tryjv3yxKFyfGF1fGrWDX342
+	qrn5A34UKFnrJwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
 	14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
 	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
 	6rWY6Fy7McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
@@ -54,36 +54,37 @@ X-Coremail-Antispam: 1Uk129KBj9fXoWfJrW5ZF45Xw4rJr4kXF4fWFX_yoW8GF1xWo
 	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv
 	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIGNtUUUUU
 
-Add DeviceTree file for Loongson-2K1000 processor, which integrates two
-64-bit dual emission superscalar LA264 processor cores.
+Add DeviceTree file for Loongson-2K2000 processor, which integrates two
+64-bit triple emission superscalar LA364 processor cores.
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
  arch/loongarch/boot/dts/Makefile              |   3 +-
- .../boot/dts/loongson-2k1000-ref.dts          | 217 +++++++++++
- arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 345 ++++++++++++++++++
- 3 files changed, 564 insertions(+), 1 deletion(-)
- create mode 100644 arch/loongarch/boot/dts/loongson-2k1000-ref.dts
- create mode 100644 arch/loongarch/boot/dts/loongson-2k1000.dtsi
+ .../boot/dts/loongson-2k2000-ref.dts          |  89 ++++++
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 257 ++++++++++++++++++
+ 3 files changed, 348 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k2000-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k2000.dtsi
 
 diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
-index aa0b21d73d4e..dc0782315bed 100644
+index dc0782315bed..c019d6676f7e 100644
 --- a/arch/loongarch/boot/dts/Makefile
 +++ b/arch/loongarch/boot/dts/Makefile
-@@ -1,5 +1,6 @@
+@@ -1,6 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0-only
  
--dtb-$(CONFIG_MACH_LOONGSON64)	= loongson-2k0500-ref.dtb
-+dtb-$(CONFIG_MACH_LOONGSON64)	= loongson-2k0500-ref.dtb \
-+				  loongson-2k1000-ref.dtb
+ dtb-$(CONFIG_MACH_LOONGSON64)	= loongson-2k0500-ref.dtb \
+-				  loongson-2k1000-ref.dtb
++				  loongson-2k1000-ref.dtb \
++				  loongson-2k2000-ref.dtb
  
  obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .dtb.o, $(CONFIG_BUILTIN_DTB_NAME))
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+diff --git a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
 new file mode 100644
-index 000000000000..950a2df4e33f
+index 000000000000..7543e3664ac8
 --- /dev/null
-+++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-@@ -0,0 +1,217 @@
++++ b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
+@@ -0,0 +1,89 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2023 Loongson Technology Corporation Limited
@@ -91,11 +92,11 @@ index 000000000000..950a2df4e33f
 +
 +/dts-v1/;
 +
-+#include "loongson-2k1000.dtsi"
++#include "loongson-2k2000.dtsi"
 +
 +/ {
-+	compatible = "loongson,ls2k1000-ref", "loongson,ls2k1000";
-+	model = "Loongson-2K1000 Reference Board";
++	compatible = "loongson,ls2k2000-ref", "loongson,ls2k2000";
++	model = "Loongson-2K2000 Reference Board";
 +
 +	aliases {
 +		serial0 = &uart0;
@@ -104,6 +105,12 @@ index 000000000000..950a2df4e33f
 +	chosen {
 +		stdout-path = "serial0:115200n8";
 +		bootargs = "earlycon";
++	};
++
++	cpu_clk: cpu-clk {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <1200000000>;
 +	};
 +
 +	cpus {
@@ -121,26 +128,25 @@ index 000000000000..950a2df4e33f
 +			};
 +		};
 +
-+		cpu0: cpu@0 {
-+			compatible = "loongson,la264";
++		cpu0: cpu@1 {
++			compatible = "loongson,la364";
 +			device_type = "cpu";
-+			reg= <0x0>;
-+			clocks = <&clk LOONGSON2_NODE_CLK>;
++			reg = <0x0>;
++			clocks = <&cpu_clk>;
 +		};
 +
-+		cpu1: cpu@1 {
-+			compatible = "loongson,la264";
++		cpu1: cpu@2 {
++			compatible = "loongson,la364";
 +			device_type = "cpu";
 +			reg = <0x1>;
-+			clocks = <&clk LOONGSON2_NODE_CLK>;
++			clocks = <&cpu_clk>;
 +		};
 +	};
 +
 +	memory@200000 {
 +		device_type = "memory";
-+		reg = <0x0 0x200000 0x0 0x6e00000>,
-+		      <0x0 0x08000000 0x0 0x7000000>,
-+		      <0x0 0x90000000 0x1 0xe0000000>;
++		reg = <0x0 0x200000 0x0 0xee00000>, /* 238 MB at 2 MB */
++		      <0x0 0x90000000 0x0 0x70000000>;
 +	};
 +
 +	reserved-memory {
@@ -155,75 +161,6 @@ index 000000000000..950a2df4e33f
 +			linux,cma-default;
 +		};
 +	};
-+
-+	i2c-gpio-0 {
-+		compatible = "i2c-gpio";
-+		scl-gpios = <&gpio0 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		sda-gpios = <&gpio0 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <5>;        /* ~100 kHz */
-+		status = "disabled";
-+	};
-+
-+	i2c-gpio-1 {
-+		compatible = "i2c-gpio";
-+		scl-gpios = <&gpio0 33 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		sda-gpios = <&gpio0 32 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <5>;        /* ~100 kHz */
-+		status = "disabled";
-+	};
-+};
-+
-+&gmac0 {
-+	status = "okay";
-+
-+	phy-mode = "rgmii";
-+	phy-handle = <&phy0>;
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy0: ethernet-phy@0 {
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&gmac1 {
-+	status = "okay";
-+
-+	phy-mode = "rgmii";
-+	phy-handle = <&phy1>;
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy1: ethernet-phy@1 {
-+			reg = <16>;
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	pinctrl-0 = <&i2c0_pins_default>;
-+	pinctrl-names = "default";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	eeprom@57{
-+		compatible = "atmel,24c16";
-+		reg = <0x57>;
-+		pagesize = <16>;
-+	};
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
 +};
 +
 +&sata {
@@ -234,79 +171,15 @@ index 000000000000..950a2df4e33f
 +	status = "okay";
 +};
 +
-+&clk {
-+	status = "okay";
-+};
-+
 +&rtc0 {
 +	status = "okay";
 +};
-+
-+&pctrl {
-+	status = "okay";
-+	sdio_pins_default: sdio-pins {
-+		sdio-pinmux {
-+			groups = "sdio";
-+			function = "sdio";
-+		};
-+		sdio-det-pinmux {
-+			groups = "pwm2";
-+			function = "gpio";
-+		};
-+	};
-+
-+	pwm1_pins_default: pwm1-pins {
-+		pinmux {
-+			groups = "pwm1";
-+			function = "pwm1";
-+		};
-+	};
-+
-+	pwm0_pins_default: pwm0-pins {
-+		pinmux {
-+			groups = "pwm0";
-+			function = "pwm0";
-+		};
-+	};
-+
-+	i2c1_pins_default: i2c1-pins {
-+		pinmux {
-+			groups = "i2c1";
-+			function = "i2c1";
-+		};
-+	};
-+
-+	i2c0_pins_default: i2c0-pins {
-+		pinmux {
-+			groups = "i2c0";
-+			function = "i2c0";
-+		};
-+	};
-+
-+	nand_pins_default: nand-pins {
-+		pinmux {
-+			groups = "nand";
-+			function = "nand";
-+		};
-+	};
-+
-+	hda_pins_default: hda-pins {
-+		grp0-pinmux {
-+			groups = "hda";
-+			function = "hda";
-+		};
-+		grp1-pinmux {
-+			groups = "i2s";
-+			function = "gpio";
-+		};
-+	};
-+};
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
 new file mode 100644
-index 000000000000..fc3bb6368a5e
+index 000000000000..f0959163f677
 --- /dev/null
-+++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-@@ -0,0 +1,345 @@
++++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
+@@ -0,0 +1,257 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2023 Loongson Technology Corporation Limited
@@ -315,19 +188,10 @@ index 000000000000..fc3bb6368a5e
 +/dts-v1/;
 +
 +#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/clock/loongson,ls2k-clk.h>
-+#include <dt-bindings/gpio/gpio.h>
 +
 +/ {
 +	#address-cells = <2>;
 +	#size-cells = <2>;
-+
-+	ref_100m: clock-ref-100m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <100000000>;
-+		clock-output-names = "ref_100m";
-+	};
 +
 +	cpuintc: interrupt-controller {
 +		compatible = "loongson,cpu-interrupt-controller";
@@ -341,18 +205,15 @@ index 000000000000..fc3bb6368a5e
 +		#size-cells = <2>;
 +
 +		ranges = <0x0 0x10000000 0x0 0x10000000 0x0 0x10000000>,
-+			 <0x0 0x2000000 0x0 0x2000000 0x0 0x2000000>,
-+			 <0x0 0x20000000 0x0 0x20000000 0x0 0x10000000>,
++			 <0x0 0x2000000  0x0 0x2000000  0x0 0x2000000>,
 +			 <0x0 0x40000000 0x0 0x40000000 0x0 0x40000000>,
 +			 <0xfe 0x0 0xfe 0x0 0x0 0x40000000>;
 +
-+		dma-coherent;
-+
-+		liointc0: interrupt-controller@1fe01400 {
++		liointc: interrupt-controller@1fe01400 {
 +			compatible = "loongson,liointc-2.0";
 +			reg = <0x0 0x1fe01400 0x0 0x40>,
-+			      <0x0 0x1fe01040 0x0 0x8>,
-+			      <0x0 0x1fe01140 0x0 0x8>;
++			      <0x0 0x1fe01440 0x0 0x8>,
++			      <0x0 0x1fe01448 0x0 0x8>;
 +			reg-names = "main", "isr0", "isr1";
 +			interrupt-controller;
 +			#interrupt-cells = <2>;
@@ -365,217 +226,116 @@ index 000000000000..fc3bb6368a5e
 +						  <0x00000000>; /* int3 */
 +		};
 +
-+		liointc1: interrupt-controller@1fe01440 {
-+			compatible = "loongson,liointc-2.0";
-+			reg = <0x0 0x1fe01440 0x0 0x40>,
-+			      <0x0 0x1fe01048 0x0 0x8>,
-+			      <0x0 0x1fe01148 0x0 0x8>;
-+			reg-names = "main", "isr0", "isr1";
++		eiointc: interrupt-controller@1fe01600 {
++			compatible = "loongson,ls2k2000-eiointc";
++			reg = <0x0 0x1fe01600 0x0 0xea00>;
 +			interrupt-controller;
-+			#interrupt-cells = <2>;
++			#interrupt-cells = <1>;
 +			interrupt-parent = <&cpuintc>;
 +			interrupts = <3>;
-+			interrupt-names = "int1";
-+			loongson,parent_int_map = <0x00000000>, /* int0 */
-+						  <0xffffffff>, /* int1 */
-+						  <0x00000000>, /* int2 */
-+						  <0x00000000>; /* int3 */
 +		};
 +
-+		global-utilities@1fe00000 {
-+			compatible = "loongson,ls2k-chipid";
-+			reg = <0x0 0x1fe00000 0x0 0x3ffc>;
-+			little-endian;
++		pic: interrupt-controller@10000000 {
++			compatible = "loongson,pch-pic-1.0";
++			reg = <0x0 0x10000000 0x0 0x400>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			loongson,pic-base-vec = <0>;
++			interrupt-parent = <&eiointc>;
 +		};
 +
-+		pctrl: pinctrl@1fe00420 {
-+			compatible = "loongson,ls2k-pinctrl";
-+			reg = <0x0 0x1fe00420 0x0 0x18>;
++		msi: msi-controller@1fe01140 {
++			compatible = "loongson,pch-msi-1.0";
++			reg = <0x0 0x1fe01140 0x0 0x8>;
++			msi-controller;
++			loongson,msi-base-vec = <64>;
++			loongson,msi-num-vecs = <192>;
++			interrupt-parent = <&eiointc>;
++		};
++
++		rtc0: rtc@100d0100 {
++			compatible = "loongson,ls2k2000-rtc", "loongson,ls7a-rtc";
++			reg = <0x0 0x100d0100 0x0 0x100>;
++			interrupt-parent = <&pic>;
++			interrupts = <52 IRQ_TYPE_LEVEL_HIGH>;
 +			status = "disabled";
 +		};
 +
-+		clk: clock-controller@1fe00480 {
-+			compatible = "loongson,ls2k-clk";
-+			reg = <0x0 0x1fe00480 0x0 0x58>;
-+			#clock-cells = <1>;
-+			clocks = <&ref_100m>;
-+			clock-names = "ref_100m";
-+			status = "disabled";
-+		};
-+
-+		gpio0: gpio@1fe00500 {
-+			compatible = "loongson,ls2k-gpio";
-+			reg = <0x0 0x1fe00500 0x0 0x38>;
-+			ngpios = <64>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pctrl 0x0 0x0 15>,
-+				      <&pctrl 16 16 15>,
-+				      <&pctrl 32 32 10>,
-+				      <&pctrl 44 44 20>;
-+			interrupt-parent = <&liointc1>;
-+			interrupts = <28 IRQ_TYPE_LEVEL_HIGH>,
-+				     <29 IRQ_TYPE_LEVEL_HIGH>,
-+				     <30 IRQ_TYPE_LEVEL_HIGH>,
-+				     <30 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <>,
-+				     <>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <27 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		uart0: serial@1fe20000 {
++		uart0: serial@1fe001e0 {
 +			compatible = "ns16550a";
-+			reg = <0x0 0x1fe20000 0x0 0x10>;
-+			clock-frequency = <125000000>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <0x0 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x0 0x1fe001e0 0x0 0x10>;
++			clock-frequency = <100000000>;
++			interrupt-parent = <&liointc>;
++			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
 +			no-loopback-test;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@1fe21000 {
-+			compatible = "loongson,ls2k-i2c";
-+			reg = <0x0 0x1fe21000 0x0 0x8>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@1fe21800 {
-+			compatible = "loongson,ls2k-i2c";
-+			reg = <0x0 0x1fe21800 0x0 0x8>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		rtc0: rtc@1fe27800 {
-+			compatible = "loongson,ls2k1000-rtc";
-+			reg = <0x0 0x1fe27800 0x0 0x100>;
-+			interrupt-parent = <&liointc1>;
-+			interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
 +			status = "disabled";
 +		};
 +
 +		pcie@1a000000 {
 +			compatible = "loongson,ls2k-pci";
 +			device_type = "pci";
-+			#size-cells = <2>;
 +			#address-cells = <3>;
++			#size-cells = <2>;
 +
 +			reg = <0x0 0x1a000000 0x0 0x02000000>,
 +			      <0xfe 0x0 0x0 0x20000000>;
 +
-+			ranges = <0x1000000 0x0 0x8000 0x0 0x18008000 0x0 0x8000>,
-+				 <0x2000000 0x0 0x60000000 0x0 0x60000000 0x0 0x20000000>; /* mem */
++			ranges = <0x2000000 0x0 0x60000000 0x0 0x60000000 0x0 0x20000000>,
++				 <0x1000000 0x0 0x8000 0x0 0x18400000 0x0 0x8000>;
 +
-+			gmac0: ethernet@3,0 {
++			ethernet@3,0 {
 +				reg = <0x1800 0x0 0x0 0x0 0x0>;
-+				interrupt-parent = <&liointc0>;
-+				interrupts = <12 IRQ_TYPE_LEVEL_HIGH>,
-+					     <13 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "macirq", "eth_lpi";
++				interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&pic>;
 +				status = "disabled";
 +			};
 +
-+			gmac1: ethernet@3,1 {
++			ethernet@3,1 {
 +				reg = <0x1900 0x0 0x0 0x0 0x0>;
-+				interrupt-parent = <&liointc0>;
-+				interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
-+					     <15 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "macirq", "eth_lpi";
++				interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&pic>;
 +				status = "disabled";
 +			};
 +
-+			ehci0: usb@4,1 {
-+				reg = <0x2100 0x0 0x0 0x0 0x0>;
-+				interrupt-parent = <&liointc1>;
-+				interrupts = <18 IRQ_TYPE_LEVEL_HIGH>;
++			ethernet@3,2 {
++				reg = <0x1a00 0x0 0x0 0x0 0x0>;
++				interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&pic>;
 +				status = "disabled";
 +			};
 +
-+			ohci0: usb@4,2 {
-+				reg = <0x2200 0x0 0x0 0x0 0x0>;
-+				interrupt-parent = <&liointc1>;
-+				interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
++			usb@4,0 {
++				reg = <0x2000 0x0 0x0 0x0 0x0>;
++				interrupts = <48 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&pic>;
 +				status = "disabled";
 +			};
 +
-+			display@6,0 {
-+				reg = <0x3000 0x0 0x0 0x0 0x0>;
-+				interrupt-parent = <&liointc0>;
++			usb@19,0 {
++				reg = <0xc800 0x0 0x0 0x0 0x0>;
++				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&pic>;
++				status = "disabled";
++			};
++
++			display@6,1 {
++				reg = <0x3100 0x0 0x0 0x0 0x0>;
 +				interrupts = <28 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&pic>;
 +				status = "disabled";
 +			};
 +
 +			hda@7,0 {
 +				reg = <0x3800 0x0 0x0 0x0 0x0>;
-+				interrupt-parent = <&liointc0>;
-+				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <58 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&pic>;
 +				status = "disabled";
 +			};
 +
 +			sata: sata@8,0 {
 +				reg = <0x4000 0x0 0x0 0x0 0x0>;
-+				interrupt-parent = <&liointc0>;
-+				interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&pic>;
 +				status = "disabled";
 +			};
 +
@@ -584,9 +344,10 @@ index 000000000000..fc3bb6368a5e
 +				#address-cells = <3>;
 +				#size-cells = <2>;
 +				device_type = "pci";
++				interrupt-parent = <&pic>;
 +				#interrupt-cells = <1>;
 +				interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-+				interrupt-map = <0x0 0x0 0x0 0x0 &liointc1 0x0 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-map = <0x0 0x0 0x0 0x0 &pic 32 IRQ_TYPE_LEVEL_HIGH>;
 +				ranges;
 +			};
 +
@@ -595,10 +356,10 @@ index 000000000000..fc3bb6368a5e
 +				#address-cells = <3>;
 +				#size-cells = <2>;
 +				device_type = "pci";
-+				interrupt-parent = <&liointc1>;
++				interrupt-parent = <&pic>;
 +				#interrupt-cells = <1>;
 +				interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-+				interrupt-map = <0x0 0x0 0x0 0x0 &liointc1 1 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-map = <0x0 0x0 0x0 0x0 &pic 33 IRQ_TYPE_LEVEL_HIGH>;
 +				ranges;
 +			};
 +
@@ -607,10 +368,10 @@ index 000000000000..fc3bb6368a5e
 +				#address-cells = <3>;
 +				#size-cells = <2>;
 +				device_type = "pci";
-+				interrupt-parent = <&liointc1>;
++				interrupt-parent = <&pic>;
 +				#interrupt-cells = <1>;
 +				interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-+				interrupt-map = <0x0 0x0 0x0 0x0 &liointc1 2 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-map = <0x0 0x0 0x0 0x0 &pic 34 IRQ_TYPE_LEVEL_HIGH>;
 +				ranges;
 +			};
 +
@@ -619,10 +380,10 @@ index 000000000000..fc3bb6368a5e
 +				#address-cells = <3>;
 +				#size-cells = <2>;
 +				device_type = "pci";
-+				interrupt-parent = <&liointc1>;
++				interrupt-parent = <&pic>;
 +				#interrupt-cells = <1>;
 +				interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-+				interrupt-map = <0x0 0x0 0x0 0x0 &liointc1 3 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-map = <0x0 0x0 0x0 0x0 &pic 35 IRQ_TYPE_LEVEL_HIGH>;
 +				ranges;
 +			};
 +
@@ -631,10 +392,10 @@ index 000000000000..fc3bb6368a5e
 +				#address-cells = <3>;
 +				#size-cells = <2>;
 +				device_type = "pci";
-+				interrupt-parent = <&liointc1>;
++				interrupt-parent = <&pic>;
 +				#interrupt-cells = <1>;
 +				interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-+				interrupt-map = <0x0 0x0 0x0 0x0 &liointc1 4 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-map = <0x0 0x0 0x0 0x0 &pic 36 IRQ_TYPE_LEVEL_HIGH>;
 +				ranges;
 +			};
 +
@@ -643,10 +404,34 @@ index 000000000000..fc3bb6368a5e
 +				#address-cells = <3>;
 +				#size-cells = <2>;
 +				device_type = "pci";
-+				interrupt-parent = <&liointc1>;
++				interrupt-parent = <&pic>;
 +				#interrupt-cells = <1>;
 +				interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-+				interrupt-map = <0x0 0x0 0x0 0x0 &liointc1 5 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-map = <0x0 0x0 0x0 0x0 &pic 37 IRQ_TYPE_LEVEL_HIGH>;
++				ranges;
++			};
++
++			pcie@f,0 {
++				reg = <0x7800 0x0 0x0 0x0 0x0>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				device_type = "pci";
++				interrupt-parent = <&pic>;
++				#interrupt-cells = <1>;
++				interrupt-map-mask = <0x0 0x0 0x0 0x0>;
++				interrupt-map = <0x0 0x0 0x0 0x0 &pic 40 IRQ_TYPE_LEVEL_HIGH>;
++				ranges;
++			};
++
++			pcie@10,0 {
++				reg = <0x8000 0x0 0x0 0x0 0x0>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				device_type = "pci";
++				interrupt-parent = <&pic>;
++				#interrupt-cells = <1>;
++				interrupt-map-mask = <0x0 0x0 0x0 0x0>;
++				interrupt-map = <0x0 0x0 0x0 0x0 &pic 30 IRQ_TYPE_LEVEL_HIGH>;
 +				ranges;
 +			};
 +		};
