@@ -1,226 +1,122 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70DD23CC
-	for <loongarch@lists.linux.dev>; Tue, 15 Aug 2023 08:36:10 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxV_H4ONtkVLEYAA--.51259S3;
-	Tue, 15 Aug 2023 16:36:08 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c74ONtk0QVbAA--.27613S2;
-	Tue, 15 Aug 2023 16:36:08 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] objtool: Check local label in is_sibling_call() and add_jump_destinations()
-Date: Tue, 15 Aug 2023 16:36:02 +0800
-Message-Id: <1692088562-4630-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8Ax3c74ONtk0QVbAA--.27613S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3XFyrCw1rCF48uF47KFy5KFX_yoW7uw43pa
-	13G3y5Kr4rXFWxuw47tF4UW3WSkw4rXFy7GFW5Ga4Skw1Yqas5ta1fK3WI9F15JFy5WF43
-	Xw4jyryUCF4UAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E54C219C
+	for <loongarch@lists.linux.dev>; Tue, 15 Aug 2023 08:51:05 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.245])
+	by gateway (Coremail) with SMTP id _____8AxFvF3PNtkK7IYAA--.50607S3;
+	Tue, 15 Aug 2023 16:51:03 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.245])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniN1PNtk0wdbAA--.51871S2;
+	Tue, 15 Aug 2023 16:51:02 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Hongliang Wang <wanghongliang@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 0/7] LoongArch: Add built-in dtb support
+Date: Tue, 15 Aug 2023 16:50:45 +0800
+Message-Id: <cover.1692088166.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxniN1PNtk0wdbAA--.51871S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxuF1kGrW7JF17WrykZrykXrc_yoW5Wr45p3
+	9rursxGr4kGr1xWrsxt345uFn5Zr1kGwsFga13CryUG39rZr1UZr1ftF90vF47Aw4rJ340
+	qr1rGw17KF4UAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
 
-When update the latest upstream gcc and binutils which enables linker
-relaxation by default, it generates more objtool warnings on LoongArch,
-like this:
+Hi all:
 
-  init/version.o: warning: objtool: early_hostname+0x20: sibling call from callable instruction with modified stack frame
+This patchset introduces LoongArch's built-in dtb support.
 
-We can see that the branch and jump operation about local label ".L2"
-is not sibling call, because a sibling call is a tail-call to another
-symbol. In this case, make is_sibling_call() return false, set dest_sec
-and dest_off to calculate jump_dest in add_jump_destinations().
+As we know, the Loongson-2K family supports DT. Inevitably, some systems
+do not provide a useful device tree to the kernel at boot time. Chasing
+around bootloaders for these systems is a headache, so we just keep a
+device tree table in the kernel, keyed by the dts filename, that
+contains the relevant DTBs.
 
-Here are some detailed info:
-[fedora@linux 6.5.test]$ gcc --version
-gcc (GCC) 14.0.0 20230803 (experimental)
-[fedora@linux 6.5.test]$ as --version
-GNU assembler (GNU Binutils) 2.41.50.20230803
-[fedora@linux 6.5.test]$ objdump -M no-aliases -D init/version.o
-0000000000000000 <early_hostname>:
-   0:   00150085        or              $a1, $a0, $zero
-   4:   1a000004        pcalau12i       $a0, 0
-   8:   02ffc063        addi.d          $sp, $sp, -16
-   c:   02810406        addi.w          $a2, $zero, 65
-  10:   02c00084        addi.d          $a0, $a0, 0
-  14:   29c02061        st.d            $ra, $sp, 8
-  18:   54000000        bl              0       # 18 <early_hostname+0x18>
-  1c:   0281000c        addi.w          $t0, $zero, 64
-  20:   6c001584        bgeu            $t0, $a0, 20    # 34 <.L2>
-  24:   1a000004        pcalau12i       $a0, 0
-  28:   02810005        addi.w          $a1, $zero, 64
-  2c:   02c00084        addi.d          $a0, $a0, 0
-  30:   54000000        bl              0       # 30 <early_hostname+0x30>
+Thanks.
 
-0000000000000034 <.L2>:
-  34:   28c02061        ld.d            $ra, $sp, 8
-  38:   00150004        or              $a0, $zero, $zero
-  3c:   02c04063        addi.d          $sp, $sp, 16
-  40:   4c000020        jirl            $zero, $ra, 0
+-----
+V2:
+patch(1/7):
+  - Drop model and clock-frequency properties;
+  - Add clocks property;
+  - Rewrite the description.
+patch(2/7):
+  - Add the proper compatibles for boards.
+patch(4/7)(5/7)(6/7):
+  - Format commit message head;
+  - Drop undocumented compatible, such as pci_bridge compatible;
+  - Distinguish the attributes, put SoC-related into DTSI and
+    board-related into DTS;
+  - Check DTS with 'make dtbs_check W=1'.
+patch(7/7)
+  - New patch;
+  - Parses Molde name and CPU MHz from the DTS attribute.
 
-By the way, it need to move insn_reloc() before is_sibling_call()
-to avoid implicit declaration build error.
+Link to V1:
+https://lore.kernel.org/loongarch/cover.1686882123.git.zhoubinbin@loongson.cn/
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/objtool/check.c | 69 ++++++++++++++++++++++++++++++---------------------
- 1 file changed, 41 insertions(+), 28 deletions(-)
+Binbin Zhou (7):
+  dt-bindings: loongarch: Add CPU bindings for LoongArch
+  dt-bindings: loongarch: Add Loongson SoC boards compatibles
+  LoongArch: Allow device trees to be built into the kernel
+  LoongArch: dts: DeviceTree for Loongson-2K0500
+  LoongArch: dts: DeviceTree for Loongson-2K1000
+  LoongArch: dts: DeviceTree for Loongson-2K2000
+  LoongArch: Parsing CPU-related information from DTS
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 8936a05..fea3675 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -161,12 +161,39 @@ static bool is_jump_table_jump(struct instruction *insn)
- 	       insn_jump_table(alt_group->orig_group->first_insn);
- }
- 
--static bool is_sibling_call(struct instruction *insn)
-+static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *insn)
-+{
-+	struct reloc *reloc;
-+
-+	if (insn->no_reloc)
-+		return NULL;
-+
-+	if (!file)
-+		return NULL;
-+
-+	reloc = find_reloc_by_dest_range(file->elf, insn->sec,
-+					 insn->offset, insn->len);
-+	if (!reloc) {
-+		insn->no_reloc = 1;
-+		return NULL;
-+	}
-+
-+	return reloc;
-+}
-+
-+static bool is_sibling_call(struct objtool_file *file, struct instruction *insn)
- {
- 	/*
- 	 * Assume only STT_FUNC calls have jump-tables.
- 	 */
- 	if (insn_func(insn)) {
-+		struct reloc *reloc = insn_reloc(file, insn);
-+
-+		/* Disallow sibling calls into STT_NOTYPE if it is local lable */
-+		if (reloc && reloc->sym->type == STT_NOTYPE &&
-+		    strncmp(reloc->sym->name, ".L", 2) == 0)
-+			return false;
-+
- 		/* An indirect jump is either a sibling call or a jump to a table. */
- 		if (insn->type == INSN_JUMP_DYNAMIC)
- 			return !is_jump_table_jump(insn);
-@@ -232,7 +259,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
- 	 * of the sibling call returns.
- 	 */
- 	func_for_each_insn(file, func, insn) {
--		if (is_sibling_call(insn)) {
-+		if (is_sibling_call(file, insn)) {
- 			struct instruction *dest = insn->jump_dest;
- 
- 			if (!dest)
-@@ -743,7 +770,7 @@ static int create_static_call_sections(struct objtool_file *file)
- 		if (!elf_init_reloc_data_sym(file->elf, sec,
- 					     idx * sizeof(*site) + 4,
- 					     (idx * 2) + 1, key_sym,
--					     is_sibling_call(insn) * STATIC_CALL_SITE_TAIL))
-+					     is_sibling_call(file, insn) * STATIC_CALL_SITE_TAIL))
- 			return -1;
- 
- 		idx++;
-@@ -1298,26 +1325,6 @@ __weak bool arch_is_rethunk(struct symbol *sym)
- 	return false;
- }
- 
--static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *insn)
--{
--	struct reloc *reloc;
--
--	if (insn->no_reloc)
--		return NULL;
--
--	if (!file)
--		return NULL;
--
--	reloc = find_reloc_by_dest_range(file->elf, insn->sec,
--					 insn->offset, insn->len);
--	if (!reloc) {
--		insn->no_reloc = 1;
--		return NULL;
--	}
--
--	return reloc;
--}
--
- static void remove_insn_ops(struct instruction *insn)
- {
- 	struct stack_op *op, *next;
-@@ -1560,8 +1567,14 @@ static int add_jump_destinations(struct objtool_file *file)
- 			 * External sibling call or internal sibling call with
- 			 * STT_FUNC reloc.
- 			 */
--			add_call_dest(file, insn, reloc->sym, true);
--			continue;
-+			if (reloc->sym->type == STT_NOTYPE &&
-+			    strncmp(reloc->sym->name, ".L", 2) == 0) {
-+				dest_sec = insn->sec;
-+				dest_off = arch_jump_destination(insn);
-+			} else {
-+				add_call_dest(file, insn, reloc->sym, true);
-+				continue;
-+			}
- 		} else if (reloc->sym->sec->idx) {
- 			dest_sec = reloc->sym->sec;
- 			dest_off = reloc->sym->sym.st_value +
-@@ -3649,7 +3662,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 
- 		case INSN_JUMP_CONDITIONAL:
- 		case INSN_JUMP_UNCONDITIONAL:
--			if (is_sibling_call(insn)) {
-+			if (is_sibling_call(file, insn)) {
- 				ret = validate_sibling_call(file, insn, &state);
- 				if (ret)
- 					return ret;
-@@ -3670,7 +3683,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 
- 		case INSN_JUMP_DYNAMIC:
- 		case INSN_JUMP_DYNAMIC_CONDITIONAL:
--			if (is_sibling_call(insn)) {
-+			if (is_sibling_call(file, insn)) {
- 				ret = validate_sibling_call(file, insn, &state);
- 				if (ret)
- 					return ret;
-@@ -3834,7 +3847,7 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
- 
- 		case INSN_JUMP_UNCONDITIONAL:
- 		case INSN_JUMP_CONDITIONAL:
--			if (!is_sibling_call(insn)) {
-+			if (!is_sibling_call(file, insn)) {
- 				if (!insn->jump_dest) {
- 					WARN_INSN(insn, "unresolved jump target after linking?!?");
- 					return -1;
+ .../devicetree/bindings/loongarch/boards.yaml |  34 ++
+ .../devicetree/bindings/loongarch/cpus.yaml   |  60 +++
+ arch/loongarch/Kconfig                        |  16 +
+ arch/loongarch/Makefile                       |  10 +-
+ arch/loongarch/boot/dts/Makefile              |   7 +-
+ .../boot/dts/loongson-2k0500-ref.dts          | 115 ++++++
+ arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 244 +++++++++++++
+ .../boot/dts/loongson-2k1000-ref.dts          | 217 +++++++++++
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 345 ++++++++++++++++++
+ .../boot/dts/loongson-2k2000-ref.dts          |  89 +++++
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 257 +++++++++++++
+ arch/loongarch/kernel/env.c                   |  33 ++
+ arch/loongarch/kernel/setup.c                 |   9 +-
+ 13 files changed, 1430 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/loongarch/boards.yaml
+ create mode 100644 Documentation/devicetree/bindings/loongarch/cpus.yaml
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0500.dtsi
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k1000.dtsi
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k2000-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k2000.dtsi
+
 -- 
-2.1.0
+2.39.3
 
