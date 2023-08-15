@@ -1,186 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7C2C2FF
-	for <loongarch@lists.linux.dev>; Mon, 14 Aug 2023 17:29:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D9EBC433C7;
-	Mon, 14 Aug 2023 17:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692034186;
-	bh=YfYqRU0e4MMwMOj2+INPBwr2gWAZuRCkDC7CcbLJZwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HlorosbJfBKoKuSEzuhpMEDhyCEgNbAjh0WRUWYvSrJQqbpn3RtXV5MXfqg86XMZu
-	 PRIzl/a1Zm4JP01aAyYvOo4eXjKSbKRGZrZWsBFgfzWmWosvRskjtSYJ2u1nkaIfYL
-	 3mf/YLk5P4/kwIbW0/0OW/80eBACchzwcI47RwiFpmJ8Jtw1j/csY9iAstWbSpBBpy
-	 WmteJ/YnEIbAWmaPz48U1VnmCu8ZYlvXIU9ZmGAGJDjbISnm/WF00EiP+i3H+Of/tV
-	 S7GkK22qTItYf8xndl/FvrUeZPyDCen+y0gW4tx9jdOzDBO2nrwCoUYxtEv2uqlbq4
-	 l2mipDbqBG9jA==
-Date: Mon, 14 Aug 2023 10:29:43 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev,
-	WANG Xuerui <kernel@xen0n.name>,
-	Huacai Chen <chenhuacai@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] asm-generic: partially revert "Unify uapi bitsperlong.h
- for arm64, riscv and loongarch"
-Message-ID: <20230814172943.GB911700@dev-arch.thelio-3990X>
-References: <20230811204930.1529925-1-arnd@kernel.org>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA511C13
+	for <loongarch@lists.linux.dev>; Tue, 15 Aug 2023 04:08:49 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.201])
+	by gateway (Coremail) with SMTP id _____8AxTetK+tpkt54YAA--.45444S3;
+	Tue, 15 Aug 2023 12:08:42 +0800 (CST)
+Received: from [10.20.42.201] (unknown [10.20.42.201])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHCNH+tpkc+BaAA--.7836S3;
+	Tue, 15 Aug 2023 12:08:39 +0800 (CST)
+Subject: Re: [PATCH v6 1/2] soc: dt-bindings: add loongson-2 pm
+To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ zhuyinbo@loongson.cn, Conor Dooley <conor+dt@kernel.org>,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, soc@kernel.org,
+ Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+ Liu Peibao <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
+ loongarch@lists.linux.dev, Liu Yun <liuyun@loongson.cn>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
+ <20230803063703.5659-2-zhuyinbo@loongson.cn>
+ <193f9138-57e0-4d4b-8225-54d38be9bfbc@app.fastmail.com>
+ <8efeac46-ebb7-fa05-3d88-7c21acd59c8b@loongson.cn>
+ <6d7335b4-63e2-4a7e-9620-8a0012558dfd@app.fastmail.com>
+ <0616585d-1459-b6ef-375b-890426004e01@loongson.cn>
+ <19feb595-e22a-4304-9b88-b5cb55949cd8@app.fastmail.com>
+ <71c53c37-a0a6-6b11-31d5-4455d2309927@loongson.cn>
+ <e04cf26e-2e38-4e87-b7b4-23dafadee00d@app.fastmail.com>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <753d10b9-3b33-e7ef-a3d3-78090d67d648@loongson.cn>
+Date: Tue, 15 Aug 2023 12:08:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230811204930.1529925-1-arnd@kernel.org>
+In-Reply-To: <e04cf26e-2e38-4e87-b7b4-23dafadee00d@app.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxHCNH+tpkc+BaAA--.7836S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Fri, Aug 11, 2023 at 10:49:07PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Unifying the asm-generic headers across 32-bit and 64-bit architectures
-> based on the compiler provided macros was a good idea and appears to work
-> with all user space, but it caused a regression when building old kernels
-> on systems that have the new headers installed in /usr/include, as this
-> combination trips an inconsistency in the kernel's own tools/include
-> headers that are a mix of userspace and kernel-internal headers.
-> 
-> This affects kernel builds on arm64, riscv64 and loongarch64 systems that
-> might end up using the "#define __BITS_PER_LONG 32" default from the old
-> tools headers. Backporting the commit into stable kernels would address
-> this, but it would still break building kernels without that backport,
-> and waste time for developers trying to understand the problem.
-> 
-> arm64 build machines are rather common, and on riscv64 this can also
-> happen in practice, but loongarch64 is probably new enough to not
-> be used much for building old kernels, so only revert the bits
-> for arm64 and riscv.
-> 
-> Link: https://lore.kernel.org/all/20230731160402.GB1823389@dev-arch.thelio-3990X/
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Fixes: 8386f58f8deda ("asm-generic: Unify uapi bitsperlong.h for arm64, riscv and loongarch")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-> ---
->  arch/arm64/include/uapi/asm/bitsperlong.h     | 24 +++++++++++++++++++
->  arch/riscv/include/uapi/asm/bitsperlong.h     | 14 +++++++++++
->  .../arch/arm64/include/uapi/asm/bitsperlong.h | 24 +++++++++++++++++++
->  .../arch/riscv/include/uapi/asm/bitsperlong.h | 14 +++++++++++
->  4 files changed, 76 insertions(+)
->  create mode 100644 arch/arm64/include/uapi/asm/bitsperlong.h
->  create mode 100644 arch/riscv/include/uapi/asm/bitsperlong.h
->  create mode 100644 tools/arch/arm64/include/uapi/asm/bitsperlong.h
->  create mode 100644 tools/arch/riscv/include/uapi/asm/bitsperlong.h
+在 2023/8/14 下午9:41, Arnd Bergmann 写道:
+> On Mon, Aug 14, 2023, at 13:57, Yinbo Zhu wrote:
+>> 在 2023/8/14 下午4:19, Arnd Bergmann 写道:
+>>> On Mon, Aug 14, 2023, at 09:57, Yinbo Zhu wrote:
+>>>> 在 2023/8/12 下午8:25, Arnd Bergmann 写道:
+>>>>> I found https://github.com/loongson-community/pmon source
+>>>>> code, and a reference to its origin at LSI Logic at
+>>>>> https://www.linux-mips.org/wiki/PMON but otherwise have
+>>>>> no idea about what this actually is, or how it relates
+>>>>> to your UEFI firmware. Did you add UEFI support to PMON,
+>>>>> or do you use it as a first stage loader that loads
+>>>>> the actual UEFI implementation (EDK2 or u-boot, I guess)?
+>>>>
+>>>>
+>>>> Pmon and uefi are two different firmware, and there is no connection
+>>>> between them.
+>>>
+>>> It sounds like we still have problems with terminology. >
+>>> I don't think categorizing UEFI as a firmware is correct,
+>>
+>>
+>> Sorry to have confused you, uefi firmware is our internal name, which is
+>> actually what you referred to as EDK2, the EDK2 need use UEFI.
 > 
-> diff --git a/arch/arm64/include/uapi/asm/bitsperlong.h b/arch/arm64/include/uapi/asm/bitsperlong.h
-> new file mode 100644
-> index 0000000000000..485d60bee26ca
-> --- /dev/null
-> +++ b/arch/arm64/include/uapi/asm/bitsperlong.h
-> @@ -0,0 +1,24 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Copyright (C) 2012 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#ifndef __ASM_BITSPERLONG_H
-> +#define __ASM_BITSPERLONG_H
-> +
-> +#define __BITS_PER_LONG 64
-> +
-> +#include <asm-generic/bitsperlong.h>
-> +
-> +#endif	/* __ASM_BITSPERLONG_H */
-> diff --git a/arch/riscv/include/uapi/asm/bitsperlong.h b/arch/riscv/include/uapi/asm/bitsperlong.h
-> new file mode 100644
-> index 0000000000000..7d0b32e3b7017
-> --- /dev/null
-> +++ b/arch/riscv/include/uapi/asm/bitsperlong.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-> +/*
-> + * Copyright (C) 2012 ARM Ltd.
-> + * Copyright (C) 2015 Regents of the University of California
-> + */
-> +
-> +#ifndef _UAPI_ASM_RISCV_BITSPERLONG_H
-> +#define _UAPI_ASM_RISCV_BITSPERLONG_H
-> +
-> +#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
-> +
-> +#include <asm-generic/bitsperlong.h>
-> +
-> +#endif /* _UAPI_ASM_RISCV_BITSPERLONG_H */
-> diff --git a/tools/arch/arm64/include/uapi/asm/bitsperlong.h b/tools/arch/arm64/include/uapi/asm/bitsperlong.h
-> new file mode 100644
-> index 0000000000000..485d60bee26ca
-> --- /dev/null
-> +++ b/tools/arch/arm64/include/uapi/asm/bitsperlong.h
-> @@ -0,0 +1,24 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Copyright (C) 2012 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#ifndef __ASM_BITSPERLONG_H
-> +#define __ASM_BITSPERLONG_H
-> +
-> +#define __BITS_PER_LONG 64
-> +
-> +#include <asm-generic/bitsperlong.h>
-> +
-> +#endif	/* __ASM_BITSPERLONG_H */
-> diff --git a/tools/arch/riscv/include/uapi/asm/bitsperlong.h b/tools/arch/riscv/include/uapi/asm/bitsperlong.h
-> new file mode 100644
-> index 0000000000000..0b9b58b57ff6e
-> --- /dev/null
-> +++ b/tools/arch/riscv/include/uapi/asm/bitsperlong.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2012 ARM Ltd.
-> + * Copyright (C) 2015 Regents of the University of California
-> + */
-> +
-> +#ifndef _UAPI_ASM_RISCV_BITSPERLONG_H
-> +#define _UAPI_ASM_RISCV_BITSPERLONG_H
-> +
-> +#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
-> +
-> +#include <asm-generic/bitsperlong.h>
-> +
-> +#endif /* _UAPI_ASM_RISCV_BITSPERLONG_H */
-> -- 
-> 2.39.2
+> Ok
 > 
+>>> it's the interface used by various firmware implementations
+>>> to load the operating system. As far as I understand,
+>>> loongarch currently mandates the use of UEFI in whichever
+>>> firmware is used, so if you have Pmon installed in ROM > and Pmon does not itself implement UEFI, it would have
+>>> to load some other firmware such as u-boot in order to
+>>> load a kernel through the UEFI protocol, right?
+>>
+>>
+>> PMON is an independent firmware and loader that can directly load the
+>> operating system and it does not require the use of UEFI.
+>>>
+>>> Has the assumption that loongarch requires UEFI changed?
+>>
+>>
+>> LoongArch embedded board was use Pmon firmware, The other one uses UEFI
+>> firmware (EDK2) on LoongArch platform.
+> 
+> I'm pretty sure we discussed this when the loongarch port
+> was originally merged, with the decisionto just use UEFI for
+> booting any kernel, as the legacy entry point for the ACPI
+> based environment was not really well-defined and the UEFI
+> stub was an easy alternative to have more commonality
+> with other architectures.
+> 
+> I see this was already extended for embedded CPUs to use
+> the uefi stub with DT in commit 88d4d957edc70 ("LoongArch: Add
+> FDT booting support from efi system table"), which seems like
+> the right direction. >
+> Can you explain why this board would want yet another method
+> for entering the kernel? Is there any documentation for the
+> boot protocol?
+
+Yes, you're right, the latest PMON does indeed support UEFI, the PMON
+used in the product code is still outdated and does not support UEFI.
+
+Actually, whether using EDK2, Pmon firmware, or other firmware, the
+LoongArch platform's s3 (suspend-to-ram) requires a suspend-address to
+be defined, if dts is supported, it is defined in dts, and if acpi table
+is supported, it is defined in acpi table.
+
+> 
+>>>>> Is this executing directly from ROM then?
+>>>>
+>>>> Yes.
+>>>
+>>> Is this the only runtime call into the firmware,
+>>
+>>
+>> Only when suspend-to-ram occurs, the kernel will call into the firmware.
+>> No other case.
+> 
+> Ok
+> 
+>>> or are there
+>>> others that are either already called from mainline kernels
+>>> or in your downsteam implementation?
+>>>
+>>> How do you ensure that the DTB matches the actual ROM code
+>>> after rebuilding Pmon? Does Pmon itself fill that field with
+>>> the correct address, or do you rely on it being a hardcoded
+>>> constant?
+>>
+>>
+>> Use Pmon, firmware team will always ensure that DTB matches the actual
+>> ROM code.  The "suspend-address" of dtb and pmon entry address will
+>> synchronized modification by firmware team.
+> 
+> Ok.  So it's linked against libfdt to fill the dtb information,
+> or do you have to provide a dtb blob that matches the firmware?
+
+
+For pmon firmware, the dtb was as part of firmware, the firmware has
+defined the address of the DTB's suspend and the address of the firmware
+entry, and is consistent.
+
+Thanks,
+Yinbo
+
