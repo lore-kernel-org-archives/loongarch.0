@@ -1,54 +1,68 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EE41094D
-	for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 14:37:46 +0000 (UTC)
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1bba48b0bd2so44464005ad.3
-        for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 07:37:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46291094D
+	for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 14:38:48 +0000 (UTC)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-26b2884bec8so3631723a91.0
+        for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 07:38:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20221208.gappssmtp.com; s=20221208; t=1692196666; x=1692801466;
+        d=dabbelt-com.20221208.gappssmtp.com; s=20221208; t=1692196728; x=1692801528;
         h=content-transfer-encoding:mime-version:message-id:to:from:cc
          :in-reply-to:subject:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jX0eyRgUBnlJvg52xTw9Xc/nvpJnbIOrZesRtyij778=;
-        b=VADZ6ppYOIa12yuHDDWB5op2QcT1ODlbktFBmeFlKBoEMxCqDrHzlC57HCdHM53VZk
-         nGobevQw5NR9tdtnclAESo5/bqz2RjxBOH+/5ozgRSmZjDK/8MSp0wYJo0onv64L6T/4
-         ij0Qc9KG4iqGvAY9QHMAlvDyevSJLWPIrZxuKwhXi0NBgHH3BuSRPxrE6kA4R7dMipF3
-         UvYtMXp/9a0HA/yKHx3EeAjfklPYz2PMqqsOYhzJLOKAN4wv3z/zR3SWG6COhDN4yoEm
-         XU5DbUI4Ym4HEuBQx9VCk5wy5N16kCRrk6DcFRgAS62yilcVX30qkFM+mOqKS7tQCNeR
-         h3+Q==
+        bh=z7kyCuHl1t/gCCGpNTbA3hwFj/lf6SuaKvtbsxGuDBs=;
+        b=dZxL0Ptmo/RfqSZAnaNdMqEON3wvqTtz9rCCZbGwRlxrXd7njXeZ9MC0HoDMQnzbMm
+         Mbp7gkbEr8As7DndYa19Nv36eYd2hToSSCFzF826MiTxJFQPanB3TDkisU5ug1n2xO0x
+         lqvfBU8gjYGcjvzm7z1KhnYi76zAKQMvLjSkKN8VKcgO7yrfcLxnnczFGmL7s8fYvGKe
+         iupXY/7su7eB4Qp8Ot15WegMitq0aXkC7C2B4amBqtpQq9iCTqbSvz7oVYvokSqAF4SL
+         qE7Cmnt2iThlim9z5xca3mEZ27llu2nfrUpa7hwX8WY7UkN0OSfjH/LjoRTW/fMpY9+M
+         GNdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692196666; x=1692801466;
+        d=1e100.net; s=20221208; t=1692196728; x=1692801528;
         h=content-transfer-encoding:mime-version:message-id:to:from:cc
          :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jX0eyRgUBnlJvg52xTw9Xc/nvpJnbIOrZesRtyij778=;
-        b=XiJt6gbxan3gD87OAjSb8E2kL2nUEQx8gz/YpNJpZiyZdRnsi1I9un2lwKLEi4d9fk
-         U5Jt1BVIPeLWfRvL00QqGvjcyshdwgEQo4stReaOfsjrSOC4MB/mwUcqj57/izSGL20e
-         UYd4+/8Yqyny//XppyOGxNFhS5+sH7bj1F5plUO+wdTdVhuGL+owqy477Mf5VLLcR+d9
-         WTOBeoLk03MT+IeezV1yBLZbcbCniCOaLTHedYJlM0pfKYNGKNI67xF1QHh2h0ReDC4o
-         pAbQr0a+kT0yk+tz15fvRZBsejR8VLmk8GBHmFp869xrObFasjt5la1SI20krhGtv38n
-         oGmg==
-X-Gm-Message-State: AOJu0YxVP+N/6RYz4rQ47pEokPBylADZFAy2fdQ9PJtL1kd/8yxqXVrV
-	HGQ8j7KIXp4xlAQtjEUoOvdKeA==
-X-Google-Smtp-Source: AGHT+IGcLRV9xPE8O/Y0r7BvxOGUyPtSc05frmq3YqIOYUpUlkYPwvMsDcG3F9VECZ6GEmz4LjGLJQ==
-X-Received: by 2002:a17:903:44e:b0:1bb:fffd:63d8 with SMTP id iw14-20020a170903044e00b001bbfffd63d8mr1911272plb.36.1692196665787;
-        Wed, 16 Aug 2023 07:37:45 -0700 (PDT)
+        bh=z7kyCuHl1t/gCCGpNTbA3hwFj/lf6SuaKvtbsxGuDBs=;
+        b=lHumzx7HOtLTQi19EzSu4GOnPRVXqv0281kpS/UrfvrfW3O5/tsWZGm+q/Ji9jY3vS
+         nj2L/pTxqISFSy5pX18sK22t7wK0oNB3CwwSNmGrLusKvG7pDj8u7NE7PA+3vFlp973l
+         ezkCPyjx21uUD6USzbADIh5KFfPv4o9ahfB2LkX/SSTPgy13/8Yfmfmh880DxEZHGVym
+         apJ4SXGOGeu6x0oJWV49NxiJn31SoSll34ZesyZTiV00XdRb5VeZqFlTmEdfWBHdrJaV
+         t+X51V9ez5B47VyqjPsPq0qLz9GxppYXeeHWy3YbFci0hxsmPZcUlGo2xXEuqgrMzFU0
+         c4sg==
+X-Gm-Message-State: AOJu0Yz47+IqF4lulQUBccohKE42AGyrDOGJyoeyrRpLkG6WRFSnbw4c
+	77p1F0VMBK+owK6LsB4PAQkm6A==
+X-Google-Smtp-Source: AGHT+IG9lm23RRLom/xb7C80klG2aDXB0ZwUgcZV4fsV/hyXYHdBd19S4I3YH9SwHqrCXPj4TdemSQ==
+X-Received: by 2002:a17:90a:f982:b0:26b:4e59:57e7 with SMTP id cq2-20020a17090af98200b0026b4e5957e7mr1730234pjb.43.1692196727793;
+        Wed, 16 Aug 2023 07:38:47 -0700 (PDT)
 Received: from localhost ([135.180.227.0])
-        by smtp.gmail.com with ESMTPSA id iw10-20020a170903044a00b001bdd7579b5dsm7164476plb.240.2023.08.16.07.37.44
+        by smtp.gmail.com with ESMTPSA id gi23-20020a17090b111700b0025645ce761dsm13120399pjb.35.2023.08.16.07.38.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Aug 2023 07:37:44 -0700 (PDT)
-Date: Wed, 16 Aug 2023 07:37:44 -0700 (PDT)
-X-Google-Original-Date: Wed, 16 Aug 2023 07:37:42 PDT (-0700)
-Subject:     Re: [PATCH] asm-generic: partially revert "Unify uapi bitsperlong.h for arm64, riscv and loongarch"
-In-Reply-To: <20230811204930.1529925-1-arnd@kernel.org>
-CC: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, yangtiezhu@loongson.cn, loongarch@lists.linux.dev,
-  kernel@xen0n.name, chenhuacai@kernel.org, Arnd Bergmann <arnd@arndb.de>, nathan@kernel.org,
-  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+        Wed, 16 Aug 2023 07:38:47 -0700 (PDT)
+Date: Wed, 16 Aug 2023 07:38:47 -0700 (PDT)
+X-Google-Original-Date: Wed, 16 Aug 2023 07:38:45 PDT (-0700)
+Subject:     Re: [PATCH 00/17] -Wmissing-prototype warning fixes
+In-Reply-To: <20230810141947.1236730-1-arnd@kernel.org>
+CC: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+  Arnd Bergmann <arnd@arndb.de>, mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, guoren@kernel.org, bcain@quicinc.com,
+  chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org, monstr@monstr.eu,
+  tsbogend@alpha.franken.de, dinguyen@kernel.org, jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+  shorne@gmail.com, James.Bottomley@HansenPartnership.com, deller@gmx.de, mpe@ellerman.id.au,
+  christophe.leroy@csgroup.eu, hca@linux.ibm.com, glaubitz@physik.fu-berlin.de, x86@kernel.org, bp@alien8.de,
+  jcmvbkbc@gmail.com, axboe@kernel.dk, sudipm.mukherjee@gmail.com, martin.petersen@oracle.com,
+  richard@nod.at, bhelgaas@google.com, masahiroy@kernel.org, nathan@kernel.org,
+  ndesaulniers@google.com, linux@roeck-us.net, Stephen Rothwell <sfr@canb.auug.org.au>,
+  linux-next@vger.kernel.org, linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+  linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+  linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+  linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+  linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+  linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+  linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+  linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
 From: Palmer Dabbelt <palmer@dabbelt.com>
 To: arnd@kernel.org
-Message-ID: <mhng-2cdb59cc-0177-47a9-af49-06d8853f56aa@palmer-ri-x1c9>
+Message-ID: <mhng-ce493a2d-71e9-440f-84d0-522a4f694bbe@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -58,142 +72,110 @@ Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Fri, 11 Aug 2023 13:49:07 PDT (-0700), arnd@kernel.org wrote:
+On Thu, 10 Aug 2023 07:19:18 PDT (-0700), arnd@kernel.org wrote:
 > From: Arnd Bergmann <arnd@arndb.de>
 >
-> Unifying the asm-generic headers across 32-bit and 64-bit architectures
-> based on the compiler provided macros was a good idea and appears to work
-> with all user space, but it caused a regression when building old kernels
-> on systems that have the new headers installed in /usr/include, as this
-> combination trips an inconsistency in the kernel's own tools/include
-> headers that are a mix of userspace and kernel-internal headers.
+> Most of the patches I sent so far for the -Wmissing-prototype warnings
+> have made it into linux-next now. There are a few that I'm resending
+> now as nobody has picked them up, and then a number of fixes that I
+> found while test-building across all architectures rather than just the
+> ones I usually test.
 >
-> This affects kernel builds on arm64, riscv64 and loongarch64 systems that
-> might end up using the "#define __BITS_PER_LONG 32" default from the old
-> tools headers. Backporting the commit into stable kernels would address
-> this, but it would still break building kernels without that backport,
-> and waste time for developers trying to understand the problem.
+> The first 15 patches in this series should be uncontroversial, so
+> I expect that either a subsystem maintainer or Andrew Morton can
+> apply these directly.
 >
-> arm64 build machines are rather common, and on riscv64 this can also
-> happen in practice, but loongarch64 is probably new enough to not
-> be used much for building old kernels, so only revert the bits
-> for arm64 and riscv.
+> For the last two patches, these might still need some debate about how
+> to handle them. I added a Kconfig option to turn off most of the missing
+> prototype warnings in the architectures that nobody has fixed yet,
+> see patch 16 for those. The last patch does cause some known warnings
+> and likely unknown ones for architectures other than x86 and arm,
+> so applying it now will bring new problems, but not applying it also
+> means that new warnings creep in, so I think this is mainly a question
+> of what the best timing is for having this in linux-next.
 >
-> Link: https://lore.kernel.org/all/20230731160402.GB1823389@dev-arch.thelio-3990X/
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Fixes: 8386f58f8deda ("asm-generic: Unify uapi bitsperlong.h for arm64, riscv and loongarch")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm64/include/uapi/asm/bitsperlong.h     | 24 +++++++++++++++++++
->  arch/riscv/include/uapi/asm/bitsperlong.h     | 14 +++++++++++
->  .../arch/arm64/include/uapi/asm/bitsperlong.h | 24 +++++++++++++++++++
->  .../arch/riscv/include/uapi/asm/bitsperlong.h | 14 +++++++++++
+> Arnd Bergmann (17):
+>   [RESEND] jffs2: mark __jffs2_dbg_superblock_counts() static
+>   [RESEND] irq_work: consolidate arch_irq_work_raise prototypes
+>   [RESEND] ida: make 'ida_dump' static
+>   pci: sysfs: move declarations to linux/pci.h
+>   swim3: mark swim3_init() static
+>   macintosh/ams: mark ams_init() static
+>   scsi: qlogicpti: mark qlogicpti_info() static
+>   microblaze: mark flush_dcache_folio() inline
+>   parport: gsc: mark init function static
+>   zorro: include zorro.h in names.c
+>   scsi: gvp11: remove unused gvp11_setup() function
+>   time: make sysfs_get_uname() function visible in header
+>   stackleak: add declarations for global functions
+>   kprobes: unify kprobes_exceptions_nofify() prototypes
+>   arch: fix asm-offsets.c building with -Wmissing-prototypes
+>   [RFC] arch: turn -Wmissing-prototypes off conditionally
+>   [RFC] Makefile.extrawarn: turn on missing-prototypes again
+>
+>  arch/alpha/Kbuild                        |  2 ++
+>  arch/alpha/include/asm/pci.h             |  3 ---
+>  arch/alpha/kernel/asm-offsets.c          |  2 +-
+>  arch/alpha/lib/Makefile                  |  1 +
+>  arch/arc/Kbuild                          |  2 ++
+>  arch/arc/include/asm/kprobes.h           |  3 ---
+>  arch/arm/include/asm/irq_work.h          |  2 --
+>  arch/arm/include/asm/kprobes.h           |  2 --
+>  arch/arm64/include/asm/irq_work.h        |  2 --
+>  arch/arm64/include/asm/kprobes.h         |  2 --
+>  arch/csky/Kbuild                         |  2 ++
+>  arch/csky/include/asm/irq_work.h         |  2 +-
+>  arch/hexagon/Kbuild                      |  2 ++
+>  arch/ia64/Kbuild                         |  2 ++
+>  arch/ia64/include/asm/kprobes.h          |  2 --
+>  arch/ia64/kernel/asm-offsets.c           |  2 +-
+>  arch/ia64/lib/Makefile                   |  1 +
+>  arch/loongarch/Kbuild                    |  2 ++
+>  arch/loongarch/kernel/asm-offsets.c      | 12 ++++++++++++
+>  arch/m68k/Kbuild                         |  2 ++
+>  arch/m68k/lib/Makefile                   |  1 +
+>  arch/microblaze/Kbuild                   |  2 ++
+>  arch/microblaze/include/asm/cacheflush.h |  2 +-
+>  arch/mips/Kbuild                         |  2 ++
+>  arch/mips/boot/compressed/Makefile       |  3 ++-
+>  arch/mips/include/asm/kprobes.h          |  2 --
+>  arch/nios2/Kbuild                        |  2 ++
+>  arch/nios2/lib/Makefile                  |  1 +
+>  arch/openrisc/Kbuild                     |  2 ++
+>  arch/parisc/Kbuild                       |  2 ++
+>  arch/parisc/lib/Makefile                 |  1 +
+>  arch/powerpc/include/asm/irq_work.h      |  1 -
+>  arch/powerpc/include/asm/kprobes.h       |  2 --
+>  arch/riscv/include/asm/irq_work.h        |  2 +-
+>  arch/s390/include/asm/irq_work.h         |  2 --
+>  arch/s390/include/asm/kprobes.h          |  2 --
+>  arch/sh/Kbuild                           |  2 ++
+>  arch/sh/boot/compressed/Makefile         |  1 +
+>  arch/sh/include/asm/kprobes.h            |  2 --
+>  arch/sparc/Kbuild                        |  2 ++
+>  arch/sparc/include/asm/kprobes.h         |  2 --
+>  arch/sparc/kernel/asm-offsets.c          | 13 ++-----------
+>  arch/sparc/lib/Makefile                  |  1 +
+>  arch/sparc/prom/Makefile                 |  1 +
+>  arch/x86/include/asm/irq_work.h          |  1 -
+>  arch/x86/include/asm/kprobes.h           |  2 --
+>  arch/xtensa/Kbuild                       |  2 ++
+>  arch/xtensa/boot/lib/Makefile            |  2 ++
+>  drivers/block/swim3.c                    |  2 +-
+>  drivers/macintosh/ams/ams-core.c         |  2 +-
+>  drivers/parport/parport_gsc.c            |  2 +-
+>  drivers/scsi/gvp11.c                     |  5 -----
+>  drivers/scsi/qlogicpti.c                 |  2 +-
+>  drivers/zorro/names.c                    |  1 +
+>  fs/jffs2/debug.c                         |  2 +-
+>  include/linux/irq_work.h                 |  3 +++
+>  include/linux/kprobes.h                  |  4 ++++
+>  include/linux/pci.h                      |  5 +++++
+>  include/linux/stackleak.h                |  6 ++++++
+>  init/Kconfig                             | 10 ++++++++++
+>  kernel/time/tick-internal.h              |  3 ++-
+>  lib/test_ida.c                           |  2 +-
+>  scripts/Makefile.extrawarn               |  5 +++--
+>  63 files changed, 101 insertions(+), 63 deletions(-)
 
 Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # RISC-V
-
->  4 files changed, 76 insertions(+)
->  create mode 100644 arch/arm64/include/uapi/asm/bitsperlong.h
->  create mode 100644 arch/riscv/include/uapi/asm/bitsperlong.h
->  create mode 100644 tools/arch/arm64/include/uapi/asm/bitsperlong.h
->  create mode 100644 tools/arch/riscv/include/uapi/asm/bitsperlong.h
->
-> diff --git a/arch/arm64/include/uapi/asm/bitsperlong.h b/arch/arm64/include/uapi/asm/bitsperlong.h
-> new file mode 100644
-> index 0000000000000..485d60bee26ca
-> --- /dev/null
-> +++ b/arch/arm64/include/uapi/asm/bitsperlong.h
-> @@ -0,0 +1,24 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Copyright (C) 2012 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#ifndef __ASM_BITSPERLONG_H
-> +#define __ASM_BITSPERLONG_H
-> +
-> +#define __BITS_PER_LONG 64
-> +
-> +#include <asm-generic/bitsperlong.h>
-> +
-> +#endif	/* __ASM_BITSPERLONG_H */
-> diff --git a/arch/riscv/include/uapi/asm/bitsperlong.h b/arch/riscv/include/uapi/asm/bitsperlong.h
-> new file mode 100644
-> index 0000000000000..7d0b32e3b7017
-> --- /dev/null
-> +++ b/arch/riscv/include/uapi/asm/bitsperlong.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-> +/*
-> + * Copyright (C) 2012 ARM Ltd.
-> + * Copyright (C) 2015 Regents of the University of California
-> + */
-> +
-> +#ifndef _UAPI_ASM_RISCV_BITSPERLONG_H
-> +#define _UAPI_ASM_RISCV_BITSPERLONG_H
-> +
-> +#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
-> +
-> +#include <asm-generic/bitsperlong.h>
-> +
-> +#endif /* _UAPI_ASM_RISCV_BITSPERLONG_H */
-> diff --git a/tools/arch/arm64/include/uapi/asm/bitsperlong.h b/tools/arch/arm64/include/uapi/asm/bitsperlong.h
-> new file mode 100644
-> index 0000000000000..485d60bee26ca
-> --- /dev/null
-> +++ b/tools/arch/arm64/include/uapi/asm/bitsperlong.h
-> @@ -0,0 +1,24 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Copyright (C) 2012 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#ifndef __ASM_BITSPERLONG_H
-> +#define __ASM_BITSPERLONG_H
-> +
-> +#define __BITS_PER_LONG 64
-> +
-> +#include <asm-generic/bitsperlong.h>
-> +
-> +#endif	/* __ASM_BITSPERLONG_H */
-> diff --git a/tools/arch/riscv/include/uapi/asm/bitsperlong.h b/tools/arch/riscv/include/uapi/asm/bitsperlong.h
-> new file mode 100644
-> index 0000000000000..0b9b58b57ff6e
-> --- /dev/null
-> +++ b/tools/arch/riscv/include/uapi/asm/bitsperlong.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2012 ARM Ltd.
-> + * Copyright (C) 2015 Regents of the University of California
-> + */
-> +
-> +#ifndef _UAPI_ASM_RISCV_BITSPERLONG_H
-> +#define _UAPI_ASM_RISCV_BITSPERLONG_H
-> +
-> +#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
-> +
-> +#include <asm-generic/bitsperlong.h>
-> +
-> +#endif /* _UAPI_ASM_RISCV_BITSPERLONG_H */
