@@ -1,113 +1,117 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C58ED302
-	for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 09:50:17 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxruvQm9xkxBQZAA--.48995S3;
-	Wed, 16 Aug 2023 17:50:09 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPCPQm9xkOeZbAA--.10301S2;
-	Wed, 16 Aug 2023 17:50:08 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] LoongArch: Put the body of play_dead() into arch_cpu_idle_dead()
-Date: Wed, 16 Aug 2023 17:50:08 +0800
-Message-Id: <1692179408-32740-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8DxPCPQm9xkOeZbAA--.10301S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw1xCw4xGF43tFy7CFy3trc_yoW5Gr15pF
-	yUAryDJr4Fgrn7Z34DJ3yrWr98Jr9rGw1a9a17AFWrAa17XF1DXrZYyas0qFnYqayF9a40
-	qayrW3yFvF4UuabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
+Received: from chg.server2.ideacentral.com (unknown [108.163.232.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AB4EDC
+	for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 10:37:41 +0000 (UTC)
+Received: from mailnull by ns-196.awsdns-24.com with local (Exim 4.96)
+	id 1qWDuH-00CVrI-0x
+	for loongarch@lists.linux.dev;
+	Wed, 16 Aug 2023 05:37:41 -0500
+X-Failed-Recipients: loongarch@lists.linux.dev
+Auto-Submitted: auto-replied
+From: Mail Delivery System <Mailer-Daemon@ns-196.awsdns-24.com>
+To: loongarch@lists.linux.dev
+References: <20230816113737.044F6D5996B8EF88@lists.linux.dev>
+Content-Type: multipart/report; report-type=delivery-status; boundary=1692182261-eximdsn-1092249164
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Subject: Mail delivery failed: returning message to sender
+Message-Id: <E1qWDuH-00CVrI-0x@ns-196.awsdns-24.com>
+Date: Wed, 16 Aug 2023 05:37:41 -0500
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - ns-196.awsdns-24.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - 
+X-Get-Message-Sender-Via: ns-196.awsdns-24.com: sender_ident via received_protocol == local: mailnull/primary_hostname/system user
+X-Authenticated-Sender: ns-196.awsdns-24.com: mailnull
 
-The initial aim is to silence the following objtool warning:
+--1692182261-eximdsn-1092249164
+Content-type: text/plain; charset=us-ascii
 
-arch/loongarch/kernel/process.o: warning: objtool: arch_cpu_idle_dead() falls through to next function start_thread()
+This message was created automatically by mail delivery software.
 
-According to tools/objtool/Documentation/objtool.txt, this is because
-the last instruction of arch_cpu_idle_dead() is a call to a noreturn
-function play_dead(). In order to silence the warning, one simple way
-is to add the noreturn function play_dead() to objtool's hard-coded
-global_noreturns array, that is to say, just put "NORETURN(play_dead)"
-into tools/objtool/noreturns.h, it works well.
+A message that you sent could not be delivered to one or more of its
+recipients. This is a permanent error. The following address(es) failed:
 
-But I noticed that play_dead() is only defined once and only called by
-arch_cpu_idle_dead(), so put the body of play_dead() into the caller
-arch_cpu_idle_dead(), then remove the noreturn function play_dead() is
-an alternative way which can reduce the overhead of the function call
-at the same time.
+  loongarch@lists.linux.dev
+    host smtp.subspace.kernel.org [44.238.234.78]
+    SMTP error from remote mail server after end of data:
+    550 5.7.1 Blocked by SpamAssassin
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/smp.h | 2 --
- arch/loongarch/kernel/process.c  | 7 -------
- arch/loongarch/kernel/smp.c      | 2 +-
- 3 files changed, 1 insertion(+), 10 deletions(-)
+--1692182261-eximdsn-1092249164
+Content-type: message/delivery-status
 
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 416b653..66ecb48 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -98,8 +98,6 @@ static inline void __cpu_die(unsigned int cpu)
- {
- 	loongson_cpu_die(cpu);
- }
--
--extern void __noreturn play_dead(void);
- #endif
- 
- #endif /* __ASM_SMP_H */
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 2e04eb0..4ee1e9d 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -61,13 +61,6 @@ EXPORT_SYMBOL(__stack_chk_guard);
- unsigned long boot_option_idle_override = IDLE_NO_OVERRIDE;
- EXPORT_SYMBOL(boot_option_idle_override);
- 
--#ifdef CONFIG_HOTPLUG_CPU
--void __noreturn arch_cpu_idle_dead(void)
--{
--	play_dead();
--}
--#endif
--
- asmlinkage void ret_from_fork(void);
- asmlinkage void ret_from_kernel_thread(void);
- 
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 8ea1bbc..6667b0a 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -317,7 +317,7 @@ void loongson_cpu_die(unsigned int cpu)
- 	mb();
- }
- 
--void play_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	register uint64_t addr;
- 	register void (*init_fn)(void);
--- 
-2.1.0
+Reporting-MTA: dns; ns-196.awsdns-24.com
 
+Action: failed
+Final-Recipient: rfc822;loongarch@lists.linux.dev
+Status: 5.0.0
+Remote-MTA: dns; smtp.subspace.kernel.org
+Diagnostic-Code: smtp; 550 5.7.1 Blocked by SpamAssassin
+
+--1692182261-eximdsn-1092249164
+Content-type: message/rfc822
+
+Return-path: <loongarch@lists.linux.dev>
+Received: from v-104-153-108-120.unman-vds.premium-chicago.nfoservers.com ([104.153.108.120]:51811)
+	by ns-196.awsdns-24.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <loongarch@lists.linux.dev>)
+	id 1qWDuE-00CUpk-2U
+	for loongarch@lists.linux.dev;
+	Wed, 16 Aug 2023 05:37:38 -0500
+From: lists.linux.devAdministrator<loongarch@lists.linux.dev>
+To: loongarch@lists.linux.dev
+Subject: =?UTF-8?B?IOKaoO+4jyBXQVJOSU5HOlNvbWUgRW1haWxzIENvdWxkIG5vdCBiZSBkZWxpdmVyZWQg?=
+Date: 16 Aug 2023 11:37:38 +0100
+Message-ID: <20230816113737.044F6D5996B8EF88@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+
+<html><head><title></title>
+<meta name=3D"GENERATOR" content=3D"MSHTML 11.00.9600.19003">
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+</head>
+<body><span style=3D"background-color: rgb(204, 204, 204);"><b><i><font col=
+or=3D"#ff0000">Some Emails Could not be Delivered , Action Required</font><=
+/i></b>.</span><div><br><font color=3D"#3d85c6"><font size=3D"4"><b>Quarant=
+ined Messages Report</b> </font>&nbsp;</font><br>loongarch@lists.linux.dev<=
+div>16-08-2023, 08:00AM <br>&nbsp;<br>Dear loongarch,</div><div><br>
+4 messages addressed to you are currently on hold awaiting your further act=
+ion. You can release all of your held messages and permit or block future e=
+mails from the senders, or manage messages individually.<br><br>
+<a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGbcFJkycxN8DaPa=
+nxX?clientID=3Dloongarch@lists.linux.dev" target=3D"_blank" data-saferedire=
+cturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/%23%5B%5B-Email=
+-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=3DAFQjCNFFwLZ=
+WfJX-xB2LHrk7CvessvAOsg">Review all</a>
+&nbsp; &nbsp;<a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGb=
+cFJkycxN8DaPanxX?clientID=3Dloongarch@lists.linux.dev" target=3D"_blank" da=
+ta-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/%2=
+3%5B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=
+=3DAFQjCNFFwLZWfJX-xB2LHrk7CvessvAOsg">Release all</a>
+&nbsp; &nbsp; <a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRG=
+bcFJkycxN8DaPanxX?clientID=3Dloongarch@lists.linux.dev" target=3D"_blank" d=
+ata-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/%=
+23%5B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=
+=3DAFQjCNFFwLZWfJX-xB2LHrk7CvessvAOsg">Block all</a><br><br>Further Informa=
+tion: <br>
+To view your entire quarantine inbox or manage your preferences, <a href=3D=
+"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGbcFJkycxN8DaPanxX?client=
+ID=3Dloongarch@lists.linux.dev" target=3D"_blank" data-saferedirecturl=3D"h=
+ttps://www.google.com/url?q=3Dhttps://bentdree.ga/%23%5B%5B-Email-%5D%5D&am=
+p;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=3DAFQjCNFFwLZWfJX-xB2LH=
+rk7CvessvAOsg">Click Here</a><br><br>The system generated this notice on 16=
+-08-2023, at 09:00AM<br>Do not reply to this automated message.<br>
+&copy; 2023 lists.linux.dev. All rights reserved.</div></div>
+</body></html>
+
+--1692182261-eximdsn-1092249164--
