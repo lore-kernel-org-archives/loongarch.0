@@ -1,101 +1,95 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40846ECA
-	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 07:22:33 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxqOi4yt1kBGsZAA--.16247S3;
-	Thu, 17 Aug 2023 15:22:32 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax98y3yt1kA5JcAA--.10201S3;
-	Thu, 17 Aug 2023 15:22:32 +0800 (CST)
-Subject: Re: [PATCH v6] selftests/clone3: Fix broken test under
- !CONFIG_TIME_NS
-To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
- Christian Brauner <brauner@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-References: <1689066814-13295-1-git-send-email-yangtiezhu@loongson.cn>
-Cc: linux-kselftest@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <0560a851-5e8c-d82a-8445-a16a92b967c9@loongson.cn>
-Date: Thu, 17 Aug 2023 15:22:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA692100
+	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 07:33:17 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-51cff235226so1385417a12.0
+        for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 00:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1692257596; x=1692862396;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XqVwwc2dDlYlCMTarZ/PjmKE+CsteLytpeFTL+9lo0M=;
+        b=F4UrenxJRzj7RIgGu2RAZ2FUbmJEF38qgllIOTjkWb91A+EGbBRBvbhHqKxIO/AeNe
+         ff4+SIOxVHNabjcg7l5TwiX0NWBzieVdmlblIxPBlK0tY01TSyLib+9qnr2FnWt66sXZ
+         Ir7tJSfIR4U2c6qGCHcDZt7br1mzXyUdZM2BKRwvU3dv2PNOesfmlqTM6uJCvbzmf7DQ
+         /BQmQ2DmlmTrOy3n3WQLJj3lRTTEEqdsco+uzM60FV6tRtGpOrx4fUryqA+4w6F4oUt5
+         /mhOH7g/8a4pwXNbvv1PpfHTnJH1zcitg5hU892GdkgYp8jALVFToAUGlI5ExSdF6Tzl
+         Djkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692257596; x=1692862396;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XqVwwc2dDlYlCMTarZ/PjmKE+CsteLytpeFTL+9lo0M=;
+        b=XFC7l0fWedJJtonUNGy9CE1L3iWF+jPoSKJSqRgwKvgklljGi8ScS05gOWP19+g8hM
+         x8ZRScqVbToYNPTPyxnX8o+MIQrVAFZ/TU+bLM6hrbq+57DGEQ6jRFNnhSVTPKaQK+BA
+         ExraPyafOGfcPL3C02gBimgtM9s90QTd4pmSUq6kxSE+qCL3rb9WzmA2SgYoXPY5mWLJ
+         99qBYnutOd0yG1gxV6HxVG6/zy6O7wMudkqrLxbKr9x6SZn1HaDQnFyZWzHlasaVGq7G
+         VwONen/6F8Rc9cHxM3W5zh1wpoXBp1VbUX72UZIGcbXB/npKcaEN4k0pt4Ntx6ZrinxQ
+         +TPg==
+X-Gm-Message-State: AOJu0Yw3LsIimZVmro9FLBXfEuzlHNqmhacaGVboHLohS2naEs9Rwa/w
+	Pf46TAGwHYcpiAXH60Ik2sSB1vuUC3efa6ra4ww=
+X-Google-Smtp-Source: AGHT+IFghrFx0zxJbJiB3SRR94OfeZeGqRzD/iYhIlcu/DnH8WCxmeY5R8S/g/7SDRhGfDDg6uwxBg==
+X-Received: by 2002:a05:6402:40c8:b0:522:b9ae:db3c with SMTP id z8-20020a05640240c800b00522b9aedb3cmr2223766edb.6.1692257595980;
+        Thu, 17 Aug 2023 00:33:15 -0700 (PDT)
+Received: from [192.168.69.115] (mek33-h02-176-184-23-56.dsl.sta.abo.bbox.fr. [176.184.23.56])
+        by smtp.gmail.com with ESMTPSA id k15-20020a05640212cf00b00521f4ee396fsm9365410edx.12.2023.08.17.00.33.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Aug 2023 00:33:15 -0700 (PDT)
+Message-ID: <f7230276-decf-2248-52b2-c2de4a13647c@linaro.org>
+Date: Thu, 17 Aug 2023 09:33:13 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1689066814-13295-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.14.0
+Subject: Re: [PATCH v2 3/4] arch/mips/configs/*_defconfig cleanup
+Content-Language: en-US
+To: Trevor Woerner <twoerner@gmail.com>, linux-kernel@vger.kernel.org,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20230817025942.3209-1-twoerner@gmail.com>
+ <20230817025942.3209-4-twoerner@gmail.com>
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20230817025942.3209-4-twoerner@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Ax98y3yt1kA5JcAA--.10201S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tF1DKw4rtw43Aw1xZFW8AFc_yoW8WryUpF
-	W8ZFsrKFZ5W347tFZrZw1qgFW5JF4kJFWjqryUW34DGrySgwn3Xr47Ka48Aa4jg34Fv34F
-	yayxGF43ur1UX3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4AhLUUUUU
 
-Hi Shuah,
+Hi Trevor,
 
-On 07/11/2023 05:13 PM, Tiezhu Yang wrote:
-> When execute the following command to test clone3 under !CONFIG_TIME_NS:
->
->   # make headers && cd tools/testing/selftests/clone3 && make && ./clone3
->
-> we can see the following error info:
->
->   # [7538] Trying clone3() with flags 0x80 (size 0)
->   # Invalid argument - Failed to create new process
->   # [7538] clone3() with flags says: -22 expected 0
->   not ok 18 [7538] Result (-22) is different than expected (0)
->   ...
->   # Totals: pass:18 fail:1 xfail:0 xpass:0 skip:0 error:0
->
-> This is because if CONFIG_TIME_NS is not set, but the flag
-> CLONE_NEWTIME (0x80) is used to clone a time namespace, it
-> will return -EINVAL in copy_time_ns().
->
-> If kernel does not support CONFIG_TIME_NS, /proc/self/ns/time
-> will be not exist, and then we should skip clone3() test with
-> CLONE_NEWTIME.
->
-> With this patch under !CONFIG_TIME_NS:
->
->   # make headers && cd tools/testing/selftests/clone3 && make && ./clone3
->   ...
->   # Time namespaces are not supported
->   ok 18 # SKIP Skipping clone3() with CLONE_NEWTIME
->   ...
->   # Totals: pass:18 fail:0 xfail:0 xpass:0 skip:1 error:0
->
-> Fixes: 515bddf0ec41 ("selftests/clone3: test clone3 with CLONE_NEWTIME")
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+On 17/8/23 04:59, Trevor Woerner wrote:
+> Drop CONFIG_IP_NF_TARGET_CLUSTERIP from any remaining mips defconfigs as it
+> was removed in commit 57f8e00d8a82 ("usb: 71 musb: Drop old unused am35x
+> glue layer").
+
+How 57f8e00d8a82 is related? Do you mean commit 9db5d918e2c0
+("netfilter: ip_tables: remove clusterip target")?
+
+> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
 > ---
->
-> v6: Rebase on 6.5-rc1 and update the commit message
->
->  tools/testing/selftests/clone3/clone3.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-
-Hi Shuah,
-
-Any comments? I guess this should go through the linux-kselftest tree.
-
-Thanks,
-Tiezhu
+>   arch/mips/configs/ip22_defconfig        | 1 -
+>   arch/mips/configs/malta_defconfig       | 1 -
+>   arch/mips/configs/malta_kvm_defconfig   | 1 -
+>   arch/mips/configs/maltaup_xpa_defconfig | 1 -
+>   arch/mips/configs/rm200_defconfig       | 1 -
+>   5 files changed, 5 deletions(-)
+> 
+> diff --git a/arch/mips/configs/ip22_defconfig b/arch/mips/configs/ip22_defconfig
+> index 44821f497261..dc49b09d492b 100644
+> --- a/arch/mips/configs/ip22_defconfig
+> +++ b/arch/mips/configs/ip22_defconfig
+> @@ -127,7 +127,6 @@ CONFIG_IP_NF_MATCH_TTL=m
+>   CONFIG_IP_NF_FILTER=m
+>   CONFIG_IP_NF_TARGET_REJECT=m
+>   CONFIG_IP_NF_MANGLE=m
+> -CONFIG_IP_NF_TARGET_CLUSTERIP=m
+>   CONFIG_IP_NF_TARGET_ECN=m
+>   CONFIG_IP_NF_TARGET_TTL=m
+>   CONFIG_IP_NF_RAW=m
 
