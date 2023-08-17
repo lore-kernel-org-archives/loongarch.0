@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640D61400C
-	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 13:00:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DBCB1400F
+	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 13:01:39 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxnuvQGd5kooYZAA--.50203S3;
-	Thu, 17 Aug 2023 21:00:00 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cxc_DOGd5kPIYZAA--.52470S3;
+	Thu, 17 Aug 2023 20:59:58 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniPIGd5kmchcAA--.55665S27;
-	Thu, 17 Aug 2023 21:00:00 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniPIGd5kmchcAA--.55665S17;
+	Thu, 17 Aug 2023 20:59:57 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v19 25/30] LoongArch: KVM: Implement handle fpu exception
-Date: Thu, 17 Aug 2023 20:59:46 +0800
-Message-Id: <20230817125951.1126909-26-zhaotianrui@loongson.cn>
+Subject: [PATCH v19 15/30] LoongArch: KVM: Implement vcpu status description
+Date: Thu, 17 Aug 2023 20:59:36 +0800
+Message-Id: <20230817125951.1126909-16-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230817125951.1126909-1-zhaotianrui@loongson.cn>
 References: <20230817125951.1126909-1-zhaotianrui@loongson.cn>
@@ -35,55 +35,49 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxniPIGd5kmchcAA--.55665S27
+X-CM-TRANSID:AQAAf8BxniPIGd5kmchcAA--.55665S17
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement handle fpu exception, using kvm_own_fpu to enable fpu for
-guest.
+Implement LoongArch vcpu status description such as idle exits counter,
+signal exits counter, cpucfg exits counter, etc.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 491d1c39a945..f9c7951261e6 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -628,3 +628,29 @@ static int _kvm_handle_read_fault(struct kvm_vcpu *vcpu)
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 79e4e2277359..60b2e584c634 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -13,6 +13,23 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+ 
++const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
++	KVM_GENERIC_VCPU_STATS(),
++	STATS_DESC_COUNTER(VCPU, idle_exits),
++	STATS_DESC_COUNTER(VCPU, signal_exits),
++	STATS_DESC_COUNTER(VCPU, int_exits),
++	STATS_DESC_COUNTER(VCPU, cpucfg_exits),
++};
++
++const struct kvm_stats_header kvm_vcpu_stats_header = {
++	.name_size = KVM_STATS_NAME_SIZE,
++	.num_desc = ARRAY_SIZE(kvm_vcpu_stats_desc),
++	.id_offset = sizeof(struct kvm_stats_header),
++	.desc_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE,
++	.data_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE +
++		       sizeof(kvm_vcpu_stats_desc),
++};
++
+ int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
  {
- 	return _kvm_handle_mmu_fault(vcpu, false);
- }
-+
-+/**
-+ * _kvm_handle_fpu_disabled() - Guest used fpu however it is disabled at host
-+ * @vcpu:	Virtual CPU context.
-+ *
-+ * Handle when the guest attempts to use fpu which hasn't been allowed
-+ * by the root context.
-+ */
-+static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_run *run = vcpu->run;
-+
-+	/*
-+	 * If guest FPU not present, the FPU operation should have been
-+	 * treated as a reserved instruction!
-+	 * If FPU already in use, we shouldn't get this at all.
-+	 */
-+	if (WARN_ON(vcpu->arch.aux_inuse & KVM_LARCH_FPU)) {
-+		kvm_err("%s internal error\n", __func__);
-+		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+		return RESUME_HOST;
-+	}
-+
-+	kvm_own_fpu(vcpu);
-+	return RESUME_GUEST;
-+}
+ 	return !!(vcpu->arch.irq_pending) &&
 -- 
 2.39.1
 
