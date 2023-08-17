@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81B2F13FF4
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1F4214006
 	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 13:00:05 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dxl+jOGd5kVIYZAA--.16262S3;
-	Thu, 17 Aug 2023 20:59:58 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cxh+jMGd5k+IUZAA--.16743S3;
+	Thu, 17 Aug 2023 20:59:56 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniPIGd5kmchcAA--.55665S19;
-	Thu, 17 Aug 2023 20:59:58 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniPIGd5kmchcAA--.55665S10;
+	Thu, 17 Aug 2023 20:59:56 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v19 17/30] LoongArch: KVM: Implement virtual machine tlb operations
-Date: Thu, 17 Aug 2023 20:59:38 +0800
-Message-Id: <20230817125951.1126909-18-zhaotianrui@loongson.cn>
+Subject: [PATCH v19 08/30] LoongArch: KVM: Implement vcpu handle exit interface
+Date: Thu, 17 Aug 2023 20:59:29 +0800
+Message-Id: <20230817125951.1126909-9-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230817125951.1126909-1-zhaotianrui@loongson.cn>
 References: <20230817125951.1126909-1-zhaotianrui@loongson.cn>
@@ -35,62 +35,73 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxniPIGd5kmchcAA--.55665S19
+X-CM-TRANSID:AQAAf8BxniPIGd5kmchcAA--.55665S10
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement LoongArch virtual machine tlb operations such as flush tlb by
-specific gpa parameter and flush all of the virt machines tlb.
+Implement vcpu handle exit interface, getting the exit code by ESTAT
+register and using kvm exception vector to handle it.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/tlb.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 arch/loongarch/kvm/tlb.c
+ arch/loongarch/kvm/vcpu.c | 41 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
-new file mode 100644
-index 000000000000..0bcbd80ac631
---- /dev/null
-+++ b/arch/loongarch/kvm/tlb.c
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 83f2988ea67b..ca4e8d074e6c 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -103,6 +103,47 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+ 	return ret;
+ }
+ 
 +/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ * Return 1 for resume guest and "<= 0" for resume host.
 + */
-+
-+#include <linux/kvm_host.h>
-+#include <asm/tlb.h>
-+#include <asm/kvm_csr.h>
-+
-+int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
++static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
 +{
-+	unsigned long flags;
++	unsigned long exst = vcpu->arch.host_estat;
++	u32 intr = exst & 0x1fff; /* ignore NMI */
++	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
++	int ret = RESUME_GUEST;
 +
-+	local_irq_save(flags);
-+	gpa &= (PAGE_MASK << 1);
-+	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
-+	local_irq_restore(flags);
-+	return 0;
++	vcpu->mode = OUTSIDE_GUEST_MODE;
++
++	/* Set a default exit reason */
++	run->exit_reason = KVM_EXIT_UNKNOWN;
++
++	guest_timing_exit_irqoff();
++	guest_state_exit_irqoff();
++	local_irq_enable();
++
++	trace_kvm_exit(vcpu, exccode);
++	if (exccode) {
++		ret = _kvm_handle_fault(vcpu, exccode);
++	} else {
++		WARN(!intr, "vm exiting with suspicious irq\n");
++		++vcpu->stat.int_exits;
++	}
++
++	if (ret == RESUME_GUEST)
++		ret = kvm_pre_enter_guest(vcpu);
++
++	if (ret != RESUME_GUEST) {
++		local_irq_disable();
++		return ret;
++	}
++
++	guest_timing_enter_irqoff();
++	guest_state_enter_irqoff();
++	trace_kvm_reenter(vcpu);
++	return RESUME_GUEST;
 +}
 +
-+/**
-+ * kvm_flush_tlb_all() - Flush all root TLB entries for
-+ * guests.
-+ *
-+ * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
-+ */
-+void kvm_flush_tlb_all(void)
-+{
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	invtlb_all(INVTLB_ALLGID, 0, 0);
-+	local_irq_restore(flags);
-+}
+ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ {
+ 	unsigned long timer_hz;
 -- 
 2.39.1
 
