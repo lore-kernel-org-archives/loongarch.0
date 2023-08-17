@@ -1,200 +1,79 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DB1B1400C
-	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 13:01:39 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Cx2erMGd5k74UZAA--.47475S3;
-	Thu, 17 Aug 2023 20:59:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniPIGd5kmchcAA--.55665S9;
-	Thu, 17 Aug 2023 20:59:55 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	loongarch@lists.linux.dev,
-	Jens Axboe <axboe@kernel.dk>,
-	Mark Brown <broonie@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	maobibo@loongson.cn,
-	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn
-Subject: [PATCH v19 07/30] LoongArch: KVM: Implement vcpu run interface
-Date: Thu, 17 Aug 2023 20:59:28 +0800
-Message-Id: <20230817125951.1126909-8-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230817125951.1126909-1-zhaotianrui@loongson.cn>
-References: <20230817125951.1126909-1-zhaotianrui@loongson.cn>
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5E514274
+	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 15:44:00 +0000 (UTC)
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2b962c226ceso122048451fa.3
+        for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 08:44:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1692287038; x=1692891838;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Lp1IuZHqWfKCAVZooutFxjvYW2JldAzLdhi3fANGf+o=;
+        b=Y7OkJ5kzfBR9aS1o3hbSjWBbpDhDfQvuOJAbLWMeHIdCvYVqIqsch4xPQi6nhKj1sW
+         MyG2VLyh2d/VhqbZsXyum3ahPYS8bZD/3vhehfn8OxUL5vrX+3/9cMxCnE5qiSsgyDR/
+         fShe46mhdY+NApZpcWsPqTIffnvlvkPtOI+jgn4rIt384WQhvhdi97ih/Ilt5JjDZtjs
+         doYEk6M74dQhbXRqKo5cHgm5Sxala+iBlG/zi0HHIrvQSCxfxkgmFC1tMXvlzNgJkmoZ
+         rUDnjo4tsPM/cqSjpRMFtA5WxE0YyMxathg7q3nRUgdWs7XXqmVaU3lpDCCDHWNMmo6U
+         MjbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692287038; x=1692891838;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lp1IuZHqWfKCAVZooutFxjvYW2JldAzLdhi3fANGf+o=;
+        b=QUbbTKOv4UTjgDzATkPvB8ypcLuAVt1icWP1JuYxtsjxKVYU+7LohwQ2+/SfDsjWSU
+         oFbwWE/PyeqfOJkH7Q9rKzylyb30FFJt7s7anl+S2Ua9cnFQSSPn4R5eEOTgMzH5o86/
+         ewpQmRHVZ51Eq7m2jM3dWp4j/QA2BKD5W1wc35JCn93axafmrkswESZdC/JpNE+CSVC1
+         St7htE+lUFwSCuWSXWjOdn/yN11sUXHOf+7W0aeXpWTZ1cJSMM6h9tyMu4lx9KmTyMif
+         /Cer2x9vZdxRs5dsZJ9tYaM47i9SCYKeZswTnDmAxxNnP2SY7DbEq4AYK2z73MApzKTi
+         Iy7A==
+X-Gm-Message-State: AOJu0YwB4I16GZ/fZ/dTPZsYsV7F6UjowvVzeBnyuPWuwWKTC8w3Ssi6
+	KATQRJvCuaUOnFeF/jW9epFbjw==
+X-Google-Smtp-Source: AGHT+IGo/MkOhuQ87pyBbC2n512LcvZgd8ip292GYtt+yin2/JuZNeICWXDi7cMjkYGQ4p2MIAoVng==
+X-Received: by 2002:a2e:241a:0:b0:2b9:df53:4c2a with SMTP id k26-20020a2e241a000000b002b9df534c2amr4656731ljk.20.1692287038600;
+        Thu, 17 Aug 2023 08:43:58 -0700 (PDT)
+Received: from [192.168.69.115] (mek33-h02-176-184-23-56.dsl.sta.abo.bbox.fr. [176.184.23.56])
+        by smtp.gmail.com with ESMTPSA id lj5-20020a170906f9c500b0098d2d219649sm10418014ejb.174.2023.08.17.08.43.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Aug 2023 08:43:57 -0700 (PDT)
+Message-ID: <c608d62f-e3fe-1ead-b0a7-f935fea80702@linaro.org>
+Date: Thu, 17 Aug 2023 17:43:56 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.14.0
+Subject: Re: [PATCH v3 3/4] arch/mips/configs/*_defconfig cleanup
+Content-Language: en-US
+To: Trevor Woerner <twoerner@gmail.com>, linux-kernel@vger.kernel.org,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20230817115017.35663-1-twoerner@gmail.com>
+ <20230817115017.35663-4-twoerner@gmail.com>
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20230817115017.35663-4-twoerner@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxniPIGd5kmchcAA--.55665S9
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement vcpu run interface, handling mmio, iocsr reading fault
-and deliver interrupt, lose fpu before vcpu enter guest.
+On 17/8/23 13:50, Trevor Woerner wrote:
+> Drop CONFIG_IP_NF_TARGET_CLUSTERIP from any remaining mips defconfigs as it
+> was removed in commit 9db5d918e2c0 ("netfilter: ip_tables: remove clusterip
+> target").
+> 
+> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+> ---
+>   arch/mips/configs/ip22_defconfig        | 1 -
+>   arch/mips/configs/malta_defconfig       | 1 -
+>   arch/mips/configs/malta_kvm_defconfig   | 1 -
+>   arch/mips/configs/maltaup_xpa_defconfig | 1 -
+>   arch/mips/configs/rm200_defconfig       | 1 -
+>   5 files changed, 5 deletions(-)
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- arch/loongarch/kvm/vcpu.c | 130 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 130 insertions(+)
-
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 545b18cd1ca2..83f2988ea67b 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -18,6 +18,91 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- 	return 0;
- }
- 
-+/*
-+ * _kvm_check_requests - check and handle pending vCPU requests
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest
-+ *         RESUME_HOST  if we should exit to userspace
-+ */
-+static int _kvm_check_requests(struct kvm_vcpu *vcpu)
-+{
-+	if (!kvm_request_pending(vcpu))
-+		return RESUME_GUEST;
-+
-+	if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
-+		/* Drop vpid for this vCPU */
-+		vcpu->arch.vpid = 0;
-+
-+	if (kvm_dirty_ring_check_request(vcpu))
-+		return RESUME_HOST;
-+
-+	return RESUME_GUEST;
-+}
-+
-+/*
-+ * Check and handle pending signal and vCPU requests etc
-+ * Run with irq enabled and preempt enabled
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest
-+ *         RESUME_HOST  if we should exit to userspace
-+ *         < 0 if we should exit to userspace, where the return value
-+ *         indicates an error
-+ */
-+static int kvm_enter_guest_check(struct kvm_vcpu *vcpu)
-+{
-+	int ret;
-+
-+	/*
-+	 * Check conditions before entering the guest
-+	 */
-+	ret = xfer_to_guest_mode_handle_work(vcpu);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = _kvm_check_requests(vcpu);
-+	return ret;
-+}
-+
-+/*
-+ * called with irq enabled
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest, and irq disabled
-+ *         Others if we should exit to userspace
-+ */
-+static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
-+{
-+	int ret;
-+
-+	do {
-+		ret = kvm_enter_guest_check(vcpu);
-+		if (ret != RESUME_GUEST)
-+			break;
-+
-+		/*
-+		 * handle vcpu timer, interrupts, check requests and
-+		 * check vmid before vcpu enter guest
-+		 */
-+		local_irq_disable();
-+		kvm_acquire_timer(vcpu);
-+		_kvm_deliver_intr(vcpu);
-+		/* make sure the vcpu mode has been written */
-+		smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+		_kvm_check_vmid(vcpu);
-+		vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-+		/* clear KVM_LARCH_CSR as csr will change when enter guest */
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
-+
-+		if (kvm_request_pending(vcpu) || xfer_to_guest_mode_work_pending()) {
-+			/* make sure the vcpu mode has been written */
-+			smp_store_mb(vcpu->mode, OUTSIDE_GUEST_MODE);
-+			local_irq_enable();
-+			ret = -EAGAIN;
-+		}
-+	} while (ret != RESUME_GUEST);
-+
-+	return ret;
-+}
-+
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	unsigned long timer_hz;
-@@ -85,3 +170,48 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 			context->last_vcpu = NULL;
- 	}
- }
-+
-+int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-+{
-+	int r = -EINTR;
-+	struct kvm_run *run = vcpu->run;
-+
-+	if (vcpu->mmio_needed) {
-+		if (!vcpu->mmio_is_write)
-+			_kvm_complete_mmio_read(vcpu, run);
-+		vcpu->mmio_needed = 0;
-+	}
-+
-+	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
-+		if (!run->iocsr_io.is_write)
-+			_kvm_complete_iocsr_read(vcpu, run);
-+	}
-+
-+	/* clear exit_reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	if (run->immediate_exit)
-+		return r;
-+
-+	lose_fpu(1);
-+	vcpu_load(vcpu);
-+	kvm_sigset_activate(vcpu);
-+	r = kvm_pre_enter_guest(vcpu);
-+	if (r != RESUME_GUEST)
-+		goto out;
-+
-+	guest_timing_enter_irqoff();
-+	guest_state_enter_irqoff();
-+	trace_kvm_enter(vcpu);
-+	r = kvm_loongarch_ops->enter_guest(run, vcpu);
-+
-+	trace_kvm_out(vcpu);
-+	/*
-+	 * guest exit is already recorded at _kvm_handle_exit
-+	 * return val must not be RESUME_GUEST
-+	 */
-+	local_irq_enable();
-+out:
-+	kvm_sigset_deactivate(vcpu);
-+	vcpu_put(vcpu);
-+	return r;
-+}
--- 
-2.39.1
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
