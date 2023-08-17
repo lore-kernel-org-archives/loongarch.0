@@ -1,86 +1,158 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED264396
-	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 03:00:01 +0000 (UTC)
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-649edb3a3d6so1295116d6.0
-        for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 20:00:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41E0638
+	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 03:16:01 +0000 (UTC)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-589d7755213so51826247b3.2
+        for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 20:16:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692241200; x=1692846000;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1692242160; x=1692846960;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n2GSnqeNoyAE/+SX3es1Oteof6ti0abAFPSQqsiZHHw=;
-        b=nQWr89uC0Ngba1SRckU+echVMfhTwA2qk0vDCbhHdOtjAAGdM19nRWPqLBgCr0Duo7
-         7rYD5dLldDIFpMazz5Tf135A0CAVP0imv6JyHkX52mUGYyUonKAhaM4xzJbZ4jbfWqpT
-         jRkxUOVXjlnyM/G6pQOhk39ERd8wIastgkFTomKSXU8WGZfyXUXiBDbO60AmhQzjBzKP
-         rEx+5tscbvHykIJgWX6AvvRShos4qB521nSQYyv2j8U1JPO3qJaP03/AX76O/sqeWF2V
-         HT6ELMnIUQFFdssAO8g4/d7WQEhfQTgKwmxtr12KhKA4izqI3id8RZR/e7rVLQH7svHa
-         uAmg==
+        bh=9lOES28x1vlU2LaHZjcK9BgxDCrzNHUrpAgbOp/z5G4=;
+        b=AfTgrTN3o2bP+4yjfvTNeGc5GlYk+imYtU//mfdqolEe1dZJe9pHLEd6l+fas/d+/G
+         M3j6cZccCNTcy2zLKQqTpB8l4sio9hD6c4kbNoz3ZclommrTzfrHgjeMM8jW9kpvumaC
+         1fr6wdTMBagQWfZ3RCkXK9gTpHGrDJNRk/clRCF/dXWhP7yFxxHcjK/WxQaYyuUgfWni
+         irDPtgba9QwOBTs5IFknnjlfIDWlr6Vwv2nq5wzG4/Fpc/kiirXD0L/XsyFzCpsOE2+d
+         Qf3oq8ApmdiFMAGV/tWk/lCY0RoNdAboIYuZyJjh86l2kJByz+HErg8UqGuzmSLLZqzu
+         HDmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692241200; x=1692846000;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1692242160; x=1692846960;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n2GSnqeNoyAE/+SX3es1Oteof6ti0abAFPSQqsiZHHw=;
-        b=Y2QWB5S2hffNWRYvOdsygJ6S48CzUWwXwa1MSI7ncms4KFzmLY3S/N8KDaUwD69e4f
-         Q7RVC2Kktiy1V0AZpZYAHzRCoEDztLfsPaUFUhwpLs4M6EvoU7YrhGx1EpUnYbOUQTVr
-         Djs6vIy81yGBE/c8iTWio5oUM6WIYoJ9z3gxOfJC2/3QTTOAinCLXdXKmqXcxTbAeDiK
-         IEbKwJ5Qwo9WFzpr5u8oNe04TUFMVnbZtnGHoOivLnaaZUMU9xDwCJaf6/Klb5rQT5xq
-         VBJKe6Bn3fArBL2mVPQI9h7fmajMfj4/XKi87XF4zwMPqhHL3oQP8umsH5RnEIOisseP
-         dY5w==
-X-Gm-Message-State: AOJu0YyBrgbV+4wZCrJKjdljTnQXyQOO0Yr+f/nnKfi5vBO8Buaicixm
-	mYgS4oYhlJw3ilmaW2v3WeQ=
-X-Google-Smtp-Source: AGHT+IFng0wFZtCSDDiVOY49UxdEFehiYLDUvGYu2W+npgCx1ZI6h5QEe6nSX/rWT8xkkK8CoCgLBA==
-X-Received: by 2002:ad4:5d6d:0:b0:63f:9130:4e9c with SMTP id fn13-20020ad45d6d000000b0063f91304e9cmr1855432qvb.26.1692241200467;
-        Wed, 16 Aug 2023 20:00:00 -0700 (PDT)
-Received: from localhost.localdomain (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
-        by smtp.gmail.com with ESMTPSA id c16-20020a0cf2d0000000b0063d0159e1f6sm5260184qvm.109.2023.08.16.19.59.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Aug 2023 19:59:59 -0700 (PDT)
-From: Trevor Woerner <twoerner@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 4/4] arch/powerpc/configs/*_defconfig cleanup
-Date: Wed, 16 Aug 2023 22:59:39 -0400
-Message-ID: <20230817025942.3209-5-twoerner@gmail.com>
-X-Mailer: git-send-email 2.41.0.327.gaa9166bcc0ba
-In-Reply-To: <20230817025942.3209-1-twoerner@gmail.com>
-References: <20230817025942.3209-1-twoerner@gmail.com>
+        bh=9lOES28x1vlU2LaHZjcK9BgxDCrzNHUrpAgbOp/z5G4=;
+        b=fCm2xqyZLcvimfizC065HbDQd7Xga8VD09QFamIwZm6Fooqa8Yk9XUugaFkbBWC1Sk
+         oOBnamfRKi06TlqFOD2u8lNLy43hevKPDq4eP/SKcE97245XfeGTgxdA0o0kBTNmJQ10
+         1KpI0oV2oisJJYK1Mrnu8JbwPcbk7IserR+/5vLju3vNAlEOVbuXG0SWuOPEgihkVnKJ
+         6hiUPs6YIM0lqt0FaDbHEtkAg15UftRCIIdfOuTzFU5CimM14weJ2ID898z6toLHHahL
+         WRTmu81lCPvhTplhbqzoHHKTSQPgiTNqKLqvlouCM8ipkL+6TxoMyqYfZdivPOxz1dGT
+         qsSw==
+X-Gm-Message-State: AOJu0YxvtCOUbWsqrZY8ewZKfOymb3gdzkWRrZ3j/2YKhcGCpLD2lhD5
+	Oh9LsueQKTuoVmkpIHO/psWvU+KZx6gTgr3Fjy0=
+X-Google-Smtp-Source: AGHT+IG97rKMlejstahverF3sLciAyT8NrV9SnFfJRx78OgxULFe3DNvaUHLr9FOp44L3XzWON0JsYb6uEc2pzfyd58=
+X-Received: by 2002:a0d:eb42:0:b0:565:c21d:8ec6 with SMTP id
+ u63-20020a0deb42000000b00565c21d8ec6mr3793635ywe.6.1692242160492; Wed, 16 Aug
+ 2023 20:16:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1692088166.git.zhoubinbin@loongson.cn> <f869b30d119a56abaa67ac78cd981fc0c2f0d28b.1692088166.git.zhoubinbin@loongson.cn>
+ <20230815-renounce-reminder-a6728ebefb5f@spud>
+In-Reply-To: <20230815-renounce-reminder-a6728ebefb5f@spud>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Thu, 17 Aug 2023 11:15:48 +0800
+Message-ID: <CAMpQs4+dau2kZ5AJLyzO532x-8A4JmmLBoBVu29SvMwmASUZgQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] LoongArch: dts: DeviceTree for Loongson-2K0500
+To: Conor Dooley <conor@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Hongliang Wang <wanghongliang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Drop CONFIG_IP_NF_TARGET_CLUSTERIP as it was removed in commit 57f8e00d8a82
-("usb: 71 musb: Drop old unused am35x glue layer").
+Hi Conor:
 
-Signed-off-by: Trevor Woerner <twoerner@gmail.com>
----
- arch/powerpc/configs/ppc6xx_defconfig | 1 -
- 1 file changed, 1 deletion(-)
+Thanks for your reply.
 
-diff --git a/arch/powerpc/configs/ppc6xx_defconfig b/arch/powerpc/configs/ppc6xx_defconfig
-index 1034aeabdd6c..eaf3273372a9 100644
---- a/arch/powerpc/configs/ppc6xx_defconfig
-+++ b/arch/powerpc/configs/ppc6xx_defconfig
-@@ -183,7 +183,6 @@ CONFIG_IP_NF_MATCH_TTL=m
- CONFIG_IP_NF_FILTER=m
- CONFIG_IP_NF_TARGET_REJECT=m
- CONFIG_IP_NF_MANGLE=m
--CONFIG_IP_NF_TARGET_CLUSTERIP=m
- CONFIG_IP_NF_TARGET_ECN=m
- CONFIG_IP_NF_TARGET_TTL=m
- CONFIG_IP_NF_RAW=m
--- 
-2.41.0.327.gaa9166bcc0ba
+On Tue, Aug 15, 2023 at 10:09=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
+ote:
+>
+> On Tue, Aug 15, 2023 at 04:51:10PM +0800, Binbin Zhou wrote:
+> > Add DeviceTree file for Loongson-2K0500 processor, which integrates one
+> > 64-bit dual emission superscalar LA264 processor core.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  arch/loongarch/boot/dts/Makefile              |   2 +
+> >  .../boot/dts/loongson-2k0500-ref.dts          | 115 +++++++++
+> >  arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 244 ++++++++++++++++++
+> >  3 files changed, 361 insertions(+)
+> >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+> >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0500.dtsi
+> >
+> > diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts=
+/Makefile
+> > index 1e24cdb5180a..aa0b21d73d4e 100644
+> > --- a/arch/loongarch/boot/dts/Makefile
+> > +++ b/arch/loongarch/boot/dts/Makefile
+> > @@ -1,3 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> >
+> > +dtb-$(CONFIG_MACH_LOONGSON64)        =3D loongson-2k0500-ref.dtb
+> > +
+> >  obj-$(CONFIG_BUILTIN_DTB)    +=3D $(addsuffix .dtb.o, $(CONFIG_BUILTIN=
+_DTB_NAME))
+> > diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loo=
+ngarch/boot/dts/loongson-2k0500-ref.dts
+> > new file mode 100644
+> > index 000000000000..c89662e5a296
+> > --- /dev/null
+> > +++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+> > @@ -0,0 +1,115 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "loongson-2k0500.dtsi"
+> > +
+> > +/ {
+> > +     compatible =3D "loongson,ls2k0500-ref", "loongson,ls2k0500";
+> > +     model =3D "Loongson-2K0500 Reference Board";
+> > +
+> > +     aliases {
+> > +             ethernet0 =3D &gmac0;
+> > +             ethernet1 =3D &gmac1;
+> > +             serial0 =3D &uart0;
+> > +     };
+> > +
+> > +     chosen {
+> > +             stdout-path =3D "serial0:115200n8";
+> > +             bootargs =3D "earlycon";
+> > +     };
+> > +
+> > +     cpu_clk: cpu-clk {
+> > +             #clock-cells =3D <0>;
+> > +             compatible =3D "fixed-clock";
+> > +             clock-frequency =3D <500000000>;
+> > +     };
+> > +
+> > +     cpus {
+> > +             #address-cells =3D <1>;
+> > +             #size-cells =3D <0>;
+> > +
+> > +             cpu-map {
+> > +                     cluster0 {
+> > +                             core0 {
+> > +                                     cpu =3D <&cpu0>;
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             cpu0: cpu@0 {
+> > +                     compatible =3D "loongson,la264";
+> > +                     device_type =3D "cpu";
+> > +                     reg =3D <0x0>;
+> > +                     clocks =3D <&cpu_clk>;
+> > +             };
+> > +     };
+>
+> I've not read this whole patch, but from a glance - why is the cpu node
+> in the board file, not the soc one?
 
+I'm very sorry, that was my mistake. cpu node should really be part of
+soc, I'll put it in dtsi.
+
+Thanks.
+Binbin
