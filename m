@@ -1,95 +1,133 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA692100
-	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 07:33:17 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-51cff235226so1385417a12.0
-        for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 00:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692257596; x=1692862396;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XqVwwc2dDlYlCMTarZ/PjmKE+CsteLytpeFTL+9lo0M=;
-        b=F4UrenxJRzj7RIgGu2RAZ2FUbmJEF38qgllIOTjkWb91A+EGbBRBvbhHqKxIO/AeNe
-         ff4+SIOxVHNabjcg7l5TwiX0NWBzieVdmlblIxPBlK0tY01TSyLib+9qnr2FnWt66sXZ
-         Ir7tJSfIR4U2c6qGCHcDZt7br1mzXyUdZM2BKRwvU3dv2PNOesfmlqTM6uJCvbzmf7DQ
-         /BQmQ2DmlmTrOy3n3WQLJj3lRTTEEqdsco+uzM60FV6tRtGpOrx4fUryqA+4w6F4oUt5
-         /mhOH7g/8a4pwXNbvv1PpfHTnJH1zcitg5hU892GdkgYp8jALVFToAUGlI5ExSdF6Tzl
-         Djkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692257596; x=1692862396;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XqVwwc2dDlYlCMTarZ/PjmKE+CsteLytpeFTL+9lo0M=;
-        b=XFC7l0fWedJJtonUNGy9CE1L3iWF+jPoSKJSqRgwKvgklljGi8ScS05gOWP19+g8hM
-         x8ZRScqVbToYNPTPyxnX8o+MIQrVAFZ/TU+bLM6hrbq+57DGEQ6jRFNnhSVTPKaQK+BA
-         ExraPyafOGfcPL3C02gBimgtM9s90QTd4pmSUq6kxSE+qCL3rb9WzmA2SgYoXPY5mWLJ
-         99qBYnutOd0yG1gxV6HxVG6/zy6O7wMudkqrLxbKr9x6SZn1HaDQnFyZWzHlasaVGq7G
-         VwONen/6F8Rc9cHxM3W5zh1wpoXBp1VbUX72UZIGcbXB/npKcaEN4k0pt4Ntx6ZrinxQ
-         +TPg==
-X-Gm-Message-State: AOJu0Yw3LsIimZVmro9FLBXfEuzlHNqmhacaGVboHLohS2naEs9Rwa/w
-	Pf46TAGwHYcpiAXH60Ik2sSB1vuUC3efa6ra4ww=
-X-Google-Smtp-Source: AGHT+IFghrFx0zxJbJiB3SRR94OfeZeGqRzD/iYhIlcu/DnH8WCxmeY5R8S/g/7SDRhGfDDg6uwxBg==
-X-Received: by 2002:a05:6402:40c8:b0:522:b9ae:db3c with SMTP id z8-20020a05640240c800b00522b9aedb3cmr2223766edb.6.1692257595980;
-        Thu, 17 Aug 2023 00:33:15 -0700 (PDT)
-Received: from [192.168.69.115] (mek33-h02-176-184-23-56.dsl.sta.abo.bbox.fr. [176.184.23.56])
-        by smtp.gmail.com with ESMTPSA id k15-20020a05640212cf00b00521f4ee396fsm9365410edx.12.2023.08.17.00.33.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Aug 2023 00:33:15 -0700 (PDT)
-Message-ID: <f7230276-decf-2248-52b2-c2de4a13647c@linaro.org>
-Date: Thu, 17 Aug 2023 09:33:13 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA948F73
+	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 08:44:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 248F5C433C8;
+	Thu, 17 Aug 2023 08:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692261861;
+	bh=0wt19lcuyV0qGxajto8H64st9E4uYSeCHXDPnDfixX0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c5ya0ywB62jJ8L512dc5X0JjP3KGG3Vpv9C4y2bXDtSo1YZNfugiFxRnq1ucoYVLb
+	 fdAwMyZ33OhiIXdWmrM1k+PSxbJbTrt5YNuE5RHkTeclgDKEsm/paEetQern5G4Cbe
+	 z2/4ym94ndL4PTpwUYcTcdLVT+GHgTcizVFmob4A7JMzUYewRQytWSwAreyQPYdwT5
+	 fgYQUr2H4UTpnBLW5qrTSrza4ZKr4nTSq/G8x5BcoeBupwKfDk3qTnZ51iaA0UtPyT
+	 vI9IHHZ7RVKRfS00W+OLLR0rM1F2CLN7uAOwLddNo/ZEBhylc/kEykV2mLcTJq0yYC
+	 LHBaPtd8MnovA==
+Date: Thu, 17 Aug 2023 09:44:16 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Hongliang Wang <wanghongliang@loongson.cn>
+Subject: Re: [PATCH v2 2/7] dt-bindings: loongarch: Add Loongson SoC boards
+ compatibles
+Message-ID: <20230817-snowfield-public-af7228b71c3f@spud>
+References: <cover.1692088166.git.zhoubinbin@loongson.cn>
+ <6d8d0d8d21e32e0577565158bc1c4960a92fb216.1692088166.git.zhoubinbin@loongson.cn>
+ <20230815-fineness-lesser-d807c051dd36@spud>
+ <CAMpQs4JY0=mdSvw64aMAk0Vq5qBcfvqzyXzscsdOhOS4vNuTwA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.14.0
-Subject: Re: [PATCH v2 3/4] arch/mips/configs/*_defconfig cleanup
-Content-Language: en-US
-To: Trevor Woerner <twoerner@gmail.com>, linux-kernel@vger.kernel.org,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20230817025942.3209-1-twoerner@gmail.com>
- <20230817025942.3209-4-twoerner@gmail.com>
-From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230817025942.3209-4-twoerner@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="H6Mr/XGuntPlO9qn"
+Content-Disposition: inline
+In-Reply-To: <CAMpQs4JY0=mdSvw64aMAk0Vq5qBcfvqzyXzscsdOhOS4vNuTwA@mail.gmail.com>
 
-Hi Trevor,
 
-On 17/8/23 04:59, Trevor Woerner wrote:
-> Drop CONFIG_IP_NF_TARGET_CLUSTERIP from any remaining mips defconfigs as it
-> was removed in commit 57f8e00d8a82 ("usb: 71 musb: Drop old unused am35x
-> glue layer").
+--H6Mr/XGuntPlO9qn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-How 57f8e00d8a82 is related? Do you mean commit 9db5d918e2c0
-("netfilter: ip_tables: remove clusterip target")?
+On Thu, Aug 17, 2023 at 02:16:13PM +0800, Binbin Zhou wrote:
+> Hi Conor:
+>=20
+> Thanks for your reply.
+>=20
+> On Tue, Aug 15, 2023 at 10:13=E2=80=AFPM Conor Dooley <conor@kernel.org> =
+wrote:
+> >
+> > On Tue, Aug 15, 2023 at 04:50:47PM +0800, Binbin Zhou wrote:
+> > > Add Loongson SoC boards binding with DT schema format using json-sche=
+ma.
+> > >
+> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > ---
+> > >  .../devicetree/bindings/loongarch/boards.yaml | 34 +++++++++++++++++=
+++
+> > >  1 file changed, 34 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/loongarch/board=
+s.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/loongarch/boards.yaml =
+b/Documentation/devicetree/bindings/loongarch/boards.yaml
+> > > new file mode 100644
+> > > index 000000000000..5092314b7a52
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/loongarch/boards.yaml
+> > > @@ -0,0 +1,34 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/loongarch/boards.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Loongson SoC-based boards
+> > > +
+> > > +maintainers:
+> > > +  - Binbin Zhou <zhoubinbin@loongson.cn>
+> > > +
+> > > +properties:
+> > > +  $nodename:
+> > > +    const: '/'
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - description: Loongson-2K0500 processor based boards
+> > > +        items:
+> > > +          - const: loongson,ls2k0500-ref
+> > > +          - const: loongson,ls2k0500
+> > > +
+> > > +      - description: Loongson-2K1000 processor based boards
+> > > +        items:
+> > > +          - const: loongson,ls2k1000-ref
+> > > +          - const: loongson,ls2k1000
+> > > +
+> > > +      - description: Loongson-2K2000 processor based boards
+> > > +        items:
+> > > +          - const: loongson,ls2k2000-ref
+> > > +          - const: loongson,ls2k2000
+> >
+> > Do all of these SoCs just have a single reference/dev board?
+>=20
+> Yes, I have development boards for each Soc on hand now, and it has a
+> relatively complete interface. My original idea was to use the
+> development boards as examples to show you the Loongson-2K Soc.
+> I'm sure more boards will be added in the future.
 
-> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
-> ---
->   arch/mips/configs/ip22_defconfig        | 1 -
->   arch/mips/configs/malta_defconfig       | 1 -
->   arch/mips/configs/malta_kvm_defconfig   | 1 -
->   arch/mips/configs/maltaup_xpa_defconfig | 1 -
->   arch/mips/configs/rm200_defconfig       | 1 -
->   5 files changed, 5 deletions(-)
-> 
-> diff --git a/arch/mips/configs/ip22_defconfig b/arch/mips/configs/ip22_defconfig
-> index 44821f497261..dc49b09d492b 100644
-> --- a/arch/mips/configs/ip22_defconfig
-> +++ b/arch/mips/configs/ip22_defconfig
-> @@ -127,7 +127,6 @@ CONFIG_IP_NF_MATCH_TTL=m
->   CONFIG_IP_NF_FILTER=m
->   CONFIG_IP_NF_TARGET_REJECT=m
->   CONFIG_IP_NF_MANGLE=m
-> -CONFIG_IP_NF_TARGET_CLUSTERIP=m
->   CONFIG_IP_NF_TARGET_ECN=m
->   CONFIG_IP_NF_TARGET_TTL=m
->   CONFIG_IP_NF_RAW=m
+My reason for asking was that "-ref" is quite generic, but if there is
+only one reference board produced by Loongson that's not a problem.
 
+--H6Mr/XGuntPlO9qn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZN3d3QAKCRB4tDGHoIJi
+0unuAP9L0k+AOLnCeI3ravVDEDl/lOldQUL5VUKqfTbKyzZBPgD9FlQ1Vr/zWE7x
+6V4TqRop84HMj1MaxoqBB53+DVNAaQo=
+=9Uxo
+-----END PGP SIGNATURE-----
+
+--H6Mr/XGuntPlO9qn--
