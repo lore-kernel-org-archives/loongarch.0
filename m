@@ -1,52 +1,58 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2235036A
-	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 02:59:52 +0000 (UTC)
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6418d8a659fso25000256d6.0
-        for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 19:59:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D3F36A
+	for <loongarch@lists.linux.dev>; Thu, 17 Aug 2023 02:59:55 +0000 (UTC)
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-649a11843b3so3508996d6.0
+        for <loongarch@lists.linux.dev>; Wed, 16 Aug 2023 19:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692241192; x=1692845992;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VqIUTEi6b5maOYfEISJN/XLCGUsT7sZm6MvKkdhtPPQ=;
-        b=WHSqp/OjipS4malg5Jhuw8Q9iUeu1/JOmbXWqXYvnZgGD0kM17N6tQvxwUsCI5NLru
-         Uc5eVbilZvj+vU/FDtUEKtVANL/igEVVU9fMzmN+KBhf+xt59WNKpal6tsNf+z9+Y7TV
-         yD5Im18r3kHMjvZZUNXeLn1YO9dO18rMwOHA24MSxJx1EZE51SgTXLAarM8kC0zelVrK
-         5SidfXYcfJz7Lp9YUVglFIezKC2ivHG+RE4hB+Sk1DDJsqYqmafTDGDirXACn06WXuBz
-         DmK8i+/ZjA5wROpsni5u9JVtRraWCxRDSDmuyfbzUbITI31KPak3SF5rZt2bcrO0fYUd
-         z78Q==
+        d=gmail.com; s=20221208; t=1692241194; x=1692845994;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YE/BUm2FSSisZiwalVUsZxq3GksbeB9ZKcukTp9gXFM=;
+        b=UZY2YVXrHGTVpEhbC5mxFz06MN1nNY1gyh7KoP2ggYewVRUUkbhSsyIhi5sB4yf5Sr
+         YXp/Unxm0pcBXp5ekpS22Ov61WGv4mX1Jtqmm35gEkixtpLg7bT7FbO+QTo93+xlU0Ts
+         vOLD8UWlG7J9toNDv7UQ9yaH6KUyt8ZqK0rOxCXmJnJ4xdCzSDOMUw/Fqn3c27pcaUbu
+         U0uYDusXjtk9NVzYHoUSUwvW/jsLsYgVQ+UMznrHW6mpeCVxOtXEAtmEQaGB+haCnpbH
+         dyRNz/QiAIt6HenV7y8ywhqVmxmUKFPlvMIJGmxAwaU/5dW4ENLiWMpEcoUBQaSxPh9h
+         vjlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692241192; x=1692845992;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VqIUTEi6b5maOYfEISJN/XLCGUsT7sZm6MvKkdhtPPQ=;
-        b=bu5Y74H3oeS+Moq6Kk/F+mGw7CaeNeN+OfQQvJfjpAXvZZ4atxRbulJbAG3iRT0p/j
-         Xh1Lu2292PHMmPPDhRz5+crKCM/tL/NRm1rB2Zm9vEh42TsdQr3IOXfuv+TgDpBE/fca
-         Sf453v1FIUWku/ybPq7Xyq6c7BfExrJCjNUOhh3DXvei0zFHKnBE+GLcq0ZnnwppKLEQ
-         B9nj8cUehC6eaS/qMJpaJZHctgkqJwNsHyBNuBRfo7zqQTqPDx2CDvwP5mPM2uycI1SI
-         lepRKIC3lPolxpTj0hECD/yIKzG1hIVGeLRFrtlgTu14TziI8nmJ6eO4AioH39bJevO4
-         v17A==
-X-Gm-Message-State: AOJu0Yzd+hfbtPMmm8YFlAeAhWFPCcdgjLi7hhwXeAQQjYPDVYWRqGeM
-	626tVgr+yGHn/kcIFHA0KTE=
-X-Google-Smtp-Source: AGHT+IFBzAZ0MiGiVZDZXUmHBUCgDd7pIXBv+9jFVMKW5hvqzp/dG7vKept76xYLnf/geME77zPN6A==
-X-Received: by 2002:a0c:e047:0:b0:636:afa1:345d with SMTP id y7-20020a0ce047000000b00636afa1345dmr3324091qvk.17.1692241191804;
-        Wed, 16 Aug 2023 19:59:51 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692241194; x=1692845994;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YE/BUm2FSSisZiwalVUsZxq3GksbeB9ZKcukTp9gXFM=;
+        b=HMHtCHqhksP29Zm/Msw4MqM8Ifj0Ya3g3RqwMukp+ELQ9F7IyLuIfx6QRVkskqH/b9
+         xakp/OSb3VKblaQG8ONdniRceO6HuFWV5vlbaRt6+YApnFcBYbTMPzrskwrnjSY0mVGY
+         qaJXtQrISgybdm6kiH8i4Z5l/6xHUoV/jPD13UdSBkVWzzepjZth8YBJw+q7qpVxSGii
+         TtRN1qrH3YotzeLdMhgu0of4is/aRkAwyLACywR0L/9+48cTbRPLrOJDmpslFKip7DNs
+         s9V6RE3xe5CbX/zkr/HFfAeFbObnEzFKZhz2o0DahsGCr5VBRl3jnI9/zFe/vxPt3dBh
+         hcNA==
+X-Gm-Message-State: AOJu0YyN3LONeBq1fAE6lXhgyyPjWFypNivFn/GfRYwBJ8tX86Hm+bRr
+	9N4QpXndM/CmDUU0KgCnRYDJRm4fvbc=
+X-Google-Smtp-Source: AGHT+IECVIOcGyGWVM+fNHMcONvgzoQkkaN3K6EQ3o6DVnQup7O4owLUrKdS4yydSMgybnuA2LUQuA==
+X-Received: by 2002:a0c:b38c:0:b0:643:3117:b22e with SMTP id t12-20020a0cb38c000000b006433117b22emr3157248qve.27.1692241194140;
+        Wed, 16 Aug 2023 19:59:54 -0700 (PDT)
 Received: from localhost.localdomain (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
-        by smtp.gmail.com with ESMTPSA id c16-20020a0cf2d0000000b0063d0159e1f6sm5260184qvm.109.2023.08.16.19.59.50
+        by smtp.gmail.com with ESMTPSA id c16-20020a0cf2d0000000b0063d0159e1f6sm5260184qvm.109.2023.08.16.19.59.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Aug 2023 19:59:51 -0700 (PDT)
+        Wed, 16 Aug 2023 19:59:53 -0700 (PDT)
 From: Trevor Woerner <twoerner@gmail.com>
-To: linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>,
+	Tony Lindgren <tony@atomide.com>
 Cc: linux-arm-kernel@lists.infradead.org,
 	loongarch@lists.linux.dev,
 	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 0/4] general defconfig cleanups
-Date: Wed, 16 Aug 2023 22:59:35 -0400
-Message-ID: <20230817025942.3209-1-twoerner@gmail.com>
+	linuxppc-dev@lists.ozlabs.org,
+	linux-omap@vger.kernel.org
+Subject: [PATCH v2 1/4] arch/arm/configs/*_defconfig cleanup
+Date: Wed, 16 Aug 2023 22:59:36 -0400
+Message-ID: <20230817025942.3209-2-twoerner@gmail.com>
 X-Mailer: git-send-email 2.41.0.327.gaa9166bcc0ba
+In-Reply-To: <20230817025942.3209-1-twoerner@gmail.com>
+References: <20230817025942.3209-1-twoerner@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -55,33 +61,127 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Drop config options from defconfigs whose code has been removed.
+Drop CONFIG_NF_LOG_NETDEV as it was removed in commit 1510618e45cb
+("netfilter: nf_log_netdev: merge with nf_log_syslog").
 
-v2:
-Generate arch-specific patches. In v1 I organized the patches by
-CONFIG_ option which caused some of the patches to cross architectural
-lines. This requires cross-arch consensus before they can be applied.
-Therefore organize the changes by architecture so each one can apply them
-independently (or not).
+Drop CONFIG_NFT_COUNTER as it was removed in commit 023223dfbfb3
+("netfilter: nf_tables: make counter support built-in").
 
-Trevor Woerner (4):
-  arch/arm/configs/*_defconfig cleanup
-  arch/loongarch/configs/*_defconfig cleanup
-  arch/mips/configs/*_defconfig cleanup
-  arch/powerpc/configs/*_defconfig cleanup
+Drop CONFIG_NF_FLOW_TABLE_IPV6 and CONFIG_NF_FLOW_TABLE_IPV4 as they were
+removed in commit c42ba4290b21 ("netfilter: flowtable: remove ipv4/ipv6
+modules").
 
- arch/arm/configs/keystone_defconfig        | 1 -
- arch/arm/configs/multi_v7_defconfig        | 1 -
- arch/arm/configs/omap2plus_defconfig       | 8 --------
- arch/loongarch/configs/loongson3_defconfig | 2 --
- arch/mips/configs/ip22_defconfig           | 1 -
- arch/mips/configs/malta_defconfig          | 1 -
- arch/mips/configs/malta_kvm_defconfig      | 1 -
- arch/mips/configs/maltaup_xpa_defconfig    | 1 -
- arch/mips/configs/rm200_defconfig          | 1 -
- arch/powerpc/configs/ppc6xx_defconfig      | 1 -
- 10 files changed, 18 deletions(-)
+Drop CONFIG_NF_LOG_BRIDGE as it was removed in commit 77ccee96a674
+("netfilter: nf_log_bridge: merge with nf_log_syslog").
 
+Drop CONFIG_IP_NF_TARGET_CLUSTERIP from any remaining arm defconfigs as it
+was removed in commit 57f8e00d8a82 ("usb: 71 musb: Drop old unused am35x
+glue layer").
+
+Drop CONFIG_USB_MUSB_AM35X as it was removed in commit 57f8e00d8a82 ("usb:
+musb: Drop old unused am35x glue layer").
+
+Drop CONFIG_NFT_OBJREF as it was removed in commit d037abc2414b
+("netfilter: nft_objref: make it builtin").
+
+Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+---
+ arch/arm/configs/keystone_defconfig  | 1 -
+ arch/arm/configs/multi_v7_defconfig  | 1 -
+ arch/arm/configs/omap2plus_defconfig | 8 --------
+ 3 files changed, 10 deletions(-)
+
+diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+index 1cb145633a91..61179b75cf1f 100644
+--- a/arch/arm/configs/keystone_defconfig
++++ b/arch/arm/configs/keystone_defconfig
+@@ -98,7 +98,6 @@ CONFIG_IP_NF_MATCH_TTL=y
+ CONFIG_IP_NF_FILTER=y
+ CONFIG_IP_NF_TARGET_REJECT=y
+ CONFIG_IP_NF_MANGLE=y
+-CONFIG_IP_NF_TARGET_CLUSTERIP=y
+ CONFIG_IP_NF_TARGET_ECN=y
+ CONFIG_IP_NF_TARGET_TTL=y
+ CONFIG_IP_NF_RAW=y
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index c7b2550d706c..497274c81ea2 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -851,7 +851,6 @@ CONFIG_USB_MUSB_HDRC=m
+ CONFIG_USB_MUSB_SUNXI=m
+ CONFIG_USB_MUSB_TUSB6010=m
+ CONFIG_USB_MUSB_OMAP2PLUS=m
+-CONFIG_USB_MUSB_AM35X=m
+ CONFIG_USB_MUSB_DSPS=m
+ CONFIG_USB_MUSB_UX500=m
+ CONFIG_USB_UX500_DMA=y
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index b685018dcf54..b2f0862f4bd9 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -78,7 +78,6 @@ CONFIG_IP_PNP_BOOTP=y
+ CONFIG_IP_PNP_RARP=y
+ CONFIG_NETFILTER=y
+ CONFIG_NF_CONNTRACK=m
+-CONFIG_NF_LOG_NETDEV=m
+ CONFIG_NF_CONNTRACK_ZONES=y
+ CONFIG_NF_CONNTRACK_EVENTS=y
+ CONFIG_NF_CONNTRACK_TIMEOUT=y
+@@ -92,7 +91,6 @@ CONFIG_NF_TABLES_INET=y
+ CONFIG_NF_TABLES_NETDEV=y
+ CONFIG_NFT_NUMGEN=m
+ CONFIG_NFT_CT=m
+-CONFIG_NFT_COUNTER=m
+ CONFIG_NFT_CONNLIMIT=m
+ CONFIG_NFT_LOG=m
+ CONFIG_NFT_LIMIT=m
+@@ -100,7 +98,6 @@ CONFIG_NFT_MASQ=m
+ CONFIG_NFT_REDIR=m
+ CONFIG_NFT_NAT=m
+ CONFIG_NFT_TUNNEL=m
+-CONFIG_NFT_OBJREF=m
+ CONFIG_NFT_QUEUE=m
+ CONFIG_NFT_QUOTA=m
+ CONFIG_NFT_REJECT=m
+@@ -179,7 +176,6 @@ CONFIG_NETFILTER_XT_MATCH_TIME=m
+ CONFIG_NETFILTER_XT_MATCH_U32=m
+ CONFIG_NFT_DUP_IPV4=m
+ CONFIG_NFT_FIB_IPV4=m
+-CONFIG_NF_FLOW_TABLE_IPV4=m
+ CONFIG_IP_NF_IPTABLES=m
+ CONFIG_IP_NF_MATCH_AH=m
+ CONFIG_IP_NF_MATCH_ECN=m
+@@ -193,14 +189,12 @@ CONFIG_IP_NF_TARGET_MASQUERADE=m
+ CONFIG_IP_NF_TARGET_NETMAP=m
+ CONFIG_IP_NF_TARGET_REDIRECT=m
+ CONFIG_IP_NF_MANGLE=m
+-CONFIG_IP_NF_TARGET_CLUSTERIP=m
+ CONFIG_IP_NF_TARGET_ECN=m
+ CONFIG_IP_NF_TARGET_TTL=m
+ CONFIG_IP_NF_RAW=m
+ CONFIG_IP_NF_SECURITY=m
+ CONFIG_NFT_DUP_IPV6=m
+ CONFIG_NFT_FIB_IPV6=m
+-CONFIG_NF_FLOW_TABLE_IPV6=m
+ CONFIG_IP6_NF_IPTABLES=m
+ CONFIG_IP6_NF_MATCH_AH=m
+ CONFIG_IP6_NF_MATCH_EUI64=m
+@@ -225,7 +219,6 @@ CONFIG_IP6_NF_TARGET_NPT=m
+ CONFIG_NF_TABLES_BRIDGE=m
+ CONFIG_NFT_BRIDGE_META=m
+ CONFIG_NFT_BRIDGE_REJECT=m
+-CONFIG_NF_LOG_BRIDGE=m
+ CONFIG_BRIDGE=m
+ CONFIG_BRIDGE_VLAN_FILTERING=y
+ CONFIG_VLAN_8021Q=m
+@@ -560,7 +553,6 @@ CONFIG_USB_STORAGE=m
+ CONFIG_USB_MUSB_HDRC=m
+ CONFIG_USB_MUSB_TUSB6010=m
+ CONFIG_USB_MUSB_OMAP2PLUS=m
+-CONFIG_USB_MUSB_AM35X=m
+ CONFIG_USB_MUSB_DSPS=m
+ CONFIG_USB_INVENTRA_DMA=y
+ CONFIG_USB_TI_CPPI41_DMA=y
 -- 
 2.41.0.327.gaa9166bcc0ba
 
