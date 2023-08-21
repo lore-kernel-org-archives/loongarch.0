@@ -1,41 +1,30 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5A85682
-	for <loongarch@lists.linux.dev>; Mon, 21 Aug 2023 12:31:27 +0000 (UTC)
-Received: from dggpemm100001.china.huawei.com (unknown [172.30.72.54])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RTsFC3r4rztShZ;
-	Mon, 21 Aug 2023 20:27:43 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 21 Aug 2023 20:31:24 +0800
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-To: Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
-CC: <surenb@google.com>, <willy@infradead.org>, Russell King
-	<linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
-	<kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
-	<npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexander Gordeev
-	<agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
-	<svens@linux.ibm.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy
- Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>, Kefeng Wang
-	<wangkefeng.wang@huawei.com>
-Subject: [PATCH rfc v2 10/10] loongarch: mm: try VMA lock-based page fault handling first
-Date: Mon, 21 Aug 2023 20:30:56 +0800
-Message-ID: <20230821123056.2109942-11-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20230821123056.2109942-1-wangkefeng.wang@huawei.com>
-References: <20230821123056.2109942-1-wangkefeng.wang@huawei.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3974D538F
+	for <loongarch@lists.linux.dev>; Mon, 21 Aug 2023 12:49:36 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.102])
+	by gateway (Coremail) with SMTP id _____8AxXOpYXeNkNJcaAA--.27222S3;
+	Mon, 21 Aug 2023 20:49:28 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.102])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx3yNWXeNkqYJfAA--.61781S2;
+	Mon, 21 Aug 2023 20:49:27 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Hongliang Wang <wanghongliang@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v3 0/7] LoongArch: Add built-in dtb support
+Date: Mon, 21 Aug 2023 20:49:16 +0800
+Message-Id: <cover.1692618548.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,130 +32,112 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.175.112.125]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm100001.china.huawei.com (7.185.36.93)
-X-CFilter-Loop: Reflected
+X-CM-TRANSID:AQAAf8Bx3yNWXeNkqYJfAA--.61781S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxuF1kJrWfAw4rWw17KFW8Xwc_yoW5tr48p3
+	y7ursxGF4kGr1xGrsxta45urn5Zr18JwsxWF43AryUC39rZr4UZr1ftasIqF43Aa1rJ340
+	qr1rGw47KFWUAabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcVc_UUUUU
 
-Attempt VMA lock-based page fault handling first, and fall back
-to the existing mmap_lock-based handling if that fails.
+Hi all:
 
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- arch/loongarch/Kconfig    |  1 +
- arch/loongarch/mm/fault.c | 37 +++++++++++++++++++++++++++++++------
- 2 files changed, 32 insertions(+), 6 deletions(-)
+This patchset introduces LoongArch's built-in dtb support.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 2b27b18a63af..6b821f621920 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -56,6 +56,7 @@ config LOONGARCH
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
- 	select ARCH_SUPPORTS_NUMA_BALANCING
-+	select ARCH_SUPPORTS_PER_VMA_LOCK
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF
- 	select ARCH_USE_QUEUED_RWLOCKS
-diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-index 2a45e9f3a485..f7ac3a14bb06 100644
---- a/arch/loongarch/mm/fault.c
-+++ b/arch/loongarch/mm/fault.c
-@@ -142,6 +142,13 @@ static inline bool access_error(unsigned int flags, struct pt_regs *regs,
- 	return false;
- }
- 
-+#ifdef CONFIG_PER_VMA_LOCK
-+bool arch_vma_access_error(struct vm_area_struct *vma, struct vm_fault *vmf)
-+{
-+	return access_error(vmf->flags, vmf->regs, vmf->real_address, vma);
-+}
-+#endif
-+
- /*
-  * This routine handles page faults.  It determines the address,
-  * and the problem, and then passes it off to one of the appropriate
-@@ -151,11 +158,15 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 			unsigned long write, unsigned long address)
- {
- 	int si_code = SEGV_MAPERR;
--	unsigned int flags = FAULT_FLAG_DEFAULT;
- 	struct task_struct *tsk = current;
- 	struct mm_struct *mm = tsk->mm;
- 	struct vm_area_struct *vma = NULL;
- 	vm_fault_t fault;
-+	struct vm_fault vmf = {
-+		.real_address = address,
-+		.regs = regs,
-+		.flags = FAULT_FLAG_DEFAULT,
-+	};
- 
- 	if (kprobe_page_fault(regs, current->thread.trap_nr))
- 		return;
-@@ -184,11 +195,24 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 		goto bad_area_nosemaphore;
- 
- 	if (user_mode(regs))
--		flags |= FAULT_FLAG_USER;
-+		vmf.flags |= FAULT_FLAG_USER;
- 	if (write)
--		flags |= FAULT_FLAG_WRITE;
-+		vmf.flags |= FAULT_FLAG_WRITE;
- 
- 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-+
-+	fault = try_vma_locked_page_fault(&vmf);
-+	if (fault == VM_FAULT_NONE)
-+		goto retry;
-+	if (!(fault & VM_FAULT_RETRY))
-+		goto done;
-+
-+	if (fault_signal_pending(fault, regs)) {
-+		if (!user_mode(regs))
-+			no_context(regs, write, address);
-+		return;
-+	}
-+
- retry:
- 	vma = lock_mm_and_find_vma(mm, address, regs);
- 	if (unlikely(!vma))
-@@ -196,7 +220,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 
- 	si_code = SEGV_ACCERR;
- 
--	if (access_error(flags, regs, vma))
-+	if (access_error(vmf.flags, regs, address, vma))
- 		goto bad_area;
- 
- 	/*
-@@ -204,7 +228,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 	 * make sure we exit gracefully rather than endlessly redo
- 	 * the fault.
- 	 */
--	fault = handle_mm_fault(vma, address, flags, regs);
-+	fault = handle_mm_fault(vma, address, vmf.flags, regs);
- 
- 	if (fault_signal_pending(fault, regs)) {
- 		if (!user_mode(regs))
-@@ -217,7 +241,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 		return;
- 
- 	if (unlikely(fault & VM_FAULT_RETRY)) {
--		flags |= FAULT_FLAG_TRIED;
-+		vmf.flags |= FAULT_FLAG_TRIED;
- 
- 		/*
- 		 * No need to mmap_read_unlock(mm) as we would
-@@ -229,6 +253,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 
- 	mmap_read_unlock(mm);
- 
-+done:
- 	if (unlikely(fault & VM_FAULT_ERROR)) {
- 		if (fault & VM_FAULT_OOM)
- 			do_out_of_memory(regs, write, address);
+As we know, the Loongson-2K family supports DT. Inevitably, some systems
+do not provide a useful device tree to the kernel at boot time. Chasing
+around bootloaders for these systems is a headache, so we just keep a
+device tree table in the kernel, keyed by the dts filename, that
+contains the relevant DTBs.
+
+Thanks.
+
+-----
+V3:
+patch(1/7):
+  - Add reference to the common cpu schema.
+patch(2/7):
+  - Add reviewed-by tag.
+patch(4/7):
+  - Drop bootargs;
+  - Move the cpus node to dtsi, which is part of the SoC.
+patch(5/7):
+  - Drop bootargs;
+  - Move the cpus node to dtsi, which is part of the SoC;
+  - Fix gmac0/1-mdio node: compatible is always the first property;
+  - Drop i2c-gpio node.
+patch(6/7):
+  - Drop bootargs;
+  - Move the cpus node to dtsi, which is part of the SoC.
+  - Changes liointc to liointc-1.0, for Loongson-2K2000 has 32 interrupt
+    sources.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1692088166.git.zhoubinbin@loongson.cn/
+
+V2:
+patch(1/7):
+  - Drop model and clock-frequency properties;
+  - Add clocks property;
+  - Rewrite the description.
+patch(2/7):
+  - Add the proper compatibles for boards.
+patch(4/7)(5/7)(6/7):
+  - Format commit message head;
+  - Drop undocumented compatible, such as pci_bridge compatible;
+  - Distinguish the attributes, put SoC-related into DTSI and
+    board-related into DTS;
+  - Check DTS with 'make dtbs_check W=1'.
+patch(7/7)
+  - New patch;
+  - Parses Molde name and CPU MHz from the DTS attribute.
+
+Link to V1:
+https://lore.kernel.org/loongarch/cover.1686882123.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (7):
+  dt-bindings: loongarch: Add CPU bindings for LoongArch
+  dt-bindings: loongarch: Add Loongson SoC boards compatibles
+  LoongArch: Allow device trees to be built into the kernel
+  LoongArch: dts: DeviceTree for Loongson-2K0500
+  LoongArch: dts: DeviceTree for Loongson-2K1000
+  LoongArch: dts: DeviceTree for Loongson-2K2000
+  LoongArch: Parsing CPU-related information from DTS
+
+ .../devicetree/bindings/loongarch/boards.yaml |  34 ++
+ .../devicetree/bindings/loongarch/cpus.yaml   |  63 +++
+ arch/loongarch/Kconfig                        |  16 +
+ arch/loongarch/Makefile                       |  10 +-
+ arch/loongarch/boot/dts/Makefile              |   7 +-
+ .../boot/dts/loongson-2k0500-ref.dts          |  88 ++++
+ arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 254 ++++++++++++
+ .../boot/dts/loongson-2k1000-ref.dts          | 171 ++++++++
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 375 ++++++++++++++++++
+ .../boot/dts/loongson-2k2000-ref.dts          |  72 ++++
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 291 ++++++++++++++
+ arch/loongarch/kernel/env.c                   |  33 ++
+ arch/loongarch/kernel/setup.c                 |   9 +-
+ 13 files changed, 1417 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/loongarch/boards.yaml
+ create mode 100644 Documentation/devicetree/bindings/loongarch/cpus.yaml
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0500.dtsi
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k1000.dtsi
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k2000-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k2000.dtsi
+
 -- 
-2.27.0
+2.39.3
 
