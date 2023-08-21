@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3974D538F
-	for <loongarch@lists.linux.dev>; Mon, 21 Aug 2023 12:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A80F05CBE
+	for <loongarch@lists.linux.dev>; Mon, 21 Aug 2023 12:49:37 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8AxXOpYXeNkNJcaAA--.27222S3;
-	Mon, 21 Aug 2023 20:49:28 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx6epfXeNkTpcaAA--.48669S3;
+	Mon, 21 Aug 2023 20:49:35 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx3yNWXeNkqYJfAA--.61781S2;
-	Mon, 21 Aug 2023 20:49:27 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx3yNWXeNkqYJfAA--.61781S5;
+	Mon, 21 Aug 2023 20:49:34 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -21,10 +21,12 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Hongliang Wang <wanghongliang@loongson.cn>,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v3 0/7] LoongArch: Add built-in dtb support
-Date: Mon, 21 Aug 2023 20:49:16 +0800
-Message-Id: <cover.1692618548.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v3 3/7] LoongArch: Allow device trees to be built into the kernel
+Date: Mon, 21 Aug 2023 20:49:19 +0800
+Message-Id: <fe58680f071875881ab5b79fabf3fa79b87fedaf.1692618548.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <cover.1692618548.git.zhoubinbin@loongson.cn>
+References: <cover.1692618548.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -32,112 +34,134 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx3yNWXeNkqYJfAA--.61781S2
+X-CM-TRANSID:AQAAf8Bx3yNWXeNkqYJfAA--.61781S5
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxuF1kJrWfAw4rWw17KFW8Xwc_yoW5tr48p3
-	y7ursxGF4kGr1xGrsxta45urn5Zr18JwsxWF43AryUC39rZr4UZr1ftasIqF43Aa1rJ340
-	qr1rGw47KFWUAabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxuF1kCFy7JF43Ar1fAryfZrc_yoWrGryfp3
+	srAw4kJr4kGr97tr92qrZ5WrZ8Jrs7Cw12q3W2yFy0kr17Xr10vw4Iqr9rZF1UGws5J3y0
+	gryrKa4agF4UJabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcVc_UUUUU
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
 
-Hi all:
+Some systems do not provide a useful device tree to the kernel at boot
+time. Let's keep a device tree table in the kernel, keyed by the dts
+filename, containing the relevant DTBs.
 
-This patchset introduces LoongArch's built-in dtb support.
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/Kconfig           | 16 ++++++++++++++++
+ arch/loongarch/Makefile          | 10 ++++++++--
+ arch/loongarch/boot/dts/Makefile |  3 +--
+ arch/loongarch/kernel/setup.c    |  9 +++++++--
+ 4 files changed, 32 insertions(+), 6 deletions(-)
 
-As we know, the Loongson-2K family supports DT. Inevitably, some systems
-do not provide a useful device tree to the kernel at boot time. Chasing
-around bootloaders for these systems is a headache, so we just keep a
-device tree table in the kernel, keyed by the dts filename, that
-contains the relevant DTBs.
-
-Thanks.
-
------
-V3:
-patch(1/7):
-  - Add reference to the common cpu schema.
-patch(2/7):
-  - Add reviewed-by tag.
-patch(4/7):
-  - Drop bootargs;
-  - Move the cpus node to dtsi, which is part of the SoC.
-patch(5/7):
-  - Drop bootargs;
-  - Move the cpus node to dtsi, which is part of the SoC;
-  - Fix gmac0/1-mdio node: compatible is always the first property;
-  - Drop i2c-gpio node.
-patch(6/7):
-  - Drop bootargs;
-  - Move the cpus node to dtsi, which is part of the SoC.
-  - Changes liointc to liointc-1.0, for Loongson-2K2000 has 32 interrupt
-    sources.
-
-Link to V2:
-https://lore.kernel.org/all/cover.1692088166.git.zhoubinbin@loongson.cn/
-
-V2:
-patch(1/7):
-  - Drop model and clock-frequency properties;
-  - Add clocks property;
-  - Rewrite the description.
-patch(2/7):
-  - Add the proper compatibles for boards.
-patch(4/7)(5/7)(6/7):
-  - Format commit message head;
-  - Drop undocumented compatible, such as pci_bridge compatible;
-  - Distinguish the attributes, put SoC-related into DTSI and
-    board-related into DTS;
-  - Check DTS with 'make dtbs_check W=1'.
-patch(7/7)
-  - New patch;
-  - Parses Molde name and CPU MHz from the DTS attribute.
-
-Link to V1:
-https://lore.kernel.org/loongarch/cover.1686882123.git.zhoubinbin@loongson.cn/
-
-Binbin Zhou (7):
-  dt-bindings: loongarch: Add CPU bindings for LoongArch
-  dt-bindings: loongarch: Add Loongson SoC boards compatibles
-  LoongArch: Allow device trees to be built into the kernel
-  LoongArch: dts: DeviceTree for Loongson-2K0500
-  LoongArch: dts: DeviceTree for Loongson-2K1000
-  LoongArch: dts: DeviceTree for Loongson-2K2000
-  LoongArch: Parsing CPU-related information from DTS
-
- .../devicetree/bindings/loongarch/boards.yaml |  34 ++
- .../devicetree/bindings/loongarch/cpus.yaml   |  63 +++
- arch/loongarch/Kconfig                        |  16 +
- arch/loongarch/Makefile                       |  10 +-
- arch/loongarch/boot/dts/Makefile              |   7 +-
- .../boot/dts/loongson-2k0500-ref.dts          |  88 ++++
- arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 254 ++++++++++++
- .../boot/dts/loongson-2k1000-ref.dts          | 171 ++++++++
- arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 375 ++++++++++++++++++
- .../boot/dts/loongson-2k2000-ref.dts          |  72 ++++
- arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 291 ++++++++++++++
- arch/loongarch/kernel/env.c                   |  33 ++
- arch/loongarch/kernel/setup.c                 |   9 +-
- 13 files changed, 1417 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/loongarch/boards.yaml
- create mode 100644 Documentation/devicetree/bindings/loongarch/cpus.yaml
- create mode 100644 arch/loongarch/boot/dts/loongson-2k0500-ref.dts
- create mode 100644 arch/loongarch/boot/dts/loongson-2k0500.dtsi
- create mode 100644 arch/loongarch/boot/dts/loongson-2k1000-ref.dts
- create mode 100644 arch/loongarch/boot/dts/loongson-2k1000.dtsi
- create mode 100644 arch/loongarch/boot/dts/loongson-2k2000-ref.dts
- create mode 100644 arch/loongarch/boot/dts/loongson-2k2000.dtsi
-
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 46b4c217da14..61febadd4fce 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -326,6 +326,22 @@ config 64KB_3LEVEL
+ 
+ endchoice
+ 
++config BUILTIN_DTB
++	bool "Enable builtin dtb in kernel"
++	depends on OF
++	help
++	  Some systems do not provide a useful device tree to the kernel at boot
++	  time. Let's keep a device tree table in the kernel, keyed by the dts
++	  filename, containing the relevant DTBs.
++
++config BUILTIN_DTB_NAME
++	string "Source file for LoongArch builtin dtb"
++	depends on BUILTIN_DTB
++	help
++	  Base name (without suffix, relative to arch/loongarch/boot/dts/)
++	  for the DTS file that will be used to produce the DTB linked into the
++	  kernel.
++
+ config CMDLINE
+ 	string "Built-in kernel command line"
+ 	help
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index fb0fada43197..abaa3df9fd6f 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -5,7 +5,8 @@
+ 
+ boot	:= arch/loongarch/boot
+ 
+-KBUILD_DEFCONFIG := loongson3_defconfig
++KBUILD_DEFCONFIG		:= loongson3_defconfig
++KBUILD_DTBS			:= dtbs
+ 
+ image-name-y			:= vmlinux
+ image-name-$(CONFIG_EFI_ZBOOT)	:= vmlinuz
+@@ -140,11 +141,14 @@ PHONY += vdso_install
+ vdso_install:
+ 	$(Q)$(MAKE) $(build)=arch/loongarch/vdso $@
+ 
+-all:	$(notdir $(KBUILD_IMAGE))
++all:	$(notdir $(KBUILD_IMAGE)) $(KBUILD_DTBS)
+ 
+ vmlinux.elf vmlinux.efi vmlinuz.efi: vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(bootvars-y) $(boot)/$@
+ 
++# device-trees
++core-y += arch/loongarch/boot/dts/
++
+ install:
+ 	$(Q)install -D -m 755 $(KBUILD_IMAGE) $(INSTALL_PATH)/$(image-name-y)-$(KERNELRELEASE)
+ 	$(Q)install -D -m 644 .config $(INSTALL_PATH)/config-$(KERNELRELEASE)
+@@ -152,5 +156,7 @@ install:
+ 
+ define archhelp
+ 	echo '  install              - install kernel into $(INSTALL_PATH)'
++	echo '  dtbs                 - Device-tree blobs for enabled boards'
++	echo '  dtbs_install         - Install dtbs to $(INSTALL_DTBS_PATH)'
+ 	echo
+ endef
+diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
+index 5f1f55e911ad..1e24cdb5180a 100644
+--- a/arch/loongarch/boot/dts/Makefile
++++ b/arch/loongarch/boot/dts/Makefile
+@@ -1,4 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-dtstree	:= $(srctree)/$(src)
+ 
+-dtb-y := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
++obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .dtb.o, $(CONFIG_BUILTIN_DTB_NAME))
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 7783f0a3d742..e5008890beda 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -296,8 +296,13 @@ static void __init fdt_setup(void)
+ 	if (acpi_os_get_root_pointer())
+ 		return;
+ 
+-	/* Look for a device tree configuration table entry */
+-	fdt_pointer = efi_fdt_pointer();
++	/* We prefer to try to use built-in dtb, checking its legality first. */
++	if (!fdt_check_header(__dtb_start))
++		fdt_pointer = __dtb_start;
++	else
++		/* Fallback to efi dtb, when built-in dtb is not available. */
++		fdt_pointer = efi_fdt_pointer();
++
+ 	if (!fdt_pointer || fdt_check_header(fdt_pointer))
+ 		return;
+ 
 -- 
 2.39.3
 
