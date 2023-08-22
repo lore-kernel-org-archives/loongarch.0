@@ -1,108 +1,259 @@
-Received: from new3-smtp.messagingengine.com (new3-smtp.messagingengine.com [66.111.4.229])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB61EA5
-	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 01:04:10 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 74037580B0C;
-	Mon, 21 Aug 2023 21:04:09 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Mon, 21 Aug 2023 21:04:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1692666249; x=1692673449; bh=qh
-	2CEBnXfgbEiktWUfRJjND/5Zat3Dd90949X0OO51Q=; b=H/HSy01numTud2NhfV
-	iwYgxWNVHTY7qmQo2LJUW/vLLjoZoXpmIt/7C1aA7YOzJsjziV6twMQVydM8Ihd5
-	YgEKlFt6JxGCF5zx7tRVwP0E/vqK2EnqmssDd5tzEAyQ9cJmxBoM3FNwFhJGAz/7
-	IgR2DxPGEDaskpggR08r28NCSaxyAO1yGUK/jCq4BGsrgQGY4P8JOohdOnBrXAxV
-	TQ+Btl6lHiCGpLCOjvBcCOqFYyzfamVZQ++ZMCgH3dCzBk7C/3JFr7V5NDoa95kn
-	xPIVmwcjW8fXjok0rtIYeOVPY3Pnr1wNvJhq3zyDw1vSNl5rN5dV6vNoMebQ1+f/
-	bQCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1692666249; x=1692673449; bh=qh2CEBnXfgbEi
-	ktWUfRJjND/5Zat3Dd90949X0OO51Q=; b=O7SKG7KQHhG7tXidrMdNKr+WyRw0t
-	dkXpvWRFazxtDK4PomrIPwyM+9S6Ub5Ip/ZQ5nbl4LiqOiA58oeofiuJEM5gLS7P
-	2gms/5u+Jd4pHfbWLGzdZA+LsS70aaBvYVMztjRIaHz2z77hszu3t62LgSxbtcgc
-	SNjNh+cnq/DasFADiC21yL38GEC8zRF+xLlie+6wtXPbFsioaofYWEpJFnRCoY4W
-	oiMOTg2E3Xrla8abD+izeZtcGiXNELBD7OXDa8tClxNeI8MQJJwx5fHqIGAe2xYd
-	+UUagAfkST6p85heilhUhwZ9Ee6Fmm6A5BIkAj2mVMTuZrJ+mDN2Zl3RA==
-X-ME-Sender: <xms:iAnkZJ9YK-iCxdeJWVdDS90L4ZuIv0_9bOkKmqOprzMBbmOoI9QCvg>
-    <xme:iAnkZNuxnai4KRWbLirda7qYBUMv_U3BrFXcweu7_Cv9-WuQDpBkNOg9fV9JeHTZ5
-    UCnN3T00ZAYnUzrCzY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddvtddggeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:iAnkZHDUM1Bt3-3KTwZiB6I0MfHCZMUbT167o-q7vvB1YTcHYTUnYw>
-    <xmx:iAnkZNd_EfM-meaNWCblZxXKJxVn41Tb1LEUysNtibp1mboCRTmyFQ>
-    <xmx:iAnkZONcxr99azeIyV0m47kJAkNUzMS9ouiavhmzoesUd0xjggimQA>
-    <xmx:iQnkZKm8VF6a4MKJf9NNVNHXWrv_lKptknMxkDw0SYz6jFizNlOZOA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 62E01B60089; Mon, 21 Aug 2023 21:04:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-647-g545049cfe6-fm-20230814.001-g545049cf
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F127F
+	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 02:35:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58E8C433CB
+	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 02:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692671722;
+	bh=ZekfsVoVhIPRzirF8nZZvDfMYc1kC1lXFro+vvpp/hE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rb/Qqv0Zf+U5t2GvdJ5pW/9BZi8s7D+S1sQCXRfNP4kzCeEP8nT+b785Z6JWvyZ7o
+	 YYrKZDieGSxftGiF67foA/lOhrdF1gGzFzZ+qNM4YBdP3JpbE7BRY5S/qP8tpJ4dVm
+	 uBv89bswn0vqDU1whTloeShi5mzZmtBOp3jatzGlM61ajSjmUojQzABqUFyCox19tJ
+	 ZzXOGKx4+HFtydkDYQ9Uu5zvf7F3LBAgkFFoKLDmkG8hB7p799CvjPmQbvfy35ITEj
+	 Na6aWPb3tpwZg3VpVZor9sUhZEtM+PProK5c5o7DtlZO/Ejc0AqVGBKsmngiVGKLcU
+	 j3uHnxtgVD5DQ==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-99bf8e5ab39so535133066b.2
+        for <loongarch@lists.linux.dev>; Mon, 21 Aug 2023 19:35:22 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxJEiUYb4LNIdhu+kbp1lMwDyWKb00BMmYG2tLTH82XpvTfHWDj
+	NOiYDkVapPdn6rpEbPlbo0y8dN7EZPw1jKJ08dU=
+X-Google-Smtp-Source: AGHT+IGCZe67JFumZ6cqJ1cF6ZtOG+6IEf7HIDVegKuXqT+vd7KLDQONuNnBlmTwlmOKrk2Nm6n/Me/oVAHV6S8/y/0=
+X-Received: by 2002:a17:906:105d:b0:994:9ed:300b with SMTP id
+ j29-20020a170906105d00b0099409ed300bmr7262682ejj.16.1692671720862; Mon, 21
+ Aug 2023 19:35:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <556a5e72-4001-4d28-affb-831f5c8f9e26@app.fastmail.com>
-In-Reply-To: <20230803063703.5659-1-zhuyinbo@loongson.cn>
-References: <20230803063703.5659-1-zhuyinbo@loongson.cn>
-Date: Mon, 21 Aug 2023 21:03:48 -0400
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, soc@kernel.org,
- "Ulf Hansson" <ulf.hansson@linaro.org>
-Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
- "Liu Peibao" <liupeibao@loongson.cn>, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev, "Liu Yun" <liuyun@loongson.cn>
-Subject: Re: [PATCH v6 0/2] soc: loongson2_pm: add power management support
-Content-Type: text/plain
+MIME-Version: 1.0
+References: <1692088562-4630-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1692088562-4630-1-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 22 Aug 2023 10:35:08 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6HxSYGmVoJs9u39biM=D1oa3-T2YSpXdpWkxvUVF-9KA@mail.gmail.com>
+Message-ID: <CAAhV-H6HxSYGmVoJs9u39biM=D1oa3-T2YSpXdpWkxvUVF-9KA@mail.gmail.com>
+Subject: Re: [PATCH] objtool: Check local label in is_sibling_call() and add_jump_destinations()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 3, 2023, at 02:37, Yinbo Zhu wrote:
-> Loongson-2 platform support Power Management Controller (ACPI) and this
-> series patch was to add PM driver that base on dts and PM binding support.
+Looks good to me.
+
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+
+On Tue, Aug 15, 2023 at 4:36=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> Change in v6:
-> 		1. The patch "[PATCH v3 1/3] loongarch: export some arch-specific
-> 		   pm interfaces" had been merged into mainline tree in v6.5-rc1
-> 		   thus this v6 series patch need drop it and need depend on it
-> 		   and it's patch link was:
-> https://lore.kernel.org/all/20230615091757.24686-2-zhuyinbo@loongson.cn/
-> 		2. Adding Ulf Hansson to Cc.
-> 		3. Adding soc@kernel.org to Cc.
-> 		4. Keep indented with one tab +2 spaces in Kconfig help text.
-
-I talked to WANG Xuerui on IRC, and he was able to clarify some of the
-missing bits of information for me, after which I merged both patches,
-even though my concerns are not fully addressed:
-
-- I still think that branching into ROM code from the kernel is a mistake
-  and we should have never allowed that as an ad-hoc interface in the ACPI
-  variant to start with. It's hard to change that now though, and having
-  a DT interface to access the same entry point does not really make it
-  worse. This might need a redesign for future firmware though, to have
-  a proper runtime interface
-
-- The bigger problem I still see is the DT-enabled boot with PMon without
-  the UEFI firmware. This does not impact the DT binding, but I would
-  consider all non-UEFI booting firmware images broken and not supported
-  by the kernel, as we originally discussed when merging the kernel.
-  These should still be fixable by upgrading PMon to a UEFI-enabled
-  version.
-
-     Arnd
+> When update the latest upstream gcc and binutils which enables linker
+> relaxation by default, it generates more objtool warnings on LoongArch,
+> like this:
+>
+>   init/version.o: warning: objtool: early_hostname+0x20: sibling call fro=
+m callable instruction with modified stack frame
+>
+> We can see that the branch and jump operation about local label ".L2"
+> is not sibling call, because a sibling call is a tail-call to another
+> symbol. In this case, make is_sibling_call() return false, set dest_sec
+> and dest_off to calculate jump_dest in add_jump_destinations().
+>
+> Here are some detailed info:
+> [fedora@linux 6.5.test]$ gcc --version
+> gcc (GCC) 14.0.0 20230803 (experimental)
+> [fedora@linux 6.5.test]$ as --version
+> GNU assembler (GNU Binutils) 2.41.50.20230803
+> [fedora@linux 6.5.test]$ objdump -M no-aliases -D init/version.o
+> 0000000000000000 <early_hostname>:
+>    0:   00150085        or              $a1, $a0, $zero
+>    4:   1a000004        pcalau12i       $a0, 0
+>    8:   02ffc063        addi.d          $sp, $sp, -16
+>    c:   02810406        addi.w          $a2, $zero, 65
+>   10:   02c00084        addi.d          $a0, $a0, 0
+>   14:   29c02061        st.d            $ra, $sp, 8
+>   18:   54000000        bl              0       # 18 <early_hostname+0x18=
+>
+>   1c:   0281000c        addi.w          $t0, $zero, 64
+>   20:   6c001584        bgeu            $t0, $a0, 20    # 34 <.L2>
+>   24:   1a000004        pcalau12i       $a0, 0
+>   28:   02810005        addi.w          $a1, $zero, 64
+>   2c:   02c00084        addi.d          $a0, $a0, 0
+>   30:   54000000        bl              0       # 30 <early_hostname+0x30=
+>
+>
+> 0000000000000034 <.L2>:
+>   34:   28c02061        ld.d            $ra, $sp, 8
+>   38:   00150004        or              $a0, $zero, $zero
+>   3c:   02c04063        addi.d          $sp, $sp, 16
+>   40:   4c000020        jirl            $zero, $ra, 0
+>
+> By the way, it need to move insn_reloc() before is_sibling_call()
+> to avoid implicit declaration build error.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  tools/objtool/check.c | 69 ++++++++++++++++++++++++++++++---------------=
+------
+>  1 file changed, 41 insertions(+), 28 deletions(-)
+>
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 8936a05..fea3675 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -161,12 +161,39 @@ static bool is_jump_table_jump(struct instruction *=
+insn)
+>                insn_jump_table(alt_group->orig_group->first_insn);
+>  }
+>
+> -static bool is_sibling_call(struct instruction *insn)
+> +static struct reloc *insn_reloc(struct objtool_file *file, struct instru=
+ction *insn)
+> +{
+> +       struct reloc *reloc;
+> +
+> +       if (insn->no_reloc)
+> +               return NULL;
+> +
+> +       if (!file)
+> +               return NULL;
+> +
+> +       reloc =3D find_reloc_by_dest_range(file->elf, insn->sec,
+> +                                        insn->offset, insn->len);
+> +       if (!reloc) {
+> +               insn->no_reloc =3D 1;
+> +               return NULL;
+> +       }
+> +
+> +       return reloc;
+> +}
+> +
+> +static bool is_sibling_call(struct objtool_file *file, struct instructio=
+n *insn)
+>  {
+>         /*
+>          * Assume only STT_FUNC calls have jump-tables.
+>          */
+>         if (insn_func(insn)) {
+> +               struct reloc *reloc =3D insn_reloc(file, insn);
+> +
+> +               /* Disallow sibling calls into STT_NOTYPE if it is local =
+lable */
+> +               if (reloc && reloc->sym->type =3D=3D STT_NOTYPE &&
+> +                   strncmp(reloc->sym->name, ".L", 2) =3D=3D 0)
+> +                       return false;
+> +
+>                 /* An indirect jump is either a sibling call or a jump to=
+ a table. */
+>                 if (insn->type =3D=3D INSN_JUMP_DYNAMIC)
+>                         return !is_jump_table_jump(insn);
+> @@ -232,7 +259,7 @@ static bool __dead_end_function(struct objtool_file *=
+file, struct symbol *func,
+>          * of the sibling call returns.
+>          */
+>         func_for_each_insn(file, func, insn) {
+> -               if (is_sibling_call(insn)) {
+> +               if (is_sibling_call(file, insn)) {
+>                         struct instruction *dest =3D insn->jump_dest;
+>
+>                         if (!dest)
+> @@ -743,7 +770,7 @@ static int create_static_call_sections(struct objtool=
+_file *file)
+>                 if (!elf_init_reloc_data_sym(file->elf, sec,
+>                                              idx * sizeof(*site) + 4,
+>                                              (idx * 2) + 1, key_sym,
+> -                                            is_sibling_call(insn) * STAT=
+IC_CALL_SITE_TAIL))
+> +                                            is_sibling_call(file, insn) =
+* STATIC_CALL_SITE_TAIL))
+>                         return -1;
+>
+>                 idx++;
+> @@ -1298,26 +1325,6 @@ __weak bool arch_is_rethunk(struct symbol *sym)
+>         return false;
+>  }
+>
+> -static struct reloc *insn_reloc(struct objtool_file *file, struct instru=
+ction *insn)
+> -{
+> -       struct reloc *reloc;
+> -
+> -       if (insn->no_reloc)
+> -               return NULL;
+> -
+> -       if (!file)
+> -               return NULL;
+> -
+> -       reloc =3D find_reloc_by_dest_range(file->elf, insn->sec,
+> -                                        insn->offset, insn->len);
+> -       if (!reloc) {
+> -               insn->no_reloc =3D 1;
+> -               return NULL;
+> -       }
+> -
+> -       return reloc;
+> -}
+> -
+>  static void remove_insn_ops(struct instruction *insn)
+>  {
+>         struct stack_op *op, *next;
+> @@ -1560,8 +1567,14 @@ static int add_jump_destinations(struct objtool_fi=
+le *file)
+>                          * External sibling call or internal sibling call=
+ with
+>                          * STT_FUNC reloc.
+>                          */
+> -                       add_call_dest(file, insn, reloc->sym, true);
+> -                       continue;
+> +                       if (reloc->sym->type =3D=3D STT_NOTYPE &&
+> +                           strncmp(reloc->sym->name, ".L", 2) =3D=3D 0) =
+{
+> +                               dest_sec =3D insn->sec;
+> +                               dest_off =3D arch_jump_destination(insn);
+> +                       } else {
+> +                               add_call_dest(file, insn, reloc->sym, tru=
+e);
+> +                               continue;
+> +                       }
+>                 } else if (reloc->sym->sec->idx) {
+>                         dest_sec =3D reloc->sym->sec;
+>                         dest_off =3D reloc->sym->sym.st_value +
+> @@ -3649,7 +3662,7 @@ static int validate_branch(struct objtool_file *fil=
+e, struct symbol *func,
+>
+>                 case INSN_JUMP_CONDITIONAL:
+>                 case INSN_JUMP_UNCONDITIONAL:
+> -                       if (is_sibling_call(insn)) {
+> +                       if (is_sibling_call(file, insn)) {
+>                                 ret =3D validate_sibling_call(file, insn,=
+ &state);
+>                                 if (ret)
+>                                         return ret;
+> @@ -3670,7 +3683,7 @@ static int validate_branch(struct objtool_file *fil=
+e, struct symbol *func,
+>
+>                 case INSN_JUMP_DYNAMIC:
+>                 case INSN_JUMP_DYNAMIC_CONDITIONAL:
+> -                       if (is_sibling_call(insn)) {
+> +                       if (is_sibling_call(file, insn)) {
+>                                 ret =3D validate_sibling_call(file, insn,=
+ &state);
+>                                 if (ret)
+>                                         return ret;
+> @@ -3834,7 +3847,7 @@ static int validate_unret(struct objtool_file *file=
+, struct instruction *insn)
+>
+>                 case INSN_JUMP_UNCONDITIONAL:
+>                 case INSN_JUMP_CONDITIONAL:
+> -                       if (!is_sibling_call(insn)) {
+> +                       if (!is_sibling_call(file, insn)) {
+>                                 if (!insn->jump_dest) {
+>                                         WARN_INSN(insn, "unresolved jump =
+target after linking?!?");
+>                                         return -1;
+> --
+> 2.1.0
+>
+>
