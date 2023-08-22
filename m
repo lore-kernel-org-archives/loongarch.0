@@ -1,220 +1,103 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA731C281
-	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 09:41:27 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8DxxPDFguRkWeAaAA--.55790S3;
-	Tue, 22 Aug 2023 17:41:25 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c7AguRkqTVgAA--.38684S5;
-	Tue, 22 Aug 2023 17:41:24 +0800 (CST)
-From: Feiyang Chen <chenfeiyang@loongson.cn>
-To: andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	peppe.cavallaro@st.com,
-	alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com,
-	chenhuacai@loongson.cn
-Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
-	linux@armlinux.org.uk,
-	dongbiao@loongson.cn,
-	guyinggang@loongson.cn,
-	siyanteng@loongson.cn,
-	loongson-kernel@lists.loongnix.cn,
-	netdev@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	chris.chenfeiyang@gmail.com
-Subject: [PATCH v4 11/11] net: stmmac: dwmac-loongson: Add GNET support
-Date: Tue, 22 Aug 2023 17:41:19 +0800
-Message-Id: <e83b526e0ee0f90ba0e645efec405de957c28bcb.1692696115.git.chenfeiyang@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1692696115.git.chenfeiyang@loongson.cn>
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C5F9460
+	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 10:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=d+PLp4qGv9vyBKfdVLM+uFC8RtyxXmEgg449xXe+ZhI=; b=00DiuSTkr9j/IHq+UsXbi3ikpd
+	M5/xGrJBCzwpTqEP+gogytb4rbMhzHARQuql9gWqxVnbnD3VnA4J0zEyYcsKZUViXgpx29XN5VU7z
+	qeI2j4crsphzOy9dmvd/vSAZ8CfYetnyLPKf3dmhHVTArWX2K44FvqdA+XKF0CaHycSLTRMNJZlEB
+	B5eq/C34+P70Ap7WO2WXGoI3ZBDSuTTdaSojF/82CfCl5sroFLyq2oNto47mIdxDh5626ZQYqnqgb
+	VZyGurX8p7wgqipjXsC9883gxdmIrQI8ia63yQnZjwTJ0+DPjqDUTjKHLZmJRfE8OPfTHDoaP4i3o
+	0M7ZEsYg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34830)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1qYOE3-0001E2-1A;
+	Tue, 22 Aug 2023 11:03:03 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1qYOE0-0005hB-T8; Tue, 22 Aug 2023 11:03:00 +0100
+Date: Tue, 22 Aug 2023 11:03:00 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Feiyang Chen <chenfeiyang@loongson.cn>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+	chenhuacai@loongson.cn, dongbiao@loongson.cn,
+	guyinggang@loongson.cn, siyanteng@loongson.cn,
+	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org,
+	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+Subject: Re: [PATCH v4 01/11] net: stmmac: Pass stmmac_priv and chan in some
+ callbacks
+Message-ID: <ZOSH1GxHkWbDGSLj@shell.armlinux.org.uk>
 References: <cover.1692696115.git.chenfeiyang@loongson.cn>
+ <e452ba21887e37a747f8d4f0f74ef4f2590c3eac.1692696115.git.chenfeiyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax3c7AguRkqTVgAA--.38684S5
-X-CM-SenderInfo: hfkh0wphl1t03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Jr15CFWDArW5XF43XrWkGrX_yoW7Cry5pw
-	43Aa47Wry2qF17Kan5Jw4DZFyYyrW3KrZ7WFW7tws3WFZFkryYqryYgFWayrnrCr4DWF1a
-	qr4jkr4UWFs8CrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Gryq6s0DMcIj6I8E
-	87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjc
-	xG6xCI17CEII8vrVW3JVW8Jr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_tr0E3s1lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IUYTbyJUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e452ba21887e37a747f8d4f0f74ef4f2590c3eac.1692696115.git.chenfeiyang@loongson.cn>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Add GNET support. Current GNET does not support half duplex mode.
-GNET on LS7A only supports ANE when speed is set to 1000M.
+On Tue, Aug 22, 2023 at 05:40:26PM +0800, Feiyang Chen wrote:
+> @@ -636,7 +637,8 @@ static void sun8i_dwmac_set_mac(void __iomem *ioaddr, bool enable)
+>   * All slot > 0 need to be enabled with MAC_ADDR_TYPE_DST
+>   * If addr is NULL, clear the slot
+>   */
+> -static void sun8i_dwmac_set_umac_addr(struct mac_device_info *hw,
+> +static void sun8i_dwmac_set_umac_addr(struct stmmac_priv *priv,
+> +				      struct mac_device_info *hw,
+>  				      const unsigned char *addr,
+>  				      unsigned int reg_n)
+>  {
 
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
----
- .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 82 +++++++++++++++++++
- .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |  6 ++
- .../net/ethernet/stmicro/stmmac/stmmac_main.c |  3 +-
- include/linux/stmmac.h                        |  2 +
- 4 files changed, 92 insertions(+), 1 deletion(-)
+Given that hw is always priv->hw, would it be sensible to simplify the
+callback by dropping the "hw" argument, and have the called methods do:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index 1f466b1e80d9..7b08c54f6c62 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -192,6 +192,86 @@ static struct stmmac_pci_info loongson_gmac_pci_info = {
- 	.config = loongson_gmac_config,
- };
- 
-+static void loongson_gnet_fix_speed(void *priv, unsigned int speed)
-+{
-+	struct net_device *ndev = dev_get_drvdata(priv);
-+	struct stmmac_priv *ptr = netdev_priv(ndev);
-+
-+	/* The controller and PHY don't work well together.
-+	 * We need to use the PS bit to check if the controller's status
-+	 * is correct and reset PHY if necessary.
-+	 */
-+	if (speed == SPEED_1000)
-+		if (readl(ptr->ioaddr + MAC_CTRL_REG) & (1 << 15) /* PS */)
-+			phy_restart_aneg(ndev->phydev);
-+}
-+
-+static int loongson_gnet_data(struct pci_dev *pdev,
-+			      struct plat_stmmacenet_data *plat)
-+{
-+	loongson_default_data(pdev, plat);
-+
-+	plat->multicast_filter_bins = 256;
-+
-+	plat->mdio_bus_data->phy_mask = 0xfffffffb;
-+
-+	plat->phy_addr = 2;
-+	plat->phy_interface = PHY_INTERFACE_MODE_INTERNAL;
-+
-+	plat->bsp_priv = &pdev->dev;
-+	plat->fix_mac_speed = loongson_gnet_fix_speed;
-+
-+	plat->dma_cfg->pbl = 32;
-+	plat->dma_cfg->pblx8 = true;
-+
-+	plat->clk_ref_rate = 125000000;
-+	plat->clk_ptp_rate = 125000000;
-+
-+	return 0;
-+}
-+
-+static int loongson_gnet_config(struct pci_dev *pdev,
-+				struct plat_stmmacenet_data *plat,
-+				struct stmmac_resources *res,
-+				struct device_node *np)
-+{
-+	int ret;
-+	u32 version = readl(res->addr + GMAC_VERSION);
-+
-+	if (version & 0x00008000)
-+		loongson_dwmac_config_dma64(plat);
-+
-+	switch (version & 0xff) {
-+	case DWEGMAC_CORE_1_00:
-+		ret = loongson_dwmac_config_multi_msi(pdev, plat, res, np, 8);
-+		break;
-+	default:
-+		ret = loongson_dwmac_config_single_irq(pdev, plat, res, np);
-+		break;
-+	}
-+
-+	switch (pdev->revision) {
-+	case 0x00:
-+		plat->dwegmac_flags |=
-+			FIELD_PREP(DWEGMAC_DISABLE_HALF_DUPLEX, 1) |
-+			FIELD_PREP(DWEGMAC_DISABLE_FORCE_1000, 1);
-+		break;
-+	case 0x01:
-+		plat->dwegmac_flags |=
-+			FIELD_PREP(DWEGMAC_DISABLE_HALF_DUPLEX, 1);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static struct stmmac_pci_info loongson_gnet_pci_info = {
-+	.setup = loongson_gnet_data,
-+	.config = loongson_gnet_config,
-+};
-+
- static int loongson_dwmac_probe(struct pci_dev *pdev,
- 				const struct pci_device_id *id)
- {
-@@ -340,9 +420,11 @@ static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
- 			 loongson_dwmac_resume);
- 
- #define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
-+#define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
- 
- static const struct pci_device_id loongson_dwmac_id_table[] = {
- 	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
-+	{ PCI_DEVICE_DATA(LOONGSON, GNET, &loongson_gnet_pci_info) },
- 	{}
- };
- MODULE_DEVICE_TABLE(pci, loongson_dwmac_id_table);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index dba33ce392a8..0006a0b2754b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -404,6 +404,12 @@ stmmac_ethtool_set_link_ksettings(struct net_device *dev,
- 		return 0;
- 	}
- 
-+	if (FIELD_GET(DWEGMAC_DISABLE_FORCE_1000, priv->plat->dwegmac_flags)) {
-+		if (cmd->base.speed == SPEED_1000 &&
-+		    cmd->base.autoneg != AUTONEG_ENABLE)
-+			return -EOPNOTSUPP;
-+	}
-+
- 	return phylink_ethtool_ksettings_set(priv->phylink, cmd);
- }
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index a98bcd797720..fa4d7b90c5fa 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -1242,7 +1242,8 @@ static int stmmac_phy_setup(struct stmmac_priv *priv)
- 	}
- 
- 	/* Half-Duplex can only work with single queue */
--	if (priv->plat->tx_queues_to_use > 1)
-+	if (priv->plat->tx_queues_to_use > 1 ||
-+	    FIELD_GET(DWEGMAC_DISABLE_HALF_DUPLEX, priv->plat->dwegmac_flags))
- 		priv->phylink_config.mac_capabilities &=
- 			~(MAC_10HD | MAC_100HD | MAC_1000HD);
- 	priv->phylink_config.mac_managed_pm = true;
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index e97774efd451..d369993a5d9d 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -209,6 +209,8 @@ struct dwmac4_addrs {
- 
- #define DWEGMAC_FIX_CHANNEL_NUM		BIT(0)
- #define DWEGMAC_DISABLE_FLOW_CONTROL	BIT(1)
-+#define DWEGMAC_DISABLE_HALF_DUPLEX	BIT(2)
-+#define DWEGMAC_DISABLE_FORCE_1000	BIT(3)
- 
- struct plat_stmmacenet_data {
- 	int bus_id;
+	struct mac_device_info *hw = priv->hw;
+
+> @@ -657,7 +659,8 @@ static void sun8i_dwmac_set_umac_addr(struct mac_device_info *hw,
+>  	}
+>  }
+>  
+> -static void sun8i_dwmac_get_umac_addr(struct mac_device_info *hw,
+> +static void sun8i_dwmac_get_umac_addr(struct stmmac_priv *priv,
+> +				      struct mac_device_info *hw,
+>  				      unsigned char *addr,
+>  				      unsigned int reg_n)
+>  {
+
+Same here.
+
+> @@ -680,7 +683,8 @@ static int sun8i_dwmac_rx_ipc_enable(struct mac_device_info *hw)
+>  	return 1;
+>  }
+>  
+> -static void sun8i_dwmac_set_filter(struct mac_device_info *hw,
+> +static void sun8i_dwmac_set_filter(struct stmmac_priv *priv,
+> +				   struct mac_device_info *hw,
+>  				   struct net_device *dev)
+>  {
+
+Probably also worth doing for this method as well. I think the only
+thing which this function uses is hw->unicast_filter_entries, so
+one could declare:
+
+	unsigned int unicast_filter_entries = priv->hw->unicast_filter_entries;
+
+rather than carrying the pointer to both "priv" and "hw" through this
+function.
+
 -- 
-2.39.3
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
