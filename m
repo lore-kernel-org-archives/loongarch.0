@@ -1,131 +1,244 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0F11855
-	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 06:25:33 +0000 (UTC)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-99bf8e5ab39so551973666b.2
-        for <loongarch@lists.linux.dev>; Mon, 21 Aug 2023 23:25:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692685531; x=1693290331;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=h9URx5W84Divr3E15R8uy2iV5OFoR8mXmpt0/gGTyXM=;
-        b=mFNl0Z9+KVkHshcQi1SfwEPR6C8O98naFaSMROhElFS3eB2Ifk4pRV36rHCI5Ivz9K
-         Vb+kFbW8HlTqjeIvLUT2YdnVRUGSjBtZgHTg61KOM3zYaC1oLg3g3t2BrX/p87O6y0EU
-         sAJ7c0sPGUi6AHxmrqUnL+36ROX5Zke8zubSxTcqDzxP8hwMYBc/5wkvJiTbtKLoGrTe
-         W5q7MTCcENvtHWWsIzUtjpbT2VakPGsN1hHYgyE28udqFi176u+ms9Vmf9Uf38SJMPBv
-         RIIacK4HIF8iGnwG9WBlQb1k6jtFKYbRj4li069W25pecqc8V8k6q5+iq4D7UxKqeEd6
-         qn4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692685531; x=1693290331;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h9URx5W84Divr3E15R8uy2iV5OFoR8mXmpt0/gGTyXM=;
-        b=VxHhYVB7ijOv6Bliv2UyDAsYbAHiJ9Qm+ojyv1Y7hIT+y3kSJInSJYLm6pjb6BPxRP
-         Pi1OginoO2+myBAIMUBMXNpW7QtlTniKenQP1ORkv/ZPqCmNpUW+Nez9JCh9t5XEPufv
-         YWl3VuMjmUs8lrI+7RkXPqilWf1NbMkiFH9zB7TDjTnfHP4RRobYy//MPwAZ1pKiIdnL
-         rUFYurWKAGcBZ6rTuFhugx7pmToXBlDhbu2S7EgQVD/XGPdJn4V1VvdpBlcoa58wmRv5
-         v0baVJHyYowqHIzYK053VXzbqJdXmxNBVKNN1g/UFfRRIdABDuGfx1RQAYWOYzGuC1Ty
-         b2sw==
-X-Gm-Message-State: AOJu0Yyl67fTSI8RlDYd4YLLh0jAq2OY8mzw1NUN9ZdFihcWC4Lxpf7q
-	l8gyarGiCoxypJicpPMUj2zH9Q==
-X-Google-Smtp-Source: AGHT+IEmzsbeo3aIN+JjqNT5cJw1qAMv9Y9wzOmcqQWRBqATxmGcjG/BrhGpepliwyEn03Vvc89d5w==
-X-Received: by 2002:a17:907:2ccf:b0:99b:cdb2:6f5f with SMTP id hg15-20020a1709072ccf00b0099bcdb26f5fmr6658421ejc.49.1692685531309;
-        Mon, 21 Aug 2023 23:25:31 -0700 (PDT)
-Received: from [192.168.0.22] ([77.252.47.198])
-        by smtp.gmail.com with ESMTPSA id z14-20020a170906240e00b00982d0563b11sm7740008eja.197.2023.08.21.23.25.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Aug 2023 23:25:30 -0700 (PDT)
-Message-ID: <bb885b12-ce9b-adf4-88fe-17925e5cf55a@linaro.org>
-Date: Tue, 22 Aug 2023 08:25:29 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4681CEA8
+	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 06:33:10 +0000 (UTC)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 0240F22C47;
+	Tue, 22 Aug 2023 06:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1692685983; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0LefrGrfWIlUUodSIRfdXfGvUMxOpn3Da/x1z7+TACM=;
+	b=dcW/Td18f6Fki4csXaJVH2kX+joGxDMOht06LwZTOfNsgqpMfncIfcqoPyYT4pr6k4mnSU
+	M0TGSwt1po685EhpFFg+MsGQqwUnObFIRiO2wfy913FH+/Lel6/Fb2dOKqsq92KJa+2uD1
+	Bu3YIapaL9IWtKzXxWr75rikpNrC41E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1692685983;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0LefrGrfWIlUUodSIRfdXfGvUMxOpn3Da/x1z7+TACM=;
+	b=rG0JjH04TqT5CksLvToAlLn8tIAFYWH057rgn75zDtNS/jv7ATjOlZlbjVPfguARFEVAuk
+	XrENx1kzxGQ4t0Cg==
+Received: from kitsune.suse.cz (kitsune.suse.cz [10.100.12.127])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by relay2.suse.de (Postfix) with ESMTPS id 4B5DF2C143;
+	Tue, 22 Aug 2023 06:32:58 +0000 (UTC)
+Date: Tue, 22 Aug 2023 08:32:57 +0200
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Cc: Eric DeVolder <eric.devolder@oracle.com>, linux@armlinux.org.uk,
+	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+	geert@linux-m68k.org, tsbogend@alpha.franken.de,
+	James.Bottomley@hansenpartnership.com, deller@gmx.de,
+	ysato@users.sourceforge.jp, dalias@libc.org,
+	glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, peterz@infradead.org,
+	linus.walleij@linaro.org, hpa@zytor.com, kernel@xen0n.name,
+	ardb@kernel.org, tsi@tuyoix.net, agordeev@linux.ibm.com,
+	paulmck@kernel.org, bhe@redhat.com, masahiroy@kernel.org,
+	konrad.wilk@oracle.com, sebastian.reichel@collabora.com,
+	samitolvanen@google.com, ojeda@kernel.org,
+	juerg.haefliger@canonical.com, borntraeger@linux.ibm.com,
+	frederic@kernel.org, arnd@arndb.de, mhiramat@kernel.org,
+	aou@eecs.berkeley.edu, keescook@chromium.org, gor@linux.ibm.com,
+	anshuman.khandual@arm.com, hca@linux.ibm.com, xin3.li@intel.com,
+	npiggin@gmail.com, rmk+kernel@armlinux.org.uk,
+	paul.walmsley@sifive.com, boris.ostrovsky@oracle.com,
+	ziy@nvidia.com, hbathini@linux.ibm.com, gregkh@linuxfoundation.org,
+	kirill.shutemov@linux.intel.com, ndesaulniers@google.com,
+	sourabhjain@linux.ibm.com, palmer@dabbelt.com, svens@linux.ibm.com,
+	tj@kernel.org, akpm@linux-foundation.org, rppt@kernel.org
+Subject: Re: [PATCH v6 02/14] x86/kexec: refactor for kernel/Kconfig.kexec
+Message-ID: <20230822063257.GI8826@kitsune.suse.cz>
+References: <20230712161545.87870-1-eric.devolder@oracle.com>
+ <20230712161545.87870-3-eric.devolder@oracle.com>
+ <d8ddd4bd-fbc9-dbe9-f5c3-daf8d89aa46d@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v3 5/7] LoongArch: dts: DeviceTree for Loongson-2K1000
-Content-Language: en-US
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Hongliang Wang <wanghongliang@loongson.cn>
-References: <cover.1692618548.git.zhoubinbin@loongson.cn>
- <10689163c9800d8c6b5e47255a3ba126e3f4fb92.1692618548.git.zhoubinbin@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <10689163c9800d8c6b5e47255a3ba126e3f4fb92.1692618548.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d8ddd4bd-fbc9-dbe9-f5c3-daf8d89aa46d@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On 21/08/2023 14:49, Binbin Zhou wrote:
-> Add DeviceTree file for Loongson-2K1000 processor, which integrates two
-> 64-bit dual emission superscalar LA264 processor cores.
+Hello,
+
+On Thu, Jul 13, 2023 at 07:13:57PM +0800, Leizhen (ThunderTown) wrote:
 > 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  arch/loongarch/boot/dts/Makefile              |   3 +-
->  .../boot/dts/loongson-2k1000-ref.dts          | 171 ++++++++
->  arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 375 ++++++++++++++++++
->  3 files changed, 548 insertions(+), 1 deletion(-)
->  create mode 100644 arch/loongarch/boot/dts/loongson-2k1000-ref.dts
->  create mode 100644 arch/loongarch/boot/dts/loongson-2k1000.dtsi
 > 
-> diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
-> index aa0b21d73d4e..dc0782315bed 100644
-> --- a/arch/loongarch/boot/dts/Makefile
-> +++ b/arch/loongarch/boot/dts/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  
-> -dtb-$(CONFIG_MACH_LOONGSON64)	= loongson-2k0500-ref.dtb
-> +dtb-$(CONFIG_MACH_LOONGSON64)	= loongson-2k0500-ref.dtb \
-> +				  loongson-2k1000-ref.dtb
->  
->  obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .dtb.o, $(CONFIG_BUILTIN_DTB_NAME))
-> diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-> new file mode 100644
-> index 000000000000..6fff45a2ea82
-> --- /dev/null
-> +++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-> @@ -0,0 +1,171 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> On 2023/7/13 0:15, Eric DeVolder wrote:
+> > The kexec and crash kernel options are provided in the common
+> > kernel/Kconfig.kexec. Utilize the common options and provide
+> > the ARCH_SUPPORTS_ and ARCH_SELECTS_ entries to recreate the
+> > equivalent set of KEXEC and CRASH options.
+> > 
+> > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> > ---
+> >  arch/x86/Kconfig | 92 ++++++++++--------------------------------------
+> >  1 file changed, 19 insertions(+), 73 deletions(-)
+> > 
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 7422db409770..9767a343f7c2 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -2040,88 +2040,34 @@ config EFI_RUNTIME_MAP
+> >  
+> >  source "kernel/Kconfig.hz"
+> >  
+> > -config KEXEC
+> > -	bool "kexec system call"
+> > -	select KEXEC_CORE
+> > -	help
+> > -	  kexec is a system call that implements the ability to shutdown your
+> > -	  current kernel, and to start another kernel.  It is like a reboot
+> > -	  but it is independent of the system firmware.   And like a reboot
+> > -	  you can start any kernel with it, not just Linux.
+> > -
+> > -	  The name comes from the similarity to the exec system call.
+> > -
+> > -	  It is an ongoing process to be certain the hardware in a machine
+> > -	  is properly shutdown, so do not be surprised if this code does not
+> > -	  initially work for you.  As of this writing the exact hardware
+> > -	  interface is strongly in flux, so no good recommendation can be
+> > -	  made.
+> > -
+> > -config KEXEC_FILE
+> > -	bool "kexec file based system call"
+> > -	select KEXEC_CORE
+> > -	select HAVE_IMA_KEXEC if IMA
+> > -	depends on X86_64
+> > -	depends on CRYPTO=y
+> > -	depends on CRYPTO_SHA256=y
+> > -	help
+> > -	  This is new version of kexec system call. This system call is
+> > -	  file based and takes file descriptors as system call argument
+> > -	  for kernel and initramfs as opposed to list of segments as
+> > -	  accepted by previous system call.
+> > +config ARCH_SUPPORTS_KEXEC
+> > +	def_bool y
+> 
+> In v5, Joel Fernandes seems to suggest you change it to the following form:
 
-...
+It's unfortunate that the suggestion did not make it to the mailinglist.
 
-> +		liointc1: interrupt-controller@1fe01440 {
-> +			compatible = "loongson,liointc-2.0";
-> +			reg = <0x0 0x1fe01440 0x0 0x40>,
-> +			      <0x0 0x1fe01048 0x0 0x8>,
-> +			      <0x0 0x1fe01148 0x0 0x8>;
-> +			reg-names = "main", "isr0", "isr1";
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			interrupt-parent = <&cpuintc>;
-> +			interrupts = <3>;
-> +			interrupt-names = "int1";
-> +			loongson,parent_int_map = <0x00000000>, /* int0 */
-> +						  <0xffffffff>, /* int1 */
-> +						  <0x00000000>, /* int2 */
-> +						  <0x00000000>; /* int3 */
-> +		};
-> +
-> +		global-utilities@1fe00000 {
+> In arch/Kconfig:
+> +config ARCH_SUPPORTS_KEXEC
+> +	bool
+> 
+> In arch/x86/Kconfig:
+> config X86
+> 	... ...
+> +	select ARCH_SUPPORTS_KEXEC
+> 
+> In arch/arm64/Kconfig:
+> config ARM64
+> 	... ...
+> +	select ARCH_SUPPORTS_KEXEC if PM_SLEEP_SMP
 
-I have no clue what "globla-utilities" are for a SoC. Compatible
-suggests it is chipid.
+Which might work for this case
 
+> 
+> etc..
+> 
+> You can refer to ARCH_HAS_DEBUG_VIRTUAL.
+> 
+> >  
+> > -config ARCH_HAS_KEXEC_PURGATORY
+> > -	def_bool KEXEC_FILE
+> > +config ARCH_SUPPORTS_KEXEC_FILE
+> > +	def_bool X86_64 && CRYPTO && CRYPTO_SHA256
+> >  
+> > -config KEXEC_SIG
+> > -	bool "Verify kernel signature during kexec_file_load() syscall"
+> > +config ARCH_SELECTS_KEXEC_FILE
+> > +	def_bool y
+> >  	depends on KEXEC_FILE
+> > -	help
+> > +	select HAVE_IMA_KEXEC if IMA
 
-Best regards,
-Krzysztof
+but not this case, at least not this trivially.
 
+Than for consistency it looks better to keep as is.
+
+Thanks
+
+Michal
+
+> >  
+> > -	  This option makes the kexec_file_load() syscall check for a valid
+> > -	  signature of the kernel image.  The image can still be loaded without
+> > -	  a valid signature unless you also enable KEXEC_SIG_FORCE, though if
+> > -	  there's a signature that we can check, then it must be valid.
+> > +config ARCH_HAS_KEXEC_PURGATORY
+> > +	def_bool KEXEC_FILE
+> >  
+> > -	  In addition to this option, you need to enable signature
+> > -	  verification for the corresponding kernel image type being
+> > -	  loaded in order for this to work.
+> > +config ARCH_SUPPORTS_KEXEC_SIG
+> > +	def_bool y
+> >  
+> > -config KEXEC_SIG_FORCE
+> > -	bool "Require a valid signature in kexec_file_load() syscall"
+> > -	depends on KEXEC_SIG
+> > -	help
+> > -	  This option makes kernel signature verification mandatory for
+> > -	  the kexec_file_load() syscall.
+> > +config ARCH_SUPPORTS_KEXEC_SIG_FORCE
+> > +	def_bool y
+> >  
+> > -config KEXEC_BZIMAGE_VERIFY_SIG
+> > -	bool "Enable bzImage signature verification support"
+> > -	depends on KEXEC_SIG
+> > -	depends on SIGNED_PE_FILE_VERIFICATION
+> > -	select SYSTEM_TRUSTED_KEYRING
+> > -	help
+> > -	  Enable bzImage signature verification support.
+> > +config ARCH_SUPPORTS_KEXEC_BZIMAGE_VERIFY_SIG
+> > +	def_bool y
+> >  
+> > -config CRASH_DUMP
+> > -	bool "kernel crash dumps"
+> > -	depends on X86_64 || (X86_32 && HIGHMEM)
+> > -	help
+> > -	  Generate crash dump after being started by kexec.
+> > -	  This should be normally only set in special crash dump kernels
+> > -	  which are loaded in the main kernel with kexec-tools into
+> > -	  a specially reserved region and then later executed after
+> > -	  a crash by kdump/kexec. The crash dump kernel must be compiled
+> > -	  to a memory address not used by the main kernel or BIOS using
+> > -	  PHYSICAL_START, or it must be built as a relocatable image
+> > -	  (CONFIG_RELOCATABLE=y).
+> > -	  For more details see Documentation/admin-guide/kdump/kdump.rst
+> > +config ARCH_SUPPORTS_KEXEC_JUMP
+> > +	def_bool y
+> >  
+> > -config KEXEC_JUMP
+> > -	bool "kexec jump"
+> > -	depends on KEXEC && HIBERNATION
+> > -	help
+> > -	  Jump between original kernel and kexeced kernel and invoke
+> > -	  code in physical address mode via KEXEC
+> > +config ARCH_SUPPORTS_CRASH_DUMP
+> > +	def_bool X86_64 || (X86_32 && HIGHMEM)
+> >  
+> >  config PHYSICAL_START
+> >  	hex "Physical address where the kernel is loaded" if (EXPERT || CRASH_DUMP)
+> > 
+> 
+> -- 
+> Regards,
+>   Zhen Lei
