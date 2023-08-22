@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCE07944C
-	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 09:41:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 242E79460
+	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 09:41:01 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8CxNvGqguRk8d8aAA--.54833S3;
-	Tue, 22 Aug 2023 17:40:58 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Ax1fCrguRk+d8aAA--.54800S3;
+	Tue, 22 Aug 2023 17:40:59 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrM6pguRkkDVgAA--.38101S2;
-	Tue, 22 Aug 2023 17:40:58 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrM6pguRkkDVgAA--.38101S3;
+	Tue, 22 Aug 2023 17:40:59 +0800 (CST)
 From: Feiyang Chen <chenfeiyang@loongson.cn>
 To: andrew@lunn.ch,
 	hkallweit1@gmail.com,
@@ -23,9 +23,9 @@ Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
 	netdev@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	chris.chenfeiyang@gmail.com
-Subject: [PATCH v4 04/11] net: stmmac: Allow platforms to set irq_flags
-Date: Tue, 22 Aug 2023 17:40:53 +0800
-Message-Id: <fb70964b2a1e58ef9987e709952001aeb000814f.1692696115.git.chenfeiyang@loongson.cn>
+Subject: [PATCH v4 05/11] net: stmmac: dwmac-loongson: Refactor code for loongson_dwmac_probe()
+Date: Tue, 22 Aug 2023 17:40:54 +0800
+Message-Id: <58215331ed92b7d68fb31ccdd758a4f23dc706a0.1692696115.git.chenfeiyang@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1692696115.git.chenfeiyang@loongson.cn>
 References: <cover.1692696115.git.chenfeiyang@loongson.cn>
@@ -36,115 +36,206 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxrM6pguRkkDVgAA--.38101S2
+X-CM-TRANSID:AQAAf8BxrM6pguRkkDVgAA--.38101S3
 X-CM-SenderInfo: hfkh0wphl1t03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCr4fGF45KrWDKw4ftFWrZwc_yoWrGr1Dpa
-	y7Aas5tFn2qr12gan8AayDZFyYk34xKa4fAFyxJwnxJFWIyr9avr1FqrySyF1fCrZ5ArWa
-	qFWDua18C3WUWrgCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jr15CFWDArW5Ar1rZw4xGrX_yoW7CFy5p3
+	yfCasIgrWftry29an5Zr4DZFyYyrWjy3yIgr42kwn7Wa4qyry0qFyIgFWjyF97ArWkWw17
+	X3WUKr48WF4DJrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVW3AVW8Xw1lYx0Ex4A2
-	jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
-	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87
-	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4EfOUUUUU
+	0xBIdaVrnRJUUUkvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_ZF0_GryDMcIj6I8E
+	87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jzoGQUUUUU=
 
-Some platforms need extra irq flags to request irq multi msi, add
-irq_flags variable for them.
+Add a setup() function to initialize data, and simplify code for
+loongson_dwmac_probe().
 
 Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_main.c    | 16 +++++++++-------
- include/linux/stmmac.h                           |  1 +
- 2 files changed, 10 insertions(+), 7 deletions(-)
+ .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 89 +++++++++++--------
+ 1 file changed, 54 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index f91dd3f69fef..1d67e5ec5fac 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3515,7 +3515,7 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
- 	int_name = priv->int_name_mac;
- 	sprintf(int_name, "%s:%s", dev->name, "mac");
- 	ret = request_irq(dev->irq, stmmac_mac_interrupt,
--			  0, int_name, dev);
-+			  priv->plat->irq_flags, int_name, dev);
- 	if (unlikely(ret < 0)) {
- 		netdev_err(priv->dev,
- 			   "%s: alloc mac MSI %d (error: %d)\n",
-@@ -3532,7 +3532,7 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
- 		sprintf(int_name, "%s:%s", dev->name, "wol");
- 		ret = request_irq(priv->wol_irq,
- 				  stmmac_mac_interrupt,
--				  0, int_name, dev);
-+				  priv->plat->irq_flags, int_name, dev);
- 		if (unlikely(ret < 0)) {
- 			netdev_err(priv->dev,
- 				   "%s: alloc wol MSI %d (error: %d)\n",
-@@ -3550,7 +3550,7 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
- 		sprintf(int_name, "%s:%s", dev->name, "lpi");
- 		ret = request_irq(priv->lpi_irq,
- 				  stmmac_mac_interrupt,
--				  0, int_name, dev);
-+				  priv->plat->irq_flags, int_name, dev);
- 		if (unlikely(ret < 0)) {
- 			netdev_err(priv->dev,
- 				   "%s: alloc lpi MSI %d (error: %d)\n",
-@@ -3568,7 +3568,7 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
- 		sprintf(int_name, "%s:%s", dev->name, "safety-ce");
- 		ret = request_irq(priv->sfty_ce_irq,
- 				  stmmac_safety_interrupt,
--				  0, int_name, dev);
-+				  priv->plat->irq_flags, int_name, dev);
- 		if (unlikely(ret < 0)) {
- 			netdev_err(priv->dev,
- 				   "%s: alloc sfty ce MSI %d (error: %d)\n",
-@@ -3586,7 +3586,7 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
- 		sprintf(int_name, "%s:%s", dev->name, "safety-ue");
- 		ret = request_irq(priv->sfty_ue_irq,
- 				  stmmac_safety_interrupt,
--				  0, int_name, dev);
-+				  priv->plat->irq_flags, int_name, dev);
- 		if (unlikely(ret < 0)) {
- 			netdev_err(priv->dev,
- 				   "%s: alloc sfty ue MSI %d (error: %d)\n",
-@@ -3607,7 +3607,8 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
- 		sprintf(int_name, "%s:%s-%d", dev->name, "rx", i);
- 		ret = request_irq(priv->rx_irq[i],
- 				  stmmac_msi_intr_rx,
--				  0, int_name, &priv->dma_conf.rx_queue[i]);
-+				  priv->plat->irq_flags, int_name,
-+				  &priv->dma_conf.rx_queue[i]);
- 		if (unlikely(ret < 0)) {
- 			netdev_err(priv->dev,
- 				   "%s: alloc rx-%d  MSI %d (error: %d)\n",
-@@ -3632,7 +3633,8 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
- 		sprintf(int_name, "%s:%s-%d", dev->name, "tx", i);
- 		ret = request_irq(priv->tx_irq[i],
- 				  stmmac_msi_intr_tx,
--				  0, int_name, &priv->dma_conf.tx_queue[i]);
-+				  priv->plat->irq_flags, int_name,
-+				  &priv->dma_conf.tx_queue[i]);
- 		if (unlikely(ret < 0)) {
- 			netdev_err(priv->dev,
- 				   "%s: alloc tx-%d  MSI %d (error: %d)\n",
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index 0e36259a9568..75da4c7eb85c 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -296,5 +296,6 @@ struct plat_stmmacenet_data {
- 	const struct dwmac4_addrs *dwmac4_addrs;
- 	bool has_integrated_pcs;
- 	int has_egmac;
-+	u32 irq_flags;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+index a25c187d3185..ff4fa74d2a11 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+@@ -9,7 +9,12 @@
+ #include <linux/of_irq.h>
+ #include "stmmac.h"
+ 
+-static int loongson_default_data(struct plat_stmmacenet_data *plat)
++struct stmmac_pci_info {
++	int (*setup)(struct pci_dev *pdev, struct plat_stmmacenet_data *plat);
++};
++
++static void loongson_default_data(struct pci_dev *pdev,
++				  struct plat_stmmacenet_data *plat)
+ {
+ 	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
+ 	plat->has_gmac = 1;
+@@ -34,23 +39,38 @@ static int loongson_default_data(struct plat_stmmacenet_data *plat)
+ 
+ 	/* Disable RX queues routing by default */
+ 	plat->rx_queues_cfg[0].pkt_route = 0x0;
++}
++
++static int loongson_gmac_data(struct pci_dev *pdev,
++			      struct plat_stmmacenet_data *plat)
++{
++	loongson_default_data(pdev, plat);
++
++	plat->multicast_filter_bins = 256;
++
++	plat->mdio_bus_data->phy_mask = 0;
+ 
+-	/* Default to phy auto-detection */
+ 	plat->phy_addr = -1;
++	plat->phy_interface = PHY_INTERFACE_MODE_RGMII_ID;
+ 
+ 	plat->dma_cfg->pbl = 32;
+ 	plat->dma_cfg->pblx8 = true;
+ 
+-	plat->multicast_filter_bins = 256;
+ 	return 0;
+ }
+ 
+-static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++static struct stmmac_pci_info loongson_gmac_pci_info = {
++	.setup = loongson_gmac_data,
++};
++
++static int loongson_dwmac_probe(struct pci_dev *pdev,
++				const struct pci_device_id *id)
+ {
++	int ret, i, bus_id, phy_mode;
+ 	struct plat_stmmacenet_data *plat;
++	struct stmmac_pci_info *info;
+ 	struct stmmac_resources res;
+ 	struct device_node *np;
+-	int ret, i, phy_mode;
+ 
+ 	np = dev_of_node(&pdev->dev);
+ 
+@@ -59,39 +79,32 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+ 		return -ENODEV;
+ 	}
+ 
+-	if (!of_device_is_compatible(np, "loongson, pci-gmac")) {
+-		pr_info("dwmac_loongson_pci: Incompatible OF node\n");
+-		return -ENODEV;
+-	}
+-
+ 	plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
+ 	if (!plat)
+ 		return -ENOMEM;
+ 
++	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
++					   sizeof(*plat->mdio_bus_data),
++					   GFP_KERNEL);
++	if (!plat->mdio_bus_data)
++		return -ENOMEM;
++
++	plat->dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*plat->dma_cfg),
++				     GFP_KERNEL);
++	if (!plat->dma_cfg)
++		return -ENOMEM;
++
+ 	plat->mdio_node = of_get_child_by_name(np, "mdio");
+ 	if (plat->mdio_node) {
+ 		dev_info(&pdev->dev, "Found MDIO subnode\n");
+-
+-		plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
+-						   sizeof(*plat->mdio_bus_data),
+-						   GFP_KERNEL);
+-		if (!plat->mdio_bus_data) {
+-			ret = -ENOMEM;
+-			goto err_put_node;
+-		}
+ 		plat->mdio_bus_data->needs_reset = true;
+ 	}
+ 
+-	plat->dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*plat->dma_cfg), GFP_KERNEL);
+-	if (!plat->dma_cfg) {
+-		ret = -ENOMEM;
+-		goto err_put_node;
+-	}
+-
+ 	/* Enable pci device */
+ 	ret = pci_enable_device(pdev);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "%s: ERROR: failed to enable device\n", __func__);
++		dev_err(&pdev->dev, "%s: ERROR: failed to enable device\n",
++			__func__);
+ 		goto err_put_node;
+ 	}
+ 
+@@ -105,9 +118,16 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+ 		break;
+ 	}
+ 
+-	plat->bus_id = of_alias_get_id(np, "ethernet");
+-	if (plat->bus_id < 0)
+-		plat->bus_id = pci_dev_id(pdev);
++	pci_set_master(pdev);
++
++	info = (struct stmmac_pci_info *)id->driver_data;
++	ret = info->setup(pdev, plat);
++	if (ret)
++		goto err_disable_device;
++
++	bus_id = of_alias_get_id(np, "ethernet");
++	if (bus_id >= 0)
++		plat->bus_id = bus_id;
+ 
+ 	phy_mode = device_get_phy_mode(&pdev->dev);
+ 	if (phy_mode < 0) {
+@@ -115,14 +135,10 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+ 		ret = phy_mode;
+ 		goto err_disable_device;
+ 	}
+-
+ 	plat->phy_interface = phy_mode;
+-	plat->interface = PHY_INTERFACE_MODE_GMII;
+ 
+-	pci_set_master(pdev);
+-
+-	loongson_default_data(plat);
+ 	pci_enable_msi(pdev);
++
+ 	memset(&res, 0, sizeof(res));
+ 	res.addr = pcim_iomap_table(pdev)[0];
+ 
+@@ -135,7 +151,8 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+ 
+ 	res.wol_irq = of_irq_get_byname(np, "eth_wake_irq");
+ 	if (res.wol_irq < 0) {
+-		dev_info(&pdev->dev, "IRQ eth_wake_irq not found, using macirq\n");
++		dev_info(&pdev->dev,
++			 "IRQ eth_wake_irq not found, using macirq\n");
+ 		res.wol_irq = res.irq;
+ 	}
+ 
+@@ -219,8 +236,10 @@ static int __maybe_unused loongson_dwmac_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
+ 			 loongson_dwmac_resume);
+ 
++#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
++
+ static const struct pci_device_id loongson_dwmac_id_table[] = {
+-	{ PCI_VDEVICE(LOONGSON, 0x7a03) },
++	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
+ 	{}
  };
- #endif
+ MODULE_DEVICE_TABLE(pci, loongson_dwmac_id_table);
 -- 
 2.39.3
 
