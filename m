@@ -1,267 +1,217 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F2C8F78
-	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 11:49:16 +0000 (UTC)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-d748d8cf074so3531338276.0
-        for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 04:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692704956; x=1693309756;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HnkSOchAykgmuLN4U3TSGjFgL9Uj0OcvtXZ0L3nkmls=;
-        b=M+QZ3IZYbaW9VT0juEBOMrByNp3PoahO2AFBKtWy6sIbhIBMN2vaUa4OILaoEQkj9Y
-         hDjeJiOsof+5b0qbk3lp/3U8cQfwud2POus1oOsr7JT+l5Ojq/wn+o+hYEETLDChSTPA
-         iUiv99hYyIV9PIHIiaxNaYHEGyNc1rrKyKrfjiCRAfkSSIgr4SsckS5QMJYLn0JKgTXK
-         9MzQlDmUyll9TRxGXRt5m4OnYHXSloa4z5Sgq1/giVtIFlA/OGi6wYvTJosqyX2JWZC7
-         l+97b5AM3ZLuUZy0Jl1T97s5bNIzFexQ0xENGQJ1k9xZu/CJR/k5bexzG+Mt1H3i50+k
-         jNyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692704956; x=1693309756;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HnkSOchAykgmuLN4U3TSGjFgL9Uj0OcvtXZ0L3nkmls=;
-        b=kRRbvDB/Xq2U5ghcmLrk6q30BlC6NuwjHvd8mZ8FTnFceKl/xO8YvWQ4TsVJT8hILv
-         zKdw6E45lmjiPNUjZAcKCyx4MHpnGNOIaDuHckGbIMQciiPt2QviSAWxZgnmv8hl4NV1
-         m2ILZE+9I5UlgyjNyHkpeU1bUk68Npb6sYGylnccIoCNLwRveDhvKOMFaY706UEW6Y7R
-         DAUBqelS2yydAWvzJQ89G2vgqpxPyhHm8dvnkzRAK2fgSCPgoSez2VFr4mEbgsmbJN5t
-         PcLjyfjJkfkwg3dsB2/ur39ZyQNJHYxNVYAy0ffcFYQ72DAeC2lDulsLoW453hI3dIk3
-         LOBg==
-X-Gm-Message-State: AOJu0YxsYc8FdbXlIhEPa3covu47I7aNjCzmrigcx4LBbu28nqeWZVk0
-	paf/e9bcWwfRS02YwLI3Y8PNP8+s0jkh+HNnxxw=
-X-Google-Smtp-Source: AGHT+IFvUkjp9Mr1ETGQ84flNE4HGHxASyHx07nqyD2nR6dxOh4T8VS7wCmrqwBMtgja+2xSt05UGV5IGU6bH0O644I=
-X-Received: by 2002:a25:6842:0:b0:d45:af57:edfe with SMTP id
- d63-20020a256842000000b00d45af57edfemr8206076ybc.26.1692704955656; Tue, 22
- Aug 2023 04:49:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A26B8F78
+	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 12:13:00 +0000 (UTC)
+Received: from dggpemm100001.china.huawei.com (unknown [172.30.72.56])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RVSr13fyWz1L9DH;
+	Tue, 22 Aug 2023 20:11:29 +0800 (CST)
+Received: from [10.174.177.243] (10.174.177.243) by
+ dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 22 Aug 2023 20:12:56 +0800
+Message-ID: <7fff8202-0be1-4989-959f-8c0b14ca1236@huawei.com>
+Date: Tue, 22 Aug 2023 20:12:55 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACZJ9cUXiWxDb6hF4JFhWe7Np82k6LopVQ+_AoGFOccN4kjJqA@mail.gmail.com>
- <20230814155911.GN2607694@kernel.org>
-In-Reply-To: <20230814155911.GN2607694@kernel.org>
-From: Liam Ni <zhiguangni01@gmail.com>
-Date: Tue, 22 Aug 2023 19:49:05 +0800
-Message-ID: <CACZJ9cU5g5wD=qEg7tbr-Gk4EADDORSG-=U1_c7nq=fO9XhJ0Q@mail.gmail.com>
-Subject: Re: [RESEND PATCH V3] NUMA:Improve the efficiency of calculating
- pages loss
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, zhoubinbin@loongson.cn, chenfeiyang@loongson.cn, 
-	jiaxun.yang@flygoat.com, Andrew Morton <akpm@linux-foundation.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Borislav Petkov <bp@alien8.de>, 
-	Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org, 
-	luto@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, kernel@xen0n.name, 
-	chenhuacai@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH rfc v2 05/10] powerpc: mm: use try_vma_locked_page_fault()
+Content-Language: en-US
+To: Christophe Leroy <christophe.leroy@csgroup.eu>, Andrew Morton
+	<akpm@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
+CC: "surenb@google.com" <surenb@google.com>, "willy@infradead.org"
+	<willy@infradead.org>, Russell King <linux@armlinux.org.uk>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Michael Ellerman
+	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexander Gordeev <agordeev@linux.ibm.com>, Gerald
+ Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger
+	<borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "x86@kernel.org"
+	<x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>
+References: <20230821123056.2109942-1-wangkefeng.wang@huawei.com>
+ <20230821123056.2109942-6-wangkefeng.wang@huawei.com>
+ <7eeed961-c2c0-2aeb-ff8c-3717de09d605@csgroup.eu>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+In-Reply-To: <7eeed961-c2c0-2aeb-ff8c-3717de09d605@csgroup.eu>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.243]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm100001.china.huawei.com (7.185.36.93)
+X-CFilter-Loop: Reflected
 
-On Tue, 15 Aug 2023 at 00:00, Mike Rapoport <rppt@kernel.org> wrote:
->
-> On Fri, Aug 04, 2023 at 11:32:51PM +0800, Liam Ni wrote:
-> > Optimize the way of calculating missing pages.
-> >
-> > In the previous implementation, We calculate missing pages as follows:
-> > 1. calculate numaram by traverse all the numa_meminfo's and for each of
-> > them traverse all the regions in memblock.memory to prepare for
-> > counting missing pages.
-> >
-> > 2. Traverse all the regions in memblock.memory again to get e820ram.
-> >
-> > 3. the missing page is (e820ram - numaram )
-> >
-> > But,it's enough to count memory in =E2=80=98memblock.memory=E2=80=99 th=
-at doesn't have
-> > the node assigned.
-> >
-> > V2:https://lore.kernel.org/all/20230619075315.49114-1-zhiguangni01@gmai=
-l.com/
-> > V1:https://lore.kernel.org/all/20230615142016.419570-1-zhiguangni01@gma=
-il.com/
-> >
-> > Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
-> > ---
-> >  arch/loongarch/kernel/numa.c | 23 ++++++++---------------
-> >  arch/x86/mm/numa.c           | 26 +++++++-------------------
-> >  include/linux/mm.h           |  1 +
-> >  mm/mm_init.c                 | 20 ++++++++++++++++++++
-> >  4 files changed, 36 insertions(+), 34 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.=
-c
-> > index 708665895b47..0239891e4d19 100644
-> > --- a/arch/loongarch/kernel/numa.c
-> > +++ b/arch/loongarch/kernel/numa.c
-> > @@ -262,25 +262,18 @@ static void __init node_mem_init(unsigned int nod=
-e)
-> >   * Sanity check to catch more bad NUMA configurations (they are amazin=
-gly
-> >   * common).  Make sure the nodes cover all memory.
-> >   */
-> > -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo=
- *mi)
-> > +static bool __init memblock_validate_numa_coverage(const u64 limit)
->
-> There is no need to have arch specific memblock_validate_numa_coverage().
-> You can add this function to memblock and call it from NUMA initializatio=
-n
-> instead of numa_meminfo_cover_memory().
 
-Remove implementation of numa_meminfo_cover_memory function?
 
->
-> The memblock_validate_numa_coverage() will count all the pages without no=
-de
-> ID set and compare to the threshold provided by the architectures.
->
-> >  {
-> > -       int i;
-> > -       u64 numaram, biosram;
-> > +       u64 lo_pg;
-> >
-> > -       numaram =3D 0;
-> > -       for (i =3D 0; i < mi->nr_blks; i++) {
-> > -               u64 s =3D mi->blk[i].start >> PAGE_SHIFT;
-> > -               u64 e =3D mi->blk[i].end >> PAGE_SHIFT;
-> > +       lo_pg =3D max_pfn - calculate_without_node_pages_in_range();
-> >
-> > -               numaram +=3D e - s;
-> > -               numaram -=3D __absent_pages_in_range(mi->blk[i].nid, s,=
- e);
-> > -               if ((s64)numaram < 0)
-> > -                       numaram =3D 0;
-> > +       /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
-> > +       if (lo_pg >=3D limit) {
-> > +               pr_err("NUMA: We lost 1m size page.\n");
-> > +               return false;
-> >         }
-> > -       max_pfn =3D max_low_pfn;
-> > -       biosram =3D max_pfn - absent_pages_in_range(0, max_pfn);
-> >
-> > -       BUG_ON((s64)(biosram - numaram) >=3D (1 << (20 - PAGE_SHIFT)));
-> >         return true;
-> >  }
-> >
-> > @@ -428,7 +421,7 @@ int __init init_numa_memory(void)
-> >                 return -EINVAL;
-> >
-> >         init_node_memblock();
-> > -       if (numa_meminfo_cover_memory(&numa_meminfo) =3D=3D false)
-> > +       if (memblock_validate_numa_coverage(SZ_1M) =3D=3D false)
-> >                 return -EINVAL;
-> >
-> >         for_each_node_mask(node, node_possible_map) {
-> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> > index 2aadb2019b4f..14feec144675 100644
-> > --- a/arch/x86/mm/numa.c
-> > +++ b/arch/x86/mm/numa.c
-> > @@ -451,30 +451,18 @@ EXPORT_SYMBOL(__node_distance);
-> >   * Sanity check to catch more bad NUMA configurations (they are amazin=
-gly
-> >   * common).  Make sure the nodes cover all memory.
-> >   */
-> > -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo=
- *mi)
-> > +static bool __init memblock_validate_numa_coverage(const u64 limit)
-> >  {
-> > -       u64 numaram, e820ram;
-> > -       int i;
-> > +       u64 lo_pg;
-> >
-> > -       numaram =3D 0;
-> > -       for (i =3D 0; i < mi->nr_blks; i++) {
-> > -               u64 s =3D mi->blk[i].start >> PAGE_SHIFT;
-> > -               u64 e =3D mi->blk[i].end >> PAGE_SHIFT;
-> > -               numaram +=3D e - s;
-> > -               numaram -=3D __absent_pages_in_range(mi->blk[i].nid, s,=
- e);
-> > -               if ((s64)numaram < 0)
-> > -                       numaram =3D 0;
-> > -       }
-> > -
-> > -       e820ram =3D max_pfn - absent_pages_in_range(0, max_pfn);
-> > +       lo_pg =3D max_pfn - calculate_without_node_pages_in_range();
-> >
-> >         /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
-> > -       if ((s64)(e820ram - numaram) >=3D (1 << (20 - PAGE_SHIFT))) {
-> > -               printk(KERN_ERR "NUMA: nodes only cover %LuMB of your
-> > %LuMB e820 RAM. Not used.\n",
-> > -                      (numaram << PAGE_SHIFT) >> 20,
-> > -                      (e820ram << PAGE_SHIFT) >> 20);
-> > +       if (lo_pg >=3D limit) {
-> > +               pr_err("NUMA: We lost 1m size page.\n");
-> >                 return false;
-> >         }
-> > +
-> >         return true;
-> >  }
-> >
-> > @@ -583,7 +571,7 @@ static int __init numa_register_memblks(struct
-> > numa_meminfo *mi)
-> >                         return -EINVAL;
-> >                 }
-> >         }
-> > -       if (!numa_meminfo_cover_memory(mi))
-> > +       if (!memblock_validate_numa_coverage(SZ_1M))
-> >                 return -EINVAL;
-> >
-> >         /* Finally register nodes. */
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 0daef3f2f029..b32457ad1ae3 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -3043,6 +3043,7 @@ unsigned long __absent_pages_in_range(int nid,
-> > unsigned long start_pfn,
-> >                                                 unsigned long end_pfn);
-> >  extern unsigned long absent_pages_in_range(unsigned long start_pfn,
-> >                                                 unsigned long end_pfn);
-> > +extern unsigned long calculate_without_node_pages_in_range(void);
-> >  extern void get_pfn_range_for_nid(unsigned int nid,
-> >                         unsigned long *start_pfn, unsigned long *end_pf=
-n);
-> >
-> > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> > index 3ddd18a89b66..13a4883787e3 100644
-> > --- a/mm/mm_init.c
-> > +++ b/mm/mm_init.c
-> > @@ -1132,6 +1132,26 @@ static void __init
-> > adjust_zone_range_for_zone_movable(int nid,
-> >         }
-> >  }
-> >
-> > +/**
-> > + * @start_pfn: The start PFN to start searching for holes
-> > + * @end_pfn: The end PFN to stop searching for holes
-> > + *
-> > + * Return: Return the number of page frames without node assigned
-> > within a range.
-> > + */
-> > +unsigned long __init calculate_without_node_pages_in_range(void)
-> > +{
-> > +       unsigned long num_pages;
-> > +       unsigned long start_pfn, end_pfn;
-> > +       int nid, i;
-> > +
-> > +       for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &=
-nid) {
-> > +               if (nid =3D=3D NUMA_NO_NODE)
-> > +                       num_pages +=3D end_pfn - start_pfn;
-> > +       }
-> > +
-> > +       return num_pages;
-> > +}
-> > +
-> >  /*
-> >   * Return the number of holes in a range on a node. If nid is MAX_NUMN=
-ODES,
-> >   * then all holes in the requested range will be accounted for.
-> > --
-> > 2.25.1
->
-> --
-> Sincerely yours,
-> Mike.
+On 2023/8/22 17:38, Christophe Leroy wrote:
+> 
+> 
+> Le 21/08/2023 à 14:30, Kefeng Wang a écrit :
+>> Use new try_vma_locked_page_fault() helper to simplify code.
+>> No functional change intended.
+> 
+> Does it really simplifies code ? It's 32 insertions versus 34 deletions
+> so only removing 2 lines.
+
+Yes，it is unfriendly for powerpc as the arch's vma access check is much
+complex than other arch,
+> 
+> I don't like the struct vm_fault you are adding because when it was four
+> independant variables it was handled through local registers. Now that
+> it is a struct it has to go via the stack, leading to unnecessary memory
+> read and writes. And going back and forth between architecture code and
+> generic code may also be counter-performant.
+
+Because different arch has different var to check vma access, so the
+easy way to add them into vmf, I don' find a better way.
+> 
+> Did you make any performance analysis ? Page faults are really a hot
+> path when dealling with minor faults.
+
+no, this is only built and rfc to see the feedback about the conversion.
+
+Thanks.
+
+> 
+> Thanks
+> Christophe
+> 
+>>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>>    arch/powerpc/mm/fault.c | 66 ++++++++++++++++++++---------------------
+>>    1 file changed, 32 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+>> index b1723094d464..52f9546e020e 100644
+>> --- a/arch/powerpc/mm/fault.c
+>> +++ b/arch/powerpc/mm/fault.c
+>> @@ -391,6 +391,22 @@ static int page_fault_is_bad(unsigned long err)
+>>    #define page_fault_is_bad(__err)	((__err) & DSISR_BAD_FAULT_32S)
+>>    #endif
+>>    
+>> +#ifdef CONFIG_PER_VMA_LOCK
+>> +bool arch_vma_access_error(struct vm_area_struct *vma, struct vm_fault *vmf)
+>> +{
+>> +	int is_exec = TRAP(vmf->regs) == INTERRUPT_INST_STORAGE;
+>> +	int is_write = page_fault_is_write(vmf->fault_code);
+>> +
+>> +	if (unlikely(access_pkey_error(is_write, is_exec,
+>> +				(vmf->fault_code & DSISR_KEYFAULT), vma)))
+>> +		return true;
+>> +
+>> +	if (unlikely(access_error(is_write, is_exec, vma)))
+>> +		return true;
+>> +	return false;
+>> +}
+>> +#endif
+>> +
+>>    /*
+>>     * For 600- and 800-family processors, the error_code parameter is DSISR
+>>     * for a data fault, SRR1 for an instruction fault.
+>> @@ -407,12 +423,18 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
+>>    {
+>>    	struct vm_area_struct * vma;
+>>    	struct mm_struct *mm = current->mm;
+>> -	unsigned int flags = FAULT_FLAG_DEFAULT;
+>>    	int is_exec = TRAP(regs) == INTERRUPT_INST_STORAGE;
+>>    	int is_user = user_mode(regs);
+>>    	int is_write = page_fault_is_write(error_code);
+>>    	vm_fault_t fault, major = 0;
+>>    	bool kprobe_fault = kprobe_page_fault(regs, 11);
+>> +	struct vm_fault vmf = {
+>> +		.real_address = address,
+>> +		.fault_code = error_code,
+>> +		.regs = regs,
+>> +		.flags = FAULT_FLAG_DEFAULT,
+>> +	};
+>> +
+>>    
+>>    	if (unlikely(debugger_fault_handler(regs) || kprobe_fault))
+>>    		return 0;
+>> @@ -463,45 +485,21 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
+>>    	 * mmap_lock held
+>>    	 */
+>>    	if (is_user)
+>> -		flags |= FAULT_FLAG_USER;
+>> +		vmf.flags |= FAULT_FLAG_USER;
+>>    	if (is_write)
+>> -		flags |= FAULT_FLAG_WRITE;
+>> +		vmf.flags |= FAULT_FLAG_WRITE;
+>>    	if (is_exec)
+>> -		flags |= FAULT_FLAG_INSTRUCTION;
+>> +		vmf.flags |= FAULT_FLAG_INSTRUCTION;
+>>    
+>> -	if (!(flags & FAULT_FLAG_USER))
+>> -		goto lock_mmap;
+>> -
+>> -	vma = lock_vma_under_rcu(mm, address);
+>> -	if (!vma)
+>> -		goto lock_mmap;
+>> -
+>> -	if (unlikely(access_pkey_error(is_write, is_exec,
+>> -				       (error_code & DSISR_KEYFAULT), vma))) {
+>> -		vma_end_read(vma);
+>> -		goto lock_mmap;
+>> -	}
+>> -
+>> -	if (unlikely(access_error(is_write, is_exec, vma))) {
+>> -		vma_end_read(vma);
+>> -		goto lock_mmap;
+>> -	}
+>> -
+>> -	fault = handle_mm_fault(vma, address, flags | FAULT_FLAG_VMA_LOCK, regs);
+>> -	if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
+>> -		vma_end_read(vma);
+>> -
+>> -	if (!(fault & VM_FAULT_RETRY)) {
+>> -		count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
+>> +	fault = try_vma_locked_page_fault(&vmf);
+>> +	if (fault == VM_FAULT_NONE)
+>> +		goto retry;
+>> +	if (!(fault & VM_FAULT_RETRY))
+>>    		goto done;
+>> -	}
+>> -	count_vm_vma_lock_event(VMA_LOCK_RETRY);
+>>    
+>>    	if (fault_signal_pending(fault, regs))
+>>    		return user_mode(regs) ? 0 : SIGBUS;
+>>    
+>> -lock_mmap:
+>> -
+>>    	/* When running in the kernel we expect faults to occur only to
+>>    	 * addresses in user space.  All other faults represent errors in the
+>>    	 * kernel and should generate an OOPS.  Unfortunately, in the case of an
+>> @@ -528,7 +526,7 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
+>>    	 * make sure we exit gracefully rather than endlessly redo
+>>    	 * the fault.
+>>    	 */
+>> -	fault = handle_mm_fault(vma, address, flags, regs);
+>> +	fault = handle_mm_fault(vma, address, vmf.flags, regs);
+>>    
+>>    	major |= fault & VM_FAULT_MAJOR;
+>>    
+>> @@ -544,7 +542,7 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
+>>    	 * case.
+>>    	 */
+>>    	if (unlikely(fault & VM_FAULT_RETRY)) {
+>> -		flags |= FAULT_FLAG_TRIED;
+>> +		vmf.flags |= FAULT_FLAG_TRIED;
+>>    		goto retry;
+>>    	}
+>>    
