@@ -1,30 +1,30 @@
 Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C5F9460
-	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 10:03:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1391C9440
+	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 11:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
 	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=d+PLp4qGv9vyBKfdVLM+uFC8RtyxXmEgg449xXe+ZhI=; b=00DiuSTkr9j/IHq+UsXbi3ikpd
-	M5/xGrJBCzwpTqEP+gogytb4rbMhzHARQuql9gWqxVnbnD3VnA4J0zEyYcsKZUViXgpx29XN5VU7z
-	qeI2j4crsphzOy9dmvd/vSAZ8CfYetnyLPKf3dmhHVTArWX2K44FvqdA+XKF0CaHycSLTRMNJZlEB
-	B5eq/C34+P70Ap7WO2WXGoI3ZBDSuTTdaSojF/82CfCl5sroFLyq2oNto47mIdxDh5626ZQYqnqgb
-	VZyGurX8p7wgqipjXsC9883gxdmIrQI8ia63yQnZjwTJ0+DPjqDUTjKHLZmJRfE8OPfTHDoaP4i3o
-	0M7ZEsYg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34830)
+	bh=npsFYkwN/id6A7uDdZP0YXNUUCPKgvunt/3UBBybHhY=; b=JkunwSrYUJpFu3mWdDd0HfRQXL
+	M3Lba55CA9ZUedjVwL/jpZhh83aPXgYDfPvbEKmQIDD9e1ildSb0pJtc4HWVHC56LnlggEpdTCBQz
+	uu7/ieqV8WisJTKgikAnHrvCgomIsVfQ/BLGy4/FJWkfkgEbgzP51WeFsc4sYcgn7q+EuYEc2oJVo
+	kMPHpNusYQMXjIkB8iFP4Ok8pi2QvWlEGaVahK/+X7Skl0z4ICB0DKsLyRXjWSAWaDWYI7C6mi3PH
+	VN8AIum6QiBPa9TF+Gf/rKqD3CJjFAmIv3yGTNDadzhiih6mvxIZqJZc11+H49NQpKplmA2zfPwIK
+	9dGmxfLw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52782)
 	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <linux@armlinux.org.uk>)
-	id 1qYOE3-0001E2-1A;
-	Tue, 22 Aug 2023 11:03:03 +0100
+	id 1qYPoo-0001Lh-19;
+	Tue, 22 Aug 2023 12:45:08 +0100
 Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
 	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qYOE0-0005hB-T8; Tue, 22 Aug 2023 11:03:00 +0100
-Date: Tue, 22 Aug 2023 11:03:00 +0100
+	id 1qYPol-0005la-7Y; Tue, 22 Aug 2023 12:45:03 +0100
+Date: Tue, 22 Aug 2023 12:45:03 +0100
 From: "Russell King (Oracle)" <linux@armlinux.org.uk>
 To: Feiyang Chen <chenfeiyang@loongson.cn>
 Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com,
@@ -33,11 +33,10 @@ Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com,
 	guyinggang@loongson.cn, siyanteng@loongson.cn,
 	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org,
 	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
-Subject: Re: [PATCH v4 01/11] net: stmmac: Pass stmmac_priv and chan in some
- callbacks
-Message-ID: <ZOSH1GxHkWbDGSLj@shell.armlinux.org.uk>
+Subject: Re: [PATCH v4 11/11] net: stmmac: dwmac-loongson: Add GNET support
+Message-ID: <ZOSfv9CcKRRC2kS/@shell.armlinux.org.uk>
 References: <cover.1692696115.git.chenfeiyang@loongson.cn>
- <e452ba21887e37a747f8d4f0f74ef4f2590c3eac.1692696115.git.chenfeiyang@loongson.cn>
+ <e83b526e0ee0f90ba0e645efec405de957c28bcb.1692696115.git.chenfeiyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -46,57 +45,74 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e452ba21887e37a747f8d4f0f74ef4f2590c3eac.1692696115.git.chenfeiyang@loongson.cn>
+In-Reply-To: <e83b526e0ee0f90ba0e645efec405de957c28bcb.1692696115.git.chenfeiyang@loongson.cn>
 Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Aug 22, 2023 at 05:40:26PM +0800, Feiyang Chen wrote:
-> @@ -636,7 +637,8 @@ static void sun8i_dwmac_set_mac(void __iomem *ioaddr, bool enable)
->   * All slot > 0 need to be enabled with MAC_ADDR_TYPE_DST
->   * If addr is NULL, clear the slot
->   */
-> -static void sun8i_dwmac_set_umac_addr(struct mac_device_info *hw,
-> +static void sun8i_dwmac_set_umac_addr(struct stmmac_priv *priv,
-> +				      struct mac_device_info *hw,
->  				      const unsigned char *addr,
->  				      unsigned int reg_n)
->  {
+On Tue, Aug 22, 2023 at 05:41:19PM +0800, Feiyang Chen wrote:
+> @@ -192,6 +192,86 @@ static struct stmmac_pci_info loongson_gmac_pci_info = {
+>  	.config = loongson_gmac_config,
+>  };
+>  
+> +static void loongson_gnet_fix_speed(void *priv, unsigned int speed)
+> +{
 
-Given that hw is always priv->hw, would it be sensible to simplify the
-callback by dropping the "hw" argument, and have the called methods do:
+What tree are these patches against? They don't look like the net-next
+tree, since net-next has changed the prototype for the fix_mac_speed
+method. Also, it would be good for it to be called
+"loongson_gnet_fix_mac_speed" so that grepping for "fix_mac_speed"
+finds not only the callsite but also the method definitions too.
 
-	struct mac_device_info *hw = priv->hw;
-
-> @@ -657,7 +659,8 @@ static void sun8i_dwmac_set_umac_addr(struct mac_device_info *hw,
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index a98bcd797720..fa4d7b90c5fa 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -1242,7 +1242,8 @@ static int stmmac_phy_setup(struct stmmac_priv *priv)
 >  	}
->  }
 >  
-> -static void sun8i_dwmac_get_umac_addr(struct mac_device_info *hw,
-> +static void sun8i_dwmac_get_umac_addr(struct stmmac_priv *priv,
-> +				      struct mac_device_info *hw,
->  				      unsigned char *addr,
->  				      unsigned int reg_n)
->  {
+>  	/* Half-Duplex can only work with single queue */
+> -	if (priv->plat->tx_queues_to_use > 1)
+> +	if (priv->plat->tx_queues_to_use > 1 ||
+> +	    FIELD_GET(DWEGMAC_DISABLE_HALF_DUPLEX, priv->plat->dwegmac_flags))
+>  		priv->phylink_config.mac_capabilities &=
+>  			~(MAC_10HD | MAC_100HD | MAC_1000HD);
 
-Same here.
+There have been a number of shortcomings of stmmac's setup of the
+phylink MAC capabilities recently, and I think it's getting to the
+point where we need someone to bite the bullet and do something
+about it.
 
-> @@ -680,7 +683,8 @@ static int sun8i_dwmac_rx_ipc_enable(struct mac_device_info *hw)
->  	return 1;
->  }
->  
-> -static void sun8i_dwmac_set_filter(struct mac_device_info *hw,
-> +static void sun8i_dwmac_set_filter(struct stmmac_priv *priv,
-> +				   struct mac_device_info *hw,
->  				   struct net_device *dev)
->  {
+Constantly extending conditions such as the above doesn't make a
+lot of sense.
 
-Probably also worth doing for this method as well. I think the only
-thing which this function uses is hw->unicast_filter_entries, so
-one could declare:
+In patch 9, you've added:
 
-	unsigned int unicast_filter_entries = priv->hw->unicast_filter_entries;
++       priv->phylink_config.mac_capabilities = MAC_10 | MAC_100;
++       if (!FIELD_GET(DWEGMAC_DISABLE_FLOW_CONTROL, priv->plat->dwegmac_flags))
++               priv->phylink_config.mac_capabilities |=
++                       MAC_ASYM_PAUSE | MAC_SYM_PAUSE;
 
-rather than carrying the pointer to both "priv" and "hw" through this
-function.
+The only two capabilities that are unconditional are MAC_10FD and
+MAC_100FD. Everything else is conditional on something.
+
+I'm thinking two things:
+
+1) the stmmac platform implementations should be responsible for
+   initialising priv->phylink_config.mac_capabilities
+
+2) phylink may need a function:
+   phylink_set_max_speed(struct phylink_config *config, u32 max_speed);
+   which does similar to phy_set_max_speed(), but operates on
+   mac_capabilities. This can then be used after calling the platform
+   setup of priv->phylink_config.mac_capabilities to limit the
+   speed. I'm not entirely sure that this is required though. I don't
+   think it's required for dwmac-intel, but would possibly be needed
+   for stmmac_platform since there's a "max-speed" property in DT.
+
+What I'm basically saying is... let's not make the setup of
+mac_capabilities any more convoluted than it already is by adding
+new flags which only exist to set or clear other bits.
+
+Also, let's try to stick to positive logic where possible!
 
 -- 
 RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
