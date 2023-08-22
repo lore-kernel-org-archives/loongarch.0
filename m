@@ -1,119 +1,267 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1391C9440
-	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 11:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=npsFYkwN/id6A7uDdZP0YXNUUCPKgvunt/3UBBybHhY=; b=JkunwSrYUJpFu3mWdDd0HfRQXL
-	M3Lba55CA9ZUedjVwL/jpZhh83aPXgYDfPvbEKmQIDD9e1ildSb0pJtc4HWVHC56LnlggEpdTCBQz
-	uu7/ieqV8WisJTKgikAnHrvCgomIsVfQ/BLGy4/FJWkfkgEbgzP51WeFsc4sYcgn7q+EuYEc2oJVo
-	kMPHpNusYQMXjIkB8iFP4Ok8pi2QvWlEGaVahK/+X7Skl0z4ICB0DKsLyRXjWSAWaDWYI7C6mi3PH
-	VN8AIum6QiBPa9TF+Gf/rKqD3CJjFAmIv3yGTNDadzhiih6mvxIZqJZc11+H49NQpKplmA2zfPwIK
-	9dGmxfLw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52782)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qYPoo-0001Lh-19;
-	Tue, 22 Aug 2023 12:45:08 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qYPol-0005la-7Y; Tue, 22 Aug 2023 12:45:03 +0100
-Date: Tue, 22 Aug 2023 12:45:03 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Feiyang Chen <chenfeiyang@loongson.cn>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com,
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-	chenhuacai@loongson.cn, dongbiao@loongson.cn,
-	guyinggang@loongson.cn, siyanteng@loongson.cn,
-	loongson-kernel@lists.loongnix.cn, netdev@vger.kernel.org,
-	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
-Subject: Re: [PATCH v4 11/11] net: stmmac: dwmac-loongson: Add GNET support
-Message-ID: <ZOSfv9CcKRRC2kS/@shell.armlinux.org.uk>
-References: <cover.1692696115.git.chenfeiyang@loongson.cn>
- <e83b526e0ee0f90ba0e645efec405de957c28bcb.1692696115.git.chenfeiyang@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F2C8F78
+	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 11:49:16 +0000 (UTC)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-d748d8cf074so3531338276.0
+        for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 04:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692704956; x=1693309756;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HnkSOchAykgmuLN4U3TSGjFgL9Uj0OcvtXZ0L3nkmls=;
+        b=M+QZ3IZYbaW9VT0juEBOMrByNp3PoahO2AFBKtWy6sIbhIBMN2vaUa4OILaoEQkj9Y
+         hDjeJiOsof+5b0qbk3lp/3U8cQfwud2POus1oOsr7JT+l5Ojq/wn+o+hYEETLDChSTPA
+         iUiv99hYyIV9PIHIiaxNaYHEGyNc1rrKyKrfjiCRAfkSSIgr4SsckS5QMJYLn0JKgTXK
+         9MzQlDmUyll9TRxGXRt5m4OnYHXSloa4z5Sgq1/giVtIFlA/OGi6wYvTJosqyX2JWZC7
+         l+97b5AM3ZLuUZy0Jl1T97s5bNIzFexQ0xENGQJ1k9xZu/CJR/k5bexzG+Mt1H3i50+k
+         jNyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692704956; x=1693309756;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HnkSOchAykgmuLN4U3TSGjFgL9Uj0OcvtXZ0L3nkmls=;
+        b=kRRbvDB/Xq2U5ghcmLrk6q30BlC6NuwjHvd8mZ8FTnFceKl/xO8YvWQ4TsVJT8hILv
+         zKdw6E45lmjiPNUjZAcKCyx4MHpnGNOIaDuHckGbIMQciiPt2QviSAWxZgnmv8hl4NV1
+         m2ILZE+9I5UlgyjNyHkpeU1bUk68Npb6sYGylnccIoCNLwRveDhvKOMFaY706UEW6Y7R
+         DAUBqelS2yydAWvzJQ89G2vgqpxPyhHm8dvnkzRAK2fgSCPgoSez2VFr4mEbgsmbJN5t
+         PcLjyfjJkfkwg3dsB2/ur39ZyQNJHYxNVYAy0ffcFYQ72DAeC2lDulsLoW453hI3dIk3
+         LOBg==
+X-Gm-Message-State: AOJu0YxsYc8FdbXlIhEPa3covu47I7aNjCzmrigcx4LBbu28nqeWZVk0
+	paf/e9bcWwfRS02YwLI3Y8PNP8+s0jkh+HNnxxw=
+X-Google-Smtp-Source: AGHT+IFvUkjp9Mr1ETGQ84flNE4HGHxASyHx07nqyD2nR6dxOh4T8VS7wCmrqwBMtgja+2xSt05UGV5IGU6bH0O644I=
+X-Received: by 2002:a25:6842:0:b0:d45:af57:edfe with SMTP id
+ d63-20020a256842000000b00d45af57edfemr8206076ybc.26.1692704955656; Tue, 22
+ Aug 2023 04:49:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e83b526e0ee0f90ba0e645efec405de957c28bcb.1692696115.git.chenfeiyang@loongson.cn>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <CACZJ9cUXiWxDb6hF4JFhWe7Np82k6LopVQ+_AoGFOccN4kjJqA@mail.gmail.com>
+ <20230814155911.GN2607694@kernel.org>
+In-Reply-To: <20230814155911.GN2607694@kernel.org>
+From: Liam Ni <zhiguangni01@gmail.com>
+Date: Tue, 22 Aug 2023 19:49:05 +0800
+Message-ID: <CACZJ9cU5g5wD=qEg7tbr-Gk4EADDORSG-=U1_c7nq=fO9XhJ0Q@mail.gmail.com>
+Subject: Re: [RESEND PATCH V3] NUMA:Improve the efficiency of calculating
+ pages loss
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, zhoubinbin@loongson.cn, chenfeiyang@loongson.cn, 
+	jiaxun.yang@flygoat.com, Andrew Morton <akpm@linux-foundation.org>, 
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Borislav Petkov <bp@alien8.de>, 
+	Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org, 
+	luto@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, kernel@xen0n.name, 
+	chenhuacai@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 22, 2023 at 05:41:19PM +0800, Feiyang Chen wrote:
-> @@ -192,6 +192,86 @@ static struct stmmac_pci_info loongson_gmac_pci_info = {
->  	.config = loongson_gmac_config,
->  };
->  
-> +static void loongson_gnet_fix_speed(void *priv, unsigned int speed)
-> +{
+On Tue, 15 Aug 2023 at 00:00, Mike Rapoport <rppt@kernel.org> wrote:
+>
+> On Fri, Aug 04, 2023 at 11:32:51PM +0800, Liam Ni wrote:
+> > Optimize the way of calculating missing pages.
+> >
+> > In the previous implementation, We calculate missing pages as follows:
+> > 1. calculate numaram by traverse all the numa_meminfo's and for each of
+> > them traverse all the regions in memblock.memory to prepare for
+> > counting missing pages.
+> >
+> > 2. Traverse all the regions in memblock.memory again to get e820ram.
+> >
+> > 3. the missing page is (e820ram - numaram )
+> >
+> > But,it's enough to count memory in =E2=80=98memblock.memory=E2=80=99 th=
+at doesn't have
+> > the node assigned.
+> >
+> > V2:https://lore.kernel.org/all/20230619075315.49114-1-zhiguangni01@gmai=
+l.com/
+> > V1:https://lore.kernel.org/all/20230615142016.419570-1-zhiguangni01@gma=
+il.com/
+> >
+> > Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
+> > ---
+> >  arch/loongarch/kernel/numa.c | 23 ++++++++---------------
+> >  arch/x86/mm/numa.c           | 26 +++++++-------------------
+> >  include/linux/mm.h           |  1 +
+> >  mm/mm_init.c                 | 20 ++++++++++++++++++++
+> >  4 files changed, 36 insertions(+), 34 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.=
+c
+> > index 708665895b47..0239891e4d19 100644
+> > --- a/arch/loongarch/kernel/numa.c
+> > +++ b/arch/loongarch/kernel/numa.c
+> > @@ -262,25 +262,18 @@ static void __init node_mem_init(unsigned int nod=
+e)
+> >   * Sanity check to catch more bad NUMA configurations (they are amazin=
+gly
+> >   * common).  Make sure the nodes cover all memory.
+> >   */
+> > -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo=
+ *mi)
+> > +static bool __init memblock_validate_numa_coverage(const u64 limit)
+>
+> There is no need to have arch specific memblock_validate_numa_coverage().
+> You can add this function to memblock and call it from NUMA initializatio=
+n
+> instead of numa_meminfo_cover_memory().
 
-What tree are these patches against? They don't look like the net-next
-tree, since net-next has changed the prototype for the fix_mac_speed
-method. Also, it would be good for it to be called
-"loongson_gnet_fix_mac_speed" so that grepping for "fix_mac_speed"
-finds not only the callsite but also the method definitions too.
+Remove implementation of numa_meminfo_cover_memory function?
 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index a98bcd797720..fa4d7b90c5fa 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -1242,7 +1242,8 @@ static int stmmac_phy_setup(struct stmmac_priv *priv)
->  	}
->  
->  	/* Half-Duplex can only work with single queue */
-> -	if (priv->plat->tx_queues_to_use > 1)
-> +	if (priv->plat->tx_queues_to_use > 1 ||
-> +	    FIELD_GET(DWEGMAC_DISABLE_HALF_DUPLEX, priv->plat->dwegmac_flags))
->  		priv->phylink_config.mac_capabilities &=
->  			~(MAC_10HD | MAC_100HD | MAC_1000HD);
-
-There have been a number of shortcomings of stmmac's setup of the
-phylink MAC capabilities recently, and I think it's getting to the
-point where we need someone to bite the bullet and do something
-about it.
-
-Constantly extending conditions such as the above doesn't make a
-lot of sense.
-
-In patch 9, you've added:
-
-+       priv->phylink_config.mac_capabilities = MAC_10 | MAC_100;
-+       if (!FIELD_GET(DWEGMAC_DISABLE_FLOW_CONTROL, priv->plat->dwegmac_flags))
-+               priv->phylink_config.mac_capabilities |=
-+                       MAC_ASYM_PAUSE | MAC_SYM_PAUSE;
-
-The only two capabilities that are unconditional are MAC_10FD and
-MAC_100FD. Everything else is conditional on something.
-
-I'm thinking two things:
-
-1) the stmmac platform implementations should be responsible for
-   initialising priv->phylink_config.mac_capabilities
-
-2) phylink may need a function:
-   phylink_set_max_speed(struct phylink_config *config, u32 max_speed);
-   which does similar to phy_set_max_speed(), but operates on
-   mac_capabilities. This can then be used after calling the platform
-   setup of priv->phylink_config.mac_capabilities to limit the
-   speed. I'm not entirely sure that this is required though. I don't
-   think it's required for dwmac-intel, but would possibly be needed
-   for stmmac_platform since there's a "max-speed" property in DT.
-
-What I'm basically saying is... let's not make the setup of
-mac_capabilities any more convoluted than it already is by adding
-new flags which only exist to set or clear other bits.
-
-Also, let's try to stick to positive logic where possible!
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>
+> The memblock_validate_numa_coverage() will count all the pages without no=
+de
+> ID set and compare to the threshold provided by the architectures.
+>
+> >  {
+> > -       int i;
+> > -       u64 numaram, biosram;
+> > +       u64 lo_pg;
+> >
+> > -       numaram =3D 0;
+> > -       for (i =3D 0; i < mi->nr_blks; i++) {
+> > -               u64 s =3D mi->blk[i].start >> PAGE_SHIFT;
+> > -               u64 e =3D mi->blk[i].end >> PAGE_SHIFT;
+> > +       lo_pg =3D max_pfn - calculate_without_node_pages_in_range();
+> >
+> > -               numaram +=3D e - s;
+> > -               numaram -=3D __absent_pages_in_range(mi->blk[i].nid, s,=
+ e);
+> > -               if ((s64)numaram < 0)
+> > -                       numaram =3D 0;
+> > +       /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
+> > +       if (lo_pg >=3D limit) {
+> > +               pr_err("NUMA: We lost 1m size page.\n");
+> > +               return false;
+> >         }
+> > -       max_pfn =3D max_low_pfn;
+> > -       biosram =3D max_pfn - absent_pages_in_range(0, max_pfn);
+> >
+> > -       BUG_ON((s64)(biosram - numaram) >=3D (1 << (20 - PAGE_SHIFT)));
+> >         return true;
+> >  }
+> >
+> > @@ -428,7 +421,7 @@ int __init init_numa_memory(void)
+> >                 return -EINVAL;
+> >
+> >         init_node_memblock();
+> > -       if (numa_meminfo_cover_memory(&numa_meminfo) =3D=3D false)
+> > +       if (memblock_validate_numa_coverage(SZ_1M) =3D=3D false)
+> >                 return -EINVAL;
+> >
+> >         for_each_node_mask(node, node_possible_map) {
+> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > index 2aadb2019b4f..14feec144675 100644
+> > --- a/arch/x86/mm/numa.c
+> > +++ b/arch/x86/mm/numa.c
+> > @@ -451,30 +451,18 @@ EXPORT_SYMBOL(__node_distance);
+> >   * Sanity check to catch more bad NUMA configurations (they are amazin=
+gly
+> >   * common).  Make sure the nodes cover all memory.
+> >   */
+> > -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo=
+ *mi)
+> > +static bool __init memblock_validate_numa_coverage(const u64 limit)
+> >  {
+> > -       u64 numaram, e820ram;
+> > -       int i;
+> > +       u64 lo_pg;
+> >
+> > -       numaram =3D 0;
+> > -       for (i =3D 0; i < mi->nr_blks; i++) {
+> > -               u64 s =3D mi->blk[i].start >> PAGE_SHIFT;
+> > -               u64 e =3D mi->blk[i].end >> PAGE_SHIFT;
+> > -               numaram +=3D e - s;
+> > -               numaram -=3D __absent_pages_in_range(mi->blk[i].nid, s,=
+ e);
+> > -               if ((s64)numaram < 0)
+> > -                       numaram =3D 0;
+> > -       }
+> > -
+> > -       e820ram =3D max_pfn - absent_pages_in_range(0, max_pfn);
+> > +       lo_pg =3D max_pfn - calculate_without_node_pages_in_range();
+> >
+> >         /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
+> > -       if ((s64)(e820ram - numaram) >=3D (1 << (20 - PAGE_SHIFT))) {
+> > -               printk(KERN_ERR "NUMA: nodes only cover %LuMB of your
+> > %LuMB e820 RAM. Not used.\n",
+> > -                      (numaram << PAGE_SHIFT) >> 20,
+> > -                      (e820ram << PAGE_SHIFT) >> 20);
+> > +       if (lo_pg >=3D limit) {
+> > +               pr_err("NUMA: We lost 1m size page.\n");
+> >                 return false;
+> >         }
+> > +
+> >         return true;
+> >  }
+> >
+> > @@ -583,7 +571,7 @@ static int __init numa_register_memblks(struct
+> > numa_meminfo *mi)
+> >                         return -EINVAL;
+> >                 }
+> >         }
+> > -       if (!numa_meminfo_cover_memory(mi))
+> > +       if (!memblock_validate_numa_coverage(SZ_1M))
+> >                 return -EINVAL;
+> >
+> >         /* Finally register nodes. */
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 0daef3f2f029..b32457ad1ae3 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -3043,6 +3043,7 @@ unsigned long __absent_pages_in_range(int nid,
+> > unsigned long start_pfn,
+> >                                                 unsigned long end_pfn);
+> >  extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+> >                                                 unsigned long end_pfn);
+> > +extern unsigned long calculate_without_node_pages_in_range(void);
+> >  extern void get_pfn_range_for_nid(unsigned int nid,
+> >                         unsigned long *start_pfn, unsigned long *end_pf=
+n);
+> >
+> > diff --git a/mm/mm_init.c b/mm/mm_init.c
+> > index 3ddd18a89b66..13a4883787e3 100644
+> > --- a/mm/mm_init.c
+> > +++ b/mm/mm_init.c
+> > @@ -1132,6 +1132,26 @@ static void __init
+> > adjust_zone_range_for_zone_movable(int nid,
+> >         }
+> >  }
+> >
+> > +/**
+> > + * @start_pfn: The start PFN to start searching for holes
+> > + * @end_pfn: The end PFN to stop searching for holes
+> > + *
+> > + * Return: Return the number of page frames without node assigned
+> > within a range.
+> > + */
+> > +unsigned long __init calculate_without_node_pages_in_range(void)
+> > +{
+> > +       unsigned long num_pages;
+> > +       unsigned long start_pfn, end_pfn;
+> > +       int nid, i;
+> > +
+> > +       for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &=
+nid) {
+> > +               if (nid =3D=3D NUMA_NO_NODE)
+> > +                       num_pages +=3D end_pfn - start_pfn;
+> > +       }
+> > +
+> > +       return num_pages;
+> > +}
+> > +
+> >  /*
+> >   * Return the number of holes in a range on a node. If nid is MAX_NUMN=
+ODES,
+> >   * then all holes in the requested range will be accounted for.
+> > --
+> > 2.25.1
+>
+> --
+> Sincerely yours,
+> Mike.
