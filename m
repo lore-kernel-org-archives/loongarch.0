@@ -1,80 +1,69 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACDFE8C10
-	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 08:54:02 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx7+uod+RkP9waAA--.53752S3;
-	Tue, 22 Aug 2023 16:54:00 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxvM6ld+RkwS5gAA--.37979S4;
-	Tue, 22 Aug 2023 16:54:00 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v4 2/3] LoongArch: Return earlier in die() if notify_die() returns NOTIFY_STOP
-Date: Tue, 22 Aug 2023 16:53:56 +0800
-Message-Id: <1692694437-27077-3-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1692694437-27077-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1692694437-27077-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8CxvM6ld+RkwS5gAA--.37979S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKrWrur1xZF43CryfGF4rZwc_yoWDXrc_Gr
-	yIkw1DurW8Cw15Xw1UCayrWFyqgayjvF1ak3Z2krZ7CF98JrW5Gw4rX3WYkrWqqrZ5uwsx
-	Z3ykJ3yv9Fy2kosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20F808F5A
+	for <loongarch@lists.linux.dev>; Tue, 22 Aug 2023 09:32:13 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.102])
+	by gateway (Coremail) with SMTP id _____8AxCPKbgORk7d4aAA--.54956S3;
+	Tue, 22 Aug 2023 17:32:11 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.102])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxB82ZgORkHzRgAA--.30982S2;
+	Tue, 22 Aug 2023 17:32:10 +0800 (CST)
+From: Yanteng Si <siyanteng@loongson.cn>
+To: acme@kernel.org
+Cc: Yanteng Si <siyanteng@loongson.cn>,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	chenhuacai@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	loongarch@lists.linux.dev
+Subject: [PATCH v1 0/2] tools/perf: Add loongarch cpuinfo and fix build warning
+Date: Tue, 22 Aug 2023 17:32:05 +0800
+Message-Id: <cover.1692694595.git.siyanteng@loongson.cn>
+X-Mailer: git-send-email 2.31.4
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxB82ZgORkHzRgAA--.30982S2
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUPjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4c8EcI0En4kS14v26r126r1DMxAqzxv26xkF7I0En4kS14v26r126r1D
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2nYFDUUUU
 
-After the call to oops_exit(), it should not panic or execute
-the crash kernel if the oops is to be suppressed.
+* LoongArch and riscv don't have tools/arch/xxxxx/include/uapi/asm/mman.h, 
+  let's modify the detection rules.
+* Allow to use cpuinfo on loongarch.
 
-Suggested-by: Maciej W. Rozycki <macro@orcam.me.uk>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/traps.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Yanteng Si (2):
+  perf/trace: Fix mmap_flags for archs use generic mman.h
+  perf/tools: Allow to use cpuinfo on loongarch
 
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index bbdfc5b..7d0ddd2 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -404,6 +404,9 @@ void die(const char *str, struct pt_regs *regs)
- 
- 	oops_exit();
- 
-+	if (ret == NOTIFY_STOP)
-+		return;
-+
- 	if (regs && kexec_should_crash(current))
- 		crash_kexec(regs);
- 
-@@ -413,8 +416,7 @@ void die(const char *str, struct pt_regs *regs)
- 	if (panic_on_oops)
- 		panic("Fatal exception");
- 
--	if (ret != NOTIFY_STOP)
--		make_task_dead(SIGSEGV);
-+	make_task_dead(SIGSEGV);
- }
- 
- static inline void setup_vint_size(unsigned int size)
+ tools/perf/trace/beauty/mmap_flags.sh | 2 +-
+ tools/perf/util/header.c              | 2 ++
+ tools/perf/util/svghelper.c           | 7 ++++++-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
+
 -- 
-2.1.0
+2.31.4
 
