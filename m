@@ -1,50 +1,74 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267E6BA48
-	for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 12:04:54 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4RW4dw5RM5z4x5q;
-	Wed, 23 Aug 2023 22:04:52 +1000 (AEST)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: linux-kernel@vger.kernel.org, Trevor Woerner <twoerner@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <20230817115017.35663-1-twoerner@gmail.com>
-References: <20230817115017.35663-1-twoerner@gmail.com>
-Subject: Re: (subset) [PATCH v3 0/4] general defconfig cleanups
-Message-Id: <169279175571.797584.3366844958085026479.b4-ty@ellerman.id.au>
-Date: Wed, 23 Aug 2023 21:55:55 +1000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F9DC131
+	for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 13:54:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E991C433C8;
+	Wed, 23 Aug 2023 13:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692798870;
+	bh=KMu12C5LLeqze6dwa+CbBzfeHdiOagjjDvFIirem8DU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IuaW65Imdj+Z4gUImwBwZx+/G83UKug87f3mbHsr/QT5lTOyG04HIr7MdFVFuRrCT
+	 7EDVvQiCJV1hdfwj3G9LFl4Q1aOcFAgEHgqQDqvhpAyuchzmn4+cCcfHoUFXeLh1V8
+	 t4bt3Fpcdhjcil0ARuUlN/r86yMvSzEDUvACUjvyfOKPw4jFm0np5n9VwgFmiZ35vi
+	 H4COby2+8kjwweDcIMMpcL4wYpxucsxA61zsnknzqTcaLQ3mZjmhXU49mR5qO0NWq8
+	 1CqqjQ53PjUFT89RXdYGmAzxbJtQnykyQIGGTb0oLo+95g57w385auU+kBkuoTH3lG
+	 GlDAkQsy8x6UQ==
+Date: Wed, 23 Aug 2023 14:54:24 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Hongliang Wang <wanghongliang@loongson.cn>
+Subject: Re: [PATCH v4 1/7] dt-bindings: loongarch: Add CPU bindings for
+ LoongArch
+Message-ID: <20230823-brunch-splendor-83b5989e67a1@spud>
+References: <cover.1692783907.git.zhoubinbin@loongson.cn>
+ <702d1fb6b14eac7ffdc7085ee3a4a1b7ee35a1cb.1692783907.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hLRT4P0+1uNkrdn7"
+Content-Disposition: inline
+In-Reply-To: <702d1fb6b14eac7ffdc7085ee3a4a1b7ee35a1cb.1692783907.git.zhoubinbin@loongson.cn>
 
-On Thu, 17 Aug 2023 07:50:10 -0400, Trevor Woerner wrote:
-> Drop config options from defconfigs whose code has been removed.
-> 
-> v3:
-> While reorganizing the patches, I put the wrong commit message with the
-> CONFIG_IP_NF_TARGET_CLUSTERIP option.
-> 
-> v2:
-> Generate arch-specific patches. In v1 I organized the patches by
-> CONFIG_ option which caused some of the patches to cross architectural
-> lines. This requires cross-arch consensus before they can be applied.
-> Therefore organize the changes by architecture so each one can apply them
-> independently (or not).
-> 
-> [...]
 
-Patch 4 applied to powerpc/next.
+--hLRT4P0+1uNkrdn7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[4/4] arch/powerpc/configs/*_defconfig cleanup
-      https://git.kernel.org/powerpc/c/455d3d38ef9d5f69c504d1af5fa2359563ea4148
+On Wed, Aug 23, 2023 at 05:54:49PM +0800, Binbin Zhou wrote:
+> Add the available CPUs in LoongArch binding with DT schema format using
+> json-schema.
+>=20
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 
-cheers
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks,
+Conor.
+
+--hLRT4P0+1uNkrdn7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZOYPkAAKCRB4tDGHoIJi
+0oPvAQCbpwul1uwIsptbT+ZN12lCnmFqN7OnndyumhBANOI+iwEAz8zi9csV5rOr
+Kof3W6h8539CEU1a6/MEKNgKk56StA0=
+=aTnp
+-----END PGP SIGNATURE-----
+
+--hLRT4P0+1uNkrdn7--
