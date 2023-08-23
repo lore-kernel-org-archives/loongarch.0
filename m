@@ -1,241 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F3EA4E
-	for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 14:36:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFEE6C433C9;
-	Wed, 23 Aug 2023 14:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A06156E6
+	for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 19:42:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B9C6C433C8;
+	Wed, 23 Aug 2023 19:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692801387;
-	bh=eRT5wpPzE2dG8Htf1U5WjVNZWKMJy4q5xPRnCCdw3jg=;
+	s=k20201202; t=1692819772;
+	bh=g4DHsYkZGlPpM5rQIQD5TCWHs/5iMzUtmQt0dwpuYqU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qZLsHVOkbIOn1hjfAmB+/RmDZAks8n7X+JQRAlO5qAuHYIP46RoFCPzYnCoKGUCnp
-	 Z2eOolqYNWZV2PQW9dxB5jwJjrxvWjHMjcWQtBg6xoG5DnSZS3dLDyUW24EKCuekIt
-	 rE3ZlfKpkUcQWNZjx9XGhO1bcpy+0l32Ltl0ool76uPBNsu1p0FqWRuwQ0BbNthHo1
-	 2HKVGbgx5xwA/uU2bQh39yGp62AvxtIPtjuNc/t8C0INMsDxg9IpMOo37BomlTdeKu
-	 U0m1dojN3+E1f6F0fzWD6pVPmj4x8qVJoBDNEZ9SlNduy3drMmWNFVfpjWB/fNfVkk
-	 DkmwDwJ584Ajw==
-Date: Wed, 23 Aug 2023 15:35:56 +0100
-From: Mike Rapoport <rppt@kernel.org>
-To: Liam Ni <zhiguangni01@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, zhoubinbin@loongson.cn,
-	chenfeiyang@loongson.cn, jiaxun.yang@flygoat.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org,
-	luto@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-	kernel@xen0n.name, chenhuacai@kernel.org
-Subject: Re: [RESEND PATCH V3] NUMA:Improve the efficiency of calculating
- pages loss
-Message-ID: <20230823143556.GA188089@kernel.org>
-References: <CACZJ9cUXiWxDb6hF4JFhWe7Np82k6LopVQ+_AoGFOccN4kjJqA@mail.gmail.com>
- <20230814155911.GN2607694@kernel.org>
- <CACZJ9cU5g5wD=qEg7tbr-Gk4EADDORSG-=U1_c7nq=fO9XhJ0Q@mail.gmail.com>
+	b=BTjCXBULpIQHKfnAn6WBFXrjhPONY5ODxQzl/v3FpfBm8fUaTO5Hx+n34Js3Y6PVk
+	 pezz/tOWeWXjkpBjZgqShIVxJ+RtqE5Vz1/YrbEcWwJuPAQbRVO6MWQdb49ZUTklKR
+	 vIDI+KWVlVJMo0IvCjKrFN5yVzxluSPSY3uPFz909en2WNk5wGHMb+QS9xvm4R4YRD
+	 PQzchCZeoNp8WY2kpqDxHMKBtkmHpsKH74rL6Njf9+tKDPxwM6jCbJoigD9Be5mryL
+	 k0E0fePx9xyb3hafAa6RapunJm9JKhcDmjcSPQcRnyGYNslwqIIOBcqXQwrrdmgPzq
+	 vFI0tUAvhteFw==
+Received: (nullmailer pid 2772251 invoked by uid 1000);
+	Wed, 23 Aug 2023 19:42:50 -0000
+Date: Wed, 23 Aug 2023 14:42:50 -0500
+From: Rob Herring <robh@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>, Hongliang Wang <wanghongliang@loongson.cn>
+Subject: Re: [PATCH v4 3/7] LoongArch: Allow device trees to be built into
+ the kernel
+Message-ID: <20230823194250.GA2768550-robh@kernel.org>
+References: <cover.1692783907.git.zhoubinbin@loongson.cn>
+ <3e69929008c8190cff331941dd4d34f748e5e44a.1692783907.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACZJ9cU5g5wD=qEg7tbr-Gk4EADDORSG-=U1_c7nq=fO9XhJ0Q@mail.gmail.com>
+In-Reply-To: <3e69929008c8190cff331941dd4d34f748e5e44a.1692783907.git.zhoubinbin@loongson.cn>
 
-On Tue, Aug 22, 2023 at 07:49:05PM +0800, Liam Ni wrote:
-> On Tue, 15 Aug 2023 at 00:00, Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > On Fri, Aug 04, 2023 at 11:32:51PM +0800, Liam Ni wrote:
-> > > Optimize the way of calculating missing pages.
-> > >
-> > > In the previous implementation, We calculate missing pages as follows:
-> > > 1. calculate numaram by traverse all the numa_meminfo's and for each of
-> > > them traverse all the regions in memblock.memory to prepare for
-> > > counting missing pages.
-> > >
-> > > 2. Traverse all the regions in memblock.memory again to get e820ram.
-> > >
-> > > 3. the missing page is (e820ram - numaram )
-> > >
-> > > But,it's enough to count memory in ‘memblock.memory’ that doesn't have
-> > > the node assigned.
-> > >
-> > > V2:https://lore.kernel.org/all/20230619075315.49114-1-zhiguangni01@gmail.com/
-> > > V1:https://lore.kernel.org/all/20230615142016.419570-1-zhiguangni01@gmail.com/
-> > >
-> > > Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
-> > > ---
-> > >  arch/loongarch/kernel/numa.c | 23 ++++++++---------------
-> > >  arch/x86/mm/numa.c           | 26 +++++++-------------------
-> > >  include/linux/mm.h           |  1 +
-> > >  mm/mm_init.c                 | 20 ++++++++++++++++++++
-> > >  4 files changed, 36 insertions(+), 34 deletions(-)
-> > >
-> > > diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-> > > index 708665895b47..0239891e4d19 100644
-> > > --- a/arch/loongarch/kernel/numa.c
-> > > +++ b/arch/loongarch/kernel/numa.c
-> > > @@ -262,25 +262,18 @@ static void __init node_mem_init(unsigned int node)
-> > >   * Sanity check to catch more bad NUMA configurations (they are amazingly
-> > >   * common).  Make sure the nodes cover all memory.
-> > >   */
-> > > -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
-> > > +static bool __init memblock_validate_numa_coverage(const u64 limit)
-> >
-> > There is no need to have arch specific memblock_validate_numa_coverage().
-> > You can add this function to memblock and call it from NUMA initialization
-> > instead of numa_meminfo_cover_memory().
-> 
-> Remove implementation of numa_meminfo_cover_memory function?
- 
-Yes, that's the idea.
+On Wed, Aug 23, 2023 at 05:54:51PM +0800, Binbin Zhou wrote:
+> Some systems do not provide a useful device tree to the kernel at boot
+> time. Let's keep a device tree table in the kernel, keyed by the dts
+> filename, containing the relevant DTBs.
 
-> > The memblock_validate_numa_coverage() will count all the pages without node
-> > ID set and compare to the threshold provided by the architectures.
-> >
-> > >  {
-> > > -       int i;
-> > > -       u64 numaram, biosram;
-> > > +       u64 lo_pg;
-> > >
-> > > -       numaram = 0;
-> > > -       for (i = 0; i < mi->nr_blks; i++) {
-> > > -               u64 s = mi->blk[i].start >> PAGE_SHIFT;
-> > > -               u64 e = mi->blk[i].end >> PAGE_SHIFT;
-> > > +       lo_pg = max_pfn - calculate_without_node_pages_in_range();
-> > >
-> > > -               numaram += e - s;
-> > > -               numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
-> > > -               if ((s64)numaram < 0)
-> > > -                       numaram = 0;
-> > > +       /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
-> > > +       if (lo_pg >= limit) {
-> > > +               pr_err("NUMA: We lost 1m size page.\n");
-> > > +               return false;
-> > >         }
-> > > -       max_pfn = max_low_pfn;
-> > > -       biosram = max_pfn - absent_pages_in_range(0, max_pfn);
-> > >
-> > > -       BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
-> > >         return true;
-> > >  }
-> > >
-> > > @@ -428,7 +421,7 @@ int __init init_numa_memory(void)
-> > >                 return -EINVAL;
-> > >
-> > >         init_node_memblock();
-> > > -       if (numa_meminfo_cover_memory(&numa_meminfo) == false)
-> > > +       if (memblock_validate_numa_coverage(SZ_1M) == false)
-> > >                 return -EINVAL;
-> > >
-> > >         for_each_node_mask(node, node_possible_map) {
-> > > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> > > index 2aadb2019b4f..14feec144675 100644
-> > > --- a/arch/x86/mm/numa.c
-> > > +++ b/arch/x86/mm/numa.c
-> > > @@ -451,30 +451,18 @@ EXPORT_SYMBOL(__node_distance);
-> > >   * Sanity check to catch more bad NUMA configurations (they are amazingly
-> > >   * common).  Make sure the nodes cover all memory.
-> > >   */
-> > > -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
-> > > +static bool __init memblock_validate_numa_coverage(const u64 limit)
-> > >  {
-> > > -       u64 numaram, e820ram;
-> > > -       int i;
-> > > +       u64 lo_pg;
-> > >
-> > > -       numaram = 0;
-> > > -       for (i = 0; i < mi->nr_blks; i++) {
-> > > -               u64 s = mi->blk[i].start >> PAGE_SHIFT;
-> > > -               u64 e = mi->blk[i].end >> PAGE_SHIFT;
-> > > -               numaram += e - s;
-> > > -               numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
-> > > -               if ((s64)numaram < 0)
-> > > -                       numaram = 0;
-> > > -       }
-> > > -
-> > > -       e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
-> > > +       lo_pg = max_pfn - calculate_without_node_pages_in_range();
-> > >
-> > >         /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
-> > > -       if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
-> > > -               printk(KERN_ERR "NUMA: nodes only cover %LuMB of your
-> > > %LuMB e820 RAM. Not used.\n",
-> > > -                      (numaram << PAGE_SHIFT) >> 20,
-> > > -                      (e820ram << PAGE_SHIFT) >> 20);
-> > > +       if (lo_pg >= limit) {
-> > > +               pr_err("NUMA: We lost 1m size page.\n");
-> > >                 return false;
-> > >         }
-> > > +
-> > >         return true;
-> > >  }
-> > >
-> > > @@ -583,7 +571,7 @@ static int __init numa_register_memblks(struct
-> > > numa_meminfo *mi)
-> > >                         return -EINVAL;
-> > >                 }
-> > >         }
-> > > -       if (!numa_meminfo_cover_memory(mi))
-> > > +       if (!memblock_validate_numa_coverage(SZ_1M))
-> > >                 return -EINVAL;
-> > >
-> > >         /* Finally register nodes. */
-> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > > index 0daef3f2f029..b32457ad1ae3 100644
-> > > --- a/include/linux/mm.h
-> > > +++ b/include/linux/mm.h
-> > > @@ -3043,6 +3043,7 @@ unsigned long __absent_pages_in_range(int nid,
-> > > unsigned long start_pfn,
-> > >                                                 unsigned long end_pfn);
-> > >  extern unsigned long absent_pages_in_range(unsigned long start_pfn,
-> > >                                                 unsigned long end_pfn);
-> > > +extern unsigned long calculate_without_node_pages_in_range(void);
-> > >  extern void get_pfn_range_for_nid(unsigned int nid,
-> > >                         unsigned long *start_pfn, unsigned long *end_pfn);
-> > >
-> > > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> > > index 3ddd18a89b66..13a4883787e3 100644
-> > > --- a/mm/mm_init.c
-> > > +++ b/mm/mm_init.c
-> > > @@ -1132,6 +1132,26 @@ static void __init
-> > > adjust_zone_range_for_zone_movable(int nid,
-> > >         }
-> > >  }
-> > >
-> > > +/**
-> > > + * @start_pfn: The start PFN to start searching for holes
-> > > + * @end_pfn: The end PFN to stop searching for holes
-> > > + *
-> > > + * Return: Return the number of page frames without node assigned
-> > > within a range.
-> > > + */
-> > > +unsigned long __init calculate_without_node_pages_in_range(void)
-> > > +{
-> > > +       unsigned long num_pages;
-> > > +       unsigned long start_pfn, end_pfn;
-> > > +       int nid, i;
-> > > +
-> > > +       for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
-> > > +               if (nid == NUMA_NO_NODE)
-> > > +                       num_pages += end_pfn - start_pfn;
-> > > +       }
-> > > +
-> > > +       return num_pages;
-> > > +}
-> > > +
-> > >  /*
-> > >   * Return the number of holes in a range on a node. If nid is MAX_NUMNODES,
-> > >   * then all holes in the requested range will be accounted for.
-> > > --
-> > > 2.25.1
-> >
-> > --
-> > Sincerely yours,
-> > Mike.
+Support for this in other arches was added to support legacy bootloaders 
+with no DT support. You should not need this for a new architecture. Fix 
+the bootloader to provide a useful DT.
 
--- 
-Sincerely yours,
-Mike.
+Rob
