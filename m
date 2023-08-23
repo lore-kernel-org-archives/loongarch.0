@@ -1,130 +1,104 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE959AD2A
-	for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 09:55:16 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8AxDOuC1+Vksi4bAA--.50164S3;
-	Wed, 23 Aug 2023 17:55:14 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLCN81+VkOz1hAA--.21192S5;
-	Wed, 23 Aug 2023 17:55:13 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Hongliang Wang <wanghongliang@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v4 7/7] LoongArch: Parsing CPU-related information from DTS
-Date: Wed, 23 Aug 2023 17:55:06 +0800
-Message-Id: <d6d3695e7bb942c93db03f95a78a519a6a670a96.1692783907.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1692783907.git.zhoubinbin@loongson.cn>
-References: <cover.1692783907.git.zhoubinbin@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BA5BA34
+	for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 11:36:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D3AC433C7;
+	Wed, 23 Aug 2023 11:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692790611;
+	bh=o8vy5BJWPXwe5Sc85tpSC7movFesjnPX1nkI7u08f4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dRMYYoyjlauIdmlFOtqgAgHEYpVyKhSaIG0wbfmOoEesPPa0Iqlksw5ktSZIoUiql
+	 tT+JQu6IIiG+2KF9x031McSW+wOXRbXMC6oKT9z95Nl19dp1tZbF+38+IWXOKgtCXl
+	 OWc25vNL2gLATzr5V8B6L5zsEDx56CgzfvImp4Zo/9Qx1cpnbGBcsdJgaGN2oUt7LZ
+	 fX4Geo7smizUI10ROOOdmgYLjSjDnMTaVEOjjLrxQ3BEyv8zBbnKIOxsnawNVz8oUF
+	 IB+2MjqP1/j3KawHmKRiwYdsng2Z666p0gd6usdBlKxYL/S/DpcwOtELkGamnCAce3
+	 6RX0Z0bQIeNbA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 1191040722; Wed, 23 Aug 2023 08:36:49 -0300 (-03)
+Date: Wed, 23 Aug 2023 08:36:49 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 1/2] perf/trace: Fix mmap_flags for archs use generic
+ mman.h
+Message-ID: <ZOXvUbQL67bdWfNz@kernel.org>
+References: <cover.1692694595.git.siyanteng@loongson.cn>
+ <03ddc1c0e01518df63aac88e561cd0ec3c1e0028.1692694595.git.siyanteng@loongson.cn>
+ <ZOT4Tuc6JGrbDqFW@kernel.org>
+ <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxLCN81+VkOz1hAA--.21192S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AryrtFyrurW8XrykGFykZwc_yoW8ZF48pF
-	Z7CFWrKrZ5CFn3G3Wftryjyryavrs5Ga17XFW29FWUCFnxKrnYqr4v9rnrtF18ZFWrWa4r
-	XFWrGFWqgF4UArXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jsSdgUUUUU=
+In-Reply-To: <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
+X-Url: http://acmel.wordpress.com
 
-Generally, we can get cpu-related information, such as model name, from
-/proc/cpuinfo. for DT-based systems, we need to parse the relevant
-information from DTS.
+Em Wed, Aug 23, 2023 at 03:11:01PM +0800, Yanteng Si escreveu:
+> 
+> 在 2023/8/23 02:02, Arnaldo Carvalho de Melo 写道:
+> > Em Tue, Aug 22, 2023 at 05:32:06PM +0800, Yanteng Si escreveu:
+> > > Silence this warning:
+> > > 
+> > > grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
+> > > No such file or directory
+> > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> > > ---
+> > >   tools/perf/trace/beauty/mmap_flags.sh | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+> > > index 3022597c8c17..d035b29fc5ec 100755
+> > > --- a/tools/perf/trace/beauty/mmap_flags.sh
+> > > +++ b/tools/perf/trace/beauty/mmap_flags.sh
+> > > @@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+> > >   printf "static const char *mmap_flags[] = {\n"
+> > >   regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+> > > -grep -E -q $regex ${arch_mman} && \
+> > > +([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
+> > >   (grep -E $regex ${arch_mman} | \
+> > >   	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+> > >   	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
+> > Humm, wouldn't this be simpler without that extra subshell? Like this:
+> > 
+> > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+> > index 3022597c8c178f21..0ac1886a83b5aceb 100755
+> > --- a/tools/perf/trace/beauty/mmap_flags.sh
+> > +++ b/tools/perf/trace/beauty/mmap_flags.sh
+> > @@ -19,6 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+> >   printf "static const char *mmap_flags[] = {\n"
+> >   regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+> > +test -f ${arch_mman} && \
+> 
+> The following lines have already used the [ ! -f ${arch_mman}, so let's stay
+> consistent？
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
----
- arch/loongarch/kernel/env.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+Well, we can make it consistent by simplifying the other places where
+the long, equivalent test is being done, which I think is the way to go,
+agreed?
 
-diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-index 6b3bfb0092e6..0191fe20b535 100644
---- a/arch/loongarch/kernel/env.c
-+++ b/arch/loongarch/kernel/env.c
-@@ -5,13 +5,16 @@
-  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-  */
- #include <linux/acpi.h>
-+#include <linux/clk.h>
- #include <linux/efi.h>
- #include <linux/export.h>
- #include <linux/memblock.h>
-+#include <linux/of_clk.h>
- #include <asm/early_ioremap.h>
- #include <asm/bootinfo.h>
- #include <asm/loongson.h>
- #include <asm/setup.h>
-+#include <asm/time.h>
+- Arnaldo
  
- u64 efi_system_table;
- struct loongson_system_configuration loongson_sysconf;
-@@ -34,9 +37,39 @@ void __init init_environ(void)
- 	efi_system_table = fw_arg2;
- }
- 
-+static int __init fdt_cpu_clk_init(void)
-+{
-+	struct clk *clk;
-+	struct device_node *np;
-+
-+	np = of_get_cpu_node(0, NULL);
-+	if (!np)
-+		return -ENODEV;
-+
-+	clk = of_clk_get(np, 0);
-+	if (IS_ERR(clk))
-+		return -ENODEV;
-+
-+	cpu_clock_freq = clk_get_rate(clk);
-+	clk_put(clk);
-+
-+	return 0;
-+}
-+late_initcall(fdt_cpu_clk_init);
-+
- static int __init init_cpu_fullname(void)
- {
- 	int cpu;
-+	char *prop;
-+	struct device_node *root;
-+
-+	/* Parsing cpuname from DTS model property */
-+	root = of_find_node_by_path("/");
-+	if (root) {
-+		of_property_read_string(root, "model", (const char **)&prop);
-+		if (prop)
-+			loongson_sysconf.cpuname = strsep(&prop, " ");
-+	}
- 
- 	if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname, "Loongson", 8)) {
- 		for (cpu = 0; cpu < NR_CPUS; cpu++)
+> 
+> Thanks,
+> 
+> Yanteng
+> 
+> >   grep -E -q $regex ${arch_mman} && \
+> >   (grep -E $regex ${arch_mman} | \
+> >   	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+> 
+
 -- 
-2.39.3
 
+- Arnaldo
