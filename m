@@ -1,119 +1,48 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 720A520EE3
-	for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 07:11:47 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8DxBfExseVkriIbAA--.55617S3;
-	Wed, 23 Aug 2023 15:11:45 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxJ80vseVk7BphAA--.38222S3;
-	Wed, 23 Aug 2023 15:11:45 +0800 (CST)
-Message-ID: <87932484-40c3-429c-b3be-6c28313dc3bd@loongson.cn>
-Date: Wed, 23 Aug 2023 15:11:43 +0800
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63EDBA934
+	for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 08:22:59 +0000 (UTC)
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1qYiCO-00071b-00; Wed, 23 Aug 2023 09:22:40 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id E31D4C0234; Wed, 23 Aug 2023 09:22:24 +0200 (CEST)
+Date: Wed, 23 Aug 2023 09:22:24 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Trevor Woerner <twoerner@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v3 3/4] arch/mips/configs/*_defconfig cleanup
+Message-ID: <ZOWzsAHxuHQLGsEa@alpha.franken.de>
+References: <20230817115017.35663-1-twoerner@gmail.com>
+ <20230817115017.35663-4-twoerner@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] perf/tools: Allow to use cpuinfo on loongarch
-Content-Language: en-US
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, chenhuacai@kernel.org,
- linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev
-References: <cover.1692694595.git.siyanteng@loongson.cn>
- <fbb71a04bf3b19b1d1b239e464c1acbcc572e9a8.1692694595.git.siyanteng@loongson.cn>
- <ZOT1c/MRwkaPaqf1@kernel.org>
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <ZOT1c/MRwkaPaqf1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxJ80vseVk7BphAA--.38222S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tw43AFW7Ar43Gw1UWF1UXFc_yoW8CF13pr
-	WkCayUta1UGF90kasavwn0qF43Xrs2qFy3Gr4DKw15Zrn2kr17KFyxXrs8KFW7Z34qgw1I
-	vr1DWr1qvFW8trXCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8XTm3UUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230817115017.35663-4-twoerner@gmail.com>
 
+On Thu, Aug 17, 2023 at 07:50:13AM -0400, Trevor Woerner wrote:
+> Drop CONFIG_IP_NF_TARGET_CLUSTERIP from any remaining mips defconfigs as it
+> was removed in commit 9db5d918e2c0 ("netfilter: ip_tables: remove clusterip
+> target").
+> 
+> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+> ---
+>  arch/mips/configs/ip22_defconfig        | 1 -
+>  arch/mips/configs/malta_defconfig       | 1 -
+>  arch/mips/configs/malta_kvm_defconfig   | 1 -
+>  arch/mips/configs/maltaup_xpa_defconfig | 1 -
+>  arch/mips/configs/rm200_defconfig       | 1 -
+>  5 files changed, 5 deletions(-)
 
-在 2023/8/23 01:50, Arnaldo Carvalho de Melo 写道:
-> Em Tue, Aug 22, 2023 at 05:32:07PM +0800, Yanteng Si escreveu:
->> Define these macros so that the CPU name can be displayed
->> when running perf report and perf timechart.
->>
->> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
->> ---
->>   tools/perf/util/header.c    | 2 ++
->>   tools/perf/util/svghelper.c | 7 ++++++-
->>   2 files changed, 8 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
->> index 52fbf526fe74..c6e19192bd28 100644
->> --- a/tools/perf/util/header.c
->> +++ b/tools/perf/util/header.c
->> @@ -456,6 +456,8 @@ static int write_cpudesc(struct feat_fd *ff,
->>   #define CPUINFO_PROC	{ "Processor", }
->>   #elif defined(__xtensa__)
->>   #define CPUINFO_PROC	{ "core ID", }
->> +#elif defined(__loongarch__)
->> +#define CPUINFO_PROC	{ "Model Name", }
->>   #else
->>   #define CPUINFO_PROC	{ "model name", }
->>   #endif
->> diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
->> index 5c62d3118c41..0259715ad6a6 100644
->> --- a/tools/perf/util/svghelper.c
->> +++ b/tools/perf/util/svghelper.c
->> @@ -322,6 +322,11 @@ void svg_waiting(int Yslot, int cpu, u64 start, u64 end, const char *backtrace)
->>   
->>   static char *cpu_model(void)
->>   {
->> +#if defined(__loongarch__)
->> +#define CPU_TYPE	"Model Name"
->> +#else
->> +#define CPU_TYPE	"model name"
->> +#endif
->>   	static char cpu_m[255];
->>   	char buf[256];
->>   	FILE *file;
->> @@ -331,7 +336,7 @@ static char *cpu_model(void)
->>   	file = fopen("/proc/cpuinfo", "r");
->>   	if (file) {
->>   		while (fgets(buf, 255, file)) {
->> -			if (strstr(buf, "model name")) {
->> +			if (strstr(buf, CPU_TYPE)) {
-> Isn't it better to just switch to strcasestr()?
+applied to mips-next.
 
-OK!
+Thomas.
 
-
-Thanks,
-
-Yanteng
-
->
-> - Arnaldo
->
->>   				strlcpy(cpu_m, &buf[13], 255);
->>   				break;
->>   			}
->> -- 
->> 2.31.4
->>
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
