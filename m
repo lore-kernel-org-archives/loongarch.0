@@ -1,146 +1,100 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9617CA62
-	for <loongarch@lists.linux.dev>; Thu, 24 Aug 2023 08:33:58 +0000 (UTC)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37O8VTbO001260;
-	Thu, 24 Aug 2023 08:33:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=KOHfq7yE34oHMF/DBtgsNugut3nvnkYP0hCTO74X1m8=;
- b=FT/XVGxnbV1yJLUcavz1X/DkKtrpIYKPgr7jA1kh6yoIjCakGbzElNg/24Nfr13mm730
- SrhuxUerPl7q/HjUfJZ0Ej4u4HAY/sWOC/NdESVVU9VmqzuIyh259ikz04aj2G65g47g
- HHhGvubKmqQKVegkU2xZLlKLmFGNuSJyhlVtUWOJiR03Z6SpMyRRfFkNl+5G1mNyUqRJ
- FEUGKLtnH7mhnpL7eYHKA7Kv7pp3XTlIppw48EJbMU7T5WHUp6uMTg6i04y0Oo9qEeAz
- O8n6orMoY88sg/d0Q0WE2Xh61CpMTrcID83QRdE2XgtJDBWrp+IkOIYYmVju1tZNRHiE Sg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sp3rwr0yc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Aug 2023 08:33:18 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37O8WAYI003577;
-	Thu, 24 Aug 2023 08:33:18 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sp3rwr0y3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Aug 2023 08:33:18 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37O6ewPB026143;
-	Thu, 24 Aug 2023 08:33:17 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3snqgt4ycw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Aug 2023 08:33:17 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37O8XEQm41288298
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Aug 2023 08:33:14 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DC7A42005A;
-	Thu, 24 Aug 2023 08:33:13 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 70D4620075;
-	Thu, 24 Aug 2023 08:32:27 +0000 (GMT)
-Received: from osiris (unknown [9.171.81.161])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 24 Aug 2023 08:32:27 +0000 (GMT)
-Date: Thu, 24 Aug 2023 10:32:25 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        surenb@google.com, willy@infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH rfc v2 04/10] s390: mm: use try_vma_locked_page_fault()
-Message-ID: <20230824083225.10112-A-hca@linux.ibm.com>
-References: <20230821123056.2109942-1-wangkefeng.wang@huawei.com>
- <20230821123056.2109942-5-wangkefeng.wang@huawei.com>
- <ZOcR4Z1WnCy1vl9T@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4B5288E6
+	for <loongarch@lists.linux.dev>; Thu, 24 Aug 2023 13:33:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD63C433C8;
+	Thu, 24 Aug 2023 13:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692883992;
+	bh=FP1acNfQmTZ7NjY1vwzgDhNQP+i8/znogMYIqAux0QI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N28J/j+qPJ6Zpb5huvQ02SCdVbPVk3KPQByBmN9CpkwVMC3pswzrX1jtmAiWw0OEB
+	 +uH1FN3d19tET3mZ/EcaJh4GTnKjz5Bw75Moog168RUXsz+cORtEi6lQZTpdmoConE
+	 O9FondeKCoPaghibjNiu87RCElctMbqIhA7C1D8r4l1cgvIZWEzZujefyjQQYUsYG2
+	 E853ew7wUIBp1E797xfQ1bU+UIhiGX6T6UaAtm+0FsdBHk3E95w/363xyOQFV2K0+A
+	 ptWOCEdTHQHRs9bX7BQYJEoswFxO8r5Hi8rONN+a1hPdDn/enHXlGetBvaviVzvd/j
+	 dtaLLht87KFVA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 069DF40722; Thu, 24 Aug 2023 10:33:09 -0300 (-03)
+Date: Thu, 24 Aug 2023 10:33:09 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 1/2] perf/trace: Fix mmap_flags for archs use generic
+ mman.h
+Message-ID: <ZOdcFUgZ7W6QEjRM@kernel.org>
+References: <cover.1692694595.git.siyanteng@loongson.cn>
+ <03ddc1c0e01518df63aac88e561cd0ec3c1e0028.1692694595.git.siyanteng@loongson.cn>
+ <ZOT4Tuc6JGrbDqFW@kernel.org>
+ <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
+ <ZOXvUbQL67bdWfNz@kernel.org>
+ <51632871-2e84-4c53-b4c0-647aea5c49dc@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZOcR4Z1WnCy1vl9T@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: _ptMvc4VMCcBQrtNKVMyLJnbnArvRQhH
-X-Proofpoint-GUID: MMqKuJFCH130oxqzSHmDVw6sZHdPY5i-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-24_05,2023-08-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=517 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 impostorscore=0 malwarescore=0 clxscore=1011 spamscore=0
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2308240065
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <51632871-2e84-4c53-b4c0-647aea5c49dc@loongson.cn>
+X-Url: http://acmel.wordpress.com
 
-On Thu, Aug 24, 2023 at 10:16:33AM +0200, Alexander Gordeev wrote:
-> On Mon, Aug 21, 2023 at 08:30:50PM +0800, Kefeng Wang wrote:
-> > Use new try_vma_locked_page_fault() helper to simplify code.
-> > No functional change intended.
-> > 
-> > Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> > ---
-> >  arch/s390/mm/fault.c | 66 ++++++++++++++++++--------------------------
-> >  1 file changed, 27 insertions(+), 39 deletions(-)
-...
-> > -	fault = handle_mm_fault(vma, address, flags | FAULT_FLAG_VMA_LOCK, regs);
-> > -	if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
-> > -		vma_end_read(vma);
-> > -	if (!(fault & VM_FAULT_RETRY)) {
-> > -		count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-> > -		if (likely(!(fault & VM_FAULT_ERROR)))
-> > -			fault = 0;
+Em Thu, Aug 24, 2023 at 10:22:57AM +0800, Yanteng Si escreveu:
 > 
-> This fault fixup is removed in the new version.
-...
-
-> > +		vmf.vm_flags = VM_WRITE;
-> > +	if (vmf.vm_flags == VM_WRITE)
-> > +		vmf.flags |= FAULT_FLAG_WRITE;
-> > +
-> > +	fault = try_vma_locked_page_fault(&vmf);
-> > +	if (fault == VM_FAULT_NONE)
-> > +		goto lock_mm;
+> 在 2023/8/23 19:36, Arnaldo Carvalho de Melo 写道:
+> > Em Wed, Aug 23, 2023 at 03:11:01PM +0800, Yanteng Si escreveu:
+> > > 在 2023/8/23 02:02, Arnaldo Carvalho de Melo 写道:
+> > > > Em Tue, Aug 22, 2023 at 05:32:06PM +0800, Yanteng Si escreveu:
+> > > > > Silence this warning:
+> > > > > 
+> > > > > grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
+> > > > > No such file or directory
+> > > > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> > > > > ---
+> > > > >    tools/perf/trace/beauty/mmap_flags.sh | 2 +-
+> > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+> > > > > index 3022597c8c17..d035b29fc5ec 100755
+> > > > > --- a/tools/perf/trace/beauty/mmap_flags.sh
+> > > > > +++ b/tools/perf/trace/beauty/mmap_flags.sh
+> > > > > @@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+> > > > >    printf "static const char *mmap_flags[] = {\n"
+> > > > >    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+> > > > > -grep -E -q $regex ${arch_mman} && \
+> > > > > +([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
+> > > > >    (grep -E $regex ${arch_mman} | \
+> > > > >    	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+> > > > >    	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
+> > > > Humm, wouldn't this be simpler without that extra subshell? Like this:
+> > > > 
+> > > > diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+> > > > index 3022597c8c178f21..0ac1886a83b5aceb 100755
+> > > > --- a/tools/perf/trace/beauty/mmap_flags.sh
+> > > > +++ b/tools/perf/trace/beauty/mmap_flags.sh
+> > > > @@ -19,6 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+> > > >    printf "static const char *mmap_flags[] = {\n"
+> > > >    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+> > > > +test -f ${arch_mman} && \
+> > > The following lines have already used the [ ! -f ${arch_mman}, so let's stay
+> > > consistent？
+> > Well, we can make it consistent by simplifying the other places where
+> > the long, equivalent test is being done, which I think is the way to go,
+> > agreed?
 > 
-> Because VM_FAULT_NONE is set to 0 it gets confused with
-> the success code of 0 returned by a fault handler. In the
-> former case we want to continue, while in the latter -
-> successfully return. I think it applies to all archs.
-...
-> FWIW, this series ends up with kernel BUG at arch/s390/mm/fault.c:341!
+> I agree, but this is not suitable to be done in the fix patch, I will split
+> it out and make a new patch.
 
-Without having looked in detail into this patch: all of this is likely
-because s390's fault handling is quite odd. Not only because fault is set
-to 0, but also because of the private VM_FAULT values like
-VM_FAULT_BADCONTEXT. I'm just cleaning up all of this, but it won't make it
-for the next merge window.
+Sure, send the one with the fix, already using the simple form, then
+convert the rest to the simpler form.
 
-Therefore I'd like to ask to drop the s390 conversion of this series, and
-if this series is supposed to be merged the s390 conversion needs to be
-done later. Let's not waste more time on the current implementation,
-please.
+Thanks,
+
+- Arnaldo
