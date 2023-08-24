@@ -1,117 +1,91 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70B417F
-	for <loongarch@lists.linux.dev>; Thu, 24 Aug 2023 02:23:02 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8AxEvAEv+Zkt18bAA--.55138S3;
-	Thu, 24 Aug 2023 10:23:00 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrM4Bv+ZksehhAA--.41658S3;
-	Thu, 24 Aug 2023 10:22:58 +0800 (CST)
-Message-ID: <51632871-2e84-4c53-b4c0-647aea5c49dc@loongson.cn>
-Date: Thu, 24 Aug 2023 10:22:57 +0800
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D445224521
+	for <loongarch@lists.linux.dev>; Thu, 24 Aug 2023 03:20:47 +0000 (UTC)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-58d40c2debeso68228987b3.2
+        for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 20:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692847246; x=1693452046;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KQa2QhUuD1nt00Z88tzVThPmcU90ZyELmtPGdBb+ofw=;
+        b=Jwi4DWLdYpf6QREC1mr/nfaVh0UZQxqaJtHDL0yr8MDBvId8qT0kltDJBw0ZZxoV8F
+         ScDdKfzRrf0bzZGSnyJN2JE73B6M8JTb7Gu1ax+7glvmS2vPJ6IH46kr5AmLr//+bPUQ
+         zjNzTgr9MwscAswfXBsjBPqjpGSRDlxzAIuxLA+7/JFO/szgUkHDo9BvQ3tgQmBJwfl0
+         0UQEYkvV8nH0TswkGX+zSVHXqcAYklPJdonmbSAoiZshJxPpMdd7jOLK4ei3wPc2EU8E
+         zQMNUY0+seupupTYFCB3PthZ6UKD6qsdoGLFzXTDNf1iPmTW2sBk9NZfY5JZwSZiVKUe
+         qGGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692847246; x=1693452046;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KQa2QhUuD1nt00Z88tzVThPmcU90ZyELmtPGdBb+ofw=;
+        b=ghX2Qf2bZklscxlEkbqGfDTh7qgj879a7u1XYNW+g/C3nOzVH2hzRqjL42qzzDblHC
+         L9MDZhFdVHSELb9mMSp8N0RfuVpZOER1GEX7AYU/rAXuCy7Oz+yvvJuVNwF3lQdOrFMk
+         FXI8pSQ040zdgFYKO8gf87Qi6Z/rw5qpWmzsxSmFULyEvVWolJxkp9giOA8XyTvTwH8u
+         zosdhI+H/TIS0EbZQv955+y55GqmmMIj3BoI7d8DrS7pCO6Hohn56Xz/qClgcYTRVBnM
+         X1jtlSoAhQQ3bDNyxc1kDuw4PplaVhEkt5CwN6JnxhkJdU4s6V5//N2gq8RV7XQunN1r
+         yYXw==
+X-Gm-Message-State: AOJu0YwIrpWHNqNzp9D5BIPl4loZz/sJufob0yG1t16zqCy1thOu3J/Z
+	VEitEL1+90MS8IgPWRLL94fCUPpiP3xDEhf14kU=
+X-Google-Smtp-Source: AGHT+IE08VXGpVtLDyG9MzPycaJeRexFCX1l1s8wa02GvSyqesRN9pe1dvaVQORBLjPPPlb+uFnirEm1bfrgpDh+YiU=
+X-Received: by 2002:a81:6ed6:0:b0:589:8b56:15f with SMTP id
+ j205-20020a816ed6000000b005898b56015fmr15027491ywc.24.1692847246639; Wed, 23
+ Aug 2023 20:20:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] perf/trace: Fix mmap_flags for archs use generic
- mman.h
-Content-Language: en-US
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, chenhuacai@kernel.org,
- linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev
-References: <cover.1692694595.git.siyanteng@loongson.cn>
- <03ddc1c0e01518df63aac88e561cd0ec3c1e0028.1692694595.git.siyanteng@loongson.cn>
- <ZOT4Tuc6JGrbDqFW@kernel.org>
- <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
- <ZOXvUbQL67bdWfNz@kernel.org>
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <ZOXvUbQL67bdWfNz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxrM4Bv+ZksehhAA--.41658S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGryfXr47ZFy5Gr1fCrW8Xwc_yoW5Gr47pr
-	4rAayDGa1DXr15tw1IvFZ0qFs8K3sFqFy5uF1DWrs7GF98KF17Gr93AF4a9FyrXws8J3y2
-	9rWUur18KF4kZrgCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDUUUU
+References: <cover.1692783907.git.zhoubinbin@loongson.cn> <3e69929008c8190cff331941dd4d34f748e5e44a.1692783907.git.zhoubinbin@loongson.cn>
+ <20230823194250.GA2768550-robh@kernel.org>
+In-Reply-To: <20230823194250.GA2768550-robh@kernel.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Thu, 24 Aug 2023 11:20:34 +0800
+Message-ID: <CAMpQs4KQzXYDsMJesGGRVX=e_psyiik-Th2Y0CV=keU+-v86mQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/7] LoongArch: Allow device trees to be built into the kernel
+To: Rob Herring <robh@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Hongliang Wang <wanghongliang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Rob:
 
-在 2023/8/23 19:36, Arnaldo Carvalho de Melo 写道:
-> Em Wed, Aug 23, 2023 at 03:11:01PM +0800, Yanteng Si escreveu:
->> 在 2023/8/23 02:02, Arnaldo Carvalho de Melo 写道:
->>> Em Tue, Aug 22, 2023 at 05:32:06PM +0800, Yanteng Si escreveu:
->>>> Silence this warning:
->>>>
->>>> grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
->>>> No such file or directory
->>>> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
->>>> ---
->>>>    tools/perf/trace/beauty/mmap_flags.sh | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
->>>> index 3022597c8c17..d035b29fc5ec 100755
->>>> --- a/tools/perf/trace/beauty/mmap_flags.sh
->>>> +++ b/tools/perf/trace/beauty/mmap_flags.sh
->>>> @@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
->>>>    printf "static const char *mmap_flags[] = {\n"
->>>>    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
->>>> -grep -E -q $regex ${arch_mman} && \
->>>> +([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
->>>>    (grep -E $regex ${arch_mman} | \
->>>>    	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
->>>>    	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
->>> Humm, wouldn't this be simpler without that extra subshell? Like this:
->>>
->>> diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
->>> index 3022597c8c178f21..0ac1886a83b5aceb 100755
->>> --- a/tools/perf/trace/beauty/mmap_flags.sh
->>> +++ b/tools/perf/trace/beauty/mmap_flags.sh
->>> @@ -19,6 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
->>>    printf "static const char *mmap_flags[] = {\n"
->>>    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
->>> +test -f ${arch_mman} && \
->> The following lines have already used the [ ! -f ${arch_mman}, so let's stay
->> consistent？
-> Well, we can make it consistent by simplifying the other places where
-> the long, equivalent test is being done, which I think is the way to go,
-> agreed?
-
-I agree, but this is not suitable to be done in the fix patch, I will 
-split it out and make a new patch.
-
-
-Thanks
-
-Yanteng
-
+On Thu, Aug 24, 2023 at 3:42=E2=80=AFAM Rob Herring <robh@kernel.org> wrote=
+:
 >
-> - Arnaldo
->   
->> Thanks,
->>
->> Yanteng
->>
->>>    grep -E -q $regex ${arch_mman} && \
->>>    (grep -E $regex ${arch_mman} | \
->>>    	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+> On Wed, Aug 23, 2023 at 05:54:51PM +0800, Binbin Zhou wrote:
+> > Some systems do not provide a useful device tree to the kernel at boot
+> > time. Let's keep a device tree table in the kernel, keyed by the dts
+> > filename, containing the relevant DTBs.
+>
+> Support for this in other arches was added to support legacy bootloaders
+> with no DT support. You should not need this for a new architecture. Fix
+> the bootloader to provide a useful DT.
+>
+Yes, our bootloader already supports DT.
 
+Our original intention of providing kernel built-in DTS is to describe
+all possible device information of that SoC, so that everyone can use
+it as a reference during development; we will unlikely to add more
+.dts files to the kernel besides the reference ones.
+
+And as a reference, our built-in DTS provides the most basic bootable
+combinations (so it is generic enough) as an alternative in case the
+DTS in the bootloader is unexpected.
+
+Does this make any sense?
+
+Thanks.
+Binbin
+
+> Rob
