@@ -1,91 +1,82 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D445224521
-	for <loongarch@lists.linux.dev>; Thu, 24 Aug 2023 03:20:47 +0000 (UTC)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-58d40c2debeso68228987b3.2
-        for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 20:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692847246; x=1693452046;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KQa2QhUuD1nt00Z88tzVThPmcU90ZyELmtPGdBb+ofw=;
-        b=Jwi4DWLdYpf6QREC1mr/nfaVh0UZQxqaJtHDL0yr8MDBvId8qT0kltDJBw0ZZxoV8F
-         ScDdKfzRrf0bzZGSnyJN2JE73B6M8JTb7Gu1ax+7glvmS2vPJ6IH46kr5AmLr//+bPUQ
-         zjNzTgr9MwscAswfXBsjBPqjpGSRDlxzAIuxLA+7/JFO/szgUkHDo9BvQ3tgQmBJwfl0
-         0UQEYkvV8nH0TswkGX+zSVHXqcAYklPJdonmbSAoiZshJxPpMdd7jOLK4ei3wPc2EU8E
-         zQMNUY0+seupupTYFCB3PthZ6UKD6qsdoGLFzXTDNf1iPmTW2sBk9NZfY5JZwSZiVKUe
-         qGGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692847246; x=1693452046;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KQa2QhUuD1nt00Z88tzVThPmcU90ZyELmtPGdBb+ofw=;
-        b=ghX2Qf2bZklscxlEkbqGfDTh7qgj879a7u1XYNW+g/C3nOzVH2hzRqjL42qzzDblHC
-         L9MDZhFdVHSELb9mMSp8N0RfuVpZOER1GEX7AYU/rAXuCy7Oz+yvvJuVNwF3lQdOrFMk
-         FXI8pSQ040zdgFYKO8gf87Qi6Z/rw5qpWmzsxSmFULyEvVWolJxkp9giOA8XyTvTwH8u
-         zosdhI+H/TIS0EbZQv955+y55GqmmMIj3BoI7d8DrS7pCO6Hohn56Xz/qClgcYTRVBnM
-         X1jtlSoAhQQ3bDNyxc1kDuw4PplaVhEkt5CwN6JnxhkJdU4s6V5//N2gq8RV7XQunN1r
-         yYXw==
-X-Gm-Message-State: AOJu0YwIrpWHNqNzp9D5BIPl4loZz/sJufob0yG1t16zqCy1thOu3J/Z
-	VEitEL1+90MS8IgPWRLL94fCUPpiP3xDEhf14kU=
-X-Google-Smtp-Source: AGHT+IE08VXGpVtLDyG9MzPycaJeRexFCX1l1s8wa02GvSyqesRN9pe1dvaVQORBLjPPPlb+uFnirEm1bfrgpDh+YiU=
-X-Received: by 2002:a81:6ed6:0:b0:589:8b56:15f with SMTP id
- j205-20020a816ed6000000b005898b56015fmr15027491ywc.24.1692847246639; Wed, 23
- Aug 2023 20:20:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394EF24538
+	for <loongarch@lists.linux.dev>; Thu, 24 Aug 2023 06:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1692856942; bh=vVRyuNLkZSfSbUTWRT7F8T0v3fD1MZl9S+fAoKzm0/g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y4P9HQqPdEgxcHNjnvkKJCVXn8KB4BAiIfRktjuzHtAPBoaa40s0h0ZbAkdHmx5M/
+	 iVKOfM8xKy8DitVEZYUgRHrn9jWDs0lB7szFluwBsKcfgdbD1jgxFDScOp+9Pvh0al
+	 7PEbU40iMtg9KCQYNzVZWQb5IwMPagSnPTMyCfzI=
+Received: from [192.168.9.172] (unknown [101.88.24.218])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2D5BD600DA;
+	Thu, 24 Aug 2023 14:02:22 +0800 (CST)
+Message-ID: <4df42f2b-3dde-f077-4ec9-b7e87d15fa4a@xen0n.name>
+Date: Thu, 24 Aug 2023 14:02:21 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1692783907.git.zhoubinbin@loongson.cn> <3e69929008c8190cff331941dd4d34f748e5e44a.1692783907.git.zhoubinbin@loongson.cn>
- <20230823194250.GA2768550-robh@kernel.org>
-In-Reply-To: <20230823194250.GA2768550-robh@kernel.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 24 Aug 2023 11:20:34 +0800
-Message-ID: <CAMpQs4KQzXYDsMJesGGRVX=e_psyiik-Th2Y0CV=keU+-v86mQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] LoongArch: Allow device trees to be built into the kernel
-To: Rob Herring <robh@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Hongliang Wang <wanghongliang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v3 2/4] arch/loongarch/configs/*_defconfig cleanup
+To: Trevor Woerner <twoerner@gmail.com>, linux-kernel@vger.kernel.org,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20230817115017.35663-1-twoerner@gmail.com>
+ <20230817115017.35663-3-twoerner@gmail.com>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230817115017.35663-3-twoerner@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Rob:
-
-On Thu, Aug 24, 2023 at 3:42=E2=80=AFAM Rob Herring <robh@kernel.org> wrote=
-:
+On 8/17/23 19:50, Trevor Woerner wrote:
+> Drop CONFIG_IP_NF_TARGET_CLUSTERIP as it was removed in commit 9db5d918e2c0
+> ("netfilter: ip_tables: remove clusterip target").
 >
-> On Wed, Aug 23, 2023 at 05:54:51PM +0800, Binbin Zhou wrote:
-> > Some systems do not provide a useful device tree to the kernel at boot
-> > time. Let's keep a device tree table in the kernel, keyed by the dts
-> > filename, containing the relevant DTBs.
+> Drop CONFIG_NFT_OBJREF as it was removed in commit d037abc2414b
+> ("netfilter: nft_objref: make it builtin").
 >
-> Support for this in other arches was added to support legacy bootloaders
-> with no DT support. You should not need this for a new architecture. Fix
-> the bootloader to provide a useful DT.
+> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+> ---
+>   arch/loongarch/configs/loongson3_defconfig | 2 --
+>   1 file changed, 2 deletions(-)
 >
-Yes, our bootloader already supports DT.
+> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+> index d64849b4cba1..4700655b2bcb 100644
+> --- a/arch/loongarch/configs/loongson3_defconfig
+> +++ b/arch/loongarch/configs/loongson3_defconfig
+> @@ -137,7 +137,6 @@ CONFIG_NFT_MASQ=m
+>   CONFIG_NFT_REDIR=m
+>   CONFIG_NFT_NAT=m
+>   CONFIG_NFT_TUNNEL=m
+> -CONFIG_NFT_OBJREF=m
+>   CONFIG_NFT_QUEUE=m
+>   CONFIG_NFT_QUOTA=m
+>   CONFIG_NFT_REJECT=m
+> @@ -227,7 +226,6 @@ CONFIG_IP_NF_TARGET_MASQUERADE=m
+>   CONFIG_IP_NF_TARGET_NETMAP=m
+>   CONFIG_IP_NF_TARGET_REDIRECT=m
+>   CONFIG_IP_NF_MANGLE=m
+> -CONFIG_IP_NF_TARGET_CLUSTERIP=m
+>   CONFIG_IP_NF_TARGET_ECN=m
+>   CONFIG_IP_NF_TARGET_TTL=m
+>   CONFIG_IP_NF_RAW=m
 
-Our original intention of providing kernel built-in DTS is to describe
-all possible device information of that SoC, so that everyone can use
-it as a reference during development; we will unlikely to add more
-.dts files to the kernel besides the reference ones.
+Acked-by: WANG Xuerui <git@xen0n.name>
 
-And as a reference, our built-in DTS provides the most basic bootable
-combinations (so it is generic enough) as an alternative in case the
-DTS in the bootloader is unexpected.
+Thanks!
 
-Does this make any sense?
+-- 
+WANG "xen0n" Xuerui
 
-Thanks.
-Binbin
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
-> Rob
