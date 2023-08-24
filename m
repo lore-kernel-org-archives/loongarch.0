@@ -1,141 +1,117 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97857F
-	for <loongarch@lists.linux.dev>; Thu, 24 Aug 2023 01:47:59 +0000 (UTC)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50078eba7afso6896581e87.0
-        for <loongarch@lists.linux.dev>; Wed, 23 Aug 2023 18:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692841677; x=1693446477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fBuu+H0+lIDFAFh6BV8P/GWalq0YHGG3/mASWuMo5lM=;
-        b=SLNzeDUS72IJwAzeVreY3UuVxr5gwQM95fVyt9/ht8rypcjabC7IeDW11JlZECJRvO
-         MxKLqLrXpEUNmzeCS+u0zAMXYck7wOgEJ6ZQWZkZeRDDnYaWKX2Smxfn0jhr7WErXCNQ
-         23oTbin/VeYg+Iyns29z6GodXQD6Lp2FtNJgmYbC6rHrE/WQbpnXZVRnT7btKJpTEG72
-         fv8MPiziafTzvzZ6IZUwfTH3hnZEMf1xBJkr9fV6ft1HhMOhpRSTcjxHdWaW29DFVk6X
-         tt/gWZP0xFX7WXGCHfz6XgLQHyWhPxdK9ozMFMyOzbE8TXDRveKy0OTJinpXzzAQNRmZ
-         iRAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692841677; x=1693446477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fBuu+H0+lIDFAFh6BV8P/GWalq0YHGG3/mASWuMo5lM=;
-        b=g08lULsgl2gsn2CXx55WTCgYDxPTzN+2+yClToiV+7OOG7O3f9Jwk84cISyMWXszGE
-         WGC6GoUd906LzF9kpwAm40H+pIG3VmpoUrKltWKCnzHY8uBeGPgFLUyVhFtWkEaJS77d
-         525THyzC7nPznpFbOGH38bK0yTYXzpl9hZRsWT7po6wRWOTM4FORXN9nLdgy6NS+KB1r
-         aghdsOYOxaxod7ohvv7us+YKDpLuv+hdyHQkWTfydWY9QzX6leTjq+EFkdqHZqVqOEfB
-         FxlvQUvMsbh4jsFpYbIIDhIswcrUyGai73Qs2C6Frp3k/5CaeL0ky1PaiDbSnsOjYblN
-         ZOBQ==
-X-Gm-Message-State: AOJu0Yw/oPO9bwG4Bk6By5nZFmhZtDnyfqKRJqSvpI7rJp7J0C/kQtPA
-	c6dAOu6x7hJEi0/Z3/GfuILltmRPRmvZFg2jlsk=
-X-Google-Smtp-Source: AGHT+IF8L2cBx5w+0JhtIC9QktBFOsReLfkleqxiIlOoTbE8jd9B+m3RmNa0CfAZn0Fq2T1YOElaAG429oOIclobI8I=
-X-Received: by 2002:a05:6512:32d0:b0:4f9:cd02:4aec with SMTP id
- f16-20020a05651232d000b004f9cd024aecmr11056801lfg.29.1692841677292; Wed, 23
- Aug 2023 18:47:57 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70B417F
+	for <loongarch@lists.linux.dev>; Thu, 24 Aug 2023 02:23:02 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.102])
+	by gateway (Coremail) with SMTP id _____8AxEvAEv+Zkt18bAA--.55138S3;
+	Thu, 24 Aug 2023 10:23:00 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.109.102])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrM4Bv+ZksehhAA--.41658S3;
+	Thu, 24 Aug 2023 10:22:58 +0800 (CST)
+Message-ID: <51632871-2e84-4c53-b4c0-647aea5c49dc@loongson.cn>
+Date: Thu, 24 Aug 2023 10:22:57 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1692696115.git.chenfeiyang@loongson.cn>
-In-Reply-To: <cover.1692696115.git.chenfeiyang@loongson.cn>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Thu, 24 Aug 2023 09:47:43 +0800
-Message-ID: <CACWXhKkSxQ8WWPwup2GujCafhkDh-YFsB7PVrcuMVYa7ZVce+g@mail.gmail.com>
-Subject: Re: [PATCH v4 00/11] stmmac: Add Loongson platform support
-To: Feiyang Chen <chenfeiyang@loongson.cn>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com, 
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com, chenhuacai@loongson.cn, 
-	linux@armlinux.org.uk, dongbiao@loongson.cn, guyinggang@loongson.cn, 
-	siyanteng@loongson.cn, loongson-kernel@lists.loongnix.cn, 
-	netdev@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] perf/trace: Fix mmap_flags for archs use generic
+ mman.h
+Content-Language: en-US
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, chenhuacai@kernel.org,
+ linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
+ loongarch@lists.linux.dev
+References: <cover.1692694595.git.siyanteng@loongson.cn>
+ <03ddc1c0e01518df63aac88e561cd0ec3c1e0028.1692694595.git.siyanteng@loongson.cn>
+ <ZOT4Tuc6JGrbDqFW@kernel.org>
+ <8ead439a-63aa-434e-9d1e-3b1b05b6347b@loongson.cn>
+ <ZOXvUbQL67bdWfNz@kernel.org>
+From: Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <ZOXvUbQL67bdWfNz@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxrM4Bv+ZksehhAA--.41658S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGryfXr47ZFy5Gr1fCrW8Xwc_yoW5Gr47pr
+	4rAayDGa1DXr15tw1IvFZ0qFs8K3sFqFy5uF1DWrs7GF98KF17Gr93AF4a9FyrXws8J3y2
+	9rWUur18KF4kZrgCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDUUUU
 
-On Tue, Aug 22, 2023 at 5:40=E2=80=AFPM Feiyang Chen <chenfeiyang@loongson.=
-cn> wrote:
->
-> Add and extend stmmac functions and macros for Loongson DWMAC.
-> Add LS7A support and GNET support for dwmac_loongson.
->
-> Split the code for extended GMAC (dwegmac) from dwmac1000, try
-> not to mix up registers and core id.
->
-> Some features of Loongson platforms are bound to the GMAC_VERSION
-> register. We have to read its value in dwmac-loongson in order to
-> get the correct channel number and DMA configuration.
->
-> The current usage of stmmac_request_irq_multi_msi() is limited to
-> dwmac-intel. While it appears that setting irq_flags might not be
-> necessary for dwmac-intel, it should be configured for other drivers
-> like dwmac-loongson. I've observed many drivers directly setting
-> irq_flags within their probe functions or data structures without
-> referencing the DT. Since I'm unsure about the proper handling of
-> irq_flags, I've chosen to retain the code as-is.
->
-> Feiyang Chen (11):
->   net: stmmac: Pass stmmac_priv and chan in some callbacks
->   stmmac: dwmac1000: Add 64-bit DMA support
->   stmmac: Add extended GMAC support for Loongson platforms
->   net: stmmac: Allow platforms to set irq_flags
->   net: stmmac: dwmac-loongson: Refactor code for loongson_dwmac_probe()
->   net: stmmac: dwmac-loongson: Add LS7A support
->   net: stmmac: dwmac-loongson: Add 64-bit DMA and MSI support
->   net: stmmac: dwegmac: Fix channel numbers
->   net: stmmac: dwmac-loongson: Disable flow control for GMAC
->   net: stmmac: dwegmac: Disable coe
->   net: stmmac: dwmac-loongson: Add GNET support
->
->  drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +-
->  .../net/ethernet/stmicro/stmmac/chain_mode.c  |  29 +-
->  drivers/net/ethernet/stmicro/stmmac/common.h  |   3 +
->  drivers/net/ethernet/stmicro/stmmac/descs.h   |   7 +
->  .../net/ethernet/stmicro/stmmac/descs_com.h   |  47 +-
->  drivers/net/ethernet/stmicro/stmmac/dwegmac.h | 332 +++++++++++
->  .../ethernet/stmicro/stmmac/dwegmac_core.c    | 552 ++++++++++++++++++
->  .../net/ethernet/stmicro/stmmac/dwegmac_dma.c | 522 +++++++++++++++++
->  .../net/ethernet/stmicro/stmmac/dwegmac_dma.h | 190 ++++++
->  .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 338 ++++++++---
->  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  22 +-
->  .../ethernet/stmicro/stmmac/dwmac1000_core.c  |   9 +-
->  .../ethernet/stmicro/stmmac/dwmac1000_dma.c   |  54 +-
->  .../ethernet/stmicro/stmmac/dwmac100_core.c   |   9 +-
->  .../ethernet/stmicro/stmmac/dwmac100_dma.c    |   2 +-
->  .../net/ethernet/stmicro/stmmac/dwmac4_core.c |  11 +-
->  .../ethernet/stmicro/stmmac/dwmac4_descs.c    |  17 +-
->  .../net/ethernet/stmicro/stmmac/dwmac4_dma.c  |   8 +-
->  .../net/ethernet/stmicro/stmmac/dwmac4_dma.h  |   2 +-
->  .../net/ethernet/stmicro/stmmac/dwmac4_lib.c  |   2 +-
->  .../net/ethernet/stmicro/stmmac/dwmac_dma.h   |  22 +-
->  .../net/ethernet/stmicro/stmmac/dwmac_lib.c   |   5 +-
->  .../ethernet/stmicro/stmmac/dwxgmac2_core.c   |  11 +-
->  .../ethernet/stmicro/stmmac/dwxgmac2_descs.c  |  17 +-
->  .../ethernet/stmicro/stmmac/dwxgmac2_dma.c    |  10 +-
->  .../net/ethernet/stmicro/stmmac/enh_desc.c    |  38 +-
->  drivers/net/ethernet/stmicro/stmmac/hwif.c    |  66 ++-
->  drivers/net/ethernet/stmicro/stmmac/hwif.h    |  73 ++-
->  .../net/ethernet/stmicro/stmmac/norm_desc.c   |  17 +-
->  .../net/ethernet/stmicro/stmmac/ring_mode64.c | 158 +++++
->  .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   8 +-
->  .../net/ethernet/stmicro/stmmac/stmmac_main.c |  34 +-
->  include/linux/stmmac.h                        |  11 +
->  33 files changed, 2410 insertions(+), 218 deletions(-)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwegmac.h
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwegmac_core.c
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwegmac_dma.c
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwegmac_dma.h
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/ring_mode64.c
->
-> --
-> 2.39.3
->
 
-Due to some recent work adjustments, Yanteng will be taking over the
-patch series.
+在 2023/8/23 19:36, Arnaldo Carvalho de Melo 写道:
+> Em Wed, Aug 23, 2023 at 03:11:01PM +0800, Yanteng Si escreveu:
+>> 在 2023/8/23 02:02, Arnaldo Carvalho de Melo 写道:
+>>> Em Tue, Aug 22, 2023 at 05:32:06PM +0800, Yanteng Si escreveu:
+>>>> Silence this warning:
+>>>>
+>>>> grep: /root/linux-next/tools/arch/xxxxx/include/uapi/asm//mman.h:
+>>>> No such file or directory
+>>>> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+>>>> ---
+>>>>    tools/perf/trace/beauty/mmap_flags.sh | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+>>>> index 3022597c8c17..d035b29fc5ec 100755
+>>>> --- a/tools/perf/trace/beauty/mmap_flags.sh
+>>>> +++ b/tools/perf/trace/beauty/mmap_flags.sh
+>>>> @@ -19,7 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+>>>>    printf "static const char *mmap_flags[] = {\n"
+>>>>    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+>>>> -grep -E -q $regex ${arch_mman} && \
+>>>> +([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
+>>>>    (grep -E $regex ${arch_mman} | \
+>>>>    	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+>>>>    	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
+>>> Humm, wouldn't this be simpler without that extra subshell? Like this:
+>>>
+>>> diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
+>>> index 3022597c8c178f21..0ac1886a83b5aceb 100755
+>>> --- a/tools/perf/trace/beauty/mmap_flags.sh
+>>> +++ b/tools/perf/trace/beauty/mmap_flags.sh
+>>> @@ -19,6 +19,7 @@ arch_mman=${arch_header_dir}/mman.h
+>>>    printf "static const char *mmap_flags[] = {\n"
+>>>    regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+>>> +test -f ${arch_mman} && \
+>> The following lines have already used the [ ! -f ${arch_mman}, so let's stay
+>> consistent？
+> Well, we can make it consistent by simplifying the other places where
+> the long, equivalent test is being done, which I think is the way to go,
+> agreed?
 
-Thanks,
-Feiyang
+I agree, but this is not suitable to be done in the fix patch, I will 
+split it out and make a new patch.
+
+
+Thanks
+
+Yanteng
+
+>
+> - Arnaldo
+>   
+>> Thanks,
+>>
+>> Yanteng
+>>
+>>>    grep -E -q $regex ${arch_mman} && \
+>>>    (grep -E $regex ${arch_mman} | \
+>>>    	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+
