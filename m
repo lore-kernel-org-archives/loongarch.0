@@ -1,113 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058F6C2FF
-	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 11:42:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E165DC433C8;
-	Fri, 25 Aug 2023 11:42:51 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Ensure FP/SIMD registers in the core dump file is up to date
-Date: Fri, 25 Aug 2023 19:42:24 +0800
-Message-Id: <20230825114224.3886577-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21BCCA6A
+	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 11:59:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1692964761; x=1724500761;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jYa2rmbVibTTzJA1qhXhwMJJgoIx8FJOzgkA0XkdUoI=;
+  b=oCQOse2TP78i4LjIBv5na2RFo6SE9N7C4nLkqlbWYAXkXFo3TUAJDaeS
+   4Fs3CX4Uv5BvZcdpcah2ewRyNDhYorA6BFtk2WkdeakEeSUyiqm1nxcbs
+   i2KQsh0RfEOC45RqrAeEGfcdmZiNhiHHwkKZnuV7CeAWDdJrf0BMiOaWc
+   +pZuWmWliNLqzsVejm6OgeHJ31zJy+kZZaq9mAXSHui9NlKiTIn132LEF
+   Bp3BQqW9fS7ia1W238JxjxFb9RyHAqg6R39QN6x38iNT+dNqOLpkZpjwG
+   Rw7N/qmsMKomU7b+qaQufIOcTImc9coOBaFZgI+OorM6rJNC46BRgbJCL
+   w==;
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="asc'?scan'208";a="231707760"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2023 04:59:14 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 25 Aug 2023 04:58:31 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Fri, 25 Aug 2023 04:58:28 -0700
+Date: Fri, 25 Aug 2023 12:57:47 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+CC: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
+	<zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <loongson-kernel@lists.loongnix.cn>, Xuerui
+ Wang <kernel@xen0n.name>, <loongarch@lists.linux.dev>, Jiaxun Yang
+	<jiaxun.yang@flygoat.com>, Hongliang Wang <wanghongliang@loongson.cn>
+Subject: Re: [PATCH v4 0/7] LoongArch: Add built-in dtb support
+Message-ID: <20230825-doubling-waltz-6444e26152db@wendy>
+References: <cover.1692783907.git.zhoubinbin@loongson.cn>
+ <CAAhV-H7hi=yc=PfDBafXVS5CSwEeE2WmbAAhnnDm6iYFF3YzkQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="R5RCBxfpk++k8id+"
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H7hi=yc=PfDBafXVS5CSwEeE2WmbAAhnnDm6iYFF3YzkQ@mail.gmail.com>
 
-This is a port of commit 379eb01c21795edb4c ("riscv: Ensure the value
-of FP registers in the core dump file is up to date").
+--R5RCBxfpk++k8id+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The values of FP/SIMD registers in the core dump file come from the
-thread.fpu. However, kernel saves the FP/SIMD registers only before
-scheduling out the process. If no process switch happens during the
-exception handling, kernel will not have a chance to save the latest
-values of FP/SIMD registers. So it may cause their values in the core
-dump file incorrect. To solve this problem, force fpr_get()/simd_get()
-to save the FP/SIMD registers into the thread.fpu if the target task
-equals the current task.
+On Fri, Aug 25, 2023 at 07:38:31PM +0800, Huacai Chen wrote:
+> This series looks good enough to me now, if no one has objections, I
+> will queue it to loongarch-next.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/fpu.h | 22 ++++++++++++++++++----
- arch/loongarch/kernel/ptrace.c   |  4 ++++
- 2 files changed, 22 insertions(+), 4 deletions(-)
+Have you not read Rob's replies?
 
-diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
-index b541f6248837..08a45e9fd15c 100644
---- a/arch/loongarch/include/asm/fpu.h
-+++ b/arch/loongarch/include/asm/fpu.h
-@@ -173,16 +173,30 @@ static inline void restore_fp(struct task_struct *tsk)
- 		_restore_fp(&tsk->thread.fpu);
- }
- 
--static inline union fpureg *get_fpu_regs(struct task_struct *tsk)
-+static inline void get_fpu_regs(struct task_struct *tsk)
- {
-+	unsigned int euen;
-+
- 	if (tsk == current) {
- 		preempt_disable();
--		if (is_fpu_owner())
-+
-+		euen = csr_read32(LOONGARCH_CSR_EUEN);
-+
-+#ifdef CONFIG_CPU_HAS_LASX
-+		if (euen & CSR_EUEN_LASXEN)
-+			_save_lasx(&current->thread.fpu);
-+		else
-+#endif
-+#ifdef CONFIG_CPU_HAS_LSX
-+		if (euen & CSR_EUEN_LSXEN)
-+			_save_lsx(&current->thread.fpu);
-+		else
-+#endif
-+		if (euen & CSR_EUEN_FPEN)
- 			_save_fp(&current->thread.fpu);
-+
- 		preempt_enable();
- 	}
--
--	return tsk->thread.fpu.fpr;
- }
- 
- static inline int is_simd_owner(void)
-diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-index 2bb5ec55ae1e..209e3d29e0b2 100644
---- a/arch/loongarch/kernel/ptrace.c
-+++ b/arch/loongarch/kernel/ptrace.c
-@@ -148,6 +148,8 @@ static int fpr_get(struct task_struct *target,
- {
- 	int r;
- 
-+	get_fpu_regs(target);
-+
- 	if (sizeof(target->thread.fpu.fpr[0]) == sizeof(elf_fpreg_t))
- 		r = gfpr_get(target, &to);
- 	else
-@@ -279,6 +281,8 @@ static int simd_get(struct task_struct *target,
- {
- 	const unsigned int wr_size = NUM_FPU_REGS * regset->size;
- 
-+	get_fpu_regs(target);
-+
- 	if (!tsk_used_math(target)) {
- 		/* The task hasn't used FP or LSX, fill with 0xff */
- 		copy_pad_fprs(target, regset, &to, 0);
--- 
-2.39.3
+--R5RCBxfpk++k8id+
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZOiXOwAKCRB4tDGHoIJi
+0oioAQC9seDAPhpBfYC7+N1in3TS0o5zdeEk2mw4b3K/ssqF+QEA2FP8m2uGc2Dq
+K0SUjJOOl8j5/YcevMEjOmMFb8O7QAM=
+=x241
+-----END PGP SIGNATURE-----
+
+--R5RCBxfpk++k8id+--
