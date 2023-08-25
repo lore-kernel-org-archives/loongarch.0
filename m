@@ -1,110 +1,146 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958F7CA52
-	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 12:01:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1692964896; x=1724500896;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZeZyfeKGvQL1c/itO010dweirYa6Wn++IE4GN+lXY78=;
-  b=2LWdaWFPhNxCHj9NcJcAQgDb3uJs18gQvNvwKblBVuLOHj0iOsiFE23h
-   20gbeg1C7Kkg6NigE30wuFUTCImmmESE+tuSh3pOIwZVXPahwBttkwzai
-   giPfvGM72Xn0N1EVMeIl5cNciJnxxopWOKxqnB5/7KxDO+42uIIyrcwow
-   hXFMMqulkjyGaGawm6LJHIA7DIosNqnp1EKmsv1AvNdyxLyjsaTCeRJyL
-   MejMEAqbiFdHDoACTaBhob/r9M3YYn4/ITqKirMRX5xdGxp/i/rdDRIoc
-   nZ9SenBgDE4UxAlHWPK8+bfO+sWhLiBZqkpjCBEtvg/ZCWq2iBFpdPcPd
-   w==;
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="asc'?scan'208";a="1305684"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2023 05:01:34 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 25 Aug 2023 05:01:33 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Fri, 25 Aug 2023 05:01:31 -0700
-Date: Fri, 25 Aug 2023 13:00:50 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-CC: Rob Herring <robh@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	<devicetree@vger.kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	<loongson-kernel@lists.loongnix.cn>, Xuerui Wang <kernel@xen0n.name>,
-	<loongarch@lists.linux.dev>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Hongliang
- Wang <wanghongliang@loongson.cn>
-Subject: Re: [PATCH v4 3/7] LoongArch: Allow device trees to be built into
- the kernel
-Message-ID: <20230825-hypocrite-smoking-cc6ce8c2936b@wendy>
-References: <cover.1692783907.git.zhoubinbin@loongson.cn>
- <3e69929008c8190cff331941dd4d34f748e5e44a.1692783907.git.zhoubinbin@loongson.cn>
- <20230823194250.GA2768550-robh@kernel.org>
- <CAMpQs4KQzXYDsMJesGGRVX=e_psyiik-Th2Y0CV=keU+-v86mQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE507495
+	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 13:45:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D02CC433C7;
+	Fri, 25 Aug 2023 13:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692971119;
+	bh=p6xhQBPRgg79wDY30Dy2w8BQlNFM3BRt8/ppENFT20c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=euOKz8xWzJjRsQ3Vx+frRZc42WwRYGXl0kbYGbBRwXMs43sqfwi5U+TkJLX0vJOur
+	 Pt+xjN2IrFuWtd3iUFGC+KBdIQYqDL+bNG3jO/aYHsM4tZ77Cha/858Vj0XIUUJ9ih
+	 MQ52cM/llKKe1UQLrg8WBtJvPwAy8f27JiNdOt2qnem8YwNsEylEnGFWuK9YsqYgQr
+	 8LO5eQxushxsTVkraLCOiY8kFE1/TRwy+dD97BVndL+XjC4egW9/fTAb392co2ZCoR
+	 xQa+OiKAoDTJJfKxMNiKdNxJhUKF8BJFOB1QO6jWnmStTMVguGvI1JMUnu6cobNExr
+	 iUvlYD72TL3xA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id BE0EE40722; Fri, 25 Aug 2023 10:45:16 -0300 (-03)
+Date: Fri, 25 Aug 2023 10:45:16 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	chenhuacai@kernel.org, linux-perf-users@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v2 1/3] perf/tools: Allow to use cpuinfo on LoongArch
+Message-ID: <ZOiwbNrwaodRfbSN@kernel.org>
+References: <cover.1692962043.git.siyanteng@loongson.cn>
+ <db968a186a10e4629fe10c26a1210f7126ad41ec.1692962043.git.siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KsqxT0t8TAxpVqE1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpQs4KQzXYDsMJesGGRVX=e_psyiik-Th2Y0CV=keU+-v86mQ@mail.gmail.com>
+In-Reply-To: <db968a186a10e4629fe10c26a1210f7126ad41ec.1692962043.git.siyanteng@loongson.cn>
+X-Url: http://acmel.wordpress.com
 
---KsqxT0t8TAxpVqE1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Em Fri, Aug 25, 2023 at 07:28:02PM +0800, Yanteng Si escreveu:
+> Define these macros so that the CPU name can be displayed
+> when running perf report and perf timechart.
+> 
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> ---
+>  tools/perf/util/header.c    | 2 ++
+>  tools/perf/util/svghelper.c | 5 ++++-
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 52fbf526fe74..c6e19192bd28 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -456,6 +456,8 @@ static int write_cpudesc(struct feat_fd *ff,
+>  #define CPUINFO_PROC	{ "Processor", }
+>  #elif defined(__xtensa__)
+>  #define CPUINFO_PROC	{ "core ID", }
+> +#elif defined(__loongarch__)
+> +#define CPUINFO_PROC	{ "Model Name", }
+>  #else
+>  #define CPUINFO_PROC	{ "model name", }
+>  #endif
+> diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+> index 5c62d3118c41..5744a3036b01 100644
+> --- a/tools/perf/util/svghelper.c
+> +++ b/tools/perf/util/svghelper.c
+> @@ -331,7 +331,10 @@ static char *cpu_model(void)
+>  	file = fopen("/proc/cpuinfo", "r");
+>  	if (file) {
+>  		while (fgets(buf, 255, file)) {
+> -			if (strstr(buf, "model name")) {
+> +			if (strcasestr(buf, "Model Name")) {
+> +				strlcpy(cpu_m, &buf[13], 255);
+> +				break;
+> +			} else if (strcasestr(buf, "model name")) {
+>  				strlcpy(cpu_m, &buf[13], 255);
 
-On Thu, Aug 24, 2023 at 11:20:34AM +0800, Binbin Zhou wrote:
-> Hi Rob:
->=20
-> On Thu, Aug 24, 2023 at 3:42=E2=80=AFAM Rob Herring <robh@kernel.org> wro=
-te:
-> >
-> > On Wed, Aug 23, 2023 at 05:54:51PM +0800, Binbin Zhou wrote:
-> > > Some systems do not provide a useful device tree to the kernel at boot
-> > > time. Let's keep a device tree table in the kernel, keyed by the dts
-> > > filename, containing the relevant DTBs.
-> >
-> > Support for this in other arches was added to support legacy bootloaders
-> > with no DT support. You should not need this for a new architecture. Fix
-> > the bootloader to provide a useful DT.
-> >
-> Yes, our bootloader already supports DT.
->=20
-> Our original intention of providing kernel built-in DTS is to describe
-> all possible device information of that SoC, so that everyone can use
-> it as a reference during development; we will unlikely to add more
-> .dts files to the kernel besides the reference ones.
->=20
-> And as a reference, our built-in DTS provides the most basic bootable
-> combinations (so it is generic enough) as an alternative in case the
-> DTS in the bootloader is unexpected.
->=20
-> Does this make any sense?
+Hey, the point of strcasestr() is to do a case _insensitive_ substring
+search, so all we need is:
 
-I don't see how this answers the question - as far as I can tell Rob was
-asking specifically about the building the dtb into the kernel, whereas
-your response seems to talk about havint the dts files in the kernel
-tree.
+> --- a/tools/perf/util/svghelper.c
+> +++ b/tools/perf/util/svghelper.c
+> @@ -331,7 +331,10 @@ static char *cpu_model(void)
+>  	file = fopen("/proc/cpuinfo", "r");
+>  	if (file) {
+>  		while (fgets(buf, 255, file)) {
+> -			if (strstr(buf, "model name")) {
+> +			if (strcasestr(buf, "model Name")) {
+>  				strlcpy(cpu_m, &buf[13], 255);
+>  				break;
 
---KsqxT0t8TAxpVqE1
-Content-Type: application/pgp-signature; name="signature.asc"
+Right? I'm doing this change while applying your patches.
 
------BEGIN PGP SIGNATURE-----
+See:
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZOiX8QAKCRB4tDGHoIJi
-0mMdAQCaaVLfZyKQ+j/RLCRL7NKg22cLE3B7zY7QFUv8jaSxEQD+POPxvl8zvCSb
-lmpG4BcHfRU8QKAVQj8AuJ57nfm8eg0=
-=9MR/
------END PGP SIGNATURE-----
+[acme@five c]$ grep -m1 "model name" /proc/cpuinfo | ./strcasestr "Model NAME"
+needle=Model NAME
+haystack=model name	: AMD Ryzen 9 5950X 16-Core Processor
 
---KsqxT0t8TAxpVqE1--
+found: model name	: AMD Ryzen 9 5950X 16-Core Processor
+found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+[acme@five c]$ grep -m1 "model name" /proc/cpuinfo | ./strcasestr "model name"
+needle=model name
+haystack=model name	: AMD Ryzen 9 5950X 16-Core Processor
+
+found: model name	: AMD Ryzen 9 5950X 16-Core Processor
+found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+[acme@five c]$ grep -m1 "model name" /proc/cpuinfo | ./strcasestr "Model Name"
+needle=Model Name
+haystack=model name	: AMD Ryzen 9 5950X 16-Core Processor
+
+found: model name	: AMD Ryzen 9 5950X 16-Core Processor
+found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+acme@five c]$ echo "Model Name : AMD Ryzen 9 5950X 16-Core Processor" | ./strcasestr "model name"
+needle=model name
+haystack=Model Name	: AMD Ryzen 9 5950X 16-Core Processor
+
+found: Model Name	: AMD Ryzen 9 5950X 16-Core Processor
+found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+[acme@five c]$ echo "MODEL NAME : AMD Ryzen 9 5950X 16-Core Processor" | ./strcasestr "model name"
+needle=model name
+haystack=MODEL NAME	: AMD Ryzen 9 5950X 16-Core Processor
+
+found: MODEL NAME	: AMD Ryzen 9 5950X 16-Core Processor
+found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+[acme@five c]$
+[acme@five c]$ cat strcasestr.c
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[])
+{
+	char *needle = argv[1], haystack[128], *found;
+	printf("needle=%s\n", needle);
+	fgets(haystack, sizeof(haystack), stdin);
+	printf("haystack=%s\n", haystack);
+	found = strcasestr(haystack, needle);
+	printf("found: %s", found);
+	printf("found[13..]: %s", found + 13);
+	return 0;
+}
+[acme@five c]$
