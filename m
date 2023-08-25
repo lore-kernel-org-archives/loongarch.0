@@ -1,98 +1,167 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 481D4CA6A
-	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 11:28:26 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8AxEvBTkOhkotAbAA--.56089S3;
-	Fri, 25 Aug 2023 19:28:19 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF81QkOhk0l1jAA--.41739S3;
-	Fri, 25 Aug 2023 19:28:18 +0800 (CST)
-From: Yanteng Si <siyanteng@loongson.cn>
-To: acme@kernel.org
-Cc: Yanteng Si <siyanteng@loongson.cn>,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	chenhuacai@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	loongarch@lists.linux.dev
-Subject: [PATCH v2 1/3] perf/tools: Allow to use cpuinfo on LoongArch
-Date: Fri, 25 Aug 2023 19:28:02 +0800
-Message-Id: <db968a186a10e4629fe10c26a1210f7126ad41ec.1692962043.git.siyanteng@loongson.cn>
-X-Mailer: git-send-email 2.31.4
-In-Reply-To: <cover.1692962043.git.siyanteng@loongson.cn>
-References: <cover.1692962043.git.siyanteng@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A8DC2FF
+	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 11:38:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E68CBC433C9
+	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 11:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692963525;
+	bh=IhUN3wNeroegBsvK8L6MatBOMRiD07StyURe84Lkn7Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DsBucCM0VnBjdcpnWKUI8s5DRCMzPqGICyZvN85ukU7qUJ1CRay5m/cbVoXEd3zo5
+	 dLB2u3UpSQ1rvWeDGp6bOKtdELGNBCkBakgdMDprZtxsM3D1LD7IKJPOnBgfa+Ihsd
+	 rNMTkD3kQKvp38FtkWUwYgnVW/coadBnM6H/nZuPELDTk8sfWvjglqxiyM0HkmhNlJ
+	 0mb1MoJE/gzt2b41CguKAJQLYQBHckPXrZ7bJEN1in0RkgT/RPv9b62xEP8k6jeTLx
+	 Is0t22DUFjMTvzO+2PtFtQVcGcgig1U6gG9auWI8yi9buwNYuJMbyPtT2rI0WNiQMw
+	 3mE+oeuM+Y2vQ==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-4ff8f2630e3so1236060e87.1
+        for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 04:38:45 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzZLJBo+vbC5noQb5aoNR7kRjExxlXAL9Ra/00ms2WKGWacHwfD
+	e70j++UjQ0emkCtjRgSh38pYqgLZmLRnphOyJHk=
+X-Google-Smtp-Source: AGHT+IFjMLJMaychfDPevyx63YRANWX74ZsjU8alQfZvoD4k7trTbs70l3tz4UR+TfzKoeCMfdvckNnPUazn/+ciTh8=
+X-Received: by 2002:a05:6512:3706:b0:4f9:586b:dba1 with SMTP id
+ z6-20020a056512370600b004f9586bdba1mr10516325lfr.4.1692963523857; Fri, 25 Aug
+ 2023 04:38:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxF81QkOhk0l1jAA--.41739S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zr45Gw4UWr4xKFWxGFW7GFX_yoW8Gr1kpr
-	WDC3y7tw43WF9xKasayFsYqFW3Xrs7JFWfWrs0k3yrZr4Syrn7XryxXr45KF47XayDXw1j
-	9r1DWr4DZFW8JrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4YLvDUUUU
+References: <cover.1692783907.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1692783907.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 25 Aug 2023 19:38:31 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7hi=yc=PfDBafXVS5CSwEeE2WmbAAhnnDm6iYFF3YzkQ@mail.gmail.com>
+Message-ID: <CAAhV-H7hi=yc=PfDBafXVS5CSwEeE2WmbAAhnnDm6iYFF3YzkQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] LoongArch: Add built-in dtb support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Hongliang Wang <wanghongliang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Define these macros so that the CPU name can be displayed
-when running perf report and perf timechart.
+This series looks good enough to me now, if no one has objections, I
+will queue it to loongarch-next.
 
-Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
----
- tools/perf/util/header.c    | 2 ++
- tools/perf/util/svghelper.c | 5 ++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+Huacai
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 52fbf526fe74..c6e19192bd28 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -456,6 +456,8 @@ static int write_cpudesc(struct feat_fd *ff,
- #define CPUINFO_PROC	{ "Processor", }
- #elif defined(__xtensa__)
- #define CPUINFO_PROC	{ "core ID", }
-+#elif defined(__loongarch__)
-+#define CPUINFO_PROC	{ "Model Name", }
- #else
- #define CPUINFO_PROC	{ "model name", }
- #endif
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index 5c62d3118c41..5744a3036b01 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -331,7 +331,10 @@ static char *cpu_model(void)
- 	file = fopen("/proc/cpuinfo", "r");
- 	if (file) {
- 		while (fgets(buf, 255, file)) {
--			if (strstr(buf, "model name")) {
-+			if (strcasestr(buf, "Model Name")) {
-+				strlcpy(cpu_m, &buf[13], 255);
-+				break;
-+			} else if (strcasestr(buf, "model name")) {
- 				strlcpy(cpu_m, &buf[13], 255);
- 				break;
- 			}
--- 
-2.31.4
-
+On Wed, Aug 23, 2023 at 5:55=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
+>
+> Hi all:
+>
+> This patchset introduces LoongArch's built-in dtb support.
+>
+> As we know, the Loongson-2K family supports DT. Inevitably, some systems
+> do not provide a useful device tree to the kernel at boot time. Chasing
+> around bootloaders for these systems is a headache, so we just keep a
+> device tree table in the kernel, keyed by the dts filename, that
+> contains the relevant DTBs.
+>
+> Thanks.
+>
+> -----
+> V4:
+> patch(1/7):
+>   - Drop device_type property.
+> patch(2/7):
+>   - Rename board.yaml to loongson.yaml.
+> patch(4/7):
+>   - Keep the ranges attribute after compatible;
+>   - Add bootargs =3D "ttyS0,115200", which is needed for reference board;
+> patch(5/7):
+>   - Keep the ranges attribute after compatible;
+>   - Add bootargs =3D "ttyS0,115200", which is needed for reference board;
+>   - Change node name global-utilities to chipid.
+> patch(6/7):
+>   - Keep the ranges attribute after compatible;
+>   - Add bootargs =3D "ttyS0,115200", which is needed for reference board.
+>
+> Link to V3:
+> https://lore.kernel.org/all/cover.1692618548.git.zhoubinbin@loongson.cn/
+>
+> V3:
+> patch(1/7):
+>   - Add reference to the common cpu schema.
+> patch(2/7):
+>   - Add reviewed-by tag.
+> patch(4/7):
+>   - Drop bootargs;
+>   - Move the cpus node to dtsi, which is part of the SoC.
+> patch(5/7):
+>   - Drop bootargs;
+>   - Move the cpus node to dtsi, which is part of the SoC;
+>   - Fix gmac0/1-mdio node: compatible is always the first property;
+>   - Drop i2c-gpio node.
+> patch(6/7):
+>   - Drop bootargs;
+>   - Move the cpus node to dtsi, which is part of the SoC.
+>   - Changes liointc to liointc-1.0, for Loongson-2K2000 has 32 interrupt
+>     sources.
+>
+> Link to V2:
+> https://lore.kernel.org/all/cover.1692088166.git.zhoubinbin@loongson.cn/
+>
+> V2:
+> patch(1/7):
+>   - Drop model and clock-frequency properties;
+>   - Add clocks property;
+>   - Rewrite the description.
+> patch(2/7):
+>   - Add the proper compatibles for boards.
+> patch(4/7)(5/7)(6/7):
+>   - Format commit message head;
+>   - Drop undocumented compatible, such as pci_bridge compatible;
+>   - Distinguish the attributes, put SoC-related into DTSI and
+>     board-related into DTS;
+>   - Check DTS with 'make dtbs_check W=3D1'.
+> patch(7/7)
+>   - New patch;
+>   - Parses Molde name and CPU MHz from the DTS attribute.
+>
+> Link to V1:
+> https://lore.kernel.org/loongarch/cover.1686882123.git.zhoubinbin@loongso=
+n.cn/
+>
+> Binbin Zhou (7):
+>   dt-bindings: loongarch: Add CPU bindings for LoongArch
+>   dt-bindings: loongarch: Add Loongson SoC boards compatibles
+>   LoongArch: Allow device trees to be built into the kernel
+>   LoongArch: dts: DeviceTree for Loongson-2K0500
+>   LoongArch: dts: DeviceTree for Loongson-2K1000
+>   LoongArch: dts: DeviceTree for Loongson-2K2000
+>   LoongArch: Parsing CPU-related information from DTS
+>
+>  .../devicetree/bindings/loongarch/cpus.yaml   |  61 +++
+>  .../bindings/loongarch/loongson.yaml          |  34 ++
+>  arch/loongarch/Kconfig                        |  16 +
+>  arch/loongarch/Makefile                       |  10 +-
+>  arch/loongarch/boot/dts/Makefile              |   7 +-
+>  .../boot/dts/loongson-2k0500-ref.dts          |  89 ++++
+>  arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 254 +++++++++++
+>  .../boot/dts/loongson-2k1000-ref.dts          | 172 ++++++++
+>  arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 397 ++++++++++++++++++
+>  .../boot/dts/loongson-2k2000-ref.dts          |  73 ++++
+>  arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 291 +++++++++++++
+>  arch/loongarch/kernel/env.c                   |  33 ++
+>  arch/loongarch/kernel/setup.c                 |   9 +-
+>  13 files changed, 1440 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/loongarch/cpus.yaml
+>  create mode 100644 Documentation/devicetree/bindings/loongarch/loongson.=
+yaml
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k0500.dtsi
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k1000.dtsi
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k2000-ref.dts
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k2000.dtsi
+>
+> --
+> 2.39.3
+>
