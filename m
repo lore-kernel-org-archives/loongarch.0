@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13361CA60
-	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 15:13:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6648FC433CC
-	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 15:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593A310787
+	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 15:19:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8FD9C433C7
+	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 15:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692976433;
-	bh=WkhOJYLE+ues6uXybxrkDTqzwzf54+ugLpiyd1X1qD4=;
+	s=k20201202; t=1692976794;
+	bh=4IIMN3b2kTYVIvu/5e5trpnBMJWv+uT58S9QzRv0bAU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hVl+dq/YMlku1ai1U5AOXCm2uo/geY18Uym7VClfr3vuDw+UwpDvc3HeAhIAGkgSu
-	 VZkZYlteZ4bnxaY6Kl4Oe2AMfaVnLNxtTLuOmb56KzR+XGtdVSSgzx0YoLfjnJOWGu
-	 fKI+5FoBmiXtghAmlH5Uo5KMNfXLQM3OTrnY5JUDAOaBEqk6LndCLdLLK/wGqjH4Jt
-	 i3CSXz6ACvXwZrbpxOwhJxeg6DNyMr1+Ns6tiiqizxprbrOTDtfHWA7pKBl1Pk7SJW
-	 gBX9MDjrBz9/zr5VBAsZkoKjhk0m2y75zOJ6ORj52OCAVBqtGAfN+5+xjNUff4UBrL
-	 FiBewBKlv4Mww==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-99c1c66876aso129778566b.2
-        for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 08:13:53 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxsMBDbC1HUXyvpepzJIRJFRpJc+rKKg+Aj9Xuf0wujpJgeZqAu
-	BqOYwW5OiSpzUtpqQ1ZX3eidOAxN+tUEKdKCS2I=
-X-Google-Smtp-Source: AGHT+IHwf5sskXQeP52vSQ1CC9d7CGeC42LRXf66m6UturBCBYbtfOO65oVp7jksLJ1+wvTIJ3jfeb+r3lujLqEAoEk=
-X-Received: by 2002:a17:907:2671:b0:99c:e38d:e47d with SMTP id
- ci17-20020a170907267100b0099ce38de47dmr14271574ejc.27.1692976431644; Fri, 25
- Aug 2023 08:13:51 -0700 (PDT)
+	b=R7c1cryVSOxME9/BeSMQ9zIFCAkOeTfE+s2H3EgFxg3B594m0xJLnN5VlR9p+Phm8
+	 3sPCHGZ4vMc9nniIpjfhFg6Q1mW4lRBhofErsCEW/TYgtA6H8/r8PKcl5QEsIbvs9+
+	 Xjod8eQKyBCa4fqaLE4yQo2sPP7WPCnYgN1UdqLrKNIFSJsLHK3TbKUY+5PiyEwGi9
+	 d2xRZeRBAAlT7YSOClf/aZFgVDyvwNcVwaXIGZ4wrJUUffjP3l22fXQjniQB5okogQ
+	 0k93wHMH6qGeUYO7GuHqCUbubkqtPuK/y/cuWQ9Y7rGzDlcw4LgkSKNHh6n4xiOzvb
+	 9SoXzgAP3MpNw==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-99c0290f0a8so134745466b.1
+        for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 08:19:54 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yw+pu4fdnJGW8InayXDEBabIUbLMHLX3MRpXT1tKXZk25QnUGMv
+	Uj4Kdpb0KJ5EXYpA4N6AN5qA/b52jaa8bayOmzA=
+X-Google-Smtp-Source: AGHT+IEMI0O5voiMBdZeSfNdo1xEa2uTWFdFqG6MIazk/Jy3gtA8gmZPT/r4C5DSsfX0sUeycQbjleULnsMw16rUPOg=
+X-Received: by 2002:a17:906:5198:b0:9a1:b967:aca8 with SMTP id
+ y24-20020a170906519800b009a1b967aca8mr8301421ejk.4.1692976793122; Fri, 25 Aug
+ 2023 08:19:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1692783907.git.zhoubinbin@loongson.cn> <3e69929008c8190cff331941dd4d34f748e5e44a.1692783907.git.zhoubinbin@loongson.cn>
- <20230823194250.GA2768550-robh@kernel.org> <CAMpQs4KQzXYDsMJesGGRVX=e_psyiik-Th2Y0CV=keU+-v86mQ@mail.gmail.com>
- <20230825-hypocrite-smoking-cc6ce8c2936b@wendy>
-In-Reply-To: <20230825-hypocrite-smoking-cc6ce8c2936b@wendy>
+References: <cover.1692783907.git.zhoubinbin@loongson.cn> <CAAhV-H7hi=yc=PfDBafXVS5CSwEeE2WmbAAhnnDm6iYFF3YzkQ@mail.gmail.com>
+ <20230825-doubling-waltz-6444e26152db@wendy> <CAAhV-H7FAKa2_+rfyboVYxvQA0sJmaWnKj3yCJZkqe_FEx9J2Q@mail.gmail.com>
+ <20230825-exorcist-periscope-045ad906d919@spud>
+In-Reply-To: <20230825-exorcist-periscope-045ad906d919@spud>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 25 Aug 2023 23:13:39 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6LqgcHpioGU7GS0Cab7JKggGLc=TOwDsQmamuPwa4OtQ@mail.gmail.com>
-Message-ID: <CAAhV-H6LqgcHpioGU7GS0Cab7JKggGLc=TOwDsQmamuPwa4OtQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] LoongArch: Allow device trees to be built into the kernel
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+Date: Fri, 25 Aug 2023 23:19:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7LMYn2u8f1waTpWn8pS1jJC1BNVWzq5zw8vE+uecx+aQ@mail.gmail.com>
+Message-ID: <CAAhV-H7LMYn2u8f1waTpWn8pS1jJC1BNVWzq5zw8vE+uecx+aQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] LoongArch: Add built-in dtb support
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
 	devicetree@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
 	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
@@ -50,47 +51,30 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi, Conor,
 
-On Fri, Aug 25, 2023 at 8:01=E2=80=AFPM Conor Dooley <conor.dooley@microchi=
-p.com> wrote:
+On Fri, Aug 25, 2023 at 11:08=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
+ote:
 >
-> On Thu, Aug 24, 2023 at 11:20:34AM +0800, Binbin Zhou wrote:
-> > Hi Rob:
+> On Fri, Aug 25, 2023 at 11:06:40PM +0800, Huacai Chen wrote:
+> > Hi, Conor,
 > >
-> > On Thu, Aug 24, 2023 at 3:42=E2=80=AFAM Rob Herring <robh@kernel.org> w=
-rote:
+> > On Fri, Aug 25, 2023 at 7:59=E2=80=AFPM Conor Dooley <conor.dooley@micr=
+ochip.com> wrote:
 > > >
-> > > On Wed, Aug 23, 2023 at 05:54:51PM +0800, Binbin Zhou wrote:
-> > > > Some systems do not provide a useful device tree to the kernel at b=
-oot
-> > > > time. Let's keep a device tree table in the kernel, keyed by the dt=
-s
-> > > > filename, containing the relevant DTBs.
+> > > On Fri, Aug 25, 2023 at 07:38:31PM +0800, Huacai Chen wrote:
+> > > > This series looks good enough to me now, if no one has objections, =
+I
+> > > > will queue it to loongarch-next.
 > > >
-> > > Support for this in other arches was added to support legacy bootload=
-ers
-> > > with no DT support. You should not need this for a new architecture. =
-Fix
-> > > the bootloader to provide a useful DT.
-> > >
-> > Yes, our bootloader already supports DT.
-> >
-> > Our original intention of providing kernel built-in DTS is to describe
-> > all possible device information of that SoC, so that everyone can use
-> > it as a reference during development; we will unlikely to add more
-> > .dts files to the kernel besides the reference ones.
-> >
-> > And as a reference, our built-in DTS provides the most basic bootable
-> > combinations (so it is generic enough) as an alternative in case the
-> > DTS in the bootloader is unexpected.
-> >
-> > Does this make any sense?
+> > > Have you not read Rob's replies?
+> > I'm sorry, I have read but I thought Binbin's reply has answered Rob's =
+question.
 >
-> I don't see how this answers the question - as far as I can tell Rob was
-> asking specifically about the building the dtb into the kernel, whereas
-> your response seems to talk about havint the dts files in the kernel
-> tree.
-I'm sorry, but from my point of view, giving users a chance to build
-the reference dts file into the kernel is not a bad idea. Of course
-the commit message can be improved.
+> As far as I can tell, it didn't - but there were was a reply from Rob
+> about dtbs_check issues too IIRC.
+OK, I see. The dtbs_check warning is being fixed in [1], but it seems
+that Binbin hasn't got the key point of Krzysztof.
+
+https://lore.kernel.org/linux-mips/d11873a1-b552-71f5-1100-7464687f8bb4@lin=
+aro.org/T/#t
 
 Huacai
