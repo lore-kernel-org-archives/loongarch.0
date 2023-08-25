@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46CC0CA6D
-	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 11:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 481D4CA6A
+	for <loongarch@lists.linux.dev>; Fri, 25 Aug 2023 11:28:26 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8CxLOtVkOhkttAbAA--.51349S3;
-	Fri, 25 Aug 2023 19:28:21 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxEvBTkOhkotAbAA--.56089S3;
+	Fri, 25 Aug 2023 19:28:19 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF81QkOhk0l1jAA--.41739S5;
-	Fri, 25 Aug 2023 19:28:20 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF81QkOhk0l1jAA--.41739S3;
+	Fri, 25 Aug 2023 19:28:18 +0800 (CST)
 From: Yanteng Si <siyanteng@loongson.cn>
 To: acme@kernel.org
 Cc: Yanteng Si <siyanteng@loongson.cn>,
@@ -22,9 +22,9 @@ Cc: Yanteng Si <siyanteng@loongson.cn>,
 	linux-perf-users@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn,
 	loongarch@lists.linux.dev
-Subject: [PATCH v2 3/3] perf/tools: Use "test -f" instead of "[-f FILE]"
-Date: Fri, 25 Aug 2023 19:28:04 +0800
-Message-Id: <c50bc0a92dce0ff0fa6504c1a52fb53e2ac007bf.1692962043.git.siyanteng@loongson.cn>
+Subject: [PATCH v2 1/3] perf/tools: Allow to use cpuinfo on LoongArch
+Date: Fri, 25 Aug 2023 19:28:02 +0800
+Message-Id: <db968a186a10e4629fe10c26a1210f7126ad41ec.1692962043.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.31.4
 In-Reply-To: <cover.1692962043.git.siyanteng@loongson.cn>
 References: <cover.1692962043.git.siyanteng@loongson.cn>
@@ -35,86 +35,64 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxF81QkOhk0l1jAA--.41739S5
+X-CM-TRANSID:AQAAf8CxF81QkOhk0l1jAA--.41739S3
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGw4xCr4xWFWkZF1xtFyrAFc_yoW5tF17pw
-	n5A398Gr47XryUA34IqF90qF45Kwn2q3W5uw4kCrZrCF18Gry7JrZ8ZwnIyF18WwsIg3yI
-	93yDuFy8tF4vqFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr45Gw4UWr4xKFWxGFW7GFX_yoW8Gr1kpr
+	WDC3y7tw43WF9xKasayFsYqFW3Xrs7JFWfWrs0k3yrZr4Syrn7XryxXr45KF47XayDXw1j
+	9r1DWr4DZFW8JrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3
-	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0XdjtUUUUU==
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4YLvDUUUU
 
-It will be simpler without that extra subshell, so
-let's use "test -f".
+Define these macros so that the CPU name can be displayed
+when running perf report and perf timechart.
 
 Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
 ---
- tools/perf/trace/beauty/mmap_flags.sh | 9 ++++++---
- tools/perf/trace/beauty/mmap_prot.sh  | 5 +++--
- 2 files changed, 9 insertions(+), 5 deletions(-)
+ tools/perf/util/header.c    | 2 ++
+ tools/perf/util/svghelper.c | 5 ++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
-index d035b29fc5ec..6ecdb3c5a99e 100755
---- a/tools/perf/trace/beauty/mmap_flags.sh
-+++ b/tools/perf/trace/beauty/mmap_flags.sh
-@@ -19,7 +19,8 @@ arch_mman=${arch_header_dir}/mman.h
- 
- printf "static const char *mmap_flags[] = {\n"
- regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
--([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
-+test -f ${arch_mman} && \
-+grep -E -q $regex ${arch_mman} && \
- (grep -E $regex ${arch_mman} | \
- 	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
- 	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
-@@ -28,12 +29,14 @@ grep -E -q $regex ${linux_mman} && \
- 	grep -E -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
- 	sed -r "s/$regex/\2 \1 \1 \1 \2/g" | \
- 	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
--([ ! -f ${arch_mman} ] || grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*' ${arch_mman}) &&
-+( ! test -f ${arch_mman} || \
-+grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*' ${arch_mman}) &&
- (grep -E $regex ${header_dir}/mman-common.h | \
- 	grep -E -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
- 	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
- 	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
--([ ! -f ${arch_mman} ] || grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.h>.*' ${arch_mman}) &&
-+( ! test -f ${arch_mman} || \
-+grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.h>.*' ${arch_mman}) &&
- (grep -E $regex ${header_dir}/mman.h | \
- 	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
- 	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef MAP_%s\n#define MAP_%s %s\n#endif\n")
-diff --git a/tools/perf/trace/beauty/mmap_prot.sh b/tools/perf/trace/beauty/mmap_prot.sh
-index 49e8c865214b..4436fcd6e861 100755
---- a/tools/perf/trace/beauty/mmap_prot.sh
-+++ b/tools/perf/trace/beauty/mmap_prot.sh
-@@ -17,12 +17,13 @@ prefix="PROT"
- 
- printf "static const char *mmap_prot[] = {\n"
- regex=`printf '^[[:space:]]*#[[:space:]]*define[[:space:]]+%s_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*' ${prefix}`
--([ ! -f ${arch_mman} ] || grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*' ${arch_mman}) &&
-+( ! test -f ${arch_mman} \
-+|| grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*' ${arch_mman}) &&
- (grep -E $regex ${common_mman} | \
- 	grep -E -vw PROT_NONE | \
- 	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
- 	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef ${prefix}_%s\n#define ${prefix}_%s %s\n#endif\n")
--[ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman} &&
-+test -f ${arch_mman} && grep -E -q $regex ${arch_mman} &&
- (grep -E $regex ${arch_mman} | \
- 	grep -E -vw PROT_NONE | \
- 	sed -r "s/$regex/\2 \1 \1 \1 \2/g"	| \
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 52fbf526fe74..c6e19192bd28 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -456,6 +456,8 @@ static int write_cpudesc(struct feat_fd *ff,
+ #define CPUINFO_PROC	{ "Processor", }
+ #elif defined(__xtensa__)
+ #define CPUINFO_PROC	{ "core ID", }
++#elif defined(__loongarch__)
++#define CPUINFO_PROC	{ "Model Name", }
+ #else
+ #define CPUINFO_PROC	{ "model name", }
+ #endif
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index 5c62d3118c41..5744a3036b01 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -331,7 +331,10 @@ static char *cpu_model(void)
+ 	file = fopen("/proc/cpuinfo", "r");
+ 	if (file) {
+ 		while (fgets(buf, 255, file)) {
+-			if (strstr(buf, "model name")) {
++			if (strcasestr(buf, "Model Name")) {
++				strlcpy(cpu_m, &buf[13], 255);
++				break;
++			} else if (strcasestr(buf, "model name")) {
+ 				strlcpy(cpu_m, &buf[13], 255);
+ 				break;
+ 			}
 -- 
 2.31.4
 
