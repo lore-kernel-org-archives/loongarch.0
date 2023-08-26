@@ -1,11 +1,11 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3961C29
-	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 09:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AC7C20FF
+	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 09:40:11 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8DxPOt5yOlk7SYcAA--.52193S3;
-	Sat, 26 Aug 2023 17:40:09 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxIvB6yOlk+CYcAA--.56643S3;
+	Sat, 26 Aug 2023 17:40:10 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHCN4yOlkVCFkAA--.26955S2;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHCN4yOlkVCFkAA--.26955S3;
 	Sat, 26 Aug 2023 17:40:09 +0800 (CST)
 From: Yanteng Si <siyanteng@loongson.cn>
 To: acme@kernel.org
@@ -21,11 +21,14 @@ Cc: Yanteng Si <siyanteng@loongson.cn>,
 	chenhuacai@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn,
-	loongarch@lists.linux.dev
-Subject: [PATCH v3 0/3] tools/perf: Add loongarch cpuinfo and fix build warning
-Date: Sat, 26 Aug 2023 17:39:59 +0800
-Message-Id: <cover.1693040967.git.siyanteng@loongson.cn>
+	loongarch@lists.linux.dev,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH v3 1/3] perf/tools: Allow to use cpuinfo on LoongArch
+Date: Sat, 26 Aug 2023 17:40:00 +0800
+Message-Id: <b7a1c8e388de8cc2832fde33825abde8eb784205.1693040967.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.31.4
+In-Reply-To: <cover.1693040967.git.siyanteng@loongson.cn>
+References: <cover.1693040967.git.siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -33,50 +36,62 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxHCN4yOlkVCFkAA--.26955S2
+X-CM-TRANSID:AQAAf8BxHCN4yOlkVCFkAA--.26955S3
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruw47Gr4fWrykCw4UtFWfXrc_yoW3XFc_Za
-	yS93WDJryUCF9Yv3yak34rCryxWFZrAr95AayDKay5Zry5Jr1DWayDC3srZF1Fg3W5Xrn3
-	Jw1fCrW5Zw4a9osvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Cr1j6rxdM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8uc_3UUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr45Gw4UWr4xKFWxGFW7GFX_yoW8JFW7pr
+	WkC3y7tw45GF9xK3Zayan5XFW3Xrs7ZFWfuws5K3y5Zr1Sywn7XryxXFs8KF47Xa4DJw1j
+	9r1DWr4DZFW8ArcCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
+	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jr9NsUUUUU=
 
-v3:
-* Using strcasest() correctly.
-* Picking Huacai's Acked tag, I seem to have lost it in the last version.
+Define these macros so that the CPU name can be displayed
+when running perf report and perf timechart.
 
-v2:
-* Switch to strcasestr().
-* Use "test -f" instead of "[-f FILE]".
+Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ tools/perf/util/header.c    | 2 ++
+ tools/perf/util/svghelper.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-v1:
-* LoongArch and riscv don't have tools/arch/xxxxx/include/uapi/asm/mman.h,
-  let's modify the detection rules.
-* Allow to use cpuinfo on loongarch.
-
-Yanteng Si (3):
-  perf/tools: Allow to use cpuinfo on LoongArch
-  perf/trace: Fix mmap_flags for archs use generic mman.h
-  perf/trace: Use "test -f" instead of "[-f FILE]"
-
- tools/perf/trace/beauty/mmap_flags.sh | 7 +++++--
- tools/perf/trace/beauty/mmap_prot.sh  | 5 +++--
- tools/perf/util/header.c              | 2 ++
- tools/perf/util/svghelper.c           | 2 +-
- 4 files changed, 11 insertions(+), 5 deletions(-)
-
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 52fbf526fe74..c6e19192bd28 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -456,6 +456,8 @@ static int write_cpudesc(struct feat_fd *ff,
+ #define CPUINFO_PROC	{ "Processor", }
+ #elif defined(__xtensa__)
+ #define CPUINFO_PROC	{ "core ID", }
++#elif defined(__loongarch__)
++#define CPUINFO_PROC	{ "Model Name", }
+ #else
+ #define CPUINFO_PROC	{ "model name", }
+ #endif
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index 5c62d3118c41..2e141126b0d6 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -331,7 +331,7 @@ static char *cpu_model(void)
+ 	file = fopen("/proc/cpuinfo", "r");
+ 	if (file) {
+ 		while (fgets(buf, 255, file)) {
+-			if (strstr(buf, "model name")) {
++			if (strcasestr(buf, "model Name")) {
+ 				strlcpy(cpu_m, &buf[13], 255);
+ 				break;
+ 			}
 -- 
 2.31.4
 
