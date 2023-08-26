@@ -1,134 +1,167 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A568710F5
-	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 07:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1693036356; bh=IFoYkf9fzSapG1XLKYIAL15Uu/RdIf8Jfzku7YLWtZ0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=g2ocIZzkMykzHJKVmZnJ4WMK9j6ZPEgJ8ahMqXA1vdXi+TNqxReYdp5vn8EaKskvf
-	 vhSO+X2zSJU4+fL31dlC5Szgd0XIaHg3SjHNw1wup9nXYSsHd66saFA4Fhwzo/UdtR
-	 OUOOWOIzVUAta26YmWXoQeGmwpMGsiJUY2WmmJf8=
-Received: from [192.168.9.172] (unknown [101.88.24.218])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 00863600DA;
-	Sat, 26 Aug 2023 15:52:35 +0800 (CST)
-Message-ID: <0b509186-bf01-2151-0954-d669075c1f71@xen0n.name>
-Date: Sat, 26 Aug 2023 15:52:35 +0800
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CD2C1C29
+	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 09:19:23 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.102])
+	by gateway (Coremail) with SMTP id _____8Dx6eqZw+lkJyMcAA--.51724S3;
+	Sat, 26 Aug 2023 17:19:21 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.109.102])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax98yXw+lkgR5kAA--.26083S3;
+	Sat, 26 Aug 2023 17:19:20 +0800 (CST)
+Message-ID: <e8dc81f6-2a2b-4647-9835-3fdeee6a1be1@loongson.cn>
+Date: Sat, 26 Aug 2023 17:19:19 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH] LoongArch: Ensure FP/SIMD registers in the core dump file
- is up to date
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] perf/tools: Allow to use cpuinfo on LoongArch
 Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <20230825114224.3886577-1-chenhuacai@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230825114224.3886577-1-chenhuacai@loongson.cn>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, chenhuacai@kernel.org,
+ linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
+ loongarch@lists.linux.dev
+References: <cover.1692962043.git.siyanteng@loongson.cn>
+ <db968a186a10e4629fe10c26a1210f7126ad41ec.1692962043.git.siyanteng@loongson.cn>
+ <ZOiwbNrwaodRfbSN@kernel.org>
+From: Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <ZOiwbNrwaodRfbSN@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Ax98yXw+lkgR5kAA--.26083S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZrWrWFWkZw4rCrWDtryktFc_yoWrWr4fpr
+	Wqkay3Kw4xKay5t3Z7trs5uan2qw43Jw47WF4DKr1DZry29r9rG34IqF4Y9rWxX3W3Ww1a
+	kr4UJrnrZFyrXFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-On 8/25/23 19:42, Huacai Chen wrote:
-> This is a port of commit 379eb01c21795edb4c ("riscv: Ensure the value
-> of FP registers in the core dump file is up to date").
+
+在 2023/8/25 21:45, Arnaldo Carvalho de Melo 写道:
+> Em Fri, Aug 25, 2023 at 07:28:02PM +0800, Yanteng Si escreveu:
+>> Define these macros so that the CPU name can be displayed
+>> when running perf report and perf timechart.
+>>
+>> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+>> ---
+>>   tools/perf/util/header.c    | 2 ++
+>>   tools/perf/util/svghelper.c | 5 ++++-
+>>   2 files changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+>> index 52fbf526fe74..c6e19192bd28 100644
+>> --- a/tools/perf/util/header.c
+>> +++ b/tools/perf/util/header.c
+>> @@ -456,6 +456,8 @@ static int write_cpudesc(struct feat_fd *ff,
+>>   #define CPUINFO_PROC	{ "Processor", }
+>>   #elif defined(__xtensa__)
+>>   #define CPUINFO_PROC	{ "core ID", }
+>> +#elif defined(__loongarch__)
+>> +#define CPUINFO_PROC	{ "Model Name", }
+>>   #else
+>>   #define CPUINFO_PROC	{ "model name", }
+>>   #endif
+>> diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+>> index 5c62d3118c41..5744a3036b01 100644
+>> --- a/tools/perf/util/svghelper.c
+>> +++ b/tools/perf/util/svghelper.c
+>> @@ -331,7 +331,10 @@ static char *cpu_model(void)
+>>   	file = fopen("/proc/cpuinfo", "r");
+>>   	if (file) {
+>>   		while (fgets(buf, 255, file)) {
+>> -			if (strstr(buf, "model name")) {
+>> +			if (strcasestr(buf, "Model Name")) {
+>> +				strlcpy(cpu_m, &buf[13], 255);
+>> +				break;
+>> +			} else if (strcasestr(buf, "model name")) {
+>>   				strlcpy(cpu_m, &buf[13], 255);
+> Hey, the point of strcasestr() is to do a case _insensitive_ substring
+> search, so all we need is:
 >
-> The values of FP/SIMD registers in the core dump file come from the
-> thread.fpu. However, kernel saves the FP/SIMD registers only before
-> scheduling out the process. If no process switch happens during the
-> exception handling, kernel will not have a chance to save the latest
-> values of FP/SIMD registers. So it may cause their values in the core
-> dump file incorrect. To solve this problem, force fpr_get()/simd_get()
-> to save the FP/SIMD registers into the thread.fpu if the target task
-> equals the current task.
+>> --- a/tools/perf/util/svghelper.c
+>> +++ b/tools/perf/util/svghelper.c
+>> @@ -331,7 +331,10 @@ static char *cpu_model(void)
+>>   	file = fopen("/proc/cpuinfo", "r");
+>>   	if (file) {
+>>   		while (fgets(buf, 255, file)) {
+>> -			if (strstr(buf, "model name")) {
+>> +			if (strcasestr(buf, "model Name")) {
+>>   				strlcpy(cpu_m, &buf[13], 255);
+>>   				break;
+Thanks a million！
+> Right? I'm doing this change while applying your patches.
 >
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->   arch/loongarch/include/asm/fpu.h | 22 ++++++++++++++++++----
->   arch/loongarch/kernel/ptrace.c   |  4 ++++
->   2 files changed, 22 insertions(+), 4 deletions(-)
+> See:
 >
-> diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
-> index b541f6248837..08a45e9fd15c 100644
-> --- a/arch/loongarch/include/asm/fpu.h
-> +++ b/arch/loongarch/include/asm/fpu.h
-> @@ -173,16 +173,30 @@ static inline void restore_fp(struct task_struct *tsk)
->   		_restore_fp(&tsk->thread.fpu);
->   }
->   
-> -static inline union fpureg *get_fpu_regs(struct task_struct *tsk)
-> +static inline void get_fpu_regs(struct task_struct *tsk)
-Removing the return value from the signature means the function is no 
-longer a getter, so maybe the name should get changed as well? Like 
-"save_fpu_regs"?
->   {
-> +	unsigned int euen;
-> +
->   	if (tsk == current) {
->   		preempt_disable();
-> -		if (is_fpu_owner())
-> +
-> +		euen = csr_read32(LOONGARCH_CSR_EUEN);
-> +
-> +#ifdef CONFIG_CPU_HAS_LASX
-> +		if (euen & CSR_EUEN_LASXEN)
-> +			_save_lasx(&current->thread.fpu);
-> +		else
-> +#endif
-> +#ifdef CONFIG_CPU_HAS_LSX
-> +		if (euen & CSR_EUEN_LSXEN)
-> +			_save_lsx(&current->thread.fpu);
-> +		else
-> +#endif
-> +		if (euen & CSR_EUEN_FPEN)
->   			_save_fp(&current->thread.fpu);
-> +
->   		preempt_enable();
->   	}
-> -
-> -	return tsk->thread.fpu.fpr;
->   }
->   
->   static inline int is_simd_owner(void)
-> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-> index 2bb5ec55ae1e..209e3d29e0b2 100644
-> --- a/arch/loongarch/kernel/ptrace.c
-> +++ b/arch/loongarch/kernel/ptrace.c
-> @@ -148,6 +148,8 @@ static int fpr_get(struct task_struct *target,
->   {
->   	int r;
->   
-> +	get_fpu_regs(target);
-> +
->   	if (sizeof(target->thread.fpu.fpr[0]) == sizeof(elf_fpreg_t))
->   		r = gfpr_get(target, &to);
->   	else
-> @@ -279,6 +281,8 @@ static int simd_get(struct task_struct *target,
->   {
->   	const unsigned int wr_size = NUM_FPU_REGS * regset->size;
->   
-> +	get_fpu_regs(target);
-> +
->   	if (!tsk_used_math(target)) {
->   		/* The task hasn't used FP or LSX, fill with 0xff */
->   		copy_pad_fprs(target, regset, &to, 0);
+> [acme@five c]$ grep -m1 "model name" /proc/cpuinfo | ./strcasestr "Model NAME"
+> needle=Model NAME
+> haystack=model name	: AMD Ryzen 9 5950X 16-Core Processor
+>
+> found: model name	: AMD Ryzen 9 5950X 16-Core Processor
+> found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+> [acme@five c]$ grep -m1 "model name" /proc/cpuinfo | ./strcasestr "model name"
+> needle=model name
+> haystack=model name	: AMD Ryzen 9 5950X 16-Core Processor
+>
+> found: model name	: AMD Ryzen 9 5950X 16-Core Processor
+> found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+> [acme@five c]$ grep -m1 "model name" /proc/cpuinfo | ./strcasestr "Model Name"
+> needle=Model Name
+> haystack=model name	: AMD Ryzen 9 5950X 16-Core Processor
+>
+> found: model name	: AMD Ryzen 9 5950X 16-Core Processor
+> found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+> acme@five c]$ echo "Model Name : AMD Ryzen 9 5950X 16-Core Processor" | ./strcasestr "model name"
+> needle=model name
+> haystack=Model Name	: AMD Ryzen 9 5950X 16-Core Processor
+>
+> found: Model Name	: AMD Ryzen 9 5950X 16-Core Processor
+> found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+> [acme@five c]$ echo "MODEL NAME : AMD Ryzen 9 5950X 16-Core Processor" | ./strcasestr "model name"
+> needle=model name
+> haystack=MODEL NAME	: AMD Ryzen 9 5950X 16-Core Processor
+>
+> found: MODEL NAME	: AMD Ryzen 9 5950X 16-Core Processor
+> found[13..]: AMD Ryzen 9 5950X 16-Core Processor
+> [acme@five c]$
+> [acme@five c]$ cat strcasestr.c
+> #define _GNU_SOURCE
+> #include <stdio.h>
+> #include <string.h>
+>
+> int main(int argc, char *argv[])I will send v3
+> {
+> 	char *needle = argv[1], haystack[128], *found;
+> 	printf("needle=%s\n", needle);
+> 	fgets(haystack, sizeof(haystack), stdin);
+> 	printf("haystack=%s\n", haystack);
+> 	found = strcasestr(haystack, needle);
+> 	printf("found: %s", found);
+> 	printf("found[13..]: %s", found + 13);
+> 	return 0;
+> }
+> [acme@five c]$
 
-Otherwise this should be fine. (I don't know why that helper is 
-previously unused though...)
+I see. I will send v3.
 
--- 
-WANG "xen0n" Xuerui
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+Thanks,
+
+Yanteng
+
 
