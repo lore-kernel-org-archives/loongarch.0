@@ -1,248 +1,115 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71637E
-	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 11:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1693049360; bh=jVCVG1/221W+GBfmKbFkmaTpzK/cZFxAofMIlAvip0g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dpQoBgXXGbviD+RTGcpdLy7Eef4gvaNogljYVawGYQnm1S1abeeb/lJd6+BqSSkmK
-	 PTwVP8nAYFGSh2qmpL6j+Nf6aJA7JtX7rZyDCFyNOmEa9UAoJ/dKkS0hslm+Cp2KNo
-	 DJlsRP+sgcoT8XcA/mp7Ayn3V052c7OqTY8+od/0=
-Received: from [192.168.9.172] (unknown [101.88.24.218])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 5D50C6011B;
-	Sat, 26 Aug 2023 19:29:20 +0800 (CST)
-Message-ID: <1b0ca747-e6cb-e53f-f5cf-b1bbfc1ed839@xen0n.name>
-Date: Sat, 26 Aug 2023 19:29:19 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B75CA58
+	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 14:23:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E28CC433C7;
+	Sat, 26 Aug 2023 14:23:52 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH V2] LoongArch: Ensure FP/SIMD registers in the core dump file is up to date
+Date: Sat, 26 Aug 2023 22:23:41 +0800
+Message-Id: <20230826142341.4107728-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v19 05/30] LoongArch: KVM: Add vcpu related header files
-Content-Language: en-US
-To: Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
- Xi Ruoyao <xry111@xry111.site>
-References: <20230817125951.1126909-1-zhaotianrui@loongson.cn>
- <20230817125951.1126909-6-zhaotianrui@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230817125951.1126909-6-zhaotianrui@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+This is a port of commit 379eb01c21795edb4c ("riscv: Ensure the value
+of FP registers in the core dump file is up to date").
 
-On 8/17/23 20:59, Tianrui Zhao wrote:
-> Add LoongArch vcpu related header files, including vcpu csr
-> information, irq number defines, and some vcpu interfaces.
->
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> ---
->   arch/loongarch/include/asm/insn-def.h  |  55 ++++++
->   arch/loongarch/include/asm/kvm_csr.h   | 252 +++++++++++++++++++++++++
->   arch/loongarch/include/asm/kvm_vcpu.h  |  95 ++++++++++
->   arch/loongarch/include/asm/loongarch.h |  20 +-
->   arch/loongarch/kvm/trace.h             | 168 +++++++++++++++++
->   5 files changed, 585 insertions(+), 5 deletions(-)
->   create mode 100644 arch/loongarch/include/asm/insn-def.h
->   create mode 100644 arch/loongarch/include/asm/kvm_csr.h
->   create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
->   create mode 100644 arch/loongarch/kvm/trace.h
->
-> diff --git a/arch/loongarch/include/asm/insn-def.h b/arch/loongarch/include/asm/insn-def.h
-> new file mode 100644
-> index 000000000000..e285ee108fb0
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/insn-def.h
-> @@ -0,0 +1,55 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#ifndef __ASM_INSN_DEF_H
-> +#define __ASM_INSN_DEF_H
-> +
-> +#include <linux/stringify.h>
-> +#include <asm/gpr-num.h>
-> +#include <asm/asm.h>
-> +
-> +#define INSN_STR(x)		__stringify(x)
-> +#define CSR_RD_SHIFT		0
-> +#define CSR_RJ_SHIFT		5
-> +#define CSR_SIMM14_SHIFT	10
-> +#define CSR_OPCODE_SHIFT	24
-> +
-> +#define DEFINE_INSN_CSR							\
-> +	__DEFINE_ASM_GPR_NUMS						\
-> +"	.macro insn_csr, opcode, rj, rd, simm14\n"			\
-> +"	.4byte	((\\opcode << " INSN_STR(CSR_OPCODE_SHIFT) ") |"	\
-> +"		 (.L__gpr_num_\\rj << " INSN_STR(CSR_RJ_SHIFT) ") |"	\
-> +"		 (.L__gpr_num_\\rd << " INSN_STR(CSR_RD_SHIFT) ") |"	\
-> +"		 (\\simm14 << " INSN_STR(CSR_SIMM14_SHIFT) "))\n"	\
-> +"	.endm\n"
+The values of FP/SIMD registers in the core dump file come from the
+thread.fpu. However, kernel saves the FP/SIMD registers only before
+scheduling out the process. If no process switch happens during the
+exception handling, kernel will not have a chance to save the latest
+values of FP/SIMD registers. So it may cause their values in the core
+dump file incorrect. To solve this problem, force fpr_get()/simd_get()
+to save the FP/SIMD registers into the thread.fpu if the target task
+equals the current task.
 
-Okay so the previous request (just removing this file and related 
-machinery, with detailed analysis [1] as to why this is doable across 
-the whole LoongArch ecosystem, and agreed by at least one downstream 
-commercial distro [2]) still isn't being honored...
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Rename get_fpu_regs() to save_fpu_regs().
 
-Maybe give your arguments as to what edge case the previous analysis 
-wasn't covering, or *at the very least* re-use the existing "parse_r" 
-helper and don't re-invent it, should it happen that such usage is 
-actually deemed acceptable in the kvm subsystem as previously pointed 
-out by Ruoyao [3].
+ arch/loongarch/include/asm/fpu.h | 22 ++++++++++++++++++----
+ arch/loongarch/kernel/ptrace.c   |  4 ++++
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-[1]: 
-https://lore.kernel.org/loongarch/81270b55-37c4-d566-8cd7-acc90b490c10@xen0n.name/
-[2]: 
-https://lore.kernel.org/loongarch/367239C38ED9D19C+9ef16061-9057-482c-bd8c-0b9ede71cfa7@uniontech.com/
-[3]: 
-https://lore.kernel.org/loongarch/6a5ed2266138cc61cbe27577424bb53cda72378d.camel@xry111.site/
-
-> +
-> +#define UNDEFINE_INSN_CSR						\
-> +"	.purgem insn_csr\n"
-> +
-> +#define __INSN_CSR(opcode, rj, rd, simm14)				\
-> +	DEFINE_INSN_CSR							\
-> +	"insn_csr " opcode ", " rj ", " rd ", " simm14 "\n"		\
-> +	UNDEFINE_INSN_CSR
-> +
-> +
-> +#define INSN_CSR(opcode, rj, rd, simm14)				\
-> +	__INSN_CSR(LARCH_##opcode, LARCH_##rj, LARCH_##rd,		\
-> +		   LARCH_##simm14)
-> +
-> +#define __ASM_STR(x)		#x
-> +#define LARCH_OPCODE(v)		__ASM_STR(v)
-> +#define LARCH_SIMM14(v)		__ASM_STR(v)
-> +#define __LARCH_REG(v)		__ASM_STR(v)
-> +#define LARCH___RD(v)		__LARCH_REG(v)
-> +#define LARCH___RJ(v)		__LARCH_REG(v)
-> +#define LARCH_OPCODE_GCSR	LARCH_OPCODE(5)
-> +
-> +#define GCSR_read(csr, rd)						\
-> +	INSN_CSR(OPCODE_GCSR, __RJ(zero), __RD(rd), SIMM14(csr))
-> +
-> +#define GCSR_write(csr, rd)						\
-> +	INSN_CSR(OPCODE_GCSR, __RJ($r1), __RD(rd), SIMM14(csr))
-> +
-> +#define GCSR_xchg(csr, rj, rd)						\
-> +	INSN_CSR(OPCODE_GCSR, __RJ(rj), __RD(rd), SIMM14(csr))
-> +
-> +#endif /* __ASM_INSN_DEF_H */
-> diff --git a/arch/loongarch/include/asm/kvm_csr.h b/arch/loongarch/include/asm/kvm_csr.h
-> new file mode 100644
-> index 000000000000..34483bbaec15
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/kvm_csr.h
-> @@ -0,0 +1,252 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-> + */
-> +
-> +#ifndef __ASM_LOONGARCH_KVM_CSR_H__
-> +#define __ASM_LOONGARCH_KVM_CSR_H__
-> +#include <asm/loongarch.h>
-> +#include <asm/kvm_vcpu.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/kvm_host.h>
-> +
-> +#ifdef CONFIG_AS_HAS_LVZ_EXTENSION
-> +/* binutils support virtualization instructions */
-
-It may also be LLVM IAS, so I'd suggest removing this comment as the 
-config symbol name is pretty self-documenting.
-
-But this Kconfig flag isn't being defined until Patch 28, which feels a 
-bit reversed. I'd suggest splitting the definition for this symbol out 
-for a small patch before this one, or merging that definition into this 
-patch.
-
-> +#define gcsr_read(csr)						\
-> +({								\
-> +	register unsigned long __v;				\
-> +	__asm__ __volatile__(					\
-> +		" gcsrrd %[val], %[reg]\n\t"			\
-> +		: [val] "=r" (__v)				\
-> +		: [reg] "i" (csr)				\
-> +		: "memory");					\
-> +	__v;							\
-> +})
-> +
-> +#define gcsr_write(v, csr)					\
-> +({								\
-> +	register unsigned long __v = v;				\
-> +	__asm__ __volatile__ (					\
-> +		" gcsrwr %[val], %[reg]\n\t"			\
-> +		: [val] "+r" (__v)				\
-> +		: [reg] "i" (csr)				\
-> +		: "memory");					\
-> +})
-> +
-> +#define gcsr_xchg(v, m, csr)					\
-> +({								\
-> +	register unsigned long __v = v;				\
-> +	__asm__ __volatile__(					\
-> +		" gcsrxchg %[val], %[mask], %[reg]\n\t"		\
-> +		: [val] "+r" (__v)				\
-> +		: [mask] "r" (m), [reg] "i" (csr)		\
-> +		: "memory");					\
-> +	__v;							\
-> +})
-> +#else
-> +/* binutils do not support virtualization instructions */
-
-Similarly this comment could be removed. Or better, instead hint at the 
-symbol being checked so readers don't lose context:
-
-#else /* CONFIG_AS_HAS_LVZ_EXTENSION */
-
-> +#define gcsr_read(csr)						\
-> +({								\
-> +	register unsigned long __v;				\
-> +	__asm__ __volatile__ (GCSR_read(csr, %0)		\
-> +				: "=r" (__v) :			\
-> +				: "memory");			\
-> +	__v;							\
-> +})
-> +
-> +#define gcsr_write(val, csr)					\
-> +({								\
-> +	register unsigned long __v = val;			\
-> +	__asm__ __volatile__ (GCSR_write(csr, %0)		\
-> +				: "+r" (__v) :			\
-> +				: "memory");			\
-> +})
-> +
-> +#define gcsr_xchg(val, mask, csr)				\
-> +({								\
-> +	register unsigned long __v = val;			\
-> +	__asm__ __volatile__ (GCSR_xchg(csr, %1, %0)		\
-> +				: "+r" (__v)			\
-> +				: "r"  (mask)			\
-> +				: "memory");			\
-> +	__v;							\
-> +})
-> +#endif
-> +
->
-> [snip]
-
+diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
+index b541f6248837..08a45e9fd15c 100644
+--- a/arch/loongarch/include/asm/fpu.h
++++ b/arch/loongarch/include/asm/fpu.h
+@@ -173,16 +173,30 @@ static inline void restore_fp(struct task_struct *tsk)
+ 		_restore_fp(&tsk->thread.fpu);
+ }
+ 
+-static inline union fpureg *get_fpu_regs(struct task_struct *tsk)
++static inline void save_fpu_regs(struct task_struct *tsk)
+ {
++	unsigned int euen;
++
+ 	if (tsk == current) {
+ 		preempt_disable();
+-		if (is_fpu_owner())
++
++		euen = csr_read32(LOONGARCH_CSR_EUEN);
++
++#ifdef CONFIG_CPU_HAS_LASX
++		if (euen & CSR_EUEN_LASXEN)
++			_save_lasx(&current->thread.fpu);
++		else
++#endif
++#ifdef CONFIG_CPU_HAS_LSX
++		if (euen & CSR_EUEN_LSXEN)
++			_save_lsx(&current->thread.fpu);
++		else
++#endif
++		if (euen & CSR_EUEN_FPEN)
+ 			_save_fp(&current->thread.fpu);
++
+ 		preempt_enable();
+ 	}
+-
+-	return tsk->thread.fpu.fpr;
+ }
+ 
+ static inline int is_simd_owner(void)
+diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+index a0767c3a0f0a..9a75dc43eb29 100644
+--- a/arch/loongarch/kernel/ptrace.c
++++ b/arch/loongarch/kernel/ptrace.c
+@@ -147,6 +147,8 @@ static int fpr_get(struct task_struct *target,
+ {
+ 	int r;
+ 
++	save_fpu_regs(target);
++
+ 	if (sizeof(target->thread.fpu.fpr[0]) == sizeof(elf_fpreg_t))
+ 		r = gfpr_get(target, &to);
+ 	else
+@@ -278,6 +280,8 @@ static int simd_get(struct task_struct *target,
+ {
+ 	const unsigned int wr_size = NUM_FPU_REGS * regset->size;
+ 
++	save_fpu_regs(target);
++
+ 	if (!tsk_used_math(target)) {
+ 		/* The task hasn't used FP or LSX, fill with 0xff */
+ 		copy_pad_fprs(target, regset, &to, 0);
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+2.39.3
 
