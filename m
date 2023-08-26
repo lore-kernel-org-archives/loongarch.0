@@ -1,116 +1,134 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E6B37F
-	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 01:07:11 +0000 (UTC)
-Received: from dggpemm100001.china.huawei.com (unknown [172.30.72.55])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RXdsj5kCdz1L9Gp;
-	Sat, 26 Aug 2023 09:05:29 +0800 (CST)
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Sat, 26 Aug 2023 09:07:01 +0800
-Message-ID: <2e047e5a-d833-4c6b-8b7c-85d29e19ceed@huawei.com>
-Date: Sat, 26 Aug 2023 09:07:00 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A568710F5
+	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 07:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1693036356; bh=IFoYkf9fzSapG1XLKYIAL15Uu/RdIf8Jfzku7YLWtZ0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g2ocIZzkMykzHJKVmZnJ4WMK9j6ZPEgJ8ahMqXA1vdXi+TNqxReYdp5vn8EaKskvf
+	 vhSO+X2zSJU4+fL31dlC5Szgd0XIaHg3SjHNw1wup9nXYSsHd66saFA4Fhwzo/UdtR
+	 OUOOWOIzVUAta26YmWXoQeGmwpMGsiJUY2WmmJf8=
+Received: from [192.168.9.172] (unknown [101.88.24.218])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 00863600DA;
+	Sat, 26 Aug 2023 15:52:35 +0800 (CST)
+Message-ID: <0b509186-bf01-2151-0954-d669075c1f71@xen0n.name>
+Date: Sat, 26 Aug 2023 15:52:35 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rfc v2 04/10] s390: mm: use try_vma_locked_page_fault()
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH] LoongArch: Ensure FP/SIMD registers in the core dump file
+ is up to date
 Content-Language: en-US
-To: Heiko Carstens <hca@linux.ibm.com>, Alexander Gordeev
-	<agordeev@linux.ibm.com>
-CC: Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-	<surenb@google.com>, <willy@infradead.org>, Russell King
-	<linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
-	<kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
-	<npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Gerald Schaefer
-	<gerald.schaefer@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian
- Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	<x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>
-References: <20230821123056.2109942-1-wangkefeng.wang@huawei.com>
- <20230821123056.2109942-5-wangkefeng.wang@huawei.com>
- <ZOcR4Z1WnCy1vl9T@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <20230824083225.10112-A-hca@linux.ibm.com>
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-In-Reply-To: <20230824083225.10112-A-hca@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+References: <20230825114224.3886577-1-chenhuacai@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230825114224.3886577-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.243]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm100001.china.huawei.com (7.185.36.93)
-X-CFilter-Loop: Reflected
 
+On 8/25/23 19:42, Huacai Chen wrote:
+> This is a port of commit 379eb01c21795edb4c ("riscv: Ensure the value
+> of FP registers in the core dump file is up to date").
+>
+> The values of FP/SIMD registers in the core dump file come from the
+> thread.fpu. However, kernel saves the FP/SIMD registers only before
+> scheduling out the process. If no process switch happens during the
+> exception handling, kernel will not have a chance to save the latest
+> values of FP/SIMD registers. So it may cause their values in the core
+> dump file incorrect. To solve this problem, force fpr_get()/simd_get()
+> to save the FP/SIMD registers into the thread.fpu if the target task
+> equals the current task.
+>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/fpu.h | 22 ++++++++++++++++++----
+>   arch/loongarch/kernel/ptrace.c   |  4 ++++
+>   2 files changed, 22 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
+> index b541f6248837..08a45e9fd15c 100644
+> --- a/arch/loongarch/include/asm/fpu.h
+> +++ b/arch/loongarch/include/asm/fpu.h
+> @@ -173,16 +173,30 @@ static inline void restore_fp(struct task_struct *tsk)
+>   		_restore_fp(&tsk->thread.fpu);
+>   }
+>   
+> -static inline union fpureg *get_fpu_regs(struct task_struct *tsk)
+> +static inline void get_fpu_regs(struct task_struct *tsk)
+Removing the return value from the signature means the function is no 
+longer a getter, so maybe the name should get changed as well? Like 
+"save_fpu_regs"?
+>   {
+> +	unsigned int euen;
+> +
+>   	if (tsk == current) {
+>   		preempt_disable();
+> -		if (is_fpu_owner())
+> +
+> +		euen = csr_read32(LOONGARCH_CSR_EUEN);
+> +
+> +#ifdef CONFIG_CPU_HAS_LASX
+> +		if (euen & CSR_EUEN_LASXEN)
+> +			_save_lasx(&current->thread.fpu);
+> +		else
+> +#endif
+> +#ifdef CONFIG_CPU_HAS_LSX
+> +		if (euen & CSR_EUEN_LSXEN)
+> +			_save_lsx(&current->thread.fpu);
+> +		else
+> +#endif
+> +		if (euen & CSR_EUEN_FPEN)
+>   			_save_fp(&current->thread.fpu);
+> +
+>   		preempt_enable();
+>   	}
+> -
+> -	return tsk->thread.fpu.fpr;
+>   }
+>   
+>   static inline int is_simd_owner(void)
+> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+> index 2bb5ec55ae1e..209e3d29e0b2 100644
+> --- a/arch/loongarch/kernel/ptrace.c
+> +++ b/arch/loongarch/kernel/ptrace.c
+> @@ -148,6 +148,8 @@ static int fpr_get(struct task_struct *target,
+>   {
+>   	int r;
+>   
+> +	get_fpu_regs(target);
+> +
+>   	if (sizeof(target->thread.fpu.fpr[0]) == sizeof(elf_fpreg_t))
+>   		r = gfpr_get(target, &to);
+>   	else
+> @@ -279,6 +281,8 @@ static int simd_get(struct task_struct *target,
+>   {
+>   	const unsigned int wr_size = NUM_FPU_REGS * regset->size;
+>   
+> +	get_fpu_regs(target);
+> +
+>   	if (!tsk_used_math(target)) {
+>   		/* The task hasn't used FP or LSX, fill with 0xff */
+>   		copy_pad_fprs(target, regset, &to, 0);
 
+Otherwise this should be fine. (I don't know why that helper is 
+previously unused though...)
 
-On 2023/8/24 16:32, Heiko Carstens wrote:
-> On Thu, Aug 24, 2023 at 10:16:33AM +0200, Alexander Gordeev wrote:
->> On Mon, Aug 21, 2023 at 08:30:50PM +0800, Kefeng Wang wrote:
->>> Use new try_vma_locked_page_fault() helper to simplify code.
->>> No functional change intended.
->>>
->>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->>> ---
->>>   arch/s390/mm/fault.c | 66 ++++++++++++++++++--------------------------
->>>   1 file changed, 27 insertions(+), 39 deletions(-)
-> ...
->>> -	fault = handle_mm_fault(vma, address, flags | FAULT_FLAG_VMA_LOCK, regs);
->>> -	if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
->>> -		vma_end_read(vma);
->>> -	if (!(fault & VM_FAULT_RETRY)) {
->>> -		count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
->>> -		if (likely(!(fault & VM_FAULT_ERROR)))
->>> -			fault = 0;
->>
->> This fault fixup is removed in the new version.
-> ...
-> 
->>> +		vmf.vm_flags = VM_WRITE;
->>> +	if (vmf.vm_flags == VM_WRITE)
->>> +		vmf.flags |= FAULT_FLAG_WRITE;
->>> +
->>> +	fault = try_vma_locked_page_fault(&vmf);
->>> +	if (fault == VM_FAULT_NONE)
->>> +		goto lock_mm;
->>
->> Because VM_FAULT_NONE is set to 0 it gets confused with
->> the success code of 0 returned by a fault handler. In the
->> former case we want to continue, while in the latter -
->> successfully return. I think it applies to all archs.
-> ...
->> FWIW, this series ends up with kernel BUG at arch/s390/mm/fault.c:341!
-> 
+-- 
+WANG "xen0n" Xuerui
 
-I didn't test and only built, this is a RFC to want to know whether
-the way to add three more numbers into vmf and using vmf in arch's page
-fault is feasible or not.
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
-> Without having looked in detail into this patch: all of this is likely
-> because s390's fault handling is quite odd. Not only because fault is set
-> to 0, but also because of the private VM_FAULT values like
-> VM_FAULT_BADCONTEXT. I'm just cleaning up all of this, but it won't make it
-> for the next merge window.
-
-Sure, if re-post, will drop the s390's change, but as mentioned above, 
-the abstract of the generic vma locked and changes may be not perfect,
-let's wait for more response.
-
-Thanks all.
-
-> 
-> Therefore I'd like to ask to drop the s390 conversion of this series, and
-> if this series is supposed to be merged the s390 conversion needs to be
-> done later. Let's not waste more time on the current implementation,
-> please.
