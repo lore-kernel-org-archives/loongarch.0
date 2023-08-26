@@ -1,24 +1,24 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975882102
-	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 09:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798482102
+	for <loongarch@lists.linux.dev>; Sat, 26 Aug 2023 09:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1693043373;
-	bh=p3YpqU+EAKVPZiCc8ygp7fZ6DxDfOkZsVuvVpGeDsb0=;
+	s=default; t=1693042936;
+	bh=uVhL8v8S6E2rp54FFN4oVfC9LZPfdMBrMIGDNzCpdmw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=lo8WrC0yj0N2oePNH4BGfV6tGeikDFvWDHnki5gqibp9/ss5c3p9izU32AxoT/Do6
-	 BXafWg0MwW3H43/W9Yw0rcrN5ppDK7KKFQWyTQTI1GIEObNUJCnrLl4DalNLObT319
-	 NWM/b4xXkb0CFTqejgBjJhD1BdR4X85ft35lgf+A=
+	b=Y8DWeQxtr1pnoC0RYYma+xath1yx7G0CUWyeVOpMtZk6LXybE/q2XjN0AiBoHs6jl
+	 4fsE8118FMmaLHLS7u7ImjRvoxhMpVcjmMZPLbk66TYwQ9UrfEx4MirZVcsVHGwF+u
+	 TPsD59do7gZNbNkZVa1SkOXtFwCYtg76olNpu7tM=
 Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 12E4F659C7;
-	Sat, 26 Aug 2023 05:49:30 -0400 (EDT)
-Message-ID: <ef11874aca952984d67ad5fb65b7fc1e265e2ef2.camel@xry111.site>
-Subject: Re: [PATCH v3 3/3] perf/trace: Use "test -f" instead of "[-f FILE]"
+	by xry111.site (Postfix) with ESMTPSA id 4DC40659AC;
+	Sat, 26 Aug 2023 05:42:13 -0400 (EDT)
+Message-ID: <cfee4c63333de790d7042ecd95cac67f3b79e3ee.camel@xry111.site>
+Subject: Re: [PATCH v2 3/3] perf/tools: Use "test -f" instead of "[-f FILE]"
 From: Xi Ruoyao <xry111@xry111.site>
 To: Yanteng Si <siyanteng@loongson.cn>, acme@kernel.org
 Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com, 
@@ -26,10 +26,10 @@ Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
 	irogers@google.com, adrian.hunter@intel.com, chenhuacai@kernel.org, 
 	linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
 	loongarch@lists.linux.dev
-Date: Sat, 26 Aug 2023 17:49:29 +0800
-In-Reply-To: <b9fc1affbca15cbf18cc23905f823047b4e2f1b6.1693040967.git.siyanteng@loongson.cn>
-References: <cover.1693040967.git.siyanteng@loongson.cn>
-	 <b9fc1affbca15cbf18cc23905f823047b4e2f1b6.1693040967.git.siyanteng@loongson.cn>
+Date: Sat, 26 Aug 2023 17:42:11 +0800
+In-Reply-To: <c50bc0a92dce0ff0fa6504c1a52fb53e2ac007bf.1692962043.git.siyanteng@loongson.cn>
+References: <cover.1692962043.git.siyanteng@loongson.cn>
+	 <c50bc0a92dce0ff0fa6504c1a52fb53e2ac007bf.1692962043.git.siyanteng@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 
@@ -40,13 +40,12 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Sat, 2023-08-26 at 17:40 +0800, Yanteng Si wrote:
+On Fri, 2023-08-25 at 19:28 +0800, Yanteng Si wrote:
 > It will be simpler without that extra subshell, so
 > let's use "test -f".
 
-Sorry for duplicated reply (I replied to v2 minutes ago), but I cannot
-understand this sentence.  [ ... ] has nothing to do with subshell, it's
-just a syntax variant of "test".
+I don't understand this sentence.  I'm pretty sure [ ... ] does not
+start any subshell.
 
 > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
 > ---
