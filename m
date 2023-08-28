@@ -1,45 +1,24 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2279B134D3
-	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 17:25:52 +0000 (UTC)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-991c786369cso449084366b.1
-        for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 10:25:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693243551; x=1693848351;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HIxfCT/5MYZNQQezDrzEbmaORh20hf3gUXKEbNNcX3E=;
-        b=yAsdxR91RmH2zwGcS3/YDGi08dh2DHGjxe6Hyz+Ao/RpkAjMO9eG2hsCQhx64Qq0Yq
-         zIkBbpMkIFIP2rSfm43XVjlX5VQk8nlJw+jWmwCB9hjNBU6CUyL+1Yxv84iD48DexD55
-         RNjrgCOkQGfPAyWwk2pF0YaVr0GarxMLbmX23BO/10ubENsOH4AwkJhQC7iGTl4AiXbM
-         9Wuuo/J/pDcpd5Hg30ulVBTnzFlHMHaKG2S6o6T/oeOPqpX78wcmRhb8lKx4TBmvf6cx
-         T9VmjScHem2ZCf74OPBHBqyLO7fJgAnOkF94CtvQtERcdz3tww48drAKQJw7aIYWM7nJ
-         S2EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693243551; x=1693848351;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HIxfCT/5MYZNQQezDrzEbmaORh20hf3gUXKEbNNcX3E=;
-        b=WKJeJE2vShPOCN389ZyXwfr1x69HM7gKNmlntp6KCWU9ZLkXvabqbMQpwUJU+YH4Bg
-         a4ZrK3wqiTF3yXZBcHGUuU5Tf4mxheCUyr7LwGgDjKeZx/XXlXYMy0Q+fWpK3Vsooyd1
-         uSzuyqM4s3lb1/XPvNPxOIywf/h7bBZ000T0BBIa0YWwCxyAYQ3De6RTJ6M3d0rEd9CP
-         9GWbMGHNQGUL/wbIpGwFlOflHIVhdVit4m/BtyBIm4ta5W9eon5nlSrkZ8HicEND/Al/
-         +9pZPZXsqgWJiLp2I6bBle8dcmKK+ECqcYP+gVzPLSDN0SBEsKyH9SryFKXSzcDu4+Dk
-         M0Qw==
-X-Gm-Message-State: AOJu0YwqhkZ/9qv8VUDQ+MYUnXVU7Lt1tjMagVt1L2YolI3sjjgRjYWw
-	2kNnh+CiZp40QMeAFWOpeF2wXg==
-X-Google-Smtp-Source: AGHT+IHUIvm/eBS/tZHWMulmOQXLPCC/0LclTYRepRFuchAYahYwH5f1d551ROPQJ7xO6EccyZS/WQ==
-X-Received: by 2002:a17:907:75c5:b0:9a2:1e14:86bd with SMTP id jl5-20020a17090775c500b009a21e1486bdmr8994196ejc.65.1693243551037;
-        Mon, 28 Aug 2023 10:25:51 -0700 (PDT)
-Received: from [192.168.0.22] ([77.252.47.225])
-        by smtp.gmail.com with ESMTPSA id i27-20020a1709063c5b00b009a1c05bd672sm4892895ejg.127.2023.08.28.10.25.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Aug 2023 10:25:50 -0700 (PDT)
-Message-ID: <5358e28f-8fee-a332-b175-9ad146dd8afa@linaro.org>
-Date: Mon, 28 Aug 2023 19:25:49 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D7A10F4
+	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 20:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=1VGN/7kaT0gr2v5iLutL5Ek3yl9HftUWq6xZh8Ol+A8=; b=dRPFd5R5dVR+XM6pQ80caayH0S
+	ZATYz4D36SUQTvDeGGScSp0homXaxxyKUjcrn/kx+nkgY3RrawnvbdCgIyiwlysAb9gmlb7DTVqfP
+	xbB8+RJL5Q7VQQfmfxPV6mp1MEjgaXIWIFgMLwFtVYCrc8/VS2yHThj5V//V26t13upeTMD69ichj
+	zW/Gf9sySlZ7hr7FFOiFXRdrV55K91jWAZmzaoDO7FBRLr7oalfAAMxkvep7Kst8Z+6GZMjWzdJEo
+	E55/bntNwunvlhc6C0ZwJujgNllxdmXbR8hKLcOUsWe9mxISNTpNVY7E0Yy8+uMLVY4RlOfa32Kqz
+	rIP/CM8A==;
+Received: from [2601:1c2:980:9ec0::2764]
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1qajCI-00AGCg-14;
+	Mon, 28 Aug 2023 20:50:54 +0000
+Message-ID: <f510eafd-7561-89d2-5d5c-ae98901c2250@infradead.org>
+Date: Mon, 28 Aug 2023 13:50:52 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -58,16 +37,17 @@ To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
  Conor Dooley <conor+dt@kernel.org>
 Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
  devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- Randy Dunlap <rdunlap@infradead.org>
+ Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
 References: <cover.1693218539.git.zhoubinbin@loongson.cn>
  <08447374271c7df6d1543abce69195f1ae09f59c.1693218539.git.zhoubinbin@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From: Randy Dunlap <rdunlap@infradead.org>
 In-Reply-To: <08447374271c7df6d1543abce69195f1ae09f59c.1693218539.git.zhoubinbin@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/08/2023 14:38, Binbin Zhou wrote:
+Hi--
+
+On 8/28/23 05:38, Binbin Zhou wrote:
 > Since commit 67694c076bd7 ("soc: loongson2_pm: add power management
 > support"), the Loongson-2K PM driver was added, but it didn't update the
 > Kconfig entry for the INPUT dependency, leading to build errors, so
@@ -86,10 +66,34 @@ On 28/08/2023 14:38, Binbin Zhou wrote:
 > /work/lnx/next/linux-next-20230825/LOONG64/../include/linux/input.h:425:(.text+0x5b4): undefined reference to `input_event'
 > /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: drivers/soc/loongson/loongson2_pm.o: in function `input_sync':
 > /work/lnx/next/linux-next-20230825/LOONG64/../include/linux/input.h:450:(.text+0x5c8): undefined reference to `input_event'
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  drivers/soc/loongson/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
+> index 314e13bb3e01..1b57af1e5529 100644
+> --- a/drivers/soc/loongson/Kconfig
+> +++ b/drivers/soc/loongson/Kconfig
+> @@ -20,6 +20,7 @@ config LOONGSON2_GUTS
+>  config LOONGSON2_PM
+>  	bool "Loongson-2 SoC Power Management Controller Driver"
+>  	depends on LOONGARCH && OF
+> +	depends on INPUT
 
-Trim unrelated parts of path and trim logs to show only one warning, not
-everything.
+In the failing .config file, CONFIG_INPUT=m.
+This bool kconfig item is still set/enabled after this patch and the build still fails.
 
-Best regards,
-Krzysztof
+You could use
+	depends on INPUT=y
 
+if that is appropriate. I dunno.
+
+>  	help
+>  	  The Loongson-2's power management controller was ACPI, supports ACPI
+>  	  S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
+
+-- 
+~Randy
