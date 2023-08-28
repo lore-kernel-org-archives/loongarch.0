@@ -1,21 +1,21 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC196116
-	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 15:32:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B323C433C7;
-	Mon, 28 Aug 2023 15:32:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175186116
+	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 15:49:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D026FC433C8;
+	Mon, 28 Aug 2023 15:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693236757;
-	bh=n+HOb8/DOkSkv6qbcqDYdruBbEwzTG5YIOFlBwbk2rI=;
+	s=k20201202; t=1693237778;
+	bh=EgwduPs67qveoZgcdAkipZLwkc8aT5xezge3BHjTvRg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U1nytWDTy/tIxxTtNvp6x2e2piwAMq9p6H57MDylhErQ5MluShijnloy1DesDgr/4
-	 VvZsTSHHTM4WWABXLfPaFwU2caIbHz0M6jn2xk8BPyP3Yxb624ZJAmK613iUPxq90n
-	 WabmTBFGXXtt4D0MZfjID9Zcl5hfVaGYKBBnQtkHPtuPrND2F4MTpTKhMvJpaeZgXl
-	 /DioONzHPRt4+4rX0noAOynksv6yKAZvre9LpNlAwkda45A/nUqGZUeqE2OXNjOdLa
-	 k6v4p+6bYNUK6EUfHro1oLURb4bFxAbyz3bQ5n5jU63I6R8Q97IDyF1vv52ncuMlzP
-	 hvIySzj0CbPNA==
-Date: Mon, 28 Aug 2023 16:32:32 +0100
+	b=LlHuE3se73qPb2ExjwJVhFAaLuJPJhhHepDASnBShkjs/So6Ed7mjchD/xdu4grrM
+	 SCae18W1kHPOR4kOXzBdBPA1gII459kX5CiDcpahkhnUIl/uIsd57ILzWHlbo0K8cz
+	 7iD3NYL3Nsj5/6b71I5YK49LQOvyMlau7denTSxBz7lglvvZ3J3xz2Fh3ehC+8KSz/
+	 2Wlk04sB1/XtxwL20d6Sgr2ZN3dvF6etkDtxrzSzd/2TvWkAeS7heG++MMDSQWjeTk
+	 6PfemCtrxGuGQMOJxUySc+Wi/hQsvhK6XBiA9qW+wIHHhvYrqvigh1ISAUj8ocjQlp
+	 TqMbiXidClShg==
+Date: Mon, 28 Aug 2023 16:49:33 +0100
 From: Conor Dooley <conor@kernel.org>
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
@@ -28,11 +28,11 @@ Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	loongson-kernel@lists.loongnix.cn, devicetree@vger.kernel.org,
 	linux-pm@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev
-Subject: Re: [PATCH 3/5] soc: loongson: loongson_pm2: Add missing compatible
- for Loongson-2K2000
-Message-ID: <20230828-compactor-contour-3a9f4991360f@spud>
+Subject: Re: [PATCH 2/5] dt-bindings: soc: loongson,ls2k-pmc: Add missing
+ compatible for Loongson-2K2000
+Message-ID: <20230828-shrewdly-payee-c5eb091a0417@spud>
 References: <cover.1693218539.git.zhoubinbin@loongson.cn>
- <8468bdbea87003dc05bd10d15b51e6d27f306a20.1693218539.git.zhoubinbin@loongson.cn>
+ <54ee114c08f35ab8b5dc584fd76135ac9076f5a7.1693218539.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -40,52 +40,61 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Xl72ewxv2X0f7Y4j"
+	protocol="application/pgp-signature"; boundary="EHhPijYPZzBKwGBx"
 Content-Disposition: inline
-In-Reply-To: <8468bdbea87003dc05bd10d15b51e6d27f306a20.1693218539.git.zhoubinbin@loongson.cn>
+In-Reply-To: <54ee114c08f35ab8b5dc584fd76135ac9076f5a7.1693218539.git.zhoubinbin@loongson.cn>
 
 
---Xl72ewxv2X0f7Y4j
+--EHhPijYPZzBKwGBx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 28, 2023 at 08:38:33PM +0800, Binbin Zhou wrote:
-> Add compatible for Loongson-2K2000, which also has the Loongson2
-> Power Management Unit system controller.
+On Mon, Aug 28, 2023 at 08:38:32PM +0800, Binbin Zhou wrote:
+> Document the Power Management Unit system controller compatible for
+> Loongson-2K2000.
 >=20
 > This is a missing compatible, now we add it.
 >=20
 > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
->  drivers/soc/loongson/loongson2_pm.c | 1 +
+>  .../devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml      | 1 +
 >  1 file changed, 1 insertion(+)
 >=20
-> diff --git a/drivers/soc/loongson/loongson2_pm.c b/drivers/soc/loongson/l=
-oongson2_pm.c
-> index 796add6e8b63..6d2b3708e947 100644
-> --- a/drivers/soc/loongson/loongson2_pm.c
-> +++ b/drivers/soc/loongson/loongson2_pm.c
-> @@ -198,6 +198,7 @@ static int loongson2_pm_probe(struct platform_device =
-*pdev)
->  static const struct of_device_id loongson2_pm_match[] =3D {
->  	{ .compatible =3D "loongson,ls2k0500-pmc", },
->  	{ .compatible =3D "loongson,ls2k1000-pmc", },
-> +	{ .compatible =3D "loongson,ls2k2000-pmc", },
+> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k=
+-pmc.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pm=
+c.yaml
+> index da2dcfeebf12..7473c5659929 100644
+> --- a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.ya=
+ml
+> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.ya=
+ml
+> @@ -15,6 +15,7 @@ properties:
+>        - enum:
+>            - loongson,ls2k0500-pmc
+>            - loongson,ls2k1000-pmc
+> +          - loongson,ls2k2000-pmc
 
-You've not added any new codepaths for this soc, so it is compatible
-with the existing ones. Why are you not using fallback compatibles for
-this?
+Same thing here as the driver patch, the pmc on this newly added SoC
+appears to use the same codepaths as the existing ones. Does it share a
+programming model & should there be a fallback compatible here?
 
---Xl72ewxv2X0f7Y4j
+>        - const: syscon
+> =20
+>    reg:
+> --=20
+> 2.39.3
+>=20
+
+--EHhPijYPZzBKwGBx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZOy+EAAKCRB4tDGHoIJi
-0okVAP9sQoTuARR2r50RcVlYllk1XS4Ssa5osAlD8MZfPRKxgwEAvYIASGDN36Zc
-I4RRQt92IJbOaRFomxERuovjUkxxvA4=
-=P4w5
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZOzCDQAKCRB4tDGHoIJi
+0mJnAQC5PFTL8cQQxmV3Bs310RTUDpQiffTEZlPNe1A93VY/EAD5AXMuAU9VmRtZ
+K/Mv7mHKDQ7h+pNz0M2jzI1i9iLyvA4=
+=LQ8S
 -----END PGP SIGNATURE-----
 
---Xl72ewxv2X0f7Y4j--
+--EHhPijYPZzBKwGBx--
