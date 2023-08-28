@@ -1,124 +1,86 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB2A3C0A
-	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 08:07:58 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1bf1935f6c2so19084975ad.1
-        for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 01:07:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693210077; x=1693814877;
-        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
-         :message-id:from:cc:references:to:subject:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pnrE6dyfVAprK/xFUC60jFewyVljQRt3NNtTMulp0V0=;
-        b=LVg55P2ejT0BJXH9H1+hgJHcBL2A+IF5g+KpwZsnJ2WoqXmcrL9ZfEfa3T6fNEdxE+
-         ga2nqaZ+gZjmffBcNuVnaXDtmvodkJeUEflTba5i6j/rIlhBduWdBgZRPVnHwy+erFMo
-         Q2sF5ZgAuDt+03EKZEd8qEogPdBU5cTg8EccDlTx6cSnC2QLYfomUfDCZyZGJl19L0Ry
-         zfDO9BgqWN0KlkikpK3fWA7KZvQWChySAj+L6JXiUhVTo7xH2gRnW3f4Al2lAGJTZzAW
-         5ZruNkogVGDYB3ptB7Tk7PeewBGyh+fZdTDyBJ7/jPzoGq3RnYeGV17VCUydj0j+5OXO
-         MJDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693210077; x=1693814877;
-        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
-         :message-id:from:cc:references:to:subject:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pnrE6dyfVAprK/xFUC60jFewyVljQRt3NNtTMulp0V0=;
-        b=YTKBFwRuvnwd9e8TTWzpXqpZXs72j7QdtdLc1eJgVF6/tMObHYefdEdC5PHa8O9mwl
-         DVGTnlGXhSRx9JGiBLpZojwMvGxrmYaBdyygdgGWO7RfhkN9w+tYwmF75an0WxevGmuQ
-         QrhLHLvzBf3hvgVsQ9naID/CgPMZil/KERpPaeOas/NwWsd1BmWtjNQPD3CTrn4jnzc+
-         hDhUbLjG7/CuWV8Dv0aXlSY6QPdAy0a59IcpdSxQA2qkHr9OdntmPquv0MjvhjtKPhVo
-         OQeJI3YP+C2u42Ppv9VGZ2aeaK4twyffNRvvm/0RA7WoB9m6CHJNu0fixB/Rfr3F67A0
-         p+ZA==
-X-Gm-Message-State: AOJu0YzCZu1HqnnDAar/o8lfAh8NgB5y98vg7hgLY124g5Y5WUHYhEjw
-	VGsP/fEXWbvVE9RwRTV4jGg=
-X-Google-Smtp-Source: AGHT+IHEN6rjlzubXIy3DuU1iYHuYGfJmUDj7MCrRMJIjxExjNAtfO/xrf/2cugqJ3sCcKtAmuhffg==
-X-Received: by 2002:a17:903:41d1:b0:1bf:193a:70b6 with SMTP id u17-20020a17090341d100b001bf193a70b6mr38374653ple.5.1693210077452;
-        Mon, 28 Aug 2023 01:07:57 -0700 (PDT)
-Received: from [10.1.1.24] (125-236-136-221-fibre.sparkbb.co.nz. [125.236.136.221])
-        by smtp.gmail.com with ESMTPSA id x19-20020a170902ea9300b001bc445e2497sm6610519plb.79.2023.08.28.01.07.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Aug 2023 01:07:57 -0700 (PDT)
-Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20230810141947.1236730-1-arnd@kernel.org>
- <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
- <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com>
- <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
- <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
- <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- Arnd Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Michal Simek <monstr@monstr.eu>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Palmer Dabbelt <palmer@dabbelt.com>, Heiko Carstens <hca@linux.ibm.com>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, x86@kernel.org,
- Borislav Petkov <bp@alien8.de>, Max Filippov <jcmvbkbc@gmail.com>,
- Jens Axboe <axboe@kernel.dk>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
- Richard Weinberger <richard@nod.at>, Bjorn Helgaas <bhelgaas@google.com>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
- Guenter Roeck <linux@roeck-us.net>, Stephen Rothwell <sfr@canb.auug.org.au>,
- linux-next@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kbuild@vger.kernel.org
-From: Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <dbed3311-6b8e-a396-7e9e-2747902c5d6a@gmail.com>
-Date: Mon, 28 Aug 2023 20:07:27 +1200
-User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
- Icedove/45.4.0
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7C4A613F
+	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 12:38:54 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.102])
+	by gateway (Coremail) with SMTP id _____8Dxg_Bclexk7IAcAA--.58491S3;
+	Mon, 28 Aug 2023 20:38:52 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.102])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx5sxalexkNrJlAA--.29195S2;
+	Mon, 28 Aug 2023 20:38:51 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	devicetree@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH 0/5] soc: loongson: Fix some issues about loongson_pm2
+Date: Mon, 28 Aug 2023 20:38:30 +0800
+Message-Id: <cover.1693218539.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx5sxalexkNrJlAA--.29195S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZrW3JrW3tr13Ww1kuw47WrX_yoWDAwbE9a
+	4Iqay8Jry3AF9rJayUXr48urW3WrWxZ3W0kF1Utr18W34Yyry5Xr1DurnxWFy3Xryjqr98
+	Xr48Wr4rAry0gosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jYSoJUUUUU=
 
-Hi Geert,
+Hi all:
 
-Am 28.08.2023 um 18:42 schrieb Geert Uytterhoeven:
-> On Sat, Aug 26, 2023 at 12:44 AM Michael Schmitz <schmitzmic@gmail.com> wrote:
->> (Incidentally - did you ever publish the m68k full history tree anywhere
->> in git?)
->
-> You mean the gitified version of the Linux/m68k CVS tree Ralf created
-> for me because my machine wasn't powerful enough?
+Since commit 67694c076bd7 ("soc: loongson2_pm: add power management support"),
+the Loongson-2K PM driver was added, some issues have been found and
+this patch set is planned to fix these issues.
 
-The very same ...
+Specific:
+Patch 1: Compilation error found by Randy;
+Patch 2/3: Add Loongson-2K2000 support;
+Patch 4/5: Add Loongson-2K SoC reboot/shutdown support as part of power
+management.
 
-> No, and I should look into doing that...
+Thanks.
 
-No pressure!
+Binbin Zhou (5):
+  soc: loongson: loongson_pm2: add dependency for INPUT
+  dt-bindings: soc: loongson,ls2k-pmc: Add missing compatible for
+    Loongson-2K2000
+  soc: loongson: loongson_pm2: Add missing compatible for
+    Loongson-2K2000
+  dt-bindings: soc: loongson,ls2k-pmc: Allow
+    syscon-reboot/syscon-poweroff as child
+  soc: loongson: loongson_pm2: Populate children syscon nodes
 
-Cheers,
+ .../soc/loongson/loongson,ls2k-pmc.yaml       | 30 ++++++++++++++++++-
+ drivers/soc/loongson/Kconfig                  |  1 +
+ drivers/soc/loongson/loongson2_pm.c           |  7 +++++
+ 3 files changed, 37 insertions(+), 1 deletion(-)
 
-	Michael
+-- 
+2.39.3
 
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
