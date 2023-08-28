@@ -1,154 +1,104 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87B76182
-	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 02:42:37 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8BxuOiUCexk9m4cAA--.22307S3;
-	Mon, 28 Aug 2023 10:42:28 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXSOSCexkYlhlAA--.30260S3;
-	Mon, 28 Aug 2023 10:42:27 +0800 (CST)
-Message-ID: <06fa9006-243c-4aac-9101-5c66251faa02@loongson.cn>
-Date: Mon, 28 Aug 2023 10:42:26 +0800
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5917CA4A
+	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 06:43:14 +0000 (UTC)
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3a8036d805eso2264660b6e.3
+        for <loongarch@lists.linux.dev>; Sun, 27 Aug 2023 23:43:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693204993; x=1693809793;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1ZAs6BPn0UEnVbrYLaaDeF3O9l7Iturm7FWJFQ5jda0=;
+        b=fjN1uxOhnHzpS9tyyhUW51xRHpMbTjLrZVfhxfwDSbdneZOhVcRNhr0I/X7rt4IX4q
+         RBAlOaIPC4zNt/+IdIOIcsHQ+5vNPkpRZg0BzER4zp1KAekzcqXuVOuJZnK5bnvXS/dQ
+         Sgkfn1yfLgtd1xtA63cCmPcrATHrdZdKEVK8evCuQ4HUH2RkOO0vfJGBJ+mDVTKNeeFg
+         WdeCkT/fkm7A/HjZbVEjGm1PtUNFBtnCAAu1vwWTYRCWKH4dAKMPzzfN0fF+Fht/zF17
+         b8Imv50a8IxSGRSTmv5aO59yRlKAdkeyULla5PfS5r02bJlldNe0SC4MrAHA/J5pFH3r
+         /taA==
+X-Gm-Message-State: AOJu0YzAPKkb6ZV0iOqo1hJgzana/TbIikdztVpIc/s38Lk3igrJmwBa
+	SiiOkVNPwHGJr7aqudIPzQlNvCCVIhX92A==
+X-Google-Smtp-Source: AGHT+IFD/h1sorMV25Zhuh+F7zm7i29lT66YqfiS8jhER9eWvkEWozdf2BTxF8CHht8Mnd5ltG/3DQ==
+X-Received: by 2002:a54:441a:0:b0:3a8:f3e7:d691 with SMTP id k26-20020a54441a000000b003a8f3e7d691mr9682879oiw.37.1693204993146;
+        Sun, 27 Aug 2023 23:43:13 -0700 (PDT)
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com. [209.85.210.42])
+        by smtp.gmail.com with ESMTPSA id s40-20020a05680820a800b003a9a28f6ec7sm3063787oiw.52.2023.08.27.23.43.12
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Aug 2023 23:43:12 -0700 (PDT)
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6bf04263dc8so1026775a34.3
+        for <loongarch@lists.linux.dev>; Sun, 27 Aug 2023 23:43:12 -0700 (PDT)
+X-Received: by 2002:a25:8502:0:b0:d7a:e348:1e47 with SMTP id
+ w2-20020a258502000000b00d7ae3481e47mr3956815ybk.36.1693204971245; Sun, 27 Aug
+ 2023 23:42:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] perf/trace: Use "test -f" instead of "[-f FILE]"
-To: Xi Ruoyao <xry111@xry111.site>, acme@kernel.org
-Cc: mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, chenhuacai@kernel.org,
- linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
- loongarch@lists.linux.dev
-References: <cover.1693040967.git.siyanteng@loongson.cn>
- <b9fc1affbca15cbf18cc23905f823047b4e2f1b6.1693040967.git.siyanteng@loongson.cn>
- <ef11874aca952984d67ad5fb65b7fc1e265e2ef2.camel@xry111.site>
-Content-Language: en-US
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <ef11874aca952984d67ad5fb65b7fc1e265e2ef2.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXSOSCexkYlhlAA--.30260S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxuryfWr1Uur13ur1rXF4UKFX_yoWruF1fpa
-	n5Aas8GFW7Xr18Gw1xXFn8XFW5G3s2q3W5ur1kAFZrGr1UGry2qrWDZwnI9F15Xwsaq3yI
-	934Dur10vr1IqrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
+References: <20230810141947.1236730-1-arnd@kernel.org> <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
+ <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com> <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
+ <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
+In-Reply-To: <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 28 Aug 2023 08:42:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
+Message-ID: <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
+Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
+To: Michael Schmitz <schmitzmic@gmail.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, x86@kernel.org, 
+	Borislav Petkov <bp@alien8.de>, Max Filippov <jcmvbkbc@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Richard Weinberger <richard@nod.at>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Aug 26, 2023 at 12:44=E2=80=AFAM Michael Schmitz <schmitzmic@gmail.=
+com> wrote:
+> (Incidentally - did you ever publish the m68k full history tree anywhere
+> in git?)
 
-在 2023/8/26 17:49, Xi Ruoyao 写道:
-> On Sat, 2023-08-26 at 17:40 +0800, Yanteng Si wrote:
->> It will be simpler without that extra subshell, so
->> let's use "test -f".
-> Sorry for duplicated reply (I replied to v2 minutes ago), but I cannot
-> understand this sentence.  [ ... ] has nothing to do with subshell, it's
-> just a syntax variant of "test".
->
-Sorry, I mean is that "[" is part of the shell builtin test (and a 
-synonym for it),
+You mean the gitified version of the Linux/m68k CVS tree Ralf created
+for me because my machine wasn't powerful enough?
+No, and I should look into doing that...
 
-  not a link to the external command /usr/bin/test.
+Gr{oetje,eeting}s,
 
-Using the "test" is simpler because it avoids a lot of "[]".
+                        Geert
 
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-I'm going to write that in v4, agree?
-
-
-Thanks,
-
-Yanteng
-
->> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
->> ---
->>   tools/perf/trace/beauty/mmap_flags.sh | 9 ++++++---
->>   tools/perf/trace/beauty/mmap_prot.sh  | 5 +++--
->>   2 files changed, 9 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/perf/trace/beauty/mmap_flags.sh
->> b/tools/perf/trace/beauty/mmap_flags.sh
->> index d035b29fc5ec..6ecdb3c5a99e 100755
->> --- a/tools/perf/trace/beauty/mmap_flags.sh
->> +++ b/tools/perf/trace/beauty/mmap_flags.sh
->> @@ -19,7 +19,8 @@ arch_mman=${arch_header_dir}/mman.h
->>   
->>   printf "static const char *mmap_flags[] = {\n"
->>   regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MAP_([[:alnum:]_]+
->> )[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
->> -([ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman}) && \
->> +test -f ${arch_mman} && \
->> +grep -E -q $regex ${arch_mman} && \
->>   (grep -E $regex ${arch_mman} | \
->>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
->>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
->> MAP_%s\n#define MAP_%s %s\n#endif\n")
->> @@ -28,12 +29,14 @@ grep -E -q $regex ${linux_mman} && \
->>          grep -E -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
->>          sed -r "s/$regex/\2 \1 \1 \1 \2/g" | \
->>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
->> MAP_%s\n#define MAP_%s %s\n#endif\n")
->> -([ ! -f ${arch_mman} ] || grep -E -q
->> '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*'
->> ${arch_mman}) &&
->> +( ! test -f ${arch_mman} || \
->> +grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-
->> generic/mman.*' ${arch_mman}) &&
->>   (grep -E $regex ${header_dir}/mman-common.h | \
->>          grep -E -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
->>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
->>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
->> MAP_%s\n#define MAP_%s %s\n#endif\n")
->> -([ ! -f ${arch_mman} ] || grep -E -q
->> '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.h>.*'
->> ${arch_mman}) &&
->> +( ! test -f ${arch_mman} || \
->> +grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-
->> generic/mman.h>.*' ${arch_mman}) &&
->>   (grep -E $regex ${header_dir}/mman.h | \
->>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
->>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
->> MAP_%s\n#define MAP_%s %s\n#endif\n")
->> diff --git a/tools/perf/trace/beauty/mmap_prot.sh
->> b/tools/perf/trace/beauty/mmap_prot.sh
->> index 49e8c865214b..4436fcd6e861 100755
->> --- a/tools/perf/trace/beauty/mmap_prot.sh
->> +++ b/tools/perf/trace/beauty/mmap_prot.sh
->> @@ -17,12 +17,13 @@ prefix="PROT"
->>   
->>   printf "static const char *mmap_prot[] = {\n"
->>   regex=`printf
->> '^[[:space:]]*#[[:space:]]*define[[:space:]]+%s_([[:alnum:]_]+)[[:spac
->> e:]]+(0x[[:xdigit:]]+)[[:space:]]*.*' ${prefix}`
->> -([ ! -f ${arch_mman} ] || grep -E -q
->> '#[[:space:]]*include[[:space:]]+.*uapi/asm-generic/mman.*'
->> ${arch_mman}) &&
->> +( ! test -f ${arch_mman} \
->> +|| grep -E -q '#[[:space:]]*include[[:space:]]+.*uapi/asm-
->> generic/mman.*' ${arch_mman}) &&
->>   (grep -E $regex ${common_mman} | \
->>          grep -E -vw PROT_NONE | \
->>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
->>          xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n#ifndef
->> ${prefix}_%s\n#define ${prefix}_%s %s\n#endif\n")
->> -[ -f ${arch_mman} ] && grep -E -q $regex ${arch_mman} &&
->> +test -f ${arch_mman} && grep -E -q $regex ${arch_mman} &&
->>   (grep -E $regex ${arch_mman} | \
->>          grep -E -vw PROT_NONE | \
->>          sed -r "s/$regex/\2 \1 \1 \1 \2/g"      | \
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
