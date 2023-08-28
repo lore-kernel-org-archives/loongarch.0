@@ -1,33 +1,27 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DF9B125A0
-	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 12:39:04 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8AxCPJnlexkNYEcAA--.58192S3;
-	Mon, 28 Aug 2023 20:39:03 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax98xllexkQrJlAA--.29412S3;
-	Mon, 28 Aug 2023 20:39:03 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	devicetree@vger.kernel.org,
-	linux-pm@vger.kernel.org,
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66D846AB
+	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 15:25:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87380C433C7;
+	Mon, 28 Aug 2023 15:25:49 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 5/5] soc: loongson: loongson_pm2: Populate children syscon nodes
-Date: Mon, 28 Aug 2023 20:39:00 +0800
-Message-Id: <64b7e1b1e88606821cfb4925fb2275bf44077b8e.1693218539.git.zhoubinbin@loongson.cn>
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Jiantao Shan <shanjiantao@loongson.cn>
+Subject: [PATCH] LoongArch: Remove shm_align_mask and use SHMLBA instead
+Date: Mon, 28 Aug 2023 23:25:40 +0800
+Message-Id: <20230828152540.1194317-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1693218539.git.zhoubinbin@loongson.cn>
-References: <cover.1693218539.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,60 +29,70 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax98xllexkQrJlAA--.29412S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XF13WFy3tryUXr43AFy3KFX_yoWkKwc_u3
-	W29r48ur18JrnIy398Z3ZxAr9F9rn5u3WUuF1Dtw1Iqa4Ut3sxtFyUArnrGF17WF4Iyrs8
-	X3y0gw4Ikw1rCosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbSkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_
-	ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_GFv_Wrylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0fhLUUUUUU==
 
-The syscon poweroff and reboot nodes logically belong to the Power
-Management Unit so populate possible children.
+Both shm_align_mask and SHMLBA want to avoid cache alias. But they are
+inconsistent: shm_align_mask is (PAGE_SIZE - 1) while SHMLBA is SZ_64K,
+but PAGE_SIZE is not always equal to SZ_64K.
 
-Without it, the reboot/poweroff feature becomes unavailable.
+This may cause problems when shmat() twice. Fix this problem by removing
+shm_align_mask and using SHMLBA (SHMLBA - 1, strctly) instead.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Reported-by: Jiantao Shan <shanjiantao@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/soc/loongson/loongson2_pm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/loongarch/mm/cache.c      |  1 -
+ arch/loongarch/mm/mmap.c       | 12 ++++--------
+ 3 files changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/soc/loongson/loongson2_pm.c b/drivers/soc/loongson/loongson2_pm.c
-index 6d2b3708e947..6e8fb170d454 100644
---- a/drivers/soc/loongson/loongson2_pm.c
-+++ b/drivers/soc/loongson/loongson2_pm.c
-@@ -11,6 +11,7 @@
- #include <linux/input.h>
- #include <linux/suspend.h>
- #include <linux/interrupt.h>
-+#include <linux/of_platform.h>
- #include <linux/pm_wakeirq.h>
- #include <linux/platform_device.h>
- #include <asm/bootinfo.h>
-@@ -192,6 +193,11 @@ static int loongson2_pm_probe(struct platform_device *pdev)
- 	if (loongson_sysconf.suspend_addr)
- 		suspend_set_ops(&loongson2_suspend_ops);
+diff --git a/arch/loongarch/mm/cache.c b/arch/loongarch/mm/cache.c
+index 72685a48eaf0..6be04d36ca07 100644
+--- a/arch/loongarch/mm/cache.c
++++ b/arch/loongarch/mm/cache.c
+@@ -156,7 +156,6 @@ void cpu_cache_init(void)
  
-+	/* Populate children */
-+	retval = devm_of_platform_populate(dev);
-+	if (retval)
-+		dev_err(dev, "Error populating children, reboot and poweroff might not work properly\n");
-+
- 	return 0;
+ 	current_cpu_data.cache_leaves_present = leaf;
+ 	current_cpu_data.options |= LOONGARCH_CPU_PREFETCH;
+-	shm_align_mask = PAGE_SIZE - 1;
  }
  
+ static const pgprot_t protection_map[16] = {
+diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
+index fbe1a4856fc4..c99c8015651a 100644
+--- a/arch/loongarch/mm/mmap.c
++++ b/arch/loongarch/mm/mmap.c
+@@ -8,12 +8,8 @@
+ #include <linux/mm.h>
+ #include <linux/mman.h>
+ 
+-unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
+-EXPORT_SYMBOL(shm_align_mask);
+-
+-#define COLOUR_ALIGN(addr, pgoff)				\
+-	((((addr) + shm_align_mask) & ~shm_align_mask) +	\
+-	 (((pgoff) << PAGE_SHIFT) & shm_align_mask))
++#define COLOUR_ALIGN(addr, pgoff)			\
++	((((addr) + (SHMLBA - 1)) & ~(SHMLBA - 1)) + (((pgoff) << PAGE_SHIFT) & (SHMLBA - 1)))
+ 
+ enum mmap_allocation_direction {UP, DOWN};
+ 
+@@ -40,7 +36,7 @@ static unsigned long arch_get_unmapped_area_common(struct file *filp,
+ 		 * cache aliasing constraints.
+ 		 */
+ 		if ((flags & MAP_SHARED) &&
+-		    ((addr - (pgoff << PAGE_SHIFT)) & shm_align_mask))
++		    ((addr - (pgoff << PAGE_SHIFT)) & (SHMLBA - 1)))
+ 			return -EINVAL;
+ 		return addr;
+ 	}
+@@ -63,7 +59,7 @@ static unsigned long arch_get_unmapped_area_common(struct file *filp,
+ 	}
+ 
+ 	info.length = len;
+-	info.align_mask = do_color_align ? (PAGE_MASK & shm_align_mask) : 0;
++	info.align_mask = do_color_align ? (PAGE_MASK & (SHMLBA - 1)) : 0;
+ 	info.align_offset = pgoff << PAGE_SHIFT;
+ 
+ 	if (dir == DOWN) {
 -- 
 2.39.3
 
