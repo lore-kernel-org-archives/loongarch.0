@@ -1,104 +1,124 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5917CA4A
-	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 06:43:14 +0000 (UTC)
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3a8036d805eso2264660b6e.3
-        for <loongarch@lists.linux.dev>; Sun, 27 Aug 2023 23:43:14 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB2A3C0A
+	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 08:07:58 +0000 (UTC)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1bf1935f6c2so19084975ad.1
+        for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 01:07:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693210077; x=1693814877;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:cc:references:to:subject:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pnrE6dyfVAprK/xFUC60jFewyVljQRt3NNtTMulp0V0=;
+        b=LVg55P2ejT0BJXH9H1+hgJHcBL2A+IF5g+KpwZsnJ2WoqXmcrL9ZfEfa3T6fNEdxE+
+         ga2nqaZ+gZjmffBcNuVnaXDtmvodkJeUEflTba5i6j/rIlhBduWdBgZRPVnHwy+erFMo
+         Q2sF5ZgAuDt+03EKZEd8qEogPdBU5cTg8EccDlTx6cSnC2QLYfomUfDCZyZGJl19L0Ry
+         zfDO9BgqWN0KlkikpK3fWA7KZvQWChySAj+L6JXiUhVTo7xH2gRnW3f4Al2lAGJTZzAW
+         5ZruNkogVGDYB3ptB7Tk7PeewBGyh+fZdTDyBJ7/jPzoGq3RnYeGV17VCUydj0j+5OXO
+         MJDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693204993; x=1693809793;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1ZAs6BPn0UEnVbrYLaaDeF3O9l7Iturm7FWJFQ5jda0=;
-        b=fjN1uxOhnHzpS9tyyhUW51xRHpMbTjLrZVfhxfwDSbdneZOhVcRNhr0I/X7rt4IX4q
-         RBAlOaIPC4zNt/+IdIOIcsHQ+5vNPkpRZg0BzER4zp1KAekzcqXuVOuJZnK5bnvXS/dQ
-         Sgkfn1yfLgtd1xtA63cCmPcrATHrdZdKEVK8evCuQ4HUH2RkOO0vfJGBJ+mDVTKNeeFg
-         WdeCkT/fkm7A/HjZbVEjGm1PtUNFBtnCAAu1vwWTYRCWKH4dAKMPzzfN0fF+Fht/zF17
-         b8Imv50a8IxSGRSTmv5aO59yRlKAdkeyULla5PfS5r02bJlldNe0SC4MrAHA/J5pFH3r
-         /taA==
-X-Gm-Message-State: AOJu0YzAPKkb6ZV0iOqo1hJgzana/TbIikdztVpIc/s38Lk3igrJmwBa
-	SiiOkVNPwHGJr7aqudIPzQlNvCCVIhX92A==
-X-Google-Smtp-Source: AGHT+IFD/h1sorMV25Zhuh+F7zm7i29lT66YqfiS8jhER9eWvkEWozdf2BTxF8CHht8Mnd5ltG/3DQ==
-X-Received: by 2002:a54:441a:0:b0:3a8:f3e7:d691 with SMTP id k26-20020a54441a000000b003a8f3e7d691mr9682879oiw.37.1693204993146;
-        Sun, 27 Aug 2023 23:43:13 -0700 (PDT)
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com. [209.85.210.42])
-        by smtp.gmail.com with ESMTPSA id s40-20020a05680820a800b003a9a28f6ec7sm3063787oiw.52.2023.08.27.23.43.12
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Aug 2023 23:43:12 -0700 (PDT)
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6bf04263dc8so1026775a34.3
-        for <loongarch@lists.linux.dev>; Sun, 27 Aug 2023 23:43:12 -0700 (PDT)
-X-Received: by 2002:a25:8502:0:b0:d7a:e348:1e47 with SMTP id
- w2-20020a258502000000b00d7ae3481e47mr3956815ybk.36.1693204971245; Sun, 27 Aug
- 2023 23:42:51 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1693210077; x=1693814877;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:cc:references:to:subject:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pnrE6dyfVAprK/xFUC60jFewyVljQRt3NNtTMulp0V0=;
+        b=YTKBFwRuvnwd9e8TTWzpXqpZXs72j7QdtdLc1eJgVF6/tMObHYefdEdC5PHa8O9mwl
+         DVGTnlGXhSRx9JGiBLpZojwMvGxrmYaBdyygdgGWO7RfhkN9w+tYwmF75an0WxevGmuQ
+         QrhLHLvzBf3hvgVsQ9naID/CgPMZil/KERpPaeOas/NwWsd1BmWtjNQPD3CTrn4jnzc+
+         hDhUbLjG7/CuWV8Dv0aXlSY6QPdAy0a59IcpdSxQA2qkHr9OdntmPquv0MjvhjtKPhVo
+         OQeJI3YP+C2u42Ppv9VGZ2aeaK4twyffNRvvm/0RA7WoB9m6CHJNu0fixB/Rfr3F67A0
+         p+ZA==
+X-Gm-Message-State: AOJu0YzCZu1HqnnDAar/o8lfAh8NgB5y98vg7hgLY124g5Y5WUHYhEjw
+	VGsP/fEXWbvVE9RwRTV4jGg=
+X-Google-Smtp-Source: AGHT+IHEN6rjlzubXIy3DuU1iYHuYGfJmUDj7MCrRMJIjxExjNAtfO/xrf/2cugqJ3sCcKtAmuhffg==
+X-Received: by 2002:a17:903:41d1:b0:1bf:193a:70b6 with SMTP id u17-20020a17090341d100b001bf193a70b6mr38374653ple.5.1693210077452;
+        Mon, 28 Aug 2023 01:07:57 -0700 (PDT)
+Received: from [10.1.1.24] (125-236-136-221-fibre.sparkbb.co.nz. [125.236.136.221])
+        by smtp.gmail.com with ESMTPSA id x19-20020a170902ea9300b001bc445e2497sm6610519plb.79.2023.08.28.01.07.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 28 Aug 2023 01:07:57 -0700 (PDT)
+Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20230810141947.1236730-1-arnd@kernel.org>
+ <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
+ <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com>
+ <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
+ <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
+ <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ Arnd Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Michal Simek <monstr@monstr.eu>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Heiko Carstens <hca@linux.ibm.com>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, x86@kernel.org,
+ Borislav Petkov <bp@alien8.de>, Max Filippov <jcmvbkbc@gmail.com>,
+ Jens Axboe <axboe@kernel.dk>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+ Richard Weinberger <richard@nod.at>, Bjorn Helgaas <bhelgaas@google.com>,
+ Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
+ Guenter Roeck <linux@roeck-us.net>, Stephen Rothwell <sfr@canb.auug.org.au>,
+ linux-next@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kbuild@vger.kernel.org
+From: Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <dbed3311-6b8e-a396-7e9e-2747902c5d6a@gmail.com>
+Date: Mon, 28 Aug 2023 20:07:27 +1200
+User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
+ Icedove/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230810141947.1236730-1-arnd@kernel.org> <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
- <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com> <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
- <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
-In-Reply-To: <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 28 Aug 2023 08:42:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
-Message-ID: <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
-Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
-To: Michael Schmitz <schmitzmic@gmail.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, x86@kernel.org, 
-	Borislav Petkov <bp@alien8.de>, Max Filippov <jcmvbkbc@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
-	Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Richard Weinberger <richard@nod.at>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Aug 26, 2023 at 12:44=E2=80=AFAM Michael Schmitz <schmitzmic@gmail.=
-com> wrote:
-> (Incidentally - did you ever publish the m68k full history tree anywhere
-> in git?)
+Hi Geert,
 
-You mean the gitified version of the Linux/m68k CVS tree Ralf created
-for me because my machine wasn't powerful enough?
-No, and I should look into doing that...
+Am 28.08.2023 um 18:42 schrieb Geert Uytterhoeven:
+> On Sat, Aug 26, 2023 at 12:44 AM Michael Schmitz <schmitzmic@gmail.com> wrote:
+>> (Incidentally - did you ever publish the m68k full history tree anywhere
+>> in git?)
+>
+> You mean the gitified version of the Linux/m68k CVS tree Ralf created
+> for me because my machine wasn't powerful enough?
 
-Gr{oetje,eeting}s,
+The very same ...
 
-                        Geert
+> No, and I should look into doing that...
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+No pressure!
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Cheers,
+
+	Michael
+
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
