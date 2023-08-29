@@ -1,206 +1,219 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC12814AB3
-	for <loongarch@lists.linux.dev>; Tue, 29 Aug 2023 12:40:20 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxNugx5+1k2sIcAA--.5392S3;
-	Tue, 29 Aug 2023 20:40:17 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXSMw5+1kqXdmAA--.32801S3;
-	Tue, 29 Aug 2023 20:40:17 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Define the symbol fault as a local label in
- fpu.S
-To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>
-References: <1693290485-3516-1-git-send-email-yangtiezhu@loongson.cn>
- <b826520103c7462b0c2f10a7bc69347799d1217b.camel@xry111.site>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <a4bd839b-d55e-07e5-67a5-016d77f77112@loongson.cn>
-Date: Tue, 29 Aug 2023 20:40:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A98114F66
+	for <loongarch@lists.linux.dev>; Tue, 29 Aug 2023 12:47:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0EDC433CA
+	for <loongarch@lists.linux.dev>; Tue, 29 Aug 2023 12:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1693313266;
+	bh=ZPmIeIIoXWcok2AYVU0nQSTUFZ/WHtGi8637bsdEXzc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KRu4pL58adMRb9bw51nG9gOsgR2v3cYkgH8FOROqoZc0aecbj6DjRObOGhF6wTur0
+	 ZTthKYEVbyDVtMOCZEEHcZDPUzBAvD1C41+Y6U/j5D4FzL8Sguf+tROJ+BtWewWoJl
+	 cEkR/OsO9DaOmSYXDzpuFRoxarXGYjGqRrsku2GpLkmGFM8wucGZR26G0m4B1fdMYJ
+	 jwkTSRKVjOTUyj7Kkyz759Y7pQE2OEjwSuRV1yJYwteZzHc5wMWuU4V6quem6TX2Ww
+	 fvG58hzFOn4yVQ2umLdkDpRCPuge0D6kK1t1G7yZfX4hjsNPyWML5rVy5ms6tPzBRi
+	 u5iAhe9o9ZA3w==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-99bcc0adab4so571741366b.2
+        for <loongarch@lists.linux.dev>; Tue, 29 Aug 2023 05:47:45 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzzfV09ZliC1QapfQfmVqpNL24kCWsHItAp3Bs/xuG6gJSbJUFZ
+	pKv4JOFrQOcYZhyBgMrv9lILZEeoYna8FAohW1w=
+X-Google-Smtp-Source: AGHT+IFh0DhlMY3u4JsUm66loxt5MstXiFdmK81tz9T03kyGfYLRywdvfMMH4gbgsye/dHg8/fHxR32Giaep3ekOXNk=
+X-Received: by 2002:a17:907:789a:b0:99c:e037:e4b8 with SMTP id
+ ku26-20020a170907789a00b0099ce037e4b8mr22947255ejc.72.1693313264133; Tue, 29
+ Aug 2023 05:47:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <b826520103c7462b0c2f10a7bc69347799d1217b.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxXSMw5+1kqXdmAA--.32801S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZF4DAry3Jw4xKrW7Wry8Zwc_yoWrtF1UpF
-	yUAFWvkrWrWF93Ja9rtws5CrZ8KanrGw1293Z8JrWxCFWjgF1qva18trWDXF12qw43JF1F
-	qa1FqrWSq3WUA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
-	UUU==
+References: <1693290485-3516-1-git-send-email-yangtiezhu@loongson.cn>
+ <b826520103c7462b0c2f10a7bc69347799d1217b.camel@xry111.site> <a4bd839b-d55e-07e5-67a5-016d77f77112@loongson.cn>
+In-Reply-To: <a4bd839b-d55e-07e5-67a5-016d77f77112@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 29 Aug 2023 20:47:32 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7BDyeU5UNOV2QJm+vOKyk1_1K2bnS8TKMyLUZ57A4++g@mail.gmail.com>
+Message-ID: <CAAhV-H7BDyeU5UNOV2QJm+vOKyk1_1K2bnS8TKMyLUZ57A4++g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Define the symbol fault as a local label in fpu.S
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 08/29/2023 02:45 PM, Xi Ruoyao wrote:
-> On Tue, 2023-08-29 at 14:28 +0800, Tiezhu Yang wrote:
->> The initial aim is to silence the following objtool warnings:
->>
->>   arch/loongarch/kernel/fpu.o: warning: objtool: _save_fp_context() falls through to next function fault()
->>   arch/loongarch/kernel/fpu.o: warning: objtool: _restore_fp_context() falls through to next function fault()
->>   arch/loongarch/kernel/fpu.o: warning: objtool: _save_lsx_context() falls through to next function fault()
->>   arch/loongarch/kernel/fpu.o: warning: objtool: _restore_lsx_context() falls through to next function fault()
->>   arch/loongarch/kernel/fpu.o: warning: objtool: _save_lasx_context() falls through to next function fault()
->>   arch/loongarch/kernel/fpu.o: warning: objtool: _restore_lasx_context() falls through to next function fault()
->>
->> Obviously, the symbol fault is not a function, it is just a local label,
+On Tue, Aug 29, 2023 at 8:40=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> Hmm why?  To me this seems a function.  We don't branch to it but store
-> its address (a "function pointer") in the extable.
 >
-> And these warnings do not make any sense to me:
 >
-> /* snip */
+> On 08/29/2023 02:45 PM, Xi Ruoyao wrote:
+> > On Tue, 2023-08-29 at 14:28 +0800, Tiezhu Yang wrote:
+> >> The initial aim is to silence the following objtool warnings:
+> >>
+> >>   arch/loongarch/kernel/fpu.o: warning: objtool: _save_fp_context() fa=
+lls through to next function fault()
+> >>   arch/loongarch/kernel/fpu.o: warning: objtool: _restore_fp_context()=
+ falls through to next function fault()
+> >>   arch/loongarch/kernel/fpu.o: warning: objtool: _save_lsx_context() f=
+alls through to next function fault()
+> >>   arch/loongarch/kernel/fpu.o: warning: objtool: _restore_lsx_context(=
+) falls through to next function fault()
+> >>   arch/loongarch/kernel/fpu.o: warning: objtool: _save_lasx_context() =
+falls through to next function fault()
+> >>   arch/loongarch/kernel/fpu.o: warning: objtool: _restore_lasx_context=
+() falls through to next function fault()
+> >>
+> >> Obviously, the symbol fault is not a function, it is just a local labe=
+l,
+> >
+> > Hmm why?  To me this seems a function.  We don't branch to it but store
+> > its address (a "function pointer") in the extable.
+> >
+> > And these warnings do not make any sense to me:
+> >
+> > /* snip */
+> >
+> >> diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+> >> index b4032de..7defe50 100644
+> >> --- a/arch/loongarch/kernel/fpu.S
+> >> +++ b/arch/loongarch/kernel/fpu.S
+> >> @@ -521,7 +521,7 @@ SYM_FUNC_START(_restore_lasx_context)
+> >>         jr      ra
+> >
+> > _restore_lasx_context returns with this instruction.  How can it fall
+> > through into fault?
+> >
+> >>  SYM_FUNC_END(_restore_lasx_context)
+> >
+> >> -SYM_FUNC_START(fault)
+> >> +SYM_CODE_START_LOCAL(fault)
+> >>         li.w    a0, -EFAULT                             # failure
+> >>         jr      ra
+> >> -SYM_FUNC_END(fault)
+> >> +SYM_CODE_END(fault)
+> >
 >
->> diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
->> index b4032de..7defe50 100644
->> --- a/arch/loongarch/kernel/fpu.S
->> +++ b/arch/loongarch/kernel/fpu.S
->> @@ -521,7 +521,7 @@ SYM_FUNC_START(_restore_lasx_context)
->>         jr      ra
+> In the current code, SYM_FUNC_END() defines the symbol as SYM_T_FUNC
+> which is STT_FUNC, the objtool warnings are generated through the
+> following code.
 >
-> _restore_lasx_context returns with this instruction.  How can it fall
-> through into fault?
+> arch/loongarch/include/asm/linkage.h
+> #define SYM_FUNC_END(name)                              \
+>         .cfi_endproc;                                   \
+>         SYM_END(name, SYM_T_FUNC)
 >
->>  SYM_FUNC_END(_restore_lasx_context)
+> include/linux/linkage.h
+> /* SYM_T_FUNC -- type used by assembler to mark functions */
+> #ifndef SYM_T_FUNC
+> #define SYM_T_FUNC                              STT_FUNC
+> #endif
 >
->> -SYM_FUNC_START(fault)
->> +SYM_CODE_START_LOCAL(fault)
->>         li.w    a0, -EFAULT                             # failure
->>         jr      ra
->> -SYM_FUNC_END(fault)
->> +SYM_CODE_END(fault)
+> tools/objtool/include/objtool/check.h
+> static inline struct symbol *insn_func(struct instruction *insn)
+> {
+>         struct symbol *sym =3D insn->sym;
 >
+>         if (sym && sym->type !=3D STT_FUNC)
+>                 sym =3D NULL;
+>
+>         return sym;
+> }
+>
+> tools/objtool/check.c
+> static int validate_branch(struct objtool_file *file, struct symbol *func=
+,
+>                            struct instruction *insn, struct insn_state st=
+ate)
+> {
+> ...
+>         while (1) {
+>                 next_insn =3D next_insn_to_validate(file, insn);
+>
+>                 if (func && insn_func(insn) && func !=3D insn_func(insn)-=
+>pfunc) {
+>                         /* Ignore KCFI type preambles, which always fall =
+through */
+>                         if (!strncmp(func->name, "__cfi_", 6) ||
+>                             !strncmp(func->name, "__pfx_", 6))
+>                                 return 0;
+>
+>                         WARN("%s() falls through to next function %s()",
+>                              func->name, insn_func(insn)->name);
+>                         return 1;
+>                 }
+> ...
+> }
+>
+> We can see that the fixup can be a local label in the following code.
+>
+> arch/loongarch/include/asm/asm-extable.h
+> #define __ASM_EXTABLE_RAW(insn, fixup, type, data)      \
+>         .pushsection    __ex_table, "a";                \
+>         .balign         4;                              \
+>         .long           ((insn) - .);                   \
+>         .long           ((fixup) - .);                  \
+>         .short          (type);                         \
+>         .short          (data);                         \
+>         .popsection;
+>
+>         .macro          _asm_extable, insn, fixup
+>         __ASM_EXTABLE_RAW(\insn, \fixup, EX_TYPE_FIXUP, 0)
+>         .endm
+>
+> Like arch/loongarch/lib/*.S does, I prefer the following changes,
+> if you are ok, I will send v2 later.
+>
+> diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+> index b4032deb8e3b..3177725ea832 100644
+> --- a/arch/loongarch/kernel/fpu.S
+> +++ b/arch/loongarch/kernel/fpu.S
+> @@ -22,7 +22,7 @@
+>
+>          .macro  EX insn, reg, src, offs
+>   .ex\@: \insn   \reg, \src, \offs
+> -       _asm_extable .ex\@, fault
+> +       _asm_extable .ex\@, .L_fixup_fpu_fault
+>          .endm
+>
+>          .macro sc_save_fp base
+> @@ -521,7 +521,6 @@ SYM_FUNC_START(_restore_lasx_context)
+>          jr      ra
+>   SYM_FUNC_END(_restore_lasx_context)
+>
+> -SYM_FUNC_START(fault)
+> +.L_fixup_fpu_fault:
+>          li.w    a0, -EFAULT                             # failure
+>          jr      ra
+> -SYM_FUNC_END(fault)
+You can only fix the fpu.S, lbt.S part can be squashed to its own patch.
 
-In the current code, SYM_FUNC_END() defines the symbol as SYM_T_FUNC
-which is STT_FUNC, the objtool warnings are generated through the
-following code.
+Huacai
 
-arch/loongarch/include/asm/linkage.h
-#define SYM_FUNC_END(name)				\
-	.cfi_endproc;					\
-	SYM_END(name, SYM_T_FUNC)
-
-include/linux/linkage.h
-/* SYM_T_FUNC -- type used by assembler to mark functions */
-#ifndef SYM_T_FUNC
-#define SYM_T_FUNC				STT_FUNC
-#endif
-
-tools/objtool/include/objtool/check.h
-static inline struct symbol *insn_func(struct instruction *insn)
-{
-	struct symbol *sym = insn->sym;
-
-	if (sym && sym->type != STT_FUNC)
-		sym = NULL;
-
-	return sym;
-}
-
-tools/objtool/check.c
-static int validate_branch(struct objtool_file *file, struct symbol *func,
-			   struct instruction *insn, struct insn_state state)
-{
-...
-	while (1) {
-		next_insn = next_insn_to_validate(file, insn);
-
-		if (func && insn_func(insn) && func != insn_func(insn)->pfunc) {
-			/* Ignore KCFI type preambles, which always fall through */
-			if (!strncmp(func->name, "__cfi_", 6) ||
-			    !strncmp(func->name, "__pfx_", 6))
-				return 0;
-
-			WARN("%s() falls through to next function %s()",
-			     func->name, insn_func(insn)->name);
-			return 1;
-		}
-...
-}
-
-We can see that the fixup can be a local label in the following code.
-
-arch/loongarch/include/asm/asm-extable.h
-#define __ASM_EXTABLE_RAW(insn, fixup, type, data)	\
-	.pushsection	__ex_table, "a";		\
-	.balign		4;				\
-	.long		((insn) - .);			\
-	.long		((fixup) - .);			\
-	.short		(type);				\
-	.short		(data);				\
-	.popsection;
-
-	.macro		_asm_extable, insn, fixup
-	__ASM_EXTABLE_RAW(\insn, \fixup, EX_TYPE_FIXUP, 0)
-	.endm
-
-Like arch/loongarch/lib/*.S does, I prefer the following changes,
-if you are ok, I will send v2 later.
-
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index b4032deb8e3b..3177725ea832 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -22,7 +22,7 @@
-
-         .macro  EX insn, reg, src, offs
-  .ex\@: \insn   \reg, \src, \offs
--       _asm_extable .ex\@, fault
-+       _asm_extable .ex\@, .L_fixup_fpu_fault
-         .endm
-
-         .macro sc_save_fp base
-@@ -521,7 +521,6 @@ SYM_FUNC_START(_restore_lasx_context)
-         jr      ra
-  SYM_FUNC_END(_restore_lasx_context)
-
--SYM_FUNC_START(fault)
-+.L_fixup_fpu_fault:
-         li.w    a0, -EFAULT                             # failure
-         jr      ra
--SYM_FUNC_END(fault)
-diff --git a/arch/loongarch/kernel/lbt.S b/arch/loongarch/kernel/lbt.S
-index ecf08bbff650..402eb8ec4024 100644
---- a/arch/loongarch/kernel/lbt.S
-+++ b/arch/loongarch/kernel/lbt.S
-@@ -16,7 +16,7 @@
-
-         .macro  EX insn, reg, src, offs
-  .ex\@: \insn   \reg, \src, \offs
--       _asm_extable .ex\@, lbt_fault
-+       _asm_extable .ex\@, .L_fixup_lbt_fault
-         .endm
-
-  /*
-@@ -150,7 +150,6 @@ SYM_FUNC_START(_restore_ftop_context)
-         jr              ra
-  SYM_FUNC_END(_restore_ftop_context)
-
--SYM_FUNC_START(lbt_fault)
-+.L_fixup_lbt_fault:
-         li.w            a0, -EFAULT             # failure
-         jr              ra
--SYM_FUNC_END(lbt_fault)
-
-Thanks,
-Tiezhu
-
+> diff --git a/arch/loongarch/kernel/lbt.S b/arch/loongarch/kernel/lbt.S
+> index ecf08bbff650..402eb8ec4024 100644
+> --- a/arch/loongarch/kernel/lbt.S
+> +++ b/arch/loongarch/kernel/lbt.S
+> @@ -16,7 +16,7 @@
+>
+>          .macro  EX insn, reg, src, offs
+>   .ex\@: \insn   \reg, \src, \offs
+> -       _asm_extable .ex\@, lbt_fault
+> +       _asm_extable .ex\@, .L_fixup_lbt_fault
+>          .endm
+>
+>   /*
+> @@ -150,7 +150,6 @@ SYM_FUNC_START(_restore_ftop_context)
+>          jr              ra
+>   SYM_FUNC_END(_restore_ftop_context)
+>
+> -SYM_FUNC_START(lbt_fault)
+> +.L_fixup_lbt_fault:
+>          li.w            a0, -EFAULT             # failure
+>          jr              ra
+> -SYM_FUNC_END(lbt_fault)
+>
+> Thanks,
+> Tiezhu
+>
