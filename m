@@ -1,86 +1,82 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C51C10EC
-	for <loongarch@lists.linux.dev>; Tue, 29 Aug 2023 06:28:14 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axjuv3j+1kC6wcAA--.56191S3;
-	Tue, 29 Aug 2023 14:28:07 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPCP1j+1kCD9mAA--.32175S2;
-	Tue, 29 Aug 2023 14:28:07 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] LoongArch: Define the symbol fault as a local label in fpu.S
-Date: Tue, 29 Aug 2023 14:28:05 +0800
-Message-Id: <1693290485-3516-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8DxPCP1j+1kCD9mAA--.32175S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AF1UtF1rGr48Gw13XrWDAwc_yoW8Aw17pr
-	y7Zr4kWr4rWFnIya9xAwn5WrW5GanrGF47W3ZrA34xCrWjqF1DZa18JrykXF1jqw47JF4F
-	qF1rXrWYq3WDA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1wL05UUUUU==
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDD910EC
+	for <loongarch@lists.linux.dev>; Tue, 29 Aug 2023 06:28:46 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-99bf3f59905so511759466b.3
+        for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 23:28:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1693290524; x=1693895324;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Rk5O5cxE3H0kwoH1WMJzLdh2Fpjs5TVwpzODQP6Z++M=;
+        b=QqICDRIUDF1jyEERa8At+Vs3w+GMlzAd48wUa/b79coZ3jsDfVTjDRQmjrGUN5TIsd
+         IxRW0xdPGhE+0BuYHu1AernHobQeJfWYbYarMI2G1lFyyEpz9qDUz01T9nldsCFtLu5A
+         Hw/kY+K8xF4MphaMHmN+eTIbTZDGn6CB6fyizcbrty1sqQKlp4g/P+vZ+C1lz4c0NGsp
+         PfeRNUCy80y18ff2Lk+5rFfly7ACiAFVm6e07u1VAmaWScdQ+dTaKZabgq98xitKrQtu
+         OzOzhaxVJ4KIJZMtercxdY/dckhP+qs5rp4G3Cp7B/XPqn27dKkBSoK0js4RYRMP6U1O
+         R9gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693290524; x=1693895324;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rk5O5cxE3H0kwoH1WMJzLdh2Fpjs5TVwpzODQP6Z++M=;
+        b=NNZp41nQ1MJNrMFbOTA+LBq0LHWFOeSL4k4MJ2gjgF2p1ol/yC3qvdxluffJKeAdJc
+         jxiFRLLIrtTWOslMBFwdPBSpV62U/vSaY1polj4wT62dqLnK+uSwCy8GBegsWhKJD7ET
+         cY6tTKf0lZcGtyCjt7WPJccGrOIm7CjX4eU2zsE56n7aFyYijXSTWTnzOnNM6vDwcCk8
+         TldKHlHEU4wYJtpN9MrQwwN1nznNyTG+E7xxqcnX7drTv1+Cnu37dK7zPozjqZfF0nNG
+         5yFP7cEzGRv4VZFD0ehl4ZEjFwKToiJ2EqJbwgnTnVgcVVU9J0QW3oI9musp+Ze3I9XV
+         dhZA==
+X-Gm-Message-State: AOJu0YzsvT/IHlBTgV2TMxHfZoH4L16OH9LHmykcEUix1h4n1HuK5bwj
+	SS9qoqJaJPLhdCBmVAlndTErFQ==
+X-Google-Smtp-Source: AGHT+IFLXFOGO7lW2CrMpZOyjDWN+69cmgGskpd1u+5hxqW7nLvyH3fWdwwRExeQ8+sQRCgE6jKjdg==
+X-Received: by 2002:a17:907:c20d:b0:9a5:c919:55cb with SMTP id ti13-20020a170907c20d00b009a5c91955cbmr826089ejc.73.1693290524597;
+        Mon, 28 Aug 2023 23:28:44 -0700 (PDT)
+Received: from [192.168.0.22] ([77.252.47.196])
+        by smtp.gmail.com with ESMTPSA id lv12-20020a170906bc8c00b009a19701e7b5sm5563521ejb.96.2023.08.28.23.28.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Aug 2023 23:28:44 -0700 (PDT)
+Message-ID: <256bfc91-31da-c3c8-7b9b-610bb4a73038@linaro.org>
+Date: Tue, 29 Aug 2023 08:28:42 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH 3/5] soc: loongson: loongson_pm2: Add missing compatible
+ for Loongson-2K2000
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
+ <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
+ devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+ Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+References: <cover.1693218539.git.zhoubinbin@loongson.cn>
+ <8468bdbea87003dc05bd10d15b51e6d27f306a20.1693218539.git.zhoubinbin@loongson.cn>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <8468bdbea87003dc05bd10d15b51e6d27f306a20.1693218539.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The initial aim is to silence the following objtool warnings:
+On 28/08/2023 14:38, Binbin Zhou wrote:
+> Add compatible for Loongson-2K2000, which also has the Loongson2
+> Power Management Unit system controller.
+> 
+> This is a missing compatible, now we add it.
 
-  arch/loongarch/kernel/fpu.o: warning: objtool: _save_fp_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _restore_fp_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _save_lsx_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _restore_lsx_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _save_lasx_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _restore_lasx_context() falls through to next function fault()
+How is it missing? Was support for it added before but not complete?
 
-Obviously, the symbol fault is not a function, it is just a local label,
-so use SYM_CODE_START_LOCAL and SYM_CODE_END to define the symbol fault.
 
-Before:
 
-$ readelf -s arch/loongarch/kernel/fpu.o | awk -F: /fault/'{print $2}'
- 000000000000053c     8 FUNC    GLOBAL DEFAULT    1 fault
-
-After:
-
-$ readelf -s arch/loongarch/kernel/fpu.o | awk -F: /fault/'{print $2}'
- 000000000000053c     8 NOTYPE  LOCAL  DEFAULT    1 fault
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/fpu.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index b4032de..7defe50 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -521,7 +521,7 @@ SYM_FUNC_START(_restore_lasx_context)
- 	jr	ra
- SYM_FUNC_END(_restore_lasx_context)
- 
--SYM_FUNC_START(fault)
-+SYM_CODE_START_LOCAL(fault)
- 	li.w	a0, -EFAULT				# failure
- 	jr	ra
--SYM_FUNC_END(fault)
-+SYM_CODE_END(fault)
--- 
-2.1.0
+Best regards,
+Krzysztof
 
