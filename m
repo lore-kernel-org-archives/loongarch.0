@@ -1,99 +1,69 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D7A10F4
-	for <loongarch@lists.linux.dev>; Mon, 28 Aug 2023 20:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF22368
+	for <loongarch@lists.linux.dev>; Tue, 29 Aug 2023 00:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=1VGN/7kaT0gr2v5iLutL5Ek3yl9HftUWq6xZh8Ol+A8=; b=dRPFd5R5dVR+XM6pQ80caayH0S
-	ZATYz4D36SUQTvDeGGScSp0homXaxxyKUjcrn/kx+nkgY3RrawnvbdCgIyiwlysAb9gmlb7DTVqfP
-	xbB8+RJL5Q7VQQfmfxPV6mp1MEjgaXIWIFgMLwFtVYCrc8/VS2yHThj5V//V26t13upeTMD69ichj
-	zW/Gf9sySlZ7hr7FFOiFXRdrV55K91jWAZmzaoDO7FBRLr7oalfAAMxkvep7Kst8Z+6GZMjWzdJEo
-	E55/bntNwunvlhc6C0ZwJujgNllxdmXbR8hKLcOUsWe9mxISNTpNVY7E0Yy8+uMLVY4RlOfa32Kqz
-	rIP/CM8A==;
-Received: from [2601:1c2:980:9ec0::2764]
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=NM2ZAIZdpAJQAO+FeaVtX/GS++k/SLz5UlFoR4kFiSU=; b=1ptDyEmzlVEdN1voi0m9PHNtfR
+	ZnPQWqB7Y8yq6+P3d9MTMMv37imU6lKkiFTTI92YMr0ny4BNyvwPydYwqMm2OKDv1yhQ3mP9TQdKz
+	zikgKB5Vi22yEwc8R4qEbyzHKKRsmr6s+f6WJDBK5RtX3vGLTHBvg1dDGpEL+dS6ihiLv3743kIId
+	rZRNVcw4duX/PJuc1zqPHGCfIc+ip688ihGwMRvtwQLgqAgndugjdubR7678a0Bq9uwCd2ZMU6eSF
+	p1Ex0GFewDOrsu//j8DnYMh8DdGbwX2Q2ELL4WyN+MjJbJ6yZhiPJIqkoxzd/8hfw6HeHwr7i5RKa
+	zZk6vraQ==;
+Received: from [2601:1c2:980:9ec0::2764] (helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1qajCI-00AGCg-14;
-	Mon, 28 Aug 2023 20:50:54 +0000
-Message-ID: <f510eafd-7561-89d2-5d5c-ae98901c2250@infradead.org>
-Date: Mon, 28 Aug 2023 13:50:52 -0700
+	id 1qamVp-00AUqI-0f;
+	Tue, 29 Aug 2023 00:23:17 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Qing Zhang <zhangqing@loongson.cn>,
+	Hui Li <lihui@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: [PATCH 1/2] Loongarch: KGDB: fix implicit declaration of flush_icache_range()
+Date: Mon, 28 Aug 2023 17:23:16 -0700
+Message-ID: <20230829002316.28287-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH 1/5] soc: loongson: loongson_pm2: add dependency for INPUT
-Content-Language: en-US
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
- devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-References: <cover.1693218539.git.zhoubinbin@loongson.cn>
- <08447374271c7df6d1543abce69195f1ae09f59c.1693218539.git.zhoubinbin@loongson.cn>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <08447374271c7df6d1543abce69195f1ae09f59c.1693218539.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi--
+Add <asm/cacheflush.h> to prevent a build error:
 
-On 8/28/23 05:38, Binbin Zhou wrote:
-> Since commit 67694c076bd7 ("soc: loongson2_pm: add power management
-> support"), the Loongson-2K PM driver was added, but it didn't update the
-> Kconfig entry for the INPUT dependency, leading to build errors, so
-> update the Kconfig entry to depend on INPUT.
-> 
-> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: drivers/soc/loongson/loongson2_pm.o: in function `loongson2_power_button_init':
-> /work/lnx/next/linux-next-20230825/LOONG64/../drivers/soc/loongson/loongson2_pm.c:101:(.text+0x350): undefined reference to `input_allocate_device'
-> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: /work/lnx/next/linux-next-20230825/LOONG64/../drivers/soc/loongson/loongson2_pm.c:109:(.text+0x3dc): undefined reference to `input_set_capability'
-> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: /work/lnx/next/linux-next-20230825/LOONG64/../drivers/soc/loongson/loongson2_pm.c:111:(.text+0x3e4): undefined reference to `input_register_device'
-> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: /work/lnx/next/linux-next-20230825/LOONG64/../drivers/soc/loongson/loongson2_pm.c:125:(.text+0x3fc): undefined reference to `input_free_device'
-> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: drivers/soc/loongson/loongson2_pm.o: in function `input_report_key':
-> /work/lnx/next/linux-next-20230825/LOONG64/../include/linux/input.h:425:(.text+0x58c): undefined reference to `input_event'
-> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: drivers/soc/loongson/loongson2_pm.o: in function `input_sync':
-> /work/lnx/next/linux-next-20230825/LOONG64/../include/linux/input.h:450:(.text+0x5a0): undefined reference to `input_event'
-> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: drivers/soc/loongson/loongson2_pm.o: in function `input_report_key':
-> /work/lnx/next/linux-next-20230825/LOONG64/../include/linux/input.h:425:(.text+0x5b4): undefined reference to `input_event'
-> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: drivers/soc/loongson/loongson2_pm.o: in function `input_sync':
-> /work/lnx/next/linux-next-20230825/LOONG64/../include/linux/input.h:450:(.text+0x5c8): undefined reference to `input_event'
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  drivers/soc/loongson/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
-> index 314e13bb3e01..1b57af1e5529 100644
-> --- a/drivers/soc/loongson/Kconfig
-> +++ b/drivers/soc/loongson/Kconfig
-> @@ -20,6 +20,7 @@ config LOONGSON2_GUTS
->  config LOONGSON2_PM
->  	bool "Loongson-2 SoC Power Management Controller Driver"
->  	depends on LOONGARCH && OF
-> +	depends on INPUT
+arch/loongarch/kernel/kgdb.c: In function 'do_single_step':
+arch/loongarch/kernel/kgdb.c:440:9: error: implicit declaration of function 'flush_icache_range' [-Werror=implicit-function-declaration]
+  440 |         flush_icache_range(addr, addr + BREAK_INSTR_SIZE);
 
-In the failing .config file, CONFIG_INPUT=m.
-This bool kconfig item is still set/enabled after this patch and the build still fails.
+Fixes: 8968eb010689 ("LoongArch: Add basic KGDB & KDB support")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Qing Zhang <zhangqing@loongson.cn>
+Cc: Hui Li <lihui@loongson.cn>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+---
+ arch/loongarch/kernel/kgdb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-You could use
-	depends on INPUT=y
-
-if that is appropriate. I dunno.
-
->  	help
->  	  The Loongson-2's power management controller was ACPI, supports ACPI
->  	  S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
-
--- 
-~Randy
+diff -- a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb.c
+--- a/arch/loongarch/kernel/kgdb.c
++++ b/arch/loongarch/kernel/kgdb.c
+@@ -13,6 +13,7 @@
+ #include <linux/sched.h>
+ #include <linux/smp.h>
+ 
++#include <asm/cacheflush.h>
+ #include <asm/fpu.h>
+ #include <asm/lbt.h>
+ #include <asm/hw_breakpoint.h>
