@@ -1,148 +1,63 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA3CA2D
-	for <loongarch@lists.linux.dev>; Wed, 30 Aug 2023 03:00:33 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxyOjPsO5kEPgcAA--.23404S3;
-	Wed, 30 Aug 2023 11:00:31 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF8zOsO5kVetmAA--.12565S2;
-	Wed, 30 Aug 2023 11:00:31 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CF931106
+	for <loongarch@lists.linux.dev>; Wed, 30 Aug 2023 03:25:59 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.128.250])
+	by gateway (Coremail) with SMTP id _____8CxNvHCtu5kW_kcAA--.59006S3;
+	Wed, 30 Aug 2023 11:25:55 +0800 (CST)
+Received: from crazy.crazy.loongson.org (unknown [10.180.128.250])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxriPBtu5k9+5mAA--.12310S4;
+	Wed, 30 Aug 2023 11:25:53 +0800 (CST)
+From: liweihao <liweihao@loongson.cn>
+To: wangrui@loongson.cn
+Cc: chenhuacai@kernel.org,
+	kernel@xen0n.name,
 	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v2] LoongArch: Define the symbol fault as a local label in fpu.S
-Date: Wed, 30 Aug 2023 11:00:30 +0800
-Message-Id: <1693364430-11337-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8CxF8zOsO5kVetmAA--.12565S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZF4ftF1fKw4rJw1UXFy7urX_yoW5uF1xpF
-	yUZrWvgr4rW3Z7Aanrtw4q9rZ8Ga9rGF47u3WqyrWxCrWjg3WDta18tryDXF12qa15JF40
-	qF4FqrWYq3Wqy3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxUcbAwUUUUU
+	liweihao@loongson.cn,
+	loongarch@lists.linux.dev,
+	masahiroy@kernel.org,
+	yijun@loongson.cn
+Subject: Re: [PATCH 1/1] LoongArch: adjust copy/clear_user exception handler behavior
+Date: Wed, 30 Aug 2023 11:25:53 +0800
+Message-Id: <20230830032553.2974884-1-liweihao@loongson.cn>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CAHirt9i0tcUCuQ5ZL657MOZ4CUg0bpfiNbo01WLhPAwsLjgM+g@mail.gmail.com>
+References: <CAHirt9i0tcUCuQ5ZL657MOZ4CUg0bpfiNbo01WLhPAwsLjgM+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxriPBtu5k9+5mAA--.12310S4
+X-CM-SenderInfo: 5olzvxhkdrqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUU9qb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4c8EcI0En4kS14v26r1Y6r17MxC20s026xCaFVCjc4AY6r1j6r4UMxCI
+	bckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
+	I_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
+	6r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj4
+	0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8
+	JbIYCTnIWIevJa73UjIFyTuYvjxUwmhFDUUUU
 
-The initial aim is to silence the following objtool warnings:
+Hello WANG Rui,
 
-  arch/loongarch/kernel/fpu.o: warning: objtool: _save_fp_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _restore_fp_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _save_lsx_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _restore_lsx_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _save_lasx_context() falls through to next function fault()
-  arch/loongarch/kernel/fpu.o: warning: objtool: _restore_lasx_context() falls through to next function fault()
+> > +.Lsmall_fixup:
+> > +29:    st.b    zero, a0, 0
+> > +       addi.d  a0, a0, 1
+> > +       addi.d  a1, a1, -1
+> > +       bgt     a1, zero, 1b
+> 
+> I'm sure the jump target here is 29b.
 
-Currently, SYM_FUNC_END() defines the symbol fault as SYM_T_FUNC which
-is STT_FUNC, the objtool warnings are generated through the following
-code:
+You are right, this is a mistake.
 
-tools/objtool/include/objtool/check.h
-static inline struct symbol *insn_func(struct instruction *insn)
-{
-	struct symbol *sym = insn->sym;
-
-	if (sym && sym->type != STT_FUNC)
-		sym = NULL;
-
-	return sym;
-}
-
-tools/objtool/check.c
-static int validate_branch(struct objtool_file *file, struct symbol *func,
-			   struct instruction *insn, struct insn_state state)
-{
-...
-		if (func && insn_func(insn) && func != insn_func(insn)->pfunc) {
-...
-			WARN("%s() falls through to next function %s()",
-			     func->name, insn_func(insn)->name);
-			return 1;
-		}
-...
-}
-
-We can see that the fixup can be a local label in the following code:
-
-arch/loongarch/include/asm/asm-extable.h
-	.pushsection	__ex_table, "a";		\
-	.balign		4;				\
-	.long		((insn) - .);			\
-	.long		((fixup) - .);			\
-	.short		(type);				\
-	.short		(data);				\
-	.popsection;
-
-	.macro		_asm_extable, insn, fixup
-	__ASM_EXTABLE_RAW(\insn, \fixup, EX_TYPE_FIXUP, 0)
-	.endm
-
-Like arch/loongarch/lib/*.S, just define the symbol fault as a local
-label in fpu.S.
-
-Before:
-
-$ readelf -s arch/loongarch/kernel/fpu.o | awk -F: /fault/'{print $2}'
- 000000000000053c     8 FUNC    GLOBAL DEFAULT    1 fault
-
-After:
-
-$ readelf -s arch/loongarch/kernel/fpu.o | awk -F: /fault/'{print $2}'
- 000000000000053c     0 NOTYPE  LOCAL  DEFAULT    1 .L_fixup_fpu_fault
-
-Co-developed-by: Youling Tang <tangyouling@loongson.cn>
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-
-Add v2 tag in this patch, please ignore the previous patch, sorry for that.
-
-There is a same issue in lbt.S, Huacai suggested to squash the changes
-in the original patch:
-"LoongArch: Add Loongson Binary Translation (LBT) extension support"
-
- arch/loongarch/kernel/fpu.S | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index b4032de..3177725 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -22,7 +22,7 @@
- 
- 	.macro	EX insn, reg, src, offs
- .ex\@:	\insn	\reg, \src, \offs
--	_asm_extable .ex\@, fault
-+	_asm_extable .ex\@, .L_fixup_fpu_fault
- 	.endm
- 
- 	.macro sc_save_fp base
-@@ -521,7 +521,6 @@ SYM_FUNC_START(_restore_lasx_context)
- 	jr	ra
- SYM_FUNC_END(_restore_lasx_context)
- 
--SYM_FUNC_START(fault)
-+.L_fixup_fpu_fault:
- 	li.w	a0, -EFAULT				# failure
- 	jr	ra
--SYM_FUNC_END(fault)
--- 
-2.1.0
+I'll correct it later. Thanks.
 
