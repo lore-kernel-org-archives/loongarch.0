@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B65E58F6A
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 710AE13AD3
 	for <loongarch@lists.linux.dev>; Thu, 31 Aug 2023 08:30:47 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxuOivT_Bk7l4dAA--.24394S3;
-	Thu, 31 Aug 2023 16:30:39 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c6gT_BkOPVnAA--.55892S30;
+	by gateway (Coremail) with SMTP id _____8Cxh+iuT_Bk0V4dAA--.24481S3;
 	Thu, 31 Aug 2023 16:30:38 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c6gT_BkOPVnAA--.55892S26;
+	Thu, 31 Aug 2023 16:30:37 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -21,11 +21,10 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v20 28/30] LoongArch: KVM: Enable kvm config and add the makefile
-Date: Thu, 31 Aug 2023 16:30:18 +0800
-Message-Id: <20230831083020.2187109-29-zhaotianrui@loongson.cn>
+	zhaotianrui@loongson.cn
+Subject: [PATCH v20 24/30] LoongArch: KVM: Implement handle mmio exception
+Date: Thu, 31 Aug 2023 16:30:14 +0800
+Message-Id: <20230831083020.2187109-25-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230831083020.2187109-1-zhaotianrui@loongson.cn>
 References: <20230831083020.2187109-1-zhaotianrui@loongson.cn>
@@ -36,151 +35,344 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax3c6gT_BkOPVnAA--.55892S30
+X-CM-TRANSID:AQAAf8Ax3c6gT_BkOPVnAA--.55892S26
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Enable LoongArch kvm config and add the makefile to support build kvm
-module.
+Implement handle mmio exception, setting the mmio info into vcpu_run and
+return to user space to handle it.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp@intel.com/
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/Kbuild                      |  1 +
- arch/loongarch/Kconfig                     |  3 ++
- arch/loongarch/configs/loongson3_defconfig |  2 +
- arch/loongarch/kvm/Kconfig                 | 45 ++++++++++++++++++++++
- arch/loongarch/kvm/Makefile                | 22 +++++++++++
- 5 files changed, 73 insertions(+)
- create mode 100644 arch/loongarch/kvm/Kconfig
- create mode 100644 arch/loongarch/kvm/Makefile
+ arch/loongarch/kvm/exit.c | 308 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 308 insertions(+)
 
-diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
-index b01f5cdb27..40be8a1696 100644
---- a/arch/loongarch/Kbuild
-+++ b/arch/loongarch/Kbuild
-@@ -2,6 +2,7 @@ obj-y += kernel/
- obj-y += mm/
- obj-y += net/
- obj-y += vdso/
-+obj-y += kvm/
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index b0781ea100..491d1c39a9 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -209,6 +209,265 @@ int _kvm_emu_idle(struct kvm_vcpu *vcpu)
+ 	return EMULATE_DONE;
+ }
  
- # for cleaning
- subdir- += boot
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index ecf282dee5..7f2f7ccc76 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -123,6 +123,7 @@ config LOONGARCH
- 	select HAVE_KPROBES
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
-+	select HAVE_KVM
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_PCI
-@@ -650,3 +651,5 @@ source "kernel/power/Kconfig"
- source "drivers/acpi/Kconfig"
- 
- endmenu
++int _kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
++{
++	struct kvm_run *run = vcpu->run;
++	unsigned int rd, op8, opcode;
++	unsigned long rd_val = 0;
++	void *data = run->mmio.data;
++	unsigned long curr_pc;
++	int ret;
 +
-+source "arch/loongarch/kvm/Kconfig"
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index d64849b4cb..7acb4ae7af 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -63,6 +63,8 @@ CONFIG_EFI_ZBOOT=y
- CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
- CONFIG_EFI_CAPSULE_LOADER=m
- CONFIG_EFI_TEST=m
-+CONFIG_VIRTUALIZATION=y
-+CONFIG_KVM=m
- CONFIG_MODULES=y
- CONFIG_MODULE_FORCE_LOAD=y
- CONFIG_MODULE_UNLOAD=y
-diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
-new file mode 100644
-index 0000000000..bf7d6e7cde
---- /dev/null
-+++ b/arch/loongarch/kvm/Kconfig
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# KVM configuration
-+#
++	/*
++	 * Update PC and hold onto current PC in case there is
++	 * an error and we want to rollback the PC
++	 */
++	curr_pc = vcpu->arch.pc;
++	update_pc(&vcpu->arch);
 +
-+source "virt/kvm/Kconfig"
++	op8 = (inst.word >> 24) & 0xff;
++	run->mmio.phys_addr = vcpu->arch.badv;
++	ret = EMULATE_DO_MMIO;
++	if (op8 < 0x28) {
++		/* stptrw/d process */
++		rd = inst.reg2i14_format.rd;
++		opcode = inst.reg2i14_format.opcode;
 +
-+menuconfig VIRTUALIZATION
-+	bool "Virtualization"
-+	help
-+	  Say Y here to get to see options for using your Linux host to run
-+	  other operating systems inside virtual machines (guests).
-+	  This option alone does not add any kernel code.
++		switch (opcode) {
++		case stptrd_op:
++			run->mmio.len = 8;
++			*(unsigned long *)data = vcpu->arch.gprs[rd];
++			break;
++		case stptrw_op:
++			run->mmio.len = 4;
++			*(unsigned int *)data = vcpu->arch.gprs[rd];
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else if (op8 < 0x30) {
++		/* st.b/h/w/d  process */
++		rd = inst.reg2i12_format.rd;
++		opcode = inst.reg2i12_format.opcode;
++		rd_val = vcpu->arch.gprs[rd];
 +
-+	  If you say N, all options in this submenu will be skipped and
-+	  disabled.
++		switch (opcode) {
++		case std_op:
++			run->mmio.len = 8;
++			*(unsigned long *)data = rd_val;
++			break;
++		case stw_op:
++			run->mmio.len = 4;
++			*(unsigned int *)data = rd_val;
++			break;
++		case sth_op:
++			run->mmio.len = 2;
++			*(unsigned short *)data = rd_val;
++			break;
++		case stb_op:
++			run->mmio.len = 1;
++			*(unsigned char *)data = rd_val;
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else if (op8 == 0x38) {
++		/* stxb/h/w/d process */
++		rd = inst.reg3_format.rd;
++		opcode = inst.reg3_format.opcode;
 +
-+if VIRTUALIZATION
++		switch (opcode) {
++		case stxb_op:
++			run->mmio.len = 1;
++			*(unsigned char *)data = vcpu->arch.gprs[rd];
++			break;
++		case stxh_op:
++			run->mmio.len = 2;
++			*(unsigned short *)data = vcpu->arch.gprs[rd];
++			break;
++		case stxw_op:
++			run->mmio.len = 4;
++			*(unsigned int *)data = vcpu->arch.gprs[rd];
++			break;
++		case stxd_op:
++			run->mmio.len = 8;
++			*(unsigned long *)data = vcpu->arch.gprs[rd];
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else
++		ret = EMULATE_FAIL;
 +
-+config AS_HAS_LVZ_EXTENSION
-+	def_bool $(as-instr,hvcl 0)
++	if (ret == EMULATE_DO_MMIO) {
++		run->mmio.is_write = 1;
++		vcpu->mmio_needed = 1;
++		vcpu->mmio_is_write = 1;
++	} else {
++		vcpu->arch.pc = curr_pc;
++		kvm_err("Write not supporded inst=0x%08x @%lx BadVaddr:%#lx\n",
++			inst.word, vcpu->arch.pc, vcpu->arch.badv);
++		kvm_arch_vcpu_dump_regs(vcpu);
++		/* Rollback PC if emulation was unsuccessful */
++	}
 +
-+config KVM
-+	tristate "Kernel-based Virtual Machine (KVM) support"
-+	depends on HAVE_KVM
-+	depends on AS_HAS_LVZ_EXTENSION
-+	select MMU_NOTIFIER
-+	select ANON_INODES
-+	select PREEMPT_NOTIFIERS
-+	select KVM_MMIO
-+	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
-+	select KVM_GENERIC_HARDWARE_ENABLING
-+	select KVM_XFER_TO_GUEST_WORK
-+	select HAVE_KVM_DIRTY_RING_ACQ_REL
-+	select HAVE_KVM_VCPU_ASYNC_IOCTL
-+	select HAVE_KVM_EVENTFD
-+	select SRCU
-+	help
-+	  Support hosting virtualized guest machines using hardware
-+	  virtualization extensions. You will need a fairly processor
-+	  equipped with virtualization extensions.
++	return ret;
++}
 +
-+	  If unsure, say N.
++int _kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
++{
++	unsigned int op8, opcode, rd;
++	struct kvm_run *run = vcpu->run;
++	int ret;
 +
-+endif # VIRTUALIZATION
-diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-new file mode 100644
-index 0000000000..2335e873a6
---- /dev/null
-+++ b/arch/loongarch/kvm/Makefile
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for LOONGARCH KVM support
-+#
++	run->mmio.phys_addr = vcpu->arch.badv;
++	vcpu->mmio_needed = 2;	/* signed */
++	op8 = (inst.word >> 24) & 0xff;
++	ret = EMULATE_DO_MMIO;
 +
-+ccflags-y += -I $(srctree)/$(src)
++	if (op8 < 0x28) {
++		/* ldptr.w/d process */
++		rd = inst.reg2i14_format.rd;
++		opcode = inst.reg2i14_format.opcode;
 +
-+include $(srctree)/virt/kvm/Makefile.kvm
++		switch (opcode) {
++		case ldptrd_op:
++			run->mmio.len = 8;
++			break;
++		case ldptrw_op:
++			run->mmio.len = 4;
++			break;
++		default:
++			break;
++		}
++	} else if (op8 < 0x2f) {
++		/* ld.b/h/w/d, ld.bu/hu/wu process */
++		rd = inst.reg2i12_format.rd;
++		opcode = inst.reg2i12_format.opcode;
 +
-+obj-$(CONFIG_KVM) += kvm.o
++		switch (opcode) {
++		case ldd_op:
++			run->mmio.len = 8;
++			break;
++		case ldwu_op:
++			vcpu->mmio_needed = 1;	/* unsigned */
++			run->mmio.len = 4;
++			break;
++		case ldw_op:
++			run->mmio.len = 4;
++			break;
++		case ldhu_op:
++			vcpu->mmio_needed = 1;	/* unsigned */
++			run->mmio.len = 2;
++			break;
++		case ldh_op:
++			run->mmio.len = 2;
++			break;
++		case ldbu_op:
++			vcpu->mmio_needed = 1;	/* unsigned */
++			run->mmio.len = 1;
++			break;
++		case ldb_op:
++			run->mmio.len = 1;
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else if (op8 == 0x38) {
++		/* ldxb/h/w/d, ldxb/h/wu, ldgtb/h/w/d, ldleb/h/w/d process */
++		rd = inst.reg3_format.rd;
++		opcode = inst.reg3_format.opcode;
 +
-+kvm-y += main.o
-+kvm-y += vm.o
-+kvm-y += vmid.o
-+kvm-y += tlb.o
-+kvm-y += mmu.o
-+kvm-y += vcpu.o
-+kvm-y += exit.o
-+kvm-y += interrupt.o
-+kvm-y += timer.o
-+kvm-y += switch.o
-+kvm-y += csr_ops.o
++		switch (opcode) {
++		case ldxb_op:
++			run->mmio.len = 1;
++			break;
++		case ldxbu_op:
++			run->mmio.len = 1;
++			vcpu->mmio_needed = 1;	/* unsigned */
++			break;
++		case ldxh_op:
++			run->mmio.len = 2;
++			break;
++		case ldxhu_op:
++			run->mmio.len = 2;
++			vcpu->mmio_needed = 1;	/* unsigned */
++			break;
++		case ldxw_op:
++			run->mmio.len = 4;
++			break;
++		case ldxwu_op:
++			run->mmio.len = 4;
++			vcpu->mmio_needed = 1;	/* unsigned */
++			break;
++		case ldxd_op:
++			run->mmio.len = 8;
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else
++		ret = EMULATE_FAIL;
++
++	if (ret == EMULATE_DO_MMIO) {
++		/* Set for _kvm_complete_mmio_read use */
++		vcpu->arch.io_gpr = rd;
++		run->mmio.is_write = 0;
++		vcpu->mmio_is_write = 0;
++	} else {
++		kvm_err("Load not supporded inst=0x%08x @%lx BadVaddr:%#lx\n",
++			inst.word, vcpu->arch.pc, vcpu->arch.badv);
++		kvm_arch_vcpu_dump_regs(vcpu);
++		vcpu->mmio_needed = 0;
++	}
++	return ret;
++}
++
++int _kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
++{
++	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
++	enum emulation_result er = EMULATE_DONE;
++
++	/* update with new PC */
++	update_pc(&vcpu->arch);
++	switch (run->mmio.len) {
++	case 8:
++		*gpr = *(s64 *)run->mmio.data;
++		break;
++	case 4:
++		if (vcpu->mmio_needed == 2)
++			*gpr = *(int *)run->mmio.data;
++		else
++			*gpr = *(unsigned int *)run->mmio.data;
++		break;
++	case 2:
++		if (vcpu->mmio_needed == 2)
++			*gpr = *(short *) run->mmio.data;
++		else
++			*gpr = *(unsigned short *)run->mmio.data;
++
++		break;
++	case 1:
++		if (vcpu->mmio_needed == 2)
++			*gpr = *(char *) run->mmio.data;
++		else
++			*gpr = *(unsigned char *) run->mmio.data;
++		break;
++	default:
++		kvm_err("Bad MMIO length: %d,addr is 0x%lx",
++				run->mmio.len, vcpu->arch.badv);
++		er = EMULATE_FAIL;
++		break;
++	}
++
++	return er;
++}
++
+ static int _kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
+ {
+ 	enum emulation_result er = EMULATE_DONE;
+@@ -320,3 +579,52 @@ static int _kvm_handle_gspr(struct kvm_vcpu *vcpu)
+ 	}
+ 	return ret;
+ }
++
++static int _kvm_handle_mmu_fault(struct kvm_vcpu *vcpu, bool write)
++{
++	struct kvm_run *run = vcpu->run;
++	unsigned long badv = vcpu->arch.badv;
++	larch_inst inst;
++	enum emulation_result er = EMULATE_DONE;
++	int ret;
++
++	ret = kvm_handle_mm_fault(vcpu, badv, write);
++	if (ret) {
++		/* Treat as MMIO */
++		inst.word = vcpu->arch.badi;
++		if (write) {
++			er = _kvm_emu_mmio_write(vcpu, inst);
++		} else {
++			/* A code fetch fault doesn't count as an MMIO */
++			if (kvm_is_ifetch_fault(&vcpu->arch)) {
++				kvm_err("%s ifetch error addr:%lx\n", __func__, badv);
++				run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++				return RESUME_HOST;
++			}
++
++			er = _kvm_emu_mmio_read(vcpu, inst);
++		}
++	}
++
++	if (er == EMULATE_DONE) {
++		ret = RESUME_GUEST;
++	} else if (er == EMULATE_DO_MMIO) {
++		run->exit_reason = KVM_EXIT_MMIO;
++		ret = RESUME_HOST;
++	} else {
++		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++		ret = RESUME_HOST;
++	}
++
++	return ret;
++}
++
++static int _kvm_handle_write_fault(struct kvm_vcpu *vcpu)
++{
++	return _kvm_handle_mmu_fault(vcpu, true);
++}
++
++static int _kvm_handle_read_fault(struct kvm_vcpu *vcpu)
++{
++	return _kvm_handle_mmu_fault(vcpu, false);
++}
 -- 
 2.27.0
 
