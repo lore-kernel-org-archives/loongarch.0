@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6ED38C13
-	for <loongarch@lists.linux.dev>; Thu, 31 Aug 2023 08:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDEBB8F51
+	for <loongarch@lists.linux.dev>; Thu, 31 Aug 2023 08:30:35 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dx_+ulT_BkIF4dAA--.58988S3;
-	Thu, 31 Aug 2023 16:30:29 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxJvGmT_BkOV4dAA--.60449S3;
+	Thu, 31 Aug 2023 16:30:30 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c6gT_BkOPVnAA--.55892S9;
-	Thu, 31 Aug 2023 16:30:28 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c6gT_BkOPVnAA--.55892S12;
+	Thu, 31 Aug 2023 16:30:29 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v20 07/30] LoongArch: KVM: Implement vcpu run interface
-Date: Thu, 31 Aug 2023 16:29:57 +0800
-Message-Id: <20230831083020.2187109-8-zhaotianrui@loongson.cn>
+Subject: [PATCH v20 10/30] LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
+Date: Thu, 31 Aug 2023 16:30:00 +0800
+Message-Id: <20230831083020.2187109-11-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230831083020.2187109-1-zhaotianrui@loongson.cn>
 References: <20230831083020.2187109-1-zhaotianrui@loongson.cn>
@@ -35,166 +35,57 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax3c6gT_BkOPVnAA--.55892S9
+X-CM-TRANSID:AQAAf8Ax3c6gT_BkOPVnAA--.55892S12
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement vcpu run interface, handling mmio, iocsr reading fault
-and deliver interrupt, lose fpu before vcpu enter guest.
+Implement LoongArch vcpu KVM_ENABLE_CAP ioctl interface.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 130 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 130 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 545b18cd1c..83f2988ea6 100644
+index f17422a942..be0c17a433 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -18,6 +18,91 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+@@ -187,6 +187,16 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
  	return 0;
  }
  
-+/*
-+ * _kvm_check_requests - check and handle pending vCPU requests
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest
-+ *         RESUME_HOST  if we should exit to userspace
-+ */
-+static int _kvm_check_requests(struct kvm_vcpu *vcpu)
++static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
++				     struct kvm_enable_cap *cap)
 +{
-+	if (!kvm_request_pending(vcpu))
-+		return RESUME_GUEST;
-+
-+	if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
-+		/* Drop vpid for this vCPU */
-+		vcpu->arch.vpid = 0;
-+
-+	if (kvm_dirty_ring_check_request(vcpu))
-+		return RESUME_HOST;
-+
-+	return RESUME_GUEST;
-+}
-+
-+/*
-+ * Check and handle pending signal and vCPU requests etc
-+ * Run with irq enabled and preempt enabled
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest
-+ *         RESUME_HOST  if we should exit to userspace
-+ *         < 0 if we should exit to userspace, where the return value
-+ *         indicates an error
-+ */
-+static int kvm_enter_guest_check(struct kvm_vcpu *vcpu)
-+{
-+	int ret;
-+
 +	/*
-+	 * Check conditions before entering the guest
++	 * FPU is enable by default, do not support any other caps,
++	 * and later we will support such as LSX cap.
 +	 */
-+	ret = xfer_to_guest_mode_handle_work(vcpu);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = _kvm_check_requests(vcpu);
-+	return ret;
++	return -EINVAL;
 +}
 +
-+/*
-+ * called with irq enabled
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest, and irq disabled
-+ *         Others if we should exit to userspace
-+ */
-+static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
-+{
-+	int ret;
-+
-+	do {
-+		ret = kvm_enter_guest_check(vcpu);
-+		if (ret != RESUME_GUEST)
-+			break;
-+
-+		/*
-+		 * handle vcpu timer, interrupts, check requests and
-+		 * check vmid before vcpu enter guest
-+		 */
-+		local_irq_disable();
-+		kvm_acquire_timer(vcpu);
-+		_kvm_deliver_intr(vcpu);
-+		/* make sure the vcpu mode has been written */
-+		smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+		_kvm_check_vmid(vcpu);
-+		vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-+		/* clear KVM_LARCH_CSR as csr will change when enter guest */
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
-+
-+		if (kvm_request_pending(vcpu) || xfer_to_guest_mode_work_pending()) {
-+			/* make sure the vcpu mode has been written */
-+			smp_store_mb(vcpu->mode, OUTSIDE_GUEST_MODE);
-+			local_irq_enable();
-+			ret = -EAGAIN;
-+		}
-+	} while (ret != RESUME_GUEST);
-+
-+	return ret;
-+}
-+
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			 unsigned int ioctl, unsigned long arg)
  {
- 	unsigned long timer_hz;
-@@ -85,3 +170,48 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 			context->last_vcpu = NULL;
+@@ -210,6 +220,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			r = _kvm_get_reg(vcpu, &reg);
+ 		break;
  	}
- }
++	case KVM_ENABLE_CAP: {
++		struct kvm_enable_cap cap;
 +
-+int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-+{
-+	int r = -EINTR;
-+	struct kvm_run *run = vcpu->run;
-+
-+	if (vcpu->mmio_needed) {
-+		if (!vcpu->mmio_is_write)
-+			_kvm_complete_mmio_read(vcpu, run);
-+		vcpu->mmio_needed = 0;
++		r = -EFAULT;
++		if (copy_from_user(&cap, argp, sizeof(cap)))
++			break;
++		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
++		break;
 +	}
-+
-+	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
-+		if (!run->iocsr_io.is_write)
-+			_kvm_complete_iocsr_read(vcpu, run);
-+	}
-+
-+	/* clear exit_reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	if (run->immediate_exit)
-+		return r;
-+
-+	lose_fpu(1);
-+	vcpu_load(vcpu);
-+	kvm_sigset_activate(vcpu);
-+	r = kvm_pre_enter_guest(vcpu);
-+	if (r != RESUME_GUEST)
-+		goto out;
-+
-+	guest_timing_enter_irqoff();
-+	guest_state_enter_irqoff();
-+	trace_kvm_enter(vcpu);
-+	r = kvm_loongarch_ops->enter_guest(run, vcpu);
-+
-+	trace_kvm_out(vcpu);
-+	/*
-+	 * guest exit is already recorded at _kvm_handle_exit
-+	 * return val must not be RESUME_GUEST
-+	 */
-+	local_irq_enable();
-+out:
-+	kvm_sigset_deactivate(vcpu);
-+	vcpu_put(vcpu);
-+	return r;
-+}
+ 	default:
+ 		r = -ENOIOCTLCMD;
+ 		break;
 -- 
 2.27.0
 
