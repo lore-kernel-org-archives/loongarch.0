@@ -1,102 +1,119 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775C08BF8
-	for <loongarch@lists.linux.dev>; Fri,  1 Sep 2023 09:06:55 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-99c1c66876aso207627166b.2
-        for <loongarch@lists.linux.dev>; Fri, 01 Sep 2023 02:06:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E69A921
+	for <loongarch@lists.linux.dev>; Fri,  1 Sep 2023 09:27:41 +0000 (UTC)
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6bb07d274feso1356299a34.0
+        for <loongarch@lists.linux.dev>; Fri, 01 Sep 2023 02:27:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693559213; x=1694164013; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CL2wZFAQ9DQMYKYYGQQIGah4zjC0ig67LMgG+Wt4f1Y=;
-        b=Owrq8KdMZLFSt2/eHynA16kmvXYtOJEpHJfTok8ri4wniyV3bvINQf4rOhcI1mruwv
-         40fl6aCSEjb5kfnTJazP8/YqkHlbHx/af/yoz/p7SaxAItYPc1M+icmt7JnsYOhgfUEJ
-         Dhf4kWsvyO/MWIAYOZT62hnTa85r82QbayuiMkSL+vkm1OmkcWEkNVSyzwxKnAAuNCU7
-         Pj8mOHp6cP5yU7UL+GadSl1yPfudLcjBmgF7woMSFRjMw1/sMb5kMf83Ck+Yd9yPq/tQ
-         JeRC2c05C7TOE57FuPOySIWsYJX5yOkIxWp2AQMhPY/QhxpedCJKM3QJODaMr2KIhkON
-         p3og==
+        d=gmail.com; s=20221208; t=1693560460; x=1694165260; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nNejtY2CYRQHuWNnMRsL970fJ2LcYenjaMg4E67qwZg=;
+        b=NACfG3k4afBvtlj64pyu8i18B5V3u7o14x69XyX7v9ofN9hUuFiOuh3hj35HJh8cJI
+         kYlRY51YvI9iswGMjKzyvf8zDujvHTIJkCM73AsQh12m/a2M9d1dV//SXOHk08klLHCd
+         zywXai2+D74ZDFGmxCQCJYUzv3McrqOpiy3sOZvZqKrcLm807t6fEMKBH84uPYj75Sg8
+         bJ8SZhOZUkZVR1WAa3DHImBEc4+mkMZFoYyN6d4rs6GfnEBNWiLV+5P7m03z3O/YYslY
+         O1Cuf6MMbMa5wkrGGpV6Gi3VWEYBra7R5WQuFIyEcWiPtqRcUsCMEt7J4obTM6SIW5Ri
+         Fd3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693559213; x=1694164013;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CL2wZFAQ9DQMYKYYGQQIGah4zjC0ig67LMgG+Wt4f1Y=;
-        b=Gx/5ipw99WyCbXJTgu2V2gxitIwWzhlA4ZI3bA/fq9D+WZlCAt7lWqqmHD5wTejKOF
-         Gm1KkeY2vhcPItae235j+luivZsoRJ35hIrbMljwo/G/VvEgI6tVr+HQHzZk7sol48I8
-         uMV2/FdTE9fYgw7G0il6DduTwNtucP7k9CokJ8rzU3uRLsF45BUyQc5CVdxsc1g5k/hE
-         k4zsQFrnBKKYAOxFgfCChRdkAbSOdGTq++f/uM7i9QpXliYgbIhSfbhKxw3F89PQZOMN
-         BkEu9ArwmCRsf1CuNQtqlvL6HZXZM6zCjkfUedM7hk70vkdoE9WD9tOO/MCMiNhKB6ns
-         AfjQ==
-X-Gm-Message-State: AOJu0Yz4E0QCz2Kmxwlk424oU5y5TlEIMtad9kFkcybxvJXRe8enLUhz
-	WX5Rxo9V2OoIWp3TVKuF4VpTcQ==
-X-Google-Smtp-Source: AGHT+IFgycuMFi2b9nbCWqWNuNSEcE07Zi45QXIvtjzYup3K8uPK4QvdgSYexfoBzJlc6i5xrD3o3g==
-X-Received: by 2002:a17:907:75fa:b0:9a5:7ade:b5e8 with SMTP id jz26-20020a17090775fa00b009a57adeb5e8mr1170613ejc.10.1693559213457;
-        Fri, 01 Sep 2023 02:06:53 -0700 (PDT)
-Received: from [192.168.0.22] (77-252-46-238.static.ip.netia.com.pl. [77.252.46.238])
-        by smtp.gmail.com with ESMTPSA id e7-20020a170906248700b009920a690cd9sm1727779ejb.59.2023.09.01.02.06.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Sep 2023 02:06:52 -0700 (PDT)
-Message-ID: <cfa55813-946e-7aad-b7a4-54450a1ea5d5@linaro.org>
-Date: Fri, 1 Sep 2023 11:06:51 +0200
+        d=1e100.net; s=20221208; t=1693560460; x=1694165260;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nNejtY2CYRQHuWNnMRsL970fJ2LcYenjaMg4E67qwZg=;
+        b=VF+v0Xz3XiHknsFcLJqQXinqn2bZJQXYwhBpB6qMini2haIyhy3zsvZO3tccKyhChK
+         5R8lVstfR5NjUzm61w3SD66WVeBHdnOysvkclzSB1DT6UYjfU7AktuVp/1gz4a/0l+nn
+         hUf06hqXAkCOyxpdCg9iZzm1c5EV7C9RjBULUd1TgP4Oneo1V2/Gl0x9HglKD2aWubel
+         lvoJ/vfXCy/99SBLzk038/5vy8k+Ck4Ifle89MZ2446JyUemJqGuYLkMcYtG17hngJWL
+         rvR40Mio84a/xyiMIdGHcaCL7DuBffbvmp/mMYWBFkQU+zRGBMCkpYRZtQ8s7J3MJKyH
+         zLvQ==
+X-Gm-Message-State: AOJu0YwfT+mq6dvU3eJ+AbFL8n4OC7XKtFgH2pjPoUElWDmE7Y9Qkn9h
+	TFVDc+5XsWFxugUJXHCr7ne0tGLVcsANqxWz39a8fmnUL8Q/X5fX
+X-Google-Smtp-Source: AGHT+IHGcKLODahchCBBvFixtlLSYCgY2KNa3x1lSet1wv+1MdRrmY04593geKiUioPkoJbLl9x3eu52b/hIFO0+TyY=
+X-Received: by 2002:a05:6358:342a:b0:133:428:35dc with SMTP id
+ h42-20020a056358342a00b00133042835dcmr1444953rwd.11.1693560460156; Fri, 01
+ Sep 2023 02:27:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
+References: <cover.1693474728.git.zhoubinbin@loongson.cn> <38e811816c37a2d52374fa04864654ff1e9b4dc8.1693474728.git.zhoubinbin@loongson.cn>
+ <cfa55813-946e-7aad-b7a4-54450a1ea5d5@linaro.org>
+In-Reply-To: <cfa55813-946e-7aad-b7a4-54450a1ea5d5@linaro.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Fri, 1 Sep 2023 17:27:28 +0800
+Message-ID: <CAMpQs4Jrvd=KAXUBYYdixvvhBx1hAXxECUhGVsuEED1Jp9SPDA@mail.gmail.com>
 Subject: Re: [PATCH v2 4/5] dt-bindings: soc: loongson,ls2k-pmc: Allow
  syscon-reboot/syscon-poweroff as child
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
- soc@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-References: <cover.1693474728.git.zhoubinbin@loongson.cn>
- <38e811816c37a2d52374fa04864654ff1e9b4dc8.1693474728.git.zhoubinbin@loongson.cn>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <38e811816c37a2d52374fa04864654ff1e9b4dc8.1693474728.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, soc@kernel.org, 
+	devicetree@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 31/08/2023 13:43, Binbin Zhou wrote:
->  required:
->    - compatible
->    - reg
-> @@ -54,4 +66,18 @@ examples:
->          interrupt-parent = <&liointc1>;
->          interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
->          loongson,suspend-address = <0x0 0x1c000500>;
-> +
-> +        syscon-reboot {
-> +            compatible = "syscon-reboot";
-> +            offset = <0x30>;
-> +            mask = <0x1>;
-> +        };
-> +
-> +        syscon-poweroff {
-> +            compatible = "syscon-poweroff";
-> +            regmap = <&pmc>;
+Hi Krzysztof:
 
-???
 
-This is a friendly reminder during the review process.
+On Fri, Sep 1, 2023 at 5:06=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 31/08/2023 13:43, Binbin Zhou wrote:
+> >  required:
+> >    - compatible
+> >    - reg
+> > @@ -54,4 +66,18 @@ examples:
+> >          interrupt-parent =3D <&liointc1>;
+> >          interrupts =3D <11 IRQ_TYPE_LEVEL_LOW>;
+> >          loongson,suspend-address =3D <0x0 0x1c000500>;
+> > +
+> > +        syscon-reboot {
+> > +            compatible =3D "syscon-reboot";
+> > +            offset =3D <0x30>;
+> > +            mask =3D <0x1>;
+> > +        };
+> > +
+> > +        syscon-poweroff {
+> > +            compatible =3D "syscon-poweroff";
+> > +            regmap =3D <&pmc>;
+>
+> ???
 
-It seems my previous comments were not fully addressed. Maybe my
-feedback got lost between the quotes, maybe you just forgot to apply it.
-Please go back to the previous discussion and either implement all
-requested changes or keep discussing them.
+I did notice that commit [1] changed "regmap" to "unrequired" for
+"syscon-reboot", but "syscon-poweroff" did not do the same.
+So, at least under the current "syscon-poweroff" rule, "regmap" is "require=
+d".
 
-Thank you.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Doc=
+umentation/devicetree/bindings/power/reset/syscon-poweroff.yaml?h=3Dv6.5#n4=
+1
 
-Best regards,
-Krzysztof
+I had my doubts before, but seeing that some dts do have
+"syscon-poweroff" as a separate node, I assumed there was a
+difference.
 
+commit[1]: 2140d68d69d4 dt-bindings: power: reset: Unrequired regmap
+property in syscon-reboot node
+
+Thanks.
+Binbin
+>
+> This is a friendly reminder during the review process.
+>
+> It seems my previous comments were not fully addressed. Maybe my
+> feedback got lost between the quotes, maybe you just forgot to apply it.
+> Please go back to the previous discussion and either implement all
+> requested changes or keep discussing them.
+>
+> Thank you.
+>
+> Best regards,
+> Krzysztof
+>
