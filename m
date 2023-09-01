@@ -1,81 +1,139 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DA0B5393
-	for <loongarch@lists.linux.dev>; Fri,  1 Sep 2023 06:26:36 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.102])
-	by gateway (Coremail) with SMTP id _____8DxPOsVhPFkkbQdAA--.55393S3;
-	Fri, 01 Sep 2023 14:26:29 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXSMQhPFkGq1oAA--.37914S4;
-	Fri, 01 Sep 2023 14:26:28 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	soc@kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Mingtong Bao <baomingtong001@208suo.com>
-Subject: [PATCH 2/2] soc: loongson: loongson2_guts: Remove unneeded semicolon
-Date: Fri,  1 Sep 2023 14:25:49 +0800
-Message-Id: <7fd769db753b746c8d8cd4eafee13be42f33fc14.1693534134.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1693534134.git.zhoubinbin@loongson.cn>
-References: <cover.1693534134.git.zhoubinbin@loongson.cn>
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F50D5C98
+	for <loongarch@lists.linux.dev>; Fri,  1 Sep 2023 06:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1693550009; x=1725086009;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=m64vTGuTn+LyymqjWnqc46/AIGoEDr1fAhPkx94h6g8=;
+  b=1u8Es2s8UzlhfT+b++jKgycOBe+1SYWG2jIezQeA5wsWAxuwpTf9v9QS
+   AQOeJXVVtbW7wZ/oyvghqLsVaotf/uKHMKt6sniF2Ztfu8vBfdOfPH9qp
+   VdlPOS8WMfSjN80u3TA/7ujDKXfmXCUQHqQdAiN00YF+ryWhwvJCSUkGY
+   gYPQhOtl7qc4sRdJqoJkh/kulMsYkYmTbOPOUB4PI6ot1uzdbkDyKeEB1
+   l3P80c+QnkXjctiPz+OBz76fj0vc9dqXBR4/1+6ghXgrPCfmgft4sKfZl
+   4iUJdzPcowlXBwC3QYcWGXffERJPn60XNHS704OG0N6kEb9L/4tHw1dt6
+   w==;
+X-IronPort-AV: E=Sophos;i="6.02,218,1688454000"; 
+   d="asc'?scan'208";a="232862143"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Aug 2023 23:33:21 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Thu, 31 Aug 2023 23:32:47 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Thu, 31 Aug 2023 23:32:44 -0700
+Date: Fri, 1 Sep 2023 07:32:02 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+CC: Conor Dooley <conor@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>, Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd
+ Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	<loongson-kernel@lists.loongnix.cn>, <soc@kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-pm@vger.kernel.org>, Xuerui Wang
+	<kernel@xen0n.name>, <loongarch@lists.linux.dev>
+Subject: Re: [PATCH v2 3/5] soc: loongson: loongson_pm2: Drop useless
+ of_device_id compatible
+Message-ID: <20230901-doubling-multiple-8b72b062e622@wendy>
+References: <cover.1693474728.git.zhoubinbin@loongson.cn>
+ <bf09b11ec6a0102f85dc2b3289d003271304e24d.1693474728.git.zhoubinbin@loongson.cn>
+ <20230831-ambition-refusing-08e63b345573@spud>
+ <CAMpQs4JbUx9N4MmfM6vRsdQBHyUcU9UHGX23UewL5Matt6iXnQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXSMQhPFkGq1oAA--.37914S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrur4UXw4DKw18XF1xZr15WrX_yoWfJrXEka
-	42qrWfur1UAF13t34j9rW3Z34Sva4rZ3WS9F1xKF1fXw42vF1rt3WUur1fGF47Xry7ZFnx
-	Zw48Wr10yw1xtosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb3xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Cr1j6rxdM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q
-	6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU8EeHDUUUUU==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HoQ3/6k+9svD/8I7"
+Content-Disposition: inline
+In-Reply-To: <CAMpQs4JbUx9N4MmfM6vRsdQBHyUcU9UHGX23UewL5Matt6iXnQ@mail.gmail.com>
 
-From: Mingtong Bao <baomingtong001@208suo.com>
+--HoQ3/6k+9svD/8I7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-No functional modification involved.
+On Fri, Sep 01, 2023 at 11:05:12AM +0800, Binbin Zhou wrote:
+> Hi Conor:
+>=20
+> Thanks for your reply.
+>=20
+> On Thu, Aug 31, 2023 at 11:15=E2=80=AFPM Conor Dooley <conor@kernel.org> =
+wrote:
+> >
+> > On Thu, Aug 31, 2023 at 07:43:13PM +0800, Binbin Zhou wrote:
+> > > Now, "loongson,ls2k0500-pmc" is used as fallback compatible, so the
+> > > ls2k1000 compatible in the driver can be dropped directly.
+> > >
+> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > ---
+> > >  drivers/soc/loongson/loongson2_pm.c | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > >
+> > > diff --git a/drivers/soc/loongson/loongson2_pm.c b/drivers/soc/loongs=
+on/loongson2_pm.c
+> > > index 796add6e8b63..5ffb77afd9eb 100644
+> > > --- a/drivers/soc/loongson/loongson2_pm.c
+> > > +++ b/drivers/soc/loongson/loongson2_pm.c
+> > > @@ -197,7 +197,6 @@ static int loongson2_pm_probe(struct platform_dev=
+ice *pdev)
+> > >
+> > >  static const struct of_device_id loongson2_pm_match[] =3D {
+> > >       { .compatible =3D "loongson,ls2k0500-pmc", },
+> > > -     { .compatible =3D "loongson,ls2k1000-pmc", },
+> >
+> > What about older devicetrees that do not have the fallback? Aren't you
+> > going to remove support for those?
+>=20
+> This driver was just merged in during the v6.6 window, and no release
+> will use it until now.
 
-./drivers/soc/loongson/loongson2_guts.c:73:2-3: Unneeded semicolon.
+Ahh, thanks for the info. Your commits 1-3 should then all have Fixes:
+tags pointing to the commits tat introduced the problems, if you intend
+getting these applied as fixes before v6.6 gets released.
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Mingtong Bao <baomingtong001@208suo.com>
----
- drivers/soc/loongson/loongson2_guts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Conor.
 
-diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
-index d97c77a9a4a2..9a469779eea7 100644
---- a/drivers/soc/loongson/loongson2_guts.c
-+++ b/drivers/soc/loongson/loongson2_guts.c
-@@ -70,7 +70,7 @@ static const struct loongson2_soc_die_attr *loongson2_soc_die_match(
- 		if (matches->svr == (svr & matches->mask))
- 			return matches;
- 		matches++;
--	};
-+	}
- 
- 	return NULL;
- }
--- 
-2.39.3
+> commit 67694c076bd7 soc: loongson2_pm: add power management support
+> commit 6054a676e969 soc: dt-bindings: add loongson-2 pm
+>=20
+> Of course, it was our mistake not to make better use of fallback
+> compatible when submitting the driver, and we hope to fix this mistake
+> soon.
+> Also, this driver will only be used by the LoongArch architecture, no
+> need to worry about other architectures.
+>=20
+> Thanks.
+> Binbin
+> >
+> > >       {},
+> > >  };
+> > >
+> > > --
+> > > 2.39.3
+> > >
 
+--HoQ3/6k+9svD/8I7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZPGFYgAKCRB4tDGHoIJi
+0vSUAQDcrB5/73rfmCNAiT2jQA1ruGVppzf3RjC+q0NLyXn7+AD9FlXDDVIXG0U4
+83Jc8qNKJVsTNg62hZ8YWLQVEyARvA8=
+=1aNe
+-----END PGP SIGNATURE-----
+
+--HoQ3/6k+9svD/8I7--
