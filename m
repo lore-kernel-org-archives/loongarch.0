@@ -1,113 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E928F7A
-	for <loongarch@lists.linux.dev>; Thu, 31 Aug 2023 16:39:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77650C433C7;
-	Thu, 31 Aug 2023 16:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693499963;
-	bh=g8xLY/dzEhuIK4x27Q6kJp7C/0Jbe5J3zYO8mO/3aC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KIZpr6ENwLVYu0b/XguiTaTDDJHKPva0+/8B88VGItwawLNOyx4Hfl5896MEX7d6w
-	 ReQR2sCItxRwB06NhAJFeHbW9n+Uy8CSNf57rq6HdWAAAGD82rCmQYCE8AI1Guh7Lo
-	 ije1As5khU1WFEVFi3t5Gti36BhXnQB0GFnEwSTDtoT05nIEq2D26hzDYRlHaBRToS
-	 VphFx+9si+yELUYmEnPffgBQa8P/LU7A4vbBocNLgwGKwDc2oIBg49RjOr/nvc89rK
-	 sajQ6XHmb46wrCERHvzaz9xVRg6B46n7eyJ7dl/CWhB5XoYnH9eyJNElqdoQ1gcR2/
-	 P2X9e7ntOo9qw==
-Received: (nullmailer pid 2406856 invoked by uid 1000);
-	Thu, 31 Aug 2023 16:39:21 -0000
-Date: Thu, 31 Aug 2023 11:39:21 -0500
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Conor Dooley <conor@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH 2/5] dt-bindings: soc: loongson,ls2k-pmc: Add missing
- compatible for Loongson-2K2000
-Message-ID: <20230831163921.GA2393252-robh@kernel.org>
-References: <cover.1693218539.git.zhoubinbin@loongson.cn>
- <54ee114c08f35ab8b5dc584fd76135ac9076f5a7.1693218539.git.zhoubinbin@loongson.cn>
- <20230828-shrewdly-payee-c5eb091a0417@spud>
- <CAMpQs4Jp0rb8sbrLrPnNziLph4Ym4LxBsFt-00G69ecd8bUHNg@mail.gmail.com>
- <3fd27e64-2221-ec38-1320-9ae966f998aa@linaro.org>
- <CAMpQs4+W1q0XziBVXr12xpFW=u2EkZx-_b-Mppx7cZukZLOBCQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EBF15A6
+	for <loongarch@lists.linux.dev>; Fri,  1 Sep 2023 03:05:24 +0000 (UTC)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-58dfe2d5b9aso20084467b3.1
+        for <loongarch@lists.linux.dev>; Thu, 31 Aug 2023 20:05:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693537524; x=1694142324; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CzzhdRRz+84nDeWWLMEXfVPuhXA1oo9sQKDIU2jXLKE=;
+        b=aaHZ1XSWxNa0/w7AznZGx4g/B3VyC40LHr9sivGtlI18/Ek2gTfYz0gS0eaujC1RfP
+         zocCz+jWcEjJP+V2u1WpQ315DH2YzCSFwBRJ+761PXkifqgaRd0m5LSMM4OLAWm2rjhy
+         KzF5BToFEkOOK+OqDcPOX6WCGzybeX4wHxFN3M4Aw9wrI9lWYvOkK0jeAxC23Cte4IRQ
+         kPRIj+nmMyn4ycGDx5J6v9irt9utXYfFcINCxg2rowQcW2JlEJ9S5lcGMcSBW7b1S1Cm
+         lojzE4RR47WeYKFFgJG4OrKHfh1Yqjiwy8koRGKK2xjaGkWhUsRn1cuAY9Fxympc+S2G
+         J0Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693537524; x=1694142324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CzzhdRRz+84nDeWWLMEXfVPuhXA1oo9sQKDIU2jXLKE=;
+        b=jez1wBLyEJfLSWk2nySlz1MUQPFi3Snh+3+10JAXBiBE7qCviRUywWMg8qDAoB2+yY
+         5Jj6zcXjYTwpgy7ylJOZtWGpXUjGNMkrCKbDhEV3cCloDTiJ43osN/qymrSGCjrBQSXQ
+         pCSOSn9/7hY5992xY1Epuq/2RH4uRFUq4u9TVY42PNJl2xyiCFulJlqMUUsRJJFPLJeo
+         FXOa4WiwEjzOl0yNXDUM2R5/kvmDEbf+Uj//1QmwlWDDZ/m4MALjZ7XjidowMYB4psjF
+         IKMRXhT0AYfMJW2I6ZU61LZpCzPRrUKoD0olrmDizUiBH7gQMdpIrgSOh0G7tBY5dX84
+         oZDQ==
+X-Gm-Message-State: AOJu0YxXrJHSDGvETahPX+fYgFJfpEHYhRHU+Q3Z9IjEojfkIKrrrFLH
+	Dx9gSYH5V9vzMCKx2+iGx0CSpN5QEO84J/15+dI=
+X-Google-Smtp-Source: AGHT+IEJQ/UnswWklefCzgEHvWHAJOerPe/H2CzyND+TNL/LPrnmDHwD+//eG8lI6MC/fhA9o6DMv8wR+lP5bYqvsro=
+X-Received: by 2002:a0d:d605:0:b0:56c:f0c7:7d72 with SMTP id
+ y5-20020a0dd605000000b0056cf0c77d72mr2225622ywd.4.1693537523953; Thu, 31 Aug
+ 2023 20:05:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpQs4+W1q0XziBVXr12xpFW=u2EkZx-_b-Mppx7cZukZLOBCQ@mail.gmail.com>
+References: <cover.1693474728.git.zhoubinbin@loongson.cn> <bf09b11ec6a0102f85dc2b3289d003271304e24d.1693474728.git.zhoubinbin@loongson.cn>
+ <20230831-ambition-refusing-08e63b345573@spud>
+In-Reply-To: <20230831-ambition-refusing-08e63b345573@spud>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Fri, 1 Sep 2023 11:05:12 +0800
+Message-ID: <CAMpQs4JbUx9N4MmfM6vRsdQBHyUcU9UHGX23UewL5Matt6iXnQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] soc: loongson: loongson_pm2: Drop useless
+ of_device_id compatible
+To: Conor Dooley <conor@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, soc@kernel.org, 
+	devicetree@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 29, 2023 at 02:52:48PM +0800, Binbin Zhou wrote:
-> On Tue, Aug 29, 2023 at 2:29 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
+Hi Conor:
+
+Thanks for your reply.
+
+On Thu, Aug 31, 2023 at 11:15=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
+ote:
+>
+> On Thu, Aug 31, 2023 at 07:43:13PM +0800, Binbin Zhou wrote:
+> > Now, "loongson,ls2k0500-pmc" is used as fallback compatible, so the
+> > ls2k1000 compatible in the driver can be dropped directly.
 > >
-> > On 29/08/2023 05:21, Binbin Zhou wrote:
-> > > HI Conor:
-> > >
-> > > Thanks for your reply.
-> > >
-> > > On Mon, Aug 28, 2023 at 11:49 PM Conor Dooley <conor@kernel.org> wrote:
-> > >>
-> > >> On Mon, Aug 28, 2023 at 08:38:32PM +0800, Binbin Zhou wrote:
-> > >>> Document the Power Management Unit system controller compatible for
-> > >>> Loongson-2K2000.
-> > >>>
-> > >>> This is a missing compatible, now we add it.
-> > >>>
-> > >>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > >>> ---
-> > >>>  .../devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml      | 1 +
-> > >>>  1 file changed, 1 insertion(+)
-> > >>>
-> > >>> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
-> > >>> index da2dcfeebf12..7473c5659929 100644
-> > >>> --- a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
-> > >>> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml
-> > >>> @@ -15,6 +15,7 @@ properties:
-> > >>>        - enum:
-> > >>>            - loongson,ls2k0500-pmc
-> > >>>            - loongson,ls2k1000-pmc
-> > >>> +          - loongson,ls2k2000-pmc
-> > >>
-> > >> Same thing here as the driver patch, the pmc on this newly added SoC
-> > >> appears to use the same codepaths as the existing ones. Does it share a
-> > >> programming model & should there be a fallback compatible here?
-> > >
-> > > I noticed the guideline about fallback compatible:
-> > >
-> > > "DO use fallback compatibles when devices are the same as or a subset
-> > > of prior implementations."
-> > >
-> > > But in fact, ls2k0500/ls2k1000/ls2k2000 are independent, there is no subset.
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  drivers/soc/loongson/loongson2_pm.c | 1 -
+> >  1 file changed, 1 deletion(-)
 > >
-> > We do not consider here ls2k0500/ls2k1000/ls2k2000, but PMC in each of
-> > them. If they are independent, why would they use the same interface?
-> 
-> Sorry. I may have misunderstood.
-> The "subset" in the above guideline, here we should be talking about
-> PMC, not SoC.
-> For PMC, ls2k0500/ls2k1000/ls2k2000 are the same.
-> 
-> Am I understanding correctly now?
+> > diff --git a/drivers/soc/loongson/loongson2_pm.c b/drivers/soc/loongson=
+/loongson2_pm.c
+> > index 796add6e8b63..5ffb77afd9eb 100644
+> > --- a/drivers/soc/loongson/loongson2_pm.c
+> > +++ b/drivers/soc/loongson/loongson2_pm.c
+> > @@ -197,7 +197,6 @@ static int loongson2_pm_probe(struct platform_devic=
+e *pdev)
+> >
+> >  static const struct of_device_id loongson2_pm_match[] =3D {
+> >       { .compatible =3D "loongson,ls2k0500-pmc", },
+> > -     { .compatible =3D "loongson,ls2k1000-pmc", },
+>
+> What about older devicetrees that do not have the fallback? Aren't you
+> going to remove support for those?
 
-The test is can an OS/client which only understands the fallback 
-compatible (loongson,ls2k-pmc) use that h/w block (or some subset of 
-it)? If so, then a fallback is appropriate. If not, then don't use a 
-fallback. If the block in one SoC is a proper subset of another SoC, 
-then make the compatible that's a subset the fallback. However, that's 
-really only helpful if an OS/client already understands the fallback. 
+This driver was just merged in during the v6.6 window, and no release
+will use it until now.
 
+commit 67694c076bd7 soc: loongson2_pm: add power management support
+commit 6054a676e969 soc: dt-bindings: add loongson-2 pm
 
-> Also, when I said "independent" above, I meant they are three different SoCs.
+Of course, it was our mistake not to make better use of fallback
+compatible when submitting the driver, and we hope to fix this mistake
+soon.
+Also, this driver will only be used by the LoongArch architecture, no
+need to worry about other architectures.
 
-But those SoCs are probably not designed completely independently. An 
-existing SoC is the basis for the next SoC design.
-
-OTOH, things like pinmux, clocks, power mgt, etc. tend to change in 
-every chip.
-
-Rob
+Thanks.
+Binbin
+>
+> >       {},
+> >  };
+> >
+> > --
+> > 2.39.3
+> >
