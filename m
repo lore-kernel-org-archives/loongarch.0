@@ -1,155 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34A0A38
-	for <loongarch@lists.linux.dev>; Tue,  5 Sep 2023 11:00:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 494E1C433D9
-	for <loongarch@lists.linux.dev>; Tue,  5 Sep 2023 11:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693911613;
-	bh=SgKV5ClqeLo1hlnR01GNFopDaqavZ/k0YiN5RC0/iBY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=snQjlbTOtWhbPjg+P/Vqfi9sJ6Aa0vKuoNjtFGHihdIJkQhRu2sYWV/szwN/5efqn
-	 qhXlBhrqSip9hnUAWZjB2Ki62cjqs9B3xWQ1KBa0qUliaVoLSLQFk6H8ncsO6M9ASU
-	 sTA3EkM1j9DClv4Dreo/1POGylXUytWwpmZobBpgLPOgGvUaJkoveeq5/YG9b1kK/p
-	 5vqqTN0Cflb+66vchO+UR9z6Am60JAtGWPM75nkuXiHbj7RM/QC42En2zprSELafOL
-	 BMf3xzG1RWP/8VVzljnnMmg6RTNJQRd5HdgguP0h+WhRom0eHszUJZ9zyQ7Bg7RgVT
-	 Xo4+p62lI0WvQ==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-9a5dff9d2d9so350233566b.3
-        for <loongarch@lists.linux.dev>; Tue, 05 Sep 2023 04:00:13 -0700 (PDT)
-X-Gm-Message-State: AOJu0YyJOfSEpkAChkeVvbQ9UpdEybdLfLu93TR/oI/wuaxynijSrgm/
-	k84F4MM+PK7ctTzlJUmVwE6e1KIM7atIuOvSxio=
-X-Google-Smtp-Source: AGHT+IFgRuoOb9wfYkJVyhU+h1VY+IW46m9VrAHtO2gesGZBBFMelgYIg1qqOD5QTGCICK6cd3WvwyXqgnlDuLiOTGI=
-X-Received: by 2002:a17:906:7691:b0:9a5:c8ad:20be with SMTP id
- o17-20020a170906769100b009a5c8ad20bemr7703246ejm.4.1693911611418; Tue, 05 Sep
- 2023 04:00:11 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB39DCA47
+	for <loongarch@lists.linux.dev>; Tue,  5 Sep 2023 11:03:03 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8Bx5fDhCvdk64YfAA--.63969S3;
+	Tue, 05 Sep 2023 19:02:57 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxB83hCvdkx8lsAA--.58503S3;
+	Tue, 05 Sep 2023 19:02:57 +0800 (CST)
+Message-ID: <22b90beb-4eeb-de44-fce5-e8504c58f1f0@loongson.cn>
+Date: Tue, 5 Sep 2023 19:02:57 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230905080147.1625448-1-maobibo@loongson.cn> <20230905080147.1625448-3-maobibo@loongson.cn>
-In-Reply-To: <20230905080147.1625448-3-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 5 Sep 2023 18:59:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6DR7huH+c9ox9vsHDaQf5BAOvhvZtpKY5rKUQsEpbVOA@mail.gmail.com>
-Message-ID: <CAAhV-H6DR7huH+c9ox9vsHDaQf5BAOvhvZtpKY5rKUQsEpbVOA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] LoongArch: Use static defined zero page rather than allocated
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 1/2] LoongArch: Remove zero_page_mask symbol
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Andrew Morton
+ <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20230905080147.1625448-1-maobibo@loongson.cn>
+ <20230905080147.1625448-2-maobibo@loongson.cn>
+ <CAAhV-H7VK+XkpCJUjX8vE2MtHDqzteCeDkvdxurKMbCZ6brSFg@mail.gmail.com>
+Content-Language: en-US
+From: bibo mao <maobibo@loongson.cn>
+In-Reply-To: <CAAhV-H7VK+XkpCJUjX8vE2MtHDqzteCeDkvdxurKMbCZ6brSFg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxB83hCvdkx8lsAA--.58503S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur1UAw4kArWkWryfKF4fCrX_yoW5JF18pF
+	9rAF1vgF48GryrArn2vwnF9r18JwsxKF4IgFy2yFyq93sFqry0gr1ktrZ7ZFyUtayxGFWI
+	va15Gr1avFs0yacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr
+	1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
+	UUU==
 
-Hi, Bibo,
 
-On Tue, Sep 5, 2023 at 4:01=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
-:
->
-> Like other popular architectures, zero page is defined in kernel
-> BSS code segment, rather than dynamically alloted page. It is
-> simpler.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/include/asm/mmzone.h  |  2 --
->  arch/loongarch/include/asm/pgtable.h |  6 ++----
->  arch/loongarch/kernel/numa.c         |  1 -
->  arch/loongarch/mm/init.c             | 21 +--------------------
->  4 files changed, 3 insertions(+), 27 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/mmzone.h b/arch/loongarch/include=
-/asm/mmzone.h
-> index fe67d0b4b33d..2b9a90727e19 100644
-> --- a/arch/loongarch/include/asm/mmzone.h
-> +++ b/arch/loongarch/include/asm/mmzone.h
-> @@ -13,6 +13,4 @@ extern struct pglist_data *node_data[];
->
->  #define NODE_DATA(nid) (node_data[(nid)])
->
-> -extern void setup_zero_pages(void);
-> -
->  #endif /* _ASM_MMZONE_H_ */
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
-e/asm/pgtable.h
-> index 342c5f9c25d2..70bd57daf42a 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -70,10 +70,8 @@ struct vm_area_struct;
->   * for zero-mapped memory areas etc..
->   */
->
-> -extern unsigned long empty_zero_page;
-> -
-> -#define ZERO_PAGE(vaddr) \
-> -       (virt_to_page((void *)(empty_zero_page)))
-> +extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
-> +#define ZERO_PAGE(vaddr)       ((void)(vaddr), virt_to_page(empty_zero_p=
-age))
-Can we simply use virt_to_page(empty_zero_page) here? Only x86 does it
-like this now.
 
-Huacai
->
->  /*
->   * TLB refill handlers may also map the vmalloc area into xkvrange.
-> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-> index 708665895b47..6f464d49f0c2 100644
-> --- a/arch/loongarch/kernel/numa.c
-> +++ b/arch/loongarch/kernel/numa.c
-> @@ -470,7 +470,6 @@ void __init mem_init(void)
->  {
->         high_memory =3D (void *) __va(get_num_physpages() << PAGE_SHIFT);
->         memblock_free_all();
-> -       setup_zero_pages();     /* This comes from node 0 */
->  }
->
->  int pcibus_to_node(struct pci_bus *bus)
-> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-> index 8ec668f97b00..628ebe42b519 100644
-> --- a/arch/loongarch/mm/init.c
-> +++ b/arch/loongarch/mm/init.c
-> @@ -35,27 +35,9 @@
->  #include <asm/pgalloc.h>
->  #include <asm/tlb.h>
->
-> -unsigned long empty_zero_page;
-> +unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_=
-aligned_bss;
->  EXPORT_SYMBOL(empty_zero_page);
->
-> -void setup_zero_pages(void)
-> -{
-> -       unsigned int order, i;
-> -       struct page *page;
-> -
-> -       order =3D 0;
-> -
-> -       empty_zero_page =3D __get_free_pages(GFP_KERNEL | __GFP_ZERO, ord=
-er);
-> -       if (!empty_zero_page)
-> -               panic("Oh boy, that early out of memory?");
-> -
-> -       page =3D virt_to_page((void *)empty_zero_page);
-> -       split_page(page, order);
-> -       for (i =3D 0; i < (1 << order); i++, page++)
-> -               mark_page_reserved(page);
-> -
-> -}
-> -
->  void copy_user_highpage(struct page *to, struct page *from,
->         unsigned long vaddr, struct vm_area_struct *vma)
->  {
-> @@ -99,7 +81,6 @@ void __init mem_init(void)
->         high_memory =3D (void *) __va(max_low_pfn << PAGE_SHIFT);
->
->         memblock_free_all();
-> -       setup_zero_pages();     /* Setup zeroed pages.  */
->  }
->  #endif /* !CONFIG_NUMA */
->
-> --
-> 2.27.0
->
->
+在 2023/9/5 18:58, Huacai Chen 写道:
+> Hi, Bibo,
+> 
+> On Tue, Sep 5, 2023 at 4:01 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> On LoongArch system, there is only one page for zero page, and
+>> there is no COLOR_ZERO_PAGE, so zero_page_mask is useless and
+>> macro __HAVE_COLOR_ZERO_PAGE is not necessary. This patch removes
+>> zero_page_mask and macro __HAVE_COLOR_ZERO_PAGE.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>  arch/loongarch/include/asm/pgtable.h | 4 +---
+>>  arch/loongarch/mm/init.c             | 9 +--------
+>>  2 files changed, 2 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+>> index 06963a172319..342c5f9c25d2 100644
+>> --- a/arch/loongarch/include/asm/pgtable.h
+>> +++ b/arch/loongarch/include/asm/pgtable.h
+>> @@ -71,11 +71,9 @@ struct vm_area_struct;
+>>   */
+>>
+>>  extern unsigned long empty_zero_page;
+>> -extern unsigned long zero_page_mask;
+>>
+>>  #define ZERO_PAGE(vaddr) \
+>> -       (virt_to_page((void *)(empty_zero_page + (((unsigned long)(vaddr)) & zero_page_mask))))
+>> -#define __HAVE_COLOR_ZERO_PAGE
+>> +       (virt_to_page((void *)(empty_zero_page)))
+>>
+>>  /*
+>>   * TLB refill handlers may also map the vmalloc area into xkvrange.
+>> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+>> index 3b7d8129570b..8ec668f97b00 100644
+>> --- a/arch/loongarch/mm/init.c
+>> +++ b/arch/loongarch/mm/init.c
+>> @@ -35,14 +35,8 @@
+>>  #include <asm/pgalloc.h>
+>>  #include <asm/tlb.h>
+>>
+>> -/*
+>> - * We have up to 8 empty zeroed pages so we can map one of the right colour
+>> - * when needed.         Since page is never written to after the initialization we
+>> - * don't have to care about aliases on other CPUs.
+>> - */
+>> -unsigned long empty_zero_page, zero_page_mask;
+>> +unsigned long empty_zero_page;
+>>  EXPORT_SYMBOL(empty_zero_page);
+>> -EXPORT_SYMBOL(zero_page_mask);
+>>
+>>  void setup_zero_pages(void)
+>>  {
+>> @@ -60,7 +54,6 @@ void setup_zero_pages(void)
+>>         for (i = 0; i < (1 << order); i++, page++)
+>>                 mark_page_reserved(page);
+>>
+>> -       zero_page_mask = ((PAGE_SIZE << order) - 1) & PAGE_MASK;
+> In my opinion it is better to combine two patches to one. Because this
+> patch can only work *accidently* when 'order' is zero.
+sure, will do.
+
+Regards
+Bibo Mao
+
+> 
+> Huacai
+>>  }
+>>
+>>  void copy_user_highpage(struct page *to, struct page *from,
+>> --
+>> 2.27.0
+>>
+>>
+
