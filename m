@@ -1,92 +1,74 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5D9A52
-	for <loongarch@lists.linux.dev>; Wed,  6 Sep 2023 08:44:13 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.176])
-	by gateway (Coremail) with SMTP id _____8CxfOrcO_hkQz4gAA--.37754S3;
-	Wed, 06 Sep 2023 16:44:12 +0800 (CST)
-Received: from loongson-pc.loongson.cn (unknown [10.180.13.176])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx7yPIO_hktVduAA--.28519S2;
-	Wed, 06 Sep 2023 16:44:11 +0800 (CST)
-From: Hongchen Zhang <zhanghongchen@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	"Mike Rapoport IBM)" <rppt@kernel.org>,
-	Feiyang Chen <chenfeiyang@loongson.cn>,
-	Hongchen Zhang <zhanghongchen@loongson.cn>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	"Matthew Wilcox Oracle)" <willy@infradead.org>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v2] LoongArch: add p?d_leaf() definitions
-Date: Wed,  6 Sep 2023 16:43:51 +0800
-Message-Id: <20230906084351.3533-1-zhanghongchen@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D97ECF;
+	Wed,  6 Sep 2023 08:44:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1693989342; bh=4Mfei+5ME77tqVWpNJ/dqxQFP44v5aASPV3skdpSyvk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pyfghuztHiaZCFHd568+VmOy/c9345b0CBr1Gu9Aoky7ggXFl15NXYQff5bo8Kcj/
+	 g6XzcMrDsbc3Jm/sQ0prroh76UrPjhgD2i8JXrbAItzYIDrHHfC6RC0Scf7z0I5mE4
+	 O974IGy2lt0uDUSOxugdzhYFnkRM5lgSoT8ADYSk=
+Received: from [192.168.9.172] (unknown [101.88.25.36])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E464B600AE;
+	Wed,  6 Sep 2023 16:35:41 +0800 (CST)
+Message-ID: <241da154-3092-7dc2-09b5-8e9cc7cac5be@xen0n.name>
+Date: Wed, 6 Sep 2023 16:35:41 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx7yPIO_hktVduAA--.28519S2
-X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQAGB2T3-DUCqgABsz
-X-Coremail-Antispam: 1Uk129KBj93XoWrZr48Zw45XF17CF43Gr15GFX_yoW8JF4UpF
-	9rAF97KF45Kas7C34Dtr1Y9FnrZws7WF12gFyYva18XFnxXws7Zr4kXrn8ZFW5XaykXFWI
-	gFs3Kw1YgF1xXwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFApnUUUUU=
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH] LoongArch: Drop unused parse_r and parse_v macros
+Content-Language: en-US
+To: Nathan Chancellor <nathan@kernel.org>, chenhuacai@kernel.org
+Cc: loongarch@lists.linux.dev, llvm@lists.linux.dev, patches@lists.linux.dev
+References: <20230905-loongarch-fix-clang-lto-parse_r-v1-1-d991ee630222@kernel.org>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230905-loongarch-fix-clang-lto-parse_r-v1-1-d991ee630222@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When I do LTP test, LTP test case ksm06 caused panic at
-	break_ksm_pmd_entry
-	  -> pmd_leaf (Huge page table but False)
-	  -> pte_present (panic)
+On 9/6/23 07:06, Nathan Chancellor wrote:
+> When building with CONFIG_LTO_CLANG_FULL, there are several errors due
+> to the way that parse_r is defined with an __asm__ statement in a
+> header:
+>
+>    ld.lld: error: ld-temp.o <inline asm>:105:1: macro 'parse_r' is already defined
+>    .macro  parse_r var r
+>    ^
+>
+> This was an issue for arch/mips as well, which was resolved by
+> commit 67512a8cf5a7 ("MIPS: Avoid macro redefinitions").
+>
+> However, parse_r is unused in arch/loongarch after
+> commit 83d8b38967d2 ("LoongArch: Simplify the invtlb wrappers"), so
+> doing the same change does not make much sense now. Just remove parse_r
+> (and parse_v, which is also unused) to resolve the redefinition error.
+> If it needs to be brought back due to an actual use, it should be
+> brought back with the same changes as the aforementioned arch/mips
+> commit.
+>
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/1924
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
+>   arch/loongarch/include/asm/asmmacro.h  | 107 ---------------------------------
+>   arch/loongarch/include/asm/loongarch.h |  43 -------------
+>   2 files changed, 150 deletions(-)
 
-The reason is pmd_leaf is not defined, So like
-commit 501b81046701 ("mips: mm: add p?d_leaf() definitions")
-add p?d_leaf() definition for LoongArch.
+Doh, I must have overlooked this when I last refactored the relevant 
+helpers. Thanks for the clean-up!
 
-v2: add Fixes: in commit message.
+Reviewed-by: WANG Xuerui <git@xen0n.name>
 
-Fixes: 09cfefb7fa70 ("LoongArch: Add memory management")
-Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
----
- arch/loongarch/include/asm/pgtable.h | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 370c6568ceb8..ea54653b7aab 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -243,6 +243,9 @@ static inline void pmd_clear(pmd_t *pmdp)
- 
- #define pmd_phys(pmd)		PHYSADDR(pmd_val(pmd))
- 
-+#define pmd_leaf(pmd)		((pmd_val(pmd) & _PAGE_HUGE) != 0)
-+#define pud_leaf(pud)		((pud_val(pud) & _PAGE_HUGE) != 0)
-+
- #ifndef CONFIG_TRANSPARENT_HUGEPAGE
- #define pmd_page(pmd)		(pfn_to_page(pmd_phys(pmd) >> PAGE_SHIFT))
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE  */
-
-base-commit: a47fc304d2b678db1a5d760a7d644dac9b067752
 -- 
-2.33.0
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
