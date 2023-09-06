@@ -1,120 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F072ED6
-	for <loongarch@lists.linux.dev>; Wed,  6 Sep 2023 09:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693992347;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pgEkHsGdpRqcvYX0da/cy0loLUWa6HLebB2lSTpxdrI=;
-	b=gRzSS7jSESFH9mpz44gsD+D7Anc0BOcmwgbNep4dZW/5iKvYxGOTfC3ysN4hJwmOv7z0vL
-	xRKWkQiVu7/ldglGoBhqDWXajxnBeglDh7Of6Or8d2KIhMt/xxMANd7N2X6h/GbQFv8mrU
-	wMHCE/JDyxrrdwza/ve/Hg6nJpCS2iQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-SLJO0-zuPOqft37DfFReTQ-1; Wed, 06 Sep 2023 05:25:45 -0400
-X-MC-Unique: SLJO0-zuPOqft37DfFReTQ-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-402cd372b8bso19276425e9.2
-        for <loongarch@lists.linux.dev>; Wed, 06 Sep 2023 02:25:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693992345; x=1694597145;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pgEkHsGdpRqcvYX0da/cy0loLUWa6HLebB2lSTpxdrI=;
-        b=YzyFSBO946IbzX/yLfq+mfTBt+vJrFEGTlb/qgEwooWWLGCaCVe35KZaDFOo79SuUe
-         8cUmS4oucS3xtfDx/EZI67xHGn+94/86/ILdFbymA194Ca6OYjESOwQizfO3yKZGXoOw
-         0u5aKZke1spDrilZBGsNDV3XgiYhMOSkBnFolQ739lud9eLfyaUVkYaebHyC2Bn7rZk0
-         tdgbAkC0DpUnDIltDDTKYgUe3mfwWqmGymaK3konF/Qbr1oKDJ1t+abjxcj5rhGGhvga
-         Giyf/5pKz0d26vEct0v54A0jtjrEYFImYhE1mhgW6pMwf81Qz+ri8jXwQhwPSyf8LX62
-         XKpA==
-X-Gm-Message-State: AOJu0Yyr9xG/1J9soIsmsRFm6imKYZcGmnakjjDzLBh1S+h5dayNOSGs
-	T30A37KTbM5ppu7T7eETc84TZ5LgodVaQfT6hZTW2vDng1A1hjx2FHknR9G4uf2z5RO59iQdVGk
-	BWdbY6fiZAW2/XArb6KJb
-X-Received: by 2002:a05:600c:20b:b0:401:b654:e8e7 with SMTP id 11-20020a05600c020b00b00401b654e8e7mr1697293wmi.28.1693992344782;
-        Wed, 06 Sep 2023 02:25:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEomZgZd0CazilTNSjLAWduPHkfO6+U+EB7X92VBI/6sXL99+eZBUtSMQQJxN9YHJ7qrGE8PQ==
-X-Received: by 2002:a05:600c:20b:b0:401:b654:e8e7 with SMTP id 11-20020a05600c020b00b00401b654e8e7mr1697276wmi.28.1693992344363;
-        Wed, 06 Sep 2023 02:25:44 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c70c:6c00:92a4:6f8:ff7e:6853? (p200300cbc70c6c0092a406f8ff7e6853.dip0.t-ipconnect.de. [2003:cb:c70c:6c00:92a4:6f8:ff7e:6853])
-        by smtp.gmail.com with ESMTPSA id 17-20020a05600c029100b004013797efb6sm22604068wmk.9.2023.09.06.02.25.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Sep 2023 02:25:43 -0700 (PDT)
-Message-ID: <4268e128-ce8b-b7da-464e-eda585aeacd6@redhat.com>
-Date: Wed, 6 Sep 2023 11:25:42 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9ED1079D;
+	Wed,  6 Sep 2023 15:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694012784; x=1725548784;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Gw9VPFGulL9SMj3bg/qb7UVUBLhbdyxQTjG8dgwPDs4=;
+  b=S6Q37KAsGZTtAhNHtxaZwHNI20yWrLLz/9Ngpndg+STRTVP469DT9h7n
+   4FfwDNWG5BcFrqgqzaJQgbm7TNt4NBA0z3VFRT91JUacwUoUYtkHqr5M2
+   62+MWHJX9Y+7hhD8C12pjLEta+W/yoiEC+PuazbnDUTOPn1SLJrKoiUs/
+   INryKuWD72ig/E0VUYtVci+nfqW7zmRW09hGbj2pmwRjcjFxL2ZUV6l3v
+   9M/dxI50g4DoYD5vL2ht1CyCqD/OO1mY4wqujrNoPBRhtTu9hhJsslWj0
+   oVs07iDK0jSsH3SBLh8JWiDSLru3WaHWDTgvbRUIEcZ2uVrhCVCHgC2dv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="443478254"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="443478254"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 08:06:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="865171164"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="865171164"
+Received: from lkp-server01.sh.intel.com (HELO 59b3c6e06877) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 06 Sep 2023 08:06:15 -0700
+Received: from kbuild by 59b3c6e06877 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qdu6f-0000Jb-1I;
+	Wed, 06 Sep 2023 15:06:13 +0000
+Date: Wed, 6 Sep 2023 23:05:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: Clear invalid tlb when set huge page PTE entry
+Message-ID: <202309062224.jKf5JY7H-lkp@intel.com>
+References: <20230905044828.1460721-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3] LoongArch: add p?d_leaf() definitions
-To: Hongchen Zhang <zhanghongchen@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Mike Rapoport IBM)" <rppt@kernel.org>,
- Feiyang Chen <chenfeiyang@loongson.cn>, Qi Zheng
- <zhengqi.arch@bytedance.com>, "Matthew Wilcox Oracle)"
- <willy@infradead.org>, Kefeng Wang <wangkefeng.wang@huawei.com>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-References: <20230906092019.4681-1-zhanghongchen@loongson.cn>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20230906092019.4681-1-zhanghongchen@loongson.cn>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230905044828.1460721-1-maobibo@loongson.cn>
 
-On 06.09.23 11:20, Hongchen Zhang wrote:
-> When I do LTP test, LTP test case ksm06 caused panic at
-> 	break_ksm_pmd_entry
-> 	  -> pmd_leaf (Huge page table but False)
-> 	  -> pte_present (panic)
-> 
-> The reason is pmd_leaf is not defined, So like
-> commit 501b81046701 ("mips: mm: add p?d_leaf() definitions")
-> add p?d_leaf() definition for LoongArch.
-> 
-> Fixes: 09cfefb7fa70 ("LoongArch: Add memory management")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> ---
-> v2->v3: add Cc: stable@vger.kernel.org
-> v1->v2: add Fixes in commit message
-> ---
->   arch/loongarch/include/asm/pgtable.h | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-> index 370c6568ceb8..ea54653b7aab 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -243,6 +243,9 @@ static inline void pmd_clear(pmd_t *pmdp)
->   
->   #define pmd_phys(pmd)		PHYSADDR(pmd_val(pmd))
->   
-> +#define pmd_leaf(pmd)		((pmd_val(pmd) & _PAGE_HUGE) != 0)
-> +#define pud_leaf(pud)		((pud_val(pud) & _PAGE_HUGE) != 0)
-> +
->   #ifndef CONFIG_TRANSPARENT_HUGEPAGE
->   #define pmd_page(pmd)		(pfn_to_page(pmd_phys(pmd) >> PAGE_SHIFT))
->   #endif /* CONFIG_TRANSPARENT_HUGEPAGE  */
+Hi Bibo,
 
-Acked-by: David Hildenbrand <david@redhat.com>
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on linus/master v6.5 next-20230906]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-Clear-invalid-tlb-when-set-huge-page-PTE-entry/20230906-013753
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20230905044828.1460721-1-maobibo%40loongson.cn
+patch subject: [PATCH] LoongArch: Clear invalid tlb when set huge page PTE entry
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20230906/202309062224.jKf5JY7H-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230906/202309062224.jKf5JY7H-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309062224.jKf5JY7H-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> arch/loongarch/mm/tlb.c:204:6: error: redefinition of 'set_huge_pte_at'
+     204 | void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+         |      ^~~~~~~~~~~~~~~
+   In file included from arch/loongarch/mm/tlb.c:9:
+   include/linux/hugetlb.h:1175:20: note: previous definition of 'set_huge_pte_at' with type 'void(struct mm_struct *, long unsigned int,  pte_t *, pte_t)'
+    1175 | static inline void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+         |                    ^~~~~~~~~~~~~~~
+   arch/loongarch/mm/tlb.c: In function 'set_huge_pte_at':
+>> arch/loongarch/mm/tlb.c:215:29: error: implicit declaration of function 'huge_pte_none'; did you mean 'huge_pte_lock'? [-Werror=implicit-function-declaration]
+     215 |         if (!cpu_has_ptw && huge_pte_none(*ptep))
+         |                             ^~~~~~~~~~~~~
+         |                             huge_pte_lock
+   arch/loongarch/mm/tlb.c: At top level:
+   arch/loongarch/mm/tlb.c:281:6: warning: no previous prototype for 'setup_tlb_handler' [-Wmissing-prototypes]
+     281 | void setup_tlb_handler(int cpu)
+         |      ^~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/set_huge_pte_at +204 arch/loongarch/mm/tlb.c
+
+   203	
+ > 204	void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+   205			pte_t *ptep, pte_t pte)
+   206	{
+   207		/*
+   208		 * If huge pte entry is none, tlb entry with normal page size is filled
+   209		 * for machines which does not support hardware page walking.
+   210		 *
+   211		 * Thread maybe migrates to other CPUs after page fault happends and
+   212		 * migrates back again after hugepage pte is set, tlbs with normal page
+   213		 * about invalid_pte_table need be flushed
+   214		 */
+ > 215		if (!cpu_has_ptw && huge_pte_none(*ptep))
+   216			flush_tlb_mm(mm);
+   217	
+   218		set_pte_at(mm, addr, ptep, pte);
+   219	}
+   220	
 
 -- 
-Cheers,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
