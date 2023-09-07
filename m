@@ -1,172 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE336A29
-	for <loongarch@lists.linux.dev>; Thu,  7 Sep 2023 01:37:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E52C433C8
-	for <loongarch@lists.linux.dev>; Thu,  7 Sep 2023 01:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694050656;
-	bh=2u555ySjYeyb0mDPSMPeSdZiOThzSFjp6psMrJQw+Ww=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Km07+jcCtXOOqmBVCEbfD+zDlXl4UBhmJiAbp2HG7JOA2ye4QwpJYygnt18y1pAJ6
-	 9OiMgpsTnLRRr311MQnfBsoeM2adRHj1lp9cgTOQTPXkG0KMMoDGSsPP+1NXB3U5z/
-	 b/rM0bc4jGexDVDBAECbYTtzc0QaT7HOiu3OJ9tCAsFHEqgCAn/NZTyDuZSVcrQfYp
-	 3uxYGzghtX5y4s9FWQXLKiOs7C7TiwgA0HtzBgtUV1zhXc2Q7lqE9OoKyKffVZAefb
-	 LunamMcskFJExMo3A/dWpIwNj/5YkavGU4Kvow6BvoFuL2CUdsEnl15a7dVurPe2EG
-	 a5em1+IW5RvLg==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-52683da3f5cso459424a12.3
-        for <loongarch@lists.linux.dev>; Wed, 06 Sep 2023 18:37:36 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yw6R2Osh+lLiMViVw+nl2XPIkFCsMoF5g6frVqxwXOw4bpNlvCh
-	j+XefL0bfBtvMY89tRWCfJ0cqscQL8rj8zt+/Sk=
-X-Google-Smtp-Source: AGHT+IFT5eIF7hr2d1Izhkban6u/0ccIOUynWf3nt7AdlxQABaEmUDuhNTN/LkPRJj2uZdfYn1qxrn1YEcQ2Y2qloLs=
-X-Received: by 2002:aa7:cd64:0:b0:523:47b0:9077 with SMTP id
- ca4-20020aa7cd64000000b0052347b09077mr3599846edb.38.1694050654555; Wed, 06
- Sep 2023 18:37:34 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBACEA29
+	for <loongarch@lists.linux.dev>; Thu,  7 Sep 2023 02:09:41 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.9.158])
+	by gateway (Coremail) with SMTP id _____8Dxl+jjMPlkRPsgAA--.30072S3;
+	Thu, 07 Sep 2023 10:09:39 +0800 (CST)
+Received: from kvm-1-158.loongson.cn (unknown [10.2.9.158])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLCPjMPlk_NJvAA--.52643S2;
+	Thu, 07 Sep 2023 10:09:39 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v2] LoongArch: Clear invalid tlb when set huge page PTE entry
+Date: Thu,  7 Sep 2023 10:09:36 +0800
+Message-Id: <20230907020936.2692542-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230907012209.2451090-1-maobibo@loongson.cn>
-In-Reply-To: <20230907012209.2451090-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 7 Sep 2023 09:37:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6fZZxP3pehyPBsvZNmJb1LCmawd0Jve24MTfBMNjUM2A@mail.gmail.com>
-Message-ID: <CAAhV-H6fZZxP3pehyPBsvZNmJb1LCmawd0Jve24MTfBMNjUM2A@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Code cleanup with zero page
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxLCPjMPlk_NJvAA--.52643S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWr1fZrWxCr1UKryxuFy8JFc_yoW5Zw1xpF
+	9rC3Z5Xr4fGr97Arn2yr4q9F43Ja1kK3y2g3Z3Jay0v3W3Wr1Uuryxt398Za48W39xG3yf
+	W3yagr1DKF1DXagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-Queued for loongarch-next with the old title "LoongArch: Use static
-defined zero page rather than allocated" since it is more clear,
-thanks.
+For LoongArch machines where hardware page table walk is not
+support, if hugetlb pte entry is invalid, invalid tlb with normal
+page will be filled and triggers page fault exception from HW.
 
-Huacai
+During page fault handling, current thread maybe migrates to other
+CPUs and set huge page pte entry. And if the thread migrates to
+the old CPU, stale tlb with normal page exists still, there will
+be confliction. So the invalid tlb need be flushed when set  huge
+page pte entry like set_huge_pte_at and set_pmd_at function.
 
-On Thu, Sep 7, 2023 at 9:22=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
-:
->
-> Like other popular architectures, zero page is defined in kernel
-> BSS data segment, rather than dynamically allocated. It is simpler.
-> Also this patch removes macro __HAVE_COLOR_ZERO_PAGE and variable
-> zero_page_mask since there is only one page for zeo_page usage.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
-> Changes in v2:
->  1. Combine two simple patches into one
->  2. Refine implementation about macro ZERO_PAGE(vaddr)
->
-> ---
->  arch/loongarch/include/asm/mmzone.h  |  2 --
->  arch/loongarch/include/asm/pgtable.h |  9 ++-------
->  arch/loongarch/kernel/numa.c         |  1 -
->  arch/loongarch/mm/init.c             | 28 +---------------------------
->  4 files changed, 3 insertions(+), 37 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/mmzone.h b/arch/loongarch/include=
-/asm/mmzone.h
-> index fe67d0b4b33d..2b9a90727e19 100644
-> --- a/arch/loongarch/include/asm/mmzone.h
-> +++ b/arch/loongarch/include/asm/mmzone.h
-> @@ -13,6 +13,4 @@ extern struct pglist_data *node_data[];
->
->  #define NODE_DATA(nid) (node_data[(nid)])
->
-> -extern void setup_zero_pages(void);
-> -
->  #endif /* _ASM_MMZONE_H_ */
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
-e/asm/pgtable.h
-> index 06963a172319..189156d8435c 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -69,13 +69,8 @@ struct vm_area_struct;
->   * ZERO_PAGE is a global shared page that is always zero; used
->   * for zero-mapped memory areas etc..
->   */
-> -
-> -extern unsigned long empty_zero_page;
-> -extern unsigned long zero_page_mask;
-> -
-> -#define ZERO_PAGE(vaddr) \
-> -       (virt_to_page((void *)(empty_zero_page + (((unsigned long)(vaddr)=
-) & zero_page_mask))))
-> -#define __HAVE_COLOR_ZERO_PAGE
-> +extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
-> +#define ZERO_PAGE(vaddr)       (virt_to_page(empty_zero_page))
->
->  /*
->   * TLB refill handlers may also map the vmalloc area into xkvrange.
-> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-> index 708665895b47..6f464d49f0c2 100644
-> --- a/arch/loongarch/kernel/numa.c
-> +++ b/arch/loongarch/kernel/numa.c
-> @@ -470,7 +470,6 @@ void __init mem_init(void)
->  {
->         high_memory =3D (void *) __va(get_num_physpages() << PAGE_SHIFT);
->         memblock_free_all();
-> -       setup_zero_pages();     /* This comes from node 0 */
->  }
->
->  int pcibus_to_node(struct pci_bus *bus)
-> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-> index 3b7d8129570b..628ebe42b519 100644
-> --- a/arch/loongarch/mm/init.c
-> +++ b/arch/loongarch/mm/init.c
-> @@ -35,33 +35,8 @@
->  #include <asm/pgalloc.h>
->  #include <asm/tlb.h>
->
-> -/*
-> - * We have up to 8 empty zeroed pages so we can map one of the right col=
-our
-> - * when needed.         Since page is never written to after the initial=
-ization we
-> - * don't have to care about aliases on other CPUs.
-> - */
-> -unsigned long empty_zero_page, zero_page_mask;
-> +unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_=
-aligned_bss;
->  EXPORT_SYMBOL(empty_zero_page);
-> -EXPORT_SYMBOL(zero_page_mask);
-> -
-> -void setup_zero_pages(void)
-> -{
-> -       unsigned int order, i;
-> -       struct page *page;
-> -
-> -       order =3D 0;
-> -
-> -       empty_zero_page =3D __get_free_pages(GFP_KERNEL | __GFP_ZERO, ord=
-er);
-> -       if (!empty_zero_page)
-> -               panic("Oh boy, that early out of memory?");
-> -
-> -       page =3D virt_to_page((void *)empty_zero_page);
-> -       split_page(page, order);
-> -       for (i =3D 0; i < (1 << order); i++, page++)
-> -               mark_page_reserved(page);
-> -
-> -       zero_page_mask =3D ((PAGE_SIZE << order) - 1) & PAGE_MASK;
-> -}
->
->  void copy_user_highpage(struct page *to, struct page *from,
->         unsigned long vaddr, struct vm_area_struct *vma)
-> @@ -106,7 +81,6 @@ void __init mem_init(void)
->         high_memory =3D (void *) __va(max_low_pfn << PAGE_SHIFT);
->
->         memblock_free_all();
-> -       setup_zero_pages();     /* Setup zeroed pages.  */
->  }
->  #endif /* !CONFIG_NUMA */
->
-> --
-> 2.27.0
->
->
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202309062224.jKf5JY7H-lkp@intel.com/
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+Changes in v2:
+ Put function set_huge_pte_at in file hugetlbpage.c to remove
+compiling warning.
+
+---
+ arch/loongarch/include/asm/hugetlb.h |  4 ++++
+ arch/loongarch/mm/hugetlbpage.c      | 18 ++++++++++++++++++
+ arch/loongarch/mm/pgtable.c          |  8 +++++++-
+ 3 files changed, 29 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+index aa44b3fe43dd..62cd7528a07f 100644
+--- a/arch/loongarch/include/asm/hugetlb.h
++++ b/arch/loongarch/include/asm/hugetlb.h
+@@ -59,6 +59,10 @@ static inline int huge_pte_none(pte_t pte)
+ 	return !val || (val == (unsigned long)invalid_pte_table);
+ }
+ 
++#define __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT
++extern void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
++				pte_t *ptep, pte_t pte);
++
+ #define __HAVE_ARCH_HUGE_PTEP_SET_ACCESS_FLAGS
+ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 					     unsigned long addr,
+diff --git a/arch/loongarch/mm/hugetlbpage.c b/arch/loongarch/mm/hugetlbpage.c
+index ba138117b124..cc31c090d4ba 100644
+--- a/arch/loongarch/mm/hugetlbpage.c
++++ b/arch/loongarch/mm/hugetlbpage.c
+@@ -85,3 +85,21 @@ uint64_t pmd_to_entrylo(unsigned long pmd_val)
+ 
+ 	return val;
+ }
++
++void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
++		pte_t *ptep, pte_t pte)
++{
++	/*
++	 * If huge pte entry is none, tlb entry with normal page size is filled
++	 * for machines which does not support hardware page walking.
++	 *
++	 * Thread maybe migrates to other CPUs after page fault happends and
++	 * migrates back again after hugepage pte is set, tlbs with normal page
++	 * about invalid_pte_table need be flushed
++	 */
++	if (!cpu_has_ptw && huge_pte_none(*ptep))
++		flush_tlb_mm(mm);
++
++	set_pte_at(mm, addr, ptep, pte);
++}
++
+diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
+index b14343e211b6..dfae34484f43 100644
+--- a/arch/loongarch/mm/pgtable.c
++++ b/arch/loongarch/mm/pgtable.c
+@@ -116,8 +116,14 @@ pmd_t mk_pmd(struct page *page, pgprot_t prot)
+ void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+ 		pmd_t *pmdp, pmd_t pmd)
+ {
++	/*
++	 * The similar with function set_huge_pte_at
++	 * Need flush invalid normal page pte if hw ptw is not supported
++	 */
++	if (!cpu_has_ptw && pmd_none(*pmdp))
++		flush_tlb_mm(mm);
++
+ 	*pmdp = pmd;
+-	flush_tlb_all();
+ }
+ 
+ void __init pagetable_init(void)
+
+base-commit: 744a759492b5c57ff24a6e8aabe47b17ad8ee964
+-- 
+2.27.0
+
