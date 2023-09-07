@@ -1,180 +1,224 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF58710E4
-	for <loongarch@lists.linux.dev>; Thu,  7 Sep 2023 06:27:42 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.9.158])
-	by gateway (Coremail) with SMTP id _____8AxqOhbbflkkh4hAA--.29915S3;
-	Thu, 07 Sep 2023 14:27:40 +0800 (CST)
-Received: from kvm-1-158.loongson.cn (unknown [10.2.9.158])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTSNbbflkQiVwAA--.53642S2;
-	Thu, 07 Sep 2023 14:27:39 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Add tlb_flush_threshold for tlb flush range
-Date: Thu,  7 Sep 2023 14:27:39 +0800
-Message-Id: <20230907062739.2853408-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.27.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1E2136B
+	for <loongarch@lists.linux.dev>; Thu,  7 Sep 2023 07:40:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC7B6C43391;
+	Thu,  7 Sep 2023 07:40:32 +0000 (UTC)
+Date: Thu, 7 Sep 2023 09:40:19 +0200
+From: Helge Deller <deller@gmx.de>
+To: Guenter Roeck <linux@roeck-us.net>, Huacai Chen <chenhuacai@kernel.org>,
+	loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Borislav Petkov <bp@suse.de>, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] lockdep: Fix static memory detection even more
+Message-ID: <ZPl+Y2vRYUnWtTQc@ls3530>
+References: <ZNep5EcYskP9HtGD@p100>
+ <b7526bf6-886f-457a-beba-84ae9f75bc77@roeck-us.net>
+ <ZPT2cINsHd+sWJQU@ls3530>
+ <78473084-d4d5-685f-9778-4bbe8878a43e@roeck-us.net>
+ <ZPgnslFTlwImJ+Aq@ls3530>
+ <081537c0-0d74-0242-451a-e6bd6f71cdd9@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxTSNbbflkQiVwAA--.53642S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Gr4DXr45Kw43Wr1Utw1DJwc_yoW7XrW5pr
-	sa9w45trs5Gr93XrWftryFgrn8Jr1kK3Waga1aqFySvr43tr17urWkKa4rAFy5Xa93GrWf
-	ur9Iqr1aqFZ5J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8CzuJUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <081537c0-0d74-0242-451a-e6bd6f71cdd9@roeck-us.net>
 
-There is calculation in function flush_tlb_range to decide flush tlb
-entries one by one or flush the whole tlbs. Instead the calculation can be
-done during cpu probe stage rather than runtime flush period.
+* Guenter Roeck <linux@roeck-us.net>:
+> On 9/6/23 00:18, Helge Deller wrote:
+> > * Guenter Roeck <linux@roeck-us.net>:
+> > > On 9/3/23 14:11, Helge Deller wrote:
+> > > > * Guenter Roeck <linux@roeck-us.net>:
+> > > > > Hi,
+> > > > > 
+> > > > > On Sat, Aug 12, 2023 at 05:48:52PM +0200, Helge Deller wrote:
+> > > > > > On the parisc architecture, lockdep reports for all static objects which
+> > > > > > are in the __initdata section (e.g. "setup_done" in devtmpfs,
+> > > > > > "kthreadd_done" in init/main.c) this warning:
+> > > > > > 
+> > > > > > 	INFO: trying to register non-static key.
+> > > > > > 
+> > > > > > The warning itself is wrong, because those objects are in the __initdata
+> > > > > > section, but the section itself is on parisc outside of range from
+> > > > > > _stext to _end, which is why the static_obj() functions returns a wrong
+> > > > > > answer.
+> > > > > > 
+> > > > > > While fixing this issue, I noticed that the whole existing check can
+> > > > > > be simplified a lot.
+> > > > > > Instead of checking against the _stext and _end symbols (which include
+> > > > > > code areas too) just check for the .data and .bss segments (since we check a
+> > > > > > data object). This can be done with the existing is_kernel_core_data()
+> > > > > > macro.
+> > > > > > 
+> > > > > > In addition objects in the __initdata section can be checked with
+> > > > > > init_section_contains().
+> > > > > > 
+> > > > > > This partly reverts and simplifies commit bac59d18c701 ("x86/setup: Fix static
+> > > > > > memory detection").
+> > > > > > 
+> > > > > > Tested on x86-64 and parisc.
+> > > > > > 
+> > > > > > Signed-off-by: Helge Deller <deller@gmx.de>
+> > > > > > Fixes: bac59d18c701 ("x86/setup: Fix static memory detection")
+> > > > > 
+> > > > > On loongarch, this patch results in the following backtrace.
+> > > > > 
+> > > > > EFI stub: Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path
+> > > > > EFI stub: Exiting boot services
+> > > > > [    0.000000] INFO: trying to register non-static key.
+> > > > > [    0.000000] The code is fine but needs lockdep annotation, or maybe
+> > > > > [    0.000000] you didn't initialize this object before use?
+> > > > > [    0.000000] turning off the locking correctness validator.
+> > > > > [    0.000000]         ...
+> > > > > [    0.000000] Call Trace:
+> > > > > [    0.000000] [<9000000000223d84>] show_stack+0x5c/0x180
+> > > > > [    0.000000] [<900000000153e0b4>] dump_stack_lvl+0x88/0xd0
+> > > > > [    0.000000] [<90000000002bc548>] register_lock_class+0x768/0x770
+> > > > > [    0.000000] [<90000000002bc710>] __lock_acquire+0xb0/0x2a18
+> > > > > [    0.000000] [<90000000002bba1c>] lock_acquire+0x11c/0x328
+> > > > > [    0.000000] [<9000000000b34a60>] __debug_object_init+0x60/0x244
+> > > > > [    0.000000] [<9000000000337f94>] init_cgroup_housekeeping+0xe8/0x144
+> > > > > [    0.000000] [<900000000033e364>] init_cgroup_root+0x38/0xa0
+> > > > > [    0.000000] [<90000000017801ac>] cgroup_init_early+0x44/0x16c
+> > > > > [    0.000000] [<9000000001770758>] start_kernel+0x50/0x624
+> > > > > [    0.000000] [<90000000015410b4>] kernel_entry+0xb4/0xc4
+> > > > > 
+> > > > > Reverting it fixes the problem. Bisect log attached.
+> > > > > 
+> > > > > This is also seen in v6.5.y and v6.4.y since the patch has been applied
+> > > > > to those branches.
+> > > > 
+> > > > Does this happens with CONFIG_SMP=n ?
+> > > > If so, I think the untested patch below might fix the issue.
+> > > > 
+> > > 
+> > > No, this is loongarch:defconfig with various debug options enabled.
+> > > That has CONFIG_SMP=y.
+> > 
+> > Could you apply below patch and verify with the contents of the
+> > System.map file where the lock is located ?
+> > 
+> > diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> > index e85b5ad3e206..db0a301f9740 100644
+> > --- a/kernel/locking/lockdep.c
+> > +++ b/kernel/locking/lockdep.c
+> > @@ -969,7 +969,7 @@ static bool assign_lock_key(struct lockdep_map *lock)
+> >   	else {
+> >   		/* Debug-check: all keys must be persistent! */
+> >   		debug_locks_off();
+> > -		pr_err("INFO: trying to register non-static key.\n");
+> > +		pr_err("INFO: trying to register non-static key at %08lx.\n", addr);
+> >   		pr_err("The code is fine but needs lockdep annotation, or maybe\n");
+> >   		pr_err("you didn't initialize this object before use?\n");
+> >   		pr_err("turning off the locking correctness validator.\n");
+> 
+> 90000000015602d0 D __la_abs_end
+> ...
+> 90000000016815c0 d fill_pool_map.3  <--- lock pointer
+> ...
+> 9000000001770000 T __init_begin
 
-This patch adds percpu variable tlb_flush_threshold during cpu probe
-stage, and removes unused percpu variabled like tlbsizemtlb,
-tlbsizestlbsets/tlbsizestlbways etc.
+The problem is, that loongarch's  vmlinux.lds.S file puts data into
+areas which are not marked "data" or "code".
 
-Also this patch fixes function __update_hugetlb, it should be
-effective for CONFIG_TRANSPARENT_HUGEPAGE also.
+can you try below patch?
+The relevant part is here the move of ".data.rel : { *(.data.rel*) }"
+into the data section.
+The other parts are suggestions.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/cpu-info.h |  4 +---
- arch/loongarch/kernel/cpu-probe.c     | 31 ++++++++++++++++-----------
- arch/loongarch/mm/tlb.c               | 11 +++-------
- 3 files changed, 23 insertions(+), 23 deletions(-)
+Helge
 
-diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/include/asm/cpu-info.h
-index 900589cb159d..523827216c1b 100644
---- a/arch/loongarch/include/asm/cpu-info.h
-+++ b/arch/loongarch/include/asm/cpu-info.h
-@@ -47,9 +47,7 @@ struct cpuinfo_loongarch {
- 	unsigned int		cputype;
- 	int			isa_level;
- 	int			tlbsize;
--	int			tlbsizemtlb;
--	int			tlbsizestlbsets;
--	int			tlbsizestlbways;
-+	int			tlb_flush_threshold;
- 	int			cache_leaves_present; /* number of cache_leaves[] elements */
- 	struct cache_desc	cache_leaves[CACHE_LEAVES_MAX];
- 	int			core;   /* physical core number in package */
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index e925579c7a71..ffa0a1b1ae29 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -88,7 +88,7 @@ static void set_isa(struct cpuinfo_loongarch *c, unsigned int isa)
+
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+index b1686afcf876..bb2ec86f37a8 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -53,33 +53,6 @@ SECTIONS
+ 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
+ 	_etext = .;
  
- static void cpu_probe_common(struct cpuinfo_loongarch *c)
- {
--	unsigned int config;
-+	unsigned int config, stlbsets, stlbways, mtlbs;
- 	unsigned long asid_mask;
- 
- 	c->options = LOONGARCH_CPU_CPUCFG | LOONGARCH_CPU_CSR |
-@@ -173,28 +173,35 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
- 	c->ksave_mask &= ~(EXC_KSAVE_MASK | PERCPU_KSAVE_MASK | KVM_KSAVE_MASK);
- 
- 	config = read_csr_prcfg3();
-+	stlbsets = 0;
-+	c->tlbsize = 0;
- 	switch (config & CSR_CONF3_TLBTYPE) {
- 	case 0:
--		c->tlbsizemtlb = 0;
--		c->tlbsizestlbsets = 0;
--		c->tlbsizestlbways = 0;
-+		mtlbs = 0;
-+		stlbsets = 0;
-+		stlbways = 0;
- 		c->tlbsize = 0;
- 		break;
- 	case 1:
--		c->tlbsizemtlb = ((config & CSR_CONF3_MTLBSIZE) >> CSR_CONF3_MTLBSIZE_SHIFT) + 1;
--		c->tlbsizestlbsets = 0;
--		c->tlbsizestlbways = 0;
--		c->tlbsize = c->tlbsizemtlb + c->tlbsizestlbsets * c->tlbsizestlbways;
-+		mtlbs = ((config & CSR_CONF3_MTLBSIZE) >> CSR_CONF3_MTLBSIZE_SHIFT) + 1;
-+		stlbsets = 0;
-+		stlbways = 0;
-+		c->tlbsize = mtlbs + stlbsets * stlbways;
- 		break;
- 	case 2:
--		c->tlbsizemtlb = ((config & CSR_CONF3_MTLBSIZE) >> CSR_CONF3_MTLBSIZE_SHIFT) + 1;
--		c->tlbsizestlbsets = 1 << ((config & CSR_CONF3_STLBIDX) >> CSR_CONF3_STLBIDX_SHIFT);
--		c->tlbsizestlbways = ((config & CSR_CONF3_STLBWAYS) >> CSR_CONF3_STLBWAYS_SHIFT) + 1;
--		c->tlbsize = c->tlbsizemtlb + c->tlbsizestlbsets * c->tlbsizestlbways;
-+		mtlbs = ((config & CSR_CONF3_MTLBSIZE) >> CSR_CONF3_MTLBSIZE_SHIFT) + 1;
-+		stlbsets = 1 << ((config & CSR_CONF3_STLBIDX) >> CSR_CONF3_STLBIDX_SHIFT);
-+		stlbways = ((config & CSR_CONF3_STLBWAYS) >> CSR_CONF3_STLBWAYS_SHIFT) + 1;
-+		c->tlbsize = mtlbs + stlbsets * stlbways;
- 		break;
- 	default:
- 		pr_warn("Warning: unknown TLB type\n");
- 	}
-+
-+	if (stlbsets)
-+		c->tlb_flush_threshold = c->tlbsize / 8;
-+	else
-+		c->tlb_flush_threshold = c->tlbsize / 2;
- }
- 
- #define MAX_NAME_LEN	32
-diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-index eb8572e201ea..d87627cb9e29 100644
---- a/arch/loongarch/mm/tlb.c
-+++ b/arch/loongarch/mm/tlb.c
-@@ -66,9 +66,7 @@ void local_flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
- 		start = round_down(start, PAGE_SIZE << 1);
- 		end = round_up(end, PAGE_SIZE << 1);
- 		size = (end - start) >> (PAGE_SHIFT + 1);
--		if (size <= (current_cpu_data.tlbsizestlbsets ?
--			     current_cpu_data.tlbsize / 8 :
--			     current_cpu_data.tlbsize / 2)) {
-+		if (size <= current_cpu_data.tlb_flush_threshold) {
- 			int asid = cpu_asid(cpu, mm);
- 
- 			while (start < end) {
-@@ -91,10 +89,7 @@ void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
- 	local_irq_save(flags);
- 	size = (end - start + (PAGE_SIZE - 1)) >> PAGE_SHIFT;
- 	size = (size + 1) >> 1;
--	if (size <= (current_cpu_data.tlbsizestlbsets ?
--		     current_cpu_data.tlbsize / 8 :
--		     current_cpu_data.tlbsize / 2)) {
+-	/*
+-	 * struct alt_inst entries. From the header (alternative.h):
+-	 * "Alternative instructions for different CPU types or capabilities"
+-	 * Think locking instructions on spinlocks.
+-	 */
+-	. = ALIGN(4);
+-	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
+-		__alt_instructions = .;
+-		*(.altinstructions)
+-		__alt_instructions_end = .;
+-	}
 -
-+	if (size <= current_cpu_data.tlb_flush_threshold) {
- 		start &= (PAGE_MASK << 1);
- 		end += ((PAGE_SIZE << 1) - 1);
- 		end &= (PAGE_MASK << 1);
-@@ -136,7 +131,7 @@ void local_flush_tlb_one(unsigned long page)
+-#ifdef CONFIG_RELOCATABLE
+-	. = ALIGN(8);
+-	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
+-		__la_abs_begin = .;
+-		*(.la_abs)
+-		__la_abs_end = .;
+-	}
+-#endif
+-
+-	.got : ALIGN(16) { *(.got) }
+-	.plt : ALIGN(16) { *(.plt) }
+-	.got.plt : ALIGN(16) { *(.got.plt) }
+-
+-	.data.rel : { *(.data.rel*) }
+-
+ 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
+ 	__init_begin = .;
+ 	__inittext_begin = .;
+@@ -94,6 +67,18 @@ SECTIONS
  
- static void __update_hugetlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep)
- {
--#ifdef CONFIG_HUGETLB_PAGE
-+#if defined(CONFIG_HUGETLB_PAGE) || defined(CONFIG_TRANSPARENT_HUGEPAGE)
- 	int idx;
- 	unsigned long lo;
- 	unsigned long flags;
-
-base-commit: 744a759492b5c57ff24a6e8aabe47b17ad8ee964
--- 
-2.27.0
+ 	__initdata_begin = .;
+ 
++	/*
++	 * struct alt_inst entries. From the header (alternative.h):
++	 * "Alternative instructions for different CPU types or capabilities"
++	 * Think locking instructions on spinlocks.
++	 */
++	. = ALIGN(4);
++	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
++		__alt_instructions = .;
++		*(.altinstructions)
++		__alt_instructions_end = .;
++	}
++
+ 	INIT_DATA_SECTION(16)
+ 	.exit.data : {
+ 		EXIT_DATA
+@@ -113,6 +98,11 @@ SECTIONS
+ 
+ 	_sdata = .;
+ 	RO_DATA(4096)
++
++	.got : ALIGN(16) { *(.got) }
++	.plt : ALIGN(16) { *(.plt) }
++	.got.plt : ALIGN(16) { *(.got.plt) }
++
+ 	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
+ 
+ 	.rela.dyn : ALIGN(8) {
+@@ -121,6 +111,17 @@ SECTIONS
+ 		__rela_dyn_end = .;
+ 	}
+ 
++	.data.rel : { *(.data.rel*) }
++
++#ifdef CONFIG_RELOCATABLE
++	. = ALIGN(8);
++	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
++		__la_abs_begin = .;
++		*(.la_abs)
++		__la_abs_end = .;
++	}
++#endif
++
+ 	.sdata : {
+ 		*(.sdata)
+ 	}
 
