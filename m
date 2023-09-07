@@ -1,49 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92F77EC
-	for <loongarch@lists.linux.dev>; Thu,  7 Sep 2023 01:36:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6453EC4339A
-	for <loongarch@lists.linux.dev>; Thu,  7 Sep 2023 01:36:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2499A29;
+	Thu,  7 Sep 2023 01:36:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 778ABC433C8;
+	Thu,  7 Sep 2023 01:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694050581;
-	bh=D3nVWOHhkmhoY1EX23mvCZ4eZ9Olrv5+jxHtY3gqvxk=;
+	s=k20201202; t=1694050598;
+	bh=K1eFDAwhbRf7Pi6Pvuv3Qv4AccmUHTSMDwU5bRVVpoU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=P1gtcAM6iZmE3GfcXb/9pte/84Tcj3t9MNhDtQFy5LOEur+TW95AAuWBqWTh4Noic
-	 Akj2UjAmkTR6IGsppAc9MXTeexO/ZY7yojVVm1cuD+IEWYV9cPmIRszAqz/JpiG6q3
-	 v4TkGwFB9nhHnAL3U/uMcPdz9bqQgO8p31885G22WufqWvRuuvey3naVHR+Uz2u4fK
-	 E7nKI4HiJYIxTCpcMbL9mFSMWvfjT1wByHyENPRwO4cV/iEDcVjiZEofU05Qq0z/Gl
-	 T9IP35rvHmuucaHlbDSgrRPz0h4sth/6EMTy6VW74tebPe+Tv7Ta+yzy2sqzSfu18e
-	 jnUh1xztmKtPQ==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-500b66f8b27so662411e87.3
-        for <loongarch@lists.linux.dev>; Wed, 06 Sep 2023 18:36:21 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzOQAPwwrH7gi5cBPK2/06oOMm7KSrtDJ2wzUVsnJq3RiLV0aY3
-	atk4tpaP3tx0DkoifrZG9RVLb1VegaTFDG6xHLU=
-X-Google-Smtp-Source: AGHT+IEE0i+eB6sNRcbbEyXiXfFXLSIfEkkJMaD0vlDSf4gvKImXgs9G/kfMt+ocLBAs/OSMT/+a3RH2B95xohcvqbM=
-X-Received: by 2002:a19:6514:0:b0:500:a0a3:80ff with SMTP id
- z20-20020a196514000000b00500a0a380ffmr3615526lfb.58.1694050579372; Wed, 06
- Sep 2023 18:36:19 -0700 (PDT)
+	b=OmR3VWiuKBu6GwGNUSNd/MTIwDc2lN3s9oD9qTLLLOvpx4VjHIkDYIbbaSekHuTMf
+	 gEQhrzH/s6OG1XnUU+C7WBj1NAydN/XQkcuDKPsc3E9MJLO0Bc7LJ71DPUgT6/LNsq
+	 +sosp/3Y5JAhIJKnvn3SlcCZoGiJk7ikbkem40YGTcmt0XS0iFVsr3NT7wUYxZLkG7
+	 oqIQj/7pNqtXT+/874Z2UujbfvvAvZYy3kXUc6fnWDyeXoDmS5NczNI4C0ke/RvNMS
+	 3JGFgkB5NMYzq8yAGiAgpAWLWvX2+aY2ElQ8EoFAboZ2Hofw5zR2FJlUuoKQy4QGsu
+	 W7K2pdIuFnwEQ==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-51e28cac164so3312054a12.1;
+        Wed, 06 Sep 2023 18:36:38 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzM1qcBJglOR6pqCnI7cWujvBnWqIAMSEGQn10zold8IJbdE+6r
+	FqnYAX7e92oFor9srKQivX/jhYNtTRt/odovvx8=
+X-Google-Smtp-Source: AGHT+IFSrgaoII2JeLHGoz+iy1OHR9VPNyJD5qJLZ1Uu0jZu49j7lK4FXM+HkkDci6x1+pekg5uDLrwJI5OAzveExq8=
+X-Received: by 2002:a05:6402:3551:b0:52a:586a:b19a with SMTP id
+ f17-20020a056402355100b0052a586ab19amr1333622edd.21.1694050596696; Wed, 06
+ Sep 2023 18:36:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230906092019.4681-1-zhanghongchen@loongson.cn>
-In-Reply-To: <20230906092019.4681-1-zhanghongchen@loongson.cn>
+References: <20230905-loongarch-fix-clang-lto-parse_r-v1-1-d991ee630222@kernel.org>
+ <241da154-3092-7dc2-09b5-8e9cc7cac5be@xen0n.name>
+In-Reply-To: <241da154-3092-7dc2-09b5-8e9cc7cac5be@xen0n.name>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 7 Sep 2023 09:36:06 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H54scsYV_jCVY_SQ8VVRpjuDreTtJ5d1JvQFNmr59_5hQ@mail.gmail.com>
-Message-ID: <CAAhV-H54scsYV_jCVY_SQ8VVRpjuDreTtJ5d1JvQFNmr59_5hQ@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: add p?d_leaf() definitions
-To: Hongchen Zhang <zhanghongchen@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, "Mike Rapoport IBM)" <rppt@kernel.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	"Matthew Wilcox Oracle)" <willy@infradead.org>, Kefeng Wang <wangkefeng.wang@huawei.com>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn
+Date: Thu, 7 Sep 2023 09:36:25 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4ZxssZDCTuQUF7UZ7v+O0hN+7Hmw2qwVFUDBDuewGL8w@mail.gmail.com>
+Message-ID: <CAAhV-H4ZxssZDCTuQUF7UZ7v+O0hN+7Hmw2qwVFUDBDuewGL8w@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Drop unused parse_r and parse_v macros
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, llvm@lists.linux.dev, 
+	patches@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -51,45 +47,45 @@ Queued for loongarch-next, thanks.
 
 Huacai
 
-On Wed, Sep 6, 2023 at 5:20=E2=80=AFPM Hongchen Zhang <zhanghongchen@loongs=
-on.cn> wrote:
+On Wed, Sep 6, 2023 at 4:36=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wrot=
+e:
 >
-> When I do LTP test, LTP test case ksm06 caused panic at
->         break_ksm_pmd_entry
->           -> pmd_leaf (Huge page table but False)
->           -> pte_present (panic)
+> On 9/6/23 07:06, Nathan Chancellor wrote:
+> > When building with CONFIG_LTO_CLANG_FULL, there are several errors due
+> > to the way that parse_r is defined with an __asm__ statement in a
+> > header:
+> >
+> >    ld.lld: error: ld-temp.o <inline asm>:105:1: macro 'parse_r' is alre=
+ady defined
+> >    .macro  parse_r var r
+> >    ^
+> >
+> > This was an issue for arch/mips as well, which was resolved by
+> > commit 67512a8cf5a7 ("MIPS: Avoid macro redefinitions").
+> >
+> > However, parse_r is unused in arch/loongarch after
+> > commit 83d8b38967d2 ("LoongArch: Simplify the invtlb wrappers"), so
+> > doing the same change does not make much sense now. Just remove parse_r
+> > (and parse_v, which is also unused) to resolve the redefinition error.
+> > If it needs to be brought back due to an actual use, it should be
+> > brought back with the same changes as the aforementioned arch/mips
+> > commit.
+> >
+> > Closes: https://github.com/ClangBuiltLinux/linux/issues/1924
+> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> > ---
+> >   arch/loongarch/include/asm/asmmacro.h  | 107 ------------------------=
+---------
+> >   arch/loongarch/include/asm/loongarch.h |  43 -------------
+> >   2 files changed, 150 deletions(-)
 >
-> The reason is pmd_leaf is not defined, So like
-> commit 501b81046701 ("mips: mm: add p?d_leaf() definitions")
-> add p?d_leaf() definition for LoongArch.
+> Doh, I must have overlooked this when I last refactored the relevant
+> helpers. Thanks for the clean-up!
 >
-> Fixes: 09cfefb7fa70 ("LoongArch: Add memory management")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> ---
-> v2->v3: add Cc: stable@vger.kernel.org
-> v1->v2: add Fixes in commit message
-> ---
->  arch/loongarch/include/asm/pgtable.h | 3 +++
->  1 file changed, 3 insertions(+)
+> Reviewed-by: WANG Xuerui <git@xen0n.name>
 >
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
-e/asm/pgtable.h
-> index 370c6568ceb8..ea54653b7aab 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -243,6 +243,9 @@ static inline void pmd_clear(pmd_t *pmdp)
->
->  #define pmd_phys(pmd)          PHYSADDR(pmd_val(pmd))
->
-> +#define pmd_leaf(pmd)          ((pmd_val(pmd) & _PAGE_HUGE) !=3D 0)
-> +#define pud_leaf(pud)          ((pud_val(pud) & _PAGE_HUGE) !=3D 0)
-> +
->  #ifndef CONFIG_TRANSPARENT_HUGEPAGE
->  #define pmd_page(pmd)          (pfn_to_page(pmd_phys(pmd) >> PAGE_SHIFT)=
-)
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE  */
 > --
-> 2.33.0
+> WANG "xen0n" Xuerui
 >
+> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 >
