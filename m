@@ -1,274 +1,199 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1736BEA0
-	for <loongarch@lists.linux.dev>; Fri,  8 Sep 2023 01:55:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE5E0C433A9
-	for <loongarch@lists.linux.dev>; Fri,  8 Sep 2023 01:55:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694138102;
-	bh=TF7EVziI1jzZrWzcJPKqnNaOcy6SMk9TrwglIc9C564=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qtbeLk5C5zmpm2mbdphvnd29u70TUewb2fv/4JhFY0Uo8r3WJfIPxBxZdeNZBeCzD
-	 62SwgkNVcSB9t+queuuqIYtv10K63phpxeVFMUI95zZ2dwmbM1Vp/IGeCu2P5tvT/K
-	 REo/elfzcXYNKqvJqEcbRZWziqcQrhX8IuXKEpHe4ht/jYQYy0dkuffvU4HFGBP39y
-	 t9l1OZldO+YcJtwdOxJas1Rg26gKAkvs0iI2D5OUCnUxZ/ch5tb+HwWPntXgGmmBkw
-	 MMDmSW96B8+GE552EnDLlJ5ei2jHN4vnuMdqqPiHOwWpxH3Z2ChJniWHKA4mqDOR+V
-	 wC8WyXXvshjFQ==
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-31c63cd4ec2so1470152f8f.0
-        for <loongarch@lists.linux.dev>; Thu, 07 Sep 2023 18:55:02 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwdSVtqvmjNC1LlilYdXJdJ0JcBv4gJTNNTX96M8llnPXds6E6a
-	J8JCgz9fhdED0/1twzDgXUXHLfUeh8MPIjtm5qo=
-X-Google-Smtp-Source: AGHT+IFavYLOKRsyuxz1o6Mmg1ottHz3UqdjPcdBMdqv21cdcnwg1S4Nj/BBkj1Wxr2eOLt3pcYB6dAAadvqaRLMUP0=
-X-Received: by 2002:adf:f3d2:0:b0:313:e8b6:1699 with SMTP id
- g18-20020adff3d2000000b00313e8b61699mr666328wrp.55.1694138101155; Thu, 07 Sep
- 2023 18:55:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECB41863
+	for <loongarch@lists.linux.dev>; Fri,  8 Sep 2023 11:11:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA41C433CA;
+	Fri,  8 Sep 2023 11:11:20 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.6
+Date: Fri,  8 Sep 2023 19:10:53 +0800
+Message-Id: <20230908111053.1660033-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230831083020.2187109-1-zhaotianrui@loongson.cn>
- <20230831083020.2187109-29-zhaotianrui@loongson.cn> <925522e9-9be6-2545-4c4e-1608eaab523a@xen0n.name>
- <CAAhV-H5WHOysfEutSg1oopx5s8SDnYd8zn8C+TY6mqVbFr22sQ@mail.gmail.com> <61b34ee0-8205-43e0-becf-a4f6c8ff876a@loongson.cn>
-In-Reply-To: <61b34ee0-8205-43e0-becf-a4f6c8ff876a@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 8 Sep 2023 09:54:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4vhY+Kf2gOB9o0Kp+pv=aEQtr=Uzq6APq1jn2p20ga0w@mail.gmail.com>
-Message-ID: <CAAhV-H4vhY+Kf2gOB9o0Kp+pv=aEQtr=Uzq6APq1jn2p20ga0w@mail.gmail.com>
-Subject: Re: [PATCH v20 28/30] LoongArch: KVM: Enable kvm config and add the makefile
-To: bibo mao <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	loongarch@lists.linux.dev, Jens Axboe <axboe@kernel.dk>, 
-	Mark Brown <broonie@kernel.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 8, 2023 at 9:49=E2=80=AFAM bibo mao <maobibo@loongson.cn> wrote=
-:
->
->
->
-> =E5=9C=A8 2023/9/8 09:40, Huacai Chen =E5=86=99=E9=81=93:
-> > On Fri, Sep 8, 2023 at 4:10=E2=80=AFAM WANG Xuerui <kernel@xen0n.name> =
-wrote:
-> >>
-> >>
-> >> On 8/31/23 16:30, Tianrui Zhao wrote:
-> >>> Enable LoongArch kvm config and add the makefile to support build kvm
-> >>> module.
-> >>>
-> >>> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> >>> Reported-by: kernel test robot <lkp@intel.com>
-> >>> Link: https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp=
-@intel.com/
-> >>> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> >>> ---
-> >>>   arch/loongarch/Kbuild                      |  1 +
-> >>>   arch/loongarch/Kconfig                     |  3 ++
-> >>>   arch/loongarch/configs/loongson3_defconfig |  2 +
-> >>>   arch/loongarch/kvm/Kconfig                 | 45 +++++++++++++++++++=
-+++
-> >>>   arch/loongarch/kvm/Makefile                | 22 +++++++++++
-> >>>   5 files changed, 73 insertions(+)
-> >>>   create mode 100644 arch/loongarch/kvm/Kconfig
-> >>>   create mode 100644 arch/loongarch/kvm/Makefile
-> >>>
-> >>> diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
-> >>> index b01f5cdb27..40be8a1696 100644
-> >>> --- a/arch/loongarch/Kbuild
-> >>> +++ b/arch/loongarch/Kbuild
-> >>> @@ -2,6 +2,7 @@ obj-y +=3D kernel/
-> >>>   obj-y +=3D mm/
-> >>>   obj-y +=3D net/
-> >>>   obj-y +=3D vdso/
-> >>> +obj-y +=3D kvm/
-> >> Do we want to keep the list alphabetically sorted here?
-> > kvm directory can be at last, but I'm afraid that it should be
-> >
-> > ifdef CONFIG_KVM
-> > obj-y +=3D kvm/
-> > endif
-> Agree, how about this like other architectures.
-> obj-$(CONFIG_KVM) +=3D kvm/
-This is better, I agree and it can be at last because it is in a
-different format from others.
+The following changes since commit 2dde18cd1d8fac735875f2e4987f11817cc0bc2c:
 
-> >
-> > If such a guard is unnecessary, then I agree to use alphabetical order.
-> Is there any document about "alphabetical order"? I check Kbuild in other
-> directories, it is not sorted by alphabetical order.
-Yes, there is no hard limit, but alphabetical order is better in some
-cases, e.g., avoid duplicate lines.
+  Linux 6.5 (2023-08-27 14:49:51 -0700)
 
-Huacai
->
-> $ cat  arch/riscv/Kbuild
-> obj-y +=3D kernel/ mm/ net/
-> obj-$(CONFIG_BUILTIN_DTB) +=3D boot/dts/
-> obj-y +=3D errata/
-> obj-$(CONFIG_KVM) +=3D kvm/
-> obj-$(CONFIG_ARCH_HAS_KEXEC_PURGATORY) +=3D purgatory/
-> # for cleaning
-> subdir- +=3D boot
->
-> $ cat arch/arm64/Kbuild
-> obj-y                   +=3D kernel/ mm/ net/
-> obj-$(CONFIG_KVM)       +=3D kvm/
-> obj-$(CONFIG_XEN)       +=3D xen/
-> obj-$(subst m,y,$(CONFIG_HYPERV))       +=3D hyperv/
-> obj-$(CONFIG_CRYPTO)    +=3D crypto/
->
-> # for cleaning
-> subdir- +=3D boot
->
->
-> Regards
-> Bibo Mao
-> >
-> > Huacai
-> >
-> >>>
-> >>>   # for cleaning
-> >>>   subdir- +=3D boot
-> >>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> >>> index ecf282dee5..7f2f7ccc76 100644
-> >>> --- a/arch/loongarch/Kconfig
-> >>> +++ b/arch/loongarch/Kconfig
-> >>> @@ -123,6 +123,7 @@ config LOONGARCH
-> >>>       select HAVE_KPROBES
-> >>>       select HAVE_KPROBES_ON_FTRACE
-> >>>       select HAVE_KRETPROBES
-> >>> +     select HAVE_KVM
-> >>>       select HAVE_MOD_ARCH_SPECIFIC
-> >>>       select HAVE_NMI
-> >>>       select HAVE_PCI
-> >>> @@ -650,3 +651,5 @@ source "kernel/power/Kconfig"
-> >>>   source "drivers/acpi/Kconfig"
-> >>>
-> >>>   endmenu
-> >>> +
-> >>> +source "arch/loongarch/kvm/Kconfig"
-> >>> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loonga=
-rch/configs/loongson3_defconfig
-> >>> index d64849b4cb..7acb4ae7af 100644
-> >>> --- a/arch/loongarch/configs/loongson3_defconfig
-> >>> +++ b/arch/loongarch/configs/loongson3_defconfig
-> >>> @@ -63,6 +63,8 @@ CONFIG_EFI_ZBOOT=3Dy
-> >>>   CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=3Dy
-> >>>   CONFIG_EFI_CAPSULE_LOADER=3Dm
-> >>>   CONFIG_EFI_TEST=3Dm
-> >>> +CONFIG_VIRTUALIZATION=3Dy
-> >>> +CONFIG_KVM=3Dm
-> >>>   CONFIG_MODULES=3Dy
-> >>>   CONFIG_MODULE_FORCE_LOAD=3Dy
-> >>>   CONFIG_MODULE_UNLOAD=3Dy
-> >>> diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
-> >>> new file mode 100644
-> >>> index 0000000000..bf7d6e7cde
-> >>> --- /dev/null
-> >>> +++ b/arch/loongarch/kvm/Kconfig
-> >>> @@ -0,0 +1,45 @@
-> >>> +# SPDX-License-Identifier: GPL-2.0
-> >>> +#
-> >>> +# KVM configuration
-> >>> +#
-> >>> +
-> >>> +source "virt/kvm/Kconfig"
-> >>> +
-> >>> +menuconfig VIRTUALIZATION
-> >>> +     bool "Virtualization"
-> >>> +     help
-> >>> +       Say Y here to get to see options for using your Linux host to=
- run
-> >>> +       other operating systems inside virtual machines (guests).
-> >>> +       This option alone does not add any kernel code.
-> >>> +
-> >>> +       If you say N, all options in this submenu will be skipped and
-> >>> +       disabled.
-> >>> +
-> >>> +if VIRTUALIZATION
-> >>> +
-> >>> +config AS_HAS_LVZ_EXTENSION
-> >>> +     def_bool $(as-instr,hvcl 0)
-> >>> +
-> >>> +config KVM
-> >>> +     tristate "Kernel-based Virtual Machine (KVM) support"
-> >>> +     depends on HAVE_KVM
-> >>> +     depends on AS_HAS_LVZ_EXTENSION
-> >>> +     select MMU_NOTIFIER
-> >>> +     select ANON_INODES
-> >>> +     select PREEMPT_NOTIFIERS
-> >>> +     select KVM_MMIO
-> >>> +     select KVM_GENERIC_DIRTYLOG_READ_PROTECT
-> >>> +     select KVM_GENERIC_HARDWARE_ENABLING
-> >>> +     select KVM_XFER_TO_GUEST_WORK
-> >>> +     select HAVE_KVM_DIRTY_RING_ACQ_REL
-> >>> +     select HAVE_KVM_VCPU_ASYNC_IOCTL
-> >>> +     select HAVE_KVM_EVENTFD
-> >>> +     select SRCU
-> >> Make the list of selects also alphabetically sorted?
-> >>> +     help
-> >>> +       Support hosting virtualized guest machines using hardware
-> >>> +       virtualization extensions. You will need a fairly processor
-> >>> +       equipped with virtualization extensions.
-> >>
-> >> The word "fairly" seems extraneous here, and can be simply dropped.
-> >>
-> >> (I suppose you forgot to delete it after tweaking the original sentenc=
-e,
-> >> that came from arch/x86/kvm: "You will need a fairly recent processor
-> >> ..." -- all LoongArch processors are recent!)
-> >>
-> >>> +
-> >>> +       If unsure, say N.
-> >>> +
-> >>> +endif # VIRTUALIZATION
-> >>> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefil=
-e
-> >>> new file mode 100644
-> >>> index 0000000000..2335e873a6
-> >>> --- /dev/null
-> >>> +++ b/arch/loongarch/kvm/Makefile
-> >>> @@ -0,0 +1,22 @@
-> >>> +# SPDX-License-Identifier: GPL-2.0
-> >>> +#
-> >>> +# Makefile for LOONGARCH KVM support
-> >> "LoongArch" -- you may want to check the entire patch series for such
-> >> ALL-CAPS references to LoongArch in natural language paragraphs, they
-> >> all want to be spelled "LoongArch".
-> >>> +#
-> >>> +
-> >>> +ccflags-y +=3D -I $(srctree)/$(src)
-> >>> +
-> >>> +include $(srctree)/virt/kvm/Makefile.kvm
-> >>> +
-> >>> +obj-$(CONFIG_KVM) +=3D kvm.o
-> >>> +
-> >>> +kvm-y +=3D main.o
-> >>> +kvm-y +=3D vm.o
-> >>> +kvm-y +=3D vmid.o
-> >>> +kvm-y +=3D tlb.o
-> >>> +kvm-y +=3D mmu.o
-> >>> +kvm-y +=3D vcpu.o
-> >>> +kvm-y +=3D exit.o
-> >>> +kvm-y +=3D interrupt.o
-> >>> +kvm-y +=3D timer.o
-> >>> +kvm-y +=3D switch.o
-> >>> +kvm-y +=3D csr_ops.o
-> >> I'd suggest sorting this list too to better avoid editing conflicts in
-> >> the future.
-> >>
-> >> --
-> >> WANG "xen0n" Xuerui
-> >>
-> >> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-> >>
-> >>
->
->
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.6
+
+for you to fetch changes up to 671eae93ae2090d2df01d810d354cab05f6bed8b:
+
+  LoongArch: Update Loongson-3 default config file (2023-09-07 12:06:20 +0800)
+
+----------------------------------------------------------------
+LoongArch changes for v6.6
+
+1, Allow usage of LSX/LASX in the kernel;
+2, Add SIMD-optimized RAID5/RAID6 routines;
+3, Add Loongson Binary Translation (LBT) extension support;
+4, Add basic KGDB & KDB support;
+5, Add building with kcov coverage;
+6, Add KFENCE (Kernel Electric-Fence) support;
+7, Add KASAN (Kernel Address Sanitizer) support;
+8, Some bug fixes and other small changes;
+9, Update the default config file.
+
+Note: There is a conflicts in arch/loongarch/mm/pgtable.c but can be
+simply fixed by adjusting context.
+
+----------------------------------------------------------------
+Bibo Mao (3):
+      LoongArch: Code improvements in function pcpu_populate_pte()
+      LoongArch: mm: Introduce unified function populate_kernel_pte()
+      LoongArch: Use static defined zero page rather than allocated
+
+Enze Li (4):
+      kfence: Defer the assignment of the local variable addr
+      LoongArch: mm: Add page table mapped mode support for virt_to_page()
+      LoongArch: Get partial stack information when providing regs parameter
+      LoongArch: Add KFENCE (Kernel Electric-Fence) support
+
+Feiyang Chen (2):
+      LoongArch: Provide kaslr_offset() to get kernel offset
+      LoongArch: Allow building with kcov coverage
+
+Hongchen Zhang (1):
+      LoongArch: mm: Add p?d_leaf() definitions
+
+Huacai Chen (4):
+      Merge tag 'md-next-20230814-resend' into loongarch-next
+      LoongArch: Remove shm_align_mask and use SHMLBA instead
+      LoongArch: Allow usage of LSX/LASX in the kernel
+      LoongArch: Update Loongson-3 default config file
+
+Nathan Chancellor (1):
+      LoongArch: Drop unused parse_r and parse_v macros
+
+Qi Hu (1):
+      LoongArch: Add Loongson Binary Translation (LBT) extension support
+
+Qing Zhang (5):
+      LoongArch: Add basic KGDB & KDB support
+      kasan: Add __HAVE_ARCH_SHADOW_MAP to support arch specific mapping
+      kasan: Add (pmd|pud)_init for LoongArch zero_(pud|p4d)_populate process
+      LoongArch: Simplify the processing of jumping new kernel for KASLR
+      LoongArch: Add KASAN (Kernel Address Sanitizer) support
+
+Tiezhu Yang (1):
+      LoongArch: Define symbol 'fault' as a local label in fpu.S
+
+WANG Xuerui (3):
+      LoongArch: Add SIMD-optimized XOR routines
+      raid6: Add LoongArch SIMD syndrome calculation
+      raid6: Add LoongArch SIMD recovery implementation
+
+Weihao Li (1):
+      LoongArch: Adjust {copy, clear}_user exception handler behavior
+
+ Documentation/dev-tools/kasan.rst                  |   4 +-
+ .../features/debug/KASAN/arch-support.txt          |   2 +-
+ Documentation/features/debug/kcov/arch-support.txt |   2 +-
+ Documentation/features/debug/kgdb/arch-support.txt |   2 +-
+ .../translations/zh_CN/dev-tools/kasan.rst         |   2 +-
+ arch/loongarch/Kconfig                             |  26 +
+ arch/loongarch/Makefile                            |   3 +
+ arch/loongarch/configs/loongson3_defconfig         |  74 ++-
+ arch/loongarch/include/asm/asm-prototypes.h        |   1 +
+ arch/loongarch/include/asm/asmmacro.h              | 158 ++---
+ arch/loongarch/include/asm/kasan.h                 | 126 ++++
+ arch/loongarch/include/asm/kfence.h                |  61 ++
+ arch/loongarch/include/asm/kgdb.h                  |  97 +++
+ arch/loongarch/include/asm/lbt.h                   | 109 +++
+ arch/loongarch/include/asm/loongarch.h             |  47 +-
+ arch/loongarch/include/asm/mmzone.h                |   2 -
+ arch/loongarch/include/asm/page.h                  |   7 +-
+ arch/loongarch/include/asm/pgalloc.h               |   1 +
+ arch/loongarch/include/asm/pgtable.h               |  31 +-
+ arch/loongarch/include/asm/processor.h             |  26 +-
+ arch/loongarch/include/asm/setup.h                 |   8 +-
+ arch/loongarch/include/asm/stackframe.h            |   4 +
+ arch/loongarch/include/asm/string.h                |  20 +
+ arch/loongarch/include/asm/switch_to.h             |   2 +
+ arch/loongarch/include/asm/thread_info.h           |   4 +
+ arch/loongarch/include/asm/xor.h                   |  68 ++
+ arch/loongarch/include/asm/xor_simd.h              |  34 +
+ arch/loongarch/include/uapi/asm/ptrace.h           |   6 +
+ arch/loongarch/include/uapi/asm/sigcontext.h       |  10 +
+ arch/loongarch/kernel/Makefile                     |   9 +
+ arch/loongarch/kernel/asm-offsets.c                |  18 +-
+ arch/loongarch/kernel/cpu-probe.c                  |  14 +
+ arch/loongarch/kernel/entry.S                      |   5 +
+ arch/loongarch/kernel/fpu.S                        |  14 +-
+ arch/loongarch/kernel/head.S                       |  13 +-
+ arch/loongarch/kernel/kfpu.c                       |  55 +-
+ arch/loongarch/kernel/kgdb.c                       | 727 +++++++++++++++++++++
+ arch/loongarch/kernel/lbt.S                        | 155 +++++
+ arch/loongarch/kernel/numa.c                       |  35 +-
+ arch/loongarch/kernel/process.c                    |  15 +-
+ arch/loongarch/kernel/ptrace.c                     |  54 ++
+ arch/loongarch/kernel/relocate.c                   |   8 +-
+ arch/loongarch/kernel/setup.c                      |   4 +
+ arch/loongarch/kernel/signal.c                     | 188 ++++++
+ arch/loongarch/kernel/stacktrace.c                 |  18 +-
+ arch/loongarch/kernel/traps.c                      |  50 +-
+ arch/loongarch/lib/Makefile                        |   2 +
+ arch/loongarch/lib/clear_user.S                    |  87 +--
+ arch/loongarch/lib/copy_user.S                     | 161 ++---
+ arch/loongarch/lib/memcpy.S                        |   8 +-
+ arch/loongarch/lib/memmove.S                       |  20 +-
+ arch/loongarch/lib/memset.S                        |   8 +-
+ arch/loongarch/lib/xor_simd.c                      |  93 +++
+ arch/loongarch/lib/xor_simd.h                      |  38 ++
+ arch/loongarch/lib/xor_simd_glue.c                 |  72 ++
+ arch/loongarch/lib/xor_template.c                  | 110 ++++
+ arch/loongarch/mm/Makefile                         |   3 +
+ arch/loongarch/mm/cache.c                          |   1 -
+ arch/loongarch/mm/fault.c                          |  22 +-
+ arch/loongarch/mm/init.c                           |  71 +-
+ arch/loongarch/mm/kasan_init.c                     | 243 +++++++
+ arch/loongarch/mm/mmap.c                           |  13 +-
+ arch/loongarch/mm/pgtable.c                        |  12 +
+ arch/loongarch/vdso/Makefile                       |   3 +
+ include/linux/kasan.h                              |   2 +
+ include/linux/raid/pq.h                            |   4 +
+ lib/raid6/Makefile                                 |   1 +
+ lib/raid6/algos.c                                  |  16 +
+ lib/raid6/loongarch.h                              |  38 ++
+ lib/raid6/loongarch_simd.c                         | 422 ++++++++++++
+ lib/raid6/recov_loongarch_simd.c                   | 513 +++++++++++++++
+ lib/raid6/test/Makefile                            |  12 +
+ mm/kasan/init.c                                    |  18 +-
+ mm/kasan/kasan.h                                   |   6 +
+ mm/kfence/core.c                                   |   5 +-
+ 75 files changed, 3862 insertions(+), 461 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kasan.h
+ create mode 100644 arch/loongarch/include/asm/kfence.h
+ create mode 100644 arch/loongarch/include/asm/kgdb.h
+ create mode 100644 arch/loongarch/include/asm/lbt.h
+ create mode 100644 arch/loongarch/include/asm/xor.h
+ create mode 100644 arch/loongarch/include/asm/xor_simd.h
+ create mode 100644 arch/loongarch/kernel/kgdb.c
+ create mode 100644 arch/loongarch/kernel/lbt.S
+ create mode 100644 arch/loongarch/lib/xor_simd.c
+ create mode 100644 arch/loongarch/lib/xor_simd.h
+ create mode 100644 arch/loongarch/lib/xor_simd_glue.c
+ create mode 100644 arch/loongarch/lib/xor_template.c
+ create mode 100644 arch/loongarch/mm/kasan_init.c
+ create mode 100644 lib/raid6/loongarch.h
+ create mode 100644 lib/raid6/loongarch_simd.c
+ create mode 100644 lib/raid6/recov_loongarch_simd.c
