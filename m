@@ -1,267 +1,118 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7BD1114
-	for <loongarch@lists.linux.dev>; Fri,  8 Sep 2023 20:52:08 +0000 (UTC)
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-68a42d06d02so2220940b3a.0
-        for <loongarch@lists.linux.dev>; Fri, 08 Sep 2023 13:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694206327; x=1694811127; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=VDbHt9ZjxbWg0OnwI6q2vK5uaDqhBGdPDoTGYH2kvhs=;
-        b=IRsSbrcxSTxiQfWG3HZUZgIk5Sxt0opg8M4ThyX5MlnC7j+r8zaB/7gCxPxcC0wCNp
-         QoH15bf/wZL5OJ2tcjocHFgC7+kxsynunK1HFSWIRqy31dWRUnMhhR17xEaVNAqGxKMU
-         JGfTRSmsohvxoVoP9/XME/qL8MbvVrldNG6FSas5hMRHrmDwqBr44uhGuyNz93ZkayNt
-         x2n3a7wlh3Pg3bV9EB0t2PvSYtqBcMB9typ8UxYFUT3vhkYpcuuhXPOvvfCKmMegrsYx
-         QlNX1Uw+E4Erd2Lu6/PJNqURShzEzjym9I1simnJ+hjARsSAOhsm8zwP+8gBCTKOgP1A
-         h7vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694206327; x=1694811127;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VDbHt9ZjxbWg0OnwI6q2vK5uaDqhBGdPDoTGYH2kvhs=;
-        b=YBB+ftbv5+8GXMXQFOEAezN/trg4Z04WWSnXIPqU/5NhXwylWwuenjmu79qD7XUsj1
-         qCDt8rlHqoYp4jXLAgE6GxEf1Pm3geCy7mZH3thID2tRWc88RoPNi+bWX7af0mqbu62/
-         ZMr4yRgdbAGClKDAzVtUQj5OE+vCuDhca8JsMXOcqbSncrtRQjGGvi3lddmIiDzImj+f
-         wYJYMjwSCGSs14wE50uVQy5meJRVMXM40dFv8VSqLGWU3cQ610FOEKckPTyUs4alHjIE
-         zYNI6uiQC0thxi+lx0YRvE9RjJTTTyC5OAbKQO+IBbXf5oQXSKk3oBCkOoORvFMDtrsI
-         OciQ==
-X-Gm-Message-State: AOJu0Yz6nLkInZ+uiXpYiOF67UXOVJvGPb5rMYtI5XkBMr7WpQuMxCb2
-	C/4UQ7b65BQTp6UOaH2ye/k=
-X-Google-Smtp-Source: AGHT+IE3hfS2KA7c98Htv9+NTlTCBJzkYRjkcPnycGW13NYWt9fF/InbMS0k6WcKTOaP72T/K0kq5w==
-X-Received: by 2002:a05:6a21:60f:b0:153:beda:863 with SMTP id ll15-20020a056a21060f00b00153beda0863mr3012237pzb.45.1694206327330;
-        Fri, 08 Sep 2023 13:52:07 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m11-20020aa78a0b000000b0068a53ac9d46sm1667577pfa.100.2023.09.08.13.52.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Sep 2023 13:52:06 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <e7965d97-48cd-b2ed-328f-c1947121c8e7@roeck-us.net>
-Date: Fri, 8 Sep 2023 13:52:04 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1E6186D;
+	Fri,  8 Sep 2023 22:44:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694213076; x=1725749076;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ig9COPkSQI7Qa5GeNMp1dKZXcUs5jkyJAYheDDXz4oA=;
+  b=CPRcNqpUmecQs+rkKaTOxefIAIH/u0MuyXQ6T5phhNQukdGH5qSo4KDl
+   lJ8QrIRvF1JEfhi54FjOS6wHyPh96iJM7g+yZ9PvCB2Z1DAmpXKjGflEW
+   7tj7dAknog+t6V+SXhQLTiPLN7Vo27jbP3RBQbQlRyc69tX5lBEbCbAJo
+   sN2F1AQeiGDHm7yElcGuef2J5W2J7t+KFTON1R1OCBbaYyATiZfyyfsss
+   XyFmsBnGGhU4UlDENX4ewdpPy6X9u6oh6ghN8XmEJ6+LeWT8fqwZ7n6ld
+   /1utVToirJt9p4dq9BxGUlWM8vSA2ZjkzYoG7NUWpmk4NiGoKaT27zTN2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="357228391"
+X-IronPort-AV: E=Sophos;i="6.02,238,1688454000"; 
+   d="scan'208";a="357228391"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2023 15:44:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="692417942"
+X-IronPort-AV: E=Sophos;i="6.02,238,1688454000"; 
+   d="scan'208";a="692417942"
+Received: from lkp-server01.sh.intel.com (HELO 59b3c6e06877) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 08 Sep 2023 15:44:34 -0700
+Received: from kbuild by 59b3c6e06877 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qekDH-0002gj-2H;
+	Fri, 08 Sep 2023 22:44:31 +0000
+Date: Sat, 9 Sep 2023 06:43:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: Add tlb_flush_threshold for tlb flush range
+Message-ID: <202309090624.CrkoQ4fj-lkp@intel.com>
+References: <20230908012907.2994001-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] lockdep: Fix static memory detection even more
-Content-Language: en-US
-To: Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
- Borislav Petkov <bp@suse.de>, Peter Zijlstra <peterz@infradead.org>
-References: <ZNep5EcYskP9HtGD@p100>
- <b7526bf6-886f-457a-beba-84ae9f75bc77@roeck-us.net> <ZPT2cINsHd+sWJQU@ls3530>
- <78473084-d4d5-685f-9778-4bbe8878a43e@roeck-us.net> <ZPgnslFTlwImJ+Aq@ls3530>
- <081537c0-0d74-0242-451a-e6bd6f71cdd9@roeck-us.net> <ZPl+Y2vRYUnWtTQc@ls3530>
-From: Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <ZPl+Y2vRYUnWtTQc@ls3530>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230908012907.2994001-1-maobibo@loongson.cn>
 
-On 9/7/23 00:40, Helge Deller wrote:
-> * Guenter Roeck <linux@roeck-us.net>:
->> On 9/6/23 00:18, Helge Deller wrote:
->>> * Guenter Roeck <linux@roeck-us.net>:
->>>> On 9/3/23 14:11, Helge Deller wrote:
->>>>> * Guenter Roeck <linux@roeck-us.net>:
->>>>>> Hi,
->>>>>>
->>>>>> On Sat, Aug 12, 2023 at 05:48:52PM +0200, Helge Deller wrote:
->>>>>>> On the parisc architecture, lockdep reports for all static objects which
->>>>>>> are in the __initdata section (e.g. "setup_done" in devtmpfs,
->>>>>>> "kthreadd_done" in init/main.c) this warning:
->>>>>>>
->>>>>>> 	INFO: trying to register non-static key.
->>>>>>>
->>>>>>> The warning itself is wrong, because those objects are in the __initdata
->>>>>>> section, but the section itself is on parisc outside of range from
->>>>>>> _stext to _end, which is why the static_obj() functions returns a wrong
->>>>>>> answer.
->>>>>>>
->>>>>>> While fixing this issue, I noticed that the whole existing check can
->>>>>>> be simplified a lot.
->>>>>>> Instead of checking against the _stext and _end symbols (which include
->>>>>>> code areas too) just check for the .data and .bss segments (since we check a
->>>>>>> data object). This can be done with the existing is_kernel_core_data()
->>>>>>> macro.
->>>>>>>
->>>>>>> In addition objects in the __initdata section can be checked with
->>>>>>> init_section_contains().
->>>>>>>
->>>>>>> This partly reverts and simplifies commit bac59d18c701 ("x86/setup: Fix static
->>>>>>> memory detection").
->>>>>>>
->>>>>>> Tested on x86-64 and parisc.
->>>>>>>
->>>>>>> Signed-off-by: Helge Deller <deller@gmx.de>
->>>>>>> Fixes: bac59d18c701 ("x86/setup: Fix static memory detection")
->>>>>>
->>>>>> On loongarch, this patch results in the following backtrace.
->>>>>>
->>>>>> EFI stub: Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path
->>>>>> EFI stub: Exiting boot services
->>>>>> [    0.000000] INFO: trying to register non-static key.
->>>>>> [    0.000000] The code is fine but needs lockdep annotation, or maybe
->>>>>> [    0.000000] you didn't initialize this object before use?
->>>>>> [    0.000000] turning off the locking correctness validator.
->>>>>> [    0.000000]         ...
->>>>>> [    0.000000] Call Trace:
->>>>>> [    0.000000] [<9000000000223d84>] show_stack+0x5c/0x180
->>>>>> [    0.000000] [<900000000153e0b4>] dump_stack_lvl+0x88/0xd0
->>>>>> [    0.000000] [<90000000002bc548>] register_lock_class+0x768/0x770
->>>>>> [    0.000000] [<90000000002bc710>] __lock_acquire+0xb0/0x2a18
->>>>>> [    0.000000] [<90000000002bba1c>] lock_acquire+0x11c/0x328
->>>>>> [    0.000000] [<9000000000b34a60>] __debug_object_init+0x60/0x244
->>>>>> [    0.000000] [<9000000000337f94>] init_cgroup_housekeeping+0xe8/0x144
->>>>>> [    0.000000] [<900000000033e364>] init_cgroup_root+0x38/0xa0
->>>>>> [    0.000000] [<90000000017801ac>] cgroup_init_early+0x44/0x16c
->>>>>> [    0.000000] [<9000000001770758>] start_kernel+0x50/0x624
->>>>>> [    0.000000] [<90000000015410b4>] kernel_entry+0xb4/0xc4
->>>>>>
->>>>>> Reverting it fixes the problem. Bisect log attached.
->>>>>>
->>>>>> This is also seen in v6.5.y and v6.4.y since the patch has been applied
->>>>>> to those branches.
->>>>>
->>>>> Does this happens with CONFIG_SMP=n ?
->>>>> If so, I think the untested patch below might fix the issue.
->>>>>
->>>>
->>>> No, this is loongarch:defconfig with various debug options enabled.
->>>> That has CONFIG_SMP=y.
->>>
->>> Could you apply below patch and verify with the contents of the
->>> System.map file where the lock is located ?
->>>
->>> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
->>> index e85b5ad3e206..db0a301f9740 100644
->>> --- a/kernel/locking/lockdep.c
->>> +++ b/kernel/locking/lockdep.c
->>> @@ -969,7 +969,7 @@ static bool assign_lock_key(struct lockdep_map *lock)
->>>    	else {
->>>    		/* Debug-check: all keys must be persistent! */
->>>    		debug_locks_off();
->>> -		pr_err("INFO: trying to register non-static key.\n");
->>> +		pr_err("INFO: trying to register non-static key at %08lx.\n", addr);
->>>    		pr_err("The code is fine but needs lockdep annotation, or maybe\n");
->>>    		pr_err("you didn't initialize this object before use?\n");
->>>    		pr_err("turning off the locking correctness validator.\n");
->>
->> 90000000015602d0 D __la_abs_end
->> ...
->> 90000000016815c0 d fill_pool_map.3  <--- lock pointer
->> ...
->> 9000000001770000 T __init_begin
-> 
-> The problem is, that loongarch's  vmlinux.lds.S file puts data into
-> areas which are not marked "data" or "code".
-> 
-> can you try below patch?
-> The relevant part is here the move of ".data.rel : { *(.data.rel*) }"
-> into the data section.
-> The other parts are suggestions.
-> 
+Hi Bibo,
 
-The patch below fixes the problem for me.
+kernel test robot noticed the following build errors:
 
-Guenter
+[auto build test ERROR on 744a759492b5c57ff24a6e8aabe47b17ad8ee964]
 
-> Helge
-> 
-> 
-> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-> index b1686afcf876..bb2ec86f37a8 100644
-> --- a/arch/loongarch/kernel/vmlinux.lds.S
-> +++ b/arch/loongarch/kernel/vmlinux.lds.S
-> @@ -53,33 +53,6 @@ SECTIONS
->   	. = ALIGN(PECOFF_SEGMENT_ALIGN);
->   	_etext = .;
->   
-> -	/*
-> -	 * struct alt_inst entries. From the header (alternative.h):
-> -	 * "Alternative instructions for different CPU types or capabilities"
-> -	 * Think locking instructions on spinlocks.
-> -	 */
-> -	. = ALIGN(4);
-> -	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
-> -		__alt_instructions = .;
-> -		*(.altinstructions)
-> -		__alt_instructions_end = .;
-> -	}
-> -
-> -#ifdef CONFIG_RELOCATABLE
-> -	. = ALIGN(8);
-> -	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
-> -		__la_abs_begin = .;
-> -		*(.la_abs)
-> -		__la_abs_end = .;
-> -	}
-> -#endif
-> -
-> -	.got : ALIGN(16) { *(.got) }
-> -	.plt : ALIGN(16) { *(.plt) }
-> -	.got.plt : ALIGN(16) { *(.got.plt) }
-> -
-> -	.data.rel : { *(.data.rel*) }
-> -
->   	. = ALIGN(PECOFF_SEGMENT_ALIGN);
->   	__init_begin = .;
->   	__inittext_begin = .;
-> @@ -94,6 +67,18 @@ SECTIONS
->   
->   	__initdata_begin = .;
->   
-> +	/*
-> +	 * struct alt_inst entries. From the header (alternative.h):
-> +	 * "Alternative instructions for different CPU types or capabilities"
-> +	 * Think locking instructions on spinlocks.
-> +	 */
-> +	. = ALIGN(4);
-> +	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
-> +		__alt_instructions = .;
-> +		*(.altinstructions)
-> +		__alt_instructions_end = .;
-> +	}
-> +
->   	INIT_DATA_SECTION(16)
->   	.exit.data : {
->   		EXIT_DATA
-> @@ -113,6 +98,11 @@ SECTIONS
->   
->   	_sdata = .;
->   	RO_DATA(4096)
-> +
-> +	.got : ALIGN(16) { *(.got) }
-> +	.plt : ALIGN(16) { *(.plt) }
-> +	.got.plt : ALIGN(16) { *(.got.plt) }
-> +
->   	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
->   
->   	.rela.dyn : ALIGN(8) {
-> @@ -121,6 +111,17 @@ SECTIONS
->   		__rela_dyn_end = .;
->   	}
->   
-> +	.data.rel : { *(.data.rel*) }
-> +
-> +#ifdef CONFIG_RELOCATABLE
-> +	. = ALIGN(8);
-> +	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
-> +		__la_abs_begin = .;
-> +		*(.la_abs)
-> +		__la_abs_end = .;
-> +	}
-> +#endif
-> +
->   	.sdata : {
->   		*(.sdata)
->   	}
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-Add-tlb_flush_threshold-for-tlb-flush-range/20230908-093017
+base:   744a759492b5c57ff24a6e8aabe47b17ad8ee964
+patch link:    https://lore.kernel.org/r/20230908012907.2994001-1-maobibo%40loongson.cn
+patch subject: [PATCH] LoongArch: Add tlb_flush_threshold for tlb flush range
+config: loongarch-randconfig-r021-20230909 (https://download.01.org/0day-ci/archive/20230909/202309090624.CrkoQ4fj-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230909/202309090624.CrkoQ4fj-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309090624.CrkoQ4fj-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arch/loongarch/mm/tlb.c: In function '__update_hugetlb':
+>> arch/loongarch/mm/tlb.c:146:14: error: implicit declaration of function 'pmd_to_entrylo' [-Werror=implicit-function-declaration]
+     146 |         lo = pmd_to_entrylo(pte_val(*ptep));
+         |              ^~~~~~~~~~~~~~
+   arch/loongarch/mm/tlb.c: At top level:
+   arch/loongarch/mm/tlb.c:259:6: warning: no previous prototype for 'setup_tlb_handler' [-Wmissing-prototypes]
+     259 | void setup_tlb_handler(int cpu)
+         |      ^~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/pmd_to_entrylo +146 arch/loongarch/mm/tlb.c
+
+09cfefb7fa70c3 Huacai Chen 2022-05-31  131  
+09cfefb7fa70c3 Huacai Chen 2022-05-31  132  static void __update_hugetlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep)
+09cfefb7fa70c3 Huacai Chen 2022-05-31  133  {
+29d05a2438754e Bibo Mao    2023-09-08  134  #if defined(CONFIG_HUGETLB_PAGE) || defined(CONFIG_TRANSPARENT_HUGEPAGE)
+09cfefb7fa70c3 Huacai Chen 2022-05-31  135  	int idx;
+09cfefb7fa70c3 Huacai Chen 2022-05-31  136  	unsigned long lo;
+09cfefb7fa70c3 Huacai Chen 2022-05-31  137  	unsigned long flags;
+09cfefb7fa70c3 Huacai Chen 2022-05-31  138  
+09cfefb7fa70c3 Huacai Chen 2022-05-31  139  	local_irq_save(flags);
+09cfefb7fa70c3 Huacai Chen 2022-05-31  140  
+09cfefb7fa70c3 Huacai Chen 2022-05-31  141  	address &= (PAGE_MASK << 1);
+09cfefb7fa70c3 Huacai Chen 2022-05-31  142  	write_csr_entryhi(address);
+09cfefb7fa70c3 Huacai Chen 2022-05-31  143  	tlb_probe();
+09cfefb7fa70c3 Huacai Chen 2022-05-31  144  	idx = read_csr_tlbidx();
+09cfefb7fa70c3 Huacai Chen 2022-05-31  145  	write_csr_pagesize(PS_HUGE_SIZE);
+09cfefb7fa70c3 Huacai Chen 2022-05-31 @146  	lo = pmd_to_entrylo(pte_val(*ptep));
+09cfefb7fa70c3 Huacai Chen 2022-05-31  147  	write_csr_entrylo0(lo);
+09cfefb7fa70c3 Huacai Chen 2022-05-31  148  	write_csr_entrylo1(lo + (HPAGE_SIZE >> 1));
+09cfefb7fa70c3 Huacai Chen 2022-05-31  149  
+09cfefb7fa70c3 Huacai Chen 2022-05-31  150  	if (idx < 0)
+09cfefb7fa70c3 Huacai Chen 2022-05-31  151  		tlb_write_random();
+09cfefb7fa70c3 Huacai Chen 2022-05-31  152  	else
+09cfefb7fa70c3 Huacai Chen 2022-05-31  153  		tlb_write_indexed();
+09cfefb7fa70c3 Huacai Chen 2022-05-31  154  	write_csr_pagesize(PS_DEFAULT_SIZE);
+09cfefb7fa70c3 Huacai Chen 2022-05-31  155  
+09cfefb7fa70c3 Huacai Chen 2022-05-31  156  	local_irq_restore(flags);
+09cfefb7fa70c3 Huacai Chen 2022-05-31  157  #endif
+09cfefb7fa70c3 Huacai Chen 2022-05-31  158  }
+09cfefb7fa70c3 Huacai Chen 2022-05-31  159  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
