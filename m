@@ -1,199 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECB41863
-	for <loongarch@lists.linux.dev>; Fri,  8 Sep 2023 11:11:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA41C433CA;
-	Fri,  8 Sep 2023 11:11:20 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.6
-Date: Fri,  8 Sep 2023 19:10:53 +0800
-Message-Id: <20230908111053.1660033-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1351F210F
+	for <loongarch@lists.linux.dev>; Fri,  8 Sep 2023 19:48:27 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-9a65f9147ccso302236566b.1
+        for <loongarch@lists.linux.dev>; Fri, 08 Sep 2023 12:48:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1694202506; x=1694807306; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=d1dUW7fJkCquDjjruKJF9ic5ByrdeDFJnU0IlXTs1QI=;
+        b=M6P7/pSB3e7HeoctkWcDVPJBwxqVY7Ey39MSfbBDUNF0PA+OrtpuQ3iEsoTbRxTiNp
+         MgS5hlFnThi8sIQu2FrsPPXtA1yg8vlR3/Dmn/EQPW3ZMTiCLwpY7rGb2loQC0QS/vQQ
+         7pp/A38SJmSfjEKIZmjxaI0j2ZeX/ILQLeMAE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694202506; x=1694807306;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d1dUW7fJkCquDjjruKJF9ic5ByrdeDFJnU0IlXTs1QI=;
+        b=DSwYs2lon6CERdBbIeBj0LBzV/MteH5dKZ9R/+bKIXrBZYVcNqMvlj2PP9wJYh1Nf0
+         FAVcZOGwa7VDGsjiiqmJKBIBnd9TwcBDXIq2tIV059bS2sewO4/2PElkGQJXPn92/J+0
+         zIKHss+i94IMnnFs114k4r0mfiCPIvksXI0BupEaES5NAPmCtT8+VkldOiTjhL5ql3Lo
+         idQHROBSW2ShOcSEb2GEJLsYPgou7byrmkBP+e0a1IaSRjbHf3hESGZzLye7bjUMbO20
+         m/MfKFc0FNfam0Z+3u5mhFxcGKZRlfaFx9ZRSInyoydXZd+ds/QFxWwFnCfOknh9JC+y
+         zUpw==
+X-Gm-Message-State: AOJu0YwIfWsR2xuXA8mDB9L5x41oEdaPBssdrGvVbNNfeISNgtior/uV
+	MatagkGcWAFvRyz2a5hOKz1QgoP5gNXNptb+idVyo1b1
+X-Google-Smtp-Source: AGHT+IFcdkeYUqadsiUpu/Iajs4W++v4wR7uL3C6wgyskxOqtGOfmip3j+T4jaH1kUPe+YTmn627mg==
+X-Received: by 2002:a17:906:18:b0:9a1:c00e:60cb with SMTP id 24-20020a170906001800b009a1c00e60cbmr3039949eja.10.1694202505894;
+        Fri, 08 Sep 2023 12:48:25 -0700 (PDT)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
+        by smtp.gmail.com with ESMTPSA id k24-20020a170906971800b0099275c59bc9sm1433071ejx.33.2023.09.08.12.48.25
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Sep 2023 12:48:25 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-9a65f9147ccso302234966b.1
+        for <loongarch@lists.linux.dev>; Fri, 08 Sep 2023 12:48:25 -0700 (PDT)
+X-Received: by 2002:a17:906:cc12:b0:9a1:e293:9882 with SMTP id
+ ml18-20020a170906cc1200b009a1e2939882mr2646204ejb.63.1694202504918; Fri, 08
+ Sep 2023 12:48:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230908111053.1660033-1-chenhuacai@loongson.cn>
+In-Reply-To: <20230908111053.1660033-1-chenhuacai@loongson.cn>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 8 Sep 2023 12:48:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh-uoZ_XsZ4fDodqjUY+rYJq=D3RVme3f=zBDB5neWhKQ@mail.gmail.com>
+Message-ID: <CAHk-=wh-uoZ_XsZ4fDodqjUY+rYJq=D3RVme3f=zBDB5neWhKQ@mail.gmail.com>
+Subject: Re: [GIT PULL] LoongArch changes for v6.6
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The following changes since commit 2dde18cd1d8fac735875f2e4987f11817cc0bc2c:
+On Fri, 8 Sept 2023 at 04:11, Huacai Chen <chenhuacai@loongson.cn> wrote:
+>
+> 7, Add KASAN (Kernel Address Sanitizer) support
 
-  Linux 6.5 (2023-08-27 14:49:51 -0700)
+I have pulled this, but please at least consider
 
-are available in the Git repository at:
+ (a) don't use the stupid and random __HAVE_ARCH_xyz defines
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.6
+Yes, yes, we have historical uses of it. That doesn't make it good.
+Instead of making up new random symbol names, just *USE* the names you
+are defining per architecture.
 
-for you to fetch changes up to 671eae93ae2090d2df01d810d354cab05f6bed8b:
+IOW, instead of doing
 
-  LoongArch: Update Loongson-3 default config file (2023-09-07 12:06:20 +0800)
+  #define __HAVE_ARCH_SHADOW_MAP
 
-----------------------------------------------------------------
-LoongArch changes for v6.6
+and defining your own helper replacement functions for
+kasan_mem_to_shadow() etc, just use those names as-is.
 
-1, Allow usage of LSX/LASX in the kernel;
-2, Add SIMD-optimized RAID5/RAID6 routines;
-3, Add Loongson Binary Translation (LBT) extension support;
-4, Add basic KGDB & KDB support;
-5, Add building with kcov coverage;
-6, Add KFENCE (Kernel Electric-Fence) support;
-7, Add KASAN (Kernel Address Sanitizer) support;
-8, Some bug fixes and other small changes;
-9, Update the default config file.
+So if you have an architecture that has its own version of
+"kasan_mem_to_shadow()", then use *THAT* name for the #ifdef too.
+Don't make up another name entirely of the form "__HAVE_ARCH_xyz".
 
-Note: There is a conflicts in arch/loongarch/mm/pgtable.c but can be
-simply fixed by adjusting context.
+Example: architectures can override the default generic versions of
+"arch_atomic_xyz()" operations, and the way you do that is (for
+example)
 
-----------------------------------------------------------------
-Bibo Mao (3):
-      LoongArch: Code improvements in function pcpu_populate_pte()
-      LoongArch: mm: Introduce unified function populate_kernel_pte()
-      LoongArch: Use static defined zero page rather than allocated
+  static __always_inline int arch_atomic_add_return(int i, atomic_t *v)
+  {
+        return i + xadd(&v->counter, i);
+  }
+  #define arch_atomic_add_return arch_atomic_add_return
 
-Enze Li (4):
-      kfence: Defer the assignment of the local variable addr
-      LoongArch: mm: Add page table mapped mode support for virt_to_page()
-      LoongArch: Get partial stack information when providing regs parameter
-      LoongArch: Add KFENCE (Kernel Electric-Fence) support
+note how the define to let you know the name exists is the name itself
+(and because the implementation is an inline function, not the macro,
+the marker is then just a "define the name to itself").
 
-Feiyang Chen (2):
-      LoongArch: Provide kaslr_offset() to get kernel offset
-      LoongArch: Allow building with kcov coverage
+End result: no made-up secondary names for other things. When you grep
+for the thing that is used, you find both the implementation and the
+marker for "look, I am overriding it".
 
-Hongchen Zhang (1):
-      LoongArch: mm: Add p?d_leaf() definitions
+And also
 
-Huacai Chen (4):
-      Merge tag 'md-next-20230814-resend' into loongarch-next
-      LoongArch: Remove shm_align_mask and use SHMLBA instead
-      LoongArch: Allow usage of LSX/LASX in the kernel
-      LoongArch: Update Loongson-3 default config file
+ (b) do you really want to inline those kasan_mem_to_shadow() and
+kasan_shadow_to_mem() things?
 
-Nathan Chancellor (1):
-      LoongArch: Drop unused parse_r and parse_v macros
+Yes, the caller is addr_has_metadata(), and that one is
+"__always_inline",. because otherwise objtool would complain about
+doing function calls in SMAP-enabled regions.
 
-Qi Hu (1):
-      LoongArch: Add Loongson Binary Translation (LBT) extension support
+HOWEVER:
 
-Qing Zhang (5):
-      LoongArch: Add basic KGDB & KDB support
-      kasan: Add __HAVE_ARCH_SHADOW_MAP to support arch specific mapping
-      kasan: Add (pmd|pud)_init for LoongArch zero_(pud|p4d)_populate process
-      LoongArch: Simplify the processing of jumping new kernel for KASLR
-      LoongArch: Add KASAN (Kernel Address Sanitizer) support
+ - on LoongArch, I don't think you have that objtool / SMAP issue
 
-Tiezhu Yang (1):
-      LoongArch: Define symbol 'fault' as a local label in fpu.S
+ - and if  you did, the function should be __always_inline, not just
+plain inline anyway
 
-WANG Xuerui (3):
-      LoongArch: Add SIMD-optimized XOR routines
-      raid6: Add LoongArch SIMD syndrome calculation
-      raid6: Add LoongArch SIMD recovery implementation
+so I get the feeling that the inline is simply wrong either way. Maybe
+that function should just be declared, with the implementation being
+out-of-line? It seems unnecessarily big to be an inline function, and
+it doesn't seem performance-critical?
 
-Weihao Li (1):
-      LoongArch: Adjust {copy, clear}_user exception handler behavior
+Neither of the above issues are critical, and the second one in
+particular really is just a "did you really mean to do that" kind of
+reaction, but since I was looking at this, I decided to write up my
+reactions.
 
- Documentation/dev-tools/kasan.rst                  |   4 +-
- .../features/debug/KASAN/arch-support.txt          |   2 +-
- Documentation/features/debug/kcov/arch-support.txt |   2 +-
- Documentation/features/debug/kgdb/arch-support.txt |   2 +-
- .../translations/zh_CN/dev-tools/kasan.rst         |   2 +-
- arch/loongarch/Kconfig                             |  26 +
- arch/loongarch/Makefile                            |   3 +
- arch/loongarch/configs/loongson3_defconfig         |  74 ++-
- arch/loongarch/include/asm/asm-prototypes.h        |   1 +
- arch/loongarch/include/asm/asmmacro.h              | 158 ++---
- arch/loongarch/include/asm/kasan.h                 | 126 ++++
- arch/loongarch/include/asm/kfence.h                |  61 ++
- arch/loongarch/include/asm/kgdb.h                  |  97 +++
- arch/loongarch/include/asm/lbt.h                   | 109 +++
- arch/loongarch/include/asm/loongarch.h             |  47 +-
- arch/loongarch/include/asm/mmzone.h                |   2 -
- arch/loongarch/include/asm/page.h                  |   7 +-
- arch/loongarch/include/asm/pgalloc.h               |   1 +
- arch/loongarch/include/asm/pgtable.h               |  31 +-
- arch/loongarch/include/asm/processor.h             |  26 +-
- arch/loongarch/include/asm/setup.h                 |   8 +-
- arch/loongarch/include/asm/stackframe.h            |   4 +
- arch/loongarch/include/asm/string.h                |  20 +
- arch/loongarch/include/asm/switch_to.h             |   2 +
- arch/loongarch/include/asm/thread_info.h           |   4 +
- arch/loongarch/include/asm/xor.h                   |  68 ++
- arch/loongarch/include/asm/xor_simd.h              |  34 +
- arch/loongarch/include/uapi/asm/ptrace.h           |   6 +
- arch/loongarch/include/uapi/asm/sigcontext.h       |  10 +
- arch/loongarch/kernel/Makefile                     |   9 +
- arch/loongarch/kernel/asm-offsets.c                |  18 +-
- arch/loongarch/kernel/cpu-probe.c                  |  14 +
- arch/loongarch/kernel/entry.S                      |   5 +
- arch/loongarch/kernel/fpu.S                        |  14 +-
- arch/loongarch/kernel/head.S                       |  13 +-
- arch/loongarch/kernel/kfpu.c                       |  55 +-
- arch/loongarch/kernel/kgdb.c                       | 727 +++++++++++++++++++++
- arch/loongarch/kernel/lbt.S                        | 155 +++++
- arch/loongarch/kernel/numa.c                       |  35 +-
- arch/loongarch/kernel/process.c                    |  15 +-
- arch/loongarch/kernel/ptrace.c                     |  54 ++
- arch/loongarch/kernel/relocate.c                   |   8 +-
- arch/loongarch/kernel/setup.c                      |   4 +
- arch/loongarch/kernel/signal.c                     | 188 ++++++
- arch/loongarch/kernel/stacktrace.c                 |  18 +-
- arch/loongarch/kernel/traps.c                      |  50 +-
- arch/loongarch/lib/Makefile                        |   2 +
- arch/loongarch/lib/clear_user.S                    |  87 +--
- arch/loongarch/lib/copy_user.S                     | 161 ++---
- arch/loongarch/lib/memcpy.S                        |   8 +-
- arch/loongarch/lib/memmove.S                       |  20 +-
- arch/loongarch/lib/memset.S                        |   8 +-
- arch/loongarch/lib/xor_simd.c                      |  93 +++
- arch/loongarch/lib/xor_simd.h                      |  38 ++
- arch/loongarch/lib/xor_simd_glue.c                 |  72 ++
- arch/loongarch/lib/xor_template.c                  | 110 ++++
- arch/loongarch/mm/Makefile                         |   3 +
- arch/loongarch/mm/cache.c                          |   1 -
- arch/loongarch/mm/fault.c                          |  22 +-
- arch/loongarch/mm/init.c                           |  71 +-
- arch/loongarch/mm/kasan_init.c                     | 243 +++++++
- arch/loongarch/mm/mmap.c                           |  13 +-
- arch/loongarch/mm/pgtable.c                        |  12 +
- arch/loongarch/vdso/Makefile                       |   3 +
- include/linux/kasan.h                              |   2 +
- include/linux/raid/pq.h                            |   4 +
- lib/raid6/Makefile                                 |   1 +
- lib/raid6/algos.c                                  |  16 +
- lib/raid6/loongarch.h                              |  38 ++
- lib/raid6/loongarch_simd.c                         | 422 ++++++++++++
- lib/raid6/recov_loongarch_simd.c                   | 513 +++++++++++++++
- lib/raid6/test/Makefile                            |  12 +
- mm/kasan/init.c                                    |  18 +-
- mm/kasan/kasan.h                                   |   6 +
- mm/kfence/core.c                                   |   5 +-
- 75 files changed, 3862 insertions(+), 461 deletions(-)
- create mode 100644 arch/loongarch/include/asm/kasan.h
- create mode 100644 arch/loongarch/include/asm/kfence.h
- create mode 100644 arch/loongarch/include/asm/kgdb.h
- create mode 100644 arch/loongarch/include/asm/lbt.h
- create mode 100644 arch/loongarch/include/asm/xor.h
- create mode 100644 arch/loongarch/include/asm/xor_simd.h
- create mode 100644 arch/loongarch/kernel/kgdb.c
- create mode 100644 arch/loongarch/kernel/lbt.S
- create mode 100644 arch/loongarch/lib/xor_simd.c
- create mode 100644 arch/loongarch/lib/xor_simd.h
- create mode 100644 arch/loongarch/lib/xor_simd_glue.c
- create mode 100644 arch/loongarch/lib/xor_template.c
- create mode 100644 arch/loongarch/mm/kasan_init.c
- create mode 100644 lib/raid6/loongarch.h
- create mode 100644 lib/raid6/loongarch_simd.c
- create mode 100644 lib/raid6/recov_loongarch_simd.c
+              Linus
