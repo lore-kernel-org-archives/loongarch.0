@@ -1,177 +1,228 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31AA3EA0
-	for <loongarch@lists.linux.dev>; Fri,  8 Sep 2023 01:29:18 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.9.158])
-	by gateway (Coremail) with SMTP id _____8AxV_HkePpkOdYhAA--.2418S3;
-	Fri, 08 Sep 2023 09:29:09 +0800 (CST)
-Received: from kvm-1-158.loongson.cn (unknown [10.2.9.158])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxfSPjePpkpqxxAA--.28198S2;
-	Fri, 08 Sep 2023 09:29:07 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Add tlb_flush_threshold for tlb flush range
-Date: Fri,  8 Sep 2023 09:29:07 +0800
-Message-Id: <20230908012907.2994001-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.27.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3165EEA0
+	for <loongarch@lists.linux.dev>; Fri,  8 Sep 2023 01:40:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97A3EC433CD
+	for <loongarch@lists.linux.dev>; Fri,  8 Sep 2023 01:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694137229;
+	bh=xxUJ4Zbe95SAzpB+WBTM98lJIPJcPTRSy6vNlAfrF3g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZJA+ENEOYiwenCrF8/5wdFQ2/maSyUWZxam3E0xSwi0MZWXQALrj0PKL9+/tJ+dm8
+	 jlu3OWaOtU0ttfoTEYeR8kUpbV7LZQCafBE+grN1UovqChc4AY8trrc0qQ20ylAKM8
+	 qDuj8o4V5EOiizMtg7uU05/hbdKSe099yT/pImdQL+BybGIFT9rL8mLMatBGkDu6YH
+	 yMs0o+jTJLs4SOz4epUKvGOBAaTifLnSGcdZLkoUSwJ5pa0zl33s5S5NhjdtUV2Ifb
+	 Y4cpPTFTonqSCfJlF/tM4Awjv9pRZ4yar+YYwvFXBX9GxnuubT885k4XioXqZ3WPda
+	 NULivPNdERnVA==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-501cef42bc9so2590853e87.0
+        for <loongarch@lists.linux.dev>; Thu, 07 Sep 2023 18:40:29 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxZ6+wttwZkopdnCPNMIf7flSwkrFgyZjReKZ4RVIG+y2mnFeZs
+	hUbldfDI+CQhOPjeWOtW8M/pcb+Gnj5fHR+JvoY=
+X-Google-Smtp-Source: AGHT+IE0y1K+boYk2dLLdJ4ZbSDeD28Jji7PpL3yDaKlNddJw3VAlmFfQJnyncZGxyekqD3nfmhlar9p/B082vXV2ZE=
+X-Received: by 2002:a05:6512:3988:b0:500:8ecb:509 with SMTP id
+ j8-20020a056512398800b005008ecb0509mr954931lfu.15.1694137227691; Thu, 07 Sep
+ 2023 18:40:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxfSPjePpkpqxxAA--.28198S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Gr4DXr45Kw43Wr1Utw1DJwc_yoW7XrW5pr
-	sa9w45trs5Gr93XrWftryFgrn8Jr1kK3Waga1aqFySvr43tr17urWkKa4rAFy5Xa93GrWf
-	ur9Iqr1aqFZ5J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZUUUUU=
+References: <20230831083020.2187109-1-zhaotianrui@loongson.cn>
+ <20230831083020.2187109-29-zhaotianrui@loongson.cn> <925522e9-9be6-2545-4c4e-1608eaab523a@xen0n.name>
+In-Reply-To: <925522e9-9be6-2545-4c4e-1608eaab523a@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 8 Sep 2023 09:40:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5WHOysfEutSg1oopx5s8SDnYd8zn8C+TY6mqVbFr22sQ@mail.gmail.com>
+Message-ID: <CAAhV-H5WHOysfEutSg1oopx5s8SDnYd8zn8C+TY6mqVbFr22sQ@mail.gmail.com>
+Subject: Re: [PATCH v20 28/30] LoongArch: KVM: Enable kvm config and add the makefile
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev, 
+	Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>, 
+	Alex Deucher <alexander.deucher@amd.com>, Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn, 
+	Xi Ruoyao <xry111@xry111.site>, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There is calculation in function flush_tlb_range to decide flush tlb
-entries one by one or flush the whole tlbs. Instead the calculation can be
-done during cpu probe stage rather than runtime flush period.
-
-This patch adds percpu variable tlb_flush_threshold during cpu probe
-stage, and removes unused percpu variabled like tlbsizemtlb,
-tlbsizestlbsets/tlbsizestlbways etc.
-
-Also this patch fixes function __update_hugetlb, it should be
-effective for CONFIG_TRANSPARENT_HUGEPAGE also.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/cpu-info.h |  4 +---
- arch/loongarch/kernel/cpu-probe.c     | 31 ++++++++++++++++-----------
- arch/loongarch/mm/tlb.c               | 11 +++-------
- 3 files changed, 23 insertions(+), 23 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/include/asm/cpu-info.h
-index 900589cb159d..523827216c1b 100644
---- a/arch/loongarch/include/asm/cpu-info.h
-+++ b/arch/loongarch/include/asm/cpu-info.h
-@@ -47,9 +47,7 @@ struct cpuinfo_loongarch {
- 	unsigned int		cputype;
- 	int			isa_level;
- 	int			tlbsize;
--	int			tlbsizemtlb;
--	int			tlbsizestlbsets;
--	int			tlbsizestlbways;
-+	int			tlb_flush_threshold;
- 	int			cache_leaves_present; /* number of cache_leaves[] elements */
- 	struct cache_desc	cache_leaves[CACHE_LEAVES_MAX];
- 	int			core;   /* physical core number in package */
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index e925579c7a71..ffa0a1b1ae29 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -88,7 +88,7 @@ static void set_isa(struct cpuinfo_loongarch *c, unsigned int isa)
- 
- static void cpu_probe_common(struct cpuinfo_loongarch *c)
- {
--	unsigned int config;
-+	unsigned int config, stlbsets, stlbways, mtlbs;
- 	unsigned long asid_mask;
- 
- 	c->options = LOONGARCH_CPU_CPUCFG | LOONGARCH_CPU_CSR |
-@@ -173,28 +173,35 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
- 	c->ksave_mask &= ~(EXC_KSAVE_MASK | PERCPU_KSAVE_MASK | KVM_KSAVE_MASK);
- 
- 	config = read_csr_prcfg3();
-+	stlbsets = 0;
-+	c->tlbsize = 0;
- 	switch (config & CSR_CONF3_TLBTYPE) {
- 	case 0:
--		c->tlbsizemtlb = 0;
--		c->tlbsizestlbsets = 0;
--		c->tlbsizestlbways = 0;
-+		mtlbs = 0;
-+		stlbsets = 0;
-+		stlbways = 0;
- 		c->tlbsize = 0;
- 		break;
- 	case 1:
--		c->tlbsizemtlb = ((config & CSR_CONF3_MTLBSIZE) >> CSR_CONF3_MTLBSIZE_SHIFT) + 1;
--		c->tlbsizestlbsets = 0;
--		c->tlbsizestlbways = 0;
--		c->tlbsize = c->tlbsizemtlb + c->tlbsizestlbsets * c->tlbsizestlbways;
-+		mtlbs = ((config & CSR_CONF3_MTLBSIZE) >> CSR_CONF3_MTLBSIZE_SHIFT) + 1;
-+		stlbsets = 0;
-+		stlbways = 0;
-+		c->tlbsize = mtlbs + stlbsets * stlbways;
- 		break;
- 	case 2:
--		c->tlbsizemtlb = ((config & CSR_CONF3_MTLBSIZE) >> CSR_CONF3_MTLBSIZE_SHIFT) + 1;
--		c->tlbsizestlbsets = 1 << ((config & CSR_CONF3_STLBIDX) >> CSR_CONF3_STLBIDX_SHIFT);
--		c->tlbsizestlbways = ((config & CSR_CONF3_STLBWAYS) >> CSR_CONF3_STLBWAYS_SHIFT) + 1;
--		c->tlbsize = c->tlbsizemtlb + c->tlbsizestlbsets * c->tlbsizestlbways;
-+		mtlbs = ((config & CSR_CONF3_MTLBSIZE) >> CSR_CONF3_MTLBSIZE_SHIFT) + 1;
-+		stlbsets = 1 << ((config & CSR_CONF3_STLBIDX) >> CSR_CONF3_STLBIDX_SHIFT);
-+		stlbways = ((config & CSR_CONF3_STLBWAYS) >> CSR_CONF3_STLBWAYS_SHIFT) + 1;
-+		c->tlbsize = mtlbs + stlbsets * stlbways;
- 		break;
- 	default:
- 		pr_warn("Warning: unknown TLB type\n");
- 	}
+On Fri, Sep 8, 2023 at 4:10=E2=80=AFAM WANG Xuerui <kernel@xen0n.name> wrot=
+e:
+>
+>
+> On 8/31/23 16:30, Tianrui Zhao wrote:
+> > Enable LoongArch kvm config and add the makefile to support build kvm
+> > module.
+> >
+> > Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Link: https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp@i=
+ntel.com/
+> > Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> > ---
+> >   arch/loongarch/Kbuild                      |  1 +
+> >   arch/loongarch/Kconfig                     |  3 ++
+> >   arch/loongarch/configs/loongson3_defconfig |  2 +
+> >   arch/loongarch/kvm/Kconfig                 | 45 +++++++++++++++++++++=
 +
-+	if (stlbsets)
-+		c->tlb_flush_threshold = c->tlbsize / 8;
-+	else
-+		c->tlb_flush_threshold = c->tlbsize / 2;
- }
- 
- #define MAX_NAME_LEN	32
-diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-index eb8572e201ea..d87627cb9e29 100644
---- a/arch/loongarch/mm/tlb.c
-+++ b/arch/loongarch/mm/tlb.c
-@@ -66,9 +66,7 @@ void local_flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
- 		start = round_down(start, PAGE_SIZE << 1);
- 		end = round_up(end, PAGE_SIZE << 1);
- 		size = (end - start) >> (PAGE_SHIFT + 1);
--		if (size <= (current_cpu_data.tlbsizestlbsets ?
--			     current_cpu_data.tlbsize / 8 :
--			     current_cpu_data.tlbsize / 2)) {
-+		if (size <= current_cpu_data.tlb_flush_threshold) {
- 			int asid = cpu_asid(cpu, mm);
- 
- 			while (start < end) {
-@@ -91,10 +89,7 @@ void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
- 	local_irq_save(flags);
- 	size = (end - start + (PAGE_SIZE - 1)) >> PAGE_SHIFT;
- 	size = (size + 1) >> 1;
--	if (size <= (current_cpu_data.tlbsizestlbsets ?
--		     current_cpu_data.tlbsize / 8 :
--		     current_cpu_data.tlbsize / 2)) {
--
-+	if (size <= current_cpu_data.tlb_flush_threshold) {
- 		start &= (PAGE_MASK << 1);
- 		end += ((PAGE_SIZE << 1) - 1);
- 		end &= (PAGE_MASK << 1);
-@@ -136,7 +131,7 @@ void local_flush_tlb_one(unsigned long page)
- 
- static void __update_hugetlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep)
- {
--#ifdef CONFIG_HUGETLB_PAGE
-+#if defined(CONFIG_HUGETLB_PAGE) || defined(CONFIG_TRANSPARENT_HUGEPAGE)
- 	int idx;
- 	unsigned long lo;
- 	unsigned long flags;
+> >   arch/loongarch/kvm/Makefile                | 22 +++++++++++
+> >   5 files changed, 73 insertions(+)
+> >   create mode 100644 arch/loongarch/kvm/Kconfig
+> >   create mode 100644 arch/loongarch/kvm/Makefile
+> >
+> > diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
+> > index b01f5cdb27..40be8a1696 100644
+> > --- a/arch/loongarch/Kbuild
+> > +++ b/arch/loongarch/Kbuild
+> > @@ -2,6 +2,7 @@ obj-y +=3D kernel/
+> >   obj-y +=3D mm/
+> >   obj-y +=3D net/
+> >   obj-y +=3D vdso/
+> > +obj-y +=3D kvm/
+> Do we want to keep the list alphabetically sorted here?
+kvm directory can be at last, but I'm afraid that it should be
 
-base-commit: 744a759492b5c57ff24a6e8aabe47b17ad8ee964
--- 
-2.27.0
+ifdef CONFIG_KVM
+obj-y +=3D kvm/
+endif
 
+If such a guard is unnecessary, then I agree to use alphabetical order.
+
+Huacai
+
+> >
+> >   # for cleaning
+> >   subdir- +=3D boot
+> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> > index ecf282dee5..7f2f7ccc76 100644
+> > --- a/arch/loongarch/Kconfig
+> > +++ b/arch/loongarch/Kconfig
+> > @@ -123,6 +123,7 @@ config LOONGARCH
+> >       select HAVE_KPROBES
+> >       select HAVE_KPROBES_ON_FTRACE
+> >       select HAVE_KRETPROBES
+> > +     select HAVE_KVM
+> >       select HAVE_MOD_ARCH_SPECIFIC
+> >       select HAVE_NMI
+> >       select HAVE_PCI
+> > @@ -650,3 +651,5 @@ source "kernel/power/Kconfig"
+> >   source "drivers/acpi/Kconfig"
+> >
+> >   endmenu
+> > +
+> > +source "arch/loongarch/kvm/Kconfig"
+> > diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarc=
+h/configs/loongson3_defconfig
+> > index d64849b4cb..7acb4ae7af 100644
+> > --- a/arch/loongarch/configs/loongson3_defconfig
+> > +++ b/arch/loongarch/configs/loongson3_defconfig
+> > @@ -63,6 +63,8 @@ CONFIG_EFI_ZBOOT=3Dy
+> >   CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=3Dy
+> >   CONFIG_EFI_CAPSULE_LOADER=3Dm
+> >   CONFIG_EFI_TEST=3Dm
+> > +CONFIG_VIRTUALIZATION=3Dy
+> > +CONFIG_KVM=3Dm
+> >   CONFIG_MODULES=3Dy
+> >   CONFIG_MODULE_FORCE_LOAD=3Dy
+> >   CONFIG_MODULE_UNLOAD=3Dy
+> > diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
+> > new file mode 100644
+> > index 0000000000..bf7d6e7cde
+> > --- /dev/null
+> > +++ b/arch/loongarch/kvm/Kconfig
+> > @@ -0,0 +1,45 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# KVM configuration
+> > +#
+> > +
+> > +source "virt/kvm/Kconfig"
+> > +
+> > +menuconfig VIRTUALIZATION
+> > +     bool "Virtualization"
+> > +     help
+> > +       Say Y here to get to see options for using your Linux host to r=
+un
+> > +       other operating systems inside virtual machines (guests).
+> > +       This option alone does not add any kernel code.
+> > +
+> > +       If you say N, all options in this submenu will be skipped and
+> > +       disabled.
+> > +
+> > +if VIRTUALIZATION
+> > +
+> > +config AS_HAS_LVZ_EXTENSION
+> > +     def_bool $(as-instr,hvcl 0)
+> > +
+> > +config KVM
+> > +     tristate "Kernel-based Virtual Machine (KVM) support"
+> > +     depends on HAVE_KVM
+> > +     depends on AS_HAS_LVZ_EXTENSION
+> > +     select MMU_NOTIFIER
+> > +     select ANON_INODES
+> > +     select PREEMPT_NOTIFIERS
+> > +     select KVM_MMIO
+> > +     select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+> > +     select KVM_GENERIC_HARDWARE_ENABLING
+> > +     select KVM_XFER_TO_GUEST_WORK
+> > +     select HAVE_KVM_DIRTY_RING_ACQ_REL
+> > +     select HAVE_KVM_VCPU_ASYNC_IOCTL
+> > +     select HAVE_KVM_EVENTFD
+> > +     select SRCU
+> Make the list of selects also alphabetically sorted?
+> > +     help
+> > +       Support hosting virtualized guest machines using hardware
+> > +       virtualization extensions. You will need a fairly processor
+> > +       equipped with virtualization extensions.
+>
+> The word "fairly" seems extraneous here, and can be simply dropped.
+>
+> (I suppose you forgot to delete it after tweaking the original sentence,
+> that came from arch/x86/kvm: "You will need a fairly recent processor
+> ..." -- all LoongArch processors are recent!)
+>
+> > +
+> > +       If unsure, say N.
+> > +
+> > +endif # VIRTUALIZATION
+> > diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+> > new file mode 100644
+> > index 0000000000..2335e873a6
+> > --- /dev/null
+> > +++ b/arch/loongarch/kvm/Makefile
+> > @@ -0,0 +1,22 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# Makefile for LOONGARCH KVM support
+> "LoongArch" -- you may want to check the entire patch series for such
+> ALL-CAPS references to LoongArch in natural language paragraphs, they
+> all want to be spelled "LoongArch".
+> > +#
+> > +
+> > +ccflags-y +=3D -I $(srctree)/$(src)
+> > +
+> > +include $(srctree)/virt/kvm/Makefile.kvm
+> > +
+> > +obj-$(CONFIG_KVM) +=3D kvm.o
+> > +
+> > +kvm-y +=3D main.o
+> > +kvm-y +=3D vm.o
+> > +kvm-y +=3D vmid.o
+> > +kvm-y +=3D tlb.o
+> > +kvm-y +=3D mmu.o
+> > +kvm-y +=3D vcpu.o
+> > +kvm-y +=3D exit.o
+> > +kvm-y +=3D interrupt.o
+> > +kvm-y +=3D timer.o
+> > +kvm-y +=3D switch.o
+> > +kvm-y +=3D csr_ops.o
+> I'd suggest sorting this list too to better avoid editing conflicts in
+> the future.
+>
+> --
+> WANG "xen0n" Xuerui
+>
+> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+>
+>
