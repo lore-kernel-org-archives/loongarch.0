@@ -1,118 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1E6186D;
-	Fri,  8 Sep 2023 22:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694213076; x=1725749076;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ig9COPkSQI7Qa5GeNMp1dKZXcUs5jkyJAYheDDXz4oA=;
-  b=CPRcNqpUmecQs+rkKaTOxefIAIH/u0MuyXQ6T5phhNQukdGH5qSo4KDl
-   lJ8QrIRvF1JEfhi54FjOS6wHyPh96iJM7g+yZ9PvCB2Z1DAmpXKjGflEW
-   7tj7dAknog+t6V+SXhQLTiPLN7Vo27jbP3RBQbQlRyc69tX5lBEbCbAJo
-   sN2F1AQeiGDHm7yElcGuef2J5W2J7t+KFTON1R1OCBbaYyATiZfyyfsss
-   XyFmsBnGGhU4UlDENX4ewdpPy6X9u6oh6ghN8XmEJ6+LeWT8fqwZ7n6ld
-   /1utVToirJt9p4dq9BxGUlWM8vSA2ZjkzYoG7NUWpmk4NiGoKaT27zTN2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="357228391"
-X-IronPort-AV: E=Sophos;i="6.02,238,1688454000"; 
-   d="scan'208";a="357228391"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2023 15:44:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="692417942"
-X-IronPort-AV: E=Sophos;i="6.02,238,1688454000"; 
-   d="scan'208";a="692417942"
-Received: from lkp-server01.sh.intel.com (HELO 59b3c6e06877) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 08 Sep 2023 15:44:34 -0700
-Received: from kbuild by 59b3c6e06877 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qekDH-0002gj-2H;
-	Fri, 08 Sep 2023 22:44:31 +0000
-Date: Sat, 9 Sep 2023 06:43:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Add tlb_flush_threshold for tlb flush range
-Message-ID: <202309090624.CrkoQ4fj-lkp@intel.com>
-References: <20230908012907.2994001-1-maobibo@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523451851
+	for <loongarch@lists.linux.dev>; Sat,  9 Sep 2023 08:05:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5F1AC433C8
+	for <loongarch@lists.linux.dev>; Sat,  9 Sep 2023 08:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694246755;
+	bh=FAl7QCcBEBmuLvmZgnqvXZHtyLfOeqGUElSXUm48ss8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mxiDnjRJL1emXGMPGtEXTuXekD/jV3lQGdCWyZEne8TW8wJQr0i4ixTGyOuDVeFiI
+	 p306iJPwMgX+b+cp3CaDPGpDt2IC6QphD9Kx5uHsocJUGmCMfv/Si5mYgAyl+w2Cw2
+	 EPRXQqUxqJcsAYM3wYsf/zbZhebqU3N+YuDieEbOoO5PC0FeEtLL8UwraVfLCQ4ht4
+	 X5fB630qfxkVF9JY5SihEw9FZpeVx8HnkHvVmoGcfcoGok9d/BOvvNsafoGRD8yttV
+	 ZxSzFwI19ry8hlXK3hPygQyDO28CgqJ7cr2Elioi4w/VUhDW28mlTE+H0xEjqwv+Es
+	 ERWasIBvKqlrg==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-9a21b6d105cso347269766b.3
+        for <loongarch@lists.linux.dev>; Sat, 09 Sep 2023 01:05:55 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxcpfNhhML0PhgXfZgexjkEucdGCcaEXU0hRtEYffja6G5QrbxP
+	89K1JuRulm9eiYh3kSdBYzodLDoWWpqPqT0ronc=
+X-Google-Smtp-Source: AGHT+IFNPGlpu+8xmETkoFkPcqKPS03ejfP5dOQKlJQWvnRcJa/E/kzIOA4TpPs+PsPQB8ZoR/NAa/0CTqnNt8gfYBg=
+X-Received: by 2002:a17:906:51c2:b0:9a1:beb2:1cb8 with SMTP id
+ v2-20020a17090651c200b009a1beb21cb8mr4250702ejk.39.1694246754043; Sat, 09 Sep
+ 2023 01:05:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230908012907.2994001-1-maobibo@loongson.cn>
+References: <20230908111053.1660033-1-chenhuacai@loongson.cn> <CAHk-=wh-uoZ_XsZ4fDodqjUY+rYJq=D3RVme3f=zBDB5neWhKQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wh-uoZ_XsZ4fDodqjUY+rYJq=D3RVme3f=zBDB5neWhKQ@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 9 Sep 2023 16:05:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H64=ZWBnzFmtS-FMB83nn21DSm20adrXdsrYkoka_oyjw@mail.gmail.com>
+Message-ID: <CAAhV-H64=ZWBnzFmtS-FMB83nn21DSm20adrXdsrYkoka_oyjw@mail.gmail.com>
+Subject: Re: [GIT PULL] LoongArch changes for v6.6
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bibo,
+Hi, Linus,
 
-kernel test robot noticed the following build errors:
+On Sat, Sep 9, 2023 at 3:48=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Fri, 8 Sept 2023 at 04:11, Huacai Chen <chenhuacai@loongson.cn> wrote:
+> >
+> > 7, Add KASAN (Kernel Address Sanitizer) support
+>
+> I have pulled this, but please at least consider
+>
+>  (a) don't use the stupid and random __HAVE_ARCH_xyz defines
+>
+> Yes, yes, we have historical uses of it. That doesn't make it good.
+> Instead of making up new random symbol names, just *USE* the names you
+> are defining per architecture.
+>
+> IOW, instead of doing
+>
+>   #define __HAVE_ARCH_SHADOW_MAP
+>
+> and defining your own helper replacement functions for
+> kasan_mem_to_shadow() etc, just use those names as-is.
+>
+> So if you have an architecture that has its own version of
+> "kasan_mem_to_shadow()", then use *THAT* name for the #ifdef too.
+> Don't make up another name entirely of the form "__HAVE_ARCH_xyz".
+>
+> Example: architectures can override the default generic versions of
+> "arch_atomic_xyz()" operations, and the way you do that is (for
+> example)
+>
+>   static __always_inline int arch_atomic_add_return(int i, atomic_t *v)
+>   {
+>         return i + xadd(&v->counter, i);
+>   }
+>   #define arch_atomic_add_return arch_atomic_add_return
+>
+> note how the define to let you know the name exists is the name itself
+> (and because the implementation is an inline function, not the macro,
+> the marker is then just a "define the name to itself").
+>
+> End result: no made-up secondary names for other things. When you grep
+> for the thing that is used, you find both the implementation and the
+> marker for "look, I am overriding it".
+>
+> And also
+>
+>  (b) do you really want to inline those kasan_mem_to_shadow() and
+> kasan_shadow_to_mem() things?
+>
+> Yes, the caller is addr_has_metadata(), and that one is
+> "__always_inline",. because otherwise objtool would complain about
+> doing function calls in SMAP-enabled regions.
+>
+> HOWEVER:
+>
+>  - on LoongArch, I don't think you have that objtool / SMAP issue
+>
+>  - and if  you did, the function should be __always_inline, not just
+> plain inline anyway
+>
+> so I get the feeling that the inline is simply wrong either way. Maybe
+> that function should just be declared, with the implementation being
+> out-of-line? It seems unnecessarily big to be an inline function, and
+> it doesn't seem performance-critical?
+>
+> Neither of the above issues are critical, and the second one in
+> particular really is just a "did you really mean to do that" kind of
+> reaction, but since I was looking at this, I decided to write up my
+> reactions.
+Thank you for your suggestions, I will make cleanup patches for the
+two issues before v6.6 is released.
 
-[auto build test ERROR on 744a759492b5c57ff24a6e8aabe47b17ad8ee964]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-Add-tlb_flush_threshold-for-tlb-flush-range/20230908-093017
-base:   744a759492b5c57ff24a6e8aabe47b17ad8ee964
-patch link:    https://lore.kernel.org/r/20230908012907.2994001-1-maobibo%40loongson.cn
-patch subject: [PATCH] LoongArch: Add tlb_flush_threshold for tlb flush range
-config: loongarch-randconfig-r021-20230909 (https://download.01.org/0day-ci/archive/20230909/202309090624.CrkoQ4fj-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230909/202309090624.CrkoQ4fj-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309090624.CrkoQ4fj-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/loongarch/mm/tlb.c: In function '__update_hugetlb':
->> arch/loongarch/mm/tlb.c:146:14: error: implicit declaration of function 'pmd_to_entrylo' [-Werror=implicit-function-declaration]
-     146 |         lo = pmd_to_entrylo(pte_val(*ptep));
-         |              ^~~~~~~~~~~~~~
-   arch/loongarch/mm/tlb.c: At top level:
-   arch/loongarch/mm/tlb.c:259:6: warning: no previous prototype for 'setup_tlb_handler' [-Wmissing-prototypes]
-     259 | void setup_tlb_handler(int cpu)
-         |      ^~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/pmd_to_entrylo +146 arch/loongarch/mm/tlb.c
-
-09cfefb7fa70c3 Huacai Chen 2022-05-31  131  
-09cfefb7fa70c3 Huacai Chen 2022-05-31  132  static void __update_hugetlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep)
-09cfefb7fa70c3 Huacai Chen 2022-05-31  133  {
-29d05a2438754e Bibo Mao    2023-09-08  134  #if defined(CONFIG_HUGETLB_PAGE) || defined(CONFIG_TRANSPARENT_HUGEPAGE)
-09cfefb7fa70c3 Huacai Chen 2022-05-31  135  	int idx;
-09cfefb7fa70c3 Huacai Chen 2022-05-31  136  	unsigned long lo;
-09cfefb7fa70c3 Huacai Chen 2022-05-31  137  	unsigned long flags;
-09cfefb7fa70c3 Huacai Chen 2022-05-31  138  
-09cfefb7fa70c3 Huacai Chen 2022-05-31  139  	local_irq_save(flags);
-09cfefb7fa70c3 Huacai Chen 2022-05-31  140  
-09cfefb7fa70c3 Huacai Chen 2022-05-31  141  	address &= (PAGE_MASK << 1);
-09cfefb7fa70c3 Huacai Chen 2022-05-31  142  	write_csr_entryhi(address);
-09cfefb7fa70c3 Huacai Chen 2022-05-31  143  	tlb_probe();
-09cfefb7fa70c3 Huacai Chen 2022-05-31  144  	idx = read_csr_tlbidx();
-09cfefb7fa70c3 Huacai Chen 2022-05-31  145  	write_csr_pagesize(PS_HUGE_SIZE);
-09cfefb7fa70c3 Huacai Chen 2022-05-31 @146  	lo = pmd_to_entrylo(pte_val(*ptep));
-09cfefb7fa70c3 Huacai Chen 2022-05-31  147  	write_csr_entrylo0(lo);
-09cfefb7fa70c3 Huacai Chen 2022-05-31  148  	write_csr_entrylo1(lo + (HPAGE_SIZE >> 1));
-09cfefb7fa70c3 Huacai Chen 2022-05-31  149  
-09cfefb7fa70c3 Huacai Chen 2022-05-31  150  	if (idx < 0)
-09cfefb7fa70c3 Huacai Chen 2022-05-31  151  		tlb_write_random();
-09cfefb7fa70c3 Huacai Chen 2022-05-31  152  	else
-09cfefb7fa70c3 Huacai Chen 2022-05-31  153  		tlb_write_indexed();
-09cfefb7fa70c3 Huacai Chen 2022-05-31  154  	write_csr_pagesize(PS_DEFAULT_SIZE);
-09cfefb7fa70c3 Huacai Chen 2022-05-31  155  
-09cfefb7fa70c3 Huacai Chen 2022-05-31  156  	local_irq_restore(flags);
-09cfefb7fa70c3 Huacai Chen 2022-05-31  157  #endif
-09cfefb7fa70c3 Huacai Chen 2022-05-31  158  }
-09cfefb7fa70c3 Huacai Chen 2022-05-31  159  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Huacai
+>
+>               Linus
+>
