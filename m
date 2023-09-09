@@ -1,124 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523451851
-	for <loongarch@lists.linux.dev>; Sat,  9 Sep 2023 08:05:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5F1AC433C8
-	for <loongarch@lists.linux.dev>; Sat,  9 Sep 2023 08:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694246755;
-	bh=FAl7QCcBEBmuLvmZgnqvXZHtyLfOeqGUElSXUm48ss8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mxiDnjRJL1emXGMPGtEXTuXekD/jV3lQGdCWyZEne8TW8wJQr0i4ixTGyOuDVeFiI
-	 p306iJPwMgX+b+cp3CaDPGpDt2IC6QphD9Kx5uHsocJUGmCMfv/Si5mYgAyl+w2Cw2
-	 EPRXQqUxqJcsAYM3wYsf/zbZhebqU3N+YuDieEbOoO5PC0FeEtLL8UwraVfLCQ4ht4
-	 X5fB630qfxkVF9JY5SihEw9FZpeVx8HnkHvVmoGcfcoGok9d/BOvvNsafoGRD8yttV
-	 ZxSzFwI19ry8hlXK3hPygQyDO28CgqJ7cr2Elioi4w/VUhDW28mlTE+H0xEjqwv+Es
-	 ERWasIBvKqlrg==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-9a21b6d105cso347269766b.3
-        for <loongarch@lists.linux.dev>; Sat, 09 Sep 2023 01:05:55 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxcpfNhhML0PhgXfZgexjkEucdGCcaEXU0hRtEYffja6G5QrbxP
-	89K1JuRulm9eiYh3kSdBYzodLDoWWpqPqT0ronc=
-X-Google-Smtp-Source: AGHT+IFNPGlpu+8xmETkoFkPcqKPS03ejfP5dOQKlJQWvnRcJa/E/kzIOA4TpPs+PsPQB8ZoR/NAa/0CTqnNt8gfYBg=
-X-Received: by 2002:a17:906:51c2:b0:9a1:beb2:1cb8 with SMTP id
- v2-20020a17090651c200b009a1beb21cb8mr4250702ejk.39.1694246754043; Sat, 09 Sep
- 2023 01:05:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC121FC2
+	for <loongarch@lists.linux.dev>; Sat,  9 Sep 2023 11:55:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C83BFC433C8;
+	Sat,  9 Sep 2023 11:54:59 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>
+Cc: loongarch@lists.linux.dev,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 1/2] kasan: Cleanup the __HAVE_ARCH_SHADOW_MAP usage
+Date: Sat,  9 Sep 2023 19:54:48 +0800
+Message-Id: <20230909115450.1903218-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230908111053.1660033-1-chenhuacai@loongson.cn> <CAHk-=wh-uoZ_XsZ4fDodqjUY+rYJq=D3RVme3f=zBDB5neWhKQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wh-uoZ_XsZ4fDodqjUY+rYJq=D3RVme3f=zBDB5neWhKQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 9 Sep 2023 16:05:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H64=ZWBnzFmtS-FMB83nn21DSm20adrXdsrYkoka_oyjw@mail.gmail.com>
-Message-ID: <CAAhV-H64=ZWBnzFmtS-FMB83nn21DSm20adrXdsrYkoka_oyjw@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch changes for v6.6
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Linus,
+As Linus suggested, __HAVE_ARCH_XYZ is stupid and only for historical
+uses. So cleanup the __HAVE_ARCH_SHADOW_MAP usage and use self-defined
+macros instead.
 
-On Sat, Sep 9, 2023 at 3:48=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, 8 Sept 2023 at 04:11, Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >
-> > 7, Add KASAN (Kernel Address Sanitizer) support
->
-> I have pulled this, but please at least consider
->
->  (a) don't use the stupid and random __HAVE_ARCH_xyz defines
->
-> Yes, yes, we have historical uses of it. That doesn't make it good.
-> Instead of making up new random symbol names, just *USE* the names you
-> are defining per architecture.
->
-> IOW, instead of doing
->
->   #define __HAVE_ARCH_SHADOW_MAP
->
-> and defining your own helper replacement functions for
-> kasan_mem_to_shadow() etc, just use those names as-is.
->
-> So if you have an architecture that has its own version of
-> "kasan_mem_to_shadow()", then use *THAT* name for the #ifdef too.
-> Don't make up another name entirely of the form "__HAVE_ARCH_xyz".
->
-> Example: architectures can override the default generic versions of
-> "arch_atomic_xyz()" operations, and the way you do that is (for
-> example)
->
->   static __always_inline int arch_atomic_add_return(int i, atomic_t *v)
->   {
->         return i + xadd(&v->counter, i);
->   }
->   #define arch_atomic_add_return arch_atomic_add_return
->
-> note how the define to let you know the name exists is the name itself
-> (and because the implementation is an inline function, not the macro,
-> the marker is then just a "define the name to itself").
->
-> End result: no made-up secondary names for other things. When you grep
-> for the thing that is used, you find both the implementation and the
-> marker for "look, I am overriding it".
->
-> And also
->
->  (b) do you really want to inline those kasan_mem_to_shadow() and
-> kasan_shadow_to_mem() things?
->
-> Yes, the caller is addr_has_metadata(), and that one is
-> "__always_inline",. because otherwise objtool would complain about
-> doing function calls in SMAP-enabled regions.
->
-> HOWEVER:
->
->  - on LoongArch, I don't think you have that objtool / SMAP issue
->
->  - and if  you did, the function should be __always_inline, not just
-> plain inline anyway
->
-> so I get the feeling that the inline is simply wrong either way. Maybe
-> that function should just be declared, with the implementation being
-> out-of-line? It seems unnecessarily big to be an inline function, and
-> it doesn't seem performance-critical?
->
-> Neither of the above issues are critical, and the second one in
-> particular really is just a "did you really mean to do that" kind of
-> reaction, but since I was looking at this, I decided to write up my
-> reactions.
-Thank you for your suggestions, I will make cleanup patches for the
-two issues before v6.6 is released.
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/kasan.h | 10 ++++++++--
+ include/linux/kasan.h              |  2 +-
+ mm/kasan/kasan.h                   |  8 +++-----
+ 3 files changed, 12 insertions(+), 8 deletions(-)
 
-Huacai
->
->               Linus
->
+diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/include/asm/kasan.h
+index deeff8158f45..a12ecab37da7 100644
+--- a/arch/loongarch/include/asm/kasan.h
++++ b/arch/loongarch/include/asm/kasan.h
+@@ -10,8 +10,6 @@
+ #include <asm/io.h>
+ #include <asm/pgtable.h>
+ 
+-#define __HAVE_ARCH_SHADOW_MAP
+-
+ #define KASAN_SHADOW_SCALE_SHIFT 3
+ #define KASAN_SHADOW_OFFSET	_AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
+ 
+@@ -68,6 +66,7 @@ static __always_inline bool kasan_arch_is_ready(void)
+ 	return !kasan_early_stage;
+ }
+ 
++#define kasan_mem_to_shadow kasan_mem_to_shadow
+ static inline void *kasan_mem_to_shadow(const void *addr)
+ {
+ 	if (!kasan_arch_is_ready()) {
+@@ -97,6 +96,7 @@ static inline void *kasan_mem_to_shadow(const void *addr)
+ 	}
+ }
+ 
++#define kasan_shadow_to_mem kasan_shadow_to_mem
+ static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
+ {
+ 	unsigned long addr = (unsigned long)shadow_addr;
+@@ -119,6 +119,12 @@ static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
+ 	}
+ }
+ 
++#define addr_has_metadata addr_has_metadata
++static __always_inline bool addr_has_metadata(const void *addr)
++{
++	return (kasan_mem_to_shadow((void *)addr) != NULL);
++}
++
+ void kasan_init(void);
+ asmlinkage void kasan_early_init(void);
+ 
+diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+index 3df5499f7936..842623d708c2 100644
+--- a/include/linux/kasan.h
++++ b/include/linux/kasan.h
+@@ -54,7 +54,7 @@ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
+ int kasan_populate_early_shadow(const void *shadow_start,
+ 				const void *shadow_end);
+ 
+-#ifndef __HAVE_ARCH_SHADOW_MAP
++#ifndef kasan_mem_to_shadow
+ static inline void *kasan_mem_to_shadow(const void *addr)
+ {
+ 	return (void *)((unsigned long)addr >> KASAN_SHADOW_SCALE_SHIFT)
+diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+index f70e3d7a602e..d37831b8511c 100644
+--- a/mm/kasan/kasan.h
++++ b/mm/kasan/kasan.h
+@@ -291,7 +291,7 @@ struct kasan_stack_ring {
+ 
+ #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+ 
+-#ifndef __HAVE_ARCH_SHADOW_MAP
++#ifndef kasan_shadow_to_mem
+ static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
+ {
+ 	return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET)
+@@ -299,15 +299,13 @@ static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
+ }
+ #endif
+ 
++#ifndef addr_has_metadata
+ static __always_inline bool addr_has_metadata(const void *addr)
+ {
+-#ifdef __HAVE_ARCH_SHADOW_MAP
+-	return (kasan_mem_to_shadow((void *)addr) != NULL);
+-#else
+ 	return (kasan_reset_tag(addr) >=
+ 		kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
+-#endif
+ }
++#endif
+ 
+ /**
+  * kasan_check_range - Check memory region, and report if invalid access.
+-- 
+2.39.3
+
