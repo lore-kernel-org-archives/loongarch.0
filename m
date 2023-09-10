@@ -1,170 +1,125 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF41C6FD5
-	for <loongarch@lists.linux.dev>; Sat,  9 Sep 2023 17:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1694279124; bh=n6XYvU0I6OlN6ZT+DVICFQ8YyaakTDFD13vykeRCZwQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ku0aRmJtm1PhKG+qBpkqcNXBUZtH9b6n/P95iS8G9gVzWBeegPildMRKwsigJtA0L
-	 iFSxJUUSvham7+EKS9diq+EMEaWDx9DpaJbjvRK40bclmsaEeDpEldllER0VF6RBDi
-	 RIeG7EtLkROU2KYkvFAc5ue/iTrG+IQcNuzrC/MY=
-Received: from [192.168.9.172] (unknown [101.88.25.36])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E2B8560117;
-	Sun, 10 Sep 2023 01:05:23 +0800 (CST)
-Message-ID: <fc0f52e0-99a7-bde7-6674-9c1c579c6bc7@xen0n.name>
-Date: Sun, 10 Sep 2023 01:05:21 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC906ABC
+	for <loongarch@lists.linux.dev>; Sun, 10 Sep 2023 15:51:36 +0000 (UTC)
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5657add1073so2354526a12.0
+        for <loongarch@lists.linux.dev>; Sun, 10 Sep 2023 08:51:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694361096; x=1694965896; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Khig5fiAk2UrEWc554zDncIUcso6vVaeyXzrWK+GM7s=;
+        b=lOFNvAwmMkTKu9ljtE1o+V0eKG3Xr6TGsETGsfykZ0wrelQ0LlxgJDyyHKokMZwFED
+         aSld4FqDwtaSIJ40Q6aOfr0fpGgd4uUfOn94UW4U1If7kNUZWgCjoRkNvBR2IJVfPQPN
+         P/ZTJu4MPAfE5cx9J8IkdlrNUJWncVkZw0I3aoA0LSgCMKu60iofSuL9VSU+0LVHrV9E
+         NUYLsHlDDdLwX3qOxSQ99GBFIvJjx/Xh/ftr2o/SEaabj0EFIQkBMFlOHRhacM4FNYuD
+         3f3qDNyXk6QjZ6BRxjBuscDgUiK22Sfp0g3zBAzl5nXx71fy0uu9yy/oftF4SPtQrc7T
+         q+FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694361096; x=1694965896;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Khig5fiAk2UrEWc554zDncIUcso6vVaeyXzrWK+GM7s=;
+        b=FXqRWB16A5ktWCGt5PTWiMoQ3kANytkSqok/FQcESSJTCheo1R3cnjq1afBEqZzrtv
+         DMN29ayXM9Iu8RZEmEIZU5DBq/HP6BEiuAR5MOQMy58Bn9LU2fFR0X6LMVi3tr/KEAin
+         a40HlLZSGIr0Y6Wft2c78PePTo4x0DqOa5dZuQOgNwJNZBZaLMrHdSYqztQZXT1xzOD2
+         9Mj/17MD+MECgTvvuav6O8IzMI5/pVXVaDPdwH2m0I0jUuBj5yYe903KCJ98xPFyhVFM
+         oulOfQXSO7/RcN+YP8LyJ07g5yvMFr9jkXpaGaoLQFDFGqYtDNOoewQMy6nom6/BUL8q
+         ACjg==
+X-Gm-Message-State: AOJu0Yw17tVJuVxS5q0eEy7dr3g87xsuccPAgBqfYjVbYPOU7zQqLB62
+	HXUoIRXWpbdn6aRF/rbc6Wc=
+X-Google-Smtp-Source: AGHT+IGfgHpKwKZHNeO/0ZoB0iKWvIQcqllCgij4Q4Gf00JZ46jSA8iYSr3FBV1wufNNVSl/tZSASA==
+X-Received: by 2002:a17:90b:33c2:b0:267:f8f4:73ab with SMTP id lk2-20020a17090b33c200b00267f8f473abmr14111217pjb.16.1694361095692;
+        Sun, 10 Sep 2023 08:51:35 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w30-20020a17090a6ba100b0026b3a86b0d5sm4557834pjj.33.2023.09.10.08.51.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Sep 2023 08:51:34 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sun, 10 Sep 2023 08:51:33 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Feiyang Chen <chenfeiyang@loongson.cn>
+Cc: chenhuacai@kernel.org, dvyukov@google.com, andreyknvl@gmail.com,
+	loongarch@lists.linux.dev, kasan-dev@googlegroups.com,
+	chris.chenfeiyang@gmail.com, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH 2/2] LoongArch: Allow building with kcov coverage
+Message-ID: <66522279-c933-4952-9a5a-64301074a74a@roeck-us.net>
+References: <cover.1688369658.git.chenfeiyang@loongson.cn>
+ <8d10b1220434432dbc089fab8df4e1cca048cd0c.1688369658.git.chenfeiyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH 1/2] kasan: Cleanup the __HAVE_ARCH_SHADOW_MAP usage
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrey Konovalov <andreyknvl@gmail.com>,
- Alexander Potapenko <glider@google.com>
-Cc: loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20230909115450.1903218-1-chenhuacai@loongson.cn>
-Content-Language: en-US
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230909115450.1903218-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d10b1220434432dbc089fab8df4e1cca048cd0c.1688369658.git.chenfeiyang@loongson.cn>
 
 Hi,
 
-On 9/9/23 19:54, Huacai Chen wrote:
-> As Linus suggested, __HAVE_ARCH_XYZ is stupid and only for historical
-> uses. So cleanup the __HAVE_ARCH_SHADOW_MAP usage and use self-defined
+On Tue, Jul 04, 2023 at 08:53:32PM +0800, Feiyang Chen wrote:
+> Add ARCH_HAS_KCOV to the LoongArch Kconfig. Also disable
+> instrumentation of vdso.
+> 
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 
-For the first sentence, I suggest adding quotation marks to make the 
-opinion expression clearer. And paraphrasing a bit:
+When trying to build loongarch:allmodconfig, this patch results in
 
- > As Linus suggested, __HAVE_ARCH_XYZ is "stupid" and "having 
-historical uses of it doesn't make it good".
+Error log:
+In file included from /opt/kernel/gcc-12.2.0-2.39-nolibc/loongarch64-linux-gnu/bin/../lib/gcc/loongarch64-linux-gnu/12.2.0/plugin/include/options.h:8,
+                 from /opt/kernel/gcc-12.2.0-2.39-nolibc/loongarch64-linux-gnu/bin/../lib/gcc/loongarch64-linux-gnu/12.2.0/plugin/include/tm.h:46,
+                 from /opt/kernel/gcc-12.2.0-2.39-nolibc/loongarch64-linux-gnu/bin/../lib/gcc/loongarch64-linux-gnu/12.2.0/plugin/include/backend.h:28,
+                 from /opt/kernel/gcc-12.2.0-2.39-nolibc/loongarch64-linux-gnu/bin/../lib/gcc/loongarch64-linux-gnu/12.2.0/plugin/include/gcc-plugin.h:30,
+                 from scripts/gcc-plugins/gcc-common.h:7,
+                 from scripts/gcc-plugins/latent_entropy_plugin.c:78:
+/opt/kernel/gcc-12.2.0-2.39-nolibc/loongarch64-linux-gnu/bin/../lib/gcc/loongarch64-linux-gnu/12.2.0/plugin/include/config/loongarch/loongarch-opts.h:31:10: fatal error: loongarch-def.h: No such file or directory
+   31 | #include "loongarch-def.h"
 
-What do you think?
+for me. I tried with gcc 12.2 / binutils 2.39 and gcc 13.1 / binutils 2.40.
 
-> macros instead.
-"self-defined macro" doesn't really make sense, at least to me. I'd 
-suggest something like "migrate __HAVE_ARCH_SHADOW_MAP to separate 
-macros named after the respective functions", what about this one?
->
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Reverting the patch or explicitly disabling CONFIG_GCC_PLUGINS fixes
+the problem.
+
+What compiler / binutils version combination is needed for this to work,
+or, alternatively, how would I have to configure the compiler ?
+
+Thanks,
+Guenter
+
 > ---
->   arch/loongarch/include/asm/kasan.h | 10 ++++++++--
->   include/linux/kasan.h              |  2 +-
->   mm/kasan/kasan.h                   |  8 +++-----
->   3 files changed, 12 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/include/asm/kasan.h
-> index deeff8158f45..a12ecab37da7 100644
-> --- a/arch/loongarch/include/asm/kasan.h
-> +++ b/arch/loongarch/include/asm/kasan.h
-> @@ -10,8 +10,6 @@
->   #include <asm/io.h>
->   #include <asm/pgtable.h>
->   
-> -#define __HAVE_ARCH_SHADOW_MAP
-> -
->   #define KASAN_SHADOW_SCALE_SHIFT 3
->   #define KASAN_SHADOW_OFFSET	_AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
->   
-> @@ -68,6 +66,7 @@ static __always_inline bool kasan_arch_is_ready(void)
->   	return !kasan_early_stage;
->   }
->   
-> +#define kasan_mem_to_shadow kasan_mem_to_shadow
->   static inline void *kasan_mem_to_shadow(const void *addr)
->   {
->   	if (!kasan_arch_is_ready()) {
-> @@ -97,6 +96,7 @@ static inline void *kasan_mem_to_shadow(const void *addr)
->   	}
->   }
->   
-> +#define kasan_shadow_to_mem kasan_shadow_to_mem
->   static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
->   {
->   	unsigned long addr = (unsigned long)shadow_addr;
-> @@ -119,6 +119,12 @@ static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
->   	}
->   }
->   
-> +#define addr_has_metadata addr_has_metadata
-> +static __always_inline bool addr_has_metadata(const void *addr)
-> +{
-> +	return (kasan_mem_to_shadow((void *)addr) != NULL);
-Drop the outermost pair of parens that's not necessary? It's only a 
-simple comparison after all (although the left hand side is a bit "heavy").
-> +}
+>  arch/loongarch/Kconfig       | 1 +
+>  arch/loongarch/vdso/Makefile | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index ed9a148cdcde..4c21a961ab88 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -14,6 +14,7 @@ config LOONGARCH
+>  	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+>  	select ARCH_HAS_CPU_FINALIZE_INIT
+>  	select ARCH_HAS_FORTIFY_SOURCE
+> +	select ARCH_HAS_KCOV
+>  	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+>  	select ARCH_HAS_PTE_SPECIAL
+>  	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index 7bb794604af3..7dc87377688b 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -5,6 +5,8 @@ ifdef CONFIG_KASAN
+>  KASAN_SANITIZE := n
+>  endif
+>  
+> +KCOV_INSTRUMENT := n
 > +
->   void kasan_init(void);
->   asmlinkage void kasan_early_init(void);
->   
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index 3df5499f7936..842623d708c2 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -54,7 +54,7 @@ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
->   int kasan_populate_early_shadow(const void *shadow_start,
->   				const void *shadow_end);
->   
-> -#ifndef __HAVE_ARCH_SHADOW_MAP
-> +#ifndef kasan_mem_to_shadow
->   static inline void *kasan_mem_to_shadow(const void *addr)
->   {
->   	return (void *)((unsigned long)addr >> KASAN_SHADOW_SCALE_SHIFT)
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index f70e3d7a602e..d37831b8511c 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -291,7 +291,7 @@ struct kasan_stack_ring {
->   
->   #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
->   
-> -#ifndef __HAVE_ARCH_SHADOW_MAP
-> +#ifndef kasan_shadow_to_mem
->   static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
->   {
->   	return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET)
-> @@ -299,15 +299,13 @@ static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
->   }
->   #endif
->   
-> +#ifndef addr_has_metadata
->   static __always_inline bool addr_has_metadata(const void *addr)
->   {
-> -#ifdef __HAVE_ARCH_SHADOW_MAP
-> -	return (kasan_mem_to_shadow((void *)addr) != NULL);
-> -#else
->   	return (kasan_reset_tag(addr) >=
->   		kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
-> -#endif
->   }
-> +#endif
->   
->   /**
->    * kasan_check_range - Check memory region, and report if invalid access.
-
-The other parts look mechanical and okay to me. With the minor nits 
-addressed (or justified):
-
-Reviewed-by: WANG Xuerui <git@xen0n.name>
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+>  # Include the generic Makefile to check the built vdso.
+>  include $(srctree)/lib/vdso/Makefile
+>  
+> -- 
+> 2.39.3
+> 
