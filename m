@@ -1,380 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F160FAD3D
-	for <loongarch@lists.linux.dev>; Mon, 11 Sep 2023 09:04:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BCD9C433CD
-	for <loongarch@lists.linux.dev>; Mon, 11 Sep 2023 09:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694423049;
-	bh=jIlDzAd6Y2zBAGfpR03z1y19Cd9znjvuc3WHMy7zY14=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eMGkZVirD9iGvSzLNzAXs8MCuYuSmx0zLTBWTX+BpxgGThWCiU9jGZaj5Cq9KH7ay
-	 J3Aq9z3Fsqx1ZiNftAysBYWPXnX1abnde99poAbtsKiWCoq/qnxTDwEEWwclnrcKUn
-	 3IeQeHZ3uMWSUfQszJEOA86GgL/2WkICTqXbik+HXKtUrB32G19Yj5g4+mLy95S2fA
-	 M8nLAW+x0Ga2r12/cWrmMnTtSALVuSS4RPydNDc5GqfOH84r+51quNKODqllzfRDic
-	 ryMH/iZ/UsPTPcOcUr9vUQEUev3r8wrJFA3zqDCdiLM+W+/0Jo3rUpn3+HM32PylJj
-	 sRB8d48fCznjA==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-99de884ad25so547697166b.3
-        for <loongarch@lists.linux.dev>; Mon, 11 Sep 2023 02:04:09 -0700 (PDT)
-X-Gm-Message-State: AOJu0YweCeNUDA+01AsFfYfPmjTzYBQcBneCV2j0G9/KY4tAMMS8sPOR
-	TlM8/FDi0XyCdYAZFYQ+xlp5S0ex1fuHP6e+EX0=
-X-Google-Smtp-Source: AGHT+IG6dIYXo1HaOT8AKRYe8T8M6JXkVELonmamgzNT9xOIY7/Ij+WADwdmCJ8XXlgiqH+XyoXu6KdqoM/9Q6M7JJ0=
-X-Received: by 2002:a17:906:73c8:b0:9a5:cab0:b061 with SMTP id
- n8-20020a17090673c800b009a5cab0b061mr8174722ejl.51.1694423047815; Mon, 11 Sep
- 2023 02:04:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC220259B
+	for <loongarch@lists.linux.dev>; Mon, 11 Sep 2023 09:28:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A7CC433C7;
+	Mon, 11 Sep 2023 09:28:27 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH] LoongArch: Set all reserved memblocks on Node#0 at initialization
+Date: Mon, 11 Sep 2023 17:28:10 +0800
+Message-Id: <20230911092810.3108092-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230831083020.2187109-1-zhaotianrui@loongson.cn> <20230831083020.2187109-10-zhaotianrui@loongson.cn>
-In-Reply-To: <20230831083020.2187109-10-zhaotianrui@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 11 Sep 2023 17:03:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6=e-Tg1tCdFhN5i2CSQpL-NDLovJdc9A=Sxt=3h-3Z0g@mail.gmail.com>
-Message-ID: <CAAhV-H6=e-Tg1tCdFhN5i2CSQpL-NDLovJdc9A=Sxt=3h-3Z0g@mail.gmail.com>
-Subject: Re: [PATCH v20 09/30] LoongArch: KVM: Implement vcpu get, vcpu set registers
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev, 
-	Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>, 
-	Alex Deucher <alexander.deucher@amd.com>, Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn, 
-	Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Tianrui,
+After commit 61167ad5fecdea ("mm: pass nid to reserve_bootmem_region()")
+we get a panic if DEFERRED_STRUCT_PAGE_INIT is enabled:
 
-On Thu, Aug 31, 2023 at 4:30=E2=80=AFPM Tianrui Zhao <zhaotianrui@loongson.=
-cn> wrote:
->
-> Implement LoongArch vcpu get registers and set registers operations, it
-> is called when user space use the ioctl interface to get or set regs.
->
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> ---
->  arch/loongarch/kvm/csr_ops.S |  67 ++++++++++++
->  arch/loongarch/kvm/vcpu.c    | 206 +++++++++++++++++++++++++++++++++++
->  2 files changed, 273 insertions(+)
->  create mode 100644 arch/loongarch/kvm/csr_ops.S
->
-> diff --git a/arch/loongarch/kvm/csr_ops.S b/arch/loongarch/kvm/csr_ops.S
-> new file mode 100644
-> index 0000000000..53e44b23a5
-> --- /dev/null
-> +++ b/arch/loongarch/kvm/csr_ops.S
-> @@ -0,0 +1,67 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <asm/regdef.h>
-> +#include <linux/linkage.h>
-> +       .text
-> +       .cfi_sections   .debug_frame
-> +/*
-> + * we have splited hw gcsr into three parts, so we can
-> + * calculate the code offset by gcsrid and jump here to
-> + * run the gcsrwr instruction.
-> + */
-> +SYM_FUNC_START(set_hw_gcsr)
-> +       addi.d      t0,   a0,   0
-> +       addi.w      t1,   zero, 96
-> +       bltu        t1,   t0,   1f
-> +       la.pcrel    t0,   10f
-> +       alsl.d      t0,   a0,   t0, 3
-> +       jr          t0
-> +1:
-> +       addi.w      t1,   a0,   -128
-> +       addi.w      t2,   zero, 15
-> +       bltu        t2,   t1,   2f
-> +       la.pcrel    t0,   11f
-> +       alsl.d      t0,   t1,   t0, 3
-> +       jr          t0
-> +2:
-> +       addi.w      t1,   a0,   -384
-> +       addi.w      t2,   zero, 3
-> +       bltu        t2,   t1,   3f
-> +       la.pcrel    t0,   12f
-> +       alsl.d      t0,   t1,   t0, 3
-> +       jr          t0
-> +3:
-> +       addi.w      a0,   zero, -1
-> +       jr          ra
-> +
-> +/* range from 0x0(KVM_CSR_CRMD) to 0x60(KVM_CSR_LLBCTL) */
-> +10:
-> +       csrnum =3D 0
-> +       .rept 0x61
-> +       gcsrwr a1, csrnum
-> +       jr ra
-> +       csrnum =3D csrnum + 1
-> +       .endr
-> +
-> +/* range from 0x80(KVM_CSR_IMPCTL1) to 0x8f(KVM_CSR_TLBRPRMD) */
-> +11:
-> +       csrnum =3D 0x80
-> +       .rept 0x10
-> +       gcsrwr a1, csrnum
-> +       jr ra
-> +       csrnum =3D csrnum + 1
-> +       .endr
-> +
-> +/* range from 0x180(KVM_CSR_DMWIN0) to 0x183(KVM_CSR_DMWIN3) */
-> +12:
-> +       csrnum =3D 0x180
-> +       .rept 0x4
-> +       gcsrwr a1, csrnum
-> +       jr ra
-> +       csrnum =3D csrnum + 1
-> +       .endr
-> +
-> +SYM_FUNC_END(set_hw_gcsr)
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index ca4e8d074e..f17422a942 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -13,6 +13,212 @@
->  #define CREATE_TRACE_POINTS
->  #include "trace.h"
->
-> +int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
-> +{
-> +       unsigned long val;
-> +       struct loongarch_csrs *csr =3D vcpu->arch.csr;
-> +
-> +       if (get_gcsr_flag(id) & INVALID_GCSR)
-> +               return -EINVAL;
-> +
-> +       if (id =3D=3D LOONGARCH_CSR_ESTAT) {
-> +               /* interrupt status IP0 -- IP7 from GINTC */
-> +               val =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0xff=
-;
-> +               *v =3D kvm_read_sw_gcsr(csr, id) | (val << 2);
-> +               return 0;
-> +       }
-> +
-> +       /*
-> +        * get software csr state if csrid is valid, since software
-> +        * csr state is consistent with hardware
-> +        */
-After a long time thinking, I found this is wrong. Of course
-_kvm_setcsr() saves a software copy of the hardware registers, but the
-hardware status will change. For example, during a VM running, it may
-change the EUEN register if it uses fpu.
+[    0.000000] CPU 0 Unable to handle kernel paging request at virtual address 0000000000002b82, era == 90000000040e3f28, ra == 90000000040e3f18
+[    0.000000] Oops[#1]:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 6.5.0+ #733
+[    0.000000] pc 90000000040e3f28 ra 90000000040e3f18 tp 90000000046f4000 sp 90000000046f7c90
+[    0.000000] a0 0000000000000001 a1 0000000000200000 a2 0000000000000040 a3 90000000046f7ca0
+[    0.000000] a4 90000000046f7ca4 a5 0000000000000000 a6 90000000046f7c38 a7 0000000000000000
+[    0.000000] t0 0000000000000002 t1 9000000004b00ac8 t2 90000000040e3f18 t3 90000000040f0800
+[    0.000000] t4 00000000000f0000 t5 80000000ffffe07e t6 0000000000000003 t7 900000047fff5e20
+[    0.000000] t8 aaaaaaaaaaaaaaab u0 0000000000000018 s9 0000000000000000 s0 fffffefffe000000
+[    0.000000] s1 0000000000000000 s2 0000000000000080 s3 0000000000000040 s4 0000000000000000
+[    0.000000] s5 0000000000000000 s6 fffffefffe000000 s7 900000000470b740 s8 9000000004ad4000
+[    0.000000]    ra: 90000000040e3f18 reserve_bootmem_region+0xec/0x21c
+[    0.000000]   ERA: 90000000040e3f28 reserve_bootmem_region+0xfc/0x21c
+[    0.000000]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
+[    0.000000]  PRMD: 00000000 (PPLV0 -PIE -PWE)
+[    0.000000]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
+[    0.000000]  ECFG: 00070800 (LIE=11 VS=7)
+[    0.000000] ESTAT: 00010800 [PIL] (IS=11 ECode=1 EsubCode=0)
+[    0.000000]  BADV: 0000000000002b82
+[    0.000000]  PRID: 0014d000 (Loongson-64bit, Loongson-3A6000)
+[    0.000000] Modules linked in:
+[    0.000000] Process swapper (pid: 0, threadinfo=(____ptrval____), task=(____ptrval____))
+[    0.000000] Stack : 0000000000000000 9000000002eb5430 0000003a00000020 90000000045ccd00
+[    0.000000]         900000000470e000 90000000002c1918 0000000000000000 9000000004110780
+[    0.000000]         00000000fe6c0000 0000000480000000 9000000004b4e368 9000000004110748
+[    0.000000]         0000000000000000 900000000421ca84 9000000004620000 9000000004564970
+[    0.000000]         90000000046f7d78 9000000002cc9f70 90000000002c1918 900000000470e000
+[    0.000000]         9000000004564970 90000000040bc0e0 90000000046f7d78 0000000000000000
+[    0.000000]         0000000000004000 90000000045ccd00 0000000000000000 90000000002c1918
+[    0.000000]         90000000002c1900 900000000470b700 9000000004b4df78 9000000004620000
+[    0.000000]         90000000046200a8 90000000046200a8 0000000000000000 9000000004218b2c
+[    0.000000]         9000000004270008 0000000000000001 0000000000000000 90000000045ccd00
+[    0.000000]         ...
+[    0.000000] Call Trace:
+[    0.000000] [<90000000040e3f28>] reserve_bootmem_region+0xfc/0x21c
+[    0.000000] [<900000000421ca84>] memblock_free_all+0x114/0x350
+[    0.000000] [<9000000004218b2c>] mm_core_init+0x138/0x3cc
+[    0.000000] [<9000000004200e38>] start_kernel+0x488/0x7a4
+[    0.000000] [<90000000040df0d8>] kernel_entry+0xd8/0xdc
+[    0.000000]
+[    0.000000] Code: 02eb21ad  00410f4c  380c31ac <262b818d> 6800b70d  02c1c196  0015001c  57fe4bb1  260002cd
 
-So, we should do things like what we do in our internal repo,
-_kvm_getcsr() should get values from hardware for HW_GCSR registers.
-And we also need a get_hw_gcsr assembly function.
+The reason is early memblock_reserve() in memblock_init() set node id
+to MAX_NUMNODES, which causes NODE_DATA(nid) be a NULL dereference in
+reserve_bootmem_region() -> init_reserved_page(). So set all reserved
+memblocks on Node#0 at initialization to avoid this panic.
 
+Reported-by: WANG Xuerui <git@xen0n.name>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/mem.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Huacai
+diff --git a/arch/loongarch/kernel/mem.c b/arch/loongarch/kernel/mem.c
+index 4a4107a6a965..aed901c57fb4 100644
+--- a/arch/loongarch/kernel/mem.c
++++ b/arch/loongarch/kernel/mem.c
+@@ -50,7 +50,6 @@ void __init memblock_init(void)
+ 	}
+ 
+ 	memblock_set_current_limit(PFN_PHYS(max_low_pfn));
+-	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
+ 
+ 	/* Reserve the first 2MB */
+ 	memblock_reserve(PHYS_OFFSET, 0x200000);
+@@ -58,4 +57,7 @@ void __init memblock_init(void)
+ 	/* Reserve the kernel text/data/bss */
+ 	memblock_reserve(__pa_symbol(&_text),
+ 			 __pa_symbol(&_end) - __pa_symbol(&_text));
++
++	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
++	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.reserved, 0);
+ }
+-- 
+2.39.3
 
-> +       *v =3D kvm_read_sw_gcsr(csr, id);
-> +
-> +       return 0;
-> +}
-> +
-> +int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
-> +{
-> +       struct loongarch_csrs *csr =3D vcpu->arch.csr;
-> +       int ret =3D 0, gintc;
-> +
-> +       if (get_gcsr_flag(id) & INVALID_GCSR)
-> +               return -EINVAL;
-> +
-> +       if (id =3D=3D LOONGARCH_CSR_ESTAT) {
-> +               /* estat IP0~IP7 inject through guestexcept */
-> +               gintc =3D (val >> 2) & 0xff;
-> +               write_csr_gintc(gintc);
-> +               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
-> +
-> +               gintc =3D val & ~(0xffUL << 2);
-> +               write_gcsr_estat(gintc);
-> +               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
-> +
-> +               return ret;
-> +       }
-> +
-> +       if (get_gcsr_flag(id) & HW_GCSR) {
-> +               set_hw_gcsr(id, val);
-> +               /* write sw gcsr to keep consistent with hardware */
-> +               kvm_write_sw_gcsr(csr, id, val);
-> +       } else
-> +               kvm_write_sw_gcsr(csr, id, val);
-> +
-> +       return ret;
-> +}
-> +
-> +static int _kvm_get_one_reg(struct kvm_vcpu *vcpu,
-> +               const struct kvm_one_reg *reg, s64 *v)
-> +{
-> +       int reg_idx, ret =3D 0;
-> +
-> +       if ((reg->id & KVM_REG_LOONGARCH_MASK) =3D=3D KVM_REG_LOONGARCH_C=
-SR) {
-> +               reg_idx =3D KVM_GET_IOC_CSRIDX(reg->id);
-> +               ret =3D _kvm_getcsr(vcpu, reg_idx, v);
-> +       } else if (reg->id =3D=3D KVM_REG_LOONGARCH_COUNTER)
-> +               *v =3D drdtime() + vcpu->kvm->arch.time_offset;
-> +       else
-> +               ret =3D -EINVAL;
-> +
-> +       return ret;
-> +}
-> +
-> +static int _kvm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg =
-*reg)
-> +{
-> +       int ret =3D -EINVAL;
-> +       s64 v;
-> +
-> +       if ((reg->id & KVM_REG_SIZE_MASK) !=3D KVM_REG_SIZE_U64)
-> +               return ret;
-> +
-> +       if (_kvm_get_one_reg(vcpu, reg, &v))
-> +               return ret;
-> +
-> +       return put_user(v, (u64 __user *)(long)reg->addr);
-> +}
-> +
-> +static int _kvm_set_one_reg(struct kvm_vcpu *vcpu,
-> +                       const struct kvm_one_reg *reg,
-> +                       s64 v)
-> +{
-> +       int ret =3D 0;
-> +       unsigned long flags;
-> +       u64 val;
-> +       int reg_idx;
-> +
-> +       val =3D v;
-> +       if ((reg->id & KVM_REG_LOONGARCH_MASK) =3D=3D KVM_REG_LOONGARCH_C=
-SR) {
-> +               reg_idx =3D KVM_GET_IOC_CSRIDX(reg->id);
-> +               ret =3D _kvm_setcsr(vcpu, reg_idx, val);
-> +       } else if (reg->id =3D=3D KVM_REG_LOONGARCH_COUNTER) {
-> +               local_irq_save(flags);
-> +               /*
-> +                * gftoffset is relative with board, not vcpu
-> +                * only set for the first time for smp system
-> +                */
-> +               if (vcpu->vcpu_id =3D=3D 0)
-> +                       vcpu->kvm->arch.time_offset =3D (signed long)(v -=
- drdtime());
-> +               write_csr_gcntc((ulong)vcpu->kvm->arch.time_offset);
-> +               local_irq_restore(flags);
-> +       } else if (reg->id =3D=3D KVM_REG_LOONGARCH_VCPU_RESET) {
-> +               kvm_reset_timer(vcpu);
-> +               memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_=
-pending));
-> +               memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_cl=
-ear));
-> +       } else
-> +               ret =3D -EINVAL;
-> +
-> +       return ret;
-> +}
-> +
-> +static int _kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg =
-*reg)
-> +{
-> +       s64 v;
-> +       int ret =3D -EINVAL;
-> +
-> +       if ((reg->id & KVM_REG_SIZE_MASK) !=3D KVM_REG_SIZE_U64)
-> +               return ret;
-> +
-> +       if (get_user(v, (u64 __user *)(long)reg->addr))
-> +               return ret;
-> +
-> +       return _kvm_set_one_reg(vcpu, reg, v);
-> +}
-> +
-> +int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
-> +                                 struct kvm_sregs *sregs)
-> +{
-> +       return -ENOIOCTLCMD;
-> +}
-> +
-> +int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
-> +                                 struct kvm_sregs *sregs)
-> +{
-> +       return -ENOIOCTLCMD;
-> +}
-> +
-> +int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs =
-*regs)
-> +{
-> +       int i;
-> +
-> +       vcpu_load(vcpu);
-> +
-> +       for (i =3D 0; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
-> +               regs->gpr[i] =3D vcpu->arch.gprs[i];
-> +
-> +       regs->pc =3D vcpu->arch.pc;
-> +
-> +       vcpu_put(vcpu);
-> +       return 0;
-> +}
-> +
-> +int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs =
-*regs)
-> +{
-> +       int i;
-> +
-> +       vcpu_load(vcpu);
-> +
-> +       for (i =3D 1; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
-> +               vcpu->arch.gprs[i] =3D regs->gpr[i];
-> +       vcpu->arch.gprs[0] =3D 0; /* zero is special, and cannot be set. =
-*/
-> +       vcpu->arch.pc =3D regs->pc;
-> +
-> +       vcpu_put(vcpu);
-> +       return 0;
-> +}
-> +
-> +long kvm_arch_vcpu_ioctl(struct file *filp,
-> +                        unsigned int ioctl, unsigned long arg)
-> +{
-> +       struct kvm_vcpu *vcpu =3D filp->private_data;
-> +       void __user *argp =3D (void __user *)arg;
-> +       long r;
-> +
-> +       vcpu_load(vcpu);
-> +
-> +       switch (ioctl) {
-> +       case KVM_SET_ONE_REG:
-> +       case KVM_GET_ONE_REG: {
-> +               struct kvm_one_reg reg;
-> +
-> +               r =3D -EFAULT;
-> +               if (copy_from_user(&reg, argp, sizeof(reg)))
-> +                       break;
-> +               if (ioctl =3D=3D KVM_SET_ONE_REG)
-> +                       r =3D _kvm_set_reg(vcpu, &reg);
-> +               else
-> +                       r =3D _kvm_get_reg(vcpu, &reg);
-> +               break;
-> +       }
-> +       default:
-> +               r =3D -ENOIOCTLCMD;
-> +               break;
-> +       }
-> +
-> +       vcpu_put(vcpu);
-> +       return r;
-> +}
-> +
->  int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
->  {
->         return 0;
-> --
-> 2.27.0
->
