@@ -1,106 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97221567E;
-	Tue, 12 Sep 2023 17:02:09 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B803CC15;
-	Tue, 12 Sep 2023 10:02:45 -0700 (PDT)
-Received: from [10.1.197.60] (eglon.cambridge.arm.com [10.1.197.60])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 431A73F738;
-	Tue, 12 Sep 2023 10:02:03 -0700 (PDT)
-Message-ID: <3ad03f27-1f2b-a79f-130d-afb9e713fa70@arm.com>
-Date: Tue, 12 Sep 2023 18:01:43 +0100
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485EFAD22
+	for <loongarch@lists.linux.dev>; Tue, 12 Sep 2023 19:18:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4046C433C7;
+	Tue, 12 Sep 2023 19:18:40 +0000 (UTC)
+Date: Tue, 12 Sep 2023 21:18:37 +0200
+From: Helge Deller <deller@gmx.de>
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, Guenter Roeck <linux@roeck-us.net>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Fix lockdep static memory detection
+Message-ID: <ZQC5jS/Kc/JiBEOa@p100>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [RFC PATCH 30/32] KVM: arm64: Pass PSCI calls to userspace
-Content-Language: en-GB
-To: Salil Mehta <salil.mehta@huawei.com>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "x86@kernel.org" <x86@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Len Brown <lenb@kernel.org>,
- Rafael Wysocki <rafael@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Russell King <linux@armlinux.org.uk>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <20230203135043.409192-1-james.morse@arm.com>
- <20230203135043.409192-31-james.morse@arm.com>
- <7e182886f20044d09d5b269cb6224af7@huawei.com>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <7e182886f20044d09d5b269cb6224af7@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Salil,
+Since commit 0a6b58c5cd0d ("lockdep: fix static memory detection even
+more") the lockdep code uses is_kernel_core_data(), is_kernel_rodata()
+and init_section_contains() to verify if a lock is located inside a
+kernel static data section.
 
-On 23/05/2023 10:32, Salil Mehta wrote:
->> From: James Morse <james.morse@arm.com>
->> Sent: Friday, February 3, 2023 1:51 PM
->> To: linux-pm@vger.kernel.org; loongarch@lists.linux.dev;
->> kvmarm@lists.linux.dev; kvm@vger.kernel.org; linux-acpi@vger.kernel.org;
->> linux-arch@vger.kernel.org; linux-ia64@vger.kernel.org; linux-
->> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->> x86@kernel.org
-> 
-> [...]
-> 
-> 
->>
->> When the KVM_CAP_ARM_PSCI_TO_USER capability is available, userspace can
->> request to handle PSCI calls.
->>
->> This is required for virtual CPU hotplug to allow the VMM to enforce the
->> online/offline policy it has advertised via ACPI. By managing PSCI in
->> user-space, the VMM is able to return PSCI_DENIED when the guest attempts
->> to bring a disabled vCPU online.
->> Without this, the VMM is only able to not-run the vCPU, the kernel will
->> have already returned PSCI_SUCCESS to the guest. This results in
->> timeouts during boot as the OS must wait for the secondary vCPU.
->>
->> SMCCC probe requires PSCI v1.x. If userspace only implements PSCI v0.2,
->> the guest won't query SMCCC support through PSCI and won't use the
->> spectre workarounds. We could hijack PSCI_VERSION and pretend to support
->> v1.0 if userspace does not, then handle all v1.0 calls ourselves
->> (including guessing the PSCI feature set implemented by the guest), but
->> that seems unnecessary. After all the API already allows userspace to
->> force a version lower than v1.0 using the firmware pseudo-registers.
->>
->> The KVM_REG_ARM_PSCI_VERSION pseudo-register currently resets to either
->> v0.1 if userspace doesn't set KVM_ARM_VCPU_PSCI_0_2, or
->> KVM_ARM_PSCI_LATEST (1.0).
+This change triggers a failure on LoongArch, for which the vmlinux.lds.S
+script misses to put the locks (as part of in the .data.rel symbols)
+into the Linux data section.
+This patch fixes the lockdep problem by moving *(.data.rel*) symbols
+into the kernel data section (from _sdata to _edata).
 
-> I just saw the latest PSCI standard issue (Mar 2023 E Non-Confidential
-> PSCI 1.2 issue E) and it contains the DENIED return value for the CPU_ON. 
-> 
-> Should we *explicitly* check for PSCI 1.2 support before allowing vCPU
-> Hot plug support? For this we would need KVM changes.
+Additionally, move other wrongly assigned symbols too:
+- altinstructions into the _initdata section,
+- PLT symbols behind the read-only section, and
+- *(.la_abs) into the data section.
 
-The VMM should certainly check which version of PSCI it supports, to make sure it doesn't
-return an error code that the spec says that version of PSCI doesn't use.
+Signed-off-by: Helge Deller <deller@gmx.de>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: 0a6b58c5cd0d ("lockdep: fix static memory detection even more")
+Cc: stable <stable@kernel.org> # v6.4+
 
-Moving the PSCI support to the VMM is a pre-requisite for supporting this mechanism,
-otherwise KVM will allow the CPUs to come online immediately.
-
-
-Thanks,
-
-James
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+index b1686afcf876..bb2ec86f37a8 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -53,33 +53,6 @@ SECTIONS
+ 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
+ 	_etext = .;
+ 
+-	/*
+-	 * struct alt_inst entries. From the header (alternative.h):
+-	 * "Alternative instructions for different CPU types or capabilities"
+-	 * Think locking instructions on spinlocks.
+-	 */
+-	. = ALIGN(4);
+-	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
+-		__alt_instructions = .;
+-		*(.altinstructions)
+-		__alt_instructions_end = .;
+-	}
+-
+-#ifdef CONFIG_RELOCATABLE
+-	. = ALIGN(8);
+-	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
+-		__la_abs_begin = .;
+-		*(.la_abs)
+-		__la_abs_end = .;
+-	}
+-#endif
+-
+-	.got : ALIGN(16) { *(.got) }
+-	.plt : ALIGN(16) { *(.plt) }
+-	.got.plt : ALIGN(16) { *(.got.plt) }
+-
+-	.data.rel : { *(.data.rel*) }
+-
+ 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
+ 	__init_begin = .;
+ 	__inittext_begin = .;
+@@ -94,6 +67,18 @@ SECTIONS
+ 
+ 	__initdata_begin = .;
+ 
++	/*
++	 * struct alt_inst entries. From the header (alternative.h):
++	 * "Alternative instructions for different CPU types or capabilities"
++	 * Think locking instructions on spinlocks.
++	 */
++	. = ALIGN(4);
++	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
++		__alt_instructions = .;
++		*(.altinstructions)
++		__alt_instructions_end = .;
++	}
++
+ 	INIT_DATA_SECTION(16)
+ 	.exit.data : {
+ 		EXIT_DATA
+@@ -113,6 +98,11 @@ SECTIONS
+ 
+ 	_sdata = .;
+ 	RO_DATA(4096)
++
++	.got : ALIGN(16) { *(.got) }
++	.plt : ALIGN(16) { *(.plt) }
++	.got.plt : ALIGN(16) { *(.got.plt) }
++
+ 	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
+ 
+ 	.rela.dyn : ALIGN(8) {
+@@ -121,6 +111,17 @@ SECTIONS
+ 		__rela_dyn_end = .;
+ 	}
+ 
++	.data.rel : { *(.data.rel*) }
++
++#ifdef CONFIG_RELOCATABLE
++	. = ALIGN(8);
++	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
++		__la_abs_begin = .;
++		*(.la_abs)
++		__la_abs_end = .;
++	}
++#endif
++
+ 	.sdata : {
+ 		*(.sdata)
+ 	}
