@@ -1,174 +1,127 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0EC3C22
-	for <loongarch@lists.linux.dev>; Tue, 12 Sep 2023 20:31:25 +0000 (UTC)
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1bf1935f6c2so1790525ad.1
-        for <loongarch@lists.linux.dev>; Tue, 12 Sep 2023 13:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694550685; x=1695155485; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HS4AS8VbR5V4QhF/RUpoUXcwG9s1gQlJ8VLh2Gkpc+o=;
-        b=DGYuYe04BkXP7sKg0pgDsvyxWcReWzsHSPXwZgBIMi57/R+uU3xUIrAyiWGZhfXJ9d
-         ZA2thvkGxdO8ASoqwDnveeHSR3SPt6Ii/BHG/WqZnwBigwInh3cdcwpnck+tPbdnyPjt
-         ChAPvrkmHJZfft04NCmZIwj1c9on27DDoFVVLDMYPQX3hewOpz2qClGOo6N88Q/Ff47w
-         w+qzc+Gsys3ME9FaHDzTW8r3NHeL9nnet2J+cj6qFMYdX3Fq5+uqt3GBxJETrsAhHAiU
-         5rWQq9+E8qw++vV5C4+kCvW9O7oUUXchriczbcRoCvK9U+J+9+nRGU9mh2kXSqfn/MKI
-         yL3A==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FB3361
+	for <loongarch@lists.linux.dev>; Tue, 12 Sep 2023 22:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1694558347;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hw4dz052UmhVfzEQW7+Uflu1VFGZC1UKKB7LwcrU6Xs=;
+	b=P86c/NEmdqlRXNvidILtx+bZU6CFOpQbGv07TuPVpdIL5kQkr+ah8N9o4FOFNnSjIN63eD
+	GtadjLZl/7sSMppMuTSwjY+XYtHxt+Cv2Z+xtT19WGqpqVbV18PQwsXS4qvbpALQSwHQPF
+	R+g71Tuvr/FuWWbp5lVKjZqvTMbZwxE=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-111-S21F5BkJMCOOQpGZD_Dc0Q-1; Tue, 12 Sep 2023 18:39:06 -0400
+X-MC-Unique: S21F5BkJMCOOQpGZD_Dc0Q-1
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1bde8160fbdso81581715ad.1
+        for <loongarch@lists.linux.dev>; Tue, 12 Sep 2023 15:39:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694550685; x=1695155485;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HS4AS8VbR5V4QhF/RUpoUXcwG9s1gQlJ8VLh2Gkpc+o=;
-        b=DNecK51C+R/TS5T6MXEWI+uVOP1+AvX+1iGegx0VLbtwTEUSV4EjDFPbMASEEiM5Zo
-         zIh18q+zwmHpYXyhQNH2Aszcd1BTwFnrZux81fwuVpNzrAgkO3XzLcdFjvg3NKTNbnxc
-         klpqod+IuOXeMc2qMeB62ss8Rly/E8n7VhpIhp8oHjSiX/XQHCx4picl1Vv1WwVwXWca
-         DfZXOSKOUdvodyOLOSxiNxl393TjN7Tif2ou1OnIUoLPBukU0vEkntd7ZQcPPu83DuHv
-         S/y/aspsTnRQLUXbH/h4dOx6bhjoCMxqfEKtqDeiZfnzsUrP4mV/R9SzrBYHx0yffssC
-         celw==
-X-Gm-Message-State: AOJu0YyKv5rCGIo3PnmnvZqLg3I+30x2BcnZq0FlVaAcSy6MMntgZnkO
-	PcRNJuliQlip35jFsUwP05A=
-X-Google-Smtp-Source: AGHT+IF1jvtZNZztOXptTJDBThYNLnBm2KUZaXghQjZd7s8ArIIYzQTsJt4XtO34Zo2jt3bqD3AHDQ==
-X-Received: by 2002:a17:903:1211:b0:1b7:ca9c:4f5c with SMTP id l17-20020a170903121100b001b7ca9c4f5cmr4456426plh.28.1694550684952;
-        Tue, 12 Sep 2023 13:31:24 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c5-20020a170902c1c500b001bb750189desm8912783plc.255.2023.09.12.13.31.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Sep 2023 13:31:24 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 12 Sep 2023 13:31:23 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Helge Deller <deller@gmx.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Fix lockdep static memory detection
-Message-ID: <9d0cb447-2556-4609-a96f-13875ddeeda3@roeck-us.net>
-References: <ZQC5jS/Kc/JiBEOa@p100>
+        d=1e100.net; s=20230601; t=1694558345; x=1695163145;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hw4dz052UmhVfzEQW7+Uflu1VFGZC1UKKB7LwcrU6Xs=;
+        b=LyHKnxxGAHM7NQhkmmImBTYhBrQps0sRwo9QLeb12bO5LyokVePNidVhqS+S81RuR0
+         KHjQc6UCj+CKXTwjw3aWsiAwosU4ZmuJZpcT6epEJvrk4Z0WjIU1DDkXQYvLlXuyLhTl
+         zuSRdZmGh6aNStmlrgPdw1+Oc2mn9JfeTc26cfzoaKCHiMyjPa0+fyYK3v9mhbQ7oK6H
+         VF8WXXnxfc9/UfjprvZN4zZMYvhehGJqxf43IBgawMP6EM4QfGQLNjPSIHWmysDzksiC
+         ivHuhy2h3TyhHjXp1EXWfzBtKvEQ/CjI2pR5sOqoVmwMXgqV7n54PJi1xBPKfh4OFZiY
+         Lbzw==
+X-Gm-Message-State: AOJu0YzmUSjQOsWwjCGmi7TCVNWJ3K5YoO6MsXbw5GQTG8YrC7lDlCg3
+	AAUdCjDV/WSpp/KHYM56YwSJwZyDIsHgxDyMo1Fo6YoX8S5UVQYL/+Uy+EeA2v8oC1B2oxKXMqj
+	QBKP6dhaFQHXaSQWD1PSp
+X-Received: by 2002:a17:903:41c4:b0:1c3:3cde:7b44 with SMTP id u4-20020a17090341c400b001c33cde7b44mr1269653ple.12.1694558344882;
+        Tue, 12 Sep 2023 15:39:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHJXfeCtpozu/i9MX/Nb9C9D8rRf3TwAOO4AoonFr0CYCLCqxvZy3HNtrsprY+cWVaejgiLRA==
+X-Received: by 2002:a17:903:41c4:b0:1c3:3cde:7b44 with SMTP id u4-20020a17090341c400b001c33cde7b44mr1269621ple.12.1694558344560;
+        Tue, 12 Sep 2023 15:39:04 -0700 (PDT)
+Received: from ?IPV6:2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5? ([2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5])
+        by smtp.gmail.com with ESMTPSA id c10-20020a170902aa4a00b001c0af36dd64sm8964168plr.162.2023.09.12.15.38.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Sep 2023 15:39:03 -0700 (PDT)
+Message-ID: <5a5fb237-c28b-d6b5-0425-8f8f0fe1ac79@redhat.com>
+Date: Wed, 13 Sep 2023 08:38:51 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZQC5jS/Kc/JiBEOa@p100>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [RFC PATCH 00/32] ACPI/arm64: add support for virtual cpuhotplug
+To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+ loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Len Brown <lenb@kernel.org>,
+ Rafael Wysocki <rafael@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Salil Mehta <salil.mehta@huawei.com>, Russell King <linux@armlinux.org.uk>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>
+References: <20230203135043.409192-1-james.morse@arm.com>
+ <41dd71ab-a6a7-fd93-73ec-64a6b0ca468e@redhat.com>
+ <1ca1fb8f-1dec-74a3-ee44-94609f6aba2c@arm.com>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <1ca1fb8f-1dec-74a3-ee44-94609f6aba2c@arm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 12, 2023 at 09:18:37PM +0200, Helge Deller wrote:
-> Since commit 0a6b58c5cd0d ("lockdep: fix static memory detection even
-> more") the lockdep code uses is_kernel_core_data(), is_kernel_rodata()
-> and init_section_contains() to verify if a lock is located inside a
-> kernel static data section.
-> 
-> This change triggers a failure on LoongArch, for which the vmlinux.lds.S
-> script misses to put the locks (as part of in the .data.rel symbols)
-> into the Linux data section.
-> This patch fixes the lockdep problem by moving *(.data.rel*) symbols
-> into the kernel data section (from _sdata to _edata).
-> 
-> Additionally, move other wrongly assigned symbols too:
-> - altinstructions into the _initdata section,
-> - PLT symbols behind the read-only section, and
-> - *(.la_abs) into the data section.
-> 
-> Signed-off-by: Helge Deller <deller@gmx.de>
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Fixes: 0a6b58c5cd0d ("lockdep: fix static memory detection even more")
-> Cc: stable <stable@kernel.org> # v6.4+
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+Hi James,
 
+On 9/13/23 03:01, James Morse wrote:
+> On 29/03/2023 03:35, Gavin Shan wrote:
+>> On 2/3/23 9:50 PM, James Morse wrote:
 > 
-> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-> index b1686afcf876..bb2ec86f37a8 100644
-> --- a/arch/loongarch/kernel/vmlinux.lds.S
-> +++ b/arch/loongarch/kernel/vmlinux.lds.S
-> @@ -53,33 +53,6 @@ SECTIONS
->  	. = ALIGN(PECOFF_SEGMENT_ALIGN);
->  	_etext = .;
->  
-> -	/*
-> -	 * struct alt_inst entries. From the header (alternative.h):
-> -	 * "Alternative instructions for different CPU types or capabilities"
-> -	 * Think locking instructions on spinlocks.
-> -	 */
-> -	. = ALIGN(4);
-> -	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
-> -		__alt_instructions = .;
-> -		*(.altinstructions)
-> -		__alt_instructions_end = .;
-> -	}
-> -
-> -#ifdef CONFIG_RELOCATABLE
-> -	. = ALIGN(8);
-> -	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
-> -		__la_abs_begin = .;
-> -		*(.la_abs)
-> -		__la_abs_end = .;
-> -	}
-> -#endif
-> -
-> -	.got : ALIGN(16) { *(.got) }
-> -	.plt : ALIGN(16) { *(.plt) }
-> -	.got.plt : ALIGN(16) { *(.got.plt) }
-> -
-> -	.data.rel : { *(.data.rel*) }
-> -
->  	. = ALIGN(PECOFF_SEGMENT_ALIGN);
->  	__init_begin = .;
->  	__inittext_begin = .;
-> @@ -94,6 +67,18 @@ SECTIONS
->  
->  	__initdata_begin = .;
->  
-> +	/*
-> +	 * struct alt_inst entries. From the header (alternative.h):
-> +	 * "Alternative instructions for different CPU types or capabilities"
-> +	 * Think locking instructions on spinlocks.
-> +	 */
-> +	. = ALIGN(4);
-> +	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
-> +		__alt_instructions = .;
-> +		*(.altinstructions)
-> +		__alt_instructions_end = .;
-> +	}
-> +
->  	INIT_DATA_SECTION(16)
->  	.exit.data : {
->  		EXIT_DATA
-> @@ -113,6 +98,11 @@ SECTIONS
->  
->  	_sdata = .;
->  	RO_DATA(4096)
-> +
-> +	.got : ALIGN(16) { *(.got) }
-> +	.plt : ALIGN(16) { *(.plt) }
-> +	.got.plt : ALIGN(16) { *(.got.plt) }
-> +
->  	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
->  
->  	.rela.dyn : ALIGN(8) {
-> @@ -121,6 +111,17 @@ SECTIONS
->  		__rela_dyn_end = .;
->  	}
->  
-> +	.data.rel : { *(.data.rel*) }
-> +
-> +#ifdef CONFIG_RELOCATABLE
-> +	. = ALIGN(8);
-> +	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
-> +		__la_abs_begin = .;
-> +		*(.la_abs)
-> +		__la_abs_end = .;
-> +	}
-> +#endif
-> +
->  	.sdata : {
->  		*(.sdata)
->  	}
+>>> If folk want to play along at home, you'll need a copy of Qemu that supports this.
+>>> https://github.com/salil-mehta/qemu.git
+>>> salil/virt-cpuhp-armv8/rfc-v1-port29092022.psci.present
+>>>
+>>> You'll need to fix the numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
+>>> to match your host kernel. Replace your '-smp' argument with something like:
+>>> | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
+>>>
+>>> then feed the following to the Qemu montior;
+>>> | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
+>>> | (qemu) device_del cpu1
+>>>
+>>>
+>>> This series is based on v6.2-rc3, and can be retrieved from:
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/ virtual_cpu_hotplug/rfc/v1
+> 
+>> I give it a try, but the hot-added CPU needs to be put into online
+>> state manually. I'm not sure if it's expected or not.
+> 
+> This is expected. If you want the CPUs to be brought online automatically, you can add
+> udev rules to do that.
+> 
+
+Yeah, I usually execute the following command to bring the CPU into online state,
+after the vCPU is hot added by QMP command.
+
+(qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
+guest# echo 1 > /sys/devices/system/cpu/cpux/online
+
+James, the series was posted a while ago and do you have plan to respin
+and post RFCv2 in near future? :)
+
+Thanks,
+Gavin
+
