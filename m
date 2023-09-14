@@ -1,85 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC6C39C
-	for <loongarch@lists.linux.dev>; Thu, 14 Sep 2023 15:25:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 431BDC433C9
-	for <loongarch@lists.linux.dev>; Thu, 14 Sep 2023 15:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD6B1CFA1;
+	Thu, 14 Sep 2023 15:34:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAE18C433C9;
+	Thu, 14 Sep 2023 15:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694705134;
-	bh=knWsHjBFVRzdgek7o198MSYRBmsXslhV9GmcwZLF6yE=;
+	s=k20201202; t=1694705679;
+	bh=TC5noj5ktH2x7QwQggxt68bg/J4n39+D6FUOyZfzpR8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=O3dJ2yRwd8ajZp73nuPqUbjPhXusPFVa5xTYPVePNAsdbvpw8dJ5Nwhw/1c+hCvNG
-	 9D0E/UNKtrW45cljZ7CPmVpzp5fyJsxBYzQBMOF9hqggu7K3w1l6jAKB2ZidkO2aHS
-	 Xlsn3nQwJynB93v44RjfHbK1Jh/v1SMdfWUG/mPWNX+L+Dc2K4Tdff0w6+RKr5NOGR
-	 Ktuddgq7Nw0UFl+3QJ0xioQ3VWJPTy7lPXWki127Zc1Nb/GmCJfXIoUwdPkBvVC9+2
-	 0X0h4/7MwLmRqSEAiRadXRUQfLLd1+4j2Cg7f4u/OFrxmQm3c+HXX3YSQIB6CV2qpY
-	 fk118OZ2a9Cyg==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-52f33659d09so1295169a12.1
-        for <loongarch@lists.linux.dev>; Thu, 14 Sep 2023 08:25:34 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yxx1pYHCyyRh5ztSlOoqoSvyB/1ZT4X6OwK4Rf4b+Z8Zwx8sIp3
-	jm9pyodaV1VDktZfJEWiDTyDbLmsQbbO5yyRWXY=
-X-Google-Smtp-Source: AGHT+IHcwA2t/kyZUwQVU13H6XxJZI4dOYLldBtDniM048IzFCaIZJz9M3iPj3Q/HXpAc+4DI080jVBRFLMV0s/WWvc=
-X-Received: by 2002:aa7:c703:0:b0:52a:250e:a052 with SMTP id
- i3-20020aa7c703000000b0052a250ea052mr5581143edq.7.1694705132751; Thu, 14 Sep
- 2023 08:25:32 -0700 (PDT)
+	b=VhZ3lpyNJ5JBnKIJXQOzqzyIyRP8YcFLhoDiqbK4XOP9op/up4vR9RzbsJ7Pv804p
+	 1KFaej6Kan7MvEO6Pff3K4+JM46O38+EbToWV3Bm57EFMSKdtyiTKP8sGrZqGcoNdp
+	 CZVXZ7ghIgZvbiwLSS2efunPvRGUYvHx4DmsMMhmbogIs5mrsYaG/1ZVOjhrE2UAhz
+	 Tn0tyQ2lp9STPxG+fwsM3Aw/uNkTbUagLsBC1h2k74xzjTz5o/s0LCn+IvEaZY/DjV
+	 QdWtANlmUc8rNkMzESluMKsL114Kx9zJGiTuZMwgoFyXLwvPd/RJc/dXHmUviwA8Eq
+	 xR45CY7Bl5RKw==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50078eba7afso1907799e87.0;
+        Thu, 14 Sep 2023 08:34:39 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxkN/McqIr9zXFYAXr2UHUXHe0DBZ4utrieHICgCGQTWfG/1brc
+	WQ8CNtdOedlobW5Ud6kbVliCcr+qVmmFo9ZgJDI=
+X-Google-Smtp-Source: AGHT+IHQWhXWk9WB76jsul3E8BXF8FIj2XgeZXziogZ8+9RlZta9SMLLLzxXno0++LBAsD2vWnMl44SVOfg370+hAkA=
+X-Received: by 2002:a05:6512:452:b0:500:bb99:69a7 with SMTP id
+ y18-20020a056512045200b00500bb9969a7mr4588249lfk.14.1694705677877; Thu, 14
+ Sep 2023 08:34:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230914103445.511285-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230914103445.511285-1-andriy.shevchenko@linux.intel.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 14 Sep 2023 23:25:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Q0sirFEDdc1v4BSfDY94eZvJazy0XLKM8V94GMJvQnQ@mail.gmail.com>
-Message-ID: <CAAhV-H6Q0sirFEDdc1v4BSfDY94eZvJazy0XLKM8V94GMJvQnQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] LoongArch: Add missing headers
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	WANG Xuerui <kernel@xen0n.name>
+References: <20230913163823.7880-1-james.morse@arm.com> <20230913163823.7880-28-james.morse@arm.com>
+ <CAMj1kXHRAt7ecB9p_dm3MjDL5wZkAsVh30hMY2SV_XUe=bm6Vg@mail.gmail.com> <20230914155459.00002dba@Huawei.com>
+In-Reply-To: <20230914155459.00002dba@Huawei.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 14 Sep 2023 17:34:25 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFquiLGCMow3iujHUU4GBZx2t9KfKy1R9iqjBFjY+acaA@mail.gmail.com>
+Message-ID: <CAMj1kXFquiLGCMow3iujHUU4GBZx2t9KfKy1R9iqjBFjY+acaA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 27/35] ACPICA: Add new MADT GICC flags fields [code first?]
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	kvmarm@lists.linux.dev, x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>, 
+	Russell King <linux@armlinux.org.uk>, Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, 
+	justin.he@arm.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,  Andy,
+On Thu, 14 Sept 2023 at 16:55, Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Thu, 14 Sep 2023 09:57:44 +0200
+> Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> > Hello James,
+> >
+> > On Wed, 13 Sept 2023 at 18:41, James Morse <james.morse@arm.com> wrote:
+> > >
+> > > Add the new flag field to the MADT's GICC structure.
+> > >
+> > > 'Online Capable' indicates a disabled CPU can be enabled later.
+> > >
+> >
+> > Why do we need a bit for this? What would be the point of describing
+> > disabled CPUs that cannot be enabled (and are you are aware of
+> > firmware doing this?).
+>
+> Enabled being not set is common at some similar ACPI tables at least.
+>
+> This is available in most ACPI tables to allow firmware to use 'nearly'
+> static tables and just tweak the 'enabled' bit to say if the record should
+> be ignored or not. Also _STA not present which is for same trick.
+> If you are doing clever dynamic tables, then you can just not present
+> the entry.
+>
+> With that existing use case in mind, need another bit to say this
+> one might one day turn up.  Note this is copied from x86 though no
+> one seems to have implemented the kernel support for them yet.
+>
+> Note as per my other reply - this isn't a code first proposal. It's in the
+> spec already (via a code first proposal last year I think).
+>
+> >
+> > So why are we not able to assume that this new bit can always be treated as '1'?
+>
+> Given above, need the extra bit to size stuff to allow for the CPU showing up
+> late.
+>
 
-Thank you for your patch, can this patch solve the problem below?
-https://lore.kernel.org/oe-kbuild-all/202309072237.9zxMv4MZ-lkp@intel.com/T=
-/#u
+So does this mean that on x86, the CPU object is instantiated only
+when the hardware level hotplug occurs? And before that, the object
+does not exist at all?
 
-If yes, please add a reference in the commit message. I have
-investigated this problem for a long time but failed to solve it.
+Because it seems to me that _STA, having both enabled and present
+bits, could already describe what we need here, and arguably, a CPU
+that is not both present and enabled should not be used by the OS.
+This would leave room for representing off-line CPUs as present but
+not enabled.
 
-Huacai
-
-On Thu, Sep 14, 2023 at 6:34=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> The header uses definitions from sizes.h, include it.
-> For __iomem we need the compiler_types.h, include it.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  arch/loongarch/include/asm/addrspace.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/loongarch/include/asm/addrspace.h b/arch/loongarch/incl=
-ude/asm/addrspace.h
-> index 5c9c03bdf915..eaf8ac098622 100644
-> --- a/arch/loongarch/include/asm/addrspace.h
-> +++ b/arch/loongarch/include/asm/addrspace.h
-> @@ -10,7 +10,9 @@
->  #ifndef _ASM_ADDRSPACE_H
->  #define _ASM_ADDRSPACE_H
->
-> +#include <linux/compiler_types.h>
->  #include <linux/const.h>
-> +#include <linux/sizes.h>
->
->  #include <asm/loongarch.h>
->
-> --
-> 2.40.0.1.gaa8946217a0b
->
->
+Apologies if I am missing something obvious here - the whole rationale
+behind this thing is rather confusing to me.
