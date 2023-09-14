@@ -1,187 +1,196 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BFAC8F3
-	for <loongarch@lists.linux.dev>; Thu, 14 Sep 2023 16:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1694709625; x=1695314425; i=deller@gmx.de;
- bh=BPMo+H8KWB+kOjZY/A9qgBPQBv2St3LuqxU/RGbM92o=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=UoLFaKEe21F7QTQTz5CVwKfjTQRQE74Q3qBUJJHHoizJ46GPws1M8TsrS56hLutOvHG5WTp47ZT
- rqBwLtC5DVHuZ0sH83/NsWixr2iXRDpgEgKoXp9m9+KIJNPYbEFx6m90hJ6KxMGED3FPMGoQ/AoRy
- LMfa4npZHiSAkV8K+SeFwRV5ieKBWVqVwJwooEzlJilzukeKASMNuF/tU1YbnYQ9X4Za2GPQ2cULI
- FoMP3fGim+kCURLebZKurYDvOy5a3kLDNCbwijq8amRZiETIHLckHLOB56rNCZ0ymSCQ7tQOpgobk
- P3Y5oiepg6sfWZWS4BWF7aEwOXovrZGMGsyw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.60] ([94.134.145.203]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MVeI8-1r8M7Z2Fc4-00RcTW; Thu, 14
- Sep 2023 18:40:25 +0200
-Message-ID: <981897ec-93a2-28f8-8c12-bc7b5e029058@gmx.de>
-Date: Thu, 14 Sep 2023 18:40:23 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A763EC8F3;
+	Thu, 14 Sep 2023 16:41:41 +0000 (UTC)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RmjkP6LwKz6K5xM;
+	Fri, 15 Sep 2023 00:41:01 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 14 Sep
+ 2023 17:41:38 +0100
+Date: Thu, 14 Sep 2023 17:41:37 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: James Morse <james.morse@arm.com>
+CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-riscv@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Salil Mehta <salil.mehta@huawei.com>, Russell King
+	<linux@armlinux.org.uk>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	<jianyong.wu@arm.com>, <justin.he@arm.com>
+Subject: Re: [RFC PATCH v2 33/35] arm64: document virtual CPU hotplug's
+ expectations
+Message-ID: <20230914174137.00000a62@Huawei.com>
+In-Reply-To: <20230913163823.7880-34-james.morse@arm.com>
+References: <20230913163823.7880-1-james.morse@arm.com>
+	<20230913163823.7880-34-james.morse@arm.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] LoongArch: Fix lockdep static memory detection
-To: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- WANG Xuerui <kernel@xen0n.name>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>
-References: <ZQC5jS/Kc/JiBEOa@p100>
- <9d0cb447-2556-4609-a96f-13875ddeeda3@roeck-us.net>
-Content-Language: en-US
-From: Helge Deller <deller@gmx.de>
-In-Reply-To: <9d0cb447-2556-4609-a96f-13875ddeeda3@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:tG/Am0xeATwJq1gejFjQUCaQOKupskcqB7iEBKV7ldNFocQv5hl
- 5YGcNW7PqKRvgEemBoUKO9cBZiwA6jHPxkcfCoAR+OBjrOzQI68IarmBK46d8dZJm9vQqLu
- p25ZYHd/1ESbYtwTjNSYsYezzxkd6/bEhn53gdic0vMLgonyo9gIZQ55u21FBDuh1x7VLVr
- IVCoqjbamS4aNZW29xxmw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:KAgDSiHeoWk=;stj9L4avZWYcxrvgYmaGOiko9Qm
- bJYy4nIkk8WYIv6eKJM7FozDd6tt9KyGr9LxOK7OdNcIIlcRAwnBhx60QB+YSbt0xTjenPHLd
- 3ystPe85Tze4/vvL1TPAXHnVU/pVDpm5s32eu1IG7LpV9gVIk0hbva3tFOLYonWiJM33HGnn3
- RAXlNeROH4jnE26TZ4Tding4jEPK6bzWd6UWOkoSrzkEtEDyLFe/bcSih/JNcbU5SpmH3tC4w
- gY+Q10atHoMVp4zwUFh8nwE6/hH8heEeijTTsoqLSbEdZDHpUkIkTsNxbgsH2rf9D8M7zWsf7
- OSU9o/Rcci2FS66YEa32fbEkMTGafPzaL5CwOtg1nBw76gYOlMOO4fFKnfWHOw3/W/OExwysr
- Kl1MJjdC9v+eFoHEuusQiXCi82Oeb0WYtxuDeM94SHyG1OaJAbciy3FPbSts+Ri7umOYiicdM
- BWySzP3uePYMk4zbR9NAfrFGldJ3W1YA9t5iGdV9MKtsq4NYtb94FZpYgt7s5akjD4dlpEHuv
- PBiJzbUgbs9qI6HSpW/7JJnRxULmNHS3N7UBMo7f9c/DfmDiwZad/zpzKeoTNNPhAD2YhW/Ef
- kCbPOZfRsmMituYRuvLMFjpcVYqer6YPLbKEJDqM57iq2UlSiCnVcpowVOwkKUpyrchg14jCF
- yP7uZlFdh5hq3Nzx8ZcmFVJJCIT8mkEYBzPT0inO/HDRugppUu1xCI3JIlxV2QoCwSV5p2sIK
- WEfNskB2gch6fLQzz1935dwAUV8OF5KVTWf3oTKEK7xhg7qMPs0d1d7hpKxfK0a4A1aIC0tYv
- J7eDnh+/taydsCOAIEua7xvSa9Y4IRhvjcKSpyhXQtAI4DnJQ2De84TKX+QIvMfee1gm8XNUv
- BSGQH14Lx8umGspChjNHfc1KhihvD68ttY5UOoriTnf/IMCV+/L/JwZqaPk9cu3T+aAMLlaIg
- mTaaag==
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 
-PING to Loongarch maintainers!
+On Wed, 13 Sep 2023 16:38:21 +0000
+James Morse <james.morse@arm.com> wrote:
 
-Without this patch, lockdep is broken on LoongArch on kernel v6.1 and abov=
-e.
-(patch below wrongly mentions kernel 6.4, but actually it needs backport t=
-o v6.1 too).
+> Add a description of physical and virtual CPU hotplug, explain the
+> differences and elaborate on what is required in ACPI for a working
+> virtual hotplug system.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
+>  Documentation/arch/arm64/cpu-hotplug.rst | 79 ++++++++++++++++++++++++
+>  Documentation/arch/arm64/index.rst       |  1 +
+>  2 files changed, 80 insertions(+)
+>  create mode 100644 Documentation/arch/arm64/cpu-hotplug.rst
+> 
+> diff --git a/Documentation/arch/arm64/cpu-hotplug.rst b/Documentation/arch/arm64/cpu-hotplug.rst
+> new file mode 100644
+> index 000000000000..76ba8d932c72
+> --- /dev/null
+> +++ b/Documentation/arch/arm64/cpu-hotplug.rst
+> @@ -0,0 +1,79 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. _cpuhp_index:
+> +
+> +====================
+> +CPU Hotplug and ACPI
+> +====================
+> +
+> +CPU hotplug in the arm64 world is commonly used to describe the kernel taking
+> +CPUs online/offline using PSCI. This document is about ACPI firmware allowing
+> +CPUs that were not available during boot to be added to the system later.
+> +
+> +``possible`` and ``present`` refer to the state of the CPU as seen by linux.
+> +
+> +
+> +CPU Hotplug on physical systems - CPUs not present at boot
+> +----------------------------------------------------------
+> +
+> +Physical systems need to mark a CPU that is ``possible`` but not ``present`` as
+> +being ``present``. An example would be a dual socket machine, where the package
+> +in one of the sockets can be replaced while the system is running.
+> +
+> +This is not supported.
+> +
+> +In the arm64 world CPUs are not a single device but a slice of the system.
+> +There are no systems that support the physical addition (or removal) of CPUs
+> +while the system is running, and ACPI is not able to sufficiently describe
+> +them.
+> +
+> +e.g. New CPUs come with new caches, but the platform's cache toplogy is
+> +described in a static table, the PPTT. How caches are shared between CPUs is
+> +not discoverable, and must be described by firmware.
+> +
+> +e.g. The GIC redistributor for each CPU must be accessed by the driver during
+> +boot to discover the system wide supported features. ACPI's MADT GICC
+> +structures can describe a redistributor associated with a disabled CPU, but
+> +can't describe whether the redistributor is accessible, only that it is not
+> +'always on'.
+> +
+> +arm64's ACPI tables assume that everything described is ``present``.
+> +
+> +
+> +CPU Hotplug on virtual systems - CPUs not enabled at boot
+> +---------------------------------------------------------
+> +
+> +Virtual systems have the advantage that all the properties the system will
+> +ever have can be described at boot. There are no power-domain considerations
+> +as such devices are emulated.
+> +
+> +CPU Hotplug on virtual systems is supported. It is distinct from physical
+> +CPU Hotplug as all resources are described as ``present``, but CPUs may be
+> +marked as disabled by firmware. Only the CPU's online/offline behaviour is
+> +influenced by firmware. An example is where a virtual machine boots with a
+> +single CPU, and additional CPUs are added once a cloud orchestrator deploys
+> +the workload.
+> +
+> +For a virtual machine, the VMM (e.g. Qemu) plays the part of firmware.
+> +
+> +Virtual hotplug is implemented as a firmware policy affecting which CPUs can be
+> +brought online. Firmware can enforce its policy via PSCI's return codes. e.g.
+> +``DENIED``.
+> +
+> +The ACPI tables must describe all the resources of the virtual machine. CPUs
+> +that firmware wishes to disable either from boot (or later) should not be
+> +``enabled`` in the MADT GICC structures, but should have the ``online capable``
+> +bit set, to indicate they can be enabled later. The boot CPU must be marked as
+> +``enabled``.  The 'always on' GICR structure must be used to describe the
+> +redistributors.
 
-Helge
+Hi James,
 
-On 9/12/23 22:31, Guenter Roeck wrote:
-> On Tue, Sep 12, 2023 at 09:18:37PM +0200, Helge Deller wrote:
->> Since commit 0a6b58c5cd0d ("lockdep: fix static memory detection even
->> more") the lockdep code uses is_kernel_core_data(), is_kernel_rodata()
->> and init_section_contains() to verify if a lock is located inside a
->> kernel static data section.
->>
->> This change triggers a failure on LoongArch, for which the vmlinux.lds.=
-S
->> script misses to put the locks (as part of in the .data.rel symbols)
->> into the Linux data section.
->> This patch fixes the lockdep problem by moving *(.data.rel*) symbols
->> into the kernel data section (from _sdata to _edata).
->>
->> Additionally, move other wrongly assigned symbols too:
->> - altinstructions into the _initdata section,
->> - PLT symbols behind the read-only section, and
->> - *(.la_abs) into the data section.
->>
->> Signed-off-by: Helge Deller <deller@gmx.de>
->> Reported-by: Guenter Roeck <linux@roeck-us.net>
->> Fixes: 0a6b58c5cd0d ("lockdep: fix static memory detection even more")
->> Cc: stable <stable@kernel.org> # v6.4+
->
-> Tested-by: Guenter Roeck <linux@roeck-us.net>
->
->>
->> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kerne=
-l/vmlinux.lds.S
->> index b1686afcf876..bb2ec86f37a8 100644
->> --- a/arch/loongarch/kernel/vmlinux.lds.S
->> +++ b/arch/loongarch/kernel/vmlinux.lds.S
->> @@ -53,33 +53,6 @@ SECTIONS
->>   	. =3D ALIGN(PECOFF_SEGMENT_ALIGN);
->>   	_etext =3D .;
->>
->> -	/*
->> -	 * struct alt_inst entries. From the header (alternative.h):
->> -	 * "Alternative instructions for different CPU types or capabilities"
->> -	 * Think locking instructions on spinlocks.
->> -	 */
->> -	. =3D ALIGN(4);
->> -	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
->> -		__alt_instructions =3D .;
->> -		*(.altinstructions)
->> -		__alt_instructions_end =3D .;
->> -	}
->> -
->> -#ifdef CONFIG_RELOCATABLE
->> -	. =3D ALIGN(8);
->> -	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
->> -		__la_abs_begin =3D .;
->> -		*(.la_abs)
->> -		__la_abs_end =3D .;
->> -	}
->> -#endif
->> -
->> -	.got : ALIGN(16) { *(.got) }
->> -	.plt : ALIGN(16) { *(.plt) }
->> -	.got.plt : ALIGN(16) { *(.got.plt) }
->> -
->> -	.data.rel : { *(.data.rel*) }
->> -
->>   	. =3D ALIGN(PECOFF_SEGMENT_ALIGN);
->>   	__init_begin =3D .;
->>   	__inittext_begin =3D .;
->> @@ -94,6 +67,18 @@ SECTIONS
->>
->>   	__initdata_begin =3D .;
->>
->> +	/*
->> +	 * struct alt_inst entries. From the header (alternative.h):
->> +	 * "Alternative instructions for different CPU types or capabilities"
->> +	 * Think locking instructions on spinlocks.
->> +	 */
->> +	. =3D ALIGN(4);
->> +	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
->> +		__alt_instructions =3D .;
->> +		*(.altinstructions)
->> +		__alt_instructions_end =3D .;
->> +	}
->> +
->>   	INIT_DATA_SECTION(16)
->>   	.exit.data : {
->>   		EXIT_DATA
->> @@ -113,6 +98,11 @@ SECTIONS
->>
->>   	_sdata =3D .;
->>   	RO_DATA(4096)
->> +
->> +	.got : ALIGN(16) { *(.got) }
->> +	.plt : ALIGN(16) { *(.plt) }
->> +	.got.plt : ALIGN(16) { *(.got.plt) }
->> +
->>   	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
->>
->>   	.rela.dyn : ALIGN(8) {
->> @@ -121,6 +111,17 @@ SECTIONS
->>   		__rela_dyn_end =3D .;
->>   	}
->>
->> +	.data.rel : { *(.data.rel*) }
->> +
->> +#ifdef CONFIG_RELOCATABLE
->> +	. =3D ALIGN(8);
->> +	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
->> +		__la_abs_begin =3D .;
->> +		*(.la_abs)
->> +		__la_abs_end =3D .;
->> +	}
->> +#endif
->> +
->>   	.sdata : {
->>   		*(.sdata)
->>   	}
+I guess you know I'm going to comment on this given I got a bit fixated on it
+at the Linaro Open Discussions call the other day.
+
+This is the corner case that I think needs discussion. So far there is nothing
+the ACPI spec that says anything about unplugability of CPUs so I see this as a
+Linux implementation choice and I think it may be a problem for the cloud tennant
+scalability usecases.  The problem is legacy operating systems. Some of whom may have
+a different interpretation of the ACPI Spec unless we make sure it addresses this.
+
+At time of VM startup, I want to provide a flexible number of CPUs say, 1 to 64 -
+but the customer paid for 4 currently so I want to start them off with 4. 
+To make this model work I have to know if they are running a hotplug capable OS
+and, even if the current OSC ACPI code first proposal goes forwards, I either have to
+ask customers to tell me they support it, or boot to find out (relying on OSC handshake
+late in boot).
+
+Code first proposal mentioned:
+https://bugzilla.tianocore.org/show_bug.cgi?id=4481
+
+If the guest doesn't support CPU hotplug I need to set enabled for the 4 CPUs. Once
+booted I can use that OSC to discover if they can ever take advantage of hotplug
+CPUs (arguably we could tweak that definition or add another to say they are fine
+with me removing them as well).
+
+If they do support CPU hotplug maximum flexiblity suggests I set enabled for CPU 0
+and online capable for the next 3 and rely on the OS optimistically poking the
+oneline capable ones to see if they are there at boot.
+
+Of course one option is stick with what you have here and treat it as customer
+lock-in they can only get bigger, not smaller.  Might be acceptable as might
+the horrible approach of trying to hot unplug a CPU and getting no reply
+(not a good user experience)
+
+I probably haven't described that well.
+
+Jonathan
+
+
+> +
+> +CPUs described as ``online capable`` but not ``enabled`` can be set to enabled
+> +by the DSDT's Processor object's _STA method. On virtual systems the _STA method
+> +must always report the CPU as ``present``. Changes to the firmware policy can
+> +be notified to the OS via device-check or eject-request.
+> +
+> +CPUs described as ``enabled`` in the static table, should not have their _STA
+> +modified dynamically by firmware. Soft-restart features such as kexec will
+> +re-read the static properties of the system from these static tables, and
+> +may malfunction if these no longer describe the running system. Linux will
+> +re-discover the dynamic properties of the system from the _STA method later
+> +during boot.
+> diff --git a/Documentation/arch/arm64/index.rst b/Documentation/arch/arm64/index.rst
+> index d08e924204bf..78544de0a8a9 100644
+> --- a/Documentation/arch/arm64/index.rst
+> +++ b/Documentation/arch/arm64/index.rst
+> @@ -13,6 +13,7 @@ ARM64 Architecture
+>      asymmetric-32bit
+>      booting
+>      cpu-feature-registers
+> +    cpu-hotplug
+>      elf_hwcaps
+>      hugetlbpage
+>      kdump
 
