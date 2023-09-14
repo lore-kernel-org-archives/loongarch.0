@@ -1,104 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156CF10A21
-	for <loongarch@lists.linux.dev>; Thu, 14 Sep 2023 10:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694687695; x=1726223695;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2FKCjcQ5u9vQaNDLGxcLVznEbCTrMpPIzmp+AvNgKs8=;
-  b=QbVp6BDkuTkQJUA8t7oMuKhs56WCwcrrA2B+Njly3sz38BUeroOJYJ2I
-   SxKAgJZaVki1wYihsFFxu5/t9AdMGKOcBfOccJixI7MvMuzhPyaofOyCV
-   7d91IK+16a6LXHuujWiBxkJTf7V3oUYuAi2BvuJhu+4GpQWaXDxmYAr7N
-   NMh/L1QUfFB9r3IQlGddee4qwWDOXmRjH08vePP7ZTtW+i+cf5aymx311
-   Uexeh9taYIQ2xiKkTGi5e7+v8mELSPb1ex9eiqLkjrUA9KmeCb94oGUgg
-   d7cJNe52QsW3tbKmGN85z/+Kd8tgJNHwCxyVXPvOgngflkZ+lj7dfDzsz
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="409867731"
-X-IronPort-AV: E=Sophos;i="6.02,145,1688454000"; 
-   d="scan'208";a="409867731"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 03:34:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="814625073"
-X-IronPort-AV: E=Sophos;i="6.02,145,1688454000"; 
-   d="scan'208";a="814625073"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Sep 2023 03:34:50 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id A9E5FBC0; Thu, 14 Sep 2023 13:34:49 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH v1 2/2] LoongArch: Use _UL() and _ULL()
-Date: Thu, 14 Sep 2023 13:34:45 +0300
-Message-Id: <20230914103445.511285-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-In-Reply-To: <20230914103445.511285-1-andriy.shevchenko@linux.intel.com>
-References: <20230914103445.511285-1-andriy.shevchenko@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D02208B4;
+	Thu, 14 Sep 2023 10:56:19 +0000 (UTC)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RmZ3v01jqz6K5v5;
+	Thu, 14 Sep 2023 18:55:38 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 14 Sep
+ 2023 11:56:14 +0100
+Date: Thu, 14 Sep 2023 11:56:13 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+CC: James Morse <james.morse@arm.com>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	<jianyong.wu@arm.com>, <justin.he@arm.com>
+Subject: Re: [RFC PATCH v2 02/35] drivers: base: Use present CPUs in
+ GENERIC_CPU_DEVICES
+Message-ID: <20230914115613.0000778e@Huawei.com>
+In-Reply-To: <ZQLCZsw+ZGbTM8oK@shell.armlinux.org.uk>
+References: <20230913163823.7880-1-james.morse@arm.com>
+	<20230913163823.7880-3-james.morse@arm.com>
+	<ZQLCZsw+ZGbTM8oK@shell.armlinux.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 
-Use _UL() and _ULL() that are provided by const.h.
+On Thu, 14 Sep 2023 09:20:54 +0100
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/loongarch/include/asm/addrspace.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> On Wed, Sep 13, 2023 at 04:37:50PM +0000, James Morse wrote:
+> > Three of the five ACPI architectures create sysfs entries using
+> > register_cpu() for present CPUs, whereas arm64, riscv and all
+> > GENERIC_CPU_DEVICES do this for possible CPUs.
+> > 
+> > Registering a CPU is what causes them to show up in sysfs.
+> > 
+> > It makes very little sense to register all possible CPUs. Registering
+> > a CPU is what triggers the udev notifications allowing user-space to
+> > react to newly added CPUs.
+> > 
+> > To allow all five ACPI architectures to use GENERIC_CPU_DEVICES, change
+> > it to use for_each_present_cpu(). Making the ACPI architectures use
+> > GENERIC_CPU_DEVICES is a pre-requisite step to centralise their
+> > cpu_register() logic, before moving it into the ACPI processor driver.
+> > When ACPI is disabled this work would be done by
+> > cpu_dev_register_generic().
+> > 
+> > Of the ACPI architectures that register possible CPUs, arm64 and riscv
+> > do not support making possible CPUs present as they use the weak 'always
+> > fails' version of arch_register_cpu().
+> > 
+> > Only two of the eight architectures that use GENERIC_CPU_DEVICES have a
+> > distinction between present and possible CPUs.
+> > 
+> > The following architectures use GENERIC_CPU_DEVICES but are not SMP,
+> > so possible == present:
+> >  * m68k
+> >  * microblaze
+> >  * nios2
+> > 
+> > The following architectures use GENERIC_CPU_DEVICES and consider
+> > possible == present:
+> >  * csky: setup_smp()
+> >  * parisc: smp_prepare_boot_cpu() marks the boot cpu as present,
+> >    processor_probe() sets possible for all CPUs and present for all CPUs
+> >    except the boot cpu.  
+> 
+> However, init/main.c::start_kernel() calls boot_cpu_init() which sets
+> the boot CPU in the online, active, present and possible masks. So,
+> _every_ architecture gets the boot CPU in all these masks no matter
+> what.
+> 
+> Only of something then clears the boot CPU from these masks (which
+> would be silly) would the boot CPU not be in all of these masks.
+Hi Russel,
 
-diff --git a/arch/loongarch/include/asm/addrspace.h b/arch/loongarch/include/asm/addrspace.h
-index eaf8ac098622..818077f62db8 100644
---- a/arch/loongarch/include/asm/addrspace.h
-+++ b/arch/loongarch/include/asm/addrspace.h
-@@ -21,7 +21,7 @@
-  */
- #ifndef __ASSEMBLY__
- #ifndef PHYS_OFFSET
--#define PHYS_OFFSET	_AC(0, UL)
-+#define PHYS_OFFSET	_UL(0)
- #endif
- extern unsigned long vm_map_base;
- #endif /* __ASSEMBLY__ */
-@@ -45,7 +45,7 @@ extern unsigned long vm_map_base;
-  * Memory above this physical address will be considered highmem.
-  */
- #ifndef HIGHMEM_START
--#define HIGHMEM_START		(_AC(1, UL) << _AC(DMW_PABITS, UL))
-+#define HIGHMEM_START		(_UL(1) << _UL(DMW_PABITS))
- #endif
- 
- #define TO_PHYS(x)		(		((x) & TO_PHYS_MASK))
-@@ -67,16 +67,16 @@ extern unsigned long vm_map_base;
- #define _ATYPE_
- #define _ATYPE32_
- #define _ATYPE64_
--#define _CONST64_(x)	x
- #else
- #define _ATYPE_		__PTRDIFF_TYPE__
- #define _ATYPE32_	int
- #define _ATYPE64_	__s64
-+#endif
-+
- #ifdef CONFIG_64BIT
--#define _CONST64_(x)	x ## UL
-+#define _CONST64_(x)	_UL(x)
- #else
--#define _CONST64_(x)	x ## ULL
--#endif
-+#define _CONST64_(x)	_ULL(x)
- #endif
- 
- /*
--- 
-2.40.0.1.gaa8946217a0b
+Upshot is that the code in parisc smp_prepare_boot_cpu() can be dropped?
+Seems like another useful simplification to add to front of this series.
+The function will end up with just a print then. 
+Seems there are lots of other empty implementations of smp_prepare_boot_cpu()
+maybe worth making that optional whilst here and dropping all the empty ones?
+
+There seem to be some other architectures setting at least some of the cpu masks
+that could perhaps be tidied up a little via same logic?
+
+Jonathan
+
+> 
 
