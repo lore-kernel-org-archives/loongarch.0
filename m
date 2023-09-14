@@ -1,150 +1,187 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A2718E28;
-	Thu, 14 Sep 2023 16:13:45 +0000 (UTC)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rmj4r2vBYz6HJcg;
-	Fri, 15 Sep 2023 00:11:56 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 14 Sep
- 2023 17:13:41 +0100
-Date: Thu, 14 Sep 2023 17:13:41 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: James Morse <james.morse@arm.com>
-CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-riscv@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Salil Mehta <salil.mehta@huawei.com>, Russell King
-	<linux@armlinux.org.uk>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	<jianyong.wu@arm.com>, <justin.he@arm.com>
-Subject: Re: [RFC PATCH v2 32/35] ACPI: add support to register CPUs based
- on the _STA enabled bit
-Message-ID: <20230914171341.00006e51@Huawei.com>
-In-Reply-To: <20230913163823.7880-33-james.morse@arm.com>
-References: <20230913163823.7880-1-james.morse@arm.com>
-	<20230913163823.7880-33-james.morse@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BFAC8F3
+	for <loongarch@lists.linux.dev>; Thu, 14 Sep 2023 16:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+ t=1694709625; x=1695314425; i=deller@gmx.de;
+ bh=BPMo+H8KWB+kOjZY/A9qgBPQBv2St3LuqxU/RGbM92o=;
+ h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+ b=UoLFaKEe21F7QTQTz5CVwKfjTQRQE74Q3qBUJJHHoizJ46GPws1M8TsrS56hLutOvHG5WTp47ZT
+ rqBwLtC5DVHuZ0sH83/NsWixr2iXRDpgEgKoXp9m9+KIJNPYbEFx6m90hJ6KxMGED3FPMGoQ/AoRy
+ LMfa4npZHiSAkV8K+SeFwRV5ieKBWVqVwJwooEzlJilzukeKASMNuF/tU1YbnYQ9X4Za2GPQ2cULI
+ FoMP3fGim+kCURLebZKurYDvOy5a3kLDNCbwijq8amRZiETIHLckHLOB56rNCZ0ymSCQ7tQOpgobk
+ P3Y5oiepg6sfWZWS4BWF7aEwOXovrZGMGsyw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.60] ([94.134.145.203]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MVeI8-1r8M7Z2Fc4-00RcTW; Thu, 14
+ Sep 2023 18:40:25 +0200
+Message-ID: <981897ec-93a2-28f8-8c12-bc7b5e029058@gmx.de>
+Date: Thu, 14 Sep 2023 18:40:23 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] LoongArch: Fix lockdep static memory detection
+To: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ WANG Xuerui <kernel@xen0n.name>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org,
+ Guenter Roeck <linux@roeck-us.net>
+References: <ZQC5jS/Kc/JiBEOa@p100>
+ <9d0cb447-2556-4609-a96f-13875ddeeda3@roeck-us.net>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+In-Reply-To: <9d0cb447-2556-4609-a96f-13875ddeeda3@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:tG/Am0xeATwJq1gejFjQUCaQOKupskcqB7iEBKV7ldNFocQv5hl
+ 5YGcNW7PqKRvgEemBoUKO9cBZiwA6jHPxkcfCoAR+OBjrOzQI68IarmBK46d8dZJm9vQqLu
+ p25ZYHd/1ESbYtwTjNSYsYezzxkd6/bEhn53gdic0vMLgonyo9gIZQ55u21FBDuh1x7VLVr
+ IVCoqjbamS4aNZW29xxmw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:KAgDSiHeoWk=;stj9L4avZWYcxrvgYmaGOiko9Qm
+ bJYy4nIkk8WYIv6eKJM7FozDd6tt9KyGr9LxOK7OdNcIIlcRAwnBhx60QB+YSbt0xTjenPHLd
+ 3ystPe85Tze4/vvL1TPAXHnVU/pVDpm5s32eu1IG7LpV9gVIk0hbva3tFOLYonWiJM33HGnn3
+ RAXlNeROH4jnE26TZ4Tding4jEPK6bzWd6UWOkoSrzkEtEDyLFe/bcSih/JNcbU5SpmH3tC4w
+ gY+Q10atHoMVp4zwUFh8nwE6/hH8heEeijTTsoqLSbEdZDHpUkIkTsNxbgsH2rf9D8M7zWsf7
+ OSU9o/Rcci2FS66YEa32fbEkMTGafPzaL5CwOtg1nBw76gYOlMOO4fFKnfWHOw3/W/OExwysr
+ Kl1MJjdC9v+eFoHEuusQiXCi82Oeb0WYtxuDeM94SHyG1OaJAbciy3FPbSts+Ri7umOYiicdM
+ BWySzP3uePYMk4zbR9NAfrFGldJ3W1YA9t5iGdV9MKtsq4NYtb94FZpYgt7s5akjD4dlpEHuv
+ PBiJzbUgbs9qI6HSpW/7JJnRxULmNHS3N7UBMo7f9c/DfmDiwZad/zpzKeoTNNPhAD2YhW/Ef
+ kCbPOZfRsmMituYRuvLMFjpcVYqer6YPLbKEJDqM57iq2UlSiCnVcpowVOwkKUpyrchg14jCF
+ yP7uZlFdh5hq3Nzx8ZcmFVJJCIT8mkEYBzPT0inO/HDRugppUu1xCI3JIlxV2QoCwSV5p2sIK
+ WEfNskB2gch6fLQzz1935dwAUV8OF5KVTWf3oTKEK7xhg7qMPs0d1d7hpKxfK0a4A1aIC0tYv
+ J7eDnh+/taydsCOAIEua7xvSa9Y4IRhvjcKSpyhXQtAI4DnJQ2De84TKX+QIvMfee1gm8XNUv
+ BSGQH14Lx8umGspChjNHfc1KhihvD68ttY5UOoriTnf/IMCV+/L/JwZqaPk9cu3T+aAMLlaIg
+ mTaaag==
 
-On Wed, 13 Sep 2023 16:38:20 +0000
-James Morse <james.morse@arm.com> wrote:
+PING to Loongarch maintainers!
 
-> acpi_processor_get_info() registers all present CPUs. Registering a
-> CPU is what creates the sysfs entries and triggers the udev
-> notifications.
-> 
-> arm64 virtual machines that support 'virtual cpu hotplug' use the
-> enabled bit to indicate whether the CPU can be brought online, as
-> the existing ACPI tables require all hardware to be described and
-> present.
-> 
-> If firmware describes a CPU as present, but disabled, skip the
-> registration. Such CPUs are present, but can't be brought online for
-> whatever reason. (e.g. firmware/hypervisor policy).
-> 
-> Once firmware sets the enabled bit, the CPU can be registered and
-> brought online by user-space. Online CPUs, or CPUs that are missing
-> an _STA method must always be registered.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-A small argument with myself inline. Feel free to ignore.
+Without this patch, lockdep is broken on LoongArch on kernel v6.1 and abov=
+e.
+(patch below wrongly mentions kernel 6.4, but actually it needs backport t=
+o v6.1 too).
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Helge
 
-> ---
->  drivers/acpi/acpi_processor.c | 31 ++++++++++++++++++++++++++++++-
->  1 file changed, 30 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-> index b67616079751..b49859eab01a 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -227,6 +227,32 @@ static int acpi_processor_make_present(struct acpi_processor *pr)
->  	return ret;
->  }
->  
-> +static int acpi_processor_make_enabled(struct acpi_processor *pr)
-> +{
-> +	unsigned long long sta;
-> +	acpi_status status;
-> +	bool present, enabled;
-> +
-> +	if (!acpi_has_method(pr->handle, "_STA"))
-> +		return arch_register_cpu(pr->id);
-> +
-> +	status = acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
-> +	if (ACPI_FAILURE(status))
-> +		return -ENODEV;
-> +
-> +	present = sta & ACPI_STA_DEVICE_PRESENT;
-> +	enabled = sta & ACPI_STA_DEVICE_ENABLED;
-> +
-> +	if (cpu_online(pr->id) && (!present || !enabled)) {
-> +		pr_err_once(FW_BUG "CPU %u is online, but described as not present or disabled!\n", pr->id);
-
-Why once?  If this for some reason happened on multiple CPUs I think we'd want to know.
-
-> +		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-> +	} else if (!present || !enabled) {
-> +		return -ENODEV;
-> +	}
-
-I guess you didn't do a nested if here to avoid even longer lines.
-Could flip things around though I don't like this much either as it makes
-the normal good path exit mid way down.
-
-	if (present && enabled)
-		return arch_register_cpu(pr->id);
-
-	if (!cpu_online(pr->id))
-		return -ENODEV;
-
-	pr_err...
-	add_taint(...
-
-	return arch_register_cpu(pr->id);
-
-Ah well. Some code just has to be less than pretty.	
-
-> +
-> +	return arch_register_cpu(pr->id);
-> +}
-> +
->  static int acpi_processor_get_info(struct acpi_device *device)
->  {
->  	union acpi_object object = { 0 };
-> @@ -318,7 +344,7 @@ static int acpi_processor_get_info(struct acpi_device *device)
->  	 */
->  	if (!invalid_logical_cpuid(pr->id) && cpu_present(pr->id) &&
->  	    !get_cpu_device(pr->id)) {
-> -		int ret = arch_register_cpu(pr->id);
-> +		int ret = acpi_processor_make_enabled(pr);
->  
->  		if (ret)
->  			return ret;
-> @@ -526,6 +552,9 @@ static void acpi_processor_post_eject(struct acpi_device *device)
->  		acpi_processor_make_not_present(device);
->  		return;
->  	}
-> +
-> +	if (cpu_present(pr->id) && !(sta & ACPI_STA_DEVICE_ENABLED))
-> +		arch_unregister_cpu(pr->id);
->  }
->  
->  #ifdef CONFIG_ARCH_MIGHT_HAVE_ACPI_PDC
+On 9/12/23 22:31, Guenter Roeck wrote:
+> On Tue, Sep 12, 2023 at 09:18:37PM +0200, Helge Deller wrote:
+>> Since commit 0a6b58c5cd0d ("lockdep: fix static memory detection even
+>> more") the lockdep code uses is_kernel_core_data(), is_kernel_rodata()
+>> and init_section_contains() to verify if a lock is located inside a
+>> kernel static data section.
+>>
+>> This change triggers a failure on LoongArch, for which the vmlinux.lds.=
+S
+>> script misses to put the locks (as part of in the .data.rel symbols)
+>> into the Linux data section.
+>> This patch fixes the lockdep problem by moving *(.data.rel*) symbols
+>> into the kernel data section (from _sdata to _edata).
+>>
+>> Additionally, move other wrongly assigned symbols too:
+>> - altinstructions into the _initdata section,
+>> - PLT symbols behind the read-only section, and
+>> - *(.la_abs) into the data section.
+>>
+>> Signed-off-by: Helge Deller <deller@gmx.de>
+>> Reported-by: Guenter Roeck <linux@roeck-us.net>
+>> Fixes: 0a6b58c5cd0d ("lockdep: fix static memory detection even more")
+>> Cc: stable <stable@kernel.org> # v6.4+
+>
+> Tested-by: Guenter Roeck <linux@roeck-us.net>
+>
+>>
+>> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kerne=
+l/vmlinux.lds.S
+>> index b1686afcf876..bb2ec86f37a8 100644
+>> --- a/arch/loongarch/kernel/vmlinux.lds.S
+>> +++ b/arch/loongarch/kernel/vmlinux.lds.S
+>> @@ -53,33 +53,6 @@ SECTIONS
+>>   	. =3D ALIGN(PECOFF_SEGMENT_ALIGN);
+>>   	_etext =3D .;
+>>
+>> -	/*
+>> -	 * struct alt_inst entries. From the header (alternative.h):
+>> -	 * "Alternative instructions for different CPU types or capabilities"
+>> -	 * Think locking instructions on spinlocks.
+>> -	 */
+>> -	. =3D ALIGN(4);
+>> -	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
+>> -		__alt_instructions =3D .;
+>> -		*(.altinstructions)
+>> -		__alt_instructions_end =3D .;
+>> -	}
+>> -
+>> -#ifdef CONFIG_RELOCATABLE
+>> -	. =3D ALIGN(8);
+>> -	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
+>> -		__la_abs_begin =3D .;
+>> -		*(.la_abs)
+>> -		__la_abs_end =3D .;
+>> -	}
+>> -#endif
+>> -
+>> -	.got : ALIGN(16) { *(.got) }
+>> -	.plt : ALIGN(16) { *(.plt) }
+>> -	.got.plt : ALIGN(16) { *(.got.plt) }
+>> -
+>> -	.data.rel : { *(.data.rel*) }
+>> -
+>>   	. =3D ALIGN(PECOFF_SEGMENT_ALIGN);
+>>   	__init_begin =3D .;
+>>   	__inittext_begin =3D .;
+>> @@ -94,6 +67,18 @@ SECTIONS
+>>
+>>   	__initdata_begin =3D .;
+>>
+>> +	/*
+>> +	 * struct alt_inst entries. From the header (alternative.h):
+>> +	 * "Alternative instructions for different CPU types or capabilities"
+>> +	 * Think locking instructions on spinlocks.
+>> +	 */
+>> +	. =3D ALIGN(4);
+>> +	.altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
+>> +		__alt_instructions =3D .;
+>> +		*(.altinstructions)
+>> +		__alt_instructions_end =3D .;
+>> +	}
+>> +
+>>   	INIT_DATA_SECTION(16)
+>>   	.exit.data : {
+>>   		EXIT_DATA
+>> @@ -113,6 +98,11 @@ SECTIONS
+>>
+>>   	_sdata =3D .;
+>>   	RO_DATA(4096)
+>> +
+>> +	.got : ALIGN(16) { *(.got) }
+>> +	.plt : ALIGN(16) { *(.plt) }
+>> +	.got.plt : ALIGN(16) { *(.got.plt) }
+>> +
+>>   	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
+>>
+>>   	.rela.dyn : ALIGN(8) {
+>> @@ -121,6 +111,17 @@ SECTIONS
+>>   		__rela_dyn_end =3D .;
+>>   	}
+>>
+>> +	.data.rel : { *(.data.rel*) }
+>> +
+>> +#ifdef CONFIG_RELOCATABLE
+>> +	. =3D ALIGN(8);
+>> +	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
+>> +		__la_abs_begin =3D .;
+>> +		*(.la_abs)
+>> +		__la_abs_end =3D .;
+>> +	}
+>> +#endif
+>> +
+>>   	.sdata : {
+>>   		*(.sdata)
+>>   	}
 
