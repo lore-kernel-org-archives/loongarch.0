@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1184815
-	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 01:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04535653
+	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 01:50:01 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxuOhFuANlwf4nAA--.41302S3;
-	Fri, 15 Sep 2023 09:49:57 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxFehCuANld_4nAA--.18180S3;
+	Fri, 15 Sep 2023 09:49:54 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axndw9uANl+ioGAA--.11927S11;
-	Fri, 15 Sep 2023 09:49:56 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axndw9uANl+ioGAA--.11927S4;
+	Fri, 15 Sep 2023 09:49:54 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v21 09/29] LoongArch: KVM: Implement vcpu get, vcpu set registers
-Date: Fri, 15 Sep 2023 09:49:29 +0800
-Message-Id: <20230915014949.1222777-10-zhaotianrui@loongson.cn>
+Subject: [PATCH v21 02/29] LoongArch: KVM: Implement kvm module related interface
+Date: Fri, 15 Sep 2023 09:49:22 +0800
+Message-Id: <20230915014949.1222777-3-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230915014949.1222777-1-zhaotianrui@loongson.cn>
 References: <20230915014949.1222777-1-zhaotianrui@loongson.cn>
@@ -35,276 +35,396 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axndw9uANl+ioGAA--.11927S11
+X-CM-TRANSID:AQAAf8Axndw9uANl+ioGAA--.11927S4
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement LoongArch vcpu get registers and set registers operations, it
-is called when user space use the ioctl interface to get or set regs.
+Implement LoongArch kvm module init, module exit interface,
+using kvm context to save the vpid info and vcpu world switch
+interface pointer.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 244 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 244 insertions(+)
+ arch/loongarch/kvm/main.c | 367 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 367 insertions(+)
+ create mode 100644 arch/loongarch/kvm/main.c
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index bfc2ec1a88..1cc53f56d0 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -13,6 +13,250 @@
- #define CREATE_TRACE_POINTS
- #include "trace.h"
- 
-+int kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+new file mode 100644
+index 0000000000..0deb9273d8
+--- /dev/null
++++ b/arch/loongarch/kvm/main.c
+@@ -0,0 +1,367 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/kvm_host.h>
++#include <asm/cacheflush.h>
++#include <asm/cpufeature.h>
++#include <asm/kvm_csr.h>
++#include "trace.h"
++
++static struct kvm_context __percpu *vmcs;
++struct kvm_world_switch *kvm_loongarch_ops;
++unsigned long vpid_mask;
++static int gcsr_flag[CSR_MAX_NUMS];
++
++int get_gcsr_flag(int csr)
 +{
-+	unsigned long val;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
++	if (csr < CSR_MAX_NUMS)
++		return gcsr_flag[csr];
 +
-+	if (get_gcsr_flag(id) & INVALID_GCSR)
-+		return -EINVAL;
++	return INVALID_GCSR;
++}
 +
-+	if (id == LOONGARCH_CSR_ESTAT) {
-+		/* interrupt status IP0 -- IP7 from GINTC */
-+		val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0xff;
-+		*v = kvm_read_sw_gcsr(csr, id) | (val << 2);
-+		return 0;
++static inline void set_gcsr_sw_flag(int csr)
++{
++	if (csr < CSR_MAX_NUMS)
++		gcsr_flag[csr] |= SW_GCSR;
++}
++
++static inline void set_gcsr_hw_flag(int csr)
++{
++	if (csr < CSR_MAX_NUMS)
++		gcsr_flag[csr] |= HW_GCSR;
++}
++
++/*
++ * The default value of gcsr_flag[CSR] is 0, and we use this
++ * function to set the flag to 1(SW_GCSR) or 2(HW_GCSR) if the
++ * gcsr is software or hardware. It will be used by get/set_gcsr,
++ * if gcsr_flag is HW we should use gcsrrd/gcsrwr to access it,
++ * else use sw csr to emulate it.
++ */
++static void kvm_init_gcsr_flag(void)
++{
++	set_gcsr_hw_flag(LOONGARCH_CSR_CRMD);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRMD);
++	set_gcsr_hw_flag(LOONGARCH_CSR_EUEN);
++	set_gcsr_hw_flag(LOONGARCH_CSR_MISC);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ECFG);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ESTAT);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ERA);
++	set_gcsr_hw_flag(LOONGARCH_CSR_BADV);
++	set_gcsr_hw_flag(LOONGARCH_CSR_BADI);
++	set_gcsr_hw_flag(LOONGARCH_CSR_EENTRY);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBIDX);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBEHI);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBELO0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBELO1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ASID);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PGDL);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PGDH);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PWCTL0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PWCTL1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_STLBPGSIZE);
++	set_gcsr_hw_flag(LOONGARCH_CSR_RVACFG);
++	set_gcsr_hw_flag(LOONGARCH_CSR_CPUID);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG2);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG3);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS2);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS3);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS4);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS5);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS6);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS7);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TMID);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TCFG);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TVAL);
++	set_gcsr_hw_flag(LOONGARCH_CSR_CNTC);
++	set_gcsr_hw_flag(LOONGARCH_CSR_LLBCTL);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRENTRY);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRBADV);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRERA);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRSAVE);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRELO0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRELO1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBREHI);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRPRMD);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN2);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN3);
++	set_gcsr_hw_flag(LOONGARCH_CSR_MWPS);
++	set_gcsr_hw_flag(LOONGARCH_CSR_FWPS);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_IMPCTL1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IMPCTL2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRCTL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRINFO1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRINFO2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRENTRY);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRERA);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRSAVE);
++	set_gcsr_sw_flag(LOONGARCH_CSR_CTAG);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DEBUG);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DERA);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DESAVE);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG3);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PGD);
++	set_gcsr_sw_flag(LOONGARCH_CSR_TINTCLR);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_FWPS);
++	set_gcsr_sw_flag(LOONGARCH_CSR_FWPC);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MWPS);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MWPC);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7ASID);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7ASID);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL0);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR0);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL3);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR3);
++}
++
++static void kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
++{
++	struct kvm_context *context;
++	unsigned long vpid;
++
++	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++	vpid = context->vpid_cache + 1;
++	if (!(vpid & vpid_mask)) {
++		/* finish round of 64 bit loop */
++		if (unlikely(!vpid))
++			vpid = vpid_mask + 1;
++
++		/* vpid 0 reserved for root */
++		++vpid;
++
++		/* start new vpid cycle */
++		kvm_flush_tlb_all();
 +	}
++
++	context->vpid_cache = vpid;
++	vcpu->arch.vpid = vpid;
++}
++
++void kvm_check_vpid(struct kvm_vcpu *vcpu)
++{
++	struct kvm_context *context;
++	bool migrated;
++	unsigned long ver, old, vpid;
++	int cpu;
++
++	cpu = smp_processor_id();
++	/*
++	 * Are we entering guest context on a different CPU to last time?
++	 * If so, the vCPU's guest TLB state on this CPU may be stale.
++	 */
++	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++	migrated = (vcpu->cpu != cpu);
 +
 +	/*
-+	 * get software csr state if csrid is valid, since software
-+	 * csr state is consistent with hardware
++	 * Check if our vpid is of an older version
++	 *
++	 * We also discard the stored vpid if we've executed on
++	 * another CPU, as the guest mappings may have changed without
++	 * hypervisor knowledge.
 +	 */
-+	*v = kvm_read_sw_gcsr(csr, id);
-+
-+	return 0;
-+}
-+
-+int kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	int ret = 0, gintc;
-+
-+	if (get_gcsr_flag(id) & INVALID_GCSR)
-+		return -EINVAL;
-+
-+	if (id == LOONGARCH_CSR_ESTAT) {
-+		/* estat IP0~IP7 inject through guestexcept */
-+		gintc = (val >> 2) & 0xff;
-+		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
-+
-+		gintc = val & ~(0xffUL << 2);
-+		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
-+
-+		return ret;
++	ver = vcpu->arch.vpid & ~vpid_mask;
++	old = context->vpid_cache  & ~vpid_mask;
++	if (migrated || (ver != old)) {
++		kvm_update_vpid(vcpu, cpu);
++		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
++		vcpu->cpu = cpu;
 +	}
 +
-+	kvm_write_sw_gcsr(csr, id, val);
-+	return ret;
++	/* Restore GSTAT(0x50).vpid */
++	vpid = (vcpu->arch.vpid & vpid_mask) << CSR_GSTAT_GID_SHIFT;
++	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
 +}
 +
-+static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
-+		const struct kvm_one_reg *reg, u64 *v)
++static int kvm_loongarch_env_init(void)
 +{
-+	int id, ret = 0;
-+	u64 type = reg->id & KVM_REG_LOONGARCH_MASK;
++	struct kvm_context *context;
++	int cpu, order;
++	void *addr;
 +
-+	switch (type) {
-+	case KVM_REG_LOONGARCH_CSR:
-+		id = KVM_GET_IOC_CSRIDX(reg->id);
-+		ret = kvm_getcsr(vcpu, id, v);
-+		break;
-+	case KVM_REG_LOONGARCH_CPUCFG:
-+		id = KVM_GET_IOC_CPUCFG_IDX(reg->id);
-+		if (id >= 0 && id < KVM_MAX_CPUCFG_REGS)
-+			*v = vcpu->arch.cpucfg[id];
-+		else
-+			ret = -EINVAL;
-+		break;
-+	case KVM_REG_LOONGARCH_KVM:
-+		switch (reg->id & 0xf) {
-+		case 4: /* counter reg */
-+			*v = drdtime() + vcpu->kvm->arch.time_offset;
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+	return ret;
-+}
-+
-+static int kvm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+{
-+	int ret = 0;
-+	u64 v, size = reg->id & KVM_REG_SIZE_MASK;
-+
-+	switch (size) {
-+	case KVM_REG_SIZE_U64:
-+		ret = kvm_get_one_reg(vcpu, reg, &v);
-+		if (ret)
-+			return ret;
-+		ret = put_user(v, (u64 __user *)(long)reg->addr);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+	return ret;
-+}
-+
-+static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
-+			const struct kvm_one_reg *reg,
-+			u64 v)
-+{
-+	int id, ret = 0;
-+	u64 type = reg->id & KVM_REG_LOONGARCH_MASK;
-+
-+	switch (type) {
-+	case KVM_REG_LOONGARCH_CSR:
-+		id = KVM_GET_IOC_CSRIDX(reg->id);
-+		ret = kvm_setcsr(vcpu, id, v);
-+		break;
-+	case KVM_REG_LOONGARCH_CPUCFG:
-+		id = KVM_GET_IOC_CPUCFG_IDX(reg->id);
-+		if (id >= 0 && id < KVM_MAX_CPUCFG_REGS)
-+			vcpu->arch.cpucfg[id] = (u32)v;
-+		else
-+			ret = -EINVAL;
-+		break;
-+	case KVM_REG_LOONGARCH_KVM:
-+		switch (reg->id & 0xf) {
-+		case 3: /* counter reg */
-+			/*
-+			 * gftoffset is relative with board, not vcpu
-+			 * only set for the first time for smp system
-+			 */
-+			if (vcpu->vcpu_id == 0)
-+				vcpu->kvm->arch.time_offset = (signed long)(v - drdtime());
-+			break;
-+		case 4: /* vcpu reset */
-+			kvm_reset_timer(vcpu);
-+			memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
-+			memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
++	vmcs = alloc_percpu(struct kvm_context);
++	if (!vmcs) {
++		pr_err("kvm: failed to allocate percpu kvm_context\n");
++		return -ENOMEM;
 +	}
 +
-+	return ret;
-+}
-+
-+static int kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+{
-+	int ret = 0;
-+	u64 v, size = reg->id & KVM_REG_SIZE_MASK;
-+
-+	switch (size) {
-+	case KVM_REG_SIZE_U64:
-+		ret = get_user(v, (u64 __user *)(long)reg->addr);
-+		if (ret)
-+			return ret;
-+		break;
-+	default:
-+		return -EINVAL;
++	kvm_loongarch_ops = kzalloc(sizeof(*kvm_loongarch_ops), GFP_KERNEL);
++	if (!kvm_loongarch_ops) {
++		free_percpu(vmcs);
++		vmcs = NULL;
++		return -ENOMEM;
 +	}
-+
-+	return kvm_set_one_reg(vcpu, reg, v);
-+}
-+
-+int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
-+				  struct kvm_sregs *sregs)
-+{
-+	return -ENOIOCTLCMD;
-+}
-+
-+int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
-+				  struct kvm_sregs *sregs)
-+{
-+	return -ENOIOCTLCMD;
-+}
-+
-+int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
-+		regs->gpr[i] = vcpu->arch.gprs[i];
-+
-+	regs->pc = vcpu->arch.pc;
-+
-+	return 0;
-+}
-+
-+int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
-+{
-+	int i;
-+
-+	for (i = 1; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
-+		vcpu->arch.gprs[i] = regs->gpr[i];
-+	vcpu->arch.gprs[0] = 0; /* zero is special, and cannot be set. */
-+	vcpu->arch.pc = regs->pc;
-+
-+	return 0;
-+}
-+
-+long kvm_arch_vcpu_ioctl(struct file *filp,
-+			 unsigned int ioctl, unsigned long arg)
-+{
-+	struct kvm_vcpu *vcpu = filp->private_data;
-+	void __user *argp = (void __user *)arg;
-+	long r;
-+
 +	/*
-+	 * Only software CSR should be modified
-+	 *
-+	 * If any hardware CSR register is modified, vcpu_load/vcpu_put pair
-+	 * should be used. Since CSR registers owns by this vcpu, if switch
-+	 * to other vcpus, other vcpus need reload CSR register.
-+	 *
-+	 * If software CSR is modified, bit KVM_LARCH_HWCSR_USABLE should
-+	 * be clear in vcpu->arch.aux_inuse, and vcpu_load will check
-+	 * aux_inuse flag and reload CSR form sw
++	 * There will be problem in world switch code if there
++	 * is page fault reenter, since pgd register is shared
++	 * between root kernel and kvm hypervisor. World switch
++	 * entry need be unmapped area, cannot be tlb mapped area.
++	 * In future if hw pagetable walking is supported, or there
++	 * is separate pgd registers between root kernel and kvm
++	 * hypervisor, copying about world switch code will not be used.
 +	 */
 +
-+	switch (ioctl) {
-+	case KVM_SET_ONE_REG:
-+	case KVM_GET_ONE_REG: {
-+		struct kvm_one_reg reg;
-+
-+		r = -EFAULT;
-+		if (copy_from_user(&reg, argp, sizeof(reg)))
-+			break;
-+		if (ioctl == KVM_SET_ONE_REG) {
-+			r = kvm_set_reg(vcpu, &reg);
-+			vcpu->arch.aux_inuse &= ~KVM_LARCH_HWCSR_USABLE;
-+		} else
-+			r = kvm_get_reg(vcpu, &reg);
-+		break;
-+	}
-+	default:
-+		r = -ENOIOCTLCMD;
-+		break;
++	order = get_order(kvm_vector_size + kvm_enter_guest_size);
++	addr = (void *)__get_free_pages(GFP_KERNEL, order);
++	if (!addr) {
++		free_percpu(vmcs);
++		vmcs = NULL;
++		kfree(kvm_loongarch_ops);
++		kvm_loongarch_ops = NULL;
++		return -ENOMEM;
 +	}
 +
-+	return r;
++	memcpy(addr, kvm_vector_entry, kvm_vector_size);
++	memcpy(addr + kvm_vector_size, kvm_enter_guest, kvm_enter_guest_size);
++	flush_icache_range((unsigned long)addr, (unsigned long)addr +
++				kvm_vector_size + kvm_enter_guest_size);
++	kvm_loongarch_ops->guest_eentry = addr;
++	kvm_loongarch_ops->enter_guest = addr + kvm_vector_size;
++	kvm_loongarch_ops->page_order = order;
++
++	vpid_mask = read_csr_gstat();
++	vpid_mask = (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_SHIFT;
++	if (vpid_mask)
++		vpid_mask = GENMASK(vpid_mask - 1, 0);
++
++	for_each_possible_cpu(cpu) {
++		context = per_cpu_ptr(vmcs, cpu);
++		context->vpid_cache = vpid_mask + 1;
++		context->last_vcpu = NULL;
++	}
++
++	kvm_init_fault();
++	kvm_init_gcsr_flag();
++
++	return 0;
 +}
 +
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- {
- 	return 0;
++static void kvm_loongarch_env_exit(void)
++{
++	unsigned long addr;
++
++	if (vmcs)
++		free_percpu(vmcs);
++
++	if (kvm_loongarch_ops) {
++		if (kvm_loongarch_ops->guest_eentry) {
++			addr = (unsigned long)kvm_loongarch_ops->guest_eentry;
++			free_pages(addr, kvm_loongarch_ops->page_order);
++		}
++		kfree(kvm_loongarch_ops);
++	}
++}
++
++static int kvm_loongarch_init(void)
++{
++	int r;
++
++	if (!cpu_has_lvz) {
++		kvm_info("hardware virtualization not available\n");
++		return -ENODEV;
++	}
++	r = kvm_loongarch_env_init();
++	if (r)
++		return r;
++
++	return kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
++}
++
++static void kvm_loongarch_exit(void)
++{
++	kvm_exit();
++	kvm_loongarch_env_exit();
++}
++
++module_init(kvm_loongarch_init);
++module_exit(kvm_loongarch_exit);
++
++#ifdef MODULE
++static const struct cpu_feature loongarch_kvm_feature[] = {
++	{ .feature = cpu_feature(LOONGARCH_LVZ) },
++	{},
++};
++MODULE_DEVICE_TABLE(cpu, loongarch_kvm_feature);
++#endif
 -- 
 2.39.1
 
