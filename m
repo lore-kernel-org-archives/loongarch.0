@@ -1,89 +1,72 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CA663A5;
-	Fri, 15 Sep 2023 10:21:20 +0000 (UTC)
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3ab8e324725so381260b6e.0;
-        Fri, 15 Sep 2023 03:21:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694773280; x=1695378080;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T2EQISS+TI6FymgehjVGYiebl+s7fB1qqSBohFwF18Y=;
-        b=NZugN1bBxSNzhtnSCxByPgDNX546xui31JpRyLoJmlpxBxm0rjaGAIBqQUHhYZkzcW
-         /430pQ/s4JkkX5s8HAxexk7sEx6wB2zDy3KMdL5qKVUDNBm2XXGZqMXGsQWPX2iZIvoJ
-         5JUQFOfmnO1FOXisjnpcOvYTxhdhUF/0lER8tSoelYHtydPwESsa8zv+6JgWsvwDxS0e
-         vtv7zSXyZHRz8FzUkFitm86Pj27Z1C/unjBbI6pnPAKmiqtgOnUC12O2kKUT/5FSAV4o
-         R+KBpGcWlhwn2d6EArsPL1uhZ22c+ySx1/z7nkCsyBQ4FEDNLezmdgkXXEqp04fM/DHA
-         0WXQ==
-X-Gm-Message-State: AOJu0YwSymf3tHZjNYJwJZE+VFJWmzhs+TDIJRfNV7yD1Nkx2A7ZUYy1
-	z8EJmTj0Nuq9UwpJFy9tDQpVuR0PsTvkGbMNWLo=
-X-Google-Smtp-Source: AGHT+IE91hPOK8y/kVeJFKJe8XyQhu0n/Q+0x2/bog6c455z4TN1+FSBkfJT1sJVgSvtor6J5rMGJgfx0mnsyytHqT0=
-X-Received: by 2002:a4a:de83:0:b0:56e:94ed:c098 with SMTP id
- v3-20020a4ade83000000b0056e94edc098mr1206706oou.0.1694773279760; Fri, 15 Sep
- 2023 03:21:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B2C101EB
+	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 13:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=MDmOVUGFw7psqGT5ektePsIj1IbCfn8TY/XxeJGVNTw=; b=rtC74pAlfCcyhcB3Wyl8LKCPB0
+	Xwz14Qd36TL0PKhw7Zk+LHnxUd5XgAmKuJEe7akvV+FC/sROu11SxSxKI+0wEMV+5tyG+iCX3Olrr
+	lO0y6WnYO8QsojbcRYxX9UrQdN/L/OAffvM0kt7yypxuwclbo3I2J8b4RIOb+s/+WUwGejgTGc/Xo
+	dStNDrPrXV6sXo2DJ/ln2JUAiLUi/5f/0lMGJHd3Kav6/MEdvhDb63mrP0ECRMh5DT6Wb67I6BORS
+	s9AtdfQyX3WJB4LjYZCrgQaddENsVW+TeUjrQddQqbbbUdsUALBFXgdcFgNaR305NNyFce8J7knKh
+	AzEeS2ng==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40636)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1qh96C-0005hw-0w;
+	Fri, 15 Sep 2023 14:43:08 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1qh969-0005qV-Do; Fri, 15 Sep 2023 14:43:05 +0100
+Date: Fri, 15 Sep 2023 14:43:05 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Salil Mehta <salil.mehta@huawei.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	James Morse <james.morse@arm.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"x86@kernel.org" <x86@kernel.org>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	"jianyong.wu@arm.com" <jianyong.wu@arm.com>,
+	"justin.he@arm.com" <justin.he@arm.com>
+Subject: Re: [RFC PATCH v2 27/35] ACPICA: Add new MADT GICC flags fields
+ [code first?]
+Message-ID: <ZQRfaYYwrYQEfICN@shell.armlinux.org.uk>
+References: <20230913163823.7880-1-james.morse@arm.com>
+ <20230913163823.7880-28-james.morse@arm.com>
+ <CAMj1kXHRAt7ecB9p_dm3MjDL5wZkAsVh30hMY2SV_XUe=bm6Vg@mail.gmail.com>
+ <20230914155459.00002dba@Huawei.com>
+ <CAMj1kXFquiLGCMow3iujHUU4GBZx2t9KfKy1R9iqjBFjY+acaA@mail.gmail.com>
+ <f5d9beea95e149ab89364dcdb0f8bf69@huawei.com>
+ <ZQQDJT6MOaIOPmq5@shell.armlinux.org.uk>
+ <CAJZ5v0jUQ+4G5ArYAtu1gvYF4356CK_QVTO4oWn0ukwdOiZaHA@mail.gmail.com>
+ <80e36ff513504a0382a1cbce83e42295@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230913163823.7880-1-james.morse@arm.com> <20230913163823.7880-28-james.morse@arm.com>
- <CAMj1kXHRAt7ecB9p_dm3MjDL5wZkAsVh30hMY2SV_XUe=bm6Vg@mail.gmail.com>
- <20230914155459.00002dba@Huawei.com> <CAMj1kXFquiLGCMow3iujHUU4GBZx2t9KfKy1R9iqjBFjY+acaA@mail.gmail.com>
- <f5d9beea95e149ab89364dcdb0f8bf69@huawei.com> <ZQQDJT6MOaIOPmq5@shell.armlinux.org.uk>
- <CAJZ5v0jUQ+4G5ArYAtu1gvYF4356CK_QVTO4oWn0ukwdOiZaHA@mail.gmail.com> <80e36ff513504a0382a1cbce83e42295@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <80e36ff513504a0382a1cbce83e42295@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 15 Sep 2023 12:21:08 +0200
-Message-ID: <CAJZ5v0gou9Pdj_CPC=vLJ-6S-hz+0VY+GMgXcRJk=6t9mL1ykw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 27/35] ACPICA: Add new MADT GICC flags fields [code first?]
-To: Salil Mehta <salil.mehta@huawei.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Russell King (Oracle)" <linux@armlinux.org.uk>, 
-	Ard Biesheuvel <ardb@kernel.org>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	James Morse <james.morse@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, "jianyong.wu@arm.com" <jianyong.wu@arm.com>, 
-	"justin.he@arm.com" <justin.he@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Fri, Sep 15, 2023 at 11:34=E2=80=AFAM Salil Mehta <salil.mehta@huawei.co=
-m> wrote:
->
->
-> > From: Rafael J. Wysocki <rafael@kernel.org>
-> > Sent: Friday, September 15, 2023 9:45 AM
-> > To: Russell King (Oracle) <linux@armlinux.org.uk>
-> > Cc: Salil Mehta <salil.mehta@huawei.com>; Ard Biesheuvel <ardb@kernel.o=
-rg>;
-> > Jonathan Cameron <jonathan.cameron@huawei.com>; James Morse
-> > <james.morse@arm.com>; linux-pm@vger.kernel.org; loongarch@lists.linux.=
-dev;
-> > linux-acpi@vger.kernel.org; linux-arch@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > riscv@lists.infradead.org; kvmarm@lists.linux.dev; x86@kernel.org; Jean=
--
-> > Philippe Brucker <jean-philippe@linaro.org>; jianyong.wu@arm.com;
-> > justin.he@arm.com
-> > Subject: Re: [RFC PATCH v2 27/35] ACPICA: Add new MADT GICC flags field=
-s
-> > [code first?]
-> >
-> > On Fri, Sep 15, 2023 at 9:09=E2=80=AFAM Russell King (Oracle)
-> > <linux@armlinux.org.uk> wrote:
-> > >
-> > > On Fri, Sep 15, 2023 at 02:29:13AM +0000, Salil Mehta wrote:
-> > > > On x86, during init, if the MADT entry for LAPIC is found to be
-> > > > online-capable and is enabled as well then possible and present
-> > >
+On Fri, Sep 15, 2023 at 09:34:46AM +0000, Salil Mehta wrote:
 > > > Note that the ACPI spec says enabled + online-capable isn't defined.
 > > >
 > > > "The information conveyed by this bit depends on the value of the
@@ -93,11 +76,29 @@ s
 > > > So, if x86 is doing something with the enabled && online-capable
 > > > state (other than ignoring the online-capable) then technically it
 > > > is doing something that the spec doesn't define
-> >
+> > 
 > > And so it is wrong.
->
->
+> 
 > Or maybe, specification has not been updated yet. code-first?
 
-Well, if you are aware of any change requests related to this and
-posted as code-first, please let me know.
+What is the point in speculating. If you want to speculate about it,
+fine, but please don't use speculation as a reason that "oh we need
+to sort this out before we can merge the patches".
+
+This is precisely why engineers are bad at producing products. They
+like to continually tweak the design, and the design never gets out
+the door. You need someone who is a project manager to tell engineers
+when to stop. Without a project manager to do that, eventually the
+project fades into insignificance because it becomes no longer relevant
+or has its funding cut.
+
+Hotplug VCPU on aarch64 feels exactly like that - it seems to be an
+engineer project that is just going to for-ever rumble on and never
+actually see the light of day.
+
+So please - stop speculating and lets get vCPU hotplug *actually*
+delivered and usable. Even if it's not 100% perfect.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
