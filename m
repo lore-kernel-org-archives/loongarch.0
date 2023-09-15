@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 220F4641
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 220C036A
 	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 01:51:46 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8DxPOtDuANlh_4nAA--.6057S3;
-	Fri, 15 Sep 2023 09:49:55 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxRuhGuANl7v4nAA--.23630S3;
+	Fri, 15 Sep 2023 09:49:58 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axndw9uANl+ioGAA--.11927S6;
-	Fri, 15 Sep 2023 09:49:54 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axndw9uANl+ioGAA--.11927S15;
+	Fri, 15 Sep 2023 09:49:58 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v21 04/29] LoongArch: KVM: Implement VM related functions
-Date: Fri, 15 Sep 2023 09:49:24 +0800
-Message-Id: <20230915014949.1222777-5-zhaotianrui@loongson.cn>
+Subject: [PATCH v21 13/29] LoongArch: KVM: Implement misc vcpu related interfaces
+Date: Fri, 15 Sep 2023 09:49:33 +0800
+Message-Id: <20230915014949.1222777-14-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230915014949.1222777-1-zhaotianrui@loongson.cn>
 References: <20230915014949.1222777-1-zhaotianrui@loongson.cn>
@@ -35,122 +35,137 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axndw9uANl+ioGAA--.11927S6
+X-CM-TRANSID:AQAAf8Axndw9uANl+ioGAA--.11927S15
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement LoongArch VM operations: Init and destroy vm interface,
-allocating memory page to save the vm pgd when init vm. Implement
-vm check extension, such as getting vcpu number info, memory slots
-info, and fpu info. And implement vm status description.
+Implement some misc vcpu relaterd interfaces, such as vcpu runnable,
+vcpu should kick, vcpu dump regs, etc.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vm.c | 92 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 arch/loongarch/kvm/vm.c
+ arch/loongarch/kvm/vcpu.c | 105 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
 
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-new file mode 100644
-index 0000000000..abc345bf37
---- /dev/null
-+++ b/arch/loongarch/kvm/vm.c
-@@ -0,0 +1,92 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 191d9f5517..42383f8648 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -13,6 +13,111 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+ 
++int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
++{
++	return !!(vcpu->arch.irq_pending) &&
++		vcpu->arch.mp_state.mp_state == KVM_MP_STATE_RUNNABLE;
++}
 +
-+#include <linux/kvm_host.h>
-+#include <asm/kvm_mmu.h>
++int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
++{
++	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
++}
 +
-+const struct _kvm_stats_desc kvm_vm_stats_desc[] = {
-+	KVM_GENERIC_VM_STATS(),
-+	STATS_DESC_ICOUNTER(VM, pages),
-+	STATS_DESC_ICOUNTER(VM, hugepages),
-+};
++bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
++{
++	return false;
++}
 +
-+const struct kvm_stats_header kvm_vm_stats_header = {
-+	.name_size = KVM_STATS_NAME_SIZE,
-+	.num_desc = ARRAY_SIZE(kvm_vm_stats_desc),
-+	.id_offset =  sizeof(struct kvm_stats_header),
-+	.desc_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE,
-+	.data_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE +
-+					sizeof(kvm_vm_stats_desc),
-+};
++vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
++{
++	return VM_FAULT_SIGBUS;
++}
 +
-+int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
++int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
++				  struct kvm_translation *tr)
++{
++	return -EINVAL;
++}
++
++int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return kvm_pending_timer(vcpu) ||
++		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) &
++			(1 << INT_TI);
++}
++
++int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
 +{
 +	int i;
 +
-+	/* Allocate page table to map GPA -> RPA */
-+	kvm->arch.pgd = kvm_pgd_alloc();
-+	if (!kvm->arch.pgd)
-+		return -ENOMEM;
++	kvm_debug("vCPU Register Dump:\n");
++	kvm_debug("\tpc = 0x%08lx\n", vcpu->arch.pc);
++	kvm_debug("\texceptions: %08lx\n", vcpu->arch.irq_pending);
 +
-+	kvm_init_vmcs(kvm);
-+	kvm->arch.gpa_size = BIT(cpu_vabits - 1);
-+	kvm->arch.root_level = CONFIG_PGTABLE_LEVELS - 1;
-+	kvm->arch.invalid_ptes[0] = 0;
-+	kvm->arch.invalid_ptes[1] = (unsigned long)invalid_pte_table;
-+	kvm->arch.invalid_ptes[2] = (unsigned long)invalid_pmd_table;
-+#if CONFIG_PGTABLE_LEVELS > 3
-+	kvm->arch.invalid_ptes[3] = (unsigned long)invalid_pud_table;
-+#endif
-+	for (i = 0; i <= kvm->arch.root_level; i++)
-+		kvm->arch.pte_shifts[i] = PAGE_SHIFT + i * (PAGE_SHIFT - 3);
++	for (i = 0; i < 32; i += 4) {
++		kvm_debug("\tgpr%02d: %08lx %08lx %08lx %08lx\n", i,
++		       vcpu->arch.gprs[i],
++		       vcpu->arch.gprs[i + 1],
++		       vcpu->arch.gprs[i + 2], vcpu->arch.gprs[i + 3]);
++	}
++
++	kvm_debug("\tCRMOD: 0x%08lx, exst: 0x%08lx\n",
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD),
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT));
++
++	kvm_debug("\tERA: 0x%08lx\n", kvm_read_hw_gcsr(LOONGARCH_CSR_ERA));
 +
 +	return 0;
 +}
 +
-+void kvm_arch_destroy_vm(struct kvm *kvm)
++int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
++				struct kvm_mp_state *mp_state)
 +{
-+	kvm_destroy_vcpus(kvm);
-+	free_page((unsigned long)kvm->arch.pgd);
-+	kvm->arch.pgd = NULL;
++	*mp_state = vcpu->arch.mp_state;
++
++	return 0;
 +}
 +
-+int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
++int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
++				struct kvm_mp_state *mp_state)
 +{
-+	int r;
++	int ret = 0;
 +
-+	switch (ext) {
-+	case KVM_CAP_ONE_REG:
-+	case KVM_CAP_ENABLE_CAP:
-+	case KVM_CAP_READONLY_MEM:
-+	case KVM_CAP_SYNC_MMU:
-+	case KVM_CAP_IMMEDIATE_EXIT:
-+	case KVM_CAP_IOEVENTFD:
-+	case KVM_CAP_MP_STATE:
-+		r = 1;
-+		break;
-+	case KVM_CAP_NR_VCPUS:
-+		r = num_online_cpus();
-+		break;
-+	case KVM_CAP_MAX_VCPUS:
-+		r = KVM_MAX_VCPUS;
-+		break;
-+	case KVM_CAP_MAX_VCPU_ID:
-+		r = KVM_MAX_VCPU_IDS;
-+		break;
-+	case KVM_CAP_NR_MEMSLOTS:
-+		r = KVM_USER_MEM_SLOTS;
++	switch (mp_state->mp_state) {
++	case KVM_MP_STATE_RUNNABLE:
++		vcpu->arch.mp_state = *mp_state;
 +		break;
 +	default:
-+		r = 0;
-+		break;
++		ret = -EINVAL;
 +	}
 +
-+	return r;
++	return ret;
 +}
 +
-+int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
++int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
++					struct kvm_guest_debug *dbg)
 +{
-+	return -ENOIOCTLCMD;
++	return -EINVAL;
 +}
++
++/**
++ * kvm_migrate_count() - Migrate timer.
++ * @vcpu:       Virtual CPU.
++ *
++ * Migrate hrtimer to the current CPU by cancelling and restarting it
++ * if it was running prior to being cancelled.
++ *
++ * Must be called when the vCPU is migrated to a different CPU to ensure that
++ * timer expiry during guest execution interrupts the guest and causes the
++ * interrupt to be delivered in a timely manner.
++ */
++static void kvm_migrate_count(struct kvm_vcpu *vcpu)
++{
++	if (hrtimer_cancel(&vcpu->arch.swtimer))
++		hrtimer_restart(&vcpu->arch.swtimer);
++}
++
+ int kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
+ {
+ 	unsigned long val;
 -- 
 2.39.1
 
