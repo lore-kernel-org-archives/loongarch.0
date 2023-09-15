@@ -1,153 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2097830CE8
-	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 15:17:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F31C433CC
-	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 15:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694791061;
-	bh=Pn5wagKwIIkrewPEK5Nl2LLTjnSePpF+xfXYXJO0WYc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uBdTy9/j5LjtmTLykyB3tw4+mKLRonDty+LiVreZDSSlqCE/fKVatnS4Oc670mvOS
-	 w15oWMDFrsSc4Uy8GCpNNfvAbB5Oek/gn6M77SpAqmHVrYdn4hRDYwGDz9BN0TVQSc
-	 yv6CP60YZs9qPQGlZGlKYumL+DxEUvvw2I4vFr3+vLKEWw3eIttGD5PKBReaMgI20E
-	 Sdf2sv8HqVNDATm9QVKKdZ+CY1QzftP2IRNO+eNl0kVK5+6H01J5gorO72Ndp91nIF
-	 R0Olv/ms0ehD/QCkAoA2a527YZ8pw/BfQ+iqeQHpWqFYN2ZIiEx/KONsTXxNi/LjkB
-	 Nl32Z41HkwnjA==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5230a22cfd1so2796195a12.1
-        for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 08:17:41 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwzXEhbJPMwWapyCH+2+ENClTswCngvY5ccoVRaduC5PqShuqVe
-	hBMc8K8tggAg7AmxbWkBA4m7o6IG0CVboGMVYcI=
-X-Google-Smtp-Source: AGHT+IHpOK75kILAwOKB+Q5UlF87xwn69ocBr6qslTeX6x1Qiydj6IjmSpCpQtP6mHvI+o8Z2EJhNyYzQdRfechbeVU=
-X-Received: by 2002:a05:6402:344e:b0:526:d6d2:aeb5 with SMTP id
- l14-20020a056402344e00b00526d6d2aeb5mr1560565edc.9.1694791059969; Fri, 15 Sep
- 2023 08:17:39 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE8511C95;
+	Fri, 15 Sep 2023 15:32:42 +0000 (UTC)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RnJ8H6h8Qz6K6SZ;
+	Fri, 15 Sep 2023 23:31:59 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 15 Sep
+ 2023 16:32:39 +0100
+Date: Fri, 15 Sep 2023 16:32:38 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Salil Mehta <salil.mehta@huawei.com>
+CC: Russell King <linux@armlinux.org.uk>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, James Morse
+	<james.morse@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, "Jean-Philippe
+ Brucker" <jean-philippe@linaro.org>, "jianyong.wu@arm.com"
+	<jianyong.wu@arm.com>, "justin.he@arm.com" <justin.he@arm.com>
+Subject: Re: [RFC PATCH v2 27/35] ACPICA: Add new MADT GICC flags fields
+ [code first?]
+Message-ID: <20230915163238.000054c8@Huawei.com>
+In-Reply-To: <9e327ad1128045fa80eebf327abaa8f0@huawei.com>
+References: <20230913163823.7880-1-james.morse@arm.com>
+	<20230913163823.7880-28-james.morse@arm.com>
+	<CAMj1kXHRAt7ecB9p_dm3MjDL5wZkAsVh30hMY2SV_XUe=bm6Vg@mail.gmail.com>
+	<20230914155459.00002dba@Huawei.com>
+	<CAMj1kXFquiLGCMow3iujHUU4GBZx2t9KfKy1R9iqjBFjY+acaA@mail.gmail.com>
+	<f5d9beea95e149ab89364dcdb0f8bf69@huawei.com>
+	<ZQQDJT6MOaIOPmq5@shell.armlinux.org.uk>
+	<CAJZ5v0jUQ+4G5ArYAtu1gvYF4356CK_QVTO4oWn0ukwdOiZaHA@mail.gmail.com>
+	<80e36ff513504a0382a1cbce83e42295@huawei.com>
+	<ZQRfaYYwrYQEfICN@shell.armlinux.org.uk>
+	<9e327ad1128045fa80eebf327abaa8f0@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZQC5jS/Kc/JiBEOa@p100> <CAAhV-H56oqmQhA1PKh3E6z0A04qfRPehQ8ATOiirAU2O+z=fgw@mail.gmail.com>
- <b1c729bf-86b9-8a1f-c6af-a69be2b4a44c@gmx.de> <CAAhV-H44mDiP2DWATVyvKq6n8qj=sLhjHxzMo_+_zyggoGR1pw@mail.gmail.com>
- <1160d063-8396-b126-15ca-a46807ec4258@gmx.de> <644b77db-7214-88c3-7ba6-9c805a134e63@roeck-us.net>
- <2bbc2df8-5fcf-b216-7aa0-192e27bac6e7@xen0n.name>
-In-Reply-To: <2bbc2df8-5fcf-b216-7aa0-192e27bac6e7@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 15 Sep 2023 23:17:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6=dCsPeiYGTKO9AbqbndobDp6juTN9EhrKrqXDMjj9HA@mail.gmail.com>
-Message-ID: <CAAhV-H6=dCsPeiYGTKO9AbqbndobDp6juTN9EhrKrqXDMjj9HA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix lockdep static memory detection
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Guenter Roeck <linux@roeck-us.net>, Helge Deller <deller@gmx.de>, loongarch@lists.linux.dev, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 
-On Fri, Sep 15, 2023 at 10:19=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wr=
-ote:
->
-> Hi,
->
-> On 9/15/23 22:07, Guenter Roeck wrote:
-> > Hi Helge,
-> >
-> > On 9/15/23 03:10, Helge Deller wrote:
-> >> On 9/15/23 11:23, Huacai Chen wrote:
-> >>> On Fri, Sep 15, 2023 at 4:16=E2=80=AFPM Helge Deller <deller@gmx.de> =
-wrote:
-> >>>>
-> >>>> On 9/15/23 05:22, Huacai Chen wrote:
-> >>>>> Hi Helge,
-> >>>>>
-> >>>>> On Wed, Sep 13, 2023 at 3:18=E2=80=AFAM Helge Deller <deller@gmx.de=
-> wrote:
-> >>>>>>
-> >>>>>> Since commit 0a6b58c5cd0d ("lockdep: fix static memory detection
-> >>>>>> even
-> >>>>>> more") the lockdep code uses is_kernel_core_data(),
-> >>>>>> is_kernel_rodata()
-> >>>>>> and init_section_contains() to verify if a lock is located inside =
-a
-> >>>>>> kernel static data section.
-> >>>>>>
-> >>>>>> This change triggers a failure on LoongArch, for which the
-> >>>>>> vmlinux.lds.S
-> >>>>>> script misses to put the locks (as part of in the .data.rel symbol=
-s)
-> >>>>>> into the Linux data section.
-> >>>>>> This patch fixes the lockdep problem by moving *(.data.rel*) symbo=
-ls
-> >>>>>> into the kernel data section (from _sdata to _edata).
-> >>>>>>
-> >>>>>> Additionally, move other wrongly assigned symbols too:
-> >>>>>> - altinstructions into the _initdata section,
-> >>>>
-> >>>>> I think altinstructions cannot  be put into _initdata because it wi=
-ll
-> >>>>> be used by modules.
-> >>>>
-> >>>> No.
-> >>>> arch/loongarch/kernel/vmlinux.lds.S is used for the static parts of
-> >>>> the kernel
-> >>>> and altinstructions are replaced before modules are loaded.
-> >>>> For altinstructions in modules the linker script
-> >>>> scripts/module.lds.S is used.
-> >>
-> >>> OK, then what about .got/.plt? It seems arm64 also doesn't put them i=
-n
-> >>> the data section.
-> >>
-> >> arm64 seems to throw away all plt entries already at link time (and
-> >> just keeps
-> >> the got.plt in the read-only data section).
-> >> It even checks at link time, that there are no plt entries in the
-> >> binary:
-> >>          ASSERT(SIZEOF(.plt) =3D=3D 0, "Unexpected run-time procedure
-> >> linkages detected!")
-> >>
-> >> I don't know for loongarch, but if you need the plt entries for
-> >> loongarch, it's
-> >> safest & best to put them into the read-only data section too, which
-> >> is what my patch does.
-> >> Up to now, you have them completely outside of code & data sections.
-> >>
-> >> In the end you need to decide for your platform. My patch is a
-> >> suggestion, which I think
-> >> is correct (untested by me, but Guenter replied he tested it).
-> >> But to fix the lockdep problem at minimum the move of the .data.rel
-> >> section
-> >> is needed.
-> >>
-> >
-> > Just my $0.02 .. it might make sense to concentrate on the minimum to
-> > get the immediate
-> > problem fixed. Loongarch maintainers can then decide at their own pace
-> > if they want
-> > to apply any of the other changes you suggested. After all, unless I
-> > am missing
-> > something, those additional changes are not really needed in stable
-> > releases.
->
-> Sorry for coming late, but as reviewer of arch/loongarch, I'd agree with
-> Guenter and Helge here: let's fix the immediate problem and investigate
-> the rest later -- it's not like the problems are *definitely* orthogonal
-> in this case, and at least *some* progress would be appreciated.
->
-> I'll try to reproduce the problem and test the fix during the weekend,
-> so hopefully Huacai can get the fix in before -rc2 or -rc3. Thanks for
-> the attention and fix.
-If all changes are OK, I have no objection to putting them in a single patc=
-h.
+On Fri, 15 Sep 2023 16:17:21 +0100
+Salil Mehta <salil.mehta@huawei.com> wrote:
 
-Huacai
+> Hi Russel,
+> Thanks for highlighting your concerns.
+> 
+> > From: Russell King <linux@armlinux.org.uk>
+> > Sent: Friday, September 15, 2023 2:43 PM
+> > To: Salil Mehta <salil.mehta@huawei.com>
+> > Cc: Rafael J. Wysocki <rafael@kernel.org>; Ard Biesheuvel
+> > <ardb@kernel.org>; Jonathan Cameron <jonathan.cameron@huawei.com>; James
+> > Morse <james.morse@arm.com>; linux-pm@vger.kernel.org;
+> > loongarch@lists.linux.dev; linux-acpi@vger.kernel.org; linux-
+> > arch@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-riscv@lists.infradead.org;
+> > kvmarm@lists.linux.dev; x86@kernel.org; Jean-Philippe Brucker <jean-  
+> > philippe@linaro.org>; jianyong.wu@arm.com; justin.he@arm.com  
+> > Subject: Re: [RFC PATCH v2 27/35] ACPICA: Add new MADT GICC flags fields
+> > [code first?]
+> > 
+> > On Fri, Sep 15, 2023 at 09:34:46AM +0000, Salil Mehta wrote:  
+> > > > > Note that the ACPI spec says enabled + online-capable isn't defined.
+> > > > >
+> > > > > "The information conveyed by this bit depends on the value of the
+> > > > > Enabled bit. If the Enabled bit is set, this bit is reserved and
+> > > > > must be zero."
+> > > > >
+> > > > > So, if x86 is doing something with the enabled && online-capable
+> > > > > state (other than ignoring the online-capable) then technically it
+> > > > > is doing something that the spec doesn't define  
+> > > >
+> > > > And so it is wrong.  
+> > >
+> > > Or maybe, specification has not been updated yet. code-first?  
+> > 
+> > What is the point in speculating. If you want to speculate about it,
+> > fine, but please don't use speculation as a reason that "oh we need
+> > to sort this out before we can merge the patches".  
+> 
+> [already replied in other thread but repeating it here]
+> 
+> Sorry, I am not aware but I was suggesting this. Can we have this
+> done for ARM first because there is a legitimate use-case. This
+> can be done in parallel while other patches are getting reviewed.
+> It would be great if they get accepted even in the current form.
+> 
+> 
+> > This is precisely why engineers are bad at producing products. They
+> > like to continually tweak the design, and the design never gets out
+> > the door. You need someone who is a project manager to tell engineers
+> > when to stop. Without a project manager to do that, eventually the
+> > project fades into insignificance because it becomes no longer relevant
+> > or has its funding cut.
+> > 
+> > Hotplug VCPU on aarch64 feels exactly like that - it seems to be an
+> > engineer project that is just going to for-ever rumble on and never
+> > actually see the light of day.  
+> 
+> 
+> Sometimes things are not in single persons control. Yes, it is
+> frustrating, I do understand that.
+> 
+> 
+> > So please - stop speculating and lets get vCPU hotplug *actually*
+> > delivered and usable. Even if it's not 100% perfect.  
+> 
+> We need to decide what is the criteria of acceptability and it can
+> vary across organizations. It depends upon internal requirements.
+> The issues what I pointed are,
+> 
+> 1. Legacy OS will not boot on latest platform with hotplug support.
+>    - Try running older windows on ARM platform with hotplug support.
+>      - older windows will only see boot cpu with online-capable bit.
+>      - Will windows use _OSC to check compatibility?
+>    - We have verified this with older Linux and it only shows 1 CPU.
+> 2. Hot(un)plug of cold-booted CPUs.  
+>    - Its use-case is subjective. Maybe you can throw light on this.
+> 
+> With current composition of bits both 1 & 2 cannot be supported
+> simultaneously. 
+> 
+> It is perfectly okay to live with them while clearly indicating
+> what we intend to support or are in process of supporting it.
+> But we do need an open discussion about how to proceed. This is
+> to avoid surprises later on.
+> 
+> BTW, I am just trying to make every one aware of the problems.
 
->
-> --
-> WANG "xen0n" Xuerui
->
-> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
->
->
+Step 1 - just allow growing (and shrinking back to initial
+enabled cpus).  That is fine with current specification and legacy
+OS. We only assume CPUs that are hotplugged can later be removed.
+That covers most use cases.
+
+So what effectively what Russell said. Enable what we can with
+the specifications as they stand before getting distracted by
+modifying them (again).
+
+Jonathan
+
+> 
+> Many thanks!
+> 
+> Best regards
+> Salil.
+> 
+> 
+> 
+
