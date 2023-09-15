@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B442F653
-	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 01:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7233C809
+	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 01:50:14 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxJuhKuANlQv8nAA--.18112S3;
+	by gateway (Coremail) with SMTP id _____8BxpPBKuANlTP8nAA--.11495S3;
 	Fri, 15 Sep 2023 09:50:02 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axndw9uANl+ioGAA--.11927S23;
-	Fri, 15 Sep 2023 09:50:01 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axndw9uANl+ioGAA--.11927S24;
+	Fri, 15 Sep 2023 09:50:02 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v21 21/29] LoongArch: KVM: Implement handle idle exception
-Date: Fri, 15 Sep 2023 09:49:41 +0800
-Message-Id: <20230915014949.1222777-22-zhaotianrui@loongson.cn>
+Subject: [PATCH v21 22/29] LoongArch: KVM: Implement handle gspr exception
+Date: Fri, 15 Sep 2023 09:49:42 +0800
+Message-Id: <20230915014949.1222777-23-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230915014949.1222777-1-zhaotianrui@loongson.cn>
 References: <20230915014949.1222777-1-zhaotianrui@loongson.cn>
@@ -35,48 +35,140 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axndw9uANl+ioGAA--.11927S23
+X-CM-TRANSID:AQAAf8Axndw9uANl+ioGAA--.11927S24
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement kvm handle LoongArch vcpu idle exception, using kvm_vcpu_block
-to emulate it.
+Implement kvm handle gspr exception interface, including emulate the
+reading and writing of cpucfg, csr, iocsr resource.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/loongarch/kvm/exit.c | 112 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 1a83eb9afe..9f3d9131c1 100644
+index 9f3d9131c1..a86586cdfc 100644
 --- a/arch/loongarch/kvm/exit.c
 +++ b/arch/loongarch/kvm/exit.c
-@@ -199,3 +199,23 @@ int kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
+@@ -219,3 +219,115 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
  
- 	return er;
+ 	return EMULATE_DONE;
  }
 +
-+int kvm_emu_idle(struct kvm_vcpu *vcpu)
++static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
 +{
-+	++vcpu->stat.idle_exits;
-+	trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
++	enum emulation_result er = EMULATE_DONE;
++	struct kvm_run *run = vcpu->run;
++	larch_inst inst;
++	unsigned long curr_pc;
++	int rd, rj;
++	unsigned int index;
 +
-+	if (!kvm_arch_vcpu_runnable(vcpu)) {
-+		/*
-+		 * Switch to the software timer before halt-polling/blocking as
-+		 * the guest's timer may be a break event for the vCPU, and the
-+		 * hypervisor timer runs only when the CPU is in guest mode.
-+		 * Switch before halt-polling so that KVM recognizes an expired
-+		 * timer before blocking.
-+		 */
-+		kvm_save_timer(vcpu);
-+		kvm_vcpu_block(vcpu);
++	/*
++	 *  Fetch the instruction.
++	 */
++	inst.word = vcpu->arch.badi;
++	curr_pc = vcpu->arch.pc;
++	update_pc(&vcpu->arch);
++
++	trace_kvm_exit_gspr(vcpu, inst.word);
++	er = EMULATE_FAIL;
++	switch (((inst.word >> 24) & 0xff)) {
++	case 0x0:
++		/* cpucfg GSPR */
++		if (inst.reg2_format.opcode == 0x1B) {
++			rd = inst.reg2_format.rd;
++			rj = inst.reg2_format.rj;
++			++vcpu->stat.cpucfg_exits;
++			index = vcpu->arch.gprs[rj];
++			er = EMULATE_DONE;
++			/*
++			 * By LoongArch Reference Manual 2.2.10.5
++			 * return value is 0 for undefined cpucfg index
++			 */
++			if (index < KVM_MAX_CPUCFG_REGS)
++				vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
++			else
++				vcpu->arch.gprs[rd] = 0;
++		}
++		break;
++	case 0x4:
++		/* csr GSPR */
++		er = kvm_handle_csr(vcpu, inst);
++		break;
++	case 0x6:
++		/* iocsr,cache,idle GSPR */
++		switch (((inst.word >> 22) & 0x3ff)) {
++		case 0x18:
++			/* cache GSPR */
++			er = EMULATE_DONE;
++			trace_kvm_exit_cache(vcpu, KVM_TRACE_EXIT_CACHE);
++			break;
++		case 0x19:
++			/* iocsr/idle GSPR */
++			switch (((inst.word >> 15) & 0x1ffff)) {
++			case 0xc90:
++				/* iocsr GSPR */
++				er = kvm_emu_iocsr(inst, run, vcpu);
++				break;
++			case 0xc91:
++				/* idle GSPR */
++				er = kvm_emu_idle(vcpu);
++				break;
++			default:
++				er = EMULATE_FAIL;
++				break;
++			}
++			break;
++		default:
++			er = EMULATE_FAIL;
++			break;
++		}
++		break;
++	default:
++		er = EMULATE_FAIL;
++		break;
 +	}
 +
-+	return EMULATE_DONE;
++	/* Rollback PC only if emulation was unsuccessful */
++	if (er == EMULATE_FAIL) {
++		kvm_err("[%#lx]%s: unsupported gspr instruction 0x%08x\n",
++			curr_pc, __func__, inst.word);
++
++		kvm_arch_vcpu_dump_regs(vcpu);
++		vcpu->arch.pc = curr_pc;
++	}
++	return er;
++}
++
++/*
++ * Execute cpucfg instruction will tirggerGSPR,
++ * Also the access to unimplemented csrs 0x15
++ * 0x16, 0x50~0x53, 0x80, 0x81, 0x90~0x95, 0x98
++ * 0xc0~0xff, 0x100~0x109, 0x500~0x502,
++ * cache_op, idle_op iocsr ops the same
++ */
++static int kvm_handle_gspr(struct kvm_vcpu *vcpu)
++{
++	enum emulation_result er = EMULATE_DONE;
++	int ret = RESUME_GUEST;
++
++	er = kvm_trap_handle_gspr(vcpu);
++
++	if (er == EMULATE_DONE) {
++		ret = RESUME_GUEST;
++	} else if (er == EMULATE_DO_IOCSR) {
++		vcpu->run->exit_reason = KVM_EXIT_LOONGARCH_IOCSR;
++		ret = RESUME_HOST;
++	} else {
++		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
++		ret = RESUME_GUEST;
++	}
++	return ret;
 +}
 -- 
 2.39.1
