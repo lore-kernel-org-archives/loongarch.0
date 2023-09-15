@@ -1,185 +1,165 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF65EC8;
-	Fri, 15 Sep 2023 02:29:17 +0000 (UTC)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rmyl26R7dz67NsF;
-	Fri, 15 Sep 2023 10:27:26 +0800 (CST)
-Received: from lhrpeml500001.china.huawei.com (7.191.163.213) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Fri, 15 Sep 2023 03:29:13 +0100
-Received: from lhrpeml500001.china.huawei.com ([7.191.163.213]) by
- lhrpeml500001.china.huawei.com ([7.191.163.213]) with mapi id 15.01.2507.031;
- Fri, 15 Sep 2023 03:29:13 +0100
-From: Salil Mehta <salil.mehta@huawei.com>
-To: Ard Biesheuvel <ardb@kernel.org>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>
-CC: James Morse <james.morse@arm.com>, "linux-pm@vger.kernel.org"
-	<linux-pm@vger.kernel.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-arch@vger.kernel.org"
-	<linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, Russell King
-	<linux@armlinux.org.uk>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	"jianyong.wu@arm.com" <jianyong.wu@arm.com>, "justin.he@arm.com"
-	<justin.he@arm.com>
-Subject: RE: [RFC PATCH v2 27/35] ACPICA: Add new MADT GICC flags fields [code
- first?]
-Thread-Topic: [RFC PATCH v2 27/35] ACPICA: Add new MADT GICC flags fields
- [code first?]
-Thread-Index: AQHZ5mDqpYLh+nkhC0mj9mPBt3XEBLAZ5MMAgAB0lICAAAsFgIAAEfIQ
-Date: Fri, 15 Sep 2023 02:29:13 +0000
-Message-ID: <f5d9beea95e149ab89364dcdb0f8bf69@huawei.com>
-References: <20230913163823.7880-1-james.morse@arm.com>
- <20230913163823.7880-28-james.morse@arm.com>
- <CAMj1kXHRAt7ecB9p_dm3MjDL5wZkAsVh30hMY2SV_XUe=bm6Vg@mail.gmail.com>
- <20230914155459.00002dba@Huawei.com>
- <CAMj1kXFquiLGCMow3iujHUU4GBZx2t9KfKy1R9iqjBFjY+acaA@mail.gmail.com>
-In-Reply-To: <CAMj1kXFquiLGCMow3iujHUU4GBZx2t9KfKy1R9iqjBFjY+acaA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [10.126.169.72]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27137EE
+	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 03:22:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B89FC433C7
+	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 03:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694748155;
+	bh=WZo85cFKx2yQFlaOIwHXEnceHiEm8QQ7OFUyZqTOQ34=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EhlYIyWuYeFpGAs2CHf/mjTCmlO55knSL4DzD82xvs51JFy+SB5sKf+KbcOK3ztR7
+	 1QbVr3v9zKFPFxmUyqmfOs/xS1iUuPtk9UDSL8kz5PWzNxjw/kixmjCTjGnCguH1I+
+	 Iz5USwmU8uSvz6HAGSvWeub0seZD5EB1Lk7N7s1JUHOlWNd83XEr/5j1x+Oc2YvFyR
+	 P/gwsxVLE0rEdaYbd06CxDvEb8YNt0ZMZEQyWziqX6Mzk8zfJYl5nYo7FwVOG4oTUY
+	 TUkhR2qgQQaDqUvMLE3MOHh/E4POve69/XQcn5pu2SxtJcmEbFbcX42rmbaaIqQIa2
+	 XljzP6MQnlvqA==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-9a9cd066db5so225646066b.0
+        for <loongarch@lists.linux.dev>; Thu, 14 Sep 2023 20:22:35 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yw42CuUrgTHNBQxj6sz1r+bprnPhW7F1GR4Qw+dszYU6oJbKBhl
+	IlvrtvOFZefkurNirdVQxHt+4LThs2n92WrpQVU=
+X-Google-Smtp-Source: AGHT+IHVfvYOY7mljhyyfVJ3nbLlErvhjC/r7hmAZ9cMr4SeNYNxgCugoOdpRJOasofMnqiAsjpXtekANyp7iDtg234=
+X-Received: by 2002:a17:906:4ca:b0:994:54ff:10f6 with SMTP id
+ g10-20020a17090604ca00b0099454ff10f6mr312832eja.30.1694748153698; Thu, 14 Sep
+ 2023 20:22:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <ZQC5jS/Kc/JiBEOa@p100>
+In-Reply-To: <ZQC5jS/Kc/JiBEOa@p100>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 15 Sep 2023 11:22:20 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H56oqmQhA1PKh3E6z0A04qfRPehQ8ATOiirAU2O+z=fgw@mail.gmail.com>
+Message-ID: <CAAhV-H56oqmQhA1PKh3E6z0A04qfRPehQ8ATOiirAU2O+z=fgw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fix lockdep static memory detection
+To: Helge Deller <deller@gmx.de>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Guenter Roeck <linux@roeck-us.net>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgQXJkLA0KDQo+IEZyb206IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+IFNl
-bnQ6IFRodXJzZGF5LCBTZXB0ZW1iZXIgMTQsIDIwMjMgNDozNCBQTQ0KPiBUbzogSm9uYXRoYW4g
-Q2FtZXJvbiA8am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29tPg0KPiBDYzogSmFtZXMgTW9yc2Ug
-PGphbWVzLm1vcnNlQGFybS5jb20+OyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxvb25n
-YXJjaEBsaXN0cy5saW51eC5kZXY7IGxpbnV4LWFjcGlAdmdlci5rZXJuZWwub3JnOyBsaW51eC0N
-Cj4gYXJjaEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxp
-bnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LXJpc2N2QGxpc3Rz
-LmluZnJhZGVhZC5vcmc7DQo+IGt2bWFybUBsaXN0cy5saW51eC5kZXY7IHg4NkBrZXJuZWwub3Jn
-OyBTYWxpbCBNZWh0YQ0KPiA8c2FsaWwubWVodGFAaHVhd2VpLmNvbT47IFJ1c3NlbGwgS2luZyA8
-bGludXhAYXJtbGludXgub3JnLnVrPjsgSmVhbi0NCj4gUGhpbGlwcGUgQnJ1Y2tlciA8amVhbi1w
-aGlsaXBwZUBsaW5hcm8ub3JnPjsgamlhbnlvbmcud3VAYXJtLmNvbTsNCj4ganVzdGluLmhlQGFy
-bS5jb20NCj4gU3ViamVjdDogUmU6IFtSRkMgUEFUQ0ggdjIgMjcvMzVdIEFDUElDQTogQWRkIG5l
-dyBNQURUIEdJQ0MgZmxhZ3MgZmllbGRzDQo+IFtjb2RlIGZpcnN0P10NCj4gDQo+IE9uIFRodSwg
-MTQgU2VwdCAyMDIzIGF0IDE2OjU1LCBKb25hdGhhbiBDYW1lcm9uDQo+IDxKb25hdGhhbi5DYW1l
-cm9uQGh1YXdlaS5jb20+IHdyb3RlOg0KPiA+DQo+ID4gT24gVGh1LCAxNCBTZXAgMjAyMyAwOTo1
-Nzo0NCArMDIwMA0KPiA+IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+IHdyb3RlOg0K
-PiA+DQo+ID4gPiBIZWxsbyBKYW1lcywNCj4gPiA+DQo+ID4gPiBPbiBXZWQsIDEzIFNlcHQgMjAy
-MyBhdCAxODo0MSwgSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFybS5jb20+IHdyb3RlOg0KPiA+
-ID4gPg0KPiA+ID4gPiBBZGQgdGhlIG5ldyBmbGFnIGZpZWxkIHRvIHRoZSBNQURUJ3MgR0lDQyBz
-dHJ1Y3R1cmUuDQo+ID4gPiA+DQo+ID4gPiA+ICdPbmxpbmUgQ2FwYWJsZScgaW5kaWNhdGVzIGEg
-ZGlzYWJsZWQgQ1BVIGNhbiBiZSBlbmFibGVkIGxhdGVyLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+
-IFdoeSBkbyB3ZSBuZWVkIGEgYml0IGZvciB0aGlzPyBXaGF0IHdvdWxkIGJlIHRoZSBwb2ludCBv
-ZiBkZXNjcmliaW5nDQo+ID4gPiBkaXNhYmxlZCBDUFVzIHRoYXQgY2Fubm90IGJlIGVuYWJsZWQg
-KGFuZCBhcmUgeW91IGFyZSBhd2FyZSBvZg0KPiA+ID4gZmlybXdhcmUgZG9pbmcgdGhpcz8pLg0K
-PiA+DQo+ID4gRW5hYmxlZCBiZWluZyBub3Qgc2V0IGlzIGNvbW1vbiBhdCBzb21lIHNpbWlsYXIg
-QUNQSSB0YWJsZXMgYXQgbGVhc3QuDQo+ID4NCj4gPiBUaGlzIGlzIGF2YWlsYWJsZSBpbiBtb3N0
-IEFDUEkgdGFibGVzIHRvIGFsbG93IGZpcm13YXJlIHRvIHVzZSAnbmVhcmx5Jw0KPiA+IHN0YXRp
-YyB0YWJsZXMgYW5kIGp1c3QgdHdlYWsgdGhlICdlbmFibGVkJyBiaXQgdG8gc2F5IGlmIHRoZSBy
-ZWNvcmQgc2hvdWxkDQo+ID4gYmUgaWdub3JlZCBvciBub3QuIEFsc28gX1NUQSBub3QgcHJlc2Vu
-dCB3aGljaCBpcyBmb3Igc2FtZSB0cmljay4NCj4gPiBJZiB5b3UgYXJlIGRvaW5nIGNsZXZlciBk
-eW5hbWljIHRhYmxlcywgdGhlbiB5b3UgY2FuIGp1c3Qgbm90IHByZXNlbnQNCj4gPiB0aGUgZW50
-cnkuDQo+ID4NCj4gPiBXaXRoIHRoYXQgZXhpc3RpbmcgdXNlIGNhc2UgaW4gbWluZCwgbmVlZCBh
-bm90aGVyIGJpdCB0byBzYXkgdGhpcw0KPiA+IG9uZSBtaWdodCBvbmUgZGF5IHR1cm4gdXAuICBO
-b3RlIHRoaXMgaXMgY29waWVkIGZyb20geDg2IHRob3VnaCBubw0KPiA+IG9uZSBzZWVtcyB0byBo
-YXZlIGltcGxlbWVudGVkIHRoZSBrZXJuZWwgc3VwcG9ydCBmb3IgdGhlbSB5ZXQuDQo+ID4NCj4g
-PiBOb3RlIGFzIHBlciBteSBvdGhlciByZXBseSAtIHRoaXMgaXNuJ3QgYSBjb2RlIGZpcnN0IHBy
-b3Bvc2FsLiBJdCdzIGluIHRoZQ0KPiA+IHNwZWMgYWxyZWFkeSAodmlhIGEgY29kZSBmaXJzdCBw
-cm9wb3NhbCBsYXN0IHllYXIgSSB0aGluaykuDQo+ID4NCj4gPiA+DQo+ID4gPiBTbyB3aHkgYXJl
-IHdlIG5vdCBhYmxlIHRvIGFzc3VtZSB0aGF0IHRoaXMgbmV3IGJpdCBjYW4gYWx3YXlzIGJlIHRy
-ZWF0ZWQgYXMgJzEnPw0KPiA+DQo+ID4gR2l2ZW4gYWJvdmUsIG5lZWQgdGhlIGV4dHJhIGJpdCB0
-byBzaXplIHN0dWZmIHRvIGFsbG93IGZvciB0aGUgQ1BVIHNob3dpbmcgdXANCj4gPiBsYXRlLg0K
-PiA+DQo+IA0KPiBTbyBkb2VzIHRoaXMgbWVhbiB0aGF0IG9uIHg4NiwgdGhlIENQVSBvYmplY3Qg
-aXMgaW5zdGFudGlhdGVkIG9ubHkNCj4gd2hlbiB0aGUgaGFyZHdhcmUgbGV2ZWwgaG90cGx1ZyBv
-Y2N1cnM/IEFuZCBiZWZvcmUgdGhhdCwgdGhlIG9iamVjdA0KPiBkb2VzIG5vdCBleGlzdCBhdCBh
-bGw/DQoNClRoYXQgaXMgY29ycmVjdCBidXQgSSBhbSBub3Qgc3VyZSBpZiB0aGUgcHJlc2VuY2Ug
-b2YgaGFyZHdhcmUgSG90cGx1Zw0Kb24geDg2IGlzIGV2ZW4gdHJ1ZS4gSXQgYWxsIGhpZGRlbiBi
-ZWhpbmQgZmlybXdhcmUgbWFnaWMgKEkgdGhpbmspLiBTbw0KeDg2IGlzIGFibGUgdG8gdXNlIHNh
-bWUgaW5mcmFzdHJ1Y3R1cmUgYm90aCBmb3IgdmlydHVhbCBhbmQgcGh5c2ljYWwNCkNQVSBIb3Rw
-bHVnLg0KDQpGcm9tIHRoZSBBQ1BJIDYuMyA+IHg4NiBoYXZlIHN0YXJ0ZWQgdG8gdXNlIG9ubGlu
-ZS1jYXBhYmxlIGJpdCBmb3IgbG9jYWwNCngyYXBpYyBpbiB0aGUgTUFEVCBUYWJsZQ0KDQpodHRw
-czovL2xvcmUua2VybmVsLm9yZy9sa21sLzE2ODAxNjg3ODAwMi40MDQuNTI2MjEwNTQwMTE2NDQw
-ODIxNC50aXAtYm90MkB0aXAtYm90Mi8NCmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMTY4
-MDE2ODc4MDg1LjQwNC42MDAzNzM0NzAwNjE2MTkzMjM4LnRpcC1ib3QyQHRpcC1ib3QyLw0KDQpC
-dXQgdGhlcmUgaXMgYSBzdWJ0bGUgZGlmZmVyZW5jZSBpbiB0aGUgd2F5IGl0IGlzIGJlaW5nIHVz
-ZWQgb24geDg2DQphbmQgb24gdGhlIEFSTSBwbGF0Zm9ybSByaWdodCBub3cuDQoNCk9uIHg4Niwg
-ZHVyaW5nIGluaXQsIGlmIHRoZSBNQURUIGVudHJ5IGZvciBMQVBJQyBpcyBmb3VuZCB0byBiZQ0K
-b25saW5lLWNhcGFibGUgYW5kIGlzIGVuYWJsZWQgYXMgd2VsbCB0aGVuIHBvc3NpYmxlIGFuZCBw
-cmVzZW50DQpjcHVtYXNrIGdldHMgc2V0IGFuZCBhIGxvZ2ljYWwgY3B1LWlkIGlzIGFsc28gYWxs
-b2NhdGVkLiBJZiB0aGUNCk1BRFQgZW50cnkgaXMgb25saW5lLWNhcGFibGUgYnV0IG5vdCBlbmFi
-bGVkIHRoZW4gZGlzYWJsZWQgY3B1cw0KYXJlIHN0aWxsIGNvdW50ZWQgYnV0IGxvZ2ljYWwgY3B1
-LWlkIGlzIG5vdCBhbGxvY2F0ZWQgZHVyaW5nDQppbml0IHRpbWUgYW5kIGluIGZhY3Qgc2V0dGlu
-ZyBwcmVzZW50IG1hc2sgYml0cyBhcmUgYWxzbw0KZGVmZXJyZWQgdGlsbCBIb3RwbHVnIGhhcHBl
-bnMgbGF0ZXIuDQoNCnN0YXRpYyBpbnQgYWNwaV9yZWdpc3Rlcl9sYXBpYyhpbnQgaWQsIHUzMiBh
-Y3BpaWQsIHU4IGVuYWJsZWQpDQp7DQogICAgICBbLi4uXSAgDQoJaWYgKCFlbmFibGVkKSB7ICAv
-KiBOb3QgQUNQSV9NQURUX0VOQUJMRUQgKi8NCgkJKytkaXNhYmxlZF9jcHVzOw0KCQlyZXR1cm4g
-LUVJTlZBTDsNCgl9DQoNCiAgICAgIFsuLi5dICANCg0KCWNwdSA9IGdlbmVyaWNfcHJvY2Vzc29y
-X2luZm8oaWQsIHZlcik7IC8qIGxvZ2ljYWwgY3VwaWQsIHByZXNlbnQgbWFzayovDQoNCiAgICAg
-IFsuLi5dDQoJcmV0dXJuIGNwdTsNCn0NCg0KYWNwaV9wYXJzZV94MmFwaWModW5pb24gYWNwaV9z
-dWJ0YWJsZV9oZWFkZXJzICogaGVhZGVyLCBjb25zdCB1bnNpZ25lZCBsb25nIGVuZCkNCnsNCglz
-dHJ1Y3QgYWNwaV9tYWR0X2xvY2FsX3gyYXBpYyAqcHJvY2Vzc29yID0gTlVMTDsNCg0KCXByb2Nl
-c3NvciA9IChzdHJ1Y3QgYWNwaV9tYWR0X2xvY2FsX3gyYXBpYyAqKWhlYWRlcjsNCg0KICAgICAg
-Wy4uLl0gDQoNCiAgICAgIGVuYWJsZWQgPSBwcm9jZXNzb3ItPmxhcGljX2ZsYWdzICYgQUNQSV9N
-QURUX0VOQUJMRUQ7DQoNCiAgICAgIFsuLi5dDQoNCgkvKiBkb24ndCByZWdpc3RlciBwcm9jZXNz
-b3JzIHRoYXQgY2Fubm90IGJlIG9ubGluZWQgKi8NCglpZiAoIWFjcGlfaXNfcHJvY2Vzc29yX3Vz
-YWJsZShwcm9jZXNzb3ItPmxhcGljX2ZsYWdzKSkNCgkJcmV0dXJuIDA7DQoNCiAgICAgIFsuLi5d
-DQoNCglhY3BpX3JlZ2lzdGVyX2xhcGljKGFwaWNfaWQsIHByb2Nlc3Nvci0+dWlkLCBlbmFibGVk
-KTsNCg0KCXJldHVybiAwOw0KfQ0KDQpPbiBBUk0sIHdlIHNpbWlsYXJseSBpZGVudGlmeSBhbGwg
-TUFEVCBHSUNDIGVudHJpZXMgd2hpY2ggYXJlDQoqdXNhYmxlKiBpLmUuIGVpdGhlciBhcmUgKkVO
-QUJMRUQqIG9yICpvbmxpbmUtY2FwYWJsZSouIEJ1dA0KVW5saWtlIHg4NiwgYWxsIGNwdXMgY29y
-cmVzcG9uZGluZyB0byB1c2FibGUgTUFEVCBHSUNDIGVudHJpZXMNCmdldHMgbG9naWNhbCBjcHUt
-ZHMgYWxsb2NhdGVkIGFuZCB0aGVpciBwcmVzZW50IGJpdCBtYXNrIHNldA0KZHVyaW5nIGJvb3Qg
-aXRzZWxmLiBIZW5jZSwgcHJlc2VudCBtYXNrIGlzIGFsd2F5cyBlcXVhbCB0bw0KdGhlIHBvc3Np
-YmxlIGNwdXMgbWFzayBvbiBBUk0uDQoNCmh0dHBzOi8vdWVmaS5vcmcvc3BlY3MvQUNQSS82LjUv
-MDVfQUNQSV9Tb2Z0d2FyZV9Qcm9ncmFtbWluZ19Nb2RlbC5odG1sI2dpY2MtY3B1LWludGVyZmFj
-ZS1mbGFncw0KDQoNCkZvciBvbmxpbmUtY2FwYWJsZSBidXQgKm5vdCogZW5hYmxlZCBDUFVzIHdl
-IGRlZmVyIHRoZQ0KcmVnaXN0cmF0aW9uIG9mIHRoZSBsb2dpY2FsIENQVS1pZHMgd2l0aCB0aGUg
-TGludXggRHJpdmVyIE1vZGVsDQp0aWxsIHRoZSB0aW1lIEFDUEkgSG90cGx1ZyBldmVudCBvY2N1
-cnMuIFRoaXMgbWVhbnMNCnJlZ2lzdGVyX2NwdSgpIGlzIG5vdCBjYWxsZWQgZm9yIHRoZSBkaXNh
-YmxlZCBDUFVzIGR1cmluZw0KaW5pdCB0aW1lLiBIZW5jZSwgc3lzZnMgZW50cmllcyBmb3IgdGhl
-IGRpc2FibGVkIENQVXMNCmRvbuKAmXQgZXhpdHMuDQoNCkJ1dCBhYm92ZSBjcmVhdGVzIGJpdCBv
-ZiBjb25mdXNpb24gdG8gYSB4ODYgYWNjdXN0b21lZCB1c2Vycw0KYXMgb24gQVJNIHdpdGggb3Vy
-IHNvbHV0aW9uLCBwcmVzZW50IENQVXMgYXJlIGFsd2F5cyBlcXVhbCB0bw0KcG9zc2libGUgQ1BV
-cy4gDQoNCiQgY2F0IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L3Bvc3NpYmxlDQowLTUNCiQgY2F0
-IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L3ByZXNlbnQNCjAtNQ0KJCBjYXQgL3N5cy9kZXZpY2Vz
-L3N5c3RlbS9jcHUvb25saW5lDQowLTENCiQgY2F0IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L29m
-ZmxpbmUNCjItNQ0KDQpUaGVyZSBpcyBubyB3YXkgdG8ga25vdyB3aGljaCBDUFVzIGhhdmUgYmVl
-biBob3RwbHVnZ2VkDQp1c2luZyBhYm92ZSBpbnRlcmZhY2UuIEhlbmNlLCB3ZSBoYXZlIGFsc28g
-YSBuZXcgbWFzaw0Kb2YgZW5hYmxlZCBDUFVzIGluIHRoZQ0KDQokIGNhdCAvc3lzL2RldmljZXMv
-c3lzdGVtL2NwdS9wb3NzaWJsZQ0KMC01DQokIGNhdCAvc3lzL2RldmljZXMvc3lzdGVtL2NwdS9w
-cmVzZW50DQowLTUNCiQgY2F0IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L2VuYWJsZWQNCjAtMg0K
-JCBjYXQgL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvb25saW5lDQowLTENCiQgY2F0IC9zeXMvZGV2
-aWNlcy9zeXN0ZW0vY3B1L29mZmxpbmUNCjItNQ0KDQpRZW11IHBhcmFtZXRlcnM6IC1zbXAgY3B1
-PTMgbWF4Y3B1cz02DQpLZXJuZWwgcGFyYW1ldGVyOiBtYXhjcHVzPTIgDQoNCg0KPiANCj4gQmVj
-YXVzZSBpdCBzZWVtcyB0byBtZSB0aGF0IF9TVEEsIGhhdmluZyBib3RoIGVuYWJsZWQgYW5kIHBy
-ZXNlbnQNCj4gYml0cywgY291bGQgYWxyZWFkeSBkZXNjcmliZSB3aGF0IHdlIG5lZWQgaGVyZSwg
-YW5kIGFyZ3VhYmx5LCBhIENQVQ0KPiB0aGF0IGlzIG5vdCBib3RoIHByZXNlbnQgYW5kIGVuYWJs
-ZWQgc2hvdWxkIG5vdCBiZSB1c2VkIGJ5IHRoZSBPUy4NCj4gVGhpcyB3b3VsZCBsZWF2ZSByb29t
-IGZvciByZXByZXNlbnRpbmcgb2ZmLWxpbmUgQ1BVcyBhcyBwcmVzZW50IGJ1dA0KPiBub3QgZW5h
-YmxlZC4NCg0KVGhhdCBpcyBjb3JyZWN0IHVuZGVyc3RhbmRpbmcuDQoNCkZvciBwbHVnZ2VkIGNw
-dXM6DQpfU1RBLlByZXNlbnQ9MSBhbmQgX1NUQS5FbmFibGVkPTENCg0KRm9yIHVucGx1Z2dlZCBj
-cHVzOg0KX1NUQS5QcmVzZW50PTEgYW5kIF9TVEEuRW5hYmxlZD0wDQoNCkhvdCh1bilwbHVnZ2lu
-ZyBpcyBvbmx5IGFsbG93ZWQgaWYgZHVyaW5nIGJvb3QgdGhlIEdJQ0MgZW50cmllcyB3ZXJlDQpk
-aXNjb3ZlcmVkIGFzICpvbmxpbmUtY2FwYWJsZSouIEdJQ0MgZW50cmllcyB3aGljaCBhcmUgTUFE
-VCBHSUNDDQplbmFibGVkIGR1cmluZyBib290IGNhbm5vdCBiZSBob3QtdW5wbHVnZ2VkIGVpdGhl
-ci4gIA0KDQpDYXRjaDoNCklmIGhvdCB1bnBsdWdnaW5nIGlzIHRvIGJlIHN1cHBvcnRlZCBmb3Ig
-YWxsIGNwdXMgZXhjZXB0IHRoZSBib290DQp0aGVuIHdlIE1VU1Qgc2V0IGFsbCBDUFVzIGV4Y2Vw
-dCBib290IENQVXMgYXMgKm9ubGluZS1jYXBhYmxlKi4gDQpUaGlzIHBvc2VzIGNvbXBhdGliaWxp
-dHkgcHJvYmxlbXMgd2l0aCB0aGUgbGVnYWN5IE9TIHJ1bm5pbmcgb3Zlcg0KbGF0ZXN0IG1hY2hp
-bmVzL3BsYXRmb3JtcyBzdXBwb3J0aW5nIEhvdHBsdWcgZmVhdHVyZS4gT1MgbWlnaHQNCmlnbm9y
-ZSBhbGwgdGhlIG9ubGluZS1jYXBhYmxlIGJpdHMgZHVyaW5nIGJvb3QgdGltZSBhbmQgaGVuY2Ug
-b25seQ0KMSBDUFUgaS5lLiBib290IGNwdXMgbWlnaHQgYXBwZWFyLg0KDQpIZW5jZSwgTUFEVC5H
-SUNDLkVuYWJsZWQgYml0cyBhbmQgTUFEVC5HSUNDLm9ubGluZS1jYXBhYmxlIG5lZWQNCk5vdCBi
-ZSBtdXR1YWxseSBleGNsdXNpdmUuIFRoaXMgcmVxdWlyZXMgbW9yZSBkaXNjdXNzaW9ucyENCg0K
-WW91IG1pZ2h0IGZpbmQgYmVsb3cgdXNlZnVsOg0KaHR0cHM6Ly9rdm0tZm9ydW0ucWVtdS5vcmcv
-MjAyMy90YWxrLzlTTVBEUS8NCg0KDQoNCj4gDQo+IEFwb2xvZ2llcyBpZiBJIGFtIG1pc3Npbmcg
-c29tZXRoaW5nIG9idmlvdXMgaGVyZSAtIHRoZSB3aG9sZSByYXRpb25hbGUNCj4gYmVoaW5kIHRo
-aXMgdGhpbmcgaXMgcmF0aGVyIGNvbmZ1c2luZyB0byBtZS4NCg==
+Hi Helge,
+
+On Wed, Sep 13, 2023 at 3:18=E2=80=AFAM Helge Deller <deller@gmx.de> wrote:
+>
+> Since commit 0a6b58c5cd0d ("lockdep: fix static memory detection even
+> more") the lockdep code uses is_kernel_core_data(), is_kernel_rodata()
+> and init_section_contains() to verify if a lock is located inside a
+> kernel static data section.
+>
+> This change triggers a failure on LoongArch, for which the vmlinux.lds.S
+> script misses to put the locks (as part of in the .data.rel symbols)
+> into the Linux data section.
+> This patch fixes the lockdep problem by moving *(.data.rel*) symbols
+> into the kernel data section (from _sdata to _edata).
+>
+> Additionally, move other wrongly assigned symbols too:
+> - altinstructions into the _initdata section,
+I think altinstructions cannot  be put into _initdata because it will
+be used by modules.
+
+Huacai
+
+> - PLT symbols behind the read-only section, and
+> - *(.la_abs) into the data section.
+>
+> Signed-off-by: Helge Deller <deller@gmx.de>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Fixes: 0a6b58c5cd0d ("lockdep: fix static memory detection even more")
+> Cc: stable <stable@kernel.org> # v6.4+
+>
+> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/=
+vmlinux.lds.S
+> index b1686afcf876..bb2ec86f37a8 100644
+> --- a/arch/loongarch/kernel/vmlinux.lds.S
+> +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> @@ -53,33 +53,6 @@ SECTIONS
+>         . =3D ALIGN(PECOFF_SEGMENT_ALIGN);
+>         _etext =3D .;
+>
+> -       /*
+> -        * struct alt_inst entries. From the header (alternative.h):
+> -        * "Alternative instructions for different CPU types or capabilit=
+ies"
+> -        * Think locking instructions on spinlocks.
+> -        */
+> -       . =3D ALIGN(4);
+> -       .altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
+> -               __alt_instructions =3D .;
+> -               *(.altinstructions)
+> -               __alt_instructions_end =3D .;
+> -       }
+> -
+> -#ifdef CONFIG_RELOCATABLE
+> -       . =3D ALIGN(8);
+> -       .la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
+> -               __la_abs_begin =3D .;
+> -               *(.la_abs)
+> -               __la_abs_end =3D .;
+> -       }
+> -#endif
+> -
+> -       .got : ALIGN(16) { *(.got) }
+> -       .plt : ALIGN(16) { *(.plt) }
+> -       .got.plt : ALIGN(16) { *(.got.plt) }
+> -
+> -       .data.rel : { *(.data.rel*) }
+> -
+>         . =3D ALIGN(PECOFF_SEGMENT_ALIGN);
+>         __init_begin =3D .;
+>         __inittext_begin =3D .;
+> @@ -94,6 +67,18 @@ SECTIONS
+>
+>         __initdata_begin =3D .;
+>
+> +       /*
+> +        * struct alt_inst entries. From the header (alternative.h):
+> +        * "Alternative instructions for different CPU types or capabilit=
+ies"
+> +        * Think locking instructions on spinlocks.
+> +        */
+> +       . =3D ALIGN(4);
+> +       .altinstructions : AT(ADDR(.altinstructions) - LOAD_OFFSET) {
+> +               __alt_instructions =3D .;
+> +               *(.altinstructions)
+> +               __alt_instructions_end =3D .;
+> +       }
+> +
+>         INIT_DATA_SECTION(16)
+>         .exit.data : {
+>                 EXIT_DATA
+> @@ -113,6 +98,11 @@ SECTIONS
+>
+>         _sdata =3D .;
+>         RO_DATA(4096)
+> +
+> +       .got : ALIGN(16) { *(.got) }
+> +       .plt : ALIGN(16) { *(.plt) }
+> +       .got.plt : ALIGN(16) { *(.got.plt) }
+> +
+>         RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
+>
+>         .rela.dyn : ALIGN(8) {
+> @@ -121,6 +111,17 @@ SECTIONS
+>                 __rela_dyn_end =3D .;
+>         }
+>
+> +       .data.rel : { *(.data.rel*) }
+> +
+> +#ifdef CONFIG_RELOCATABLE
+> +       . =3D ALIGN(8);
+> +       .la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
+> +               __la_abs_begin =3D .;
+> +               *(.la_abs)
+> +               __la_abs_end =3D .;
+> +       }
+> +#endif
+> +
+>         .sdata : {
+>                 *(.sdata)
+>         }
