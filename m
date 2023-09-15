@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 246AB808
-	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 01:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1184815
+	for <loongarch@lists.linux.dev>; Fri, 15 Sep 2023 01:50:00 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxbOpEuANlr_4nAA--.49577S3;
-	Fri, 15 Sep 2023 09:49:56 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxuOhFuANlwf4nAA--.41302S3;
+	Fri, 15 Sep 2023 09:49:57 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axndw9uANl+ioGAA--.11927S9;
-	Fri, 15 Sep 2023 09:49:55 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axndw9uANl+ioGAA--.11927S11;
+	Fri, 15 Sep 2023 09:49:56 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v21 07/29] LoongArch: KVM: Implement vcpu run interface
-Date: Fri, 15 Sep 2023 09:49:27 +0800
-Message-Id: <20230915014949.1222777-8-zhaotianrui@loongson.cn>
+Subject: [PATCH v21 09/29] LoongArch: KVM: Implement vcpu get, vcpu set registers
+Date: Fri, 15 Sep 2023 09:49:29 +0800
+Message-Id: <20230915014949.1222777-10-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230915014949.1222777-1-zhaotianrui@loongson.cn>
 References: <20230915014949.1222777-1-zhaotianrui@loongson.cn>
@@ -35,167 +35,276 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axndw9uANl+ioGAA--.11927S9
+X-CM-TRANSID:AQAAf8Axndw9uANl+ioGAA--.11927S11
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement vcpu run interface, handling mmio, iocsr reading fault
-and deliver interrupt, lose fpu before vcpu enter guest.
+Implement LoongArch vcpu get registers and set registers operations, it
+is called when user space use the ioctl interface to get or set regs.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 131 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 244 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 244 insertions(+)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index e6efa0f185..a510082e9b 100644
+index bfc2ec1a88..1cc53f56d0 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -18,6 +18,92 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- 	return 0;
- }
+@@ -13,6 +13,250 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
  
-+/*
-+ * kvm_check_requests - check and handle pending vCPU requests
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest
-+ *         RESUME_HOST  if we should exit to userspace
-+ */
-+static int kvm_check_requests(struct kvm_vcpu *vcpu)
++int kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
 +{
-+	if (!kvm_request_pending(vcpu))
-+		return RESUME_GUEST;
++	unsigned long val;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
 +
-+	if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
-+		/* Drop vpid for this vCPU */
-+		vcpu->arch.vpid = 0;
++	if (get_gcsr_flag(id) & INVALID_GCSR)
++		return -EINVAL;
 +
-+	if (kvm_dirty_ring_check_request(vcpu))
-+		return RESUME_HOST;
-+
-+	return RESUME_GUEST;
-+}
-+
-+/*
-+ * Check and handle pending signal and vCPU requests etc
-+ * Run with irq enabled and preempt enabled
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest
-+ *         RESUME_HOST  if we should exit to userspace
-+ *         < 0 if we should exit to userspace, where the return value
-+ *         indicates an error
-+ */
-+static int kvm_enter_guest_check(struct kvm_vcpu *vcpu)
-+{
-+	int ret;
++	if (id == LOONGARCH_CSR_ESTAT) {
++		/* interrupt status IP0 -- IP7 from GINTC */
++		val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0xff;
++		*v = kvm_read_sw_gcsr(csr, id) | (val << 2);
++		return 0;
++	}
 +
 +	/*
-+	 * Check conditions before entering the guest
++	 * get software csr state if csrid is valid, since software
++	 * csr state is consistent with hardware
 +	 */
-+	ret = xfer_to_guest_mode_handle_work(vcpu);
-+	if (ret < 0)
++	*v = kvm_read_sw_gcsr(csr, id);
++
++	return 0;
++}
++
++int kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	int ret = 0, gintc;
++
++	if (get_gcsr_flag(id) & INVALID_GCSR)
++		return -EINVAL;
++
++	if (id == LOONGARCH_CSR_ESTAT) {
++		/* estat IP0~IP7 inject through guestexcept */
++		gintc = (val >> 2) & 0xff;
++		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
++
++		gintc = val & ~(0xffUL << 2);
++		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
++
 +		return ret;
++	}
 +
-+	ret = kvm_check_requests(vcpu);
++	kvm_write_sw_gcsr(csr, id, val);
 +	return ret;
 +}
 +
-+/*
-+ * called with irq enabled
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest, and irq disabled
-+ *         Others if we should exit to userspace
-+ */
-+static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
++static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
++		const struct kvm_one_reg *reg, u64 *v)
 +{
-+	int ret;
++	int id, ret = 0;
++	u64 type = reg->id & KVM_REG_LOONGARCH_MASK;
 +
-+	do {
-+		ret = kvm_enter_guest_check(vcpu);
-+		if (ret != RESUME_GUEST)
++	switch (type) {
++	case KVM_REG_LOONGARCH_CSR:
++		id = KVM_GET_IOC_CSRIDX(reg->id);
++		ret = kvm_getcsr(vcpu, id, v);
++		break;
++	case KVM_REG_LOONGARCH_CPUCFG:
++		id = KVM_GET_IOC_CPUCFG_IDX(reg->id);
++		if (id >= 0 && id < KVM_MAX_CPUCFG_REGS)
++			*v = vcpu->arch.cpucfg[id];
++		else
++			ret = -EINVAL;
++		break;
++	case KVM_REG_LOONGARCH_KVM:
++		switch (reg->id & 0xf) {
++		case 4: /* counter reg */
++			*v = drdtime() + vcpu->kvm->arch.time_offset;
 +			break;
-+
-+		/*
-+		 * handle vcpu timer, interrupts, check requests and
-+		 * check vmid before vcpu enter guest
-+		 */
-+		local_irq_disable();
-+		kvm_acquire_timer(vcpu);
-+		kvm_deliver_intr(vcpu);
-+		kvm_deliver_exception(vcpu);
-+		/* make sure the vcpu mode has been written */
-+		smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+		kvm_check_vpid(vcpu);
-+		vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-+		/* clear KVM_LARCH_CSR as csr will change when enter guest */
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
-+
-+		if (kvm_request_pending(vcpu) || xfer_to_guest_mode_work_pending()) {
-+			/* make sure the vcpu mode has been written */
-+			smp_store_mb(vcpu->mode, OUTSIDE_GUEST_MODE);
-+			local_irq_enable();
-+			ret = -EAGAIN;
++		default:
++			ret = -EINVAL;
++			break;
 +		}
-+	} while (ret != RESUME_GUEST);
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
++static int kvm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
++{
++	int ret = 0;
++	u64 v, size = reg->id & KVM_REG_SIZE_MASK;
++
++	switch (size) {
++	case KVM_REG_SIZE_U64:
++		ret = kvm_get_one_reg(vcpu, reg, &v);
++		if (ret)
++			return ret;
++		ret = put_user(v, (u64 __user *)(long)reg->addr);
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
++static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
++			const struct kvm_one_reg *reg,
++			u64 v)
++{
++	int id, ret = 0;
++	u64 type = reg->id & KVM_REG_LOONGARCH_MASK;
++
++	switch (type) {
++	case KVM_REG_LOONGARCH_CSR:
++		id = KVM_GET_IOC_CSRIDX(reg->id);
++		ret = kvm_setcsr(vcpu, id, v);
++		break;
++	case KVM_REG_LOONGARCH_CPUCFG:
++		id = KVM_GET_IOC_CPUCFG_IDX(reg->id);
++		if (id >= 0 && id < KVM_MAX_CPUCFG_REGS)
++			vcpu->arch.cpucfg[id] = (u32)v;
++		else
++			ret = -EINVAL;
++		break;
++	case KVM_REG_LOONGARCH_KVM:
++		switch (reg->id & 0xf) {
++		case 3: /* counter reg */
++			/*
++			 * gftoffset is relative with board, not vcpu
++			 * only set for the first time for smp system
++			 */
++			if (vcpu->vcpu_id == 0)
++				vcpu->kvm->arch.time_offset = (signed long)(v - drdtime());
++			break;
++		case 4: /* vcpu reset */
++			kvm_reset_timer(vcpu);
++			memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
++			memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
++			break;
++		default:
++			ret = -EINVAL;
++			break;
++		}
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
 +
 +	return ret;
 +}
 +
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	unsigned long timer_hz;
-@@ -85,3 +171,48 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 			context->last_vcpu = NULL;
- 	}
- }
-+
-+int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
++static int kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
 +{
-+	int r = -EINTR;
-+	struct kvm_run *run = vcpu->run;
++	int ret = 0;
++	u64 v, size = reg->id & KVM_REG_SIZE_MASK;
 +
-+	if (vcpu->mmio_needed) {
-+		if (!vcpu->mmio_is_write)
-+			kvm_complete_mmio_read(vcpu, run);
-+		vcpu->mmio_needed = 0;
++	switch (size) {
++	case KVM_REG_SIZE_U64:
++		ret = get_user(v, (u64 __user *)(long)reg->addr);
++		if (ret)
++			return ret;
++		break;
++	default:
++		return -EINVAL;
 +	}
 +
-+	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
-+		if (!run->iocsr_io.is_write)
-+			kvm_complete_iocsr_read(vcpu, run);
-+	}
++	return kvm_set_one_reg(vcpu, reg, v);
++}
 +
-+	if (run->immediate_exit)
-+		return r;
++int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
++				  struct kvm_sregs *sregs)
++{
++	return -ENOIOCTLCMD;
++}
 +
-+	/* clear exit_reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	lose_fpu(1);
-+	vcpu_load(vcpu);
-+	kvm_sigset_activate(vcpu);
-+	r = kvm_pre_enter_guest(vcpu);
-+	if (r != RESUME_GUEST)
-+		goto out;
++int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
++				  struct kvm_sregs *sregs)
++{
++	return -ENOIOCTLCMD;
++}
 +
-+	guest_timing_enter_irqoff();
-+	guest_state_enter_irqoff();
-+	trace_kvm_enter(vcpu);
-+	r = kvm_loongarch_ops->enter_guest(run, vcpu);
++int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
++{
++	int i;
 +
-+	trace_kvm_out(vcpu);
++	for (i = 0; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
++		regs->gpr[i] = vcpu->arch.gprs[i];
++
++	regs->pc = vcpu->arch.pc;
++
++	return 0;
++}
++
++int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
++{
++	int i;
++
++	for (i = 1; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
++		vcpu->arch.gprs[i] = regs->gpr[i];
++	vcpu->arch.gprs[0] = 0; /* zero is special, and cannot be set. */
++	vcpu->arch.pc = regs->pc;
++
++	return 0;
++}
++
++long kvm_arch_vcpu_ioctl(struct file *filp,
++			 unsigned int ioctl, unsigned long arg)
++{
++	struct kvm_vcpu *vcpu = filp->private_data;
++	void __user *argp = (void __user *)arg;
++	long r;
++
 +	/*
-+	 * guest exit is already recorded at kvm_handle_exit
-+	 * return val must not be RESUME_GUEST
++	 * Only software CSR should be modified
++	 *
++	 * If any hardware CSR register is modified, vcpu_load/vcpu_put pair
++	 * should be used. Since CSR registers owns by this vcpu, if switch
++	 * to other vcpus, other vcpus need reload CSR register.
++	 *
++	 * If software CSR is modified, bit KVM_LARCH_HWCSR_USABLE should
++	 * be clear in vcpu->arch.aux_inuse, and vcpu_load will check
++	 * aux_inuse flag and reload CSR form sw
 +	 */
-+	local_irq_enable();
-+out:
-+	kvm_sigset_deactivate(vcpu);
-+	vcpu_put(vcpu);
++
++	switch (ioctl) {
++	case KVM_SET_ONE_REG:
++	case KVM_GET_ONE_REG: {
++		struct kvm_one_reg reg;
++
++		r = -EFAULT;
++		if (copy_from_user(&reg, argp, sizeof(reg)))
++			break;
++		if (ioctl == KVM_SET_ONE_REG) {
++			r = kvm_set_reg(vcpu, &reg);
++			vcpu->arch.aux_inuse &= ~KVM_LARCH_HWCSR_USABLE;
++		} else
++			r = kvm_get_reg(vcpu, &reg);
++		break;
++	}
++	default:
++		r = -ENOIOCTLCMD;
++		break;
++	}
++
 +	return r;
 +}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ {
+ 	return 0;
 -- 
 2.39.1
 
