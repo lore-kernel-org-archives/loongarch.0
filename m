@@ -1,177 +1,450 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53521125D1
-	for <loongarch@lists.linux.dev>; Sat, 16 Sep 2023 16:23:25 +0000 (UTC)
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-68fb85afef4so2982197b3a.1
-        for <loongarch@lists.linux.dev>; Sat, 16 Sep 2023 09:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1694881404; x=1695486204; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vnbqp2QICXtxCRvhqirbkk4LQUQEjriYEsYOyafJQnA=;
-        b=h67TSeHgRFsMUaDPGfSZ93E4L9+XLsuRasiIsTJhHQ5ibfkAwek5MYQjh2hU8D76xZ
-         tQUulvEvqLelCm7Of36CV0NJF6nfS9bE4DBDCCbnxwJYoKRddgv2iB2cblJUKpT9+g2o
-         RVwJ7SCgQOi3p/eUGkaqoL6ATVEVRPhdWuWqjtYWVEaqU/s+vG+Ey5oY5ZloqFEjKav8
-         +FO2nIyp0PFwbePz/UvBilSbeZ9h4swjoS+Kg25rUwWJ8zxSvEnjiBztNMVz1u+0Ibt+
-         CacUyrhhBaS5vseSpiOwuTKGXL9bpDZCtrtJpbSpbpjluReMlBYyWUNBHKJBljxm6JVR
-         +Vsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694881404; x=1695486204;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vnbqp2QICXtxCRvhqirbkk4LQUQEjriYEsYOyafJQnA=;
-        b=KRHws3d3xz2km43ahrIvM63+4qhsgNWJibdgy6Djn2wtlgEmLo170vc0o4l/3tRHms
-         3kBbneMZMkjiGGMJMKSnkIHqcSXh6De12hbGJR0U192AfVrBDX/NUPDuJCOOxUZ0QP7j
-         RJlsrl7RCrRvjALjWVPzR7Wsw8QwBcHo6uvKctt4KBmdq5sJieT9kPAlg/Sl2Y1zSgLD
-         R/bW7czxQmfBzMkQtKaNX3hewBZery8I12E6h4zYQZAqwHey7ml2L0Rcz8SjEUQRjIDt
-         5EtF4Yche99KXlG9O9aSHkm9VQQgZG9reSUDOLxpgN718Q40xZIDtUqAEEbVigqim7Js
-         GhPA==
-X-Gm-Message-State: AOJu0Ywwl9pTSYCc5kpFLQyv/PkxmJA50ZzybWkII5nbmfgmul1UyUVc
-	KnNj1ySLQYZtvk2FSk0vKG40rkdt7D78Ov91oYY=
-X-Google-Smtp-Source: AGHT+IEfXOCC/sICfnIRMCLDsK6b3IEs/xbd1z457jQO3JvhocT+ttSvPY+qyY1L2eoGhwW9HnpvD/EI34DzlGuujic=
-X-Received: by 2002:a05:6a20:e11a:b0:14c:76bd:10c1 with SMTP id
- kr26-20020a056a20e11a00b0014c76bd10c1mr5776753pzb.21.1694881404475; Sat, 16
- Sep 2023 09:23:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E53F1112
+	for <loongarch@lists.linux.dev>; Sun, 17 Sep 2023 04:21:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FD8AC433CA
+	for <loongarch@lists.linux.dev>; Sun, 17 Sep 2023 04:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694924519;
+	bh=BdUg/qhfSlwXs/t0h4/uauYW+q3aqla519GK51TBDIc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lFusjD60bUtEqrm/4mthKr+DnH16oYSgTJeusVtVAHrT4hoQ5IplkV4LZIjMXQ8oC
+	 j1o1OnQhwHqlr+16iTQ8LCO6RJvS/XMdXgtLJ08pPnUpRR2VjZpRdfHWtZU0laC+Tj
+	 etL+fRa+FyOUB+2hmZNK/SV6VusadlmT/t0riMe4V9TFHqj5EKTTeR2NV5zMCDGhOJ
+	 ssv0Di2CbmgCo6a0mWE2cDos7lbxA2LhjbqsfcZrkWbb/iSmdtiH2LzmvmDwDTIrdk
+	 ITFsBSzc69VvOYq4owbb3Kg9g9podZLjoIrs6Y1NSe3K7llojoPpj1xNlgck4x8qwj
+	 dXdO60IKHe7CA==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-52f33659d09so4119568a12.1
+        for <loongarch@lists.linux.dev>; Sat, 16 Sep 2023 21:21:59 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxNWe+kZXMAI7fddbhI/XttBgAZxPJZTgGm96kX2+5CVwMraBLi
+	ObWg1ufWnxgYFhUGVZoyQBsW0CmekPiHbR539OA=
+X-Google-Smtp-Source: AGHT+IGmng1Pj3omNi/0DJ7CwPyUkgAogfEQzxOxB7l9oiA2cBAcISVDUxW/PQDiEaRcTilh/BcIrhY03f2VTfYjoDw=
+X-Received: by 2002:a05:6402:14c8:b0:52f:bd60:b54b with SMTP id
+ f8-20020a05640214c800b0052fbd60b54bmr5749732edx.37.1694924517806; Sat, 16 Sep
+ 2023 21:21:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230912031750.3319584-1-chenhuacai@loongson.cn>
-In-Reply-To: <20230912031750.3319584-1-chenhuacai@loongson.cn>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Sat, 16 Sep 2023 18:23:13 +0200
-Message-ID: <CA+fCnZcSZi5nPPnbC3Ce7qChUFMwwSkP13fGSG4VXpDqOUimOg@mail.gmail.com>
-Subject: Re: [PATCH V2] kasan: Cleanup the __HAVE_ARCH_SHADOW_MAP usage
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Alexander Potapenko <glider@google.com>, loongarch@lists.linux.dev, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn, 
-	Linus Torvalds <torvalds@linux-foundation.org>, WANG Xuerui <git@xen0n.name>
+References: <20230915014949.1222777-1-zhaotianrui@loongson.cn> <20230915014949.1222777-3-zhaotianrui@loongson.cn>
+In-Reply-To: <20230915014949.1222777-3-zhaotianrui@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 17 Sep 2023 12:21:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5MEEACwp-NAPMWDhv31YT9cqJE6o8Z_O3UtHepyKF81g@mail.gmail.com>
+Message-ID: <CAAhV-H5MEEACwp-NAPMWDhv31YT9cqJE6o8Z_O3UtHepyKF81g@mail.gmail.com>
+Subject: Re: [PATCH v21 02/29] LoongArch: KVM: Implement kvm module related interface
+To: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev, 
+	Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>, 
+	Alex Deucher <alexander.deucher@amd.com>, Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn, 
+	Xi Ruoyao <xry111@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 12, 2023 at 5:18=E2=80=AFAM Huacai Chen <chenhuacai@loongson.cn=
-> wrote:
+Hi, Tianrui,
+
+On Fri, Sep 15, 2023 at 9:50=E2=80=AFAM Tianrui Zhao <zhaotianrui@loongson.=
+cn> wrote:
 >
-> As Linus suggested, __HAVE_ARCH_XYZ is "stupid" and "having historical
-> uses of it doesn't make it good". So migrate __HAVE_ARCH_SHADOW_MAP to
-> separate macros named after the respective functions.
+> Implement LoongArch kvm module init, module exit interface,
+> using kvm context to save the vpid info and vcpu world switch
+> interface pointer.
 >
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Reviewed-by: WANG Xuerui <git@xen0n.name>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 > ---
-> V2: Update commit messages.
+>  arch/loongarch/kvm/main.c | 367 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 367 insertions(+)
+>  create mode 100644 arch/loongarch/kvm/main.c
 >
->  arch/loongarch/include/asm/kasan.h | 10 ++++++++--
->  include/linux/kasan.h              |  2 +-
->  mm/kasan/kasan.h                   |  8 +++-----
->  3 files changed, 12 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/include/=
-asm/kasan.h
-> index deeff8158f45..a12ecab37da7 100644
-> --- a/arch/loongarch/include/asm/kasan.h
-> +++ b/arch/loongarch/include/asm/kasan.h
-> @@ -10,8 +10,6 @@
->  #include <asm/io.h>
->  #include <asm/pgtable.h>
->
-> -#define __HAVE_ARCH_SHADOW_MAP
-> -
->  #define KASAN_SHADOW_SCALE_SHIFT 3
->  #define KASAN_SHADOW_OFFSET    _AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
->
-> @@ -68,6 +66,7 @@ static __always_inline bool kasan_arch_is_ready(void)
->         return !kasan_early_stage;
->  }
->
-> +#define kasan_mem_to_shadow kasan_mem_to_shadow
->  static inline void *kasan_mem_to_shadow(const void *addr)
->  {
->         if (!kasan_arch_is_ready()) {
-> @@ -97,6 +96,7 @@ static inline void *kasan_mem_to_shadow(const void *add=
-r)
->         }
->  }
->
-> +#define kasan_shadow_to_mem kasan_shadow_to_mem
->  static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
->  {
->         unsigned long addr =3D (unsigned long)shadow_addr;
-> @@ -119,6 +119,12 @@ static inline const void *kasan_shadow_to_mem(const =
-void *shadow_addr)
->         }
->  }
->
-> +#define addr_has_metadata addr_has_metadata
-> +static __always_inline bool addr_has_metadata(const void *addr)
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> new file mode 100644
+> index 0000000000..0deb9273d8
+> --- /dev/null
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -0,0 +1,367 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/kvm_host.h>
+> +#include <asm/cacheflush.h>
+> +#include <asm/cpufeature.h>
+> +#include <asm/kvm_csr.h>
+> +#include "trace.h"
+> +
+> +static struct kvm_context __percpu *vmcs;
+> +struct kvm_world_switch *kvm_loongarch_ops;
+> +unsigned long vpid_mask;
+> +static int gcsr_flag[CSR_MAX_NUMS];
+> +
+> +int get_gcsr_flag(int csr)
 > +{
-> +       return (kasan_mem_to_shadow((void *)addr) !=3D NULL);
+> +       if (csr < CSR_MAX_NUMS)
+> +               return gcsr_flag[csr];
+> +
+> +       return INVALID_GCSR;
 > +}
 > +
->  void kasan_init(void);
->  asmlinkage void kasan_early_init(void);
->
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index 3df5499f7936..842623d708c2 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -54,7 +54,7 @@ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
->  int kasan_populate_early_shadow(const void *shadow_start,
->                                 const void *shadow_end);
->
-> -#ifndef __HAVE_ARCH_SHADOW_MAP
-> +#ifndef kasan_mem_to_shadow
->  static inline void *kasan_mem_to_shadow(const void *addr)
->  {
->         return (void *)((unsigned long)addr >> KASAN_SHADOW_SCALE_SHIFT)
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index f70e3d7a602e..d37831b8511c 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -291,7 +291,7 @@ struct kasan_stack_ring {
->
->  #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
->
-> -#ifndef __HAVE_ARCH_SHADOW_MAP
-> +#ifndef kasan_shadow_to_mem
->  static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
->  {
->         return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET=
-)
-> @@ -299,15 +299,13 @@ static inline const void *kasan_shadow_to_mem(const=
- void *shadow_addr)
->  }
->  #endif
->
-> +#ifndef addr_has_metadata
->  static __always_inline bool addr_has_metadata(const void *addr)
->  {
-> -#ifdef __HAVE_ARCH_SHADOW_MAP
-> -       return (kasan_mem_to_shadow((void *)addr) !=3D NULL);
-> -#else
->         return (kasan_reset_tag(addr) >=3D
->                 kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
-> -#endif
->  }
+> +static inline void set_gcsr_sw_flag(int csr)
+> +{
+> +       if (csr < CSR_MAX_NUMS)
+> +               gcsr_flag[csr] |=3D SW_GCSR;
+> +}
+> +
+> +static inline void set_gcsr_hw_flag(int csr)
+> +{
+> +       if (csr < CSR_MAX_NUMS)
+> +               gcsr_flag[csr] |=3D HW_GCSR;
+> +}
+> +
+> +/*
+> + * The default value of gcsr_flag[CSR] is 0, and we use this
+> + * function to set the flag to 1(SW_GCSR) or 2(HW_GCSR) if the
+> + * gcsr is software or hardware. It will be used by get/set_gcsr,
+> + * if gcsr_flag is HW we should use gcsrrd/gcsrwr to access it,
+> + * else use sw csr to emulate it.
+> + */
+> +static void kvm_init_gcsr_flag(void)
+> +{
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_CRMD);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_PRMD);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_EUEN);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_MISC);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_ECFG);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_ESTAT);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_ERA);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_BADV);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_BADI);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_EENTRY);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBIDX);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBEHI);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBELO0);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBELO1);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_ASID);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_PGDL);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_PGDH);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_PWCTL0);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_PWCTL1);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_STLBPGSIZE);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_RVACFG);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_CPUID);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG1);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG2);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG3);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_KS0);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_KS1);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_KS2);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_KS3);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_KS4);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_KS5);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_KS6);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_KS7);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TMID);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TCFG);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TVAL);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_CNTC);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_LLBCTL);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBRENTRY);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBRBADV);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBRERA);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBRSAVE);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBRELO0);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBRELO1);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBREHI);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_TLBRPRMD);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN0);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN1);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN2);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN3);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_MWPS);
+> +       set_gcsr_hw_flag(LOONGARCH_CSR_FWPS);
+> +
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IMPCTL1);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IMPCTL2);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_MERRCTL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_MERRINFO1);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_MERRINFO2);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_MERRENTRY);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_MERRERA);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_MERRSAVE);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_CTAG);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DEBUG);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DERA);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DESAVE);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG1);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG2);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG3);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PGD);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_TINTCLR);
+> +
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_FWPS);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_FWPC);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_MWPS);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_MWPC);
+> +
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB0ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB0MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB0CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB0ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB1ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB1MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB1CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB1ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB2ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB2MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB2CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB2ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB3ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB3MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB3CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB3ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB4ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB4MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB4CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB4ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB5ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB5MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB5CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB5ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB6ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB6MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB6CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB6ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB7ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB7MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB7CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_DB7ASID);
+> +
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB0ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB0MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB0CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB0ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB1ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB1MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB1CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB1ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB2ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB2MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB2CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB2ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB3ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB3MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB3CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB3ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB4ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB4MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB4CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB4ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB5ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB5MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB5CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB5ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB6ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB6MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB6CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB6ASID);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB7ADDR);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB7MASK);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB7CTRL);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_IB7ASID);
+> +
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL0);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR0);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL1);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR1);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL2);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR2);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL3);
+> +       set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR3);
+> +}
+> +
+> +static void kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
+> +{
+> +       struct kvm_context *context;
+> +       unsigned long vpid;
+> +
+> +       context =3D per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
+> +       vpid =3D context->vpid_cache + 1;
+> +       if (!(vpid & vpid_mask)) {
+> +               /* finish round of 64 bit loop */
+> +               if (unlikely(!vpid))
+> +                       vpid =3D vpid_mask + 1;
+> +
+> +               /* vpid 0 reserved for root */
+> +               ++vpid;
+> +
+> +               /* start new vpid cycle */
+> +               kvm_flush_tlb_all();
+> +       }
+> +
+> +       context->vpid_cache =3D vpid;
+> +       vcpu->arch.vpid =3D vpid;
+> +}
+> +
+> +void kvm_check_vpid(struct kvm_vcpu *vcpu)
+> +{
+> +       struct kvm_context *context;
+> +       bool migrated;
+> +       unsigned long ver, old, vpid;
+> +       int cpu;
+> +
+> +       cpu =3D smp_processor_id();
+> +       /*
+> +        * Are we entering guest context on a different CPU to last time?
+> +        * If so, the vCPU's guest TLB state on this CPU may be stale.
+> +        */
+> +       context =3D per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
+> +       migrated =3D (vcpu->cpu !=3D cpu);
+> +
+> +       /*
+> +        * Check if our vpid is of an older version
+> +        *
+> +        * We also discard the stored vpid if we've executed on
+> +        * another CPU, as the guest mappings may have changed without
+> +        * hypervisor knowledge.
+> +        */
+> +       ver =3D vcpu->arch.vpid & ~vpid_mask;
+> +       old =3D context->vpid_cache  & ~vpid_mask;
+> +       if (migrated || (ver !=3D old)) {
+> +               kvm_update_vpid(vcpu, cpu);
+> +               trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
+> +               vcpu->cpu =3D cpu;
+> +       }
+> +
+> +       /* Restore GSTAT(0x50).vpid */
+> +       vpid =3D (vcpu->arch.vpid & vpid_mask) << CSR_GSTAT_GID_SHIFT;
+> +       change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
+> +}
+> +
+> +static int kvm_loongarch_env_init(void)
+> +{
+> +       struct kvm_context *context;
+> +       int cpu, order;
+> +       void *addr;
+> +
+> +       vmcs =3D alloc_percpu(struct kvm_context);
+> +       if (!vmcs) {
+> +               pr_err("kvm: failed to allocate percpu kvm_context\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       kvm_loongarch_ops =3D kzalloc(sizeof(*kvm_loongarch_ops), GFP_KER=
+NEL);
+> +       if (!kvm_loongarch_ops) {
+> +               free_percpu(vmcs);
+> +               vmcs =3D NULL;
+> +               return -ENOMEM;
+> +       }
+> +       /*
+> +        * There will be problem in world switch code if there
+> +        * is page fault reenter, since pgd register is shared
+> +        * between root kernel and kvm hypervisor. World switch
+> +        * entry need be unmapped area, cannot be tlb mapped area.
+> +        * In future if hw pagetable walking is supported, or there
+> +        * is separate pgd registers between root kernel and kvm
+> +        * hypervisor, copying about world switch code will not be used.
+> +        */
+> +
+> +       order =3D get_order(kvm_vector_size + kvm_enter_guest_size);
+> +       addr =3D (void *)__get_free_pages(GFP_KERNEL, order);
+> +       if (!addr) {
+> +               free_percpu(vmcs);
+> +               vmcs =3D NULL;
+> +               kfree(kvm_loongarch_ops);
+> +               kvm_loongarch_ops =3D NULL;
+> +               return -ENOMEM;
+> +       }
+> +
+> +       memcpy(addr, kvm_vector_entry, kvm_vector_size);
+> +       memcpy(addr + kvm_vector_size, kvm_enter_guest, kvm_enter_guest_s=
+ize);
+Why memcpy? In our internal repo, we use kvm_vector_entry and
+kvm_enter_guest directly. The long comments above make me nervous
+because Loongson-3A6000 already supports hardware pagetable walker.
+
+Huacai
+
+> +       flush_icache_range((unsigned long)addr, (unsigned long)addr +
+> +                               kvm_vector_size + kvm_enter_guest_size);
+> +       kvm_loongarch_ops->guest_eentry =3D addr;
+> +       kvm_loongarch_ops->enter_guest =3D addr + kvm_vector_size;
+> +       kvm_loongarch_ops->page_order =3D order;
+> +
+> +       vpid_mask =3D read_csr_gstat();
+> +       vpid_mask =3D (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_=
+SHIFT;
+> +       if (vpid_mask)
+> +               vpid_mask =3D GENMASK(vpid_mask - 1, 0);
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               context =3D per_cpu_ptr(vmcs, cpu);
+> +               context->vpid_cache =3D vpid_mask + 1;
+> +               context->last_vcpu =3D NULL;
+> +       }
+> +
+> +       kvm_init_fault();
+> +       kvm_init_gcsr_flag();
+> +
+> +       return 0;
+> +}
+> +
+> +static void kvm_loongarch_env_exit(void)
+> +{
+> +       unsigned long addr;
+> +
+> +       if (vmcs)
+> +               free_percpu(vmcs);
+> +
+> +       if (kvm_loongarch_ops) {
+> +               if (kvm_loongarch_ops->guest_eentry) {
+> +                       addr =3D (unsigned long)kvm_loongarch_ops->guest_=
+eentry;
+> +                       free_pages(addr, kvm_loongarch_ops->page_order);
+> +               }
+> +               kfree(kvm_loongarch_ops);
+> +       }
+> +}
+> +
+> +static int kvm_loongarch_init(void)
+> +{
+> +       int r;
+> +
+> +       if (!cpu_has_lvz) {
+> +               kvm_info("hardware virtualization not available\n");
+> +               return -ENODEV;
+> +       }
+> +       r =3D kvm_loongarch_env_init();
+> +       if (r)
+> +               return r;
+> +
+> +       return kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
+> +}
+> +
+> +static void kvm_loongarch_exit(void)
+> +{
+> +       kvm_exit();
+> +       kvm_loongarch_env_exit();
+> +}
+> +
+> +module_init(kvm_loongarch_init);
+> +module_exit(kvm_loongarch_exit);
+> +
+> +#ifdef MODULE
+> +static const struct cpu_feature loongarch_kvm_feature[] =3D {
+> +       { .feature =3D cpu_feature(LOONGARCH_LVZ) },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(cpu, loongarch_kvm_feature);
 > +#endif
->
->  /**
->   * kasan_check_range - Check memory region, and report if invalid access=
-.
 > --
-> 2.39.3
+> 2.39.1
 >
-
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
-
-Thanks!
