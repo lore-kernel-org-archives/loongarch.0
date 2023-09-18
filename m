@@ -1,114 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26074C94
-	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 08:06:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AA2FC433C7
-	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 08:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695024364;
-	bh=AxhP1qUZ6L8D85WygjwNWOG3OogI8UwnrtK6B11kuho=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ev0bMudmfGo1Sm5fm2k7W1Pz9Sc41I8Oxj/tg9dQLDH7oPS5/rQ4HI9q/QIHbNO0s
-	 5q++zG0X6c9MOEeie/uiQpP/r6N0nV2eeKlsyR88/4DbBWPEg8hy9+ca71B63dtff3
-	 S1tl/9Y+iLS4JX3qBNFzoYwRPiphVu5Hy/ASiA9RCueATCjs7QCE0tqiViSpGk2/O6
-	 jBsKHDSKJzTADQcKxVowR/d885gHV2qWq+xWHNgwMkNDDrvn4HzEFJcz6WbxHCul8n
-	 QWZD2liOEkKooGwXIMDWixVcWy9baVErtS12qGXdgk4cJ4wy5YIiZeu5uhUPXAKnWg
-	 rzlrDp51xZBpA==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-530ea522f5eso1240220a12.3
-        for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 01:06:04 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxTksvl/EyEXSd2/mwqtdibDu5UmLixDLi37fQXZGLJcGDRRSLh
-	LRLel1YdqTDm5uugaWz2P5qEzGev6PCEJoeXGG4=
-X-Google-Smtp-Source: AGHT+IHUuSYye6BWA93KBT5rLo5F4a0/T5b7KQein1/mOTRyb192Farkzy4tF6PxQyNKGpHh3XWDfwzJA1lW5D5wqIU=
-X-Received: by 2002:a05:6402:14c4:b0:530:4fc4:50f8 with SMTP id
- f4-20020a05640214c400b005304fc450f8mr6228588edx.29.1695024362563; Mon, 18 Sep
- 2023 01:06:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E8613AFA
+	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 08:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=55eakHJGO5EUrnz8oyp7PKJxWNPGSy80I5cTzshJrkE=; b=myT6AGwYEqN4ejdUWPmq/Vgm33
+	9LHv7QtZCxGnRh5zp3aH21FUpOdswe89NrYUPkEuLSxMij/dzTSJnPKxPNxWOKIr9v5IDurA7RgRp
+	Ngu+OvnLtLDXU4IqhgFOC2OFmdTzOSv3ybe4MbIbyulmtvaRDW94Zki3h0wxFTLtSGRZrs7AmhHAL
+	+6Hk+rTi4fROJlzaaBVMSrNgX9buhvwWc1cvzWCsXhXlkLplPUTaEK2V7YGxLotX36irVNhAlldLy
+	ujqumRivrAWrKHqFKbb/0IgbB7smGynZW1fmuRD/xzSGuw9asiX4xW7dgTDj1S9+ghdoUhqqmb6nn
+	AwkOQ45w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52138)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1qi9Qe-0008Ne-0S;
+	Mon, 18 Sep 2023 09:16:24 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1qi9QY-0000Jt-WD; Mon, 18 Sep 2023 09:16:19 +0100
+Date: Mon, 18 Sep 2023 09:16:18 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-acpi@vger.kernel.org, James Morse <james.morse@arm.com>,
+	loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Salil Mehta <salil.mehta@huawei.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-ia64@vger.kernel.org
+Subject: Re: [PATCH RFC v2] cpu-hotplug: provide prototypes for arch CPU
+ registration
+Message-ID: <ZQgHUvW8qgyj5Puv@shell.armlinux.org.uk>
+References: <E1qgnh2-007ZRZ-WD@rmk-PC.armlinux.org.uk>
+ <871qez1cfd.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230914103445.511285-1-andriy.shevchenko@linux.intel.com>
- <CAAhV-H6Q0sirFEDdc1v4BSfDY94eZvJazy0XLKM8V94GMJvQnQ@mail.gmail.com>
- <ZQNWh2DY319jGbfq@smile.fi.intel.com> <CAAhV-H66LUWHP-eGp6VGvs0F+QD=QJ69uR3_1A3SqH9cyPUPoQ@mail.gmail.com>
- <ZQWCeI6E7rm8Akbt@smile.fi.intel.com> <CAAhV-H6dakVH0a4Mt9MdcY8OO3gdne6rW0Z1kK6YRq9hDLP05w@mail.gmail.com>
- <ZQfzDXc0WRHCUeIq@smile.fi.intel.com>
-In-Reply-To: <ZQfzDXc0WRHCUeIq@smile.fi.intel.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 18 Sep 2023 16:05:50 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4HkA=SZAb-4q5QVdyDB1MsEsmjVO_N8h30MkSXzpzimQ@mail.gmail.com>
-Message-ID: <CAAhV-H4HkA=SZAb-4q5QVdyDB1MsEsmjVO_N8h30MkSXzpzimQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] LoongArch: Add missing headers
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	WANG Xuerui <kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871qez1cfd.ffs@tglx>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi, Andy,
+On Fri, Sep 15, 2023 at 09:09:10PM +0200, Thomas Gleixner wrote:
+> On Thu, Sep 14 2023 at 15:51, Russell King wrote:
+> > Provide common prototypes for arch_register_cpu() and
+> > arch_unregister_cpu(). These are called by acpi_processor.c, with
+> > weak versions, so the prototype for this is already set. It is
+> > generally not necessary for function prototypes to be conditional
+> > on preprocessor macros.
+> >
+> > Some architectures (e.g. Loongarch) are missing the prototype for this,
+> > and rather than add it to Loongarch's asm/cpu.h, lets do the job once
+> > for everyone.
+> >
+> > Since this covers everyone, remove the now unnecessary prototypes in
+> > asm/cpu.h, and we also need to remove the 'static' from one of ia64's
+> > arch_register_cpu() definitions.
+> >
+> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > ---
+> > Spotted during the review of James Morse's patches, I think rather than
+> > adding prototypes for loongarch to its asm/cpu.h, it would make more
+> > sense to provide the prototypes in a non-arch specific header file so
+> > everyone can benefit, rather than having each architecture do its own
+> > thing.
+> >
+> > I'm sending this as RFC as James has yet to comment on my proposal, and
+> > also to a wider audience, and although it makes a little more work for
+> > James (to respin his series) it does mean that his series should get a
+> > little smaller.
+> 
+> And it makes tons of sense.
+> 
+> > See:
+> >  https://lore.kernel.org/r/20230913163823.7880-2-james.morse@arm.com
+> >  https://lore.kernel.org/r/20230913163823.7880-4-james.morse@arm.com
+> >  https://lore.kernel.org/r/20230913163823.7880-23-james.morse@arm.com
+> >
+> > v2: lets try not fat-fingering vim.
+> 
+> Yeah. I wondered how you managed to mangle that :)
+> 
+> >  arch/ia64/include/asm/cpu.h | 5 -----
+> >  arch/ia64/kernel/topology.c | 2 +-
+> 
+> That's moot as ia64 is queued for removal :)
 
-On Mon, Sep 18, 2023 at 2:49=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Sat, Sep 16, 2023 at 08:05:52PM +0800, Huacai Chen wrote:
-> > On Sat, Sep 16, 2023 at 6:27=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Fri, Sep 15, 2023 at 08:36:24AM +0800, Huacai Chen wrote:
-> > > > On Fri, Sep 15, 2023 at 2:53=E2=80=AFAM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > On Thu, Sep 14, 2023 at 11:25:22PM +0800, Huacai Chen wrote:
-> > >
-> > > > > > Thank you for your patch, can this patch solve the problem belo=
-w?
-> > > > > > https://lore.kernel.org/oe-kbuild-all/202309072237.9zxMv4MZ-lkp=
-@intel.com/T/#u
-> > > > >
-> > > > > Nope, this just adds missing includes.
-> > > > > No functional change, so warnings will still be there.
-> > > > But I think a patch should solve a problem.
-> > >
-> > > No, that problem is static analyser concern, not the compiler nor lin=
-ker.
-> > >
-> > > > If we don't get a build
-> > > > error or warning without this patch, does that mean the 'missing'
-> > > > headers are actually included indirectly?
-> > >
-> > > I might be missing something, but I do not see any build error in the=
- above message.
-> > Hmm, then I think I will take the second patch only.
->
-> Thanks, but can you shed a light why?
->
-> The rule of thumb is to include the headers we are direct users of, we ha=
-ve not
-> to imply any other inclusions done by others, unless it's kinda same fami=
-ly of
-> headers (like types.h always includes compiler_types.h). Since in your ca=
-se
-> the const.h is included the other two are missing and it's even worse, as=
- I
-> understand you rely on the specific headers to be included _before_ using=
- this
-> one in the users.
-I agree with you more or less, but I doubt there is another rule: no
-break, no fix. Please see:
+Okay, one less thing to worry about. Tomorrow, I'll re-spin without the
+ia64 bits included.
 
-https://lore.kernel.org/loongarch/20221024070105.306280-1-chenhuacai@loongs=
-on.cn/T/#t
+I would really like to hear from James before we think about merging
+this, as it will impact James' patch set and would add a dependency
+for that. I wouldn't want this patch to become a reason to delay
+James' patch set for another kernel cycle.
 
-Obviously static_key is used in page-flags.h and it really causes
-build errors once before, but at last I removed the inclusion of
-static_key.h to get that series merged.
-
-Huacai
-
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
->
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
