@@ -1,65 +1,239 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687F110F9
-	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 10:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JpmACuKzLEySkiefvR4XEzLq2l/GD0gp2bnZ8kEBIFI=; b=kVzQ7/vwTnpP+CIOcOrHaveVQL
-	sLK/dUbflp5AVZCi1NjTN4vGf0n8ODQ7+WX0qtIA+7Sj8W67e4mukT7UakvHTeQdXmkgGSHuD5qlA
-	hrSjKimLBut7aaQ14th62KlJ7yiOPuQc4rl7JsKxe0s/9reJwnUuY01QSW/vr6EANjJKVBe++3mpj
-	ePhEwkrYE2JyWBt0U0Utguc04Ew3fBOT2gmdqMGE/JseHq70NaEbGE7t+Yc6zjLSOXMHhyz8rkrp3
-	qCRkwR9dMkY8mB4getceyrmE3pKMTQIEtRvNZUG1hYZEd24ULHMIsy0/3v3OM9HvXiG2d2pib11lA
-	dMSc1aMg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34502)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qiBTj-000059-36;
-	Mon, 18 Sep 2023 11:27:43 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qiBTi-0000Oe-EM; Mon, 18 Sep 2023 11:27:42 +0100
-Date: Mon, 18 Sep 2023 11:27:42 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: James Morse <james.morse@arm.com>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com
-Subject: Re: [RFC PATCH v2 00/35] ACPI/arm64: add support for virtual
- cpuhotplug
-Message-ID: <ZQgmHtG10n+XyZYR@shell.armlinux.org.uk>
-References: <20230913163823.7880-1-james.morse@arm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1457450F6
+	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 23:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1695080865;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zVlOSfQ+Cs92BylKR+M/JB7hqrVK10vOpKWpaqimizU=;
+	b=KsC/QQE0YXOmM2vzVwmRtj3WS+HB5vTj+I/aMT08mBdCq5eZJYi7z7hHeTwl1Z+QnTt0Fj
+	kDjQIS47tB4547+9iZXstCXxDSwWCReWR2f8/grz6y1iwwFRks/vLqF9FgD4qf4Yd90TKm
+	bS2NPkR/9CdG+ltM273WwIpv/2K+U+Y=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-83-OCEydLpWPjaiKsgl-mgSvA-1; Mon, 18 Sep 2023 19:43:57 -0400
+X-MC-Unique: OCEydLpWPjaiKsgl-mgSvA-1
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-573d44762e4so3920977a12.0
+        for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 16:43:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695080636; x=1695685436;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zVlOSfQ+Cs92BylKR+M/JB7hqrVK10vOpKWpaqimizU=;
+        b=DL4dNjDHeicQ5tbgGAxNOYcxVk02ytoXafRZ/+xpJ6gEirZjmfxl7Q+py+v+XgFZzP
+         tgKe7iEaoGOHuLgjD+a1bYBKrryCNtKTJ6B+HQjHxEFKc9U2wpIjEODf3wBqXq6pwcNP
+         fe22IAXD/j7H4nl7kqcjRp6Ts5vvGtjorOn8LmJb4SHgur0hGziHZYVs5pioVlFuP3FR
+         E1u9NliZ8XPGNkWD58d4VHsSCAt0Jpm5nbNewv1zffvERAaVXZsE8zCYVkHQlPGTVlnm
+         vYsZ5hsWhYgjAWGjMSR2uS4zfr94onEQcOISkHtJAGugTBCVQ0StMiLjPKfNo+UePQRe
+         UIrA==
+X-Gm-Message-State: AOJu0Yy5DWzPT0ogk1vxQ/86OFA/9q828Fc/nXNvog9E6WBhptd1DV8A
+	Aiip5XyRhmzfc9yzajUprGgioZS4VkYyXTexsA+HRgIWBFC4SFncC/TE24p+l1l5MnNSWYIP/8c
+	zLvZAK1NJnKFl0UXn2uWf
+X-Received: by 2002:a05:6a20:430d:b0:118:e70:6f7d with SMTP id h13-20020a056a20430d00b001180e706f7dmr10495449pzk.10.1695080635943;
+        Mon, 18 Sep 2023 16:43:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHFKOy814XSQK8TdPjNzCWuHRcOodlWCLUpNrs1TYBainKT1BB0hWvhf0Gyqm0LB88Jzxx1dQ==
+X-Received: by 2002:a05:6a20:430d:b0:118:e70:6f7d with SMTP id h13-20020a056a20430d00b001180e706f7dmr10495432pzk.10.1695080635630;
+        Mon, 18 Sep 2023 16:43:55 -0700 (PDT)
+Received: from ?IPV6:2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5? ([2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5])
+        by smtp.gmail.com with ESMTPSA id jo13-20020a170903054d00b001bc68602e54sm8823472plb.142.2023.09.18.16.43.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Sep 2023 16:43:54 -0700 (PDT)
+Message-ID: <ebfa8b5c-c09f-a1e6-e6ec-f4f3cda9de03@redhat.com>
+Date: Tue, 19 Sep 2023 09:43:46 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230913163823.7880-1-james.morse@arm.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [RFC PATCH v2 14/35] ACPI: Only enumerate enabled (or functional)
+ devices
+To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ kvmarm@lists.linux.dev
+Cc: x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
+ justin.he@arm.com
+References: <20230913163823.7880-1-james.morse@arm.com>
+ <20230913163823.7880-15-james.morse@arm.com>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20230913163823.7880-15-james.morse@arm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 13, 2023 at 04:37:48PM +0000, James Morse wrote:
-> This series is based on v6.6-rc1, and can be retrieved from:
-> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/ virtual_cpu_hotplug/rfc/v2
+On 9/14/23 02:38, James Morse wrote:
+> Today the ACPI enumeration code 'visits' all devices that are present.
+> 
+> This is a problem for arm64, where CPUs are always present, but not
+> always enabled. When a device-check occurs because the firmware-policy
+> has changed and a CPU is now enabled, the following error occurs:
+> | acpi ACPI0007:48: Enumeration failure
+> 
+> This is ultimately because acpi_dev_ready_for_enumeration() returns
+> true for a device that is not enabled. The ACPI Processor driver
+> will not register such CPUs as they are not 'decoding their resources'.
+> 
+> Change acpi_dev_ready_for_enumeration() to also check the enabled bit.
+> ACPI allows a device to be functional instead of maintaining the
+> present and enabled bit. Make this behaviour an explicit check with
+> a reference to the spec, and then check the present and enabled bits.
+> This is needed to avoid enumerating present && functional devices that
+> are not enabled.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
+> If this change causes problems on deployed hardware, I suggest an
+> arch opt-in: ACPI_IGNORE_STA_ENABLED, that causes
+> acpi_dev_ready_for_enumeration() to only check the present bit.
+> ---
+>   drivers/acpi/device_pm.c    |  2 +-
+>   drivers/acpi/device_sysfs.c |  2 +-
+>   drivers/acpi/internal.h     |  1 -
+>   drivers/acpi/property.c     |  2 +-
+>   drivers/acpi/scan.c         | 23 +++++++++++++----------
+>   5 files changed, 16 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+> index f007116a8427..76c38478a502 100644
+> --- a/drivers/acpi/device_pm.c
+> +++ b/drivers/acpi/device_pm.c
+> @@ -313,7 +313,7 @@ int acpi_bus_init_power(struct acpi_device *device)
+>   		return -EINVAL;
+>   
+>   	device->power.state = ACPI_STATE_UNKNOWN;
+> -	if (!acpi_device_is_present(device)) {
+> +	if (!acpi_dev_ready_for_enumeration(device)) {
+>   		device->flags.initialized = false;
+>   		return -ENXIO;
+>   	}
+> diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
+> index b9bbf0746199..16e586d74aa2 100644
+> --- a/drivers/acpi/device_sysfs.c
+> +++ b/drivers/acpi/device_sysfs.c
+> @@ -141,7 +141,7 @@ static int create_pnp_modalias(const struct acpi_device *acpi_dev, char *modalia
+>   	struct acpi_hardware_id *id;
+>   
+>   	/* Avoid unnecessarily loading modules for non present devices. */
+> -	if (!acpi_device_is_present(acpi_dev))
+> +	if (!acpi_dev_ready_for_enumeration(acpi_dev))
+>   		return 0;
+>   
+>   	/*
+> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+> index 866c7c4ed233..a1b45e345bcc 100644
+> --- a/drivers/acpi/internal.h
+> +++ b/drivers/acpi/internal.h
+> @@ -107,7 +107,6 @@ int acpi_device_setup_files(struct acpi_device *dev);
+>   void acpi_device_remove_files(struct acpi_device *dev);
+>   void acpi_device_add_finalize(struct acpi_device *device);
+>   void acpi_free_pnp_ids(struct acpi_device_pnp *pnp);
+> -bool acpi_device_is_present(const struct acpi_device *adev);
+>   bool acpi_device_is_battery(struct acpi_device *adev);
+>   bool acpi_device_is_first_physical_node(struct acpi_device *adev,
+>   					const struct device *dev);
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index 413e4fcadcaf..e03f00b98701 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -1418,7 +1418,7 @@ static bool acpi_fwnode_device_is_available(const struct fwnode_handle *fwnode)
+>   	if (!is_acpi_device_node(fwnode))
+>   		return false;
+>   
+> -	return acpi_device_is_present(to_acpi_device_node(fwnode));
+> +	return acpi_dev_ready_for_enumeration(to_acpi_device_node(fwnode));
+>   }
+>   
+>   static const void *
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 17ab875a7d4e..f898591ce05f 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -304,7 +304,7 @@ static int acpi_scan_device_check(struct acpi_device *adev)
+>   	int error;
+>   
+>   	acpi_bus_get_status(adev);
+> -	if (acpi_device_is_present(adev)) {
+> +	if (acpi_dev_ready_for_enumeration(adev)) {
+>   		/*
+>   		 * This function is only called for device objects for which
+>   		 * matching scan handlers exist.  The only situation in which
+> @@ -338,7 +338,7 @@ static int acpi_scan_bus_check(struct acpi_device *adev, void *not_used)
+>   	int error;
+>   
+>   	acpi_bus_get_status(adev);
+> -	if (!acpi_device_is_present(adev)) {
+> +	if (!acpi_dev_ready_for_enumeration(adev)) {
+>   		acpi_scan_device_not_enumerated(adev);
+>   		return 0;
+>   	}
+> @@ -1908,11 +1908,6 @@ static bool acpi_device_should_be_hidden(acpi_handle handle)
+>   	return true;
+>   }
+>   
+> -bool acpi_device_is_present(const struct acpi_device *adev)
+> -{
+> -	return adev->status.present || adev->status.functional;
+> -}
+> -
+>   static bool acpi_scan_handler_matching(struct acpi_scan_handler *handler,
+>   				       const char *idstr,
+>   				       const struct acpi_device_id **matchid)
+> @@ -2375,16 +2370,24 @@ EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
+>    * acpi_dev_ready_for_enumeration - Check if the ACPI device is ready for enumeration
+>    * @device: Pointer to the &struct acpi_device to check
+>    *
+> - * Check if the device is present and has no unmet dependencies.
+> + * Check if the device is functional or enabled and has no unmet dependencies.
+>    *
+> - * Return true if the device is ready for enumeratino. Otherwise, return false.
+> + * Return true if the device is ready for enumeration. Otherwise, return false.
+>    */
+>   bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
+>   {
+>   	if (device->flags.honor_deps && device->dep_unmet)
+>   		return false;
+>   
+> -	return acpi_device_is_present(device);
+> +	/*
+> +	 * ACPI 6.5's 6.3.7 "_STA (Device Status)" allows firmware to return
+> +	 * (!present && functional) for certain types of devices that should be
+> +	 * enumerated.
+> +	 */
+> +	if (!device->status.present && !device->status.enabled)
+> +		return device->status.functional;
+> +
+> +	return device->status.present && device->status.enabled;
+>   }
+>   EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
+>   
 
-Hi James,
+Looking at Salil's latest branch (vcpu-hotplug-RFCv2-rc7), there are 3 possible statuses:
 
-FYI, this doesn't seem to be based upon v6.6-rc1, but v6.4-rc5.
-virtual_cpu_hotplug/rfc/v2 seems to have a hash of 505859b05e15.
+   0x0       when CPU isn't present
+   0xD       when CPU is present, but not enabled
+   0xF       when CPU is present and enabled
 
-Thanks.
+Previously, the ACPI device is enumerated on 0xD and 0xF. We want to avoid the enumeration
+on 0xD since the processor isn't ready for enumeration in this specific case. The changed
+check (device->status.present && device->status.enabled) can ensure it. So the addition
+of checking @device->state.functional seems irrelevant to ARM64 vCPU hot-add? I guess we
+probably want a relaxation after the condition (device->status.present || device->status.enabled)
+becomes a more strict one (device->status.present && device->status.enabled)
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Thanks,
+Gavin
+
