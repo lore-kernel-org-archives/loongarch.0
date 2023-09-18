@@ -1,51 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A4D185F
-	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 03:33:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F24D20FC
+	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 03:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695008030;
+	s=mimecast20190719; t=1695008936;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gHzH+a1yYhJkfNUv/Dy9j8VaViRqaOEkd87Y+pYRKHg=;
-	b=Z62n5vaekOxsxE++HL43oPSSH4HWvpUxkKhWQOecIxcWF9DvMkSD4lzDyv/jxY4K4koo9X
-	qtmIt05Smpg2rAbmP0DZQXoGlJYVkz0r5K8lJEfcEK3mj0UIjJ7tID+oPMjqjxArHATCtJ
-	LFuyXWFg0BuipXka9kJ+c1QDgVN7X0g=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=tf1afM7/bTwRaF6MhWk6NmsY4pxpFUisMFOko6iFoOg=;
+	b=FLZUGeW9Mbxhb+kIOs743Mp42E7hnmSAGBEp9F95zONVpTdCNw0VaX8reHPWonnAUvr9PI
+	H9oUxF42485wfRmEspAXUtgVDoq3+2su6WQdxv6SyQaTV0VzNTBuzfNkN0L4E6TcDa8Sos
+	CHuFe6JRtChFCjmTWeQR3Td3m1wd/FA=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-496-IrcILFUaO2CnTFoewZL14A-1; Sun, 17 Sep 2023 23:33:48 -0400
-X-MC-Unique: IrcILFUaO2CnTFoewZL14A-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2748d60c072so2822984a91.1
-        for <loongarch@lists.linux.dev>; Sun, 17 Sep 2023 20:33:47 -0700 (PDT)
+ us-mta-621-kWQCSBIZOYCN8g8xe_T1Gw-1; Sun, 17 Sep 2023 23:48:55 -0400
+X-MC-Unique: kWQCSBIZOYCN8g8xe_T1Gw-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1c443fdfedbso14898025ad.2
+        for <loongarch@lists.linux.dev>; Sun, 17 Sep 2023 20:48:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695008027; x=1695612827;
+        d=1e100.net; s=20230601; t=1695008934; x=1695613734;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gHzH+a1yYhJkfNUv/Dy9j8VaViRqaOEkd87Y+pYRKHg=;
-        b=nDMKN3YAQ2BwWUgiHFoDd2X3Lxurnq14pKuCzqUnOgS1RRufSFEuCqwiiahXek6g5v
-         koTW56IVuvdNmHiLQ7HeOihmS35xLmGIVmHduz/+B8N+7usiYJGLKuEJc1j+gvrytHea
-         C/300jXf+jIw1rgVeQzWuwMPangGNCI7piZdvNJMUcYvomAIL36wLzRaSE8Y1hjR4hbB
-         E5aeedQYk0/If+UbvhhCevEtZhbgHjCAbw9KJuM0+mFEfNo7iMpniQ8o9Qz3eSizGLJf
-         La54eym/KPQhgRE9fFJ8dJWTQkiTKJxTUlm3g3JGqJxrobgt0IVT0ZsXnhkmWy5sc3LS
-         bk5g==
-X-Gm-Message-State: AOJu0YzAwj7MueOpenA/xO0f6pjP8Z/9/dffVexG8rH5FwBgJXORIJsB
-	kCSy42nDWMsX4lvB2BYrPJq/nu77tU8vTSDAoDga3RlKGEElkxS8S03mKFg1rTa/6PTfZR6qnnU
-	Wwe47FZmms3c4A+7Ae8m7
-X-Received: by 2002:a17:90b:890:b0:274:7de7:d6fa with SMTP id bj16-20020a17090b089000b002747de7d6famr7131234pjb.9.1695008027066;
-        Sun, 17 Sep 2023 20:33:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGdFVHnxmGek3zqSMDKaRzCcHQAQEv2cIpV7L2yNs7LNSqm4GiEBUNxLVrj5jEdjCAv9J4IOA==
-X-Received: by 2002:a17:90b:890:b0:274:7de7:d6fa with SMTP id bj16-20020a17090b089000b002747de7d6famr7131213pjb.9.1695008026727;
-        Sun, 17 Sep 2023 20:33:46 -0700 (PDT)
+        bh=tf1afM7/bTwRaF6MhWk6NmsY4pxpFUisMFOko6iFoOg=;
+        b=MGOalvxtkzk1ahTpgldcMYncgBxyqGE34p7DMIVGnWD9jHjasQRcLQO82u+k9osSXe
+         i7eTd/K8ZyGo+8R+Vg1h/1OWAKaFCf5b75Ws/USXCRNF+8TFzhaw9IdfHxmKG5q1YNr6
+         u5x1SeLJHFmYOjHnoXjEaumHYhB98Ra/tpG2ZnFfu3er6i9cLqIhMZUCyN0hc323phoE
+         Eb9Cwnv3OZYR3FMER1zp34AzRBT3rwUTX2Wq9JpYLHxWJtSDuDbmz5AKlb1hPFaUjn67
+         sTlY+EEuQgAKTIu3x740a2K3u2+Tm45FUkqi1NyxG74d6/YDj6RCqxi+JKXddK9AIWoc
+         EseQ==
+X-Gm-Message-State: AOJu0Yxqgnq3qzmZ+QDM1Zuv6vfrhTXcbalo6JgtPZj/xOmLpnKFgQ5X
+	y8IlRqmr9D0wmwTSaexAQKHpZ1YuI9ekLUadmnb08hw3cIUy07y2nFQvIg/LSogUDfCfrZXLV/Q
+	Of4R6G97LSBCcJ0x1MrWk
+X-Received: by 2002:a17:902:e551:b0:1c4:16f7:d95b with SMTP id n17-20020a170902e55100b001c416f7d95bmr8120391plf.63.1695008934604;
+        Sun, 17 Sep 2023 20:48:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHU+J6/1r/Ic+5ZZYMQ4fGS+99Vl+z2dkdnv17BDJt0rP24HSwlnxKPxSwy3c72dz81jLm2Bg==
+X-Received: by 2002:a17:902:e551:b0:1c4:16f7:d95b with SMTP id n17-20020a170902e55100b001c416f7d95bmr8120381plf.63.1695008934370;
+        Sun, 17 Sep 2023 20:48:54 -0700 (PDT)
 Received: from ?IPV6:2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5? ([2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5])
-        by smtp.gmail.com with ESMTPSA id 8-20020a17090a004800b0026b420ae167sm8825822pjb.17.2023.09.17.20.33.40
+        by smtp.gmail.com with ESMTPSA id n10-20020a170902d2ca00b001bbf7fd354csm7284723plc.213.2023.09.17.20.48.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Sep 2023 20:33:45 -0700 (PDT)
-Message-ID: <2c23ab17-7516-e310-8b79-b8c5fc02984a@redhat.com>
-Date: Mon, 18 Sep 2023 13:33:37 +1000
+        Sun, 17 Sep 2023 20:48:53 -0700 (PDT)
+Message-ID: <4f368470-83c1-4140-9d0f-e64db3402865@redhat.com>
+Date: Mon, 18 Sep 2023 13:48:47 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,8 +54,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [RFC PATCH v2 05/35] drivers: base: Print a warning instead of
- panic() when register_cpu() fails
+Subject: Re: [RFC PATCH v2 07/35] x86: intel_epb: Don't rely on link order
 To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
  loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
  linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -66,9 +65,9 @@ Cc: x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
  Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
  justin.he@arm.com
 References: <20230913163823.7880-1-james.morse@arm.com>
- <20230913163823.7880-6-james.morse@arm.com>
+ <20230913163823.7880-8-james.morse@arm.com>
 From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20230913163823.7880-6-james.morse@arm.com>
+In-Reply-To: <20230913163823.7880-8-james.morse@arm.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -78,49 +77,41 @@ Content-Transfer-Encoding: 7bit
 
 
 On 9/14/23 02:37, James Morse wrote:
-> loongarch, mips, parisc, riscv and sh all print a warning if
-> register_cpu() returns an error. Architectures that use
-> GENERIC_CPU_DEVICES call panic() instead.
+> intel_epb_init() is called as a subsys_initcall() to register cpuhp
+> callbacks. The callbacks make use of get_cpu_device() which will return
+> NULL unless register_cpu() has been called. register_cpu() is called
+> from topology_init(), which is also a subsys_initcall().
 > 
-> Errors in this path indicate something is wrong with the firmware
-> description of the platform, but the kernel is able to keep running.
+> This is fragile. Moving the register_cpu() to a different
+> subsys_initcall()  leads to a NULL derefernce during boot.
+                                      ^^^^^^^^^^
+                                      s/derefernce/dereference
+
+Reported by ./scripts/checkpatch.pl --codespell
+
 > 
-> Downgrade this to a warning to make it easier to debug this issue.
-> 
-> This will allow architectures that switching over to GENERIC_CPU_DEVICES
-> to drop their warning, but keep the existing behaviour.
+> Make intel_epb_init() a late_initcall(), user-space can't provide a
+> policy before this point anyway.
 > 
 > Signed-off-by: James Morse <james.morse@arm.com>
 > ---
->   drivers/base/cpu.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
+> subsys_initcall_sync() would be an option, but moving the register_cpu()
+> calls into ACPI also means adding a safety net for CPUs that are online
+> but not described properly by firmware. This lives in subsys_initcall_sync().
+> ---
+>   arch/x86/kernel/cpu/intel_epb.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-> index 579064fda97b..d31c936f0955 100644
-> --- a/drivers/base/cpu.c
-> +++ b/drivers/base/cpu.c
-> @@ -535,14 +535,15 @@ int __weak arch_register_cpu(int cpu)
->   
->   static void __init cpu_dev_register_generic(void)
->   {
-> -	int i;
-> +	int i, ret;
->   
->   	if (!IS_ENABLED(CONFIG_GENERIC_CPU_DEVICES))
->   		return;
->   
->   	for_each_present_cpu(i) {
-> -		if (arch_register_cpu(i))
-> -			panic("Failed to register CPU device");
-> +		ret = arch_register_cpu(i);
-> +		if (ret)
-> +			pr_warn("register_cpu %d failed (%d)\n", i, ret);
->   	}
+> diff --git a/arch/x86/kernel/cpu/intel_epb.c b/arch/x86/kernel/cpu/intel_epb.c
+> index e4c3ba91321c..f18d35fe27a9 100644
+> --- a/arch/x86/kernel/cpu/intel_epb.c
+> +++ b/arch/x86/kernel/cpu/intel_epb.c
+> @@ -237,4 +237,4 @@ static __init int intel_epb_init(void)
+>   	cpuhp_remove_state(CPUHP_AP_X86_INTEL_EPB_ONLINE);
+>   	return ret;
 >   }
->   
-
-The same warning message has been printed by arch/loongarch/kernel/topology.c::arch_register_cpu().
-In order to avoid the duplication, I think the warning message in arch/loongarch needs to be dropped?
+> -subsys_initcall(intel_epb_init);
+> +late_initcall(intel_epb_init);
 
 Thanks,
 Gavin
