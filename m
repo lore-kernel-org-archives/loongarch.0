@@ -1,51 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0CD1FDC
-	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 04:06:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C0C1FCC
+	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 04:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695009999;
+	s=mimecast20190719; t=1695010441;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RyEnCFT5C38bhUURLkGzvUajSXRR1/fSXXPcrqWJ/i0=;
-	b=Sx38KtqaNLgedsFfbIOY//4AFSkSAAWhG2kIPULbdOvkEWUHgkWHlWpNt/7EeGiDf3AY37
-	iyV1P56pM4BW/c8wZgSAwQToP7oa+9fzqjZkJP8dq9aRlrZ37ZkD2Ea1iRbl5TgGAvbr1O
-	U/N00cyNvYPRYFsSS16Tmjd+OdiyG30=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=+naNdgA3bFvfUIv4tJXTTMUwzR4YQ9euXBZfFED9oXc=;
+	b=MPknRFWjt+gO2KIhppkRjReWPLmE7eoVG9QkQqEgHU0Q/SMVTHXHWOYXLLZZBtPn7AXpVd
+	x1M5nTfClD78jLZ8s93PCFf2NpboRtTzPiRIT/lAnvyLvbTY7odf3F4FMPXuhOC5CZdUzi
+	bVnJZzJt+BomntwYiJNbOsZ2WcQzvOk=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-665-hS7dTMWYPcuFMQL3zMNQmA-1; Mon, 18 Sep 2023 00:06:38 -0400
-X-MC-Unique: hS7dTMWYPcuFMQL3zMNQmA-1
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1c387a09de4so32202455ad.1
-        for <loongarch@lists.linux.dev>; Sun, 17 Sep 2023 21:06:38 -0700 (PDT)
+ us-mta-590-1aQ-LNkxO0aDUP3vHmc1tw-1; Mon, 18 Sep 2023 00:13:59 -0400
+X-MC-Unique: 1aQ-LNkxO0aDUP3vHmc1tw-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-271bb60d8a8so4365952a91.3
+        for <loongarch@lists.linux.dev>; Sun, 17 Sep 2023 21:13:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695009997; x=1695614797;
+        d=1e100.net; s=20230601; t=1695010438; x=1695615238;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RyEnCFT5C38bhUURLkGzvUajSXRR1/fSXXPcrqWJ/i0=;
-        b=eb32xwvKZuz5WWZnk70CnYISXTfzN5OrxvEvNT1/jVESMq6tm1AItSnuOEHsIKBciG
-         4Elsm/JaN3/pKxecCarEXgLnR1AJux3NODOfkHAVdGk9B/zrigTl8RVJQIzWdT0WPVRl
-         LuzD9bPD0i6jrMfF7wwLg+oPDgJPTRqCSpu6fvfpxvgJ/StO9kJyvaoHlsa1YzUF8tU+
-         yaLwpf4SXBamuxH2f39ufKU6W7UZ5cnLN7GtCO1G2p3GjPaygoAGMeBuFSzyr/VqMcLe
-         HhjwPXxga/lY96sMoXqgLsHH+nt00KQ+U+LPA1YcD33DoFzHeGYsz1UlWZTDkhKB/I1O
-         V2UQ==
-X-Gm-Message-State: AOJu0YxU6BqF+fm2vDNsXhkAW0/BdrVlV1VHdrFg0yeGvVsuVmCkvxCc
-	oNZgo9ae1WRI5CdTwWkw/Kppa/mIRP/DgxxOswVOxcNXGYj+xAt3+nzN4kTruj9gwK49Qj0ij8d
-	/bsItA+ltQgr9YIv3E0k9
-X-Received: by 2002:a17:902:ed13:b0:1c4:2639:fcac with SMTP id b19-20020a170902ed1300b001c42639fcacmr6826554pld.44.1695009997184;
-        Sun, 17 Sep 2023 21:06:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEF065/Z94SfXDjWgy8eNRhRV8ONjtcc1kg9eJW1xxYmQI4hKUxuHGFuBMDdEioAhl0IB04WA==
-X-Received: by 2002:a17:902:ed13:b0:1c4:2639:fcac with SMTP id b19-20020a170902ed1300b001c42639fcacmr6826541pld.44.1695009996903;
-        Sun, 17 Sep 2023 21:06:36 -0700 (PDT)
+        bh=+naNdgA3bFvfUIv4tJXTTMUwzR4YQ9euXBZfFED9oXc=;
+        b=rZYTzIyI8BLoH+UdJdaOgZJpZvNBZgZUmMnmYIhJ/vcgXu9rB0Ck2RfbsWZg+h24Iq
+         oBgo+x2w89Ax63ArMxeJjDbNEKUMR/+gfmQfXq3Wzfht9v68F3yKc8RFL7DHWl5/0ZG8
+         urk0jpfNbBOIKJC6MjL60qdxG/Y+u82uKNs2s5+OO0FcSgujZ94bIcsW8qANgYJPRPlo
+         RbCSzKZbBhhXKyy1gi5C7DZV04fKAa1lh27XNeXb/F1g03NrCtK7f6mmlZEsMQu4aEts
+         1J4I2/HR6Z47krHSaiakhDWjaKWD8+P4URgRQUxxXl1x6IvoZrO8k4Hq9aclig/pQUIS
+         X02g==
+X-Gm-Message-State: AOJu0YwUi/Iiomu56dpXR1kzt5cgOFT3hcIw96wSblKwy0IDRGPMUm3M
+	Eu+odvtsVLofKbgE5M9sFaugwR3uJhtqa8BZs7eoaRPHdzVUYc5ui4ZDZW1jfTKF5hinZQZGWBi
+	rOkNtAQReErhPvytvhXHk
+X-Received: by 2002:a17:90b:a4a:b0:268:d05c:2d7e with SMTP id gw10-20020a17090b0a4a00b00268d05c2d7emr7199791pjb.14.1695010438620;
+        Sun, 17 Sep 2023 21:13:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF1foMotPOeb/U6/yukF28+ks3ZQRkPSCrKuGwYeHbXeH4thsw0w9Gpz7n9powcJl9wMU41Zg==
+X-Received: by 2002:a17:90b:a4a:b0:268:d05c:2d7e with SMTP id gw10-20020a17090b0a4a00b00268d05c2d7emr7199783pjb.14.1695010438337;
+        Sun, 17 Sep 2023 21:13:58 -0700 (PDT)
 Received: from ?IPV6:2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5? ([2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5])
-        by smtp.gmail.com with ESMTPSA id ju3-20020a170903428300b001bdb8c0b578sm5892366plb.192.2023.09.17.21.06.31
+        by smtp.gmail.com with ESMTPSA id s8-20020a17090a074800b00262eb0d141esm6923176pje.28.2023.09.17.21.13.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Sep 2023 21:06:36 -0700 (PDT)
-Message-ID: <4e5aaed1-bf7d-18a8-0f77-8f29bb2e43bc@redhat.com>
-Date: Mon, 18 Sep 2023 14:06:28 +1000
+        Sun, 17 Sep 2023 21:13:57 -0700 (PDT)
+Message-ID: <e364c6e3-4900-404e-54e9-a634eca4384a@redhat.com>
+Date: Mon, 18 Sep 2023 14:13:50 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,8 +54,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [RFC PATCH v2 12/35] ACPI: Use the acpi_device_is_present()
- helper in more places
+Subject: Re: [RFC PATCH v2 13/35] ACPI: Rename acpi_scan_device_not_present()
+ to be about enumeration
 To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
  loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
  linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -66,9 +66,9 @@ Cc: x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
  Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
  justin.he@arm.com
 References: <20230913163823.7880-1-james.morse@arm.com>
- <20230913163823.7880-13-james.morse@arm.com>
+ <20230913163823.7880-14-james.morse@arm.com>
 From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20230913163823.7880-13-james.morse@arm.com>
+In-Reply-To: <20230913163823.7880-14-james.morse@arm.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -78,40 +78,60 @@ Content-Transfer-Encoding: 7bit
 
 
 On 9/14/23 02:38, James Morse wrote:
-> acpi_device_is_present() checks the present or functional bits
-> from the cached copy of _STA.
+> acpi_scan_device_not_present() is called when a device in the
+> hierarchy is not available for enumeration. Historically enumeration
+> was only based on whether the device was present.
 > 
-> A few places open-code this check. Use the helper instead to
-> improve readability.
+> To add support for only enumerating devices that are both present
+> and enabled, this helper should be renamed. It was only ever about
+> enumeration, rename it acpi_scan_device_not_enumerated().
+> 
+> No change in behaviour is intended.
 > 
 > Signed-off-by: James Morse <james.morse@arm.com>
 > ---
->   drivers/acpi/scan.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+>   drivers/acpi/scan.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
 
 Reviewed-by: Gavin Shan <gshan@redhat.com>
 
 > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 691d4b7686ee..ed01e19514ef 100644
+> index ed01e19514ef..17ab875a7d4e 100644
 > --- a/drivers/acpi/scan.c
 > +++ b/drivers/acpi/scan.c
-> @@ -304,7 +304,7 @@ static int acpi_scan_device_check(struct acpi_device *adev)
->   	int error;
+> @@ -289,10 +289,10 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+>   	return 0;
+>   }
+>   
+> -static int acpi_scan_device_not_present(struct acpi_device *adev)
+> +static int acpi_scan_device_not_enumerated(struct acpi_device *adev)
+>   {
+>   	if (!acpi_device_enumerated(adev)) {
+> -		dev_warn(&adev->dev, "Still not present\n");
+> +		dev_warn(&adev->dev, "Still not enumerated\n");
+>   		return -EALREADY;
+>   	}
+>   	acpi_bus_trim(adev);
+> @@ -327,7 +327,7 @@ static int acpi_scan_device_check(struct acpi_device *adev)
+>   			error = -ENODEV;
+>   		}
+>   	} else {
+> -		error = acpi_scan_device_not_present(adev);
+> +		error = acpi_scan_device_not_enumerated(adev);
+>   	}
+>   	return error;
+>   }
+> @@ -339,7 +339,7 @@ static int acpi_scan_bus_check(struct acpi_device *adev, void *not_used)
 >   
 >   	acpi_bus_get_status(adev);
-> -	if (adev->status.present || adev->status.functional) {
-> +	if (acpi_device_is_present(adev)) {
->   		/*
->   		 * This function is only called for device objects for which
->   		 * matching scan handlers exist.  The only situation in which
-> @@ -338,7 +338,7 @@ static int acpi_scan_bus_check(struct acpi_device *adev, void *not_used)
->   	int error;
->   
->   	acpi_bus_get_status(adev);
-> -	if (!(adev->status.present || adev->status.functional)) {
-> +	if (!acpi_device_is_present(adev)) {
->   		acpi_scan_device_not_present(adev);
+>   	if (!acpi_device_is_present(adev)) {
+> -		acpi_scan_device_not_present(adev);
+> +		acpi_scan_device_not_enumerated(adev);
 >   		return 0;
 >   	}
+>   	if (handler && handler->hotplug.scan_dependent)
+
+Thanks,
+Gavin
 
