@@ -1,84 +1,69 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 880F538DED
-	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 09:24:20 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8CxLOvDaAllPd8pAA--.9413S3;
-	Tue, 19 Sep 2023 17:24:19 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx7tzBaAlluGkLAA--.22960S3;
-	Tue, 19 Sep 2023 17:24:19 +0800 (CST)
-Subject: Re: [PATCH v1] LoongArch: Remove dead code in relocate_new_kernel
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <1695114428-20308-1-git-send-email-yangtiezhu@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <7aa1e5a0-c161-08d6-a2fc-0d4f65148b01@loongson.cn>
-Date: Tue, 19 Sep 2023 17:24:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE670110B
+	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 09:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=BHDU/uL8LxSg62Q/u4osBO6lMbutGaWzvUBNKWgWQLM=; b=pLvrwD4msGWTwxI8101DXka/78
+	DZEMxr08Dp8UAFTjZbVfC9lF+XzkCI4X73WOV7xA6bvQQrmxHHgrwHTsGvzqcv7QjmXFtuvJZPXrr
+	e80aORF125Xth3z/Nr4XDOaFG+q7HzMK8hA9mFOhJ2ewEwudulmxbBQgiyQ9tA2CARLvEr8slMmQT
+	YUuQGIbaP48KiRH0+Utzxhqxt65swdcVCy5eD+L+bwYLGmobeQZGiGQv/jhOEh64rD4JlvW02y4ae
+	sOrAwSmaJ5sap4IFpnXyYAFAFVYzvkv73YnhzlE77IZrS/t1HHduvLPnImGQPMFj0YPU5O4QmE7ha
+	489v0a7A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33864)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1qiXS4-0001em-11;
+	Tue, 19 Sep 2023 10:55:28 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1qiXS3-0001P0-3I; Tue, 19 Sep 2023 10:55:27 +0100
+Date: Tue, 19 Sep 2023 10:55:27 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Gavin Shan <gshan@redhat.com>
+Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
+	x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com
+Subject: Re: [RFC PATCH v2 32/35] ACPI: add support to register CPUs based on
+ the _STA enabled bit
+Message-ID: <ZQlwD50FEZeeAMBQ@shell.armlinux.org.uk>
+References: <20230913163823.7880-1-james.morse@arm.com>
+ <20230913163823.7880-33-james.morse@arm.com>
+ <ad068df5-d5b1-030a-af25-723cd5c3b854@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1695114428-20308-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Bx7tzBaAlluGkLAA--.22960S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GFy7ury3AF1ktFWUGF4ftFc_yoWkKwb_JF
-	17tw1kGr48Jr4jy3Z0gw4Sqr1Fg34FyayrCanrXw47t3Way342yrnxJ3Wruwn0gr4kWrs8
-	Z395JFsIyr18tosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
-	DUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad068df5-d5b1-030a-af25-723cd5c3b854@redhat.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Not need my tag. Youling found that before, and simply talked about it 
-to me.
+On Tue, Sep 19, 2023 at 02:46:22PM +1000, Gavin Shan wrote:
+> The message needs to be split up into multiple lines to make ./scripts/checkpatch.pl
+> happy:
+> 
+> 	pr_err_once(FW_BUG "CPU %u is online, but described "
+> 			   "as not present or disabled!\n", pr->id);
 
-Thanks.
+No. checkpatch is wrong on this point. Splitting the message like this
+hurts debuggability, because the message can no longer be grepped for.
 
+What James has done is perfectly fine.
 
-On 2023-09-19 17:07, Tiezhu Yang wrote:
-> The initial aim is to silence the following objtool warning:
->
-> arch/loongarch/kernel/relocate_kernel.o: warning: objtool: relocate_new_kernel+0x74: unreachable instruction
->
-> There are two adjacent "b" instructions, the second one is unreachable,
-> it is dead code, just remove it.
->
-> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-> Co-developed-by: Youling Tang <tangyouling@loongson.cn>
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   arch/loongarch/kernel/relocate_kernel.S | 1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
-> index d132525..f49f6b0 100644
-> --- a/arch/loongarch/kernel/relocate_kernel.S
-> +++ b/arch/loongarch/kernel/relocate_kernel.S
-> @@ -72,7 +72,6 @@ copy_word:
->   	LONG_ADDI	s5, s5, -1
->   	beqz		s5, process_entry
->   	b		copy_word
-> -	b		process_entry
->   
->   done:
->   	ibar		0
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
