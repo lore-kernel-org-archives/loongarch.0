@@ -1,191 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7565E8471
-	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 06:48:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45C45C433C8;
-	Tue, 19 Sep 2023 06:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695106111;
-	bh=v1PBG6Gu/3eqRITlKaenIy1Iaq3gKBzyqYlv0ai4zO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g81NpwhjgWC5UNpbUGov4u227vlRjEbZixKM1tjaZpaM/VY6T9DXSa/NEFVhg41PN
-	 vnrRJL/9n7SjreVQLTCw1zfG/HO8EMMJtOSa/z1D/CFbU114nEbsr06aQ520n/3u1j
-	 g1ERXarMOaeSRRWVrRVjkj3QcghAZT2RhMDgEx8AQqjIbY6048kFxlHKikjCWSyuLM
-	 iuv2rfpWoG3+m+AHxfjjzMFu11ynzIQlPTHtjh2xfDgQPFPLFv48dM8n6h4j5U4CaH
-	 Pokk/9WjdSFC6CHoDZa/xnP+QGd+sc3B23/ldGMkARS2g+aCBL6v5tzoijY2vKM65J
-	 rxr74ifBr+LMw==
-Date: Tue, 19 Sep 2023 09:47:44 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, will@kernel.org, aneesh.kumar@linux.ibm.com,
-	npiggin@gmail.com, peterz@infradead.org, catalin.marinas@arm.com,
-	chenhuacai@kernel.org, tsbogend@alpha.franken.de,
-	dave.hansen@linux.intel.com, luto@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, arnd@arndb.de, willy@infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org
-Subject: Re: [PATCH] mm: add statistics for PUD level pagetable
-Message-ID: <20230919064744.GE3303@kernel.org>
-References: <876c71c03a7e69c17722a690e3225a4f7b172fb2.1695017383.git.baolin.wang@linux.alibaba.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86ED134CCC
+	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 08:57:50 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxuOiLYgllZd0pAA--.44593S3;
+	Tue, 19 Sep 2023 16:57:48 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxfNyKYgll12MLAA--.22712S2;
+	Tue, 19 Sep 2023 16:57:46 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] LoongArch: Update the links of ABI documentation
+Date: Tue, 19 Sep 2023 16:57:44 +0800
+Message-Id: <1695113866-20120-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8CxfNyKYgll12MLAA--.22712S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUU9vb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4c8EcI0En4kS14v26r1Y6r17MxC20s026xCaFVCjc4AY6r1j6r4UMxCI
+	bckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
+	I_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
+	6r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj4
+	0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
+	JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8yrW7UUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <876c71c03a7e69c17722a690e3225a4f7b172fb2.1695017383.git.baolin.wang@linux.alibaba.com>
 
-On Mon, Sep 18, 2023 at 02:31:42PM +0800, Baolin Wang wrote:
-> Recently, we found that cross-die access to pagetable pages on ARM64
-> machines can cause performance fluctuations in our business. Currently,
-> there are no PMU events available to track this situation on our ARM64
-> machines, so an accurate pagetable accounting can help to analyze this
-> issue, but now the PUD level pagetable accounting is missed.
-> 
-> So introducing pagetable_pud_ctor/dtor() to help to get an accurate
-> PUD pagetable accounting, as well as converting the architectures with
-> using generic PUD pagatable allocation to add corresponding PUD pagetable
-> accounting. Moreover this patch will also mark the PUD level pagetable
-> with PG_table flag, which will help to do sanity validation in unpoison_memory().
-> 
-> On my testing machine, I can see more pagetables statistics after the patch
-> with page-types tool:
-> 
-> Before patch:
->         flags           page-count      MB  symbolic-flags                     long-symbolic-flags
-> 0x0000000004000000           27326      106  __________________________g_________________       pgtable
-> After patch:
-> 0x0000000004000000           27541      107  __________________________g_________________       pgtable
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Tiezhu Yang (2):
+  docs/LoongArch: Update the links of ABI
+  docs/zh_CN/LoongArch: Update the links of ABI
 
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
-
-> ---
->  arch/arm64/include/asm/tlb.h         |  5 ++++-
->  arch/loongarch/include/asm/pgalloc.h |  1 +
->  arch/mips/include/asm/pgalloc.h      |  1 +
->  arch/x86/mm/pgtable.c                |  3 +++
->  include/asm-generic/pgalloc.h        |  7 ++++++-
->  include/linux/mm.h                   | 16 ++++++++++++++++
->  6 files changed, 31 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
-> index 2c29239d05c3..846c563689a8 100644
-> --- a/arch/arm64/include/asm/tlb.h
-> +++ b/arch/arm64/include/asm/tlb.h
-> @@ -96,7 +96,10 @@ static inline void __pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmdp,
->  static inline void __pud_free_tlb(struct mmu_gather *tlb, pud_t *pudp,
->  				  unsigned long addr)
->  {
-> -	tlb_remove_ptdesc(tlb, virt_to_ptdesc(pudp));
-> +	struct ptdesc *ptdesc = virt_to_ptdesc(pudp);
-> +
-> +	pagetable_pud_dtor(ptdesc);
-> +	tlb_remove_ptdesc(tlb, ptdesc);
->  }
->  #endif
->  
-> diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongarch/include/asm/pgalloc.h
-> index 79470f0b4f1d..4e2d6b7ca2ee 100644
-> --- a/arch/loongarch/include/asm/pgalloc.h
-> +++ b/arch/loongarch/include/asm/pgalloc.h
-> @@ -84,6 +84,7 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
->  
->  	if (!ptdesc)
->  		return NULL;
-> +	pagetable_pud_ctor(ptdesc);
->  	pud = ptdesc_address(ptdesc);
->  
->  	pud_init(pud);
-> diff --git a/arch/mips/include/asm/pgalloc.h b/arch/mips/include/asm/pgalloc.h
-> index 40e40a7eb94a..f4440edcd8fe 100644
-> --- a/arch/mips/include/asm/pgalloc.h
-> +++ b/arch/mips/include/asm/pgalloc.h
-> @@ -95,6 +95,7 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
->  
->  	if (!ptdesc)
->  		return NULL;
-> +	pagetable_pud_ctor(ptdesc);
->  	pud = ptdesc_address(ptdesc);
->  
->  	pud_init(pud);
-> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-> index 9deadf517f14..0cbc1b8e8e3d 100644
-> --- a/arch/x86/mm/pgtable.c
-> +++ b/arch/x86/mm/pgtable.c
-> @@ -76,6 +76,9 @@ void ___pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd)
->  #if CONFIG_PGTABLE_LEVELS > 3
->  void ___pud_free_tlb(struct mmu_gather *tlb, pud_t *pud)
->  {
-> +	struct ptdesc *ptdesc = virt_to_ptdesc(pud);
-> +
-> +	pagetable_pud_dtor(ptdesc);
->  	paravirt_release_pud(__pa(pud) >> PAGE_SHIFT);
->  	paravirt_tlb_remove_table(tlb, virt_to_page(pud));
->  }
-> diff --git a/include/asm-generic/pgalloc.h b/include/asm-generic/pgalloc.h
-> index c75d4a753849..879e5f8aa5e9 100644
-> --- a/include/asm-generic/pgalloc.h
-> +++ b/include/asm-generic/pgalloc.h
-> @@ -169,6 +169,8 @@ static inline pud_t *__pud_alloc_one(struct mm_struct *mm, unsigned long addr)
->  	ptdesc = pagetable_alloc(gfp, 0);
->  	if (!ptdesc)
->  		return NULL;
-> +
-> +	pagetable_pud_ctor(ptdesc);
->  	return ptdesc_address(ptdesc);
->  }
->  
-> @@ -190,8 +192,11 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
->  
->  static inline void __pud_free(struct mm_struct *mm, pud_t *pud)
->  {
-> +	struct ptdesc *ptdesc = virt_to_ptdesc(pud);
-> +
->  	BUG_ON((unsigned long)pud & (PAGE_SIZE-1));
-> -	pagetable_free(virt_to_ptdesc(pud));
-> +	pagetable_pud_dtor(ptdesc);
-> +	pagetable_free(ptdesc);
->  }
->  
->  #ifndef __HAVE_ARCH_PUD_FREE
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 12335de50140..2232bfebb88a 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -3049,6 +3049,22 @@ static inline spinlock_t *pud_lock(struct mm_struct *mm, pud_t *pud)
->  	return ptl;
->  }
->  
-> +static inline void pagetable_pud_ctor(struct ptdesc *ptdesc)
-> +{
-> +	struct folio *folio = ptdesc_folio(ptdesc);
-> +
-> +	__folio_set_pgtable(folio);
-> +	lruvec_stat_add_folio(folio, NR_PAGETABLE);
-> +}
-> +
-> +static inline void pagetable_pud_dtor(struct ptdesc *ptdesc)
-> +{
-> +	struct folio *folio = ptdesc_folio(ptdesc);
-> +
-> +	__folio_clear_pgtable(folio);
-> +	lruvec_stat_sub_folio(folio, NR_PAGETABLE);
-> +}
-> +
->  extern void __init pagecache_init(void);
->  extern void free_initmem(void);
->  
-> -- 
-> 2.39.3
-> 
-> 
+ Documentation/arch/loongarch/introduction.rst                    | 4 ++--
+ Documentation/translations/zh_CN/arch/loongarch/introduction.rst | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 -- 
-Sincerely yours,
-Mike.
+2.1.0
+
