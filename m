@@ -1,146 +1,109 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B702110B
-	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 10:24:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139B820B25
+	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 15:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ZB9BH5s6f+1vWNC2c2Ik282bpxBrIN2PmS2ywFcicC0=; b=QFgL+GrLi4spuAOmLz3KFJCeSu
-	7JM8L9KKnKdJd3mizqrd7r8XOiJmeFq4ouhF6CtN3jNRYGfxLg15k+cYTBuT7BZSjFu9zVQF8U/CB
-	qxcY62BX4iTdtz8TxPGyYqW8R9PtxZRdZm6Gd0YY/iva1tazgUAbLpcGUJM32rZEm45UkyONvMzWs
-	Mp0U+xYRw+Re/2wd/EZgoyLCr3uesAioIu99+to9tNugowUvbsi+ux/B43lRIuE/x2tdQaVoO4Cwn
-	OKzk1azVmZpkMlOWJfGw9LFPDoFDTEZ5kdmDVEPR5gKaIiaDFlSVebUav8i0+wPxIeqx4CC53O9wi
-	X2T6BZ8A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48024)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qiXuL-0001gT-1a;
-	Tue, 19 Sep 2023 11:24:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qiXuL-0001QG-Gh; Tue, 19 Sep 2023 11:24:41 +0100
-Date: Tue, 19 Sep 2023 11:24:41 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com
-Subject: Re: [RFC PATCH v2 32/35] ACPI: add support to register CPUs based on
- the _STA enabled bit
-Message-ID: <ZQl26YlRnQaKwCg6@shell.armlinux.org.uk>
-References: <20230913163823.7880-1-james.morse@arm.com>
- <20230913163823.7880-33-james.morse@arm.com>
- <20230914171341.00006e51@Huawei.com>
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=EkcxN4mrbXMsLJAdxtwy2oz0sxfaSLg8LzPbTnf3zFY=; b=TKCfAHHBTyWO6i9uVdTVGjl/vG
+	TRawhS42WqVqO9/EHxjVJqRbac7xfR16bAwkoZQMyoYCO9/TUJc7TQ8bQEcz70UkRVVPlSL5ORXgZ
+	gnPmxAuBOtb/Y6eTmgTCC3WQFcXox8mvke9JavA4wjj440A/hstNLx7GnrVqJuVgs/1jEKWrEHWgq
+	Y/oIZEnUkILeiP48yAfQWCvbLVZVBNdhz5z11ogs1lxhZuMaewL5CMAi9VTv4X4OFqwbA6g8QZNYp
+	E/r3aEtLVq2p9xLL8wQq7JKIf0mP+foHdFuGPSMDTZBX/petlohpJ0s+TkRIb18OQI1hkdw5CV+Hj
+	t/2fr9Og==;
+Received: from [2601:1c2:980:9ec0::9fed]
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1qicmS-000m50-2W;
+	Tue, 19 Sep 2023 15:36:52 +0000
+Message-ID: <c7604f6c-4da7-47c4-abe9-e626b3efc665@infradead.org>
+Date: Tue, 19 Sep 2023 08:36:50 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230914171341.00006e51@Huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] soc: loongson: loongson2_pm: Add dependency for
+ INPUT
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
+ <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
+ soc@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+ Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+References: <cover.1693623752.git.zhoubinbin@loongson.cn>
+ <16a37f6ad3cc9417b6638c2cd532d88c79468eb1.1693623752.git.zhoubinbin@loongson.cn>
+ <885eab85-2c11-cf20-9187-55cd647fbe9f@infradead.org>
+In-Reply-To: <885eab85-2c11-cf20-9187-55cd647fbe9f@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 14, 2023 at 05:13:41PM +0100, Jonathan Cameron wrote:
-> On Wed, 13 Sep 2023 16:38:20 +0000
-> James Morse <james.morse@arm.com> wrote:
-> > +static int acpi_processor_make_enabled(struct acpi_processor *pr)
-> > +{
-> > +	unsigned long long sta;
-> > +	acpi_status status;
-> > +	bool present, enabled;
-> > +
-> > +	if (!acpi_has_method(pr->handle, "_STA"))
-> > +		return arch_register_cpu(pr->id);
-> > +
-> > +	status = acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
-> > +	if (ACPI_FAILURE(status))
-> > +		return -ENODEV;
-> > +
-> > +	present = sta & ACPI_STA_DEVICE_PRESENT;
-> > +	enabled = sta & ACPI_STA_DEVICE_ENABLED;
-> > +
-> > +	if (cpu_online(pr->id) && (!present || !enabled)) {
-> > +		pr_err_once(FW_BUG "CPU %u is online, but described as not present or disabled!\n", pr->id);
+Hi--
+
+On 9/2/23 08:43, Randy Dunlap wrote:
 > 
-> Why once?  If this for some reason happened on multiple CPUs I think we'd want to know.
 > 
-> > +		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-> > +	} else if (!present || !enabled) {
-> > +		return -ENODEV;
-> > +	}
+> On 9/2/23 01:47, Binbin Zhou wrote:
+>> Since commit 67694c076bd7 ("soc: loongson2_pm: add power management
+>> support"), the Loongson-2K PM driver was added, but it didn't update the
+>> Kconfig entry for the INPUT dependency, leading to build errors:
+>>
+>> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld:
+>> drivers/soc/loongson/loongson2_pm.o: in function `loongson2_power_button_init':
+>> /work/lnx/next/linux-next-20230825/LOONG64/../drivers/soc/loongson/loongson2_pm.c:101:(.text+0x350): undefined reference to `input_allocate_device'
+>> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld:
+>> /work/lnx/next/linux-next-20230825/LOONG64/../drivers/soc/loongson/loongson2_pm.c:109:(.text+0x3dc): undefined reference to `input_set_capability'
+>> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld:
+>> /work/lnx/next/linux-next-20230825/LOONG64/../drivers/soc/loongson/loongson2_pm.c:111:(.text+0x3e4): undefined reference to `input_register_device'
+>> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld:
+>> /work/lnx/next/linux-next-20230825/LOONG64/../drivers/soc/loongson/loongson2_pm.c:125:(.text+0x3fc): undefined reference to `input_free_device'
+>> /opt/crosstool/gcc-13.2.0-nolibc/loongarch64-linux/bin/loongarch64-linux-ld: drivers/soc/loongson/loongson2_pm.o: in function `input_report_key':
+>> /work/lnx/next/linux-next-20230825/LOONG64/../include/linux/input.h:425:(.text+0x58c): undefined reference to `input_event'
+>>
+>> Also, since this driver can only be built-in, it fails to link when the
+>> INPUT is in a loadable module, so we should update the Kconfig entry to
+>> depend on INPUT=y.
+>>
+>> Fixes: 67694c076bd7 ("soc: loongson2_pm: add power management support")
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > 
-> I guess you didn't do a nested if here to avoid even longer lines.
-> Could flip things around though I don't like this much either as it makes
-> the normal good path exit mid way down.
+> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> Tested-by: Randy Dunlap <rdunlap@infradead.org>
 > 
-> 	if (present && enabled)
-> 		return arch_register_cpu(pr->id);
+> Thanks.
+
+What's the status of this patch?
+linux-next builds are still failing without this patch.
+
+Thanks.
+
 > 
-> 	if (!cpu_online(pr->id))
-> 		return -ENODEV;
+>> ---
+>>  drivers/soc/loongson/Kconfig | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
+>> index 314e13bb3e01..368344943a93 100644
+>> --- a/drivers/soc/loongson/Kconfig
+>> +++ b/drivers/soc/loongson/Kconfig
+>> @@ -20,6 +20,7 @@ config LOONGSON2_GUTS
+>>  config LOONGSON2_PM
+>>  	bool "Loongson-2 SoC Power Management Controller Driver"
+>>  	depends on LOONGARCH && OF
+>> +	depends on INPUT=y
+>>  	help
+>>  	  The Loongson-2's power management controller was ACPI, supports ACPI
+>>  	  S2Idle (Suspend To Idle), ACPI S3 (Suspend To RAM), ACPI S4 (Suspend To
 > 
-> 	pr_err...
-> 	add_taint(...
-> 
-> 	return arch_register_cpu(pr->id);
-> 
-> Ah well. Some code just has to be less than pretty.
-
-How about:
-
-static int acpi_processor_should_register_cpu(struct acpi_processor *pr)
-{
-	unsigned long long sta;
-	acpi_status status;
-
-	if (!acpi_has_method(pr->handle, "_STA"))
-		return 0;
-
-	status = acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
-	if (ACPI_FAILURE(status))
-		return -ENODEV;
-
-	if (sta & ACPI_STA_DEVICE_PRESENT && sta & ACPI_STA_DEVICE_ENABLED)
-		return 0;
-
-	if (cpu_online(pr->id)) {
-		pr_err_once(FW_BUG
-			    "CPU %u is online, but described as not present or disabled!\n",
-			    pr->id);
-
-		/* Register the CPU anyway */
-		return 0;
-	}
-
-	return -ENODEV;
-}
-
-static int acpi_processor_make_enabled(struct acpi_processor *pr)
-{
-	int ret = acpi_processor_should_register_cpu(pr);
-
-	if (ret)
-		return ret;
-
-	return arch_register_cpu(pr->id);
-}
-
-I would keep the "cpu online but !present and !disabled" as a sub-block
-because it makes better reading flow, but instead break the message as
-I've indicated above.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+~Randy
