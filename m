@@ -1,148 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65AE163
-	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 00:56:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC7E5C433C7
-	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 00:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695084997;
-	bh=nE5P8ufygqbIo8jvx/OEDKHbyHstgT6k4TktwRlOAZQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uh1a3Vz09m4eYrMIBw5dUOcOT2b2nusN7GZYwcgx1Mmv+zw6mVGHih5CQqSUTS0mT
-	 nAkFPLu8HTIU3+IQy64cG+rMer2TB5Yzch/I/AianECJ1pw/bqEa2OFlIFTInhqrzD
-	 FSo6mYvUq3Lvt4UpzvZcY0Ii4viZe2VCCuckp7++V9THu/0w3A2M5mfWq6SC/4tGDM
-	 cTOiS4n1VchWOrv9mUh71LDaXgC8H1dw7MRS7Gxlo7ZhL11jB1LiTpmfVgEDz5g7YJ
-	 JSMEylwzA/dflCP6Vuf+nNo0YlwxBtaOnFRk+1SVedRkRyHcOxqtAiyQflfzKFKt2X
-	 SOj6DhAplnHzw==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-99c3c8adb27so671179466b.1
-        for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 17:56:37 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yyol5gs6fMjyj5Ls8FiUse8Z6a/6STw44WOMViaCCqYH0DuJxNF
-	ESImgJrxDq3GzjAmgmo6qnowxe4Go1xeapwdAs8=
-X-Google-Smtp-Source: AGHT+IEFySirtuTqKHANnvts1iP62VmxSeB/4SElE5cqR3MknDm4Qs17P4QND0TDuwYjr7EQUVxKyS++TSXObEqGeQg=
-X-Received: by 2002:a17:906:2921:b0:992:7295:61c9 with SMTP id
- v1-20020a170906292100b00992729561c9mr8693317ejd.69.1695084996069; Mon, 18 Sep
- 2023 17:56:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760AC1380
+	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 00:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1695085173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bw0RCNykMdY7RZsWbJdeZUErCRZgRpcPnJGa7EHVzz4=;
+	b=Bue/mVDEQh5rS75zAHcFn62FGRisryxKB+eFsVOY5DHkB5Rn90Qrhg6T3qfHPQWrBJ+0/6
+	nwMHdLyucp5Gf99kgIG7tmXbWhYaEsNkYhtY/cUc2IBB17g8PXM2BTVi0wrgNJLiFH6Ne5
+	TFDnDSq4Dr/qnf6dvkvFyQUqePS9dYU=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-336-ua0kEeS1NyCphM9r3bE1Dg-1; Mon, 18 Sep 2023 20:59:32 -0400
+X-MC-Unique: ua0kEeS1NyCphM9r3bE1Dg-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1c395534687so44373435ad.1
+        for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 17:59:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695085171; x=1695689971;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bw0RCNykMdY7RZsWbJdeZUErCRZgRpcPnJGa7EHVzz4=;
+        b=lK78vMkYiRjg3s43q47uqJ9CPU39V3c55uLyKfFiBWsVE1P7fp1ZgryGS0X8NE3D5N
+         vf2lrxiYVZc1K4hJ/ue2rnSmziNIGgXHfNtoh2NUHaFgjOla/ld1qc5qhQIDlA7qVKKK
+         4dNB2tv0+pJXJelUdPJ1ImxRzWaLNofZqBZ1BYqlMgiGzjdBbBqvK6CfhQ71S39e817Q
+         S2OvJ9Nf7AeRrH4me0XufSw3Gvp+oGXqpN+Wx2YSXNSLGvtNUS5Pi82PwhvB26LGw/X1
+         lhLLuo+rb2RsNpfi1yDTMfhLPubfBuedWmI6mlcrsS757o6d0JVM4am9gkmEwueeqheo
+         6F4Q==
+X-Gm-Message-State: AOJu0Yyj4nsECSlcM63718gzbJJoCg6qlkYXs0DjgWvVuGxGzMlrzD4D
+	kYkudStx/pFcBVhrtPql+AjZYOcaI9/5tA2MbYh5qsfuDC7atZOS+TsCJdnafApFz107+E0JzYr
+	LLbIEhO0B2IApJkFbzkn+
+X-Received: by 2002:a17:903:187:b0:1c1:eb8b:79a6 with SMTP id z7-20020a170903018700b001c1eb8b79a6mr9666417plg.24.1695085170968;
+        Mon, 18 Sep 2023 17:59:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7eI2cxEHhh6ECmh24LHvZfT00fTv4NRQgrtlQ6ac1SnBZhOS9meGvuMTt0rEbyYbfdT98tw==
+X-Received: by 2002:a17:903:187:b0:1c1:eb8b:79a6 with SMTP id z7-20020a170903018700b001c1eb8b79a6mr9666399plg.24.1695085170570;
+        Mon, 18 Sep 2023 17:59:30 -0700 (PDT)
+Received: from ?IPV6:2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5? ([2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5])
+        by smtp.gmail.com with ESMTPSA id kg14-20020a170903060e00b001c41e1e9ca7sm8040575plb.215.2023.09.18.17.59.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Sep 2023 17:59:30 -0700 (PDT)
+Message-ID: <8be3a9dc-8f59-9ef9-3662-95814e177125@redhat.com>
+Date: Tue, 19 Sep 2023 10:59:23 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230914103445.511285-1-andriy.shevchenko@linux.intel.com>
- <CAAhV-H6Q0sirFEDdc1v4BSfDY94eZvJazy0XLKM8V94GMJvQnQ@mail.gmail.com>
- <ZQNWh2DY319jGbfq@smile.fi.intel.com> <CAAhV-H66LUWHP-eGp6VGvs0F+QD=QJ69uR3_1A3SqH9cyPUPoQ@mail.gmail.com>
- <ZQWCeI6E7rm8Akbt@smile.fi.intel.com> <CAAhV-H6dakVH0a4Mt9MdcY8OO3gdne6rW0Z1kK6YRq9hDLP05w@mail.gmail.com>
- <ZQfzDXc0WRHCUeIq@smile.fi.intel.com> <CAAhV-H4HkA=SZAb-4q5QVdyDB1MsEsmjVO_N8h30MkSXzpzimQ@mail.gmail.com>
- <ZQgJB6KKYka6YGNK@smile.fi.intel.com>
-In-Reply-To: <ZQgJB6KKYka6YGNK@smile.fi.intel.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Tue, 19 Sep 2023 08:56:24 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTT=bNh9s4=ERooLMj1r+WO4J59LyugibZWBU2nk-9FkTQ@mail.gmail.com>
-Message-ID: <CAJF2gTT=bNh9s4=ERooLMj1r+WO4J59LyugibZWBU2nk-9FkTQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] LoongArch: Add missing headers
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 18, 2023 at 4:23=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Sep 18, 2023 at 04:05:50PM +0800, Huacai Chen wrote:
-> > On Mon, Sep 18, 2023 at 2:49=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Sat, Sep 16, 2023 at 08:05:52PM +0800, Huacai Chen wrote:
-> > > > On Sat, Sep 16, 2023 at 6:27=E2=80=AFPM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > On Fri, Sep 15, 2023 at 08:36:24AM +0800, Huacai Chen wrote:
-> > > > > > On Fri, Sep 15, 2023 at 2:53=E2=80=AFAM Andy Shevchenko
-> > > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > > On Thu, Sep 14, 2023 at 11:25:22PM +0800, Huacai Chen wrote:
-> > > > >
-> > > > > > > > Thank you for your patch, can this patch solve the problem =
-below?
-> > > > > > > > https://lore.kernel.org/oe-kbuild-all/202309072237.9zxMv4MZ=
--lkp@intel.com/T/#u
-> > > > > > >
-> > > > > > > Nope, this just adds missing includes.
-> > > > > > > No functional change, so warnings will still be there.
-> > > > > > But I think a patch should solve a problem.
-> > > > >
-> > > > > No, that problem is static analyser concern, not the compiler nor=
- linker.
-> > > > >
-> > > > > > If we don't get a build
-> > > > > > error or warning without this patch, does that mean the 'missin=
-g'
-> > > > > > headers are actually included indirectly?
-> > > > >
-> > > > > I might be missing something, but I do not see any build error in=
- the above message.
-> > > > Hmm, then I think I will take the second patch only.
-> > >
-> > > Thanks, but can you shed a light why?
-> > >
-> > > The rule of thumb is to include the headers we are direct users of, w=
-e have not
-> > > to imply any other inclusions done by others, unless it's kinda same =
-family of
-> > > headers (like types.h always includes compiler_types.h). Since in you=
-r case
-> > > the const.h is included the other two are missing and it's even worse=
-, as I
-> > > understand you rely on the specific headers to be included _before_ u=
-sing this
-> > > one in the users.
-> > I agree with you more or less, but I doubt there is another rule: no
-> > break, no fix. Please see:
-> >
-> > https://lore.kernel.org/loongarch/20221024070105.306280-1-chenhuacai@lo=
-ongson.cn/T/#t
-> >
-> > Obviously static_key is used in page-flags.h and it really causes
-> > build errors once before, but at last I removed the inclusion of
-> > static_key.h to get that series merged.
->
-> This is strange requirement to be honest. Doing like this is to move your
-> responsibility and understanding of the code to be a burden of the person=
- who
-> volunteers cleaning up the header mess we have in the Linux kernel source=
- tree.
->
-> Since I'm the one who tries to fix some mess (in particular kernel.h), I =
-am
-> pretty much know what I am talking about from the experience.
->
-> Cc'ing Guo. Guo, can you shed a light on the rationale of your comment in
-> the above mentioned thread?
-
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 5c02720c53a5..9cdef3944a75 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -9,6 +9,7 @@
- #include <linux/types.h>
- #include <linux/bug.h>
- #include <linux/mmdebug.h>
-+#include <linux/static_key.h>
- #ifndef __GENERATING_BOUNDS_H
- #include <linux/mm_types.h>
- #include <generated/bounds.h>
-
-My meaning is riscv needn't include the above header file to support
-HVO, and I just tested the above modification with riscv, all passed,
-so go ahead.
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [RFC PATCH v2 24/35] drivers: base: Implement weak
+ arch_unregister_cpu()
+To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ kvmarm@lists.linux.dev
+Cc: x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
+ justin.he@arm.com
+References: <20230913163823.7880-1-james.morse@arm.com>
+ <20230913163823.7880-25-james.morse@arm.com>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20230913163823.7880-25-james.morse@arm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---=20
-Best Regards
- Guo Ren
+
+On 9/14/23 02:38, James Morse wrote:
+> Add arch_unregister_cpu() to allow the ACPI machinery to call
+> unregister_cpu(). This is enough for arm64, riscv and loongarch, but
+> needs to be overridden by x86 and ia64 who need to do more work.
+> 
+> CC: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
+> Changes since v1:
+>   * Added CONFIG_HOTPLUG_CPU ifdeffery around unregister_cpu
+> ---
+>   arch/ia64/include/asm/cpu.h      | 4 ----
+>   arch/loongarch/include/asm/cpu.h | 6 ------
+>   arch/x86/include/asm/cpu.h       | 1 -
+>   drivers/base/cpu.c               | 9 ++++++++-
+>   4 files changed, 8 insertions(+), 12 deletions(-)
+> 
+
+I agree with Jonathan this patch needs to come early. Maybe move this
+before the following one:
+
+[RFC PATCH v2 19/35] ACPI: Move acpi_bus_trim_one() before acpi_scan_hot_remove()
+
+> diff --git a/arch/ia64/include/asm/cpu.h b/arch/ia64/include/asm/cpu.h
+> index a3e690e685e5..642d71675ddb 100644
+> --- a/arch/ia64/include/asm/cpu.h
+> +++ b/arch/ia64/include/asm/cpu.h
+> @@ -15,8 +15,4 @@ DECLARE_PER_CPU(struct ia64_cpu, cpu_devices);
+>   
+>   DECLARE_PER_CPU(int, cpu_state);
+>   
+> -#ifdef CONFIG_HOTPLUG_CPU
+> -extern void arch_unregister_cpu(int);
+> -#endif
+> -
+>   #endif /* _ASM_IA64_CPU_H_ */
+> diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
+> index b8568e637420..48b9f7168bcc 100644
+> --- a/arch/loongarch/include/asm/cpu.h
+> +++ b/arch/loongarch/include/asm/cpu.h
+> @@ -128,10 +128,4 @@ enum cpu_type_enum {
+>   #define LOONGARCH_CPU_HYPERVISOR	BIT_ULL(CPU_FEATURE_HYPERVISOR)
+>   #define LOONGARCH_CPU_PTW		BIT_ULL(CPU_FEATURE_PTW)
+>   
+> -#if !defined(__ASSEMBLY__)
+> -#ifdef CONFIG_HOTPLUG_CPU
+> -void arch_unregister_cpu(int cpu);
+> -#endif
+> -#endif /* ! __ASSEMBLY__ */
+> -
+>   #endif /* _ASM_CPU_H */
+> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+> index f349c94510e8..91867a6a9f8e 100644
+> --- a/arch/x86/include/asm/cpu.h
+> +++ b/arch/x86/include/asm/cpu.h
+> @@ -24,7 +24,6 @@ static inline void prefill_possible_map(void) {}
+>   #endif /* CONFIG_SMP */
+>   
+>   #ifdef CONFIG_HOTPLUG_CPU
+> -extern void arch_unregister_cpu(int);
+>   extern void soft_restart_cpu(void);
+>   #endif
+>   
+> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> index 677f963e02ce..c709747c4a18 100644
+> --- a/drivers/base/cpu.c
+> +++ b/drivers/base/cpu.c
+> @@ -531,7 +531,14 @@ int __weak arch_register_cpu(int cpu)
+>   {
+>   	return register_cpu(&per_cpu(cpu_devices, cpu), cpu);
+>   }
+> -#endif
+> +
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +void __weak arch_unregister_cpu(int num)
+> +{
+> +	unregister_cpu(&per_cpu(cpu_devices, num));
+> +}
+> +#endif /* CONFIG_HOTPLUG_CPU */
+> +#endif /* CONFIG_GENERIC_CPU_DEVICES */
+>   
+
+It seems conflicting with its declaration in include/linux/cpu.h. Besides,
+the function is still needed by drivers/acpi/acpi_processor.c::acpi_processor_make_not_present()
+even both CONFIG_HOTPLUG_CPU and CONFIG_GENERIC_CPU_DEVICES are disabled?
+
+>   static void __init cpu_dev_register_generic(void)
+>   {
+
+Thanks,
+Gavin
+
