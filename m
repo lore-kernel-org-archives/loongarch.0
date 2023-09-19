@@ -1,81 +1,72 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3B8338F94
-	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 08:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA6FA5399
+	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 09:07:11 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxNvGNYgllbd0pAA--.14486S3;
-	Tue, 19 Sep 2023 16:57:49 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx7+u9ZAllFd4pAA--.13607S3;
+	Tue, 19 Sep 2023 17:07:09 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxfNyKYgll12MLAA--.22712S4;
-	Tue, 19 Sep 2023 16:57:49 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxzdy9ZAll_WULAA--.22269S2;
+	Tue, 19 Sep 2023 17:07:09 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Huacai Chen <chenhuacai@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] docs/zh_CN/LoongArch: Update the links of ABI
-Date: Tue, 19 Sep 2023 16:57:46 +0800
-Message-Id: <1695113866-20120-3-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v1] LoongArch: Remove dead code in relocate_new_kernel
+Date: Tue, 19 Sep 2023 17:07:08 +0800
+Message-Id: <1695114428-20308-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1695113866-20120-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1695113866-20120-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8Dxzdy9ZAll_WULAA--.22269S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtrW7KF1UJw48tr48Xw15KFX_yoWDurX_JF
+	17twn5Gr48Jr4jyw1Ygw4fXr1Yq34rtFWrC3ZFvw47t3ZIy342yrs8J3Z8urn8Kr4kWrZ8
+	Z395WFnIyr18tosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8CztUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxfNyKYgll12MLAA--.22712S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrW5Cr1rWFW7uF1fZr4UZFc_yoW8AryUpr
-	WvkrWxKFnrCr1Uu34kKa4UWF409FZ7Wa17GF4Utw1FgFnrZa4vvrWrtr15tF13Z34rAFWI
-	q34Fkw48XF15ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUqUUUUU
 
-The current links of ABI can not be found for some time, let us fix
-the broken links.
+The initial aim is to silence the following objtool warning:
 
-By the way, the latest and official ABI documentation releases are
-available at https://github.com/loongson/la-abi-specs, but there are
-no Chinese and pdf versions for now, so just do the minimal changes
-to update the links so that they can be found, hope there are stable
-links in the future.
+arch/loongarch/kernel/relocate_kernel.o: warning: objtool: relocate_new_kernel+0x74: unreachable instruction
 
+There are two adjacent "b" instructions, the second one is unreachable,
+it is dead code, just remove it.
+
+Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+Co-developed-by: Youling Tang <tangyouling@loongson.cn>
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- Documentation/translations/zh_CN/arch/loongarch/introduction.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/loongarch/kernel/relocate_kernel.S | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/translations/zh_CN/arch/loongarch/introduction.rst b/Documentation/translations/zh_CN/arch/loongarch/introduction.rst
-index cba04be..59d6bf3 100644
---- a/Documentation/translations/zh_CN/arch/loongarch/introduction.rst
-+++ b/Documentation/translations/zh_CN/arch/loongarch/introduction.rst
-@@ -344,9 +344,9 @@ LoongArch指令集架构的文档：
+diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
+index d132525..f49f6b0 100644
+--- a/arch/loongarch/kernel/relocate_kernel.S
++++ b/arch/loongarch/kernel/relocate_kernel.S
+@@ -72,7 +72,6 @@ copy_word:
+ 	LONG_ADDI	s5, s5, -1
+ 	beqz		s5, process_entry
+ 	b		copy_word
+-	b		process_entry
  
- LoongArch的ELF psABI文档：
- 
--  https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-ELF-ABI-v2.00-CN.pdf （中文版）
-+  https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-ELF-ABI-v2.01-CN.pdf （中文版）
- 
--  https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-ELF-ABI-v2.00-EN.pdf （英文版）
-+  https://github.com/loongson/LoongArch-Documentation/releases/latest/download/LoongArch-ELF-ABI-v2.01-EN.pdf （英文版）
- 
- Loongson与LoongArch的Linux内核源码仓库：
- 
+ done:
+ 	ibar		0
 -- 
 2.1.0
 
