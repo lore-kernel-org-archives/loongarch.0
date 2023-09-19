@@ -1,51 +1,51 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1457450F6
-	for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 23:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6D4163
+	for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 00:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695080865;
+	s=mimecast20190719; t=1695083489;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zVlOSfQ+Cs92BylKR+M/JB7hqrVK10vOpKWpaqimizU=;
-	b=KsC/QQE0YXOmM2vzVwmRtj3WS+HB5vTj+I/aMT08mBdCq5eZJYi7z7hHeTwl1Z+QnTt0Fj
-	kDjQIS47tB4547+9iZXstCXxDSwWCReWR2f8/grz6y1iwwFRks/vLqF9FgD4qf4Yd90TKm
-	bS2NPkR/9CdG+ltM273WwIpv/2K+U+Y=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=yt0ViDpjZ+25N6JQm0qkxgqk3PInKbbOQPzyPguJLGE=;
+	b=XSeKs3Zbp5UBCx90WTU87kAfeNMO9bhfOkoLCFe3UCNq/PYUfctSkFN4kzg4RStOEPfHow
+	+6ytqrWesu42fsKAUmumt2Zw3C7otdtjxMpjqTF496kK1AKm/5m/LqJZrI8pfaegRLhIMe
+	yF0srjSFMSq2vU4tIOgcpA7/JDc1a/8=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-83-OCEydLpWPjaiKsgl-mgSvA-1; Mon, 18 Sep 2023 19:43:57 -0400
-X-MC-Unique: OCEydLpWPjaiKsgl-mgSvA-1
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-573d44762e4so3920977a12.0
-        for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 16:43:56 -0700 (PDT)
+ us-mta-185-hg7RwbyfM4qPO_bv6W_HwQ-1; Mon, 18 Sep 2023 20:31:27 -0400
+X-MC-Unique: hg7RwbyfM4qPO_bv6W_HwQ-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2748327f37dso3038564a91.0
+        for <loongarch@lists.linux.dev>; Mon, 18 Sep 2023 17:31:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695080636; x=1695685436;
+        d=1e100.net; s=20230601; t=1695083486; x=1695688286;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zVlOSfQ+Cs92BylKR+M/JB7hqrVK10vOpKWpaqimizU=;
-        b=DL4dNjDHeicQ5tbgGAxNOYcxVk02ytoXafRZ/+xpJ6gEirZjmfxl7Q+py+v+XgFZzP
-         tgKe7iEaoGOHuLgjD+a1bYBKrryCNtKTJ6B+HQjHxEFKc9U2wpIjEODf3wBqXq6pwcNP
-         fe22IAXD/j7H4nl7kqcjRp6Ts5vvGtjorOn8LmJb4SHgur0hGziHZYVs5pioVlFuP3FR
-         E1u9NliZ8XPGNkWD58d4VHsSCAt0Jpm5nbNewv1zffvERAaVXZsE8zCYVkHQlPGTVlnm
-         vYsZ5hsWhYgjAWGjMSR2uS4zfr94onEQcOISkHtJAGugTBCVQ0StMiLjPKfNo+UePQRe
-         UIrA==
-X-Gm-Message-State: AOJu0Yy5DWzPT0ogk1vxQ/86OFA/9q828Fc/nXNvog9E6WBhptd1DV8A
-	Aiip5XyRhmzfc9yzajUprGgioZS4VkYyXTexsA+HRgIWBFC4SFncC/TE24p+l1l5MnNSWYIP/8c
-	zLvZAK1NJnKFl0UXn2uWf
-X-Received: by 2002:a05:6a20:430d:b0:118:e70:6f7d with SMTP id h13-20020a056a20430d00b001180e706f7dmr10495449pzk.10.1695080635943;
-        Mon, 18 Sep 2023 16:43:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHFKOy814XSQK8TdPjNzCWuHRcOodlWCLUpNrs1TYBainKT1BB0hWvhf0Gyqm0LB88Jzxx1dQ==
-X-Received: by 2002:a05:6a20:430d:b0:118:e70:6f7d with SMTP id h13-20020a056a20430d00b001180e706f7dmr10495432pzk.10.1695080635630;
-        Mon, 18 Sep 2023 16:43:55 -0700 (PDT)
+        bh=yt0ViDpjZ+25N6JQm0qkxgqk3PInKbbOQPzyPguJLGE=;
+        b=g0+MagFfaIu+RYTd+GqipXQFAArDiiBIPtGIcTh/KpWHlQDDWksZ4NDDMrYx7oeo7f
+         IK7KcyeLSfACzcbthvX9qXQ4oGrK7Hv97EydILCbPURn8GLdmdkJdoc62FtbX6Bnzr8D
+         RZXLrgeiyX1UX+UPKOB/kt0tU1Tqotq4Bzmte+XET5V+4JHQt/eHpVWnb2/9VEQ9QMSv
+         UBA9+Cd51tP7GVtYafVtNfhzpnsQqL36jc8JhPDM0THc0ZSfdYPPNlnpS3RyfItCgtzL
+         E1x4BSv8S1bjs2SzEM6eEvTxH4/8xxVimNIDYCJoxNk48GGJME4tDEBWjASE/gq96REg
+         rVrA==
+X-Gm-Message-State: AOJu0YykI0ltFkobItO0ZxUEqdfZQzJnsUoRpoCszfFpISQOi2kJHTHu
+	mfbf8ky0l+YcA/mrnfS1Dt6Ym0nE8B72g/YXDAMjKEskLq0NXnHVQVP26Ji2/qp477bxCQw0Fo4
+	d8NHpLjLxOdcQzSFagu9X
+X-Received: by 2002:a17:90a:f3d4:b0:274:6cd3:a533 with SMTP id ha20-20020a17090af3d400b002746cd3a533mr7710091pjb.20.1695083486653;
+        Mon, 18 Sep 2023 17:31:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEuRHNEswx8Y3CK9vB5Y6rtmqv1Vi3ahJ5e3s63VHLKH86N5qFHbQvQv+6fmLjVPhUNR76WEw==
+X-Received: by 2002:a17:90a:f3d4:b0:274:6cd3:a533 with SMTP id ha20-20020a17090af3d400b002746cd3a533mr7710080pjb.20.1695083486322;
+        Mon, 18 Sep 2023 17:31:26 -0700 (PDT)
 Received: from ?IPV6:2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5? ([2001:8003:e5b0:9f00:dbbc:1945:6e65:ec5])
-        by smtp.gmail.com with ESMTPSA id jo13-20020a170903054d00b001bc68602e54sm8823472plb.142.2023.09.18.16.43.49
+        by smtp.gmail.com with ESMTPSA id f93-20020a17090a706600b0026fa1931f66sm8310527pjk.9.2023.09.18.17.31.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Sep 2023 16:43:54 -0700 (PDT)
-Message-ID: <ebfa8b5c-c09f-a1e6-e6ec-f4f3cda9de03@redhat.com>
-Date: Tue, 19 Sep 2023 09:43:46 +1000
+        Mon, 18 Sep 2023 17:31:25 -0700 (PDT)
+Message-ID: <c3ef8123-1fcc-7289-c475-c753de44d564@redhat.com>
+Date: Tue, 19 Sep 2023 10:31:17 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,8 +54,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [RFC PATCH v2 14/35] ACPI: Only enumerate enabled (or functional)
- devices
+Subject: Re: [RFC PATCH v2 21/35] ACPI: Add post_eject to struct
+ acpi_scan_handler for cpu hotplug
 To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
  loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
  linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -66,173 +66,190 @@ Cc: x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
  Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
  justin.he@arm.com
 References: <20230913163823.7880-1-james.morse@arm.com>
- <20230913163823.7880-15-james.morse@arm.com>
+ <20230913163823.7880-22-james.morse@arm.com>
 From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20230913163823.7880-15-james.morse@arm.com>
+In-Reply-To: <20230913163823.7880-22-james.morse@arm.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+
+
 On 9/14/23 02:38, James Morse wrote:
-> Today the ACPI enumeration code 'visits' all devices that are present.
+> struct acpi_scan_handler has a detach callback that is used to remove
+> a driver when a bus is changed. When interacting with an eject-request,
+> the detach callback is called before _EJ0.
 > 
-> This is a problem for arm64, where CPUs are always present, but not
-> always enabled. When a device-check occurs because the firmware-policy
-> has changed and a CPU is now enabled, the following error occurs:
-> | acpi ACPI0007:48: Enumeration failure
+> This means the ACPI processor driver can't use _STA to determine if a
+> CPU has been made not-present, or some of the other _STA bits have been
+> changed. acpi_processor_remove() needs to know the value of _STA after
+> _EJ0 has been called.
 > 
-> This is ultimately because acpi_dev_ready_for_enumeration() returns
-> true for a device that is not enabled. The ACPI Processor driver
-> will not register such CPUs as they are not 'decoding their resources'.
-> 
-> Change acpi_dev_ready_for_enumeration() to also check the enabled bit.
-> ACPI allows a device to be functional instead of maintaining the
-> present and enabled bit. Make this behaviour an explicit check with
-> a reference to the spec, and then check the present and enabled bits.
-> This is needed to avoid enumerating present && functional devices that
-> are not enabled.
+
+It's helpful to mention which ACPI processor driver needs to use _STA
+to determine the status here. I guess the ACPI processor driver will
+behave differently depending on the status.
+
+> Add a post_eject callback to struct acpi_scan_handler. This is called
+> after acpi_scan_hot_remove() has successfully called _EJ0. Because
+> acpi_bus_trim_one() also clears the handler pointer, it needs to be
+> told if the caller will go on to call acpi_bus_post_eject(), so
+> that acpi_device_clear_enumerated() and clearing the handler pointer
+> can be deferred. The existing not-used pointer is used for this.
 > 
 > Signed-off-by: James Morse <james.morse@arm.com>
 > ---
-> If this change causes problems on deployed hardware, I suggest an
-> arch opt-in: ACPI_IGNORE_STA_ENABLED, that causes
-> acpi_dev_ready_for_enumeration() to only check the present bit.
-> ---
->   drivers/acpi/device_pm.c    |  2 +-
->   drivers/acpi/device_sysfs.c |  2 +-
->   drivers/acpi/internal.h     |  1 -
->   drivers/acpi/property.c     |  2 +-
->   drivers/acpi/scan.c         | 23 +++++++++++++----------
->   5 files changed, 16 insertions(+), 14 deletions(-)
+>   drivers/acpi/acpi_processor.c |  4 +--
+>   drivers/acpi/scan.c           | 52 ++++++++++++++++++++++++++++++-----
+>   include/acpi/acpi_bus.h       |  1 +
+>   3 files changed, 48 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> index f007116a8427..76c38478a502 100644
-> --- a/drivers/acpi/device_pm.c
-> +++ b/drivers/acpi/device_pm.c
-> @@ -313,7 +313,7 @@ int acpi_bus_init_power(struct acpi_device *device)
->   		return -EINVAL;
+
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+
+> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+> index 22a15a614f95..00dcc23d49a8 100644
+> --- a/drivers/acpi/acpi_processor.c
+> +++ b/drivers/acpi/acpi_processor.c
+> @@ -459,7 +459,7 @@ static int acpi_processor_add(struct acpi_device *device,
 >   
->   	device->power.state = ACPI_STATE_UNKNOWN;
-> -	if (!acpi_device_is_present(device)) {
-> +	if (!acpi_dev_ready_for_enumeration(device)) {
->   		device->flags.initialized = false;
->   		return -ENXIO;
->   	}
-> diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
-> index b9bbf0746199..16e586d74aa2 100644
-> --- a/drivers/acpi/device_sysfs.c
-> +++ b/drivers/acpi/device_sysfs.c
-> @@ -141,7 +141,7 @@ static int create_pnp_modalias(const struct acpi_device *acpi_dev, char *modalia
->   	struct acpi_hardware_id *id;
+>   #ifdef CONFIG_ACPI_HOTPLUG_PRESENT_CPU
+>   /* Removal */
+> -static void acpi_processor_remove(struct acpi_device *device)
+> +static void acpi_processor_post_eject(struct acpi_device *device)
+>   {
+>   	struct acpi_processor *pr;
 >   
->   	/* Avoid unnecessarily loading modules for non present devices. */
-> -	if (!acpi_device_is_present(acpi_dev))
-> +	if (!acpi_dev_ready_for_enumeration(acpi_dev))
->   		return 0;
->   
->   	/*
-> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-> index 866c7c4ed233..a1b45e345bcc 100644
-> --- a/drivers/acpi/internal.h
-> +++ b/drivers/acpi/internal.h
-> @@ -107,7 +107,6 @@ int acpi_device_setup_files(struct acpi_device *dev);
->   void acpi_device_remove_files(struct acpi_device *dev);
->   void acpi_device_add_finalize(struct acpi_device *device);
->   void acpi_free_pnp_ids(struct acpi_device_pnp *pnp);
-> -bool acpi_device_is_present(const struct acpi_device *adev);
->   bool acpi_device_is_battery(struct acpi_device *adev);
->   bool acpi_device_is_first_physical_node(struct acpi_device *adev,
->   					const struct device *dev);
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index 413e4fcadcaf..e03f00b98701 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -1418,7 +1418,7 @@ static bool acpi_fwnode_device_is_available(const struct fwnode_handle *fwnode)
->   	if (!is_acpi_device_node(fwnode))
->   		return false;
->   
-> -	return acpi_device_is_present(to_acpi_device_node(fwnode));
-> +	return acpi_dev_ready_for_enumeration(to_acpi_device_node(fwnode));
->   }
->   
->   static const void *
+> @@ -627,7 +627,7 @@ static struct acpi_scan_handler processor_handler = {
+>   	.ids = processor_device_ids,
+>   	.attach = acpi_processor_add,
+>   #ifdef CONFIG_ACPI_HOTPLUG_PRESENT_CPU
+> -	.detach = acpi_processor_remove,
+> +	.post_eject = acpi_processor_post_eject,
+>   #endif
+>   	.hotplug = {
+>   		.enabled = true,
 > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 17ab875a7d4e..f898591ce05f 100644
+> index a675333618ae..b6d2f01640a9 100644
 > --- a/drivers/acpi/scan.c
 > +++ b/drivers/acpi/scan.c
-> @@ -304,7 +304,7 @@ static int acpi_scan_device_check(struct acpi_device *adev)
->   	int error;
->   
->   	acpi_bus_get_status(adev);
-> -	if (acpi_device_is_present(adev)) {
-> +	if (acpi_dev_ready_for_enumeration(adev)) {
->   		/*
->   		 * This function is only called for device objects for which
->   		 * matching scan handlers exist.  The only situation in which
-> @@ -338,7 +338,7 @@ static int acpi_scan_bus_check(struct acpi_device *adev, void *not_used)
->   	int error;
->   
->   	acpi_bus_get_status(adev);
-> -	if (!acpi_device_is_present(adev)) {
-> +	if (!acpi_dev_ready_for_enumeration(adev)) {
->   		acpi_scan_device_not_enumerated(adev);
->   		return 0;
->   	}
-> @@ -1908,11 +1908,6 @@ static bool acpi_device_should_be_hidden(acpi_handle handle)
->   	return true;
+> @@ -244,18 +244,28 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
+>   	return 0;
 >   }
 >   
-> -bool acpi_device_is_present(const struct acpi_device *adev)
-> -{
-> -	return adev->status.present || adev->status.functional;
-> -}
-> -
->   static bool acpi_scan_handler_matching(struct acpi_scan_handler *handler,
->   				       const char *idstr,
->   				       const struct acpi_device_id **matchid)
-> @@ -2375,16 +2370,24 @@ EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
->    * acpi_dev_ready_for_enumeration - Check if the ACPI device is ready for enumeration
->    * @device: Pointer to the &struct acpi_device to check
->    *
-> - * Check if the device is present and has no unmet dependencies.
-> + * Check if the device is functional or enabled and has no unmet dependencies.
->    *
-> - * Return true if the device is ready for enumeratino. Otherwise, return false.
-> + * Return true if the device is ready for enumeration. Otherwise, return false.
->    */
->   bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
+> -static int acpi_bus_trim_one(struct acpi_device *adev, void *not_used)
+> +/**
+> + * acpi_bus_trim_one() - Detach scan handlers and drivers from ACPI device
+> + *                       objects.
+> + * @adev:       Root of the ACPI namespace scope to walk.
+> + * @eject:      Pointer to a bool that indicates if this was due to an
+> + *              eject-request.
+> + *
+> + * Must be called under acpi_scan_lock.
+> + * If @eject points to true, clearing the device enumeration is deferred until
+> + * acpi_bus_post_eject() is called.
+> + */
+> +static int acpi_bus_trim_one(struct acpi_device *adev, void *eject)
 >   {
->   	if (device->flags.honor_deps && device->dep_unmet)
->   		return false;
+>   	struct acpi_scan_handler *handler = adev->handler;
+> +	bool is_eject = *(bool *)eject;
 >   
-> -	return acpi_device_is_present(device);
-> +	/*
-> +	 * ACPI 6.5's 6.3.7 "_STA (Device Status)" allows firmware to return
-> +	 * (!present && functional) for certain types of devices that should be
-> +	 * enumerated.
-> +	 */
-> +	if (!device->status.present && !device->status.enabled)
-> +		return device->status.functional;
+> -	acpi_dev_for_each_child_reverse(adev, acpi_bus_trim_one, NULL);
+> +	acpi_dev_for_each_child_reverse(adev, acpi_bus_trim_one, eject);
+>   
+>   	adev->flags.match_driver = false;
+>   	if (handler) {
+>   		if (handler->detach)
+>   			handler->detach(adev);
+> -
+> -		adev->handler = NULL;
+>   	} else {
+>   		device_release_driver(&adev->dev);
+>   	}
+> @@ -265,7 +275,12 @@ static int acpi_bus_trim_one(struct acpi_device *adev, void *not_used)
+>   	 */
+>   	acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
+>   	adev->flags.initialized = false;
+> -	acpi_device_clear_enumerated(adev);
 > +
-> +	return device->status.present && device->status.enabled;
->   }
->   EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
+> +	/* For eject this is deferred to acpi_bus_post_eject() */
+> +	if (!is_eject) {
+> +		adev->handler = NULL;
+> +		acpi_device_clear_enumerated(adev);
+> +	}
 >   
-
-Looking at Salil's latest branch (vcpu-hotplug-RFCv2-rc7), there are 3 possible statuses:
-
-   0x0       when CPU isn't present
-   0xD       when CPU is present, but not enabled
-   0xF       when CPU is present and enabled
-
-Previously, the ACPI device is enumerated on 0xD and 0xF. We want to avoid the enumeration
-on 0xD since the processor isn't ready for enumeration in this specific case. The changed
-check (device->status.present && device->status.enabled) can ensure it. So the addition
-of checking @device->state.functional seems irrelevant to ARM64 vCPU hot-add? I guess we
-probably want a relaxation after the condition (device->status.present || device->status.enabled)
-becomes a more strict one (device->status.present && device->status.enabled)
+>   	return 0;
+>   }
+> @@ -278,15 +293,36 @@ static int acpi_bus_trim_one(struct acpi_device *adev, void *not_used)
+>    */
+>   void acpi_bus_trim(struct acpi_device *adev)
+>   {
+> -	acpi_bus_trim_one(adev, NULL);
+> +	bool eject = false;
+> +
+> +	acpi_bus_trim_one(adev, &eject);
+>   }
+>   EXPORT_SYMBOL_GPL(acpi_bus_trim);
+>   
+> +static int acpi_bus_post_eject(struct acpi_device *adev, void *not_used)
+> +{
+> +	struct acpi_scan_handler *handler = adev->handler;
+> +
+> +	acpi_dev_for_each_child_reverse(adev, acpi_bus_post_eject, NULL);
+> +
+> +	if (handler) {
+> +		if (handler->post_eject)
+> +			handler->post_eject(adev);
+> +
+> +		adev->handler = NULL;
+> +	}
+> +
+> +	acpi_device_clear_enumerated(adev);
+> +
+> +	return 0;
+> +}
+> +
+>   static int acpi_scan_hot_remove(struct acpi_device *device)
+>   {
+>   	acpi_handle handle = device->handle;
+>   	unsigned long long sta;
+>   	acpi_status status;
+> +	bool eject = true;
+>   
+>   	if (device->handler && device->handler->hotplug.demand_offline) {
+>   		if (!acpi_scan_is_offline(device, true))
+> @@ -299,7 +335,7 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+>   
+>   	acpi_handle_debug(handle, "Ejecting\n");
+>   
+> -	acpi_bus_trim(device);
+> +	acpi_bus_trim_one(device, &eject);
+>   
+>   	acpi_evaluate_lck(handle, 0);
+>   	/*
+> @@ -322,6 +358,8 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+>   	} else if (sta & ACPI_STA_DEVICE_ENABLED) {
+>   		acpi_handle_warn(handle,
+>   			"Eject incomplete - status 0x%llx\n", sta);
+> +	} else {
+> +		acpi_bus_post_eject(device, NULL);
+>   	}
+>   
+>   	return 0;
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index 254685085c82..1b7e1acf925b 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -127,6 +127,7 @@ struct acpi_scan_handler {
+>   	bool (*match)(const char *idstr, const struct acpi_device_id **matchid);
+>   	int (*attach)(struct acpi_device *dev, const struct acpi_device_id *id);
+>   	void (*detach)(struct acpi_device *dev);
+> +	void (*post_eject)(struct acpi_device *dev);
+>   	void (*bind)(struct device *phys_dev);
+>   	void (*unbind)(struct device *phys_dev);
+>   	struct acpi_hotplug_profile hotplug;
 
 Thanks,
 Gavin
