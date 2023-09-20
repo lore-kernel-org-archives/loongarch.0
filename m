@@ -1,344 +1,65 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935D2187F
-	for <loongarch@lists.linux.dev>; Wed, 20 Sep 2023 03:28:19 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.9.158])
-	by gateway (Coremail) with SMTP id _____8DxxPDKZgplJSYqAA--.16350S3;
-	Wed, 20 Sep 2023 11:28:11 +0800 (CST)
-Received: from kvm-1-158.loongson.cn (unknown [10.2.9.158])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxG9zKZgpl6jUMAA--.24496S2;
-	Wed, 20 Sep 2023 11:28:10 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Xi Ruoyao <xry111@xry111.site>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Fix some build warnings with W=1 option
-Date: Wed, 20 Sep 2023 11:28:10 +0800
-Message-Id: <20230920032810.1392548-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.27.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF123D87
+	for <loongarch@lists.linux.dev>; Wed, 20 Sep 2023 06:27:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 108A0C433C9
+	for <loongarch@lists.linux.dev>; Wed, 20 Sep 2023 06:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695191274;
+	bh=aKadO3U4TnL2TXTxl4CJlXU+DprvIkWeqJzC/Nqz8bY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ob8Fj0WQej79SOC8XyqOwwMOcuf8FJssGyl8FfaUE9IMgbGM1dd3Z3jl7J1pCKRMQ
+	 TKb6ycUEcAefJpSo9Hwa2F36Y+AY57nDuMPl0YhrIj9v1hQopKOm1cN2pqj5P5uJQm
+	 +REsQQzJRypBMo7d8iASl4i6vXLGvYQja3iKK2vO4pO5XkdTsEaj2IX5IPqmdpIbNj
+	 GLAOjxlP+eLiMelWhpysr2TRYRl2jW1zNm4UuuC8sHM7RjSv8XoWpz9PKD7uOUKKJZ
+	 krbFBrpEZVioMVAidW13/TKPnh7wR+f6uI9HXUGd9/VRMgZpYJvRFYTTV+CDUZUIN9
+	 lRm6mHPwnCgSQ==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-52f3ba561d9so1195569a12.1
+        for <loongarch@lists.linux.dev>; Tue, 19 Sep 2023 23:27:53 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yxzo71PAk7TD9H69FZ+erNBCq+ufg1+F2ppcYpK1lt06HcE3EOm
+	nI9CRYp61vwhSbi1exwkefivdSqBGvprttx+/ng=
+X-Google-Smtp-Source: AGHT+IF64244Hk3wdFHeEi52bl20YWnvHxyfaFIZqydi3XW+5eIdjSeULQiRM9dvLux5ZR38SnscT4wHQ2DEe7RpCgA=
+X-Received: by 2002:a05:6402:4304:b0:530:bfb6:66cd with SMTP id
+ m4-20020a056402430400b00530bfb666cdmr6449027edc.7.1695191272461; Tue, 19 Sep
+ 2023 23:27:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxG9zKZgpl6jUMAA--.24496S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3ur47Xr1rWFyUJF47ZF13trc_yoWDKF17pF
-	ZrAr1kGrZ5Gw1kZF9rA3yjvr13Jws5Kw12v3W2kFyrAF12qrn5Xr4v9FyDXF18ta95KFy0
-	vFWfKw1SvF45XwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxU2G-eUUUUU
+References: <1695113866-20120-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1695113866-20120-1-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 20 Sep 2023 14:27:41 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6jUBHQL-R-3SriF7R5Y5O7P2SsH8mcn6LsC4kmfZRWeg@mail.gmail.com>
+Message-ID: <CAAhV-H6jUBHQL-R-3SriF7R5Y5O7P2SsH8mcn6LsC4kmfZRWeg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] LoongArch: Update the links of ABI documentation
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Jonathan Corbet <corbet@lwn.net>, loongarch@lists.linux.dev, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There are some building warnings when building LoongArch kernel
-with W=1 option as following, this patch fixes these building
-warnings.
+Queued for loongarch-next, thanks.
 
-arch/loongarch/kernel/traps.c:496:25: warning: no previous prototype
-for 'do_fpe' [-Wmissing-prototypes]
-  496 | asmlinkage void noinstr do_fpe(struct pt_regs *regs
-      |                         ^~~~~~
-arch/loongarch/kernel/syscall.c:21:40: warning: initialized field
-overwritten [-Woverride-init]
-   21 | #define __SYSCALL(nr, call)     [nr] = (call),
-      |                                        ^
+Huacai
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
-Changes in v2:
-  1. Remove modification about file arch/loongarch/kernel/asm-offsets.c,
-since it is refacted now.
-  2. Add more modification and eliminate almost all building warnings in
-arch/loongarch tree.
----
- arch/loongarch/include/asm/exception.h | 26 ++++++++++++++++++++++++++
- arch/loongarch/include/asm/io.h        |  4 +---
- arch/loongarch/include/asm/smp.h       |  1 +
- arch/loongarch/include/asm/syscall.h   |  1 +
- arch/loongarch/kernel/Makefile         |  1 +
- arch/loongarch/kernel/process.c        |  1 +
- arch/loongarch/kernel/signal.c         |  6 +++---
- arch/loongarch/kernel/smp.c            |  3 +++
- arch/loongarch/kernel/syscall.c        |  1 +
- arch/loongarch/kernel/time.c           |  2 +-
- arch/loongarch/kernel/traps.c          | 10 ++++++----
- arch/loongarch/mm/fault.c              |  1 +
- arch/loongarch/mm/tlb.c                |  2 +-
- 13 files changed, 47 insertions(+), 12 deletions(-)
- create mode 100644 arch/loongarch/include/asm/exception.h
-
-diff --git a/arch/loongarch/include/asm/exception.h b/arch/loongarch/include/asm/exception.h
-new file mode 100644
-index 000000000000..ffa068aa6ac9
---- /dev/null
-+++ b/arch/loongarch/include/asm/exception.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef __ASM_EXCEPTION_H
-+#define __ASM_EXCEPTION_H
-+
-+#include <asm/ptrace.h>
-+
-+asmlinkage void noinstr do_fpe(struct pt_regs *regs, unsigned long fcsr);
-+asmlinkage void noinstr do_ade(struct pt_regs *regs);
-+asmlinkage void noinstr do_ale(struct pt_regs *regs);
-+asmlinkage void noinstr do_bce(struct pt_regs *regs);
-+asmlinkage void noinstr do_bp(struct pt_regs *regs);
-+asmlinkage void noinstr do_watch(struct pt_regs *regs);
-+asmlinkage void noinstr do_ri(struct pt_regs *regs);
-+asmlinkage void noinstr do_fpu(struct pt_regs *regs);
-+asmlinkage void noinstr do_lsx(struct pt_regs *regs);
-+asmlinkage void noinstr do_lasx(struct pt_regs *regs);
-+asmlinkage void noinstr do_lbt(struct pt_regs *regs);
-+asmlinkage void noinstr do_reserved(struct pt_regs *regs);
-+asmlinkage void cache_parity_error(void);
-+asmlinkage void noinstr handle_loongarch_irq(struct pt_regs *regs);
-+asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp);
-+asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
-+				unsigned long write, unsigned long address);
-+
-+#endif	/* __ASM_EXCEPTION_H */
-diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
-index 0dcb36b32cb2..58bc88c5a9e5 100644
---- a/arch/loongarch/include/asm/io.h
-+++ b/arch/loongarch/include/asm/io.h
-@@ -10,6 +10,7 @@
- 
- #include <asm/addrspace.h>
- #include <asm/cpu.h>
-+#include <asm/early_ioremap.h>
- #include <asm/page.h>
- #include <asm/pgtable-bits.h>
- #include <asm/string.h>
-@@ -19,9 +20,6 @@
-  */
- #define page_to_phys(page)	((phys_addr_t)page_to_pfn(page) << PAGE_SHIFT)
- 
--extern void __init __iomem *early_ioremap(u64 phys_addr, unsigned long size);
--extern void __init early_iounmap(void __iomem *addr, unsigned long size);
+On Tue, Sep 19, 2023 at 4:57=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> Tiezhu Yang (2):
+>   docs/LoongArch: Update the links of ABI
+>   docs/zh_CN/LoongArch: Update the links of ABI
+>
+>  Documentation/arch/loongarch/introduction.rst                    | 4 ++-=
 -
- #define early_memremap early_ioremap
- #define early_memunmap early_iounmap
- 
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 66ecb480c894..a845ed3a6456 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -19,6 +19,7 @@ extern cpumask_t cpu_sibling_map[];
- extern cpumask_t cpu_core_map[];
- extern cpumask_t cpu_foreign_map[];
- 
-+asmlinkage void start_secondary(void);
- void loongson_smp_setup(void);
- void loongson_prepare_cpus(unsigned int max_cpus);
- void loongson_boot_secondary(int cpu, struct task_struct *idle);
-diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/include/asm/syscall.h
-index e286dc58476e..089a58d2a45f 100644
---- a/arch/loongarch/include/asm/syscall.h
-+++ b/arch/loongarch/include/asm/syscall.h
-@@ -20,6 +20,7 @@
- 
- extern void *sys_call_table[];
- 
-+void noinstr do_syscall(struct pt_regs *regs);
- static inline long syscall_get_nr(struct task_struct *task,
- 				  struct pt_regs *regs)
- {
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index c56ea0b75448..1e94764005e1 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_CPU_HAS_LBT)	+= lbt.o
- 
- obj-$(CONFIG_ARCH_STRICT_ALIGN)	+= unaligned.o
- 
-+CFLAGS_syscall.o	+= $(call cc-option,-Wno-override-init,)
- ifdef CONFIG_FUNCTION_TRACER
-   ifndef CONFIG_DYNAMIC_FTRACE
-     obj-y += mcount.o ftrace.o
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 3cb082e0c992..767d94cce0de 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -37,6 +37,7 @@
- #include <asm/bootinfo.h>
- #include <asm/cpu.h>
- #include <asm/elf.h>
-+#include <asm/exec.h>
- #include <asm/fpu.h>
- #include <asm/lbt.h>
- #include <asm/io.h>
-diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
-index 504fdfe85203..aa482eae5e79 100644
---- a/arch/loongarch/kernel/signal.c
-+++ b/arch/loongarch/kernel/signal.c
-@@ -13,6 +13,7 @@
- #include <linux/audit.h>
- #include <linux/cache.h>
- #include <linux/context_tracking.h>
-+#include <linux/entry-common.h>
- #include <linux/irqflags.h>
- #include <linux/sched.h>
- #include <linux/mm.h>
-@@ -891,7 +892,7 @@ static unsigned long setup_extcontext(struct extctx_layout *extctx, unsigned lon
- 	return new_sp;
- }
- 
--void __user *get_sigframe(struct ksignal *ksig, struct pt_regs *regs,
-+static void __user *get_sigframe(struct ksignal *ksig, struct pt_regs *regs,
- 			  struct extctx_layout *extctx)
- {
- 	unsigned long sp;
-@@ -921,8 +922,7 @@ void __user *get_sigframe(struct ksignal *ksig, struct pt_regs *regs,
- /*
-  * Atomically swap in the new signal mask, and wait for a signal.
-  */
+>  Documentation/translations/zh_CN/arch/loongarch/introduction.rst | 4 ++-=
 -
--asmlinkage long sys_rt_sigreturn(void)
-+SYSCALL_DEFINE0(rt_sigreturn)
- {
- 	int sig;
- 	sigset_t set;
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 6667b0a90f81..ef35c871244f 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -13,6 +13,7 @@
- #include <linux/cpumask.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-+#include <linux/profile.h>
- #include <linux/seq_file.h>
- #include <linux/smp.h>
- #include <linux/threads.h>
-@@ -556,10 +557,12 @@ void smp_send_stop(void)
- 	smp_call_function(stop_this_cpu, NULL, 0);
- }
- 
-+#ifdef CONFIG_PROFILING
- int setup_profiling_timer(unsigned int multiplier)
- {
- 	return 0;
- }
-+#endif
- 
- static void flush_tlb_all_ipi(void *info)
- {
-diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
-index 3fc4211db989..b73218ce55e8 100644
---- a/arch/loongarch/kernel/syscall.c
-+++ b/arch/loongarch/kernel/syscall.c
-@@ -15,6 +15,7 @@
- #include <asm/asm.h>
- #include <asm/signal.h>
- #include <asm/switch_to.h>
-+#include <asm/syscall.h>
- #include <asm-generic/syscalls.h>
- 
- #undef __SYSCALL
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index c189e03cd5da..3064af94db9c 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -29,7 +29,7 @@ static void constant_event_handler(struct clock_event_device *dev)
- {
- }
- 
--irqreturn_t constant_timer_interrupt(int irq, void *data)
-+static irqreturn_t constant_timer_interrupt(int irq, void *data)
- {
- 	int cpu = smp_processor_id();
- 	struct clock_event_device *cd;
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 65214774ef7c..e6429047b6d9 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -35,6 +35,7 @@
- #include <asm/branch.h>
- #include <asm/break.h>
- #include <asm/cpu.h>
-+#include <asm/exception.h>
- #include <asm/fpu.h>
- #include <asm/lbt.h>
- #include <asm/inst.h>
-@@ -371,7 +372,7 @@ void show_regs(struct pt_regs *regs)
- 	dump_stack();
- }
- 
--void show_registers(struct pt_regs *regs)
-+static void show_registers(struct pt_regs *regs)
- {
- 	__show_regs(regs);
- 	print_modules();
-@@ -439,7 +440,7 @@ static inline void setup_vint_size(unsigned int size)
-  * happen together with Overflow or Underflow, and `ptrace' can set
-  * any bits.
-  */
--void force_fcsr_sig(unsigned long fcsr, void __user *fault_addr,
-+static void force_fcsr_sig(unsigned long fcsr, void __user *fault_addr,
- 		     struct task_struct *tsk)
- {
- 	int si_code = FPE_FLTUNK;
-@@ -458,7 +459,8 @@ void force_fcsr_sig(unsigned long fcsr, void __user *fault_addr,
- 	force_sig_fault(SIGFPE, si_code, fault_addr);
- }
- 
--int process_fpemu_return(int sig, void __user *fault_addr, unsigned long fcsr)
-+static int process_fpemu_return(int sig, void __user *fault_addr,
-+				unsigned long fcsr)
- {
- 	int si_code;
- 
-@@ -824,7 +826,7 @@ asmlinkage void noinstr do_watch(struct pt_regs *regs)
- asmlinkage void noinstr do_ri(struct pt_regs *regs)
- {
- 	int status = SIGILL;
--	unsigned int opcode = 0;
-+	unsigned int __maybe_unused opcode;
- 	unsigned int __user *era = (unsigned int __user *)exception_era(regs);
- 	irqentry_state_t state = irqentry_enter(regs);
- 
-diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-index e6376e3dce86..02f2a9765524 100644
---- a/arch/loongarch/mm/fault.c
-+++ b/arch/loongarch/mm/fault.c
-@@ -26,6 +26,7 @@
- #include <linux/kfence.h>
- 
- #include <asm/branch.h>
-+#include <asm/exception.h>
- #include <asm/mmu_context.h>
- #include <asm/ptrace.h>
- 
-diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-index eb8572e201ea..2c0a411f23aa 100644
---- a/arch/loongarch/mm/tlb.c
-+++ b/arch/loongarch/mm/tlb.c
-@@ -261,7 +261,7 @@ unsigned long pcpu_handlers[NR_CPUS];
- #endif
- extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
- 
--void setup_tlb_handler(int cpu)
-+static void setup_tlb_handler(int cpu)
- {
- 	setup_ptwalker();
- 	local_flush_tlb_all();
-
-base-commit: 9fdfb15a3dbf818e06be514f4abbfc071004cbe7
--- 
-2.27.0
-
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> --
+> 2.1.0
+>
+>
