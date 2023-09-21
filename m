@@ -1,14 +1,14 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E28DA5CBD
-	for <loongarch@lists.linux.dev>; Thu, 21 Sep 2023 07:57:10 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8Cx5_FM9wtl1n4qAA--.15876S3;
-	Thu, 21 Sep 2023 15:57:00 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxK9xD9wtl4CUNAA--.26478S3;
-	Thu, 21 Sep 2023 15:56:55 +0800 (CST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C57245CBD
+	for <loongarch@lists.linux.dev>; Thu, 21 Sep 2023 08:03:31 +0000 (UTC)
+Received: from loongson.cn (unknown [10.40.46.158])
+	by gateway (Coremail) with SMTP id _____8DxVujO+Atlpn8qAA--.46520S3;
+	Thu, 21 Sep 2023 16:03:26 +0800 (CST)
+Received: from [192.168.124.126] (unknown [10.40.46.158])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxvi_J+AtlFCcNAA--.26855S3;
+	Thu, 21 Sep 2023 16:03:24 +0800 (CST)
 Subject: Re: [PATCH v21 00/29] Add KVM LoongArch support
-To: Huacai Chen <chenhuacai@kernel.org>, zhaotianrui <zhaotianrui@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
  Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
@@ -24,9 +24,9 @@ References: <20230915014949.1222777-1-zhaotianrui@loongson.cn>
  <CAAhV-H7QKBEV_dSfX8nprZ838HRCcDt8cziPip4UdSMuYvERzQ@mail.gmail.com>
  <1f13e290-4655-99c2-7edd-d62c71e13498@loongson.cn>
  <CAAhV-H6cCnvduCQiXGY=74YAKt1zLM9dBqMKUN6ELQ=4t3Fwqg@mail.gmail.com>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <a3e1b365-03a5-5b2a-a9b7-9a711cc1f129@loongson.cn>
-Date: Thu, 21 Sep 2023 15:56:51 +0800
+From: zhaotianrui <zhaotianrui@loongson.cn>
+Message-ID: <584e79a5-4b2f-4d18-6cf1-df1d3ce61883@loongson.cn>
+Date: Thu, 21 Sep 2023 16:03:21 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -39,29 +39,29 @@ In-Reply-To: <CAAhV-H6cCnvduCQiXGY=74YAKt1zLM9dBqMKUN6ELQ=4t3Fwqg@mail.gmail.com
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:AQAAf8BxK9xD9wtl4CUNAA--.26478S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfXryrCFykKr15KFW5Cr47WrX_yoW8trW5Ao
-	WrJFnrtw48Gr18Cr1UJ34qqrWUXw18Gr45A347Z3s8JF45tw1UGry8Gw15JFW3tr1DGr4U
-	Ca4UGw1DAry7JFn3l-sFpf9Il3svdjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf
+X-CM-TRANSID:AQAAf8Dxvi_J+AtlFCcNAA--.26855S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj9fXoWfXryrCFykKr15KFW5Cr47WrX_yoW8tr4xWo
+	W5JFnrtw48Gr18Cr1UJ34DtrWUXw18Gr45Ary7Zwn8JF45tw1UGry8Gw15JFW3tr1DGr4U
+	Ca4UGw1DAry7JFn3l-sFpf9Il3svdjkaLaAFLSUrUUUUzb8apTn2vfkv8UJUUUU8wcxFpf
 	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
 	UjIYCTnIWjp_UUUO07kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
 	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
 	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14
 	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	wI0_Gr1j6F4UJwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
 	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
 	JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
-	xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrV
+	xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r4a6rW5MI8I3I0E5I8CrV
 	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267
 	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUU
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUTpBTUU
 	UUU
 
-On 2023-09-21 15:17, Huacai Chen wrote:
 
+在 2023/9/21 下午3:17, Huacai Chen 写道:
 > Hi, Tianrui,
 >
 > On Sat, Sep 16, 2023 at 2:30 PM zhaotianrui <zhaotianrui@loongson.cn> wrote:
@@ -165,6 +165,11 @@ On 2023-09-21 15:17, Huacai Chen wrote:
 > You can pick the last 25 commits as v22. But please do a complete
 > testing before sending patches. And please contact with me if you have
 > any problems.
+Thanks very much, and I will read the changes carefully, and do a 
+complete testing.
+
+Thanks
+Tianrui Zhao
 >
 > Changes for v22:
 > 1. Combine very small patches.
@@ -184,22 +189,7 @@ On 2023-09-21 15:17, Huacai Chen wrote:
 > 11. Remove ANON_INODES/SRCU in Kconfig since they are already selected
 > unconditinally.
 > 12. Many coding style adjustment and typo fixes.
-
-Hi, Tianrui and Huacai,
-
-Since commit c718a0bad75c ("LoongArch: Fix some build warnings with
-W=1") was approved, "-Wno-override-init" should also work well with [1]
-which suggested by Youling.
-
-[1] 
-https://lore.kernel.org/loongarch/b0e8a311-d988-a1be-a256-130adcdbbfc6@loongson.cn/
-
-
-Thanks
-
-Jinyang
-
-
+>
 >
 >
 > Huacai
