@@ -1,95 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13ED62CA7
-	for <loongarch@lists.linux.dev>; Sat, 23 Sep 2023 09:11:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B93C433C7;
-	Sat, 23 Sep 2023 09:11:00 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.6-rc3
-Date: Sat, 23 Sep 2023 17:10:31 +0800
-Message-Id: <20230923091031.1075337-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500561D544;
+	Sat, 23 Sep 2023 15:39:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2139BC433C8;
+	Sat, 23 Sep 2023 15:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695483543;
+	bh=44aW6DcKJaHGXelf02UJMtFK5RbIa4QmGjb00e/7p/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fw2A/tcOcobQiglJay8dvPT5bEfVdzbbmq0FwMYYkRDEvMMNze6l5vdxXC61b2ule
+	 JFCwMCsxrAuMW6D9gVnh2enWSeUtDeXGmVEjWBDuVv9KbPW1MRt9tzybn9NNKJQMj2
+	 y3Lc/W+nmmCK2KsTrqRVvz29GuwFbt1mGULYw6jBfPPwRcYXpuSga9okI5ya4zHkUD
+	 tynDeAbBph8ozw0L4VOesv/AFGSBeSrp7QqXSV98fLRWfSHzHFilN6nNqox4/XsFqb
+	 GBdnrmPrEZw+uXG8gLcDpColobXRcu9WsCK8bgQKX9ms+oqH3fV0ph2eOZh795NWNU
+	 moLZ9gWnlnDaA==
+Date: Sat, 23 Sep 2023 18:38:08 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Song Liu <song@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 02/13] mm: introduce execmem_text_alloc() and
+ execmem_free()
+Message-ID: <20230923153808.GI3303@kernel.org>
+References: <20230918072955.2507221-1-rppt@kernel.org>
+ <20230918072955.2507221-3-rppt@kernel.org>
+ <CAPhsuW5-=H1V=VXUYxyGnUdJuNUpRt44QmpwjkDUD=9i0itjuw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW5-=H1V=VXUYxyGnUdJuNUpRt44QmpwjkDUD=9i0itjuw@mail.gmail.com>
 
-The following changes since commit ce9ecca0238b140b88f43859b211c9fdfd8e5b70:
+On Thu, Sep 21, 2023 at 03:34:18PM -0700, Song Liu wrote:
+> On Mon, Sep 18, 2023 at 12:30 AM Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> 
+> [...]
+> 
+> > diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
+> > index 42215f9404af..db5561d0c233 100644
+> > --- a/arch/s390/kernel/module.c
+> > +++ b/arch/s390/kernel/module.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/moduleloader.h>
+> >  #include <linux/bug.h>
+> >  #include <linux/memory.h>
+> > +#include <linux/execmem.h>
+> >  #include <asm/alternative.h>
+> >  #include <asm/nospec-branch.h>
+> >  #include <asm/facility.h>
+> > @@ -76,7 +77,7 @@ void *module_alloc(unsigned long size)
+> >  #ifdef CONFIG_FUNCTION_TRACER
+> >  void module_arch_cleanup(struct module *mod)
+> >  {
+> > -       module_memfree(mod->arch.trampolines_start);
+> > +       execmem_free(mod->arch.trampolines_start);
+> >  }
+> >  #endif
+> >
+> > @@ -510,7 +511,7 @@ static int module_alloc_ftrace_hotpatch_trampolines(struct module *me,
+> >
+> >         size = FTRACE_HOTPATCH_TRAMPOLINES_SIZE(s->sh_size);
+> >         numpages = DIV_ROUND_UP(size, PAGE_SIZE);
+> > -       start = module_alloc(numpages * PAGE_SIZE);
+> > +       start = execmem_text_alloc(EXECMEM_FTRACE, numpages * PAGE_SIZE);
+> 
+> This should be EXECMEM_MODULE_TEXT?
 
-  Linux 6.6-rc2 (2023-09-17 14:40:24 -0700)
+This is an ftrace trampoline, so I think it should be FTRACE type of
+allocation.
+ 
+> Thanks,
+> Song
+> 
+> >         if (!start)
+> >                 return -ENOMEM;
+> >         set_memory_rox((unsigned long)start, numpages);
+> [...]
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.6-1
-
-for you to fetch changes up to e74a6b7f3744d122ff4544f19393dfab167166ec:
-
-  docs/zh_CN/LoongArch: Update the links of ABI (2023-09-20 14:26:38 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v6.6-rc3
-
-Fix lockdep, fix a boot failure, fix some build warnings, fix document
-links, and some cleanups.
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      LoongArch: Use _UL() and _ULL()
-
-Bibo Mao (1):
-      LoongArch: Fix some build warnings with W=1
-
-Helge Deller (1):
-      LoongArch: Fix lockdep static memory detection
-
-Huacai Chen (3):
-      LoongArch: Set all reserved memblocks on Node#0 at initialization
-      kasan: Cleanup the __HAVE_ARCH_SHADOW_MAP usage
-      LoongArch: Don't inline kasan_mem_to_shadow()/kasan_shadow_to_mem()
-
-Tiezhu Yang (3):
-      LoongArch: Remove dead code in relocate_new_kernel
-      docs/LoongArch: Update the links of ABI
-      docs/zh_CN/LoongArch: Update the links of ABI
-
- Documentation/arch/loongarch/introduction.rst      |  4 +-
- .../zh_CN/arch/loongarch/introduction.rst          |  4 +-
- arch/loongarch/include/asm/addrspace.h             | 12 ++---
- arch/loongarch/include/asm/exception.h             | 45 +++++++++++++++++
- arch/loongarch/include/asm/kasan.h                 | 59 ++++------------------
- arch/loongarch/include/asm/smp.h                   |  1 +
- arch/loongarch/kernel/Makefile                     |  4 ++
- arch/loongarch/kernel/acpi.c                       |  1 -
- arch/loongarch/kernel/mem.c                        |  4 +-
- arch/loongarch/kernel/module-sections.c            |  1 +
- arch/loongarch/kernel/process.c                    |  1 +
- arch/loongarch/kernel/relocate_kernel.S            |  1 -
- arch/loongarch/kernel/signal.c                     |  7 +--
- arch/loongarch/kernel/smp.c                        |  3 ++
- arch/loongarch/kernel/syscall.c                    |  1 +
- arch/loongarch/kernel/time.c                       |  2 +-
- arch/loongarch/kernel/topology.c                   |  3 ++
- arch/loongarch/kernel/traps.c                      | 25 ++-------
- arch/loongarch/kernel/vmlinux.lds.S                | 55 ++++++++++----------
- arch/loongarch/mm/fault.c                          |  2 +-
- arch/loongarch/mm/hugetlbpage.c                    | 12 -----
- arch/loongarch/mm/ioremap.c                        |  1 +
- arch/loongarch/mm/kasan_init.c                     | 51 +++++++++++++++++++
- arch/loongarch/mm/tlb.c                            |  2 +-
- include/linux/kasan.h                              |  2 +-
- mm/kasan/kasan.h                                   |  8 ++-
- 26 files changed, 177 insertions(+), 134 deletions(-)
- create mode 100644 arch/loongarch/include/asm/exception.h
+-- 
+Sincerely yours,
+Mike.
