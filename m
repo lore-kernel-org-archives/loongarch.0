@@ -1,117 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40181D68D
-	for <loongarch@lists.linux.dev>; Sat, 23 Sep 2023 22:36:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4995FC433C8
-	for <loongarch@lists.linux.dev>; Sat, 23 Sep 2023 22:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695508596;
-	bh=p6KwkG6gIDCpi+5ECOWCYMC6fT/RtPXwryMv7tZb+xk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qMtA01N7mUaduYIspWvK5JZ27eHUuSEyBLxGRGUZtf/FbSg9jHYzJ2f2cd8Hr0zaD
-	 gL8xG3LJxd6nxGio9Fzk8TIdvkTL5FUYAEwU2HR7wi7iMSZriaaLFzccU1tfbDPejn
-	 tyuyDfQL7Wu77yWenumIHoMtUzMrkWQa1BL36R/myu5VL2noZoGyEs9Dl+RmnFCsJV
-	 gnwzGnxf8TIHH4S5b+5hFKgoRUG6bBujvYLStpsBd69BbjjIrY48hS91NOjTuyri8s
-	 qJwE4v2gKN3mYX1xMPoT+rtga4hD7EyYHWlmoJrUsEBTKwyzS+jUtZo60/w8ZNjwjy
-	 nDTDUFHZdutng==
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-405361bba99so36953905e9.2
-        for <loongarch@lists.linux.dev>; Sat, 23 Sep 2023 15:36:36 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzJiZPu9AkOUmhLb66IlUnb3EVMoOC6jrv69muNxp4rb+tOZKJn
-	MmNiVJQ5csMLVtkCYXOA6e41Q44Vo47xh7vrM6c=
-X-Google-Smtp-Source: AGHT+IHGEMyzPMP0PdtKXqSKknw0oXHfeYEIvmKQhWxGVhq9jrC3LZkcXvNIlQvBWHbanSZQKP0MnXe/fed+WldiSzw=
-X-Received: by 2002:a05:6512:250d:b0:4fb:90c6:c31a with SMTP id
- be13-20020a056512250d00b004fb90c6c31amr2958776lfb.14.1695508573892; Sat, 23
- Sep 2023 15:36:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3401398
+	for <loongarch@lists.linux.dev>; Sun, 24 Sep 2023 12:21:14 +0000 (UTC)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-59f55c276c3so21997417b3.2
+        for <loongarch@lists.linux.dev>; Sun, 24 Sep 2023 05:21:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695558073; x=1696162873; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MTfZjqjMpvXRZj3b3a+JLvwqBqzdhBKsQPxsSKfm4jQ=;
+        b=g404SB3db4GEla3BYphidUAQ+KWHGJz7LluVZwSlGDaFVwcX7678AmuMOzW/8/Ip/O
+         5/XyTQEFLN/sT/OVMSRCplJe1+GQ/eQ9cuttO52+LMJBx+0V5yKTMiJrvC5w6aUgkXy+
+         kqTnT6H2DewE+NkVZc/CUgepb78cJBw+U+AwWdhz9DsrtMdCVt/8o79xpeAv+G6eMbaV
+         QEULiRtxBPrSeMYBz8NNnI9NDDz1xmRQz9po4Vmg7hugOimX7qYSIuezr6sVqbjOErAj
+         5i00AsM7+a/W9yTTHBRyuekKwueaVfxTvsw/qkmjQgzIPDNbRiivz6u0qBmRmOVIZewg
+         z2cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695558073; x=1696162873;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MTfZjqjMpvXRZj3b3a+JLvwqBqzdhBKsQPxsSKfm4jQ=;
+        b=US/3R+4I0BT+jeidtifNo2tScas581mUKdZFH73kIeivkyQZVJYrvr6eLn4C73BoxV
+         nsDyGDPQQk+yUzYfR8jF6G8Rj7XPIinccTWe/SXxTehQzWEKv49E+syqq1gpwQY/G8ZA
+         rqE0o75AtohcocSKc6wzaCrNSFslVYDSbrhwMfNxlss2j76aGQb7/GGxsryd7vzIHqTZ
+         JpRvEsladrOvGlQhOaw2fW02a8nb/iUj33Iahf7MOuFVcqtLAnEFU/fPnQVRH2E/YrZh
+         u3hAcaIqSky45C3/0WtJoBtWHkueM1TIkXCo5S9XNQ4rTMq9J3y92ZJQI8yrdwUOpdwP
+         E7Ww==
+X-Gm-Message-State: AOJu0YwDSbVW/5IxCwENXMiPPzYCb7RyebXQ89fypXLhhOOq12kqi5IX
+	pdvSHRyHLz2pVFj9lT/IFMyekT2WJehLfNagkv0=
+X-Google-Smtp-Source: AGHT+IF2jNaWBk87Cb4LztG+3BYADZk5wQU4zwUp4/XjFmSp0zIWGQD+y5IecCnZhP1NNVheMxVGBydqfLx6BDN44Oo=
+X-Received: by 2002:a25:a048:0:b0:d43:a84f:a6aa with SMTP id
+ x66-20020a25a048000000b00d43a84fa6aamr3813704ybh.39.1695558073705; Sun, 24
+ Sep 2023 05:21:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230918072955.2507221-1-rppt@kernel.org> <20230918072955.2507221-3-rppt@kernel.org>
- <CAPhsuW5-=H1V=VXUYxyGnUdJuNUpRt44QmpwjkDUD=9i0itjuw@mail.gmail.com> <20230923153808.GI3303@kernel.org>
-In-Reply-To: <20230923153808.GI3303@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Sat, 23 Sep 2023 15:36:01 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6TxG87ZBwQ_027iiE+_UmXweZEPh8wKHkHo7wA+qXZUg@mail.gmail.com>
-Message-ID: <CAPhsuW6TxG87ZBwQ_027iiE+_UmXweZEPh8wKHkHo7wA+qXZUg@mail.gmail.com>
-Subject: Re: [PATCH v3 02/13] mm: introduce execmem_text_alloc() and execmem_free()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nadav Amit <nadav.amit@gmail.com>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+References: <cover.1693623752.git.zhoubinbin@loongson.cn> <16a37f6ad3cc9417b6638c2cd532d88c79468eb1.1693623752.git.zhoubinbin@loongson.cn>
+ <885eab85-2c11-cf20-9187-55cd647fbe9f@infradead.org> <c7604f6c-4da7-47c4-abe9-e626b3efc665@infradead.org>
+ <20230919-9ce82588fccdd641574b468c@fedora> <CAAhV-H73kp8zWJD7AKUvknmxow=f_cPBw9jctpmced6o_QCF6w@mail.gmail.com>
+ <ea9ee2dd-b71a-4c97-a347-20536d7ad424@app.fastmail.com>
+In-Reply-To: <ea9ee2dd-b71a-4c97-a347-20536d7ad424@app.fastmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Sun, 24 Sep 2023 20:21:02 +0800
+Message-ID: <CAMpQs4Lp1y1=hp_Z7zRV7W0WCB047yDD5eqnuLHjdqHYZpchRQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] soc: loongson: loongson2_pm: Add dependency for INPUT
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Yinbo Zhu <zhuyinbo@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, soc@kernel.org, devicetree@vger.kernel.org, 
+	linux-pm@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 23, 2023 at 8:39=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
+On Fri, Sep 22, 2023 at 10:43=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrot=
+e:
 >
-> On Thu, Sep 21, 2023 at 03:34:18PM -0700, Song Liu wrote:
-> > On Mon, Sep 18, 2023 at 12:30=E2=80=AFAM Mike Rapoport <rppt@kernel.org=
+> On Tue, Sep 19, 2023, at 12:15, Huacai Chen wrote:
+> > On Tue, Sep 19, 2023 at 11:48=E2=80=AFPM Conor Dooley <conor@kernel.org=
 > wrote:
-> > >
+> >> On Tue, Sep 19, 2023 at 08:36:50AM -0700, Randy Dunlap wrote:
+> >>
+> >> Seemingly this was sent again in isolation 2 weeks ago, but neither th=
+e
+> >> maintainer (Huacai) nor soc@kernel.org were on cc:
+> >>
+> >> https://lore.kernel.org/all/20230905123629.4510-1-zhuyinbo@loongson.cn=
+/
+> > v3 indeed cc-ed soc@kernel.org. :)
 > >
-> > [...]
-> >
-> > > diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
-> > > index 42215f9404af..db5561d0c233 100644
-> > > --- a/arch/s390/kernel/module.c
-> > > +++ b/arch/s390/kernel/module.c
-> > > @@ -21,6 +21,7 @@
-> > >  #include <linux/moduleloader.h>
-> > >  #include <linux/bug.h>
-> > >  #include <linux/memory.h>
-> > > +#include <linux/execmem.h>
-> > >  #include <asm/alternative.h>
-> > >  #include <asm/nospec-branch.h>
-> > >  #include <asm/facility.h>
-> > > @@ -76,7 +77,7 @@ void *module_alloc(unsigned long size)
-> > >  #ifdef CONFIG_FUNCTION_TRACER
-> > >  void module_arch_cleanup(struct module *mod)
-> > >  {
-> > > -       module_memfree(mod->arch.trampolines_start);
-> > > +       execmem_free(mod->arch.trampolines_start);
-> > >  }
-> > >  #endif
-> > >
-> > > @@ -510,7 +511,7 @@ static int module_alloc_ftrace_hotpatch_trampolin=
-es(struct module *me,
-> > >
-> > >         size =3D FTRACE_HOTPATCH_TRAMPOLINES_SIZE(s->sh_size);
-> > >         numpages =3D DIV_ROUND_UP(size, PAGE_SIZE);
-> > > -       start =3D module_alloc(numpages * PAGE_SIZE);
-> > > +       start =3D execmem_text_alloc(EXECMEM_FTRACE, numpages * PAGE_=
-SIZE);
-> >
-> > This should be EXECMEM_MODULE_TEXT?
+> > Arnd, could you please take this series to the soc tree? And also this
+> > series:
+> > https://lore.kernel.org/loongarch/cover.1693534134.git.zhoubinbin@loong=
+son.cn/T/#t
 >
-> This is an ftrace trampoline, so I think it should be FTRACE type of
-> allocation.
+> Sorry, I have been traveling and not pushed out the tree yet.
+>
+> Can you confirm that the input dependency is required for 6.6
+> and the other series can wait until 6.7? When you send patches
+> to soc@kernel.org, please always mention which tree you intend
+> them for. I might disagree, but it's better than having to guess.
+>
+Hi Arnd:
 
-Yeah, I was aware of the ftrace trampoline. My point was, ftrace trampoline
-doesn't seem to have any special requirements. Therefore, it is probably no=
-t
-necessary to have a separate type just for it.
+Thanks for your reply.
 
-AFAICT, kprobe, ftrace, and BPF (JIT and trampoline) can share the same
-execmem_type. We may need some work for some archs, but nothing is
-fundamentally different among these.
+As we know, this driver was just merged in during the v6.6 window, and
+no release will use it until now:
 
-Thanks,
-Song
+commit 67694c076bd7 soc: loongson2_pm: add power management support
+commit 6054a676e969 soc: dt-bindings: add loongson-2 pm
+
+Now, since the Loongson-2K series SoCs are indifferent at the driver
+level, we used fallback compatible and added
+syscon-reboot/syscon-poweroff subnodes for power on/off functionality.
+These somewhat break the original devicetree rules.
+So, I think these patches need to be merged in before the v6.6 release
+to avoid unnecessary compatibility issues.
+Of course, I added the "Fixes:" tag in the corresponding patch.
+
+Thanks.
+Binbin
+
+>      Arnd
