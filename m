@@ -1,113 +1,90 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3401398
-	for <loongarch@lists.linux.dev>; Sun, 24 Sep 2023 12:21:14 +0000 (UTC)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-59f55c276c3so21997417b3.2
-        for <loongarch@lists.linux.dev>; Sun, 24 Sep 2023 05:21:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695558073; x=1696162873; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MTfZjqjMpvXRZj3b3a+JLvwqBqzdhBKsQPxsSKfm4jQ=;
-        b=g404SB3db4GEla3BYphidUAQ+KWHGJz7LluVZwSlGDaFVwcX7678AmuMOzW/8/Ip/O
-         5/XyTQEFLN/sT/OVMSRCplJe1+GQ/eQ9cuttO52+LMJBx+0V5yKTMiJrvC5w6aUgkXy+
-         kqTnT6H2DewE+NkVZc/CUgepb78cJBw+U+AwWdhz9DsrtMdCVt/8o79xpeAv+G6eMbaV
-         QEULiRtxBPrSeMYBz8NNnI9NDDz1xmRQz9po4Vmg7hugOimX7qYSIuezr6sVqbjOErAj
-         5i00AsM7+a/W9yTTHBRyuekKwueaVfxTvsw/qkmjQgzIPDNbRiivz6u0qBmRmOVIZewg
-         z2cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695558073; x=1696162873;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MTfZjqjMpvXRZj3b3a+JLvwqBqzdhBKsQPxsSKfm4jQ=;
-        b=US/3R+4I0BT+jeidtifNo2tScas581mUKdZFH73kIeivkyQZVJYrvr6eLn4C73BoxV
-         nsDyGDPQQk+yUzYfR8jF6G8Rj7XPIinccTWe/SXxTehQzWEKv49E+syqq1gpwQY/G8ZA
-         rqE0o75AtohcocSKc6wzaCrNSFslVYDSbrhwMfNxlss2j76aGQb7/GGxsryd7vzIHqTZ
-         JpRvEsladrOvGlQhOaw2fW02a8nb/iUj33Iahf7MOuFVcqtLAnEFU/fPnQVRH2E/YrZh
-         u3hAcaIqSky45C3/0WtJoBtWHkueM1TIkXCo5S9XNQ4rTMq9J3y92ZJQI8yrdwUOpdwP
-         E7Ww==
-X-Gm-Message-State: AOJu0YwDSbVW/5IxCwENXMiPPzYCb7RyebXQ89fypXLhhOOq12kqi5IX
-	pdvSHRyHLz2pVFj9lT/IFMyekT2WJehLfNagkv0=
-X-Google-Smtp-Source: AGHT+IF2jNaWBk87Cb4LztG+3BYADZk5wQU4zwUp4/XjFmSp0zIWGQD+y5IecCnZhP1NNVheMxVGBydqfLx6BDN44Oo=
-X-Received: by 2002:a25:a048:0:b0:d43:a84f:a6aa with SMTP id
- x66-20020a25a048000000b00d43a84fa6aamr3813704ybh.39.1695558073705; Sun, 24
- Sep 2023 05:21:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A1B13FFA
+	for <loongarch@lists.linux.dev>; Mon, 25 Sep 2023 09:55:44 +0000 (UTC)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1qkiJX-0007qg-M8; Mon, 25 Sep 2023 11:55:39 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1qkiJW-008pzO-Io; Mon, 25 Sep 2023 11:55:38 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1qkiJW-004dlC-9A; Mon, 25 Sep 2023 11:55:38 +0200
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: [PATCH 13/40] soc/loongson: loongson2_guts: Convert to platform remove callback returning void
+Date: Mon, 25 Sep 2023 11:55:04 +0200
+Message-Id: <20230925095532.1984344-14-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
+References: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1693623752.git.zhoubinbin@loongson.cn> <16a37f6ad3cc9417b6638c2cd532d88c79468eb1.1693623752.git.zhoubinbin@loongson.cn>
- <885eab85-2c11-cf20-9187-55cd647fbe9f@infradead.org> <c7604f6c-4da7-47c4-abe9-e626b3efc665@infradead.org>
- <20230919-9ce82588fccdd641574b468c@fedora> <CAAhV-H73kp8zWJD7AKUvknmxow=f_cPBw9jctpmced6o_QCF6w@mail.gmail.com>
- <ea9ee2dd-b71a-4c97-a347-20536d7ad424@app.fastmail.com>
-In-Reply-To: <ea9ee2dd-b71a-4c97-a347-20536d7ad424@app.fastmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Sun, 24 Sep 2023 20:21:02 +0800
-Message-ID: <CAMpQs4Lp1y1=hp_Z7zRV7W0WCB047yDD5eqnuLHjdqHYZpchRQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] soc: loongson: loongson2_pm: Add dependency for INPUT
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Conor Dooley <conor@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Yinbo Zhu <zhuyinbo@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, soc@kernel.org, devicetree@vger.kernel.org, 
-	linux-pm@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1681; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=ATjpJg3Ymn3lpV/5/BensT0YUucFb6ICE/DcTgZnEiU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlEVhOe/DWNmRhMPdnepAPTAePH9HSED/q6ORNq y4EcfxNb7WJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRFYTgAKCRCPgPtYfRL+ TvGmCAChX5JJSKyWxFMa7rU47aHAgL6TpgnCjq94OMFLpaki4HemK4CGcqcXzVOOpb8Ibp7vjsg MZu3h8z/Lbwpavjrwo2L1g7Tq2Tlt2fWIH+F/zX7Eu4+VpphT9vNj0Gjp+VATd8mhbXk1YXE5HJ WcqyI/lLeOVm0dks8SLNWpVBN1UsfpJZyoTB4bpO6u3wnoFNwRqE2xCfeZslzh6B16qzGa5YTi4 yGWMU5gJryc5JulBxbszxRCcsGmlxgU98i9Iy+xytb17tOj+EQR770ZaMTMV0as7ldV2u/Z0miN d6lcfMkkifrfU6ut/kQFd4TW7Hp28ZAUSeAVCNDh1zGfigWT
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: loongarch@lists.linux.dev
 
-On Fri, Sep 22, 2023 at 10:43=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrot=
-e:
->
-> On Tue, Sep 19, 2023, at 12:15, Huacai Chen wrote:
-> > On Tue, Sep 19, 2023 at 11:48=E2=80=AFPM Conor Dooley <conor@kernel.org=
-> wrote:
-> >> On Tue, Sep 19, 2023 at 08:36:50AM -0700, Randy Dunlap wrote:
-> >>
-> >> Seemingly this was sent again in isolation 2 weeks ago, but neither th=
-e
-> >> maintainer (Huacai) nor soc@kernel.org were on cc:
-> >>
-> >> https://lore.kernel.org/all/20230905123629.4510-1-zhuyinbo@loongson.cn=
-/
-> > v3 indeed cc-ed soc@kernel.org. :)
-> >
-> > Arnd, could you please take this series to the soc tree? And also this
-> > series:
-> > https://lore.kernel.org/loongarch/cover.1693534134.git.zhoubinbin@loong=
-son.cn/T/#t
->
-> Sorry, I have been traveling and not pushed out the tree yet.
->
-> Can you confirm that the input dependency is required for 6.6
-> and the other series can wait until 6.7? When you send patches
-> to soc@kernel.org, please always mention which tree you intend
-> them for. I might disagree, but it's better than having to guess.
->
-Hi Arnd:
+The .remove() callback for a platform driver returns an int which makes
+many driver authors wrongly assume it's possible to do error handling by
+returning an error code. However the value returned is ignored (apart
+from emitting a warning) and this typically results in resource leaks.
+To improve here there is a quest to make the remove callback return
+void. In the first step of this quest all drivers are converted to
+.remove_new() which already returns void. Eventually after all drivers
+are converted, .remove_new() will be renamed to .remove().
 
-Thanks for your reply.
+Trivially convert this driver from always returning zero in the remove
+callback to the void returning variant.
 
-As we know, this driver was just merged in during the v6.6 window, and
-no release will use it until now:
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/soc/loongson/loongson2_guts.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-commit 67694c076bd7 soc: loongson2_pm: add power management support
-commit 6054a676e969 soc: dt-bindings: add loongson-2 pm
+diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
+index bace4bc8e03b..48f8382888a7 100644
+--- a/drivers/soc/loongson/loongson2_guts.c
++++ b/drivers/soc/loongson/loongson2_guts.c
+@@ -150,11 +150,9 @@ static int loongson2_guts_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int loongson2_guts_remove(struct platform_device *dev)
++static void loongson2_guts_remove(struct platform_device *dev)
+ {
+ 	soc_device_unregister(soc_dev);
+-
+-	return 0;
+ }
+ 
+ /*
+@@ -173,7 +171,7 @@ static struct platform_driver loongson2_guts_driver = {
+ 		.of_match_table = loongson2_guts_of_match,
+ 	},
+ 	.probe = loongson2_guts_probe,
+-	.remove = loongson2_guts_remove,
++	.remove_new = loongson2_guts_remove,
+ };
+ 
+ static int __init loongson2_guts_init(void)
+-- 
+2.40.1
 
-Now, since the Loongson-2K series SoCs are indifferent at the driver
-level, we used fallback compatible and added
-syscon-reboot/syscon-poweroff subnodes for power on/off functionality.
-These somewhat break the original devicetree rules.
-So, I think these patches need to be merged in before the v6.6 release
-to avoid unnecessary compatibility issues.
-Of course, I added the "Fixes:" tag in the corresponding patch.
-
-Thanks.
-Binbin
-
->      Arnd
