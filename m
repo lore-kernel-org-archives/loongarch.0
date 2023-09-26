@@ -1,63 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A83C107B9
-	for <loongarch@lists.linux.dev>; Tue, 26 Sep 2023 12:10:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACDDAC433C7;
-	Tue, 26 Sep 2023 12:10:49 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: [PATCH] LoongArch: numa: Fix high_memory calculation
-Date: Tue, 26 Sep 2023 20:10:31 +0800
-Message-Id: <20230926121031.1901760-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4551B2F24;
+	Tue, 26 Sep 2023 13:16:45 +0000 (UTC)
+Received: from lhrpeml500002.china.huawei.com (unknown [172.18.147.200])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rw0bh0SMmz6K7vG;
+	Tue, 26 Sep 2023 21:15:28 +0800 (CST)
+Received: from lhrpeml500001.china.huawei.com (7.191.163.213) by
+ lhrpeml500002.china.huawei.com (7.191.160.78) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 26 Sep 2023 14:16:41 +0100
+Received: from lhrpeml500001.china.huawei.com ([7.191.163.213]) by
+ lhrpeml500001.china.huawei.com ([7.191.163.213]) with mapi id 15.01.2507.031;
+ Tue, 26 Sep 2023 14:16:41 +0100
+From: Salil Mehta <salil.mehta@huawei.com>
+To: James Morse <james.morse@arm.com>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>
+CC: "x86@kernel.org" <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, "jianyong.wu@arm.com"
+	<jianyong.wu@arm.com>, "justin.he@arm.com" <justin.he@arm.com>
+Subject: RE: [RFC PATCH v2 00/35] ACPI/arm64: add support for virtual
+ cpuhotplug
+Thread-Topic: [RFC PATCH v2 00/35] ACPI/arm64: add support for virtual
+ cpuhotplug
+Thread-Index: AQHZ5mDIR7JMF2KEeEGQTVeJuAX/8LAtKYMg
+Date: Tue, 26 Sep 2023 13:16:41 +0000
+Message-ID: <622a39bda12a4b75a6da84f4566b4238@huawei.com>
+References: <20230913163823.7880-1-james.morse@arm.com>
+In-Reply-To: <20230913163823.7880-1-james.morse@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [10.126.174.16]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 
-high_memory is the virtual address of the 'highest physical address' in
-the system. But __va(get_num_physpages() << PAGE_SHIFT) is not what we
-want because there may be holes in the physical address space. On the
-other hand, max_low_pfn is calculated from memblock_end_of_DRAM(), which
-is exactly corresponding to the highest physical address, so use it for
-high_memory calculation.
+> From: James Morse <james.morse@arm.com>
+> Sent: Wednesday, September 13, 2023 5:38 PM
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/numa.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[...]
 
-diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-index c7d33c489e04..6e65ff12d5c7 100644
---- a/arch/loongarch/kernel/numa.c
-+++ b/arch/loongarch/kernel/numa.c
-@@ -436,7 +436,7 @@ void __init paging_init(void)
- 
- void __init mem_init(void)
- {
--	high_memory = (void *) __va(get_num_physpages() << PAGE_SHIFT);
-+	high_memory = (void *) __va(max_low_pfn << PAGE_SHIFT);
- 	memblock_free_all();
- }
- 
--- 
-2.39.3
+>=20
+> Hello!
+>=20
+> Changes since RFC-v1:
+>  * riscv is new, ia64 is gone
+>  * The KVM support is different, and upstream - no need to patch the host=
+.
+>=20
+> ---
+>=20
+> This series adds what looks like cpuhotplug support to arm64 for use in
+> virtual machines. It does this by moving the cpu_register() calls for
+> architectures that support ACPI out of the arch code by using
+> GENERIC_CPU_DEVICES, then into the ACPI processor driver.
+>=20
+> The kubernetes folk really want to be able to add CPUs to an existing VM,
+> in exactly the same way they do on x86. The use-case is pre-booting guest=
+s
+> with one CPU, then adding the number that were actually needed when the
+> workload is provisioned.
+>=20
 
+[...]
+
+>=20
+> I had a go at switching the remaining architectures over to
+> GENERIC_CPU_DEVICES,
+> so that the Kconfig symbol can be removed, but I got stuck with powerpc
+> and s390.
+>=20
+> I've only build tested Loongarch and riscv. I've removed the ia64 specifi=
+c
+> patches, but left the changes in other patches to make git-grep review of
+> renames easier.
+>=20
+> If folk want to play along at home, you'll need a copy of Qemu that
+> supports this.
+> https://github.com/salil-mehta/qemu.git salil/virt-cpuhp-armv8/rfc-v2-rc6
+
+
+Please use the latest pushed RFC V2 instead:
+https://lore.kernel.org/qemu-devel/20230926100436.28284-1-salil.mehta@huawe=
+i.com/T/#m523b37819c4811c7827333982004e07a1ef03879
+
+Repository:
+https://github.com/salil-mehta/qemu.git  virt-cpuhp-armv8/rfc-v2
+
+
+Thanks
+Salil.
+
+
+[...]
+
+> Why is this still an RFC? I'm still looking for confirmation from the
+> kubernetes/kata folk that this works for them. Because of this I've culle=
+d
+> the CC list...
+>=20
+>=20
+> This series is based on v6.6-rc1, and can be retrieved from:
+> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/virtual_c=
+pu_hotplug/rfc/v2
