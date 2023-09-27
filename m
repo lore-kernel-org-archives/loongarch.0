@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB1E06D3F
-	for <loongarch@lists.linux.dev>; Wed, 27 Sep 2023 03:10:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84C2C6FA3
+	for <loongarch@lists.linux.dev>; Wed, 27 Sep 2023 03:10:09 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxueoMnRNl_BYtAA--.10812S3;
-	Wed, 27 Sep 2023 11:10:04 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxyeoNnRNlIBctAA--.11251S3;
+	Wed, 27 Sep 2023 11:10:05 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd4InRNlhZETAA--.42466S8;
-	Wed, 27 Sep 2023 11:10:03 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd4InRNlhZETAA--.42466S11;
+	Wed, 27 Sep 2023 11:10:04 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -23,9 +23,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v22 06/25] LoongArch: KVM: Implement basic vcpu interfaces
-Date: Wed, 27 Sep 2023 11:09:40 +0800
-Message-Id: <20230927030959.3629941-7-zhaotianrui@loongson.cn>
+Subject: [PATCH v22 09/25] LoongArch: KVM: Implement vcpu interrupt operations
+Date: Wed, 27 Sep 2023 11:09:43 +0800
+Message-Id: <20230927030959.3629941-10-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230927030959.3629941-1-zhaotianrui@loongson.cn>
 References: <20230927030959.3629941-1-zhaotianrui@loongson.cn>
@@ -36,299 +36,263 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxjd4InRNlhZETAA--.42466S8
+X-CM-TRANSID:AQAAf8Cxjd4InRNlhZETAA--.42466S11
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement basic vcpu interfaces, including:
-
-1, vcpu create and destroy interface, saving info into vcpu arch
-structure such as vcpu exception entrance, vcpu enter guest pointer,
-etc. Init vcpu timer and set address translation mode when vcpu create.
-
-2, vcpu run interface, handling mmio, iocsr reading fault and deliver
-interrupt, lose fpu before vcpu enter guest.
-
-3, vcpu handle exit interface, getting the exit code by ESTAT register
-and using kvm exception vector to handle it.
+Implement vcpu interrupt operations such as vcpu set irq and vcpu
+clear irq, using set_gcsr_estat() to set irq which is parsed by the
+irq bitmap.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Tested-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 261 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 261 insertions(+)
- create mode 100644 arch/loongarch/kvm/vcpu.c
+ arch/loongarch/kvm/interrupt.c | 183 +++++++++++++++++++++++++++++++++
+ arch/loongarch/kvm/vcpu.c      |  38 +++++++
+ 2 files changed, 221 insertions(+)
+ create mode 100644 arch/loongarch/kvm/interrupt.c
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
 new file mode 100644
-index 0000000000..349cecca1e
+index 0000000000..4c3f22de4b
 --- /dev/null
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -0,0 +1,261 @@
++++ b/arch/loongarch/kvm/interrupt.c
+@@ -0,0 +1,183 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
 +
-+#include <linux/kvm_host.h>
-+#include <linux/entry-kvm.h>
-+#include <asm/fpu.h>
-+#include <asm/loongarch.h>
-+#include <asm/setup.h>
-+#include <asm/time.h>
++#include <linux/err.h>
++#include <linux/errno.h>
++#include <asm/kvm_csr.h>
++#include <asm/kvm_vcpu.h>
 +
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
++static unsigned int priority_to_irq[EXCCODE_INT_NUM] = {
++	[INT_TI]	= CPU_TIMER,
++	[INT_IPI]	= CPU_IPI,
++	[INT_SWI0]	= CPU_SIP0,
++	[INT_SWI1]	= CPU_SIP1,
++	[INT_HWI0]	= CPU_IP0,
++	[INT_HWI1]	= CPU_IP1,
++	[INT_HWI2]	= CPU_IP2,
++	[INT_HWI3]	= CPU_IP3,
++	[INT_HWI4]	= CPU_IP4,
++	[INT_HWI5]	= CPU_IP5,
++	[INT_HWI6]	= CPU_IP6,
++	[INT_HWI7]	= CPU_IP7,
++};
 +
-+/*
-+ * kvm_check_requests - check and handle pending vCPU requests
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest
-+ *         RESUME_HOST  if we should exit to userspace
-+ */
-+static int kvm_check_requests(struct kvm_vcpu *vcpu)
++static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
 +{
-+	if (!kvm_request_pending(vcpu))
-+		return RESUME_GUEST;
++	unsigned int irq = 0;
 +
-+	if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
-+		vcpu->arch.vpid = 0;  /* Drop vpid for this vCPU */
++	clear_bit(priority, &vcpu->arch.irq_pending);
++	if (priority < EXCCODE_INT_NUM)
++		irq = priority_to_irq[priority];
 +
-+	if (kvm_dirty_ring_check_request(vcpu))
-+		return RESUME_HOST;
++	switch (priority) {
++	case INT_TI:
++	case INT_IPI:
++	case INT_SWI0:
++	case INT_SWI1:
++		set_gcsr_estat(irq);
++		break;
 +
-+	return RESUME_GUEST;
++	case INT_HWI0 ... INT_HWI7:
++		set_csr_gintc(irq);
++		break;
++
++	default:
++		break;
++	}
++
++	return 1;
 +}
 +
-+/*
-+ * Check and handle pending signal and vCPU requests etc
-+ * Run with irq enabled and preempt enabled
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest
-+ *         RESUME_HOST  if we should exit to userspace
-+ *         < 0 if we should exit to userspace, where the return value
-+ *         indicates an error
-+ */
-+static int kvm_enter_guest_check(struct kvm_vcpu *vcpu)
++static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
 +{
-+	int ret;
++	unsigned int irq = 0;
 +
-+	/*
-+	 * Check conditions before entering the guest
-+	 */
-+	ret = xfer_to_guest_mode_handle_work(vcpu);
-+	if (ret < 0)
-+		return ret;
++	clear_bit(priority, &vcpu->arch.irq_clear);
++	if (priority < EXCCODE_INT_NUM)
++		irq = priority_to_irq[priority];
 +
-+	ret = kvm_check_requests(vcpu);
++	switch (priority) {
++	case INT_TI:
++	case INT_IPI:
++	case INT_SWI0:
++	case INT_SWI1:
++		clear_gcsr_estat(irq);
++		break;
 +
-+	return ret;
++	case INT_HWI0 ... INT_HWI7:
++		clear_csr_gintc(irq);
++		break;
++
++	default:
++		break;
++	}
++
++	return 1;
 +}
 +
-+/*
-+ * Called with irq enabled
-+ *
-+ * Return: RESUME_GUEST if we should enter the guest, and irq disabled
-+ *         Others if we should exit to userspace
-+ */
-+static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
++void kvm_deliver_intr(struct kvm_vcpu *vcpu)
 +{
-+	int ret;
++	unsigned int priority;
++	unsigned long *pending = &vcpu->arch.irq_pending;
++	unsigned long *pending_clr = &vcpu->arch.irq_clear;
 +
-+	do {
-+		ret = kvm_enter_guest_check(vcpu);
-+		if (ret != RESUME_GUEST)
-+			break;
++	if (!(*pending) && !(*pending_clr))
++		return;
 +
-+		/*
-+		 * Handle vcpu timer, interrupts, check requests and
-+		 * check vmid before vcpu enter guest
-+		 */
-+		local_irq_disable();
-+		kvm_acquire_timer(vcpu);
-+		kvm_deliver_intr(vcpu);
-+		kvm_deliver_exception(vcpu);
-+		/* Make sure the vcpu mode has been written */
-+		smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+		kvm_check_vpid(vcpu);
-+		vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-+		/* Clear KVM_LARCH_SWCSR_LATEST as CSR will change when enter guest */
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
-+
-+		if (kvm_request_pending(vcpu) || xfer_to_guest_mode_work_pending()) {
-+			/* make sure the vcpu mode has been written */
-+			smp_store_mb(vcpu->mode, OUTSIDE_GUEST_MODE);
-+			local_irq_enable();
-+			ret = -EAGAIN;
++	if (*pending_clr) {
++		priority = __ffs(*pending_clr);
++		while (priority <= INT_IPI) {
++			kvm_irq_clear(vcpu, priority);
++			priority = find_next_bit(pending_clr,
++					BITS_PER_BYTE * sizeof(*pending_clr),
++					priority + 1);
 +		}
-+	} while (ret != RESUME_GUEST);
++	}
 +
-+	return ret;
++	if (*pending) {
++		priority = __ffs(*pending);
++		while (priority <= INT_IPI) {
++			kvm_irq_deliver(vcpu, priority);
++			priority = find_next_bit(pending,
++					BITS_PER_BYTE * sizeof(*pending),
++					priority + 1);
++		}
++	}
++}
++
++int kvm_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return test_bit(INT_TI, &vcpu->arch.irq_pending);
 +}
 +
 +/*
-+ * Return 1 for resume guest and "<= 0" for resume host.
++ * Only support illegal instruction or illegal Address Error exception,
++ * Other exceptions are injected by hardware in kvm mode
 + */
-+static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
++static void _kvm_deliver_exception(struct kvm_vcpu *vcpu,
++				unsigned int code, unsigned int subcode)
 +{
-+	int ret = RESUME_GUEST;
-+	unsigned long estat = vcpu->arch.host_estat;
-+	u32 intr = estat & 0x1fff; /* Ignore NMI */
-+	u32 ecode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
++	unsigned long val, vec_size;
 +
-+	vcpu->mode = OUTSIDE_GUEST_MODE;
-+
-+	/* Set a default exit reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+
-+	guest_timing_exit_irqoff();
-+	guest_state_exit_irqoff();
-+	local_irq_enable();
-+
-+	trace_kvm_exit(vcpu, ecode);
-+	if (ecode) {
-+		ret = kvm_handle_fault(vcpu, ecode);
-+	} else {
-+		WARN(!intr, "vm exiting with suspicious irq\n");
-+		++vcpu->stat.int_exits;
++	/*
++	 * BADV is added for EXCCODE_ADE exception
++	 *  Use PC register (GVA address) if it is instruction exeception
++	 *  Else use BADV from host side (GPA address) for data exeception
++	 */
++	if (code == EXCCODE_ADE) {
++		if (subcode == EXSUBCODE_ADEF)
++			val = vcpu->arch.pc;
++		else
++			val = vcpu->arch.badv;
++		kvm_write_hw_gcsr(LOONGARCH_CSR_BADV, val);
 +	}
 +
-+	if (ret == RESUME_GUEST)
-+		ret = kvm_pre_enter_guest(vcpu);
++	/* Set exception instruction */
++	kvm_write_hw_gcsr(LOONGARCH_CSR_BADI, vcpu->arch.badi);
 +
-+	if (ret != RESUME_GUEST) {
-+		local_irq_disable();
-+		return ret;
-+	}
++	/*
++	 * Save CRMD in PRMD
++	 * Set IRQ disabled and PLV0 with CRMD
++	 */
++	val = kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD);
++	kvm_write_hw_gcsr(LOONGARCH_CSR_PRMD, val);
++	val = val & ~(CSR_CRMD_PLV | CSR_CRMD_IE);
++	kvm_write_hw_gcsr(LOONGARCH_CSR_CRMD, val);
 +
-+	guest_timing_enter_irqoff();
-+	guest_state_enter_irqoff();
-+	trace_kvm_reenter(vcpu);
++	/* Set exception PC address */
++	kvm_write_hw_gcsr(LOONGARCH_CSR_ERA, vcpu->arch.pc);
 +
-+	return RESUME_GUEST;
++	/*
++	 * Set exception code
++	 * Exception and interrupt can be inject at the same time
++	 * Hardware will handle exception first and then extern interrupt
++	 * Exception code is Ecode in ESTAT[16:21]
++	 * Interrupt code in ESTAT[0:12]
++	 */
++	val = kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT);
++	val = (val & ~CSR_ESTAT_EXC) | code;
++	kvm_write_hw_gcsr(LOONGARCH_CSR_ESTAT, val);
++
++	/* Calculate expcetion entry address */
++	val = kvm_read_hw_gcsr(LOONGARCH_CSR_ECFG);
++	vec_size = (val & CSR_ECFG_VS) >> CSR_ECFG_VS_SHIFT;
++	if (vec_size)
++		vec_size = (1 << vec_size) * 4;
++	val =  kvm_read_hw_gcsr(LOONGARCH_CSR_EENTRY);
++	vcpu->arch.pc = val + code * vec_size;
 +}
 +
-+int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
++void kvm_deliver_exception(struct kvm_vcpu *vcpu)
 +{
++	unsigned int code;
++	unsigned long *pending = &vcpu->arch.exception_pending;
++
++	if (*pending) {
++		code = __ffs(*pending);
++		_kvm_deliver_exception(vcpu, code, vcpu->arch.esubcode);
++		*pending = 0;
++		vcpu->arch.esubcode = 0;
++	}
++}
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 0f19c8b0c0..7576f5a735 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -458,6 +458,44 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+ 	preempt_enable();
+ }
+ 
++int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
++{
++	int intr = (int)irq->irq;
++
++	if (intr > 0)
++		kvm_queue_irq(vcpu, intr);
++	else if (intr < 0)
++		kvm_dequeue_irq(vcpu, -intr);
++	else {
++		kvm_err("%s: invalid interrupt ioctl %d\n", __func__, irq->irq);
++		return -EINVAL;
++	}
++
++	kvm_vcpu_kick(vcpu);
++
 +	return 0;
 +}
 +
-+int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
++long kvm_arch_vcpu_async_ioctl(struct file *filp,
++			       unsigned int ioctl, unsigned long arg)
 +{
-+	unsigned long timer_hz;
-+	struct loongarch_csrs *csr;
++	void __user *argp = (void __user *)arg;
++	struct kvm_vcpu *vcpu = filp->private_data;
 +
-+	vcpu->arch.vpid = 0;
++	if (ioctl == KVM_INTERRUPT) {
++		struct kvm_interrupt irq;
 +
-+	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
-+	vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
++		if (copy_from_user(&irq, argp, sizeof(irq)))
++			return -EFAULT;
 +
-+	vcpu->arch.handle_exit = kvm_handle_exit;
-+	vcpu->arch.guest_eentry = (unsigned long)kvm_loongarch_ops->exc_entry;
-+	vcpu->arch.csr = kzalloc(sizeof(struct loongarch_csrs), GFP_KERNEL);
-+	if (!vcpu->arch.csr)
-+		return -ENOMEM;
++		kvm_debug("[%d] %s: irq: %d\n", vcpu->vcpu_id, __func__, irq.irq);
 +
-+	/*
-+	 * All kvm exceptions share one exception entry, and host <-> guest
-+	 * switch also switch ECFG.VS field, keep host ECFG.VS info here.
-+	 */
-+	vcpu->arch.host_ecfg = (read_csr_ecfg() & CSR_ECFG_VS);
-+
-+	/* Init */
-+	vcpu->arch.last_sched_cpu = -1;
-+
-+	/*
-+	 * Initialize guest register state to valid architectural reset state.
-+	 */
-+	timer_hz = calc_const_freq();
-+	kvm_init_timer(vcpu, timer_hz);
-+
-+	/* Set Initialize mode for guest */
-+	csr = vcpu->arch.csr;
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CRMD, CSR_CRMD_DA);
-+
-+	/* Set cpuid */
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TMID, vcpu->vcpu_id);
-+
-+	/* Start with no pending virtual guest interrupts */
-+	csr->csrs[LOONGARCH_CSR_GINTC] = 0;
-+
-+	return 0;
-+}
-+
-+void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
-+{
-+}
-+
-+void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
-+{
-+	int cpu;
-+	struct kvm_context *context;
-+
-+	hrtimer_cancel(&vcpu->arch.swtimer);
-+	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
-+	kfree(vcpu->arch.csr);
-+
-+	/*
-+	 * If the vCPU is freed and reused as another vCPU, we don't want the
-+	 * matching pointer wrongly hanging around in last_vcpu.
-+	 */
-+	for_each_possible_cpu(cpu) {
-+		context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+		if (context->last_vcpu == vcpu)
-+			context->last_vcpu = NULL;
-+	}
-+}
-+
-+int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-+{
-+	int r = -EINTR;
-+	struct kvm_run *run = vcpu->run;
-+
-+	if (vcpu->mmio_needed) {
-+		if (!vcpu->mmio_is_write)
-+			kvm_complete_mmio_read(vcpu, run);
-+		vcpu->mmio_needed = 0;
++		return kvm_vcpu_ioctl_interrupt(vcpu, &irq);
 +	}
 +
-+	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
-+		if (!run->iocsr_io.is_write)
-+			kvm_complete_iocsr_read(vcpu, run);
-+	}
-+
-+	if (run->immediate_exit)
-+		return r;
-+
-+	/* Clear exit_reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	lose_fpu(1);
-+	vcpu_load(vcpu);
-+	kvm_sigset_activate(vcpu);
-+	r = kvm_pre_enter_guest(vcpu);
-+	if (r != RESUME_GUEST)
-+		goto out;
-+
-+	guest_timing_enter_irqoff();
-+	guest_state_enter_irqoff();
-+	trace_kvm_enter(vcpu);
-+	r = kvm_loongarch_ops->enter_guest(run, vcpu);
-+
-+	trace_kvm_out(vcpu);
-+	/*
-+	 * Guest exit is already recorded at kvm_handle_exit()
-+	 * return value must not be RESUME_GUEST
-+	 */
-+	local_irq_enable();
-+out:
-+	kvm_sigset_deactivate(vcpu);
-+	vcpu_put(vcpu);
-+
-+	return r;
++	return -ENOIOCTLCMD;
 +}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ {
+ 	return 0;
 -- 
 2.39.3
 
