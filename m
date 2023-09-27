@@ -1,12 +1,12 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84C2C6FA3
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ED6E6FA8
 	for <loongarch@lists.linux.dev>; Wed, 27 Sep 2023 03:10:09 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxyeoNnRNlIBctAA--.11251S3;
-	Wed, 27 Sep 2023 11:10:05 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxfOoOnRNlLRctAA--.59150S3;
+	Wed, 27 Sep 2023 11:10:06 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd4InRNlhZETAA--.42466S11;
-	Wed, 27 Sep 2023 11:10:04 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd4InRNlhZETAA--.42466S13;
+	Wed, 27 Sep 2023 11:10:05 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -23,9 +23,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v22 09/25] LoongArch: KVM: Implement vcpu interrupt operations
-Date: Wed, 27 Sep 2023 11:09:43 +0800
-Message-Id: <20230927030959.3629941-10-zhaotianrui@loongson.cn>
+Subject: [PATCH v22 11/25] LoongArch: KVM: Implement misc vcpu related interfaces
+Date: Wed, 27 Sep 2023 11:09:45 +0800
+Message-Id: <20230927030959.3629941-12-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230927030959.3629941-1-zhaotianrui@loongson.cn>
 References: <20230927030959.3629941-1-zhaotianrui@loongson.cn>
@@ -36,263 +36,163 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxjd4InRNlhZETAA--.42466S11
+X-CM-TRANSID:AQAAf8Cxjd4InRNlhZETAA--.42466S13
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement vcpu interrupt operations such as vcpu set irq and vcpu
-clear irq, using set_gcsr_estat() to set irq which is parsed by the
-irq bitmap.
+1, Implement LoongArch vcpu status description such as idle exits
+counter, signal exits counter, cpucfg exits counter, etc.
+
+2, Implement some misc vcpu relaterd interfaces, such as vcpu runnable,
+vcpu should kick, vcpu dump regs, etc.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Tested-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/interrupt.c | 183 +++++++++++++++++++++++++++++++++
- arch/loongarch/kvm/vcpu.c      |  38 +++++++
- 2 files changed, 221 insertions(+)
- create mode 100644 arch/loongarch/kvm/interrupt.c
+ arch/loongarch/kvm/vcpu.c | 120 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 120 insertions(+)
 
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-new file mode 100644
-index 0000000000..4c3f22de4b
---- /dev/null
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <asm/kvm_csr.h>
-+#include <asm/kvm_vcpu.h>
-+
-+static unsigned int priority_to_irq[EXCCODE_INT_NUM] = {
-+	[INT_TI]	= CPU_TIMER,
-+	[INT_IPI]	= CPU_IPI,
-+	[INT_SWI0]	= CPU_SIP0,
-+	[INT_SWI1]	= CPU_SIP1,
-+	[INT_HWI0]	= CPU_IP0,
-+	[INT_HWI1]	= CPU_IP1,
-+	[INT_HWI2]	= CPU_IP2,
-+	[INT_HWI3]	= CPU_IP3,
-+	[INT_HWI4]	= CPU_IP4,
-+	[INT_HWI5]	= CPU_IP5,
-+	[INT_HWI6]	= CPU_IP6,
-+	[INT_HWI7]	= CPU_IP7,
-+};
-+
-+static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
-+{
-+	unsigned int irq = 0;
-+
-+	clear_bit(priority, &vcpu->arch.irq_pending);
-+	if (priority < EXCCODE_INT_NUM)
-+		irq = priority_to_irq[priority];
-+
-+	switch (priority) {
-+	case INT_TI:
-+	case INT_IPI:
-+	case INT_SWI0:
-+	case INT_SWI1:
-+		set_gcsr_estat(irq);
-+		break;
-+
-+	case INT_HWI0 ... INT_HWI7:
-+		set_csr_gintc(irq);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 1;
-+}
-+
-+static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
-+{
-+	unsigned int irq = 0;
-+
-+	clear_bit(priority, &vcpu->arch.irq_clear);
-+	if (priority < EXCCODE_INT_NUM)
-+		irq = priority_to_irq[priority];
-+
-+	switch (priority) {
-+	case INT_TI:
-+	case INT_IPI:
-+	case INT_SWI0:
-+	case INT_SWI1:
-+		clear_gcsr_estat(irq);
-+		break;
-+
-+	case INT_HWI0 ... INT_HWI7:
-+		clear_csr_gintc(irq);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 1;
-+}
-+
-+void kvm_deliver_intr(struct kvm_vcpu *vcpu)
-+{
-+	unsigned int priority;
-+	unsigned long *pending = &vcpu->arch.irq_pending;
-+	unsigned long *pending_clr = &vcpu->arch.irq_clear;
-+
-+	if (!(*pending) && !(*pending_clr))
-+		return;
-+
-+	if (*pending_clr) {
-+		priority = __ffs(*pending_clr);
-+		while (priority <= INT_IPI) {
-+			kvm_irq_clear(vcpu, priority);
-+			priority = find_next_bit(pending_clr,
-+					BITS_PER_BYTE * sizeof(*pending_clr),
-+					priority + 1);
-+		}
-+	}
-+
-+	if (*pending) {
-+		priority = __ffs(*pending);
-+		while (priority <= INT_IPI) {
-+			kvm_irq_deliver(vcpu, priority);
-+			priority = find_next_bit(pending,
-+					BITS_PER_BYTE * sizeof(*pending),
-+					priority + 1);
-+		}
-+	}
-+}
-+
-+int kvm_pending_timer(struct kvm_vcpu *vcpu)
-+{
-+	return test_bit(INT_TI, &vcpu->arch.irq_pending);
-+}
-+
-+/*
-+ * Only support illegal instruction or illegal Address Error exception,
-+ * Other exceptions are injected by hardware in kvm mode
-+ */
-+static void _kvm_deliver_exception(struct kvm_vcpu *vcpu,
-+				unsigned int code, unsigned int subcode)
-+{
-+	unsigned long val, vec_size;
-+
-+	/*
-+	 * BADV is added for EXCCODE_ADE exception
-+	 *  Use PC register (GVA address) if it is instruction exeception
-+	 *  Else use BADV from host side (GPA address) for data exeception
-+	 */
-+	if (code == EXCCODE_ADE) {
-+		if (subcode == EXSUBCODE_ADEF)
-+			val = vcpu->arch.pc;
-+		else
-+			val = vcpu->arch.badv;
-+		kvm_write_hw_gcsr(LOONGARCH_CSR_BADV, val);
-+	}
-+
-+	/* Set exception instruction */
-+	kvm_write_hw_gcsr(LOONGARCH_CSR_BADI, vcpu->arch.badi);
-+
-+	/*
-+	 * Save CRMD in PRMD
-+	 * Set IRQ disabled and PLV0 with CRMD
-+	 */
-+	val = kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD);
-+	kvm_write_hw_gcsr(LOONGARCH_CSR_PRMD, val);
-+	val = val & ~(CSR_CRMD_PLV | CSR_CRMD_IE);
-+	kvm_write_hw_gcsr(LOONGARCH_CSR_CRMD, val);
-+
-+	/* Set exception PC address */
-+	kvm_write_hw_gcsr(LOONGARCH_CSR_ERA, vcpu->arch.pc);
-+
-+	/*
-+	 * Set exception code
-+	 * Exception and interrupt can be inject at the same time
-+	 * Hardware will handle exception first and then extern interrupt
-+	 * Exception code is Ecode in ESTAT[16:21]
-+	 * Interrupt code in ESTAT[0:12]
-+	 */
-+	val = kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT);
-+	val = (val & ~CSR_ESTAT_EXC) | code;
-+	kvm_write_hw_gcsr(LOONGARCH_CSR_ESTAT, val);
-+
-+	/* Calculate expcetion entry address */
-+	val = kvm_read_hw_gcsr(LOONGARCH_CSR_ECFG);
-+	vec_size = (val & CSR_ECFG_VS) >> CSR_ECFG_VS_SHIFT;
-+	if (vec_size)
-+		vec_size = (1 << vec_size) * 4;
-+	val =  kvm_read_hw_gcsr(LOONGARCH_CSR_EENTRY);
-+	vcpu->arch.pc = val + code * vec_size;
-+}
-+
-+void kvm_deliver_exception(struct kvm_vcpu *vcpu)
-+{
-+	unsigned int code;
-+	unsigned long *pending = &vcpu->arch.exception_pending;
-+
-+	if (*pending) {
-+		code = __ffs(*pending);
-+		_kvm_deliver_exception(vcpu, code, vcpu->arch.esubcode);
-+		*pending = 0;
-+		vcpu->arch.esubcode = 0;
-+	}
-+}
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 0f19c8b0c0..7576f5a735 100644
+index b16fe2913e..73d0c2b9c1 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -458,6 +458,44 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- 	preempt_enable();
+@@ -13,6 +13,23 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+ 
++const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
++	KVM_GENERIC_VCPU_STATS(),
++	STATS_DESC_COUNTER(VCPU, int_exits),
++	STATS_DESC_COUNTER(VCPU, idle_exits),
++	STATS_DESC_COUNTER(VCPU, cpucfg_exits),
++	STATS_DESC_COUNTER(VCPU, signal_exits),
++};
++
++const struct kvm_stats_header kvm_vcpu_stats_header = {
++	.name_size = KVM_STATS_NAME_SIZE,
++	.num_desc = ARRAY_SIZE(kvm_vcpu_stats_desc),
++	.id_offset = sizeof(struct kvm_stats_header),
++	.desc_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE,
++	.data_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE +
++		       sizeof(kvm_vcpu_stats_desc),
++};
++
+ /*
+  * kvm_check_requests - check and handle pending vCPU requests
+  *
+@@ -141,6 +158,109 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
+ 	return RESUME_GUEST;
  }
  
-+int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
++int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
 +{
-+	int intr = (int)irq->irq;
++	return !!(vcpu->arch.irq_pending) &&
++		vcpu->arch.mp_state.mp_state == KVM_MP_STATE_RUNNABLE;
++}
 +
-+	if (intr > 0)
-+		kvm_queue_irq(vcpu, intr);
-+	else if (intr < 0)
-+		kvm_dequeue_irq(vcpu, -intr);
-+	else {
-+		kvm_err("%s: invalid interrupt ioctl %d\n", __func__, irq->irq);
-+		return -EINVAL;
++int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
++{
++	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
++}
++
++bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
++{
++	return false;
++}
++
++vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
++{
++	return VM_FAULT_SIGBUS;
++}
++
++int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
++				  struct kvm_translation *tr)
++{
++	return -EINVAL;
++}
++
++int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return kvm_pending_timer(vcpu) ||
++		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) & (1 << INT_TI);
++}
++
++int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
++{
++	int i;
++
++	kvm_debug("vCPU Register Dump:\n");
++	kvm_debug("\tPC = 0x%08lx\n", vcpu->arch.pc);
++	kvm_debug("\tExceptions: %08lx\n", vcpu->arch.irq_pending);
++
++	for (i = 0; i < 32; i += 4) {
++		kvm_debug("\tGPR%02d: %08lx %08lx %08lx %08lx\n", i,
++		       vcpu->arch.gprs[i], vcpu->arch.gprs[i + 1],
++		       vcpu->arch.gprs[i + 2], vcpu->arch.gprs[i + 3]);
 +	}
 +
-+	kvm_vcpu_kick(vcpu);
++	kvm_debug("\tCRMD: 0x%08lx, ESTAT: 0x%08lx\n",
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD),
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT));
++
++	kvm_debug("\tERA: 0x%08lx\n", kvm_read_hw_gcsr(LOONGARCH_CSR_ERA));
 +
 +	return 0;
 +}
 +
-+long kvm_arch_vcpu_async_ioctl(struct file *filp,
-+			       unsigned int ioctl, unsigned long arg)
++int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
++				struct kvm_mp_state *mp_state)
 +{
-+	void __user *argp = (void __user *)arg;
-+	struct kvm_vcpu *vcpu = filp->private_data;
++	*mp_state = vcpu->arch.mp_state;
 +
-+	if (ioctl == KVM_INTERRUPT) {
-+		struct kvm_interrupt irq;
-+
-+		if (copy_from_user(&irq, argp, sizeof(irq)))
-+			return -EFAULT;
-+
-+		kvm_debug("[%d] %s: irq: %d\n", vcpu->vcpu_id, __func__, irq.irq);
-+
-+		return kvm_vcpu_ioctl_interrupt(vcpu, &irq);
-+	}
-+
-+	return -ENOIOCTLCMD;
++	return 0;
 +}
 +
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
++int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
++				struct kvm_mp_state *mp_state)
++{
++	int ret = 0;
++
++	switch (mp_state->mp_state) {
++	case KVM_MP_STATE_RUNNABLE:
++		vcpu->arch.mp_state = *mp_state;
++		break;
++	default:
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
++int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
++					struct kvm_guest_debug *dbg)
++{
++	return -EINVAL;
++}
++
++/**
++ * kvm_migrate_count() - Migrate timer.
++ * @vcpu:       Virtual CPU.
++ *
++ * Migrate hrtimer to the current CPU by cancelling and restarting it
++ * if the hrtimer is active.
++ *
++ * Must be called when the vCPU is migrated to a different CPU, so that
++ * the timer can interrupt the guest at the new CPU, and the timer irq can
++ * be delivered to the vCPU.
++ */
++static void kvm_migrate_count(struct kvm_vcpu *vcpu)
++{
++	if (hrtimer_cancel(&vcpu->arch.swtimer))
++		hrtimer_restart(&vcpu->arch.swtimer);
++}
++
+ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
  {
- 	return 0;
+ 	unsigned long gintc;
 -- 
 2.39.3
 
