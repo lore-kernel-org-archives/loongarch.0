@@ -1,78 +1,146 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 013B17466
-	for <loongarch@lists.linux.dev>; Wed, 27 Sep 2023 03:10:18 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dxg_ARnRNlwhctAA--.21242S3;
-	Wed, 27 Sep 2023 11:10:09 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd4InRNlhZETAA--.42466S27;
-	Wed, 27 Sep 2023 11:10:09 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	loongarch@lists.linux.dev,
-	Jens Axboe <axboe@kernel.dk>,
-	Mark Brown <broonie@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	maobibo@loongson.cn,
-	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v22 25/25] LoongArch: KVM: Add maintainers for LoongArch KVM
-Date: Wed, 27 Sep 2023 11:09:59 +0800
-Message-Id: <20230927030959.3629941-26-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230927030959.3629941-1-zhaotianrui@loongson.cn>
-References: <20230927030959.3629941-1-zhaotianrui@loongson.cn>
+Received: from wnew4-smtp.messagingengine.com (wnew4-smtp.messagingengine.com [64.147.123.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2546B1C298
+	for <loongarch@lists.linux.dev>; Wed, 27 Sep 2023 08:43:45 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailnew.west.internal (Postfix) with ESMTP id AD2CB2B00190;
+	Wed, 27 Sep 2023 04:43:40 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 27 Sep 2023 04:43:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm1; t=
+	1695804220; x=1695811420; bh=o7VjoUAbmEtRJA+8mE/ljFlKqx4X7034jZT
+	pRVdZN6U=; b=ADzfipzn1H6nvZj6IPUSg2e6bCMhLYRmEs66usghC3Y3gx5303Q
+	aTTmtJG0A0L9CHLezJhajL9yKQwYfnfAFiXMKhwusvHW50CG5uI5iEl7tt3E5O/c
+	109Prl9v1WY5Dz5zbA1UlVJNeFc9OyrqpbnS2acBLHAax7mj4JSazShKhZ2AKtL5
+	Kb+sO9zLKfRG70g6mMx2NTtBQwA5XqhQTr1ML37jliO1pEZ8oPvMjAfQWzjpeRwp
+	P93tKMWDgbtYnrHOA50hnF/3YZr7ca8sSU/zKOdnxmfL7uNzchYn4fxuizIz9Uwo
+	wSMlNWEE93us8pOvJ6bXAOtzDZ3Y1r8Dkqg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1695804220; x=1695811420; bh=o7VjoUAbmEtRJA+8mE/ljFlKqx4X7034jZT
+	pRVdZN6U=; b=T05vfZWD4SeZP01Wx6kQneLrsFr8U69yAe1OGWDRowa7yugQwJ3
+	94K12SDEFGNefEiYGYpscPNiz8fBtJOZO5fFMXK84Cq+DLpoiisAlVL+RurIMkNt
+	Nb2Kj7pvRYINg5vwBm6juNHbkdHU+vbRdM25KS0/MoCFoR7dMv4jNuYUJK728O7n
+	iuONNqsQxEpFoNEgNZeMqcSx2GySa1Mo1t3OXUYum79164XAx8pAzMB2VEr5DM4K
+	l2fTK2Za9USzPDJVwoXHD61JS9bNxlIY3Zqu64JfZbZVGMo1Hh9jhGdTq1v3tyYS
+	fgvfYIMPcx51AjviWxI9VX5zh0EwxD/MAaA==
+X-ME-Sender: <xms:OusTZTxl4DMJTP59c2KJ3iAewQQWbzZvdalDvbWGKOLzv2EzLdBGuA>
+    <xme:OusTZbQexVSnj58RtwR8RCEaMhCEDqGXO2BE_Mcdl6H_L2Irne_1ea8tvqBCQSDTq
+    Rq5c7228oHf_xSqDlE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvjedrtddvgddtjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
+    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:OusTZdUi1I6Gdh1mDxeBlJHg-Yno8M5T2KHxAbUCNM4lr_pKsVlrxA>
+    <xmx:OusTZdie3X4oFed4rWhvAe5IK10Jrbz1ltYCRBKW4lbI9_Q9epjx-A>
+    <xmx:OusTZVB2dhx1vK4otJlVYTjXkXX07gEQS0rDAla7iUQqudzIuChogw>
+    <xmx:POsTZXqlhNzvo9JMY5-8GSCqucFjQ1YuFjO0FqgTBEXKd9KEj2fANC8DefA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 30D92B60089; Wed, 27 Sep 2023 04:43:38 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-957-ga1ccdb4cff-fm-20230919.001-ga1ccdb4c
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxjd4InRNlhZETAA--.42466S27
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Message-Id: <1b2fddf8-c0a6-4afa-8ad0-f280dea1607f@app.fastmail.com>
+In-Reply-To: 
+ <CACPK8XeROYz_XaB3TvUhdXm7Vm8fjC8yU+mfvA58=_FiDrBy-g@mail.gmail.com>
+References: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
+ <CACPK8XeROYz_XaB3TvUhdXm7Vm8fjC8yU+mfvA58=_FiDrBy-g@mail.gmail.com>
+Date: Wed, 27 Sep 2023 10:43:16 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Joel Stanley" <joel@jms.id.au>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: "Leo Li" <leoyang.li@nxp.com>, "Herve Codina" <herve.codina@bootlin.com>,
+ "Qiang Zhao" <qiang.zhao@nxp.com>,
+ "Hitomi Hasegawa" <hasegawa-hitomi@fujitsu.com>,
+ "Huisong Li" <lihuisong@huawei.com>,
+ "Krzysztof Halasa" <khalasa@piap.pl>,
+ "Karol Gugala" <kgugala@antmicro.com>,
+ "Mateusz Holenko" <mholenko@antmicro.com>,
+ "Gabriel Somlo" <gsomlo@gmail.com>, "Yinbo Zhu" <zhuyinbo@loongson.cn>,
+ "Matthias Brugger" <matthias.bgg@gmail.com>,
+ "Conor.Dooley" <conor.dooley@microchip.com>,
+ "Daire McNamara" <daire.mcnamara@microchip.com>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+ "Andy Gross" <agross@kernel.org>,
+ "Bjorn Andersson" <andersson@kernel.org>,
+ "Konrad Dybcio" <konrad.dybcio@linaro.org>,
+ =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ "Thierry Reding" <thierry.reding@gmail.com>,
+ "Jon Hunter" <jonathanh@nvidia.com>, "Sumit Gupta" <sumitg@nvidia.com>,
+ "Shang XiaoJing" <shangxiaojing@huawei.com>,
+ "Muhammad Usama Anjum" <usama.anjum@collabora.com>,
+ "Rob Herring" <robh@kernel.org>, "Nishanth Menon" <nm@ti.com>,
+ "Santosh Shilimkar" <ssantosh@kernel.org>,
+ "Michal Simek" <michal.simek@amd.com>,
+ "Andrew Jeffery" <andrew@aj.id.au>, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ "Zev Weiss" <zev@bewilderbeest.net>, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev,
+ "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
+ linux-mediatek@lists.infradead.org, linux-riscv@lists.infradead.org,
+ "zhang.songyi" <zhang.songyi@zte.com.cn>,
+ "Lubomir Rintel" <lkundrak@v3.sk>, linux-arm-msm@vger.kernel.org,
+ linux-rockchip@lists.infradead.org,
+ "Alim Akhtar" <alim.akhtar@samsung.com>,
+ linux-samsung-soc@vger.kernel.org,
+ "Nick Alcock" <nick.alcock@oracle.com>,
+ "Yang Yingliang" <yangyingliang@huawei.com>, linux-tegra@vger.kernel.org,
+ linux-pm@vger.kernel.org, "Ruan Jinjie" <ruanjinjie@huawei.com>,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>
+Subject: Re: [PATCH 00/40] soc: Convert to platform remove callback returning void
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add maintainers for LoongArch KVM.
+On Wed, Sep 27, 2023, at 04:25, Joel Stanley wrote:
+> On Mon, 25 Sept 2023 at 09:55, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@=
+pengutronix.de> wrote:
+>>
+>> this series converts all platform drivers below drivers/soc to use
+>> .remove_new(). The motivation is to get rid of an integer return code
+>> that is (mostly) ignored by the platform driver core and error prone =
+on
+>> the driver side.
+>>
+>> See commit 5c5a7680e67b ("platform: Provide a remove callback that
+>> returns no value") for an extended explanation and the eventual goal.
+>>
+>> As there is no single maintainer team for drivers/soc, I suggest the
+>> individual maintainers to pick up "their" patches.
+>
+> I'd be happy if Arnd merged the lot at once. Arnd, what do you think?
+>
+> If that will be too messy then I understand. I have queued the aspeed
+> ones locally and will push that out if we decide that's the best way
+> to go.
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+The main downside of merging it all at once through the soc tree
+is that there may be patches that conflict with other work going on
+in individual drivers.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bf0f54c24f..2ff07a4ba5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11523,6 +11523,18 @@ F:	include/kvm/arm_*
- F:	tools/testing/selftests/kvm/*/aarch64/
- F:	tools/testing/selftests/kvm/aarch64/
- 
-+KERNEL VIRTUAL MACHINE FOR LOONGARCH (KVM/LoongArch)
-+M:	Tianrui Zhao <zhaotianrui@loongson.cn>
-+M:	Bibo Mao <maobibo@loongson.cn>
-+M:	Huacai Chen <chenhuacai@kernel.org>
-+L:	kvm@vger.kernel.org
-+L:	loongarch@lists.linux.dev
-+S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
-+F:	arch/loongarch/include/asm/kvm*
-+F:	arch/loongarch/include/uapi/asm/kvm*
-+F:	arch/loongarch/kvm/
-+
- KERNEL VIRTUAL MACHINE FOR MIPS (KVM/mips)
- M:	Huacai Chen <chenhuacai@kernel.org>
- L:	linux-mips@vger.kernel.org
--- 
-2.39.3
+What I'd suggest doing here is:
 
+- have platform maintainers pick up patches for their drivers
+  if that is their preference for any reason
+
+- get a pull request from Uwe for the soc tree for anything that has
+  not been picked up in one or two weeks from now
+
+      Arnd
