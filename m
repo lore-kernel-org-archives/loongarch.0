@@ -1,11 +1,11 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B4F26FC0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE0D6FB6
 	for <loongarch@lists.linux.dev>; Wed, 27 Sep 2023 03:10:13 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxbesPnRNlYBctAA--.18478S3;
+	by gateway (Coremail) with SMTP id _____8Bx5fAPnRNlbhctAA--.21310S3;
 	Wed, 27 Sep 2023 11:10:07 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd4InRNlhZETAA--.42466S18;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd4InRNlhZETAA--.42466S20;
 	Wed, 27 Sep 2023 11:10:07 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
@@ -23,9 +23,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v22 16/25] LoongArch: KVM: Implement handle iocsr exception
-Date: Wed, 27 Sep 2023 11:09:50 +0800
-Message-Id: <20230927030959.3629941-17-zhaotianrui@loongson.cn>
+Subject: [PATCH v22 18/25] LoongArch: KVM: Implement handle gspr exception
+Date: Wed, 27 Sep 2023 11:09:52 +0800
+Message-Id: <20230927030959.3629941-19-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230927030959.3629941-1-zhaotianrui@loongson.cn>
 References: <20230927030959.3629941-1-zhaotianrui@loongson.cn>
@@ -36,162 +36,136 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxjd4InRNlhZETAA--.42466S18
+X-CM-TRANSID:AQAAf8Cxjd4InRNlhZETAA--.42466S20
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implement kvm handle vcpu iocsr exception, setting the iocsr info into
-vcpu_run and return to user space to handle it.
+Implement kvm handle gspr exception interface, including emulate the
+reading and writing of cpucfg, csr, iocsr resource.
 
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Tested-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/include/asm/inst.h | 16 ++++++
- arch/loongarch/kvm/exit.c         | 91 +++++++++++++++++++++++++++++++
- 2 files changed, 107 insertions(+)
+ arch/loongarch/kvm/exit.c | 107 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 71e1ed4165..008a88ead6 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -65,6 +65,14 @@ enum reg2_op {
- 	revbd_op	= 0x0f,
- 	revh2w_op	= 0x10,
- 	revhd_op	= 0x11,
-+	iocsrrdb_op     = 0x19200,
-+	iocsrrdh_op     = 0x19201,
-+	iocsrrdw_op     = 0x19202,
-+	iocsrrdd_op     = 0x19203,
-+	iocsrwrb_op     = 0x19204,
-+	iocsrwrh_op     = 0x19205,
-+	iocsrwrw_op     = 0x19206,
-+	iocsrwrd_op     = 0x19207,
- };
- 
- enum reg2i5_op {
-@@ -318,6 +326,13 @@ struct reg2bstrd_format {
- 	unsigned int opcode : 10;
- };
- 
-+struct reg2csr_format {
-+	unsigned int rd : 5;
-+	unsigned int rj : 5;
-+	unsigned int csr : 14;
-+	unsigned int opcode : 8;
-+};
-+
- struct reg3_format {
- 	unsigned int rd : 5;
- 	unsigned int rj : 5;
-@@ -346,6 +361,7 @@ union loongarch_instruction {
- 	struct reg2i14_format	reg2i14_format;
- 	struct reg2i16_format	reg2i16_format;
- 	struct reg2bstrd_format	reg2bstrd_format;
-+	struct reg2csr_format   reg2csr_format;
- 	struct reg3_format	reg3_format;
- 	struct reg3sa2_format	reg3sa2_format;
- };
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 37bc8a4209..7e729dd9e9 100644
+index d4d7e74f72..33d1b4190a 100644
 --- a/arch/loongarch/kvm/exit.c
 +++ b/arch/loongarch/kvm/exit.c
-@@ -103,3 +103,94 @@ static int kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
+@@ -214,3 +214,110 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
  
  	return EMULATE_DONE;
  }
 +
-+int kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
++static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
 +{
-+	int ret;
-+	unsigned long val;
-+	u32 addr, rd, rj, opcode;
-+
-+	/*
-+	 * Each IOCSR with different opcode
-+	 */
-+	rd = inst.reg2_format.rd;
-+	rj = inst.reg2_format.rj;
-+	opcode = inst.reg2_format.opcode;
-+	addr = vcpu->arch.gprs[rj];
-+	ret = EMULATE_DO_IOCSR;
-+	run->iocsr_io.phys_addr = addr;
-+	run->iocsr_io.is_write = 0;
-+
-+	/* LoongArch is Little endian */
-+	switch (opcode) {
-+	case iocsrrdb_op:
-+		run->iocsr_io.len = 1;
-+		break;
-+	case iocsrrdh_op:
-+		run->iocsr_io.len = 2;
-+		break;
-+	case iocsrrdw_op:
-+		run->iocsr_io.len = 4;
-+		break;
-+	case iocsrrdd_op:
-+		run->iocsr_io.len = 8;
-+		break;
-+	case iocsrwrb_op:
-+		run->iocsr_io.len = 1;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrh_op:
-+		run->iocsr_io.len = 2;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrw_op:
-+		run->iocsr_io.len = 4;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrd_op:
-+		run->iocsr_io.len = 8;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	default:
-+		ret = EMULATE_FAIL;
-+		break;
-+	}
-+
-+	if (ret == EMULATE_DO_IOCSR) {
-+		if (run->iocsr_io.is_write) {
-+			val = vcpu->arch.gprs[rd];
-+			memcpy(run->iocsr_io.data, &val, run->iocsr_io.len);
-+		}
-+		vcpu->arch.io_gpr = rd;
-+	}
-+
-+	return ret;
-+}
-+
-+int kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
-+{
++	int rd, rj;
++	unsigned int index;
++	unsigned long curr_pc;
++	larch_inst inst;
 +	enum emulation_result er = EMULATE_DONE;
-+	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
++	struct kvm_run *run = vcpu->run;
 +
-+	switch (run->iocsr_io.len) {
-+	case 1:
-+		*gpr = *(s8 *)run->iocsr_io.data;
++	/* Fetch the instruction */
++	inst.word = vcpu->arch.badi;
++	curr_pc = vcpu->arch.pc;
++	update_pc(&vcpu->arch);
++
++	trace_kvm_exit_gspr(vcpu, inst.word);
++	er = EMULATE_FAIL;
++	switch (((inst.word >> 24) & 0xff)) {
++	case 0x0: /* CPUCFG GSPR */
++		if (inst.reg2_format.opcode == 0x1B) {
++			rd = inst.reg2_format.rd;
++			rj = inst.reg2_format.rj;
++			++vcpu->stat.cpucfg_exits;
++			index = vcpu->arch.gprs[rj];
++			er = EMULATE_DONE;
++			/*
++			 * By LoongArch Reference Manual 2.2.10.5
++			 * return value is 0 for undefined cpucfg index
++			 */
++			if (index < KVM_MAX_CPUCFG_REGS)
++				vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
++			else
++				vcpu->arch.gprs[rd] = 0;
++		}
 +		break;
-+	case 2:
-+		*gpr = *(s16 *)run->iocsr_io.data;
++	case 0x4: /* CSR{RD,WR,XCHG} GSPR */
++		er = kvm_handle_csr(vcpu, inst);
 +		break;
-+	case 4:
-+		*gpr = *(s32 *)run->iocsr_io.data;
-+		break;
-+	case 8:
-+		*gpr = *(s64 *)run->iocsr_io.data;
++	case 0x6: /* Cache, Idle and IOCSR GSPR */
++		switch (((inst.word >> 22) & 0x3ff)) {
++		case 0x18: /* Cache GSPR */
++			er = EMULATE_DONE;
++			trace_kvm_exit_cache(vcpu, KVM_TRACE_EXIT_CACHE);
++			break;
++		case 0x19: /* Idle/IOCSR GSPR */
++			switch (((inst.word >> 15) & 0x1ffff)) {
++			case 0xc90: /* IOCSR GSPR */
++				er = kvm_emu_iocsr(inst, run, vcpu);
++				break;
++			case 0xc91: /* Idle GSPR */
++				er = kvm_emu_idle(vcpu);
++				break;
++			default:
++				er = EMULATE_FAIL;
++				break;
++			}
++			break;
++		default:
++			er = EMULATE_FAIL;
++			break;
++		}
 +		break;
 +	default:
-+		kvm_err("Bad IOCSR length: %d, addr is 0x%lx\n",
-+				run->iocsr_io.len, vcpu->arch.badv);
 +		er = EMULATE_FAIL;
 +		break;
 +	}
 +
++	/* Rollback PC only if emulation was unsuccessful */
++	if (er == EMULATE_FAIL) {
++		kvm_err("[%#lx]%s: unsupported gspr instruction 0x%08x\n",
++			curr_pc, __func__, inst.word);
++
++		kvm_arch_vcpu_dump_regs(vcpu);
++		vcpu->arch.pc = curr_pc;
++	}
++
 +	return er;
++}
++
++/*
++ * Trigger GSPR:
++ * 1) Execute CPUCFG instruction;
++ * 2) Execute CACOP/IDLE instructions;
++ * 3) Access to unimplemented CSRs/IOCSRs.
++ */
++static int kvm_handle_gspr(struct kvm_vcpu *vcpu)
++{
++	int ret = RESUME_GUEST;
++	enum emulation_result er = EMULATE_DONE;
++
++	er = kvm_trap_handle_gspr(vcpu);
++
++	if (er == EMULATE_DONE) {
++		ret = RESUME_GUEST;
++	} else if (er == EMULATE_DO_MMIO) {
++		vcpu->run->exit_reason = KVM_EXIT_MMIO;
++		ret = RESUME_HOST;
++	} else if (er == EMULATE_DO_IOCSR) {
++		vcpu->run->exit_reason = KVM_EXIT_LOONGARCH_IOCSR;
++		ret = RESUME_HOST;
++	} else {
++		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
++		ret = RESUME_GUEST;
++	}
++
++	return ret;
 +}
 -- 
 2.39.3
