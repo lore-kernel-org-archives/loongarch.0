@@ -1,119 +1,158 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F129379CC
-	for <loongarch@lists.linux.dev>; Thu, 28 Sep 2023 04:04:31 +0000 (UTC)
-Received: from loongson.cn (unknown [10.40.46.158])
-	by gateway (Coremail) with SMTP id _____8BxIvBM+xRliawtAA--.21179S3;
-	Thu, 28 Sep 2023 12:04:29 +0800 (CST)
-Received: from [192.168.124.126] (unknown [10.40.46.158])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxvi9K+xRlXwEVAA--.43483S3;
-	Thu, 28 Sep 2023 12:04:28 +0800 (CST)
-Subject: Re: [PATCH v2 3/4] KVM: selftests: Add ucall test support for
- LoongArch
-To: Sean Christopherson <seanjc@google.com>
-Cc: Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Vishal Annapurve <vannapurve@google.com>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Peter Xu <peterx@redhat.com>,
- Vipin Sharma <vipinsh@google.com>, maobibo@loongson.cn
-References: <20230807065137.3408970-1-zhaotianrui@loongson.cn>
- <20230807065137.3408970-4-zhaotianrui@loongson.cn>
- <ZRSWlqS3zQBSLFVK@google.com>
-From: zhaotianrui <zhaotianrui@loongson.cn>
-Message-ID: <8ac800d7-144d-22f4-fe2c-206aecc9a5dd@loongson.cn>
-Date: Thu, 28 Sep 2023 12:04:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3C04403
+	for <loongarch@lists.linux.dev>; Thu, 28 Sep 2023 06:15:29 +0000 (UTC)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1qlkIf-0005M7-3R; Thu, 28 Sep 2023 08:15:01 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1qlkIT-009W0C-Oq; Thu, 28 Sep 2023 08:14:49 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1qlkIT-005Ytu-DX; Thu, 28 Sep 2023 08:14:49 +0200
+Date: Thu, 28 Sep 2023 08:14:49 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Nishanth Menon <nm@ti.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
+	Mateusz Holenko <mholenko@antmicro.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	linux-tegra@vger.kernel.org,
+	"Conor.Dooley" <conor.dooley@microchip.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-riscv@lists.infradead.org,
+	Karol Gugala <kgugala@antmicro.com>,
+	Qiang Zhao <qiang.zhao@nxp.com>,
+	Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+	Rob Herring <robh@kernel.org>, linux-samsung-soc@vger.kernel.org,
+	linux-aspeed@lists.ozlabs.org, Ruan Jinjie <ruanjinjie@huawei.com>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>, Jon Hunter <jonathanh@nvidia.com>,
+	linux-rockchip@lists.infradead.org,
+	Gabriel Somlo <gsomlo@gmail.com>, Andy Gross <agross@kernel.org>,
+	Huisong Li <lihuisong@huawei.com>, Joel Stanley <joel@jms.id.au>,
+	Sumit Gupta <sumitg@nvidia.com>,
+	"zhang.songyi" <zhang.songyi@zte.com.cn>,
+	Zev Weiss <zev@bewilderbeest.net>, linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Lubomir Rintel <lkundrak@v3.sk>, Krzysztof Halasa <khalasa@piap.pl>,
+	loongarch@lists.linux.dev, Santosh Shilimkar <ssantosh@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Michal Simek <michal.simek@amd.com>,
+	linux-arm-kernel@lists.infradead.org,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	linux-kernel@vger.kernel.org,
+	Shang XiaoJing <shangxiaojing@huawei.com>,
+	Leo Li <leoyang.li@nxp.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Andrew Jeffery <andrew@aj.id.au>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	linux-mediatek@lists.infradead.org,
+	Nick Alcock <nick.alcock@oracle.com>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 00/40] soc: Convert to platform remove callback returning
+ void
+Message-ID: <20230928061449.xxqhyyrg6e357dn2@pengutronix.de>
+References: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
+ <CACPK8XeROYz_XaB3TvUhdXm7Vm8fjC8yU+mfvA58=_FiDrBy-g@mail.gmail.com>
+ <1b2fddf8-c0a6-4afa-8ad0-f280dea1607f@app.fastmail.com>
+ <f4hvrslynlgmxu4a2gogc5idvumskhaalxgwildy56yqk2wz7d@lkh4swkv52mi>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ZRSWlqS3zQBSLFVK@google.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Dxvi9K+xRlXwEVAA--.43483S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxurW7Kw4Uur43uF1ktF4UZFc_yoW5Jw4kpa
-	4kC3W5Kr4rKry7AasxXw1vq3WSyrZ7KF4rZr1ayryF9wsFyr1fAr1fKF1jkFy5ua4vgr1k
-	ZFn2gwnIkF1qk3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUzksgUU
-	UUU
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yfll6esgccshw4fu"
+Content-Disposition: inline
+In-Reply-To: <f4hvrslynlgmxu4a2gogc5idvumskhaalxgwildy56yqk2wz7d@lkh4swkv52mi>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: loongarch@lists.linux.dev
 
 
-ÔÚ 2023/9/28 ÉÏÎç4:54, Sean Christopherson Ð´µÀ:
-> On Mon, Aug 07, 2023, Tianrui Zhao wrote:
->> Add ucall test support for LoongArch. A ucall is a "hypercall to
->> userspace".
-> Nit, can you explain why LoongArch uses MMIO to trigger ucall, and what alternatives
-> were considred (if any)?  The main reason for the ask is because we've tossed
-> around the idea of converting all architectures (except s390) to MMIO-based ucall
-> in order to reduce the number of "flavors" of ucall we have to worry about it.
-> If MMIO is the only reasonable choice for LoongArch, that's another reason to
-> double down on MMIO as the primary choice for ucall.
-Thanks for your reminding about ucall, and our guest can also use 
-hypercall instruction to trigger ucall, so this change will not affect us.
+--yfll6esgccshw4fu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
-Tianrui Zhao
->
->> Based-on: <20230803022138.2736430-1-zhaotianrui@loongson.cn>
->> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
->> ---
->>   .../selftests/kvm/lib/loongarch/ucall.c       | 43 +++++++++++++++++++
->>   1 file changed, 43 insertions(+)
->>   create mode 100644 tools/testing/selftests/kvm/lib/loongarch/ucall.c
->>
->> diff --git a/tools/testing/selftests/kvm/lib/loongarch/ucall.c b/tools/testing/selftests/kvm/lib/loongarch/ucall.c
->> new file mode 100644
->> index 000000000000..72868ddec313
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/lib/loongarch/ucall.c
->> @@ -0,0 +1,43 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * ucall support. A ucall is a "hypercall to userspace".
->> + *
->> + */
->> +#include "kvm_util.h"
->> +
->> +/*
->> + * ucall_exit_mmio_addr holds per-VM values (global data is duplicated by each
->> + * VM), it must not be accessed from host code.
->> + */
->> +static vm_vaddr_t *ucall_exit_mmio_addr;
->> +
->> +void ucall_arch_init(struct kvm_vm *vm, vm_paddr_t mmio_gpa)
->> +{
->> +	vm_vaddr_t mmio_gva = vm_vaddr_unused_gap(vm, vm->page_size, KVM_UTIL_MIN_VADDR);
->> +
->> +	virt_map(vm, mmio_gva, mmio_gpa, 1);
->> +
->> +	vm->ucall_mmio_addr = mmio_gpa;
->> +
->> +	write_guest_global(vm, ucall_exit_mmio_addr, (vm_vaddr_t *)mmio_gva);
->> +}
->> +
->> +void ucall_arch_do_ucall(vm_vaddr_t uc)
->> +{
->> +	WRITE_ONCE(*ucall_exit_mmio_addr, uc);
-> Another uber nit, you might want to put this in the header as a static inline to
-> avoid function calls.  I doubt it'll actually matter, but we've had enough weird,
-> hard-to-debug issues with ucall that minimizing the amount of generated code might
-> save some future pain.
+On Wed, Sep 27, 2023 at 04:01:58PM -0700, Bjorn Andersson wrote:
+> On Wed, Sep 27, 2023 at 10:43:16AM +0200, Arnd Bergmann wrote:
+> > On Wed, Sep 27, 2023, at 04:25, Joel Stanley wrote:
+> > > On Mon, 25 Sept 2023 at 09:55, Uwe Kleine-K=F6nig <u.kleine-koenig@pe=
+ngutronix.de> wrote:
+> > >>
+> > >> this series converts all platform drivers below drivers/soc to use
+> > >> .remove_new(). The motivation is to get rid of an integer return code
+> > >> that is (mostly) ignored by the platform driver core and error prone=
+ on
+> > >> the driver side.
+> > >>
+> > >> See commit 5c5a7680e67b ("platform: Provide a remove callback that
+> > >> returns no value") for an extended explanation and the eventual goal.
+> > >>
+> > >> As there is no single maintainer team for drivers/soc, I suggest the
+> > >> individual maintainers to pick up "their" patches.
+> > >
+> > > I'd be happy if Arnd merged the lot at once. Arnd, what do you think?
+> > >
+> > > If that will be too messy then I understand. I have queued the aspeed
+> > > ones locally and will push that out if we decide that's the best way
+> > > to go.
+> >=20
+> > The main downside of merging it all at once through the soc tree
+> > is that there may be patches that conflict with other work going on
+> > in individual drivers.
+> >=20
+> > What I'd suggest doing here is:
+> >=20
+> > - have platform maintainers pick up patches for their drivers
+> >   if that is their preference for any reason
+>=20
+> I'd prefer this for the qcom drivers at least, please let me know if you
+> would like me to proceed.
 
+I can send a pull request as Arnd suggested. So iff you want the qcom
+drivers not be a part of that PR, just make sure they appear in next
+during the next week. :-)
+
+(I'm not sure if "this" in your last quoted sentence is "platform
+maintainers pick up" or "merging it all at once through the soc tree". I
+think you mean the former. Still if you don't want me to pick up the
+qcom patches and won't manage to make them appear in next via your tree,
+I ask you to tell me explicitly to skip these in my PR.)
+
+Best regards and thanks,
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--yfll6esgccshw4fu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUVGdgACgkQj4D7WH0S
+/k4H8ggAlzMNhL51l548JwUtvGIKaakJoHBLPcGIj/hsCvofuN0HLiMSEtj8Dg6K
+8y1eWVR1Yl+MqkggqjwkOCCy2eX7GYvKXYBRynjaryEtuaE5wSH09zlTWvWBc/ac
+XaBPBsvT6wrBDQBNG9hy4EuMwz7hTRZqp6r0nJV4SSrnor+Lh3EgudImNy82xdmh
+qewYGPdP1R2M1dIIvRSxcLGWHQike9Rti3B8LNTQOTOKB4RrnNfwmPZAk+6LSRAW
+ArlW9S66AzVOe1E5gY70pi4VTQ8AmegEFPOJf3ZqPVAr5s/FYfmxf7GUUM/j/BMh
+7vHOjZMrtO+JkBW/lzWwgV6oKIHgtA==
+=TaoJ
+-----END PGP SIGNATURE-----
+
+--yfll6esgccshw4fu--
