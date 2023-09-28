@@ -1,102 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013CC1CA84
-	for <loongarch@lists.linux.dev>; Wed, 27 Sep 2023 22:57:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E53C9C433C7;
-	Wed, 27 Sep 2023 22:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695855467;
-	bh=U6mvGN6IUsN3aQ3Mg+rtFDHole4TLUqxeXU4RuqCc9I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BghfInz1dtGj+a0NwGrQpQyiHTPQFE7pGKytrpsBClpu9NX2eDcjSChVYZmAF6XDB
-	 owkxfj0jdteMSoWlG/cGItYI7rwQRUHp8gvgTfu6LqVuG2Ju3NmaLW+PzihWROGETC
-	 8im2c1V6bhHXdTgg2FyeVqoOoGl2C9rGCm7cO+QnD4KASaYNOMS1b5kWe3RD3hlBwa
-	 8K94UVok49+wD2jCK35a7ooWNY6CyXEsRolTaaTlHbmMq6gapMGZ2q5sD3ePlXHOQS
-	 huIRK9HVFU8DWh9mV8DVS8hYOkca+rRCVDtybY9i3VxzNc3SAJ8sCy+Qm1xR/Ceo4m
-	 4kcCfJF20jzJQ==
-Date: Wed, 27 Sep 2023 16:01:58 -0700
-From: Bjorn Andersson <andersson@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Joel Stanley <joel@jms.id.au>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Leo Li <leoyang.li@nxp.com>, 
-	Herve Codina <herve.codina@bootlin.com>, Qiang Zhao <qiang.zhao@nxp.com>, 
-	Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>, Huisong Li <lihuisong@huawei.com>, 
-	Krzysztof Halasa <khalasa@piap.pl>, Karol Gugala <kgugala@antmicro.com>, 
-	Mateusz Holenko <mholenko@antmicro.com>, Gabriel Somlo <gsomlo@gmail.com>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	"Conor.Dooley" <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Andy Gross <agross@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, 
-	Sumit Gupta <sumitg@nvidia.com>, Shang XiaoJing <shangxiaojing@huawei.com>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, Rob Herring <robh@kernel.org>, Nishanth Menon <nm@ti.com>, 
-	Santosh Shilimkar <ssantosh@kernel.org>, Michal Simek <michal.simek@amd.com>, 
-	Andrew Jeffery <andrew@aj.id.au>, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Zev Weiss <zev@bewilderbeest.net>, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-mediatek@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, "zhang.songyi" <zhang.songyi@zte.com.cn>, 
-	Lubomir Rintel <lkundrak@v3.sk>, linux-arm-msm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, Alim Akhtar <alim.akhtar@samsung.com>, 
-	linux-samsung-soc@vger.kernel.org, Nick Alcock <nick.alcock@oracle.com>, 
-	Yang Yingliang <yangyingliang@huawei.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Ruan Jinjie <ruanjinjie@huawei.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH 00/40] soc: Convert to platform remove callback returning
- void
-Message-ID: <f4hvrslynlgmxu4a2gogc5idvumskhaalxgwildy56yqk2wz7d@lkh4swkv52mi>
-References: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
- <CACPK8XeROYz_XaB3TvUhdXm7Vm8fjC8yU+mfvA58=_FiDrBy-g@mail.gmail.com>
- <1b2fddf8-c0a6-4afa-8ad0-f280dea1607f@app.fastmail.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D36B61872
+	for <loongarch@lists.linux.dev>; Thu, 28 Sep 2023 02:14:49 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Dxg_CQ4RRlV6ItAA--.22270S3;
+	Thu, 28 Sep 2023 10:14:41 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axzy+Q4RRlNecUAA--.43050S2;
+	Thu, 28 Sep 2023 10:14:40 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Share the same pmd between vDSO space and stack
+Date: Thu, 28 Sep 2023 10:14:40 +0800
+Message-Id: <20230928021440.698982-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1b2fddf8-c0a6-4afa-8ad0-f280dea1607f@app.fastmail.com>
+X-CM-TRANSID:AQAAf8Axzy+Q4RRlNecUAA--.43050S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw48KrW5JF43AFWkXw13trc_yoWrZw4kpF
+	ZrCFs7XrWUGr97Kry7tw1kWr15Jas7Kw42ga12y393AF1YqF13Zw1kAryDZF4UtanY9a10
+	gFyfKrZ09a15XwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxU74lkDUUUU
 
-On Wed, Sep 27, 2023 at 10:43:16AM +0200, Arnd Bergmann wrote:
-> On Wed, Sep 27, 2023, at 04:25, Joel Stanley wrote:
-> > On Mon, 25 Sept 2023 at 09:55, Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
-> >>
-> >> this series converts all platform drivers below drivers/soc to use
-> >> .remove_new(). The motivation is to get rid of an integer return code
-> >> that is (mostly) ignored by the platform driver core and error prone on
-> >> the driver side.
-> >>
-> >> See commit 5c5a7680e67b ("platform: Provide a remove callback that
-> >> returns no value") for an extended explanation and the eventual goal.
-> >>
-> >> As there is no single maintainer team for drivers/soc, I suggest the
-> >> individual maintainers to pick up "their" patches.
-> >
-> > I'd be happy if Arnd merged the lot at once. Arnd, what do you think?
-> >
-> > If that will be too messy then I understand. I have queued the aspeed
-> > ones locally and will push that out if we decide that's the best way
-> > to go.
-> 
-> The main downside of merging it all at once through the soc tree
-> is that there may be patches that conflict with other work going on
-> in individual drivers.
-> 
-> What I'd suggest doing here is:
-> 
-> - have platform maintainers pick up patches for their drivers
->   if that is their preference for any reason
-> 
+Currently vDSO virtual address space is randomed within range 64M
+below TASK_SIZE, and the next is stack space randomed within generic
+range 8M. so vDSO space uses different pmd entry with stack.
 
-I'd prefer this for the qcom drivers at least, please let me know if you
-would like me to proceed.
+With idea from x86, vDSO space can share the same pmd entry with
+stack, only that randomed range is smaller than before. This will
+save one PTE page for every thread.
 
-Regards,
-Bjorn
+Also this patch removes ____cacheline_aligned_in_smp property for
+vdso_pcpu_data structure, cache line aligned property for small size
+is generally used for frequently modified data like lock to avoid
+cache-thrashing on smp system. The struct element node is almost constant
+in struct vdso_pcpu_data, so cache line aligned property is not
+necessary, and it will use more memory.
 
-> - get a pull request from Uwe for the soc tree for anything that has
->   not been picked up in one or two weeks from now
-> 
->       Arnd
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/processor.h |  2 --
+ arch/loongarch/include/asm/vdso/vdso.h |  2 +-
+ arch/loongarch/kernel/process.c        |  4 ---
+ arch/loongarch/kernel/vdso.c           | 44 +++++++++++++++++++++-----
+ 4 files changed, 37 insertions(+), 15 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+index c3bc44b5f5b3..5870b2785968 100644
+--- a/arch/loongarch/include/asm/processor.h
++++ b/arch/loongarch/include/asm/processor.h
+@@ -43,8 +43,6 @@
+ 
+ #endif
+ 
+-#define VDSO_RANDOMIZE_SIZE	(TASK_IS_32BIT_ADDR ? SZ_1M : SZ_64M)
+-
+ unsigned long stack_top(void);
+ #define STACK_TOP stack_top()
+ 
+diff --git a/arch/loongarch/include/asm/vdso/vdso.h b/arch/loongarch/include/asm/vdso/vdso.h
+index 5a12309d9fb5..d57de1887bb2 100644
+--- a/arch/loongarch/include/asm/vdso/vdso.h
++++ b/arch/loongarch/include/asm/vdso/vdso.h
+@@ -12,7 +12,7 @@
+ 
+ struct vdso_pcpu_data {
+ 	u32 node;
+-} ____cacheline_aligned_in_smp;
++};
+ 
+ struct loongarch_vdso_data {
+ 	struct vdso_pcpu_data pdata[NR_CPUS];
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 767d94cce0de..059e52d59297 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -296,10 +296,6 @@ unsigned long stack_top(void)
+ 	top -= PAGE_ALIGN(current->thread.vdso->size);
+ 	top -= VVAR_SIZE;
+ 
+-	/* Space to randomize the VDSO base */
+-	if (current->flags & PF_RANDOMIZE)
+-		top -= VDSO_RANDOMIZE_SIZE;
+-
+ 	return top;
+ }
+ 
+diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+index 14941e4be66d..5cc27c12dce1 100644
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -148,16 +148,44 @@ int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
+ }
+ #endif
+ 
+-static unsigned long vdso_base(void)
++/*
++ * Put the vdso above the (randomized) stack with another randomized
++ * offset.  This way there is no hole in the middle of address space.
++ * To save memory make sure it is still in the same PTE as the stack
++ * top.  This doesn't give that many random bits.
++ *
++ * Note that this algorithm is imperfect: the distribution of the vdso
++ * start address within a PMD is biased toward the end.
++ */
++static unsigned long vdso_addr(unsigned long start, unsigned int len)
+ {
+-	unsigned long base = STACK_TOP;
++	unsigned long addr, end;
++	unsigned long offset;
+ 
+-	if (current->flags & PF_RANDOMIZE) {
+-		base += get_random_u32_below(VDSO_RANDOMIZE_SIZE);
+-		base = PAGE_ALIGN(base);
+-	}
++	/*
++	 * Round up the start address.  It can start out unaligned as a result
++	 * of stack start randomization.
++	 */
++	start = PAGE_ALIGN(start);
+ 
+-	return base;
++	/* Round the lowest possible end address up to a PMD boundary. */
++	end = (start + len + PMD_SIZE - 1) & PMD_MASK;
++	if (end >= TASK_SIZE)
++		end = TASK_SIZE;
++	end -= len;
++
++	if (end > start) {
++		offset = get_random_u32_below((end - start) >> PAGE_SHIFT);
++		addr = start + (offset << PAGE_SHIFT);
++	} else
++		addr = start;
++
++	return addr;
++}
++
++static inline unsigned long vdso_base(unsigned int len)
++{
++	return vdso_addr(current->mm->start_stack, len);
+ }
+ 
+ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+@@ -177,7 +205,7 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 	 */
+ 	size = VVAR_SIZE + info->size;
+ 
+-	data_addr = get_unmapped_area(NULL, vdso_base(), size, 0, 0);
++	data_addr = get_unmapped_area(NULL, vdso_base(size), size, 0, 0);
+ 	if (IS_ERR_VALUE(data_addr)) {
+ 		ret = data_addr;
+ 		goto out;
+-- 
+2.39.3
+
