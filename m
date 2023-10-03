@@ -1,96 +1,76 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD366199AF
-	for <loongarch@lists.linux.dev>; Mon,  2 Oct 2023 14:22:05 +0000 (UTC)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 392EDi1r029079;
-	Mon, 2 Oct 2023 09:13:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1696256024;
-	bh=9xwbB9UUJNHYGsvOL2OWasF1jedaAyNp2p7Cekqs654=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=By/tIsGE+iOxh5Xc+vk8G7bJIcgKrRMlPYXZHcFUKin/3+STUwGcSbwHAlEJAygAg
-	 cYX4zyPPw/iOWY5DN75uQdDwGYBXfP8SBN+kqJyxUMDBGrYpXulQ+jDabJRfTmMu9G
-	 DJaTDmzj2DXwuD/TrpxGcgigx7G0iwH+ZRX59CSI=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 392EDiPN020538
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 2 Oct 2023 09:13:44 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 2
- Oct 2023 09:13:44 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 2 Oct 2023 09:13:44 -0500
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-	by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 392EDhKD007764;
-	Mon, 2 Oct 2023 09:13:44 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Joel Stanley <joel@jms.id.au>, Li Yang <leoyang.li@nxp.com>,
-        Herve Codina
-	<herve.codina@bootlin.com>,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        Hitomi Hasegawa
-	<hasegawa-hitomi@fujitsu.com>,
-        Huisong Li <lihuisong@huawei.com>, Krzysztof
- Halasa <khalasa@piap.pl>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz
- Holenko <mholenko@antmicro.com>,
-        Gabriel Somlo <gsomlo@gmail.com>, Yinbo Zhu
-	<zhuyinbo@loongson.cn>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Conor
- Dooley <conor.dooley@microchip.com>,
-        Daire McNamara
-	<daire.mcnamara@microchip.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn
- Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Sumit Gupta <sumitg@nvidia.com>,
-        Shang XiaoJing <shangxiaojing@huawei.com>,
-        Muhammad Usama Anjum
-	<usama.anjum@collabora.com>,
-        Rob Herring <robh@kernel.org>,
-        Santosh Shilimkar
-	<ssantosh@kernel.org>,
-        Michal Simek <michal.simek@amd.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-CC: Nishanth Menon <nm@ti.com>, Andrew Jeffery <andrew@aj.id.au>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Zev Weiss
-	<zev@bewilderbeest.net>,
-        <linuxppc-dev@lists.ozlabs.org>, <loongarch@lists.linux.dev>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-riscv@lists.infradead.org>,
-        zhang songyi <zhang.songyi@zte.com.cn>,
-        Lubomir Rintel <lkundrak@v3.sk>, <linux-arm-msm@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        Alim
- Akhtar <alim.akhtar@samsung.com>,
-        <linux-samsung-soc@vger.kernel.org>,
-        Nick
- Alcock <nick.alcock@oracle.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        <linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        Ruan Jinjie
-	<ruanjinjie@huawei.com>, <kernel@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F852365
+	for <loongarch@lists.linux.dev>; Tue,  3 Oct 2023 01:06:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EB4C433C8;
+	Tue,  3 Oct 2023 01:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696295161;
+	bh=F4f0krFznweIk4taQ98VjdjNBbxdo6qbxD3mNrr0nSM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Qjo96mCWqTKW7xGjcbugvTHPxzMEDCajwcw1va4Y2FbcHxO3ZcGKJhTfC83106ARL
+	 tU6n9aOW7ZWhDLjnQiboRRQ82EVD3td822hvni2XK2g9yNk3HSm2Ur7Z555ck5rG+o
+	 12dhoHDmpsg6GbUi7vFsQpePSjmL7y7isIq5rL6cYanqyxddTPGOhvh9UX6i8cVIA7
+	 ZNczfsHMS606tgeAt9grrKxT2FqCR0UULw6bIjRTIClFh9JhkLAVjJWQ9lZKETlzhR
+	 YTYWmLkKqRpNbxBQIivk0G2e/6Y+0MGkQudKU03TMbdV9ij8lvPLibuVE8O1+k6oVB
+	 UoMFwMLszD8rA==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Joel Stanley <joel@jms.id.au>,
+	Li Yang <leoyang.li@nxp.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Qiang Zhao <qiang.zhao@nxp.com>,
+	Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+	Huisong Li <lihuisong@huawei.com>,
+	Krzysztof Halasa <khalasa@piap.pl>,
+	Karol Gugala <kgugala@antmicro.com>,
+	Mateusz Holenko <mholenko@antmicro.com>,
+	Gabriel Somlo <gsomlo@gmail.com>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andy Gross <agross@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Sumit Gupta <sumitg@nvidia.com>,
+	Shang XiaoJing <shangxiaojing@huawei.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Andrew Jeffery <andrew@aj.id.au>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Zev Weiss <zev@bewilderbeest.net>,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mediatek@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	zhang songyi <zhang.songyi@zte.com.cn>,
+	Lubomir Rintel <lkundrak@v3.sk>,
+	linux-arm-msm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-samsung-soc@vger.kernel.org,
+	Nick Alcock <nick.alcock@oracle.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	linux-tegra@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Ruan Jinjie <ruanjinjie@huawei.com>,
+	kernel@pengutronix.de
 Subject: Re: (subset) [PATCH 00/40] soc: Convert to platform remove callback returning void
-Date: Mon, 2 Oct 2023 09:13:43 -0500
-Message-ID: <169625598637.2878306.1181893226380989815.b4-ty@ti.com>
-X-Mailer: git-send-email 2.40.0
+Date: Mon,  2 Oct 2023 18:10:02 -0700
+Message-ID: <169629539848.1944895.16954663145011378401.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
 References: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
@@ -101,9 +81,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Uwe Kleine-König,
 
 On Mon, 25 Sep 2023 11:54:51 +0200, Uwe Kleine-König wrote:
 > this series converts all platform drivers below drivers/soc to use
@@ -116,43 +94,33 @@ On Mon, 25 Sep 2023 11:54:51 +0200, Uwe Kleine-König wrote:
 > 
 > [...]
 
-I have applied the following to branch ti-drivers-soc-next on [1].
-Thank you!
+Applied, thanks!
 
-[33/40] soc/ti: k3-ringacc: Convert to platform remove callback returning void
-        commit: f34b902c5ba67841902cd7f0e24e64bb82f69cb4
-[34/40] soc/ti: knav_dma: Convert to platform remove callback returning void
-        commit: 3af4ec7c7dd39a2c4618f6536b2e7b73a19be169
-[35/40] soc/ti: knav_qmss_queue: Convert to platform remove callback returning void
-        commit: af97160a0c5f1908c6f2830023fb93baac4451d3
-[36/40] soc/ti: pm33xx: Convert to platform remove callback returning void
-        commit: 9eb950e9fffc5337bfe1798cf89ce4d97a4f1221
-[37/40] soc/ti: pruss: Convert to platform remove callback returning void
-        commit: d183b20d340b7c098f44cb5c02f4ced01cfd0b16
-[38/40] soc/ti: smartreflex: Convert to platform remove callback returning void
-        commit: ba03aab9bfb4c9d456419da3891375d45c6bfe15
-[39/40] soc/ti: wkup_m3_ipc: Convert to platform remove callback returning void
-        commit: 82e83cb51c87b5bf3ab83f7c7b150c19400056c2
+[18/40] soc/qcom: icc-bwmon: Convert to platform remove callback returning void
+        commit: dd714c568ed4e6f79017be45077de71e9908af03
+[19/40] soc/qcom: llcc-qcom: Convert to platform remove callback returning void
+        commit: d85a9d18a58156fc8b5ab185e00e078adaaeefde
+[20/40] soc/qcom: ocmem: Convert to platform remove callback returning void
+        commit: 0b742c498bcd7d215501b10fe9df72a16237735a
+[21/40] soc/qcom: pmic_glink: Convert to platform remove callback returning void
+        commit: 4b3373e42dc2caa34394ac090c8c70bed49badd6
+[22/40] soc/qcom: qcom_aoss: Convert to platform remove callback returning void
+        commit: ffbe84a514f863a46a85c1e47b2b6d930b1b463e
+[23/40] soc/qcom: qcom_gsbi: Convert to platform remove callback returning void
+        commit: 57b31729bd2c72b00d400106e18db91e9d95d3c3
+[24/40] soc/qcom: qcom_stats: Convert to platform remove callback returning void
+        commit: a47ff90bf2f93ce4ca99858948a74a0c10a2bc45
+[25/40] soc/qcom: rmtfs_mem: Convert to platform remove callback returning void
+        commit: 7c93da5b8b69d4e4e7270c33ba3206af43930e1d
+[26/40] soc/qcom: smem: Convert to platform remove callback returning void
+        commit: 4b8dee9a34d51a61f60add996fae6a7140a20ae5
+[27/40] soc/qcom: smp2p: Convert to platform remove callback returning void
+        commit: 1cd966c2dc19654ed08c843e5c933db8c1349636
+[28/40] soc/qcom: smsm: Convert to platform remove callback returning void
+        commit: bdd7cc62cf69fe989557445d65d6c8cb2f956518
+[29/40] soc/qcom: socinfo: Convert to platform remove callback returning void
+        commit: c0989f7d1264b2b1885345a28a32fd5e1e61f9c7
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+Best regards,
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
-
+Bjorn Andersson <andersson@kernel.org>
