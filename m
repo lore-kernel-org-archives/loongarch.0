@@ -1,123 +1,100 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2279A31A96
-	for <loongarch@lists.linux.dev>; Tue,  3 Oct 2023 14:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=XQksk7pyvzZ6898twTFuY7ew23wLu3w3rS0ARfVw3k4=; b=WlrkJSyKlNE8OwZSxon9XsxAdz
-	ASx702dgd0uiF2J3NXC8vaNCH/q+u2wPNN+6oZVHo8cY5V8ZdankY0xk2rou5ypVnd8uNw0lVfgQ0
-	ZnBHFMzGxJDzYFKo23XDs5VZq4WzkkYSKYCNH8u7rErL0Nj+yCGtAgeKAoAdbyWvRJAgRvKu1i4ts
-	ZO+Y1/kFUR+5AfRk65vlNPA9XjR/LB37rlwNrYyDBS67mgDtOEn5IqMpRecIg0GHZej5mVDilaOpU
-	OPsTIE67HUWOn2EcQWB11jsSWIqr9q/XC1tVdmPrkntyomoSbaGo9mN/l0CdlZ4t8HDoJkWt7OJGI
-	9PHLc/CQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39002)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qngUG-0001rW-1u;
-	Tue, 03 Oct 2023 15:35:00 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qngUB-0007y5-GX; Tue, 03 Oct 2023 15:34:55 +0100
-Date: Tue, 3 Oct 2023 15:34:55 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Gavin Shan <gshan@redhat.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-acpi@vger.kernel.org,
-	James Morse <james.morse@arm.com>, loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>, linux-ia64@vger.kernel.org
-Subject: Re: [PATCH] cpu-hotplug: provide prototypes for arch CPU registration
-Message-ID: <ZRwmj/e+jAXFfvCm@shell.armlinux.org.uk>
-References: <E1qkoRr-0088Q8-Da@rmk-PC.armlinux.org.uk>
- <dd4dee9e-4d75-e1e6-04c8-82d84b28fd35@redhat.com>
- <ZRIU/yFrbFbIR7zZ@shell.armlinux.org.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855812942C
+	for <loongarch@lists.linux.dev>; Tue,  3 Oct 2023 18:01:12 +0000 (UTC)
+Received: from [192.168.7.187] ([76.103.185.250])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 393Hb5dd1691810
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 3 Oct 2023 10:37:05 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 393Hb5dd1691810
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2023091101; t=1696354628;
+	bh=pV/MsKucrKusG2Y/zWi1V+/lmmij2RlMuAhslhwjBGY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ie+iUNG++evbuJJIH4LlVE0y2kO/anm5d/KQwE81BTvjNrZxoKeTGUjvRP94gJyOW
+	 sFFwd0PevILqj6hD6U2qhBArrigpGLpXM8fHjGxeiGT+ars6lZM63/+CSvM7JcI6Ce
+	 i/1trzuvN3L4daAHaFAv1RVz8+foCPfh2Rmolh8QxMA/Xrvn95KJpYWuswaXnnZolW
+	 YcYqO+AG6Y17Wv5Ou8D9OODEB0u/t1bXtlvbsLuz6TiurGl9UM3D82tn97PdzO/W6E
+	 Iv0qGHQNJAC0k8ul3K4pRSLLwEm7lTKyXhJ30LwwQxK+sgBP6hHFmJXb3j2p6StTgX
+	 RDV3jN2oQ7j6A==
+Message-ID: <7aee5021-8bb6-4343-b746-a8417af030a9@zytor.com>
+Date: Tue, 3 Oct 2023 10:37:02 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZRIU/yFrbFbIR7zZ@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpu-hotplug: provide prototypes for arch CPU registration
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Gavin Shan <gshan@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-acpi@vger.kernel.org,
+        James Morse <james.morse@arm.com>, loongarch@lists.linux.dev,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
+        justin.he@arm.com, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Salil Mehta <salil.mehta@huawei.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, linux-ia64@vger.kernel.org
+References: <E1qkoRr-0088Q8-Da@rmk-PC.armlinux.org.uk>
+ <dd4dee9e-4d75-e1e6-04c8-82d84b28fd35@redhat.com>
+ <ZRIU/yFrbFbIR7zZ@shell.armlinux.org.uk>
+ <ZRwmj/e+jAXFfvCm@shell.armlinux.org.uk>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <ZRwmj/e+jAXFfvCm@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 26, 2023 at 12:17:19AM +0100, Russell King (Oracle) wrote:
-> On Tue, Sep 26, 2023 at 09:04:46AM +1000, Gavin Shan wrote:
-> > Hi Russell,
-> > 
-> > On 9/26/23 02:28, Russell King (Oracle) wrote:
-> > > Provide common prototypes for arch_register_cpu() and
-> > > arch_unregister_cpu(). These are called by acpi_processor.c, with
-> > > weak versions, so the prototype for this is already set. It is
-> > > generally not necessary for function prototypes to be conditional
-> > > on preprocessor macros.
-> > > 
-> > > Some architectures (e.g. Loongarch) are missing the prototype for this,
-> > > and rather than add it to Loongarch's asm/cpu.h, lets do the job once
-> > > for everyone.
-> > > 
-> > > Since this covers everyone, remove the now unnecessary prototypes in
-> > > asm/cpu.h, and we also need to remove the 'static' from one of ia64's
-> > > arch_register_cpu() definitions.
-> > > 
-> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > > ---
-> > > Changes since RFC v2:
-> > >   - drop ia64 changes, as ia64 has already been removed.
-> > > 
-> > >   arch/x86/include/asm/cpu.h  | 2 --
-> > >   arch/x86/kernel/topology.c  | 2 +-
-> > >   include/linux/cpu.h         | 2 ++
-> > >   3 files changed, 3 insertions(+), 3 deletions(-)
-> > > 
-> > 
-> > In Linux 6.6.rc3, the prototypes are still existing in arch/ia64/include/asm/cpu.h.
-> 
-> Correct, but I have been told that IA64 has been removed, so I removed
-> those changes from my patch.
-> 
-> > They may have been dropped in other ia64 or x86 git repository, which this patch
-> > bases on.
-> 
-> I have no idea which repository they have been dropped from. I only know
-> what tglx told me, and despite asking the question, I never got any
-> answer. So I've done the best I can with this patch. If kernel devs want
-> to state things in vague terms, and then go silent when asked questions
-> to elaborate, then that leads to guessing.
-> 
-> Maybe someone else should adapt this patch to apply to whatever tree it
-> is going to end up being applied to - because I have no idea _which_
-> tree it'll end up being applied to.
+On 10/3/2023 7:34 AM, Russell King (Oracle) wrote:
+>>>>
+>>>> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+>>>> ---
+>>>> Changes since RFC v2:
+>>>>    - drop ia64 changes, as ia64 has already been removed.
+>>>>
 
-So, is this how the Linux community is now dysfunctional?
+If this is RFC v2, we put "RFC v2" in the subject, then people know you
+are sending a newer version.  People are busy, and your patch could be 
+skipped if it appears the same as a previous one.
 
-Someone sends a patch.
-Thomas reviews, says it's a good idea and provides some feedback.
-Author asks questions, gets ignored.
-Author sends a patch taking in to account that previous feedback.
-Someone else replies, contradicting the previous feedback.
-Nothing else happens.
-
-What a bloody sorry state of affairs.
-
-Makes me wonder what the point of trying to contribute to the Linux
-kernel outside of the areas I actually maintain anymore is.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
