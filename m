@@ -1,126 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F852365
-	for <loongarch@lists.linux.dev>; Tue,  3 Oct 2023 01:06:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EB4C433C8;
-	Tue,  3 Oct 2023 01:05:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696295161;
-	bh=F4f0krFznweIk4taQ98VjdjNBbxdo6qbxD3mNrr0nSM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qjo96mCWqTKW7xGjcbugvTHPxzMEDCajwcw1va4Y2FbcHxO3ZcGKJhTfC83106ARL
-	 tU6n9aOW7ZWhDLjnQiboRRQ82EVD3td822hvni2XK2g9yNk3HSm2Ur7Z555ck5rG+o
-	 12dhoHDmpsg6GbUi7vFsQpePSjmL7y7isIq5rL6cYanqyxddTPGOhvh9UX6i8cVIA7
-	 ZNczfsHMS606tgeAt9grrKxT2FqCR0UULw6bIjRTIClFh9JhkLAVjJWQ9lZKETlzhR
-	 YTYWmLkKqRpNbxBQIivk0G2e/6Y+0MGkQudKU03TMbdV9ij8lvPLibuVE8O1+k6oVB
-	 UoMFwMLszD8rA==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Joel Stanley <joel@jms.id.au>,
-	Li Yang <leoyang.li@nxp.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Qiang Zhao <qiang.zhao@nxp.com>,
-	Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
-	Huisong Li <lihuisong@huawei.com>,
-	Krzysztof Halasa <khalasa@piap.pl>,
-	Karol Gugala <kgugala@antmicro.com>,
-	Mateusz Holenko <mholenko@antmicro.com>,
-	Gabriel Somlo <gsomlo@gmail.com>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Andy Gross <agross@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Sumit Gupta <sumitg@nvidia.com>,
-	Shang XiaoJing <shangxiaojing@huawei.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Andrew Jeffery <andrew@aj.id.au>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	Zev Weiss <zev@bewilderbeest.net>,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	zhang songyi <zhang.songyi@zte.com.cn>,
-	Lubomir Rintel <lkundrak@v3.sk>,
-	linux-arm-msm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	linux-samsung-soc@vger.kernel.org,
-	Nick Alcock <nick.alcock@oracle.com>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	linux-tegra@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Ruan Jinjie <ruanjinjie@huawei.com>,
-	kernel@pengutronix.de
-Subject: Re: (subset) [PATCH 00/40] soc: Convert to platform remove callback returning void
-Date: Mon,  2 Oct 2023 18:10:02 -0700
-Message-ID: <169629539848.1944895.16954663145011378401.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
-References: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2279A31A96
+	for <loongarch@lists.linux.dev>; Tue,  3 Oct 2023 14:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=XQksk7pyvzZ6898twTFuY7ew23wLu3w3rS0ARfVw3k4=; b=WlrkJSyKlNE8OwZSxon9XsxAdz
+	ASx702dgd0uiF2J3NXC8vaNCH/q+u2wPNN+6oZVHo8cY5V8ZdankY0xk2rou5ypVnd8uNw0lVfgQ0
+	ZnBHFMzGxJDzYFKo23XDs5VZq4WzkkYSKYCNH8u7rErL0Nj+yCGtAgeKAoAdbyWvRJAgRvKu1i4ts
+	ZO+Y1/kFUR+5AfRk65vlNPA9XjR/LB37rlwNrYyDBS67mgDtOEn5IqMpRecIg0GHZej5mVDilaOpU
+	OPsTIE67HUWOn2EcQWB11jsSWIqr9q/XC1tVdmPrkntyomoSbaGo9mN/l0CdlZ4t8HDoJkWt7OJGI
+	9PHLc/CQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39002)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1qngUG-0001rW-1u;
+	Tue, 03 Oct 2023 15:35:00 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1qngUB-0007y5-GX; Tue, 03 Oct 2023 15:34:55 +0100
+Date: Tue, 3 Oct 2023 15:34:55 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Gavin Shan <gshan@redhat.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-acpi@vger.kernel.org,
+	James Morse <james.morse@arm.com>, loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Salil Mehta <salil.mehta@huawei.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-ia64@vger.kernel.org
+Subject: Re: [PATCH] cpu-hotplug: provide prototypes for arch CPU registration
+Message-ID: <ZRwmj/e+jAXFfvCm@shell.armlinux.org.uk>
+References: <E1qkoRr-0088Q8-Da@rmk-PC.armlinux.org.uk>
+ <dd4dee9e-4d75-e1e6-04c8-82d84b28fd35@redhat.com>
+ <ZRIU/yFrbFbIR7zZ@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZRIU/yFrbFbIR7zZ@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-
-On Mon, 25 Sep 2023 11:54:51 +0200, Uwe Kleine-König wrote:
-> this series converts all platform drivers below drivers/soc to use
-> .remove_new(). The motivation is to get rid of an integer return code
-> that is (mostly) ignored by the platform driver core and error prone on
-> the driver side.
+On Tue, Sep 26, 2023 at 12:17:19AM +0100, Russell King (Oracle) wrote:
+> On Tue, Sep 26, 2023 at 09:04:46AM +1000, Gavin Shan wrote:
+> > Hi Russell,
+> > 
+> > On 9/26/23 02:28, Russell King (Oracle) wrote:
+> > > Provide common prototypes for arch_register_cpu() and
+> > > arch_unregister_cpu(). These are called by acpi_processor.c, with
+> > > weak versions, so the prototype for this is already set. It is
+> > > generally not necessary for function prototypes to be conditional
+> > > on preprocessor macros.
+> > > 
+> > > Some architectures (e.g. Loongarch) are missing the prototype for this,
+> > > and rather than add it to Loongarch's asm/cpu.h, lets do the job once
+> > > for everyone.
+> > > 
+> > > Since this covers everyone, remove the now unnecessary prototypes in
+> > > asm/cpu.h, and we also need to remove the 'static' from one of ia64's
+> > > arch_register_cpu() definitions.
+> > > 
+> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > > ---
+> > > Changes since RFC v2:
+> > >   - drop ia64 changes, as ia64 has already been removed.
+> > > 
+> > >   arch/x86/include/asm/cpu.h  | 2 --
+> > >   arch/x86/kernel/topology.c  | 2 +-
+> > >   include/linux/cpu.h         | 2 ++
+> > >   3 files changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > 
+> > In Linux 6.6.rc3, the prototypes are still existing in arch/ia64/include/asm/cpu.h.
 > 
-> See commit 5c5a7680e67b ("platform: Provide a remove callback that
-> returns no value") for an extended explanation and the eventual goal.
+> Correct, but I have been told that IA64 has been removed, so I removed
+> those changes from my patch.
 > 
-> [...]
+> > They may have been dropped in other ia64 or x86 git repository, which this patch
+> > bases on.
+> 
+> I have no idea which repository they have been dropped from. I only know
+> what tglx told me, and despite asking the question, I never got any
+> answer. So I've done the best I can with this patch. If kernel devs want
+> to state things in vague terms, and then go silent when asked questions
+> to elaborate, then that leads to guessing.
+> 
+> Maybe someone else should adapt this patch to apply to whatever tree it
+> is going to end up being applied to - because I have no idea _which_
+> tree it'll end up being applied to.
 
-Applied, thanks!
+So, is this how the Linux community is now dysfunctional?
 
-[18/40] soc/qcom: icc-bwmon: Convert to platform remove callback returning void
-        commit: dd714c568ed4e6f79017be45077de71e9908af03
-[19/40] soc/qcom: llcc-qcom: Convert to platform remove callback returning void
-        commit: d85a9d18a58156fc8b5ab185e00e078adaaeefde
-[20/40] soc/qcom: ocmem: Convert to platform remove callback returning void
-        commit: 0b742c498bcd7d215501b10fe9df72a16237735a
-[21/40] soc/qcom: pmic_glink: Convert to platform remove callback returning void
-        commit: 4b3373e42dc2caa34394ac090c8c70bed49badd6
-[22/40] soc/qcom: qcom_aoss: Convert to platform remove callback returning void
-        commit: ffbe84a514f863a46a85c1e47b2b6d930b1b463e
-[23/40] soc/qcom: qcom_gsbi: Convert to platform remove callback returning void
-        commit: 57b31729bd2c72b00d400106e18db91e9d95d3c3
-[24/40] soc/qcom: qcom_stats: Convert to platform remove callback returning void
-        commit: a47ff90bf2f93ce4ca99858948a74a0c10a2bc45
-[25/40] soc/qcom: rmtfs_mem: Convert to platform remove callback returning void
-        commit: 7c93da5b8b69d4e4e7270c33ba3206af43930e1d
-[26/40] soc/qcom: smem: Convert to platform remove callback returning void
-        commit: 4b8dee9a34d51a61f60add996fae6a7140a20ae5
-[27/40] soc/qcom: smp2p: Convert to platform remove callback returning void
-        commit: 1cd966c2dc19654ed08c843e5c933db8c1349636
-[28/40] soc/qcom: smsm: Convert to platform remove callback returning void
-        commit: bdd7cc62cf69fe989557445d65d6c8cb2f956518
-[29/40] soc/qcom: socinfo: Convert to platform remove callback returning void
-        commit: c0989f7d1264b2b1885345a28a32fd5e1e61f9c7
+Someone sends a patch.
+Thomas reviews, says it's a good idea and provides some feedback.
+Author asks questions, gets ignored.
+Author sends a patch taking in to account that previous feedback.
+Someone else replies, contradicting the previous feedback.
+Nothing else happens.
 
-Best regards,
+What a bloody sorry state of affairs.
+
+Makes me wonder what the point of trying to contribute to the Linux
+kernel outside of the areas I actually maintain anymore is.
+
 -- 
-Bjorn Andersson <andersson@kernel.org>
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
