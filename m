@@ -1,23 +1,23 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5E47FA
-	for <loongarch@lists.linux.dev>; Thu,  5 Oct 2023 05:31:58 +0000 (UTC)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA305690
+	for <loongarch@lists.linux.dev>; Thu,  5 Oct 2023 09:18:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxLOv8SR5lP0EvAA--.19571S3;
-	Thu, 05 Oct 2023 13:30:37 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axji_7SR5lbooYAA--.51738S2;
-	Thu, 05 Oct 2023 13:30:35 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC1B4C116B9;
+	Thu,  5 Oct 2023 09:18:52 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Share the same pmd between vDSO space and stack
-Date: Thu,  5 Oct 2023 13:30:35 +0800
-Message-Id: <20231005053035.798361-1-maobibo@loongson.cn>
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch KVM changes for v6.7
+Date: Thu,  5 Oct 2023 17:18:25 +0800
+Message-Id: <20231005091825.3207300-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -26,171 +26,110 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axji_7SR5lbooYAA--.51738S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WFWrKryrXrWfXFy8AryxZwc_yoW7GF4UpF
-	ZrAFs2q3yUGryxK3y7t34kuw15ta4kKw42ga12y39xAF15XF1UZw1kA34kZF4Utw4vyw4I
-	g34SkrZ09a15ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
-	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
-	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU8fsqJUUUUU==
 
-Currently vDSO virtual address space is randomed within range 64M
-below TASK_SIZE, and next is randomed stack space within generic
-range 8M. so vDSO space uses different pmd entry with stack.
+The following changes since commit 8a749fd1a8720d4619c91c8b6e7528c0a355c0aa:
 
-With idea from x86, vDSO space can share the same pmd entry with
-stack, only that randomed range is smaller than before. This will
-save one PTE table page for every thread. And vDSO base is set as
-even page aligned if there is enough VA space, so that less TLB entries
-can be used for vDSO.
+  Linux 6.6-rc4 (2023-10-01 14:15:13 -0700)
 
-Also this patch removes ____cacheline_aligned_in_smp property for
-vdso_pcpu_data structure, cache line aligned property is generally
-used for frequently modified data like lock to avoid cache-thrash
-on smp system. The struct element node is almost constant in
-struct vdso_pcpu_data, so cache line aligned property is not
-necessary, and it will use more memory.
+are available in the Git repository at:
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
-Changes in v2:
- 1. Set vDSO base address as even page address if possible, less TLB
-entries may be used for vDSO since per TLB entry contains two pages.
- 2. Add PF_RANDOMIZE flag checking to set random address for vDSO.
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.7
 
----
- arch/loongarch/include/asm/processor.h |  2 --
- arch/loongarch/include/asm/vdso/vdso.h |  2 +-
- arch/loongarch/kernel/process.c        |  4 ---
- arch/loongarch/kernel/vdso.c           | 50 +++++++++++++++++++++-----
- 4 files changed, 43 insertions(+), 15 deletions(-)
+for you to fetch changes up to 2c10cda4b777be4be9d9e69e4f70c818dbb15e21:
 
-diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
-index c3bc44b5f5b3..5870b2785968 100644
---- a/arch/loongarch/include/asm/processor.h
-+++ b/arch/loongarch/include/asm/processor.h
-@@ -43,8 +43,6 @@
- 
- #endif
- 
--#define VDSO_RANDOMIZE_SIZE	(TASK_IS_32BIT_ADDR ? SZ_1M : SZ_64M)
--
- unsigned long stack_top(void);
- #define STACK_TOP stack_top()
- 
-diff --git a/arch/loongarch/include/asm/vdso/vdso.h b/arch/loongarch/include/asm/vdso/vdso.h
-index 5a12309d9fb5..d57de1887bb2 100644
---- a/arch/loongarch/include/asm/vdso/vdso.h
-+++ b/arch/loongarch/include/asm/vdso/vdso.h
-@@ -12,7 +12,7 @@
- 
- struct vdso_pcpu_data {
- 	u32 node;
--} ____cacheline_aligned_in_smp;
-+};
- 
- struct loongarch_vdso_data {
- 	struct vdso_pcpu_data pdata[NR_CPUS];
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 767d94cce0de..059e52d59297 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -296,10 +296,6 @@ unsigned long stack_top(void)
- 	top -= PAGE_ALIGN(current->thread.vdso->size);
- 	top -= VVAR_SIZE;
- 
--	/* Space to randomize the VDSO base */
--	if (current->flags & PF_RANDOMIZE)
--		top -= VDSO_RANDOMIZE_SIZE;
--
- 	return top;
- }
- 
-diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
-index 14941e4be66d..0fe6ce49c5e8 100644
---- a/arch/loongarch/kernel/vdso.c
-+++ b/arch/loongarch/kernel/vdso.c
-@@ -148,16 +148,49 @@ int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
- }
- #endif
- 
--static unsigned long vdso_base(void)
-+/*
-+ * Put the vdso above the (randomized) stack with another randomized
-+ * offset.  This way there is no hole in the middle of address space.
-+ * To save memory make sure it is still in the same PTE as the stack
-+ * top.  This doesn't give that many random bits.
-+ *
-+ * Note that this algorithm is imperfect: the distribution of the vdso
-+ * start address within a PMD is biased toward the end.
-+ */
-+static inline unsigned long vdso_base(unsigned long start, unsigned int len)
- {
--	unsigned long base = STACK_TOP;
-+	unsigned long addr, end;
-+	unsigned long offset;
- 
--	if (current->flags & PF_RANDOMIZE) {
--		base += get_random_u32_below(VDSO_RANDOMIZE_SIZE);
--		base = PAGE_ALIGN(base);
--	}
-+	/*
-+	 * Round up the start address.  It can start out unaligned as a result
-+	 * of stack start randomization.
-+	 */
-+	start = PAGE_ALIGN(start);
-+
-+	/* Round the lowest possible end address up to a PMD boundary. */
-+	end = (start + len + PMD_SIZE - 1) & PMD_MASK;
-+	if (end >= TASK_SIZE)
-+		end = TASK_SIZE;
-+	end -= len;
-+
-+	if (end > start) {
-+		offset = 0;
-+		if (current->flags & PF_RANDOMIZE)
-+			offset = get_random_u32_below(end - start);
-+		addr = PAGE_ALIGN(start + offset);
-+
-+		/*
-+		 * There are two pages per TLB entry on LoongArch system.
-+		 * Set vDSO base address as even page so that there is no
-+		 * invalid odd pair page, less TLB entries are used for vDSO
-+		 */
-+		if (addr < end)
-+			addr = ALIGN(addr, PAGE_SIZE * 2);
-+	} else
-+		addr = start;
- 
--	return base;
-+	return addr;
- }
- 
- int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
-@@ -177,7 +210,8 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 	 */
- 	size = VVAR_SIZE + info->size;
- 
--	data_addr = get_unmapped_area(NULL, vdso_base(), size, 0, 0);
-+	data_addr = get_unmapped_area(NULL, vdso_base(mm->start_stack, size),
-+					size, 0, 0);
- 	if (IS_ERR_VALUE(data_addr)) {
- 		ret = data_addr;
- 		goto out;
+  LoongArch: KVM: Add maintainers for LoongArch KVM (2023-10-02 10:01:29 +0800)
 
-base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
--- 
-2.39.3
+----------------------------------------------------------------
+LoongArch KVM changes for v6.7
 
+Add LoongArch's KVM support. Loongson 3A5000/3A6000 supports hardware
+assisted virtualization. With cpu virtualization, there are separate
+hw-supported user mode and kernel mode in guest mode. With memory
+virtualization, there are two-level hw mmu table for guest mode and host
+mode. Also there is separate hw cpu timer with consant frequency in
+guest mode, so that vm can migrate between hosts with different freq.
+Currently, we are able to boot LoongArch Linux guests.
+
+Few key aspects of KVM LoongArch added by this series are:
+1. Enable kvm hardware features when kvm module is loaded.
+2. Implement VM and vcpu related ioctl interface such as vcpu create,
+   vcpu run etc. GET_ONE_REG/SET_ONE_REG ioctl commands are use to
+   get general registers one by one.
+3. Hardware access about MMU, timer and csr are emulated in kernel.
+4. Hardwares such as mmio and iocsr device are emulated in user space
+   such as IPI, irqchips, pci devices etc.
+
+----------------------------------------------------------------
+Tianrui Zhao (25):
+      LoongArch: KVM: Add kvm related header files
+      LoongArch: KVM: Implement kvm module related interface
+      LoongArch: KVM: Implement kvm hardware enable, disable interface
+      LoongArch: KVM: Implement VM related functions
+      LoongArch: KVM: Add vcpu related header files
+      LoongArch: KVM: Implement basic vcpu interfaces
+      LoongArch: KVM: Implement basic vcpu ioctl interfaces
+      LoongArch: KVM: Implement fpu operations for vcpu
+      LoongArch: KVM: Implement vcpu interrupt operations
+      LoongArch: KVM: Implement vcpu load and vcpu put operations
+      LoongArch: KVM: Implement misc vcpu related interfaces
+      LoongArch: KVM: Implement vcpu timer operations
+      LoongArch: KVM: Implement virtual machine tlb operations
+      LoongArch: KVM: Implement kvm mmu operations
+      LoongArch: KVM: Implement handle csr exception
+      LoongArch: KVM: Implement handle iocsr exception
+      LoongArch: KVM: Implement handle idle exception
+      LoongArch: KVM: Implement handle gspr exception
+      LoongArch: KVM: Implement handle mmio exception
+      LoongArch: KVM: Implement handle fpu exception
+      LoongArch: KVM: Implement kvm exception vectors
+      LoongArch: KVM: Implement vcpu world switch
+      LoongArch: KVM: Enable kvm config and add the makefile
+      LoongArch: KVM: Supplement kvm document about LoongArch-specific part
+      LoongArch: KVM: Add maintainers for LoongArch KVM
+
+ Documentation/virt/kvm/api.rst             |  70 ++-
+ MAINTAINERS                                |  12 +
+ arch/loongarch/Kbuild                      |   2 +
+ arch/loongarch/Kconfig                     |   6 +
+ arch/loongarch/configs/loongson3_defconfig |   2 +
+ arch/loongarch/include/asm/inst.h          |  16 +
+ arch/loongarch/include/asm/kvm_csr.h       | 211 +++++++
+ arch/loongarch/include/asm/kvm_host.h      | 237 ++++++++
+ arch/loongarch/include/asm/kvm_mmu.h       | 139 +++++
+ arch/loongarch/include/asm/kvm_types.h     |  11 +
+ arch/loongarch/include/asm/kvm_vcpu.h      |  93 +++
+ arch/loongarch/include/asm/loongarch.h     |  19 +-
+ arch/loongarch/include/uapi/asm/kvm.h      | 108 ++++
+ arch/loongarch/kernel/asm-offsets.c        |  32 +
+ arch/loongarch/kvm/Kconfig                 |  40 ++
+ arch/loongarch/kvm/Makefile                |  22 +
+ arch/loongarch/kvm/exit.c                  | 696 +++++++++++++++++++++
+ arch/loongarch/kvm/interrupt.c             | 183 ++++++
+ arch/loongarch/kvm/main.c                  | 420 +++++++++++++
+ arch/loongarch/kvm/mmu.c                   | 914 ++++++++++++++++++++++++++++
+ arch/loongarch/kvm/switch.S                | 250 ++++++++
+ arch/loongarch/kvm/timer.c                 | 197 ++++++
+ arch/loongarch/kvm/tlb.c                   |  32 +
+ arch/loongarch/kvm/trace.h                 | 162 +++++
+ arch/loongarch/kvm/vcpu.c                  | 939 +++++++++++++++++++++++++++++
+ arch/loongarch/kvm/vm.c                    |  94 +++
+ include/uapi/linux/kvm.h                   |   9 +
+ 27 files changed, 4902 insertions(+), 14 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+ create mode 100644 arch/loongarch/include/asm/kvm_host.h
+ create mode 100644 arch/loongarch/include/asm/kvm_mmu.h
+ create mode 100644 arch/loongarch/include/asm/kvm_types.h
+ create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
+ create mode 100644 arch/loongarch/include/uapi/asm/kvm.h
+ create mode 100644 arch/loongarch/kvm/Kconfig
+ create mode 100644 arch/loongarch/kvm/Makefile
+ create mode 100644 arch/loongarch/kvm/exit.c
+ create mode 100644 arch/loongarch/kvm/interrupt.c
+ create mode 100644 arch/loongarch/kvm/main.c
+ create mode 100644 arch/loongarch/kvm/mmu.c
+ create mode 100644 arch/loongarch/kvm/switch.S
+ create mode 100644 arch/loongarch/kvm/timer.c
+ create mode 100644 arch/loongarch/kvm/tlb.c
+ create mode 100644 arch/loongarch/kvm/trace.h
+ create mode 100644 arch/loongarch/kvm/vcpu.c
+ create mode 100644 arch/loongarch/kvm/vm.c
