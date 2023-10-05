@@ -1,118 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252827FA;
-	Thu,  5 Oct 2023 05:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htbvcSdK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CBD6C433CC;
-	Thu,  5 Oct 2023 05:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696483777;
-	bh=0Btg3YXrlgdZvN9c5GBtYXuhH18hqWIB+5O6R7ueqJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=htbvcSdKFwWteJskCo57Zoc+HETH4Yk4itDoLxeJ1ZG4lHI/6dRpo8c5g9SXm397o
-	 Eun4d3xnthNfZVwdWsofKvM4QWBVN4HTm3hLqzLiQBrntUL8UgEGY5xtChyLJeLSvA
-	 +kiu09tPGlxznwtPobf/uLurpuN8CBF2/SLMhDWs179ymyb2Urny866sSuGF/ojv6+
-	 iWewEluv5jVsvROGeyy57su15Hs4TbNbwzhji63ZqwBfc3BmxOSDIm1/YBjJDN2t9v
-	 ZHq7tnS5BF0NS66xJ3m6K4ABlSRKqepeLUIUEhNo390B9QIPXevXF5ZN3BxZUTA4Ed
-	 Ef2zRBvRZ4gnQ==
-Date: Thu, 5 Oct 2023 08:28:24 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"deller@gmx.de" <deller@gmx.de>,
-	"mcgrof@kernel.org" <mcgrof@kernel.org>,
-	"bjorn@kernel.org" <bjorn@kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"nadav.amit@gmail.com" <nadav.amit@gmail.com>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"hca@linux.ibm.com" <hca@linux.ibm.com>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
-	"puranjay12@gmail.com" <puranjay12@gmail.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"chenhuacai@kernel.org" <chenhuacai@kernel.org>,
-	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"will@kernel.org" <will@kernel.org>,
-	"dinguyen@kernel.org" <dinguyen@kernel.org>,
-	"naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
-	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"song@kernel.org" <song@kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 04/13] mm/execmem, arch: convert remaining overrides
- of module_alloc to execmem
-Message-ID: <20231005052824.GE3303@kernel.org>
-References: <20230918072955.2507221-1-rppt@kernel.org>
- <20230918072955.2507221-5-rppt@kernel.org>
- <3483c4712306060ac56f07f5db9b146d69fc7e9e.camel@intel.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5E47FA
+	for <loongarch@lists.linux.dev>; Thu,  5 Oct 2023 05:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxLOv8SR5lP0EvAA--.19571S3;
+	Thu, 05 Oct 2023 13:30:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axji_7SR5lbooYAA--.51738S2;
+	Thu, 05 Oct 2023 13:30:35 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: Share the same pmd between vDSO space and stack
+Date: Thu,  5 Oct 2023 13:30:35 +0800
+Message-Id: <20231005053035.798361-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3483c4712306060ac56f07f5db9b146d69fc7e9e.camel@intel.com>
+X-CM-TRANSID:AQAAf8Axji_7SR5lbooYAA--.51738S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3WFWrKryrXrWfXFy8AryxZwc_yoW7GF4UpF
+	ZrAFs2q3yUGryxK3y7t34kuw15ta4kKw42ga12y39xAF15XF1UZw1kA34kZF4Utw4vyw4I
+	g34SkrZ09a15ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
+	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU8fsqJUUUUU==
 
-On Wed, Oct 04, 2023 at 12:29:36AM +0000, Edgecombe, Rick P wrote:
-> On Mon, 2023-09-18 at 10:29 +0300, Mike Rapoport wrote:
-> > diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-> > index 5f71a0cf4399..9d37375e2f05 100644
-> > --- a/arch/x86/kernel/module.c
-> > +++ b/arch/x86/kernel/module.c
-> >
-> > -void *module_alloc(unsigned long size)
-> > +struct execmem_params __init *execmem_arch_params(void)
-> >  {
-> > -       gfp_t gfp_mask = GFP_KERNEL;
-> > -       void *p;
-> > -
-> > -       if (PAGE_ALIGN(size) > MODULES_LEN)
-> > -               return NULL;
-> > +       unsigned long module_load_offset = 0;
-> > +       unsigned long start;
-> >  
-> > -       p = __vmalloc_node_range(size, MODULE_ALIGN,
-> > -                                MODULES_VADDR +
-> > get_module_load_offset(),
-> > -                                MODULES_END, gfp_mask, PAGE_KERNEL,
-> > -                                VM_FLUSH_RESET_PERMS |
-> > VM_DEFER_KMEMLEAK,
-> > -                                NUMA_NO_NODE,
-> > __builtin_return_address(0));
-> > +       if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_enabled())
-> > +               module_load_offset =
-> > +                       get_random_u32_inclusive(1, 1024) *
-> > PAGE_SIZE;
-> 
-> Minor:
-> I think you can skip the IS_ENABLED(CONFIG_RANDOMIZE_BASE) part because
-> CONFIG_RANDOMIZE_MEMORY depends on CONFIG_RANDOMIZE_BASE (which is
-> checked in kaslr_enabled()).
+Currently vDSO virtual address space is randomed within range 64M
+below TASK_SIZE, and next is randomed stack space within generic
+range 8M. so vDSO space uses different pmd entry with stack.
 
-Thanks, I'll look into it.
+With idea from x86, vDSO space can share the same pmd entry with
+stack, only that randomed range is smaller than before. This will
+save one PTE table page for every thread. And vDSO base is set as
+even page aligned if there is enough VA space, so that less TLB entries
+can be used for vDSO.
 
+Also this patch removes ____cacheline_aligned_in_smp property for
+vdso_pcpu_data structure, cache line aligned property is generally
+used for frequently modified data like lock to avoid cache-thrash
+on smp system. The struct element node is almost constant in
+struct vdso_pcpu_data, so cache line aligned property is not
+necessary, and it will use more memory.
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+Changes in v2:
+ 1. Set vDSO base address as even page address if possible, less TLB
+entries may be used for vDSO since per TLB entry contains two pages.
+ 2. Add PF_RANDOMIZE flag checking to set random address for vDSO.
+
+---
+ arch/loongarch/include/asm/processor.h |  2 --
+ arch/loongarch/include/asm/vdso/vdso.h |  2 +-
+ arch/loongarch/kernel/process.c        |  4 ---
+ arch/loongarch/kernel/vdso.c           | 50 +++++++++++++++++++++-----
+ 4 files changed, 43 insertions(+), 15 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+index c3bc44b5f5b3..5870b2785968 100644
+--- a/arch/loongarch/include/asm/processor.h
++++ b/arch/loongarch/include/asm/processor.h
+@@ -43,8 +43,6 @@
+ 
+ #endif
+ 
+-#define VDSO_RANDOMIZE_SIZE	(TASK_IS_32BIT_ADDR ? SZ_1M : SZ_64M)
+-
+ unsigned long stack_top(void);
+ #define STACK_TOP stack_top()
+ 
+diff --git a/arch/loongarch/include/asm/vdso/vdso.h b/arch/loongarch/include/asm/vdso/vdso.h
+index 5a12309d9fb5..d57de1887bb2 100644
+--- a/arch/loongarch/include/asm/vdso/vdso.h
++++ b/arch/loongarch/include/asm/vdso/vdso.h
+@@ -12,7 +12,7 @@
+ 
+ struct vdso_pcpu_data {
+ 	u32 node;
+-} ____cacheline_aligned_in_smp;
++};
+ 
+ struct loongarch_vdso_data {
+ 	struct vdso_pcpu_data pdata[NR_CPUS];
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 767d94cce0de..059e52d59297 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -296,10 +296,6 @@ unsigned long stack_top(void)
+ 	top -= PAGE_ALIGN(current->thread.vdso->size);
+ 	top -= VVAR_SIZE;
+ 
+-	/* Space to randomize the VDSO base */
+-	if (current->flags & PF_RANDOMIZE)
+-		top -= VDSO_RANDOMIZE_SIZE;
+-
+ 	return top;
+ }
+ 
+diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+index 14941e4be66d..0fe6ce49c5e8 100644
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -148,16 +148,49 @@ int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
+ }
+ #endif
+ 
+-static unsigned long vdso_base(void)
++/*
++ * Put the vdso above the (randomized) stack with another randomized
++ * offset.  This way there is no hole in the middle of address space.
++ * To save memory make sure it is still in the same PTE as the stack
++ * top.  This doesn't give that many random bits.
++ *
++ * Note that this algorithm is imperfect: the distribution of the vdso
++ * start address within a PMD is biased toward the end.
++ */
++static inline unsigned long vdso_base(unsigned long start, unsigned int len)
+ {
+-	unsigned long base = STACK_TOP;
++	unsigned long addr, end;
++	unsigned long offset;
+ 
+-	if (current->flags & PF_RANDOMIZE) {
+-		base += get_random_u32_below(VDSO_RANDOMIZE_SIZE);
+-		base = PAGE_ALIGN(base);
+-	}
++	/*
++	 * Round up the start address.  It can start out unaligned as a result
++	 * of stack start randomization.
++	 */
++	start = PAGE_ALIGN(start);
++
++	/* Round the lowest possible end address up to a PMD boundary. */
++	end = (start + len + PMD_SIZE - 1) & PMD_MASK;
++	if (end >= TASK_SIZE)
++		end = TASK_SIZE;
++	end -= len;
++
++	if (end > start) {
++		offset = 0;
++		if (current->flags & PF_RANDOMIZE)
++			offset = get_random_u32_below(end - start);
++		addr = PAGE_ALIGN(start + offset);
++
++		/*
++		 * There are two pages per TLB entry on LoongArch system.
++		 * Set vDSO base address as even page so that there is no
++		 * invalid odd pair page, less TLB entries are used for vDSO
++		 */
++		if (addr < end)
++			addr = ALIGN(addr, PAGE_SIZE * 2);
++	} else
++		addr = start;
+ 
+-	return base;
++	return addr;
+ }
+ 
+ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+@@ -177,7 +210,8 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 	 */
+ 	size = VVAR_SIZE + info->size;
+ 
+-	data_addr = get_unmapped_area(NULL, vdso_base(), size, 0, 0);
++	data_addr = get_unmapped_area(NULL, vdso_base(mm->start_stack, size),
++					size, 0, 0);
+ 	if (IS_ERR_VALUE(data_addr)) {
+ 		ret = data_addr;
+ 		goto out;
+
+base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
 -- 
-Sincerely yours,
-Mike.
+2.39.3
+
