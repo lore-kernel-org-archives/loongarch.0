@@ -1,90 +1,85 @@
-Received: from mailo.com (msg-2.mailo.com [213.182.54.12])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877C5179A8
-	for <loongarch@lists.linux.dev>; Sat,  7 Oct 2023 13:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mailo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2851E511
+	for <loongarch@lists.linux.dev>; Sat,  7 Oct 2023 16:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailo.com header.i=@mailo.com header.b="Wl/YS/3c"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
-	t=1696683633; bh=6e/J14qgrz5/5aSBCNVxqNF6zVd6jEJWQXAXSY4IkQs=;
-	h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To;
-	b=Wl/YS/3c1/JXS9cetGFFrgwJM4to1+2/hZSU41yumdXep8sVGnd2NwUKQqvfJL1Es
-	 ERE2lEUgaUMAO9iQ3VwKlYKrK9L+VG+4watCndLoHV9j8lcnLVBFSOtUe40Avp+D6s
-	 DMOwvjnWgnzDTU7r2mBBXGgtdD+3cbLwBMgNB3Ps=
-Received: by b221-4.in.mailobj.net [192.168.90.24] with ESMTP
-	via ip-20.mailobj.net [213.182.54.20]
-	Sat,  7 Oct 2023 15:00:33 +0200 (CEST)
-X-EA-Auth: CAve3YZ/hZSuwfASOt92PtmM7Xx8xFaK9CD6lQ30TkqPKvGUURv8G1rIc+WBPmvrICkK34P+vUG14I6ddiREXgxjMkykTT5H
-Date: Sat, 7 Oct 2023 18:30:27 +0530
-From: Deepak R Varma <drv@mailo.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-	"Fabio M. De Francesco" <fmdefrancesco@gmail.com>
-Subject: Re: kmap() transformation: Question about copy_user_highpage
-Message-ID: <ZSFWa44FTi48hDyE@runicha.com>
-References: <ZSBV+h/gjPWV7+Gj@runicha.com>
- <CAAhV-H7B2tqw-PWD2775Nx1JiPVwh8nGYsVDTiA0QjBhTYbrMw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tjDTEUPw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=e6r4ZECyO9EqgE0zmF10A/TBUvrf32/knhNgMfcTMpc=; b=tjDTEUPwILW4Bcxjb8LgjBeOcw
+	lqC/TEiUs36rn/1SswqXLPigaxpC/u813h4qlKONpc7jdvwfKh6SycnqIFfFGIO+fj6LrmmXhxQI8
+	PI7ogAxinHUjDWsXFXLwDB0/XYNWTKC5obe16CQE9P1SYtGpVYzg00r3Hr8oEcR6SZBXPtvfczBOg
+	fOlhTu9YpPwGkn1hNMRJlkNFh9ghKubr9EoO1ot8M+QMsK6prcCevqPNmlQf+ukokrFMo/vPcIzke
+	t98teuyDXl2Rhm7Tn6q68OAxB/uLuQVPkLVpwqe7pjxvKev/YhO//vpl/Lnq/pv7uU6M9H6odijv5
+	07KQyfIQ==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1qp9wq-007imV-2l;
+	Sat, 07 Oct 2023 16:14:36 +0000
+Message-ID: <9f7931dd-3c0e-4bc2-988e-1fb3549e440e@infradead.org>
+Date: Sat, 7 Oct 2023 09:14:36 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7B2tqw-PWD2775Nx1JiPVwh8nGYsVDTiA0QjBhTYbrMw@mail.gmail.com>
-
-On Sat, Oct 07, 2023 at 12:55:14PM +0800, Huacai Chen wrote:
-> Hi, Deepak,
-
-Hello Huacai,
-
->
-> On Sat, Oct 7, 2023 at 2:46 AM Deepak R Varma <drv@mailo.com> wrote:
-> >
-> > Hello,
-> > I am attempting to work on replacing the kmap[_atomic]() calls by
-> > kmap_local_page() function call. A detail on this change can be found here [0].
-> >
-> > I would like to know if this function:
-> >         arch/loongarch/mm/init.c::copy_user_highpage()
-> > is currently in use or is it a dead code?
-> >
-> > If this code is not in use, can this be removed instead? However, if it is in
-> > use, can you comment why kmap_atomic() was preferred over kmap()
-> > function call?
-> I think this function will be used for the 32bit kernel, and we will
-> add loongarch32 support in the near future.
-
-Okay. Sounds good.
-
->
-> But on the other hand, you can replace kmap_atomic() with
-> kmap_local_page(), there is no special reason to use kmap_atomic().
-
-Looks like you sent in a patch. Thank you. I was working on trying to cross
-compile my patch for the arch. I still would like to attempt that. Will request
-your help if I get stuck.
-
-regards,
-deepak.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH linux-next] LoongArch: mm: Export symbol for
+ invalid_pud_table.
+Content-Language: en-US
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "open list : LOONGARCH" <loongarch@lists.linux.dev>,
+ KVM list <kvm@vger.kernel.org>, maobibo@loongson.cn,
+ Huacai Chen <chenhuacai@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+References: <20231007075303.263407-1-zhaotianrui@loongson.cn>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231007075303.263407-1-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
->
-> Huacai
->
-> >
-> > [0] https://lore.kernel.org/all/20201029222652.302358281@linutronix.de/
-> >
-> > Thank you,
-> > Deepak.
-> >
-> >
-> >
 
+On 10/7/23 00:53, Tianrui Zhao wrote:
+> Export symbol for invalid_pud_table, so it can be used
+> by the files in other directories.
+> 
+> And this can resolve the problem caused in:
+> https://lore.kernel.org/lkml/20230927030959.3629941-5-zhaotianrui@loongson.cn/
+> ERROR: modpost: "invalid_pud_table" [arch/loongarch/kvm/kvm.ko] undefined!
+> 
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  arch/loongarch/mm/init.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> index f3fe8c06ba4d..ddf1330c924c 100644
+> --- a/arch/loongarch/mm/init.c
+> +++ b/arch/loongarch/mm/init.c
+> @@ -240,6 +240,7 @@ pgd_t swapper_pg_dir[_PTRS_PER_PGD] __section(".bss..swapper_pg_dir");
+>  pgd_t invalid_pg_dir[_PTRS_PER_PGD] __page_aligned_bss;
+>  #ifndef __PAGETABLE_PUD_FOLDED
+>  pud_t invalid_pud_table[PTRS_PER_PUD] __page_aligned_bss;
+> +EXPORT_SYMBOL(invalid_pud_table);
+>  #endif
+>  #ifndef __PAGETABLE_PMD_FOLDED
+>  pmd_t invalid_pmd_table[PTRS_PER_PMD] __page_aligned_bss;
+
+-- 
+~Randy
