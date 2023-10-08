@@ -1,24 +1,58 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0431B10E6
-	for <loongarch@lists.linux.dev>; Sun,  8 Oct 2023 01:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxFejlAyJlGOwvAA--.33156S3;
-	Sun, 08 Oct 2023 09:20:37 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd7lAyJlY34aAA--.58224S2;
-	Sun, 08 Oct 2023 09:20:37 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] LoongArch: Share the same pmd between vDSO space and stack
-Date: Sun,  8 Oct 2023 09:20:36 +0800
-Message-Id: <20231008012036.1415883-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from sender4-op-o10.zoho.com (sender4-op-o10.zoho.com [136.143.188.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35118BE48
+	for <loongarch@lists.linux.dev>; Sun,  8 Oct 2023 13:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="PD/Y0r/Q"
+ARC-Seal: i=1; a=rsa-sha256; t=1696770157; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=iJ3STLMZ8t20XLJ5EROqQu9VvTc7QljoWk+YCnzFmzW/BGM9gbxBksj6BeGfukgAXH80tpaYMuZD5oeAtcRKNGdjjlx1KstjVI1hcSBVATGRSt/LFJXk9PURa97jTekMbxrwK9FMLDc37B3FrJSSDKoFDMbqCzyGN2zO+i4Y+xE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1696770157; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=VBlxTHh+op4ADZ3ZQmt0tLZf0Cudg9IHwDc+to4R0Yg=; 
+	b=DSwytPz8xXjXePqa4f4z6FSnMcRjmmnfHgqiGDx6kx4ZKr5bUdxVuj0xL3Gd7UuSbtiUyWv5QoeKI5prVRn40y/M9yFaDie6d+hEeqQS90k5lBcKlpQ5FMeQ9KfuLZ9lxA6VQSC1f9hiL+SE3J8sa62P9klBu783a8s0NveV0X8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1696770157;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=VBlxTHh+op4ADZ3ZQmt0tLZf0Cudg9IHwDc+to4R0Yg=;
+	b=PD/Y0r/QvaqzF3TApAWBfq5tmAnmdEN0Opi6Em8nrG3xbYZon66fXhEb6l+3SZ5Y
+	VRGOY1aA+nVoztC2WWxDREHlowb7PalVJfAqX9Xn7GVeJ3jXao1F3JkdbKona9napxQ
+	0U8x5TeMCkUVr3s56D/LCACyDrJbaFSa32Sh3WTjUEAXPKL3BBC08qHHkTVZowwDxfi
+	yG9gRVRv7f302V0BYNvtW8nIRLQ0hQaETjr1wMta4JeBgusCrnRxMWnfM6w79f29hWj
+	Tq1CO/7ftu4cT6xXMHnp6W0PXMha8KJPReqvRIiMazun3WYkJ6wb0YEfGvtDUBejqly
+	PxDax5VucQ==
+Received: from edelgard.fodlan.icenowy.me (120.85.97.233 [120.85.97.233]) by mx.zohomail.com
+	with SMTPS id 1696770154734739.6304167491805; Sun, 8 Oct 2023 06:02:34 -0700 (PDT)
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jun Yi <yijun@loongson.cn>,
+	Baoquan He <bhe@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	Hongchen Zhang <zhanghongchen@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Youling Tang <tangyouling@loongson.cn>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Zhihong Dong <donmor3000@hotmail.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH] loongarch/mm: disable WUC for pgprot_writecombine() too
+Date: Sun,  8 Oct 2023 21:02:04 +0800
+Message-Id: <20231008130204.489081-1-uwu@icenowy.me>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -26,173 +60,97 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxjd7lAyJlY34aAA--.58224S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WFWrKryrXrWfXFy8AryxZwc_yoW7Xr13pF
-	ZrAFs2qrW5GryxKrWUt34kZw15tas3Kw42gay2y39xAF15XF1UZw1kAr98ZF4Utw4kAw1I
-	gFySkrZ09a15ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24SoDUUUU
+X-ZohoMailClient: External
 
-Currently vDSO virtual address space is randomed within range 64M
-below TASK_SIZE, and next is randomed stack space within generic
-range 8M. so vDSO space uses different pmd entry with stack.
+Currently the code disables WUC only disables it for ioremap_wc(), which
+is only used when mapping writecombine pages like ioremap() (mapped to
+the kernel space). For VRAM mapped in TTM/GEM, it's mapped with a
+crafted pgprot with pgprot_writecombine() function, which isn't
+corrently disabled now.
 
-With idea from x86, vDSO space can share the same pmd entry with
-stack, only that randomed range is smaller than before. This will
-save one PTE table page for every thread. And vDSO base is set as
-even page aligned if there is enough VA space, so that less TLB entries
-can be used for vDSO.
+Disable WUC for pgprot_writecombine() (fallback to SUC) too.
 
-Also this patch removes ____cacheline_aligned_in_smp property for
-vdso_pcpu_data structure, cache line aligned property is generally
-used for frequently modified data like lock to avoid cache-thrash
-on smp system. The struct element node is almost constant in
-struct vdso_pcpu_data, so cache line aligned property is not
-necessary, and it will use more memory.
+This improves AMDGPU driver stability on Loongson 3A5000 machines.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
 ---
-Changes in v3:
- 1. Code refined for vDSO addr calculation for even page 
+ arch/loongarch/include/asm/io.h           |  4 +---
+ arch/loongarch/include/asm/pgtable-bits.h |  9 ++++++++-
+ arch/loongarch/kernel/setup.c             | 10 +++++-----
+ 3 files changed, 14 insertions(+), 9 deletions(-)
 
-Changes in v2:
- 1. Set vDSO base address as even page address if possible, less TLB
-entries may be used for vDSO since per TLB entry contains two pages.
- 2. Add PF_RANDOMIZE flag checking to set random address for vDSO.
-
----
- arch/loongarch/include/asm/processor.h |  2 --
- arch/loongarch/include/asm/vdso/vdso.h |  2 +-
- arch/loongarch/kernel/process.c        |  4 ---
- arch/loongarch/kernel/vdso.c           | 50 +++++++++++++++++++++-----
- 4 files changed, 43 insertions(+), 15 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
-index c3bc44b5f5b3..5870b2785968 100644
---- a/arch/loongarch/include/asm/processor.h
-+++ b/arch/loongarch/include/asm/processor.h
-@@ -43,8 +43,6 @@
- 
- #endif
- 
--#define VDSO_RANDOMIZE_SIZE	(TASK_IS_32BIT_ADDR ? SZ_1M : SZ_64M)
+diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+index 0dcb36b32cb25..5477d9e3ab072 100644
+--- a/arch/loongarch/include/asm/io.h
++++ b/arch/loongarch/include/asm/io.h
+@@ -52,10 +52,8 @@ static inline void __iomem *ioremap_prot(phys_addr_t offset, unsigned long size,
+  * @offset:    bus address of the memory
+  * @size:      size of the resource to map
+  */
+-extern pgprot_t pgprot_wc;
 -
- unsigned long stack_top(void);
- #define STACK_TOP stack_top()
+ #define ioremap_wc(offset, size)	\
+-	ioremap_prot((offset), (size), pgprot_val(pgprot_wc))
++	ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL_WC))
  
-diff --git a/arch/loongarch/include/asm/vdso/vdso.h b/arch/loongarch/include/asm/vdso/vdso.h
-index 5a12309d9fb5..d57de1887bb2 100644
---- a/arch/loongarch/include/asm/vdso/vdso.h
-+++ b/arch/loongarch/include/asm/vdso/vdso.h
-@@ -12,7 +12,7 @@
+ #define ioremap_cache(offset, size)	\
+ 	ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL))
+diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
+index 35348d4c4209a..c9e3ed330fb97 100644
+--- a/arch/loongarch/include/asm/pgtable-bits.h
++++ b/arch/loongarch/include/asm/pgtable-bits.h
+@@ -92,6 +92,13 @@
  
- struct vdso_pcpu_data {
- 	u32 node;
--} ____cacheline_aligned_in_smp;
-+};
+ #ifndef __ASSEMBLY__
  
- struct loongarch_vdso_data {
- 	struct vdso_pcpu_data pdata[NR_CPUS];
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 767d94cce0de..059e52d59297 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -296,10 +296,6 @@ unsigned long stack_top(void)
- 	top -= PAGE_ALIGN(current->thread.vdso->size);
- 	top -= VVAR_SIZE;
++extern bool wc_enabled;
++
++#define _CACHE_WC	(wc_enabled ? _CACHE_WUC : _CACHE_SUC)
++
++#define PAGE_KERNEL_WC	__pgprot(_PAGE_PRESENT | __READABLE | __WRITEABLE | \
++				 _PAGE_GLOBAL | _PAGE_KERN |  _CACHE_WC)
++
+ #define _PAGE_IOREMAP		pgprot_val(PAGE_KERNEL_SUC)
  
--	/* Space to randomize the VDSO base */
--	if (current->flags & PF_RANDOMIZE)
--		top -= VDSO_RANDOMIZE_SIZE;
--
- 	return top;
- }
- 
-diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
-index 14941e4be66d..aa472fc6b128 100644
---- a/arch/loongarch/kernel/vdso.c
-+++ b/arch/loongarch/kernel/vdso.c
-@@ -148,16 +148,49 @@ int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
- }
- #endif
- 
--static unsigned long vdso_base(void)
-+/*
-+ * Put the vdso above the (randomized) stack with another randomized
-+ * offset.  This way there is no hole in the middle of address space.
-+ * To save memory make sure it is still in the same PTE as the stack
-+ * top.  This doesn't give that many random bits.
-+ *
-+ * Note that this algorithm is imperfect: the distribution of the vdso
-+ * start address within a PMD is biased toward the end.
-+ */
-+static inline unsigned long vdso_base(unsigned long start, unsigned int len)
+ #define pgprot_noncached pgprot_noncached
+@@ -111,7 +118,7 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
  {
--	unsigned long base = STACK_TOP;
-+	unsigned long addr, end;
-+	unsigned long offset;
+ 	unsigned long prot = pgprot_val(_prot);
  
--	if (current->flags & PF_RANDOMIZE) {
--		base += get_random_u32_below(VDSO_RANDOMIZE_SIZE);
--		base = PAGE_ALIGN(base);
--	}
-+	/*
-+	 * Round up the start address.  It can start out unaligned as a result
-+	 * of stack start randomization.
-+	 */
-+	start = PAGE_ALIGN(start);
-+
-+	/* Round the lowest possible end address up to a PMD boundary. */
-+	end = (start + len + PMD_SIZE - 1) & PMD_MASK;
-+	if (end >= TASK_SIZE)
-+		end = TASK_SIZE;
-+	end -= len;
-+
-+	if (end > start) {
-+		offset = 0;
-+		if (current->flags & PF_RANDOMIZE)
-+			offset = get_random_u32_below(end - start);
-+		addr = PAGE_ALIGN_DOWN(start + offset);
-+
-+		/*
-+		 * There are two pages per TLB entry on LoongArch system.
-+		 * Set vDSO base address as even page so that there is no
-+		 * invalid odd pair page, less TLB entries are used for vDSO
-+		 */
-+		if (addr & PAGE_SIZE)
-+			addr += PAGE_SIZE;
-+	} else
-+		addr = start;
+-	prot = (prot & ~_CACHE_MASK) | _CACHE_WUC;
++	prot = (prot & ~_CACHE_MASK) | _CACHE_WC;
  
--	return base;
-+	return addr;
+ 	return __pgprot(prot);
+ }
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 4de32b07c0dcd..b35186f7b2547 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -161,19 +161,19 @@ static void __init smbios_parse(void)
  }
  
- int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
-@@ -177,7 +210,8 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 	 */
- 	size = VVAR_SIZE + info->size;
+ #ifdef CONFIG_ARCH_WRITECOMBINE
+-pgprot_t pgprot_wc = PAGE_KERNEL_WUC;
++bool wc_enabled = true;
+ #else
+-pgprot_t pgprot_wc = PAGE_KERNEL_SUC;
++bool wc_enabled;
+ #endif
  
--	data_addr = get_unmapped_area(NULL, vdso_base(), size, 0, 0);
-+	data_addr = get_unmapped_area(NULL, vdso_base(mm->start_stack, size),
-+					size, 0, 0);
- 	if (IS_ERR_VALUE(data_addr)) {
- 		ret = data_addr;
- 		goto out;
-
-base-commit: 7de25c855b63453826ef678420831f98331d85fd
+-EXPORT_SYMBOL(pgprot_wc);
++EXPORT_SYMBOL(wc_enabled);
+ 
+ static int __init setup_writecombine(char *p)
+ {
+ 	if (!strcmp(p, "on"))
+-		pgprot_wc = PAGE_KERNEL_WUC;
++		wc_enabled = true;
+ 	else if (!strcmp(p, "off"))
+-		pgprot_wc = PAGE_KERNEL_SUC;
++		wc_enabled = false;
+ 	else
+ 		pr_warn("Unknown writecombine setting \"%s\".\n", p);
+ 
 -- 
-2.39.3
+2.39.1
 
