@@ -1,15 +1,15 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7503F1643D
-	for <loongarch@lists.linux.dev>; Mon,  9 Oct 2023 13:03:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A742D18654
+	for <loongarch@lists.linux.dev>; Mon,  9 Oct 2023 13:03:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxrusQ+iNlFk4wAA--.24290S3;
-	Mon, 09 Oct 2023 21:03:13 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxXesU+iNlOU4wAA--.22075S3;
+	Mon, 09 Oct 2023 21:03:16 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxzt4P+iNlksscAA--.62948S2;
-	Mon, 09 Oct 2023 21:03:11 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxzt4P+iNlksscAA--.62948S9;
+	Mon, 09 Oct 2023 21:03:16 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -17,126 +17,91 @@ To: Josh Poimboeuf <jpoimboe@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v2 0/8] Add objtool and orc support for LoongArch
-Date: Mon,  9 Oct 2023 21:03:02 +0800
-Message-Id: <1696856590-30298-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 7/8] objtool: Check local label in read_unwind_hints()
+Date: Mon,  9 Oct 2023 21:03:09 +0800
+Message-Id: <1696856590-30298-8-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8Cxzt4P+iNlksscAA--.62948S2
+In-Reply-To: <1696856590-30298-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1696856590-30298-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8Cxzt4P+iNlksscAA--.62948S9
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWw15JFy5WF17tFyfGry8Zwc_yoWrurWUpF
-	9rArykGF4UWr93Aw1kta4UurWDJan7Gr12g3W3Xry8AFW2qr1DArsakryDXF9Fqa1rGFy0
-	qF1fWw1Yga1jvabCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFyrZw45KFWrCw4xWF47ZFc_yoW8trW5pF
+	W3C34agr40qry7uw17tFy8WasxKws7CF17trZrGr4rAry2qw15KF9Iyr15tF9rWr15uw47
+	XF98Ka4293WqyabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2eT5DUUUU
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIwIDUUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-This version is based on 6.6-rc5, tested with the latest upstream
-gcc and binutils (20231009), all of the objtool warnings have been
-silenced.
+When update the latest upstream gcc and binutils which enables linker
+relaxation by default, it generates more objtool warnings on LoongArch.
 
-The patches #5, #6 and #7 are based on the following objdump info:
-the latest upstream gas of LoongArch replaces a pair of ADD32/64
-and SUB32/64 with 32/64_PCREL, and the option -mrelax is used by
-default, there are local labels for the branch and jump operation,
-the reloc symbol is label + offset instead of section + offset.
+We can see that the reloc sym name is local label instead of section
+in relocation section '.rela.discard.unwind_hints', in this case, the
+reloc sym type is STT_NOTYPE instead of STT_SECTION. Let us check it
+to not return -1, then use reloc->sym->offset instead of reloc addend
+which is 0 to find the corresponding instruction.
 
-The binutils should contain the following two commits:
-(1) Use 32/64_PCREL to replace a pair of ADD32/64 and SUB32/64
-https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=ecb802d02eeb
-(2) as: add option for generate R_LARCH_32/64_PCREL
-https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=816029e06768
+Here are some detailed info:
+[fedora@linux 6.6.test]$ gcc --version
+gcc (GCC) 14.0.0 20231009 (experimental)
+[fedora@linux 6.6.test]$ as --version
+GNU assembler (GNU Binutils) 2.41.50.20231009
+[fedora@linux 6.6.test]$ readelf -r arch/loongarch/kernel/entry.o | grep -A 2 "rela.discard.unwind_hints"
+Relocation section '.rela.discard.unwind_hints' at offset 0x458 contains 7 entries:
+  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+000000000000  000800000063 R_LARCH_32_PCREL  000000000000001c .Lhere_1 + 0
 
-Tiezhu Yang (8):
-  objtool/LoongArch: Enable objtool to be built
-  objtool/LoongArch: Implement instruction decoder
-  objtool/x86: Separate arch-specific and generic parts
-  objtool/LoongArch: Enable orc to be built
-  objtool: Check local label about sibling call
-  objtool: Check local label in add_dead_ends()
-  objtool: Check local label in read_unwind_hints()
-  LoongArch: Add ORC unwinder support
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/objtool/check.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
- arch/loongarch/Kconfig                             |   2 +
- arch/loongarch/Kconfig.debug                       |  11 +
- arch/loongarch/Makefile                            |  23 +
- arch/loongarch/configs/loongson3_defconfig         |   1 +
- arch/loongarch/include/asm/Kbuild                  |   1 +
- arch/loongarch/include/asm/bug.h                   |   1 +
- arch/loongarch/include/asm/linkage.h               |   2 +
- arch/loongarch/include/asm/module.h                |   7 +
- arch/loongarch/include/asm/orc_header.h            |  19 +
- arch/loongarch/include/asm/orc_lookup.h            |  34 ++
- arch/loongarch/include/asm/orc_types.h             |  58 +++
- arch/loongarch/include/asm/stackframe.h            |   3 +
- arch/loongarch/include/asm/unwind.h                |  22 +-
- arch/loongarch/include/asm/unwind_hints.h          |  28 +
- arch/loongarch/kernel/Makefile                     |   3 +
- arch/loongarch/kernel/entry.S                      |   9 +-
- arch/loongarch/kernel/genex.S                      |  20 +-
- arch/loongarch/kernel/head.S                       |   1 +
- arch/loongarch/kernel/module.c                     |  11 +-
- arch/loongarch/kernel/relocate_kernel.S            |   2 +
- arch/loongarch/kernel/setup.c                      |   2 +
- arch/loongarch/kernel/stacktrace.c                 |   1 +
- arch/loongarch/kernel/unwind_orc.c                 | 571 +++++++++++++++++++++
- arch/loongarch/kernel/vmlinux.lds.S                |   3 +
- arch/loongarch/lib/Makefile                        |   2 +
- arch/loongarch/mm/tlbex.S                          |  45 +-
- arch/loongarch/power/Makefile                      |   2 +
- arch/loongarch/vdso/Makefile                       |   1 +
- include/linux/compiler.h                           |   9 +
- scripts/Makefile                                   |   5 +-
- tools/arch/loongarch/include/asm/inst.h            | 161 ++++++
- tools/arch/loongarch/include/asm/orc_types.h       |  58 +++
- tools/include/linux/bitops.h                       |  11 +
- tools/objtool/Makefile                             |   4 +
- tools/objtool/arch/loongarch/Build                 |   3 +
- tools/objtool/arch/loongarch/decode.c              | 334 ++++++++++++
- .../objtool/arch/loongarch/include/arch/cfi_regs.h |  21 +
- tools/objtool/arch/loongarch/include/arch/elf.h    |  30 ++
- .../objtool/arch/loongarch/include/arch/special.h  |  33 ++
- tools/objtool/arch/loongarch/orc.c                 | 155 ++++++
- tools/objtool/arch/loongarch/special.c             |  15 +
- tools/objtool/arch/x86/Build                       |   1 +
- tools/objtool/arch/x86/orc.c                       | 169 ++++++
- tools/objtool/check.c                              | 118 +++--
- tools/objtool/include/objtool/orc.h                |  10 +
- tools/objtool/orc_dump.c                           |  69 +--
- tools/objtool/orc_gen.c                            |  92 +---
- 47 files changed, 1949 insertions(+), 234 deletions(-)
- create mode 100644 arch/loongarch/include/asm/orc_header.h
- create mode 100644 arch/loongarch/include/asm/orc_lookup.h
- create mode 100644 arch/loongarch/include/asm/orc_types.h
- create mode 100644 arch/loongarch/include/asm/unwind_hints.h
- create mode 100644 arch/loongarch/kernel/unwind_orc.c
- create mode 100644 tools/arch/loongarch/include/asm/inst.h
- create mode 100644 tools/arch/loongarch/include/asm/orc_types.h
- create mode 100644 tools/objtool/arch/loongarch/Build
- create mode 100644 tools/objtool/arch/loongarch/decode.c
- create mode 100644 tools/objtool/arch/loongarch/include/arch/cfi_regs.h
- create mode 100644 tools/objtool/arch/loongarch/include/arch/elf.h
- create mode 100644 tools/objtool/arch/loongarch/include/arch/special.h
- create mode 100644 tools/objtool/arch/loongarch/orc.c
- create mode 100644 tools/objtool/arch/loongarch/special.c
- create mode 100644 tools/objtool/arch/x86/orc.c
- create mode 100644 tools/objtool/include/objtool/orc.h
-
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index eee5621..607a745 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2227,6 +2227,7 @@ static int read_unwind_hints(struct objtool_file *file)
+ 	struct unwind_hint *hint;
+ 	struct instruction *insn;
+ 	struct reloc *reloc;
++	unsigned long offset;
+ 	int i;
+ 
+ 	sec = find_section_by_name(file->elf, ".discard.unwind_hints");
+@@ -2254,7 +2255,17 @@ static int read_unwind_hints(struct objtool_file *file)
+ 			return -1;
+ 		}
+ 
+-		insn = find_insn(file, reloc->sym->sec, reloc_addend(reloc));
++		if (reloc->sym->type == STT_SECTION) {
++			offset = reloc_addend(reloc);
++		} else if ((reloc->sym->type == STT_NOTYPE) &&
++			strncmp(reloc->sym->name, ".L", 2) == 0) {
++			offset = reloc->sym->offset;
++		} else {
++			WARN("unexpected relocation symbol type in %s", sec->rsec->name);
++			return -1;
++		}
++
++		insn = find_insn(file, reloc->sym->sec, offset);
+ 		if (!insn) {
+ 			WARN("can't find insn for unwind_hints[%d]", i);
+ 			return -1;
 -- 
 2.1.0
 
