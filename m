@@ -1,107 +1,287 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459A615E9B
-	for <loongarch@lists.linux.dev>; Mon,  9 Oct 2023 12:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BKSDQENl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD3BC433C8;
-	Mon,  9 Oct 2023 12:42:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696855351;
-	bh=ohuZp0WsPxcwHw6R6rlObohasBZPv2zNfsGPMOVNB0w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BKSDQENlvCmvcUrtGTpvgpXpECfR89ZihieZKhN8yFEcgvnaQah5u+fu1s9cT4cyh
-	 t0XXIrXBr5Wh2tHs5U1wgNNLvlJriRBgYeecMegYSMNkZLiT37eCLJlFIUbu7rxsbG
-	 5sr0In6kOsFUzhVpOudgXO5aL4REohZCiaJPgybNzfR2soQZC2ttQ0uYemp5lQ6Wtx
-	 vi8oA26zKj5teKiNkX8lGRKZNfEXHLCGSxdgSIRTbQ/cGXWeU3YnKa2qbLlIVXNKLs
-	 UbTjRun9wVsuKTpkgtho/Jv5qMGp9UmJAFMvr18c5+F3RNdavwcms6ANinS9j1avAn
-	 oEcB4ugnaUyQg==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Subject: [PATCH 5/5] kbuild: unify no-compiler-targets and no-sync-config-targets
-Date: Mon,  9 Oct 2023 21:42:10 +0900
-Message-Id: <20231009124210.1064021-5-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231009124210.1064021-1-masahiroy@kernel.org>
-References: <20231009124210.1064021-1-masahiroy@kernel.org>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7500311C8F
+	for <loongarch@lists.linux.dev>; Mon,  9 Oct 2023 13:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxuOgS+iNlG04wAA--.56934S3;
+	Mon, 09 Oct 2023 21:03:14 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxzt4P+iNlksscAA--.62948S3;
+	Mon, 09 Oct 2023 21:03:12 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v2 1/8] objtool/LoongArch: Enable objtool to be built
+Date: Mon,  9 Oct 2023 21:03:03 +0800
+Message-Id: <1696856590-30298-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1696856590-30298-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1696856590-30298-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8Cxzt4P+iNlksscAA--.62948S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtr47ur1kJF13CFW3ZFW7WrX_yoWxZrW8pF
+	4DC3sxGF48WFyfuw1xt3W5WrW3Jan7WryIqFy2qry8ZFZrX3s7tr4SkrWDAFy8Xws5KFyI
+	qFnag3WUZFsFyabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1LvtUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Now that vdso_install does not depend on any in-tree build artifact,
-it no longer invokes a compiler, making no-compiler-targets the same
-as no-sync-config-targets.
+Add the minimal changes to enable objtool build on LoongArch,
+most of the functions are stubs to only fix the build errors
+when make -C tools/objtool.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+This is similar with commit e52ec98c5ab1 ("objtool/powerpc:
+Enable objtool to be built on ppc").
+
+Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+Co-developed-by: Youling Tang <tangyouling@loongson.cn>
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
+ tools/objtool/arch/loongarch/Build                 |  2 +
+ tools/objtool/arch/loongarch/decode.c              | 71 ++++++++++++++++++++++
+ .../objtool/arch/loongarch/include/arch/cfi_regs.h | 21 +++++++
+ tools/objtool/arch/loongarch/include/arch/elf.h    | 30 +++++++++
+ .../objtool/arch/loongarch/include/arch/special.h  | 33 ++++++++++
+ tools/objtool/arch/loongarch/special.c             | 15 +++++
+ 6 files changed, 172 insertions(+)
+ create mode 100644 tools/objtool/arch/loongarch/Build
+ create mode 100644 tools/objtool/arch/loongarch/decode.c
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/cfi_regs.h
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/elf.h
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/special.h
+ create mode 100644 tools/objtool/arch/loongarch/special.c
 
- Makefile | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 2170d56630e8..982b1ad33287 100644
---- a/Makefile
-+++ b/Makefile
-@@ -277,10 +277,6 @@ no-dot-config-targets := $(clean-targets) \
- 			 $(version_h) headers headers_% archheaders archscripts \
- 			 %asm-generic kernelversion %src-pkg dt_binding_check \
- 			 outputmakefile rustavailable rustfmt rustfmtcheck
--# Installation targets should not require compiler. Unfortunately, vdso_install
--# is an exception where build artifacts may be updated. This must be fixed.
--no-compiler-targets := $(no-dot-config-targets) install dtbs_install \
--			headers_install modules_install modules_sign kernelrelease image_name
- no-sync-config-targets := $(no-dot-config-targets) %install modules_sign kernelrelease \
- 			  image_name
- single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %.symtypes %/
-@@ -288,7 +284,6 @@ single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %.symtypes %
- config-build	:=
- mixed-build	:=
- need-config	:= 1
--need-compiler	:= 1
- may-sync-config	:= 1
- single-build	:=
- 
-@@ -298,12 +293,6 @@ ifneq ($(filter $(no-dot-config-targets), $(MAKECMDGOALS)),)
- 	endif
- endif
- 
--ifneq ($(filter $(no-compiler-targets), $(MAKECMDGOALS)),)
--	ifeq ($(filter-out $(no-compiler-targets), $(MAKECMDGOALS)),)
--		need-compiler :=
--	endif
--endif
--
- ifneq ($(filter $(no-sync-config-targets), $(MAKECMDGOALS)),)
- 	ifeq ($(filter-out $(no-sync-config-targets), $(MAKECMDGOALS)),)
- 		may-sync-config :=
-@@ -675,7 +664,7 @@ endif
- 
- # Include this also for config targets because some architectures need
- # cc-cross-prefix to determine CROSS_COMPILE.
--ifdef need-compiler
-+ifdef may-sync-config
- include $(srctree)/scripts/Makefile.compiler
- endif
- 
+diff --git a/tools/objtool/arch/loongarch/Build b/tools/objtool/arch/loongarch/Build
+new file mode 100644
+index 0000000..d24d563
+--- /dev/null
++++ b/tools/objtool/arch/loongarch/Build
+@@ -0,0 +1,2 @@
++objtool-y += decode.o
++objtool-y += special.o
+diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
+new file mode 100644
+index 0000000..cc74ba4
+--- /dev/null
++++ b/tools/objtool/arch/loongarch/decode.c
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include <string.h>
++#include <objtool/check.h>
++
++int arch_ftrace_match(char *name)
++{
++	return !strcmp(name, "_mcount");
++}
++
++unsigned long arch_jump_destination(struct instruction *insn)
++{
++	return insn->offset + (insn->immediate << 2);
++}
++
++unsigned long arch_dest_reloc_offset(int addend)
++{
++	return addend;
++}
++
++bool arch_pc_relative_reloc(struct reloc *reloc)
++{
++	return false;
++}
++
++bool arch_callee_saved_reg(unsigned char reg)
++{
++	switch (reg) {
++	case CFI_RA:
++	case CFI_FP:
++	case CFI_S0 ... CFI_S8:
++		return true;
++	default:
++		return false;
++	}
++}
++
++int arch_decode_hint_reg(u8 sp_reg, int *base)
++{
++	return 0;
++}
++
++int arch_decode_instruction(struct objtool_file *file, const struct section *sec,
++			    unsigned long offset, unsigned int maxlen,
++			    struct instruction *insn)
++{
++	return 0;
++}
++
++const char *arch_nop_insn(int len)
++{
++	return NULL;
++}
++
++const char *arch_ret_insn(int len)
++{
++	return NULL;
++}
++
++void arch_initial_func_cfi_state(struct cfi_init_state *state)
++{
++	int i;
++
++	for (i = 0; i < CFI_NUM_REGS; i++) {
++		state->regs[i].base = CFI_UNDEFINED;
++		state->regs[i].offset = 0;
++	}
++
++	/* initial CFA (call frame address) */
++	state->cfa.base = CFI_SP;
++	state->cfa.offset = 0;
++}
+diff --git a/tools/objtool/arch/loongarch/include/arch/cfi_regs.h b/tools/objtool/arch/loongarch/include/arch/cfi_regs.h
+new file mode 100644
+index 0000000..c768d39
+--- /dev/null
++++ b/tools/objtool/arch/loongarch/include/arch/cfi_regs.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _OBJTOOL_ARCH_CFI_REGS_H
++#define _OBJTOOL_ARCH_CFI_REGS_H
++
++#define CFI_RA		1
++#define CFI_SP		3
++#define CFI_FP		22
++#define CFI_S0		23
++#define CFI_S1		24
++#define CFI_S2		25
++#define CFI_S3		26
++#define CFI_S4		27
++#define CFI_S5		28
++#define CFI_S6		29
++#define CFI_S7		30
++#define CFI_S8		31
++#define CFI_NUM_REGS	32
++
++#define CFI_BP		CFI_FP
++
++#endif /* _OBJTOOL_ARCH_CFI_REGS_H */
+diff --git a/tools/objtool/arch/loongarch/include/arch/elf.h b/tools/objtool/arch/loongarch/include/arch/elf.h
+new file mode 100644
+index 0000000..9623d66
+--- /dev/null
++++ b/tools/objtool/arch/loongarch/include/arch/elf.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _OBJTOOL_ARCH_ELF_H
++#define _OBJTOOL_ARCH_ELF_H
++
++/*
++ * See the following link for more info about ELF Relocation types:
++ * https://loongson.github.io/LoongArch-Documentation/LoongArch-ELF-ABI-EN.html#_relocations
++ */
++#ifndef R_LARCH_NONE
++#define R_LARCH_NONE		0
++#endif
++#ifndef R_LARCH_32
++#define R_LARCH_32		1
++#endif
++#ifndef R_LARCH_64
++#define R_LARCH_64		2
++#endif
++#ifndef R_LARCH_32_PCREL
++#define R_LARCH_32_PCREL	99
++#endif
++
++#define R_NONE			R_LARCH_NONE
++#define R_ABS32			R_LARCH_32
++#define R_ABS64			R_LARCH_64
++#define R_DATA32		R_LARCH_32_PCREL
++#define R_DATA64		R_LARCH_32_PCREL
++#define R_TEXT32		R_LARCH_32_PCREL
++#define R_TEXT64		R_LARCH_32_PCREL
++
++#endif /* _OBJTOOL_ARCH_ELF_H */
+diff --git a/tools/objtool/arch/loongarch/include/arch/special.h b/tools/objtool/arch/loongarch/include/arch/special.h
+new file mode 100644
+index 0000000..1a8245c
+--- /dev/null
++++ b/tools/objtool/arch/loongarch/include/arch/special.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _OBJTOOL_ARCH_SPECIAL_H
++#define _OBJTOOL_ARCH_SPECIAL_H
++
++/*
++ * See more info about struct exception_table_entry
++ * in arch/loongarch/include/asm/extable.h
++ */
++#define EX_ENTRY_SIZE 12
++#define EX_ORIG_OFFSET 0
++#define EX_NEW_OFFSET 4
++
++/*
++ * See more info about struct jump_entry
++ * in include/linux/jump_label.h
++ */
++#define JUMP_ENTRY_SIZE 16
++#define JUMP_ORIG_OFFSET 0
++#define JUMP_NEW_OFFSET 4
++#define JUMP_KEY_OFFSET 8
++
++/*
++ * See more info about struct alt_instr
++ * in arch/loongarch/include/asm/alternative.h
++ */
++#define ALT_ENTRY_SIZE 12
++#define ALT_ORIG_OFFSET 0
++#define ALT_NEW_OFFSET 4
++#define ALT_FEATURE_OFFSET 8
++#define ALT_ORIG_LEN_OFFSET 10
++#define ALT_NEW_LEN_OFFSET 11
++
++#endif /* _OBJTOOL_ARCH_SPECIAL_H */
+diff --git a/tools/objtool/arch/loongarch/special.c b/tools/objtool/arch/loongarch/special.c
+new file mode 100644
+index 0000000..9bba1e9
+--- /dev/null
++++ b/tools/objtool/arch/loongarch/special.c
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include <objtool/special.h>
++
++bool arch_support_alt_relocation(struct special_alt *special_alt,
++				 struct instruction *insn,
++				 struct reloc *reloc)
++{
++	return false;
++}
++
++struct reloc *arch_find_switch_table(struct objtool_file *file,
++				     struct instruction *insn)
++{
++	return NULL;
++}
 -- 
-2.39.2
+2.1.0
 
