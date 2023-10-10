@@ -1,51 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A461428E;
-	Tue, 10 Oct 2023 14:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D686C31A94
+	for <loongarch@lists.linux.dev>; Tue, 10 Oct 2023 16:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TXMHskQq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696949008; x=1728485008;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zfROI6MBZCaI2oRWyyxyDo+yXZYPsEV+/hc81eUbxCc=;
-  b=TXMHskQqdzRHo1CCPdn3JlN/6dguT1aRpSCT8KKzuXgegrRlbomzs66t
-   ccmkB3UzXNZudoN/6FVS2bQwrAkSLhIWkESrUWEwRZoi1OvpVvoIlpThF
-   AYqq6VLPEXtIE+oOvgYHJKPulraTxikumANu6m9LMRqjrIs4erlAdckuQ
-   TIIBlx10M3xbvhfxAMt+hxLXP9SQk8Uu2w4O2yRdUl3o6EsOjX0NwTD4o
-   bGa+IB6+ZZkH5H96akRyxw5pqlQ6WE7rhSLmxC/cTQIL0vofFv9K0QO8H
-   T2qpqsuL5v2Hgm+ay3LDQZqa1uXYH+xRo5xUhSOuwtyie/5H14IVhDRi4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="383286056"
-X-IronPort-AV: E=Sophos;i="6.03,213,1694761200"; 
-   d="scan'208";a="383286056"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 07:43:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="897211695"
-X-IronPort-AV: E=Sophos;i="6.03,213,1694761200"; 
-   d="scan'208";a="897211695"
-Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Oct 2023 07:41:43 -0700
-Received: from kbuild by f64821696465 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qqDxD-0000aY-1x;
-	Tue, 10 Oct 2023 14:43:23 +0000
-Date: Tue, 10 Oct 2023 22:43:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v2 8/8] LoongArch: Add ORC unwinder support
-Message-ID: <202310102212.HoI1aH5d-lkp@intel.com>
-References: <1696856590-30298-9-git-send-email-yangtiezhu@loongson.cn>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xMY47nv2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=jGruK/JRvPoRUKxXzmvtLrVi9bVZIlNLf9fCJALkLIM=; b=xMY47nv2HdLOE6LlA7OyP2LWey
+	S0evHCbenZWvVgxR4F8rWt5Ho69xVrBJhByY+bW91oJApLmVwsrjGcr2uN7gma91izQR31ewJ7anp
+	v3BAQE2H7edUk4krSzTVY/sH+Z7ymu/VGenzVTiL5Elnk0Ap4xfmeT21t2JGtV3VmipsVKiuqT3j8
+	hXipYGeQSRxOHG2qphtUxXdHpvY6yOS2DnND9IvBkjxwo0AZUxc5ZE05SBTBiStPXltyPdy8jeQJL
+	By2re7ZSo/L7fV9iuSIAB9+n3fnRuJPnSBvKj9LF/Wj5fUgqDIA5uwTJu7lAT7uRoewWW/jjwBR8y
+	ANwieyqA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37818)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1qqFWH-00028u-29;
+	Tue, 10 Oct 2023 17:23:41 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1qqFWF-0007dT-D4; Tue, 10 Oct 2023 17:23:39 +0100
+Date: Tue, 10 Oct 2023 17:23:39 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-acpi@vger.kernel.org, James Morse <james.morse@arm.com>,
+	loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Salil Mehta <salil.mehta@huawei.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-ia64@vger.kernel.org
+Subject: Re: [PATCH] cpu-hotplug: provide prototypes for arch CPU registration
+Message-ID: <ZSV6i4pnjQqvWuKp@shell.armlinux.org.uk>
+References: <E1qkoRr-0088Q8-Da@rmk-PC.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,56 +54,93 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1696856590-30298-9-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <E1qkoRr-0088Q8-Da@rmk-PC.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi Tiezhu,
+Okay, I give up. 15 days, still no real progress. I don't see any point
+in submitting any further patches for the kernel outside of those areas
+that I maintain. Clearly no one cares enough to bother (a) properly
+reviewing the patch, (b) applying the patch that Thomas thought
+"makes tons of sense."
 
-kernel test robot noticed the following build errors:
+If patches that "makes tons of sense" just get ignored, then what does
+the future of the kernel hold? Crap, that's what, utter crap.
 
-[auto build test ERROR on masahiroy-kbuild/for-next]
-[also build test ERROR on masahiroy-kbuild/fixes linus/master v6.6-rc5 next-20231010]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+As I said, it seems that the Linux kernel process is basically totally
+broken and rotten. If a six line patch that "makes tons of sense" can't
+be applied, then there's basically no hope what so ever.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tiezhu-Yang/objtool-LoongArch-Enable-objtool-to-be-built/20231009-210700
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git for-next
-patch link:    https://lore.kernel.org/r/1696856590-30298-9-git-send-email-yangtiezhu%40loongson.cn
-patch subject: [PATCH v2 8/8] LoongArch: Add ORC unwinder support
-config: x86_64-randconfig-014-20231010 (https://download.01.org/0day-ci/archive/20231010/202310102212.HoI1aH5d-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231010/202310102212.HoI1aH5d-lkp@intel.com/reproduce)
+FFS.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310102212.HoI1aH5d-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from scripts/sorttable.c:201:
->> scripts/sorttable.h:96:10: fatal error: asm/orc_types.h: No such file or directory
-      96 | #include <asm/orc_types.h>
-         |          ^~~~~~~~~~~~~~~~~
-   compilation terminated.
-   make[3]: *** [scripts/Makefile.host:114: scripts/sorttable] Error 1 shuffle=2318162869
-   make[3]: Target 'scripts/' not remade because of errors.
-   make[2]: *** [Makefile:1186: scripts] Error 2 shuffle=2318162869
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:234: __sub-make] Error 2 shuffle=2318162869
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:234: __sub-make] Error 2 shuffle=2318162869
-   make: Target 'prepare' not remade because of errors.
-
-
-vim +96 scripts/sorttable.h
-
-a79f248b9b309ebb scripts/sortextable.h David Daney 2012-04-19  93  
-57fa1899428538e3 scripts/sorttable.h   Shile Zhang 2019-12-04  94  #if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
-57fa1899428538e3 scripts/sorttable.h   Shile Zhang 2019-12-04  95  /* ORC unwinder only support X86_64 */
-57fa1899428538e3 scripts/sorttable.h   Shile Zhang 2019-12-04 @96  #include <asm/orc_types.h>
-57fa1899428538e3 scripts/sorttable.h   Shile Zhang 2019-12-04  97  
+On Mon, Sep 25, 2023 at 05:28:39PM +0100, Russell King (Oracle) wrote:
+> Provide common prototypes for arch_register_cpu() and
+> arch_unregister_cpu(). These are called by acpi_processor.c, with
+> weak versions, so the prototype for this is already set. It is
+> generally not necessary for function prototypes to be conditional
+> on preprocessor macros.
+> 
+> Some architectures (e.g. Loongarch) are missing the prototype for this,
+> and rather than add it to Loongarch's asm/cpu.h, lets do the job once
+> for everyone.
+> 
+> Since this covers everyone, remove the now unnecessary prototypes in
+> asm/cpu.h, and we also need to remove the 'static' from one of ia64's
+> arch_register_cpu() definitions.
+> 
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
+> Changes since RFC v2:
+>  - drop ia64 changes, as ia64 has already been removed.
+> 
+>  arch/x86/include/asm/cpu.h  | 2 --
+>  arch/x86/kernel/topology.c  | 2 +-
+>  include/linux/cpu.h         | 2 ++
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+> index 3a233ebff712..25050d953eee 100644
+> --- a/arch/x86/include/asm/cpu.h
+> +++ b/arch/x86/include/asm/cpu.h
+> @@ -28,8 +28,6 @@ struct x86_cpu {
+>  };
+>  
+>  #ifdef CONFIG_HOTPLUG_CPU
+> -extern int arch_register_cpu(int num);
+> -extern void arch_unregister_cpu(int);
+>  extern void soft_restart_cpu(void);
+>  #endif
+>  
+> diff --git a/arch/x86/kernel/topology.c b/arch/x86/kernel/topology.c
+> index ca004e2e4469..0bab03130033 100644
+> --- a/arch/x86/kernel/topology.c
+> +++ b/arch/x86/kernel/topology.c
+> @@ -54,7 +54,7 @@ void arch_unregister_cpu(int num)
+>  EXPORT_SYMBOL(arch_unregister_cpu);
+>  #else /* CONFIG_HOTPLUG_CPU */
+>  
+> -static int __init arch_register_cpu(int num)
+> +int __init arch_register_cpu(int num)
+>  {
+>  	return register_cpu(&per_cpu(cpu_devices, num).cpu, num);
+>  }
+> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+> index 0abd60a7987b..eb768a866fe3 100644
+> --- a/include/linux/cpu.h
+> +++ b/include/linux/cpu.h
+> @@ -80,6 +80,8 @@ extern __printf(4, 5)
+>  struct device *cpu_device_create(struct device *parent, void *drvdata,
+>  				 const struct attribute_group **groups,
+>  				 const char *fmt, ...);
+> +extern int arch_register_cpu(int cpu);
+> +extern void arch_unregister_cpu(int cpu);
+>  #ifdef CONFIG_HOTPLUG_CPU
+>  extern void unregister_cpu(struct cpu *cpu);
+>  extern ssize_t arch_cpu_probe(const char *, size_t);
+> -- 
+> 2.30.2
+> 
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
