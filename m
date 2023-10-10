@@ -1,41 +1,41 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F961DFDA;
-	Tue, 10 Oct 2023 13:47:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A461428E;
+	Tue, 10 Oct 2023 14:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TwvvVHb2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TXMHskQq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696945639; x=1728481639;
+  t=1696949008; x=1728485008;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=YpAggeSBtYgOtpoP02QjBaZNvhudqWNJONP0rNybQj8=;
-  b=TwvvVHb2+sddNDma8QFk7uilksvXGhesEDwNstraJYQ3mas2QNfAQHbs
-   +CKtbQlVZ6RmVfZfyodx0Jgw1SVJd4DnVdd5u7cENwCczAdqYpAbLD7U+
-   TpFt3YqIvXQnxazwcZKwOux+pPKFBzQOC3g27w2q4dU63/+hTk97rjKp6
-   dtsNZdlbqzZWjn/QyvN+7o3Cfj8IbbLSxEdqGhzXOz7ihn7wp8kb4/L8B
-   yYqDxM0iizcfFSo2LCaCrSPkyWAsRSwplx5zV26tR5xn3EqfGsWUUSUGH
-   tw2oRZjI3HhL4+KOjy0Ay7VKWRaYJgImPZk3IDxssHJsOjjr44oqYJuBF
+  bh=zfROI6MBZCaI2oRWyyxyDo+yXZYPsEV+/hc81eUbxCc=;
+  b=TXMHskQqdzRHo1CCPdn3JlN/6dguT1aRpSCT8KKzuXgegrRlbomzs66t
+   ccmkB3UzXNZudoN/6FVS2bQwrAkSLhIWkESrUWEwRZoi1OvpVvoIlpThF
+   AYqq6VLPEXtIE+oOvgYHJKPulraTxikumANu6m9LMRqjrIs4erlAdckuQ
+   TIIBlx10M3xbvhfxAMt+hxLXP9SQk8Uu2w4O2yRdUl3o6EsOjX0NwTD4o
+   bGa+IB6+ZZkH5H96akRyxw5pqlQ6WE7rhSLmxC/cTQIL0vofFv9K0QO8H
+   T2qpqsuL5v2Hgm+ay3LDQZqa1uXYH+xRo5xUhSOuwtyie/5H14IVhDRi4
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="363749138"
-X-IronPort-AV: E=Sophos;i="6.03,212,1694761200"; 
-   d="scan'208";a="363749138"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 06:47:18 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="383286056"
+X-IronPort-AV: E=Sophos;i="6.03,213,1694761200"; 
+   d="scan'208";a="383286056"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 07:43:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="1084794451"
-X-IronPort-AV: E=Sophos;i="6.03,212,1694761200"; 
-   d="scan'208";a="1084794451"
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="897211695"
+X-IronPort-AV: E=Sophos;i="6.03,213,1694761200"; 
+   d="scan'208";a="897211695"
 Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Oct 2023 06:47:16 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 10 Oct 2023 07:41:43 -0700
 Received: from kbuild by f64821696465 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1qqD4r-0000VQ-2V;
-	Tue, 10 Oct 2023 13:47:13 +0000
-Date: Tue, 10 Oct 2023 21:46:45 +0800
+	id 1qqDxD-0000aY-1x;
+	Tue, 10 Oct 2023 14:43:23 +0000
+Date: Tue, 10 Oct 2023 22:43:12 +0800
 From: kernel test robot <lkp@intel.com>
 To: Tiezhu Yang <yangtiezhu@loongson.cn>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -44,7 +44,7 @@ To: Tiezhu Yang <yangtiezhu@loongson.cn>,
 Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
 Subject: Re: [PATCH v2 8/8] LoongArch: Add ORC unwinder support
-Message-ID: <202310102113.bw7w3ZVv-lkp@intel.com>
+Message-ID: <202310102212.HoI1aH5d-lkp@intel.com>
 References: <1696856590-30298-9-git-send-email-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -70,31 +70,39 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Tiezhu-Yang/objtool-Loong
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git for-next
 patch link:    https://lore.kernel.org/r/1696856590-30298-9-git-send-email-yangtiezhu%40loongson.cn
 patch subject: [PATCH v2 8/8] LoongArch: Add ORC unwinder support
-config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20231010/202310102113.bw7w3ZVv-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231010/202310102113.bw7w3ZVv-lkp@intel.com/reproduce)
+config: x86_64-randconfig-014-20231010 (https://download.01.org/0day-ci/archive/20231010/202310102212.HoI1aH5d-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231010/202310102212.HoI1aH5d-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310102113.bw7w3ZVv-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310102212.HoI1aH5d-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
    In file included from scripts/sorttable.c:201:
->> scripts/sorttable.h:96:10: fatal error: 'asm/orc_types.h' file not found
-   #include <asm/orc_types.h>
-            ^~~~~~~~~~~~~~~~~
-   1 error generated.
+>> scripts/sorttable.h:96:10: fatal error: asm/orc_types.h: No such file or directory
+      96 | #include <asm/orc_types.h>
+         |          ^~~~~~~~~~~~~~~~~
+   compilation terminated.
+   make[3]: *** [scripts/Makefile.host:114: scripts/sorttable] Error 1 shuffle=2318162869
+   make[3]: Target 'scripts/' not remade because of errors.
+   make[2]: *** [Makefile:1186: scripts] Error 2 shuffle=2318162869
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:234: __sub-make] Error 2 shuffle=2318162869
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:234: __sub-make] Error 2 shuffle=2318162869
+   make: Target 'prepare' not remade because of errors.
 
 
 vim +96 scripts/sorttable.h
 
-a79f248b9b309e scripts/sortextable.h David Daney 2012-04-19  93  
-57fa1899428538 scripts/sorttable.h   Shile Zhang 2019-12-04  94  #if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
-57fa1899428538 scripts/sorttable.h   Shile Zhang 2019-12-04  95  /* ORC unwinder only support X86_64 */
-57fa1899428538 scripts/sorttable.h   Shile Zhang 2019-12-04 @96  #include <asm/orc_types.h>
-57fa1899428538 scripts/sorttable.h   Shile Zhang 2019-12-04  97  
+a79f248b9b309ebb scripts/sortextable.h David Daney 2012-04-19  93  
+57fa1899428538e3 scripts/sorttable.h   Shile Zhang 2019-12-04  94  #if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
+57fa1899428538e3 scripts/sorttable.h   Shile Zhang 2019-12-04  95  /* ORC unwinder only support X86_64 */
+57fa1899428538e3 scripts/sorttable.h   Shile Zhang 2019-12-04 @96  #include <asm/orc_types.h>
+57fa1899428538e3 scripts/sorttable.h   Shile Zhang 2019-12-04  97  
 
 -- 
 0-DAY CI Kernel Test Service
