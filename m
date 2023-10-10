@@ -1,205 +1,175 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8582E10F5
-	for <loongarch@lists.linux.dev>; Tue, 10 Oct 2023 03:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.20.42.43])
-	by gateway (Coremail) with SMTP id _____8BxnuvjviRlzIMwAA--.25423S3;
-	Tue, 10 Oct 2023 11:02:59 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxbNzSviRlENEdAA--.62798S3;
-	Tue, 10 Oct 2023 11:02:56 +0800 (CST)
-Message-ID: <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
-Date: Tue, 10 Oct 2023 11:02:40 +0800
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE09AA34
+	for <loongarch@lists.linux.dev>; Tue, 10 Oct 2023 07:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fVtGrVHn"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39A79XvC020878;
+	Tue, 10 Oct 2023 07:37:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=pp1; bh=5aaW2dPRZNtep/xpizNo1N37xs+hP26eCD8NQHP4dYg=;
+ b=fVtGrVHngctrT1pbGLa4kXC6Fe5YJewBoz+fvd2PlEeRlwxFa8Mz8htlgo7LyeE5ZKxo
+ c38UNaXtlvi9WBRAV/TfG4SKfPb4XcA+Hbld4wCXOaoJTNV2SbPzFI5HGTPFPnrhOkuz
+ i+YzokrsJB6sw/l2hFqMyvVR7xdXygmj1olabaYPAf+NZfRUu6ndv/LPY5Er8eJImBtA
+ U9r8/auWcw6/6ciwOREGLWgjdv+uTA6uft3ai5yHqErbT2l3rHRRts1J7YocsGqZqScZ
+ OCiu5nb92oYYMMDAZNTDF5zdFqt9utJzeOSvHKZyurFYuaX/3geRwZTDR8N1jW9Y/2nh KQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tn1yq1513-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Oct 2023 07:37:04 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39A79caK021024;
+	Tue, 10 Oct 2023 07:37:03 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tn1yq150m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Oct 2023 07:37:03 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39A4lurn028185;
+	Tue, 10 Oct 2023 07:37:02 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tkj1xy0hm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Oct 2023 07:37:02 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39A7ax5Y22086166
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Oct 2023 07:36:59 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0F70A20040;
+	Tue, 10 Oct 2023 07:36:59 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4797420043;
+	Tue, 10 Oct 2023 07:36:58 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 10 Oct 2023 07:36:58 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Andy Lutomirski <luto@kernel.org>, Borislav
+ Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dave Hansen
+ <dave.hansen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>, Guo Ren <guoren@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Heiko
+ Carstens <hca@linux.ibm.com>,
+        Huacai Chen <chenhuacai@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick
+ Desaulniers <ndesaulniers@google.com>,
+        Nicolas Schier
+ <nicolas@fjasle.eu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley
+ <paul.walmsley@sifive.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas
+ Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>, WANG
+ Xuerui <kernel@xen0n.name>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 4/5] kbuild: unify vdso_install rules
+References: <20231009124210.1064021-1-masahiroy@kernel.org>
+	<20231009124210.1064021-4-masahiroy@kernel.org>
+Date: Tue, 10 Oct 2023 09:36:57 +0200
+In-Reply-To: <20231009124210.1064021-4-masahiroy@kernel.org> (Masahiro
+	Yamada's message of "Mon, 9 Oct 2023 21:42:09 +0900")
+Message-ID: <yt9dfs2judwm.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
- same as ioremap_wc
-To: WANG Xuerui <kernel@xen0n.name>, Icenowy Zheng <uwu@icenowy.me>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Weihao Li <liweihao@loongson.cn>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
- Jun Yi <yijun@loongson.cn>, Baoquan He <bhe@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- Hongchen Zhang <zhanghongchen@loongson.cn>,
- Binbin Zhou <zhoubinbin@loongson.cn>, Zhen Lei <thunder.leizhen@huawei.com>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>,
- Zhihong Dong <donmor3000@hotmail.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20231009042841.635366-1-uwu@icenowy.me>
- <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
- <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
-Content-Language: en-US
-From: Sui Jingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxbNzSviRlENEdAA--.62798S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Gr4DtrW8Ww1xtF15JFy3KFX_yoW7KF18pF
-	Z7AFWkAFZ5WrnYyr1qyry8ury5Ars7GasrWw1UKFy8AFZIqr10gr40vryq9F18Xws7Gr10
-	qr4F9rnxZF4DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUU
-	U==
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: _CGlDQcO5kaF2u-illDRNoa12BhAMAB3
+X-Proofpoint-GUID: 5Ae0OhPocEUKJk2CSLcSZHHAMy_Wm0U-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-10_04,2023-10-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=931
+ bulkscore=0 clxscore=1011 suspectscore=0 adultscore=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 impostorscore=0 phishscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
+ definitions=main-2310100056
 
+Masahiro Yamada <masahiroy@kernel.org> writes:
 
-On 2023/10/10 08:15, WANG Xuerui wrote:
+> Currently, there is no standard implementation for vdso_install,
+> leading to various issues:
 >
-> On 10/9/23 22:32, Sui Jingfeng wrote:
->> Hi,
->>
->>
->> On 2023/10/9 12:28, Icenowy Zheng wrote:
->>> Currently the code disables WUC only disables it for ioremap_wc(), 
->>> which
->>> is only used when mapping writecombine pages like ioremap() (mapped to
->>> the kernel space). For VRAM mapped in TTM/GEM, it's mapped with a
->>> crafted pgprot with pgprot_writecombine() function, which isn't
->>> corrently disabled now.
->>>
->>> Disable WUC for pgprot_writecombine() (fallback to SUC) too.
->>>
->>> This improves AMDGPU driver stability on Loongson 3A5000 machines.
->>>
->>> Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
->>> ---
->>> Changes since v1:
->>> - Removed _WC macros
->>> - Mention ioremap_wc in commit message
->>>
->>>   arch/loongarch/include/asm/io.h           |  5 ++---
->>>   arch/loongarch/include/asm/pgtable-bits.h |  4 +++-
->>>   arch/loongarch/kernel/setup.c             | 10 +++++-----
->>>   3 files changed, 10 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/arch/loongarch/include/asm/io.h 
->>> b/arch/loongarch/include/asm/io.h
->>> index 0dcb36b32cb25..290aad87a8847 100644
->>> --- a/arch/loongarch/include/asm/io.h
->>> +++ b/arch/loongarch/include/asm/io.h
->>> @@ -52,10 +52,9 @@ static inline void __iomem 
->>> *ioremap_prot(phys_addr_t offset, unsigned long size,
->>>    * @offset:    bus address of the memory
->>>    * @size:      size of the resource to map
->>>    */
->>> -extern pgprot_t pgprot_wc;
->>> -
->>>   #define ioremap_wc(offset, size)    \
->>> -    ioremap_prot((offset), (size), pgprot_val(pgprot_wc))
->>> +    ioremap_prot((offset), (size), pgprot_val( \
->>> +        wc_enabled ? PAGE_KERNEL_WUC : PAGE_KERNEL_SUC))
->>>     #define ioremap_cache(offset, size)    \
->>>       ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL))
->>> diff --git a/arch/loongarch/include/asm/pgtable-bits.h 
->>> b/arch/loongarch/include/asm/pgtable-bits.h
->>> index 35348d4c4209a..a3d827701736d 100644
->>> --- a/arch/loongarch/include/asm/pgtable-bits.h
->>> +++ b/arch/loongarch/include/asm/pgtable-bits.h
->>> @@ -92,6 +92,8 @@
->>>     #ifndef __ASSEMBLY__
->>>   +extern bool wc_enabled;
->>> +
->>>   #define _PAGE_IOREMAP        pgprot_val(PAGE_KERNEL_SUC)
->>>     #define pgprot_noncached pgprot_noncached
->>> @@ -111,7 +113,7 @@ static inline pgprot_t 
->>> pgprot_writecombine(pgprot_t _prot)
->>>   {
->>>       unsigned long prot = pgprot_val(_prot);
->>>   -    prot = (prot & ~_CACHE_MASK) | _CACHE_WUC;
->>> +    prot = (prot & ~_CACHE_MASK) | (wc_enabled ? _CACHE_WUC : 
->>> _CACHE_SUC);
->>>         return __pgprot(prot);
->>>   }
->>> diff --git a/arch/loongarch/kernel/setup.c 
->>> b/arch/loongarch/kernel/setup.c
->>> index 7783f0a3d742c..465c1dbb6f4b4 100644
->>> --- a/arch/loongarch/kernel/setup.c
->>> +++ b/arch/loongarch/kernel/setup.c
->>> @@ -161,19 +161,19 @@ static void __init smbios_parse(void)
->>>   }
->>>     #ifdef CONFIG_ARCH_WRITECOMBINE
->>> -pgprot_t pgprot_wc = PAGE_KERNEL_WUC;
->>> +bool wc_enabled = true;
->>>   #else
->>> -pgprot_t pgprot_wc = PAGE_KERNEL_SUC;
->>> +bool wc_enabled;
->>>   #endif
->>>   -EXPORT_SYMBOL(pgprot_wc);
->>> +EXPORT_SYMBOL(wc_enabled);
->>>     static int __init setup_writecombine(char *p)
->>>   {
->>>       if (!strcmp(p, "on"))
->>> -        pgprot_wc = PAGE_KERNEL_WUC;
->>> +        wc_enabled = true;
->>>       else if (!strcmp(p, "off"))
->>> -        pgprot_wc = PAGE_KERNEL_SUC;
->>> +        wc_enabled = false;
->>>       else
->>>           pr_warn("Unknown writecombine setting \"%s\".\n", p);
->>
->>
->> Good catch!
->>
->> But this will make the write combine(WC) mappings completely unusable 
->> on LoongArch.
->> This is nearly equivalent to say that LoongArch don't support write 
->> combine at all.
->> But the write combine(WC) mappings works fine for software based drm 
->> drivers,
->> such as drm/loongson and drm/ast etc. Even include drm/radeon and 
->> drm/amdgpu with
->> pure software rendering setup (by putting Option "Accel" "off" into 
->> 10-amdgpu.conf
->> or 10-radeon.conf) After merge this patch, the performance drop 
->> dramatically for
->> 2D software rendering based display controller drivers.
->>
->> Well, this patch itself is a good catch, as it is a fix for the 
->> commit <16c52e503043>
->> ("LoongArch: Make WriteCombine configurable for ioremap()"). But I'm 
->> afraid that
->> both of this commit and the <16c52e503043> commit are not a *real* 
->> fix write combine
->> related issue on LoongArch. It just negative sidestep of the real 
->> problem.
-> Sure, but given the public information I have access to, I don't think 
-> it's possible to "really" fix the root cause with software only. Do 
-> you have any insight on this, given from your perspective and 
-> language, such a solution seems to exist?
+>  1. Code duplication
 >
-On LoongArch, cached mapping and uncached mappings are DMA-coherent and guaranteed by
-the hardware. While WC mappings is *NOT* DMA-coherent when 3D GPU is involved. Therefore,
-On downstream kernel, We disable write combine(WC) mappings at the drm drivers side.
+>     Many architectures duplicate similar code just for copying files
+>     to the install destination.
+>
+>     Some architectures (arm, sparc, x86) create build-id symlinks,
+>     introducing more code duplication.
+>
+>  2. Accidental updates of in-tree build artifacts
+>
+>     The vdso_install rule depends on the vdso files to install.
+>     It may update in-tree build artifacts. This can be problematic,
+>     as explained in commit 19514fc665ff ("arm, kbuild: make
+>     "make install" not depend on vmlinux").
+>
+>  3. Broken code in some architectures
+>
+>     Makefile code is often copied from one architecture to another
+>     without proper adaptation or testing.
+>
+>     The previous commits removed broken code from csky, UML, and parisc.
+>
+>     Another issue is that 'make vdso_install' for ARCH=s390 installs
+>     vdso64, but not vdso32.
+>
+> To address these problems, this commit introduces the generic vdso_install.
+>
+> Architectures that support vdso_install need to define vdso-install-y
+> in arch/*/Makefile.
+>
+> vdso-install-y lists the files to install. For example, arch/x86/Makefile
+> looks like this:
+>
+>   vdso-install-$(CONFIG_X86_64)           += arch/x86/entry/vdso/vdso64.so.dbg
+>   vdso-install-$(CONFIG_X86_X32_ABI)      += arch/x86/entry/vdso/vdsox32.so.dbg
+>   vdso-install-$(CONFIG_X86_32)           += arch/x86/entry/vdso/vdso32.so.dbg
+>   vdso-install-$(CONFIG_IA32_EMULATION)   += arch/x86/entry/vdso/vdso32.so.dbg
+>
+> These files will be installed to $(MODLIB)/vdso/ with the .dbg suffix,
+> if exists, stripped away.
+>
+> vdso-install-y can optionally take the second field after the colon
+> separator. This is needed because some architectures install vdso
+> files as a different base name.
+>
+> The following is a snippet from arch/arm64/Makefile.
+>
+>   vdso-install-$(CONFIG_COMPAT_VDSO)      += arch/arm64/kernel/vdso32/vdso.so.dbg:vdso32.so
+>
+> This will rename vdso.so.dbg to vdso32.so during installation. If such
+> architectures change their implementation so that the file names match,
+> this workaround will go away.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-- For buffers at VRAM(device memory), we replace the WC mappings with uncached mappings.
-- For buffers reside in RAM, we replace the WC mappings with cached mappings.
-
-By this way, we were able to minimum the side effects, and meet the usable requirements
-for all of the GPU drivers.
-
-For DMA non-coherent buffers, we should try to implement arch-specific dma_map_ops,
-invalidate the CPU cache and flush the CPU write buffer before the device do DMA. Instead
-of pretend to be DMA coherent for all buffers, a kernel cmdline is not a system level
-solution for all of GPU drivers and OS release.
-
+Acked-by: Sven Schnelle <svens@linux.ibm.com> # s390
