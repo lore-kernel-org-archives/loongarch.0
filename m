@@ -1,675 +1,1681 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11395211C
-	for <loongarch@lists.linux.dev>; Wed, 11 Oct 2023 02:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F67B811
+	for <loongarch@lists.linux.dev>; Wed, 11 Oct 2023 04:38:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5tPoW1A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53716C433D9
-	for <loongarch@lists.linux.dev>; Wed, 11 Oct 2023 02:24:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GL5FvQpc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93F7DC433CD
+	for <loongarch@lists.linux.dev>; Wed, 11 Oct 2023 04:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696991051;
-	bh=RHFN1FO9/ftnJhtd5wsYZBpO5z3hsvR+2HgNHN/aptw=;
+	s=k20201202; t=1696999091;
+	bh=5nEgy6r1ZaYyqbgD88UBpbv0eZEMnNnmNzG4AdcBzUA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=D5tPoW1AAFWi8mmnq3Qm/p73nSW6zxWxZQgnhx9woStByx0mTImSgwgCCUm4euyam
-	 FQX0K8rWsGZiXgCeYQ5DiSZT2kQmH9OrenZQt/Ya3K7qXbbdNwJidbqQobQZtBCqaO
-	 1xkR2NaAomyHqFc4Z0WlKdYybOuBFB8PTmTZZc6ki5ZvxBRhRO9v2v28mdZp32VQsv
-	 MkbhnIGaf7NfDDKzI9BXwA0HCehj1tu+DJjUZKol8ARQR1kGhaHR/XLkrSbjStHNPm
-	 5RqFUtWI9Ag75jWvJvZz+Qe2TrRfwgpLIMRadbG9CLnt1Z/t/4MAF4nEK1HPUh7+CN
-	 qjfZVm6XelN7w==
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-31f71b25a99so6262273f8f.2
-        for <loongarch@lists.linux.dev>; Tue, 10 Oct 2023 19:24:11 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwCc9BHUwFM/o5IhIBPvrumNrKjsNMSCBqQ05W3lVNdg5GuX7Ul
-	NdLaNj+jQoxYWpKKy6EyDlK17nbuJOHIIVd4Fqk=
-X-Google-Smtp-Source: AGHT+IE7xntPJSkBNkeGpTc53bJWGKzf4kw+kCkaQkuXM8kgw2ahLlmtMqnS4LxDn8NEGp4CP9kmgt/C6oNK+XzDp8g=
-X-Received: by 2002:a5d:60d1:0:b0:321:7052:6406 with SMTP id
- x17-20020a5d60d1000000b0032170526406mr16510458wrt.12.1696991049407; Tue, 10
- Oct 2023 19:24:09 -0700 (PDT)
+	b=GL5FvQpcndImCLEfRLhJkCvfxjkDWtIZIkNobnP7JEnTX81H0MYCu4xdeQKQetuiN
+	 az4JESmIVZEFw3/3945doQpOHOFs+EKyrhGPXu4G4kc7/7iujFKZ+IRd/RLugux2il
+	 Cs39b7PGdeq8NxB6bpRC7j7tjp3b9EwpH13Fmv3Q4x52KCxx1osj7wMMS95Mg/HCbK
+	 YPzR4PIHMJB1bl9bGj4JEdTi6kl99la1gyNmNiRWMHbNRuXVqOv8seFN7ABTehAXKW
+	 My1OKv5zmQJRNcm4mL0wQreXyR6F4ThTP9LkfXzuaf6dZuDVDdlKR8bdJFn4hknqTF
+	 +ic0bvH95gHIQ==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-53b962f09e0so6027800a12.0
+        for <loongarch@lists.linux.dev>; Tue, 10 Oct 2023 21:38:11 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yy7V3RYqIB5b8DhYACkjF/VATkKxxtoJTG+gYaMUbAGv+pMpvau
+	qM4WvHHqg2iWx9ft6ZK0YOnkF//3S0x319hUhmI=
+X-Google-Smtp-Source: AGHT+IFrWO9zHK46a6Per+U0ktgVHUrd0IG68PbUgFcUO0fVaMTG8h3UGFUOPbJBUuOX9/m9IgIu0KBYtwrddxdslEw=
+X-Received: by 2002:a05:6402:60c:b0:531:35c4:8ca2 with SMTP id
+ n12-20020a056402060c00b0053135c48ca2mr13759092edv.42.1696999089468; Tue, 10
+ Oct 2023 21:38:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231009124210.1064021-1-masahiroy@kernel.org> <20231009124210.1064021-4-masahiroy@kernel.org>
-In-Reply-To: <20231009124210.1064021-4-masahiroy@kernel.org>
-From: Guo Ren <guoren@kernel.org>
-Date: Wed, 11 Oct 2023 10:23:57 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTDpGgzsiRk=q6FCdX_g5maY-sT9h0jiW=p6HLziq97yA@mail.gmail.com>
-Message-ID: <CAJF2gTTDpGgzsiRk=q6FCdX_g5maY-sT9h0jiW=p6HLziq97yA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] kbuild: unify vdso_install rules
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Russell King <linux@armlinux.org.uk>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>, 
-	Will Deacon <will@kernel.org>
+References: <1696856590-30298-1-git-send-email-yangtiezhu@loongson.cn> <1696856590-30298-9-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1696856590-30298-9-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 11 Oct 2023 12:37:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4pVRLPZ9OrfvV-UbPm1kRRJ0gpTqRtVbDd-eA5WzUaXg@mail.gmail.com>
+Message-ID: <CAAhV-H4pVRLPZ9OrfvV-UbPm1kRRJ0gpTqRtVbDd-eA5WzUaXg@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] LoongArch: Add ORC unwinder support
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 9, 2023 at 8:42=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.or=
-g> wrote:
+Hi, Tiezhu,
+
+Maybe "LoongArch: Add ORC stack unwinder support" is better.
+
+On Mon, Oct 9, 2023 at 9:03=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
+ wrote:
 >
-> Currently, there is no standard implementation for vdso_install,
-> leading to various issues:
+> The kernel CONFIG_UNWINDER_ORC option enables the ORC unwinder, which is
+> similar in concept to a DWARF unwinder. The difference is that the format
+> of the ORC data is much simpler than DWARF, which in turn allows the ORC
+> unwinder to be much simpler and faster.
 >
->  1. Code duplication
+> The ORC data consists of unwind tables which are generated by objtool.
+> They contain out-of-band data which is used by the in-kernel ORC unwinder=
+.
+> Objtool generates the ORC data by first doing compile-time stack metadata
+> validation (CONFIG_STACK_VALIDATION). After analyzing all the code paths
+> of a .o file, it determines information about the stack state at each
+> instruction address in the file and outputs that information to the
+> .orc_unwind and .orc_unwind_ip sections.
 >
->     Many architectures duplicate similar code just for copying files
->     to the install destination.
+> The per-object ORC sections are combined at link time and are sorted and
+> post-processed at boot time. The unwinder uses the resulting data to
+> correlate instruction addresses with their stack states at run time.
 >
->     Some architectures (arm, sparc, x86) create build-id symlinks,
->     introducing more code duplication.
+> Most of the logic are similar with x86, in order to get ra info before ra
+> is saved into stack, add ra_reg and ra_offset into orc_entry. At the same
+> time, modify some arch-specific code to silence the objtool warnings.
 >
->  2. Accidental updates of in-tree build artifacts
->
->     The vdso_install rule depends on the vdso files to install.
->     It may update in-tree build artifacts. This can be problematic,
->     as explained in commit 19514fc665ff ("arm, kbuild: make
->     "make install" not depend on vmlinux").
->
->  3. Broken code in some architectures
->
->     Makefile code is often copied from one architecture to another
->     without proper adaptation or testing.
->
->     The previous commits removed broken code from csky, UML, and parisc.
->
->     Another issue is that 'make vdso_install' for ARCH=3Ds390 installs
->     vdso64, but not vdso32.
->
-> To address these problems, this commit introduces the generic vdso_instal=
-l.
->
-> Architectures that support vdso_install need to define vdso-install-y
-> in arch/*/Makefile.
->
-> vdso-install-y lists the files to install. For example, arch/x86/Makefile
-> looks like this:
->
->   vdso-install-$(CONFIG_X86_64)           +=3D arch/x86/entry/vdso/vdso64=
-.so.dbg
->   vdso-install-$(CONFIG_X86_X32_ABI)      +=3D arch/x86/entry/vdso/vdsox3=
-2.so.dbg
->   vdso-install-$(CONFIG_X86_32)           +=3D arch/x86/entry/vdso/vdso32=
-.so.dbg
->   vdso-install-$(CONFIG_IA32_EMULATION)   +=3D arch/x86/entry/vdso/vdso32=
-.so.dbg
->
-> These files will be installed to $(MODLIB)/vdso/ with the .dbg suffix,
-> if exists, stripped away.
->
-> vdso-install-y can optionally take the second field after the colon
-> separator. This is needed because some architectures install vdso
-> files as a different base name.
->
-> The following is a snippet from arch/arm64/Makefile.
->
->   vdso-install-$(CONFIG_COMPAT_VDSO)      +=3D arch/arm64/kernel/vdso32/v=
-dso.so.dbg:vdso32.so
->
-> This will rename vdso.so.dbg to vdso32.so during installation. If such
-> architectures change their implementation so that the file names match,
-> this workaround will go away.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> Co-developed-by: Youling Tang <tangyouling@loongson.cn>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
+>  arch/loongarch/Kconfig                     |   2 +
+>  arch/loongarch/Kconfig.debug               |  11 +
+>  arch/loongarch/Makefile                    |  23 ++
+>  arch/loongarch/configs/loongson3_defconfig |   1 +
+>  arch/loongarch/include/asm/Kbuild          |   1 +
+>  arch/loongarch/include/asm/bug.h           |   1 +
+>  arch/loongarch/include/asm/linkage.h       |   2 +
+>  arch/loongarch/include/asm/module.h        |   7 +
+>  arch/loongarch/include/asm/orc_header.h    |  19 +
+>  arch/loongarch/include/asm/orc_lookup.h    |  34 ++
+>  arch/loongarch/include/asm/orc_types.h     |  58 +++
+>  arch/loongarch/include/asm/stackframe.h    |   3 +
+>  arch/loongarch/include/asm/unwind.h        |  22 +-
+>  arch/loongarch/include/asm/unwind_hints.h  |  28 ++
+>  arch/loongarch/kernel/Makefile             |   3 +
+>  arch/loongarch/kernel/entry.S              |   9 +-
+>  arch/loongarch/kernel/genex.S              |  20 +-
+>  arch/loongarch/kernel/head.S               |   1 +
+>  arch/loongarch/kernel/module.c             |  11 +-
+>  arch/loongarch/kernel/relocate_kernel.S    |   2 +
+>  arch/loongarch/kernel/setup.c              |   2 +
+>  arch/loongarch/kernel/stacktrace.c         |   1 +
+>  arch/loongarch/kernel/unwind_orc.c         | 571 +++++++++++++++++++++++=
+++++++
+>  arch/loongarch/kernel/vmlinux.lds.S        |   3 +
+>  arch/loongarch/lib/Makefile                |   2 +
+>  arch/loongarch/mm/tlbex.S                  |  45 ++-
+>  arch/loongarch/power/Makefile              |   2 +
+>  arch/loongarch/vdso/Makefile               |   1 +
+>  include/linux/compiler.h                   |   9 +
+>  scripts/Makefile                           |   5 +-
+>  30 files changed, 867 insertions(+), 32 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/orc_header.h
+>  create mode 100644 arch/loongarch/include/asm/orc_lookup.h
+>  create mode 100644 arch/loongarch/include/asm/orc_types.h
+>  create mode 100644 arch/loongarch/include/asm/unwind_hints.h
+>  create mode 100644 arch/loongarch/kernel/unwind_orc.c
 >
->  Makefile                               |  9 ++++++
->  arch/arm/Makefile                      |  7 +---
->  arch/arm/vdso/Makefile                 | 25 --------------
->  arch/arm64/Makefile                    |  9 ++----
->  arch/arm64/kernel/vdso/Makefile        | 10 ------
->  arch/arm64/kernel/vdso32/Makefile      | 10 ------
->  arch/loongarch/Makefile                |  4 +--
->  arch/loongarch/vdso/Makefile           | 10 ------
->  arch/riscv/Makefile                    |  9 ++----
->  arch/riscv/kernel/compat_vdso/Makefile | 10 ------
->  arch/riscv/kernel/vdso/Makefile        | 10 ------
->  arch/s390/Makefile                     |  6 ++--
->  arch/s390/kernel/vdso32/Makefile       | 10 ------
->  arch/s390/kernel/vdso64/Makefile       | 10 ------
->  arch/sparc/Makefile                    |  5 ++-
->  arch/sparc/vdso/Makefile               | 27 ----------------
->  arch/x86/Makefile                      |  7 ++--
->  arch/x86/entry/vdso/Makefile           | 27 ----------------
->  scripts/Makefile.vdsoinst              | 45 ++++++++++++++++++++++++++
->  19 files changed, 71 insertions(+), 179 deletions(-)
->  create mode 100644 scripts/Makefile.vdsoinst
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index e14396a..21ef3bb 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -131,6 +131,7 @@ config LOONGARCH
+>         select HAVE_KRETPROBES
+>         select HAVE_MOD_ARCH_SPECIFIC
+>         select HAVE_NMI
+> +       select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS
+>         select HAVE_PCI
+>         select HAVE_PERF_EVENTS
+>         select HAVE_PERF_REGS
+> @@ -141,6 +142,7 @@ config LOONGARCH
+>         select HAVE_SAMPLE_FTRACE_DIRECT
+>         select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+>         select HAVE_SETUP_PER_CPU_AREA if NUMA
+> +       select HAVE_STACK_VALIDATION if HAVE_OBJTOOL
+>         select HAVE_STACKPROTECTOR
+>         select HAVE_SYSCALL_TRACEPOINTS
+>         select HAVE_TIF_NOHZ
+> diff --git a/arch/loongarch/Kconfig.debug b/arch/loongarch/Kconfig.debug
+> index 8d36aab..98d6063 100644
+> --- a/arch/loongarch/Kconfig.debug
+> +++ b/arch/loongarch/Kconfig.debug
+> @@ -26,4 +26,15 @@ config UNWINDER_PROLOGUE
+>           Some of the addresses it reports may be incorrect (but better t=
+han the
+>           Guess unwinder).
 >
-> diff --git a/Makefile b/Makefile
-> index 373649c7374e..2170d56630e8 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1317,6 +1317,14 @@ scripts_unifdef: scripts_basic
->  quiet_cmd_install =3D INSTALL $(INSTALL_PATH)
->        cmd_install =3D unset sub_make_done; $(srctree)/scripts/install.sh
->
-> +# ----------------------------------------------------------------------=
------
-> +# vDSO install
+> +config UNWINDER_ORC
+> +       bool "ORC unwinder"
+> +       select OBJTOOL
+> +       help
+> +         This option enables the ORC (Oops Rewind Capability) unwinder f=
+or
+> +         unwinding kernel stack traces.  It uses a custom data format wh=
+ich is
+> +         a simplified version of the DWARF Call Frame Information standa=
+rd.
 > +
-> +PHONY +=3D vdso_install
-> +vdso_install: export INSTALL_FILES =3D $(vdso-install-y)
-> +vdso_install:
-> +       $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vdsoinst
+> +         Enabling this option will increase the kernel's runtime memory =
+usage
+> +         by roughly 2-4MB, depending on your kernel config.
 > +
->  # ----------------------------------------------------------------------=
------
->  # Tools
->
-> @@ -1560,6 +1568,7 @@ help:
->         @echo  '* vmlinux         - Build the bare kernel'
->         @echo  '* modules         - Build all modules'
->         @echo  '  modules_install - Install all modules to INSTALL_MOD_PA=
-TH (default: /)'
-> +       @echo  '  vdso_install    - Install unstripped vdso to INSTALL_MO=
-D_PATH (default: /)'
->         @echo  '  dir/            - Build all files in dir and below'
->         @echo  '  dir/file.[ois]  - Build specified target only'
->         @echo  '  dir/file.ll     - Build the LLVM assembly file'
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 547e5856eaa0..5ba42f69f8ce 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -304,11 +304,7 @@ $(INSTALL_TARGETS): KBUILD_IMAGE =3D $(boot)/$(patsu=
-bst %install,%Image,$@)
->  $(INSTALL_TARGETS):
->         $(call cmd,install)
->
-> -PHONY +=3D vdso_install
-> -vdso_install:
-> -ifeq ($(CONFIG_VDSO),y)
-> -       $(Q)$(MAKE) $(build)=3Darch/arm/vdso $@
-> -endif
-> +vdso-install-$(CONFIG_VDSO) +=3D arch/arm/vdso/vdso.so.dbg
->
->  # My testing targets (bypasses dependencies)
->  bp:;   $(Q)$(MAKE) $(build)=3D$(boot) $(boot)/bootpImage
-> @@ -331,7 +327,6 @@ define archhelp
->    echo  '                  Install using (your) ~/bin/$(INSTALLKERNEL) o=
-r'
->    echo  '                  (distribution) /sbin/$(INSTALLKERNEL) or'
->    echo  '                  install to $$(INSTALL_PATH) and run lilo'
-> -  echo  '  vdso_install  - Install unstripped vdso.so to $$(INSTALL_MOD_=
-PATH)/vdso'
->    echo
->    echo  '  multi_v7_lpae_defconfig     - multi_v7_defconfig with CONFIG_=
-ARM_LPAE enabled'
->  endef
-> diff --git a/arch/arm/vdso/Makefile b/arch/arm/vdso/Makefile
-> index 515ca33b854c..d761bd2e2f40 100644
-> --- a/arch/arm/vdso/Makefile
-> +++ b/arch/arm/vdso/Makefile
-> @@ -63,28 +63,3 @@ quiet_cmd_vdsold_and_vdso_check =3D LD      $@
->
->  quiet_cmd_vdsomunge =3D MUNGE   $@
->        cmd_vdsomunge =3D $(objtree)/$(obj)/vdsomunge $< $@
-> -
-> -#
-> -# Install the unstripped copy of vdso.so.dbg.  If our toolchain
-> -# supports build-id, install .build-id links as well.
-> -#
-> -# Cribbed from arch/x86/vdso/Makefile.
-> -#
-> -quiet_cmd_vdso_install =3D INSTALL $<
-> -define cmd_vdso_install
-> -       cp $< "$(MODLIB)/vdso/vdso.so"; \
-> -       if readelf -n $< | grep -q 'Build ID'; then \
-> -         buildid=3D`readelf -n $< |grep 'Build ID' |sed -e 's/^.*Build I=
-D: \(.*\)$$/\1/'`; \
-> -         first=3D`echo $$buildid | cut -b-2`; \
-> -         last=3D`echo $$buildid | cut -b3-`; \
-> -         mkdir -p "$(MODLIB)/vdso/.build-id/$$first"; \
-> -         ln -sf "../../vdso.so" "$(MODLIB)/vdso/.build-id/$$first/$$last=
-.debug"; \
-> -       fi
-> -endef
-> -
-> -$(MODLIB)/vdso: FORCE
-> -       @mkdir -p $(MODLIB)/vdso
-> -
-> -PHONY +=3D vdso_install
-> -vdso_install: $(obj)/vdso.so.dbg $(MODLIB)/vdso
-> -       $(call cmd,vdso_install)
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index 2d49aea0ff67..4bd85cc0d32b 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -169,12 +169,6 @@ install: KBUILD_IMAGE :=3D $(boot)/Image
->  install zinstall:
->         $(call cmd,install)
->
-> -PHONY +=3D vdso_install
-> -vdso_install:
-> -       $(Q)$(MAKE) $(build)=3Darch/arm64/kernel/vdso $@
-> -       $(if $(CONFIG_COMPAT_VDSO), \
-> -               $(Q)$(MAKE) $(build)=3Darch/arm64/kernel/vdso32 $@)
-> -
->  archprepare:
->         $(Q)$(MAKE) $(build)=3Darch/arm64/tools kapi
->  ifeq ($(CONFIG_ARM64_ERRATUM_843419),y)
-> @@ -205,6 +199,9 @@ ifdef CONFIG_COMPAT_VDSO
->  endif
->  endif
->
-> +vdso-install-y                         +=3D arch/arm64/kernel/vdso/vdso.=
-so.dbg
-> +vdso-install-$(CONFIG_COMPAT_VDSO)     +=3D arch/arm64/kernel/vdso32/vds=
-o.so.dbg:vdso32.so
-> +
->  include $(srctree)/scripts/Makefile.defconf
->
->  PHONY +=3D virtconfig
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Mak=
-efile
-> index fe7a53c6781f..8818287f1095 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -78,13 +78,3 @@ include/generated/vdso-offsets.h: $(obj)/vdso.so.dbg F=
-ORCE
->  # Actual build commands
->  quiet_cmd_vdsold_and_vdso_check =3D LD      $@
->        cmd_vdsold_and_vdso_check =3D $(cmd_ld); $(cmd_vdso_check)
-> -
-> -# Install commands for the unstripped file
-> -quiet_cmd_vdso_install =3D INSTALL $@
-> -      cmd_vdso_install =3D cp $(obj)/$@.dbg $(MODLIB)/vdso/$@
-> -
-> -vdso.so: $(obj)/vdso.so.dbg
-> -       @mkdir -p $(MODLIB)/vdso
-> -       $(call cmd,vdso_install)
-> -
-> -vdso_install: vdso.so
-> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32=
-/Makefile
-> index 2f73e5bca213..1f911a76c5af 100644
-> --- a/arch/arm64/kernel/vdso32/Makefile
-> +++ b/arch/arm64/kernel/vdso32/Makefile
-> @@ -172,13 +172,3 @@ gen-vdsosym :=3D $(srctree)/$(src)/../vdso/gen_vdso_=
-offsets.sh
->  quiet_cmd_vdsosym =3D VDSOSYM $@
->  # The AArch64 nm should be able to read an AArch32 binary
->        cmd_vdsosym =3D $(NM) $< | $(gen-vdsosym) | LC_ALL=3DC sort > $@
-> -
-> -# Install commands for the unstripped file
-> -quiet_cmd_vdso_install =3D INSTALL32 $@
-> -      cmd_vdso_install =3D cp $(obj)/$@.dbg $(MODLIB)/vdso/vdso32.so
-> -
-> -vdso.so: $(obj)/vdso.so.dbg
-> -       @mkdir -p $(MODLIB)/vdso
-> -       $(call cmd,vdso_install)
-> -
-> -vdso_install: vdso.so
+>  endchoice
 > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index fb0fada43197..b86f2ff31659 100644
+> index fb0fada..89a6e61 100644
 > --- a/arch/loongarch/Makefile
 > +++ b/arch/loongarch/Makefile
-> @@ -136,9 +136,7 @@ vdso_prepare: prepare0
->         $(Q)$(MAKE) $(build)=3Darch/loongarch/vdso include/generated/vdso=
--offsets.h
->  endif
+> @@ -25,6 +25,29 @@ endif
+>  32bit-emul             =3D elf32loongarch
+>  64bit-emul             =3D elf64loongarch
 >
-> -PHONY +=3D vdso_install
-> -vdso_install:
-> -       $(Q)$(MAKE) $(build)=3Darch/loongarch/vdso $@
-> +vdso-install-y +=3D arch/loongarch/vdso/vdso.so.dbg
->
->  all:   $(notdir $(KBUILD_IMAGE))
->
-> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-> index 5c97d1463328..c74c9921304f 100644
-> --- a/arch/loongarch/vdso/Makefile
-> +++ b/arch/loongarch/vdso/Makefile
-> @@ -83,13 +83,3 @@ $(obj)/vdso.so: $(obj)/vdso.so.dbg FORCE
->  obj-y +=3D vdso.o
->
->  $(obj)/vdso.o : $(obj)/vdso.so
-> -
-> -# install commands for the unstripped file
-> -quiet_cmd_vdso_install =3D INSTALL $@
-> -      cmd_vdso_install =3D cp $(obj)/$@.dbg $(MODLIB)/vdso/$@
-> -
-> -vdso.so: $(obj)/vdso.so.dbg
-> -       @mkdir -p $(MODLIB)/vdso
-> -       $(call cmd,vdso_install)
-> -
-> -vdso_install: vdso.so
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index 1329e060c548..18a47b4d6795 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -131,12 +131,6 @@ endif
->  libs-y +=3D arch/riscv/lib/
->  libs-$(CONFIG_EFI_STUB) +=3D $(objtree)/drivers/firmware/efi/libstub/lib=
-.a
->
-> -PHONY +=3D vdso_install
-> -vdso_install:
-> -       $(Q)$(MAKE) $(build)=3Darch/riscv/kernel/vdso $@
-> -       $(if $(CONFIG_COMPAT),$(Q)$(MAKE) \
-> -               $(build)=3Darch/riscv/kernel/compat_vdso compat_$@)
-> -
->  ifeq ($(KBUILD_EXTMOD),)
->  ifeq ($(CONFIG_MMU),y)
->  prepare: vdso_prepare
-> @@ -148,6 +142,9 @@ vdso_prepare: prepare0
->  endif
->  endif
->
-> +vdso-install-y                 +=3D arch/riscv/kernel/vdso/vdso.so.dbg
-> +vdso-install-$(CONFIG_COMPAT)  +=3D arch/riscv/kernel/compat_vdso/compat=
-_vdso.so.dbg:../compat_vdso/compat_vdso.so
-Why do we need ":../compat_vdso/compat_vdso.so" here?
+> +ifdef CONFIG_OBJTOOL
+> +# https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3Decb802=
+d02eeb
+> +# https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3D816029=
+e06768
+> +ifeq ($(shell as --help 2>&1 | grep -e '-mthin-add-sub'),)
+> +  $(error Sorry, you need a newer gas version with -mthin-add-sub option=
+)
+I prefer no error out here, because without this option we can still
+built a runnable kernel.
 
-> +
->  ifneq ($(CONFIG_XIP_KERNEL),y)
->  ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_ARCH_CANAAN),yy)
->  KBUILD_IMAGE :=3D $(boot)/loader.bin
-> diff --git a/arch/riscv/kernel/compat_vdso/Makefile b/arch/riscv/kernel/c=
-ompat_vdso/Makefile
-> index b86e5e2c3aea..62fa393b2eb2 100644
-> --- a/arch/riscv/kernel/compat_vdso/Makefile
-> +++ b/arch/riscv/kernel/compat_vdso/Makefile
-> @@ -76,13 +76,3 @@ quiet_cmd_compat_vdsold =3D VDSOLD  $@
->  # actual build commands
->  quiet_cmd_compat_vdsoas =3D VDSOAS $@
->        cmd_compat_vdsoas =3D $(COMPAT_CC) $(a_flags) $(COMPAT_CC_FLAGS) -=
-c -o $@ $<
-> -
-> -# install commands for the unstripped file
-> -quiet_cmd_compat_vdso_install =3D INSTALL $@
-> -      cmd_compat_vdso_install =3D cp $(obj)/$@.dbg $(MODLIB)/compat_vdso=
-/$@
-> -
-> -compat_vdso.so: $(obj)/compat_vdso.so.dbg
-> -       @mkdir -p $(MODLIB)/compat_vdso
-> -       $(call cmd,compat_vdso_install)
-> -
-> -compat_vdso_install: compat_vdso.so
-> diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Mak=
-efile
-> index 6b1dba11bf6d..e8aa7c380007 100644
-> --- a/arch/riscv/kernel/vdso/Makefile
-> +++ b/arch/riscv/kernel/vdso/Makefile
-> @@ -73,13 +73,3 @@ quiet_cmd_vdsold =3D VDSOLD  $@
->        cmd_vdsold =3D $(LD) $(ld_flags) -T $(filter-out FORCE,$^) -o $@.t=
-mp && \
->                     $(OBJCOPY) $(patsubst %, -G __vdso_%, $(vdso-syms)) $=
-@.tmp $@ && \
->                     rm $@.tmp
-> -
-> -# install commands for the unstripped file
-> -quiet_cmd_vdso_install =3D INSTALL $@
-> -      cmd_vdso_install =3D cp $(obj)/$@.dbg $(MODLIB)/vdso/$@
-> -
-> -vdso.so: $(obj)/vdso.so.dbg
-> -       @mkdir -p $(MODLIB)/vdso
-> -       $(call cmd,vdso_install)
-> -
-> -vdso_install: vdso.so
-> diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-> index a53a36ee0731..73873e451686 100644
-> --- a/arch/s390/Makefile
-> +++ b/arch/s390/Makefile
-> @@ -138,9 +138,6 @@ bzImage: vmlinux
->  zfcpdump:
->         $(Q)$(MAKE) $(build)=3D$(boot) $(boot)/$@
->
-> -vdso_install:
-> -       $(Q)$(MAKE) $(build)=3Darch/$(ARCH)/kernel/vdso64 $@
-> -
->  archheaders:
->         $(Q)$(MAKE) $(build)=3D$(syscalls) uapi
->
-> @@ -160,6 +157,9 @@ vdso_prepare: prepare0
->         $(if $(CONFIG_COMPAT),$(Q)$(MAKE) \
->                 $(build)=3Darch/s390/kernel/vdso32 include/generated/vdso=
-32-offsets.h)
->
-> +vdso-install-y                 +=3D arch/s390/kernel/vdso64/vdso64.so.db=
-g
-> +vdso-install-$(CONFIG_COMPAT)  +=3D arch/s390/kernel/vdso32/vdso32.so.db=
-g
-> +
->  ifdef CONFIG_EXPOLINE_EXTERN
->  modules_prepare: expoline_prepare
->  expoline_prepare: scripts
-> diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/M=
-akefile
-> index 23e868b79a6c..caec7db6f966 100644
-> --- a/arch/s390/kernel/vdso32/Makefile
-> +++ b/arch/s390/kernel/vdso32/Makefile
-> @@ -61,16 +61,6 @@ quiet_cmd_vdso32as =3D VDSO32A $@
->  quiet_cmd_vdso32cc =3D VDSO32C $@
->        cmd_vdso32cc =3D $(CC) $(c_flags) -c -o $@ $<
->
-> -# install commands for the unstripped file
-> -quiet_cmd_vdso_install =3D INSTALL $@
-> -      cmd_vdso_install =3D cp $(obj)/$@.dbg $(MODLIB)/vdso/$@
-> -
-> -vdso32.so: $(obj)/vdso32.so.dbg
-> -       @mkdir -p $(MODLIB)/vdso
-> -       $(call cmd,vdso_install)
-> -
-> -vdso_install: vdso32.so
-> -
->  # Generate VDSO offsets using helper script
->  gen-vdsosym :=3D $(srctree)/$(src)/gen_vdso_offsets.sh
->  quiet_cmd_vdsosym =3D VDSOSYM $@
-> diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/M=
-akefile
-> index fc1c6ff8178f..e3c9085f8fa7 100644
-> --- a/arch/s390/kernel/vdso64/Makefile
-> +++ b/arch/s390/kernel/vdso64/Makefile
-> @@ -70,16 +70,6 @@ quiet_cmd_vdso64as =3D VDSO64A $@
->  quiet_cmd_vdso64cc =3D VDSO64C $@
->        cmd_vdso64cc =3D $(CC) $(c_flags) -c -o $@ $<
->
-> -# install commands for the unstripped file
-> -quiet_cmd_vdso_install =3D INSTALL $@
-> -      cmd_vdso_install =3D cp $(obj)/$@.dbg $(MODLIB)/vdso/$@
-> -
-> -vdso64.so: $(obj)/vdso64.so.dbg
-> -       @mkdir -p $(MODLIB)/vdso
-> -       $(call cmd,vdso_install)
-> -
-> -vdso_install: vdso64.so
-> -
->  # Generate VDSO offsets using helper script
->  gen-vdsosym :=3D $(srctree)/$(src)/gen_vdso_offsets.sh
->  quiet_cmd_vdsosym =3D VDSOSYM $@
-> diff --git a/arch/sparc/Makefile b/arch/sparc/Makefile
-> index 7417345c6639..5f6035936131 100644
-> --- a/arch/sparc/Makefile
-> +++ b/arch/sparc/Makefile
-> @@ -76,9 +76,8 @@ install:
->  archheaders:
->         $(Q)$(MAKE) $(build)=3Darch/sparc/kernel/syscalls all
->
-> -PHONY +=3D vdso_install
-> -vdso_install:
-> -       $(Q)$(MAKE) $(build)=3Darch/sparc/vdso $@
-> +vdso-install-$(CONFIG_SPARC64) +=3D arch/sparc/vdso/vdso64.so.dbg
-> +vdso-install-$(CONFIG_COMPAT)  +=3D arch/sparc/vdso/vdso32.so.dbg
->
->  # This is the image used for packaging
->  KBUILD_IMAGE :=3D $(boot)/zImage
-> diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-> index 77d7b9032158..d08c3a0443f3 100644
-> --- a/arch/sparc/vdso/Makefile
-> +++ b/arch/sparc/vdso/Makefile
-> @@ -116,30 +116,3 @@ quiet_cmd_vdso =3D VDSO    $@
->
->  VDSO_LDFLAGS =3D -shared --hash-style=3Dboth --build-id=3Dsha1 -Bsymboli=
-c
->  GCOV_PROFILE :=3D n
-> -
-> -#
-> -# Install the unstripped copies of vdso*.so.  If our toolchain supports
-> -# build-id, install .build-id links as well.
-> -#
-> -quiet_cmd_vdso_install =3D INSTALL $(@:install_%=3D%)
-> -define cmd_vdso_install
-> -       cp $< "$(MODLIB)/vdso/$(@:install_%=3D%)"; \
-> -       if readelf -n $< |grep -q 'Build ID'; then \
-> -         buildid=3D`readelf -n $< |grep 'Build ID' |sed -e 's/^.*Build I=
-D: \(.*\)$$/\1/'`; \
-> -         first=3D`echo $$buildid | cut -b-2`; \
-> -         last=3D`echo $$buildid | cut -b3-`; \
-> -         mkdir -p "$(MODLIB)/vdso/.build-id/$$first"; \
-> -         ln -sf "../../$(@:install_%=3D%)" "$(MODLIB)/vdso/.build-id/$$f=
-irst/$$last.debug"; \
-> -       fi
-> -endef
-> -
-> -vdso_img_insttargets :=3D $(vdso_img_sodbg:%.dbg=3Dinstall_%)
-> -
-> -$(MODLIB)/vdso: FORCE
-> -       @mkdir -p $(MODLIB)/vdso
-> -
-> -$(vdso_img_insttargets): install_%: $(obj)/%.dbg $(MODLIB)/vdso FORCE
-> -       $(call cmd,vdso_install)
-> -
-> -PHONY +=3D vdso_install $(vdso_img_insttargets)
-> -vdso_install: $(vdso_img_insttargets) FORCE
-> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> index 5bfe5caaa444..3ff53a2d4ff0 100644
-> --- a/arch/x86/Makefile
-> +++ b/arch/x86/Makefile
-> @@ -291,9 +291,10 @@ PHONY +=3D install
->  install:
->         $(call cmd,install)
->
-> -PHONY +=3D vdso_install
-> -vdso_install:
-> -       $(Q)$(MAKE) $(build)=3Darch/x86/entry/vdso $@
-> +vdso-install-$(CONFIG_X86_64)          +=3D arch/x86/entry/vdso/vdso64.s=
-o.dbg
-> +vdso-install-$(CONFIG_X86_X32_ABI)     +=3D arch/x86/entry/vdso/vdsox32.=
-so.dbg
-> +vdso-install-$(CONFIG_X86_32)          +=3D arch/x86/entry/vdso/vdso32.s=
-o.dbg
-> +vdso-install-$(CONFIG_IA32_EMULATION)  +=3D arch/x86/entry/vdso/vdso32.s=
-o.dbg
->
->  archprepare: checkbin
->  checkbin:
-> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-> index 6a1821bd7d5e..c197efd82922 100644
-> --- a/arch/x86/entry/vdso/Makefile
-> +++ b/arch/x86/entry/vdso/Makefile
-> @@ -190,31 +190,4 @@ GCOV_PROFILE :=3D n
->  quiet_cmd_vdso_and_check =3D VDSO    $@
->        cmd_vdso_and_check =3D $(cmd_vdso); $(cmd_vdso_check)
->
-> -#
-> -# Install the unstripped copies of vdso*.so.  If our toolchain supports
-> -# build-id, install .build-id links as well.
-> -#
-> -quiet_cmd_vdso_install =3D INSTALL $(@:install_%=3D%)
-> -define cmd_vdso_install
-> -       cp $< "$(MODLIB)/vdso/$(@:install_%=3D%)"; \
-> -       if readelf -n $< |grep -q 'Build ID'; then \
-> -         buildid=3D`readelf -n $< |grep 'Build ID' |sed -e 's/^.*Build I=
-D: \(.*\)$$/\1/'`; \
-> -         first=3D`echo $$buildid | cut -b-2`; \
-> -         last=3D`echo $$buildid | cut -b3-`; \
-> -         mkdir -p "$(MODLIB)/vdso/.build-id/$$first"; \
-> -         ln -sf "../../$(@:install_%=3D%)" "$(MODLIB)/vdso/.build-id/$$f=
-irst/$$last.debug"; \
-> -       fi
-> -endef
-> -
-> -vdso_img_insttargets :=3D $(vdso_img_sodbg:%.dbg=3Dinstall_%)
-> -
-> -$(MODLIB)/vdso: FORCE
-> -       @mkdir -p $(MODLIB)/vdso
-> -
-> -$(vdso_img_insttargets): install_%: $(obj)/%.dbg $(MODLIB)/vdso
-> -       $(call cmd,vdso_install)
-> -
-> -PHONY +=3D vdso_install $(vdso_img_insttargets)
-> -vdso_install: $(vdso_img_insttargets)
-> -
->  clean-files :=3D vdso32.so vdso32.so.dbg vdso64* vdso-image-*.c vdsox32.=
-so*
-> diff --git a/scripts/Makefile.vdsoinst b/scripts/Makefile.vdsoinst
-> new file mode 100644
-> index 000000000000..1022d9fdd976
-> --- /dev/null
-> +++ b/scripts/Makefile.vdsoinst
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> +# Install unstripped copies of vDSO
-> +# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> +
-> +PHONY :=3D __default
-> +__default:
-> +       @:
-> +
-> +include $(srctree)/scripts/Kbuild.include
-> +
-> +install-dir :=3D $(MODLIB)/vdso
-> +
-> +define gen_install_rules
-> +
-> +src :=3D $$(firstword $$(subst :,$(space),$(1)))
-> +dest :=3D $(install-dir)/$$(or $$(word 2,$$(subst :,$(space),$(1))),$$(p=
-atsubst %.dbg,%,$$(notdir $(1))))
-> +
-> +__default: $$(dest)
-> +$$(dest): $$(src) FORCE
-> +       $$(call cmd,install)
-> +
-> +# Some architectures create .build-id symlinks
-> +ifneq ($(filter arm sparc x86, $(SRCARCH)),)
-> +link :=3D $(install-dir)/.build-id/$$(shell $(READELF) -n $$(src) | sed =
--n 's@^.*Build ID: \(..\)\(.*\)@\1/\2@p')
-> +
-> +__default: $$(link)
-> +$$(link): $$(dest) FORCE
-> +       $$(call cmd,symlink)
+> +endif
+> +KBUILD_AFLAGS  +=3D $(call cc-option,-mthin-add-sub) $(call cc-option,-W=
+a$(comma)-mthin-add-sub)
+> +KBUILD_CFLAGS  +=3D $(call cc-option,-mthin-add-sub) $(call cc-option,-W=
+a$(comma)-mthin-add-sub)
+> +KBUILD_CFLAGS  +=3D -fno-optimize-sibling-calls -fno-jump-tables -falign=
+-functions=3D4
 > +endif
 > +
-> +endef
+> +ifdef CONFIG_UNWINDER_ORC
+> +orc_hash_h :=3D arch/$(SRCARCH)/include/generated/asm/orc_hash.h
+> +orc_hash_sh :=3D $(srctree)/scripts/orc_hash.sh
+> +targets +=3D $(orc_hash_h)
+> +quiet_cmd_orc_hash =3D GEN     $@
+> +      cmd_orc_hash =3D mkdir -p $(dir $@); \
+> +                    $(CONFIG_SHELL) $(orc_hash_sh) < $< > $@
+> +$(orc_hash_h): $(srctree)/arch/loongarch/include/asm/orc_types.h $(orc_h=
+ash_sh) FORCE
+> +       $(call if_changed,orc_hash)
+> +archprepare: $(orc_hash_h)
+> +endif
 > +
-> +$(foreach x, $(sort $(INSTALL_FILES)), $(eval $(call gen_install_rules,$=
-(x))))
-> +
-> +quiet_cmd_install =3D INSTALL $@
-> +      cmd_install =3D mkdir -p $(dir $@); cp $< $@
-> +
-> +quiet_cmd_symlink =3D SYMLINK $@
-> +      cmd_symlink =3D mkdir -p $(dir $@); ln -sf --relative $< $@
-> +
-> +PHONY +=3D FORCE
-> +FORCE:
-> +
-> +.PHONY: $(PHONY)
-> --
-> 2.39.2
+>  ifdef CONFIG_DYNAMIC_FTRACE
+>  KBUILD_CPPFLAGS +=3D -DCC_USING_PATCHABLE_FUNCTION_ENTRY
+>  CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D2
+> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/=
+configs/loongson3_defconfig
+> index a3b52aa..de911c3 100644
+> --- a/arch/loongarch/configs/loongson3_defconfig
+> +++ b/arch/loongarch/configs/loongson3_defconfig
+> @@ -5,6 +5,7 @@ CONFIG_NO_HZ=3Dy
+>  CONFIG_HIGH_RES_TIMERS=3Dy
+>  CONFIG_BPF_SYSCALL=3Dy
+>  CONFIG_BPF_JIT=3Dy
+> +CONFIG_BPF_JIT_ALWAYS_ON=3Dy
+>  CONFIG_PREEMPT=3Dy
+>  CONFIG_BSD_PROCESS_ACCT=3Dy
+>  CONFIG_BSD_PROCESS_ACCT_V3=3Dy
+> diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/a=
+sm/Kbuild
+> index 93783fa..2bb285c 100644
+> --- a/arch/loongarch/include/asm/Kbuild
+> +++ b/arch/loongarch/include/asm/Kbuild
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +generated-y +=3D orc_hash.h
+>  generic-y +=3D dma-contiguous.h
+>  generic-y +=3D mcs_spinlock.h
+>  generic-y +=3D parport.h
+> diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/as=
+m/bug.h
+> index d4ca3ba..0838887 100644
+> --- a/arch/loongarch/include/asm/bug.h
+> +++ b/arch/loongarch/include/asm/bug.h
+> @@ -44,6 +44,7 @@
+>  do {                                                           \
+>         instrumentation_begin();                                \
+>         __BUG_FLAGS(BUGFLAG_WARNING|(flags));                   \
+> +       annotate_reachable();                                   \
+>         instrumentation_end();                                  \
+>  } while (0)
 >
+> diff --git a/arch/loongarch/include/asm/linkage.h b/arch/loongarch/includ=
+e/asm/linkage.h
+> index 81b0c4c..ae4e100 100644
+> --- a/arch/loongarch/include/asm/linkage.h
+> +++ b/arch/loongarch/include/asm/linkage.h
+> @@ -2,6 +2,8 @@
+>  #ifndef __ASM_LINKAGE_H
+>  #define __ASM_LINKAGE_H
+>
+> +#include <asm/unwind_hints.h>
+> +
+>  #define __ALIGN                .align 2
+>  #define __ALIGN_STR    __stringify(__ALIGN)
+>
+> diff --git a/arch/loongarch/include/asm/module.h b/arch/loongarch/include=
+/asm/module.h
+> index 2ecd82b..96af0ba 100644
+> --- a/arch/loongarch/include/asm/module.h
+> +++ b/arch/loongarch/include/asm/module.h
+> @@ -6,6 +6,7 @@
+>  #define _ASM_MODULE_H
+>
+>  #include <asm/inst.h>
+> +#include <asm/orc_types.h>
+>  #include <asm-generic/module.h>
+>
+>  #define RELA_STACK_DEPTH 16
+> @@ -23,6 +24,12 @@ struct mod_arch_specific {
+>
+>         /* For CONFIG_DYNAMIC_FTRACE */
+>         struct plt_entry *ftrace_trampolines;
+> +
+> +#ifdef CONFIG_UNWINDER_ORC
+> +       unsigned int num_orcs;
+> +       int *orc_unwind_ip;
+> +       struct orc_entry *orc_unwind;
+> +#endif
+>  };
+>
+>  struct got_entry {
+> diff --git a/arch/loongarch/include/asm/orc_header.h b/arch/loongarch/inc=
+lude/asm/orc_header.h
+> new file mode 100644
+> index 0000000..07bacf3
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/orc_header.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/* Copyright (c) Meta Platforms, Inc. and affiliates. */
+> +
+> +#ifndef _ORC_HEADER_H
+> +#define _ORC_HEADER_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/compiler.h>
+> +#include <asm/orc_hash.h>
+> +
+> +/*
+> + * The header is currently a 20-byte hash of the ORC entry definition; s=
+ee
+> + * scripts/orc_hash.sh.
+> + */
+> +#define ORC_HEADER                                     \
+> +       __used __section(".orc_header") __aligned(4)    \
+> +       static const u8 orc_header[] =3D { ORC_HASH }
+> +
+> +#endif /* _ORC_HEADER_H */
+> diff --git a/arch/loongarch/include/asm/orc_lookup.h b/arch/loongarch/inc=
+lude/asm/orc_lookup.h
+> new file mode 100644
+> index 0000000..2416312
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/orc_lookup.h
+> @@ -0,0 +1,34 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Copyright (C) 2017 Josh Poimboeuf <jpoimboe@redhat.com>
+> + */
+> +#ifndef _ORC_LOOKUP_H
+> +#define _ORC_LOOKUP_H
+> +
+> +/*
+> + * This is a lookup table for speeding up access to the .orc_unwind tabl=
+e.
+> + * Given an input address offset, the corresponding lookup table entry
+> + * specifies a subset of the .orc_unwind table to search.
+> + *
+> + * Each block represents the end of the previous range and the start of =
+the
+> + * next range.  An extra block is added to give the last range an end.
+> + *
+> + * The block size should be a power of 2 to avoid a costly 'div' instruc=
+tion.
+> + *
+> + * A block size of 256 was chosen because it roughly doubles unwinder
+> + * performance while only adding ~5% to the ORC data footprint.
+> + */
+> +#define LOOKUP_BLOCK_ORDER     8
+> +#define LOOKUP_BLOCK_SIZE      (1 << LOOKUP_BLOCK_ORDER)
+> +
+> +#ifndef LINKER_SCRIPT
+> +
+> +extern unsigned int orc_lookup[];
+> +extern unsigned int orc_lookup_end[];
+> +
+> +#define LOOKUP_START_IP                (unsigned long)_stext
+> +#define LOOKUP_STOP_IP         (unsigned long)_etext
+> +
+> +#endif /* LINKER_SCRIPT */
+> +
+> +#endif /* _ORC_LOOKUP_H */
+> diff --git a/arch/loongarch/include/asm/orc_types.h b/arch/loongarch/incl=
+ude/asm/orc_types.h
+> new file mode 100644
+> index 0000000..1d37e62
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/orc_types.h
+> @@ -0,0 +1,58 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +#ifndef _ORC_TYPES_H
+> +#define _ORC_TYPES_H
+> +
+> +#include <linux/types.h>
+> +
+> +/*
+> + * The ORC_REG_* registers are base registers which are used to find oth=
+er
+> + * registers on the stack.
+> + *
+> + * ORC_REG_PREV_SP, also known as DWARF Call Frame Address (CFA), is the
+> + * address of the previous frame: the caller's SP before it called the c=
+urrent
+> + * function.
+> + *
+> + * ORC_REG_UNDEFINED means the corresponding register's value didn't cha=
+nge in
+> + * the current frame.
+> + *
+> + * The most commonly used base registers are SP and BP -- which the prev=
+ious SP
+> + * is usually based on -- and PREV_SP and UNDEFINED -- which the previou=
+s BP is
+> + * usually based on.
+> + *
+> + * The rest of the base registers are needed for special cases like entr=
+y code
+> + * and GCC realigned stacks.
+> + */
+> +#define ORC_REG_UNDEFINED              0
+> +#define ORC_REG_PREV_SP                        1
+> +#define ORC_REG_SP                     2
+> +#define ORC_REG_BP                     3
+Use FP instead of BP in this patch, too.
 
+> +#define ORC_REG_MAX                    4
+> +
+> +#define ORC_TYPE_UNDEFINED             0
+> +#define ORC_TYPE_END_OF_STACK          1
+> +#define ORC_TYPE_CALL                  2
+> +#define ORC_TYPE_REGS                  3
+> +#define ORC_TYPE_REGS_PARTIAL          4
+> +
+> +#ifndef __ASSEMBLY__
+> +/*
+> + * This struct is more or less a vastly simplified version of the DWARF =
+Call
+> + * Frame Information standard.  It contains only the necessary parts of =
+DWARF
+> + * CFI, simplified for ease of access by the in-kernel unwinder.  It tel=
+ls the
+> + * unwinder how to find the previous SP and BP (and sometimes entry regs=
+) on
+> + * the stack for a given code address.  Each instance of the struct corr=
+esponds
+> + * to one or more code locations.
+> + */
+> +struct orc_entry {
+> +       s16             sp_offset;
+> +       s16             bp_offset;
+> +       s16             ra_offset;
+> +       unsigned int    sp_reg:4;
+> +       unsigned int    bp_reg:4;
+> +       unsigned int    ra_reg:4;
+> +       unsigned int    type:3;
+> +       unsigned int    signal:1;
+> +};
+> +#endif /* __ASSEMBLY__ */
+> +
+> +#endif /* _ORC_TYPES_H */
+> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/inc=
+lude/asm/stackframe.h
+> index 4fb1e64..45b507a 100644
+> --- a/arch/loongarch/include/asm/stackframe.h
+> +++ b/arch/loongarch/include/asm/stackframe.h
+> @@ -13,6 +13,7 @@
+>  #include <asm/asm-offsets.h>
+>  #include <asm/loongarch.h>
+>  #include <asm/thread_info.h>
+> +#include <asm/unwind_hints.h>
+>
+>  /* Make the addition of cfi info a little easier. */
+>         .macro cfi_rel_offset reg offset=3D0 docfi=3D0
+> @@ -162,6 +163,7 @@
+>         li.w    t0, CSR_CRMD_WE
+>         csrxchg t0, t0, LOONGARCH_CSR_CRMD
+>  #endif
+> +       UNWIND_HINT_REGS
+>         .endm
+>
+>         .macro  SAVE_ALL docfi=3D0
+> @@ -219,6 +221,7 @@
+>
+>         .macro  RESTORE_SP_AND_RET docfi=3D0
+>         cfi_ld  sp, PT_R3, \docfi
+> +       UNWIND_HINT_FUNC
+>         ertn
+>         .endm
+>
+> diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include=
+/asm/unwind.h
+> index b9dce87..d36e04e 100644
+> --- a/arch/loongarch/include/asm/unwind.h
+> +++ b/arch/loongarch/include/asm/unwind.h
+> @@ -16,6 +16,7 @@
+>  enum unwinder_type {
+>         UNWINDER_GUESS,
+>         UNWINDER_PROLOGUE,
+> +       UNWINDER_ORC,
+>  };
+>
+>  struct unwind_state {
+> @@ -24,7 +25,7 @@ struct unwind_state {
+>         struct task_struct *task;
+>         bool first, error, reset;
+>         int graph_idx;
+> -       unsigned long sp, pc, ra;
+> +       unsigned long sp, pc, ra, fp;
+>  };
+>
+>  bool default_next_frame(struct unwind_state *state);
+> @@ -34,6 +35,17 @@ void unwind_start(struct unwind_state *state,
+>  bool unwind_next_frame(struct unwind_state *state);
+>  unsigned long unwind_get_return_address(struct unwind_state *state);
+>
+> +#ifdef CONFIG_UNWINDER_ORC
+> +void unwind_init(void);
+> +void unwind_module_init(struct module *mod, void *orc_ip, size_t orc_ip_=
+size,
+> +                       void *orc, size_t orc_size);
+> +#else
+> +static inline void unwind_init(void) {}
+> +static inline
+> +void unwind_module_init(struct module *mod, void *orc_ip, size_t orc_ip_=
+size,
+> +                       void *orc, size_t orc_size) {}
+> +#endif
+> +
+>  static inline bool unwind_done(struct unwind_state *state)
+>  {
+>         return state->stack_info.type =3D=3D STACK_TYPE_UNKNOWN;
+> @@ -61,14 +73,17 @@ static __always_inline void __unwind_start(struct unw=
+ind_state *state,
+>                 state->sp =3D regs->regs[3];
+>                 state->pc =3D regs->csr_era;
+>                 state->ra =3D regs->regs[1];
+> +               state->fp =3D regs->regs[22];
+>         } else if (task && task !=3D current) {
+>                 state->sp =3D thread_saved_fp(task);
+>                 state->pc =3D thread_saved_ra(task);
+>                 state->ra =3D 0;
+> +               state->fp =3D 0;
+>         } else {
+>                 state->sp =3D (unsigned long)__builtin_frame_address(0);
+>                 state->pc =3D (unsigned long)__builtin_return_address(0);
+>                 state->ra =3D 0;
+> +               state->fp =3D 0;
+>         }
+>         state->task =3D task;
+>         get_stack_info(state->sp, state->task, &state->stack_info);
+> @@ -77,6 +92,9 @@ static __always_inline void __unwind_start(struct unwin=
+d_state *state,
+>
+>  static __always_inline unsigned long __unwind_get_return_address(struct =
+unwind_state *state)
+>  {
+> -       return unwind_done(state) ? 0 : state->pc;
+> +       if (unwind_done(state))
+> +               return 0;
+> +
+> +       return __kernel_text_address(state->pc) ? state->pc : 0;
+>  }
+>  #endif /* _ASM_UNWIND_H */
+> diff --git a/arch/loongarch/include/asm/unwind_hints.h b/arch/loongarch/i=
+nclude/asm/unwind_hints.h
+> new file mode 100644
+> index 0000000..82443fe
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/unwind_hints.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_LOONGARCH_UNWIND_HINTS_H
+> +#define _ASM_LOONGARCH_UNWIND_HINTS_H
+> +
+> +#include <linux/objtool.h>
+> +#include <asm/orc_types.h>
+> +
+> +#ifdef __ASSEMBLY__
+> +
+> +.macro UNWIND_HINT_UNDEFINED
 
---=20
-Best Regards
- Guo Ren
+> +       UNWIND_HINT type=3DUNWIND_HINT_TYPE_UNDEFINED
+> +.endm
+We don't need to set sp_reg=3DORC_REG_UNDEFINED for UNWIND_HINT_UNDEFINED?
+
+> +
+> +.macro UNWIND_HINT_EMPTY
+> +       UNWIND_HINT sp_reg=3DORC_REG_UNDEFINED type=3DUNWIND_HINT_TYPE_CA=
+LL
+> +.endm
+We don't need to define UNWIND_HINT_END_OF_STACK?
+
+> +
+> +.macro UNWIND_HINT_REGS
+> +       UNWIND_HINT sp_reg=3DORC_REG_SP type=3DUNWIND_HINT_TYPE_REGS
+> +.endm
+> +
+> +.macro UNWIND_HINT_FUNC
+> +       UNWIND_HINT sp_reg=3DORC_REG_SP type=3DUNWIND_HINT_TYPE_CALL
+> +.endm
+We don't need to set sp_offset for UNWIND_HINT_REGS and UNWIND_HINT_FUNC?
+
+> +
+> +#endif /* __ASSEMBLY__ */
+> +
+> +#endif /* _ASM_LOONGARCH_UNWIND_HINTS_H */
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
+ile
+> index 4fcc168..a89428c 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -3,6 +3,8 @@
+>  # Makefile for the Linux/LoongArch kernel.
+>  #
+>
+> +OBJECT_FILES_NON_STANDARD_head.o :=3D y
+> +
+>  extra-y                :=3D vmlinux.lds
+>
+>  obj-y          +=3D head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o=
+ genex.o \
+> @@ -62,6 +64,7 @@ obj-$(CONFIG_CRASH_DUMP)      +=3D crash_dump.o
+>
+>  obj-$(CONFIG_UNWINDER_GUESS)   +=3D unwind_guess.o
+>  obj-$(CONFIG_UNWINDER_PROLOGUE) +=3D unwind_prologue.o
+> +obj-$(CONFIG_UNWINDER_ORC)     +=3D unwind_orc.o
+>
+>  obj-$(CONFIG_PERF_EVENTS)      +=3D perf_event.o perf_regs.o
+>  obj-$(CONFIG_HAVE_HW_BREAKPOINT)       +=3D hw_breakpoint.o
+> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.=
+S
+> index 65518bb..e43115f 100644
+> --- a/arch/loongarch/kernel/entry.S
+> +++ b/arch/loongarch/kernel/entry.S
+> @@ -14,11 +14,13 @@
+>  #include <asm/regdef.h>
+>  #include <asm/stackframe.h>
+>  #include <asm/thread_info.h>
+> +#include <asm/unwind_hints.h>
+>
+>         .text
+>         .cfi_sections   .debug_frame
+>         .align  5
+> -SYM_FUNC_START(handle_syscall)
+> +SYM_CODE_START(handle_syscall)
+Why?
+
+> +       UNWIND_HINT_UNDEFINED
+>         csrrd           t0, PERCPU_BASE_KS
+>         la.pcrel        t1, kernelsp
+>         add.d           t1, t1, t0
+> @@ -56,6 +58,7 @@ SYM_FUNC_START(handle_syscall)
+>         cfi_st          u0, PT_R21
+>         cfi_st          fp, PT_R22
+>
+> +       UNWIND_HINT_REGS
+>         SAVE_STATIC
+>
+>  #ifdef CONFIG_KGDB
+> @@ -71,10 +74,11 @@ SYM_FUNC_START(handle_syscall)
+>         bl              do_syscall
+>
+>         RESTORE_ALL_AND_RET
+> -SYM_FUNC_END(handle_syscall)
+> +SYM_CODE_END(handle_syscall)
+>  _ASM_NOKPROBE(handle_syscall)
+>
+>  SYM_CODE_START(ret_from_fork)
+> +       UNWIND_HINT_REGS
+>         bl              schedule_tail           # a0 =3D struct task_stru=
+ct *prev
+>         move            a0, sp
+>         bl              syscall_exit_to_user_mode
+> @@ -84,6 +88,7 @@ SYM_CODE_START(ret_from_fork)
+>  SYM_CODE_END(ret_from_fork)
+>
+>  SYM_CODE_START(ret_from_kernel_thread)
+> +       UNWIND_HINT_REGS
+>         bl              schedule_tail           # a0 =3D struct task_stru=
+ct *prev
+>         move            a0, s1
+>         jirl            ra, s0, 0
+> diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.=
+S
+> index 78f0663..3f18e3b 100644
+> --- a/arch/loongarch/kernel/genex.S
+> +++ b/arch/loongarch/kernel/genex.S
+> @@ -31,7 +31,8 @@ SYM_FUNC_START(__arch_cpu_idle)
+>  1:     jr      ra
+>  SYM_FUNC_END(__arch_cpu_idle)
+>
+> -SYM_FUNC_START(handle_vint)
+> +SYM_CODE_START(handle_vint)
+> +       UNWIND_HINT_UNDEFINED
+>         BACKUP_T0T1
+>         SAVE_ALL
+>         la_abs  t1, __arch_cpu_idle
+> @@ -46,11 +47,12 @@ SYM_FUNC_START(handle_vint)
+>         la_abs  t0, do_vint
+>         jirl    ra, t0, 0
+>         RESTORE_ALL_AND_RET
+> -SYM_FUNC_END(handle_vint)
+> +SYM_CODE_END(handle_vint)
+>
+> -SYM_FUNC_START(except_vec_cex)
+> +SYM_CODE_START(except_vec_cex)
+> +       UNWIND_HINT_UNDEFINED
+>         b       cache_parity_error
+> -SYM_FUNC_END(except_vec_cex)
+> +SYM_CODE_END(except_vec_cex)
+>
+>         .macro  build_prep_badv
+>         csrrd   t0, LOONGARCH_CSR_BADV
+> @@ -66,7 +68,8 @@ SYM_FUNC_END(except_vec_cex)
+>
+>         .macro  BUILD_HANDLER exception handler prep
+>         .align  5
+> -       SYM_FUNC_START(handle_\exception)
+> +       SYM_CODE_START(handle_\exception)
+> +       UNWIND_HINT_UNDEFINED
+>         666:
+>         BACKUP_T0T1
+>         SAVE_ALL
+> @@ -76,7 +79,7 @@ SYM_FUNC_END(except_vec_cex)
+>         jirl    ra, t0, 0
+>         668:
+>         RESTORE_ALL_AND_RET
+> -       SYM_FUNC_END(handle_\exception)
+> +       SYM_CODE_END(handle_\exception)
+>         SYM_DATA(unwind_hint_\exception, .word 668b - 666b)
+>         .endm
+>
+> @@ -93,7 +96,8 @@ SYM_FUNC_END(except_vec_cex)
+>         BUILD_HANDLER watch watch none
+>         BUILD_HANDLER reserved reserved none    /* others */
+>
+> -SYM_FUNC_START(handle_sys)
+> +SYM_CODE_START(handle_sys)
+> +       UNWIND_HINT_UNDEFINED
+>         la_abs  t0, handle_syscall
+>         jr      t0
+> -SYM_FUNC_END(handle_sys)
+> +SYM_CODE_END(handle_sys)
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index 53b883d..5664390 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -43,6 +43,7 @@ SYM_DATA(kernel_offset, .long _kernel_offset);
+>         .align 12
+>
+>  SYM_CODE_START(kernel_entry)                   # kernel entry point
+> +       UNWIND_HINT_EMPTY
+I'm not sure but I think this isn't needed, because
+"OBJECT_FILES_NON_STANDARD_head.o               :=3Dy"
+
+>
+>         /* Config direct window and set PG */
+>         li.d            t0, CSR_DMW0_INIT       # UC, PLV0, 0x8000 xxxx x=
+xxx xxxx
+> diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/modul=
+e.c
+> index b13b285..83db7e5 100644
+> --- a/arch/loongarch/kernel/module.c
+> +++ b/arch/loongarch/kernel/module.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/kernel.h>
+>  #include <asm/alternative.h>
+>  #include <asm/inst.h>
+> +#include <asm/unwind.h>
+>
+>  static int rela_stack_push(s64 stack_value, s64 *rela_stack, size_t *rel=
+a_stack_top)
+>  {
+> @@ -515,7 +516,7 @@ static void module_init_ftrace_plt(const Elf_Ehdr *hd=
+r,
+>  int module_finalize(const Elf_Ehdr *hdr,
+>                     const Elf_Shdr *sechdrs, struct module *mod)
+>  {
+> -       const Elf_Shdr *s, *se;
+> +       const Elf_Shdr *s, *se, *orc =3D NULL, *orc_ip =3D NULL;
+>         const char *secstrs =3D (void *)hdr + sechdrs[hdr->e_shstrndx].sh=
+_offset;
+>
+>         for (s =3D sechdrs, se =3D sechdrs + hdr->e_shnum; s < se; s++) {
+> @@ -523,7 +524,15 @@ int module_finalize(const Elf_Ehdr *hdr,
+>                         apply_alternatives((void *)s->sh_addr, (void *)s-=
+>sh_addr + s->sh_size);
+>                 if (!strcmp(".ftrace_trampoline", secstrs + s->sh_name))
+>                         module_init_ftrace_plt(hdr, s, mod);
+> +               if (!strcmp(".orc_unwind", secstrs + s->sh_name))
+> +                       orc =3D s;
+> +               if (!strcmp(".orc_unwind_ip", secstrs + s->sh_name))
+> +                       orc_ip =3D s;
+>         }
+>
+> +       if (orc && orc_ip)
+> +               unwind_module_init(mod, (void *)orc_ip->sh_addr, orc_ip->=
+sh_size,
+> +                                      (void *)orc->sh_addr, orc->sh_size=
+);
+> +
+>         return 0;
+>  }
+> diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/ker=
+nel/relocate_kernel.S
+> index f49f6b0..bcc191d 100644
+> --- a/arch/loongarch/kernel/relocate_kernel.S
+> +++ b/arch/loongarch/kernel/relocate_kernel.S
+> @@ -15,6 +15,7 @@
+>  #include <asm/addrspace.h>
+>
+>  SYM_CODE_START(relocate_new_kernel)
+> +       UNWIND_HINT_UNDEFINED
+>         /*
+>          * a0: EFI boot flag for the new kernel
+>          * a1: Command line pointer for the new kernel
+> @@ -90,6 +91,7 @@ SYM_CODE_END(relocate_new_kernel)
+>   * then start at the entry point from LOONGARCH_IOCSR_MBUF0.
+>   */
+>  SYM_CODE_START(kexec_smp_wait)
+> +       UNWIND_HINT_UNDEFINED
+>  1:     li.w            t0, 0x100                       /* wait for init =
+loop */
+>  2:     addi.w          t0, t0, -1                      /* limit mailbox =
+access */
+>         bnez            t0, 2b
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
+c
+> index 7783f0a..a173b02 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -48,6 +48,7 @@
+>  #include <asm/sections.h>
+>  #include <asm/setup.h>
+>  #include <asm/time.h>
+> +#include <asm/unwind.h>
+>
+>  #define SMBIOS_BIOSSIZE_OFFSET         0x09
+>  #define SMBIOS_BIOSEXTERN_OFFSET       0x13
+> @@ -605,6 +606,7 @@ static void __init prefill_possible_map(void)
+>
+>  void __init setup_arch(char **cmdline_p)
+>  {
+> +       unwind_init();
+I think this line should be after cpu_probe().
+
+>         cpu_probe();
+>
+>         init_environ();
+> diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/s=
+tacktrace.c
+> index 92270f1..9848d42 100644
+> --- a/arch/loongarch/kernel/stacktrace.c
+> +++ b/arch/loongarch/kernel/stacktrace.c
+> @@ -29,6 +29,7 @@ void arch_stack_walk(stack_trace_consume_fn consume_ent=
+ry, void *cookie,
+>                         regs->csr_era =3D thread_saved_ra(task);
+>                 }
+>                 regs->regs[1] =3D 0;
+> +               regs->regs[22] =3D 0;
+>         }
+>
+>         for (unwind_start(&state, task, regs);
+> diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/u=
+nwind_orc.c
+> new file mode 100644
+> index 0000000..08f80ca0
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/unwind_orc.c
+> @@ -0,0 +1,571 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <linux/objtool.h>
+> +#include <linux/module.h>
+> +#include <linux/sort.h>
+> +#include <asm/exception.h>
+> +#include <asm/orc_types.h>
+> +#include <asm/orc_lookup.h>
+> +#include <asm/orc_header.h>
+> +#include <asm/ptrace.h>
+> +#include <asm/setup.h>
+> +#include <asm/stacktrace.h>
+> +#include <asm/tlb.h>
+> +#include <asm/unwind.h>
+> +
+> +ORC_HEADER;
+> +
+> +#define orc_warn(fmt, ...) \
+> +       printk_deferred_once(KERN_WARNING "WARNING: " fmt, ##__VA_ARGS__)
+> +
+> +extern int __start_orc_unwind_ip[];
+> +extern int __stop_orc_unwind_ip[];
+> +extern struct orc_entry __start_orc_unwind[];
+> +extern struct orc_entry __stop_orc_unwind[];
+> +
+> +static bool orc_init __ro_after_init;
+> +static unsigned int lookup_num_blocks __ro_after_init;
+> +
+> +/* Fake frame pointer entry -- used as a fallback for generated code */
+> +static struct orc_entry orc_fp_entry =3D {
+> +       .type           =3D UNWIND_HINT_TYPE_CALL,
+> +       .sp_reg         =3D ORC_REG_BP,
+> +       .sp_offset      =3D 16,
+> +       .bp_reg         =3D ORC_REG_PREV_SP,
+> +       .bp_offset      =3D -16,
+> +       .ra_reg         =3D ORC_REG_PREV_SP,
+> +       .ra_offset      =3D -8,
+> +};
+> +
+> +static inline unsigned long orc_ip(const int *ip)
+> +{
+> +       return (unsigned long)ip + *ip;
+> +}
+> +
+> +static struct orc_entry *__orc_find(int *ip_table, struct orc_entry *u_t=
+able,
+> +                                   unsigned int num_entries, unsigned lo=
+ng ip)
+> +{
+> +       int *first =3D ip_table;
+> +       int *last =3D ip_table + num_entries - 1;
+> +       int *mid =3D first, *found =3D first;
+> +
+> +       if (!num_entries)
+> +               return NULL;
+> +
+> +       /*
+> +        * Do a binary range search to find the rightmost duplicate of a =
+given
+> +        * starting address.  Some entries are section terminators which =
+are
+> +        * "weak" entries for ensuring there are no gaps.  They should be
+> +        * ignored when they conflict with a real entry.
+> +        */
+> +       while (first <=3D last) {
+> +               mid =3D first + ((last - first) / 2);
+> +
+> +               if (orc_ip(mid) <=3D ip) {
+> +                       found =3D mid;
+> +                       first =3D mid + 1;
+> +               } else
+> +                       last =3D mid - 1;
+> +       }
+> +
+> +       return u_table + (found - ip_table);
+> +}
+> +
+> +#ifdef CONFIG_MODULES
+> +static struct orc_entry *orc_module_find(unsigned long ip)
+> +{
+> +       struct module *mod;
+> +
+> +       mod =3D __module_address(ip);
+> +       if (!mod || !mod->arch.orc_unwind || !mod->arch.orc_unwind_ip)
+> +               return NULL;
+> +       return __orc_find(mod->arch.orc_unwind_ip, mod->arch.orc_unwind,
+> +                         mod->arch.num_orcs, ip);
+> +}
+> +#else
+> +static struct orc_entry *orc_module_find(unsigned long ip)
+> +{
+> +       return NULL;
+> +}
+> +#endif
+> +
+> +#ifdef CONFIG_DYNAMIC_FTRACE
+> +static struct orc_entry *orc_find(unsigned long ip);
+> +
+> +/*
+> + * Ftrace dynamic trampolines do not have orc entries of their own.
+> + * But they are copies of the ftrace entries that are static and
+> + * defined in ftrace_*.S, which do have orc entries.
+> + *
+> + * If the unwinder comes across a ftrace trampoline, then find the
+> + * ftrace function that was used to create it, and use that ftrace
+> + * function's orc entry, as the placement of the return code in
+> + * the stack will be identical.
+> + */
+> +static struct orc_entry *orc_ftrace_find(unsigned long ip)
+> +{
+> +       struct ftrace_ops *ops;
+> +       unsigned long tramp_addr, offset;
+> +
+> +       ops =3D ftrace_ops_trampoline(ip);
+> +       if (!ops)
+> +               return NULL;
+> +
+> +       /* Set tramp_addr to the start of the code copied by the trampoli=
+ne */
+> +       if (ops->flags & FTRACE_OPS_FL_SAVE_REGS)
+> +               tramp_addr =3D (unsigned long)ftrace_regs_caller;
+> +       else
+> +               tramp_addr =3D (unsigned long)ftrace_caller;
+> +
+> +       /* Now place tramp_addr to the location within the trampoline ip =
+is at */
+> +       offset =3D ip - ops->trampoline;
+> +       tramp_addr +=3D offset;
+> +
+> +       /* Prevent unlikely recursion */
+> +       if (ip =3D=3D tramp_addr)
+> +               return NULL;
+> +
+> +       return orc_find(tramp_addr);
+> +}
+> +#else
+> +static struct orc_entry *orc_ftrace_find(unsigned long ip)
+> +{
+> +       return NULL;
+> +}
+> +#endif
+> +
+> +/*
+> + * If we crash with IP=3D=3D0, the last successfully executed instructio=
+n
+> + * was probably an indirect function call with a NULL function pointer,
+> + * and we don't have unwind information for NULL.
+> + * This hardcoded ORC entry for IP=3D=3D0 allows us to unwind from a NUL=
+L function
+> + * pointer into its parent and then continue normally from there.
+> + */
+> +static struct orc_entry null_orc_entry =3D {
+> +       .sp_offset =3D sizeof(long),
+> +       .sp_reg =3D ORC_REG_SP,
+> +       .bp_reg =3D ORC_REG_UNDEFINED,
+> +       .type =3D ORC_TYPE_CALL
+> +};
+> +
+> +static struct orc_entry *orc_find(unsigned long ip)
+> +{
+> +       static struct orc_entry *orc;
+> +
+> +       if (ip =3D=3D 0)
+> +               return &null_orc_entry;
+> +
+> +       /* For non-init vmlinux addresses, use the fast lookup table: */
+> +       if (ip >=3D LOOKUP_START_IP && ip < LOOKUP_STOP_IP) {
+> +               unsigned int idx, start, stop;
+> +
+> +               idx =3D (ip - LOOKUP_START_IP) / LOOKUP_BLOCK_SIZE;
+> +
+> +               if (unlikely((idx >=3D lookup_num_blocks-1))) {
+> +                       orc_warn("WARNING: bad lookup idx: idx=3D%u num=
+=3D%u ip=3D%pB\n",
+> +                                idx, lookup_num_blocks, (void *)ip);
+> +                       return NULL;
+> +               }
+> +
+> +               start =3D orc_lookup[idx];
+> +               stop =3D orc_lookup[idx + 1] + 1;
+> +
+> +               if (unlikely((__start_orc_unwind + start >=3D __stop_orc_=
+unwind) ||
+> +                            (__start_orc_unwind + stop > __stop_orc_unwi=
+nd))) {
+> +                       orc_warn("WARNING: bad lookup value: idx=3D%u num=
+=3D%u start=3D%u stop=3D%u ip=3D%pB\n",
+> +                                idx, lookup_num_blocks, start, stop, (vo=
+id *)ip);
+> +                       return NULL;
+> +               }
+> +
+> +               return __orc_find(__start_orc_unwind_ip + start,
+> +                                 __start_orc_unwind + start, stop - star=
+t, ip);
+> +       }
+> +
+> +       /* vmlinux .init slow lookup: */
+> +       if (is_kernel_inittext(ip))
+> +               return __orc_find(__start_orc_unwind_ip, __start_orc_unwi=
+nd,
+> +                                 __stop_orc_unwind_ip - __start_orc_unwi=
+nd_ip, ip);
+> +
+> +       /* Module lookup: */
+> +       orc =3D orc_module_find(ip);
+> +       if (orc)
+> +               return orc;
+> +
+> +       return orc_ftrace_find(ip);
+> +}
+> +
+> +#ifdef CONFIG_MODULES
+> +
+> +static DEFINE_MUTEX(sort_mutex);
+> +static int *cur_orc_ip_table =3D __start_orc_unwind_ip;
+> +static struct orc_entry *cur_orc_table =3D __start_orc_unwind;
+> +
+> +static void orc_sort_swap(void *_a, void *_b, int size)
+> +{
+> +       struct orc_entry *orc_a, *orc_b;
+> +       int *a =3D _a, *b =3D _b, tmp;
+> +       int delta =3D _b - _a;
+> +
+> +       /* Swap the .orc_unwind_ip entries: */
+> +       tmp =3D *a;
+> +       *a =3D *b + delta;
+> +       *b =3D tmp - delta;
+> +
+> +       /* Swap the corresponding .orc_unwind entries: */
+> +       orc_a =3D cur_orc_table + (a - cur_orc_ip_table);
+> +       orc_b =3D cur_orc_table + (b - cur_orc_ip_table);
+> +       swap(*orc_a, *orc_b);
+> +}
+> +
+> +static int orc_sort_cmp(const void *_a, const void *_b)
+> +{
+> +       struct orc_entry *orc_a;
+> +       const int *a =3D _a, *b =3D _b;
+> +       unsigned long a_val =3D orc_ip(a);
+> +       unsigned long b_val =3D orc_ip(b);
+> +
+> +       if (a_val > b_val)
+> +               return 1;
+> +       if (a_val < b_val)
+> +               return -1;
+> +
+> +       /*
+> +        * The "weak" section terminator entries need to always be first
+> +        * to ensure the lookup code skips them in favor of real entries.
+> +        * These terminator entries exist to handle any gaps created by
+> +        * whitelisted .o files which didn't get objtool generation.
+> +        */
+> +       orc_a =3D cur_orc_table + (a - cur_orc_ip_table);
+> +       return orc_a->type =3D=3D ORC_TYPE_UNDEFINED ? -1 : 1;
+> +}
+> +
+> +void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip=
+_size,
+> +                       void *_orc, size_t orc_size)
+> +{
+> +       int *orc_ip =3D _orc_ip;
+> +       struct orc_entry *orc =3D _orc;
+> +       unsigned int num_entries =3D orc_ip_size / sizeof(int);
+> +
+> +       WARN_ON_ONCE(orc_ip_size % sizeof(int) !=3D 0 ||
+> +                    orc_size % sizeof(*orc) !=3D 0 ||
+> +                    num_entries !=3D orc_size / sizeof(*orc));
+> +
+> +       /*
+> +        * The 'cur_orc_*' globals allow the orc_sort_swap() callback to
+> +        * associate an .orc_unwind_ip table entry with its corresponding
+> +        * .orc_unwind entry so they can both be swapped.
+> +        */
+> +       mutex_lock(&sort_mutex);
+> +       cur_orc_ip_table =3D orc_ip;
+> +       cur_orc_table =3D orc;
+> +       sort(orc_ip, num_entries, sizeof(int), orc_sort_cmp, orc_sort_swa=
+p);
+> +       mutex_unlock(&sort_mutex);
+> +
+> +       mod->arch.orc_unwind_ip =3D orc_ip;
+> +       mod->arch.orc_unwind =3D orc;
+> +       mod->arch.num_orcs =3D num_entries;
+> +}
+> +#endif
+> +
+> +void __init unwind_init(void)
+> +{
+> +       size_t orc_ip_size =3D (void *)__stop_orc_unwind_ip - (void *)__s=
+tart_orc_unwind_ip;
+> +       size_t orc_size =3D (void *)__stop_orc_unwind - (void *)__start_o=
+rc_unwind;
+> +       size_t num_entries =3D orc_ip_size / sizeof(int);
+> +       struct orc_entry *orc;
+> +       int i;
+> +
+> +       if (!num_entries || orc_ip_size % sizeof(int) !=3D 0 ||
+> +           orc_size % sizeof(struct orc_entry) !=3D 0 ||
+> +           num_entries !=3D orc_size / sizeof(struct orc_entry)) {
+> +               orc_warn("WARNING: Bad or missing .orc_unwind table.  Dis=
+abling unwinder.\n");
+> +               return;
+> +       }
+> +
+> +       /*
+> +        * Note, the orc_unwind and orc_unwind_ip tables were already
+> +        * sorted at build time via the 'sorttable' tool.
+> +        * It's ready for binary search straight away, no need to sort it=
+.
+> +        */
+> +
+> +       /* Initialize the fast lookup table: */
+> +       lookup_num_blocks =3D orc_lookup_end - orc_lookup;
+> +       for (i =3D 0; i < lookup_num_blocks-1; i++) {
+> +               orc =3D __orc_find(__start_orc_unwind_ip, __start_orc_unw=
+ind,
+> +                                num_entries,
+> +                                LOOKUP_START_IP + (LOOKUP_BLOCK_SIZE * i=
+));
+> +               if (!orc) {
+> +                       orc_warn("WARNING: Corrupt .orc_unwind table.  Di=
+sabling unwinder.\n");
+> +                       return;
+> +               }
+> +
+> +               orc_lookup[i] =3D orc - __start_orc_unwind;
+> +       }
+> +
+> +       /* Initialize the ending block: */
+> +       orc =3D __orc_find(__start_orc_unwind_ip, __start_orc_unwind, num=
+_entries,
+> +                        LOOKUP_STOP_IP);
+> +       if (!orc) {
+> +               orc_warn("WARNING: Corrupt .orc_unwind table.  Disabling =
+unwinder.\n");
+> +               return;
+> +       }
+> +       orc_lookup[lookup_num_blocks-1] =3D orc - __start_orc_unwind;
+> +
+> +       orc_init =3D true;
+> +}
+> +
+> +static inline bool on_stack(struct stack_info *info, unsigned long addr,=
+ size_t len)
+> +{
+> +       unsigned long begin =3D info->begin;
+> +       unsigned long end   =3D info->end;
+> +
+> +       return (info->type !=3D STACK_TYPE_UNKNOWN &&
+> +               addr >=3D begin && addr < end &&
+> +               addr + len > begin && addr + len <=3D end);
+> +}
+> +
+> +static bool stack_access_ok(struct unwind_state *state, unsigned long ad=
+dr,
+> +                           size_t len)
+> +{
+> +       struct stack_info *info =3D &state->stack_info;
+> +
+> +       if (on_stack(info, addr, len))
+> +               return true;
+> +
+> +       return !get_stack_info(addr, state->task, info) &&
+> +               on_stack(info, addr, len);
+> +}
+> +
+> +unsigned long unwind_get_return_address(struct unwind_state *state)
+> +{
+> +       return __unwind_get_return_address(state);
+> +}
+> +EXPORT_SYMBOL_GPL(unwind_get_return_address);
+> +
+> +void unwind_start(struct unwind_state *state, struct task_struct *task,
+> +                   struct pt_regs *regs)
+> +{
+> +       __unwind_start(state, task, regs);
+> +       if (!unwind_done(state) && !__kernel_text_address(state->pc))
+> +               unwind_next_frame(state);
+> +}
+> +EXPORT_SYMBOL_GPL(unwind_start);
+> +
+> +static bool is_entry_func(unsigned long addr)
+> +{
+> +       extern u32 kernel_entry;
+> +       extern u32 kernel_entry_end;
+> +
+> +       return addr >=3D (unsigned long)&kernel_entry &&
+> +               addr < (unsigned long)&kernel_entry_end;
+> +}
+> +
+> +static inline unsigned long bt_address(unsigned long ra)
+> +{
+> +       extern unsigned long eentry;
+> +
+> +       if (__kernel_text_address(ra))
+> +               return ra;
+> +
+> +       /* We are in preempt_disable() here */
+> +       if (__module_text_address(ra))
+> +               return ra;
+> +
+> +       if (ra >=3D eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
+> +               unsigned long type =3D (ra - eentry) / VECSIZE;
+> +               unsigned long offset =3D (ra - eentry) % VECSIZE;
+> +               unsigned long func;
+> +
+> +               switch (type) {
+> +               case EXCCODE_TLBL:
+> +               case EXCCODE_TLBI:
+> +                       func =3D (unsigned long)handle_tlb_load;
+> +                       break;
+> +               case EXCCODE_TLBS:
+> +                       func =3D (unsigned long)handle_tlb_store;
+> +                       break;
+> +               case EXCCODE_TLBM:
+> +                       func =3D (unsigned long)handle_tlb_modify;
+> +                       break;
+> +               case EXCCODE_TLBNR:
+> +               case EXCCODE_TLBNX:
+> +               case EXCCODE_TLBPE:
+> +                       func =3D (unsigned long)handle_tlb_protect;
+> +                       break;
+> +               case EXCCODE_ADE:
+> +                       func =3D (unsigned long)handle_ade;
+> +                       break;
+> +               case EXCCODE_ALE:
+> +                       func =3D (unsigned long)handle_ale;
+> +                       break;
+> +               case EXCCODE_BCE:
+> +                       func =3D (unsigned long)handle_bce;
+> +                       break;
+> +               case EXCCODE_SYS:
+> +                       func =3D (unsigned long)handle_sys;
+> +                       break;
+> +               case EXCCODE_BP:
+> +                       func =3D (unsigned long)handle_bp;
+> +                       break;
+> +               case EXCCODE_INE:
+> +               case EXCCODE_IPE:
+> +                       func =3D (unsigned long)handle_ri;
+> +                       break;
+> +               case EXCCODE_FPDIS:
+> +                       func =3D (unsigned long)handle_fpu;
+> +                       break;
+> +               case EXCCODE_LSXDIS:
+> +                       func =3D (unsigned long)handle_lsx;
+> +                       break;
+> +               case EXCCODE_LASXDIS:
+> +                       func =3D (unsigned long)handle_lasx;
+> +                       break;
+> +               case EXCCODE_FPE:
+> +                       func =3D (unsigned long)handle_fpe;
+> +                       break;
+> +               case EXCCODE_WATCH:
+> +                       func =3D (unsigned long)handle_watch;
+> +                       break;
+> +               case EXCCODE_BTDIS:
+> +                       func =3D (unsigned long)handle_lbt;
+> +                       break;
+> +               case EXCCODE_INT_START ... EXCCODE_INT_END - 1:
+> +                       func =3D (unsigned long)handle_vint;
+> +                       break;
+> +               default:
+> +                       func =3D (unsigned long)handle_reserved;
+> +                       break;
+> +               }
+> +
+> +               return func + offset;
+> +       }
+> +
+> +       return ra;
+> +}
+> +
+> +bool unwind_next_frame(struct unwind_state *state)
+> +{
+> +       struct stack_info *info =3D &state->stack_info;
+> +       struct orc_entry *orc;
+> +       struct pt_regs *regs;
+> +       unsigned long *p, pc;
+> +
+> +       if (unwind_done(state))
+> +               return false;
+> +
+> +       /* Don't let modules unload while we're reading their ORC data. *=
+/
+> +       preempt_disable();
+> +
+> +       if (is_entry_func(state->pc))
+> +               goto end;
+> +
+> +       orc =3D orc_find(state->pc);
+> +       if (!orc) {
+> +               orc =3D &orc_fp_entry;
+> +               state->error =3D true;
+> +       }
+> +
+> +       switch (orc->sp_reg) {
+> +       case ORC_REG_SP:
+> +               state->sp =3D state->sp + orc->sp_offset;
+> +               break;
+> +       case ORC_REG_BP:
+> +               state->sp =3D state->fp;
+> +               break;
+> +       default:
+> +               orc_warn("unknown SP base reg %d at %pB\n",
+> +                       orc->sp_reg, (void *)state->pc);
+> +               goto err;
+> +       }
+> +
+> +       switch (orc->bp_reg) {
+> +       case ORC_REG_PREV_SP:
+> +               p =3D (unsigned long *)(state->sp + orc->bp_offset);
+> +               if (!stack_access_ok(state, (unsigned long)p, sizeof(unsi=
+gned long)))
+> +                       goto err;
+> +
+> +               state->fp =3D *p;
+> +               break;
+> +       case ORC_REG_UNDEFINED:
+> +               /* Nothing. */
+> +               break;
+> +       default:
+> +               orc_warn("unknown FP base reg %d at %pB\n",
+> +                       orc->bp_reg, (void *)state->pc);
+> +               goto err;
+> +       }
+> +
+> +       switch (orc->type) {
+> +       case UNWIND_HINT_TYPE_CALL:
+> +               if (orc->ra_reg =3D=3D ORC_REG_PREV_SP) {
+> +                       p =3D (unsigned long *)(state->sp + orc->ra_offse=
+t);
+> +                       if (!stack_access_ok(state, (unsigned long)p, siz=
+eof(unsigned long)))
+> +                               goto err;
+> +
+> +                       pc =3D unwind_graph_addr(state, *p, state->sp);
+> +                       pc -=3D LOONGARCH_INSN_SIZE;
+> +               } else if (orc->ra_reg =3D=3D ORC_REG_UNDEFINED) {
+> +                       if (!state->ra || state->ra =3D=3D state->pc)
+> +                               goto err;
+> +
+> +                       pc =3D unwind_graph_addr(state, state->ra, state-=
+>sp);
+> +                       pc -=3D  LOONGARCH_INSN_SIZE;
+> +                       state->ra =3D 0;
+> +               } else {
+> +                       orc_warn("unknown ra base reg %d at %pB\n",
+> +                               orc->ra_reg, (void *)state->pc);
+> +                       goto err;
+> +               }
+> +               break;
+> +       case UNWIND_HINT_TYPE_REGS:
+> +               if (state->stack_info.type =3D=3D STACK_TYPE_IRQ && state=
+->sp =3D=3D info->end)
+> +                       regs =3D (struct pt_regs *)info->next_sp;
+> +               else
+> +                       regs =3D (struct pt_regs *)state->sp;
+> +
+> +               if (!stack_access_ok(state, (unsigned long)regs, sizeof(*=
+regs)))
+> +                       goto err;
+> +
+> +               if ((info->end =3D=3D (unsigned long)regs + sizeof(*regs)=
+) &&
+> +                   !regs->regs[3] && !regs->regs[1])
+> +                       goto end;
+> +
+> +               if (user_mode(regs))
+> +                       goto end;
+> +
+> +               pc =3D regs->csr_era;
+> +               if (!__kernel_text_address(pc))
+> +                       goto err;
+> +
+> +               state->sp =3D regs->regs[3];
+> +               state->ra =3D regs->regs[1];
+> +               state->fp =3D regs->regs[22];
+> +               get_stack_info(state->sp, state->task, info);
+> +
+> +               break;
+> +       default:
+> +               orc_warn("unknown .orc_unwind entry type %d at %pB\n",
+> +                        orc->type, (void *)state->pc);
+> +               goto err;
+> +       }
+> +
+> +       state->pc =3D bt_address(pc);
+> +       if (!state->pc) {
+> +               pr_err("cannot find unwind pc at %pK\n", (void *)pc);
+> +               goto err;
+> +       }
+> +
+> +       if (!__kernel_text_address(state->pc))
+> +               goto err;
+> +
+> +       preempt_enable();
+> +       return true;
+> +
+> +err:
+> +       state->error =3D true;
+> +
+> +end:
+> +       preempt_enable();
+> +       state->stack_info.type =3D STACK_TYPE_UNKNOWN;
+> +       return false;
+> +}
+> +EXPORT_SYMBOL_GPL(unwind_next_frame);
+> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/=
+vmlinux.lds.S
+> index bb2ec86..09fd4eb 100644
+> --- a/arch/loongarch/kernel/vmlinux.lds.S
+> +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> @@ -2,6 +2,7 @@
+>  #include <linux/sizes.h>
+>  #include <asm/asm-offsets.h>
+>  #include <asm/thread_info.h>
+> +#include <asm/orc_lookup.h>
+>
+>  #define PAGE_SIZE _PAGE_SIZE
+>  #define RO_EXCEPTION_TABLE_ALIGN       4
+> @@ -99,6 +100,8 @@ SECTIONS
+>         _sdata =3D .;
+>         RO_DATA(4096)
+>
+> +       ORC_UNWIND_TABLE
+> +
+>         .got : ALIGN(16) { *(.got) }
+>         .plt : ALIGN(16) { *(.plt) }
+>         .got.plt : ALIGN(16) { *(.got.plt) }
+> diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
+> index a77bf160..e3023d9 100644
+> --- a/arch/loongarch/lib/Makefile
+> +++ b/arch/loongarch/lib/Makefile
+> @@ -3,6 +3,8 @@
+>  # Makefile for LoongArch-specific library files.
+>  #
+>
+> +OBJECT_FILES_NON_STANDARD :=3D y
+> +
+>  lib-y  +=3D delay.o memset.o memcpy.o memmove.o \
+>            clear_user.o copy_user.o csum.o dump_tlb.o unaligned.o
+>
+> diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
+> index ca17dd3..a44387b 100644
+> --- a/arch/loongarch/mm/tlbex.S
+> +++ b/arch/loongarch/mm/tlbex.S
+> @@ -17,7 +17,8 @@
+>  #define PTRS_PER_PTE_BITS      (PAGE_SHIFT - 3)
+>
+>         .macro tlb_do_page_fault, write
+> -       SYM_FUNC_START(tlb_do_page_fault_\write)
+> +       SYM_CODE_START(tlb_do_page_fault_\write)
+> +       UNWIND_HINT_UNDEFINED
+>         SAVE_ALL
+>         csrrd           a2, LOONGARCH_CSR_BADV
+>         move            a0, sp
+> @@ -25,13 +26,14 @@
+>         li.w            a1, \write
+>         bl              do_page_fault
+>         RESTORE_ALL_AND_RET
+> -       SYM_FUNC_END(tlb_do_page_fault_\write)
+> +       SYM_CODE_END(tlb_do_page_fault_\write)
+>         .endm
+>
+>         tlb_do_page_fault 0
+>         tlb_do_page_fault 1
+>
+> -SYM_FUNC_START(handle_tlb_protect)
+> +SYM_CODE_START(handle_tlb_protect)
+> +       UNWIND_HINT_UNDEFINED
+>         BACKUP_T0T1
+>         SAVE_ALL
+>         move            a0, sp
+> @@ -41,9 +43,10 @@ SYM_FUNC_START(handle_tlb_protect)
+>         la_abs          t0, do_page_fault
+>         jirl            ra, t0, 0
+>         RESTORE_ALL_AND_RET
+> -SYM_FUNC_END(handle_tlb_protect)
+> +SYM_CODE_END(handle_tlb_protect)
+>
+> -SYM_FUNC_START(handle_tlb_load)
+> +SYM_CODE_START(handle_tlb_load)
+> +       UNWIND_HINT_UNDEFINED
+>         csrwr           t0, EXCEPTION_KS0
+>         csrwr           t1, EXCEPTION_KS1
+>         csrwr           ra, EXCEPTION_KS2
+> @@ -187,16 +190,18 @@ nopage_tlb_load:
+>         csrrd           ra, EXCEPTION_KS2
+>         la_abs          t0, tlb_do_page_fault_0
+>         jr              t0
+> -SYM_FUNC_END(handle_tlb_load)
+> +SYM_CODE_END(handle_tlb_load)
+>
+> -SYM_FUNC_START(handle_tlb_load_ptw)
+> +SYM_CODE_START(handle_tlb_load_ptw)
+> +       UNWIND_HINT_UNDEFINED
+>         csrwr           t0, LOONGARCH_CSR_KS0
+>         csrwr           t1, LOONGARCH_CSR_KS1
+>         la_abs          t0, tlb_do_page_fault_0
+>         jr              t0
+> -SYM_FUNC_END(handle_tlb_load_ptw)
+> +SYM_CODE_END(handle_tlb_load_ptw)
+>
+> -SYM_FUNC_START(handle_tlb_store)
+> +SYM_CODE_START(handle_tlb_store)
+> +       UNWIND_HINT_UNDEFINED
+>         csrwr           t0, EXCEPTION_KS0
+>         csrwr           t1, EXCEPTION_KS1
+>         csrwr           ra, EXCEPTION_KS2
+> @@ -343,16 +348,18 @@ nopage_tlb_store:
+>         csrrd           ra, EXCEPTION_KS2
+>         la_abs          t0, tlb_do_page_fault_1
+>         jr              t0
+> -SYM_FUNC_END(handle_tlb_store)
+> +SYM_CODE_END(handle_tlb_store)
+>
+> -SYM_FUNC_START(handle_tlb_store_ptw)
+> +SYM_CODE_START(handle_tlb_store_ptw)
+> +       UNWIND_HINT_UNDEFINED
+>         csrwr           t0, LOONGARCH_CSR_KS0
+>         csrwr           t1, LOONGARCH_CSR_KS1
+>         la_abs          t0, tlb_do_page_fault_1
+>         jr              t0
+> -SYM_FUNC_END(handle_tlb_store_ptw)
+> +SYM_CODE_END(handle_tlb_store_ptw)
+>
+> -SYM_FUNC_START(handle_tlb_modify)
+> +SYM_CODE_START(handle_tlb_modify)
+> +       UNWIND_HINT_UNDEFINED
+>         csrwr           t0, EXCEPTION_KS0
+>         csrwr           t1, EXCEPTION_KS1
+>         csrwr           ra, EXCEPTION_KS2
+> @@ -497,16 +504,18 @@ nopage_tlb_modify:
+>         csrrd           ra, EXCEPTION_KS2
+>         la_abs          t0, tlb_do_page_fault_1
+>         jr              t0
+> -SYM_FUNC_END(handle_tlb_modify)
+> +SYM_CODE_END(handle_tlb_modify)
+>
+> -SYM_FUNC_START(handle_tlb_modify_ptw)
+> +SYM_CODE_START(handle_tlb_modify_ptw)
+> +       UNWIND_HINT_UNDEFINED
+>         csrwr           t0, LOONGARCH_CSR_KS0
+>         csrwr           t1, LOONGARCH_CSR_KS1
+>         la_abs          t0, tlb_do_page_fault_1
+>         jr              t0
+> -SYM_FUNC_END(handle_tlb_modify_ptw)
+> +SYM_CODE_END(handle_tlb_modify_ptw)
+>
+> -SYM_FUNC_START(handle_tlb_refill)
+> +SYM_CODE_START(handle_tlb_refill)
+> +       UNWIND_HINT_UNDEFINED
+>         csrwr           t0, LOONGARCH_CSR_TLBRSAVE
+>         csrrd           t0, LOONGARCH_CSR_PGD
+>         lddir           t0, t0, 3
+> @@ -521,4 +530,4 @@ SYM_FUNC_START(handle_tlb_refill)
+>         tlbfill
+>         csrrd           t0, LOONGARCH_CSR_TLBRSAVE
+>         ertn
+> -SYM_FUNC_END(handle_tlb_refill)
+> +SYM_CODE_END(handle_tlb_refill)
+> diff --git a/arch/loongarch/power/Makefile b/arch/loongarch/power/Makefil=
+e
+> index 58151d0..bbd1d47 100644
+> --- a/arch/loongarch/power/Makefile
+> +++ b/arch/loongarch/power/Makefile
+> @@ -1,3 +1,5 @@
+> +OBJECT_FILES_NON_STANDARD_suspend_asm.o :=3D y
+hibernate_asm.o has no problem?
+
+Huacai
+> +
+>  obj-y  +=3D platform.o
+>
+>  obj-$(CONFIG_SUSPEND)          +=3D suspend.o suspend_asm.o
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index 5c97d1463..997f41c 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -3,6 +3,7 @@
+>
+>  KASAN_SANITIZE :=3D n
+>  KCOV_INSTRUMENT :=3D n
+> +OBJECT_FILES_NON_STANDARD :=3D y
+>
+>  # Include the generic Makefile to check the built vdso.
+>  include $(srctree)/lib/vdso/Makefile
+> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> index d7779a1..df29ddb 100644
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+> @@ -116,6 +116,14 @@ void ftrace_likely_update(struct ftrace_likely_data =
+*f, int val,
+>   */
+>  #define __stringify_label(n) #n
+>
+> +#define __annotate_reachable(c) ({                                     \
+> +       asm volatile(__stringify_label(c) ":\n\t"                       \
+> +                       ".pushsection .discard.reachable\n\t"           \
+> +                       ".long " __stringify_label(c) "b - .\n\t"       \
+> +                       ".popsection\n\t");                             \
+> +})
+> +#define annotate_reachable() __annotate_reachable(__COUNTER__)
+> +
+>  #define __annotate_unreachable(c) ({                                   \
+>         asm volatile(__stringify_label(c) ":\n\t"                       \
+>                      ".pushsection .discard.unreachable\n\t"            \
+> @@ -128,6 +136,7 @@ void ftrace_likely_update(struct ftrace_likely_data *=
+f, int val,
+>  #define __annotate_jump_table __section(".rodata..c_jump_table")
+>
+>  #else /* !CONFIG_OBJTOOL */
+> +#define annotate_reachable()
+>  #define annotate_unreachable()
+>  #define __annotate_jump_table
+>  #endif /* CONFIG_OBJTOOL */
+> diff --git a/scripts/Makefile b/scripts/Makefile
+> index 576cf64..baaed78 100644
+> --- a/scripts/Makefile
+> +++ b/scripts/Makefile
+> @@ -33,7 +33,10 @@ ifdef CONFIG_UNWINDER_ORC
+>  ifeq ($(ARCH),x86_64)
+>  ARCH :=3D x86
+>  endif
+> -HOSTCFLAGS_sorttable.o +=3D -I$(srctree)/tools/arch/x86/include
+> +ifeq ($(ARCH),loongarch)
+> +ARCH :=3D loongarch
+> +endif
+> +HOSTCFLAGS_sorttable.o +=3D -I$(srctree)/tools/arch/$(ARCH)/include
+>  HOSTCFLAGS_sorttable.o +=3D -DUNWINDER_ORC_ENABLED
+>  endif
+>
+> --
+> 2.1.0
+>
+>
