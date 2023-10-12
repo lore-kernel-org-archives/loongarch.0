@@ -1,151 +1,88 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAB712E5B
-	for <loongarch@lists.linux.dev>; Wed, 11 Oct 2023 20:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="5WImRH0w"
-Received: from leknes.fjasle.eu ([46.142.98.201]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N8XkP-1rd3321Guf-014Paf; Wed, 11 Oct 2023 22:10:25 +0200
-Received: from localhost.fjasle.eu (kirkenes.fjasle.eu [10.10.0.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by leknes.fjasle.eu (Postfix) with ESMTPS id 9DCA03F840;
-	Wed, 11 Oct 2023 22:10:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
-	t=1697055016; bh=5Fr/47OcVCuPllaYQgCL+zdi7dPjAjL3MNWZhdULIc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=5WImRH0w1AH69SJDHrWAjBqhWAtqvRtsHukVpQNPqSKcrMzjMa8QWAh7Sy2kg/Nii
-	 cNKr21hCCqvUTUPfee6kxSqzD2EW093Yu8e5H/j30R+OnBFpAlQ1Wl4y/NvNCujB6z
-	 7ZYgYAxnN9X+ortJfAYnkbWwxYwRsiCYWqBUTebE=
-Received: by localhost.fjasle.eu (Postfix, from userid 1000)
-	id ABC4A251E; Wed, 11 Oct 2023 22:10:14 +0200 (CEST)
-Date: Wed, 11 Oct 2023 22:10:14 +0200
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
-	x86@kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 4/5] kbuild: unify vdso_install rules
-Message-ID: <ZScBJp-nen5wDRkT@bergen.fjasle.eu>
-References: <20231009124210.1064021-1-masahiroy@kernel.org>
- <20231009124210.1064021-4-masahiroy@kernel.org>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05F40658
+	for <loongarch@lists.linux.dev>; Thu, 12 Oct 2023 01:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxbetrUSdl2ToxAA--.26865S3;
+	Thu, 12 Oct 2023 09:52:43 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxzt5pUSdlsjYhAA--.6621S3;
+	Thu, 12 Oct 2023 09:52:41 +0800 (CST)
+Subject: Re: [PATCH v2 0/2] Modify vDSO selftests
+To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <1689069425-17414-1-git-send-email-yangtiezhu@loongson.cn>
+ <6aafe4f7-5b20-e791-12c1-413f2db3417b@loongson.cn>
+Cc: linux-kselftest@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
+ Andrew Morton <akpm@linux-foundation.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <379c1f53-3e32-0033-3658-6689f43e7f1f@loongson.cn>
+Date: Thu, 12 Oct 2023 09:52:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20231009124210.1064021-4-masahiroy@kernel.org>
-X-Operating-System: Debian GNU/Linux trixie/sid
-Jabber-ID: nicolas@jabber.no
-X-Provags-ID: V03:K1:GUfrfLlCUzJuMEjs4zRXdY1OuzE+qTNGx7LxKM1S1e9ReRxprWw
- QTcaTBx+t0EkTRqYWkYL67T9+ycHGZaqicx6qJ56Gqgjv4SNCVgkolt4r+0ZEgWqOlo+M4w
- O8j6dJv9DPnZVx+Re6NhFwDsF9/Jz5Qda20FlFD/v/59oC+e5T2V9+yc9jzxg8tnQCrfW6W
- OrXnxMb3y1nL8PBSSLcbA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:qNyXQk5UllI=;y8DdQd/Ft0LT6jsPRdxBN+G4s3G
- /dPQre51e0CezAsPaxbY0go4zVXCq8l3VMpkyVphD4Ebwcnjz+yzK136vs00yapmqCWX36hT/
- NXmFHSZPlveUU24GlvQpwQSfgBPFheOuYdWZ35ro+lccjF8o31Ku/tPMdS9Pujb2cTCvxqNt1
- YOrApfMBQsAPir8jbcWo2AgKTVph8uZ3jsZ3LCAcswn+cdhrq42B/LqbewNWUjiiwo5NovQ7X
- KczDAQqgpbn9krt6MUFokSGSf3DvdFlDVMUKZGZgwbrZfOPuw/cOsdtbQ2xOIFPb8FOeGaU4s
- RgBvvpLkUenKwOP64pryV/oQxby40IsynMJSdNBalDtN4+OBMp7xTvp4Yf3o+vZDiq4u+MezG
- QfVIdR7NUXg8uRejQT7mhDc1iQdstXDgUTjxcYZ1i4wAdVyM+mlbmvg8RMHvE3TEUtYJu0ncX
- tRgSfaauZifFKtrHuhbLXLavl3huWpgpu0RWAGz81ZsUpOhWCICM/mHV4FcpbP5T9CWTiBkis
- mPZHClPSJs65ACtPtoxIsDkhpilDa5GshzZto25RU4ZIGsjGoqzVgp0iOnsXVecB/pM4AUuou
- mwDo2Ma5gAipHcCF5iRss67DeGqV71qkwu/ptgiyW2DxZvLGkUr/h6qanW5CpLU4MHrTsm8hK
- Cp+rJaZ5AYXBRGNj214Og75oBWIjsHuD4DYBxg8+rXMpyOx+x5ZtTkbWOnLFu8FwD89cmvH9v
- KY3zlZ2a/om9/rt6NHMJllhWVKYOei5LUAspSIVv6BwmkUXg+6sT/x1OpzQmUUNpemJ733l0v
- CkyBea3IC9dW/+Z7vwOLn8v7m049Ze4jE2lDVYGp9qKvbSMV/X2j9My9xYcX70Pb5JlP7OLGG
- PMQHHGIOP5jvwVQ==
+In-Reply-To: <6aafe4f7-5b20-e791-12c1-413f2db3417b@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Cxzt5pUSdlsjYhAA--.6621S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtr1ftw4xKryDXw45KFW5CFX_yoWfurbE9a
+	y8uas3tws7ZF9xAF4Sgw13ZryDJayIyr4UKr17Way7Xry3ZFWUWF4kur48u3WrWa17trZ2
+	yF4UZasavryDXosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
 
-On Mon 09 Oct 2023 21:42:09 GMT, Masahiro Yamada wrote:
-> Currently, there is no standard implementation for vdso_install,
-> leading to various issues:
-> 
->  1. Code duplication
-> 
->     Many architectures duplicate similar code just for copying files
->     to the install destination.
-> 
->     Some architectures (arm, sparc, x86) create build-id symlinks,
->     introducing more code duplication.
-> 
->  2. Accidental updates of in-tree build artifacts
-> 
->     The vdso_install rule depends on the vdso files to install.
->     It may update in-tree build artifacts. This can be problematic,
->     as explained in commit 19514fc665ff ("arm, kbuild: make
->     "make install" not depend on vmlinux").
-> 
->  3. Broken code in some architectures
-> 
->     Makefile code is often copied from one architecture to another
->     without proper adaptation or testing.
-> 
->     The previous commits removed broken code from csky, UML, and parisc.
-> 
->     Another issue is that 'make vdso_install' for ARCH=s390 installs
->     vdso64, but not vdso32.
-> 
-> To address these problems, this commit introduces the generic vdso_install.
-> 
-> Architectures that support vdso_install need to define vdso-install-y
-> in arch/*/Makefile.
-> 
-> vdso-install-y lists the files to install. For example, arch/x86/Makefile
-> looks like this:
-> 
->   vdso-install-$(CONFIG_X86_64)           += arch/x86/entry/vdso/vdso64.so.dbg
->   vdso-install-$(CONFIG_X86_X32_ABI)      += arch/x86/entry/vdso/vdsox32.so.dbg
->   vdso-install-$(CONFIG_X86_32)           += arch/x86/entry/vdso/vdso32.so.dbg
->   vdso-install-$(CONFIG_IA32_EMULATION)   += arch/x86/entry/vdso/vdso32.so.dbg
-> 
-> These files will be installed to $(MODLIB)/vdso/ with the .dbg suffix,
-> if exists, stripped away.
-> 
-> vdso-install-y can optionally take the second field after the colon
-> separator. This is needed because some architectures install vdso
-> files as a different base name.
-> 
-> The following is a snippet from arch/arm64/Makefile.
-> 
->   vdso-install-$(CONFIG_COMPAT_VDSO)      += arch/arm64/kernel/vdso32/vdso.so.dbg:vdso32.so
-> 
-> This will rename vdso.so.dbg to vdso32.so during installation. If such
-> architectures change their implementation so that the file names match,
-> this workaround will go away.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+Cc: Andrew Morton <akpm@linux-foundation.org>
 
-Thanks for cleaning this up!
+On 08/17/2023 03:20 PM, Tiezhu Yang wrote:
+> Hi Shuah,
+>
+> On 07/11/2023 05:57 PM, Tiezhu Yang wrote:
+>> v2: Rebase on 6.5-rc1 and update the commit message
+>>
+>> Tiezhu Yang (2):
+>>   selftests/vDSO: Add support for LoongArch
+>>   selftests/vDSO: Get version and name for all archs
+>>
+>>  tools/testing/selftests/vDSO/vdso_config.h         |  6 ++++-
+>>  tools/testing/selftests/vDSO/vdso_test_getcpu.c    | 16 +++++--------
+>>  .../selftests/vDSO/vdso_test_gettimeofday.c        | 26
+>> ++++++----------------
+>>  3 files changed, 18 insertions(+), 30 deletions(-)
+>>
+>
+> Any comments? I guess this should go through the linux-kselftest tree.
+>
+> Thanks,
+> Tiezhu
+>
 
-Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+What are the status of these patches?
+
+https://lore.kernel.org/lkml/1689069425-17414-1-git-send-email-yangtiezhu@loongson.cn/
+
+This is a ping message, maybe you have forgot them?
+
+Thanks,
+Tiezhu
+
