@@ -1,89 +1,115 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 513C33D026
-	for <loongarch@lists.linux.dev>; Fri, 13 Oct 2023 12:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.20.42.43])
-	by gateway (Coremail) with SMTP id _____8DxxPBmPSllObcxAA--.31318S3;
-	Fri, 13 Oct 2023 20:51:50 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxjNxjPSllVeUiAA--.7995S3;
-	Fri, 13 Oct 2023 20:51:49 +0800 (CST)
-Message-ID: <73ddfc81-3f94-4403-8bb2-d537742a7042@loongson.cn>
-Date: Fri, 13 Oct 2023 20:51:46 +0800
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE44154B9
+	for <loongarch@lists.linux.dev>; Fri, 13 Oct 2023 13:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="TPTLZoSW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1697202930;
+	bh=hxUB6QsYvQndxByR8nkgIwYDWVox7o8wrc2RqZWj+bc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=TPTLZoSWy35vD+BljSD2VfbVzPHiM+D5/Purwp2uAUd9ZHAlEkjw0iAe1JJ3FfkXY
+	 e+MwHv4ChA9Jm6d03dMT9zpFcazATAyr1k8p2sBeHXE1JTFKHyxndFsEe6yY8SRFnd
+	 gUeImKziK+qKaPVQolcUtsSyJ44Gh+Ohkod20/4c=
+Received: from [IPv6:240e:358:11e2:500:dc73:854d:832e:3] (unknown [IPv6:240e:358:11e2:500:dc73:854d:832e:3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id EFFD866930;
+	Fri, 13 Oct 2023 09:15:18 -0400 (EDT)
+Message-ID: <049fbd3906b60f75be3900f20f6974967da374f3.camel@xry111.site>
+Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
+ same as ioremap_wc
+From: Xi Ruoyao <xry111@xry111.site>
+To: Sui Jingfeng <suijingfeng@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+  Icenowy Zheng <uwu@icenowy.me>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Weihao Li
+ <liweihao@loongson.cn>,  "Mike Rapoport (IBM)" <rppt@kernel.org>, Jun Yi
+ <yijun@loongson.cn>, Baoquan He <bhe@redhat.com>,  "Matthew Wilcox
+ (Oracle)" <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
+ Hongchen Zhang <zhanghongchen@loongson.cn>, Binbin Zhou
+ <zhoubinbin@loongson.cn>, Zhen Lei <thunder.leizhen@huawei.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>,
+ Zhihong Dong <donmor3000@hotmail.com>, loongarch@lists.linux.dev, 
+ linux-kernel@vger.kernel.org
+Date: Fri, 13 Oct 2023 21:15:10 +0800
+In-Reply-To: <73ddfc81-3f94-4403-8bb2-d537742a7042@loongson.cn>
+References: <20231009042841.635366-1-uwu@icenowy.me>
+	 <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
+	 <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
+	 <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
+	 <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
+	 <73ddfc81-3f94-4403-8bb2-d537742a7042@loongson.cn>
+Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
+ keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
- same as ioremap_wc
-Content-Language: en-US
-To: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>,
- Icenowy Zheng <uwu@icenowy.me>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Weihao Li <liweihao@loongson.cn>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
- Jun Yi <yijun@loongson.cn>, Baoquan He <bhe@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- Hongchen Zhang <zhanghongchen@loongson.cn>,
- Binbin Zhou <zhoubinbin@loongson.cn>, Zhen Lei <thunder.leizhen@huawei.com>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>,
- Zhihong Dong <donmor3000@hotmail.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20231009042841.635366-1-uwu@icenowy.me>
- <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
- <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
- <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
- <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
-From: Sui Jingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8DxjNxjPSllVeUiAA--.7995S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Xr4rCFykXF1fWrWftFWfCrX_yoWDZrg_uF
-	Wv9asrGw4fWFsrtF47tr4Ygr9xKw1qvry0q3y8tasIq345CFZ7WF4v9wnFkr15JF45CrWk
-	Wr12qFW8tanF9osvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
-	JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
-	v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
-	67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
-	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFApnUUUUU=
 
-Hi,
+On Fri, 2023-10-13 at 20:51 +0800, Sui Jingfeng wrote:
+> Hi,
+>=20
+>=20
+> On 2023/10/10 20:26, Xi Ruoyao wrote:
+> > > - For buffers at VRAM(device memory), we replace the WC mappings with=
+ uncached mappings.
+> > > - For buffers reside in RAM, we replace the WC mappings with cached m=
+appings.
+> > >=20
+> > > By this way, we were able to minimum the side effects, and meet the u=
+sable requirements
+> > > for all of the GPU drivers.
+> > AFAIK there has been some clear NAK from DRM maintainers towards this
+> > "approach".=C2=A0 So it's not possible to be applied upstream.
+>=20
+>=20
+> Yeah, domain specific reviewers are really hard to persuade to accept our=
+ solution.
+> Probably because they are not know our hardware very well.
 
+The problem: why this is only an issue with DRM devices?  Work around it
+in DRM subsystem just does not make sense to me, at all.
 
-On 2023/10/10 20:26, Xi Ruoyao wrote:
->> - For buffers at VRAM(device memory), we replace the WC mappings with uncached mappings.
->> - For buffers reside in RAM, we replace the WC mappings with cached mappings.
->>
->> By this way, we were able to minimum the side effects, and meet the usable requirements
->> for all of the GPU drivers.
-> AFAIK there has been some clear NAK from DRM maintainers towards this
-> "approach".  So it's not possible to be applied upstream.
+You cannot exclude the possibility that another subsystem will start to
+hit the same issue in the future.  Then such a "solution" will cause #if
+CONFIG_LOONGARCH scattering everywhere and doing so is completely
+unmaintainable.
 
+> But the side effects of this patch is really too hurt to accept. In this =
+case, if you really want to make
+> a progress by workaround.
 
-Yeah, domain specific reviewers are really hard to persuade to accept our solution.
-Probably because they are not know our hardware very well. But the side effects of
-this patch is really too hurt to accept. In this case, if you really want to make
-a progress by workaround. I think you could try scan the PCI device in the whole
-system on boot time. Turn off the WC mappings when there is a AMD or ATI GPUs found.
-Leave the the WC mappings open at the rest of cases. But this is yet another ugly
-workaround. Perhaps it is a bit of better than this because there is no way left.
+This is not a valid reason.  For example, the spectre-like bug
+workarounds hurts the performance as well, but we enable them on
+affected CPUs by default.
 
-  
-  
+> I think you could try scan the PCI device in the whole
+> system on boot time. Turn off the WC mappings when there is a AMD or ATI =
+GPUs found.
 
+Again, why this is only an issue with AMD or ATI GPUs?
+
+Can you provide some detailed documentations about this hardware issue
+so the community can help to figure out a solution?
+
+> Leave the the WC mappings open at the rest of cases. But this is yet anot=
+her ugly
+> workaround. Perhaps it is a bit of better than this because there is no w=
+ay left.
+
+And this also won't work with PCI hotplug, I'm not sure if it's
+supported now but I'm 99% sure you'll add it in the future.
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
