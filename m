@@ -1,17 +1,17 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7068B125A0
-	for <loongarch@lists.linux.dev>; Fri, 13 Oct 2023 11:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 513C33D026
+	for <loongarch@lists.linux.dev>; Fri, 13 Oct 2023 12:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from loongson.cn (unknown [10.20.42.43])
-	by gateway (Coremail) with SMTP id _____8BxIvAMJillYbIxAA--.29475S3;
-	Fri, 13 Oct 2023 19:12:12 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxxPBmPSllObcxAA--.31318S3;
+	Fri, 13 Oct 2023 20:51:50 +0800 (CST)
 Received: from [10.20.42.43] (unknown [10.20.42.43])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd4KJilleMkiAA--.9894S3;
-	Fri, 13 Oct 2023 19:12:12 +0800 (CST)
-Message-ID: <9c2ec240-bca0-4f99-96db-a5156bbd82e5@loongson.cn>
-Date: Fri, 13 Oct 2023 19:12:09 +0800
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxjNxjPSllVeUiAA--.7995S3;
+	Fri, 13 Oct 2023 20:51:49 +0800 (CST)
+Message-ID: <73ddfc81-3f94-4403-8bb2-d537742a7042@loongson.cn>
+Date: Fri, 13 Oct 2023 20:51:46 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,43 +43,47 @@ From: Sui Jingfeng <suijingfeng@loongson.cn>
 In-Reply-To: <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Cxjd4KJilleMkiAA--.9894S3
+X-CM-TRANSID:AQAAf8DxjNxjPSllVeUiAA--.7995S3
 X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruw1fWr4xXFy8GFy8uFy5WrX_yoWfGrX_uF
-	yDWwsrGwn5WF1DJwnYkr4IqrWagrn2vry8Ca9rJF13J343X3yxKF4kGr95Zw18JF4rGr1U
-	Gr93Aa9av3sI9osvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Xr4rCFykXF1fWrWftFWfCrX_yoWDZrg_uF
+	Wv9asrGw4fWFsrtF47tr4Ygr9xKw1qvry0q3y8tasIq345CFZ7WF4v9wnFkr15JF45CrWk
+	Wr12qFW8tanF9osvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
 	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	cSsGvfJTRUUUbfxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
 	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
 	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDUUUU
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFApnUUUUU=
 
 Hi,
 
 
 On 2023/10/10 20:26, Xi Ruoyao wrote:
->> For DMA non-coherent buffers, we should try to implement arch-specific dma_map_ops,
->> invalidate the CPU cache and flush the CPU write buffer before the device do DMA. Instead
->> of pretend to be DMA coherent for all buffers, a kernel cmdline is not a system level
->> solution for all of GPU drivers and OS release.
-> IIUC this is a hardware bug of 7A1000 and 7A2000, so the proper location
-> of the workaround is in the bridge chip driver.  Or am I
-> misunderstanding something?
+>> - For buffers at VRAM(device memory), we replace the WC mappings with uncached mappings.
+>> - For buffers reside in RAM, we replace the WC mappings with cached mappings.
+>>
+>> By this way, we were able to minimum the side effects, and meet the usable requirements
+>> for all of the GPU drivers.
+> AFAIK there has been some clear NAK from DRM maintainers towards this
+> "approach".  So it's not possible to be applied upstream.
 
 
-The ls2k1000 and ls2k2000 SoC (which don't use with 7A1000 and 7A2000) are also suffer form this
-problem. If this is a hardware bug of 7A1000 and 7A2000, why forbidden WC mapping of pages in
-system RAM?
+Yeah, domain specific reviewers are really hard to persuade to accept our solution.
+Probably because they are not know our hardware very well. But the side effects of
+this patch is really too hurt to accept. In this case, if you really want to make
+a progress by workaround. I think you could try scan the PCI device in the whole
+system on boot time. Turn off the WC mappings when there is a AMD or ATI GPUs found.
+Leave the the WC mappings open at the rest of cases. But this is yet another ugly
+workaround. Perhaps it is a bit of better than this because there is no way left.
 
-The problem of this patch and the <16c52e503043> commit is that it forbidden all WC mappings by
-default. Even pages in system RAM.
+  
+  
 
