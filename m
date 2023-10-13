@@ -1,99 +1,121 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E63168AF
-	for <loongarch@lists.linux.dev>; Fri, 13 Oct 2023 13:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B32421A0A
+	for <loongarch@lists.linux.dev>; Fri, 13 Oct 2023 21:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="FSXItkua"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1697205206;
-	bh=3qcLRTnBJA6r9AgprapzBnGL8upTT05UMS6QH3ySA9A=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FSXItkuadwHJ6d78M3BciIszukol1681GVS95q+cv/EV3dPOS0UKKpc/1+PpoZxl+
-	 8UDZUzsipey7Y+GcWgJZg75CgtWFPgxRt7gePhr7KgstPOftDX/jH91O76av5e2gBv
-	 vgDip6zG+VrhdePUuspXQhR+gO/EAwnmNR5cVBK4=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id D675766935;
-	Fri, 13 Oct 2023 09:53:22 -0400 (EDT)
-Message-ID: <00d5150cadcb8b60004284ad43810adef52aab37.camel@xry111.site>
-Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
- same as ioremap_wc
-From: Xi Ruoyao <xry111@xry111.site>
-To: Sui Jingfeng <suijingfeng@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
-  Icenowy Zheng <uwu@icenowy.me>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Weihao Li
- <liweihao@loongson.cn>,  "Mike Rapoport (IBM)" <rppt@kernel.org>, Jun Yi
- <yijun@loongson.cn>, Baoquan He <bhe@redhat.com>,  "Matthew Wilcox
- (Oracle)" <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
- Hongchen Zhang <zhanghongchen@loongson.cn>, Binbin Zhou
- <zhoubinbin@loongson.cn>, Zhen Lei <thunder.leizhen@huawei.com>, Tiezhu
- Yang <yangtiezhu@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>,
- Zhihong Dong <donmor3000@hotmail.com>, loongarch@lists.linux.dev, 
- linux-kernel@vger.kernel.org
-Date: Fri, 13 Oct 2023 21:53:21 +0800
-In-Reply-To: <049fbd3906b60f75be3900f20f6974967da374f3.camel@xry111.site>
-References: <20231009042841.635366-1-uwu@icenowy.me>
-	 <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
-	 <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
-	 <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
-	 <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
-	 <73ddfc81-3f94-4403-8bb2-d537742a7042@loongson.cn>
-	 <049fbd3906b60f75be3900f20f6974967da374f3.camel@xry111.site>
-Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
- keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgZz4xyv"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-d9ac31cb051so2412164276.3
+        for <loongarch@lists.linux.dev>; Fri, 13 Oct 2023 14:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697231000; x=1697835800; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JtiOVCn2uSsz0FoSYRDQt6Ad/oEEDkzUyvmWznVzlSA=;
+        b=lgZz4xyvxjtTfuCDgO3P3HZaXAFdlpc7nwqjurkbC0J2RHinoZ6Mv2qpLDp5JLU3OP
+         dWse/kkaquoJBzypMqVcaKApH7rqPH4iIVrRRAL1Vpqc65i3LuSuMKojSEsZ/bRJCwF3
+         bSLW6iGwuvj16wGJbisGzGT3yDiU7RDJE1KZxGaDuRcVqstbgNLDKHo4bt7n2jZTGSbi
+         B6JO85I4aHzMQVLds2RmKeKs0ThM5hUxd1nz1miR5iAHhhXF51Urqn03xtsle7Kq9g7S
+         jtU+VgOdkHwsTBgWX4VtFMGvW1+Gk8iDF/e5+/PieHVMLnqj17d8wtAKhrtiwEGYNAH0
+         AtOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697231000; x=1697835800;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JtiOVCn2uSsz0FoSYRDQt6Ad/oEEDkzUyvmWznVzlSA=;
+        b=RgG3GgZTAk7nXZ6b4AwemMfg9jsuhWeYZbQyC5QkYdM8NjoGkeNpSlLMRXpVtAYJsm
+         Zx6hTpJvfH9u6HzMLonIWxcQiDcL6gGdylhvRxxxj3yp62SmuOJS6zE1BRWna5NVrbUD
+         wLIPuburvfWOuOmyuQotYvwqPGcXVQh5DvmR8OkHM6vhPSku4ojjYBuEncIuPMvMMcJM
+         EpreusUH8eaJwlctoU4NSTAJiRj0f826QQWZjEBcb8w3xH9DXeYhqjK+nl8iSBTVJbNy
+         03bZYKpOBd2XS5jkH0egetjzFnRYJ2ReuzMOQTdBGILRk4Ybs2vufs6DPr/hCPk0QuCc
+         P0KA==
+X-Gm-Message-State: AOJu0Yzob0huLxHVVVgtuM6+8jRN/XNxP9uvSfgOaDhe2nM1CBEMnmW3
+	7fAmdjbMpO0WLR6JdbRSPqgv3sGuQubCM66Q7hY=
+X-Google-Smtp-Source: AGHT+IHWHj9ILTPWExZ8ekeA0/ryyRW0ZV6k5VhEVnOo+k5EpZsvEbKt/nom23K7vTTS2zHZvjjk2tEmm58T8MLLm1U=
+X-Received: by 2002:a5b:64d:0:b0:d9b:3b3e:5a07 with SMTP id
+ o13-20020a5b064d000000b00d9b3b3e5a07mr2004058ybq.5.1697230999223; Fri, 13 Oct
+ 2023 14:03:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20230807230513.102486-1-vishal.moola@gmail.com>
+ <20230807230513.102486-15-vishal.moola@gmail.com> <20231012072505.6160-A-hca@linux.ibm.com>
+In-Reply-To: <20231012072505.6160-A-hca@linux.ibm.com>
+From: Vishal Moola <vishal.moola@gmail.com>
+Date: Fri, 13 Oct 2023 14:03:08 -0700
+Message-ID: <CAOzc2px-SFSnmjcPriiB3cm1fNj3+YC8S0VSp4t1QvDR0f4E2A@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable v9 14/31] s390: Convert various pgalloc
+ functions to use ptdescs
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
+	Hugh Dickins <hughd@google.com>, David Hildenbrand <david@redhat.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Mike Rapoport <rppt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2023-10-13 at 21:15 +0800, Xi Ruoyao wrote:
-> Again, why this is only an issue with AMD or ATI GPUs?
->=20
-> Can you provide some detailed documentations about this hardware issue
-> so the community can help to figure out a solution?
+On Thu, Oct 12, 2023 at 12:25=E2=80=AFAM Heiko Carstens <hca@linux.ibm.com>=
+ wrote:
+>
+> On Mon, Aug 07, 2023 at 04:04:56PM -0700, Vishal Moola (Oracle) wrote:
+> > As part of the conversions to replace pgtable constructor/destructors w=
+ith
+> > ptdesc equivalents, convert various page table functions to use ptdescs=
+.
+> >
+> > Some of the functions use the *get*page*() helper functions. Convert
+> > these to use pagetable_alloc() and ptdesc_address() instead to help
+> > standardize page tables further.
+> >
+> > Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> > Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> > ---
+> >  arch/s390/include/asm/pgalloc.h |   4 +-
+> >  arch/s390/include/asm/tlb.h     |   4 +-
+> >  arch/s390/mm/pgalloc.c          | 128 ++++++++++++++++----------------
+> >  3 files changed, 69 insertions(+), 67 deletions(-)
+> ...
+> > diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
+> > index d7374add7820..07fc660a24aa 100644
+> > --- a/arch/s390/mm/pgalloc.c
+> > +++ b/arch/s390/mm/pgalloc.c
+> ...
+> > @@ -488,16 +486,20 @@ static void base_pgt_free(unsigned long *table)
+> >  static unsigned long *base_crst_alloc(unsigned long val)
+> >  {
+> >       unsigned long *table;
+> > +     struct ptdesc *ptdesc;
+> >
+> > -     table =3D (unsigned long *)__get_free_pages(GFP_KERNEL, CRST_ALLO=
+C_ORDER);
+> > -     if (table)
+> > -             crst_table_init(table, val);
+> > +     ptdesc =3D pagetable_alloc(GFP_KERNEL & ~__GFP_HIGHMEM, CRST_ALLO=
+C_ORDER);
+>
+> I guess I must miss something, but what is the reason to mask out
+> __GFP_HIGHMEM here? It is not part of GFP_KERNEL, nor does s390 support
+> HIGHMEM.
 
-3 years ago we had=C2=A0https://lkml.org/lkml/2020/8/10/255:
+You're not missing anything.
 
-   In this case the patch is a clear NAK since you haven't root caused the
-   issue and are just working around it in a very questionable manner.
-
-and
-
-   But when the hardware doesn't correctly implement WC for PCIe BARs, then=
-=20
-   this is a violation of the PCIe spec and a bit more serious issue for=
-=20
-   the whole platform.
-
-So do we know the root cause now?  <rant>Or in all the 3 years we just
-keep carrying a problematic workaround downstream, burying the head into
-the sand like an ostrich, and self comforting with "oh they don't
-understand our hardware"?!</rant>
-
-Even if the problem is really "they don't understand our hardware" you
-need to provide some materials to help people understanding the hardware
-better.
-
-If we cannot figure out the root cause or a proper fix is too difficult,
-we should *at least* have a cmdline option and/or a configuration option
-to allow the user to decide, like how we treat these spectre-like bugs.
-"Should the option be enabled or disabled by default" can be debated
-later.
-
-And please try to fix the hardware, to me it will be a compelling reason
-to pay some money for an upgrade :).
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+This was replacing __get_free_pages() which also doesn't support HIGHMEM,
+so I had that in to ensure a non-HIGHMEM allocation in case a
+passed-in gfp_flags
+had it set. In hindsight since we're just passing in the GFP flags
+directly here, we don't
+actually need to mask out GFP_HIGHMEM.
