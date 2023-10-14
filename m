@@ -1,95 +1,130 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7300E1106
-	for <loongarch@lists.linux.dev>; Sat, 14 Oct 2023 03:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxueqfDSplKe0xAA--.20683S3;
-	Sat, 14 Oct 2023 11:40:15 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx7tyeDSplbswjAA--.10433S3;
-	Sat, 14 Oct 2023 11:40:14 +0800 (CST)
-Subject: Re: [PATCH v2 4/8] objtool/LoongArch: Enable orc to be built
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <1696856590-30298-1-git-send-email-yangtiezhu@loongson.cn>
- <1696856590-30298-5-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H6bKnCjjbD=ghJvjYkD4vnMsUNzataMV965zvO=vzQf5Q@mail.gmail.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <5f31f8e9-75ad-4cb8-5998-dc9c8d00c70f@loongson.cn>
-Date: Sat, 14 Oct 2023 11:40:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A6E7E
+	for <loongarch@lists.linux.dev>; Sat, 14 Oct 2023 08:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+yp/KOZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B239C433CA
+	for <loongarch@lists.linux.dev>; Sat, 14 Oct 2023 08:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697272921;
+	bh=G4Swg/OELkKA5zlwNUrWJdm9EBLT0JpHuSiYFDVKAVw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=K+yp/KOZHEM3arVfGghtli0iELZWZqeBdZQjVLVWAUiNiyjaLooZNU+qmDCQBd7ul
+	 wJaBzeZOVlPFEUG5h5tlObcnYkX0avwfR0zxFXrVQEiQDnBc/Lml9dt/p9dThylmIB
+	 6dy7VAWjVXsKM31JLEaZWzS991xED7EXyxYEqup8PHhHUWT6i4XXZP3blNDWD9gE4P
+	 HBZnzVjpf+964c0m1gsJz512u75AQxj5sGo0kVtbsfwjz6xNJ/scm1p3BONbVF4ExA
+	 K1tnbxCnRJlB0L9unW/GUHbyPmh79PM5kqNhJnIfBbfDsshHj4MN11rBcR3rT09vWo
+	 iM+Y47HqeqnfA==
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1dc863efb61so1706093fac.0
+        for <loongarch@lists.linux.dev>; Sat, 14 Oct 2023 01:42:01 -0700 (PDT)
+X-Gm-Message-State: AOJu0Ywp8tqi57MqiZfT1elECD3F1i8j8to9ahBZcDpUZJOMOwkm+VAD
+	/0kJ88WplzugA+3YK1VGqz4WDP4JWQt18vwATUw=
+X-Google-Smtp-Source: AGHT+IEDHn8hDctpEgrOdAxDg4ZGS+fyZbcsCWC8+bRNQUrpKMWoTdaHrZNdtFPEOiGiKHQudHJYv6z04ih1iicSLkY=
+X-Received: by 2002:a05:6870:7687:b0:1e9:d6c8:d031 with SMTP id
+ dx7-20020a056870768700b001e9d6c8d031mr4746345oab.26.1697272921007; Sat, 14
+ Oct 2023 01:42:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6bKnCjjbD=ghJvjYkD4vnMsUNzataMV965zvO=vzQf5Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx7tyeDSplbswjAA--.10433S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JF45Xw4fCryUXw47Gw1rAFc_yoWfAFb_Wr
-	n2yr1DGr1UuFnxC3ZIkayUZFyDt3W5Xa17Gay8ursrXrn3JrWF9FWkurn3ur4rJ3y3CF4D
-	ur1vyFy5CF1DWosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
+References: <20231009124210.1064021-1-masahiroy@kernel.org>
+ <20231009124210.1064021-5-masahiroy@kernel.org> <20231009164424.GB1153868@dev-arch.thelio-3990X>
+In-Reply-To: <20231009164424.GB1153868@dev-arch.thelio-3990X>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 14 Oct 2023 17:41:25 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASZ78NX13cfGiCeXGxB7A_2CasuAgNv-XzyWM79PD2NwA@mail.gmail.com>
+Message-ID: <CAK7LNASZ78NX13cfGiCeXGxB7A_2CasuAgNv-XzyWM79PD2NwA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] kbuild: unify no-compiler-targets and no-sync-config-targets
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org, 
+	Nick Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 10/10/2023 08:52 PM, Huacai Chen wrote:
-> Hi, Tiezhu,
+On Tue, Oct 10, 2023 at 1:44=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
 >
-> On Mon, Oct 9, 2023 at 9:03 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> Implement arch-specific init_orc_entry(), reg_name(), orc_type_name(),
->> print_reg() and orc_print_dump(), then set BUILD_ORC as y to build the
->> orc related files.
+> On Mon, Oct 09, 2023 at 09:42:10PM +0900, Masahiro Yamada wrote:
+> > Now that vdso_install does not depend on any in-tree build artifact,
+> > it no longer invokes a compiler, making no-compiler-targets the same
+> > as no-sync-config-targets.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  Makefile | 13 +------------
+> >  1 file changed, 1 insertion(+), 12 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 2170d56630e8..982b1ad33287 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -277,10 +277,6 @@ no-dot-config-targets :=3D $(clean-targets) \
+> >                        $(version_h) headers headers_% archheaders archs=
+cripts \
+> >                        %asm-generic kernelversion %src-pkg dt_binding_c=
+heck \
+> >                        outputmakefile rustavailable rustfmt rustfmtchec=
+k
+> > -# Installation targets should not require compiler. Unfortunately, vds=
+o_install
+> > -# is an exception where build artifacts may be updated. This must be f=
+ixed.
+> > -no-compiler-targets :=3D $(no-dot-config-targets) install dtbs_install=
+ \
+> > -                     headers_install modules_install modules_sign kern=
+elrelease image_name
+> >  no-sync-config-targets :=3D $(no-dot-config-targets) %install modules_=
+sign kernelrelease \
+> >                         image_name
+> >  single-targets :=3D %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s =
+%.symtypes %/
+> > @@ -288,7 +284,6 @@ single-targets :=3D %.a %.i %.ko %.lds %.ll %.lst %=
+.mod %.o %.rsi %.s %.symtypes %
+> >  config-build :=3D
+> >  mixed-build  :=3D
+> >  need-config  :=3D 1
+> > -need-compiler        :=3D 1
+> >  may-sync-config      :=3D 1
+> >  single-build :=3D
+> >
+> > @@ -298,12 +293,6 @@ ifneq ($(filter $(no-dot-config-targets), $(MAKECM=
+DGOALS)),)
+> >       endif
+> >  endif
+> >
+> > -ifneq ($(filter $(no-compiler-targets), $(MAKECMDGOALS)),)
+> > -     ifeq ($(filter-out $(no-compiler-targets), $(MAKECMDGOALS)),)
+> > -             need-compiler :=3D
+> > -     endif
+> > -endif
+> > -
+>
+> MIPS and LoongArch seem to have grown a usage of need-compiler in
+> 4fe4a6374c4d ("MIPS: Only fiddle with CHECKFLAGS if `need-compiler'")
+> and 54c2c9df083f ("LoongArch: Only fiddle with CHECKFLAGS if
+> `need-compiler'"). With this removal, should those be updated as well?
 
-...
 
->> +#define ORC_REG_SP                     2
->> +#define ORC_REG_BP                     3
-> There is no BP register for LoongArch, so I think all 'BP' should be
-> 'FP' in this patch.
+Right, but may-sync-config and need-compiler are not
+interchangeable due to the following code.
 
-Makes sense, thank you, will do it.
+ifneq ($(KBUILD_EXTMOD),)
+        may-sync-config :=3D
+endif
 
->> +#define ORC_REG_MAX                    4
 
-...
+I will keep both.
 
->> +struct orc_entry {
->> +       s16             sp_offset;
->> +       s16             bp_offset;
->> +       s16             ra_offset;
->> +       unsigned int    sp_reg:4;
->> +       unsigned int    bp_reg:4;
->> +       unsigned int    ra_reg:4;
->> +       unsigned int    type:3;
->> +       unsigned int    signal:1;
->> +};
 
-At the same time, I will replace bp_offset with fp_offset and
-replace bp_reg with fp_reg, then modify the related code.
-
-Thanks,
-Tiezhu
-
+--=20
+Best Regards
+Masahiro Yamada
