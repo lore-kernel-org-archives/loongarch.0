@@ -1,121 +1,95 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B32421A0A
-	for <loongarch@lists.linux.dev>; Fri, 13 Oct 2023 21:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgZz4xyv"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-d9ac31cb051so2412164276.3
-        for <loongarch@lists.linux.dev>; Fri, 13 Oct 2023 14:03:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697231000; x=1697835800; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JtiOVCn2uSsz0FoSYRDQt6Ad/oEEDkzUyvmWznVzlSA=;
-        b=lgZz4xyvxjtTfuCDgO3P3HZaXAFdlpc7nwqjurkbC0J2RHinoZ6Mv2qpLDp5JLU3OP
-         dWse/kkaquoJBzypMqVcaKApH7rqPH4iIVrRRAL1Vpqc65i3LuSuMKojSEsZ/bRJCwF3
-         bSLW6iGwuvj16wGJbisGzGT3yDiU7RDJE1KZxGaDuRcVqstbgNLDKHo4bt7n2jZTGSbi
-         B6JO85I4aHzMQVLds2RmKeKs0ThM5hUxd1nz1miR5iAHhhXF51Urqn03xtsle7Kq9g7S
-         jtU+VgOdkHwsTBgWX4VtFMGvW1+Gk8iDF/e5+/PieHVMLnqj17d8wtAKhrtiwEGYNAH0
-         AtOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697231000; x=1697835800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JtiOVCn2uSsz0FoSYRDQt6Ad/oEEDkzUyvmWznVzlSA=;
-        b=RgG3GgZTAk7nXZ6b4AwemMfg9jsuhWeYZbQyC5QkYdM8NjoGkeNpSlLMRXpVtAYJsm
-         Zx6hTpJvfH9u6HzMLonIWxcQiDcL6gGdylhvRxxxj3yp62SmuOJS6zE1BRWna5NVrbUD
-         wLIPuburvfWOuOmyuQotYvwqPGcXVQh5DvmR8OkHM6vhPSku4ojjYBuEncIuPMvMMcJM
-         EpreusUH8eaJwlctoU4NSTAJiRj0f826QQWZjEBcb8w3xH9DXeYhqjK+nl8iSBTVJbNy
-         03bZYKpOBd2XS5jkH0egetjzFnRYJ2ReuzMOQTdBGILRk4Ybs2vufs6DPr/hCPk0QuCc
-         P0KA==
-X-Gm-Message-State: AOJu0Yzob0huLxHVVVgtuM6+8jRN/XNxP9uvSfgOaDhe2nM1CBEMnmW3
-	7fAmdjbMpO0WLR6JdbRSPqgv3sGuQubCM66Q7hY=
-X-Google-Smtp-Source: AGHT+IHWHj9ILTPWExZ8ekeA0/ryyRW0ZV6k5VhEVnOo+k5EpZsvEbKt/nom23K7vTTS2zHZvjjk2tEmm58T8MLLm1U=
-X-Received: by 2002:a5b:64d:0:b0:d9b:3b3e:5a07 with SMTP id
- o13-20020a5b064d000000b00d9b3b3e5a07mr2004058ybq.5.1697230999223; Fri, 13 Oct
- 2023 14:03:19 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE9127E
+	for <loongarch@lists.linux.dev>; Sat, 14 Oct 2023 02:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxuOgC+SllGOkxAA--.60398S3;
+	Sat, 14 Oct 2023 10:12:19 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_y8B+SllHbojAA--.9890S3;
+	Sat, 14 Oct 2023 10:12:17 +0800 (CST)
+Subject: Re: [PATCH v2 1/8] objtool/LoongArch: Enable objtool to be built
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <1696856590-30298-1-git-send-email-yangtiezhu@loongson.cn>
+ <1696856590-30298-2-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H7NQM_W-T80UdPy0F7jUFa-eWKLymoLHkgUGoAGzZPUTQ@mail.gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <872be5af-26f0-34db-dedb-0d6ecb7092c0@loongson.cn>
+Date: Sat, 14 Oct 2023 10:12:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230807230513.102486-1-vishal.moola@gmail.com>
- <20230807230513.102486-15-vishal.moola@gmail.com> <20231012072505.6160-A-hca@linux.ibm.com>
-In-Reply-To: <20231012072505.6160-A-hca@linux.ibm.com>
-From: Vishal Moola <vishal.moola@gmail.com>
-Date: Fri, 13 Oct 2023 14:03:08 -0700
-Message-ID: <CAOzc2px-SFSnmjcPriiB3cm1fNj3+YC8S0VSp4t1QvDR0f4E2A@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v9 14/31] s390: Convert various pgalloc
- functions to use ptdescs
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
-	Hugh Dickins <hughd@google.com>, David Hildenbrand <david@redhat.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H7NQM_W-T80UdPy0F7jUFa-eWKLymoLHkgUGoAGzZPUTQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx_y8B+SllHbojAA--.9890S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrur47Ar4rGrWUCFWxCw47Jrc_yoWkZrc_uw
+	17Wa1kur1rXFWft3Z0vF95uF98GayrZrs5ArWvqr43W3Z8ta1DGFZrX348Zr45K3yvvFsx
+	CFZ5Jr13CrnFgosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jeQ6JUUUUU=
 
-On Thu, Oct 12, 2023 at 12:25=E2=80=AFAM Heiko Carstens <hca@linux.ibm.com>=
- wrote:
+
+
+On 10/10/2023 08:45 PM, Huacai Chen wrote:
+> Hi, Tiezhu,
 >
-> On Mon, Aug 07, 2023 at 04:04:56PM -0700, Vishal Moola (Oracle) wrote:
-> > As part of the conversions to replace pgtable constructor/destructors w=
-ith
-> > ptdesc equivalents, convert various page table functions to use ptdescs=
-.
-> >
-> > Some of the functions use the *get*page*() helper functions. Convert
-> > these to use pagetable_alloc() and ptdesc_address() instead to help
-> > standardize page tables further.
-> >
-> > Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> > Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-> > ---
-> >  arch/s390/include/asm/pgalloc.h |   4 +-
-> >  arch/s390/include/asm/tlb.h     |   4 +-
-> >  arch/s390/mm/pgalloc.c          | 128 ++++++++++++++++----------------
-> >  3 files changed, 69 insertions(+), 67 deletions(-)
-> ...
-> > diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
-> > index d7374add7820..07fc660a24aa 100644
-> > --- a/arch/s390/mm/pgalloc.c
-> > +++ b/arch/s390/mm/pgalloc.c
-> ...
-> > @@ -488,16 +486,20 @@ static void base_pgt_free(unsigned long *table)
-> >  static unsigned long *base_crst_alloc(unsigned long val)
-> >  {
-> >       unsigned long *table;
-> > +     struct ptdesc *ptdesc;
-> >
-> > -     table =3D (unsigned long *)__get_free_pages(GFP_KERNEL, CRST_ALLO=
-C_ORDER);
-> > -     if (table)
-> > -             crst_table_init(table, val);
-> > +     ptdesc =3D pagetable_alloc(GFP_KERNEL & ~__GFP_HIGHMEM, CRST_ALLO=
-C_ORDER);
+> On Mon, Oct 9, 2023 at 9:03 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> Add the minimal changes to enable objtool build on LoongArch,
+>> most of the functions are stubs to only fix the build errors
+>> when make -C tools/objtool.
+>>
+>> This is similar with commit e52ec98c5ab1 ("objtool/powerpc:
+>> Enable objtool to be built on ppc").
+
+...
+
+>> diff --git a/tools/objtool/arch/loongarch/include/arch/special.h b/tools/objtool/arch/loongarch/include/arch/special.h
+>> new file mode 100644
+>> index 0000000..1a8245c
+>> --- /dev/null
+>> +++ b/tools/objtool/arch/loongarch/include/arch/special.h
+>> @@ -0,0 +1,33 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>> +#ifndef _OBJTOOL_ARCH_SPECIAL_H
+>> +#define _OBJTOOL_ARCH_SPECIAL_H
+>> +
+>> +/*
+>> + * See more info about struct exception_table_entry
+>> + * in arch/loongarch/include/asm/extable.h
+>> + */
+>> +#define EX_ENTRY_SIZE 12
+>> +#define EX_ORIG_OFFSET 0
+>> +#define EX_NEW_OFFSET 4
+> Other archs use tab for indentation in special.h
 >
-> I guess I must miss something, but what is the reason to mask out
-> __GFP_HIGHMEM here? It is not part of GFP_KERNEL, nor does s390 support
-> HIGHMEM.
 
-You're not missing anything.
+OK, thank you, will do it.
 
-This was replacing __get_free_pages() which also doesn't support HIGHMEM,
-so I had that in to ensure a non-HIGHMEM allocation in case a
-passed-in gfp_flags
-had it set. In hindsight since we're just passing in the GFP flags
-directly here, we don't
-actually need to mask out GFP_HIGHMEM.
+Thanks,
+Tiezhu
+
