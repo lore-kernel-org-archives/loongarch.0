@@ -1,238 +1,163 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from sender4-op-o10.zoho.com (sender4-op-o10.zoho.com [136.143.188.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DF51C3E
-	for <loongarch@lists.linux.dev>; Sat, 14 Oct 2023 22:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1qrmfV-0001zq-2D; Sat, 14 Oct 2023 23:59:33 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1qrmfI-001hum-RA; Sat, 14 Oct 2023 23:59:20 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1qrmfI-00GSU5-Fm; Sat, 14 Oct 2023 23:59:20 +0200
-Date: Sat, 14 Oct 2023 23:59:18 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: soc@kernel.org
-Cc: Nishanth Menon <nm@ti.com>, Herve Codina <herve.codina@bootlin.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
-	Mateusz Holenko <mholenko@antmicro.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	"Conor.Dooley" <conor.dooley@microchip.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	linux-riscv@lists.infradead.org,
-	Karol Gugala <kgugala@antmicro.com>,
-	Qiang Zhao <qiang.zhao@nxp.com>,
-	Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
-	Rob Herring <robh@kernel.org>, linux-samsung-soc@vger.kernel.org,
-	linux-aspeed@lists.ozlabs.org, Ruan Jinjie <ruanjinjie@huawei.com>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Jon Hunter <jonathanh@nvidia.com>,
-	linux-rockchip@lists.infradead.org,
-	Gabriel Somlo <gsomlo@gmail.com>, Andy Gross <agross@kernel.org>,
-	Huisong Li <lihuisong@huawei.com>, Joel Stanley <joel@jms.id.au>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Sumit Gupta <sumitg@nvidia.com>,
-	"zhang.songyi" <zhang.songyi@zte.com.cn>,
-	Zev Weiss <zev@bewilderbeest.net>, Arnd Bergmann <arnd@arndb.de>,
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Lubomir Rintel <lkundrak@v3.sk>, Krzysztof Halasa <khalasa@piap.pl>,
-	loongarch@lists.linux.dev, Santosh Shilimkar <ssantosh@kernel.org>,
-	linux-tegra@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F9915B4
+	for <loongarch@lists.linux.dev>; Sun, 15 Oct 2023 06:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="VMBdpqst"
+ARC-Seal: i=1; a=rsa-sha256; t=1697352031; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=EUHWn97BjzuhVk4aoSNe5kTYbVS1evSOKIQO+l5Nt6hPYRJI6o/+1dnNLUoA7gamN1lnzfe1ze60zVeOGS2jB6Cn9mqZdG0pXtkbFCHYlznfuO9nwemdi798EtZ7pOz3j9bSUl1BPCa2PaLpd+3cv5nE8UrX9FjnLX6ZyQ1i3d8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1697352031; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=tdDhVnGxLtb4fS71jSH6UyR1CF4JMcetfgtEDsucopY=; 
+	b=Y6MMc8X9pts5ZpTKiaS1yLU06DgbCTC5WPY6cpBlW985UGVrOL2nS2gbWBwqzdJa6oX7Uu79gAHRZZQKncLVLM0pE8hOXwIpbuut/NjIclQnpVhhg7To7sPiiMaeWa6excB4xl2jZ5/9borV0hUj6icPW/Or5/e5Q2p/D1LgeNg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1697352031;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=tdDhVnGxLtb4fS71jSH6UyR1CF4JMcetfgtEDsucopY=;
+	b=VMBdpqstCHXb7MzWwPc/56HOZSVF6K4tDr+TsadbeyALjLcwRhrTwBkwrJSoEfUu
+	LmE/SUozYBZBKTCxuYiQGHekvYyOz61hmMduvsKh1IqPM5nPcN9JNhWx/ncBjSO+L4B
+	oVW67LWqaoOmM4SL5yfDKrph7iRFstJkCFnghZtjUrUSdo6W91MZZwyi9Cx6kzTrM7u
+	NGYmYTJWHXbUe+JBWK+P1shVbVWPCTnGFqjKh7K9a/+AXEjY3WFYmPxhOcHFPl13gAK
+	lR0z8XsWySy8ROVJX2WTvaQSrrafmrbVtz2YwwtzBvWt46Ub9uLHxGNZkAWZ9zl13YW
+	Xeh7kjPr1g==
+Received: from edelgard.fodlan.icenowy.me (120.85.96.102 [120.85.96.102]) by mx.zohomail.com
+	with SMTPS id 1697352029711769.5282799913583; Sat, 14 Oct 2023 23:40:29 -0700 (PDT)
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Weihao Li <liweihao@loongson.cn>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Jun Yi <yijun@loongson.cn>,
+	Baoquan He <bhe@redhat.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	Hongchen Zhang <zhanghongchen@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Youling Tang <tangyouling@loongson.cn>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Zhihong Dong <donmor3000@hotmail.com>,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Shang XiaoJing <shangxiaojing@huawei.com>,
-	Leo Li <leoyang.li@nxp.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Andrew Jeffery <andrew@aj.id.au>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	linux-mediatek@lists.infradead.org,
-	Nick Alcock <nick.alcock@oracle.com>, linuxppc-dev@lists.ozlabs.org
-Subject: [GIT PULL] Convert drivers/soc to struct
- platform_driver::remove_new()
-Message-ID: <20231014215918.prqhkk7kp2vobe3a@pengutronix.de>
-References: <20230925095532.1984344-1-u.kleine-koenig@pengutronix.de>
- <CACPK8XeROYz_XaB3TvUhdXm7Vm8fjC8yU+mfvA58=_FiDrBy-g@mail.gmail.com>
- <1b2fddf8-c0a6-4afa-8ad0-f280dea1607f@app.fastmail.com>
- <f4hvrslynlgmxu4a2gogc5idvumskhaalxgwildy56yqk2wz7d@lkh4swkv52mi>
- <20230928061449.xxqhyyrg6e357dn2@pengutronix.de>
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH v3] loongarch/mm: disable WUC for pgprot_writecombine() like ioremap_wc()
+Date: Sun, 15 Oct 2023 14:39:57 +0800
+Message-Id: <20231015063957.1999585-1-uwu@icenowy.me>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7gysnf7ldsm65nug"
-Content-Disposition: inline
-In-Reply-To: <20230928061449.xxqhyyrg6e357dn2@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: loongarch@lists.linux.dev
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
+Currently the code disables WUC only disables it for ioremap_wc(), which
+is only used when mapping writecombine pages like ioremap() (mapped to
+the kernel space). For VRAM mapped in TTM/GEM, it's mapped with a
+crafted pgprot with pgprot_writecombine() function, which isn't
+corrently disabled now.
 
---7gysnf7ldsm65nug
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Disable WUC for pgprot_writecombine() (fallback to SUC) too.
 
-Hello Arnd,
+This solves some misrendering on AMDGPU driver, e.g. opening some
+webpages in Firefox.
 
-the following changes since commit 0bb80ecc33a8fb5a682236443c1e740d5c917d1d:
+Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+---
+Changes since v2:
+- Changed commit message (use "like" instead of "as same as" and
+  change the problem fixed from stability issue (still mysterious) to
+  misrendering.)
 
-  Linux 6.6-rc1 (2023-09-10 16:28:41 -0700)
+Changes since v1:
+- Removed _WC macros
+- Mention ioremap_wc in commit message
 
-are available in the Git repository at:
+ arch/loongarch/include/asm/io.h           |  5 ++---
+ arch/loongarch/include/asm/pgtable-bits.h |  4 +++-
+ arch/loongarch/kernel/setup.c             | 10 +++++-----
+ 3 files changed, 10 insertions(+), 9 deletions(-)
 
-  https://git.pengutronix.de/git/ukl/linux tags/platform-remove-void-soc-fo=
-r-6.7-rc
+diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+index 0dcb36b32cb25..290aad87a8847 100644
+--- a/arch/loongarch/include/asm/io.h
++++ b/arch/loongarch/include/asm/io.h
+@@ -52,10 +52,9 @@ static inline void __iomem *ioremap_prot(phys_addr_t offset, unsigned long size,
+  * @offset:    bus address of the memory
+  * @size:      size of the resource to map
+  */
+-extern pgprot_t pgprot_wc;
+-
+ #define ioremap_wc(offset, size)	\
+-	ioremap_prot((offset), (size), pgprot_val(pgprot_wc))
++	ioremap_prot((offset), (size), pgprot_val( \
++		wc_enabled ? PAGE_KERNEL_WUC : PAGE_KERNEL_SUC))
+ 
+ #define ioremap_cache(offset, size)	\
+ 	ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL))
+diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
+index 35348d4c4209a..a3d827701736d 100644
+--- a/arch/loongarch/include/asm/pgtable-bits.h
++++ b/arch/loongarch/include/asm/pgtable-bits.h
+@@ -92,6 +92,8 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
++extern bool wc_enabled;
++
+ #define _PAGE_IOREMAP		pgprot_val(PAGE_KERNEL_SUC)
+ 
+ #define pgprot_noncached pgprot_noncached
+@@ -111,7 +113,7 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+ {
+ 	unsigned long prot = pgprot_val(_prot);
+ 
+-	prot = (prot & ~_CACHE_MASK) | _CACHE_WUC;
++	prot = (prot & ~_CACHE_MASK) | (wc_enabled ? _CACHE_WUC : _CACHE_SUC);
+ 
+ 	return __pgprot(prot);
+ }
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 7783f0a3d742c..465c1dbb6f4b4 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -161,19 +161,19 @@ static void __init smbios_parse(void)
+ }
+ 
+ #ifdef CONFIG_ARCH_WRITECOMBINE
+-pgprot_t pgprot_wc = PAGE_KERNEL_WUC;
++bool wc_enabled = true;
+ #else
+-pgprot_t pgprot_wc = PAGE_KERNEL_SUC;
++bool wc_enabled;
+ #endif
+ 
+-EXPORT_SYMBOL(pgprot_wc);
++EXPORT_SYMBOL(wc_enabled);
+ 
+ static int __init setup_writecombine(char *p)
+ {
+ 	if (!strcmp(p, "on"))
+-		pgprot_wc = PAGE_KERNEL_WUC;
++		wc_enabled = true;
+ 	else if (!strcmp(p, "off"))
+-		pgprot_wc = PAGE_KERNEL_SUC;
++		wc_enabled = false;
+ 	else
+ 		pr_warn("Unknown writecombine setting \"%s\".\n", p);
+ 
+-- 
+2.39.1
 
-for you to fetch changes up to e77e6e3e909d33361c58af848a96e1f7f71ba7e4:
-
-  soc/pxa: ssp: Convert to platform remove callback returning void (2023-10=
--14 23:27:34 +0200)
-
-----------------------------------------------------------------
-Convert drivers/soc to struct platform_driver::remove_new()
-
-This PR contains the patches I sent in the series available at
-https://lore.kernel.org/all/20230925095532.1984344-1-u.kleine-koenig@pengut=
-ronix.de
-that were not yet picked up in next as of next-20231013.
-
-It converts all drivers below drivers/soc to let their remove callback
-return void. See commit 5c5a7680e67b ("platform: Provide a remove
-callback that returns no value") for the rationale.
-
-----------------------------------------------------------------
-
-On Thu, Sep 28, 2023 at 08:14:49AM +0200, Uwe Kleine-K=F6nig wrote:
-> On Wed, Sep 27, 2023 at 04:01:58PM -0700, Bjorn Andersson wrote:
-> > On Wed, Sep 27, 2023 at 10:43:16AM +0200, Arnd Bergmann wrote:
-> > > On Wed, Sep 27, 2023, at 04:25, Joel Stanley wrote:
-> > > > On Mon, 25 Sept 2023 at 09:55, Uwe Kleine-K=F6nig <u.kleine-koenig@=
-pengutronix.de> wrote:
-> > > >>
-> > > >> this series converts all platform drivers below drivers/soc to use
-> > > >> .remove_new(). The motivation is to get rid of an integer return c=
-ode
-> > > >> that is (mostly) ignored by the platform driver core and error pro=
-ne on
-> > > >> the driver side.
-> > > >>
-> > > >> See commit 5c5a7680e67b ("platform: Provide a remove callback that
-> > > >> returns no value") for an extended explanation and the eventual go=
-al.
-> > > >>
-> > > >> As there is no single maintainer team for drivers/soc, I suggest t=
-he
-> > > >> individual maintainers to pick up "their" patches.
-> > > >
-> > > > I'd be happy if Arnd merged the lot at once. Arnd, what do you thin=
-k?
-> > > >
-> > > > If that will be too messy then I understand. I have queued the aspe=
-ed
-> > > > ones locally and will push that out if we decide that's the best way
-> > > > to go.
-> > >=20
-> > > The main downside of merging it all at once through the soc tree
-> > > is that there may be patches that conflict with other work going on
-> > > in individual drivers.
-> > >=20
-> > > What I'd suggest doing here is:
-> > >=20
-> > > - have platform maintainers pick up patches for their drivers
-> > >   if that is their preference for any reason
-> >=20
-> > I'd prefer this for the qcom drivers at least, please let me know if you
-> > would like me to proceed.
->
-> I can send a pull request as Arnd suggested. So iff you want the qcom
-> drivers not be a part of that PR, just make sure they appear in next
-> during the next week. :-)
->
-> > > - get a pull request from Uwe for the soc tree for anything that has
-> > >  not been picked up in one or two weeks from now
-
-Here comes the promised PR. The qcom patches are among the set of
-patches dropped here as they are already in next.
-
-To state the obvious: This is merge window material and the idea is that
-it's pulled into armsoc and then included in the armsoc v6.7-rc1 PR to
-Linus Torvalds. I hope it's not too late for that already.
-
-Best regards and thanks
-Uwe
-
-Uwe Kleine-K=F6nig (12):
-      soc/fsl: dpaa2-console: Convert to platform remove callback returning=
- void
-      soc/fsl: cpm: qmc: Convert to platform remove callback returning void
-      soc/fsl: cpm: tsa: Convert to platform remove callback returning void
-      soc/fujitsu: a64fx-diag: Convert to platform remove callback returnin=
-g void
-      soc/hisilicon: kunpeng_hccs: Convert to platform remove callback retu=
-rning void
-      soc/ixp4xx: ixp4xx-npe: Convert to platform remove callback returning=
- void
-      soc/ixp4xx: ixp4xx-qmgr: Convert to platform remove callback returnin=
-g void
-      soc/litex: litex_soc_ctrl: Convert to platform remove callback return=
-ing void
-      soc/loongson: loongson2_guts: Convert to platform remove callback ret=
-urning void
-      soc/mediatek: mtk-devapc: Convert to platform remove callback returni=
-ng void
-      soc/mediatek: mtk-mmsys: Convert to platform remove callback returnin=
-g void
-      soc/pxa: ssp: Convert to platform remove callback returning void
-
- drivers/soc/fsl/dpaa2-console.c       | 6 ++----
- drivers/soc/fsl/qe/qmc.c              | 6 ++----
- drivers/soc/fsl/qe/tsa.c              | 5 ++---
- drivers/soc/fujitsu/a64fx-diag.c      | 6 ++----
- drivers/soc/hisilicon/kunpeng_hccs.c  | 6 ++----
- drivers/soc/ixp4xx/ixp4xx-npe.c       | 6 ++----
- drivers/soc/ixp4xx/ixp4xx-qmgr.c      | 5 ++---
- drivers/soc/litex/litex_soc_ctrl.c    | 5 ++---
- drivers/soc/loongson/loongson2_guts.c | 6 ++----
- drivers/soc/mediatek/mtk-devapc.c     | 6 ++----
- drivers/soc/mediatek/mtk-mmsys.c      | 6 ++----
- drivers/soc/pxa/ssp.c                 | 6 ++----
- 12 files changed, 24 insertions(+), 45 deletions(-)
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---7gysnf7ldsm65nug
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUrDzUACgkQj4D7WH0S
-/k5j4gf/bF9kgxVuSiift0gAwVEYG58vErpILxnhavoGUJkIvS/2rxDkuHmTNQ5X
-QalfUGigAoE8LztKGVtaC0Xx+ie+VRIk5mw7tId7GP1bfzJnrekEsnRe0feT2zy4
-2d7Jc3JZ2H+C31SObKtmKNcav5jLzXd8vN/RS+w/tj9/nE/paVB+kcHIX17ZPGE2
-zIumGo0OqOAmN6fNwoqyqQuy22i5ECmPHi9DAJkeOg4/Hu017wBfW2V/FvHA+eee
-KpnkXofsyZDqGCLvlNHd4qBQG/88+W7qcVxbCoDebo18y86tj2IbgeeFfbihxKLO
-lcwKEm4ptKtWDPzYdLgO7nELl73FRw==
-=h2pz
------END PGP SIGNATURE-----
-
---7gysnf7ldsm65nug--
