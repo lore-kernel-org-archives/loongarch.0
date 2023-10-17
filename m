@@ -1,272 +1,256 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66EBF15ADD
-	for <loongarch@lists.linux.dev>; Mon, 16 Oct 2023 09:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx2ep1BC1lXUwyAA--.26476S3;
-	Mon, 16 Oct 2023 17:37:58 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxiuR0BC1lzU0mAA--.16612S2;
-	Mon, 16 Oct 2023 17:37:57 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1040F3B29E
+	for <loongarch@lists.linux.dev>; Tue, 17 Oct 2023 08:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DakgsQpz"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1c88b467ef8so36882215ad.0
+        for <loongarch@lists.linux.dev>; Tue, 17 Oct 2023 01:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697531507; x=1698136307; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XbcbAmOCv2GaogANlUUkIacNzCiiquB3TlI/GPI0gBs=;
+        b=DakgsQpz2Gk2+IUad7+HNmN0OHl3SF1MOFrdVuf+WPn+2Z6I2a6lCEfs7MjL6Y0c8Y
+         GnZtxNL9TfLt+/TNKRQfaPRKXQv//xN9TBW4ik32o9I/AMhAszb61TuweXyoyJiDhAIB
+         DcgZp7DFOzbjVqHkv+nakD6JlAa+tnmbVhJuYRSpMWeZhtVcrzmMv654Jjj0pHWUhSp2
+         8QiBIxaHtHq2RJftJn3wdu3VDBlj2e70KtgT0Jwrh2kmGb13qQDqb6jvVeI2nB/4X0CI
+         6ZCtMTL0/NxDPGX1J6AtnFNzv2Esph0+myggWv3mrzB6nhqLU8DCzamiSnmQ9Of689mI
+         1VXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697531507; x=1698136307;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XbcbAmOCv2GaogANlUUkIacNzCiiquB3TlI/GPI0gBs=;
+        b=oWE45JVop96pBlTYehhhfnDeSqL5gwmrw+gEN1s9MgriM/AXfd95hfuR43Qa9ByKX1
+         CCEnYphU1MqGeUSQtZGHpYADysktbp2MJBZvApaWTADhS7LSA5C9Ds12ZyjOWVNj78zu
+         xr6Pw3JiO9K9QUo+71CSmCNKkJGhsb9s1/fPxFuNEan6XQnvmSCaITaZpM2tigtshdI/
+         QGzB4g6lESlM/MQG1Mz9mpRs5HsbYY77/046hyW8kSdubJ30V1bpaSDqS/Xp59DgFxNc
+         hT5qKyU540a6+VmD9K/44hDKwnJbG918K7o5UW6QmzWJinUijoqjlmWsOslTtruVsWT3
+         Zsfw==
+X-Gm-Message-State: AOJu0Yxt7VEnNIkmJMJyXV3/rmXtJi5+y2YhMK2BfyoNrsmC5f6kdxi1
+	wtmqRHy+GGns7geyCen3h7A=
+X-Google-Smtp-Source: AGHT+IEHlMnIQEbxWQLv6YjjNM5FsNxG9ZmE7/HIc2N7h4xzHEPy4DzECahLVTHTwFwqZjk3lkNLrA==
+X-Received: by 2002:a17:902:c712:b0:1ca:7af1:8a85 with SMTP id p18-20020a170902c71200b001ca7af18a85mr1286971plp.57.1697531507232;
+        Tue, 17 Oct 2023 01:31:47 -0700 (PDT)
+Received: from aa-PC.zhaoxin.com ([180.169.121.82])
+        by smtp.gmail.com with ESMTPSA id l18-20020a170902d35200b001c9d235b3a0sm924017plk.7.2023.10.17.01.31.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Oct 2023 01:31:46 -0700 (PDT)
+From: Liam Ni <zhiguangni01@gmail.com>
+To: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v1] LoongArch: Use SYM_CODE to annotate exception handlers
-Date: Mon, 16 Oct 2023 17:37:56 +0800
-Message-Id: <1697449076-31866-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8DxiuR0BC1lzU0mAA--.16612S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3GryDWF1kGr4kGr1rXry5trc_yoWxWw45p3
-	43AFs8GrWqgFy3XFy3Cw4UArW7JanFgay29a1DXrZagwn2gF1vq340y393XF92gayUXF40
-	9r1UAw1I9FW5JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxU74lkDUUUU
+	loongarch@lists.linux.dev,
+	rppt@kernel.org
+Cc: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	x86@kernel.org,
+	hpa@zytor.com,
+	akpm@linux-foundation.org,
+	maobibo@loongson.cn,
+	chenfeiyang@loongson.cn,
+	zhiguangni01@gmail.com,
+	zhoubinbin@loongson.cn
+Subject: [PATCH V5] NUMA: optimize detection of memory with no node id assigned by firmware
+Date: Tue, 17 Oct 2023 16:30:33 +0800
+Message-Id: <20231017083033.118643-1-zhiguangni01@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-As described in include/linux/linkage.h,
+Sanity check that makes sure the nodes cover all memory loops over
+numa_meminfo to count the pages that have node id assigned by the firmware,
+then loops again over memblock.memory to find the total amount of memory
+and in the end checks that the difference between the total memory and
+memory that covered by nodes is less than some threshold. Worse, the loop
+over numa_meminfo calls __absent_pages_in_range() that also partially
+traverses memblock.memory.
 
-  FUNC -- C-like functions (proper stack frame etc.)
-  CODE -- non-C code (e.g. irq handlers with different, special stack etc.)
+It's much simpler and more efficient to have a single traversal of
+memblock.memory that verifies that amount of memory not covered by nodes is
+less than a threshold.
 
-  SYM_FUNC_START -- use for global functions
-  SYM_CODE_START -- use for non-C (special) functions
+Introduce memblock_validate_numa_coverage() that does exactly that and use
+it instead of numa_meminfo_cover_memory().
 
-use SYM_CODE to annotate exception handlers.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
 ---
- arch/loongarch/include/asm/linkage.h |  8 ++++++++
- arch/loongarch/kernel/entry.S        |  4 ++--
- arch/loongarch/kernel/genex.S        | 16 ++++++++--------
- arch/loongarch/mm/tlbex.S            | 36 ++++++++++++++++++------------------
- 4 files changed, 36 insertions(+), 28 deletions(-)
+ arch/loongarch/kernel/numa.c | 28 +---------------------------
+ arch/x86/mm/numa.c           | 34 ++--------------------------------
+ include/linux/memblock.h     |  1 +
+ mm/memblock.c                | 34 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 38 insertions(+), 59 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/linkage.h b/arch/loongarch/include/asm/linkage.h
-index 81b0c4c..e2eca1a 100644
---- a/arch/loongarch/include/asm/linkage.h
-+++ b/arch/loongarch/include/asm/linkage.h
-@@ -33,4 +33,12 @@
- 	.cfi_endproc;					\
- 	SYM_END(name, SYM_T_FUNC)
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index cb00804826f7..fca94d16be34 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -226,32 +226,6 @@ static void __init node_mem_init(unsigned int node)
  
-+#define SYM_CODE_START(name)				\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)	\
-+	.cfi_startproc;
+ #ifdef CONFIG_ACPI_NUMA
+ 
+-/*
+- * Sanity check to catch more bad NUMA configurations (they are amazingly
+- * common).  Make sure the nodes cover all memory.
+- */
+-static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+-{
+-	int i;
+-	u64 numaram, biosram;
+-
+-	numaram = 0;
+-	for (i = 0; i < mi->nr_blks; i++) {
+-		u64 s = mi->blk[i].start >> PAGE_SHIFT;
+-		u64 e = mi->blk[i].end >> PAGE_SHIFT;
+-
+-		numaram += e - s;
+-		numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+-		if ((s64)numaram < 0)
+-			numaram = 0;
+-	}
+-	max_pfn = max_low_pfn;
+-	biosram = max_pfn - absent_pages_in_range(0, max_pfn);
+-
+-	BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
+-	return true;
+-}
+-
+ static void __init add_node_intersection(u32 node, u64 start, u64 size, u32 type)
+ {
+ 	static unsigned long num_physpages;
+@@ -396,7 +370,7 @@ int __init init_numa_memory(void)
+ 		return -EINVAL;
+ 
+ 	init_node_memblock();
+-	if (numa_meminfo_cover_memory(&numa_meminfo) == false)
++	if (memblock_validate_numa_coverage(SZ_1M >> 12) == false)
+ 		return -EINVAL;
+ 
+ 	for_each_node_mask(node, node_possible_map) {
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index 2aadb2019b4f..95376e7c263e 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -447,37 +447,6 @@ int __node_distance(int from, int to)
+ }
+ EXPORT_SYMBOL(__node_distance);
+ 
+-/*
+- * Sanity check to catch more bad NUMA configurations (they are amazingly
+- * common).  Make sure the nodes cover all memory.
+- */
+-static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+-{
+-	u64 numaram, e820ram;
+-	int i;
+-
+-	numaram = 0;
+-	for (i = 0; i < mi->nr_blks; i++) {
+-		u64 s = mi->blk[i].start >> PAGE_SHIFT;
+-		u64 e = mi->blk[i].end >> PAGE_SHIFT;
+-		numaram += e - s;
+-		numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+-		if ((s64)numaram < 0)
+-			numaram = 0;
+-	}
+-
+-	e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
+-
+-	/* We seem to lose 3 pages somewhere. Allow 1M of slack. */
+-	if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
+-		printk(KERN_ERR "NUMA: nodes only cover %LuMB of your %LuMB e820 RAM. Not used.\n",
+-		       (numaram << PAGE_SHIFT) >> 20,
+-		       (e820ram << PAGE_SHIFT) >> 20);
+-		return false;
+-	}
+-	return true;
+-}
+-
+ /*
+  * Mark all currently memblock-reserved physical memory (which covers the
+  * kernel's own memory ranges) as hot-unswappable.
+@@ -583,7 +552,8 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
+ 			return -EINVAL;
+ 		}
+ 	}
+-	if (!numa_meminfo_cover_memory(mi))
 +
-+#define SYM_CODE_END(name)				\
-+	.cfi_endproc;					\
-+	SYM_END(name, SYM_T_NONE)
++	if (!memblock_validate_numa_coverage(SZ_1M >> 12))
+ 		return -EINVAL;
+ 
+ 	/* Finally register nodes. */
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 1c1072e3ca06..727242f4b54a 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -120,6 +120,7 @@ int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
+ void memblock_trim_memory(phys_addr_t align);
+ bool memblock_overlaps_region(struct memblock_type *type,
+ 			      phys_addr_t base, phys_addr_t size);
++bool memblock_validate_numa_coverage(const u64 threshold_pages);
+ int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+ int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+ int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 0863222af4a4..4f1f2d8a8119 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -734,6 +734,40 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
+ 	return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
+ }
+ 
++/**
++ * memblock_validate_numa_coverage - calculating memory with no node id assigned by firmware
++ * @threshold_pages: threshold memory of no node id assigned
++ *
++ * calculating memory with no node id assigned by firmware,
++ * If the number is less than the @threshold_pages, it returns true,
++ * otherwise it returns false.
++ *
++ * Return:
++ * true on success, false on failure.
++ */
++bool __init_memblock memblock_validate_numa_coverage(const u64 threshold_pages)
++{
++	unsigned long nr_pages = 0;
++	unsigned long start_pfn, end_pfn, mem_size_mb;
++	int nid, i;
 +
- #endif
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index 65518bb..1ec8e4c 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -18,7 +18,7 @@
- 	.text
- 	.cfi_sections	.debug_frame
- 	.align	5
--SYM_FUNC_START(handle_syscall)
-+SYM_CODE_START(handle_syscall)
- 	csrrd		t0, PERCPU_BASE_KS
- 	la.pcrel	t1, kernelsp
- 	add.d		t1, t1, t0
-@@ -71,7 +71,7 @@ SYM_FUNC_START(handle_syscall)
- 	bl		do_syscall
- 
- 	RESTORE_ALL_AND_RET
--SYM_FUNC_END(handle_syscall)
-+SYM_CODE_END(handle_syscall)
- _ASM_NOKPROBE(handle_syscall)
- 
- SYM_CODE_START(ret_from_fork)
-diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-index 78f0663..2bb3aa2 100644
---- a/arch/loongarch/kernel/genex.S
-+++ b/arch/loongarch/kernel/genex.S
-@@ -31,7 +31,7 @@ SYM_FUNC_START(__arch_cpu_idle)
- 1:	jr	ra
- SYM_FUNC_END(__arch_cpu_idle)
- 
--SYM_FUNC_START(handle_vint)
-+SYM_CODE_START(handle_vint)
- 	BACKUP_T0T1
- 	SAVE_ALL
- 	la_abs	t1, __arch_cpu_idle
-@@ -46,11 +46,11 @@ SYM_FUNC_START(handle_vint)
- 	la_abs	t0, do_vint
- 	jirl	ra, t0, 0
- 	RESTORE_ALL_AND_RET
--SYM_FUNC_END(handle_vint)
-+SYM_CODE_END(handle_vint)
- 
--SYM_FUNC_START(except_vec_cex)
-+SYM_CODE_START(except_vec_cex)
- 	b	cache_parity_error
--SYM_FUNC_END(except_vec_cex)
-+SYM_CODE_END(except_vec_cex)
- 
- 	.macro	build_prep_badv
- 	csrrd	t0, LOONGARCH_CSR_BADV
-@@ -66,7 +66,7 @@ SYM_FUNC_END(except_vec_cex)
- 
- 	.macro	BUILD_HANDLER exception handler prep
- 	.align	5
--	SYM_FUNC_START(handle_\exception)
-+	SYM_CODE_START(handle_\exception)
- 	666:
- 	BACKUP_T0T1
- 	SAVE_ALL
-@@ -76,7 +76,7 @@ SYM_FUNC_END(except_vec_cex)
- 	jirl	ra, t0, 0
- 	668:
- 	RESTORE_ALL_AND_RET
--	SYM_FUNC_END(handle_\exception)
-+	SYM_CODE_END(handle_\exception)
- 	SYM_DATA(unwind_hint_\exception, .word 668b - 666b)
- 	.endm
- 
-@@ -93,7 +93,7 @@ SYM_FUNC_END(except_vec_cex)
- 	BUILD_HANDLER watch watch none
- 	BUILD_HANDLER reserved reserved none	/* others */
- 
--SYM_FUNC_START(handle_sys)
-+SYM_CODE_START(handle_sys)
- 	la_abs	t0, handle_syscall
- 	jr	t0
--SYM_FUNC_END(handle_sys)
-+SYM_CODE_END(handle_sys)
-diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
-index ca17dd3..d5d682f 100644
---- a/arch/loongarch/mm/tlbex.S
-+++ b/arch/loongarch/mm/tlbex.S
-@@ -17,7 +17,7 @@
- #define PTRS_PER_PTE_BITS	(PAGE_SHIFT - 3)
- 
- 	.macro tlb_do_page_fault, write
--	SYM_FUNC_START(tlb_do_page_fault_\write)
-+	SYM_CODE_START(tlb_do_page_fault_\write)
- 	SAVE_ALL
- 	csrrd		a2, LOONGARCH_CSR_BADV
- 	move		a0, sp
-@@ -25,13 +25,13 @@
- 	li.w		a1, \write
- 	bl		do_page_fault
- 	RESTORE_ALL_AND_RET
--	SYM_FUNC_END(tlb_do_page_fault_\write)
-+	SYM_CODE_END(tlb_do_page_fault_\write)
- 	.endm
- 
- 	tlb_do_page_fault 0
- 	tlb_do_page_fault 1
- 
--SYM_FUNC_START(handle_tlb_protect)
-+SYM_CODE_START(handle_tlb_protect)
- 	BACKUP_T0T1
- 	SAVE_ALL
- 	move		a0, sp
-@@ -41,9 +41,9 @@ SYM_FUNC_START(handle_tlb_protect)
- 	la_abs		t0, do_page_fault
- 	jirl		ra, t0, 0
- 	RESTORE_ALL_AND_RET
--SYM_FUNC_END(handle_tlb_protect)
-+SYM_CODE_END(handle_tlb_protect)
- 
--SYM_FUNC_START(handle_tlb_load)
-+SYM_CODE_START(handle_tlb_load)
- 	csrwr		t0, EXCEPTION_KS0
- 	csrwr		t1, EXCEPTION_KS1
- 	csrwr		ra, EXCEPTION_KS2
-@@ -187,16 +187,16 @@ nopage_tlb_load:
- 	csrrd		ra, EXCEPTION_KS2
- 	la_abs		t0, tlb_do_page_fault_0
- 	jr		t0
--SYM_FUNC_END(handle_tlb_load)
-+SYM_CODE_END(handle_tlb_load)
- 
--SYM_FUNC_START(handle_tlb_load_ptw)
-+SYM_CODE_START(handle_tlb_load_ptw)
- 	csrwr		t0, LOONGARCH_CSR_KS0
- 	csrwr		t1, LOONGARCH_CSR_KS1
- 	la_abs		t0, tlb_do_page_fault_0
- 	jr		t0
--SYM_FUNC_END(handle_tlb_load_ptw)
-+SYM_CODE_END(handle_tlb_load_ptw)
- 
--SYM_FUNC_START(handle_tlb_store)
-+SYM_CODE_START(handle_tlb_store)
- 	csrwr		t0, EXCEPTION_KS0
- 	csrwr		t1, EXCEPTION_KS1
- 	csrwr		ra, EXCEPTION_KS2
-@@ -343,16 +343,16 @@ nopage_tlb_store:
- 	csrrd		ra, EXCEPTION_KS2
- 	la_abs		t0, tlb_do_page_fault_1
- 	jr		t0
--SYM_FUNC_END(handle_tlb_store)
-+SYM_CODE_END(handle_tlb_store)
- 
--SYM_FUNC_START(handle_tlb_store_ptw)
-+SYM_CODE_START(handle_tlb_store_ptw)
- 	csrwr		t0, LOONGARCH_CSR_KS0
- 	csrwr		t1, LOONGARCH_CSR_KS1
- 	la_abs		t0, tlb_do_page_fault_1
- 	jr		t0
--SYM_FUNC_END(handle_tlb_store_ptw)
-+SYM_CODE_END(handle_tlb_store_ptw)
- 
--SYM_FUNC_START(handle_tlb_modify)
-+SYM_CODE_START(handle_tlb_modify)
- 	csrwr		t0, EXCEPTION_KS0
- 	csrwr		t1, EXCEPTION_KS1
- 	csrwr		ra, EXCEPTION_KS2
-@@ -497,16 +497,16 @@ nopage_tlb_modify:
- 	csrrd		ra, EXCEPTION_KS2
- 	la_abs		t0, tlb_do_page_fault_1
- 	jr		t0
--SYM_FUNC_END(handle_tlb_modify)
-+SYM_CODE_END(handle_tlb_modify)
- 
--SYM_FUNC_START(handle_tlb_modify_ptw)
-+SYM_CODE_START(handle_tlb_modify_ptw)
- 	csrwr		t0, LOONGARCH_CSR_KS0
- 	csrwr		t1, LOONGARCH_CSR_KS1
- 	la_abs		t0, tlb_do_page_fault_1
- 	jr		t0
--SYM_FUNC_END(handle_tlb_modify_ptw)
-+SYM_CODE_END(handle_tlb_modify_ptw)
- 
--SYM_FUNC_START(handle_tlb_refill)
-+SYM_CODE_START(handle_tlb_refill)
- 	csrwr		t0, LOONGARCH_CSR_TLBRSAVE
- 	csrrd		t0, LOONGARCH_CSR_PGD
- 	lddir		t0, t0, 3
-@@ -521,4 +521,4 @@ SYM_FUNC_START(handle_tlb_refill)
- 	tlbfill
- 	csrrd		t0, LOONGARCH_CSR_TLBRSAVE
- 	ertn
--SYM_FUNC_END(handle_tlb_refill)
-+SYM_CODE_END(handle_tlb_refill)
++	/* calculate lose page */
++	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
++		if (nid == NUMA_NO_NODE)
++			nr_pages += end_pfn - start_pfn;
++	}
++
++	if (nr_pages >= threshold_pages) {
++		mem_size_mb = memblock_phys_mem_size() >> 20;
++		pr_err("NUMA: no nodes coverage for %luMB of %luMB RAM\n",
++		       (nr_pages << PAGE_SHIFT) >> 20, mem_size_mb);
++		return false;
++	}
++
++	return true;
++}
++
++
+ /**
+  * memblock_isolate_range - isolate given range into disjoint memblocks
+  * @type: memblock type to isolate range for
 -- 
-2.1.0
+2.25.1
 
