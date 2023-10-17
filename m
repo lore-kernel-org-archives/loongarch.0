@@ -1,70 +1,37 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1040F3B29E
-	for <loongarch@lists.linux.dev>; Tue, 17 Oct 2023 08:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE396405C2
+	for <loongarch@lists.linux.dev>; Tue, 17 Oct 2023 09:39:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DakgsQpz"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1c88b467ef8so36882215ad.0
-        for <loongarch@lists.linux.dev>; Tue, 17 Oct 2023 01:31:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697531507; x=1698136307; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XbcbAmOCv2GaogANlUUkIacNzCiiquB3TlI/GPI0gBs=;
-        b=DakgsQpz2Gk2+IUad7+HNmN0OHl3SF1MOFrdVuf+WPn+2Z6I2a6lCEfs7MjL6Y0c8Y
-         GnZtxNL9TfLt+/TNKRQfaPRKXQv//xN9TBW4ik32o9I/AMhAszb61TuweXyoyJiDhAIB
-         DcgZp7DFOzbjVqHkv+nakD6JlAa+tnmbVhJuYRSpMWeZhtVcrzmMv654Jjj0pHWUhSp2
-         8QiBIxaHtHq2RJftJn3wdu3VDBlj2e70KtgT0Jwrh2kmGb13qQDqb6jvVeI2nB/4X0CI
-         6ZCtMTL0/NxDPGX1J6AtnFNzv2Esph0+myggWv3mrzB6nhqLU8DCzamiSnmQ9Of689mI
-         1VXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697531507; x=1698136307;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XbcbAmOCv2GaogANlUUkIacNzCiiquB3TlI/GPI0gBs=;
-        b=oWE45JVop96pBlTYehhhfnDeSqL5gwmrw+gEN1s9MgriM/AXfd95hfuR43Qa9ByKX1
-         CCEnYphU1MqGeUSQtZGHpYADysktbp2MJBZvApaWTADhS7LSA5C9Ds12ZyjOWVNj78zu
-         xr6Pw3JiO9K9QUo+71CSmCNKkJGhsb9s1/fPxFuNEan6XQnvmSCaITaZpM2tigtshdI/
-         QGzB4g6lESlM/MQG1Mz9mpRs5HsbYY77/046hyW8kSdubJ30V1bpaSDqS/Xp59DgFxNc
-         hT5qKyU540a6+VmD9K/44hDKwnJbG918K7o5UW6QmzWJinUijoqjlmWsOslTtruVsWT3
-         Zsfw==
-X-Gm-Message-State: AOJu0Yxt7VEnNIkmJMJyXV3/rmXtJi5+y2YhMK2BfyoNrsmC5f6kdxi1
-	wtmqRHy+GGns7geyCen3h7A=
-X-Google-Smtp-Source: AGHT+IEHlMnIQEbxWQLv6YjjNM5FsNxG9ZmE7/HIc2N7h4xzHEPy4DzECahLVTHTwFwqZjk3lkNLrA==
-X-Received: by 2002:a17:902:c712:b0:1ca:7af1:8a85 with SMTP id p18-20020a170902c71200b001ca7af18a85mr1286971plp.57.1697531507232;
-        Tue, 17 Oct 2023 01:31:47 -0700 (PDT)
-Received: from aa-PC.zhaoxin.com ([180.169.121.82])
-        by smtp.gmail.com with ESMTPSA id l18-20020a170902d35200b001c9d235b3a0sm924017plk.7.2023.10.17.01.31.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Oct 2023 01:31:46 -0700 (PDT)
-From: Liam Ni <zhiguangni01@gmail.com>
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBnKQWsY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 014DFC433C8;
+	Tue, 17 Oct 2023 09:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697535598;
+	bh=F5RcJpz6n6tELuxNxNyEcSyKRIgUtiYBPAb5RiIKHpo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WBnKQWsYpPgp4Opd8VBte4yLHLYA6BqtJOYGvKnkSo9yXD6wc2IK9hRVyglNsbzLo
+	 Dxx+u8yG4/RaIP+xMn7gOpe9dEOVrPWRyjAyvoQTZ3QDWYDaki6vpUDdxDf0GqYG+i
+	 1JP9u+azCGiMfXEc2A26TneZGYweKH1ywqRCq+eYW43arz+rQz5XX04A6o9lasP797
+	 /uWwNcSteBgT547xAlXmfoMyu37e51nLGRNUMNaEa6KuUp6owLL1C90NVP9q7LRpm4
+	 5YYT4BxqSEfkN9g3M+mUPkiEE4UITBJjCZAVQVfoD/Mf7swrV0Tm+YkrNvRU2EljOZ
+	 TrrjJI0KUXA3g==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-fbdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	rppt@kernel.org
-Cc: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	x86@kernel.org,
-	hpa@zytor.com,
-	akpm@linux-foundation.org,
-	maobibo@loongson.cn,
-	chenfeiyang@loongson.cn,
-	zhiguangni01@gmail.com,
-	zhoubinbin@loongson.cn
-Subject: [PATCH V5] NUMA: optimize detection of memory with no node id assigned by firmware
-Date: Tue, 17 Oct 2023 16:30:33 +0800
-Message-Id: <20231017083033.118643-1-zhiguangni01@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	linux-arm-kernel@lists.infradead.org,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Helge Deller <deller@gmx.de>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 1/2] [v2] efi: move screen_info into efi init code
+Date: Tue, 17 Oct 2023 11:39:46 +0200
+Message-Id: <20231017093947.3627976-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -73,184 +40,239 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Sanity check that makes sure the nodes cover all memory loops over
-numa_meminfo to count the pages that have node id assigned by the firmware,
-then loops again over memblock.memory to find the total amount of memory
-and in the end checks that the difference between the total memory and
-memory that covered by nodes is less than some threshold. Worse, the loop
-over numa_meminfo calls __absent_pages_in_range() that also partially
-traverses memblock.memory.
+From: Arnd Bergmann <arnd@arndb.de>
 
-It's much simpler and more efficient to have a single traversal of
-memblock.memory that verifies that amount of memory not covered by nodes is
-less than a threshold.
+After the vga console no longer relies on global screen_info, there are
+only two remaining use cases:
 
-Introduce memblock_validate_numa_coverage() that does exactly that and use
-it instead of numa_meminfo_cover_memory().
+ - on the x86 architecture, it is used for multiple boot methods
+   (bzImage, EFI, Xen, kexec) to commucate the initial VGA or framebuffer
+   settings to a number of device drivers.
 
-Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
+ - on other architectures, it is only used as part of the EFI stub,
+   and only for the three sysfb framebuffers (simpledrm, simplefb, efifb).
+
+Remove the duplicate data structure definitions by moving it into the
+efi-init.c file that sets it up initially for the EFI case, leaving x86
+as an exception that retains its own definition for non-EFI boots.
+
+The added #ifdefs here are optional, I added them to further limit the
+reach of screen_info to configurations that have at least one of the
+users enabled.
+
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Acked-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/loongarch/kernel/numa.c | 28 +---------------------------
- arch/x86/mm/numa.c           | 34 ++--------------------------------
- include/linux/memblock.h     |  1 +
- mm/memblock.c                | 34 ++++++++++++++++++++++++++++++++++
- 4 files changed, 38 insertions(+), 59 deletions(-)
+v2: fix up loongarch code, which has a separate copy of the
+efi-init.c file.
+---
+ arch/arm/kernel/setup.c                       |  4 ----
+ arch/arm64/kernel/efi.c                       |  4 ----
+ arch/arm64/kernel/image-vars.h                |  2 ++
+ arch/loongarch/kernel/efi.c                   |  8 +++++++-
+ arch/loongarch/kernel/image-vars.h            |  2 ++
+ arch/loongarch/kernel/setup.c                 |  5 -----
+ arch/riscv/kernel/image-vars.h                |  2 ++
+ arch/riscv/kernel/setup.c                     |  5 -----
+ drivers/firmware/efi/efi-init.c               | 14 +++++++++++++-
+ drivers/firmware/efi/libstub/efi-stub-entry.c |  8 +++++++-
+ 10 files changed, 33 insertions(+), 21 deletions(-)
 
-diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-index cb00804826f7..fca94d16be34 100644
---- a/arch/loongarch/kernel/numa.c
-+++ b/arch/loongarch/kernel/numa.c
-@@ -226,32 +226,6 @@ static void __init node_mem_init(unsigned int node)
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index c15dfdbe3d5ae..b808712e85981 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -939,10 +939,6 @@ static struct screen_info vgacon_screen_info = {
+ };
+ #endif
  
- #ifdef CONFIG_ACPI_NUMA
- 
--/*
-- * Sanity check to catch more bad NUMA configurations (they are amazingly
-- * common).  Make sure the nodes cover all memory.
-- */
--static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
--{
--	int i;
--	u64 numaram, biosram;
+-#if defined(CONFIG_EFI)
+-struct screen_info screen_info;
+-#endif
 -
--	numaram = 0;
--	for (i = 0; i < mi->nr_blks; i++) {
--		u64 s = mi->blk[i].start >> PAGE_SHIFT;
--		u64 e = mi->blk[i].end >> PAGE_SHIFT;
--
--		numaram += e - s;
--		numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
--		if ((s64)numaram < 0)
--			numaram = 0;
--	}
--	max_pfn = max_low_pfn;
--	biosram = max_pfn - absent_pages_in_range(0, max_pfn);
--
--	BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
--	return true;
--}
--
- static void __init add_node_intersection(u32 node, u64 start, u64 size, u32 type)
+ static int __init customize_machine(void)
  {
- 	static unsigned long num_physpages;
-@@ -396,7 +370,7 @@ int __init init_numa_memory(void)
- 		return -EINVAL;
- 
- 	init_node_memblock();
--	if (numa_meminfo_cover_memory(&numa_meminfo) == false)
-+	if (memblock_validate_numa_coverage(SZ_1M >> 12) == false)
- 		return -EINVAL;
- 
- 	for_each_node_mask(node, node_possible_map) {
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 2aadb2019b4f..95376e7c263e 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -447,37 +447,6 @@ int __node_distance(int from, int to)
+ 	/*
+diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
+index 3f8c9c143552f..0228001347bea 100644
+--- a/arch/arm64/kernel/efi.c
++++ b/arch/arm64/kernel/efi.c
+@@ -71,10 +71,6 @@ static __init pteval_t create_mapping_protection(efi_memory_desc_t *md)
+ 	return pgprot_val(PAGE_KERNEL_EXEC);
  }
- EXPORT_SYMBOL(__node_distance);
  
--/*
-- * Sanity check to catch more bad NUMA configurations (they are amazingly
-- * common).  Make sure the nodes cover all memory.
-- */
--static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
--{
--	u64 numaram, e820ram;
--	int i;
+-/* we will fill this structure from the stub, so don't put it in .bss */
+-struct screen_info screen_info __section(".data");
+-EXPORT_SYMBOL(screen_info);
 -
--	numaram = 0;
--	for (i = 0; i < mi->nr_blks; i++) {
--		u64 s = mi->blk[i].start >> PAGE_SHIFT;
--		u64 e = mi->blk[i].end >> PAGE_SHIFT;
--		numaram += e - s;
--		numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
--		if ((s64)numaram < 0)
--			numaram = 0;
--	}
+ int __init efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md)
+ {
+ 	pteval_t prot_val = create_mapping_protection(md);
+diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+index 35f3c79595137..5e4dc72ab1bda 100644
+--- a/arch/arm64/kernel/image-vars.h
++++ b/arch/arm64/kernel/image-vars.h
+@@ -27,7 +27,9 @@ PROVIDE(__efistub__text			= _text);
+ PROVIDE(__efistub__end			= _end);
+ PROVIDE(__efistub___inittext_end       	= __inittext_end);
+ PROVIDE(__efistub__edata		= _edata);
++#if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
+ PROVIDE(__efistub_screen_info		= screen_info);
++#endif
+ PROVIDE(__efistub__ctype		= _ctype);
+ 
+ PROVIDE(__pi___memcpy			= __pi_memcpy);
+diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
+index 9fc10cea21e10..acb5d3385675c 100644
+--- a/arch/loongarch/kernel/efi.c
++++ b/arch/loongarch/kernel/efi.c
+@@ -68,6 +68,11 @@ void __init efi_runtime_init(void)
+ 
+ unsigned long __initdata screen_info_table = EFI_INVALID_TABLE_ADDR;
+ 
++#if defined(CONFIG_SYSFB) || defined(CONFIG_EFI_EARLYCON)
++struct screen_info screen_info __section(".data");
++EXPORT_SYMBOL_GPL(screen_info);
++#endif
++
+ static void __init init_screen_info(void)
+ {
+ 	struct screen_info *si;
+@@ -115,7 +120,8 @@ void __init efi_init(void)
+ 
+ 	set_bit(EFI_CONFIG_TABLES, &efi.flags);
+ 
+-	init_screen_info();
++	if (IS_ENABLED(CONFIG_EFI_EARLYCON) || IS_ENABLED(CONFIG_SYSFB))
++		init_screen_info();
+ 
+ 	if (boot_memmap == EFI_INVALID_TABLE_ADDR)
+ 		return;
+diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel/image-vars.h
+index e561989d02de9..5087416b9678d 100644
+--- a/arch/loongarch/kernel/image-vars.h
++++ b/arch/loongarch/kernel/image-vars.h
+@@ -12,7 +12,9 @@ __efistub_kernel_entry		= kernel_entry;
+ __efistub_kernel_asize		= kernel_asize;
+ __efistub_kernel_fsize		= kernel_fsize;
+ __efistub_kernel_offset		= kernel_offset;
++#if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
+ __efistub_screen_info		= screen_info;
++#endif
+ 
+ #endif
+ 
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 0d5edf1f7e4a1..407cd6b49bef6 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -16,7 +16,6 @@
+ #include <linux/dmi.h>
+ #include <linux/efi.h>
+ #include <linux/export.h>
+-#include <linux/screen_info.h>
+ #include <linux/memblock.h>
+ #include <linux/initrd.h>
+ #include <linux/ioport.h>
+@@ -57,10 +56,6 @@
+ #define SMBIOS_CORE_PACKAGE_OFFSET	0x23
+ #define LOONGSON_EFI_ENABLE		(1 << 3)
+ 
+-#ifdef CONFIG_EFI
+-struct screen_info screen_info __section(".data");
+-#endif
 -
--	e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
--
--	/* We seem to lose 3 pages somewhere. Allow 1M of slack. */
--	if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
--		printk(KERN_ERR "NUMA: nodes only cover %LuMB of your %LuMB e820 RAM. Not used.\n",
--		       (numaram << PAGE_SHIFT) >> 20,
--		       (e820ram << PAGE_SHIFT) >> 20);
--		return false;
--	}
--	return true;
--}
+ unsigned long fw_arg0, fw_arg1, fw_arg2;
+ DEFINE_PER_CPU(unsigned long, kernelsp);
+ struct cpuinfo_loongarch cpu_data[NR_CPUS] __read_mostly;
+diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
+index ea1a10355ce90..3df30dd1c458b 100644
+--- a/arch/riscv/kernel/image-vars.h
++++ b/arch/riscv/kernel/image-vars.h
+@@ -28,7 +28,9 @@ __efistub__start_kernel		= _start_kernel;
+ __efistub__end			= _end;
+ __efistub__edata		= _edata;
+ __efistub___init_text_end	= __init_text_end;
++#if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
+ __efistub_screen_info		= screen_info;
++#endif
+ 
+ #endif
+ 
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index 0c466a50f1744..0624f44d43eca 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -15,7 +15,6 @@
+ #include <linux/memblock.h>
+ #include <linux/sched.h>
+ #include <linux/console.h>
+-#include <linux/screen_info.h>
+ #include <linux/of_fdt.h>
+ #include <linux/sched/task.h>
+ #include <linux/smp.h>
+@@ -40,10 +39,6 @@
+ 
+ #include "head.h"
+ 
+-#if defined(CONFIG_EFI)
+-struct screen_info screen_info __section(".data");
+-#endif
 -
  /*
-  * Mark all currently memblock-reserved physical memory (which covers the
-  * kernel's own memory ranges) as hot-unswappable.
-@@ -583,7 +552,8 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
- 			return -EINVAL;
- 		}
- 	}
--	if (!numa_meminfo_cover_memory(mi))
-+
-+	if (!memblock_validate_numa_coverage(SZ_1M >> 12))
- 		return -EINVAL;
+  * The lucky hart to first increment this variable will boot the other cores.
+  * This is used before the kernel initializes the BSS so it can't be in the
+diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
+index ef0820f1a9246..d4987d0130801 100644
+--- a/drivers/firmware/efi/efi-init.c
++++ b/drivers/firmware/efi/efi-init.c
+@@ -55,6 +55,15 @@ static phys_addr_t __init efi_to_phys(unsigned long addr)
  
- 	/* Finally register nodes. */
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 1c1072e3ca06..727242f4b54a 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -120,6 +120,7 @@ int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
- void memblock_trim_memory(phys_addr_t align);
- bool memblock_overlaps_region(struct memblock_type *type,
- 			      phys_addr_t base, phys_addr_t size);
-+bool memblock_validate_numa_coverage(const u64 threshold_pages);
- int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
- int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
- int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 0863222af4a4..4f1f2d8a8119 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -734,6 +734,40 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
- 	return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
+ extern __weak const efi_config_table_type_t efi_arch_tables[];
+ 
++/*
++ * x86 defines its own screen_info and uses it even without EFI,
++ * everything else can get it from here.
++ */
++#if !defined(CONFIG_X86) && (defined(CONFIG_SYSFB) || defined(CONFIG_EFI_EARLYCON))
++struct screen_info screen_info __section(".data");
++EXPORT_SYMBOL_GPL(screen_info);
++#endif
++
+ static void __init init_screen_info(void)
+ {
+ 	struct screen_info *si;
+@@ -240,5 +249,8 @@ void __init efi_init(void)
+ 	memblock_reserve(data.phys_map & PAGE_MASK,
+ 			 PAGE_ALIGN(data.size + (data.phys_map & ~PAGE_MASK)));
+ 
+-	init_screen_info();
++	if (IS_ENABLED(CONFIG_X86) ||
++	    IS_ENABLED(CONFIG_SYSFB) ||
++	    IS_ENABLED(CONFIG_EFI_EARLYCON))
++		init_screen_info();
+ }
+diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
+index 2f1902e5d4075..a6c0498351905 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-entry.c
++++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
+@@ -13,7 +13,13 @@ struct screen_info *alloc_screen_info(void)
+ {
+ 	if (IS_ENABLED(CONFIG_ARM))
+ 		return __alloc_screen_info();
+-	return (void *)&screen_info + screen_info_offset;
++
++	if (IS_ENABLED(CONFIG_X86) ||
++	    IS_ENABLED(CONFIG_EFI_EARLYCON) ||
++	    IS_ENABLED(CONFIG_SYSFB))
++		return (void *)&screen_info + screen_info_offset;
++
++	return NULL;
  }
  
-+/**
-+ * memblock_validate_numa_coverage - calculating memory with no node id assigned by firmware
-+ * @threshold_pages: threshold memory of no node id assigned
-+ *
-+ * calculating memory with no node id assigned by firmware,
-+ * If the number is less than the @threshold_pages, it returns true,
-+ * otherwise it returns false.
-+ *
-+ * Return:
-+ * true on success, false on failure.
-+ */
-+bool __init_memblock memblock_validate_numa_coverage(const u64 threshold_pages)
-+{
-+	unsigned long nr_pages = 0;
-+	unsigned long start_pfn, end_pfn, mem_size_mb;
-+	int nid, i;
-+
-+	/* calculate lose page */
-+	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
-+		if (nid == NUMA_NO_NODE)
-+			nr_pages += end_pfn - start_pfn;
-+	}
-+
-+	if (nr_pages >= threshold_pages) {
-+		mem_size_mb = memblock_phys_mem_size() >> 20;
-+		pr_err("NUMA: no nodes coverage for %luMB of %luMB RAM\n",
-+		       (nr_pages << PAGE_SHIFT) >> 20, mem_size_mb);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+
- /**
-  * memblock_isolate_range - isolate given range into disjoint memblocks
-  * @type: memblock type to isolate range for
+ /*
 -- 
-2.25.1
+2.39.2
 
