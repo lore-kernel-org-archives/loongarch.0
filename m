@@ -1,118 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.120])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBF53D96B
-	for <loongarch@lists.linux.dev>; Tue, 17 Oct 2023 09:40:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A481946A
+	for <loongarch@lists.linux.dev>; Tue, 17 Oct 2023 12:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7pNPOWw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97CAC433CB;
-	Tue, 17 Oct 2023 09:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697535600;
-	bh=K50Y7pAstCn0vIlPs9oEq/dIQQ7sSFid9QIZDsnEC58=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E7pNPOWwMNsnxJiNu+/ulgNnBPDAK35fhQY/w7ONBieXm4cxYawjWgp+kN+LC7hSs
-	 9GJ9Tcb6m25A1HX7BzUn4rev268Rkgkrbkob8CL0e393Bikj1yJFTFiqAcGV7/vxMB
-	 YNvql7JqXrq6bvENwo+N7rGrSMwXCMgsoPUBzktAVO29HeHYQR6CXNEsPEXMU8AEw+
-	 Z/nNofFXDLIJNcfRYEqfhQMUKuf3vP/Ywv31+csIT9PN4yDoiI/cXtRwng0kDUwiwD
-	 wB9rHCuJNUzxssMimXgA+/Jldhu15olqxUYcne59UwMrXksyGLTyAHL6x9ZURDDCbH
-	 vS8plkDZ4H3/w==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-fbdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 2/2] console: fix up ARM screen_info reference
-Date: Tue, 17 Oct 2023 11:39:47 +0200
-Message-Id: <20231017093947.3627976-2-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231017093947.3627976-1-arnd@kernel.org>
-References: <20231017093947.3627976-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="LnJgpiNW"
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Tue, 17 Oct 2023 13:57:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
+	t=1697543873; bh=osOPrqiiKOprJxC70XFTAVq992xL7ZaM2aZVaEQG2Qc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LnJgpiNWAMGVc0xEWtD9K4S88LSSPMbgijDz2pOHmBktW2Orxe1PlrhnLTDsBrgGX
+	 tfFz/35yEpjsd2lWXJB3L8dxOM1f2ywcRKM8oZxaKD9ofLnmAeJI+8zMVH6ERwT4HW
+	 LewlwUwa8Y743N4nthnjDBYgG1826/sWxFei++6o=
+Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
+	by mail-auth.avm.de (Postfix) with ESMTPA id 1002280683;
+	Tue, 17 Oct 2023 13:57:54 +0200 (CEST)
+Received: by buildd.core.avm.de (Postfix, from userid 1000)
+	id 0841B1819FD; Tue, 17 Oct 2023 13:57:54 +0200 (CEST)
+Date: Tue, 17 Oct 2023 13:57:54 +0200
+From: Nicolas Schier <n.schier@avm.de>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
+	x86@kernel.org, Nicolas Schier <nicolas@fjasle.eu>
+Subject: Re: [PATCH v2 2/2] kbuild: unify no-compiler-targets and
+ no-sync-config-targets
+Message-ID: <ZS52wrL9meW8iehZ@buildd.core.avm.de>
+Mail-Followup-To: Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
+	x86@kernel.org
+References: <20231014105436.2119702-1-masahiroy@kernel.org>
+ <20231014105436.2119702-2-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231014105436.2119702-2-masahiroy@kernel.org>
+X-purgate-ID: 149429::1697543872-187BED95-BE924DB1/0/0
+X-purgate-type: clean
+X-purgate-size: 416
+X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate: clean
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Sat, Oct 14, 2023 at 07:54:36PM +0900, Masahiro Yamada wrote:
+> Now that vdso_install does not depend on any in-tree build artifact,
+> it no longer needs a compiler, making no-compiler-targets the same
+> as no-sync-config-targets.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+> Changes in v2:
+>   - Revive need-compiler flag
+> 
 
-Separating the VGA console screen_info from the EFI one unfortunately
-caused a build failure for footbridge that I had never caught
-with randconfig builds:
-
-arch/arm/kernel/setup.c:932:27: error: static declaration of 'vgacon_screen_info' follows non-static declaration
-  932 | static struct screen_info vgacon_screen_info = {
-      |                           ^~~~~~~~~~~~~~~~~~
-In file included from arch/arm/kernel/setup.c:44:
-arch/arm/include/asm/setup.h:40:27: note: previous declaration of 'vgacon_screen_info' with type 'struct screen_info'
-   40 | extern struct screen_info vgacon_screen_info;
-      |                           ^~~~~~~~~~~~~~~~~~
-arm-linux-gnueabi-ld: drivers/video/console/dummycon.o: in function `dummycon_init':
-dummycon.c:(.text+0xe4): undefined reference to `screen_info'
-
-Make sure the variable is global to avoid the conflict with the extern
-declaration, and make it work in dummycon.c
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-Greg, this was caused by patch "vgacon: clean up global screen_info
-instances" in tty-testing. You can either apply this patch on top or fold
-it into that, or I can just resend the fixed series if you prefer.
----
- arch/arm/include/asm/vga.h       | 1 +
- arch/arm/kernel/setup.c          | 2 +-
- drivers/video/console/dummycon.c | 5 +++--
- 3 files changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/include/asm/vga.h b/arch/arm/include/asm/vga.h
-index 7c0bee57855ab..6c430ec371df2 100644
---- a/arch/arm/include/asm/vga.h
-+++ b/arch/arm/include/asm/vga.h
-@@ -5,6 +5,7 @@
- #include <linux/io.h>
- 
- extern unsigned long vga_base;
-+extern struct screen_info vgacon_screen_info;
- 
- #define VGA_MAP_MEM(x,s)	(vga_base + (x))
- 
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index b808712e85981..ff2299ce1ad7a 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -929,7 +929,7 @@ static void __init request_standard_resources(const struct machine_desc *mdesc)
- }
- 
- #if defined(CONFIG_VGA_CONSOLE)
--static struct screen_info vgacon_screen_info = {
-+struct screen_info vgacon_screen_info = {
-  .orig_video_lines	= 30,
-  .orig_video_cols	= 80,
-  .orig_video_mode	= 0,
-diff --git a/drivers/video/console/dummycon.c b/drivers/video/console/dummycon.c
-index 70549fecee12c..14af5d9e13b00 100644
---- a/drivers/video/console/dummycon.c
-+++ b/drivers/video/console/dummycon.c
-@@ -19,8 +19,9 @@
-  */
- 
- #if defined(CONFIG_ARCH_FOOTBRIDGE) && defined(CONFIG_VGA_CONSOLE)
--#define DUMMY_COLUMNS	screen_info.orig_video_cols
--#define DUMMY_ROWS	screen_info.orig_video_lines
-+#include <asm/vga.h>
-+#define DUMMY_COLUMNS	vgacon_screen_info.orig_video_cols
-+#define DUMMY_ROWS	vgacon_screen_info.orig_video_lines
- #else
- /* set by Kconfig. Use 80x25 for 640x480 and 160x64 for 1280x1024 */
- #define DUMMY_COLUMNS	CONFIG_DUMMY_CONSOLE_COLUMNS
--- 
-2.39.2
-
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
