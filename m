@@ -1,110 +1,258 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 799271A708;
-	Wed, 18 Oct 2023 11:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bxd+g3xS9l2uAyAA--.62482S3;
-	Wed, 18 Oct 2023 19:44:55 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxE+Q2xS9lai0pAA--.23449S3;
-	Wed, 18 Oct 2023 19:44:55 +0800 (CST)
-Subject: Re: [PATCH v2 8/8] LoongArch: Add ORC unwinder support
-To: kernel test robot <lkp@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
-References: <1696856590-30298-9-git-send-email-yangtiezhu@loongson.cn>
- <202310102113.bw7w3ZVv-lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <b30b034d-46ee-618b-5f92-b0f7dde1219a@loongson.cn>
-Date: Wed, 18 Oct 2023 19:44:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6247FD26D
+	for <loongarch@lists.linux.dev>; Thu, 19 Oct 2023 07:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uz86yeEo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54669C433C7;
+	Thu, 19 Oct 2023 07:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697701001;
+	bh=1N4xqqxOlozUS6OFkZvzJkSNGpLhAKLz8zkUg9AX4l8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Uz86yeEo+4rJQd1joYCr0DJ3UEq4WWefPN841VPLcADI/aoJB7oJkd1LAFPl+SdG6
+	 VgkiM8ekwjFm4MAe04jV7oE/aPuTwuo1JlveOqGgBNVhrDPEfE9qVD8+xaaeJHjtRh
+	 npn9W2+8goCqBIplpCngJhqlt/k6HISK4JzErprE40+itghz/1fh36NSnVmqKbhrbY
+	 0LVHegsXHl70rnvyH6SSw3wEFgx78M0wO4wvya4+eAZfS8rJ/PkaO2Wx7Gn0G/I4xV
+	 OO6GzMAB3d+oHph00FY4VjYwd107IqU6pU6bIogv+uMavPvzORT5XlCfHfaWg6N2ca
+	 CTsYbMBne5+Qg==
+Date: Thu, 19 Oct 2023 10:36:25 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Liam Ni <zhiguangni01@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, chenhuacai@kernel.org, kernel@xen0n.name,
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+	hpa@zytor.com, akpm@linux-foundation.org, maobibo@loongson.cn,
+	chenfeiyang@loongson.cn, zhoubinbin@loongson.cn
+Subject: Re: [PATCH V5] NUMA: optimize detection of memory with no node id
+ assigned by firmware
+Message-ID: <20231019073625.GB2824@kernel.org>
+References: <20231017083033.118643-1-zhiguangni01@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <202310102113.bw7w3ZVv-lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxE+Q2xS9lai0pAA--.23449S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF45Aw1DGFy3Wr13tw4rtFc_yoW8XFW7pa
-	9Y93yIyryrWF18ua4DWr4UXw4jyr40ya4F9FyagryUA3ZIqFy3AFs2yrWY9ryUG3s7trZ5
-	KFWS9as8XF1UC3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkU
-	UUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231017083033.118643-1-zhiguangni01@gmail.com>
 
+On Tue, Oct 17, 2023 at 04:30:33PM +0800, Liam Ni wrote:
+> Sanity check that makes sure the nodes cover all memory loops over
+> numa_meminfo to count the pages that have node id assigned by the firmware,
+> then loops again over memblock.memory to find the total amount of memory
+> and in the end checks that the difference between the total memory and
+> memory that covered by nodes is less than some threshold. Worse, the loop
+> over numa_meminfo calls __absent_pages_in_range() that also partially
+> traverses memblock.memory.
+> 
+> It's much simpler and more efficient to have a single traversal of
+> memblock.memory that verifies that amount of memory not covered by nodes is
+> less than a threshold.
+> 
+> Introduce memblock_validate_numa_coverage() that does exactly that and use
+> it instead of numa_meminfo_cover_memory().
+> 
+> Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
+> ---
+>  arch/loongarch/kernel/numa.c | 28 +---------------------------
+>  arch/x86/mm/numa.c           | 34 ++--------------------------------
+>  include/linux/memblock.h     |  1 +
+>  mm/memblock.c                | 34 ++++++++++++++++++++++++++++++++++
+>  4 files changed, 38 insertions(+), 59 deletions(-)
+> 
+> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+> index cb00804826f7..fca94d16be34 100644
+> --- a/arch/loongarch/kernel/numa.c
+> +++ b/arch/loongarch/kernel/numa.c
+> @@ -226,32 +226,6 @@ static void __init node_mem_init(unsigned int node)
+>  
+>  #ifdef CONFIG_ACPI_NUMA
+>  
+> -/*
+> - * Sanity check to catch more bad NUMA configurations (they are amazingly
+> - * common).  Make sure the nodes cover all memory.
+> - */
+> -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+> -{
+> -	int i;
+> -	u64 numaram, biosram;
+> -
+> -	numaram = 0;
+> -	for (i = 0; i < mi->nr_blks; i++) {
+> -		u64 s = mi->blk[i].start >> PAGE_SHIFT;
+> -		u64 e = mi->blk[i].end >> PAGE_SHIFT;
+> -
+> -		numaram += e - s;
+> -		numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+> -		if ((s64)numaram < 0)
+> -			numaram = 0;
+> -	}
+> -	max_pfn = max_low_pfn;
+> -	biosram = max_pfn - absent_pages_in_range(0, max_pfn);
+> -
+> -	BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
+> -	return true;
+> -}
+> -
+>  static void __init add_node_intersection(u32 node, u64 start, u64 size, u32 type)
+>  {
+>  	static unsigned long num_physpages;
+> @@ -396,7 +370,7 @@ int __init init_numa_memory(void)
+>  		return -EINVAL;
+>  
+>  	init_node_memblock();
+> -	if (numa_meminfo_cover_memory(&numa_meminfo) == false)
+> +	if (memblock_validate_numa_coverage(SZ_1M >> 12) == false)
 
+No magic constants please.
+Either use
 
-On 10/10/2023 09:46 PM, kernel test robot wrote:
-> Hi Tiezhu,
->
-> kernel test robot noticed the following build errors:
+	SZ_1M >> PAGE_SIZE
 
-...
+here, or make threshold in bytes and convert it to number of pages in
+memblock_validate_numa_coverage().
 
->    In file included from scripts/sorttable.c:201:
->>> scripts/sorttable.h:96:10: fatal error: 'asm/orc_types.h' file not found
->    #include <asm/orc_types.h>
->             ^~~~~~~~~~~~~~~~~
->    1 error generated.
+Besides, no need to compare to false,  
 
-Thanks for your report, I can reproduce the error on x86:
+	if (!memblock_validate_numa_coverage())
 
-   make ARCH=x86_64 olddefconfig
-   make ARCH=x86_64 prepare
+will do
 
-The build error is related with "ARCH=x86_64", there is no error
-without "ARCH=x86_64" when build locally on x86.
+>  		return -EINVAL;
+>  
+>  	for_each_node_mask(node, node_possible_map) {
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index 2aadb2019b4f..95376e7c263e 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -447,37 +447,6 @@ int __node_distance(int from, int to)
+>  }
+>  EXPORT_SYMBOL(__node_distance);
+>  
+> -/*
+> - * Sanity check to catch more bad NUMA configurations (they are amazingly
+> - * common).  Make sure the nodes cover all memory.
+> - */
+> -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+> -{
+> -	u64 numaram, e820ram;
+> -	int i;
+> -
+> -	numaram = 0;
+> -	for (i = 0; i < mi->nr_blks; i++) {
+> -		u64 s = mi->blk[i].start >> PAGE_SHIFT;
+> -		u64 e = mi->blk[i].end >> PAGE_SHIFT;
+> -		numaram += e - s;
+> -		numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+> -		if ((s64)numaram < 0)
+> -			numaram = 0;
+> -	}
+> -
+> -	e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
+> -
+> -	/* We seem to lose 3 pages somewhere. Allow 1M of slack. */
+> -	if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
+> -		printk(KERN_ERR "NUMA: nodes only cover %LuMB of your %LuMB e820 RAM. Not used.\n",
+> -		       (numaram << PAGE_SHIFT) >> 20,
+> -		       (e820ram << PAGE_SHIFT) >> 20);
+> -		return false;
+> -	}
+> -	return true;
+> -}
+> -
+>  /*
+>   * Mark all currently memblock-reserved physical memory (which covers the
+>   * kernel's own memory ranges) as hot-unswappable.
+> @@ -583,7 +552,8 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
+>  			return -EINVAL;
+>  		}
+>  	}
+> -	if (!numa_meminfo_cover_memory(mi))
+> +
+> +	if (!memblock_validate_numa_coverage(SZ_1M >> 12))
+>  		return -EINVAL;
+>  
+>  	/* Finally register nodes. */
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 1c1072e3ca06..727242f4b54a 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -120,6 +120,7 @@ int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
+>  void memblock_trim_memory(phys_addr_t align);
+>  bool memblock_overlaps_region(struct memblock_type *type,
+>  			      phys_addr_t base, phys_addr_t size);
+> +bool memblock_validate_numa_coverage(const u64 threshold_pages);
+>  int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+>  int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+>  int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 0863222af4a4..4f1f2d8a8119 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -734,6 +734,40 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
+>  	return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
+>  }
+>  
+> +/**
+> + * memblock_validate_numa_coverage - calculating memory with no node id assigned by firmware
+> + * @threshold_pages: threshold memory of no node id assigned
+> + *
+> + * calculating memory with no node id assigned by firmware,
+> + * If the number is less than the @threshold_pages, it returns true,
+> + * otherwise it returns false.
+> + *
+> + * Return:
+> + * true on success, false on failure.
+> + */
 
-As described in Documentation/kbuild/makefiles.rst:
+I'd suggest the below version:
 
-   For example, you can pass in ARCH=i386, ARCH=x86_64, or ARCH=x86.
-   For all of them, SRCARCH=x86 because arch/x86/ supports both i386 and
-   x86_64.
+/**
+ * memblock_validate_numa_coverage - check if amount of memory with
+ * no node ID assigned is less than a threshold
+ * @threshold_pages: maximal number of pages that can have unassigned node
+ * ID (in pages).
+ *
+ * A buggy firmware may report memory that does not belong to any node.
+ * Check if amount of such memory is below @threshold_pages.
+ *
+ * Return: true on success, false on failure.
+ */
 
-we should use SRCARCH instead of ARCH to specify the directory,
-like this:
+> +bool __init_memblock memblock_validate_numa_coverage(const u64 threshold_pages)
+> +{
+> +	unsigned long nr_pages = 0;
+> +	unsigned long start_pfn, end_pfn, mem_size_mb;
+> +	int nid, i;
+> +
+> +	/* calculate lose page */
+> +	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+> +		if (nid == NUMA_NO_NODE)
+> +			nr_pages += end_pfn - start_pfn;
+> +	}
+> +
+> +	if (nr_pages >= threshold_pages) {
+> +		mem_size_mb = memblock_phys_mem_size() >> 20;
+> +		pr_err("NUMA: no nodes coverage for %luMB of %luMB RAM\n",
+> +		       (nr_pages << PAGE_SHIFT) >> 20, mem_size_mb);
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +
+>  /**
+>   * memblock_isolate_range - isolate given range into disjoint memblocks
+>   * @type: memblock type to isolate range for
+> -- 
+> 2.25.1
+> 
 
-diff --git a/scripts/Makefile b/scripts/Makefile
-index 576cf64..e4cca53 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -31,9 +31,12 @@ HOSTLDLIBS_sign-file = $(shell $(HOSTPKG_CONFIG) 
---libs libcrypto 2> /dev/null |
-
-  ifdef CONFIG_UNWINDER_ORC
-  ifeq ($(ARCH),x86_64)
--ARCH := x86
-+SRCARCH := x86
-  endif
--HOSTCFLAGS_sorttable.o += -I$(srctree)/tools/arch/x86/include
-+ifeq ($(ARCH),loongarch)
-+SRCARCH := loongarch
-+endif
-+HOSTCFLAGS_sorttable.o += -I$(srctree)/tools/arch/$(SRCARCH)/include
-  HOSTCFLAGS_sorttable.o += -DUNWINDER_ORC_ENABLED
-  endif
-
-I will update the related code of this patch in the next version.
-
-Thanks,
-Tiezhu
-
+-- 
+Sincerely yours,
+Mike.
