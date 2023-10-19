@@ -1,258 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6247FD26D
-	for <loongarch@lists.linux.dev>; Thu, 19 Oct 2023 07:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uz86yeEo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54669C433C7;
-	Thu, 19 Oct 2023 07:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697701001;
-	bh=1N4xqqxOlozUS6OFkZvzJkSNGpLhAKLz8zkUg9AX4l8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uz86yeEo+4rJQd1joYCr0DJ3UEq4WWefPN841VPLcADI/aoJB7oJkd1LAFPl+SdG6
-	 VgkiM8ekwjFm4MAe04jV7oE/aPuTwuo1JlveOqGgBNVhrDPEfE9qVD8+xaaeJHjtRh
-	 npn9W2+8goCqBIplpCngJhqlt/k6HISK4JzErprE40+itghz/1fh36NSnVmqKbhrbY
-	 0LVHegsXHl70rnvyH6SSw3wEFgx78M0wO4wvya4+eAZfS8rJ/PkaO2Wx7Gn0G/I4xV
-	 OO6GzMAB3d+oHph00FY4VjYwd107IqU6pU6bIogv+uMavPvzORT5XlCfHfaWg6N2ca
-	 CTsYbMBne5+Qg==
-Date: Thu, 19 Oct 2023 10:36:25 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Liam Ni <zhiguangni01@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, chenhuacai@kernel.org, kernel@xen0n.name,
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-	hpa@zytor.com, akpm@linux-foundation.org, maobibo@loongson.cn,
-	chenfeiyang@loongson.cn, zhoubinbin@loongson.cn
-Subject: Re: [PATCH V5] NUMA: optimize detection of memory with no node id
- assigned by firmware
-Message-ID: <20231019073625.GB2824@kernel.org>
-References: <20231017083033.118643-1-zhiguangni01@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3387615AC0
+	for <loongarch@lists.linux.dev>; Thu, 19 Oct 2023 08:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21C63C433C7;
+	Thu, 19 Oct 2023 08:43:16 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.6-rc7
+Date: Thu, 19 Oct 2023 16:42:27 +0800
+Message-Id: <20231019084227.4111684-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231017083033.118643-1-zhiguangni01@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 17, 2023 at 04:30:33PM +0800, Liam Ni wrote:
-> Sanity check that makes sure the nodes cover all memory loops over
-> numa_meminfo to count the pages that have node id assigned by the firmware,
-> then loops again over memblock.memory to find the total amount of memory
-> and in the end checks that the difference between the total memory and
-> memory that covered by nodes is less than some threshold. Worse, the loop
-> over numa_meminfo calls __absent_pages_in_range() that also partially
-> traverses memblock.memory.
-> 
-> It's much simpler and more efficient to have a single traversal of
-> memblock.memory that verifies that amount of memory not covered by nodes is
-> less than a threshold.
-> 
-> Introduce memblock_validate_numa_coverage() that does exactly that and use
-> it instead of numa_meminfo_cover_memory().
-> 
-> Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
-> ---
->  arch/loongarch/kernel/numa.c | 28 +---------------------------
->  arch/x86/mm/numa.c           | 34 ++--------------------------------
->  include/linux/memblock.h     |  1 +
->  mm/memblock.c                | 34 ++++++++++++++++++++++++++++++++++
->  4 files changed, 38 insertions(+), 59 deletions(-)
-> 
-> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-> index cb00804826f7..fca94d16be34 100644
-> --- a/arch/loongarch/kernel/numa.c
-> +++ b/arch/loongarch/kernel/numa.c
-> @@ -226,32 +226,6 @@ static void __init node_mem_init(unsigned int node)
->  
->  #ifdef CONFIG_ACPI_NUMA
->  
-> -/*
-> - * Sanity check to catch more bad NUMA configurations (they are amazingly
-> - * common).  Make sure the nodes cover all memory.
-> - */
-> -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
-> -{
-> -	int i;
-> -	u64 numaram, biosram;
-> -
-> -	numaram = 0;
-> -	for (i = 0; i < mi->nr_blks; i++) {
-> -		u64 s = mi->blk[i].start >> PAGE_SHIFT;
-> -		u64 e = mi->blk[i].end >> PAGE_SHIFT;
-> -
-> -		numaram += e - s;
-> -		numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
-> -		if ((s64)numaram < 0)
-> -			numaram = 0;
-> -	}
-> -	max_pfn = max_low_pfn;
-> -	biosram = max_pfn - absent_pages_in_range(0, max_pfn);
-> -
-> -	BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
-> -	return true;
-> -}
-> -
->  static void __init add_node_intersection(u32 node, u64 start, u64 size, u32 type)
->  {
->  	static unsigned long num_physpages;
-> @@ -396,7 +370,7 @@ int __init init_numa_memory(void)
->  		return -EINVAL;
->  
->  	init_node_memblock();
-> -	if (numa_meminfo_cover_memory(&numa_meminfo) == false)
-> +	if (memblock_validate_numa_coverage(SZ_1M >> 12) == false)
+The following changes since commit 58720809f52779dc0f08e53e54b014209d13eebb:
 
-No magic constants please.
-Either use
+  Linux 6.6-rc6 (2023-10-15 13:34:39 -0700)
 
-	SZ_1M >> PAGE_SIZE
+are available in the Git repository at:
 
-here, or make threshold in bytes and convert it to number of pages in
-memblock_validate_numa_coverage().
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.6-3
 
-Besides, no need to compare to false,  
+for you to fetch changes up to 278be83601dd1725d4732241f066d528e160a39d:
 
-	if (!memblock_validate_numa_coverage())
+  LoongArch: Disable WUC for pgprot_writecombine() like ioremap_wc() (2023-10-18 08:42:52 +0800)
 
-will do
+----------------------------------------------------------------
+LoongArch fixes for v6.6-rc7
 
->  		return -EINVAL;
->  
->  	for_each_node_mask(node, node_possible_map) {
-> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> index 2aadb2019b4f..95376e7c263e 100644
-> --- a/arch/x86/mm/numa.c
-> +++ b/arch/x86/mm/numa.c
-> @@ -447,37 +447,6 @@ int __node_distance(int from, int to)
->  }
->  EXPORT_SYMBOL(__node_distance);
->  
-> -/*
-> - * Sanity check to catch more bad NUMA configurations (they are amazingly
-> - * common).  Make sure the nodes cover all memory.
-> - */
-> -static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
-> -{
-> -	u64 numaram, e820ram;
-> -	int i;
-> -
-> -	numaram = 0;
-> -	for (i = 0; i < mi->nr_blks; i++) {
-> -		u64 s = mi->blk[i].start >> PAGE_SHIFT;
-> -		u64 e = mi->blk[i].end >> PAGE_SHIFT;
-> -		numaram += e - s;
-> -		numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
-> -		if ((s64)numaram < 0)
-> -			numaram = 0;
-> -	}
-> -
-> -	e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
-> -
-> -	/* We seem to lose 3 pages somewhere. Allow 1M of slack. */
-> -	if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
-> -		printk(KERN_ERR "NUMA: nodes only cover %LuMB of your %LuMB e820 RAM. Not used.\n",
-> -		       (numaram << PAGE_SHIFT) >> 20,
-> -		       (e820ram << PAGE_SHIFT) >> 20);
-> -		return false;
-> -	}
-> -	return true;
-> -}
-> -
->  /*
->   * Mark all currently memblock-reserved physical memory (which covers the
->   * kernel's own memory ranges) as hot-unswappable.
-> @@ -583,7 +552,8 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
->  			return -EINVAL;
->  		}
->  	}
-> -	if (!numa_meminfo_cover_memory(mi))
-> +
-> +	if (!memblock_validate_numa_coverage(SZ_1M >> 12))
->  		return -EINVAL;
->  
->  	/* Finally register nodes. */
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index 1c1072e3ca06..727242f4b54a 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -120,6 +120,7 @@ int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
->  void memblock_trim_memory(phys_addr_t align);
->  bool memblock_overlaps_region(struct memblock_type *type,
->  			      phys_addr_t base, phys_addr_t size);
-> +bool memblock_validate_numa_coverage(const u64 threshold_pages);
->  int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
->  int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
->  int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 0863222af4a4..4f1f2d8a8119 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -734,6 +734,40 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
->  	return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
->  }
->  
-> +/**
-> + * memblock_validate_numa_coverage - calculating memory with no node id assigned by firmware
-> + * @threshold_pages: threshold memory of no node id assigned
-> + *
-> + * calculating memory with no node id assigned by firmware,
-> + * If the number is less than the @threshold_pages, it returns true,
-> + * otherwise it returns false.
-> + *
-> + * Return:
-> + * true on success, false on failure.
-> + */
+Fix 4-level pagetable building, disable WUC for pgprot_writecombine()
+like ioremap_wc(), use correct annotation for exception handlers, and
+a trivial cleanup.
+----------------------------------------------------------------
+Huacai Chen (2):
+      LoongArch: Export symbol invalid_pud_table for modules building
+      LoongArch: Replace kmap_atomic() with kmap_local_page() in copy_user_highpage()
 
-I'd suggest the below version:
+Icenowy Zheng (1):
+      LoongArch: Disable WUC for pgprot_writecombine() like ioremap_wc()
 
-/**
- * memblock_validate_numa_coverage - check if amount of memory with
- * no node ID assigned is less than a threshold
- * @threshold_pages: maximal number of pages that can have unassigned node
- * ID (in pages).
- *
- * A buggy firmware may report memory that does not belong to any node.
- * Check if amount of such memory is below @threshold_pages.
- *
- * Return: true on success, false on failure.
- */
+Tiezhu Yang (1):
+      LoongArch: Use SYM_CODE_* to annotate exception handlers
 
-> +bool __init_memblock memblock_validate_numa_coverage(const u64 threshold_pages)
-> +{
-> +	unsigned long nr_pages = 0;
-> +	unsigned long start_pfn, end_pfn, mem_size_mb;
-> +	int nid, i;
-> +
-> +	/* calculate lose page */
-> +	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
-> +		if (nid == NUMA_NO_NODE)
-> +			nr_pages += end_pfn - start_pfn;
-> +	}
-> +
-> +	if (nr_pages >= threshold_pages) {
-> +		mem_size_mb = memblock_phys_mem_size() >> 20;
-> +		pr_err("NUMA: no nodes coverage for %luMB of %luMB RAM\n",
-> +		       (nr_pages << PAGE_SHIFT) >> 20, mem_size_mb);
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +
->  /**
->   * memblock_isolate_range - isolate given range into disjoint memblocks
->   * @type: memblock type to isolate range for
-> -- 
-> 2.25.1
-> 
-
--- 
-Sincerely yours,
-Mike.
+ arch/loongarch/include/asm/io.h           |  5 ++---
+ arch/loongarch/include/asm/linkage.h      |  8 +++++++
+ arch/loongarch/include/asm/pgtable-bits.h |  4 +++-
+ arch/loongarch/kernel/entry.S             |  4 ++--
+ arch/loongarch/kernel/genex.S             | 16 +++++++-------
+ arch/loongarch/kernel/setup.c             | 10 ++++-----
+ arch/loongarch/mm/init.c                  |  9 ++++----
+ arch/loongarch/mm/tlbex.S                 | 36 +++++++++++++++----------------
+ 8 files changed, 51 insertions(+), 41 deletions(-)
