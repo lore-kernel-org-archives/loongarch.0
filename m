@@ -1,55 +1,515 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D01939852
-	for <loongarch@lists.linux.dev>; Thu, 19 Oct 2023 18:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iSTa+LUS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B5A4AC433C8;
-	Thu, 19 Oct 2023 18:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697740576;
-	bh=v2W9P4t8t3zNYgO1q1TE+P02uqNlmhYpi0lDTNyHrJU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=iSTa+LUSbvdfbSkeXN+w/pZrSGXxLXC2n0WiztmEm6m3OGIGZGuEwGDgDBm57flXr
-	 cBBFNjMit/JsBLaq33nHSZcU9GK0KCsc886MkqXGoW8TnGKIbM+8ZehZYbWScmyVDs
-	 CvGdeRyxXQtg6a8wErMZyHkV2iUM+miJ+iWRPZtInkKaONy9ED6S+mdwU1XG3d8pGV
-	 0srH3A5UKl81Y052B78fhB28gB67rXFUa9Qut2FhDxckPTghH2ea9/tynlYEDw59oT
-	 HrR0jImjU4L7iyIpAwBGcTHwVmEVYLERBCDkSbGUGp9xBjuHr35XtvcsZTihmFs/aY
-	 ZTu857JmABb9Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 971B5C04DD9;
-	Thu, 19 Oct 2023 18:36:16 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.6-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20231019084227.4111684-1-chenhuacai@loongson.cn>
-References: <20231019084227.4111684-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20231019084227.4111684-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.6-3
-X-PR-Tracked-Commit-Id: 278be83601dd1725d4732241f066d528e160a39d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 74e9347ebc5be452935fe4f3eddb150aa5a6f4fe
-Message-Id: <169774057661.20290.11492595041951746156.pr-tracker-bot@kernel.org>
-Date: Thu, 19 Oct 2023 18:36:16 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2AAD80B
+	for <loongarch@lists.linux.dev>; Fri, 20 Oct 2023 02:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dxg_B55TFlMl8zAA--.34675S3;
+	Fri, 20 Oct 2023 10:27:05 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxP9115TFl7r4rAA--.28791S5;
+	Fri, 20 Oct 2023 10:27:05 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v3 3/8] objtool/x86: Separate arch-specific and generic parts
+Date: Fri, 20 Oct 2023 10:26:56 +0800
+Message-Id: <1697768821-22931-4-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1697768821-22931-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1697768821-22931-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8CxP9115TFl7r4rAA--.28791S5
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3uFW5Aw13WFy3KrWkZrWDtrc_yoWkuF1DpF
+	15CrWDGrW7XF13Gwn2gan7CrWYkws7Gr1kArnxC340v3yIqr1rJFsIyryjvF98W393Way3
+	ua90qFWFkanxAFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUoxR6UUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-The pull request you sent on Thu, 19 Oct 2023 16:42:27 +0800:
+Move init_orc_entry(), write_orc_entry(), reg_name(), orc_type_name()
+and print_reg() from generic orc_gen.c and orc_dump.c to arch-specific
+orc.c, then introduce a new function orc_print_dump() to print info.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.6-3
+This is preparation for later patch, no functionality change.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/74e9347ebc5be452935fe4f3eddb150aa5a6f4fe
+Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+Co-developed-by: Youling Tang <tangyouling@loongson.cn>
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/objtool/arch/x86/Build        |   1 +
+ tools/objtool/arch/x86/orc.c        | 188 ++++++++++++++++++++++++++++++++++++
+ tools/objtool/include/objtool/orc.h |  14 +++
+ tools/objtool/orc_dump.c            |  69 +------------
+ tools/objtool/orc_gen.c             | 113 +---------------------
+ 5 files changed, 206 insertions(+), 179 deletions(-)
+ create mode 100644 tools/objtool/arch/x86/orc.c
+ create mode 100644 tools/objtool/include/objtool/orc.h
 
-Thank you!
-
+diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
+index 9f7869b..3dedb2f 100644
+--- a/tools/objtool/arch/x86/Build
++++ b/tools/objtool/arch/x86/Build
+@@ -1,5 +1,6 @@
+ objtool-y += special.o
+ objtool-y += decode.o
++objtool-y += orc.o
+ 
+ inat_tables_script = ../arch/x86/tools/gen-insn-attr-x86.awk
+ inat_tables_maps = ../arch/x86/lib/x86-opcode-map.txt
+diff --git a/tools/objtool/arch/x86/orc.c b/tools/objtool/arch/x86/orc.c
+new file mode 100644
+index 0000000..b6cd943
+--- /dev/null
++++ b/tools/objtool/arch/x86/orc.c
+@@ -0,0 +1,188 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include <linux/objtool_types.h>
++#include <asm/orc_types.h>
++
++#include <objtool/check.h>
++#include <objtool/orc.h>
++#include <objtool/warn.h>
++#include <objtool/endianness.h>
++
++int init_orc_entry(struct orc_entry *orc, struct cfi_state *cfi, struct instruction *insn)
++{
++	struct cfi_reg *bp = &cfi->regs[CFI_BP];
++
++	memset(orc, 0, sizeof(*orc));
++
++	if (!cfi) {
++		/*
++		 * This is usually either unreachable nops/traps (which don't
++		 * trigger unreachable instruction warnings), or
++		 * STACK_FRAME_NON_STANDARD functions.
++		 */
++		orc->type = ORC_TYPE_UNDEFINED;
++		return 0;
++	}
++
++	switch (cfi->type) {
++	case UNWIND_HINT_TYPE_UNDEFINED:
++		orc->type = ORC_TYPE_UNDEFINED;
++		return 0;
++	case UNWIND_HINT_TYPE_END_OF_STACK:
++		orc->type = ORC_TYPE_END_OF_STACK;
++		return 0;
++	case UNWIND_HINT_TYPE_CALL:
++		orc->type = ORC_TYPE_CALL;
++		break;
++	case UNWIND_HINT_TYPE_REGS:
++		orc->type = ORC_TYPE_REGS;
++		break;
++	case UNWIND_HINT_TYPE_REGS_PARTIAL:
++		orc->type = ORC_TYPE_REGS_PARTIAL;
++		break;
++	default:
++		WARN_INSN(insn, "unknown unwind hint type %d", cfi->type);
++		return -1;
++	}
++
++	orc->signal = cfi->signal;
++
++	switch (cfi->cfa.base) {
++	case CFI_SP:
++		orc->sp_reg = ORC_REG_SP;
++		break;
++	case CFI_SP_INDIRECT:
++		orc->sp_reg = ORC_REG_SP_INDIRECT;
++		break;
++	case CFI_BP:
++		orc->sp_reg = ORC_REG_BP;
++		break;
++	case CFI_BP_INDIRECT:
++		orc->sp_reg = ORC_REG_BP_INDIRECT;
++		break;
++	case CFI_R10:
++		orc->sp_reg = ORC_REG_R10;
++		break;
++	case CFI_R13:
++		orc->sp_reg = ORC_REG_R13;
++		break;
++	case CFI_DI:
++		orc->sp_reg = ORC_REG_DI;
++		break;
++	case CFI_DX:
++		orc->sp_reg = ORC_REG_DX;
++		break;
++	default:
++		WARN_INSN(insn, "unknown CFA base reg %d", cfi->cfa.base);
++		return -1;
++	}
++
++	switch (bp->base) {
++	case CFI_UNDEFINED:
++		orc->bp_reg = ORC_REG_UNDEFINED;
++		break;
++	case CFI_CFA:
++		orc->bp_reg = ORC_REG_PREV_SP;
++		break;
++	case CFI_BP:
++		orc->bp_reg = ORC_REG_BP;
++		break;
++	default:
++		WARN_INSN(insn, "unknown BP base reg %d", bp->base);
++		return -1;
++	}
++
++	orc->sp_offset = cfi->cfa.offset;
++	orc->bp_offset = bp->offset;
++
++	return 0;
++}
++
++int write_orc_entry(struct elf *elf, struct section *orc_sec,
++		    struct section *ip_sec, unsigned int idx,
++		    struct section *insn_sec, unsigned long insn_off,
++		    struct orc_entry *o)
++{
++	struct orc_entry *orc;
++
++	/* populate ORC data */
++	orc = (struct orc_entry *)orc_sec->data->d_buf + idx;
++	memcpy(orc, o, sizeof(*orc));
++	orc->sp_offset = bswap_if_needed(elf, orc->sp_offset);
++	orc->bp_offset = bswap_if_needed(elf, orc->bp_offset);
++
++	/* populate reloc for ip */
++	if (!elf_init_reloc_text_sym(elf, ip_sec, idx * sizeof(int), idx,
++				     insn_sec, insn_off))
++		return -1;
++
++	return 0;
++}
++
++static const char *reg_name(unsigned int reg)
++{
++	switch (reg) {
++	case ORC_REG_PREV_SP:
++		return "prevsp";
++	case ORC_REG_DX:
++		return "dx";
++	case ORC_REG_DI:
++		return "di";
++	case ORC_REG_BP:
++		return "bp";
++	case ORC_REG_SP:
++		return "sp";
++	case ORC_REG_R10:
++		return "r10";
++	case ORC_REG_R13:
++		return "r13";
++	case ORC_REG_BP_INDIRECT:
++		return "bp(ind)";
++	case ORC_REG_SP_INDIRECT:
++		return "sp(ind)";
++	default:
++		return "?";
++	}
++}
++
++static const char *orc_type_name(unsigned int type)
++{
++	switch (type) {
++	case ORC_TYPE_UNDEFINED:
++		return "(und)";
++	case ORC_TYPE_END_OF_STACK:
++		return "end";
++	case ORC_TYPE_CALL:
++		return "call";
++	case ORC_TYPE_REGS:
++		return "regs";
++	case ORC_TYPE_REGS_PARTIAL:
++		return "regs (partial)";
++	default:
++		return "?";
++	}
++}
++
++static void print_reg(unsigned int reg, int offset)
++{
++	if (reg == ORC_REG_BP_INDIRECT)
++		printf("(bp%+d)", offset);
++	else if (reg == ORC_REG_SP_INDIRECT)
++		printf("(sp)%+d", offset);
++	else if (reg == ORC_REG_UNDEFINED)
++		printf("(und)");
++	else
++		printf("%s%+d", reg_name(reg), offset);
++}
++
++void orc_print_dump(struct elf *dummy_elf, struct orc_entry *orc, int i)
++{
++	printf("type:%s", orc_type_name(orc[i].type));
++
++	printf(" sp:");
++	print_reg(orc[i].sp_reg, bswap_if_needed(dummy_elf, orc[i].sp_offset));
++
++	printf(" bp:");
++	print_reg(orc[i].bp_reg, bswap_if_needed(dummy_elf, orc[i].bp_offset));
++
++	printf(" signal:%d\n", orc[i].signal);
++}
+diff --git a/tools/objtool/include/objtool/orc.h b/tools/objtool/include/objtool/orc.h
+new file mode 100644
+index 0000000..15a32de
+--- /dev/null
++++ b/tools/objtool/include/objtool/orc.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _OBJTOOL_ORC_H
++#define _OBJTOOL_ORC_H
++
++#include <objtool/check.h>
++
++int init_orc_entry(struct orc_entry *orc, struct cfi_state *cfi, struct instruction *insn);
++void orc_print_dump(struct elf *dummy_elf, struct orc_entry *orc, int i);
++int write_orc_entry(struct elf *elf, struct section *orc_sec,
++		    struct section *ip_sec, unsigned int idx,
++		    struct section *insn_sec, unsigned long insn_off,
++		    struct orc_entry *o);
++
++#endif /* _OBJTOOL_ORC_H */
+diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
+index 0e183bb..a62247ef 100644
+--- a/tools/objtool/orc_dump.c
++++ b/tools/objtool/orc_dump.c
+@@ -6,65 +6,10 @@
+ #include <unistd.h>
+ #include <asm/orc_types.h>
+ #include <objtool/objtool.h>
++#include <objtool/orc.h>
+ #include <objtool/warn.h>
+ #include <objtool/endianness.h>
+ 
+-static const char *reg_name(unsigned int reg)
+-{
+-	switch (reg) {
+-	case ORC_REG_PREV_SP:
+-		return "prevsp";
+-	case ORC_REG_DX:
+-		return "dx";
+-	case ORC_REG_DI:
+-		return "di";
+-	case ORC_REG_BP:
+-		return "bp";
+-	case ORC_REG_SP:
+-		return "sp";
+-	case ORC_REG_R10:
+-		return "r10";
+-	case ORC_REG_R13:
+-		return "r13";
+-	case ORC_REG_BP_INDIRECT:
+-		return "bp(ind)";
+-	case ORC_REG_SP_INDIRECT:
+-		return "sp(ind)";
+-	default:
+-		return "?";
+-	}
+-}
+-
+-static const char *orc_type_name(unsigned int type)
+-{
+-	switch (type) {
+-	case ORC_TYPE_UNDEFINED:
+-		return "(und)";
+-	case ORC_TYPE_END_OF_STACK:
+-		return "end";
+-	case ORC_TYPE_CALL:
+-		return "call";
+-	case ORC_TYPE_REGS:
+-		return "regs";
+-	case ORC_TYPE_REGS_PARTIAL:
+-		return "regs (partial)";
+-	default:
+-		return "?";
+-	}
+-}
+-
+-static void print_reg(unsigned int reg, int offset)
+-{
+-	if (reg == ORC_REG_BP_INDIRECT)
+-		printf("(bp%+d)", offset);
+-	else if (reg == ORC_REG_SP_INDIRECT)
+-		printf("(sp)%+d", offset);
+-	else if (reg == ORC_REG_UNDEFINED)
+-		printf("(und)");
+-	else
+-		printf("%s%+d", reg_name(reg), offset);
+-}
+-
+ int orc_dump(const char *_objname)
+ {
+ 	int fd, nr_entries, i, *orc_ip = NULL, orc_size = 0;
+@@ -205,17 +150,7 @@ int orc_dump(const char *_objname)
+ 			printf("%llx:", (unsigned long long)(orc_ip_addr + (i * sizeof(int)) + orc_ip[i]));
+ 		}
+ 
+-		printf("type:%s", orc_type_name(orc[i].type));
+-
+-		printf(" sp:");
+-
+-		print_reg(orc[i].sp_reg, bswap_if_needed(&dummy_elf, orc[i].sp_offset));
+-
+-		printf(" bp:");
+-
+-		print_reg(orc[i].bp_reg, bswap_if_needed(&dummy_elf, orc[i].bp_offset));
+-
+-		printf(" signal:%d\n", orc[i].signal);
++		orc_print_dump(&dummy_elf, orc, i);
+ 	}
+ 
+ 	elf_end(elf);
+diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
+index bae3439..922e6aa 100644
+--- a/tools/objtool/orc_gen.c
++++ b/tools/objtool/orc_gen.c
+@@ -10,121 +10,10 @@
+ #include <asm/orc_types.h>
+ 
+ #include <objtool/check.h>
++#include <objtool/orc.h>
+ #include <objtool/warn.h>
+ #include <objtool/endianness.h>
+ 
+-static int init_orc_entry(struct orc_entry *orc, struct cfi_state *cfi,
+-			  struct instruction *insn)
+-{
+-	struct cfi_reg *bp = &cfi->regs[CFI_BP];
+-
+-	memset(orc, 0, sizeof(*orc));
+-
+-	if (!cfi) {
+-		/*
+-		 * This is usually either unreachable nops/traps (which don't
+-		 * trigger unreachable instruction warnings), or
+-		 * STACK_FRAME_NON_STANDARD functions.
+-		 */
+-		orc->type = ORC_TYPE_UNDEFINED;
+-		return 0;
+-	}
+-
+-	switch (cfi->type) {
+-	case UNWIND_HINT_TYPE_UNDEFINED:
+-		orc->type = ORC_TYPE_UNDEFINED;
+-		return 0;
+-	case UNWIND_HINT_TYPE_END_OF_STACK:
+-		orc->type = ORC_TYPE_END_OF_STACK;
+-		return 0;
+-	case UNWIND_HINT_TYPE_CALL:
+-		orc->type = ORC_TYPE_CALL;
+-		break;
+-	case UNWIND_HINT_TYPE_REGS:
+-		orc->type = ORC_TYPE_REGS;
+-		break;
+-	case UNWIND_HINT_TYPE_REGS_PARTIAL:
+-		orc->type = ORC_TYPE_REGS_PARTIAL;
+-		break;
+-	default:
+-		WARN_INSN(insn, "unknown unwind hint type %d", cfi->type);
+-		return -1;
+-	}
+-
+-	orc->signal = cfi->signal;
+-
+-	switch (cfi->cfa.base) {
+-	case CFI_SP:
+-		orc->sp_reg = ORC_REG_SP;
+-		break;
+-	case CFI_SP_INDIRECT:
+-		orc->sp_reg = ORC_REG_SP_INDIRECT;
+-		break;
+-	case CFI_BP:
+-		orc->sp_reg = ORC_REG_BP;
+-		break;
+-	case CFI_BP_INDIRECT:
+-		orc->sp_reg = ORC_REG_BP_INDIRECT;
+-		break;
+-	case CFI_R10:
+-		orc->sp_reg = ORC_REG_R10;
+-		break;
+-	case CFI_R13:
+-		orc->sp_reg = ORC_REG_R13;
+-		break;
+-	case CFI_DI:
+-		orc->sp_reg = ORC_REG_DI;
+-		break;
+-	case CFI_DX:
+-		orc->sp_reg = ORC_REG_DX;
+-		break;
+-	default:
+-		WARN_INSN(insn, "unknown CFA base reg %d", cfi->cfa.base);
+-		return -1;
+-	}
+-
+-	switch (bp->base) {
+-	case CFI_UNDEFINED:
+-		orc->bp_reg = ORC_REG_UNDEFINED;
+-		break;
+-	case CFI_CFA:
+-		orc->bp_reg = ORC_REG_PREV_SP;
+-		break;
+-	case CFI_BP:
+-		orc->bp_reg = ORC_REG_BP;
+-		break;
+-	default:
+-		WARN_INSN(insn, "unknown BP base reg %d", bp->base);
+-		return -1;
+-	}
+-
+-	orc->sp_offset = cfi->cfa.offset;
+-	orc->bp_offset = bp->offset;
+-
+-	return 0;
+-}
+-
+-static int write_orc_entry(struct elf *elf, struct section *orc_sec,
+-			   struct section *ip_sec, unsigned int idx,
+-			   struct section *insn_sec, unsigned long insn_off,
+-			   struct orc_entry *o)
+-{
+-	struct orc_entry *orc;
+-
+-	/* populate ORC data */
+-	orc = (struct orc_entry *)orc_sec->data->d_buf + idx;
+-	memcpy(orc, o, sizeof(*orc));
+-	orc->sp_offset = bswap_if_needed(elf, orc->sp_offset);
+-	orc->bp_offset = bswap_if_needed(elf, orc->bp_offset);
+-
+-	/* populate reloc for ip */
+-	if (!elf_init_reloc_text_sym(elf, ip_sec, idx * sizeof(int), idx,
+-				     insn_sec, insn_off))
+-		return -1;
+-
+-	return 0;
+-}
+-
+ struct orc_list_entry {
+ 	struct list_head list;
+ 	struct orc_entry orc;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.1.0
+
