@@ -1,80 +1,101 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E911D125BE
-	for <loongarch@lists.linux.dev>; Fri, 20 Oct 2023 09:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jzRRY2jA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nkRbIeka6D9hktLXrz9eFYF7RLBS9b1Mb7EA0LnaqAs=; b=jzRRY2jAbC2JrZLmV54U9W9qOw
-	bkMbHIH76swqn1SPX8cjp9ieDsdG2VK6K5DGZuYnZjvJwoX6gM9emZhNGBDcOslLMFqNIgQhHL4eW
-	zHxsLLoqRn3jd7SjLKt34XEe1QTuZD/305FtFLOOsM64rr87VAvsHuyil1OzbJlufo/YZZ4gHmrfD
-	9EffeYn9BIPaN7eGWsSM9u7g8RTy9dzl0Ke04YI1jK22TwqkIxW22vaHDPweLfbIAlw6ow08Z7Xxy
-	1WRFjclpnnili5RaGOobS1A7n9X7VRROHtbRfJ7eUiEWiUeamao+//QCRCjzWntSuk4+LUL+QZgsi
-	RjUAbdGQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qtlpw-00CKzN-D5; Fri, 20 Oct 2023 09:30:32 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 16BAB300392; Fri, 20 Oct 2023 11:30:32 +0200 (CEST)
-Date: Fri, 20 Oct 2023 11:30:31 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 5/8] objtool: Check local label about sibling call
-Message-ID: <20231020093031.GB31411@noisy.programming.kicks-ass.net>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 902A116433
+	for <loongarch@lists.linux.dev>; Fri, 20 Oct 2023 10:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxpPA1VjJlFHMzAA--.34556S3;
+	Fri, 20 Oct 2023 18:28:05 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxH90zVjJlvzssAA--.30051S3;
+	Fri, 20 Oct 2023 18:28:04 +0800 (CST)
+Subject: Re: [PATCH v3 0/8] Add objtool and orc support for LoongArch
+To: Huacai Chen <chenhuacai@kernel.org>
 References: <1697768821-22931-1-git-send-email-yangtiezhu@loongson.cn>
- <1697768821-22931-6-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H4wqO0=+EOhyH+t=0bpiX2DayddVArB=x_yzVvmX9OW1g@mail.gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <a967ebeb-f19d-4e36-3547-80e838ad2fa0@loongson.cn>
+Date: Fri, 20 Oct 2023 18:28:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1697768821-22931-6-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <CAAhV-H4wqO0=+EOhyH+t=0bpiX2DayddVArB=x_yzVvmX9OW1g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8AxH90zVjJlvzssAA--.30051S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7AF48Zry3tFW5JrWDGFWDWrX_yoW8Aw1DpF
+	sFvrW2grWDW3sYy34kG3W0g34vvF1IkryYqFykGFWUArZ5Ary0qa97JFykZF17X3Z0va1Y
+	934Igr15WF17AagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r
+	1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U14lk7UUUUU==
 
-On Fri, Oct 20, 2023 at 10:26:58AM +0800, Tiezhu Yang wrote:
 
-> +		if (reloc && reloc->sym->type == STT_NOTYPE &&
-> +		    strncmp(reloc->sym->name, ".L", 2) == 0)
 
-> +			if (reloc->sym->type == STT_NOTYPE &&
-> +			    strncmp(reloc->sym->name, ".L", 2) == 0) {
+On 10/20/2023 04:51 PM, Huacai Chen wrote:
+> Cross compiling on X86 for LoongArch fails:
+>
+>   CALL    scripts/checksyscalls.sh
+>   DESCEND objtool
+> make[5]: *** No rule to make target
+> '/usr/lib/gcc/x86_64-redhat-linux/8/include/stdbool.h', needed by
+> '/home/chenhuacai/linux-official.git/tools/objtool/libsubcmd/exec-cmd.o'.
+> Stop.
+> make[4]: *** [Makefile:80:
+> /home/chenhuacai/linux-official.git/tools/objtool/libsubcmd/libsubcmd-in.o]
+> Error 2
+> make[3]: *** [Makefile:82:
+> /home/chenhuacai/linux-official.git/tools/objtool/libsubcmd/libsubcmd.a]
+> Error 2
+> make[2]: *** [Makefile:73: objtool] Error 2
+> make[1]: *** [/home/chenhuacai/linux-official.git/Makefile:1355:
+> tools/objtool] Error 2
+> make: *** [Makefile:234: __sub-make] Error 2
 
-Would not something like the below be better?
+It seems that there is no stdbool.h in your cross compile environment.
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index e308d1ba664e..a57d293c834d 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2506,6 +2506,9 @@ static int classify_symbols(struct objtool_file *file)
- 	struct symbol *func;
- 
- 	for_each_sym(file, func) {
-+		if (func->type == STT_NOTYPE && strstarts(func->name, ".L"))
-+			func->local_label = true;
-+
- 		if (func->bind != STB_GLOBAL)
- 			continue;
- 
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index 9f71e988eca4..2b8a69de4db8 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -67,6 +67,7 @@ struct symbol {
- 	u8 profiling_func    : 1;
- 	u8 warned	     : 1;
- 	u8 embedded_insn     : 1;
-+	u8 local_label       : 1;
- 	struct list_head pv_target;
- 	struct reloc *relocs;
- };
+It works well with the following steps, you can try it.
+
+wget 
+https://github.com/loongson/build-tools/releases/download/2023.08.08/x86_64-cross-tools-loongarch64-gcc-libc.tar.xz
+tar xf x86_64-cross-tools-loongarch64-gcc-libc.tar.xz -C /opt
+export PATH=/opt/cross-tools/bin/:$PATH
+export 
+LD_LIBRARY_PATH=/opt/cross-tools/loongarch64-unknown-linux-gnu/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/opt/cross-tools/lib:$LD_LIBRARY_PATH
+export CROSS_COMPILE=loongarch64-unknown-linux-gnu-
+export ARCH=loongarch
+
+find /opt -name stdbool.h
+/opt/cross-tools/lib/gcc/loongarch64-unknown-linux-gnu/14.0.0/include/stdbool.h
+/opt/cross-tools/loongarch64-unknown-linux-gnu/include/c++/14.0.0/tr1/stdbool.h
+
+cd linux.git
+make loongson3_defconfig
+make menuconfig   # select CONFIG_UNWINDER_ORC
+make -j4
+
+Thanks,
+Tiezhu
+
