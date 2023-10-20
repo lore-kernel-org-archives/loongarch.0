@@ -1,70 +1,123 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0509C1EA64;
-	Fri, 20 Oct 2023 16:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SBr1Q0Hr4z6K6c6;
-	Sat, 21 Oct 2023 00:40:42 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 20 Oct
- 2023 17:41:16 +0100
-Date: Fri, 20 Oct 2023 17:41:15 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-CC: James Morse <james.morse@arm.com>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Salil Mehta
-	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	<jianyong.wu@arm.com>, <justin.he@arm.com>
-Subject: Re: [RFC PATCH v2 13/35] ACPI: Rename
- acpi_scan_device_not_present() to be about enumeration
-Message-ID: <20231020174115.0000045a@Huawei.com>
-In-Reply-To: <ZTKkWozjprMYLjay@shell.armlinux.org.uk>
-References: <20230913163823.7880-1-james.morse@arm.com>
-	<20230913163823.7880-14-james.morse@arm.com>
-	<ZTKkWozjprMYLjay@shell.armlinux.org.uk>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CA9200BF
+	for <loongarch@lists.linux.dev>; Fri, 20 Oct 2023 18:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LtdVRAzT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
+	:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+	Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=p30D1Q3zE2qXAXYR3qzel/vvewRxpsqtgQHCmqUYVEc=; b=LtdVRAzT/5ZWoDw0QQ+xhklB9/
+	890ErFfVXqWVySS3OHD9I/gJXfSDCp+LFYKEA06AQdIWecu1WiROyi+hxGDfFV/1Exv8Gt3xM4/Zp
+	jrrxGUmPkdG5J+IZajAAnmyd74VJlPHVEd6cHT8P3HuEtGZFu4nHStDWYitjNYhSEtsZEfsaTRmW2
+	AKBY6J/S0UG58H67P4/tHOxwhdmNloeKleBA3MmXYEClCEnkM9S/Vl6Ya8vvoa7doTjRHhEfQKzy9
+	U2guXWrehQ2IB+qYklB2lYQl+pAwQlvbd1NpxiUJzLoUnup9N6znXpEammjKwPoK/XzTHp7WIHJpj
+	8IuirCgg==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:59232 helo=rmk-PC.armlinux.org.uk)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <rmk@armlinux.org.uk>)
+	id 1qtuWU-0000mU-1u;
+	Fri, 20 Oct 2023 19:47:02 +0100
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <rmk@rmk-PC.armlinux.org.uk>)
+	id 1qtuWW-00AQ7P-0W; Fri, 20 Oct 2023 19:47:04 +0100
+From: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+To: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev
+Cc: x86@kernel.org, James Morse <james.morse@arm.com>, Salil Mehta
+	<salil.mehta@huawei.com>, Jonathan Cameron
+	<Jonathan.Cameron@Huawei.com>, Jean-Philippe Brucker
+	<jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com,
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH] ACPI: Rename acpi_scan_device_not_present() to be about
+ enumeration
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1qtuWW-00AQ7P-0W@rmk-PC.armlinux.org.uk>
+Sender: Russell King <rmk@armlinux.org.uk>
+Date: Fri, 20 Oct 2023 19:47:04 +0100
 
-On Fri, 20 Oct 2023 17:01:30 +0100
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+From: James Morse <james.morse@arm.com>
 
-> On Wed, Sep 13, 2023 at 04:38:01PM +0000, James Morse wrote:
-> > acpi_scan_device_not_present() is called when a device in the
-> > hierarchy is not available for enumeration. Historically enumeration
-> > was only based on whether the device was present.
-> > 
-> > To add support for only enumerating devices that are both present
-> > and enabled, this helper should be renamed. It was only ever about
-> > enumeration, rename it acpi_scan_device_not_enumerated().
-> > 
-> > No change in behaviour is intended.
-> > 
-> > Signed-off-by: James Morse <james.morse@arm.com>  
-> 
+acpi_scan_device_not_present() is called when a device in the
+hierarchy is not available for enumeration. Historically enumeration
+was only based on whether the device was present.
+
+To add support for only enumerating devices that are both present
+and enabled, this helper should be renamed. It was only ever about
+enumeration, rename it acpi_scan_device_not_enumerated().
+
+No change in behaviour is intended.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+---
+This is another patch from James' aarch64 hotplug vcpu series.
+
+I asked:
 > Is this another patch which ought to be submitted without waiting
 > for the rest of the series?
-> 
-> Thanks.
-> 
+to which Jonathan Cameron replied:
+> Looks like a valid standalone change to me.
 
-Looks like a valid standalone change to me.
+So let's get this queued up.
+
+ drivers/acpi/scan.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index ed01e19514ef..17ab875a7d4e 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -289,10 +289,10 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+ 	return 0;
+ }
+ 
+-static int acpi_scan_device_not_present(struct acpi_device *adev)
++static int acpi_scan_device_not_enumerated(struct acpi_device *adev)
+ {
+ 	if (!acpi_device_enumerated(adev)) {
+-		dev_warn(&adev->dev, "Still not present\n");
++		dev_warn(&adev->dev, "Still not enumerated\n");
+ 		return -EALREADY;
+ 	}
+ 	acpi_bus_trim(adev);
+@@ -327,7 +327,7 @@ static int acpi_scan_device_check(struct acpi_device *adev)
+ 			error = -ENODEV;
+ 		}
+ 	} else {
+-		error = acpi_scan_device_not_present(adev);
++		error = acpi_scan_device_not_enumerated(adev);
+ 	}
+ 	return error;
+ }
+@@ -339,7 +339,7 @@ static int acpi_scan_bus_check(struct acpi_device *adev, void *not_used)
+ 
+ 	acpi_bus_get_status(adev);
+ 	if (!acpi_device_is_present(adev)) {
+-		acpi_scan_device_not_present(adev);
++		acpi_scan_device_not_enumerated(adev);
+ 		return 0;
+ 	}
+ 	if (handler && handler->hotplug.scan_dependent)
+-- 
+2.30.2
+
