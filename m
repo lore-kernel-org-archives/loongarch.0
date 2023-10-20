@@ -1,15 +1,15 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12EAC811
-	for <loongarch@lists.linux.dev>; Fri, 20 Oct 2023 02:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 093AB80D
+	for <loongarch@lists.linux.dev>; Fri, 20 Oct 2023 02:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxtPB65TFlRV8zAA--.35126S3;
-	Fri, 20 Oct 2023 10:27:06 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxXOp25TFlJ18zAA--.6887S3;
+	Fri, 20 Oct 2023 10:27:03 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxP9115TFl7r4rAA--.28791S8;
-	Fri, 20 Oct 2023 10:27:06 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxP9115TFl7r4rAA--.28791S2;
+	Fri, 20 Oct 2023 10:27:01 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -17,151 +17,128 @@ To: Josh Poimboeuf <jpoimboe@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 6/8] objtool: Check local label in add_dead_ends()
-Date: Fri, 20 Oct 2023 10:26:59 +0800
-Message-Id: <1697768821-22931-7-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 0/8] Add objtool and orc support for LoongArch
+Date: Fri, 20 Oct 2023 10:26:53 +0800
+Message-Id: <1697768821-22931-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1697768821-22931-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1697768821-22931-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8CxP9115TFl7r4rAA--.28791S8
+X-CM-TRANSID:AQAAf8CxP9115TFl7r4rAA--.28791S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWryUXryUtryDKF1DCw48GrX_yoWrWr15pF
-	43C343Kr42yr13Zw47tF1kWasxWw4kGFnrJ39rKF1rAryIvanxKw1ayw15uas8Wr12vw45
-	Xay5Kay3uryDA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxXrW5XrW8Cr1DKry7Gw47WrX_yoWruF1DpF
+	9rurykGF4UWr93Awnrta4UurWDJan7Gr12g3W2qry8CFW2qr1DJrsakFyDZFyqqa1rJFy0
+	qFn5Gw1aga1jyabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1q6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUoxR6UUUUU
+	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU8X_-PUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-When update the latest upstream gcc and binutils which enables linker
-relaxation by default, it generates more objtool warnings on LoongArch,
-like this:
+This version is based on the latest torvalds/linux.git (20231020)
+which includes the commit 00c2ca84c680 ("LoongArch: Use SYM_CODE_*
+to annotate exception handlers"), tested with the latest upstream
+gcc and binutils (20231009).
 
-  init/main.o: warning: objtool: unexpected relocation symbol type in .rela.discard.unreachable
+v3:
+  -- Use tab for indentation in special.h
+  -- Replace BP/bp with FP/fp
+  -- Modify jirl decoder to handle special case in hibernate_asm.o
+  -- Remove the calling of bswap_if_needed() which always return false
+  -- Remove OBJECT_FILES_NON_STANDARD_suspend_asm.o
+  -- Remove check of assembler version in Makefile
+  -- Remove UNWIND_HINT_EMPTY in kernel_entry
+  -- Put unwind_init() after cpu_probe()
+  -- Remove CONFIG_BPF_JIT_ALWAYS_ON in defconfig
+  -- Rename title of patch #8 to "Add ORC stack unwinder support"
+  -- Fix build error of scripts/sorttable.h reported by test robot
+  -- Add exception_table[] to save exception handlers
 
-We can see that the reloc sym name is local label instead of section
-in relocation section '.rela.discard.unreachable', in this case, the
-reloc sym type is STT_NOTYPE instead of STT_SECTION. Let us check it
-to not return -1, then use reloc->sym->offset instead of reloc addend
-which is 0 to find the corresponding instruction. At the same time,
-replace the variable "addend" with "offset" to reflect the reality.
+Tiezhu Yang (8):
+  objtool/LoongArch: Enable objtool to be built
+  objtool/LoongArch: Implement instruction decoder
+  objtool/x86: Separate arch-specific and generic parts
+  objtool/LoongArch: Enable orc to be built
+  objtool: Check local label about sibling call
+  objtool: Check local label in add_dead_ends()
+  objtool: Check local label in read_unwind_hints()
+  LoongArch: Add ORC stack unwinder support
 
-Here are some detailed info:
-[fedora@linux 6.6.test]$ gcc --version
-gcc (GCC) 14.0.0 20231009 (experimental)
-[fedora@linux 6.6.test]$ as --version
-GNU assembler (GNU Binutils) 2.41.50.20231009
-[fedora@linux 6.6.test]$ readelf -r init/main.o | grep -A 2 "rela.discard.unreachable"
-Relocation section '.rela.discard.unreachable' at offset 0x4b70 contains 1 entry:
-  Offset          Info           Type           Sym. Value    Sym. Name + Addend
-000000000000  00de00000063 R_LARCH_32_PCREL  0000000000000228 .L466^B1 + 0
+ arch/loongarch/Kconfig                             |   2 +
+ arch/loongarch/Kconfig.debug                       |  11 +
+ arch/loongarch/Makefile                            |  18 +
+ arch/loongarch/include/asm/Kbuild                  |   1 +
+ arch/loongarch/include/asm/bug.h                   |   1 +
+ arch/loongarch/include/asm/exception.h             |   2 +
+ arch/loongarch/include/asm/module.h                |   7 +
+ arch/loongarch/include/asm/orc_header.h            |  19 +
+ arch/loongarch/include/asm/orc_lookup.h            |  34 ++
+ arch/loongarch/include/asm/orc_types.h             |  58 +++
+ arch/loongarch/include/asm/stackframe.h            |   3 +
+ arch/loongarch/include/asm/unwind.h                |  22 +-
+ arch/loongarch/include/asm/unwind_hints.h          |  28 ++
+ arch/loongarch/kernel/Makefile                     |   3 +
+ arch/loongarch/kernel/entry.S                      |   5 +
+ arch/loongarch/kernel/genex.S                      |   4 +
+ arch/loongarch/kernel/module.c                     |  11 +-
+ arch/loongarch/kernel/relocate_kernel.S            |   2 +
+ arch/loongarch/kernel/setup.c                      |   2 +
+ arch/loongarch/kernel/stacktrace.c                 |   1 +
+ arch/loongarch/kernel/traps.c                      |  44 +-
+ arch/loongarch/kernel/unwind_orc.c                 | 522 +++++++++++++++++++++
+ arch/loongarch/kernel/vmlinux.lds.S                |   3 +
+ arch/loongarch/lib/Makefile                        |   2 +
+ arch/loongarch/mm/tlb.c                            |  27 +-
+ arch/loongarch/mm/tlbex.S                          |   9 +
+ arch/loongarch/vdso/Makefile                       |   1 +
+ include/linux/compiler.h                           |   9 +
+ scripts/Makefile                                   |   7 +-
+ tools/arch/loongarch/include/asm/inst.h            | 161 +++++++
+ tools/arch/loongarch/include/asm/orc_types.h       |  58 +++
+ tools/include/linux/bitops.h                       |  11 +
+ tools/objtool/Makefile                             |   4 +
+ tools/objtool/arch/loongarch/Build                 |   3 +
+ tools/objtool/arch/loongarch/decode.c              | 352 ++++++++++++++
+ .../objtool/arch/loongarch/include/arch/cfi_regs.h |  22 +
+ tools/objtool/arch/loongarch/include/arch/elf.h    |  30 ++
+ .../objtool/arch/loongarch/include/arch/special.h  |  33 ++
+ tools/objtool/arch/loongarch/orc.c                 | 171 +++++++
+ tools/objtool/arch/loongarch/special.c             |  15 +
+ tools/objtool/arch/x86/Build                       |   1 +
+ tools/objtool/arch/x86/orc.c                       | 188 ++++++++
+ tools/objtool/check.c                              | 118 +++--
+ tools/objtool/include/objtool/orc.h                |  14 +
+ tools/objtool/orc_dump.c                           |  69 +--
+ tools/objtool/orc_gen.c                            | 113 +----
+ 46 files changed, 1964 insertions(+), 257 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/orc_header.h
+ create mode 100644 arch/loongarch/include/asm/orc_lookup.h
+ create mode 100644 arch/loongarch/include/asm/orc_types.h
+ create mode 100644 arch/loongarch/include/asm/unwind_hints.h
+ create mode 100644 arch/loongarch/kernel/unwind_orc.c
+ create mode 100644 tools/arch/loongarch/include/asm/inst.h
+ create mode 100644 tools/arch/loongarch/include/asm/orc_types.h
+ create mode 100644 tools/objtool/arch/loongarch/Build
+ create mode 100644 tools/objtool/arch/loongarch/decode.c
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/cfi_regs.h
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/elf.h
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/special.h
+ create mode 100644 tools/objtool/arch/loongarch/orc.c
+ create mode 100644 tools/objtool/arch/loongarch/special.c
+ create mode 100644 tools/objtool/arch/x86/orc.c
+ create mode 100644 tools/objtool/include/objtool/orc.h
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/objtool/check.c | 36 +++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index a9cb224..eee5621 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -611,7 +611,7 @@ static int add_dead_ends(struct objtool_file *file)
- 	struct section *rsec;
- 	struct reloc *reloc;
- 	struct instruction *insn;
--	s64 addend;
-+	unsigned long offset;
- 
- 	/*
- 	 * Check for manually annotated dead ends.
-@@ -622,26 +622,29 @@ static int add_dead_ends(struct objtool_file *file)
- 
- 	for_each_reloc(rsec, reloc) {
- 
--		if (reloc->sym->type != STT_SECTION) {
-+		if (reloc->sym->type == STT_SECTION) {
-+			offset = reloc_addend(reloc);
-+		} else if ((reloc->sym->type == STT_NOTYPE) &&
-+			    strncmp(reloc->sym->name, ".L", 2) == 0) {
-+			offset = reloc->sym->offset;
-+		} else {
- 			WARN("unexpected relocation symbol type in %s", rsec->name);
- 			return -1;
- 		}
- 
--		addend = reloc_addend(reloc);
--
--		insn = find_insn(file, reloc->sym->sec, addend);
-+		insn = find_insn(file, reloc->sym->sec, offset);
- 		if (insn)
- 			insn = prev_insn_same_sec(file, insn);
--		else if (addend == reloc->sym->sec->sh.sh_size) {
-+		else if (offset == reloc->sym->sec->sh.sh_size) {
- 			insn = find_last_insn(file, reloc->sym->sec);
- 			if (!insn) {
- 				WARN("can't find unreachable insn at %s+0x%" PRIx64,
--				     reloc->sym->sec->name, addend);
-+				     reloc->sym->sec->name, offset);
- 				return -1;
- 			}
- 		} else {
- 			WARN("can't find unreachable insn at %s+0x%" PRIx64,
--			     reloc->sym->sec->name, addend);
-+			     reloc->sym->sec->name, offset);
- 			return -1;
- 		}
- 
-@@ -661,26 +664,29 @@ static int add_dead_ends(struct objtool_file *file)
- 
- 	for_each_reloc(rsec, reloc) {
- 
--		if (reloc->sym->type != STT_SECTION) {
-+		if (reloc->sym->type == STT_SECTION) {
-+			offset = reloc_addend(reloc);
-+		} else if ((reloc->sym->type == STT_NOTYPE) &&
-+			    strncmp(reloc->sym->name, ".L", 2) == 0) {
-+			offset = reloc->sym->offset;
-+		} else {
- 			WARN("unexpected relocation symbol type in %s", rsec->name);
- 			return -1;
- 		}
- 
--		addend = reloc_addend(reloc);
--
--		insn = find_insn(file, reloc->sym->sec, addend);
-+		insn = find_insn(file, reloc->sym->sec, offset);
- 		if (insn)
- 			insn = prev_insn_same_sec(file, insn);
--		else if (addend == reloc->sym->sec->sh.sh_size) {
-+		else if (offset == reloc->sym->sec->sh.sh_size) {
- 			insn = find_last_insn(file, reloc->sym->sec);
- 			if (!insn) {
- 				WARN("can't find reachable insn at %s+0x%" PRIx64,
--				     reloc->sym->sec->name, addend);
-+				     reloc->sym->sec->name, offset);
- 				return -1;
- 			}
- 		} else {
- 			WARN("can't find reachable insn at %s+0x%" PRIx64,
--			     reloc->sym->sec->name, addend);
-+			     reloc->sym->sec->name, offset);
- 			return -1;
- 		}
- 
 -- 
 2.1.0
 
