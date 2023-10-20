@@ -1,15 +1,15 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDCE180B
-	for <loongarch@lists.linux.dev>; Fri, 20 Oct 2023 02:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E16480E
+	for <loongarch@lists.linux.dev>; Fri, 20 Oct 2023 02:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxVuh55TFlLl8zAA--.64375S3;
-	Fri, 20 Oct 2023 10:27:05 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bx5fB65TFlPl8zAA--.34884S3;
+	Fri, 20 Oct 2023 10:27:06 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxP9115TFl7r4rAA--.28791S4;
-	Fri, 20 Oct 2023 10:27:04 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxP9115TFl7r4rAA--.28791S7;
+	Fri, 20 Oct 2023 10:27:06 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -17,552 +17,219 @@ To: Josh Poimboeuf <jpoimboe@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 2/8] objtool/LoongArch: Implement instruction decoder
-Date: Fri, 20 Oct 2023 10:26:55 +0800
-Message-Id: <1697768821-22931-3-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 5/8] objtool: Check local label about sibling call
+Date: Fri, 20 Oct 2023 10:26:58 +0800
+Message-Id: <1697768821-22931-6-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1697768821-22931-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1697768821-22931-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8CxP9115TFl7r4rAA--.28791S4
+X-CM-TRANSID:AQAAf8CxP9115TFl7r4rAA--.28791S7
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfJFykXw18AF1kGw1fCry3GFX_yoW8Gr1xGo
-	W8Ja4DKw1rJr4Uua1UJrn7JF4UZr109rW5Z34SvrsYyF45Zw15WrZFkw43W3Wa9w48JrZr
-	Gayj9FykAa17XF1fl-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY87kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUZVWUtwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUbCzuJUUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoW3XFyrCw13GryDKr13uF1xWFX_yoW7tw4kpa
+	13G390gr4rXFWxuw47tF4jg3Wa9w4rXFy7GFW5Ga4Skw1Yv3s8Ka1fK3WI9F15JFy5WF43
+	Xa1jyryUCF4UAabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1q6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUoxR6UUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-Only copy the minimal definitions of instruction opcodes and formats
-in inst.h from arch/loongarch to tools/arch/loongarch, and also copy
-the definition of sign_extend64() to tools/include/linux/bitops.h to
-decode the following kinds of instructions:
+When update the latest upstream gcc and binutils which enables linker
+relaxation by default, it generates more objtool warnings on LoongArch,
+like this:
 
-(1) stack pointer related instructions
-addi.d, ld.d, st.d, ldptr.d and stptr.d
+  init/version.o: warning: objtool: early_hostname+0x20: sibling call from callable instruction with modified stack frame
 
-(2) branch and jump related instructions
-beq, bne, blt, bge, bltu, bgeu, beqz, bnez, bceqz, bcnez, b, bl and jirl
+We can see that the branch and jump operation about local label ".L2"
+is not sibling call, because a sibling call is a tail-call to another
+symbol. In this case, make is_sibling_call() return false, set dest_sec
+and dest_off to calculate jump_dest in add_jump_destinations().
 
-(3) other instructions
-break, nop and ertn
+Here are some detailed info:
+[fedora@linux 6.6.test]$ gcc --version
+gcc (GCC) 14.0.0 20231009 (experimental)
+[fedora@linux 6.6.test]$ as --version
+GNU assembler (GNU Binutils) 2.41.50.20231009
+[fedora@linux 6.6.test]$ objdump -M no-aliases -D init/version.o | grep -A 21 "init.text"
+Disassembly of section .init.text:
 
-See more info about instructions in LoongArch Reference Manual:
-https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html
+0000000000000000 <early_hostname>:
+   0:	1a00000c 	pcalau12i   	$t0, 0
+   4:	02ffc063 	addi.d      	$sp, $sp, -16
+   8:	00150085 	or          	$a1, $a0, $zero
+   c:	02810406 	addi.w      	$a2, $zero, 65
+  10:	02c00184 	addi.d      	$a0, $t0, 0
+  14:	29c02061 	st.d        	$ra, $sp, 8
+  18:	54000000 	bl          	0	# 18 <early_hostname+0x18>
+  1c:	0281000c 	addi.w      	$t0, $zero, 64
+  20:	6c001584 	bgeu        	$t0, $a0, 20	# 34 <.L2>
+  24:	1a000004 	pcalau12i   	$a0, 0
+  28:	02810005 	addi.w      	$a1, $zero, 64
+  2c:	02c00084 	addi.d      	$a0, $a0, 0
+  30:	54000000 	bl          	0	# 30 <early_hostname+0x30>
 
-Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-Co-developed-by: Youling Tang <tangyouling@loongson.cn>
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+0000000000000034 <.L2>:
+  34:	28c02061 	ld.d        	$ra, $sp, 8
+  38:	00150004 	or          	$a0, $zero, $zero
+  3c:	02c04063 	addi.d      	$sp, $sp, 16
+  40:	4c000020 	jirl        	$zero, $ra, 0
+
+By the way, it need to move insn_reloc() before is_sibling_call()
+to avoid implicit declaration build error.
+
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- tools/arch/loongarch/include/asm/inst.h | 161 +++++++++++++++++++
- tools/include/linux/bitops.h            |  11 ++
- tools/objtool/arch/loongarch/decode.c   | 269 +++++++++++++++++++++++++++++++-
- 3 files changed, 439 insertions(+), 2 deletions(-)
- create mode 100644 tools/arch/loongarch/include/asm/inst.h
+ tools/objtool/check.c | 69 ++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 41 insertions(+), 28 deletions(-)
 
-diff --git a/tools/arch/loongarch/include/asm/inst.h b/tools/arch/loongarch/include/asm/inst.h
-new file mode 100644
-index 0000000..c25b585
---- /dev/null
-+++ b/tools/arch/loongarch/include/asm/inst.h
-@@ -0,0 +1,161 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-+ */
-+#ifndef _ASM_INST_H
-+#define _ASM_INST_H
-+
-+#include <linux/bitops.h>
-+
-+#define LOONGARCH_INSN_NOP		0x03400000
-+
-+enum reg0i15_op {
-+	break_op	= 0x54,
-+};
-+
-+enum reg0i26_op {
-+	b_op		= 0x14,
-+	bl_op		= 0x15,
-+};
-+
-+enum reg1i21_op {
-+	beqz_op		= 0x10,
-+	bnez_op		= 0x11,
-+	bceqz_op	= 0x12, /* bits[9:8] = 0x00 */
-+	bcnez_op	= 0x12, /* bits[9:8] = 0x01 */
-+};
-+
-+enum reg2_op {
-+	ertn_op		= 0x1920e,
-+};
-+
-+enum reg2i12_op {
-+	addid_op	= 0x0b,
-+	andi_op		= 0x0d,
-+	ldd_op		= 0xa3,
-+	std_op		= 0xa7,
-+};
-+
-+enum reg2i14_op {
-+	ldptrd_op	= 0x26,
-+	stptrd_op	= 0x27,
-+};
-+
-+enum reg2i16_op {
-+	jirl_op		= 0x13,
-+	beq_op		= 0x16,
-+	bne_op		= 0x17,
-+	blt_op		= 0x18,
-+	bge_op		= 0x19,
-+	bltu_op		= 0x1a,
-+	bgeu_op		= 0x1b,
-+};
-+
-+struct reg0i15_format {
-+	unsigned int immediate : 15;
-+	unsigned int opcode : 17;
-+};
-+
-+struct reg0i26_format {
-+	unsigned int immediate_h : 10;
-+	unsigned int immediate_l : 16;
-+	unsigned int opcode : 6;
-+};
-+
-+struct reg1i21_format {
-+	unsigned int immediate_h  : 5;
-+	unsigned int rj : 5;
-+	unsigned int immediate_l : 16;
-+	unsigned int opcode : 6;
-+};
-+
-+struct reg2_format {
-+	unsigned int rd : 5;
-+	unsigned int rj : 5;
-+	unsigned int opcode : 22;
-+};
-+
-+struct reg2i12_format {
-+	unsigned int rd : 5;
-+	unsigned int rj : 5;
-+	unsigned int immediate : 12;
-+	unsigned int opcode : 10;
-+};
-+
-+struct reg2i14_format {
-+	unsigned int rd : 5;
-+	unsigned int rj : 5;
-+	unsigned int immediate : 14;
-+	unsigned int opcode : 8;
-+};
-+
-+struct reg2i16_format {
-+	unsigned int rd : 5;
-+	unsigned int rj : 5;
-+	unsigned int immediate : 16;
-+	unsigned int opcode : 6;
-+};
-+
-+union loongarch_instruction {
-+	unsigned int word;
-+	struct reg0i15_format	reg0i15_format;
-+	struct reg0i26_format	reg0i26_format;
-+	struct reg1i21_format	reg1i21_format;
-+	struct reg2_format	reg2_format;
-+	struct reg2i12_format	reg2i12_format;
-+	struct reg2i14_format	reg2i14_format;
-+	struct reg2i16_format	reg2i16_format;
-+};
-+
-+#define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
-+
-+enum loongarch_gpr {
-+	LOONGARCH_GPR_ZERO = 0,
-+	LOONGARCH_GPR_RA = 1,
-+	LOONGARCH_GPR_TP = 2,
-+	LOONGARCH_GPR_SP = 3,
-+	LOONGARCH_GPR_A0 = 4,	/* Reused as V0 for return value */
-+	LOONGARCH_GPR_A1,	/* Reused as V1 for return value */
-+	LOONGARCH_GPR_A2,
-+	LOONGARCH_GPR_A3,
-+	LOONGARCH_GPR_A4,
-+	LOONGARCH_GPR_A5,
-+	LOONGARCH_GPR_A6,
-+	LOONGARCH_GPR_A7,
-+	LOONGARCH_GPR_T0 = 12,
-+	LOONGARCH_GPR_T1,
-+	LOONGARCH_GPR_T2,
-+	LOONGARCH_GPR_T3,
-+	LOONGARCH_GPR_T4,
-+	LOONGARCH_GPR_T5,
-+	LOONGARCH_GPR_T6,
-+	LOONGARCH_GPR_T7,
-+	LOONGARCH_GPR_T8,
-+	LOONGARCH_GPR_FP = 22,
-+	LOONGARCH_GPR_S0 = 23,
-+	LOONGARCH_GPR_S1,
-+	LOONGARCH_GPR_S2,
-+	LOONGARCH_GPR_S3,
-+	LOONGARCH_GPR_S4,
-+	LOONGARCH_GPR_S5,
-+	LOONGARCH_GPR_S6,
-+	LOONGARCH_GPR_S7,
-+	LOONGARCH_GPR_S8,
-+	LOONGARCH_GPR_MAX
-+};
-+
-+#define DEF_EMIT_REG2I16_FORMAT(NAME, OP)				\
-+static inline void emit_##NAME(union loongarch_instruction *insn,	\
-+			       enum loongarch_gpr rj,			\
-+			       enum loongarch_gpr rd,			\
-+			       int offset)				\
-+{									\
-+	insn->reg2i16_format.opcode = OP;				\
-+	insn->reg2i16_format.immediate = offset;			\
-+	insn->reg2i16_format.rj = rj;					\
-+	insn->reg2i16_format.rd = rd;					\
-+}
-+
-+DEF_EMIT_REG2I16_FORMAT(jirl, jirl_op)
-+
-+#endif /* _ASM_INST_H */
-diff --git a/tools/include/linux/bitops.h b/tools/include/linux/bitops.h
-index f18683b9..7319f6c 100644
---- a/tools/include/linux/bitops.h
-+++ b/tools/include/linux/bitops.h
-@@ -87,4 +87,15 @@ static inline __u32 rol32(__u32 word, unsigned int shift)
- 	return (word << shift) | (word >> ((-shift) & 31));
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index e308d1b..a9cb224 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -161,12 +161,39 @@ static bool is_jump_table_jump(struct instruction *insn)
+ 	       insn_jump_table(alt_group->orig_group->first_insn);
  }
  
-+/**
-+ * sign_extend64 - sign extend a 64-bit value using specified bit as sign-bit
-+ * @value: value to sign extend
-+ * @index: 0 based bit index (0<=index<64) to sign bit
-+ */
-+static __always_inline __s64 sign_extend64(__u64 value, int index)
+-static bool is_sibling_call(struct instruction *insn)
++static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *insn)
 +{
-+	__u8 shift = 63 - index;
-+	return (__s64)(value << shift) >> shift;
++	struct reloc *reloc;
++
++	if (insn->no_reloc)
++		return NULL;
++
++	if (!file)
++		return NULL;
++
++	reloc = find_reloc_by_dest_range(file->elf, insn->sec,
++					 insn->offset, insn->len);
++	if (!reloc) {
++		insn->no_reloc = 1;
++		return NULL;
++	}
++
++	return reloc;
 +}
 +
- #endif
-diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
-index cc74ba4..0ee3333 100644
---- a/tools/objtool/arch/loongarch/decode.c
-+++ b/tools/objtool/arch/loongarch/decode.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- #include <string.h>
- #include <objtool/check.h>
-+#include <objtool/warn.h>
-+#include <asm/inst.h>
- 
- int arch_ftrace_match(char *name)
++static bool is_sibling_call(struct objtool_file *file, struct instruction *insn)
  {
-@@ -39,21 +41,284 @@ int arch_decode_hint_reg(u8 sp_reg, int *base)
- 	return 0;
+ 	/*
+ 	 * Assume only STT_FUNC calls have jump-tables.
+ 	 */
+ 	if (insn_func(insn)) {
++		struct reloc *reloc = insn_reloc(file, insn);
++
++		/* Disallow sibling calls into STT_NOTYPE if it is local lable */
++		if (reloc && reloc->sym->type == STT_NOTYPE &&
++		    strncmp(reloc->sym->name, ".L", 2) == 0)
++			return false;
++
+ 		/* An indirect jump is either a sibling call or a jump to a table. */
+ 		if (insn->type == INSN_JUMP_DYNAMIC)
+ 			return !is_jump_table_jump(insn);
+@@ -232,7 +259,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 	 * of the sibling call returns.
+ 	 */
+ 	func_for_each_insn(file, func, insn) {
+-		if (is_sibling_call(insn)) {
++		if (is_sibling_call(file, insn)) {
+ 			struct instruction *dest = insn->jump_dest;
+ 
+ 			if (!dest)
+@@ -743,7 +770,7 @@ static int create_static_call_sections(struct objtool_file *file)
+ 		if (!elf_init_reloc_data_sym(file->elf, sec,
+ 					     idx * sizeof(*site) + 4,
+ 					     (idx * 2) + 1, key_sym,
+-					     is_sibling_call(insn) * STATIC_CALL_SITE_TAIL))
++					     is_sibling_call(file, insn) * STATIC_CALL_SITE_TAIL))
+ 			return -1;
+ 
+ 		idx++;
+@@ -1315,26 +1342,6 @@ __weak bool arch_is_embedded_insn(struct symbol *sym)
+ 	return false;
  }
  
-+static bool is_loongarch(const struct elf *elf)
-+{
-+	if (elf->ehdr.e_machine == EM_LOONGARCH)
-+		return true;
-+
-+	WARN("unexpected ELF machine type %d", elf->ehdr.e_machine);
-+	return false;
-+}
-+
-+#define ADD_OP(op) \
-+	if (!(op = calloc(1, sizeof(*op)))) \
-+		return -1; \
-+	else for (*ops_list = op, ops_list = &op->next; op; op = NULL)
-+
-+static bool decode_insn_reg0i26_fomat(union loongarch_instruction inst,
-+				      struct instruction *insn)
-+{
-+	switch (inst.reg0i26_format.opcode) {
-+	case b_op:
-+		insn->type = INSN_JUMP_UNCONDITIONAL;
-+		insn->immediate = sign_extend64(inst.reg0i26_format.immediate_h << 16 |
-+						inst.reg0i26_format.immediate_l, 25);
-+		break;
-+	case bl_op:
-+		insn->type = INSN_CALL;
-+		insn->immediate = sign_extend64(inst.reg0i26_format.immediate_h << 16 |
-+						inst.reg0i26_format.immediate_l, 25);
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool decode_insn_reg1i21_fomat(union loongarch_instruction inst,
-+				      struct instruction *insn)
-+{
-+	switch (inst.reg1i21_format.opcode) {
-+	case beqz_op:
-+	case bnez_op:
-+	case bceqz_op:
-+		insn->type = INSN_JUMP_CONDITIONAL;
-+		insn->immediate = sign_extend64(inst.reg1i21_format.immediate_h << 16 |
-+						inst.reg1i21_format.immediate_l, 20);
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool decode_insn_reg2i12_fomat(union loongarch_instruction inst,
-+				      struct instruction *insn,
-+				      struct stack_op **ops_list,
-+				      struct stack_op *op)
-+{
-+	switch (inst.reg2i12_format.opcode) {
-+	case addid_op:
-+		if ((inst.reg2i12_format.rd == CFI_SP) || (inst.reg2i12_format.rj == CFI_SP)) {
-+			/* addi.d sp,sp,si12 or addi.d fp,sp,si12 */
-+			insn->immediate = sign_extend64(inst.reg2i12_format.immediate, 11);
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_ADD;
-+				op->src.reg = inst.reg2i12_format.rj;
-+				op->src.offset = insn->immediate;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = inst.reg2i12_format.rd;
-+			}
-+		}
-+		break;
-+	case ldd_op:
-+		if (inst.reg2i12_format.rj == CFI_SP) {
-+			/* ld.d rd,sp,si12 */
-+			insn->immediate = sign_extend64(inst.reg2i12_format.immediate, 11);
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG_INDIRECT;
-+				op->src.reg = CFI_SP;
-+				op->src.offset = insn->immediate;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = inst.reg2i12_format.rd;
-+			}
-+		}
-+		break;
-+	case std_op:
-+		if (inst.reg2i12_format.rj == CFI_SP) {
-+			/* st.d rd,sp,si12 */
-+			insn->immediate = sign_extend64(inst.reg2i12_format.immediate, 11);
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG;
-+				op->src.reg = inst.reg2i12_format.rd;
-+				op->dest.type = OP_DEST_REG_INDIRECT;
-+				op->dest.reg = CFI_SP;
-+				op->dest.offset = insn->immediate;
-+			}
-+		}
-+		break;
-+	case andi_op:
-+		if (inst.reg2i12_format.rd == 0 &&
-+		    inst.reg2i12_format.rj == 0 &&
-+		    inst.reg2i12_format.immediate == 0)
-+			/* andi r0,r0,0 */
-+			insn->type = INSN_NOP;
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool decode_insn_reg2i14_fomat(union loongarch_instruction inst,
-+				      struct instruction *insn,
-+				      struct stack_op **ops_list,
-+				      struct stack_op *op)
-+{
-+	switch (inst.reg2i14_format.opcode) {
-+	case ldptrd_op:
-+		if (inst.reg2i14_format.rj == CFI_SP) {
-+			/* ldptr.d rd,sp,si14 */
-+			insn->immediate = sign_extend64(inst.reg2i14_format.immediate, 13);
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG_INDIRECT;
-+				op->src.reg = CFI_SP;
-+				op->src.offset = insn->immediate;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = inst.reg2i14_format.rd;
-+			}
-+		}
-+		break;
-+	case stptrd_op:
-+		if (inst.reg2i14_format.rj == CFI_SP) {
-+			/* stptr.d ra,sp,0 */
-+			if (inst.reg2i14_format.rd == LOONGARCH_GPR_RA &&
-+			    inst.reg2i14_format.immediate == 0)
-+				break;
-+
-+			/* stptr.d rd,sp,si14 */
-+			insn->immediate = sign_extend64(inst.reg2i14_format.immediate, 13);
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG;
-+				op->src.reg = inst.reg2i14_format.rd;
-+				op->dest.type = OP_DEST_REG_INDIRECT;
-+				op->dest.reg = CFI_SP;
-+				op->dest.offset = insn->immediate;
-+			}
-+		}
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool decode_insn_reg2i16_fomat(union loongarch_instruction inst,
-+				      struct instruction *insn)
-+{
-+	switch (inst.reg2i16_format.opcode) {
-+	case jirl_op:
-+		if (inst.reg2i16_format.rd == 0 &&
-+		    inst.reg2i16_format.rj == CFI_RA &&
-+		    inst.reg2i16_format.immediate == 0) {
-+			/* jirl r0,ra,0 */
-+			insn->type = INSN_RETURN;
-+		} else if (inst.reg2i16_format.rd == CFI_RA) {
-+			/* jirl ra,rj,offs16 */
-+			insn->type = INSN_CALL_DYNAMIC;
-+		} else if (inst.reg2i16_format.rd == CFI_A0 &&
-+			   inst.reg2i16_format.immediate == 0) {
-+			/*
-+			 * jirl a0,t0,0
-+			 * this is a special case in loongarch_suspend_enter,
-+			 * just treat it as a call instruction.
-+			 */
-+			insn->type = INSN_CALL_DYNAMIC;
-+		} else if (inst.reg2i16_format.rd == 0 &&
-+			   inst.reg2i16_format.immediate == 0) {
-+			/* jirl r0,rj,0 */
-+			insn->type = INSN_JUMP_DYNAMIC;
-+		} else if (inst.reg2i16_format.rd == 0 &&
-+			   inst.reg2i16_format.immediate != 0) {
-+			/*
-+			 * jirl r0,t0,12
-+			 * this is a rare case in JUMP_VIRT_ADDR,
-+			 * just ignore it due to it is harmless for tracing.
-+			 */
-+			break;
-+		} else {
-+			/* jirl rd,rj,offs16 */
-+			insn->type = INSN_JUMP_UNCONDITIONAL;
-+			insn->immediate = sign_extend64(inst.reg2i16_format.immediate, 15);
-+		}
-+		break;
-+	case beq_op:
-+	case bne_op:
-+	case blt_op:
-+	case bge_op:
-+	case bltu_op:
-+	case bgeu_op:
-+		insn->type = INSN_JUMP_CONDITIONAL;
-+		insn->immediate = sign_extend64(inst.reg2i16_format.immediate, 15);
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- int arch_decode_instruction(struct objtool_file *file, const struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    struct instruction *insn)
+-static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *insn)
+-{
+-	struct reloc *reloc;
+-
+-	if (insn->no_reloc)
+-		return NULL;
+-
+-	if (!file)
+-		return NULL;
+-
+-	reloc = find_reloc_by_dest_range(file->elf, insn->sec,
+-					 insn->offset, insn->len);
+-	if (!reloc) {
+-		insn->no_reloc = 1;
+-		return NULL;
+-	}
+-
+-	return reloc;
+-}
+-
+ static void remove_insn_ops(struct instruction *insn)
  {
-+	struct stack_op **ops_list = &insn->stack_ops;
-+	const struct elf *elf = file->elf;
-+	struct stack_op *op = NULL;
-+	union loongarch_instruction inst;
-+
-+	if (!is_loongarch(elf))
-+		return -1;
-+
-+	if (maxlen < LOONGARCH_INSN_SIZE)
-+		return 0;
-+
-+	insn->len = LOONGARCH_INSN_SIZE;
-+	insn->type = INSN_OTHER;
-+	insn->immediate = 0;
-+
-+	inst = *(union loongarch_instruction *)(sec->data->d_buf + offset);
-+
-+	if (decode_insn_reg0i26_fomat(inst, insn))
-+		return 0;
-+	if (decode_insn_reg1i21_fomat(inst, insn))
-+		return 0;
-+	if (decode_insn_reg2i12_fomat(inst, insn, ops_list, op))
-+		return 0;
-+	if (decode_insn_reg2i14_fomat(inst, insn, ops_list, op))
-+		return 0;
-+	if (decode_insn_reg2i16_fomat(inst, insn))
-+		return 0;
-+
-+	if (inst.word == 0)
-+		insn->type = INSN_NOP;
-+	else if (inst.reg0i15_format.opcode == break_op) {
-+		/* break */
-+		insn->type = INSN_BUG;
-+	} else if (inst.reg2_format.opcode == ertn_op) {
-+		/* ertn */
-+		insn->type = INSN_RETURN;
-+	}
-+
- 	return 0;
- }
+ 	struct stack_op *op, *next;
+@@ -1577,8 +1584,14 @@ static int add_jump_destinations(struct objtool_file *file)
+ 			 * External sibling call or internal sibling call with
+ 			 * STT_FUNC reloc.
+ 			 */
+-			add_call_dest(file, insn, reloc->sym, true);
+-			continue;
++			if (reloc->sym->type == STT_NOTYPE &&
++			    strncmp(reloc->sym->name, ".L", 2) == 0) {
++				dest_sec = insn->sec;
++				dest_off = arch_jump_destination(insn);
++			} else {
++				add_call_dest(file, insn, reloc->sym, true);
++				continue;
++			}
+ 		} else if (reloc->sym->sec->idx) {
+ 			dest_sec = reloc->sym->sec;
+ 			dest_off = reloc->sym->sym.st_value +
+@@ -3674,7 +3687,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
  
- const char *arch_nop_insn(int len)
- {
--	return NULL;
-+	static u32 nop;
-+
-+	if (len != LOONGARCH_INSN_SIZE)
-+		WARN("invalid NOP size: %d\n", len);
-+
-+	nop = LOONGARCH_INSN_NOP;
-+
-+	return (const char *)&nop;
- }
+ 		case INSN_JUMP_CONDITIONAL:
+ 		case INSN_JUMP_UNCONDITIONAL:
+-			if (is_sibling_call(insn)) {
++			if (is_sibling_call(file, insn)) {
+ 				ret = validate_sibling_call(file, insn, &state);
+ 				if (ret)
+ 					return ret;
+@@ -3695,7 +3708,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
  
- const char *arch_ret_insn(int len)
- {
--	return NULL;
-+	static u32 ret;
-+
-+	if (len != LOONGARCH_INSN_SIZE)
-+		WARN("invalid RET size: %d\n", len);
-+
-+	emit_jirl((union loongarch_instruction *)&ret, LOONGARCH_GPR_RA, LOONGARCH_GPR_ZERO, 0);
-+
-+	return (const char *)&ret;
- }
+ 		case INSN_JUMP_DYNAMIC:
+ 		case INSN_JUMP_DYNAMIC_CONDITIONAL:
+-			if (is_sibling_call(insn)) {
++			if (is_sibling_call(file, insn)) {
+ 				ret = validate_sibling_call(file, insn, &state);
+ 				if (ret)
+ 					return ret;
+@@ -3859,7 +3872,7 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
  
- void arch_initial_func_cfi_state(struct cfi_init_state *state)
+ 		case INSN_JUMP_UNCONDITIONAL:
+ 		case INSN_JUMP_CONDITIONAL:
+-			if (!is_sibling_call(insn)) {
++			if (!is_sibling_call(file, insn)) {
+ 				if (!insn->jump_dest) {
+ 					WARN_INSN(insn, "unresolved jump target after linking?!?");
+ 					return -1;
 -- 
 2.1.0
 
