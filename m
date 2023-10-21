@@ -1,94 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967E618A;
-	Sat, 21 Oct 2023 10:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02A64C8D
+	for <loongarch@lists.linux.dev>; Sat, 21 Oct 2023 13:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hTcaPIRt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85359C433C8;
-	Sat, 21 Oct 2023 10:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1697885818;
-	bh=lWjx0bstoWSn8O+1+vq3s6PJ4JDA6SyKY8ViX2L7YW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hTcaPIRtnQmlyxhrbVQzTkIF6yu1dZwfQH0HKzzZf+IdjhhVDBzohjKljAvRxu6ZC
-	 +EK0hYdtjcSMWn6+4ncGofksLqwZ6P5+pfIq4uHxdEPiU2xTLxyhLfke0SYjlmgd4x
-	 HJxhZl7xo4cAk+d9+HLkSGCqfb+thCkty+PvIYNY=
-Date: Sat, 21 Oct 2023 12:56:55 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com
-Subject: Re: [RFC PATCH v2 11/35] arch_topology: Make
- register_cpu_capacity_sysctl() tolerant to late CPUs
-Message-ID: <2023102128-banter-circular-85a2@gregkh>
-References: <20230913163823.7880-1-james.morse@arm.com>
- <20230913163823.7880-12-james.morse@arm.com>
- <20230914130126.000069db@Huawei.com>
- <ZTJqOTfDEnL9wgtY@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZNjA3YD"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-9ba1eb73c27so277337666b.3
+        for <loongarch@lists.linux.dev>; Sat, 21 Oct 2023 06:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697894132; x=1698498932; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=A4ojW8MhOkGMt4rZFKfvqTzl9hsgFK5wHWRIWJqgdLo=;
+        b=EZNjA3YD2YHojHkdZkJgY+T4jFViUHVb1J1S6XRIUwiUhNmtRmFGorKikww66bR1y2
+         6LkBSLqWHrNZ2qY22nWrUQGWtEKk9vVHtE01ga/IS1QDin39IQ3Ib8QBMx/1tuRrfAiL
+         0D3zN/uLsxZllwQ5RYHSCQcuswsALQXGtqfrtTOYMHmR99A96ntIyoU+dZbackMpcX18
+         l3hBxspzFyPvGfFtAgpYLdqeB86SA/lLMzQ8oc0pnEa5R7PzsUNY5gqJTlC/AWRIU894
+         vZXk7VHT9u/YzdKLwr6xBVCelqYT7eTfbt9AFBo+9Wt10uuuiBFSHWVrKS1UQYXdjfIX
+         EfEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697894132; x=1698498932;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A4ojW8MhOkGMt4rZFKfvqTzl9hsgFK5wHWRIWJqgdLo=;
+        b=tFYAOUam2QD+RAU0I08Q11pvKepY1/wAvk4J3qQTRrv13RUweHjWYk5wdgOmuPFTm6
+         SiT7tM6s3a4Cjm/hw+2rmrbjrF+UE4qrTyLEW4oJY77q6Njru+lISUudA0hX57mnuHA0
+         47s/LbpMebdorAhFNiC+goDVhOiO+DOoH1iDdz0oMEsSBQmBe/+/umHw+inj+QkdxbG1
+         mPd6RXi0VtBURlMp2gdoV0KY+vlBLYHqX4ed0L6RKq8Xkkim5zniYpxaeIEQVgAv31Io
+         42yczJu26FW2nNic/AhUABCDHDMBfa6HUYcSPSjcEyF1pCcmjNFatRHFIcs8mBR9Xa7f
+         5feQ==
+X-Gm-Message-State: AOJu0Yw9xyMeOCNsAsCX1ecRm/RBoI9CIfVt+yXHTPyQ1jGtPYu/S6CM
+	klOaWium+YWMKd9m77PPyxg+szeqzysxLLhL5kA=
+X-Google-Smtp-Source: AGHT+IFoFNN2vZXrdO/ozDp8lvS7xbWE01Ti8oHMgJBNaHnMtWvFGLqUvKa1chGI1bavLM08v2K9U9DDFNMT3m1qMbA=
+X-Received: by 2002:a17:907:9445:b0:9bd:d405:4e80 with SMTP id
+ dl5-20020a170907944500b009bdd4054e80mr3260573ejc.46.1697894131611; Sat, 21
+ Oct 2023 06:15:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZTJqOTfDEnL9wgtY@shell.armlinux.org.uk>
+From: Liam Ni <zhiguangni01@gmail.com>
+Date: Sat, 21 Oct 2023 21:15:20 +0800
+Message-ID: <CACZJ9cUzd-33v3B_DckkCrMzX=bHdABT1Hy0235uKrSJc0NN3Q@mail.gmail.com>
+Subject: [PATCH V6] NUMA: optimize detection of memory with no node id
+ assigned by firmware
+To: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mike Rapoport <rppt@kernel.org>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, 
+	Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org, peterz@infradead.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, maobibo@loongson.cn, 
+	chenfeiyang@loongson.cn, Zhiguang Ni <zhiguangni01@gmail.com>, zhoubinbin@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Oct 20, 2023 at 12:53:29PM +0100, Russell King (Oracle) wrote:
-> On Thu, Sep 14, 2023 at 01:01:26PM +0100, Jonathan Cameron wrote:
-> > On Wed, 13 Sep 2023 16:37:59 +0000
-> > James Morse <james.morse@arm.com> wrote:
-> > 
-> > > register_cpu_capacity_sysctl() adds a property to sysfs that describes
-> > > the CPUs capacity. This is done from a subsys_initcall() that assumes
-> > > all possible CPUs are registered.
-> > > 
-> > > With CPU hotplug, possible CPUs aren't registered until they become
-> > > present, (or for arm64 enabled). This leads to messages during boot:
-> > > | register_cpu_capacity_sysctl: too early to get CPU1 device!
-> > > and once these CPUs are added to the system, the file is missing.
-> > > 
-> > > Move this to a cpuhp callback, so that the file is created once
-> > > CPUs are brought online. This covers CPUs that are added late by
-> > > mechanisms like hotplug.
-> > > One observable difference is the file is now missing for offline CPUs.
-> > > 
-> > > Signed-off-by: James Morse <james.morse@arm.com>
-> > > ---
-> > > If the offline CPUs thing is a problem for the tools that consume
-> > > this value, we'd need to move cpu_capacity to be part of cpu.c's
-> > > common_cpu_attr_groups.
-> > 
-> > I think we should do that anyway and then use an is_visible() if we want to
-> > change whether it is visible in offline cpus.
-> > 
-> > Dynamic sysfs file creation is horrible - particularly when done
-> > from an totally different file from where the rest of the attributes
-> > are registered.  I'm curious what the history behind that is.
-> > 
-> > Whilst here, why is there a common_cpu_attr_groups which is
-> > identical to the hotpluggable_cpu_attr_groups in base/cpu.c?
-> > 
-> > 
-> > +CC GregKH
-> > Given changes in drivers/base/
-> 
-> It would be good to have a comment on this from Greg before I post
-> an updated series of James' patches with most of the comments
-> addressed, possibly later today.
+Sanity check that makes sure the nodes cover all memory loops over
+numa_meminfo to count the pages that have node id assigned by the firmware,
+then loops again over memblock.memory to find the total amount of memory
+and in the end checks that the difference between the total memory and
+memory that covered by nodes is less than some threshold. Worse, the loop
+over numa_meminfo calls __absent_pages_in_range() that also partially
+traverses memblock.memory.
 
-Sorry, I don't see what I am supposed to comment on, so please just send
-a new series and I'll look at that.
+It's much simpler and more efficient to have a single traversal of
+memblock.memory that verifies that amount of memory not covered by nodes is
+less than a threshold.
 
-thanks,
+Introduce memblock_validate_numa_coverage() that does exactly that and use
+it instead of numa_meminfo_cover_memory().
 
-greg k-h
+Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
+---
+ arch/loongarch/kernel/numa.c | 28 +---------------------------
+ arch/x86/mm/numa.c           | 34 ++--------------------------------
+ include/linux/memblock.h     |  1 +
+ mm/memblock.c                | 34 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 38 insertions(+), 59 deletions(-)
+
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index cb00804826f7..84e1b046ab52 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -226,32 +226,6 @@ static void __init node_mem_init(unsigned int node)
+
+ #ifdef CONFIG_ACPI_NUMA
+
+-/*
+- * Sanity check to catch more bad NUMA configurations (they are amazingly
+- * common).  Make sure the nodes cover all memory.
+- */
+-static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+-{
+-   int i;
+-   u64 numaram, biosram;
+-
+-   numaram = 0;
+-   for (i = 0; i < mi->nr_blks; i++) {
+-       u64 s = mi->blk[i].start >> PAGE_SHIFT;
+-       u64 e = mi->blk[i].end >> PAGE_SHIFT;
+-
+-       numaram += e - s;
+-       numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+-       if ((s64)numaram < 0)
+-           numaram = 0;
+-   }
+-   max_pfn = max_low_pfn;
+-   biosram = max_pfn - absent_pages_in_range(0, max_pfn);
+-
+-   BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
+-   return true;
+-}
+-
+ static void __init add_node_intersection(u32 node, u64 start, u64
+size, u32 type)
+ {
+    static unsigned long num_physpages;
+@@ -396,7 +370,7 @@ int __init init_numa_memory(void)
+        return -EINVAL;
+
+    init_node_memblock();
+-   if (numa_meminfo_cover_memory(&numa_meminfo) == false)
++   if (!memblock_validate_numa_coverage(SZ_1M >> PAGE_SIZE))
+        return -EINVAL;
+
+    for_each_node_mask(node, node_possible_map) {
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index 2aadb2019b4f..39772d551924 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -447,37 +447,6 @@ int __node_distance(int from, int to)
+ }
+ EXPORT_SYMBOL(__node_distance);
+
+-/*
+- * Sanity check to catch more bad NUMA configurations (they are amazingly
+- * common).  Make sure the nodes cover all memory.
+- */
+-static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+-{
+-   u64 numaram, e820ram;
+-   int i;
+-
+-   numaram = 0;
+-   for (i = 0; i < mi->nr_blks; i++) {
+-       u64 s = mi->blk[i].start >> PAGE_SHIFT;
+-       u64 e = mi->blk[i].end >> PAGE_SHIFT;
+-       numaram += e - s;
+-       numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
+-       if ((s64)numaram < 0)
+-           numaram = 0;
+-   }
+-
+-   e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
+-
+-   /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
+-   if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
+-       printk(KERN_ERR "NUMA: nodes only cover %LuMB of your %LuMB
+e820 RAM. Not used.\n",
+-              (numaram << PAGE_SHIFT) >> 20,
+-              (e820ram << PAGE_SHIFT) >> 20);
+-       return false;
+-   }
+-   return true;
+-}
+-
+ /*
+  * Mark all currently memblock-reserved physical memory (which covers the
+  * kernel's own memory ranges) as hot-unswappable.
+@@ -583,7 +552,8 @@ static int __init numa_register_memblks(struct
+numa_meminfo *mi)
+            return -EINVAL;
+        }
+    }
+-   if (!numa_meminfo_cover_memory(mi))
++
++   if (!memblock_validate_numa_coverage(SZ_1M >> PAGE_SIZE))
+        return -EINVAL;
+
+    /* Finally register nodes. */
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 1c1072e3ca06..727242f4b54a 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -120,6 +120,7 @@ int memblock_physmem_add(phys_addr_t base,
+phys_addr_t size);
+ void memblock_trim_memory(phys_addr_t align);
+ bool memblock_overlaps_region(struct memblock_type *type,
+                  phys_addr_t base, phys_addr_t size);
++bool memblock_validate_numa_coverage(const u64 threshold_pages);
+ int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+ int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+ int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 0863222af4a4..ebea0c204eaa 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -734,6 +734,40 @@ int __init_memblock memblock_add(phys_addr_t
+base, phys_addr_t size)
+    return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
+ }
+
++/**
++ * memblock_validate_numa_coverage - check if amount of memory with
++ * no node ID assigned is less than a threshold
++ * @threshold_pages: maximal number of pages that can have unassigned node
++ * ID (in pages).
++ *
++ * A buggy firmware may report memory that does not belong to any node.
++ * Check if amount of such memory is below @threshold_pages.
++ *
++ * Return: true on success, false on failure.
++ */
++bool __init_memblock memblock_validate_numa_coverage(const u64 threshold_pages)
++{
++   unsigned long nr_pages = 0;
++   unsigned long start_pfn, end_pfn, mem_size_mb;
++   int nid, i;
++
++   /* calculate lose page */
++   for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
++       if (nid == NUMA_NO_NODE)
++           nr_pages += end_pfn - start_pfn;
++   }
++
++   if (nr_pages >= threshold_pages) {
++       mem_size_mb = memblock_phys_mem_size() >> 20;
++       pr_err("NUMA: no nodes coverage for %luMB of %luMB RAM\n",
++              (nr_pages << PAGE_SHIFT) >> 20, mem_size_mb);
++       return false;
++   }
++
++   return true;
++}
++
++
+ /**
+  * memblock_isolate_range - isolate given range into disjoint memblocks
+  * @type: memblock type to isolate range for
+-- 
+2.25.1
