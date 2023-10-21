@@ -1,123 +1,402 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CA9200BF
-	for <loongarch@lists.linux.dev>; Fri, 20 Oct 2023 18:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CD1EC8
+	for <loongarch@lists.linux.dev>; Sat, 21 Oct 2023 08:08:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LtdVRAzT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
-	:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-	Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=p30D1Q3zE2qXAXYR3qzel/vvewRxpsqtgQHCmqUYVEc=; b=LtdVRAzT/5ZWoDw0QQ+xhklB9/
-	890ErFfVXqWVySS3OHD9I/gJXfSDCp+LFYKEA06AQdIWecu1WiROyi+hxGDfFV/1Exv8Gt3xM4/Zp
-	jrrxGUmPkdG5J+IZajAAnmyd74VJlPHVEd6cHT8P3HuEtGZFu4nHStDWYitjNYhSEtsZEfsaTRmW2
-	AKBY6J/S0UG58H67P4/tHOxwhdmNloeKleBA3MmXYEClCEnkM9S/Vl6Ya8vvoa7doTjRHhEfQKzy9
-	U2guXWrehQ2IB+qYklB2lYQl+pAwQlvbd1NpxiUJzLoUnup9N6znXpEammjKwPoK/XzTHp7WIHJpj
-	8IuirCgg==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:59232 helo=rmk-PC.armlinux.org.uk)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <rmk@armlinux.org.uk>)
-	id 1qtuWU-0000mU-1u;
-	Fri, 20 Oct 2023 19:47:02 +0100
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <rmk@rmk-PC.armlinux.org.uk>)
-	id 1qtuWW-00AQ7P-0W; Fri, 20 Oct 2023 19:47:04 +0100
-From: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-To: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev
-Cc: x86@kernel.org, James Morse <james.morse@arm.com>, Salil Mehta
-	<salil.mehta@huawei.com>, Jonathan Cameron
-	<Jonathan.Cameron@Huawei.com>, Jean-Philippe Brucker
-	<jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com,
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH] ACPI: Rename acpi_scan_device_not_present() to be about
- enumeration
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qr069Pcl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 765AEC433CB
+	for <loongarch@lists.linux.dev>; Sat, 21 Oct 2023 08:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697875730;
+	bh=9Z0LMIWX0kYDAHWA+pONK63hgphovtxtenw80n3nMNs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qr069PclYA5XUFKUrgU7N/1Mv7jUI0CJbEETl+swzC6iwySnYUw36Gs7qMHSRpdr6
+	 HQIPvId1+BnsqwiwUMgGUyuZ3So6H7m64b+mhOAsHZb8HYkr4Z71UsckyUFlKm1tfr
+	 IY0gvzF9BqZTO5RcoEh0a6PLSC0fPN2zULdbDbfubBhQXAeizxrNcCCXgYcQgH9eZD
+	 Swh8XsNwaZURScD4JdUO+6041sgm6XeAlgYkJTdrzw9l2JifkXW2aj0ju+Itoor65J
+	 Um5nPkKfFrAss/E5prN7OuSBPaZVm05MUfOU5B2/eiy/9HtoK3Wkn84aFacD9yN4xT
+	 nMhDLIM4sJrvw==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-52bd9ddb741so2346207a12.0
+        for <loongarch@lists.linux.dev>; Sat, 21 Oct 2023 01:08:49 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwcwVwJShxeeAMrmWrEKq0UdYcT+s3Ok3SG+0U/DvMScq+ntBUi
+	flvpApzVlMtzT81wWpbJP3ZFnXa7c58lTSugo18=
+X-Google-Smtp-Source: AGHT+IHlkf/gyEPs3bWi04S3OLKBhoRe82bBMKVesyj+qZ7grcgh6q3H6eXOad7Cb3xgTEPL3NdaTp/4hBVxNMBKbeI=
+X-Received: by 2002:a05:6402:274e:b0:53e:3b8f:8a58 with SMTP id
+ z14-20020a056402274e00b0053e3b8f8a58mr3582135edd.11.1697875727878; Sat, 21
+ Oct 2023 01:08:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1qtuWW-00AQ7P-0W@rmk-PC.armlinux.org.uk>
-Sender: Russell King <rmk@armlinux.org.uk>
-Date: Fri, 20 Oct 2023 19:47:04 +0100
+References: <1697768821-22931-1-git-send-email-yangtiezhu@loongson.cn> <1697768821-22931-5-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1697768821-22931-5-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 21 Oct 2023 16:08:35 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Wmvq3_sBBeoYnz3V=A8bNzfwT7jMeN-NOadSQWVDZ+w@mail.gmail.com>
+Message-ID: <CAAhV-H7Wmvq3_sBBeoYnz3V=A8bNzfwT7jMeN-NOadSQWVDZ+w@mail.gmail.com>
+Subject: Re: [PATCH v3 4/8] objtool/LoongArch: Enable orc to be built
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: James Morse <james.morse@arm.com>
+Hi, Tiezhu,
 
-acpi_scan_device_not_present() is called when a device in the
-hierarchy is not available for enumeration. Historically enumeration
-was only based on whether the device was present.
+On Fri, Oct 20, 2023 at 10:27=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
+n> wrote:
+>
+> Implement arch-specific init_orc_entry(), write_orc_entry(), reg_name(),
+> orc_type_name(), print_reg() and orc_print_dump(), then set BUILD_ORC as
+> y to build the orc related files.
+>
+> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> Co-developed-by: Youling Tang <tangyouling@loongson.cn>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  tools/arch/loongarch/include/asm/orc_types.h |  58 +++++++++
+>  tools/objtool/Makefile                       |   4 +
+>  tools/objtool/arch/loongarch/Build           |   1 +
+>  tools/objtool/arch/loongarch/decode.c        |  16 +++
+>  tools/objtool/arch/loongarch/orc.c           | 171 +++++++++++++++++++++=
+++++++
+>  5 files changed, 250 insertions(+)
+>  create mode 100644 tools/arch/loongarch/include/asm/orc_types.h
+>  create mode 100644 tools/objtool/arch/loongarch/orc.c
+>
+> diff --git a/tools/arch/loongarch/include/asm/orc_types.h b/tools/arch/lo=
+ongarch/include/asm/orc_types.h
+> new file mode 100644
+> index 0000000..caf1f71
+> --- /dev/null
+> +++ b/tools/arch/loongarch/include/asm/orc_types.h
+> @@ -0,0 +1,58 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +#ifndef _ORC_TYPES_H
+> +#define _ORC_TYPES_H
+> +
+> +#include <linux/types.h>
+> +
+> +/*
+> + * The ORC_REG_* registers are base registers which are used to find oth=
+er
+> + * registers on the stack.
+> + *
+> + * ORC_REG_PREV_SP, also known as DWARF Call Frame Address (CFA), is the
+> + * address of the previous frame: the caller's SP before it called the c=
+urrent
+> + * function.
+> + *
+> + * ORC_REG_UNDEFINED means the corresponding register's value didn't cha=
+nge in
+> + * the current frame.
+> + *
+> + * The most commonly used base registers are SP and FP -- which the prev=
+ious SP
+> + * is usually based on -- and PREV_SP and UNDEFINED -- which the previou=
+s FP is
+> + * usually based on.
+> + *
+> + * The rest of the base registers are needed for special cases like entr=
+y code
+> + * and GCC realigned stacks.
+> + */
+> +#define ORC_REG_UNDEFINED              0
+> +#define ORC_REG_PREV_SP                        1
+> +#define ORC_REG_SP                     2
+> +#define ORC_REG_FP                     3
+> +#define ORC_REG_MAX                    4
+> +
+> +#define ORC_TYPE_UNDEFINED             0
+> +#define ORC_TYPE_END_OF_STACK          1
+> +#define ORC_TYPE_CALL                  2
+> +#define ORC_TYPE_REGS                  3
+> +#define ORC_TYPE_REGS_PARTIAL          4
+> +
+> +#ifndef __ASSEMBLY__
+> +/*
+> + * This struct is more or less a vastly simplified version of the DWARF =
+Call
+> + * Frame Information standard.  It contains only the necessary parts of =
+DWARF
+> + * CFI, simplified for ease of access by the in-kernel unwinder.  It tel=
+ls the
+> + * unwinder how to find the previous SP and FP (and sometimes entry regs=
+) on
+> + * the stack for a given code address.  Each instance of the struct corr=
+esponds
+> + * to one or more code locations.
+> + */
+> +struct orc_entry {
+> +       s16             sp_offset;
+> +       s16             fp_offset;
+> +       s16             ra_offset;
+> +       unsigned int    sp_reg:4;
+> +       unsigned int    fp_reg:4;
+> +       unsigned int    ra_reg:4;
+> +       unsigned int    type:3;
+> +       unsigned int    signal:1;
+> +};
+> +#endif /* __ASSEMBLY__ */
+> +
+> +#endif /* _ORC_TYPES_H */
+> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+> index 83b100c..bf7f7f8 100644
+> --- a/tools/objtool/Makefile
+> +++ b/tools/objtool/Makefile
+> @@ -57,6 +57,10 @@ ifeq ($(SRCARCH),x86)
+>         BUILD_ORC :=3D y
+>  endif
+>
+> +ifeq ($(SRCARCH),loongarch)
+> +       BUILD_ORC :=3D y
+> +endif
+> +
+>  export BUILD_ORC
+>  export srctree OUTPUT CFLAGS SRCARCH AWK
+>  include $(srctree)/tools/build/Makefile.include
+> diff --git a/tools/objtool/arch/loongarch/Build b/tools/objtool/arch/loon=
+garch/Build
+> index d24d563..1d4b784 100644
+> --- a/tools/objtool/arch/loongarch/Build
+> +++ b/tools/objtool/arch/loongarch/Build
+> @@ -1,2 +1,3 @@
+>  objtool-y +=3D decode.o
+>  objtool-y +=3D special.o
+> +objtool-y +=3D orc.o
+> diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/l=
+oongarch/decode.c
+> index 0ee3333..555b6d0 100644
+> --- a/tools/objtool/arch/loongarch/decode.c
+> +++ b/tools/objtool/arch/loongarch/decode.c
+> @@ -3,6 +3,8 @@
+>  #include <objtool/check.h>
+>  #include <objtool/warn.h>
+>  #include <asm/inst.h>
+> +#include <asm/orc_types.h>
+> +#include <linux/objtool_types.h>
+>
 
-To add support for only enumerating devices that are both present
-and enabled, this helper should be renamed. It was only ever about
-enumeration, rename it acpi_scan_device_not_enumerated().
+We should add lines here to avoid cross-compile errors:
 
-No change in behaviour is intended.
++#ifndef EM_LOONGARCH
++#define EM_LOONGARCH   258
++#endif
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
----
-This is another patch from James' aarch64 hotplug vcpu series.
 
-I asked:
-> Is this another patch which ought to be submitted without waiting
-> for the rest of the series?
-to which Jonathan Cameron replied:
-> Looks like a valid standalone change to me.
 
-So let's get this queued up.
+Huacai
 
- drivers/acpi/scan.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index ed01e19514ef..17ab875a7d4e 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -289,10 +289,10 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
- 	return 0;
- }
- 
--static int acpi_scan_device_not_present(struct acpi_device *adev)
-+static int acpi_scan_device_not_enumerated(struct acpi_device *adev)
- {
- 	if (!acpi_device_enumerated(adev)) {
--		dev_warn(&adev->dev, "Still not present\n");
-+		dev_warn(&adev->dev, "Still not enumerated\n");
- 		return -EALREADY;
- 	}
- 	acpi_bus_trim(adev);
-@@ -327,7 +327,7 @@ static int acpi_scan_device_check(struct acpi_device *adev)
- 			error = -ENODEV;
- 		}
- 	} else {
--		error = acpi_scan_device_not_present(adev);
-+		error = acpi_scan_device_not_enumerated(adev);
- 	}
- 	return error;
- }
-@@ -339,7 +339,7 @@ static int acpi_scan_bus_check(struct acpi_device *adev, void *not_used)
- 
- 	acpi_bus_get_status(adev);
- 	if (!acpi_device_is_present(adev)) {
--		acpi_scan_device_not_present(adev);
-+		acpi_scan_device_not_enumerated(adev);
- 		return 0;
- 	}
- 	if (handler && handler->hotplug.scan_dependent)
--- 
-2.30.2
-
+>  int arch_ftrace_match(char *name)
+>  {
+> @@ -38,6 +40,20 @@ bool arch_callee_saved_reg(unsigned char reg)
+>
+>  int arch_decode_hint_reg(u8 sp_reg, int *base)
+>  {
+> +       switch (sp_reg) {
+> +       case ORC_REG_UNDEFINED:
+> +               *base =3D CFI_UNDEFINED;
+> +               break;
+> +       case ORC_REG_SP:
+> +               *base =3D CFI_SP;
+> +               break;
+> +       case ORC_REG_FP:
+> +               *base =3D CFI_FP;
+> +               break;
+> +       default:
+> +               return -1;
+> +       }
+> +
+>         return 0;
+>  }
+>
+> diff --git a/tools/objtool/arch/loongarch/orc.c b/tools/objtool/arch/loon=
+garch/orc.c
+> new file mode 100644
+> index 0000000..873536d
+> --- /dev/null
+> +++ b/tools/objtool/arch/loongarch/orc.c
+> @@ -0,0 +1,171 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +#include <linux/objtool_types.h>
+> +#include <asm/orc_types.h>
+> +
+> +#include <objtool/check.h>
+> +#include <objtool/orc.h>
+> +#include <objtool/warn.h>
+> +#include <objtool/endianness.h>
+> +
+> +int init_orc_entry(struct orc_entry *orc, struct cfi_state *cfi, struct =
+instruction *insn)
+> +{
+> +       struct cfi_reg *fp =3D &cfi->regs[CFI_FP];
+> +       struct cfi_reg *ra =3D &cfi->regs[CFI_RA];
+> +
+> +       memset(orc, 0, sizeof(*orc));
+> +
+> +       if (!cfi) {
+> +               /*
+> +                * This is usually either unreachable nops/traps (which d=
+on't
+> +                * trigger unreachable instruction warnings), or
+> +                * STACK_FRAME_NON_STANDARD functions.
+> +                */
+> +               orc->type =3D ORC_TYPE_UNDEFINED;
+> +               return 0;
+> +       }
+> +
+> +       switch (cfi->type) {
+> +       case UNWIND_HINT_TYPE_UNDEFINED:
+> +               orc->type =3D ORC_TYPE_UNDEFINED;
+> +               return 0;
+> +       case UNWIND_HINT_TYPE_END_OF_STACK:
+> +               orc->type =3D ORC_TYPE_END_OF_STACK;
+> +               return 0;
+> +       case UNWIND_HINT_TYPE_CALL:
+> +               orc->type =3D ORC_TYPE_CALL;
+> +               break;
+> +       case UNWIND_HINT_TYPE_REGS:
+> +               orc->type =3D ORC_TYPE_REGS;
+> +               break;
+> +       case UNWIND_HINT_TYPE_REGS_PARTIAL:
+> +               orc->type =3D ORC_TYPE_REGS_PARTIAL;
+> +               break;
+> +       default:
+> +               WARN_INSN(insn, "unknown unwind hint type %d", cfi->type)=
+;
+> +               return -1;
+> +       }
+> +
+> +       orc->signal =3D cfi->signal;
+> +
+> +       switch (cfi->cfa.base) {
+> +       case CFI_SP:
+> +               orc->sp_reg =3D ORC_REG_SP;
+> +               break;
+> +       case CFI_FP:
+> +               orc->sp_reg =3D ORC_REG_FP;
+> +               break;
+> +       default:
+> +               WARN_INSN(insn, "unknown CFA base reg %d", cfi->cfa.base)=
+;
+> +               return -1;
+> +       }
+> +
+> +       switch (fp->base) {
+> +       case CFI_UNDEFINED:
+> +               orc->fp_reg =3D ORC_REG_UNDEFINED;
+> +               orc->fp_offset =3D 0;
+> +               break;
+> +       case CFI_CFA:
+> +               orc->fp_reg =3D ORC_REG_PREV_SP;
+> +               orc->fp_offset =3D fp->offset;
+> +               break;
+> +       case CFI_FP:
+> +               orc->fp_reg =3D ORC_REG_FP;
+> +               break;
+> +       default:
+> +               WARN_INSN(insn, "unknown FP base reg %d", fp->base);
+> +               return -1;
+> +       }
+> +
+> +       switch (ra->base) {
+> +       case CFI_UNDEFINED:
+> +               orc->ra_reg =3D ORC_REG_UNDEFINED;
+> +               orc->ra_offset =3D 0;
+> +               break;
+> +       case CFI_CFA:
+> +               orc->ra_reg =3D ORC_REG_PREV_SP;
+> +               orc->ra_offset =3D ra->offset;
+> +               break;
+> +       case CFI_FP:
+> +               orc->ra_reg =3D ORC_REG_FP;
+> +               break;
+> +       default:
+> +               WARN_INSN(insn, "unknown RA base reg %d", ra->base);
+> +               return -1;
+> +       }
+> +
+> +       orc->sp_offset =3D cfi->cfa.offset;
+> +
+> +       return 0;
+> +}
+> +
+> +int write_orc_entry(struct elf *elf, struct section *orc_sec,
+> +                   struct section *ip_sec, unsigned int idx,
+> +                   struct section *insn_sec, unsigned long insn_off,
+> +                   struct orc_entry *o)
+> +{
+> +       struct orc_entry *orc;
+> +
+> +       /* populate ORC data */
+> +       orc =3D (struct orc_entry *)orc_sec->data->d_buf + idx;
+> +       memcpy(orc, o, sizeof(*orc));
+> +
+> +       /* populate reloc for ip */
+> +       if (!elf_init_reloc_text_sym(elf, ip_sec, idx * sizeof(int), idx,
+> +                                    insn_sec, insn_off))
+> +               return -1;
+> +
+> +       return 0;
+> +}
+> +
+> +static const char *reg_name(unsigned int reg)
+> +{
+> +       switch (reg) {
+> +       case ORC_REG_SP:
+> +               return "sp";
+> +       case ORC_REG_FP:
+> +               return "fp";
+> +       case ORC_REG_PREV_SP:
+> +               return "prevsp";
+> +       default:
+> +               return "?";
+> +       }
+> +}
+> +
+> +static const char *orc_type_name(unsigned int type)
+> +{
+> +       switch (type) {
+> +       case UNWIND_HINT_TYPE_CALL:
+> +               return "call";
+> +       case UNWIND_HINT_TYPE_REGS:
+> +               return "regs";
+> +       case UNWIND_HINT_TYPE_REGS_PARTIAL:
+> +               return "regs (partial)";
+> +       default:
+> +               return "?";
+> +       }
+> +}
+> +
+> +static void print_reg(unsigned int reg, int offset)
+> +{
+> +       if (reg =3D=3D ORC_REG_UNDEFINED)
+> +               printf(" (und) ");
+> +       else
+> +               printf("%s + %3d", reg_name(reg), offset);
+> +
+> +}
+> +
+> +void orc_print_dump(struct elf *dummy_elf, struct orc_entry *orc, int i)
+> +{
+> +       printf("type:%s", orc_type_name(orc[i].type));
+> +
+> +       printf(" sp:");
+> +       print_reg(orc[i].sp_reg, orc[i].sp_offset);
+> +
+> +       printf(" fp:");
+> +       print_reg(orc[i].fp_reg, orc[i].fp_offset);
+> +
+> +       printf(" ra:");
+> +       print_reg(orc[i].ra_reg, orc[i].ra_offset);
+> +
+> +       printf(" signal:%d\n", orc[i].signal);
+> +}
+> --
+> 2.1.0
+>
