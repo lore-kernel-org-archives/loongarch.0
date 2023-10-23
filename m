@@ -1,80 +1,258 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1747412B93
-	for <loongarch@lists.linux.dev>; Mon, 23 Oct 2023 09:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxyeojOzZlPuozAA--.25766S3;
-	Mon, 23 Oct 2023 17:21:40 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx7twiOzZlLCQvAA--.34646S3;
-	Mon, 23 Oct 2023 17:21:38 +0800 (CST)
-Subject: Re: [PATCH v4 8/8] LoongArch: Add ORC stack unwinder support
-To: Xi Ruoyao <xry111@xry111.site>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
-References: <1698048691-19521-1-git-send-email-yangtiezhu@loongson.cn>
- <1698048691-19521-9-git-send-email-yangtiezhu@loongson.cn>
- <4d3363eb5f4d864cfd171d89b1a13da5ef8b784c.camel@xry111.site>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <1a06a70d-5dae-93a7-c200-c5b58f1241d5@loongson.cn>
-Date: Mon, 23 Oct 2023 17:21:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D221134C6;
+	Mon, 23 Oct 2023 17:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MeuEwtvu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43161C433C9;
+	Mon, 23 Oct 2023 17:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698081270;
+	bh=Ja8s9hHWNsMl9rR/A2vkVRwGBByDHecu9TUfTmLK5O0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MeuEwtvuDFO5yp5iwwuVEJNzg9RfG0g2iSphmorTs1YHktZPSgAIBmOgSnoaQJdHm
+	 nUlWIMj2sV40TRQksuLqdyoEUZOrZ4YgskSrGgA2/nhb9IFL78IFLLm5ChkY8qJxOI
+	 XvSk9ecB7rzX1Id68w7pVTn+QD7K44RzxoL0JXDRTA8j3sh2U4yTDlfwo97LvPAH00
+	 RUnsGssWWAdudZuWTwU1hLYa0ovrTsWm97cFrfjCEL0C5VQBb75ldMMm5wnopS8rdo
+	 ma5otrvqzXBMC9YyKDYNnhopzPnGbtq133bDGxB7c+u2v5Gw+ZIgVNda5UvccMxt+p
+	 Sq/U+bn87cRzw==
+Date: Mon, 23 Oct 2023 18:14:20 +0100
+From: Will Deacon <will@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 04/13] mm/execmem, arch: convert remaining overrides
+ of module_alloc to execmem
+Message-ID: <20231023171420.GA4041@willie-the-truck>
+References: <20230918072955.2507221-1-rppt@kernel.org>
+ <20230918072955.2507221-5-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <4d3363eb5f4d864cfd171d89b1a13da5ef8b784c.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Bx7twiOzZlLCQvAA--.34646S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Jr1fuw17WF4UZw17AFWUtrc_yoW3WrXEk3
-	yruF1kC3yUZF1qg3W7Gan2vFy7Ga47Cw1UGFy0vrsrKryfta1DuF4qk3sYvFW8XF97CF1k
-	uan8X343C3Z29osvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbqAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4U
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7k9NDU
-	UUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230918072955.2507221-5-rppt@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
+Hi Mike,
 
+On Mon, Sep 18, 2023 at 10:29:46AM +0300, Mike Rapoport wrote:
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> 
+> Extend execmem parameters to accommodate more complex overrides of
+> module_alloc() by architectures.
+> 
+> This includes specification of a fallback range required by arm, arm64
+> and powerpc and support for allocation of KASAN shadow required by
+> arm64, s390 and x86.
+> 
+> The core implementation of execmem_alloc() takes care of suppressing
+> warnings when the initial allocation fails but there is a fallback range
+> defined.
+> 
+> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> ---
+>  arch/arm/kernel/module.c     | 38 ++++++++++++---------
+>  arch/arm64/kernel/module.c   | 57 ++++++++++++++------------------
+>  arch/powerpc/kernel/module.c | 52 ++++++++++++++---------------
+>  arch/s390/kernel/module.c    | 52 +++++++++++------------------
+>  arch/x86/kernel/module.c     | 64 +++++++++++-------------------------
+>  include/linux/execmem.h      | 14 ++++++++
+>  mm/execmem.c                 | 43 ++++++++++++++++++++++--
+>  7 files changed, 167 insertions(+), 153 deletions(-)
 
-On 10/23/2023 04:43 PM, Xi Ruoyao wrote:
-> On Mon, 2023-10-23 at 16:11 +0800, Tiezhu Yang wrote:
->> +ifdef CONFIG_OBJTOOL
->> +KBUILD_CFLAGS			+= -fno-optimize-sibling-calls -fno-jump-tables -falign-functions=4
->> +endif
->
-> Why do we need to regress the code generation so much for objtool?
+[...]
 
-Add the above options is to avoid generating some intractable
-instructions for objtool by now, I hope all of the extra options
-can be removed if possible.
+> diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+> index dd851297596e..cd6320de1c54 100644
+> --- a/arch/arm64/kernel/module.c
+> +++ b/arch/arm64/kernel/module.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/random.h>
+>  #include <linux/scs.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/execmem.h>
+>  
+>  #include <asm/alternative.h>
+>  #include <asm/insn.h>
+> @@ -108,46 +109,38 @@ static int __init module_init_limits(void)
+>  
+>  	return 0;
+>  }
+> -subsys_initcall(module_init_limits);
+>  
+> -void *module_alloc(unsigned long size)
+> +static struct execmem_params execmem_params __ro_after_init = {
+> +	.ranges = {
+> +		[EXECMEM_DEFAULT] = {
+> +			.flags = EXECMEM_KASAN_SHADOW,
+> +			.alignment = MODULE_ALIGN,
+> +		},
+> +	},
+> +};
+> +
+> +struct execmem_params __init *execmem_arch_params(void)
+>  {
+> -	void *p = NULL;
+> +	struct execmem_range *r = &execmem_params.ranges[EXECMEM_DEFAULT];
+>  
+> -	/*
+> -	 * Where possible, prefer to allocate within direct branch range of the
+> -	 * kernel such that no PLTs are necessary.
+> -	 */
 
-For example, without -fno-jump-tables, there exist many objtool
-warnings like this:
+Why are you removing this comment? I think you could just move it next
+to the part where we set a 128MiB range.
 
-"sibling call from callable instruction with modified stack frame"
+> -	if (module_direct_base) {
+> -		p = __vmalloc_node_range(size, MODULE_ALIGN,
+> -					 module_direct_base,
+> -					 module_direct_base + SZ_128M,
+> -					 GFP_KERNEL | __GFP_NOWARN,
+> -					 PAGE_KERNEL, 0, NUMA_NO_NODE,
+> -					 __builtin_return_address(0));
+> -	}
+> +	module_init_limits();
 
-If the enhanced special function about jump table is implemented
-in objtool, -fno-jump-tables will be removed in the future.
+Hmm, this used to be run from subsys_initcall(), but now you're running
+it _really_ early, before random_init(), so randomization of the module
+space is no longer going to be very random if we don't have early entropy
+from the firmware or the CPU, which is likely to be the case on most SoCs.
 
-Thanks,
-Tiezhu
+>  
+> -	if (!p && module_plt_base) {
+> -		p = __vmalloc_node_range(size, MODULE_ALIGN,
+> -					 module_plt_base,
+> -					 module_plt_base + SZ_2G,
+> -					 GFP_KERNEL | __GFP_NOWARN,
+> -					 PAGE_KERNEL, 0, NUMA_NO_NODE,
+> -					 __builtin_return_address(0));
+> -	}
+> +	r->pgprot = PAGE_KERNEL;
+>  
+> -	if (!p) {
+> -		pr_warn_ratelimited("%s: unable to allocate memory\n",
+> -				    __func__);
+> -	}
+> +	if (module_direct_base) {
+> +		r->start = module_direct_base;
+> +		r->end = module_direct_base + SZ_128M;
+>  
+> -	if (p && (kasan_alloc_module_shadow(p, size, GFP_KERNEL) < 0)) {
+> -		vfree(p);
+> -		return NULL;
+> +		if (module_plt_base) {
+> +			r->fallback_start = module_plt_base;
+> +			r->fallback_end = module_plt_base + SZ_2G;
+> +		}
+> +	} else if (module_plt_base) {
+> +		r->start = module_plt_base;
+> +		r->end = module_plt_base + SZ_2G;
+>  	}
+>  
+> -	/* Memory is intended to be executable, reset the pointer tag. */
+> -	return kasan_reset_tag(p);
+> +	return &execmem_params;
+>  }
+>  
+>  enum aarch64_reloc_op {
 
+[...]
+
+> diff --git a/include/linux/execmem.h b/include/linux/execmem.h
+> index 44e213625053..806ad1a0088d 100644
+> --- a/include/linux/execmem.h
+> +++ b/include/linux/execmem.h
+> @@ -32,19 +32,33 @@ enum execmem_type {
+>  	EXECMEM_TYPE_MAX,
+>  };
+>  
+> +/**
+> + * enum execmem_module_flags - options for executable memory allocations
+> + * @EXECMEM_KASAN_SHADOW:	allocate kasan shadow
+> + */
+> +enum execmem_range_flags {
+> +	EXECMEM_KASAN_SHADOW	= (1 << 0),
+> +};
+> +
+>  /**
+>   * struct execmem_range - definition of a memory range suitable for code and
+>   *			  related data allocations
+>   * @start:	address space start
+>   * @end:	address space end (inclusive)
+> + * @fallback_start:	start of the range for fallback allocations
+> + * @fallback_end:	end of the range for fallback allocations (inclusive)
+>   * @pgprot:	permissions for memory in this address space
+>   * @alignment:	alignment required for text allocations
+> + * @flags:	options for memory allocations for this range
+>   */
+>  struct execmem_range {
+>  	unsigned long   start;
+>  	unsigned long   end;
+> +	unsigned long   fallback_start;
+> +	unsigned long   fallback_end;
+>  	pgprot_t        pgprot;
+>  	unsigned int	alignment;
+> +	enum execmem_range_flags flags;
+>  };
+>  
+>  /**
+> diff --git a/mm/execmem.c b/mm/execmem.c
+> index f25a5e064886..a8c2f44d0133 100644
+> --- a/mm/execmem.c
+> +++ b/mm/execmem.c
+> @@ -11,12 +11,46 @@ static void *execmem_alloc(size_t size, struct execmem_range *range)
+>  {
+>  	unsigned long start = range->start;
+>  	unsigned long end = range->end;
+> +	unsigned long fallback_start = range->fallback_start;
+> +	unsigned long fallback_end = range->fallback_end;
+>  	unsigned int align = range->alignment;
+>  	pgprot_t pgprot = range->pgprot;
+> +	bool kasan = range->flags & EXECMEM_KASAN_SHADOW;
+> +	unsigned long vm_flags  = VM_FLUSH_RESET_PERMS;
+> +	bool fallback  = !!fallback_start;
+> +	gfp_t gfp_flags = GFP_KERNEL;
+> +	void *p;
+>  
+> -	return __vmalloc_node_range(size, align, start, end,
+> -				   GFP_KERNEL, pgprot, VM_FLUSH_RESET_PERMS,
+> -				   NUMA_NO_NODE, __builtin_return_address(0));
+> +	if (PAGE_ALIGN(size) > (end - start))
+> +		return NULL;
+> +
+> +	if (kasan)
+> +		vm_flags |= VM_DEFER_KMEMLEAK;
+
+Hmm, I don't think we passed this before on arm64, should we have done?
+
+Will
