@@ -1,58 +1,109 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296E923C5
-	for <loongarch@lists.linux.dev>; Mon, 23 Oct 2023 08:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E3BF50E
+	for <loongarch@lists.linux.dev>; Mon, 23 Oct 2023 08:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="jKwtdBW+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1698050611;
-	bh=5sGQLj6Xe46sp6vsAAGQQglvUAz3OFwB9FX1yIiN66M=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=jKwtdBW+zLw3ADx5pYsywAV1ucmNbz6JD+sg07zzSGSUugKIlUoR15wdiiV3kaC5y
-	 8EP6476kRPacm9EeenCUuq1xlgM2E6S7d03kNNRJxtN2diKnEax/6f5B35Pek9i8db
-	 gZUbxUemJbCybBSBA/TfbxYLTlNX9Gy7CSYQEA5M=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 1495866B50;
-	Mon, 23 Oct 2023 04:43:28 -0400 (EDT)
-Message-ID: <4d3363eb5f4d864cfd171d89b1a13da5ef8b784c.camel@xry111.site>
-Subject: Re: [PATCH v4 8/8] LoongArch: Add ORC stack unwinder support
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf
- <jpoimboe@kernel.org>,  Peter Zijlstra <peterz@infradead.org>, Huacai Chen
- <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn
-Date: Mon, 23 Oct 2023 16:43:26 +0800
-In-Reply-To: <1698048691-19521-9-git-send-email-yangtiezhu@loongson.cn>
-References: <1698048691-19521-1-git-send-email-yangtiezhu@loongson.cn>
-	 <1698048691-19521-9-git-send-email-yangtiezhu@loongson.cn>
-Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
- keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.1 
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="YBhUuWgp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Apd3KeJ8uuP3OQFLQ5TzxVCBAuh86rEsBBY3n1LtHcM=; b=YBhUuWgpNULl2044fpGJ/4RiyU
+	W2ygtuqlY99XtPXYBTEzLjRfuXprkm+9j4t032PBXwks89r8Z2UW0gWBXD81t1AKXGEa23oSnZ2Ac
+	fy44mvrrt1gfHfc8UFjdtlb9+ta7o1rlQhgpBZVvUPoOSNxT+NFC3RVWyzyv7RLOEghIH25YZQe1W
+	ZNdTbpo5oGx/qPAhtLcliiECxKCJOFs9jPB6FQBDw4kMfy3eoHHpTjQphSdbcucZfc6ejZ+hPA3LL
+	2CCikNXWTwCOrL4Sya5hdrgRD431/EbkJNy4a0c3U2bWPdaEaPH/7yQ+Jo+qll7sVFEAFfRwiYYq+
+	lQ0ZeaKg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37836)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1quqYO-0002gI-2k;
+	Mon, 23 Oct 2023 09:44:52 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1quqYN-0004g0-0h; Mon, 23 Oct 2023 09:44:51 +0100
+Date: Mon, 23 Oct 2023 09:44:50 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Gavin Shan <gshan@redhat.com>
+Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
+	x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com
+Subject: Re: [RFC PATCH v2 24/35] drivers: base: Implement weak
+ arch_unregister_cpu()
+Message-ID: <ZTYygtKt4w9C0Oxw@shell.armlinux.org.uk>
+References: <20230913163823.7880-1-james.morse@arm.com>
+ <20230913163823.7880-25-james.morse@arm.com>
+ <8be3a9dc-8f59-9ef9-3662-95814e177125@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8be3a9dc-8f59-9ef9-3662-95814e177125@redhat.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, 2023-10-23 at 16:11 +0800, Tiezhu Yang wrote:
-> +ifdef CONFIG_OBJTOOL
-> +KBUILD_CFLAGS			+=3D -fno-optimize-sibling-calls -fno-jump-tables -falig=
-n-functions=3D4
-> +endif
+On Tue, Sep 19, 2023 at 10:59:23AM +1000, Gavin Shan wrote:
+> On 9/14/23 02:38, James Morse wrote:
+> > diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> > index 677f963e02ce..c709747c4a18 100644
+> > --- a/drivers/base/cpu.c
+> > +++ b/drivers/base/cpu.c
+> > @@ -531,7 +531,14 @@ int __weak arch_register_cpu(int cpu)
+> >   {
+> >   	return register_cpu(&per_cpu(cpu_devices, cpu), cpu);
+> >   }
+> > -#endif
+> > +
+> > +#ifdef CONFIG_HOTPLUG_CPU
+> > +void __weak arch_unregister_cpu(int num)
+> > +{
+> > +	unregister_cpu(&per_cpu(cpu_devices, num));
+> > +}
+> > +#endif /* CONFIG_HOTPLUG_CPU */
+> > +#endif /* CONFIG_GENERIC_CPU_DEVICES */
+> 
+> It seems conflicting with its declaration in include/linux/cpu.h.
 
-Why do we need to regress the code generation so much for objtool?
+How so? The declaration is:
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+extern void arch_unregister_cpu(int cpu);
+
+So:
+
+void __weak arch_unregister_cpu(int num)
+
+is compatible.
+
+> Besides, the function is still needed by
+> drivers/acpi/acpi_processor.c::acpi_processor_make_not_present()
+> even both CONFIG_HOTPLUG_CPU and CONFIG_GENERIC_CPU_DEVICES are disabled?
+
+Yes, I agree - it needs to be present when ACPI is built, so I'm
+thinking the right solution is to move it out from under at least
+CONFIG_HOTPLUG_CPU.
+
+It can't be moved out from under CONFIG_GENERIC_CPU_DEVICES because
+then we end up referencing the per-cpu variable cpu_devices which only
+exists when CONFIG_GENERIC_CPU_DEVICES is enabled. Is that a problem
+though, because in the case of !CONFIG_GENERIC_CPU_DEVICES, aren't
+architectures required to provide both arch_.*register_cpu() functions?
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
