@@ -1,244 +1,135 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02A64C8D
-	for <loongarch@lists.linux.dev>; Sat, 21 Oct 2023 13:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZNjA3YD"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-9ba1eb73c27so277337666b.3
-        for <loongarch@lists.linux.dev>; Sat, 21 Oct 2023 06:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697894132; x=1698498932; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=A4ojW8MhOkGMt4rZFKfvqTzl9hsgFK5wHWRIWJqgdLo=;
-        b=EZNjA3YD2YHojHkdZkJgY+T4jFViUHVb1J1S6XRIUwiUhNmtRmFGorKikww66bR1y2
-         6LkBSLqWHrNZ2qY22nWrUQGWtEKk9vVHtE01ga/IS1QDin39IQ3Ib8QBMx/1tuRrfAiL
-         0D3zN/uLsxZllwQ5RYHSCQcuswsALQXGtqfrtTOYMHmR99A96ntIyoU+dZbackMpcX18
-         l3hBxspzFyPvGfFtAgpYLdqeB86SA/lLMzQ8oc0pnEa5R7PzsUNY5gqJTlC/AWRIU894
-         vZXk7VHT9u/YzdKLwr6xBVCelqYT7eTfbt9AFBo+9Wt10uuuiBFSHWVrKS1UQYXdjfIX
-         EfEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697894132; x=1698498932;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A4ojW8MhOkGMt4rZFKfvqTzl9hsgFK5wHWRIWJqgdLo=;
-        b=tFYAOUam2QD+RAU0I08Q11pvKepY1/wAvk4J3qQTRrv13RUweHjWYk5wdgOmuPFTm6
-         SiT7tM6s3a4Cjm/hw+2rmrbjrF+UE4qrTyLEW4oJY77q6Njru+lISUudA0hX57mnuHA0
-         47s/LbpMebdorAhFNiC+goDVhOiO+DOoH1iDdz0oMEsSBQmBe/+/umHw+inj+QkdxbG1
-         mPd6RXi0VtBURlMp2gdoV0KY+vlBLYHqX4ed0L6RKq8Xkkim5zniYpxaeIEQVgAv31Io
-         42yczJu26FW2nNic/AhUABCDHDMBfa6HUYcSPSjcEyF1pCcmjNFatRHFIcs8mBR9Xa7f
-         5feQ==
-X-Gm-Message-State: AOJu0Yw9xyMeOCNsAsCX1ecRm/RBoI9CIfVt+yXHTPyQ1jGtPYu/S6CM
-	klOaWium+YWMKd9m77PPyxg+szeqzysxLLhL5kA=
-X-Google-Smtp-Source: AGHT+IFoFNN2vZXrdO/ozDp8lvS7xbWE01Ti8oHMgJBNaHnMtWvFGLqUvKa1chGI1bavLM08v2K9U9DDFNMT3m1qMbA=
-X-Received: by 2002:a17:907:9445:b0:9bd:d405:4e80 with SMTP id
- dl5-20020a170907944500b009bdd4054e80mr3260573ejc.46.1697894131611; Sat, 21
- Oct 2023 06:15:31 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A276D1847
+	for <loongarch@lists.linux.dev>; Mon, 23 Oct 2023 08:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxIvC1KjZlV+YzAA--.34603S3;
+	Mon, 23 Oct 2023 16:11:33 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxG9y0KjZlQRAvAA--.34174S2;
+	Mon, 23 Oct 2023 16:11:32 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v4 0/8] Add objtool and orc support for LoongArch
+Date: Mon, 23 Oct 2023 16:11:23 +0800
+Message-Id: <1698048691-19521-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8AxG9y0KjZlQRAvAA--.34174S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZr4UJr1fAFykWr4Utr4UZFc_yoWrWrWfpF
+	9rZr95GF4UWr93Aw1Dta4UurWDJan7Gr12g3Waqry8AFW2qr1DJrsakryDXF9Fqa1rGFW0
+	qF1rGw1aga1jvabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-From: Liam Ni <zhiguangni01@gmail.com>
-Date: Sat, 21 Oct 2023 21:15:20 +0800
-Message-ID: <CACZJ9cUzd-33v3B_DckkCrMzX=bHdABT1Hy0235uKrSJc0NN3Q@mail.gmail.com>
-Subject: [PATCH V6] NUMA: optimize detection of memory with no node id
- assigned by firmware
-To: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Mike Rapoport <rppt@kernel.org>
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, 
-	Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org, peterz@infradead.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, maobibo@loongson.cn, 
-	chenfeiyang@loongson.cn, Zhiguang Ni <zhiguangni01@gmail.com>, zhoubinbin@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
 
-Sanity check that makes sure the nodes cover all memory loops over
-numa_meminfo to count the pages that have node id assigned by the firmware,
-then loops again over memblock.memory to find the total amount of memory
-and in the end checks that the difference between the total memory and
-memory that covered by nodes is less than some threshold. Worse, the loop
-over numa_meminfo calls __absent_pages_in_range() that also partially
-traverses memblock.memory.
+This version is based on 6.6-rc7, tested with the latest upstream
+gcc and binutils (20231009).
 
-It's much simpler and more efficient to have a single traversal of
-memblock.memory that verifies that amount of memory not covered by nodes is
-less than a threshold.
+v4:
+  -- Add "local_label" member in struct symbol, and set it
+     as true if symbol type is STT_NOTYPE and symbol name
+     starts with ".L" string
+  -- Add EM_LOONGARCH definition to avoid cross-compile error
+  -- Modify some coding issues of patch #8
 
-Introduce memblock_validate_numa_coverage() that does exactly that and use
-it instead of numa_meminfo_cover_memory().
+Tiezhu Yang (8):
+  objtool/LoongArch: Enable objtool to be built
+  objtool/LoongArch: Implement instruction decoder
+  objtool/x86: Separate arch-specific and generic parts
+  objtool/LoongArch: Enable orc to be built
+  objtool: Check local label about sibling call
+  objtool: Check local label in add_dead_ends()
+  objtool: Check local label in read_unwind_hints()
+  LoongArch: Add ORC stack unwinder support
 
-Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
----
- arch/loongarch/kernel/numa.c | 28 +---------------------------
- arch/x86/mm/numa.c           | 34 ++--------------------------------
- include/linux/memblock.h     |  1 +
- mm/memblock.c                | 34 ++++++++++++++++++++++++++++++++++
- 4 files changed, 38 insertions(+), 59 deletions(-)
+ arch/loongarch/Kconfig                             |   2 +
+ arch/loongarch/Kconfig.debug                       |  11 +
+ arch/loongarch/Makefile                            |  19 +
+ arch/loongarch/include/asm/Kbuild                  |   2 +
+ arch/loongarch/include/asm/bug.h                   |   1 +
+ arch/loongarch/include/asm/exception.h             |   2 +
+ arch/loongarch/include/asm/module.h                |   7 +
+ arch/loongarch/include/asm/orc_header.h            |  18 +
+ arch/loongarch/include/asm/orc_lookup.h            |  31 ++
+ arch/loongarch/include/asm/orc_types.h             |  58 +++
+ arch/loongarch/include/asm/stackframe.h            |   3 +
+ arch/loongarch/include/asm/unwind.h                |  19 +-
+ arch/loongarch/include/asm/unwind_hints.h          |  28 ++
+ arch/loongarch/kernel/Makefile                     |   4 +
+ arch/loongarch/kernel/entry.S                      |   5 +
+ arch/loongarch/kernel/genex.S                      |   4 +
+ arch/loongarch/kernel/module.c                     |  22 +-
+ arch/loongarch/kernel/relocate_kernel.S            |   2 +
+ arch/loongarch/kernel/setup.c                      |   2 +
+ arch/loongarch/kernel/stacktrace.c                 |   1 +
+ arch/loongarch/kernel/traps.c                      |  42 +-
+ arch/loongarch/kernel/unwind_orc.c                 | 513 +++++++++++++++++++++
+ arch/loongarch/kernel/vmlinux.lds.S                |   3 +
+ arch/loongarch/lib/Makefile                        |   2 +
+ arch/loongarch/mm/tlb.c                            |  27 +-
+ arch/loongarch/mm/tlbex.S                          |   9 +
+ arch/loongarch/vdso/Makefile                       |   1 +
+ include/linux/compiler.h                           |   9 +
+ scripts/Makefile                                   |   7 +-
+ tools/arch/loongarch/include/asm/inst.h            | 161 +++++++
+ tools/arch/loongarch/include/asm/orc_types.h       |  58 +++
+ tools/include/linux/bitops.h                       |  11 +
+ tools/objtool/Makefile                             |   4 +
+ tools/objtool/arch/loongarch/Build                 |   3 +
+ tools/objtool/arch/loongarch/decode.c              | 356 ++++++++++++++
+ .../objtool/arch/loongarch/include/arch/cfi_regs.h |  22 +
+ tools/objtool/arch/loongarch/include/arch/elf.h    |  30 ++
+ .../objtool/arch/loongarch/include/arch/special.h  |  33 ++
+ tools/objtool/arch/loongarch/orc.c                 | 171 +++++++
+ tools/objtool/arch/loongarch/special.c             |  15 +
+ tools/objtool/arch/x86/Build                       |   1 +
+ tools/objtool/arch/x86/orc.c                       | 188 ++++++++
+ tools/objtool/check.c                              | 117 +++--
+ tools/objtool/include/objtool/elf.h                |   1 +
+ tools/objtool/include/objtool/orc.h                |  14 +
+ tools/objtool/orc_dump.c                           |  69 +--
+ tools/objtool/orc_gen.c                            | 113 +----
+ 47 files changed, 1962 insertions(+), 259 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/orc_header.h
+ create mode 100644 arch/loongarch/include/asm/orc_lookup.h
+ create mode 100644 arch/loongarch/include/asm/orc_types.h
+ create mode 100644 arch/loongarch/include/asm/unwind_hints.h
+ create mode 100644 arch/loongarch/kernel/unwind_orc.c
+ create mode 100644 tools/arch/loongarch/include/asm/inst.h
+ create mode 100644 tools/arch/loongarch/include/asm/orc_types.h
+ create mode 100644 tools/objtool/arch/loongarch/Build
+ create mode 100644 tools/objtool/arch/loongarch/decode.c
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/cfi_regs.h
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/elf.h
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/special.h
+ create mode 100644 tools/objtool/arch/loongarch/orc.c
+ create mode 100644 tools/objtool/arch/loongarch/special.c
+ create mode 100644 tools/objtool/arch/x86/orc.c
+ create mode 100644 tools/objtool/include/objtool/orc.h
 
-diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-index cb00804826f7..84e1b046ab52 100644
---- a/arch/loongarch/kernel/numa.c
-+++ b/arch/loongarch/kernel/numa.c
-@@ -226,32 +226,6 @@ static void __init node_mem_init(unsigned int node)
-
- #ifdef CONFIG_ACPI_NUMA
-
--/*
-- * Sanity check to catch more bad NUMA configurations (they are amazingly
-- * common).  Make sure the nodes cover all memory.
-- */
--static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
--{
--   int i;
--   u64 numaram, biosram;
--
--   numaram = 0;
--   for (i = 0; i < mi->nr_blks; i++) {
--       u64 s = mi->blk[i].start >> PAGE_SHIFT;
--       u64 e = mi->blk[i].end >> PAGE_SHIFT;
--
--       numaram += e - s;
--       numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
--       if ((s64)numaram < 0)
--           numaram = 0;
--   }
--   max_pfn = max_low_pfn;
--   biosram = max_pfn - absent_pages_in_range(0, max_pfn);
--
--   BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
--   return true;
--}
--
- static void __init add_node_intersection(u32 node, u64 start, u64
-size, u32 type)
- {
-    static unsigned long num_physpages;
-@@ -396,7 +370,7 @@ int __init init_numa_memory(void)
-        return -EINVAL;
-
-    init_node_memblock();
--   if (numa_meminfo_cover_memory(&numa_meminfo) == false)
-+   if (!memblock_validate_numa_coverage(SZ_1M >> PAGE_SIZE))
-        return -EINVAL;
-
-    for_each_node_mask(node, node_possible_map) {
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 2aadb2019b4f..39772d551924 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -447,37 +447,6 @@ int __node_distance(int from, int to)
- }
- EXPORT_SYMBOL(__node_distance);
-
--/*
-- * Sanity check to catch more bad NUMA configurations (they are amazingly
-- * common).  Make sure the nodes cover all memory.
-- */
--static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
--{
--   u64 numaram, e820ram;
--   int i;
--
--   numaram = 0;
--   for (i = 0; i < mi->nr_blks; i++) {
--       u64 s = mi->blk[i].start >> PAGE_SHIFT;
--       u64 e = mi->blk[i].end >> PAGE_SHIFT;
--       numaram += e - s;
--       numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
--       if ((s64)numaram < 0)
--           numaram = 0;
--   }
--
--   e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
--
--   /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
--   if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
--       printk(KERN_ERR "NUMA: nodes only cover %LuMB of your %LuMB
-e820 RAM. Not used.\n",
--              (numaram << PAGE_SHIFT) >> 20,
--              (e820ram << PAGE_SHIFT) >> 20);
--       return false;
--   }
--   return true;
--}
--
- /*
-  * Mark all currently memblock-reserved physical memory (which covers the
-  * kernel's own memory ranges) as hot-unswappable.
-@@ -583,7 +552,8 @@ static int __init numa_register_memblks(struct
-numa_meminfo *mi)
-            return -EINVAL;
-        }
-    }
--   if (!numa_meminfo_cover_memory(mi))
-+
-+   if (!memblock_validate_numa_coverage(SZ_1M >> PAGE_SIZE))
-        return -EINVAL;
-
-    /* Finally register nodes. */
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 1c1072e3ca06..727242f4b54a 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -120,6 +120,7 @@ int memblock_physmem_add(phys_addr_t base,
-phys_addr_t size);
- void memblock_trim_memory(phys_addr_t align);
- bool memblock_overlaps_region(struct memblock_type *type,
-                  phys_addr_t base, phys_addr_t size);
-+bool memblock_validate_numa_coverage(const u64 threshold_pages);
- int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
- int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
- int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 0863222af4a4..ebea0c204eaa 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -734,6 +734,40 @@ int __init_memblock memblock_add(phys_addr_t
-base, phys_addr_t size)
-    return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
- }
-
-+/**
-+ * memblock_validate_numa_coverage - check if amount of memory with
-+ * no node ID assigned is less than a threshold
-+ * @threshold_pages: maximal number of pages that can have unassigned node
-+ * ID (in pages).
-+ *
-+ * A buggy firmware may report memory that does not belong to any node.
-+ * Check if amount of such memory is below @threshold_pages.
-+ *
-+ * Return: true on success, false on failure.
-+ */
-+bool __init_memblock memblock_validate_numa_coverage(const u64 threshold_pages)
-+{
-+   unsigned long nr_pages = 0;
-+   unsigned long start_pfn, end_pfn, mem_size_mb;
-+   int nid, i;
-+
-+   /* calculate lose page */
-+   for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
-+       if (nid == NUMA_NO_NODE)
-+           nr_pages += end_pfn - start_pfn;
-+   }
-+
-+   if (nr_pages >= threshold_pages) {
-+       mem_size_mb = memblock_phys_mem_size() >> 20;
-+       pr_err("NUMA: no nodes coverage for %luMB of %luMB RAM\n",
-+              (nr_pages << PAGE_SHIFT) >> 20, mem_size_mb);
-+       return false;
-+   }
-+
-+   return true;
-+}
-+
-+
- /**
-  * memblock_isolate_range - isolate given range into disjoint memblocks
-  * @type: memblock type to isolate range for
 -- 
-2.25.1
+2.1.0
+
