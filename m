@@ -1,15 +1,15 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 541021119B
-	for <loongarch@lists.linux.dev>; Mon, 23 Oct 2023 08:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC6220F4
+	for <loongarch@lists.linux.dev>; Mon, 23 Oct 2023 08:11:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxLOu5KjZlZ+YzAA--.29880S3;
-	Mon, 23 Oct 2023 16:11:37 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dxg_C6KjZlcuYzAA--.35749S3;
+	Mon, 23 Oct 2023 16:11:38 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxG9y0KjZlQRAvAA--.34174S5;
-	Mon, 23 Oct 2023 16:11:36 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxG9y0KjZlQRAvAA--.34174S7;
+	Mon, 23 Oct 2023 16:11:37 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -17,20 +17,20 @@ To: Josh Poimboeuf <jpoimboe@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v4 3/8] objtool/x86: Separate arch-specific and generic parts
-Date: Mon, 23 Oct 2023 16:11:26 +0800
-Message-Id: <1698048691-19521-4-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 5/8] objtool: Check local label about sibling call
+Date: Mon, 23 Oct 2023 16:11:28 +0800
+Message-Id: <1698048691-19521-6-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1698048691-19521-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1698048691-19521-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8AxG9y0KjZlQRAvAA--.34174S5
+X-CM-TRANSID:AQAAf8AxG9y0KjZlQRAvAA--.34174S7
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3uFW5Aw13WFy3KrWkZrWDtrc_yoWkuF1DpF
-	15CrWDGrW7XF13Gwn2gan7CrWYkws7Gr1kArnxC340v3yIqr1rJFsIyryjvF98W393Way3
-	ua90qFWFkanxAFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3XFyrCw1UJFW5trW8AF4xuFX_yoWxur47pF
+	43G3yjgr4rXFy8uw47tF4jg3Wa9w48Xry7GrW5G34Skr1Yqr98ta1Skw1IvF15XrZ8WF47
+	XayjkryUCF4UAabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
@@ -38,478 +38,231 @@ X-Coremail-Antispam: 1Uk129KBj93XoW3uFW5Aw13WFy3KrWkZrWDtrc_yoWkuF1DpF
 	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
 	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUco7KUUUUU
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUoxR6UUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-Move init_orc_entry(), write_orc_entry(), reg_name(), orc_type_name()
-and print_reg() from generic orc_gen.c and orc_dump.c to arch-specific
-orc.c, then introduce a new function orc_print_dump() to print info.
+When update the latest upstream gcc and binutils which enables linker
+relaxation by default, it generates more objtool warnings on LoongArch,
+like this:
 
-This is preparation for later patch, no functionality change.
+  init/version.o: warning: objtool: early_hostname+0x20: sibling call from callable instruction with modified stack frame
 
-Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-Co-developed-by: Youling Tang <tangyouling@loongson.cn>
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+We can see that the branch and jump operation about local label ".L2"
+is not sibling call, because a sibling call is a tail-call to another
+symbol. In this case, make is_sibling_call() return false, set dest_sec
+and dest_off to calculate jump_dest in add_jump_destinations().
+
+As suggested by Peter Zijlstra, add "local_label" member in struct
+symbol, then set it as true if symbol type is STT_NOTYPE and symbol
+name starts with ".L" string in classify_symbols().
+
+Here are some detailed info:
+[fedora@linux 6.6.test]$ gcc --version
+gcc (GCC) 14.0.0 20231009 (experimental)
+[fedora@linux 6.6.test]$ as --version
+GNU assembler (GNU Binutils) 2.41.50.20231009
+[fedora@linux 6.6.test]$ objdump -M no-aliases -D init/version.o | grep -A 21 "init.text"
+Disassembly of section .init.text:
+
+0000000000000000 <early_hostname>:
+   0:	1a00000c 	pcalau12i   	$t0, 0
+   4:	02ffc063 	addi.d      	$sp, $sp, -16
+   8:	00150085 	or          	$a1, $a0, $zero
+   c:	02810406 	addi.w      	$a2, $zero, 65
+  10:	02c00184 	addi.d      	$a0, $t0, 0
+  14:	29c02061 	st.d        	$ra, $sp, 8
+  18:	54000000 	bl          	0	# 18 <early_hostname+0x18>
+  1c:	0281000c 	addi.w      	$t0, $zero, 64
+  20:	6c001584 	bgeu        	$t0, $a0, 20	# 34 <.L2>
+  24:	1a000004 	pcalau12i   	$a0, 0
+  28:	02810005 	addi.w      	$a1, $zero, 64
+  2c:	02c00084 	addi.d      	$a0, $a0, 0
+  30:	54000000 	bl          	0	# 30 <early_hostname+0x30>
+
+0000000000000034 <.L2>:
+  34:	28c02061 	ld.d        	$ra, $sp, 8
+  38:	00150004 	or          	$a0, $zero, $zero
+  3c:	02c04063 	addi.d      	$sp, $sp, 16
+  40:	4c000020 	jirl        	$zero, $ra, 0
+
+By the way, it need to move insn_reloc() before is_sibling_call()
+to avoid implicit declaration build error.
+
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- tools/objtool/arch/x86/Build        |   1 +
- tools/objtool/arch/x86/orc.c        | 188 ++++++++++++++++++++++++++++++++++++
- tools/objtool/include/objtool/orc.h |  14 +++
- tools/objtool/orc_dump.c            |  69 +------------
- tools/objtool/orc_gen.c             | 113 +---------------------
- 5 files changed, 206 insertions(+), 179 deletions(-)
- create mode 100644 tools/objtool/arch/x86/orc.c
- create mode 100644 tools/objtool/include/objtool/orc.h
+ tools/objtool/check.c               | 71 ++++++++++++++++++++++---------------
+ tools/objtool/include/objtool/elf.h |  1 +
+ 2 files changed, 44 insertions(+), 28 deletions(-)
 
-diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
-index 9f7869b..3dedb2f 100644
---- a/tools/objtool/arch/x86/Build
-+++ b/tools/objtool/arch/x86/Build
-@@ -1,5 +1,6 @@
- objtool-y += special.o
- objtool-y += decode.o
-+objtool-y += orc.o
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index e308d1b..1b40639 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -20,6 +20,7 @@
+ #include <linux/hashtable.h>
+ #include <linux/kernel.h>
+ #include <linux/static_call_types.h>
++#include <linux/string.h>
  
- inat_tables_script = ../arch/x86/tools/gen-insn-attr-x86.awk
- inat_tables_maps = ../arch/x86/lib/x86-opcode-map.txt
-diff --git a/tools/objtool/arch/x86/orc.c b/tools/objtool/arch/x86/orc.c
-new file mode 100644
-index 0000000..b6cd943
---- /dev/null
-+++ b/tools/objtool/arch/x86/orc.c
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <linux/objtool_types.h>
-+#include <asm/orc_types.h>
-+
-+#include <objtool/check.h>
-+#include <objtool/orc.h>
-+#include <objtool/warn.h>
-+#include <objtool/endianness.h>
-+
-+int init_orc_entry(struct orc_entry *orc, struct cfi_state *cfi, struct instruction *insn)
-+{
-+	struct cfi_reg *bp = &cfi->regs[CFI_BP];
-+
-+	memset(orc, 0, sizeof(*orc));
-+
-+	if (!cfi) {
-+		/*
-+		 * This is usually either unreachable nops/traps (which don't
-+		 * trigger unreachable instruction warnings), or
-+		 * STACK_FRAME_NON_STANDARD functions.
-+		 */
-+		orc->type = ORC_TYPE_UNDEFINED;
-+		return 0;
-+	}
-+
-+	switch (cfi->type) {
-+	case UNWIND_HINT_TYPE_UNDEFINED:
-+		orc->type = ORC_TYPE_UNDEFINED;
-+		return 0;
-+	case UNWIND_HINT_TYPE_END_OF_STACK:
-+		orc->type = ORC_TYPE_END_OF_STACK;
-+		return 0;
-+	case UNWIND_HINT_TYPE_CALL:
-+		orc->type = ORC_TYPE_CALL;
-+		break;
-+	case UNWIND_HINT_TYPE_REGS:
-+		orc->type = ORC_TYPE_REGS;
-+		break;
-+	case UNWIND_HINT_TYPE_REGS_PARTIAL:
-+		orc->type = ORC_TYPE_REGS_PARTIAL;
-+		break;
-+	default:
-+		WARN_INSN(insn, "unknown unwind hint type %d", cfi->type);
-+		return -1;
-+	}
-+
-+	orc->signal = cfi->signal;
-+
-+	switch (cfi->cfa.base) {
-+	case CFI_SP:
-+		orc->sp_reg = ORC_REG_SP;
-+		break;
-+	case CFI_SP_INDIRECT:
-+		orc->sp_reg = ORC_REG_SP_INDIRECT;
-+		break;
-+	case CFI_BP:
-+		orc->sp_reg = ORC_REG_BP;
-+		break;
-+	case CFI_BP_INDIRECT:
-+		orc->sp_reg = ORC_REG_BP_INDIRECT;
-+		break;
-+	case CFI_R10:
-+		orc->sp_reg = ORC_REG_R10;
-+		break;
-+	case CFI_R13:
-+		orc->sp_reg = ORC_REG_R13;
-+		break;
-+	case CFI_DI:
-+		orc->sp_reg = ORC_REG_DI;
-+		break;
-+	case CFI_DX:
-+		orc->sp_reg = ORC_REG_DX;
-+		break;
-+	default:
-+		WARN_INSN(insn, "unknown CFA base reg %d", cfi->cfa.base);
-+		return -1;
-+	}
-+
-+	switch (bp->base) {
-+	case CFI_UNDEFINED:
-+		orc->bp_reg = ORC_REG_UNDEFINED;
-+		break;
-+	case CFI_CFA:
-+		orc->bp_reg = ORC_REG_PREV_SP;
-+		break;
-+	case CFI_BP:
-+		orc->bp_reg = ORC_REG_BP;
-+		break;
-+	default:
-+		WARN_INSN(insn, "unknown BP base reg %d", bp->base);
-+		return -1;
-+	}
-+
-+	orc->sp_offset = cfi->cfa.offset;
-+	orc->bp_offset = bp->offset;
-+
-+	return 0;
-+}
-+
-+int write_orc_entry(struct elf *elf, struct section *orc_sec,
-+		    struct section *ip_sec, unsigned int idx,
-+		    struct section *insn_sec, unsigned long insn_off,
-+		    struct orc_entry *o)
-+{
-+	struct orc_entry *orc;
-+
-+	/* populate ORC data */
-+	orc = (struct orc_entry *)orc_sec->data->d_buf + idx;
-+	memcpy(orc, o, sizeof(*orc));
-+	orc->sp_offset = bswap_if_needed(elf, orc->sp_offset);
-+	orc->bp_offset = bswap_if_needed(elf, orc->bp_offset);
-+
-+	/* populate reloc for ip */
-+	if (!elf_init_reloc_text_sym(elf, ip_sec, idx * sizeof(int), idx,
-+				     insn_sec, insn_off))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static const char *reg_name(unsigned int reg)
-+{
-+	switch (reg) {
-+	case ORC_REG_PREV_SP:
-+		return "prevsp";
-+	case ORC_REG_DX:
-+		return "dx";
-+	case ORC_REG_DI:
-+		return "di";
-+	case ORC_REG_BP:
-+		return "bp";
-+	case ORC_REG_SP:
-+		return "sp";
-+	case ORC_REG_R10:
-+		return "r10";
-+	case ORC_REG_R13:
-+		return "r13";
-+	case ORC_REG_BP_INDIRECT:
-+		return "bp(ind)";
-+	case ORC_REG_SP_INDIRECT:
-+		return "sp(ind)";
-+	default:
-+		return "?";
-+	}
-+}
-+
-+static const char *orc_type_name(unsigned int type)
-+{
-+	switch (type) {
-+	case ORC_TYPE_UNDEFINED:
-+		return "(und)";
-+	case ORC_TYPE_END_OF_STACK:
-+		return "end";
-+	case ORC_TYPE_CALL:
-+		return "call";
-+	case ORC_TYPE_REGS:
-+		return "regs";
-+	case ORC_TYPE_REGS_PARTIAL:
-+		return "regs (partial)";
-+	default:
-+		return "?";
-+	}
-+}
-+
-+static void print_reg(unsigned int reg, int offset)
-+{
-+	if (reg == ORC_REG_BP_INDIRECT)
-+		printf("(bp%+d)", offset);
-+	else if (reg == ORC_REG_SP_INDIRECT)
-+		printf("(sp)%+d", offset);
-+	else if (reg == ORC_REG_UNDEFINED)
-+		printf("(und)");
-+	else
-+		printf("%s%+d", reg_name(reg), offset);
-+}
-+
-+void orc_print_dump(struct elf *dummy_elf, struct orc_entry *orc, int i)
-+{
-+	printf("type:%s", orc_type_name(orc[i].type));
-+
-+	printf(" sp:");
-+	print_reg(orc[i].sp_reg, bswap_if_needed(dummy_elf, orc[i].sp_offset));
-+
-+	printf(" bp:");
-+	print_reg(orc[i].bp_reg, bswap_if_needed(dummy_elf, orc[i].bp_offset));
-+
-+	printf(" signal:%d\n", orc[i].signal);
-+}
-diff --git a/tools/objtool/include/objtool/orc.h b/tools/objtool/include/objtool/orc.h
-new file mode 100644
-index 0000000..15a32de
---- /dev/null
-+++ b/tools/objtool/include/objtool/orc.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef _OBJTOOL_ORC_H
-+#define _OBJTOOL_ORC_H
-+
-+#include <objtool/check.h>
-+
-+int init_orc_entry(struct orc_entry *orc, struct cfi_state *cfi, struct instruction *insn);
-+void orc_print_dump(struct elf *dummy_elf, struct orc_entry *orc, int i);
-+int write_orc_entry(struct elf *elf, struct section *orc_sec,
-+		    struct section *ip_sec, unsigned int idx,
-+		    struct section *insn_sec, unsigned long insn_off,
-+		    struct orc_entry *o);
-+
-+#endif /* _OBJTOOL_ORC_H */
-diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
-index 0e183bb..a62247ef 100644
---- a/tools/objtool/orc_dump.c
-+++ b/tools/objtool/orc_dump.c
-@@ -6,65 +6,10 @@
- #include <unistd.h>
- #include <asm/orc_types.h>
- #include <objtool/objtool.h>
-+#include <objtool/orc.h>
- #include <objtool/warn.h>
- #include <objtool/endianness.h>
+ struct alternative {
+ 	struct alternative *next;
+@@ -161,12 +162,38 @@ static bool is_jump_table_jump(struct instruction *insn)
+ 	       insn_jump_table(alt_group->orig_group->first_insn);
+ }
  
--static const char *reg_name(unsigned int reg)
--{
--	switch (reg) {
--	case ORC_REG_PREV_SP:
--		return "prevsp";
--	case ORC_REG_DX:
--		return "dx";
--	case ORC_REG_DI:
--		return "di";
--	case ORC_REG_BP:
--		return "bp";
--	case ORC_REG_SP:
--		return "sp";
--	case ORC_REG_R10:
--		return "r10";
--	case ORC_REG_R13:
--		return "r13";
--	case ORC_REG_BP_INDIRECT:
--		return "bp(ind)";
--	case ORC_REG_SP_INDIRECT:
--		return "sp(ind)";
--	default:
--		return "?";
--	}
--}
--
--static const char *orc_type_name(unsigned int type)
--{
--	switch (type) {
--	case ORC_TYPE_UNDEFINED:
--		return "(und)";
--	case ORC_TYPE_END_OF_STACK:
--		return "end";
--	case ORC_TYPE_CALL:
--		return "call";
--	case ORC_TYPE_REGS:
--		return "regs";
--	case ORC_TYPE_REGS_PARTIAL:
--		return "regs (partial)";
--	default:
--		return "?";
--	}
--}
--
--static void print_reg(unsigned int reg, int offset)
--{
--	if (reg == ORC_REG_BP_INDIRECT)
--		printf("(bp%+d)", offset);
--	else if (reg == ORC_REG_SP_INDIRECT)
--		printf("(sp)%+d", offset);
--	else if (reg == ORC_REG_UNDEFINED)
--		printf("(und)");
--	else
--		printf("%s%+d", reg_name(reg), offset);
--}
--
- int orc_dump(const char *_objname)
+-static bool is_sibling_call(struct instruction *insn)
++static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *insn)
++{
++	struct reloc *reloc;
++
++	if (insn->no_reloc)
++		return NULL;
++
++	if (!file)
++		return NULL;
++
++	reloc = find_reloc_by_dest_range(file->elf, insn->sec,
++					 insn->offset, insn->len);
++	if (!reloc) {
++		insn->no_reloc = 1;
++		return NULL;
++	}
++
++	return reloc;
++}
++
++static bool is_sibling_call(struct objtool_file *file, struct instruction *insn)
  {
- 	int fd, nr_entries, i, *orc_ip = NULL, orc_size = 0;
-@@ -205,17 +150,7 @@ int orc_dump(const char *_objname)
- 			printf("%llx:", (unsigned long long)(orc_ip_addr + (i * sizeof(int)) + orc_ip[i]));
- 		}
+ 	/*
+ 	 * Assume only STT_FUNC calls have jump-tables.
+ 	 */
+ 	if (insn_func(insn)) {
++		struct reloc *reloc = insn_reloc(file, insn);
++
++		/* Disallow sibling calls into STT_NOTYPE if it is local lable */
++		if (reloc && reloc->sym->local_label)
++			return false;
++
+ 		/* An indirect jump is either a sibling call or a jump to a table. */
+ 		if (insn->type == INSN_JUMP_DYNAMIC)
+ 			return !is_jump_table_jump(insn);
+@@ -232,7 +259,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 	 * of the sibling call returns.
+ 	 */
+ 	func_for_each_insn(file, func, insn) {
+-		if (is_sibling_call(insn)) {
++		if (is_sibling_call(file, insn)) {
+ 			struct instruction *dest = insn->jump_dest;
  
--		printf("type:%s", orc_type_name(orc[i].type));
--
--		printf(" sp:");
--
--		print_reg(orc[i].sp_reg, bswap_if_needed(&dummy_elf, orc[i].sp_offset));
--
--		printf(" bp:");
--
--		print_reg(orc[i].bp_reg, bswap_if_needed(&dummy_elf, orc[i].bp_offset));
--
--		printf(" signal:%d\n", orc[i].signal);
-+		orc_print_dump(&dummy_elf, orc, i);
- 	}
+ 			if (!dest)
+@@ -743,7 +770,7 @@ static int create_static_call_sections(struct objtool_file *file)
+ 		if (!elf_init_reloc_data_sym(file->elf, sec,
+ 					     idx * sizeof(*site) + 4,
+ 					     (idx * 2) + 1, key_sym,
+-					     is_sibling_call(insn) * STATIC_CALL_SITE_TAIL))
++					     is_sibling_call(file, insn) * STATIC_CALL_SITE_TAIL))
+ 			return -1;
  
- 	elf_end(elf);
-diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
-index bae3439..922e6aa 100644
---- a/tools/objtool/orc_gen.c
-+++ b/tools/objtool/orc_gen.c
-@@ -10,121 +10,10 @@
- #include <asm/orc_types.h>
+ 		idx++;
+@@ -1315,26 +1342,6 @@ __weak bool arch_is_embedded_insn(struct symbol *sym)
+ 	return false;
+ }
  
- #include <objtool/check.h>
-+#include <objtool/orc.h>
- #include <objtool/warn.h>
- #include <objtool/endianness.h>
- 
--static int init_orc_entry(struct orc_entry *orc, struct cfi_state *cfi,
--			  struct instruction *insn)
+-static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *insn)
 -{
--	struct cfi_reg *bp = &cfi->regs[CFI_BP];
+-	struct reloc *reloc;
 -
--	memset(orc, 0, sizeof(*orc));
+-	if (insn->no_reloc)
+-		return NULL;
 -
--	if (!cfi) {
--		/*
--		 * This is usually either unreachable nops/traps (which don't
--		 * trigger unreachable instruction warnings), or
--		 * STACK_FRAME_NON_STANDARD functions.
--		 */
--		orc->type = ORC_TYPE_UNDEFINED;
--		return 0;
+-	if (!file)
+-		return NULL;
+-
+-	reloc = find_reloc_by_dest_range(file->elf, insn->sec,
+-					 insn->offset, insn->len);
+-	if (!reloc) {
+-		insn->no_reloc = 1;
+-		return NULL;
 -	}
 -
--	switch (cfi->type) {
--	case UNWIND_HINT_TYPE_UNDEFINED:
--		orc->type = ORC_TYPE_UNDEFINED;
--		return 0;
--	case UNWIND_HINT_TYPE_END_OF_STACK:
--		orc->type = ORC_TYPE_END_OF_STACK;
--		return 0;
--	case UNWIND_HINT_TYPE_CALL:
--		orc->type = ORC_TYPE_CALL;
--		break;
--	case UNWIND_HINT_TYPE_REGS:
--		orc->type = ORC_TYPE_REGS;
--		break;
--	case UNWIND_HINT_TYPE_REGS_PARTIAL:
--		orc->type = ORC_TYPE_REGS_PARTIAL;
--		break;
--	default:
--		WARN_INSN(insn, "unknown unwind hint type %d", cfi->type);
--		return -1;
--	}
--
--	orc->signal = cfi->signal;
--
--	switch (cfi->cfa.base) {
--	case CFI_SP:
--		orc->sp_reg = ORC_REG_SP;
--		break;
--	case CFI_SP_INDIRECT:
--		orc->sp_reg = ORC_REG_SP_INDIRECT;
--		break;
--	case CFI_BP:
--		orc->sp_reg = ORC_REG_BP;
--		break;
--	case CFI_BP_INDIRECT:
--		orc->sp_reg = ORC_REG_BP_INDIRECT;
--		break;
--	case CFI_R10:
--		orc->sp_reg = ORC_REG_R10;
--		break;
--	case CFI_R13:
--		orc->sp_reg = ORC_REG_R13;
--		break;
--	case CFI_DI:
--		orc->sp_reg = ORC_REG_DI;
--		break;
--	case CFI_DX:
--		orc->sp_reg = ORC_REG_DX;
--		break;
--	default:
--		WARN_INSN(insn, "unknown CFA base reg %d", cfi->cfa.base);
--		return -1;
--	}
--
--	switch (bp->base) {
--	case CFI_UNDEFINED:
--		orc->bp_reg = ORC_REG_UNDEFINED;
--		break;
--	case CFI_CFA:
--		orc->bp_reg = ORC_REG_PREV_SP;
--		break;
--	case CFI_BP:
--		orc->bp_reg = ORC_REG_BP;
--		break;
--	default:
--		WARN_INSN(insn, "unknown BP base reg %d", bp->base);
--		return -1;
--	}
--
--	orc->sp_offset = cfi->cfa.offset;
--	orc->bp_offset = bp->offset;
--
--	return 0;
+-	return reloc;
 -}
 -
--static int write_orc_entry(struct elf *elf, struct section *orc_sec,
--			   struct section *ip_sec, unsigned int idx,
--			   struct section *insn_sec, unsigned long insn_off,
--			   struct orc_entry *o)
--{
--	struct orc_entry *orc;
--
--	/* populate ORC data */
--	orc = (struct orc_entry *)orc_sec->data->d_buf + idx;
--	memcpy(orc, o, sizeof(*orc));
--	orc->sp_offset = bswap_if_needed(elf, orc->sp_offset);
--	orc->bp_offset = bswap_if_needed(elf, orc->bp_offset);
--
--	/* populate reloc for ip */
--	if (!elf_init_reloc_text_sym(elf, ip_sec, idx * sizeof(int), idx,
--				     insn_sec, insn_off))
--		return -1;
--
--	return 0;
--}
--
- struct orc_list_entry {
- 	struct list_head list;
- 	struct orc_entry orc;
+ static void remove_insn_ops(struct instruction *insn)
+ {
+ 	struct stack_op *op, *next;
+@@ -1577,8 +1584,13 @@ static int add_jump_destinations(struct objtool_file *file)
+ 			 * External sibling call or internal sibling call with
+ 			 * STT_FUNC reloc.
+ 			 */
+-			add_call_dest(file, insn, reloc->sym, true);
+-			continue;
++			if (reloc->sym->local_label) {
++				dest_sec = insn->sec;
++				dest_off = arch_jump_destination(insn);
++			} else {
++				add_call_dest(file, insn, reloc->sym, true);
++				continue;
++			}
+ 		} else if (reloc->sym->sec->idx) {
+ 			dest_sec = reloc->sym->sec;
+ 			dest_off = reloc->sym->sym.st_value +
+@@ -2506,6 +2518,9 @@ static int classify_symbols(struct objtool_file *file)
+ 	struct symbol *func;
+ 
+ 	for_each_sym(file, func) {
++		if (func->type == STT_NOTYPE && strstarts(func->name, ".L"))
++			func->local_label = true;
++
+ 		if (func->bind != STB_GLOBAL)
+ 			continue;
+ 
+@@ -3674,7 +3689,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 
+ 		case INSN_JUMP_CONDITIONAL:
+ 		case INSN_JUMP_UNCONDITIONAL:
+-			if (is_sibling_call(insn)) {
++			if (is_sibling_call(file, insn)) {
+ 				ret = validate_sibling_call(file, insn, &state);
+ 				if (ret)
+ 					return ret;
+@@ -3695,7 +3710,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 
+ 		case INSN_JUMP_DYNAMIC:
+ 		case INSN_JUMP_DYNAMIC_CONDITIONAL:
+-			if (is_sibling_call(insn)) {
++			if (is_sibling_call(file, insn)) {
+ 				ret = validate_sibling_call(file, insn, &state);
+ 				if (ret)
+ 					return ret;
+@@ -3859,7 +3874,7 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
+ 
+ 		case INSN_JUMP_UNCONDITIONAL:
+ 		case INSN_JUMP_CONDITIONAL:
+-			if (!is_sibling_call(insn)) {
++			if (!is_sibling_call(file, insn)) {
+ 				if (!insn->jump_dest) {
+ 					WARN_INSN(insn, "unresolved jump target after linking?!?");
+ 					return -1;
+diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
+index 9f71e98..2b8a69d 100644
+--- a/tools/objtool/include/objtool/elf.h
++++ b/tools/objtool/include/objtool/elf.h
+@@ -67,6 +67,7 @@ struct symbol {
+ 	u8 profiling_func    : 1;
+ 	u8 warned	     : 1;
+ 	u8 embedded_insn     : 1;
++	u8 local_label       : 1;
+ 	struct list_head pv_target;
+ 	struct reloc *relocs;
+ };
 -- 
 2.1.0
 
