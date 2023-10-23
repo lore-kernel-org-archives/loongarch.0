@@ -1,57 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454211BDFE;
-	Mon, 23 Oct 2023 17:21:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B3D21A09
+	for <loongarch@lists.linux.dev>; Mon, 23 Oct 2023 18:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOVDksWf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977DEC433C7;
-	Mon, 23 Oct 2023 17:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698081670;
-	bh=WQYEKm0Mc7inaH0wFnxcEUmfAmPR1JoMV7fRygVNKQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZOVDksWfw+hV9R+Z5ZexM6NcY3xDNdzdq9AsRt4vO9wMdxWhqWWcxLwP+eW4A962q
-	 Qk6ekhq2Ipm65VVsfFxXGy8qQeQOWzCvDqLJfEU8nWaZHFbI6flnaXvlVH0CRDWH+w
-	 hIMRahts5mdD+tpF+6eXFcpVMEl1Ep7tHL5W7fbVdPmlfZ6yQugf14RafBolwJcEMn
-	 21vyDdZz0h9WC0+Q/QJBX2oIB6fGQ1kXhcFuxCsKB2tbLoPEgU/BSdSOixB9qw31iO
-	 OgDPN8A4Uqs6uFqTMJcPk6zjMZ/offJmG+hcHSxPefHsLKYd1oYsfoKs6fvoRIkbKX
-	 wMvEth+vb/+ag==
-Date: Mon, 23 Oct 2023 18:21:00 +0100
-From: Will Deacon <will@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v3 07/13] arm64, execmem: extend execmem_params for
- generated code allocations
-Message-ID: <20231023172059.GB4041@willie-the-truck>
-References: <20230918072955.2507221-1-rppt@kernel.org>
- <20230918072955.2507221-8-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gtirJysC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7A0pd5ea/mWj9XmmTvRG6wtE18VpprIFdxTUBKRhNM0=; b=gtirJysCoPrK4qOy7mI9wMUvVz
+	P33fMEnvCKyA74eRCvoEqjBQtXgT+ZfZaYwQdCj+oxzxDcBug/ZRYPHaMwfrVDsRg+SeYQ4ERiw3e
+	maPZCTvvgkS2b147zcO7rUOaomZAQ0kPL5PTN6DNCaANEnB1lTAFW0ykLuziDuf+Dy8K+AE8O2k19
+	PvdUnlkuD7/LMRkrQnfpX5g/p4kiD3Mj609pBiwd4YrNm3Zrc0ezR23xIBfNb1xScxybdK96le6aG
+	0NeJcWgxNT5jq7CPNUlJH/PqpwF9p1KbFSX+6WabCSjxQo+VlGAEyfwtwC06L6xyK1qMiXK41UoIG
+	5ILYltUQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45546)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1qv08O-0003OY-1Z;
+	Mon, 23 Oct 2023 19:58:40 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1qv08N-00052v-CV; Mon, 23 Oct 2023 19:58:39 +0100
+Date: Mon, 23 Oct 2023 19:58:39 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
+	x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com
+Subject: Re: [RFC PATCH v2 29/35] irqchip/gic-v3: Don't return errors from
+ gic_acpi_match_gicc()
+Message-ID: <ZTbCX0n2SrhUBESf@shell.armlinux.org.uk>
+References: <20230913163823.7880-1-james.morse@arm.com>
+ <20230913163823.7880-30-james.morse@arm.com>
+ <20230914160223.0000782f@Huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -60,75 +53,61 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230918072955.2507221-8-rppt@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20230914160223.0000782f@Huawei.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, Sep 18, 2023 at 10:29:49AM +0300, Mike Rapoport wrote:
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+On Thu, Sep 14, 2023 at 04:02:23PM +0100, Jonathan Cameron wrote:
+> On Wed, 13 Sep 2023 16:38:17 +0000
+> James Morse <james.morse@arm.com> wrote:
 > 
-> The memory allocations for kprobes and BPF on arm64 can be placed
-> anywhere in vmalloc address space and currently this is implemented with
-> overrides of alloc_insn_page() and bpf_jit_alloc_exec() in arm64.
+> > gic_acpi_match_gicc() is only called via gic_acpi_count_gicr_regions().
+> > It should only count the number of enabled redistributors, but it
+> > also tries to sanity check the GICC entry, currently returning an
+> > error if the Enabled bit is set, but the gicr_base_address is zero.
+> > 
+> > Adding support for the online-capable bit to the sanity check
+> > complicates it, for no benefit. The existing check implicitly
+> > depends on gic_acpi_count_gicr_regions() previous failing to find
+> > any GICR regions (as it is valid to have gicr_base_address of zero if
+> > the redistributors are described via a GICR entry).
+> > 
+> > Instead of complicating the check, remove it. Failures that happen
+> > at this point cause the irqchip not to register, meaning no irqs
+> > can be requested. The kernel grinds to a panic() pretty quickly.
+> > 
+> > Without the check, MADT tables that exhibit this problem are still
+> > caught by gic_populate_rdist(), which helpfully also prints what
+> > went wrong:
+> > | CPU4: mpidr 100 has no re-distributor!
+> > 
+> > Signed-off-by: James Morse <james.morse@arm.com>
+> > ---
+> >  drivers/irqchip/irq-gic-v3.c | 18 ++++++------------
+> >  1 file changed, 6 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> > index 72d3cdebdad1..0f54811262eb 100644
+> > --- a/drivers/irqchip/irq-gic-v3.c
+> > +++ b/drivers/irqchip/irq-gic-v3.c
+> > @@ -2415,21 +2415,15 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
+> >  
+> >  	/*
+> >  	 * If GICC is enabled and has valid gicr base address, then it means
+> > -	 * GICR base is presented via GICC
+> > +	 * GICR base is presented via GICC. The redistributor is only known to
+> > +	 * be accessible if the GICC is marked as enabled. If this bit is not
+> > +	 * set, we'd need to add the redistributor at runtime, which isn't
+> > +	 * supported.
+> >  	 */
+> > -	if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address) {
+> > +	if (gicc->flags & ACPI_MADT_ENABLED && gicc->gicr_base_address)
 > 
-> Define EXECMEM_KPROBES and EXECMEM_BPF ranges in arm64::execmem_params and
-> drop overrides of alloc_insn_page() and bpf_jit_alloc_exec().
-> 
-> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> ---
->  arch/arm64/kernel/module.c         | 13 +++++++++++++
->  arch/arm64/kernel/probes/kprobes.c |  7 -------
->  arch/arm64/net/bpf_jit_comp.c      | 11 -----------
->  3 files changed, 13 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-> index cd6320de1c54..d27db168d2a2 100644
-> --- a/arch/arm64/kernel/module.c
-> +++ b/arch/arm64/kernel/module.c
-> @@ -116,6 +116,16 @@ static struct execmem_params execmem_params __ro_after_init = {
->  			.flags = EXECMEM_KASAN_SHADOW,
->  			.alignment = MODULE_ALIGN,
->  		},
-> +		[EXECMEM_KPROBES] = {
-> +			.start = VMALLOC_START,
-> +			.end = VMALLOC_END,
-> +			.alignment = 1,
-> +		},
-> +		[EXECMEM_BPF] = {
-> +			.start = VMALLOC_START,
-> +			.end = VMALLOC_END,
-> +			.alignment = 1,
-> +		},
->  	},
->  };
->  
-> @@ -140,6 +150,9 @@ struct execmem_params __init *execmem_arch_params(void)
->  		r->end = module_plt_base + SZ_2G;
->  	}
->  
-> +	execmem_params.ranges[EXECMEM_KPROBES].pgprot = PAGE_KERNEL_ROX;
-> +	execmem_params.ranges[EXECMEM_BPF].pgprot = PAGE_KERNEL;
-> +
->  	return &execmem_params;
->  }
->  
-> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> index 70b91a8c6bb3..6fccedd02b2a 100644
-> --- a/arch/arm64/kernel/probes/kprobes.c
-> +++ b/arch/arm64/kernel/probes/kprobes.c
-> @@ -129,13 +129,6 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
->  	return 0;
->  }
->  
-> -void *alloc_insn_page(void)
-> -{
-> -	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
-> -			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
-> -			NUMA_NO_NODE, __builtin_return_address(0));
-> -}
+> Going in circles...
 
-It's slightly curious that we didn't clear the tag here, so it's nice that
-it all happens magically with your series:
+It does seem that way. Are you suggesting something should change here?
 
-Acked-by: Will Deacon <will@kernel.org>
+Thanks.
 
-Will
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
