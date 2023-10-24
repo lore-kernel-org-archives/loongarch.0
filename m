@@ -1,33 +1,33 @@
 Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F94434CEF
-	for <loongarch@lists.linux.dev>; Tue, 24 Oct 2023 15:18:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EE034CEF
+	for <loongarch@lists.linux.dev>; Tue, 24 Oct 2023 15:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RXKzMk8n"
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HXBUATQV"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
 	Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
 	In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7mUed4j6JYeBkSblH2nqcvZsQbChg0c7FCSaYvctrZY=; b=RXKzMk8nxqLsHr4DrG64vwCDNl
-	L1dBvNRAboxbtvs9cSI1KCnV0hnPEd7IW2lznQwfui6jPeu3MJ5AAq2UCyu6FgD+8x2iGNf4iDs5W
-	Hw2gX7LecqKIJFAwAF1BKt8bxa1WBrvQMwLcjVSAzi89+ncVyvzw0koZvYsmjNUkGg+jRIE5r3U5x
-	orHxHls/n75Zzq/kBkYtZ0EOZfE8GldZzqesp2T03cpK4YGxXTcZiQmUuT5AYQwhg5tvCo9L0tXt9
-	NbmL3Te3xKJ1+ljcRqR+ihf1KD34wlPyBSMmb4jpyIB5r1SctfT0r+pSXWkYCf0HEW9QvzvWn9Ogc
-	wAFyW+YA==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:44454 helo=rmk-PC.armlinux.org.uk)
+	bh=IvdCyZ69JqjCqU2UCE2N7kgvodoHzzbAeaFJb32wt6M=; b=HXBUATQVBdjMZPY0yc6gM7kPy3
+	G3hrUbLBAVOLWAfhp7RSpQyTDo7kR93WiMzdV7a87uv35WPsIqru3D1uZ6uAi2zfLpa6dfU3h5pv8
+	vzi3dl9isG3GGh3n5k2W4XJe0ogrjaGhQ5L55rpGmsONgDHpsUuhQ355rEY2hf+9Lg9SqilZSMfZX
+	Ye7Y/qNvdVEdWIgCGh36o2wQflsQPjVxaUPt/A2I4YhimpoM+vFFnMib/ZXWdF85xUHJuFLIFlF3S
+	e8ajQ1VQuoclimJYrm4GDa0mWAJKt6BniECMV5SPpDQwXY0VqweTrf/JA0Zs+Jbxda2NjqyCiiVCk
+	CdBVe8Jw==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:46022 helo=rmk-PC.armlinux.org.uk)
 	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <rmk@armlinux.org.uk>)
-	id 1qvJB9-0004VJ-12;
-	Tue, 24 Oct 2023 16:18:47 +0100
+	id 1qvJBJ-0004Vr-2J;
+	Tue, 24 Oct 2023 16:18:57 +0100
 Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
 	(envelope-from <rmk@rmk-PC.armlinux.org.uk>)
-	id 1qvJBA-00AqRq-QW; Tue, 24 Oct 2023 16:18:48 +0100
+	id 1qvJBL-00AqS2-3S; Tue, 24 Oct 2023 16:18:59 +0100
 In-Reply-To: <ZTffkAdOqL2pI2la@shell.armlinux.org.uk>
 References: <ZTffkAdOqL2pI2la@shell.armlinux.org.uk>
 From: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
@@ -49,11 +49,12 @@ Cc: Salil Mehta <salil.mehta@huawei.com>,
 	 jianyong.wu@arm.com,
 	 justin.he@arm.com,
 	 James Morse <james.morse@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	acpica-devel@lists.linuxfoundation.org
-Subject: [PATCH 31/39] ACPICA: Add new MADT GICC flags fields
+	Len Brown <lenb@kernel.org>
+Subject: [PATCH 33/39] irqchip/gic-v3: Add support for ACPI's disabled but
+ 'online capable' CPUs
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -63,43 +64,94 @@ MIME-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1qvJBA-00AqRq-QW@rmk-PC.armlinux.org.uk>
+Message-Id: <E1qvJBL-00AqS2-3S@rmk-PC.armlinux.org.uk>
 Sender: Russell King <rmk@armlinux.org.uk>
-Date: Tue, 24 Oct 2023 16:18:48 +0100
+Date: Tue, 24 Oct 2023 16:18:59 +0100
 
 From: James Morse <james.morse@arm.com>
 
-Add the new flag field to the MADT's GICC structure.
+To support virtual CPU hotplug, ACPI has added an 'online capable' bit
+to the MADT GICC entries. This indicates a disabled CPU entry may not
+be possible to online via PSCI until firmware has set enabled bit in
+_STA.
 
-'Online Capable' indicates a disabled CPU can be enabled later. See
-ACPI specification 6.5 Tabel 5.37: GICC CPU Interface Flags.
+What about the redistributor in the GICC entry? ACPI doesn't want to say.
+Assume the worst: When a redistributor is described in the GICC entry,
+but the entry is marked as disabled at boot, assume the redistributor
+is inaccessible.
+
+The GICv3 driver doesn't support late online of redistributors, so this
+means the corresponding CPU can't be brought online either. Clear the
+possible and present bits.
+
+Systems that want CPU hotplug in a VM can ensure their redistributors
+are always-on, and describe them that way with a GICR entry in the MADT.
+
+When mapping redistributors found via GICC entries, handle the case
+where the arch code believes the CPU is present and possible, but it
+does not have an accessible redistributor. Print a warning and clear
+the present and possible bits.
 
 Signed-off-by: James Morse <james.morse@arm.com>
----
-This patch probably needs to go via the upstream acpica project,
-but is included here so the feature can be tested.
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+----
+Disabled but online-capable CPUs cause this message to be printed
+if their redistributors are described via GICC:
+| GICv3: CPU 3's redistributor is inaccessible: this CPU can't be brought online
 
-If the ACPICA header files are updated before merging this patch set,
-this patch will need to be dropped.
+If ACPI's _STA tries to make the cpu present later, this message is printed:
+| Changing CPU present bit is not supported
 
 Changes since RFC v2:
- * Add ACPI specification reference.
+ * use gicc->flags & (ACPI_MADT_ENABLED | ACPI_MADT_GICC_CPU_CAPABLE)
 ---
- include/acpi/actbl2.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/irq-gic-v3.c | 14 ++++++++++++++
+ include/linux/acpi.h         |  2 +-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-index 3751ae69432f..c433a079d8e1 100644
---- a/include/acpi/actbl2.h
-+++ b/include/acpi/actbl2.h
-@@ -1046,6 +1046,7 @@ struct acpi_madt_generic_interrupt {
- /* ACPI_MADT_ENABLED                    (1)      Processor is usable if set */
- #define ACPI_MADT_PERFORMANCE_IRQ_MODE  (1<<1)	/* 01: Performance Interrupt Mode */
- #define ACPI_MADT_VGIC_IRQ_MODE         (1<<2)	/* 02: VGIC Maintenance Interrupt mode */
-+#define ACPI_MADT_GICC_CPU_CAPABLE      (1<<3)	/* 03: CPU is online capable */
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index e787e7bbb5a2..8a89b853a5b9 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -2378,11 +2378,25 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
+ 				(struct acpi_madt_generic_interrupt *)header;
+ 	u32 reg = readl_relaxed(acpi_data.dist_base + GICD_PIDR2) & GIC_PIDR2_ARCH_MASK;
+ 	u32 size = reg == GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_64K * 2;
++	int cpu = get_cpu_for_acpi_id(gicc->uid);
+ 	void __iomem *redist_base;
  
- /* 12: Generic Distributor (ACPI 5.0 + ACPI 6.0 changes) */
+ 	if (!acpi_gicc_is_usable(gicc))
+ 		return 0;
  
++	/*
++	 * Capable but disabled CPUs can be brought online later. What about
++	 * the redistributor? ACPI doesn't want to say!
++	 * Virtual hotplug systems can use the MADT's "always-on" GICR entries.
++	 * Otherwise, prevent such CPUs from being brought online.
++	 */
++	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
++		pr_warn_once("CPU %u's redistributor is inaccessible: this CPU can't be brought online\n", cpu);
++		set_cpu_present(cpu, false);
++		set_cpu_possible(cpu, false);
++		return 0;
++	}
++
+ 	redist_base = ioremap(gicc->gicr_base_address, size);
+ 	if (!redist_base)
+ 		return -ENOMEM;
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 3672312e15eb..ed1ef5d8687f 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -258,7 +258,7 @@ void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
+ 
+ static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interrupt *gicc)
+ {
+-	return gicc->flags & ACPI_MADT_ENABLED;
++	return gicc->flags & (ACPI_MADT_ENABLED | ACPI_MADT_GICC_CPU_CAPABLE);
+ }
+ 
+ /* the following numa functions are architecture-dependent */
 -- 
 2.30.2
 
