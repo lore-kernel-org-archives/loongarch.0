@@ -1,33 +1,33 @@
 Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87466328BD
-	for <loongarch@lists.linux.dev>; Tue, 24 Oct 2023 15:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14326328D1
+	for <loongarch@lists.linux.dev>; Tue, 24 Oct 2023 15:18:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="UFpyf7IB"
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KMVeJnaK"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
 	Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
 	In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WbkJcP8EfdoxIJZCXfcMKFVW/i0XQ0H+6U5ilPscurM=; b=UFpyf7IBgalvU1WbMK4uFsjopi
-	n3QYxKYZyHK3GPF00+ghNLXiOFCtl6pp8wlAjZdeBBo+1hsVMpqhTFYqVSDnaXMgPqZAaLKwUQiDG
-	9uvr3egTxe1FOV02vpFPdUDsfkp9i6U6JHam5QzXbOYxN7X33nA9s439YqSld4/s9jCJov8XGKHL+
-	JNp7n/Wabc3e93CgHUO+oxPhtxw4O4WRPce1ABFGYGzKuH5/kRJqlr0K6ewJyURrQiZVlLdhSRdP7
-	w3C055XibslaZrjOpVNLKJDdeaJjqxnvqA4rMmD9NMA6hA95tQ/sT/XqTlIor9TKsrxuKAy4xVBXP
-	pfpMPhIg==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:36712 helo=rmk-PC.armlinux.org.uk)
+	bh=X5Z3Nkf5E4AARS+LHoFvElPsf0E44YGYiNzXX8jAQTI=; b=KMVeJnaKKwNEXhfQUmDrES4Snp
+	XVvjqbxfqo6dLoYwamROVwhdcf+ZovVQJI7nDYDGQtcNIXjfIT8e7KsFeto4CPCANkXvu4t9K4Y+g
+	8EGsTU5QpumHaaHipUSZyR13cFFVehwjO/0SFEc+a9oyQs8c2MGh5V3uwAXUPf7q0fXPquP3hLEJy
+	Yzqs5yQ5uo1f5zI1l2MQZ9XL7/fXlSAGmRdqC0+pVYMp1Z9i9VoONTVYY/uld4OO+hy99c97jEcyL
+	Hniy37vHKdoNG4BwZgaojb/AMgXRdKgZ2qQQjWXVjYQP8wKJN0AeDHybJXL9JPfGFMLw+qJ5Nr0tt
+	HjcFxc7g==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:57434 helo=rmk-PC.armlinux.org.uk)
 	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <rmk@armlinux.org.uk>)
-	id 1qvJAE-0004Rl-2N;
-	Tue, 24 Oct 2023 16:17:50 +0100
+	id 1qvJAU-0004SZ-0c;
+	Tue, 24 Oct 2023 16:18:06 +0100
 Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
 	(envelope-from <rmk@rmk-PC.armlinux.org.uk>)
-	id 1qvJAG-00AqQm-6R; Tue, 24 Oct 2023 16:17:52 +0100
+	id 1qvJAV-00AqR4-LS; Tue, 24 Oct 2023 16:18:07 +0100
 In-Reply-To: <ZTffkAdOqL2pI2la@shell.armlinux.org.uk>
 References: <ZTffkAdOqL2pI2la@shell.armlinux.org.uk>
 From: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
@@ -49,10 +49,12 @@ Cc: Salil Mehta <salil.mehta@huawei.com>,
 	 jianyong.wu@arm.com,
 	 justin.he@arm.com,
 	 James Morse <james.morse@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Subject: [PATCH 20/39] ACPI: processor: Register CPUs that are online, but not
- described in the DSDT
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Subject: [PATCH 23/39] drivers: base: Implement weak arch_unregister_cpu()
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -62,70 +64,47 @@ MIME-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1qvJAG-00AqQm-6R@rmk-PC.armlinux.org.uk>
+Message-Id: <E1qvJAV-00AqR4-LS@rmk-PC.armlinux.org.uk>
 Sender: Russell King <rmk@armlinux.org.uk>
-Date: Tue, 24 Oct 2023 16:17:52 +0100
+Date: Tue, 24 Oct 2023 16:18:07 +0100
 
 From: James Morse <james.morse@arm.com>
 
-ACPI has two descriptions of CPUs, one in the MADT/APIC table, the other
-in the DSDT. Both are required. (ACPI 6.5's 8.4 "Declaring Processors"
-says "Each processor in the system must be declared in the ACPI
-namespace"). Having two descriptions allows firmware authors to get
-this wrong.
+Add arch_unregister_cpu() to allow the ACPI machinery to call
+unregister_cpu(). This is enough for arm64, riscv and loongarch, but
+needs to be overridden by x86 and ia64 who need to do more work.
 
-If CPUs are described in the MADT/APIC, they will be brought online
-early during boot. Once the register_cpu() calls are moved to ACPI,
-they will be based on the DSDT description of the CPUs. When CPUs are
-missing from the DSDT description, they will end up online, but not
-registered.
-
-Add a helper that runs after acpi_init() has completed to register
-CPUs that are online, but weren't found in the DSDT. Any CPU that
-is registered by this code triggers a firmware-bug warning and kernel
-taint.
-
-Qemu TCG only describes the first CPU in the DSDT, unless cpu-hotplug
-is configured.
-
+CC: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 ---
- drivers/acpi/acpi_processor.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Changes since v1:
+ * Added CONFIG_HOTPLUG_CPU ifdeffery around unregister_cpu
+Changes since RFC v2:
+ * Move earlier in the series
+---
+ drivers/base/cpu.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index 6a542e0ce396..0511f2bc10bc 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -791,6 +791,25 @@ void __init acpi_processor_init(void)
- 	acpi_pcc_cpufreq_init();
+diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+index 6c70a004c198..2b9cb2667654 100644
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -531,7 +531,14 @@ int __weak arch_register_cpu(int cpu)
+ {
+ 	return register_cpu(&per_cpu(cpu_devices, cpu), cpu);
  }
- 
-+static int __init acpi_processor_register_missing_cpus(void)
+-#endif
++
++#ifdef CONFIG_HOTPLUG_CPU
++void __weak arch_unregister_cpu(int num)
 +{
-+	int cpu;
-+
-+	if (acpi_disabled)
-+		return 0;
-+
-+	for_each_online_cpu(cpu) {
-+		if (!get_cpu_device(cpu)) {
-+			pr_err_once(FW_BUG "CPU %u has no ACPI namespace description!\n", cpu);
-+			add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-+			arch_register_cpu(cpu);
-+		}
-+	}
-+
-+	return 0;
++	unregister_cpu(&per_cpu(cpu_devices, num));
 +}
-+subsys_initcall_sync(acpi_processor_register_missing_cpus);
-+
- #ifdef CONFIG_ACPI_PROCESSOR_CSTATE
- /**
-  * acpi_processor_claim_cst_control - Request _CST control from the platform.
++#endif /* CONFIG_HOTPLUG_CPU */
++#endif /* CONFIG_GENERIC_CPU_DEVICES */
+ 
+ static void __init cpu_dev_register_generic(void)
+ {
 -- 
 2.30.2
 
