@@ -1,245 +1,125 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4261CAB2
-	for <loongarch@lists.linux.dev>; Wed, 25 Oct 2023 13:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421F233E3
+	for <loongarch@lists.linux.dev>; Wed, 25 Oct 2023 23:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4L25iin"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-9becde9ea7bso189393766b.0
-        for <loongarch@lists.linux.dev>; Wed, 25 Oct 2023 06:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698239734; x=1698844534; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9RaUlU1nxCqKDcemUMCbFBahiSg15h6A7+woT7EpFjA=;
-        b=K4L25iinXCR+UZPaIWmUAuIiOfTGdTpsQNvdfRPBCkMS7HJHUmGlPoEIvw03IURV89
-         92e6VgC7vjLpvsM2cBzErKWb+Obebn0AHBh576ptP9TMDm8q2iPG8DgsxyETklybgWnh
-         KxZ/O/hFjdQIAdI2Rwdt2I2xYVR9JvHuWyVXPmRyVrU13AR1nNRHUl39L4bzAMeO2zaA
-         GjBAloU94Pe51ESSnCu9xB2E3EUL9ftxm4Aj5HL108tTtkfy51wP5p7114s2gBLhs7CV
-         u15/iCOvqZa+pptR7E50IxKCjwCDWo6pMN4OiRxeD+osc8HwoCRUNM8oScNjSMEZ+WIz
-         AM3Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oyl/Mjs/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1698278088;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TIintWgJTfboQO5OTuPzrdngusig1vFIFKO8N+OxmI8=;
+	b=Oyl/Mjs/0mS0sR4k7SLz2AWdg1aLFHJIHzIwehiv3qhqqZvs06Z426GddAaJ4MhxezRmir
+	6mG0f7rcJzfWMTR3LZ753mHoDlNx/3ElNXBcwuzE8hjXomsJDHH5cN4d9b78bSh1x3Y/sb
+	zjoXosOIY25gqCoLaVWdYFUTi4Xz9R8=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-149-cxmxUYqOPPG65nebqVA65g-1; Wed, 25 Oct 2023 19:54:46 -0400
+X-MC-Unique: cxmxUYqOPPG65nebqVA65g-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-778915a0c73so43105885a.1
+        for <loongarch@lists.linux.dev>; Wed, 25 Oct 2023 16:54:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698239734; x=1698844534;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9RaUlU1nxCqKDcemUMCbFBahiSg15h6A7+woT7EpFjA=;
-        b=tXOaypvq6c8quGk7H3+W0gRKWHaEfr1MeWo10vqwkmtF1d9BII3GoefkRfsJLT5q2o
-         L7U/g/TwbIZSO7/JArUyKU4CbQwG6uMT/1fyHrWjoGVq1wIW1cAMwZsKhKNiScJyRED3
-         nGhEG9GNn93WybMQAit/eG298AQR/KCeOBgBkLXAy4HwFhB3AZNcMLFvLPADPcF6Cypp
-         Cf6eUQS4H83+mxeBVyHMcakSV1mDc082VxOt7bMRs7eAQSJpxVmE0mL79GR8DP0QyTmd
-         LZinOc1DD1H7wljYd1SP0NVpa7ahqjSToOJ0oGTdXGXKmnlqCFAJ7bHFmrbtRKzTztyE
-         cbwQ==
-X-Gm-Message-State: AOJu0YxRXcPgys3MNBRlaRMuhHnRkSos4l6OnTbeW39vcv3V/sCOWTWu
-	0/j4+z5F5+EX6sX5WDiUQ+m4/OPwM4sY/cUYf9s=
-X-Google-Smtp-Source: AGHT+IGf0RFhqVSBCtZWMVshUEqDHl2Mhw5MfY0Igi6bPLXi+zIldIN36bhKyeMs64sCzHBPAcBSh0Gu0kSB2/0dvw8=
-X-Received: by 2002:a17:906:fe06:b0:9a9:f042:deb9 with SMTP id
- wy6-20020a170906fe0600b009a9f042deb9mr14576255ejb.19.1698239733182; Wed, 25
- Oct 2023 06:15:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698278086; x=1698882886;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TIintWgJTfboQO5OTuPzrdngusig1vFIFKO8N+OxmI8=;
+        b=Gv+rT0QKN6VE5wrUh995Q+9oComRuKlTaRatcwJ8GR9O2TWgEhP/qBFXYPjsymhTkB
+         e0QbincL5usE/JPpUu/NxrV5f2D+DpoKBYYh/Z6XNBwgbGhGJvi/EhV2vaxjLl35viQ4
+         QRTOmJdzqVC1CKmljUXsv4pRG0K2TLkuAtrtzQ8TWvu2+jvAinB05U9AO8PbC5/BXbf/
+         t5Ghn7CWLitORSgg6Wl+Akju9yH3qAdM5DcaT8Nz49THdtRcflXWq5zZxvMDBbr5o4eW
+         t6mby8z+5h6JlhY42/1UoWAxNKG6RAhDt7hZqR8rqU2yQbVGqNyznfqPyZsQP+6BfA07
+         dNeQ==
+X-Gm-Message-State: AOJu0YxrSrj5MifIGRNjv4bqArdm2t35qzHJOuKGNXFrSoReJ6k2Sh01
+	T9rfmmBLYU0KsK2AVEz78gyhdjoHt4rHQ5BSc8X5VmN1eWPwwurRZdHBeY6Txl8EgzOv3SA0dLL
+	nN8E89vW5w+h7Y4d/JCDxhCNGEZtG
+X-Received: by 2002:a05:620a:5627:b0:778:91f0:e559 with SMTP id vv7-20020a05620a562700b0077891f0e559mr14623238qkn.78.1698278086031;
+        Wed, 25 Oct 2023 16:54:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEG8buWnXa1t3csI9uuGtHq1Kkfm/iFDo8HA+qc6SHQk1q5HQs4phEeyxxaDi4lZR9R6mmHJA==
+X-Received: by 2002:a05:620a:5627:b0:778:91f0:e559 with SMTP id vv7-20020a05620a562700b0077891f0e559mr14623224qkn.78.1698278085713;
+        Wed, 25 Oct 2023 16:54:45 -0700 (PDT)
+Received: from [172.19.0.201] ([192.80.84.35])
+        by smtp.googlemail.com with ESMTPSA id qp8-20020a05620a388800b0077423f849c3sm4600064qkn.24.2023.10.25.16.54.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Oct 2023 16:54:45 -0700 (PDT)
+Message-ID: <791d3b77-8a4d-4c5e-88db-f38843d37098@redhat.com>
+Date: Thu, 26 Oct 2023 01:54:44 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Liam Ni <zhiguangni01@gmail.com>
-Date: Wed, 25 Oct 2023 21:15:21 +0800
-Message-ID: <CACZJ9cUggCs1E_E_CKJzK=TVN9v+s=tegsHV_8NczsPB5OhW5w@mail.gmail.com>
-Subject: [PATCH V7] NUMA: optimize detection of memory with no node id
- assigned by firmware
-To: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Mike Rapoport <rppt@kernel.org>
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, 
-	Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org, peterz@infradead.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, maobibo@loongson.cn, 
-	chenfeiyang@loongson.cn, Zhiguang Ni <zhiguangni01@gmail.com>, zhoubinbin@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] LoongArch KVM changes for v6.7
+To: Huacai Chen <chenhuacai@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <20231005091825.3207300-1-chenhuacai@loongson.cn>
+ <CAAhV-H7VN_r-SzEMK6LHqXzVbNemZYuYYLb2mri=EGZ7qb3C3A@mail.gmail.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <CAAhV-H7VN_r-SzEMK6LHqXzVbNemZYuYYLb2mri=EGZ7qb3C3A@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Sanity check that makes sure the nodes cover all memory loops over
-numa_meminfo to count the pages that have node id assigned by the firmware,
-then loops again over memblock.memory to find the total amount of memory
-and in the end checks that the difference between the total memory and
-memory that covered by nodes is less than some threshold. Worse, the loop
-over numa_meminfo calls __absent_pages_in_range() that also partially
-traverses memblock.memory.
+On 10/25/23 04:10, Huacai Chen wrote:
+> Hi, Paolo, Excuse me, but this is just a gentle reminder. The 6.7 merge 
+> window is coming soon, have you missed this PR mail? Or should I rebase 
+> to 6.6-rc7 to send a new PR (a randconfig build error is fixed in 6.6-rc7)?
 
-It's much simpler and more efficient to have a single traversal of
-memblock.memory that verifies that amount of memory not covered by nodes is
-less than a threshold.
+Hi,
 
-Introduce memblock_validate_numa_coverage() that does exactly that and use
-it instead of numa_meminfo_cover_memory().
+I am expecting some changes to Kconfig for 6.7 and wanted to pull this 
+second, to solve the conflicts.
 
-Signed-off-by: Liam Ni <zhiguangni01@gmail.com>
----
- arch/loongarch/kernel/numa.c | 28 +---------------------------
- arch/x86/mm/numa.c           | 34 ++--------------------------------
- include/linux/memblock.h     |  1 +
- mm/memblock.c                | 34 ++++++++++++++++++++++++++++++++++
- 4 files changed, 38 insertions(+), 59 deletions(-)
+There is no need to rebase, but it would be useful to point me to the 
+fix in 6.6-rc7.
 
-diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-index cb00804826f7..0e69679bfc8d 100644
---- a/arch/loongarch/kernel/numa.c
-+++ b/arch/loongarch/kernel/numa.c
-@@ -226,32 +226,6 @@ static void __init node_mem_init(unsigned int node)
+Paolo
 
- #ifdef CONFIG_ACPI_NUMA
-
--/*
-- * Sanity check to catch more bad NUMA configurations (they are amazingly
-- * common).  Make sure the nodes cover all memory.
-- */
--static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
--{
--   int i;
--   u64 numaram, biosram;
--
--   numaram = 0;
--   for (i = 0; i < mi->nr_blks; i++) {
--       u64 s = mi->blk[i].start >> PAGE_SHIFT;
--       u64 e = mi->blk[i].end >> PAGE_SHIFT;
--
--       numaram += e - s;
--       numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
--       if ((s64)numaram < 0)
--           numaram = 0;
--   }
--   max_pfn = max_low_pfn;
--   biosram = max_pfn - absent_pages_in_range(0, max_pfn);
--
--   BUG_ON((s64)(biosram - numaram) >= (1 << (20 - PAGE_SHIFT)));
--   return true;
--}
--
- static void __init add_node_intersection(u32 node, u64 start, u64
-size, u32 type)
- {
-    static unsigned long num_physpages;
-@@ -396,7 +370,7 @@ int __init init_numa_memory(void)
-        return -EINVAL;
-
-    init_node_memblock();
--   if (numa_meminfo_cover_memory(&numa_meminfo) == false)
-+   if (!memblock_validate_numa_coverage(SZ_1M))
-        return -EINVAL;
-
-    for_each_node_mask(node, node_possible_map) {
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 2aadb2019b4f..4079c9edaa93 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -447,37 +447,6 @@ int __node_distance(int from, int to)
- }
- EXPORT_SYMBOL(__node_distance);
-
--/*
-- * Sanity check to catch more bad NUMA configurations (they are amazingly
-- * common).  Make sure the nodes cover all memory.
-- */
--static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
--{
--   u64 numaram, e820ram;
--   int i;
--
--   numaram = 0;
--   for (i = 0; i < mi->nr_blks; i++) {
--       u64 s = mi->blk[i].start >> PAGE_SHIFT;
--       u64 e = mi->blk[i].end >> PAGE_SHIFT;
--       numaram += e - s;
--       numaram -= __absent_pages_in_range(mi->blk[i].nid, s, e);
--       if ((s64)numaram < 0)
--           numaram = 0;
--   }
--
--   e820ram = max_pfn - absent_pages_in_range(0, max_pfn);
--
--   /* We seem to lose 3 pages somewhere. Allow 1M of slack. */
--   if ((s64)(e820ram - numaram) >= (1 << (20 - PAGE_SHIFT))) {
--       printk(KERN_ERR "NUMA: nodes only cover %LuMB of your %LuMB
-e820 RAM. Not used.\n",
--              (numaram << PAGE_SHIFT) >> 20,
--              (e820ram << PAGE_SHIFT) >> 20);
--       return false;
--   }
--   return true;
--}
--
- /*
-  * Mark all currently memblock-reserved physical memory (which covers the
-  * kernel's own memory ranges) as hot-unswappable.
-@@ -583,7 +552,8 @@ static int __init numa_register_memblks(struct
-numa_meminfo *mi)
-            return -EINVAL;
-        }
-    }
--   if (!numa_meminfo_cover_memory(mi))
-+
-+   if (!memblock_validate_numa_coverage(SZ_1M))
-        return -EINVAL;
-
-    /* Finally register nodes. */
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 1c1072e3ca06..a94efe977539 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -120,6 +120,7 @@ int memblock_physmem_add(phys_addr_t base,
-phys_addr_t size);
- void memblock_trim_memory(phys_addr_t align);
- bool memblock_overlaps_region(struct memblock_type *type,
-                  phys_addr_t base, phys_addr_t size);
-+bool memblock_validate_numa_coverage(unsigned long threshold_bytes);
- int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
- int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
- int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 0863222af4a4..a1917aa331d6 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -734,6 +734,40 @@ int __init_memblock memblock_add(phys_addr_t
-base, phys_addr_t size)
-    return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
- }
-
-+/**
-+ * memblock_validate_numa_coverage - check if amount of memory with
-+ * no node ID assigned is less than a threshold
-+ * @threshold_bytes: maximal number of bytes that can have unassigned node
-+ * ID (in bytes).
-+ *
-+ * A buggy firmware may report memory that does not belong to any node.
-+ * Check if amount of such memory is below @threshold_pages.
-+ *
-+ * Return: true on success, false on failure.
-+ */
-+bool __init_memblock memblock_validate_numa_coverage(unsigned long
-threshold_bytes)
-+{
-+   unsigned long nr_pages = 0;
-+   unsigned long start_pfn, end_pfn, mem_size_mb;
-+   int nid, i;
-+
-+   /* calculate lose page */
-+   for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
-+       if (nid == NUMA_NO_NODE)
-+           nr_pages += end_pfn - start_pfn;
-+   }
-+
-+   if ((nr_pages << PAGE_SHIFT) >= threshold_bytes) {
-+       mem_size_mb = memblock_phys_mem_size() >> 20;
-+       pr_err("NUMA: no nodes coverage for %luMB of %luMB RAM\n",
-+              (nr_pages << PAGE_SHIFT) >> 20, mem_size_mb);
-+       return false;
-+   }
-+
-+   return true;
-+}
-+
-+
- /**
-  * memblock_isolate_range - isolate given range into disjoint memblocks
-  * @type: memblock type to isolate range for
--- 
-2.25.1
