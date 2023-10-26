@@ -1,47 +1,47 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA87E79DE
-	for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 06:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E87A8C13
+	for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 06:01:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeVhJPJL"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-27d0a173e61so1443721a91.0
-        for <loongarch@lists.linux.dev>; Thu, 26 Oct 2023 23:01:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnwLGlID"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-27d104fa285so1419233a91.2
+        for <loongarch@lists.linux.dev>; Thu, 26 Oct 2023 23:01:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698386470; x=1698991270; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1698386473; x=1698991273; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XOAetODyKAZtmGq4juMfnsuGXFtx5PudQ3Ii+cytJu4=;
-        b=EeVhJPJLztgSzNhu/9chYqpKWFCKCfBmi8h1SfXT4fHig9VsxCVAtMgHpLBILdyIxM
-         iwi8HWpI9/9/74gBX4LkSUUrGUsxC4xnOU2SUqlsfy/flP06E9O3uXNTcyZ7REqfkzj/
-         SNY3iPhIq42uBTFzlaQnt0GCWLlEGzYhAYZQICSv5chz4CNj9KA4YhK15VoCTK7+zNt3
-         CRTGdECsa6O3GSnJjS1lgVfohdO/HVHIP40sKJB3pp4S2YwU1XQVPht1DxXUC//Gq2ep
-         5NtBQVvPR9SNrf+yA5BWU5jnkqjEACxdubqg7ojna6JaxgbYiB5ZWIGYA2scvy7BOSxE
-         8FBA==
+        bh=Dhv57qGO2ds9mbz1kzxH2y7YI2Zg20QWv6WH4DiyAo4=;
+        b=WnwLGlIDsx1d6LUqKU3MQvsFm0+WBnOjMNv7I3oMsgwftXQZRBF1k+0LhZiHijv0bV
+         Q2aoH8v/vL7veKAmT6nN1y9tcWl3RpToiDRC4e8TM88gXA4GjKJUBQrpNiCPUFV+gvur
+         IiMZ2GegE/itNbcPSOHF/OPn/s1YiJGp/ey5316WUNy4sd5zyvUyjTgRlPout4XSq9/8
+         Yad+fU+o1J3inAnR67G0KA0DXDHvh+l/F5wLFUMJzXxQHu80ZNWW90Cx8FjwGy9hduux
+         x47kiEQKk0lKAXRCCteonxRMckFvGMOP6IGs1weNeX4dBivXnerLQqtamUUXdWJ7ifAj
+         OrzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698386470; x=1698991270;
+        d=1e100.net; s=20230601; t=1698386473; x=1698991273;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XOAetODyKAZtmGq4juMfnsuGXFtx5PudQ3Ii+cytJu4=;
-        b=e40r6KbT2OUm5wZrt6Dyu+34+xZG5Ld4FBiyD0wct848oqnDNCFsFwU9C7xFEYYxvD
-         06pLGdopfRBS1HC/YMnWINdCXyS9y+0NkwDH66M41e3y54eCc1jukFiBMij/SfOiMoMD
-         jZJNtbhvgw03INz2MvvN5ZvOIZDPcakbGnHlIHcVCYNyoAXD5wkoQmSPyV10F/B/Nsgi
-         8Bzoj8SmDYg5gCVWql4WA0xAUJvqi8LgPuM05ZQqG0ziq8vX/RQ1o4GtX04Z2CVPbKiL
-         q3LrnO4G/aXubwKTEqpWYd/jXu3VUmR4Y8lSnZvrVFIPRJk2N1rSOeoFZr18jFQdD55/
-         B72w==
-X-Gm-Message-State: AOJu0YywfB5OCHyU6JK7VAf3aeb/8tcbxfH+gf48dwETO2VRxCMUQwwe
-	gexRb94anPAO9JZ3/phob3c+/FICj5V4Yw==
-X-Google-Smtp-Source: AGHT+IFKkk/FmkDvRFb2t82GndS2qIQ4DB43yNCvuipJTQpVhZ7laCMccD98YMenu6lbOguM6Rr73Q==
-X-Received: by 2002:a17:90a:2d83:b0:27d:2abc:f9c1 with SMTP id p3-20020a17090a2d8300b0027d2abcf9c1mr1598389pjd.20.1698386469984;
-        Thu, 26 Oct 2023 23:01:09 -0700 (PDT)
+        bh=Dhv57qGO2ds9mbz1kzxH2y7YI2Zg20QWv6WH4DiyAo4=;
+        b=VMJ9ERpQuLzEJMVHvB3DNvhQJO3K7NIVMvDbPyDha0PYvJRWeAAa3baP7q8wPF4TKu
+         DJ2LwQ8/O7m1klRTBYaqQkF2YTqS5uNbATU1xtnwJFL/u6Q2uPkKh91wVPWWs/DQqFsc
+         gspwolE9DTMNRwcmi35G5XgVKayrkm6HWcVy2hhaOFpsBeTpUkxDPKzsh8/ma2IW0/g3
+         BXvkrE3kPXmkzcHn+ayGuMKFa+VUN6xyoRAXDrM4gzbY5a10pbc2v+v4hSWczjMxIF76
+         hpzKGUKg4z/RHP5pXvKV30SS1oh1jifO9bxdxGxjZuvrPIUjbPrthg2Ed8GDvhjQ/SQ0
+         xsog==
+X-Gm-Message-State: AOJu0YwE3rMWbIaqRSzfMDMey4uNQFCybpjrSYqa6qEsdZLbQE3cBGUk
+	JePk0ZXUiV9n1QKi/CFxzE1z8pHfWWDKEw==
+X-Google-Smtp-Source: AGHT+IE2jl0HioVsQXNEfZxRACFosanEuhKFHfIooEHzU9KdPnTtunsaur1cC+gCgV8FkLRBioC3ig==
+X-Received: by 2002:a17:90a:1996:b0:27d:2054:9641 with SMTP id 22-20020a17090a199600b0027d20549641mr1710760pji.36.1698386473513;
+        Thu, 26 Oct 2023 23:01:13 -0700 (PDT)
 Received: from ubuntu.. ([43.132.98.47])
-        by smtp.googlemail.com with ESMTPSA id z2-20020a17090a1fc200b00277337818afsm1113667pjz.0.2023.10.26.23.01.08
+        by smtp.googlemail.com with ESMTPSA id z2-20020a17090a1fc200b00277337818afsm1113667pjz.0.2023.10.26.23.01.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Oct 2023 23:01:09 -0700 (PDT)
+        Thu, 26 Oct 2023 23:01:13 -0700 (PDT)
 From: Hengqi Chen <hengqi.chen@gmail.com>
 To: loongarch@lists.linux.dev,
 	bpf@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: ast@kernel.org,
 	kernel@xen0n.name,
 	yangtiezhu@loongson.cn,
 	hengqi.chen@gmail.com
-Subject: [PATCH bpf-next 1/8] LoongArch: Add more instruction opcodes and emit_* helpers
-Date: Thu, 26 Oct 2023 18:43:30 +0000
-Message-Id: <20231026184337.563801-2-hengqi.chen@gmail.com>
+Subject: [PATCH bpf-next 2/8] LoongArch: BPF: Support sign-extension load instructions
+Date: Thu, 26 Oct 2023 18:43:31 +0000
+Message-Id: <20231026184337.563801-3-hengqi.chen@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231026184337.563801-1-hengqi.chen@gmail.com>
 References: <20231026184337.563801-1-hengqi.chen@gmail.com>
@@ -66,69 +66,104 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch adds more instruction opcodes and their corresponding
-emit_* helpers which will be used in later patches.
+Add support for sign-extension load instructions.
 
 Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
 ---
- arch/loongarch/include/asm/inst.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/loongarch/net/bpf_jit.c | 49 ++++++++++++++++++++++++++++--------
+ 1 file changed, 39 insertions(+), 10 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 71e1ed4165c8..5350ae9ee380 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -65,6 +65,8 @@ enum reg2_op {
- 	revbd_op	= 0x0f,
- 	revh2w_op	= 0x10,
- 	revhd_op	= 0x11,
-+	extwh_op	= 0x16,
-+	extwb_op	= 0x17,
- };
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index db9342b2d0e6..0c2bbca527ef 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -411,7 +411,11 @@ static int add_exception_handler(const struct bpf_insn *insn,
+ 	off_t offset;
+ 	struct exception_table_entry *ex;
  
- enum reg2i5_op {
-@@ -556,6 +558,8 @@ static inline void emit_##NAME(union loongarch_instruction *insn,	\
- DEF_EMIT_REG2_FORMAT(revb2h, revb2h_op)
- DEF_EMIT_REG2_FORMAT(revb2w, revb2w_op)
- DEF_EMIT_REG2_FORMAT(revbd, revbd_op)
-+DEF_EMIT_REG2_FORMAT(extwh, extwh_op)
-+DEF_EMIT_REG2_FORMAT(extwb, extwb_op)
+-	if (!ctx->image || !ctx->prog->aux->extable || BPF_MODE(insn->code) != BPF_PROBE_MEM)
++	if (!ctx->image || !ctx->prog->aux->extable)
++		return 0;
++
++	if (BPF_MODE(insn->code) != BPF_PROBE_MEM &&
++	    BPF_MODE(insn->code) != BPF_PROBE_MEMSX)
+ 		return 0;
  
- #define DEF_EMIT_REG2I5_FORMAT(NAME, OP)				\
- static inline void emit_##NAME(union loongarch_instruction *insn,	\
-@@ -607,6 +611,9 @@ DEF_EMIT_REG2I12_FORMAT(lu52id, lu52id_op)
- DEF_EMIT_REG2I12_FORMAT(andi, andi_op)
- DEF_EMIT_REG2I12_FORMAT(ori, ori_op)
- DEF_EMIT_REG2I12_FORMAT(xori, xori_op)
-+DEF_EMIT_REG2I12_FORMAT(ldb, ldb_op)
-+DEF_EMIT_REG2I12_FORMAT(ldh, ldh_op)
-+DEF_EMIT_REG2I12_FORMAT(ldw, ldw_op)
- DEF_EMIT_REG2I12_FORMAT(ldbu, ldbu_op)
- DEF_EMIT_REG2I12_FORMAT(ldhu, ldhu_op)
- DEF_EMIT_REG2I12_FORMAT(ldwu, ldwu_op)
-@@ -685,9 +692,12 @@ static inline void emit_##NAME(union loongarch_instruction *insn,	\
- 	insn->reg3_format.rk = rk;					\
- }
- 
-+DEF_EMIT_REG3_FORMAT(addw, addw_op)
- DEF_EMIT_REG3_FORMAT(addd, addd_op)
- DEF_EMIT_REG3_FORMAT(subd, subd_op)
- DEF_EMIT_REG3_FORMAT(muld, muld_op)
-+DEF_EMIT_REG3_FORMAT(divd, divd_op)
-+DEF_EMIT_REG3_FORMAT(modd, modd_op)
- DEF_EMIT_REG3_FORMAT(divdu, divdu_op)
- DEF_EMIT_REG3_FORMAT(moddu, moddu_op)
- DEF_EMIT_REG3_FORMAT(and, and_op)
-@@ -699,6 +709,9 @@ DEF_EMIT_REG3_FORMAT(srlw, srlw_op)
- DEF_EMIT_REG3_FORMAT(srld, srld_op)
- DEF_EMIT_REG3_FORMAT(sraw, sraw_op)
- DEF_EMIT_REG3_FORMAT(srad, srad_op)
-+DEF_EMIT_REG3_FORMAT(ldxb, ldxb_op)
-+DEF_EMIT_REG3_FORMAT(ldxh, ldxh_op)
-+DEF_EMIT_REG3_FORMAT(ldxw, ldxw_op)
- DEF_EMIT_REG3_FORMAT(ldxbu, ldxbu_op)
- DEF_EMIT_REG3_FORMAT(ldxhu, ldxhu_op)
- DEF_EMIT_REG3_FORMAT(ldxwu, ldxwu_op)
+ 	if (WARN_ON_ONCE(ctx->num_exentries >= ctx->prog->aux->num_exentries))
+@@ -450,7 +454,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ {
+ 	u8 tm = -1;
+ 	u64 func_addr;
+-	bool func_addr_fixed;
++	bool func_addr_fixed, sign_extend;
+ 	int i = insn - ctx->prog->insnsi;
+ 	int ret, jmp_offset;
+ 	const u8 code = insn->code;
+@@ -879,31 +883,56 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	case BPF_LDX | BPF_PROBE_MEM | BPF_W:
+ 	case BPF_LDX | BPF_PROBE_MEM | BPF_H:
+ 	case BPF_LDX | BPF_PROBE_MEM | BPF_B:
++	/* dst_reg = (s64)*(signed size *)(src_reg + off) */
++	case BPF_LDX | BPF_MEMSX | BPF_B:
++	case BPF_LDX | BPF_MEMSX | BPF_H:
++	case BPF_LDX | BPF_MEMSX | BPF_W:
++	case BPF_LDX | BPF_PROBE_MEMSX | BPF_B:
++	case BPF_LDX | BPF_PROBE_MEMSX | BPF_H:
++	case BPF_LDX | BPF_PROBE_MEMSX | BPF_W:
++		sign_extend = BPF_MODE(insn->code) == BPF_MEMSX ||
++			      BPF_MODE(insn->code) == BPF_PROBE_MEMSX;
+ 		switch (BPF_SIZE(code)) {
+ 		case BPF_B:
+ 			if (is_signed_imm12(off)) {
+-				emit_insn(ctx, ldbu, dst, src, off);
++				if (sign_extend)
++					emit_insn(ctx, ldb, dst, src, off);
++				else
++					emit_insn(ctx, ldbu, dst, src, off);
+ 			} else {
+ 				move_imm(ctx, t1, off, is32);
+-				emit_insn(ctx, ldxbu, dst, src, t1);
++				if (sign_extend)
++					emit_insn(ctx, ldxb, dst, src, t1);
++				else
++					emit_insn(ctx, ldxbu, dst, src, t1);
+ 			}
+ 			break;
+ 		case BPF_H:
+ 			if (is_signed_imm12(off)) {
+-				emit_insn(ctx, ldhu, dst, src, off);
++				if (sign_extend)
++					emit_insn(ctx, ldh, dst, src, off);
++				else
++					emit_insn(ctx, ldhu, dst, src, off);
+ 			} else {
+ 				move_imm(ctx, t1, off, is32);
+-				emit_insn(ctx, ldxhu, dst, src, t1);
++				if (sign_extend)
++					emit_insn(ctx, ldxh, dst, src, t1);
++				else
++					emit_insn(ctx, ldxhu, dst, src, t1);
+ 			}
+ 			break;
+ 		case BPF_W:
+ 			if (is_signed_imm12(off)) {
+-				emit_insn(ctx, ldwu, dst, src, off);
+-			} else if (is_signed_imm14(off)) {
+-				emit_insn(ctx, ldptrw, dst, src, off);
++				if (sign_extend)
++					emit_insn(ctx, ldw, dst, src, off);
++				else
++					emit_insn(ctx, ldwu, dst, src, off);
+ 			} else {
+ 				move_imm(ctx, t1, off, is32);
+-				emit_insn(ctx, ldxwu, dst, src, t1);
++				if (sign_extend)
++					emit_insn(ctx, ldxw, dst, src, t1);
++				else
++					emit_insn(ctx, ldxwu, dst, src, t1);
+ 			}
+ 			break;
+ 		case BPF_DW:
 -- 
 2.34.1
 
