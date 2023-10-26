@@ -1,137 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2C12D02B;
-	Thu, 26 Oct 2023 10:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyX3dszi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1DD8C433C8;
-	Thu, 26 Oct 2023 10:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698315889;
-	bh=WN2YIA4Ghusd7FbmcNZrWw/oKLuywPkap4tOfxaAQ4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZyX3dsziPkRUXG2UWwCRe9pQvhY4J8EKCi1UMJicG8n+1K8kuqLhkCHInfodKwhzx
-	 IGdZJx3E0WGYfJuhn5slU+daxFVHZfLRqURf8zRCQM4mPgPcJg6TqmPoqs/pWtOypa
-	 aGTSZPjPNBzHwtWONSwhXj/25YMcitUcojHP1kRQ49c14Z4eV6Kpw2ampGhmL7G6Sm
-	 v7J3Ia4FdxDhFLmdhSb20AH9mufPj5bcJmpVjmk+yiUwvbVfd/gsYS5NT3Ej9E93W4
-	 br849v8H22PcC0TOPiwgXMZFArfvyVNNVM97V2kwDBdHjqJI1bEYt3iRHEo7Tm6Bk9
-	 Y3kn5Rw8Exupg==
-Date: Thu, 26 Oct 2023 11:24:39 +0100
-From: Will Deacon <will@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v3 04/13] mm/execmem, arch: convert remaining overrides
- of module_alloc to execmem
-Message-ID: <20231026102438.GA6924@willie-the-truck>
-References: <20230918072955.2507221-1-rppt@kernel.org>
- <20230918072955.2507221-5-rppt@kernel.org>
- <20231023171420.GA4041@willie-the-truck>
- <20231026085800.GK2824@kernel.org>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F1F2D05E
+	for <loongarch@lists.linux.dev>; Thu, 26 Oct 2023 11:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8DxVug_UTpl9c40AA--.2294S3;
+	Thu, 26 Oct 2023 19:45:03 +0800 (CST)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx3t47UTpl7bMzAA--.4952S3;
+	Thu, 26 Oct 2023 19:45:03 +0800 (CST)
+From: Huang Pei <huangpei@loongson.cn>
+To: Huacai Chen <chenhuacai@loongson.cn>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] LoongArch: Add RSEQ_SIG break code definition
+Date: Thu, 26 Oct 2023 19:44:46 +0800
+Message-Id: <20231026114446.5932-2-huangpei@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20231026114446.5932-1-huangpei@loongson.cn>
+References: <20231026114446.5932-1-huangpei@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231026085800.GK2824@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx3t47UTpl7bMzAA--.4952S3
+X-CM-SenderInfo: xkxd0whshlqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrWF18Gw17ZrWDAw1UAF1kJFc_yoWxGFX_Jw
+	13Jw48CrWxWFWxJ3Wqv3sxJr1jgw48Krn0vF9Iqr1UuF98tr43Jws7JasrZr1qk3yDur4r
+	ZFyFvrWY9w1YkosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-On Thu, Oct 26, 2023 at 11:58:00AM +0300, Mike Rapoport wrote:
-> On Mon, Oct 23, 2023 at 06:14:20PM +0100, Will Deacon wrote:
-> > On Mon, Sep 18, 2023 at 10:29:46AM +0300, Mike Rapoport wrote:
-> > > diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-> > > index dd851297596e..cd6320de1c54 100644
-> > > --- a/arch/arm64/kernel/module.c
-> > > +++ b/arch/arm64/kernel/module.c
-> > > @@ -20,6 +20,7 @@
-> > >  #include <linux/random.h>
-> > >  #include <linux/scs.h>
-> > >  #include <linux/vmalloc.h>
-> > > +#include <linux/execmem.h>
-> > >  
-> > >  #include <asm/alternative.h>
-> > >  #include <asm/insn.h>
-> > > @@ -108,46 +109,38 @@ static int __init module_init_limits(void)
-> > >  
-> > >  	return 0;
-> > >  }
-> > > -subsys_initcall(module_init_limits);
-> > >  
-> > > -void *module_alloc(unsigned long size)
-> > > +static struct execmem_params execmem_params __ro_after_init = {
-> > > +	.ranges = {
-> > > +		[EXECMEM_DEFAULT] = {
-> > > +			.flags = EXECMEM_KASAN_SHADOW,
-> > > +			.alignment = MODULE_ALIGN,
-> > > +		},
-> > > +	},
-> > > +};
-> > > +
-> > > +struct execmem_params __init *execmem_arch_params(void)
-> > >  {
-> > > -	void *p = NULL;
-> > > +	struct execmem_range *r = &execmem_params.ranges[EXECMEM_DEFAULT];
-> > >  
-> > > -	/*
-> > > -	 * Where possible, prefer to allocate within direct branch range of the
-> > > -	 * kernel such that no PLTs are necessary.
-> > > -	 */
-> > 
-> > Why are you removing this comment? I think you could just move it next
-> > to the part where we set a 128MiB range.
->  
-> Oops, my bad. Will add it back.
+Signed-off-by: Huang Pei <huangpei@loongson.cn>
+---
+ arch/loongarch/include/uapi/asm/break.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks.
+diff --git a/arch/loongarch/include/uapi/asm/break.h b/arch/loongarch/include/uapi/asm/break.h
+index bb9b82ba59f2..e0fcfc304834 100644
+--- a/arch/loongarch/include/uapi/asm/break.h
++++ b/arch/loongarch/include/uapi/asm/break.h
+@@ -20,4 +20,6 @@
+ #define BRK_UPROBE_BP		12	/* See <asm/uprobes.h> */
+ #define BRK_UPROBE_XOLBP	13	/* See <asm/uprobes.h> */
+ 
++#define BRK_RSEQ_SIG		16	/* See rseq */
++
+ #endif /* __UAPI_ASM_BREAK_H */
+-- 
+2.20.1
 
-> > > -	if (module_direct_base) {
-> > > -		p = __vmalloc_node_range(size, MODULE_ALIGN,
-> > > -					 module_direct_base,
-> > > -					 module_direct_base + SZ_128M,
-> > > -					 GFP_KERNEL | __GFP_NOWARN,
-> > > -					 PAGE_KERNEL, 0, NUMA_NO_NODE,
-> > > -					 __builtin_return_address(0));
-> > > -	}
-> > > +	module_init_limits();
-> > 
-> > Hmm, this used to be run from subsys_initcall(), but now you're running
-> > it _really_ early, before random_init(), so randomization of the module
-> > space is no longer going to be very random if we don't have early entropy
-> > from the firmware or the CPU, which is likely to be the case on most SoCs.
-> 
-> Well, it will be as random as KASLR. Won't that be enough?
-
-I don't think that's true -- we have the 'kaslr-seed' property for KASLR,
-but I'm not seeing anything like that for the module randomisation and I
-also don't see why we need to set these limits so early.
-
-Will
