@@ -1,775 +1,446 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CFED13ACD
-	for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 08:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8AxJuhTcTtllBQ1AA--.44950S3;
-	Fri, 27 Oct 2023 16:14:11 +0800 (CST)
-Received: from localhost.localdomain (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx3t5NcTtlSz01AA--.5040S2;
-	Fri, 27 Oct 2023 16:14:06 +0800 (CST)
-From: Huang Pei <huangpei@loongson.cn>
-To: Huacai Chen <chenhuacai@loongson.cn>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests/rseq: Add 64bit LoongArch support
-Date: Fri, 27 Oct 2023 16:13:13 +0800
-Message-Id: <20231027081312.15702-1-huangpei@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F83A15AC7
+	for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 08:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4nzq0VJ"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-1e9d3cc6e7aso1112217fac.2
+        for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 01:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698396009; x=1699000809; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s8tqsRTjEKVKOooTOpYZ4xZ6ckxmXqyelNwJXHUUxsI=;
+        b=Q4nzq0VJFIGW9GcARvg6rzT+9ldquRQ13JDU1BKa7SX+Q4cfeMvnQsvzlK5fUQUWub
+         RJkDM1Mo9bbIAVZL5wycspFU5SMgX9oClbLgv8HaBkHz3/G0Imwpd2xMxMr0qsSn5I3j
+         6VwfcNmMQLwFXs1CJjjBlhQYZRFCt8ob4AewLBrmW7SXFZyY8Q0lSnzL0bCq8+bV8Lap
+         uZt+JG37jle2QTdIqh8PFGgG7D7eLhaansOEumRB4z18yHs3FuOSCMuHnZhMNAAFAs2b
+         Me1Lp+kRGh8mlQQ2EHApj09wPKG67+roFrxnzs0CD57iZ79urqX3DFWxbVl9lvuRo9mi
+         5Bmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698396009; x=1699000809;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s8tqsRTjEKVKOooTOpYZ4xZ6ckxmXqyelNwJXHUUxsI=;
+        b=o5tWLR7xQQtPliXzKjieUOfGc7JL4sX0Z/s1MdXUwn3KPTIc2MFnftm/K0aEtvAUiO
+         eRCNI1nIRDeV7vxksx4nhp88S1NXCE3wKMFZ3pDF5xGMNKuYySb4HAAFBiCesx+SJnn7
+         LjKteB9hni2pPd0t/8PFYxP2l0DxCbeteQ5eQNt/BA8o7tMEuez0W7ScMjQktqxCk7Vr
+         u1ZB5aHa2J1fn3rfmSCQUQBPG7l2cC7TqZFsilxk+7WCRlBW4XN+2EO/vfg8xOjuK9oL
+         PYZ6dOA8NgOea9jxsFvpwnZEj71VcjiGfuCnH0R0DnZ8dJbfg74RnI7FcfHDRpTGxzdS
+         TNWw==
+X-Gm-Message-State: AOJu0Ywi1YxXVhg6Oq6WeTTKF2mM7Xr22q5Pre2CKeroRMKV9IMTGyco
+	vV1nmXyTldVDULTc7E8EpLC/oXQRHDEco2WKPPVP4q7rGxw=
+X-Google-Smtp-Source: AGHT+IEv+Qf/0zwTKZf2U+EYIu89C8g3ECPyYUFYTefQTc1tTPHpgRq63E+o1NbdBWvpvZ9lTUCJr9L6wJCw6xOviUI=
+X-Received: by 2002:a05:6870:1157:b0:1d5:a303:5f39 with SMTP id
+ 23-20020a056870115700b001d5a3035f39mr1829108oag.49.1698396009332; Fri, 27 Oct
+ 2023 01:40:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx3t5NcTtlSz01AA--.5040S2
-X-CM-SenderInfo: xkxd0whshlqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfAw4rAw15JF47CF1kZr1fAFc_yoW8Kry3Go
-	W7CF4xK3WIgw1jvr1kCFy7tFWfJFW7GFW7AFWagr18CFyxKr1DGw1UAr42q39xZrWkGa45
-	XFy5C3yfWF9Iywn3l-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
-	CY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
+References: <20231026184337.563801-1-hengqi.chen@gmail.com>
+ <20231026184337.563801-9-hengqi.chen@gmail.com> <CAAhV-H57Xxq86of8cfcGtq5hVuZ2Z5hCjZSGQZ+kHShXS83xVw@mail.gmail.com>
+In-Reply-To: <CAAhV-H57Xxq86of8cfcGtq5hVuZ2Z5hCjZSGQZ+kHShXS83xVw@mail.gmail.com>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Fri, 27 Oct 2023 16:39:58 +0800
+Message-ID: <CAEyhmHRLTSZZzSTyUq-DUrhOnQ6DCwZSKj498F-xRrxoO1U1LQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 8/8] selftests/bpf: Enable cpu v4 tests for LoongArch
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, kernel@xen0n.name, 
+	yangtiezhu@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Basic rseq test support for LoongArch64:
+On Fri, Oct 27, 2023 at 3:05=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> Hi, Hengqi,
+>
+> On Fri, Oct 27, 2023 at 2:01=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.co=
+m> wrote:
+> >
+> > Enable cpu v4 tests for LoongArch. Currently, we don't
+> > have BPF trampoline in LoongArch JIT, so the fentry
+> > test `test_ptr_struct_arg` still failed, will followup.
+> > Test result attached below:
+> >
+> >   # ./test_progs -t verifier_sdiv,verifier_movsx,verifier_ldsx,verifier=
+_gotol,verifier_bswap
+> >   #316/1   verifier_bswap/BSWAP, 16:OK
+> >   #316/2   verifier_bswap/BSWAP, 16 @unpriv:OK
+> >   #316/3   verifier_bswap/BSWAP, 32:OK
+> >   #316/4   verifier_bswap/BSWAP, 32 @unpriv:OK
+> >   #316/5   verifier_bswap/BSWAP, 64:OK
+> >   #316/6   verifier_bswap/BSWAP, 64 @unpriv:OK
+> >   #316     verifier_bswap:OK
+> >   #330/1   verifier_gotol/gotol, small_imm:OK
+> >   #330/2   verifier_gotol/gotol, small_imm @unpriv:OK
+> >   #330     verifier_gotol:OK
+> >   #338/1   verifier_ldsx/LDSX, S8:OK
+> >   #338/2   verifier_ldsx/LDSX, S8 @unpriv:OK
+> >   #338/3   verifier_ldsx/LDSX, S16:OK
+> >   #338/4   verifier_ldsx/LDSX, S16 @unpriv:OK
+> >   #338/5   verifier_ldsx/LDSX, S32:OK
+> >   #338/6   verifier_ldsx/LDSX, S32 @unpriv:OK
+> >   #338/7   verifier_ldsx/LDSX, S8 range checking, privileged:OK
+> >   #338/8   verifier_ldsx/LDSX, S16 range checking:OK
+> >   #338/9   verifier_ldsx/LDSX, S16 range checking @unpriv:OK
+> >   #338/10  verifier_ldsx/LDSX, S32 range checking:OK
+> >   #338/11  verifier_ldsx/LDSX, S32 range checking @unpriv:OK
+> >   #338     verifier_ldsx:OK
+> >   #349/1   verifier_movsx/MOV32SX, S8:OK
+> >   #349/2   verifier_movsx/MOV32SX, S8 @unpriv:OK
+> >   #349/3   verifier_movsx/MOV32SX, S16:OK
+> >   #349/4   verifier_movsx/MOV32SX, S16 @unpriv:OK
+> >   #349/5   verifier_movsx/MOV64SX, S8:OK
+> >   #349/6   verifier_movsx/MOV64SX, S8 @unpriv:OK
+> >   #349/7   verifier_movsx/MOV64SX, S16:OK
+> >   #349/8   verifier_movsx/MOV64SX, S16 @unpriv:OK
+> >   #349/9   verifier_movsx/MOV64SX, S32:OK
+> >   #349/10  verifier_movsx/MOV64SX, S32 @unpriv:OK
+> >   #349/11  verifier_movsx/MOV32SX, S8, range_check:OK
+> >   #349/12  verifier_movsx/MOV32SX, S8, range_check @unpriv:OK
+> >   #349/13  verifier_movsx/MOV32SX, S16, range_check:OK
+> >   #349/14  verifier_movsx/MOV32SX, S16, range_check @unpriv:OK
+> >   #349/15  verifier_movsx/MOV32SX, S16, range_check 2:OK
+> >   #349/16  verifier_movsx/MOV32SX, S16, range_check 2 @unpriv:OK
+> >   #349/17  verifier_movsx/MOV64SX, S8, range_check:OK
+> >   #349/18  verifier_movsx/MOV64SX, S8, range_check @unpriv:OK
+> >   #349/19  verifier_movsx/MOV64SX, S16, range_check:OK
+> >   #349/20  verifier_movsx/MOV64SX, S16, range_check @unpriv:OK
+> >   #349/21  verifier_movsx/MOV64SX, S32, range_check:OK
+> >   #349/22  verifier_movsx/MOV64SX, S32, range_check @unpriv:OK
+> >   #349/23  verifier_movsx/MOV64SX, S16, R10 Sign Extension:OK
+> >   #349/24  verifier_movsx/MOV64SX, S16, R10 Sign Extension @unpriv:OK
+> >   #349     verifier_movsx:OK
+> >   #361/1   verifier_sdiv/SDIV32, non-zero imm divisor, check 1:OK
+> >   #361/2   verifier_sdiv/SDIV32, non-zero imm divisor, check 1 @unpriv:=
+OK
+> >   #361/3   verifier_sdiv/SDIV32, non-zero imm divisor, check 2:OK
+> >   #361/4   verifier_sdiv/SDIV32, non-zero imm divisor, check 2 @unpriv:=
+OK
+> >   #361/5   verifier_sdiv/SDIV32, non-zero imm divisor, check 3:OK
+> >   #361/6   verifier_sdiv/SDIV32, non-zero imm divisor, check 3 @unpriv:=
+OK
+> >   #361/7   verifier_sdiv/SDIV32, non-zero imm divisor, check 4:OK
+> >   #361/8   verifier_sdiv/SDIV32, non-zero imm divisor, check 4 @unpriv:=
+OK
+> >   #361/9   verifier_sdiv/SDIV32, non-zero imm divisor, check 5:OK
+> >   #361/10  verifier_sdiv/SDIV32, non-zero imm divisor, check 5 @unpriv:=
+OK
+> >   #361/11  verifier_sdiv/SDIV32, non-zero imm divisor, check 6:OK
+> >   #361/12  verifier_sdiv/SDIV32, non-zero imm divisor, check 6 @unpriv:=
+OK
+> >   #361/13  verifier_sdiv/SDIV32, non-zero imm divisor, check 7:OK
+> >   #361/14  verifier_sdiv/SDIV32, non-zero imm divisor, check 7 @unpriv:=
+OK
+> >   #361/15  verifier_sdiv/SDIV32, non-zero imm divisor, check 8:OK
+> >   #361/16  verifier_sdiv/SDIV32, non-zero imm divisor, check 8 @unpriv:=
+OK
+> >   #361/17  verifier_sdiv/SDIV32, non-zero reg divisor, check 1:OK
+> >   #361/18  verifier_sdiv/SDIV32, non-zero reg divisor, check 1 @unpriv:=
+OK
+> >   #361/19  verifier_sdiv/SDIV32, non-zero reg divisor, check 2:OK
+> >   #361/20  verifier_sdiv/SDIV32, non-zero reg divisor, check 2 @unpriv:=
+OK
+> >   #361/21  verifier_sdiv/SDIV32, non-zero reg divisor, check 3:OK
+> >   #361/22  verifier_sdiv/SDIV32, non-zero reg divisor, check 3 @unpriv:=
+OK
+> >   #361/23  verifier_sdiv/SDIV32, non-zero reg divisor, check 4:OK
+> >   #361/24  verifier_sdiv/SDIV32, non-zero reg divisor, check 4 @unpriv:=
+OK
+> >   #361/25  verifier_sdiv/SDIV32, non-zero reg divisor, check 5:OK
+> >   #361/26  verifier_sdiv/SDIV32, non-zero reg divisor, check 5 @unpriv:=
+OK
+> >   #361/27  verifier_sdiv/SDIV32, non-zero reg divisor, check 6:OK
+> >   #361/28  verifier_sdiv/SDIV32, non-zero reg divisor, check 6 @unpriv:=
+OK
+> >   #361/29  verifier_sdiv/SDIV32, non-zero reg divisor, check 7:OK
+> >   #361/30  verifier_sdiv/SDIV32, non-zero reg divisor, check 7 @unpriv:=
+OK
+> >   #361/31  verifier_sdiv/SDIV32, non-zero reg divisor, check 8:OK
+> >   #361/32  verifier_sdiv/SDIV32, non-zero reg divisor, check 8 @unpriv:=
+OK
+> >   #361/33  verifier_sdiv/SDIV64, non-zero imm divisor, check 1:OK
+> >   #361/34  verifier_sdiv/SDIV64, non-zero imm divisor, check 1 @unpriv:=
+OK
+> >   #361/35  verifier_sdiv/SDIV64, non-zero imm divisor, check 2:OK
+> >   #361/36  verifier_sdiv/SDIV64, non-zero imm divisor, check 2 @unpriv:=
+OK
+> >   #361/37  verifier_sdiv/SDIV64, non-zero imm divisor, check 3:OK
+> >   #361/38  verifier_sdiv/SDIV64, non-zero imm divisor, check 3 @unpriv:=
+OK
+> >   #361/39  verifier_sdiv/SDIV64, non-zero imm divisor, check 4:OK
+> >   #361/40  verifier_sdiv/SDIV64, non-zero imm divisor, check 4 @unpriv:=
+OK
+> >   #361/41  verifier_sdiv/SDIV64, non-zero imm divisor, check 5:OK
+> >   #361/42  verifier_sdiv/SDIV64, non-zero imm divisor, check 5 @unpriv:=
+OK
+> >   #361/43  verifier_sdiv/SDIV64, non-zero imm divisor, check 6:OK
+> >   #361/44  verifier_sdiv/SDIV64, non-zero imm divisor, check 6 @unpriv:=
+OK
+> >   #361/45  verifier_sdiv/SDIV64, non-zero reg divisor, check 1:OK
+> >   #361/46  verifier_sdiv/SDIV64, non-zero reg divisor, check 1 @unpriv:=
+OK
+> >   #361/47  verifier_sdiv/SDIV64, non-zero reg divisor, check 2:OK
+> >   #361/48  verifier_sdiv/SDIV64, non-zero reg divisor, check 2 @unpriv:=
+OK
+> >   #361/49  verifier_sdiv/SDIV64, non-zero reg divisor, check 3:OK
+> >   #361/50  verifier_sdiv/SDIV64, non-zero reg divisor, check 3 @unpriv:=
+OK
+> >   #361/51  verifier_sdiv/SDIV64, non-zero reg divisor, check 4:OK
+> >   #361/52  verifier_sdiv/SDIV64, non-zero reg divisor, check 4 @unpriv:=
+OK
+> >   #361/53  verifier_sdiv/SDIV64, non-zero reg divisor, check 5:OK
+> >   #361/54  verifier_sdiv/SDIV64, non-zero reg divisor, check 5 @unpriv:=
+OK
+> >   #361/55  verifier_sdiv/SDIV64, non-zero reg divisor, check 6:OK
+> >   #361/56  verifier_sdiv/SDIV64, non-zero reg divisor, check 6 @unpriv:=
+OK
+> >   #361/57  verifier_sdiv/SMOD32, non-zero imm divisor, check 1:OK
+> >   #361/58  verifier_sdiv/SMOD32, non-zero imm divisor, check 1 @unpriv:=
+OK
+> >   #361/59  verifier_sdiv/SMOD32, non-zero imm divisor, check 2:OK
+> >   #361/60  verifier_sdiv/SMOD32, non-zero imm divisor, check 2 @unpriv:=
+OK
+> >   #361/61  verifier_sdiv/SMOD32, non-zero imm divisor, check 3:OK
+> >   #361/62  verifier_sdiv/SMOD32, non-zero imm divisor, check 3 @unpriv:=
+OK
+> >   #361/63  verifier_sdiv/SMOD32, non-zero imm divisor, check 4:OK
+> >   #361/64  verifier_sdiv/SMOD32, non-zero imm divisor, check 4 @unpriv:=
+OK
+> >   #361/65  verifier_sdiv/SMOD32, non-zero imm divisor, check 5:OK
+> >   #361/66  verifier_sdiv/SMOD32, non-zero imm divisor, check 5 @unpriv:=
+OK
+> >   #361/67  verifier_sdiv/SMOD32, non-zero imm divisor, check 6:OK
+> >   #361/68  verifier_sdiv/SMOD32, non-zero imm divisor, check 6 @unpriv:=
+OK
+> >   #361/69  verifier_sdiv/SMOD32, non-zero reg divisor, check 1:OK
+> >   #361/70  verifier_sdiv/SMOD32, non-zero reg divisor, check 1 @unpriv:=
+OK
+> >   #361/71  verifier_sdiv/SMOD32, non-zero reg divisor, check 2:OK
+> >   #361/72  verifier_sdiv/SMOD32, non-zero reg divisor, check 2 @unpriv:=
+OK
+> >   #361/73  verifier_sdiv/SMOD32, non-zero reg divisor, check 3:OK
+> >   #361/74  verifier_sdiv/SMOD32, non-zero reg divisor, check 3 @unpriv:=
+OK
+> >   #361/75  verifier_sdiv/SMOD32, non-zero reg divisor, check 4:OK
+> >   #361/76  verifier_sdiv/SMOD32, non-zero reg divisor, check 4 @unpriv:=
+OK
+> >   #361/77  verifier_sdiv/SMOD32, non-zero reg divisor, check 5:OK
+> >   #361/78  verifier_sdiv/SMOD32, non-zero reg divisor, check 5 @unpriv:=
+OK
+> >   #361/79  verifier_sdiv/SMOD32, non-zero reg divisor, check 6:OK
+> >   #361/80  verifier_sdiv/SMOD32, non-zero reg divisor, check 6 @unpriv:=
+OK
+> >   #361/81  verifier_sdiv/SMOD64, non-zero imm divisor, check 1:OK
+> >   #361/82  verifier_sdiv/SMOD64, non-zero imm divisor, check 1 @unpriv:=
+OK
+> >   #361/83  verifier_sdiv/SMOD64, non-zero imm divisor, check 2:OK
+> >   #361/84  verifier_sdiv/SMOD64, non-zero imm divisor, check 2 @unpriv:=
+OK
+> >   #361/85  verifier_sdiv/SMOD64, non-zero imm divisor, check 3:OK
+> >   #361/86  verifier_sdiv/SMOD64, non-zero imm divisor, check 3 @unpriv:=
+OK
+> >   #361/87  verifier_sdiv/SMOD64, non-zero imm divisor, check 4:OK
+> >   #361/88  verifier_sdiv/SMOD64, non-zero imm divisor, check 4 @unpriv:=
+OK
+> >   #361/89  verifier_sdiv/SMOD64, non-zero imm divisor, check 5:OK
+> >   #361/90  verifier_sdiv/SMOD64, non-zero imm divisor, check 5 @unpriv:=
+OK
+> >   #361/91  verifier_sdiv/SMOD64, non-zero imm divisor, check 6:OK
+> >   #361/92  verifier_sdiv/SMOD64, non-zero imm divisor, check 6 @unpriv:=
+OK
+> >   #361/93  verifier_sdiv/SMOD64, non-zero imm divisor, check 7:OK
+> >   #361/94  verifier_sdiv/SMOD64, non-zero imm divisor, check 7 @unpriv:=
+OK
+> >   #361/95  verifier_sdiv/SMOD64, non-zero imm divisor, check 8:OK
+> >   #361/96  verifier_sdiv/SMOD64, non-zero imm divisor, check 8 @unpriv:=
+OK
+> >   #361/97  verifier_sdiv/SMOD64, non-zero reg divisor, check 1:OK
+> >   #361/98  verifier_sdiv/SMOD64, non-zero reg divisor, check 1 @unpriv:=
+OK
+> >   #361/99  verifier_sdiv/SMOD64, non-zero reg divisor, check 2:OK
+> >   #361/100 verifier_sdiv/SMOD64, non-zero reg divisor, check 2 @unpriv:=
+OK
+> >   #361/101 verifier_sdiv/SMOD64, non-zero reg divisor, check 3:OK
+> >   #361/102 verifier_sdiv/SMOD64, non-zero reg divisor, check 3 @unpriv:=
+OK
+> >   #361/103 verifier_sdiv/SMOD64, non-zero reg divisor, check 4:OK
+> >   #361/104 verifier_sdiv/SMOD64, non-zero reg divisor, check 4 @unpriv:=
+OK
+> >   #361/105 verifier_sdiv/SMOD64, non-zero reg divisor, check 5:OK
+> >   #361/106 verifier_sdiv/SMOD64, non-zero reg divisor, check 5 @unpriv:=
+OK
+> >   #361/107 verifier_sdiv/SMOD64, non-zero reg divisor, check 6:OK
+> >   #361/108 verifier_sdiv/SMOD64, non-zero reg divisor, check 6 @unpriv:=
+OK
+> >   #361/109 verifier_sdiv/SMOD64, non-zero reg divisor, check 7:OK
+> >   #361/110 verifier_sdiv/SMOD64, non-zero reg divisor, check 7 @unpriv:=
+OK
+> >   #361/111 verifier_sdiv/SMOD64, non-zero reg divisor, check 8:OK
+> >   #361/112 verifier_sdiv/SMOD64, non-zero reg divisor, check 8 @unpriv:=
+OK
+> >   #361/113 verifier_sdiv/SDIV32, zero divisor:OK
+> >   #361/114 verifier_sdiv/SDIV32, zero divisor @unpriv:OK
+> >   #361/115 verifier_sdiv/SDIV64, zero divisor:OK
+> >   #361/116 verifier_sdiv/SDIV64, zero divisor @unpriv:OK
+> >   #361/117 verifier_sdiv/SMOD32, zero divisor:OK
+> >   #361/118 verifier_sdiv/SMOD32, zero divisor @unpriv:OK
+> >   #361/119 verifier_sdiv/SMOD64, zero divisor:OK
+> >   #361/120 verifier_sdiv/SMOD64, zero divisor @unpriv:OK
+> >   #361     verifier_sdiv:OK
+> >   Summary: 5/163 PASSED, 0 SKIPPED, 0 FAILED
+> >
+> >   # ./test_progs -t ldsx_insn
+> >   test_map_val_and_probed_memory:PASS:test_ldsx_insn__open 0 nsec
+> >   test_map_val_and_probed_memory:PASS:test_ldsx_insn__load 0 nsec
+> >   libbpf: prog 'test_ptr_struct_arg': failed to attach: ERROR: strerror=
+_r(-524)=3D22
+> >   libbpf: prog 'test_ptr_struct_arg': failed to auto-attach: -524
+> >   test_map_val_and_probed_memory:FAIL:test_ldsx_insn__attach unexpected=
+ error: -524 (errno 524)
+> >   #116/1   ldsx_insn/map_val and probed_memory:FAIL
+> >   #116/2   ldsx_insn/ctx_member_sign_ext:OK
+> >   #116/3   ldsx_insn/ctx_member_narrow_sign_ext:OK
+> >   #116     ldsx_insn:FAIL
+> Thank you for your effort, but why is there a failure? Can it be solved?
+>
 
- - Use "ebreak 0x10" for RSEQ_SIG.
+As I said in the above commit message,  the feature is not implemented yet.
+I will follow up but not in this series.
 
- - No support for "rseq_offset_deref_addv".
-
- - No support for __builtin_thread_pointer() in GCC/LoongArch, use
-   built-in asm instead. (GCC got it on commit 1b30ef7cea77)
-
- - No failure, tested on 3A5000 with linux-4.19 and linux-6.6-rc4.
-
-Signed-off-by: Huang Pei <huangpei@loongson.cn>
----
- tools/testing/selftests/rseq/param_test.c     |  20 +
- .../selftests/rseq/rseq-loongarch-bits.h      | 463 ++++++++++++++++++
- .../rseq/rseq-loongarch-thread-pointer.h      |  22 +
- tools/testing/selftests/rseq/rseq-loongarch.h | 140 ++++++
- .../selftests/rseq/rseq-thread-pointer.h      |   2 +
- tools/testing/selftests/rseq/rseq.h           |   2 +
- 6 files changed, 649 insertions(+)
- create mode 100644 tools/testing/selftests/rseq/rseq-loongarch-bits.h
- create mode 100644 tools/testing/selftests/rseq/rseq-loongarch-thread-pointer.h
- create mode 100644 tools/testing/selftests/rseq/rseq-loongarch.h
-
-diff --git a/tools/testing/selftests/rseq/param_test.c b/tools/testing/selftests/rseq/param_test.c
-index bf951a490bb4..e930aa73c219 100644
---- a/tools/testing/selftests/rseq/param_test.c
-+++ b/tools/testing/selftests/rseq/param_test.c
-@@ -227,7 +227,27 @@ unsigned int yield_mod_cnt, nr_abort;
- 	"bnez " INJECT_ASM_REG ", 222b\n\t"			\
- 	"333:\n\t"
- 
-+#elif defined(__loongarch__)
-+#define RSEQ_INJECT_INPUT \
-+	, [loop_cnt_1]"m"(loop_cnt[1]) \
-+	, [loop_cnt_2]"m"(loop_cnt[2]) \
-+	, [loop_cnt_3]"m"(loop_cnt[3]) \
-+	, [loop_cnt_4]"m"(loop_cnt[4]) \
-+	, [loop_cnt_5]"m"(loop_cnt[5]) \
-+	, [loop_cnt_6]"m"(loop_cnt[6])
-+
-+#define INJECT_ASM_REG  "$r12"
-+
-+#define RSEQ_INJECT_CLOBBER \
-+	, INJECT_ASM_REG
- 
-+#define RSEQ_INJECT_ASM(n)                                      \
-+	"ld.w " INJECT_ASM_REG ", %[loop_cnt_" #n "]\n\t"         \
-+	"beqz " INJECT_ASM_REG ", 333f\n\t"                     \
-+	"222:\n\t"                                              \
-+	"addi.w  " INJECT_ASM_REG "," INJECT_ASM_REG ", -1\n\t"   \
-+	"bnez " INJECT_ASM_REG ", 222b\n\t"                     \
-+	"333:\n\t"
- #else
- #error unsupported target
- #endif
-diff --git a/tools/testing/selftests/rseq/rseq-loongarch-bits.h b/tools/testing/selftests/rseq/rseq-loongarch-bits.h
-new file mode 100644
-index 000000000000..cf933c1a2100
---- /dev/null
-+++ b/tools/testing/selftests/rseq/rseq-loongarch-bits.h
-@@ -0,0 +1,463 @@
-+/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-+/*
-+ * Author: Huang Pei <huangpei@loongson.cn>
-+ * (C) Copyright 2023 Loongson Technology Corporation Limited
-+ * (C) Copyright 2016-2022 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-+ * (C) Copyright 2018 MIPS Tech LLC
-+ * (C) Copyright 2018 - Paul Burton <paul.burton@mips.com>
-+ */
-+#include "rseq-bits-template.h"
-+
-+#if defined(RSEQ_TEMPLATE_MO_RELAXED) && \
-+	(defined(RSEQ_TEMPLATE_CPU_ID) || defined(RSEQ_TEMPLATE_MM_CID))
-+
-+static inline __attribute__((always_inline))
-+int RSEQ_TEMPLATE_IDENTIFIER(rseq_cmpeqv_storev)(intptr_t *v, intptr_t expect, intptr_t newv, int cpu)
-+{
-+	RSEQ_INJECT_C(9)
-+
-+	__asm__ __volatile__ goto (
-+		RSEQ_ASM_DEFINE_TABLE(9, 1f, 2f, 4f) /* start, commit, abort */
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[cmpfail])
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error1])
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error2])
-+#endif
-+		/* Start rseq by storing table entry pointer into rseq_cs. */
-+		RSEQ_ASM_STORE_RSEQ_CS(1, 3f, rseq_cs)
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 4f)
-+		RSEQ_INJECT_ASM(3)
-+		LONG_L " $r4, %[v]\n\t"
-+		"bne $r4, %[expect], %l[cmpfail]\n\t"
-+		RSEQ_INJECT_ASM(4)
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, %l[error1])
-+		LONG_L " $r4, %[v]\n\t"
-+		"bne $r4, %[expect], %l[error2]\n\t"
-+#endif
-+		/* final store */
-+		LONG_S " %[newv], %[v]\n\t"
-+		"2:\n\t"
-+		RSEQ_INJECT_ASM(5)
-+		"b 5f\n\t"
-+		RSEQ_ASM_DEFINE_ABORT(3, 4, "", abort, 1b, 2b, 4f)
-+		"5:\n\t"
-+		: /* gcc asm goto does not allow outputs */
-+		: [cpu_id]		"r" (cpu),
-+		  [current_cpu_id]	"m" (rseq_get_abi()->RSEQ_TEMPLATE_CPU_ID_FIELD),
-+		  [rseq_cs]		"m" (rseq_get_abi()->rseq_cs.arch.ptr),
-+		  [v]			"m" (*v),
-+		  [expect]		"r" (expect),
-+		  [newv]		"r" (newv)
-+		  RSEQ_INJECT_INPUT
-+		: "$r4", "memory"
-+		  RSEQ_INJECT_CLOBBER
-+		: abort, cmpfail
-+#ifdef RSEQ_COMPARE_TWICE
-+		  , error1, error2
-+#endif
-+	);
-+	return 0;
-+abort:
-+	RSEQ_INJECT_FAILED
-+	return -1;
-+cmpfail:
-+	return 1;
-+#ifdef RSEQ_COMPARE_TWICE
-+error1:
-+	rseq_bug("cpu_id comparison failed");
-+error2:
-+	rseq_bug("expected value comparison failed");
-+#endif
-+}
-+
-+static inline __attribute__((always_inline))
-+int RSEQ_TEMPLATE_IDENTIFIER(rseq_cmpnev_storeoffp_load)(intptr_t *v, intptr_t expectnot,
-+			       long voffp, intptr_t *load, int cpu)
-+{
-+	RSEQ_INJECT_C(9)
-+
-+	__asm__ __volatile__ goto (
-+		RSEQ_ASM_DEFINE_TABLE(9, 1f, 2f, 4f) /* start, commit, abort */
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[cmpfail])
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error1])
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error2])
-+#endif
-+		/* Start rseq by storing table entry pointer into rseq_cs. */
-+		RSEQ_ASM_STORE_RSEQ_CS(1, 3f, rseq_cs)
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 4f)
-+		RSEQ_INJECT_ASM(3)
-+		LONG_L " $r4, %[v]\n\t"
-+		"beq $r4, %[expectnot], %l[cmpfail]\n\t"
-+		RSEQ_INJECT_ASM(4)
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, %l[error1])
-+		LONG_L " $r4, %[v]\n\t"
-+		"beq $r4, %[expectnot], %l[error2]\n\t"
-+#endif
-+		LONG_S " $r4, %[load]\n\t"
-+		LONG_ADDI " $r4, $r4, %[voffp]\n\t"
-+		LONG_L " $r4, $r4, 0\n\t"
-+		/* final store */
-+		LONG_S " $r4, %[v]\n\t"
-+		"2:\n\t"
-+		RSEQ_INJECT_ASM(5)
-+		"b 5f\n\t"
-+		RSEQ_ASM_DEFINE_ABORT(3, 4, "", abort, 1b, 2b, 4f)
-+		"5:\n\t"
-+		: /* gcc asm goto does not allow outputs */
-+		: [cpu_id]		"r" (cpu),
-+		  [current_cpu_id]	"m" (rseq_get_abi()->RSEQ_TEMPLATE_CPU_ID_FIELD),
-+		  [rseq_cs]		"m" (rseq_get_abi()->rseq_cs.arch.ptr),
-+		  /* final store input */
-+		  [v]			"m" (*v),
-+		  [expectnot]		"r" (expectnot),
-+		  [voffp]		"Ir" (voffp),
-+		  [load]		"m" (*load)
-+		  RSEQ_INJECT_INPUT
-+		: "$r4", "memory"
-+		  RSEQ_INJECT_CLOBBER
-+		: abort, cmpfail
-+#ifdef RSEQ_COMPARE_TWICE
-+		  , error1, error2
-+#endif
-+	);
-+	return 0;
-+abort:
-+	RSEQ_INJECT_FAILED
-+	return -1;
-+cmpfail:
-+	return 1;
-+#ifdef RSEQ_COMPARE_TWICE
-+error1:
-+	rseq_bug("cpu_id comparison failed");
-+error2:
-+	rseq_bug("expected value comparison failed");
-+#endif
-+}
-+
-+static inline __attribute__((always_inline))
-+int RSEQ_TEMPLATE_IDENTIFIER(rseq_addv)(intptr_t *v, intptr_t count, int cpu)
-+{
-+	RSEQ_INJECT_C(9)
-+
-+	__asm__ __volatile__ goto (
-+		RSEQ_ASM_DEFINE_TABLE(9, 1f, 2f, 4f) /* start, commit, abort */
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error1])
-+#endif
-+		/* Start rseq by storing table entry pointer into rseq_cs. */
-+		RSEQ_ASM_STORE_RSEQ_CS(1, 3f, rseq_cs)
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 4f)
-+		RSEQ_INJECT_ASM(3)
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, %l[error1])
-+#endif
-+		LONG_L " $r4, %[v]\n\t"
-+		LONG_ADDI " $r4, $r4, %[count]\n\t"
-+		/* final store */
-+		LONG_S " $r4, %[v]\n\t"
-+		"2:\n\t"
-+		RSEQ_INJECT_ASM(4)
-+		"b 5f\n\t"
-+		RSEQ_ASM_DEFINE_ABORT(3, 4, "", abort, 1b, 2b, 4f)
-+		"5:\n\t"
-+		: /* gcc asm goto does not allow outputs */
-+		: [cpu_id]		"r" (cpu),
-+		  [current_cpu_id]	"m" (rseq_get_abi()->RSEQ_TEMPLATE_CPU_ID_FIELD),
-+		  [rseq_cs]		"m" (rseq_get_abi()->rseq_cs.arch.ptr),
-+		  [v]			"m" (*v),
-+		  [count]		"Ir" (count)
-+		  RSEQ_INJECT_INPUT
-+		: "$r4", "memory"
-+		  RSEQ_INJECT_CLOBBER
-+		: abort
-+#ifdef RSEQ_COMPARE_TWICE
-+		  , error1
-+#endif
-+	);
-+	return 0;
-+abort:
-+	RSEQ_INJECT_FAILED
-+	return -1;
-+#ifdef RSEQ_COMPARE_TWICE
-+error1:
-+	rseq_bug("cpu_id comparison failed");
-+#endif
-+}
-+
-+static inline __attribute__((always_inline))
-+int RSEQ_TEMPLATE_IDENTIFIER(rseq_cmpeqv_cmpeqv_storev)(intptr_t *v, intptr_t expect,
-+			      intptr_t *v2, intptr_t expect2,
-+			      intptr_t newv, int cpu)
-+{
-+	RSEQ_INJECT_C(9)
-+
-+	__asm__ __volatile__ goto (
-+		RSEQ_ASM_DEFINE_TABLE(9, 1f, 2f, 4f) /* start, commit, abort */
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[cmpfail])
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error1])
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error2])
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error3])
-+#endif
-+		/* Start rseq by storing table entry pointer into rseq_cs. */
-+		RSEQ_ASM_STORE_RSEQ_CS(1, 3f, rseq_cs)
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 4f)
-+		RSEQ_INJECT_ASM(3)
-+		LONG_L " $r4, %[v]\n\t"
-+		"bne $r4, %[expect], %l[cmpfail]\n\t"
-+		RSEQ_INJECT_ASM(4)
-+		LONG_L " $r4, %[v2]\n\t"
-+		"bne $r4, %[expect2], %l[cmpfail]\n\t"
-+		RSEQ_INJECT_ASM(5)
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, %l[error1])
-+		LONG_L " $r4, %[v]\n\t"
-+		"bne $r4, %[expect], %l[error2]\n\t"
-+		LONG_L " $r4, %[v2]\n\t"
-+		"bne $r4, %[expect2], %l[error3]\n\t"
-+#endif
-+		/* final store */
-+		LONG_S " %[newv], %[v]\n\t"
-+		"2:\n\t"
-+		RSEQ_INJECT_ASM(6)
-+		"b 5f\n\t"
-+		RSEQ_ASM_DEFINE_ABORT(3, 4, "", abort, 1b, 2b, 4f)
-+		"5:\n\t"
-+		: /* gcc asm goto does not allow outputs */
-+		: [cpu_id]		"r" (cpu),
-+		  [current_cpu_id]	"m" (rseq_get_abi()->RSEQ_TEMPLATE_CPU_ID_FIELD),
-+		  [rseq_cs]		"m" (rseq_get_abi()->rseq_cs.arch.ptr),
-+		  /* cmp2 input */
-+		  [v2]			"m" (*v2),
-+		  [expect2]		"r" (expect2),
-+		  /* final store input */
-+		  [v]			"m" (*v),
-+		  [expect]		"r" (expect),
-+		  [newv]		"r" (newv)
-+		  RSEQ_INJECT_INPUT
-+		: "$r4", "memory"
-+		  RSEQ_INJECT_CLOBBER
-+		: abort, cmpfail
-+#ifdef RSEQ_COMPARE_TWICE
-+		  , error1, error2, error3
-+#endif
-+	);
-+	return 0;
-+abort:
-+	RSEQ_INJECT_FAILED
-+	return -1;
-+cmpfail:
-+	return 1;
-+#ifdef RSEQ_COMPARE_TWICE
-+error1:
-+	rseq_bug("cpu_id comparison failed");
-+error2:
-+	rseq_bug("1st expected value comparison failed");
-+error3:
-+	rseq_bug("2nd expected value comparison failed");
-+#endif
-+}
-+
-+#endif /* #if defined(RSEQ_TEMPLATE_MO_RELAXED) &&
-+	(defined(RSEQ_TEMPLATE_CPU_ID) || defined(RSEQ_TEMPLATE_MM_CID)) */
-+
-+#if (defined(RSEQ_TEMPLATE_MO_RELAXED) || defined(RSEQ_TEMPLATE_MO_RELEASE)) && \
-+	(defined(RSEQ_TEMPLATE_CPU_ID) || defined(RSEQ_TEMPLATE_MM_CID))
-+
-+static inline __attribute__((always_inline))
-+int RSEQ_TEMPLATE_IDENTIFIER(rseq_cmpeqv_trystorev_storev)(intptr_t *v, intptr_t expect,
-+				 intptr_t *v2, intptr_t newv2,
-+				 intptr_t newv, int cpu)
-+{
-+	RSEQ_INJECT_C(9)
-+
-+	__asm__ __volatile__ goto (
-+		RSEQ_ASM_DEFINE_TABLE(9, 1f, 2f, 4f) /* start, commit, abort */
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[cmpfail])
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error1])
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error2])
-+#endif
-+		/* Start rseq by storing table entry pointer into rseq_cs. */
-+		RSEQ_ASM_STORE_RSEQ_CS(1, 3f, rseq_cs)
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 4f)
-+		RSEQ_INJECT_ASM(3)
-+		LONG_L " $r4, %[v]\n\t"
-+		"bne $r4, %[expect], %l[cmpfail]\n\t"
-+		RSEQ_INJECT_ASM(4)
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, %l[error1])
-+		LONG_L " $r4, %[v]\n\t"
-+		"bne $r4, %[expect], %l[error2]\n\t"
-+#endif
-+		/* try store */
-+		LONG_S " %[newv2], %[v2]\n\t"
-+		RSEQ_INJECT_ASM(5)
-+#ifdef RSEQ_TEMPLATE_MO_RELEASE
-+		"dbar 0x12\n\t"	/* store-release */
-+#endif
-+		/* final store */
-+		LONG_S " %[newv], %[v]\n\t"
-+		"2:\n\t"
-+		RSEQ_INJECT_ASM(6)
-+		"b 5f\n\t"
-+		RSEQ_ASM_DEFINE_ABORT(3, 4, "", abort, 1b, 2b, 4f)
-+		"5:\n\t"
-+		: /* gcc asm goto does not allow outputs */
-+		: [cpu_id]		"r" (cpu),
-+		  [current_cpu_id]	"m" (rseq_get_abi()->RSEQ_TEMPLATE_CPU_ID_FIELD),
-+		  [rseq_cs]		"m" (rseq_get_abi()->rseq_cs.arch.ptr),
-+		  /* try store input */
-+		  [v2]			"m" (*v2),
-+		  [newv2]		"r" (newv2),
-+		  /* final store input */
-+		  [v]			"m" (*v),
-+		  [expect]		"r" (expect),
-+		  [newv]		"r" (newv)
-+		  RSEQ_INJECT_INPUT
-+		: "$r4", "memory"
-+		  RSEQ_INJECT_CLOBBER
-+		: abort, cmpfail
-+#ifdef RSEQ_COMPARE_TWICE
-+		  , error1, error2
-+#endif
-+	);
-+	return 0;
-+abort:
-+	RSEQ_INJECT_FAILED
-+	return -1;
-+cmpfail:
-+	return 1;
-+#ifdef RSEQ_COMPARE_TWICE
-+error1:
-+	rseq_bug("cpu_id comparison failed");
-+error2:
-+	rseq_bug("expected value comparison failed");
-+#endif
-+}
-+
-+static inline __attribute__((always_inline))
-+int RSEQ_TEMPLATE_IDENTIFIER(rseq_cmpeqv_trymemcpy_storev)(intptr_t *v, intptr_t expect,
-+				 void *dst, void *src, size_t len,
-+				 intptr_t newv, int cpu)
-+{
-+	uintptr_t rseq_scratch[3];
-+
-+	RSEQ_INJECT_C(9)
-+
-+	__asm__ __volatile__ goto (
-+		RSEQ_ASM_DEFINE_TABLE(9, 1f, 2f, 4f) /* start, commit, abort */
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[cmpfail])
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error1])
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error2])
-+#endif
-+		LONG_S " %[src], %[rseq_scratch0]\n\t"
-+		LONG_S "  %[dst], %[rseq_scratch1]\n\t"
-+		LONG_S " %[len], %[rseq_scratch2]\n\t"
-+		/* Start rseq by storing table entry pointer into rseq_cs. */
-+		RSEQ_ASM_STORE_RSEQ_CS(1, 3f, rseq_cs)
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 4f)
-+		RSEQ_INJECT_ASM(3)
-+		LONG_L " $r4, %[v]\n\t"
-+		"bne $r4, %[expect], 5f\n\t"
-+		RSEQ_INJECT_ASM(4)
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 6f)
-+		LONG_L " $r4, %[v]\n\t"
-+		"bne $r4, %[expect], 7f\n\t"
-+#endif
-+		/* try memcpy */
-+		"beqz %[len], 333f\n\t" \
-+		"222:\n\t" \
-+		"ld.b  $r4, %[src], 0\n\t" \
-+		"st.b  $r4, %[dst], 0\n\t" \
-+		LONG_ADDI " %[src], %[src], 1\n\t" \
-+		LONG_ADDI " %[dst], %[dst], 1\n\t" \
-+		LONG_ADDI " %[len], %[len], -1\n\t" \
-+		"bnez %[len], 222b\n\t" \
-+		"333:\n\t" \
-+		RSEQ_INJECT_ASM(5)
-+#ifdef RSEQ_TEMPLATE_MO_RELEASE
-+		"dbar 0x12\n\t"	/* store-release */
-+#endif
-+		/* final store */
-+		LONG_S " %[newv], %[v]\n\t"
-+		"2:\n\t"
-+		RSEQ_INJECT_ASM(6)
-+		/* teardown */
-+		LONG_L " %[len], %[rseq_scratch2]\n\t"
-+		LONG_L " %[dst], %[rseq_scratch1]\n\t"
-+		LONG_L " %[src], %[rseq_scratch0]\n\t"
-+		"b 8f\n\t"
-+		RSEQ_ASM_DEFINE_ABORT(3, 4,
-+				      /* teardown */
-+				      LONG_L " %[len], %[rseq_scratch2]\n\t"
-+				      LONG_L " %[dst], %[rseq_scratch1]\n\t"
-+				      LONG_L " %[src], %[rseq_scratch0]\n\t",
-+				      abort, 1b, 2b, 4f)
-+		RSEQ_ASM_DEFINE_CMPFAIL(5,
-+					/* teardown */
-+					LONG_L " %[len], %[rseq_scratch2]\n\t"
-+					LONG_L " %[dst], %[rseq_scratch1]\n\t"
-+					LONG_L " %[src], %[rseq_scratch0]\n\t",
-+					cmpfail)
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_DEFINE_CMPFAIL(6,
-+					/* teardown */
-+					LONG_L " %[len], %[rseq_scratch2]\n\t"
-+					LONG_L " %[dst], %[rseq_scratch1]\n\t"
-+					LONG_L " %[src], %[rseq_scratch0]\n\t",
-+					error1)
-+		RSEQ_ASM_DEFINE_CMPFAIL(7,
-+					/* teardown */
-+					LONG_L " %[len], %[rseq_scratch2]\n\t"
-+					LONG_L " %[dst], %[rseq_scratch1]\n\t"
-+					LONG_L " %[src], %[rseq_scratch0]\n\t",
-+					error2)
-+#endif
-+		"8:\n\t"
-+		: /* gcc asm goto does not allow outputs */
-+		: [cpu_id]		"r" (cpu),
-+		  [current_cpu_id]	"m" (rseq_get_abi()->RSEQ_TEMPLATE_CPU_ID_FIELD),
-+		  [rseq_cs]		"m" (rseq_get_abi()->rseq_cs.arch.ptr),
-+		  /* final store input */
-+		  [v]			"m" (*v),
-+		  [expect]		"r" (expect),
-+		  [newv]		"r" (newv),
-+		  /* try memcpy input */
-+		  [dst]			"r" (dst),
-+		  [src]			"r" (src),
-+		  [len]			"r" (len),
-+		  [rseq_scratch0]	"m" (rseq_scratch[0]),
-+		  [rseq_scratch1]	"m" (rseq_scratch[1]),
-+		  [rseq_scratch2]	"m" (rseq_scratch[2])
-+		  RSEQ_INJECT_INPUT
-+		: "$r4", "memory"
-+		  RSEQ_INJECT_CLOBBER
-+		: abort, cmpfail
-+#ifdef RSEQ_COMPARE_TWICE
-+		  , error1, error2
-+#endif
-+	);
-+	return 0;
-+abort:
-+	RSEQ_INJECT_FAILED
-+	return -1;
-+cmpfail:
-+	return 1;
-+#ifdef RSEQ_COMPARE_TWICE
-+error1:
-+	rseq_bug("cpu_id comparison failed");
-+error2:
-+	rseq_bug("expected value comparison failed");
-+#endif
-+}
-+
-+#endif /* #if (defined(RSEQ_TEMPLATE_MO_RELAXED) || defined(RSEQ_TEMPLATE_MO_RELEASE)) &&
-+	(defined(RSEQ_TEMPLATE_CPU_ID) || defined(RSEQ_TEMPLATE_MM_CID)) */
-+
-+#include "rseq-bits-reset.h"
-diff --git a/tools/testing/selftests/rseq/rseq-loongarch-thread-pointer.h b/tools/testing/selftests/rseq/rseq-loongarch-thread-pointer.h
-new file mode 100644
-index 000000000000..7dc990687982
---- /dev/null
-+++ b/tools/testing/selftests/rseq/rseq-loongarch-thread-pointer.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: MIT */
-+/* SPDX-FileCopyrightText: 2023 Huang Pei <huangpei@loongson.cn> */
-+
-+#ifndef _RSEQ_LOONGARCH_THREAD_POINTER
-+#define _RSEQ_LOONGARCH_THREAD_POINTER
-+
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
-+
-+static inline void *rseq_thread_pointer(void)
-+{
-+	register void *__result asm ("$2");
-+	asm ("" : "=r" (__result));
-+	return __result;
-+}
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif
-diff --git a/tools/testing/selftests/rseq/rseq-loongarch.h b/tools/testing/selftests/rseq/rseq-loongarch.h
-new file mode 100644
-index 000000000000..37aae463edde
---- /dev/null
-+++ b/tools/testing/selftests/rseq/rseq-loongarch.h
-@@ -0,0 +1,140 @@
-+/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-+/*
-+ * Author: Huang Pei <huangpei@loongson.cn>
-+ * (C) Copyright 2023 Loongson Technology Corporation Limited
-+ * (C) Copyright 2016-2022 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-+ * (C) Copyright 2018 MIPS Tech LLC
-+ * (C) Copyright 2018 - Paul Burton <paul.burton@mips.com>
-+ */
-+
-+/*
-+ * RSEQ_SIG use "break 0x10" instruction.
-+ */
-+
-+# define RSEQ_SIG	0x002a0010
-+
-+
-+
-+#define rseq_smp_mb()	__asm__ __volatile__ ("dbar 0x10" ::: "memory")
-+#define rseq_smp_rmb()	__asm__ __volatile__ ("dbar 0x15" ::: "memory")
-+#define rseq_smp_wmb()	__asm__ __volatile__ ("dbar 0x1a" ::: "memory")
-+
-+#define rseq_smp_load_acquire(p)					\
-+__extension__ ({							\
-+	rseq_unqual_scalar_typeof(*(p)) ____p1 = RSEQ_READ_ONCE(*(p));	\
-+	__asm__ __volatile__("dbar 0x14" :::  "memory");		\
-+	____p1;								\
-+})
-+
-+#define rseq_smp_acquire__after_ctrl_dep()	rseq_smp_rmb()
-+
-+#define rseq_smp_store_release(p, v)					\
-+do {									\
-+	__asm__ __volatile__("dbar 0x12" :::  "memory");		\
-+	RSEQ_WRITE_ONCE(*(p), v);					\
-+} while (0)
-+
-+# define LONG			".dword"
-+# define LONG_LA		"la.local"
-+# define LONG_L			"ld.d"
-+# define LONG_S			"st.d"
-+# define LONG_ADDI		"addi.d"
-+# define U32_U64_PAD(x)		x
-+
-+#define __RSEQ_ASM_DEFINE_TABLE(label, version, flags, start_ip, \
-+				post_commit_offset, abort_ip) \
-+		".pushsection __rseq_cs, \"aw\"\n\t" \
-+		".balign 32\n\t" \
-+		__rseq_str(label) ":\n\t"					\
-+		".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
-+		LONG " " U32_U64_PAD(__rseq_str(start_ip)) "\n\t" \
-+		LONG " " U32_U64_PAD(__rseq_str(post_commit_offset)) "\n\t" \
-+		LONG " " U32_U64_PAD(__rseq_str(abort_ip)) "\n\t" \
-+		".popsection\n\t" \
-+		".pushsection __rseq_cs_ptr_array, \"aw\"\n\t" \
-+		LONG " " U32_U64_PAD(__rseq_str(label) "b") "\n\t" \
-+		".popsection\n\t"
-+
-+#define RSEQ_ASM_DEFINE_TABLE(label, start_ip, post_commit_ip, abort_ip) \
-+	__RSEQ_ASM_DEFINE_TABLE(label, 0x0, 0x0, start_ip, \
-+				(post_commit_ip - start_ip), abort_ip)
-+/*
-+ * Exit points of a rseq critical section consist of all instructions outside
-+ * of the critical section where a critical section can either branch to or
-+ * reach through the normal course of its execution. The abort IP and the
-+ * post-commit IP are already part of the __rseq_cs section and should not be
-+ * explicitly defined as additional exit points. Knowing all exit points is
-+ * useful to assist debuggers stepping over the critical section.
-+ */
-+#define RSEQ_ASM_DEFINE_EXIT_POINT(start_ip, exit_ip) \
-+		".pushsection __rseq_exit_point_array, \"aw\"\n\t" \
-+		LONG " " U32_U64_PAD(__rseq_str(start_ip)) "\n\t" \
-+		LONG " " U32_U64_PAD(__rseq_str(exit_ip)) "\n\t" \
-+		".popsection\n\t"
-+
-+#define RSEQ_ASM_STORE_RSEQ_CS(label, cs_label, rseq_cs) \
-+		RSEQ_INJECT_ASM(1) \
-+		LONG_LA " $r4, " __rseq_str(cs_label) "\n\t" \
-+		LONG_S  " $r4, %[" __rseq_str(rseq_cs) "]\n\t" \
-+		__rseq_str(label) ":\n\t"
-+
-+#define RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, label) \
-+		RSEQ_INJECT_ASM(2) \
-+		"ld.w  $r4, %[" __rseq_str(current_cpu_id) "]\n\t" \
-+		"bne $r4, %[" __rseq_str(cpu_id) "], " __rseq_str(label) "\n\t"
-+
-+#define __RSEQ_ASM_DEFINE_ABORT(table_label, label, teardown, \
-+				abort_label, version, flags, \
-+				start_ip, post_commit_offset, abort_ip) \
-+		".balign 32\n\t" \
-+		__rseq_str(table_label) ":\n\t" \
-+		".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
-+		LONG " " U32_U64_PAD(__rseq_str(start_ip)) "\n\t" \
-+		LONG " " U32_U64_PAD(__rseq_str(post_commit_offset)) "\n\t" \
-+		LONG " " U32_U64_PAD(__rseq_str(abort_ip)) "\n\t" \
-+		".word " __rseq_str(RSEQ_SIG) "\n\t" \
-+		__rseq_str(label) ":\n\t" \
-+		teardown \
-+		"b %l[" __rseq_str(abort_label) "]\n\t"
-+
-+#define RSEQ_ASM_DEFINE_ABORT(table_label, label, teardown, abort_label, \
-+			      start_ip, post_commit_ip, abort_ip) \
-+	__RSEQ_ASM_DEFINE_ABORT(table_label, label, teardown, \
-+				abort_label, 0x0, 0x0, start_ip, \
-+				(post_commit_ip - start_ip), abort_ip)
-+
-+#define RSEQ_ASM_DEFINE_CMPFAIL(label, teardown, cmpfail_label) \
-+		__rseq_str(label) ":\n\t" \
-+		teardown \
-+		"b %l[" __rseq_str(cmpfail_label) "]\n\t"
-+
-+/* Per-cpu-id indexing. */
-+#define RSEQ_TEMPLATE_CPU_ID
-+#define RSEQ_TEMPLATE_MO_RELAXED
-+#include "rseq-loongarch-bits.h"
-+#undef RSEQ_TEMPLATE_MO_RELAXED
-+
-+#define RSEQ_TEMPLATE_MO_RELEASE
-+#include "rseq-loongarch-bits.h"
-+#undef RSEQ_TEMPLATE_MO_RELEASE
-+#undef RSEQ_TEMPLATE_CPU_ID
-+
-+/* Per-mm-cid indexing. */
-+
-+#define RSEQ_TEMPLATE_MM_CID
-+#define RSEQ_TEMPLATE_MO_RELAXED
-+#include "rseq-loongarch-bits.h"
-+#undef RSEQ_TEMPLATE_MO_RELAXED
-+
-+#define RSEQ_TEMPLATE_MO_RELEASE
-+#include "rseq-loongarch-bits.h"
-+#undef RSEQ_TEMPLATE_MO_RELEASE
-+#undef RSEQ_TEMPLATE_MM_CID
-+
-+/* APIs which are not based on cpu ids. */
-+
-+#define RSEQ_TEMPLATE_CPU_ID_NONE
-+#define RSEQ_TEMPLATE_MO_RELAXED
-+#include "rseq-loongarch-bits.h"
-+#undef RSEQ_TEMPLATE_MO_RELAXED
-+#undef RSEQ_TEMPLATE_CPU_ID_NONE
-diff --git a/tools/testing/selftests/rseq/rseq-thread-pointer.h b/tools/testing/selftests/rseq/rseq-thread-pointer.h
-index 977c25d758b2..b9c8fe7c4683 100644
---- a/tools/testing/selftests/rseq/rseq-thread-pointer.h
-+++ b/tools/testing/selftests/rseq/rseq-thread-pointer.h
-@@ -12,6 +12,8 @@
- #include "rseq-x86-thread-pointer.h"
- #elif defined(__PPC__)
- #include "rseq-ppc-thread-pointer.h"
-+#elif defined(__loongarch__)
-+#include "rseq-loongarch-thread-pointer.h"
- #else
- #include "rseq-generic-thread-pointer.h"
- #endif
-diff --git a/tools/testing/selftests/rseq/rseq.h b/tools/testing/selftests/rseq/rseq.h
-index d7364ea4d201..75c4bbe013d3 100644
---- a/tools/testing/selftests/rseq/rseq.h
-+++ b/tools/testing/selftests/rseq/rseq.h
-@@ -128,6 +128,8 @@ static inline struct rseq_abi *rseq_get_abi(void)
- #include <rseq-s390.h>
- #elif defined(__riscv)
- #include <rseq-riscv.h>
-+#elif defined(__loongarch__)
-+#include <rseq-loongarch.h>
- #else
- #error unsupported target
- #endif
--- 
-2.20.1
-
+> Huacai
+>
+> >
+> >   All error logs:
+> >   test_map_val_and_probed_memory:PASS:test_ldsx_insn__open 0 nsec
+> >   test_map_val_and_probed_memory:PASS:test_ldsx_insn__load 0 nsec
+> >   libbpf: prog 'test_ptr_struct_arg': failed to attach: ERROR: strerror=
+_r(-524)=3D22
+> >   libbpf: prog 'test_ptr_struct_arg': failed to auto-attach: -524
+> >   test_map_val_and_probed_memory:FAIL:test_ldsx_insn__attach unexpected=
+ error: -524 (errno 524)
+> >   #116/1   ldsx_insn/map_val and probed_memory:FAIL
+> >   #116     ldsx_insn:FAIL
+> >   Summary: 0/2 PASSED, 0 SKIPPED, 1 FAILED
+> >
+> > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > ---
+> >  tools/testing/selftests/bpf/progs/test_ldsx_insn.c | 3 ++-
+> >  tools/testing/selftests/bpf/progs/verifier_bswap.c | 3 ++-
+> >  tools/testing/selftests/bpf/progs/verifier_gotol.c | 3 ++-
+> >  tools/testing/selftests/bpf/progs/verifier_ldsx.c  | 3 ++-
+> >  tools/testing/selftests/bpf/progs/verifier_movsx.c | 3 ++-
+> >  tools/testing/selftests/bpf/progs/verifier_sdiv.c  | 3 ++-
+> >  6 files changed, 12 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/bpf/progs/test_ldsx_insn.c b/tools=
+/testing/selftests/bpf/progs/test_ldsx_insn.c
+> > index 3ddcb3777912..2a2a942737d7 100644
+> > --- a/tools/testing/selftests/bpf/progs/test_ldsx_insn.c
+> > +++ b/tools/testing/selftests/bpf/progs/test_ldsx_insn.c
+> > @@ -7,7 +7,8 @@
+> >
+> >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
+> >       (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) ||      =
+ \
+> > -     defined(__TARGET_ARCH_s390)) && __clang_major__ >=3D 18
+> > +     defined(__TARGET_ARCH_s390) || defined(__TARGET_ARCH_loongarch)) =
+&& \
+> > +     __clang_major__ >=3D 18
+> >  const volatile int skip =3D 0;
+> >  #else
+> >  const volatile int skip =3D 1;
+> > diff --git a/tools/testing/selftests/bpf/progs/verifier_bswap.c b/tools=
+/testing/selftests/bpf/progs/verifier_bswap.c
+> > index 107525fb4a6a..e61755656e8d 100644
+> > --- a/tools/testing/selftests/bpf/progs/verifier_bswap.c
+> > +++ b/tools/testing/selftests/bpf/progs/verifier_bswap.c
+> > @@ -6,7 +6,8 @@
+> >
+> >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
+> >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) || \
+> > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390)) && =
+\
+> > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
+> > +       defined(__TARGET_ARCH_loongarch)) && \
+> >         __clang_major__ >=3D 18
+> >
+> >  SEC("socket")
+> > diff --git a/tools/testing/selftests/bpf/progs/verifier_gotol.c b/tools=
+/testing/selftests/bpf/progs/verifier_gotol.c
+> > index 9f202eda952f..d1edbcff9a18 100644
+> > --- a/tools/testing/selftests/bpf/progs/verifier_gotol.c
+> > +++ b/tools/testing/selftests/bpf/progs/verifier_gotol.c
+> > @@ -6,7 +6,8 @@
+> >
+> >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
+> >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) || \
+> > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390)) && =
+\
+> > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
+> > +       defined(__TARGET_ARCH_loongarch)) && \
+> >         __clang_major__ >=3D 18
+> >
+> >  SEC("socket")
+> > diff --git a/tools/testing/selftests/bpf/progs/verifier_ldsx.c b/tools/=
+testing/selftests/bpf/progs/verifier_ldsx.c
+> > index 375525329637..d4427d8e1217 100644
+> > --- a/tools/testing/selftests/bpf/progs/verifier_ldsx.c
+> > +++ b/tools/testing/selftests/bpf/progs/verifier_ldsx.c
+> > @@ -6,7 +6,8 @@
+> >
+> >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
+> >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) || \
+> > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390)) && =
+\
+> > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
+> > +       defined(__TARGET_ARCH_loongarch)) && \
+> >         __clang_major__ >=3D 18
+> >
+> >  SEC("socket")
+> > diff --git a/tools/testing/selftests/bpf/progs/verifier_movsx.c b/tools=
+/testing/selftests/bpf/progs/verifier_movsx.c
+> > index b2a04d1179d0..cbb9d6714f53 100644
+> > --- a/tools/testing/selftests/bpf/progs/verifier_movsx.c
+> > +++ b/tools/testing/selftests/bpf/progs/verifier_movsx.c
+> > @@ -6,7 +6,8 @@
+> >
+> >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
+> >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) || \
+> > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390)) && =
+\
+> > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
+> > +       defined(__TARGET_ARCH_loongarch)) && \
+> >         __clang_major__ >=3D 18
+> >
+> >  SEC("socket")
+> > diff --git a/tools/testing/selftests/bpf/progs/verifier_sdiv.c b/tools/=
+testing/selftests/bpf/progs/verifier_sdiv.c
+> > index 8fc5174808b2..2a2271cf0294 100644
+> > --- a/tools/testing/selftests/bpf/progs/verifier_sdiv.c
+> > +++ b/tools/testing/selftests/bpf/progs/verifier_sdiv.c
+> > @@ -6,7 +6,8 @@
+> >
+> >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
+> >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) || \
+> > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390)) && =
+\
+> > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
+> > +       defined(__TARGET_ARCH_loongarch)) && \
+> >         __clang_major__ >=3D 18
+> >
+> >  SEC("socket")
+> > --
+> > 2.34.1
+> >
+>
