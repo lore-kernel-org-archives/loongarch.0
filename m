@@ -1,69 +1,75 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 108D6168C4
-	for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 09:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxqOgOgjtl1Rg1AA--.2111S3;
-	Fri, 27 Oct 2023 17:25:35 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd4NgjtlwlQ1AA--.50641S3;
-	Fri, 27 Oct 2023 17:25:33 +0800 (CST)
-Subject: Re: [PATCH v4 8/8] LoongArch: Add ORC stack unwinder support
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <1698048691-19521-1-git-send-email-yangtiezhu@loongson.cn>
- <1698048691-19521-9-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H7yYYtBQ8=oxSjdn=Jnne8mUK17n_S6c6O1bLC4B7VVcg@mail.gmail.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <4a516dcf-aac6-48c9-9082-ac812f313edc@loongson.cn>
-Date: Fri, 27 Oct 2023 17:25:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D70415AD7
+	for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 09:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGxUc1Fm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3AE0C433C8
+	for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 09:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698399075;
+	bh=32xHlCKJDS5VKbaDnq/BJ50yrsQl1IiT6t8Cc+ds0xw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WGxUc1FmDwpRMtD63eKBtmnZlRk8Tg0JPxrzPQOmn6suFUppoL9QFGmJbCMbap66u
+	 jw5XfvHszulDB0yrr4uDnBZ9k4vOzjvEztAhjT4U7BtOFHenB9hHHOPJMTDUvbpozF
+	 ivMlaEglIuAk8JYqTmWW+ZWwrf4BBVzXF8heFXcfHwoMtqccpoicG36FCU1eGoSaGN
+	 3AqPQe8ylRwNdpREywyuzp+kqdBMA34Elnr6AEaUxgn3vXjke0cH/Be9yVa0BPOXpC
+	 i064BGUh64LP/QIHmdbuNOIjTPinvMHMl48QXoeBf7cgSA+YudChMcrgR1It0eUjVC
+	 G+s2U9UbfT9cA==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-540c54944c4so3795305a12.1
+        for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 02:31:15 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yx9oOfU9BFSyDWyJs72vfmxMd29PMt2+gokwBWMn/vY+Qm5wXih
+	je0qyuPNC3wlkZu0mqL0iztuR1Ad5tjIr4jcBFY=
+X-Google-Smtp-Source: AGHT+IH6nvqzaXYwfoTx6Tkant12vcAxlz0QhF3Rd0CNwO7QrMhJlXP0wW5HvOn5mcLfA09F5m5iWkBwXRFdijBWOL4=
+X-Received: by 2002:a05:6402:1f90:b0:540:2a8f:806f with SMTP id
+ c16-20020a0564021f9000b005402a8f806fmr5124196edc.3.1698399074112; Fri, 27 Oct
+ 2023 02:31:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7yYYtBQ8=oxSjdn=Jnne8mUK17n_S6c6O1bLC4B7VVcg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Cxjd4NgjtlwlQ1AA--.50641S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s02
-	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF
-	0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
-	U1QVy3UUUUU==
+References: <1698048691-19521-1-git-send-email-yangtiezhu@loongson.cn>
+ <1698048691-19521-9-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H7yYYtBQ8=oxSjdn=Jnne8mUK17n_S6c6O1bLC4B7VVcg@mail.gmail.com> <4a516dcf-aac6-48c9-9082-ac812f313edc@loongson.cn>
+In-Reply-To: <4a516dcf-aac6-48c9-9082-ac812f313edc@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 27 Oct 2023 17:31:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Xov4vg8ezSeHfDVRJF2t4Sj9jMLwNYZAKR3bsTGm6JA@mail.gmail.com>
+Message-ID: <CAAhV-H5Xov4vg8ezSeHfDVRJF2t4Sj9jMLwNYZAKR3bsTGm6JA@mail.gmail.com>
+Subject: Re: [PATCH v4 8/8] LoongArch: Add ORC stack unwinder support
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Oct 27, 2023 at 5:25=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+>
+>
+> On 10/27/2023 03:02 PM, Huacai Chen wrote:
+> > v3 works in most cases, v4 cannot work completely (stop at show_stack),=
+ why?
+>
+> There are no obvious differences of this patch between v3 and v4.
+>
+> > [   61.642993] Call Trace:
+> > [   61.642995] [<9000000002ad3808>] show_stack+0x40/0x17c
+>
+> I can not reproduce the above issue with this patch unless remove
+> the option "-falign-functions" in arch/loongarch/Makefile, please
+> make sure the option "-falign-functions" is in your test code.
+A compiler issue? Can you try this one? Thanks.
+https://mirrors.wsyu.edu.cn/fedora/linux/Yongbao/cross-toolchain/20231026/
 
+Huacai
 
-On 10/27/2023 03:02 PM, Huacai Chen wrote:
-> v3 works in most cases, v4 cannot work completely (stop at show_stack), why?
-
-There are no obvious differences of this patch between v3 and v4.
-
-> [   61.642993] Call Trace:
-> [   61.642995] [<9000000002ad3808>] show_stack+0x40/0x17c
-
-I can not reproduce the above issue with this patch unless remove
-the option "-falign-functions" in arch/loongarch/Makefile, please
-make sure the option "-falign-functions" is in your test code.
-
-Thanks,
-Tiezhu
-
+>
+> Thanks,
+> Tiezhu
+>
+>
