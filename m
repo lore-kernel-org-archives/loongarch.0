@@ -1,83 +1,285 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286663AC22
-	for <loongarch@lists.linux.dev>; Fri, 27 Oct 2023 19:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AF013AE1
+	for <loongarch@lists.linux.dev>; Sun, 29 Oct 2023 22:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Ibrs5OOI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=x0iYI5oenjIZgr5Ea1ttq1u1uXaCUnuC+gyTKvhjOBk=; b=Ibrs5OOIynLh1ZqBHvo810vT2q
-	eZ2nAuEC+K8WhADZyxCD7xKQ7OjuqkB8rNWbweBGcKtCe8Efu7z905xSwkmaFhMWLogTpKeKp530c
-	y+snwDCtQLvQDi8jIBsm//i44Q6CVALD1DuRwOCHIrexGbVrRgcuPC0+OBgc0ect2BhZQxjhCQYj2
-	MSiZAfwX7ZMLxY1tPkBJ/kabOPASmDIlm14+ujvKWv7mtx2AMBdzfungg4OSeOdSvSQNubRBDCYW8
-	Wb6MfUkoZIBWsMA4dmC6oIypgl/PXBefZx7wAkV/9ynOow1ZBq2mVcMm41FTVxyfegcHh4AJBlsxe
-	Bi32VVuw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59754)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qwSpA-0008EM-0T;
-	Fri, 27 Oct 2023 20:48:52 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qwSp5-00018G-6R; Fri, 27 Oct 2023 20:48:47 +0100
-Date: Fri, 27 Oct 2023 20:48:47 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
-	x86@kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 4/5] kbuild: unify vdso_install rules
-Message-ID: <ZTwUH0uNESuWeKPR@shell.armlinux.org.uk>
-References: <20231009124210.1064021-1-masahiroy@kernel.org>
- <20231009124210.1064021-4-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HML9sNK2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A73C433C9;
+	Sun, 29 Oct 2023 22:56:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698620191;
+	bh=1SHLZbshLGB8vLgpREn8v8IpnOkMDMDQ5Q3UAsfjWDI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HML9sNK2FKKmiy/gboSiNaHO6S6oZWflLX+vHVivf1VBvdyaxpESLwwoQ/WLCHzlB
+	 s8Gog/BnWhobRM7cbt3/hN/SGsDUoMuvo6qfI53003e3/eZV1GHnAjCxBkrGtN3JE8
+	 YlEnPfPlHOPoY+cdVIVN5S8Dny7CJ2l5PG6VzHs498Vt6dK1IJZVNN2OC01NBy4HOb
+	 ZEQVrn64fANv8E+G4QeNmKnCnZAh90za37SzYOpv5ipcTzjcH9ezHZQLxup6zf+k6H
+	 57nf7S1PjVFVcNzCQHThdZ74XusocTB0k//OCpE02EhO+3ibKOkzjfzo8t2Li/TgFj
+	 P+m5u8rkQMWAg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	chenhuacai@kernel.org,
+	zhoubinbin@loongson.cn,
+	xry111@xry111.site,
+	lihui@loongson.cn,
+	zhangqing@loongson.cn,
+	hejinyang@loongson.cn,
+	tangyouling@loongson.cn,
+	git@xen0n.name,
+	yijun@loongson.cn,
+	masahiroy@kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.5 40/52] LoongArch: Use SYM_CODE_* to annotate exception handlers
+Date: Sun, 29 Oct 2023 18:53:27 -0400
+Message-ID: <20231029225441.789781-40-sashal@kernel.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231029225441.789781-1-sashal@kernel.org>
+References: <20231029225441.789781-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231009124210.1064021-4-masahiroy@kernel.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.5.9
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 09, 2023 at 09:42:09PM +0900, Masahiro Yamada wrote:
->  arch/arm/Makefile                      |  7 +---
->  arch/arm/vdso/Makefile                 | 25 --------------
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+[ Upstream commit 00c2ca84c680f64b79b5e10a482ca435fd7d98ce ]
 
-Thanks!
+As described in include/linux/linkage.h,
 
+  FUNC -- C-like functions (proper stack frame etc.)
+  CODE -- non-C code (e.g. irq handlers with different, special stack etc.)
+
+  SYM_FUNC_{START, END} -- use for global functions
+  SYM_CODE_{START, END} -- use for non-C (special) functions
+
+So use SYM_CODE_* to annotate exception handlers.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/include/asm/linkage.h |  8 +++++++
+ arch/loongarch/kernel/entry.S        |  4 ++--
+ arch/loongarch/kernel/genex.S        | 16 ++++++-------
+ arch/loongarch/mm/tlbex.S            | 36 ++++++++++++++--------------
+ 4 files changed, 36 insertions(+), 28 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/linkage.h b/arch/loongarch/include/asm/linkage.h
+index 81b0c4cfbf4f2..e2eca1a25b4ef 100644
+--- a/arch/loongarch/include/asm/linkage.h
++++ b/arch/loongarch/include/asm/linkage.h
+@@ -33,4 +33,12 @@
+ 	.cfi_endproc;					\
+ 	SYM_END(name, SYM_T_FUNC)
+ 
++#define SYM_CODE_START(name)				\
++	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)	\
++	.cfi_startproc;
++
++#define SYM_CODE_END(name)				\
++	.cfi_endproc;					\
++	SYM_END(name, SYM_T_NONE)
++
+ #endif
+diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
+index d737e3cf42d3f..1781c6a5befa2 100644
+--- a/arch/loongarch/kernel/entry.S
++++ b/arch/loongarch/kernel/entry.S
+@@ -18,7 +18,7 @@
+ 	.text
+ 	.cfi_sections	.debug_frame
+ 	.align	5
+-SYM_FUNC_START(handle_syscall)
++SYM_CODE_START(handle_syscall)
+ 	csrrd		t0, PERCPU_BASE_KS
+ 	la.pcrel	t1, kernelsp
+ 	add.d		t1, t1, t0
+@@ -66,7 +66,7 @@ SYM_FUNC_START(handle_syscall)
+ 	bl		do_syscall
+ 
+ 	RESTORE_ALL_AND_RET
+-SYM_FUNC_END(handle_syscall)
++SYM_CODE_END(handle_syscall)
+ _ASM_NOKPROBE(handle_syscall)
+ 
+ SYM_CODE_START(ret_from_fork)
+diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
+index 78f0663846575..2bb3aa2dcfcb2 100644
+--- a/arch/loongarch/kernel/genex.S
++++ b/arch/loongarch/kernel/genex.S
+@@ -31,7 +31,7 @@ SYM_FUNC_START(__arch_cpu_idle)
+ 1:	jr	ra
+ SYM_FUNC_END(__arch_cpu_idle)
+ 
+-SYM_FUNC_START(handle_vint)
++SYM_CODE_START(handle_vint)
+ 	BACKUP_T0T1
+ 	SAVE_ALL
+ 	la_abs	t1, __arch_cpu_idle
+@@ -46,11 +46,11 @@ SYM_FUNC_START(handle_vint)
+ 	la_abs	t0, do_vint
+ 	jirl	ra, t0, 0
+ 	RESTORE_ALL_AND_RET
+-SYM_FUNC_END(handle_vint)
++SYM_CODE_END(handle_vint)
+ 
+-SYM_FUNC_START(except_vec_cex)
++SYM_CODE_START(except_vec_cex)
+ 	b	cache_parity_error
+-SYM_FUNC_END(except_vec_cex)
++SYM_CODE_END(except_vec_cex)
+ 
+ 	.macro	build_prep_badv
+ 	csrrd	t0, LOONGARCH_CSR_BADV
+@@ -66,7 +66,7 @@ SYM_FUNC_END(except_vec_cex)
+ 
+ 	.macro	BUILD_HANDLER exception handler prep
+ 	.align	5
+-	SYM_FUNC_START(handle_\exception)
++	SYM_CODE_START(handle_\exception)
+ 	666:
+ 	BACKUP_T0T1
+ 	SAVE_ALL
+@@ -76,7 +76,7 @@ SYM_FUNC_END(except_vec_cex)
+ 	jirl	ra, t0, 0
+ 	668:
+ 	RESTORE_ALL_AND_RET
+-	SYM_FUNC_END(handle_\exception)
++	SYM_CODE_END(handle_\exception)
+ 	SYM_DATA(unwind_hint_\exception, .word 668b - 666b)
+ 	.endm
+ 
+@@ -93,7 +93,7 @@ SYM_FUNC_END(except_vec_cex)
+ 	BUILD_HANDLER watch watch none
+ 	BUILD_HANDLER reserved reserved none	/* others */
+ 
+-SYM_FUNC_START(handle_sys)
++SYM_CODE_START(handle_sys)
+ 	la_abs	t0, handle_syscall
+ 	jr	t0
+-SYM_FUNC_END(handle_sys)
++SYM_CODE_END(handle_sys)
+diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
+index ca17dd3a19153..d5d682f3d29f3 100644
+--- a/arch/loongarch/mm/tlbex.S
++++ b/arch/loongarch/mm/tlbex.S
+@@ -17,7 +17,7 @@
+ #define PTRS_PER_PTE_BITS	(PAGE_SHIFT - 3)
+ 
+ 	.macro tlb_do_page_fault, write
+-	SYM_FUNC_START(tlb_do_page_fault_\write)
++	SYM_CODE_START(tlb_do_page_fault_\write)
+ 	SAVE_ALL
+ 	csrrd		a2, LOONGARCH_CSR_BADV
+ 	move		a0, sp
+@@ -25,13 +25,13 @@
+ 	li.w		a1, \write
+ 	bl		do_page_fault
+ 	RESTORE_ALL_AND_RET
+-	SYM_FUNC_END(tlb_do_page_fault_\write)
++	SYM_CODE_END(tlb_do_page_fault_\write)
+ 	.endm
+ 
+ 	tlb_do_page_fault 0
+ 	tlb_do_page_fault 1
+ 
+-SYM_FUNC_START(handle_tlb_protect)
++SYM_CODE_START(handle_tlb_protect)
+ 	BACKUP_T0T1
+ 	SAVE_ALL
+ 	move		a0, sp
+@@ -41,9 +41,9 @@ SYM_FUNC_START(handle_tlb_protect)
+ 	la_abs		t0, do_page_fault
+ 	jirl		ra, t0, 0
+ 	RESTORE_ALL_AND_RET
+-SYM_FUNC_END(handle_tlb_protect)
++SYM_CODE_END(handle_tlb_protect)
+ 
+-SYM_FUNC_START(handle_tlb_load)
++SYM_CODE_START(handle_tlb_load)
+ 	csrwr		t0, EXCEPTION_KS0
+ 	csrwr		t1, EXCEPTION_KS1
+ 	csrwr		ra, EXCEPTION_KS2
+@@ -187,16 +187,16 @@ nopage_tlb_load:
+ 	csrrd		ra, EXCEPTION_KS2
+ 	la_abs		t0, tlb_do_page_fault_0
+ 	jr		t0
+-SYM_FUNC_END(handle_tlb_load)
++SYM_CODE_END(handle_tlb_load)
+ 
+-SYM_FUNC_START(handle_tlb_load_ptw)
++SYM_CODE_START(handle_tlb_load_ptw)
+ 	csrwr		t0, LOONGARCH_CSR_KS0
+ 	csrwr		t1, LOONGARCH_CSR_KS1
+ 	la_abs		t0, tlb_do_page_fault_0
+ 	jr		t0
+-SYM_FUNC_END(handle_tlb_load_ptw)
++SYM_CODE_END(handle_tlb_load_ptw)
+ 
+-SYM_FUNC_START(handle_tlb_store)
++SYM_CODE_START(handle_tlb_store)
+ 	csrwr		t0, EXCEPTION_KS0
+ 	csrwr		t1, EXCEPTION_KS1
+ 	csrwr		ra, EXCEPTION_KS2
+@@ -343,16 +343,16 @@ nopage_tlb_store:
+ 	csrrd		ra, EXCEPTION_KS2
+ 	la_abs		t0, tlb_do_page_fault_1
+ 	jr		t0
+-SYM_FUNC_END(handle_tlb_store)
++SYM_CODE_END(handle_tlb_store)
+ 
+-SYM_FUNC_START(handle_tlb_store_ptw)
++SYM_CODE_START(handle_tlb_store_ptw)
+ 	csrwr		t0, LOONGARCH_CSR_KS0
+ 	csrwr		t1, LOONGARCH_CSR_KS1
+ 	la_abs		t0, tlb_do_page_fault_1
+ 	jr		t0
+-SYM_FUNC_END(handle_tlb_store_ptw)
++SYM_CODE_END(handle_tlb_store_ptw)
+ 
+-SYM_FUNC_START(handle_tlb_modify)
++SYM_CODE_START(handle_tlb_modify)
+ 	csrwr		t0, EXCEPTION_KS0
+ 	csrwr		t1, EXCEPTION_KS1
+ 	csrwr		ra, EXCEPTION_KS2
+@@ -497,16 +497,16 @@ nopage_tlb_modify:
+ 	csrrd		ra, EXCEPTION_KS2
+ 	la_abs		t0, tlb_do_page_fault_1
+ 	jr		t0
+-SYM_FUNC_END(handle_tlb_modify)
++SYM_CODE_END(handle_tlb_modify)
+ 
+-SYM_FUNC_START(handle_tlb_modify_ptw)
++SYM_CODE_START(handle_tlb_modify_ptw)
+ 	csrwr		t0, LOONGARCH_CSR_KS0
+ 	csrwr		t1, LOONGARCH_CSR_KS1
+ 	la_abs		t0, tlb_do_page_fault_1
+ 	jr		t0
+-SYM_FUNC_END(handle_tlb_modify_ptw)
++SYM_CODE_END(handle_tlb_modify_ptw)
+ 
+-SYM_FUNC_START(handle_tlb_refill)
++SYM_CODE_START(handle_tlb_refill)
+ 	csrwr		t0, LOONGARCH_CSR_TLBRSAVE
+ 	csrrd		t0, LOONGARCH_CSR_PGD
+ 	lddir		t0, t0, 3
+@@ -521,4 +521,4 @@ SYM_FUNC_START(handle_tlb_refill)
+ 	tlbfill
+ 	csrrd		t0, LOONGARCH_CSR_TLBRSAVE
+ 	ertn
+-SYM_FUNC_END(handle_tlb_refill)
++SYM_CODE_END(handle_tlb_refill)
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.42.0
+
