@@ -1,88 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAE012E7B
-	for <loongarch@lists.linux.dev>; Sun, 29 Oct 2023 22:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9196A3FE4;
+	Mon, 30 Oct 2023 07:01:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pr1tNExj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC2CC433AB;
-	Sun, 29 Oct 2023 22:58:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyer+0uy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B1CC433C7;
+	Mon, 30 Oct 2023 07:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698620322;
-	bh=j3zRutOngKhqvqthHq0n5oDAv//ZpGVCoHpJC5jHYPM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pr1tNExjUV3XJVt3h0UQMZAdyz9BhmZi8cWC88TJRFv7MQCdF1HU50+/UMiMAPnkf
-	 eyns4Xmy95EQrD+LL3UEfU95Xlzc7AgkgyC+Z7qb8VqrsCNbz/ehu6iSOqCjwWi1rN
-	 pqMQ1vUrcVbnjSjaS3xMSjJji6WnuUjDMtI+CMa01Za+6OwWbwlF8V/jKDjLmK6iiM
-	 T4MvL4yEXpmmTonmgjo6pkgKbl4kQsjdul5xSix9sZ7hwhQl2fBF4P4QeJ3BhM4IEM
-	 C9Mv0mfveno/kA5QfRU8ClvJWaGmnDJTCyR+UMMsZBUjShFTKjuRCVCgGrzLs5KJqC
-	 2pxD1bCYUD4Lw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Deepak R Varma <drv@mailo.com>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	chenfeiyang@loongson.cn,
-	maobibo@loongson.cn,
-	arnd@arndb.de,
-	akpm@linux-foundation.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 31/39] LoongArch: Replace kmap_atomic() with kmap_local_page() in copy_user_highpage()
-Date: Sun, 29 Oct 2023 18:57:03 -0400
-Message-ID: <20231029225740.790936-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231029225740.790936-1-sashal@kernel.org>
-References: <20231029225740.790936-1-sashal@kernel.org>
+	s=k20201202; t=1698649274;
+	bh=EmJn7V2xcCxlebppxaDAhU12OFutDZWRBy0vMaSrWuA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fyer+0uyv1jhu2jxdwK+n1O2/sIgGI7ezOwxQC871hHJ3Cd/JKl9lBlO3pXltUpO2
+	 tybWUbFkw8nG3yYnKj5NWsk/KsMeh5cYt2Zf06cFoE4cK0SwwSOQ0meQsCZJmwrLES
+	 ZjfIwnoeXu/25/54cCJrG0ThSOL/VsSYVOr1W/9QTaMgDvrgblTvcHPZrDSbxEy8fw
+	 AT95UrDI+b348FRlIe6JpCkizTZtGaE3kNe+nAOZWv5ZyGWJevSARlVxf0OsNjI/Uk
+	 BM7kNTKVl9T3dS3d/hE9ctd5XEbBUeRh4TuIA6DuyqF/4ni+SgBncpCAAQy/vXTAcB
+	 87xr+yc2RIXWg==
+Date: Mon, 30 Oct 2023 09:00:53 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 04/13] mm/execmem, arch: convert remaining overrides
+ of module_alloc to execmem
+Message-ID: <20231030070053.GL2824@kernel.org>
+References: <20230918072955.2507221-1-rppt@kernel.org>
+ <20230918072955.2507221-5-rppt@kernel.org>
+ <20231023171420.GA4041@willie-the-truck>
+ <20231026085800.GK2824@kernel.org>
+ <20231026102438.GA6924@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.60
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231026102438.GA6924@willie-the-truck>
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+On Thu, Oct 26, 2023 at 11:24:39AM +0100, Will Deacon wrote:
+> On Thu, Oct 26, 2023 at 11:58:00AM +0300, Mike Rapoport wrote:
+> > On Mon, Oct 23, 2023 at 06:14:20PM +0100, Will Deacon wrote:
+> > > On Mon, Sep 18, 2023 at 10:29:46AM +0300, Mike Rapoport wrote:
+> > > > diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+> > > > index dd851297596e..cd6320de1c54 100644
+> > > > --- a/arch/arm64/kernel/module.c
+> > > > +++ b/arch/arm64/kernel/module.c
 
-[ Upstream commit 477a0ebec101359f49d92796e3b609857d564b52 ]
+...
 
-Replace kmap_atomic()/kunmap_atomic() calls with kmap_local_page()/
-kunmap_local() in copy_user_highpage() which can be invoked from both
-preemptible and atomic context [1].
+> > > > -	if (module_direct_base) {
+> > > > -		p = __vmalloc_node_range(size, MODULE_ALIGN,
+> > > > -					 module_direct_base,
+> > > > -					 module_direct_base + SZ_128M,
+> > > > -					 GFP_KERNEL | __GFP_NOWARN,
+> > > > -					 PAGE_KERNEL, 0, NUMA_NO_NODE,
+> > > > -					 __builtin_return_address(0));
+> > > > -	}
+> > > > +	module_init_limits();
+> > > 
+> > > Hmm, this used to be run from subsys_initcall(), but now you're running
+> > > it _really_ early, before random_init(), so randomization of the module
+> > > space is no longer going to be very random if we don't have early entropy
+> > > from the firmware or the CPU, which is likely to be the case on most SoCs.
+> > 
+> > Well, it will be as random as KASLR. Won't that be enough?
+> 
+> I don't think that's true -- we have the 'kaslr-seed' property for KASLR,
+> but I'm not seeing anything like that for the module randomisation and I
+> also don't see why we need to set these limits so early.
 
-[1] https://lore.kernel.org/all/20201029222652.302358281@linutronix.de/
+x86 needs execmem initialized before ftrace_init() so I thought it would be
+best to setup execmem along with most of MM in mm_core_init().
 
-Suggested-by: Deepak R Varma <drv@mailo.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/mm/init.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index c74da7770e39e..f42a3be5f28d7 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -68,11 +68,11 @@ void copy_user_highpage(struct page *to, struct page *from,
- {
- 	void *vfrom, *vto;
+I'll move execmem initialization for !x86 to a later point, say
+core_initcall.
  
--	vto = kmap_atomic(to);
--	vfrom = kmap_atomic(from);
-+	vfrom = kmap_local_page(from);
-+	vto = kmap_local_page(to);
- 	copy_page(vto, vfrom);
--	kunmap_atomic(vfrom);
--	kunmap_atomic(vto);
-+	kunmap_local(vfrom);
-+	kunmap_local(vto);
- 	/* Make sure this page is cleared on other CPU's too before using it */
- 	smp_wmb();
- }
--- 
-2.42.0
+> Will
 
+-- 
+Sincerely yours,
+Mike.
