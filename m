@@ -1,15 +1,15 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E06180A
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D6D47E4
 	for <loongarch@lists.linux.dev>; Tue, 31 Oct 2023 02:36:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from loongson.cn (unknown [112.20.110.17])
-	by gateway (Coremail) with SMTP id _____8DxxPBDaEBlQN41AA--.41017S3;
-	Tue, 31 Oct 2023 10:36:51 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxxPA8aEBlK941AA--.41014S3;
+	Tue, 31 Oct 2023 10:36:44 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.110.17])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axzy85aEBla0Q3AA--.53709S4;
-	Tue, 31 Oct 2023 10:36:50 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axzy85aEBla0Q3AA--.53709S2;
+	Tue, 31 Oct 2023 10:36:42 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -28,12 +28,10 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v3 2/5] dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check warning for reg-names
-Date: Tue, 31 Oct 2023 10:36:37 +0800
-Message-Id: <fd5efc8a21b94e044e4e225255655fc92beb0c63.1698717154.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v3 0/5] dt-bindings: interrupt-controller: Fix some loongson,liointc warnings
+Date: Tue, 31 Oct 2023 10:36:35 +0800
+Message-Id: <cover.1698717154.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1698717154.git.zhoubinbin@loongson.cn>
-References: <cover.1698717154.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,95 +39,81 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axzy85aEBla0Q3AA--.53709S4
+X-CM-TRANSID:AQAAf8Axzy85aEBla0Q3AA--.53709S2
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw15ZF4kKrWrXFy7tFW3CFX_yoW5ArWfpa
-	y7CanFgF48KF13Z3y8t340krnxZr93AwnIkan7J3y7GFsFq34UXr13tF95JF4fGrWIqa4j
-	vryFgayfGFyjyabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7WryfJFyxGrW5CrW5CrWfWFX_yoW8ZF15pF
+	sxA3WDKr4UtFWxArs8Ja48Arn5ZFW5JasxWFs7A3WfCayDX34jqr1SkF48Ar47Cry3X34a
+	vrykKrWUGFyUCFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
 	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
 	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
 	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8_gA5UUUUU==
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
 
-As we know, the Loongson-2K0500 is a single-core CPU, and the
-core1-related register (isr1) does not exist, and we need a separate
-declaration.
+Hi all:
 
-This fixes dtbs_check warning:
+Some liointc-related DTBS_CHECK warnings were found when trying to
+introduce the Loongson-2K DTS{I} for LoongArch.
+This patch series attempts to fix those warnings, as well as fixing
+non-standard property naming.
 
-DTC_CHK arch/loongarch/boot/dts/loongson-2k0500-ref.dtb
-arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11400: reg-names: ['main', 'isr0'] is too short
-        From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11400: Unevaluated properties are not allowed ('reg-names' was unexpected)
-        From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11400: reg: [[0, 534844416, 0, 64], [0, 534843456, 0, 8]] is too short
-        From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11440: reg-names: ['main', 'isr0'] is too short
-        From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+Of course, these fixes also apply to MIPS Loongson-2K1000/Loongson-3A
+dts{i}.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- .../loongson,liointc.yaml                     | 22 ++++++++++++++-----
- 1 file changed, 16 insertions(+), 6 deletions(-)
+Thanks.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-index 0d9511b8a792..7393d7dfbe82 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-@@ -11,8 +11,13 @@ maintainers:
- 
- description: |
-   This interrupt controller is found in the Loongson-3 family of chips and
--  Loongson-2K1000 chip, as the primary package interrupt controller which
-+  Loongson-2K series chips, as the primary package interrupt controller which
-   can route local I/O interrupt to interrupt lines of cores.
-+  Be aware of the following points.
-+  1.The Loongson-2K0500 is a single core CPU, the isr1 register could not be defined;
-+  2.The Loongson-2K0500/2K1000 has 64 device interrupt sources as inputs, so we
-+    need to define two nodes in dts{i} to describe the "0-31" and "32-61" interrupt
-+    sources respectively.
- 
- allOf:
-   - $ref: /schemas/interrupt-controller.yaml#
-@@ -29,10 +34,14 @@ properties:
-     maxItems: 3
- 
-   reg-names:
--    items:
--      - const: main
--      - const: isr0
--      - const: isr1
-+    oneOf:
-+      - items:
-+          - const: main
-+          - const: isr0
-+      - items:
-+          - const: main
-+          - const: isr0
-+          - const: isr1
- 
-   interrupt-controller: true
- 
-@@ -94,7 +103,8 @@ if:
- then:
-   properties:
-     reg:
--      minItems: 3
-+      minItems: 2
-+      maxItems: 3
- 
-   required:
-     - reg-names
+-----
+V3:
+patch(1/5):
+  - new patch, 'loongson,parent_int_map' renamed to 'loongson,parent-int-map';
+patch(2/5)(3/5):
+  - Separate the change points into separate patches;
+patch(4/5):
+ - new patch, make sure both parent map forms can be parsed;
+patch(5/5):
+ - new patch, fix 'loongson,parent_int_map' references in mips loongson
+   dts{i}.
+
+Link to V2:
+https://lore.kernel.org/all/20230821061315.3416836-1-zhoubinbin@loongson.cn/
+
+V2:
+1. Update commit message;
+2. "interruprt-names" should be "required", the driver gets the parent
+interrupts through it;
+3. Add more descriptions to explain the rationale for multiple nodes;
+4. Rewrite if-else statements.
+
+Link to V1:
+https://lore.kernel.org/all/20230815084713.1627520-1-zhoubinbin@loongson.cn/
+
+Binbin Zhou (5):
+  dt-bindings: interrupt-controller: loongson,liointc: Standardize the
+    naming of 'loongson,parent-int-map'
+  dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+    warning for reg-names
+  dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+    for interrupt-names
+  irqchip/loongson-liointc: Fix 'loongson,parent_int_map' parse
+  MIPS: Loongson64: DTS: Fix 'loongson,parent_int_map' references
+
+ .../loongson,liointc.yaml                     | 44 +++++++++++++------
+ .../boot/dts/loongson/loongson64-2k1000.dtsi  |  4 +-
+ .../dts/loongson/loongson64c-package.dtsi     |  2 +-
+ .../dts/loongson/loongson64g-package.dtsi     |  2 +-
+ .../dts/loongson/loongson64v_4core_virtio.dts |  2 +-
+ drivers/irqchip/irq-loongson-liointc.c        |  7 ++-
+ 6 files changed, 41 insertions(+), 20 deletions(-)
+
 -- 
 2.39.3
 
