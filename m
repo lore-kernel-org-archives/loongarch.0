@@ -1,144 +1,190 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4994719442
-	for <loongarch@lists.linux.dev>; Tue, 31 Oct 2023 11:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [112.20.110.17])
-	by gateway (Coremail) with SMTP id _____8CxtPCa30Blcu41AA--.40923S3;
-	Tue, 31 Oct 2023 19:06:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.110.17])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxE+SU30BlHm03AA--.56085S3;
-	Tue, 31 Oct 2023 19:06:00 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	WANG Xuerui <git@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 2/2] drivers/thermal/loongson2_thermal: Fix incorrect PTR_ERR() judgment
-Date: Tue, 31 Oct 2023 19:05:50 +0800
-Message-Id: <59565d152b68b528fc711a89151ea12ed3b73b90.1698743706.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1698743706.git.zhoubinbin@loongson.cn>
-References: <cover.1698743706.git.zhoubinbin@loongson.cn>
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D50B1DDE0
+	for <loongarch@lists.linux.dev>; Tue, 31 Oct 2023 14:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/23c6aF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1698761373;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PSrlOFadgRmkp59Ps7hIlpBA3Ozc75gF0uiWtS5xZoA=;
+	b=Y/23c6aFjjs3bhvH84JvOZiYdApSznDOBFfWjNjzF1txxrmdM/zm6h+j0ObO6LpUBr/AY5
+	4V8MNn1mcaSju1Mi892LXAvUBiylEXCpoY7h7BcI4T3uopULE+8R6ciaZCy0XRpSbTbXEI
+	n1Oqu+z0eqRa9L1+p17+hJkB/WbAwbw=
+Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com
+ [209.85.160.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-301-BplohA46OV21dvMxYjSpXw-1; Tue, 31 Oct 2023 10:09:30 -0400
+X-MC-Unique: BplohA46OV21dvMxYjSpXw-1
+Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-1e9c2c00182so7489121fac.1
+        for <loongarch@lists.linux.dev>; Tue, 31 Oct 2023 07:09:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698761370; x=1699366170;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PSrlOFadgRmkp59Ps7hIlpBA3Ozc75gF0uiWtS5xZoA=;
+        b=TYdgB8O9U4Bcb/Kvoh4xbTqh7/NHTotV/VUwd1KSD4p0Wm/hnvVuTxHpcPD5Orbkzh
+         uKTCkRJ+j1pm0Pc2N/D0JZDhk4afNkAGgpN70R5txOsiFKz7f9ha+I+7gSxZQ3mCwSPO
+         vgWMRaBD5t5mFpjVC5GY30vHvhlBaX9AmT2Yh5tHbdGiYfUCCw+T2xNLvAYd8A/7GJ5L
+         ZnRx3ghSFhlfPwpGKox0YHh1TFlo0r1ALIP72OkOe0zljdvCGxJVnaItfWEuik5IWAN1
+         YY90lC4dIH6pKCHhHrBfyQSCV3jN8Ew3/y8RsE9W2Z47U3cBIXhCpEsO0jAv97FqCLTJ
+         RlKg==
+X-Gm-Message-State: AOJu0Yz6sVBKA5rqGn+2CGEBQeUPQwjI6oZG2UHcXVTzI/5lVcJuKLJg
+	uAIW/cZJc14RJCS++maqUZKvU5usn2VQrbOlCnA8uG9c/LW0WCT97nkh3liZcLL7Tcyeatp0xqG
+	VZuYSC3zNhKmGvcKRdOZX46jig0hzfD/hA2Az
+X-Received: by 2002:a05:6870:180d:b0:1e9:c18b:b2da with SMTP id t13-20020a056870180d00b001e9c18bb2damr14768263oaf.18.1698761369992;
+        Tue, 31 Oct 2023 07:09:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFH5Kh6RCGV+88rrPsi6GN5YEaQ4HK/udqjWpjbov/sleXyyQzFEyt1SUvx/PitO+ubDGHgzNiGoOwUb15AZaU=
+X-Received: by 2002:a05:6870:180d:b0:1e9:c18b:b2da with SMTP id
+ t13-20020a056870180d00b001e9c18bb2damr14768241oaf.18.1698761369717; Tue, 31
+ Oct 2023 07:09:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxE+SU30BlHm03AA--.56085S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtry7XF1rCrWUXw1xAF43Arc_yoW7GFyDpr
-	y5Jr18Kr4kXr17Jw45AF15JF45Ja42ya1xur48Gr1UAr1UGr1UXFyUJrWUtryDAry5JF17
-	Jr1Dtr45tryDJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxU2nmRUUUUU
+References: <20231005091825.3207300-1-chenhuacai@loongson.cn>
+In-Reply-To: <20231005091825.3207300-1-chenhuacai@loongson.cn>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Tue, 31 Oct 2023 15:09:17 +0100
+Message-ID: <CABgObfZt+bEV2Ho5guX3=2eqJnBxt01D5tp6J-_VZuK1=JiWew@mail.gmail.com>
+Subject: Re: [GIT PULL] LoongArch KVM changes for v6.7
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PTR_ERR() returns -ENODEV when thermal-zones are undefined, and we need
--ENODEV as the right value for comparison.
+On Thu, Oct 5, 2023 at 11:28=E2=80=AFAM Huacai Chen <chenhuacai@loongson.cn=
+> wrote:
+>
+> The following changes since commit 8a749fd1a8720d4619c91c8b6e7528c0a355c0=
+aa:
+>
+>   Linux 6.6-rc4 (2023-10-01 14:15:13 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
+.git tags/loongarch-kvm-6.7
+>
+> for you to fetch changes up to 2c10cda4b777be4be9d9e69e4f70c818dbb15e21:
+>
+>   LoongArch: KVM: Add maintainers for LoongArch KVM (2023-10-02 10:01:29 =
++0800)
 
-Otherwise, tz->type is NULL when thermal-zones is undefined, resulting
-in the following error:
+Pulled, thanks.
 
-[   12.290030] CPU 1 Unable to handle kernel paging request at virtual address fffffffffffffff1, era == 900000000355f410, ra == 90000000031579b8
-[   12.302877] Oops[#1]:
-[   12.305190] CPU: 1 PID: 181 Comm: systemd-udevd Not tainted 6.6.0-rc7+ #5385
-[   12.312304] pc 900000000355f410 ra 90000000031579b8 tp 90000001069e8000 sp 90000001069eba10
-[   12.320739] a0 0000000000000000 a1 fffffffffffffff1 a2 0000000000000014 a3 0000000000000001
-[   12.329173] a4 90000001069eb990 a5 0000000000000001 a6 0000000000001001 a7 900000010003431c
-[   12.337606] t0 fffffffffffffff1 t1 54567fd5da9b4fd4 t2 900000010614ec40 t3 00000000000dc901
-[   12.346041] t4 0000000000000000 t5 0000000000000004 t6 900000010614ee20 t7 900000000d00b790
-[   12.354472] t8 00000000000dc901 u0 54567fd5da9b4fd4 s9 900000000402ae10 s0 900000010614ec40
-[   12.362916] s1 90000000039fced0 s2 ffffffffffffffed s3 ffffffffffffffed s4 9000000003acc000
-[   12.362931] s5 0000000000000004 s6 fffffffffffff000 s7 0000000000000490 s8 90000001028b2ec8
-[   12.362938]    ra: 90000000031579b8 thermal_add_hwmon_sysfs+0x258/0x300
-[   12.386411]   ERA: 900000000355f410 strscpy+0xf0/0x160
-[   12.391626]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
-[   12.397898]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-[   12.403678]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-[   12.409859]  ECFG: 00071c1c (LIE=2-4,10-12 VS=7)
-[   12.415882] ESTAT: 00010000 [PIL] (IS= ECode=1 EsubCode=0)
-[   12.415907]  BADV: fffffffffffffff1
-[   12.415911]  PRID: 0014a000 (Loongson-64bit, Loongson-2K1000)
-[   12.415917] Modules linked in: loongson2_thermal(+) vfat fat uio_pdrv_genirq uio fuse zram zsmalloc
-[   12.415950] Process systemd-udevd (pid: 181, threadinfo=00000000358b9718, task=00000000ace72fe3)
-[   12.415961] Stack : 0000000000000dc0 54567fd5da9b4fd4 900000000402ae10 9000000002df9358
-[   12.415982]         ffffffffffffffed 0000000000000004 9000000107a10aa8 90000001002a3410
-[   12.415999]         ffffffffffffffed ffffffffffffffed 9000000107a11268 9000000003157ab0
-[   12.416016]         9000000107a10aa8 ffffff80020fc0c8 90000001002a3410 ffffffffffffffed
-[   12.416032]         0000000000000024 ffffff80020cc1e8 900000000402b2a0 9000000003acc000
-[   12.416048]         90000001002a3410 0000000000000000 ffffff80020f4030 90000001002a3410
-[   12.416065]         0000000000000000 9000000002df6808 90000001002a3410 0000000000000000
-[   12.416081]         ffffff80020f4030 0000000000000000 90000001002a3410 9000000002df2ba8
-[   12.416097]         00000000000000b4 90000001002a34f4 90000001002a3410 0000000000000002
-[   12.416114]         ffffff80020f4030 fffffffffffffff0 90000001002a3410 9000000002df2f30
-[   12.416131]         ...
-[   12.416138] Call Trace:
-[   12.416142] [<900000000355f410>] strscpy+0xf0/0x160
-[   12.416167] [<90000000031579b8>] thermal_add_hwmon_sysfs+0x258/0x300
-[   12.416183] [<9000000003157ab0>] devm_thermal_add_hwmon_sysfs+0x50/0xe0
-[   12.416200] [<ffffff80020cc1e8>] loongson2_thermal_probe+0x128/0x200 [loongson2_thermal]
-[   12.416232] [<9000000002df6808>] platform_probe+0x68/0x140
-[   12.416249] [<9000000002df2ba8>] really_probe+0xc8/0x3c0
-[   12.416269] [<9000000002df2f30>] __driver_probe_device+0x90/0x180
-[   12.416286] [<9000000002df3058>] driver_probe_device+0x38/0x160
-[   12.416302] [<9000000002df33a8>] __driver_attach+0xa8/0x200
-[   12.416314] [<9000000002deffec>] bus_for_each_dev+0x8c/0x120
-[   12.416330] [<9000000002df198c>] bus_add_driver+0x10c/0x2a0
-[   12.416346] [<9000000002df46b4>] driver_register+0x74/0x160
-[   12.416358] [<90000000022201a4>] do_one_initcall+0x84/0x220
-[   12.416372] [<90000000022f3ab8>] do_init_module+0x58/0x2c0
-[   12.416386] [<90000000022f6538>] init_module_from_file+0x98/0x100
-[   12.416399] [<90000000022f67f0>] sys_finit_module+0x230/0x3c0
-[   12.416412] [<900000000358f7c8>] do_syscall+0x88/0xc0
-[   12.416431] [<900000000222137c>] handle_syscall+0xbc/0x158
+Paolo
 
-Fixes: e7e3a7c35791 ("thermal/drivers/loongson-2: Add thermal management support")
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/thermal/loongson2_thermal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loongson2_thermal.c
-index 133098dc0854..99ca0c7bc41c 100644
---- a/drivers/thermal/loongson2_thermal.c
-+++ b/drivers/thermal/loongson2_thermal.c
-@@ -127,7 +127,7 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- 		if (!IS_ERR(tzd))
- 			break;
- 
--		if (PTR_ERR(tzd) != ENODEV)
-+		if (PTR_ERR(tzd) != -ENODEV)
- 			continue;
- 
- 		return dev_err_probe(dev, PTR_ERR(tzd), "failed to register");
--- 
-2.39.3
+>
+> ----------------------------------------------------------------
+> LoongArch KVM changes for v6.7
+>
+> Add LoongArch's KVM support. Loongson 3A5000/3A6000 supports hardware
+> assisted virtualization. With cpu virtualization, there are separate
+> hw-supported user mode and kernel mode in guest mode. With memory
+> virtualization, there are two-level hw mmu table for guest mode and host
+> mode. Also there is separate hw cpu timer with consant frequency in
+> guest mode, so that vm can migrate between hosts with different freq.
+> Currently, we are able to boot LoongArch Linux guests.
+>
+> Few key aspects of KVM LoongArch added by this series are:
+> 1. Enable kvm hardware features when kvm module is loaded.
+> 2. Implement VM and vcpu related ioctl interface such as vcpu create,
+>    vcpu run etc. GET_ONE_REG/SET_ONE_REG ioctl commands are use to
+>    get general registers one by one.
+> 3. Hardware access about MMU, timer and csr are emulated in kernel.
+> 4. Hardwares such as mmio and iocsr device are emulated in user space
+>    such as IPI, irqchips, pci devices etc.
+>
+> ----------------------------------------------------------------
+> Tianrui Zhao (25):
+>       LoongArch: KVM: Add kvm related header files
+>       LoongArch: KVM: Implement kvm module related interface
+>       LoongArch: KVM: Implement kvm hardware enable, disable interface
+>       LoongArch: KVM: Implement VM related functions
+>       LoongArch: KVM: Add vcpu related header files
+>       LoongArch: KVM: Implement basic vcpu interfaces
+>       LoongArch: KVM: Implement basic vcpu ioctl interfaces
+>       LoongArch: KVM: Implement fpu operations for vcpu
+>       LoongArch: KVM: Implement vcpu interrupt operations
+>       LoongArch: KVM: Implement vcpu load and vcpu put operations
+>       LoongArch: KVM: Implement misc vcpu related interfaces
+>       LoongArch: KVM: Implement vcpu timer operations
+>       LoongArch: KVM: Implement virtual machine tlb operations
+>       LoongArch: KVM: Implement kvm mmu operations
+>       LoongArch: KVM: Implement handle csr exception
+>       LoongArch: KVM: Implement handle iocsr exception
+>       LoongArch: KVM: Implement handle idle exception
+>       LoongArch: KVM: Implement handle gspr exception
+>       LoongArch: KVM: Implement handle mmio exception
+>       LoongArch: KVM: Implement handle fpu exception
+>       LoongArch: KVM: Implement kvm exception vectors
+>       LoongArch: KVM: Implement vcpu world switch
+>       LoongArch: KVM: Enable kvm config and add the makefile
+>       LoongArch: KVM: Supplement kvm document about LoongArch-specific pa=
+rt
+>       LoongArch: KVM: Add maintainers for LoongArch KVM
+>
+>  Documentation/virt/kvm/api.rst             |  70 ++-
+>  MAINTAINERS                                |  12 +
+>  arch/loongarch/Kbuild                      |   2 +
+>  arch/loongarch/Kconfig                     |   6 +
+>  arch/loongarch/configs/loongson3_defconfig |   2 +
+>  arch/loongarch/include/asm/inst.h          |  16 +
+>  arch/loongarch/include/asm/kvm_csr.h       | 211 +++++++
+>  arch/loongarch/include/asm/kvm_host.h      | 237 ++++++++
+>  arch/loongarch/include/asm/kvm_mmu.h       | 139 +++++
+>  arch/loongarch/include/asm/kvm_types.h     |  11 +
+>  arch/loongarch/include/asm/kvm_vcpu.h      |  93 +++
+>  arch/loongarch/include/asm/loongarch.h     |  19 +-
+>  arch/loongarch/include/uapi/asm/kvm.h      | 108 ++++
+>  arch/loongarch/kernel/asm-offsets.c        |  32 +
+>  arch/loongarch/kvm/Kconfig                 |  40 ++
+>  arch/loongarch/kvm/Makefile                |  22 +
+>  arch/loongarch/kvm/exit.c                  | 696 +++++++++++++++++++++
+>  arch/loongarch/kvm/interrupt.c             | 183 ++++++
+>  arch/loongarch/kvm/main.c                  | 420 +++++++++++++
+>  arch/loongarch/kvm/mmu.c                   | 914 +++++++++++++++++++++++=
++++++
+>  arch/loongarch/kvm/switch.S                | 250 ++++++++
+>  arch/loongarch/kvm/timer.c                 | 197 ++++++
+>  arch/loongarch/kvm/tlb.c                   |  32 +
+>  arch/loongarch/kvm/trace.h                 | 162 +++++
+>  arch/loongarch/kvm/vcpu.c                  | 939 +++++++++++++++++++++++=
+++++++
+>  arch/loongarch/kvm/vm.c                    |  94 +++
+>  include/uapi/linux/kvm.h                   |   9 +
+>  27 files changed, 4902 insertions(+), 14 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+>  create mode 100644 arch/loongarch/include/asm/kvm_host.h
+>  create mode 100644 arch/loongarch/include/asm/kvm_mmu.h
+>  create mode 100644 arch/loongarch/include/asm/kvm_types.h
+>  create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
+>  create mode 100644 arch/loongarch/include/uapi/asm/kvm.h
+>  create mode 100644 arch/loongarch/kvm/Kconfig
+>  create mode 100644 arch/loongarch/kvm/Makefile
+>  create mode 100644 arch/loongarch/kvm/exit.c
+>  create mode 100644 arch/loongarch/kvm/interrupt.c
+>  create mode 100644 arch/loongarch/kvm/main.c
+>  create mode 100644 arch/loongarch/kvm/mmu.c
+>  create mode 100644 arch/loongarch/kvm/switch.S
+>  create mode 100644 arch/loongarch/kvm/timer.c
+>  create mode 100644 arch/loongarch/kvm/tlb.c
+>  create mode 100644 arch/loongarch/kvm/trace.h
+>  create mode 100644 arch/loongarch/kvm/vcpu.c
+>  create mode 100644 arch/loongarch/kvm/vm.c
+>
 
