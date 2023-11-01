@@ -1,131 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B92E63B4;
-	Wed,  1 Nov 2023 07:59:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB49134BC;
+	Wed,  1 Nov 2023 19:43:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="myCbG9LB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69483C433C8;
-	Wed,  1 Nov 2023 07:59:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rna+fo/L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8133C433C7;
+	Wed,  1 Nov 2023 19:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698825579;
-	bh=jiCwSEELbO1aW3JJpzVrDphDytx3euzZUFBmwq0P4mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=myCbG9LBEhZlDR0A7XU7TJjnyaoZ3odUM+NAMFt1QAbCQW1BYt6H2PornxifIDPNm
-	 WkBY/PLCDYAeYJ/vZHaySk6oe9vC8WB1M/kAq5hMurOdPftFxvIDqg3Vz+gq7kpW6V
-	 xON1cuHiSCDPOPhVzFRF8YhJKL8fZSSZZ7Nb1ergh9f7yzVOl2ZzztI2SzjM++P8BA
-	 8kwDoZq/RBZlyPOIOGfRu4/x7sody6NxoBZtqSFU5cF5iFMlGlZWsyU1SI7+EWsHSm
-	 1KDleqCpiUUgNyX/RrM2LMMOvCZM8tFbZPFI7geiWLDeOpQIPybnvP56CmgKDSNOyQ
-	 2J00rnoM59hAQ==
-Date: Wed, 1 Nov 2023 07:59:34 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, Yinbo Zhu <zhuyinbo@loongson.cn>,
-	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH 1/2] dt-bindings: thermal: loongson,ls2k-thermal: Fix
- binding check issues
-Message-ID: <20231101-clone-facsimile-fd4c37333842@spud>
-References: <cover.1698743706.git.zhoubinbin@loongson.cn>
- <944559ea3bf7ba0a1540f831ccd7d33591622b22.1698743706.git.zhoubinbin@loongson.cn>
- <20231031-negative-giveaway-6191a2da0cd5@spud>
- <CAMpQs4+3T9RATpJ5VycnEzkOTx_M2vdt6WPJv_B1Efy81RzCjA@mail.gmail.com>
+	s=k20201202; t=1698867834;
+	bh=iWWsfVS+rpKy6OxoYr/8+r3ZrokHZiq9cZGVvMK8dcc=;
+	h=From:Date:Subject:To:Cc:From;
+	b=rna+fo/LNh/XVBYP5kckUPBwWVWrAimsosLF7qlmVIYjFi3ake97U+Jo9Oc1QC2Q6
+	 nLVNAEMRRyqtV/rX/L5Er4F0YISxAYj1yvSQ6pjXau/eoQNL8v8pc0JxCPh0Dr5qr/
+	 kLWEz2fxsWrzOdhQe+NCiREtXWFi60GWDmWJH3JwsPfm0HFU7vbeUEHh9aKJco0SG9
+	 gZPoZxabk/81cbaXwHLZBOD3q0IphAVutG6rhE6YKmw81WMOMm44stD3B8VTsBhP+k
+	 mV2YeoYTI5eb+ebxpTG4Sfco6ouUS9OyKajsHuDQczMuNu1A100bYmmMaJ3dtH1YzK
+	 KejYfKEMx718g==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Wed, 01 Nov 2023 12:43:29 -0700
+Subject: [PATCH] LoongArch: Mark __percpu functions as always inline
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="CBXhjm54eJnDaEDF"
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4+3T9RATpJ5VycnEzkOTx_M2vdt6WPJv_B1Efy81RzCjA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231101-loongarch-always-inline-percpu-ops-v1-1-b8f2e9a71729@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAGCqQmUC/x3NwQrCMAyA4VcZORtYJqziq4iHEtMtUNqSoE7G3
+ t2y43f5/x1cTMXhPuxg8lHXWjroMgCvsSyC+uqGaZyuRCNhrrUs0XjFmL/x56glaxFsYtzeWJs
+ jpxCYZroFStBDzSTpdk4ez+P4AxEhNfN0AAAA
+To: chenhuacai@kernel.org, kernel@xen0n.name
+Cc: ndesaulniers@google.com, trix@redhat.com, jiaxun.yang@flygoat.com, 
+ loongarch@lists.linux.dev, llvm@lists.linux.dev, patches@lists.linux.dev, 
+ stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.13-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3635; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=iWWsfVS+rpKy6OxoYr/8+r3ZrokHZiq9cZGVvMK8dcc=;
+ b=owGbwMvMwCEmm602sfCA1DTG02pJDKlOqyoNpfgPu/hFLDxbyyC4P3Gvq1vzPdeko34OylULH
+ cwOx2d1lLIwiHEwyIopslQ/Vj1uaDjnLOONU5Ng5rAygQxh4OIUgImwaDAybBH4qWnmVuB55cik
+ z+9PWeh+WHJ/d5HWzdUlQgzhtfOe8DEy9G4RDTnAMXer8K/ZMio104Ubd+5lOxnBKHYqbuV0efk
+ NTAA=
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
+A recent change to the optimization pipeline in LLVM reveals some
+fragility around the inlining of LoongArch's __percpu functions, which
+manifests as a BUILD_BUG() failure:
 
---CBXhjm54eJnDaEDF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  In file included from kernel/sched/build_policy.c:17:
+  In file included from include/linux/sched/cputime.h:5:
+  In file included from include/linux/sched/signal.h:5:
+  In file included from include/linux/rculist.h:11:
+  In file included from include/linux/rcupdate.h:26:
+  In file included from include/linux/irqflags.h:18:
+  arch/loongarch/include/asm/percpu.h:97:3: error: call to '__compiletime_assert_51' declared with 'error' attribute: BUILD_BUG failed
+     97 |                 BUILD_BUG();
+        |                 ^
+  include/linux/build_bug.h:59:21: note: expanded from macro 'BUILD_BUG'
+     59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+        |                     ^
+  include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
+     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+        |                                     ^
+  include/linux/compiler_types.h:425:2: note: expanded from macro 'compiletime_assert'
+    425 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+        |         ^
+  include/linux/compiler_types.h:413:2: note: expanded from macro '_compiletime_assert'
+    413 |         __compiletime_assert(condition, msg, prefix, suffix)
+        |         ^
+  include/linux/compiler_types.h:406:4: note: expanded from macro '__compiletime_assert'
+    406 |                         prefix ## suffix();                             \
+        |                         ^
+  <scratch space>:86:1: note: expanded from here
+     86 | __compiletime_assert_51
+        | ^
+  1 error generated.
 
-On Wed, Nov 01, 2023 at 07:38:39AM +0600, Binbin Zhou wrote:
-> On Tue, Oct 31, 2023 at 10:58=E2=80=AFPM Conor Dooley <conor@kernel.org> =
-wrote:
-> >
-> > On Tue, Oct 31, 2023 at 07:05:49PM +0800, Binbin Zhou wrote:
-> > > Add the missing 'thermal-sensor-cells' property which is required for
-> > > every thermal sensor as it's used when using phandles.
-> > > And add the thermal-sensor.yaml reference.
-> > >
-> > > Fixes: 72684d99a854 ("thermal: dt-bindings: add loongson-2 thermal")
-> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > > ---
-> > >  .../bindings/thermal/loongson,ls2k-thermal.yaml        | 10 ++++++++=
-+-
-> > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/thermal/loongson,ls2k-=
-thermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-ther=
-mal.yaml
-> > > index 7538469997f9..b634f57cd011 100644
-> > > --- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal=
-=2Eyaml
-> > > +++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal=
-=2Eyaml
-> > > @@ -10,6 +10,9 @@ maintainers:
-> > >    - zhanghongchen <zhanghongchen@loongson.cn>
-> > >    - Yinbo Zhu <zhuyinbo@loongson.cn>
-> > >
-> > > +allOf:
-> > > +  - $ref: /schemas/thermal/thermal-sensor.yaml#
-> > > +
-> > >  properties:
-> > >    compatible:
-> > >      oneOf:
-> > > @@ -26,12 +29,16 @@ properties:
-> > >    interrupts:
-> > >      maxItems: 1
-> > >
-> > > +  '#thermal-sensor-cells':
-> > > +    const: 1
-> > > +
-> > >  required:
-> > >    - compatible
-> > >    - reg
-> > >    - interrupts
-> > > +  - '#thermal-sensor-cells'
-> >
-> > Why does it need to be a required property now though?
-> > Adding new required properties is technically an ABI break.
->=20
-> Hi Conor:
->=20
-> I don't think it makes sense to have a separate thermal sensor
-> definition, it needs thermal-zones to describe specific behaviors,
-> e.g. cpu-thermal, so we need '#thermal-sensor-cells' to specify the
-> reference.
-> And the Loongson-2K1000 has 4 sets of control registers, we need to
-> specify the id when referencing it.
+If these functions are not inlined, the BUILD_BUG() in the default case
+cannot be eliminated since the compiler cannot prove it is never used,
+resulting in a build failure due to the error attribute.
 
-Unfortunately, none of this is an answer to my question.
+Mark these functions as __always_inline so that the BUILD_BUG() only
+triggers when the default case genuinely cannot be eliminated due to an
+unexpected size.
 
---CBXhjm54eJnDaEDF
-Content-Type: application/pgp-signature; name="signature.asc"
+Cc:  <stable@vger.kernel.org>
+Closes: https://github.com/ClangBuiltLinux/linux/issues/1955
+Fixes: 46859ac8af52 ("LoongArch: Add multi-processor (SMP) support")
+Link: https://github.com/llvm/llvm-project/commit/1a2e77cf9e11dbf56b5720c607313a566eebb16e
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ arch/loongarch/include/asm/percpu.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include/asm/percpu.h
+index b9f567e66016..8fb857ae962b 100644
+--- a/arch/loongarch/include/asm/percpu.h
++++ b/arch/loongarch/include/asm/percpu.h
+@@ -32,7 +32,7 @@ static inline void set_my_cpu_offset(unsigned long off)
+ #define __my_cpu_offset __my_cpu_offset
+ 
+ #define PERCPU_OP(op, asm_op, c_op)					\
+-static inline unsigned long __percpu_##op(void *ptr,			\
++static __always_inline unsigned long __percpu_##op(void *ptr,			\
+ 			unsigned long val, int size)			\
+ {									\
+ 	unsigned long ret;						\
+@@ -63,7 +63,7 @@ PERCPU_OP(and, and, &)
+ PERCPU_OP(or, or, |)
+ #undef PERCPU_OP
+ 
+-static inline unsigned long __percpu_read(void *ptr, int size)
++static __always_inline unsigned long __percpu_read(void *ptr, int size)
+ {
+ 	unsigned long ret;
+ 
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZUIFZQAKCRB4tDGHoIJi
-0k/YAP9nZLjoFPxaiAxkL9a6JHwwaHqBVMqOAAr9maCqVYmckAEAqzEhbz1o4upc
-Q+0rBHfXJBsJYwze5G9Iusc+4I3JPQo=
-=JvQD
------END PGP SIGNATURE-----
+---
+base-commit: 278be83601dd1725d4732241f066d528e160a39d
+change-id: 20231101-loongarch-always-inline-percpu-ops-cf77c161871f
 
---CBXhjm54eJnDaEDF--
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
+
