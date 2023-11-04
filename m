@@ -1,186 +1,112 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724CC2D631
-	for <loongarch@lists.linux.dev>; Fri,  3 Nov 2023 14:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="q8smHBP7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=72hxmQCBkLT/0leJQbNO6c+d3oMFYZOQGMSD17s25rI=; b=q8smHBP7DkeRlLmtBpuVNpbR3l
-	Xsq9Jg+jETRWE9W6AuGqCDDiqxwTUQfqg0tFog/sx8M46baq9d88THW80uQlFB4fqAYCq/DzxQVtR
-	g+/2VpoltDLb+HANTiWd7cpJg0mw85W6TI5UDDVSr2mh9gorJBllB4eQsCGu1APZJcTsAOhGxLMOF
-	rSERDI7IL5O8ysT9mss7VBj65MH8WJWsPtnKokF1trUFWaDHPGx5/Vd1P9pA1ypJccnB9lslaWTOy
-	kAjrpoOnuaYuqlvim1kLdN33vhWIuNl3wQW0SUOYQZtw8JeMgy8G8ndUDUjLI2wchB2QT/eSQVcIQ
-	Y4XdND7w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54582)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qyvIX-0005cb-1Y;
-	Fri, 03 Nov 2023 14:37:21 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qyvIY-0008Tw-8D; Fri, 03 Nov 2023 14:37:22 +0000
-Date: Fri, 3 Nov 2023 14:37:22 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Gavin Shan <gshan@redhat.com>
-Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com
-Subject: Re: [RFC PATCH v2 22/35] ACPI: Check _STA present bit before making
- CPUs not present
-Message-ID: <ZUUFovp4x9TkWBYn@shell.armlinux.org.uk>
-References: <20230913163823.7880-1-james.morse@arm.com>
- <20230913163823.7880-23-james.morse@arm.com>
- <518859b1-64a9-d723-963c-56c7f6fc2da1@redhat.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC0DBC2D3
+	for <loongarch@lists.linux.dev>; Sat,  4 Nov 2023 08:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxqOqVB0Zl1uE2AA--.6333S3;
+	Sat, 04 Nov 2023 16:57:57 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxbS+UB0ZlmGs5AA--.59322S3;
+	Sat, 04 Nov 2023 16:57:57 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/3] LoongArch: KVM: Remove SW timer switch during vcpu block flow
+Date: Sat,  4 Nov 2023 16:57:53 +0800
+Message-Id: <20231104085755.930439-2-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20231104085755.930439-1-maobibo@loongson.cn>
+References: <20231104085755.930439-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <518859b1-64a9-d723-963c-56c7f6fc2da1@redhat.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxbS+UB0ZlmGs5AA--.59322S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur45Ar18Wr1kJF48JFWDGFX_yoW8uF4fpF
+	W7Crnaqw4rWr1kK3srtw4kWr4UXw4kKF1fXasrAFW5Ar1qyF18tF4rKrWqqFy5Kw4rCFyf
+	Zr1rK3W5uF15A3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-On Tue, Sep 19, 2023 at 10:45:39AM +1000, Gavin Shan wrote:
-> On 9/14/23 02:38, James Morse wrote:
-> > When called acpi_processor_post_eject() unconditionally make a CPU
-> > not-present and unregisters it.
-> > 
-> > To add support for AML events where the CPU has become disabled, but
-> > remains present, the _STA method should be checked before calling
-> > acpi_processor_remove().
-> > 
-> > Rename acpi_processor_post_eject() acpi_processor_remove_possible(), and
-> > check the _STA before calling.
-> > 
-> > Adding the function prototype for arch_unregister_cpu() allows the
-> > preprocessor guards to be removed.
-> > 
-> > After this change CPUs will remain registered and visible to
-> > user-space as offline if buggy firmware triggers an eject-request,
-> > but doesn't clear the corresponding _STA bits after _EJ0 has been
-> > called.
-> > 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > ---
-> >   drivers/acpi/acpi_processor.c | 31 +++++++++++++++++++++++++------
-> >   include/linux/cpu.h           |  1 +
-> >   2 files changed, 26 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-> > index 00dcc23d49a8..2cafea1edc24 100644
-> > --- a/drivers/acpi/acpi_processor.c
-> > +++ b/drivers/acpi/acpi_processor.c
-> > @@ -457,13 +457,12 @@ static int acpi_processor_add(struct acpi_device *device,
-> >   	return result;
-> >   }
-> > -#ifdef CONFIG_ACPI_HOTPLUG_PRESENT_CPU
-> >   /* Removal */
-> > -static void acpi_processor_post_eject(struct acpi_device *device)
-> > +static void acpi_processor_make_not_present(struct acpi_device *device)
-> >   {
-> >   	struct acpi_processor *pr;
-> > -	if (!device || !acpi_driver_data(device))
-> > +	if (!IS_ENABLED(CONFIG_ACPI_HOTPLUG_PRESENT_CPU))
-> >   		return;
-> 
-> In order to use IS_ENABLED(),
+When idle instruction is emulation, kvm will check whether there is
+pending interrupts including timer interrupt. HW timer event checking is
+used now, so it is not necessary to switch to sw timer during vcpu block
+checking flow, since hw timer pending interrupt can be set directly with
+CSR staus register. This patch adds preemption disabling during checking
+hw CSR status register, and removes SW timer mode switching in idle
+instruction emulation function.
 
-And the rest of this statement is where?
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/exit.c | 11 +----------
+ arch/loongarch/kvm/vcpu.c |  9 ++++++++-
+ 2 files changed, 9 insertions(+), 11 deletions(-)
 
-> >   	pr = acpi_driver_data(device);
-> > @@ -501,7 +500,29 @@ static void acpi_processor_post_eject(struct acpi_device *device)
-> >   	free_cpumask_var(pr->throttling.shared_cpu_map);
-> >   	kfree(pr);
-> >   }
-> > -#endif /* CONFIG_ACPI_HOTPLUG_PRESENT_CPU */
-> > +
-> > +static void acpi_processor_post_eject(struct acpi_device *device)
-> > +{
-> > +	struct acpi_processor *pr;
-> > +	unsigned long long sta;
-> > +	acpi_status status;
-> > +
-> > +	if (!device)
-> > +		return;
-> > +
-> > +	pr = acpi_driver_data(device);
-> > +	if (!pr || pr->id >= nr_cpu_ids || invalid_phys_cpuid(pr->phys_id))
-> > +		return;
-> > +
-> 
-> Do we really need to validate the logic and hardware CPU IDs here? I think
-> the ACPI processor device can't be added successfully if one of them is
-> invalid.
-> 
-> > +	status = acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
-> > +	if (ACPI_FAILURE(status))
-> > +		return;
-> > +
-> > +	if (cpu_present(pr->id) && !(sta & ACPI_STA_DEVICE_PRESENT)) {
-> > +		acpi_processor_make_not_present(device);
-> > +		return;
-> > +	}
-> > +}
-> >   #ifdef CONFIG_ARCH_MIGHT_HAVE_ACPI_PDC
-> >   bool __init processor_physically_present(acpi_handle handle)
-> > @@ -626,9 +647,7 @@ static const struct acpi_device_id processor_device_ids[] = {
-> >   static struct acpi_scan_handler processor_handler = {
-> >   	.ids = processor_device_ids,
-> >   	.attach = acpi_processor_add,
-> > -#ifdef CONFIG_ACPI_HOTPLUG_PRESENT_CPU
-> >   	.post_eject = acpi_processor_post_eject,
-> > -#endif
-> >   	.hotplug = {
-> >   		.enabled = true,
-> >   	},
-> > diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> > index a71691d7c2ca..e117c06e0c6b 100644
-> > --- a/include/linux/cpu.h
-> > +++ b/include/linux/cpu.h
-> > @@ -81,6 +81,7 @@ struct device *cpu_device_create(struct device *parent, void *drvdata,
-> >   				 const struct attribute_group **groups,
-> >   				 const char *fmt, ...);
-> >   extern int arch_register_cpu(int cpu);
-> > +extern void arch_unregister_cpu(int cpu);
-> 
-> arch_unregister_cpu() is protected by CONFIG_HOTPLUG_CPU in the individual architectures,
-> for example arch/ia64/kernel/topology.c
-
-Yes, I agree, there _may_ be a reference to arch_unregister_cpu() if
-the compiler doesn't optimise the "if(0) return".
-
-As things stand in my "head" tree (which I'll be posting once 6.7-rc1
-is out) at the point that this patch exists in the series, there are
-no architectures which provide arch_unregister_cpu(), and the only
-implementation of it is the __weak one in drivers/base/cpu.c
-
-That implementation is also ifdef'd with CONFIG_HOTPLUG_CPU and also
-CONFIG_GENERIC_CPU_DEVICES.
-
-Meanwhile, acpi_processor.c is always built with ACPI, and while we
-have IS_ENABLED() clauses with James' patches for both of these
-symbols, if the compiler doesn't optimise the code away, we will end
-up with a reference and a link-time error. That being said, the 0-day
-bot has not reported anything as yet (and it builds my tree.)
-
-So, is this a problem that needs to be solved or not?
-
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index ce8de3fa472c..d2a38cd47032 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -200,17 +200,8 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
+ 	++vcpu->stat.idle_exits;
+ 	trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
+ 
+-	if (!kvm_arch_vcpu_runnable(vcpu)) {
+-		/*
+-		 * Switch to the software timer before halt-polling/blocking as
+-		 * the guest's timer may be a break event for the vCPU, and the
+-		 * hypervisor timer runs only when the CPU is in guest mode.
+-		 * Switch before halt-polling so that KVM recognizes an expired
+-		 * timer before blocking.
+-		 */
+-		kvm_save_timer(vcpu);
++	if (!kvm_arch_vcpu_runnable(vcpu))
+ 		kvm_vcpu_block(vcpu);
+-	}
+ 
+ 	return EMULATE_DONE;
+ }
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 73d0c2b9c1a5..42663a345bd1 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -187,8 +187,15 @@ int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
+ 
+ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
+ {
+-	return kvm_pending_timer(vcpu) ||
++	int ret;
++
++	/* protect from TOD sync and vcpu_load/put */
++	preempt_disable();
++	ret = kvm_pending_timer(vcpu) ||
+ 		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) & (1 << INT_TI);
++	preempt_enable();
++
++	return ret;
+ }
+ 
+ int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.39.3
+
