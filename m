@@ -1,51 +1,51 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE6B339A4
-	for <loongarch@lists.linux.dev>; Tue,  7 Nov 2023 17:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1664634CEA
+	for <loongarch@lists.linux.dev>; Tue,  7 Nov 2023 17:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="M0IFeJBw"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1cc30bf9e22so47050995ad.1
-        for <loongarch@lists.linux.dev>; Tue, 07 Nov 2023 09:48:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="VkzcfaSp"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1cc4f777ab9so42736905ad.0
+        for <loongarch@lists.linux.dev>; Tue, 07 Nov 2023 09:48:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1699379288; x=1699984088; darn=lists.linux.dev;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1699379290; x=1699984090; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:message-id:to:from:cc
          :in-reply-to:subject:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ywd9froD7aOGJqc09ImjtHrARMhZvSCpgT2M8r3eM5I=;
-        b=M0IFeJBwiVQQPBAdHNhpUCFAvOxP04x0fNP8XmD6Tep2oy+KFEY4YY87uGHjYJcMm9
-         H4u8M7ATab1H1DNsRnvOvtD+cBQd2U188hMziaJ1y44szgYo3zwFD3IJpMQXtBt5S1rY
-         kA8vywsSlNj02rpyObPHwiXLYeD8JyFeV38kUNEAj0bD587sCDLBoWk2jUVqaAhXe0d+
-         Uangvs869jQZNlmJ8OWFWnT5pgzsj6ZZDc5JKjrT6vtaVIW0k11W38UCm4xcf+SINQ+n
-         s6P6VQyC0b/Fnq0qTkQFsoUQwU6Njz0LoLGyP2PSkZAt8TCl6dj2he1ffYQMWSa2IqjE
-         g0sw==
+        bh=TY15kIau+eDARAHjRIt1BbGYq8C7hJS6gitrNXYnQoM=;
+        b=VkzcfaSpr5xCq81FhCig4PzxD49b4C18Sp8q1a839caGGK5rvyuR55c4GgBWhvV76G
+         mf6W2IKFMskORhfXF30+STuIXHhlEIOwx+75mLvkwlb68eLC4l0UejW3Cx3zEIRC13wo
+         kq7ob1c62AYWaJwd+GMU4ll2CVPE/AHnI4wvdH3nQclg9whGtCCG0SJ6Yv8LgWhPz0jX
+         8FUJRq8XKp2UQY2DWmwIrs4r2XLhnLnZumeOmq6bQfbJYRUlOpYhGH84cSHqlQfe/YxV
+         puLxXZ4Xtgx74k3oaKO6ECvRtjw1v9BVNVc1fwrxDTny5wdINBDdDCR4SwR93KXk+MTk
+         89Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699379288; x=1699984088;
+        d=1e100.net; s=20230601; t=1699379290; x=1699984090;
         h=content-transfer-encoding:mime-version:message-id:to:from:cc
          :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ywd9froD7aOGJqc09ImjtHrARMhZvSCpgT2M8r3eM5I=;
-        b=dRxWuoNVIJ1kNNw1lLlG6/etpE1gS0KSdB4k1vpERFW0tOV6DglAUB2CSFkIsDjLC5
-         XgHlCIEh/hZPmVp45/ndATSnHqjepJLXBV2Dt1HU8owVE6c4asINHO61B70I35m/Ak3C
-         b+LGk3EWE4c6kjX0MHh73OmmqXZ3RFw0O82BefcXAVXd9JrWJtCv71WjnURVXDHr6NOl
-         bAplfqmKIlqucQSHfFRzok1TlfbyXbC7V3tstKK74zyA7QiEIuY81E1GAbb8uokYboUj
-         V0gY9h5K0r2CCjEo4oXkeOwQgdYJBdQoCCMUYq8h0/FfBfSX+xiW6G6YEzZGqMhQnh1h
-         IJbQ==
-X-Gm-Message-State: AOJu0Yyuht3HPl+FQxC+5VM0mG5kbTrEA/Eiko0ETEqO4fMGGBL73QNG
-	idh7fk2S6lwPUvTRermvrqKGVg==
-X-Google-Smtp-Source: AGHT+IE1O0IZeedx9DdABfISL9vUc/qLEJImXP8G88Ji0nXKSIqNVitCPYUEuOTU6Qgy+/VgBOwBhA==
-X-Received: by 2002:a17:902:d4ce:b0:1cc:32df:8ebd with SMTP id o14-20020a170902d4ce00b001cc32df8ebdmr5416391plg.25.1699379288440;
-        Tue, 07 Nov 2023 09:48:08 -0800 (PST)
+        bh=TY15kIau+eDARAHjRIt1BbGYq8C7hJS6gitrNXYnQoM=;
+        b=an82WrTN1uOVk/9ADmlMInAvftHDza9kPgDLxncETXLC5UhL4e3iPwfQIM0/xj5Nkb
+         j3G06wINDLsG+T2R/EK5Eb51+WEQAW3+eNtKNK/Q19jAQ3Fck1BygW7HfHrTfWN2K5aF
+         UxeIOt2ONLrYNs9CF7JpG2pG8+bFd2Yh2yOkOhoiS0Dz9tFuIWhjc+7e8b944it0+UTb
+         WkDM/I/WDfJyy8hGr9X1aA6jNgfXmWHnocjv3DK8WYciDZ7YMlhxMI3/JpK9JuEuaLFN
+         ULRgyVO+8sd1GjdNX4eDqVwf/BudoLAhWsY+GTDUjnrgFCEE2DlgAm7P0et8d1xGTb2c
+         zIAA==
+X-Gm-Message-State: AOJu0YxQO/AqScsA/yfBGRCLSgVGCLpHODmCkE+Blh/TMGZgoBbm959n
+	a9znFPwJFGA+lq2WCuJMGugA0A==
+X-Google-Smtp-Source: AGHT+IE1uUN1bCnM0e+Ov1l1naTtElUtLA3DgMMTfPPCXEEwKaTGd4dv0hVEl36p8Py1780zIW4h7w==
+X-Received: by 2002:a17:902:ccca:b0:1bd:c7e2:462 with SMTP id z10-20020a170902ccca00b001bdc7e20462mr31928892ple.11.1699379290316;
+        Tue, 07 Nov 2023 09:48:10 -0800 (PST)
 Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id iy3-20020a170903130300b001c9dac0fbbasm115552plb.63.2023.11.07.09.48.07
+        by smtp.gmail.com with ESMTPSA id l12-20020a170903244c00b001b9be3b94d3sm102654pls.140.2023.11.07.09.48.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Nov 2023 09:48:07 -0800 (PST)
-Date: Tue, 07 Nov 2023 09:48:07 -0800 (PST)
-X-Google-Original-Date: Tue, 07 Nov 2023 09:47:58 PST (-0800)
-Subject:     Re: [PATCH RFC 21/22] riscv: Switch over to GENERIC_CPU_DEVICES
-In-Reply-To: <E1r0JMQ-00CTyb-Ee@rmk-PC.armlinux.org.uk>
+        Tue, 07 Nov 2023 09:48:09 -0800 (PST)
+Date: Tue, 07 Nov 2023 09:48:09 -0800 (PST)
+X-Google-Original-Date: Tue, 07 Nov 2023 09:48:06 PST (-0800)
+Subject:     Re: [PATCH RFC 22/22] riscv: convert to use arch_cpu_is_hotpluggable()
+In-Reply-To: <E1r0JMV-00CTyh-It@rmk-PC.armlinux.org.uk>
 CC: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
   linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
   linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, linux-csky@vger.kernel.org,
@@ -54,7 +54,7 @@ CC: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.
   james.morse@arm.com, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu
 From: Palmer Dabbelt <palmer@dabbelt.com>
 To: rmk+kernel@armlinux.org.uk
-Message-ID: <mhng-6d9a28af-d626-410e-913f-33bc01890537@palmer-ri-x1c9>
+Message-ID: <mhng-b535d186-b241-4fe8-a6b5-b06aff516d1c@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -64,83 +64,33 @@ Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Tue, 07 Nov 2023 02:31:06 PST (-0800), rmk+kernel@armlinux.org.uk wrote:
-> From: James Morse <james.morse@arm.com>
+On Tue, 07 Nov 2023 02:31:11 PST (-0800), rmk+kernel@armlinux.org.uk wrote:
+> Convert riscv to use the arch_cpu_is_hotpluggable() helper rather than
+> arch_register_cpu().
 >
-> Now that GENERIC_CPU_DEVICES calls arch_register_cpu(), which can be
-> overridden by the arch code, switch over to this to allow common code
-> to choose when the register_cpu() call is made.
->
-> This allows topology_init() to be removed.
->
-> This is an intermediate step to the logic being moved to drivers/acpi,
-> where GENERIC_CPU_DEVICES will do the work when booting with acpi=off.
->
-> This patch also has the effect of moving the registration of CPUs from
-> subsys to driver core initialisation, prior to any initcalls running.
->
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 > ---
-> Changes since RFC v2:
->  * Add note about initialisation order change.
-> ---
->  arch/riscv/Kconfig        |  1 +
->  arch/riscv/kernel/setup.c | 19 ++++---------------
->  2 files changed, 5 insertions(+), 15 deletions(-)
+>  arch/riscv/kernel/setup.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 >
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index eaa15a20e6ae..264aa466aec3 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -69,6 +69,7 @@ config RISCV
->  	select GENERIC_ARCH_TOPOLOGY
->  	select GENERIC_ATOMIC64 if !64BIT
->  	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
-> +	select GENERIC_CPU_DEVICES
->  	select GENERIC_EARLY_IOREMAP
->  	select GENERIC_ENTRY
->  	select GENERIC_GETTIMEOFDAY if HAVE_GENERIC_VDSO
 > diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index 0624f44d43ec..f8875ae1b0aa 100644
+> index f8875ae1b0aa..168f0db63d53 100644
 > --- a/arch/riscv/kernel/setup.c
 > +++ b/arch/riscv/kernel/setup.c
-> @@ -50,7 +50,6 @@ atomic_t hart_lottery __section(".sdata")
->  #endif
->  ;
->  unsigned long boot_cpu_hartid;
-> -static DEFINE_PER_CPU(struct cpu, cpu_devices);
->
->  /*
->   * Place kernel memory regions on the resource tree so that
-> @@ -295,23 +294,13 @@ void __init setup_arch(char **cmdline_p)
+> @@ -294,12 +294,9 @@ void __init setup_arch(char **cmdline_p)
 >  	riscv_set_dma_cache_alignment();
 >  }
 >
-> -static int __init topology_init(void)
-> +int arch_register_cpu(int cpu)
+> -int arch_register_cpu(int cpu)
+> +bool arch_cpu_is_hotpluggable(int cpu)
 >  {
-> -	int i, ret;
-> +	struct cpu *c = &per_cpu(cpu_devices, cpu);
->
-> -	for_each_possible_cpu(i) {
-> -		struct cpu *cpu = &per_cpu(cpu_devices, i);
+> -	struct cpu *c = &per_cpu(cpu_devices, cpu);
 > -
-> -		cpu->hotpluggable = cpu_has_hotplug(i);
-> -		ret = register_cpu(cpu, i);
-> -		if (unlikely(ret))
-> -			pr_warn("Warning: %s: register_cpu %d failed (%d)\n",
-> -			       __func__, i, ret);
-> -	}
-> -
-> -	return 0;
-> +	c->hotpluggable = cpu_has_hotplug(cpu);
-> +	return register_cpu(c, cpu);
+> -	c->hotpluggable = cpu_has_hotplug(cpu);
+> -	return register_cpu(c, cpu);
+> +	return cpu_has_hotplug(cpu);
 >  }
-> -subsys_initcall(topology_init);
 >
 >  void free_initmem(void)
->  {
 
 Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
