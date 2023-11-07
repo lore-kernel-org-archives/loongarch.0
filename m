@@ -1,126 +1,146 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFFBA2DF68
-	for <loongarch@lists.linux.dev>; Tue,  7 Nov 2023 12:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxBfHAJ0pl4qw3AA--.44197S3;
-	Tue, 07 Nov 2023 20:04:16 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axji+_J0plPBo7AA--.63299S4;
-	Tue, 07 Nov 2023 20:04:16 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] LoongArch: KVM: Allow to access HW timer CSR registers always
-Date: Tue,  7 Nov 2023 20:04:13 +0800
-Message-Id: <20231107120414.1927261-3-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20231107120414.1927261-1-maobibo@loongson.cn>
-References: <20231107120414.1927261-1-maobibo@loongson.cn>
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE6B339A4
+	for <loongarch@lists.linux.dev>; Tue,  7 Nov 2023 17:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="M0IFeJBw"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1cc30bf9e22so47050995ad.1
+        for <loongarch@lists.linux.dev>; Tue, 07 Nov 2023 09:48:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1699379288; x=1699984088; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ywd9froD7aOGJqc09ImjtHrARMhZvSCpgT2M8r3eM5I=;
+        b=M0IFeJBwiVQQPBAdHNhpUCFAvOxP04x0fNP8XmD6Tep2oy+KFEY4YY87uGHjYJcMm9
+         H4u8M7ATab1H1DNsRnvOvtD+cBQd2U188hMziaJ1y44szgYo3zwFD3IJpMQXtBt5S1rY
+         kA8vywsSlNj02rpyObPHwiXLYeD8JyFeV38kUNEAj0bD587sCDLBoWk2jUVqaAhXe0d+
+         Uangvs869jQZNlmJ8OWFWnT5pgzsj6ZZDc5JKjrT6vtaVIW0k11W38UCm4xcf+SINQ+n
+         s6P6VQyC0b/Fnq0qTkQFsoUQwU6Njz0LoLGyP2PSkZAt8TCl6dj2he1ffYQMWSa2IqjE
+         g0sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699379288; x=1699984088;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ywd9froD7aOGJqc09ImjtHrARMhZvSCpgT2M8r3eM5I=;
+        b=dRxWuoNVIJ1kNNw1lLlG6/etpE1gS0KSdB4k1vpERFW0tOV6DglAUB2CSFkIsDjLC5
+         XgHlCIEh/hZPmVp45/ndATSnHqjepJLXBV2Dt1HU8owVE6c4asINHO61B70I35m/Ak3C
+         b+LGk3EWE4c6kjX0MHh73OmmqXZ3RFw0O82BefcXAVXd9JrWJtCv71WjnURVXDHr6NOl
+         bAplfqmKIlqucQSHfFRzok1TlfbyXbC7V3tstKK74zyA7QiEIuY81E1GAbb8uokYboUj
+         V0gY9h5K0r2CCjEo4oXkeOwQgdYJBdQoCCMUYq8h0/FfBfSX+xiW6G6YEzZGqMhQnh1h
+         IJbQ==
+X-Gm-Message-State: AOJu0Yyuht3HPl+FQxC+5VM0mG5kbTrEA/Eiko0ETEqO4fMGGBL73QNG
+	idh7fk2S6lwPUvTRermvrqKGVg==
+X-Google-Smtp-Source: AGHT+IE1O0IZeedx9DdABfISL9vUc/qLEJImXP8G88Ji0nXKSIqNVitCPYUEuOTU6Qgy+/VgBOwBhA==
+X-Received: by 2002:a17:902:d4ce:b0:1cc:32df:8ebd with SMTP id o14-20020a170902d4ce00b001cc32df8ebdmr5416391plg.25.1699379288440;
+        Tue, 07 Nov 2023 09:48:08 -0800 (PST)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id iy3-20020a170903130300b001c9dac0fbbasm115552plb.63.2023.11.07.09.48.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Nov 2023 09:48:07 -0800 (PST)
+Date: Tue, 07 Nov 2023 09:48:07 -0800 (PST)
+X-Google-Original-Date: Tue, 07 Nov 2023 09:47:58 PST (-0800)
+Subject:     Re: [PATCH RFC 21/22] riscv: Switch over to GENERIC_CPU_DEVICES
+In-Reply-To: <E1r0JMQ-00CTyb-Ee@rmk-PC.armlinux.org.uk>
+CC: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+  linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+  linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, linux-csky@vger.kernel.org,
+  linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+  salil.mehta@huawei.com, jean-philippe@linaro.org, jianyong.wu@arm.com, justin.he@arm.com,
+  james.morse@arm.com, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: rmk+kernel@armlinux.org.uk
+Message-ID: <mhng-6d9a28af-d626-410e-913f-33bc01890537@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axji+_J0plPBo7AA--.63299S4
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFW7XFyDXw47WrW7CF13KFX_yoW5JrWDpr
-	WakF9rtr48tryqqFyDJrs8uF15CrZ7K34xWF17AFW2yr12vr1rJF97Gr97XFWYqa4SqFWS
-	vryrCwn0vF4DXwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IUb58n5UUUUU==
 
-Currently HW timer CSR registers are allowed to access before entering to
-vm and disabled if switch to SW timer in host mode, instead it is not
-necessary to do so. HW timer CSR registers can be accessed always, it
-is nothing to do with whether it is in vm mode or host mode. This patch
-removes the limitation.
+On Tue, 07 Nov 2023 02:31:06 PST (-0800), rmk+kernel@armlinux.org.uk wrote:
+> From: James Morse <james.morse@arm.com>
+>
+> Now that GENERIC_CPU_DEVICES calls arch_register_cpu(), which can be
+> overridden by the arch code, switch over to this to allow common code
+> to choose when the register_cpu() call is made.
+>
+> This allows topology_init() to be removed.
+>
+> This is an intermediate step to the logic being moved to drivers/acpi,
+> where GENERIC_CPU_DEVICES will do the work when booting with acpi=off.
+>
+> This patch also has the effect of moving the registration of CPUs from
+> subsys to driver core initialisation, prior to any initcalls running.
+>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
+> Changes since RFC v2:
+>  * Add note about initialisation order change.
+> ---
+>  arch/riscv/Kconfig        |  1 +
+>  arch/riscv/kernel/setup.c | 19 ++++---------------
+>  2 files changed, 5 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index eaa15a20e6ae..264aa466aec3 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -69,6 +69,7 @@ config RISCV
+>  	select GENERIC_ARCH_TOPOLOGY
+>  	select GENERIC_ATOMIC64 if !64BIT
+>  	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+> +	select GENERIC_CPU_DEVICES
+>  	select GENERIC_EARLY_IOREMAP
+>  	select GENERIC_ENTRY
+>  	select GENERIC_GETTIMEOFDAY if HAVE_GENERIC_VDSO
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index 0624f44d43ec..f8875ae1b0aa 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -50,7 +50,6 @@ atomic_t hart_lottery __section(".sdata")
+>  #endif
+>  ;
+>  unsigned long boot_cpu_hartid;
+> -static DEFINE_PER_CPU(struct cpu, cpu_devices);
+>
+>  /*
+>   * Place kernel memory regions on the resource tree so that
+> @@ -295,23 +294,13 @@ void __init setup_arch(char **cmdline_p)
+>  	riscv_set_dma_cache_alignment();
+>  }
+>
+> -static int __init topology_init(void)
+> +int arch_register_cpu(int cpu)
+>  {
+> -	int i, ret;
+> +	struct cpu *c = &per_cpu(cpu_devices, cpu);
+>
+> -	for_each_possible_cpu(i) {
+> -		struct cpu *cpu = &per_cpu(cpu_devices, i);
+> -
+> -		cpu->hotpluggable = cpu_has_hotplug(i);
+> -		ret = register_cpu(cpu, i);
+> -		if (unlikely(ret))
+> -			pr_warn("Warning: %s: register_cpu %d failed (%d)\n",
+> -			       __func__, i, ret);
+> -	}
+> -
+> -	return 0;
+> +	c->hotpluggable = cpu_has_hotplug(cpu);
+> +	return register_cpu(c, cpu);
+>  }
+> -subsys_initcall(topology_init);
+>
+>  void free_initmem(void)
+>  {
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/main.c  |  1 -
- arch/loongarch/kvm/timer.c | 27 ++++++---------------------
- 2 files changed, 6 insertions(+), 22 deletions(-)
-
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index 1c1d5199500e..86a2f2d0cb27 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -287,7 +287,6 @@ int kvm_arch_hardware_enable(void)
- 	if (env & CSR_GCFG_MATC_ROOT)
- 		gcfg |= CSR_GCFG_MATC_ROOT;
- 
--	gcfg |= CSR_GCFG_TIT;
- 	write_csr_gcfg(gcfg);
- 
- 	kvm_flush_tlb_all();
-diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
-index 284bf553fefe..1d29bd21a9da 100644
---- a/arch/loongarch/kvm/timer.c
-+++ b/arch/loongarch/kvm/timer.c
-@@ -70,15 +70,6 @@ void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long timer_hz)
-  */
- void kvm_acquire_timer(struct kvm_vcpu *vcpu)
- {
--	unsigned long cfg;
--
--	cfg = read_csr_gcfg();
--	if (!(cfg & CSR_GCFG_TIT))
--		return;
--
--	/* Enable guest access to hard timer */
--	write_csr_gcfg(cfg & ~CSR_GCFG_TIT);
--
- 	/*
- 	 * Freeze the soft-timer and sync the guest stable timer with it. We do
- 	 * this with interrupts disabled to avoid latency.
-@@ -168,21 +159,15 @@ static void _kvm_save_timer(struct kvm_vcpu *vcpu)
-  */
- void kvm_save_timer(struct kvm_vcpu *vcpu)
- {
--	unsigned long cfg;
- 	struct loongarch_csrs *csr = vcpu->arch.csr;
- 
- 	preempt_disable();
--	cfg = read_csr_gcfg();
--	if (!(cfg & CSR_GCFG_TIT)) {
--		/* Disable guest use of hard timer */
--		write_csr_gcfg(cfg | CSR_GCFG_TIT);
--
--		/* Save hard timer state */
--		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
--		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TVAL);
--		if (kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG) & CSR_TCFG_EN)
--			_kvm_save_timer(vcpu);
--	}
-+
-+	/* Save hard timer state */
-+	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TVAL);
-+	if (kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG) & CSR_TCFG_EN)
-+		_kvm_save_timer(vcpu);
- 
- 	/* Save timer-related state to vCPU context */
- 	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
--- 
-2.39.3
-
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
