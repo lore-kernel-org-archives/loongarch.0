@@ -1,181 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7C9111D;
-	Wed,  8 Nov 2023 03:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZ1EyD+r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D253CC433C9;
-	Wed,  8 Nov 2023 03:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699413129;
-	bh=zWzQI9h3JCmUeFnDwkorPBWuwpKsgMwO9qtOrsDKJtk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mZ1EyD+rahmxc5oJmN6mow3uP8TFbBfuD+yfl8UJFpuivRX8C4WZR8+qvEDtOOObl
-	 F/Y+kvHxpeKjmExv8txKviglCJKIC4/EJsiFMB07hjmFiI8PhiHaIvu0Rx8JvHtVJq
-	 PKCOvcjs7xjSAyP/1ii/Y9JpFGKQt55ApuQL8GJVstKPH/T6ufFo2f1ikiYgVEjng1
-	 Bdfs93ZzxvJdWNzowXDF60kNUGaZur3lwhEkv3nYefiJ8OdniUTlfJk/0zni0BaBsJ
-	 mJr1/ORktAhHJLly+8LVqVxyTxq8PFbJJ1iMllD4kenjVFw1Igm94IwFGoDRtMzhu7
-	 A6Cr7kkc8zrtA==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-53ed4688b9fso10682182a12.0;
-        Tue, 07 Nov 2023 19:12:09 -0800 (PST)
-X-Gm-Message-State: AOJu0YzKnLUgcGqhiw88yvB86Y35lcTz39ALJZE+l8jm/V+aB+M1v/ri
-	+FgaTePTJzvD7GnapBwqwk/Su74fbor8ImyV3Bc=
-X-Google-Smtp-Source: AGHT+IHxIANpMSTnCBsjUQot+qYbwXrOYHOuQcH/shPCBn66k9YGTd2uK6Co9Kr0z7LX9MwoBysbR3k/zHMEj32jttE=
-X-Received: by 2002:a17:906:dc95:b0:9be:77cd:4c2c with SMTP id
- cs21-20020a170906dc9500b009be77cd4c2cmr321928ejc.28.1699413128274; Tue, 07
- Nov 2023 19:12:08 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 460091C38;
+	Wed,  8 Nov 2023 04:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [112.22.233.25])
+	by gateway (Coremail) with SMTP id _____8DxBfEJCUtlNew3AA--.44748S3;
+	Wed, 08 Nov 2023 12:05:30 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.22.233.25])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxL90ECUtleMA7AA--.1906S2;
+	Wed, 08 Nov 2023 12:05:27 +0800 (CST)
+From: WANG Rui <wangrui@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Xi Ruoyao <xry111@xry111.site>,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn,
+	WANG Rui <wangrui@loongson.cn>
+Subject: [PATCH] LoongArch: Disable module from accessing external data directly
+Date: Wed,  8 Nov 2023 12:04:47 +0800
+Message-ID: <20231108040447.288870-1-wangrui@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231102-loongarch-always-inline-percpu-ops-v2-1-31c51959a5c0@kernel.org>
-In-Reply-To: <20231102-loongarch-always-inline-percpu-ops-v2-1-31c51959a5c0@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 8 Nov 2023 11:11:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6CuABSAEn8MXssE8yDgSVEsONW7PmaDOiS+xJm=ZbcQA@mail.gmail.com>
-Message-ID: <CAAhV-H6CuABSAEn8MXssE8yDgSVEsONW7PmaDOiS+xJm=ZbcQA@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Mark __percpu functions as always inline
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: kernel@xen0n.name, ndesaulniers@google.com, trix@redhat.com, 
-	jiaxun.yang@flygoat.com, loongarch@lists.linux.dev, llvm@lists.linux.dev, 
-	patches@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxL90ECUtleMA7AA--.1906S2
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Gry5XFWxCw47CrW7ArW3twc_yoW8JF17pF
+	Z7ur1DGws5ur4vvFnFyFWxXa90yr4DJr4fZa4Ikr45ZFW3uryFvw4Fyrs0g3W2kw4kX34x
+	Ww4fCF9rtFW5JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxU2MKZDUUUU
 
-Applied to loongarch-next, thanks.
+The distance between vmlinux and the module is too far so that PC-REL
+cannot be accessed directly, only GOT.
 
-Huacai
+When compiling module with GCC, the option `-mdirect-extern-access` is
+disabled by default. The Clang option `-fdirect-access-external-data`
+is enabled by default, so it needs to be explicitly disabled.
 
-On Thu, Nov 2, 2023 at 11:43=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> A recent change to the optimization pipeline in LLVM reveals some
-> fragility around the inlining of LoongArch's __percpu functions, which
-> manifests as a BUILD_BUG() failure:
->
->   In file included from kernel/sched/build_policy.c:17:
->   In file included from include/linux/sched/cputime.h:5:
->   In file included from include/linux/sched/signal.h:5:
->   In file included from include/linux/rculist.h:11:
->   In file included from include/linux/rcupdate.h:26:
->   In file included from include/linux/irqflags.h:18:
->   arch/loongarch/include/asm/percpu.h:97:3: error: call to '__compiletime=
-_assert_51' declared with 'error' attribute: BUILD_BUG failed
->      97 |                 BUILD_BUG();
->         |                 ^
->   include/linux/build_bug.h:59:21: note: expanded from macro 'BUILD_BUG'
->      59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->         |                     ^
->   include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_O=
-N_MSG'
->      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond),=
- msg)
->         |                                     ^
->   include/linux/compiler_types.h:425:2: note: expanded from macro 'compil=
-etime_assert'
->     425 |         _compiletime_assert(condition, msg, __compiletime_asser=
-t_, __COUNTER__)
->         |         ^
->   include/linux/compiler_types.h:413:2: note: expanded from macro '_compi=
-letime_assert'
->     413 |         __compiletime_assert(condition, msg, prefix, suffix)
->         |         ^
->   include/linux/compiler_types.h:406:4: note: expanded from macro '__comp=
-iletime_assert'
->     406 |                         prefix ## suffix();                    =
-         \
->         |                         ^
->   <scratch space>:86:1: note: expanded from here
->      86 | __compiletime_assert_51
->         | ^
->   1 error generated.
->
-> If these functions are not inlined (which the compiler is free to do
-> even with functions marked with the standard 'inline' keyword), the
-> BUILD_BUG() in the default case cannot be eliminated since the compiler
-> cannot prove it is never used, resulting in a build failure due to the
-> error attribute.
->
-> Mark these functions as __always_inline to guarantee inlining so that
-> the BUILD_BUG() only triggers when the default case genuinely cannot be
-> eliminated due to an unexpected size.
->
-> Cc:  <stable@vger.kernel.org>
-> Closes: https://github.com/ClangBuiltLinux/linux/issues/1955
-> Fixes: 46859ac8af52 ("LoongArch: Add multi-processor (SMP) support")
-> Link: https://github.com/llvm/llvm-project/commit/1a2e77cf9e11dbf56b5720c=
-607313a566eebb16e
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
-> Changes in v2:
-> - Change 'inline' to __always_inline for all functions that contain
->   BUILD_BUG() (Huacai)
-> - Notate that 'inline' does not guarantee inlining in the commit message
->   to further clarify the change to __always_inline.
-> - Link to v1: https://lore.kernel.org/r/20231101-loongarch-always-inline-=
-percpu-ops-v1-1-b8f2e9a71729@kernel.org
-> ---
->  arch/loongarch/include/asm/percpu.h | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include=
-/asm/percpu.h
-> index b9f567e66016..313852fba845 100644
-> --- a/arch/loongarch/include/asm/percpu.h
-> +++ b/arch/loongarch/include/asm/percpu.h
-> @@ -32,7 +32,7 @@ static inline void set_my_cpu_offset(unsigned long off)
->  #define __my_cpu_offset __my_cpu_offset
->
->  #define PERCPU_OP(op, asm_op, c_op)                                    \
-> -static inline unsigned long __percpu_##op(void *ptr,                   \
-> +static __always_inline unsigned long __percpu_##op(void *ptr,          \
->                         unsigned long val, int size)                    \
->  {                                                                      \
->         unsigned long ret;                                              \
-> @@ -63,7 +63,7 @@ PERCPU_OP(and, and, &)
->  PERCPU_OP(or, or, |)
->  #undef PERCPU_OP
->
-> -static inline unsigned long __percpu_read(void *ptr, int size)
-> +static __always_inline unsigned long __percpu_read(void *ptr, int size)
->  {
->         unsigned long ret;
->
-> @@ -100,7 +100,8 @@ static inline unsigned long __percpu_read(void *ptr, =
-int size)
->         return ret;
->  }
->
-> -static inline void __percpu_write(void *ptr, unsigned long val, int size=
-)
-> +static __always_inline void __percpu_write(void *ptr, unsigned long val,
-> +                                          int size)
->  {
->         switch (size) {
->         case 1:
-> @@ -132,8 +133,8 @@ static inline void __percpu_write(void *ptr, unsigned=
- long val, int size)
->         }
->  }
->
-> -static inline unsigned long __percpu_xchg(void *ptr, unsigned long val,
-> -                                               int size)
-> +static __always_inline unsigned long __percpu_xchg(void *ptr, unsigned l=
-ong val,
-> +                                                  int size)
->  {
->         switch (size) {
->         case 1:
->
-> ---
-> base-commit: 278be83601dd1725d4732241f066d528e160a39d
-> change-id: 20231101-loongarch-always-inline-percpu-ops-cf77c161871f
->
-> Best regards,
-> --
-> Nathan Chancellor <nathan@kernel.org>
->
+Signed-off-by: WANG Rui <wangrui@loongson.cn>
+---
+ arch/loongarch/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index b86f2ff31659..9eeb0c05f3f4 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -68,6 +68,8 @@ LDFLAGS_vmlinux			+= -static -n -nostdlib
+ ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
+ cflags-y			+= $(call cc-option,-mexplicit-relocs)
+ KBUILD_CFLAGS_KERNEL		+= $(call cc-option,-mdirect-extern-access)
++KBUILD_AFLAGS_MODULE		+= $(call cc-option,-fno-direct-access-external-data)
++KBUILD_CFLAGS_MODULE		+= $(call cc-option,-fno-direct-access-external-data)
+ KBUILD_AFLAGS_MODULE		+= $(call cc-option,-mno-relax) $(call cc-option,-Wa$(comma)-mno-relax)
+ KBUILD_CFLAGS_MODULE		+= $(call cc-option,-mno-relax) $(call cc-option,-Wa$(comma)-mno-relax)
+ else
+-- 
+2.42.1
+
