@@ -1,108 +1,91 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45ED5FC12
-	for <loongarch@lists.linux.dev>; Wed,  8 Nov 2023 09:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [209.85.219.178])
-	by gateway (Coremail) with SMTP id _____8CxtPBwV0tl9_83AA--.45546S3;
-	Wed, 08 Nov 2023 17:40:00 +0800 (CST)
-Received: from mail-yb1-f178.google.com (unknown [209.85.219.178])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx7y9sV0tlGPE7AA--.64859S3;
-	Wed, 08 Nov 2023 17:39:58 +0800 (CST)
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-d9a4c0d89f7so7040568276.1
-        for <loongarch@lists.linux.dev>; Wed, 08 Nov 2023 01:39:58 -0800 (PST)
-X-Gm-Message-State: AOJu0YxHu1UQtq6EfVzBC6XEWL8oq0Nud8fKBI428NZpYY1gdG/N3GVr
-	L6eJY75hvt2bKs1MMnHDJ8SUBJP6ifPKzU2uC42JFg==
-X-Google-Smtp-Source: AGHT+IGJw6kxe2AuHux+s5+MaURvgqvxjUxou2MX4C7yq7jPaCu5YsXeP43aDJUBTZfW4qAw+LoksQL8ZcDMCnjIKY0=
-X-Received: by 2002:a25:ad48:0:b0:d9a:6b1e:ef51 with SMTP id
- l8-20020a25ad48000000b00d9a6b1eef51mr1139641ybe.2.1699436396146; Wed, 08 Nov
- 2023 01:39:56 -0800 (PST)
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BF7101C7;
+	Wed,  8 Nov 2023 09:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="FYh3YR16"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1699436811;
+	bh=JsqArwf7i++16JZaeUV8Vxl01WJB/F/dSilTsgJ3HE4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=FYh3YR16sty+E4UnANyNklB7fjB7TwklI07azkSD7QGZzMtxCpPcJj0bUYQM/y2Ad
+	 lb2ns8kIn6SVUJWG6nKWoE8YIaLdZw65c4Fmg37yGlAX1vCmd1a4rzDNyJmjQe+xj4
+	 KCqLM5+EbiWxESWRx5Z2ejAW57z6AB7bp16rFtEs=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 446CA66A03;
+	Wed,  8 Nov 2023 04:46:48 -0500 (EST)
+Message-ID: <de7c80a1e297fb1cddbca3972fe8c09a3b551b7a.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Disable module from accessing external data
+ directly
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
+	loongson-kernel@lists.loongnix.cn, Fangrui Song <maskray@google.com>
+Date: Wed, 08 Nov 2023 17:46:46 +0800
+In-Reply-To: <CAHirt9jRH1CKE=BUWpML_jNgTBvMfJiYoAYPnVS3E=89oBUVyw@mail.gmail.com>
+References: <20231108040447.288870-1-wangrui@loongson.cn>
+	 <d32d8a26dcd75a840727cdb50546b621d34d326b.camel@xry111.site>
+	 <CAHirt9jQHTRGdv4rShgvWHEbG1vzuLkNDbxLP7x4eMtuB3BB5g@mail.gmail.com>
+	 <4075b4dad9bedbc3def5dfe75f66f3e5d49ce6d5.camel@xry111.site>
+	 <CAHirt9jRH1CKE=BUWpML_jNgTBvMfJiYoAYPnVS3E=89oBUVyw@mail.gmail.com>
+Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
+ keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231108040447.288870-1-wangrui@loongson.cn> <d32d8a26dcd75a840727cdb50546b621d34d326b.camel@xry111.site>
- <CAHirt9jQHTRGdv4rShgvWHEbG1vzuLkNDbxLP7x4eMtuB3BB5g@mail.gmail.com>
- <4075b4dad9bedbc3def5dfe75f66f3e5d49ce6d5.camel@xry111.site> <CAHirt9jRH1CKE=BUWpML_jNgTBvMfJiYoAYPnVS3E=89oBUVyw@mail.gmail.com>
-In-Reply-To: <CAHirt9jRH1CKE=BUWpML_jNgTBvMfJiYoAYPnVS3E=89oBUVyw@mail.gmail.com>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Wed, 8 Nov 2023 17:39:45 +0800
-X-Gmail-Original-Message-ID: <CAHirt9i-esjhZWF9yTsd+wBuMB+ebjVT33dY5VUkWHLcYREQpw@mail.gmail.com>
-Message-ID: <CAHirt9i-esjhZWF9yTsd+wBuMB+ebjVT33dY5VUkWHLcYREQpw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Disable module from accessing external data directly
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn, Fangrui Song <maskray@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8Cx7y9sV0tlGPE7AA--.64859S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ww4kArykCFW3Gw1fKF1Utwc_yoW8WrWrpF
-	ZrGF1rKrs7Jr1jqrn2vFn7X3WYva1xArWxGFy0vw1Yvas0kr9rXa13tr4agF9FqryDWw12
-	9r4vga42934UX3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r4a6rW5MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1l1v3UUUUU==
 
-On Wed, Nov 8, 2023 at 5:36=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wrote=
-:
->
-> On Wed, Nov 8, 2023 at 5:26=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
-te:
-> >
-> > On Wed, 2023-11-08 at 17:20 +0800, WANG Rui wrote:
-> > > > then the linked binary triggers a SIGBUS.  Ideally this should be
-> > > > detected by the linker at link time, but currently the BFD linker
-> > > > fails
-> > > > to detect this error (FWIW this flaw is caused by a really nasty
-> > > > method
-> > > > for the medium code model implementation).  So to me -fno-direct-
-> > > > access-
-> > > > external-data is the default.  I also grepped for -fdirect-access-
-> > > > external-data in the kernel building system but I've not found any
-> > > > match.
-> > > >
-> > > > Are you using a different version of Clang, or maybe Clang has some
-> > > > configuration-time option to make -fdirect-access-external-data the
-> > > > default?
-> > >
-> > > The clang enables `direct-access-external-data` by default in PIC and
-> > > disables it by default in no-PIC. This also applies to PIE. [1]
-> >
-> > Oh sh*t:
-> >
+On Wed, 2023-11-08 at 17:36 +0800, WANG Rui wrote:
 > > xry111@nanmen2 ~ $ clang t1.c -O2 -fno-pie -no-pie
 > > xry111@nanmen2 ~ $ ./a.out
 > > Bus error (core dumped)
-> >
+> >=20
 > > I'll consider it a Clang bug then.
->
+
+https://github.com/llvm/llvm-project/issues/71645
+
 > That's it, no copy relocations. As far as I know, copying relocations
 > has some issues and is not recommended by Fangrui.
->
+>=20
 > For modules, if distance is not a problem, `no-pic` and
 > `direct-access-external-data` can be together because the code is
 > writable. Does it seem reasonable to exist?
 
-Of course, for LoongArch, it is better for `no-pic` to disable
-`direct-access-external-data` by default. I will send a patch.
+It may be usable, but the result is generally worse than relying on GOT.
+
+For example, consider a module referring two data symbols in vmlinux,
+foo and bar.  The symbol foo is referred 10 times and bar is referred 8
+times.
+
+With the current GOT-based approach, the total space usage is (2 GOT
+entry * (8 bytes / GOT entry)) + ((10 + 8) * 2 instruction * 4 (bytes /
+instruction)) =3D 160 bytes.
+
+With -fdirect-access-external-data, we must add -mcmodel=3Dextreme too
+because the modules are too far away from vmlinux in the kernel address
+space, then the total space usage will be (10 + 8) * 5 instruction * 4
+(bytes / instruction) =3D 360 bytes.
+
+One possible approach to resolve the issue is relocating vmlinux from
+XKPRANGE to XKVRANGE and fit vmlinux + all modules into a 2GiB range.=20
+Then the total space usage will be (10 + 8) * 2 instruction * 4 (bytes /
+instruction) =3D 144 bytes.  But I don't know how to implement this, and
+running vmlinux in XKVRANGE may have a performance penalty.
 
 --=20
-WANG Rui
-
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
