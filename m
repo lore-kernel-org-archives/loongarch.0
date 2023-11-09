@@ -1,177 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EAD14F7D
-	for <loongarch@lists.linux.dev>; Thu,  9 Nov 2023 10:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4240A1DA2C
+	for <loongarch@lists.linux.dev>; Thu,  9 Nov 2023 12:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jVy/SlMh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699527564;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K9U5ygdZjpdfSXw60j6OXFMXdIu25vL99MHEH+w5Ks4=;
-	b=jVy/SlMhSHjD6q6aV9Ap3fm4YrSbHCBJuGMlwIxkRGhTxXFafvo/83GnXruI2pw1RBVPF+
-	p6PhAhxdNtIxj55psyskVCPoyJq3eOKzxEz85NzyKcNF+v4yCd/4gIXhy1muvkf8oA3evO
-	xFovnDKoC4GwcDxmoTR16Adu5tDfg1M=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-621-G5LcGkTnN5qdmY2VSzWlEw-1; Thu, 09 Nov 2023 05:59:23 -0500
-X-MC-Unique: G5LcGkTnN5qdmY2VSzWlEw-1
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6bdc140103bso222916b3a.1
-        for <loongarch@lists.linux.dev>; Thu, 09 Nov 2023 02:59:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699527562; x=1700132362;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K9U5ygdZjpdfSXw60j6OXFMXdIu25vL99MHEH+w5Ks4=;
-        b=KoiIRQNG8EDW8T2HrHDlHETbP1qPuE7MrxmXcRDPR92Hwc2xQ7vHYVIPCDH8trssee
-         G/o8XT/wdV9ghF4zeRI5zdlCVuIt4Fp6+DAxbglhx7LqfuJZad0V00xS7PlKOG4a1CFE
-         6fQBe2si1WAojzN8NNNRPB/HXEOW+KYRUFOkeOAnMJu/lpWfGZdhzIh3Q+w70U7o7hkj
-         JDS0exVWAyIZe/nEVd1+OkWTMlfWrZKaamnLPa8sl1Q4Jk5E6rMPSfOZqpQpfDdOINMw
-         H3oKDAhZAq92CISCP+H5FjqMvLoOQXn1IrIAx7umLacQaGuGN3u4JqQjfwVVUar6tmcM
-         7aKQ==
-X-Gm-Message-State: AOJu0Yxn6IvxZIzTgU2dcGfX1EgLb+ug3pn/gsJs25xhu+n2VFbMs+mC
-	MIYWWU3GBPAHDyufnseZt1b+vAmtgLDawksWe39D0qKPecGTUZcATwwI4WwOCnWQy7uRHMpf7UZ
-	j4L8+jxew93GKwt7NTbpu
-X-Received: by 2002:a05:6a20:8e14:b0:181:7d6d:c0ee with SMTP id y20-20020a056a208e1400b001817d6dc0eemr5336334pzj.0.1699527562423;
-        Thu, 09 Nov 2023 02:59:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHVGk/5hgPxq0+SsSph+84k4BFGhqdcMPg+KMAt0nXFoQGQf7FXvvQcKVOfijjQlbVGmLH/fA==
-X-Received: by 2002:a05:6a20:8e14:b0:181:7d6d:c0ee with SMTP id y20-20020a056a208e1400b001817d6dc0eemr5336293pzj.0.1699527562066;
-        Thu, 09 Nov 2023 02:59:22 -0800 (PST)
-Received: from [10.66.61.39] ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id x16-20020aa793b0000000b006c344c9f8bfsm10417140pff.87.2023.11.09.02.59.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Nov 2023 02:59:21 -0800 (PST)
-Message-ID: <6c27c39a-a851-52f5-1156-354487bb2821@redhat.com>
-Date: Thu, 9 Nov 2023 18:59:14 +0800
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JOE+Y96n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1699532610;
+	bh=R2IIgl4ZRFgwipCQ4ZBWquxZCbtnLxeQT8yMzVcSClk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=JOE+Y96nQb0g0fD7YjgIsTtXOrsQ0zdJ9Xit6bae239vdgrtE8Xe20tGEjOEwp6b5
+	 bBGasTtN2qhciM6Vxj5gO1APMLHXfhhNabxTTxDpDoDz6AXcIv0hdu9+rRXuZNmSj3
+	 PriUuPEOny5OCaNxYhuQeMYyhW0D7Uuip11fA5kii4KmxM9zaRV2MnEviCDpMHy6zq
+	 fUfZ9elCA6bj44/a3P1CQqNaCruTVzrNA2B2UxDQEd/EBpaSM5DHluHgXy74J1JLYp
+	 rlgnpTfcT5fdD0htnPYkbVFENF7DqxPzxI5N3NUPYBgm/lUlPDoiySV3dJVovZ01Br
+	 M0UtCQNJ+RaEQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SR1MD6jtmz4wd2;
+	Thu,  9 Nov 2023 23:23:20 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>, Arnd Bergmann
+ <arnd@arndb.de>, Arnd
+ Bergmann <arnd@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro
+ Yamada <masahiroy@kernel.org>, "linux-kbuild@vger.kernel.org"
+ <linux-kbuild@vger.kernel.org>
+Cc: Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+ Russell King <linux@armlinux.org.uk>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, guoren <guoren@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, Greg Ungerer <gerg@linux-m68k.org>, Michal Simek
+ <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh
+ Nguyen <dinguyen@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, Geoff
+ Levand <geoff@infradead.org>, Palmer Dabbelt <palmer@dabbelt.com>, Heiko
+ Carstens <hca@linux.ibm.com>, John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>, "David S . Miller" <davem@davemloft.net>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo
+ Molnar <mingo@redhat.com>, "x86@kernel.org" <x86@kernel.org>, Helge Deller
+ <deller@gmx.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Timur Tabi <timur@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>, David Woodhouse
+ <dwmw2@infradead.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil
+ S
+ Keshavamurthy <anil.s.keshavamurthy@intel.com>, Kees Cook
+ <keescook@chromium.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Juri
+ Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Nathan Chancellor <nathan@kernel.org>, Nick
+ Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@pengutronix.de>, "linux-alpha@vger.kernel.org"
+ <linux-alpha@vger.kernel.org>, "linux-snps-arc@lists.infradead.org"
+ <linux-snps-arc@lists.infradead.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+ "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+ "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>, Netdev
+ <netdev@vger.kernel.org>, "linux-parisc@vger.kernel.org"
+ <linux-parisc@vger.kernel.org>, "linux-usb@vger.kernel.org"
+ <linux-usb@vger.kernel.org>, "linux-fbdev@vger.kernel.org"
+ <linux-fbdev@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
+ <dri-devel@lists.freedesktop.org>, "linux-bcachefs@vger.kernel.org"
+ <linux-bcachefs@vger.kernel.org>, "linux-mtd@lists.infradead.org"
+ <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH 15/22] arch: vdso: consolidate gettime prototypes
+In-Reply-To: <886df4e4-9fc2-ca52-e7e9-53688e6e821a@csgroup.eu>
+References: <20231108125843.3806765-1-arnd@kernel.org>
+ <20231108125843.3806765-16-arnd@kernel.org>
+ <ecedb0f1-9543-35c6-18bd-723e6bf21173@csgroup.eu>
+ <d94de5b8-db92-4055-9484-f2666973c02a@app.fastmail.com>
+ <87o7g3qlf5.fsf@mail.lhotse>
+ <886df4e4-9fc2-ca52-e7e9-53688e6e821a@csgroup.eu>
+Date: Thu, 09 Nov 2023 23:23:20 +1100
+Message-ID: <87il6bqfnr.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH RFC 06/22] drivers: base: Use present CPUs in
- GENERIC_CPU_DEVICES
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org,
- linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
- Salil Mehta <salil.mehta@huawei.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
- justin.he@arm.com, James Morse <james.morse@arm.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Guo Ren <guoren@kernel.org>
-References: <ZUoRY33AAHMc5ThW@shell.armlinux.org.uk>
- <E1r0JLB-00CTwy-7y@rmk-PC.armlinux.org.uk>
- <f00dd1cf-5b4c-38a8-a337-817d474d53d1@redhat.com>
- <ZUy0h/lc3QCPsuU8@shell.armlinux.org.uk>
-From: Shaoqin Huang <shahuang@redhat.com>
-In-Reply-To: <ZUy0h/lc3QCPsuU8@shell.armlinux.org.uk>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 11/9/23 18:29, Russell King (Oracle) wrote:
-> On Thu, Nov 09, 2023 at 06:09:32PM +0800, Shaoqin Huang wrote:
->> Hi Russell,
->>
->> On 11/7/23 18:29, Russell King (Oracle) wrote:
->>> From: James Morse <james.morse@arm.com>
+Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+> Le 09/11/2023 =C3=A0 11:18, Michael Ellerman a =C3=A9crit=C2=A0:
+>> "Arnd Bergmann" <arnd@arndb.de> writes:
+>>> On Wed, Nov 8, 2023, at 19:31, Christophe Leroy wrote:
+>>>> Le 08/11/2023 =C3=A0 13:58, Arnd Bergmann a =C3=A9crit=C2=A0:
 >>>
->>> Three of the five ACPI architectures create sysfs entries using
->>> register_cpu() for present CPUs, whereas arm64, riscv and all
->>> GENERIC_CPU_DEVICES do this for possible CPUs.
+>>>> powerpc has functions doing more or less the same, they are called
+>>>> __c_kernel_clock_gettime() and alike with their prototypes siting in
+>>>> arch/powerpc/include/asm/vdso/gettimeofday.h
+>>>>
+>>>> Should those prototypes be moved to include/vdso/gettime.h too and
+>>>> eventually renamed, or are they considered too powerpc specific ?
 >>>
->>> Registering a CPU is what causes them to show up in sysfs.
->>>
->>> It makes very little sense to register all possible CPUs. Registering
->>> a CPU is what triggers the udev notifications allowing user-space to
->>> react to newly added CPUs.
->>>
->>> To allow all five ACPI architectures to use GENERIC_CPU_DEVICES, change
->>> it to use for_each_present_cpu(). Making the ACPI architectures use
->>> GENERIC_CPU_DEVICES is a pre-requisite step to centralise their
->>> cpu_register() logic, before moving it into the ACPI processor driver.
->>> When ACPI is disabled this work would be done by
->>> cpu_dev_register_generic().
->>
->> What do you actually mean about when ACPI is disabled this work would be
-> 
-> Firstly, please note that "you" is not appropriate here. This is James'
-> commit message, not mine.
-> 
+>>> I don't actually know, my initial interpretation was that
+>>> these function names are part of the user ABI for the vdso,
+>>> but I never looked closely enough at how vdso works to
+>>> be sure what the actual ABI is.
+>>=20
+>> AFAIK the ABI is just the symbols we export, as defined in the linker
+>> script:
+>>=20
+>> /*
+>>   * This controls what symbols we export from the DSO.
+>>   */
+>> VERSION
+>> {
+>> 	VDSO_VERSION_STRING {
+>> 	global:
+>> 		__kernel_get_syscall_map;
+>> 		__kernel_gettimeofday;
+>> 		__kernel_clock_gettime;
+>> 		__kernel_clock_getres;
+>> 		__kernel_get_tbfreq;
+>> 		__kernel_sync_dicache;
+>> 		__kernel_sigtramp_rt64;
+>> 		__kernel_getcpu;
+>> 		__kernel_time;
+>>=20
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+arch/powerpc/kernel/vdso/vdso64.lds.S?h=3Dv6.6&#n117
+>>=20
+>>> If __c_kernel_clock_gettime() etc are not part of the user-facing
+>>> ABI, I think renaming them for consistency with the other
+>>> architectures would be best.
+>>=20
+>> The __c symbols are not part of the ABI, so we could rename them.
+>>=20
+>> At the moment though they don't have the same prototype as the generic
+>> versions, because we find the VDSO data in asm and pass it to the C
+>> functions, eg:
+>>=20
+>> int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct time=
+zone *tz,
+>> 			    const struct vdso_data *vd);
+>>=20
+>> I think we can rework that though, by implementing
+>> __arch_get_vdso_data() and getting the vdso_data in C. Then we'd be able
+>> to share the prototypes.
+>
+> I think it would not a been good idea, it would be less performant, for=20
+> explanation see commit=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?id=3De876f0b69dc993e86ca7795e63e98385aa9a7ef3
 
-Oh, Sorry for that.
+Ah thanks. I was wondering why you had done it in asm.
 
->> done by cpu_dev_register_generic()? Is the work means register the cpu?
-> 
-> When ACPI is disabled _and_ CONFIG_GENERIC_CPU_DEVICES is enabled, then
-> cpu_dev_register_generic() will call arch_register_cpu() for each present
-> CPU after this commit, rather than for each _possible_ CPU (which is the
-> actual code change here.)
-> 
->> I'm not quite understand that, and how about when ACPI is enabled, which
->> function do this work?
-> 
-> This is what happens later in the series.
-> 
-> "drivers: base: Allow parts of GENERIC_CPU_DEVICES to be overridden"
-> adds a test for CONFIG_GENERIC_CPU_DEVICES, so this will only be used
-> with architectures using GENERIC_CPU_DEVICES. Then in:
-> 
-> "ACPI: processor: Register all CPUs from acpi_processor_get_info()"
-> which is not part of this series, this adds a call to arch_register_cpu()
-> in the ACPI code, and disables this path via a test for !acpi_disabled.
-> 
-> Essentially, this path gets used to register the present CPUs when
-> firmware (ACPI) isn't going to be registering the present CPUs.
-> 
-> I've changed this to:
-> 
-> "It makes very little sense to register all possible CPUs. Registering
-> a CPU is what triggers the udev notifications allowing user-space to
-> react to newly added CPUs.
-> 
-> "To allow all five ACPI architectures to use GENERIC_CPU_DEVICES, change
-> it to use for_each_present_cpu().
-> 
-> "Making the ACPI architectures use GENERIC_CPU_DEVICES is a pre-requisite
-> step to centralise their register_cpu() logic, before moving it into the
-> ACPI processor driver. When we add support for register CPUs from ACPI
-> in a later patch, we will avoid registering CPUs in this path."
-> 
-> which I hope makes it clearer.
-> 
+It's a pity but you're right that's probably a measurable performance
+hit for some of those calls.
 
-Thanks for your great explanation. Change commit message to this makes 
-me understand well.
-
-Thanks,
-Shaoqin
-
->>> After this change, openrisc and hexagon systems that use the max_cpus
->>> command line argument would not see the other CPUs present in sysfs.
->>> This should not be a problem as these CPUs can't bre brought online as
->>                                               ^ nit: can't be
-> 
-> Thanks, I'll fix that.
-> 
-
+cheers
