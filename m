@@ -1,91 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E28E1FD1;
-	Sun, 12 Nov 2023 05:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3362EC433C7;
-	Sun, 12 Nov 2023 05:13:50 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.7
-Date: Sun, 12 Nov 2023 13:12:48 +0800
-Message-Id: <20231112051248.272444-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CB31641A;
+	Sun, 12 Nov 2023 19:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F47AzYfO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 63D03C433C8;
+	Sun, 12 Nov 2023 19:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699816691;
+	bh=YCASNaA9apHrWV6XvNG2YqzSqL/8KIldQaaqwKBZ+ro=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=F47AzYfOn+nHjmt3Jf95efOfK5jZ3Rw+qHtySAYGyP8aXX0NgdbBfpEmAQyuBoR+T
+	 WMYwM/tZ7lwYikPZ5RZwJkQvtFec8PJHtcZnV3e77WVTh4hSgTgk5uc0BoiiZFq55V
+	 aeUwqveKVScFZ6uKYDDaIEFyqZqniXYTahXwiebhtuukCOaPDFuNr1URpFSORTPTzs
+	 iiX6p4Kh3Z3QktHOYI1bPdsGu3EbM5xBpFwUmvNJz4XGgTMhkQepLO4Ht3sLdO++hE
+	 DHd64aG2qAhMMdulBpQaL48J5CLkYWY2/ihFY+99VqaiFd5cMznfz6vVETCycgq5vl
+	 wVfw71JhLSMpw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4FB96EAB08C;
+	Sun, 12 Nov 2023 19:18:11 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v6.7
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20231112051248.272444-1-chenhuacai@loongson.cn>
+References: <20231112051248.272444-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20231112051248.272444-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.7
+X-PR-Tracked-Commit-Id: 1d375d65466e5c8d7a9406826d80d475a22e8c6d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4eeee6636af819454d7c43702e77ec7857a63000
+Message-Id: <169981669132.29349.8417024851700164619.pr-tracker-bot@kernel.org>
+Date: Sun, 12 Nov 2023 19:18:11 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The following changes since commit ffc253263a1375a65fa6c9f62a893e9767fbebfa:
+The pull request you sent on Sun, 12 Nov 2023 13:12:48 +0800:
 
-  Linux 6.6 (2023-10-29 16:31:08 -1000)
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.7
 
-are available in the Git repository at:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4eeee6636af819454d7c43702e77ec7857a63000
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.7
+Thank you!
 
-for you to fetch changes up to 1d375d65466e5c8d7a9406826d80d475a22e8c6d:
-
-  selftests/bpf: Enable cpu v4 tests for LoongArch (2023-11-08 14:12:21 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v6.7
-
-1, Support PREEMPT_DYNAMIC with static keys;
-2, Relax memory ordering for atomic operations;
-3, Support BPF CPU v4 instructions for LoongArch;
-4, Some build and runtime warning fixes.
-
-Note: There is a conflicts in arch/loongarch/include/asm/inst.h but can
-be simply fixed by adjusting context.
-
-----------------------------------------------------------------
-Hengqi Chen (8):
-      LoongArch: Add more instruction opcodes and emit_* helpers
-      LoongArch: BPF: Support sign-extension load instructions
-      LoongArch: BPF: Support sign-extension mov instructions
-      LoongArch: BPF: Support unconditional bswap instructions
-      LoongArch: BPF: Support 32-bit offset jmp instructions
-      LoongArch: BPF: Support signed div instructions
-      LoongArch: BPF: Support signed mod instructions
-      selftests/bpf: Enable cpu v4 tests for LoongArch
-
-Huacai Chen (3):
-      Merge 'bpf-next 2023-10-16' into loongarch-next
-      LoongArch: Support PREEMPT_DYNAMIC with static keys
-      LoongArch/smp: Call rcutree_report_cpu_starting() earlier
-
-Nathan Chancellor (1):
-      LoongArch: Mark __percpu functions as always inline
-
-WANG Rui (2):
-      LoongArch: Disable module from accessing external data directly
-      LoongArch: Relax memory ordering for atomic operations
-
- arch/loongarch/Kconfig                             |   1 +
- arch/loongarch/Makefile                            |   2 +
- arch/loongarch/include/asm/atomic.h                |  88 ++++++++++---
- arch/loongarch/include/asm/inst.h                  |  13 ++
- arch/loongarch/include/asm/percpu.h                |  10 +-
- arch/loongarch/kernel/smp.c                        |   3 +-
- arch/loongarch/net/bpf_jit.c                       | 143 ++++++++++++++++-----
- tools/testing/selftests/bpf/progs/test_ldsx_insn.c |   3 +-
- tools/testing/selftests/bpf/progs/verifier_bswap.c |   3 +-
- tools/testing/selftests/bpf/progs/verifier_gotol.c |   3 +-
- tools/testing/selftests/bpf/progs/verifier_ldsx.c  |   3 +-
- tools/testing/selftests/bpf/progs/verifier_movsx.c |   3 +-
- tools/testing/selftests/bpf/progs/verifier_sdiv.c  |   3 +-
- 13 files changed, 215 insertions(+), 63 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
