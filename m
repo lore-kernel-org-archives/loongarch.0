@@ -1,486 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABBF1840
-	for <loongarch@lists.linux.dev>; Sun, 12 Nov 2023 02:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5B05225
+	for <loongarch@lists.linux.dev>; Sun, 12 Nov 2023 04:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhhj8rkU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92AE2C433C7
-	for <loongarch@lists.linux.dev>; Sun, 12 Nov 2023 02:49:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T9IHCfRS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4999EC4339A
+	for <loongarch@lists.linux.dev>; Sun, 12 Nov 2023 04:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699757367;
-	bh=rIkFv8nGkPM9rlQLYrVYnJRrrtq8rKN0184X/jIv9cY=;
+	s=k20201202; t=1699762947;
+	bh=FJL4JNEf9Nr1DoflQgnKi0tfP9lyYuVjCmmad2iv8TA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fhhj8rkU64adBHDeZHFxBVH7qfiTCmhb2f8dol4zeFcO5P74pW9wyigV71B1PNsnU
-	 aOGXq0PT+VSZkwUR9k92d96HkGtrj6OlRhKoyRJ20PsJDkNR1YoXb0Pq/dvcaw28vC
-	 0dnzG4ulgVExMR9jMg2U/oBqi8yZfed2uv5/QH+MoH4t95rcVCzqHH+GeGBqQK0S6a
-	 MU9aaP0rqYK+xPEX4VjS4H6gaNehdSOjoGoydy2TrRbAWYT1AhOROtzt9bD2N2anEG
-	 I2GM4GF4A+0aqnoTOSrJIMhHWrw+Kff5S1hB0+WmPOL17AwzgPcEZLKhvYAJK9n3VS
-	 fyp8DlliwEwng==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5446c9f3a77so5309875a12.0
-        for <loongarch@lists.linux.dev>; Sat, 11 Nov 2023 18:49:27 -0800 (PST)
-X-Gm-Message-State: AOJu0YyEJrFAC1pDarNix42HWx7Oa5ovXl6eBTvieBhoNpjKQtr8V0m/
-	HgW5FUEHPQGQmdT8DoV7OhZSRY2J4odWhh/09bo=
-X-Google-Smtp-Source: AGHT+IFkC/VPpxj9L9NOaZjxlh5akwRjzXDgYVje2TQycWdZSZORdo8BMdC0DJF7DSsCmIodCZLnj7yMXuLbJWKAEW0=
-X-Received: by 2002:a05:6402:88d:b0:543:7201:7c70 with SMTP id
- e13-20020a056402088d00b0054372017c70mr2906409edy.7.1699757365914; Sat, 11 Nov
- 2023 18:49:25 -0800 (PST)
+	b=T9IHCfRSJCCiMNO/B2lnKhTDg7vzSLaSof7ydAGyTQokfwHc0UzVrA9vy+3S4mFHO
+	 Mpc/gtpML1wYUcpX2bPDBy9pPY5QgOuHgc/QzsPUa8mOygZ56/qPbpHlwwajazH46U
+	 1n3ZTA/MJFWE7HGwSGp8kR738Ey0K/PgQf5/mwzV91s5bTFFTjRfOkgcW5rDr+NefW
+	 70g/doUyhEQMNRVBFV9M32HHKhYl3CB4VPe3qN0mLdZDr/+kodq44fJDaQC3vcGEqX
+	 U3rqX7e9UEtc3XjfnoI7xoUubZMR0tX2Ciz3rIWEnZ55X4l4ocVhndGYJ7soDuUgJ2
+	 X1txJX8483BHg==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2c504a5e1deso46134921fa.2
+        for <loongarch@lists.linux.dev>; Sat, 11 Nov 2023 20:22:27 -0800 (PST)
+X-Gm-Message-State: AOJu0YyngfW+6xJ6VHAnt0srHnd6lQ5ZvTxbXaTbhHZ1D4eLBfW3n6jB
+	42gYlX49erio0qX1skaqZWviHTxImzmH3qzHvWU=
+X-Google-Smtp-Source: AGHT+IGKtBb4zpepnAgJWTPQf4OFL8Yxg0IypTLD7L38xtqORdph/fQnU2/w9oi/MfemCZAy/+rZ76w/2ug+y+JaBNQ=
+X-Received: by 2002:a05:6402:3d9:b0:53f:731a:e513 with SMTP id
+ t25-20020a05640203d900b0053f731ae513mr2174574edw.25.1699762924720; Sat, 11
+ Nov 2023 20:22:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231026184337.563801-1-hengqi.chen@gmail.com>
- <20231026184337.563801-9-hengqi.chen@gmail.com> <CAAhV-H7Zh3NVaxrag-4t594K8shW4Y7V0sp3Wn79Z1WJoACcwQ@mail.gmail.com>
- <CAEyhmHTKzXfAOXAk0BxzM7XyLVy=A8P_bWpG-u+UTHSG2WF+qQ@mail.gmail.com> <CAAhV-H5gzXV=Dt05jt59y76KCQorik67ndQ7VxguPTKg8nsD3w@mail.gmail.com>
-In-Reply-To: <CAAhV-H5gzXV=Dt05jt59y76KCQorik67ndQ7VxguPTKg8nsD3w@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 12 Nov 2023 10:49:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H77+wDuycUBSpzkNEHJm-K0QHmCuYTHFUwvbGKo46WeWg@mail.gmail.com>
-Message-ID: <CAAhV-H77+wDuycUBSpzkNEHJm-K0QHmCuYTHFUwvbGKo46WeWg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 8/8] selftests/bpf: Enable cpu v4 tests for LoongArch
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, kernel@xen0n.name, 
-	yangtiezhu@loongson.cn
+References: <20231108125843.3806765-1-arnd@kernel.org> <20231108125843.3806765-13-arnd@kernel.org>
+In-Reply-To: <20231108125843.3806765-13-arnd@kernel.org>
+From: Guo Ren <guoren@kernel.org>
+Date: Sat, 11 Nov 2023 23:21:53 -0500
+X-Gmail-Original-Message-ID: <CAJF2gTSEziwKn+f6DfZXRuzW1SXaWraKL2HdXMRkEOGyuHq3MQ@mail.gmail.com>
+Message-ID: <CAJF2gTSEziwKn+f6DfZXRuzW1SXaWraKL2HdXMRkEOGyuHq3MQ@mail.gmail.com>
+Subject: Re: [PATCH 12/22] csky: fix arch_jump_label_transform_static override
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, Greg Ungerer <gerg@linux-m68k.org>, 
+	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Geoff Levand <geoff@infradead.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	x86@kernel.org, Helge Deller <deller@gmx.de>, 
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Timur Tabi <timur@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, David Woodhouse <dwmw2@infradead.org>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, Kees Cook <keescook@chromium.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Al Viro <viro@zeniv.linux.org.uk>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-bcachefs@vger.kernel.org, linux-mtd@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 12, 2023 at 12:19=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
+On Wed, Nov 8, 2023 at 8:02=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wrot=
+e:
 >
-> Hi, Hengqi,
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> On Sat, Nov 11, 2023 at 10:50=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.c=
-om> wrote:
-> >
-> > Hi Huacai,
-> >
-> > On Thu, Nov 9, 2023 at 11:25=E2=80=AFPM Huacai Chen <chenhuacai@kernel.=
-org> wrote:
-> > >
-> > > Hi, Hengqi,
-> > >
-> > > I applied this series here:
-> > > https://github.com/chenhuacai/linux/commits/loongarch-next
-> > >
-> > > But I have some problems, see below.
-> > >
-> > > On Fri, Oct 27, 2023 at 2:01=E2=80=AFPM Hengqi Chen <hengqi.chen@gmai=
-l.com> wrote:
-> > > >
-> > > > Enable cpu v4 tests for LoongArch. Currently, we don't
-> > > > have BPF trampoline in LoongArch JIT, so the fentry
-> > > > test `test_ptr_struct_arg` still failed, will followup.
-> > > > Test result attached below:
-> > > >
-> > > >   # ./test_progs -t verifier_sdiv,verifier_movsx,verifier_ldsx,veri=
-fier_gotol,verifier_bswap
-> > > If I disable unprivileged bpf, these tests pass, but unprivileged
-> > > tests are skipped; if I enable unprivileged bpf, the 'verifier_movsx'
-> > > causes the system hang.
-> > >
-> >
-> > I can't reproduce this on my machine, see my .config at
-> > https://github.com/chenhengqi/public
-> OK, I will try you .config, and could you please try the code in my
-> repo, too? I rebased on the mainline and there may be other problems.
-I have tried your .config and no system hangs. And I also find that if
-enabling CONFIG_BPF_JIT_ALWAYS_ON based on your .config there will be
-a system hang during tests. So, does that mean you only tested the
-interpreter but not JIT?
+> The arch_jump_label_transform_static() function in csky was originally me=
+ant to
+> override the generic __weak function, but that got changed to an #ifndef =
+check.
+>
+> This showed up as a missing-prototype warning:
+> arch/csky/kernel/jump_label.c:43:6: error: no previous prototype for 'arc=
+h_jump_label_transform_static' [-Werror=3Dmissing-prototypes]
+>
+> Change the method to use the new method of having a #define and a prototy=
+pe
+> for the global function.
+>
+> Fixes: 7e6b9db27de9 ("jump_label: make initial NOP patching the special c=
+ase")
+> Fixes: 4e8bb4ba5a55 ("csky: Add jump-label implementation")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/csky/include/asm/jump_label.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/csky/include/asm/jump_label.h b/arch/csky/include/asm/j=
+ump_label.h
+> index d488ba6084bc..98a3f4b168bd 100644
+> --- a/arch/csky/include/asm/jump_label.h
+> +++ b/arch/csky/include/asm/jump_label.h
+> @@ -43,5 +43,10 @@ static __always_inline bool arch_static_branch_jump(st=
+ruct static_key *key,
+>         return true;
+>  }
+>
+> +enum jump_label_type;
+> +void arch_jump_label_transform_static(struct jump_entry *entry,
+> +                                     enum jump_label_type type);
+> +#define arch_jump_label_transform_static arch_jump_label_transform_stati=
+c
+> +
+>  #endif  /* __ASSEMBLY__ */
+>  #endif /* __ASM_CSKY_JUMP_LABEL_H */
+> --
+> 2.39.2
+>
+>
+Thank you!
+Reviewed-by: Guo Ren <guoren@kernel.org>
 
-And the other problem still exists even using your .config,
-'ctx_member_sign_ext' still fails.
-
-Huacai
-
->
-> Huacai
->
-> >
-> > > >   #316/1   verifier_bswap/BSWAP, 16:OK
-> > > >   #316/2   verifier_bswap/BSWAP, 16 @unpriv:OK
-> > > >   #316/3   verifier_bswap/BSWAP, 32:OK
-> > > >   #316/4   verifier_bswap/BSWAP, 32 @unpriv:OK
-> > > >   #316/5   verifier_bswap/BSWAP, 64:OK
-> > > >   #316/6   verifier_bswap/BSWAP, 64 @unpriv:OK
-> > > >   #316     verifier_bswap:OK
-> > > >   #330/1   verifier_gotol/gotol, small_imm:OK
-> > > >   #330/2   verifier_gotol/gotol, small_imm @unpriv:OK
-> > > >   #330     verifier_gotol:OK
-> > > >   #338/1   verifier_ldsx/LDSX, S8:OK
-> > > >   #338/2   verifier_ldsx/LDSX, S8 @unpriv:OK
-> > > >   #338/3   verifier_ldsx/LDSX, S16:OK
-> > > >   #338/4   verifier_ldsx/LDSX, S16 @unpriv:OK
-> > > >   #338/5   verifier_ldsx/LDSX, S32:OK
-> > > >   #338/6   verifier_ldsx/LDSX, S32 @unpriv:OK
-> > > >   #338/7   verifier_ldsx/LDSX, S8 range checking, privileged:OK
-> > > >   #338/8   verifier_ldsx/LDSX, S16 range checking:OK
-> > > >   #338/9   verifier_ldsx/LDSX, S16 range checking @unpriv:OK
-> > > >   #338/10  verifier_ldsx/LDSX, S32 range checking:OK
-> > > >   #338/11  verifier_ldsx/LDSX, S32 range checking @unpriv:OK
-> > > >   #338     verifier_ldsx:OK
-> > > >   #349/1   verifier_movsx/MOV32SX, S8:OK
-> > > >   #349/2   verifier_movsx/MOV32SX, S8 @unpriv:OK
-> > > >   #349/3   verifier_movsx/MOV32SX, S16:OK
-> > > >   #349/4   verifier_movsx/MOV32SX, S16 @unpriv:OK
-> > > >   #349/5   verifier_movsx/MOV64SX, S8:OK
-> > > >   #349/6   verifier_movsx/MOV64SX, S8 @unpriv:OK
-> > > >   #349/7   verifier_movsx/MOV64SX, S16:OK
-> > > >   #349/8   verifier_movsx/MOV64SX, S16 @unpriv:OK
-> > > >   #349/9   verifier_movsx/MOV64SX, S32:OK
-> > > >   #349/10  verifier_movsx/MOV64SX, S32 @unpriv:OK
-> > > >   #349/11  verifier_movsx/MOV32SX, S8, range_check:OK
-> > > >   #349/12  verifier_movsx/MOV32SX, S8, range_check @unpriv:OK
-> > > >   #349/13  verifier_movsx/MOV32SX, S16, range_check:OK
-> > > >   #349/14  verifier_movsx/MOV32SX, S16, range_check @unpriv:OK
-> > > >   #349/15  verifier_movsx/MOV32SX, S16, range_check 2:OK
-> > > >   #349/16  verifier_movsx/MOV32SX, S16, range_check 2 @unpriv:OK
-> > > >   #349/17  verifier_movsx/MOV64SX, S8, range_check:OK
-> > > >   #349/18  verifier_movsx/MOV64SX, S8, range_check @unpriv:OK
-> > > >   #349/19  verifier_movsx/MOV64SX, S16, range_check:OK
-> > > >   #349/20  verifier_movsx/MOV64SX, S16, range_check @unpriv:OK
-> > > >   #349/21  verifier_movsx/MOV64SX, S32, range_check:OK
-> > > >   #349/22  verifier_movsx/MOV64SX, S32, range_check @unpriv:OK
-> > > >   #349/23  verifier_movsx/MOV64SX, S16, R10 Sign Extension:OK
-> > > >   #349/24  verifier_movsx/MOV64SX, S16, R10 Sign Extension @unpriv:=
-OK
-> > > >   #349     verifier_movsx:OK
-> > > >   #361/1   verifier_sdiv/SDIV32, non-zero imm divisor, check 1:OK
-> > > >   #361/2   verifier_sdiv/SDIV32, non-zero imm divisor, check 1 @unp=
-riv:OK
-> > > >   #361/3   verifier_sdiv/SDIV32, non-zero imm divisor, check 2:OK
-> > > >   #361/4   verifier_sdiv/SDIV32, non-zero imm divisor, check 2 @unp=
-riv:OK
-> > > >   #361/5   verifier_sdiv/SDIV32, non-zero imm divisor, check 3:OK
-> > > >   #361/6   verifier_sdiv/SDIV32, non-zero imm divisor, check 3 @unp=
-riv:OK
-> > > >   #361/7   verifier_sdiv/SDIV32, non-zero imm divisor, check 4:OK
-> > > >   #361/8   verifier_sdiv/SDIV32, non-zero imm divisor, check 4 @unp=
-riv:OK
-> > > >   #361/9   verifier_sdiv/SDIV32, non-zero imm divisor, check 5:OK
-> > > >   #361/10  verifier_sdiv/SDIV32, non-zero imm divisor, check 5 @unp=
-riv:OK
-> > > >   #361/11  verifier_sdiv/SDIV32, non-zero imm divisor, check 6:OK
-> > > >   #361/12  verifier_sdiv/SDIV32, non-zero imm divisor, check 6 @unp=
-riv:OK
-> > > >   #361/13  verifier_sdiv/SDIV32, non-zero imm divisor, check 7:OK
-> > > >   #361/14  verifier_sdiv/SDIV32, non-zero imm divisor, check 7 @unp=
-riv:OK
-> > > >   #361/15  verifier_sdiv/SDIV32, non-zero imm divisor, check 8:OK
-> > > >   #361/16  verifier_sdiv/SDIV32, non-zero imm divisor, check 8 @unp=
-riv:OK
-> > > >   #361/17  verifier_sdiv/SDIV32, non-zero reg divisor, check 1:OK
-> > > >   #361/18  verifier_sdiv/SDIV32, non-zero reg divisor, check 1 @unp=
-riv:OK
-> > > >   #361/19  verifier_sdiv/SDIV32, non-zero reg divisor, check 2:OK
-> > > >   #361/20  verifier_sdiv/SDIV32, non-zero reg divisor, check 2 @unp=
-riv:OK
-> > > >   #361/21  verifier_sdiv/SDIV32, non-zero reg divisor, check 3:OK
-> > > >   #361/22  verifier_sdiv/SDIV32, non-zero reg divisor, check 3 @unp=
-riv:OK
-> > > >   #361/23  verifier_sdiv/SDIV32, non-zero reg divisor, check 4:OK
-> > > >   #361/24  verifier_sdiv/SDIV32, non-zero reg divisor, check 4 @unp=
-riv:OK
-> > > >   #361/25  verifier_sdiv/SDIV32, non-zero reg divisor, check 5:OK
-> > > >   #361/26  verifier_sdiv/SDIV32, non-zero reg divisor, check 5 @unp=
-riv:OK
-> > > >   #361/27  verifier_sdiv/SDIV32, non-zero reg divisor, check 6:OK
-> > > >   #361/28  verifier_sdiv/SDIV32, non-zero reg divisor, check 6 @unp=
-riv:OK
-> > > >   #361/29  verifier_sdiv/SDIV32, non-zero reg divisor, check 7:OK
-> > > >   #361/30  verifier_sdiv/SDIV32, non-zero reg divisor, check 7 @unp=
-riv:OK
-> > > >   #361/31  verifier_sdiv/SDIV32, non-zero reg divisor, check 8:OK
-> > > >   #361/32  verifier_sdiv/SDIV32, non-zero reg divisor, check 8 @unp=
-riv:OK
-> > > >   #361/33  verifier_sdiv/SDIV64, non-zero imm divisor, check 1:OK
-> > > >   #361/34  verifier_sdiv/SDIV64, non-zero imm divisor, check 1 @unp=
-riv:OK
-> > > >   #361/35  verifier_sdiv/SDIV64, non-zero imm divisor, check 2:OK
-> > > >   #361/36  verifier_sdiv/SDIV64, non-zero imm divisor, check 2 @unp=
-riv:OK
-> > > >   #361/37  verifier_sdiv/SDIV64, non-zero imm divisor, check 3:OK
-> > > >   #361/38  verifier_sdiv/SDIV64, non-zero imm divisor, check 3 @unp=
-riv:OK
-> > > >   #361/39  verifier_sdiv/SDIV64, non-zero imm divisor, check 4:OK
-> > > >   #361/40  verifier_sdiv/SDIV64, non-zero imm divisor, check 4 @unp=
-riv:OK
-> > > >   #361/41  verifier_sdiv/SDIV64, non-zero imm divisor, check 5:OK
-> > > >   #361/42  verifier_sdiv/SDIV64, non-zero imm divisor, check 5 @unp=
-riv:OK
-> > > >   #361/43  verifier_sdiv/SDIV64, non-zero imm divisor, check 6:OK
-> > > >   #361/44  verifier_sdiv/SDIV64, non-zero imm divisor, check 6 @unp=
-riv:OK
-> > > >   #361/45  verifier_sdiv/SDIV64, non-zero reg divisor, check 1:OK
-> > > >   #361/46  verifier_sdiv/SDIV64, non-zero reg divisor, check 1 @unp=
-riv:OK
-> > > >   #361/47  verifier_sdiv/SDIV64, non-zero reg divisor, check 2:OK
-> > > >   #361/48  verifier_sdiv/SDIV64, non-zero reg divisor, check 2 @unp=
-riv:OK
-> > > >   #361/49  verifier_sdiv/SDIV64, non-zero reg divisor, check 3:OK
-> > > >   #361/50  verifier_sdiv/SDIV64, non-zero reg divisor, check 3 @unp=
-riv:OK
-> > > >   #361/51  verifier_sdiv/SDIV64, non-zero reg divisor, check 4:OK
-> > > >   #361/52  verifier_sdiv/SDIV64, non-zero reg divisor, check 4 @unp=
-riv:OK
-> > > >   #361/53  verifier_sdiv/SDIV64, non-zero reg divisor, check 5:OK
-> > > >   #361/54  verifier_sdiv/SDIV64, non-zero reg divisor, check 5 @unp=
-riv:OK
-> > > >   #361/55  verifier_sdiv/SDIV64, non-zero reg divisor, check 6:OK
-> > > >   #361/56  verifier_sdiv/SDIV64, non-zero reg divisor, check 6 @unp=
-riv:OK
-> > > >   #361/57  verifier_sdiv/SMOD32, non-zero imm divisor, check 1:OK
-> > > >   #361/58  verifier_sdiv/SMOD32, non-zero imm divisor, check 1 @unp=
-riv:OK
-> > > >   #361/59  verifier_sdiv/SMOD32, non-zero imm divisor, check 2:OK
-> > > >   #361/60  verifier_sdiv/SMOD32, non-zero imm divisor, check 2 @unp=
-riv:OK
-> > > >   #361/61  verifier_sdiv/SMOD32, non-zero imm divisor, check 3:OK
-> > > >   #361/62  verifier_sdiv/SMOD32, non-zero imm divisor, check 3 @unp=
-riv:OK
-> > > >   #361/63  verifier_sdiv/SMOD32, non-zero imm divisor, check 4:OK
-> > > >   #361/64  verifier_sdiv/SMOD32, non-zero imm divisor, check 4 @unp=
-riv:OK
-> > > >   #361/65  verifier_sdiv/SMOD32, non-zero imm divisor, check 5:OK
-> > > >   #361/66  verifier_sdiv/SMOD32, non-zero imm divisor, check 5 @unp=
-riv:OK
-> > > >   #361/67  verifier_sdiv/SMOD32, non-zero imm divisor, check 6:OK
-> > > >   #361/68  verifier_sdiv/SMOD32, non-zero imm divisor, check 6 @unp=
-riv:OK
-> > > >   #361/69  verifier_sdiv/SMOD32, non-zero reg divisor, check 1:OK
-> > > >   #361/70  verifier_sdiv/SMOD32, non-zero reg divisor, check 1 @unp=
-riv:OK
-> > > >   #361/71  verifier_sdiv/SMOD32, non-zero reg divisor, check 2:OK
-> > > >   #361/72  verifier_sdiv/SMOD32, non-zero reg divisor, check 2 @unp=
-riv:OK
-> > > >   #361/73  verifier_sdiv/SMOD32, non-zero reg divisor, check 3:OK
-> > > >   #361/74  verifier_sdiv/SMOD32, non-zero reg divisor, check 3 @unp=
-riv:OK
-> > > >   #361/75  verifier_sdiv/SMOD32, non-zero reg divisor, check 4:OK
-> > > >   #361/76  verifier_sdiv/SMOD32, non-zero reg divisor, check 4 @unp=
-riv:OK
-> > > >   #361/77  verifier_sdiv/SMOD32, non-zero reg divisor, check 5:OK
-> > > >   #361/78  verifier_sdiv/SMOD32, non-zero reg divisor, check 5 @unp=
-riv:OK
-> > > >   #361/79  verifier_sdiv/SMOD32, non-zero reg divisor, check 6:OK
-> > > >   #361/80  verifier_sdiv/SMOD32, non-zero reg divisor, check 6 @unp=
-riv:OK
-> > > >   #361/81  verifier_sdiv/SMOD64, non-zero imm divisor, check 1:OK
-> > > >   #361/82  verifier_sdiv/SMOD64, non-zero imm divisor, check 1 @unp=
-riv:OK
-> > > >   #361/83  verifier_sdiv/SMOD64, non-zero imm divisor, check 2:OK
-> > > >   #361/84  verifier_sdiv/SMOD64, non-zero imm divisor, check 2 @unp=
-riv:OK
-> > > >   #361/85  verifier_sdiv/SMOD64, non-zero imm divisor, check 3:OK
-> > > >   #361/86  verifier_sdiv/SMOD64, non-zero imm divisor, check 3 @unp=
-riv:OK
-> > > >   #361/87  verifier_sdiv/SMOD64, non-zero imm divisor, check 4:OK
-> > > >   #361/88  verifier_sdiv/SMOD64, non-zero imm divisor, check 4 @unp=
-riv:OK
-> > > >   #361/89  verifier_sdiv/SMOD64, non-zero imm divisor, check 5:OK
-> > > >   #361/90  verifier_sdiv/SMOD64, non-zero imm divisor, check 5 @unp=
-riv:OK
-> > > >   #361/91  verifier_sdiv/SMOD64, non-zero imm divisor, check 6:OK
-> > > >   #361/92  verifier_sdiv/SMOD64, non-zero imm divisor, check 6 @unp=
-riv:OK
-> > > >   #361/93  verifier_sdiv/SMOD64, non-zero imm divisor, check 7:OK
-> > > >   #361/94  verifier_sdiv/SMOD64, non-zero imm divisor, check 7 @unp=
-riv:OK
-> > > >   #361/95  verifier_sdiv/SMOD64, non-zero imm divisor, check 8:OK
-> > > >   #361/96  verifier_sdiv/SMOD64, non-zero imm divisor, check 8 @unp=
-riv:OK
-> > > >   #361/97  verifier_sdiv/SMOD64, non-zero reg divisor, check 1:OK
-> > > >   #361/98  verifier_sdiv/SMOD64, non-zero reg divisor, check 1 @unp=
-riv:OK
-> > > >   #361/99  verifier_sdiv/SMOD64, non-zero reg divisor, check 2:OK
-> > > >   #361/100 verifier_sdiv/SMOD64, non-zero reg divisor, check 2 @unp=
-riv:OK
-> > > >   #361/101 verifier_sdiv/SMOD64, non-zero reg divisor, check 3:OK
-> > > >   #361/102 verifier_sdiv/SMOD64, non-zero reg divisor, check 3 @unp=
-riv:OK
-> > > >   #361/103 verifier_sdiv/SMOD64, non-zero reg divisor, check 4:OK
-> > > >   #361/104 verifier_sdiv/SMOD64, non-zero reg divisor, check 4 @unp=
-riv:OK
-> > > >   #361/105 verifier_sdiv/SMOD64, non-zero reg divisor, check 5:OK
-> > > >   #361/106 verifier_sdiv/SMOD64, non-zero reg divisor, check 5 @unp=
-riv:OK
-> > > >   #361/107 verifier_sdiv/SMOD64, non-zero reg divisor, check 6:OK
-> > > >   #361/108 verifier_sdiv/SMOD64, non-zero reg divisor, check 6 @unp=
-riv:OK
-> > > >   #361/109 verifier_sdiv/SMOD64, non-zero reg divisor, check 7:OK
-> > > >   #361/110 verifier_sdiv/SMOD64, non-zero reg divisor, check 7 @unp=
-riv:OK
-> > > >   #361/111 verifier_sdiv/SMOD64, non-zero reg divisor, check 8:OK
-> > > >   #361/112 verifier_sdiv/SMOD64, non-zero reg divisor, check 8 @unp=
-riv:OK
-> > > >   #361/113 verifier_sdiv/SDIV32, zero divisor:OK
-> > > >   #361/114 verifier_sdiv/SDIV32, zero divisor @unpriv:OK
-> > > >   #361/115 verifier_sdiv/SDIV64, zero divisor:OK
-> > > >   #361/116 verifier_sdiv/SDIV64, zero divisor @unpriv:OK
-> > > >   #361/117 verifier_sdiv/SMOD32, zero divisor:OK
-> > > >   #361/118 verifier_sdiv/SMOD32, zero divisor @unpriv:OK
-> > > >   #361/119 verifier_sdiv/SMOD64, zero divisor:OK
-> > > >   #361/120 verifier_sdiv/SMOD64, zero divisor @unpriv:OK
-> > > >   #361     verifier_sdiv:OK
-> > > >   Summary: 5/163 PASSED, 0 SKIPPED, 0 FAILED
-> > > >
-> > > >   # ./test_progs -t ldsx_insn
-> > > >   test_map_val_and_probed_memory:PASS:test_ldsx_insn__open 0 nsec
-> > > >   test_map_val_and_probed_memory:PASS:test_ldsx_insn__load 0 nsec
-> > > >   libbpf: prog 'test_ptr_struct_arg': failed to attach: ERROR: stre=
-rror_r(-524)=3D22
-> > > >   libbpf: prog 'test_ptr_struct_arg': failed to auto-attach: -524
-> > > >   test_map_val_and_probed_memory:FAIL:test_ldsx_insn__attach unexpe=
-cted error: -524 (errno 524)
-> > > >   #116/1   ldsx_insn/map_val and probed_memory:FAIL
-> > > >   #116/2   ldsx_insn/ctx_member_sign_ext:OK
-> > > During my tests, 'ctx_member_sign_ext' fails.
-> > >
-> > > Do you know why (you can test with the code in my repo)? Thanks.
-> > >
-> > > Huacai
-> > >
-> > > >   #116/3   ldsx_insn/ctx_member_narrow_sign_ext:OK
-> > > >   #116     ldsx_insn:FAIL
-> > > >
-> > > >   All error logs:
-> > > >   test_map_val_and_probed_memory:PASS:test_ldsx_insn__open 0 nsec
-> > > >   test_map_val_and_probed_memory:PASS:test_ldsx_insn__load 0 nsec
-> > > >   libbpf: prog 'test_ptr_struct_arg': failed to attach: ERROR: stre=
-rror_r(-524)=3D22
-> > > >   libbpf: prog 'test_ptr_struct_arg': failed to auto-attach: -524
-> > > >   test_map_val_and_probed_memory:FAIL:test_ldsx_insn__attach unexpe=
-cted error: -524 (errno 524)
-> > > >   #116/1   ldsx_insn/map_val and probed_memory:FAIL
-> > > >   #116     ldsx_insn:FAIL
-> > > >   Summary: 0/2 PASSED, 0 SKIPPED, 1 FAILED
-> > > >
-> > > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> > > > ---
-> > > >  tools/testing/selftests/bpf/progs/test_ldsx_insn.c | 3 ++-
-> > > >  tools/testing/selftests/bpf/progs/verifier_bswap.c | 3 ++-
-> > > >  tools/testing/selftests/bpf/progs/verifier_gotol.c | 3 ++-
-> > > >  tools/testing/selftests/bpf/progs/verifier_ldsx.c  | 3 ++-
-> > > >  tools/testing/selftests/bpf/progs/verifier_movsx.c | 3 ++-
-> > > >  tools/testing/selftests/bpf/progs/verifier_sdiv.c  | 3 ++-
-> > > >  6 files changed, 12 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/tools/testing/selftests/bpf/progs/test_ldsx_insn.c b/t=
-ools/testing/selftests/bpf/progs/test_ldsx_insn.c
-> > > > index 3ddcb3777912..2a2a942737d7 100644
-> > > > --- a/tools/testing/selftests/bpf/progs/test_ldsx_insn.c
-> > > > +++ b/tools/testing/selftests/bpf/progs/test_ldsx_insn.c
-> > > > @@ -7,7 +7,8 @@
-> > > >
-> > > >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) ||=
- \
-> > > >       (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) ||  =
-     \
-> > > > -     defined(__TARGET_ARCH_s390)) && __clang_major__ >=3D 18
-> > > > +     defined(__TARGET_ARCH_s390) || defined(__TARGET_ARCH_loongarc=
-h)) && \
-> > > > +     __clang_major__ >=3D 18
-> > > >  const volatile int skip =3D 0;
-> > > >  #else
-> > > >  const volatile int skip =3D 1;
-> > > > diff --git a/tools/testing/selftests/bpf/progs/verifier_bswap.c b/t=
-ools/testing/selftests/bpf/progs/verifier_bswap.c
-> > > > index 107525fb4a6a..e61755656e8d 100644
-> > > > --- a/tools/testing/selftests/bpf/progs/verifier_bswap.c
-> > > > +++ b/tools/testing/selftests/bpf/progs/verifier_bswap.c
-> > > > @@ -6,7 +6,8 @@
-> > > >
-> > > >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) ||=
- \
-> > > >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) ||=
- \
-> > > > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390))=
- && \
-> > > > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) |=
-| \
-> > > > +       defined(__TARGET_ARCH_loongarch)) && \
-> > > >         __clang_major__ >=3D 18
-> > > >
-> > > >  SEC("socket")
-> > > > diff --git a/tools/testing/selftests/bpf/progs/verifier_gotol.c b/t=
-ools/testing/selftests/bpf/progs/verifier_gotol.c
-> > > > index 9f202eda952f..d1edbcff9a18 100644
-> > > > --- a/tools/testing/selftests/bpf/progs/verifier_gotol.c
-> > > > +++ b/tools/testing/selftests/bpf/progs/verifier_gotol.c
-> > > > @@ -6,7 +6,8 @@
-> > > >
-> > > >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) ||=
- \
-> > > >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) ||=
- \
-> > > > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390))=
- && \
-> > > > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) |=
-| \
-> > > > +       defined(__TARGET_ARCH_loongarch)) && \
-> > > >         __clang_major__ >=3D 18
-> > > >
-> > > >  SEC("socket")
-> > > > diff --git a/tools/testing/selftests/bpf/progs/verifier_ldsx.c b/to=
-ols/testing/selftests/bpf/progs/verifier_ldsx.c
-> > > > index 375525329637..d4427d8e1217 100644
-> > > > --- a/tools/testing/selftests/bpf/progs/verifier_ldsx.c
-> > > > +++ b/tools/testing/selftests/bpf/progs/verifier_ldsx.c
-> > > > @@ -6,7 +6,8 @@
-> > > >
-> > > >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) ||=
- \
-> > > >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) ||=
- \
-> > > > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390))=
- && \
-> > > > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) |=
-| \
-> > > > +       defined(__TARGET_ARCH_loongarch)) && \
-> > > >         __clang_major__ >=3D 18
-> > > >
-> > > >  SEC("socket")
-> > > > diff --git a/tools/testing/selftests/bpf/progs/verifier_movsx.c b/t=
-ools/testing/selftests/bpf/progs/verifier_movsx.c
-> > > > index b2a04d1179d0..cbb9d6714f53 100644
-> > > > --- a/tools/testing/selftests/bpf/progs/verifier_movsx.c
-> > > > +++ b/tools/testing/selftests/bpf/progs/verifier_movsx.c
-> > > > @@ -6,7 +6,8 @@
-> > > >
-> > > >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) ||=
- \
-> > > >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) ||=
- \
-> > > > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390))=
- && \
-> > > > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) |=
-| \
-> > > > +       defined(__TARGET_ARCH_loongarch)) && \
-> > > >         __clang_major__ >=3D 18
-> > > >
-> > > >  SEC("socket")
-> > > > diff --git a/tools/testing/selftests/bpf/progs/verifier_sdiv.c b/to=
-ols/testing/selftests/bpf/progs/verifier_sdiv.c
-> > > > index 8fc5174808b2..2a2271cf0294 100644
-> > > > --- a/tools/testing/selftests/bpf/progs/verifier_sdiv.c
-> > > > +++ b/tools/testing/selftests/bpf/progs/verifier_sdiv.c
-> > > > @@ -6,7 +6,8 @@
-> > > >
-> > > >  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) ||=
- \
-> > > >         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) ||=
- \
-> > > > -        defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390))=
- && \
-> > > > +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) |=
-| \
-> > > > +       defined(__TARGET_ARCH_loongarch)) && \
-> > > >         __clang_major__ >=3D 18
-> > > >
-> > > >  SEC("socket")
-> > > > --
-> > > > 2.34.1
-> > > >
+--=20
+Best Regards
+ Guo Ren
