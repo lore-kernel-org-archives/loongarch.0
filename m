@@ -1,15 +1,15 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD38A441B
-	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 02:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 123B26ABC
+	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 02:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from loongson.cn (unknown [112.20.112.120])
-	by gateway (Coremail) with SMTP id _____8BxY_C1i1Fla245AA--.47352S3;
-	Mon, 13 Nov 2023 10:36:37 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx_+vCi1FlkG45AA--.46167S3;
+	Mon, 13 Nov 2023 10:36:50 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.112.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxvdyui1FltFJAAA--.9944S3;
-	Mon, 13 Nov 2023 10:36:34 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxvi_Bi1Fly1JAAA--.9842S2;
+	Mon, 13 Nov 2023 10:36:50 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -28,9 +28,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v4 1/5] dt-bindings: interrupt-controller: loongson,liointc: Standardize the naming of 'loongson,parent-int-map'
-Date: Mon, 13 Nov 2023 10:36:21 +0800
-Message-Id: <84cb3df17eee993fc6a10e965b3f438f9034d2de.1699521866.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v4 3/5] dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check warning for interrupt-names
+Date: Mon, 13 Nov 2023 10:36:45 +0800
+Message-Id: <a162081f9b707580700a2b10719300511c6e6baf.1699521866.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1699521866.git.zhoubinbin@loongson.cn>
 References: <cover.1699521866.git.zhoubinbin@loongson.cn>
@@ -41,85 +41,85 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxvdyui1FltFJAAA--.9944S3
+X-CM-TRANSID:AQAAf8Dxvi_Bi1Fly1JAAA--.9842S2
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF4rZFy5uF4rtFy7Xw4xAFc_yoW8Cw48pF
-	sxC3WDGr48tF17A390qa4vyF1fZFn5A3ZrWFZ7Ja1xAFWqqw1DXrW3KF15A3W3CrWUXFy7
-	XryFgayUKa47AabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw43ZF4rKr1UAFWkGryxCrX_yoW5AFyfpF
+	ZrC3ZrXr4UtF13Cw48tw10k3Z8Zrn5AwnI93Z7C3y7GFnFqa48Zr43tF95XF4rGrZ7Xa42
+	qryFgayxWa47AabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4Xo7DUUUU
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWr
+	XVW3AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0_WrPUUUUU==
 
-Since the 'loongson,parent_int_map' attribute naming is non-standard, we
-should use 'loongson,parent-int-map' instead.
-Also, 'loongson,parent_int_map' will be marked as deprecated.
+The Loongson-2K0500/2K1000 CPUs have 64 interrupt sources as inputs, and
+a route-mapped node handles up to 32 interrupt sources, so two liointc
+nodes are defined in dts{i}.
+
+Of course, we have to make sure that the routing outputs ("intx") of the
+two nodes do not conflict, i.e. "int0" can only be used as a routing
+output for one of them. Therefore, "interrupt-names" should be defined
+as "pattern".
+
+In addition, since "interrupt-names" and "interrupts" are one-to-one
+correspondence, we pass it to get the corresponding interrupt number in
+the driver. Setting it to "required" does not break ABI, because it
+is already logically represented as "required".
+
+This fixes dtbs_check warning:
+
+DTC_CHK arch/loongarch/boot/dts/loongson-2k0500-ref.dtb
+arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11440: interrupt-names:0: 'int0' was expected
+        From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11440: Unevaluated properties are not allowed ('interrupt-names' was unexpected)
+        From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+DTC_CHK arch/loongarch/boot/dts/loongson-2k1000-ref.dtb
+arch/loongarch/boot/dts/loongson-2k1000-ref.dtb: interrupt-controller@1fe01440: interrupt-names:0: 'int0' was expected
+        From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+arch/loongarch/boot/dts/loongson-2k1000-ref.dtb: interrupt-controller@1fe01440: Unevaluated properties are not allowed ('interrupt-names' was unexpected)
+        From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
 
 Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- .../interrupt-controller/loongson,liointc.yaml    | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ .../bindings/interrupt-controller/loongson,liointc.yaml    | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-index 00b570c82903..0d9511b8a792 100644
+index 8e1292e6f3ff..896e2fef67f8 100644
 --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
 +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-@@ -55,6 +55,7 @@ properties:
-     const: 2
- 
-   loongson,parent_int_map:
-+    deprecated: true
-     description: |
-       This property points how the children interrupts will be mapped into CPU
-       interrupt lines. Each cell refers to a parent interrupt line from 0 to 3
-@@ -65,14 +66,21 @@ properties:
-     minItems: 4
-     maxItems: 4
- 
-+  loongson,parent-int-map:
-+    description: |
-+      Exactly the same as 'loongson,parent_int_map', we just replaced the
-+      unstandardized use of underscores.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 4
+@@ -51,11 +51,9 @@ properties:
+   interrupt-names:
+     description: List of names for the parent interrupts.
+     items:
+-      - const: int0
+-      - const: int1
+-      - const: int2
+-      - const: int3
++      pattern: int[0-3]
+     minItems: 1
 +    maxItems: 4
-+
- required:
+ 
+   '#interrupt-cells':
+     const: 2
+@@ -84,6 +82,7 @@ required:
    - compatible
    - reg
    - interrupts
++  - interrupt-names
    - interrupt-controller
    - '#interrupt-cells'
--  - loongson,parent_int_map
--
-+  - loongson,parent-int-map
- 
- unevaluatedProperties: false
- 
-@@ -109,11 +117,10 @@ examples:
-       interrupts = <2>, <3>;
-       interrupt-names = "int0", "int1";
- 
--      loongson,parent_int_map = <0xf0ffffff>, /* int0 */
-+      loongson,parent-int-map = <0xf0ffffff>, /* int0 */
-                                 <0x0f000000>, /* int1 */
-                                 <0x00000000>, /* int2 */
-                                 <0x00000000>; /* int3 */
--
-     };
- 
- ...
+   - loongson,parent-int-map
 -- 
 2.39.3
 
