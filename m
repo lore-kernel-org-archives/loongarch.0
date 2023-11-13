@@ -1,55 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214FE2C80
-	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 00:45:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D104C8A
+	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 00:57:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WIy5zAvI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JIEKbx0i"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699836319;
+	s=mimecast20190719; t=1699837028;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AIBcuinF5ss2DgGVnkjihkWjegSjrF5pOFgfBoAd6NQ=;
-	b=WIy5zAvInhpPvNYpp5Nk+NgvUBFL6o3h3mA/MeAzwJLp2ZusOLVDuIpjpm3A+K8LNFh8Qb
-	3GTLMn1QQ2kpWvLcQ6YeMZKIwME4xlEomluMu0LJN+E4xfFtJA5v3nXCPq+wonLx5NY/HR
-	FkMTntMTVw0oJuP4VblDhLWx7UUMPHQ=
-Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com
- [209.85.160.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=JSnhv2PPOYa4ZnCU0cai1bmRuczHu96zHiRWZODUn4U=;
+	b=JIEKbx0iSQdpX0FzLBFeca4pVo9PpRzKrNE5sISMEF1tFi1eCuP+8sR/YBVpTFFnHRdvt6
+	ya7HB9jqGdgH/BPKJTcYFSgyUFhDH5Y2G3hWygrkQyftU+3MLhhIxc+z70qQYeHmnL+QYu
+	WDdJ26M6r3kSDk0YUbQUk0/YbjG/aDI=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-317-oA8nrpOuPVq9Ng6jfPE2iw-1; Sun, 12 Nov 2023 19:45:16 -0500
-X-MC-Unique: oA8nrpOuPVq9Ng6jfPE2iw-1
-Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-1eb43ff49b2so3642379fac.2
-        for <loongarch@lists.linux.dev>; Sun, 12 Nov 2023 16:45:15 -0800 (PST)
+ us-mta-536-ab42QXgkN1-KVxM7AbmbUQ-1; Sun, 12 Nov 2023 19:57:07 -0500
+X-MC-Unique: ab42QXgkN1-KVxM7AbmbUQ-1
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5aaae6f46e1so4611194a12.3
+        for <loongarch@lists.linux.dev>; Sun, 12 Nov 2023 16:57:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699836315; x=1700441115;
+        d=1e100.net; s=20230601; t=1699837026; x=1700441826;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AIBcuinF5ss2DgGVnkjihkWjegSjrF5pOFgfBoAd6NQ=;
-        b=RPguBreY7dBdczlXBjSeO81aiRmNigmGyPean5bbYpj9oQx28PL0WIP1ONAsKUjEI6
-         n1dtLNNWu4Th6Vr/QBCSyS3PSuVyVFhTHMHeBxAoJBve4u1cYxvsVNXKovpwo0vkndi8
-         kTfBcR6gYJaaHCT94dr1aJtpPo5jAkkTXBUEumYbbG0V1ULapf6QgIQAaX8pITn7zQ79
-         1kFPEit/ulxp18n2+anSrc0Q4vRGd9SDCi5FVcrpHi0xsUpNiemGNl5Zox4n2wbFcUYH
-         wYjsSi42jKo4wQCqZpTQ4pkUYouTGRAPiClepnSxJU/oBhAZvJb/4COzA53K3riI5JB0
-         94Rw==
-X-Gm-Message-State: AOJu0YznDlXyKemew0oQSQSjsZ+VCNMKNj7VK48J2J8XIWrhzHo0Prb5
-	7tX8lbedFOsduPJ7ydRVbOItp8PlRZC6wIg9KF7/CoMf3+swB+OdKU6gOf3u9vg4j/cbPjiRjO1
-	kbQb51N2lJ5+nMxl/cJhr
-X-Received: by 2002:a05:6870:f14d:b0:1d5:b2ba:bc93 with SMTP id l13-20020a056870f14d00b001d5b2babc93mr7060129oac.13.1699836315187;
-        Sun, 12 Nov 2023 16:45:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH9rLDeDKmdt9jI4rfj9b9OvZLsFOMuiJgoFwWcjW46CaFvA839DNqkdgqlkT2G64l2xzZLdg==
-X-Received: by 2002:a05:6870:f14d:b0:1d5:b2ba:bc93 with SMTP id l13-20020a056870f14d00b001d5b2babc93mr7060111oac.13.1699836314952;
-        Sun, 12 Nov 2023 16:45:14 -0800 (PST)
+        bh=JSnhv2PPOYa4ZnCU0cai1bmRuczHu96zHiRWZODUn4U=;
+        b=Sd+fdfXvwEbKdnIrbT+iZFdAaghIrm86K1RNF3RtV7AkQYCGwWKmVYH/04f/IBLch2
+         H+y0Q9YVGrUC//nNvZX4DY73hNmvgRzX6qHvoEilUWxPTFv85gQja+dTAgTwEzuW8wYJ
+         sV3jsig+ZNMtEPakZzB+KIK/p7CxcellIwUuyLwCNaCpOdkahrVfYQd8U/eoyYqtZAEG
+         xrQ9/ycCBg33PyeNKTzWLMcMo+KinAEIfOajPIEly/jlqd0q8iW3g3SfV8WFafb6Z50X
+         TVf6C/3aKNpYbIeoKTfpq6sf3rRzTqQnXOb7QuJYxZzu6Ax0yFO4qW9e+eKNx+b86zXB
+         Lvow==
+X-Gm-Message-State: AOJu0YwAKubt5xZ5iUrYvX8MFOhadsj4BYrwMgsnbCqt6Xr5G+9hTBQj
+	RurctFZvuwW4dv/xJNrz7eYZBr4GAFYLWG3M1VLpxjbe+jZgN/l052FhGUMzrMPfud+p/HeLgR+
+	At+YIgCOMjp4AXnxAaMoM
+X-Received: by 2002:a17:903:41c1:b0:1cc:5ed4:7b4c with SMTP id u1-20020a17090341c100b001cc5ed47b4cmr8056797ple.35.1699837026071;
+        Sun, 12 Nov 2023 16:57:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEYB8Gjvjb9rpzJlKa/gGoy1/kAMp5o6DcRuutNzYMQOmMyg/HSI8WRyf/v5bwebYCVyW6+ig==
+X-Received: by 2002:a17:903:41c1:b0:1cc:5ed4:7b4c with SMTP id u1-20020a17090341c100b001cc5ed47b4cmr8056788ple.35.1699837025799;
+        Sun, 12 Nov 2023 16:57:05 -0800 (PST)
 Received: from ?IPV6:2001:8003:e5b0:9f00:b890:3e54:96bb:2a15? ([2001:8003:e5b0:9f00:b890:3e54:96bb:2a15])
-        by smtp.gmail.com with ESMTPSA id hq18-20020a056a00681200b006933822e7a6sm2957854pfb.66.2023.11.12.16.45.07
+        by smtp.gmail.com with ESMTPSA id h4-20020a170902eec400b001b03f208323sm3058989plb.64.2023.11.12.16.56.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Nov 2023 16:45:14 -0800 (PST)
-Message-ID: <df5fb117-96e0-4231-85c6-70c960fbb6c4@redhat.com>
-Date: Mon, 13 Nov 2023 10:45:05 +1000
+        Sun, 12 Nov 2023 16:57:05 -0800 (PST)
+Message-ID: <2c597d46-9e15-4059-9386-a811fa7b65dd@redhat.com>
+Date: Mon, 13 Nov 2023 10:56:56 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -57,8 +57,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 08/22] drivers: base: Implement weak
- arch_unregister_cpu()
+Subject: Re: [PATCH RFC 09/22] drivers: base: add arch_cpu_is_hotpluggable()
 To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
  linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
  linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
@@ -70,37 +69,29 @@ Cc: Salil Mehta <salil.mehta@huawei.com>,
  Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
  justin.he@arm.com, James Morse <james.morse@arm.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+ "Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>
 References: <ZUoRY33AAHMc5ThW@shell.armlinux.org.uk>
- <E1r0JLL-00CTxD-Gc@rmk-PC.armlinux.org.uk>
+ <E1r0JLQ-00CTxK-Ln@rmk-PC.armlinux.org.uk>
 From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <E1r0JLL-00CTxD-Gc@rmk-PC.armlinux.org.uk>
+In-Reply-To: <E1r0JLQ-00CTxK-Ln@rmk-PC.armlinux.org.uk>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-On 11/7/23 20:29, Russell King (Oracle) wrote:
-> From: James Morse <james.morse@arm.com>
+On 11/7/23 20:30, Russell King (Oracle) wrote:
+> The differences between architecture specific implementations of
+> arch_register_cpu() are down to whether the CPU is hotpluggable or not.
+> Rather than overriding the weak version of arch_register_cpu(), provide
+> a function that can be used to provide this detail instead.
 > 
-> Add arch_unregister_cpu() to allow the ACPI machinery to call
-> unregister_cpu(). This is enough for arm64, riscv and loongarch, but
-> needs to be overridden by x86 and ia64 who need to do more work.
-> 
-> CC: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: James Morse <james.morse@arm.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 > ---
-> Changes since v1:
->   * Added CONFIG_HOTPLUG_CPU ifdeffery around unregister_cpu
-> Changes since RFC v2:
->   * Move earlier in the series
-> ---
->   drivers/base/cpu.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
+>   drivers/base/cpu.c  | 11 ++++++++++-
+>   include/linux/cpu.h |  1 +
+>   2 files changed, 11 insertions(+), 1 deletion(-)
 > 
 
 Reviewed-by: Gavin Shan <gshan@redhat.com>
