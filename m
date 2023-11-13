@@ -1,130 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784F61E532
-	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 14:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6462110E
+	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 14:36:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rNB69Moy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED95EC43395
-	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 14:33:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHICE0Tu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3870C433CA
+	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 14:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699886037;
-	bh=6DAxemjl0AVTHxHytjTbhgq1BuBFNuktqHNcC4X2p80=;
+	s=k20201202; t=1699886208;
+	bh=T94jC6gYgqIEWFyZ1II2N6gAHu2jGjaIBOT2siGHB8A=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rNB69MoylII0mMriYA92/cxJs/qXkYfiTEX06Xc0W/8elqKjW1nPXqM4fQEC2gdqL
-	 KVVC9h3GdtRCvNLxBrGUuMPMJDbwfu7h5rREbbYt9V9HvcfZi15nVXatKY/kWmLBSL
-	 1OTDX53JnUaAFYqUIggfnKcGMMbEQ8LBdnPDjVEcEvSvX3fnTswnnQHB8EmkZgxnoX
-	 3+HSxM3ZRrJyvhHOo9JOzhyGgS9hSgwQK2WK3p7nhLD8iiNxx6CWg0tF7j/LooEWyH
-	 X9lhSSMUV3GVE4RG74k6gkbuzlEpDHZwMHFXBGQiz1Ch5ZYtCyMaqnm2/KZjkVXjuw
-	 /RnROjOwH+SEw==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-507b9408c61so6084330e87.0
-        for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 06:33:56 -0800 (PST)
-X-Gm-Message-State: AOJu0YzWQdyd5Jq5Ki2nqZJynZflS4H5Y4KkiFAbpsihqSTZ2F1JjBDF
-	hU//ShECWBO6RLgM89bozFK9xuIgLhLzcwR3unw=
-X-Google-Smtp-Source: AGHT+IF8sszOmCM/pyDPh+LfBIcxgfXipt/rZt6rWmIvK+wpDukDNDxSLIyU7B+lHoQohecY7K0htUXRMO83ELauFmk=
-X-Received: by 2002:a05:6512:31c8:b0:50a:71e1:e1ce with SMTP id
- j8-20020a05651231c800b0050a71e1e1cemr5323774lfe.51.1699886034965; Mon, 13 Nov
- 2023 06:33:54 -0800 (PST)
+	b=CHICE0Tu+G63jYeMl+9KfCeKD3f+6g3YkLyIL6ERGvkZWpfxz0eOUFje7Gd4BOGad
+	 qrnrT7S81BdPZZNv8kn6gWi/32gHa/YlM8ipH8IBeNtyAf4GzC/obyqe1YDIh0LIuz
+	 4jd6hyhoZ2i9V9H3qBLQU2UL/isbo6JluQYR7YyEC5xsGJaLJT1Vhnh/9fc8K4B9Ht
+	 h53B6ILBWqfXInSuOHvArWs9KBy5MAMVVoyUdTxF+RDP/3oYara6frtVkhO/oXe7+b
+	 NOfVIevgl18YzcRwfCTtarBJW35Zb0J3TgRqXz8joARz9D7JjEdVwY/4fRnrOvhGiN
+	 EunNr5ElkXw7g==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-53e2308198eso6904919a12.1
+        for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 06:36:48 -0800 (PST)
+X-Gm-Message-State: AOJu0YyKxWmu2w22WAdDkoc6aecSu/tFlxku5Eb/ttDzCknQWFNnZbYm
+	750Pkot72KDyB6kDo7euyhnw2UKFtwu9W97w4jo=
+X-Google-Smtp-Source: AGHT+IE5N7gaovtQf+6aQpJwEoMCVsB9Y6Eaj7ba1gX65dnSqlKSXkvvTlQSoMjG3C4SFjnXtWxlh4xEYN/E1W7XgJo=
+X-Received: by 2002:a05:6402:3494:b0:547:479b:c299 with SMTP id
+ v20-20020a056402349400b00547479bc299mr3110444edc.19.1699886207128; Mon, 13
+ Nov 2023 06:36:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1699521866.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1699521866.git.zhoubinbin@loongson.cn>
+References: <20231110090529.56950-1-maobibo@loongson.cn>
+In-Reply-To: <20231110090529.56950-1-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 13 Nov 2023 22:33:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4pzWNJf2Bs0tHRZG=8ibm_JUvfoPQdkurEnqo=L+P1oA@mail.gmail.com>
-Message-ID: <CAAhV-H4pzWNJf2Bs0tHRZG=8ibm_JUvfoPQdkurEnqo=L+P1oA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] dt-bindings: interrupt-controller: Fix some
- loongson,liointc warnings
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, devicetree@vger.kernel.org, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-mips@vger.kernel.org, lvjianmin@loongson.cn, 
-	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Mon, 13 Nov 2023 22:36:35 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6zH7TwcAokHguy5Wk_z44nu6toZ9uW48TxrgxxRrvuJA@mail.gmail.com>
+Message-ID: <CAAhV-H6zH7TwcAokHguy5Wk_z44nu6toZ9uW48TxrgxxRrvuJA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] LoongArch: KVM: Remove SW timer switch when vcpu
+ is halt polling
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-For the whole series.
+Hi, Bibo,
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Does this series have some relationship with the commit
+"LoongArch:LSVZ: set timer offset at first time once" in our internal
+repo?
 
-On Mon, Nov 13, 2023 at 10:36=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
-n> wrote:
+Huacai
+
+On Fri, Nov 10, 2023 at 5:07=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
 >
-> Hi all:
+> This patches removes SW timer switch during vcpu block stage. VM uses HW
+> timer rather than SW PV timer on LoongArch system, it can check pending
+> HW timer interrupt status directly, rather than switch to SW timer and
+> check injected SW timer interrupt.
 >
-> Some liointc-related DTBS_CHECK warnings were found when trying to
-> introduce the Loongson-2K DTS{I} for LoongArch.
-> This patch series attempts to fix those warnings, as well as fixing
-> non-standard property naming.
+> When SW timer is not used in vcpu halt-polling mode, the relative
+> SW timer handling before entering guest can be removed also. Timer
+> emulation is simpler than before, SW timer emuation is only used in vcpu
+> thread context switch.
 >
-> Of course, these fixes also apply to MIPS Loongson-2K1000.
+> ---
 >
-> Thanks.
+> Changes in v3:
+>   Add kvm_arch_vcpu_runnable checking before kvm_vcpu_halt.
 >
-> -----
-> V4:
-> - Add Acked-by tag;
-> patch(2/5):
->   - Just add 'maxitem 2' instead of duplicating the list;
-> patch(3/5):
->   - Rewite commit message for 'interrupt-names'.
+> Changes in v2:
+>   Add halt polling support for idle instruction emulation, using api
+> kvm_vcpu_halt rather than kvm_vcpu_block in function kvm_emu_idle.
 >
-> Link to V3:
-> https://lore.kernel.org/all/cover.1698717154.git.zhoubinbin@loongson.cn/
+> ---
 >
-> V3:
-> patch(1/5):
->   - new patch, 'loongson,parent_int_map' renamed to 'loongson,parent-int-=
-map';
-> patch(2/5)(3/5):
->   - Separate the change points into separate patches;
-> patch(4/5):
->  - new patch, make sure both parent map forms can be parsed;
-> patch(5/5):
->  - new patch, fix 'loongson,parent_int_map' references in mips loongson
->    dts{i}.
+> Bibo Mao (3):
+>   LoongArch: KVM: Remove SW timer switch when vcpu is halt polling
+>   LoongArch: KVM: Allow to access HW timer CSR registers always
+>   LoongArch: KVM: Remove kvm_acquire_timer before entering guest
 >
-> Link to V2:
-> https://lore.kernel.org/all/20230821061315.3416836-1-zhoubinbin@loongson.=
-cn/
+>  arch/loongarch/include/asm/kvm_vcpu.h |  1 -
+>  arch/loongarch/kvm/exit.c             | 13 ++------
+>  arch/loongarch/kvm/main.c             |  1 -
+>  arch/loongarch/kvm/timer.c            | 47 +++++++--------------------
+>  arch/loongarch/kvm/vcpu.c             | 38 +++++-----------------
+>  5 files changed, 22 insertions(+), 78 deletions(-)
 >
-> V2:
-> 1. Update commit message;
-> 2. "interruprt-names" should be "required", the driver gets the parent
-> interrupts through it;
-> 3. Add more descriptions to explain the rationale for multiple nodes;
-> 4. Rewrite if-else statements.
 >
-> Link to V1:
-> https://lore.kernel.org/all/20230815084713.1627520-1-zhoubinbin@loongson.=
-cn/
->
-> Binbin Zhou (5):
->   dt-bindings: interrupt-controller: loongson,liointc: Standardize the
->     naming of 'loongson,parent-int-map'
->   dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
->     warning for reg-names
->   dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
->     for warning interrupt-names
->   irqchip/loongson-liointc: Fix 'loongson,parent_int_map' parse
->   MIPS: Loongson64: DTS: Fix 'loongson,parent_int_map' references
->
->  .../loongson,liointc.yaml                     | 33 +++++++++++++------
->  .../boot/dts/loongson/loongson64-2k1000.dtsi  |  4 +--
->  .../dts/loongson/loongson64c-package.dtsi     |  2 +-
->  .../dts/loongson/loongson64g-package.dtsi     |  2 +-
->  .../dts/loongson/loongson64v_4core_virtio.dts |  2 +-
->  drivers/irqchip/irq-loongson-liointc.c        |  7 +++-
->  6 files changed, 34 insertions(+), 16 deletions(-)
->
+> base-commit: 305230142ae0637213bf6e04f6d9f10bbcb74af8
 > --
 > 2.39.3
->
 >
