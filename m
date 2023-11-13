@@ -1,39 +1,26 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7BC979EA
-	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 02:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6541FB6
+	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 03:25:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [112.20.112.120])
-	by gateway (Coremail) with SMTP id _____8BxpPDGi1FlwG45AA--.47620S3;
-	Mon, 13 Nov 2023 10:36:54 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.112.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxvi_Bi1Fly1JAAA--.9842S4;
-	Mon, 13 Nov 2023 10:36:52 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	devicetree@vger.kernel.org,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B8CC433C7;
+	Mon, 13 Nov 2023 03:25:23 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-mips@vger.kernel.org,
-	lvjianmin@loongson.cn,
-	WANG Xuerui <git@xen0n.name>,
-	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v4 5/5] MIPS: Loongson64: DTS: Fix 'loongson,parent_int_map' references
-Date: Mon, 13 Nov 2023 10:36:47 +0800
-Message-Id: <5673f5d246625397595803c3f5f9b70397930ca7.1699521866.git.zhoubinbin@loongson.cn>
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] LoongArch: Add __percpu annotation for __percpu_read()/__percpu_write()
+Date: Mon, 13 Nov 2023 11:25:11 +0800
+Message-Id: <20231113032511.860159-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1699521866.git.zhoubinbin@loongson.cn>
-References: <cover.1699521866.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,100 +28,85 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxvi_Bi1Fly1JAAA--.9842S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZr13Zry7Xw1UAF4xAr1fGrX_yoW5tF48pw
-	43Aa18Gw4xKr17A398G34UJr1fZFZ0yFZrWF4xGFW8A39aga4UXr1fJF1rtrs3Gry5Xa42
-	9r1vgrWUKFykCabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWr
-	XVW3AwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU022NJUUUUU==
 
-Since 'loongson,parent_int_map' has been deprecated, replace all
-relevant references in the MIPS loongson dts{i} with
-'loongson,parent-int-map'.
+When build kernel with C=1, we get:
 
-Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+arch/loongarch/kernel/process.c:234:46: warning: incorrect type in argument 1 (different address spaces)
+arch/loongarch/kernel/process.c:234:46:    expected void *ptr
+arch/loongarch/kernel/process.c:234:46:    got unsigned long [noderef] __percpu *
+arch/loongarch/kernel/process.c:234:46: warning: incorrect type in argument 1 (different address spaces)
+arch/loongarch/kernel/process.c:234:46:    expected void *ptr
+arch/loongarch/kernel/process.c:234:46:    got unsigned long [noderef] __percpu *
+arch/loongarch/kernel/process.c:234:46: warning: incorrect type in argument 1 (different address spaces)
+arch/loongarch/kernel/process.c:234:46:    expected void *ptr
+arch/loongarch/kernel/process.c:234:46:    got unsigned long [noderef] __percpu *
+arch/loongarch/kernel/process.c:234:46: warning: incorrect type in argument 1 (different address spaces)
+arch/loongarch/kernel/process.c:234:46:    expected void *ptr
+arch/loongarch/kernel/process.c:234:46:    got unsigned long [noderef] __percpu *
+
+Add __percpu annotation for __percpu_read()/__percpu_write() can avoid
+such warnings. __percpu_xchg() and other functions don't need annotation
+because their wrapper, i.e. _pcp_protect(), already suppresses warnings.
+
+Also adjust the indentations in this file.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202311080409.LlOfTR3m-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202311080840.Vc2kXhfp-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202311081340.3k72KKdg-lkp@intel.com/
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi       | 4 ++--
- arch/mips/boot/dts/loongson/loongson64c-package.dtsi     | 2 +-
- arch/mips/boot/dts/loongson/loongson64g-package.dtsi     | 2 +-
- arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ arch/loongarch/include/asm/percpu.h | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi b/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
-index f878f47e4501..36f499a3772e 100644
---- a/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
-+++ b/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
-@@ -71,7 +71,7 @@ liointc0: interrupt-controller@1fe11400 {
- 			interrupts = <2>;
- 			interrupt-names = "int0";
+diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include/asm/percpu.h
+index ed5da02b1cf6..9b36ac003f89 100644
+--- a/arch/loongarch/include/asm/percpu.h
++++ b/arch/loongarch/include/asm/percpu.h
+@@ -40,13 +40,13 @@ static __always_inline unsigned long __percpu_##op(void *ptr,		\
+ 	switch (size) {							\
+ 	case 4:								\
+ 		__asm__ __volatile__(					\
+-		"am"#asm_op".w"	" %[ret], %[val], %[ptr]	\n"		\
++		"am"#asm_op".w"	" %[ret], %[val], %[ptr]	\n"	\
+ 		: [ret] "=&r" (ret), [ptr] "+ZB"(*(u32 *)ptr)		\
+ 		: [val] "r" (val));					\
+ 		break;							\
+ 	case 8:								\
+ 		__asm__ __volatile__(					\
+-		"am"#asm_op".d" " %[ret], %[val], %[ptr]	\n"		\
++		"am"#asm_op".d" " %[ret], %[val], %[ptr]	\n"	\
+ 		: [ret] "=&r" (ret), [ptr] "+ZB"(*(u64 *)ptr)		\
+ 		: [val] "r" (val));					\
+ 		break;							\
+@@ -63,7 +63,7 @@ PERCPU_OP(and, and, &)
+ PERCPU_OP(or, or, |)
+ #undef PERCPU_OP
  
--			loongson,parent_int_map = <0xffffffff>, /* int0 */
-+			loongson,parent-int-map = <0xffffffff>, /* int0 */
- 						<0x00000000>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
-@@ -91,7 +91,7 @@ liointc1: interrupt-controller@1fe11440 {
- 			interrupts = <3>;
- 			interrupt-names = "int1";
+-static __always_inline unsigned long __percpu_read(void *ptr, int size)
++static __always_inline unsigned long __percpu_read(void __percpu *ptr, int size)
+ {
+ 	unsigned long ret;
  
--			loongson,parent_int_map = <0x00000000>, /* int0 */
-+			loongson,parent-int-map = <0x00000000>, /* int0 */
- 						<0xffffffff>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
-diff --git a/arch/mips/boot/dts/loongson/loongson64c-package.dtsi b/arch/mips/boot/dts/loongson/loongson64c-package.dtsi
-index 5bb876a4de52..38de0108e804 100644
---- a/arch/mips/boot/dts/loongson/loongson64c-package.dtsi
-+++ b/arch/mips/boot/dts/loongson/loongson64c-package.dtsi
-@@ -35,7 +35,7 @@ liointc: interrupt-controller@3ff01400 {
- 			interrupts = <2>, <3>;
- 			interrupt-names = "int0", "int1";
+@@ -100,7 +100,7 @@ static __always_inline unsigned long __percpu_read(void *ptr, int size)
+ 	return ret;
+ }
  
--			loongson,parent_int_map = <0xf0ffffff>, /* int0 */
-+			loongson,parent-int-map = <0xf0ffffff>, /* int0 */
- 						<0x0f000000>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
-diff --git a/arch/mips/boot/dts/loongson/loongson64g-package.dtsi b/arch/mips/boot/dts/loongson/loongson64g-package.dtsi
-index d4314f62ccc2..8972adcb83d6 100644
---- a/arch/mips/boot/dts/loongson/loongson64g-package.dtsi
-+++ b/arch/mips/boot/dts/loongson/loongson64g-package.dtsi
-@@ -32,7 +32,7 @@ liointc: interrupt-controller@3ff01400 {
- 			interrupts = <2>, <3>;
- 			interrupt-names = "int0", "int1";
+-static __always_inline void __percpu_write(void *ptr, unsigned long val, int size)
++static __always_inline void __percpu_write(void __percpu *ptr, unsigned long val, int size)
+ {
+ 	switch (size) {
+ 	case 1:
+@@ -132,8 +132,7 @@ static __always_inline void __percpu_write(void *ptr, unsigned long val, int siz
+ 	}
+ }
  
--			loongson,parent_int_map = <0x00ffffff>, /* int0 */
-+			loongson,parent-int-map = <0x00ffffff>, /* int0 */
- 						<0xff000000>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
-diff --git a/arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts b/arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts
-index d0588d81e0c2..88642fee1bbd 100644
---- a/arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts
-+++ b/arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts
-@@ -34,7 +34,7 @@ liointc: interrupt-controller@3ff01400 {
- 			interrupts = <2>, <3>;
- 			interrupt-names = "int0", "int1";
- 
--			loongson,parent_int_map = <0x00000001>, /* int0 */
-+			loongson,parent-int-map = <0x00000001>, /* int0 */
- 						<0xfffffffe>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
+-static __always_inline unsigned long __percpu_xchg(void *ptr, unsigned long val,
+-						   int size)
++static __always_inline unsigned long __percpu_xchg(void *ptr, unsigned long val, int size)
+ {
+ 	switch (size) {
+ 	case 1:
 -- 
 2.39.3
 
