@@ -1,111 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9843D78
-	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 00:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2nQ34+L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699837137;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cDT/Yw6MepTUY5berRyzp+iGTh5/71yTqnFQ/kYgufg=;
-	b=F2nQ34+LtuVNAzyHYMhY7XKF8bKgDNlg2lTV3kPzOyfNVqMTnoyZycOp3/kc191s/cPkOT
-	X9y36lz/hegBsN5yN0+KnUJa1Wh3z27wNu1V7y1dhKJHdpVpaZ/Uzz59iae17ivmd+/piC
-	IaPEuDzPSDJOa3dvZmFTGJa+XSk1Ruo=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-614-HBP6GoDbM1iWKMbjv9sEkw-1; Sun, 12 Nov 2023 19:58:56 -0500
-X-MC-Unique: HBP6GoDbM1iWKMbjv9sEkw-1
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1cc40eb7d54so37692275ad.2
-        for <loongarch@lists.linux.dev>; Sun, 12 Nov 2023 16:58:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699837135; x=1700441935;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cDT/Yw6MepTUY5berRyzp+iGTh5/71yTqnFQ/kYgufg=;
-        b=R2cn8qHT/ePFtmPxbhJqEhYOdNacUajq1A9RubL3ZX+FagMvIQ41MGgcxzKQx+Hrht
-         zvjFD/2tdHLv8MYTCmETGR5rq/pM3Z2oy6C5iHzjW/ufjQ4TFz8LLkC+6eG8mao/gIpR
-         s5tEVfpm2r4fatlVrkaovlpTG67TP8ULKGVxnBcBCVtcL21gVoz8BOjowljkRud3Qbrz
-         wK25il3W18j83feKSVvQzsugaVegCnpj4ClP3YHdndNJbLaEExdN/w4gOYa6o+7lstOh
-         5dUD84g6zOirfcDW0qIgJoKdVYrSkm0P3lKqg1mjJClvRuHIRsyUnzZtXjTKewmw8Xen
-         Ezzg==
-X-Gm-Message-State: AOJu0YxYNItWIlATwRq8WtnAyCXTOE+QQQhnZLEXjSKyWwd6d9pBP9FB
-	dD1WtFfa7m8CBBjZZZr+eHgEm+2xMClnX9zbpuzW63IY8ZSiem1ZvJx2/+I6z3/0g6rB1cAwt1n
-	j9Tn1WRzc3wpLXNLtw9on
-X-Received: by 2002:a17:903:18a:b0:1c5:d063:b70e with SMTP id z10-20020a170903018a00b001c5d063b70emr3527471plg.53.1699837134997;
-        Sun, 12 Nov 2023 16:58:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEYIxs5W0nH5PRlEPeC7HszJcExOhwxIk5eQviHGK0uTrxM/8D+SW3tGS+WkqqASqjIUf7rPA==
-X-Received: by 2002:a17:903:18a:b0:1c5:d063:b70e with SMTP id z10-20020a170903018a00b001c5d063b70emr3527451plg.53.1699837134747;
-        Sun, 12 Nov 2023 16:58:54 -0800 (PST)
-Received: from ?IPV6:2001:8003:e5b0:9f00:b890:3e54:96bb:2a15? ([2001:8003:e5b0:9f00:b890:3e54:96bb:2a15])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170902c24d00b001c5fc291ef9sm3053276plg.209.2023.11.12.16.58.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Nov 2023 16:58:54 -0800 (PST)
-Message-ID: <095c2d24-735b-4ce2-ba2e-9ec2164f2237@redhat.com>
-Date: Mon, 13 Nov 2023 10:58:46 +1000
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 439D9522B
+	for <loongarch@lists.linux.dev>; Mon, 13 Nov 2023 02:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [112.20.112.120])
+	by gateway (Coremail) with SMTP id _____8DxxPCyi1FlYW45AA--.48613S3;
+	Mon, 13 Nov 2023 10:36:34 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.112.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxvdyui1FltFJAAA--.9944S2;
+	Mon, 13 Nov 2023 10:36:30 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	devicetree@vger.kernel.org,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-mips@vger.kernel.org,
+	lvjianmin@loongson.cn,
+	WANG Xuerui <git@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v4 0/5] dt-bindings: interrupt-controller: Fix some loongson,liointc warnings
+Date: Mon, 13 Nov 2023 10:36:20 +0800
+Message-Id: <cover.1699521866.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 10/22] drivers: base: Move cpu_dev_init() after
- node_dev_init()
-To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org,
- linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org
-Cc: Salil Mehta <salil.mehta@huawei.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
- justin.he@arm.com, James Morse <james.morse@arm.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-References: <ZUoRY33AAHMc5ThW@shell.armlinux.org.uk>
- <E1r0JLV-00CTxS-QB@rmk-PC.armlinux.org.uk>
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <E1r0JLV-00CTxS-QB@rmk-PC.armlinux.org.uk>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cxvdyui1FltFJAAA--.9944S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WryfJFyxGrW5ur1UWr1kCrX_yoW8tF15pF
+	sxC3ZxGr45tr4xAws8Jay8AFn5ZrW5JasxWFs7A34xCayDX34jvr1SkF48ArW7Cry3Xw1a
+	qrWkKFWUWa4jkFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUUU==
 
+Hi all:
 
+Some liointc-related DTBS_CHECK warnings were found when trying to
+introduce the Loongson-2K DTS{I} for LoongArch.
+This patch series attempts to fix those warnings, as well as fixing
+non-standard property naming.
 
-On 11/7/23 20:30, Russell King (Oracle) wrote:
-> From: James Morse <james.morse@arm.com>
-> 
-> NUMA systems require the node descriptions to be ready before CPUs are
-> registered. This is so that the node symlinks can be created in sysfs.
-> 
-> Currently no NUMA platform uses GENERIC_CPU_DEVICES, meaning that CPUs
-> are registered by arch code, instead of cpu_dev_init().
-> 
-> Move cpu_dev_init() after node_dev_init() so that NUMA architectures
-> can use GENERIC_CPU_DEVICES.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
-> Note: Jonathan's comment still needs addressing - see
->    https://lore.kernel.org/r/20230914121612.00006ac7@Huawei.com
-> ---
->   drivers/base/init.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Of course, these fixes also apply to MIPS Loongson-2K1000.
 
-With Jonathan's comments addressed:
+Thanks.
 
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+-----
+V4:
+- Add Acked-by tag;
+patch(2/5):
+  - Just add 'maxitem 2' instead of duplicating the list;
+patch(3/5):
+  - Rewite commit message for 'interrupt-names'.
+
+Link to V3:
+https://lore.kernel.org/all/cover.1698717154.git.zhoubinbin@loongson.cn/
+
+V3:
+patch(1/5):
+  - new patch, 'loongson,parent_int_map' renamed to 'loongson,parent-int-map';
+patch(2/5)(3/5):
+  - Separate the change points into separate patches;
+patch(4/5):
+ - new patch, make sure both parent map forms can be parsed;
+patch(5/5):
+ - new patch, fix 'loongson,parent_int_map' references in mips loongson
+   dts{i}.
+
+Link to V2:
+https://lore.kernel.org/all/20230821061315.3416836-1-zhoubinbin@loongson.cn/
+
+V2:
+1. Update commit message;
+2. "interruprt-names" should be "required", the driver gets the parent
+interrupts through it;
+3. Add more descriptions to explain the rationale for multiple nodes;
+4. Rewrite if-else statements.
+
+Link to V1:
+https://lore.kernel.org/all/20230815084713.1627520-1-zhoubinbin@loongson.cn/
+
+Binbin Zhou (5):
+  dt-bindings: interrupt-controller: loongson,liointc: Standardize the
+    naming of 'loongson,parent-int-map'
+  dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+    warning for reg-names
+  dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+    for warning interrupt-names
+  irqchip/loongson-liointc: Fix 'loongson,parent_int_map' parse
+  MIPS: Loongson64: DTS: Fix 'loongson,parent_int_map' references
+
+ .../loongson,liointc.yaml                     | 33 +++++++++++++------
+ .../boot/dts/loongson/loongson64-2k1000.dtsi  |  4 +--
+ .../dts/loongson/loongson64c-package.dtsi     |  2 +-
+ .../dts/loongson/loongson64g-package.dtsi     |  2 +-
+ .../dts/loongson/loongson64v_4core_virtio.dts |  2 +-
+ drivers/irqchip/irq-loongson-liointc.c        |  7 +++-
+ 6 files changed, 34 insertions(+), 16 deletions(-)
+
+-- 
+2.39.3
 
