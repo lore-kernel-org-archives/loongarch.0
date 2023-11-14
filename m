@@ -1,211 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29B61FD8;
-	Tue, 14 Nov 2023 02:25:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CA8182CE
+	for <loongarch@lists.linux.dev>; Tue, 14 Nov 2023 10:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRTt9l1j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F9BC433D9;
-	Tue, 14 Nov 2023 02:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699928754;
-	bh=CYcpvfJ9TQDQEuovsOAJb8HhEEnIA1oyhQK4KMPS/uU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dRTt9l1jAszL3jEAH5Y4UPSa8dxQd+1eo9ROoYH0KlVlgeLEXaFPQRdNTxPWnckqy
-	 14OXuJ+77GqjM0s+C4IRD/d3hfbGrifQ6JJUN9dGfAX0c/x/3QKHYf7j+AOUiKZ3Sk
-	 3qNg1WJwJnVnbtGTpGQ5BdidMLmN70xsus6xyOywzSpLlN2Jh7G2Tz6GeOk70zhWpS
-	 54GOrcta9ZEyeqzE7WzxiiUMqAu7eNFx3zsnTlcu6QwyuS3ZXVKPJcLhWBNdLWMPCq
-	 Eo2WkS/1AhqPlfHCIRaj6PsRvA6Kh9QGNGQdwHHQVXCJgSoOVUI4zNO6yPqYFEJIr7
-	 ZJWlz8AlQ5sSA==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50930f126b1so6776511e87.3;
-        Mon, 13 Nov 2023 18:25:54 -0800 (PST)
-X-Gm-Message-State: AOJu0Yx9VWPhGm0vZhc0sIZo8z5rI+zfs8MRg3pl8BRPyMR1q4J9ZTIB
-	kYCRD1uSP/QkJNdtwnUJRPodriB7u1D95IaznX4=
-X-Google-Smtp-Source: AGHT+IH96uIZur/Swgs8Pnes7TyGIuTRoYkArdusQcGT/ZdWM/PnBw6U9MGYDuEAIhZ9josJXqxtd5XOPbnbYX4a7HA=
-X-Received: by 2002:ac2:5147:0:b0:508:1889:bfc0 with SMTP id
- q7-20020ac25147000000b005081889bfc0mr5372698lfd.5.1699928752304; Mon, 13 Nov
- 2023 18:25:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="w4XFJJSu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=MliSkT+C97r/xoKb00has1+pOVRxGmmTM9aHZqmFb/M=; b=w4XFJJSuIadpNAeBv0oFJvheSh
+	XwUK9PQmPMEhgdmwSDbAapoeDa9K9HWgMz38zdIGLe/sPLp7TUYkOcvYDg3LX9m6snr5MAMtXZp1G
+	vIR6D8/EEfGWaAmd1K5HqJ20zzwHZj47NTHQMs5MZLrvpche7UN5fFTZUSmZeSZsKEMQLad0LQu28
+	zunJCFl41N8ZLAphzoOqhGQGVtYmuTDPoGwmCXhpcmyCL6DPgOGWWOwereFReVboNc6aRwnyTdllh
+	LRSDUTGxHde7yh8aZ/Yc3qmiS/Sv9HtEFiSqz9Vn7XPbLYjDyO5VYNCX+0/pgAR76YDhy0QX4GYMr
+	Kd1NjHnw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44278)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1r2qHP-0007em-2q;
+	Tue, 14 Nov 2023 10:04:23 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1r2qHO-0005UR-In; Tue, 14 Nov 2023 10:04:22 +0000
+Date: Tue, 14 Nov 2023 10:04:22 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
+	x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com, gregkh@linuxfoundation.org
+Subject: Re: [RFC PATCH v2 11/35] arch_topology: Make
+ register_cpu_capacity_sysctl() tolerant to late CPUs
+Message-ID: <ZVNGJuUEkwei+CwY@shell.armlinux.org.uk>
+References: <20230913163823.7880-1-james.morse@arm.com>
+ <20230913163823.7880-12-james.morse@arm.com>
+ <20230914130126.000069db@Huawei.com>
+ <ZTKEQz0DJuv/tqNH@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <202311120926.cjYHyoYw-lkp@intel.com> <03b4e787-53bb-4a9c-afa5-dbb51599a8ce@arm.com>
-In-Reply-To: <03b4e787-53bb-4a9c-afa5-dbb51599a8ce@arm.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 14 Nov 2023 10:25:40 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6PfKc7+p3iFpDF=Hv45b+2ouCOWZ0w-tHxRauprtbaYA@mail.gmail.com>
-Message-ID: <CAAhV-H6PfKc7+p3iFpDF=Hv45b+2ouCOWZ0w-tHxRauprtbaYA@mail.gmail.com>
-Subject: Re: drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse:
- incorrect type in argument 1 (different address spaces)
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: kernel test robot <lkp@intel.com>, loongarch@lists.linux.dev, kernel@xen0n.name, 
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Will Deacon <will@kernel.org>, Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZTKEQz0DJuv/tqNH@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi, Robin,
+Okay, after 25 days, I'm now changing James' comment to:
 
-Could you please try this patch?
-https://lore.kernel.org/loongarch/20231113032511.860159-1-chenhuacai@loongs=
-on.cn/T/#u
+    If the offline CPUs thing is a problem for the tools that consume
+    this value, we'd need to move cpu_capacity to be part of cpu.c's
+    common_cpu_attr_groups. However, attempts to discuss this just end
+    up in a black hole, so this is a non-starter. Thus, if this needs
+    to be done, it can be done as a separate patch.
 
-Huacai
+and thus I'm going to consider this patch acceptable to everyone.
 
-On Mon, Nov 13, 2023 at 11:45=E2=80=AFPM Robin Murphy <robin.murphy@arm.com=
-> wrote:
->
-> On 2023-11-12 1:38 am, kernel test robot wrote:
-> > Hi Robin,
-> >
-> > First bad commit (maybe !=3D root cause):
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git master
-> > head:   3ca112b71f35dd5d99fc4571a56b5fc6f0c15814
-> > commit: f9bd34e3753ea8f1433a3ba70f03a165a1416f98 perf/arm_cspmu: Clean =
-up ACPI dependency
-> > date:   5 months ago
-> > config: loongarch-randconfig-r133-20231107 (https://download.01.org/0da=
-y-ci/archive/20231112/202311120926.cjYHyoYw-lkp@intel.com/config)
-> > compiler: loongarch64-linux-gcc (GCC) 13.2.0
-> > reproduce: (https://download.01.org/0day-ci/archive/20231112/2023111209=
-26.cjYHyoYw-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
-rsion of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202311120926.cjYHyoYw-l=
-kp@intel.com/
-> >
-> > sparse warnings: (new ones prefixed by >>)
-> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
-ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
-   got unsigned int [noderef] __percpu * @@
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
- *ptr
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got unsigned =
-int [noderef] __percpu *
->
-> Unpicking the macros, I guess this must stem from:
->
-> for_each_sibling_event()
->   -> lockdep_assert_event_ctx()
->      ->this_cpu_read(hardirqs_enabled)
->
-> which appears to be the only obvious place to involve a __percpu pointer
-> in this area.
->
->  From there it would seem to be a preexisting Loongarch bug - AFAICS
-> __percpu_read() (and presumably at least __percpu_write() as well)
-> should not be expecting a raw void * argument, but still the __percpu
-> pointer, since the final dereference is done right down in the asm using
-> the per-cpu offset stashed in r21?
->
-> Thanks,
-> Robin.
->
-> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
-ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
-   got unsigned int [noderef] __percpu * @@
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
- *ptr
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got unsigned =
-int [noderef] __percpu *
-> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
-ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
-   got unsigned int [noderef] __percpu * @@
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
- *ptr
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got unsigned =
-int [noderef] __percpu *
-> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
-ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
-   got unsigned int [noderef] __percpu * @@
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
- *ptr
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got unsigned =
-int [noderef] __percpu *
-> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
-ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
-   got int [noderef] __percpu * @@
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
- *ptr
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got int [node=
-ref] __percpu *
-> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
-ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
-   got int [noderef] __percpu * @@
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
- *ptr
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got int [node=
-ref] __percpu *
-> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
-ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
-   got int [noderef] __percpu * @@
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
- *ptr
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got int [node=
-ref] __percpu *
-> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
-ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
-   got int [noderef] __percpu * @@
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
- *ptr
-> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got int [node=
-ref] __percpu *
-> >
-> > vim +627 drivers/perf/arm_cspmu/arm_cspmu.c
-> >
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  609
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  610  /*
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  611   * Make sure the group=
- of events can be scheduled at once
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  612   * on the PMU.
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  613   */
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  614  static bool arm_cspmu_=
-validate_group(struct perf_event *event)
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  615  {
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  616       struct perf_event=
- *sibling, *leader =3D event->group_leader;
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  617       struct arm_cspmu_=
-hw_events fake_hw_events;
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  618
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  619       if (event->group_=
-leader =3D=3D event)
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  620               return tr=
-ue;
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  621
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  622       memset(&fake_hw_e=
-vents, 0, sizeof(fake_hw_events));
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  623
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  624       if (!arm_cspmu_va=
-lidate_event(event->pmu, &fake_hw_events, leader))
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  625               return fa=
-lse;
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  626
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11 @627       for_each_sibling_=
-event(sibling, leader) {
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  628               if (!arm_=
-cspmu_validate_event(event->pmu, &fake_hw_events,
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  629                        =
-                         sibling))
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  630                       r=
-eturn false;
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  631       }
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  632
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  633       return arm_cspmu_=
-validate_event(event->pmu, &fake_hw_events, event);
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  634  }
-> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  635
-> >
-> > :::::: The code at line 627 was first introduced by commit
-> > :::::: e37dfd65731dc4f001fa7dfa7f705e6840017d5a perf: arm_cspmu: Add su=
-pport for ARM CoreSight PMU driver
-> >
-> > :::::: TO: Besar Wicaksono <bwicaksono@nvidia.com>
-> > :::::: CC: Will Deacon <will@kernel.org>
-> >
+On Fri, Oct 20, 2023 at 02:44:35PM +0100, Russell King (Oracle) wrote:
+> On Thu, Sep 14, 2023 at 01:01:26PM +0100, Jonathan Cameron wrote:
+> > On Wed, 13 Sep 2023 16:37:59 +0000
+> > James Morse <james.morse@arm.com> wrote:
+> > 
+> > > register_cpu_capacity_sysctl() adds a property to sysfs that describes
+> > > the CPUs capacity. This is done from a subsys_initcall() that assumes
+> > > all possible CPUs are registered.
+> > > 
+> > > With CPU hotplug, possible CPUs aren't registered until they become
+> > > present, (or for arm64 enabled). This leads to messages during boot:
+> > > | register_cpu_capacity_sysctl: too early to get CPU1 device!
+> > > and once these CPUs are added to the system, the file is missing.
+> > > 
+> > > Move this to a cpuhp callback, so that the file is created once
+> > > CPUs are brought online. This covers CPUs that are added late by
+> > > mechanisms like hotplug.
+> > > One observable difference is the file is now missing for offline CPUs.
+> > > 
+> > > Signed-off-by: James Morse <james.morse@arm.com>
+> > > ---
+> > > If the offline CPUs thing is a problem for the tools that consume
+> > > this value, we'd need to move cpu_capacity to be part of cpu.c's
+> > > common_cpu_attr_groups.
+> > 
+> > I think we should do that anyway and then use an is_visible() if we want to
+> > change whether it is visible in offline cpus.
+> > 
+> > Dynamic sysfs file creation is horrible - particularly when done
+> > from an totally different file from where the rest of the attributes
+> > are registered.  I'm curious what the history behind that is.
+> > 
+> > Whilst here, why is there a common_cpu_attr_groups which is
+> > identical to the hotpluggable_cpu_attr_groups in base/cpu.c?
+> 
+> Looking into doing this, the easy bit is adding the attribute group
+> with an appropriate .is_visible dependent on cpu_present(), but we
+> need to be able to call sysfs_update_groups() when the state of the
+> .is_visible() changes.
+> 
+> Given the comment in sysfs_update_groups() about "if an error occurs",
+> rather than making this part of common_cpu_attr_groups, would it be
+> better that it's part of its own set of groups, thus limiting the
+> damage from a possible error? I suspect, however, that any error at
+> that point means that the system is rather fatally wounded.
+> 
+> This is what I have so far to implement your idea, less the necessary
+> sysfs_update_groups() call when we need to change the visibility of
+> the attributes.
+> 
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index 9ccb7daee78e..06c9fc6620d2 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -215,43 +215,24 @@ static ssize_t cpu_capacity_show(struct device *dev,
+>  	return sysfs_emit(buf, "%lu\n", topology_get_cpu_scale(cpu->dev.id));
+>  }
+>  
+> -static void update_topology_flags_workfn(struct work_struct *work);
+> -static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
+> -
+>  static DEVICE_ATTR_RO(cpu_capacity);
+>  
+> -static int cpu_capacity_sysctl_add(unsigned int cpu)
+> -{
+> -	struct device *cpu_dev = get_cpu_device(cpu);
+> -
+> -	if (!cpu_dev)
+> -		return -ENOENT;
+> -
+> -	device_create_file(cpu_dev, &dev_attr_cpu_capacity);
+> -
+> -	return 0;
+> -}
+> -
+> -static int cpu_capacity_sysctl_remove(unsigned int cpu)
+> +static umode_t cpu_present_attrs_visible(struct kobject *kobi,
+> +					 struct attribute *attr, int index)
+>  {
+> -	struct device *cpu_dev = get_cpu_device(cpu);
+> -
+> -	if (!cpu_dev)
+> -		return -ENOENT;
+> -
+> -	device_remove_file(cpu_dev, &dev_attr_cpu_capacity);
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct cpu *cpu = container_of(dev, struct cpu, dev);
+>  
+> -	return 0;
+> +	return cpu_present(cpu->dev.id) ? attr->mode : 0;
+>  }
+>  
+> -static int register_cpu_capacity_sysctl(void)
+> -{
+> -	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "topology/cpu-capacity",
+> -			  cpu_capacity_sysctl_add, cpu_capacity_sysctl_remove);
+> +const struct attribute_group cpu_capacity_attr_group = {
+> +	.is_visible = cpu_present_attrs_visible,
+> +	.attrs = cpu_capacity_attrs
+> +};
+>  
+> -	return 0;
+> -}
+> -subsys_initcall(register_cpu_capacity_sysctl);
+> +static void update_topology_flags_workfn(struct work_struct *work);
+> +static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
+>  
+>  static int update_topology;
+>  
+> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> index a19a8be93102..954b045705c2 100644
+> --- a/drivers/base/cpu.c
+> +++ b/drivers/base/cpu.c
+> @@ -192,6 +192,9 @@ static const struct attribute_group crash_note_cpu_attr_group = {
+>  static const struct attribute_group *common_cpu_attr_groups[] = {
+>  #ifdef CONFIG_KEXEC
+>  	&crash_note_cpu_attr_group,
+> +#endif
+> +#ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
+> +	&cpu_capacity_attr_group,
+>  #endif
+>  	NULL
+>  };
+> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+> index e117c06e0c6b..745ad21e3dc8 100644
+> --- a/include/linux/cpu.h
+> +++ b/include/linux/cpu.h
+> @@ -30,6 +30,8 @@ struct cpu {
+>  	struct device dev;
+>  };
+>  
+> +extern const struct attribute_group cpu_capacity_attr_group;
+> +
+>  extern void boot_cpu_init(void);
+>  extern void boot_cpu_hotplug_init(void);
+>  extern void cpu_init(void);
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
