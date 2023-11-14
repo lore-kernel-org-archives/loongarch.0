@@ -1,213 +1,101 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CA8182CE
-	for <loongarch@lists.linux.dev>; Tue, 14 Nov 2023 10:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="w4XFJJSu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MliSkT+C97r/xoKb00has1+pOVRxGmmTM9aHZqmFb/M=; b=w4XFJJSuIadpNAeBv0oFJvheSh
-	XwUK9PQmPMEhgdmwSDbAapoeDa9K9HWgMz38zdIGLe/sPLp7TUYkOcvYDg3LX9m6snr5MAMtXZp1G
-	vIR6D8/EEfGWaAmd1K5HqJ20zzwHZj47NTHQMs5MZLrvpche7UN5fFTZUSmZeSZsKEMQLad0LQu28
-	zunJCFl41N8ZLAphzoOqhGQGVtYmuTDPoGwmCXhpcmyCL6DPgOGWWOwereFReVboNc6aRwnyTdllh
-	LRSDUTGxHde7yh8aZ/Yc3qmiS/Sv9HtEFiSqz9Vn7XPbLYjDyO5VYNCX+0/pgAR76YDhy0QX4GYMr
-	Kd1NjHnw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44278)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1r2qHP-0007em-2q;
-	Tue, 14 Nov 2023 10:04:23 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1r2qHO-0005UR-In; Tue, 14 Nov 2023 10:04:22 +0000
-Date: Tue, 14 Nov 2023 10:04:22 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com, gregkh@linuxfoundation.org
-Subject: Re: [RFC PATCH v2 11/35] arch_topology: Make
- register_cpu_capacity_sysctl() tolerant to late CPUs
-Message-ID: <ZVNGJuUEkwei+CwY@shell.armlinux.org.uk>
-References: <20230913163823.7880-1-james.morse@arm.com>
- <20230913163823.7880-12-james.morse@arm.com>
- <20230914130126.000069db@Huawei.com>
- <ZTKEQz0DJuv/tqNH@shell.armlinux.org.uk>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 494F43A287
+	for <loongarch@lists.linux.dev>; Tue, 14 Nov 2023 11:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxyOjCXlNlvPA5AA--.12675S3;
+	Tue, 14 Nov 2023 19:49:22 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxni_CXlNlnuRBAA--.13313S2;
+	Tue, 14 Nov 2023 19:49:22 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Peter Zijlstra <peterz@infradead.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Implement stable timer shutdown interface
+Date: Tue, 14 Nov 2023 19:46:56 +0800
+Message-Id: <20231114114656.1003841-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZTKEQz0DJuv/tqNH@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bxni_CXlNlnuRBAA--.13313S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cw45uFW3JFW3XF18Xry5GFX_yoW8Zw4Dpw
+	srCFnxKrWYk3ZagFyDtr4kZr98J3409wsFya4DKay8CFyYqr1fGFs7trWqvF4avryFgayx
+	J3W0vw1qqa17JabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-Okay, after 25 days, I'm now changing James' comment to:
+When cpu is hotplug out, cpu is in idle state and function
+arch_cpu_idle_dead is called. Timer interrupt for this processor should
+be disabled, else there will be timer interrupt for the dead cpu. Also
+this prevents vcpu to schedule out during halt-polling flow when system
+is running in vm mode, since there is pending timer interrupt.
 
-    If the offline CPUs thing is a problem for the tools that consume
-    this value, we'd need to move cpu_capacity to be part of cpu.c's
-    common_cpu_attr_groups. However, attempts to discuss this just end
-    up in a black hole, so this is a non-starter. Thus, if this needs
-    to be done, it can be done as a separate patch.
+This patch adds detailed implementation for timer shutdown interface, so
+that timer will be disabled when cpu is plug-out.
 
-and thus I'm going to consider this patch acceptable to everyone.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kernel/time.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-On Fri, Oct 20, 2023 at 02:44:35PM +0100, Russell King (Oracle) wrote:
-> On Thu, Sep 14, 2023 at 01:01:26PM +0100, Jonathan Cameron wrote:
-> > On Wed, 13 Sep 2023 16:37:59 +0000
-> > James Morse <james.morse@arm.com> wrote:
-> > 
-> > > register_cpu_capacity_sysctl() adds a property to sysfs that describes
-> > > the CPUs capacity. This is done from a subsys_initcall() that assumes
-> > > all possible CPUs are registered.
-> > > 
-> > > With CPU hotplug, possible CPUs aren't registered until they become
-> > > present, (or for arm64 enabled). This leads to messages during boot:
-> > > | register_cpu_capacity_sysctl: too early to get CPU1 device!
-> > > and once these CPUs are added to the system, the file is missing.
-> > > 
-> > > Move this to a cpuhp callback, so that the file is created once
-> > > CPUs are brought online. This covers CPUs that are added late by
-> > > mechanisms like hotplug.
-> > > One observable difference is the file is now missing for offline CPUs.
-> > > 
-> > > Signed-off-by: James Morse <james.morse@arm.com>
-> > > ---
-> > > If the offline CPUs thing is a problem for the tools that consume
-> > > this value, we'd need to move cpu_capacity to be part of cpu.c's
-> > > common_cpu_attr_groups.
-> > 
-> > I think we should do that anyway and then use an is_visible() if we want to
-> > change whether it is visible in offline cpus.
-> > 
-> > Dynamic sysfs file creation is horrible - particularly when done
-> > from an totally different file from where the rest of the attributes
-> > are registered.  I'm curious what the history behind that is.
-> > 
-> > Whilst here, why is there a common_cpu_attr_groups which is
-> > identical to the hotpluggable_cpu_attr_groups in base/cpu.c?
-> 
-> Looking into doing this, the easy bit is adding the attribute group
-> with an appropriate .is_visible dependent on cpu_present(), but we
-> need to be able to call sysfs_update_groups() when the state of the
-> .is_visible() changes.
-> 
-> Given the comment in sysfs_update_groups() about "if an error occurs",
-> rather than making this part of common_cpu_attr_groups, would it be
-> better that it's part of its own set of groups, thus limiting the
-> damage from a possible error? I suspect, however, that any error at
-> that point means that the system is rather fatally wounded.
-> 
-> This is what I have so far to implement your idea, less the necessary
-> sysfs_update_groups() call when we need to change the visibility of
-> the attributes.
-> 
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 9ccb7daee78e..06c9fc6620d2 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -215,43 +215,24 @@ static ssize_t cpu_capacity_show(struct device *dev,
->  	return sysfs_emit(buf, "%lu\n", topology_get_cpu_scale(cpu->dev.id));
->  }
->  
-> -static void update_topology_flags_workfn(struct work_struct *work);
-> -static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
-> -
->  static DEVICE_ATTR_RO(cpu_capacity);
->  
-> -static int cpu_capacity_sysctl_add(unsigned int cpu)
-> -{
-> -	struct device *cpu_dev = get_cpu_device(cpu);
-> -
-> -	if (!cpu_dev)
-> -		return -ENOENT;
-> -
-> -	device_create_file(cpu_dev, &dev_attr_cpu_capacity);
-> -
-> -	return 0;
-> -}
-> -
-> -static int cpu_capacity_sysctl_remove(unsigned int cpu)
-> +static umode_t cpu_present_attrs_visible(struct kobject *kobi,
-> +					 struct attribute *attr, int index)
->  {
-> -	struct device *cpu_dev = get_cpu_device(cpu);
-> -
-> -	if (!cpu_dev)
-> -		return -ENOENT;
-> -
-> -	device_remove_file(cpu_dev, &dev_attr_cpu_capacity);
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct cpu *cpu = container_of(dev, struct cpu, dev);
->  
-> -	return 0;
-> +	return cpu_present(cpu->dev.id) ? attr->mode : 0;
->  }
->  
-> -static int register_cpu_capacity_sysctl(void)
-> -{
-> -	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "topology/cpu-capacity",
-> -			  cpu_capacity_sysctl_add, cpu_capacity_sysctl_remove);
-> +const struct attribute_group cpu_capacity_attr_group = {
-> +	.is_visible = cpu_present_attrs_visible,
-> +	.attrs = cpu_capacity_attrs
-> +};
->  
-> -	return 0;
-> -}
-> -subsys_initcall(register_cpu_capacity_sysctl);
-> +static void update_topology_flags_workfn(struct work_struct *work);
-> +static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
->  
->  static int update_topology;
->  
-> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-> index a19a8be93102..954b045705c2 100644
-> --- a/drivers/base/cpu.c
-> +++ b/drivers/base/cpu.c
-> @@ -192,6 +192,9 @@ static const struct attribute_group crash_note_cpu_attr_group = {
->  static const struct attribute_group *common_cpu_attr_groups[] = {
->  #ifdef CONFIG_KEXEC
->  	&crash_note_cpu_attr_group,
-> +#endif
-> +#ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
-> +	&cpu_capacity_attr_group,
->  #endif
->  	NULL
->  };
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index e117c06e0c6b..745ad21e3dc8 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -30,6 +30,8 @@ struct cpu {
->  	struct device dev;
->  };
->  
-> +extern const struct attribute_group cpu_capacity_attr_group;
-> +
->  extern void boot_cpu_init(void);
->  extern void boot_cpu_hotplug_init(void);
->  extern void cpu_init(void);
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+index 3064af94db9c..2920770e30a9 100644
+--- a/arch/loongarch/kernel/time.c
++++ b/arch/loongarch/kernel/time.c
+@@ -58,7 +58,7 @@ static int constant_set_state_oneshot(struct clock_event_device *evt)
+ 	return 0;
+ }
+ 
+-static int constant_set_state_oneshot_stopped(struct clock_event_device *evt)
++static int constant_set_state_shutdown(struct clock_event_device *evt)
+ {
+ 	unsigned long timer_config;
+ 
+@@ -90,11 +90,6 @@ static int constant_set_state_periodic(struct clock_event_device *evt)
+ 	return 0;
+ }
+ 
+-static int constant_set_state_shutdown(struct clock_event_device *evt)
+-{
+-	return 0;
+-}
+-
+ static int constant_timer_next_event(unsigned long delta, struct clock_event_device *evt)
+ {
+ 	unsigned long timer_config;
+@@ -161,7 +156,7 @@ int constant_clockevent_init(void)
+ 	cd->rating = 320;
+ 	cd->cpumask = cpumask_of(cpu);
+ 	cd->set_state_oneshot = constant_set_state_oneshot;
+-	cd->set_state_oneshot_stopped = constant_set_state_oneshot_stopped;
++	cd->set_state_oneshot_stopped = constant_set_state_shutdown;
+ 	cd->set_state_periodic = constant_set_state_periodic;
+ 	cd->set_state_shutdown = constant_set_state_shutdown;
+ 	cd->set_next_event = constant_timer_next_event;
 
+base-commit: 9bacdd8996c77c42ca004440be610692275ff9d0
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.39.3
+
