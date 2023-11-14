@@ -1,116 +1,211 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3E336128
-	for <loongarch@lists.linux.dev>; Tue, 14 Nov 2023 01:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8Dxg_CX0VJlrss5AA--.48509S3;
-	Tue, 14 Nov 2023 09:47:03 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxbS+U0VJla2hBAA--.12085S3;
-	Tue, 14 Nov 2023 09:47:03 +0800 (CST)
-Subject: Re: [PATCH v3 0/3] LoongArch: KVM: Remove SW timer switch when vcpu
- is halt polling
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20231110090529.56950-1-maobibo@loongson.cn>
- <CAAhV-H6zH7TwcAokHguy5Wk_z44nu6toZ9uW48TxrgxxRrvuJA@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <008ec0db-0c3e-0ed6-3f85-cfc60e5e696a@loongson.cn>
-Date: Tue, 14 Nov 2023 09:47:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29B61FD8;
+	Tue, 14 Nov 2023 02:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRTt9l1j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F9BC433D9;
+	Tue, 14 Nov 2023 02:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699928754;
+	bh=CYcpvfJ9TQDQEuovsOAJb8HhEEnIA1oyhQK4KMPS/uU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dRTt9l1jAszL3jEAH5Y4UPSa8dxQd+1eo9ROoYH0KlVlgeLEXaFPQRdNTxPWnckqy
+	 14OXuJ+77GqjM0s+C4IRD/d3hfbGrifQ6JJUN9dGfAX0c/x/3QKHYf7j+AOUiKZ3Sk
+	 3qNg1WJwJnVnbtGTpGQ5BdidMLmN70xsus6xyOywzSpLlN2Jh7G2Tz6GeOk70zhWpS
+	 54GOrcta9ZEyeqzE7WzxiiUMqAu7eNFx3zsnTlcu6QwyuS3ZXVKPJcLhWBNdLWMPCq
+	 Eo2WkS/1AhqPlfHCIRaj6PsRvA6Kh9QGNGQdwHHQVXCJgSoOVUI4zNO6yPqYFEJIr7
+	 ZJWlz8AlQ5sSA==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50930f126b1so6776511e87.3;
+        Mon, 13 Nov 2023 18:25:54 -0800 (PST)
+X-Gm-Message-State: AOJu0Yx9VWPhGm0vZhc0sIZo8z5rI+zfs8MRg3pl8BRPyMR1q4J9ZTIB
+	kYCRD1uSP/QkJNdtwnUJRPodriB7u1D95IaznX4=
+X-Google-Smtp-Source: AGHT+IH96uIZur/Swgs8Pnes7TyGIuTRoYkArdusQcGT/ZdWM/PnBw6U9MGYDuEAIhZ9josJXqxtd5XOPbnbYX4a7HA=
+X-Received: by 2002:ac2:5147:0:b0:508:1889:bfc0 with SMTP id
+ q7-20020ac25147000000b005081889bfc0mr5372698lfd.5.1699928752304; Mon, 13 Nov
+ 2023 18:25:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6zH7TwcAokHguy5Wk_z44nu6toZ9uW48TxrgxxRrvuJA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxbS+U0VJla2hBAA--.12085S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tFy3ZryxJrWfuF1kXF1kJFc_yoW8Cw47pF
-	ZxCFnFkF40krZ8K3W29a1DGr97t3yxKF1xXrnIkFyrCr1qyw1YqFW8KrZ5ZF9xX3yfAryI
-	vr1rta43Za4UA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07URa0PU
-	UUUU=
+References: <202311120926.cjYHyoYw-lkp@intel.com> <03b4e787-53bb-4a9c-afa5-dbb51599a8ce@arm.com>
+In-Reply-To: <03b4e787-53bb-4a9c-afa5-dbb51599a8ce@arm.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 14 Nov 2023 10:25:40 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6PfKc7+p3iFpDF=Hv45b+2ouCOWZ0w-tHxRauprtbaYA@mail.gmail.com>
+Message-ID: <CAAhV-H6PfKc7+p3iFpDF=Hv45b+2ouCOWZ0w-tHxRauprtbaYA@mail.gmail.com>
+Subject: Re: drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse:
+ incorrect type in argument 1 (different address spaces)
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: kernel test robot <lkp@intel.com>, loongarch@lists.linux.dev, kernel@xen0n.name, 
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Will Deacon <will@kernel.org>, Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Robin,
 
+Could you please try this patch?
+https://lore.kernel.org/loongarch/20231113032511.860159-1-chenhuacai@loongs=
+on.cn/T/#u
 
-On 2023/11/13 下午10:36, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> Does this series have some relationship with the commit
-> "LoongArch:LSVZ: set timer offset at first time once" in our internal
-> repo?
+Huacai
 
-No, it is not relative with internal repo. This patch is only 
-optimization for timer save and restore. The internal repo is to set 
-timestamp offset for VM.
-
-I will post another patch for timestamp offset setting.
-
-Regards
-Bibo,
-
-> 
-> Huacai
-> 
-> On Fri, Nov 10, 2023 at 5:07 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> This patches removes SW timer switch during vcpu block stage. VM uses HW
->> timer rather than SW PV timer on LoongArch system, it can check pending
->> HW timer interrupt status directly, rather than switch to SW timer and
->> check injected SW timer interrupt.
->>
->> When SW timer is not used in vcpu halt-polling mode, the relative
->> SW timer handling before entering guest can be removed also. Timer
->> emulation is simpler than before, SW timer emuation is only used in vcpu
->> thread context switch.
->>
->> ---
->>
->> Changes in v3:
->>    Add kvm_arch_vcpu_runnable checking before kvm_vcpu_halt.
->>
->> Changes in v2:
->>    Add halt polling support for idle instruction emulation, using api
->> kvm_vcpu_halt rather than kvm_vcpu_block in function kvm_emu_idle.
->>
->> ---
->>
->> Bibo Mao (3):
->>    LoongArch: KVM: Remove SW timer switch when vcpu is halt polling
->>    LoongArch: KVM: Allow to access HW timer CSR registers always
->>    LoongArch: KVM: Remove kvm_acquire_timer before entering guest
->>
->>   arch/loongarch/include/asm/kvm_vcpu.h |  1 -
->>   arch/loongarch/kvm/exit.c             | 13 ++------
->>   arch/loongarch/kvm/main.c             |  1 -
->>   arch/loongarch/kvm/timer.c            | 47 +++++++--------------------
->>   arch/loongarch/kvm/vcpu.c             | 38 +++++-----------------
->>   5 files changed, 22 insertions(+), 78 deletions(-)
->>
->>
->> base-commit: 305230142ae0637213bf6e04f6d9f10bbcb74af8
->> --
->> 2.39.3
->>
-
+On Mon, Nov 13, 2023 at 11:45=E2=80=AFPM Robin Murphy <robin.murphy@arm.com=
+> wrote:
+>
+> On 2023-11-12 1:38 am, kernel test robot wrote:
+> > Hi Robin,
+> >
+> > First bad commit (maybe !=3D root cause):
+> >
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
+git master
+> > head:   3ca112b71f35dd5d99fc4571a56b5fc6f0c15814
+> > commit: f9bd34e3753ea8f1433a3ba70f03a165a1416f98 perf/arm_cspmu: Clean =
+up ACPI dependency
+> > date:   5 months ago
+> > config: loongarch-randconfig-r133-20231107 (https://download.01.org/0da=
+y-ci/archive/20231112/202311120926.cjYHyoYw-lkp@intel.com/config)
+> > compiler: loongarch64-linux-gcc (GCC) 13.2.0
+> > reproduce: (https://download.01.org/0day-ci/archive/20231112/2023111209=
+26.cjYHyoYw-lkp@intel.com/reproduce)
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
+rsion of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202311120926.cjYHyoYw-l=
+kp@intel.com/
+> >
+> > sparse warnings: (new ones prefixed by >>)
+> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
+ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
+   got unsigned int [noderef] __percpu * @@
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
+ *ptr
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got unsigned =
+int [noderef] __percpu *
+>
+> Unpicking the macros, I guess this must stem from:
+>
+> for_each_sibling_event()
+>   -> lockdep_assert_event_ctx()
+>      ->this_cpu_read(hardirqs_enabled)
+>
+> which appears to be the only obvious place to involve a __percpu pointer
+> in this area.
+>
+>  From there it would seem to be a preexisting Loongarch bug - AFAICS
+> __percpu_read() (and presumably at least __percpu_write() as well)
+> should not be expecting a raw void * argument, but still the __percpu
+> pointer, since the final dereference is done right down in the asm using
+> the per-cpu offset stashed in r21?
+>
+> Thanks,
+> Robin.
+>
+> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
+ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
+   got unsigned int [noderef] __percpu * @@
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
+ *ptr
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got unsigned =
+int [noderef] __percpu *
+> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
+ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
+   got unsigned int [noderef] __percpu * @@
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
+ *ptr
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got unsigned =
+int [noderef] __percpu *
+> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
+ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
+   got unsigned int [noderef] __percpu * @@
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
+ *ptr
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got unsigned =
+int [noderef] __percpu *
+> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
+ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
+   got int [noderef] __percpu * @@
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
+ *ptr
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got int [node=
+ref] __percpu *
+> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
+ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
+   got int [noderef] __percpu * @@
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
+ *ptr
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got int [node=
+ref] __percpu *
+> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
+ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
+   got int [noderef] __percpu * @@
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
+ *ptr
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got int [node=
+ref] __percpu *
+> >>> drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse: sparse: incorrect t=
+ype in argument 1 (different address spaces) @@     expected void *ptr @@  =
+   got int [noderef] __percpu * @@
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     expected void=
+ *ptr
+> >     drivers/perf/arm_cspmu/arm_cspmu.c:627:9: sparse:     got int [node=
+ref] __percpu *
+> >
+> > vim +627 drivers/perf/arm_cspmu/arm_cspmu.c
+> >
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  609
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  610  /*
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  611   * Make sure the group=
+ of events can be scheduled at once
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  612   * on the PMU.
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  613   */
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  614  static bool arm_cspmu_=
+validate_group(struct perf_event *event)
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  615  {
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  616       struct perf_event=
+ *sibling, *leader =3D event->group_leader;
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  617       struct arm_cspmu_=
+hw_events fake_hw_events;
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  618
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  619       if (event->group_=
+leader =3D=3D event)
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  620               return tr=
+ue;
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  621
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  622       memset(&fake_hw_e=
+vents, 0, sizeof(fake_hw_events));
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  623
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  624       if (!arm_cspmu_va=
+lidate_event(event->pmu, &fake_hw_events, leader))
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  625               return fa=
+lse;
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  626
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11 @627       for_each_sibling_=
+event(sibling, leader) {
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  628               if (!arm_=
+cspmu_validate_event(event->pmu, &fake_hw_events,
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  629                        =
+                         sibling))
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  630                       r=
+eturn false;
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  631       }
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  632
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  633       return arm_cspmu_=
+validate_event(event->pmu, &fake_hw_events, event);
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  634  }
+> > e37dfd65731dc4f Besar Wicaksono 2022-11-11  635
+> >
+> > :::::: The code at line 627 was first introduced by commit
+> > :::::: e37dfd65731dc4f001fa7dfa7f705e6840017d5a perf: arm_cspmu: Add su=
+pport for ARM CoreSight PMU driver
+> >
+> > :::::: TO: Besar Wicaksono <bwicaksono@nvidia.com>
+> > :::::: CC: Will Deacon <will@kernel.org>
+> >
