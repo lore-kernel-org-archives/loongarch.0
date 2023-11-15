@@ -1,110 +1,90 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FF73174F
-	for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 16:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900213BB47
+	for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 16:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KAMe7zWF"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-9c3aec5f326so205471466b.1
-        for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 08:12:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1700064774; x=1700669574; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ab4jnXj8Bjx21zU5WbouPNL4gj/h303kBNvkdQgDmY=;
-        b=KAMe7zWFftBZdVi3kShiOdUzFXzrNU7QQrdHUbSLWNNDvok0rm4Mc8k3ZeEXWtJ5/l
-         Cqp5OtvOI/W9ndK0MEAftqpF1bn3MCrghgFXv7JSy+fUUfDHm9hNnBcrg1gQJmdF73MI
-         wgafY6AuuCsWPRclHdGJykmWUB2hj8yWo691A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700064774; x=1700669574;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1ab4jnXj8Bjx21zU5WbouPNL4gj/h303kBNvkdQgDmY=;
-        b=KEf4Y8XABnF72KvpXP+Ek5Z7sSH530+rTI0gL1NThtIY4cz/Nb2DwnomG+o9pbBAU7
-         dKgytRX1d1oN5GYvhMoUOoLqjQDbtryEDpSlQQ40MZ1cn8bOBPwYAoLjtD9C5IAg+WCH
-         3wslg1zrbB54ZSJ5s9UXBbNgX1k7XgwMRFMT79E7WYLwSUJ6HrcZPnBDbdgFhKVr7RVH
-         qffG31NZINqKJPPh3g5AUj1gkgp6/aymFFs/oX2bFm8/kSyFEnqCyobRXtP181HIJ9Zm
-         826jfxJ9Rmog62VL2D8mPhz13Fs7wSiPzgzVW4Jl0VqhdbEuBBfHxYQnQoE7+05kIQV4
-         kdQg==
-X-Gm-Message-State: AOJu0Yz79t5tD5PegJNOLbkM26SpghQPgZfxip11pFJhEqrJIliBDwGt
-	lASvoCuE7Carq/hdH2Mbx4YcGc+pjHBt7UKVplohPR5Q
-X-Google-Smtp-Source: AGHT+IHiFiaPtfIX1brxVPDTiJKzaQtxLKIKnBTs53n1h+5G6UH21uq0BfUWtjwECc5j/IhmiM0d5Q==
-X-Received: by 2002:a17:906:3518:b0:9f4:53d9:2d66 with SMTP id r24-20020a170906351800b009f453d92d66mr759343eja.5.1700064774755;
-        Wed, 15 Nov 2023 08:12:54 -0800 (PST)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id lx20-20020a170906af1400b009e5f5efac10sm7174636ejb.208.2023.11.15.08.12.54
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Nov 2023 08:12:54 -0800 (PST)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-9c603e2354fso207475266b.1
-        for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 08:12:54 -0800 (PST)
-X-Received: by 2002:aa7:da07:0:b0:542:ff1b:6c7a with SMTP id
- r7-20020aa7da07000000b00542ff1b6c7amr5958727eds.9.1700064753769; Wed, 15 Nov
- 2023 08:12:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YL+XnhK/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700066396;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HCpNMTIKyOeROsc7/RWOAvMZhqSI0z3duXfnje8m3KQ=;
+	b=YL+XnhK/zX5yeaOBX/zZ95Z/c7pB1fLKh64GHmJZ7xUDXknJjndVgb78S8MOg48F549mAN
+	0wgM9MWPY6aDGR50ZwBLAxd/iNE0lPQk3M5HXx6ji5ifulEkGsvcjkTi86/GRujlc9jdeB
+	kVlgLd5mIkejXayQx7D6AmXWK4yEI50=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-121-UdDnholkMuG4DRRASuNUrQ-1; Wed, 15 Nov 2023 11:39:50 -0500
+X-MC-Unique: UdDnholkMuG4DRRASuNUrQ-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E6F20101B04B;
+	Wed, 15 Nov 2023 16:39:46 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.16])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id F0B85492BE8;
+	Wed, 15 Nov 2023 16:39:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wgHciqm3iaq6hhtP64+Zsca6Y6z5UfzHzjfhUhA=jP0zA@mail.gmail.com>
+References: <CAHk-=wgHciqm3iaq6hhtP64+Zsca6Y6z5UfzHzjfhUhA=jP0zA@mail.gmail.com> <20231115154946.3933808-1-dhowells@redhat.com> <20231115154946.3933808-6-dhowells@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
+    Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+    Christoph Hellwig <hch@lst.de>,
+    David Laight <David.Laight@aculab.com>,
+    Matthew Wilcox <willy@infradead.org>,
+    Brendan Higgins <brendanhiggins@google.com>,
+    David Gow <davidgow@google.com>, linux-fsdevel@vger.kernel.org,
+    linux-block@vger.kernel.org, linux-mm@kvack.org,
+    netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+    kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+    Andrew Morton <akpm@linux-foundation.org>,
+    Christian Brauner <brauner@kernel.org>,
+    David Hildenbrand <david@redhat.com>,
+    John Hubbard <jhubbard@nvidia.com>,
+    Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+    Heiko Carstens <hca@linux.ibm.com>,
+    Vasily Gorbik <gor@linux.ibm.com>,
+    Alexander Gordeev <agordeev@linux.ibm.com>,
+    Christian Borntraeger <borntraeger@linux.ibm.com>,
+    Sven Schnelle <svens@linux.ibm.com>, loongarch@lists.linux.dev,
+    linux-s390@vger.kernel.org
+Subject: Re: [PATCH v3 05/10] iov_iter: Create a function to prepare userspace VM for UBUF/IOVEC tests
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231115154946.3933808-1-dhowells@redhat.com> <20231115154946.3933808-6-dhowells@redhat.com>
-In-Reply-To: <20231115154946.3933808-6-dhowells@redhat.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 15 Nov 2023 11:12:17 -0500
-X-Gmail-Original-Message-ID: <CAHk-=wgHciqm3iaq6hhtP64+Zsca6Y6z5UfzHzjfhUhA=jP0zA@mail.gmail.com>
-Message-ID: <CAHk-=wgHciqm3iaq6hhtP64+Zsca6Y6z5UfzHzjfhUhA=jP0zA@mail.gmail.com>
-Subject: Re: [PATCH v3 05/10] iov_iter: Create a function to prepare userspace
- VM for UBUF/IOVEC tests
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>, Jens Axboe <axboe@kernel.dk>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Christoph Hellwig <hch@lst.de>, 
-	David Laight <David.Laight@aculab.com>, Matthew Wilcox <willy@infradead.org>, 
-	Brendan Higgins <brendanhiggins@google.com>, David Gow <davidgow@google.com>, 
-	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-mm@kvack.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, 
-	David Hildenbrand <david@redhat.com>, John Hubbard <jhubbard@nvidia.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, loongarch@lists.linux.dev, linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3936725.1700066370.1@warthog.procyon.org.uk>
+Date: Wed, 15 Nov 2023 16:39:30 +0000
+Message-ID: <3936726.1700066370@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On Wed, 15 Nov 2023 at 10:50, David Howells <dhowells@redhat.com> wrote:
->
-> This requires access to otherwise unexported core symbols: mm_alloc(),
-> vm_area_alloc(), insert_vm_struct() arch_pick_mmap_layout() and
-> anon_inode_getfile_secure(), which I've exported _GPL.
->
-> [?] Would it be better if this were done in core and not in a module?
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-I'm not going to take this, even if it were to be sent to me through Christian.
+> From a quick look, what you were doing was checking that the patterns
+> you set up in user space came through ok. Dammit, what's wrong with
+> just using read()/write() on a pipe, or splice, or whatever. It will
+> test exactly the same iov_iter thing.
 
-I think the exports really show that this shouldn't be done. And yes,
-doing it in core would avoid the exports, but would be even worse.
+I was trying to make it possible to do these tests before starting userspace
+as there's a good chance that if the UBUF/IOVEC iterators don't work right
+then your system can't be booted.
 
-Those functions exist for setting up user space. You should be doing
-this in user space.
+Anyway, if I drop patches 5, 6, 7 and 10 (ie. the ones doing stuff with UBUF
+and IOVEC-type iterators), would you be okay with the rest?
 
-I'm getting really fed up with the problems that ther KUnit tests
-cause. We have a long history of self-inflicted pain due to "unit
-testing", where it has caused stupid problems like just overflowing
-the kernel stack etc.
+David
 
-This needs to stop. And this is where I'm putting my foot down. No
-more KUnit tests that make up interfaces - or use interfaces - that
-they have absolutely no place using.
-
-From a quick look, what you were doing was checking that the patterns
-you set up in user space came through ok. Dammit, what's wrong with
-just using read()/write() on a pipe, or splice, or whatever. It will
-test exactly the same iov_iter thing.
-
-Kernel code should do things that can *only* be done in the kernel.
-This is not it.
-
-              Linus
