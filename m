@@ -1,29 +1,27 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7903C18C07;
-	Wed, 15 Nov 2023 13:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079F8286B5;
+	Wed, 15 Nov 2023 14:15:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [112.22.233.25])
-	by gateway (Coremail) with SMTP id _____8AxlPDtxVRlxUY6AA--.49344S3;
-	Wed, 15 Nov 2023 21:21:50 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.22.233.25])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axzy_pxVRlXQNDAA--.16352S2;
-	Wed, 15 Nov 2023 21:21:48 +0800 (CST)
-From: WANG Rui <wangrui@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Xi Ruoyao <xry111@xry111.site>,
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D367FC433C7;
+	Wed, 15 Nov 2023 14:15:48 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kbuild@vger.kernel.org,
-	llvm@lists.linux.dev,
 	loongson-kernel@lists.loongnix.cn,
-	WANG Rui <wangrui@loongson.cn>
-Subject: [PATCH] LoongArch: Explicitly set -fdirect-access-external-data for vmlinux
-Date: Wed, 15 Nov 2023 21:21:37 +0800
-Message-ID: <20231115132137.178523-1-wangrui@loongson.cn>
-X-Mailer: git-send-email 2.42.1
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Silence the boot warning about 'nokaslr'
+Date: Wed, 15 Nov 2023 22:15:30 +0800
+Message-Id: <20231115141530.2534778-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -31,49 +29,42 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axzy_pxVRlXQNDAA--.16352S2
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7JrWUtr47Ww47Zr4rGryrZrc_yoW8Jrykpa
-	97ur48Gws5ArWIqF9FqFWfXw4qyr4DJr4fZa47Krn8ZFyDZryfZw45Ar4qg3W2y34kAryx
-	Wa1xGFy2qFW5JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7-B_UUUUU
 
-After this llvm commit [1], The -fno-pic does not imply direct access
-external data. Explicitly set -fdirect-access-external-data for vmlinux
-that can avoids GOT entries.
+The kernel parameter 'nokaslr' is handled before start_kernel(), so we
+don't need early_param() to mark it technically. But it can cause a boot
+warning as follows:
 
-Link: https://github.com/llvm/llvm-project/commit/47eeee297775347cbdb7624d6a766c2a3eec4a59
-Suggested-by: Xi Ruoyao <xry111@xry111.site>
-Signed-off-by: WANG Rui <wangrui@loongson.cn>
+Unknown kernel command line parameters "nokaslr", will be passed to user space.
+
+When we use 'init=/bin/bash', 'nokaslr' which passed to user space will
+even cause a kernel panic. So we use early_param() to mark 'nokaslr',
+simply print a notice and silence the boot warning (also fix a potential
+panic). This logic is similar to RISC-V.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/loongarch/kernel/relocate.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index c31a62521e6b..1f0d74403419 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -68,6 +68,7 @@ LDFLAGS_vmlinux			+= -static -n -nostdlib
- ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
- cflags-y			+= $(call cc-option,-mexplicit-relocs)
- KBUILD_CFLAGS_KERNEL		+= $(call cc-option,-mdirect-extern-access)
-+KBUILD_CFLAGS_KERNEL		+= $(call cc-option,-fdirect-access-external-data)
- KBUILD_AFLAGS_MODULE		+= $(call cc-option,-fno-direct-access-external-data)
- KBUILD_CFLAGS_MODULE		+= $(call cc-option,-fno-direct-access-external-data)
- KBUILD_AFLAGS_MODULE		+= $(call cc-option,-mno-relax) $(call cc-option,-Wa$(comma)-mno-relax)
+diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
+index 6c3eff9af9fb..c2f5c2bdeb7f 100644
+--- a/arch/loongarch/kernel/relocate.c
++++ b/arch/loongarch/kernel/relocate.c
+@@ -102,6 +102,14 @@ static inline __init unsigned long get_random_boot(void)
+ 	return hash;
+ }
+ 
++static int __init nokaslr(char *p)
++{
++	pr_info("KASLR is disabled.\n");
++
++	return 0; /* Print a notice and silence the boot warning */
++}
++early_param("nokaslr", nokaslr);
++
+ static inline __init bool kaslr_disabled(void)
+ {
+ 	char *str;
 -- 
-2.42.1
+2.39.3
 
