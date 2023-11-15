@@ -1,101 +1,62 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 494F43A287
-	for <loongarch@lists.linux.dev>; Tue, 14 Nov 2023 11:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxyOjCXlNlvPA5AA--.12675S3;
-	Tue, 14 Nov 2023 19:49:22 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxni_CXlNlnuRBAA--.13313S2;
-	Tue, 14 Nov 2023 19:49:22 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Peter Zijlstra <peterz@infradead.org>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Implement stable timer shutdown interface
-Date: Tue, 14 Nov 2023 19:46:56 +0800
-Message-Id: <20231114114656.1003841-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58532FC5C
+	for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 00:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="z08EQD44"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=fI1i46wGmSawxg9bjQqtCDxaszTYtfTdIi2jtLduIII=; b=z08EQD44LOosBYSQh7X5OAeNlk
+	i5YGV6CTfwp0fndbsnX0juOwyS0Rgs0EvsHZER+NPjqeDdenGV3/NjhT8eguHN8I7uBxQw3/UziJ0
+	2k/LhfOz2dTvZ/nEKnHqt/YoW+5VccyjjDESSmVsioMSdTZzw8QgzV+CK4fW1MN1QxkSKWa9M8HDX
+	ggyxr91FgxyR+ghklrTdVzQhboa3ZrUcVW1MXGQkSg07REeGwGHG4S3lgkw/AA/tS/t0x1//j4S98
+	D2QFYPyxOK9L10p6l+uoKNIckvdO0VEsIwBcJmdkmRDmNUF8HqoZdjryA6pYATPYBXf95p9NElnE9
+	L0WVKVhg==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1r33KA-00H0dp-36;
+	Wed, 15 Nov 2023 00:00:06 +0000
+Message-ID: <960bef74-ed09-4b6f-8ae8-b3effef6914f@infradead.org>
+Date: Tue, 14 Nov 2023 16:00:05 -0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxni_CXlNlnuRBAA--.13313S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw45uFW3JFW3XF18Xry5GFX_yoW8Zw4Dpw
-	srCFnxKrWYk3ZagFyDtr4kZr98J3409wsFya4DKay8CFyYqr1fGFs7trWqvF4avryFgayx
-	J3W0vw1qqa17JabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Nov 14 (loongarch: KVM)
+Content-Language: en-US
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ KVM list <kvm@vger.kernel.org>,
+ "open list:LOONGARCH" <loongarch@lists.linux.dev>
+References: <20231114141916.6472e5c0@canb.auug.org.au>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231114141916.6472e5c0@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When cpu is hotplug out, cpu is in idle state and function
-arch_cpu_idle_dead is called. Timer interrupt for this processor should
-be disabled, else there will be timer interrupt for the dead cpu. Also
-this prevents vcpu to schedule out during halt-polling flow when system
-is running in vm mode, since there is pending timer interrupt.
 
-This patch adds detailed implementation for timer shutdown interface, so
-that timer will be disabled when cpu is plug-out.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kernel/time.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+On 11/13/23 19:19, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20231113:
+> 
 
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index 3064af94db9c..2920770e30a9 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -58,7 +58,7 @@ static int constant_set_state_oneshot(struct clock_event_device *evt)
- 	return 0;
- }
- 
--static int constant_set_state_oneshot_stopped(struct clock_event_device *evt)
-+static int constant_set_state_shutdown(struct clock_event_device *evt)
- {
- 	unsigned long timer_config;
- 
-@@ -90,11 +90,6 @@ static int constant_set_state_periodic(struct clock_event_device *evt)
- 	return 0;
- }
- 
--static int constant_set_state_shutdown(struct clock_event_device *evt)
--{
--	return 0;
--}
--
- static int constant_timer_next_event(unsigned long delta, struct clock_event_device *evt)
- {
- 	unsigned long timer_config;
-@@ -161,7 +156,7 @@ int constant_clockevent_init(void)
- 	cd->rating = 320;
- 	cd->cpumask = cpumask_of(cpu);
- 	cd->set_state_oneshot = constant_set_state_oneshot;
--	cd->set_state_oneshot_stopped = constant_set_state_oneshot_stopped;
-+	cd->set_state_oneshot_stopped = constant_set_state_shutdown;
- 	cd->set_state_periodic = constant_set_state_periodic;
- 	cd->set_state_shutdown = constant_set_state_shutdown;
- 	cd->set_next_event = constant_timer_next_event;
+../arch/loongarch/kvm/mmu.c: In function 'kvm_map_page':
+../arch/loongarch/kvm/mmu.c:810:13: error: implicit declaration of function 'mmu_invalidate_retry_hva'; did you mean 'mmu_invalidate_retry_gfn'? [-Werror=implicit-function-declaration]
+  810 |         if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+      |             mmu_invalidate_retry_gfn
 
-base-commit: 9bacdd8996c77c42ca004440be610692275ff9d0
+
 -- 
-2.39.3
-
+~Randy
