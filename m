@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263361FCF
-	for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 03:34:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94234EB8
+	for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 03:35:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQtnLEWj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7286AC433C7;
-	Wed, 15 Nov 2023 03:34:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1ChV6BT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D1E6C433C7;
+	Wed, 15 Nov 2023 03:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700019276;
-	bh=K9lq4b4xli/0qrsq9veIqfV5CRENhYQ+seLOfRxbm48=;
+	s=k20201202; t=1700019339;
+	bh=+e3LP2IXL68DhaHAAyxre/OGc5CwF35fpWnMeovze1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IQtnLEWjmyTPWuRuI2Hh7N7+zf/UXMs6/bQtCNq0x2XTmq9OLEH1g5K5zMjMizamo
-	 TeAWfJN91IFdClnaNls0cUA4mUTWzWhUfls6T/y2uhrgZLJW3+sq0/tnvQK7O5yPxp
-	 NtVHMj8vmc/4YWucO44yv2YD5stgsaESluHd3TfcXgUEn75p5/auI4nKSeIfD8ymAV
-	 hsDt3ud9RkYEZKpggoZUuwq4taogRqoEGw4Sn3hUOTrdU77TgY/niDqyBGlMTqPdx2
-	 iOZcuqPTGkjCEU4Jr7xzhCEYtDST/E1euuC4DbtIMYiarfWqAbR8o3mJaWFF+aT3yA
-	 kycYQyFuHvgCQ==
+	b=e1ChV6BTa4UcemUCTXLvy4YGkqN50IXE2SHqxwYCmPSxEwQEJzItKgNzMKRum+K86
+	 1QR4xNAHPdCqAk8SO5oLWCQS7NEQagEG5qlaz9oSnnPPe+/+KUeMuetcXaYWTPA8aE
+	 c0zXyaWjetYlUAwVjsGoGg6BDBeTTQ37+I9pe6QmalgKvTiLOeOdZwkQVw8FlgDXc4
+	 mGaHTtIDdIkM1p7cl3KTIvqYepJX4jx9OrlwGlXC2bnhVZsphZk4yvRz/oagVaXjBc
+	 jkzn3esevWZ0pqk0tIheyaeEWaobTCV1FwSc5+CEodJl+58UYI9Dlk76FxkpdLeU4A
+	 ENcS32V3TcEgg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -24,18 +24,20 @@ Cc: Huacai Chen <chenhuacai@loongson.cn>,
 	Sasha Levin <sashal@kernel.org>,
 	chenhuacai@kernel.org,
 	maobibo@loongson.cn,
+	peterz@infradead.org,
 	palmer@rivosinc.com,
-	yangtiezhu@loongson.cn,
-	wangliupu@loongson.cn,
+	guoren@kernel.org,
+	vschneid@redhat.com,
 	jpoimboe@kernel.org,
+	yangtiezhu@loongson.cn,
 	zhoubinbin@loongson.cn,
 	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 4/6] LoongArch/smp: Call rcutree_report_cpu_starting() earlier
-Date: Tue, 14 Nov 2023 22:33:38 -0500
-Message-ID: <20231115033350.1228588-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.5 4/6] LoongArch/smp: Call rcutree_report_cpu_starting() earlier
+Date: Tue, 14 Nov 2023 22:34:48 -0500
+Message-ID: <20231115033459.1228900-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231115033350.1228588-1-sashal@kernel.org>
-References: <20231115033350.1228588-1-sashal@kernel.org>
+In-Reply-To: <20231115033459.1228900-1-sashal@kernel.org>
+References: <20231115033459.1228900-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,7 +46,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.1
+X-stable-base: Linux 6.5.11
 Content-Transfer-Encoding: 8bit
 
 From: Huacai Chen <chenhuacai@loongson.cn>
@@ -107,10 +109,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index ef35c871244f0..5bca12d16e069 100644
+index 6667b0a90f81d..dafccf44308b6 100644
 --- a/arch/loongarch/kernel/smp.c
 +++ b/arch/loongarch/kernel/smp.c
-@@ -504,8 +504,9 @@ asmlinkage void start_secondary(void)
+@@ -503,8 +503,9 @@ asmlinkage void start_secondary(void)
  	unsigned int cpu;
  
  	sync_counter();
