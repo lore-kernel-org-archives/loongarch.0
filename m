@@ -1,151 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E862F80C
-	for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 03:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812E13D6C
+	for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 06:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uImMLZOV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FD26C433C8
-	for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 03:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700020536;
-	bh=DjioEA6yFkFSgqg2Fg87W7Jilj73akgzOASGYgK8gHw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uImMLZOVAb7cWC/V37UV+IJsRtdEfQ6ADj4ZQ4Mbti0LA6QBNKdVOJBMsTTvxVd2w
-	 uQSejMzTjPolGjMyMlnMSx/8+ZSPrLQaVQw/FuksyK4KujiUX38ZZgH2TnexBT6bXa
-	 gMl8nkSAZvMTrD2IW0a+jgaHvBl6eP0WvlzGb7iBQ1ac0JLM5Y/w9YV9pi8GMsfX9w
-	 B/GaiUHl8jgBOLzOFdFoPswdZQmba3IqibW9mlkugY9qeYnSLRk3xAmzBQpjUXkA+Y
-	 XX8N0oziYTHPpHl9A2f67DHr9VdT+nuAAip2+IIJpfWnX+drq419UoC1DWV0kAF92G
-	 98AVrIidnmYZA==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-9df8d0c2505so90853466b.0
-        for <loongarch@lists.linux.dev>; Tue, 14 Nov 2023 19:55:36 -0800 (PST)
-X-Gm-Message-State: AOJu0Yz2EsXHWGCyE9DZzgBJSiUDJerRVthJKhA4OCi2KTvG0ndsvCWs
-	uuUWwzy0zYROxAOBHHPSMTspDuIUYYOM4kMRe/E=
-X-Google-Smtp-Source: AGHT+IGiN/xewkmgirjSJILpaABI73kI4yfwGW0y4S7r3q1TLlfVBcz/Eyl2jNLvj5JbU9u9riOUEWgnwpZT4I8QvaU=
-X-Received: by 2002:a17:907:9629:b0:9ee:295:5696 with SMTP id
- gb41-20020a170907962900b009ee02955696mr4368970ejc.2.1700020534757; Tue, 14
- Nov 2023 19:55:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQgpHdXz"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dafe04717baso2250494276.1
+        for <loongarch@lists.linux.dev>; Tue, 14 Nov 2023 22:50:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700031053; x=1700635853; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=POR86ACWq50gnyaMlW3Qse0dtzLOhtouY3Pos+VsSEI=;
+        b=GQgpHdXzJMUlr3eQnvnh3874uGNTbcXMePk4FDOmkqA+4qOOLP87SHKbDKigHqLZwi
+         AZDB3Y8tUJcUVZnXcLiJx0H4NE4emifYwhn7ryDkHeZkyzG5jxP9jPPFyJHc2N19WhIT
+         u8btaKzbsnWvvT52hkUFG069VIVftvTj2usyuun8YyQZi4vJfZxzBw9k3OCgSf8KvrvN
+         /XVwZx0bEubzRG0NxRnINJzV3KUybjD8QTTQcVQNhLa6LADM9VUrM+9J8FtvJNRR1S+H
+         uG+0QWxOGfIGBqhMfYEpI/jZLutDX+juyyVkLQk5arOiVVH0K6Jf9wNj7HrJy13ENYXG
+         htNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700031053; x=1700635853;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=POR86ACWq50gnyaMlW3Qse0dtzLOhtouY3Pos+VsSEI=;
+        b=MQWXjxqsxR26ma22E38k5bvWB2cnjWi99ADNyiFhoX9VcJGXBRTr5zGo1mO8URUeA3
+         t2+n1Kh+K++gX43FgQCbPSTVpaDAMzO5Vume1dxlEpVAVCjrFawlV4fYfuQgkJsHGsgp
+         aVUSrR5HJxoKKHS9IBIZ2f4VFx41vw2+0qcC9iucgaz7XplLgMToTf2SAvhw/J+DXAIh
+         eihvKvm7Yr2TYutx2ghTiQz1J9gNp+/u+84Afp1UFrp+LogT+OgdQMcv9UXSQFus/Nlg
+         aGH1NPQry+hM2e1A9UJenebfHpWoEag+YUtBAtNUO35/SmEHKf7qYd3NLvGcgaWlLtuA
+         SPfQ==
+X-Gm-Message-State: AOJu0YzyfXPA2fRu1UVcz58E3Fvd5xF9GReWpNeUJ7fQf3jDJ/1heWWZ
+	9DKnlxej+lU6lmJq4+zn+DsI0KcIuhca1opadsI=
+X-Google-Smtp-Source: AGHT+IEvWU+xADG1vVrhuo05S5yemv8lG8npJc7Gem1sHpS7JujsnjhW9DN6x9wSerRwOITRWwumplSH2YEoe+kS57E=
+X-Received: by 2002:a25:383:0:b0:da0:6257:8da4 with SMTP id
+ 125-20020a250383000000b00da062578da4mr9881399ybd.57.1700031053336; Tue, 14
+ Nov 2023 22:50:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231115033350.1228588-1-sashal@kernel.org> <20231115033350.1228588-4-sashal@kernel.org>
-In-Reply-To: <20231115033350.1228588-4-sashal@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 15 Nov 2023 11:55:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H61R006eHGN+ujvDqrT_6AYV0XBcSaT2zyVLJi1rR=kMA@mail.gmail.com>
-Message-ID: <CAAhV-H61R006eHGN+ujvDqrT_6AYV0XBcSaT2zyVLJi1rR=kMA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.6 4/6] LoongArch/smp: Call rcutree_report_cpu_starting()
- earlier
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Huacai Chen <chenhuacai@loongson.cn>, maobibo@loongson.cn, palmer@rivosinc.com, 
-	yangtiezhu@loongson.cn, wangliupu@loongson.cn, jpoimboe@kernel.org, 
-	zhoubinbin@loongson.cn, loongarch@lists.linux.dev
+References: <cover.1698743706.git.zhoubinbin@loongson.cn> <944559ea3bf7ba0a1540f831ccd7d33591622b22.1698743706.git.zhoubinbin@loongson.cn>
+ <20231031-negative-giveaway-6191a2da0cd5@spud> <CAMpQs4+3T9RATpJ5VycnEzkOTx_M2vdt6WPJv_B1Efy81RzCjA@mail.gmail.com>
+ <20231101-clone-facsimile-fd4c37333842@spud>
+In-Reply-To: <20231101-clone-facsimile-fd4c37333842@spud>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 15 Nov 2023 12:50:41 +0600
+Message-ID: <CAMpQs4L_85yPQXR4t=kaCEuwXK-Jr=L6G=omhAtrOn7CWUMCKw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: loongson,ls2k-thermal: Fix
+ binding check issues
+To: Conor Dooley <conor@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, 
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Sasha,
+On Wed, Nov 1, 2023 at 1:59=E2=80=AFPM Conor Dooley <conor@kernel.org> wrot=
+e:
+>
+> On Wed, Nov 01, 2023 at 07:38:39AM +0600, Binbin Zhou wrote:
+> > On Tue, Oct 31, 2023 at 10:58=E2=80=AFPM Conor Dooley <conor@kernel.org=
+> wrote:
+> > >
+> > > On Tue, Oct 31, 2023 at 07:05:49PM +0800, Binbin Zhou wrote:
+> > > > Add the missing 'thermal-sensor-cells' property which is required f=
+or
+> > > > every thermal sensor as it's used when using phandles.
+> > > > And add the thermal-sensor.yaml reference.
+> > > >
+> > > > Fixes: 72684d99a854 ("thermal: dt-bindings: add loongson-2 thermal"=
+)
+> > > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > > ---
+> > > >  .../bindings/thermal/loongson,ls2k-thermal.yaml        | 10 ++++++=
++++-
+> > > >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/thermal/loongson,ls2=
+k-thermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-th=
+ermal.yaml
+> > > > index 7538469997f9..b634f57cd011 100644
+> > > > --- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-therm=
+al.yaml
+> > > > +++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-therm=
+al.yaml
+> > > > @@ -10,6 +10,9 @@ maintainers:
+> > > >    - zhanghongchen <zhanghongchen@loongson.cn>
+> > > >    - Yinbo Zhu <zhuyinbo@loongson.cn>
+> > > >
+> > > > +allOf:
+> > > > +  - $ref: /schemas/thermal/thermal-sensor.yaml#
+> > > > +
+> > > >  properties:
+> > > >    compatible:
+> > > >      oneOf:
+> > > > @@ -26,12 +29,16 @@ properties:
+> > > >    interrupts:
+> > > >      maxItems: 1
+> > > >
+> > > > +  '#thermal-sensor-cells':
+> > > > +    const: 1
+> > > > +
+> > > >  required:
+> > > >    - compatible
+> > > >    - reg
+> > > >    - interrupts
+> > > > +  - '#thermal-sensor-cells'
+> > >
+> > > Why does it need to be a required property now though?
+> > > Adding new required properties is technically an ABI break.
+> >
+> > Hi Conor:
+> >
+> > I don't think it makes sense to have a separate thermal sensor
+> > definition, it needs thermal-zones to describe specific behaviors,
+> > e.g. cpu-thermal, so we need '#thermal-sensor-cells' to specify the
+> > reference.
+> > And the Loongson-2K1000 has 4 sets of control registers, we need to
+> > specify the id when referencing it.
+>
+> Unfortunately, none of this is an answer to my question.
 
-In 6.6 and earlier versions, rcutree_report_cpu_starting() should be
-rcu_cpu_starting().
+Hi Conor:
 
-Huacai
+Sorry for my late reply.
 
-On Wed, Nov 15, 2023 at 11:34=E2=80=AFAM Sasha Levin <sashal@kernel.org> wr=
-ote:
->
-> From: Huacai Chen <chenhuacai@loongson.cn>
->
-> [ Upstream commit a2ccf46333d7b2cf9658f0d82ac74097c1542fae ]
->
-> rcutree_report_cpu_starting() must be called before cpu_probe() to avoid
-> the following lockdep splat that triggered by calling __alloc_pages() whe=
-n
-> CONFIG_PROVE_RCU_LIST=3Dy:
->
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
->  WARNING: suspicious RCU usage
->  6.6.0+ #980 Not tainted
->  -----------------------------
->  kernel/locking/lockdep.c:3761 RCU-list traversed in non-reader section!!
->  other info that might help us debug this:
->  RCU used illegally from offline CPU!
->  rcu_scheduler_active =3D 1, debug_locks =3D 1
->  1 lock held by swapper/1/0:
->   #0: 900000000c82ef98 (&pcp->lock){+.+.}-{2:2}, at: get_page_from_freeli=
-st+0x894/0x1790
->  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.6.0+ #980
->  Stack : 0000000000000001 9000000004f79508 9000000004893670 9000000100310=
-000
->          90000001003137d0 0000000000000000 90000001003137d8 9000000004f79=
-508
->          0000000000000000 0000000000000001 0000000000000000 90000000048a3=
-384
->          203a656d616e2065 ca43677b3687e616 90000001002c3480 0000000000000=
-008
->          000000000000009d 0000000000000000 0000000000000001 80000000ffffe=
-0b8
->          000000000000000d 0000000000000033 0000000007ec0000 13bbf50562dad=
-831
->          9000000005140748 0000000000000000 9000000004f79508 0000000000000=
-004
->          0000000000000000 9000000005140748 90000001002bad40 0000000000000=
-000
->          90000001002ba400 0000000000000000 9000000003573ec8 0000000000000=
-000
->          00000000000000b0 0000000000000004 0000000000000000 0000000000070=
-000
->          ...
->  Call Trace:
->  [<9000000003573ec8>] show_stack+0x38/0x150
->  [<9000000004893670>] dump_stack_lvl+0x74/0xa8
->  [<900000000360d2bc>] lockdep_rcu_suspicious+0x14c/0x190
->  [<900000000361235c>] __lock_acquire+0xd0c/0x2740
->  [<90000000036146f4>] lock_acquire+0x104/0x2c0
->  [<90000000048a955c>] _raw_spin_lock_irqsave+0x5c/0x90
->  [<900000000381cd5c>] rmqueue_bulk+0x6c/0x950
->  [<900000000381fc0c>] get_page_from_freelist+0xd4c/0x1790
->  [<9000000003821c6c>] __alloc_pages+0x1bc/0x3e0
->  [<9000000003583b40>] tlb_init+0x150/0x2a0
->  [<90000000035742a0>] per_cpu_trap_init+0xf0/0x110
->  [<90000000035712fc>] cpu_probe+0x3dc/0x7a0
->  [<900000000357ed20>] start_secondary+0x40/0xb0
->  [<9000000004897138>] smpboot_entry+0x54/0x58
->
-> raw_smp_processor_id() is required in order to avoid calling into lockdep
-> before RCU has declared the CPU to be watched for readers.
->
-> See also commit 29368e093921 ("x86/smpboot: Move rcu_cpu_starting() earli=
-er"),
-> commit de5d9dae150c ("s390/smp: move rcu_cpu_starting() earlier") and com=
-mit
-> 99f070b62322 ("powerpc/smp: Call rcu_cpu_starting() earlier").
->
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  arch/loongarch/kernel/smp.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index ef35c871244f0..5bca12d16e069 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -504,8 +504,9 @@ asmlinkage void start_secondary(void)
->         unsigned int cpu;
->
->         sync_counter();
-> -       cpu =3D smp_processor_id();
-> +       cpu =3D raw_smp_processor_id();
->         set_my_cpu_offset(per_cpu_offset(cpu));
-> +       rcutree_report_cpu_starting(cpu);
->
->         cpu_probe();
->         constant_clockevent_init();
-> --
-> 2.42.0
->
+Over the past few days, I've been communicating offline with Yinbo
+(the driver author) about the use of the '#thermal-sensor-cells'
+attribute. He retested the attribute and determined that it is
+'required'.
+
+We can see that the '#thermal-sensor-cells' attribute in the
+dt-binding was dropped between the V12 patchset[1] and the V13
+patchset[2]. Yinbo may have misunderstood Daniel's comment and removed
+the '#thermal-sensor-cells' attribute from the dt-binding. But the
+attribute was carelessly still left in the dts file, resulting in the
+issue not being found during functional validation.
+
+Indeed, re-adding the '#thermal-sensor-cells' attribute as "required"
+is technically an ABI breakage, but the driver does not work properly
+under the current dt-binding rules.
+Also, the driver is only valid under LoongArch and will have no effect
+on other architectures.
+
+[1]=EF=BC=9Ahttps://lore.kernel.org/all/20221114024709.7975-2-zhuyinbo@loon=
+gson.cn/
+[2]=EF=BC=9Ahttps://lore.kernel.org/all/20230221095355.9799-2-zhuyinbo@loon=
+gson.cn/
+
+Thanks.
+Binbin
