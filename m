@@ -1,170 +1,379 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCF72EB08;
-	Wed, 15 Nov 2023 14:54:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8717E31736
+	for <loongarch@lists.linux.dev>; Wed, 15 Nov 2023 15:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZBjEbY7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E51AC433C8;
-	Wed, 15 Nov 2023 14:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700060063;
-	bh=qJzZTmMjUOCQgaFSR0cAlyelD4CebJxSHi50IvMMUXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sZBjEbY7ekjmsPtfiYZ7Qes3zmOewOIk3dgwa4I4mBP3Ew/Zkl+nv6jT5TcTA0sso
-	 tnXS6s2x92qXATCgr4gauZDg6Cm4OD+QvZMmzaVB8tL7YP3MR/e7tqVcjnPc3RADGe
-	 46rxBZJNMU8z7pMFI5fxDNOVs8my4USq3fMe8GUZZRTVh0+XeJpJ3XhO/mzMLMqfe1
-	 6k2kyzwwGr4bo8dWA7f7q4Rx2YrR0FbKCe3jsqkR/6PVZPBRX2EeLqpKS2/+e9jxUA
-	 Hy2KGZCZ/A2ftHDhNVd/AE5uNEsHGcScCrCuvyBcyx8EGFM/+R4vpA0FGGb9aVTxwH
-	 A70dtOc8HgFfA==
-Date: Wed, 15 Nov 2023 14:54:19 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QU/V0jDC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700063418;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b3ihm64DLhXgEo21yeb6GRZDfRI7P6/1vvxJ7ZUFSPA=;
+	b=QU/V0jDCdP6Tcz7XZGKuP7+114rHhdryGDgyoI5xIR2zxjq+2YId3WifgysOxEP+b+bkOH
+	Bf2NHpHw6m0LZUGckj7g2ZOX+KAP8gznMrN6/ediMUJKEg7W07iMI2yauyYlpv6tuadLxb
+	RvABbkmkyKpfaemjUrHRoaXHQz9asvI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-621-KoY37iMuPKyClFxPWlKzTA-1; Wed, 15 Nov 2023 10:50:12 -0500
+X-MC-Unique: KoY37iMuPKyClFxPWlKzTA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F1A0A88D048;
+	Wed, 15 Nov 2023 15:50:10 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.16])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4435C492BE0;
+	Wed, 15 Nov 2023 15:50:07 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Christoph Hellwig <hch@lst.de>,
+	David Laight <David.Laight@ACULAB.COM>,
+	Matthew Wilcox <willy@infradead.org>,
+	Brendan Higgins <brendanhiggins@google.com>,
+	David Gow <davidgow@google.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	John Hubbard <jhubbard@nvidia.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, Yinbo Zhu <zhuyinbo@loongson.cn>,
-	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH 1/2] dt-bindings: thermal: loongson,ls2k-thermal: Fix
- binding check issues
-Message-ID: <20231115-frantic-charter-ccd33e3478de@squawk>
-References: <cover.1698743706.git.zhoubinbin@loongson.cn>
- <944559ea3bf7ba0a1540f831ccd7d33591622b22.1698743706.git.zhoubinbin@loongson.cn>
- <20231031-negative-giveaway-6191a2da0cd5@spud>
- <CAMpQs4+3T9RATpJ5VycnEzkOTx_M2vdt6WPJv_B1Efy81RzCjA@mail.gmail.com>
- <20231101-clone-facsimile-fd4c37333842@spud>
- <CAMpQs4L_85yPQXR4t=kaCEuwXK-Jr=L6G=omhAtrOn7CWUMCKw@mail.gmail.com>
+	WANG Xuerui <kernel@xen0n.name>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org
+Subject: [PATCH v3 05/10] iov_iter: Create a function to prepare userspace VM for UBUF/IOVEC tests
+Date: Wed, 15 Nov 2023 15:49:41 +0000
+Message-ID: <20231115154946.3933808-6-dhowells@redhat.com>
+In-Reply-To: <20231115154946.3933808-1-dhowells@redhat.com>
+References: <20231115154946.3933808-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="onz20QwnE0RQyYcQ"
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4L_85yPQXR4t=kaCEuwXK-Jr=L6G=omhAtrOn7CWUMCKw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
+Create a function to set up a userspace VM for the kunit testing thread and
+set up a buffer within it such that ITER_UBUF and ITER_IOVEC tests can be
+performed.
 
---onz20QwnE0RQyYcQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Note that this requires current->mm to point to a sufficiently set up
+mm_struct.  This is done by partially mirroring what execve does.
 
-On Wed, Nov 15, 2023 at 12:50:41PM +0600, Binbin Zhou wrote:
-> On Wed, Nov 1, 2023 at 1:59=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
-ote:
-> >
-> > On Wed, Nov 01, 2023 at 07:38:39AM +0600, Binbin Zhou wrote:
-> > > On Tue, Oct 31, 2023 at 10:58=E2=80=AFPM Conor Dooley <conor@kernel.o=
-rg> wrote:
-> > > >
-> > > > On Tue, Oct 31, 2023 at 07:05:49PM +0800, Binbin Zhou wrote:
-> > > > > Add the missing 'thermal-sensor-cells' property which is required=
- for
-> > > > > every thermal sensor as it's used when using phandles.
-> > > > > And add the thermal-sensor.yaml reference.
-> > > > >
-> > > > > Fixes: 72684d99a854 ("thermal: dt-bindings: add loongson-2 therma=
-l")
-> > > > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > > > > ---
-> > > > >  .../bindings/thermal/loongson,ls2k-thermal.yaml        | 10 ++++=
-+++++-
-> > > > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/thermal/loongson,l=
-s2k-thermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-=
-thermal.yaml
-> > > > > index 7538469997f9..b634f57cd011 100644
-> > > > > --- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-the=
-rmal.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-the=
-rmal.yaml
-> > > > > @@ -10,6 +10,9 @@ maintainers:
-> > > > >    - zhanghongchen <zhanghongchen@loongson.cn>
-> > > > >    - Yinbo Zhu <zhuyinbo@loongson.cn>
-> > > > >
-> > > > > +allOf:
-> > > > > +  - $ref: /schemas/thermal/thermal-sensor.yaml#
-> > > > > +
-> > > > >  properties:
-> > > > >    compatible:
-> > > > >      oneOf:
-> > > > > @@ -26,12 +29,16 @@ properties:
-> > > > >    interrupts:
-> > > > >      maxItems: 1
-> > > > >
-> > > > > +  '#thermal-sensor-cells':
-> > > > > +    const: 1
-> > > > > +
-> > > > >  required:
-> > > > >    - compatible
-> > > > >    - reg
-> > > > >    - interrupts
-> > > > > +  - '#thermal-sensor-cells'
-> > > >
-> > > > Why does it need to be a required property now though?
-> > > > Adding new required properties is technically an ABI break.
-> > >
-> > > Hi Conor:
-> > >
-> > > I don't think it makes sense to have a separate thermal sensor
-> > > definition, it needs thermal-zones to describe specific behaviors,
-> > > e.g. cpu-thermal, so we need '#thermal-sensor-cells' to specify the
-> > > reference.
-> > > And the Loongson-2K1000 has 4 sets of control registers, we need to
-> > > specify the id when referencing it.
-> >
-> > Unfortunately, none of this is an answer to my question.
->=20
-> Hi Conor:
->=20
-> Sorry for my late reply.
->=20
-> Over the past few days, I've been communicating offline with Yinbo
-> (the driver author) about the use of the '#thermal-sensor-cells'
-> attribute. He retested the attribute and determined that it is
-> 'required'.
->=20
-> We can see that the '#thermal-sensor-cells' attribute in the
-> dt-binding was dropped between the V12 patchset[1] and the V13
-> patchset[2]. Yinbo may have misunderstood Daniel's comment and removed
-> the '#thermal-sensor-cells' attribute from the dt-binding. But the
-> attribute was carelessly still left in the dts file, resulting in the
-> issue not being found during functional validation.
->=20
-> Indeed, re-adding the '#thermal-sensor-cells' attribute as "required"
-> is technically an ABI breakage, but the driver does not work properly
-> under the current dt-binding rules.
+The following steps are performed:
 
-I was going to say that you should add some comment about this in the
-commit message, but at the end of the day - you're not much of a thermal
-sensor without having thermal-sensor-cells, so I think your commit
-message is actually fine.
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+ (1) Allocate an mm_struct and pick an arch layout (required to set
+     mm->get_unmapped_area).
 
-and I probably should have recognised that earlier.
+ (2) Create an empty "stack" VMA so that the VMA maple tree is set up and
+     won't cause a crash in the maple tree code later.  We don't actually
+     care about the stack as we're not going to actually execute userspace.
 
-Thanks,
-Conor
+ (3) Create an anon file and attach a bunch of folios to it so that the
+     requested number of pages are accessible.
 
---onz20QwnE0RQyYcQ
-Content-Type: application/pgp-signature; name="signature.asc"
+ (4) Make the kthread use the mm.  This must be done before mmap is called.
 
------BEGIN PGP SIGNATURE-----
+ (5) Shared-mmap the anon file into the allocated mm_struct.
 
-iHUEARYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZVTbkAAKCRB4tDGHoIJi
-0kPGAP4vCF3zOgWBTIduTnedLvxu7tAfmldsc4YY9a/LZhSwHgEAx41v6AmfunzY
-vAEB1T1BmgPRc8b0RFtCKVscJocGXwg=
-=GzLQ
------END PGP SIGNATURE-----
+This requires access to otherwise unexported core symbols: mm_alloc(),
+vm_area_alloc(), insert_vm_struct() arch_pick_mmap_layout() and
+anon_inode_getfile_secure(), which I've exported _GPL.
 
---onz20QwnE0RQyYcQ--
+[?] Would it be better if this were done in core and not in a module?
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Andrew Morton <akpm@linux-foundation.org>
+cc: Christoph Hellwig <hch@lst.de>
+cc: Christian Brauner <brauner@kernel.org>
+cc: Jens Axboe <axboe@kernel.dk>
+cc: Al Viro <viro@zeniv.linux.org.uk>
+cc: Matthew Wilcox <willy@infradead.org>
+cc: David Hildenbrand <david@redhat.com>
+cc: John Hubbard <jhubbard@nvidia.com>
+cc: Brendan Higgins <brendanhiggins@google.com>
+cc: David Gow <davidgow@google.com>
+cc: Huacai Chen <chenhuacai@kernel.org>
+cc: WANG Xuerui <kernel@xen0n.name>
+cc: Heiko Carstens <hca@linux.ibm.com>
+cc: Vasily Gorbik <gor@linux.ibm.com>
+cc: Alexander Gordeev <agordeev@linux.ibm.com>
+cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+cc: Sven Schnelle <svens@linux.ibm.com>
+cc: linux-mm@kvack.org
+cc: loongarch@lists.linux.dev
+cc: linux-s390@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+cc: linux-kselftest@vger.kernel.org
+cc: kunit-dev@googlegroups.com
+---
+ arch/s390/kernel/vdso.c |   1 +
+ fs/anon_inodes.c        |   1 +
+ kernel/fork.c           |   2 +
+ lib/kunit_iov_iter.c    | 143 ++++++++++++++++++++++++++++++++++++++++
+ mm/mmap.c               |   1 +
+ mm/util.c               |   3 +
+ 6 files changed, 151 insertions(+)
+
+diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
+index bbaefd84f15e..6849eac59129 100644
+--- a/arch/s390/kernel/vdso.c
++++ b/arch/s390/kernel/vdso.c
+@@ -223,6 +223,7 @@ unsigned long vdso_size(void)
+ 		size += vdso64_end - vdso64_start;
+ 	return PAGE_ALIGN(size);
+ }
++EXPORT_SYMBOL_GPL(vdso_size);
+ 
+ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ {
+diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+index d26222b7eefe..e4862dff235b 100644
+--- a/fs/anon_inodes.c
++++ b/fs/anon_inodes.c
+@@ -176,6 +176,7 @@ struct file *anon_inode_getfile_secure(const char *name,
+ 	return __anon_inode_getfile(name, fops, priv, flags,
+ 				    context_inode, true);
+ }
++EXPORT_SYMBOL_GPL(anon_inode_getfile_secure);
+ 
+ static int __anon_inode_getfd(const char *name,
+ 			      const struct file_operations *fops,
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 10917c3e1f03..f6d9e0d0685a 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -494,6 +494,7 @@ struct vm_area_struct *vm_area_alloc(struct mm_struct *mm)
+ 
+ 	return vma;
+ }
++EXPORT_SYMBOL_GPL(vm_area_alloc);
+ 
+ struct vm_area_struct *vm_area_dup(struct vm_area_struct *orig)
+ {
+@@ -1337,6 +1338,7 @@ struct mm_struct *mm_alloc(void)
+ 	memset(mm, 0, sizeof(*mm));
+ 	return mm_init(mm, current, current_user_ns());
+ }
++EXPORT_SYMBOL_GPL(mm_alloc);
+ 
+ static inline void __mmput(struct mm_struct *mm)
+ {
+diff --git a/lib/kunit_iov_iter.c b/lib/kunit_iov_iter.c
+index eb86371b67d0..63e4dd1e7c1b 100644
+--- a/lib/kunit_iov_iter.c
++++ b/lib/kunit_iov_iter.c
+@@ -10,6 +10,13 @@
+ #include <linux/module.h>
+ #include <linux/vmalloc.h>
+ #include <linux/mm.h>
++#include <linux/pagemap.h>
++#include <linux/mman.h>
++#include <linux/file.h>
++#include <linux/kthread.h>
++#include <linux/anon_inodes.h>
++#include <linux/writeback.h>
++#include <linux/personality.h>
+ #include <linux/uio.h>
+ #include <linux/bvec.h>
+ #include <kunit/test.h>
+@@ -68,6 +75,20 @@ static void iov_kunit_unmap(void *data)
+ 	vunmap(data);
+ }
+ 
++static void iov_kunit_mmdrop(void *data)
++{
++	struct mm_struct *mm = data;
++
++	if (current->mm == mm)
++		kthread_unuse_mm(mm);
++	mmdrop(mm);
++}
++
++static void iov_kunit_fput(void *data)
++{
++	fput(data);
++}
++
+ /*
+  * Create a buffer out of some pages and return a vmap'd pointer to it.
+  */
+@@ -151,6 +172,128 @@ static void iov_kunit_check_pattern(struct kunit *test, const u8 *buffer,
+ 	}
+ }
+ 
++static const struct file_operations iov_kunit_user_file_fops = {
++	.mmap = generic_file_mmap,
++};
++
++static int iov_kunit_user_file_read_folio(struct file *file, struct folio *folio)
++{
++	folio_mark_uptodate(folio);
++	folio_unlock(folio);
++	return 0;
++}
++
++static const struct address_space_operations iov_kunit_user_file_aops = {
++	.read_folio	= iov_kunit_user_file_read_folio,
++	.dirty_folio	= filemap_dirty_folio,
++};
++
++/*
++ * Create an anonymous file and attach a bunch of pages to it.  We can then use
++ * this in mmap() and check the pages against it when doing extraction tests.
++ */
++static struct file *iov_kunit_create_file(struct kunit *test, size_t npages,
++					  struct page ***ppages)
++{
++	struct folio *folio;
++	struct file *file;
++	struct page **pages = NULL;
++	size_t i;
++
++	if (ppages) {
++		pages = kunit_kcalloc(test, npages, sizeof(struct page *), GFP_KERNEL);
++		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pages);
++		*ppages = pages;
++	}
++
++	file = anon_inode_getfile_secure("kunit-iov-test",
++					 &iov_kunit_user_file_fops,
++					 NULL, O_RDWR, NULL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, file);
++	kunit_add_action_or_reset(test, iov_kunit_fput, file);
++	file->f_mapping->a_ops = &iov_kunit_user_file_aops;
++
++	i_size_write(file_inode(file), npages * PAGE_SIZE);
++	for (i = 0; i < npages; i++) {
++		folio = filemap_grab_folio(file->f_mapping, i);
++		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, folio);
++		if (pages)
++			*pages++ = folio_page(folio, 0);
++		folio_unlock(folio);
++		folio_put(folio);
++	}
++
++	return file;
++}
++
++/*
++ * Attach a userspace buffer to a kernel thread by adding an mm_struct to it
++ * and mmapping the buffer.  If the caller requires a list of pages for
++ * checking, then an anon_inode file is created, populated with pages and
++ * mmapped otherwise an anonymous mapping is used.
++ */
++static u8 __user *__init iov_kunit_create_user_buf(struct kunit *test,
++						   size_t npages,
++						   struct page ***ppages)
++{
++	struct rlimit rlim_stack = {
++		.rlim_cur = LONG_MAX,
++		.rlim_max = LONG_MAX,
++	};
++	struct vm_area_struct *vma;
++	struct mm_struct *mm;
++	struct file *file;
++	u8 __user *buffer;
++	int ret;
++
++	KUNIT_ASSERT_NULL(test, current->mm);
++
++	mm = mm_alloc();
++	KUNIT_ASSERT_NOT_NULL(test, mm);
++	kunit_add_action_or_reset(test, iov_kunit_mmdrop, mm);
++	arch_pick_mmap_layout(mm, &rlim_stack);
++
++	vma = vm_area_alloc(mm);
++	KUNIT_ASSERT_NOT_NULL(test, vma);
++	vma_set_anonymous(vma);
++
++	/*
++	 * Place the stack at the largest stack address the architecture
++	 * supports. Later, we'll move this to an appropriate place. We don't
++	 * use STACK_TOP because that can depend on attributes which aren't
++	 * configured yet.
++	 */
++	vma->vm_end = STACK_TOP_MAX;
++	vma->vm_start = vma->vm_end - PAGE_SIZE;
++	vm_flags_init(vma, VM_SOFTDIRTY | VM_STACK_FLAGS | VM_STACK_INCOMPLETE_SETUP);
++	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
++
++	ret = insert_vm_struct(mm, vma);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	mm->stack_vm = mm->total_vm = 1;
++
++	/*
++	 * If we want the pages, attach the pages to a file to prevent swap
++	 * interfering, otherwise use an anonymous mapping.
++	 */
++	if (ppages) {
++		file = iov_kunit_create_file(test, npages, ppages);
++
++		kthread_use_mm(mm);
++		buffer = (u8 __user *)vm_mmap(file, 0, PAGE_SIZE * npages,
++					      PROT_READ | PROT_WRITE,
++					      MAP_SHARED, 0);
++	} else {
++		kthread_use_mm(mm);
++		buffer = (u8 __user *)vm_mmap(NULL, 0, PAGE_SIZE * npages,
++					      PROT_READ | PROT_WRITE,
++					      MAP_PRIVATE | MAP_ANONYMOUS, 0);
++	}
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, (void __force *)buffer);
++	return buffer;
++}
++
+ static void __init iov_kunit_load_kvec(struct kunit *test,
+ 				       struct iov_iter *iter, int dir,
+ 				       struct kvec *kvec, unsigned int kvmax,
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 1971bfffcc03..8a2595b8ec59 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3383,6 +3383,7 @@ int insert_vm_struct(struct mm_struct *mm, struct vm_area_struct *vma)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(insert_vm_struct);
+ 
+ /*
+  * Copy the vma structure to a new location in the same mm,
+diff --git a/mm/util.c b/mm/util.c
+index aa01f6ea5a75..518f7c085923 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -455,6 +455,9 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+ 	mm->get_unmapped_area = arch_get_unmapped_area;
+ }
+ #endif
++#ifdef CONFIG_MMU
++EXPORT_SYMBOL_GPL(arch_pick_mmap_layout);
++#endif
+ 
+ /**
+  * __account_locked_vm - account locked pages to an mm's locked_vm
+
