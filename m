@@ -1,119 +1,286 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17858847D
-	for <loongarch@lists.linux.dev>; Thu, 16 Nov 2023 03:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8CxLOvui1VlzXI6AA--.44120S3;
-	Thu, 16 Nov 2023 11:26:38 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxO9zqi1VlAaxDAA--.16678S3;
-	Thu, 16 Nov 2023 11:26:37 +0800 (CST)
-Subject: Re: [PATCH v4 0/3] LoongArch: KVM: Remove SW timer switch when vcpu
- is halt polling
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20231116023036.2324371-1-maobibo@loongson.cn>
- <CAAhV-H4Wyp-6_gFSfm8uWUMiEJnebk9n4JxQrx_nBdxkTF5wUA@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <06908fb4-cbd8-74a1-2e6f-3da016bd3280@loongson.cn>
-Date: Thu, 16 Nov 2023 11:26:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B66E9476
+	for <loongarch@lists.linux.dev>; Thu, 16 Nov 2023 07:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="pliusvvh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1700118901; bh=5DHbcB6eo5LDPo3cAilOXMI9H2T9LcCcW11o3Ihx+Z8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pliusvvhpjRn+cVQjMmEMPnQ6PEWo0h9jkT9fP9DhTaMFLNvFB9my2oEIkP6R5dlN
+	 nHojnlwjCM57yg3Azept4kpJ/ioDcOvuyzCwUk8IcJCB7+myyU0fGHLjAZblQJs0Or
+	 TzkjCyGXU1SXO4AnE8Frd6jRlCYIRiqfmc83P2A0=
+Received: from [IPV6:240e:388:8d26:bf00:6f50:1e00:d62c:dcf9] (unknown [IPv6:240e:388:8d26:bf00:6f50:1e00:d62c:dcf9])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 04AE5601DD;
+	Thu, 16 Nov 2023 15:15:00 +0800 (CST)
+Message-ID: <28c11122-4433-4302-bb09-95b3d458b457@xen0n.name>
+Date: Thu, 16 Nov 2023 15:15:00 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4Wyp-6_gFSfm8uWUMiEJnebk9n4JxQrx_nBdxkTF5wUA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] LoongArch: KVM: Add lsx support
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxO9zqi1VlAaxDAA--.16678S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tF1UuFWUAF48WFy3Wry7XFc_yoW8KFWkpF
-	ZIkFnIqr4kKr4kK3Zaqa1DXr9Fq3yIqF1xXrn3tryrArsIyF1YqF18KrWF9F9xu393AFyI
-	vryrt3Z8Za4UA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
-	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wN
-	VDUUUUU==
+To: Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>
+References: <20231115091921.85516-1-zhaotianrui@loongson.cn>
+ <20231115091921.85516-2-zhaotianrui@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20231115091921.85516-2-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
+On 11/15/23 17:19, Tianrui Zhao wrote:
+> This patch adds LSX support for LoongArch KVM. The LSX means
+> LoongArch 128-bits vector instruction.
+Maybe we don't need to explain what "LSX" is; people working on 
+LoongArch kernel should already know this through the kernel docs and 
+the various occurrences in the code.
+> There will be LSX exception in KVM when guest use the LSX
+> instruction. KVM will enable LSX and restore the vector
+> registers for guest then return to guest to continue running.
+>
+One more extra line that should get removed.
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/kvm_host.h |  6 ++++
+>   arch/loongarch/include/asm/kvm_vcpu.h | 12 +++++++
+>   arch/loongarch/kvm/exit.c             | 18 ++++++++++
+>   arch/loongarch/kvm/switch.S           | 22 +++++++++++++
+>   arch/loongarch/kvm/trace.h            |  4 ++-
+>   arch/loongarch/kvm/vcpu.c             | 47 +++++++++++++++++++++++++--
+>   6 files changed, 105 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index 11328700d4..6c65c25169 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -94,6 +94,7 @@ enum emulation_result {
+>   #define KVM_LARCH_FPU		(0x1 << 0)
+>   #define KVM_LARCH_SWCSR_LATEST	(0x1 << 1)
+>   #define KVM_LARCH_HWCSR_USABLE	(0x1 << 2)
+> +#define KVM_LARCH_LSX		(0x1 << 3)
+>   
+>   struct kvm_vcpu_arch {
+>   	/*
+> @@ -175,6 +176,11 @@ static inline void writel_sw_gcsr(struct loongarch_csrs *csr, int reg, unsigned
+>   	csr->csrs[reg] = val;
+>   }
+>   
+> +static inline bool kvm_guest_has_lsx(struct kvm_vcpu_arch *arch)
+> +{
+> +	return arch->cpucfg[2] & CPUCFG2_LSX;
+> +}
+> +
+>   /* Debug: dump vcpu state */
+>   int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
+>   
+> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+> index 553cfa2b2b..c629771e12 100644
+> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+> @@ -55,6 +55,18 @@ void kvm_save_fpu(struct loongarch_fpu *fpu);
+>   void kvm_restore_fpu(struct loongarch_fpu *fpu);
+>   void kvm_restore_fcsr(struct loongarch_fpu *fpu);
+>   
+> +#ifdef CONFIG_CPU_HAS_LSX
+> +void kvm_own_lsx(struct kvm_vcpu *vcpu);
+> +void kvm_save_lsx(struct loongarch_fpu *fpu);
+> +void kvm_restore_lsx(struct loongarch_fpu *fpu);
+> +void kvm_restore_lsx_upper(struct loongarch_fpu *fpu);
+> +#else
+> +static inline void kvm_own_lsx(struct kvm_vcpu *vcpu) { }
+> +static inline void kvm_save_lsx(struct loongarch_fpu *fpu) { }
+> +static inline void kvm_restore_lsx(struct loongarch_fpu *fpu) { }
+> +static inline void kvm_restore_lsx_upper(struct loongarch_fpu *fpu) { }
+> +#endif
+> +
+>   void kvm_acquire_timer(struct kvm_vcpu *vcpu);
+>   void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
+>   void kvm_reset_timer(struct kvm_vcpu *vcpu);
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index ce8de3fa47..1b1c58ccc8 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -659,6 +659,23 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
+>   	return RESUME_GUEST;
+>   }
+>   
+> +/*
+> + * kvm_handle_lsx_disabled() - Guest used LSX while disabled in root.
+> + * @vcpu:      Virtual CPU context.
+> + *
+> + * Handle when the guest attempts to use LSX when it is disabled in the root
+> + * context.
+> + */
+> +static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu)
+> +{
+> +	if (!kvm_guest_has_lsx(&vcpu->arch))
+> +		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+> +	else
+> +		kvm_own_lsx(vcpu);
+> +
+> +	return RESUME_GUEST;
+> +}
+> +
+>   /*
+>    * LoongArch KVM callback handling for unimplemented guest exiting
+>    */
+> @@ -687,6 +704,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
+>   	[EXCCODE_TLBS]			= kvm_handle_write_fault,
+>   	[EXCCODE_TLBM]			= kvm_handle_write_fault,
+>   	[EXCCODE_FPDIS]			= kvm_handle_fpu_disabled,
+> +	[EXCCODE_LSXDIS]                = kvm_handle_lsx_disabled,
+>   	[EXCCODE_GSPR]			= kvm_handle_gspr,
+>   };
+>   
+> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+> index 0ed9040307..32ba092a44 100644
+> --- a/arch/loongarch/kvm/switch.S
+> +++ b/arch/loongarch/kvm/switch.S
+> @@ -245,6 +245,28 @@ SYM_FUNC_START(kvm_restore_fpu)
+>   	jr                 ra
+>   SYM_FUNC_END(kvm_restore_fpu)
+>   
+> +#ifdef CONFIG_CPU_HAS_LSX
+> +SYM_FUNC_START(kvm_save_lsx)
+> +	fpu_save_csr    a0 t1
+> +	fpu_save_cc     a0 t1 t2
+> +	lsx_save_data   a0 t1
+> +	jirl            zero, ra, 0
+"jr ra" for consistency (e.g. with the function immediately above); 
+similarly for other such usages.
+> +SYM_FUNC_END(kvm_save_lsx)
+> +
+> +SYM_FUNC_START(kvm_restore_lsx)
+> +	lsx_restore_data a0 t1
+> +	fpu_restore_cc   a0 t1 t2
+> +	fpu_restore_csr  a0 t1
+> +	jirl             zero, ra, 0
+> +SYM_FUNC_END(kvm_restore_lsx)
+> +
+> +SYM_FUNC_START(kvm_restore_lsx_upper)
+> +	lsx_restore_all_upper a0 t0 t1
+> +
+> +	jirl                  zero, ra, 0
+> +SYM_FUNC_END(kvm_restore_lsx_upper)
+> +#endif
+> +
+>   	.section ".rodata"
+>   SYM_DATA(kvm_exception_size, .quad kvm_exc_entry_end - kvm_exc_entry)
+>   SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
+> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+> index a1e35d6554..7da4e230e8 100644
+> --- a/arch/loongarch/kvm/trace.h
+> +++ b/arch/loongarch/kvm/trace.h
+> @@ -102,6 +102,7 @@ TRACE_EVENT(kvm_exit_gspr,
+>   #define KVM_TRACE_AUX_DISCARD		4
+>   
+>   #define KVM_TRACE_AUX_FPU		1
+> +#define KVM_TRACE_AUX_LSX		2
+>   
+>   #define kvm_trace_symbol_aux_op				\
+>   	{ KVM_TRACE_AUX_SAVE,		"save" },	\
+> @@ -111,7 +112,8 @@ TRACE_EVENT(kvm_exit_gspr,
+>   	{ KVM_TRACE_AUX_DISCARD,	"discard" }
+>   
+>   #define kvm_trace_symbol_aux_state			\
+> -	{ KVM_TRACE_AUX_FPU,     "FPU" }
+> +	{ KVM_TRACE_AUX_FPU,     "FPU" },		\
+> +	{ KVM_TRACE_AUX_LSX,     "LSX" }
+>   
+>   TRACE_EVENT(kvm_aux,
+>   	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int op,
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 73d0c2b9c1..f0bb583353 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -378,9 +378,13 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
+>   		break;
+>   	case KVM_REG_LOONGARCH_CPUCFG:
+>   		id = KVM_GET_IOC_CPUCFG_IDX(reg->id);
+> -		if (id >= 0 && id < KVM_MAX_CPUCFG_REGS)
+> +		if (id >= 0 && id < KVM_MAX_CPUCFG_REGS) {
+>   			vcpu->arch.cpucfg[id] = (u32)v;
+> -		else
+> +			if (id == 2 && v & CPUCFG2_LSX && !cpu_has_lsx) {
+> +				vcpu->arch.cpucfg[id] &= ~CPUCFG2_LSX;
+> +				ret = -EINVAL;
+> +			}
+> +		} else
+>   			ret = -EINVAL;
+>   		break;
+>   	case KVM_REG_LOONGARCH_KVM:
+> @@ -561,12 +565,49 @@ void kvm_own_fpu(struct kvm_vcpu *vcpu)
+>   	preempt_enable();
+>   }
+>   
+> +#ifdef CONFIG_CPU_HAS_LSX
+> +/* Enable LSX for guest and restore context */
+> +void kvm_own_lsx(struct kvm_vcpu *vcpu)
+> +{
+> +	preempt_disable();
+> +
+> +	/* Enable LSX for guest */
+> +	set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
+> +	switch (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
+> +	case KVM_LARCH_FPU:
+> +		/*
+> +		 * Guest FPU state already loaded,
+> +		 * only restore upper LSX state
+> +		 */
+> +		kvm_restore_lsx_upper(&vcpu->arch.fpu);
+> +		break;
+> +	default:
+> +		/* Neither FP or LSX already active,
+> +		 * restore full LSX state
+> +		 */
+> +		kvm_restore_lsx(&vcpu->arch.fpu);
+> +	break;
+> +	}
+> +
+> +	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
+> +	vcpu->arch.aux_inuse |= KVM_LARCH_LSX | KVM_LARCH_FPU;
+> +	preempt_enable();
+> +}
+> +#endif
+> +
+>   /* Save context and disable FPU */
+>   void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+>   {
+>   	preempt_disable();
+>   
+> -	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
+> +	if (vcpu->arch.aux_inuse & KVM_LARCH_LSX) {
+> +		kvm_save_lsx(&vcpu->arch.fpu);
+> +		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU);
+> +		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_LSX);
+> +
+> +		/* Disable LSX & FPU */
+> +		clear_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN);
+> +	} else if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
+>   		kvm_save_fpu(&vcpu->arch.fpu);
+>   		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
+>   		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
 
-On 2023/11/16 上午10:54, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> I suggest submitting this series to the internal repo, too. Because we
-> don't have enough resources to test the stability for the upstream
-> version, while this is a fundamental change. On the other hand, the
-> patch "LoongArch:LSVZ: set timer offset at first time once" can be
-> submitted first because it is already in the internal repo.
-We ever consider to keep the same between internal repo and upstream, 
-only that there are many differences since kernel version is different.
+-- 
+WANG "xen0n" Xuerui
 
-We are preparing to setup test environment for upstream kvm module, the 
-stability for the upstream is very important for us -:)
-
-Regards
-Bibo Mao
-
-> 
-> Huacai
-> 
-> On Thu, Nov 16, 2023 at 10:33 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> This patches removes SW timer switch during vcpu block stage. VM uses HW
->> timer rather than SW PV timer on LoongArch system, it can check pending
->> HW timer interrupt status directly, rather than switch to SW timer and
->> check injected SW timer interrupt.
->>
->> When SW timer is not used in vcpu halt-polling mode, the relative
->> SW timer handling before entering guest can be removed also. Timer
->> emulation is simpler than before, SW timer emuation is only used in vcpu
->> thread context switch.
->> ---
->> Changes in v4:
->>    If vcpu is scheduled out since there is no pending event, and timer is
->> fired during sched-out period. SW hrtimer is used to wake up vcpu thread
->> in time, rather than inject pending timer irq.
->>
->> Changes in v3:
->>    Add kvm_arch_vcpu_runnable checking before kvm_vcpu_halt.
->>
->> Changes in v2:
->>    Add halt polling support for idle instruction emulation, using api
->> kvm_vcpu_halt rather than kvm_vcpu_block in function kvm_emu_idle.
->>
->> ---
->> Bibo Mao (3):
->>    LoongArch: KVM: Remove SW timer switch when vcpu is halt polling
->>    LoongArch: KVM: Allow to access HW timer CSR registers always
->>    LoongArch: KVM: Remove kvm_acquire_timer before entering guest
->>
->>   arch/loongarch/include/asm/kvm_vcpu.h |  1 -
->>   arch/loongarch/kvm/exit.c             | 13 +-----
->>   arch/loongarch/kvm/main.c             |  1 -
->>   arch/loongarch/kvm/timer.c            | 62 ++++++++++-----------------
->>   arch/loongarch/kvm/vcpu.c             | 38 ++++------------
->>   5 files changed, 32 insertions(+), 83 deletions(-)
->>
->>
->> base-commit: c42d9eeef8e5ba9292eda36fd8e3c11f35ee065c
->> --
->> 2.39.3
->>
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
