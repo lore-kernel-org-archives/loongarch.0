@@ -1,66 +1,54 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBE8341BB
-	for <loongarch@lists.linux.dev>; Thu, 16 Nov 2023 17:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-1f54c538869so558698fac.2
-        for <loongarch@lists.linux.dev>; Thu, 16 Nov 2023 09:39:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700156349; x=1700761149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JMmODC6lTYe45jRABBx+ZhN5Tb2w0g+Vh3f3SnI6Fz8=;
-        b=WRlaBX302332YOY4SZvCttYeE8ZIPTrLROiy3LGKbP53N5TjietIRnnLQGCoYsW30O
-         cwNN4pGYT1uDFZV87hnDKbKWKqHdcJ32pdLnhFxN7Objg0pllR7t93KvuippaUOci+bY
-         EgNnmSRcisvqaIeJlV/TmyrL0nR5vFcmxKR2cLRPFhcCcKxGok44kZPBou2Qky+w5cBf
-         pQzrFuIjDXefQdelwpgcXbvSAlRGGFvZm5dv0GfqYsfn3NzGr28mxz6ufHXUHEvhKUm7
-         A3pMik1RilOPgUoor9MOeTu2h14DamPiGxNqMPWtItO9psaF922zbz0aABWsELHEK5Ho
-         1h8A==
-X-Gm-Message-State: AOJu0YyH1gy/NZ4ZiUZlofrul0HwAankHVseFmSzUNqyG0BH6+YyEncx
-	8fe+YZs4i8uOf23VOoL3LakrAKOWdw==
-X-Google-Smtp-Source: AGHT+IHNw1V0lhfLKn46rO8+iH+9QbhJdtMQ+a2Jse5CJMLrhaAzrFpM8qD8OvQHrhgcPUlMiszj5A==
-X-Received: by 2002:a05:6870:b251:b0:1f4:a631:f5fc with SMTP id b17-20020a056870b25100b001f4a631f5fcmr21066531oam.33.1700156349413;
-        Thu, 16 Nov 2023 09:39:09 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id ni47-20020a05687134af00b001efa91630f6sm2221633oac.6.2023.11.16.09.39.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Nov 2023 09:39:08 -0800 (PST)
-Received: (nullmailer pid 2519555 invoked by uid 1000);
-	Thu, 16 Nov 2023 17:39:07 -0000
-Date: Thu, 16 Nov 2023 11:39:07 -0600
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, devicetree@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, lvjianmin@loongson.cn, WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: interrupt-controller:
- loongson,liointc: Standardize the naming of 'loongson,parent-int-map'
-Message-ID: <20231116173907.GA2446677-robh@kernel.org>
-References: <cover.1699521866.git.zhoubinbin@loongson.cn>
- <84cb3df17eee993fc6a10e965b3f438f9034d2de.1699521866.git.zhoubinbin@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5735633CE3
+	for <loongarch@lists.linux.dev>; Thu, 16 Nov 2023 17:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YT2DIpaT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A37C433C7;
+	Thu, 16 Nov 2023 17:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700156380;
+	bh=Zgd5QCuzvKEJFDLFEKjM60EEmgTalFX8rouizgN0mfk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YT2DIpaTL/Eiy2JY8VlYnI5iD/v6L2uFCfNsxeK3EPGEhUcUYlDWkQZ1dtcIOeCOL
+	 wJe4OcPAfJkKyddrzmWmYkai++zzS8XhZeVQcev1JzQ0Zq+ymqDD49St0VsLwsmarT
+	 pILUUFml2MuTk9CI1F2aN4k9MvP2fq8L8VFmEBYPTMxfDxEZcyrEcHEviXKT2bO6fQ
+	 4O5MFVu1jtKZW7j8m8k4TXIc2QW9dzbdCy59Un6imvMj8ar1XxZXRtjnBlan7gXsi/
+	 kpMFSd5lUJIiiPDk7hvPk3WM78Hf7aG4Ckk+hgVOnX3X0mT3hx7ae1B3t5ca16vMMs
+	 7IBlvTg4FO1Qg==
+Date: Thu, 16 Nov 2023 12:39:39 -0500
+From: Sasha Levin <sashal@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>, maobibo@loongson.cn,
+	palmer@rivosinc.com, yangtiezhu@loongson.cn, wangliupu@loongson.cn,
+	jpoimboe@kernel.org, zhoubinbin@loongson.cn,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH AUTOSEL 6.6 4/6] LoongArch/smp: Call
+ rcutree_report_cpu_starting() earlier
+Message-ID: <ZVZT27pS16Y7S9wQ@sashalap>
+References: <20231115033350.1228588-1-sashal@kernel.org>
+ <20231115033350.1228588-4-sashal@kernel.org>
+ <CAAhV-H61R006eHGN+ujvDqrT_6AYV0XBcSaT2zyVLJi1rR=kMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <84cb3df17eee993fc6a10e965b3f438f9034d2de.1699521866.git.zhoubinbin@loongson.cn>
+In-Reply-To: <CAAhV-H61R006eHGN+ujvDqrT_6AYV0XBcSaT2zyVLJi1rR=kMA@mail.gmail.com>
 
-On Mon, Nov 13, 2023 at 10:36:21AM +0800, Binbin Zhou wrote:
-> Since the 'loongson,parent_int_map' attribute naming is non-standard, we
-> should use 'loongson,parent-int-map' instead.
-> Also, 'loongson,parent_int_map' will be marked as deprecated.
+On Wed, Nov 15, 2023 at 11:55:24AM +0800, Huacai Chen wrote:
+>Hi, Sasha,
+>
+>In 6.6 and earlier versions, rcutree_report_cpu_starting() should be
+>rcu_cpu_starting().
 
-Again, as I said last time, it is not worth adding 
-'loongson,parent-int-map' and having to support both forms in the kernel 
-forever. If you can define a time that we keep 'loongson,parent_int_map' 
-that's less than "forever", then may be it would be worth changing.
+I'll drop this one. Happy to apply a backport...
 
-To put this another way, using '-' instead of '_' is for *new* bindings, 
-not existing users.
-
-Rob
+-- 
+Thanks,
+Sasha
