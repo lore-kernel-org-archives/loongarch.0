@@ -1,89 +1,65 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42243FE4
-	for <loongarch@lists.linux.dev>; Fri, 17 Nov 2023 09:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzoPylfn"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-da041ffef81so1822833276.0
-        for <loongarch@lists.linux.dev>; Fri, 17 Nov 2023 01:06:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700211960; x=1700816760; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LrD8+qkSJjr9Q+fiMn2ZGucWuBAaYvxiKOqNR6fU0Tg=;
-        b=hzoPylfnJEnAiiicRapc1NJe/mWfLh9p2b4Pmn2WVzCKU16/bIoG5Kesg6A4iHkjaE
-         +fTHt877PKz/upqTNxfpAjPKL/EOFn5FmqKHBIRhg3eZGC3v3BZ9T5W2/aLvDboHUyRD
-         DPoQplXziSqhkwDOD1iyt5F3wYLwYMyY6t7HuNSIZZU0Lkrzdt/GaLdpQCcUoiypfAxX
-         HsC8EwkS9SMnXHaVULX9PMcrntUEtj73txfC+n4OdGN/MBeOGCtlwOSXxG0+KE9Q9Ixt
-         HjdBU6U1qJtAIwypFXw026aCfkeJijTX2NOAL9UZFPvDVrVWO6F+pMKvclHul2gCAFo5
-         k0xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700211960; x=1700816760;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LrD8+qkSJjr9Q+fiMn2ZGucWuBAaYvxiKOqNR6fU0Tg=;
-        b=soV8tPoJ4UFYwDEaeRzzj6CTVdP5JMTjjaSMNQhIRa9oAwu0DU1IJpH9ZzVD4c/O3v
-         mwpbdFWRYOenAW4+tB6d6AxMe2sg1qedWEMb6vxsyhhEaXvkVeSe2+kkTtzIOadaEJTj
-         vepFGc/Y22OxDtmN74lH/hR6ZtFtFZttepx0oyYrEdiZeGye0HPulHvKMDhWDVZdvudm
-         Q2f3dg/xgkIAh7RzgEIei/VmaMyukbxVSOOeQfrbpaqyGlvGN+4mdm19moygPrbVijEY
-         1ihuZ7RI7tg96VRSzQ2xRPVG3y8YLAq1+9d1Ledp2yQ5V8tIf19HH6jETkeCgoPuYbGs
-         G67w==
-X-Gm-Message-State: AOJu0YxKT3mgi/FcamXFYIPh4RlXylv2skgpxHAVXtI46xGWbzfnB7Em
-	xDCHRuIIK2SJo+A371gMiDtwfUqfWIKsddpas5Q=
-X-Google-Smtp-Source: AGHT+IEPixzhGpSc3tEVO8ZRFesnGrSzYBPawj/qAai8ntLRg9Ayp0XOI/51MrxatMcMZiHLvSJYqxEGgMe7A1fzuaU=
-X-Received: by 2002:a25:6ad7:0:b0:d9b:4bfd:b75 with SMTP id
- f206-20020a256ad7000000b00d9b4bfd0b75mr15683441ybc.18.1700211960566; Fri, 17
- Nov 2023 01:06:00 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FCC249F83
+	for <loongarch@lists.linux.dev>; Fri, 17 Nov 2023 11:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [112.20.112.120])
+	by gateway (Coremail) with SMTP id _____8CxNvHnUldlQcs6AA--.50079S3;
+	Fri, 17 Nov 2023 19:47:52 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.112.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxL93mUldl705FAA--.23797S2;
+	Fri, 17 Nov 2023 19:47:51 +0800 (CST)
+From: Yanteng Si <siyanteng@loongson.cn>
+To: chenhuacai@kernel.org
+Cc: Yanteng Si <siyanteng@loongson.cn>,
+	kernel@xen0n.name,
+	corbet@lwn.net,
+	alexs@kernel.org,
+	wu.xiangcheng@linux.dev,
+	linux-doc@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH 0/2] Docs/LoongArch: Update links in the introduction.rst
+Date: Fri, 17 Nov 2023 19:47:46 +0800
+Message-Id: <cover.1700221148.git.siyanteng@loongson.cn>
+X-Mailer: git-send-email 2.31.4
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1699521866.git.zhoubinbin@loongson.cn> <84cb3df17eee993fc6a10e965b3f438f9034d2de.1699521866.git.zhoubinbin@loongson.cn>
- <20231116173907.GA2446677-robh@kernel.org>
-In-Reply-To: <20231116173907.GA2446677-robh@kernel.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 17 Nov 2023 15:05:49 +0600
-Message-ID: <CAMpQs4KkOS1Eo-Y7=D2kP+yOW78zVN_7WDO_w0mc5-uaBGT47w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] dt-bindings: interrupt-controller:
- loongson,liointc: Standardize the naming of 'loongson,parent-int-map'
-To: Rob Herring <robh@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, 
-	devicetree@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, lvjianmin@loongson.cn, 
-	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxL93mUldl705FAA--.23797S2
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUPjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4c8EcI0En4kS14v26r126r1DMxAqzxv26xkF7I0En4kS14v26r126r1D
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwMKuUUUUU
 
-On Thu, Nov 16, 2023 at 11:39=E2=80=AFPM Rob Herring <robh@kernel.org> wrot=
-e:
->
-> On Mon, Nov 13, 2023 at 10:36:21AM +0800, Binbin Zhou wrote:
-> > Since the 'loongson,parent_int_map' attribute naming is non-standard, w=
-e
-> > should use 'loongson,parent-int-map' instead.
-> > Also, 'loongson,parent_int_map' will be marked as deprecated.
->
-> Again, as I said last time, it is not worth adding
-> 'loongson,parent-int-map' and having to support both forms in the kernel
-> forever. If you can define a time that we keep 'loongson,parent_int_map'
-> that's less than "forever", then may be it would be worth changing.
->
-> To put this another way, using '-' instead of '_' is for *new* bindings,
-> not existing users.
->
-OK, I see, and I will fix it in the next version.
+LoongArch-Vol1 has been updated to v1.10, the links in the
+documentation are out of date. That means, everyone can't
+download it, let's update it.
 
-Thanks.
-Binbin
+Yanteng Si (2):
+  Docs/LoongArch: Update arch LoongArch introduction.rst
+  Docs/zh_CN/LoongArch: Update arch LoongArch introduction.rst
 
-> Rob
+ Documentation/arch/loongarch/introduction.rst                 | 4 ++--
+ .../translations/zh_CN/arch/loongarch/introduction.rst        | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+-- 
+2.31.4
+
