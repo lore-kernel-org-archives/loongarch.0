@@ -1,26 +1,29 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFB44441F
-	for <loongarch@lists.linux.dev>; Fri, 17 Nov 2023 01:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90AB7FBFF
+	for <loongarch@lists.linux.dev>; Fri, 17 Nov 2023 08:24:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.40.46.156])
-	by gateway (Coremail) with SMTP id _____8Cx7+tTyFZlZbQ6AA--.49233S3;
-	Fri, 17 Nov 2023 09:56:36 +0800 (CST)
-Received: from [192.168.100.135] (unknown [10.40.46.156])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxH91SyFZlxcxEAA--.22204S3;
-	Fri, 17 Nov 2023 09:56:35 +0800 (CST)
-Subject: Re: [PATCH v4 0/4] KVM: selftests: Add LoongArch support
-To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc: Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Vishal Annapurve <vannapurve@google.com>, Huacai Chen
- <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- Peter Xu <peterx@redhat.com>, Vipin Sharma <vipinsh@google.com>,
- maobibo@loongson.cn, Sean Christopherson <seanjc@google.com>
-References: <20231108025134.2592663-1-zhaotianrui@loongson.cn>
-From: zhaotianrui <zhaotianrui@loongson.cn>
-Message-ID: <32b34bc1-f0f0-0155-6df0-ac7725527bb8@loongson.cn>
-Date: Fri, 17 Nov 2023 09:47:18 +0800
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8CxRugwI1dlcMI6AA--.62312S3;
+	Fri, 17 Nov 2023 16:24:16 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrdwrI1dlNCNFAA--.20259S3;
+	Fri, 17 Nov 2023 16:24:13 +0800 (CST)
+Subject: Re: [PATCH v1 1/2] LoongArch: KVM: Add lsx support
+To: Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>
+References: <20231115091921.85516-1-zhaotianrui@loongson.cn>
+ <20231115091921.85516-2-zhaotianrui@loongson.cn>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <2161517e-1934-9d18-3bdf-1e397413b3a8@loongson.cn>
+Date: Fri, 17 Nov 2023 16:24:10 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -29,248 +32,270 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20231108025134.2592663-1-zhaotianrui@loongson.cn>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231115091921.85516-2-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-CM-TRANSID:AQAAf8AxH91SyFZlxcxEAA--.22204S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKw1Uuw17Kr1kJFykKF1fKrX_yoWfCr1Dpa
-	yFqr1FkF4fJFy7Aw1xJ34kZ34S9as7CFWUCw13KrykZrnFy34kJry8Ka92y34fua4DXw1S
-	vay8CwnxW3WDGagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxrdwrI1dlNCNFAA--.20259S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKF4DJrWDtr1xWr4rCrW8KrX_yoW3uw17pF
+	97Zrn8ta1xWF1Sk3s7tF1qgrnxZr4kKryIgasrJay3AF1Yqry5XF4kKrZrWFy5Gw4rAFyS
+	vF1rtr15uayDJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXU
-	UUUU=
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDU
+	UUU
 
-Hi, all:
-This is a PING message, please help to review the LoongArch KVM 
-selftests patches.
 
-Thanks
-Tianrui Zhao
-ÔÚ 2023/11/8 ÉÏÎç10:51, Tianrui Zhao Ð´µÀ:
-> We add LoongArch support into KVM selftests and there are some KVM
-> test cases we have passed:
-> 	demand_paging_test
-> 	dirty_log_perf_test
-> 	dirty_log_test
-> 	guest_print_test
-> 	kvm_binary_stats_test
-> 	kvm_create_max_vcpus
-> 	kvm_page_table_test
-> 	memslot_modification_stress_test
-> 	memslot_perf_test
-> 	set_memory_region_test
->
-> Changes for v4:
-> 1. Remove the based-on flag, as the LoongArch KVM patch series
-> have been accepted by Linux kernel, so this can be applied directly
-> in kernel.
->
-> Changes for v3:
-> 1. Improve implementation of LoongArch VM page walk.
-> 2. Add exception handler for LoongArch.
-> 3. Add dirty_log_test, dirty_log_perf_test, guest_print_test
-> test cases for LoongArch.
-> 4. Add __ASSEMBLER__ macro to distinguish asm file and c file.
-> 5. Move ucall_arch_do_ucall to the header file and make it as
-> static inline to avoid function calls.
-> 6. Change the DEFAULT_GUEST_TEST_MEM base addr for LoongArch.
->
-> Changes for v2:
-> 1. We should use ".balign 4096" to align the assemble code with 4K in
-> exception.S instead of "align 12".
-> 2. LoongArch only supports 3 or 4 levels page tables, so we remove the
-> hanlders for 2-levels page table.
-> 3. Remove the DEFAULT_LOONGARCH_GUEST_STACK_VADDR_MIN and use the common
-> DEFAULT_GUEST_STACK_VADDR_MIN to allocate stack memory in guest.
-> 4. Reorganize the test cases supported by LoongArch.
-> 5. Fix some code comments.
-> 6. Add kvm_binary_stats_test test case into LoongArch KVM selftests.
->
-> changes for v1:
-> 1. Add kvm selftests header files for LoongArch.
-> 2. Add processor tests for LoongArch KVM.
-> 3. Add ucall tests for LoongArch KVM.
-> 4. Add LoongArch tests into makefile.
->
-> All of the test cases results:
-> 1..10
-> # timeout set to 120
-> # selftests: kvm: demand_paging_test
-> # Testing guest mode: PA-bits:36,  VA-bits:47, 16K pages
-> # guest physical test memory: [0xfbfffc000, 0xfffffc000)
-> # Finished creating vCPUs and starting uffd threads
-> # Started all vCPUs
-> # All vCPU threads joined
-> # Total guest execution time: 0.200804700s
-> # Overall demand paging rate: 326366.862927 pgs/sec
-> ok 1 selftests: kvm: demand_paging_test
-> # timeout set to 120
-> # selftests: kvm: dirty_log_perf_test
-> # Test iterations: 2
-> # Testing guest mode: PA-bits:36,  VA-bits:47, 16K pages
-> # guest physical test memory: [0xfbfffc000, 0xfffffc000)
-> # Random seed: 1
-> # Populate memory time: 0.201452560s
-> # Enabling dirty logging time: 0.000451670s
-> #
-> # Iteration 1 dirty memory time: 0.051582140s
-> # Iteration 1 get dirty log time: 0.000010510s
-> # Iteration 1 clear dirty log time: 0.000421730s
-> # Iteration 2 dirty memory time: 0.046593760s
-> # Iteration 2 get dirty log time: 0.000002110s
-> # Iteration 2 clear dirty log time: 0.000418020s
-> # Disabling dirty logging time: 0.002948490s
-> # Get dirty log over 2 iterations took 0.000012620s. (Avg 0.000006310s/iteration)
-> # Clear dirty log over 2 iterations took 0.000839750s. (Avg 0.000419875s/iteration)
-> ok 2 selftests: kvm: dirty_log_perf_test
-> # timeout set to 120
-> # selftests: kvm: dirty_log_test
-> # Test iterations: 32, interval: 10 (ms)
-> # Testing Log Mode 'dirty-log'
-> # Testing guest mode: PA-bits:36,  VA-bits:47, 16K pages
-> # guest physical test memory offset: 0xfbfff0000
-> # Dirtied 453632 pages
-> # Total bits checked: dirty (436564), clear (1595145), track_next (70002)
-> # Testing Log Mode 'clear-log'
-> # Testing guest mode: PA-bits:36,  VA-bits:47, 16K pages
-> # guest physical test memory offset: 0xfbfff0000
-> # Dirtied 425984 pages
-> # Total bits checked: dirty (414397), clear (1617312), track_next (68152)
-> # Testing Log Mode 'dirty-ring'
-> # Testing guest mode: PA-bits:36,  VA-bits:47, 16K pages
-> # dirty ring count: 0x10000
-> # guest physical test memory offset: 0xfbfff0000
-> # vcpu stops because vcpu is kicked out...
-> # Notifying vcpu to continue
-> # vcpu continues now.
-> # Iteration 1 collected 3201 pages
-> # vcpu stops because dirty ring is full...
-> # vcpu continues now.
-> # vcpu stops because dirty ring is full...
-> # Notifying vcpu to continue
-> # Iteration 2 collected 65472 pages
-> # ......
-> # vcpu continues now.
-> # vcpu stops because vcpu is kicked out...
-> # vcpu continues now.
-> # vcpu stops because vcpu is kicked out...
-> # Notifying vcpu to continue
-> # vcpu continues now.
-> # Iteration 31 collected 12642 pages
-> # vcpu stops because dirty ring is full...
-> # vcpu continues now.
-> # Dirtied 7275520 pages
-> # Total bits checked: dirty (1165675), clear (866034), track_next (811358)
-> ok 3 selftests: kvm: dirty_log_test
-> # timeout set to 120
-> # selftests: kvm: guest_print_test
-> ok 4 selftests: kvm: guest_print_test
-> # timeout set to 120
-> # selftests: kvm: kvm_binary_stats_test
-> # TAP version 13
-> # 1..4
-> # ok 1 vm0
-> # ok 2 vm1
-> # ok 3 vm2
-> # ok 4 vm3
-> # # Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
-> ok 5 selftests: kvm: kvm_binary_stats_test
-> # timeout set to 120
-> # selftests: kvm: kvm_create_max_vcpus
-> # KVM_CAP_MAX_VCPU_ID: 256
-> # KVM_CAP_MAX_VCPUS: 256
-> # Testing creating 256 vCPUs, with IDs 0...255.
-> ok 6 selftests: kvm: kvm_create_max_vcpus
-> # timeout set to 120
-> # selftests: kvm: kvm_page_table_test
-> # Testing guest mode: PA-bits:36,  VA-bits:47, 16K pages
-> # Testing memory backing src type: anonymous
-> # Testing memory backing src granularity: 0x4000
-> # Testing memory size(aligned): 0x40000000
-> # Guest physical test memory offset: 0xfbfffc000
-> # Host  virtual  test memory offset: 0x7fffb0860000
-> # Number of testing vCPUs: 1
-> # Started all vCPUs successfully
-> # KVM_CREATE_MAPPINGS: total execution time: 0.200919330s
-> #
-> # KVM_UPDATE_MAPPINGS: total execution time: 0.051182930s
-> #
-> # KVM_ADJUST_MAPPINGS: total execution time: 0.010083590s
-> #
-> ok 7 selftests: kvm: kvm_page_table_test
-> # timeout set to 120
-> # selftests: kvm: memslot_modification_stress_test
-> # Testing guest mode: PA-bits:36,  VA-bits:47, 16K pages
-> # guest physical test memory: [0xfbfffc000, 0xfffffc000)
-> # Finished creating vCPUs
-> # Started all vCPUs
-> # All vCPU threads joined
-> ok 8 selftests: kvm: memslot_modification_stress_test
-> # timeout set to 120
-> # selftests: kvm: memslot_perf_test
-> # Testing map performance with 1 runs, 5 seconds each
-> # Memslot count too high for this test, decrease the cap (max is 2053)
-> #
-> # Testing unmap performance with 1 runs, 5 seconds each
-> # Memslot count too high for this test, decrease the cap (max is 8197)
-> #
-> # Testing unmap chunked performance with 1 runs, 5 seconds each
-> # Memslot count too high for this test, decrease the cap (max is 8197)
-> #
-> # Testing move active area performance with 1 runs, 5 seconds each
-> # Test took 0.761678900s for slot setup + 5.000014460s all iterations
-> # Done 120167 iterations, avg 0.000041608s each
-> # Best runtime result was 0.000041608s per iteration (with 120167 iterations)
-> #
-> # Testing move inactive area performance with 1 runs, 5 seconds each
-> # Test took 0.771796550s for slot setup + 5.000018520s all iterations
-> # Done 136354 iterations, avg 0.000036669s each
-> # Best runtime result was 0.000036669s per iteration (with 136354 iterations)
-> #
-> # Testing RW performance with 1 runs, 5 seconds each
-> # Test took 0.763568840s for slot setup + 5.002233800s all iterations
-> # Done 649 iterations, avg 0.007707602s each
-> # Best runtime result was 0.007707602s per iteration (with 649 iterations)
-> # Best slot setup time for the whole test area was 0.761678900s
-> ok 9 selftests: kvm: memslot_perf_test
-> # timeout set to 120
-> # selftests: kvm: set_memory_region_test
-> # Allowed number of memory slots: 32767
-> # Adding slots 0..32766, each memory region with 2048K size
-> ok 10 selftests: kvm: set_memory_region_test
->
-> Tianrui Zhao (4):
->    KVM: selftests: Add KVM selftests header files for LoongArch
->    KVM: selftests: Add core KVM selftests support for LoongArch
->    KVM: selftests: Add ucall test support for LoongArch
->    KVM: selftests: Add test cases for LoongArch
->
->   tools/testing/selftests/kvm/Makefile          |  15 +
->   .../selftests/kvm/include/kvm_util_base.h     |   5 +
->   .../kvm/include/loongarch/processor.h         | 133 +++++++
->   .../selftests/kvm/include/loongarch/ucall.h   |  20 ++
->   .../testing/selftests/kvm/include/memstress.h |  10 +
->   .../selftests/kvm/lib/loongarch/exception.S   |  59 ++++
->   .../selftests/kvm/lib/loongarch/processor.c   | 333 ++++++++++++++++++
->   .../selftests/kvm/lib/loongarch/ucall.c       |  38 ++
->   8 files changed, 613 insertions(+)
->   create mode 100644 tools/testing/selftests/kvm/include/loongarch/processor.h
->   create mode 100644 tools/testing/selftests/kvm/include/loongarch/ucall.h
->   create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
->   create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
->   create mode 100644 tools/testing/selftests/kvm/lib/loongarch/ucall.c
->
+
+On 2023/11/15 ä¸‹åˆ5:19, Tianrui Zhao wrote:
+> This patch adds LSX support for LoongArch KVM. The LSX means
+> LoongArch 128-bits vector instruction.
+> There will be LSX exception in KVM when guest use the LSX
+> instruction. KVM will enable LSX and restore the vector
+> registers for guest then return to guest to continue running.
+> 
+> 
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/kvm_host.h |  6 ++++
+>   arch/loongarch/include/asm/kvm_vcpu.h | 12 +++++++
+>   arch/loongarch/kvm/exit.c             | 18 ++++++++++
+>   arch/loongarch/kvm/switch.S           | 22 +++++++++++++
+>   arch/loongarch/kvm/trace.h            |  4 ++-
+>   arch/loongarch/kvm/vcpu.c             | 47 +++++++++++++++++++++++++--
+>   6 files changed, 105 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index 11328700d4..6c65c25169 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -94,6 +94,7 @@ enum emulation_result {
+>   #define KVM_LARCH_FPU		(0x1 << 0)
+>   #define KVM_LARCH_SWCSR_LATEST	(0x1 << 1)
+>   #define KVM_LARCH_HWCSR_USABLE	(0x1 << 2)
+> +#define KVM_LARCH_LSX		(0x1 << 3)
+>   
+>   struct kvm_vcpu_arch {
+>   	/*
+> @@ -175,6 +176,11 @@ static inline void writel_sw_gcsr(struct loongarch_csrs *csr, int reg, unsigned
+>   	csr->csrs[reg] = val;
+>   }
+>   
+> +static inline bool kvm_guest_has_lsx(struct kvm_vcpu_arch *arch)
+> +{
+> +	return arch->cpucfg[2] & CPUCFG2_LSX;
+> +}
+> +
+>   /* Debug: dump vcpu state */
+>   int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
+>   
+> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+> index 553cfa2b2b..c629771e12 100644
+> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+> @@ -55,6 +55,18 @@ void kvm_save_fpu(struct loongarch_fpu *fpu);
+>   void kvm_restore_fpu(struct loongarch_fpu *fpu);
+>   void kvm_restore_fcsr(struct loongarch_fpu *fpu);
+>   
+> +#ifdef CONFIG_CPU_HAS_LSX
+> +void kvm_own_lsx(struct kvm_vcpu *vcpu);
+> +void kvm_save_lsx(struct loongarch_fpu *fpu);
+> +void kvm_restore_lsx(struct loongarch_fpu *fpu);
+> +void kvm_restore_lsx_upper(struct loongarch_fpu *fpu);
+> +#else
+> +static inline void kvm_own_lsx(struct kvm_vcpu *vcpu) { }
+> +static inline void kvm_save_lsx(struct loongarch_fpu *fpu) { }
+> +static inline void kvm_restore_lsx(struct loongarch_fpu *fpu) { }
+> +static inline void kvm_restore_lsx_upper(struct loongarch_fpu *fpu) { }
+> +#endif
+> +
+>   void kvm_acquire_timer(struct kvm_vcpu *vcpu);
+>   void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
+>   void kvm_reset_timer(struct kvm_vcpu *vcpu);
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index ce8de3fa47..1b1c58ccc8 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -659,6 +659,23 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
+>   	return RESUME_GUEST;
+>   }
+>   
+> +/*
+> + * kvm_handle_lsx_disabled() - Guest used LSX while disabled in root.
+> + * @vcpu:      Virtual CPU context.
+> + *
+> + * Handle when the guest attempts to use LSX when it is disabled in the root
+> + * context.
+> + */
+> +static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu)
+> +{
+> +	if (!kvm_guest_has_lsx(&vcpu->arch))
+> +		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+> +	else
+> +		kvm_own_lsx(vcpu);
+> +
+> +	return RESUME_GUEST;
+> +}
+> +
+>   /*
+>    * LoongArch KVM callback handling for unimplemented guest exiting
+>    */
+> @@ -687,6 +704,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
+>   	[EXCCODE_TLBS]			= kvm_handle_write_fault,
+>   	[EXCCODE_TLBM]			= kvm_handle_write_fault,
+>   	[EXCCODE_FPDIS]			= kvm_handle_fpu_disabled,
+> +	[EXCCODE_LSXDIS]                = kvm_handle_lsx_disabled,
+>   	[EXCCODE_GSPR]			= kvm_handle_gspr,
+>   };
+>   
+> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+> index 0ed9040307..32ba092a44 100644
+> --- a/arch/loongarch/kvm/switch.S
+> +++ b/arch/loongarch/kvm/switch.S
+> @@ -245,6 +245,28 @@ SYM_FUNC_START(kvm_restore_fpu)
+>   	jr                 ra
+>   SYM_FUNC_END(kvm_restore_fpu)
+>   
+> +#ifdef CONFIG_CPU_HAS_LSX
+> +SYM_FUNC_START(kvm_save_lsx)
+> +	fpu_save_csr    a0 t1
+> +	fpu_save_cc     a0 t1 t2
+> +	lsx_save_data   a0 t1
+> +	jirl            zero, ra, 0
+> +SYM_FUNC_END(kvm_save_lsx)
+> +
+> +SYM_FUNC_START(kvm_restore_lsx)
+> +	lsx_restore_data a0 t1
+> +	fpu_restore_cc   a0 t1 t2
+> +	fpu_restore_csr  a0 t1
+> +	jirl             zero, ra, 0
+> +SYM_FUNC_END(kvm_restore_lsx)
+> +
+> +SYM_FUNC_START(kvm_restore_lsx_upper)
+> +	lsx_restore_all_upper a0 t0 t1
+> +
+> +	jirl                  zero, ra, 0
+> +SYM_FUNC_END(kvm_restore_lsx_upper)
+> +#endif
+> +
+>   	.section ".rodata"
+>   SYM_DATA(kvm_exception_size, .quad kvm_exc_entry_end - kvm_exc_entry)
+>   SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
+> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+> index a1e35d6554..7da4e230e8 100644
+> --- a/arch/loongarch/kvm/trace.h
+> +++ b/arch/loongarch/kvm/trace.h
+> @@ -102,6 +102,7 @@ TRACE_EVENT(kvm_exit_gspr,
+>   #define KVM_TRACE_AUX_DISCARD		4
+>   
+>   #define KVM_TRACE_AUX_FPU		1
+> +#define KVM_TRACE_AUX_LSX		2
+>   
+>   #define kvm_trace_symbol_aux_op				\
+>   	{ KVM_TRACE_AUX_SAVE,		"save" },	\
+> @@ -111,7 +112,8 @@ TRACE_EVENT(kvm_exit_gspr,
+>   	{ KVM_TRACE_AUX_DISCARD,	"discard" }
+>   
+>   #define kvm_trace_symbol_aux_state			\
+> -	{ KVM_TRACE_AUX_FPU,     "FPU" }
+> +	{ KVM_TRACE_AUX_FPU,     "FPU" },		\
+> +	{ KVM_TRACE_AUX_LSX,     "LSX" }
+>   
+>   TRACE_EVENT(kvm_aux,
+>   	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int op,
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 73d0c2b9c1..f0bb583353 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -378,9 +378,13 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
+>   		break;
+>   	case KVM_REG_LOONGARCH_CPUCFG:
+>   		id = KVM_GET_IOC_CPUCFG_IDX(reg->id);
+> -		if (id >= 0 && id < KVM_MAX_CPUCFG_REGS)
+> +		if (id >= 0 && id < KVM_MAX_CPUCFG_REGS) {
+>   			vcpu->arch.cpucfg[id] = (u32)v;
+> -		else
+> +			if (id == 2 && v & CPUCFG2_LSX && !cpu_has_lsx) {
+Hi Tianrui,
+
+Can you add some annotations about these piece of codes? so that
+people can understand easily.
+
+And do we need interface to get host capabilities to user application?
+Such as QEMU first gets supported capabilities from kvm and then sets 
+the required ones.
+
+Regards
+Bibo Mao
+> +				vcpu->arch.cpucfg[id] &= ~CPUCFG2_LSX;
+> +				ret = -EINVAL;
+> +			}
+> +		} else
+>   			ret = -EINVAL;
+>   		break;
+>   	case KVM_REG_LOONGARCH_KVM:
+> @@ -561,12 +565,49 @@ void kvm_own_fpu(struct kvm_vcpu *vcpu)
+>   	preempt_enable();
+>   }
+>   
+> +#ifdef CONFIG_CPU_HAS_LSX
+> +/* Enable LSX for guest and restore context */
+> +void kvm_own_lsx(struct kvm_vcpu *vcpu)
+> +{
+> +	preempt_disable();
+> +
+> +	/* Enable LSX for guest */
+> +	set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
+> +	switch (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
+> +	case KVM_LARCH_FPU:
+> +		/*
+> +		 * Guest FPU state already loaded,
+> +		 * only restore upper LSX state
+> +		 */
+> +		kvm_restore_lsx_upper(&vcpu->arch.fpu);
+> +		break;
+> +	default:
+> +		/* Neither FP or LSX already active,
+> +		 * restore full LSX state
+> +		 */
+> +		kvm_restore_lsx(&vcpu->arch.fpu);
+> +	break;
+> +	}
+> +
+> +	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
+> +	vcpu->arch.aux_inuse |= KVM_LARCH_LSX | KVM_LARCH_FPU;
+> +	preempt_enable();
+> +}
+> +#endif
+> +
+>   /* Save context and disable FPU */
+>   void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+>   {
+>   	preempt_disable();
+>   
+> -	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
+> +	if (vcpu->arch.aux_inuse & KVM_LARCH_LSX) {
+> +		kvm_save_lsx(&vcpu->arch.fpu);
+> +		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU);
+> +		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_LSX);
+> +
+> +		/* Disable LSX & FPU */
+> +		clear_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN);
+> +	} else if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
+>   		kvm_save_fpu(&vcpu->arch.fpu);
+>   		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
+>   		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
+> 
 
