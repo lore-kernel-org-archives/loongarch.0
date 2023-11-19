@@ -1,68 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3881859
-	for <loongarch@lists.linux.dev>; Sun, 19 Nov 2023 04:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D7E1876;
+	Sun, 19 Nov 2023 05:34:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvA6j/IJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B909EC433C7
-	for <loongarch@lists.linux.dev>; Sun, 19 Nov 2023 04:50:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7mlj5GU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4417EC433C8;
+	Sun, 19 Nov 2023 05:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700369439;
-	bh=zNXER7j7tF5pfX+nQwMxcuPe+WxAcejTCNbyXNYTx7s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GvA6j/IJYlL3C7I5ZKYNVoN+G6go5ApTuq6BluLe/OUIUtJWZFzIppKXq57jj8xt4
-	 s/1o7M291ZEDOQL3hTE+DAfoTRKLGtZh94+RjWUMWnsaufo1I6GQV98sP+gXpmytL5
-	 2/W7mp9fwGNqNIC/dzNTVnE9kAj+rv5C3zWQguAJRoNbDDbSny7qlI1Vria9xEjQ7x
-	 3jWXK31v2Hn6b8ilfuKLLXEgZGNjBO0ACdnk4Hg/XDENlZkAnPwwuiK9ehjYow1gK7
-	 5PchmuXc/advVxai77W2yT8zvAiVCL0xK8yPoGhKSG+pmgAw8YKoyuCGyojKKo06Lv
-	 QBnzB2FGiW65w==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-9c773ac9b15so444553266b.2
-        for <loongarch@lists.linux.dev>; Sat, 18 Nov 2023 20:50:39 -0800 (PST)
-X-Gm-Message-State: AOJu0YzkJNwt0pjA+9rq4KIqJYsL0Pj8wSbuCqfTqNIckFmNJYDWABRK
-	1DVB/ihLCu6R9PvUDV/eq1LnsOBnxX6hRYF5K/g=
-X-Google-Smtp-Source: AGHT+IER67XbvB5u725agtnKI/UdWgR01M3yq3KhEHCV4bUhokIYktTA+CZRvrf43+0BAq5s0Xfx+EU+7LYq8Orgj8c=
-X-Received: by 2002:a17:906:34c7:b0:9c4:b8c9:1bf3 with SMTP id
- h7-20020a17090634c700b009c4b8c91bf3mr2707302ejb.27.1700369438060; Sat, 18 Nov
- 2023 20:50:38 -0800 (PST)
+	s=k20201202; t=1700372099;
+	bh=08ranJTDZ/V2FeaQz06DOfRs9FrKM8GbfKs8aPV/pJ0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=T7mlj5GUg5Ir2bPEcJD672ID2zy1JFi6zQqSV/b06D0APxoOpxxRwLqkZJo9U/gho
+	 4E91B5jnTQfg0EBCqq1aoHQ0G6MupKhi48gJ9n8a+NUPdQMXzBG4GYyUfsymrpMiTe
+	 QsasBKKCtXNl8rpQMWS7/R0Q4OzHmkr0g0hmPJpXeWu7ENeLji/9yYUc91/hGQo7jh
+	 OpGS3IipJk87W9vaifTYcSBrnn0q5dvfpkAPg/c4+xqrCHCEWOdJX5jmaDL4eXunKR
+	 aGDZVSLbP/6TnwyngJZ80Gl7jXmPNAi4g2GwixD6/udG90dSATaW7GkozapYOMzo8O
+	 dzFGWJ6aDxc1w==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Simon Glass <sjg@chromium.org>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] loongarch: add dependency between vmlinuz.efi and vmlinux.efi
+Date: Sun, 19 Nov 2023 14:34:48 +0900
+Message-Id: <20231119053448.2367725-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1700221148.git.siyanteng@loongson.cn>
-In-Reply-To: <cover.1700221148.git.siyanteng@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 19 Nov 2023 12:50:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7-9JL1hf8_Hs3dirJ8aqgK4BGU1PANsXDDVkSHP_fe9A@mail.gmail.com>
-Message-ID: <CAAhV-H7-9JL1hf8_Hs3dirJ8aqgK4BGU1PANsXDDVkSHP_fe9A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Docs/LoongArch: Update links in the introduction.rst
-To: Yanteng Si <siyanteng@loongson.cn>
-Cc: kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, 
-	wu.xiangcheng@linux.dev, linux-doc@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Series applied in loongarch-fixes, thanks.
+A common issue in Makefile is a race in parallel building.
 
-Huacai
+You need to be careful to prevent multiple threads from writing to the
+same file simultaneously.
 
-On Fri, Nov 17, 2023 at 7:47=E2=80=AFPM Yanteng Si <siyanteng@loongson.cn> =
-wrote:
->
-> LoongArch-Vol1 has been updated to v1.10, the links in the
-> documentation are out of date. That means, everyone can't
-> download it, let's update it.
->
-> Yanteng Si (2):
->   Docs/LoongArch: Update arch LoongArch introduction.rst
->   Docs/zh_CN/LoongArch: Update arch LoongArch introduction.rst
->
->  Documentation/arch/loongarch/introduction.rst                 | 4 ++--
->  .../translations/zh_CN/arch/loongarch/introduction.rst        | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> --
-> 2.31.4
->
+Commit 3939f3345050 ("ARM: 8418/1: add boot image dependencies to not
+generate invalid images") addressed such a bad scenario.
+
+A similar symptom occurs with the following command:
+
+  $ make -j$(nproc) ARCH=loongarch vmlinux.efi vmlinuz.efi
+    [ snip ]
+    SORTTAB vmlinux
+    OBJCOPY arch/loongarch/boot/vmlinux.efi
+    OBJCOPY arch/loongarch/boot/vmlinux.efi
+    PAD     arch/loongarch/boot/vmlinux.bin
+    GZIP    arch/loongarch/boot/vmlinuz
+    OBJCOPY arch/loongarch/boot/vmlinuz.o
+    LD      arch/loongarch/boot/vmlinuz.efi.elf
+    OBJCOPY arch/loongarch/boot/vmlinuz.efi
+
+The log "OBJCOPY arch/loongarch/boot/vmlinux.efi" is displayed twice.
+
+It indicates that two threads simultaneously enter arch/loongarch/boot/
+and write to arch/loongarch/boot/vmlinux.efi.
+
+It occasionally leads to a build failure:
+
+  $ make -j$(nproc) ARCH=loongarch vmlinux.efi vmlinuz.efi
+    [ snip ]
+    SORTTAB vmlinux
+    OBJCOPY arch/loongarch/boot/vmlinux.efi
+    PAD     arch/loongarch/boot/vmlinux.bin
+  truncate: Invalid number: ‘arch/loongarch/boot/vmlinux.bin’
+  make[2]: *** [drivers/firmware/efi/libstub/Makefile.zboot:13:
+  arch/loongarch/boot/vmlinux.bin] Error 1
+  make[2]: *** Deleting file 'arch/loongarch/boot/vmlinux.bin'
+  make[1]: *** [arch/loongarch/Makefile:146: vmlinuz.efi] Error 2
+  make[1]: *** Waiting for unfinished jobs....
+  make: *** [Makefile:234: __sub-make] Error 2
+
+vmlinuz.efi depends on vmlinux.efi, but such a dependency is not
+specified in arch/loongarch/Makefile.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ arch/loongarch/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 9eeb0c05f3f4..6022bf3d30c9 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -142,6 +142,7 @@ vdso-install-y += arch/loongarch/vdso/vdso.so.dbg
+ 
+ all:	$(notdir $(KBUILD_IMAGE))
+ 
++vmlinuz.efi: vmlinux.efi
+ vmlinux.elf vmlinux.efi vmlinuz.efi: vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(bootvars-y) $(boot)/$@
+ 
+-- 
+2.40.1
+
