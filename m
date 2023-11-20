@@ -1,274 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1F7442D
-	for <loongarch@lists.linux.dev>; Mon, 20 Nov 2023 06:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUGjHdQN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02958C433C7
-	for <loongarch@lists.linux.dev>; Mon, 20 Nov 2023 06:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700460803;
-	bh=K9MbVLMSv4EVE6SLbElz+8oAQhZAeOF2kn5isepi8y0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nUGjHdQNzq4dfzl4vf6XdZM8XVMXebiJHsDYGbSR0/rEqHa9dI3w5sRh2/quNZpxe
-	 RpwYDbbSYfou0vFn0Zr0pdJKKm585zHg/ZBScqqlGhie1/5BanWkA5WsLnJDuWC2xc
-	 LWpWF3G5QmYMs5Hqed1my8jm+cVUnSmerkHW3Euqj0DQLZ/2NqY/hc99yDo494uLXx
-	 dHuGeLsK+fDS40BMQ9qzTKotZRW46YhWvk/8zNPi/nS55SyvGtfHl6wg/dHcY5A23z
-	 WsB3W2RCp8Y9sG79+UqMHCD4P/+mvG+ujJ3PcmvwG+7COqYNFdT0nsBO+yuDikDFRz
-	 CdNAovp6BlMtA==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-507b9408c61so5287328e87.0
-        for <loongarch@lists.linux.dev>; Sun, 19 Nov 2023 22:13:22 -0800 (PST)
-X-Gm-Message-State: AOJu0YyBwjWhMH/q0ZHT8J2pP4KHnXVrfn4oC4AK15HhEuTjOZpPesl+
-	vB6dFPODip2k89g2Cock7EcSI368Hp7VdNDxEJU=
-X-Google-Smtp-Source: AGHT+IHb6p9IJTFLDUf4ScBJV3BAFVXwgFeNSZ4PSi6nKS0IsX1RdQpejzvc39T/8XzH5Wb0yNeu4wFElUmVrTWqlEc=
-X-Received: by 2002:a05:6512:208:b0:509:75b8:637b with SMTP id
- a8-20020a056512020800b0050975b8637bmr4758832lfo.30.1700460801187; Sun, 19 Nov
- 2023 22:13:21 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6836110941
+	for <loongarch@lists.linux.dev>; Mon, 20 Nov 2023 09:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [112.20.112.120])
+	by gateway (Coremail) with SMTP id _____8BxHOuhIVtlXSw7AA--.46935S3;
+	Mon, 20 Nov 2023 17:06:41 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.112.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxS9ydIVtlrmRHAA--.24751S2;
+	Mon, 20 Nov 2023 17:06:39 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	devicetree@vger.kernel.org,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-mips@vger.kernel.org,
+	lvjianmin@loongson.cn,
+	WANG Xuerui <git@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v5 0/5] dt-bindings: interrupt-controller: Fix some loongson,liointc warnings
+Date: Mon, 20 Nov 2023 17:06:22 +0800
+Message-Id: <cover.1700449792.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231119053448.2367725-1-masahiroy@kernel.org>
- <CAAhV-H6Y4vqc45eaMs+wCN7Quf4e9ogp8aDA8V0sA=TUnMWd-Q@mail.gmail.com>
- <CAK7LNAR=5s0tbqvB+poMD45Oyjknx9=VpVqE+qwqZy9LfQermQ@mail.gmail.com>
- <CAAhV-H4w1Esxp7pE02nbeh_Wft6=a8Q8MBEr54Q5D3_g9XP1gQ@mail.gmail.com> <CAK7LNAQi=cNK4cax76F8=f1tQC8fFRyu0SQmbiKiHTRsoat6Og@mail.gmail.com>
-In-Reply-To: <CAK7LNAQi=cNK4cax76F8=f1tQC8fFRyu0SQmbiKiHTRsoat6Og@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 20 Nov 2023 14:13:13 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7GiQ=+kU9xH09pL89QYSKOhBEcT5L55wPhXuoDkL37Yg@mail.gmail.com>
-Message-ID: <CAAhV-H7GiQ=+kU9xH09pL89QYSKOhBEcT5L55wPhXuoDkL37Yg@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: add dependency between vmlinuz.efi and vmlinux.efi
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Simon Glass <sjg@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxS9ydIVtlrmRHAA--.24751S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WryfJFyxGrW5Zr1rAF13trc_yoW5Jry5pF
+	sxC3ZrGr45Kr4xAws8Jay8ZF1rZ398JasxWFs7A348CayDJw1qqr1SkF48Ar47CryaqFya
+	qrWkKFWUGFyjkFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
-On Mon, Nov 20, 2023 at 12:45=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.=
-org> wrote:
->
-> On Mon, Nov 20, 2023 at 10:33=E2=80=AFAM Huacai Chen <chenhuacai@kernel.o=
-rg> wrote:
-> >
-> > Hi, Masahiro,
-> >
-> > On Sun, Nov 19, 2023 at 10:25=E2=80=AFPM Masahiro Yamada <masahiroy@ker=
-nel.org> wrote:
-> > >
-> > > On Sun, Nov 19, 2023 at 8:59=E2=80=AFPM Huacai Chen <chenhuacai@kerne=
-l.org> wrote:
-> > > >
-> > > > Hi, Masahiro,
-> > > >
-> > > > On Sun, Nov 19, 2023 at 1:35=E2=80=AFPM Masahiro Yamada <masahiroy@=
-kernel.org> wrote:
-> > > > >
-> > > > > A common issue in Makefile is a race in parallel building.
-> > > > >
-> > > > > You need to be careful to prevent multiple threads from writing t=
-o the
-> > > > > same file simultaneously.
-> > > > >
-> > > > > Commit 3939f3345050 ("ARM: 8418/1: add boot image dependencies to=
- not
-> > > > > generate invalid images") addressed such a bad scenario.
-> > > > >
-> > > > > A similar symptom occurs with the following command:
-> > > > >
-> > > > >   $ make -j$(nproc) ARCH=3Dloongarch vmlinux.efi vmlinuz.efi
-> > > > >     [ snip ]
-> > > > >     SORTTAB vmlinux
-> > > > >     OBJCOPY arch/loongarch/boot/vmlinux.efi
-> > > > >     OBJCOPY arch/loongarch/boot/vmlinux.efi
-> > > > >     PAD     arch/loongarch/boot/vmlinux.bin
-> > > > >     GZIP    arch/loongarch/boot/vmlinuz
-> > > > >     OBJCOPY arch/loongarch/boot/vmlinuz.o
-> > > > >     LD      arch/loongarch/boot/vmlinuz.efi.elf
-> > > > >     OBJCOPY arch/loongarch/boot/vmlinuz.efi
-> > > > >
-> > > > > The log "OBJCOPY arch/loongarch/boot/vmlinux.efi" is displayed tw=
-ice.
-> > > > >
-> > > > > It indicates that two threads simultaneously enter arch/loongarch=
-/boot/
-> > > > > and write to arch/loongarch/boot/vmlinux.efi.
-> > > > >
-> > > > > It occasionally leads to a build failure:
-> > > > >
-> > > > >   $ make -j$(nproc) ARCH=3Dloongarch vmlinux.efi vmlinuz.efi
-> > > > >     [ snip ]
-> > > > >     SORTTAB vmlinux
-> > > > >     OBJCOPY arch/loongarch/boot/vmlinux.efi
-> > > > >     PAD     arch/loongarch/boot/vmlinux.bin
-> > > > >   truncate: Invalid number: =E2=80=98arch/loongarch/boot/vmlinux.=
-bin=E2=80=99
-> > > > >   make[2]: *** [drivers/firmware/efi/libstub/Makefile.zboot:13:
-> > > > >   arch/loongarch/boot/vmlinux.bin] Error 1
-> > > > >   make[2]: *** Deleting file 'arch/loongarch/boot/vmlinux.bin'
-> > > > >   make[1]: *** [arch/loongarch/Makefile:146: vmlinuz.efi] Error 2
-> > > > >   make[1]: *** Waiting for unfinished jobs....
-> > > > >   make: *** [Makefile:234: __sub-make] Error 2
-> > > > >
-> > > > > vmlinuz.efi depends on vmlinux.efi, but such a dependency is not
-> > > > > specified in arch/loongarch/Makefile.
-> > > > >
-> > > > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > > > > ---
-> > > > >
-> > > > >  arch/loongarch/Makefile | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >
-> > > > > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> > > > > index 9eeb0c05f3f4..6022bf3d30c9 100644
-> > > > > --- a/arch/loongarch/Makefile
-> > > > > +++ b/arch/loongarch/Makefile
-> > > > > @@ -142,6 +142,7 @@ vdso-install-y +=3D arch/loongarch/vdso/vdso.=
-so.dbg
-> > > > >
-> > > > >  all:   $(notdir $(KBUILD_IMAGE))
-> > > > >
-> > > > > +vmlinuz.efi: vmlinux.efi
-> > > > >  vmlinux.elf vmlinux.efi vmlinuz.efi: vmlinux
-> > > > >         $(Q)$(MAKE) $(build)=3D$(boot) $(bootvars-y) $(boot)/$@
-> > > > It is a little strange, because
-> > > >
-> > > > in drivers/firmware/efi/libstub/Makefile.zboot:
-> > > > vmlinuz.efi depends on vmlinuz.efi.elf, vmlinuz.efi.elf depends on
-> > > > vmlinuz.o, vmlinuz.o depends on vmlinuz, vmlinuz depends on
-> > > > vmlinux.bin, vmlinux.bin depends on $(EFI_ZBOOT_PAYLOAD).
-> > > >
-> > > > in arch/loongarch/boot/Makefile,
-> > > > EFI_ZBOOT_PAYLOAD :=3D vmlinux.efi
-> > > >
-> > > > So I think vmlinuz.efi has already depend on vmlinux.efi.
-> > >
-> > >
-> > >
-> > > That is a story in arch/loongarch/boot/Makefile.
-> > >
-> > >
-> > > I am talking about arch/loongarch/Makefile,
-> > > which is included from the top Makefile.
-> > >
-> > >
-> > > See this code.
-> > >
-> > >
-> > > vmlinux.elf vmlinux.efi vmlinuz.efi: vmlinux
-> > >         $(Q)$(MAKE) $(build)=3D$(boot) $(bootvars-y) $(boot)/$@
-> > >
-> > >
-> > >
-> > >
-> > > Only the required dependency is
-> > >
-> > >  - vmlinux.elf depends on vmlinux
-> > >  - vmlinuz.elf depends on vmlinux
-> > >
-> > >
-> > > vmlinux.elf and vmlinuz.elf are independent of each other.
-> > >
-> > >
-> > >
-> > > In parallel building, GNU Make considers that
-> > > vmlinux.elf and vmlinuz.elf can be built simultaneously.
-> > >
-> > >
-> > > GNU Make spawns two processes to execute these simultaneously:
-> > >
-> > >  $(MAKE) $(build)=3D$(boot) $(bootvars-y) $(boot)/vmlinux.elf
-> > >  $(MAKE) $(build)=3D$(boot) $(bootvars-y) $(boot)/vmlinuz.elf
-> > >
-> > >
-> > >
-> > > The former enters arch/loongarch/boot/Makefile to build
-> > > vmlinux.elf.  (A)
-> > >
-> > >
-> > > The latter also enters arch/loongarch/boot/Makefile to build
-> > > vmlinuz.elf, which depends on vmlinux.elf  (B)
-> > >
-> > >
-> > >
-> > > (A) and (B) are independent processes, hence none of them
-> > > know the other.
-> > >
-> > >
-> > > I hope it is clearer.
-> > Sorry, I'm not familiar with Makefile rules, so you are probably
-> > right, but should we do it like this (remove the direct dependency
-> > from vmlinuz.efi to vmlinux)?
-> >
-> > vmlinuz.efi: vmlinux.efi
-> > vmlinux.elf vmlinux.efi: vmlinux
-> >         $(Q)$(MAKE) $(build)=3D$(boot) $(bootvars-y) $(boot)/$@
->
->
->
-> No.
->
-> It would create only vmlinux.efi because there is
-> no recipe line for vmlinuz.efi
->
->
->
->
-> vmlinuz.efi: vmlinux.efi
->         $(Q)$(MAKE) $(build)=3D$(boot) $(bootvars-y) $(boot)/$@
-> vmlinux.elf vmlinux.efi: vmlinux
->         $(Q)$(MAKE) $(build)=3D$(boot) $(bootvars-y) $(boot)/$@
->
->
-> will work, but I do not want to repeat the same recipe line.
->
-OK, I know, thank you very much. This patch will be applied to loongarch-fi=
-xes.
+Hi all:
 
-Huacai
+Some liointc-related DTBS_CHECK warnings were found when trying to
+introduce the Loongson-2K DTS{I} for LoongArch.
+This patch series attempts to fix those warnings, as well as fixing
+non-standard property naming.
 
->
->
->
->
->
->
->
->
->
->
->
->
->
->
->
-> > Huacai
-> >
-> > >
-> > >
-> > >
-> > >
-> > >
-> > >
-> > > > Huacai
-> > > >
-> > > > >
-> > > > > --
-> > > > > 2.40.1
-> > > > >
-> > > > >
-> > > >
-> > >
-> > >
-> > > --
-> > > Best Regards
-> > > Masahiro Yamada
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+Of course, these fixes also apply to MIPS Loongson-2K1000.
+
+Thanks.
+
+-----
+V5:
+- Add Reviewed-by tag;
+patch(1/5):
+  - Just drop 'loongson,parent_int_map' instead of marking it as
+    deprecated.
+
+Link to V4:
+https://lore.kernel.org/all/cover.1699521866.git.zhoubinbin@loongson.cn/
+
+V4:
+- Add Acked-by tag;
+patch(2/5):
+  - Just add 'maxitem 2' instead of duplicating the list;
+patch(3/5):
+  - Rewite commit message for 'interrupt-names'.
+
+Link to V3:
+https://lore.kernel.org/all/cover.1698717154.git.zhoubinbin@loongson.cn/
+
+V3:
+patch(1/5):
+  - new patch, 'loongson,parent_int_map' renamed to 'loongson,parent-int-map';
+patch(2/5)(3/5):
+  - Separate the change points into separate patches;
+patch(4/5):
+ - new patch, make sure both parent map forms can be parsed;
+patch(5/5):
+ - new patch, fix 'loongson,parent_int_map' references in mips loongson
+   dts{i}.
+
+Link to V2:
+https://lore.kernel.org/all/20230821061315.3416836-1-zhoubinbin@loongson.cn/
+
+V2:
+1. Update commit message;
+2. "interruprt-names" should be "required", the driver gets the parent
+interrupts through it;
+3. Add more descriptions to explain the rationale for multiple nodes;
+4. Rewrite if-else statements.
+
+Link to V1:
+https://lore.kernel.org/all/20230815084713.1627520-1-zhoubinbin@loongson.cn/
+
+Binbin Zhou (5):
+  dt-bindings: interrupt-controller: loongson,liointc: Standardize the
+    naming of 'loongson,parent-int-map'
+  dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+    warning for reg-names
+  dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+    warning for interrupt-names
+  irqchip/loongson-liointc: Fix 'loongson,parent_int_map' parse
+  MIPS: Loongson64: DTS: Fix 'loongson,parent_int_map' references
+
+ .../loongson,liointc.yaml                     | 26 +++++++++++--------
+ .../boot/dts/loongson/loongson64-2k1000.dtsi  |  4 +--
+ .../dts/loongson/loongson64c-package.dtsi     |  2 +-
+ .../dts/loongson/loongson64g-package.dtsi     |  2 +-
+ .../dts/loongson/loongson64v_4core_virtio.dts |  2 +-
+ drivers/irqchip/irq-loongson-liointc.c        |  7 ++++-
+ 6 files changed, 26 insertions(+), 17 deletions(-)
+
+-- 
+2.39.3
+
