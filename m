@@ -1,141 +1,112 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35C6A7491
-	for <loongarch@lists.linux.dev>; Mon, 20 Nov 2023 09:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [112.20.112.120])
-	by gateway (Coremail) with SMTP id _____8BxY_C1IVtlvCw7AA--.51333S3;
-	Mon, 20 Nov 2023 17:07:01 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.112.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxzt6wIVtl0WRHAA--.27816S4;
-	Mon, 20 Nov 2023 17:07:00 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	devicetree@vger.kernel.org,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-mips@vger.kernel.org,
-	lvjianmin@loongson.cn,
-	WANG Xuerui <git@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v5 5/5] MIPS: Loongson64: DTS: Fix 'loongson,parent_int_map' references
-Date: Mon, 20 Nov 2023 17:06:49 +0800
-Message-Id: <12036a9dab5b4d421fb9c74e1ef2c3cb2f26c641.1700449792.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1700449792.git.zhoubinbin@loongson.cn>
-References: <cover.1700449792.git.zhoubinbin@loongson.cn>
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6518711707
+	for <loongarch@lists.linux.dev>; Mon, 20 Nov 2023 09:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Y7u3kRAF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=VaLCPpptCPl4dd3HPwfC9h62KXrs4QNdYGscUChirrc=; b=Y7u3kRAFMUjm3/j4LodjYSA3LZ
+	VC/v4Le7llOshhtVIeZgByL9Ta8EV6wWiKc32k2oFctq/SRATcfURY2PKHwM1fQ3e8O0y94oymLQc
+	xUrw2kmBGd5PWCfen4xrhtknxW1A3VcIcPuln0pl6/3f9+djfDci/m0DmbTJbLwDqHwz9uzkkrzpc
+	n5mOUp+mG/7fnMgC/NdjC9qKdJiht8DNMXVImILTIBATOw8lyvNOwlhTzaZeudVzzfnwbvVIrj3yR
+	uYAf8x/ctMS3iNKwDTV/DFOkBJ4dwsZmpT9F11ZEBjlVG0bZ2GIoNmwdcP+kaiqwUeH0SI0NgvPw4
+	bHPb0sAw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49586)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1r50WD-0005DX-2m;
+	Mon, 20 Nov 2023 09:24:37 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1r50WD-00033Q-J2; Mon, 20 Nov 2023 09:24:37 +0000
+Date: Mon, 20 Nov 2023 09:24:37 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Jianyong Wu <Jianyong.Wu@arm.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Justin He <Justin.He@arm.com>, James Morse <James.Morse@arm.com>,
+	Catalin Marinas <Catalin.Marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: Re: [PATCH 34/39] arm64: psci: Ignore DENIED CPUs
+Message-ID: <ZVsl1ZQ9JRXPf4qH@shell.armlinux.org.uk>
+References: <ZTffkAdOqL2pI2la@shell.armlinux.org.uk>
+ <E1qvJBQ-00AqS8-8B@rmk-PC.armlinux.org.uk>
+ <DB9PR08MB7511B178CA811C412766FDBAF4B0A@DB9PR08MB7511.eurprd08.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxzt6wIVtl0WRHAA--.27816S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZr13XF4kWw1UGw45AryUtwc_yoW5tw47pw
-	43A3W8Gw4xKr17A398G34UJr1fZFZ0yFZrWF4xGFW8A39aga4UXr1fJF1rtrs3Gry5Xa42
-	9r1vgrW7KFy8CabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
-	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
-	6rWY6Fy7McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
-	kI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUx-txUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB9PR08MB7511B178CA811C412766FDBAF4B0A@DB9PR08MB7511.eurprd08.prod.outlook.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Since 'loongson,parent_int_map' has been dropped, replace all
-relevant references in the MIPS loongson dts{i} with
-'loongson,parent-int-map'.
+On Thu, Nov 16, 2023 at 07:45:51AM +0000, Jianyong Wu wrote:
+> Hi Russell,
+> 
+> One inline comment.
+...
+> > Changes since RFC v2
+> >  * Add specification reference
+> >  * Use EPERM rather than EPROBE_DEFER
+...
+> > @@ -40,7 +40,7 @@ static int cpu_psci_cpu_boot(unsigned int cpu)  {
+> >  	phys_addr_t pa_secondary_entry = __pa_symbol(secondary_entry);
+> >  	int err = psci_ops.cpu_on(cpu_logical_map(cpu), pa_secondary_entry);
+> > -	if (err)
+> > +	if (err && err != -EPROBE_DEFER)
+> 
+> Should this be EPERM? As the following psci cpu_on op will return it. I
+> think you miss to change this when apply Jean-Philippe's patch.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi       | 4 ++--
- arch/mips/boot/dts/loongson/loongson64c-package.dtsi     | 2 +-
- arch/mips/boot/dts/loongson/loongson64g-package.dtsi     | 2 +-
- arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+It looks like James didn't properly update all places. Also,
 
-diff --git a/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi b/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
-index f878f47e4501..36f499a3772e 100644
---- a/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
-+++ b/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
-@@ -71,7 +71,7 @@ liointc0: interrupt-controller@1fe11400 {
- 			interrupts = <2>;
- 			interrupt-names = "int0";
- 
--			loongson,parent_int_map = <0xffffffff>, /* int0 */
-+			loongson,parent-int-map = <0xffffffff>, /* int0 */
- 						<0x00000000>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
-@@ -91,7 +91,7 @@ liointc1: interrupt-controller@1fe11440 {
- 			interrupts = <3>;
- 			interrupt-names = "int1";
- 
--			loongson,parent_int_map = <0x00000000>, /* int0 */
-+			loongson,parent-int-map = <0x00000000>, /* int0 */
- 						<0xffffffff>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
-diff --git a/arch/mips/boot/dts/loongson/loongson64c-package.dtsi b/arch/mips/boot/dts/loongson/loongson64c-package.dtsi
-index 5bb876a4de52..38de0108e804 100644
---- a/arch/mips/boot/dts/loongson/loongson64c-package.dtsi
-+++ b/arch/mips/boot/dts/loongson/loongson64c-package.dtsi
-@@ -35,7 +35,7 @@ liointc: interrupt-controller@3ff01400 {
- 			interrupts = <2>, <3>;
- 			interrupt-names = "int0", "int1";
- 
--			loongson,parent_int_map = <0xf0ffffff>, /* int0 */
-+			loongson,parent-int-map = <0xf0ffffff>, /* int0 */
- 						<0x0f000000>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
-diff --git a/arch/mips/boot/dts/loongson/loongson64g-package.dtsi b/arch/mips/boot/dts/loongson/loongson64g-package.dtsi
-index d4314f62ccc2..8972adcb83d6 100644
---- a/arch/mips/boot/dts/loongson/loongson64g-package.dtsi
-+++ b/arch/mips/boot/dts/loongson/loongson64g-package.dtsi
-@@ -32,7 +32,7 @@ liointc: interrupt-controller@3ff01400 {
- 			interrupts = <2>, <3>;
- 			interrupt-names = "int0", "int1";
- 
--			loongson,parent_int_map = <0x00ffffff>, /* int0 */
-+			loongson,parent-int-map = <0x00ffffff>, /* int0 */
- 						<0xff000000>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
-diff --git a/arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts b/arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts
-index d0588d81e0c2..88642fee1bbd 100644
---- a/arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts
-+++ b/arch/mips/boot/dts/loongson/loongson64v_4core_virtio.dts
-@@ -34,7 +34,7 @@ liointc: interrupt-controller@3ff01400 {
- 			interrupts = <2>, <3>;
- 			interrupt-names = "int0", "int1";
- 
--			loongson,parent_int_map = <0x00000001>, /* int0 */
-+			loongson,parent-int-map = <0x00000001>, /* int0 */
- 						<0xfffffffe>, /* int1 */
- 						<0x00000000>, /* int2 */
- 						<0x00000000>; /* int3 */
+> > diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c index
+> > d9629ff87861..ee82e7880d8c 100644
+> > --- a/drivers/firmware/psci/psci.c
+> > +++ b/drivers/firmware/psci/psci.c
+> > @@ -218,6 +218,8 @@ static int __psci_cpu_on(u32 fn, unsigned long cpuid,
+> > unsigned long entry_point)
+> >  	int err;
+> > 
+> >  	err = invoke_psci_fn(fn, cpuid, entry_point, 0);
+> > +	if (err == PSCI_RET_DENIED)
+> > +		return -EPERM;
+> >  	return psci_to_linux_errno(err);
+
+This change is unnecessary - probably comes from when -EPROBE_DEFER was
+being used. psci_to_linux_errno() already does:
+
+       case PSCI_RET_DENIED:
+               return -EPERM;
+
+Thanks.
+
 -- 
-2.39.3
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
