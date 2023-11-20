@@ -1,104 +1,115 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4522B374CF
-	for <loongarch@lists.linux.dev>; Mon, 20 Nov 2023 22:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B5F38DF8;
+	Mon, 20 Nov 2023 23:08:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Q5haxl/+"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-282fcf7eef9so3352313a91.1
-        for <loongarch@lists.linux.dev>; Mon, 20 Nov 2023 14:53:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1700520783; x=1701125583; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jj/vQll/FXoy8ynJ7Qc2odNrUXWiiF64P1hSHAKTnLo=;
-        b=Q5haxl/+ncCQCvJIENKJufwAWI3gNr3nkxu6ipsOsnP/G6Ptyi7AB7bMjaYjuOGNn6
-         +giGUXP9uRfw0CKXYX7S2vobYhqmmPIPD4Xd2G3QpK1v2UJlUrb5SFnt1yq2k2Zc+7Gs
-         pZnpdGhnEQM5+5wVQ/J13J7sRN50DWFgZq4dZtQP2oxLH1rJc9jtc31q+fpPo6FTMFKC
-         Nz93izPfM3EWeQRuinKMTG/ept+dRNloCHdwIzq7dk0Lr2WJ74FF6FEiZEEXHQuX5+Hx
-         WGqCiwA0lJcKNzfV26x+OsXz5J0J5oCLPaDcBgf8xokFMiF/1kIsplDjPd2aL2t2+iN+
-         R+tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700520783; x=1701125583;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jj/vQll/FXoy8ynJ7Qc2odNrUXWiiF64P1hSHAKTnLo=;
-        b=AehBdt6nsy0gkbgpUjNkpYiZMhJt01ggKncnvqHQ3vSqlzDeMeP/BmXD7SqMAhPlLO
-         tMpG/BnpHYPpDkfoiPjNr7vYMR0OfQcccELdChkFKn1niz6yVxKlXaBtMa4OjQVUUhlW
-         VNN4TlR/rnbjauomPgcMKiKpN82DLg/p+JvlTC/G/7BSrKeJZLFqorE1Fho/uisnZlBp
-         Ma5+Lb629kmab2iyEqbldDYPOBNBjPbZnGuQ+Cfedl7LTaWDM/QDtAN+tuRftLEx1vqc
-         iXckFU2ajDtgh5r6jCVWmiJsc6XGSoybhKCCQmzG+m2Sy34TLtIyU9NCbX0xoY3keogi
-         ZzYQ==
-X-Gm-Message-State: AOJu0YxOIJ/lGA+sOWmYG9+xMEMQXONBJds7nelRUDVwFFoVSeV2Efrv
-	1zEruoA0Imkubg+6sG+e8m3eV/JK5kF2LBGvhBjOnw==
-X-Google-Smtp-Source: AGHT+IFZPPhV0R/g5zHGb3q3Uo9IH7rXXP80OMq0eithxekw9SzGz9ATfztUful4gMY68aa6sJe0kX0Yn689XQCOKAw=
-X-Received: by 2002:a17:90b:1a89:b0:27d:2364:44f6 with SMTP id
- ng9-20020a17090b1a8900b0027d236444f6mr7022804pjb.6.1700520783377; Mon, 20 Nov
- 2023 14:53:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pm0ocCOu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00B7BC433C8;
+	Mon, 20 Nov 2023 23:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700521699;
+	bh=CFqoX8V2WNEiSzZISkGpjZgqDIO60dgqCnVyQdufY0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pm0ocCOuOM935pl00FZ7y8WqMAQHOpgOGaD6c9Umz3wSPv+b+ywRvOFVrGqJDsjpe
+	 MOsKExWGV46pb4wNHQhYNdmWdwFDRVCR/NvTlAfJC8ZM0zlAVG239yHgDJBfDTh0wJ
+	 5LibP1FfBpF5Cnazh/45hzIPRACn0/CDLcwOYP6Iqmd1SaJ5Oc2HzW07QFFy7Nslwn
+	 Tn0X8yTzXAP70Gn8/WJ9CKIXnxzSTXPbukl5EMSXBQ6uXbqxGX11uklzQfh/I/Hux8
+	 f4kJEYXAQR/Hsg36Qvqtp9TMUhuYYzAyQubKIN/oQJclZXgxyXYXTm0EuwEnbzWrhY
+	 YXmhg5H72w8Jw==
+Date: Mon, 20 Nov 2023 16:08:17 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	Jinyang He <hejinyang@loongson.cn>, Xi Ruoyao <xry111@xry111.site>,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH] LoongArch: Record pc instead of offset in la-abs
+ relocation
+Message-ID: <20231120230817.GA2116806@dev-arch.thelio-3990X>
+References: <20231116130331.241395-1-wangrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Ignat Korchagin <ignat@cloudflare.com>
-Date: Mon, 20 Nov 2023 22:52:52 +0000
-Message-ID: <CALrw=nHpRQQaQTP_jZfREgrQEMpS8jBF8JQCv4ygqXycE-StaA@mail.gmail.com>
-Subject: Potential config regression after 89cde455 ("kexec: consolidate kexec
- and crash options into kernel/Kconfig.kexec")
-To: eric.devolder@oracle.com
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	chenhuacai@kernel.org, geert@linux-m68k.org, tsbogend@alpha.franken.de, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, deller@gmx.de, 
-	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	dave.hansen@linux.intel.com, x86@kernel.org, 
-	linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, kernel@xen0n.name, mpe@ellerman.id.au, 
-	npiggin@gmail.com, christophe.leroy@csgroup.eu, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com, 
-	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
-	svens@linux.ibm.com, hpa@zytor.com, keescook@chromium.org, paulmck@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, frederic@kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>, samitolvanen@google.com, 
-	juerg.haefliger@canonical.com, arnd@arndb.de, rmk+kernel@armlinux.org.uk, 
-	linus.walleij@linaro.org, sebastian.reichel@collabora.com, rppt@kernel.org, 
-	kirill.shutemov@linux.intel.com, anshuman.khandual@arm.com, ziy@nvidia.com, 
-	masahiroy@kernel.org, ndesaulniers@google.com, mhiramat@kernel.org, 
-	ojeda@kernel.org, thunder.leizhen@huawei.com, xin3.li@intel.com, 
-	tj@kernel.org, Greg KH <gregkh@linuxfoundation.org>, tsi@tuyoix.net, bhe@redhat.com, 
-	hbathini@linux.ibm.com, sourabhjain@linux.ibm.com, boris.ostrovsky@oracle.com, 
-	konrad.wilk@oracle.com, kernel-team <kernel-team@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231116130331.241395-1-wangrui@loongson.cn>
 
-Good day!
+Hi Rui,
 
-We have recently started to evaluate Linux 6.6 and noticed that we
-cannot disable CONFIG_KEXEC anymore, but keep CONFIG_CRASH_DUMP
-enabled. It seems to be related to commit 89cde455 ("kexec:
-consolidate kexec and crash options into kernel/Kconfig.kexec"), where
-a CONFIG_KEXEC dependency was added to CONFIG_CRASH_DUMP.
+On Thu, Nov 16, 2023 at 09:03:31PM +0800, WANG Rui wrote:
+> To clarify, the previous version functioned flawlessly. However, it's
+> worth noting that the LLVM's LoongArch backend currently lacks support
+> for cross-section label calculations. With this patch, we enable the use
+> of clang to compile relocatable kernels.
+> 
+> Signed-off-by: WANG Rui <wangrui@loongson.cn>
 
-In our current kernel (Linux 6.1) we only enable CONFIG_KEXEC_FILE
-with enforced signature check to support the kernel crash dumping
-functionality and would like to keep CONFIG_KEXEC disabled for
-security reasons [1].
+Thanks a lot for the patch! This fixes the CONFIG_RELOCATABLE build for
+me as well.
 
-I was reading the long commit message, but the reason for adding
-CONFIG_KEXEC as a dependency for CONFIG_CRASH_DUMP evaded me. And I
-believe from the implementation perspective CONFIG_KEXEC_FILE should
-suffice here (as we successfully used it for crashdumps on Linux 6.1).
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-Is there a reason for adding this dependency or is it just an
-oversight? Would some solution of requiring either CONFIG_KEXEC or
-CONFIG_KEXEC_FILE work here?
+Something I noticed while testing is that a kernel linked with ld.lld
+does not boot while one linked with ld.bfd did. I think this might be
+the same issue that Xuerui filed on our issue tracker but I figured I
+would mention it in case not:
+https://github.com/ClangBuiltLinux/linux/issues/1883
 
-Ignat
+Cheers,
+Nathan
 
-[1]: https://mjg59.dreamwidth.org/28746.html
+> ---
+>  arch/loongarch/include/asm/asmmacro.h | 3 +--
+>  arch/loongarch/include/asm/setup.h    | 2 +-
+>  arch/loongarch/kernel/relocate.c      | 2 +-
+>  3 files changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/asmmacro.h b/arch/loongarch/include/asm/asmmacro.h
+> index c9544f358c33..655db7d7a427 100644
+> --- a/arch/loongarch/include/asm/asmmacro.h
+> +++ b/arch/loongarch/include/asm/asmmacro.h
+> @@ -609,8 +609,7 @@
+>  	lu32i.d	\reg, 0
+>  	lu52i.d	\reg, \reg, 0
+>  	.pushsection ".la_abs", "aw", %progbits
+> -	768:
+> -	.dword	768b-766b
+> +	.dword	766b
+>  	.dword	\sym
+>  	.popsection
+>  #endif
+> diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/asm/setup.h
+> index a0bc159ce8bd..ee52fb1e9963 100644
+> --- a/arch/loongarch/include/asm/setup.h
+> +++ b/arch/loongarch/include/asm/setup.h
+> @@ -25,7 +25,7 @@ extern void set_merr_handler(unsigned long offset, void *addr, unsigned long len
+>  #ifdef CONFIG_RELOCATABLE
+>  
+>  struct rela_la_abs {
+> -	long offset;
+> +	long pc;
+>  	long symvalue;
+>  };
+>  
+> diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
+> index 6c3eff9af9fb..288b739ca88d 100644
+> --- a/arch/loongarch/kernel/relocate.c
+> +++ b/arch/loongarch/kernel/relocate.c
+> @@ -52,7 +52,7 @@ static inline void __init relocate_absolute(long random_offset)
+>  	for (p = begin; (void *)p < end; p++) {
+>  		long v = p->symvalue;
+>  		uint32_t lu12iw, ori, lu32id, lu52id;
+> -		union loongarch_instruction *insn = (void *)p - p->offset;
+> +		union loongarch_instruction *insn = (void *)p->pc;
+>  
+>  		lu12iw = (v >> 12) & 0xfffff;
+>  		ori    = v & 0xfff;
+> -- 
+> 2.42.1
+> 
+> 
