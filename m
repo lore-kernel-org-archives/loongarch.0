@@ -1,98 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D197136C;
-	Tue, 21 Nov 2023 14:52:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A30E8C17
+	for <loongarch@lists.linux.dev>; Wed, 22 Nov 2023 03:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="poue5VPW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 580D7C433C7;
-	Tue, 21 Nov 2023 14:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1700578360;
-	bh=dGYz6IxNOUY4NpvhlMLeIB3Xxc/hARJYIHJyki7wDHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=poue5VPWyYd+HrTAPC2kL1JwV02FvsHlUJ1z3W9FXk/U2czUqklkcawHdmmtSEsoY
-	 IlPddu/gpJsZ1UpOPQIgrM7BkkvyXf2F3hIfHrb2U18/fsMMvTR4wCzYJDyNBuBtzP
-	 SpQfWPT1cgV1qEShQyzt0KdJxLEsOUDx610rqzSQ=
-Date: Tue, 21 Nov 2023 15:12:23 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Greg Ungerer <gerg@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Geoff Levand <geoff@infradead.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-	Helge Deller <deller@gmx.de>,
-	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-	Timur Tabi <timur@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	David Woodhouse <dwmw2@infradead.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-bcachefs@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 20/22] usb: fsl-mph-dr-of: mark fsl_usb2_mpc5121_init()
- static
-Message-ID: <2023112114-cried-ramble-b3f9@gregkh>
-References: <20231108125843.3806765-1-arnd@kernel.org>
- <20231108125843.3806765-21-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2U6oUFpf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=E1IYrOk2/0lcmIdJNinsgjAdw9J4MaPGjPYOhConAww=; b=2U
+	6oUFpfkITjG1Y8KyWRfgRHkN6tZS/BQat8YcXd6sVIo6rI7UiLUNRwd3iXfNinbC43cIMBrosqXzV
+	aWyJ8RSG8X+KV/22CDEb820I8+RBSPe9xivLPX8sFHrh4GHNL/t9iEV7G/OR9MvAVJjBkMpc7B5Gm
+	4I8o38tnV1ANzcM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1r5e5A-000orX-IC; Wed, 22 Nov 2023 04:39:20 +0100
+Date: Wed, 22 Nov 2023 04:39:20 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: hkallweit1@gmail.com, peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+	fancer.lancer@gmail.com, Jose.Abreu@synopsys.com,
+	chenhuacai@loongson.cn, linux@armlinux.org.uk, dongbiao@loongson.cn,
+	guyinggang@loongson.cn, netdev@vger.kernel.org,
+	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+Subject: Re: [PATCH v5 3/9] net: stmmac: Add Loongson DWGMAC definitions
+Message-ID: <9c2806c7-daaa-4a2d-b69b-245d202d9870@lunn.ch>
+References: <cover.1699533745.git.siyanteng@loongson.cn>
+ <87011adcd39f20250edc09ee5d31bda01ded98b5.1699533745.git.siyanteng@loongson.cn>
+ <2e1197f9-22f6-4189-8c16-f9bff897d567@lunn.ch>
+ <df17d5e9-2c61-47e3-ba04-64b7110a7ba6@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231108125843.3806765-21-arnd@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <df17d5e9-2c61-47e3-ba04-64b7110a7ba6@loongson.cn>
 
-On Wed, Nov 08, 2023 at 01:58:41PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Nov 21, 2023 at 05:55:24PM +0800, Yanteng Si wrote:
+> Hi Andrew,
 > 
-> This function is only called locally and should always have been static:
+> 在 2023/11/12 04:07, Andrew Lunn 写道:
+> > > +#ifdef	CONFIG_DWMAC_LOONGSON
+> > > +#define DMA_INTR_ABNORMAL	(DMA_INTR_ENA_AIE_LOONGSON | DMA_INTR_ENA_AIE | \
+> > > +				DMA_INTR_ENA_FBE | DMA_INTR_ENA_UNE)
+> > > +#else
+> > >   #define DMA_INTR_ABNORMAL	(DMA_INTR_ENA_AIE | DMA_INTR_ENA_FBE | \
+> > >   				DMA_INTR_ENA_UNE)
+> > > +#endif
+> > The aim is to produce one kernel which runs on all possible
+> > variants. So we don't like to see this sort of #ifdef. Please try to
+> > remove them.
 > 
-> drivers/usb/host/fsl-mph-dr-of.c:291:5: error: no previous prototype for 'fsl_usb2_mpc5121_init' [-Werror=missing-prototypes]
+> We now run into a tricky problem: we only have a few register
+> definitions(DMA_XXX_LOONGSON)
 > 
-> Fixes: 230f7ede6c2f ("USB: add USB EHCI support for MPC5121 SoC")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> that are not the same as the dwmac1000 register definition.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+What does DMA_INTR_ENA_AIE_LOONGSON do? This seems like an interrupt
+mask, and this is enabling an interrupt source? However, i don't see
+this bit being tested in any interrupt status register? Or is it
+hiding in one of the other patches?
+
+This is where lots of small patches, with good descriptions helps.
+
+     Andrew
