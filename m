@@ -1,78 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F644C3C5;
-	Wed, 22 Nov 2023 15:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6B9C433C7;
-	Wed, 22 Nov 2023 15:13:07 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.7-rc3
-Date: Wed, 22 Nov 2023 23:12:45 +0800
-Message-Id: <20231122151245.1730120-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FF05C902;
+	Wed, 22 Nov 2023 19:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZj9WW0e"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4577DC433CA;
+	Wed, 22 Nov 2023 19:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700680618;
+	bh=V+bcEHuaoT0QO1L4PpY2MsEghTUZNEpjix34EZdyApg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=rZj9WW0ex44DdDLUe4dtr+cE5Zc8RXL/V/i0eiQRdwCJH61zVPY0GkGkO/6GeBgY7
+	 s+jwiE5TjVU11PFWqdxGrvs/7Th7T7BLul83EqutTQLAih22EF1o2e+YVZdpo8StdL
+	 F4RcudE22Lbx8/Cyg4vHSSBAEPHND6a39QQI7ysM5m8PQG8uL8qoRtwdPK+hry3c7x
+	 ov92VwKJOp0esc7vFWwUh+/h4x9y93acAyl0JyiZdgQ2ez2jhiQuVfd6kOnU+CDbSl
+	 QaBUtxGnDZPTtftZKtFQLS1bOHBp0a1Qd36iiMIKfC6kzOj1j7Z8UgpO5BZOYd4eBN
+	 dOPUJLXyn5RDQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 311AEEAA958;
+	Wed, 22 Nov 2023 19:16:58 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.7-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20231122151245.1730120-1-chenhuacai@loongson.cn>
+References: <20231122151245.1730120-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20231122151245.1730120-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.7-1
+X-PR-Tracked-Commit-Id: c517fd2738f472eb0d1db60a70d91629349a9bf8
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9b6de136b5f0158c60844f85286a593cb70fb364
+Message-Id: <170068061818.6718.7703537633390907893.pr-tracker-bot@kernel.org>
+Date: Wed, 22 Nov 2023 19:16:58 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The following changes since commit 98b1cc82c4affc16f5598d4fa14b1858671b2263:
+The pull request you sent on Wed, 22 Nov 2023 23:12:45 +0800:
 
-  Linux 6.7-rc2 (2023-11-19 15:02:14 -0800)
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.7-1
 
-are available in the Git repository at:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9b6de136b5f0158c60844f85286a593cb70fb364
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.7-1
+Thank you!
 
-for you to fetch changes up to c517fd2738f472eb0d1db60a70d91629349a9bf8:
-
-  Docs/zh_CN/LoongArch: Update links in LoongArch introduction.rst (2023-11-21 15:03:26 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v6.7-rc3
-
-Fix several build errors, a potential kernel panic, a cpu hotplug issue
-and update links in documentations.
-----------------------------------------------------------------
-Bibo Mao (1):
-      LoongArch: Implement constant timer shutdown interface
-
-Huacai Chen (3):
-      LoongArch: Add __percpu annotation for __percpu_read()/__percpu_write()
-      LoongArch: Silence the boot warning about 'nokaslr'
-      LoongArch: Mark {dmw,tlb}_virt_to_page() exports as non-GPL
-
-Masahiro Yamada (1):
-      LoongArch: Add dependency between vmlinuz.efi and vmlinux.efi
-
-WANG Rui (2):
-      LoongArch: Explicitly set -fdirect-access-external-data for vmlinux
-      LoongArch: Record pc instead of offset in la_abs relocation
-
-Yanteng Si (2):
-      Docs/LoongArch: Update links in LoongArch introduction.rst
-      Docs/zh_CN/LoongArch: Update links in LoongArch introduction.rst
-
- Documentation/arch/loongarch/introduction.rst      |  4 ++--
- .../zh_CN/arch/loongarch/introduction.rst          |  4 ++--
- arch/loongarch/Makefile                            |  3 +++
- arch/loongarch/include/asm/asmmacro.h              |  3 +--
- arch/loongarch/include/asm/percpu.h                | 11 +++++------
- arch/loongarch/include/asm/setup.h                 |  2 +-
- arch/loongarch/kernel/relocate.c                   | 10 +++++++++-
- arch/loongarch/kernel/time.c                       | 23 +++++++++-------------
- arch/loongarch/mm/pgtable.c                        |  4 ++--
- 9 files changed, 34 insertions(+), 30 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
