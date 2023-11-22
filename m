@@ -1,75 +1,86 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A30E8C17
-	for <loongarch@lists.linux.dev>; Wed, 22 Nov 2023 03:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FBEBE45
+	for <loongarch@lists.linux.dev>; Wed, 22 Nov 2023 04:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2U6oUFpf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=E1IYrOk2/0lcmIdJNinsgjAdw9J4MaPGjPYOhConAww=; b=2U
-	6oUFpfkITjG1Y8KyWRfgRHkN6tZS/BQat8YcXd6sVIo6rI7UiLUNRwd3iXfNinbC43cIMBrosqXzV
-	aWyJ8RSG8X+KV/22CDEb820I8+RBSPe9xivLPX8sFHrh4GHNL/t9iEV7G/OR9MvAVJjBkMpc7B5Gm
-	4I8o38tnV1ANzcM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1r5e5A-000orX-IC; Wed, 22 Nov 2023 04:39:20 +0100
-Date: Wed, 22 Nov 2023 04:39:20 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yanteng Si <siyanteng@loongson.cn>
-Cc: hkallweit1@gmail.com, peppe.cavallaro@st.com,
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-	fancer.lancer@gmail.com, Jose.Abreu@synopsys.com,
-	chenhuacai@loongson.cn, linux@armlinux.org.uk, dongbiao@loongson.cn,
-	guyinggang@loongson.cn, netdev@vger.kernel.org,
-	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="StHdttqR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1700625781;
+	bh=WyAShApkDdBPwl2YIcs5L7o6ggYYCKEIr+CohnIiE+0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=StHdttqReRqB113S/1/8A2J+KS6E9/syqzuCcV86z7aWExzC34utdq7S1ZpLsazsd
+	 ToyQWRX7uQyZ/vrhH1rYwn3h3qZF576qoKbHN0hC243gPhcJ/g0ngOgl2T/L/fQfLX
+	 4EZ8T+yMElNnSy/0SLytVzQYTzf9c+FsD9qGlsvE=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id E820A66B39;
+	Tue, 21 Nov 2023 23:02:58 -0500 (EST)
+Message-ID: <cbf497a2aa3c1dcb83fde103b231c31b791ccb26.camel@xry111.site>
 Subject: Re: [PATCH v5 3/9] net: stmmac: Add Loongson DWGMAC definitions
-Message-ID: <9c2806c7-daaa-4a2d-b69b-245d202d9870@lunn.ch>
+From: Xi Ruoyao <xry111@xry111.site>
+To: Andrew Lunn <andrew@lunn.ch>, Yanteng Si <siyanteng@loongson.cn>
+Cc: hkallweit1@gmail.com, peppe.cavallaro@st.com,
+ alexandre.torgue@foss.st.com,  joabreu@synopsys.com,
+ fancer.lancer@gmail.com, Jose.Abreu@synopsys.com,  chenhuacai@loongson.cn,
+ linux@armlinux.org.uk, dongbiao@loongson.cn,  guyinggang@loongson.cn,
+ netdev@vger.kernel.org, loongarch@lists.linux.dev, 
+ chris.chenfeiyang@gmail.com
+Date: Wed, 22 Nov 2023 12:02:57 +0800
+In-Reply-To: <9c2806c7-daaa-4a2d-b69b-245d202d9870@lunn.ch>
 References: <cover.1699533745.git.siyanteng@loongson.cn>
- <87011adcd39f20250edc09ee5d31bda01ded98b5.1699533745.git.siyanteng@loongson.cn>
- <2e1197f9-22f6-4189-8c16-f9bff897d567@lunn.ch>
- <df17d5e9-2c61-47e3-ba04-64b7110a7ba6@loongson.cn>
+	 <87011adcd39f20250edc09ee5d31bda01ded98b5.1699533745.git.siyanteng@loongson.cn>
+	 <2e1197f9-22f6-4189-8c16-f9bff897d567@lunn.ch>
+	 <df17d5e9-2c61-47e3-ba04-64b7110a7ba6@loongson.cn>
+	 <9c2806c7-daaa-4a2d-b69b-245d202d9870@lunn.ch>
+Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
+ keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <df17d5e9-2c61-47e3-ba04-64b7110a7ba6@loongson.cn>
 
-On Tue, Nov 21, 2023 at 05:55:24PM +0800, Yanteng Si wrote:
-> Hi Andrew,
-> 
-> 在 2023/11/12 04:07, Andrew Lunn 写道:
-> > > +#ifdef	CONFIG_DWMAC_LOONGSON
-> > > +#define DMA_INTR_ABNORMAL	(DMA_INTR_ENA_AIE_LOONGSON | DMA_INTR_ENA_AIE | \
-> > > +				DMA_INTR_ENA_FBE | DMA_INTR_ENA_UNE)
-> > > +#else
-> > >   #define DMA_INTR_ABNORMAL	(DMA_INTR_ENA_AIE | DMA_INTR_ENA_FBE | \
-> > >   				DMA_INTR_ENA_UNE)
-> > > +#endif
-> > The aim is to produce one kernel which runs on all possible
-> > variants. So we don't like to see this sort of #ifdef. Please try to
-> > remove them.
-> 
-> We now run into a tricky problem: we only have a few register
-> definitions(DMA_XXX_LOONGSON)
-> 
-> that are not the same as the dwmac1000 register definition.
+On Wed, 2023-11-22 at 04:39 +0100, Andrew Lunn wrote:
+> On Tue, Nov 21, 2023 at 05:55:24PM +0800, Yanteng Si wrote:
+> > Hi Andrew,
+> >=20
+> > =E5=9C=A8 2023/11/12 04:07, Andrew Lunn =E5=86=99=E9=81=93:
+> > > > +#ifdef	CONFIG_DWMAC_LOONGSON
+> > > > +#define DMA_INTR_ABNORMAL	(DMA_INTR_ENA_AIE_LOONGSON | DMA_INTR_EN=
+A_AIE | \
+> > > > +				DMA_INTR_ENA_FBE | DMA_INTR_ENA_UNE)
+> > > > +#else
+> > > > =C2=A0=C2=A0 #define DMA_INTR_ABNORMAL	(DMA_INTR_ENA_AIE | DMA_INTR=
+_ENA_FBE | \
+> > > > =C2=A0=C2=A0=C2=A0				DMA_INTR_ENA_UNE)
+> > > > +#endif
+> > > The aim is to produce one kernel which runs on all possible
+> > > variants. So we don't like to see this sort of #ifdef. Please try to
+> > > remove them.
+> >=20
+> > We now run into a tricky problem: we only have a few register
+> > definitions(DMA_XXX_LOONGSON)
+> >=20
+> > that are not the same as the dwmac1000 register definition.
 
-What does DMA_INTR_ENA_AIE_LOONGSON do? This seems like an interrupt
-mask, and this is enabling an interrupt source? However, i don't see
-this bit being tested in any interrupt status register? Or is it
-hiding in one of the other patches?
+You need to determine to use Loongson register or general dwmac1000
+register definition at *runtime*, not *compile time*.
 
-This is where lots of small patches, with good descriptions helps.
+Or when people enable CONFIG_DWMAC_LOONGSON (for a release build of
+kernel in a mainstream distro the maintainers often enable as many
+drivers as possible) they'll suddenly find their dwmac1000's are broken
+and we'll get many bug reports.
 
-     Andrew
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
