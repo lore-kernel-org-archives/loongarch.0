@@ -1,261 +1,267 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4338019BAB
-	for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 08:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCF633CC3
+	for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 14:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iBRXrpzQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700728039;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=clHFl9DyukhU/KNoZLAq0QP1VqRYJXancPu2G75tCi0=;
-	b=iBRXrpzQD5DZ2Wuy7qKTsKaqmE4qg4lBPqWjO+7In0bl3sIABYYEdrOAx9CoKLcDqMQkYQ
-	45TjybMMqBwTJQyA2rkApR3M/u6utEd4uhkW7DSd95noiPBYNglipKJCBHkyIK/PMik8h0
-	AZExSFgzeXMEXbL3ZEswbXNMbVExuzI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-141-xbU-EiHFNt2UCn3fOV12Bg-1; Thu, 23 Nov 2023 03:27:17 -0500
-X-MC-Unique: xbU-EiHFNt2UCn3fOV12Bg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 574DB101A53B;
-	Thu, 23 Nov 2023 08:27:16 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.97])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C8B82026D4C;
-	Thu, 23 Nov 2023 08:27:12 +0000 (UTC)
-Date: Thu, 23 Nov 2023 16:27:09 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Ignat Korchagin <ignat@cloudflare.com>
-Cc: eric_devolder@yahoo.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
-	will@kernel.org, chenhuacai@kernel.org, geert@linux-m68k.org,
-	tsbogend@alpha.franken.de,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	deller@gmx.de, ysato@users.sourceforge.jp, dalias@libc.org,
-	glaubitz@physik.fu-berlin.de, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	dave.hansen@linux.intel.com, x86@kernel.org,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	kernel@xen0n.name, mpe@ellerman.id.au, npiggin@gmail.com,
-	christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
-	gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
-	keescook@chromium.org, paulmck@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>, frederic@kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ard Biesheuvel <ardb@kernel.org>, samitolvanen@google.com,
-	juerg.haefliger@canonical.com, arnd@arndb.de,
-	rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
-	sebastian.reichel@collabora.com, rppt@kernel.org,
-	kirill.shutemov@linux.intel.com, anshuman.khandual@arm.com,
-	ziy@nvidia.com, masahiroy@kernel.org, ndesaulniers@google.com,
-	mhiramat@kernel.org, ojeda@kernel.org, thunder.leizhen@huawei.com,
-	xin3.li@intel.com, tj@kernel.org,
-	Greg KH <gregkh@linuxfoundation.org>, tsi@tuyoix.net,
-	hbathini@linux.ibm.com, sourabhjain@linux.ibm.com,
-	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
-	kernel-team <kernel-team@cloudflare.com>
-Subject: Re: Potential config regression after 89cde455 ("kexec: consolidate
- kexec and crash options into kernel/Kconfig.kexec")
-Message-ID: <ZV8M3aUTdt2BWaAP@MiWiFi-R3L-srv>
-References: <CALrw=nHpRQQaQTP_jZfREgrQEMpS8jBF8JQCv4ygqXycE-StaA@mail.gmail.com>
- <ZVwMzXxWkgonIAfc@MiWiFi-R3L-srv>
- <CALrw=nG8xsYw7XKyL_VMHtKiaBcQCKvC8UVp-C9-BdeN4A1Daw@mail.gmail.com>
- <CALrw=nH-vcROja2W23rUKEEZMZhxsQiNB4P_ZZQ-XhPHAJGxrg@mail.gmail.com>
- <ZV3LKVOokpx2WvKp@MiWiFi-R3L-srv>
- <CALrw=nGadgbwuNAFacatz-agpGn9NvtgaCUXu73MzAzZq07k-g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtlfDgB0"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3b83c4c5aefso584370b6e.1
+        for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 06:39:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700750393; x=1701355193; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x9X9uhF8OSYthUzmtslwmdEtCWgAjbVmdLteT4Uwcqw=;
+        b=gtlfDgB0iqgNgwljmb7e0yvBPRxtkRmDo1kKoojDYAQpTPnUf7Rs8DKZE96Ep5Skaq
+         ApDHbGjk8a+Rq9xOQ/KdS9BadwcRSX2EMR3NHZfPllzSM2QBTpXazCYECsOES66LLEOj
+         qLm2c2/dT/5uMSk9fgrVsXOAUuGSsg2FT8N7Tv1z0+50uIGengbI+oiE1rlg9EbsrCdd
+         OJVTf2aY6TaGpMa9LeDAIfQ42f17J+D4REht6r8pe3///8JEfGZ8q04kwCqwtBRvsMW0
+         TISI5qeQ7b/hJms01VZd7YwANvBFETnQj6KvR6atI4Fxvvw+DI3CXtaqCNMsaRHT1Fzx
+         JFgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700750393; x=1701355193;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x9X9uhF8OSYthUzmtslwmdEtCWgAjbVmdLteT4Uwcqw=;
+        b=vRo5i2Sxh5Iult6hQ2PC2fDjBE2pWsjc/FxR4JuZ8J18gqZGJ1puvp9r3wd4ojwqFp
+         oUZcBTWAt3fc2YKv8e0u6VrnEnbuvzKoX5VVW688AOUE/VUc9Sk9N2u5E0q2QqJc8kgl
+         rTxvfK9wK6VjvbI+3sOL1AihwujoV8mK6U+hlp0yaxZZRJmJVQrJq73Zr6c71C5J0g/4
+         swkxQGshUnAJ5nIq6skGQDl6UFpEKp5GOO9e0aeI0jKihBvB2wYMYDCX+P5HejAhgeo7
+         FTblAef4zg7nhu7gO5FaD5rKYECT1xTfHyvQ4xcpVeAQGOZtMNfbSOjmuFYIYpKZOoWI
+         tSbg==
+X-Gm-Message-State: AOJu0YxIo4D81f09fSEOSvYYSL6pS6ZxCm5SLGU7dXDgAlJuCxFBV30m
+	EoDncZdvHwamOHD1iQZWRMDwc2BF+Pu23Bmg7Kc=
+X-Google-Smtp-Source: AGHT+IH8jQ4PDRhyeRzH9DiB0Z37O/a9ZpRgM1avWuvGR7ryKm8yIgJ/zLL8p7eNT59Vvn3rDOCukib9uQWFrJcqetA=
+X-Received: by 2002:a05:6870:9b0c:b0:1e9:af81:54b6 with SMTP id
+ hq12-20020a0568709b0c00b001e9af8154b6mr7149706oab.55.1700750393048; Thu, 23
+ Nov 2023 06:39:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALrw=nGadgbwuNAFacatz-agpGn9NvtgaCUXu73MzAzZq07k-g@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+References: <20231121070209.210934-1-hengqi.chen@gmail.com>
+ <CAAhV-H7SwSRDh8Ui2xVb1ncoaEQVd=dugphcBemkeaPNGQX2qw@mail.gmail.com>
+ <CAEyhmHRYghT5iFiLByUmC=AjdygiBWU8TH3joSyyWibu0Ki2xw@mail.gmail.com>
+ <CAAhV-H4Jr_a4j+Qnitd7ay9Vkcw5g0W_W3LNJwUzQ1BWXoGpoA@mail.gmail.com>
+ <CAEyhmHRFZqH=4K8WUO6tPFd0NoWMHm_iLan+4EPiqovO03w1xw@mail.gmail.com>
+ <CAAhV-H53YNH_trJmgcp-=PjdTSXuyzvmxWVaeUg++yYiXd=1Kg@mail.gmail.com>
+ <CAEyhmHSPwjWQ=KJKskQHTjNKfMV3WG6r8sHihqtbBsZeKUQzUg@mail.gmail.com> <CAAhV-H6xtawO3kMtJtzMAbGELTO=RieY3B2mM77Uk8rB73Ppqw@mail.gmail.com>
+In-Reply-To: <CAAhV-H6xtawO3kMtJtzMAbGELTO=RieY3B2mM77Uk8rB73Ppqw@mail.gmail.com>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Thu, 23 Nov 2023 22:39:41 +0800
+Message-ID: <CAEyhmHQQ3NqN1cZ1AfhUEbaswy6BWHCTjmUyncxdNUwQuCVOAA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Store syscall nr in thread_info
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, loongarch@lists.linux.dev, 
+	kernel@xen0n.name
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/22/23 at 09:47am, Ignat Korchagin wrote:
-> On Wed, Nov 22, 2023 at 9:34 AM Baoquan He <bhe@redhat.com> wrote:
+On Thu, Nov 23, 2023 at 4:25=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> On Thu, Nov 23, 2023 at 4:09=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.co=
+m> wrote:
 > >
-> > On 11/21/23 at 09:43am, Ignat Korchagin wrote:
-> > > On Tue, Nov 21, 2023 at 7:53 AM Ignat Korchagin <ignat@cloudflare.com> wrote:
-> > > >
-> > > > On Tue, Nov 21, 2023 at 1:50 AM Baoquan He <bhe@redhat.com> wrote:
-> > > > >
-> > > > > Eric DeVolder's Oracle mail address is not available anymore, add his
-> > > > > current mail address he told me.
-> > > >
-> > > > Thank you!
-> > > >
-> > > > > On 11/20/23 at 10:52pm, Ignat Korchagin wrote:
-> > > > > > Good day!
-> > > > > >
-> > > > > > We have recently started to evaluate Linux 6.6 and noticed that we
-> > > > > > cannot disable CONFIG_KEXEC anymore, but keep CONFIG_CRASH_DUMP
-> > > > > > enabled. It seems to be related to commit 89cde455 ("kexec:
-> > > > > > consolidate kexec and crash options into kernel/Kconfig.kexec"), where
-> > > > > > a CONFIG_KEXEC dependency was added to CONFIG_CRASH_DUMP.
-> > > > > >
-> > > > > > In our current kernel (Linux 6.1) we only enable CONFIG_KEXEC_FILE
-> > > > > > with enforced signature check to support the kernel crash dumping
-> > > > > > functionality and would like to keep CONFIG_KEXEC disabled for
-> > > > > > security reasons [1].
-> > > > > >
-> > > > > > I was reading the long commit message, but the reason for adding
-> > > > > > CONFIG_KEXEC as a dependency for CONFIG_CRASH_DUMP evaded me. And I
-> > > > > > believe from the implementation perspective CONFIG_KEXEC_FILE should
-> > > > > > suffice here (as we successfully used it for crashdumps on Linux 6.1).
-> > > > > >
-> > > > > > Is there a reason for adding this dependency or is it just an
-> > > > > > oversight? Would some solution of requiring either CONFIG_KEXEC or
-> > > > > > CONFIG_KEXEC_FILE work here?
-> > > > >
-> > > > > I searched the patch history, found Eric didn't add the dependency on
-> > > > > CONFIG_KEXEC at the beginning. Later a linux-next building failure with
-> > > > > randconfig was reported, in there CONFIG_CRASH_DUMP enabled, while
-> > > > > CONFIG_KEXEC is disabled. Finally Eric added the KEXEC dependency for
-> > > > > CRASH_DUMP. Please see below link for more details:
-> > > > >
-> > > > > https://lore.kernel.org/all/3e8eecd1-a277-2cfb-690e-5de2eb7b988e@oracle.com/T/#u
-> > > >
-> > > > Thank you for digging this up. However I'm still confused, because
-> > > > this is exactly how we configure Linux 6.1 (although we do have
-> > > > CONFIG_KEXEC_FILE enabled) and we don't have any problems. I believe
-> > > > we did not investigate this issue properly.
+> > On Thu, Nov 23, 2023 at 2:13=E2=80=AFPM Huacai Chen <chenhuacai@kernel.=
+org> wrote:
 > > >
-> > > I did some preliminary investigation for this. If I patch out the
-> > > dependency on CONFIG_KEXEC the kernel builds just fine for x86
-> > > (without CONFIG_CRASH_HOTPLUG - which is probably another issue) - so
-> > > this was the previous behaviour. I can see that the reported error is
-> > > for arm architecture and was able to reproduce it with a simple cross
-> > > compiler in Debian. However, I think it is still somehow related to
-> > > this patchset as the previous kernels (up to 6.5) build fine with just
-> > > CONFIG_CRASH_DUMP and without CONFIG_KEXEC for arm as well. So even
-> > > for arm it was introduced in 6.6.
-> >
-> > Thanks for the information.
-> >
-> > I haven't run the reproducer of issue reported on Eric's old patchset,
-> > while checkout to kernel 6.1, only s390 selected KEXEC for CRASH_DUMP
-> > already. And with the ARM building breakage, the simplest idea is
-> > to select KEXEC only for ARM or S390 CRASH_DUMP. I plan to try the
-> > reproducer later. If you have any idea or draft patch, please feel free
-> > to post.
-> 
-> The thing is - before 6.6 even ARM did not require KEXEC for
-> CRASH_DUMP (at least to successfully compile), so I think we should
-> understand what changed first before adding a dependency for ARM. I'll
-> try to investigate more, if I have time.
-
-I did a cross compiling of arm on x86_64, it clearly requires KEXEC for
-CRASH_DUMP if the select of KEXEC for CRASH_DUMP is removed and
-CONFIG_KEXEC=n is set.
-
-1) building error, only copy the first one:
-==========================================
-In file included from ../include/linux/ima.h:13,
-                 from ../security/keys/key.c:16:
-../include/linux/kexec.h:38:2: error: #error KEXEC_SOURCE_MEMORY_LIMIT not defined
-   38 | #error KEXEC_SOURCE_MEMORY_LIMIT not defined
-      |  ^~~~~
-../include/linux/kexec.h:42:2: error: #error KEXEC_DESTINATION_MEMORY_LIMIT not defined
-   42 | #error KEXEC_DESTINATION_MEMORY_LIMIT not defined
-      |  ^~~~~
-../include/linux/kexec.h:46:2: error: #error KEXEC_CONTROL_MEMORY_LIMIT not defined
-   46 | #error KEXEC_CONTROL_MEMORY_LIMIT not defined
-      |  ^~~~~
-../include/linux/kexec.h:54:2: error: #error KEXEC_CONTROL_PAGE_SIZE not defined
-   54 | #error KEXEC_CONTROL_PAGE_SIZE not defined
-      |  ^~~~~
-../include/linux/kexec.h:58:2: error: #error KEXEC_ARCH not defined
-   58 | #error KEXEC_ARCH not defined
-      |  ^~~~~
-In file included from ../drivers/misc/pvpanic/pvpanic.c:13:
-
-2) Kconfig items I enabled:
-====
-CONFIG_CRASH_CORE=y
-CONFIG_KEXEC_CORE=y
-# CONFIG_KEXEC is not set
-CONFIG_CRASH_DUMP=y
-
-
-
-3) KEXEC select is dropped so as not to enable KEXEC automatically:
-=====
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 7aff28ded2f4..1cc3b1c595d7 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -97,7 +97,6 @@ config CRASH_DUMP
-        depends on ARCH_SUPPORTS_KEXEC
-        select CRASH_CORE
-        select KEXEC_CORE
--       select KEXEC
-        help
-          Generate crash dump after being started by kexec.
-          This should be normally only set in special crash dump kernels
-> 
-> > diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> > index 7aff28ded2f4..382dcd8d7a9d 100644
-> > --- a/kernel/Kconfig.kexec
-> > +++ b/kernel/Kconfig.kexec
-> > @@ -97,7 +97,7 @@ config CRASH_DUMP
-> >         depends on ARCH_SUPPORTS_KEXEC
-> >         select CRASH_CORE
-> >         select KEXEC_CORE
-> > -       select KEXEC
-> > +       select KEXEC if (ARM || S390)
-> >
-> >
-> > arch/s390/Kconfig in kernel 6.1:
-> > config CRASH_DUMP
-> >         bool "kernel crash dumps"
-> >         select KEXEC
-> >         help
-> >           Generate crash dump after being started by kexec.
-> >           Crash dump kernels are loaded in the main kernel with kexec-tools
-> >           into a specially reserved region and then later executed after
-> >           a crash by kdump/kexec.
-> >           Refer to <file:Documentation/s390/zfcpdump.rst> for more details on this.
-> >           This option also enables s390 zfcpdump.
-> >           See also <file:Documentation/s390/zfcpdump.rst>
-> >
+> > > Hi, Hengqi,
 > > >
-> > > > > And besides, the newly added CONFIG_CRASH_HOTPLUG also needs
-> > > > > CONFIG_KEXEC if the elfcorehdr is allowed to be manipulated when
-> > > > > cpu/memory hotplug hapened.
+> > > On Thu, Nov 23, 2023 at 1:49=E2=80=AFPM Hengqi Chen <hengqi.chen@gmai=
+l.com> wrote:
 > > > >
-> > > > This still feels like a regression to me: any crash dump support
-> > > > should be independent of KEXEC syscalls being present. While probably
-> > > > the common case (including us) that the crashing kernel and recovery
-> > > > kernel are the same, they don't have to be. We need kexec syscall in
-> > > > the crashing kernel, but crashdump support in the recovery kernel (but
-> > > > the recovery kernel not having the kexec syscalls should be totally
-> > > > fine). If we do require some code definitions from kexec - at most we
-> > > > should put them under CONFIG_KEXEC_CORE.
-> > > >
-> > > > > Thanks
-> > > > > Baoquan
+> > > > On Wed, Nov 22, 2023 at 3:58=E2=80=AFPM Huacai Chen <chenhuacai@ker=
+nel.org> wrote:
 > > > > >
-> > >
-> > > Ignat
+> > > > > Hi, Hengqi,
+> > > > >
+> > > > > On Wed, Nov 22, 2023 at 3:34=E2=80=AFPM Hengqi Chen <hengqi.chen@=
+gmail.com> wrote:
+> > > > > >
+> > > > > > Hi, Huacai,
+> > > > > >
+> > > > > > On Wed, Nov 22, 2023 at 2:32=E2=80=AFPM Huacai Chen <chenhuacai=
+@kernel.org> wrote:
+> > > > > > >
+> > > > > > > Hi, Hengqi,
+> > > > > > >
+> > > > > > > On Wed, Nov 22, 2023 at 1:14=E2=80=AFPM Hengqi Chen <hengqi.c=
+hen@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > Currently, we store syscall number in pt_regs::regs[11] and=
+ it may be
+> > > > > > > > changed during syscall execution. Take `execve` as an examp=
+le:
+> > > > > > > >
+> > > > > > > >     sys_execve
+> > > > > > > >       -> do_execve
+> > > > > > > >         -> do_execveat_common
+> > > > > > > >           -> bprm_execve
+> > > > > > > >             -> exec_binprm
+> > > > > > > >               -> search_binary_handler
+> > > > > > > >                 -> load_elf_binary
+> > > > > > > >                   -> ELF_PLAT_INIT
+> > > > > > > >
+> > > > > > > > ELF_PLAT_INIT reset regs[11] to 0, later in syscall_exit_to=
+_user_mode
+> > > > > > > > we get a wrong syscall nr.
+> > > > > > > >
+> > > > > > > > Known affected syscalls includes execve/execveat/rt_sigretu=
+rn. Tools
+> > > > > > > > like execsnoop do not work properly because the sys_exit_* =
+tracepoints
+> > > > > > > > does not trigger at all.
+> > > > > > > >
+> > > > > > > > Let's store syscall nr in thread_info instead.
+> > > > > > > Can we just modify ELF_PLAT_INIT and not clear regs[11]?
+> > > > > > >
+> > > > > >
+> > > > > > I am uncertain about the side effects of changing ELF_PLAT_INIT=
+.
+> > > > > > From a completeness perspective, changing ELF_PLAT_INIT is subo=
+ptimal,
+> > > > > > rt_sigreturn is affected in another code path, and there may be=
+ other
+> > > > > > syscalls that I am unaware of.
+> > > > > Save syscall number in thread_info has more side effects, because
+> > > > > ptrace allows us to change the number during syscall, then we sho=
+uld
+> > > > > keep consistency between syscall and regs[11].
+> > > > >
+> > > >
+> > > > How about the change below:
+> > > >
+> > > > diff --git a/arch/loongarch/include/asm/syscall.h
+> > > > b/arch/loongarch/include/asm/syscall.h
+> > > > index e286dc58476e..954ba53bcc9a 100644
+> > > > --- a/arch/loongarch/include/asm/syscall.h
+> > > > +++ b/arch/loongarch/include/asm/syscall.h
+> > > > @@ -23,7 +23,9 @@ extern void *sys_call_table[];
+> > > >  static inline long syscall_get_nr(struct task_struct *task,
+> > > >                                   struct pt_regs *regs)
+> > > >  {
+> > > > -       return regs->regs[11];
+> > > > +       long nr =3D task_thread_info(task)->syscall;
+> > > > +
+> > > > +       return nr ? : regs->regs[11];
+> > > >  }
+> > > >
+> > > >  static inline void syscall_rollback(struct task_struct *task,
+> > > > diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kerne=
+l/syscall.c
+> > > > index b4c5acd7aa3b..553ab0d624cb 100644
+> > > > --- a/arch/loongarch/kernel/syscall.c
+> > > > +++ b/arch/loongarch/kernel/syscall.c
+> > > > @@ -53,6 +53,7 @@ void noinstr do_syscall(struct pt_regs *regs)
+> > > >         regs->regs[4] =3D -ENOSYS;
+> > > >
+> > > >         nr =3D syscall_enter_from_user_mode(regs, nr);
+> > > > +       current_thread_info()->syscall =3D nr;
+> > > >
+> > > >         if (nr < NR_syscalls) {
+> > > >                 syscall_fn =3D sys_call_table[nr];
+> > > > @@ -61,4 +62,5 @@ void noinstr do_syscall(struct pt_regs *regs)
+> > > >         }
+> > > >
+> > > >         syscall_exit_to_user_mode(regs);
+> > > > +       current_thread_info()->syscall =3D 0;
+> > > >  }
+> > > >
+> > > > * allow ptrace to change syscall nr
+> > > > * sys_exit_* will also see the right syscall nr
+> > > > * this works even if rt_sigreturn clobbers all pt_regs::regs
+> > > No, I still prefer to modify ELF_PLAT_INIT, we can wait Arnd's commen=
+ts.
 > > >
 > >
-> 
+> > OK, I am not eager, anyway, we know the root cause. :)
+> >
+> > > And, do you mean modifying ELF_PLAT_INIT cannot solve the
+> > > rt_sigreturn's problem?
+> > >
+> >
+> > Right, see https://elixir.bootlin.com/linux/latest/source/arch/loongarc=
+h/kernel/signal.c#L807
+> Is this the expected behavior for rt_sigreturn()? Otherwise I think
+> RISC-V has the same problem. And if we really need the 'correct'
+> syscall number, we can overwrite regs[11] in sys_rt_sigreturn().
+>
 
+I check with x86 and arm64, both have the same issue, seems no one care.
+
+> And another question: do you have any updates about the BPF system
+> hang problem? :)
+>
+
+Let's discuss this on a new thread.
+
+> Huacai
+>
+> >
+> > > Huacai
+> > >
+> > > >
+> > > > > And about ELF_PLAT_INIT, maybe Arnd can give us some more informa=
+tion.
+> > > > >
+> > > > > Hi, Arnd,
+> > > > >
+> > > > > I found some new architectures, such as ARM64 and RISC-V, just do
+> > > > > nearly nothing in ELF_PLAT_INIT, while some old architectures, su=
+ch as
+> > > > > x86 and MIPS, clear most of the registers, do you know why?
+> > > > >
+> > > > > Huacai
+> > > > >
+> > > > > >
+> > > > > > > Huacai
+> > > > > > >
+> > > > > > > >
+> > > > > > > > Fixes: be769645a2aef ("LoongArch: Add system call support")
+> > > > > > > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > > > > > > > ---
+> > > > > > > >  arch/loongarch/include/asm/syscall.h | 2 +-
+> > > > > > > >  arch/loongarch/kernel/syscall.c      | 1 +
+> > > > > > > >  2 files changed, 2 insertions(+), 1 deletion(-)
+> > > > > > > >
+> > > > > > > > diff --git a/arch/loongarch/include/asm/syscall.h b/arch/lo=
+ongarch/include/asm/syscall.h
+> > > > > > > > index e286dc58476e..2317d674b92a 100644
+> > > > > > > > --- a/arch/loongarch/include/asm/syscall.h
+> > > > > > > > +++ b/arch/loongarch/include/asm/syscall.h
+> > > > > > > > @@ -23,7 +23,7 @@ extern void *sys_call_table[];
+> > > > > > > >  static inline long syscall_get_nr(struct task_struct *task=
+,
+> > > > > > > >                                   struct pt_regs *regs)
+> > > > > > > >  {
+> > > > > > > > -       return regs->regs[11];
+> > > > > > > > +       return task_thread_info(task)->syscall;
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > >  static inline void syscall_rollback(struct task_struct *ta=
+sk,
+> > > > > > > > diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongar=
+ch/kernel/syscall.c
+> > > > > > > > index b4c5acd7aa3b..2783e33cf276 100644
+> > > > > > > > --- a/arch/loongarch/kernel/syscall.c
+> > > > > > > > +++ b/arch/loongarch/kernel/syscall.c
+> > > > > > > > @@ -52,6 +52,7 @@ void noinstr do_syscall(struct pt_regs *r=
+egs)
+> > > > > > > >         regs->orig_a0 =3D regs->regs[4];
+> > > > > > > >         regs->regs[4] =3D -ENOSYS;
+> > > > > > > >
+> > > > > > > > +       task_thread_info(current)->syscall =3D nr;
+> > > > > > > >         nr =3D syscall_enter_from_user_mode(regs, nr);
+> > > > > > > >
+> > > > > > > >         if (nr < NR_syscalls) {
+> > > > > > > > --
+> > > > > > > > 2.42.0
+> > > > > > > >
+> > > >
