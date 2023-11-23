@@ -1,180 +1,199 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45C25D909;
-	Wed, 22 Nov 2023 20:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5907517E2
+	for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 02:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-1f92cc9b2c5so18715fac.1;
-        Wed, 22 Nov 2023 12:16:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700684210; x=1701289010;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U+AKNbPfGcSitF9DQBk43/GENfS9BTVC5pjwY2CWch8=;
-        b=CRNNv3f7PlKFeB3P+OzEl9XwsWQ+cKwI0aU8pleNsxGMtentUlWvGMM/WuGg6pvV/Y
-         MZxrlHGtezv06SD6xVE49mXIOVBeM2XXNFdJGgdE+CaOZddk/PQJwmSVJPSwZbvTP0Qv
-         CeDHdZNeP/WIE3ClIDlXk3ENZf+VcP5vQo1YzcYWbho7mcxHulUKFOz2gkGUgtzv4puV
-         pYu7FbqgqbJEoS6p2QT4kVymN7XHGUXpk5WMLI4GePtW6oIynoAgoHQ43/BGuNbMNdfj
-         6JIp6d4RmzgceKXXGmqjnZtbikPhCip6Benl4v0ZPHkG9KVyHwJip5c7+M59Dkqz0lU4
-         A4cw==
-X-Gm-Message-State: AOJu0Yw0jUTtwx6kVSRq7v5br4cbBi6LHmrVMRwnrGnPLsHiy5+Q2Lhk
-	2iRllM/YlxGARXPuw6JIDkEmF9V7l4oUFLyGj9U=
-X-Google-Smtp-Source: AGHT+IEZOuwWL+O8Ns2NywQDonavCXvBHcgdxxi2QZSHFBHwzFPNR8Ac+xre6B7/Fz+/eqIGB2UbpAfb/c6ikknz6l8=
-X-Received: by 2002:a05:6871:7a0:b0:1e9:8a7e:5893 with SMTP id
- o32-20020a05687107a000b001e98a7e5893mr4323044oap.5.1700684209905; Wed, 22 Nov
- 2023 12:16:49 -0800 (PST)
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxJugZvV5l_So8AA--.60563S3;
+	Thu, 23 Nov 2023 10:46:50 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxjNwYvV5lgkBKAA--.32617S2;
+	Thu, 23 Nov 2023 10:46:48 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: KVM: Fix timer emulation with oneshot mode
+Date: Thu, 23 Nov 2023 10:44:22 +0800
+Message-Id: <20231123024422.3754234-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZVyz/Ve5pPu8AWoA@shell.armlinux.org.uk> <E1r5R31-00Csyt-Jq@rmk-PC.armlinux.org.uk>
-In-Reply-To: <E1r5R31-00Csyt-Jq@rmk-PC.armlinux.org.uk>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 22 Nov 2023 21:16:39 +0100
-Message-ID: <CAJZ5v0iYRXh369M3XTM0V8Q9mWkAT2y+9pJMD7HMaGjgpvFEMw@mail.gmail.com>
-Subject: Re: [PATCH 05/21] ACPI: Move ACPI_HOTPLUG_CPU to be disabled on arm64
- and riscv
-To: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, 
-	justin.he@arm.com, James Morse <james.morse@arm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxjNwYvV5lgkBKAA--.32617S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKrW5tr1kWw47Gw4fGF47WrX_yoW7WF4kpF
+	WSkFyI9r18GryDG3W3Xan8Zwnxt393t3WfGrsrWay2yrnxX345XFW0gryxXFW5ArWfJF1S
+	vryrAwnIvF4rX3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
+	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU88Ma5UUUUU==
 
-On Tue, Nov 21, 2023 at 2:44=E2=80=AFPM Russell King <rmk+kernel@armlinux.o=
-rg.uk> wrote:
->
-> From: James Morse <james.morse@arm.com>
->
-> Neither arm64 nor riscv support physical hotadd of CPUs that were not
-> present at boot. For arm64 much of the platform description is in static
-> tables which do not have update methods. arm64 does support HOTPLUG_CPU,
-> which is backed by a firmware interface to turn CPUs on and off.
->
-> acpi_processor_hotadd_init() and acpi_processor_remove() are for adding
-> and removing CPUs that were not present at boot. arm64 systems that do th=
-is
-> are not supported as there is currently insufficient information in the
-> platform description. (e.g. did the GICR get removed too?)
->
-> arm64 currently relies on the MADT enabled flag check in map_gicc_mpidr()
-> to prevent CPUs that were not described as present at boot from being
-> added to the system. Similarly, riscv relies on the same check in
-> map_rintc_hartid(). Both architectures also rely on the weak 'always fail=
-s'
-> definitions of acpi_map_cpu() and arch_register_cpu().
->
-> Subsequent changes will redefine ACPI_HOTPLUG_CPU as making possible
-> CPUs present. Neither arm64 nor riscv support this.
->
-> Disable ACPI_HOTPLUG_CPU for arm64 and riscv by removing 'default y' and
-> selecting it on the other three ACPI architectures. This allows the weak
-> definitions of some symbols to be removed.
->
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Shaoqin Huang <shahuang@redhat.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+When timer is fired with oneshot mode, CSR TVAL will be -1 rather than 0.
+There needs special handing for this situation. There are two scenarios
+when oneshot timer is fired. One scenario is that time is fired after
+exiting to host, CSR TVAL is set with 0 in order to inject hw interrupt,
+and -1 will assigned to CSR TVAL soon.
 
-I can apply this if it gets ACKs from the maintainers of the affected
-architectures.
+The other situation is that timer is fired in VM and guest kernel is
+hanlding timer IRQ, IRQ is acked and is ready to set next expired timer
+value, then vm exits to host. Timer interrupt should not be inject at
+this point, else there will be spurious timer interrupt.
 
-> ---
-> Changes since RFC:
->  * Expanded conditions to avoid ACPI_HOTPLUG_CPU being enabled when
->    HOTPLUG_CPU isn't.
-> Changes since RFC v3:
->  * Dropped ia64 changes
-> ---
->  arch/loongarch/Kconfig        |  1 +
->  arch/x86/Kconfig              |  1 +
->  drivers/acpi/Kconfig          |  1 -
->  drivers/acpi/acpi_processor.c | 18 ------------------
->  4 files changed, 2 insertions(+), 19 deletions(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index ee123820a476..331becb2cb4f 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -5,6 +5,7 @@ config LOONGARCH
->         select ACPI
->         select ACPI_GENERIC_GSI if ACPI
->         select ACPI_MCFG if ACPI
-> +       select ACPI_HOTPLUG_CPU if ACPI_PROCESSOR && HOTPLUG_CPU
->         select ACPI_PPTT if ACPI
->         select ACPI_SYSTEM_POWER_STATES_SUPPORT if ACPI
->         select ARCH_BINFMT_ELF_STATE
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 3762f41bb092..dbdcfc708369 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -59,6 +59,7 @@ config X86
->         #
->         select ACPI_LEGACY_TABLES_LOOKUP        if ACPI
->         select ACPI_SYSTEM_POWER_STATES_SUPPORT if ACPI
-> +       select ACPI_HOTPLUG_CPU                 if ACPI_PROCESSOR && HOTP=
-LUG_CPU
->         select ARCH_32BIT_OFF_T                 if X86_32
->         select ARCH_CLOCKSOURCE_INIT
->         select ARCH_CORRECT_STACKTRACE_ON_KRETPROBE
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index f819e760ff19..a3acfc750fce 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -310,7 +310,6 @@ config ACPI_HOTPLUG_CPU
->         bool
->         depends on ACPI_PROCESSOR && HOTPLUG_CPU
->         select ACPI_CONTAINER
-> -       default y
->
->  config ACPI_PROCESSOR_AGGREGATOR
->         tristate "Processor Aggregator"
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
-c
-> index 0f5218e361df..4fe2ef54088c 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -184,24 +184,6 @@ static void __init acpi_pcc_cpufreq_init(void) {}
->
->  /* Initialization */
->  #ifdef CONFIG_ACPI_HOTPLUG_CPU
-> -int __weak acpi_map_cpu(acpi_handle handle,
-> -               phys_cpuid_t physid, u32 acpi_id, int *pcpu)
-> -{
-> -       return -ENODEV;
-> -}
-> -
-> -int __weak acpi_unmap_cpu(int cpu)
-> -{
-> -       return -ENODEV;
-> -}
-> -
-> -int __weak arch_register_cpu(int cpu)
-> -{
-> -       return -ENODEV;
-> -}
-> -
-> -void __weak arch_unregister_cpu(int cpu) {}
-> -
->  static int acpi_processor_hotadd_init(struct acpi_processor *pr)
->  {
->         unsigned long long sta;
-> --
-> 2.30.2
->
+Here hw timer irq status in CSR ESTAT is used to judge these two
+scenarios. If CSR TVAL is -1, the oneshot timer is fired; and if timer hw
+irq is on in CSR ESTAT register, it happens after exiting to host; else
+if timer hw irq is off, we think that it happens in vm and timer IRQ
+handler has already acked IRQ.
+
+With this patch, runltp with version ltp20230516 passes to run in vm.
+And this patch is based on the patch series.
+https://lore.kernel.org/lkml/20231116023036.2324371-1-maobibo@loongson.cn/
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+Changes in v2:
+
+If vm is doing timer IRQ after timer is fired and then vm exits to host,
+CSR LOONGARCH_CSR_TVAL is set with 0. HW will set CSR LOONGARCH_CSR_TVAL
+with -1 and inject timer IRQ. KVM host clears timer IRQ then. With this
+method value of CSR LOONGARCH_CSR_TVAL will be -1 unchanged. Previous
+method will not inject timer IRQ, however LOONGARCH_CSR_TVAL will
+conitnue to go down from -1.
+
+---
+ arch/loongarch/kvm/timer.c | 65 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 53 insertions(+), 12 deletions(-)
+
+diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
+index 711982f9eeb5..6bc3292e779f 100644
+--- a/arch/loongarch/kvm/timer.c
++++ b/arch/loongarch/kvm/timer.c
+@@ -70,13 +70,17 @@ void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long timer_hz)
+ void kvm_restore_timer(struct kvm_vcpu *vcpu)
+ {
+ 	unsigned long cfg, delta, period;
++	unsigned long ticks, estat;
+ 	ktime_t expire, now;
+ 	struct loongarch_csrs *csr = vcpu->arch.csr;
+ 
+ 	/*
+ 	 * Set guest stable timer cfg csr
++	 * Disable timer before restore estat CSR register, avoid to
++	 * get invalid timer interrupt for old timer cfg
+ 	 */
+ 	cfg = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG);
++	write_gcsr_timercfg(0);
+ 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
+ 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
+ 	if (!(cfg & CSR_TCFG_EN)) {
+@@ -90,20 +94,47 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
+ 	 */
+ 	hrtimer_cancel(&vcpu->arch.swtimer);
+ 
++	/*
++	 * From LoongArch Reference Manual Volume 1 Chapter 7.6.2
++	 * If oneshot timer is fired, CSR TVAL will be -1, there are two
++	 * conditions:
++	 *  1) timer is fired during exiting to host
++	 *  2) timer is fired and vm is doing timer irq, and then exiting to
++	 *     host. Host should not inject timer irq to avoid spurious
++	 *     timer interrupt again
++	 */
++	ticks = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TVAL);
++	estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
++	if (!(cfg & CSR_TCFG_PERIOD) && (ticks > cfg)) {
++		/*
++		 * Writing 0 to LOONGARCH_CSR_TVAL will inject timer irq
++		 * and set CSR TVAL with -1
++		 */
++		write_gcsr_timertick(0);
++
++		/*
++		 * Writing CSR_TINTCLR_TI to LOONGARCH_CSR_TINTCLR will clear
++		 * timer interrupt, and CSR TVAL keeps unchanged with -1,
++		 * it avoids spurious timer interrupt
++		 */
++		if ((estat & CPU_TIMER) == 0)
++			gcsr_write(CSR_TINTCLR_TI, LOONGARCH_CSR_TINTCLR);
++		return;
++	}
++
+ 	/*
+ 	 * Set remainder tick value if not expired
+ 	 */
+ 	now = ktime_get();
+ 	expire = vcpu->arch.expire;
++	delta = 0;
+ 	if (ktime_before(now, expire))
+ 		delta = ktime_to_tick(vcpu, ktime_sub(expire, now));
+-	else {
+-		if (cfg & CSR_TCFG_PERIOD) {
+-			period = cfg & CSR_TCFG_VAL;
+-			delta = ktime_to_tick(vcpu, ktime_sub(now, expire));
+-			delta = period - (delta % period);
+-		} else
+-			delta = 0;
++	else if (cfg & CSR_TCFG_PERIOD) {
++		period = cfg & CSR_TCFG_VAL;
++		delta = ktime_to_tick(vcpu, ktime_sub(now, expire));
++		delta = period - (delta % period);
++
+ 		/*
+ 		 * Inject timer here though sw timer should inject timer
+ 		 * interrupt async already, since sw timer may be cancelled
+@@ -122,15 +153,25 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
+  */
+ static void _kvm_save_timer(struct kvm_vcpu *vcpu)
+ {
+-	unsigned long ticks, delta;
++	unsigned long ticks, delta, cfg;
+ 	ktime_t expire;
+ 	struct loongarch_csrs *csr = vcpu->arch.csr;
+ 
+ 	ticks = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TVAL);
+-	delta = tick_to_ns(vcpu, ticks);
+-	expire = ktime_add_ns(ktime_get(), delta);
+-	vcpu->arch.expire = expire;
+-	if (ticks) {
++	cfg = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG);
++
++	/*
++	 * From LoongArch Reference Manual Volume 1 Chapter 7.6.2
++	 * If period timer is fired, CSR TVAL will be reloaded from CSR TCFG
++	 * If oneshot timer is fired, CSR TVAL will be -1
++	 * Here judge one shot timer fired by checking whether TVAL is larger
++	 * than TCFG
++	 */
++	if (ticks < cfg) {
++		delta = tick_to_ns(vcpu, ticks);
++		expire = ktime_add_ns(ktime_get(), delta);
++		vcpu->arch.expire = expire;
++
+ 		/*
+ 		 * HRTIMER_MODE_PINNED is suggested since vcpu may run in
+ 		 * the same physical cpu in next time
+
+base-commit: c2d5304e6c648ebcf653bace7e51e0e6742e46c8
+-- 
+2.39.3
+
