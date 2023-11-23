@@ -1,199 +1,208 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5907517E2
-	for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 02:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxJugZvV5l_So8AA--.60563S3;
-	Thu, 23 Nov 2023 10:46:50 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxjNwYvV5lgkBKAA--.32617S2;
-	Thu, 23 Nov 2023 10:46:48 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: KVM: Fix timer emulation with oneshot mode
-Date: Thu, 23 Nov 2023 10:44:22 +0800
-Message-Id: <20231123024422.3754234-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD67BA26
+	for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 05:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gncAtwVh"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-1f0f160e293so380211fac.0
+        for <loongarch@lists.linux.dev>; Wed, 22 Nov 2023 21:49:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700718588; x=1701323388; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cPfksV5844JHYEUobFng9V4vWZpitSP8AHiUCoJcjbU=;
+        b=gncAtwVhtnBTC8Yggr0RkswZWJZg6WUfMgMiD2jOgURh+kCz+OzQsPYS8QL1n2fUmb
+         Am8xZwT8E2BtNFJhI80TFWE6Lc4x8Kb4Xe+ZB6bt7J6oWFQf4fV+L95Ss6Pni1NZeLV5
+         cfZoEw9xV8ABV4JE0LVPlTMDzFT2c+oHlSUSwxuqaEI3cWSjO+ViK1EVBJ7apwX3QHps
+         lPGcvG6CENjKnz3TSVwIjBdrqn86oVRxyjKlXUF0ruoTDey/75U6ev9MAhn9ie54uNjW
+         uhQDvqIWSwiCNRTYo7KZVynvZC9Gba3q8AbLeQW35w9BwrNSBXRAnkvrh6lzv+JF35sX
+         Q5cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700718588; x=1701323388;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cPfksV5844JHYEUobFng9V4vWZpitSP8AHiUCoJcjbU=;
+        b=wNXk4Y5DBLKF35/fhZGqbeRCXEIL4Jn3n+YT5bKiteUOzecR8klXryiCBgilRzd0Mr
+         vf1+GGhH1yseav1vcwq4ooUsrFK1ainWL7hWyBh+OVBJLqY2fyQn38cRiTf3BNQ5BjzB
+         AMKtDgWgmAJRi9b2Swr68gJ9Wb59p0217v38p3MZgOBsIepESHGtkMxfsuGE43lVBCh8
+         +8V+UR1nbEU3xrp9AsFwOvjGESWuDRRAfFts8lAPhNrRnLldMCyBbc7o3rr3NZoPAjVG
+         zH8euxGz1RNU1NKJofuZXL665DYooQ1r1h/OAXq8epYpmN430+NbA0fsDW+IjyTXnvbW
+         uFDw==
+X-Gm-Message-State: AOJu0Yxtmxpp/gnj9e+q8grENh33Im19jzAWgm/IMe9nUxdQ5Wdvq2TE
+	Eh/mbNAuPCj9sXIfgZN3OyntiPw09JBQ1J5DLRE=
+X-Google-Smtp-Source: AGHT+IFBUgMf8BkN7yIm4mC7gjITFkIXu7lXnbcu5HUA1DhlXMvJUADTew6Dcv4oLC4YSr/cYCa/qrk72ZRBJGbucjI=
+X-Received: by 2002:a05:6870:3c87:b0:1f5:ccc2:b21e with SMTP id
+ gl7-20020a0568703c8700b001f5ccc2b21emr6712288oab.41.1700718587763; Wed, 22
+ Nov 2023 21:49:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxjNwYvV5lgkBKAA--.32617S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKrW5tr1kWw47Gw4fGF47WrX_yoW7WF4kpF
-	WSkFyI9r18GryDG3W3Xan8Zwnxt393t3WfGrsrWay2yrnxX345XFW0gryxXFW5ArWfJF1S
-	vryrAwnIvF4rX3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
-	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
-	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU88Ma5UUUUU==
+References: <20231121070209.210934-1-hengqi.chen@gmail.com>
+ <CAAhV-H7SwSRDh8Ui2xVb1ncoaEQVd=dugphcBemkeaPNGQX2qw@mail.gmail.com>
+ <CAEyhmHRYghT5iFiLByUmC=AjdygiBWU8TH3joSyyWibu0Ki2xw@mail.gmail.com> <CAAhV-H4Jr_a4j+Qnitd7ay9Vkcw5g0W_W3LNJwUzQ1BWXoGpoA@mail.gmail.com>
+In-Reply-To: <CAAhV-H4Jr_a4j+Qnitd7ay9Vkcw5g0W_W3LNJwUzQ1BWXoGpoA@mail.gmail.com>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Thu, 23 Nov 2023 13:49:36 +0800
+Message-ID: <CAEyhmHRFZqH=4K8WUO6tPFd0NoWMHm_iLan+4EPiqovO03w1xw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Store syscall nr in thread_info
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, loongarch@lists.linux.dev, 
+	kernel@xen0n.name
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When timer is fired with oneshot mode, CSR TVAL will be -1 rather than 0.
-There needs special handing for this situation. There are two scenarios
-when oneshot timer is fired. One scenario is that time is fired after
-exiting to host, CSR TVAL is set with 0 in order to inject hw interrupt,
-and -1 will assigned to CSR TVAL soon.
+On Wed, Nov 22, 2023 at 3:58=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> Hi, Hengqi,
+>
+> On Wed, Nov 22, 2023 at 3:34=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.co=
+m> wrote:
+> >
+> > Hi, Huacai,
+> >
+> > On Wed, Nov 22, 2023 at 2:32=E2=80=AFPM Huacai Chen <chenhuacai@kernel.=
+org> wrote:
+> > >
+> > > Hi, Hengqi,
+> > >
+> > > On Wed, Nov 22, 2023 at 1:14=E2=80=AFPM Hengqi Chen <hengqi.chen@gmai=
+l.com> wrote:
+> > > >
+> > > > Currently, we store syscall number in pt_regs::regs[11] and it may =
+be
+> > > > changed during syscall execution. Take `execve` as an example:
+> > > >
+> > > >     sys_execve
+> > > >       -> do_execve
+> > > >         -> do_execveat_common
+> > > >           -> bprm_execve
+> > > >             -> exec_binprm
+> > > >               -> search_binary_handler
+> > > >                 -> load_elf_binary
+> > > >                   -> ELF_PLAT_INIT
+> > > >
+> > > > ELF_PLAT_INIT reset regs[11] to 0, later in syscall_exit_to_user_mo=
+de
+> > > > we get a wrong syscall nr.
+> > > >
+> > > > Known affected syscalls includes execve/execveat/rt_sigreturn. Tool=
+s
+> > > > like execsnoop do not work properly because the sys_exit_* tracepoi=
+nts
+> > > > does not trigger at all.
+> > > >
+> > > > Let's store syscall nr in thread_info instead.
+> > > Can we just modify ELF_PLAT_INIT and not clear regs[11]?
+> > >
+> >
+> > I am uncertain about the side effects of changing ELF_PLAT_INIT.
+> > From a completeness perspective, changing ELF_PLAT_INIT is suboptimal,
+> > rt_sigreturn is affected in another code path, and there may be other
+> > syscalls that I am unaware of.
+> Save syscall number in thread_info has more side effects, because
+> ptrace allows us to change the number during syscall, then we should
+> keep consistency between syscall and regs[11].
+>
 
-The other situation is that timer is fired in VM and guest kernel is
-hanlding timer IRQ, IRQ is acked and is ready to set next expired timer
-value, then vm exits to host. Timer interrupt should not be inject at
-this point, else there will be spurious timer interrupt.
+How about the change below:
 
-Here hw timer irq status in CSR ESTAT is used to judge these two
-scenarios. If CSR TVAL is -1, the oneshot timer is fired; and if timer hw
-irq is on in CSR ESTAT register, it happens after exiting to host; else
-if timer hw irq is off, we think that it happens in vm and timer IRQ
-handler has already acked IRQ.
-
-With this patch, runltp with version ltp20230516 passes to run in vm.
-And this patch is based on the patch series.
-https://lore.kernel.org/lkml/20231116023036.2324371-1-maobibo@loongson.cn/
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
-Changes in v2:
-
-If vm is doing timer IRQ after timer is fired and then vm exits to host,
-CSR LOONGARCH_CSR_TVAL is set with 0. HW will set CSR LOONGARCH_CSR_TVAL
-with -1 and inject timer IRQ. KVM host clears timer IRQ then. With this
-method value of CSR LOONGARCH_CSR_TVAL will be -1 unchanged. Previous
-method will not inject timer IRQ, however LOONGARCH_CSR_TVAL will
-conitnue to go down from -1.
-
----
- arch/loongarch/kvm/timer.c | 65 +++++++++++++++++++++++++++++++-------
- 1 file changed, 53 insertions(+), 12 deletions(-)
-
-diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
-index 711982f9eeb5..6bc3292e779f 100644
---- a/arch/loongarch/kvm/timer.c
-+++ b/arch/loongarch/kvm/timer.c
-@@ -70,13 +70,17 @@ void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long timer_hz)
- void kvm_restore_timer(struct kvm_vcpu *vcpu)
+diff --git a/arch/loongarch/include/asm/syscall.h
+b/arch/loongarch/include/asm/syscall.h
+index e286dc58476e..954ba53bcc9a 100644
+--- a/arch/loongarch/include/asm/syscall.h
++++ b/arch/loongarch/include/asm/syscall.h
+@@ -23,7 +23,9 @@ extern void *sys_call_table[];
+ static inline long syscall_get_nr(struct task_struct *task,
+                                  struct pt_regs *regs)
  {
- 	unsigned long cfg, delta, period;
-+	unsigned long ticks, estat;
- 	ktime_t expire, now;
- 	struct loongarch_csrs *csr = vcpu->arch.csr;
- 
- 	/*
- 	 * Set guest stable timer cfg csr
-+	 * Disable timer before restore estat CSR register, avoid to
-+	 * get invalid timer interrupt for old timer cfg
- 	 */
- 	cfg = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+	write_gcsr_timercfg(0);
- 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
- 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
- 	if (!(cfg & CSR_TCFG_EN)) {
-@@ -90,20 +94,47 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
- 	 */
- 	hrtimer_cancel(&vcpu->arch.swtimer);
- 
-+	/*
-+	 * From LoongArch Reference Manual Volume 1 Chapter 7.6.2
-+	 * If oneshot timer is fired, CSR TVAL will be -1, there are two
-+	 * conditions:
-+	 *  1) timer is fired during exiting to host
-+	 *  2) timer is fired and vm is doing timer irq, and then exiting to
-+	 *     host. Host should not inject timer irq to avoid spurious
-+	 *     timer interrupt again
-+	 */
-+	ticks = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TVAL);
-+	estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	if (!(cfg & CSR_TCFG_PERIOD) && (ticks > cfg)) {
-+		/*
-+		 * Writing 0 to LOONGARCH_CSR_TVAL will inject timer irq
-+		 * and set CSR TVAL with -1
-+		 */
-+		write_gcsr_timertick(0);
+-       return regs->regs[11];
++       long nr =3D task_thread_info(task)->syscall;
 +
-+		/*
-+		 * Writing CSR_TINTCLR_TI to LOONGARCH_CSR_TINTCLR will clear
-+		 * timer interrupt, and CSR TVAL keeps unchanged with -1,
-+		 * it avoids spurious timer interrupt
-+		 */
-+		if ((estat & CPU_TIMER) == 0)
-+			gcsr_write(CSR_TINTCLR_TI, LOONGARCH_CSR_TINTCLR);
-+		return;
-+	}
-+
- 	/*
- 	 * Set remainder tick value if not expired
- 	 */
- 	now = ktime_get();
- 	expire = vcpu->arch.expire;
-+	delta = 0;
- 	if (ktime_before(now, expire))
- 		delta = ktime_to_tick(vcpu, ktime_sub(expire, now));
--	else {
--		if (cfg & CSR_TCFG_PERIOD) {
--			period = cfg & CSR_TCFG_VAL;
--			delta = ktime_to_tick(vcpu, ktime_sub(now, expire));
--			delta = period - (delta % period);
--		} else
--			delta = 0;
-+	else if (cfg & CSR_TCFG_PERIOD) {
-+		period = cfg & CSR_TCFG_VAL;
-+		delta = ktime_to_tick(vcpu, ktime_sub(now, expire));
-+		delta = period - (delta % period);
-+
- 		/*
- 		 * Inject timer here though sw timer should inject timer
- 		 * interrupt async already, since sw timer may be cancelled
-@@ -122,15 +153,25 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
-  */
- static void _kvm_save_timer(struct kvm_vcpu *vcpu)
- {
--	unsigned long ticks, delta;
-+	unsigned long ticks, delta, cfg;
- 	ktime_t expire;
- 	struct loongarch_csrs *csr = vcpu->arch.csr;
- 
- 	ticks = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TVAL);
--	delta = tick_to_ns(vcpu, ticks);
--	expire = ktime_add_ns(ktime_get(), delta);
--	vcpu->arch.expire = expire;
--	if (ticks) {
-+	cfg = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+
-+	/*
-+	 * From LoongArch Reference Manual Volume 1 Chapter 7.6.2
-+	 * If period timer is fired, CSR TVAL will be reloaded from CSR TCFG
-+	 * If oneshot timer is fired, CSR TVAL will be -1
-+	 * Here judge one shot timer fired by checking whether TVAL is larger
-+	 * than TCFG
-+	 */
-+	if (ticks < cfg) {
-+		delta = tick_to_ns(vcpu, ticks);
-+		expire = ktime_add_ns(ktime_get(), delta);
-+		vcpu->arch.expire = expire;
-+
- 		/*
- 		 * HRTIMER_MODE_PINNED is suggested since vcpu may run in
- 		 * the same physical cpu in next time
++       return nr ? : regs->regs[11];
+ }
 
-base-commit: c2d5304e6c648ebcf653bace7e51e0e6742e46c8
--- 
-2.39.3
+ static inline void syscall_rollback(struct task_struct *task,
+diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscal=
+l.c
+index b4c5acd7aa3b..553ab0d624cb 100644
+--- a/arch/loongarch/kernel/syscall.c
++++ b/arch/loongarch/kernel/syscall.c
+@@ -53,6 +53,7 @@ void noinstr do_syscall(struct pt_regs *regs)
+        regs->regs[4] =3D -ENOSYS;
 
+        nr =3D syscall_enter_from_user_mode(regs, nr);
++       current_thread_info()->syscall =3D nr;
+
+        if (nr < NR_syscalls) {
+                syscall_fn =3D sys_call_table[nr];
+@@ -61,4 +62,5 @@ void noinstr do_syscall(struct pt_regs *regs)
+        }
+
+        syscall_exit_to_user_mode(regs);
++       current_thread_info()->syscall =3D 0;
+ }
+
+* allow ptrace to change syscall nr
+* sys_exit_* will also see the right syscall nr
+* this works even if rt_sigreturn clobbers all pt_regs::regs
+
+> And about ELF_PLAT_INIT, maybe Arnd can give us some more information.
+>
+> Hi, Arnd,
+>
+> I found some new architectures, such as ARM64 and RISC-V, just do
+> nearly nothing in ELF_PLAT_INIT, while some old architectures, such as
+> x86 and MIPS, clear most of the registers, do you know why?
+>
+> Huacai
+>
+> >
+> > > Huacai
+> > >
+> > > >
+> > > > Fixes: be769645a2aef ("LoongArch: Add system call support")
+> > > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > > > ---
+> > > >  arch/loongarch/include/asm/syscall.h | 2 +-
+> > > >  arch/loongarch/kernel/syscall.c      | 1 +
+> > > >  2 files changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/=
+include/asm/syscall.h
+> > > > index e286dc58476e..2317d674b92a 100644
+> > > > --- a/arch/loongarch/include/asm/syscall.h
+> > > > +++ b/arch/loongarch/include/asm/syscall.h
+> > > > @@ -23,7 +23,7 @@ extern void *sys_call_table[];
+> > > >  static inline long syscall_get_nr(struct task_struct *task,
+> > > >                                   struct pt_regs *regs)
+> > > >  {
+> > > > -       return regs->regs[11];
+> > > > +       return task_thread_info(task)->syscall;
+> > > >  }
+> > > >
+> > > >  static inline void syscall_rollback(struct task_struct *task,
+> > > > diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kerne=
+l/syscall.c
+> > > > index b4c5acd7aa3b..2783e33cf276 100644
+> > > > --- a/arch/loongarch/kernel/syscall.c
+> > > > +++ b/arch/loongarch/kernel/syscall.c
+> > > > @@ -52,6 +52,7 @@ void noinstr do_syscall(struct pt_regs *regs)
+> > > >         regs->orig_a0 =3D regs->regs[4];
+> > > >         regs->regs[4] =3D -ENOSYS;
+> > > >
+> > > > +       task_thread_info(current)->syscall =3D nr;
+> > > >         nr =3D syscall_enter_from_user_mode(regs, nr);
+> > > >
+> > > >         if (nr < NR_syscalls) {
+> > > > --
+> > > > 2.42.0
+> > > >
