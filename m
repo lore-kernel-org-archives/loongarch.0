@@ -1,78 +1,116 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F55221117
-	for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 15:12:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4671F625
+	for <loongarch@lists.linux.dev>; Fri, 24 Nov 2023 01:48:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gq5aT+jx"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1f937a7b8aaso562073fac.0
-        for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 07:12:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kB9OMlBQ"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5bdb0be3591so1076139a12.2
+        for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 17:48:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700752342; x=1701357142; darn=lists.linux.dev;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ppW4DoglJ3C/vPddz2/r1J5r1r+DkMQSG8YfnSPIn8E=;
-        b=Gq5aT+jxChDmEwV4bSiMaMZEhhpR0JCmKOG08DcQjgLmXLTHhzjHMXeopRni/fgyU0
-         cAypN+SXu3L2gBCnbiuC+/lu9MR05CkHNZrdAvYZc7dnEgmsvFiAzNzCaOzRkxKhzlYX
-         W/ryTLJtjU0tX4dpIWRsj53gPcu8du2g/DmJbIbZtaizcYHAuTIc1kSSbh8OR3LjrmDE
-         Lpg9EsJ7wVpSXtHO4v0jN70+L9of0WvfC/t26VyrAELJHySdGWUzp2zLZkKydm1DPVGm
-         JdWYIBtIYSBCAZMWcvUul9ec/JKbx6lTyAiBe93ZvBYj0j4aaMG/XO07LoOsYULexpO6
-         dPHA==
+        d=gmail.com; s=20230601; t=1700790511; x=1701395311; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L1v0zD5ohGSHo01XfRcFHZXPgTcO33uYH5dgRj4yXKI=;
+        b=kB9OMlBQJz30xNItWkqjj2BJcajH7tpT//yXwjmoWdZiQnx9KEWRn44rG77xZjxnY6
+         2O2B4o264mbAssFMHUuQqAccqcK5rRZYcFshI5tao6ChrnWchhswWTSaK+t2X13FWjtH
+         C9E1hoW6sLOzJK3l8cyW0miKRHB4K3VvGYBassP2bG92tm8zO07Ms3EPIOHv3PshR4eT
+         L/g0gVO9SMxYn9UURBXpGEUYmIawJybWkELoZTB7mTtcDxf1FXgGSJcL1lt/S97hOYpC
+         iPmzm02M7BH9mXwL/35XCPqgjtjINoLplIjhlv0M/PyeleipusidL3DzcCcCwefz3Rzd
+         R9IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700752342; x=1701357142;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ppW4DoglJ3C/vPddz2/r1J5r1r+DkMQSG8YfnSPIn8E=;
-        b=tWL/TRUFA24wEdnl4iyhw72PLqEulX9nN3z+8PFJMUerxTiSApTcFTJ0NoKCY76vf/
-         NZzlowPJbRGUToH95Pfr2SpUBtwyduDk1r7bJ08Lw6uESQ1r4eG/S3DBmp0iM4myjZ2m
-         FDXS9NVMF5UUUzfI5HkwfVtqZVieeBa4UmLdpSmyBmGhsxCQ19/GjmA6OnKZ7DQA9iV2
-         Y7ZJ0OPZEGezN9rYLf2l57q6tL6FM+bMXp0Bkt0k7M7y3HvFrqS/r4pgxn4vOE2soto4
-         uot9T8TzTEtLj7b1s2Hs+RX8fr0KCDs2NeaaEWolvuFaE5gKuhIouCVekPmgqi2DZWtR
-         vJfw==
-X-Gm-Message-State: AOJu0YwteyaMZeMVcYGI6Jtq2NlCxTusG/Jx5gs8zB7jxWVu1CwuNZLM
-	P6C2v8mTlJPQXB/3/qjHMeGA65503baLwflUMFEUUyejKPSWDA==
-X-Google-Smtp-Source: AGHT+IGtJSmWED/DRpx6rYmqst6hYpoSnqN6v+30IeY8XZeDaQEdDM5uLPsokmqQ1+5xua94zACFBHecROFsYyaZPjw=
-X-Received: by 2002:a05:6871:e70d:b0:1e9:d158:7e85 with SMTP id
- qa13-20020a056871e70d00b001e9d1587e85mr7952779oac.30.1700752342152; Thu, 23
- Nov 2023 07:12:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700790511; x=1701395311;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L1v0zD5ohGSHo01XfRcFHZXPgTcO33uYH5dgRj4yXKI=;
+        b=UPMSXE++x027Hi+QxCbzyXXcKcz8ma35W5k4Sx/9FDWMlb1t6u0+Axv2hty/1aTErD
+         SXvjrYkC0OMjfyNYgrySgmHEmVQ4ZpjHrdGU0rte+m9xpn4aII8NAQQXAjCXCatEYl5/
+         mTvlqmpTCY7vNyUI8x3Bi4MRBcZ+KNQYyGRXFufh95JcSqGQC0Q3BOxhpDpRsQnWrlrm
+         ttg4LEwReXiA3CVe17dnwd+2jGholcfUhFTKWAAZpFtRfYQDRa0EPSOBlbTGi6jGxNVT
+         UdsuOqfNCIo+xNRQA5lPX2d/hEVlw376CXmk0owDgj9qC+92lrmOqoXhq7sQUc2FiNza
+         1wxw==
+X-Gm-Message-State: AOJu0YzgfDL6/78+kCdLBb7MsiEgSJF2PUCHWPkoxmLUcCFucLc9rQWW
+	7xNI5fX8l367ujSqRFENTYTYPRVheSig+g==
+X-Google-Smtp-Source: AGHT+IF06BLNSwgp+g9/KiD9JxAG8XANBdzU+i3wYo6W7ohWsUZBncHbeGyyIu0VhosXhT37L3F6SQ==
+X-Received: by 2002:a17:90b:1c8b:b0:27c:f309:f381 with SMTP id oo11-20020a17090b1c8b00b0027cf309f381mr1471332pjb.6.1700790510583;
+        Thu, 23 Nov 2023 17:48:30 -0800 (PST)
+Received: from ubuntu.. ([203.205.141.11])
+        by smtp.googlemail.com with ESMTPSA id qa9-20020a17090b4fc900b00274b035246esm3718894pjb.1.2023.11.23.17.48.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Nov 2023 17:48:30 -0800 (PST)
+From: Hengqi Chen <hengqi.chen@gmail.com>
+To: loongarch@lists.linux.dev
+Cc: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	hengqi.chen@gmail.com
+Subject: [PATCH] LoongArch: Check unwind_error() in show_backtrace()
+Date: Fri, 24 Nov 2023 01:48:22 +0000
+Message-Id: <20231124014822.7894-1-hengqi.chen@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Thu, 23 Nov 2023 23:12:11 +0800
-Message-ID: <CAEyhmHT6UOryPZi7eEfw01Y_CjAqxy8NM6eKkdvdojJqB9P7eQ@mail.gmail.com>
-Subject: Kernel panic and stall triggered by bpf selftests
-To: loongarch@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+While tracking down the CPU stall issues ([0]), I saw
+that show_backtrace() stuck in an infinite loop ([1]):
 
-The following bpf selftests tigger kernel panics and stalls (RCU related)
+  [  153.610816] Call Trace:
+  [  153.610929] [<9000000002723eb8>] show_stack+0x5c/0x180
+  [  153.611252] [<90000000038e9954>] dump_stack_lvl+0x60/0x88
+  [  153.611349] [<90000000038cf8ec>] rcu_dump_cpu_stacks+0xf8/0x150
+  [  153.611452] [<90000000027dc5dc>] rcu_sched_clock_irq+0x69c/0xf10
+  [  153.611585] [<90000000027f0dfc>] update_process_times+0x6c/0xb4
+  [  153.611696] [<9000000002801fb8>] tick_nohz_highres_handler+0x54/0xe0
+  [  153.611808] [<90000000027f1898>] __hrtimer_run_queues+0x178/0x344
+  [  153.611909] [<90000000027f29dc>] hrtimer_interrupt+0x108/0x28c
+  [  153.612009] [<90000000027269c4>] constant_timer_interrupt+0x38/0x48
+  [  153.612113] [<90000000027b7824>] __handle_irq_event_percpu+0x68/0x24c
+  [  153.612223] [<90000000027b7a20>] handle_irq_event_percpu+0x18/0x6c
+  [  153.612327] [<90000000027bdae0>] handle_percpu_irq+0x54/0x88
+  [  153.612420] [<90000000027b6af8>] generic_handle_domain_irq+0x28/0x40
+  [  153.612524] [<9000000003085b0c>] handle_cpu_irq+0x6c/0xa8
+  [  153.612621] [<90000000038e9c28>] handle_loongarch_irq+0x30/0x48
+  [  153.612721] [<90000000038e9cc0>] do_vint+0x80/0xb4
+  [  153.612906] [<90000000038e9cc0>] do_vint+0x80/0xb4
+  [  153.612985] [<90000000038e9cc0>] do_vint+0x80/0xb4
+  [  153.613066] [<90000000038e9cc0>] do_vint+0x80/0xb4
+  [  153.613150] [<90000000038e9cc0>] do_vint+0x80/0xb4
+  ...
 
-| TEST CASE               | JIT    | JIT + UNPRIV |
-| cls_redirect            | PANIC  | PANIC        |
-| sockopt_inherit         | STALL  | STALL        |
-| test_profiler           | N/A    | STALL        |
-| verifier_map_ptr_mixing | PANIC  | PANIC        |
-| verifier_movsx          | PASSED | STALL        |
+This is because the unwinder does not stop immediately when
+it reaches non-kernel stackframe at which point it sets
+unwind_state::error. Add the missing unwind_error() check
+to resolve the issue.
 
-BPF JIT can be enabled by:
-  # echo 1 > /proc/sys/net/core/bpf_jit_enable
-unprivileged BPF can be enabled by:
-  # echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
+  [0]: https://lore.kernel.org/loongarch/CAEyhmHT6UOryPZi7eEfw01Y_CjAqxy8NM6eKkdvdojJqB9P7eQ@mail.gmail.com/T/#u
+  [1]: https://github.com/chenhengqi/public/blob/main/verifier_movsx
 
-For the full logs of each test cases, see below
-https://github.com/chenhengqi/public/commit/75a265e961e5d93b61c3b012e16f1db2f9d333b5
+Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+---
+ arch/loongarch/kernel/traps.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I spent quite some time debugging this, but unable to isolate the
-related code path.
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index aebfc3733a76..63bf24295e3d 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -65,7 +65,8 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
+ 
+ 	printk("%sCall Trace:", loglvl);
+ 	for (unwind_start(&state, task, pregs);
+-	      !unwind_done(&state); unwind_next_frame(&state)) {
++	    !unwind_done(&state) && !unwind_error(&state);
++	     unwind_next_frame(&state)) {
+ 		addr = unwind_get_return_address(&state);
+ 		print_ip_sym(loglvl, addr);
+ 	}
+-- 
+2.34.1
 
-Thoughts welcome.
-
---
-Hengqi
