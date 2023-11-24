@@ -1,44 +1,30 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3C44416
-	for <loongarch@lists.linux.dev>; Fri, 24 Nov 2023 05:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0958653B3
+	for <loongarch@lists.linux.dev>; Fri, 24 Nov 2023 06:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBIEtZ78"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6d7e51638e7so922166a34.1
-        for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 21:34:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700804060; x=1701408860; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yHCCIv8tsPd8RTsRMpwqBw9Sr+WUe9/qiBoUH8rW8zo=;
-        b=MBIEtZ78pZ535mezcn7EuhgfKeZkQ6a/wnDmhx0Lt8UQoVGu3BamTrJoHOhV+KqhVh
-         62NUx3bUtwVN+sPDcSrOWQPnhVClC/ziwS83b2xmin0xoacgqyPDgFNNaKtAm3Hc1VF1
-         gg/GAqYxIjcV+iT8RTvrAg3eRPsvs00zZCxKMHufjrYo4Iaa/fQ+c+vOqHIVaDkM2Hlq
-         Bv5RH2xd/RFV4NcF3I5NitEYYtnCf3Rnv6cgLmK4Vgr6b1Xbi/0vKLABFGUqbyhuic+n
-         v5gHeDwh3Sqi31knwNlhbh8uEQKPzZu+MgT7E18VeDUZnNPmLjjhE+dPeR75xBxP9/eU
-         e1ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700804060; x=1701408860;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yHCCIv8tsPd8RTsRMpwqBw9Sr+WUe9/qiBoUH8rW8zo=;
-        b=I3n8E9tKmTKNY4PD9toyf13u4MRalc4yvLU0eChyOk6mzOqhMtCnNWSXVYFb2YMSA7
-         OOUAepWp11N0vpj/qsoy4b+0W6SYk7hfdly0pJe2uDh/JLtK6yIRhv5t7zbKweCCXOzL
-         GHs/8LUBKrMHQnN4Enb8g1m8LtoDz6eSV9NN2clKuTsZjtgJ48t5M1Re2at9WLJp9zt+
-         quY9sjEAnxp9Jm59wJjo9aqkbTfvsFIkSnI2tDqZn8VSvP9n6CxKz7PIDPqk3iDNKbwO
-         N6xRwuT+GxGj8Gwq6ecXmSJx+KoG3W0HiAmm8vywVOoL2kVqFqisj3gSU1Ka/ZpHfcAc
-         Q+VA==
-X-Gm-Message-State: AOJu0Yw73H3Fo4ZT1cRadJCQ661M+V39OTBtVYOjgii5/od6OwR+vIxA
-	sKdr0slVvLfkYOqF9TvH6296ubjyp5xQ4O1vYcs=
-X-Google-Smtp-Source: AGHT+IGLBmazJ8+WRX7D6BFsH26fNKmV1qhmZ31XpKcJc/86PtMtvxsnnWZ8U8FWV9aUZxIPKU8ftqCvo5Gw0MHl1D8=
-X-Received: by 2002:a05:6871:3a22:b0:1fa:135:cc6a with SMTP id
- pu34-20020a0568713a2200b001fa0135cc6amr183927oac.4.1700804059661; Thu, 23 Nov
- 2023 21:34:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVMF2a1I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F2FDC433C7
+	for <loongarch@lists.linux.dev>; Fri, 24 Nov 2023 06:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700807288;
+	bh=6EvEOkLCr8zzgGpTKtoG3JN80jTAIS3N9m4lAjs88os=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fVMF2a1IZGlkiMZ9pgbYV3Y+bQHeOhcnNYjOBP2jZjlG82MrrY6GlPeJKnN+oJiU8
+	 /Wkl8zDVm4qmJkODqnb3WNs7NKlDSoFljDwOcDhs0EIfxxWwJQ5j4IqbLp1ad2rufK
+	 25nfuGbJVKsQW57QRVr9QW2psL1f/BwI4btz8FCkb3wFX3A6fbaUYrpiD24LJ+B2Xb
+	 wKDStV1BcMjfIjrar6wsH3un5YL78TpQBttweyzhLhb09bxez9AHrQCLXnsiRE0pmV
+	 SPWRUiDSvd3JyYbTyM+uIU7EDBcTAQ89o1efhQN/Jpdrjmuau92aFDqUcStovcHEFN
+	 qoM52L0psHROw==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a0029289b1bso213268966b.1
+        for <loongarch@lists.linux.dev>; Thu, 23 Nov 2023 22:28:08 -0800 (PST)
+X-Gm-Message-State: AOJu0YxHhFhM7CS6EK0x7Kx5dxlKQowgESyLzccFx9ABUXjHZxT2NAzL
+	0HTgiVa8HRJrQjoMGQtiFrqtWJGmlEHJasSj3Qs=
+X-Google-Smtp-Source: AGHT+IENQ0OhaK6zK/tqrB3ex7koa+d0QXMlUOEuGxbdpjWzKXGT0ZOyC2J39wgm+rsiiH5pomXQkuW9Sn3jhEkFcmc=
+X-Received: by 2002:a17:906:1685:b0:9fe:a92b:9844 with SMTP id
+ s5-20020a170906168500b009fea92b9844mr1125369ejd.37.1700807286981; Thu, 23 Nov
+ 2023 22:28:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,15 +33,18 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20231124014822.7894-1-hengqi.chen@gmail.com> <cdc62ae9-87f0-c9c8-a37a-d2fe24c224af@loongson.cn>
 In-Reply-To: <cdc62ae9-87f0-c9c8-a37a-d2fe24c224af@loongson.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Fri, 24 Nov 2023 13:34:08 +0800
-Message-ID: <CAEyhmHQ7ny4C7ZSvuWUdxYDRWvEJLjjG_jp1aZyXLh7a8o3mSA@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 24 Nov 2023 14:27:55 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6xZBWzuPBSMDAmiuL=VV39Z9HJ+e0i0+BQuJo63b9ekg@mail.gmail.com>
+Message-ID: <CAAhV-H6xZBWzuPBSMDAmiuL=VV39Z9HJ+e0i0+BQuJo63b9ekg@mail.gmail.com>
 Subject: Re: [PATCH] LoongArch: Check unwind_error() in show_backtrace()
 To: Jinyang He <hejinyang@loongson.cn>
-Cc: loongarch@lists.linux.dev, chenhuacai@kernel.org, kernel@xen0n.name, 
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, kernel@xen0n.name, 
 	Tiezhu Yang <yangtiezhu@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+
+Hi, Jinyang,
 
 On Fri, Nov 24, 2023 at 10:34=E2=80=AFAM Jinyang He <hejinyang@loongson.cn>=
  wrote:
@@ -104,10 +93,13 @@ x40
 > next_frame() where set `state->error =3D true`.
 >
 > Stack type change to unknown also indicate that the unwind should stop.
+In this way arch_stack_walk() don't need to call unwind_error() any
+more? But then what is the real difference between unwind_done() and
+unwind_error()?
+
+Huacai
+
 >
-
-OK, will do.
-
 > The patch way makes us need fix the other place where call unwind_XXX().
 >
 > Seems commit 370a3b8f5874 ("LoongArch: Check unwind_error() in
