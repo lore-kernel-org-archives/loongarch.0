@@ -1,268 +1,129 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489F5EC0
-	for <loongarch@lists.linux.dev>; Mon, 27 Nov 2023 01:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxJvFs9GNlX_g8AA--.55758S3;
-	Mon, 27 Nov 2023 09:44:12 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxrdxq9GNlHlJNAA--.39309S2;
-	Mon, 27 Nov 2023 09:44:10 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Optimization for memslot hugepage checking
-Date: Mon, 27 Nov 2023 09:44:10 +0800
-Message-Id: <20231127014410.4122997-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABFC36D
+	for <loongarch@lists.linux.dev>; Mon, 27 Nov 2023 02:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WNCNFiaH"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3b83398cfc7so2385065b6e.3
+        for <loongarch@lists.linux.dev>; Sun, 26 Nov 2023 18:41:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701052906; x=1701657706; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UJClfc4sDLiEj/eSTt+VCec2Lgvh20eFtg0zCQJNbx4=;
+        b=WNCNFiaHjypFzyVD+jxPqGAPYV/QfEXQMVQxqbJ4vgBByWUP5+2wRcjAri7us7RHyq
+         tYWybMpRjZ7/MC2mXYZWouccUWJrcVh7I+RdlWYBH8HoSKAN43ZnY9K7P8mMkAot0U+m
+         OJ3kRlPsrsn4fLFJPcqt7XfAIph4QCnIwzO21UVfwPY3Ie5iPJg0Jh9fT3FiC+j2XmvL
+         cnvCBtxkMgjwhsmorJzxQwpm3/sskjlTMtQLUEH9E7DM6nF/WdetbYvegPaJrO0wD2nu
+         5T89a5BB1KhCUE9mIAd/F0/m+HPjovgTfzZb9gYb8XIk5SI5SnYgJtvjNMoOYSUaL31l
+         h6qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701052906; x=1701657706;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UJClfc4sDLiEj/eSTt+VCec2Lgvh20eFtg0zCQJNbx4=;
+        b=WRrm1IyWLbklKkfgoJqzbNg7PdB6IV4JRj6g6+ZXsNDVBbj7ltolLDM7b97ZimKP9w
+         VQUuAUMl0U2RDtpdoBU0oSEpstKeqfmbPBIgN+hrf6CyYQRsrLGaNgZIuayLfLXjAdLc
+         KIHdFhnuPvkTNMOYAxExA0QRtCGXZuHfTq2rxlkmBJMowb0Nbs/ZqdsOWY5JrfA9O2ye
+         lPR44co1NopMaQKVwMIJlvPb/9ytxa7swXNk6NyfnpfMKItcQsrZY66ImcZ87vXNK2QF
+         ix62+zo3OwICkCk+wnyNbE+u951g61H/Ssv1M99ja3xAU66incowdMK9k1ablVkY5Q1E
+         cvxw==
+X-Gm-Message-State: AOJu0YwEqRikbri8pvTNcI6wUsw7XWyia/6hYitzwPLDfKkaiCXVsS9z
+	3w9df1koIy2dWe1S6ElqGYf5e1EeFeOGWrO8/KU=
+X-Google-Smtp-Source: AGHT+IGHwCnnl/V4HEAdOxYhHMW6DPwEZ/BDf+qy3Yzj4LFXLVT3ZHq32Wm/RxTQIoL07zqbsDCNidoIBsf7jHQC8Po=
+X-Received: by 2002:a05:6870:558f:b0:1fa:3678:6c4e with SMTP id
+ qj15-20020a056870558f00b001fa36786c4emr4960309oac.8.1701052906041; Sun, 26
+ Nov 2023 18:41:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxrdxq9GNlHlJNAA--.39309S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WFW5tF1Dtw47WFyrJr18WFX_yoW3Gr4UpF
-	43ArsxCrW5Jr13ursrtw1Duw15Aws5Gw17Ga47t34FvFn0yr15Ja1kA3y8Jry5JrW8ZFW2
-	qFWYyF4UW3yUt3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
+References: <20231126121002.22568-1-hejinyang@loongson.cn>
+In-Reply-To: <20231126121002.22568-1-hejinyang@loongson.cn>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Mon, 27 Nov 2023 10:41:35 +0800
+Message-ID: <CAEyhmHRCJootEEcYo_S7BdCq5LhN5MBG3ut5oYrSLd8R8jWG8A@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Set unwind stack type to unknown rather than
+ set error flag
+To: Jinyang He <hejinyang@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-During shadow mmu page fault, there is checking for huge page for
-specified memslot. Page fault is hot path, check logic can be done
-when memslot is created. Here two flags are added for huge page
-checking, KVM_MEM_HUGEPAGE_CAPABLE and KVM_MEM_HUGEPAGE_INCAPABLE.
-Instead for optimization qemu, memslot for dram is always huge page
-aligned. The flag is firstly checked during hot page fault path.
+On Sun, Nov 26, 2023 at 8:10=E2=80=AFPM Jinyang He <hejinyang@loongson.cn> =
+wrote:
+>
+> During the unwinding, unwind_done() is used as an end condition. Normally
+> it unwind to the user stack and then set the stack type to unknown, which
+> is a normal exit. When something unexpected happens in unwind process and
+> we cannot unwind anymore, we should set the error flag, and also set the
+> stack type to unknown to indicate that the unwind process cannot continue=
+.
+> The error flag emphasizes that the unwind process produce an unexpected
+> error. There is no unexpected things when we unwind the PT_REGS in the
+> top of IRQ stack and find out that is an user mode PT_REGS. Thus, we
+> should not set error flag and just set stack type to unknown.
+>
+> Reported-by: Hengqi Chen <hengqi.chen@gmail.com>
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> ---
+>  arch/loongarch/kernel/stacktrace.c      | 2 +-
+>  arch/loongarch/kernel/unwind.c          | 1 -
+>  arch/loongarch/kernel/unwind_prologue.c | 2 +-
+>  3 files changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/s=
+tacktrace.c
+> index 92270f14db94..f623feb2129f 100644
+> --- a/arch/loongarch/kernel/stacktrace.c
+> +++ b/arch/loongarch/kernel/stacktrace.c
+> @@ -32,7 +32,7 @@ void arch_stack_walk(stack_trace_consume_fn consume_ent=
+ry, void *cookie,
+>         }
+>
+>         for (unwind_start(&state, task, regs);
+> -            !unwind_done(&state) && !unwind_error(&state); unwind_next_f=
+rame(&state)) {
+> +            !unwind_done(&state); unwind_next_frame(&state)) {
+>                 addr =3D unwind_get_return_address(&state);
+>                 if (!addr || !consume_entry(cookie, addr))
+>                         break;
+> diff --git a/arch/loongarch/kernel/unwind.c b/arch/loongarch/kernel/unwin=
+d.c
+> index ba324ba76fa1..a463d6961344 100644
+> --- a/arch/loongarch/kernel/unwind.c
+> +++ b/arch/loongarch/kernel/unwind.c
+> @@ -28,6 +28,5 @@ bool default_next_frame(struct unwind_state *state)
+>
+>         } while (!get_stack_info(state->sp, state->task, info));
+>
+> -       state->error =3D true;
+>         return false;
+>  }
+> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/ker=
+nel/unwind_prologue.c
+> index 55afc27320e1..929ae240280a 100644
+> --- a/arch/loongarch/kernel/unwind_prologue.c
+> +++ b/arch/loongarch/kernel/unwind_prologue.c
+> @@ -227,7 +227,7 @@ static bool next_frame(struct unwind_state *state)
+>         } while (!get_stack_info(state->sp, state->task, info));
+>
+>  out:
+> -       state->error =3D true;
+> +       state->stack_info.type =3D STACK_TYPE_UNKNOWN;
+>         return false;
+>  }
+>
+> --
+> 2.42.0
+>
 
-Now only huge page flag is supported, there is a long way for super
-page support in LoongArch system. Since super page size is 64G for
-16K pagesize and 1G for 4K pagesize, 64G physical address is rarely
-used and LoongArch kernel needs support super page for 4K. Also memory
-layout of LoongArch qemu VM should be 1G aligned.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |   3 +
- arch/loongarch/kvm/mmu.c              | 127 +++++++++++++++++---------
- 2 files changed, 89 insertions(+), 41 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 11328700d4fa..0e89db020481 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -45,7 +45,10 @@ struct kvm_vcpu_stat {
- 	u64 signal_exits;
- };
- 
-+#define KVM_MEM_HUGEPAGE_CAPABLE	(1UL << 0)
-+#define KVM_MEM_HUGEPAGE_INCAPABLE	(1UL << 1)
- struct kvm_arch_memory_slot {
-+	unsigned long flags;
- };
- 
- struct kvm_context {
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index 80480df5f550..6845733f37dc 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -13,6 +13,16 @@
- #include <asm/tlb.h>
- #include <asm/kvm_mmu.h>
- 
-+static inline bool kvm_hugepage_capable(struct kvm_memory_slot *slot)
-+{
-+	return slot->arch.flags & KVM_MEM_HUGEPAGE_CAPABLE;
-+}
-+
-+static inline bool kvm_hugepage_incapable(struct kvm_memory_slot *slot)
-+{
-+	return slot->arch.flags & KVM_MEM_HUGEPAGE_INCAPABLE;
-+}
-+
- static inline void kvm_ptw_prepare(struct kvm *kvm, kvm_ptw_ctx *ctx)
- {
- 	ctx->level = kvm->arch.root_level;
-@@ -365,6 +375,71 @@ void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
- 	kvm_ptw_top(kvm->arch.pgd, start << PAGE_SHIFT, end << PAGE_SHIFT, &ctx);
- }
- 
-+int kvm_arch_prepare_memory_region(struct kvm *kvm,
-+				const struct kvm_memory_slot *old,
-+				struct kvm_memory_slot *new,
-+				enum kvm_mr_change change)
-+{
-+	size_t size, gpa_offset, hva_offset;
-+	gpa_t gpa_start;
-+	hva_t hva_start;
-+
-+	if ((change != KVM_MR_MOVE) && (change != KVM_MR_CREATE))
-+		return 0;
-+	/*
-+	 * Prevent userspace from creating a memory region outside of the
-+	 * VM GPA address space
-+	 */
-+	if ((new->base_gfn + new->npages) > (kvm->arch.gpa_size >> PAGE_SHIFT))
-+		return -ENOMEM;
-+
-+	size = new->npages * PAGE_SIZE;
-+	gpa_start = new->base_gfn << PAGE_SHIFT;
-+	hva_start = new->userspace_addr;
-+	new->arch.flags = 0;
-+	if (IS_ALIGNED(size, PMD_SIZE) && IS_ALIGNED(gpa_start, PMD_SIZE)
-+			&& IS_ALIGNED(hva_start, PMD_SIZE))
-+		new->arch.flags |= KVM_MEM_HUGEPAGE_CAPABLE;
-+	else {
-+		/*
-+		 * Pages belonging to memslots that don't have the same
-+		 * alignment within a PMD for userspace and GPA cannot be
-+		 * mapped with PMD entries, because we'll end up mapping
-+		 * the wrong pages.
-+		 *
-+		 * Consider a layout like the following:
-+		 *
-+		 *    memslot->userspace_addr:
-+		 *    +-----+--------------------+--------------------+---+
-+		 *    |abcde|fgh  Stage-1 block  |    Stage-1 block tv|xyz|
-+		 *    +-----+--------------------+--------------------+---+
-+		 *
-+		 *    memslot->base_gfn << PAGE_SIZE:
-+		 *      +---+--------------------+--------------------+-----+
-+		 *      |abc|def  Stage-2 block  |    Stage-2 block   |tvxyz|
-+		 *      +---+--------------------+--------------------+-----+
-+		 *
-+		 * If we create those stage-2 blocks, we'll end up with this
-+		 * incorrect mapping:
-+		 *   d -> f
-+		 *   e -> g
-+		 *   f -> h
-+		 */
-+		gpa_offset = gpa_start & (PMD_SIZE - 1);
-+		hva_offset = hva_start & (PMD_SIZE - 1);
-+		if (gpa_offset != hva_offset) {
-+			new->arch.flags |= KVM_MEM_HUGEPAGE_INCAPABLE;
-+		} else {
-+			if (gpa_offset == 0)
-+				gpa_offset = PMD_SIZE;
-+			if ((size + gpa_offset) < (PMD_SIZE * 2))
-+				new->arch.flags |= KVM_MEM_HUGEPAGE_INCAPABLE;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				   struct kvm_memory_slot *old,
- 				   const struct kvm_memory_slot *new,
-@@ -562,47 +637,23 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
- }
- 
- static bool fault_supports_huge_mapping(struct kvm_memory_slot *memslot,
--				unsigned long hva, unsigned long map_size, bool write)
-+				unsigned long hva, bool write)
- {
--	size_t size;
--	gpa_t gpa_start;
--	hva_t uaddr_start, uaddr_end;
-+	hva_t start, end;
- 
- 	/* Disable dirty logging on HugePages */
- 	if (kvm_slot_dirty_track_enabled(memslot) && write)
- 		return false;
- 
--	size = memslot->npages * PAGE_SIZE;
--	gpa_start = memslot->base_gfn << PAGE_SHIFT;
--	uaddr_start = memslot->userspace_addr;
--	uaddr_end = uaddr_start + size;
-+	if (kvm_hugepage_capable(memslot))
-+		return true;
- 
--	/*
--	 * Pages belonging to memslots that don't have the same alignment
--	 * within a PMD for userspace and GPA cannot be mapped with stage-2
--	 * PMD entries, because we'll end up mapping the wrong pages.
--	 *
--	 * Consider a layout like the following:
--	 *
--	 *    memslot->userspace_addr:
--	 *    +-----+--------------------+--------------------+---+
--	 *    |abcde|fgh  Stage-1 block  |    Stage-1 block tv|xyz|
--	 *    +-----+--------------------+--------------------+---+
--	 *
--	 *    memslot->base_gfn << PAGE_SIZE:
--	 *      +---+--------------------+--------------------+-----+
--	 *      |abc|def  Stage-2 block  |    Stage-2 block   |tvxyz|
--	 *      +---+--------------------+--------------------+-----+
--	 *
--	 * If we create those stage-2 blocks, we'll end up with this incorrect
--	 * mapping:
--	 *   d -> f
--	 *   e -> g
--	 *   f -> h
--	 */
--	if ((gpa_start & (map_size - 1)) != (uaddr_start & (map_size - 1)))
-+	if (kvm_hugepage_incapable(memslot))
- 		return false;
- 
-+	start = memslot->userspace_addr;
-+	end = start + memslot->npages * PAGE_SIZE;
-+
- 	/*
- 	 * Next, let's make sure we're not trying to map anything not covered
- 	 * by the memslot. This means we have to prohibit block size mappings
-@@ -615,8 +666,8 @@ static bool fault_supports_huge_mapping(struct kvm_memory_slot *memslot,
- 	 * userspace_addr or the base_gfn, as both are equally aligned (per
- 	 * the check above) and equally sized.
- 	 */
--	return (hva & ~(map_size - 1)) >= uaddr_start &&
--		(hva & ~(map_size - 1)) + map_size <= uaddr_end;
-+	return (hva >= ALIGN(start, PMD_SIZE)) &&
-+			(hva < ALIGN_DOWN(end, PMD_SIZE));
- }
- 
- /*
-@@ -842,7 +893,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
- 
- 	/* Disable dirty logging on HugePages */
- 	level = 0;
--	if (!fault_supports_huge_mapping(memslot, hva, PMD_SIZE, write)) {
-+	if (!fault_supports_huge_mapping(memslot, hva, write)) {
- 		level = 0;
- 	} else {
- 		level = host_pfn_mapping_level(kvm, gfn, memslot);
-@@ -901,12 +952,6 @@ void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
- {
- }
- 
--int kvm_arch_prepare_memory_region(struct kvm *kvm, const struct kvm_memory_slot *old,
--				   struct kvm_memory_slot *new, enum kvm_mr_change change)
--{
--	return 0;
--}
--
- void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
- 					const struct kvm_memory_slot *memslot)
- {
--- 
-2.39.3
-
+Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
