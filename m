@@ -1,129 +1,232 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABFC36D
-	for <loongarch@lists.linux.dev>; Mon, 27 Nov 2023 02:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284BC199C2
+	for <loongarch@lists.linux.dev>; Mon, 27 Nov 2023 11:32:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WNCNFiaH"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3b83398cfc7so2385065b6e.3
-        for <loongarch@lists.linux.dev>; Sun, 26 Nov 2023 18:41:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nT9fsSes"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2c88750e7d1so49205461fa.3
+        for <loongarch@lists.linux.dev>; Mon, 27 Nov 2023 03:32:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701052906; x=1701657706; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UJClfc4sDLiEj/eSTt+VCec2Lgvh20eFtg0zCQJNbx4=;
-        b=WNCNFiaHjypFzyVD+jxPqGAPYV/QfEXQMVQxqbJ4vgBByWUP5+2wRcjAri7us7RHyq
-         tYWybMpRjZ7/MC2mXYZWouccUWJrcVh7I+RdlWYBH8HoSKAN43ZnY9K7P8mMkAot0U+m
-         OJ3kRlPsrsn4fLFJPcqt7XfAIph4QCnIwzO21UVfwPY3Ie5iPJg0Jh9fT3FiC+j2XmvL
-         cnvCBtxkMgjwhsmorJzxQwpm3/sskjlTMtQLUEH9E7DM6nF/WdetbYvegPaJrO0wD2nu
-         5T89a5BB1KhCUE9mIAd/F0/m+HPjovgTfzZb9gYb8XIk5SI5SnYgJtvjNMoOYSUaL31l
-         h6qw==
+        d=gmail.com; s=20230601; t=1701084756; x=1701689556; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A7OSBy3ds1uj4pC4OX5qkf39ZZikExw7hhktBM5V9i0=;
+        b=nT9fsSesoQxParzZSyS7+VQX886oonoYqKoB4XAfTL4e5lCF2bv9McMiLSr8ejx/iy
+         Pyy6Kxg050uSDT3cyNTMWFYgnpMoNqI4OKOA6+w0ITEpM4b83+oabeCDo5Y4ORQrIEy/
+         lxYxOKABk1I+lXU6ZTyQqRmQL1ycN2EUvuh7YMOXolFMQXq5HM6zf+RWXngwP7VXOU6K
+         auylYoZO4ZU3wEhM8qn7/h7wQ/gSGuWZUFlGSDf6cccR4LDEkrEYjNO29oSVrNBzBAyP
+         obmIjduPduFo6cd/p1yR7vNFXsfgTi46S0/BnnHh2z4e0MxWkdFsF6eR4Kl/g1IhIU85
+         r6CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701052906; x=1701657706;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UJClfc4sDLiEj/eSTt+VCec2Lgvh20eFtg0zCQJNbx4=;
-        b=WRrm1IyWLbklKkfgoJqzbNg7PdB6IV4JRj6g6+ZXsNDVBbj7ltolLDM7b97ZimKP9w
-         VQUuAUMl0U2RDtpdoBU0oSEpstKeqfmbPBIgN+hrf6CyYQRsrLGaNgZIuayLfLXjAdLc
-         KIHdFhnuPvkTNMOYAxExA0QRtCGXZuHfTq2rxlkmBJMowb0Nbs/ZqdsOWY5JrfA9O2ye
-         lPR44co1NopMaQKVwMIJlvPb/9ytxa7swXNk6NyfnpfMKItcQsrZY66ImcZ87vXNK2QF
-         ix62+zo3OwICkCk+wnyNbE+u951g61H/Ssv1M99ja3xAU66incowdMK9k1ablVkY5Q1E
-         cvxw==
-X-Gm-Message-State: AOJu0YwEqRikbri8pvTNcI6wUsw7XWyia/6hYitzwPLDfKkaiCXVsS9z
-	3w9df1koIy2dWe1S6ElqGYf5e1EeFeOGWrO8/KU=
-X-Google-Smtp-Source: AGHT+IGHwCnnl/V4HEAdOxYhHMW6DPwEZ/BDf+qy3Yzj4LFXLVT3ZHq32Wm/RxTQIoL07zqbsDCNidoIBsf7jHQC8Po=
-X-Received: by 2002:a05:6870:558f:b0:1fa:3678:6c4e with SMTP id
- qj15-20020a056870558f00b001fa36786c4emr4960309oac.8.1701052906041; Sun, 26
- Nov 2023 18:41:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701084756; x=1701689556;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A7OSBy3ds1uj4pC4OX5qkf39ZZikExw7hhktBM5V9i0=;
+        b=uFfwbE2OIl81SWMFzMrW9R9PPX8ToLv/+Hqxj5VF8m74bGitpTJTKXIcHVDv6MGrM+
+         CsULBF3wSJOZ/iWr81IFzY+XvnN5e8SUCtu0sk4TKHREvmMBmT0obKPtMoIrmioA+XUc
+         zfGrOfdOMvj3//ofcaOG154uPS6IdbLWqTE+/KSPYK2q+gIsJurwm4hrthn4afRk2L8p
+         TOcJmERiYePUEaUxrOkXKrX4NxhgKQmciXLkxtd+AtnI3jj4qr21+5eADkrTuTAm9wf0
+         rHv0yTRLLHLCxNmXTSAz8jNc9zf/kWrykIYnhG+35kfPT5Vkox+jdPcGs3x/Y9YOmovP
+         vtNA==
+X-Gm-Message-State: AOJu0YztkTlShtThkXW+C8AJyqt91YvY08t+IcoAQwFouyPI0xoFM4xp
+	BKFey1aKqs2NXIB7QUctxaBY/XVli8GbLw==
+X-Google-Smtp-Source: AGHT+IHh5skc13rlT81IBrOX4l27eg3nZ6uS9+zPvlQKXzOjQxJPUZimOnpqL78RUvvjWwsxJwzrYA==
+X-Received: by 2002:a2e:6e16:0:b0:2c5:80d:53b1 with SMTP id j22-20020a2e6e16000000b002c5080d53b1mr8777784ljc.43.1701084755854;
+        Mon, 27 Nov 2023 03:32:35 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id a25-20020a2eb559000000b002c88bbac093sm1314705ljn.63.2023.11.27.03.32.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Nov 2023 03:32:35 -0800 (PST)
+Date: Mon, 27 Nov 2023 14:32:31 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: Andrew Lunn <andrew@lunn.ch>, hkallweit1@gmail.com, 
+	peppe.cavallaro@st.com, alexandre.torgue@foss.st.com, joabreu@synopsys.com, 
+	Jose.Abreu@synopsys.com, chenhuacai@loongson.cn, linux@armlinux.org.uk, 
+	dongbiao@loongson.cn, guyinggang@loongson.cn, netdev@vger.kernel.org, 
+	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+Subject: Re: [PATCH v5 3/9] net: stmmac: Add Loongson DWGMAC definitions
+Message-ID: <gbwyupdmey4qiabqtpkqryufsme3dx5wxs3gp3snamijfkzyda@7r2av5z7szs6>
+References: <cover.1699533745.git.siyanteng@loongson.cn>
+ <87011adcd39f20250edc09ee5d31bda01ded98b5.1699533745.git.siyanteng@loongson.cn>
+ <2e1197f9-22f6-4189-8c16-f9bff897d567@lunn.ch>
+ <df17d5e9-2c61-47e3-ba04-64b7110a7ba6@loongson.cn>
+ <9c2806c7-daaa-4a2d-b69b-245d202d9870@lunn.ch>
+ <8d82761e-c978-4763-a765-f6e0b57ec6a6@loongson.cn>
+ <7dde9b88-8dc5-4a35-a6e3-c56cf673e66d@lunn.ch>
+ <3amgiylsqdngted6tts6msman54nws3jxvkuq2kcasdqfa5d7j@kxxitnckw2gp>
+ <4f9a4d75-7052-4314-bbd1-838a642b80ab@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231126121002.22568-1-hejinyang@loongson.cn>
-In-Reply-To: <20231126121002.22568-1-hejinyang@loongson.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Mon, 27 Nov 2023 10:41:35 +0800
-Message-ID: <CAEyhmHRCJootEEcYo_S7BdCq5LhN5MBG3ut5oYrSLd8R8jWG8A@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Set unwind stack type to unknown rather than
- set error flag
-To: Jinyang He <hejinyang@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4f9a4d75-7052-4314-bbd1-838a642b80ab@loongson.cn>
 
-On Sun, Nov 26, 2023 at 8:10=E2=80=AFPM Jinyang He <hejinyang@loongson.cn> =
-wrote:
->
-> During the unwinding, unwind_done() is used as an end condition. Normally
-> it unwind to the user stack and then set the stack type to unknown, which
-> is a normal exit. When something unexpected happens in unwind process and
-> we cannot unwind anymore, we should set the error flag, and also set the
-> stack type to unknown to indicate that the unwind process cannot continue=
-.
-> The error flag emphasizes that the unwind process produce an unexpected
-> error. There is no unexpected things when we unwind the PT_REGS in the
-> top of IRQ stack and find out that is an user mode PT_REGS. Thus, we
-> should not set error flag and just set stack type to unknown.
->
-> Reported-by: Hengqi Chen <hengqi.chen@gmail.com>
-> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-> ---
->  arch/loongarch/kernel/stacktrace.c      | 2 +-
->  arch/loongarch/kernel/unwind.c          | 1 -
->  arch/loongarch/kernel/unwind_prologue.c | 2 +-
->  3 files changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/s=
-tacktrace.c
-> index 92270f14db94..f623feb2129f 100644
-> --- a/arch/loongarch/kernel/stacktrace.c
-> +++ b/arch/loongarch/kernel/stacktrace.c
-> @@ -32,7 +32,7 @@ void arch_stack_walk(stack_trace_consume_fn consume_ent=
-ry, void *cookie,
->         }
->
->         for (unwind_start(&state, task, regs);
-> -            !unwind_done(&state) && !unwind_error(&state); unwind_next_f=
-rame(&state)) {
-> +            !unwind_done(&state); unwind_next_frame(&state)) {
->                 addr =3D unwind_get_return_address(&state);
->                 if (!addr || !consume_entry(cookie, addr))
->                         break;
-> diff --git a/arch/loongarch/kernel/unwind.c b/arch/loongarch/kernel/unwin=
-d.c
-> index ba324ba76fa1..a463d6961344 100644
-> --- a/arch/loongarch/kernel/unwind.c
-> +++ b/arch/loongarch/kernel/unwind.c
-> @@ -28,6 +28,5 @@ bool default_next_frame(struct unwind_state *state)
->
->         } while (!get_stack_info(state->sp, state->task, info));
->
-> -       state->error =3D true;
->         return false;
->  }
-> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/ker=
-nel/unwind_prologue.c
-> index 55afc27320e1..929ae240280a 100644
-> --- a/arch/loongarch/kernel/unwind_prologue.c
-> +++ b/arch/loongarch/kernel/unwind_prologue.c
-> @@ -227,7 +227,7 @@ static bool next_frame(struct unwind_state *state)
->         } while (!get_stack_info(state->sp, state->task, info));
->
->  out:
-> -       state->error =3D true;
-> +       state->stack_info.type =3D STACK_TYPE_UNKNOWN;
->         return false;
->  }
->
-> --
-> 2.42.0
->
+Yanteng
 
-Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
+On Sun, Nov 26, 2023 at 08:25:13PM +0800, Yanteng Si wrote:
+> 
+> 在 2023/11/25 00:44, Serge Semin 写道:
+> > On Fri, Nov 24, 2023 at 03:51:08PM +0100, Andrew Lunn wrote:
+> > > > In general, we split one into two.
+> > > > 
+> > > > the details are as follows：
+> > > > 
+> > > > DMA_INTR_ENA_NIE = DMA_INTR_ENA_NIE_LOONGSON= DMA_INTR_ENA_TX_NIE +
+> > > > DMA_INTR_ENA_RX_NIE
+> > > What does the documentation from Synopsys say about the bit you have
+> > > used for DMA_INTR_ENA_NIE_LOONGSON? Is it marked as being usable by IP
+> > > integrators for whatever they want, or is it marked as reserved?
+> > > 
+> > > I'm just wondering if we are heading towards a problem when the next
+> > > version of this IP assigns the bit to mean something else.
+> > That's what I started to figure out in my initial message:
+> > Link: https://lore.kernel.org/netdev/gxods3yclaqkrud6jxhvcjm67vfp5zmuoxjlr6llcddny7zwsr@473g74uk36xn/
+> > but Yanteng for some reason ignored all my comments.
+> 
+> Sorry, I always keep your review comments in mind, and even this version of
+> the patch is
+> 
+> largely based on your previous comments. Please give me some more time and I
+> promise
+> 
+> to answer your comments before the next patch is made.
+> 
+> > 
+> > Anyway AFAICS this Loongson GMAC has NIE and AIE flags defined differently:
+> > DW GMAC: NIE - BIT(16) - all non-fatal Tx and Rx errors,
+> >           AIE - BIT(15) - all fatal Tx, Rx and Bus errors.
+> > Loongson GMAC: NIE - BIT(18) | BIT(17) - one flag for Tx and another for Rx errors.
+> >                 AIE - BIT(16) | BIT(15) - Tx, Rx and don't know about the Bus errors.
+> > So the Loongson GMAC has not only NIE/AIE flags re-defined, but
+> > also get to occupy two reserved in the generic DW GMAC bits: BIT(18) and BIT(17).
+> > 
+> > Moreover Yanteng in his patch defines DMA_INTR_NORMAL as a combination
+> > of both _generic_ DW and Loongson-specific NIE flags and
+> > DMA_INTR_ABNORMAL as a combination of both _generic_ DW and
+> > Loongson-specific AIE flags. At the very least it doesn't look
+> > correct, since _generic_ DW GMAC NIE flag BIT(16) is defined as a part
+> > of the Loongson GMAC AIE flags set.
+> 
+> We will consider this seriously, please give us some more time, and of
+> course, we
+> 
+> are looking forward to your opinions on this problem.
+> 
+> 
+> I hope you can accept my apologies, Please allow me to say sorry again.
+
+Thanks for your response. No worries. I keep following this thread and
+sending my comments because the changes here deeply concerns our
+hardware. Besides the driver already looks unreasonably
+overcomplicated and weakly structured in a lot of aspects. I bet
+nobody here wants it to be having even more clumsy parts. That's why
+all the "irritating" comments and nitpicks.
+
+Anyway regarding the Loongson Multi-channels GMAC IRQs based on all
+your info in the previous replies I guess what could be an acceptable
+solution (with the subsystem/driver maintainers blessing) is something
+like this:
+
+1. Add new platform feature flag:
+include/linux/stmmac.h:
++#define STMMAC_FLAG_HAS_LSMC			BIT(13)
+
+2. Update the stmmac_dma_ops.init() callback prototype to accepting
+a pointer to the stmmac_priv instance:
+drivers/net/ethernet/stmicro/stmmac/hwif.h:
+	void (*init)(struct stmmac_priv *priv, void __iomem *ioaddr,
+		     struct stmmac_dma_cfg *dma_cfg, int atds);
++drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c ...
++drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c ...
++drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c ...
++drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c ...
+!!!+drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c ...
+
+3. Add the IRQs macros specific to the LoongSon Multi-channels GMAC:
+drivers/net/ethernet/stmicro/stmmac/dwmac_dma.h:
++#define DMA_INTR_ENA_LS_NIE 0x00060000	/* Normal Loongson Tx/Rx Summary */
+#define DMA_INTR_ENA_NIE 0x00010000	/* Normal Summary */
+...
+
++#define DMA_INTR_LS_NORMAL	(DMA_INTR_ENA_LS_NIE | DMA_INTR_ENA_RIE | \
+				DMA_INTR_ENA_TIE)
+#define DMA_INTR_NORMAL		(DMA_INTR_ENA_NIE | DMA_INTR_ENA_RIE | \
+				DMA_INTR_ENA_TIE)
+...
++#define DMA_INTR_ENA_LS_AIE 0x00018000	/* Abnormal Loongson Tx/Rx Summary */
+#define DMA_INTR_ENA_AIE 0x00008000	/* Abnormal Summary */
+...
+define DMA_INTR_LS_ABNORMAL	(DMA_INTR_ENA_LS_AIE | DMA_INTR_ENA_FBE | \
+				DMA_INTR_ENA_UNE)
+#define DMA_INTR_ABNORMAL	(DMA_INTR_ENA_AIE | DMA_INTR_ENA_FBE | \
+				DMA_INTR_ENA_UNE)
+...
+#define DMA_INTR_LS_DEFAULT_MASK	(DMA_INTR_LS_NORMAL | DMA_INTR_LS_ABNORMAL)
+#define DMA_INTR_DEFAULT_MASK		(DMA_INTR_NORMAL | DMA_INTR_ABNORMAL)
+
+etc for the DMA_STATUS_TX_*, DMA_STATUS_RX_* macros.
+
+4. Update the DW GMAC DMA init() method to be activating all the
+Normal and Abnormal Loongson-specific IRQs:
+drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c:
+	if (priv->plat->flags & STMMAC_FLAG_HAS_LSMC)
+		writel(DMA_INTR_LS_DEFAULT_MASK, ioaddr + DMA_INTR_ENA);
+	else
+		writel(DMA_INTR_DEFAULT_MASK, ioaddr + DMA_INTR_ENA);
+
+5. Make sure your low-level driver sets the STMMAC_FLAG_HAS_LSMC flag
+in the plat_stmmacenet_data structure instance.
+
+Note 1. For the sake of consistency a similar update can be provided
+for the dwmac_enable_dma_irq()/dwmac_disable_dma_irq() methods and
+the DMA_INTR_DEFAULT_RX/DMA_INTR_DEFAULT_TX macros seeing your device
+is able to disable/enable the xfer-specific summary IRQs. But it
+doesn't look like required seeing the driver won't raise the summary
+IRQs if no respective xfer IRQ is enabled. Most importantly this
+update would add additional code to the Tx/Rx paths, which in a tiny
+bit measure may affect the other platforms perf. So it's better to
+avoid it if possible.
+
+Note 2. The STMMAC_FLAG_HAS_LSMC flag might be utilized to tweak up
+the other generic parts of the STMMAC driver.
+
+Noet 3. An alternative to the step 3 above could be to define two
+additional plat_stmmacenet_data fields like: dma_def_intr_mask,
+dma_nor_stat, dma_abnor_stat, which would be initialized in the
+stmmac_probe() method with the currently defined
+DMA_INTR_DEFAULT_MASK, DMA_NOR_INTR_STATUS and DMA_ABNOR_INTR_STATUS
+macros if they haven't been initialized by the low-level drivers.
+These fields could be then used in the respective DMA IRQ init and
+handler methods. I don't know which solution is better. At the first
+glance this one might be even better than what is described in step 3.
+
+Note 4. The solution above will also cover the Andrew's note of having
+the kernel which runs on all possible variants.
+
+-Serge(y)
+
+> 
+> 
+> Thanks for your review!
+> 
+> 
+> Thanks,
+> 
+> Yanteng
+> 
+> > 
+> > -Serge(y)
+> > 
+> > > 	Andrew
+> 
