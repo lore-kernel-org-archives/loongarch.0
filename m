@@ -1,79 +1,102 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F743714E
-	for <loongarch@lists.linux.dev>; Mon, 27 Nov 2023 18:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755A0199B2;
+	Tue, 28 Nov 2023 13:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6d8162ca490so945459a34.0
-        for <loongarch@lists.linux.dev>; Mon, 27 Nov 2023 10:28:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701109718; x=1701714518;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8lHbAwOVAGp3Jtbt+Xomb+VJp96WXonwddtbec/v2sQ=;
-        b=cQOfjby60/8xiyszYFS03tYsryHJSc5xDx573YF6CBuQ/KYuWZh4BKtY9it+W7c2gG
-         uOJCbQF+YWLOfEvLLFsd/mHddNdTPKkkm2YpT4xTyno3nZh1t6meHGnRUAzDWah1YAiC
-         k/wXzO9uiGVgeTqq1EaiDFfvYnPnfndJ2QDWFPIXVP5jTSUadzwE2OW2jyuxK1mAjQva
-         EVBKHw14FulFHaW8p9mM0G/LtRfxzNBfFr8ayZjij/4Pygm5Q7qsKMojU2PRlM0qrTn3
-         gHgdwT9SWbbHXiuengSZxx43L2hgez4yvcnHCDAE8j21UFQ4+iAgbwdWtffOD04Mf9hj
-         AZCA==
-X-Gm-Message-State: AOJu0Ywy8uFCnqSdLUufyKsoBPKkc9PL9nAHocD4bsNnY2l/rhS43cvd
-	ObiAR4zBOvXE3PtXrD6RbQ==
-X-Google-Smtp-Source: AGHT+IH1ioL910ojCs2BJrotcJC6TMmff95P6LzxSW4hHnZG0BZEJks3qA0x9adGeBvdttiowYqtdQ==
-X-Received: by 2002:a05:6830:44a9:b0:6d8:1bf7:df43 with SMTP id r41-20020a05683044a900b006d81bf7df43mr4088750otv.14.1701109718072;
-        Mon, 27 Nov 2023 10:28:38 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id r8-20020a056830448800b006d3127234d7sm1400352otv.8.2023.11.27.10.28.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Nov 2023 10:28:37 -0800 (PST)
-Received: (nullmailer pid 2171552 invoked by uid 1000);
-	Mon, 27 Nov 2023 18:28:36 -0000
-Date: Mon, 27 Nov 2023 12:28:36 -0600
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, devicetree@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, lvjianmin@loongson.cn, WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] dt-bindings: interrupt-controller:
- loongson,liointc: Standardize the naming of 'loongson,parent-int-map'
-Message-ID: <20231127182836.GA2150516-robh@kernel.org>
-References: <cover.1700449792.git.zhoubinbin@loongson.cn>
- <cae772aa897f6b10c3f5c4c93a256b50c5de4b21.1700449792.git.zhoubinbin@loongson.cn>
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SfkVd4WZ8z6JB96;
+	Tue, 28 Nov 2023 21:55:21 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 774E61400C9;
+	Tue, 28 Nov 2023 21:55:38 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 28 Nov
+ 2023 13:55:37 +0000
+Date: Tue, 28 Nov 2023 13:55:36 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+CC: Gavin Shan <gshan@redhat.com>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>, <linux-csky@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
+	<linux-parisc@vger.kernel.org>, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, <jianyong.wu@arm.com>,
+	<justin.he@arm.com>, James Morse <james.morse@arm.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH RFC 10/22] drivers: base: Move cpu_dev_init() after
+ node_dev_init()
+Message-ID: <20231128135536.00002ab9@Huawei.com>
+In-Reply-To: <ZVywLPwhILp083Jk@shell.armlinux.org.uk>
+References: <ZUoRY33AAHMc5ThW@shell.armlinux.org.uk>
+	<E1r0JLV-00CTxS-QB@rmk-PC.armlinux.org.uk>
+	<095c2d24-735b-4ce2-ba2e-9ec2164f2237@redhat.com>
+	<ZVHXk9JG7gUjtERt@shell.armlinux.org.uk>
+	<ZVywLPwhILp083Jk@shell.armlinux.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cae772aa897f6b10c3f5c4c93a256b50c5de4b21.1700449792.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, Nov 20, 2023 at 05:06:23PM +0800, Binbin Zhou wrote:
-> Since the 'loongson,parent_int_map' attribute naming is non-standard, we
-> should use 'loongson,parent-int-map' instead.
+On Tue, 21 Nov 2023 13:27:08 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+
+> On Mon, Nov 13, 2023 at 08:00:19AM +0000, Russell King (Oracle) wrote:
+> > On Mon, Nov 13, 2023 at 10:58:46AM +1000, Gavin Shan wrote:  
+> > > 
+> > > 
+> > > On 11/7/23 20:30, Russell King (Oracle) wrote:  
+> > > > From: James Morse <james.morse@arm.com>
+> > > > 
+> > > > NUMA systems require the node descriptions to be ready before CPUs are
+> > > > registered. This is so that the node symlinks can be created in sysfs.
+> > > > 
+> > > > Currently no NUMA platform uses GENERIC_CPU_DEVICES, meaning that CPUs
+> > > > are registered by arch code, instead of cpu_dev_init().
+> > > > 
+> > > > Move cpu_dev_init() after node_dev_init() so that NUMA architectures
+> > > > can use GENERIC_CPU_DEVICES.
+> > > > 
+> > > > Signed-off-by: James Morse <james.morse@arm.com>
+> > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > > > ---
+> > > > Note: Jonathan's comment still needs addressing - see
+> > > >    https://lore.kernel.org/r/20230914121612.00006ac7@Huawei.com
+> > > > ---
+> > > >   drivers/base/init.c | 2 +-
+> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >   
+> > > 
+> > > With Jonathan's comments addressed:  
+> > 
+> > That needs James' input, which is why I made the note on the patch.  
 > 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  .../bindings/interrupt-controller/loongson,liointc.yaml   | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+> I'm going to be posting the series without RFC soon, and it will be
+> with Jonathan's comment unaddressed - because as I've said several
+> times it needs James' input and we have sadly not yet received that.
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-> index 00b570c82903..70c125bf8095 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-> @@ -54,7 +54,7 @@ properties:
->    '#interrupt-cells':
->      const: 2
->  
-> -  loongson,parent_int_map:
-> +  loongson,parent-int-map:
+> Short of waiting until James can respond, I don't think there are
+> any other alternatives.
 
-Not what I said to do. Now you just break the ABI instead of maintaining 
-both names.
+In the interests of expediency I'm fine with that.  (To be honest I'd
+forgotten I even made that comment ;)
 
-Just use loongson,parent_int_map *forever*. Drop this patch.
+Jonathan
 
-Rob
+> 
+> I do hope we can get this queued up for v6.8 though.
+> 
+
