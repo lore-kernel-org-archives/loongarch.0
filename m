@@ -1,92 +1,116 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F591E481
-	for <loongarch@lists.linux.dev>; Tue, 28 Nov 2023 15:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B6B42AAA;
+	Tue, 28 Nov 2023 21:06:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="z16DHxP0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=IMKJEnNn+G4rdqFGH3iRHztZa/N2RADNEAueBo8O0cY=; b=z16DHxP08aFFFJ47LD9uxtJpsn
-	+t0RB0TyQ2KyCYVbEMXvvjymQCwHExD6/vKRXzXzkjojJ7IP2XE8qmxVC8cAHrtCd0+IIrVCm7qdN
-	ZdkxE7l6xOULssxdV73BHOuaELu62t9SvZuDP9ZN1aCfYYnQMrGlQxH4qVoIMelPnGvcPnaF38Pkr
-	h5A/PWeMHMTxSr3BM1Zuta51o2q+gTVoiMVbBs0Dc0KEwgofXauGinHENQ/qNDFrdL2D7Y0vYeL4i
-	sMNspndTH56fozoySkkm+Xwt+BdU09U7Sw0FK8bN/SgdK1YxaDQXRaJcCIRC8UP2EoMRf9O+b1H83
-	t070MZQg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54994)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1r80E9-0007Xq-1d;
-	Tue, 28 Nov 2023 15:42:21 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1r80EA-00034k-5Y; Tue, 28 Nov 2023 15:42:22 +0000
-Date: Tue, 28 Nov 2023 15:42:22 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, linux-csky@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org,
-	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH RFC 02/22] x86: intel_epb: Don't rely on link order
-Message-ID: <ZWYKXvbAck9kQ+iy@shell.armlinux.org.uk>
-References: <ZUoRY33AAHMc5ThW@shell.armlinux.org.uk>
- <E1r0JKq-00CTwZ-Mh@rmk-PC.armlinux.org.uk>
- <20231128144059.000042c8@Huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aiWeM5qQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF79C433C7;
+	Tue, 28 Nov 2023 21:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701205609;
+	bh=xRoEIjR3KV/1kAEQG2vgN5KGGWtoecQCkzDjciK9N1M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aiWeM5qQns4M7irrxvJIn1lTTAyaAZbs86/QCO2v+Y2kc0l1tLFVIVWUkgdM8aMGc
+	 G+e0PWBmBWe9+YkDzoWc5H7rqR6B4MOcAzwjX1R3tEK50OzFWK3zqgqMR0t/Zg0nFZ
+	 LyxxuQMcXMttXI8os53ZJONFJYEw9ZsoZBrZrDeZuTGWHNKuBhP1gRHCeM17VphznU
+	 Wvig8Qa6KiOloUD4UwiBPPpDeAjkAHCFcAJzON6bbd9wm8EK4HCbjfl+SbWissloLl
+	 GOCN3DDiiD90il4oayJ8OWiQDtd0+92kWrFfOEgD71EjxJI3mTAnvMvG4l/mqTnupW
+	 jZv1T1ItfYiNQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	chenhuacai@kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.6 18/40] LoongArch: Add dependency between vmlinuz.efi and vmlinux.efi
+Date: Tue, 28 Nov 2023 16:05:24 -0500
+Message-ID: <20231128210615.875085-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231128210615.875085-1-sashal@kernel.org>
+References: <20231128210615.875085-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231128144059.000042c8@Huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.3
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 28, 2023 at 02:40:59PM +0000, Jonathan Cameron wrote:
-> On Tue, 07 Nov 2023 10:29:28 +0000
-> Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> 
-> > From: James Morse <james.morse@arm.com>
-> > 
-> > intel_epb_init() is called as a subsys_initcall() to register cpuhp
-> > callbacks. The callbacks make use of get_cpu_device() which will return
-> > NULL unless register_cpu() has been called. register_cpu() is called
-> > from topology_init(), which is also a subsys_initcall().
-> > 
-> > This is fragile. Moving the register_cpu() to a different
-> > subsys_initcall()  leads to a NULL dereference during boot.
-> > 
-> > Make intel_epb_init() a late_initcall(), user-space can't provide a
-> > policy before this point anyway.
-> > 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> 
-> Seems reasonable. FWIW
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-Thanks, however this has already been merged into the tip tree since
-Rafael suggested sending it separately.
+[ Upstream commit d3ec75bc635cb0cb8185b63293d33a3d1b942d22 ]
 
+A common issue in Makefile is a race in parallel building.
+
+You need to be careful to prevent multiple threads from writing to the
+same file simultaneously.
+
+Commit 3939f3345050 ("ARM: 8418/1: add boot image dependencies to not
+generate invalid images") addressed such a bad scenario.
+
+A similar symptom occurs with the following command:
+
+  $ make -j$(nproc) ARCH=loongarch vmlinux.efi vmlinuz.efi
+    [ snip ]
+    SORTTAB vmlinux
+    OBJCOPY arch/loongarch/boot/vmlinux.efi
+    OBJCOPY arch/loongarch/boot/vmlinux.efi
+    PAD     arch/loongarch/boot/vmlinux.bin
+    GZIP    arch/loongarch/boot/vmlinuz
+    OBJCOPY arch/loongarch/boot/vmlinuz.o
+    LD      arch/loongarch/boot/vmlinuz.efi.elf
+    OBJCOPY arch/loongarch/boot/vmlinuz.efi
+
+The log "OBJCOPY arch/loongarch/boot/vmlinux.efi" is displayed twice.
+
+It indicates that two threads simultaneously enter arch/loongarch/boot/
+and write to arch/loongarch/boot/vmlinux.efi.
+
+It occasionally leads to a build failure:
+
+  $ make -j$(nproc) ARCH=loongarch vmlinux.efi vmlinuz.efi
+    [ snip ]
+    SORTTAB vmlinux
+    OBJCOPY arch/loongarch/boot/vmlinux.efi
+    PAD     arch/loongarch/boot/vmlinux.bin
+  truncate: Invalid number: ‘arch/loongarch/boot/vmlinux.bin’
+  make[2]: *** [drivers/firmware/efi/libstub/Makefile.zboot:13:
+  arch/loongarch/boot/vmlinux.bin] Error 1
+  make[2]: *** Deleting file 'arch/loongarch/boot/vmlinux.bin'
+  make[1]: *** [arch/loongarch/Makefile:146: vmlinuz.efi] Error 2
+  make[1]: *** Waiting for unfinished jobs....
+  make: *** [Makefile:234: __sub-make] Error 2
+
+vmlinuz.efi depends on vmlinux.efi, but such a dependency is not
+specified in arch/loongarch/Makefile.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index fb0fada43197e..96747bfec1a10 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -142,6 +142,8 @@ vdso_install:
+ 
+ all:	$(notdir $(KBUILD_IMAGE))
+ 
++vmlinuz.efi: vmlinux.efi
++
+ vmlinux.elf vmlinux.efi vmlinuz.efi: vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(bootvars-y) $(boot)/$@
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.42.0
+
