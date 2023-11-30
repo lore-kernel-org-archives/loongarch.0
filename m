@@ -1,137 +1,80 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24FD3D39E
-	for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 11:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Cxbet2cmhl_+c9AA--.55235S3;
-	Thu, 30 Nov 2023 19:31:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxG9xycmhlNblQAA--.47327S5;
-	Thu, 30 Nov 2023 19:31:01 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: Shuah Khan <shuah@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Sean Christopherson <seanjc@google.com>
-Cc: Vishal Annapurve <vannapurve@google.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Peter Xu <peterx@redhat.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	maobibo@loongson.cn,
-	zhaotianrui@loongson.cn
-Subject: [PATCH v5 3/4] KVM: selftests: Add ucall test support for LoongArch
-Date: Thu, 30 Nov 2023 19:18:03 +0800
-Message-Id: <20231130111804.2227570-4-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20231130111804.2227570-1-zhaotianrui@loongson.cn>
-References: <20231130111804.2227570-1-zhaotianrui@loongson.cn>
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748ED4503D
+	for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 12:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GbSXqQ+v"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=2TjoRav92l6lGBHcgQ1IFwrVpqblxm0gDdEjjO9i59E=; b=GbSXqQ+vl+tK08waHI4y515wqP
+	Q86qDI1AgJw1pLC5ZapIOzsHoJpbnsFqID0QXfxFNjS8NE1MxyGJvaPAqP8UXgXPG+OkIiwqvFlE5
+	DgMw0T2oet8bb4vL8QGSd9PVtRm2H4WDDGvigxdO5dtwqWYIgGY2ZdIGbI4X/r0gW1UEzOMr2Dmde
+	viBSuF8wOnZothwOKj7mlCWoQjHiCqAqz6lM/4ThVWLIR5o09TLvAb3QvQ8+pRelrxSE2XAmAfbqe
+	GcIF1ksl2SBgzx/SYAZ9ZHOSd1E0v1qAotFN0UA7XzmyxTTFDemZpu8Qw++hpXqEzqrc9ikD4vd5b
+	kcwkIMUQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51064)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1r8frh-0001gG-1i;
+	Thu, 30 Nov 2023 12:09:57 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1r8frg-00050Q-P4; Thu, 30 Nov 2023 12:09:56 +0000
+Date: Thu, 30 Nov 2023 12:09:56 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
+	x86@kernel.org, linux-csky@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org,
+	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com,
+	James Morse <james.morse@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH RFC 14/22] arm64: convert to arch_cpu_is_hotpluggable()
+Message-ID: <ZWh7lA9+goBzAprN@shell.armlinux.org.uk>
+References: <ZUoRY33AAHMc5ThW@shell.armlinux.org.uk>
+ <E1r0JLq-00CTxq-CF@rmk-PC.armlinux.org.uk>
+ <20231128151115.00007726@Huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxG9xycmhlNblQAA--.47327S5
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231128151115.00007726@Huawei.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Add ucall test support for LoongArch. A ucall is a "hypercall to
-userspace".
+On Tue, Nov 28, 2023 at 03:11:15PM +0000, Jonathan Cameron wrote:
+> On Tue, 07 Nov 2023 10:30:30 +0000
+> "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk> wrote:
+> 
+> > Convert arm64 to use the arch_cpu_is_hotpluggable() helper rather than
+> > arch_register_cpu().
+> > 
+> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> Ah. Or previous patch needs a forwards reference to the tweaking
+> of it it here.
+> 
+> Maybe just smash the 2 together with a Co-developed: ?
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- .../selftests/kvm/include/loongarch/ucall.h   | 28 ++++++++++++++
- .../selftests/kvm/lib/loongarch/ucall.c       | 38 +++++++++++++++++++
- 2 files changed, 66 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/include/loongarch/ucall.h
- create mode 100644 tools/testing/selftests/kvm/lib/loongarch/ucall.c
+I wanted to keep the two separate to preserve the authorship of the
+individual patches, so I'll take the former. Thanks.
 
-diff --git a/tools/testing/selftests/kvm/include/loongarch/ucall.h b/tools/testing/selftests/kvm/include/loongarch/ucall.h
-new file mode 100644
-index 00000000000..e9033ea6fbf
---- /dev/null
-+++ b/tools/testing/selftests/kvm/include/loongarch/ucall.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef SELFTEST_KVM_UCALL_H
-+#define SELFTEST_KVM_UCALL_H
-+
-+#include "kvm_util_base.h"
-+
-+#define UCALL_EXIT_REASON       KVM_EXIT_MMIO
-+
-+/*
-+ * Default base address for application loading is 0x120000000,
-+ * DEFAULT_GUEST_TEST_MEM should be larger than app loading address,
-+ * so that PER_VCPU_MEM_SIZE can be large enough, and kvm selftests
-+ * app size is smaller than 256M in generic
-+ */
-+#define DEFAULT_GUEST_TEST_MEM	0x130000000
-+
-+/*
-+ * ucall_exit_mmio_addr holds per-VM values (global data is duplicated by each
-+ * VM), it must not be accessed from host code.
-+ */
-+extern vm_vaddr_t *ucall_exit_mmio_addr;
-+
-+static inline void ucall_arch_do_ucall(vm_vaddr_t uc)
-+{
-+	WRITE_ONCE(*ucall_exit_mmio_addr, uc);
-+}
-+
-+#endif
-diff --git a/tools/testing/selftests/kvm/lib/loongarch/ucall.c b/tools/testing/selftests/kvm/lib/loongarch/ucall.c
-new file mode 100644
-index 00000000000..fc6cbb50573
---- /dev/null
-+++ b/tools/testing/selftests/kvm/lib/loongarch/ucall.c
-@@ -0,0 +1,38 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ucall support. A ucall is a "hypercall to userspace".
-+ *
-+ */
-+#include "kvm_util.h"
-+
-+/*
-+ * ucall_exit_mmio_addr holds per-VM values (global data is duplicated by each
-+ * VM), it must not be accessed from host code.
-+ */
-+vm_vaddr_t *ucall_exit_mmio_addr;
-+
-+void ucall_arch_init(struct kvm_vm *vm, vm_paddr_t mmio_gpa)
-+{
-+	vm_vaddr_t mmio_gva = vm_vaddr_unused_gap(vm, vm->page_size, KVM_UTIL_MIN_VADDR);
-+
-+	virt_map(vm, mmio_gva, mmio_gpa, 1);
-+
-+	vm->ucall_mmio_addr = mmio_gpa;
-+
-+	write_guest_global(vm, ucall_exit_mmio_addr, (vm_vaddr_t *)mmio_gva);
-+}
-+
-+void *ucall_arch_get_ucall(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_run *run = vcpu->run;
-+
-+	if (run->exit_reason == KVM_EXIT_MMIO &&
-+	    run->mmio.phys_addr == vcpu->vm->ucall_mmio_addr) {
-+		TEST_ASSERT(run->mmio.is_write && run->mmio.len == sizeof(uint64_t),
-+			    "Unexpected ucall exit mmio address access");
-+
-+		return (void *)(*((uint64_t *)run->mmio.data));
-+	}
-+
-+	return NULL;
-+}
 -- 
-2.39.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
