@@ -1,96 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85982134B6
-	for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 11:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtvHevNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 100F0C433C9
-	for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 11:23:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701343407;
-	bh=nAmHeSXEsjhy93x4xbYPJVYvdPWjv6x5rNspjStVL/w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UtvHevNdySWePxcnv1prtzCnPv/pcRgfT9jiEbPES3QSIiMbdr4NvoqtNYvdEjgCt
-	 Lc8OsxhXqTKOG0r1Px6PgJ01RcT6oLxEOqgcfgvSnZkc1GY+PeLhVx1pN6zh9IGjSZ
-	 CUgi6MUbWb2iROFR4rd5+2Tyg1HZnPz2iJWwBg3jVpenJOoNTCMXI+Vc3nfQUN/6LG
-	 wU4Mkss/IykuZqQnnrn+OklNJaBkdNaMVa5IYx+RAu4erPQYezFOij5NS4o+ciwvXC
-	 aAV/HPXFTyTfU0OMQd1W0CpdW2HwTfm9bDtGqElOFteunU1/fMgNr5gc/AcEZ/t8n/
-	 In1i/Y2dEWe6A==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-54b0c7987easo826856a12.3
-        for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 03:23:26 -0800 (PST)
-X-Gm-Message-State: AOJu0Yx7UDc09IwUplK1tcv/ZnhnQfuG1Of7k/xjHvxEW67EOEkmu7SN
-	nt5yVtMsWUm9Xr+mi6MOIxZ6DuFVC2dtjg2sWt8=
-X-Google-Smtp-Source: AGHT+IHwMBcnNZLSiY/O2otZQ1LeFGUXkFmMLeB1ILb15w45kG9MyCgDPAPkqKcVHIw2MPx2ht3ROtkEwEe9YOy4EBc=
-X-Received: by 2002:a17:907:1c1c:b0:9fd:8cd9:7842 with SMTP id
- nc28-20020a1709071c1c00b009fd8cd97842mr19742539ejc.44.1701343405544; Thu, 30
- Nov 2023 03:23:25 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA8273C6BE
+	for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 11:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8BxbOp2cmhlAOg9AA--.30232S3;
+	Thu, 30 Nov 2023 19:31:02 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxG9xycmhlNblQAA--.47327S6;
+	Thu, 30 Nov 2023 19:31:02 +0800 (CST)
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+To: Shuah Khan <shuah@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Sean Christopherson <seanjc@google.com>
+Cc: Vishal Annapurve <vannapurve@google.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Peter Xu <peterx@redhat.com>,
+	Vipin Sharma <vipinsh@google.com>,
+	maobibo@loongson.cn,
+	zhaotianrui@loongson.cn
+Subject: [PATCH v5 4/4] KVM: selftests: Add test cases for LoongArch
+Date: Thu, 30 Nov 2023 19:18:04 +0800
+Message-Id: <20231130111804.2227570-5-zhaotianrui@loongson.cn>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20231130111804.2227570-1-zhaotianrui@loongson.cn>
+References: <20231130111804.2227570-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAEyhmHT6UOryPZi7eEfw01Y_CjAqxy8NM6eKkdvdojJqB9P7eQ@mail.gmail.com>
- <CAAhV-H5pKEzVnHKCiHm9=9wDapa5RhS5uMFEo2KHBskYrP7DnQ@mail.gmail.com>
-In-Reply-To: <CAAhV-H5pKEzVnHKCiHm9=9wDapa5RhS5uMFEo2KHBskYrP7DnQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 30 Nov 2023 19:23:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H73o+RjdFBe3mHJJkqttNzZgamPfs-6oiXj5iwxL8fxww@mail.gmail.com>
-Message-ID: <CAAhV-H73o+RjdFBe3mHJJkqttNzZgamPfs-6oiXj5iwxL8fxww@mail.gmail.com>
-Subject: Re: Kernel panic and stall triggered by bpf selftests
-To: Hengqi Chen <hengqi.chen@gmail.com>, Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxG9xycmhlNblQAA--.47327S6
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi, Hengqi,
+There are some KVM common test cases supported by LoongArch:
+	demand_paging_test
+	dirty_log_perf_test
+	dirty_log_test
+	guest_print_test
+	kvm_binary_stats_test
+	kvm_create_max_vcpus
+	kvm_page_table_test
+	memslot_modification_stress_test
+	memslot_perf_test
+	set_memory_region_test
+And other test cases are not supported by LoongArch. For example,
+we do not support rseq_test, as the glibc do not support it.
 
-Maybe you can get something useful from here:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-tools/testing/selftests/bpf?h=3Dnext-20231130&id=3Dd128860dbb29cafc3c65ca2d=
-22082745a32829dd
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-tools/testing/selftests/bpf?h=3Dnext-20231130&id=3De13b5f2f3ba3df1ca31824d2=
-fdbd182250fa10c7
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+---
+ tools/testing/selftests/kvm/Makefile | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Huacai
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index a5963ab9215..9d099d48013 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -65,6 +65,10 @@ LIBKVM_s390x += lib/s390x/ucall.c
+ LIBKVM_riscv += lib/riscv/processor.c
+ LIBKVM_riscv += lib/riscv/ucall.c
+ 
++LIBKVM_loongarch += lib/loongarch/processor.c
++LIBKVM_loongarch += lib/loongarch/ucall.c
++LIBKVM_loongarch += lib/loongarch/exception.S
++
+ # Non-compiled test targets
+ TEST_PROGS_x86_64 += x86_64/nx_huge_pages_test.sh
+ 
+@@ -202,6 +206,17 @@ TEST_GEN_PROGS_riscv += kvm_binary_stats_test
+ 
+ SPLIT_TESTS += get-reg-list
+ 
++TEST_GEN_PROGS_loongarch += demand_paging_test
++TEST_GEN_PROGS_loongarch += dirty_log_perf_test
++TEST_GEN_PROGS_loongarch += dirty_log_test
++TEST_GEN_PROGS_loongarch += guest_print_test
++TEST_GEN_PROGS_loongarch += kvm_binary_stats_test
++TEST_GEN_PROGS_loongarch += kvm_create_max_vcpus
++TEST_GEN_PROGS_loongarch += kvm_page_table_test
++TEST_GEN_PROGS_loongarch += memslot_modification_stress_test
++TEST_GEN_PROGS_loongarch += memslot_perf_test
++TEST_GEN_PROGS_loongarch += set_memory_region_test
++
+ TEST_PROGS += $(TEST_PROGS_$(ARCH_DIR))
+ TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(ARCH_DIR))
+ TEST_GEN_PROGS_EXTENDED += $(TEST_GEN_PROGS_EXTENDED_$(ARCH_DIR))
+-- 
+2.39.1
 
-On Fri, Nov 24, 2023 at 2:29=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> Add Tiezhu since he is familiar with bpf.
->
-> Huacai
->
-> On Thu, Nov 23, 2023 at 11:12=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.c=
-om> wrote:
-> >
-> > Hello,
-> >
-> > The following bpf selftests tigger kernel panics and stalls (RCU relate=
-d)
-> >
-> > | TEST CASE               | JIT    | JIT + UNPRIV |
-> > | cls_redirect            | PANIC  | PANIC        |
-> > | sockopt_inherit         | STALL  | STALL        |
-> > | test_profiler           | N/A    | STALL        |
-> > | verifier_map_ptr_mixing | PANIC  | PANIC        |
-> > | verifier_movsx          | PASSED | STALL        |
-> >
-> > BPF JIT can be enabled by:
-> >   # echo 1 > /proc/sys/net/core/bpf_jit_enable
-> > unprivileged BPF can be enabled by:
-> >   # echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
-> >
-> > For the full logs of each test cases, see below
-> > https://github.com/chenhengqi/public/commit/75a265e961e5d93b61c3b012e16=
-f1db2f9d333b5
-> >
-> > I spent quite some time debugging this, but unable to isolate the
-> > related code path.
-> >
-> > Thoughts welcome.
-> >
-> > --
-> > Hengqi
