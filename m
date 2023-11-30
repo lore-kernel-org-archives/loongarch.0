@@ -1,126 +1,208 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D623B197
-	for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 13:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiNozpPc"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-db498e1132bso781844276.2
-        for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 05:02:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701349362; x=1701954162; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t+XQrviBlIMoJrwg4MwMEzdsSIALeidvNSbX1jKDmG8=;
-        b=EiNozpPcAti0vXxYXMncOLCoNMAKh4avAuEdtBdqHUIta4NJl4kwALWuSDc4nfFvJa
-         Q7uLvrABuD8yd3/hfb3WGOSfpOEqMfWgmbeACInNv7IQtPqpLCvBc03LJPVTSMGwYy2n
-         GN3DTcW9goIhsIYyKwyDMLnGnHkltpntNwA+iAxnoy53hDuCGi+C/PMfUp3jJVhLR+aO
-         HpN16qeoz+T+9Y1wngs8HmipFa9HkHwtiROsbDck/2sRZXmYWO4fNBmfR9f9BUayEz+8
-         Uu4HVLkhYJvrFTR5RLQOjUJkkK998f/djJR3Oa8LKav0pG2E2I1GGP+3mgbwZwQcF5mL
-         WpxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701349362; x=1701954162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t+XQrviBlIMoJrwg4MwMEzdsSIALeidvNSbX1jKDmG8=;
-        b=byceJTZSX+47BLYwEN1v69r7i0xXLhkY7XkJdugkGyU1hQgBhVrlT9pFs+NTUiU6Bi
-         ktFBoBEk2DxdJCrRdVv05c/l1yihbAJFMjxuZtOQiqPXIVnqM9kWerylZv40oL9VEZCT
-         ugS6x7f1kZvXmRWS77QaARXeR6T6B5YTSlan5QMCFI+u37/oh5qdLBiAuZSpaaA58nWW
-         6TsOIjnTy1EuLaeHt+v9Kwx8QjUzpYP3hm7PiYEhSrTggHZBcSeniRRx9mTzGfi231N9
-         UCvG8FSi4SsUwKQTpSBJiusKY3NP+Q7TG3zudygqljKBmG5MPeVi44UoEaMN0z8nht1U
-         Ux2w==
-X-Gm-Message-State: AOJu0Yxd+pQJrWBw110UDzZTtJCS2P6wDeJWnKxBUG5M1PTm/iVXOjko
-	alXEhW2zA4y1941OW95ukB8QLfD4YWHLlGkW6D0=
-X-Google-Smtp-Source: AGHT+IHIwoQzWS4BMQgwFN+MZ738g0TwywAROWyKKdIPTEdVaVrBaTq/gSSsO5ifNGwIKJT7r35V4rLO/ylbgNI4JiA=
-X-Received: by 2002:a25:6853:0:b0:db5:3c1d:76a5 with SMTP id
- d80-20020a256853000000b00db53c1d76a5mr1385840ybc.44.1701349361458; Thu, 30
- Nov 2023 05:02:41 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7954487BC;
+	Thu, 30 Nov 2023 16:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Sh25S5Wz5z6K5lf;
+	Fri,  1 Dec 2023 00:41:32 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8C3F214058E;
+	Fri,  1 Dec 2023 00:46:11 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 30 Nov
+ 2023 16:46:10 +0000
+Date: Thu, 30 Nov 2023 16:46:09 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+CC: James Morse <james.morse@arm.com>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	<jianyong.wu@arm.com>, <justin.he@arm.com>, <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH v2 11/35] arch_topology: Make
+ register_cpu_capacity_sysctl() tolerant to late CPUs
+Message-ID: <20231130164609.00000b4a@Huawei.com>
+In-Reply-To: <ZTKEQz0DJuv/tqNH@shell.armlinux.org.uk>
+References: <20230913163823.7880-1-james.morse@arm.com>
+	<20230913163823.7880-12-james.morse@arm.com>
+	<20230914130126.000069db@Huawei.com>
+	<ZTKEQz0DJuv/tqNH@shell.armlinux.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1700449792.git.zhoubinbin@loongson.cn> <cae772aa897f6b10c3f5c4c93a256b50c5de4b21.1700449792.git.zhoubinbin@loongson.cn>
- <20231127182836.GA2150516-robh@kernel.org>
-In-Reply-To: <20231127182836.GA2150516-robh@kernel.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 30 Nov 2023 19:02:29 +0600
-Message-ID: <CAMpQs4LSTV6PgZSuyQx2Nq+87OHxSa=-Wz5nbhFVsmmvHubQFQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/5] dt-bindings: interrupt-controller:
- loongson,liointc: Standardize the naming of 'loongson,parent-int-map'
-To: Rob Herring <robh@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, 
-	devicetree@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, lvjianmin@loongson.cn, 
-	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, Nov 28, 2023 at 12:28=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
-e:
->
-> On Mon, Nov 20, 2023 at 05:06:23PM +0800, Binbin Zhou wrote:
-> > Since the 'loongson,parent_int_map' attribute naming is non-standard, w=
-e
-> > should use 'loongson,parent-int-map' instead.
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > ---
-> >  .../bindings/interrupt-controller/loongson,liointc.yaml   | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/loo=
-ngson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller=
-/loongson,liointc.yaml
-> > index 00b570c82903..70c125bf8095 100644
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,l=
-iointc.yaml
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,l=
-iointc.yaml
-> > @@ -54,7 +54,7 @@ properties:
-> >    '#interrupt-cells':
-> >      const: 2
-> >
-> > -  loongson,parent_int_map:
-> > +  loongson,parent-int-map:
->
-> Not what I said to do. Now you just break the ABI instead of maintaining
-> both names.
->
-> Just use loongson,parent_int_map *forever*. Drop this patch.
+On Fri, 20 Oct 2023 14:44:35 +0100
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Hi Rob:
+> On Thu, Sep 14, 2023 at 01:01:26PM +0100, Jonathan Cameron wrote:
+> > On Wed, 13 Sep 2023 16:37:59 +0000
+> > James Morse <james.morse@arm.com> wrote:
+> >   
+> > > register_cpu_capacity_sysctl() adds a property to sysfs that describes
+> > > the CPUs capacity. This is done from a subsys_initcall() that assumes
+> > > all possible CPUs are registered.
+> > > 
+> > > With CPU hotplug, possible CPUs aren't registered until they become
+> > > present, (or for arm64 enabled). This leads to messages during boot:
+> > > | register_cpu_capacity_sysctl: too early to get CPU1 device!
+> > > and once these CPUs are added to the system, the file is missing.
+> > > 
+> > > Move this to a cpuhp callback, so that the file is created once
+> > > CPUs are brought online. This covers CPUs that are added late by
+> > > mechanisms like hotplug.
+> > > One observable difference is the file is now missing for offline CPUs.
+> > > 
+> > > Signed-off-by: James Morse <james.morse@arm.com>
+> > > ---
+> > > If the offline CPUs thing is a problem for the tools that consume
+> > > this value, we'd need to move cpu_capacity to be part of cpu.c's
+> > > common_cpu_attr_groups.  
+> > 
+> > I think we should do that anyway and then use an is_visible() if we want to
+> > change whether it is visible in offline cpus.
+> > 
+> > Dynamic sysfs file creation is horrible - particularly when done
+> > from an totally different file from where the rest of the attributes
+> > are registered.  I'm curious what the history behind that is.
+> > 
+> > Whilst here, why is there a common_cpu_attr_groups which is
+> > identical to the hotpluggable_cpu_attr_groups in base/cpu.c?  
+> 
+> Looking into doing this, the easy bit is adding the attribute group
+> with an appropriate .is_visible dependent on cpu_present(), but we
+> need to be able to call sysfs_update_groups() when the state of the
+> .is_visible() changes.
+Hi Russell,
 
-Thanks for your reply, and I am very sorry that I may have missed your
-previous thought, but at the same time I'm confused about how to
-handle the 'parent_int_map' attribute.
+Sorry, somehow I missed this completely until you referred back to it :(
 
-During the V2 patchset, krzysztof noticed the non-standard naming of
-this property and suggested that we rename 'parent_int_map' in the
-binding and label it as "deprecated". But you don't think it's worth
-doing that.
-My understanding is that it doesn't make sense to keep
-'parent_int_map' for the new binding, so I'm just going to rename the
-property in this version.
-It's true that this will result in an ABI break, but at the same time
-corresponding changes have been made to the driver as well as in the
-existing DTS{i}:
-Patch 4: Handles attribute names in both naming styles;
-Patch 5: Replace all 'parent_int_map' in the MIPS DTS{i}.
+This is pretty much what I was thinking so thanks for doing it.
 
-Do you think this is a suitable way to handle this? Or just keep the "_" na=
-ming?
+> 
+> Given the comment in sysfs_update_groups() about "if an error occurs",
+> rather than making this part of common_cpu_attr_groups, would it be
+> better that it's part of its own set of groups, thus limiting the
+> damage from a possible error? I suspect, however, that any error at
+> that point means that the system is rather fatally wounded.
+> 
+> This is what I have so far to implement your idea, less the necessary
+> sysfs_update_groups() call when we need to change the visibility of
+> the attributes.
 
-Thanks.
-Binbin
->
-> Rob
+Fwiw (and I think you shouldn't add this to the critical path for your
+main series for obvious reasons), I think you are right that it makes
+sense to do this in a separate group, but that if we were going to see
+an error I'd 'hope' we shouldn't see anything that hasn't occurred
+when groups were originally added. Maybe that's overly optimistic.
+
+Sorry again for lack of reply before now and thanks for pointing this
+out.  I'd love to see this posted after the ARM vCPU HP stuff is in.
+
+Jonathan
+
+
+> 
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index 9ccb7daee78e..06c9fc6620d2 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -215,43 +215,24 @@ static ssize_t cpu_capacity_show(struct device *dev,
+>  	return sysfs_emit(buf, "%lu\n", topology_get_cpu_scale(cpu->dev.id));
+>  }
+>  
+> -static void update_topology_flags_workfn(struct work_struct *work);
+> -static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
+> -
+>  static DEVICE_ATTR_RO(cpu_capacity);
+>  
+> -static int cpu_capacity_sysctl_add(unsigned int cpu)
+> -{
+> -	struct device *cpu_dev = get_cpu_device(cpu);
+> -
+> -	if (!cpu_dev)
+> -		return -ENOENT;
+> -
+> -	device_create_file(cpu_dev, &dev_attr_cpu_capacity);
+> -
+> -	return 0;
+> -}
+> -
+> -static int cpu_capacity_sysctl_remove(unsigned int cpu)
+> +static umode_t cpu_present_attrs_visible(struct kobject *kobi,
+> +					 struct attribute *attr, int index)
+>  {
+> -	struct device *cpu_dev = get_cpu_device(cpu);
+> -
+> -	if (!cpu_dev)
+> -		return -ENOENT;
+> -
+> -	device_remove_file(cpu_dev, &dev_attr_cpu_capacity);
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct cpu *cpu = container_of(dev, struct cpu, dev);
+>  
+> -	return 0;
+> +	return cpu_present(cpu->dev.id) ? attr->mode : 0;
+>  }
+>  
+> -static int register_cpu_capacity_sysctl(void)
+> -{
+> -	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "topology/cpu-capacity",
+> -			  cpu_capacity_sysctl_add, cpu_capacity_sysctl_remove);
+> +const struct attribute_group cpu_capacity_attr_group = {
+> +	.is_visible = cpu_present_attrs_visible,
+> +	.attrs = cpu_capacity_attrs
+> +};
+>  
+> -	return 0;
+> -}
+> -subsys_initcall(register_cpu_capacity_sysctl);
+> +static void update_topology_flags_workfn(struct work_struct *work);
+> +static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
+>  
+>  static int update_topology;
+>  
+> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> index a19a8be93102..954b045705c2 100644
+> --- a/drivers/base/cpu.c
+> +++ b/drivers/base/cpu.c
+> @@ -192,6 +192,9 @@ static const struct attribute_group crash_note_cpu_attr_group = {
+>  static const struct attribute_group *common_cpu_attr_groups[] = {
+>  #ifdef CONFIG_KEXEC
+>  	&crash_note_cpu_attr_group,
+> +#endif
+> +#ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
+> +	&cpu_capacity_attr_group,
+>  #endif
+>  	NULL
+>  };
+> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+> index e117c06e0c6b..745ad21e3dc8 100644
+> --- a/include/linux/cpu.h
+> +++ b/include/linux/cpu.h
+> @@ -30,6 +30,8 @@ struct cpu {
+>  	struct device dev;
+>  };
+>  
+> +extern const struct attribute_group cpu_capacity_attr_group;
+> +
+>  extern void boot_cpu_init(void);
+>  extern void boot_cpu_hotplug_init(void);
+>  extern void cpu_init(void);
+> 
+
