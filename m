@@ -1,103 +1,126 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E50620DFE
-	for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 12:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D623B197
+	for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 13:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FTaxNY5G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xIf2EIwYoaPmQHLlqFmW3VwET/3yB8a9DutsaY8oDIQ=; b=FTaxNY5GHJeGYAg7/aa/E7lEd/
-	qMw/ks71XLrE4Bikt/adHddh5szYMLLdqLILVIoymEpf5KLJY/ZSGWp5z+h2+KcPnlMq6o3g5NWi7
-	3AGeSuQJXa9Q2v+zt/g3yAjTIqWEuEAHozw87psltN3EBDWDqpfqkbu6wZfiB+vZxAbAQrsEZpgj5
-	W+6vQ6f8QcXiyrk/svKx1p7iaymf3R1GcGn+28pZ2dVgiuui26ig2MUMpUcvwPLi/scVVp9UgUHMj
-	4JmE+d2GQQoJp9dJcG2viQ0Slymk3v30atTHyckCNO5LeFIbPt8H2F4M67roxt80LrXWWDypoY4u8
-	czJBEcXg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34218)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1r8fyg-0001gn-2D;
-	Thu, 30 Nov 2023 12:17:10 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1r8fyi-00050h-6g; Thu, 30 Nov 2023 12:17:12 +0000
-Date: Thu, 30 Nov 2023 12:17:12 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Gavin Shan <gshan@redhat.com>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, linux-csky@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org,
-	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH RFC 10/22] drivers: base: Move cpu_dev_init() after
- node_dev_init()
-Message-ID: <ZWh9SMOGSrmaNidw@shell.armlinux.org.uk>
-References: <ZUoRY33AAHMc5ThW@shell.armlinux.org.uk>
- <E1r0JLV-00CTxS-QB@rmk-PC.armlinux.org.uk>
- <095c2d24-735b-4ce2-ba2e-9ec2164f2237@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiNozpPc"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-db498e1132bso781844276.2
+        for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 05:02:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701349362; x=1701954162; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t+XQrviBlIMoJrwg4MwMEzdsSIALeidvNSbX1jKDmG8=;
+        b=EiNozpPcAti0vXxYXMncOLCoNMAKh4avAuEdtBdqHUIta4NJl4kwALWuSDc4nfFvJa
+         Q7uLvrABuD8yd3/hfb3WGOSfpOEqMfWgmbeACInNv7IQtPqpLCvBc03LJPVTSMGwYy2n
+         GN3DTcW9goIhsIYyKwyDMLnGnHkltpntNwA+iAxnoy53hDuCGi+C/PMfUp3jJVhLR+aO
+         HpN16qeoz+T+9Y1wngs8HmipFa9HkHwtiROsbDck/2sRZXmYWO4fNBmfR9f9BUayEz+8
+         Uu4HVLkhYJvrFTR5RLQOjUJkkK998f/djJR3Oa8LKav0pG2E2I1GGP+3mgbwZwQcF5mL
+         WpxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701349362; x=1701954162;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t+XQrviBlIMoJrwg4MwMEzdsSIALeidvNSbX1jKDmG8=;
+        b=byceJTZSX+47BLYwEN1v69r7i0xXLhkY7XkJdugkGyU1hQgBhVrlT9pFs+NTUiU6Bi
+         ktFBoBEk2DxdJCrRdVv05c/l1yihbAJFMjxuZtOQiqPXIVnqM9kWerylZv40oL9VEZCT
+         ugS6x7f1kZvXmRWS77QaARXeR6T6B5YTSlan5QMCFI+u37/oh5qdLBiAuZSpaaA58nWW
+         6TsOIjnTy1EuLaeHt+v9Kwx8QjUzpYP3hm7PiYEhSrTggHZBcSeniRRx9mTzGfi231N9
+         UCvG8FSi4SsUwKQTpSBJiusKY3NP+Q7TG3zudygqljKBmG5MPeVi44UoEaMN0z8nht1U
+         Ux2w==
+X-Gm-Message-State: AOJu0Yxd+pQJrWBw110UDzZTtJCS2P6wDeJWnKxBUG5M1PTm/iVXOjko
+	alXEhW2zA4y1941OW95ukB8QLfD4YWHLlGkW6D0=
+X-Google-Smtp-Source: AGHT+IHIwoQzWS4BMQgwFN+MZ738g0TwywAROWyKKdIPTEdVaVrBaTq/gSSsO5ifNGwIKJT7r35V4rLO/ylbgNI4JiA=
+X-Received: by 2002:a25:6853:0:b0:db5:3c1d:76a5 with SMTP id
+ d80-20020a256853000000b00db53c1d76a5mr1385840ybc.44.1701349361458; Thu, 30
+ Nov 2023 05:02:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <095c2d24-735b-4ce2-ba2e-9ec2164f2237@redhat.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <cover.1700449792.git.zhoubinbin@loongson.cn> <cae772aa897f6b10c3f5c4c93a256b50c5de4b21.1700449792.git.zhoubinbin@loongson.cn>
+ <20231127182836.GA2150516-robh@kernel.org>
+In-Reply-To: <20231127182836.GA2150516-robh@kernel.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Thu, 30 Nov 2023 19:02:29 +0600
+Message-ID: <CAMpQs4LSTV6PgZSuyQx2Nq+87OHxSa=-Wz5nbhFVsmmvHubQFQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] dt-bindings: interrupt-controller:
+ loongson,liointc: Standardize the naming of 'loongson,parent-int-map'
+To: Rob Herring <robh@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Thomas Gleixner <tglx@linutronix.de>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, 
+	devicetree@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, lvjianmin@loongson.cn, 
+	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 13, 2023 at 10:58:46AM +1000, Gavin Shan wrote:
-> 
-> 
-> On 11/7/23 20:30, Russell King (Oracle) wrote:
-> > From: James Morse <james.morse@arm.com>
-> > 
-> > NUMA systems require the node descriptions to be ready before CPUs are
-> > registered. This is so that the node symlinks can be created in sysfs.
-> > 
-> > Currently no NUMA platform uses GENERIC_CPU_DEVICES, meaning that CPUs
-> > are registered by arch code, instead of cpu_dev_init().
-> > 
-> > Move cpu_dev_init() after node_dev_init() so that NUMA architectures
-> > can use GENERIC_CPU_DEVICES.
-> > 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+On Tue, Nov 28, 2023 at 12:28=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
+e:
+>
+> On Mon, Nov 20, 2023 at 05:06:23PM +0800, Binbin Zhou wrote:
+> > Since the 'loongson,parent_int_map' attribute naming is non-standard, w=
+e
+> > should use 'loongson,parent-int-map' instead.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > > ---
-> > Note: Jonathan's comment still needs addressing - see
-> >    https://lore.kernel.org/r/20230914121612.00006ac7@Huawei.com
-> > ---
-> >   drivers/base/init.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> 
-> With Jonathan's comments addressed:
-> 
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> >  .../bindings/interrupt-controller/loongson,liointc.yaml   | 8 +++-----
+> >  1 file changed, 3 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/loo=
+ngson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller=
+/loongson,liointc.yaml
+> > index 00b570c82903..70c125bf8095 100644
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,l=
+iointc.yaml
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,l=
+iointc.yaml
+> > @@ -54,7 +54,7 @@ properties:
+> >    '#interrupt-cells':
+> >      const: 2
+> >
+> > -  loongson,parent_int_map:
+> > +  loongson,parent-int-map:
+>
+> Not what I said to do. Now you just break the ABI instead of maintaining
+> both names.
+>
+> Just use loongson,parent_int_map *forever*. Drop this patch.
 
-Can I assume, given Jonathan's reply later in this sub-thread, that you
-are happy for me to add your r-b without the referred comment having
-been addressed - Jonathan says tit was a "nice to have" and he's fine
-without the requested change.
+Hi Rob:
 
-See https://lore.kernel.org/r/20231128150017.000069eb@Huawei.com
+Thanks for your reply, and I am very sorry that I may have missed your
+previous thought, but at the same time I'm confused about how to
+handle the 'parent_int_map' attribute.
+
+During the V2 patchset, krzysztof noticed the non-standard naming of
+this property and suggested that we rename 'parent_int_map' in the
+binding and label it as "deprecated". But you don't think it's worth
+doing that.
+My understanding is that it doesn't make sense to keep
+'parent_int_map' for the new binding, so I'm just going to rename the
+property in this version.
+It's true that this will result in an ABI break, but at the same time
+corresponding changes have been made to the driver as well as in the
+existing DTS{i}:
+Patch 4: Handles attribute names in both naming styles;
+Patch 5: Replace all 'parent_int_map' in the MIPS DTS{i}.
+
+Do you think this is a suitable way to handle this? Or just keep the "_" na=
+ming?
 
 Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Binbin
+>
+> Rob
