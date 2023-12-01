@@ -1,112 +1,154 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D0F63D1
-	for <loongarch@lists.linux.dev>; Fri,  1 Dec 2023 03:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962D58C17
+	for <loongarch@lists.linux.dev>; Fri,  1 Dec 2023 06:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WGu4YqHA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RDnBFDqx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701402555;
+	s=mimecast20190719; t=1701410615;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IO8CL2qjeIUr0LsYwreVkjK8516DQtyOeewHK7H786o=;
-	b=WGu4YqHA2ly7lIBRb5cmtWLi5WqsiTeGBSOgibj+nx4++AXyK7ZsEtv2GYNHC2kyyWjipB
-	yfENv9zdCkglh41tmGkeQTVkU716gjXy1Imt0DaVvIn14xh4uR/2vgPO83XBmn2z/DmeoP
-	bx0ooj+aQf6f1CAztnw2y3tD3Gym1HY=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/TeMDmB7LckIZA4USFVQUlo1F06QQ0tuHG6egKrLc10=;
+	b=RDnBFDqxhCJnoQtGPadXzuaB25L2Fp7B+XyQVZ/OmZlLdhr3phzxo9WkSdtb3DiwVt2uZW
+	mBMvCyGMrh4To10U2K2cJnpFSS0lMUFWzDuL9s8hQUqYNEGlRXGlWaqcnPb0kYGFTFfLwt
+	a2sdKiWKcS6m6rRJ0Nnf29njtE3zLgA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-526-2gwYEP2uPTKCzYYdSctK_w-1; Thu, 30 Nov 2023 22:49:13 -0500
-X-MC-Unique: 2gwYEP2uPTKCzYYdSctK_w-1
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1cfcf1e9442so1556235ad.3
-        for <loongarch@lists.linux.dev>; Thu, 30 Nov 2023 19:49:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701402552; x=1702007352;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IO8CL2qjeIUr0LsYwreVkjK8516DQtyOeewHK7H786o=;
-        b=Bvh62/B6SxoPwkiG5yO7VXUWEAZGTWCpBgv4HxjaGprgnXZTdkUkAf36fyG0lm14Vv
-         NufOOHGYAlBXVxMOvGFnWmoWjSWmX6sJixCIi8aRnM1lq5wDpVPpjmwHzrk76Xr0XiXY
-         K4jD31UKYUiWB4pS6TwVG/cUkVaGFHosybS6d0+HoTeD7Y4mMLXU8N3gjXRzXyvCRs9R
-         KVs8xwiyoCDMdMFSfIZnNhNqgdAkdFaqfw8XZfE5IlUhKTlTGDVxbBOslInArAx47FxY
-         IkAMRdi9d/NgN5YiQ0I55WAjzY7cfrvqqS3CEH300Yx0tckWBVCEjZJl5ijj9n064bUp
-         AeOg==
-X-Gm-Message-State: AOJu0YyMyBfKOhQB5ePCGK9Cp2IDlBB5Vwz2yQfVxlB7+2T2tbl6jOiv
-	Nst4XceZV0/tKBVT87AIdXnI8PH0wQaC3K/s8D4UvB5wrn34LAMNUjd2NakzLiSuPk7pAZh/RAK
-	ezRjJWk3NhrkzF7AgsDAt
-X-Received: by 2002:a17:902:e80e:b0:1cf:daca:2b5e with SMTP id u14-20020a170902e80e00b001cfdaca2b5emr17322871plg.38.1701402552355;
-        Thu, 30 Nov 2023 19:49:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHVVbr2zUe8qqYTBkmHgB1fO8oP/OS0GFEHLzxacC4remFDnJNuIkfv1IWdcQ4cpeu8xrZWrg==
-X-Received: by 2002:a17:902:e80e:b0:1cf:daca:2b5e with SMTP id u14-20020a170902e80e00b001cfdaca2b5emr17322834plg.38.1701402551963;
-        Thu, 30 Nov 2023 19:49:11 -0800 (PST)
-Received: from [192.168.68.51] ([43.252.115.3])
-        by smtp.gmail.com with ESMTPSA id p5-20020a170902e74500b001cfc1a593f7sm2185691plf.217.2023.11.30.19.49.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Nov 2023 19:49:11 -0800 (PST)
-Message-ID: <e0b38120-8b09-4695-974c-f3c3ef226f22@redhat.com>
-Date: Fri, 1 Dec 2023 14:49:03 +1100
+ us-mta-586-d749Q2UvPqiCzf1p7FVvXQ-1; Fri, 01 Dec 2023 01:03:34 -0500
+X-MC-Unique: d749Q2UvPqiCzf1p7FVvXQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7DA7D85A58A;
+	Fri,  1 Dec 2023 06:03:33 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.113.121])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id ED9E31121307;
+	Fri,  1 Dec 2023 06:03:29 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	akpm@linux-foundation.org,
+	eric_devolder@yahoo.com,
+	lkp@intel.com,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH v2] kexec_core: change dependency of object files
+Date: Fri,  1 Dec 2023 14:03:25 +0800
+Message-ID: <20231201060325.26940-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/21] drivers: base: Print a warning instead of panic()
- when register_cpu() fails
-To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org,
- linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org
-Cc: Salil Mehta <salil.mehta@huawei.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com,
- justin.he@arm.com, James Morse <james.morse@arm.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-References: <ZVyz/Ve5pPu8AWoA@shell.armlinux.org.uk>
- <E1r5R3W-00CszU-GM@rmk-PC.armlinux.org.uk>
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <E1r5R3W-00CszU-GM@rmk-PC.armlinux.org.uk>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
+When dropping the select of KEXEC for CRASH_DUMP, compiling error
+will be triggered if below config items are set on some architectures.
 
-On 11/22/23 00:44, Russell King (Oracle) wrote:
-> From: James Morse <james.morse@arm.com>
-> 
-> loongarch, mips, parisc, riscv and sh all print a warning if
-> register_cpu() returns an error. Architectures that use
-> GENERIC_CPU_DEVICES call panic() instead.
-> 
-> Errors in this path indicate something is wrong with the firmware
-> description of the platform, but the kernel is able to keep running.
-> 
-> Downgrade this to a warning to make it easier to debug this issue.
-> 
-> This will allow architectures that switching over to GENERIC_CPU_DEVICES
-> to drop their warning, but keep the existing behaviour.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> Reviewed-by: Shaoqin Huang <shahuang@redhat.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
->   drivers/base/cpu.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
-> 
+===
+CONFIG_CRASH_CORE=y
+CONFIG_KEXEC_CORE=y
+CONFIG_CRASH_DUMP=y
+===
 
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+E.g the building error on loongarch:
+---------------------------------------------------------------
+loongarch64-linux-ld: kernel/kexec_core.o: in function `.L209':
+>> kexec_core.c:(.text+0x1660): undefined reference to `machine_kexec_cleanup'
+   loongarch64-linux-ld: kernel/kexec_core.o: in function `.L287':
+>> kexec_core.c:(.text+0x1c5c): undefined reference to `machine_crash_shutdown'
+>> loongarch64-linux-ld: kexec_core.c:(.text+0x1c64): undefined reference to `machine_kexec'
+   loongarch64-linux-ld: kernel/kexec_core.o: in function `.L2^B5':
+>> kexec_core.c:(.text+0x2090): undefined reference to `machine_shutdown'
+   loongarch64-linux-ld: kexec_core.c:(.text+0x20a0): undefined reference to `machine_kexec'
+---------------------------------------------------------------
+
+The reason is that currently in arch/loongarch/kernel/Makefile, building
+machine_kexec.o relocate_kernel.o depends on CONFIG_KEXEC. So the
+building of the two object files is skipped because CONFIG_KEXEC=n in
+that case.
+
+And this situation exists in m68k, mips and sh ARCH too.
+
+Here, changing the dependency of machine_kexec.o relocate_kernel.o to
+CONFIG_KEXEC_CORE for all relevant architectures.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202311300946.kHE9Iu71-lkp@intel.com/
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+v1->v2:
+- V1 only includes fix on loongarch. Add m68k, mips, sh fix in v2 too.
+
+ arch/loongarch/kernel/Makefile | 2 +-
+ arch/m68k/kernel/Makefile      | 2 +-
+ arch/mips/kernel/Makefile      | 2 +-
+ arch/sh/kernel/Makefile        | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 4fcc168f0732..3c808c680370 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -57,7 +57,7 @@ obj-$(CONFIG_MAGIC_SYSRQ)	+= sysrq.o
+ 
+ obj-$(CONFIG_RELOCATABLE)	+= relocate.o
+ 
+-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
++obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+ 
+ obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
+diff --git a/arch/m68k/kernel/Makefile b/arch/m68k/kernel/Makefile
+index 01fb69a5095f..f335bf3268a1 100644
+--- a/arch/m68k/kernel/Makefile
++++ b/arch/m68k/kernel/Makefile
+@@ -25,7 +25,7 @@ obj-$(CONFIG_PCI) += pcibios.o
+ 
+ obj-$(CONFIG_M68K_NONCOHERENT_DMA) += dma.o
+ 
+-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
++obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+ obj-$(CONFIG_BOOTINFO_PROC)	+= bootinfo_proc.o
+ obj-$(CONFIG_UBOOT)		+= uboot.o
+ 
+diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
+index 853a43ee4b44..ecf3278a32f7 100644
+--- a/arch/mips/kernel/Makefile
++++ b/arch/mips/kernel/Makefile
+@@ -90,7 +90,7 @@ obj-$(CONFIG_GPIO_TXX9)		+= gpio_txx9.o
+ 
+ obj-$(CONFIG_RELOCATABLE)	+= relocate.o
+ 
+-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o crash.o
++obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o crash.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+ obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
+ obj-$(CONFIG_EARLY_PRINTK_8250)	+= early_printk_8250.o
+diff --git a/arch/sh/kernel/Makefile b/arch/sh/kernel/Makefile
+index 69cd9ac4b2ab..2d7e70537de0 100644
+--- a/arch/sh/kernel/Makefile
++++ b/arch/sh/kernel/Makefile
+@@ -33,7 +33,7 @@ obj-$(CONFIG_SMP)		+= smp.o
+ obj-$(CONFIG_SH_STANDARD_BIOS)	+= sh_bios.o
+ obj-$(CONFIG_KGDB)		+= kgdb.o
+ obj-$(CONFIG_MODULES)		+= sh_ksyms_32.o module.o
+-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
++obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+ obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
+ obj-$(CONFIG_IO_TRAPPED)	+= io_trapped.o
+-- 
+2.41.0
 
