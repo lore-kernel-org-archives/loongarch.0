@@ -1,99 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EA2C129
-	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 07:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4AfQQV9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95CA0C433C7
-	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 07:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701675674;
-	bh=dzUje8AnmwjLWX61PyUvezwxfEoybbUnfl3NZk7Eul8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=c4AfQQV9VERgD90Epksxlcf5+p7Ld3K2EjrZxghqoTlVBK16W5Cs0lQevyAtp/0E3
-	 yncFa7/B74SqnihAoIih8ObMjezPOxNPVb9buKxrnSOSeibA9yFfp5+fK8LB9g9C1U
-	 VkzOQDnnTVsX3LZOKAyPpz4SY864evZK/T86U6bwci4y/0CY/6IGMap1ys9RhWnFOP
-	 tq6qlFNerrbC1NhwmyJpK5hi69w6m61a5XHTrIwrMPOX4X17wLHBSei+uHQKs9z41F
-	 bWYPaWQROW+fHutraFdej70kouhv93+HDXXl05qOSOBduVlK3mhbfcOVaAUiXraEFJ
-	 zGMtzE7iGzrNQ==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-54c77e0835bso2174168a12.2
-        for <loongarch@lists.linux.dev>; Sun, 03 Dec 2023 23:41:14 -0800 (PST)
-X-Gm-Message-State: AOJu0YzXP3ChRrNtG00fMNSJnOcyrLW5aEP9G3cye3u5yFrvpCKDqbNn
-	BB0CpJK2XYEoGYkRC9PMgbIbvkyMXtfmZTH0h+Q=
-X-Google-Smtp-Source: AGHT+IELVVyN8weIhVewmt7Kz3EXFdvGgIroZ7d3AxQ5jpKvIKHH8KA8hIZ7lDDuA0X9NFjgXUQzHW7EXbniS05Hnmc=
-X-Received: by 2002:a50:d6cf:0:b0:53d:b59c:8f91 with SMTP id
- l15-20020a50d6cf000000b0053db59c8f91mr3082749edj.27.1701675673094; Sun, 03
- Dec 2023 23:41:13 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02533F9C3
+	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 08:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.183])
+	by gateway (Coremail) with SMTP id _____8AxqOi0kW1ls7M+AA--.23447S3;
+	Mon, 04 Dec 2023 16:45:40 +0800 (CST)
+Received: from [10.20.42.183] (unknown [10.20.42.183])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxXNyykW1lWhhUAA--.54576S3;
+	Mon, 04 Dec 2023 16:45:40 +0800 (CST)
+Subject: Re: [PATCH v4 1/3] LoongArch: KVM: Remove SW timer switch when vcpu
+ is halt polling
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20231116023036.2324371-1-maobibo@loongson.cn>
+ <20231116023036.2324371-2-maobibo@loongson.cn>
+From: zhaotianrui <zhaotianrui@loongson.cn>
+Message-ID: <564a2fd3-ffba-3bc5-70b9-8a9fa9a0f1c6@loongson.cn>
+Date: Mon, 4 Dec 2023 16:48:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231204053745.3153-1-hengqi.chen@gmail.com>
-In-Reply-To: <20231204053745.3153-1-hengqi.chen@gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 4 Dec 2023 15:41:00 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4TMU+4_-UWv+7o1jbHOvWey=7iU7n=R=+TCLPPGHasSg@mail.gmail.com>
-Message-ID: <CAAhV-H4TMU+4_-UWv+7o1jbHOvWey=7iU7n=R=+TCLPPGHasSg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Preserve syscall nr across execve
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev, kernel@xen0n.name
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231116023036.2324371-2-maobibo@loongson.cn>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8AxXNyykW1lWhhUAA--.54576S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxur1rur15ZF4rWFy8Kw1fZrc_yoW5Kw1fpF
+	W7CFnrXr4rGrnrtw13XF4Dur45X3ykKF1xWa47AayFyrsrtr1rJF48K39xXFyagw4rCrWx
+	Zr1rKas8ua1jy3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
+	e5UUUUU==
 
-Queued for loongarch-fixes, thanks.
+Reviewed-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 
-Huacai
-
-On Mon, Dec 4, 2023 at 1:37=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com> =
-wrote:
+ÔÚ 2023/11/16 ÉÏÎç10:30, Bibo Mao Ð´µÀ:
+> With halt-polling supported, there is checking for pending events
+> or interrupts when vcpu executes idle instruction. Pending interrupts
+> include injected SW interrupts and passthrough HW interrupts, such as
+> HW timer interrupts, since HW timer works still even if vcpu exists
+> from VM mode.
 >
-> Currently, we store syscall nr in pt_regs::regs[11] and
-> syscall execve accidentally overrides it during its execution:
+> Since HW timer pending interrupt can be set directly with CSR status
+> register, and pending HW timer interrupt checking is used in vcpu block
+> checking function, it is not necessary to switch to sw timer during
+> halt-polling. This patch adds preemption disabling in function
+> kvm_cpu_has_pending_timer, and removes SW timer switching in idle
+> instruction emulation function.
 >
->     sys_execve
->       -> do_execve
->         -> do_execveat_common
->           -> bprm_execve
->             -> exec_binprm
->               -> search_binary_handler
->                 -> load_elf_binary
->                   -> ELF_PLAT_INIT
->
-> ELF_PLAT_INIT reset regs[11] to 0, later in syscall_exit_to_user_mode
-> we get a wrong syscall nr. This breaks tool like execsnoop since it
-> relies on execve tracepoints.
->
-> Skip pt_regs::regs[11] reset in ELF_PLAT_INIT to fix the issue.
->
-> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  arch/loongarch/include/asm/elf.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   arch/loongarch/kvm/exit.c  | 13 ++-----------
+>   arch/loongarch/kvm/timer.c | 13 ++++++++++---
+>   arch/loongarch/kvm/vcpu.c  |  9 ++++++++-
+>   3 files changed, 20 insertions(+), 15 deletions(-)
 >
-> diff --git a/arch/loongarch/include/asm/elf.h b/arch/loongarch/include/as=
-m/elf.h
-> index b9a4ab54285c..fb9261164a34 100644
-> --- a/arch/loongarch/include/asm/elf.h
-> +++ b/arch/loongarch/include/asm/elf.h
-> @@ -293,7 +293,7 @@ extern const char *__elf_platform;
->  #define ELF_PLAT_INIT(_r, load_addr)   do { \
->         _r->regs[1] =3D _r->regs[2] =3D _r->regs[3] =3D _r->regs[4] =3D 0=
-;      \
->         _r->regs[5] =3D _r->regs[6] =3D _r->regs[7] =3D _r->regs[8] =3D 0=
-;      \
-> -       _r->regs[9] =3D _r->regs[10] =3D _r->regs[11] =3D _r->regs[12] =
-=3D 0;   \
-> +       _r->regs[9] =3D _r->regs[10] =3D /* syscall nr */ _r->regs[12] =
-=3D 0; \
->         _r->regs[13] =3D _r->regs[14] =3D _r->regs[15] =3D _r->regs[16] =
-=3D 0;  \
->         _r->regs[17] =3D _r->regs[18] =3D _r->regs[19] =3D _r->regs[20] =
-=3D 0;  \
->         _r->regs[21] =3D _r->regs[22] =3D _r->regs[23] =3D _r->regs[24] =
-=3D 0;  \
-> --
-> 2.27.0
->
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index ce8de3fa472c..e708a1786d6b 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -200,17 +200,8 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
+>   	++vcpu->stat.idle_exits;
+>   	trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
+>   
+> -	if (!kvm_arch_vcpu_runnable(vcpu)) {
+> -		/*
+> -		 * Switch to the software timer before halt-polling/blocking as
+> -		 * the guest's timer may be a break event for the vCPU, and the
+> -		 * hypervisor timer runs only when the CPU is in guest mode.
+> -		 * Switch before halt-polling so that KVM recognizes an expired
+> -		 * timer before blocking.
+> -		 */
+> -		kvm_save_timer(vcpu);
+> -		kvm_vcpu_block(vcpu);
+> -	}
+> +	if (!kvm_arch_vcpu_runnable(vcpu))
+> +		kvm_vcpu_halt(vcpu);
+>   
+>   	return EMULATE_DONE;
+>   }
+> diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
+> index 284bf553fefe..437e960d8fdb 100644
+> --- a/arch/loongarch/kvm/timer.c
+> +++ b/arch/loongarch/kvm/timer.c
+> @@ -155,11 +155,18 @@ static void _kvm_save_timer(struct kvm_vcpu *vcpu)
+>   		 */
+>   		hrtimer_cancel(&vcpu->arch.swtimer);
+>   		hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_ABS_PINNED);
+> -	} else
+> +	} else if (vcpu->stat.generic.blocking) {
+>   		/*
+> -		 * Inject timer interrupt so that hall polling can dectect and exit
+> +		 * Inject timer interrupt so that hall polling can dectect and
+> +		 * exit.
+> +		 * VCPU is scheduled out already and sleeps in rcuwait queue and
+> +		 * will not poll pending events again. kvm_queue_irq is not
+> +		 * enough, hrtimer swtimer should be used here.
+>   		 */
+> -		kvm_queue_irq(vcpu, INT_TI);
+> +		expire = ktime_add_ns(ktime_get(), 10);  // 10ns is enough here?
+> +		vcpu->arch.expire = expire;
+> +		hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_ABS_PINNED);
+> +	}
+>   }
+>   
+>   /*
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 73d0c2b9c1a5..42663a345bd1 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -187,8 +187,15 @@ int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
+>   
+>   int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
+>   {
+> -	return kvm_pending_timer(vcpu) ||
+> +	int ret;
+> +
+> +	/* protect from TOD sync and vcpu_load/put */
+> +	preempt_disable();
+> +	ret = kvm_pending_timer(vcpu) ||
+>   		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) & (1 << INT_TI);
+> +	preempt_enable();
+> +
+> +	return ret;
+>   }
+>   
+>   int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
+
