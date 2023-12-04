@@ -1,118 +1,314 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0CCD10F0
-	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 02:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8BxpPBvNW1lJaI+AA--.59581S3;
-	Mon, 04 Dec 2023 10:11:59 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxO9xsNW1le8lTAA--.53472S3;
-	Mon, 04 Dec 2023 10:11:58 +0800 (CST)
-Subject: Re: [PATCH v5 4/4] KVM: selftests: Add test cases for LoongArch
-To: Tianrui Zhao <zhaotianrui@loongson.cn>, Shuah Khan <shuah@kernel.org>,
- Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, Sean Christopherson <seanjc@google.com>
-Cc: Vishal Annapurve <vannapurve@google.com>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Peter Xu <peterx@redhat.com>,
- Vipin Sharma <vipinsh@google.com>
-References: <20231130111804.2227570-1-zhaotianrui@loongson.cn>
- <20231130111804.2227570-5-zhaotianrui@loongson.cn>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <ebdc956b-6235-370f-97d1-c24540c05047@loongson.cn>
-Date: Mon, 4 Dec 2023 10:11:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA6C10EA
+	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 02:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9Z88ekH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFA6C433CB
+	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 02:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701656219;
+	bh=kqjRhgTaWFyWNU0iDPibNUZDm+BI9k9CgyR6qAyUgIY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=p9Z88ekH2+TXdp7gx8oSV9sh5/k+1dONUihJfFqkT1wBlwXij8XbXJF04j9DvDVDY
+	 3cu+hG0Ijisn2wbl/BhWMqHqUAKikXx9v+js6vMsUQt6+xE/+NRmijmResii03Inu8
+	 8uhEymXn98MlNAW3l/ssAd5NvYgji4+I52eEho9fuLY410XvbiUoW3tJBYR8xVXn9N
+	 bnwdUUXk9Po6NKyLtOkW3Mv1/3snYGVR80f7fjDfmSEmDjRY5BFgarcIWtSaLmRPMg
+	 YhDJlCaj73POOoZSaT6FPUkfKY+B9wvpzizH+613Zs/jmggCcSO5bcKKXqPZ8uXR+J
+	 Gim6tzBBbZXwQ==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-54c77e0832cso2046636a12.0
+        for <loongarch@lists.linux.dev>; Sun, 03 Dec 2023 18:16:59 -0800 (PST)
+X-Gm-Message-State: AOJu0Yyp0bLTAlDrEmi1QgesjJ8S71EhTJ97Q6CSPz2zGrTlCNqo66Fj
+	uRSWzb3hxYw+ya3cyoQGZAOd+HZGLIUYbRw/aoY=
+X-Google-Smtp-Source: AGHT+IE+fEccqGwFMBhK661nmD8tez5/mcWWY4NJEpbIlX9MEZryLkLbRc/xqM9QGL6UD0nTeWCbF7gr/Dv4WQJ8kc0=
+X-Received: by 2002:a50:a6c4:0:b0:54c:a3f0:598c with SMTP id
+ f4-20020a50a6c4000000b0054ca3f0598cmr864610edc.24.1701656217877; Sun, 03 Dec
+ 2023 18:16:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20231130111804.2227570-5-zhaotianrui@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxO9xsNW1le8lTAA--.53472S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uw17Kr4DtFyDCF4kGFW3urX_yoW8KFWrpF
-	yI9r1jvFWxurs3Jwn3Gw4DZan3Cr9Fgr40gFy3Kw18ur98J348JF1xKasrKFsYgw45Xa1Y
-	v3WrKwnruayDA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
-	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
-	WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2F4i
-	UUUUU
+References: <20231121070209.210934-1-hengqi.chen@gmail.com>
+ <CAAhV-H7SwSRDh8Ui2xVb1ncoaEQVd=dugphcBemkeaPNGQX2qw@mail.gmail.com>
+ <CAEyhmHRYghT5iFiLByUmC=AjdygiBWU8TH3joSyyWibu0Ki2xw@mail.gmail.com>
+ <CAAhV-H4Jr_a4j+Qnitd7ay9Vkcw5g0W_W3LNJwUzQ1BWXoGpoA@mail.gmail.com>
+ <CAEyhmHRFZqH=4K8WUO6tPFd0NoWMHm_iLan+4EPiqovO03w1xw@mail.gmail.com>
+ <CAAhV-H53YNH_trJmgcp-=PjdTSXuyzvmxWVaeUg++yYiXd=1Kg@mail.gmail.com>
+ <CAEyhmHSPwjWQ=KJKskQHTjNKfMV3WG6r8sHihqtbBsZeKUQzUg@mail.gmail.com>
+ <CAAhV-H6xtawO3kMtJtzMAbGELTO=RieY3B2mM77Uk8rB73Ppqw@mail.gmail.com>
+ <CAEyhmHQQ3NqN1cZ1AfhUEbaswy6BWHCTjmUyncxdNUwQuCVOAA@mail.gmail.com>
+ <CAAhV-H7p4i+EJj9hd3mRdTePjJ07zSwuBKNuCp66828UnLMGkA@mail.gmail.com> <CAEyhmHQaAi3vV7e51DY_6MyYoTVZNd8gC22+K9CT_s6m+3Sk-Q@mail.gmail.com>
+In-Reply-To: <CAEyhmHQaAi3vV7e51DY_6MyYoTVZNd8gC22+K9CT_s6m+3Sk-Q@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 4 Dec 2023 10:16:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5cTH+=1KGPXV3n3sSTdz1-ANQ0c9nHy7+RzWVq=b4TiA@mail.gmail.com>
+Message-ID: <CAAhV-H5cTH+=1KGPXV3n3sSTdz1-ANQ0c9nHy7+RzWVq=b4TiA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Store syscall nr in thread_info
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, loongarch@lists.linux.dev, 
+	kernel@xen0n.name
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Hengqi,
 
+On Mon, Dec 4, 2023 at 9:56=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com> =
+wrote:
+>
+> On Sun, Dec 3, 2023 at 11:17=E2=80=AFAM Huacai Chen <chenhuacai@kernel.or=
+g> wrote:
+> >
+> > Hi, Hengqi,
+> >
+> > On Thu, Nov 23, 2023 at 10:39=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail=
+.com> wrote:
+> > >
+> > > On Thu, Nov 23, 2023 at 4:25=E2=80=AFPM Huacai Chen <chenhuacai@kerne=
+l.org> wrote:
+> > > >
+> > > > On Thu, Nov 23, 2023 at 4:09=E2=80=AFPM Hengqi Chen <hengqi.chen@gm=
+ail.com> wrote:
+> > > > >
+> > > > > On Thu, Nov 23, 2023 at 2:13=E2=80=AFPM Huacai Chen <chenhuacai@k=
+ernel.org> wrote:
+> > > > > >
+> > > > > > Hi, Hengqi,
+> > > > > >
+> > > > > > On Thu, Nov 23, 2023 at 1:49=E2=80=AFPM Hengqi Chen <hengqi.che=
+n@gmail.com> wrote:
+> > > > > > >
+> > > > > > > On Wed, Nov 22, 2023 at 3:58=E2=80=AFPM Huacai Chen <chenhuac=
+ai@kernel.org> wrote:
+> > > > > > > >
+> > > > > > > > Hi, Hengqi,
+> > > > > > > >
+> > > > > > > > On Wed, Nov 22, 2023 at 3:34=E2=80=AFPM Hengqi Chen <hengqi=
+.chen@gmail.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi, Huacai,
+> > > > > > > > >
+> > > > > > > > > On Wed, Nov 22, 2023 at 2:32=E2=80=AFPM Huacai Chen <chen=
+huacai@kernel.org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Hi, Hengqi,
+> > > > > > > > > >
+> > > > > > > > > > On Wed, Nov 22, 2023 at 1:14=E2=80=AFPM Hengqi Chen <he=
+ngqi.chen@gmail.com> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > Currently, we store syscall number in pt_regs::regs[1=
+1] and it may be
+> > > > > > > > > > > changed during syscall execution. Take `execve` as an=
+ example:
+> > > > > > > > > > >
+> > > > > > > > > > >     sys_execve
+> > > > > > > > > > >       -> do_execve
+> > > > > > > > > > >         -> do_execveat_common
+> > > > > > > > > > >           -> bprm_execve
+> > > > > > > > > > >             -> exec_binprm
+> > > > > > > > > > >               -> search_binary_handler
+> > > > > > > > > > >                 -> load_elf_binary
+> > > > > > > > > > >                   -> ELF_PLAT_INIT
+> > > > > > > > > > >
+> > > > > > > > > > > ELF_PLAT_INIT reset regs[11] to 0, later in syscall_e=
+xit_to_user_mode
+> > > > > > > > > > > we get a wrong syscall nr.
+> > > > > > > > > > >
+> > > > > > > > > > > Known affected syscalls includes execve/execveat/rt_s=
+igreturn. Tools
+> > > > > > > > > > > like execsnoop do not work properly because the sys_e=
+xit_* tracepoints
+> > > > > > > > > > > does not trigger at all.
+> > > > > > > > > > >
+> > > > > > > > > > > Let's store syscall nr in thread_info instead.
+> > > > > > > > > > Can we just modify ELF_PLAT_INIT and not clear regs[11]=
+?
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > I am uncertain about the side effects of changing ELF_PLA=
+T_INIT.
+> > > > > > > > > From a completeness perspective, changing ELF_PLAT_INIT i=
+s suboptimal,
+> > > > > > > > > rt_sigreturn is affected in another code path, and there =
+may be other
+> > > > > > > > > syscalls that I am unaware of.
+> > > > > > > > Save syscall number in thread_info has more side effects, b=
+ecause
+> > > > > > > > ptrace allows us to change the number during syscall, then =
+we should
+> > > > > > > > keep consistency between syscall and regs[11].
+> > > > > > > >
+> > > > > > >
+> > > > > > > How about the change below:
+> > > > > > >
+> > > > > > > diff --git a/arch/loongarch/include/asm/syscall.h
+> > > > > > > b/arch/loongarch/include/asm/syscall.h
+> > > > > > > index e286dc58476e..954ba53bcc9a 100644
+> > > > > > > --- a/arch/loongarch/include/asm/syscall.h
+> > > > > > > +++ b/arch/loongarch/include/asm/syscall.h
+> > > > > > > @@ -23,7 +23,9 @@ extern void *sys_call_table[];
+> > > > > > >  static inline long syscall_get_nr(struct task_struct *task,
+> > > > > > >                                   struct pt_regs *regs)
+> > > > > > >  {
+> > > > > > > -       return regs->regs[11];
+> > > > > > > +       long nr =3D task_thread_info(task)->syscall;
+> > > > > > > +
+> > > > > > > +       return nr ? : regs->regs[11];
+> > > > > > >  }
+> > > > > > >
+> > > > > > >  static inline void syscall_rollback(struct task_struct *task=
+,
+> > > > > > > diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch=
+/kernel/syscall.c
+> > > > > > > index b4c5acd7aa3b..553ab0d624cb 100644
+> > > > > > > --- a/arch/loongarch/kernel/syscall.c
+> > > > > > > +++ b/arch/loongarch/kernel/syscall.c
+> > > > > > > @@ -53,6 +53,7 @@ void noinstr do_syscall(struct pt_regs *reg=
+s)
+> > > > > > >         regs->regs[4] =3D -ENOSYS;
+> > > > > > >
+> > > > > > >         nr =3D syscall_enter_from_user_mode(regs, nr);
+> > > > > > > +       current_thread_info()->syscall =3D nr;
+> > > > > > >
+> > > > > > >         if (nr < NR_syscalls) {
+> > > > > > >                 syscall_fn =3D sys_call_table[nr];
+> > > > > > > @@ -61,4 +62,5 @@ void noinstr do_syscall(struct pt_regs *reg=
+s)
+> > > > > > >         }
+> > > > > > >
+> > > > > > >         syscall_exit_to_user_mode(regs);
+> > > > > > > +       current_thread_info()->syscall =3D 0;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > * allow ptrace to change syscall nr
+> > > > > > > * sys_exit_* will also see the right syscall nr
+> > > > > > > * this works even if rt_sigreturn clobbers all pt_regs::regs
+> > > > > > No, I still prefer to modify ELF_PLAT_INIT, we can wait Arnd's =
+comments.
+> > > > > >
+> > > > >
+> > > > > OK, I am not eager, anyway, we know the root cause. :)
+> > > > >
+> > > > > > And, do you mean modifying ELF_PLAT_INIT cannot solve the
+> > > > > > rt_sigreturn's problem?
+> > > > > >
+> > > > >
+> > > > > Right, see https://elixir.bootlin.com/linux/latest/source/arch/lo=
+ongarch/kernel/signal.c#L807
+> > > > Is this the expected behavior for rt_sigreturn()? Otherwise I think
+> > > > RISC-V has the same problem. And if we really need the 'correct'
+> > > > syscall number, we can overwrite regs[11] in sys_rt_sigreturn().
+> > > >
+> > >
+> > > I check with x86 and arm64, both have the same issue, seems no one ca=
+re.
+> > Does the rt_sigreturn issue affect execsnoop?
+> >
+>
+> No, execsnoop only relies on sys_enter_execve/sys_exit_execve.
+Then I suggest the below one line patch, though Arnd still no
+response, I believe it has no side effect (because ARM64 and RISC-V
+clear nothing here):
 
-On 2023/11/30 下午7:18, Tianrui Zhao wrote:
-> There are some KVM common test cases supported by LoongArch:
-> 	demand_paging_test
-> 	dirty_log_perf_test
-> 	dirty_log_test
-> 	guest_print_test
-> 	kvm_binary_stats_test
-> 	kvm_create_max_vcpus
-> 	kvm_page_table_test
-> 	memslot_modification_stress_test
-> 	memslot_perf_test
-> 	set_memory_region_test
-> And other test cases are not supported by LoongArch. For example,
-> we do not support rseq_test, as the glibc do not support it.
-> 
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> ---
->   tools/testing/selftests/kvm/Makefile | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index a5963ab9215..9d099d48013 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -65,6 +65,10 @@ LIBKVM_s390x += lib/s390x/ucall.c
->   LIBKVM_riscv += lib/riscv/processor.c
->   LIBKVM_riscv += lib/riscv/ucall.c
->   
-> +LIBKVM_loongarch += lib/loongarch/processor.c
-> +LIBKVM_loongarch += lib/loongarch/ucall.c
-> +LIBKVM_loongarch += lib/loongarch/exception.S
-> +
->   # Non-compiled test targets
->   TEST_PROGS_x86_64 += x86_64/nx_huge_pages_test.sh
->   
-> @@ -202,6 +206,17 @@ TEST_GEN_PROGS_riscv += kvm_binary_stats_test
->   
->   SPLIT_TESTS += get-reg-list
->   
-> +TEST_GEN_PROGS_loongarch += demand_paging_test
-> +TEST_GEN_PROGS_loongarch += dirty_log_perf_test
-> +TEST_GEN_PROGS_loongarch += dirty_log_test
-> +TEST_GEN_PROGS_loongarch += guest_print_test
-> +TEST_GEN_PROGS_loongarch += kvm_binary_stats_test
-> +TEST_GEN_PROGS_loongarch += kvm_create_max_vcpus
-> +TEST_GEN_PROGS_loongarch += kvm_page_table_test
-> +TEST_GEN_PROGS_loongarch += memslot_modification_stress_test
-> +TEST_GEN_PROGS_loongarch += memslot_perf_test
-> +TEST_GEN_PROGS_loongarch += set_memory_region_test
-rseq_test is not supported by LoongArch kernel, and get-reg-list 
-interface is not supported by KVM now, arch specific testcases
-will be added later also.
+diff --git a/arch/loongarch/include/asm/elf.h b/arch/loongarch/include/asm/=
+elf.h
+index b9a4ab54285c..45a2a2f7a27f 100644
+--- a/arch/loongarch/include/asm/elf.h
++++ b/arch/loongarch/include/asm/elf.h
+@@ -293,7 +293,7 @@ extern const char *__elf_platform;
+ #define ELF_PLAT_INIT(_r, load_addr)   do { \
+        _r->regs[1] =3D _r->regs[2] =3D _r->regs[3] =3D _r->regs[4] =3D 0; =
+     \
+        _r->regs[5] =3D _r->regs[6] =3D _r->regs[7] =3D _r->regs[8] =3D 0; =
+     \
+-       _r->regs[9] =3D _r->regs[10] =3D _r->regs[11] =3D _r->regs[12] =3D =
+0;   \
++       _r->regs[9] =3D _r->regs[10] =3D /* syscall */ =3D _r->regs[12] =3D=
+ 0;  \
+        _r->regs[13] =3D _r->regs[14] =3D _r->regs[15] =3D _r->regs[16] =3D=
+ 0;  \
+        _r->regs[17] =3D _r->regs[18] =3D _r->regs[19] =3D _r->regs[20] =3D=
+ 0;  \
+        _r->regs[21] =3D _r->regs[22] =3D _r->regs[23] =3D _r->regs[24] =3D=
+ 0;  \
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> +
->   TEST_PROGS += $(TEST_PROGS_$(ARCH_DIR))
->   TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(ARCH_DIR))
->   TEST_GEN_PROGS_EXTENDED += $(TEST_GEN_PROGS_EXTENDED_$(ARCH_DIR))
-> 
-
+>
+> > Huacai
+> >
+> > >
+> > > > And another question: do you have any updates about the BPF system
+> > > > hang problem? :)
+> > > >
+> > >
+> > > Let's discuss this on a new thread.
+> > >
+> > > > Huacai
+> > > >
+> > > > >
+> > > > > > Huacai
+> > > > > >
+> > > > > > >
+> > > > > > > > And about ELF_PLAT_INIT, maybe Arnd can give us some more i=
+nformation.
+> > > > > > > >
+> > > > > > > > Hi, Arnd,
+> > > > > > > >
+> > > > > > > > I found some new architectures, such as ARM64 and RISC-V, j=
+ust do
+> > > > > > > > nearly nothing in ELF_PLAT_INIT, while some old architectur=
+es, such as
+> > > > > > > > x86 and MIPS, clear most of the registers, do you know why?
+> > > > > > > >
+> > > > > > > > Huacai
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > > Huacai
+> > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > Fixes: be769645a2aef ("LoongArch: Add system call sup=
+port")
+> > > > > > > > > > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > > > > > > > > > > ---
+> > > > > > > > > > >  arch/loongarch/include/asm/syscall.h | 2 +-
+> > > > > > > > > > >  arch/loongarch/kernel/syscall.c      | 1 +
+> > > > > > > > > > >  2 files changed, 2 insertions(+), 1 deletion(-)
+> > > > > > > > > > >
+> > > > > > > > > > > diff --git a/arch/loongarch/include/asm/syscall.h b/a=
+rch/loongarch/include/asm/syscall.h
+> > > > > > > > > > > index e286dc58476e..2317d674b92a 100644
+> > > > > > > > > > > --- a/arch/loongarch/include/asm/syscall.h
+> > > > > > > > > > > +++ b/arch/loongarch/include/asm/syscall.h
+> > > > > > > > > > > @@ -23,7 +23,7 @@ extern void *sys_call_table[];
+> > > > > > > > > > >  static inline long syscall_get_nr(struct task_struct=
+ *task,
+> > > > > > > > > > >                                   struct pt_regs *reg=
+s)
+> > > > > > > > > > >  {
+> > > > > > > > > > > -       return regs->regs[11];
+> > > > > > > > > > > +       return task_thread_info(task)->syscall;
+> > > > > > > > > > >  }
+> > > > > > > > > > >
+> > > > > > > > > > >  static inline void syscall_rollback(struct task_stru=
+ct *task,
+> > > > > > > > > > > diff --git a/arch/loongarch/kernel/syscall.c b/arch/l=
+oongarch/kernel/syscall.c
+> > > > > > > > > > > index b4c5acd7aa3b..2783e33cf276 100644
+> > > > > > > > > > > --- a/arch/loongarch/kernel/syscall.c
+> > > > > > > > > > > +++ b/arch/loongarch/kernel/syscall.c
+> > > > > > > > > > > @@ -52,6 +52,7 @@ void noinstr do_syscall(struct pt_r=
+egs *regs)
+> > > > > > > > > > >         regs->orig_a0 =3D regs->regs[4];
+> > > > > > > > > > >         regs->regs[4] =3D -ENOSYS;
+> > > > > > > > > > >
+> > > > > > > > > > > +       task_thread_info(current)->syscall =3D nr;
+> > > > > > > > > > >         nr =3D syscall_enter_from_user_mode(regs, nr)=
+;
+> > > > > > > > > > >
+> > > > > > > > > > >         if (nr < NR_syscalls) {
+> > > > > > > > > > > --
+> > > > > > > > > > > 2.42.0
+> > > > > > > > > > >
+> > > > > > >
+> > >
