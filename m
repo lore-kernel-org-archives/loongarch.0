@@ -1,120 +1,289 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A892ECE
-	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 01:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A743ECE
+	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 01:55:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqRAHEPj"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6d986a75337so559524a34.1
-        for <loongarch@lists.linux.dev>; Sun, 03 Dec 2023 17:53:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpPa+LZM"
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-1faf46f96ebso1693736fac.1
+        for <loongarch@lists.linux.dev>; Sun, 03 Dec 2023 17:55:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701654818; x=1702259618; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1701654957; x=1702259757; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/O6x9fYJwBsgdgrCbuB22dComvuLhmJX5eQyzCr32ag=;
-        b=BqRAHEPjWl+jzLN5uTJTISaj0X2F9Y3GJrTB3pj+Pun4acKcdBfZBbRYT9YEO+bDpy
-         OvVl08iN81WgscfWWFTQ2yNz9AMIXc65aYxKJ66LDUy5FDW3WYLvZxwJqIXzqFWFwPq7
-         c0eHFgL7MaOeap08LzmVayM/gBYqJv1PsBzjhwUSk2+xoyOnTpOY2k/G+4uCRY7NQCDJ
-         XpM+NzNLKoZ5ejhyKaBht54ylywc/Nf/LaE65K24wmGj9cn55m03KRErmzJgoux/qN3M
-         A9lRMYo1KDZNazbCS+jLhVwP1gwBA90I1OSdwIpd/sb5jcaFYpb0egP4bpFMa1e+OMGz
-         4iUw==
+        bh=xTtphEMr2OlDETtXEitijMD12offq4ozAysRuJ934w8=;
+        b=VpPa+LZMEfqgKPg+g14iifq005cWkKJxBnnOnnuLAMCDG+x9mnqX4X9jdBQ47A5niK
+         eXn7BpYlH6/7l40U86lhBt1FVwRlYl9bMw9byQ21lnkFQVqI0nUfqqdl073+MQCOO+M/
+         R8xPbiuSOJysaYqFqtodxcNYiiwoxEbISiTRmKK5e51NYOljTvMU2DXu05FBNBpfS4aI
+         pXEkJF/sZovT/uC76QD9021uusRPFdgcamDgt7/j+9PNIahoAGTmyEDeVHGUc7aaKMFv
+         NQ2cNNS7AiSoV8cFhjaADZ5zuajncAInbsStHuhZqjG236up4DqxzijDeia7NNlIy+LB
+         gwXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701654818; x=1702259618;
+        d=1e100.net; s=20230601; t=1701654957; x=1702259757;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/O6x9fYJwBsgdgrCbuB22dComvuLhmJX5eQyzCr32ag=;
-        b=WAG/1dZaEdBMNsiOczTowD2vXQhait5/LhmNhVIaUds+0w/37uXPa4J3tLIzgGOSX4
-         4mRU7m8kpv+Y6HwonGQNO1WHHxkZkL9OAmwcCSjPZXozQ4A4gjwNfIAQjirkLRy83t3j
-         mmYsMEKAGhAk8Xg9d8AkQVBwCNS6fVCBfxPt6WrdBLdSrZi6fAHlRnPbabFRyAbSjBMR
-         OKLd4g670JrpxtkwNiD8r6leFJJkxcr1sHscl6zHQBP7YS1XrK6N/Eh8EHpnPlzw6Q7n
-         h3n7OpjuxSLsTlMUjldPiPvrfjLyRRwPS9l/mrkCjl22vihPNc7LSPQlg2LTBXFOu4zw
-         XFUg==
-X-Gm-Message-State: AOJu0YzBj/kWAw9hhRTxj7i0kmGtjYhy4f3ql11nvBaR+dFSVWViVzi3
-	BfP/AesjFLF4bgs5MV0GgFs8kVh0xNM5DyMfdck=
-X-Google-Smtp-Source: AGHT+IEdvx1YJAbBE60E7Uiicb/PgJqeraAhxjunFjP/E5R/jWYIYQR8IcvmP8RAcyDtQymbd3V/IEvESE+8EB49KPE=
-X-Received: by 2002:a05:6871:7585:b0:1fb:75c:400a with SMTP id
- nz5-20020a056871758500b001fb075c400amr4130668oac.106.1701654818156; Sun, 03
- Dec 2023 17:53:38 -0800 (PST)
+        bh=xTtphEMr2OlDETtXEitijMD12offq4ozAysRuJ934w8=;
+        b=I1UxfK5O0IjMuHoDq8XcpH9wPnQfw4kyTItWBhYbv0U8l8GVWEMQxil6aqXKVbCfMN
+         DjnVx5rSW7iDxGcwK+wOmJKXT3TI6uJMqa50YV2NMatV8bM+zSCsyM2l/qONO2DRwfLW
+         KKN8VlbGDeAhSW3Jid3RKS3HdWKKXI6YJZLIuTYwY1sfLxR+zqj+6MOMtXTUj2fJ2Ls5
+         o9gHZFh8PxMMiN0RUkIDMW+GJimsSa+PPlZopPY2ocHmZzkmQP9k8NV5PTIRgywAQHBH
+         rbN+XQ4d3pEY/VWHeOh/0SOGo9MeXyinxvZaYSJ4x0teLmUiMRRideXivTKnlv0nmKi0
+         BMlg==
+X-Gm-Message-State: AOJu0YwJj/lnIWA8Q5PTfA9xD+lfMDzfIWAuZKtrNKgDGsbKd0TzXcfA
+	7VDAsiapqlqW/wc1FxrfX6/zwGE7le82B7EsDUWQP9uul+c=
+X-Google-Smtp-Source: AGHT+IFGMuLHH5DR8CZghBk+bXC7qM7qdDP2YnwN5e9enHQ4rHJYysrwBd+DIXA7KSOOmp11L3JsWQJsjMDCTIOVNm8=
+X-Received: by 2002:a05:6870:3854:b0:1e9:f0fe:6ba4 with SMTP id
+ z20-20020a056870385400b001e9f0fe6ba4mr5281807oal.11.1701654957049; Sun, 03
+ Dec 2023 17:55:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAEyhmHT6UOryPZi7eEfw01Y_CjAqxy8NM6eKkdvdojJqB9P7eQ@mail.gmail.com>
- <CAAhV-H5pKEzVnHKCiHm9=9wDapa5RhS5uMFEo2KHBskYrP7DnQ@mail.gmail.com> <CAAhV-H73o+RjdFBe3mHJJkqttNzZgamPfs-6oiXj5iwxL8fxww@mail.gmail.com>
-In-Reply-To: <CAAhV-H73o+RjdFBe3mHJJkqttNzZgamPfs-6oiXj5iwxL8fxww@mail.gmail.com>
+References: <20231121070209.210934-1-hengqi.chen@gmail.com>
+ <CAAhV-H7SwSRDh8Ui2xVb1ncoaEQVd=dugphcBemkeaPNGQX2qw@mail.gmail.com>
+ <CAEyhmHRYghT5iFiLByUmC=AjdygiBWU8TH3joSyyWibu0Ki2xw@mail.gmail.com>
+ <CAAhV-H4Jr_a4j+Qnitd7ay9Vkcw5g0W_W3LNJwUzQ1BWXoGpoA@mail.gmail.com>
+ <CAEyhmHRFZqH=4K8WUO6tPFd0NoWMHm_iLan+4EPiqovO03w1xw@mail.gmail.com>
+ <CAAhV-H53YNH_trJmgcp-=PjdTSXuyzvmxWVaeUg++yYiXd=1Kg@mail.gmail.com>
+ <CAEyhmHSPwjWQ=KJKskQHTjNKfMV3WG6r8sHihqtbBsZeKUQzUg@mail.gmail.com>
+ <CAAhV-H6xtawO3kMtJtzMAbGELTO=RieY3B2mM77Uk8rB73Ppqw@mail.gmail.com>
+ <CAEyhmHQQ3NqN1cZ1AfhUEbaswy6BWHCTjmUyncxdNUwQuCVOAA@mail.gmail.com> <CAAhV-H7p4i+EJj9hd3mRdTePjJ07zSwuBKNuCp66828UnLMGkA@mail.gmail.com>
+In-Reply-To: <CAAhV-H7p4i+EJj9hd3mRdTePjJ07zSwuBKNuCp66828UnLMGkA@mail.gmail.com>
 From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Mon, 4 Dec 2023 09:53:27 +0800
-Message-ID: <CAEyhmHSQj4idr3aTeYPpiDCjDu1WFmQug4vjNh88wfRs_oLcdA@mail.gmail.com>
-Subject: Re: Kernel panic and stall triggered by bpf selftests
+Date: Mon, 4 Dec 2023 09:55:46 +0800
+Message-ID: <CAEyhmHQaAi3vV7e51DY_6MyYoTVZNd8gC22+K9CT_s6m+3Sk-Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Store syscall nr in thread_info
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, loongarch@lists.linux.dev, 
+	kernel@xen0n.name
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Huacai,
-
-I've found the root cause for the panic cases, will post a fix soon.
-
-Cheers,
----
-Hengqi
-
-On Thu, Nov 30, 2023 at 7:23=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+On Sun, Dec 3, 2023 at 11:17=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
  wrote:
 >
 > Hi, Hengqi,
 >
-> Maybe you can get something useful from here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
-t/tools/testing/selftests/bpf?h=3Dnext-20231130&id=3Dd128860dbb29cafc3c65ca=
-2d22082745a32829dd
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
-t/tools/testing/selftests/bpf?h=3Dnext-20231130&id=3De13b5f2f3ba3df1ca31824=
-d2fdbd182250fa10c7
+> On Thu, Nov 23, 2023 at 10:39=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.c=
+om> wrote:
+> >
+> > On Thu, Nov 23, 2023 at 4:25=E2=80=AFPM Huacai Chen <chenhuacai@kernel.=
+org> wrote:
+> > >
+> > > On Thu, Nov 23, 2023 at 4:09=E2=80=AFPM Hengqi Chen <hengqi.chen@gmai=
+l.com> wrote:
+> > > >
+> > > > On Thu, Nov 23, 2023 at 2:13=E2=80=AFPM Huacai Chen <chenhuacai@ker=
+nel.org> wrote:
+> > > > >
+> > > > > Hi, Hengqi,
+> > > > >
+> > > > > On Thu, Nov 23, 2023 at 1:49=E2=80=AFPM Hengqi Chen <hengqi.chen@=
+gmail.com> wrote:
+> > > > > >
+> > > > > > On Wed, Nov 22, 2023 at 3:58=E2=80=AFPM Huacai Chen <chenhuacai=
+@kernel.org> wrote:
+> > > > > > >
+> > > > > > > Hi, Hengqi,
+> > > > > > >
+> > > > > > > On Wed, Nov 22, 2023 at 3:34=E2=80=AFPM Hengqi Chen <hengqi.c=
+hen@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > Hi, Huacai,
+> > > > > > > >
+> > > > > > > > On Wed, Nov 22, 2023 at 2:32=E2=80=AFPM Huacai Chen <chenhu=
+acai@kernel.org> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi, Hengqi,
+> > > > > > > > >
+> > > > > > > > > On Wed, Nov 22, 2023 at 1:14=E2=80=AFPM Hengqi Chen <heng=
+qi.chen@gmail.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Currently, we store syscall number in pt_regs::regs[11]=
+ and it may be
+> > > > > > > > > > changed during syscall execution. Take `execve` as an e=
+xample:
+> > > > > > > > > >
+> > > > > > > > > >     sys_execve
+> > > > > > > > > >       -> do_execve
+> > > > > > > > > >         -> do_execveat_common
+> > > > > > > > > >           -> bprm_execve
+> > > > > > > > > >             -> exec_binprm
+> > > > > > > > > >               -> search_binary_handler
+> > > > > > > > > >                 -> load_elf_binary
+> > > > > > > > > >                   -> ELF_PLAT_INIT
+> > > > > > > > > >
+> > > > > > > > > > ELF_PLAT_INIT reset regs[11] to 0, later in syscall_exi=
+t_to_user_mode
+> > > > > > > > > > we get a wrong syscall nr.
+> > > > > > > > > >
+> > > > > > > > > > Known affected syscalls includes execve/execveat/rt_sig=
+return. Tools
+> > > > > > > > > > like execsnoop do not work properly because the sys_exi=
+t_* tracepoints
+> > > > > > > > > > does not trigger at all.
+> > > > > > > > > >
+> > > > > > > > > > Let's store syscall nr in thread_info instead.
+> > > > > > > > > Can we just modify ELF_PLAT_INIT and not clear regs[11]?
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > I am uncertain about the side effects of changing ELF_PLAT_=
+INIT.
+> > > > > > > > From a completeness perspective, changing ELF_PLAT_INIT is =
+suboptimal,
+> > > > > > > > rt_sigreturn is affected in another code path, and there ma=
+y be other
+> > > > > > > > syscalls that I am unaware of.
+> > > > > > > Save syscall number in thread_info has more side effects, bec=
+ause
+> > > > > > > ptrace allows us to change the number during syscall, then we=
+ should
+> > > > > > > keep consistency between syscall and regs[11].
+> > > > > > >
+> > > > > >
+> > > > > > How about the change below:
+> > > > > >
+> > > > > > diff --git a/arch/loongarch/include/asm/syscall.h
+> > > > > > b/arch/loongarch/include/asm/syscall.h
+> > > > > > index e286dc58476e..954ba53bcc9a 100644
+> > > > > > --- a/arch/loongarch/include/asm/syscall.h
+> > > > > > +++ b/arch/loongarch/include/asm/syscall.h
+> > > > > > @@ -23,7 +23,9 @@ extern void *sys_call_table[];
+> > > > > >  static inline long syscall_get_nr(struct task_struct *task,
+> > > > > >                                   struct pt_regs *regs)
+> > > > > >  {
+> > > > > > -       return regs->regs[11];
+> > > > > > +       long nr =3D task_thread_info(task)->syscall;
+> > > > > > +
+> > > > > > +       return nr ? : regs->regs[11];
+> > > > > >  }
+> > > > > >
+> > > > > >  static inline void syscall_rollback(struct task_struct *task,
+> > > > > > diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/k=
+ernel/syscall.c
+> > > > > > index b4c5acd7aa3b..553ab0d624cb 100644
+> > > > > > --- a/arch/loongarch/kernel/syscall.c
+> > > > > > +++ b/arch/loongarch/kernel/syscall.c
+> > > > > > @@ -53,6 +53,7 @@ void noinstr do_syscall(struct pt_regs *regs)
+> > > > > >         regs->regs[4] =3D -ENOSYS;
+> > > > > >
+> > > > > >         nr =3D syscall_enter_from_user_mode(regs, nr);
+> > > > > > +       current_thread_info()->syscall =3D nr;
+> > > > > >
+> > > > > >         if (nr < NR_syscalls) {
+> > > > > >                 syscall_fn =3D sys_call_table[nr];
+> > > > > > @@ -61,4 +62,5 @@ void noinstr do_syscall(struct pt_regs *regs)
+> > > > > >         }
+> > > > > >
+> > > > > >         syscall_exit_to_user_mode(regs);
+> > > > > > +       current_thread_info()->syscall =3D 0;
+> > > > > >  }
+> > > > > >
+> > > > > > * allow ptrace to change syscall nr
+> > > > > > * sys_exit_* will also see the right syscall nr
+> > > > > > * this works even if rt_sigreturn clobbers all pt_regs::regs
+> > > > > No, I still prefer to modify ELF_PLAT_INIT, we can wait Arnd's co=
+mments.
+> > > > >
+> > > >
+> > > > OK, I am not eager, anyway, we know the root cause. :)
+> > > >
+> > > > > And, do you mean modifying ELF_PLAT_INIT cannot solve the
+> > > > > rt_sigreturn's problem?
+> > > > >
+> > > >
+> > > > Right, see https://elixir.bootlin.com/linux/latest/source/arch/loon=
+garch/kernel/signal.c#L807
+> > > Is this the expected behavior for rt_sigreturn()? Otherwise I think
+> > > RISC-V has the same problem. And if we really need the 'correct'
+> > > syscall number, we can overwrite regs[11] in sys_rt_sigreturn().
+> > >
+> >
+> > I check with x86 and arm64, both have the same issue, seems no one care=
+.
+> Does the rt_sigreturn issue affect execsnoop?
 >
+
+No, execsnoop only relies on sys_enter_execve/sys_exit_execve.
+
 > Huacai
 >
-> On Fri, Nov 24, 2023 at 2:29=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
 > >
-> > Add Tiezhu since he is familiar with bpf.
+> > > And another question: do you have any updates about the BPF system
+> > > hang problem? :)
+> > >
 > >
-> > Huacai
+> > Let's discuss this on a new thread.
 > >
-> > On Thu, Nov 23, 2023 at 11:12=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail=
-.com> wrote:
+> > > Huacai
 > > >
-> > > Hello,
-> > >
-> > > The following bpf selftests tigger kernel panics and stalls (RCU rela=
-ted)
-> > >
-> > > | TEST CASE               | JIT    | JIT + UNPRIV |
-> > > | cls_redirect            | PANIC  | PANIC        |
-> > > | sockopt_inherit         | STALL  | STALL        |
-> > > | test_profiler           | N/A    | STALL        |
-> > > | verifier_map_ptr_mixing | PANIC  | PANIC        |
-> > > | verifier_movsx          | PASSED | STALL        |
-> > >
-> > > BPF JIT can be enabled by:
-> > >   # echo 1 > /proc/sys/net/core/bpf_jit_enable
-> > > unprivileged BPF can be enabled by:
-> > >   # echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
-> > >
-> > > For the full logs of each test cases, see below
-> > > https://github.com/chenhengqi/public/commit/75a265e961e5d93b61c3b012e=
-16f1db2f9d333b5
-> > >
-> > > I spent quite some time debugging this, but unable to isolate the
-> > > related code path.
-> > >
-> > > Thoughts welcome.
-> > >
-> > > --
-> > > Hengqi
+> > > >
+> > > > > Huacai
+> > > > >
+> > > > > >
+> > > > > > > And about ELF_PLAT_INIT, maybe Arnd can give us some more inf=
+ormation.
+> > > > > > >
+> > > > > > > Hi, Arnd,
+> > > > > > >
+> > > > > > > I found some new architectures, such as ARM64 and RISC-V, jus=
+t do
+> > > > > > > nearly nothing in ELF_PLAT_INIT, while some old architectures=
+, such as
+> > > > > > > x86 and MIPS, clear most of the registers, do you know why?
+> > > > > > >
+> > > > > > > Huacai
+> > > > > > >
+> > > > > > > >
+> > > > > > > > > Huacai
+> > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > Fixes: be769645a2aef ("LoongArch: Add system call suppo=
+rt")
+> > > > > > > > > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > > > > > > > > > ---
+> > > > > > > > > >  arch/loongarch/include/asm/syscall.h | 2 +-
+> > > > > > > > > >  arch/loongarch/kernel/syscall.c      | 1 +
+> > > > > > > > > >  2 files changed, 2 insertions(+), 1 deletion(-)
+> > > > > > > > > >
+> > > > > > > > > > diff --git a/arch/loongarch/include/asm/syscall.h b/arc=
+h/loongarch/include/asm/syscall.h
+> > > > > > > > > > index e286dc58476e..2317d674b92a 100644
+> > > > > > > > > > --- a/arch/loongarch/include/asm/syscall.h
+> > > > > > > > > > +++ b/arch/loongarch/include/asm/syscall.h
+> > > > > > > > > > @@ -23,7 +23,7 @@ extern void *sys_call_table[];
+> > > > > > > > > >  static inline long syscall_get_nr(struct task_struct *=
+task,
+> > > > > > > > > >                                   struct pt_regs *regs)
+> > > > > > > > > >  {
+> > > > > > > > > > -       return regs->regs[11];
+> > > > > > > > > > +       return task_thread_info(task)->syscall;
+> > > > > > > > > >  }
+> > > > > > > > > >
+> > > > > > > > > >  static inline void syscall_rollback(struct task_struct=
+ *task,
+> > > > > > > > > > diff --git a/arch/loongarch/kernel/syscall.c b/arch/loo=
+ngarch/kernel/syscall.c
+> > > > > > > > > > index b4c5acd7aa3b..2783e33cf276 100644
+> > > > > > > > > > --- a/arch/loongarch/kernel/syscall.c
+> > > > > > > > > > +++ b/arch/loongarch/kernel/syscall.c
+> > > > > > > > > > @@ -52,6 +52,7 @@ void noinstr do_syscall(struct pt_reg=
+s *regs)
+> > > > > > > > > >         regs->orig_a0 =3D regs->regs[4];
+> > > > > > > > > >         regs->regs[4] =3D -ENOSYS;
+> > > > > > > > > >
+> > > > > > > > > > +       task_thread_info(current)->syscall =3D nr;
+> > > > > > > > > >         nr =3D syscall_enter_from_user_mode(regs, nr);
+> > > > > > > > > >
+> > > > > > > > > >         if (nr < NR_syscalls) {
+> > > > > > > > > > --
+> > > > > > > > > > 2.42.0
+> > > > > > > > > >
+> > > > > >
+> >
