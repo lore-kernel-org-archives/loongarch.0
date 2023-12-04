@@ -1,289 +1,477 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A743ECE
-	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 01:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpPa+LZM"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-1faf46f96ebso1693736fac.1
-        for <loongarch@lists.linux.dev>; Sun, 03 Dec 2023 17:55:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701654957; x=1702259757; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xTtphEMr2OlDETtXEitijMD12offq4ozAysRuJ934w8=;
-        b=VpPa+LZMEfqgKPg+g14iifq005cWkKJxBnnOnnuLAMCDG+x9mnqX4X9jdBQ47A5niK
-         eXn7BpYlH6/7l40U86lhBt1FVwRlYl9bMw9byQ21lnkFQVqI0nUfqqdl073+MQCOO+M/
-         R8xPbiuSOJysaYqFqtodxcNYiiwoxEbISiTRmKK5e51NYOljTvMU2DXu05FBNBpfS4aI
-         pXEkJF/sZovT/uC76QD9021uusRPFdgcamDgt7/j+9PNIahoAGTmyEDeVHGUc7aaKMFv
-         NQ2cNNS7AiSoV8cFhjaADZ5zuajncAInbsStHuhZqjG236up4DqxzijDeia7NNlIy+LB
-         gwXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701654957; x=1702259757;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xTtphEMr2OlDETtXEitijMD12offq4ozAysRuJ934w8=;
-        b=I1UxfK5O0IjMuHoDq8XcpH9wPnQfw4kyTItWBhYbv0U8l8GVWEMQxil6aqXKVbCfMN
-         DjnVx5rSW7iDxGcwK+wOmJKXT3TI6uJMqa50YV2NMatV8bM+zSCsyM2l/qONO2DRwfLW
-         KKN8VlbGDeAhSW3Jid3RKS3HdWKKXI6YJZLIuTYwY1sfLxR+zqj+6MOMtXTUj2fJ2Ls5
-         o9gHZFh8PxMMiN0RUkIDMW+GJimsSa+PPlZopPY2ocHmZzkmQP9k8NV5PTIRgywAQHBH
-         rbN+XQ4d3pEY/VWHeOh/0SOGo9MeXyinxvZaYSJ4x0teLmUiMRRideXivTKnlv0nmKi0
-         BMlg==
-X-Gm-Message-State: AOJu0YwJj/lnIWA8Q5PTfA9xD+lfMDzfIWAuZKtrNKgDGsbKd0TzXcfA
-	7VDAsiapqlqW/wc1FxrfX6/zwGE7le82B7EsDUWQP9uul+c=
-X-Google-Smtp-Source: AGHT+IFGMuLHH5DR8CZghBk+bXC7qM7qdDP2YnwN5e9enHQ4rHJYysrwBd+DIXA7KSOOmp11L3JsWQJsjMDCTIOVNm8=
-X-Received: by 2002:a05:6870:3854:b0:1e9:f0fe:6ba4 with SMTP id
- z20-20020a056870385400b001e9f0fe6ba4mr5281807oal.11.1701654957049; Sun, 03
- Dec 2023 17:55:57 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0143710EA
+	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 02:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8DxVujVM21l26E+AA--.24304S3;
+	Mon, 04 Dec 2023 10:05:10 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxjNzTM21lP8hTAA--.53749S3;
+	Mon, 04 Dec 2023 10:05:09 +0800 (CST)
+Subject: Re: [PATCH v5 2/4] KVM: selftests: Add core KVM selftests support for
+ LoongArch
+To: Tianrui Zhao <zhaotianrui@loongson.cn>, Shuah Khan <shuah@kernel.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, Sean Christopherson <seanjc@google.com>
+Cc: Vishal Annapurve <vannapurve@google.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, Peter Xu <peterx@redhat.com>,
+ Vipin Sharma <vipinsh@google.com>
+References: <20231130111804.2227570-1-zhaotianrui@loongson.cn>
+ <20231130111804.2227570-3-zhaotianrui@loongson.cn>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <2a2ef678-95f9-b6ff-8e32-f1aee26276a5@loongson.cn>
+Date: Mon, 4 Dec 2023 10:05:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231121070209.210934-1-hengqi.chen@gmail.com>
- <CAAhV-H7SwSRDh8Ui2xVb1ncoaEQVd=dugphcBemkeaPNGQX2qw@mail.gmail.com>
- <CAEyhmHRYghT5iFiLByUmC=AjdygiBWU8TH3joSyyWibu0Ki2xw@mail.gmail.com>
- <CAAhV-H4Jr_a4j+Qnitd7ay9Vkcw5g0W_W3LNJwUzQ1BWXoGpoA@mail.gmail.com>
- <CAEyhmHRFZqH=4K8WUO6tPFd0NoWMHm_iLan+4EPiqovO03w1xw@mail.gmail.com>
- <CAAhV-H53YNH_trJmgcp-=PjdTSXuyzvmxWVaeUg++yYiXd=1Kg@mail.gmail.com>
- <CAEyhmHSPwjWQ=KJKskQHTjNKfMV3WG6r8sHihqtbBsZeKUQzUg@mail.gmail.com>
- <CAAhV-H6xtawO3kMtJtzMAbGELTO=RieY3B2mM77Uk8rB73Ppqw@mail.gmail.com>
- <CAEyhmHQQ3NqN1cZ1AfhUEbaswy6BWHCTjmUyncxdNUwQuCVOAA@mail.gmail.com> <CAAhV-H7p4i+EJj9hd3mRdTePjJ07zSwuBKNuCp66828UnLMGkA@mail.gmail.com>
-In-Reply-To: <CAAhV-H7p4i+EJj9hd3mRdTePjJ07zSwuBKNuCp66828UnLMGkA@mail.gmail.com>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Mon, 4 Dec 2023 09:55:46 +0800
-Message-ID: <CAEyhmHQaAi3vV7e51DY_6MyYoTVZNd8gC22+K9CT_s6m+3Sk-Q@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Store syscall nr in thread_info
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, loongarch@lists.linux.dev, 
-	kernel@xen0n.name
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231130111804.2227570-3-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxjNzTM21lP8hTAA--.53749S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9fXoW3Cw18WrWUuFW5Kw1Dtry7Jwc_yoW8Jr4kKo
+	W3CFsF9r4rG342yr97Kr10qay2qw109an8CFy5Cr4rXa1vyFy5Ar15Kw4Fyr1fWF4kJryD
+	CasrWan7CF97Awn8l-sFpf9Il3svdjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUOb7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2_HUDUUUU
 
-On Sun, Dec 3, 2023 at 11:17=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> Hi, Hengqi,
->
-> On Thu, Nov 23, 2023 at 10:39=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.c=
-om> wrote:
-> >
-> > On Thu, Nov 23, 2023 at 4:25=E2=80=AFPM Huacai Chen <chenhuacai@kernel.=
-org> wrote:
-> > >
-> > > On Thu, Nov 23, 2023 at 4:09=E2=80=AFPM Hengqi Chen <hengqi.chen@gmai=
-l.com> wrote:
-> > > >
-> > > > On Thu, Nov 23, 2023 at 2:13=E2=80=AFPM Huacai Chen <chenhuacai@ker=
-nel.org> wrote:
-> > > > >
-> > > > > Hi, Hengqi,
-> > > > >
-> > > > > On Thu, Nov 23, 2023 at 1:49=E2=80=AFPM Hengqi Chen <hengqi.chen@=
-gmail.com> wrote:
-> > > > > >
-> > > > > > On Wed, Nov 22, 2023 at 3:58=E2=80=AFPM Huacai Chen <chenhuacai=
-@kernel.org> wrote:
-> > > > > > >
-> > > > > > > Hi, Hengqi,
-> > > > > > >
-> > > > > > > On Wed, Nov 22, 2023 at 3:34=E2=80=AFPM Hengqi Chen <hengqi.c=
-hen@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > Hi, Huacai,
-> > > > > > > >
-> > > > > > > > On Wed, Nov 22, 2023 at 2:32=E2=80=AFPM Huacai Chen <chenhu=
-acai@kernel.org> wrote:
-> > > > > > > > >
-> > > > > > > > > Hi, Hengqi,
-> > > > > > > > >
-> > > > > > > > > On Wed, Nov 22, 2023 at 1:14=E2=80=AFPM Hengqi Chen <heng=
-qi.chen@gmail.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Currently, we store syscall number in pt_regs::regs[11]=
- and it may be
-> > > > > > > > > > changed during syscall execution. Take `execve` as an e=
-xample:
-> > > > > > > > > >
-> > > > > > > > > >     sys_execve
-> > > > > > > > > >       -> do_execve
-> > > > > > > > > >         -> do_execveat_common
-> > > > > > > > > >           -> bprm_execve
-> > > > > > > > > >             -> exec_binprm
-> > > > > > > > > >               -> search_binary_handler
-> > > > > > > > > >                 -> load_elf_binary
-> > > > > > > > > >                   -> ELF_PLAT_INIT
-> > > > > > > > > >
-> > > > > > > > > > ELF_PLAT_INIT reset regs[11] to 0, later in syscall_exi=
-t_to_user_mode
-> > > > > > > > > > we get a wrong syscall nr.
-> > > > > > > > > >
-> > > > > > > > > > Known affected syscalls includes execve/execveat/rt_sig=
-return. Tools
-> > > > > > > > > > like execsnoop do not work properly because the sys_exi=
-t_* tracepoints
-> > > > > > > > > > does not trigger at all.
-> > > > > > > > > >
-> > > > > > > > > > Let's store syscall nr in thread_info instead.
-> > > > > > > > > Can we just modify ELF_PLAT_INIT and not clear regs[11]?
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > I am uncertain about the side effects of changing ELF_PLAT_=
-INIT.
-> > > > > > > > From a completeness perspective, changing ELF_PLAT_INIT is =
-suboptimal,
-> > > > > > > > rt_sigreturn is affected in another code path, and there ma=
-y be other
-> > > > > > > > syscalls that I am unaware of.
-> > > > > > > Save syscall number in thread_info has more side effects, bec=
-ause
-> > > > > > > ptrace allows us to change the number during syscall, then we=
- should
-> > > > > > > keep consistency between syscall and regs[11].
-> > > > > > >
-> > > > > >
-> > > > > > How about the change below:
-> > > > > >
-> > > > > > diff --git a/arch/loongarch/include/asm/syscall.h
-> > > > > > b/arch/loongarch/include/asm/syscall.h
-> > > > > > index e286dc58476e..954ba53bcc9a 100644
-> > > > > > --- a/arch/loongarch/include/asm/syscall.h
-> > > > > > +++ b/arch/loongarch/include/asm/syscall.h
-> > > > > > @@ -23,7 +23,9 @@ extern void *sys_call_table[];
-> > > > > >  static inline long syscall_get_nr(struct task_struct *task,
-> > > > > >                                   struct pt_regs *regs)
-> > > > > >  {
-> > > > > > -       return regs->regs[11];
-> > > > > > +       long nr =3D task_thread_info(task)->syscall;
-> > > > > > +
-> > > > > > +       return nr ? : regs->regs[11];
-> > > > > >  }
-> > > > > >
-> > > > > >  static inline void syscall_rollback(struct task_struct *task,
-> > > > > > diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/k=
-ernel/syscall.c
-> > > > > > index b4c5acd7aa3b..553ab0d624cb 100644
-> > > > > > --- a/arch/loongarch/kernel/syscall.c
-> > > > > > +++ b/arch/loongarch/kernel/syscall.c
-> > > > > > @@ -53,6 +53,7 @@ void noinstr do_syscall(struct pt_regs *regs)
-> > > > > >         regs->regs[4] =3D -ENOSYS;
-> > > > > >
-> > > > > >         nr =3D syscall_enter_from_user_mode(regs, nr);
-> > > > > > +       current_thread_info()->syscall =3D nr;
-> > > > > >
-> > > > > >         if (nr < NR_syscalls) {
-> > > > > >                 syscall_fn =3D sys_call_table[nr];
-> > > > > > @@ -61,4 +62,5 @@ void noinstr do_syscall(struct pt_regs *regs)
-> > > > > >         }
-> > > > > >
-> > > > > >         syscall_exit_to_user_mode(regs);
-> > > > > > +       current_thread_info()->syscall =3D 0;
-> > > > > >  }
-> > > > > >
-> > > > > > * allow ptrace to change syscall nr
-> > > > > > * sys_exit_* will also see the right syscall nr
-> > > > > > * this works even if rt_sigreturn clobbers all pt_regs::regs
-> > > > > No, I still prefer to modify ELF_PLAT_INIT, we can wait Arnd's co=
-mments.
-> > > > >
-> > > >
-> > > > OK, I am not eager, anyway, we know the root cause. :)
-> > > >
-> > > > > And, do you mean modifying ELF_PLAT_INIT cannot solve the
-> > > > > rt_sigreturn's problem?
-> > > > >
-> > > >
-> > > > Right, see https://elixir.bootlin.com/linux/latest/source/arch/loon=
-garch/kernel/signal.c#L807
-> > > Is this the expected behavior for rt_sigreturn()? Otherwise I think
-> > > RISC-V has the same problem. And if we really need the 'correct'
-> > > syscall number, we can overwrite regs[11] in sys_rt_sigreturn().
-> > >
-> >
-> > I check with x86 and arm64, both have the same issue, seems no one care=
-.
-> Does the rt_sigreturn issue affect execsnoop?
->
 
-No, execsnoop only relies on sys_enter_execve/sys_exit_execve.
 
-> Huacai
->
-> >
-> > > And another question: do you have any updates about the BPF system
-> > > hang problem? :)
-> > >
-> >
-> > Let's discuss this on a new thread.
-> >
-> > > Huacai
-> > >
-> > > >
-> > > > > Huacai
-> > > > >
-> > > > > >
-> > > > > > > And about ELF_PLAT_INIT, maybe Arnd can give us some more inf=
-ormation.
-> > > > > > >
-> > > > > > > Hi, Arnd,
-> > > > > > >
-> > > > > > > I found some new architectures, such as ARM64 and RISC-V, jus=
-t do
-> > > > > > > nearly nothing in ELF_PLAT_INIT, while some old architectures=
-, such as
-> > > > > > > x86 and MIPS, clear most of the registers, do you know why?
-> > > > > > >
-> > > > > > > Huacai
-> > > > > > >
-> > > > > > > >
-> > > > > > > > > Huacai
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > Fixes: be769645a2aef ("LoongArch: Add system call suppo=
-rt")
-> > > > > > > > > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> > > > > > > > > > ---
-> > > > > > > > > >  arch/loongarch/include/asm/syscall.h | 2 +-
-> > > > > > > > > >  arch/loongarch/kernel/syscall.c      | 1 +
-> > > > > > > > > >  2 files changed, 2 insertions(+), 1 deletion(-)
-> > > > > > > > > >
-> > > > > > > > > > diff --git a/arch/loongarch/include/asm/syscall.h b/arc=
-h/loongarch/include/asm/syscall.h
-> > > > > > > > > > index e286dc58476e..2317d674b92a 100644
-> > > > > > > > > > --- a/arch/loongarch/include/asm/syscall.h
-> > > > > > > > > > +++ b/arch/loongarch/include/asm/syscall.h
-> > > > > > > > > > @@ -23,7 +23,7 @@ extern void *sys_call_table[];
-> > > > > > > > > >  static inline long syscall_get_nr(struct task_struct *=
-task,
-> > > > > > > > > >                                   struct pt_regs *regs)
-> > > > > > > > > >  {
-> > > > > > > > > > -       return regs->regs[11];
-> > > > > > > > > > +       return task_thread_info(task)->syscall;
-> > > > > > > > > >  }
-> > > > > > > > > >
-> > > > > > > > > >  static inline void syscall_rollback(struct task_struct=
- *task,
-> > > > > > > > > > diff --git a/arch/loongarch/kernel/syscall.c b/arch/loo=
-ngarch/kernel/syscall.c
-> > > > > > > > > > index b4c5acd7aa3b..2783e33cf276 100644
-> > > > > > > > > > --- a/arch/loongarch/kernel/syscall.c
-> > > > > > > > > > +++ b/arch/loongarch/kernel/syscall.c
-> > > > > > > > > > @@ -52,6 +52,7 @@ void noinstr do_syscall(struct pt_reg=
-s *regs)
-> > > > > > > > > >         regs->orig_a0 =3D regs->regs[4];
-> > > > > > > > > >         regs->regs[4] =3D -ENOSYS;
-> > > > > > > > > >
-> > > > > > > > > > +       task_thread_info(current)->syscall =3D nr;
-> > > > > > > > > >         nr =3D syscall_enter_from_user_mode(regs, nr);
-> > > > > > > > > >
-> > > > > > > > > >         if (nr < NR_syscalls) {
-> > > > > > > > > > --
-> > > > > > > > > > 2.42.0
-> > > > > > > > > >
-> > > > > >
-> >
+On 2023/11/30 下午7:18, Tianrui Zhao wrote:
+> Add core KVM selftests support for LoongArch.
+> 
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> ---
+>   .../selftests/kvm/lib/loongarch/exception.S   |  59 ++++
+>   .../selftests/kvm/lib/loongarch/processor.c   | 333 ++++++++++++++++++
+>   2 files changed, 392 insertions(+)
+>   create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
+>   create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
+> 
+> diff --git a/tools/testing/selftests/kvm/lib/loongarch/exception.S b/tools/testing/selftests/kvm/lib/loongarch/exception.S
+> new file mode 100644
+> index 00000000000..88bfa505c6f
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/lib/loongarch/exception.S
+> @@ -0,0 +1,59 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#include "processor.h"
+> +
+> +/* address of refill exception should be 4K aligned */
+> +.balign	4096
+> +.global handle_tlb_refill
+> +handle_tlb_refill:
+> +	csrwr	t0, LOONGARCH_CSR_TLBRSAVE
+> +	csrrd	t0, LOONGARCH_CSR_PGD
+> +	lddir	t0, t0, 3
+> +	lddir	t0, t0, 1
+> +	ldpte	t0, 0
+> +	ldpte	t0, 1
+> +	tlbfill
+> +	csrrd	t0, LOONGARCH_CSR_TLBRSAVE
+> +	ertn
+> +
+> +	/*
+> +	 * save and restore all gprs except base register,
+> +	 * and default value of base register is sp ($r3).
+> +	 */
+> +.macro save_gprs base
+> +	.irp n,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
+> +	st.d    $r\n, \base, 8 * \n
+> +	.endr
+> +.endm
+> +
+> +.macro restore_gprs base
+> +	.irp n,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
+> +	ld.d    $r\n, \base, 8 * \n
+> +	.endr
+> +.endm
+> +
+> +/* address of general exception should be 4K aligned */
+> +.balign	4096
+> +.global handle_exception
+> +handle_exception:
+> +	csrwr  sp, LOONGARCH_CSR_KS0
+> +	csrrd  sp, LOONGARCH_CSR_KS1
+> +	addi.d sp, sp, -EXREGS_SIZE
+> +
+> +	save_gprs sp
+> +	/* save sp register to stack */
+> +	csrrd  t0, LOONGARCH_CSR_KS0
+> +	st.d   t0, sp, 3 * 8
+> +
+> +	csrrd  t0, LOONGARCH_CSR_ERA
+> +	st.d   t0, sp, PC_OFFSET_EXREGS
+> +	csrrd  t0, LOONGARCH_CSR_ESTAT
+> +	st.d   t0, sp, ESTAT_OFFSET_EXREGS
+> +	csrrd  t0, LOONGARCH_CSR_BADV
+> +	st.d   t0, sp, BADV_OFFSET_EXREGS
+> +
+> +	or     a0, sp, zero
+> +	bl route_exception
+> +	restore_gprs sp
+> +	csrrd  sp, LOONGARCH_CSR_KS0
+> +	ertn
+> diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+> new file mode 100644
+> index 00000000000..82d8c1ec711
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+> @@ -0,0 +1,333 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <assert.h>
+> +#include <linux/compiler.h>
+> +
+> +#include "kvm_util.h"
+> +#include "processor.h"
+> +
+> +static vm_paddr_t invalid_pgtable[4];
+> +static uint64_t virt_pte_index(struct kvm_vm *vm, vm_vaddr_t gva, int level)
+> +{
+> +	unsigned int shift;
+> +	uint64_t mask;
+> +
+> +	shift = level * (vm->page_shift - 3) + vm->page_shift;
+> +	mask = (1UL << (vm->page_shift - 3)) - 1;
+> +	return (gva >> shift) & mask;
+> +}
+> +
+> +static uint64_t pte_addr(struct kvm_vm *vm, uint64_t entry)
+> +{
+> +	return entry &  ~((0x1UL << vm->page_shift) - 1);
+> +}
+> +
+> +static uint64_t ptrs_per_pte(struct kvm_vm *vm)
+> +{
+> +	return 1 << (vm->page_shift - 3);
+> +}
+> +
+> +static void virt_set_pgtable(struct kvm_vm *vm, vm_paddr_t table, vm_paddr_t child)
+> +{
+> +	uint64_t *ptep;
+> +	int i, ptrs_per_pte;
+> +
+> +	ptep = addr_gpa2hva(vm, table);
+> +	ptrs_per_pte = 1 << (vm->page_shift - 3);
+> +	for (i = 0; i < ptrs_per_pte; i++)
+> +		*(ptep + i) = child;
+> +}
+> +
+> +void virt_arch_pgd_alloc(struct kvm_vm *vm)
+> +{
+> +	int i;
+> +	vm_paddr_t child, table;
+> +
+> +	if (vm->pgd_created)
+> +		return;
+> +	child = table = 0;
+> +	for (i = 0; i < vm->pgtable_levels; i++) {
+> +		invalid_pgtable[i] = child;
+> +		table = vm_phy_page_alloc(vm, DEFAULT_LOONARCH64_PAGE_TABLE_MIN,
+> +				vm->memslots[MEM_REGION_PT]);
+> +		TEST_ASSERT(table, "Fail to allocate page tale at level %d\n", i);
+> +		virt_set_pgtable(vm, table, child);
+> +		child = table;
+> +	}
+> +	vm->pgd = table;
+> +	vm->pgd_created = true;
+> +}
+> +
+> +static int virt_pte_none(uint64_t *ptep, int level)
+> +{
+> +	return *ptep == invalid_pgtable[level];
+> +}
+> +
+> +static uint64_t *virt_populate_pte(struct kvm_vm *vm, vm_vaddr_t gva, int alloc)
+> +{
+> +	uint64_t *ptep;
+> +	vm_paddr_t child;
+> +	int level;
+> +
+> +	if (!vm->pgd_created)
+> +		goto unmapped_gva;
+> +
+> +	level = vm->pgtable_levels - 1;
+> +	child = vm->pgd;
+> +	while (level > 0) {
+> +		ptep = addr_gpa2hva(vm, child) + virt_pte_index(vm, gva, level) * 8;
+> +		if (virt_pte_none(ptep, level)) {
+> +			if (alloc) {
+> +				child = vm_alloc_page_table(vm);
+> +				virt_set_pgtable(vm, child, invalid_pgtable[level - 1]);
+> +				*ptep = child;
+> +			} else
+> +				goto unmapped_gva;
+> +
+> +		} else
+> +			child = pte_addr(vm, *ptep);
+> +		level--;
+> +	}
+> +
+> +	ptep = addr_gpa2hva(vm, child) + virt_pte_index(vm, gva, level) * 8;
+> +	return ptep;
+> +
+> +unmapped_gva:
+> +	TEST_FAIL("No mapping for vm virtual address, gva: 0x%lx", gva);
+> +	exit(EXIT_FAILURE);
+> +}
+> +
+> +vm_paddr_t addr_arch_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
+> +{
+> +	uint64_t *ptep;
+> +
+> +	ptep = virt_populate_pte(vm, gva, 0);
+> +	TEST_ASSERT(*ptep != 0, "Virtual address vaddr: 0x%lx not mapped\n", gva);
+> +
+> +	return pte_addr(vm, *ptep) + (gva & (vm->page_size - 1));
+> +}
+> +
+> +void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
+> +{
+> +	uint32_t prot_bits;
+> +	uint64_t *ptep;
+> +
+> +	TEST_ASSERT((vaddr % vm->page_size) == 0,
+> +			"Virtual address not on page boundary,\n"
+> +			"vaddr: 0x%lx vm->page_size: 0x%x", vaddr, vm->page_size);
+> +	TEST_ASSERT(sparsebit_is_set(vm->vpages_valid,
+> +			(vaddr >> vm->page_shift)),
+> +			"Invalid virtual address, vaddr: 0x%lx", vaddr);
+> +	TEST_ASSERT((paddr % vm->page_size) == 0,
+> +			"Physical address not on page boundary,\n"
+> +			"paddr: 0x%lx vm->page_size: 0x%x", paddr, vm->page_size);
+> +	TEST_ASSERT((paddr >> vm->page_shift) <= vm->max_gfn,
+> +			"Physical address beyond maximum supported,\n"
+> +			"paddr: 0x%lx vm->max_gfn: 0x%lx vm->page_size: 0x%x",
+> +			paddr, vm->max_gfn, vm->page_size);
+> +
+> +	ptep = virt_populate_pte(vm, vaddr, 1);
+> +	prot_bits = _PAGE_PRESENT | __READABLE | __WRITEABLE | _CACHE_CC;
+> +	prot_bits |= _PAGE_USER;
+> +	*ptep = paddr | prot_bits;
+> +}
+> +
+> +static void pte_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent, uint64_t page, int level)
+> +{
+> +	static const char * const type[] = { "pte", "pmd", "pud", "pgd"};
+> +	uint64_t pte, *ptep;
+> +
+> +	if (level < 0)
+> +		return;
+> +
+> +	for (pte = page; pte < page + ptrs_per_pte(vm) * 8; pte += 8) {
+> +		ptep = addr_gpa2hva(vm, pte);
+> +		if (virt_pte_none(ptep, level))
+> +			continue;
+> +		fprintf(stream, "%*s%s: %lx: %lx at %p\n",
+> +				indent, "", type[level], pte, *ptep, ptep);
+> +		pte_dump(stream, vm, indent + 1, pte_addr(vm, *ptep), level--);
+> +	}
+> +}
+> +
+> +void virt_arch_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
+> +{
+> +	int level;
+> +
+> +	if (!vm->pgd_created)
+> +		return;
+> +
+> +	level = vm->pgtable_levels - 1;
+> +	pte_dump(stream, vm, indent, vm->pgd, level);
+> +}
+> +
+> +void vcpu_arch_dump(FILE *stream, struct kvm_vcpu *vcpu, uint8_t indent)
+> +{
+> +}
+> +
+> +void assert_on_unhandled_exception(struct kvm_vcpu *vcpu)
+> +{
+> +	struct ucall uc;
+> +
+> +	if (get_ucall(vcpu, &uc) != UCALL_UNHANDLED)
+> +		return;
+> +
+> +	TEST_FAIL("Unexpected exception (pc:0x%lx, estat:0x%lx, badv:0x%lx)",
+> +			uc.args[0], uc.args[1], uc.args[2]);
+> +}
+> +
+> +void route_exception(struct ex_regs *regs)
+> +{
+> +	unsigned long pc, estat, badv;
+> +
+> +	pc = regs->pc;
+> +	estat = regs->estat;
+> +	badv  = regs->badv;
+> +	ucall(UCALL_UNHANDLED, 3, pc, estat, badv);
+> +	while (1)
+> +		;
+> +}
+> +
+> +void vcpu_args_set(struct kvm_vcpu *vcpu, unsigned int num, ...)
+> +{
+> +	va_list ap;
+> +	struct kvm_regs regs;
+> +	int i;
+> +
+> +	TEST_ASSERT(num >= 1 && num <= 8, "Unsupported number of args,\n"
+> +		    "num: %u\n", num);
+> +
+> +	vcpu_regs_get(vcpu, &regs);
+> +	va_start(ap, num);
+> +	for (i = 0; i < num; i++)
+> +		regs.gpr[i + 4] = va_arg(ap, uint64_t);
+> +	va_end(ap);
+> +	vcpu_regs_set(vcpu, &regs);
+> +}
+> +
+> +static void loongarch_get_csr(struct kvm_vcpu *vcpu, uint64_t id, void *addr)
+> +{
+> +	uint64_t csrid;
+> +
+> +	csrid = KVM_REG_LOONGARCH_CSR | KVM_REG_SIZE_U64 | 8 * id;
+> +	vcpu_get_reg(vcpu, csrid, addr);
+> +}
+> +
+> +static void loongarch_set_csr(struct kvm_vcpu *vcpu, uint64_t id, uint64_t val)
+> +{
+> +	uint64_t csrid;
+> +
+> +	csrid = KVM_REG_LOONGARCH_CSR | KVM_REG_SIZE_U64 | 8 * id;
+> +	vcpu_set_reg(vcpu, csrid, val);
+> +}
+> +
+> +static void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
+> +{
+> +	unsigned long val;
+> +	int width;
+> +	struct kvm_vm *vm = vcpu->vm;
+> +
+> +	switch (vm->mode) {
+> +	case VM_MODE_P48V48_16K:
+> +	case VM_MODE_P40V48_16K:
+> +	case VM_MODE_P36V48_16K:
+> +	case VM_MODE_P36V47_16K:
+> +		break;
+> +
+> +	default:
+> +		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
+> +	}
+> +
+> +	/* user mode and page enable mode */
+> +	val = PLV_USER | CSR_CRMD_PG;
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_CRMD, val);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PRMD, val);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_EUEN, 1);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_ECFG, 0);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_TCFG, 0);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_ASID, 1);
+> +
+> +	width = vm->page_shift - 3;
+> +	val = 0;
+> +	switch (vm->pgtable_levels) {
+> +	case 4:
+> +		/* pud page shift and width */
+> +		val = (vm->page_shift + width * 2) << 20 | (width << 25);
+> +		/* fall throuth */
+> +	case 3:
+> +		/* pmd page shift and width */
+> +		val |= (vm->page_shift + width) << 10 | (width << 15);
+> +		/* pte page shift and width */
+> +		val |= vm->page_shift | width << 5;
+> +		break;
+> +	default:
+> +		TEST_FAIL("Got %u page table levels, expected 3 or 4", vm->pgtable_levels);
+> +	}
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PWCTL0, val);
+> +
+> +	/* pgd page shift and width */
+> +	val = (vm->page_shift + width * (vm->pgtable_levels - 1)) | width << 6;
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PWCTL1, val);
+> +
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_PGDL, vm->pgd);
+> +
+> +	/*
+> +	 * refill exception runs on real mode, entry address should
+> +	 * be physical address
+> +	 */
+> +	val = addr_gva2gpa(vm, (unsigned long)handle_tlb_refill);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_TLBRENTRY, val);
+> +
+> +	/*
+> +	 * general exception runs on page-enabled mode, entry address should
+> +	 * be virtual address
+> +	 */
+> +	val = (unsigned long)handle_exception;
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_EENTRY, val);
+> +
+> +	loongarch_get_csr(vcpu, LOONGARCH_CSR_TLBIDX, &val);
+> +	val &= ~CSR_TLBIDX_SIZEM;
+> +	val |= PS_DEFAULT_SIZE << CSR_TLBIDX_SIZE;
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_TLBIDX, val);
+> +
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_STLBPGSIZE, PS_DEFAULT_SIZE);
+> +
+> +	/* LOONGARCH_CSR_KS1 is used for exception stack */
+> +	val = __vm_vaddr_alloc(vm, vm->page_size,
+> +			DEFAULT_LOONARCH64_STACK_MIN, MEM_REGION_DATA);
+> +	TEST_ASSERT(val != 0,  "No memory for exception stack");
+> +	val = val + vm->page_size;
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_KS1, val);
+> +
+> +	loongarch_get_csr(vcpu, LOONGARCH_CSR_TLBREHI, &val);
+> +	val &= ~CSR_TLBREHI_PS;
+> +	val |= PS_DEFAULT_SIZE << CSR_TLBREHI_PS_SHIFT;
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_TLBREHI, val);
+> +
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_CPUID, vcpu->id);
+> +	loongarch_set_csr(vcpu, LOONGARCH_CSR_TMID,  vcpu->id);
+> +}
+> +
+> +struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
+> +				  void *guest_code)
+> +{
+> +	size_t stack_size;
+> +	uint64_t stack_vaddr;
+> +	struct kvm_regs regs;
+> +	struct kvm_vcpu *vcpu;
+> +
+> +	vcpu = __vm_vcpu_add(vm, vcpu_id);
+> +	stack_size = vm->page_size;
+> +	stack_vaddr = __vm_vaddr_alloc(vm, stack_size,
+> +			DEFAULT_LOONARCH64_STACK_MIN, MEM_REGION_DATA);
+> +	TEST_ASSERT(stack_vaddr != 0,  "No memory for vm stack");
+> +
+> +	loongarch_vcpu_setup(vcpu);
+> +	/* Setup guest general purpose registers */
+> +	vcpu_regs_get(vcpu, &regs);
+> +	regs.gpr[3] = stack_vaddr + stack_size;
+> +	regs.pc = (uint64_t)guest_code;
+> +	vcpu_regs_set(vcpu, &regs);
+> +
+> +	return vcpu;
+> +}
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+
