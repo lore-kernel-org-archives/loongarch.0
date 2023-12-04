@@ -1,24 +1,24 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02533F9C3
-	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 08:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 272A8FBE2
+	for <loongarch@lists.linux.dev>; Mon,  4 Dec 2023 08:46:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.183])
-	by gateway (Coremail) with SMTP id _____8AxqOi0kW1ls7M+AA--.23447S3;
-	Mon, 04 Dec 2023 16:45:40 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx_7vtkW1l0rM+AA--.539S3;
+	Mon, 04 Dec 2023 16:46:37 +0800 (CST)
 Received: from [10.20.42.183] (unknown [10.20.42.183])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxXNyykW1lWhhUAA--.54576S3;
-	Mon, 04 Dec 2023 16:45:40 +0800 (CST)
-Subject: Re: [PATCH v4 1/3] LoongArch: KVM: Remove SW timer switch when vcpu
- is halt polling
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx7y_skW1lpxhUAA--.54473S3;
+	Mon, 04 Dec 2023 16:46:36 +0800 (CST)
+Subject: Re: [PATCH v4 3/3] LoongArch: KVM: Remove kvm_acquire_timer before
+ entering guest
 To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
  loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <20231116023036.2324371-1-maobibo@loongson.cn>
- <20231116023036.2324371-2-maobibo@loongson.cn>
+ <20231116023036.2324371-4-maobibo@loongson.cn>
 From: zhaotianrui <zhaotianrui@loongson.cn>
-Message-ID: <564a2fd3-ffba-3bc5-70b9-8a9fa9a0f1c6@loongson.cn>
-Date: Mon, 4 Dec 2023 16:48:01 +0800
+Message-ID: <408e06fe-6c98-129c-d369-ba4e91b07ea6@loongson.cn>
+Date: Mon, 4 Dec 2023 16:48:59 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -27,122 +27,172 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20231116023036.2324371-2-maobibo@loongson.cn>
+In-Reply-To: <20231116023036.2324371-4-maobibo@loongson.cn>
 Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:AQAAf8AxXNyykW1lWhhUAA--.54576S3
+X-CM-TRANSID:AQAAf8Cx7y_skW1lpxhUAA--.54473S3
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxur1rur15ZF4rWFy8Kw1fZrc_yoW5Kw1fpF
-	W7CFnrXr4rGrnrtw13XF4Dur45X3ykKF1xWa47AayFyrsrtr1rJF48K39xXFyagw4rCrWx
-	Zr1rKas8ua1jy3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jw43GFyruF4Utw4xXr15WrX_yoW7Ww48pF
+	WxuwnFqw4rJr4UWw17t3Wq9rW5X3ykKr1fJFykJayFyrsIyrn0qF4kGFZ5XFW3J3yIyF4S
+	vr1rtwnxAF4DA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
 	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
 	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
 	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
-	e5UUUUU==
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07Ui
+	VysUUUUU=
 
 Reviewed-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 
 ÔÚ 2023/11/16 ÉÏÎç10:30, Bibo Mao Ð´µÀ:
-> With halt-polling supported, there is checking for pending events
-> or interrupts when vcpu executes idle instruction. Pending interrupts
-> include injected SW interrupts and passthrough HW interrupts, such as
-> HW timer interrupts, since HW timer works still even if vcpu exists
-> from VM mode.
+> Timer emulation method in VM is switch to SW timer, there are two
+> places where timer emulation is needed. One is during vcpu thread
+> context switch, the other is halt-polling with idle instruction
+> emulation. SW timer switching is remove during halt-polling mode,
+> so it is not necessary to disable SW timer before entering to guest.
 >
-> Since HW timer pending interrupt can be set directly with CSR status
-> register, and pending HW timer interrupt checking is used in vcpu block
-> checking function, it is not necessary to switch to sw timer during
-> halt-polling. This patch adds preemption disabling in function
-> kvm_cpu_has_pending_timer, and removes SW timer switching in idle
-> instruction emulation function.
+> This patch removes SW timer handling before entering guest mode, and
+> put it in HW timer restoring flow when vcpu thread is sched-in. With
+> this patch, vm timer emulation is simpler, there is SW/HW timer
+> switch only in vcpu thread context switch scenario.
 >
 > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->   arch/loongarch/kvm/exit.c  | 13 ++-----------
->   arch/loongarch/kvm/timer.c | 13 ++++++++++---
->   arch/loongarch/kvm/vcpu.c  |  9 ++++++++-
->   3 files changed, 20 insertions(+), 15 deletions(-)
+>   arch/loongarch/include/asm/kvm_vcpu.h |  1 -
+>   arch/loongarch/kvm/timer.c            | 22 ++++++--------------
+>   arch/loongarch/kvm/vcpu.c             | 29 ---------------------------
+>   3 files changed, 6 insertions(+), 46 deletions(-)
 >
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> index ce8de3fa472c..e708a1786d6b 100644
-> --- a/arch/loongarch/kvm/exit.c
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -200,17 +200,8 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
->   	++vcpu->stat.idle_exits;
->   	trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
+> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+> index 553cfa2b2b1c..0e87652f780a 100644
+> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+> @@ -55,7 +55,6 @@ void kvm_save_fpu(struct loongarch_fpu *fpu);
+>   void kvm_restore_fpu(struct loongarch_fpu *fpu);
+>   void kvm_restore_fcsr(struct loongarch_fpu *fpu);
 >   
-> -	if (!kvm_arch_vcpu_runnable(vcpu)) {
-> -		/*
-> -		 * Switch to the software timer before halt-polling/blocking as
-> -		 * the guest's timer may be a break event for the vCPU, and the
-> -		 * hypervisor timer runs only when the CPU is in guest mode.
-> -		 * Switch before halt-polling so that KVM recognizes an expired
-> -		 * timer before blocking.
-> -		 */
-> -		kvm_save_timer(vcpu);
-> -		kvm_vcpu_block(vcpu);
-> -	}
-> +	if (!kvm_arch_vcpu_runnable(vcpu))
-> +		kvm_vcpu_halt(vcpu);
->   
->   	return EMULATE_DONE;
->   }
+> -void kvm_acquire_timer(struct kvm_vcpu *vcpu);
+>   void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
+>   void kvm_reset_timer(struct kvm_vcpu *vcpu);
+>   void kvm_save_timer(struct kvm_vcpu *vcpu);
 > diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
-> index 284bf553fefe..437e960d8fdb 100644
+> index e37c0ebffabd..711982f9eeb5 100644
 > --- a/arch/loongarch/kvm/timer.c
 > +++ b/arch/loongarch/kvm/timer.c
-> @@ -155,11 +155,18 @@ static void _kvm_save_timer(struct kvm_vcpu *vcpu)
->   		 */
->   		hrtimer_cancel(&vcpu->arch.swtimer);
->   		hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_ABS_PINNED);
-> -	} else
-> +	} else if (vcpu->stat.generic.blocking) {
->   		/*
-> -		 * Inject timer interrupt so that hall polling can dectect and exit
-> +		 * Inject timer interrupt so that hall polling can dectect and
-> +		 * exit.
-> +		 * VCPU is scheduled out already and sleeps in rcuwait queue and
-> +		 * will not poll pending events again. kvm_queue_irq is not
-> +		 * enough, hrtimer swtimer should be used here.
->   		 */
-> -		kvm_queue_irq(vcpu, INT_TI);
-> +		expire = ktime_add_ns(ktime_get(), 10);  // 10ns is enough here?
-> +		vcpu->arch.expire = expire;
-> +		hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_ABS_PINNED);
-> +	}
+> @@ -64,19 +64,6 @@ void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long timer_hz)
+>   	kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_TVAL, 0);
 >   }
 >   
+> -/*
+> - * Restore hard timer state and enable guest to access timer registers
+> - * without trap, should be called with irq disabled
+> - */
+> -void kvm_acquire_timer(struct kvm_vcpu *vcpu)
+> -{
+> -	/*
+> -	 * Freeze the soft-timer and sync the guest stable timer with it. We do
+> -	 * this with interrupts disabled to avoid latency.
+> -	 */
+> -	hrtimer_cancel(&vcpu->arch.swtimer);
+> -}
+> -
 >   /*
+>    * Restore soft timer state from saved context.
+>    */
+> @@ -98,6 +85,11 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
+>   		return;
+>   	}
+>   
+> +	/*
+> +	 * Freeze the soft-timer and sync the guest stable timer with it.
+> +	 */
+> +	hrtimer_cancel(&vcpu->arch.swtimer);
+> +
+>   	/*
+>   	 * Set remainder tick value if not expired
+>   	 */
+> @@ -115,7 +107,7 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
+>   		/*
+>   		 * Inject timer here though sw timer should inject timer
+>   		 * interrupt async already, since sw timer may be cancelled
+> -		 * during injecting intr async in function kvm_acquire_timer
+> +		 * during injecting intr async
+>   		 */
+>   		kvm_queue_irq(vcpu, INT_TI);
+>   	}
+> @@ -140,11 +132,9 @@ static void _kvm_save_timer(struct kvm_vcpu *vcpu)
+>   	vcpu->arch.expire = expire;
+>   	if (ticks) {
+>   		/*
+> -		 * Update hrtimer to use new timeout
+>   		 * HRTIMER_MODE_PINNED is suggested since vcpu may run in
+>   		 * the same physical cpu in next time
+>   		 */
+> -		hrtimer_cancel(&vcpu->arch.swtimer);
+>   		hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_ABS_PINNED);
+>   	} else if (vcpu->stat.generic.blocking) {
+>   		/*
 > diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 73d0c2b9c1a5..42663a345bd1 100644
+> index 42663a345bd1..cf1c4d64c1b7 100644
 > --- a/arch/loongarch/kvm/vcpu.c
 > +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -187,8 +187,15 @@ int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
->   
->   int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
->   {
-> -	return kvm_pending_timer(vcpu) ||
-> +	int ret;
-> +
-> +	/* protect from TOD sync and vcpu_load/put */
-> +	preempt_disable();
-> +	ret = kvm_pending_timer(vcpu) ||
->   		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) & (1 << INT_TI);
-> +	preempt_enable();
-> +
-> +	return ret;
+> @@ -95,7 +95,6 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+>   		 * check vmid before vcpu enter guest
+>   		 */
+>   		local_irq_disable();
+> -		kvm_acquire_timer(vcpu);
+>   		kvm_deliver_intr(vcpu);
+>   		kvm_deliver_exception(vcpu);
+>   		/* Make sure the vcpu mode has been written */
+> @@ -251,23 +250,6 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>   	return -EINVAL;
 >   }
 >   
->   int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
+> -/**
+> - * kvm_migrate_count() - Migrate timer.
+> - * @vcpu:       Virtual CPU.
+> - *
+> - * Migrate hrtimer to the current CPU by cancelling and restarting it
+> - * if the hrtimer is active.
+> - *
+> - * Must be called when the vCPU is migrated to a different CPU, so that
+> - * the timer can interrupt the guest at the new CPU, and the timer irq can
+> - * be delivered to the vCPU.
+> - */
+> -static void kvm_migrate_count(struct kvm_vcpu *vcpu)
+> -{
+> -	if (hrtimer_cancel(&vcpu->arch.swtimer))
+> -		hrtimer_restart(&vcpu->arch.swtimer);
+> -}
+> -
+>   static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+>   {
+>   	unsigned long gintc;
+> @@ -796,17 +778,6 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>   	unsigned long flags;
+>   
+>   	local_irq_save(flags);
+> -	if (vcpu->arch.last_sched_cpu != cpu) {
+> -		kvm_debug("[%d->%d]KVM vCPU[%d] switch\n",
+> -				vcpu->arch.last_sched_cpu, cpu, vcpu->vcpu_id);
+> -		/*
+> -		 * Migrate the timer interrupt to the current CPU so that it
+> -		 * always interrupts the guest and synchronously triggers a
+> -		 * guest timer interrupt.
+> -		 */
+> -		kvm_migrate_count(vcpu);
+> -	}
+> -
+>   	/* Restore guest state to registers */
+>   	_kvm_vcpu_load(vcpu, cpu);
+>   	local_irq_restore(flags);
 
