@@ -1,168 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8D046AF
-	for <loongarch@lists.linux.dev>; Tue,  5 Dec 2023 02:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLKHfmQb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B6DDC433CC
-	for <loongarch@lists.linux.dev>; Tue,  5 Dec 2023 02:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701742831;
-	bh=yGVYTaY5WjmVroBLRmh/zaOtHpLdW1ToCiNR1/hpasM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TLKHfmQbCfpFnLjP1wbNoTuPQpWJKEO+Rv/acUOB1lJ0/tZ75jS9wif7367i41Bg/
-	 odG9uQvrD8UIw+QJFe6SnxEDv2Y+bHaZ+8hJWp6xo9XAPaBU2HTXBSpGA9AQrd783i
-	 KmcFzNtT/YBvFYWAdVKa9oOd7XMBeOtaKhkCspMmS6a8i/0wJ4hZJYRJcaqpmX+gqu
-	 jl/UssF04+26mnA8UgIzB/B7P3YvBhn6Tu7Lek8Wq85Yy9Eaqd8SoPrQ2IbSFFPSRQ
-	 7vxbffTpwkbtNCJ8slxlyGkAQ4Mc9Nvg0d0RIkFrvyYP/4GNpRBZVZwayM+BoW7SJC
-	 mPvIA9fY8eLxA==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-548ce39b101so6400867a12.2
-        for <loongarch@lists.linux.dev>; Mon, 04 Dec 2023 18:20:30 -0800 (PST)
-X-Gm-Message-State: AOJu0YwYYEneV5dOyOI0pOeWH6RnxQxsHeQSzZw3QfebhSgEqp30GKsK
-	ub+LK0ieeLO+YiFQlJQRAA8fWAbbP0YhyTzjQ5Y=
-X-Google-Smtp-Source: AGHT+IFZlQzjG1R+WCnQ0APvSI1FWHVxxlzrjPGayh4LKHdoF0kRjHnoDZhwhp2SZCjcparsiyJYD0pU2Ui4NlFVo3w=
-X-Received: by 2002:a50:d787:0:b0:54c:4837:7d3b with SMTP id
- w7-20020a50d787000000b0054c48377d3bmr2455887edi.122.1701742829397; Mon, 04
- Dec 2023 18:20:29 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4E1D803
+	for <loongarch@lists.linux.dev>; Tue,  5 Dec 2023 02:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx77uPkG5l0+8+AA--.835S3;
+	Tue, 05 Dec 2023 10:53:03 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrdyOkG5lBA9VAA--.56516S3;
+	Tue, 05 Dec 2023 10:53:02 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: BPF: Remove fatal signed-extension
+ instructions
+To: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev
+References: <20231204141938.7230-1-hengqi.chen@gmail.com>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <846ccd59-9789-daf1-972d-2a47912f5433@loongson.cn>
+Date: Tue, 5 Dec 2023 10:53:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231116023036.2324371-1-maobibo@loongson.cn> <20231116023036.2324371-2-maobibo@loongson.cn>
- <564a2fd3-ffba-3bc5-70b9-8a9fa9a0f1c6@loongson.cn>
-In-Reply-To: <564a2fd3-ffba-3bc5-70b9-8a9fa9a0f1c6@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 5 Dec 2023 10:20:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4P_JUewDM7R1ByNR4PZa97=xM_rAJ239J-wFSd6_+0GA@mail.gmail.com>
-Message-ID: <CAAhV-H4P_JUewDM7R1ByNR4PZa97=xM_rAJ239J-wFSd6_+0GA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] LoongArch: KVM: Remove SW timer switch when vcpu
- is halt polling
-To: zhaotianrui <zhaotianrui@loongson.cn>
-Cc: Bibo Mao <maobibo@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231204141938.7230-1-hengqi.chen@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8BxrdyOkG5lBA9VAA--.56516S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uF4kGFW8Ww4DZr47CFW5CFX_yoW8uFWxpF
+	ZIg3yakrWDt39xWw1xZw4Uua40yw1ft3y5GFyrtr13K34UWFn2vrWrtF45AF98ZF4fWFy2
+	va1DXw4Sg3WqvagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
+	DUUUU
 
-This series looks good to me, If Paolo agrees, I will apply to
-loongarch-next after [1] is taken into the kvm tree (otherwise there
-will be build errors).
+Hi Hengqi,
 
-[1] https://lore.kernel.org/loongarch/CAAhV-H63QkfSw+Esn8oW2PDEsCnTRPFqkj8X=
--x8i9cH3AS0k9w@mail.gmail.com/T/#t
+On 12/04/2023 10:19 PM, Hengqi Chen wrote:
+> As reported on mailing list ([0]), several BPF testcases could
+> triggered kernel panics like:
+>
+>     # ./test_progs -t verifier_map_ptr_mixing
 
-On Mon, Dec 4, 2023 at 4:45=E2=80=AFPM zhaotianrui <zhaotianrui@loongson.cn=
-> wrote:
+...
+
+>     [   47.872612] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+
+According to the commit message, the code itself looks good to me,
+thanks for your patch.
+
+In my opinion, I think it is better to update the commit message
+and split the changes into two separate patches.
+
+> Take the `cls_redirect` case as an example:
 >
-> Reviewed-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+>     cls_redirect()
+>       -> get_global_metrics() returns pcpu ptr 0xfffffefffc00b480
 >
-> =E5=9C=A8 2023/11/16 =E4=B8=8A=E5=8D=8810:30, Bibo Mao =E5=86=99=E9=81=93=
-:
-> > With halt-polling supported, there is checking for pending events
-> > or interrupts when vcpu executes idle instruction. Pending interrupts
-> > include injected SW interrupts and passthrough HW interrupts, such as
-> > HW timer interrupts, since HW timer works still even if vcpu exists
-> > from VM mode.
-> >
-> > Since HW timer pending interrupt can be set directly with CSR status
-> > register, and pending HW timer interrupt checking is used in vcpu block
-> > checking function, it is not necessary to switch to sw timer during
-> > halt-polling. This patch adds preemption disabling in function
-> > kvm_cpu_has_pending_timer, and removes SW timer switching in idle
-> > instruction emulation function.
-> >
-> > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > ---
-> >   arch/loongarch/kvm/exit.c  | 13 ++-----------
-> >   arch/loongarch/kvm/timer.c | 13 ++++++++++---
-> >   arch/loongarch/kvm/vcpu.c  |  9 ++++++++-
-> >   3 files changed, 20 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> > index ce8de3fa472c..e708a1786d6b 100644
-> > --- a/arch/loongarch/kvm/exit.c
-> > +++ b/arch/loongarch/kvm/exit.c
-> > @@ -200,17 +200,8 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
-> >       ++vcpu->stat.idle_exits;
-> >       trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
-> >
-> > -     if (!kvm_arch_vcpu_runnable(vcpu)) {
-> > -             /*
-> > -              * Switch to the software timer before halt-polling/block=
-ing as
-> > -              * the guest's timer may be a break event for the vCPU, a=
-nd the
-> > -              * hypervisor timer runs only when the CPU is in guest mo=
-de.
-> > -              * Switch before halt-polling so that KVM recognizes an e=
-xpired
-> > -              * timer before blocking.
-> > -              */
-> > -             kvm_save_timer(vcpu);
-> > -             kvm_vcpu_block(vcpu);
-> > -     }
-> > +     if (!kvm_arch_vcpu_runnable(vcpu))
-> > +             kvm_vcpu_halt(vcpu);
-> >
-> >       return EMULATE_DONE;
-> >   }
-> > diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
-> > index 284bf553fefe..437e960d8fdb 100644
-> > --- a/arch/loongarch/kvm/timer.c
-> > +++ b/arch/loongarch/kvm/timer.c
-> > @@ -155,11 +155,18 @@ static void _kvm_save_timer(struct kvm_vcpu *vcpu=
-)
-> >                */
-> >               hrtimer_cancel(&vcpu->arch.swtimer);
-> >               hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_A=
-BS_PINNED);
-> > -     } else
-> > +     } else if (vcpu->stat.generic.blocking) {
-> >               /*
-> > -              * Inject timer interrupt so that hall polling can dectec=
-t and exit
-> > +              * Inject timer interrupt so that hall polling can dectec=
-t and
-> > +              * exit.
-> > +              * VCPU is scheduled out already and sleeps in rcuwait qu=
-eue and
-> > +              * will not poll pending events again. kvm_queue_irq is n=
-ot
-> > +              * enough, hrtimer swtimer should be used here.
-> >                */
-> > -             kvm_queue_irq(vcpu, INT_TI);
-> > +             expire =3D ktime_add_ns(ktime_get(), 10);  // 10ns is eno=
-ugh here?
-> > +             vcpu->arch.expire =3D expire;
-> > +             hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_A=
-BS_PINNED);
-> > +     }
-> >   }
-> >
-> >   /*
-> > diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> > index 73d0c2b9c1a5..42663a345bd1 100644
-> > --- a/arch/loongarch/kvm/vcpu.c
-> > +++ b/arch/loongarch/kvm/vcpu.c
-> > @@ -187,8 +187,15 @@ int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu =
-*vcpu,
-> >
-> >   int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
-> >   {
-> > -     return kvm_pending_timer(vcpu) ||
-> > +     int ret;
-> > +
-> > +     /* protect from TOD sync and vcpu_load/put */
-> > +     preempt_disable();
-> > +     ret =3D kvm_pending_timer(vcpu) ||
-> >               kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) & (1 << INT_TI);
-> > +     preempt_enable();
-> > +
-> > +     return ret;
-> >   }
-> >
-> >   int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
+> The pointer is later signed-extended to 0xfffffffffc00b480 at
+> `BPF_JMP | BPF_EXIT`. During BPF prog run, this triggers unhandled
+> page fault and a kernel panic.
+
+The test case that cause panic is "verifier_map_ptr_mixing",
+but here the example is another test case "test_cls_redirect",
+please take "verifier_map_ptr_mixing" as an example to analysis
+to keep it consistent.
+
 >
+> The `cgrp_ls_tp_btf` test reveals another kind of kernel panic
+> when handling memory load:
 >
+>     ptr = bpf_cgrp_storage_get(&map_a, task->cgroups->dfl_cgrp, 0,
+>     				   BPF_LOCAL_STORAGE_GET_F_CREATE);
+>
+> The expression `task->cgroups->dfl_cgrp` involves two memory load.
+> Since the field offset fits in imm12 or imm14, we use ldd or ldptrd
+> to perform memory load. But the ldd and ldptrd instructions both
+> have the side effect that it will signed-extended the imm operand.
+
+The initial aim of ldd and ldptrd is to reduce one instruction,
+if it has problem, we can use ldxd directly, but ...
+
+> Finally, we got the wrong addresses and result in kernel panics.
+
+... if the test case "cgrp_ls_tp_btf" triggers another panic,
+and the cause is another reason related with BPF_DW case,
+please submit a separate patch so that we can record the cause
+and analysis clearly.
+
+>
+> Let's get rid of those fatal signed-extension instrutions to fix
+> the issues. For the first case, no arches do a sext on function
+> return, the fix should be safe. For the second case, we fallback
+> to use a generic ldxd instruction.
+
+Thanks,
+Tiezhu
+
