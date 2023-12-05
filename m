@@ -1,214 +1,168 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A4A20E8
-	for <loongarch@lists.linux.dev>; Tue,  5 Dec 2023 02:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8D046AF
+	for <loongarch@lists.linux.dev>; Tue,  5 Dec 2023 02:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/9yKNsd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADDEC433C9
-	for <loongarch@lists.linux.dev>; Tue,  5 Dec 2023 02:11:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLKHfmQb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B6DDC433CC
+	for <loongarch@lists.linux.dev>; Tue,  5 Dec 2023 02:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701742293;
-	bh=bERZPYkBAZ+KnpaV36S2oPGbOUqayaORFbPmWJnhfKA=;
+	s=k20201202; t=1701742831;
+	bh=yGVYTaY5WjmVroBLRmh/zaOtHpLdW1ToCiNR1/hpasM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=l/9yKNsdWtEsT6kU4AE5sH5q408k4mqDX/Ev9nAqcdLILBsdUwSE40opzSbwJHq33
-	 J6hPVbI7yOdpt9PYpgBesaehRzttrc5qU8qKTul0xQ7jGEOFI652vT23i/ueSjpL/C
-	 DXedwUNCxgveejfBLpALE+3Ny16MkeO8ByQFKeivZhuQI11ExbMqxpFQJCbUdPxwCD
-	 wH3T7ITy4orr7yp3Btwo6B6+nHrx849w36iMMyn8qMB5AXEJmcYSfN8weOGLhK6m5W
-	 imi7EILn06PN52AQQ0HJsxwIsu+83x/FSM9usETIIwEuyzB0CpLWmTGMPilVxaInny
-	 6BEmF2xya7pew==
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40c09ba723eso22395065e9.2
-        for <loongarch@lists.linux.dev>; Mon, 04 Dec 2023 18:11:33 -0800 (PST)
-X-Gm-Message-State: AOJu0Yz4r/Qc8BqBKaKjPmnPAg87lPdp8vOyTGFD7mFzRUe/0IGczfs4
-	dcnF2mWmAyWv+wWIBga3FvWkFtyHTMgsadWM5wQ=
-X-Google-Smtp-Source: AGHT+IEJTFeR4V2leJ6ifCJyvIJUSwYNX9Jur42i8mKRW704ztGv7JeoihkEefzYc95TNnIaz9n/5iUCMx2ti57Eb40=
-X-Received: by 2002:a05:600c:19cc:b0:40b:5e4a:407f with SMTP id
- u12-20020a05600c19cc00b0040b5e4a407fmr32444wmq.159.1701742291477; Mon, 04 Dec
- 2023 18:11:31 -0800 (PST)
+	b=TLKHfmQbCfpFnLjP1wbNoTuPQpWJKEO+Rv/acUOB1lJ0/tZ75jS9wif7367i41Bg/
+	 odG9uQvrD8UIw+QJFe6SnxEDv2Y+bHaZ+8hJWp6xo9XAPaBU2HTXBSpGA9AQrd783i
+	 KmcFzNtT/YBvFYWAdVKa9oOd7XMBeOtaKhkCspMmS6a8i/0wJ4hZJYRJcaqpmX+gqu
+	 jl/UssF04+26mnA8UgIzB/B7P3YvBhn6Tu7Lek8Wq85Yy9Eaqd8SoPrQ2IbSFFPSRQ
+	 7vxbffTpwkbtNCJ8slxlyGkAQ4Mc9Nvg0d0RIkFrvyYP/4GNpRBZVZwayM+BoW7SJC
+	 mPvIA9fY8eLxA==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-548ce39b101so6400867a12.2
+        for <loongarch@lists.linux.dev>; Mon, 04 Dec 2023 18:20:30 -0800 (PST)
+X-Gm-Message-State: AOJu0YwYYEneV5dOyOI0pOeWH6RnxQxsHeQSzZw3QfebhSgEqp30GKsK
+	ub+LK0ieeLO+YiFQlJQRAA8fWAbbP0YhyTzjQ5Y=
+X-Google-Smtp-Source: AGHT+IFZlQzjG1R+WCnQ0APvSI1FWHVxxlzrjPGayh4LKHdoF0kRjHnoDZhwhp2SZCjcparsiyJYD0pU2Ui4NlFVo3w=
+X-Received: by 2002:a50:d787:0:b0:54c:4837:7d3b with SMTP id
+ w7-20020a50d787000000b0054c48377d3bmr2455887edi.122.1701742829397; Mon, 04
+ Dec 2023 18:20:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231204141938.7230-1-hengqi.chen@gmail.com>
-In-Reply-To: <20231204141938.7230-1-hengqi.chen@gmail.com>
+References: <20231116023036.2324371-1-maobibo@loongson.cn> <20231116023036.2324371-2-maobibo@loongson.cn>
+ <564a2fd3-ffba-3bc5-70b9-8a9fa9a0f1c6@loongson.cn>
+In-Reply-To: <564a2fd3-ffba-3bc5-70b9-8a9fa9a0f1c6@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 5 Dec 2023 10:11:19 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5-5mCSJ4O3WFSAKM=7ZtjLwQqt3BzVoKuYx94nxkFvTQ@mail.gmail.com>
-Message-ID: <CAAhV-H5-5mCSJ4O3WFSAKM=7ZtjLwQqt3BzVoKuYx94nxkFvTQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Remove fatal signed-extension instructions
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev, kernel@xen0n.name, yangtiezhu@loongson.cn
+Date: Tue, 5 Dec 2023 10:20:17 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4P_JUewDM7R1ByNR4PZa97=xM_rAJ239J-wFSd6_+0GA@mail.gmail.com>
+Message-ID: <CAAhV-H4P_JUewDM7R1ByNR4PZa97=xM_rAJ239J-wFSd6_+0GA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] LoongArch: KVM: Remove SW timer switch when vcpu
+ is halt polling
+To: zhaotianrui <zhaotianrui@loongson.cn>
+Cc: Bibo Mao <maobibo@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Hengqi,
+This series looks good to me, If Paolo agrees, I will apply to
+loongarch-next after [1] is taken into the kvm tree (otherwise there
+will be build errors).
 
-Why privileged bpf programs have no problem?
+[1] https://lore.kernel.org/loongarch/CAAhV-H63QkfSw+Esn8oW2PDEsCnTRPFqkj8X=
+-x8i9cH3AS0k9w@mail.gmail.com/T/#t
 
-Huacai
-
-On Mon, Dec 4, 2023 at 10:20=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
- wrote:
+On Mon, Dec 4, 2023 at 4:45=E2=80=AFPM zhaotianrui <zhaotianrui@loongson.cn=
+> wrote:
 >
-> As reported on mailing list ([0]), several BPF testcases could
-> triggered kernel panics like:
+> Reviewed-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 >
->     # ./test_progs -t verifier_map_ptr_mixing
->     Can't find bpf_testmod.ko kernel module: -2
->     WARNING! Selftests relying on bpf_testmod.ko will be skipped.
->     [   47.842279] CPU 0 Unable to handle kernel paging request at virtua=
-l address ffffffff9218d000, era =3D=3D 9000000003573ff8, ra =3D=3D ffff8000=
-020dbc70
->     [   47.843498] Oops[#1]:
->     [   47.843870] CPU: 0 PID: 242 Comm: test_progs Not tainted 6.7.0-rc2=
-+ #27
->     [   47.844308] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown=
- 2/2/2022
->     [   47.844850] pc 9000000003573ff8 ra ffff8000020dbc70 tp 90000000976=
-18000 sp 900000009761bad0
->     [   47.845484] a0 ffffffff9218d000 a1 900000009761bad8 a2 00000000000=
-00001 a3 900000009761bc20
->     [   47.846097] a4 900000009761bc24 a5 ffffffff9218d000 a6 00000000000=
-00021 a7 0000000000000118
->     [   47.846643] t0 ffff8000020dbbd8 t1 9000000003573ff8 t2 90000000923=
-0dd00 t3 000c65d400000000
->     [   47.847220] t4 ffffffffffffffff t5 000000012ea823f8 t6 00000000000=
-00000 t7 0000000000000000
->     [   47.847753] t8 000000000005b900 u0 900000009761ba88 s9 90000000976=
-1bb20 s0 ffff80001b278000
->     [   47.848259] s1 0000000000000001 s2 900000009230dd00 s3 90000000976=
-1bc20 s4 900000009761bae0
->     [   47.848796] s5 0000000000000000 s6 900000000438be20 s7 90000000976=
-1bb54 s8 9000000005b967c0
->     [   47.849400]    ra: ffff8000020dbc70 bpf_prog_4ecec27f4a4ae8c7_poin=
-ters_for_lookup_hash_array+0x98/0xe4
->     [   47.850543]   ERA: 9000000003573ff8 bpf_map_lookup_elem+0x0/0xc
->     [   47.851180]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC =
--WE)
->     [   47.852203]  PRMD: 00000004 (PPLV0 +PIE -PWE)
->     [   47.852592]  EUEN: 00000003 (+FPE +SXE -ASXE -BTE)
->     [   47.852964]  ECFG: 00071c1c (LIE=3D2-4,10-12 VS=3D7)
->     [   47.853351] ESTAT: 00010000 [PIL] (IS=3D ECode=3D1 EsubCode=3D0)
->     [   47.853706]  BADV: ffffffff9218d000
->     [   47.854113]  PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
->     [   47.854733] Modules linked in:
->     [   47.855261] Process test_progs (pid: 242, threadinfo=3D0000000071b=
-66eac, task=3D00000000aa177492)
->     [   47.856344] Stack : 900000009761bb58 0000000000000000 000000000000=
-0000 900000009761bc24
->     [   47.857347]         900000009761bc20 900000009230dd00 000000000000=
-0001 ffff80001b278000
->     [   47.858064]         900000009761bb80 900000000438becc 000000000000=
-0000 900000009761bb68
->     [   47.858691]         ffff80001b278048 9000000005254000 90000000042e=
-c12c 0000000000000000
->     [   47.859332]         0000000000000000 900000009761bb80 000000000000=
-0000 0000000000000001
->     [   47.859832]         0000000b230f0ab8 0000000000000000 ffff80001b27=
-8000 0000000000000000
->     [   47.860268]         0000000000000000 8dfb8454e0eb5b83 ffff80001b27=
-8000 9000000005b967c0
->     [   47.860701]         9000000093c80000 ffff80001b278000 000000000000=
-0040 900000009230dd00
->     [   47.861190]         900000009393f400 9000000097863400 900000009761=
-bd88 0000000000000000
->     [   47.861650]         9000000005254000 900000000438d100 000000000000=
-0001 0000000000000001
->     [   47.862077]         ...
->     [   47.862311] Call Trace:
->     [   47.862568] [<9000000003573ff8>] bpf_map_lookup_elem+0x0/0xc
->     [   47.863511] [<ffff8000020dbc70>] bpf_prog_4ecec27f4a4ae8c7_pointer=
-s_for_lookup_hash_array+0x98/0xe4
->     [   47.864150] [<900000000438becc>] bpf_test_run+0x1e4/0x2f0
->     [   47.864544] [<900000000438d100>] bpf_prog_test_run_skb+0x314/0x67c
->     [   47.864934] [<900000000354cd18>] __sys_bpf+0x514/0x26d8
->     [   47.865261] [<900000000354f4e8>] sys_bpf+0x18/0x28
->     [   47.865596] [<90000000045b6c3c>] do_syscall+0x7c/0x94
->     [   47.865932] [<90000000033e1b1c>] handle_syscall+0xbc/0x158
->     [   47.866373]
->     [   47.866549] Code: 00150317  53fe67ff  542c6841 <2600008c> 28c1818c=
-  4c000180  2600008c  28c1a18c  4c000180
->     [   47.867381]
->     [   47.867749] ---[ end trace 0000000000000000 ]---
->     [   47.868514] Kernel panic - not syncing: Fatal exception in interru=
-pt
->     [   47.870138] Kernel relocated by 0x31c0000
->     [   47.870868]  .text @ 0x90000000033c0000
->     [   47.871361]  .data @ 0x9000000004690000
->     [   47.871777]  .bss  @ 0x9000000005a6e000
->     [   47.872612] ---[ end Kernel panic - not syncing: Fatal exception i=
-n interrupt ]---
+> =E5=9C=A8 2023/11/16 =E4=B8=8A=E5=8D=8810:30, Bibo Mao =E5=86=99=E9=81=93=
+:
+> > With halt-polling supported, there is checking for pending events
+> > or interrupts when vcpu executes idle instruction. Pending interrupts
+> > include injected SW interrupts and passthrough HW interrupts, such as
+> > HW timer interrupts, since HW timer works still even if vcpu exists
+> > from VM mode.
+> >
+> > Since HW timer pending interrupt can be set directly with CSR status
+> > register, and pending HW timer interrupt checking is used in vcpu block
+> > checking function, it is not necessary to switch to sw timer during
+> > halt-polling. This patch adds preemption disabling in function
+> > kvm_cpu_has_pending_timer, and removes SW timer switching in idle
+> > instruction emulation function.
+> >
+> > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> > ---
+> >   arch/loongarch/kvm/exit.c  | 13 ++-----------
+> >   arch/loongarch/kvm/timer.c | 13 ++++++++++---
+> >   arch/loongarch/kvm/vcpu.c  |  9 ++++++++-
+> >   3 files changed, 20 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> > index ce8de3fa472c..e708a1786d6b 100644
+> > --- a/arch/loongarch/kvm/exit.c
+> > +++ b/arch/loongarch/kvm/exit.c
+> > @@ -200,17 +200,8 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
+> >       ++vcpu->stat.idle_exits;
+> >       trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
+> >
+> > -     if (!kvm_arch_vcpu_runnable(vcpu)) {
+> > -             /*
+> > -              * Switch to the software timer before halt-polling/block=
+ing as
+> > -              * the guest's timer may be a break event for the vCPU, a=
+nd the
+> > -              * hypervisor timer runs only when the CPU is in guest mo=
+de.
+> > -              * Switch before halt-polling so that KVM recognizes an e=
+xpired
+> > -              * timer before blocking.
+> > -              */
+> > -             kvm_save_timer(vcpu);
+> > -             kvm_vcpu_block(vcpu);
+> > -     }
+> > +     if (!kvm_arch_vcpu_runnable(vcpu))
+> > +             kvm_vcpu_halt(vcpu);
+> >
+> >       return EMULATE_DONE;
+> >   }
+> > diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
+> > index 284bf553fefe..437e960d8fdb 100644
+> > --- a/arch/loongarch/kvm/timer.c
+> > +++ b/arch/loongarch/kvm/timer.c
+> > @@ -155,11 +155,18 @@ static void _kvm_save_timer(struct kvm_vcpu *vcpu=
+)
+> >                */
+> >               hrtimer_cancel(&vcpu->arch.swtimer);
+> >               hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_A=
+BS_PINNED);
+> > -     } else
+> > +     } else if (vcpu->stat.generic.blocking) {
+> >               /*
+> > -              * Inject timer interrupt so that hall polling can dectec=
+t and exit
+> > +              * Inject timer interrupt so that hall polling can dectec=
+t and
+> > +              * exit.
+> > +              * VCPU is scheduled out already and sleeps in rcuwait qu=
+eue and
+> > +              * will not poll pending events again. kvm_queue_irq is n=
+ot
+> > +              * enough, hrtimer swtimer should be used here.
+> >                */
+> > -             kvm_queue_irq(vcpu, INT_TI);
+> > +             expire =3D ktime_add_ns(ktime_get(), 10);  // 10ns is eno=
+ugh here?
+> > +             vcpu->arch.expire =3D expire;
+> > +             hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_A=
+BS_PINNED);
+> > +     }
+> >   }
+> >
+> >   /*
+> > diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> > index 73d0c2b9c1a5..42663a345bd1 100644
+> > --- a/arch/loongarch/kvm/vcpu.c
+> > +++ b/arch/loongarch/kvm/vcpu.c
+> > @@ -187,8 +187,15 @@ int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu =
+*vcpu,
+> >
+> >   int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
+> >   {
+> > -     return kvm_pending_timer(vcpu) ||
+> > +     int ret;
+> > +
+> > +     /* protect from TOD sync and vcpu_load/put */
+> > +     preempt_disable();
+> > +     ret =3D kvm_pending_timer(vcpu) ||
+> >               kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) & (1 << INT_TI);
+> > +     preempt_enable();
+> > +
+> > +     return ret;
+> >   }
+> >
+> >   int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
 >
-> Take the `cls_redirect` case as an example:
->
->     cls_redirect()
->       -> get_global_metrics() returns pcpu ptr 0xfffffefffc00b480
->
-> The pointer is later signed-extended to 0xfffffffffc00b480 at
-> `BPF_JMP | BPF_EXIT`. During BPF prog run, this triggers unhandled
-> page fault and a kernel panic.
->
-> The `cgrp_ls_tp_btf` test reveals another kind of kernel panic
-> when handling memory load:
->
->     ptr =3D bpf_cgrp_storage_get(&map_a, task->cgroups->dfl_cgrp, 0,
->                                    BPF_LOCAL_STORAGE_GET_F_CREATE);
->
-> The expression `task->cgroups->dfl_cgrp` involves two memory load.
-> Since the field offset fits in imm12 or imm14, we use ldd or ldptrd
-> to perform memory load. But the ldd and ldptrd instructions both
-> have the side effect that it will signed-extended the imm operand.
-> Finally, we got the wrong addresses and result in kernel panics.
->
-> Let's get rid of those fatal signed-extension instrutions to fix
-> the issues. For the first case, no arches do a sext on function
-> return, the fix should be safe. For the second case, we fallback
-> to use a generic ldxd instruction.
->
->   [0]: https://lore.kernel.org/loongarch/CAEyhmHT6UOryPZi7eEfw01Y_CjAqxy8=
-NM6eKkdvdojJqB9P7eQ@mail.gmail.com/T/#m78408fe3db883f384406e30e6b2b1f1e3fd5=
-7c1c
->
-> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> ---
->  arch/loongarch/net/bpf_jit.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 169ff8b3915e..d76281efc5b8 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -911,8 +911,6 @@ static int build_insn(const struct bpf_insn *insn, st=
-ruct jit_ctx *ctx, bool ext
->
->         /* function return */
->         case BPF_JMP | BPF_EXIT:
-> -               emit_sext_32(ctx, regmap[BPF_REG_0], true);
-> -
->                 if (i =3D=3D ctx->prog->len - 1)
->                         break;
->
-> @@ -988,14 +986,8 @@ static int build_insn(const struct bpf_insn *insn, s=
-truct jit_ctx *ctx, bool ext
->                         }
->                         break;
->                 case BPF_DW:
-> -                       if (is_signed_imm12(off)) {
-> -                               emit_insn(ctx, ldd, dst, src, off);
-> -                       } else if (is_signed_imm14(off)) {
-> -                               emit_insn(ctx, ldptrd, dst, src, off);
-> -                       } else {
-> -                               move_imm(ctx, t1, off, is32);
-> -                               emit_insn(ctx, ldxd, dst, src, t1);
-> -                       }
-> +                       move_imm(ctx, t1, off, is32);
-> +                       emit_insn(ctx, ldxd, dst, src, t1);
->                         break;
->                 }
->
-> --
-> 2.34.1
 >
