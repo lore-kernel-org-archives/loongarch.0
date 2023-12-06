@@ -1,56 +1,59 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7829A1103
-	for <loongarch@lists.linux.dev>; Thu,  7 Dec 2023 05:53:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B261103
+	for <loongarch@lists.linux.dev>; Thu,  7 Dec 2023 05:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IoAg/eIl"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d098b87eeeso4827775ad.0
-        for <loongarch@lists.linux.dev>; Wed, 06 Dec 2023 21:53:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6k73q7C"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d0521554ddso4179425ad.2
+        for <loongarch@lists.linux.dev>; Wed, 06 Dec 2023 21:53:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701928411; x=1702533211; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iQNgFqjCFoK0CHMofG7Ew86sJ/5WJfiLYQkaT/2jAmY=;
-        b=IoAg/eIl4pYYBJClTr9Kx8bHk+24CvzttezKkpXqXFgKTeIqMDW4aT7xvvLl3dVkF3
-         O75ad6FC33urcdTE2z2QgzmSqhVUHFJF6OS8NQT5S+5EmNZPJd6xYI7qHH8MQRfBEgO1
-         MUFG9c2ZVq9G3Ax9vkH0rjFri8DtJpxAazvsl5zAcSpdSWcLkl6BW+3Ujg4ZsKnTJ4X9
-         v47hI8Nt7C9CO4BHWkKgsoalOGPmB3hAT+FwrfTW/efXjuJZ4Q+Yb2Yhau5L1sr/eSlB
-         4dCiFFf/mVSoBu47SqdvA1izBp74jIP8a4Mmv+Z+OMKbXvDFe9W3Q85S12Pch9X+i/Es
-         Q+tw==
+        d=gmail.com; s=20230601; t=1701928415; x=1702533215; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JOUWnKcYotLxi5ITaiugf6q+QgeuIIRKHzHIiQynJN4=;
+        b=J6k73q7C75l8/efDPZhmTM4hsJsrPXcf6vnOvHdx/ijlB3l8tOUUGHQcIEU8y1e+0P
+         DWQUS6GSeGlbG51DeUfujtG0KdWWanCLa0QjfYNcNCYAcZyLvpwiGXGV1GTiRIkzLPXI
+         tS/N+yzH3aydrd9HLJvgWxOlBCMrvf6YGr8rYzMCwcktN/9vLpv+rOsJyaXOLODzNF5S
+         q9+YdxaISJSminhdsERqSPAwEnYnk1V2alLCAuGo2e9Au92VStBO/ZNvoo5LuNQxnxe3
+         3N/gU+JAltqDLZ6/e8Ad0O1G5oqUNAjmxEvARWcj4zXTkYReFFXsAxMSYTiYcoI/r0CO
+         zJHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701928411; x=1702533211;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iQNgFqjCFoK0CHMofG7Ew86sJ/5WJfiLYQkaT/2jAmY=;
-        b=l34iZ/hSu5RzvAf2KTyF9Ui+RnqmenqkEkV6Xzj/AmOmsQg2EAcq5QqHGfr8a0z4Vu
-         VWodjaihGNuGIWJ/oh6fDswnTM84MyWdl3aBKNsGcGbtiutjYMJTElTadNy1G4h4wvjy
-         ZnDqAffBS+2419hYqtDjaBaG3lR24r+YfJX29XMNKrjvZJVYtvDIN3qdN1i+WZ0PExR7
-         S9eDMo0zFKFMvjh1fa+QxN91tN5SGWf9o4LvUd80Z+wHm3Rv9x2rD1JXEKyrAnG+EdWF
-         rX0N5OvN+839+5IOwFAw+GuO2LACGBx4U4ltv7E8zy6EkzhMJw6i/1I8wqnUvYl7OILk
-         ym6Q==
-X-Gm-Message-State: AOJu0YyAiG2Kzwl2FkxX7H5p/YQq+Hdj4X56iaRxYKWnaVGWr/Zntr6J
-	dlbKuC/be4l/eSf3cawkA0V11uSG8U94WA==
-X-Google-Smtp-Source: AGHT+IGC1PoBCtbH8/3Q47tOKLDHF1mnmin3LkZjaeTIP3s36fqCFVzAilyBDnuDVuyKfxZol3wJ3Q==
-X-Received: by 2002:a17:902:c944:b0:1d1:cb7a:a908 with SMTP id i4-20020a170902c94400b001d1cb7aa908mr2218554pla.60.1701928411376;
-        Wed, 06 Dec 2023 21:53:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701928415; x=1702533215;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JOUWnKcYotLxi5ITaiugf6q+QgeuIIRKHzHIiQynJN4=;
+        b=rNo6mHr6nZgNXczRH96K+n1lG45maP49ntUK1s2lSS19wJEYvSyAgdmfK56WJvqAJx
+         XFJL7UzNF0xAK02J/t3oufHA6MXyGpC9oCuVDe2liPN21X63wNE8lVZh5vIl+F3BRGGz
+         3ixLJo7IBjhwpysnwwJvg2Bv9eyL8Cv0XIIiabCQOsPEBnjmlLvf7xIcX9W3R34wqbcm
+         BK/u4XwDbixCIXkdyp+E8RAE4IqLO+XQ8axStrJ+in0mE0V+aRgVsNDCqyiU0lCz10iY
+         0W4JcEnYpiNw5AEYSGAgXdPAcYaa25j/F//oqk82pNp6xq9h091WKbrfJI330GF1IcAs
+         AD7g==
+X-Gm-Message-State: AOJu0Yz/fojylUXCYXP7lZa8DDC5ZPDfw8lzWD0VEHKJEVJpzrkcUnzG
+	3+GYn7L77EesPvh6aIHjMRIKTYUqIuv3wg==
+X-Google-Smtp-Source: AGHT+IEQcgmpmLtDk2OVqc9FSIkXuHVVH625YX93u/83UCo0JZjHRNEspEW2jC56Oz9dxKypn6wocQ==
+X-Received: by 2002:a17:903:11d0:b0:1d0:a720:1fd3 with SMTP id q16-20020a17090311d000b001d0a7201fd3mr1905639plh.99.1701928415282;
+        Wed, 06 Dec 2023 21:53:35 -0800 (PST)
 Received: from ubuntu.. ([43.132.98.107])
-        by smtp.googlemail.com with ESMTPSA id p14-20020a170902780e00b001cfed5524easm438574pll.288.2023.12.06.21.53.29
+        by smtp.googlemail.com with ESMTPSA id p14-20020a170902780e00b001cfed5524easm438574pll.288.2023.12.06.21.53.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 21:53:30 -0800 (PST)
+        Wed, 06 Dec 2023 21:53:34 -0800 (PST)
 From: Hengqi Chen <hengqi.chen@gmail.com>
 To: loongarch@lists.linux.dev
 Cc: chenhuacai@kernel.org,
 	yangtiezhu@loongson.cn,
 	hejinyang@loongson.cn,
 	hengqi.chen@gmail.com
-Subject: [PATCH 0/2] LoongArch: BPF: Remove fatal signed-extension instructions
-Date: Wed,  6 Dec 2023 07:38:32 +0000
-Message-Id: <20231206073834.9707-1-hengqi.chen@gmail.com>
+Subject: [PATCH 1/2] LoongArch: BPF: Don't sign extend function return value
+Date: Wed,  6 Dec 2023 07:38:33 +0000
+Message-Id: <20231206073834.9707-2-hengqi.chen@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231206073834.9707-1-hengqi.chen@gmail.com>
+References: <20231206073834.9707-1-hengqi.chen@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -59,8 +62,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As reported on mailing list ([0]), several BPF testcases could
-triggered kernel panics like:
+The `cls_redirect` test triggers a kernel panic like:
 
   # ./test_progs -t cls_redirect
   Can't find bpf_testmod.ko kernel module: -2
@@ -118,59 +120,90 @@ triggered kernel panics like:
   [   32.093792]  .bss  @ 0x9000000004413200
   [   34.971998] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
 
-Tracking this down reveals two different code paths lead to
-these panics.
+This is because we signed-extend function return values.
+When subprog mode is enabled, we have:
 
-1. Signed extend function return value
+  cls_redirect()
+    -> get_global_metrics() returns pcpu ptr 0xfffffefffc00b480
 
-  Take the `cls_redirect` test as an example, when subprog mode
-  is enabled, we have:
+The pointer returned is later signed-extended to 0xfffffffffc00b480
+at `BPF_JMP | BPF_EXIT`. During BPF prog run, this triggers unhandled
+page fault and a kernel panic.
 
-    cls_redirect()
-      -> get_global_metrics() returns pcpu ptr 0xfffffefffc00b480
+Drop the unnecessary signed-extension on return values like other
+arches do.
 
-  The pointer is later signed-extended to 0xfffffffffc00b480 at
-  `BPF_JMP | BPF_EXIT`. During BPF prog run, this triggers unhandled
-  page fault and a kernel panic.
+With this change, we have:
 
-  The `verifier_map_ptr_mixing` test is another victim of this
-  signed-extension.
+  # ./test_progs -t cls_redirect
+  Can't find bpf_testmod.ko kernel module: -2
+  WARNING! Selftests relying on bpf_testmod.ko will be skipped.
+  #51/1    cls_redirect/cls_redirect_inlined:OK
+  #51/2    cls_redirect/IPv4 TCP accept unknown (no hops, flags: SYN):OK
+  #51/3    cls_redirect/IPv6 TCP accept unknown (no hops, flags: SYN):OK
+  #51/4    cls_redirect/IPv4 TCP accept unknown (no hops, flags: ACK):OK
+  #51/5    cls_redirect/IPv6 TCP accept unknown (no hops, flags: ACK):OK
+  #51/6    cls_redirect/IPv4 TCP forward unknown (one hop, flags: ACK):OK
+  #51/7    cls_redirect/IPv6 TCP forward unknown (one hop, flags: ACK):OK
+  #51/8    cls_redirect/IPv4 TCP accept known (one hop, flags: ACK):OK
+  #51/9    cls_redirect/IPv6 TCP accept known (one hop, flags: ACK):OK
+  #51/10   cls_redirect/IPv4 UDP accept unknown (no hops, flags: none):OK
+  #51/11   cls_redirect/IPv6 UDP accept unknown (no hops, flags: none):OK
+  #51/12   cls_redirect/IPv4 UDP forward unknown (one hop, flags: none):OK
+  #51/13   cls_redirect/IPv6 UDP forward unknown (one hop, flags: none):OK
+  #51/14   cls_redirect/IPv4 UDP accept known (one hop, flags: none):OK
+  #51/15   cls_redirect/IPv6 UDP accept known (one hop, flags: none):OK
+  #51/16   cls_redirect/cls_redirect_subprogs:OK
+  #51/17   cls_redirect/IPv4 TCP accept unknown (no hops, flags: SYN):OK
+  #51/18   cls_redirect/IPv6 TCP accept unknown (no hops, flags: SYN):OK
+  #51/19   cls_redirect/IPv4 TCP accept unknown (no hops, flags: ACK):OK
+  #51/20   cls_redirect/IPv6 TCP accept unknown (no hops, flags: ACK):OK
+  #51/21   cls_redirect/IPv4 TCP forward unknown (one hop, flags: ACK):OK
+  #51/22   cls_redirect/IPv6 TCP forward unknown (one hop, flags: ACK):OK
+  #51/23   cls_redirect/IPv4 TCP accept known (one hop, flags: ACK):OK
+  #51/24   cls_redirect/IPv6 TCP accept known (one hop, flags: ACK):OK
+  #51/25   cls_redirect/IPv4 UDP accept unknown (no hops, flags: none):OK
+  #51/26   cls_redirect/IPv6 UDP accept unknown (no hops, flags: none):OK
+  #51/27   cls_redirect/IPv4 UDP forward unknown (one hop, flags: none):OK
+  #51/28   cls_redirect/IPv6 UDP forward unknown (one hop, flags: none):OK
+  #51/29   cls_redirect/IPv4 UDP accept known (one hop, flags: none):OK
+  #51/30   cls_redirect/IPv6 UDP accept known (one hop, flags: none):OK
+  #51/31   cls_redirect/cls_redirect_dynptr:OK
+  #51/32   cls_redirect/IPv4 TCP accept unknown (no hops, flags: SYN):OK
+  #51/33   cls_redirect/IPv6 TCP accept unknown (no hops, flags: SYN):OK
+  #51/34   cls_redirect/IPv4 TCP accept unknown (no hops, flags: ACK):OK
+  #51/35   cls_redirect/IPv6 TCP accept unknown (no hops, flags: ACK):OK
+  #51/36   cls_redirect/IPv4 TCP forward unknown (one hop, flags: ACK):OK
+  #51/37   cls_redirect/IPv6 TCP forward unknown (one hop, flags: ACK):OK
+  #51/38   cls_redirect/IPv4 TCP accept known (one hop, flags: ACK):OK
+  #51/39   cls_redirect/IPv6 TCP accept known (one hop, flags: ACK):OK
+  #51/40   cls_redirect/IPv4 UDP accept unknown (no hops, flags: none):OK
+  #51/41   cls_redirect/IPv6 UDP accept unknown (no hops, flags: none):OK
+  #51/42   cls_redirect/IPv4 UDP forward unknown (one hop, flags: none):OK
+  #51/43   cls_redirect/IPv6 UDP forward unknown (one hop, flags: none):OK
+  #51/44   cls_redirect/IPv4 UDP accept known (one hop, flags: none):OK
+  #51/45   cls_redirect/IPv6 UDP accept known (one hop, flags: none):OK
+  #51      cls_redirect:OK
+  Summary: 1/45 PASSED, 0 SKIPPED, 0 FAILED
 
-  BPF verifier ensures all BPF progs loaded run to completion, so
-  every BPF prog has at least one `exit` instruction. Why do most of
-  them survive this signed-extension? That's because most BPF prog
-  types (if not all) return small non-negative integers, like TC or XDP.
-  Some prog types (like tracing) even ignore the return value.
-  In the above cases, we use subprogs, and subprogs return pointer
-  values, so bad things happened.
+Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+---
+ arch/loongarch/net/bpf_jit.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-2. Signed extend memory load operand
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 169ff8b3915e..0303c0094d38 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -911,8 +911,6 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
 
-  The `cgrp_local_storage` test triggers panics when doing memory
-  load (see `cgrp_ls_tp_btf.c` for details):
-
-    ptr = bpf_cgrp_storage_get(&map_a, task->cgroups->dfl_cgrp, 0,
-                               BPF_LOCAL_STORAGE_GET_F_CREATE);
-
-  The expression `task->cgroups->dfl_cgrp` involves two memory load.
-  Since the field offset fits in imm12 or imm14, we use ldd or ldptrd
-  to perform memory load. But the ldd and ldptrd instructions both
-  have the side effect that it will signed-extended the imm operand.
-  Finally, we got the wrong addresses and result in kernel panics.
-
-Let's get rid of those fatal signed-extension instrutions to fix
-these issues.
-  - For the first case, don't sext on return values like other arches.
-  - For the second case, we fallback to use a generic ldxd instruction.
-
-  [0]: https://lore.kernel.org/loongarch/CAEyhmHT6UOryPZi7eEfw01Y_CjAqxy8NM6eKkdvdojJqB9P7eQ@mail.gmail.com/
-
-Hengqi Chen (2):
-  LoongArch: BPF: Don't sign extend function return value
-  LoongArch: BPF: Don't sign extend memory load operand
-
- arch/loongarch/net/bpf_jit.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ 	/* function return */
+ 	case BPF_JMP | BPF_EXIT:
+-		emit_sext_32(ctx, regmap[BPF_REG_0], true);
+-
+ 		if (i == ctx->prog->len - 1)
+ 			break;
 
 --
 2.34.1
