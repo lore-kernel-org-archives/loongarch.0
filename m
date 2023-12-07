@@ -1,89 +1,105 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 098AB20F3
-	for <loongarch@lists.linux.dev>; Thu,  7 Dec 2023 03:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cxrus5PHFl_oQ_AA--.58502S3;
-	Thu, 07 Dec 2023 11:30:01 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3tw0PHFlBCFXAA--.60649S4;
-	Thu, 07 Dec 2023 11:30:00 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] LoongArch: BPF: Fix unconditional bswap instructions
-Date: Thu,  7 Dec 2023 11:29:51 +0800
-Message-ID: <20231207032951.16334-3-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231207032951.16334-1-yangtiezhu@loongson.cn>
-References: <20231207032951.16334-1-yangtiezhu@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784815670
+	for <loongarch@lists.linux.dev>; Thu,  7 Dec 2023 04:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlS5viHc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE22DC433C7
+	for <loongarch@lists.linux.dev>; Thu,  7 Dec 2023 04:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701922344;
+	bh=0RjgV47unZBqHuDbjr4/VkAWoqZn4Tl76xtyIEWOyh0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nlS5viHch/RcAiCqRdfO+367ziRpUvnEvaoVtrJObtLC1jnMJI7FLhQLyHzrcIG/j
+	 4fjUN5D4eTHuQOxE4OYY95R+GBA955UkmHTrIXEmLtUl6iXa8rUSP9LnBN3Hd7uIsP
+	 Tw/RruHlM9j98uMOxtPgmfflwiBAyRyF2bUX7pPYLqjYyll6bZkMaGcmC3RUp45aXQ
+	 qVe5PbpQhWf1MBB73vppPkNXf6ZUP1cYriT6D3Wwot8LEUIhJy9PwbayYi18VdAHB/
+	 /FSIDDQuSDo9poqx/CvIYEPdq4QidgNQl62XfbtdtUZOtcOSQtQ4s2j3wWS4nMpSJh
+	 yt5fCTtZZAX9A==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2c9ee6fed3eso3644481fa.0
+        for <loongarch@lists.linux.dev>; Wed, 06 Dec 2023 20:12:24 -0800 (PST)
+X-Gm-Message-State: AOJu0Yz9m9jTUyqh73l5oxWb+3V9DkCh+PE2Z4DRaaOQ5kgGNiP6P2II
+	6k5GRwZ+JrsCmPQCRyLLZhwlk5y/2jaWg95e9vg=
+X-Google-Smtp-Source: AGHT+IHIPS1wDHWq56C+Y7X9N9a98eDKbLbm/xzE+PEo9oZw5MW4RGUFCfyRcPDXO2ej6s2EL9iNms2IOp97Li1iwrQ=
+X-Received: by 2002:a05:651c:1030:b0:2c9:d872:e7b3 with SMTP id
+ w16-20020a05651c103000b002c9d872e7b3mr1141856ljm.106.1701922343104; Wed, 06
+ Dec 2023 20:12:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax3tw0PHFlBCFXAA--.60649S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zw45KrW7Gw4DJr1DWw1fZrc_yoW8Ww1Dpr
-	sFyrs5KrW0gFy7Xa4UX3yxJr4jkan5A3WUJF1av34rGa9Fqw1UWF18Kw1YvasIy3yvva40
-	qa1jkFnIgF1UuagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8gAw7UUUUU==
+References: <20231207032951.16334-1-yangtiezhu@loongson.cn> <20231207032951.16334-2-yangtiezhu@loongson.cn>
+In-Reply-To: <20231207032951.16334-2-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 7 Dec 2023 12:12:10 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H40YTpJP0giD6Y9ekfaceimpzuxqJndoBJiMU89YLA3zw@mail.gmail.com>
+Message-ID: <CAAhV-H40YTpJP0giD6Y9ekfaceimpzuxqJndoBJiMU89YLA3zw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Fix sign-extension mov instructions
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We can see that "bswap32: Takes an unsigned 32-bit number in either
-big- or little-endian format and returns the equivalent number with
-the same bit width but opposite endianness" in BPF Instruction Set
-Specification, so it should clear the upper 32 bits in the case 32
-for BPF_ALU and BPF_ALU64.
+On Thu, Dec 7, 2023 at 11:30=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> We can see that "Short form of movsx, dst_reg =3D (s8,s16,s32)src_reg"
+> in include/linux/filter.h, additionally, for BPF_ALU64 the value of
+> the destination register is unchanged whereas for BPF_ALU the upper
+> 32 bits of the destination register are zeroed, so it should clear
+> the upper 32 bits for BPF_ALU.
+>
+> [root@linux fedora]# echo 1 > /proc/sys/net/core/bpf_jit_enable
+> [root@linux fedora]# modprobe test_bpf
+>
+> Before:
+> test_bpf: #81 ALU_MOVSX | BPF_B jited:1 ret 2 !=3D 1 (0x2 !=3D 0x1)FAIL (=
+1 times)
+> test_bpf: #82 ALU_MOVSX | BPF_H jited:1 ret 2 !=3D 1 (0x2 !=3D 0x1)FAIL (=
+1 times)
+>
+> After:
+> test_bpf: #81 ALU_MOVSX | BPF_B jited:1 6 PASS
+> test_bpf: #82 ALU_MOVSX | BPF_H jited:1 6 PASS
+>
+> By the way, the bpf selftest case "./test_progs -t verifier_movsx" can
+> also be fixed with this patch.
+Hmmm, it is a little strange that privileged verifier_movsx has no problem.
 
-[root@linux fedora]# echo 1 > /proc/sys/net/core/bpf_jit_enable
-[root@linux fedora]# modprobe test_bpf
+Huacai
 
-Before:
-test_bpf: #313 BSWAP 32: 0x0123456789abcdef -> 0xefcdab89 jited:1 ret 1460850314 != -271733879 (0x5712ce8a != 0xefcdab89)FAIL (1 times)
-test_bpf: #317 BSWAP 32: 0xfedcba9876543210 -> 0x10325476 jited:1 ret -1460850316 != 271733878 (0xa8ed3174 != 0x10325476)FAIL (1 times)
-
-After:
-test_bpf: #313 BSWAP 32: 0x0123456789abcdef -> 0xefcdab89 jited:1 4 PASS
-test_bpf: #317 BSWAP 32: 0xfedcba9876543210 -> 0x10325476 jited:1 4 PASS
-
-Fixes: 4ebf9216e7df ("LoongArch: BPF: Support unconditional bswap instructions")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/net/bpf_jit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 8c907c2c42f7..da48398e8794 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -774,8 +774,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			break;
- 		case 32:
- 			emit_insn(ctx, revb2w, dst, dst);
--			/* zero-extend 32 bits into 64 bits */
--			emit_zext_32(ctx, dst, is32);
-+			/* clear the upper 32 bits */
-+			emit_zext_32(ctx, dst, true);
- 			break;
- 		case 64:
- 			emit_insn(ctx, revbd, dst, dst);
--- 
-2.42.0
-
+>
+> Fixes: f48012f16150 ("LoongArch: BPF: Support sign-extension mov instruct=
+ions")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/net/bpf_jit.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 169ff8b3915e..8c907c2c42f7 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -480,10 +480,12 @@ static int build_insn(const struct bpf_insn *insn, =
+struct jit_ctx *ctx, bool ext
+>                 case 8:
+>                         move_reg(ctx, t1, src);
+>                         emit_insn(ctx, extwb, dst, t1);
+> +                       emit_zext_32(ctx, dst, is32);
+>                         break;
+>                 case 16:
+>                         move_reg(ctx, t1, src);
+>                         emit_insn(ctx, extwh, dst, t1);
+> +                       emit_zext_32(ctx, dst, is32);
+>                         break;
+>                 case 32:
+>                         emit_insn(ctx, addw, dst, src, LOONGARCH_GPR_ZERO=
+);
+> --
+> 2.42.0
+>
+>
