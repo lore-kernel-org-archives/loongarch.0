@@ -1,23 +1,25 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E4AD1C3C
-	for <loongarch@lists.linux.dev>; Thu,  7 Dec 2023 03:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA6B20E5
+	for <loongarch@lists.linux.dev>; Thu,  7 Dec 2023 03:30:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dxl+g3PHFl9YQ_AA--.25334S3;
-	Thu, 07 Dec 2023 11:29:59 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxVug4PHFl+YQ_AA--.26302S3;
+	Thu, 07 Dec 2023 11:30:00 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3tw0PHFlBCFXAA--.60649S2;
-	Thu, 07 Dec 2023 11:29:57 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3tw0PHFlBCFXAA--.60649S3;
+	Thu, 07 Dec 2023 11:29:59 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Hengqi Chen <hengqi.chen@gmail.com>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/2] Fix failed test cases in test_bpf.ko for LoongArch
-Date: Thu,  7 Dec 2023 11:29:49 +0800
-Message-ID: <20231207032951.16334-1-yangtiezhu@loongson.cn>
+Subject: [PATCH v1 1/2] LoongArch: BPF: Fix sign-extension mov instructions
+Date: Thu,  7 Dec 2023 11:29:50 +0800
+Message-ID: <20231207032951.16334-2-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231207032951.16334-1-yangtiezhu@loongson.cn>
+References: <20231207032951.16334-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -25,37 +27,68 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax3tw0PHFlBCFXAA--.60649S2
+X-CM-TRANSID:AQAAf8Ax3tw0PHFlBCFXAA--.60649S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
-	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
-	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ar48Xr47uw47ZF15Xw4kKrX_yoW8WF1rpr
+	s8Crs5KrWxX3yI9a4kA3y7XF4qkFs5Gr13Ga4aqay8WwsxXryUXF1xKw1Utan5JrZYvFW8
+	ua4Skwn09a4kXagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU82g43UUUUU==
 
-There are 5 failed test cases in test_bpf.ko if enable jit on LoongArch,
-one of them is related with the test case itself and has been fixed in
-bpf-next tree [1], the other failed test cases are related with bpf jit
-and can be fixed with this patch series.
+We can see that "Short form of movsx, dst_reg = (s8,s16,s32)src_reg"
+in include/linux/filter.h, additionally, for BPF_ALU64 the value of
+the destination register is unchanged whereas for BPF_ALU the upper
+32 bits of the destination register are zeroed, so it should clear
+the upper 32 bits for BPF_ALU.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/commit/?id=5fa201f37c2e
+[root@linux fedora]# echo 1 > /proc/sys/net/core/bpf_jit_enable
+[root@linux fedora]# modprobe test_bpf
 
-Tiezhu Yang (2):
-  LoongArch: BPF: Fix sign-extension mov instructions
-  LoongArch: BPF: Fix unconditional bswap instructions
+Before:
+test_bpf: #81 ALU_MOVSX | BPF_B jited:1 ret 2 != 1 (0x2 != 0x1)FAIL (1 times)
+test_bpf: #82 ALU_MOVSX | BPF_H jited:1 ret 2 != 1 (0x2 != 0x1)FAIL (1 times)
 
- arch/loongarch/net/bpf_jit.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+After:
+test_bpf: #81 ALU_MOVSX | BPF_B jited:1 6 PASS
+test_bpf: #82 ALU_MOVSX | BPF_H jited:1 6 PASS
 
+By the way, the bpf selftest case "./test_progs -t verifier_movsx" can
+also be fixed with this patch.
+
+Fixes: f48012f16150 ("LoongArch: BPF: Support sign-extension mov instructions")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 169ff8b3915e..8c907c2c42f7 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -480,10 +480,12 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 		case 8:
+ 			move_reg(ctx, t1, src);
+ 			emit_insn(ctx, extwb, dst, t1);
++			emit_zext_32(ctx, dst, is32);
+ 			break;
+ 		case 16:
+ 			move_reg(ctx, t1, src);
+ 			emit_insn(ctx, extwh, dst, t1);
++			emit_zext_32(ctx, dst, is32);
+ 			break;
+ 		case 32:
+ 			emit_insn(ctx, addw, dst, src, LOONGARCH_GPR_ZERO);
 -- 
 2.42.0
 
