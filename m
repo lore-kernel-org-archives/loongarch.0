@@ -1,94 +1,145 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBAE1199BF
-	for <loongarch@lists.linux.dev>; Thu,  7 Dec 2023 07:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxRuiJd3Fls5A_AA--.7764S3;
-	Thu, 07 Dec 2023 15:43:06 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxbNyId3FlwktXAA--.62372S3;
-	Thu, 07 Dec 2023 15:43:04 +0800 (CST)
-Subject: Re: [PATCH v5 8/8] LoongArch: Add ORC stack unwinder support
-To: Xi Ruoyao <xry111@xry111.site>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
-References: <20231129130701.27744-1-yangtiezhu@loongson.cn>
- <20231129130701.27744-9-yangtiezhu@loongson.cn>
- <e860c6d42dc67e2c662c732ce56309874456f21b.camel@xry111.site>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <c172bf73-1e4e-9d4a-4b82-6aeb0f6f4ff8@loongson.cn>
-Date: Thu, 7 Dec 2023 15:43:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59421E4B0
+	for <loongarch@lists.linux.dev>; Thu,  7 Dec 2023 08:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uJpeX78H"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40c236624edso7386195e9.1
+        for <loongarch@lists.linux.dev>; Thu, 07 Dec 2023 00:23:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701937426; x=1702542226; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9IIO9873MnUjYDWrO8IkuU/36xiBULfRgmqcuNEoo3A=;
+        b=uJpeX78HgLgzhgQPeNQXpRKXg/RgTIktd0tzTBQwrAfVy8newtCSN+NjlemKQZAH4T
+         fR1fMxln7B5wXX+PD7bWrEaLbDHyG+upsy2XXYeo4IyzWs10cDbE6t0BLz3tQLQgXaW9
+         uSmdb/QFkDNxXryYAU7SghqCtcgWosPgNUBQO5H+OrxjkHuwhlE7/A+DJuYv2tHR8EfH
+         q0FzHN5aLeCk9UI3y+1XXGQEmzdrRSRDq5JChD9SFB4A9ShV4PWkvYzaYWssv1Aa83EN
+         0bTqTiQduO9N+0KM/I1iDHuAq6zcEDoYy/LaQLcc3OAFVFSOzRSkB1Ib2Q1nUWwo0Nfe
+         PExg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701937426; x=1702542226;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9IIO9873MnUjYDWrO8IkuU/36xiBULfRgmqcuNEoo3A=;
+        b=tUETStCqDgn0m15c0GSOjxqEXoyy8MLG0GgJGlV3aun/TNMPMJPPYe16xiBk7gPrTT
+         ZKjika/mrrXgV39r0NwgaCuYST5+4yN0LhehgrcuvyH4ISrKhbXPFn4+vR5j4xqHhrnD
+         CY72neB7EsuIj25QekqvKRrJiTqA7TFUIb4DKbRDHvApgeCvpRGOP7uZLhvOTNA1296P
+         5BOlXgCNmuqG+J5QSFgFWwxwwVB0AsYQaTm+lskTBaj70xJ/cPZjJUo98oqGLKpuaK/4
+         2c9Ipe+d7P77x+PgbxfCWetoohyjP9pKQS8P/wqMex5okfdhviBP8B6VnG260ZHvijoq
+         xefw==
+X-Gm-Message-State: AOJu0YzKtjy4jgK3fG5FxtLDoYsbiE6WMgEylu1jqvZXoYI64aVMJa60
+	cAG+Gdxvy3bVT8CW195TOxEuDw==
+X-Google-Smtp-Source: AGHT+IEZZ77Si2Rch/NVJLpDVaVcnc6cmbJQHa/B0LHFoA9fzugp+5LEnSr+7KRoILy25YSvgzmbaQ==
+X-Received: by 2002:a05:600c:154e:b0:40b:380e:2c9e with SMTP id f14-20020a05600c154e00b0040b380e2c9emr1249711wmg.34.1701937425217;
+        Thu, 07 Dec 2023 00:23:45 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.27])
+        by smtp.gmail.com with ESMTPSA id i8-20020a05600c354800b004083729fc14sm1144817wmq.20.2023.12.07.00.23.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Dec 2023 00:23:44 -0800 (PST)
+Message-ID: <0c1211e5-95a0-4caf-bc59-4a453fcf011a@linaro.org>
+Date: Thu, 7 Dec 2023 09:23:41 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <e860c6d42dc67e2c662c732ce56309874456f21b.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] dt-bindings: interrupt-controller:
+ loongson,liointc: Fix dtbs_check warning for reg-names
+Content-Language: en-US
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
+ <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, devicetree@vger.kernel.org,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, lvjianmin@loongson.cn,
+ WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+References: <cover.1701933946.git.zhoubinbin@loongson.cn>
+ <fde4d43ab25ad2a936c1b50ab7ed292345fcd32c.1701933946.git.zhoubinbin@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <fde4d43ab25ad2a936c1b50ab7ed292345fcd32c.1701933946.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxbNyId3FlwktXAA--.62372S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kr4kKw4ruw13GrWrGFW7trc_yoW8GF4rpa
-	ykGr4qkr4kXF4kXr17Aw4rJ39aqanrGrs8Xw42gayUCwsIqrsIgr4IkF45Ca47GrsFkFnF
-	vFs3t3ZYv3W5C3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcqXdUU
-	UUU
 
+On 07/12/2023 08:29, Binbin Zhou wrote:
+> As we know, the Loongson-2K0500 is a single-core CPU, and the
+> core1-related register (isr1) does not exist. So "reg" and "reg-names"
+> should be set to "minItems 2"(main nad isr0).
+> 
+> This fixes dtbs_check warning:
+> 
+> DTC_CHK arch/loongarch/boot/dts/loongson-2k0500-ref.dtb
+> arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11400: reg-names: ['main', 'isr0'] is too short
+>         From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11400: Unevaluated properties are not allowed ('reg-names' was unexpected)
+>         From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11400: reg: [[0, 534844416, 0, 64], [0, 534843456, 0, 8]] is too short
+>         From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> arch/loongarch/boot/dts/loongson-2k0500-ref.dtb: interrupt-controller@1fe11440: reg-names: ['main', 'isr0'] is too short
+>         From schema: Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
+Where? Point me to exact email on lore.
 
-On 12/03/2023 09:20 PM, Xi Ruoyao wrote:
-> On Wed, 2023-11-29 at 21:07 +0800, Tiezhu Yang wrote:
->> +KBUILD_AFLAGS			+= $(call cc-option,-mthin-add-sub) $(call cc-option,-Wa$(comma)-mthin-add-sub)
->> +KBUILD_CFLAGS			+= $(call cc-option,-mthin-add-sub) $(call cc-option,-Wa$(comma)-mthin-add-sub)
->> +
->> +ifdef CONFIG_OBJTOOL
->> +KBUILD_CFLAGS			+= -fno-optimize-sibling-calls -fno-jump-tables -falign-functions=4 -falign-labels=4
->> +endif
->
-> I still hate regressing the optimization with a passion.
+Didn't we already talk some time ago about fake reviews?
 
-Yes, I agree in general.
-
->
-> And -falign-labels=4 implies -falign-functions=4 so at least we can
-> remove -falign-functions=4.
-
-Thanks.
-
->
-> And in GCC >= 14 the defaults are -falign-labels=16 and -falign-
-> functions=32.  These values are determined by benchmarking on LA464 so
-> I'd suggest using them (maybe unless CONFIG_CC_OPTIMIZE_FOR_SIZE).
->
-
-The initial aim to add "-falign-functions=4 -falign-labels=4" is to
-avoid generating nop instructions in .o file with -mrelax option
-by default, otherwise the orc info can not match the symbol address
-in vmlinux.
-
-I want to add -mno-relax option and remove the extra option
-"-falign-functions=4 -falign-labels=4", then the offsets in
-each .o file and vmlinux are same, and it is not necessary
-to do the special handling about local labels, I think
-it will make life easier.
-
-Thanks,
-Tiezhu
+Best regards,
+Krzysztof
 
