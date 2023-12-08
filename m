@@ -1,14 +1,14 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C888815D2
-	for <loongarch@lists.linux.dev>; Fri,  8 Dec 2023 01:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1695E1FA1
+	for <loongarch@lists.linux.dev>; Fri,  8 Dec 2023 01:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxueoOdXJlPNg_AA--.52041S3;
-	Fri, 08 Dec 2023 09:44:46 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx77sSdXJlU9g_AA--.3036S3;
+	Fri, 08 Dec 2023 09:44:50 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3twNdXJlUvVXAA--.62660S2;
-	Fri, 08 Dec 2023 09:44:45 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3twNdXJlUvVXAA--.62660S4;
+	Fri, 08 Dec 2023 09:44:48 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -23,10 +23,12 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v3 0/2] LoongArch: KVM: Add LSX,LASX support
-Date: Fri,  8 Dec 2023 09:31:49 +0800
-Message-Id: <20231208013151.2668156-1-zhaotianrui@loongson.cn>
+Subject: [PATCH v3 2/2] LoongArch: KVM: Add LASX support
+Date: Fri,  8 Dec 2023 09:31:51 +0800
+Message-Id: <20231208013151.2668156-3-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20231208013151.2668156-1-zhaotianrui@loongson.cn>
+References: <20231208013151.2668156-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -34,54 +36,247 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax3twNdXJlUvVXAA--.62660S2
+X-CM-TRANSID:AQAAf8Ax3twNdXJlUvVXAA--.62660S4
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-This patch series add LSX,LASX support for LoongArch KVM.
-There will be LSX,LASX exception in KVM when guest use the
-LSX,LASX instructions. KVM will enable LSX,LASX and restore
-the vector registers for guest then return to guest to continue
-running.
+This patch adds LASX support for LoongArch KVM.
+There will be LASX exception in KVM when guest use the LASX
+instruction. KVM will enable LASX and restore the vector
+registers for guest then return to guest to continue running.
 
-Changes for v3:
-1. Use KVM_GET_DEVICE_ATTR interface to return CPUCFG2
-features which are supported by KVM to user space.
-2. Remove version checking in kvm_check_cpucfg.
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_host.h |  6 ++++
+ arch/loongarch/include/asm/kvm_vcpu.h | 10 ++++++
+ arch/loongarch/kernel/fpu.S           |  2 ++
+ arch/loongarch/kvm/exit.c             | 18 +++++++++++
+ arch/loongarch/kvm/switch.S           | 15 +++++++++
+ arch/loongarch/kvm/trace.h            |  4 ++-
+ arch/loongarch/kvm/vcpu.c             | 46 ++++++++++++++++++++++++++-
+ 7 files changed, 99 insertions(+), 2 deletions(-)
 
-Changes for v2:
-1. Add interface to return CPUCFG2 features which have
-been supported by current KVM to user space. So that
-user space can get CPU features such as FPU,LSX,LASX
-whether support by KVM.
-2. Add CPUCFG2 checking interface to check that if the
-value which is passed from user space has any errors.
-3. Export both _restore_lsx_upper and _restore_lasx_upper
-to keep consistency.
-4. Use "jr ra" instruction to repalce "jirl zero, ra, 0".
-
-Changes for v1:
-1. Add LSX support for LoongArch KVM.
-2. Add LASX support for LoongArch KVM.
-
-Tianrui Zhao (1):
-  LoongArch: KVM: Add LSX support
-
-zhaotianrui (1):
-  LoongArch: KVM: Add LASX support
-
- arch/loongarch/include/asm/kvm_host.h |  17 ++
- arch/loongarch/include/asm/kvm_vcpu.h |  22 +++
- arch/loongarch/include/uapi/asm/kvm.h |   1 +
- arch/loongarch/kernel/fpu.S           |   2 +
- arch/loongarch/kvm/exit.c             |  41 +++++
- arch/loongarch/kvm/switch.S           |  36 ++++
- arch/loongarch/kvm/trace.h            |   6 +-
- arch/loongarch/kvm/vcpu.c             | 245 +++++++++++++++++++++++++-
- 8 files changed, 364 insertions(+), 6 deletions(-)
-
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index b5fd55f6d0..757a589e6b 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -95,6 +95,7 @@ enum emulation_result {
+ #define KVM_LARCH_SWCSR_LATEST	(0x1 << 1)
+ #define KVM_LARCH_HWCSR_USABLE	(0x1 << 2)
+ #define KVM_LARCH_LSX		(0x1 << 3)
++#define KVM_LARCH_LASX		(0x1 << 4)
+ 
+ struct kvm_vcpu_arch {
+ 	/*
+@@ -186,6 +187,11 @@ static inline bool kvm_guest_has_fpu(struct kvm_vcpu_arch *arch)
+ 	return arch->cpucfg[2] & CPUCFG2_FP;
+ }
+ 
++static inline bool kvm_guest_has_lasx(struct kvm_vcpu_arch *arch)
++{
++	return arch->cpucfg[2] & CPUCFG2_LASX;
++}
++
+ /* Debug: dump vcpu state */
+ int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
+ 
+diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+index c629771e12..4f87f16018 100644
+--- a/arch/loongarch/include/asm/kvm_vcpu.h
++++ b/arch/loongarch/include/asm/kvm_vcpu.h
+@@ -67,6 +67,16 @@ static inline void kvm_restore_lsx(struct loongarch_fpu *fpu) { }
+ static inline void kvm_restore_lsx_upper(struct loongarch_fpu *fpu) { }
+ #endif
+ 
++#ifdef CONFIG_CPU_HAS_LASX
++void kvm_own_lasx(struct kvm_vcpu *vcpu);
++void kvm_save_lasx(struct loongarch_fpu *fpu);
++void kvm_restore_lasx(struct loongarch_fpu *fpu);
++#else
++static inline void kvm_own_lasx(struct kvm_vcpu *vcpu) { }
++static inline void kvm_save_lasx(struct loongarch_fpu *fpu) { }
++static inline void kvm_restore_lasx(struct loongarch_fpu *fpu) { }
++#endif
++
+ void kvm_acquire_timer(struct kvm_vcpu *vcpu);
+ void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
+ void kvm_reset_timer(struct kvm_vcpu *vcpu);
+diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+index d53ab10f46..4382e36ae3 100644
+--- a/arch/loongarch/kernel/fpu.S
++++ b/arch/loongarch/kernel/fpu.S
+@@ -349,6 +349,7 @@ SYM_FUNC_START(_restore_lsx_upper)
+ 	lsx_restore_all_upper a0 t0 t1
+ 	jr	ra
+ SYM_FUNC_END(_restore_lsx_upper)
++EXPORT_SYMBOL(_restore_lsx_upper)
+ 
+ SYM_FUNC_START(_init_lsx_upper)
+ 	lsx_init_all_upper t1
+@@ -384,6 +385,7 @@ SYM_FUNC_START(_restore_lasx_upper)
+ 	lasx_restore_all_upper a0 t0 t1
+ 	jr	ra
+ SYM_FUNC_END(_restore_lasx_upper)
++EXPORT_SYMBOL(_restore_lasx_upper)
+ 
+ SYM_FUNC_START(_init_lasx_upper)
+ 	lasx_init_all_upper t1
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index e40409ba76..e00aacd6c1 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -681,6 +681,23 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu)
+ 	return RESUME_GUEST;
+ }
+ 
++/*
++ * kvm_handle_lasx_disabled() - Guest used LASX while disabled in root.
++ * @vcpu:	Virtual CPU context.
++ *
++ * Handle when the guest attempts to use LASX when it is disabled in the root
++ * context.
++ */
++static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu)
++{
++	if (!kvm_guest_has_lasx(&vcpu->arch))
++		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
++	else
++		kvm_own_lasx(vcpu);
++
++	return RESUME_GUEST;
++}
++
+ /*
+  * LoongArch KVM callback handling for unimplemented guest exiting
+  */
+@@ -710,6 +727,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
+ 	[EXCCODE_TLBM]			= kvm_handle_write_fault,
+ 	[EXCCODE_FPDIS]			= kvm_handle_fpu_disabled,
+ 	[EXCCODE_LSXDIS]                = kvm_handle_lsx_disabled,
++	[EXCCODE_LASXDIS]               = kvm_handle_lasx_disabled,
+ 	[EXCCODE_GSPR]			= kvm_handle_gspr,
+ };
+ 
+diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+index 6c48f7d1ca..215c70b2de 100644
+--- a/arch/loongarch/kvm/switch.S
++++ b/arch/loongarch/kvm/switch.S
+@@ -266,6 +266,21 @@ SYM_FUNC_START(kvm_restore_lsx_upper)
+ SYM_FUNC_END(kvm_restore_lsx_upper)
+ #endif
+ 
++#ifdef CONFIG_CPU_HAS_LASX
++SYM_FUNC_START(kvm_save_lasx)
++	fpu_save_csr    a0 t1
++	fpu_save_cc     a0 t1 t2
++	lasx_save_data  a0 t1
++	jr              ra
++SYM_FUNC_END(kvm_save_lasx)
++
++SYM_FUNC_START(kvm_restore_lasx)
++	lasx_restore_data a0 t1
++	fpu_restore_cc    a0 t1 t2
++	fpu_restore_csr   a0 t1 t2
++	jr                ra
++SYM_FUNC_END(kvm_restore_lasx)
++#endif
+ 	.section ".rodata"
+ SYM_DATA(kvm_exception_size, .quad kvm_exc_entry_end - kvm_exc_entry)
+ SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
+diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+index 7da4e230e8..c2484ad4cf 100644
+--- a/arch/loongarch/kvm/trace.h
++++ b/arch/loongarch/kvm/trace.h
+@@ -103,6 +103,7 @@ TRACE_EVENT(kvm_exit_gspr,
+ 
+ #define KVM_TRACE_AUX_FPU		1
+ #define KVM_TRACE_AUX_LSX		2
++#define KVM_TRACE_AUX_LASX		3
+ 
+ #define kvm_trace_symbol_aux_op				\
+ 	{ KVM_TRACE_AUX_SAVE,		"save" },	\
+@@ -113,7 +114,8 @@ TRACE_EVENT(kvm_exit_gspr,
+ 
+ #define kvm_trace_symbol_aux_state			\
+ 	{ KVM_TRACE_AUX_FPU,     "FPU" },		\
+-	{ KVM_TRACE_AUX_LSX,     "LSX" }
++	{ KVM_TRACE_AUX_LSX,     "LSX" },		\
++	{ KVM_TRACE_AUX_LASX,    "LASX" }
+ 
+ TRACE_EVENT(kvm_aux,
+ 	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int op,
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 3c2ee202d2..970ba18a28 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -328,6 +328,13 @@ static int _kvm_loongarch_get_cpucfg_attr(int id, u64 *v)
+ 		 */
+ 		if (cpu_has_lsx)
+ 			*v |= CPUCFG2_LSX;
++		/*
++		 * if LASX is supported by CPU, it is also supported by KVM,
++		 * as we implement it.
++		 */
++		if (cpu_has_lasx)
++			*v |= CPUCFG2_LASX;
++
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -745,12 +752,49 @@ void kvm_own_lsx(struct kvm_vcpu *vcpu)
+ }
+ #endif
+ 
++#ifdef CONFIG_CPU_HAS_LASX
++/* Enable LASX for guest and restore context */
++void kvm_own_lasx(struct kvm_vcpu *vcpu)
++{
++	preempt_disable();
++
++	set_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
++	switch (vcpu->arch.aux_inuse & (KVM_LARCH_FPU | KVM_LARCH_LSX)) {
++	case KVM_LARCH_LSX | KVM_LARCH_FPU:
++	case KVM_LARCH_LSX:
++		/* Guest LSX state already loaded, only restore upper LASX state */
++		_restore_lasx_upper(&vcpu->arch.fpu);
++		break;
++	case KVM_LARCH_FPU:
++		/* Guest FP state already loaded, only restore 64~256 LASX state */
++		kvm_restore_lsx_upper(&vcpu->arch.fpu);
++		_restore_lasx_upper(&vcpu->arch.fpu);
++		break;
++	default:
++		/* Neither FP or LSX already active, restore full LASX state */
++		kvm_restore_lasx(&vcpu->arch.fpu);
++		break;
++	}
++
++	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LASX);
++	vcpu->arch.aux_inuse |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
++	preempt_enable();
++}
++#endif
++
+ /* Save context and disable FPU */
+ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+ {
+ 	preempt_disable();
+ 
+-	if (vcpu->arch.aux_inuse & KVM_LARCH_LSX) {
++	if (vcpu->arch.aux_inuse & KVM_LARCH_LASX) {
++		kvm_save_lasx(&vcpu->arch.fpu);
++		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU | KVM_LARCH_LASX);
++		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_LASX);
++
++		/* Disable LASX & LSX & FPU */
++		clear_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
++	} else if (vcpu->arch.aux_inuse & KVM_LARCH_LSX) {
+ 		kvm_save_lsx(&vcpu->arch.fpu);
+ 		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU);
+ 		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_LSX);
 -- 
 2.39.1
 
