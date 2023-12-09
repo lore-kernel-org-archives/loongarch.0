@@ -1,117 +1,238 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570F71D531
-	for <loongarch@lists.linux.dev>; Fri,  8 Dec 2023 14:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49008A2D
+	for <loongarch@lists.linux.dev>; Sat,  9 Dec 2023 06:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xqAI9Q7p";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5/kaQb7/"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1702045206;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xflaWiDw7kr8d/dlbv/fd4pzj3NI4pM3Ha1Gv1hGpME=;
-	b=xqAI9Q7p3eiImDPsYb3EgsmFw2FY4OUext9dxB4kvC+RGzJDOzzxV8/A1wrZAtU/f5dKS8
-	MaZPEr64Dqr691qS0QXo/2FsEo+hSSEU/blc0/lmaDDaTSS13dyEDHpBmd7lR2wQ61VTXO
-	5kevTVfzsbLzZh1XBlIOGO32ogydca3CgoFIBnw14Ia/+6AQzLdqhGWiEsa+PUsUFc7e9e
-	Bep+2+JbDnQPz32EFRTOl09He+JIs74SI23GBxDA/zIYiGwR1Df/FUHbkCOaLCw5xnXKx7
-	gkVTiApYhHW+vhswvyD3q/4YUfbMYl1ikBVJiWP/Kqmq9BqLeGFSsm0/78i+Hw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1702045206;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xflaWiDw7kr8d/dlbv/fd4pzj3NI4pM3Ha1Gv1hGpME=;
-	b=5/kaQb7/CisTC8SQuhbs5tQNRgtR1GoYBHF2P6cjQpotgD6wB8Rrfhb6lX+oh5uEnpcYP9
-	VVagnqz7i2+sTyDA==
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
- devicetree@vger.kernel.org, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- linux-mips@vger.kernel.org, lvjianmin@loongson.cn, WANG Xuerui
- <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH v5 4/5] irqchip/loongson-liointc: Fix
- 'loongson,parent_int_map' parse
-In-Reply-To: <fc9b3afaf8826fd437ba91397eb7fa231db2c05c.1700449792.git.zhoubinbin@loongson.cn>
-References: <cover.1700449792.git.zhoubinbin@loongson.cn>
- <fc9b3afaf8826fd437ba91397eb7fa231db2c05c.1700449792.git.zhoubinbin@loongson.cn>
-Date: Fri, 08 Dec 2023 15:20:06 +0100
-Message-ID: <87lea4srmx.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvUHK8ct"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1f055438492so1892531fac.3
+        for <loongarch@lists.linux.dev>; Fri, 08 Dec 2023 22:04:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702101840; x=1702706640; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EuHtUevushkllDsRgX2L0JmAYIUSbk8cfaFnmZYMhoM=;
+        b=GvUHK8ct8xQ5Bl5GzDXLlkE+zAU/bIyzcb/dSlwcta9UmvDJwLyFWD80OkVDBSJl/d
+         37A7FRCsIcaPulcQWjWcAhQnK9YUtmsAeS178ImFJ9PsMC2v8wnj1Tl04QLZdscCJt8T
+         d9ka3W40ShOST6GwkQJt+2jkl8/daINpWuM108gjFrRSLrUIgHZYQ6SCFpacdM/cjpe7
+         gJwtKHRGTdpCGQHnlUftqeM8mYoZabXkZTK/WbOSU7OpXfAJvPk0ceCVATsEohpRARMp
+         bBQaOXxff8ZcOdrJP3wqR+6rNqQaNc5MtIsi6E0qz2lIhz0RxFJlNhYc2LQVmIHnCXR3
+         YLaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702101840; x=1702706640;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EuHtUevushkllDsRgX2L0JmAYIUSbk8cfaFnmZYMhoM=;
+        b=OuHbpQis+3TQQ9eQJIJrSL/h9d2daC4suMA3wOkuAop2Vb7a1wN7Bqi46nM5iu2vZf
+         xPAxGXOGjsN061GyN2ZVzR2zTZ6vovGfi2gHn5ZFe9PQotJL07wyv6p4TLEukfUqMPgD
+         6vAFiHy7DhFGfmc521GwoyUz/AsUTGswFJoKaq/Afv95K8n9kCi+39oEvylcDxQiFrqT
+         4ab6KpX9JLlWK54qsg2YnKs7pH8ocDkbGwDIleTPd5vFn5+1880YIHeoAuUxbp2rs24U
+         uBVWBdenM2iBIZ7bQcODroUstSl0HmscdIOv63jufsIudy7hiyanYJ3O7+LCm7Pug6WX
+         PXCQ==
+X-Gm-Message-State: AOJu0YwLen/PZL59xi9DIhlXqswWR3Nd8RElX+Hh1Q5gx41mouGqBJFM
+	aDvnPtubT/YZQv9MzymCMn+1d4OZ2UaSw3V3F2o=
+X-Google-Smtp-Source: AGHT+IEyWdcmoKa6dKNQw0agZUw7tuz2hhEMcIhGbESbM0SBuOfrWSsqAMv0s0BUJX3CMZJz9+OmAPO51bYwqV9kvG4=
+X-Received: by 2002:a05:6870:b28d:b0:1fb:75b:12eb with SMTP id
+ c13-20020a056870b28d00b001fb075b12ebmr1547657oao.61.1702101840001; Fri, 08
+ Dec 2023 22:04:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20231207032951.16334-1-yangtiezhu@loongson.cn>
+ <20231207032951.16334-2-yangtiezhu@loongson.cn> <CAAhV-H40YTpJP0giD6Y9ekfaceimpzuxqJndoBJiMU89YLA3zw@mail.gmail.com>
+In-Reply-To: <CAAhV-H40YTpJP0giD6Y9ekfaceimpzuxqJndoBJiMU89YLA3zw@mail.gmail.com>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Sat, 9 Dec 2023 14:03:48 +0800
+Message-ID: <CAEyhmHQOfs39cgKBb0VEdF6=pFodBYYkBichsxX_uBh30kNZXg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Fix sign-extension mov instructions
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 20 2023 at 17:06, Binbin Zhou wrote:
-
-$Subject: s/parse/parsing/
-
-> In keeping with naming standards, 'loongson,parent_int_map' is renamed
-> to 'loongson,parent-int-map'. But for the driver, we need to make sure
-> that both forms can be parsed.
-
-Please keep changelogs in neutral or imperative tone:
-
-  For backwards compatibility it is required to parse the original
-  string too.
-
-Makes it entirely clear what this is about without 'we'. See also:
-
-  https://www.kernel.org/doc/html/latest/process/submitting-patches.rst 
-
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/irqchip/irq-loongson-liointc.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+On Thu, Dec 7, 2023 at 12:12=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
 >
-> diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-> index e4b33aed1c97..add2e0a955b8 100644
-> --- a/drivers/irqchip/irq-loongson-liointc.c
-> +++ b/drivers/irqchip/irq-loongson-liointc.c
-> @@ -330,6 +330,7 @@ static int __init liointc_of_init(struct device_node *node,
->  	bool have_parent = FALSE;
->  	int sz, i, index, revision, err = 0;
->  	struct resource res;
-> +	const char *prop_name = "loongson,parent-int-map";
+> On Thu, Dec 7, 2023 at 11:30=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.=
+cn> wrote:
+> >
+> > We can see that "Short form of movsx, dst_reg =3D (s8,s16,s32)src_reg"
+> > in include/linux/filter.h, additionally, for BPF_ALU64 the value of
+> > the destination register is unchanged whereas for BPF_ALU the upper
+> > 32 bits of the destination register are zeroed, so it should clear
+> > the upper 32 bits for BPF_ALU.
+> >
+> > [root@linux fedora]# echo 1 > /proc/sys/net/core/bpf_jit_enable
+> > [root@linux fedora]# modprobe test_bpf
+> >
+> > Before:
+> > test_bpf: #81 ALU_MOVSX | BPF_B jited:1 ret 2 !=3D 1 (0x2 !=3D 0x1)FAIL=
+ (1 times)
+> > test_bpf: #82 ALU_MOVSX | BPF_H jited:1 ret 2 !=3D 1 (0x2 !=3D 0x1)FAIL=
+ (1 times)
+> >
+> > After:
+> > test_bpf: #81 ALU_MOVSX | BPF_B jited:1 6 PASS
+> > test_bpf: #82 ALU_MOVSX | BPF_H jited:1 6 PASS
+> >
+> > By the way, the bpf selftest case "./test_progs -t verifier_movsx" can
+> > also be fixed with this patch.
+> Hmmm, it is a little strange that privileged verifier_movsx has no proble=
+m.
+>
 
-Please don't glue variables randomly into the declaration section:
+I have found the differences between priv and unpriv mode.
+The BPF verifier performs different optimizations for priv and upriv progs.
+See the following commits:
 
-  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
+https://github.com/torvalds/linux/commit/e2ae4ca266a1c
+https://github.com/torvalds/linux/commit/52875a04f4b26
+https://github.com/torvalds/linux/commit/a1b14abc009d9
 
->  	if (!of_device_is_compatible(node, "loongson,liointc-2.0")) {
->  		index = 0;
-> @@ -350,8 +351,12 @@ static int __init liointc_of_init(struct device_node *node,
->  	if (!have_parent)
->  		return -ENODEV;
->  
-> +	if (!of_find_property(node, prop_name, &i))
-> +		/* Fallback to 'loongson,parent_int_map'. */
-> +		prop_name = "loongson,parent_int_map";
+As a result, with unprivileged_bpf_disabled on, we have:
 
-This lacks curly brackets:
+  # bpftool p d x i 55
+  void mov32sx_s16_range_2():
+  ; asm volatile ("                    \
+     0: (b7) r1 =3D 65535
+     1: (bc) w2 =3D w1
+     2: (77) r2 >>=3D 1
+     3: (b7) r0 =3D 1
+     4: (95) exit
 
-  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#bracket-rules
+  # bpftool p d j i 55
+  void mov32sx_s16_range_2():
+  0xffff800002416238:
+  ; asm volatile ("                    \
+     0:    addi.d          $a6, $zero, 33(0x21)
+     4:    addi.d          $sp, $sp, -64(0xfc0)
+     8:    st.d            $ra, $sp, 56(0x38)
+     c:    st.d            $fp, $sp, 48(0x30)
+    10:    st.d            $s0, $sp, 40(0x28)
+    14:    st.d            $s1, $sp, 32(0x20)
+    18:    st.d            $s2, $sp, 24(0x18)
+    1c:    st.d            $s3, $sp, 16(0x10)
+    20:    st.d            $s4, $sp, 8(0x8)
+    24:    st.d            $s5, $sp, 0
+    28:    addi.d          $fp, $sp, 64(0x40)
+    2c:    lu12i.w         $a0, 15(0xf)
+    30:    ori             $a0, $a0, 0xfff
+    34:    move            $t1, $a0
+    38:    ext.w.h         $a1, $t1
+    3c:    srli.d          $a1, $a1, 0x1
+    40:    addi.w          $a5, $zero, 1(0x1)
+    44:    ld.d            $ra, $sp, 56(0x38)
+    48:    ld.d            $fp, $sp, 48(0x30)
+    4c:    ld.d            $s0, $sp, 40(0x28)
+    50:    ld.d            $s1, $sp, 32(0x20)
+    54:    ld.d            $s2, $sp, 24(0x18)
+    58:    ld.d            $s3, $sp, 16(0x10)
+    5c:    ld.d            $s4, $sp, 8(0x8)
+    60:    ld.d            $s5, $sp, 0
+    64:    addi.d          $sp, $sp, 64(0x40)
+    68:    move            $a0, $a5
+    6c:    jirl            $zero, $ra, 0
 
->  	sz = of_property_read_variable_u32_array(node,
-> -						"loongson,parent_int_map",
-> +						prop_name,
->  						&parent_int_map[0],
->  						LIOINTC_NUM_PARENT,
->  						LIOINTC_NUM_PARENT);
+With unprivileged_bpf_disabled off, we have:
 
-Thanks,
+  # bpftool p d x i 59
+     0: (b7) r1 =3D 65535
+     1: (bc) w2 =3D w1
+     2: (77) r2 >>=3D 1
+     3: (55) if r2 !=3D 0x7fffffff goto pc+2
+     4: (b7) r0 =3D 1
+     5: (95) exit
+     6: (05) goto pc-1
+     7: (05) goto pc-1
 
-        tglx
+  # bpftool p d j i 59
+  0xffff8000024146a0:
+     0:    addi.d          $a6, $zero, 33(0x21)
+     4:    addi.d          $sp, $sp, -64(0xfc0)
+     8:    st.d            $ra, $sp, 56(0x38)
+     c:    st.d            $fp, $sp, 48(0x30)
+    10:    st.d            $s0, $sp, 40(0x28)
+    14:    st.d            $s1, $sp, 32(0x20)
+    18:    st.d            $s2, $sp, 24(0x18)
+    1c:    st.d            $s3, $sp, 16(0x10)
+    20:    st.d            $s4, $sp, 8(0x8)
+    24:    st.d            $s5, $sp, 0
+    28:    addi.d          $fp, $sp, 64(0x40)
+    2c:    lu12i.w         $a0, 15(0xf)
+    30:    ori             $a0, $a0, 0xfff
+    34:    move            $t1, $a0
+    38:    ext.w.h         $a1, $t1
+    3c:    srli.d          $a1, $a1, 0x1
+    40:    lu12i.w         $t1, 524287(0x7ffff)
+    44:    ori             $t1, $t1, 0xfff
+    48:    move            $t2, $a1
+    4c:    beq             $t2, $t1, 8(0x8)    # 0x0000000000000054
+    50:    b               12(0xc)    # 0x000000000000005c
+    54:    addi.w          $a5, $zero, 1(0x1)
+    58:    b               12(0xc)    # 0x0000000000000064
+    5c:    b               0    # 0x000000000000005c
+    60:    b               0    # 0x0000000000000060
+    64:    ld.d            $ra, $sp, 56(0x38)
+    68:    ld.d            $fp, $sp, 48(0x30)
+    6c:    ld.d            $s0, $sp, 40(0x28)
+    70:    ld.d            $s1, $sp, 32(0x20)
+    74:    ld.d            $s2, $sp, 24(0x18)
+    78:    ld.d            $s3, $sp, 16(0x10)
+    7c:    ld.d            $s4, $sp, 8(0x8)
+    80:    ld.d            $s5, $sp, 0
+    84:    addi.d          $sp, $sp, 64(0x40)
+    88:    move            $a0, $a5
+    8c:    jirl            $zero, $ra, 0
+
+Without this fix, it seems like the prog is trapped in an infinite loop.
+
+This patch looks good to me, so I am going to offer:
+
+Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
+
+Cheers,
+--
+Hengqi
+
+> Huacai
+>
+> >
+> > Fixes: f48012f16150 ("LoongArch: BPF: Support sign-extension mov instru=
+ctions")
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > ---
+> >  arch/loongarch/net/bpf_jit.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
+c
+> > index 169ff8b3915e..8c907c2c42f7 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -480,10 +480,12 @@ static int build_insn(const struct bpf_insn *insn=
+, struct jit_ctx *ctx, bool ext
+> >                 case 8:
+> >                         move_reg(ctx, t1, src);
+> >                         emit_insn(ctx, extwb, dst, t1);
+> > +                       emit_zext_32(ctx, dst, is32);
+> >                         break;
+> >                 case 16:
+> >                         move_reg(ctx, t1, src);
+> >                         emit_insn(ctx, extwh, dst, t1);
+> > +                       emit_zext_32(ctx, dst, is32);
+> >                         break;
+> >                 case 32:
+> >                         emit_insn(ctx, addw, dst, src, LOONGARCH_GPR_ZE=
+RO);
+> > --
+> > 2.42.0
+> >
+> >
