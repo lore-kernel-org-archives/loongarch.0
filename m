@@ -1,83 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07A83D96A;
-	Mon, 11 Dec 2023 13:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD174776B;
+	Mon, 11 Dec 2023 13:54:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eIX+Piq0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4D26C433C7;
-	Mon, 11 Dec 2023 13:21:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3xjA0mP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EF81C433B7;
+	Mon, 11 Dec 2023 13:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702300894;
-	bh=pdOjaPV9Jsg2+hufBUTJoin1FtJ4JLo5gH1YiEsQ8lI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eIX+Piq0oQQdGn8TD0Edg+vyONGxOr1LGqK2bq6Dsi6ovtOvnWpT/rIpQOFhBlA3b
-	 RD+M0Y9olHV8bbTdPocbTzZZmSuQtM3wSgOKRufOCXeKAdrG2YkwpRzI1hwx19gfpd
-	 R8J7br7NfDKSsDo3Ubfz/IzHwRPxRpH0UZXsDmakCZQtxs8yx3CHcht0dAUUySZ72W
-	 7ezqAlqh/1/ULVq4w52iqG1vo6pwpmtsxVWD0ybb3R5KpAvHOys51oI1D1oLC2d49W
-	 kbq2skXfspeTVUkdhvgV61N5n4rZQ8glL+SZEddbiQ/dbTg34ryLGY2yDr7oygKcuA
-	 WwZRQbf9JcgXw==
-Date: Mon, 11 Dec 2023 13:21:27 +0000
-From: Will Deacon <will@kernel.org>
-To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, linux-csky@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org,
-	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 13/21] arm64: convert to arch_cpu_is_hotpluggable()
-Message-ID: <20231211132127.GD25681@willie-the-truck>
-References: <ZVyz/Ve5pPu8AWoA@shell.armlinux.org.uk>
- <E1r5R3g-00Cszg-PP@rmk-PC.armlinux.org.uk>
+	s=k20201202; t=1702302840;
+	bh=wdNJDgqHvDzQr6q3lTGtBsDgx/ijcaDTNNN6qwjaRC4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=L3xjA0mPON5y9hqfrcIgIc/MOZd1DVa6Z+3NRujO/rvhRp39mnwEw7iVmpquAjejI
+	 H3xn6oQIsdRUevtkFNo9vcyT8cPC8UKyF91hU9DODbeYBJAVhkaCb1JufSm5xN5TLI
+	 70JF6vDwQjfQ3ESCxvTeKjrcUtIHaXZrRw2s0B56n+i96DJwuYmelK7JDgaLYQk10+
+	 lx458Ufq4gnd8IeVIFcEJK5jyp9X7UKxsuUoSN2YuRQJgl4CXXanZ3FIMRTu7CVWpJ
+	 GlbSyuenluKSisDNOO2vvjhT4pKMExnIdZQmD1Uo0YHUKAAN3WjQ/aQZRnu+KFqJJe
+	 yX0SA/+PuKNOA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: WANG Rui <wangrui@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	chenhuacai@kernel.org,
+	nathan@kernel.org,
+	loongarch@lists.linux.dev,
+	llvm@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.6 45/47] LoongArch: Apply dynamic relocations for LLD
+Date: Mon, 11 Dec 2023 08:50:46 -0500
+Message-ID: <20231211135147.380223-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231211135147.380223-1-sashal@kernel.org>
+References: <20231211135147.380223-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E1r5R3g-00Cszg-PP@rmk-PC.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.5
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 21, 2023 at 01:44:56PM +0000, Russell King (Oracle) wrote:
-> Convert arm64 to use the arch_cpu_is_hotpluggable() helper rather than
-> arch_register_cpu().
-> 
-> Reviewed-by: Shaoqin Huang <shahuang@redhat.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
->  arch/arm64/kernel/setup.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 165bd2c0dd5a..42c690bb2d60 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -402,13 +402,9 @@ static inline bool cpu_can_disable(unsigned int cpu)
->  	return false;
->  }
->  
-> -int arch_register_cpu(int num)
-> +bool arch_cpu_is_hotpluggable(int num)
->  {
-> -	struct cpu *cpu = &per_cpu(cpu_devices, num);
-> -
-> -	cpu->hotpluggable = cpu_can_disable(num);
-> -
-> -	return register_cpu(cpu, num);
-> +	return cpu_can_disable(num);
->  }
->  
->  static void dump_kernel_offset(void)
+From: WANG Rui <wangrui@loongson.cn>
 
-Acked-by: Will Deacon <will@kernel.org>
+[ Upstream commit eea673e9d5ea994c60b550ffb684413d3759b3f4 ]
 
-Will
+For the following assembly code:
+
+     .text
+     .global func
+ func:
+     nop
+
+     .data
+ var:
+     .dword func
+
+When linked with `-pie`, GNU LD populates the `var` variable with the
+pre-relocated value of `func`. However, LLVM LLD does not exhibit the
+same behavior. This issue also arises with the `kernel_entry` in arch/
+loongarch/kernel/head.S:
+
+ _head:
+     .word   MZ_MAGIC                /* "MZ", MS-DOS header */
+     .org    0x8
+     .dword  kernel_entry            /* Kernel entry point */
+
+The correct kernel entry from the MS-DOS header is crucial for jumping
+to vmlinux from zboot. This necessity is why the compressed relocatable
+kernel compiled by Clang encounters difficulties in booting.
+
+To address this problem, it is proposed to apply dynamic relocations to
+place with `--apply-dynamic-relocs`.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/1962
+Signed-off-by: WANG Rui <wangrui@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index fb0fada43197e..390867fc45b84 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -80,7 +80,7 @@ endif
+ 
+ ifeq ($(CONFIG_RELOCATABLE),y)
+ KBUILD_CFLAGS_KERNEL		+= -fPIE
+-LDFLAGS_vmlinux			+= -static -pie --no-dynamic-linker -z notext
++LDFLAGS_vmlinux			+= -static -pie --no-dynamic-linker -z notext $(call ld-option, --apply-dynamic-relocs)
+ endif
+ 
+ cflags-y += $(call cc-option, -mno-check-zero-division)
+-- 
+2.42.0
+
