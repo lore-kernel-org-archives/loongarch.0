@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A514776B;
-	Mon, 11 Dec 2023 13:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26259358A9;
+	Mon, 11 Dec 2023 13:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvBl+m+0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F70CC433C7;
-	Mon, 11 Dec 2023 13:54:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V374Q210"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06E69C433C9;
+	Mon, 11 Dec 2023 13:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702302851;
+	s=k20201202; t=1702303059;
 	bh=gmWXl8OnCsDxGnfCAvvdJ9/lz1xt84JHADheam84Pw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SvBl+m+09oDNEHo5Q4aH4aSNYq1uuGpreTCXZSr+fq6/zGeVIrqeesF+pDMbTWPQz
-	 Mty/KJfz/VOiqPxs0kzdlmduh1GRgdiNrg7udScux6bWlfH/1eajcWbom7LejGz1lh
-	 Lvdn/CHmwXZpBjjagkDYpW5nboFbbd4uYFO93as7Iduh+QjJ631ExDl+CJngjFQTw5
-	 3ECbZyz3lWwqMoGNdSPECQZhZziinpGJ7aWmopuGw7tNLW6qxqwZcSafcaov140a6g
-	 IIZJTW7ciKxEdxDSg1kULVGdLxpdGSNwsyZBOI9UFlRmJ5yxw4qSt/xkFIyUa2qW1q
-	 qRWJQYfttmrMA==
+	b=V374Q210qweBD3E8fXjl1CBQBikPTEb7Kz6PJdJC36Zcckw50tE9/yRhcFF0BFqdF
+	 zu0Gx1qAfPHR4FyqcD9HT93uQBZAgrUei1mt1Q1B/GqPeBLorMfwYWQz0q77iXy/p+
+	 SbS71XArMz88bAK2DMsjBEs2oNPn6C/v883SmFYuopOuVHdUl1TSQ82EY/5kb6DsNx
+	 4zqTvAn8dKZkAK7zSddzozfAKt15ZKEjoNwSEtMmQqpMR8CjyMhET9GE5lbJoOSU9K
+	 +xDjyUBaWyyiPT8mcbkAcVy04d732RcMlxfu7qJiNrbUozcWIK7XvpduGJxbNmujD/
+	 3F0QBPgBb6FIw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -27,12 +27,12 @@ Cc: Hengqi Chen <hengqi.chen@gmail.com>,
 	yangtiezhu@loongson.cn,
 	loongarch@lists.linux.dev,
 	linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 6.6 47/47] LoongArch: Preserve syscall nr across execve()
-Date: Mon, 11 Dec 2023 08:50:48 -0500
-Message-ID: <20231211135147.380223-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 29/29] LoongArch: Preserve syscall nr across execve()
+Date: Mon, 11 Dec 2023 08:54:13 -0500
+Message-ID: <20231211135457.381397-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231211135147.380223-1-sashal@kernel.org>
-References: <20231211135147.380223-1-sashal@kernel.org>
+In-Reply-To: <20231211135457.381397-1-sashal@kernel.org>
+References: <20231211135457.381397-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.5
+X-stable-base: Linux 6.1.66
 Content-Transfer-Encoding: 8bit
 
 From: Hengqi Chen <hengqi.chen@gmail.com>
