@@ -1,127 +1,140 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B3820B3F
-	for <loongarch@lists.linux.dev>; Mon, 11 Dec 2023 08:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dbc72b692adso1131651276.2
-        for <loongarch@lists.linux.dev>; Mon, 11 Dec 2023 00:25:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702283137; x=1702887937;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j2eWe2oiRzSTkXAZdruL7FMLjSewImdzh7HyKdRxUqI=;
-        b=CYdRZE6R5XA++QFd3vG3/ar9OurJW23ZsqmWX1nQ0e+uK/dg19CboqNWvU7HKmfOMs
-         9aMlGajbbD3PBfgJ4VVSMGSTj5zj+nE3sQY7DrfHhtl/HcuC+y4bvxc0001yggvT2HDZ
-         BpOEBAFr6ZfzJZcPaGS6N4Kli8JTnhKZhn2ucuHrxzpDYOXEKt7LW68f1E7luR+eBnvc
-         uQsQUPMCq0iE+PclzjjyixzaDkq1giuMnZDExwYULa0SMYsnfwvfx2F46KuMatsll+l3
-         OYXrkQ30dgKNGinBI+3KQocXrwcJ/u7fkdS9Oss5cYWMbw7tGqCs8p/yxvuIdjhTTK0d
-         JKcw==
-X-Gm-Message-State: AOJu0Yw1LYYN8ygzm42ECiUzD+iYdpRo2Cm3Y9FrfC/oyjjLJxsooUmH
-	xjnR64Q/LEeoGlgMU3TGX32u+XQ8L29WTQ==
-X-Google-Smtp-Source: AGHT+IFGBS/WOnuhNVA+Yv8a8HuxSYf6/0LPeRiqUJCe+9GZJFpVDXjhvlnUtt1D3lABQU4gnDpABg==
-X-Received: by 2002:a05:6902:28d:b0:db7:dacf:3f99 with SMTP id v13-20020a056902028d00b00db7dacf3f99mr2020923ybh.70.1702283136684;
-        Mon, 11 Dec 2023 00:25:36 -0800 (PST)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id e188-20020a2537c5000000b00db7c2132925sm2413116yba.55.2023.12.11.00.25.36
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Dec 2023 00:25:36 -0800 (PST)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5d6b9143782so35674587b3.0
-        for <loongarch@lists.linux.dev>; Mon, 11 Dec 2023 00:25:36 -0800 (PST)
-X-Received: by 2002:a81:7285:0:b0:5d8:74e6:e4c5 with SMTP id
- n127-20020a817285000000b005d874e6e4c5mr2853116ywc.98.1702283135734; Mon, 11
- Dec 2023 00:25:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F2D210E0
+	for <loongarch@lists.linux.dev>; Mon, 11 Dec 2023 09:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gj5WQLt/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702285836;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X3H2rKzNGhPd5aG+amaV+RsXWG/q4mDryaGgazG1R5k=;
+	b=Gj5WQLt/u1gVD7U+1L5EA18HN4wMiApuM4Lp9k9c5xFOr3oTLjhuboC4V980vuM+fY2OyK
+	8raNFsVp/0pRW9uvIElpfYN61h3QPfmxRcNRxsxSmD4JwQGG+b0tnDzGXo1F6HKAEwQEm3
+	OJRIRj21yci42sa7J/bvB/8TJFcURB4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-7k3BtasXNIGeNUyNQiTfDg-1; Mon, 11 Dec 2023 04:10:34 -0500
+X-MC-Unique: 7k3BtasXNIGeNUyNQiTfDg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9F258833944;
+	Mon, 11 Dec 2023 09:10:33 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.218])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B74A11C060AF;
+	Mon, 11 Dec 2023 09:10:32 +0000 (UTC)
+Date: Mon, 11 Dec 2023 17:10:29 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+	loongarch@lists.linux.dev, kexec@lists.infradead.org,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-sh@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org,
+	eric_devolder@yahoo.com, sfr@canb.auug.org.au, ignat@cloudflare.com
+Subject: Re: [PATCH 0/5] kexec: fix the incorrect ifdeffery and dependency of
+ CONFIG_KEXEC
+Message-ID: <ZXbSBdalhEWPtUn0@MiWiFi-R3L-srv>
+References: <20231208073036.7884-1-bhe@redhat.com>
+ <ZXLI748b85be459B@fedora>
+ <CAMuHMdWAaM+eJtiVbXXBO0xOmpqhrOiCO5itNsNdTiOxRXVtVw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231208073036.7884-1-bhe@redhat.com> <ZXLI748b85be459B@fedora>
-In-Reply-To: <ZXLI748b85be459B@fedora>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 11 Dec 2023 09:25:24 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWAaM+eJtiVbXXBO0xOmpqhrOiCO5itNsNdTiOxRXVtVw@mail.gmail.com>
-Message-ID: <CAMuHMdWAaM+eJtiVbXXBO0xOmpqhrOiCO5itNsNdTiOxRXVtVw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] kexec: fix the incorrect ifdeffery and dependency of CONFIG_KEXEC
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
-	loongarch@lists.linux.dev, kexec@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-sh@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org, 
-	eric_devolder@yahoo.com, sfr@canb.auug.org.au, ignat@cloudflare.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdWAaM+eJtiVbXXBO0xOmpqhrOiCO5itNsNdTiOxRXVtVw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Hi Baoquan,
-
-On Fri, Dec 8, 2023 at 8:43=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
-> Forgot adding kexec to CC, add it now.
->
-> On 12/08/23 at 03:30pm, Baoquan He wrote:
-> > The select of KEXEC for CRASH_DUMP in kernel/Kconfig.kexec will be
-> > dropped, then compiling errors will be triggered if below config
-> > items are set:
+On 12/11/23 at 09:25am, Geert Uytterhoeven wrote:
+> Hi Baoquan,
+> 
+> On Fri, Dec 8, 2023 at 8:43 AM Baoquan He <bhe@redhat.com> wrote:
+> > Forgot adding kexec to CC, add it now.
 > >
-> > =3D=3D=3D
-> > CONFIG_CRASH_CORE=3Dy
-> > CONFIG_KEXEC_CORE=3Dy
-> > CONFIG_CRASH_DUMP=3Dy
-> > =3D=3D=3D
-> >
-> > E.g on mips, below link error are seen:
-> > --------------------------------------------------------------------
-> > mipsel-linux-ld: kernel/kexec_core.o: in function `kimage_free':
-> > kernel/kexec_core.c:(.text+0x2200): undefined reference to `machine_kex=
-ec_cleanup'
-> > mipsel-linux-ld: kernel/kexec_core.o: in function `__crash_kexec':
-> > kernel/kexec_core.c:(.text+0x2480): undefined reference to `machine_cra=
-sh_shutdown'
-> > mipsel-linux-ld: kernel/kexec_core.c:(.text+0x2488): undefined referenc=
-e to `machine_kexec'
-> > mipsel-linux-ld: kernel/kexec_core.o: in function `kernel_kexec':
-> > kernel/kexec_core.c:(.text+0x29b8): undefined reference to `machine_shu=
-tdown'
-> > mipsel-linux-ld: kernel/kexec_core.c:(.text+0x29c0): undefined referenc=
-e to `machine_kexec'
-> > --------------------------------------------------------------------
-> >
-> > Here, change the incorrect dependency of building kexec_core related ob=
-ject
-> > files, and the ifdeffery on architectures from CONFIG_KEXEC to
-> > CONFIG_KEXEC_CORE.
-> >
-> > Testing:
-> > =3D=3D=3D=3D=3D=3D=3D=3D
-> > Passed on mips and loognarch with the LKP reproducer.
-> >
-> > Baoquan He (5):
-> >   loongarch, kexec: change dependency of object files
-> >   m68k, kexec: fix the incorrect ifdeffery and build dependency of
-> >     CONFIG_KEXEC
-> >   mips, kexec: fix the incorrect ifdeffery and dependency of
-> >     CONFIG_KEXEC
-> >   sh, kexec: fix the incorrect ifdeffery and dependency of CONFIG_KEXEC
-> >   x86, kexec: fix the wrong ifdeffery CONFIG_KEXEC
+> > On 12/08/23 at 03:30pm, Baoquan He wrote:
+> > > The select of KEXEC for CRASH_DUMP in kernel/Kconfig.kexec will be
+> > > dropped, then compiling errors will be triggered if below config
+> > > items are set:
+> > >
+> > > ===
+> > > CONFIG_CRASH_CORE=y
+> > > CONFIG_KEXEC_CORE=y
+> > > CONFIG_CRASH_DUMP=y
+> > > ===
+> > >
+> > > E.g on mips, below link error are seen:
+> > > --------------------------------------------------------------------
+> > > mipsel-linux-ld: kernel/kexec_core.o: in function `kimage_free':
+> > > kernel/kexec_core.c:(.text+0x2200): undefined reference to `machine_kexec_cleanup'
+> > > mipsel-linux-ld: kernel/kexec_core.o: in function `__crash_kexec':
+> > > kernel/kexec_core.c:(.text+0x2480): undefined reference to `machine_crash_shutdown'
+> > > mipsel-linux-ld: kernel/kexec_core.c:(.text+0x2488): undefined reference to `machine_kexec'
+> > > mipsel-linux-ld: kernel/kexec_core.o: in function `kernel_kexec':
+> > > kernel/kexec_core.c:(.text+0x29b8): undefined reference to `machine_shutdown'
+> > > mipsel-linux-ld: kernel/kexec_core.c:(.text+0x29c0): undefined reference to `machine_kexec'
+> > > --------------------------------------------------------------------
+> > >
+> > > Here, change the incorrect dependency of building kexec_core related object
+> > > files, and the ifdeffery on architectures from CONFIG_KEXEC to
+> > > CONFIG_KEXEC_CORE.
+> > >
+> > > Testing:
+> > > ========
+> > > Passed on mips and loognarch with the LKP reproducer.
+> > >
+> > > Baoquan He (5):
+> > >   loongarch, kexec: change dependency of object files
+> > >   m68k, kexec: fix the incorrect ifdeffery and build dependency of
+> > >     CONFIG_KEXEC
+> > >   mips, kexec: fix the incorrect ifdeffery and dependency of
+> > >     CONFIG_KEXEC
+> > >   sh, kexec: fix the incorrect ifdeffery and dependency of CONFIG_KEXEC
+> > >   x86, kexec: fix the wrong ifdeffery CONFIG_KEXEC
+> 
+> I understand this series is v3 of "[PATCH v2] kexec_core: change
+> dependency of object files"? As this series does not contain a
+> changelog, can you please summarize what was changed?
+> Thanks!
 
-I understand this series is v3 of "[PATCH v2] kexec_core: change
-dependency of object files"? As this series does not contain a
-changelog, can you please summarize what was changed?
-Thanks!
+Oh, sorry for the confusion.
 
-Gr{oetje,eeting}s,
+You are right, I should have taken this as v3 and posted to avoid
+confusion.
 
-                        Geert
+I add below change log for this series, not sure if it's clearer than
+before. E.g for m68k, the <asm/kexec.h> is included in <linux/kexec.h>.
+The old ifdeffery CONFIG_KEXEC will cause those definitions in
+asm/kexec.h unseen if CONFIG_KEXEC is unset. See
+KEXEC_SOURCE_MEMORY_LIMIT, it's needed in kernel/kexec_core.c.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Changelog:
+------------
+v2->v3:
+- Change the incorrect ifdeffery CONFIG_KEXEC in arch. Since select of
+  KEXEC for CRASH_DUMP in kernel/Kconfig.kexec is dropped, people can
+  set below config items dependently of CONFIG_KEXEC. Then those
+  KEXEC_CORE or CRASH_CORE related codes compiling will report error.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+  ===
+  CONFIG_CRASH_CORE=y
+  CONFIG_KEXEC_CORE=y
+  CONFIG_CRASH_DUMP=y
+  ===
+- Change the incorrect ifdeffery CONFIG_KEXEC in get_cmdline_acpi_rsdp()
+  of x86 because kexec_file_load needs that too.
+
+v1->v2:
+- V1 only includes fix on loongarch. Add m68k, mips, sh fix in v2 too.
+
