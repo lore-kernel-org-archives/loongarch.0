@@ -1,91 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26259358A9;
-	Mon, 11 Dec 2023 13:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8AA208DF
+	for <loongarch@lists.linux.dev>; Mon, 11 Dec 2023 14:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V374Q210"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06E69C433C9;
-	Mon, 11 Dec 2023 13:57:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702303059;
-	bh=gmWXl8OnCsDxGnfCAvvdJ9/lz1xt84JHADheam84Pw0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=V374Q210qweBD3E8fXjl1CBQBikPTEb7Kz6PJdJC36Zcckw50tE9/yRhcFF0BFqdF
-	 zu0Gx1qAfPHR4FyqcD9HT93uQBZAgrUei1mt1Q1B/GqPeBLorMfwYWQz0q77iXy/p+
-	 SbS71XArMz88bAK2DMsjBEs2oNPn6C/v883SmFYuopOuVHdUl1TSQ82EY/5kb6DsNx
-	 4zqTvAn8dKZkAK7zSddzozfAKt15ZKEjoNwSEtMmQqpMR8CjyMhET9GE5lbJoOSU9K
-	 +xDjyUBaWyyiPT8mcbkAcVy04d732RcMlxfu7qJiNrbUozcWIK7XvpduGJxbNmujD/
-	 3F0QBPgBb6FIw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Hengqi Chen <hengqi.chen@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	yangtiezhu@loongson.cn,
-	loongarch@lists.linux.dev,
-	linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 6.1 29/29] LoongArch: Preserve syscall nr across execve()
-Date: Mon, 11 Dec 2023 08:54:13 -0500
-Message-ID: <20231211135457.381397-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231211135457.381397-1-sashal@kernel.org>
-References: <20231211135457.381397-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="eraxT1UA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Oq7uN0UA4e29OD1T/vJ5LTgmVczpGSvVwmcHIE/xouM=; b=eraxT1UAAa6Sj6qX+sOaBE8kHv
+	fce9Pos6BoTdmvZDq+hOl4chP+zWCLsbnvjLCgt6qaMBnYfO3mHSY/2WcMU7Q9qZdHAyLKebQ8nVn
+	52Vc0fgtZKOmHXVqHDAxJA1qV94bRxsow/e/230BJgXz3O2lMmI6DnyZU6SjtWZvfKIQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rCgsq-002coy-7j; Mon, 11 Dec 2023 15:03:44 +0100
+Date: Mon, 11 Dec 2023 15:03:44 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: tsbogend@alpha.franken.de, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	peppe.cavallaro@st.com, alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
+	devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+	chenhuacai@loongson.cn, netdev@vger.kernel.org,
+	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+Subject: Re: [PATCH v1 net 1/3] stmmac: dwmac-loongson: Make sure MDIO is
+ initialized before use
+Message-ID: <0fb4ecea-9db9-4cea-b8f0-3f3b210b1ced@lunn.ch>
+References: <cover.1702289232.git.siyanteng@loongson.cn>
+ <b6059c83049c7a4c97b2c9dfd348b198a8ec1b14.1702289232.git.siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.66
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6059c83049c7a4c97b2c9dfd348b198a8ec1b14.1702289232.git.siyanteng@loongson.cn>
 
-From: Hengqi Chen <hengqi.chen@gmail.com>
+On Mon, Dec 11, 2023 at 06:33:11PM +0800, Yanteng Si wrote:
+> Generic code will use mdio. If it is not initialized before use,
+> the kernel will Oops.
+> 
+> Fixes: 30bba69d7db4 ("stmmac: pci: Add dwmac support for Loongson")
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 
-[ Upstream commit d6c5f06e46a836e6a70c7cfd95bb38a67d9252ec ]
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Currently, we store syscall nr in pt_regs::regs[11] and syscall execve()
-accidentally overrides it during its execution:
-
-    sys_execve()
-      -> do_execve()
-        -> do_execveat_common()
-          -> bprm_execve()
-            -> exec_binprm()
-              -> search_binary_handler()
-                -> load_elf_binary()
-                  -> ELF_PLAT_INIT()
-
-ELF_PLAT_INIT() reset regs[11] to 0, so in syscall_exit_to_user_mode()
-we later get a wrong syscall nr. This breaks tools like execsnoop since
-it relies on execve() tracepoints.
-
-Skip pt_regs::regs[11] reset in ELF_PLAT_INIT() to fix the issue.
-
-Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/include/asm/elf.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/include/asm/elf.h b/arch/loongarch/include/asm/elf.h
-index b9a4ab54285c1..9b16a3b8e7060 100644
---- a/arch/loongarch/include/asm/elf.h
-+++ b/arch/loongarch/include/asm/elf.h
-@@ -293,7 +293,7 @@ extern const char *__elf_platform;
- #define ELF_PLAT_INIT(_r, load_addr)	do { \
- 	_r->regs[1] = _r->regs[2] = _r->regs[3] = _r->regs[4] = 0;	\
- 	_r->regs[5] = _r->regs[6] = _r->regs[7] = _r->regs[8] = 0;	\
--	_r->regs[9] = _r->regs[10] = _r->regs[11] = _r->regs[12] = 0;	\
-+	_r->regs[9] = _r->regs[10] /* syscall n */ = _r->regs[12] = 0;	\
- 	_r->regs[13] = _r->regs[14] = _r->regs[15] = _r->regs[16] = 0;	\
- 	_r->regs[17] = _r->regs[18] = _r->regs[19] = _r->regs[20] = 0;	\
- 	_r->regs[21] = _r->regs[22] = _r->regs[23] = _r->regs[24] = 0;	\
--- 
-2.42.0
-
+    Andrew
