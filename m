@@ -1,126 +1,132 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED27F9FE
-	for <loongarch@lists.linux.dev>; Wed, 13 Dec 2023 07:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5153224C3
+	for <loongarch@lists.linux.dev>; Wed, 13 Dec 2023 10:12:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8BxNPBvYHllCJoAAA--.3735S3;
-	Wed, 13 Dec 2023 15:42:39 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axv+FtYHll3QYCAA--.13949S3;
-	Wed, 13 Dec 2023 15:42:39 +0800 (CST)
-Subject: Re: [PATCH v5 1/4] KVM: selftests: Add KVM selftests header files for
- LoongArch
-To: zhaotianrui <zhaotianrui@loongson.cn>,
- Sean Christopherson <seanjc@google.com>
-Cc: Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Vishal Annapurve <vannapurve@google.com>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Peter Xu <peterx@redhat.com>,
- Vipin Sharma <vipinsh@google.com>, huangpei@loongson.cn
-References: <20231130111804.2227570-1-zhaotianrui@loongson.cn>
- <20231130111804.2227570-2-zhaotianrui@loongson.cn>
- <e40d3884-bf39-8286-627f-e0ce7dacfcbe@loongson.cn>
- <ZXiV1rMrXY0hNgvZ@google.com>
- <023b6f8f-301b-a6d0-448b-09a602ba1141@loongson.cn>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <06076290-4efb-5d71-74eb-396d325447e0@loongson.cn>
-Date: Wed, 13 Dec 2023 15:42:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [112.20.109.254])
+	by gateway (Coremail) with SMTP id _____8CxueiWg3llEKEAAA--.3853S3;
+	Wed, 13 Dec 2023 18:12:38 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.254])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxguOPg3llXjMCAA--.15020S2;
+	Wed, 13 Dec 2023 18:12:32 +0800 (CST)
+From: Yanteng Si <siyanteng@loongson.cn>
+To: andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com
+Cc: Yanteng Si <siyanteng@loongson.cn>,
+	fancer.lancer@gmail.com,
+	Jose.Abreu@synopsys.com,
+	chenhuacai@loongson.cn,
+	linux@armlinux.org.uk,
+	guyinggang@loongson.cn,
+	netdev@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	chris.chenfeiyang@gmail.com
+Subject: [PATCH v6 0/9] stmmac: Add Loongson platform support
+Date: Wed, 13 Dec 2023 18:12:22 +0800
+Message-Id: <cover.1702458672.git.siyanteng@loongson.cn>
+X-Mailer: git-send-email 2.31.4
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <023b6f8f-301b-a6d0-448b-09a602ba1141@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axv+FtYHll3QYCAA--.13949S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WF13GFWUCFy7Cw4ftF4rXrc_yoW8tF43pr
-	yIkF1Yka1kGrZ7tw4kt3W5XF4agFs3u3W8ArykWr4Uuan8Xw17Ar1jkw4rKas2krW8J3Wj
-	qF4jq3yjv3Z8C3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:AQAAf8CxguOPg3llXjMCAA--.15020S2
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF45Wr45Wr47CFWDJr1UArc_yoW5CF18pF
+	W7Aa4YgrZ7tr1xA3Z5Jw1DXFy5Wayayr47Wa1Iqw1Ska9rKryjqrya9FWYvFy7ArZ8uFy2
+	qr1UCr1DCF1qk3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
-	e5UUUUU==
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
+
+v6:
+
+* Refer to Serge's suggestion:
+  - Add new platform feature flag:
+    include/linux/stmmac.h:
+    +#define STMMAC_FLAG_HAS_LGMAC			BIT(13)
+
+  - Add the IRQs macros specific to the Loongson Multi-channels GMAC:
+     drivers/net/ethernet/stmicro/stmmac/dwmac_dma.h:
+     +#define DMA_INTR_ENA_NIE_LOONGSON 0x00060000	/* Normal Loongson Tx/Rx Summary */
+     #define DMA_INTR_ENA_NIE 0x00010000	/* Normal Summary */
+     ...
+
+  - Drop all of redundant changes that don't require the
+    prototypes being converted to accepting the stmmac_priv
+    pointer.
+
+* Refer to andrew's suggestion:
+  - Drop white space changes.
+  - break patch up into lots of smaller parts.
+     Some small patches have been put into another series as a preparation
+     see <https://lore.kernel.org/loongarch/cover.1702289232.git.siyanteng@loongson.cn/T/#t>
+     
+     *note* : This series of patches relies on the three small patches above.
+* others
+  - Drop irq_flags changes.
+  - Changed patch order.
 
 
 
-On 2023/12/13 下午3:15, zhaotianrui wrote:
-> 
-> 
-> 在 2023/12/13 上午1:18, Sean Christopherson 写道:
->> On Tue, Dec 12, 2023, zhaotianrui wrote:
->>> Hi, Sean:
->>>
->>> I want to change the definition of  DEFAULT_GUEST_TEST_MEM in the common
->>> file "memstress.h", like this:
->>>
->>>   /* Default guest test virtual memory offset */
->>> +#ifndef DEFAULT_GUEST_TEST_MEM
->>>   #define DEFAULT_GUEST_TEST_MEM        0xc0000000
->>> +#endif
->>>
->>> As this address should be re-defined in LoongArch headers.
->>
->> Why?  E.g. is 0xc0000000 unconditionally reserved, not guaranteed to 
->> be valid,
->> something else?
->>
->>> So, do you have any suggesstion?
->>
->> Hmm, I think ideally kvm_util_base.h would define a range of memory 
->> that can be
->> used by tests for arbitrary data.  Multiple tests use 0xc0000000, 
->> which is not
->> entirely arbitrary, i.e. it doesn't _need_ to be 0xc0000000, but 
->> 0xc0000000 is
->> convenient because it's 32-bit addressable and doesn't overlap 
->> reserved areas in
->> other architectures.
-In general text entry address of user application on x86/arm64 Linux
-is 0x200000, however on LoongArch system text entry address is strange, 
-its value 0x120000000.
+v4 -> v5:
 
-When DEFAULT_GUEST_TEST_MEM is defined as 0xc0000000, there is 
-limitation for guest memory size, it cannot exceed 0x120000000 - 
-0xc000000 = 1.5G bytes, else there will be conflict. However
-there is no such issue on x86/arm64, since 0xc0000000 is above text 
-entry address 0x200000.
+* Remove an ugly and useless patch (fix channel number).
+* Remove the non-standard dma64 driver code, and also remove
+  the HWIF entries, since the associated custom callbacks no
+  longer exist.
+* Refer to Serge's suggestion: Update the dwmac1000_dma.c to
+  support the multi-DMA-channels controller setup.
 
-The LoongArch link scripts actually is strange, it brings out some 
-compatible issues such dpdk/kvm selftest when user applications
-want fixed virtual address space.
+See:
+v4: <https://lore.kernel.org/loongarch/cover.1692696115.git.chenfeiyang@loongson.cn/>
+v3: <https://lore.kernel.org/loongarch/cover.1691047285.git.chenfeiyang@loongson.cn/>
+v2: <https://lore.kernel.org/loongarch/cover.1690439335.git.chenfeiyang@loongson.cn/>
+v1: <https://lore.kernel.org/loongarch/cover.1689215889.git.chenfeiyang@loongson.cn/>
 
-So here DEFAULT_GUEST_TEST_MEM is defined as 0x130000000 separately, 
-maybe 0x140000000 is better since it is 1G super-page aligned for 4K 
-page size.
+Yanteng Si (9):
+  net: stmmac: Pass stmmac_priv and chan in some callbacks
+  net: stmmac: dwmac-loongson: Refactor code for loongson_dwmac_probe()
+  net: stmmac: dwmac-loongson: Add full PCI support
+  net: stmmac: Add multi-channel supports
+  net: stmmac: Add Loongson-specific register definitions
+  net: stmmac: dwmac-loongson: Add MSI support
+  net: stmmac: dwmac-loongson: Add GNET support
+  net: stmmac: dwmac-loongson: Disable flow control for GMAC
+  net: stmmac: Disable coe for some Loongson GNET
 
-Regards
-Bibo Mao
+ drivers/net/ethernet/stmicro/stmmac/common.h  |   1 +
+ .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 296 ++++++++++++++----
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |   2 +-
+ .../ethernet/stmicro/stmmac/dwmac1000_dma.c   |  61 +++-
+ .../ethernet/stmicro/stmmac/dwmac100_dma.c    |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac4_dma.c  |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac_dma.h   |  47 ++-
+ .../net/ethernet/stmicro/stmmac/dwmac_lib.c   |  65 ++--
+ .../ethernet/stmicro/stmmac/dwxgmac2_dma.c    |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/hwif.c    |   8 +-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h    |  11 +-
+ .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   6 +
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  13 +-
+ include/linux/stmmac.h                        |   4 +
+ 14 files changed, 413 insertions(+), 107 deletions(-)
 
->>
-> Thanks for your explanation, and LoongArch want to define 
-> DEFAULT_GUEST_TEST_MEM to 0x130000000. As default base address for 
-> application loading is 0x120000000, DEFAULT_GUEST_TEST_MEM should be 
-> larger than app loading address, so that PER_VCPU_MEM_SIZE can be large 
-> enough, and kvm selftests app size is smaller than 256M in generic.
-> 
-> Thanks
-> Tianrui Zhao
+-- 
+2.31.4
 
