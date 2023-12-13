@@ -1,35 +1,26 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 201F6224D6
-	for <loongarch@lists.linux.dev>; Wed, 13 Dec 2023 10:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.109.254])
-	by gateway (Coremail) with SMTP id _____8AxXOkrhHllw6EAAA--.3943S3;
-	Wed, 13 Dec 2023 18:15:07 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.254])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXeEnhHllQjQCAA--.14860S4;
-	Wed, 13 Dec 2023 18:15:07 +0800 (CST)
-From: Yanteng Si <siyanteng@loongson.cn>
-To: andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	peppe.cavallaro@st.com,
-	alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com
-Cc: Yanteng Si <siyanteng@loongson.cn>,
-	fancer.lancer@gmail.com,
-	Jose.Abreu@synopsys.com,
-	chenhuacai@loongson.cn,
-	linux@armlinux.org.uk,
-	guyinggang@loongson.cn,
-	netdev@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	chris.chenfeiyang@gmail.com
-Subject: [PATCH v6 9/9] net: stmmac: Disable coe for some Loongson GNET
-Date: Wed, 13 Dec 2023 18:15:02 +0800
-Message-Id: <41acce3f4178c91c15a67b4ff675c06b3b9b8d17.1702458672.git.siyanteng@loongson.cn>
-X-Mailer: git-send-email 2.31.4
-In-Reply-To: <cover.1702458672.git.siyanteng@loongson.cn>
-References: <cover.1702458672.git.siyanteng@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4209B22EF1;
+	Wed, 13 Dec 2023 11:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2XwzqUz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A49CDC433C9;
+	Wed, 13 Dec 2023 11:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702465224;
+	bh=qri/w5jLo+6ipU86Kfi+yN99WggNK8P2NJcKN4CB6ok=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=U2XwzqUzjWN0yLjzlLhJQc3xMh3Tg0fhZn8qCu9BfIRR5WocEZ1lmz4BKFgAB/VFr
+	 zg5A+VDIPe2JK5K3B6DNHg3tebxxKu4nyQ1Q9Gb/S3COrsYLwasZ4Urm66OwOCa6KI
+	 L5mT16Tf/Es6CSzqCQvIjGmIY34GGFPJASUBGsJHMYvOHC1AnobfapvffVT6X8dw2m
+	 oX4dPOwt/OwsrzbR9vyiahmZt2kOOk70Qzyou/gYYNqc7nctHqnJYJe/HSbaniCJTF
+	 P3AS9hZhDeeizkycIvTg0X5SHhfAjKjWQuV0Ds0nw14MSFbYNk0C/Xq5Rpt1U1uAbX
+	 MYTYQnc3LpREQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 89A83DD4EFD;
+	Wed, 13 Dec 2023 11:00:24 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,50 +28,48 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxXeEnhHllQjQCAA--.14860S4
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XFWUZrW8Gr1kJFW3Ww13WrX_yoWfCwbE9F
-	12vrn3Xa1UtF1ak3yDWw15Z34S9w4Du3WrCFsFqa4Fka92q3s8Jrykur93JFnxWrZ5uF1D
-	Gr1xtFyxAw1xAosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbckYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVW3AVW8Xw1lYx0Ex4A2
-	jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI
-	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFrWrUUUUU=
+Subject: Re: [PATCH v1 net 0/3] Some bug fixes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170246522455.5465.14917728271617814116.git-patchwork-notify@kernel.org>
+Date: Wed, 13 Dec 2023 11:00:24 +0000
+References: <cover.1702289232.git.siyanteng@loongson.cn>
+In-Reply-To: <cover.1702289232.git.siyanteng@loongson.cn>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: andrew@lunn.ch, tsbogend@alpha.franken.de, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ peppe.cavallaro@st.com, alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org,
+ linux-mips@vger.kernel.org, chenhuacai@loongson.cn, netdev@vger.kernel.org,
+ loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
 
-Some chips of Loongson GNET does not support coe, so disable them.
+Hello:
 
-Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
----
- drivers/net/ethernet/stmicro/stmmac/hwif.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This series was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-index 3724cf698de6..f211880925aa 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-@@ -73,6 +73,11 @@ static int stmmac_dwmac1_quirks(struct stmmac_priv *priv)
- 		mac->desc = &ndesc_ops;
- 	}
- 
-+	if (priv->synopsys_id == DWLGMAC_CORE_1_00) {
-+		priv->plat->tx_coe = 0;
-+		priv->plat->rx_coe = STMMAC_RX_COE_NONE;
-+	}
-+
- 	stmmac_dwmac_mode_quirk(priv);
- 	return 0;
- }
+On Mon, 11 Dec 2023 18:20:32 +0800 you wrote:
+> * Put Krzysztof's patch into my thread, pick Conor's Reviewed-by
+>   tag and Jiaxun's Acked-by tag.(prev version is RFC patch)
+> 
+> * I fixed an Oops related to mdio, mainly to ensure that
+>   mdio is initialized before use, because it will be used
+>   in a series of patches I am working on.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v1,net,1/3] stmmac: dwmac-loongson: Make sure MDIO is initialized before use
+    https://git.kernel.org/netdev/net/c/e87d3a1370ce
+  - [v1,net,2/3] stmmac: dwmac-loongson: drop useless check for compatible fallback
+    https://git.kernel.org/netdev/net/c/31fea092c6f9
+  - [v1,net,3/3] MIPS: dts: loongson: drop incorrect dwmac fallback compatible
+    https://git.kernel.org/netdev/net/c/4907a3f54b12
+
+You are awesome, thank you!
 -- 
-2.31.4
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
