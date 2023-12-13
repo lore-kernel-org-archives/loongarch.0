@@ -1,111 +1,62 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D441C63BEF
-	for <loongarch@lists.linux.dev>; Tue, 12 Dec 2023 20:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Le1a7b+M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PDwWMvE707rKJbV02zug7t37qFDv7YOoytMyP2X6xyQ=; b=Le1a7b+MYxlb3kfygQ0jhZGDz+
-	1KEl3WefH1wExk5k9L8RKfyjQb31NtNsFDmeS4rbyNsnV/AXUNGZ4lb5p5n6bzlws55DQTx6h0Pci
-	2u3wY6NiE6B+lMqsPbDzadz2m2GUvO+8cAcQqTDUn2jhye7PisBrMewyqd/QZUPpAurEe+jBmHuOo
-	QZY3oxISKjP6uooc+4ddKW0Y68+IKpagaLdIr/CvX94n5Xo5rkXFcE7Uvf+3APlWLA0ytjjrnZlrN
-	8dsbOoFtwrn6T2CxI8FRZWBoRtSUTRQ8ww5gyZJb/FHHmDSGFj8cA+TDfANxb1MalWyb1DtUqoygz
-	L/AUbcjQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58234)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rD9Ba-0007OH-0y;
-	Tue, 12 Dec 2023 20:16:58 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rD9Bb-0000jo-UJ; Tue, 12 Dec 2023 20:16:59 +0000
-Date: Tue, 12 Dec 2023 20:16:59 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>
-Subject: Re: [RFC PATCH v3 00/39] ACPI/arm64: add support for virtual
- cpuhotplug
-Message-ID: <ZXi/u7dZ20oLPF9n@shell.armlinux.org.uk>
-References: <ZTffkAdOqL2pI2la@shell.armlinux.org.uk>
- <CAJZ5v0j-73_+9U3ngDAf9w1ADDhBTKctJdWboqUk-okH2TQGyg@mail.gmail.com>
- <ZW4ZBkj2oCmxv55T@shell.armlinux.org.uk>
- <ZXi7do4mVfdsz/k0@shell.armlinux.org.uk>
- <CAJZ5v0jOU4Re2g5QtxpG0RjP3MYBxqz5Z+TtfXq2dz8HTq9A0A@mail.gmail.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 119FBA5E
+	for <loongarch@lists.linux.dev>; Wed, 13 Dec 2023 01:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxCul3B3lli4YAAA--.3208S3;
+	Wed, 13 Dec 2023 09:23:03 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXeF1B3ll_JYBAA--.11124S2;
+	Wed, 13 Dec 2023 09:23:01 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-kselftest@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] selftests/vDSO: Fix errors on LoongArch
+Date: Wed, 13 Dec 2023 09:22:58 +0800
+Message-ID: <20231213012300.5640-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0jOU4Re2g5QtxpG0RjP3MYBxqz5Z+TtfXq2dz8HTq9A0A@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-CM-TRANSID:AQAAf8CxXeF1B3ll_JYBAA--.11124S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
+	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
+	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+	Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
 
-On Tue, Dec 12, 2023 at 09:05:14PM +0100, Rafael J. Wysocki wrote:
-> On Tue, Dec 12, 2023 at 8:58 PM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Mon, Dec 04, 2023 at 06:23:02PM +0000, Russell King (Oracle) wrote:
-> > > On Tue, Oct 24, 2023 at 08:26:58PM +0200, Rafael J. Wysocki wrote:
-> > > > I've gone through the series and there is at least one thing in it
-> > > > that concerns me a lot and some others that at least appear to be
-> > > > really questionable.
-> > > >
-> > > > I need more time to send comments which I'm not going to do before the
-> > > > 6.7 merge window (sorry), but from what I can say right now, this is
-> > > > not looking good.
-> > >
-> > > Hi Rafael,
-> > >
-> > > Will you be able to send your comments, so that we can find out what
-> > > your other concerns are please? I'm getting questions from interested
-> > > parties who want to know what your concerns are.
-> > >
-> > > Nothing much has changed to the ACPI changes, so I think it's still
-> > > valid to have the comments back for this.
-> >
-> > Hi Rafael,
-> >
-> > Another gentle prod on this...
-> 
-> There was a selection of the patches in the series sent separately and
-> I believe that some of them have been applied already.
-> 
-> Can you please send the remaining patches again so it is clear what's
-> still outstanding?
+v3: Rebase on the next branch of linux-kselftest.git,
+    modify the patch title and update the commit message
 
-I can do tomorrow, thanks. I will re-post as RFC again because it will
-depend on the cleanup part that was merged into Greg's tree - and thus
-the series isn't standalone (and I'll mention that in the cover
-message.)
+v2: Rebase on 6.5-rc1 and update the commit message
 
-We need to hear your concerns, which sounded quite damning for the
-series, so that if it's possible to save this a plan to address your
-concerns can be formulated.
+Tiezhu Yang (2):
+  selftests/vDSO: Fix building errors on LoongArch
+  selftests/vDSO: Fix runtime errors on LoongArch
 
-Thanks.
+ tools/testing/selftests/vDSO/vdso_config.h    |  6 ++++-
+ .../testing/selftests/vDSO/vdso_test_getcpu.c | 16 +++++-------
+ .../selftests/vDSO/vdso_test_gettimeofday.c   | 26 +++++--------------
+ 3 files changed, 18 insertions(+), 30 deletions(-)
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.42.0
+
