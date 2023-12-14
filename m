@@ -1,171 +1,214 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA1B79E15
-	for <loongarch@lists.linux.dev>; Wed, 13 Dec 2023 23:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0195238E
+	for <loongarch@lists.linux.dev>; Thu, 14 Dec 2023 01:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lQryytS/"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5e283ef6299so671297b3.1
-        for <loongarch@lists.linux.dev>; Wed, 13 Dec 2023 15:56:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XFiX7M1j"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-77f46ae7e5dso398042685a.3
+        for <loongarch@lists.linux.dev>; Wed, 13 Dec 2023 17:03:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702511791; x=1703116591; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UxO4lwP1Y614pYP6ZHT+U53NlXgl8rz0sajx/aIIUBo=;
-        b=lQryytS/8JU4PqG3zEQi2X+LWZe5ClZFwmSuYK2J+3FUV5vmYb/epIPVHl7tqm4JaY
-         sLMV/ulvQGeZ155UazHSdmpElC2ZPLmMo8yFlOHMVzUvt7ta+npEw4eDuTKmoWDsIQez
-         jleJqCyUDJzmtRTu9I+BjCXH8Kp/q7SRZgs4DPDhDajocf5Vo+sL750OdlMl3nOK/TO5
-         kZS/TJMNbDnG4UykyxPnvBuqWaCX5h+30H5KuBcuxcGH4ksFPplK5ybT34EMHQsiILW7
-         zxKT4L4tX2KhNzKR4kpvQw+IrN35aFG8IuFYssMreg6RU9WfEnc0bW1Gi6imWFh1Uk5h
-         CG4Q==
+        d=sifive.com; s=google; t=1702515802; x=1703120602; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Kotqopmhql9RPm3S4FTj2FqpufLgCsxyuc5LZys4ifw=;
+        b=XFiX7M1jD7zKiRtrbapSYIWubLWDZCl6jLuOSTnkCk6AV2m3na684JIdGMLlfgclog
+         Z9X1oeA3bEMrg10tg/+g4Kb5PpAq+rkLjDCDYrU9/m9/GO24RVXTwvz320Xf4/JPDg1L
+         T8J6w9VTR7TsJzUJ4H1Pl9xfRnqy1adItVQKkKsROAzYK09pw18WwGotB8ZYw/gZWFIj
+         X0HlN/Me7Yfsv7eLBFbM0woLTxj048ChXKGeXSeq1hhxm0BmJ3FQ2dc6cvnHLwxo1ezZ
+         5nnrnodaD3iOx8aYWKBl9Fb0AIUzYQK2klwM6/zYENo1FUDdmdQzu9fgk9U1ecxVEk0I
+         qeYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702511791; x=1703116591;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UxO4lwP1Y614pYP6ZHT+U53NlXgl8rz0sajx/aIIUBo=;
-        b=GkxHvZv6DaT9AHUel5e2RZeg7HcEBqtLJT1I82YpDeYjqdCUFEF1jxoAVx7Tq+DEJ+
-         xdZ9giDCmqZ+My41p44jWSGQRnD4hT0Iy+FGetXBNYCWUd+lioxsaNGX4sKf/6TqyQSD
-         98CIw4fjVKUiE0/ZgQ6UpRR3kQRKlRP7QSVtA8onUprBjQNYN+UWLOePlk0z2HOIts59
-         V3iS1mAWCA7qZ0VMX8MQyhS5UehtbsuuAJUxBlFdn5xrRGH0JAFx4hyEJ2hGKZlDJfaI
-         J/HTEtAve2TOg1GbTpm3+8+0aMW2SnqZNdFxBAC0PCu496A2FQQ0uCJllqf+1lhvsRdz
-         r8KQ==
-X-Gm-Message-State: AOJu0YzmYOs37o1hS/MXpBXpyUDAaRLf7l865Awm3hKmT+ZYGeNUIByz
-	OsvPgjpBSlYnwV9QjvzOgZFebVz2Mfk=
-X-Google-Smtp-Source: AGHT+IEdEJxURty77JppqMbnEcTtdqehWo1GpHD5Zc7eekAL54I1TN5IQJjkH6fjT6U+/8piBXb3dgq1kJ0=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:14d:b0:db5:3aaf:5207 with SMTP id
- p13-20020a056902014d00b00db53aaf5207mr151250ybh.3.1702511791190; Wed, 13 Dec
- 2023 15:56:31 -0800 (PST)
-Date: Wed, 13 Dec 2023 15:56:29 -0800
-In-Reply-To: <06076290-4efb-5d71-74eb-396d325447e0@loongson.cn>
+        d=1e100.net; s=20230601; t=1702515802; x=1703120602;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kotqopmhql9RPm3S4FTj2FqpufLgCsxyuc5LZys4ifw=;
+        b=VCiL5V3jJAYKTNHwwnT3vsrH8xfOMxABGJ9FHOC5ahGTOII5KVMCnuejNJmsGhlYGE
+         6BmazdnxtRKme6r2PQNlKUNj0wQsw9SJW2MsUR1f7KUq2aUjD03kd/8CLYbTQiPSm0Ap
+         3oJkOKNdhsfbpBoDJ3bMO1ik51BhC8MYH2vnpJexBa30RmqsYhtPg8uWkD9R6HVSOrJS
+         fnFlkaAnyRKtO4s+gXEGAnNPBrs73lkg180sXFWfQGYfmBxPdymmKoLXIB2OWdwMrxHK
+         rOWZDufcSVi7dLeeGUP8c6lqHgw8vQom3tnRFzlndD5u4f2NtifauMvgzvhq2m9MnoNC
+         q7rQ==
+X-Gm-Message-State: AOJu0Ywds2bfq/7YhLqPka3iFVSbzWiLLeDBABx88V3bSBQ+VUB7L6mF
+	NQYCrhvaPeN5VUJ5K6b0GlS25w==
+X-Google-Smtp-Source: AGHT+IFjYn4/wlSclY9FQAk7x1h05GKodk6C3zlVMTJ3BbOMNQ8WP5BrWLxO1hQ2sob52mgNqAJxdQ==
+X-Received: by 2002:a05:620a:1034:b0:77f:2734:4c5d with SMTP id a20-20020a05620a103400b0077f27344c5dmr9834012qkk.130.1702515801849;
+        Wed, 13 Dec 2023 17:03:21 -0800 (PST)
+Received: from ?IPV6:2600:1700:2000:b002:a1d1:dd74:a6de:fdf? ([2600:1700:2000:b002:a1d1:dd74:a6de:fdf])
+        by smtp.gmail.com with ESMTPSA id ul9-20020a05620a6d0900b0077f0d3bac3bsm4896980qkn.76.2023.12.13.17.03.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Dec 2023 17:03:21 -0800 (PST)
+Message-ID: <7ed20fcf-8a9d-40d5-b913-b5d2da443cd6@sifive.com>
+Date: Wed, 13 Dec 2023 19:03:20 -0600
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20231130111804.2227570-1-zhaotianrui@loongson.cn>
- <20231130111804.2227570-2-zhaotianrui@loongson.cn> <e40d3884-bf39-8286-627f-e0ce7dacfcbe@loongson.cn>
- <ZXiV1rMrXY0hNgvZ@google.com> <023b6f8f-301b-a6d0-448b-09a602ba1141@loongson.cn>
- <06076290-4efb-5d71-74eb-396d325447e0@loongson.cn>
-Message-ID: <ZXpErTHBn6HeQUOp@google.com>
-Subject: Re: [PATCH v5 1/4] KVM: selftests: Add KVM selftests header files for LoongArch
-From: Sean Christopherson <seanjc@google.com>
-To: maobibo <maobibo@loongson.cn>
-Cc: zhaotianrui <zhaotianrui@loongson.cn>, Shuah Khan <shuah@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Vishal Annapurve <vannapurve@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, Peter Xu <peterx@redhat.com>, 
-	Vipin Sharma <vipinsh@google.com>, huangpei@loongson.cn
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 10/12] drm/amd/display: Use
+ ARCH_HAS_KERNEL_FPU_SUPPORT
+Content-Language: en-US
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+ linux-riscv@lists.infradead.org, Christoph Hellwig <hch@infradead.org>,
+ Timothy Pearson <tpearson@raptorengineering.com>
+References: <20231208055501.2916202-1-samuel.holland@sifive.com>
+ <20231208055501.2916202-11-samuel.holland@sifive.com>
+ <87h6kpdj20.fsf@mail.lhotse>
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <87h6kpdj20.fsf@mail.lhotse>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 13, 2023, maobibo wrote:
->=20
-> On 2023/12/13 =E4=B8=8B=E5=8D=883:15, zhaotianrui wrote:
-> >=20
-> > =E5=9C=A8 2023/12/13 =E4=B8=8A=E5=8D=881:18, Sean Christopherson =E5=86=
-=99=E9=81=93:
-> > > On Tue, Dec 12, 2023, zhaotianrui wrote:
-> > > > Hi, Sean:
-> > > >=20
-> > > > I want to change the definition of=C2=A0 DEFAULT_GUEST_TEST_MEM in =
-the common
-> > > > file "memstress.h", like this:
-> > > >=20
-> > > > =C2=A0 /* Default guest test virtual memory offset */
-> > > > +#ifndef DEFAULT_GUEST_TEST_MEM
-> > > > =C2=A0 #define DEFAULT_GUEST_TEST_MEM=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 0xc0000000
-> > > > +#endif
-> > > >=20
-> > > > As this address should be re-defined in LoongArch headers.
-> > >=20
-> > > Why?=C2=A0 E.g. is 0xc0000000 unconditionally reserved, not guarantee=
-d to
-> > > be valid,
-> > > something else?
-> > >=20
-> > > > So, do you have any suggesstion?
-> > >=20
-> > > Hmm, I think ideally kvm_util_base.h would define a range of memory t=
-hat
-> > > can be used by tests for arbitrary data.=C2=A0 Multiple tests use 0xc=
-0000000,
-> > > which is not entirely arbitrary, i.e. it doesn't _need_ to be 0xc0000=
-000,
-> > > but 0xc0000000 is convenient because it's 32-bit addressable and does=
-n't
-> > > overlap reserved areas in other architectures.
-> In general text entry address of user application on x86/arm64 Linux
-> is 0x200000, however on LoongArch system text entry address is strange, i=
-ts
-> value 0x120000000.
->=20
-> When DEFAULT_GUEST_TEST_MEM is defined as 0xc0000000, there is limitation
-> for guest memory size, it cannot exceed 0x120000000 - 0xc000000 =3D 1.5G
-> bytes, else there will be conflict. However there is no such issue on
-> x86/arm64, since 0xc0000000 is above text entry address 0x200000.
+On 2023-12-11 6:23 AM, Michael Ellerman wrote:
+> Hi Samuel,
+> 
+> Thanks for trying to clean all this up.
+> 
+> One problem below.
+> 
+> Samuel Holland <samuel.holland@sifive.com> writes:
+>> Now that all previously-supported architectures select
+>> ARCH_HAS_KERNEL_FPU_SUPPORT, this code can depend on that symbol instead
+>> of the existing list of architectures. It can also take advantage of the
+>> common kernel-mode FPU API and method of adjusting CFLAGS.
+>>
+>> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> ...
+>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
+>> index 4ae4720535a5..b64f917174ca 100644
+>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
+>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
+>> @@ -87,20 +78,9 @@ void dc_fpu_begin(const char *function_name, const int line)
+>>  	WARN_ON_ONCE(!in_task());
+>>  	preempt_disable();
+>>  	depth = __this_cpu_inc_return(fpu_recursion_depth);
+>> -
+>>  	if (depth == 1) {
+>> -#if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
+>> +		BUG_ON(!kernel_fpu_available());
+>>  		kernel_fpu_begin();
+>> -#elif defined(CONFIG_PPC64)
+>> -		if (cpu_has_feature(CPU_FTR_VSX_COMP))
+>> -			enable_kernel_vsx();
+>> -		else if (cpu_has_feature(CPU_FTR_ALTIVEC_COMP))
+>> -			enable_kernel_altivec();
+>  
+> Note altivec.
+> 
+>> -		else if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
+>> -			enable_kernel_fp();
+>> -#elif defined(CONFIG_ARM64)
+>> -		kernel_neon_begin();
+>> -#endif
+>>  	}
+>>  
+>>  	TRACE_DCN_FPU(true, function_name, line, depth);
+>> diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+>> index ea7d60f9a9b4..5aad0f572ba3 100644
+>> --- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
+>> +++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+>> @@ -25,40 +25,8 @@
+>>  # It provides the general basic services required by other DAL
+>>  # subcomponents.
+>>  
+>> -ifdef CONFIG_X86
+>> -dml_ccflags-$(CONFIG_CC_IS_GCC) := -mhard-float
+>> -dml_ccflags := $(dml_ccflags-y) -msse
+>> -endif
+>> -
+>> -ifdef CONFIG_PPC64
+>> -dml_ccflags := -mhard-float -maltivec
+>> -endif
+> 
+> And altivec is enabled in the flags there.
+> 
+> That doesn't match your implementation for powerpc in patch 7, which
+> only deals with float.
+> 
+> I suspect the AMD driver actually doesn't need altivec enabled, but I
+> don't know that for sure. It compiles without it, but I don't have a GPU
+> to actually test. I've added Timothy on Cc who added the support for
+> powerpc to the driver originally, hopefully he has a test system.
 
-Ugh, I spent a good 30 minutes trying to figure out how any of this works o=
-n x86
-before I realized DEFAULT_GUEST_TEST_MEM is used for the guest _virtual_ ad=
-dress
-space.
+I tested this series on a POWER9 system with an AMD Radeon RX 6400 GPU (which
+requires this FPU code to initialize), and got functioning graphics output.
 
-I was thinking we were talking about guest _physical_ address, hence my com=
-ments
-about it being 32-bit addressable and not overlappin reserved areas.  E.g. =
-on x86,
-anything remotely resembling a real system has regular memory, a.k.a. DRAM,=
- split
-between low memory (below the 32-bit boundary, i.e. below 4GiB) and high me=
-mory
-(from 4GiB to the max legal physical address).  Addresses above "top of low=
-er
-usable DRAM" (TOLUD) are reserved (again, in a "real" system) for things li=
-ke
-PCI, local APIC, I/O APIC, and the _architecturally_ defined RESET vector.
+> Anyway if that's true that it doesn't need altivec we should probably do
+> a lead-up patch that drops altivec from the AMD driver explicitly, eg.
+> as below.
 
-I couldn't figure out how x86 worked, because KVM creates an KVM-internal m=
-emslot
-at address 0xfee00000.  And then I realized the test creates memslots at co=
-mpletely
-different GPAs, and DEFAULT_GUEST_TEST_MEM is used only as super arbitrary
-guest virtual address.
+That makes sense to me. Do you want to provide your Signed-off-by so I can send
+this patch with your authorship?
 
-*sigh*
+Regards,
+Samuel
 
-Anyways...
+> cheers
+> 
+> 
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
+> index 4ae4720535a5..0de16796466b 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
+> @@ -92,11 +92,7 @@ void dc_fpu_begin(const char *function_name, const int line)
+>  #if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
+>  		kernel_fpu_begin();
+>  #elif defined(CONFIG_PPC64)
+> -		if (cpu_has_feature(CPU_FTR_VSX_COMP))
+> -			enable_kernel_vsx();
+> -		else if (cpu_has_feature(CPU_FTR_ALTIVEC_COMP))
+> -			enable_kernel_altivec();
+> -		else if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
+> +		if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
+>  			enable_kernel_fp();
+>  #elif defined(CONFIG_ARM64)
+>  		kernel_neon_begin();
+> @@ -125,11 +121,7 @@ void dc_fpu_end(const char *function_name, const int line)
+>  #if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
+>  		kernel_fpu_end();
+>  #elif defined(CONFIG_PPC64)
+> -		if (cpu_has_feature(CPU_FTR_VSX_COMP))
+> -			disable_kernel_vsx();
+> -		else if (cpu_has_feature(CPU_FTR_ALTIVEC_COMP))
+> -			disable_kernel_altivec();
+> -		else if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
+> +		if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
+>  			disable_kernel_fp();
+>  #elif defined(CONFIG_ARM64)
+>  		kernel_neon_end();
+> diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+> index 6042a5a6a44f..554c39024a40 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+> @@ -31,7 +31,7 @@ dml_ccflags := $(dml_ccflags-y) -msse
+>  endif
+>  
+>  ifdef CONFIG_PPC64
+> -dml_ccflags := -mhard-float -maltivec
+> +dml_ccflags := -mhard-float
+>  endif
+>  
+>  ifdef CONFIG_ARM64
+> diff --git a/drivers/gpu/drm/amd/display/dc/dml2/Makefile b/drivers/gpu/drm/amd/display/dc/dml2/Makefile
+> index acff3449b8d7..7b51364084b5 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dml2/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dml2/Makefile
+> @@ -30,7 +30,7 @@ dml2_ccflags := $(dml2_ccflags-y) -msse
+>  endif
+>  
+>  ifdef CONFIG_PPC64
+> -dml2_ccflags := -mhard-float -maltivec
+> +dml2_ccflags := -mhard-float
+>  endif
+>  
+>  ifdef CONFIG_ARM64
 
-> The LoongArch link scripts actually is strange, it brings out some
-> compatible issues such dpdk/kvm selftest when user applications
-> want fixed virtual address space.
-
-Can you elaborate on compatiblity issues?  I don't see the connection betwe=
-en
-DPDK and KVM selftests.
-
-> So here DEFAULT_GUEST_TEST_MEM is defined as 0x130000000 separately, mayb=
-e
-> 0x140000000 is better since it is 1G super-page aligned for 4K page size.
-
-I would strongly prefer we carve out a virtual address range that *all* tes=
-ts
-can safely use for test-specific code and data.  E.g. if/when we add usersp=
-ace
-support to selftests, I like the idea of having dedicated address spaces fo=
-r
-kernel vs. user[*].
-
-Maybe we can march in that generally direction and define test's virtual ad=
-dress
-range to be in kernel space, i.e. the high half.  I assume/hope that would =
-play
-nice with all architectures' entry points?
-
-[*] https://lore.kernel.org/all/20231102155111.28821-1-guang.zeng@intel.com
