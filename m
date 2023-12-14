@@ -1,231 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0DB54BD2
-	for <loongarch@lists.linux.dev>; Thu, 14 Dec 2023 13:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5E05C060
+	for <loongarch@lists.linux.dev>; Thu, 14 Dec 2023 15:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1CROop2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7DFEC433CA
-	for <loongarch@lists.linux.dev>; Thu, 14 Dec 2023 13:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702559440;
-	bh=DlgxjSeiJJTnnWWZhlter7Y+dJ5cGY4p6x7pxDXTL9M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m1CROop2SygAcnUtsy9DFbpmHtKOQfx0QxjSvdGybM9re4GHKNRfTclRAN0iNTFzZ
-	 dgk+8stGhHKqJFfbmCJa+OAQfa+x3zW/0Pl2K1gaOXU5dLU8buH3v7RRWRi07z2a2e
-	 gyvryA73q0Xiw1B6BuVF4ZZpIeIYLMmrfnaa+3kTXQLe3TBzmubXKG87HxWkuXm/jK
-	 XrF8TVyEiXN2iZpjNu9K5EzZ0ScpovS5J48nkgAjV03jJrmn0LCVhWREsT6RJ3Q8El
-	 px+H1nnmqLndd5nm4S2n5jGgkD02wYQ0cURypfntC5YLj4+xLVXZlv5GEozrzLtbA/
-	 AqxuMx136/xkg==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-551ee7d5214so1186800a12.0
-        for <loongarch@lists.linux.dev>; Thu, 14 Dec 2023 05:10:40 -0800 (PST)
-X-Gm-Message-State: AOJu0YwW1r73SVV56GOT6e2+AnOE6dBlVqYNqT2h2RSfqBgC3TWpwPRQ
-	EwdSbmcMZDx9hM+US74u/uocr7Tg9yjSu/+g8wI=
-X-Google-Smtp-Source: AGHT+IGFbAvlhXbVw1gK9Mwrn19U55ODtV8P21GAhqMjLGc6Qa1dUnAwbrLySOGsKnTDjnMogaKDQCiNVTUhphgDqic=
-X-Received: by 2002:a17:906:14c:b0:a22:ebf1:1c9f with SMTP id
- 12-20020a170906014c00b00a22ebf11c9fmr3714768ejh.72.1702559439263; Thu, 14 Dec
- 2023 05:10:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFcRYG1c"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-20315d10afaso1696676fac.0
+        for <loongarch@lists.linux.dev>; Thu, 14 Dec 2023 07:15:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702566935; x=1703171735; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wb1/c99fDx2vxrOG/BjC5kU3A8NpbcUe6YaEnqoVq+s=;
+        b=eFcRYG1cZ5BVme7hIsD5utPX9aeT62WYrrahDtr4yGiUv6oFY77kgVcyNoHz+nLEvS
+         u5epvA7IQ1/twfEx7aazPjfRZ1jJjQXbT0EAHuMMOJhhDM5QdrnRBJ43QzYWvgj263SG
+         0NNESZ6YtTOvgJ4KdWO3KqyqP1xmMBLQQ1j1pIOzkIcOqSRWimUP1Hou/Ou3rIoVl0EA
+         dvtFg0+D1iuQqiCX4ND7K/G2w8s7qX0oM4hSQT39PDZAHnfOpTI5DH30E47uHUx6BSgl
+         eBa0Ps2HkNNIxTliT2GRbfV4Evmf0s3RTQ0jUW6x4MEWhlx4mAFteIkbqf158YpotZCt
+         xwpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702566935; x=1703171735;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wb1/c99fDx2vxrOG/BjC5kU3A8NpbcUe6YaEnqoVq+s=;
+        b=pJpsELLUJGBuwB7Hw5mfKqKKVd3uFJI7cm6I7MGCK3Avzyo8RIi77BWcxbkFzO9sVv
+         DqnoMYFDLD/iN3tsiOg0/3rQXDjo7SO2QdzGj3zPeLFqDSinJOOoL8511eQx7+34dSCj
+         JaZVfwQQ72//M/vqhlINOYh9rU0nabVwRLYRRkMKf3yaatPYmPTbS1yETBwPAfbJqFWs
+         SfzHrI0gmjGdWaqWmsHajG//eedV2y1ykHZ6CaLdo7DUH7GK5hSzpph713+C03FEeolI
+         kc4jPK8E8JiJ3CXlQDWi762ReFAGCA859jL9xqFKU4zfDIjC57X37f0wXbtnZSQ374Bh
+         bbLQ==
+X-Gm-Message-State: AOJu0Yx6bJGoKjCY5PFRl9ukwXWSZMKT3MNzzhkeJwrsmGNuKiDh7+qc
+	Ii3ZlhMFjPkMsEwOoJseJsU=
+X-Google-Smtp-Source: AGHT+IEPfMadRV3cTITiKW5mlEGOHNGhNvsrfOl026TFEUVp+domMSgFVqmzh2kXUESW9AXEtzPilA==
+X-Received: by 2002:a05:6870:a693:b0:203:506a:326e with SMTP id i19-20020a056870a69300b00203506a326emr715873oam.79.1702566934908;
+        Thu, 14 Dec 2023 07:15:34 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id d24-20020a67fb18000000b004665bd1453asm160375vsr.30.2023.12.14.07.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Dec 2023 07:15:34 -0800 (PST)
+Date: Thu, 14 Dec 2023 18:15:30 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com, 
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com, Jose.Abreu@synopsys.com, 
+	chenhuacai@loongson.cn, linux@armlinux.org.uk, guyinggang@loongson.cn, 
+	netdev@vger.kernel.org, loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+Subject: Re: [PATCH v6 0/9] stmmac: Add Loongson platform support
+Message-ID: <pwdr6mampxe33jpqdf6o5xczgd4qkdttqj4tvionxl7qbry2ek@hpadl7wi4zni>
+References: <cover.1702458672.git.siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231214130206.21219-1-xry111@xry111.site>
-In-Reply-To: <20231214130206.21219-1-xry111@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 14 Dec 2023 21:10:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5m65qL05W9VZw7Qff-qg8TUc_wY8zs-pSeBuWSAFnSaQ@mail.gmail.com>
-Message-ID: <CAAhV-H5m65qL05W9VZw7Qff-qg8TUc_wY8zs-pSeBuWSAFnSaQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Micro-optimize sc_save_fcc and sc_restore_fcc
- for LA464
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1702458672.git.siyanteng@loongson.cn>
 
-Emmm, I want to keep the code simpler. :)
+Hi Yanteng
 
-Huacai
+On Wed, Dec 13, 2023 at 06:12:22PM +0800, Yanteng Si wrote:
+> v6:
+> 
+> * Refer to Serge's suggestion:
+>   - Add new platform feature flag:
+>     include/linux/stmmac.h:
+>     +#define STMMAC_FLAG_HAS_LGMAC			BIT(13)
+> 
+>   - Add the IRQs macros specific to the Loongson Multi-channels GMAC:
+>      drivers/net/ethernet/stmicro/stmmac/dwmac_dma.h:
+>      +#define DMA_INTR_ENA_NIE_LOONGSON 0x00060000	/* Normal Loongson Tx/Rx Summary */
+>      #define DMA_INTR_ENA_NIE 0x00010000	/* Normal Summary */
+>      ...
+> 
+>   - Drop all of redundant changes that don't require the
+>     prototypes being converted to accepting the stmmac_priv
+>     pointer.
+> 
+> * Refer to andrew's suggestion:
+>   - Drop white space changes.
+>   - break patch up into lots of smaller parts.
+>      Some small patches have been put into another series as a preparation
+>      see <https://lore.kernel.org/loongarch/cover.1702289232.git.siyanteng@loongson.cn/T/#t>
+>      
+>      *note* : This series of patches relies on the three small patches above.
+> * others
+>   - Drop irq_flags changes.
+>   - Changed patch order.
 
-On Thu, Dec 14, 2023 at 9:02=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> On LA464 movcf2gr is 7 times slower than movcf2fr + movfr2gr, and
-> movgr2cf is 15 times (!) slower than movgr2fr + movfr2cf.
->
-> On LA664 movcf2fr + movfr2gr has a similar performance with movcf2gr,
-> and movgr2fr + movfr2cf has a similar performance with movgr2cf.
->
-> To use FP registers in sc_save_fcc and sc_restore_fcc we need to save
-> FP/LSX/LASX registers before sc_save_fcc, and restore FP/LSX/LASX
-> registers after sc_restore_fcc.
->
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/loongarch/kernel/fpu.S | 94 +++++++++++++++++++++----------------
->  1 file changed, 54 insertions(+), 40 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-> index d53ab10f4644..ecb127f9a673 100644
-> --- a/arch/loongarch/kernel/fpu.S
-> +++ b/arch/loongarch/kernel/fpu.S
-> @@ -96,43 +96,57 @@
->         .endm
->
->         .macro sc_save_fcc base, tmp0, tmp1
-> -       movcf2gr        \tmp0, $fcc0
-> -       move            \tmp1, \tmp0
-> -       movcf2gr        \tmp0, $fcc1
-> -       bstrins.d       \tmp1, \tmp0, 15, 8
-> -       movcf2gr        \tmp0, $fcc2
-> -       bstrins.d       \tmp1, \tmp0, 23, 16
-> -       movcf2gr        \tmp0, $fcc3
-> -       bstrins.d       \tmp1, \tmp0, 31, 24
-> -       movcf2gr        \tmp0, $fcc4
-> -       bstrins.d       \tmp1, \tmp0, 39, 32
-> -       movcf2gr        \tmp0, $fcc5
-> -       bstrins.d       \tmp1, \tmp0, 47, 40
-> -       movcf2gr        \tmp0, $fcc6
-> -       bstrins.d       \tmp1, \tmp0, 55, 48
-> -       movcf2gr        \tmp0, $fcc7
-> -       bstrins.d       \tmp1, \tmp0, 63, 56
-> -       EX      st.d    \tmp1, \base, 0
-> +       movcf2fr        ft0, $fcc0
-> +       movcf2fr        ft1, $fcc1
-> +       movfr2gr.s      \tmp0, ft0
-> +       movfr2gr.s      \tmp1, ft1
-> +       EX  st.b        \tmp0, \base, 0
-> +       EX  st.b        \tmp0, \base, 8
-> +       movcf2fr        ft0, $fcc2
-> +       movcf2fr        ft1, $fcc3
-> +       movfr2gr.s      \tmp0, ft0
-> +       movfr2gr.s      \tmp1, ft1
-> +       EX  st.b        \tmp0, \base, 16
-> +       EX  st.b        \tmp0, \base, 24
-> +       movcf2fr        ft0, $fcc3
-> +       movcf2fr        ft1, $fcc4
-> +       movfr2gr.s      \tmp0, ft0
-> +       movfr2gr.s      \tmp1, ft1
-> +       EX  st.b        \tmp0, \base, 32
-> +       EX  st.b        \tmp0, \base, 40
-> +       movcf2fr        ft0, $fcc5
-> +       movcf2fr        ft1, $fcc6
-> +       movfr2gr.s      \tmp0, ft0
-> +       movfr2gr.s      \tmp1, ft1
-> +       EX  st.b        \tmp0, \base, 48
-> +       EX  st.b        \tmp0, \base, 56
->         .endm
->
->         .macro sc_restore_fcc base, tmp0, tmp1
-> -       EX      ld.d    \tmp0, \base, 0
-> -       bstrpick.d      \tmp1, \tmp0, 7, 0
-> -       movgr2cf        $fcc0, \tmp1
-> -       bstrpick.d      \tmp1, \tmp0, 15, 8
-> -       movgr2cf        $fcc1, \tmp1
-> -       bstrpick.d      \tmp1, \tmp0, 23, 16
-> -       movgr2cf        $fcc2, \tmp1
-> -       bstrpick.d      \tmp1, \tmp0, 31, 24
-> -       movgr2cf        $fcc3, \tmp1
-> -       bstrpick.d      \tmp1, \tmp0, 39, 32
-> -       movgr2cf        $fcc4, \tmp1
-> -       bstrpick.d      \tmp1, \tmp0, 47, 40
-> -       movgr2cf        $fcc5, \tmp1
-> -       bstrpick.d      \tmp1, \tmp0, 55, 48
-> -       movgr2cf        $fcc6, \tmp1
-> -       bstrpick.d      \tmp1, \tmp0, 63, 56
-> -       movgr2cf        $fcc7, \tmp1
-> +       EX      ld.b    \tmp0, \base, 0
-> +       EX      ld.b    \tmp1, \base, 8
-> +       movgr2fr.w      ft0, \tmp0
-> +       movgr2fr.w      ft1, \tmp1
-> +       movfr2cf        $fcc0, ft0
-> +       movfr2cf        $fcc1, ft1
-> +       EX      ld.b    \tmp0, \base, 16
-> +       EX      ld.b    \tmp1, \base, 24
-> +       movgr2fr.w      ft0, \tmp0
-> +       movgr2fr.w      ft1, \tmp1
-> +       movfr2cf        $fcc2, ft0
-> +       movfr2cf        $fcc3, ft1
-> +       EX      ld.b    \tmp0, \base, 32
-> +       EX      ld.b    \tmp1, \base, 40
-> +       movgr2fr.w      ft0, \tmp0
-> +       movgr2fr.w      ft1, \tmp1
-> +       movfr2cf        $fcc4, ft0
-> +       movfr2cf        $fcc5, ft1
-> +       EX      ld.b    \tmp0, \base, 48
-> +       EX      ld.b    \tmp1, \base, 56
-> +       movgr2fr.w      ft0, \tmp0
-> +       movgr2fr.w      ft1, \tmp1
-> +       movfr2cf        $fcc6, ft0
-> +       movfr2cf        $fcc7, ft1
->         .endm
->
->         .macro sc_save_fcsr base, tmp0
-> @@ -449,9 +463,9 @@ SYM_FUNC_END(_init_fpu)
->   * a2: fcsr
->   */
->  SYM_FUNC_START(_save_fp_context)
-> -       sc_save_fcc     a1 t1 t2
->         sc_save_fcsr    a2 t1
->         sc_save_fp      a0
-> +       sc_save_fcc     a1 t1 t2
->         li.w            a0, 0                           # success
->         jr              ra
->  SYM_FUNC_END(_save_fp_context)
-> @@ -462,8 +476,8 @@ SYM_FUNC_END(_save_fp_context)
->   * a2: fcsr
->   */
->  SYM_FUNC_START(_restore_fp_context)
-> -       sc_restore_fp   a0
->         sc_restore_fcc  a1 t1 t2
-> +       sc_restore_fp   a0
->         sc_restore_fcsr a2 t1
->         li.w            a0, 0                           # success
->         jr              ra
-> @@ -475,9 +489,9 @@ SYM_FUNC_END(_restore_fp_context)
->   * a2: fcsr
->   */
->  SYM_FUNC_START(_save_lsx_context)
-> -       sc_save_fcc a1, t0, t1
->         sc_save_fcsr a2, t0
->         sc_save_lsx a0
-> +       sc_save_fcc a1, t0, t1
->         li.w    a0, 0                                   # success
->         jr      ra
->  SYM_FUNC_END(_save_lsx_context)
-> @@ -488,8 +502,8 @@ SYM_FUNC_END(_save_lsx_context)
->   * a2: fcsr
->   */
->  SYM_FUNC_START(_restore_lsx_context)
-> -       sc_restore_lsx a0
->         sc_restore_fcc a1, t1, t2
-> +       sc_restore_lsx a0
->         sc_restore_fcsr a2, t1
->         li.w    a0, 0                                   # success
->         jr      ra
-> @@ -501,9 +515,9 @@ SYM_FUNC_END(_restore_lsx_context)
->   * a2: fcsr
->   */
->  SYM_FUNC_START(_save_lasx_context)
-> -       sc_save_fcc a1, t0, t1
->         sc_save_fcsr a2, t0
->         sc_save_lasx a0
-> +       sc_save_fcc a1, t0, t1
->         li.w    a0, 0                                   # success
->         jr      ra
->  SYM_FUNC_END(_save_lasx_context)
-> @@ -514,8 +528,8 @@ SYM_FUNC_END(_save_lasx_context)
->   * a2: fcsr
->   */
->  SYM_FUNC_START(_restore_lasx_context)
-> -       sc_restore_lasx a0
->         sc_restore_fcc a1, t1, t2
-> +       sc_restore_lasx a0
->         sc_restore_fcsr a2, t1
->         li.w    a0, 0                                   # success
->         jr      ra
-> --
-> 2.43.0
->
+Thanks for submitting the updated series. I'll have a closer look at
+it on the next week.
+
+-Serge(y)
+
+> 
+> 
+> 
+> v4 -> v5:
+> 
+> * Remove an ugly and useless patch (fix channel number).
+> * Remove the non-standard dma64 driver code, and also remove
+>   the HWIF entries, since the associated custom callbacks no
+>   longer exist.
+> * Refer to Serge's suggestion: Update the dwmac1000_dma.c to
+>   support the multi-DMA-channels controller setup.
+> 
+> See:
+> v4: <https://lore.kernel.org/loongarch/cover.1692696115.git.chenfeiyang@loongson.cn/>
+> v3: <https://lore.kernel.org/loongarch/cover.1691047285.git.chenfeiyang@loongson.cn/>
+> v2: <https://lore.kernel.org/loongarch/cover.1690439335.git.chenfeiyang@loongson.cn/>
+> v1: <https://lore.kernel.org/loongarch/cover.1689215889.git.chenfeiyang@loongson.cn/>
+> 
+> Yanteng Si (9):
+>   net: stmmac: Pass stmmac_priv and chan in some callbacks
+>   net: stmmac: dwmac-loongson: Refactor code for loongson_dwmac_probe()
+>   net: stmmac: dwmac-loongson: Add full PCI support
+>   net: stmmac: Add multi-channel supports
+>   net: stmmac: Add Loongson-specific register definitions
+>   net: stmmac: dwmac-loongson: Add MSI support
+>   net: stmmac: dwmac-loongson: Add GNET support
+>   net: stmmac: dwmac-loongson: Disable flow control for GMAC
+>   net: stmmac: Disable coe for some Loongson GNET
+> 
+>  drivers/net/ethernet/stmicro/stmmac/common.h  |   1 +
+>  .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 296 ++++++++++++++----
+>  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |   2 +-
+>  .../ethernet/stmicro/stmmac/dwmac1000_dma.c   |  61 +++-
+>  .../ethernet/stmicro/stmmac/dwmac100_dma.c    |   2 +-
+>  .../net/ethernet/stmicro/stmmac/dwmac4_dma.c  |   2 +-
+>  .../net/ethernet/stmicro/stmmac/dwmac_dma.h   |  47 ++-
+>  .../net/ethernet/stmicro/stmmac/dwmac_lib.c   |  65 ++--
+>  .../ethernet/stmicro/stmmac/dwxgmac2_dma.c    |   2 +-
+>  drivers/net/ethernet/stmicro/stmmac/hwif.c    |   8 +-
+>  drivers/net/ethernet/stmicro/stmmac/hwif.h    |  11 +-
+>  .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   6 +
+>  .../net/ethernet/stmicro/stmmac/stmmac_main.c |  13 +-
+>  include/linux/stmmac.h                        |   4 +
+>  14 files changed, 413 insertions(+), 107 deletions(-)
+> 
+> -- 
+> 2.31.4
+> 
