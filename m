@@ -1,147 +1,236 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5E05C060
-	for <loongarch@lists.linux.dev>; Thu, 14 Dec 2023 15:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFcRYG1c"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-20315d10afaso1696676fac.0
-        for <loongarch@lists.linux.dev>; Thu, 14 Dec 2023 07:15:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702566935; x=1703171735; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wb1/c99fDx2vxrOG/BjC5kU3A8NpbcUe6YaEnqoVq+s=;
-        b=eFcRYG1cZ5BVme7hIsD5utPX9aeT62WYrrahDtr4yGiUv6oFY77kgVcyNoHz+nLEvS
-         u5epvA7IQ1/twfEx7aazPjfRZ1jJjQXbT0EAHuMMOJhhDM5QdrnRBJ43QzYWvgj263SG
-         0NNESZ6YtTOvgJ4KdWO3KqyqP1xmMBLQQ1j1pIOzkIcOqSRWimUP1Hou/Ou3rIoVl0EA
-         dvtFg0+D1iuQqiCX4ND7K/G2w8s7qX0oM4hSQT39PDZAHnfOpTI5DH30E47uHUx6BSgl
-         eBa0Ps2HkNNIxTliT2GRbfV4Evmf0s3RTQ0jUW6x4MEWhlx4mAFteIkbqf158YpotZCt
-         xwpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702566935; x=1703171735;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wb1/c99fDx2vxrOG/BjC5kU3A8NpbcUe6YaEnqoVq+s=;
-        b=pJpsELLUJGBuwB7Hw5mfKqKKVd3uFJI7cm6I7MGCK3Avzyo8RIi77BWcxbkFzO9sVv
-         DqnoMYFDLD/iN3tsiOg0/3rQXDjo7SO2QdzGj3zPeLFqDSinJOOoL8511eQx7+34dSCj
-         JaZVfwQQ72//M/vqhlINOYh9rU0nabVwRLYRRkMKf3yaatPYmPTbS1yETBwPAfbJqFWs
-         SfzHrI0gmjGdWaqWmsHajG//eedV2y1ykHZ6CaLdo7DUH7GK5hSzpph713+C03FEeolI
-         kc4jPK8E8JiJ3CXlQDWi762ReFAGCA859jL9xqFKU4zfDIjC57X37f0wXbtnZSQ374Bh
-         bbLQ==
-X-Gm-Message-State: AOJu0Yx6bJGoKjCY5PFRl9ukwXWSZMKT3MNzzhkeJwrsmGNuKiDh7+qc
-	Ii3ZlhMFjPkMsEwOoJseJsU=
-X-Google-Smtp-Source: AGHT+IEPfMadRV3cTITiKW5mlEGOHNGhNvsrfOl026TFEUVp+domMSgFVqmzh2kXUESW9AXEtzPilA==
-X-Received: by 2002:a05:6870:a693:b0:203:506a:326e with SMTP id i19-20020a056870a69300b00203506a326emr715873oam.79.1702566934908;
-        Thu, 14 Dec 2023 07:15:34 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id d24-20020a67fb18000000b004665bd1453asm160375vsr.30.2023.12.14.07.15.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 07:15:34 -0800 (PST)
-Date: Thu, 14 Dec 2023 18:15:30 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Yanteng Si <siyanteng@loongson.cn>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com, 
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com, Jose.Abreu@synopsys.com, 
-	chenhuacai@loongson.cn, linux@armlinux.org.uk, guyinggang@loongson.cn, 
-	netdev@vger.kernel.org, loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
-Subject: Re: [PATCH v6 0/9] stmmac: Add Loongson platform support
-Message-ID: <pwdr6mampxe33jpqdf6o5xczgd4qkdttqj4tvionxl7qbry2ek@hpadl7wi4zni>
-References: <cover.1702458672.git.siyanteng@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E912965ECF;
+	Thu, 14 Dec 2023 17:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SrfWp0gHJz67mnJ;
+	Fri, 15 Dec 2023 01:30:46 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8C9211400CA;
+	Fri, 15 Dec 2023 01:32:43 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 14 Dec
+ 2023 17:32:42 +0000
+Date: Thu, 14 Dec 2023 17:32:41 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-riscv@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, <acpica-devel@lists.linuxfoundation.org>,
+	<linux-csky@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-ia64@vger.kernel.org>, <linux-parisc@vger.kernel.org>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	<jianyong.wu@arm.com>, <justin.he@arm.com>, James Morse <james.morse@arm.com>
+Subject: Re: [PATCH RFC v3 01/21] ACPI: Only enumerate enabled (or
+ functional) devices
+Message-ID: <20231214173241.0000260f@Huawei.com>
+In-Reply-To: <E1rDOfs-00DvjY-HQ@rmk-PC.armlinux.org.uk>
+References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
+	<E1rDOfs-00DvjY-HQ@rmk-PC.armlinux.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1702458672.git.siyanteng@loongson.cn>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Yanteng
+On Wed, 13 Dec 2023 12:49:16 +0000
+Russell King (Oracle) <rmk+kernel@armlinux.org.uk> wrote:
 
-On Wed, Dec 13, 2023 at 06:12:22PM +0800, Yanteng Si wrote:
-> v6:
+> From: James Morse <james.morse@arm.com>
 > 
-> * Refer to Serge's suggestion:
->   - Add new platform feature flag:
->     include/linux/stmmac.h:
->     +#define STMMAC_FLAG_HAS_LGMAC			BIT(13)
+> Today the ACPI enumeration code 'visits' all devices that are present.
 > 
->   - Add the IRQs macros specific to the Loongson Multi-channels GMAC:
->      drivers/net/ethernet/stmicro/stmmac/dwmac_dma.h:
->      +#define DMA_INTR_ENA_NIE_LOONGSON 0x00060000	/* Normal Loongson Tx/Rx Summary */
->      #define DMA_INTR_ENA_NIE 0x00010000	/* Normal Summary */
->      ...
+> This is a problem for arm64, where CPUs are always present, but not
+> always enabled. When a device-check occurs because the firmware-policy
+> has changed and a CPU is now enabled, the following error occurs:
+> | acpi ACPI0007:48: Enumeration failure
 > 
->   - Drop all of redundant changes that don't require the
->     prototypes being converted to accepting the stmmac_priv
->     pointer.
+> This is ultimately because acpi_dev_ready_for_enumeration() returns
+> true for a device that is not enabled. The ACPI Processor driver
+> will not register such CPUs as they are not 'decoding their resources'.
 > 
-> * Refer to andrew's suggestion:
->   - Drop white space changes.
->   - break patch up into lots of smaller parts.
->      Some small patches have been put into another series as a preparation
->      see <https://lore.kernel.org/loongarch/cover.1702289232.git.siyanteng@loongson.cn/T/#t>
->      
->      *note* : This series of patches relies on the three small patches above.
-> * others
->   - Drop irq_flags changes.
->   - Changed patch order.
+> Change acpi_dev_ready_for_enumeration() to also check the enabled bit.
+> ACPI allows a device to be functional instead of maintaining the
+> present and enabled bit. Make this behaviour an explicit check with
+> a reference to the spec, and then check the present and enabled bits.
+> This is needed to avoid enumerating present && functional devices that
+> are not enabled.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
+> If this change causes problems on deployed hardware, I suggest an
+> arch opt-in: ACPI_IGNORE_STA_ENABLED, that causes
+> acpi_dev_ready_for_enumeration() to only check the present bit.
 
-Thanks for submitting the updated series. I'll have a closer look at
-it on the next week.
+My gut feeling (having made ACPI 'fixes' in the past that ran into
+horribly broken firmware and had to be reverted) is reduce the blast
+radius preemptively from the start. I'd love to live in a world were
+that wasn't necessary but I don't trust all the generators of ACPI tables.
+I'll leave it to Rafael and other ACPI experts suggest how narrow we should
+make it though - arch opt in might be narrow enough.
 
--Serge(y)
+> 
+> Changes since RFC v2:
+>  * Incorporate comment suggestion by Gavin Shan.
+> Other review comments from Jonathan Cameron not yet addressed.
 
+Looking back, I think this was mainly a suggestion for a minor
+possible optimization by ignoring the case of !present && enabled
+when designing the logic because that's not allowed by the spec.
+
+You made that change in v3.
+
+Otherwise, comments were trivial comment clarifications that I'm not
+that worried about.
+
+One comment typo inline.
+
+With assumption others will comment on when this change should be
+chicken bit'd out.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
+> ---
+>  drivers/acpi/device_pm.c    |  2 +-
+>  drivers/acpi/device_sysfs.c |  2 +-
+>  drivers/acpi/internal.h     |  1 -
+>  drivers/acpi/property.c     |  2 +-
+>  drivers/acpi/scan.c         | 24 ++++++++++++++----------
+>  5 files changed, 17 insertions(+), 14 deletions(-)
 > 
-> 
-> 
-> v4 -> v5:
-> 
-> * Remove an ugly and useless patch (fix channel number).
-> * Remove the non-standard dma64 driver code, and also remove
->   the HWIF entries, since the associated custom callbacks no
->   longer exist.
-> * Refer to Serge's suggestion: Update the dwmac1000_dma.c to
->   support the multi-DMA-channels controller setup.
-> 
-> See:
-> v4: <https://lore.kernel.org/loongarch/cover.1692696115.git.chenfeiyang@loongson.cn/>
-> v3: <https://lore.kernel.org/loongarch/cover.1691047285.git.chenfeiyang@loongson.cn/>
-> v2: <https://lore.kernel.org/loongarch/cover.1690439335.git.chenfeiyang@loongson.cn/>
-> v1: <https://lore.kernel.org/loongarch/cover.1689215889.git.chenfeiyang@loongson.cn/>
-> 
-> Yanteng Si (9):
->   net: stmmac: Pass stmmac_priv and chan in some callbacks
->   net: stmmac: dwmac-loongson: Refactor code for loongson_dwmac_probe()
->   net: stmmac: dwmac-loongson: Add full PCI support
->   net: stmmac: Add multi-channel supports
->   net: stmmac: Add Loongson-specific register definitions
->   net: stmmac: dwmac-loongson: Add MSI support
->   net: stmmac: dwmac-loongson: Add GNET support
->   net: stmmac: dwmac-loongson: Disable flow control for GMAC
->   net: stmmac: Disable coe for some Loongson GNET
-> 
->  drivers/net/ethernet/stmicro/stmmac/common.h  |   1 +
->  .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 296 ++++++++++++++----
->  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |   2 +-
->  .../ethernet/stmicro/stmmac/dwmac1000_dma.c   |  61 +++-
->  .../ethernet/stmicro/stmmac/dwmac100_dma.c    |   2 +-
->  .../net/ethernet/stmicro/stmmac/dwmac4_dma.c  |   2 +-
->  .../net/ethernet/stmicro/stmmac/dwmac_dma.h   |  47 ++-
->  .../net/ethernet/stmicro/stmmac/dwmac_lib.c   |  65 ++--
->  .../ethernet/stmicro/stmmac/dwxgmac2_dma.c    |   2 +-
->  drivers/net/ethernet/stmicro/stmmac/hwif.c    |   8 +-
->  drivers/net/ethernet/stmicro/stmmac/hwif.h    |  11 +-
->  .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   6 +
->  .../net/ethernet/stmicro/stmmac/stmmac_main.c |  13 +-
->  include/linux/stmmac.h                        |   4 +
->  14 files changed, 413 insertions(+), 107 deletions(-)
-> 
-> -- 
-> 2.31.4
-> 
+> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+> index 3b4d048c4941..e3c80f3b3b57 100644
+> --- a/drivers/acpi/device_pm.c
+> +++ b/drivers/acpi/device_pm.c
+> @@ -313,7 +313,7 @@ int acpi_bus_init_power(struct acpi_device *device)
+>  		return -EINVAL;
+>  
+>  	device->power.state = ACPI_STATE_UNKNOWN;
+> -	if (!acpi_device_is_present(device)) {
+> +	if (!acpi_dev_ready_for_enumeration(device)) {
+>  		device->flags.initialized = false;
+>  		return -ENXIO;
+>  	}
+> diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
+> index 23373faa35ec..a0256d2493a7 100644
+> --- a/drivers/acpi/device_sysfs.c
+> +++ b/drivers/acpi/device_sysfs.c
+> @@ -141,7 +141,7 @@ static int create_pnp_modalias(const struct acpi_device *acpi_dev, char *modalia
+>  	struct acpi_hardware_id *id;
+>  
+>  	/* Avoid unnecessarily loading modules for non present devices. */
+> -	if (!acpi_device_is_present(acpi_dev))
+> +	if (!acpi_dev_ready_for_enumeration(acpi_dev))
+>  		return 0;
+>  
+>  	/*
+> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+> index 866c7c4ed233..a1b45e345bcc 100644
+> --- a/drivers/acpi/internal.h
+> +++ b/drivers/acpi/internal.h
+> @@ -107,7 +107,6 @@ int acpi_device_setup_files(struct acpi_device *dev);
+>  void acpi_device_remove_files(struct acpi_device *dev);
+>  void acpi_device_add_finalize(struct acpi_device *device);
+>  void acpi_free_pnp_ids(struct acpi_device_pnp *pnp);
+> -bool acpi_device_is_present(const struct acpi_device *adev);
+>  bool acpi_device_is_battery(struct acpi_device *adev);
+>  bool acpi_device_is_first_physical_node(struct acpi_device *adev,
+>  					const struct device *dev);
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index 6979a3f9f90a..14d6948fd88a 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -1420,7 +1420,7 @@ static bool acpi_fwnode_device_is_available(const struct fwnode_handle *fwnode)
+>  	if (!is_acpi_device_node(fwnode))
+>  		return false;
+>  
+> -	return acpi_device_is_present(to_acpi_device_node(fwnode));
+> +	return acpi_dev_ready_for_enumeration(to_acpi_device_node(fwnode));
+>  }
+>  
+>  static const void *
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 02bb2cce423f..728649a2a251 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -304,7 +304,7 @@ static int acpi_scan_device_check(struct acpi_device *adev)
+>  	int error;
+>  
+>  	acpi_bus_get_status(adev);
+> -	if (acpi_device_is_present(adev)) {
+> +	if (acpi_dev_ready_for_enumeration(adev)) {
+>  		/*
+>  		 * This function is only called for device objects for which
+>  		 * matching scan handlers exist.  The only situation in which
+> @@ -338,7 +338,7 @@ static int acpi_scan_bus_check(struct acpi_device *adev, void *not_used)
+>  	int error;
+>  
+>  	acpi_bus_get_status(adev);
+> -	if (!acpi_device_is_present(adev)) {
+> +	if (!acpi_dev_ready_for_enumeration(adev)) {
+>  		acpi_scan_device_not_enumerated(adev);
+>  		return 0;
+>  	}
+> @@ -1913,11 +1913,6 @@ static bool acpi_device_should_be_hidden(acpi_handle handle)
+>  	return true;
+>  }
+>  
+> -bool acpi_device_is_present(const struct acpi_device *adev)
+> -{
+> -	return adev->status.present || adev->status.functional;
+> -}
+> -
+>  static bool acpi_scan_handler_matching(struct acpi_scan_handler *handler,
+>  				       const char *idstr,
+>  				       const struct acpi_device_id **matchid)
+> @@ -2381,16 +2376,25 @@ EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
+>   * acpi_dev_ready_for_enumeration - Check if the ACPI device is ready for enumeration
+>   * @device: Pointer to the &struct acpi_device to check
+>   *
+> - * Check if the device is present and has no unmet dependencies.
+> + * Check if the device is functional or enabled and has no unmet dependencies.
+>   *
+> - * Return true if the device is ready for enumeratino. Otherwise, return false.
+> + * Return true if the device is ready for enumeration. Otherwise, return false.
+>   */
+>  bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
+>  {
+>  	if (device->flags.honor_deps && device->dep_unmet)
+>  		return false;
+>  
+> -	return acpi_device_is_present(device);
+> +	/*
+> +	 * ACPI 6.5's 6.3.7 "_STA (Device Status)" allows firmware to return
+> +	 * (!present && functional) for certain types of devices that should be
+> +	 * enumerated. Note that the enabled bit can't be sert until the present
+
+set until
+
+> +	 * bit is set.
+> +	 */
+> +	if (device->status.present)
+> +		return device->status.enabled;
+> +	else
+> +		return device->status.functional;
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
+>  
+
