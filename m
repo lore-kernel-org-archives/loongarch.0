@@ -1,91 +1,59 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DAC10A06;
-	Sat, 16 Dec 2023 05:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75432C681;
+	Sat, 16 Dec 2023 13:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="y5GOZijB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=LNbpWQOmt7apCl5n0HnfiCBr/R0dZ7dJOsEv+sS5huc=; b=y5GOZijB/vsGTnQ+5eB2ALoG0J
-	QbRBUDvMMXk8egB3bzntff0aMPHjDgL1QBarq3yN7547EbeMlZYrraYv7y4oaxu77e0Bj8MdYaUUF
-	1UWCgYXMlfuQ2CqZ/gCBNgqkQXDbehSH8acWnkSip8lKqa9rZpXGpHzulX2LSFxjqrrishniuxvyg
-	HVclsNKj/+S+bjT7s43UjOy1y2YL2zFXBv9sJ+1oZhf4c6cR/8ebJGgz6FEO/ryZ6tTYD2wvvBE5G
-	DgRBtO131N3UhZRagRg7D/fbD+ce66yx+98zteFsLpZHAJGFVQmm99Uuzgx88JNiiQfODb/UkjX2N
-	8U5PuARw==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEMuE-005RHJ-2R;
-	Sat, 16 Dec 2023 05:08:06 +0000
-Message-ID: <15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
-Date: Fri, 15 Dec 2023 21:08:06 -0800
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="eXZGywpj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Ixhx6WvH8Syc80mMeRWCVgpohgczXdvY1NV4I9TIvsw=; b=eXZGywpjpZLXl5bSBE8DRYTRG1
+	jk40d17DQiH6y4fYt1NiLMcWee1V5K//1R2YQGtkNvuP2a3TxxQq4e1pR0H49t+vET3tbg4cJW1VO
+	3ZcKuSsaTLmEjUQ8AUMZeFPLE5IW3BGKLawaVyZZAttBDLR9UDSErelQR/RnQQcUgvvo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rEUI9-0036CU-B4; Sat, 16 Dec 2023 14:01:17 +0100
+Date: Sat, 16 Dec 2023 14:01:17 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: hkallweit1@gmail.com, peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+	fancer.lancer@gmail.com, Jose.Abreu@synopsys.com,
+	chenhuacai@loongson.cn, linux@armlinux.org.uk,
+	guyinggang@loongson.cn, netdev@vger.kernel.org,
+	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+Subject: Re: [PATCH v6 1/9] net: stmmac: Pass stmmac_priv and chan in some
+ callbacks
+Message-ID: <759f33f0-e75a-406b-9318-272e50f2ec3b@lunn.ch>
+References: <cover.1702458672.git.siyanteng@loongson.cn>
+ <361389e731d14e3e2094f6ff5501597e9f762f34.1702458672.git.siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] LoongArch: KVM: Fix build due to API changes
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Paolo Bonzini
- <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20231115090735.2404866-1-chenhuacai@loongson.cn>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20231115090735.2404866-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi,
-
-Someone please merge this patch...
-Thanks.
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <361389e731d14e3e2094f6ff5501597e9f762f34.1702458672.git.siyanteng@loongson.cn>
 
 
-On 11/15/23 01:07, Huacai Chen wrote:
-> Commit 8569992d64b8f750e34b7858eac ("KVM: Use gfn instead of hva for
-> mmu_notifier_retry") replaces mmu_invalidate_retry_hva() usage with
-> mmu_invalidate_retry_gfn() for X86, LoongArch also need similar changes
-> to fix build.
-> 
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/loongarch/kvm/mmu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> index 80480df5f550..9463ebecd39b 100644
-> --- a/arch/loongarch/kvm/mmu.c
-> +++ b/arch/loongarch/kvm/mmu.c
-> @@ -627,7 +627,7 @@ static bool fault_supports_huge_mapping(struct kvm_memory_slot *memslot,
->   *
->   * There are several ways to safely use this helper:
->   *
-> - * - Check mmu_invalidate_retry_hva() after grabbing the mapping level, before
-> + * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level, before
->   *   consuming it.  In this case, mmu_lock doesn't need to be held during the
->   *   lookup, but it does need to be held while checking the MMU notifier.
->   *
-> @@ -807,7 +807,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+> -static void sun8i_dwmac_enable_dma_transmission(void __iomem *ioaddr)
+> +static void sun8i_dwmac_enable_dma_transmission(void __iomem *ioaddr, u32 chan)
+
+
 >  
->  	/* Check if an invalidation has taken place since we got pfn */
->  	spin_lock(&kvm->mmu_lock);
-> -	if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
-> +	if (mmu_invalidate_retry_gfn(kvm, mmu_seq, gfn)) {
->  		/*
->  		 * This can happen when mappings are changed asynchronously, but
->  		 * also synchronously if a COW is triggered by
+> -	stmmac_enable_dma_transmission(priv, priv->ioaddr);
+> +	stmmac_enable_dma_transmission(priv, priv->ioaddr, queue);
 
--- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+As i've said a few times, i don't know this driver.
+
+Is it a queue or is it a chan? Is this change consistent with the
+reset of the code base?
+
+      Andrew
