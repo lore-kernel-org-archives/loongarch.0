@@ -1,207 +1,91 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DE141843;
-	Fri, 15 Dec 2023 19:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id 2539e6c80012c5e6; Fri, 15 Dec 2023 20:47:32 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id C96C5668B59;
-	Fri, 15 Dec 2023 20:47:31 +0100 (CET)
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, acpica-devel@lists.linuxfoundation.org, linux-csky@vger.kernel.org, linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com, James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 01/21] ACPI: Only enumerate enabled (or functional) devices
-Date: Fri, 15 Dec 2023 20:47:31 +0100
-Message-ID: <5760569.DvuYhMxLoT@kreacher>
-In-Reply-To: <20231215161539.00000940@Huawei.com>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk> <ZXxxa+XZjPZtNfJ+@shell.armlinux.org.uk> <20231215161539.00000940@Huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DAC10A06;
+	Sat, 16 Dec 2023 05:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="y5GOZijB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=LNbpWQOmt7apCl5n0HnfiCBr/R0dZ7dJOsEv+sS5huc=; b=y5GOZijB/vsGTnQ+5eB2ALoG0J
+	QbRBUDvMMXk8egB3bzntff0aMPHjDgL1QBarq3yN7547EbeMlZYrraYv7y4oaxu77e0Bj8MdYaUUF
+	1UWCgYXMlfuQ2CqZ/gCBNgqkQXDbehSH8acWnkSip8lKqa9rZpXGpHzulX2LSFxjqrrishniuxvyg
+	HVclsNKj/+S+bjT7s43UjOy1y2YL2zFXBv9sJ+1oZhf4c6cR/8ebJGgz6FEO/ryZ6tTYD2wvvBE5G
+	DgRBtO131N3UhZRagRg7D/fbD+ce66yx+98zteFsLpZHAJGFVQmm99Uuzgx88JNiiQfODb/UkjX2N
+	8U5PuARw==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rEMuE-005RHJ-2R;
+	Sat, 16 Dec 2023 05:08:06 +0000
+Message-ID: <15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
+Date: Fri, 15 Dec 2023 21:08:06 -0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrvddtvddguddvkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthhqredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedtvdefgeelvdefvdevveehvdetfeefhedvueeiudekieeltdetgfdviefhgfetteenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheplfhonhgrthhhrghnrdevrghmvghrohhnsehhuhgrfigvihdrtghomhdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=22 Fuz1=22 Fuz2=22
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: KVM: Fix build due to API changes
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Paolo Bonzini
+ <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20231115090735.2404866-1-chenhuacai@loongson.cn>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231115090735.2404866-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Friday, December 15, 2023 5:15:39 PM CET Jonathan Cameron wrote:
-> On Fri, 15 Dec 2023 15:31:55 +0000
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
->=20
-> > On Thu, Dec 14, 2023 at 07:37:10PM +0100, Rafael J. Wysocki wrote:
-> > > On Thu, Dec 14, 2023 at 7:16=E2=80=AFPM Rafael J. Wysocki <rafael@ker=
-nel.org> wrote: =20
-> > > >
-> > > > On Thu, Dec 14, 2023 at 7:10=E2=80=AFPM Russell King (Oracle)
-> > > > <linux@armlinux.org.uk> wrote: =20
-> > > > > I guess we need something like:
-> > > > >
-> > > > >         if (device->status.present)
-> > > > >                 return device->device_type !=3D ACPI_BUS_TYPE_PRO=
-CESSOR ||
-> > > > >                        device->status.enabled;
-> > > > >         else
-> > > > >                 return device->status.functional;
-> > > > >
-> > > > > so we only check device->status.enabled for processor-type device=
-s? =20
-> > > >
-> > > > Yes, something like this. =20
-> > >=20
-> > > However, that is not sufficient, because there are
-> > > ACPI_BUS_TYPE_DEVICE devices representing processors.
-> > >=20
-> > > I'm not sure about a clean way to do it ATM. =20
-> >=20
-> > Ok, how about:
-> >=20
-> > static bool acpi_dev_is_processor(const struct acpi_device *device)
-> > {
-> > 	struct acpi_hardware_id *hwid;
-> >=20
-> > 	if (device->device_type =3D=3D ACPI_BUS_TYPE_PROCESSOR)
-> > 		return true;
-> >=20
-> > 	if (device->device_type !=3D ACPI_BUS_TYPE_DEVICE)
-> > 		return false;
-> >=20
-> > 	list_for_each_entry(hwid, &device->pnp.ids, list)
-> > 		if (!strcmp(ACPI_PROCESSOR_OBJECT_HID, hwid->id) ||
-> > 		    !strcmp(ACPI_PROCESSOR_DEVICE_HID, hwid->id))
-> > 			return true;
-> >=20
-> > 	return false;
-> > }
-> >=20
-> > and then:
-> >=20
-> > 	if (device->status.present)
-> > 		return !acpi_dev_is_processor(device) || device->status.enabled;
-> > 	else
-> > 		return device->status.functional;
-> >=20
-> > ?
-> >=20
-> Changing it to CPU only for now makes sense to me and I think this code s=
-nippet should do the
-> job.  Nice and simple.
+Hi,
 
-Well, except that it does checks that are done elsewhere slightly
-differently, which from the maintenance POV is not nice.
-
-Maybe something like the appended patch (untested).
-
-=2D--
- drivers/acpi/acpi_processor.c |   11 +++++++++++
- drivers/acpi/internal.h       |    3 +++
- drivers/acpi/scan.c           |   24 +++++++++++++++++++++++-
- 3 files changed, 37 insertions(+), 1 deletion(-)
-
-Index: linux-pm/drivers/acpi/acpi_processor.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/acpi/acpi_processor.c
-+++ linux-pm/drivers/acpi/acpi_processor.c
-@@ -644,6 +644,17 @@ static struct acpi_scan_handler processo
- 	},
- };
-=20
-+bool acpi_device_is_processor(const struct acpi_device *adev)
-+{
-+	if (adev->device_type =3D=3D ACPI_BUS_TYPE_PROCESSOR)
-+		return true;
-+
-+	if (adev->device_type !=3D ACPI_BUS_TYPE_DEVICE)
-+		return false;
-+
-+	return acpi_scan_check_handler(adev, &processor_handler);
-+}
-+
- static int acpi_processor_container_attach(struct acpi_device *dev,
- 					   const struct acpi_device_id *id)
- {
-Index: linux-pm/drivers/acpi/internal.h
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/acpi/internal.h
-+++ linux-pm/drivers/acpi/internal.h
-@@ -62,6 +62,8 @@ void acpi_sysfs_add_hotplug_profile(stru
- int acpi_scan_add_handler_with_hotplug(struct acpi_scan_handler *handler,
- 				       const char *hotplug_profile_name);
- void acpi_scan_hotplug_enabled(struct acpi_hotplug_profile *hotplug, bool =
-val);
-+bool acpi_scan_check_handler(const struct acpi_device *adev,
-+			     struct acpi_scan_handler *handler);
-=20
- #ifdef CONFIG_DEBUG_FS
- extern struct dentry *acpi_debugfs_dir;
-@@ -133,6 +135,7 @@ int acpi_bus_register_early_device(int t
- const struct acpi_device *acpi_companion_match(const struct device *dev);
- int __acpi_device_uevent_modalias(const struct acpi_device *adev,
- 				  struct kobj_uevent_env *env);
-+bool acpi_device_is_processor(const struct acpi_device *adev);
-=20
- /* -----------------------------------------------------------------------=
-=2D--
-                                   Power Resource
-Index: linux-pm/drivers/acpi/scan.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/acpi/scan.c
-+++ linux-pm/drivers/acpi/scan.c
-@@ -1938,6 +1938,19 @@ static bool acpi_scan_handler_matching(s
- 	return false;
- }
-=20
-+bool acpi_scan_check_handler(const struct acpi_device *adev,
-+			     struct acpi_scan_handler *handler)
-+{
-+	struct acpi_hardware_id *hwid;
-+
-+	list_for_each_entry(hwid, &adev->pnp.ids, list) {
-+		if (acpi_scan_handler_matching(handler, hwid->id, NULL))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- static struct acpi_scan_handler *acpi_scan_match_handler(const char *idstr,
- 					const struct acpi_device_id **matchid)
- {
-@@ -2410,7 +2423,16 @@ bool acpi_dev_ready_for_enumeration(cons
- 	if (device->flags.honor_deps && device->dep_unmet)
- 		return false;
-=20
-=2D	return acpi_device_is_present(device);
-+	if (device->status.functional)
-+		return true;
-+
-+	if (!device->status.present)
-+		return false;
-+
-+	if (device->status.enabled)
-+		return true; /* Fast path. */
-+
-+	return !acpi_device_is_processor(device);
- }
- EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
-=20
+Someone please merge this patch...
+Thanks.
 
 
+On 11/15/23 01:07, Huacai Chen wrote:
+> Commit 8569992d64b8f750e34b7858eac ("KVM: Use gfn instead of hva for
+> mmu_notifier_retry") replaces mmu_invalidate_retry_hva() usage with
+> mmu_invalidate_retry_gfn() for X86, LoongArch also need similar changes
+> to fix build.
+> 
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  arch/loongarch/kvm/mmu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index 80480df5f550..9463ebecd39b 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -627,7 +627,7 @@ static bool fault_supports_huge_mapping(struct kvm_memory_slot *memslot,
+>   *
+>   * There are several ways to safely use this helper:
+>   *
+> - * - Check mmu_invalidate_retry_hva() after grabbing the mapping level, before
+> + * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level, before
+>   *   consuming it.  In this case, mmu_lock doesn't need to be held during the
+>   *   lookup, but it does need to be held while checking the MMU notifier.
+>   *
+> @@ -807,7 +807,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+>  
+>  	/* Check if an invalidation has taken place since we got pfn */
+>  	spin_lock(&kvm->mmu_lock);
+> -	if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
+> +	if (mmu_invalidate_retry_gfn(kvm, mmu_seq, gfn)) {
+>  		/*
+>  		 * This can happen when mappings are changed asynchronously, but
+>  		 * also synchronously if a COW is triggered by
 
+-- 
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
