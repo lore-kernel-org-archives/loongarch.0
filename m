@@ -1,112 +1,83 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93383A1C7;
-	Mon, 18 Dec 2023 13:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6da6576064dso458673a34.1;
-        Mon, 18 Dec 2023 05:14:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702905286; x=1703510086;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7pNpyU2ryow+CaLgg5WjtqJLreEscZp2rrpn9BXxGtI=;
-        b=RTn2nJgjAFjBDbgn/AHR5hAQvf+hWGE7edBRbJXe7DlL9wVF3fdDEKw/esy+f2NFpx
-         ToTJP4XckxXDMldD8Wr4nVd1Bta7ZWN0Ef5Cv75R/FbIHuCuciPYXP+J5YAibSDJntlg
-         v8+Cqsqkn1JSX8LYM/g49VwyLJV70uEj7m8V/Beni8RoGGS1ZzVomTUzEsdxInEGaDP/
-         gAlawr+4/v0x/onoNQjngsTTUmZiMBWMrVtNwwsEU56lKcOKDZlVmtzUtuh3sb/NQL0p
-         /pFa5bwQ5zIiWupbe3Mouw6ar5ZQ/lhMvc2j+sqwi+7v6TcNE+n/UUOPS7BXjeRU4FoK
-         Ljkg==
-X-Gm-Message-State: AOJu0YwoQiN39fKOEbxbsZAYwWOmWfXsGzX+6By7oqvJMeY3WcToD1OD
-	9C4WC5QePkqsFat9qnO+m2PLU+WPzUXsMUwinmc=
-X-Google-Smtp-Source: AGHT+IGUbGitVTHQvmgL9TrX5vuBwIcknqlxcDjvg6GX7UZ1bnRcd/SOCXRu68x81Op7UDAQkGoBQI9yiRAPn8sEAhY=
-X-Received: by 2002:a05:6871:2284:b0:1fb:648:5207 with SMTP id
- sd4-20020a056871228400b001fb06485207mr29349775oab.2.1702905285904; Mon, 18
- Dec 2023 05:14:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DEC3A1B6;
+	Mon, 18 Dec 2023 15:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="p6JZmqlP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=oJskJN4R/iyEsuEHtoL4otuKCFa7wjBQnbjBdPls1FE=; b=p6
+	JZmqlPoPSkXH7+rUb12CNgWmirtpk2vBlE7uCixmqphuax0C8UqQvPH8wgPUa8NlotmyslGw4/CRU
+	Y2pfXXSfBiaNG2NEhd7HBwdV79YjHCfXARQQfZ2/9SCPQfe0MaihpDWSZY9DfyRHrzIPWWruhvngx
+	/S2lnfjf/Ry//r8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rFFXK-003G9h-Au; Mon, 18 Dec 2023 16:28:06 +0100
+Date: Mon, 18 Dec 2023 16:28:06 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: hkallweit1@gmail.com, peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+	fancer.lancer@gmail.com, Jose.Abreu@synopsys.com,
+	chenhuacai@loongson.cn, linux@armlinux.org.uk,
+	guyinggang@loongson.cn, netdev@vger.kernel.org,
+	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
+Subject: Re: [PATCH v6 5/9] net: stmmac: Add Loongson-specific register
+ definitions
+Message-ID: <bc36a2a1-1c3c-4adb-8c8a-d4e4427a6999@lunn.ch>
+References: <cover.1702458672.git.siyanteng@loongson.cn>
+ <40eff8db93b02599f00a156b07a0dcdacfc0fbf3.1702458672.git.siyanteng@loongson.cn>
+ <8a7d2d11-a299-42e0-960f-a6916e9b54fe@lunn.ch>
+ <033fedc9-1d96-408e-911b-9829c6a5e851@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk> <E1rDOgs-00Dvko-6t@rmk-PC.armlinux.org.uk>
- <20231215162322.00007391@Huawei.com> <ZXyEiHLFBsoUkfNI@shell.armlinux.org.uk> <ZYAPhlwPUT/7dN4n@lpieralisi>
-In-Reply-To: <ZYAPhlwPUT/7dN4n@lpieralisi>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 18 Dec 2023 14:14:30 +0100
-Message-ID: <CAJZ5v0hyUqJspPbGTgTMSVHVBe=wHR6swPx-O3UcsH5dXDFpTA@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 13/21] ACPICA: Add new MADT GICC flags fields
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
-	acpica-devel@lists.linuxfoundation.org, linux-csky@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com, 
-	James Morse <james.morse@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <033fedc9-1d96-408e-911b-9829c6a5e851@loongson.cn>
 
-On Mon, Dec 18, 2023 at 10:23=E2=80=AFAM Lorenzo Pieralisi
-<lpieralisi@kernel.org> wrote:
->
-> On Fri, Dec 15, 2023 at 04:53:28PM +0000, Russell King (Oracle) wrote:
-> > On Fri, Dec 15, 2023 at 04:23:22PM +0000, Jonathan Cameron wrote:
-> > > On Wed, 13 Dec 2023 12:50:18 +0000
-> > > Russell King (Oracle) <rmk+kernel@armlinux.org.uk> wrote:
-> > >
-> > > > From: James Morse <james.morse@arm.com>
-> > > >
-> > > > Add the new flag field to the MADT's GICC structure.
-> > > >
-> > > > 'Online Capable' indicates a disabled CPU can be enabled later. See
-> > > > ACPI specification 6.5 Tabel 5.37: GICC CPU Interface Flags.
-> > > >
-> > > > Signed-off-by: James Morse <james.morse@arm.com>
-> > > > Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> > > > Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> > > > Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > >
-> > > I see there is an acpica pull request including this bit but with a d=
-ifferent name
-> > > For reference.
-> > > https://github.com/acpica/acpica/pull/914/commits/453a5f6756778652202=
-1d5f6913f561f8b3cabf6
-> > >
-> > > +CC Lorenzo who submitted that.
-> >
-> > > > +#define ACPI_MADT_GICC_CPU_CAPABLE      (1<<3)   /* 03: CPU is onl=
-ine capable */
-> > >
-> > > ACPI_MADT_GICC_ONLINE_CAPABLE
-> >
-> > It's somewhat disappointing, but no big deal. It's easy enough to chang=
-e
-> > "irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' C=
-PUs"
-> > to use Lorenzo's name when that patch hits - and it becomes one less
-> > patch in this patch set when Lorenzo's change eventually hits mainline.
-> >
-> > Does anyone know how long it may take for Lorenzo's change to get into
-> > mainline? Would it be by the 6.8 merge window or the following one?
->
-> I wish I knew. I submitted ACPICA changes for the online capable bit
-> since I had to add additional flags on top (ie DMA coherent) and it
-> would not make sense to submit the latter without the former.
->
-> I'd be great if the ACPICA headers can make it into Linux for the upcomin=
-g
-> merge window, not sure what I can do to fasttrack the process though
-> (I shall ping the maintainers).
+On Mon, Dec 18, 2023 at 06:22:04PM +0800, Yanteng Si wrote:
+> 
+> 在 2023/12/16 23:47, Andrew Lunn 写道:
+> > On Wed, Dec 13, 2023 at 06:14:23PM +0800, Yanteng Si wrote:
+> > > There are two types of Loongson DWGMAC. The first type shares the same
+> > > register definitions and has similar logic as dwmac1000. The second type
+> > > uses several different register definitions.
+> > > 
+> > > Simply put, we split some single bit fields into double bits fileds:
+> > > 
+> > > DMA_INTR_ENA_NIE = 0x00040000 + 0x00020000
+> > > DMA_INTR_ENA_AIE = 0x00010000 + 0x00008000
+> > > DMA_STATUS_NIS = 0x00040000 + 0x00020000
+> > > DMA_STATUS_AIS = 0x00010000 + 0x00008000
+> > > DMA_STATUS_FBI = 0x00002000 + 0x00001000
+> > What is missing here is why? What are the second bits used for? And
+> 
+> We think it is necessary to distinguish rx and tx, so we split these bits
+> into two.
+> 
+> this is:
+> 
+> DMA_INTR_ENA_NIE = rx + tx
 
-If your upstream pull request has been merged, I can pick up Linux
-patches carrying Link: tags pointing to the upstream ACPICA commits in
-that pull request.
+O.K, so please add DMA_INTR_ENA_NIE_RX and DMA_INTR_ENA_NIE_TX
+#define's, etc.
 
-Thanks!
+> We will care about it later. Because now we will support the minimum feature
+> set first, which can reduce everyone’s review pressure.
+
+Well, you failed with that, since you did not provide the details what
+these bits are. If you had directly handled the bits separately, it
+would of been obvious what they are for.
+
+      Andrew
