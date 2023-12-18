@@ -1,61 +1,138 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587DD18EAF;
-	Sat, 16 Dec 2023 15:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TD0pN7zb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=RTORsuSZkvTY31cBxhOWBrsjpZhS9406R8HEK6TsWi4=; b=TD0pN7zbB0jXOyXv6KMq2/137+
-	Fp9nw07US5W1x3YwL7ogqlxquYrzrn5c0D4bYvvC+9IKP5+fkl+NmiKJ7FQ8hqGHvPbNbIaiz4l0J
-	uMhNMunnY0lbMCASpOfvUVSB6Y/8nKffFsTWWuxL2ivGy84dM8cnhKhsUkiclVirVRKk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rEWsc-0036TX-Ty; Sat, 16 Dec 2023 16:47:06 +0100
-Date: Sat, 16 Dec 2023 16:47:06 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yanteng Si <siyanteng@loongson.cn>
-Cc: hkallweit1@gmail.com, peppe.cavallaro@st.com,
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-	fancer.lancer@gmail.com, Jose.Abreu@synopsys.com,
-	chenhuacai@loongson.cn, linux@armlinux.org.uk,
-	guyinggang@loongson.cn, netdev@vger.kernel.org,
-	loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
-Subject: Re: [PATCH v6 5/9] net: stmmac: Add Loongson-specific register
- definitions
-Message-ID: <8a7d2d11-a299-42e0-960f-a6916e9b54fe@lunn.ch>
-References: <cover.1702458672.git.siyanteng@loongson.cn>
- <40eff8db93b02599f00a156b07a0dcdacfc0fbf3.1702458672.git.siyanteng@loongson.cn>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CD431FBF
+	for <loongarch@lists.linux.dev>; Mon, 18 Dec 2023 01:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.112.176])
+	by gateway (Coremail) with SMTP id _____8Dxyej2pX9lDOYBAA--.10158S3;
+	Mon, 18 Dec 2023 09:52:54 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.112.176])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxCHPwpX9lwF8JAA--.29587S3;
+	Mon, 18 Dec 2023 09:52:52 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Hongliang Wang <wanghongliang@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v5 1/7] dt-bindings: loongarch: Add CPU bindings for LoongArch
+Date: Mon, 18 Dec 2023 09:52:34 +0800
+Message-Id: <a868877b554201e1933847360b397798031ba17d.1702862778.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <cover.1702862778.git.zhoubinbin@loongson.cn>
+References: <cover.1702862778.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <40eff8db93b02599f00a156b07a0dcdacfc0fbf3.1702458672.git.siyanteng@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxCHPwpX9lwF8JAA--.29587S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WF4ftF4fWF15AF1rXw4DWrX_yoW8Aw4fp3
+	Z7CF1DGryFgF12qwsIqa48CF1Fvan7Ca47XFW7KryUKasxXasYvw1SkFn8Z3W7A348Ga4I
+	vFWrCw17KF1UAFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
 
-On Wed, Dec 13, 2023 at 06:14:23PM +0800, Yanteng Si wrote:
-> There are two types of Loongson DWGMAC. The first type shares the same
-> register definitions and has similar logic as dwmac1000. The second type
-> uses several different register definitions.
-> 
-> Simply put, we split some single bit fields into double bits fileds:
-> 
-> DMA_INTR_ENA_NIE = 0x00040000 + 0x00020000
-> DMA_INTR_ENA_AIE = 0x00010000 + 0x00008000
-> DMA_STATUS_NIS = 0x00040000 + 0x00020000
-> DMA_STATUS_AIS = 0x00010000 + 0x00008000
-> DMA_STATUS_FBI = 0x00002000 + 0x00001000
+Add the available CPUs in LoongArch binding with DT schema format using
+json-schema.
 
-What is missing here is why? What are the second bits used for? And
-why does the driver not care which bit is set when handing interrupts? 
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ .../devicetree/bindings/loongarch/cpus.yaml   | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/loongarch/cpus.yaml
 
-    Andrew
+diff --git a/Documentation/devicetree/bindings/loongarch/cpus.yaml b/Documentation/devicetree/bindings/loongarch/cpus.yaml
+new file mode 100644
+index 000000000000..f175872995e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/loongarch/cpus.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/loongarch/cpus.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LoongArch CPUs
++
++maintainers:
++  - Binbin Zhou <zhoubinbin@loongson.cn>
++
++description:
++  This document describes the list of LoongArch CPU cores that support FDT,
++  it describe the layout of CPUs in a system through the "cpus" node.
++
++allOf:
++  - $ref: /schemas/cpu.yaml#
++
++properties:
++  compatible:
++    enum:
++      - loongson,la264
++      - loongson,la364
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/loongson,ls2k-clk.h>
++
++    cpus {
++        #size-cells = <0>;
++        #address-cells = <1>;
++
++        cpu@0 {
++            compatible = "loongson,la264";
++            device_type = "cpu";
++            reg = <0>;
++            clocks = <&clk LOONGSON2_NODE_CLK>;
++        };
++
++        cpu@1 {
++            compatible = "loongson,la264";
++            device_type = "cpu";
++            reg = <1>;
++            clocks = <&clk LOONGSON2_NODE_CLK>;
++        };
++    };
++
++...
+-- 
+2.39.3
+
