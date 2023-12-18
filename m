@@ -1,93 +1,96 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 271ED14F78
-	for <loongarch@lists.linux.dev>; Mon, 18 Dec 2023 10:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.112.193])
-	by gateway (Coremail) with SMTP id _____8DxyehOHYBlXAgCAA--.10699S3;
-	Mon, 18 Dec 2023 18:22:06 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.112.193])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxCHNMHYBlMBIKAA--.32567S3;
-	Mon, 18 Dec 2023 18:22:06 +0800 (CST)
-Message-ID: <033fedc9-1d96-408e-911b-9829c6a5e851@loongson.cn>
-Date: Mon, 18 Dec 2023 18:22:04 +0800
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF804F897
+	for <loongarch@lists.linux.dev>; Mon, 18 Dec 2023 12:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="C2KaLUoh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=08SzGJH5lXG9BtLXnSCiZJkgfUYvZPRLdF1MiDN6maA=; b=C2KaLUoh/n1BgxKSf6SrAbqvai
+	JKrWWotA8ePs91dXAVLuwjEpSY5ePbNax2YRNGRaUBgp7XlJSEVD5M4TKEtLw4VeIHgs2tqfFO7aM
+	dxhfjGyheynixij5MnQ9UsD+vCLAUH1h1KZirAZWC8js4LRKy1n3PwI3uBnUi1JZVY2U7Ihv5/Mor
+	rJp5cRqch1rnSU/tEZFmu+buYl/SCLuuuxAXtVHXXphaJjFugXWAG6myDphxhCF2EwzotxfXC/uJ4
+	u6LnZqqFeEf53FdSsSiRJvxxjxBXV5gsbJXRjyqKyBk1ikWGT5yxqUY1944KT5NF09+Aqz0ttUPbl
+	JFeOLJUA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54580)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rFCVj-0005GR-2l;
+	Mon, 18 Dec 2023 12:14:15 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rFCVi-0006hJ-Np; Mon, 18 Dec 2023 12:14:14 +0000
+Date: Mon, 18 Dec 2023 12:14:14 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
+	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
+	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com,
+	James Morse <james.morse@arm.com>
+Subject: Re: [PATCH RFC v3 21/21] cpumask: Add enabled cpumask for present
+ CPUs that can be brought online
+Message-ID: <ZYA3lmPOwIOJq/iY@shell.armlinux.org.uk>
+References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
+ <E1rDOhX-00Dvlg-Ci@rmk-PC.armlinux.org.uk>
+ <20231215171831.00004a19@Huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/9] net: stmmac: Add Loongson-specific register
- definitions
-Content-Language: en-US
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: hkallweit1@gmail.com, peppe.cavallaro@st.com,
- alexandre.torgue@foss.st.com, joabreu@synopsys.com, fancer.lancer@gmail.com,
- Jose.Abreu@synopsys.com, chenhuacai@loongson.cn, linux@armlinux.org.uk,
- guyinggang@loongson.cn, netdev@vger.kernel.org, loongarch@lists.linux.dev,
- chris.chenfeiyang@gmail.com
-References: <cover.1702458672.git.siyanteng@loongson.cn>
- <40eff8db93b02599f00a156b07a0dcdacfc0fbf3.1702458672.git.siyanteng@loongson.cn>
- <8a7d2d11-a299-42e0-960f-a6916e9b54fe@lunn.ch>
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <8a7d2d11-a299-42e0-960f-a6916e9b54fe@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxCHNMHYBlMBIKAA--.32567S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKrWrJF47WFyfuw4DKw47KFX_yoWDZrX_Kr
-	yF9w1kCr4DKrnFkF4UKrW5Zr1q9FZ7ZrW0gr1FqwsYv343Ja4xGFW8GryFva48Wr1jvFn8
-	Cw17tF4DG3yagosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231215171831.00004a19@Huawei.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
+On Fri, Dec 15, 2023 at 05:18:31PM +0000, Jonathan Cameron wrote:
+> On Wed, 13 Dec 2023 12:50:59 +0000
+> Russell King (Oracle) <rmk+kernel@armlinux.org.uk> wrote:
+> 
+> > From: James Morse <james.morse@arm.com>
+> > 
+> > The 'offline' file in sysfs shows all offline CPUs, including those
+> > that aren't present. User-space is expected to remove not-present CPUs
+> > from this list to learn which CPUs could be brought online.
+> > 
+> > CPUs can be present but not-enabled. These CPUs can't be brought online
+> > until the firmware policy changes, which comes with an ACPI notification
+> > that will register the CPUs.
+> > 
+> > With only the offline and present files, user-space is unable to
+> > determine which CPUs it can try to bring online. Add a new CPU mask
+> > that shows this based on all the registered CPUs.
+> > 
+> > Signed-off-by: James Morse <james.morse@arm.com>
+> > Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> > Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> > Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> > ---
+> 
+> Needs docs
+> Documentation/ABI/testing/sysfs-devices-system-cpu
+> seems to have the rest of the similar entries.
 
-在 2023/12/16 23:47, Andrew Lunn 写道:
-> On Wed, Dec 13, 2023 at 06:14:23PM +0800, Yanteng Si wrote:
->> There are two types of Loongson DWGMAC. The first type shares the same
->> register definitions and has similar logic as dwmac1000. The second type
->> uses several different register definitions.
->>
->> Simply put, we split some single bit fields into double bits fileds:
->>
->> DMA_INTR_ENA_NIE = 0x00040000 + 0x00020000
->> DMA_INTR_ENA_AIE = 0x00010000 + 0x00008000
->> DMA_STATUS_NIS = 0x00040000 + 0x00020000
->> DMA_STATUS_AIS = 0x00010000 + 0x00008000
->> DMA_STATUS_FBI = 0x00002000 + 0x00001000
-> What is missing here is why? What are the second bits used for? And
+Any ideas what I put in there as "Date" ? It seems to me that we have
+little idea when this might be merged.. I could use the date of the
+commit (Nov 2022).
 
-We think it is necessary to distinguish rx and tx, so we split these 
-bits into two.
-
-this is:
-
-DMA_INTR_ENA_NIE = rx + tx
-
-> why does the driver not care which bit is set when handing interrupts?
-
-We will care about it later. Because now we will support the minimum 
-feature set
-
-first, which can reduce everyone’s review pressure.
-
-
-Thanks,
-
-Yanteng
-
->
->      Andrew
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
