@@ -1,35 +1,26 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2256FAD
-	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 05:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lemote.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lemote.com
-X-QQ-mid: bizesmtp91t1702964151tnirw86x
-Received: from localhost.localdomain ( [222.92.8.138])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 19 Dec 2023 13:35:50 +0800 (CST)
-X-QQ-SSF: 01400000000000F0W000000A0000000
-X-QQ-FEAT: D2GZf6M6C/gl4FXsVRCaNSI/H5NGV6Bc4V+7XEm/wYq2ArB+tvCgfEe3jeLn7
-	r9vqIOsIuLhD/8mfYQGAFog4kXTdaMylbsLswJt4efWmbvJkMjqdJ62rLZ5cXjqQzMPc4/5
-	yhD7mFLjDVEPc3x14feLj9NlNaBZKFl2IY95PSMYDySSgttPZnLtFyuVmcoJRqyqrnJ9MDs
-	9Xgyu+MqIziYZFPJuGu3kl6CppydvUUsinZ+S7z/l0tsNVMKDbYwvmSCZ/yOuldWQHLh6mI
-	QkTQ1tmx2Z81XIv7HXe0VIt16VmpftgqyBa3yIFwb+0OtA6GA/G46knNOepKftNNshy3MwV
-	Tc3FaLrRmIDC+3KDEtQIgtJARuF7TjHYugiB44hIEQKJEWbrcE1TH6xa1dJw68jEvs0xSm7
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 10460518577884746340
-From: wangyao@lemote.com
-To: ardb@kernel.org,
-	chenhuacai@kernel.org,
-	wangrui@loongson.cn
-Cc: linux-efi@vger.kernel.org,
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22EB8883A
+	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 06:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx9OrjNoFlSoUCAA--.8435S3;
+	Tue, 19 Dec 2023 14:23:33 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxrnPjNoFl0d8LAA--.53871S2;
+	Tue, 19 Dec 2023 14:23:31 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	ainux.wang@gmail.com,
-	Wang Yao <wangyao@lemote.com>
-Subject: [PATCH] efi/loongarch: Directly position the loaded image file
-Date: Tue, 19 Dec 2023 13:35:43 +0800
-Message-Id: <20231219053543.11726-1-wangyao@lemote.com>
-X-Mailer: git-send-email 2.27.0
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] Update kprobes documentation
+Date: Tue, 19 Dec 2023 14:23:28 +0800
+Message-ID: <20231219062330.22813-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,152 +28,32 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:lemote.com:qybglogicsvrgz:qybglogicsvrgz5a-2
+X-CM-TRANSID:AQAAf8CxrnPjNoFl0d8LAA--.53871S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
+	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
+	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+	Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZUUUUU=
 
-From: Wang Yao <wangyao@lemote.com>
+This is based on 6.7-rc6.
 
-Replace kernel_offset with image_base to positon the image file that has
-been loaded by UEFI or GRUB.
+Tiezhu Yang (2):
+  docs, kprobes: Update email address of Masami Hiramatsu
+  docs, kprobes: Add loongarch as supported architecture
 
-Signed-off-by: Wang Yao <wangyao@lemote.com>
----
- arch/loongarch/include/asm/efi.h              | 2 --
- arch/loongarch/kernel/head.S                  | 1 -
- arch/loongarch/kernel/image-vars.h            | 1 -
- arch/loongarch/kernel/vmlinux.lds.S           | 1 -
- drivers/firmware/efi/libstub/loongarch-stub.c | 9 +++++----
- drivers/firmware/efi/libstub/loongarch-stub.h | 4 ++++
- drivers/firmware/efi/libstub/loongarch.c      | 6 ++++--
- 7 files changed, 13 insertions(+), 11 deletions(-)
- create mode 100644 drivers/firmware/efi/libstub/loongarch-stub.h
+ Documentation/trace/kprobes.rst | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
-index 91d81f9730ab..eddc8e79b3fa 100644
---- a/arch/loongarch/include/asm/efi.h
-+++ b/arch/loongarch/include/asm/efi.h
-@@ -32,6 +32,4 @@ static inline unsigned long efi_get_kimg_min_align(void)
- 
- #define EFI_KIMG_PREFERRED_ADDRESS	PHYSADDR(VMLINUX_LOAD_ADDRESS)
- 
--unsigned long kernel_entry_address(unsigned long kernel_addr);
--
- #endif /* _ASM_LOONGARCH_EFI_H */
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 53b883db0786..0ecab4216392 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -34,7 +34,6 @@ pe_header:
- 
- SYM_DATA(kernel_asize, .long _kernel_asize);
- SYM_DATA(kernel_fsize, .long _kernel_fsize);
--SYM_DATA(kernel_offset, .long _kernel_offset);
- 
- #endif
- 
-diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel/image-vars.h
-index 5087416b9678..41ddcf56d21c 100644
---- a/arch/loongarch/kernel/image-vars.h
-+++ b/arch/loongarch/kernel/image-vars.h
-@@ -11,7 +11,6 @@ __efistub_strcmp		= strcmp;
- __efistub_kernel_entry		= kernel_entry;
- __efistub_kernel_asize		= kernel_asize;
- __efistub_kernel_fsize		= kernel_fsize;
--__efistub_kernel_offset		= kernel_offset;
- #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
- __efistub_screen_info		= screen_info;
- #endif
-diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-index bb2ec86f37a8..a5d0cd2035da 100644
---- a/arch/loongarch/kernel/vmlinux.lds.S
-+++ b/arch/loongarch/kernel/vmlinux.lds.S
-@@ -143,7 +143,6 @@ SECTIONS
- 	_kernel_fsize = _edata - _text;
- 	_kernel_vsize = _end - __initdata_begin;
- 	_kernel_rsize = _edata - __initdata_begin;
--	_kernel_offset = kernel_offset - _text;
- #endif
- 
- 	.gptab.sdata : {
-diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/firmware/efi/libstub/loongarch-stub.c
-index d6ec5d4b8dbe..736b6aae323d 100644
---- a/drivers/firmware/efi/libstub/loongarch-stub.c
-+++ b/drivers/firmware/efi/libstub/loongarch-stub.c
-@@ -8,10 +8,10 @@
- #include <asm/efi.h>
- #include <asm/addrspace.h>
- #include "efistub.h"
-+#include "loongarch-stub.h"
- 
- extern int kernel_asize;
- extern int kernel_fsize;
--extern int kernel_offset;
- extern int kernel_entry;
- 
- efi_status_t handle_kernel_image(unsigned long *image_addr,
-@@ -24,7 +24,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
- 	efi_status_t status;
- 	unsigned long kernel_addr = 0;
- 
--	kernel_addr = (unsigned long)&kernel_offset - kernel_offset;
-+	kernel_addr = (unsigned long)image->image_base;
- 
- 	status = efi_relocate_kernel(&kernel_addr, kernel_fsize, kernel_asize,
- 		     EFI_KIMG_PREFERRED_ADDRESS, efi_get_kimg_min_align(), 0x0);
-@@ -35,9 +35,10 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
- 	return status;
- }
- 
--unsigned long kernel_entry_address(unsigned long kernel_addr)
-+unsigned long kernel_entry_address(unsigned long kernel_addr,
-+		efi_loaded_image_t *image)
- {
--	unsigned long base = (unsigned long)&kernel_offset - kernel_offset;
-+	unsigned long base = (unsigned long)image->image_base;
- 
- 	return (unsigned long)&kernel_entry - base + kernel_addr;
- }
-diff --git a/drivers/firmware/efi/libstub/loongarch-stub.h b/drivers/firmware/efi/libstub/loongarch-stub.h
-new file mode 100644
-index 000000000000..cd015955a015
---- /dev/null
-+++ b/drivers/firmware/efi/libstub/loongarch-stub.h
-@@ -0,0 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+unsigned long kernel_entry_address(unsigned long kernel_addr,
-+		efi_loaded_image_t *image);
-diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
-index 0e0aa6cda73f..684c9354637c 100644
---- a/drivers/firmware/efi/libstub/loongarch.c
-+++ b/drivers/firmware/efi/libstub/loongarch.c
-@@ -8,6 +8,7 @@
- #include <asm/efi.h>
- #include <asm/addrspace.h>
- #include "efistub.h"
-+#include "loongarch-stub.h"
- 
- typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline,
- 					  unsigned long systab);
-@@ -37,7 +38,8 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
- 	return EFI_SUCCESS;
- }
- 
--unsigned long __weak kernel_entry_address(unsigned long kernel_addr)
-+unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
-+		efi_loaded_image_t *image)
- {
- 	return *(unsigned long *)(kernel_addr + 8) - VMLINUX_LOAD_ADDRESS + kernel_addr;
- }
-@@ -73,7 +75,7 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
- 	csr_write64(CSR_DMW0_INIT, LOONGARCH_CSR_DMWIN0);
- 	csr_write64(CSR_DMW1_INIT, LOONGARCH_CSR_DMWIN1);
- 
--	real_kernel_entry = (void *)kernel_entry_address(kernel_addr);
-+	real_kernel_entry = (void *)kernel_entry_address(kernel_addr, image);
- 
- 	real_kernel_entry(true, (unsigned long)cmdline_ptr,
- 			  (unsigned long)efi_system_table);
 -- 
-2.27.0
+2.42.0
 
