@@ -1,115 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC288479
-	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 03:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBDzKc04"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 289BDC433C8
-	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 03:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702955218;
-	bh=RzxTf7RhaILeV9wCyhzQyl7++g8TNQNbq8hRWOyQd+M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BBDzKc04EME67QqQKtCaIS71J1L60KEaYd3UbCWUwUF6VeK1yfEc+khWnoYQA6k9g
-	 O1Xu/e8erSPVa6IP4Sqg2jaJjjVaVFhmmCpTDOZOeOXJZPrzeF8sL8S6MAcs2eEtGy
-	 Y3rCNuQd1/FsvoVq2iP6SwrVBrHKSsjiDEr5FpVz9YpLBqJAxS93Hll6WS1QURlNtD
-	 O777tF/XUlAf+TLzwj4AoC8R9q3Z/EXNM6bF9DnODtHCP5KBMd9itDka5EklGUTbWR
-	 n/LoPxax/nW0+PqoFyRy5Bugu6JNJ5lgY423z1/jxeoMMn/qaC39s/uJRs7vGiGRFy
-	 tKtB6xGL5GdnA==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50d176eb382so5365350e87.2
-        for <loongarch@lists.linux.dev>; Mon, 18 Dec 2023 19:06:58 -0800 (PST)
-X-Gm-Message-State: AOJu0Yxwal27WlDYeQkPxB5RLn82kvjmJoEhXRpvSl9FwYA7MVw9syog
-	fOhVz2LSe4VqtcJsDEaerRtz9447XNe/ljKzmP0=
-X-Google-Smtp-Source: AGHT+IEk9tQlIMI9LFzQsHZ87oxZ2QTHtDV5rI1Dp8W1kZOWPN+LWRK4WWaazQRJIsOhShr35OG2IPzZlnxJ6etd6v4=
-X-Received: by 2002:ac2:42c7:0:b0:50e:3659:8657 with SMTP id
- n7-20020ac242c7000000b0050e36598657mr1453178lfl.21.1702955216361; Mon, 18 Dec
- 2023 19:06:56 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2256FAD
+	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 05:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lemote.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lemote.com
+X-QQ-mid: bizesmtp91t1702964151tnirw86x
+Received: from localhost.localdomain ( [222.92.8.138])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 19 Dec 2023 13:35:50 +0800 (CST)
+X-QQ-SSF: 01400000000000F0W000000A0000000
+X-QQ-FEAT: D2GZf6M6C/gl4FXsVRCaNSI/H5NGV6Bc4V+7XEm/wYq2ArB+tvCgfEe3jeLn7
+	r9vqIOsIuLhD/8mfYQGAFog4kXTdaMylbsLswJt4efWmbvJkMjqdJ62rLZ5cXjqQzMPc4/5
+	yhD7mFLjDVEPc3x14feLj9NlNaBZKFl2IY95PSMYDySSgttPZnLtFyuVmcoJRqyqrnJ9MDs
+	9Xgyu+MqIziYZFPJuGu3kl6CppydvUUsinZ+S7z/l0tsNVMKDbYwvmSCZ/yOuldWQHLh6mI
+	QkTQ1tmx2Z81XIv7HXe0VIt16VmpftgqyBa3yIFwb+0OtA6GA/G46knNOepKftNNshy3MwV
+	Tc3FaLrRmIDC+3KDEtQIgtJARuF7TjHYugiB44hIEQKJEWbrcE1TH6xa1dJw68jEvs0xSm7
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 10460518577884746340
+From: wangyao@lemote.com
+To: ardb@kernel.org,
+	chenhuacai@kernel.org,
+	wangrui@loongson.cn
+Cc: linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	ainux.wang@gmail.com,
+	Wang Yao <wangyao@lemote.com>
+Subject: [PATCH] efi/loongarch: Directly position the loaded image file
+Date: Tue, 19 Dec 2023 13:35:43 +0800
+Message-Id: <20231219053543.11726-1-wangyao@lemote.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231115090735.2404866-1-chenhuacai@loongson.cn> <15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
-In-Reply-To: <15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 19 Dec 2023 11:06:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H57PxrGPQMSvxUS2eJFCETYYUAyc=oxxu5fX1akuUCAng@mail.gmail.com>
-Message-ID: <CAAhV-H57PxrGPQMSvxUS2eJFCETYYUAyc=oxxu5fX1akuUCAng@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Fix build due to API changes
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:lemote.com:qybglogicsvrgz:qybglogicsvrgz5a-2
 
-Hi, Randy,
+From: Wang Yao <wangyao@lemote.com>
 
-On Sat, Dec 16, 2023 at 1:08=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org=
-> wrote:
->
-> Hi,
->
-> Someone please merge this patch...
-> Thanks.
-I prepared loongarch-kvm changes for 6.8 and the base is 6.7-rc6 [1],
-If I merge this patch then the loongarch-next branch will build fail.
-So I think this patch should be merged to Paolo's next branch in his
-kvm tree.
+Replace kernel_offset with image_base to positon the image file that has
+been loaded by UEFI or GRUB.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongs=
-on.git/log/?h=3Dloongarch-next
+Signed-off-by: Wang Yao <wangyao@lemote.com>
+---
+ arch/loongarch/include/asm/efi.h              | 2 --
+ arch/loongarch/kernel/head.S                  | 1 -
+ arch/loongarch/kernel/image-vars.h            | 1 -
+ arch/loongarch/kernel/vmlinux.lds.S           | 1 -
+ drivers/firmware/efi/libstub/loongarch-stub.c | 9 +++++----
+ drivers/firmware/efi/libstub/loongarch-stub.h | 4 ++++
+ drivers/firmware/efi/libstub/loongarch.c      | 6 ++++--
+ 7 files changed, 13 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/firmware/efi/libstub/loongarch-stub.h
 
-Huacai
+diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
+index 91d81f9730ab..eddc8e79b3fa 100644
+--- a/arch/loongarch/include/asm/efi.h
++++ b/arch/loongarch/include/asm/efi.h
+@@ -32,6 +32,4 @@ static inline unsigned long efi_get_kimg_min_align(void)
+ 
+ #define EFI_KIMG_PREFERRED_ADDRESS	PHYSADDR(VMLINUX_LOAD_ADDRESS)
+ 
+-unsigned long kernel_entry_address(unsigned long kernel_addr);
+-
+ #endif /* _ASM_LOONGARCH_EFI_H */
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index 53b883db0786..0ecab4216392 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -34,7 +34,6 @@ pe_header:
+ 
+ SYM_DATA(kernel_asize, .long _kernel_asize);
+ SYM_DATA(kernel_fsize, .long _kernel_fsize);
+-SYM_DATA(kernel_offset, .long _kernel_offset);
+ 
+ #endif
+ 
+diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel/image-vars.h
+index 5087416b9678..41ddcf56d21c 100644
+--- a/arch/loongarch/kernel/image-vars.h
++++ b/arch/loongarch/kernel/image-vars.h
+@@ -11,7 +11,6 @@ __efistub_strcmp		= strcmp;
+ __efistub_kernel_entry		= kernel_entry;
+ __efistub_kernel_asize		= kernel_asize;
+ __efistub_kernel_fsize		= kernel_fsize;
+-__efistub_kernel_offset		= kernel_offset;
+ #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
+ __efistub_screen_info		= screen_info;
+ #endif
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+index bb2ec86f37a8..a5d0cd2035da 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -143,7 +143,6 @@ SECTIONS
+ 	_kernel_fsize = _edata - _text;
+ 	_kernel_vsize = _end - __initdata_begin;
+ 	_kernel_rsize = _edata - __initdata_begin;
+-	_kernel_offset = kernel_offset - _text;
+ #endif
+ 
+ 	.gptab.sdata : {
+diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/firmware/efi/libstub/loongarch-stub.c
+index d6ec5d4b8dbe..736b6aae323d 100644
+--- a/drivers/firmware/efi/libstub/loongarch-stub.c
++++ b/drivers/firmware/efi/libstub/loongarch-stub.c
+@@ -8,10 +8,10 @@
+ #include <asm/efi.h>
+ #include <asm/addrspace.h>
+ #include "efistub.h"
++#include "loongarch-stub.h"
+ 
+ extern int kernel_asize;
+ extern int kernel_fsize;
+-extern int kernel_offset;
+ extern int kernel_entry;
+ 
+ efi_status_t handle_kernel_image(unsigned long *image_addr,
+@@ -24,7 +24,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+ 	efi_status_t status;
+ 	unsigned long kernel_addr = 0;
+ 
+-	kernel_addr = (unsigned long)&kernel_offset - kernel_offset;
++	kernel_addr = (unsigned long)image->image_base;
+ 
+ 	status = efi_relocate_kernel(&kernel_addr, kernel_fsize, kernel_asize,
+ 		     EFI_KIMG_PREFERRED_ADDRESS, efi_get_kimg_min_align(), 0x0);
+@@ -35,9 +35,10 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+ 	return status;
+ }
+ 
+-unsigned long kernel_entry_address(unsigned long kernel_addr)
++unsigned long kernel_entry_address(unsigned long kernel_addr,
++		efi_loaded_image_t *image)
+ {
+-	unsigned long base = (unsigned long)&kernel_offset - kernel_offset;
++	unsigned long base = (unsigned long)image->image_base;
+ 
+ 	return (unsigned long)&kernel_entry - base + kernel_addr;
+ }
+diff --git a/drivers/firmware/efi/libstub/loongarch-stub.h b/drivers/firmware/efi/libstub/loongarch-stub.h
+new file mode 100644
+index 000000000000..cd015955a015
+--- /dev/null
++++ b/drivers/firmware/efi/libstub/loongarch-stub.h
+@@ -0,0 +1,4 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++unsigned long kernel_entry_address(unsigned long kernel_addr,
++		efi_loaded_image_t *image);
+diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
+index 0e0aa6cda73f..684c9354637c 100644
+--- a/drivers/firmware/efi/libstub/loongarch.c
++++ b/drivers/firmware/efi/libstub/loongarch.c
+@@ -8,6 +8,7 @@
+ #include <asm/efi.h>
+ #include <asm/addrspace.h>
+ #include "efistub.h"
++#include "loongarch-stub.h"
+ 
+ typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline,
+ 					  unsigned long systab);
+@@ -37,7 +38,8 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
+ 	return EFI_SUCCESS;
+ }
+ 
+-unsigned long __weak kernel_entry_address(unsigned long kernel_addr)
++unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
++		efi_loaded_image_t *image)
+ {
+ 	return *(unsigned long *)(kernel_addr + 8) - VMLINUX_LOAD_ADDRESS + kernel_addr;
+ }
+@@ -73,7 +75,7 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
+ 	csr_write64(CSR_DMW0_INIT, LOONGARCH_CSR_DMWIN0);
+ 	csr_write64(CSR_DMW1_INIT, LOONGARCH_CSR_DMWIN1);
+ 
+-	real_kernel_entry = (void *)kernel_entry_address(kernel_addr);
++	real_kernel_entry = (void *)kernel_entry_address(kernel_addr, image);
+ 
+ 	real_kernel_entry(true, (unsigned long)cmdline_ptr,
+ 			  (unsigned long)efi_system_table);
+-- 
+2.27.0
 
->
->
-> On 11/15/23 01:07, Huacai Chen wrote:
-> > Commit 8569992d64b8f750e34b7858eac ("KVM: Use gfn instead of hva for
-> > mmu_notifier_retry") replaces mmu_invalidate_retry_hva() usage with
-> > mmu_invalidate_retry_gfn() for X86, LoongArch also need similar changes
-> > to fix build.
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  arch/loongarch/kvm/mmu.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> > index 80480df5f550..9463ebecd39b 100644
-> > --- a/arch/loongarch/kvm/mmu.c
-> > +++ b/arch/loongarch/kvm/mmu.c
-> > @@ -627,7 +627,7 @@ static bool fault_supports_huge_mapping(struct kvm_=
-memory_slot *memslot,
-> >   *
-> >   * There are several ways to safely use this helper:
-> >   *
-> > - * - Check mmu_invalidate_retry_hva() after grabbing the mapping level=
-, before
-> > + * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level=
-, before
-> >   *   consuming it.  In this case, mmu_lock doesn't need to be held dur=
-ing the
-> >   *   lookup, but it does need to be held while checking the MMU notifi=
-er.
-> >   *
-> > @@ -807,7 +807,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsi=
-gned long gpa, bool write)
-> >
-> >       /* Check if an invalidation has taken place since we got pfn */
-> >       spin_lock(&kvm->mmu_lock);
-> > -     if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
-> > +     if (mmu_invalidate_retry_gfn(kvm, mmu_seq, gfn)) {
-> >               /*
-> >                * This can happen when mappings are changed asynchronous=
-ly, but
-> >                * also synchronously if a COW is triggered by
->
-> --
-> #Randy
-> https://people.kernel.org/tglx/notes-about-netiquette
-> https://subspace.kernel.org/etiquette.html
