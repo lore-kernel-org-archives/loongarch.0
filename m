@@ -1,104 +1,101 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D78C14A8C
-	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 10:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JM/8vVUo"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-da077db5145so2544112276.0
-        for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 02:17:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702981028; x=1703585828; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TwKtmUeXSXGux8LEEI/VvN8eUqwl+pKEHLAxCiqGfVM=;
-        b=JM/8vVUo7ZLldIHQsI7SSv0hv6HhDcc7BLwYfpVs9RZ0d5mvbRIHTEFXteusWvZNFC
-         irMN6QZIiGY04ZGg9KJY4tw8K3rVO1qWBE73niXeLBcTRh2trlcUzDkr3qN26IGEgnQE
-         HwIvIIiInt6qvrJaqbLzepyWST6WF/WIhiNpRoFQp0LqkuBm875pz/7ZbYVzcdTDJaCQ
-         pY6cK/x1KcWcW7P7D/8wDy0caWFhqqpAFl+SaE+zPmA7aZrREf9eLkjDn3+Du+5EDeTV
-         JD3eY3z6JhcTCfGIs2mipPwoHF6do0RkWxeShQK98D76JvO8A3WcLV6OzLZfD5G8dWje
-         xegg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702981028; x=1703585828;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TwKtmUeXSXGux8LEEI/VvN8eUqwl+pKEHLAxCiqGfVM=;
-        b=ZPCO6zJQN71QW5E2ZlnBTdqkMjMV+8eUAAmB41WgXtuSoHQb5uqnFmkjAk0OSaF2HK
-         k0mZaqwfS3CafQ9m3iT8O2oJkpuiLa1OhYZrfyNTgtZjo3xHdX+mXldiQDk4FaHse3B1
-         if14859KYhJ6UoMn/6wx7787QpCYRdORCQLMoTVGRa4qfdd1RnlcjyEIwKcmbAugeQhf
-         1sFWzibHJ3zs7fEAikiQreWvyuwP4hsM4LXE1vgJrH3U6MUN6I1oaIRic2Zt7/aH8Yg8
-         BoC2dnLbCFW6IqevOAcGUOcQWXWXnGhW6POU75xHJuQLHqtuH1CPL6iFUQeBDTgYePEl
-         fAQQ==
-X-Gm-Message-State: AOJu0Yy0AlWcyplEnRRAcRC8vofiv0HPD6HrjOFFExgNllmtdPeKfEQ+
-	V58GzKZm45b4cihid3QqE7HRwpAYJsKJjFkLBPGUIHbMRmzgmI2bFBM=
-X-Google-Smtp-Source: AGHT+IEGctgYKKVMu+YuriBCPXOw/L5KAOMG9wLTDWsxAOg5VUoNJUVa/HSTkhiV6wKe747NB9y5LX/zVTaLJh/49tc=
-X-Received: by 2002:a5b:190:0:b0:dbd:8d9:15be with SMTP id r16-20020a5b0190000000b00dbd08d915bemr2752608ybl.85.1702981028230;
- Tue, 19 Dec 2023 02:17:08 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFBB41804D
+	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 12:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.110.252])
+	by gateway (Coremail) with SMTP id _____8CxRPDijIFlapsCAA--.13236S3;
+	Tue, 19 Dec 2023 20:30:26 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.110.252])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxneTgjIFl_U8AAA--.2346S3;
+	Tue, 19 Dec 2023 20:30:26 +0800 (CST)
+Message-ID: <b3afbe08-3cd2-4b7e-8191-f7028f3d6acc@loongson.cn>
+Date: Tue, 19 Dec 2023 20:30:24 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231219091405.39867-1-wangyao@lemote.com> <CAMj1kXEPdMBkne=ugR_j1Be8Aeh8jCA_ryHvh8rMA-c27i+RuA@mail.gmail.com>
- <CAPWE4_wydoTWHUYPmALp1oii+=ALVy_BTDUO_1wOo7XmkJ=cjA@mail.gmail.com>
- <CAMj1kXEL2nuVyNq1O=ytrCr3xh3tA6TU6kRFuk07H1EmneRTTg@mail.gmail.com>
- <CAMj1kXFqpJvH0ukOTufsLCTyCk1abct1kaPUV3JTaS6hMb75Og@mail.gmail.com>
- <CAMj1kXFFb3ksR=HCxiWpfhcjRcx-U=XE5LmZ2AMt9K110QpynQ@mail.gmail.com>
- <CAPWE4_wAa5uYEqkSRkJH+V57jNgjUZgFcrrjtRqRDECTCCASyQ@mail.gmail.com>
- <CAMj1kXHLApok+q99a_MSb6korFnV5qhS5fDL6MXhX9F2pSjBfw@mail.gmail.com> <CAMj1kXFq2a+34cPMmq6LP9VpZGrQV0QAGt0=a-r03wczCE+brg@mail.gmail.com>
-In-Reply-To: <CAMj1kXFq2a+34cPMmq6LP9VpZGrQV0QAGt0=a-r03wczCE+brg@mail.gmail.com>
-From: Ainux Wang <ainux.wang@gmail.com>
-Date: Tue, 19 Dec 2023 18:16:31 +0800
-Message-ID: <CAPWE4_xOvsJvKNvZHUf-uA_RvDvKL0iFajsGceyhWJu9q0pP+g@mail.gmail.com>
-Subject: Re: [PATCH v2] efi/loongarch: Directly position the loaded image file
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: wangyao@lemote.com, chenhuacai@kernel.org, wangrui@loongson.cn, 
-	linux-efi@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/9] net: stmmac: Add Loongson-specific register
+ definitions
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: hkallweit1@gmail.com, peppe.cavallaro@st.com,
+ alexandre.torgue@foss.st.com, joabreu@synopsys.com, fancer.lancer@gmail.com,
+ Jose.Abreu@synopsys.com, chenhuacai@loongson.cn, linux@armlinux.org.uk,
+ guyinggang@loongson.cn, netdev@vger.kernel.org, loongarch@lists.linux.dev,
+ chris.chenfeiyang@gmail.com
+References: <cover.1702458672.git.siyanteng@loongson.cn>
+ <40eff8db93b02599f00a156b07a0dcdacfc0fbf3.1702458672.git.siyanteng@loongson.cn>
+ <8a7d2d11-a299-42e0-960f-a6916e9b54fe@lunn.ch>
+ <033fedc9-1d96-408e-911b-9829c6a5e851@loongson.cn>
+ <bc36a2a1-1c3c-4adb-8c8a-d4e4427a6999@lunn.ch>
+Content-Language: en-US
+From: Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <bc36a2a1-1c3c-4adb-8c8a-d4e4427a6999@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxneTgjIFl_U8AAA--.2346S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tF18Wr1kAry3tw18KFy7CFX_yoW8XrWxpw
+	47WFWkKr4kJr42y3W0ya15WFy5t3ySkFyrGw48G3s7tas8Zr17Cr4rGrs5WasrJr4DA3y2
+	qF1DArn3tr4rA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-Ard Biesheuvel <ardb@kernel.org> =E4=BA=8E2023=E5=B9=B412=E6=9C=8819=E6=97=
-=A5=E5=91=A8=E4=BA=8C 18:11=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Tue, 19 Dec 2023 at 11:08, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Tue, 19 Dec 2023 at 11:05, Ainux Wang <ainux.wang@gmail.com> wrote:
-> > >
-> > > Ard Biesheuvel <ardb@kernel.org> =E4=BA=8E2023=E5=B9=B412=E6=9C=8819=
-=E6=97=A5=E5=91=A8=E4=BA=8C 17:35=E5=86=99=E9=81=93=EF=BC=9A
-> > > >
-> > > > On Tue, 19 Dec 2023 at 10:32, Ard Biesheuvel <ardb@kernel.org> wrot=
-e:
-> > > > >
-> > > > ...
-> > > > > I'll queue this up.
-> > > > >
-> > > >
-> > > > This patch does not apply. What commit is it based on?
-> > > >
-> > >
-> > > It based on the newest loongarch-next branch that based on the v6.7-r=
-c6.
-> > >
-> > > Link:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loon=
-gson.git/log/?h=3Dloongarch-next
-> > >
-> >
-> > Please rebase it onto v6.7-rc6, notably, this patch:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/commit/?h=
-=3Durgent&id=3D271f2a4a9576b87ed1f8584909d6d270039e52ea
-> >
-> > which is now in mainline.
->
-> Apologies, I got that the wrong way around.
->
-> Merged now, thanks.
 
- It's all right.
+在 2023/12/18 23:28, Andrew Lunn 写道:
+> On Mon, Dec 18, 2023 at 06:22:04PM +0800, Yanteng Si wrote:
+>> 在 2023/12/16 23:47, Andrew Lunn 写道:
+>>> On Wed, Dec 13, 2023 at 06:14:23PM +0800, Yanteng Si wrote:
+>>>> There are two types of Loongson DWGMAC. The first type shares the same
+>>>> register definitions and has similar logic as dwmac1000. The second type
+>>>> uses several different register definitions.
+>>>>
+>>>> Simply put, we split some single bit fields into double bits fileds:
+>>>>
+>>>> DMA_INTR_ENA_NIE = 0x00040000 + 0x00020000
+>>>> DMA_INTR_ENA_AIE = 0x00010000 + 0x00008000
+>>>> DMA_STATUS_NIS = 0x00040000 + 0x00020000
+>>>> DMA_STATUS_AIS = 0x00010000 + 0x00008000
+>>>> DMA_STATUS_FBI = 0x00002000 + 0x00001000
+>>> What is missing here is why? What are the second bits used for? And
+>> We think it is necessary to distinguish rx and tx, so we split these bits
+>> into two.
+>>
+>> this is:
+>>
+>> DMA_INTR_ENA_NIE = rx + tx
+> O.K, so please add DMA_INTR_ENA_NIE_RX and DMA_INTR_ENA_NIE_TX
+> #define's, etc.
+OK!
+>
+>> We will care about it later. Because now we will support the minimum feature
+>> set first, which can reduce everyone’s review pressure.
+> Well, you failed with that, since you did not provide the details what
+> these bits are. If you had directly handled the bits separately, it
+> would of been obvious what they are for.
+
+  It is because I did not give a clear reply to serge's comment, which 
+was more detailed. :)
+
+
+Thanks,
+
+Yanteng
+
+>
+>        Andrew
+
