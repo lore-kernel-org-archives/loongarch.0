@@ -1,49 +1,49 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B5D1CA80
-	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 15:37:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A261CA91
+	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 15:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RUbsUdet"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50e4b6b13d4so764035e87.2
-        for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 07:37:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SMH4FJa9"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5534abbc637so3252186a12.0
+        for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 07:38:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703000264; x=1703605064; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1703000309; x=1703605109; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MzJ28sgWvP5MtmVBjVe3Rl+ZQWMtWoctXYs8cXOr3T8=;
-        b=RUbsUdetB6L9KLrbj80vn2tHuA0gKSa4L2PXHfBcYs3cVyPbQbXBQ7zM65YAEMzrHz
-         aGdNiUFOZqE+KtWI439pGuvB8ULBNt/3snvpwutI7E/HRUXAZ+LzqGzbjYcw+4be6lVK
-         OdJsW12LxISfI00AcamPDW68+tev7jl2ttUoBtZcnY/dOo0dbJh9416xRqRQGegMDm+p
-         ca4fKPTjXytz9jRlwebwQ5wFH0BfcQDUclYtbKeA86gE+PNqRsXXXVxh6quTG+aLwggA
-         b1SlcA0oveth5DY8fHBWxAqZTP72Zax3Nrt/B9y1x093nJA4qArWY7pjrgE47JpX31Q+
-         /32Q==
+        bh=A0m/4pJwrLBZoS6pTxRM7bPI5fL3PwuzWkk1iDdkD4I=;
+        b=SMH4FJa9PCg15F+mUV/jyOJmUwJg7N7HxSY7MgtfY+/Dsxj5cIwGlOBNmPH+5wRgGU
+         1s+M1gJ0QRPYSSSCBNPk+CH3SPx4OOmslNKfJMu6FhZ6ByxrKpEznrUq5p3hYOvy7dn2
+         N99+00Kg+ufVWd6vhstrEvQiobELSrF1YQU66K3JrXdUFVlBycjvns80AbZcWZuBpXgE
+         otRT43MuhehhoqLvhffetobSd5a00+d90piZ00yfMMNtkiC2MxgfBSgCDxiiJABawRsO
+         AMTskHLkLs1PgA6oHsv8EB+qiejcJlayP13wRzcQ8w4ZT5S1ZhV/hrXTBtLpP9e2Yr8l
+         n/Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703000264; x=1703605064;
+        d=1e100.net; s=20230601; t=1703000309; x=1703605109;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MzJ28sgWvP5MtmVBjVe3Rl+ZQWMtWoctXYs8cXOr3T8=;
-        b=OmkIurI6AcybTqXx/9MldIZwapEJyZbScDDggy9tqnOVDUI0WYz6j8YKxP9rI1Zikj
-         MnhnSmmx+rBIA1JP5dOLj8QpWopwmLALLum3VsIB+XFn9jRbEXcffKpbAwEqNEuICY+q
-         Ka7Xyi8Kxg0CVkyITo5ychVpV2MLSkF9EmlxPf7NLVh2HP7Hc9CtZa1yKymQiI1zVPNH
-         IBy71R0t4uLxXj2zh91GDrmnPTqXy/CLFZ2at06S1y7cqoaAZVHzBWTf9TPfr6hQDey6
-         pKlwAuQHg9fAhsFTKaPiHz+u9xk76AYqWraQ9KjdoOCMyLqK+5tBWq0IKla3Mgz6joDj
-         X7kg==
-X-Gm-Message-State: AOJu0YxfydGQExAUkFbKIYEHpVKAcMTJ8ItIdv4yy/bauMEgQ6rR60wq
-	iBVETCy+IY/nVHoR/D6AfJF6eg==
-X-Google-Smtp-Source: AGHT+IFx4CfTHkGOithq5myq12h7cSk5PiOIr177HI5qRAF5Z/Ng+tVGQgu1awwXM1f7fotRXZKw1Q==
-X-Received: by 2002:a05:6512:3e21:b0:50b:e005:88ab with SMTP id i33-20020a0565123e2100b0050be00588abmr10344750lfv.64.1703000264537;
-        Tue, 19 Dec 2023 07:37:44 -0800 (PST)
+        bh=A0m/4pJwrLBZoS6pTxRM7bPI5fL3PwuzWkk1iDdkD4I=;
+        b=Y9es0ZGbSRM1lQCiZpJR/KugPSWs1oB+BkM4TJEew3DfMn+rnGvlEl/utXjX8z0xsE
+         1NutmOHmNDUaXpxbJ2RfQTbJZJ9f5bLDUkjoWGvq4xvXHNwIV0LnqB1CMJHWVghodMYf
+         29PtxXK061nzzarxwYCosAfWelacxsXFsYMeY/VVKfcjZa4J/uNDLo/IK6iC3T2XtZZ4
+         ezBLKXwSJuv+b2W9xlVHquAl5HYChfU0Quj3rZZf/NcrwY0066jJ8M2r4GV6z4XvHbAe
+         T/hfJjmqB27Y0llpWr1pw5vvLV4MAtO3o6xrXqDH4/L/ahsnPTY9rU4su3DEDFyer5jI
+         E7uw==
+X-Gm-Message-State: AOJu0YzVCmxeNTJaXFoi58gdF68xLX8qybQfLqWPwXsULX0UXfwB0mJz
+	nCvliX6EFJrfJFn5P44qbCHrVQ==
+X-Google-Smtp-Source: AGHT+IGm1FMNwzajZqJSryfKTv9sFhkqcHoq0dLDBd+QPxi4p2Sjy4py87/YnSOcSR6ya+v1dQrC7g==
+X-Received: by 2002:a50:bb41:0:b0:552:f56d:eb81 with SMTP id y59-20020a50bb41000000b00552f56deb81mr3549940ede.66.1703000308809;
+        Tue, 19 Dec 2023 07:38:28 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id q3-20020a5085c3000000b0054ccac03945sm11543717edh.12.2023.12.19.07.37.42
+        by smtp.gmail.com with ESMTPSA id q3-20020a5085c3000000b0054ccac03945sm11543717edh.12.2023.12.19.07.38.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Dec 2023 07:37:43 -0800 (PST)
-Message-ID: <66cdcde3-4894-4c80-b0b8-dec351b3e203@linaro.org>
-Date: Tue, 19 Dec 2023 16:37:42 +0100
+        Tue, 19 Dec 2023 07:38:28 -0800 (PST)
+Message-ID: <e32191ea-3756-4104-8610-4477c22aece2@linaro.org>
+Date: Tue, 19 Dec 2023 16:38:26 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -51,7 +51,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/7] LoongArch: dts: DeviceTree for Loongson-2K1000
+Subject: Re: [PATCH v5 6/7] LoongArch: dts: DeviceTree for Loongson-2K2000
 Content-Language: en-US
 To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
  <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
@@ -62,7 +62,7 @@ Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
  loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
  Hongliang Wang <wanghongliang@loongson.cn>
 References: <cover.1702862778.git.zhoubinbin@loongson.cn>
- <f528fa7f8bce79d5f0a748597bb3b50ec1cd6f83.1702862779.git.zhoubinbin@loongson.cn>
+ <f62d0b6df04144404b0d657bce39a8f25b931c3a.1702862779.git.zhoubinbin@loongson.cn>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -108,41 +108,42 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <f528fa7f8bce79d5f0a748597bb3b50ec1cd6f83.1702862779.git.zhoubinbin@loongson.cn>
+In-Reply-To: <f62d0b6df04144404b0d657bce39a8f25b931c3a.1702862779.git.zhoubinbin@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/12/2023 02:52, Binbin Zhou wrote:
-> Add DeviceTree file for Loongson-2K1000 processor, which integrates two
-> 64-bit dual emission superscalar LA264 processor cores.
+On 18/12/2023 02:53, Binbin Zhou wrote:
+> Add DeviceTree file for Loongson-2K2000 processor, which integrates two
+> 64-bit triple emission superscalar LA364 processor cores.
 > 
 > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
 >  arch/loongarch/boot/dts/Makefile              |   3 +-
->  .../boot/dts/loongson-2k1000-ref.dts          | 184 +++++++
->  arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 453 ++++++++++++++++++
->  3 files changed, 639 insertions(+), 1 deletion(-)
->  create mode 100644 arch/loongarch/boot/dts/loongson-2k1000-ref.dts
->  create mode 100644 arch/loongarch/boot/dts/loongson-2k1000.dtsi
+>  .../boot/dts/loongson-2k2000-ref.dts          |  73 ++++
+>  arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 311 ++++++++++++++++++
+>  3 files changed, 386 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k2000-ref.dts
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k2000.dtsi
 > 
 > diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
-> index aa0b21d73d4e..dc0782315bed 100644
+> index dc0782315bed..c019d6676f7e 100644
 > --- a/arch/loongarch/boot/dts/Makefile
 > +++ b/arch/loongarch/boot/dts/Makefile
-> @@ -1,5 +1,6 @@
+> @@ -1,6 +1,7 @@
 >  # SPDX-License-Identifier: GPL-2.0-only
 >  
-> -dtb-$(CONFIG_MACH_LOONGSON64)	= loongson-2k0500-ref.dtb
-> +dtb-$(CONFIG_MACH_LOONGSON64)	= loongson-2k0500-ref.dtb \
-> +				  loongson-2k1000-ref.dtb
+>  dtb-$(CONFIG_MACH_LOONGSON64)	= loongson-2k0500-ref.dtb \
+> -				  loongson-2k1000-ref.dtb
+> +				  loongson-2k1000-ref.dtb \
+> +				  loongson-2k2000-ref.dtb
 >  
 >  obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .dtb.o, $(CONFIG_BUILTIN_DTB_NAME))
-> diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+> diff --git a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
 > new file mode 100644
-> index 000000000000..95346bcbea71
+> index 000000000000..ac6b370800fa
 > --- /dev/null
-> +++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-> @@ -0,0 +1,184 @@
+> +++ b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
+> @@ -0,0 +1,73 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
 > + * Copyright (C) 2023 Loongson Technology Corporation Limited
@@ -150,11 +151,11 @@ On 18/12/2023 02:52, Binbin Zhou wrote:
 > +
 > +/dts-v1/;
 > +
-> +#include "loongson-2k1000.dtsi"
+> +#include "loongson-2k2000.dtsi"
 > +
 > +/ {
-> +	compatible = "loongson,ls2k1000-ref", "loongson,ls2k1000";
-> +	model = "Loongson-2K1000 Reference Board";
+> +	compatible = "loongson,ls2k2000-ref", "loongson,ls2k2000";
+> +	model = "Loongson-2K2000 Reference Board";
 > +
 > +	aliases {
 > +		serial0 = &uart0;
@@ -164,7 +165,8 @@ On 18/12/2023 02:52, Binbin Zhou wrote:
 > +		stdout-path = "serial0:115200n8";
 > +		bootargs = "console=ttyS0,115200";
 
-NAK. Don't ignore the review.
+Nope.
+
 
 Best regards,
 Krzysztof
