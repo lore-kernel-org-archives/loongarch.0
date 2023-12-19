@@ -1,78 +1,115 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D921DA21;
-	Mon, 18 Dec 2023 20:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-1fae54afb66so108520fac.1;
-        Mon, 18 Dec 2023 12:35:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702931727; x=1703536527;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w5muLLdvnEWK5GQ123Z96eJyI+5glad1JcNNdF8H1Jg=;
-        b=LTP2lQDeFXEDUZVdCNQF8GdhHCbpicXo3ev5c7ZpIYyHj7UEVJqBggQUlfYjcV/Yy1
-         tBikJ7RIv3bdzIMTymwM6YbnoyDlUJ8+9LiGTlnSJ56crMJwWO3HUVAuLVinJZyFGYJB
-         nH6cUvJi/ppxi6hjtFj8n90KdcsAcjDx/9NP/4B8HI7NQ2GZIPeCDiDi/9y/JxA5fR2Y
-         wyu2R/H9GjZmUDHJCLUny8alPzDwIsc5jq1ONqo63mshxi4r2wVnrtHG6rIKxPlDMlfF
-         QjSvAEm7wnvH7VaNTK3A+PV7cX6rKu+hMSFDAEgzmYUoybiD2iuwffkmz1ZUkKzi3FZq
-         YTWw==
-X-Gm-Message-State: AOJu0YwQ9pfWrr2hIc6R04yV4yQp4DFRsipNkEtyA49k8ixElHQkft1I
-	2yrQDfyCJNe4GWTqCQA4eNHriEhXle8RYL4cvs4oTkLA
-X-Google-Smtp-Source: AGHT+IF1MjB6QbmwWfc3T+5pLabp0AF+8g7RLCoeqeEABS9CAvETyoAN6o6rB15S5OlZOByT2E647igWVuJN9yCJ/4I=
-X-Received: by 2002:a05:6870:71ca:b0:203:e75d:a2c2 with SMTP id
- p10-20020a05687071ca00b00203e75da2c2mr729668oag.1.1702931727130; Mon, 18 Dec
- 2023 12:35:27 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC288479
+	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 03:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBDzKc04"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 289BDC433C8
+	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 03:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702955218;
+	bh=RzxTf7RhaILeV9wCyhzQyl7++g8TNQNbq8hRWOyQd+M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BBDzKc04EME67QqQKtCaIS71J1L60KEaYd3UbCWUwUF6VeK1yfEc+khWnoYQA6k9g
+	 O1Xu/e8erSPVa6IP4Sqg2jaJjjVaVFhmmCpTDOZOeOXJZPrzeF8sL8S6MAcs2eEtGy
+	 Y3rCNuQd1/FsvoVq2iP6SwrVBrHKSsjiDEr5FpVz9YpLBqJAxS93Hll6WS1QURlNtD
+	 O777tF/XUlAf+TLzwj4AoC8R9q3Z/EXNM6bF9DnODtHCP5KBMd9itDka5EklGUTbWR
+	 n/LoPxax/nW0+PqoFyRy5Bugu6JNJ5lgY423z1/jxeoMMn/qaC39s/uJRs7vGiGRFy
+	 tKtB6xGL5GdnA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50d176eb382so5365350e87.2
+        for <loongarch@lists.linux.dev>; Mon, 18 Dec 2023 19:06:58 -0800 (PST)
+X-Gm-Message-State: AOJu0Yxwal27WlDYeQkPxB5RLn82kvjmJoEhXRpvSl9FwYA7MVw9syog
+	fOhVz2LSe4VqtcJsDEaerRtz9447XNe/ljKzmP0=
+X-Google-Smtp-Source: AGHT+IEk9tQlIMI9LFzQsHZ87oxZ2QTHtDV5rI1Dp8W1kZOWPN+LWRK4WWaazQRJIsOhShr35OG2IPzZlnxJ6etd6v4=
+X-Received: by 2002:ac2:42c7:0:b0:50e:3659:8657 with SMTP id
+ n7-20020ac242c7000000b0050e36598657mr1453178lfl.21.1702955216361; Mon, 18 Dec
+ 2023 19:06:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk> <E1rDOgD-00Dvk2-3h@rmk-PC.armlinux.org.uk>
-In-Reply-To: <E1rDOgD-00Dvk2-3h@rmk-PC.armlinux.org.uk>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 18 Dec 2023 21:35:16 +0100
-Message-ID: <CAJZ5v0g9nfLrEf9u4Ksw6BOWJQ9iv8Z-O8RsLU6jR5zk0ahxRw@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 05/21] ACPI: Rename ACPI_HOTPLUG_CPU to include 'present'
-To: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
-	acpica-devel@lists.linuxfoundation.org, linux-csky@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com, 
-	James Morse <james.morse@arm.com>
+References: <20231115090735.2404866-1-chenhuacai@loongson.cn> <15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
+In-Reply-To: <15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 19 Dec 2023 11:06:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H57PxrGPQMSvxUS2eJFCETYYUAyc=oxxu5fX1akuUCAng@mail.gmail.com>
+Message-ID: <CAAhV-H57PxrGPQMSvxUS2eJFCETYYUAyc=oxxu5fX1akuUCAng@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Fix build due to API changes
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 13, 2023 at 1:49=E2=80=AFPM Russell King <rmk+kernel@armlinux.o=
-rg.uk> wrote:
+Hi, Randy,
+
+On Sat, Dec 16, 2023 at 1:08=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org=
+> wrote:
 >
-> From: James Morse <james.morse@arm.com>
+> Hi,
 >
-> The code behind ACPI_HOTPLUG_CPU allows a not-present CPU to become
-> present.
+> Someone please merge this patch...
+> Thanks.
+I prepared loongarch-kvm changes for 6.8 and the base is 6.7-rc6 [1],
+If I merge this patch then the loongarch-next branch will build fail.
+So I think this patch should be merged to Paolo's next branch in his
+kvm tree.
 
-Right.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongs=
+on.git/log/?h=3Dloongarch-next
 
-> This isn't the only use of HOTPLUG_CPU. On arm64 and riscv
-> CPUs can be taken offline as a power saving measure.
+Huacai
 
-But still there is the case in which a non-present CPU can become
-present, isn't it there?
-
-> On arm64 an offline CPU may be disabled by firmware, preventing it from
-> being brought back online, but it remains present throughout.
 >
-> Adding code to prevent user-space trying to online these disabled CPUs
-> needs some additional terminology.
 >
-> Rename the Kconfig symbol CONFIG_ACPI_HOTPLUG_PRESENT_CPU to reflect
-> that it makes possible CPUs present.
-
-Honestly, I don't think that this change is necessary or even useful.
+> On 11/15/23 01:07, Huacai Chen wrote:
+> > Commit 8569992d64b8f750e34b7858eac ("KVM: Use gfn instead of hva for
+> > mmu_notifier_retry") replaces mmu_invalidate_retry_hva() usage with
+> > mmu_invalidate_retry_gfn() for X86, LoongArch also need similar changes
+> > to fix build.
+> >
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  arch/loongarch/kvm/mmu.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> > index 80480df5f550..9463ebecd39b 100644
+> > --- a/arch/loongarch/kvm/mmu.c
+> > +++ b/arch/loongarch/kvm/mmu.c
+> > @@ -627,7 +627,7 @@ static bool fault_supports_huge_mapping(struct kvm_=
+memory_slot *memslot,
+> >   *
+> >   * There are several ways to safely use this helper:
+> >   *
+> > - * - Check mmu_invalidate_retry_hva() after grabbing the mapping level=
+, before
+> > + * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level=
+, before
+> >   *   consuming it.  In this case, mmu_lock doesn't need to be held dur=
+ing the
+> >   *   lookup, but it does need to be held while checking the MMU notifi=
+er.
+> >   *
+> > @@ -807,7 +807,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsi=
+gned long gpa, bool write)
+> >
+> >       /* Check if an invalidation has taken place since we got pfn */
+> >       spin_lock(&kvm->mmu_lock);
+> > -     if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
+> > +     if (mmu_invalidate_retry_gfn(kvm, mmu_seq, gfn)) {
+> >               /*
+> >                * This can happen when mappings are changed asynchronous=
+ly, but
+> >                * also synchronously if a COW is triggered by
+>
+> --
+> #Randy
+> https://people.kernel.org/tglx/notes-about-netiquette
+> https://subspace.kernel.org/etiquette.html
