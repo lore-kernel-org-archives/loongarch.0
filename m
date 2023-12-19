@@ -1,207 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6FE13AD1
-	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 09:22:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B5A14286
+	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 09:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1HPC9Ex"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC79C433CB
-	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 09:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702977731;
-	bh=0u58FpPHyar+jepb2pMgOvDTYMdpvayx2cB+S88DNRY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=i1HPC9Ex7wDpbXfE/hDPVU5nSgByNetoqAXXIYyHNPxgaV4VudTvTfg1k8E6CfVGR
-	 ccMydP28+yZbessVbxFMasseh4/QoKGSH5zh+RPC7Bo09CuBXcwgkYObflKDlgbsJn
-	 ibpC48h5v3s2X6Kc1XNvdO0xAT+FHiDG3jwLkV9GUdNK1R6CJY0/5CPlaMuPaUTT2x
-	 pAK9B87tZoTMj2z3hb1tt1Gs91KAjXA/+K1F6EpCdQI/okBH/zQ1b7S4JP0395SqMt
-	 tvRHcZvuJpx3rn34ht+HhVf9sj8eAielXIRIkv000nDqcS7fGpve/g/Y+EkdVX9qwX
-	 lnU8WzaVehkZg==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2cc7d80324dso7034881fa.2
-        for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 01:22:10 -0800 (PST)
-X-Gm-Message-State: AOJu0YxIk8gsxA8hriTmnymwD2p3V32T5BPoyGmvmO5Rn50ivV4gnqdf
-	naJkBc/TMMuLcaHDHHDI7KYPoUxDwhFmmMOLtA4=
-X-Google-Smtp-Source: AGHT+IFrtRZXnAmsf4xPVXxtymglPLQlh/oKmjJsBlB/eoShYuX/BpbU2jhgL6ZP4LNhvMc8qfPMdg46mhd5F8zwEOo=
-X-Received: by 2002:a2e:a363:0:b0:2cc:7868:c200 with SMTP id
- i3-20020a2ea363000000b002cc7868c200mr717572ljn.90.1702977729148; Tue, 19 Dec
- 2023 01:22:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Limewbp9"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dbccbdacb9eso3517045276.3
+        for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 01:27:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702978020; x=1703582820; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wgr+bPFMf0jzYI3cGscIZIVI1UlYgc3N2TeKFvuxGPM=;
+        b=Limewbp91ckCJEqPUaer5B2VywmwscxPJPLiw1+bCFqdUnXrybEc5LygvhDhLjEkp1
+         nOZOEnAjEutf2hiOVaHY0X+WnQZlB7LFHHsIdeONkqL728NcFbraZ5COVEFftloYXEUi
+         z6NbETrxCJLW9nY7bdNs1WS4GSU91xfZsAaQFYigmf4zXplXKxi5Oy4IlZjevZ82iUc4
+         eC4N2pFnA13YTWPZDRZissnJBVjB/t1+IILoUu/9F3HVxgYl7xrCLtEUwBGP73XECvxx
+         8CpDQV0LEBAEM+EfasMI53+TlUrLpM+032gqCFfOIaWvpA98tt6KBZDijgPo6l3gJBUT
+         tyiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702978020; x=1703582820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wgr+bPFMf0jzYI3cGscIZIVI1UlYgc3N2TeKFvuxGPM=;
+        b=F6SPLnb9MHtd7SEmEAnAOmEvQaZTqTqi70e5AHa1MXCVKoWNl1ALkidElq+7aeFjDv
+         Z9X3k8S+iGuGzV3UGVKrNOn3bLRGy9HZzlS4jP62nX5eTNqBN1kCBS4C1e+2hyEzTTGw
+         nTLCnzyIwM0jCzS019oPmVaW24jaEwIU8D4ndutNhJVF1ARYls1uUi9t9U3mxjceoY+j
+         eTMrGDRmEKHSeUg0FADOvQoug972uZZ79lUIJFqhYEiV5sOh9DmBpSSWeMtQJt9im0c2
+         gu0x5fcJAO7rcbkoXi+0HES0zm+UopTA4i6pzXRMEMTjKBqzb3L9JeoE7vq8Z0LkL2FY
+         YHbQ==
+X-Gm-Message-State: AOJu0YxV0qWIHs2nCAHo8kMtStd48XwxKzREHO27JO5MNqPW9gQbmYoH
+	AdzOxHLwNLZtBiu/Z6WyUI5/cmrRYKcHLyBqifs=
+X-Google-Smtp-Source: AGHT+IGuzet49OLo7wla1HLPzfqDEhH2BYgEJTaX6a3rL8GfnBEaDXvvQb6RCyTzso9EfilLtSBnaFSZjKXhTYYQsRQ=
+X-Received: by 2002:a25:c41:0:b0:db5:3b32:b1c3 with SMTP id
+ 62-20020a250c41000000b00db53b32b1c3mr9734179ybm.21.1702978020049; Tue, 19 Dec
+ 2023 01:27:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231219091405.39867-1-wangyao@lemote.com>
-In-Reply-To: <20231219091405.39867-1-wangyao@lemote.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 19 Dec 2023 10:21:57 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEPdMBkne=ugR_j1Be8Aeh8jCA_ryHvh8rMA-c27i+RuA@mail.gmail.com>
-Message-ID: <CAMj1kXEPdMBkne=ugR_j1Be8Aeh8jCA_ryHvh8rMA-c27i+RuA@mail.gmail.com>
+References: <20231219091405.39867-1-wangyao@lemote.com> <CAMj1kXEPdMBkne=ugR_j1Be8Aeh8jCA_ryHvh8rMA-c27i+RuA@mail.gmail.com>
+In-Reply-To: <CAMj1kXEPdMBkne=ugR_j1Be8Aeh8jCA_ryHvh8rMA-c27i+RuA@mail.gmail.com>
+From: Ainux Wang <ainux.wang@gmail.com>
+Date: Tue, 19 Dec 2023 17:26:21 +0800
+Message-ID: <CAPWE4_wydoTWHUYPmALp1oii+=ALVy_BTDUO_1wOo7XmkJ=cjA@mail.gmail.com>
 Subject: Re: [PATCH v2] efi/loongarch: Directly position the loaded image file
-To: wangyao@lemote.com
-Cc: chenhuacai@kernel.org, wangrui@loongson.cn, linux-efi@vger.kernel.org, 
-	loongarch@lists.linux.dev, ainux.wang@gmail.com
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: wangyao@lemote.com, chenhuacai@kernel.org, wangrui@loongson.cn, 
+	linux-efi@vger.kernel.org, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 19 Dec 2023 at 10:14, <wangyao@lemote.com> wrote:
+Ard Biesheuvel <ardb@kernel.org> =E4=BA=8E2023=E5=B9=B412=E6=9C=8819=E6=97=
+=A5=E5=91=A8=E4=BA=8C 17:22=E5=86=99=E9=81=93=EF=BC=9A
 >
-> From: Wang Yao <wangyao@lemote.com>
+> On Tue, 19 Dec 2023 at 10:14, <wangyao@lemote.com> wrote:
+> >
+> > From: Wang Yao <wangyao@lemote.com>
+> >
+> > The use of the 'kernel_offset' variable to position the image file that
+> > has been loaded by UEFI or GRUB is unnecessary, because we can directly
+> > position the loaded image file through using the image_base field of th=
+e
+> > efi_loaded_image struct provided by UEFI.
+> >
+> > Replace kernel_offset with image_base to positon the image file that ha=
+s
+> > been loaded by UEFI or GRUB.
+> >
+> > Signed-off-by: Wang Yao <wangyao@lemote.com>
+> > ---
+> >
+> > v1->v2:
+> > Rewrite the commit log include 'why', not just include 'how'.
+> >
+> >  arch/loongarch/include/asm/efi.h              | 2 --
+> >  arch/loongarch/kernel/head.S                  | 1 -
+> >  arch/loongarch/kernel/image-vars.h            | 1 -
+> >  arch/loongarch/kernel/vmlinux.lds.S           | 1 -
+> >  drivers/firmware/efi/libstub/loongarch-stub.c | 9 +++++----
+> >  drivers/firmware/efi/libstub/loongarch-stub.h | 4 ++++
+> >  drivers/firmware/efi/libstub/loongarch.c      | 6 ++++--
+> >  7 files changed, 13 insertions(+), 11 deletions(-)
+> >  create mode 100644 drivers/firmware/efi/libstub/loongarch-stub.h
+> >
+> > diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/=
+asm/efi.h
+> > index 91d81f9730ab..eddc8e79b3fa 100644
+> > --- a/arch/loongarch/include/asm/efi.h
+> > +++ b/arch/loongarch/include/asm/efi.h
+> > @@ -32,6 +32,4 @@ static inline unsigned long efi_get_kimg_min_align(vo=
+id)
+> >
+> >  #define EFI_KIMG_PREFERRED_ADDRESS     PHYSADDR(VMLINUX_LOAD_ADDRESS)
+> >
+> > -unsigned long kernel_entry_address(unsigned long kernel_addr);
+> > -
 >
-> The use of the 'kernel_offset' variable to position the image file that
-> has been loaded by UEFI or GRUB is unnecessary, because we can directly
-> position the loaded image file through using the image_base field of the
-> efi_loaded_image struct provided by UEFI.
+> Why are you removing this? Won't that cause missing prototype warnings?
 >
-> Replace kernel_offset with image_base to positon the image file that has
-> been loaded by UEFI or GRUB.
+> The rest of the patch looks fine to me, but I haven't tested it.
 >
-> Signed-off-by: Wang Yao <wangyao@lemote.com>
-> ---
->
-> v1->v2:
-> Rewrite the commit log include 'why', not just include 'how'.
->
->  arch/loongarch/include/asm/efi.h              | 2 --
->  arch/loongarch/kernel/head.S                  | 1 -
->  arch/loongarch/kernel/image-vars.h            | 1 -
->  arch/loongarch/kernel/vmlinux.lds.S           | 1 -
->  drivers/firmware/efi/libstub/loongarch-stub.c | 9 +++++----
->  drivers/firmware/efi/libstub/loongarch-stub.h | 4 ++++
->  drivers/firmware/efi/libstub/loongarch.c      | 6 ++++--
->  7 files changed, 13 insertions(+), 11 deletions(-)
->  create mode 100644 drivers/firmware/efi/libstub/loongarch-stub.h
->
-> diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
-> index 91d81f9730ab..eddc8e79b3fa 100644
-> --- a/arch/loongarch/include/asm/efi.h
-> +++ b/arch/loongarch/include/asm/efi.h
-> @@ -32,6 +32,4 @@ static inline unsigned long efi_get_kimg_min_align(void)
->
->  #define EFI_KIMG_PREFERRED_ADDRESS     PHYSADDR(VMLINUX_LOAD_ADDRESS)
->
-> -unsigned long kernel_entry_address(unsigned long kernel_addr);
-> -
 
-Why are you removing this? Won't that cause missing prototype warnings?
+Because the efi_loaded_image_t struct is defined in the efistub.h.
 
-The rest of the patch looks fine to me, but I haven't tested it.
-
->  #endif /* _ASM_LOONGARCH_EFI_H */
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index 53b883db0786..0ecab4216392 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -34,7 +34,6 @@ pe_header:
->
->  SYM_DATA(kernel_asize, .long _kernel_asize);
->  SYM_DATA(kernel_fsize, .long _kernel_fsize);
-> -SYM_DATA(kernel_offset, .long _kernel_offset);
->
->  #endif
->
-> diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel/image-vars.h
-> index 5087416b9678..41ddcf56d21c 100644
-> --- a/arch/loongarch/kernel/image-vars.h
-> +++ b/arch/loongarch/kernel/image-vars.h
-> @@ -11,7 +11,6 @@ __efistub_strcmp              = strcmp;
->  __efistub_kernel_entry         = kernel_entry;
->  __efistub_kernel_asize         = kernel_asize;
->  __efistub_kernel_fsize         = kernel_fsize;
-> -__efistub_kernel_offset                = kernel_offset;
->  #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
->  __efistub_screen_info          = screen_info;
->  #endif
-> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-> index bb2ec86f37a8..a5d0cd2035da 100644
-> --- a/arch/loongarch/kernel/vmlinux.lds.S
-> +++ b/arch/loongarch/kernel/vmlinux.lds.S
-> @@ -143,7 +143,6 @@ SECTIONS
->         _kernel_fsize = _edata - _text;
->         _kernel_vsize = _end - __initdata_begin;
->         _kernel_rsize = _edata - __initdata_begin;
-> -       _kernel_offset = kernel_offset - _text;
->  #endif
->
->         .gptab.sdata : {
-> diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/firmware/efi/libstub/loongarch-stub.c
-> index d6ec5d4b8dbe..736b6aae323d 100644
-> --- a/drivers/firmware/efi/libstub/loongarch-stub.c
-> +++ b/drivers/firmware/efi/libstub/loongarch-stub.c
-> @@ -8,10 +8,10 @@
->  #include <asm/efi.h>
->  #include <asm/addrspace.h>
->  #include "efistub.h"
-> +#include "loongarch-stub.h"
->
->  extern int kernel_asize;
->  extern int kernel_fsize;
-> -extern int kernel_offset;
->  extern int kernel_entry;
->
->  efi_status_t handle_kernel_image(unsigned long *image_addr,
-> @@ -24,7 +24,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
->         efi_status_t status;
->         unsigned long kernel_addr = 0;
->
-> -       kernel_addr = (unsigned long)&kernel_offset - kernel_offset;
-> +       kernel_addr = (unsigned long)image->image_base;
->
->         status = efi_relocate_kernel(&kernel_addr, kernel_fsize, kernel_asize,
->                      EFI_KIMG_PREFERRED_ADDRESS, efi_get_kimg_min_align(), 0x0);
-> @@ -35,9 +35,10 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
->         return status;
->  }
->
-> -unsigned long kernel_entry_address(unsigned long kernel_addr)
-> +unsigned long kernel_entry_address(unsigned long kernel_addr,
-> +               efi_loaded_image_t *image)
->  {
-> -       unsigned long base = (unsigned long)&kernel_offset - kernel_offset;
-> +       unsigned long base = (unsigned long)image->image_base;
->
->         return (unsigned long)&kernel_entry - base + kernel_addr;
->  }
-> diff --git a/drivers/firmware/efi/libstub/loongarch-stub.h b/drivers/firmware/efi/libstub/loongarch-stub.h
-> new file mode 100644
-> index 000000000000..cd015955a015
-> --- /dev/null
-> +++ b/drivers/firmware/efi/libstub/loongarch-stub.h
-> @@ -0,0 +1,4 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +unsigned long kernel_entry_address(unsigned long kernel_addr,
-> +               efi_loaded_image_t *image);
-> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
-> index 0e0aa6cda73f..684c9354637c 100644
-> --- a/drivers/firmware/efi/libstub/loongarch.c
-> +++ b/drivers/firmware/efi/libstub/loongarch.c
-> @@ -8,6 +8,7 @@
->  #include <asm/efi.h>
->  #include <asm/addrspace.h>
->  #include "efistub.h"
-> +#include "loongarch-stub.h"
->
->  typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline,
->                                           unsigned long systab);
-> @@ -37,7 +38,8 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
->         return EFI_SUCCESS;
->  }
->
-> -unsigned long __weak kernel_entry_address(unsigned long kernel_addr)
-> +unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
-> +               efi_loaded_image_t *image)
->  {
->         return *(unsigned long *)(kernel_addr + 8) - VMLINUX_LOAD_ADDRESS + kernel_addr;
->  }
-> @@ -73,7 +75,7 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
->         csr_write64(CSR_DMW0_INIT, LOONGARCH_CSR_DMWIN0);
->         csr_write64(CSR_DMW1_INIT, LOONGARCH_CSR_DMWIN1);
->
-> -       real_kernel_entry = (void *)kernel_entry_address(kernel_addr);
-> +       real_kernel_entry = (void *)kernel_entry_address(kernel_addr, image);
->
->         real_kernel_entry(true, (unsigned long)cmdline_ptr,
->                           (unsigned long)efi_system_table);
-> --
-> 2.27.0
->
+> >  #endif /* _ASM_LOONGARCH_EFI_H */
+> > diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.=
+S
+> > index 53b883db0786..0ecab4216392 100644
+> > --- a/arch/loongarch/kernel/head.S
+> > +++ b/arch/loongarch/kernel/head.S
+> > @@ -34,7 +34,6 @@ pe_header:
+> >
+> >  SYM_DATA(kernel_asize, .long _kernel_asize);
+> >  SYM_DATA(kernel_fsize, .long _kernel_fsize);
+> > -SYM_DATA(kernel_offset, .long _kernel_offset);
+> >
+> >  #endif
+> >
+> > diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel=
+/image-vars.h
+> > index 5087416b9678..41ddcf56d21c 100644
+> > --- a/arch/loongarch/kernel/image-vars.h
+> > +++ b/arch/loongarch/kernel/image-vars.h
+> > @@ -11,7 +11,6 @@ __efistub_strcmp              =3D strcmp;
+> >  __efistub_kernel_entry         =3D kernel_entry;
+> >  __efistub_kernel_asize         =3D kernel_asize;
+> >  __efistub_kernel_fsize         =3D kernel_fsize;
+> > -__efistub_kernel_offset                =3D kernel_offset;
+> >  #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
+> >  __efistub_screen_info          =3D screen_info;
+> >  #endif
+> > diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kerne=
+l/vmlinux.lds.S
+> > index bb2ec86f37a8..a5d0cd2035da 100644
+> > --- a/arch/loongarch/kernel/vmlinux.lds.S
+> > +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> > @@ -143,7 +143,6 @@ SECTIONS
+> >         _kernel_fsize =3D _edata - _text;
+> >         _kernel_vsize =3D _end - __initdata_begin;
+> >         _kernel_rsize =3D _edata - __initdata_begin;
+> > -       _kernel_offset =3D kernel_offset - _text;
+> >  #endif
+> >
+> >         .gptab.sdata : {
+> > diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/fi=
+rmware/efi/libstub/loongarch-stub.c
+> > index d6ec5d4b8dbe..736b6aae323d 100644
+> > --- a/drivers/firmware/efi/libstub/loongarch-stub.c
+> > +++ b/drivers/firmware/efi/libstub/loongarch-stub.c
+> > @@ -8,10 +8,10 @@
+> >  #include <asm/efi.h>
+> >  #include <asm/addrspace.h>
+> >  #include "efistub.h"
+> > +#include "loongarch-stub.h"
+> >
+> >  extern int kernel_asize;
+> >  extern int kernel_fsize;
+> > -extern int kernel_offset;
+> >  extern int kernel_entry;
+> >
+> >  efi_status_t handle_kernel_image(unsigned long *image_addr,
+> > @@ -24,7 +24,7 @@ efi_status_t handle_kernel_image(unsigned long *image=
+_addr,
+> >         efi_status_t status;
+> >         unsigned long kernel_addr =3D 0;
+> >
+> > -       kernel_addr =3D (unsigned long)&kernel_offset - kernel_offset;
+> > +       kernel_addr =3D (unsigned long)image->image_base;
+> >
+> >         status =3D efi_relocate_kernel(&kernel_addr, kernel_fsize, kern=
+el_asize,
+> >                      EFI_KIMG_PREFERRED_ADDRESS, efi_get_kimg_min_align=
+(), 0x0);
+> > @@ -35,9 +35,10 @@ efi_status_t handle_kernel_image(unsigned long *imag=
+e_addr,
+> >         return status;
+> >  }
+> >
+> > -unsigned long kernel_entry_address(unsigned long kernel_addr)
+> > +unsigned long kernel_entry_address(unsigned long kernel_addr,
+> > +               efi_loaded_image_t *image)
+> >  {
+> > -       unsigned long base =3D (unsigned long)&kernel_offset - kernel_o=
+ffset;
+> > +       unsigned long base =3D (unsigned long)image->image_base;
+> >
+> >         return (unsigned long)&kernel_entry - base + kernel_addr;
+> >  }
+> > diff --git a/drivers/firmware/efi/libstub/loongarch-stub.h b/drivers/fi=
+rmware/efi/libstub/loongarch-stub.h
+> > new file mode 100644
+> > index 000000000000..cd015955a015
+> > --- /dev/null
+> > +++ b/drivers/firmware/efi/libstub/loongarch-stub.h
+> > @@ -0,0 +1,4 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +
+> > +unsigned long kernel_entry_address(unsigned long kernel_addr,
+> > +               efi_loaded_image_t *image);
+> > diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmwar=
+e/efi/libstub/loongarch.c
+> > index 0e0aa6cda73f..684c9354637c 100644
+> > --- a/drivers/firmware/efi/libstub/loongarch.c
+> > +++ b/drivers/firmware/efi/libstub/loongarch.c
+> > @@ -8,6 +8,7 @@
+> >  #include <asm/efi.h>
+> >  #include <asm/addrspace.h>
+> >  #include "efistub.h"
+> > +#include "loongarch-stub.h"
+> >
+> >  typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdl=
+ine,
+> >                                           unsigned long systab);
+> > @@ -37,7 +38,8 @@ static efi_status_t exit_boot_func(struct efi_boot_me=
+mmap *map, void *priv)
+> >         return EFI_SUCCESS;
+> >  }
+> >
+> > -unsigned long __weak kernel_entry_address(unsigned long kernel_addr)
+> > +unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
+> > +               efi_loaded_image_t *image)
+> >  {
+> >         return *(unsigned long *)(kernel_addr + 8) - VMLINUX_LOAD_ADDRE=
+SS + kernel_addr;
+> >  }
+> > @@ -73,7 +75,7 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded=
+_image_t *image,
+> >         csr_write64(CSR_DMW0_INIT, LOONGARCH_CSR_DMWIN0);
+> >         csr_write64(CSR_DMW1_INIT, LOONGARCH_CSR_DMWIN1);
+> >
+> > -       real_kernel_entry =3D (void *)kernel_entry_address(kernel_addr)=
+;
+> > +       real_kernel_entry =3D (void *)kernel_entry_address(kernel_addr,=
+ image);
+> >
+> >         real_kernel_entry(true, (unsigned long)cmdline_ptr,
+> >                           (unsigned long)efi_system_table);
+> > --
+> > 2.27.0
+> >
