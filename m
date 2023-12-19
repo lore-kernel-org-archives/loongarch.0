@@ -1,170 +1,208 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A931B26C
-	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 12:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C691CA80
+	for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 15:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1Q41Dab"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cc63b3ed71so43239501fa.3
-        for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 04:55:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mNs29XB+"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-553a65b6ad4so943875a12.0
+        for <loongarch@lists.linux.dev>; Tue, 19 Dec 2023 07:37:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702990558; x=1703595358; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ThEDF5X685my3aypVfpzyZJUTfRzfmqP6N9smgNetEs=;
-        b=W1Q41DabQMb0pw6pE5pi/9w/f09LcTXpMojCRqNezvEpxQAxL1Ale50K+xkuGOCEj7
-         xyhuXWHjlpf4mH8tfyQJfZTD12wjGK7VLYx1c8MjOaMVt6XR+jfFgFO45DrcaFwFvScF
-         O9ujnRxn5D4pm2jecSA4HE8szE9W8NfrB9Pf6QxArTqBFlsSJkOi3XOiYFS1pK2Nq2T8
-         //0MUpdJkvRjrNo2FapCF/eYXhzFdXTbNDicwEVT9X6fK+ISBAVFMFO85BZsNL6hNHeg
-         aboKRV+DFCKX2n7abysEeVLTevN4erumTpY0npTQUHtrVok80KGkJ+8XOQZtI0elcNpP
-         Dksg==
+        d=linaro.org; s=google; t=1703000231; x=1703605031; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=p8No9hlm9jHsXZmOQq26Qu4O9QoSJjQbTk+fyTwBdp4=;
+        b=mNs29XB+d7QZ98ycIAzRnLonckOG0v9sKpFxMtx8cj+YBmIMipDseyVLf3Ow2jS32t
+         d6qyR+PNMkcfK9O48f4c02RYTCY/FivUReJXDkyiDfqE8XCX1wW00ojR/89n47ivRglY
+         X0GNgXYCXiDTkq4NIJenrF6fX8Jqox3QpeKVOpzR2cc+onRWsR1EXgcHI4Yuj7WrBrNG
+         PAM3ifVb5CRe3MZ3Gtym2vebgFbPyN+D9/WJEHeOw3DZko4dly8ofBYvTQntJLsbTsrh
+         56p94zueWUtwXq6fi+iHFbODSgIfBXhB4Wn5FUsQUk1SUPh56G/TqHdessOhY4pZORXm
+         UfsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702990558; x=1703595358;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ThEDF5X685my3aypVfpzyZJUTfRzfmqP6N9smgNetEs=;
-        b=f3PuqA4MRd85uOMYKo7pGPi8pRvvudJVUz6r3E8O6tc9CaXm8x954gHGhzMaqqBJx9
-         6kqHqyuyAOSfdJgb7TfV9g/wET1r9qiyfds5OgtgYOYOkMwfPQFfMRPM6jJhQ50rvAjm
-         NeHXhpjvvaIohGqsJlZQcl2GYf25+Gb7INmvQRodXYPJpbvDvEFX5duxMXoer5ajD6xl
-         SK7W4CN7hP84VjFi2mYgkmKpZOjKVQIdalwmLbyB87Qeg5OWvMrdOPxFWjbIsWb0X+4P
-         qoa6CJ2Hg53qeKKuBqfDXH1ndeYfa+yqaYLn+flh9ki4u0HTUAIFNHxIQc9OObRgUKAy
-         etqQ==
-X-Gm-Message-State: AOJu0Ywnxhz2SmmLvjg/KUpz5U0Yl51P/DnU+xcp+5O/rAP1uIGWGOi3
-	V1inFo0qJ4z0ONQ4ghW98HQ=
-X-Google-Smtp-Source: AGHT+IFiE6QYBiTcVUFS6P1GPo7wdMo2zGCwVwmOdTDn3J7xZZ8r673aujlJgzZpBUlksgfe9SC3dA==
-X-Received: by 2002:a05:651c:54d:b0:2cb:2d09:791 with SMTP id q13-20020a05651c054d00b002cb2d090791mr9297539ljp.3.1702990557409;
-        Tue, 19 Dec 2023 04:55:57 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id w25-20020a2e9599000000b002cc8772c87bsm72314ljh.76.2023.12.19.04.55.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 04:55:56 -0800 (PST)
-Date: Tue, 19 Dec 2023 15:55:53 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Yanteng Si <siyanteng@loongson.cn>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, peppe.cavallaro@st.com, 
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com, Jose.Abreu@synopsys.com, 
-	chenhuacai@loongson.cn, linux@armlinux.org.uk, guyinggang@loongson.cn, 
-	netdev@vger.kernel.org, loongarch@lists.linux.dev, chris.chenfeiyang@gmail.com
-Subject: Re: [PATCH v6 0/9] stmmac: Add Loongson platform support
-Message-ID: <hc7nrz7ppzm45v37hi7xuogmgaz2w3jnolmuesxsm6s5ta34rn@vc2mmp33zpu7>
-References: <cover.1702458672.git.siyanteng@loongson.cn>
- <pwdr6mampxe33jpqdf6o5xczgd4qkdttqj4tvionxl7qbry2ek@hpadl7wi4zni>
- <885a8904-9412-411d-9995-7d3ff350f309@loongson.cn>
+        d=1e100.net; s=20230601; t=1703000231; x=1703605031;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p8No9hlm9jHsXZmOQq26Qu4O9QoSJjQbTk+fyTwBdp4=;
+        b=XnqWioyLYbCdZ52j8QVIx7x35BlQPxfVmFX5g7qEClzboMb4oBBQnz0QwelqxyLJeY
+         7hnykZxl8UV0PtOs2ih+DV7SjX37cXuIoosAPkBLQCtqXYCKngeZCg2SdjNpVdcPxW2S
+         naWRtheaySqsU7WPgsuBF1v85hC463mIVZ/awOGsg/e1RzKJpCst/eeTt8Jc6FZ4Pd1i
+         TqjtXhduJrrNTO6EldcbIB2lu4jCxJuYeJy8UKR4YygMXj4BOgSuiipihD8nXt+Q/xEY
+         Fffbl1iw7Gy2lP0adLip+9YSHHNUGzLgLy9gNw4ueoo656GhtJmqo39tOKFHahsbWHeO
+         LusA==
+X-Gm-Message-State: AOJu0YwaYkHudS0mT3O/GNHMja/UzBAmiY+seiGTaxTFJK1++tWhNn0i
+	N8amCeUZiKG5gOlLTDLw+HcccQ==
+X-Google-Smtp-Source: AGHT+IG98ZVqaAgGx02IYeiWXu/BCETcaGSD5YZvxU7pel6YjaXDWWyOmK7h3Ye/lHCyjLenK+T47A==
+X-Received: by 2002:a50:858b:0:b0:54c:4837:a644 with SMTP id a11-20020a50858b000000b0054c4837a644mr10513070edh.49.1703000231417;
+        Tue, 19 Dec 2023 07:37:11 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.27])
+        by smtp.gmail.com with ESMTPSA id q3-20020a5085c3000000b0054ccac03945sm11543717edh.12.2023.12.19.07.37.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Dec 2023 07:37:10 -0800 (PST)
+Message-ID: <aa9cec3e-ee58-4d52-a8ec-d696e3ff70ca@linaro.org>
+Date: Tue, 19 Dec 2023 16:37:08 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <885a8904-9412-411d-9995-7d3ff350f309@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/7] LoongArch: dts: DeviceTree for Loongson-2K0500
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
+ <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Hongliang Wang <wanghongliang@loongson.cn>
+References: <cover.1702862778.git.zhoubinbin@loongson.cn>
+ <303e56cb6e5f82623babe18b095069b330cd37da.1702862778.git.zhoubinbin@loongson.cn>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <303e56cb6e5f82623babe18b095069b330cd37da.1702862778.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 19, 2023 at 08:35:17PM +0800, Yanteng Si wrote:
+On 18/12/2023 02:52, Binbin Zhou wrote:
+> Add DeviceTree file for Loongson-2K0500 processor, which integrates one
+> 64-bit dual emission superscalar LA264 processor core.
 > 
-> 在 2023/12/14 23:15, Serge Semin 写道:
-> > Hi Yanteng
-> > 
-> > On Wed, Dec 13, 2023 at 06:12:22PM +0800, Yanteng Si wrote:
-> > > v6:
-> > > 
-> > > * Refer to Serge's suggestion:
-> > >    - Add new platform feature flag:
-> > >      include/linux/stmmac.h:
-> > >      +#define STMMAC_FLAG_HAS_LGMAC			BIT(13)
-> > > 
-> > >    - Add the IRQs macros specific to the Loongson Multi-channels GMAC:
-> > >       drivers/net/ethernet/stmicro/stmmac/dwmac_dma.h:
-> > >       +#define DMA_INTR_ENA_NIE_LOONGSON 0x00060000	/* Normal Loongson Tx/Rx Summary */
-> > >       #define DMA_INTR_ENA_NIE 0x00010000	/* Normal Summary */
-> > >       ...
-> > > 
-> > >    - Drop all of redundant changes that don't require the
-> > >      prototypes being converted to accepting the stmmac_priv
-> > >      pointer.
-> > > 
-> > > * Refer to andrew's suggestion:
-> > >    - Drop white space changes.
-> > >    - break patch up into lots of smaller parts.
-> > >       Some small patches have been put into another series as a preparation
-> > >       see <https://lore.kernel.org/loongarch/cover.1702289232.git.siyanteng@loongson.cn/T/#t>
-> > >       *note* : This series of patches relies on the three small patches above.
-> > > * others
-> > >    - Drop irq_flags changes.
-> > >    - Changed patch order.
-> > Thanks for submitting the updated series. I'll have a closer look at
-> > it on the next week.
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  arch/loongarch/boot/dts/Makefile              |   2 +
+>  .../boot/dts/loongson-2k0500-ref.dts          |  89 ++++++
+>  arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 274 ++++++++++++++++++
+>  3 files changed, 365 insertions(+)
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k0500.dtsi
 > 
+> diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
+> index 1e24cdb5180a..aa0b21d73d4e 100644
+> --- a/arch/loongarch/boot/dts/Makefile
+> +++ b/arch/loongarch/boot/dts/Makefile
+> @@ -1,3 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  
+> +dtb-$(CONFIG_MACH_LOONGSON64)	= loongson-2k0500-ref.dtb
+> +
+>  obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .dtb.o, $(CONFIG_BUILTIN_DTB_NAME))
+> diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+> new file mode 100644
+> index 000000000000..52483127a419
+> --- /dev/null
+> +++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+> @@ -0,0 +1,89 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "loongson-2k0500.dtsi"
+> +
+> +/ {
+> +	compatible = "loongson,ls2k0500-ref", "loongson,ls2k0500";
+> +	model = "Loongson-2K0500 Reference Board";
+> +
+> +	aliases {
+> +		ethernet0 = &gmac0;
+> +		ethernet1 = &gmac1;
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +		bootargs = "console=ttyS0,115200";
 
-> I have prepared a new patch version and will CC you soon, so you can go
-> straight
-> 
-> to the v7.
+You received here comments already:
+https://lore.kernel.org/all/3543cbf9-d259-8d0f-e78e-d8d5e3f501de@linaro.org/
 
-If you think you settled all the Andrew's comment, you can go ahead
-and submit v7. I'll look at it tomorrow.
+Don't waste our time to re-review the same mistakes over and over again.
 
--Serge(y)
 
-> 
-> 
-> Thank,
-> 
-> Yanteng
-> 
-> > 
-> > -Serge(y)
-> > 
-> > > 
-> > > 
-> > > v4 -> v5:
-> > > 
-> > > * Remove an ugly and useless patch (fix channel number).
-> > > * Remove the non-standard dma64 driver code, and also remove
-> > >    the HWIF entries, since the associated custom callbacks no
-> > >    longer exist.
-> > > * Refer to Serge's suggestion: Update the dwmac1000_dma.c to
-> > >    support the multi-DMA-channels controller setup.
-> > > 
-> > > See:
-> > > v4: <https://lore.kernel.org/loongarch/cover.1692696115.git.chenfeiyang@loongson.cn/>
-> > > v3: <https://lore.kernel.org/loongarch/cover.1691047285.git.chenfeiyang@loongson.cn/>
-> > > v2: <https://lore.kernel.org/loongarch/cover.1690439335.git.chenfeiyang@loongson.cn/>
-> > > v1: <https://lore.kernel.org/loongarch/cover.1689215889.git.chenfeiyang@loongson.cn/>
-> > > 
-> > > Yanteng Si (9):
-> > >    net: stmmac: Pass stmmac_priv and chan in some callbacks
-> > >    net: stmmac: dwmac-loongson: Refactor code for loongson_dwmac_probe()
-> > >    net: stmmac: dwmac-loongson: Add full PCI support
-> > >    net: stmmac: Add multi-channel supports
-> > >    net: stmmac: Add Loongson-specific register definitions
-> > >    net: stmmac: dwmac-loongson: Add MSI support
-> > >    net: stmmac: dwmac-loongson: Add GNET support
-> > >    net: stmmac: dwmac-loongson: Disable flow control for GMAC
-> > >    net: stmmac: Disable coe for some Loongson GNET
-> > > 
-> > >   drivers/net/ethernet/stmicro/stmmac/common.h  |   1 +
-> > >   .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 296 ++++++++++++++----
-> > >   .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |   2 +-
-> > >   .../ethernet/stmicro/stmmac/dwmac1000_dma.c   |  61 +++-
-> > >   .../ethernet/stmicro/stmmac/dwmac100_dma.c    |   2 +-
-> > >   .../net/ethernet/stmicro/stmmac/dwmac4_dma.c  |   2 +-
-> > >   .../net/ethernet/stmicro/stmmac/dwmac_dma.h   |  47 ++-
-> > >   .../net/ethernet/stmicro/stmmac/dwmac_lib.c   |  65 ++--
-> > >   .../ethernet/stmicro/stmmac/dwxgmac2_dma.c    |   2 +-
-> > >   drivers/net/ethernet/stmicro/stmmac/hwif.c    |   8 +-
-> > >   drivers/net/ethernet/stmicro/stmmac/hwif.h    |  11 +-
-> > >   .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   6 +
-> > >   .../net/ethernet/stmicro/stmmac/stmmac_main.c |  13 +-
-> > >   include/linux/stmmac.h                        |   4 +
-> > >   14 files changed, 413 insertions(+), 107 deletions(-)
-> > > 
-> > > -- 
-> > > 2.31.4
-> > > 
-> 
+
+...
+
+> +
+> +		i2c@1ff4a800 {
+> +			compatible = "loongson,ls2k-i2c";
+> +			reg = <0x0 0x1ff4a800 0x0 0x0800>;
+> +			interrupt-parent = <&eiointc>;
+> +			interrupts = <19>;
+> +			status = "disabled";
+> +		};
+> +
+> +		pmc: power-management@1ff6c000 {
+> +			compatible = "loongson,ls2k0500-pmc", "syscon";
+
+It does not look like you tested the DTS against bindings. Please run
+`make dtbs_check W=1` (see
+Documentation/devicetree/bindings/writing-schema.rst or
+https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+for instructions).
+
+Or you did not test your DTS on the hardware.
+
+> +			reg = <0x0 0x1ff6c000 0x0 0x58>;
+> +			interrupt-parent = <&eiointc>;
+> +			interrupts = <56>;
+> +			loongson,suspend-address = <0x0 0x1c000500>;
+> +
+> +			syscon-reboot {
+
+
+
+Best regards,
+Krzysztof
+
