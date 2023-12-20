@@ -1,113 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE8D2030E;
-	Tue, 19 Dec 2023 16:18:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDF48C09
+	for <loongarch@lists.linux.dev>; Wed, 20 Dec 2023 03:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRqBijeY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED25C433C7;
-	Tue, 19 Dec 2023 16:18:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703002738;
-	bh=4K8i2SyKgo1k5tzLRI+BTkVP3NpdntC9IygweW+cYbk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iRqBijeYKTIqGCaU7d9elc8O0psrrNN3pCkuzAyZ6EAf4AmjDL30NGl5rT4wI48vI
-	 6rwpTgFApxqkqsO8+rOdB35aejdPY4PJs2GNuze2sIKyew75Ei7ri/i5yIeysaRT8i
-	 0RSbX/32AXtVSWX3N+mXXa1AwBoNfG6Dli4DxlaziMkSBel6dv4ThDr8OZakHm1AZa
-	 lL21EiuCtckN3nTU/vpZWSLZL0dQz/WanC48T6VP5ZQEKbqgtgCzSBIeu/WFS0oKnV
-	 PiXnOshcLB/PeAblBlxGazKXjXdDIGJJSWjjCR0ZH3iEVn+vlkO2DrQPogct1nWY/r
-	 2/PZMyh0UURtQ==
-Date: Tue, 19 Dec 2023 16:18:54 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Hongliang Wang <wanghongliang@loongson.cn>
-Subject: Re: [PATCH v5 5/7] LoongArch: dts: DeviceTree for Loongson-2K1000
-Message-ID: <20231219-steep-underrate-c4055350b6dc@spud>
-References: <cover.1702862778.git.zhoubinbin@loongson.cn>
- <f528fa7f8bce79d5f0a748597bb3b50ec1cd6f83.1702862779.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FE/TZjwL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1703043626;
+	bh=LxXYxW2bs3l7KuPRCYllTwAzb73+N1q9RxfmHtoBHi8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FE/TZjwLf/1r2JSv1gEW2d/POdIGdxzhk1uGywp5bjkqTpv30NZ+K00N6gdJdG0En
+	 q8DsuG5vdXNAL9djC4dxY9AnufCRZA1JQWjT6Xf8uL3mI/jeutaUG8W36uwwoLQCeB
+	 VKBgNwePzvh/R5FyCNTQr/kAfA2SBOybG3IkmMsmGlaCAoL9AZa8kNY4sJKgdw6ZrX
+	 hpDpIWDsjypITPRvR4T+PSDsEyDLwsAblGWGrwl8sXkgZPNYDMWd4DrTqminTUnzpf
+	 fVvNNICtZSYhmXQwX7GlvhclRWC1av5pHnyZN1iMNornDDHaYMTE4tw15A0o7LjS8u
+	 tTBLRsM+JM5fg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Svzpx3Bt1z4wd4;
+	Wed, 20 Dec 2023 14:40:25 +1100 (AEDT)
+Date: Wed, 20 Dec 2023 14:40:24 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Huacai Chen
+ <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] LoongArch: KVM: Fix build due to API changes
+Message-ID: <20231220144024.7d9fd46b@canb.auug.org.au>
+In-Reply-To: <15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
+References: <20231115090735.2404866-1-chenhuacai@loongson.cn>
+	<15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hDTfjr5dbXuJU7Op"
-Content-Disposition: inline
-In-Reply-To: <f528fa7f8bce79d5f0a748597bb3b50ec1cd6f83.1702862779.git.zhoubinbin@loongson.cn>
+Content-Type: multipart/signed; boundary="Sig_//S5PCuZDLoPcwX41DFKdeRu";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_//S5PCuZDLoPcwX41DFKdeRu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---hDTfjr5dbXuJU7Op
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi all,
 
-On Mon, Dec 18, 2023 at 09:52:59AM +0800, Binbin Zhou wrote:
+On Fri, 15 Dec 2023 21:08:06 -0800 Randy Dunlap <rdunlap@infradead.org> wro=
+te:
+>
+> Someone please merge this patch...
 
-> +/ {
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu0: cpu@0 {
-> +			compatible = "loongson,la264";
-> +			device_type = "cpu";
-> +			reg= <0x0>;
-> +			clocks = <&clk LOONGSON2_NODE_CLK>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			compatible = "loongson,la264";
-> +			device_type = "cpu";
-> +			reg = <0x1>;
-> +			clocks = <&clk LOONGSON2_NODE_CLK>;
-> +		};
-> +	};
+I have applied it to my merge of the kvm tree today and will keep
+applying it until it is applied to the kvm tree ...
 
-Even with 2 CPUs, the cpu-map should not really be needed.
-The generic topology code that is used by riscv and arm64 should be able
-to determine that these two cpus are in the same cluster (See
-CONFIG_GENERIC_ARCH_TOPOLOGY) provided you populate the next level cache
-in the cpu devicetree nodes. As with the ls2k0500, you have no i, d or
-next level cache information in these nodes, which I suspect your
-hardware actually has?
+It looks like this:
 
-I wired this generic "fallback" code up for riscv in this series here:
-https://lore.kernel.org/all/20220715175155.3567243-3-mail@conchuod.ie/
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: KVM: Fix build due to API changes
+Date: Wed, 15 Nov 2023 17:07:35 +0800
 
+Commit 8569992d64b8f750e34b7858eac ("KVM: Use gfn instead of hva for
+mmu_notifier_retry") replaces mmu_invalidate_retry_hva() usage with
+mmu_invalidate_retry_gfn() for X86, LoongArch also need similar changes
+to fix build.
+
+Fixes: 8569992d64b8 ("KVM: Use gfn instead of hva for mmu_notifier_retry")
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/loongarch/kvm/mmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index 80480df5f550..9463ebecd39b 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -627,7 +627,7 @@ static bool fault_supports_huge_mapping(struct kvm_memo=
+ry_slot *memslot,
+  *
+  * There are several ways to safely use this helper:
+  *
+- * - Check mmu_invalidate_retry_hva() after grabbing the mapping level, be=
+fore
++ * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level, be=
+fore
+  *   consuming it.  In this case, mmu_lock doesn't need to be held during =
+the
+  *   lookup, but it does need to be held while checking the MMU notifier.
+  *
+@@ -807,7 +807,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned=
+ long gpa, bool write)
+=20
+ 	/* Check if an invalidation has taken place since we got pfn */
+ 	spin_lock(&kvm->mmu_lock);
+-	if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
++	if (mmu_invalidate_retry_gfn(kvm, mmu_seq, gfn)) {
+ 		/*
+ 		 * This can happen when mappings are changed asynchronously, but
+ 		 * also synchronously if a COW is triggered by
+--=20
+2.39.3
+
+Though my Signed-off-by is not necessary if it applied to the kvm tree.
+
+--=20
 Cheers,
-Conor.
+Stephen Rothwell
 
---hDTfjr5dbXuJU7Op
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_//S5PCuZDLoPcwX41DFKdeRu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZYHCbgAKCRB4tDGHoIJi
-0tmpAP9Qf4Ys7eSemfSGMWIavd9+NkmnseWvb5o231caaqR73gEAmcpwksLVikDu
-zzcNsISG/eyv9WQYCoN2pvLIwpXzUwU=
-=Qf71
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWCYigACgkQAVBC80lX
+0Gw0hgf/dBEXxvqYb+gUvVeOe+ITNt6ui/uaSnXarJOtRq0NUOfL/gW/TGK5NoVO
+r0MrXU6jAkr1K3+P0NvF/vJ52tlYaRjxNGNiB/cmLocgTLF8nCsjNSL6yTEraGqy
+L9Lx2osHr8w1VoTL7k2b7Uoa46xk/YCE9ssMNcSJe4w5ONwzqfM/MVplCyV4pDdE
+1fppL1Dt7uu5rozcoFPklB5e3kpt0/29/36QnI+fak1nXpSbhKwyxFpSzB8gDJBF
+aZxgUh5me1CEsLsPP9rRKTaMFg2+KbSjQrmVIfY4cMiqzDBILIntW1sTMfxMP0+W
+6prGmrL8hvSA3Z5m0RMSM6m6Jstnow==
+=eOfT
 -----END PGP SIGNATURE-----
 
---hDTfjr5dbXuJU7Op--
+--Sig_//S5PCuZDLoPcwX41DFKdeRu--
