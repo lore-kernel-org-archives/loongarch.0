@@ -1,146 +1,182 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDF48C09
-	for <loongarch@lists.linux.dev>; Wed, 20 Dec 2023 03:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7B320300
+	for <loongarch@lists.linux.dev>; Wed, 20 Dec 2023 09:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FE/TZjwL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1703043626;
-	bh=LxXYxW2bs3l7KuPRCYllTwAzb73+N1q9RxfmHtoBHi8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FE/TZjwLf/1r2JSv1gEW2d/POdIGdxzhk1uGywp5bjkqTpv30NZ+K00N6gdJdG0En
-	 q8DsuG5vdXNAL9djC4dxY9AnufCRZA1JQWjT6Xf8uL3mI/jeutaUG8W36uwwoLQCeB
-	 VKBgNwePzvh/R5FyCNTQr/kAfA2SBOybG3IkmMsmGlaCAoL9AZa8kNY4sJKgdw6ZrX
-	 hpDpIWDsjypITPRvR4T+PSDsEyDLwsAblGWGrwl8sXkgZPNYDMWd4DrTqminTUnzpf
-	 fVvNNICtZSYhmXQwX7GlvhclRWC1av5pHnyZN1iMNornDDHaYMTE4tw15A0o7LjS8u
-	 tTBLRsM+JM5fg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Svzpx3Bt1z4wd4;
-	Wed, 20 Dec 2023 14:40:25 +1100 (AEDT)
-Date: Wed, 20 Dec 2023 14:40:24 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Huacai Chen
- <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH] LoongArch: KVM: Fix build due to API changes
-Message-ID: <20231220144024.7d9fd46b@canb.auug.org.au>
-In-Reply-To: <15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
-References: <20231115090735.2404866-1-chenhuacai@loongson.cn>
-	<15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrfJWi9s"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5cece20f006so46789377b3.3
+        for <loongarch@lists.linux.dev>; Wed, 20 Dec 2023 01:17:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703063841; x=1703668641; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+R1fM9+vLFIoF/9tqH5AXlx2OHJNI3tZEKatxSdScR0=;
+        b=ZrfJWi9s0m0Minh0TlPnZfz32wtKTRjU6OJp3tq0FjayUyjmMN2S4bf6kSFcdIfYB7
+         g5YefV36npMy4SZhd94gJXoIad3Lt1We++FWJ9ugvKsvwmAXos3layqQLuETkzjHpZF1
+         RgrqZZZ0HiF8XwQWafSdGmg8MrQsPOGIyGx/k2dILIs5nIGI3DXlm8GlgyOSwuACJ3bb
+         CFkvKYCKsH8IDWlUaGkf8EmEHA5JbfzmC4JLcp2Zhl5TlYrW0g0Iavv+/wh4R6lI8llH
+         epfHY4B5cuDrWIRoEML+hLxjMU9F63JvEUvtbN2LY3tVqiDRD3bcXHbtfLHioRYmOuZy
+         aXAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703063841; x=1703668641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+R1fM9+vLFIoF/9tqH5AXlx2OHJNI3tZEKatxSdScR0=;
+        b=FvYlfhYGLpQv21S7VOsfcYrv1Nt+P7gO1qOTmGZDFi7tzH91NnYsParMYFNwWudTL0
+         xGSyPOjJOD+oJ9D5wk3srqMWenK45J5nf9vXf7pHNDsX/jOd4JYoVIHnkcVAqSL/mSpF
+         LI3tLt4c/TsilM/nYAsZPgVQkk5PJs75CZKINCI+wJOFz/L5w02gFM//iwHYK6rbEY+y
+         AAwTnA0sI2oYDS9HHcjRRUZypNOzwzlbjlbXgvystyj+xdpbnuo0yPPhaXYMM7bn+mHs
+         qOjbqNk2FhZx/nJr7/wOOEqWZL14KK4Oz7UxfZpMLUJr4qtX4nI5eAp/36ukeIYI/OdA
+         jTzA==
+X-Gm-Message-State: AOJu0YxrXaE1OxusHv13U8qMJburVdcth68MKjFd9kuugQPVd+x3jZG6
+	AUaKDzeOptCsAdiUR93cKLI+qFRuKcxF20tlY4k=
+X-Google-Smtp-Source: AGHT+IH4fy+M5Mci0jOZFHXk6OQiimrMQ64TBv79ZLaHN2/FkeZEE50f3MA0k25m/HDAViPO6IvSPZDAL2UW8K4a8bg=
+X-Received: by 2002:a25:a105:0:b0:dbd:990b:be32 with SMTP id
+ z5-20020a25a105000000b00dbd990bbe32mr557075ybh.17.1703063840724; Wed, 20 Dec
+ 2023 01:17:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//S5PCuZDLoPcwX41DFKdeRu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_//S5PCuZDLoPcwX41DFKdeRu
-Content-Type: text/plain; charset=US-ASCII
+References: <cover.1702862778.git.zhoubinbin@loongson.cn> <303e56cb6e5f82623babe18b095069b330cd37da.1702862778.git.zhoubinbin@loongson.cn>
+ <aa9cec3e-ee58-4d52-a8ec-d696e3ff70ca@linaro.org>
+In-Reply-To: <aa9cec3e-ee58-4d52-a8ec-d696e3ff70ca@linaro.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 20 Dec 2023 15:17:09 +0600
+Message-ID: <CAMpQs4+2kjNZMHu1+7MvDNFdCgY8bpF2kQTru-ZHSf8RceiP_A@mail.gmail.com>
+Subject: Re: [PATCH v5 4/7] LoongArch: dts: DeviceTree for Loongson-2K0500
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Hongliang Wang <wanghongliang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-
-On Fri, 15 Dec 2023 21:08:06 -0800 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
+On Tue, Dec 19, 2023 at 9:37=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> Someone please merge this patch...
+> On 18/12/2023 02:52, Binbin Zhou wrote:
+> > Add DeviceTree file for Loongson-2K0500 processor, which integrates one
+> > 64-bit dual emission superscalar LA264 processor core.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  arch/loongarch/boot/dts/Makefile              |   2 +
+> >  .../boot/dts/loongson-2k0500-ref.dts          |  89 ++++++
+> >  arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 274 ++++++++++++++++++
+> >  3 files changed, 365 insertions(+)
+> >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+> >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0500.dtsi
+> >
+> > diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts=
+/Makefile
+> > index 1e24cdb5180a..aa0b21d73d4e 100644
+> > --- a/arch/loongarch/boot/dts/Makefile
+> > +++ b/arch/loongarch/boot/dts/Makefile
+> > @@ -1,3 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> >
+> > +dtb-$(CONFIG_MACH_LOONGSON64)        =3D loongson-2k0500-ref.dtb
+> > +
+> >  obj-$(CONFIG_BUILTIN_DTB)    +=3D $(addsuffix .dtb.o, $(CONFIG_BUILTIN=
+_DTB_NAME))
+> > diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loo=
+ngarch/boot/dts/loongson-2k0500-ref.dts
+> > new file mode 100644
+> > index 000000000000..52483127a419
+> > --- /dev/null
+> > +++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+> > @@ -0,0 +1,89 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "loongson-2k0500.dtsi"
+> > +
+> > +/ {
+> > +     compatible =3D "loongson,ls2k0500-ref", "loongson,ls2k0500";
+> > +     model =3D "Loongson-2K0500 Reference Board";
+> > +
+> > +     aliases {
+> > +             ethernet0 =3D &gmac0;
+> > +             ethernet1 =3D &gmac1;
+> > +             serial0 =3D &uart0;
+> > +     };
+> > +
+> > +     chosen {
+> > +             stdout-path =3D "serial0:115200n8";
+> > +             bootargs =3D "console=3DttyS0,115200";
+>
+> You received here comments already:
+> https://lore.kernel.org/all/3543cbf9-d259-8d0f-e78e-d8d5e3f501de@linaro.o=
+rg/
+>
+> Don't waste our time to re-review the same mistakes over and over again.
+>
+>
+Hi Krzysztof:
 
-I have applied it to my merge of the kvm tree today and will keep
-applying it until it is applied to the kvm tree ...
+I am sorry for this, I misunderstood before that `earlycon` is not allowed.
+BTW, is there a note about not using the `bootargs` attribute? I
+didn't find it in the Documentation.
 
-It looks like this:
+>
+> ...
+>
+> > +
+> > +             i2c@1ff4a800 {
+> > +                     compatible =3D "loongson,ls2k-i2c";
+> > +                     reg =3D <0x0 0x1ff4a800 0x0 0x0800>;
+> > +                     interrupt-parent =3D <&eiointc>;
+> > +                     interrupts =3D <19>;
+> > +                     status =3D "disabled";
+> > +             };
+> > +
+> > +             pmc: power-management@1ff6c000 {
+> > +                     compatible =3D "loongson,ls2k0500-pmc", "syscon";
+>
+> It does not look like you tested the DTS against bindings. Please run
+> `make dtbs_check W=3D1` (see
+> Documentation/devicetree/bindings/writing-schema.rst or
+> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sou=
+rces-with-the-devicetree-schema/
+> for instructions).
 
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: KVM: Fix build due to API changes
-Date: Wed, 15 Nov 2023 17:07:35 +0800
+Emm...
+Here is the compatible description from the latest kernel:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Doc=
+umentation/devicetree/bindings/soc/loongson/loongson,ls2k-pmc.yaml#n13
 
-Commit 8569992d64b8f750e34b7858eac ("KVM: Use gfn instead of hva for
-mmu_notifier_retry") replaces mmu_invalidate_retry_hva() usage with
-mmu_invalidate_retry_gfn() for X86, LoongArch also need similar changes
-to fix build.
+I think this compatible should be fine, also, I ensure that `make
+dtbs_check W=3D1` is fine before committing.
 
-Fixes: 8569992d64b8 ("KVM: Use gfn instead of hva for mmu_notifier_retry")
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/loongarch/kvm/mmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index 80480df5f550..9463ebecd39b 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -627,7 +627,7 @@ static bool fault_supports_huge_mapping(struct kvm_memo=
-ry_slot *memslot,
-  *
-  * There are several ways to safely use this helper:
-  *
-- * - Check mmu_invalidate_retry_hva() after grabbing the mapping level, be=
-fore
-+ * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level, be=
-fore
-  *   consuming it.  In this case, mmu_lock doesn't need to be held during =
-the
-  *   lookup, but it does need to be held while checking the MMU notifier.
-  *
-@@ -807,7 +807,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned=
- long gpa, bool write)
-=20
- 	/* Check if an invalidation has taken place since we got pfn */
- 	spin_lock(&kvm->mmu_lock);
--	if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
-+	if (mmu_invalidate_retry_gfn(kvm, mmu_seq, gfn)) {
- 		/*
- 		 * This can happen when mappings are changed asynchronously, but
- 		 * also synchronously if a COW is triggered by
---=20
-2.39.3
-
-Though my Signed-off-by is not necessary if it applied to the kvm tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//S5PCuZDLoPcwX41DFKdeRu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWCYigACgkQAVBC80lX
-0Gw0hgf/dBEXxvqYb+gUvVeOe+ITNt6ui/uaSnXarJOtRq0NUOfL/gW/TGK5NoVO
-r0MrXU6jAkr1K3+P0NvF/vJ52tlYaRjxNGNiB/cmLocgTLF8nCsjNSL6yTEraGqy
-L9Lx2osHr8w1VoTL7k2b7Uoa46xk/YCE9ssMNcSJe4w5ONwzqfM/MVplCyV4pDdE
-1fppL1Dt7uu5rozcoFPklB5e3kpt0/29/36QnI+fak1nXpSbhKwyxFpSzB8gDJBF
-aZxgUh5me1CEsLsPP9rRKTaMFg2+KbSjQrmVIfY4cMiqzDBILIntW1sTMfxMP0+W
-6prGmrL8hvSA3Z5m0RMSM6m6Jstnow==
-=eOfT
------END PGP SIGNATURE-----
-
---Sig_//S5PCuZDLoPcwX41DFKdeRu--
+Thanks.
+Binbin
+>
+> Or you did not test your DTS on the hardware.
+>
+> > +                     reg =3D <0x0 0x1ff6c000 0x0 0x58>;
+> > +                     interrupt-parent =3D <&eiointc>;
+> > +                     interrupts =3D <56>;
+> > +                     loongson,suspend-address =3D <0x0 0x1c000500>;
+> > +
+> > +                     syscon-reboot {
+>
+>
+>
+> Best regards,
+> Krzysztof
+>
