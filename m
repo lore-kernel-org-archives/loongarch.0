@@ -1,14 +1,14 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 157599476
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A9BB946F
 	for <loongarch@lists.linux.dev>; Fri, 22 Dec 2023 08:01:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [112.20.110.252])
-	by gateway (Coremail) with SMTP id _____8BxbOlDQoVlY8oDAA--.19021S3;
-	Fri, 22 Dec 2023 16:01:07 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxNPBEQoVla8oDAA--.19271S3;
+	Fri, 22 Dec 2023 16:01:08 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.110.252])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXOQ9QoVl0FEFAA--.26775S3;
-	Fri, 22 Dec 2023 16:01:04 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXOQ9QoVl0FEFAA--.26775S4;
+	Fri, 22 Dec 2023 16:01:06 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -23,9 +23,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Hongliang Wang <wanghongliang@loongson.cn>,
 	Binbin Zhou <zhoubinbin@loongson.cn>,
 	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v6 1/7] dt-bindings: loongarch: Add CPU bindings for LoongArch
-Date: Fri, 22 Dec 2023 16:00:44 +0800
-Message-Id: <c4fca3da138f6c09056f158a4b424013c7630f42.1703229766.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v6 2/7] dt-bindings: loongarch: Add Loongson SoC boards compatibles
+Date: Fri, 22 Dec 2023 16:00:45 +0800
+Message-Id: <ea56d356c170252647a5ab1513ec0f7ac28ec028.1703229766.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1703229766.git.zhoubinbin@loongson.cn>
 References: <cover.1703229766.git.zhoubinbin@loongson.cn>
@@ -36,11 +36,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXOQ9QoVl0FEFAA--.26775S3
+X-CM-TRANSID:AQAAf8BxXOQ9QoVl0FEFAA--.26775S4
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WF4DGF1fZw15Jw18JF4xuFX_yoW8Aw4fpF
-	n7CF1DGryFgF12qwsIqa48CF1Fvan7Ca42qFW7KryUKasxXasYvw1SkFn8Z3W7A348Ca4I
-	vFWrCw17KFyUAFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7CF4kWFW3Kr1fGF1xCw1xZwc_yoW8Xw1UpF
+	43Ca47Kr4xKF17u393Xa48Aw4rZrykCa42qF47JryDKayDXa1Fvw4ak34DZF43Aw4rtay7
+	XFy8Wr45KFW8CwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
@@ -56,81 +56,53 @@ X-Coremail-Antispam: 1Uk129KBj93XoW7WF4DGF1fZw15Jw18JF4xuFX_yoW8Aw4fpF
 	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
 	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8EoGPUUUUU==
 
-Add the available CPUs in LoongArch binding with DT schema format using
-json-schema.
+Add Loongson SoC boards binding with DT schema format using json-schema.
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- .../devicetree/bindings/loongarch/cpus.yaml   | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/loongarch/cpus.yaml
+ .../bindings/loongarch/loongson.yaml          | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/loongarch/loongson.yaml
 
-diff --git a/Documentation/devicetree/bindings/loongarch/cpus.yaml b/Documentation/devicetree/bindings/loongarch/cpus.yaml
+diff --git a/Documentation/devicetree/bindings/loongarch/loongson.yaml b/Documentation/devicetree/bindings/loongarch/loongson.yaml
 new file mode 100644
-index 000000000000..f175872995e1
+index 000000000000..e1a4a97b7576
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/loongarch/cpus.yaml
-@@ -0,0 +1,61 @@
++++ b/Documentation/devicetree/bindings/loongarch/loongson.yaml
+@@ -0,0 +1,34 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/loongarch/cpus.yaml#
++$id: http://devicetree.org/schemas/loongarch/loongson.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: LoongArch CPUs
++title: Loongson SoC-based boards
 +
 +maintainers:
 +  - Binbin Zhou <zhoubinbin@loongson.cn>
 +
-+description:
-+  This document describes the list of LoongArch CPU cores that support FDT,
-+  it describe the layout of CPUs in a system through the "cpus" node.
-+
-+allOf:
-+  - $ref: /schemas/cpu.yaml#
-+
 +properties:
++  $nodename:
++    const: '/'
 +  compatible:
-+    enum:
-+      - loongson,la264
-+      - loongson,la364
++    oneOf:
++      - description: Loongson-2K0500 processor based boards
++        items:
++          - const: loongson,ls2k0500-ref
++          - const: loongson,ls2k0500
 +
-+  reg:
-+    maxItems: 1
++      - description: Loongson-2K1000 processor based boards
++        items:
++          - const: loongson,ls2k1000-ref
++          - const: loongson,ls2k1000
 +
-+  clocks:
-+    maxItems: 1
++      - description: Loongson-2K2000 processor based boards
++        items:
++          - const: loongson,ls2k2000-ref
++          - const: loongson,ls2k2000
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/loongson,ls2k-clk.h>
-+
-+    cpus {
-+        #size-cells = <0>;
-+        #address-cells = <1>;
-+
-+        cpu@0 {
-+            compatible = "loongson,la264";
-+            device_type = "cpu";
-+            reg = <0>;
-+            clocks = <&clk LOONGSON2_NODE_CLK>;
-+        };
-+
-+        cpu@1 {
-+            compatible = "loongson,la264";
-+            device_type = "cpu";
-+            reg = <1>;
-+            clocks = <&clk LOONGSON2_NODE_CLK>;
-+        };
-+    };
++additionalProperties: true
 +
 +...
 -- 
