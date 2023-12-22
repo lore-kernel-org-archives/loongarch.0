@@ -1,31 +1,37 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7183DECE
-	for <loongarch@lists.linux.dev>; Fri, 22 Dec 2023 02:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Cx9OqN+4RlbL0DAA--.14777S3;
-	Fri, 22 Dec 2023 10:59:25 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axnr6J+4RlGu0EAA--.17897S2;
-	Fri, 22 Dec 2023 10:59:21 +0800 (CST)
-From: Song Gao <gaosong@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	raven@themaw.net,
-	davem@davemloft.net,
-	svenjoac@gmx.de,
-	anthony.l.nguyen@intel.com,
-	richard.henderson@linaro.org,
-	peter.maydell@linaro.org,
-	philmd@linaro.org,
-	maobibo@loongson.cn
-Subject: [PATCH 1/1] LoongArch: defconfig: Enable Generic PCIE by default
-Date: Fri, 22 Dec 2023 10:46:28 +0800
-Message-Id: <20231222024628.3138406-1-gaosong@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5324680;
+	Fri, 22 Dec 2023 04:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aLvB0/0X"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=vToPUnmN/oarZ/hFlZN6gbMr1MxOMg0QMOvO7BUHMxM=; b=aLvB0/0XIIBheIueWG+PGbXLD4
+	ND/RT/jNr+W2ma814MPZt8oqaIi/mNkPNTqx/XrreansEPhPwFfjaGk6ws5LlHN1CZIIxRPC/Koy8
+	iUToKssdMQcdY4fvvT4zX0PRtUBX/PQQMY0K6jvTeqe4vC65Iq12a7us+DtfI8yfVUkCLCjyBr4Zg
+	r/ywM+AEkfDPoeZs2zsoQEPtJGSHrXf0MbuH7OTPq4AEEdiV0uUFAtpOAYhPeKfoR4T9C9kzu+1NJ
+	OO4GCRw0rWBf3Jw6l3YIAPxb/91bsZmBVxSuUi8abbLgSvgcm1AcQXBdzFO8xYbwgSEeADeVHKm60
+	qe9/jqhQ==;
+Received: from [50.53.46.231] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rGXQ3-004sg6-1u;
+	Fri, 22 Dec 2023 04:45:56 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Kent Overstreet <kent.overstreet@gmail.com>
+Subject: [PATCH v2] LoongArch: signal.c: add header file to fix build error
+Date: Thu, 21 Dec 2023 20:45:54 -0800
+Message-ID: <20231222044554.25656-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -33,32 +39,35 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axnr6J+4RlGu0EAA--.17897S2
-X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Enable generic PCIe by default in the LoongArch defconfig.
-QEMU requires this configuration when booting the kernel with FDT.
+loongarch's signal.c uses rseq_signal_deliver() so it should
+pull in the appropriate header to prevent a build error:
 
-Signed-off-by: Song Gao <gaosong@loongson.cn>
+../arch/loongarch/kernel/signal.c: In function 'handle_signal':
+../arch/loongarch/kernel/signal.c:1034:9: error: implicit declaration of function 'rseq_signal_deliver' [-Werror=implicit-function-declaration]
+ 1034 |         rseq_signal_deliver(ksig, regs);
+      |         ^~~~~~~~~~~~~~~~~~~
+
+Fixes: b74baf4ad05b ("LoongArch: Add signal handling support")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+Cc: Kent Overstreet <kent.overstreet@gmail.com>
 ---
- arch/loongarch/configs/loongson3_defconfig | 1 +
+v2: repair Cc: list
+
+ arch/loongarch/kernel/signal.c |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 33795e4a5bd6..6350be7e8ec8 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -348,6 +348,7 @@ CONFIG_NET_9P=y
- CONFIG_NET_9P_VIRTIO=y
- CONFIG_CEPH_LIB=m
- CONFIG_PCIEPORTBUS=y
-+CONFIG_PCI_HOST_GENERIC=y
- CONFIG_HOTPLUG_PCI_PCIE=y
- CONFIG_PCIEAER=y
- # CONFIG_PCIEASPM is not set
--- 
-2.39.3
-
+diff -- a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
+--- a/arch/loongarch/kernel/signal.c
++++ b/arch/loongarch/kernel/signal.c
+@@ -15,6 +15,7 @@
+ #include <linux/context_tracking.h>
+ #include <linux/entry-common.h>
+ #include <linux/irqflags.h>
++#include <linux/rseq.h>
+ #include <linux/sched.h>
+ #include <linux/mm.h>
+ #include <linux/personality.h>
