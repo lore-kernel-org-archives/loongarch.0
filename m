@@ -1,161 +1,126 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CC1210E5
-	for <loongarch@lists.linux.dev>; Fri, 22 Dec 2023 14:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F571CAA9
+	for <loongarch@lists.linux.dev>; Fri, 22 Dec 2023 14:32:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4wqB2Iu"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-20458cf9e5aso28650fac.0
-        for <loongarch@lists.linux.dev>; Fri, 22 Dec 2023 06:32:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jkfx5q0N"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d3e2972f65so8886265ad.3
+        for <loongarch@lists.linux.dev>; Fri, 22 Dec 2023 06:32:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703255527; x=1703860327; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8MRirUTen9Qb/bHuifbqECgBAdAb7f7ac9lAwQG0yf8=;
-        b=K4wqB2IubfYGfK0KEo8kFPEVPvKKzoERt8wEX6ANm/Cv1Q/9151SHNXhrQTVeO02rn
-         beMc5kAEuIiQKqDWhjL+N3SBJl3j3KC+7kame8QxaZCgW6SnBTVZLvFKjE0Cq6aXUy7b
-         8nbyKTn7/bxpq59+ROgd9NsuV+V6BLLb+KBikCb8ZuR6dEwtrdiJiA+S2Wagy+OPV3ox
-         BsNHdaDogAP3s/vTxz250L1HT4kxb4ruFZsI5JSjbt25t5z5AackvNB/QtXiRTpDwPW2
-         sWVYTlt2sl78uvQK+CdpQEPbeNkxqSGed2+yPxjNSTknYBF8zyVhCV5fKD84ftfShaQE
-         tYXA==
+        d=gmail.com; s=20230601; t=1703255564; x=1703860364; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zfxaQ9nW9jvx6STwaNvM2r1MNzifxGZO6uzShOeSsF4=;
+        b=jkfx5q0NQJVR8YxsrfrtA5kRv5ySFWQ1ziyncjgdpXBpjImAmQSPveFZ5nkHt/Vxbz
+         W6dRhqOErQopJIYTiDiUYnsi2lFagxF83kVaQIIIHBEzbt4zSMCuaTZQTCDji3vYrwHP
+         /OzggMPLgJGGhYkYv4ZddIshDuDUvTUVMNkHVODY4bavLwCP+lg+HRyJ6ATMpdVtEH/I
+         zQjP9fOrCzU/h1AqFMvrGtdNJ67tPmA1wVnRiDH+il42EVwZVKeu1UphyGZ+xhjQ7mkM
+         soFCl1eoSGai37xUmDX9lyMqQZAazWlz6xBCY5MtWrocp07u70PzpX/QSDfEU7esptLz
+         bX2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703255527; x=1703860327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8MRirUTen9Qb/bHuifbqECgBAdAb7f7ac9lAwQG0yf8=;
-        b=i/PuI2i/M/lHnFM7JcT9IG0J1he8gbhGWbzHSeU7kIQ3QbcZjieII3sWSnOstmWCJ1
-         QwHlIDpi4V1nJR9Me/JGtPv2zuWRQgUGOKgB2PcQAhM4YYZ/qxjYS6cYWkxEFWxQnR07
-         S7WMIvYBoKuNxh3Mc7URNoAuLpugwe4X7/rNi3r3BGkqQ8oHXrN7+rWgKIQ9y3Z+E1NA
-         GvxoHrcOtUC7luZmhmS/+6xVrEWWd+HQcNF4CjBHFnuUHqa2v8XEa2qB+DXYfQ6g8gtk
-         XtymJKoItcjksUndhGwdMfaOPZAFMG7MnSmBczlhflVR2EuvgCHXQzXruazZB97dzHRM
-         Oe/Q==
-X-Gm-Message-State: AOJu0Yx9OLGS87XVKcn5At52uJTDXaf1Rk5PTHOEjYoDM395b3Y956FM
-	eFRykz9aOgvNThSUQIcDhi4AD/QWI/M+VJcvmgscAi5BjeU=
-X-Google-Smtp-Source: AGHT+IFWgHL1+n83K7D73D+FHb2oPNhjYh3lmIJAg+Yk+Kxe2QihmzUANm+/nRRzNanekpCiRHJlZVLf/kEuDXdnCUM=
-X-Received: by 2002:a05:6870:b6a3:b0:204:fca:ce23 with SMTP id
- cy35-20020a056870b6a300b002040fcace23mr1706302oab.28.1703255526859; Fri, 22
- Dec 2023 06:32:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703255564; x=1703860364;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zfxaQ9nW9jvx6STwaNvM2r1MNzifxGZO6uzShOeSsF4=;
+        b=NYcJ7FSrtzQRUsEj4CJ7PNZZg7pwXIYcl46Vrx6LtztpbAWu8xZzZKGqAtHbuNl95o
+         3kOoih6MF0fKEVStfZOY5mWfSxbClWEr7uiLoiwsAs0TN8y0S14Q0k2e6x3dOaXtKaTA
+         8+6QuRCMt+1QZ/pFU1D4oPwFW1sMuKL/q0znEoP7sW/69gFI8i3ps81vdC+Lo0dhGUib
+         abMAV7ipxmB3eopAWdu7tjQgyvGKVbSuxoT5+2JqLg517w9gOlQ1yxQn0dema0VEmiPI
+         rydErVYf0dqC2Gq1Pp3csIUO0JzsBLW/VsX44G97on9RZOljsYQjkapnAMeOLYK5kjkc
+         5K2Q==
+X-Gm-Message-State: AOJu0Yy8fs+7UiGOoztouuMGpYE04eRN40c2ToywDsX+sxEzwcv1RTCa
+	zGo9lZSFXpRlt8y6jWFyiPb9iPMcdvL99Q==
+X-Google-Smtp-Source: AGHT+IHRhDnHqau/pTL2PqrJaj/lxb2MINx3ZzFZvDGHrDh1R+gseScJmri9sdoSaLjR3CC9urOavg==
+X-Received: by 2002:a17:903:40c4:b0:1d3:840f:a065 with SMTP id t4-20020a17090340c400b001d3840fa065mr1170220pld.123.1703255563607;
+        Fri, 22 Dec 2023 06:32:43 -0800 (PST)
+Received: from ubuntu.. ([223.74.104.94])
+        by smtp.googlemail.com with ESMTPSA id b2-20020a170902d30200b001d3961217a1sm3532158plc.102.2023.12.22.06.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 06:32:43 -0800 (PST)
+From: Hengqi Chen <hengqi.chen@gmail.com>
+To: loongarch@lists.linux.dev
+Cc: chenhuacai@kernel.org,
+	yangtiezhu@loongson.cn,
+	hengqi.chen@gmail.com
+Subject: [PATCH v2] LoongArch: BPF: Support 64-bit pointers to kfuncs
+Date: Fri, 22 Dec 2023 14:32:24 +0000
+Message-Id: <20231222143224.54556-1-hengqi.chen@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231215142138.3281-1-hengqi.chen@gmail.com> <14161bfc-c561-f93b-a219-a31583a679fc@loongson.cn>
-In-Reply-To: <14161bfc-c561-f93b-a219-a31583a679fc@loongson.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Fri, 22 Dec 2023 22:31:56 +0800
-Message-ID: <CAEyhmHRBuF-SqwYiYEtdujLU23HZqfB24hsddBOL42ZEm8oQRg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Support 64-bit pointers to kfuncs
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, chenhuacai@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 22, 2023 at 9:42=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> Hi Hengqi,
->
-> Thanks for the patch, sorry for the late reply.
->
-> On 12/15/2023 10:21 PM, Hengqi Chen wrote:
-> > Like commit 1cf3bfc60f98 ("bpf: Support 64-bit pointers to kfuncs")
-> > for s390x, add support for 64-bit pointers to kfuncs for LoongArch.
-> > Since the infrastructure is already implemented in BPF core, the only
-> > thing need to be done is to override bpf_jit_supports_far_kfunc_call().
-> >
-> > Before this change, several test_verifier tests failed:
-> >
-> >   # ./test_verifier | grep # | grep FAIL
->
-> [root@linux bpf]# ./test_verifier | grep # | grep FAIL
-> Usage: grep [OPTION]... PATTERNS [FILE]...
-> Try 'grep --help' for more information.
->
-> It should be:
-> [root@linux bpf]# ./test_verifier | grep "#" | grep FAIL
->
-> >   #119/p calls: invalid kfunc call: ptr_to_mem to struct with non-scala=
-r FAIL
-> >   #120/p calls: invalid kfunc call: ptr_to_mem to struct with nesting d=
-epth > 4 FAIL
-> >   #121/p calls: invalid kfunc call: ptr_to_mem to struct with FAM FAIL
-> >   #122/p calls: invalid kfunc call: reg->type !=3D PTR_TO_CTX FAIL
-> >   #123/p calls: invalid kfunc call: void * not allowed in func proto wi=
-thout mem size arg FAIL
-> >   #124/p calls: trigger reg2btf_ids[reg->type] for reg->type > __BPF_RE=
-G_TYPE_MAX FAIL
-> >   #125/p calls: invalid kfunc call: reg->off must be zero when passed t=
-o release kfunc FAIL
-> >   #126/p calls: invalid kfunc call: don't match first member type when =
-passed to release kfunc FAIL
-> >   #127/p calls: invalid kfunc call: PTR_TO_BTF_ID with negative offset =
-FAIL
-> >   #128/p calls: invalid kfunc call: PTR_TO_BTF_ID with variable offset =
-FAIL
-> >   #129/p calls: invalid kfunc call: referenced arg needs refcounted PTR=
-_TO_BTF_ID FAIL
-> >   #130/p calls: valid kfunc call: referenced arg needs refcounted PTR_T=
-O_BTF_ID FAIL
-> >   #486/p map_kptr: ref: reference state created and released on xchg FA=
-IL
-> >
-> > This is because the kfuncs in the loaded module are far away from
-> > __bpf_call_base:
-> >
-> >   ffff800002009440 t bpf_kfunc_call_test_fail1    [bpf_testmod]
-> >   9000000002e128d8 T __bpf_call_base
-> >
-> > The offset relative to __bpf_call_base does NOT fit in s32, which break=
-s
-> > the assumption in BPF core. Enable bpf_jit_supports_far_kfunc_call() li=
-fts
-> > this limit.
-> >
-> > With this change, the test_verifier tests now all passed:
-> >
-> >   # ./test_verifier
-> >   ...
-> >   Summary: 777 PASSED, 0 SKIPPED, 0 FAILED
->
-> I met build errors and failed/skipped tests at the beginning, so I spent
-> some time to analysis the problems. In order to achieve success, it is
-> necessary to do the following steps:
->
-> (1) build with loongson3_defconfig and also set
-> CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=3Dy
-> CONFIG_DEBUG_INFO_BTF=3Dy
-> CONFIG_FTRACE_SYSCALLS=3Dy
-> CONFIG_BPF_LSM=3Dy
->
-> (2) enable bpf jit and enable unprivileged bpf before test
-> echo 1 > /proc/sys/net/core/bpf_jit_enable
-> echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
->
-> Otherwise there exist build errors when execute
->
->    make headers && cd tools/testing/selftests/bpf && make -j4
->
-> Furthermore, there exist failed test "#507/p sleepable lsm accept FAIL"
-> and many skipped tests when execute "./test_verifier".
->
-> I think it would be best to add the above info in the commit message so
-> that the users know how to test and how to solve or avoid the failures.
->
-> >
-> > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
->
-> Feel free to add a
->
-> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->
-> Thanks,
-> Tiezhu
->
+Like commit 1cf3bfc60f98 ("bpf: Support 64-bit pointers to kfuncs")
+for s390x, add support for 64-bit pointers to kfuncs for LoongArch.
+Since the infrastructure is already implemented in BPF core, the only
+thing need to be done is to override bpf_jit_supports_far_kfunc_call().
 
-Thanks, will send a v2 soon.
+Before this change, several test_verifier tests failed:
+
+  # ./test_verifier | grep '#' | grep FAIL
+  #119/p calls: invalid kfunc call: ptr_to_mem to struct with non-scalar FAIL
+  #120/p calls: invalid kfunc call: ptr_to_mem to struct with nesting depth > 4 FAIL
+  #121/p calls: invalid kfunc call: ptr_to_mem to struct with FAM FAIL
+  #122/p calls: invalid kfunc call: reg->type != PTR_TO_CTX FAIL
+  #123/p calls: invalid kfunc call: void * not allowed in func proto without mem size arg FAIL
+  #124/p calls: trigger reg2btf_ids[reg->type] for reg->type > __BPF_REG_TYPE_MAX FAIL
+  #125/p calls: invalid kfunc call: reg->off must be zero when passed to release kfunc FAIL
+  #126/p calls: invalid kfunc call: don't match first member type when passed to release kfunc FAIL
+  #127/p calls: invalid kfunc call: PTR_TO_BTF_ID with negative offset FAIL
+  #128/p calls: invalid kfunc call: PTR_TO_BTF_ID with variable offset FAIL
+  #129/p calls: invalid kfunc call: referenced arg needs refcounted PTR_TO_BTF_ID FAIL
+  #130/p calls: valid kfunc call: referenced arg needs refcounted PTR_TO_BTF_ID FAIL
+  #486/p map_kptr: ref: reference state created and released on xchg FAIL
+
+This is because the kfuncs in the loaded module are far away from
+__bpf_call_base:
+
+  ffff800002009440 t bpf_kfunc_call_test_fail1    [bpf_testmod]
+  9000000002e128d8 T __bpf_call_base
+
+The offset relative to __bpf_call_base does NOT fit in s32, which breaks
+the assumption in BPF core. Enable bpf_jit_supports_far_kfunc_call() lifts
+this limit.
+
+Note that to reproduce the above result, tools/testing/selftests/bpf/config
+should be applied, and run the test with JIT enabled, unpriv BPF enabled.
+
+With this change, the test_verifier tests now all passed:
+
+  # ./test_verifier
+  ...
+  Summary: 777 PASSED, 0 SKIPPED, 0 FAILED
+
+Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 4fcd6cd6da23..2f154c60ee00 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -201,6 +201,11 @@ bool bpf_jit_supports_kfunc_call(void)
+ 	return true;
+ }
+ 
++bool bpf_jit_supports_far_kfunc_call(void)
++{
++	return true;
++}
++
+ /* initialized on the first pass of build_body() */
+ static int out_offset = -1;
+ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+-- 
+2.34.1
+
