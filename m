@@ -1,126 +1,106 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F571CAA9
-	for <loongarch@lists.linux.dev>; Fri, 22 Dec 2023 14:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D0323765;
+	Fri, 22 Dec 2023 15:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jkfx5q0N"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d3e2972f65so8886265ad.3
-        for <loongarch@lists.linux.dev>; Fri, 22 Dec 2023 06:32:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703255564; x=1703860364; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zfxaQ9nW9jvx6STwaNvM2r1MNzifxGZO6uzShOeSsF4=;
-        b=jkfx5q0NQJVR8YxsrfrtA5kRv5ySFWQ1ziyncjgdpXBpjImAmQSPveFZ5nkHt/Vxbz
-         W6dRhqOErQopJIYTiDiUYnsi2lFagxF83kVaQIIIHBEzbt4zSMCuaTZQTCDji3vYrwHP
-         /OzggMPLgJGGhYkYv4ZddIshDuDUvTUVMNkHVODY4bavLwCP+lg+HRyJ6ATMpdVtEH/I
-         zQjP9fOrCzU/h1AqFMvrGtdNJ67tPmA1wVnRiDH+il42EVwZVKeu1UphyGZ+xhjQ7mkM
-         soFCl1eoSGai37xUmDX9lyMqQZAazWlz6xBCY5MtWrocp07u70PzpX/QSDfEU7esptLz
-         bX2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703255564; x=1703860364;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zfxaQ9nW9jvx6STwaNvM2r1MNzifxGZO6uzShOeSsF4=;
-        b=NYcJ7FSrtzQRUsEj4CJ7PNZZg7pwXIYcl46Vrx6LtztpbAWu8xZzZKGqAtHbuNl95o
-         3kOoih6MF0fKEVStfZOY5mWfSxbClWEr7uiLoiwsAs0TN8y0S14Q0k2e6x3dOaXtKaTA
-         8+6QuRCMt+1QZ/pFU1D4oPwFW1sMuKL/q0znEoP7sW/69gFI8i3ps81vdC+Lo0dhGUib
-         abMAV7ipxmB3eopAWdu7tjQgyvGKVbSuxoT5+2JqLg517w9gOlQ1yxQn0dema0VEmiPI
-         rydErVYf0dqC2Gq1Pp3csIUO0JzsBLW/VsX44G97on9RZOljsYQjkapnAMeOLYK5kjkc
-         5K2Q==
-X-Gm-Message-State: AOJu0Yy8fs+7UiGOoztouuMGpYE04eRN40c2ToywDsX+sxEzwcv1RTCa
-	zGo9lZSFXpRlt8y6jWFyiPb9iPMcdvL99Q==
-X-Google-Smtp-Source: AGHT+IHRhDnHqau/pTL2PqrJaj/lxb2MINx3ZzFZvDGHrDh1R+gseScJmri9sdoSaLjR3CC9urOavg==
-X-Received: by 2002:a17:903:40c4:b0:1d3:840f:a065 with SMTP id t4-20020a17090340c400b001d3840fa065mr1170220pld.123.1703255563607;
-        Fri, 22 Dec 2023 06:32:43 -0800 (PST)
-Received: from ubuntu.. ([223.74.104.94])
-        by smtp.googlemail.com with ESMTPSA id b2-20020a170902d30200b001d3961217a1sm3532158plc.102.2023.12.22.06.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 06:32:43 -0800 (PST)
-From: Hengqi Chen <hengqi.chen@gmail.com>
-To: loongarch@lists.linux.dev
-Cc: chenhuacai@kernel.org,
-	yangtiezhu@loongson.cn,
-	hengqi.chen@gmail.com
-Subject: [PATCH v2] LoongArch: BPF: Support 64-bit pointers to kfuncs
-Date: Fri, 22 Dec 2023 14:32:24 +0000
-Message-Id: <20231222143224.54556-1-hengqi.chen@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5ZXNtQN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3247FC433C7;
+	Fri, 22 Dec 2023 15:39:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703259544;
+	bh=sVpgFN+bKRvkZsW0txNkPgIOZa0dfGDSfWxyXs7AEeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l5ZXNtQN612pkMfNqBINmArzkfRvOoIuXpDrwL9HuyodZ0vcSa4dfwFJVv9v+wlHn
+	 cQbExULZrJNIZFCQ3NCBJVX4C1yxbNoEHxRZ0zb7OhHgmNc/gxzA5xvonvEB1QW5uz
+	 D8bzJA9PFBJ7JaP/6lDI2Vpd5fCaD7Vm/0/u6Hv3u0pZ6tb0DM0ruM7Z1Dsgk7TLzW
+	 Agkr9fS4RUmH1Wi6wX3kwlyjzUZlIiblSuvHcFyn4kCehyBuuiPZC4b6+6HUyev2qx
+	 EPDNLXwjmK/mqsZR24ZpHkjTBJKXKEgDJMHspDOH6y6Y0/IgfiFwiv/4u6iG0/0t+s
+	 OeVmDDD31DhGg==
+Date: Fri, 22 Dec 2023 15:38:59 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Hongliang Wang <wanghongliang@loongson.cn>
+Subject: Re: [PATCH v6 0/7] LoongArch: Add built-in dtb support
+Message-ID: <20231222-support-relieve-5d8f25292b40@spud>
+References: <cover.1703229766.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cl7s7JpZ8PgKhOsN"
+Content-Disposition: inline
+In-Reply-To: <cover.1703229766.git.zhoubinbin@loongson.cn>
 
-Like commit 1cf3bfc60f98 ("bpf: Support 64-bit pointers to kfuncs")
-for s390x, add support for 64-bit pointers to kfuncs for LoongArch.
-Since the infrastructure is already implemented in BPF core, the only
-thing need to be done is to override bpf_jit_supports_far_kfunc_call().
 
-Before this change, several test_verifier tests failed:
+--cl7s7JpZ8PgKhOsN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  # ./test_verifier | grep '#' | grep FAIL
-  #119/p calls: invalid kfunc call: ptr_to_mem to struct with non-scalar FAIL
-  #120/p calls: invalid kfunc call: ptr_to_mem to struct with nesting depth > 4 FAIL
-  #121/p calls: invalid kfunc call: ptr_to_mem to struct with FAM FAIL
-  #122/p calls: invalid kfunc call: reg->type != PTR_TO_CTX FAIL
-  #123/p calls: invalid kfunc call: void * not allowed in func proto without mem size arg FAIL
-  #124/p calls: trigger reg2btf_ids[reg->type] for reg->type > __BPF_REG_TYPE_MAX FAIL
-  #125/p calls: invalid kfunc call: reg->off must be zero when passed to release kfunc FAIL
-  #126/p calls: invalid kfunc call: don't match first member type when passed to release kfunc FAIL
-  #127/p calls: invalid kfunc call: PTR_TO_BTF_ID with negative offset FAIL
-  #128/p calls: invalid kfunc call: PTR_TO_BTF_ID with variable offset FAIL
-  #129/p calls: invalid kfunc call: referenced arg needs refcounted PTR_TO_BTF_ID FAIL
-  #130/p calls: valid kfunc call: referenced arg needs refcounted PTR_TO_BTF_ID FAIL
-  #486/p map_kptr: ref: reference state created and released on xchg FAIL
+Hey Binbin,
 
-This is because the kfuncs in the loaded module are far away from
-__bpf_call_base:
+On Fri, Dec 22, 2023 at 04:00:43PM +0800, Binbin Zhou wrote:
+> Hi all:
+>=20
+> This patchset introduces LoongArch's built-in dtb support.
+>=20
+> During the upstream progress of those DT-based drivers, DT properties
+> are changed a lot so very different from those in existing bootloaders.
+> It is inevitably that some existing systems do not provide a standard,
+> canonical device tree to the kernel at boot time. So let's provide a
+> device tree table in the kernel, keyed by the dts filename, containing
+> the relevant DTBs.
+>=20
+> We can use the built-in dts files as references. Each SoC has only one
+> built-in dts file which describes all possible device information of
+> that SoC, so the dts files are good examples during development.
+>=20
+> And as a reference, our built-in dts file only enables the most basic
+> bootable combinations (so it is generic enough), acts as an alternative
+> in case the dts in the bootloader is unexpected.
+>=20
+> In the past while, we resolved the DTC_CHK warning for the v4 patchset,
+> and the relevant patchset has either been applied or had the
+> Reviewed-by tag added.=20
 
-  ffff800002009440 t bpf_kfunc_call_test_fail1    [bpf_testmod]
-  9000000002e128d8 T __bpf_call_base
+I notice you dropped the topology information from all patches in the
+series, not only the 2k0500 patch that only has one CPU. I didn't see a
+response to my comments the kernel being able to assemble the topology
+based on the second level caches using the generic topology code for the
+systems that have more than one cpu. With the cpu-map information
+dropped, do the multi-cpu systems have their topologies assembled
+correctly by the kernel?
+You mentioned that there is an instruction that allows you to get
+information about i and d caches etc, so adding them to the DT is not
+required, but does it also cover the next level caches?
+The program that I am familiar with for displaying this information
+is hwloc: https://github.com/open-mpi/hwloc
 
-The offset relative to __bpf_call_base does NOT fit in s32, which breaks
-the assumption in BPF core. Enable bpf_jit_supports_far_kfunc_call() lifts
-this limit.
+Cheers,
+Conor.
 
-Note that to reproduce the above result, tools/testing/selftests/bpf/config
-should be applied, and run the test with JIT enabled, unpriv BPF enabled.
 
-With this change, the test_verifier tests now all passed:
+--cl7s7JpZ8PgKhOsN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  # ./test_verifier
-  ...
-  Summary: 777 PASSED, 0 SKIPPED, 0 FAILED
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/net/bpf_jit.c | 5 +++++
- 1 file changed, 5 insertions(+)
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZYWtkwAKCRB4tDGHoIJi
+0jCsAQDipsjMzXNhmZcK6kUY1L2Kq3wWBV5A7mZVD3TLqO7GuwEA2J94hEBmdKMK
+8joYybldYGnbInCVes8NkqS2MWGODQY=
+=fIt2
+-----END PGP SIGNATURE-----
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 4fcd6cd6da23..2f154c60ee00 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -201,6 +201,11 @@ bool bpf_jit_supports_kfunc_call(void)
- 	return true;
- }
- 
-+bool bpf_jit_supports_far_kfunc_call(void)
-+{
-+	return true;
-+}
-+
- /* initialized on the first pass of build_body() */
- static int out_offset = -1;
- static int emit_bpf_tail_call(struct jit_ctx *ctx)
--- 
-2.34.1
-
+--cl7s7JpZ8PgKhOsN--
