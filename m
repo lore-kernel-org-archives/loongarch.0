@@ -1,36 +1,36 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5324680;
-	Fri, 22 Dec 2023 04:45:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C605523D8;
+	Fri, 22 Dec 2023 04:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aLvB0/0X"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JW29o6h7"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:In-Reply-To:References;
-	bh=vToPUnmN/oarZ/hFlZN6gbMr1MxOMg0QMOvO7BUHMxM=; b=aLvB0/0XIIBheIueWG+PGbXLD4
-	ND/RT/jNr+W2ma814MPZt8oqaIi/mNkPNTqx/XrreansEPhPwFfjaGk6ws5LlHN1CZIIxRPC/Koy8
-	iUToKssdMQcdY4fvvT4zX0PRtUBX/PQQMY0K6jvTeqe4vC65Iq12a7us+DtfI8yfVUkCLCjyBr4Zg
-	r/ywM+AEkfDPoeZs2zsoQEPtJGSHrXf0MbuH7OTPq4AEEdiV0uUFAtpOAYhPeKfoR4T9C9kzu+1NJ
-	OO4GCRw0rWBf3Jw6l3YIAPxb/91bsZmBVxSuUi8abbLgSvgcm1AcQXBdzFO8xYbwgSEeADeVHKm60
-	qe9/jqhQ==;
+	bh=fCSM/xbXg41FRfHNUILYTv5XhyXDuX5hUzcGjOUJb1U=; b=JW29o6h7DCzdPnq/UvZWGf0APD
+	7lTkLiEDSM+kLsJF1vt0E7A6omO1ElVQlKKk/jUNJ3KNCcBg0zP7RWX1sGbdGoKMrhjkfCRON6Re+
+	3y42dysYyFgtMTCOGiJm/3lquOuEFAOCNtQ/MhOKzJ4qdmek1YobmnmVtvvFXcQ3q9wc9cOYcEu9L
+	9Bi+ow6sXX/eab0wistbLEA0QsJxLrQu9kn2AniycGslicVCcXxz4d5cYma6hRTeuZjGbui+wTO2Z
+	SgtZPyJMn2yb9vsMX6rj4ip4G0IDXXyOPHmYAwZhO+7gTL+lv/a5mVe/c9Xo10EBdIDhHo6cDjt82
+	Jd7QqvKQ==;
 Received: from [50.53.46.231] (helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGXQ3-004sg6-1u;
-	Fri, 22 Dec 2023 04:45:56 +0000
+	id 1rGXcA-004v1T-1a;
+	Fri, 22 Dec 2023 04:58:26 +0000
 From: Randy Dunlap <rdunlap@infradead.org>
 To: linux-kernel@vger.kernel.org
 Cc: Randy Dunlap <rdunlap@infradead.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH v2] LoongArch: signal.c: add header file to fix build error
-Date: Thu, 21 Dec 2023 20:45:54 -0800
-Message-ID: <20231222044554.25656-1-rdunlap@infradead.org>
+	Kent Overstreet <kent.overstreet@linux.dev>
+Subject: [PATCH v3] LoongArch: signal.c: add header file to fix build error
+Date: Thu, 21 Dec 2023 20:58:25 -0800
+Message-ID: <20231222045825.14732-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -53,9 +53,10 @@ Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev
-Cc: Kent Overstreet <kent.overstreet@gmail.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
 ---
 v2: repair Cc: list
+v3: use Kent's @linux.dev email address
 
  arch/loongarch/kernel/signal.c |    1 +
  1 file changed, 1 insertion(+)
