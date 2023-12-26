@@ -1,85 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2D018EBF
-	for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 04:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LX0MA6Yd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 801B2C433C9
-	for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 04:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703563538;
-	bh=88qZqX6FvEAqXKjlf4JusAJMCOr/iqqN/aaHLuITe7o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LX0MA6Ydz+Fu/oppRah8/YZWdY+giI3yLx6dyUMWavRp4FuW5/e2PapSiN/m9OG3z
-	 TW2lk0lIryNpK75rpSe/gyV1y9gCpZk4M2skX+aueWWHzZNBEMWVQwJa3IMS9YlQBs
-	 0Rz5xoa2JfTGdfyFC3XQR1R3CPfCGDr0R+ASNlIPfiaFqGUsSz/FOBracmfFYPalRM
-	 K/yJgPw6crWAC+cwIAdVfQKTluzGxKPcaUlG87sbOCAL1VirGfXGEDZMGIfb8VTJal
-	 peZlfWcxDdFmdnN5e9BVsUK5JtXmcM544QzbP35LFMpGnUNIGNA5Mr5vBuDG6c4Auz
-	 OKp/b0meg39kg==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a2698eae0a9so457398466b.3
-        for <loongarch@lists.linux.dev>; Mon, 25 Dec 2023 20:05:38 -0800 (PST)
-X-Gm-Message-State: AOJu0YxLwSeQm9zc4m4mffZ6sEOKuSHlO1TaTrhK2OZTAs9LpbcaPxu6
-	vvCAFybH5NIu7+MmCKSIWWWoA221Z+wWLRAKfa0=
-X-Google-Smtp-Source: AGHT+IEGa6+8bEU9gUw/mjnCAVIWnhuOjEyxauSi9//dbs3tPS1ULTd/ep91JzpcFcxgocWR+jf0ShZZdfKyz7g11Ts=
-X-Received: by 2002:a17:906:38c8:b0:a1c:45c0:4992 with SMTP id
- r8-20020a17090638c800b00a1c45c04992mr2898375ejd.106.1703563536979; Mon, 25
- Dec 2023 20:05:36 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5DB84D59B
+	for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 10:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxPIfQp4plmcEEAA--.386S3;
+	Tue, 26 Dec 2023 18:15:45 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXOTNp4plEiMLAA--.41447S3;
+	Tue, 26 Dec 2023 18:15:41 +0800 (CST)
+Subject: Re: [PATCH] MAINTAINERS: Add BPF JIT for LOONGARCH entry
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <20231225090730.6074-1-yangtiezhu@loongson.cn>
+ <CAAhV-H4J6qRcC-nwJfVzoQYhOPKAMZmq=3xWuDpgdLrw4A2SPg@mail.gmail.com>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <e9f3c6c3-69f6-621c-92a2-9786f09fe3d6@loongson.cn>
+Date: Tue, 26 Dec 2023 18:15:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231225090730.6074-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20231225090730.6074-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 26 Dec 2023 12:05:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4J6qRcC-nwJfVzoQYhOPKAMZmq=3xWuDpgdLrw4A2SPg@mail.gmail.com>
-Message-ID: <CAAhV-H4J6qRcC-nwJfVzoQYhOPKAMZmq=3xWuDpgdLrw4A2SPg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add BPF JIT for LOONGARCH entry
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H4J6qRcC-nwJfVzoQYhOPKAMZmq=3xWuDpgdLrw4A2SPg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxXOTNp4plEiMLAA--.41447S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cw1rZFWrGw4rAw1UAFy7Arc_yoW8XF1rpw
+	48AFs8ArWkGr1xA3ZrK39avasIqrykCr92ga9Fk395ArnxZw43Gr18Xwn8uFW0qa10kFWI
+	vrn2934Sqa15JacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
+	DUUUU
 
-Also list the loongarch maillist? See the "KERNEL VIRTUAL MACHINE FOR
-MIPS (KVM/mips)" entry.
 
-Huacai
 
-On Mon, Dec 25, 2023 at 5:08=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+On 12/26/2023 12:05 PM, Huacai Chen wrote:
+> Also list the loongarch maillist? See the "KERNEL VIRTUAL MACHINE FOR
+> MIPS (KVM/mips)" entry.
+
+I think it is not necessary, it is duplicate.
+
+Because this file is used for get_maintainer.pl, and arch/loongarch/net/
+is a subdirectory of arch/loongarch, so when execute the command
+
+   ./scripts/get_maintainer.pl -f arch/loongarch/net/
+
+the outputs will include both bpf@ and loongarch@ maillists automatically.
+
+Thanks,
+Tiezhu
+
+> Huacai
 >
-> After commit 5dc615520c4d ("LoongArch: Add BPF JIT support"),
-> there is no BPF JIT for LOONGARCH entry, in order to maintain
-> the current code and the new features timely, just add it.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7cef2d2ef8d7..3ba07b212d38 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3651,6 +3651,13 @@ L:       bpf@vger.kernel.org
->  S:     Supported
->  F:     arch/arm64/net/
->
-> +BPF JIT for LOONGARCH
-> +M:     Tiezhu Yang <yangtiezhu@loongson.cn>
-> +R:     Hengqi Chen <hengqi.chen@gmail.com>
-> +L:     bpf@vger.kernel.org
-> +S:     Maintained
-> +F:     arch/loongarch/net/
-> +
->  BPF JIT for MIPS (32-BIT AND 64-BIT)
->  M:     Johan Almbladh <johan.almbladh@anyfinetworks.com>
->  M:     Paul Burton <paulburton@kernel.org>
-> --
-> 2.42.0
->
->
+> On Mon, Dec 25, 2023 at 5:08 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> After commit 5dc615520c4d ("LoongArch: Add BPF JIT support"),
+>> there is no BPF JIT for LOONGARCH entry, in order to maintain
+>> the current code and the new features timely, just add it.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>  MAINTAINERS | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 7cef2d2ef8d7..3ba07b212d38 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -3651,6 +3651,13 @@ L:       bpf@vger.kernel.org
+>>  S:     Supported
+>>  F:     arch/arm64/net/
+>>
+>> +BPF JIT for LOONGARCH
+>> +M:     Tiezhu Yang <yangtiezhu@loongson.cn>
+>> +R:     Hengqi Chen <hengqi.chen@gmail.com>
+>> +L:     bpf@vger.kernel.org
+>> +S:     Maintained
+>> +F:     arch/loongarch/net/
+>> +
+>>  BPF JIT for MIPS (32-BIT AND 64-BIT)
+>>  M:     Johan Almbladh <johan.almbladh@anyfinetworks.com>
+>>  M:     Paul Burton <paulburton@kernel.org>
+>> --
+>> 2.42.0
+>>
+>>
+
