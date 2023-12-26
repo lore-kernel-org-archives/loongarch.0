@@ -1,105 +1,244 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5DB84D59B
-	for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 10:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxPIfQp4plmcEEAA--.386S3;
-	Tue, 26 Dec 2023 18:15:45 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXOTNp4plEiMLAA--.41447S3;
-	Tue, 26 Dec 2023 18:15:41 +0800 (CST)
-Subject: Re: [PATCH] MAINTAINERS: Add BPF JIT for LOONGARCH entry
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <20231225090730.6074-1-yangtiezhu@loongson.cn>
- <CAAhV-H4J6qRcC-nwJfVzoQYhOPKAMZmq=3xWuDpgdLrw4A2SPg@mail.gmail.com>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <e9f3c6c3-69f6-621c-92a2-9786f09fe3d6@loongson.cn>
-Date: Tue, 26 Dec 2023 18:15:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA684E1A1
+	for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 10:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyNboUkH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C69CC433CA
+	for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 10:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703588202;
+	bh=7yAih3GoOhZJptIFU6wbb/T3rDQVto1u3wtn6V99Q58=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UyNboUkHZ3yp9xrDbz26+3eqXg7xEPDTtbnO8//0pDVKSe9ALYoaLvSXxwPJidaka
+	 KwCK4cbQGkPzbt7e6SZlfSwv4to5uaBvFA3nsQY67sdf1uBcrJpU9s1Ed29mqIzAzh
+	 wJxN/4wnI2mt45YRCHCCQ1UYtE4PXJSkecD0kFSQdFKrJ1Zn7+a5IDC7dRnt74LZJa
+	 TlsN1KAJ5ZWZyxCaCl/pGMo8/WDrrPdkkplgIVOpS9C6UfKm1uIIN3SZgDEWq+TDMh
+	 l35CIiSBVx8my3MP6YTAaCZI3cO0vc7qz6XYhL4nzVUw9uGO48pfTo03W5/6WB4TV0
+	 SgWRp+RWCHqoA==
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-336897b6bd6so4208966f8f.2
+        for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 02:56:42 -0800 (PST)
+X-Gm-Message-State: AOJu0YxJ5p5FVzrZmbVhsHLLTO4ogqwmAUqLOw0RfjLQAuux6AUmdchb
+	IHasQUCjy88I76sZYvHxKYlu5WVpdEucZi7ju10=
+X-Google-Smtp-Source: AGHT+IHbqb3vaam+q4gKQoE0NvNshSmdiO+YiLKGmFfOA2Ah2IFBS74FiRRzitBz3c94Q+t3Z6zHJDT4hl2RRHLRNbY=
+X-Received: by 2002:a05:600c:198a:b0:40d:5358:8d77 with SMTP id
+ t10-20020a05600c198a00b0040d53588d77mr1900602wmq.80.1703588200833; Tue, 26
+ Dec 2023 02:56:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4J6qRcC-nwJfVzoQYhOPKAMZmq=3xWuDpgdLrw4A2SPg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXOTNp4plEiMLAA--.41447S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw1rZFWrGw4rAw1UAFy7Arc_yoW8XF1rpw
-	48AFs8ArWkGr1xA3ZrK39avasIqrykCr92ga9Fk395ArnxZw43Gr18Xwn8uFW0qa10kFWI
-	vrn2934Sqa15JacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
-	DUUUU
+References: <MW4PR84MB3145311E8DE893E89119FAFA8199A@MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM>
+In-Reply-To: <MW4PR84MB3145311E8DE893E89119FAFA8199A@MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 26 Dec 2023 18:56:28 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Qka0yNMRwtk5aFOqBQchU__myZgH4EzNnKBwur86oDg@mail.gmail.com>
+Message-ID: <CAAhV-H6Qka0yNMRwtk5aFOqBQchU__myZgH4EzNnKBwur86oDg@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: use generic interface to support crashkernel=X,[high,low]
+To: Youling Tang <youling.tang@outlook.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Youling,
 
-
-On 12/26/2023 12:05 PM, Huacai Chen wrote:
-> Also list the loongarch maillist? See the "KERNEL VIRTUAL MACHINE FOR
-> MIPS (KVM/mips)" entry.
-
-I think it is not necessary, it is duplicate.
-
-Because this file is used for get_maintainer.pl, and arch/loongarch/net/
-is a subdirectory of arch/loongarch, so when execute the command
-
-   ./scripts/get_maintainer.pl -f arch/loongarch/net/
-
-the outputs will include both bpf@ and loongarch@ maillists automatically.
-
-Thanks,
-Tiezhu
-
-> Huacai
+On Mon, Dec 25, 2023 at 10:18=E2=80=AFPM Youling Tang <youling.tang@outlook=
+.com> wrote:
 >
-> On Mon, Dec 25, 2023 at 5:08 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> After commit 5dc615520c4d ("LoongArch: Add BPF JIT support"),
->> there is no BPF JIT for LOONGARCH entry, in order to maintain
->> the current code and the new features timely, just add it.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>  MAINTAINERS | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 7cef2d2ef8d7..3ba07b212d38 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -3651,6 +3651,13 @@ L:       bpf@vger.kernel.org
->>  S:     Supported
->>  F:     arch/arm64/net/
->>
->> +BPF JIT for LOONGARCH
->> +M:     Tiezhu Yang <yangtiezhu@loongson.cn>
->> +R:     Hengqi Chen <hengqi.chen@gmail.com>
->> +L:     bpf@vger.kernel.org
->> +S:     Maintained
->> +F:     arch/loongarch/net/
->> +
->>  BPF JIT for MIPS (32-BIT AND 64-BIT)
->>  M:     Johan Almbladh <johan.almbladh@anyfinetworks.com>
->>  M:     Paul Burton <paulburton@kernel.org>
->> --
->> 2.42.0
->>
->>
+> From: Youling Tang <tangyouling@kylinos.cn>
+>
+> LoongArch already supports two crashkernel regions in kexec-tools, so we
+> can directly use the common interface to support crashkernel=3DX,[hign,lo=
+w].
+>
+> With the help of newly changed function parse_crashkernel() and generic
+> reserve_crashkernel_generic(), crashkernel reservation can be simplified
+> by steps:
+It is better to refer the commits introduce those changes.
 
+>
+> 1) Add a new header file <asm/crash_core.h>, and define CRASH_ALIGN,
+>    CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX and
+>    DEFAULT_CRASH_KERNEL_LOW_SIZE in <asm/crash_core.h>;
+>
+> 2) Add arch_reserve_crashkernel() to call parse_crashkernel() and
+>    reserve_crashkernel_generic();
+>
+> 3) Add ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION Kconfig in
+>    arch/loongarch/Kconfig.
+>
+> One can reserve the crash kernel from high memory above DMA zone range
+> by explicitly passing "crashkernel=3DX,high"; or reserve a memory range
+> below 4G with "crashkernel=3DX,low". Besides, there are few rules need
+> to take notice:
+>
+> 1) "crashkernel=3DX,[high,low]" will be ignored if "crashkernel=3Dsize"
+>    is specified.
+> 2) "crashkernel=3DX,low" is valid only when "crashkernel=3DX,high" is pas=
+sed
+>    and there is enough memory to be allocated under 4G.
+> 3) When allocating crashkernel above 4G and no "crashkernel=3DX,low" is
+>    specified, a 128M low memory will be allocated automatically for
+>    swiotlb bounce buffer.
+> See Documentation/admin-guide/kernel-parameters.txt for more information.
+>
+> Following test cases have been performed as expected:
+It is better to group them into "Recommended use cases", "Valid use
+cases (not recommended)" and "Invalid use cases".
+
+> 1) crashkernel=3D256M                          //low=3D256M
+> 2) crashkernel=3D1G                            //low=3D1G
+> 3) crashkernel=3D4G                            //high=3D4G, low=3D128M(de=
+fault)
+> 4) crashkernel=3D4G crashkernel=3D256M,high      //high=3D4G, low=3D128M(=
+default), high is ignored
+> 5) crashkernel=3D4G crashkernel=3D256M,low       //high=3D4G, low=3D128M(=
+default), low is ignored
+> 6) crashkernel=3D4G,high                       //high=3D4G, low=3D128M(de=
+fault)
+> 7) crashkernel=3D256M,low                      //low=3D0M, invalid
+> 8) crashkernel=3D4G,high crashkernel=3D256M,low  //high=3D4G, low=3D256M
+> 9) crashkernel=3D4G,high crashkernel=3D4G,low    //high=3D0M, low=3D0M, i=
+nvalid
+> 10) crashkernel=3D512M@2560M                   //low=3D512M
+> 11) crashkernel=3D1G,high crashkernel=3D0M,low   //high=3D1G, low=3D0M
+>
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> ---
+>  arch/loongarch/Kconfig                  |  3 ++
+>  arch/loongarch/include/asm/crash_core.h | 11 ++++++
+>  arch/loongarch/kernel/setup.c           | 48 +++++++------------------
+>  3 files changed, 27 insertions(+), 35 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/crash_core.h
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index ee123820a476..02060b2ac3f2 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -575,6 +575,9 @@ config ARCH_SELECTS_CRASH_DUMP
+>         depends on CRASH_DUMP
+>         select RELOCATABLE
+>
+> +config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> +       def_bool CRASH_CORE
+> +
+>  config RELOCATABLE
+>         bool "Relocatable kernel"
+>         help
+> diff --git a/arch/loongarch/include/asm/crash_core.h b/arch/loongarch/inc=
+lude/asm/crash_core.h
+> new file mode 100644
+> index 000000000000..1f7040d8ed0f
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/crash_core.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef _LOONGARCH_CRASH_CORE_H
+> +#define _LOONGARCH_CRASH_CORE_H
+> +
+> +#define CRASH_ALIGN                    SZ_2M
+> +
+> +#define CRASH_ADDR_LOW_MAX             SZ_4G
+> +#define CRASH_ADDR_HIGH_MAX            memblock_end_of_DRAM()
+> +
+> +extern phys_addr_t memblock_end_of_DRAM(void);
+> +#endif
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
+c
+> index d183a745fb85..2a69a36419da 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -252,38 +252,25 @@ static void __init arch_reserve_vmcore(void)
+>  #endif
+>  }
+>
+> -/* 2MB alignment for crash kernel regions */
+> -#define CRASH_ALIGN    SZ_2M
+> -#define CRASH_ADDR_MAX SZ_4G
+> -
+> -static void __init arch_parse_crashkernel(void)
+> +static void __init arch_reserve_crashkernel(void)
+>  {
+> -#ifdef CONFIG_KEXEC
+> -       int ret;
+> -       unsigned long long total_mem;
+> +       unsigned long long low_size =3D 0;
+>         unsigned long long crash_base, crash_size;
+> +       char *cmdline =3D boot_command_line;
+> +       bool high =3D false;
+> +       int ret;
+>
+> -       total_mem =3D memblock_phys_mem_size();
+> -       ret =3D parse_crashkernel(boot_command_line, total_mem,
+> -                               &crash_size, &crash_base,
+> -                               NULL, NULL);
+> -       if (ret < 0 || crash_size <=3D 0)
+> +       if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+>                 return;
+>
+> -       if (crash_base <=3D 0) {
+> -               crash_base =3D memblock_phys_alloc_range(crash_size, CRAS=
+H_ALIGN, CRASH_ALIGN, CRASH_ADDR_MAX);
+> -               if (!crash_base) {
+> -                       pr_warn("crashkernel reservation failed - No suit=
+able area found.\n");
+> -                       return;
+> -               }
+> -       } else if (!memblock_phys_alloc_range(crash_size, CRASH_ALIGN, cr=
+ash_base, crash_base + crash_size)) {
+> -               pr_warn("Invalid memory region reserved for crash kernel\=
+n");
+> +       ret =3D parse_crashkernel(cmdline, memblock_phys_mem_size(),
+> +                               &crash_size, &crash_base,
+> +                               &low_size, &high);
+This line can be merged with its above line.
+
+> +       if (ret)
+>                 return;
+> -       }
+>
+> -       crashk_res.start =3D crash_base;
+> -       crashk_res.end   =3D crash_base + crash_size - 1;
+> -#endif
+> +       reserve_crashkernel_generic(cmdline, crash_size, crash_base,
+> +                                   low_size, high);
+They can be in one line.
+
+Huacai
+>  }
+>
+>  static void __init fdt_setup(void)
+> @@ -357,7 +344,7 @@ static void __init bootcmdline_init(char **cmdline_p)
+>  void __init platform_init(void)
+>  {
+>         arch_reserve_vmcore();
+> -       arch_parse_crashkernel();
+> +       arch_reserve_crashkernel();
+>
+>  #ifdef CONFIG_ACPI_TABLE_UPGRADE
+>         acpi_table_upgrade();
+> @@ -467,15 +454,6 @@ static void __init resource_init(void)
+>                 request_resource(res, &data_resource);
+>                 request_resource(res, &bss_resource);
+>         }
+> -
+> -#ifdef CONFIG_KEXEC
+> -       if (crashk_res.start < crashk_res.end) {
+> -               insert_resource(&iomem_resource, &crashk_res);
+> -               pr_info("Reserving %ldMB of memory at %ldMB for crashkern=
+el\n",
+> -                       (unsigned long)((crashk_res.end - crashk_res.star=
+t + 1) >> 20),
+> -                       (unsigned long)(crashk_res.start  >> 20));
+> -       }
+> -#endif
+>  }
+>
+>  static int __init add_legacy_isa_io(struct fwnode_handle *fwnode,
+> --
+> 2.40.0
+>
