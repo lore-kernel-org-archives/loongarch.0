@@ -1,99 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110DA52F62;
-	Mon, 25 Dec 2023 14:50:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 070CBC433C7;
-	Mon, 25 Dec 2023 14:50:43 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V2] LoongArch: Let cores_io_master cover the largest NR_CPUS
-Date: Mon, 25 Dec 2023 22:50:23 +0800
-Message-Id: <20231225145023.1505439-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2D018EBF
+	for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 04:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LX0MA6Yd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 801B2C433C9
+	for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 04:05:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703563538;
+	bh=88qZqX6FvEAqXKjlf4JusAJMCOr/iqqN/aaHLuITe7o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LX0MA6Ydz+Fu/oppRah8/YZWdY+giI3yLx6dyUMWavRp4FuW5/e2PapSiN/m9OG3z
+	 TW2lk0lIryNpK75rpSe/gyV1y9gCpZk4M2skX+aueWWHzZNBEMWVQwJa3IMS9YlQBs
+	 0Rz5xoa2JfTGdfyFC3XQR1R3CPfCGDr0R+ASNlIPfiaFqGUsSz/FOBracmfFYPalRM
+	 K/yJgPw6crWAC+cwIAdVfQKTluzGxKPcaUlG87sbOCAL1VirGfXGEDZMGIfb8VTJal
+	 peZlfWcxDdFmdnN5e9BVsUK5JtXmcM544QzbP35LFMpGnUNIGNA5Mr5vBuDG6c4Auz
+	 OKp/b0meg39kg==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a2698eae0a9so457398466b.3
+        for <loongarch@lists.linux.dev>; Mon, 25 Dec 2023 20:05:38 -0800 (PST)
+X-Gm-Message-State: AOJu0YxLwSeQm9zc4m4mffZ6sEOKuSHlO1TaTrhK2OZTAs9LpbcaPxu6
+	vvCAFybH5NIu7+MmCKSIWWWoA221Z+wWLRAKfa0=
+X-Google-Smtp-Source: AGHT+IEGa6+8bEU9gUw/mjnCAVIWnhuOjEyxauSi9//dbs3tPS1ULTd/ep91JzpcFcxgocWR+jf0ShZZdfKyz7g11Ts=
+X-Received: by 2002:a17:906:38c8:b0:a1c:45c0:4992 with SMTP id
+ r8-20020a17090638c800b00a1c45c04992mr2898375ejd.106.1703563536979; Mon, 25
+ Dec 2023 20:05:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231225090730.6074-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20231225090730.6074-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 26 Dec 2023 12:05:25 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4J6qRcC-nwJfVzoQYhOPKAMZmq=3xWuDpgdLrw4A2SPg@mail.gmail.com>
+Message-ID: <CAAhV-H4J6qRcC-nwJfVzoQYhOPKAMZmq=3xWuDpgdLrw4A2SPg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add BPF JIT for LOONGARCH entry
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now loongson_system_configuration::cores_io_master only covers 64 cpus,
-if NR_CPUS > 64 there will be memory corruption. So let cores_io_master
-cover the largest NR_CPUS (256).
+Also list the loongarch maillist? See the "KERNEL VIRTUAL MACHINE FOR
+MIPS (KVM/mips)" entry.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/bootinfo.h | 6 ++++--
- arch/loongarch/kernel/acpi.c          | 2 +-
- arch/loongarch/kernel/smp.c           | 2 +-
- 3 files changed, 6 insertions(+), 4 deletions(-)
+Huacai
 
-diff --git a/arch/loongarch/include/asm/bootinfo.h b/arch/loongarch/include/asm/bootinfo.h
-index c60796869b2b..6d5846dd075c 100644
---- a/arch/loongarch/include/asm/bootinfo.h
-+++ b/arch/loongarch/include/asm/bootinfo.h
-@@ -24,13 +24,15 @@ struct loongson_board_info {
- 	const char *board_vendor;
- };
- 
-+#define NR_WORDS DIV_ROUND_UP(NR_CPUS, BITS_PER_LONG)
-+
- struct loongson_system_configuration {
- 	int nr_cpus;
- 	int nr_nodes;
- 	int boot_cpu_id;
- 	int cores_per_node;
- 	int cores_per_package;
--	unsigned long cores_io_master;
-+	unsigned long cores_io_master[NR_WORDS];
- 	unsigned long suspend_addr;
- 	const char *cpuname;
- };
-@@ -42,7 +44,7 @@ extern struct loongson_system_configuration loongson_sysconf;
- 
- static inline bool io_master(int cpu)
- {
--	return test_bit(cpu, &loongson_sysconf.cores_io_master);
-+	return test_bit(cpu, loongson_sysconf.cores_io_master);
- }
- 
- #endif /* _ASM_BOOTINFO_H */
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 8e00a754e548..b6b097bbf866 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -119,7 +119,7 @@ acpi_parse_eio_master(union acpi_subtable_headers *header, const unsigned long e
- 		return -EINVAL;
- 
- 	core = eiointc->node * CORES_PER_EIO_NODE;
--	set_bit(core, &(loongson_sysconf.cores_io_master));
-+	set_bit(core, loongson_sysconf.cores_io_master);
- 
- 	return 0;
- }
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 5bca12d16e06..33e583303652 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -208,7 +208,7 @@ static void __init fdt_smp_setup(void)
- 	}
- 
- 	loongson_sysconf.nr_cpus = num_processors;
--	set_bit(0, &(loongson_sysconf.cores_io_master));
-+	set_bit(0, loongson_sysconf.cores_io_master);
- #endif
- }
- 
--- 
-2.39.3
-
+On Mon, Dec 25, 2023 at 5:08=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> After commit 5dc615520c4d ("LoongArch: Add BPF JIT support"),
+> there is no BPF JIT for LOONGARCH entry, in order to maintain
+> the current code and the new features timely, just add it.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7cef2d2ef8d7..3ba07b212d38 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3651,6 +3651,13 @@ L:       bpf@vger.kernel.org
+>  S:     Supported
+>  F:     arch/arm64/net/
+>
+> +BPF JIT for LOONGARCH
+> +M:     Tiezhu Yang <yangtiezhu@loongson.cn>
+> +R:     Hengqi Chen <hengqi.chen@gmail.com>
+> +L:     bpf@vger.kernel.org
+> +S:     Maintained
+> +F:     arch/loongarch/net/
+> +
+>  BPF JIT for MIPS (32-BIT AND 64-BIT)
+>  M:     Johan Almbladh <johan.almbladh@anyfinetworks.com>
+>  M:     Paul Burton <paulburton@kernel.org>
+> --
+> 2.42.0
+>
+>
