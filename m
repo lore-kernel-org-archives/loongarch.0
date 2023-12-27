@@ -1,144 +1,143 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6C463AE
-	for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 06:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9UL+bsh"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dbd722b55afso3380559276.2
-        for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 22:05:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703657112; x=1704261912; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kEKjovWuYxpJqS1fAk7+OKeuiHleqNwWwut073yxsFg=;
-        b=b9UL+bsh2/HLUKizs/foZa55OSsIf1ZQJ+9GKgj+YUN5cZTGkNeet+WZFnikp1JoRB
-         o0stTxg/a2DGw/xh2+iT+b98vNY2vY2Bp+aiJL3j5lZalbbvrDHJAt4ZIMg6j8zJ9hat
-         MUor5M+9OfSfHNbRI2cayqZm6tKLUUtKRnwi/sLBn6EsesYgGROmGiC/drCOBD0VGFp9
-         WIj93wID/lDlpUvHyE5spUtH278MQjUboygMcZ876cGIE7AK1FiS6KussLD/UGmN8fhc
-         ruPCmhpfYy3L2Sc1aPt33JnsuI7nDPoTBRcf5iye1h1OmznEaElhdvXWlwoNgbZPIZc4
-         flLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703657112; x=1704261912;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kEKjovWuYxpJqS1fAk7+OKeuiHleqNwWwut073yxsFg=;
-        b=w9xOMKuV6hIHK0HKbydKlh/pUUa5iILLc7Hk31zFCm8hC2b5dWf3TrkHmg5kqXzFAM
-         uVqoIMTNxi90zpSHbQ5+q8XIPBkGojAQ1IuqQkTo6sqgtBi2bGt7jcndl7hixSdjxrwD
-         eDwW37md8pj7Y+nt9/RQaU0ss10daEdp4OEDNNxKZg50pcmb7x5yCH9eROkhtU4AmuxZ
-         KfJegaeVKAl/QPAa+CRqAfGXA0anR6w4DsKpZfmZxJTI93l/tKbartRXjAzRgLJIpU8m
-         UQ7ow3V2HGxOIBUbrhuIX7/yXCNpAfPDsty1MMhTCbCBPykJ/1Z4OsWaaz1zZCXcmtJm
-         xAoA==
-X-Gm-Message-State: AOJu0YwcA2RVBT2pz9zI5KLP0FjIgQgQJ4q2s0+EhoH2Z11SshtMWa13
-	dicN2beE/LnS6iC+r6FUXoeRkS9AAiwac2vr0hY=
-X-Google-Smtp-Source: AGHT+IFGTodi7r7DuXwFGu6dkeX67vCAZ7BuZa9KAVTGY4nyX6+mi8TiSd5HJFeEIPZVQY7fkz3alsEK7qDgczU4nqM=
-X-Received: by 2002:a05:6902:e02:b0:dbd:d73f:7cd7 with SMTP id
- df2-20020a0569020e0200b00dbdd73f7cd7mr4398976ybb.70.1703657112484; Tue, 26
- Dec 2023 22:05:12 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C201610E
+	for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 07:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxG+mjzYtljfMEAA--.23630S3;
+	Wed, 27 Dec 2023 15:09:23 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxrr6izYtlJHYMAA--.37462S2;
+	Wed, 27 Dec 2023 15:09:22 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Add hypercall instruction emulation support
+Date: Wed, 27 Dec 2023 15:09:22 +0800
+Message-Id: <20231227070922.1411467-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1703229766.git.zhoubinbin@loongson.cn> <20231222-support-relieve-5d8f25292b40@spud>
-In-Reply-To: <20231222-support-relieve-5d8f25292b40@spud>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 27 Dec 2023 12:04:59 +0600
-Message-ID: <CAMpQs4+Uwu=j56Qa_V211_hC+F4MKE6mvTVtW75M1wuAY3-p1g@mail.gmail.com>
-Subject: Re: [PATCH v6 0/7] LoongArch: Add built-in dtb support
-To: Conor Dooley <conor@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Hongliang Wang <wanghongliang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bxrr6izYtlJHYMAA--.37462S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXryDXFyxtFWkCFWktr4xAFc_yoW5Zr1DpF
+	93Cr1kGr48GryfCFy3twn8Wr13Ars7K342gFW2k3y5AF12qF1Fyr4kKryDZFy5Ja1rXF1S
+	gFWftw1Y9F4UtagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-Hi Conor:
+On LoongArch system, hypercall instruction is supported when system
+runs on VM mode. This patch adds dummy function for hypercall
+instruction emulation, rather than inject EXCCODE_INE invalid
+instruction exception to VM.
 
-Sorry for the late reply.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/Kbuild      |  1 -
+ arch/loongarch/include/asm/kvm_para.h  | 26 ++++++++++++++++++++++++++
+ arch/loongarch/include/uapi/asm/Kbuild |  2 --
+ arch/loongarch/kvm/exit.c              | 10 ++++++++++
+ 4 files changed, 36 insertions(+), 3 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_para.h
+ delete mode 100644 arch/loongarch/include/uapi/asm/Kbuild
 
-On Fri, Dec 22, 2023 at 9:39=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> Hey Binbin,
->
-> On Fri, Dec 22, 2023 at 04:00:43PM +0800, Binbin Zhou wrote:
-> > Hi all:
-> >
-> > This patchset introduces LoongArch's built-in dtb support.
-> >
-> > During the upstream progress of those DT-based drivers, DT properties
-> > are changed a lot so very different from those in existing bootloaders.
-> > It is inevitably that some existing systems do not provide a standard,
-> > canonical device tree to the kernel at boot time. So let's provide a
-> > device tree table in the kernel, keyed by the dts filename, containing
-> > the relevant DTBs.
-> >
-> > We can use the built-in dts files as references. Each SoC has only one
-> > built-in dts file which describes all possible device information of
-> > that SoC, so the dts files are good examples during development.
-> >
-> > And as a reference, our built-in dts file only enables the most basic
-> > bootable combinations (so it is generic enough), acts as an alternative
-> > in case the dts in the bootloader is unexpected.
-> >
-> > In the past while, we resolved the DTC_CHK warning for the v4 patchset,
-> > and the relevant patchset has either been applied or had the
-> > Reviewed-by tag added.
->
-> I notice you dropped the topology information from all patches in the
-> series, not only the 2k0500 patch that only has one CPU. I didn't see a
-> response to my comments the kernel being able to assemble the topology
-> based on the second level caches using the generic topology code for the
-> systems that have more than one cpu. With the cpu-map information
-> dropped, do the multi-cpu systems have their topologies assembled
-> correctly by the kernel?
+diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
+index 93783fa24f6e..22991a6f0e2b 100644
+--- a/arch/loongarch/include/asm/Kbuild
++++ b/arch/loongarch/include/asm/Kbuild
+@@ -23,4 +23,3 @@ generic-y += poll.h
+ generic-y += param.h
+ generic-y += posix_types.h
+ generic-y += resource.h
+-generic-y += kvm_para.h
+diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+new file mode 100644
+index 000000000000..9425d3b7e486
+--- /dev/null
++++ b/arch/loongarch/include/asm/kvm_para.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_LOONGARCH_KVM_PARA_H
++#define _ASM_LOONGARCH_KVM_PARA_H
++
++/*
++ * LoongArch hypcall return code
++ */
++#define KVM_HC_STATUS_SUCCESS		0
++#define KVM_HC_INVALID_CODE		-1UL
++#define KVM_HC_INVALID_PARAMETER	-2UL
++
++static inline unsigned int kvm_arch_para_features(void)
++{
++	return 0;
++}
++
++static inline unsigned int kvm_arch_para_hints(void)
++{
++	return 0;
++}
++
++static inline bool kvm_check_and_clear_guest_paused(void)
++{
++	return false;
++}
++#endif /* _ASM_LOONGARCH_KVM_PARA_H */
+diff --git a/arch/loongarch/include/uapi/asm/Kbuild b/arch/loongarch/include/uapi/asm/Kbuild
+deleted file mode 100644
+index 4aa680ca2e5f..000000000000
+--- a/arch/loongarch/include/uapi/asm/Kbuild
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-generic-y += kvm_para.h
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index ce8de3fa472c..f453a3e40cab 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -659,6 +659,15 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
+ 	return RESUME_GUEST;
+ }
+ 
++static int kvm_handle_hypcall(struct kvm_vcpu *vcpu)
++{
++	update_pc(&vcpu->arch);
++
++	/* Treat it as noop intruction, only set return value */
++	vcpu->arch.gprs[LOONGARCH_GPR_A0] = KVM_HC_INVALID_CODE;
++	return RESUME_GUEST;
++}
++
+ /*
+  * LoongArch KVM callback handling for unimplemented guest exiting
+  */
+@@ -688,6 +697,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
+ 	[EXCCODE_TLBM]			= kvm_handle_write_fault,
+ 	[EXCCODE_FPDIS]			= kvm_handle_fpu_disabled,
+ 	[EXCCODE_GSPR]			= kvm_handle_gspr,
++	[EXCCODE_HVC]			= kvm_handle_hypcall,
+ };
+ 
+ int kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
+-- 
+2.39.3
 
-As we saw previously, our DT-based system only supports single cluster
-cpu{s}, and multi-cluster cpu is not going to be in our plans.
-
-> You mentioned that there is an instruction that allows you to get
-> information about i and d caches etc, so adding them to the DT is not
-> required, but does it also cover the next level caches?
-
-Firstly, sorry for my previous mistake about the cache reads.
-`cpucfg` is actually a set of registers that describes the features of
-the cpu, including the CPU cache [1].
-`populate_cache_properties()` reads all levels of cache information
-[2], including of course `next cache` if it exists.
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/arch/loongarch/include/asm/loongarch.h#n765
-[2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/arch/loongarch/mm/cache.c#n94
-
-> The program that I am familiar with for displaying this information
-> is hwloc: https://github.com/open-mpi/hwloc
->
-
-Ah, yes, I tried looking at the `hwloc-ls` output before committing,
-and it's below(LS2K1000):
-
-[root@fedora ~]# hwloc-ls
-Machine (7730MB total)
-  Package L#0
-    NUMANode L#0 (P#0 7730MB)
-    L2 L#0 (1024KB)
-      L1d L#0 (32KB) + L1i L#0 (32KB) + Core L#0 + PU L#0 (P#0)
-      L1d L#1 (32KB) + L1i L#1 (32KB) + Core L#1 + PU L#1 (P#1)
-
-It's the same as what we actually have.
-
-Thanks.
-Binbin
-> Cheers,
-> Conor.
->
