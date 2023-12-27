@@ -1,25 +1,37 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C201610E
-	for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 07:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxG+mjzYtljfMEAA--.23630S3;
-	Wed, 27 Dec 2023 15:09:23 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxrr6izYtlJHYMAA--.37462S2;
-	Wed, 27 Dec 2023 15:09:22 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Add hypercall instruction emulation support
-Date: Wed, 27 Dec 2023 15:09:22 +0800
-Message-Id: <20231227070922.1411467-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC3453A1
+	for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 07:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="F39uGL/b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1703660626; bh=K2k2GxIuqjMC/NnfCosbCSIqYontEnvv3dQx5KknIGk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=F39uGL/bn4zLEsFhaY74nOkfbu0rj45jjJOPO0+/s6Mmw7GUSBmZJtNlwq0tHtmx4
+	 B4JfchpNPqR3PGn8XEt3h+lTyAA4/6xzaDlk8/5h1XZZexfZmAocxyRyxxTB/0FQgE
+	 r1y6nnjLyQbYip892ykBZBlzLGFGgntBKXWmlfaw=
+Received: from ld50.lan (unknown [IPv6:240e:388:8d23:e100:4572:35ff:7275:50ea])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 8F20160117;
+	Wed, 27 Dec 2023 15:03:39 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: linux-kbuild@vger.kernel.org
+Cc: WANG Xuerui <git@xen0n.name>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Youling Tang <tangyouling@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	loongarch@lists.linux.dev
+Subject: [PATCH] modpost: Ignore relaxation and alignment marker relocs on LoongArch
+Date: Wed, 27 Dec 2023 15:03:14 +0800
+Message-ID: <20231227070317.1936234-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -27,117 +39,73 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxrr6izYtlJHYMAA--.37462S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXryDXFyxtFWkCFWktr4xAFc_yoW5Zr1DpF
-	93Cr1kGr48GryfCFy3twn8Wr13Ars7K342gFW2k3y5AF12qF1Fyr4kKryDZFy5Ja1rXF1S
-	gFWftw1Y9F4UtagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-On LoongArch system, hypercall instruction is supported when system
-runs on VM mode. This patch adds dummy function for hypercall
-instruction emulation, rather than inject EXCCODE_INE invalid
-instruction exception to VM.
+From: WANG Xuerui <git@xen0n.name>
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+With recent trunk versions of binutils and gcc, alignment directives are
+represented with R_LARCH_ALIGN relocs on LoongArch, which is necessary
+for the linker to maintain alignment requirements during its relaxation
+passes. And even though the kernel is built with relaxation disabled, so
+far a small number of R_LARCH_RELAX marker relocs are still emitted as
+part of la.* pseudo instructions in assembly. These two kinds of relocs
+do not refer to symbols, which can trip up modpost's section mismatch
+checks, because the r_offset of said relocs can be zero or any other
+meaningless value, eventually leading to a `from == NULL` condition in
+default_mismatch_handler and SIGSEGV.
+
+As the two kinds of relocs are not concerned with symbols, just ignore
+them for section mismatch check purposes.
+
+Fixes: 3d36f4298ba9 ("LoongArch: Switch to relative exception tables")
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Youling Tang <tangyouling@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev
 ---
- arch/loongarch/include/asm/Kbuild      |  1 -
- arch/loongarch/include/asm/kvm_para.h  | 26 ++++++++++++++++++++++++++
- arch/loongarch/include/uapi/asm/Kbuild |  2 --
- arch/loongarch/kvm/exit.c              | 10 ++++++++++
- 4 files changed, 36 insertions(+), 3 deletions(-)
- create mode 100644 arch/loongarch/include/asm/kvm_para.h
- delete mode 100644 arch/loongarch/include/uapi/asm/Kbuild
+ scripts/mod/modpost.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
-index 93783fa24f6e..22991a6f0e2b 100644
---- a/arch/loongarch/include/asm/Kbuild
-+++ b/arch/loongarch/include/asm/Kbuild
-@@ -23,4 +23,3 @@ generic-y += poll.h
- generic-y += param.h
- generic-y += posix_types.h
- generic-y += resource.h
--generic-y += kvm_para.h
-diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-new file mode 100644
-index 000000000000..9425d3b7e486
---- /dev/null
-+++ b/arch/loongarch/include/asm/kvm_para.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_LOONGARCH_KVM_PARA_H
-+#define _ASM_LOONGARCH_KVM_PARA_H
-+
-+/*
-+ * LoongArch hypcall return code
-+ */
-+#define KVM_HC_STATUS_SUCCESS		0
-+#define KVM_HC_INVALID_CODE		-1UL
-+#define KVM_HC_INVALID_PARAMETER	-2UL
-+
-+static inline unsigned int kvm_arch_para_features(void)
-+{
-+	return 0;
-+}
-+
-+static inline unsigned int kvm_arch_para_hints(void)
-+{
-+	return 0;
-+}
-+
-+static inline bool kvm_check_and_clear_guest_paused(void)
-+{
-+	return false;
-+}
-+#endif /* _ASM_LOONGARCH_KVM_PARA_H */
-diff --git a/arch/loongarch/include/uapi/asm/Kbuild b/arch/loongarch/include/uapi/asm/Kbuild
-deleted file mode 100644
-index 4aa680ca2e5f..000000000000
---- a/arch/loongarch/include/uapi/asm/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--generic-y += kvm_para.h
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index ce8de3fa472c..f453a3e40cab 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -659,6 +659,15 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
- 	return RESUME_GUEST;
- }
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index cb6406f485a9..a4df47372b95 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -1346,6 +1346,14 @@ static Elf_Addr addend_mips_rel(uint32_t *location, unsigned int r_type)
+ #define R_LARCH_SUB32		55
+ #endif
  
-+static int kvm_handle_hypcall(struct kvm_vcpu *vcpu)
-+{
-+	update_pc(&vcpu->arch);
++#ifndef R_LARCH_RELAX
++#define R_LARCH_RELAX		100
++#endif
 +
-+	/* Treat it as noop intruction, only set return value */
-+	vcpu->arch.gprs[LOONGARCH_GPR_A0] = KVM_HC_INVALID_CODE;
-+	return RESUME_GUEST;
-+}
++#ifndef R_LARCH_ALIGN
++#define R_LARCH_ALIGN		102
++#endif
 +
- /*
-  * LoongArch KVM callback handling for unimplemented guest exiting
-  */
-@@ -688,6 +697,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
- 	[EXCCODE_TLBM]			= kvm_handle_write_fault,
- 	[EXCCODE_FPDIS]			= kvm_handle_fpu_disabled,
- 	[EXCCODE_GSPR]			= kvm_handle_gspr,
-+	[EXCCODE_HVC]			= kvm_handle_hypcall,
- };
+ static void get_rel_type_and_sym(struct elf_info *elf, uint64_t r_info,
+ 				 unsigned int *r_type, unsigned int *r_sym)
+ {
+@@ -1400,9 +1408,16 @@ static void section_rela(struct module *mod, struct elf_info *elf,
+ 				continue;
+ 			break;
+ 		case EM_LOONGARCH:
+-			if (!strcmp("__ex_table", fromsec) &&
+-			    r_type == R_LARCH_SUB32)
++			switch (r_type) {
++			case R_LARCH_SUB32:
++				if (!strcmp("__ex_table", fromsec))
++					continue;
++				break;
++			case R_LARCH_RELAX:
++			case R_LARCH_ALIGN:
++				/* these relocs do not refer to symbols */
+ 				continue;
++			}
+ 			break;
+ 		}
  
- int kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
 -- 
-2.39.3
+2.43.0
 
