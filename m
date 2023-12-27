@@ -1,111 +1,80 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC3453A1
-	for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 07:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="F39uGL/b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1703660626; bh=K2k2GxIuqjMC/NnfCosbCSIqYontEnvv3dQx5KknIGk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=F39uGL/bn4zLEsFhaY74nOkfbu0rj45jjJOPO0+/s6Mmw7GUSBmZJtNlwq0tHtmx4
-	 B4JfchpNPqR3PGn8XEt3h+lTyAA4/6xzaDlk8/5h1XZZexfZmAocxyRyxxTB/0FQgE
-	 r1y6nnjLyQbYip892ykBZBlzLGFGgntBKXWmlfaw=
-Received: from ld50.lan (unknown [IPv6:240e:388:8d23:e100:4572:35ff:7275:50ea])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 8F20160117;
-	Wed, 27 Dec 2023 15:03:39 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: linux-kbuild@vger.kernel.org
-Cc: WANG Xuerui <git@xen0n.name>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Youling Tang <tangyouling@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	loongarch@lists.linux.dev
-Subject: [PATCH] modpost: Ignore relaxation and alignment marker relocs on LoongArch
-Date: Wed, 27 Dec 2023 15:03:14 +0800
-Message-ID: <20231227070317.1936234-1-kernel@xen0n.name>
-X-Mailer: git-send-email 2.43.0
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 898B96127
+	for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 07:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxBOt82ItlUvYEAA--.19578S3;
+	Wed, 27 Dec 2023 15:55:40 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxt+Z42ItlT4AMAA--.44482S3;
+	Wed, 27 Dec 2023 15:55:37 +0800 (CST)
+Subject: Re: [PATCH v3 0/2] selftests/vDSO: Fix errors on LoongArch
+To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>
+References: <20231213012300.5640-1-yangtiezhu@loongson.cn>
+Cc: linux-kselftest@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <d73d107d-9e04-4250-f467-f6ff7eb92103@loongson.cn>
+Date: Wed, 27 Dec 2023 15:55:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231213012300.5640-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Dxt+Z42ItlT4AMAA--.44482S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtr13AF1kZF18Gr1fZw17twc_yoWftrb_uF
+	W8ua4kGrZ7uFZ8AF4Fqw1rZry3JF4Iyr4xWryj9w47Jr9rArZ8GF4FkF48uFySgrWayr9r
+	JF4DCa9avr1qqosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_Ma
+	UUUUU
 
-From: WANG Xuerui <git@xen0n.name>
++ Andrew Morton <akpm@linux-foundation.org>
++ Mark Brown <broonie@kernel.org>
 
-With recent trunk versions of binutils and gcc, alignment directives are
-represented with R_LARCH_ALIGN relocs on LoongArch, which is necessary
-for the linker to maintain alignment requirements during its relaxation
-passes. And even though the kernel is built with relaxation disabled, so
-far a small number of R_LARCH_RELAX marker relocs are still emitted as
-part of la.* pseudo instructions in assembly. These two kinds of relocs
-do not refer to symbols, which can trip up modpost's section mismatch
-checks, because the r_offset of said relocs can be zero or any other
-meaningless value, eventually leading to a `from == NULL` condition in
-default_mismatch_handler and SIGSEGV.
+On 12/13/2023 09:22 AM, Tiezhu Yang wrote:
+> v3: Rebase on the next branch of linux-kselftest.git,
+>     modify the patch title and update the commit message
+>
+> v2: Rebase on 6.5-rc1 and update the commit message
+>
+> Tiezhu Yang (2):
+>   selftests/vDSO: Fix building errors on LoongArch
+>   selftests/vDSO: Fix runtime errors on LoongArch
+>
+>  tools/testing/selftests/vDSO/vdso_config.h    |  6 ++++-
+>  .../testing/selftests/vDSO/vdso_test_getcpu.c | 16 +++++-------
+>  .../selftests/vDSO/vdso_test_gettimeofday.c   | 26 +++++--------------
+>  3 files changed, 18 insertions(+), 30 deletions(-)
+>
 
-As the two kinds of relocs are not concerned with symbols, just ignore
-them for section mismatch check purposes.
+Hi Shuah, Andrew and Mark,
 
-Fixes: 3d36f4298ba9 ("LoongArch: Switch to relative exception tables")
-Signed-off-by: WANG Xuerui <git@xen0n.name>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nicolas@fjasle.eu>
-Cc: Youling Tang <tangyouling@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev
----
- scripts/mod/modpost.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+The patches still seem to apply cleanly.
+Could you please review and merge them for the upcoming merge window?
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index cb6406f485a9..a4df47372b95 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -1346,6 +1346,14 @@ static Elf_Addr addend_mips_rel(uint32_t *location, unsigned int r_type)
- #define R_LARCH_SUB32		55
- #endif
- 
-+#ifndef R_LARCH_RELAX
-+#define R_LARCH_RELAX		100
-+#endif
-+
-+#ifndef R_LARCH_ALIGN
-+#define R_LARCH_ALIGN		102
-+#endif
-+
- static void get_rel_type_and_sym(struct elf_info *elf, uint64_t r_info,
- 				 unsigned int *r_type, unsigned int *r_sym)
- {
-@@ -1400,9 +1408,16 @@ static void section_rela(struct module *mod, struct elf_info *elf,
- 				continue;
- 			break;
- 		case EM_LOONGARCH:
--			if (!strcmp("__ex_table", fromsec) &&
--			    r_type == R_LARCH_SUB32)
-+			switch (r_type) {
-+			case R_LARCH_SUB32:
-+				if (!strcmp("__ex_table", fromsec))
-+					continue;
-+				break;
-+			case R_LARCH_RELAX:
-+			case R_LARCH_ALIGN:
-+				/* these relocs do not refer to symbols */
- 				continue;
-+			}
- 			break;
- 		}
- 
--- 
-2.43.0
+https://lore.kernel.org/lkml/20231213012300.5640-1-yangtiezhu@loongson.cn/
+
+Thanks,
+Tiezhu
 
