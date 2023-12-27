@@ -1,58 +1,113 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1275D446A2
-	for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 11:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF88E44396;
+	Wed, 27 Dec 2023 11:15:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="i3GT7Yk3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1703675191;
-	bh=hzoqkGXMJoG4W/65dYdEwFFiktQvIVhMBsE8Rkg8xEg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=i3GT7Yk3dgV9Nz2/kA81h4kHlT2mfgtjaSUO7h1ZATAAh020KofBEcryzzxgGkNPu
-	 0luMa0zMoatAzO/OecmH9RVIsBVk+JGazHusDgQDR5bsOn42KSo2oG+L+iacdpKWwn
-	 HVny7NdNTLoBEjEldmaw3MkynMMQQKxGwgx6acQU=
-Received: from [192.168.124.20] (unknown [113.200.174.41])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 644556698A;
-	Wed, 27 Dec 2023 06:06:29 -0500 (EST)
-Message-ID: <fbefe6e45e23a09e5b63eaac0a07a2fbae4a3845.camel@xry111.site>
-Subject: Re: [PATCH] modpost: Ignore relaxation and alignment marker relocs
- on LoongArch
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, linux-kbuild@vger.kernel.org
-Cc: WANG Xuerui <git@xen0n.name>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor
-	 <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Youling Tang
-	 <tangyouling@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	loongarch@lists.linux.dev
-Date: Wed, 27 Dec 2023 19:06:26 +0800
-In-Reply-To: <20231227070317.1936234-1-kernel@xen0n.name>
-References: <20231227070317.1936234-1-kernel@xen0n.name>
-Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
- keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pP9RBZ+D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 354F6C433C8;
+	Wed, 27 Dec 2023 11:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703675723;
+	bh=Gy+D+S27rQJBs12wlJEa+cumgsdCkF3P6tKjEyxVt5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pP9RBZ+DfqI9ufbs6J2xz/FKM0nY4Pwf02G34GG/l91DTZu2tk+J7E60zTnEhjPL3
+	 qZpNUMit64mYzbAtmwb9KGD6zaz5A40god5gLykenVaCm2sXCYmzeuPBwh81SyO6PE
+	 Bmza1w3YIvrK9XpCQ1ll0SBpVNNIbPKuiFHL1di27kuvrOtBBRDVMYxJBl9aC9WXFF
+	 MVkAcY36NePVzE7QE5kh7q0qI8bFlVKwHv5Lb87s+QQdATKl+4EzU0nNeZCmAVTbhm
+	 BIC374HdlJLWXGEfqtrC7dzBPDecYaAPxTeXEnoldydMWpAyK6aa7O4FdWU6pXS3QV
+	 BU1AUG2sovIcQ==
+Date: Wed, 27 Dec 2023 12:15:14 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
+	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
+	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com,
+	James Morse <james.morse@arm.com>
+Subject: Re: [PATCH RFC v3 13/21] ACPICA: Add new MADT GICC flags fields
+Message-ID: <ZYwHQgdGGGVkwmJ8@lpieralisi>
+References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
+ <E1rDOgs-00Dvko-6t@rmk-PC.armlinux.org.uk>
+ <20231215162322.00007391@Huawei.com>
+ <ZXyEiHLFBsoUkfNI@shell.armlinux.org.uk>
+ <ZYAPhlwPUT/7dN4n@lpieralisi>
+ <CAJZ5v0hyUqJspPbGTgTMSVHVBe=wHR6swPx-O3UcsH5dXDFpTA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hyUqJspPbGTgTMSVHVBe=wHR6swPx-O3UcsH5dXDFpTA@mail.gmail.com>
 
-On Wed, 2023-12-27 at 15:03 +0800, WANG Xuerui wrote:
-> And even though the kernel is built with relaxation disabled, so
-> far a small number of R_LARCH_RELAX marker relocs are still emitted as
-> part of la.* pseudo instructions in assembly.
+On Mon, Dec 18, 2023 at 02:14:30PM +0100, Rafael J. Wysocki wrote:
+> On Mon, Dec 18, 2023 at 10:23 AM Lorenzo Pieralisi
+> <lpieralisi@kernel.org> wrote:
+> >
+> > On Fri, Dec 15, 2023 at 04:53:28PM +0000, Russell King (Oracle) wrote:
+> > > On Fri, Dec 15, 2023 at 04:23:22PM +0000, Jonathan Cameron wrote:
+> > > > On Wed, 13 Dec 2023 12:50:18 +0000
+> > > > Russell King (Oracle) <rmk+kernel@armlinux.org.uk> wrote:
+> > > >
+> > > > > From: James Morse <james.morse@arm.com>
+> > > > >
+> > > > > Add the new flag field to the MADT's GICC structure.
+> > > > >
+> > > > > 'Online Capable' indicates a disabled CPU can be enabled later. See
+> > > > > ACPI specification 6.5 Tabel 5.37: GICC CPU Interface Flags.
+> > > > >
+> > > > > Signed-off-by: James Morse <james.morse@arm.com>
+> > > > > Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> > > > > Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> > > > > Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> > > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > > >
+> > > > I see there is an acpica pull request including this bit but with a different name
+> > > > For reference.
+> > > > https://github.com/acpica/acpica/pull/914/commits/453a5f67567786522021d5f6913f561f8b3cabf6
+> > > >
+> > > > +CC Lorenzo who submitted that.
+> > >
+> > > > > +#define ACPI_MADT_GICC_CPU_CAPABLE      (1<<3)   /* 03: CPU is online capable */
+> > > >
+> > > > ACPI_MADT_GICC_ONLINE_CAPABLE
+> > >
+> > > It's somewhat disappointing, but no big deal. It's easy enough to change
+> > > "irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs"
+> > > to use Lorenzo's name when that patch hits - and it becomes one less
+> > > patch in this patch set when Lorenzo's change eventually hits mainline.
+> > >
+> > > Does anyone know how long it may take for Lorenzo's change to get into
+> > > mainline? Would it be by the 6.8 merge window or the following one?
+> >
+> > I wish I knew. I submitted ACPICA changes for the online capable bit
+> > since I had to add additional flags on top (ie DMA coherent) and it
+> > would not make sense to submit the latter without the former.
+> >
+> > I'd be great if the ACPICA headers can make it into Linux for the upcoming
+> > merge window, not sure what I can do to fasttrack the process though
+> > (I shall ping the maintainers).
+> 
+> If your upstream pull request has been merged, I can pick up Linux
+> patches carrying Link: tags pointing to the upstream ACPICA commits in
+> that pull request.
 
-I'd consider it a toolchain bug...  Is there a reproducer?
+ACPICA PR was merged, sent the Linuxized version along with the GIC changes
+here:
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+https://lore.kernel.org/lkml/20231227110038.55453-1-lpieralisi@kernel.org
+
+Thanks,
+Lorenzo
