@@ -1,93 +1,144 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77D61C3E;
-	Wed, 27 Dec 2023 01:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6C463AE
+	for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 06:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xNkGEoU8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=SuZFcoL6i0kMdM6kD/totFTlC3QefOClRnBM4XrBqqI=; b=xNkGEoU8W2YOPy99YSbSwfTb2X
-	9TVDUtwsIvSZFHkSIErhjTrIyzaO8yvHnT/vmaQsfQO6ZP70iWmZ+UHO0HJ8LARfQ/2ewkB8g4x4A
-	eDH2pNJTDmpSftzLOXuqeuxMCEFRd82lU/AzSCNF9kJjJjVItMZVyP05pMw9YIDnARTjDsULCgsJP
-	4N8sJ7+RFRlakKrvUObPc4MAsa1SkZxQvsc/MQ/i04RlF0UW0cFlyJeefmT/YHMXpdf1H+wi65s1Z
-	cSNRbWFVWH/mJTWchgOe6cz5pyAAevJwxWscvdR33zEM7591nLfBOrqcMryHgbf6tTR1bVVwOfUOA
-	NKyX1H4g==;
-Received: from [50.53.46.231] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rIId9-00DlNz-19;
-	Wed, 27 Dec 2023 01:22:43 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH v2] LoongArch: KVM: add returns to SIMD stubs
-Date: Tue, 26 Dec 2023 17:22:40 -0800
-Message-ID: <20231227012240.6545-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9UL+bsh"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dbd722b55afso3380559276.2
+        for <loongarch@lists.linux.dev>; Tue, 26 Dec 2023 22:05:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703657112; x=1704261912; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kEKjovWuYxpJqS1fAk7+OKeuiHleqNwWwut073yxsFg=;
+        b=b9UL+bsh2/HLUKizs/foZa55OSsIf1ZQJ+9GKgj+YUN5cZTGkNeet+WZFnikp1JoRB
+         o0stTxg/a2DGw/xh2+iT+b98vNY2vY2Bp+aiJL3j5lZalbbvrDHJAt4ZIMg6j8zJ9hat
+         MUor5M+9OfSfHNbRI2cayqZm6tKLUUtKRnwi/sLBn6EsesYgGROmGiC/drCOBD0VGFp9
+         WIj93wID/lDlpUvHyE5spUtH278MQjUboygMcZ876cGIE7AK1FiS6KussLD/UGmN8fhc
+         ruPCmhpfYy3L2Sc1aPt33JnsuI7nDPoTBRcf5iye1h1OmznEaElhdvXWlwoNgbZPIZc4
+         flLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703657112; x=1704261912;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kEKjovWuYxpJqS1fAk7+OKeuiHleqNwWwut073yxsFg=;
+        b=w9xOMKuV6hIHK0HKbydKlh/pUUa5iILLc7Hk31zFCm8hC2b5dWf3TrkHmg5kqXzFAM
+         uVqoIMTNxi90zpSHbQ5+q8XIPBkGojAQ1IuqQkTo6sqgtBi2bGt7jcndl7hixSdjxrwD
+         eDwW37md8pj7Y+nt9/RQaU0ss10daEdp4OEDNNxKZg50pcmb7x5yCH9eROkhtU4AmuxZ
+         KfJegaeVKAl/QPAa+CRqAfGXA0anR6w4DsKpZfmZxJTI93l/tKbartRXjAzRgLJIpU8m
+         UQ7ow3V2HGxOIBUbrhuIX7/yXCNpAfPDsty1MMhTCbCBPykJ/1Z4OsWaaz1zZCXcmtJm
+         xAoA==
+X-Gm-Message-State: AOJu0YwcA2RVBT2pz9zI5KLP0FjIgQgQJ4q2s0+EhoH2Z11SshtMWa13
+	dicN2beE/LnS6iC+r6FUXoeRkS9AAiwac2vr0hY=
+X-Google-Smtp-Source: AGHT+IFGTodi7r7DuXwFGu6dkeX67vCAZ7BuZa9KAVTGY4nyX6+mi8TiSd5HJFeEIPZVQY7fkz3alsEK7qDgczU4nqM=
+X-Received: by 2002:a05:6902:e02:b0:dbd:d73f:7cd7 with SMTP id
+ df2-20020a0569020e0200b00dbdd73f7cd7mr4398976ybb.70.1703657112484; Tue, 26
+ Dec 2023 22:05:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1703229766.git.zhoubinbin@loongson.cn> <20231222-support-relieve-5d8f25292b40@spud>
+In-Reply-To: <20231222-support-relieve-5d8f25292b40@spud>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 27 Dec 2023 12:04:59 +0600
+Message-ID: <CAMpQs4+Uwu=j56Qa_V211_hC+F4MKE6mvTVtW75M1wuAY3-p1g@mail.gmail.com>
+Subject: Re: [PATCH v6 0/7] LoongArch: Add built-in dtb support
+To: Conor Dooley <conor@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Hongliang Wang <wanghongliang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The stubs for kvm_own/lsx()/kvm_own_lasx() when CONFIG_CPU_HAS_LSX or
-CONFIG_CPU_HAS_LASX is not defined should have a return value since they
-return an int, so add "return -EINVAL;" to the stubs.
-Fixes the build error:
+Hi Conor:
 
-In file included from ../arch/loongarch/include/asm/kvm_csr.h:12,
-                 from ../arch/loongarch/kvm/interrupt.c:8:
-../arch/loongarch/include/asm/kvm_vcpu.h: In function 'kvm_own_lasx':
-../arch/loongarch/include/asm/kvm_vcpu.h:73:39: error: no return statement in function returning non-void [-Werror=return-type]
-   73 | static inline int kvm_own_lasx(struct kvm_vcpu *vcpu) { }
+Sorry for the late reply.
 
-Fixes: 118e10cd893d ("LoongArch: KVM: Add LASX (256bit SIMD) support")
-Fixes: db1ecca22edf ("LoongArch: KVM: Add LSX (128bit SIMD) support")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: kvm@vger.kernel.org
-Cc: loongarch@lists.linux.dev
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
----
-v2: also update kvm_own_lsx() as requested by Huacai
+On Fri, Dec 22, 2023 at 9:39=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> Hey Binbin,
+>
+> On Fri, Dec 22, 2023 at 04:00:43PM +0800, Binbin Zhou wrote:
+> > Hi all:
+> >
+> > This patchset introduces LoongArch's built-in dtb support.
+> >
+> > During the upstream progress of those DT-based drivers, DT properties
+> > are changed a lot so very different from those in existing bootloaders.
+> > It is inevitably that some existing systems do not provide a standard,
+> > canonical device tree to the kernel at boot time. So let's provide a
+> > device tree table in the kernel, keyed by the dts filename, containing
+> > the relevant DTBs.
+> >
+> > We can use the built-in dts files as references. Each SoC has only one
+> > built-in dts file which describes all possible device information of
+> > that SoC, so the dts files are good examples during development.
+> >
+> > And as a reference, our built-in dts file only enables the most basic
+> > bootable combinations (so it is generic enough), acts as an alternative
+> > in case the dts in the bootloader is unexpected.
+> >
+> > In the past while, we resolved the DTC_CHK warning for the v4 patchset,
+> > and the relevant patchset has either been applied or had the
+> > Reviewed-by tag added.
+>
+> I notice you dropped the topology information from all patches in the
+> series, not only the 2k0500 patch that only has one CPU. I didn't see a
+> response to my comments the kernel being able to assemble the topology
+> based on the second level caches using the generic topology code for the
+> systems that have more than one cpu. With the cpu-map information
+> dropped, do the multi-cpu systems have their topologies assembled
+> correctly by the kernel?
 
- arch/loongarch/include/asm/kvm_vcpu.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+As we saw previously, our DT-based system only supports single cluster
+cpu{s}, and multi-cluster cpu is not going to be in our plans.
 
-diff -- a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -60,7 +60,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu);
- void kvm_save_lsx(struct loongarch_fpu *fpu);
- void kvm_restore_lsx(struct loongarch_fpu *fpu);
- #else
--static inline int kvm_own_lsx(struct kvm_vcpu *vcpu) { }
-+static inline int kvm_own_lsx(struct kvm_vcpu *vcpu) { return -EINVAL; }
- static inline void kvm_save_lsx(struct loongarch_fpu *fpu) { }
- static inline void kvm_restore_lsx(struct loongarch_fpu *fpu) { }
- #endif
-@@ -70,7 +70,7 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu);
- void kvm_save_lasx(struct loongarch_fpu *fpu);
- void kvm_restore_lasx(struct loongarch_fpu *fpu);
- #else
--static inline int kvm_own_lasx(struct kvm_vcpu *vcpu) { }
-+static inline int kvm_own_lasx(struct kvm_vcpu *vcpu) { return -EINVAL; }
- static inline void kvm_save_lasx(struct loongarch_fpu *fpu) { }
- static inline void kvm_restore_lasx(struct loongarch_fpu *fpu) { }
- #endif
+> You mentioned that there is an instruction that allows you to get
+> information about i and d caches etc, so adding them to the DT is not
+> required, but does it also cover the next level caches?
+
+Firstly, sorry for my previous mistake about the cache reads.
+`cpucfg` is actually a set of registers that describes the features of
+the cpu, including the CPU cache [1].
+`populate_cache_properties()` reads all levels of cache information
+[2], including of course `next cache` if it exists.
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/arch/loongarch/include/asm/loongarch.h#n765
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/arch/loongarch/mm/cache.c#n94
+
+> The program that I am familiar with for displaying this information
+> is hwloc: https://github.com/open-mpi/hwloc
+>
+
+Ah, yes, I tried looking at the `hwloc-ls` output before committing,
+and it's below(LS2K1000):
+
+[root@fedora ~]# hwloc-ls
+Machine (7730MB total)
+  Package L#0
+    NUMANode L#0 (P#0 7730MB)
+    L2 L#0 (1024KB)
+      L1d L#0 (32KB) + L1i L#0 (32KB) + Core L#0 + PU L#0 (P#0)
+      L1d L#1 (32KB) + L1i L#1 (32KB) + Core L#1 + PU L#1 (P#1)
+
+It's the same as what we actually have.
+
+Thanks.
+Binbin
+> Cheers,
+> Conor.
+>
