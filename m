@@ -1,253 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AEA3EA9
-	for <loongarch@lists.linux.dev>; Thu, 28 Dec 2023 01:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A3A1104
+	for <loongarch@lists.linux.dev>; Thu, 28 Dec 2023 01:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcE6dSn3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EF7DC433C8
-	for <loongarch@lists.linux.dev>; Thu, 28 Dec 2023 01:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703726669;
-	bh=xHv0G5x2J88Pxkc5+do8/plUomGlF6DSGjvbPx0NqpE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CcE6dSn38KviQaoBTEb20h9ZVUMPTA2s8akbRkuOm26TEvOGVjXZneVUz4aJTlIKE
-	 3Rhq6RVYaNuDFIzZl29dGop+46nsrNwLZvol7cFBwIQWjO4hkLXtJlIWzS4S/TQWKU
-	 yuZWPfprwIX2/DIM0RntYaUhdSjrKNkgnfFrawW3fC715HmwiSf8Zehzdpl+BBFS2h
-	 fiLx5r6hy+L3RXDIV8xYgjr5x5+G1O1RO3t6SFLsYrmLri6mHLesZg9H3e8vnE/TCK
-	 ftZRtWKIu/aMmUD3HeUkRR3TekspNrGV3hsZgIKrfmi2sGDDhVl4ZVU9xkp5nJjoEl
-	 etJCSIWlvOhqA==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55559e26ccfso1111243a12.3
-        for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 17:24:29 -0800 (PST)
-X-Gm-Message-State: AOJu0YwDKjWJI8gMrwbB2+osGd/BZQ8lhGj8SJwH7eouGSqObPZUeIyj
-	IsebMzOqQaee4jE6DbOuiM6kVcGeoA769OWdxsk=
-X-Google-Smtp-Source: AGHT+IFNl2QaHwhfSPIRRVVE8SAHU4vy7JEojJZherbgfMXxrnWyDyJ1X3+yW1jGo2jOr7eOOx5vEbZdnvTi/z8LSnw=
-X-Received: by 2002:a17:906:1688:b0:a23:665f:3981 with SMTP id
- s8-20020a170906168800b00a23665f3981mr2482371ejd.88.1703726667507; Wed, 27 Dec
- 2023 17:24:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SbchhMeQ"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6d9aa51571fso2622367b3a.3
+        for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 17:42:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1703727742; x=1704332542; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LKYKCC0iAyjtmcl9i3gxZmi/p+HZhZfirGb7twXi050=;
+        b=SbchhMeQdUDiYs7zBgfhg8wPO0yYMPNBwec9vjdd+bv/KV1puMUGEzAFdd8d19bZcW
+         1J/NW3vBV5ClnGKuTPlZ/gTEp9Txcb6KrCTIDJgqD10rr+IukgvFD0Pxz3CrQjGnN6Kq
+         L5Rt1IzGaGch4OV8xHrxtyqNdCEeu5Ya3+gJZTBplfRqwOe+roCMRtrMj/NkL/t4uMKG
+         63RjPO/Czp/uku+iebWBuWIldzVF4yJGJbMITMqIs1mzI/6tH8AlJ5h8RXmNUUk+gFXk
+         lb50spyaggHraQmfPfRy+ijycamdTRe+K1v3UB8eSHJrO5184U4olZDUXMXuh4GcI/qi
+         p2kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703727742; x=1704332542;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LKYKCC0iAyjtmcl9i3gxZmi/p+HZhZfirGb7twXi050=;
+        b=tG72k9KlshGVSF/6jjiWGjJKz8p+Nr4X3zbunvIvbDhe5iUM6tOvSh47qwJr3uQ04W
+         Kgh/lxQWzzYtRmWKwRUxB3154RhqIKhsDYJ3llf7IL/9fZ53BQrnHmM6Ujf8v6ugx3Qi
+         9LUMKQ7jp4pDIo7plODi8UrUyH88o0xx4BkTumnzJVuqSuM1lGKAn862b71WmcxJsDCu
+         JNJv9PEZkjiMWHWntXzwOtyx+3+9yzXMdbwgXCIvPBdhUF1DIep1oRfO0lrz8hOISYRD
+         5KSSYbl3e86SzIEshcihSGOrQnDSEp/7ANVNOj94fdqNdI6xBCLuEeYHba7WFNer5RgR
+         qWsQ==
+X-Gm-Message-State: AOJu0YzHCmgSy521rGB8Hq/FZNVtmgUlmktiCKCb4zY4uHlcxENYcsws
+	YNUWhXBpx//FCW3mDYR3Cu3xQpQ6JBQWIg==
+X-Google-Smtp-Source: AGHT+IHZ0/JideaaZYntOkNOqAPh5V/QL/d8QFy5AdTRppdgJDCkExfUqVkpEa+jpNl3GOmHDV7Ddw==
+X-Received: by 2002:a05:6a00:1d05:b0:6d9:bfb8:e37c with SMTP id a5-20020a056a001d0500b006d9bfb8e37cmr6112797pfx.41.1703727742547;
+        Wed, 27 Dec 2023 17:42:22 -0800 (PST)
+Received: from sw06.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id g24-20020aa78758000000b006d49ed3effasm7335440pfo.63.2023.12.27.17.42.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Dec 2023 17:42:22 -0800 (PST)
+From: Samuel Holland <samuel.holland@sifive.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	x86@kernel.org,
+	linux-riscv@lists.infradead.org,
+	Christoph Hellwig <hch@lst.de>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-arch@vger.kernel.org,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v2 00/14] Unified cross-architecture kernel-mode FPU API
+Date: Wed, 27 Dec 2023 17:41:50 -0800
+Message-ID: <20231228014220.3562640-1-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <MW4PR84MB3145344537A6C6629398DF7C819FA@MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM>
-In-Reply-To: <MW4PR84MB3145344537A6C6629398DF7C819FA@MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 28 Dec 2023 09:24:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7+oCWSLcRi87LeOxJg84DdPe=5pcAvNwwDs-ucTTAm2g@mail.gmail.com>
-Message-ID: <CAAhV-H7+oCWSLcRi87LeOxJg84DdPe=5pcAvNwwDs-ucTTAm2g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] LoongArch: use generic interface to support crashkernel=X,[high,low]
-To: Youling Tang <youling.tang@outlook.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>, 
-	loongarch@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Youling,
+This series unifies the kernel-mode FPU API across several architectures
+by wrapping the existing functions (where needed) in consistently-named
+functions placed in a consistent header location, with mostly the same
+semantics: they can be called from preemptible or non-preemptible task
+context, and are not assumed to be reentrant. Architectures are also
+expected to provide CFLAGS adjustments for compiling FPU-dependent code.
+For the moment, SIMD/vector units are out of scope for this common API.
 
-I squashed the two patches and applied here:
-https://github.com/chenhuacai/linux/commits/loongarch-next
+This allows us to remove the ifdeffery and duplicated Makefile logic at
+each FPU user. It then implements the common API on RISC-V, and converts
+a couple of users to the new API: the AMDGPU DRM driver, and the FPU
+self test.
 
-You can verify whether everything works.
+The underlying goal of this series is to allow using newer AMD GPUs
+(e.g. Navi) on RISC-V boards such as SiFive's HiFive Unmatched. Those
+GPUs need CONFIG_DRM_AMD_DC_FP to initialize, which requires kernel-mode
+FPU support.
 
-Huacai
+Previous versions:
+v1: https://lore.kernel.org/linux-kernel/20231208055501.2916202-1-samuel.holland@sifive.com/
+v0: https://lore.kernel.org/linux-kernel/20231122030621.3759313-1-samuel.holland@sifive.com/
 
-On Wed, Dec 27, 2023 at 8:31=E2=80=AFPM Youling Tang <youling.tang@outlook.=
-com> wrote:
->
-> From: Youling Tang <tangyouling@kylinos.cn>
->
-> LoongArch already supports two crashkernel regions in kexec-tools, so we
-> can directly use the common interface to support crashkernel=3DX,[hign,lo=
-w]
-> after commit 0ab97169aa05("crash_core: add generic function to do reserva=
-tion").
->
-> With the help of newly changed function parse_crashkernel() and generic
-> reserve_crashkernel_generic(), crashkernel reservation can be simplified
-> by steps:
->
-> 1) Add a new header file <asm/crash_core.h>, and define CRASH_ALIGN,
->    CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX and
->    DEFAULT_CRASH_KERNEL_LOW_SIZE in <asm/crash_core.h>;
->
-> 2) Add arch_reserve_crashkernel() to call parse_crashkernel() and
->    reserve_crashkernel_generic();
->
-> 3) Add ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION Kconfig in
->    arch/loongarch/Kconfig.
->
-> One can reserve the crash kernel from high memory above DMA zone range
-> by explicitly passing "crashkernel=3DX,high"; or reserve a memory range
-> below 4G with "crashkernel=3DX,low". Besides, there are few rules need
-> to take notice:
->
-> 1) "crashkernel=3DX,[high,low]" will be ignored if "crashkernel=3Dsize"
->    is specified.
-> 2) "crashkernel=3DX,low" is valid only when "crashkernel=3DX,high" is pas=
-sed
->    and there is enough memory to be allocated under 4G.
-> 3) When allocating crashkernel above 4G and no "crashkernel=3DX,low" is
->    specified, a 128M low memory will be allocated automatically for
->    swiotlb bounce buffer.
-> See Documentation/admin-guide/kernel-parameters.txt for more information.
->
-> Following test cases have been performed as expected:
-> 1) crashkernel=3D256M                          //low=3D256M
-> 2) crashkernel=3D1G                            //low=3D1G
-> 3) crashkernel=3D4G                            //high=3D4G, low=3D128M(de=
-fault)
-> 4) crashkernel=3D4G crashkernel=3D256M,high      //high=3D4G, low=3D128M(=
-default), high is ignored
-> 5) crashkernel=3D4G crashkernel=3D256M,low       //high=3D4G, low=3D128M(=
-default), low is ignored
-> 6) crashkernel=3D4G,high                       //high=3D4G, low=3D128M(de=
-fault)
-> 7) crashkernel=3D256M,low                      //low=3D0M, invalid
-> 8) crashkernel=3D4G,high crashkernel=3D256M,low  //high=3D4G, low=3D256M
-> 9) crashkernel=3D4G,high crashkernel=3D4G,low    //high=3D0M, low=3D0M, i=
-nvalid
-> 10) crashkernel=3D512M@2560M                   //low=3D512M
-> 11) crashkernel=3D1G,high crashkernel=3D0M,low   //high=3D1G, low=3D0M
->
-> Recommended usage in general:
-> 1) In the case of small memory: crashkernel=3D512M
-> 2) In the case of large memory: crashkernel=3D1024M,high crashkernel=3D12=
-8M,low
->
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
-> v2:
-> Submit information and format adjustments.
->
->  arch/loongarch/Kconfig                  |  3 ++
->  arch/loongarch/include/asm/crash_core.h | 11 ++++++
->  arch/loongarch/kernel/setup.c           | 46 ++++++-------------------
->  3 files changed, 25 insertions(+), 35 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/crash_core.h
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index ee123820a476..02060b2ac3f2 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -575,6 +575,9 @@ config ARCH_SELECTS_CRASH_DUMP
->         depends on CRASH_DUMP
->         select RELOCATABLE
->
-> +config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> +       def_bool CRASH_CORE
-> +
->  config RELOCATABLE
->         bool "Relocatable kernel"
->         help
-> diff --git a/arch/loongarch/include/asm/crash_core.h b/arch/loongarch/inc=
-lude/asm/crash_core.h
-> new file mode 100644
-> index 000000000000..1f7040d8ed0f
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/crash_core.h
-> @@ -0,0 +1,11 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef _LOONGARCH_CRASH_CORE_H
-> +#define _LOONGARCH_CRASH_CORE_H
-> +
-> +#define CRASH_ALIGN                    SZ_2M
-> +
-> +#define CRASH_ADDR_LOW_MAX             SZ_4G
-> +#define CRASH_ADDR_HIGH_MAX            memblock_end_of_DRAM()
-> +
-> +extern phys_addr_t memblock_end_of_DRAM(void);
-> +#endif
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
-c
-> index d183a745fb85..189cd9575758 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -252,38 +252,23 @@ static void __init arch_reserve_vmcore(void)
->  #endif
->  }
->
-> -/* 2MB alignment for crash kernel regions */
-> -#define CRASH_ALIGN    SZ_2M
-> -#define CRASH_ADDR_MAX SZ_4G
-> -
-> -static void __init arch_parse_crashkernel(void)
-> +static void __init arch_reserve_crashkernel(void)
->  {
-> -#ifdef CONFIG_KEXEC
-> -       int ret;
-> -       unsigned long long total_mem;
-> +       unsigned long long low_size =3D 0;
->         unsigned long long crash_base, crash_size;
-> +       char *cmdline =3D boot_command_line;
-> +       bool high =3D false;
-> +       int ret;
->
-> -       total_mem =3D memblock_phys_mem_size();
-> -       ret =3D parse_crashkernel(boot_command_line, total_mem,
-> -                               &crash_size, &crash_base,
-> -                               NULL, NULL);
-> -       if (ret < 0 || crash_size <=3D 0)
-> +       if (!IS_ENABLED(CONFIG_KEXEC_CORE))
->                 return;
->
-> -       if (crash_base <=3D 0) {
-> -               crash_base =3D memblock_phys_alloc_range(crash_size, CRAS=
-H_ALIGN, CRASH_ALIGN, CRASH_ADDR_MAX);
-> -               if (!crash_base) {
-> -                       pr_warn("crashkernel reservation failed - No suit=
-able area found.\n");
-> -                       return;
-> -               }
-> -       } else if (!memblock_phys_alloc_range(crash_size, CRASH_ALIGN, cr=
-ash_base, crash_base + crash_size)) {
-> -               pr_warn("Invalid memory region reserved for crash kernel\=
-n");
-> +       ret =3D parse_crashkernel(cmdline, memblock_phys_mem_size(),
-> +                               &crash_size, &crash_base, &low_size, &hig=
-h);
-> +       if (ret)
->                 return;
-> -       }
->
-> -       crashk_res.start =3D crash_base;
-> -       crashk_res.end   =3D crash_base + crash_size - 1;
-> -#endif
-> +       reserve_crashkernel_generic(cmdline, crash_size, crash_base, low_=
-size, high);
->  }
->
->  static void __init fdt_setup(void)
-> @@ -357,7 +342,7 @@ static void __init bootcmdline_init(char **cmdline_p)
->  void __init platform_init(void)
->  {
->         arch_reserve_vmcore();
-> -       arch_parse_crashkernel();
-> +       arch_reserve_crashkernel();
->
->  #ifdef CONFIG_ACPI_TABLE_UPGRADE
->         acpi_table_upgrade();
-> @@ -467,15 +452,6 @@ static void __init resource_init(void)
->                 request_resource(res, &data_resource);
->                 request_resource(res, &bss_resource);
->         }
-> -
-> -#ifdef CONFIG_KEXEC
-> -       if (crashk_res.start < crashk_res.end) {
-> -               insert_resource(&iomem_resource, &crashk_res);
-> -               pr_info("Reserving %ldMB of memory at %ldMB for crashkern=
-el\n",
-> -                       (unsigned long)((crashk_res.end - crashk_res.star=
-t + 1) >> 20),
-> -                       (unsigned long)(crashk_res.start  >> 20));
-> -       }
-> -#endif
->  }
->
->  static int __init add_legacy_isa_io(struct fwnode_handle *fwnode,
-> --
-> 2.40.0
->
->
+Changes in v2:
+ - Add documentation explaining the built-time and runtime APIs
+ - Add a linux/fpu.h header for generic isolation enforcement
+ - Remove file name from header comment
+ - Clean up arch/arm64/lib/Makefile, like for arch/arm
+ - Remove RISC-V architecture-specific preprocessor check
+ - Split altivec removal to a separate patch
+ - Use linux/fpu.h instead of asm/fpu.h in consumers
+ - Declare test_fpu() in a header
+
+Michael Ellerman (1):
+  drm/amd/display: Only use hard-float, not altivec on powerpc
+
+Samuel Holland (13):
+  arch: Add ARCH_HAS_KERNEL_FPU_SUPPORT
+  ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  ARM: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
+  arm64: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  arm64: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
+  lib/raid6: Use CC_FLAGS_FPU for NEON CFLAGS
+  LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  powerpc: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  x86: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  riscv: Add support for kernel-mode FPU
+  drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+  selftests/fpu: Move FP code to a separate translation unit
+  selftests/fpu: Allow building on other architectures
+
+ Documentation/core-api/floating-point.rst     | 78 +++++++++++++++++++
+ Documentation/core-api/index.rst              |  1 +
+ Makefile                                      |  5 ++
+ arch/Kconfig                                  |  6 ++
+ arch/arm/Kconfig                              |  1 +
+ arch/arm/Makefile                             |  7 ++
+ arch/arm/include/asm/fpu.h                    | 15 ++++
+ arch/arm/lib/Makefile                         |  3 +-
+ arch/arm64/Kconfig                            |  1 +
+ arch/arm64/Makefile                           |  9 ++-
+ arch/arm64/include/asm/fpu.h                  | 15 ++++
+ arch/arm64/lib/Makefile                       |  6 +-
+ arch/loongarch/Kconfig                        |  1 +
+ arch/loongarch/Makefile                       |  5 +-
+ arch/loongarch/include/asm/fpu.h              |  1 +
+ arch/powerpc/Kconfig                          |  1 +
+ arch/powerpc/Makefile                         |  5 +-
+ arch/powerpc/include/asm/fpu.h                | 28 +++++++
+ arch/riscv/Kconfig                            |  1 +
+ arch/riscv/Makefile                           |  3 +
+ arch/riscv/include/asm/fpu.h                  | 16 ++++
+ arch/riscv/kernel/Makefile                    |  1 +
+ arch/riscv/kernel/kernel_mode_fpu.c           | 28 +++++++
+ arch/x86/Kconfig                              |  1 +
+ arch/x86/Makefile                             | 20 +++++
+ arch/x86/include/asm/fpu.h                    | 13 ++++
+ drivers/gpu/drm/amd/display/Kconfig           |  2 +-
+ .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    | 35 +--------
+ drivers/gpu/drm/amd/display/dc/dml/Makefile   | 36 +--------
+ drivers/gpu/drm/amd/display/dc/dml2/Makefile  | 36 +--------
+ include/linux/fpu.h                           | 12 +++
+ lib/Kconfig.debug                             |  2 +-
+ lib/Makefile                                  | 26 +------
+ lib/raid6/Makefile                            | 31 ++------
+ lib/test_fpu.h                                |  8 ++
+ lib/{test_fpu.c => test_fpu_glue.c}           | 37 ++-------
+ lib/test_fpu_impl.c                           | 37 +++++++++
+ 37 files changed, 343 insertions(+), 190 deletions(-)
+ create mode 100644 Documentation/core-api/floating-point.rst
+ create mode 100644 arch/arm/include/asm/fpu.h
+ create mode 100644 arch/arm64/include/asm/fpu.h
+ create mode 100644 arch/powerpc/include/asm/fpu.h
+ create mode 100644 arch/riscv/include/asm/fpu.h
+ create mode 100644 arch/riscv/kernel/kernel_mode_fpu.c
+ create mode 100644 arch/x86/include/asm/fpu.h
+ create mode 100644 include/linux/fpu.h
+ create mode 100644 lib/test_fpu.h
+ rename lib/{test_fpu.c => test_fpu_glue.c} (71%)
+ create mode 100644 lib/test_fpu_impl.c
+
+-- 
+2.42.0
+
