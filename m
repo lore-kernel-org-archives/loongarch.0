@@ -1,47 +1,47 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8156D3F
-	for <loongarch@lists.linux.dev>; Thu, 28 Dec 2023 01:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558006FD6
+	for <loongarch@lists.linux.dev>; Thu, 28 Dec 2023 01:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="nUvUijz9"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3bbd11b2f95so106946b6e.0
-        for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 17:42:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="nTd6wt1w"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6d98ce84e18so3891082b3a.3
+        for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 17:42:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1703727751; x=1704332551; darn=lists.linux.dev;
+        d=sifive.com; s=google; t=1703727753; x=1704332553; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h+RheApEuJN9kaaLRvICyPNbTjOVIvY5kEzb7DbTZjA=;
-        b=nUvUijz9qfqkoZ520qigbtI4jtIRfeeQAFAqlQVQG33qJETDkQ7ChvkUQVrtJYvTB4
-         3/bFbVkHQ7r989ThRhZBJcIr8m0c5cxn7xRViS1QccIdN4OvoIRifOkt1pd+CimD9GRm
-         RJkEgH5TmFT84eCCegVjAza0Vi4GFt/Dja6tZpnxdnfmss1Cb25ZOg0yOowBR9VPDR86
-         hR7016Ods4aE1+zTBN/ARV+EEBuIZoGhwXGnxF/CmDT0D3i+NRx5uhz+qASIaQ/8m+8q
-         xdtSFCQeBx0dyh/KNaLbD5wV7McBF7gN7cOxsNsRN4+evfafQOlY2kpatqwIdzXIOEIG
-         8okg==
+        bh=5FK4PuyaVW5o+fowKBsFSathMMiGJoXogQryv4/PrHo=;
+        b=nTd6wt1wqWA8TBoL3qzlS/ONgS3vbcVgYmg02kRBoN/AbtamHW5SmsVNs4QMjn3EE3
+         1WPpEGV0f4MnO7MUNKYEmrEhc109ClelnXilBNtnf2o5lzIV/Od1Rxmbje8ea7G1kGe+
+         0TTGov4dcgOQlDVJd5XYidpw14u8npCDDJ89RGG/aK1I1/JXoZKsYl6jQJ9Tnhhmbpcu
+         DPkhjTK185wBS4r+N//hKqSw8acFowu+9SHTK9nq2go+sJAhSGvVybZYlmOj8Oa8XikN
+         R/wiQ/eOPRkKVFZd0e542G05AfNJ3xGGZdpqVknHlFiDQ/5CfVbAG/cDX7c2AmME0k9Y
+         6x9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703727751; x=1704332551;
+        d=1e100.net; s=20230601; t=1703727753; x=1704332553;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h+RheApEuJN9kaaLRvICyPNbTjOVIvY5kEzb7DbTZjA=;
-        b=FpCscQxxY2ve3jpjEduTrZ/Oe4/Ec+tW7i0cttdCW6vqg8aoY/TCiINnP11OxwAYSY
-         Tm13vJUYfW2gDuZuZjkQPzOQ3t+Ks+hInn2p28OgZ4ZePGd58kiAQGXXJBcQM6stkvt6
-         LaBo6N7LEN88ggdo17agQKF6vfsEEOyaPRpXwkFWy/ZZ7zZUjrYEqg6JMxFcPLhpnSoj
-         sLAJeP4meIq92Mv8UiJZ84R5pJPfMzEJXwRp6djUDK6mAOQE/L2Hvd69V/RGf5PfkiT1
-         pt/AbqXKMrJ/qkovtAx3A0e4qQ8nphDhX/5Q3Q166OKb6S8F2EOrsKvg+sRYqEGv6bXa
-         hhuQ==
-X-Gm-Message-State: AOJu0YxPQEaAcwAEGvD6vhqAerv/fjFCd9TUBqEumcg//lhuDc2ncaXV
-	j+jD5iXS6+a7ufHq5Ktwpf+i1g0yIXQWOHgvCRrdtzzVTWA=
-X-Google-Smtp-Source: AGHT+IFlYg0OgNqHd1istrtt2UTcBedE87vqCIVNtp3f0Z5ptnzM2zYPRY9OCADmqV6QIO1pVX8ZnQ==
-X-Received: by 2002:a05:6808:6544:b0:3bb:b063:1afe with SMTP id fn4-20020a056808654400b003bbb0631afemr7698441oib.113.1703727751522;
-        Wed, 27 Dec 2023 17:42:31 -0800 (PST)
+        bh=5FK4PuyaVW5o+fowKBsFSathMMiGJoXogQryv4/PrHo=;
+        b=KwwWzwiJZ7zpUJo9E2YHK2w0oxPWuKHjJ0zEVGa3qiS2rH7B4NU/Gu2idb+rWuqMFW
+         TUbFJz2pq+lQowDJHDfovo7YJAKHB+f/LqmCtYCqk2QQezZCxCexmvfi/2NPRrDGsUSa
+         CoiWdy53akpVmOh4e8bvLSn8VQ4eA1xk28cjlOQmIUJV5WOgbcU9k/dy/nxyfTLcEeH/
+         wn7+U93IvCqBXTkgNJflGyi4bhXmeDcQZ49boCoKDh/4Jxg3eYSHRkniqcJFFF4cxBXZ
+         r9W9l7C6jxaSGyCiKrwF+k6EfXkuAIN0/IYL0ptB3+EQwUW3AOJ9Qr8W5+itE23UP/Zf
+         ycMg==
+X-Gm-Message-State: AOJu0Yw8qs2zT5vY2ksD71HmKPGDoTere4ugrzJur5CbK3yFSSTn0I+0
+	/7YCeeIjp01KlFaWqVsu7y9bXvbzKJvO3A==
+X-Google-Smtp-Source: AGHT+IGDcwpDNI+ACJS8JwK6slMdt2P3zgEqkBXVCA8XIoKmVvXUWVJm0n6YvZtcZMejj6VORWJ3pQ==
+X-Received: by 2002:a05:6a21:612:b0:194:f17b:f877 with SMTP id ll18-20020a056a21061200b00194f17bf877mr9226487pzb.61.1703727752746;
+        Wed, 27 Dec 2023 17:42:32 -0800 (PST)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id g24-20020aa78758000000b006d49ed3effasm7335440pfo.63.2023.12.27.17.42.30
+        by smtp.gmail.com with ESMTPSA id g24-20020aa78758000000b006d49ed3effasm7335440pfo.63.2023.12.27.17.42.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Dec 2023 17:42:31 -0800 (PST)
+        Wed, 27 Dec 2023 17:42:32 -0800 (PST)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: linux-arm-kernel@lists.infradead.org,
 	linuxppc-dev@lists.ozlabs.org,
@@ -52,11 +52,10 @@ Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	amd-gfx@lists.freedesktop.org,
 	linux-arch@vger.kernel.org,
-	Samuel Holland <samuel.holland@sifive.com>,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v2 07/14] LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
-Date: Wed, 27 Dec 2023 17:41:57 -0800
-Message-ID: <20231228014220.3562640-8-samuel.holland@sifive.com>
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v2 08/14] powerpc: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+Date: Wed, 27 Dec 2023 17:41:58 -0800
+Message-ID: <20231228014220.3562640-9-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231228014220.3562640-1-samuel.holland@sifive.com>
 References: <20231228014220.3562640-1-samuel.holland@sifive.com>
@@ -68,69 +67,92 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-LoongArch already provides kernel_fpu_begin() and kernel_fpu_end() in
-asm/fpu.h, so it only needs to add kernel_fpu_available() and export
-the CFLAGS adjustments.
+PowerPC provides an equivalent to the common kernel-mode FPU API, but in
+a different header and using different function names. The PowerPC API
+also requires a non-preemptible context. Add a wrapper header, and
+export the CFLAGS adjustments.
 
-Acked-by: WANG Xuerui <git@xen0n.name>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
 
 (no changes since v1)
 
- arch/loongarch/Kconfig           | 1 +
- arch/loongarch/Makefile          | 5 ++++-
- arch/loongarch/include/asm/fpu.h | 1 +
- 3 files changed, 6 insertions(+), 1 deletion(-)
+ arch/powerpc/Kconfig           |  1 +
+ arch/powerpc/Makefile          |  5 ++++-
+ arch/powerpc/include/asm/fpu.h | 28 ++++++++++++++++++++++++++++
+ 3 files changed, 33 insertions(+), 1 deletion(-)
+ create mode 100644 arch/powerpc/include/asm/fpu.h
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index ee123820a476..65d4475565b8 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -15,6 +15,7 @@ config LOONGARCH
- 	select ARCH_HAS_CPU_FINALIZE_INIT
- 	select ARCH_HAS_FORTIFY_SOURCE
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 6f105ee4f3cf..e96cb5b7c571 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -137,6 +137,7 @@ config PPC
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_HUGEPD			if HUGETLB_PAGE
  	select ARCH_HAS_KCOV
-+	select ARCH_HAS_KERNEL_FPU_SUPPORT if CPU_HAS_FPU
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PTE_SPECIAL
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 4ba8d67ddb09..1afe28feaba5 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -25,6 +25,9 @@ endif
- 32bit-emul		= elf32loongarch
- 64bit-emul		= elf64loongarch
++	select ARCH_HAS_KERNEL_FPU_SUPPORT	if PPC_FPU
+ 	select ARCH_HAS_MEMBARRIER_CALLBACKS
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+ 	select ARCH_HAS_MEMREMAP_COMPAT_ALIGN	if PPC_64S_HASH_MMU
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index f19dbaa1d541..91106970a8c1 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -142,6 +142,9 @@ CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option, $(MULTIPLEWORD))
  
-+CC_FLAGS_FPU		:= -mfpu=64
-+CC_FLAGS_NO_FPU		:= -msoft-float
+ CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option,-mno-readonly-in-sdata)
+ 
++CC_FLAGS_FPU		:= $(call cc-option,-mhard-float)
++CC_FLAGS_NO_FPU		:= $(call cc-option,-msoft-float)
 +
- ifdef CONFIG_DYNAMIC_FTRACE
- KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
- CC_FLAGS_FTRACE := -fpatchable-function-entry=2
-@@ -46,7 +49,7 @@ ld-emul			= $(64bit-emul)
- cflags-y		+= -mabi=lp64s
- endif
+ ifdef CONFIG_FUNCTION_TRACER
+ ifdef CONFIG_ARCH_USING_PATCHABLE_FUNCTION_ENTRY
+ KBUILD_CPPFLAGS	+= -DCC_USING_PATCHABLE_FUNCTION_ENTRY
+@@ -163,7 +166,7 @@ asinstr := $(call as-instr,lis 9$(comma)foo@high,-DHAVE_AS_ATHIGH=1)
  
--cflags-y			+= -pipe -msoft-float
-+cflags-y			+= -pipe $(CC_FLAGS_NO_FPU)
- LDFLAGS_vmlinux			+= -static -n -nostdlib
+ KBUILD_CPPFLAGS	+= -I $(srctree)/arch/$(ARCH) $(asinstr)
+ KBUILD_AFLAGS	+= $(AFLAGS-y)
+-KBUILD_CFLAGS	+= $(call cc-option,-msoft-float)
++KBUILD_CFLAGS	+= $(CC_FLAGS_NO_FPU)
+ KBUILD_CFLAGS	+= $(CFLAGS-y)
+ CPP		= $(CC) -E $(KBUILD_CFLAGS)
  
- # When the assembler supports explicit relocation hint, we must use it.
-diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
-index c2d8962fda00..3177674228f8 100644
---- a/arch/loongarch/include/asm/fpu.h
-+++ b/arch/loongarch/include/asm/fpu.h
-@@ -21,6 +21,7 @@
- 
- struct sigcontext;
- 
-+#define kernel_fpu_available() cpu_has_fpu
- extern void kernel_fpu_begin(void);
- extern void kernel_fpu_end(void);
- 
+diff --git a/arch/powerpc/include/asm/fpu.h b/arch/powerpc/include/asm/fpu.h
+new file mode 100644
+index 000000000000..ca584e4bc40f
+--- /dev/null
++++ b/arch/powerpc/include/asm/fpu.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2023 SiFive
++ */
++
++#ifndef _ASM_POWERPC_FPU_H
++#define _ASM_POWERPC_FPU_H
++
++#include <linux/preempt.h>
++
++#include <asm/cpu_has_feature.h>
++#include <asm/switch_to.h>
++
++#define kernel_fpu_available()	(!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
++
++static inline void kernel_fpu_begin(void)
++{
++	preempt_disable();
++	enable_kernel_fp();
++}
++
++static inline void kernel_fpu_end(void)
++{
++	disable_kernel_fp();
++	preempt_enable();
++}
++
++#endif /* ! _ASM_POWERPC_FPU_H */
 -- 
 2.42.0
 
