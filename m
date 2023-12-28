@@ -1,47 +1,47 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B5B882D
-	for <loongarch@lists.linux.dev>; Thu, 28 Dec 2023 01:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33562BE74
+	for <loongarch@lists.linux.dev>; Thu, 28 Dec 2023 01:42:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dI/0nhQj"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6d9aa51571fso2622445b3a.3
-        for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 17:42:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="gPJ3YlSO"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-594c7241fa9so894488eaf.0
+        for <loongarch@lists.linux.dev>; Wed, 27 Dec 2023 17:42:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1703727757; x=1704332557; darn=lists.linux.dev;
+        d=sifive.com; s=google; t=1703727759; x=1704332559; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g3Nao5aFqcs14j7uzTeCL4obzFSkk9OE7jeAS4fIG/k=;
-        b=dI/0nhQj4eDwLp66ALjHdaGvq2UvhCZDLZyoVel4Y9Y6Hr6Kx+h3bl3gDs9toN6Pvc
-         hOhpSO9zRmv/oeo0ZCYOBbnJUrXeBp6adFeStfUtD0j1W6uXep823stJn09wmUJ2L/gA
-         7igosYZNT3RffdLRt+8083cLZ4bDqj9HNgGyCp7hHsxcJs10yBdaeMCVGQYoId9+paqN
-         WDDfsmWusuu+B7/HSsUUdzO8CGR8hDJG6u3p2ut9+q0u73pgA6bDcZDXKr93rv1GLQtm
-         h1WsyhYLLrM2LYMemdGzPSg+Tq1IoR4vvpm6pyFu7UmMaLmp2tAGZ7xQcLrdPW1y4DML
-         lW3w==
+        bh=cNUGRAFHmKzY6lG9DcfUZlQ4QTwCBjkCL5t9hP4xKAE=;
+        b=gPJ3YlSOb+SSWxqMaTW5flOsS3XuDJ5ZskLExvuKUn5qj117wo2xIIFUpg2Ep6CPQ2
+         VYtNmpL6wbtTfzozoNRerquk57JOfvfoCrIJ60Am/lEYC2i9OsjCf2VZBVsx5DkdNrA8
+         UoLUurqm0fx1HR9X/oPuKb5npY8iODHyc7iCMfnKjgHJE0FMMv1qW2gYdDYuGulq7VGb
+         9Q1zTIf111yfewyaObCgiakgG4c5s+H4BRujYY2sQhsPzNqav9cOJ0K3CchvPefkaaRw
+         Tdw0tne3vb/c7MUgn3ZdBEmxc7PLRhKUxrz1AmN90bMvzLZPFLGYJdCFuqGa8oGndECh
+         Rr1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703727757; x=1704332557;
+        d=1e100.net; s=20230601; t=1703727759; x=1704332559;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=g3Nao5aFqcs14j7uzTeCL4obzFSkk9OE7jeAS4fIG/k=;
-        b=Lcw97ESIlLN6X7iK1KBEwN3CK3wH+/kdzAgKwG9mG4kClJARQT5ZqRCgJYHZQzTRlj
-         k87Ngt0Ko9y9voOeUZjXHd2GlYVXvwE3RDJl7hG0K5ukV1LZzo2Rr/FwAD7PEIMPOakP
-         Xcp07KUMT+hAzIE4noBfbg0VfiPrUBeucISCwcqEyahJyXjW48IsGY9HydjPtgnsT4wm
-         zMYEx6Yria/Env5qwW9ZBQM402RtljgTN5fxgBTIk4O70aSxh4+Or3Bu/VwZiQEFIRhG
-         2/nVQGKYJs589b7yXRC9kp3ZZR+qiXysuykNFNduCqnOm+whN8x29qOQt7erSvKFj4Fa
-         lIkw==
-X-Gm-Message-State: AOJu0Yxv3WeJKUhVahS1w0T85Ziya+OWMw8zsJVdJ8Dl8XRb1oOrt+8K
-	FeBFvVHKjzsv/O+6zcBdMpFVNtyZPpqGlQ==
-X-Google-Smtp-Source: AGHT+IF6EDv76QAoc6OEmsqDg21WkjdveqS7R2bB/shYp3RQfsvs+Kqk+D0lgj6bhfU+kuxRie9joQ==
-X-Received: by 2002:aa7:91d5:0:b0:6d2:95d4:9c37 with SMTP id z21-20020aa791d5000000b006d295d49c37mr9390922pfa.30.1703727756811;
-        Wed, 27 Dec 2023 17:42:36 -0800 (PST)
+        bh=cNUGRAFHmKzY6lG9DcfUZlQ4QTwCBjkCL5t9hP4xKAE=;
+        b=NtFWkuERhq38n1AlMpbzCIAHhuPQo0TQA/gh3Ff4J43hhTaDJMkz6cFIVYJvcp8re6
+         FIIMo/AvBWb7rHEaNwkHE5/bmr+hEgQe9KGlcuQnp35+Vw45XiMsn51/DWByv7RbxfyI
+         m98wXuhvgmDcCd1UYXUwxSuwgsFgoaAjQJtQrLgzGE6eFOcElYjmgc4mCh6G0qF/5ExB
+         IMWvKvApmGs3poMelAHZgZDDyY2Z07yMy3nu/DRyppCTTWXs1o5Y6eN0y7CPtYfBTib1
+         YfqPZZOlp9gp1tohf5UELQ4VBbLe/V0qPrxIw1I3RlA2JqvZiIjSRSDCAv5BKD8dgm7p
+         2g9g==
+X-Gm-Message-State: AOJu0YyYz3IWFr1E6n7hSejBzDMBDJZp8FbKJc7GZoyZvzCdnmean1uL
+	Kv/VReG71O4F5k/vKh8mowbPC/olGBrNmg==
+X-Google-Smtp-Source: AGHT+IGvfqTB3x7wwPMxp1qNsfQvBXkwAH7kyz4he4Bu1Z+L46cvb1psldcQ6vV6De8969ozhHXwqQ==
+X-Received: by 2002:a05:6358:3a1b:b0:172:c06c:fce3 with SMTP id g27-20020a0563583a1b00b00172c06cfce3mr5190091rwe.58.1703727759326;
+        Wed, 27 Dec 2023 17:42:39 -0800 (PST)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id g24-20020aa78758000000b006d49ed3effasm7335440pfo.63.2023.12.27.17.42.35
+        by smtp.gmail.com with ESMTPSA id g24-20020aa78758000000b006d49ed3effasm7335440pfo.63.2023.12.27.17.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Dec 2023 17:42:36 -0800 (PST)
+        Wed, 27 Dec 2023 17:42:39 -0800 (PST)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: linux-arm-kernel@lists.infradead.org,
 	linuxppc-dev@lists.ozlabs.org,
@@ -52,11 +52,10 @@ Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	amd-gfx@lists.freedesktop.org,
 	linux-arch@vger.kernel.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
 	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v2 11/14] drm/amd/display: Only use hard-float, not altivec on powerpc
-Date: Wed, 27 Dec 2023 17:42:01 -0800
-Message-ID: <20231228014220.3562640-12-samuel.holland@sifive.com>
+Subject: [PATCH v2 13/14] selftests/fpu: Move FP code to a separate translation unit
+Date: Wed, 27 Dec 2023 17:42:03 -0800
+Message-ID: <20231228014220.3562640-14-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231228014220.3562640-1-samuel.holland@sifive.com>
 References: <20231228014220.3562640-1-samuel.holland@sifive.com>
@@ -68,82 +67,142 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+This ensures no compiler-generated floating-point code can appear
+outside kernel_fpu_{begin,end}() sections, and some architectures
+enforce this separation.
 
-The compiler flags enable altivec, but that is not required; hard-float
-is sufficient for the code to build and function.
-
-Drop altivec from the compiler flags and adjust the enable/disable code
-to only enable FPU use.
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
 
 Changes in v2:
- - New patch for v2
+ - Declare test_fpu() in a header
 
- drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c | 12 ++----------
- drivers/gpu/drm/amd/display/dc/dml/Makefile    |  2 +-
- drivers/gpu/drm/amd/display/dc/dml2/Makefile   |  2 +-
- 3 files changed, 4 insertions(+), 12 deletions(-)
+ lib/Makefile                        |  3 ++-
+ lib/test_fpu.h                      |  8 +++++++
+ lib/{test_fpu.c => test_fpu_glue.c} | 32 +------------------------
+ lib/test_fpu_impl.c                 | 37 +++++++++++++++++++++++++++++
+ 4 files changed, 48 insertions(+), 32 deletions(-)
+ create mode 100644 lib/test_fpu.h
+ rename lib/{test_fpu.c => test_fpu_glue.c} (71%)
+ create mode 100644 lib/test_fpu_impl.c
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
-index 4ae4720535a5..0de16796466b 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
-@@ -92,11 +92,7 @@ void dc_fpu_begin(const char *function_name, const int line)
- #if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
- 		kernel_fpu_begin();
- #elif defined(CONFIG_PPC64)
--		if (cpu_has_feature(CPU_FTR_VSX_COMP))
--			enable_kernel_vsx();
--		else if (cpu_has_feature(CPU_FTR_ALTIVEC_COMP))
--			enable_kernel_altivec();
--		else if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
-+		if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
- 			enable_kernel_fp();
- #elif defined(CONFIG_ARM64)
- 		kernel_neon_begin();
-@@ -125,11 +121,7 @@ void dc_fpu_end(const char *function_name, const int line)
- #if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
- 		kernel_fpu_end();
- #elif defined(CONFIG_PPC64)
--		if (cpu_has_feature(CPU_FTR_VSX_COMP))
--			disable_kernel_vsx();
--		else if (cpu_has_feature(CPU_FTR_ALTIVEC_COMP))
--			disable_kernel_altivec();
--		else if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
-+		if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
- 			disable_kernel_fp();
- #elif defined(CONFIG_ARM64)
- 		kernel_neon_end();
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-index 6042a5a6a44f..554c39024a40 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-@@ -31,7 +31,7 @@ dml_ccflags := $(dml_ccflags-y) -msse
+diff --git a/lib/Makefile b/lib/Makefile
+index 6b09731d8e61..e7cbd54944a2 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -132,7 +132,8 @@ FPU_CFLAGS += $(call cc-option,-msse -mpreferred-stack-boundary=3,-mpreferred-st
  endif
  
- ifdef CONFIG_PPC64
--dml_ccflags := -mhard-float -maltivec
-+dml_ccflags := -mhard-float
- endif
+ obj-$(CONFIG_TEST_FPU) += test_fpu.o
+-CFLAGS_test_fpu.o += $(FPU_CFLAGS)
++test_fpu-y := test_fpu_glue.o test_fpu_impl.o
++CFLAGS_test_fpu_impl.o += $(FPU_CFLAGS)
  
- ifdef CONFIG_ARM64
-diff --git a/drivers/gpu/drm/amd/display/dc/dml2/Makefile b/drivers/gpu/drm/amd/display/dc/dml2/Makefile
-index acff3449b8d7..7b51364084b5 100644
---- a/drivers/gpu/drm/amd/display/dc/dml2/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml2/Makefile
-@@ -30,7 +30,7 @@ dml2_ccflags := $(dml2_ccflags-y) -msse
- endif
+ obj-$(CONFIG_TEST_LIVEPATCH) += livepatch/
  
- ifdef CONFIG_PPC64
--dml2_ccflags := -mhard-float -maltivec
-+dml2_ccflags := -mhard-float
- endif
+diff --git a/lib/test_fpu.h b/lib/test_fpu.h
+new file mode 100644
+index 000000000000..4459807084bc
+--- /dev/null
++++ b/lib/test_fpu.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++
++#ifndef _LIB_TEST_FPU_H
++#define _LIB_TEST_FPU_H
++
++int test_fpu(void);
++
++#endif
+diff --git a/lib/test_fpu.c b/lib/test_fpu_glue.c
+similarity index 71%
+rename from lib/test_fpu.c
+rename to lib/test_fpu_glue.c
+index e82db19fed84..85963d7be826 100644
+--- a/lib/test_fpu.c
++++ b/lib/test_fpu_glue.c
+@@ -19,37 +19,7 @@
+ #include <linux/debugfs.h>
+ #include <asm/fpu/api.h>
  
- ifdef CONFIG_ARM64
+-static int test_fpu(void)
+-{
+-	/*
+-	 * This sequence of operations tests that rounding mode is
+-	 * to nearest and that denormal numbers are supported.
+-	 * Volatile variables are used to avoid compiler optimizing
+-	 * the calculations away.
+-	 */
+-	volatile double a, b, c, d, e, f, g;
+-
+-	a = 4.0;
+-	b = 1e-15;
+-	c = 1e-310;
+-
+-	/* Sets precision flag */
+-	d = a + b;
+-
+-	/* Result depends on rounding mode */
+-	e = a + b / 2;
+-
+-	/* Denormal and very large values */
+-	f = b / c;
+-
+-	/* Depends on denormal support */
+-	g = a + c * f;
+-
+-	if (d > a && e > a && g > a)
+-		return 0;
+-	else
+-		return -EINVAL;
+-}
++#include "test_fpu.h"
+ 
+ static int test_fpu_get(void *data, u64 *val)
+ {
+diff --git a/lib/test_fpu_impl.c b/lib/test_fpu_impl.c
+new file mode 100644
+index 000000000000..777894dbbe86
+--- /dev/null
++++ b/lib/test_fpu_impl.c
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++#include <linux/errno.h>
++
++#include "test_fpu.h"
++
++int test_fpu(void)
++{
++	/*
++	 * This sequence of operations tests that rounding mode is
++	 * to nearest and that denormal numbers are supported.
++	 * Volatile variables are used to avoid compiler optimizing
++	 * the calculations away.
++	 */
++	volatile double a, b, c, d, e, f, g;
++
++	a = 4.0;
++	b = 1e-15;
++	c = 1e-310;
++
++	/* Sets precision flag */
++	d = a + b;
++
++	/* Result depends on rounding mode */
++	e = a + b / 2;
++
++	/* Denormal and very large values */
++	f = b / c;
++
++	/* Depends on denormal support */
++	g = a + c * f;
++
++	if (d > a && e > a && g > a)
++		return 0;
++	else
++		return -EINVAL;
++}
 -- 
 2.42.0
 
