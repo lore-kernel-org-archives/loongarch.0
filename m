@@ -1,83 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AC6D517;
-	Thu, 28 Dec 2023 14:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3808011CBA
+	for <loongarch@lists.linux.dev>; Fri, 29 Dec 2023 15:08:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tw/zl+Ek"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF0DFC433C7;
-	Thu, 28 Dec 2023 14:09:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lx6AV1+J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBA99C433CD
+	for <loongarch@lists.linux.dev>; Fri, 29 Dec 2023 15:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703772557;
-	bh=0KS86pSxtMiAwpTGif4h0gvZMaH1Cq/im8Whr2BWleo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tw/zl+EkpnQAzLEpIMFoAaFF4B+tE2kLR0/MMdxfKbazf+BF/eANeTE/cMH6+8f9k
-	 RtgoMk1hivL15Sx0NAe/Z3L9gL78T8HNeS1YAkbX4U+GXEH9tyViBi927OAurLYesR
-	 xRw9eB5jYW4L8tfgm1pbRu+kcH1tS4HaxoLYH6Hc4iZtkxtv4A0qBP+hUX8LZP50Jm
-	 EzbM6nGGEaeSIwRVzZ/XIEOSl1x/Em0r5kcNrvxoHFJgbSDCUXrZmWBVGv+LJg3opu
-	 mxU25zO1RQVXPzX5gVd2RBAQigA3vNgQnES3hhyS5imPVCAE8gwJnQBHU70pavcWL1
-	 pJ5LWiNFfZlWg==
-Date: Thu, 28 Dec 2023 14:09:12 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Hongliang Wang <wanghongliang@loongson.cn>
-Subject: Re: [PATCH v6 0/7] LoongArch: Add built-in dtb support
-Message-ID: <20231228-ultimatum-paramedic-6c0301f56d1c@spud>
-References: <cover.1703229766.git.zhoubinbin@loongson.cn>
- <20231222-support-relieve-5d8f25292b40@spud>
- <CAMpQs4+Uwu=j56Qa_V211_hC+F4MKE6mvTVtW75M1wuAY3-p1g@mail.gmail.com>
+	s=k20201202; t=1703862505;
+	bh=j7gsuymDQRQieUAcePV6o+Ec3rJKy6pr+4987njsHZ4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lx6AV1+J9Gkp/zp73wFXVjD3LwWp4avtJ4SIsqwo8FJh73dqUZ4ZmiSmVc/hUDUzt
+	 RUv4a91dYVAiDO3x3/EsrOfyd9DlPow7c2v1AbmmWO0T/LSAZkJfiO0cCp9UoM5Jkx
+	 va/dF1coRc7UIF+vl1QGK9I0OrtiZ8hcIUwuQxYzzpma5Oao7tABhc1tgh6hEy6F94
+	 OpLWwJYB0l0TG4kohMcKATC4jts/vBTFqmDhRhYb+JLMtuM5A508JnoyjhLkfYegDp
+	 V/VBVCtSIEIm2jEUo5rRLpxeu7V0DGeSo8atVRbHNN5VqOdnOPgsvEMmO8jlp4tMPS
+	 zv1Oj9FIMRPqw==
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40b5155e154so91193625e9.3
+        for <loongarch@lists.linux.dev>; Fri, 29 Dec 2023 07:08:25 -0800 (PST)
+X-Gm-Message-State: AOJu0YyzWQGmSmwPOM+q2xjfHvibERMZzXt/4rqXHTjIp5MYgjD/bg5o
+	TEHNpjF7RBX7VOg1Rggm5ajyy+Vu6TW5V7sqnFU=
+X-Google-Smtp-Source: AGHT+IG0u18G+4W12HMBhlEcyYtZ+r3vNWHXalMetm4Iq2gz7UCYqiGPF1YQZfh2lHmtJeA8SLGv5Mm1YfwIyrpN+5Q=
+X-Received: by 2002:a05:600c:1e01:b0:40d:7d4f:840e with SMTP id
+ ay1-20020a05600c1e0100b0040d7d4f840emr428794wmb.83.1703862504064; Fri, 29 Dec
+ 2023 07:08:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ci/tCjg9pwZIdhtL"
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4+Uwu=j56Qa_V211_hC+F4MKE6mvTVtW75M1wuAY3-p1g@mail.gmail.com>
-
-
---ci/tCjg9pwZIdhtL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <cover.1701933946.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1701933946.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 29 Dec 2023 23:08:12 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4yS5nW9Xg1D+FRRa4jv8vGB9auim74NzTjmkw-CC6yZA@mail.gmail.com>
+Message-ID: <CAAhV-H4yS5nW9Xg1D+FRRa4jv8vGB9auim74NzTjmkw-CC6yZA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] dt-bindings: interrupt-controller: Fix some
+ loongson,liointc warnings
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>, lvjianmin@loongson.cn, 
+	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 27, 2023 at 12:04:59PM +0600, Binbin Zhou wrote:
->=20
-> Ah, yes, I tried looking at the `hwloc-ls` output before committing,
-> and it's below(LS2K1000):
->=20
-> [root@fedora ~]# hwloc-ls
-> Machine (7730MB total)
->   Package L#0
->     NUMANode L#0 (P#0 7730MB)
->     L2 L#0 (1024KB)
->       L1d L#0 (32KB) + L1i L#0 (32KB) + Core L#0 + PU L#0 (P#0)
->       L1d L#1 (32KB) + L1i L#1 (32KB) + Core L#1 + PU L#1 (P#1)
->=20
-> It's the same as what we actually have.
+Hi, Rob,
 
+Since this series doesn't touch the driver any more, I suppose that
+this series will go through your dt tree?
 
-Yeah, that looks to be about what I would expect, thanks.
+Huacai
 
---ci/tCjg9pwZIdhtL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZY2BiAAKCRB4tDGHoIJi
-0lLPAQDmiDwuyFdk70rPlM/m9cmFFfO2ngdulTETC3kATIE3uAEA+qioJ0JPSVYa
-cbMKh1bsP9t7oqoxdxH0xeNTQhQSKgQ=
-=0mbY
------END PGP SIGNATURE-----
-
---ci/tCjg9pwZIdhtL--
+On Thu, Dec 7, 2023 at 3:29=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
+ wrote:
+>
+> Hi all:
+>
+> Some liointc-related DTBS_CHECK warnings were found when trying to
+> introduce the Loongson-2K DTS{I} for LoongArch.
+> This patch series attempts to fix those warnings.
+>
+> Of course, these fixes also apply to MIPS Loongson-2K1000.
+>
+> Thanks.
+>
+> -----
+> V6:
+> - Drop the 'parent_int_map' related patches following Rob's comment.
+>
+> Link to V5:
+> https://lore.kernel.org/all/cover.1700449792.git.zhoubinbin@loongson.cn/
+>
+> V5:
+> - Add Reviewed-by tag;
+> patch(1/5):
+>   - Just drop 'loongson,parent_int_map' instead of marking it as
+>     deprecated.
+>
+> Link to V4:
+> https://lore.kernel.org/all/cover.1699521866.git.zhoubinbin@loongson.cn/
+>
+> V4:
+> - Add Acked-by tag;
+> patch(2/5):
+>   - Just add 'maxitem 2' instead of duplicating the list;
+> patch(3/5):
+>   - Rewite commit message for 'interrupt-names'.
+>
+> Link to V3:
+> https://lore.kernel.org/all/cover.1698717154.git.zhoubinbin@loongson.cn/
+>
+> V3:
+> patch(1/5):
+>   - new patch, 'loongson,parent_int_map' renamed to 'loongson,parent-int-=
+map';
+> patch(2/5)(3/5):
+>   - Separate the change points into separate patches;
+> patch(4/5):
+>  - new patch, make sure both parent map forms can be parsed;
+> patch(5/5):
+>  - new patch, fix 'loongson,parent_int_map' references in mips loongson
+>    dts{i}.
+>
+> Link to V2:
+> https://lore.kernel.org/all/20230821061315.3416836-1-zhoubinbin@loongson.=
+cn/
+>
+> V2:
+> 1. Update commit message;
+> 2. "interruprt-names" should be "required", the driver gets the parent
+> interrupts through it;
+> 3. Add more descriptions to explain the rationale for multiple nodes;
+> 4. Rewrite if-else statements.
+>
+> Link to V1:
+> https://lore.kernel.org/all/20230815084713.1627520-1-zhoubinbin@loongson.=
+cn/
+>
+> Binbin Zhou (2):
+>   dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+>     warning for reg-names
+>   dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+>     warning for interrupt-names
+>
+>  .../interrupt-controller/loongson,liointc.yaml | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+>
+> --
+> 2.39.3
+>
