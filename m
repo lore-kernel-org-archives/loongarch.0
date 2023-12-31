@@ -1,88 +1,90 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467D423A5
-	for <loongarch@lists.linux.dev>; Sat, 30 Dec 2023 07:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D5e8Uz0P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1703920023;
-	bh=CxlImPBq53eZem5Et6yBckyx0PnHoMgFMsFpjlSIejE=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=D5e8Uz0PeLBwDcLY7fbsI0z23YVblUvbcsD9J7qHRtU8xuH82viTwf7dO+jProDBo
-	 DbHm9sE5+epJUxb1+iinKgCN4f7m9Hjo6R6emk7p4L8dNGLJs8MI38dMnLgTXKBSqd
-	 FLNvIE7RUxMzTfr5Lat447BWzW/XV/mRju9OsFO/Nxlts8KRIWmh/XESOGO8Kuj0RZ
-	 VdDfj3kSz8qdo+u6PBnA4Vsn3uAQI/kTb1TuPK+gkJ+QHofKJPYn9F+L3ltkdDp5hp
-	 q0azNFo6x8T81HzINRYFSFXfi8Hea9inPco72cHo2yc6yZenzZM6eD0eJ38i/eqW4a
-	 gKzVnD/iwhN0A==
-Received: from [100.96.234.34] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4DF6C378105A;
-	Sat, 30 Dec 2023 07:06:59 +0000 (UTC)
-Message-ID: <d3dd3a6c-ae60-48c9-945b-40aa18ccad86@collabora.com>
-Date: Sat, 30 Dec 2023 12:07:00 +0500
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC4E63B9
+	for <loongarch@lists.linux.dev>; Sun, 31 Dec 2023 15:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [36.44.127.64])
+	by gateway (Coremail) with SMTP id _____8Cx7+vUjZFlFNEAAA--.3490S3;
+	Sun, 31 Dec 2023 23:50:44 +0800 (CST)
+Received: from [192.168.0.108] (unknown [36.44.127.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axur3RjZFlEUMTAA--.32041S3;
+	Sun, 31 Dec 2023 23:50:42 +0800 (CST)
+Message-ID: <ced09963-1a02-5ef0-9e31-e2441e062557@loongson.cn>
+Date: Sun, 31 Dec 2023 23:51:00 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- linux-kselftest@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
 Subject: Re: [PATCH v3 0/2] selftests/vDSO: Fix errors on LoongArch
 Content-Language: en-US
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Shuah Khan <shuah@kernel.org>,
- Shuah Khan <skhan@linuxfoundation.org>,
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
 References: <20231213012300.5640-1-yangtiezhu@loongson.cn>
  <d73d107d-9e04-4250-f467-f6ff7eb92103@loongson.cn>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <d73d107d-9e04-4250-f467-f6ff7eb92103@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
+ <d3dd3a6c-ae60-48c9-945b-40aa18ccad86@collabora.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+In-Reply-To: <d3dd3a6c-ae60-48c9-945b-40aa18ccad86@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Axur3RjZFlEUMTAA--.32041S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWrZr48KryUtry5Cr45Ar4UZFc_yoW8Jry3pF
+	s3Ga4akw4Fk395tF9F93yDXFyYyr1xCa1Uu345Ja4kAr1YyF1SqrWxWF1xKFyfJ3yfZw1Y
+	kF18ta93Za4UArgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
 
-On 12/27/23 12:55 PM, Tiezhu Yang wrote:
-> + Andrew Morton <akpm@linux-foundation.org>
-> + Mark Brown <broonie@kernel.org>
-> 
-> On 12/13/2023 09:22 AM, Tiezhu Yang wrote:
->> v3: Rebase on the next branch of linux-kselftest.git,
->>     modify the patch title and update the commit message
->>
->> v2: Rebase on 6.5-rc1 and update the commit message
->>
->> Tiezhu Yang (2):
->>   selftests/vDSO: Fix building errors on LoongArch
->>   selftests/vDSO: Fix runtime errors on LoongArch
->>
->>  tools/testing/selftests/vDSO/vdso_config.h    |  6 ++++-
->>  .../testing/selftests/vDSO/vdso_test_getcpu.c | 16 +++++-------
->>  .../selftests/vDSO/vdso_test_gettimeofday.c   | 26 +++++--------------
->>  3 files changed, 18 insertions(+), 30 deletions(-)
->>
-> 
-> Hi Shuah, Andrew and Mark,
-> 
-> The patches still seem to apply cleanly.
-> Could you please review and merge them for the upcoming merge window?
-People may be on vacation. I'm also waiting to hear back on my patches.
-Lets see when they get back and start picking up patches.
+Hi Muhammad,
 
-> 
-> https://lore.kernel.org/lkml/20231213012300.5640-1-yangtiezhu@loongson.cn/
-> 
-> Thanks,
-> Tiezhu
-> 
-> 
+On 12/30/23 15:07, Muhammad Usama Anjum wrote:
+> On 12/27/23 12:55 PM, Tiezhu Yang wrote:
+>> + Andrew Morton <akpm@linux-foundation.org>
+>> + Mark Brown <broonie@kernel.org>
+>>
+>> On 12/13/2023 09:22 AM, Tiezhu Yang wrote:
+>>> v3: Rebase on the next branch of linux-kselftest.git,
+>>>      modify the patch title and update the commit message
+>>>
+>>> v2: Rebase on 6.5-rc1 and update the commit message
+>>>
+>>> Tiezhu Yang (2):
+>>>    selftests/vDSO: Fix building errors on LoongArch
+>>>    selftests/vDSO: Fix runtime errors on LoongArch
+>>>
+>>>   tools/testing/selftests/vDSO/vdso_config.h    |  6 ++++-
+>>>   .../testing/selftests/vDSO/vdso_test_getcpu.c | 16 +++++-------
+>>>   .../selftests/vDSO/vdso_test_gettimeofday.c   | 26 +++++--------------
+>>>   3 files changed, 18 insertions(+), 30 deletions(-)
+>>>
+>>
+>> Hi Shuah, Andrew and Mark,
+>>
+>> The patches still seem to apply cleanly.
+>> Could you please review and merge them for the upcoming merge window?
+> People may be on vacation. I'm also waiting to hear back on my patches.
+> Lets see when they get back and start picking up patches.
 
--- 
-BR,
-Muhammad Usama Anjum
+Thank you very much for your reply and review, happy new year.
+
+Thanks,
+Tiezhu
+
