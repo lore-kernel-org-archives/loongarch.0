@@ -1,126 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CB9156D9
-	for <loongarch@lists.linux.dev>; Tue,  2 Jan 2024 18:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CoAxLPzB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704219500;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qqNcOVDP8DdJ819qPbE88DE6/hMQSOntgNZh+qc4qEc=;
-	b=CoAxLPzBvta5LHqQkgxrh6X2JiaacchVs2uNpOvfbiy1ZpMz+ar+xjXqyOzVLbi4o0vSh1
-	Ha3v7T+4YrYlguSg+/UVWueGQz1aWuPZZDu6THC1w9sjTsy0DnoddvWcOdhukEdEKVUeVb
-	LmcKKoG/sQXmlPKBcvjUpzbalgCFDJc=
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
- [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-648-8QRvY42PMG-kCenDLYnNOQ-1; Tue, 02 Jan 2024 13:18:18 -0500
-X-MC-Unique: 8QRvY42PMG-kCenDLYnNOQ-1
-Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-466ec6d33bcso1833055137.3
-        for <loongarch@lists.linux.dev>; Tue, 02 Jan 2024 10:18:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704219498; x=1704824298;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qqNcOVDP8DdJ819qPbE88DE6/hMQSOntgNZh+qc4qEc=;
-        b=rrkc2grd9hqF54wG3mXfyX1Z7l5Feh9b9FFFPY3y4UgrkSkD8lakwFy8FIdMj9YJSW
-         1+dgDi9BDhPPsElmplM6vhbhItIWw57e3dk3ymlxK4HW7ffY68aC+LYLwijMssFlHcx/
-         EEXp1PIr8FVkImq2BN5bdGVk/JAnsUXDCFc3PYCJn/5Sm9PjFoiF2sqVq4C5pibWry2B
-         GXNTrqVvRVPs4mmBiZAPPdwbdmgKEs47nGN8Ce/MPlt1r1dQ6Um5qN/EptMZgUSOOUrL
-         AZQ4jMURRaAQJ4NSFpocjy7esZaFbs/P9AwKgA3Id6n0PV4blQvCsALWHGKb1ZZ+CbuH
-         WRWw==
-X-Gm-Message-State: AOJu0YzG3X5EWYBJYSB1gjHYT6qurwLZWOrBT2RmnkyYC4PFPzYD/p/E
-	oTghFAmvbPrp+5D/7f1f/s2cmBGkNYiqYFt4Ydb055nZKOIauQ15F2r8SL+67Cw6HVe44ibwmv5
-	9ZsNEw/1UczczsyLPVmaCDIOQLKW0Caz69xiVx4Q0GSuU
-X-Received: by 2002:a05:6102:32cb:b0:467:7df1:93d4 with SMTP id o11-20020a05610232cb00b004677df193d4mr1333695vss.56.1704219497995;
-        Tue, 02 Jan 2024 10:18:17 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEVztsrJFmMF0JJjeSQuEPrOTAsB2AewM3tqW1FHbMEMG3rKdHdoK3NErEji+Bu7ltEHjnjBgbxoSTivL4kKWw=
-X-Received: by 2002:a05:6102:32cb:b0:467:7df1:93d4 with SMTP id
- o11-20020a05610232cb00b004677df193d4mr1333683vss.56.1704219497723; Tue, 02
- Jan 2024 10:18:17 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09B361804D;
+	Wed,  3 Jan 2024 07:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxHOvACZVlvHIBAA--.5690S3;
+	Wed, 03 Jan 2024 15:16:16 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxqb2_CZVlm1EYAA--.43800S3;
+	Wed, 03 Jan 2024 15:16:16 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Juergen Gross <jgross@suse.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	kvm@vger.kernel.org
+Subject: [PATCH 1/5] LoongArch: KVM: Add hypercall instruction emulation support
+Date: Wed,  3 Jan 2024 15:16:11 +0800
+Message-Id: <20240103071615.3422264-2-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240103071615.3422264-1-maobibo@loongson.cn>
+References: <20240103071615.3422264-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231223120642.1067728-1-chenhuacai@loongson.cn>
-In-Reply-To: <20231223120642.1067728-1-chenhuacai@loongson.cn>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Tue, 2 Jan 2024 19:18:05 +0100
-Message-ID: <CABgObfZHRf7E_7Jk4uPRmSyxTy3EiuuYwHC35jQncNL9s-zTDA@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch KVM changes for v6.8
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dxqb2_CZVlm1EYAA--.43800S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr1DuFW7XF17Gw1DKF47ZFc_yoW5Zr1xpF
+	93Cr1kGr4rGryfCFy3twn8Wr13ArZ7Kw12gFy2k3yUAF12qF1Fyr4kKryDZFy5Jw4rXF1S
+	gFWftw1Y9F4UtacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjOJ5UUUUU=
 
-On Sat, Dec 23, 2023 at 1:12=E2=80=AFPM Huacai Chen <chenhuacai@loongson.cn=
-> wrote:
->
-> The following changes since commit ceb6a6f023fd3e8b07761ed900352ef574010b=
-cb:
->
->   Linux 6.7-rc6 (2023-12-17 15:19:28 -0800)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
-.git tags/loongarch-kvm-6.8
->
-> for you to fetch changes up to 118e10cd893d57df55b3302dfd188a981b6e6d1c:
->
->   LoongArch: KVM: Add LASX (256bit SIMD) support (2023-12-19 10:48:28 +08=
-00)
+On LoongArch system, hypercall instruction is supported when system
+runs on VM mode. This patch adds dummy function with hypercall
+instruction emulation, rather than inject EXCCODE_INE invalid
+instruction exception.
 
-Pulled, thanks.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/Kbuild      |  1 -
+ arch/loongarch/include/asm/kvm_para.h  | 26 ++++++++++++++++++++++++++
+ arch/loongarch/include/uapi/asm/Kbuild |  2 --
+ arch/loongarch/kvm/exit.c              | 10 ++++++++++
+ 4 files changed, 36 insertions(+), 3 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_para.h
+ delete mode 100644 arch/loongarch/include/uapi/asm/Kbuild
 
-Paolo
-
->
-> ----------------------------------------------------------------
-> LoongArch KVM changes for v6.8
->
-> 1. Optimization for memslot hugepage checking.
-> 2. Cleanup and fix some HW/SW timer issues.
-> 3. Add LSX/LASX (128bit/256bit SIMD) support.
->
-> ----------------------------------------------------------------
-> Bibo Mao (5):
->       LoongArch: KVM: Optimization for memslot hugepage checking
->       LoongArch: KVM: Remove SW timer switch when vcpu is halt polling
->       LoongArch: KVM: Allow to access HW timer CSR registers always
->       LoongArch: KVM: Remove kvm_acquire_timer() before entering guest
->       LoongArch: KVM: Fix timer emulation with oneshot mode
->
-> Tianrui Zhao (2):
->       LoongArch: KVM: Add LSX (128bit SIMD) support
->       LoongArch: KVM: Add LASX (256bit SIMD) support
->
->  arch/loongarch/include/asm/kvm_host.h |  24 ++-
->  arch/loongarch/include/asm/kvm_vcpu.h |  21 ++-
->  arch/loongarch/include/uapi/asm/kvm.h |   1 +
->  arch/loongarch/kernel/fpu.S           |   2 +
->  arch/loongarch/kvm/exit.c             |  50 ++++--
->  arch/loongarch/kvm/main.c             |   1 -
->  arch/loongarch/kvm/mmu.c              | 124 +++++++++-----
->  arch/loongarch/kvm/switch.S           |  31 ++++
->  arch/loongarch/kvm/timer.c            | 129 ++++++++------
->  arch/loongarch/kvm/trace.h            |   6 +-
->  arch/loongarch/kvm/vcpu.c             | 307 ++++++++++++++++++++++++++++=
-++----
->  11 files changed, 551 insertions(+), 145 deletions(-)
->
+diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
+index 93783fa24f6e..22991a6f0e2b 100644
+--- a/arch/loongarch/include/asm/Kbuild
++++ b/arch/loongarch/include/asm/Kbuild
+@@ -23,4 +23,3 @@ generic-y += poll.h
+ generic-y += param.h
+ generic-y += posix_types.h
+ generic-y += resource.h
+-generic-y += kvm_para.h
+diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+new file mode 100644
+index 000000000000..9425d3b7e486
+--- /dev/null
++++ b/arch/loongarch/include/asm/kvm_para.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_LOONGARCH_KVM_PARA_H
++#define _ASM_LOONGARCH_KVM_PARA_H
++
++/*
++ * LoongArch hypcall return code
++ */
++#define KVM_HC_STATUS_SUCCESS		0
++#define KVM_HC_INVALID_CODE		-1UL
++#define KVM_HC_INVALID_PARAMETER	-2UL
++
++static inline unsigned int kvm_arch_para_features(void)
++{
++	return 0;
++}
++
++static inline unsigned int kvm_arch_para_hints(void)
++{
++	return 0;
++}
++
++static inline bool kvm_check_and_clear_guest_paused(void)
++{
++	return false;
++}
++#endif /* _ASM_LOONGARCH_KVM_PARA_H */
+diff --git a/arch/loongarch/include/uapi/asm/Kbuild b/arch/loongarch/include/uapi/asm/Kbuild
+deleted file mode 100644
+index 4aa680ca2e5f..000000000000
+--- a/arch/loongarch/include/uapi/asm/Kbuild
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-generic-y += kvm_para.h
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index e708a1786d6b..59e5fe221982 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -650,6 +650,15 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
+ 	return RESUME_GUEST;
+ }
+ 
++static int kvm_handle_hypcall(struct kvm_vcpu *vcpu)
++{
++	update_pc(&vcpu->arch);
++
++	/* Treat it as noop intruction, only set return value */
++	vcpu->arch.gprs[LOONGARCH_GPR_A0] = KVM_HC_INVALID_CODE;
++	return RESUME_GUEST;
++}
++
+ /*
+  * LoongArch KVM callback handling for unimplemented guest exiting
+  */
+@@ -679,6 +688,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
+ 	[EXCCODE_TLBM]			= kvm_handle_write_fault,
+ 	[EXCCODE_FPDIS]			= kvm_handle_fpu_disabled,
+ 	[EXCCODE_GSPR]			= kvm_handle_gspr,
++	[EXCCODE_HVC]			= kvm_handle_hypcall,
+ };
+ 
+ int kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
+-- 
+2.39.3
 
