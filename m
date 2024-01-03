@@ -1,96 +1,174 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5E3182A2;
-	Wed,  3 Jan 2024 08:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8Dx+emxIJVl2XsBAA--.1677S3;
-	Wed, 03 Jan 2024 16:54:09 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxG76vIJVl+pUYAA--.44880S3;
-	Wed, 03 Jan 2024 16:54:09 +0800 (CST)
-Subject: Re: [PATCH 4/5] LoongArch: Add paravirt interface for guest kernel
-To: Juergen Gross <jgross@suse.com>, Huacai Chen <chenhuacai@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, kvm@vger.kernel.org
-References: <20240103071615.3422264-1-maobibo@loongson.cn>
- <20240103071615.3422264-5-maobibo@loongson.cn>
- <66c15a1b-fb28-4653-982f-37494a01cd4f@suse.com>
- <4240d67f-1e5d-f865-c16e-32b64aea8099@loongson.cn>
- <df32d011-49c8-4bdb-a695-41cb6fbdf854@suse.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <b8b2330d-9057-ff9b-b5aa-483c0f573a72@loongson.cn>
-Date: Wed, 3 Jan 2024 16:54:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0231A593
+	for <loongarch@lists.linux.dev>; Wed,  3 Jan 2024 14:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arSHPSg8"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-20440084f25so2532820fac.2
+        for <loongarch@lists.linux.dev>; Wed, 03 Jan 2024 06:27:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704292078; x=1704896878; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a349tfFo0Tz6+yladu1vGz3cOOaSViS9QyeDAzXiKtI=;
+        b=arSHPSg8orAzgZtIx4NNDSI/jdXILMdGQRybZddq79dYqiJz+987cOaVt2gyhsDrqZ
+         Xeb9G81DK2uS0e4/vitJP29FMIwLFusVnr/QOUJyifVvxSYU7gsfuuLk9pqKbsFqQ1Jk
+         XJT/haBmTij63RhmiXE8Ru5pZuS6gDrPbX52atOieicailzbybScDzC33FzctYe6FGWN
+         S3DLvbVSz5hcPJ8Ve2PqdVv67ep4hup6miUB2NX8ugGHbBWhR/YD1gvnFf+BEYxBYlAj
+         MjUFl/4NL52iwWjwDnC8/dxgB8B+YBvxPK2wz5B0ctKNcoQqrNQ5eCc8mBXaglexMBHu
+         ELkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704292078; x=1704896878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a349tfFo0Tz6+yladu1vGz3cOOaSViS9QyeDAzXiKtI=;
+        b=ozU5++QyE4a7A4XhQJIQqa9Vs8rUdYoUHfc/j+yE6fLlk9YAFjmnytgcGBxJaECLOn
+         gEfUQ7MIinWgxTiaQq+gYYYxBUh3yRsB+7+hOE/3U46xdYW2AvjQBJn+BAvSBpj3mg3I
+         5JHI3WEEsrs78Ri/gVAXJYRNUr62KX0gt+idonica86oTHda7oQlokqL7xLUyQ0JWPUi
+         UzdXLWadnThob6UujSyAhiqvD3rZkdPJrw7lc9PrNGc1YR6TVLQqAGa28tjk8fNPWTxw
+         WU/03kLp8ArEAj7JaB80Vee6j/sHxUmcD6L9ysqxPYsoRAHtk24ff2nO6lnZiyIRI21w
+         V3OQ==
+X-Gm-Message-State: AOJu0YwpXMWJIVUDUOlbduXUJ6oZLrvkijjKeJ+83WPEbNmPvnRJaDv0
+	Av4Lg0fld32ahJH67sn9vJb1B7VP0Fm/93Q6z1E=
+X-Google-Smtp-Source: AGHT+IHjuxm+WsGold4msvLzUcwvASXsLbNWaImZQEtNmF+UM28LD4T6ctfH3u7LonFz90aecPkvdKH3c/Z8VWiEa/Q=
+X-Received: by 2002:a05:6871:2b02:b0:204:32f7:6668 with SMTP id
+ dr2-20020a0568712b0200b0020432f76668mr8870200oac.34.1704292078704; Wed, 03
+ Jan 2024 06:27:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <df32d011-49c8-4bdb-a695-41cb6fbdf854@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxG76vIJVl+pUYAA--.44880S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrykKFW5Cry5WF4fKw1ruFX_yoW8JFWrpF
-	WS9asFkF48CF42yr4xKr4kZr1Y9rZrKr15Wa4rXry0v39xZw1Fvr4FgF1a9a4DAr1UC3Wj
-	qFWjq3srW3WDAFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
-	67AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
-	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-	daVFxhVjvjDU0xZFpf9x07jnUUUUUUUU=
+References: <20231228014220.3562640-1-samuel.holland@sifive.com>
+In-Reply-To: <20231228014220.3562640-1-samuel.holland@sifive.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 3 Jan 2024 09:27:47 -0500
+Message-ID: <CADnq5_Pub0UULb6UqO2g+Eo6RCy=gqtWLN9txjEyp2Gmw9idww@mail.gmail.com>
+Subject: Re: [PATCH v2 00/14] Unified cross-architecture kernel-mode FPU API
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	x86@kernel.org, linux-riscv@lists.infradead.org, 
+	Christoph Hellwig <hch@lst.de>, linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Dec 28, 2023 at 5:11=E2=80=AFAM Samuel Holland
+<samuel.holland@sifive.com> wrote:
+>
+> This series unifies the kernel-mode FPU API across several architectures
+> by wrapping the existing functions (where needed) in consistently-named
+> functions placed in a consistent header location, with mostly the same
+> semantics: they can be called from preemptible or non-preemptible task
+> context, and are not assumed to be reentrant. Architectures are also
+> expected to provide CFLAGS adjustments for compiling FPU-dependent code.
+> For the moment, SIMD/vector units are out of scope for this common API.
+>
+> This allows us to remove the ifdeffery and duplicated Makefile logic at
+> each FPU user. It then implements the common API on RISC-V, and converts
+> a couple of users to the new API: the AMDGPU DRM driver, and the FPU
+> self test.
+>
+> The underlying goal of this series is to allow using newer AMD GPUs
+> (e.g. Navi) on RISC-V boards such as SiFive's HiFive Unmatched. Those
+> GPUs need CONFIG_DRM_AMD_DC_FP to initialize, which requires kernel-mode
+> FPU support.
 
+Series is:
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 
-On 2024/1/3 下午4:14, Juergen Gross wrote:
-> On 03.01.24 09:00, maobibo wrote:
->>
->>
->> On 2024/1/3 下午3:40, Jürgen Groß wrote:
->>> On 03.01.24 08:16, Bibo Mao wrote:
->>>> The patch add paravirt interface for guest kernel, it checks whether
->>>> system runs on VM mode. If it is, it will detect hypervisor type. And
->>>> returns true it is KVM hypervisor, else return false. Currently only
->>>> KVM hypervisor is supported, so there is only hypervisor detection
->>>> for KVM type.
->>>
->>> I guess you are talking of pv_guest_init() here? Or do you mean
->>> kvm_para_available()?
->> yes, it is pv_guest_init. It will be better if all hypervisor detection
->> is called in function pv_guest_init. Currently there is only kvm 
->> hypervisor, kvm_para_available is hard-coded in pv_guest_init here.
-> 
-> I think this is no problem as long as there are not more hypervisors
-> supported.
-> 
->>
->> I can split file paravirt.c into paravirt.c and kvm.c, paravirt.c is 
->> used for hypervisor detection, and move code relative with pv_ipi into 
->> kvm.c
-> 
-> I wouldn't do that right now.
-> 
-> Just be a little bit more specific in the commit message (use the related
-> function name instead of "it").
-Sure, will do this in next version, and thanks for your guidance.
-
-Regards
-Bibo Mao
-> 
-> 
-> Juergen
-
+>
+> Previous versions:
+> v1: https://lore.kernel.org/linux-kernel/20231208055501.2916202-1-samuel.=
+holland@sifive.com/
+> v0: https://lore.kernel.org/linux-kernel/20231122030621.3759313-1-samuel.=
+holland@sifive.com/
+>
+> Changes in v2:
+>  - Add documentation explaining the built-time and runtime APIs
+>  - Add a linux/fpu.h header for generic isolation enforcement
+>  - Remove file name from header comment
+>  - Clean up arch/arm64/lib/Makefile, like for arch/arm
+>  - Remove RISC-V architecture-specific preprocessor check
+>  - Split altivec removal to a separate patch
+>  - Use linux/fpu.h instead of asm/fpu.h in consumers
+>  - Declare test_fpu() in a header
+>
+> Michael Ellerman (1):
+>   drm/amd/display: Only use hard-float, not altivec on powerpc
+>
+> Samuel Holland (13):
+>   arch: Add ARCH_HAS_KERNEL_FPU_SUPPORT
+>   ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>   ARM: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
+>   arm64: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>   arm64: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
+>   lib/raid6: Use CC_FLAGS_FPU for NEON CFLAGS
+>   LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>   powerpc: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>   x86: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>   riscv: Add support for kernel-mode FPU
+>   drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+>   selftests/fpu: Move FP code to a separate translation unit
+>   selftests/fpu: Allow building on other architectures
+>
+>  Documentation/core-api/floating-point.rst     | 78 +++++++++++++++++++
+>  Documentation/core-api/index.rst              |  1 +
+>  Makefile                                      |  5 ++
+>  arch/Kconfig                                  |  6 ++
+>  arch/arm/Kconfig                              |  1 +
+>  arch/arm/Makefile                             |  7 ++
+>  arch/arm/include/asm/fpu.h                    | 15 ++++
+>  arch/arm/lib/Makefile                         |  3 +-
+>  arch/arm64/Kconfig                            |  1 +
+>  arch/arm64/Makefile                           |  9 ++-
+>  arch/arm64/include/asm/fpu.h                  | 15 ++++
+>  arch/arm64/lib/Makefile                       |  6 +-
+>  arch/loongarch/Kconfig                        |  1 +
+>  arch/loongarch/Makefile                       |  5 +-
+>  arch/loongarch/include/asm/fpu.h              |  1 +
+>  arch/powerpc/Kconfig                          |  1 +
+>  arch/powerpc/Makefile                         |  5 +-
+>  arch/powerpc/include/asm/fpu.h                | 28 +++++++
+>  arch/riscv/Kconfig                            |  1 +
+>  arch/riscv/Makefile                           |  3 +
+>  arch/riscv/include/asm/fpu.h                  | 16 ++++
+>  arch/riscv/kernel/Makefile                    |  1 +
+>  arch/riscv/kernel/kernel_mode_fpu.c           | 28 +++++++
+>  arch/x86/Kconfig                              |  1 +
+>  arch/x86/Makefile                             | 20 +++++
+>  arch/x86/include/asm/fpu.h                    | 13 ++++
+>  drivers/gpu/drm/amd/display/Kconfig           |  2 +-
+>  .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    | 35 +--------
+>  drivers/gpu/drm/amd/display/dc/dml/Makefile   | 36 +--------
+>  drivers/gpu/drm/amd/display/dc/dml2/Makefile  | 36 +--------
+>  include/linux/fpu.h                           | 12 +++
+>  lib/Kconfig.debug                             |  2 +-
+>  lib/Makefile                                  | 26 +------
+>  lib/raid6/Makefile                            | 31 ++------
+>  lib/test_fpu.h                                |  8 ++
+>  lib/{test_fpu.c =3D> test_fpu_glue.c}           | 37 ++-------
+>  lib/test_fpu_impl.c                           | 37 +++++++++
+>  37 files changed, 343 insertions(+), 190 deletions(-)
+>  create mode 100644 Documentation/core-api/floating-point.rst
+>  create mode 100644 arch/arm/include/asm/fpu.h
+>  create mode 100644 arch/arm64/include/asm/fpu.h
+>  create mode 100644 arch/powerpc/include/asm/fpu.h
+>  create mode 100644 arch/riscv/include/asm/fpu.h
+>  create mode 100644 arch/riscv/kernel/kernel_mode_fpu.c
+>  create mode 100644 arch/x86/include/asm/fpu.h
+>  create mode 100644 include/linux/fpu.h
+>  create mode 100644 lib/test_fpu.h
+>  rename lib/{test_fpu.c =3D> test_fpu_glue.c} (71%)
+>  create mode 100644 lib/test_fpu_impl.c
+>
+> --
+> 2.42.0
+>
