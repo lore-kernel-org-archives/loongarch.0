@@ -1,174 +1,74 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0231A593
-	for <loongarch@lists.linux.dev>; Wed,  3 Jan 2024 14:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBC81D69E
+	for <loongarch@lists.linux.dev>; Wed,  3 Jan 2024 21:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arSHPSg8"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-20440084f25so2532820fac.2
-        for <loongarch@lists.linux.dev>; Wed, 03 Jan 2024 06:27:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704292078; x=1704896878; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a349tfFo0Tz6+yladu1vGz3cOOaSViS9QyeDAzXiKtI=;
-        b=arSHPSg8orAzgZtIx4NNDSI/jdXILMdGQRybZddq79dYqiJz+987cOaVt2gyhsDrqZ
-         Xeb9G81DK2uS0e4/vitJP29FMIwLFusVnr/QOUJyifVvxSYU7gsfuuLk9pqKbsFqQ1Jk
-         XJT/haBmTij63RhmiXE8Ru5pZuS6gDrPbX52atOieicailzbybScDzC33FzctYe6FGWN
-         S3DLvbVSz5hcPJ8Ve2PqdVv67ep4hup6miUB2NX8ugGHbBWhR/YD1gvnFf+BEYxBYlAj
-         MjUFl/4NL52iwWjwDnC8/dxgB8B+YBvxPK2wz5B0ctKNcoQqrNQ5eCc8mBXaglexMBHu
-         ELkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704292078; x=1704896878;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a349tfFo0Tz6+yladu1vGz3cOOaSViS9QyeDAzXiKtI=;
-        b=ozU5++QyE4a7A4XhQJIQqa9Vs8rUdYoUHfc/j+yE6fLlk9YAFjmnytgcGBxJaECLOn
-         gEfUQ7MIinWgxTiaQq+gYYYxBUh3yRsB+7+hOE/3U46xdYW2AvjQBJn+BAvSBpj3mg3I
-         5JHI3WEEsrs78Ri/gVAXJYRNUr62KX0gt+idonica86oTHda7oQlokqL7xLUyQ0JWPUi
-         UzdXLWadnThob6UujSyAhiqvD3rZkdPJrw7lc9PrNGc1YR6TVLQqAGa28tjk8fNPWTxw
-         WU/03kLp8ArEAj7JaB80Vee6j/sHxUmcD6L9ysqxPYsoRAHtk24ff2nO6lnZiyIRI21w
-         V3OQ==
-X-Gm-Message-State: AOJu0YwpXMWJIVUDUOlbduXUJ6oZLrvkijjKeJ+83WPEbNmPvnRJaDv0
-	Av4Lg0fld32ahJH67sn9vJb1B7VP0Fm/93Q6z1E=
-X-Google-Smtp-Source: AGHT+IHjuxm+WsGold4msvLzUcwvASXsLbNWaImZQEtNmF+UM28LD4T6ctfH3u7LonFz90aecPkvdKH3c/Z8VWiEa/Q=
-X-Received: by 2002:a05:6871:2b02:b0:204:32f7:6668 with SMTP id
- dr2-20020a0568712b0200b0020432f76668mr8870200oac.34.1704292078704; Wed, 03
- Jan 2024 06:27:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="UwyT4oom"
+Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 27D511C33;
+	Wed,  3 Jan 2024 21:36:48 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 27D511C33
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1704317808; bh=Pp+S4dnT1+94l+jOINYFV0VO5dbfPFIuxTyiE3wcd/M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=UwyT4oomfbvbcT8MGD+wZGT6FriTY4R6KbSyczzQOBTXWE9swrKrKpvA3Gl1zJavp
+	 23Mt7u4Kj42970Uz1uBBavRAZzTn72w+chbeRtjXgYF1H50EmI0hMj91Gxf8NjmyWw
+	 Wd0tw2Rjb6gJZ2R1RxulRYFHFBgkfEz1Os8ozxjjhQ3lfogH3rPx6MIWE4snzAOJUZ
+	 7ly/FjrT4IwFJgvifG+q9YpUwqIdoSGLa5jmzY7XXUl6OC8XSIgxqD6SxrOW5fFPUr
+	 8t/FSj+/mT820UVjTQx86dBWCnB0AlJCg2DiDlDpwjCzB+LGGQk3ECOQigWVcdEKaM
+	 uE6BzSVBv+C8A==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] docs, kprobes: Update email address of Masami
+ Hiramatsu
+In-Reply-To: <20231219062330.22813-2-yangtiezhu@loongson.cn>
+References: <20231219062330.22813-1-yangtiezhu@loongson.cn>
+ <20231219062330.22813-2-yangtiezhu@loongson.cn>
+Date: Wed, 03 Jan 2024 14:36:47 -0700
+Message-ID: <87mstm6qvk.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231228014220.3562640-1-samuel.holland@sifive.com>
-In-Reply-To: <20231228014220.3562640-1-samuel.holland@sifive.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 3 Jan 2024 09:27:47 -0500
-Message-ID: <CADnq5_Pub0UULb6UqO2g+Eo6RCy=gqtWLN9txjEyp2Gmw9idww@mail.gmail.com>
-Subject: Re: [PATCH v2 00/14] Unified cross-architecture kernel-mode FPU API
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	x86@kernel.org, linux-riscv@lists.infradead.org, 
-	Christoph Hellwig <hch@lst.de>, linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Dec 28, 2023 at 5:11=E2=80=AFAM Samuel Holland
-<samuel.holland@sifive.com> wrote:
->
-> This series unifies the kernel-mode FPU API across several architectures
-> by wrapping the existing functions (where needed) in consistently-named
-> functions placed in a consistent header location, with mostly the same
-> semantics: they can be called from preemptible or non-preemptible task
-> context, and are not assumed to be reentrant. Architectures are also
-> expected to provide CFLAGS adjustments for compiling FPU-dependent code.
-> For the moment, SIMD/vector units are out of scope for this common API.
->
-> This allows us to remove the ifdeffery and duplicated Makefile logic at
-> each FPU user. It then implements the common API on RISC-V, and converts
-> a couple of users to the new API: the AMDGPU DRM driver, and the FPU
-> self test.
->
-> The underlying goal of this series is to allow using newer AMD GPUs
-> (e.g. Navi) on RISC-V boards such as SiFive's HiFive Unmatched. Those
-> GPUs need CONFIG_DRM_AMD_DC_FP to initialize, which requires kernel-mode
-> FPU support.
+Tiezhu Yang <yangtiezhu@loongson.cn> writes:
 
-Series is:
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+> According to the latest authorship and Signed-off-by:
+>
+>   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Masami Hiramatsu is working at Google, so the current email @redhat.com
+> is out of date, it is better to use the email @kernel.org.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  Documentation/trace/kprobes.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/trace/kprobes.rst b/Documentation/trace/kprobes.rst
+> index f825970a1495..968ae080accd 100644
+> --- a/Documentation/trace/kprobes.rst
+> +++ b/Documentation/trace/kprobes.rst
+> @@ -4,7 +4,7 @@ Kernel Probes (Kprobes)
+>  
+>  :Author: Jim Keniston <jkenisto@us.ibm.com>
+>  :Author: Prasanna S Panchamukhi <prasanna.panchamukhi@gmail.com>
+> -:Author: Masami Hiramatsu <mhiramat@redhat.com>
+> +:Author: Masami Hiramatsu <mhiramat@kernel.org>
 
->
-> Previous versions:
-> v1: https://lore.kernel.org/linux-kernel/20231208055501.2916202-1-samuel.=
-holland@sifive.com/
-> v0: https://lore.kernel.org/linux-kernel/20231122030621.3759313-1-samuel.=
-holland@sifive.com/
->
-> Changes in v2:
->  - Add documentation explaining the built-time and runtime APIs
->  - Add a linux/fpu.h header for generic isolation enforcement
->  - Remove file name from header comment
->  - Clean up arch/arm64/lib/Makefile, like for arch/arm
->  - Remove RISC-V architecture-specific preprocessor check
->  - Split altivec removal to a separate patch
->  - Use linux/fpu.h instead of asm/fpu.h in consumers
->  - Declare test_fpu() in a header
->
-> Michael Ellerman (1):
->   drm/amd/display: Only use hard-float, not altivec on powerpc
->
-> Samuel Holland (13):
->   arch: Add ARCH_HAS_KERNEL_FPU_SUPPORT
->   ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->   ARM: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
->   arm64: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->   arm64: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
->   lib/raid6: Use CC_FLAGS_FPU for NEON CFLAGS
->   LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->   powerpc: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->   x86: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->   riscv: Add support for kernel-mode FPU
->   drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
->   selftests/fpu: Move FP code to a separate translation unit
->   selftests/fpu: Allow building on other architectures
->
->  Documentation/core-api/floating-point.rst     | 78 +++++++++++++++++++
->  Documentation/core-api/index.rst              |  1 +
->  Makefile                                      |  5 ++
->  arch/Kconfig                                  |  6 ++
->  arch/arm/Kconfig                              |  1 +
->  arch/arm/Makefile                             |  7 ++
->  arch/arm/include/asm/fpu.h                    | 15 ++++
->  arch/arm/lib/Makefile                         |  3 +-
->  arch/arm64/Kconfig                            |  1 +
->  arch/arm64/Makefile                           |  9 ++-
->  arch/arm64/include/asm/fpu.h                  | 15 ++++
->  arch/arm64/lib/Makefile                       |  6 +-
->  arch/loongarch/Kconfig                        |  1 +
->  arch/loongarch/Makefile                       |  5 +-
->  arch/loongarch/include/asm/fpu.h              |  1 +
->  arch/powerpc/Kconfig                          |  1 +
->  arch/powerpc/Makefile                         |  5 +-
->  arch/powerpc/include/asm/fpu.h                | 28 +++++++
->  arch/riscv/Kconfig                            |  1 +
->  arch/riscv/Makefile                           |  3 +
->  arch/riscv/include/asm/fpu.h                  | 16 ++++
->  arch/riscv/kernel/Makefile                    |  1 +
->  arch/riscv/kernel/kernel_mode_fpu.c           | 28 +++++++
->  arch/x86/Kconfig                              |  1 +
->  arch/x86/Makefile                             | 20 +++++
->  arch/x86/include/asm/fpu.h                    | 13 ++++
->  drivers/gpu/drm/amd/display/Kconfig           |  2 +-
->  .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    | 35 +--------
->  drivers/gpu/drm/amd/display/dc/dml/Makefile   | 36 +--------
->  drivers/gpu/drm/amd/display/dc/dml2/Makefile  | 36 +--------
->  include/linux/fpu.h                           | 12 +++
->  lib/Kconfig.debug                             |  2 +-
->  lib/Makefile                                  | 26 +------
->  lib/raid6/Makefile                            | 31 ++------
->  lib/test_fpu.h                                |  8 ++
->  lib/{test_fpu.c =3D> test_fpu_glue.c}           | 37 ++-------
->  lib/test_fpu_impl.c                           | 37 +++++++++
->  37 files changed, 343 insertions(+), 190 deletions(-)
->  create mode 100644 Documentation/core-api/floating-point.rst
->  create mode 100644 arch/arm/include/asm/fpu.h
->  create mode 100644 arch/arm64/include/asm/fpu.h
->  create mode 100644 arch/powerpc/include/asm/fpu.h
->  create mode 100644 arch/riscv/include/asm/fpu.h
->  create mode 100644 arch/riscv/kernel/kernel_mode_fpu.c
->  create mode 100644 arch/x86/include/asm/fpu.h
->  create mode 100644 include/linux/fpu.h
->  create mode 100644 lib/test_fpu.h
->  rename lib/{test_fpu.c =3D> test_fpu_glue.c} (71%)
->  create mode 100644 lib/test_fpu_impl.c
->
-> --
-> 2.42.0
->
+Masami, is this change OK with you?
+
+Thanks,
+
+jon
