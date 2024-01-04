@@ -1,198 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704481EA95
-	for <loongarch@lists.linux.dev>; Thu,  4 Jan 2024 08:58:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60D720B22
+	for <loongarch@lists.linux.dev>; Thu,  4 Jan 2024 09:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1bXm+0o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0262C433C9
-	for <loongarch@lists.linux.dev>; Thu,  4 Jan 2024 08:58:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHFkUtqf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE2CC433C7
+	for <loongarch@lists.linux.dev>; Thu,  4 Jan 2024 09:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704358708;
-	bh=N87omvR/1Ui7jNJRlywxLVgXDex4G3VlN98Ml/JXR90=;
+	s=k20201202; t=1704362139;
+	bh=NUKoeng2TtOuvmS1QuUleD7BGl+JqWw7EjY22X+zMeE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=W1bXm+0oPfT5rDH/gS1gYxYx9XKTMh6rp+TBMPIZ9U+PxxhI8paxDD5MCdN5UQgri
-	 FmajXDHHp6E56+SgsXq7hkOtIFxeU/w8oqVN7POD8IIcl3lTmNPUvxGDEyML0wlU1f
-	 bSb//6X0qRzGlKMMLF0tOBlVRnDMQyvCNOaZz1EeZMjoalhUMXUURShIo5NpPosK6D
-	 Cf4YlXb+WuvmMM1hJzgdD3vtdIS+LSaO2hnr22CIcb+WvZhUb+KtAFJMDbuXhpqRFi
-	 3KWYLNt3r9fLxjZU7NJ3vQXTv0ORLSiGSpf3VapXXxejjX/V4H9157N13si/TqnQgs
-	 inaj0ZFsXetKQ==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a28b2e1a13fso27119566b.3
-        for <loongarch@lists.linux.dev>; Thu, 04 Jan 2024 00:58:27 -0800 (PST)
-X-Gm-Message-State: AOJu0YxQOOlNP+CPvjXYNpzJSceDuBTcF3x6a+Ucfnj3c0IOmZRbtLEJ
-	blUAksPoQ89brEZS3cPJInYV71ERV9y9GUE1E2E=
-X-Google-Smtp-Source: AGHT+IHQVPwm12+OlEILyIKcXqjXe7xvDeITRMmcqOceIIL7hs/JLrObgNNCkATamQIcelA4TEK/rAkJk+QMqBGQsfU=
-X-Received: by 2002:a17:906:bc45:b0:a28:d45:33ee with SMTP id
- s5-20020a170906bc4500b00a280d4533eemr152937ejv.143.1704358706430; Thu, 04 Jan
- 2024 00:58:26 -0800 (PST)
+	b=OHFkUtqftfj+SZv9SeaQruKnYEQ+cq+CUVLhdhS4ctC5mJde61oZpomnZp+ecLocl
+	 edGdjmqnCNVqcSE+r/1BHCS9HtiWkfJlVSxkDAqPGjrXpj3m1RESX+i8Du30XCZhoc
+	 Phx4BiVKMLfV6iWckC4A+sp0BbGfUzv2NrDh9iOsqfiDWgJJBXqcmWjicme7o2UqjD
+	 OMdDO97BJHjpoD64eKNTbxVRZi2a6R+/ZwjD90Vah4KdwTLgLKFVkFiJMEVPIBQPIC
+	 QoCG2KHOziSdqLfOlz01MyVVY2UGekeYO2k3gZN/0V0FQCNOuMwCjTEqTwRZOK3QMU
+	 ZsLwm/ZTJ1jcQ==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a2888d65f1fso35705166b.1
+        for <loongarch@lists.linux.dev>; Thu, 04 Jan 2024 01:55:39 -0800 (PST)
+X-Gm-Message-State: AOJu0YyNhmz2oemxt37wUHaqzyykqP5Drc1no0ffnfz8L7fBUoFlQ1l4
+	khaAJWHPr2kXoxTXE0Q249WIxDta1NubU+CamoQ=
+X-Google-Smtp-Source: AGHT+IEKmcnwqgygVH9sZZQyzsnOvSR/gqjMEXN+FYG4pXKZGSTboqY34lxGfMFTo2QI4qDTuxyc5MRzDYiHeKc4cMU=
+X-Received: by 2002:a17:906:a94:b0:a28:9633:d599 with SMTP id
+ y20-20020a1709060a9400b00a289633d599mr160134ejf.18.1704362137704; Thu, 04 Jan
+ 2024 01:55:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240102123706.6099-2-xry111@xry111.site>
-In-Reply-To: <20240102123706.6099-2-xry111@xry111.site>
+References: <20231228014220.3562640-1-samuel.holland@sifive.com> <20231228014220.3562640-8-samuel.holland@sifive.com>
+In-Reply-To: <20231228014220.3562640-8-samuel.holland@sifive.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 4 Jan 2024 16:58:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4QM6xHNfNcnbYX4M+PMuBcp7x9do97Ak9_XksFA9mM2Q@mail.gmail.com>
-Message-ID: <CAAhV-H4QM6xHNfNcnbYX4M+PMuBcp7x9do97Ak9_XksFA9mM2Q@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: Fix and simplify fcsr initialization on execve
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Jinyang He <hejinyang@loongson.cn>, 
-	loongarch@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, linux-mips@vger.kernel.org
+Date: Thu, 4 Jan 2024 17:55:32 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5TJPqRcgS6jywWDSNsCvd-PsVacgxgoiF-fJ00ZnS4uA@mail.gmail.com>
+Message-ID: <CAAhV-H5TJPqRcgS6jywWDSNsCvd-PsVacgxgoiF-fJ00ZnS4uA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/14] LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	x86@kernel.org, linux-riscv@lists.infradead.org, 
+	Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, linux-arch@vger.kernel.org, 
+	WANG Xuerui <git@xen0n.name>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Queued for loongarch-next, thanks.
+Hi, Samuel,
+
+On Thu, Dec 28, 2023 at 9:42=E2=80=AFAM Samuel Holland
+<samuel.holland@sifive.com> wrote:
+>
+> LoongArch already provides kernel_fpu_begin() and kernel_fpu_end() in
+> asm/fpu.h, so it only needs to add kernel_fpu_available() and export
+> the CFLAGS adjustments.
+>
+> Acked-by: WANG Xuerui <git@xen0n.name>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> ---
+>
+> (no changes since v1)
+>
+>  arch/loongarch/Kconfig           | 1 +
+>  arch/loongarch/Makefile          | 5 ++++-
+>  arch/loongarch/include/asm/fpu.h | 1 +
+>  3 files changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index ee123820a476..65d4475565b8 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -15,6 +15,7 @@ config LOONGARCH
+>         select ARCH_HAS_CPU_FINALIZE_INIT
+>         select ARCH_HAS_FORTIFY_SOURCE
+>         select ARCH_HAS_KCOV
+> +       select ARCH_HAS_KERNEL_FPU_SUPPORT if CPU_HAS_FPU
+>         select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+>         select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>         select ARCH_HAS_PTE_SPECIAL
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index 4ba8d67ddb09..1afe28feaba5 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -25,6 +25,9 @@ endif
+>  32bit-emul             =3D elf32loongarch
+>  64bit-emul             =3D elf64loongarch
+>
+> +CC_FLAGS_FPU           :=3D -mfpu=3D64
+> +CC_FLAGS_NO_FPU                :=3D -msoft-float
+We will add LoongArch32 support later, maybe it should be -mfpu=3D32 in
+that case, and do other archs have the case that only support FP32?
 
 Huacai
 
-On Tue, Jan 2, 2024 at 8:38=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
-:
+> +
+>  ifdef CONFIG_DYNAMIC_FTRACE
+>  KBUILD_CPPFLAGS +=3D -DCC_USING_PATCHABLE_FUNCTION_ENTRY
+>  CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D2
+> @@ -46,7 +49,7 @@ ld-emul                       =3D $(64bit-emul)
+>  cflags-y               +=3D -mabi=3Dlp64s
+>  endif
 >
-> There has been a lingering bug in LoongArch Linux systems causing some
-> GCC tests to intermittently fail (see Closes link).  I've made a minimal
-> reproducer:
+> -cflags-y                       +=3D -pipe -msoft-float
+> +cflags-y                       +=3D -pipe $(CC_FLAGS_NO_FPU)
+>  LDFLAGS_vmlinux                        +=3D -static -n -nostdlib
 >
->     zsh% cat measure.s
->     .align 4
->     .globl _start
->     _start:
->         movfcsr2gr  $a0, $fcsr0
->         bstrpick.w  $a0, $a0, 16, 16
->         beqz        $a0, .ok
->         break       0
->     .ok:
->         li.w        $a7, 93
->         syscall     0
->     zsh% cc mesaure.s -o measure -nostdlib
->     zsh% echo $((1.0/3))
->     0.33333333333333331
->     zsh% while ./measure; do ; done
+>  # When the assembler supports explicit relocation hint, we must use it.
+> diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/as=
+m/fpu.h
+> index c2d8962fda00..3177674228f8 100644
+> --- a/arch/loongarch/include/asm/fpu.h
+> +++ b/arch/loongarch/include/asm/fpu.h
+> @@ -21,6 +21,7 @@
 >
-> This while loop should not stop as POSIX is clear that execve must set
-> fenv to the default, where FCSR should be zero.  But in fact it will
-> just stop after running for a while (normally less than 30 seconds).
-> Note that "$((1.0/3))" is needed to reproduce the issue because it
-> raises FE_INVALID and makes fcsr0 non-zero.
+>  struct sigcontext;
 >
-> The problem is we are relying on SET_PERSONALITY2 to reset
-> current->thread.fpu.fcsr.  But SET_PERSONALITY2 is executed before
-> start_thread which calls lose_fpu(0).  We can see if kernel preempt is
-> enabled, we may switch to another thread after SET_PERSONALITY2 but
-> before lose_fpu(0).  Then bad thing happens: during the thread switch
-> the value of the fcsr0 register is stored into current->thread.fpu.fcsr,
-> making it dirty again.
+> +#define kernel_fpu_available() cpu_has_fpu
+>  extern void kernel_fpu_begin(void);
+>  extern void kernel_fpu_end(void);
 >
-> The issue can be fixed by setting current->thread.fpu.fcsr after
-> lose_fpu(0) because lose_fpu clears TIF_USEDFPU, then the thread
-> switch won't touch current->thread.fpu.fcsr.
->
-> The only other architecture setting FCSR in SET_PERSONALITY2 is MIPS.
-> I've ran a similar test on MIPS with mainline kernel and it turns out
-> MIPS is buggy too.  Anyway MIPS do this for supporting different FP
-> flavors (NaN encodings etc.) which do not exist on LoongArch.  So for
-> LoongArch, we can simply remove the current->thread.fpu.fcsr setting
-> from SET_PERSONALITY2 and do it in start_thread, after lose_fpu(0).
-> I'll leave the job to fix MIPS for MIPS maintainers.
->
-> The while loop failing with the mainline kernel has survived one hour
-> after this change on LoongArch.
->
-> Closes: https://github.com/loongson-community/discussions/issues/7
-> Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
-> Link: https://lore.kernel.org/linux-mips/7a6aa1bbdbbe2e63ae96ff163fab0349=
-f58f1b9e.camel@xry111.site/
-> Cc: stable@vger.kernel.org
-> Cc: linux-mips@vger.kernel.org
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->
-> v2 -> v3:
-> - Update the commit message to mention MIPS is buggy too.
-> - Replace tabs in the commit message with whitespaces.
-> - No code change.
->
-> v1 -> v2:
-> - Still set current->thread.fpu.fcsr to boot_cpu_data.fpu_csr0 instead
->   of constant 0.
->
->  arch/loongarch/include/asm/elf.h | 5 -----
->  arch/loongarch/kernel/elf.c      | 5 -----
->  arch/loongarch/kernel/process.c  | 1 +
->  3 files changed, 1 insertion(+), 10 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/elf.h b/arch/loongarch/include/as=
-m/elf.h
-> index 9b16a3b8e706..f16bd42456e4 100644
-> --- a/arch/loongarch/include/asm/elf.h
-> +++ b/arch/loongarch/include/asm/elf.h
-> @@ -241,8 +241,6 @@ void loongarch_dump_regs64(u64 *uregs, const struct p=
-t_regs *regs);
->  do {                                                                   \
->         current->thread.vdso =3D &vdso_info;                             =
- \
->                                                                         \
-> -       loongarch_set_personality_fcsr(state);                          \
-> -                                                                       \
->         if (personality(current->personality) !=3D PER_LINUX)            =
- \
->                 set_personality(PER_LINUX);                             \
->  } while (0)
-> @@ -259,7 +257,6 @@ do {                                                 =
-                       \
->         clear_thread_flag(TIF_32BIT_ADDR);                              \
->                                                                         \
->         current->thread.vdso =3D &vdso_info;                             =
- \
-> -       loongarch_set_personality_fcsr(state);                          \
->                                                                         \
->         p =3D personality(current->personality);                         =
- \
->         if (p !=3D PER_LINUX32 && p !=3D PER_LINUX)                      =
-   \
-> @@ -340,6 +337,4 @@ extern int arch_elf_pt_proc(void *ehdr, void *phdr, s=
-truct file *elf,
->  extern int arch_check_elf(void *ehdr, bool has_interpreter, void *interp=
-_ehdr,
->                           struct arch_elf_state *state);
->
-> -extern void loongarch_set_personality_fcsr(struct arch_elf_state *state)=
-;
-> -
->  #endif /* _ASM_ELF_H */
-> diff --git a/arch/loongarch/kernel/elf.c b/arch/loongarch/kernel/elf.c
-> index 183e94fc9c69..0fa81ced28dc 100644
-> --- a/arch/loongarch/kernel/elf.c
-> +++ b/arch/loongarch/kernel/elf.c
-> @@ -23,8 +23,3 @@ int arch_check_elf(void *_ehdr, bool has_interpreter, v=
-oid *_interp_ehdr,
->  {
->         return 0;
->  }
-> -
-> -void loongarch_set_personality_fcsr(struct arch_elf_state *state)
-> -{
-> -       current->thread.fpu.fcsr =3D boot_cpu_data.fpu_csr0;
-> -}
-> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/proc=
-ess.c
-> index 767d94cce0de..3f9cae615f52 100644
-> --- a/arch/loongarch/kernel/process.c
-> +++ b/arch/loongarch/kernel/process.c
-> @@ -92,6 +92,7 @@ void start_thread(struct pt_regs *regs, unsigned long p=
-c, unsigned long sp)
->         clear_used_math();
->         regs->csr_era =3D pc;
->         regs->regs[3] =3D sp;
-> +       current->thread.fpu.fcsr =3D boot_cpu_data.fpu_csr0;
->  }
->
->  void flush_thread(void)
 > --
-> 2.43.0
+> 2.42.0
+>
 >
