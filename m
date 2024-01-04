@@ -1,129 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068731FB4;
-	Thu,  4 Jan 2024 01:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C15C4C83;
+	Thu,  4 Jan 2024 02:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bXKA+i41"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704333140; x=1735869140;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x87hXyg1vD9hfcAbz58oRkGr1NdcwNmNwpY5ZaL9VpU=;
-  b=bXKA+i41l9Tpdnr/oA9Nrqly+Czuh7rXBBJ0AZ8p6b6HFcKKu8mEVSzY
-   1Hbd155UrxHF/HP+u0NS3osxT+x7R4YjiVXT9IyClWe0MFP8QxcouELF7
-   lCN9dSN1569uAYgbdZtxOzPTl/CbzBZrsU4jzJDZ3B98oI07N8iO9Qzrq
-   su9o/TWKDyTzFJSvm4aNOtF/S3qrBehkCMvYKz5SbXoxNybjhqZTnswEL
-   qUZQvdh79GWAPhLn5tmSZsnyGgpNQ3CmBjFcVl3wWGbTrR29FkyMK12iD
-   8Tdyj/UHHOovjUikHtM3vkHmU7ZE2wjpRyillHvfM+xmjcQMBmxGsclNL
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="4443208"
-X-IronPort-AV: E=Sophos;i="6.04,329,1695711600"; 
-   d="scan'208";a="4443208"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 17:52:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="783692444"
-X-IronPort-AV: E=Sophos;i="6.04,329,1695711600"; 
-   d="scan'208";a="783692444"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Jan 2024 17:52:15 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rLCu5-000MmM-0C;
-	Thu, 04 Jan 2024 01:52:13 +0000
-Date: Thu, 4 Jan 2024 09:51:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Juergen Gross <jgross@suse.com>
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH 3/5] LoongArch/smp: Refine ipi ops on LoongArch platform
-Message-ID: <202401040952.1JdPfC85-lkp@intel.com>
-References: <20240103071615.3422264-4-maobibo@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAvW7t9+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDE3C433C8;
+	Thu,  4 Jan 2024 02:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704337138;
+	bh=01K1xit/4AEQ8i0BRSYPXXAVVlLb6B3z2QascNWt8Go=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XAvW7t9+ME532xnff0Cv4Ov9JDzr39BvFUOMveX1TewOFfaXs/Tn3zF9sfBn3pm2k
+	 wUeDbjA0DK1IY61bc7tHsvl7TXpDJ/7t33Jr9DuXJy/w8VTSv4iegGrCvn75hY4gGf
+	 l3JFNsn95NGvxaBRpAmV3GnEKmv8n0I6eZ93KDmzrlrxybTvUw7hgT0UdvE+MF0w5a
+	 3yJ5jwUibI9fptvRgdyZBiFC5zdbrWu0zrUnhiQ+YSgIPByX/6HWQBAu+dJjCcBPqt
+	 DS7sFGZTVHR/fL2n+O4OdnARNT70k8vzh7G5y3t+94j6gq5AsgmvWNKQZk2BkpUhhe
+	 96WDbjIo0Sl+w==
+Date: Thu, 4 Jan 2024 11:58:54 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Steven Rostedt
+ <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] docs, kprobes: Update email address of Masami
+ Hiramatsu
+Message-Id: <20240104115854.e98f0081f771d4aa73647c3b@kernel.org>
+In-Reply-To: <87mstm6qvk.fsf@meer.lwn.net>
+References: <20231219062330.22813-1-yangtiezhu@loongson.cn>
+	<20231219062330.22813-2-yangtiezhu@loongson.cn>
+	<87mstm6qvk.fsf@meer.lwn.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240103071615.3422264-4-maobibo@loongson.cn>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Bibo,
+On Wed, 03 Jan 2024 14:36:47 -0700
+Jonathan Corbet <corbet@lwn.net> wrote:
 
-kernel test robot noticed the following build warnings:
+> Tiezhu Yang <yangtiezhu@loongson.cn> writes:
+> 
+> > According to the latest authorship and Signed-off-by:
+> >
+> >   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> > Masami Hiramatsu is working at Google, so the current email @redhat.com
+> > is out of date, it is better to use the email @kernel.org.
+> >
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > ---
+> >  Documentation/trace/kprobes.rst | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/trace/kprobes.rst b/Documentation/trace/kprobes.rst
+> > index f825970a1495..968ae080accd 100644
+> > --- a/Documentation/trace/kprobes.rst
+> > +++ b/Documentation/trace/kprobes.rst
+> > @@ -4,7 +4,7 @@ Kernel Probes (Kprobes)
+> >  
+> >  :Author: Jim Keniston <jkenisto@us.ibm.com>
+> >  :Author: Prasanna S Panchamukhi <prasanna.panchamukhi@gmail.com>
+> > -:Author: Masami Hiramatsu <mhiramat@redhat.com>
+> > +:Author: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> Masami, is this change OK with you?
 
-[auto build test WARNING on 610a9b8f49fbcf1100716370d3b5f6f884a2835a]
+I would like to know the policy. Should we update the author's mail
+address in the document (source) everytime?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-KVM-Add-hypercall-instruction-emulation-support/20240103-151946
-base:   610a9b8f49fbcf1100716370d3b5f6f884a2835a
-patch link:    https://lore.kernel.org/r/20240103071615.3422264-4-maobibo%40loongson.cn
-patch subject: [PATCH 3/5] LoongArch/smp: Refine ipi ops on LoongArch platform
-config: loongarch-randconfig-r131-20240103 (https://download.01.org/0day-ci/archive/20240104/202401040952.1JdPfC85-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240104/202401040952.1JdPfC85-lkp@intel.com/reproduce)
+Anyway, I'm OK for this update.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401040952.1JdPfC85-lkp@intel.com/
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-sparse warnings: (new ones prefixed by >>)
->> arch/loongarch/kernel/smp.c:192:73: sparse: sparse: incorrect type in argument 4 (different address spaces) @@     expected void [noderef] __percpu *percpu_dev_id @@     got int * @@
-   arch/loongarch/kernel/smp.c:192:73: sparse:     expected void [noderef] __percpu *percpu_dev_id
-   arch/loongarch/kernel/smp.c:192:73: sparse:     got int *
-   arch/loongarch/kernel/smp.c: note: in included file (through arch/loongarch/include/asm/loongarch.h, arch/loongarch/include/asm/cpu-info.h, ...):
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:332:3: sparse: sparse: undefined identifier '__builtin_loongarch_iocsrwr_d'
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:284:25: sparse: sparse: undefined identifier '__builtin_loongarch_iocsrrd_w'
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:284:11: sparse: sparse: cast from unknown type
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:322:3: sparse: sparse: undefined identifier '__builtin_loongarch_iocsrwr_w'
-   arch/loongarch/kernel/smp.c: note: in included file (through arch/loongarch/include/asm/cpu-info.h, arch/loongarch/include/asm/processor.h, ...):
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_w'
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: undefined identifier '__builtin_loongarch_csrwr_w'
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_w'
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: undefined identifier '__builtin_loongarch_csrwr_w'
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_w'
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: undefined identifier '__builtin_loongarch_csrwr_w'
-   arch/loongarch/include/asm/loongarch.h:1260:1: sparse: sparse: cast from unknown type
-   arch/loongarch/kernel/smp.c: note: in included file (through arch/loongarch/include/asm/loongarch.h, arch/loongarch/include/asm/cpu-info.h, ...):
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:294:30: sparse: sparse: undefined identifier '__builtin_loongarch_iocsrrd_d'
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:294:11: sparse: sparse: cast from unknown type
-   arch/loongarch/kernel/smp.c: note: in included file (through include/linux/irqflags.h, include/linux/spinlock.h, include/linux/mmzone.h, ...):
-   arch/loongarch/include/asm/percpu.h:30:9: sparse: sparse: undefined identifier '__builtin_loongarch_csrwr_d'
-   arch/loongarch/include/asm/percpu.h:30:9: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/percpu.h:30:9: sparse: sparse: cast from unknown type
+Thanks,
 
-vim +192 arch/loongarch/kernel/smp.c
+> 
+> Thanks,
+> 
+> jon
 
-   181	
-   182	static void loongson_ipi_init(void)
-   183	{
-   184		int r, ipi_irq;
-   185		static int ipi_dummy_dev;
-   186	
-   187		ipi_irq = get_percpu_irq(INT_IPI);
-   188		if (ipi_irq < 0)
-   189			panic("IPI IRQ mapping failed\n");
-   190	
-   191		irq_set_percpu_devid(ipi_irq);
- > 192		r = request_percpu_irq(ipi_irq, loongson_ipi_interrupt, "IPI", &ipi_dummy_dev);
-   193		if (r < 0)
-   194			panic("IPI IRQ request failed\n");
-   195	}
-   196	
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
