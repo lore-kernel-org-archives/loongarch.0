@@ -1,127 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60D720B22
-	for <loongarch@lists.linux.dev>; Thu,  4 Jan 2024 09:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B1C20DF4
+	for <loongarch@lists.linux.dev>; Thu,  4 Jan 2024 11:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHFkUtqf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE2CC433C7
-	for <loongarch@lists.linux.dev>; Thu,  4 Jan 2024 09:55:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SEZKKIhf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EDA4C433D9
+	for <loongarch@lists.linux.dev>; Thu,  4 Jan 2024 11:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704362139;
-	bh=NUKoeng2TtOuvmS1QuUleD7BGl+JqWw7EjY22X+zMeE=;
+	s=k20201202; t=1704366002;
+	bh=QNlTNClwPlEEC6QlstmypMfevz5Oe6cwp4zY1EyQ13E=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OHFkUtqftfj+SZv9SeaQruKnYEQ+cq+CUVLhdhS4ctC5mJde61oZpomnZp+ecLocl
-	 edGdjmqnCNVqcSE+r/1BHCS9HtiWkfJlVSxkDAqPGjrXpj3m1RESX+i8Du30XCZhoc
-	 Phx4BiVKMLfV6iWckC4A+sp0BbGfUzv2NrDh9iOsqfiDWgJJBXqcmWjicme7o2UqjD
-	 OMdDO97BJHjpoD64eKNTbxVRZi2a6R+/ZwjD90Vah4KdwTLgLKFVkFiJMEVPIBQPIC
-	 QoCG2KHOziSdqLfOlz01MyVVY2UGekeYO2k3gZN/0V0FQCNOuMwCjTEqTwRZOK3QMU
-	 ZsLwm/ZTJ1jcQ==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a2888d65f1fso35705166b.1
-        for <loongarch@lists.linux.dev>; Thu, 04 Jan 2024 01:55:39 -0800 (PST)
-X-Gm-Message-State: AOJu0YyNhmz2oemxt37wUHaqzyykqP5Drc1no0ffnfz8L7fBUoFlQ1l4
-	khaAJWHPr2kXoxTXE0Q249WIxDta1NubU+CamoQ=
-X-Google-Smtp-Source: AGHT+IEKmcnwqgygVH9sZZQyzsnOvSR/gqjMEXN+FYG4pXKZGSTboqY34lxGfMFTo2QI4qDTuxyc5MRzDYiHeKc4cMU=
-X-Received: by 2002:a17:906:a94:b0:a28:9633:d599 with SMTP id
- y20-20020a1709060a9400b00a289633d599mr160134ejf.18.1704362137704; Thu, 04 Jan
- 2024 01:55:37 -0800 (PST)
+	b=SEZKKIhfEFj4RR8NlDAB7JvdvTQkXzTsKDN9WveLDB27lDbLPi9+tSj76EmgT2C0u
+	 jihxRAianhDn972WtbMPwG2VKl5g4vlQFZKWirG/I516gG7Y5fj/6omDvWphRmvarO
+	 SiwbkToj8zjTfMwbnF+QCpSWPhdHPwARUkT/4e45wsZD14UoBU/dx+fl74Ngvs2gl/
+	 ioj4r4Cro2VYo7emweFXTjb7VBXEhO4JvfEintskKMUUeOSSFSDGcPU+zP1apzbP+d
+	 9kj8aOgB4Br8qL0d6Cj03Sby6Ilmk73fIGMV6X4eVknIzPyrPzK6KA5XCz0obO+vK9
+	 ynMUJygns2X3A==
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6dc035ee106so211255a34.3
+        for <loongarch@lists.linux.dev>; Thu, 04 Jan 2024 03:00:02 -0800 (PST)
+X-Gm-Message-State: AOJu0YyVECAvT9FGDap7o+rNnWTT9nw8TMrhbB0blXj/Wfh5M4eNrC4Z
+	QfVO7FW5IqDczpSWUfVyVJPQQbmU3DGAbJAfh4M=
+X-Google-Smtp-Source: AGHT+IFO8//nIaNkJTs+JWuKZnB9mhyJVrnoRgEJzbk4exWG9bZuNkIzFhZlDYGUcgJlYxpyBzz2O1FmOxcVBklMWLo=
+X-Received: by 2002:a05:6870:10d8:b0:1fb:75a:c443 with SMTP id
+ 24-20020a05687010d800b001fb075ac443mr227570oar.108.1704366001458; Thu, 04 Jan
+ 2024 03:00:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231228014220.3562640-1-samuel.holland@sifive.com> <20231228014220.3562640-8-samuel.holland@sifive.com>
-In-Reply-To: <20231228014220.3562640-8-samuel.holland@sifive.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 4 Jan 2024 17:55:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5TJPqRcgS6jywWDSNsCvd-PsVacgxgoiF-fJ00ZnS4uA@mail.gmail.com>
-Message-ID: <CAAhV-H5TJPqRcgS6jywWDSNsCvd-PsVacgxgoiF-fJ00ZnS4uA@mail.gmail.com>
-Subject: Re: [PATCH v2 07/14] LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	x86@kernel.org, linux-riscv@lists.infradead.org, 
-	Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, linux-arch@vger.kernel.org, 
-	WANG Xuerui <git@xen0n.name>
+References: <20231227070317.1936234-1-kernel@xen0n.name> <fbefe6e45e23a09e5b63eaac0a07a2fbae4a3845.camel@xry111.site>
+ <CAAhV-H44EZpOpnWyZm14QdwTLAPcxM1eNhpoDEsFQbf8=s7-iA@mail.gmail.com>
+In-Reply-To: <CAAhV-H44EZpOpnWyZm14QdwTLAPcxM1eNhpoDEsFQbf8=s7-iA@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 4 Jan 2024 19:59:24 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQfU1kypaSkQmc24uhO49B452tJJAzvStpZeVBkijOPyg@mail.gmail.com>
+Message-ID: <CAK7LNAQfU1kypaSkQmc24uhO49B452tJJAzvStpZeVBkijOPyg@mail.gmail.com>
+Subject: Re: [PATCH] modpost: Ignore relaxation and alignment marker relocs on LoongArch
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>, linux-kbuild@vger.kernel.org, 
+	WANG Xuerui <git@xen0n.name>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Samuel,
+On Thu, Jan 4, 2024 at 5:58=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
+wrote:
+>
+> On Wed, Dec 27, 2023 at 7:06=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wr=
+ote:
+> >
+> > On Wed, 2023-12-27 at 15:03 +0800, WANG Xuerui wrote:
+> > > And even though the kernel is built with relaxation disabled, so
+> > > far a small number of R_LARCH_RELAX marker relocs are still emitted a=
+s
+> > > part of la.* pseudo instructions in assembly.
+> >
+> > I'd consider it a toolchain bug...  Is there a reproducer?
+> Any updates? Should I apply this patch for loongarch-next?
 
-On Thu, Dec 28, 2023 at 9:42=E2=80=AFAM Samuel Holland
-<samuel.holland@sifive.com> wrote:
->
-> LoongArch already provides kernel_fpu_begin() and kernel_fpu_end() in
-> asm/fpu.h, so it only needs to add kernel_fpu_available() and export
-> the CFLAGS adjustments.
->
-> Acked-by: WANG Xuerui <git@xen0n.name>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
->
-> (no changes since v1)
->
->  arch/loongarch/Kconfig           | 1 +
->  arch/loongarch/Makefile          | 5 ++++-
->  arch/loongarch/include/asm/fpu.h | 1 +
->  3 files changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index ee123820a476..65d4475565b8 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -15,6 +15,7 @@ config LOONGARCH
->         select ARCH_HAS_CPU_FINALIZE_INIT
->         select ARCH_HAS_FORTIFY_SOURCE
->         select ARCH_HAS_KCOV
-> +       select ARCH_HAS_KERNEL_FPU_SUPPORT if CPU_HAS_FPU
->         select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
->         select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->         select ARCH_HAS_PTE_SPECIAL
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index 4ba8d67ddb09..1afe28feaba5 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -25,6 +25,9 @@ endif
->  32bit-emul             =3D elf32loongarch
->  64bit-emul             =3D elf64loongarch
->
-> +CC_FLAGS_FPU           :=3D -mfpu=3D64
-> +CC_FLAGS_NO_FPU                :=3D -msoft-float
-We will add LoongArch32 support later, maybe it should be -mfpu=3D32 in
-that case, and do other archs have the case that only support FP32?
 
-Huacai
+This is odd.
 
-> +
->  ifdef CONFIG_DYNAMIC_FTRACE
->  KBUILD_CPPFLAGS +=3D -DCC_USING_PATCHABLE_FUNCTION_ENTRY
->  CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D2
-> @@ -46,7 +49,7 @@ ld-emul                       =3D $(64bit-emul)
->  cflags-y               +=3D -mabi=3Dlp64s
->  endif
->
-> -cflags-y                       +=3D -pipe -msoft-float
-> +cflags-y                       +=3D -pipe $(CC_FLAGS_NO_FPU)
->  LDFLAGS_vmlinux                        +=3D -static -n -nostdlib
->
->  # When the assembler supports explicit relocation hint, we must use it.
-> diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/as=
-m/fpu.h
-> index c2d8962fda00..3177674228f8 100644
-> --- a/arch/loongarch/include/asm/fpu.h
-> +++ b/arch/loongarch/include/asm/fpu.h
-> @@ -21,6 +21,7 @@
->
->  struct sigcontext;
->
-> +#define kernel_fpu_available() cpu_has_fpu
->  extern void kernel_fpu_begin(void);
->  extern void kernel_fpu_end(void);
->
-> --
-> 2.42.0
->
->
+At least, Fixes: 3d36f4298ba9
+is unrelated.
+
+
+The instruction to reproduce it was requested.
+
+I did not see any error for defconfig
+with loongarch64-linux-gcc 13.2 provided by 0day bot.
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
