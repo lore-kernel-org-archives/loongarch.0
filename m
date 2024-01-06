@@ -1,139 +1,134 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9E4524B4D
-	for <loongarch@lists.linux.dev>; Fri,  5 Jan 2024 10:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02B75522B
+	for <loongarch@lists.linux.dev>; Sat,  6 Jan 2024 07:04:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8AxTeuw1ZdlskoCAA--.8414S3;
-	Fri, 05 Jan 2024 18:10:56 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxvoep1ZdlykUDAA--.8534S3;
-	Fri, 05 Jan 2024 18:10:50 +0800 (CST)
-Subject: Re: [PATCH] modpost: Ignore relaxation and alignment marker relocs on
- LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- linux-kbuild@vger.kernel.org, WANG Xuerui <git@xen0n.name>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
- Youling Tang <tangyouling@kylinos.cn>, loongarch@lists.linux.dev
-References: <20231227070317.1936234-1-kernel@xen0n.name>
- <fbefe6e45e23a09e5b63eaac0a07a2fbae4a3845.camel@xry111.site>
- <CAAhV-H44EZpOpnWyZm14QdwTLAPcxM1eNhpoDEsFQbf8=s7-iA@mail.gmail.com>
- <2f1877ed39563b42d41f03ad6d6fdd7ce4137bbb.camel@xry111.site>
- <445a73e3-4e0e-0f03-3719-57975fb95189@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <2abbb633-a10e-71cc-a5e1-4d9e39074066@loongson.cn>
-Date: Fri, 5 Jan 2024 18:10:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [112.22.232.245])
+	by gateway (Coremail) with SMTP id _____8Bx37th+5hl3JUCAA--.819S3;
+	Sat, 06 Jan 2024 15:04:01 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.22.232.245])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx34de+5hlmlQEAA--.11488S2;
+	Sat, 06 Jan 2024 15:04:00 +0800 (CST)
+From: WANG Rui <wangrui@loongson.cn>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	WANG Rui <wangrui@loongson.cn>
+Subject: [PATCH] LoongArch: Enable initial Rust support
+Date: Sat,  6 Jan 2024 14:59:41 +0800
+Message-ID: <20240106065941.180796-1-wangrui@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <445a73e3-4e0e-0f03-3719-57975fb95189@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Dxvoep1ZdlykUDAA--.8534S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXrWxXr1UtrW7Ar15tFWrWFX_yoW5GryUpa
-	yUtFs0kF48JFykCw1xtr1jga4Yqwn7t342q3y8JryUAr9FqryFqw48X3ySgFyDKrs2gF15
-	uw4Igas7CaykJabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:AQAAf8Bx34de+5hlmlQEAA--.11488S2
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGr4UWryDJw43Xw45Cr4kAFc_yoW5Ary5pa
+	97ur97Jr4xXrykJrn8JFyUZr4UAFyDGr47XF18Cw18Jr4DZryUXr1xtFn3JF1rGw4kArW8
+	WF15GryUArWUJwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jYpB-UUU
-	UU=
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07URa0PUUUUU=
 
+Add initial Rust support for LoongArch.
 
-On 2024-01-05 16:09, Tiezhu Yang wrote:
->
->
-> On 01/05/2024 12:26 AM, Xi Ruoyao wrote:
->> On Thu, 2024-01-04 at 16:57 +0800, Huacai Chen wrote:
->>> On Wed, Dec 27, 2023 at 7:06 PM Xi Ruoyao <xry111@xry111.site> wrote:
->>>>
->>>> On Wed, 2023-12-27 at 15:03 +0800, WANG Xuerui wrote:
->>>>> And even though the kernel is built with relaxation disabled, so
->>>>> far a small number of R_LARCH_RELAX marker relocs are still 
->>>>> emitted as
->>>>> part of la.* pseudo instructions in assembly.
->>>>
->>>> I'd consider it a toolchain bug...  Is there a reproducer?
->>> Any updates? Should I apply this patch for loongarch-next?
->>
->> Tiezhu told me this should be reproducible with GCC 14 and Binutils-2.42
->> development snapshots and defconfig.  I'm trying...
->
-> 1. How to reproduce
->
-> I update the latest upstream toolchains (20240105):
->
-> [fedora@linux 6.7.test]$ gcc --version
-> gcc (GCC) 14.0.0 20240105 (experimental)
-> [fedora@linux 6.7.test]$ as --version
-> GNU assembler (GNU Binutils) 2.41.50.20240105
-> [fedora@linux 6.7.test]$ ld --version
-> GNU ld (GNU Binutils) 2.41.50.20240105
->
-> and then test it again, here is the failure info:
->
-> [fedora@linux 6.7.test]$ git log --oneline | head -1
-> 610a9b8f49fb Linux 6.7-rc8
-> [fedora@linux 6.7.test]$ make loongson3_defconfig
-> [fedora@linux 6.7.test]$ make
-> ...
->   AR      built-in.a
->   AR      vmlinux.a
->   LD      vmlinux.o
->   OBJCOPY modules.builtin.modinfo
->   GEN     modules.builtin
->   GEN     .vmlinux.objs
->   MODPOST Module.symvers
-> make[2]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 139
-> make[1]: *** [/home/fedora/6.7.test/Makefile:1863: modpost] Error 2
-> make: *** [Makefile:234: __sub-make] Error 2
->
-> 2. Additional info
->
-> I can confirm that the slightly older version of toolchains (20231127)
-> have no the above failure, so I guess this is related with toolchains.
->
-> 3. How to fix
->
-> (1) One way is to modify the kernel code, with this kernel patch,
->     there is no building failure with the latest upstream toolchains.
-> (2) The other way is to analysis and fix the binutils code,
->     it need more work to do.
+Signed-off-by: WANG Rui <wangrui@loongson.cn>
+---
+ Documentation/rust/arch-support.rst |  1 +
+ arch/loongarch/Kconfig              |  1 +
+ arch/loongarch/Makefile             |  3 +++
+ scripts/generate_rust_target.rs     | 10 ++++++++++
+ 4 files changed, 15 insertions(+)
 
-Hi,
-
-I have an idea about that, but I didn't really get into it. The improved
-R_LARCH_ALIGN (psABI v2.30) requires a symbol index. The symbol is only
-created at the first time to handle alignment directive. This means that
-all other sections may use this symbol. If the section of this symbol is
-discarded, there may be problems.
-
-Thanks,
-
-Jinyang
-
-
->
-> Thanks,
-> Tiezhu
->
+diff --git a/Documentation/rust/arch-support.rst b/Documentation/rust/arch-support.rst
+index b91e9ef4d0c2..e89c8b2efbff 100644
+--- a/Documentation/rust/arch-support.rst
++++ b/Documentation/rust/arch-support.rst
+@@ -15,6 +15,7 @@ support corresponds to ``S`` values in the ``MAINTAINERS`` file.
+ ============  ================  ==============================================
+ Architecture  Level of support  Constraints
+ ============  ================  ==============================================
++``loongarch`` Maintained
+ ``um``        Maintained        ``x86_64`` only.
+ ``x86``       Maintained        ``x86_64`` only.
+ ============  ================  ==============================================
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 15d05dd2b7f3..6d39ec3077da 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -142,6 +142,7 @@ config LOONGARCH
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+ 	select HAVE_RETHOOK
+ 	select HAVE_RSEQ
++	select HAVE_RUST
+ 	select HAVE_SAMPLE_FTRACE_DIRECT
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+ 	select HAVE_SETUP_PER_CPU_AREA if NUMA
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 4ba8d67ddb09..ba45cb7b621c 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -81,8 +81,11 @@ KBUILD_AFLAGS_MODULE		+= -Wa,-mla-global-with-abs
+ KBUILD_CFLAGS_MODULE		+= -fplt -Wa,-mla-global-with-abs,-mla-local-with-abs
+ endif
+ 
++KBUILD_RUSTFLAGS_MODULE		+= -Crelocation-model=pic
++
+ ifeq ($(CONFIG_RELOCATABLE),y)
+ KBUILD_CFLAGS_KERNEL		+= -fPIE
++KBUILD_RUSTFLAGS_KERNEL		+= -Crelocation-model=pie
+ LDFLAGS_vmlinux			+= -static -pie --no-dynamic-linker -z notext $(call ld-option, --apply-dynamic-relocs)
+ endif
+ 
+diff --git a/scripts/generate_rust_target.rs b/scripts/generate_rust_target.rs
+index 3c6cbe2b278d..3edda6a10dd0 100644
+--- a/scripts/generate_rust_target.rs
++++ b/scripts/generate_rust_target.rs
+@@ -161,6 +161,16 @@ fn main() {
+         ts.push("features", features);
+         ts.push("llvm-target", "x86_64-linux-gnu");
+         ts.push("target-pointer-width", "64");
++    } else if cfg.has("LOONGARCH") {
++        ts.push("arch", "loongarch64");
++        ts.push(
++            "data-layout",
++            "e-m:e-p:64:64-i64:64-i128:128-n64-S128",
++        );
++        ts.push("features", "-f,-d");
++        ts.push("llvm-target", "loongarch64-linux-gnusf");
++        ts.push("llvm-abiname", "lp64s");
++        ts.push("target-pointer-width", "64");
+     } else {
+         panic!("Unsupported architecture");
+     }
+-- 
+2.43.0
 
