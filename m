@@ -1,102 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DBC259A;
-	Sun,  7 Jan 2024 01:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D5D10A0F;
+	Sun,  7 Jan 2024 02:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3GGWgij"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704589616; x=1736125616;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BL/G2+DBgzyngkKxm1Okb/HyxO0E8Sb22Xv27tX30GE=;
-  b=c3GGWgijseLIXLViTRVGe3MIyA8zx7PuuTh7Jt4hybRwLge9c/SMvpqq
-   fRY4n2ZhxAAFkOg+FaWPHQfwaYjKr6qScu92LSfXcLiO/lTIWams0owY5
-   70gzzdvxoJhuFiCFSY13agnoObQX/oEmH5V4IoD0HcNXdpuFTEJYczOAt
-   qEoeTGTqKRH1gkIpjqICBtQO8JRHODvBBNZIuOrcU4J847Yf1cf3HGETq
-   zCIbemcbzrVVddvzj3vN3ld3nwc+Z/dmtZzhpjt3ZL5e29X5atjL/U+Kj
-   bVZ2i5Ms5eiZZTEjn2COHw9D+9nIObzVqp2987q8IgCdsKv4/Jselyhpk
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="382661492"
-X-IronPort-AV: E=Sophos;i="6.04,338,1695711600"; 
-   d="scan'208";a="382661492"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 17:06:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="899999269"
-X-IronPort-AV: E=Sophos;i="6.04,338,1695711600"; 
-   d="scan'208";a="899999269"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Jan 2024 17:06:42 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rMHce-0003EK-0f;
-	Sun, 07 Jan 2024 01:06:40 +0000
-Date: Sun, 7 Jan 2024 09:06:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: WANG Rui <wangrui@loongson.cn>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: oe-kbuild-all@lists.linux.dev, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn, WANG Rui <wangrui@loongson.cn>
-Subject: Re: [PATCH] LoongArch: Enable initial Rust support
-Message-ID: <202401070815.6tdJWFme-lkp@intel.com>
-References: <20240106065941.180796-1-wangrui@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPIMwMzz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F87FC4339A;
+	Sun,  7 Jan 2024 02:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704594515;
+	bh=K7ih9bZtybZqziznyQQD1kMoWldlbUm+9ljRnW2YBy8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FPIMwMzzJfuChI3Us/lS3S9+TlrQziTgoSb7/8uQp7jeEhqNzUmW3Xw0XOWBgOGkE
+	 hZd4dIsnwL36Glpodhzi1IiDjY1flnZMnNt6DPHWIrCNMh643/QOEXOuEjIaGLfYm7
+	 02cBU8M8MQ+FHcLi+VYcVm24iAoCZ/G3V1mxQQvFnvF0mUYn4trlAwqpdQsqHe/dBP
+	 qRgxWWFyxmwnhsZeVMrIPeYvfcGS/PtITA0DJ+Ei0LKVyVBFxKygklw2g7pTJi3y0W
+	 BJAyPEWhl+PFFBBi4tnoFfVlcjd2fmP+ZIdzoKddGYv0Ns6L5KVSLvnIm9lOF38tQs
+	 LQBaqNaG5flcQ==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-552d39ac3ccso3056576a12.0;
+        Sat, 06 Jan 2024 18:28:35 -0800 (PST)
+X-Gm-Message-State: AOJu0YynWeVf7PYtkO347GedR7bRjAB68OEGNZF9oANI2wF8sDu6RxgP
+	NB/fGhLKjSfZHrmhZSfAXlvQBgO3KbDW6sIFuC8=
+X-Google-Smtp-Source: AGHT+IF43c6rpnnblMV44I9rcuIsU8WPV8s0sRSdlNkOxDUDA7gEuDgzBXjnRWJAeX/Eqg+KQmVaBlE8Nmyseh8LqjA=
+X-Received: by 2002:a17:906:74c3:b0:a27:abac:177f with SMTP id
+ z3-20020a17090674c300b00a27abac177fmr1608415ejl.29.1704594513638; Sat, 06 Jan
+ 2024 18:28:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240106065941.180796-1-wangrui@loongson.cn>
+References: <20240106065941.180796-1-wangrui@loongson.cn> <202401070815.6tdJWFme-lkp@intel.com>
+In-Reply-To: <202401070815.6tdJWFme-lkp@intel.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 7 Jan 2024 10:28:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5WCHsYi8f6AWVC-3RB3dp+vno0hS+tgkB1pqw48W24_Q@mail.gmail.com>
+Message-ID: <CAAhV-H5WCHsYi8f6AWVC-3RB3dp+vno0hS+tgkB1pqw48W24_Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Enable initial Rust support
+To: kernel test robot <lkp@intel.com>
+Cc: WANG Rui <wangrui@loongson.cn>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, oe-kbuild-all@lists.linux.dev, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi WANG,
+On Sun, Jan 7, 2024 at 9:06=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
+ote:
+>
+> Hi WANG,
+>
+> kernel test robot noticed the following build warnings:
+>
+> [auto build test WARNING on rust/rust-next]
+> [also build test WARNING on linus/master v6.7-rc8 next-20240105]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/WANG-Rui/LoongArch=
+-Enable-initial-Rust-support/20240106-150902
+> base:   https://github.com/Rust-for-Linux/linux rust-next
+> patch link:    https://lore.kernel.org/r/20240106065941.180796-1-wangrui%=
+40loongson.cn
+> patch subject: [PATCH] LoongArch: Enable initial Rust support
+> reproduce: (https://download.01.org/0day-ci/archive/20240107/202401070815=
+.6tdJWFme-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202401070815.6tdJWFme-lkp=
+@intel.com/
+>
+> All warnings (new ones prefixed by >>):
+>
+> >> Documentation/rust/arch-support.rst:18: WARNING: Malformed table.
+>
+> vim +18 Documentation/rust/arch-support.rst
+>
+>     14
+>     15  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>     16  Architecture  Level of support  Constraints
+>     17  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>   > 18  ``loongarch`` Maintained
+I think we can put a "none." or just a "-" below "Constraints" to fix
+the warning.
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on rust/rust-next]
-[also build test WARNING on linus/master v6.7-rc8 next-20240105]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/WANG-Rui/LoongArch-Enable-initial-Rust-support/20240106-150902
-base:   https://github.com/Rust-for-Linux/linux rust-next
-patch link:    https://lore.kernel.org/r/20240106065941.180796-1-wangrui%40loongson.cn
-patch subject: [PATCH] LoongArch: Enable initial Rust support
-reproduce: (https://download.01.org/0day-ci/archive/20240107/202401070815.6tdJWFme-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401070815.6tdJWFme-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Documentation/rust/arch-support.rst:18: WARNING: Malformed table.
-
-vim +18 Documentation/rust/arch-support.rst
-
-    14	
-    15	============  ================  ==============================================
-    16	Architecture  Level of support  Constraints
-    17	============  ================  ==============================================
-  > 18	``loongarch`` Maintained
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Huacai
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+>
