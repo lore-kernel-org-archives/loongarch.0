@@ -1,94 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC86479D9;
-	Sat,  6 Jan 2024 14:55:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52ABBC433C7;
-	Sat,  6 Jan 2024 14:55:28 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Change SHMLBA from SZ_64K to PAGE_SIZE
-Date: Sat,  6 Jan 2024 22:55:01 +0800
-Message-Id: <20240106145501.3370364-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DBC259A;
+	Sun,  7 Jan 2024 01:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3GGWgij"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704589616; x=1736125616;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BL/G2+DBgzyngkKxm1Okb/HyxO0E8Sb22Xv27tX30GE=;
+  b=c3GGWgijseLIXLViTRVGe3MIyA8zx7PuuTh7Jt4hybRwLge9c/SMvpqq
+   fRY4n2ZhxAAFkOg+FaWPHQfwaYjKr6qScu92LSfXcLiO/lTIWams0owY5
+   70gzzdvxoJhuFiCFSY13agnoObQX/oEmH5V4IoD0HcNXdpuFTEJYczOAt
+   qEoeTGTqKRH1gkIpjqICBtQO8JRHODvBBNZIuOrcU4J847Yf1cf3HGETq
+   zCIbemcbzrVVddvzj3vN3ld3nwc+Z/dmtZzhpjt3ZL5e29X5atjL/U+Kj
+   bVZ2i5Ms5eiZZTEjn2COHw9D+9nIObzVqp2987q8IgCdsKv4/Jselyhpk
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="382661492"
+X-IronPort-AV: E=Sophos;i="6.04,338,1695711600"; 
+   d="scan'208";a="382661492"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 17:06:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="899999269"
+X-IronPort-AV: E=Sophos;i="6.04,338,1695711600"; 
+   d="scan'208";a="899999269"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Jan 2024 17:06:42 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rMHce-0003EK-0f;
+	Sun, 07 Jan 2024 01:06:40 +0000
+Date: Sun, 7 Jan 2024 09:06:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: WANG Rui <wangrui@loongson.cn>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: oe-kbuild-all@lists.linux.dev, Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn, WANG Rui <wangrui@loongson.cn>
+Subject: Re: [PATCH] LoongArch: Enable initial Rust support
+Message-ID: <202401070815.6tdJWFme-lkp@intel.com>
+References: <20240106065941.180796-1-wangrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240106065941.180796-1-wangrui@loongson.cn>
 
-LoongArch has hardware page coloring for L1 Cache, so we don't have
-cache aliases. But SFB (Store Fill Buffer) still has aliases. So we
-define SHMLBA to SZ_64K previously. But there are losts of applications
-use PAGE_SIZE rather than SHMLBA to mmap() file pages and shared pages.
-Of course we can fix them one by one, but not easy.
+Hi WANG,
 
-On the other hand, we can simply disable SFB for 4KB page size to fix
-cache alias (there will be performance decrease, but acceptable), and
-in future we will fix SFB in hardware. So we can safely define SHMLBA to
-PAGE_SIZE (use the generic shmparam.h) to make life easier.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/shmparam.h | 12 ------------
- arch/loongarch/kernel/head.S          | 10 ++++++++++
- 2 files changed, 10 insertions(+), 12 deletions(-)
- delete mode 100644 arch/loongarch/include/asm/shmparam.h
+[auto build test WARNING on rust/rust-next]
+[also build test WARNING on linus/master v6.7-rc8 next-20240105]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/arch/loongarch/include/asm/shmparam.h b/arch/loongarch/include/asm/shmparam.h
-deleted file mode 100644
-index c9554f48d2df..000000000000
---- a/arch/loongarch/include/asm/shmparam.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-- */
--#ifndef _ASM_SHMPARAM_H
--#define _ASM_SHMPARAM_H
--
--#define __ARCH_FORCE_SHMLBA	1
--
--#define	SHMLBA	SZ_64K		 /* attach addr a multiple of this */
--
--#endif /* _ASM_SHMPARAM_H */
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 53b883db0786..be187e99d358 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -75,6 +75,11 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	la.pcrel	t0, fw_arg2
- 	st.d		a2, t0, 0
- 
-+#ifdef CONFIG_PAGE_SIZE_4KB
-+	li.d		t0, 0
-+	li.d		t1, CSR_STFILL
-+	csrxchg		t0, t1, LOONGARCH_CSR_IMPCTL1
-+#endif
- 	/* KSave3 used for percpu base, initialized as 0 */
- 	csrwr		zero, PERCPU_BASE_KS
- 	/* GPR21 used for percpu base (runtime), initialized as 0 */
-@@ -127,6 +132,11 @@ SYM_CODE_START(smpboot_entry)
- 
- 	JUMP_VIRT_ADDR	t0, t1
- 
-+#ifdef CONFIG_PAGE_SIZE_4KB
-+	li.d		t0, 0
-+	li.d		t1, CSR_STFILL
-+	csrxchg		t0, t1, LOONGARCH_CSR_IMPCTL1
-+#endif
- 	/* Enable PG */
- 	li.w		t0, 0xb0		# PLV=0, IE=0, PG=1
- 	csrwr		t0, LOONGARCH_CSR_CRMD
+url:    https://github.com/intel-lab-lkp/linux/commits/WANG-Rui/LoongArch-Enable-initial-Rust-support/20240106-150902
+base:   https://github.com/Rust-for-Linux/linux rust-next
+patch link:    https://lore.kernel.org/r/20240106065941.180796-1-wangrui%40loongson.cn
+patch subject: [PATCH] LoongArch: Enable initial Rust support
+reproduce: (https://download.01.org/0day-ci/archive/20240107/202401070815.6tdJWFme-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401070815.6tdJWFme-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Documentation/rust/arch-support.rst:18: WARNING: Malformed table.
+
+vim +18 Documentation/rust/arch-support.rst
+
+    14	
+    15	============  ================  ==============================================
+    16	Architecture  Level of support  Constraints
+    17	============  ================  ==============================================
+  > 18	``loongarch`` Maintained
+
 -- 
-2.39.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
