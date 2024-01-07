@@ -1,108 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D5D10A0F;
-	Sun,  7 Jan 2024 02:28:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC1210A10
+	for <loongarch@lists.linux.dev>; Sun,  7 Jan 2024 02:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPIMwMzz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F87FC4339A;
-	Sun,  7 Jan 2024 02:28:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9oNWf0y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF922C433C9
+	for <loongarch@lists.linux.dev>; Sun,  7 Jan 2024 02:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704594515;
-	bh=K7ih9bZtybZqziznyQQD1kMoWldlbUm+9ljRnW2YBy8=;
+	s=k20201202; t=1704594637;
+	bh=2Fbqgy+vsdXu/HxjvKi6pvA1+WIhlSD252HGunBDD2w=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FPIMwMzzJfuChI3Us/lS3S9+TlrQziTgoSb7/8uQp7jeEhqNzUmW3Xw0XOWBgOGkE
-	 hZd4dIsnwL36Glpodhzi1IiDjY1flnZMnNt6DPHWIrCNMh643/QOEXOuEjIaGLfYm7
-	 02cBU8M8MQ+FHcLi+VYcVm24iAoCZ/G3V1mxQQvFnvF0mUYn4trlAwqpdQsqHe/dBP
-	 qRgxWWFyxmwnhsZeVMrIPeYvfcGS/PtITA0DJ+Ei0LKVyVBFxKygklw2g7pTJi3y0W
-	 BJAyPEWhl+PFFBBi4tnoFfVlcjd2fmP+ZIdzoKddGYv0Ns6L5KVSLvnIm9lOF38tQs
-	 LQBaqNaG5flcQ==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-552d39ac3ccso3056576a12.0;
-        Sat, 06 Jan 2024 18:28:35 -0800 (PST)
-X-Gm-Message-State: AOJu0YynWeVf7PYtkO347GedR7bRjAB68OEGNZF9oANI2wF8sDu6RxgP
-	NB/fGhLKjSfZHrmhZSfAXlvQBgO3KbDW6sIFuC8=
-X-Google-Smtp-Source: AGHT+IF43c6rpnnblMV44I9rcuIsU8WPV8s0sRSdlNkOxDUDA7gEuDgzBXjnRWJAeX/Eqg+KQmVaBlE8Nmyseh8LqjA=
-X-Received: by 2002:a17:906:74c3:b0:a27:abac:177f with SMTP id
- z3-20020a17090674c300b00a27abac177fmr1608415ejl.29.1704594513638; Sat, 06 Jan
- 2024 18:28:33 -0800 (PST)
+	b=m9oNWf0yG7dzaQqhDt60wSBRaAheJnxCx43Qlmec5VzzNppTOTo68hMQteM4WfFmO
+	 h3Y2C2HQ/Gt9BXXw27vZO0B2zdCcc/L4Nruwm74zemjTVE38xfotqcynGhxs40hNGo
+	 Ajn0nd/TFCWMjCDES05Zc6vcMsLif4WgmUg7UvGIgGV59Vr2P7PB8SUNdrBLyX7W1j
+	 KpJe1P/ZdhATGEke5pvECHYzRZ/D+bzld2USriqkE0KBei01OUuchRYSIyOsrKscFG
+	 bIg5OPuejkZUV3uWV7xM/BSVUFnKGsVZ9Xc476lV59rPs+pyFuB0fAd9yFIL829EQO
+	 2twWQ/ODPZPvg==
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40d5b89e2bfso8943645e9.0
+        for <loongarch@lists.linux.dev>; Sat, 06 Jan 2024 18:30:37 -0800 (PST)
+X-Gm-Message-State: AOJu0Yx5bcHp5L2TQHXWthfaH+WS3SRaHu41+8X9zBH/VQvglL9+N00P
+	sF18MXv7SIpdXydzPMzrcrYLZyCgyPFos7T/X4k=
+X-Google-Smtp-Source: AGHT+IHk4Mmn7hLXjOxTUGcNNtAWn4r5ukz6BnfIbiBazy0ZxQqLbQjhzaTqcIgKGHVi5UVKzouFRsJReeaqymtkIk8=
+X-Received: by 2002:a05:600c:c0a:b0:40d:6221:9944 with SMTP id
+ fm10-20020a05600c0c0a00b0040d62219944mr814060wmb.88.1704594636104; Sat, 06
+ Jan 2024 18:30:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240106065941.180796-1-wangrui@loongson.cn> <202401070815.6tdJWFme-lkp@intel.com>
-In-Reply-To: <202401070815.6tdJWFme-lkp@intel.com>
+References: <20231227070317.1936234-1-kernel@xen0n.name> <fbefe6e45e23a09e5b63eaac0a07a2fbae4a3845.camel@xry111.site>
+ <CAAhV-H44EZpOpnWyZm14QdwTLAPcxM1eNhpoDEsFQbf8=s7-iA@mail.gmail.com>
+ <2f1877ed39563b42d41f03ad6d6fdd7ce4137bbb.camel@xry111.site>
+ <445a73e3-4e0e-0f03-3719-57975fb95189@loongson.cn> <2abbb633-a10e-71cc-a5e1-4d9e39074066@loongson.cn>
+In-Reply-To: <2abbb633-a10e-71cc-a5e1-4d9e39074066@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 7 Jan 2024 10:28:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5WCHsYi8f6AWVC-3RB3dp+vno0hS+tgkB1pqw48W24_Q@mail.gmail.com>
-Message-ID: <CAAhV-H5WCHsYi8f6AWVC-3RB3dp+vno0hS+tgkB1pqw48W24_Q@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Enable initial Rust support
-To: kernel test robot <lkp@intel.com>
-Cc: WANG Rui <wangrui@loongson.cn>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, oe-kbuild-all@lists.linux.dev, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Date: Sun, 7 Jan 2024 10:30:29 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7KteJvRVpj3Hz-Ui9VnmijcJq5D1Tb-KJvqTO_+jjp2Q@mail.gmail.com>
+Message-ID: <CAAhV-H7KteJvRVpj3Hz-Ui9VnmijcJq5D1Tb-KJvqTO_+jjp2Q@mail.gmail.com>
+Subject: Re: [PATCH] modpost: Ignore relaxation and alignment marker relocs on LoongArch
+To: Jinyang He <hejinyang@loongson.cn>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Xi Ruoyao <xry111@xry111.site>, 
+	WANG Xuerui <kernel@xen0n.name>, linux-kbuild@vger.kernel.org, 
+	WANG Xuerui <git@xen0n.name>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Youling Tang <tangyouling@kylinos.cn>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 7, 2024 at 9:06=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
-ote:
->
-> Hi WANG,
->
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on rust/rust-next]
-> [also build test WARNING on linus/master v6.7-rc8 next-20240105]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/WANG-Rui/LoongArch=
--Enable-initial-Rust-support/20240106-150902
-> base:   https://github.com/Rust-for-Linux/linux rust-next
-> patch link:    https://lore.kernel.org/r/20240106065941.180796-1-wangrui%=
-40loongson.cn
-> patch subject: [PATCH] LoongArch: Enable initial Rust support
-> reproduce: (https://download.01.org/0day-ci/archive/20240107/202401070815=
-.6tdJWFme-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202401070815.6tdJWFme-lkp=
-@intel.com/
->
-> All warnings (new ones prefixed by >>):
->
-> >> Documentation/rust/arch-support.rst:18: WARNING: Malformed table.
->
-> vim +18 Documentation/rust/arch-support.rst
->
->     14
->     15  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
->     16  Architecture  Level of support  Constraints
->     17  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
->   > 18  ``loongarch`` Maintained
-I think we can put a "none." or just a "-" below "Constraints" to fix
-the warning.
+Hi, Xuerui,
+
+Could you please update a V2 to just modify the commit message?
 
 Huacai
+
+On Fri, Jan 5, 2024 at 6:11=E2=80=AFPM Jinyang He <hejinyang@loongson.cn> w=
+rote:
 >
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+>
+> On 2024-01-05 16:09, Tiezhu Yang wrote:
+> >
+> >
+> > On 01/05/2024 12:26 AM, Xi Ruoyao wrote:
+> >> On Thu, 2024-01-04 at 16:57 +0800, Huacai Chen wrote:
+> >>> On Wed, Dec 27, 2023 at 7:06=E2=80=AFPM Xi Ruoyao <xry111@xry111.site=
+> wrote:
+> >>>>
+> >>>> On Wed, 2023-12-27 at 15:03 +0800, WANG Xuerui wrote:
+> >>>>> And even though the kernel is built with relaxation disabled, so
+> >>>>> far a small number of R_LARCH_RELAX marker relocs are still
+> >>>>> emitted as
+> >>>>> part of la.* pseudo instructions in assembly.
+> >>>>
+> >>>> I'd consider it a toolchain bug...  Is there a reproducer?
+> >>> Any updates? Should I apply this patch for loongarch-next?
+> >>
+> >> Tiezhu told me this should be reproducible with GCC 14 and Binutils-2.=
+42
+> >> development snapshots and defconfig.  I'm trying...
+> >
+> > 1. How to reproduce
+> >
+> > I update the latest upstream toolchains (20240105):
+> >
+> > [fedora@linux 6.7.test]$ gcc --version
+> > gcc (GCC) 14.0.0 20240105 (experimental)
+> > [fedora@linux 6.7.test]$ as --version
+> > GNU assembler (GNU Binutils) 2.41.50.20240105
+> > [fedora@linux 6.7.test]$ ld --version
+> > GNU ld (GNU Binutils) 2.41.50.20240105
+> >
+> > and then test it again, here is the failure info:
+> >
+> > [fedora@linux 6.7.test]$ git log --oneline | head -1
+> > 610a9b8f49fb Linux 6.7-rc8
+> > [fedora@linux 6.7.test]$ make loongson3_defconfig
+> > [fedora@linux 6.7.test]$ make
+> > ...
+> >   AR      built-in.a
+> >   AR      vmlinux.a
+> >   LD      vmlinux.o
+> >   OBJCOPY modules.builtin.modinfo
+> >   GEN     modules.builtin
+> >   GEN     .vmlinux.objs
+> >   MODPOST Module.symvers
+> > make[2]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 139
+> > make[1]: *** [/home/fedora/6.7.test/Makefile:1863: modpost] Error 2
+> > make: *** [Makefile:234: __sub-make] Error 2
+> >
+> > 2. Additional info
+> >
+> > I can confirm that the slightly older version of toolchains (20231127)
+> > have no the above failure, so I guess this is related with toolchains.
+> >
+> > 3. How to fix
+> >
+> > (1) One way is to modify the kernel code, with this kernel patch,
+> >     there is no building failure with the latest upstream toolchains.
+> > (2) The other way is to analysis and fix the binutils code,
+> >     it need more work to do.
+>
+> Hi,
+>
+> I have an idea about that, but I didn't really get into it. The improved
+> R_LARCH_ALIGN (psABI v2.30) requires a symbol index. The symbol is only
+> created at the first time to handle alignment directive. This means that
+> all other sections may use this symbol. If the section of this symbol is
+> discarded, there may be problems.
+>
+> Thanks,
+>
+> Jinyang
+>
+>
+> >
+> > Thanks,
+> > Tiezhu
+> >
 >
