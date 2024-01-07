@@ -1,142 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC1210A10
-	for <loongarch@lists.linux.dev>; Sun,  7 Jan 2024 02:30:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC8610A05
+	for <loongarch@lists.linux.dev>; Sun,  7 Jan 2024 02:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9oNWf0y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF922C433C9
-	for <loongarch@lists.linux.dev>; Sun,  7 Jan 2024 02:30:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/2dWfbs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FDF4C433CC
+	for <loongarch@lists.linux.dev>; Sun,  7 Jan 2024 02:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704594637;
-	bh=2Fbqgy+vsdXu/HxjvKi6pvA1+WIhlSD252HGunBDD2w=;
+	s=k20201202; t=1704595156;
+	bh=jJbJktSdzhdzV2bS3gu5EK0DeDy7WfVB0EYasXcaPjw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m9oNWf0yG7dzaQqhDt60wSBRaAheJnxCx43Qlmec5VzzNppTOTo68hMQteM4WfFmO
-	 h3Y2C2HQ/Gt9BXXw27vZO0B2zdCcc/L4Nruwm74zemjTVE38xfotqcynGhxs40hNGo
-	 Ajn0nd/TFCWMjCDES05Zc6vcMsLif4WgmUg7UvGIgGV59Vr2P7PB8SUNdrBLyX7W1j
-	 KpJe1P/ZdhATGEke5pvECHYzRZ/D+bzld2USriqkE0KBei01OUuchRYSIyOsrKscFG
-	 bIg5OPuejkZUV3uWV7xM/BSVUFnKGsVZ9Xc476lV59rPs+pyFuB0fAd9yFIL829EQO
-	 2twWQ/ODPZPvg==
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40d5b89e2bfso8943645e9.0
-        for <loongarch@lists.linux.dev>; Sat, 06 Jan 2024 18:30:37 -0800 (PST)
-X-Gm-Message-State: AOJu0Yx5bcHp5L2TQHXWthfaH+WS3SRaHu41+8X9zBH/VQvglL9+N00P
-	sF18MXv7SIpdXydzPMzrcrYLZyCgyPFos7T/X4k=
-X-Google-Smtp-Source: AGHT+IHk4Mmn7hLXjOxTUGcNNtAWn4r5ukz6BnfIbiBazy0ZxQqLbQjhzaTqcIgKGHVi5UVKzouFRsJReeaqymtkIk8=
-X-Received: by 2002:a05:600c:c0a:b0:40d:6221:9944 with SMTP id
- fm10-20020a05600c0c0a00b0040d62219944mr814060wmb.88.1704594636104; Sat, 06
- Jan 2024 18:30:36 -0800 (PST)
+	b=G/2dWfbsLN9WwONooqF8NP5eFXFFOXQ5R6pDJXrL/Xza8jKUMjyzLISO/JNRMvYNn
+	 ebjH0gTMb0U4Prs0XDY60enG/LtvrGLzWjVf7Zzw8H2mYYP9S0qsp8K7Ce6UKsNFDs
+	 luwaMAnTvjVJM9HUnldij5bMjLFAarf4NscxczzeoYtSCV5eoStKqOMNDLTmu19xze
+	 aMrbfKIfNiIj8X1DZgs468Zb9C+7WcgK9ZNAOjucthSo1/0cLBg7F7C6N6JPLcTfxU
+	 QUG04tPdXEPjgcJtJhrAkM9utpizPYOwvU0ipsvKaL5YnYtdbnpOYvyKg5CDhYcl0N
+	 TIVY824fazJig==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-50e8ca6c76dso806654e87.3
+        for <loongarch@lists.linux.dev>; Sat, 06 Jan 2024 18:39:16 -0800 (PST)
+X-Gm-Message-State: AOJu0YwRBlyE/04O2PNh3gICftAwEpeVvLvOwi1qrrDueKOaaKcGNqzk
+	55RyViD7beGda6+y0anXlizjgL3fFEl135MSfVQ=
+X-Google-Smtp-Source: AGHT+IE666iz2mwVRCBnzGP5r7CatHWfsTic6W1ztccc+lpU8OH145j+/Z8tY3bo1scDBlBwbi74pfIJZJaXjjloGT8=
+X-Received: by 2002:a05:6512:3a82:b0:50e:8ead:3889 with SMTP id
+ q2-20020a0565123a8200b0050e8ead3889mr731610lfu.75.1704595154779; Sat, 06 Jan
+ 2024 18:39:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231227070317.1936234-1-kernel@xen0n.name> <fbefe6e45e23a09e5b63eaac0a07a2fbae4a3845.camel@xry111.site>
- <CAAhV-H44EZpOpnWyZm14QdwTLAPcxM1eNhpoDEsFQbf8=s7-iA@mail.gmail.com>
- <2f1877ed39563b42d41f03ad6d6fdd7ce4137bbb.camel@xry111.site>
- <445a73e3-4e0e-0f03-3719-57975fb95189@loongson.cn> <2abbb633-a10e-71cc-a5e1-4d9e39074066@loongson.cn>
-In-Reply-To: <2abbb633-a10e-71cc-a5e1-4d9e39074066@loongson.cn>
+References: <20231228014220.3562640-1-samuel.holland@sifive.com>
+ <20231228014220.3562640-8-samuel.holland@sifive.com> <CAAhV-H5TJPqRcgS6jywWDSNsCvd-PsVacgxgoiF-fJ00ZnS4uA@mail.gmail.com>
+ <84389bc3-f2e7-49c5-a820-de60ee00f8a7@sifive.com>
+In-Reply-To: <84389bc3-f2e7-49c5-a820-de60ee00f8a7@sifive.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 7 Jan 2024 10:30:29 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7KteJvRVpj3Hz-Ui9VnmijcJq5D1Tb-KJvqTO_+jjp2Q@mail.gmail.com>
-Message-ID: <CAAhV-H7KteJvRVpj3Hz-Ui9VnmijcJq5D1Tb-KJvqTO_+jjp2Q@mail.gmail.com>
-Subject: Re: [PATCH] modpost: Ignore relaxation and alignment marker relocs on LoongArch
-To: Jinyang He <hejinyang@loongson.cn>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Xi Ruoyao <xry111@xry111.site>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-kbuild@vger.kernel.org, 
-	WANG Xuerui <git@xen0n.name>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Youling Tang <tangyouling@kylinos.cn>, loongarch@lists.linux.dev
+Date: Sun, 7 Jan 2024 10:39:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4JxP-j5A7KuNSBncZkHF9i3O1njCtMjVkd3=RNbE5Q7w@mail.gmail.com>
+Message-ID: <CAAhV-H4JxP-j5A7KuNSBncZkHF9i3O1njCtMjVkd3=RNbE5Q7w@mail.gmail.com>
+Subject: Re: [PATCH v2 07/14] LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	x86@kernel.org, linux-riscv@lists.infradead.org, 
+	Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, linux-arch@vger.kernel.org, 
+	WANG Xuerui <git@xen0n.name>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Xuerui,
-
-Could you please update a V2 to just modify the commit message?
+On Thu, Jan 4, 2024 at 11:58=E2=80=AFPM Samuel Holland
+<samuel.holland@sifive.com> wrote:
+>
+> Hi Huacai,
+>
+> On 2024-01-04 3:55 AM, Huacai Chen wrote:
+> > Hi, Samuel,
+> >
+> > On Thu, Dec 28, 2023 at 9:42=E2=80=AFAM Samuel Holland
+> > <samuel.holland@sifive.com> wrote:
+> >>
+> >> LoongArch already provides kernel_fpu_begin() and kernel_fpu_end() in
+> >> asm/fpu.h, so it only needs to add kernel_fpu_available() and export
+> >> the CFLAGS adjustments.
+> >>
+> >> Acked-by: WANG Xuerui <git@xen0n.name>
+> >> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> >> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> >> ---
+> >>
+> >> (no changes since v1)
+> >>
+> >>  arch/loongarch/Kconfig           | 1 +
+> >>  arch/loongarch/Makefile          | 5 ++++-
+> >>  arch/loongarch/include/asm/fpu.h | 1 +
+> >>  3 files changed, 6 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> >> index ee123820a476..65d4475565b8 100644
+> >> --- a/arch/loongarch/Kconfig
+> >> +++ b/arch/loongarch/Kconfig
+> >> @@ -15,6 +15,7 @@ config LOONGARCH
+> >>         select ARCH_HAS_CPU_FINALIZE_INIT
+> >>         select ARCH_HAS_FORTIFY_SOURCE
+> >>         select ARCH_HAS_KCOV
+> >> +       select ARCH_HAS_KERNEL_FPU_SUPPORT if CPU_HAS_FPU
+> >>         select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+> >>         select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+> >>         select ARCH_HAS_PTE_SPECIAL
+> >> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> >> index 4ba8d67ddb09..1afe28feaba5 100644
+> >> --- a/arch/loongarch/Makefile
+> >> +++ b/arch/loongarch/Makefile
+> >> @@ -25,6 +25,9 @@ endif
+> >>  32bit-emul             =3D elf32loongarch
+> >>  64bit-emul             =3D elf64loongarch
+> >>
+> >> +CC_FLAGS_FPU           :=3D -mfpu=3D64
+> >> +CC_FLAGS_NO_FPU                :=3D -msoft-float
+> > We will add LoongArch32 support later, maybe it should be -mfpu=3D32 in
+> > that case, and do other archs have the case that only support FP32?
+>
+> Do you mean that LoongArch32 does not support double-precision FP in hard=
+ware?
+> At least both of the consumers in this series use double-precision, so my=
+ first
+> thought is that LoongArch32 could not select ARCH_HAS_KERNEL_FPU_SUPPORT.
+Then is it possible to introduce CC_FLAGS_SP_FPU and CC_FLAGS_DP_FPU?
+I think there may be some place where SP FP is enough.
 
 Huacai
 
-On Fri, Jan 5, 2024 at 6:11=E2=80=AFPM Jinyang He <hejinyang@loongson.cn> w=
-rote:
 >
->
-> On 2024-01-05 16:09, Tiezhu Yang wrote:
-> >
-> >
-> > On 01/05/2024 12:26 AM, Xi Ruoyao wrote:
-> >> On Thu, 2024-01-04 at 16:57 +0800, Huacai Chen wrote:
-> >>> On Wed, Dec 27, 2023 at 7:06=E2=80=AFPM Xi Ruoyao <xry111@xry111.site=
-> wrote:
-> >>>>
-> >>>> On Wed, 2023-12-27 at 15:03 +0800, WANG Xuerui wrote:
-> >>>>> And even though the kernel is built with relaxation disabled, so
-> >>>>> far a small number of R_LARCH_RELAX marker relocs are still
-> >>>>> emitted as
-> >>>>> part of la.* pseudo instructions in assembly.
-> >>>>
-> >>>> I'd consider it a toolchain bug...  Is there a reproducer?
-> >>> Any updates? Should I apply this patch for loongarch-next?
-> >>
-> >> Tiezhu told me this should be reproducible with GCC 14 and Binutils-2.=
-42
-> >> development snapshots and defconfig.  I'm trying...
-> >
-> > 1. How to reproduce
-> >
-> > I update the latest upstream toolchains (20240105):
-> >
-> > [fedora@linux 6.7.test]$ gcc --version
-> > gcc (GCC) 14.0.0 20240105 (experimental)
-> > [fedora@linux 6.7.test]$ as --version
-> > GNU assembler (GNU Binutils) 2.41.50.20240105
-> > [fedora@linux 6.7.test]$ ld --version
-> > GNU ld (GNU Binutils) 2.41.50.20240105
-> >
-> > and then test it again, here is the failure info:
-> >
-> > [fedora@linux 6.7.test]$ git log --oneline | head -1
-> > 610a9b8f49fb Linux 6.7-rc8
-> > [fedora@linux 6.7.test]$ make loongson3_defconfig
-> > [fedora@linux 6.7.test]$ make
-> > ...
-> >   AR      built-in.a
-> >   AR      vmlinux.a
-> >   LD      vmlinux.o
-> >   OBJCOPY modules.builtin.modinfo
-> >   GEN     modules.builtin
-> >   GEN     .vmlinux.objs
-> >   MODPOST Module.symvers
-> > make[2]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 139
-> > make[1]: *** [/home/fedora/6.7.test/Makefile:1863: modpost] Error 2
-> > make: *** [Makefile:234: __sub-make] Error 2
-> >
-> > 2. Additional info
-> >
-> > I can confirm that the slightly older version of toolchains (20231127)
-> > have no the above failure, so I guess this is related with toolchains.
-> >
-> > 3. How to fix
-> >
-> > (1) One way is to modify the kernel code, with this kernel patch,
-> >     there is no building failure with the latest upstream toolchains.
-> > (2) The other way is to analysis and fix the binutils code,
-> >     it need more work to do.
->
-> Hi,
->
-> I have an idea about that, but I didn't really get into it. The improved
-> R_LARCH_ALIGN (psABI v2.30) requires a symbol index. The symbol is only
-> created at the first time to handle alignment directive. This means that
-> all other sections may use this symbol. If the section of this symbol is
-> discarded, there may be problems.
->
-> Thanks,
->
-> Jinyang
->
->
-> >
-> > Thanks,
-> > Tiezhu
-> >
+> Regards,
+> Samuel
 >
