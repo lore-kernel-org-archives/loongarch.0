@@ -1,80 +1,80 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C3EC7F;
-	Mon,  8 Jan 2024 03:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.22.232.245])
-	by gateway (Coremail) with SMTP id _____8DxPumsbJtlfgUDAA--.1590S3;
-	Mon, 08 Jan 2024 11:31:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.22.232.245])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx34epbJtldugGAA--.17876S2;
-	Mon, 08 Jan 2024 11:31:55 +0800 (CST)
-From: WANG Rui <wangrui@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn,
-	WANG Rui <wangrui@loongson.cn>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH] scripts/min-tool-version.sh: Raise min clang version to 18.0.0 for loongarch
-Date: Mon,  8 Jan 2024 11:31:38 +0800
-Message-ID: <20240108033138.217032-1-wangrui@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671897F
+	for <loongarch@lists.linux.dev>; Mon,  8 Jan 2024 04:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ubxMhBMP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2621BC433C9
+	for <loongarch@lists.linux.dev>; Mon,  8 Jan 2024 04:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704687803;
+	bh=ezhgovzwtbl5aiCEBWaqQXNw0GJ0WXozlkT004oAt+A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ubxMhBMPnOZqRKZVnnA/vesq2ON1PZFcLf8aNLxIk45upWt7WYs2+VehvWlrvhBFT
+	 rQrBA5nowg9TWohCMQQabmMIg7tG3mK6dZFanG9f8Sl5Jh4QXMdPlFAglLLs+TXe/6
+	 6gW76XH0UnswkaYbTFsDHWPoFB1zqUgggVxDcoJA865hWLBsrRrt65yIXYsXxYuWUU
+	 tNMeFq03bnxIhYuWqgoCdkJn3FbqfBt3Pmn0475weiIx4liAeXSjDTYZ/E1UeC0a35
+	 6pzooZZqXYrZy5f7RcSVrgT8oEhwr/aG/VRFRV3Rp3XAO246BpuGLtJyXudIHE3pqU
+	 zEhtCY2/PvtqA==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55745901085so1633138a12.0
+        for <loongarch@lists.linux.dev>; Sun, 07 Jan 2024 20:23:23 -0800 (PST)
+X-Gm-Message-State: AOJu0YyB570Dtnuvy52cKzFz1p+UuIFlFUKMuY9SiG0azTLCfWiw72KB
+	O3K20AZyh2UrDd2VmDrsW8g1wAdxpk68Z3o14aI=
+X-Google-Smtp-Source: AGHT+IFJjig79ZB0iC0XLaT/lU6a6r5MpjmqOrkFnO9JTppo6ZB6EaGeD33z/lxS/vPgmS1H4G2RA1/OzbKksuC/dxA=
+X-Received: by 2002:a17:907:868e:b0:a29:27ad:8eac with SMTP id
+ qa14-20020a170907868e00b00a2927ad8eacmr1673809ejc.6.1704687801631; Sun, 07
+ Jan 2024 20:23:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx34epbJtldugGAA--.17876S2
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrtrW8Ar13AF4UCw45Jw1UArc_yoWftrX_J3
-	Z2v3WxZr45Jr4Svan7tFn5Zry2ka93Xw4rCF1rWrWDA340k3s0qF1DJFWDAF1Y9rsrGrs3
-	W39FqryxCry7CosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb2kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0HUDJUUUUU==
+References: <20240108032117.215171-1-wangrui@loongson.cn>
+In-Reply-To: <20240108032117.215171-1-wangrui@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 8 Jan 2024 12:23:10 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7qGSiXZFybw20p4inLVphtucUgcvw4H=JkSAfCRoe-sA@mail.gmail.com>
+Message-ID: <CAAhV-H7qGSiXZFybw20p4inLVphtucUgcvw4H=JkSAfCRoe-sA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The existing mainline clang development version encounters diffculties
-compiling the LoongArch kernel module. It is anticipated that this issue
-will be resolved in the upcoming 18.0.0 release. To prevent user
-confusion arising from broken builds, it is advisable to raise the
-minimum required clang version for LoongArch to 18.0.0.
+No need to split patches.
 
-Suggested-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: WANG Rui <wangrui@loongson.cn>
----
- scripts/min-tool-version.sh | 2 ++
- 1 file changed, 2 insertions(+)
+Huacai
 
-diff --git a/scripts/min-tool-version.sh b/scripts/min-tool-version.sh
-index c62066825f53..9faa4d3d91e3 100755
---- a/scripts/min-tool-version.sh
-+++ b/scripts/min-tool-version.sh
-@@ -26,6 +26,8 @@ gcc)
- llvm)
- 	if [ "$SRCARCH" = s390 ]; then
- 		echo 15.0.0
-+	elif [ "$SRCARCH" = loongarch ]; then
-+		echo 18.0.0
- 	else
- 		echo 11.0.0
- 	fi
--- 
-2.43.0
-
+On Mon, Jan 8, 2024 at 11:21=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wrot=
+e:
+>
+> Enable Rust support for the LoongArch architecture.
+>
+> Previous versions:
+> v0: https://lore.kernel.org/loongarch/20240106065941.180796-1-wangrui@loo=
+ngson.cn/
+>
+> Changes in v1:
+>  - Address htmldocs warning.
+>
+> WANG Rui (2):
+>   Documentation: rust: Add a character to the first column
+>   LoongArch: Enable initial Rust support
+>
+>  Documentation/rust/arch-support.rst | 13 +++++++------
+>  arch/loongarch/Kconfig              |  1 +
+>  arch/loongarch/Makefile             |  3 +++
+>  scripts/generate_rust_target.rs     | 10 ++++++++++
+>  4 files changed, 21 insertions(+), 6 deletions(-)
+>
+> --
+> 2.43.0
+>
