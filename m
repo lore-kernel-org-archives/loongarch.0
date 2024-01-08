@@ -1,39 +1,28 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F243179E0
-	for <loongarch@lists.linux.dev>; Mon,  8 Jan 2024 03:21:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C3EC7F;
+	Mon,  8 Jan 2024 03:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [112.22.232.245])
-	by gateway (Coremail) with SMTP id _____8AxTes6aptllgQDAA--.9837S3;
-	Mon, 08 Jan 2024 11:21:30 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxPumsbJtlfgUDAA--.1590S3;
+	Mon, 08 Jan 2024 11:31:56 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.22.232.245])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxO9wxaptlNuUGAA--.17925S3;
-	Mon, 08 Jan 2024 11:21:29 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx34epbJtldugGAA--.17876S2;
+	Mon, 08 Jan 2024 11:31:55 +0800 (CST)
 From: WANG Rui <wangrui@loongson.cn>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	rust-for-linux@vger.kernel.org,
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn,
-	WANG Rui <wangrui@loongson.cn>
-Subject: [PATCH v1 1/2] Documentation: rust: Add a character to the first column
-Date: Mon,  8 Jan 2024 11:21:16 +0800
-Message-ID: <20240108032117.215171-2-wangrui@loongson.cn>
+	WANG Rui <wangrui@loongson.cn>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH] scripts/min-tool-version.sh: Raise min clang version to 18.0.0 for loongarch
+Date: Mon,  8 Jan 2024 11:31:38 +0800
+Message-ID: <20240108033138.217032-1-wangrui@loongson.cn>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240108032117.215171-1-wangrui@loongson.cn>
-References: <20240108032117.215171-1-wangrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,55 +30,51 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxO9wxaptlNuUGAA--.17925S3
+X-CM-TRANSID:AQAAf8Bx34epbJtldugGAA--.17876S2
 X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJr47ZrWrZw48JFWrGr4kuFX_yoW8XF45pr
-	1DJryfJr1UJryUJr1UJr1UXr1UJr1UJr1UJr18Gw1UJr4DJr1UJr1UtF15Jr1UGr18AFyU
-	Xr1UJryUAr1UArbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8EeHDUUUUU==
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtrW8Ar13AF4UCw45Jw1UArc_yoWftrX_J3
+	Z2v3WxZr45Jr4Svan7tFn5Zry2ka93Xw4rCF1rWrWDA340k3s0qF1DJFWDAF1Y9rsrGrs3
+	W39FqryxCry7CosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb2kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0HUDJUUUUU==
 
-Add a character to the first table column in preparation for subsequent
-'loongarch' row additions.
+The existing mainline clang development version encounters diffculties
+compiling the LoongArch kernel module. It is anticipated that this issue
+will be resolved in the upcoming 18.0.0 release. To prevent user
+confusion arising from broken builds, it is advisable to raise the
+minimum required clang version for LoongArch to 18.0.0.
 
+Suggested-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: WANG Rui <wangrui@loongson.cn>
 ---
- Documentation/rust/arch-support.rst | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ scripts/min-tool-version.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/rust/arch-support.rst b/Documentation/rust/arch-support.rst
-index b91e9ef4d0c2..14875a2e073a 100644
---- a/Documentation/rust/arch-support.rst
-+++ b/Documentation/rust/arch-support.rst
-@@ -12,10 +12,10 @@ which uses ``libclang``.
- Below is a general summary of architectures that currently work. Level of
- support corresponds to ``S`` values in the ``MAINTAINERS`` file.
- 
--============  ================  ==============================================
--Architecture  Level of support  Constraints
--============  ================  ==============================================
--``um``        Maintained        ``x86_64`` only.
--``x86``       Maintained        ``x86_64`` only.
--============  ================  ==============================================
-+=============  ================  ==============================================
-+Architecture   Level of support  Constraints
-+=============  ================  ==============================================
-+``um``         Maintained        ``x86_64`` only.
-+``x86``        Maintained        ``x86_64`` only.
-+=============  ================  ==============================================
- 
+diff --git a/scripts/min-tool-version.sh b/scripts/min-tool-version.sh
+index c62066825f53..9faa4d3d91e3 100755
+--- a/scripts/min-tool-version.sh
++++ b/scripts/min-tool-version.sh
+@@ -26,6 +26,8 @@ gcc)
+ llvm)
+ 	if [ "$SRCARCH" = s390 ]; then
+ 		echo 15.0.0
++	elif [ "$SRCARCH" = loongarch ]; then
++		echo 18.0.0
+ 	else
+ 		echo 11.0.0
+ 	fi
 -- 
 2.43.0
 
