@@ -1,99 +1,79 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A476134B2
-	for <loongarch@lists.linux.dev>; Sun,  7 Jan 2024 14:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SPKQoiOX"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6dc02ab3cc9so886635a34.3
-        for <loongarch@lists.linux.dev>; Sun, 07 Jan 2024 06:29:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704637771; x=1705242571; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eGfKDZU2v02JYj8j4xt04rkLEro10sjs/HZeZU+mIfg=;
-        b=SPKQoiOXyKxsL6d+YqyKIzv9tCwOYgv680eXHTMSFkSSM2v3k0yPnoNS1LfOXKJmpK
-         GssI0T2vAqFCJLa+Wg790qF2yG9/tZClWgBTkSTTyhB4RrLViwLNctAmFrY41SH3vLrp
-         i1gLHOsA7uR2USW5KE0tF+6blfev+AeFxNmhYQoB0D5CYO3bD7y28Os6sAPMKInX4QPB
-         neJThMuB3X3kZ/1JYjxiYOdZptnuSQQ+co0lffdkE/oV1QeRd+aMdSvPA0A3WG21t8AC
-         eReF4i8Vpj2iSiVMLB6Q8aN3wjzbv5vnPOXe8gQqbOL51vlm/C1TB07q1WIjzFJRA4WJ
-         KIeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704637771; x=1705242571;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eGfKDZU2v02JYj8j4xt04rkLEro10sjs/HZeZU+mIfg=;
-        b=PjKbwq3M6vksQCB4snvoM7equ0lnFIIsd6a7o7mraGxLwTk3mKbk98s2rof2M6QU7q
-         /MAxDcxfSnvvFwY9lYmBwc8Lu0KmRx9Ry42RvPAAw1S5s+GAb2OvhmeCWSOxJvy0nJTS
-         HRluWGmxgvHkF1AcLNwEjFojkmk+CkwPJ8YvAM+QRWE1ggrn+uy97wMatTBzJHqoVDMo
-         BH0i8vlqmMnJFX7Zj6xCviMJ/qaVdEsy52mxGjxZg7qm8AnfUL0vEIaZUEpthlp7I87U
-         U456y/rUpzHDfdiBQlvh0Yfb/wiFBE7TNmA//j29p6exKqVoMyXki3vzfy8mrUg3jy6x
-         B0nw==
-X-Gm-Message-State: AOJu0Ywif1JEzQ1qryyZCIXacjWgn79Cr2OPfmpKUK8AcSut+0qIMs4T
-	AHjfxJJH6vWVEVSEBgRcWXXQKwUkgGkKz2Zw25I=
-X-Google-Smtp-Source: AGHT+IGN0eC3tUJD1D2LgL2Ag3j92/KIUXQUEmoyoyxjkJa09kgyiqq1FJMICAshXVC9CqeiXAALCcuMb3opn+/A8cc=
-X-Received: by 2002:a05:6830:314e:b0:6db:e5a0:f142 with SMTP id
- c14-20020a056830314e00b006dbe5a0f142mr2422716ots.58.1704637771617; Sun, 07
- Jan 2024 06:29:31 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1310479CC
+	for <loongarch@lists.linux.dev>; Mon,  8 Jan 2024 03:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.22.232.245])
+	by gateway (Coremail) with SMTP id _____8Dx_7s2aptliAQDAA--.1570S3;
+	Mon, 08 Jan 2024 11:21:26 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.22.232.245])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxO9wxaptlNuUGAA--.17925S2;
+	Mon, 08 Jan 2024 11:21:25 +0800 (CST)
+From: WANG Rui <wangrui@loongson.cn>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	WANG Rui <wangrui@loongson.cn>
+Subject: [PATCH v1 0/2] Rust enablement for LoongArch
+Date: Mon,  8 Jan 2024 11:21:15 +0800
+Message-ID: <20240108032117.215171-1-wangrui@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240106065941.180796-1-wangrui@loongson.cn>
-In-Reply-To: <20240106065941.180796-1-wangrui@loongson.cn>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 7 Jan 2024 15:29:20 +0100
-Message-ID: <CANiq72=M5TrUL+9Z0nqKKcD=KHwyDA79fNYHgU2EJ+7u6Ct8qw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Enable initial Rust support
-To: WANG Rui <wangrui@loongson.cn>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxO9wxaptlNuUGAA--.17925S2
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIx
+	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-On Sat, Jan 6, 2024 at 8:04=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wrote=
-:
->
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
->  Architecture  Level of support  Constraints
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> +``loongarch`` Maintained
+Enable Rust support for the LoongArch architecture.
 
-On top of what Huacai said, it would be nice to add another character
-and realign the table so that `loongarch` it doesn't overflow (perhaps
-best done in an additional, previous patch).
+Previous versions:
+v0: https://lore.kernel.org/loongarch/20240106065941.180796-1-wangrui@loongson.cn/
 
-> +    } else if cfg.has("LOONGARCH") {
+Changes in v1:
+ - Address htmldocs warning.
 
-Would it be possible to do it without a custom target in
-`scripts/generate_rust_target.rs`? If it is not possible (e.g. there
-is something that you cannot tweak otherwise on top of a built-in
-target via the CLI flags), it is fine to use a custom target for the
-moment.
+WANG Rui (2):
+  Documentation: rust: Add a character to the first column
+  LoongArch: Enable initial Rust support
 
-For instance, this is how ARM is doing it:
-https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Jamie.Cunli=
-ffe@arm.com/
+ Documentation/rust/arch-support.rst | 13 +++++++------
+ arch/loongarch/Kconfig              |  1 +
+ arch/loongarch/Makefile             |  3 +++
+ scripts/generate_rust_target.rs     | 10 ++++++++++
+ 4 files changed, 21 insertions(+), 6 deletions(-)
 
-Thanks!
+-- 
+2.43.0
 
-Cheers,
-Miguel
