@@ -1,94 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A2F15AA;
-	Tue,  9 Jan 2024 01:40:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7192A9455;
+	Tue,  9 Jan 2024 06:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoYIohds"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6373BC433F1;
-	Tue,  9 Jan 2024 01:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704764420;
-	bh=2x9g0HMaQU0iX9WQFIBG+M+vpIbfAwCaBiU+2zAJbBA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UoYIohdsLoCPJIdqIbXoPxXzpEL6lSppRCE5IjTooKUKIRVZWV5OotocomA60S8x7
-	 eFjQ+7kp06Wd9EPpmofHQUocTeU7tk4N7S9liGRTHksaw0ntDZ2DKH8yP/VJwfKdLH
-	 YTTUziIVV+hJUaNdIiappf1LO9KE+QWaoqxZ9IxDGv+EPC3kaicSuJsSGum4bIeugL
-	 zAHi0WBkLYs7AeM/nTqpW996EvAWBpqzGk41puPSPAV3/Vgb8EIEhYlsDbpfnnTE0F
-	 qLt9SpgNC6Ueo39lBEmTAb4yfzz2+jSaXuVOPwKpfC+0J7l7OGWcHP9Ry7Bf6uggvJ
-	 AQ78Zl0X5BxrA==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5572a9b3420so5859382a12.1;
-        Mon, 08 Jan 2024 17:40:20 -0800 (PST)
-X-Gm-Message-State: AOJu0YwboziWBzoxtYe3zCJTKVG6Hin2DbHF48R+7sEqj+RhAYtH0AU+
-	nzMNv0nn3BW0rRQiLA3heICwuoJ5PEl8wWQ0qaA=
-X-Google-Smtp-Source: AGHT+IEvIuDP8zcop8SzbUdvV9GzexD3OinQ7Y7YhFFrUWA/qkv+rf74cFDWQudgpXUwaPjeO9x8r43pegbA0ch8QzY=
-X-Received: by 2002:a17:906:3c50:b0:a28:f6a2:ca7c with SMTP id
- i16-20020a1709063c5000b00a28f6a2ca7cmr10082ejg.17.1704764418845; Mon, 08 Jan
- 2024 17:40:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QpS8pW3B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704780089; x=1736316089;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sA9jOFAl/Yz2nJon6qcwL0ATsst7m3Ms+tSbOB128dU=;
+  b=QpS8pW3BA+BsIT2qERHYr+RDKrHvmf1Qm/r2WLWWbG33FEYclLKrg1Q4
+   YOHiV3VZkiGBKojFGwvLEbwsFNyn0M5DTOQF+yYfBgSxvW6UJsxd7+Hj9
+   Q7ipt+v1rwfsAKaXkSGIoeP6gp0/Yj2eOHuV+GvadqoO+6G7DrvWUmngJ
+   kiaMGmzxZcZlO+YumebcppRGTnTgBRt9S5Y2JvsOFHCmlRZ8klKt44/5W
+   ts1wBAYGWM/SG+rRlH0wOr3ka4sxQMMo88Y7HtLUXGxFz4iAx4vxi4zGA
+   yTtxMJaQm/NLnuW5EDjiaSISMim1/0RVME3iDpepIbbZFSu2HsA10k/y3
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="4840340"
+X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
+   d="scan'208";a="4840340"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 22:01:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="900635538"
+X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
+   d="scan'208";a="900635538"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Jan 2024 22:01:19 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rN5Ap-0005WA-1K;
+	Tue, 09 Jan 2024 06:01:15 +0000
+Date: Tue, 9 Jan 2024 14:00:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Juergen Gross <jgross@suse.com>
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH 5/5] LoongArch: Add pv ipi support on LoongArch system
+Message-ID: <202401091354.GtBERgQJ-lkp@intel.com>
+References: <20240103071615.3422264-6-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240108033138.217032-1-wangrui@loongson.cn> <20240108163759.GA2899468@dev-arch.thelio-3990X>
-In-Reply-To: <20240108163759.GA2899468@dev-arch.thelio-3990X>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 9 Jan 2024 09:40:06 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7Qu9yj1d+fAcE3vL0=1FUOD8x0v+AhCr7Bj5yuQstndQ@mail.gmail.com>
-Message-ID: <CAAhV-H7Qu9yj1d+fAcE3vL0=1FUOD8x0v+AhCr7Bj5yuQstndQ@mail.gmail.com>
-Subject: Re: [PATCH] scripts/min-tool-version.sh: Raise min clang version to
- 18.0.0 for loongarch
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: WANG Rui <wangrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn, Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240103071615.3422264-6-maobibo@loongson.cn>
 
-Applied with R-b/A-b tags and fix typo together, thanks.
+Hi Bibo,
 
-Huacai
+kernel test robot noticed the following build warnings:
 
-On Tue, Jan 9, 2024 at 12:38=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> On Mon, Jan 08, 2024 at 11:31:38AM +0800, WANG Rui wrote:
-> > The existing mainline clang development version encounters diffculties
-> > compiling the LoongArch kernel module. It is anticipated that this issu=
-e
-> > will be resolved in the upcoming 18.0.0 release. To prevent user
-> > confusion arising from broken builds, it is advisable to raise the
-> > minimum required clang version for LoongArch to 18.0.0.
-> >
-> > Suggested-by: Nathan Chancellor <nathan@kernel.org>
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > Signed-off-by: WANG Rui <wangrui@loongson.cn>
->
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
->
-> Thanks a lot for all the work driving getting everything to work
-> properly with LLVM!
->
-> > ---
-> >  scripts/min-tool-version.sh | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/scripts/min-tool-version.sh b/scripts/min-tool-version.sh
-> > index c62066825f53..9faa4d3d91e3 100755
-> > --- a/scripts/min-tool-version.sh
-> > +++ b/scripts/min-tool-version.sh
-> > @@ -26,6 +26,8 @@ gcc)
-> >  llvm)
-> >       if [ "$SRCARCH" =3D s390 ]; then
-> >               echo 15.0.0
-> > +     elif [ "$SRCARCH" =3D loongarch ]; then
-> > +             echo 18.0.0
-> >       else
-> >               echo 11.0.0
-> >       fi
-> > --
-> > 2.43.0
-> >
-> >
->
+[auto build test WARNING on 610a9b8f49fbcf1100716370d3b5f6f884a2835a]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-KVM-Add-hypercall-instruction-emulation-support/20240103-151946
+base:   610a9b8f49fbcf1100716370d3b5f6f884a2835a
+patch link:    https://lore.kernel.org/r/20240103071615.3422264-6-maobibo%40loongson.cn
+patch subject: [PATCH 5/5] LoongArch: Add pv ipi support on LoongArch system
+config: loongarch-randconfig-r061-20240109 (https://download.01.org/0day-ci/archive/20240109/202401091354.GtBERgQJ-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401091354.GtBERgQJ-lkp@intel.com/
+
+cocci warnings: (new ones prefixed by >>)
+>> arch/loongarch/kvm/exit.c:681:5-8: Unneeded variable: "ret". Return "  0" on line 701
+--
+>> arch/loongarch/kvm/exit.c:720:2-3: Unneeded semicolon
+
+vim +681 arch/loongarch/kvm/exit.c
+
+   678	
+   679	static int kvm_pv_send_ipi(struct kvm_vcpu *vcpu, int sgi)
+   680	{
+ > 681		int ret = 0;
+   682		u64 ipi_bitmap;
+   683		unsigned int min, cpu;
+   684		struct kvm_vcpu *dest;
+   685	
+   686		ipi_bitmap = vcpu->arch.gprs[LOONGARCH_GPR_A1];
+   687		min = vcpu->arch.gprs[LOONGARCH_GPR_A2];
+   688	
+   689		if (ipi_bitmap) {
+   690			cpu = find_first_bit((void *)&ipi_bitmap, BITS_PER_LONG);
+   691			while (cpu < BITS_PER_LONG) {
+   692				if ((cpu + min) < KVM_MAX_VCPUS) {
+   693					dest = kvm_get_vcpu_by_id(vcpu->kvm, cpu + min);
+   694					kvm_queue_irq(dest, sgi);
+   695					kvm_vcpu_kick(dest);
+   696				}
+   697				cpu = find_next_bit((void *)&ipi_bitmap, BITS_PER_LONG, cpu + 1);
+   698			}
+   699		}
+   700	
+ > 701		return ret;
+   702	}
+   703	
+   704	/*
+   705	 * hypcall emulation always return to guest, Caller should check retval.
+   706	 */
+   707	static void kvm_handle_pv_hcall(struct kvm_vcpu *vcpu)
+   708	{
+   709		unsigned long func = vcpu->arch.gprs[LOONGARCH_GPR_A0];
+   710		long ret;
+   711	
+   712		switch (func) {
+   713		case KVM_HC_FUNC_IPI:
+   714			kvm_pv_send_ipi(vcpu, INT_SWI0);
+   715			ret = KVM_HC_STATUS_SUCCESS;
+   716			break;
+   717		default:
+   718			ret = KVM_HC_INVALID_CODE;
+   719			break;
+ > 720		};
+   721	
+   722		vcpu->arch.gprs[LOONGARCH_GPR_A0] = ret;
+   723	}
+   724	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
