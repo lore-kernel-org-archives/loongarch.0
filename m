@@ -1,50 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3A83526E
-	for <loongarch@lists.linux.dev>; Tue,  9 Jan 2024 09:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5629224E9
+	for <loongarch@lists.linux.dev>; Tue,  9 Jan 2024 09:57:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uiuI+wXG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5528DC43601
-	for <loongarch@lists.linux.dev>; Tue,  9 Jan 2024 09:56:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrZoMEKK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88315C43399
+	for <loongarch@lists.linux.dev>; Tue,  9 Jan 2024 09:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704794204;
-	bh=Qj1F7vQXR5INGTzBCvV9vm+Os3PkCrPsecSk0gcowD8=;
+	s=k20201202; t=1704794239;
+	bh=lGD1VYSzbIozqojany1B4nD1TW6DSBEyoIz78q9RggE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uiuI+wXGOgQCsJfodVvD7TtSKMBAuyi1UAeRMEURbK/Ahluvoa5pRYgbG+mUkceAa
-	 ftvRGzM9D5qOPUuDdRXyRdzgnlAQtnfwh8sTmkmCjXkhxeytOWurbIq0JGAZFyMkeH
-	 nXB4GAZG6Q2rfGHE0jzcZNqpBes3dL6iK9+DNN/QkiNAFhiSFxLJO0qluBNfAP4ZOV
-	 Mhtz+ljnpSDLiSUNqKEEr0a79WuGsk4pPbM8WzhDDBOM+rfnu+XAdcrraHtC6nhh4j
-	 x8k6DE6wE75G9OL0IHwjZtA/pCiYon6jVooeJ2fkPSEsTmwMkpbdvyBo+BCc0pKdXl
-	 o3B0bTN5RSq1A==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a28da6285c1so486193866b.0
-        for <loongarch@lists.linux.dev>; Tue, 09 Jan 2024 01:56:44 -0800 (PST)
-X-Gm-Message-State: AOJu0YzEKTffss7bApSfHjbvDR2Z1/1RfHm4+V04wNihBHA95BZwJSoI
-	7uKQvzbRc/lLYIaJA/HbIDyQECcmQuSbFqtXGGA=
-X-Google-Smtp-Source: AGHT+IGDZ/SZJpnUYzFx9G1HRdVTWUBV4U15+SGj/OVohDcnnqrlVNy+7QIKS/khbP7ZYDsPMVjRIsIZ+zQBmKjnTI8=
-X-Received: by 2002:a17:907:77c1:b0:a2a:a3dc:621b with SMTP id
- kz1-20020a17090777c100b00a2aa3dc621bmr597168ejc.4.1704794202753; Tue, 09 Jan
- 2024 01:56:42 -0800 (PST)
+	b=JrZoMEKK8+l2qLtIOhnKVymf5TvaXsyddXjl0BqIUn4lKuB60li6q3/vZYSILe7hm
+	 mhN9x1m1FmT+UqnyTCDTHgOFbMotI0tGblgD7y5nMYbsxp6QQ28DSCCcGmPQsIaXUl
+	 cr8oOie9bCtmHIah52CRNfovy/zs/oS3a4Q/otX+rKkYMKIl/1Ct9wAE6NByIFCtaz
+	 w2BBu+qP20eSOED/uS9hMOAQEVTKtPMjj7kvfvjgWbmMToRA0Tp/DYQSXBSb152vGu
+	 q6aTRsOtADhJDeXDezrigWWgDVM9ZgDTls4YQUjdersbe5bBjg+MRephzQdYR7DkZg
+	 CFfnOpiSRvEBw==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a28b0207c1dso214542666b.3
+        for <loongarch@lists.linux.dev>; Tue, 09 Jan 2024 01:57:19 -0800 (PST)
+X-Gm-Message-State: AOJu0Yx7CuhuPLpuARWtBH73bgxn8gc5CMSSMSsnXjvAWBM85KZiNs1j
+	3iw+yhBhQeeESi9+H06ywt6hui22gm3c7CKyqjE=
+X-Google-Smtp-Source: AGHT+IFjzBbYMXlJmOGzMy4q0IGkJetOZTUPve3851vC8/cUqEgYgSBBS7Mm3kCQ00usLht8PY0orBAK6cYPFvxmk9M=
+X-Received: by 2002:a17:906:1ce:b0:a28:c16a:f18a with SMTP id
+ 14-20020a17090601ce00b00a28c16af18amr463673ejj.5.1704794238062; Tue, 09 Jan
+ 2024 01:57:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1701933946.git.zhoubinbin@loongson.cn> <CAAhV-H4yS5nW9Xg1D+FRRa4jv8vGB9auim74NzTjmkw-CC6yZA@mail.gmail.com>
-In-Reply-To: <CAAhV-H4yS5nW9Xg1D+FRRa4jv8vGB9auim74NzTjmkw-CC6yZA@mail.gmail.com>
+References: <cover.1703229766.git.zhoubinbin@loongson.cn> <20231222-support-relieve-5d8f25292b40@spud>
+ <CAMpQs4+Uwu=j56Qa_V211_hC+F4MKE6mvTVtW75M1wuAY3-p1g@mail.gmail.com>
+ <20231228-ultimatum-paramedic-6c0301f56d1c@spud> <CAAhV-H6O_Ke-xJPGFmgdwNVbGkDS2P6EK3ecfgo9KkkNyi9eOg@mail.gmail.com>
+In-Reply-To: <CAAhV-H6O_Ke-xJPGFmgdwNVbGkDS2P6EK3ecfgo9KkkNyi9eOg@mail.gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 9 Jan 2024 17:56:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4dPHqA5naqowOKxALWsXWHSVMoUqDC_1F_DE2t9=S28A@mail.gmail.com>
-Message-ID: <CAAhV-H4dPHqA5naqowOKxALWsXWHSVMoUqDC_1F_DE2t9=S28A@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] dt-bindings: interrupt-controller: Fix some
- loongson,liointc warnings
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
+Date: Tue, 9 Jan 2024 17:57:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5aZc2sWhodA0+V9aWBUoD0oD4tQHiqDSyg2B-iuHDA9g@mail.gmail.com>
+Message-ID: <CAAhV-H5aZc2sWhodA0+V9aWBUoD0oD4tQHiqDSyg2B-iuHDA9g@mail.gmail.com>
+Subject: Re: [PATCH v6 0/7] LoongArch: Add built-in dtb support
+To: Conor Dooley <conor@kernel.org>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>, lvjianmin@loongson.cn, 
-	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Hongliang Wang <wanghongliang@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -52,94 +53,34 @@ Applied to loongarch-next, thanks.
 
 Huacai
 
-On Fri, Dec 29, 2023 at 11:08=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
+On Fri, Dec 29, 2023 at 11:10=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
 > wrote:
 >
-> Hi, Rob,
+> This series is good enough for me, I will apply it to the loongarch
+> tree after [1] is merged.
 >
-> Since this series doesn't touch the driver any more, I suppose that
-> this series will go through your dt tree?
+> [1] https://lore.kernel.org/loongarch/cover.1701933946.git.zhoubinbin@loo=
+ngson.cn/T/#t
 >
 > Huacai
 >
-> On Thu, Dec 7, 2023 at 3:29=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.c=
-n> wrote:
+> On Thu, Dec 28, 2023 at 10:09=E2=80=AFPM Conor Dooley <conor@kernel.org> =
+wrote:
 > >
-> > Hi all:
+> > On Wed, Dec 27, 2023 at 12:04:59PM +0600, Binbin Zhou wrote:
+> > >
+> > > Ah, yes, I tried looking at the `hwloc-ls` output before committing,
+> > > and it's below(LS2K1000):
+> > >
+> > > [root@fedora ~]# hwloc-ls
+> > > Machine (7730MB total)
+> > >   Package L#0
+> > >     NUMANode L#0 (P#0 7730MB)
+> > >     L2 L#0 (1024KB)
+> > >       L1d L#0 (32KB) + L1i L#0 (32KB) + Core L#0 + PU L#0 (P#0)
+> > >       L1d L#1 (32KB) + L1i L#1 (32KB) + Core L#1 + PU L#1 (P#1)
+> > >
+> > > It's the same as what we actually have.
 > >
-> > Some liointc-related DTBS_CHECK warnings were found when trying to
-> > introduce the Loongson-2K DTS{I} for LoongArch.
-> > This patch series attempts to fix those warnings.
 > >
-> > Of course, these fixes also apply to MIPS Loongson-2K1000.
-> >
-> > Thanks.
-> >
-> > -----
-> > V6:
-> > - Drop the 'parent_int_map' related patches following Rob's comment.
-> >
-> > Link to V5:
-> > https://lore.kernel.org/all/cover.1700449792.git.zhoubinbin@loongson.cn=
-/
-> >
-> > V5:
-> > - Add Reviewed-by tag;
-> > patch(1/5):
-> >   - Just drop 'loongson,parent_int_map' instead of marking it as
-> >     deprecated.
-> >
-> > Link to V4:
-> > https://lore.kernel.org/all/cover.1699521866.git.zhoubinbin@loongson.cn=
-/
-> >
-> > V4:
-> > - Add Acked-by tag;
-> > patch(2/5):
-> >   - Just add 'maxitem 2' instead of duplicating the list;
-> > patch(3/5):
-> >   - Rewite commit message for 'interrupt-names'.
-> >
-> > Link to V3:
-> > https://lore.kernel.org/all/cover.1698717154.git.zhoubinbin@loongson.cn=
-/
-> >
-> > V3:
-> > patch(1/5):
-> >   - new patch, 'loongson,parent_int_map' renamed to 'loongson,parent-in=
-t-map';
-> > patch(2/5)(3/5):
-> >   - Separate the change points into separate patches;
-> > patch(4/5):
-> >  - new patch, make sure both parent map forms can be parsed;
-> > patch(5/5):
-> >  - new patch, fix 'loongson,parent_int_map' references in mips loongson
-> >    dts{i}.
-> >
-> > Link to V2:
-> > https://lore.kernel.org/all/20230821061315.3416836-1-zhoubinbin@loongso=
-n.cn/
-> >
-> > V2:
-> > 1. Update commit message;
-> > 2. "interruprt-names" should be "required", the driver gets the parent
-> > interrupts through it;
-> > 3. Add more descriptions to explain the rationale for multiple nodes;
-> > 4. Rewrite if-else statements.
-> >
-> > Link to V1:
-> > https://lore.kernel.org/all/20230815084713.1627520-1-zhoubinbin@loongso=
-n.cn/
-> >
-> > Binbin Zhou (2):
-> >   dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
-> >     warning for reg-names
-> >   dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
-> >     warning for interrupt-names
-> >
-> >  .../interrupt-controller/loongson,liointc.yaml | 18 ++++++++++++------
-> >  1 file changed, 12 insertions(+), 6 deletions(-)
-> >
-> > --
-> > 2.39.3
-> >
+> > Yeah, that looks to be about what I would expect, thanks.
