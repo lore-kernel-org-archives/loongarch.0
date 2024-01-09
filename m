@@ -1,134 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7192A9455;
-	Tue,  9 Jan 2024 06:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QpS8pW3B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704780089; x=1736316089;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sA9jOFAl/Yz2nJon6qcwL0ATsst7m3Ms+tSbOB128dU=;
-  b=QpS8pW3BA+BsIT2qERHYr+RDKrHvmf1Qm/r2WLWWbG33FEYclLKrg1Q4
-   YOHiV3VZkiGBKojFGwvLEbwsFNyn0M5DTOQF+yYfBgSxvW6UJsxd7+Hj9
-   Q7ipt+v1rwfsAKaXkSGIoeP6gp0/Yj2eOHuV+GvadqoO+6G7DrvWUmngJ
-   kiaMGmzxZcZlO+YumebcppRGTnTgBRt9S5Y2JvsOFHCmlRZ8klKt44/5W
-   ts1wBAYGWM/SG+rRlH0wOr3ka4sxQMMo88Y7HtLUXGxFz4iAx4vxi4zGA
-   yTtxMJaQm/NLnuW5EDjiaSISMim1/0RVME3iDpepIbbZFSu2HsA10k/y3
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="4840340"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="4840340"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 22:01:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="900635538"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="900635538"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Jan 2024 22:01:19 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rN5Ap-0005WA-1K;
-	Tue, 09 Jan 2024 06:01:15 +0000
-Date: Tue, 9 Jan 2024 14:00:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Juergen Gross <jgross@suse.com>
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH 5/5] LoongArch: Add pv ipi support on LoongArch system
-Message-ID: <202401091354.GtBERgQJ-lkp@intel.com>
-References: <20240103071615.3422264-6-maobibo@loongson.cn>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A681E79C4
+	for <loongarch@lists.linux.dev>; Tue,  9 Jan 2024 06:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxCuoT7Zxl3mIDAA--.6696S3;
+	Tue, 09 Jan 2024 14:52:03 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxut0S7ZxlkI0IAA--.22849S2;
+	Tue, 09 Jan 2024 14:52:02 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Fix definition of ftrace_regs_set_instruction_pointer()
+Date: Tue,  9 Jan 2024 14:52:01 +0800
+Message-ID: <20240109065201.11800-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240103071615.3422264-6-maobibo@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bxut0S7ZxlkI0IAA--.22849S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWrZr17Jr18KrWrtr1fZw4rtFc_yoW8JF13pF
+	ZrC3WkJFWUGFs7uF1jgF4rur1fJ395Cry09r1Ikw1ayrnxXw1q9FykKryqyFy5Jay8C342
+	g3WakwnIvFn8ZwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-Hi Bibo,
+The current definition of ftrace_regs_set_instruction_pointer() is wrong,
+obviously, this function is used to set instruction pointer, so it should
+call instruction_pointer_set() instead of regs_set_return_value().
 
-kernel test robot noticed the following build warnings:
+There is no side effect by now because it is used for kernel livepatching
+which is not supported, fix it to avoid failure when testing livepatch in
+the future.
 
-[auto build test WARNING on 610a9b8f49fbcf1100716370d3b5f6f884a2835a]
+Fixes: 6fbff14a6382 ("LoongArch: ftrace: Abstract DYNAMIC_FTRACE_WITH_ARGS accesses")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/ftrace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-KVM-Add-hypercall-instruction-emulation-support/20240103-151946
-base:   610a9b8f49fbcf1100716370d3b5f6f884a2835a
-patch link:    https://lore.kernel.org/r/20240103071615.3422264-6-maobibo%40loongson.cn
-patch subject: [PATCH 5/5] LoongArch: Add pv ipi support on LoongArch system
-config: loongarch-randconfig-r061-20240109 (https://download.01.org/0day-ci/archive/20240109/202401091354.GtBERgQJ-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401091354.GtBERgQJ-lkp@intel.com/
-
-cocci warnings: (new ones prefixed by >>)
->> arch/loongarch/kvm/exit.c:681:5-8: Unneeded variable: "ret". Return "  0" on line 701
---
->> arch/loongarch/kvm/exit.c:720:2-3: Unneeded semicolon
-
-vim +681 arch/loongarch/kvm/exit.c
-
-   678	
-   679	static int kvm_pv_send_ipi(struct kvm_vcpu *vcpu, int sgi)
-   680	{
- > 681		int ret = 0;
-   682		u64 ipi_bitmap;
-   683		unsigned int min, cpu;
-   684		struct kvm_vcpu *dest;
-   685	
-   686		ipi_bitmap = vcpu->arch.gprs[LOONGARCH_GPR_A1];
-   687		min = vcpu->arch.gprs[LOONGARCH_GPR_A2];
-   688	
-   689		if (ipi_bitmap) {
-   690			cpu = find_first_bit((void *)&ipi_bitmap, BITS_PER_LONG);
-   691			while (cpu < BITS_PER_LONG) {
-   692				if ((cpu + min) < KVM_MAX_VCPUS) {
-   693					dest = kvm_get_vcpu_by_id(vcpu->kvm, cpu + min);
-   694					kvm_queue_irq(dest, sgi);
-   695					kvm_vcpu_kick(dest);
-   696				}
-   697				cpu = find_next_bit((void *)&ipi_bitmap, BITS_PER_LONG, cpu + 1);
-   698			}
-   699		}
-   700	
- > 701		return ret;
-   702	}
-   703	
-   704	/*
-   705	 * hypcall emulation always return to guest, Caller should check retval.
-   706	 */
-   707	static void kvm_handle_pv_hcall(struct kvm_vcpu *vcpu)
-   708	{
-   709		unsigned long func = vcpu->arch.gprs[LOONGARCH_GPR_A0];
-   710		long ret;
-   711	
-   712		switch (func) {
-   713		case KVM_HC_FUNC_IPI:
-   714			kvm_pv_send_ipi(vcpu, INT_SWI0);
-   715			ret = KVM_HC_STATUS_SUCCESS;
-   716			break;
-   717		default:
-   718			ret = KVM_HC_INVALID_CODE;
-   719			break;
- > 720		};
-   721	
-   722		vcpu->arch.gprs[LOONGARCH_GPR_A0] = ret;
-   723	}
-   724	
-
+diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
+index a11996eb5892..de891c2c83d4 100644
+--- a/arch/loongarch/include/asm/ftrace.h
++++ b/arch/loongarch/include/asm/ftrace.h
+@@ -63,7 +63,7 @@ ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
+ static __always_inline void
+ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs, unsigned long ip)
+ {
+-	regs_set_return_value(&fregs->regs, ip);
++	instruction_pointer_set(&fregs->regs, ip);
+ }
+ 
+ #define ftrace_regs_get_argument(fregs, n) \
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.42.0
+
