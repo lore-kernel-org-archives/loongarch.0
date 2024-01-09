@@ -1,53 +1,90 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936F73D540
-	for <loongarch@lists.linux.dev>; Tue,  9 Jan 2024 19:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32473C694
+	for <loongarch@lists.linux.dev>; Tue,  9 Jan 2024 19:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MU44z6ma"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=L5q9G4EH+GvNtL+Wb8XKMCOl8tTep7D40VZuegMyoOA=; b=MU44z6maYlvs7GL6v/GT26fHEs
-	JywflQgaRGHzndkpt+lSurBg+ao2mQxU+/oGRSPRiPNkKcdcrWFvi+6rItnyaLc7f+FPAYo7I83W5
-	d2s5ZugUXxshlJZGVGdrzrlIPCvqO/paJ1S3aBQEm5m9WcY0LPaxU5tR2kGwmEZzaY4deEjqCqu4u
-	DArVZFITrAPbLhv9xLhr/UgPtS73DxSn0SkJEK4PDTSMy+YZBXGTEYK/DtGROgF9J5QMkTF/3HvTA
-	umaXB+rcdQQpV3GgnIh74H38yrte9HF9bmmSsTVhQfTau7kl/lzJA4JTLkbtSQEyuHbASkLLoClqJ
-	gOO/RXgQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56366)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rNHkv-0004Ud-0B;
-	Tue, 09 Jan 2024 19:27:21 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rNHku-0004Wn-DT; Tue, 09 Jan 2024 19:27:20 +0000
-Date: Tue, 9 Jan 2024 19:27:20 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 14/21] irqchip/gic-v3: Don't return errors from
- gic_acpi_match_gicc()
-Message-ID: <ZZ2eGLwlkqZrh0In@shell.armlinux.org.uk>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
- <E1rDOgx-00Dvkv-Bb@rmk-PC.armlinux.org.uk>
- <20231215163301.0000183a@Huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nT8+7YRW"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-680d4584a81so27285606d6.1
+        for <loongarch@lists.linux.dev>; Tue, 09 Jan 2024 11:35:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704828917; x=1705433717; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NzW64ptRfrCAo122Yc/n1SHQGIxOss557ihMga016To=;
+        b=nT8+7YRWzRw2T86pOWJWvn+z9Vsp9j4GrgkYW4F7ARNJaqFW5RYMzyotiS/ZdNtuoG
+         p9+SkqTn33uH0iJnKtZijR6V01ysLlW0hrE9ke6kJnt0A7MIndYYirq07Rz/RkZ0pj3D
+         d49+wTuJdq5xv9kmwtysfsivWbdZ4bfz2IhD9tuB+fQLFZhAzPmdicbUcCer4ojCQsQi
+         m1aNns1zTQWEBnkSy3FSu/FFfGH53HeYCwvtNuKm90e2K5koj9UlxSeBEx2v3Hoc/uyX
+         B51obhP8Repmv5TD3Wks9qQZLnBrhJ/d0p5b+yJU6mWKu3ZoaGEB+H2ZeTV/bjfTJ5Bq
+         F/xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704828917; x=1705433717;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NzW64ptRfrCAo122Yc/n1SHQGIxOss557ihMga016To=;
+        b=NZtfiSafPi4lYfelLeD9+T2R2Ao1QXPsqcbHFfVbNKotPPsin4MK2OTl1hGNiaM0YB
+         rhZ5IryopFS9lt99qpbaEEBzK2E+kRNNWriUfqHbvFX8UaoXsBEl0PSXWD851iwzFEDA
+         nembER0Ykiajzn8pZv/gGRGtYW1eNzX2Azs4OxLXx+TPl6PRZtFFMSXy/k2evelbTqVo
+         dTSFHGs6beC4mRn4APN+XsHhFyxWnAb0gd0+a8jQr9wMBDHcbXA+NP5bVXzxDs7S38wk
+         tZ8yhfynmI5zSF35XXrcVUdsKc8qmDqM/P2D+BLzR871HYPJzQ/v/WyPbtQ0mAdH8aBP
+         bPkg==
+X-Gm-Message-State: AOJu0YziL6tm4+TcjUDKbzXRmM8VRxRtL5Hfh4Vg+6LUEgyf+fNu/8+4
+	Z0MVedAmBLqd8jRWNRdOcnE=
+X-Google-Smtp-Source: AGHT+IHT/9NQ1s8O8QwK4Ls/ZHKIo/F//1voo5RQVDE/mg/Jc8M+RXEXFTR9a3LeHTD8TBpigcXbOA==
+X-Received: by 2002:ad4:5ecd:0:b0:680:d2f7:7e7 with SMTP id jm13-20020ad45ecd000000b00680d2f707e7mr1625826qvb.45.1704828917575;
+        Tue, 09 Jan 2024 11:35:17 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id z8-20020a0cfec8000000b00681092cb7b4sm1117903qvs.103.2024.01.09.11.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 11:35:17 -0800 (PST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailauth.nyi.internal (Postfix) with ESMTP id 68CB527C005A;
+	Tue,  9 Jan 2024 14:35:16 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 09 Jan 2024 14:35:16 -0500
+X-ME-Sender: <xms:8p-dZZj3VYVagPcrppDVY1hAVttcz-brGmQ2tQRu_m8SUb9zmYPrww>
+    <xme:8p-dZeAXI1oGECXctymTpshMs7pHhDKsYA3gWtzgp43dzRsVZa4P-9vQ_fyFP9j_U
+    7zqc89-N3c3V3x3cg>
+X-ME-Received: <xmr:8p-dZZHCRCK4tJUQ7k5byjHDt4aOdNTa5llSW3d9sLzGU7DaR4l575IIfFZplw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehledguddvhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhephfetvdfgtdeukedvkeeiteeiteejieehvdetheduudejvdektdekfeeg
+    vddvhedtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhht
+    hhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquh
+    hnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:8p-dZeSJpL5T1SOUIGIK_S-Mjm8Wm0pyvMh4s0omKjUAQmaUth1fiQ>
+    <xmx:8p-dZWxSZRKp-DMUofkOGNoaVZcAVoquwMebc9HEeZeJZUnHU3F4hg>
+    <xmx:8p-dZU68pwGlVA9rgiJFWsZ-oU9HHuzLENgZAQ5ce128ZKBSU2tL5A>
+    <xmx:9J-dZbhN9d3_srFTUJD-NfI-Yki5kCc-V2CWaC9v9ohqQXrCWG6OjA>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Jan 2024 14:35:13 -0500 (EST)
+Date: Tue, 9 Jan 2024 11:33:51 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
+Message-ID: <ZZ2fn0scbDKBXWe5@boqun-archlinux>
+References: <20240108032117.215171-1-wangrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -56,104 +93,38 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231215163301.0000183a@Huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20240108032117.215171-1-wangrui@loongson.cn>
 
-On Fri, Dec 15, 2023 at 04:33:01PM +0000, Jonathan Cameron wrote:
-> On Wed, 13 Dec 2023 12:50:23 +0000
-> Russell King (Oracle) <rmk+kernel@armlinux.org.uk> wrote:
+Hi,
+
+Thanks for the patch.
+
+On Mon, Jan 08, 2024 at 11:21:15AM +0800, WANG Rui wrote:
+> Enable Rust support for the LoongArch architecture.
 > 
-> > From: James Morse <james.morse@arm.com>
-> > 
-> > gic_acpi_match_gicc() is only called via gic_acpi_count_gicr_regions().
-> > It should only count the number of enabled redistributors, but it
-> > also tries to sanity check the GICC entry, currently returning an
-> > error if the Enabled bit is set, but the gicr_base_address is zero.
-> > 
-> > Adding support for the online-capable bit to the sanity check
-> > complicates it, for no benefit. The existing check implicitly
-> > depends on gic_acpi_count_gicr_regions() previous failing to find
-> > any GICR regions (as it is valid to have gicr_base_address of zero if
-> > the redistributors are described via a GICR entry).
-> > 
-> > Instead of complicating the check, remove it. Failures that happen
-> > at this point cause the irqchip not to register, meaning no irqs
-> > can be requested. The kernel grinds to a panic() pretty quickly.
-> > 
-> > Without the check, MADT tables that exhibit this problem are still
-> > caught by gic_populate_rdist(), which helpfully also prints what
-> > went wrong:
-> > | CPU4: mpidr 100 has no re-distributor!
-> > 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > Reviewed-by: Gavin Shan <gshan@redhat.com>
-> > Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> > Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> > Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > ---
-> >  drivers/irqchip/irq-gic-v3.c | 18 ++++++------------
-> >  1 file changed, 6 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> > index 98b0329b7154..ebecd4546830 100644
-> > --- a/drivers/irqchip/irq-gic-v3.c
-> > +++ b/drivers/irqchip/irq-gic-v3.c
-> > @@ -2420,21 +2420,15 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
-> >  
-> >  	/*
-> >  	 * If GICC is enabled and has valid gicr base address, then it means
-> > -	 * GICR base is presented via GICC
-> > +	 * GICR base is presented via GICC. The redistributor is only known to
-> > +	 * be accessible if the GICC is marked as enabled. If this bit is not
-> > +	 * set, we'd need to add the redistributor at runtime, which isn't
-> > +	 * supported.
-> >  	 */
-> > -	if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address) {
-> > +	if (gicc->flags & ACPI_MADT_ENABLED && gicc->gicr_base_address)
+
+Could you share how you build and test? For example, I wonder the clang
+or gcc version you used and bindgen version you used. Thanks.
+
+Regards,
+Boqun
+
+> Previous versions:
+> v0: https://lore.kernel.org/loongarch/20240106065941.180796-1-wangrui@loongson.cn/
 > 
-> I was very vague in previous review.  I think the reasons you are switching
-> from acpi_gicc_is_useable(gicc) to the gicc->flags & ACPI_MADT_ENABLED
-> needs calling out as I'm fairly sure that this point in the series at least
-> acpi_gicc_is_usable is same as current upstream:
+> Changes in v1:
+>  - Address htmldocs warning.
 > 
-> static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interrupt *gicc)
-> {
-> 	return gicc->flags & ACPI_MADT_ENABLED;
-> }
-
-In a previous patch adding acpi_gicc_is_usable() c54e52f84d7a ("arm64,
-irqchip/gic-v3, ACPI: Move MADT GICC enabled check into a helper") this
-was:
-
--       if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
-+       if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address) {
-
-so effectively this is undoing that particular change, which raises in
-my mind why the change was made in the first place if it's just going
-to be reverted in a later patch (because in a following patch,
-acpi_gicc_is_usable() has an additional condition added to it that
-isn't applicable here.) which effectively makes acpi_gicc_is_usable()
-return true if either ACPI_MADT_ENABLED _or_
-ACPI_MADT_GICC_ONLINE_CAPABLE (as it is now known) are set.
-
-However, if ACPI_MADT_GICC_ONLINE_CAPABLE is set, does that actually
-mean that the GICC is usable? I'm not sure it does. ACPI v6.5 says that
-this bit indicates that the system supports enabling this processor
-later. Is the GICC of a currently disabled processor "usable"...
-
-Clearly, the intention of this change is not to count this GICC entry
-if it is marked ACPI_MADT_GICC_ONLINE_CAPABLE, but I feel that isn't
-described in the commit message.
-
-Moreover, I am getting the feeling that there are _two_ changes going
-on here - there's the change that's talked about in the commit message
-(the complex validation that seems unnecessary) and then there's the
-preparation for the change to acpi_gicc_is_usable() - which maybe
-should be in the following patch where it would be less confusing.
-
-Would you agree?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> WANG Rui (2):
+>   Documentation: rust: Add a character to the first column
+>   LoongArch: Enable initial Rust support
+> 
+>  Documentation/rust/arch-support.rst | 13 +++++++------
+>  arch/loongarch/Kconfig              |  1 +
+>  arch/loongarch/Makefile             |  3 +++
+>  scripts/generate_rust_target.rs     | 10 ++++++++++
+>  4 files changed, 21 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 2.43.0
+> 
