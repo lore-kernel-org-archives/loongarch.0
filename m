@@ -1,78 +1,135 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C21943AAD
-	for <loongarch@lists.linux.dev>; Fri, 12 Jan 2024 03:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxCuoPt6BlN3EEAA--.9031S3;
-	Fri, 12 Jan 2024 11:50:39 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axqt0Pt6BlAsMSAA--.49445S2;
-	Fri, 12 Jan 2024 11:50:39 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Remove unnecessary CSR register saving during enter guest
-Date: Fri, 12 Jan 2024 11:50:39 +0800
-Message-Id: <20240112035039.833974-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5660F55C0B;
+	Fri, 12 Jan 2024 09:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TBGL62L2Wz6J69M;
+	Fri, 12 Jan 2024 17:23:26 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9A8B6140A36;
+	Fri, 12 Jan 2024 17:25:21 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 12 Jan
+ 2024 09:25:20 +0000
+Date: Fri, 12 Jan 2024 09:25:20 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>,
+	<acpica-devel@lists.linuxfoundation.org>, <linux-csky@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
+	<linux-parisc@vger.kernel.org>, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, <jianyong.wu@arm.com>,
+	<justin.he@arm.com>, James Morse <james.morse@arm.com>
+Subject: Re: [PATCH RFC v3 02/21] ACPI: processor: Add support for
+ processors described as container packages
+Message-ID: <20240112092520.00001278@Huawei.com>
+In-Reply-To: <ZaA3l4yjgCXxSiVg@shell.armlinux.org.uk>
+References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
+	<E1rDOfx-00Dvje-MS@rmk-PC.armlinux.org.uk>
+	<CAJZ5v0iB0bS6nmjQ++pV1zp5YSGuigbffK5VD3wsX+8bY9MA5w@mail.gmail.com>
+	<20240111175908.00002f46@Huawei.com>
+	<ZaA3l4yjgCXxSiVg@shell.armlinux.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axqt0Pt6BlAsMSAA--.49445S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKFyxGw1fuFy3Kr45Ww4ftFc_yoWfAFX_XF
-	1xtw4Durn3Janruw1Fvas5Xw1jga1kGwsY9F18uryxJa4FqrZ8Zr4Iya1DAr13KFWUZrWf
-	ZrWxGrZ3ur1IyosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Some CSR registers like CRMD/PRMD are saved during enter VM mode. However
-they are not restored for actual use, saving for these CSR registers
-can be removed.
+On Thu, 11 Jan 2024 18:46:47 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/switch.S | 6 ------
- 1 file changed, 6 deletions(-)
+> On Thu, Jan 11, 2024 at 05:59:08PM +0000, Jonathan Cameron wrote:
+> > On Mon, 18 Dec 2023 21:17:34 +0100
+> > "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> >  =20
+> > > On Wed, Dec 13, 2023 at 1:49=E2=80=AFPM Russell King <rmk+kernel@arml=
+inux.org.uk> wrote: =20
+> > > >
+> > > > From: James Morse <james.morse@arm.com> =20
+> >=20
+> > Done some digging + machine faking.  This is mid stage results at best.
+> >=20
+> > Summary: I don't think this patch is necessary.  If anyone happens to b=
+e in
+> > the mood for testing on various platforms, can you drop this patch and
+> > see if everything still works.
+> >=20
+> > With this patch in place, and a processor container containing
+> > Processor() objects acpi_process_add is called twice - once via
+> > the path added here and once via acpi_bus_attach etc.
+> >=20
+> > Maybe it's a left over from earlier approaches to some of this? =20
+>=20
+> From what you're saying, it seems that way. It would be really good to
+> get a reply from James to see whether he agrees - or at least get the
+> reason why this patch is in the series... but I suspect that will never
+> come.
+>=20
+> > Both cases are covered by the existing handling without this.
+> >=20
+> > I'm far from clear on why we need this patch.  Presumably
+> > it's the reference in the description on it breaking for
+> > Processor Package containing Processor() objects that matters
+> > after a move... I'm struggling to find that move though! =20
+>=20
+> I do know that James did a lot of testing, so maybe he found some
+> corner case somewhere which made this necessary - but without input
+> from James, we can't know that.
+>=20
+> So, maybe the right way forward on this is to re-test the series
+> with this patch dropped, and see whether there's any ill effects.
+> It should be possible to resurect the patch if it does turn out to
+> be necessary.
+>=20
+> Does that sound like a good way forward?
+>=20
+> Thanks.
+>=20
 
-diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-index 0ed9040307b7..905b90de50e8 100644
---- a/arch/loongarch/kvm/switch.S
-+++ b/arch/loongarch/kvm/switch.S
-@@ -213,12 +213,6 @@ SYM_FUNC_START(kvm_enter_guest)
- 	/* Save host GPRs */
- 	kvm_save_host_gpr a2
- 
--	/* Save host CRMD, PRMD to stack */
--	csrrd	a3, LOONGARCH_CSR_CRMD
--	st.d	a3, a2, PT_CRMD
--	csrrd	a3, LOONGARCH_CSR_PRMD
--	st.d	a3, a2, PT_PRMD
--
- 	addi.d	a2, a1, KVM_VCPU_ARCH
- 	st.d	sp, a2, KVM_ARCH_HSP
- 	st.d	tp, a2, KVM_ARCH_HTP
+Yes that sounds like the best plan. Note this patch can only make a
+difference on non arm64 arches because it's a firmware bug to combine
+Processor() with a GICC entry in APIC/MADT.  To even test on ARM64
+you have to skip the bug check.
 
-base-commit: de927f6c0b07d9e698416c5b287c521b07694cac
--- 
-2.39.3
+https://elixir.bootlin.com/linux/latest/source/drivers/acpi/processor_core.=
+c#L101
+
+	/* device_declaration means Device object in DSDT, in the
+	 * GIC interrupt model, logical processors are required to
+	 * have a Processor Device object in the DSDT, so we should
+	 * check device_declaration here
+	 */
+//	if (device_declaration && (gicc->uid =3D=3D acpi_id)) {
+	if (gicc->uid =3D=3D acpi_id) {
+		*mpidr =3D gicc->arm_mpidr;
+		return 0;
+	}
+
+Only alternative is probably to go history diving and try and
+find another change that would have required this and is now gone.
+
+The ACPI scanning code has had a lot of changes whilst this work has
+been underway.  More than possible that this was papering over some
+issue that has long since been fixed. I can't find any deliberate
+functional changes, but there is some code generalization that 'might'
+have side effects in this area. Rafael, any expectation that anything
+changed in how scanning processor containers works?
+
+Jonathan
+
 
