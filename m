@@ -1,112 +1,78 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7110433D9
-	for <loongarch@lists.linux.dev>; Thu, 11 Jan 2024 18:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="QdyXNbVg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=sG0vta/K25cX+m3KWmJQGIOyHDu76/qWE53sJiW1pFo=; b=QdyXNbVgAPkw53YLTW5MFLAwGd
-	JSmyBJYT187WJ9+lEgwFU4PhK1dNACRkVKJfr68Vrl3dvWbrfDcajsyxvDC+L+X9FlhxRdzkHifJ7
-	Nyxxyw4E6rhW4a9StvHd/8k0K7cZ2ejK8wWeAxlnWB3EXAqRbexHDSm2Ym+JznIMwLMETkZI1EOBF
-	aFTVH+8Oirspf3X8ccXVNUEcwyl/yFabJZJG4kbTOUGr9HGQnWzceum2L980kdwneZgFV/2GpF9u7
-	+ZMQvD6P6lp8CqjbYvw2rm5IOxMyXQjXa+F/gD8ocRGtER1nVEgTt8Q6I3eYKL9yLoSjoGENQ2Kyy
-	yStOVlHw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54562)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rO04n-0006t8-0R;
-	Thu, 11 Jan 2024 18:46:49 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rO04l-0006ah-8R; Thu, 11 Jan 2024 18:46:47 +0000
-Date: Thu, 11 Jan 2024 18:46:47 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 02/21] ACPI: processor: Add support for processors
- described as container packages
-Message-ID: <ZaA3l4yjgCXxSiVg@shell.armlinux.org.uk>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
- <E1rDOfx-00Dvje-MS@rmk-PC.armlinux.org.uk>
- <CAJZ5v0iB0bS6nmjQ++pV1zp5YSGuigbffK5VD3wsX+8bY9MA5w@mail.gmail.com>
- <20240111175908.00002f46@Huawei.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C21943AAD
+	for <loongarch@lists.linux.dev>; Fri, 12 Jan 2024 03:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxCuoPt6BlN3EEAA--.9031S3;
+	Fri, 12 Jan 2024 11:50:39 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axqt0Pt6BlAsMSAA--.49445S2;
+	Fri, 12 Jan 2024 11:50:39 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Remove unnecessary CSR register saving during enter guest
+Date: Fri, 12 Jan 2024 11:50:39 +0800
+Message-Id: <20240112035039.833974-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240111175908.00002f46@Huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-CM-TRANSID:AQAAf8Axqt0Pt6BlAsMSAA--.49445S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKFyxGw1fuFy3Kr45Ww4ftFc_yoWfAFX_XF
+	1xtw4Durn3Janruw1Fvas5Xw1jga1kGwsY9F18uryxJa4FqrZ8Zr4Iya1DAr13KFWUZrWf
+	ZrWxGrZ3ur1IyosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
 
-On Thu, Jan 11, 2024 at 05:59:08PM +0000, Jonathan Cameron wrote:
-> On Mon, 18 Dec 2023 21:17:34 +0100
-> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
-> 
-> > On Wed, Dec 13, 2023 at 1:49 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> > >
-> > > From: James Morse <james.morse@arm.com>
-> 
-> Done some digging + machine faking.  This is mid stage results at best.
-> 
-> Summary: I don't think this patch is necessary.  If anyone happens to be in
-> the mood for testing on various platforms, can you drop this patch and
-> see if everything still works.
-> 
-> With this patch in place, and a processor container containing
-> Processor() objects acpi_process_add is called twice - once via
-> the path added here and once via acpi_bus_attach etc.
-> 
-> Maybe it's a left over from earlier approaches to some of this?
+Some CSR registers like CRMD/PRMD are saved during enter VM mode. However
+they are not restored for actual use, saving for these CSR registers
+can be removed.
 
-From what you're saying, it seems that way. It would be really good to
-get a reply from James to see whether he agrees - or at least get the
-reason why this patch is in the series... but I suspect that will never
-come.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/switch.S | 6 ------
+ 1 file changed, 6 deletions(-)
 
-> Both cases are covered by the existing handling without this.
-> 
-> I'm far from clear on why we need this patch.  Presumably
-> it's the reference in the description on it breaking for
-> Processor Package containing Processor() objects that matters
-> after a move... I'm struggling to find that move though!
+diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+index 0ed9040307b7..905b90de50e8 100644
+--- a/arch/loongarch/kvm/switch.S
++++ b/arch/loongarch/kvm/switch.S
+@@ -213,12 +213,6 @@ SYM_FUNC_START(kvm_enter_guest)
+ 	/* Save host GPRs */
+ 	kvm_save_host_gpr a2
+ 
+-	/* Save host CRMD, PRMD to stack */
+-	csrrd	a3, LOONGARCH_CSR_CRMD
+-	st.d	a3, a2, PT_CRMD
+-	csrrd	a3, LOONGARCH_CSR_PRMD
+-	st.d	a3, a2, PT_PRMD
+-
+ 	addi.d	a2, a1, KVM_VCPU_ARCH
+ 	st.d	sp, a2, KVM_ARCH_HSP
+ 	st.d	tp, a2, KVM_ARCH_HTP
 
-I do know that James did a lot of testing, so maybe he found some
-corner case somewhere which made this necessary - but without input
-from James, we can't know that.
-
-So, maybe the right way forward on this is to re-test the series
-with this patch dropped, and see whether there's any ill effects.
-It should be possible to resurect the patch if it does turn out to
-be necessary.
-
-Does that sound like a good way forward?
-
-Thanks.
-
+base-commit: de927f6c0b07d9e698416c5b287c521b07694cac
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.39.3
+
