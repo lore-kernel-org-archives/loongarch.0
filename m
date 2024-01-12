@@ -1,155 +1,148 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B626E2BB;
-	Fri, 12 Jan 2024 15:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TBPrs1VcSz6FGMn;
-	Fri, 12 Jan 2024 23:02:05 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 445D41400CB;
-	Fri, 12 Jan 2024 23:04:01 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 12 Jan
- 2024 15:04:00 +0000
-Date: Fri, 12 Jan 2024 15:03:59 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	<linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-riscv@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, <acpica-devel@lists.linuxfoundation.org>,
-	<linux-csky@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-ia64@vger.kernel.org>, <linux-parisc@vger.kernel.org>, Salil Mehta
-	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	<jianyong.wu@arm.com>, <justin.he@arm.com>, James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 02/21] ACPI: processor: Add support for
- processors described as container packages
-Message-ID: <20240112150359.0000733f@Huawei.com>
-In-Reply-To: <CAJZ5v0g2CFPrSfNzHKBz_Spwt304QEQtR6w57VR11i5APPrD8Q@mail.gmail.com>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
-	<E1rDOfx-00Dvje-MS@rmk-PC.armlinux.org.uk>
-	<CAJZ5v0iB0bS6nmjQ++pV1zp5YSGuigbffK5VD3wsX+8bY9MA5w@mail.gmail.com>
-	<20240111175908.00002f46@Huawei.com>
-	<ZaA3l4yjgCXxSiVg@shell.armlinux.org.uk>
-	<20240112092520.00001278@Huawei.com>
-	<CAJZ5v0g2CFPrSfNzHKBz_Spwt304QEQtR6w57VR11i5APPrD8Q@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8437014F6D
+	for <loongarch@lists.linux.dev>; Fri, 12 Jan 2024 19:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bhxNK7s4"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9c7932b3so11188884276.2
+        for <loongarch@lists.linux.dev>; Fri, 12 Jan 2024 11:31:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705087865; x=1705692665; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zcB+CUweXKRRwTEVx+dPw3m+uDfT/oMzwKpBe0EWZg4=;
+        b=bhxNK7s4/jPuMckzH9T7RMagzvXOQeT115ILurSfhitsR7sgoQvjlDGYPRMWmG0vWb
+         4vf5f4r1QPBZK7naY92MvYMT+t4AUd0/7q5xeimgMEJ45d+A+rl78eXGENmvEMtPfOXz
+         ie/sl6nAo9ptLpmqodeJN+VNR4EOpVtqBgk2ZqHtHfgWi3kKhfldpGRy9muyHJwlOG2V
+         p/Qjpk/EKw/eXGyTJmIMsq8Va1lzLcAQWfrCqvdxJdiG/KigFmOKcl7gfaq/KwKumSIU
+         s7UACADvgV9r/jB0zqlKPPBxZygjGpCi4u45dMeEEA/I+1DyQFOcp3KRyRKqMU7t8a9h
+         fMKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705087865; x=1705692665;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zcB+CUweXKRRwTEVx+dPw3m+uDfT/oMzwKpBe0EWZg4=;
+        b=pVKvIGoTsrezhukZBNY90123DnXfyfuFWAf1c6lWo7mG6NI8L+Y+UzRDmQaqYPDGHz
+         EodEOcVLt+wMsE5nyATSOhwNVmFlBvBiiwhvX2C8k3LBQvoC3cS3QuZELpbwWQ55cMYw
+         ZCrC68tKpsyBY8DLZPBcqr+NXmwhhaVC6dxOLhot6Nio78t3z41BMWZ5B9b8HGsdjcR6
+         EylGaBDwRrWQ2pHZ0VJaTH60cJfVW+N9f5J6zm/29duorTXGEVHcCwuauCMkzKcjFd6A
+         b46k3NR7yj6Dg9QaDSYPcho3n3QPLHuan+1eoHuDDPyqmMwD7zP+lXGmpe3cFg0py89u
+         qzdA==
+X-Gm-Message-State: AOJu0Yw7wYlfsg631hLpuCquZmzGup+9QoFjXC4W9lYMzHj6ET55skP5
+	cwbAj417n5BQp9qgXaSlGN2Qx0d1bU2rBjgwnzUT5Lk=
+X-Google-Smtp-Source: AGHT+IHXfXlLCPAaZRRjOmLUIRThqdt/F+b/7UzcDXbsb8hupk3oS/NFXVxFBaFHFuKSENWk6NaW7A8MSkPs/nbY
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a25:8246:0:b0:dbd:748c:fbb7 with SMTP
+ id d6-20020a258246000000b00dbd748cfbb7mr586650ybn.0.1705087865498; Fri, 12
+ Jan 2024 11:31:05 -0800 (PST)
+Date: Fri, 12 Jan 2024 19:31:03 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
+Message-ID: <20240112193103.3798287-1-yosryahmed@google.com>
+Subject: [RFC PATCH] mm: z3fold: rename CONFIG_Z3FOLD to CONFIG_Z3FOLD_DEPRECATED
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Vitaly Wool <vitaly.wool@konsulko.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Nhat Pham <nphamcs@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, linux-mm@kvack.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	Yosry Ahmed <yosryahmed@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 12 Jan 2024 16:01:40 +0100
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+The z3fold compressed pages allocator is not widely used, most users use
+zsmalloc. The only disadvantage of zsmalloc in comparison is the
+dependency on MMU, and zbud is a more common option for !MMU as it was
+the default zswap allocator for a long time.
 
-> On Fri, Jan 12, 2024 at 10:25=E2=80=AFAM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Thu, 11 Jan 2024 18:46:47 +0000
-> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > =20
-> > > On Thu, Jan 11, 2024 at 05:59:08PM +0000, Jonathan Cameron wrote: =20
-> > > > On Mon, 18 Dec 2023 21:17:34 +0100
-> > > > "Rafael J. Wysocki" <rafael@kernel.org> wrote:
-> > > > =20
-> > > > > On Wed, Dec 13, 2023 at 1:49=E2=80=AFPM Russell King <rmk+kernel@=
-armlinux.org.uk> wrote: =20
-> > > > > >
-> > > > > > From: James Morse <james.morse@arm.com> =20
-> > > >
-> > > > Done some digging + machine faking.  This is mid stage results at b=
-est.
-> > > >
-> > > > Summary: I don't think this patch is necessary.  If anyone happens =
-to be in
-> > > > the mood for testing on various platforms, can you drop this patch =
-and
-> > > > see if everything still works.
-> > > >
-> > > > With this patch in place, and a processor container containing
-> > > > Processor() objects acpi_process_add is called twice - once via
-> > > > the path added here and once via acpi_bus_attach etc.
-> > > >
-> > > > Maybe it's a left over from earlier approaches to some of this? =20
-> > >
-> > > From what you're saying, it seems that way. It would be really good to
-> > > get a reply from James to see whether he agrees - or at least get the
-> > > reason why this patch is in the series... but I suspect that will nev=
-er
-> > > come.
-> > > =20
-> > > > Both cases are covered by the existing handling without this.
-> > > >
-> > > > I'm far from clear on why we need this patch.  Presumably
-> > > > it's the reference in the description on it breaking for
-> > > > Processor Package containing Processor() objects that matters
-> > > > after a move... I'm struggling to find that move though! =20
-> > >
-> > > I do know that James did a lot of testing, so maybe he found some
-> > > corner case somewhere which made this necessary - but without input
-> > > from James, we can't know that.
-> > >
-> > > So, maybe the right way forward on this is to re-test the series
-> > > with this patch dropped, and see whether there's any ill effects.
-> > > It should be possible to resurect the patch if it does turn out to
-> > > be necessary.
-> > >
-> > > Does that sound like a good way forward?
-> > >
-> > > Thanks.
-> > > =20
-> >
-> > Yes that sounds like the best plan. Note this patch can only make a
-> > difference on non arm64 arches because it's a firmware bug to combine
-> > Processor() with a GICC entry in APIC/MADT.  To even test on ARM64
-> > you have to skip the bug check.
-> >
-> > https://elixir.bootlin.com/linux/latest/source/drivers/acpi/processor_c=
-ore.c#L101
-> >
-> >         /* device_declaration means Device object in DSDT, in the
-> >          * GIC interrupt model, logical processors are required to
-> >          * have a Processor Device object in the DSDT, so we should
-> >          * check device_declaration here
-> >          */
-> > //      if (device_declaration && (gicc->uid =3D=3D acpi_id)) {
-> >         if (gicc->uid =3D=3D acpi_id) {
-> >                 *mpidr =3D gicc->arm_mpidr;
-> >                 return 0;
-> >         }
-> >
-> > Only alternative is probably to go history diving and try and
-> > find another change that would have required this and is now gone.
-> >
-> > The ACPI scanning code has had a lot of changes whilst this work has
-> > been underway.  More than possible that this was papering over some
-> > issue that has long since been fixed. I can't find any deliberate
-> > functional changes, but there is some code generalization that 'might'
-> > have side effects in this area. Rafael, any expectation that anything
-> > changed in how scanning processor containers works? =20
->=20
-> There have been changes, but I can't recall when exactly without some
-> git history research.
->=20
-> In any case, it is always better to work on top of the current
-> mainline code IMO.
+In hopes of having a single compressed pages allocator at some point,
+and following in the footsteps of SLAB, deprecate z3fold. Rename the
+user-visible option so that users with CONFIG_Z3FOLD=y get a new prompt
+with explanation during make oldconfig. Remove CONFIG_Z3FOLD=y from
+defconfigs.
 
-Absolutely - just in this case the series has been rebased for=20
-a few years because the standards discussions took far far too long!
+Existing users, if any, should voice their objections. Otherwise, we can
+remove z3fold in a few releases.
 
-Jonathan
+Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+---
+I have limited understanding of Kconfigs. I modelled this after commit
+eb07c4f39c3e ("mm/slab: rename CONFIG_SLAB to CONFIG_SLAB_DEPRECATED"),
+but one difference is that CONFIG_Z3FOLD is a tristate. I made
+CONFIG_Z3FOLD_DEPRECATED a boolean config, and CONFIG_Z3FOLD default y
+so that it is on by default if CONFIG_Z3FOLD_DEPRECATED is selected. I
+am not sure if that's the correct way to do this.
 
+---
+ arch/loongarch/configs/loongson3_defconfig |  1 -
+ arch/powerpc/configs/ppc64_defconfig       |  1 -
+ mm/Kconfig                                 | 13 +++++++++++--
+ 3 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index 33795e4a5bd63..89b66b6c6a1d5 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -85,7 +85,6 @@ CONFIG_ZPOOL=y
+ CONFIG_ZSWAP=y
+ CONFIG_ZSWAP_COMPRESSOR_DEFAULT_ZSTD=y
+ CONFIG_ZBUD=y
+-CONFIG_Z3FOLD=y
+ CONFIG_ZSMALLOC=m
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_MEMORY_HOTPLUG=y
+diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
+index 544a65fda77bc..d39284489aa26 100644
+--- a/arch/powerpc/configs/ppc64_defconfig
++++ b/arch/powerpc/configs/ppc64_defconfig
+@@ -81,7 +81,6 @@ CONFIG_MODULE_SIG_SHA512=y
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_BINFMT_MISC=m
+ CONFIG_ZSWAP=y
+-CONFIG_Z3FOLD=y
+ CONFIG_ZSMALLOC=y
+ # CONFIG_SLAB_MERGE_DEFAULT is not set
+ CONFIG_SLAB_FREELIST_RANDOM=y
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 1902cfe4cc4f5..bc6cc97c08349 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -193,15 +193,24 @@ config ZBUD
+ 	  deterministic reclaim properties that make it preferable to a higher
+ 	  density approach when reclaim will be used.
+ 
+-config Z3FOLD
+-	tristate "3:1 compression allocator (z3fold)"
++config Z3FOLD_DEPRECATED
++	bool "3:1 compression allocator (z3fold) (DEPRECATED)"
+ 	depends on ZSWAP
+ 	help
++	  Deprecated and scheduled for removal in a few cycles. If you have
++	  a good reason for using Z3FOLD rather than ZSMALLOC or ZBUD, please
++	  contact linux-mm@kvack.org and the zswap maintainers.
++
+ 	  A special purpose allocator for storing compressed pages.
+ 	  It is designed to store up to three compressed pages per physical
+ 	  page. It is a ZBUD derivative so the simplicity and determinism are
+ 	  still there.
+ 
++config Z3FOLD
++	tristate
++	default y
++	depends on Z3FOLD_DEPRECATED
++
+ config ZSMALLOC
+ 	tristate
+ 	prompt "N:1 compression allocator (zsmalloc)" if ZSWAP
+-- 
+2.43.0.275.g3460e3d667-goog
 
