@@ -1,57 +1,58 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF321A5A7
-	for <loongarch@lists.linux.dev>; Fri, 12 Jan 2024 23:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11319134C2
+	for <loongarch@lists.linux.dev>; Sat, 13 Jan 2024 00:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qxn7n2hX"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50e7f58c5fbso9467501e87.1
-        for <loongarch@lists.linux.dev>; Fri, 12 Jan 2024 15:37:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfkhNCg3"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7bf0f3bf331so71797339f.3
+        for <loongarch@lists.linux.dev>; Fri, 12 Jan 2024 16:38:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705102678; x=1705707478; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1705106322; x=1705711122; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D130Haic3fJ8XBJFw+SdYFyFWmLLHqb4ygQbVbZqeRI=;
-        b=qxn7n2hXbnU+d9z9ORv4YbzD72vJFQVwFqk2+TRs2R5cW0tcAz/JFt0zzf3kKyO14S
-         58UjeIp7ssISb1YhCbaSuEt62prW71qPSdw075nslwNWTI1jkAHasxBoNoBYdfFKP7Fj
-         A+gzB+Xb6Zx4ty/bn/XqZsEkiTdsqwA/PC1TEpNxvKVXogOzsIK3s5h0LEbOA59otZRS
-         O3WlCbWD8M5iaIgGLSJxCQ72sofJ17X8eyrLcpYhL01LboSRzdz9jHw1/7IZfgEUE3er
-         eKTWxhs+bbMnk2x3qMCcT2vOXz1ZsRnj4wnvgBLkJTGDTZU8KjnapER8fYLATdNnW/pc
-         j3yg==
+        bh=e8+5Wu3yFVyh8RZpVSuMO/tabpv/LOlHIY8VjuUoGF4=;
+        b=RfkhNCg3OIg1SGNnfbsgFdyXZVFgUz9RrO85tbpu6dNWlfU+0aH/hBJNtqzO+uuH2R
+         f+PO6swt39D+9B9Pfs6QbAg0O5dzjQY8B97OV9d/Hh/c4s+yG1p3hVQNb4nY6eY5UDVT
+         26D3cInK5IyVkkmO3OyB3dA+OOlr6qmX5qWgXLFLxkS36+5H6dG6UMOVBqbVM2JN7KYz
+         Yfa4NgL7c+hzgMWr6wXUhNjTD3D6SjJZTDEOVQqEdI4vm05nRvvmGUpLfmaScVphp4sE
+         jwQrO/65muxYyX5AeUSckzHycM7ExCYiuVlDA3ZfxQpQEw4UEhG8d7cWMYWvTgJCpqlP
+         zDJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705102678; x=1705707478;
+        d=1e100.net; s=20230601; t=1705106322; x=1705711122;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D130Haic3fJ8XBJFw+SdYFyFWmLLHqb4ygQbVbZqeRI=;
-        b=YvQSusCLZMfLxNhPr4skUFogb7b5Ryhthdf/bZh5nPzFZA0v7FNyKGPArpZuwmOmgC
-         Gc9/3dyw5vdhS7M8boTUlo45SRu4FIM1lJOQFiqxZoqRjg+FtVNZKlTmsvmhgSOEwdqO
-         5gQ33Vi+F7d5Er+3XrmgnkowkFvvbCspLOZ7eYdHtq5cVre5iGWVOqBY0a00hB2cVNv9
-         SgOfrXxYLNQ8+cNVM5p7/LJZZf/5iNSfn2LJg3OrBmykUsyEgRaVOXDMG47XNsHlUyM1
-         Lg14QZJka0/+LzAe5uvQYN+JBM+VWv8VgaMLXdex+xCjIp0P7Q04FlqTmcvCZ5B7IXNS
-         20jg==
-X-Gm-Message-State: AOJu0Yz+pgePPSNOA0UYqo1DZHdJQisJeAuxCTS8w5devqrZF/0/nSS7
-	oqrEjewcB4+P+754Zq5e/5aoGPdA4qgNx0krPrRAU61oVBNI
-X-Google-Smtp-Source: AGHT+IF9VftxTlnm9TW+u2N8M7OK49IFFcQO1e0lX02zmtEMviiex02lbBZwZzubrEoSy0Nk7DdRybqXFNy0lBuXPHY=
-X-Received: by 2002:a19:e054:0:b0:50e:bb4d:e502 with SMTP id
- g20-20020a19e054000000b0050ebb4de502mr969238lfj.122.1705102677596; Fri, 12
- Jan 2024 15:37:57 -0800 (PST)
+        bh=e8+5Wu3yFVyh8RZpVSuMO/tabpv/LOlHIY8VjuUoGF4=;
+        b=aD7rT1gjQqXGEcLYTKNi+g1j9XApNcBmCgiRlbW9cxraz29Fc1ZxjqO0OaSZJhj7LG
+         yDRwUU2FoI3CY1nfrMV7DBBFjkisSBuFlnsC48E0E0VwhQCvahcJg2BeCmxnHG8nXP4F
+         E7vUZ5pV5qhXzfg4hvySawE3LDwfrnOBUwnfXO294p/0RHD1xKqEhD+e4dSgY2tfINcI
+         RLRONPa2DxNj0l6k2qY/scZJO7p9IayO+BYg87NLButbzhLYwTh7Vpxbm7fdXej4s9sc
+         hy6ShONmVwMMCO8KCUMXMjH5xSKlIkQIvYygZ0xb8iSJWoxRxw5VnKr4J6kfbctNR6b6
+         DBoQ==
+X-Gm-Message-State: AOJu0YxEZXTmvikBWQITepJUrWdg8ZIFIEsyc4EoCU2NASpcLXbCStUH
+	ogZTSFtB/Zh4WthJFbcWnTxBjN+EiBxvKckfEjM=
+X-Google-Smtp-Source: AGHT+IGPLvyZ3kdlus0znWz/e0967hWAWD55LSsq42/n5tdRk22r3nVsQZbJiOxY4+nTTgUC6BDEaomdDCNfHWM/QSc=
+X-Received: by 2002:a5e:8c05:0:b0:7bf:31bc:66b2 with SMTP id
+ n5-20020a5e8c05000000b007bf31bc66b2mr87040ioj.6.1705106321993; Fri, 12 Jan
+ 2024 16:38:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240112193103.3798287-1-yosryahmed@google.com> <CAKEwX=PXfZssERxeMS3FpMP7H0psMzC72C2ga3fqr_Qh88M75A@mail.gmail.com>
-In-Reply-To: <CAKEwX=PXfZssERxeMS3FpMP7H0psMzC72C2ga3fqr_Qh88M75A@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Fri, 12 Jan 2024 15:37:18 -0800
-Message-ID: <CAJD7tkYqKve5V4eJjbZE8kPZ=-5DU1Xh6jym8OfE1twQz-vbUA@mail.gmail.com>
+References: <20240112193103.3798287-1-yosryahmed@google.com>
+ <CAKEwX=PXfZssERxeMS3FpMP7H0psMzC72C2ga3fqr_Qh88M75A@mail.gmail.com> <CAJD7tkYqKve5V4eJjbZE8kPZ=-5DU1Xh6jym8OfE1twQz-vbUA@mail.gmail.com>
+In-Reply-To: <CAJD7tkYqKve5V4eJjbZE8kPZ=-5DU1Xh6jym8OfE1twQz-vbUA@mail.gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Fri, 12 Jan 2024 16:38:30 -0800
+Message-ID: <CAKEwX=P21VvVyfmAADzXe0=Mqz3Htyx9nQuiivLchcDZRumh6Q@mail.gmail.com>
 Subject: Re: [RFC PATCH] mm: z3fold: rename CONFIG_Z3FOLD to CONFIG_Z3FOLD_DEPRECATED
-To: Nhat Pham <nphamcs@gmail.com>
+To: Yosry Ahmed <yosryahmed@google.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Vitaly Wool <vitaly.wool@konsulko.com>, 
 	Miaohe Lin <linmiaohe@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, 
 	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
@@ -63,29 +64,36 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Vitaly Wool <vitaly.wool@konsulko
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 12, 2024 at 11:42=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wrot=
-e:
+On Fri, Jan 12, 2024 at 3:37=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com>=
+ wrote:
 >
-> On Fri, Jan 12, 2024 at 11:31=E2=80=AFAM Yosry Ahmed <yosryahmed@google.c=
-om> wrote:
+> On Fri, Jan 12, 2024 at 11:42=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wr=
+ote:
 > >
-> > The z3fold compressed pages allocator is not widely used, most users us=
-e
-> > zsmalloc. The only disadvantage of zsmalloc in comparison is the
-> > dependency on MMU, and zbud is a more common option for !MMU as it was
-> > the default zswap allocator for a long time.
+> > On Fri, Jan 12, 2024 at 11:31=E2=80=AFAM Yosry Ahmed <yosryahmed@google=
+.com> wrote:
+> > >
+> > > The z3fold compressed pages allocator is not widely used, most users =
+use
+> > > zsmalloc. The only disadvantage of zsmalloc in comparison is the
+> > > dependency on MMU, and zbud is a more common option for !MMU as it wa=
+s
+> > > the default zswap allocator for a long time.
+> >
+> > Johannes and I were chatting about this the other day. We might be
+> > able to disable certain zsmalloc behavior in the case of !MMU, making
+> > it available there too. Once that's happened, we can outright remove
+> > z3fold and zbud, and have one allocator to rule them all? :)
 >
-> Johannes and I were chatting about this the other day. We might be
-> able to disable certain zsmalloc behavior in the case of !MMU, making
-> it available there too. Once that's happened, we can outright remove
-> z3fold and zbud, and have one allocator to rule them all? :)
+> (Adding Sergey and Minchan for visibility)
+>
+> I didn't want to bring up the zsmalloc MMU dependency in this thread
+> to reduce noise, but that's also what I had in mind. Sergey and I were
+> also chatting about this the other day :)
+>
+> I thought deprecating z3fold is the low hanging fruit. Then, once we
+> can sort out the MMU dependency in zsmalloc, we can go after zbud as
+> well.
 
-(Adding Sergey and Minchan for visibility)
-
-I didn't want to bring up the zsmalloc MMU dependency in this thread
-to reduce noise, but that's also what I had in mind. Sergey and I were
-also chatting about this the other day :)
-
-I thought deprecating z3fold is the low hanging fruit. Then, once we
-can sort out the MMU dependency in zsmalloc, we can go after zbud as
-well.
+Makes sense to me. Should we do the same thing to zbud? We probably
+have even less of a case for it, no?
