@@ -1,102 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC87C1841
-	for <loongarch@lists.linux.dev>; Mon, 15 Jan 2024 03:23:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38AC2BAFD
+	for <loongarch@lists.linux.dev>; Mon, 15 Jan 2024 10:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwzluulG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67783C433C7
-	for <loongarch@lists.linux.dev>; Mon, 15 Jan 2024 03:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705289032;
-	bh=zVQ4Atjg+ZZXRw35BNYzt6eRLBSNn7IT89ZOhNOYHh0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UwzluulGpswDZu/e/NAeK7k8IsGLqOyBFpxkP29pXfVmi3Gvn569ub7FRhMyIkvR5
-	 OSVn7a5b374DCez11xZDXpO1LP8TYoHr6lD++TEr+mff353sDc7PDMNeQQDJc290QM
-	 entoRdaDOiiXRFcvNtqIiUnTV+YWgbtgOn37a6EsumFPNbHt9iuwm+6R2LZ1uBQ2hi
-	 6REjtiyVNU9O3sLbDmEqpOWpb1NV0KoMD9zd6uRGInRnxkkTHZrscQUtNMpbUCmp+8
-	 yhr++pD2YQjWMheSxxlYWcGvCyzJeXYCvO3n9JQgQqMr3h6YKWbZdmf/pbgAbivxqz
-	 EscAFqJ2iF1eQ==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a2c179aa5c4so475130766b.0
-        for <loongarch@lists.linux.dev>; Sun, 14 Jan 2024 19:23:52 -0800 (PST)
-X-Gm-Message-State: AOJu0YxQN81Fera5ngFLHdes/7CnQqI9TtEI0J4FLqKA+RwYIc1Tw9Zk
-	JaJ4nkI1pFyBckKjhR9skTmapWyYpU6D8xf2SyA=
-X-Google-Smtp-Source: AGHT+IGBw5yLuMBlpzqrb4QV0zgXvIN5QCGmmQPXNht56SQVwgPF/JD5WcbK+/kmXco6k37C8XFr71yW2zOsF3NW6bg=
-X-Received: by 2002:a17:907:9515:b0:a28:88d6:5d9c with SMTP id
- ew21-20020a170907951500b00a2888d65d9cmr2067170ejc.131.1705289030867; Sun, 14
- Jan 2024 19:23:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Sz3CtW8T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=BZWJhywUMRRIXvtL5doMOpnSiLPQBWG9w9WPF2MUO4c=; b=Sz3CtW8TvMYVj95XL1EZCET2A+
+	QamuonxIFNT3zYkRLRtfqxw7SE6Ou+c1sDlHOm3gafCTRQqOLJZCqlQDm5FD6J4qrogV6aC9NBqKU
+	UvioOgQ7gVTi/liinVC4kVe/e4buW1OQKg1r4GMXP3iDla1Qt5/Ci+N1I7TqyALOM7ZH/njEyXM+O
+	kqJMAfgr9yHj6be0TqV5AqRnblBaGfn2ZJHMunrt6qJ0b7/ZJ87rjdKUjRsvXgIYphw4O44+TlX5o
+	PSgdX1SN3rxuaPmO/lCvJycV2gVlF4hse5S9MWc2dj0rsOcECr0O+epZD/m8Mped50SRNjDOgOXs2
+	5FXDnxHg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39864)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rPKUr-0002Ja-0t;
+	Mon, 15 Jan 2024 10:47:13 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rPKUm-0002tU-5o; Mon, 15 Jan 2024 10:47:08 +0000
+Date: Mon, 15 Jan 2024 10:47:08 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
+	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
+	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com,
+	James Morse <james.morse@arm.com>
+Subject: Re: [PATCH RFC v3 02/21] ACPI: processor: Add support for processors
+ described as container packages
+Message-ID: <ZaUNLMvIYChv6qai@shell.armlinux.org.uk>
+References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
+ <E1rDOfx-00Dvje-MS@rmk-PC.armlinux.org.uk>
+ <CAJZ5v0iB0bS6nmjQ++pV1zp5YSGuigbffK5VD3wsX+8bY9MA5w@mail.gmail.com>
+ <20240111175908.00002f46@Huawei.com>
+ <ZaA3l4yjgCXxSiVg@shell.armlinux.org.uk>
+ <20240112092520.00001278@Huawei.com>
+ <CAJZ5v0g2CFPrSfNzHKBz_Spwt304QEQtR6w57VR11i5APPrD8Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240108032117.215171-1-wangrui@loongson.cn> <ZZ2fn0scbDKBXWe5@boqun-archlinux>
- <CAHirt9iox8FGV2wrMyxwFRjab2avfOcyLKvBc9K=AqiHxqHXKg@mail.gmail.com>
- <ZZ38XMQw18mw2sTA@Boquns-Mac-mini.home> <CAHirt9jQSVvBF=1wc=sT9FxngeSP30P4FDpu8m0JH_0fOPSO-w@mail.gmail.com>
- <CANiq72=X3cggAn0HLMi7jVFAfypBhog=ZkPB57yfaX4ZUzT-HA@mail.gmail.com>
- <CAHirt9hdtGSsEofxDb0FCtcFeAw9n9LKJALz23Qdqh4n2=Ua5A@mail.gmail.com> <CANiq72n7K8LcKrs+beF2sbt1XLdr4zEhEw4xcy3yh4wgTrvYeg@mail.gmail.com>
-In-Reply-To: <CANiq72n7K8LcKrs+beF2sbt1XLdr4zEhEw4xcy3yh4wgTrvYeg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 15 Jan 2024 11:23:41 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H72Hbfy7n6+AFSFFOzizo0GtpzA074sgo48-W-Dt0VR+w@mail.gmail.com>
-Message-ID: <CAAhV-H72Hbfy7n6+AFSFFOzizo0GtpzA074sgo48-W-Dt0VR+w@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: WANG Rui <wangrui@loongson.cn>, Boqun Feng <boqun.feng@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0g2CFPrSfNzHKBz_Spwt304QEQtR6w57VR11i5APPrD8Q@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi, Miguel,
+On Fri, Jan 12, 2024 at 04:01:40PM +0100, Rafael J. Wysocki wrote:
+> In any case, it is always better to work on top of the current
+> mainline code IMO.
 
-On Sun, Jan 14, 2024 at 11:44=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Thu, Jan 11, 2024 at 4:16=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wr=
-ote:
-> >
-> > 6.8
->
-> Thanks, that is quite expedited...
->
-> Please `rustfmt` the code to avoid failing the `rustfmtcheck` target.
-> I see you already created the 6.8 tag but I have not seen it in
-> linux-next yet and you did not send the PR, so it would be ideal if
-> you could fix this before it goes to Linus.
->
-> diff --git a/scripts/generate_rust_target.rs b/scripts/generate_rust_targ=
-et.rs
-> index 3edda6a10..0da52b548 100644
-> --- a/scripts/generate_rust_target.rs
-> +++ b/scripts/generate_rust_target.rs
-> @@ -163,10 +163,7 @@ fn main() {
->          ts.push("target-pointer-width", "64");
->      } else if cfg.has("LOONGARCH") {
->          ts.push("arch", "loongarch64");
-> -        ts.push(
-> -            "data-layout",
-> -            "e-m:e-p:64:64-i64:64-i128:128-n64-S128",
-> -        );
-> +        ts.push("data-layout", "e-m:e-p:64:64-i64:64-i128:128-n64-S128")=
-;
->          ts.push("features", "-f,-d");
->          ts.push("llvm-target", "loongarch64-linux-gnusf");
->          ts.push("llvm-abiname", "lp64s");
->
-> Thanks!
-Thank you for your suggestion, but since this will be replaced by the
-built-in target soon, and I don't want to change the tag to make Linus
-unhappy. Let's leave it as is.
+That's fine if one is starting to do some work now, but that is not the
+case with this. The first posting was almost a year ago:
 
-Huacai
+	https://lwn.net/Articles/922127/
 
->
-> Cheers,
-> Miguel
+which likely means that it's been around for at 18 months or more, and
+we can also see that this patch was in that original patch set. What
+the history of this patch is before the first posting... only James
+would be able to answer that and I feel that we're highly unlikely to
+get any kind of response.
+
+Anyway, consider this patch dropped from the series.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
