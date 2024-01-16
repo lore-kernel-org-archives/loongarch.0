@@ -1,30 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8527612B7B
-	for <loongarch@lists.linux.dev>; Tue, 16 Jan 2024 09:31:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3831BF2B
+	for <loongarch@lists.linux.dev>; Tue, 16 Jan 2024 15:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unN+9lmG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FD9CC43394
-	for <loongarch@lists.linux.dev>; Tue, 16 Jan 2024 09:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705397510;
-	bh=VLP6UgFM96N7y+o2qdkKbSUFQq0ljlGSoU8LbFEeobY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=unN+9lmG5I30QesWUCKaoL5o3AgVB4FIkuK8XMYneyhX0DMYpe83oEel57kmTBsEa
-	 xK3QGZ4w1ZK/GnZK11fDsFiYZH06ibO4QbvbYzZxKAqoS6g0oO92nYHITmghW4335n
-	 fy5/TRlxNh3MEUCYwzPngBRjMZYAr11P1qaj978i7W2tlO/wYL3tJtRAzXiuD07P1V
-	 +SIYOWetQHxWKthhhmy9O18POg2x8PhrmYJ0H9KaOkoorK4ftAXUty3uVWhJjVCkUq
-	 jTywdSrT+YH0Xy11sL0DE2m5B++HHf/HOGIgNj4NT+BE4IAN/+0jAKCJK9axnT6vo5
-	 xsbSgdKQY8x8w==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5592d72ede0so2226223a12.3
-        for <loongarch@lists.linux.dev>; Tue, 16 Jan 2024 01:31:49 -0800 (PST)
-X-Gm-Message-State: AOJu0YwzSzawxbqvv689qBqf7KTp5JdwS4pRnEslt0r+l/BKxPHdo+gr
-	rc/3p4BPtZg02HJcoDDqS6RcVqQX2i957uzAhWY=
-X-Google-Smtp-Source: AGHT+IGCUpSuIQgXHJTAuQmb/QACibD64SWuIXhc3fCqJpxMZRy6D1FcLP/Vc55ljvPLouJWBYUz2y+IU1A8msEcz6I=
-X-Received: by 2002:a17:907:d38a:b0:a2c:b31f:f076 with SMTP id
- vh10-20020a170907d38a00b00a2cb31ff076mr4347078ejc.124.1705397508471; Tue, 16
- Jan 2024 01:31:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkRyLOdb"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5f2d4aaa2fdso100548667b3.1
+        for <loongarch@lists.linux.dev>; Tue, 16 Jan 2024 07:16:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705418166; x=1706022966; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DSN/1a15f7oyeGM9Lrw3hF9g8ErJxL7cfBh+TgaPZGs=;
+        b=HkRyLOdbL+/580Yo1d89FaIWgFavpzVRDuF+4FL2Pq4VekQhdEc3C9NJbFFCyZMQhZ
+         hlJaOs7E5GvlrJ5mIC0u/0kLqliyvGtR9RQSftj7EZj+3rEaaMQQTuyrg/5HirPfvDZg
+         LGF99Q8yhL46t9idRFZhQj+FVcF2oTX69zEdBnLQK3Hmg9Xk/lQPAq+u0dvY3fTDNB7Q
+         gM2CF/xeE/p7WoALncDcKDlMxtWQvuRWAdubmf+4V1zjrnsRz8fADDOD9PRol2jTg0mC
+         Yo1Xr3H2nCNyvdzLYgl8H92fRDdJfwF69CEG31ezEgngZLstCi1wIRSDXq/kTkB+rcNq
+         EnWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705418166; x=1706022966;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DSN/1a15f7oyeGM9Lrw3hF9g8ErJxL7cfBh+TgaPZGs=;
+        b=MBuY3J9lAWBiQQvuxCmzEgn5uKr7nVJOpVvYP55oN7r+wec+lbQiutSVazYz3lRW6K
+         u70LGeDLqIZEmyRGdcWYTxen+PtWyDSPT2g735YC1zWpFCu1aatfxJga2FsXQn0ZKccH
+         giHJZjmkaj6xWXuFbh/CUPJbLXyAJkaYnJ6jbm8GquDMKd5vzWszdBaBYvFBOakgianq
+         334YwMfie82+Mk1jbirCktS1tUeN4moGoFyvA39gAPBQRz+qN4uUEtj3u+f9y+FQ65VU
+         ikBlhYIQ+RdC4C7wkOKn/nBv46+5DVqxyxF/QKU2tYgyRfEH0audVH2u8iwCQbDzKwey
+         Bw4A==
+X-Gm-Message-State: AOJu0YxL2DC8UIQLEbSA1dpi70Fou7Ux1C1/3auHI/8N2TKipQZ9XL8Z
+	0SJ3CxHNPFjEu3VqLqwDhyOnZLxqnX/X0N/jdhs=
+X-Google-Smtp-Source: AGHT+IGe9k13knvJv7mVIsQ9hgvppAFWfLivsE0iE7Akp5hdY4KqCSIXZVDX/dYBWRUzIqzqlKYkQegSb/NhYu+r1uQ=
+X-Received: by 2002:a81:830c:0:b0:5ff:5beb:d570 with SMTP id
+ t12-20020a81830c000000b005ff5bebd570mr486554ywf.43.1705418165912; Tue, 16 Jan
+ 2024 07:16:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,14 +51,14 @@ References: <20240108032117.215171-1-wangrui@loongson.cn> <ZZ2fn0scbDKBXWe5@boqu
  <CANiq72=X3cggAn0HLMi7jVFAfypBhog=ZkPB57yfaX4ZUzT-HA@mail.gmail.com>
  <CAHirt9hdtGSsEofxDb0FCtcFeAw9n9LKJALz23Qdqh4n2=Ua5A@mail.gmail.com>
  <CANiq72n7K8LcKrs+beF2sbt1XLdr4zEhEw4xcy3yh4wgTrvYeg@mail.gmail.com>
- <CAAhV-H72Hbfy7n6+AFSFFOzizo0GtpzA074sgo48-W-Dt0VR+w@mail.gmail.com> <CANiq72mEPnB7yEZvtUXAM5w0GgYmzdrM9OhioLGb_LzbAJKNOA@mail.gmail.com>
-In-Reply-To: <CANiq72mEPnB7yEZvtUXAM5w0GgYmzdrM9OhioLGb_LzbAJKNOA@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 16 Jan 2024 17:31:36 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6BFkgN-KzEexXk9zdnOGNCdBesCEEaczEvEp8x2K2YHw@mail.gmail.com>
-Message-ID: <CAAhV-H6BFkgN-KzEexXk9zdnOGNCdBesCEEaczEvEp8x2K2YHw@mail.gmail.com>
+ <CAAhV-H72Hbfy7n6+AFSFFOzizo0GtpzA074sgo48-W-Dt0VR+w@mail.gmail.com>
+ <CANiq72mEPnB7yEZvtUXAM5w0GgYmzdrM9OhioLGb_LzbAJKNOA@mail.gmail.com> <CAAhV-H6BFkgN-KzEexXk9zdnOGNCdBesCEEaczEvEp8x2K2YHw@mail.gmail.com>
+In-Reply-To: <CAAhV-H6BFkgN-KzEexXk9zdnOGNCdBesCEEaczEvEp8x2K2YHw@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 16 Jan 2024 16:15:54 +0100
+Message-ID: <CANiq72nv3Uw8GLNqbdGBC3b+viF+o8BeppS9KWhpzBFvjqZLUg@mail.gmail.com>
 Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Rui <wangrui@loongson.cn>, Boqun Feng <boqun.feng@gmail.com>, 
 	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Wedson Almeida Filho <wedsonaf@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Gary Guo <gary@garyguo.net>, 
@@ -56,39 +70,27 @@ Cc: WANG Rui <wangrui@loongson.cn>, Boqun Feng <boqun.feng@gmail.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Miguel,
-
-On Tue, Jan 16, 2024 at 12:08=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On Tue, Jan 16, 2024 at 10:31=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org=
+> wrote:
 >
-> On Mon, Jan 15, 2024 at 4:23=E2=80=AFAM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> >
-> > Thank you for your suggestion, but since this will be replaced by the
-> > built-in target soon, and I don't want to change the tag to make Linus
-> > unhappy. Let's leave it as is.
+> OK, since Linus said the merge window is paused now, I rebase and
+> retag my tree and the Rust commit is like this, I think this is
+> perfect now?
 >
-> The issue is not a big deal and I appreciate that you made the effort
-> to enable Rust for your architecture. However, please note that we do
-> our best to maintain a clean formatting state for Rust code (i.e.
-> `rustfmt` should be run) and that people may see this in tests/CIs
-> that use the Make target.
->
-> I don't think Linus would mind too much, and you could point him to
-> this email if you want (or you could put the fix on top); but if you
-> really want to keep the tag as-is, then we should consider it as a fix
-> for this cycle, i.e. we should not wait for e.g. the next cycle for
-> the built-in target. Could you please send it through your tree as
-> soon as possible?
-OK, since Linus said the merge window is paused now, I rebase and
-retag my tree and the Rust commit is like this, I think this is
-perfect now?
+> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
+.git/commit/?h=3Dloongarch-next&id=3D706f9e1ab7c7a58d80ef2c87d8720131253a22=
+56
 
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
-it/commit/?h=3Dloongarch-next&id=3D706f9e1ab7c7a58d80ef2c87d8720131253a2256
+Thanks a lot! That works, yeah.
 
-Huacai
+I also took the chance to build LLVM and QEMU and I tested the tag --
+it seems to work: I see the samples (built-in) printing in the kernel
+log :)
 
->
-> Cheers,
-> Miguel
+So in case you end up rebasing for another reason and want to add it,
+even if it is a simple check I did:
+
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
+
+Cheers,
+Miguel
