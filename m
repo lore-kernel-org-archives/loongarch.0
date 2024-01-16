@@ -1,96 +1,66 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3831BF2B
-	for <loongarch@lists.linux.dev>; Tue, 16 Jan 2024 15:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B7A1C2B2
+	for <loongarch@lists.linux.dev>; Tue, 16 Jan 2024 15:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkRyLOdb"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5f2d4aaa2fdso100548667b3.1
-        for <loongarch@lists.linux.dev>; Tue, 16 Jan 2024 07:16:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705418166; x=1706022966; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DSN/1a15f7oyeGM9Lrw3hF9g8ErJxL7cfBh+TgaPZGs=;
-        b=HkRyLOdbL+/580Yo1d89FaIWgFavpzVRDuF+4FL2Pq4VekQhdEc3C9NJbFFCyZMQhZ
-         hlJaOs7E5GvlrJ5mIC0u/0kLqliyvGtR9RQSftj7EZj+3rEaaMQQTuyrg/5HirPfvDZg
-         LGF99Q8yhL46t9idRFZhQj+FVcF2oTX69zEdBnLQK3Hmg9Xk/lQPAq+u0dvY3fTDNB7Q
-         gM2CF/xeE/p7WoALncDcKDlMxtWQvuRWAdubmf+4V1zjrnsRz8fADDOD9PRol2jTg0mC
-         Yo1Xr3H2nCNyvdzLYgl8H92fRDdJfwF69CEG31ezEgngZLstCi1wIRSDXq/kTkB+rcNq
-         EnWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705418166; x=1706022966;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DSN/1a15f7oyeGM9Lrw3hF9g8ErJxL7cfBh+TgaPZGs=;
-        b=MBuY3J9lAWBiQQvuxCmzEgn5uKr7nVJOpVvYP55oN7r+wec+lbQiutSVazYz3lRW6K
-         u70LGeDLqIZEmyRGdcWYTxen+PtWyDSPT2g735YC1zWpFCu1aatfxJga2FsXQn0ZKccH
-         giHJZjmkaj6xWXuFbh/CUPJbLXyAJkaYnJ6jbm8GquDMKd5vzWszdBaBYvFBOakgianq
-         334YwMfie82+Mk1jbirCktS1tUeN4moGoFyvA39gAPBQRz+qN4uUEtj3u+f9y+FQ65VU
-         ikBlhYIQ+RdC4C7wkOKn/nBv46+5DVqxyxF/QKU2tYgyRfEH0audVH2u8iwCQbDzKwey
-         Bw4A==
-X-Gm-Message-State: AOJu0YxL2DC8UIQLEbSA1dpi70Fou7Ux1C1/3auHI/8N2TKipQZ9XL8Z
-	0SJ3CxHNPFjEu3VqLqwDhyOnZLxqnX/X0N/jdhs=
-X-Google-Smtp-Source: AGHT+IGe9k13knvJv7mVIsQ9hgvppAFWfLivsE0iE7Akp5hdY4KqCSIXZVDX/dYBWRUzIqzqlKYkQegSb/NhYu+r1uQ=
-X-Received: by 2002:a81:830c:0:b0:5ff:5beb:d570 with SMTP id
- t12-20020a81830c000000b005ff5bebd570mr486554ywf.43.1705418165912; Tue, 16 Jan
- 2024 07:16:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o9Gjjz+T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WtuVntAUUaCAXXG4ld9RtlJPqwKTyVWfU729/RL/Hsw=; b=o9Gjjz+T5kDv5mjN1O1rCFpBHe
+	GjyMdKlmHDPVacqgG9J02XTK47cYYGykjg8ppuXuvAip5m4Oo2tZLsNq/ngiRennfsaO7LQKCRdfC
+	qWURBIOAj24mTBDP391o0WgYKYUTHzpdUcfKs3kbVaNIZ3LB13sVKEE6AuyhSZI1FfgYniot97q0q
+	JwU9NGmxE4jrQ9E6lIc+yc9ue+6pJmffS5jgVXYFfDhm3V3qQxg9AAxGjzIYXx53VVaa2MtDMXvR/
+	GH6yMxn9hYJ3LX3R0eVMBCTME4Qo8RVdm1YcrTt67RUCn8gs2XfbgYO2reqzRoAig72MObiBsStBH
+	VwK/lYgA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rPlWg-00CSYJ-1w;
+	Tue, 16 Jan 2024 15:38:54 +0000
+Date: Tue, 16 Jan 2024 07:38:54 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: Yosry Ahmed <yosryahmed@google.com>, Miaohe Lin <linmiaohe@huawei.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, linux-mm@kvack.org,
+	loongarch@lists.linux.dev, Johannes Weiner <hannes@cmpxchg.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Minchan Kim <minchan@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linuxppc-dev@lists.ozlabs.org, WANG Xuerui <kernel@xen0n.name>,
+	Vitaly Wool <vitaly.wool@konsulko.com>
+Subject: Re: [RFC PATCH] mm: z3fold: rename CONFIG_Z3FOLD to
+ CONFIG_Z3FOLD_DEPRECATED
+Message-ID: <ZaajDheNtqKkCoeD@infradead.org>
+References: <20240112193103.3798287-1-yosryahmed@google.com>
+ <CAKEwX=PXfZssERxeMS3FpMP7H0psMzC72C2ga3fqr_Qh88M75A@mail.gmail.com>
+ <CAJD7tkYqKve5V4eJjbZE8kPZ=-5DU1Xh6jym8OfE1twQz-vbUA@mail.gmail.com>
+ <CAKEwX=P21VvVyfmAADzXe0=Mqz3Htyx9nQuiivLchcDZRumh6Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240108032117.215171-1-wangrui@loongson.cn> <ZZ2fn0scbDKBXWe5@boqun-archlinux>
- <CAHirt9iox8FGV2wrMyxwFRjab2avfOcyLKvBc9K=AqiHxqHXKg@mail.gmail.com>
- <ZZ38XMQw18mw2sTA@Boquns-Mac-mini.home> <CAHirt9jQSVvBF=1wc=sT9FxngeSP30P4FDpu8m0JH_0fOPSO-w@mail.gmail.com>
- <CANiq72=X3cggAn0HLMi7jVFAfypBhog=ZkPB57yfaX4ZUzT-HA@mail.gmail.com>
- <CAHirt9hdtGSsEofxDb0FCtcFeAw9n9LKJALz23Qdqh4n2=Ua5A@mail.gmail.com>
- <CANiq72n7K8LcKrs+beF2sbt1XLdr4zEhEw4xcy3yh4wgTrvYeg@mail.gmail.com>
- <CAAhV-H72Hbfy7n6+AFSFFOzizo0GtpzA074sgo48-W-Dt0VR+w@mail.gmail.com>
- <CANiq72mEPnB7yEZvtUXAM5w0GgYmzdrM9OhioLGb_LzbAJKNOA@mail.gmail.com> <CAAhV-H6BFkgN-KzEexXk9zdnOGNCdBesCEEaczEvEp8x2K2YHw@mail.gmail.com>
-In-Reply-To: <CAAhV-H6BFkgN-KzEexXk9zdnOGNCdBesCEEaczEvEp8x2K2YHw@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 16 Jan 2024 16:15:54 +0100
-Message-ID: <CANiq72nv3Uw8GLNqbdGBC3b+viF+o8BeppS9KWhpzBFvjqZLUg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Rui <wangrui@loongson.cn>, Boqun Feng <boqun.feng@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKEwX=P21VvVyfmAADzXe0=Mqz3Htyx9nQuiivLchcDZRumh6Q@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jan 16, 2024 at 10:31=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
->
-> OK, since Linus said the merge window is paused now, I rebase and
-> retag my tree and the Rust commit is like this, I think this is
-> perfect now?
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
-.git/commit/?h=3Dloongarch-next&id=3D706f9e1ab7c7a58d80ef2c87d8720131253a22=
-56
+On Fri, Jan 12, 2024 at 04:38:30PM -0800, Nhat Pham wrote:
+> >
+> > I thought deprecating z3fold is the low hanging fruit. Then, once we
+> > can sort out the MMU dependency in zsmalloc, we can go after zbud as
+> > well.
+> 
+> Makes sense to me. Should we do the same thing to zbud? We probably
+> have even less of a case for it, no?
 
-Thanks a lot! That works, yeah.
-
-I also took the chance to build LLVM and QEMU and I tested the tag --
-it seems to work: I see the samples (built-in) printing in the kernel
-log :)
-
-So in case you end up rebasing for another reason and want to add it,
-even if it is a simple check I did:
-
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
-
-Cheers,
-Miguel
+Is there any user visible effect of switching the allocator?  If not it
+seems a bit pointless to deprecate them vs just removing them (or maybe
+making z3fold depend on !MMU for now).
