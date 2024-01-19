@@ -1,106 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9481D6119
-	for <loongarch@lists.linux.dev>; Wed, 17 Jan 2024 04:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DB91D690;
+	Fri, 19 Jan 2024 11:07:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705466082; cv=none; b=awhT6zenH4Ei49KaVHQIutjsqXQCLvRqNc3ZdU/OjBYvze+1+XT+31ZP3NcSKBsSBhElM4We761PlBhG9CM0lK+CEbuG/8I+C0hEAsWu1nOp9YdMPEkAfA0+bZhExLsF4e4iIxoPa6o05R4/+rPq+qboENARLT166VIQP7xGZT0=
+	t=1705662444; cv=none; b=OpC6NQdPQ79ClxzjN4Fy/nQWT6EYThleJ4acdTu5bM3hmvISAubgv365aX6F/m2NEWus6y9Qx8YNxhzksJpqPzpBRW03E62uHNT/tNYuQhd1L6ye7jjD9bJlBYhNWrUQFsToEYNuNtwWGDXmJgwYZcbriPI+ZhbBAiohBRUBfNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705466082; c=relaxed/simple;
-	bh=M0lHeEIbJSP8UEtQ7BzZHEeSSX3emAVPVhi6TmOdTmw=;
-	h=Received:DKIM-Signature:Received:X-Gm-Message-State:
-	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:X-Gmail-Original-Message-ID:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding; b=KEVm/co7CK6x/GXGhUtYcIiIgMEaVN4Py2N9pPZom0bJo17HD5o0Ag2kLw82fvEMTK48gTA6z+xh0y9lq/eOyYsYB5YzqqHHySPfbnqKfnv2ZDjjhX8Ad9WunL/I9PTxNkePZJMr0rS1gatRqysrdBU4pYEtHFs7tueqQOnxxZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXDf1qJb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXDf1qJb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1227BC433C7
-	for <loongarch@lists.linux.dev>; Wed, 17 Jan 2024 04:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705466082;
-	bh=M0lHeEIbJSP8UEtQ7BzZHEeSSX3emAVPVhi6TmOdTmw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CXDf1qJbqvdXoXU8dg7DU5ubXNQ7WNA9aX1ilbJscd7JrxbkXjjJ/HkYslSojP7d1
-	 SZty9DEOw32ezbbNxF1uFPxjBzR/Wk3CVNwrHoczaPtWfKBvj0P1kMS5myspvnTFjf
-	 WvtyjclcPMdCfaiHDMBhhyvKGwUYf6S1WjXYQvdTiC6XQASQ3KPr06lNk6qZdOYGYm
-	 qEQIjWXFHn9Ra+7yDAzNkgQYljtNGaH9N7vuTmBRwFS0aJtgKsazR6yryDu0/AUPlB
-	 7xL51I82l02yVMBLdlqOYJIFbcFTVuS10ISG39hTPjNxGTEJwtwma608nNzZ901cT2
-	 Z16Gv4+XL9t8g==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50ec948ad31so10564126e87.2
-        for <loongarch@lists.linux.dev>; Tue, 16 Jan 2024 20:34:41 -0800 (PST)
-X-Gm-Message-State: AOJu0YxedgZ9mEKYd6BBlTnY8eHpPGeL2Pt9gXqMVsi/G0+fEtgMng3w
-	OFzFuFo2GwUYMVZ8gc+yG2KpMabaJgL78sEQrIU=
-X-Google-Smtp-Source: AGHT+IFBqnMfUgM4CRX5wiiomwTy15C6kBIJjo72WKWNLc+dQEyC4hkYoiqfUivkJJafe+zfYxjuMnrYThXWHtq4MnY=
-X-Received: by 2002:a05:6512:3a86:b0:50e:7d6b:b5b2 with SMTP id
- q6-20020a0565123a8600b0050e7d6bb5b2mr4765644lfu.6.1705466080318; Tue, 16 Jan
- 2024 20:34:40 -0800 (PST)
+	s=arc-20240116; t=1705662444; c=relaxed/simple;
+	bh=QG7E3xZDv1be+XkDSOyaOlT8BoYaqVCBOneMyW01fZw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j68ye8g8w1bSYi9zObeLwc4/F2q5zCPcyuN8ovul5tX331dZwV764kit0bULKJLifuYqiM9CKtbyRaADJSJeApQ/9WIXfOcG6FiRw++UcQYdL/LKAXuC5/7oZRjjNEck2RZrcicxCNlMF+P3ur4kTsWYRinkwBXqTrTJ5xc/sWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373A6C433F1;
+	Fri, 19 Jan 2024 11:07:21 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.8
+Date: Fri, 19 Jan 2024 19:07:00 +0800
+Message-Id: <20240119110700.335741-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240108032117.215171-1-wangrui@loongson.cn> <ZZ2fn0scbDKBXWe5@boqun-archlinux>
- <CAHirt9iox8FGV2wrMyxwFRjab2avfOcyLKvBc9K=AqiHxqHXKg@mail.gmail.com>
- <ZZ38XMQw18mw2sTA@Boquns-Mac-mini.home> <CAHirt9jQSVvBF=1wc=sT9FxngeSP30P4FDpu8m0JH_0fOPSO-w@mail.gmail.com>
- <CANiq72=X3cggAn0HLMi7jVFAfypBhog=ZkPB57yfaX4ZUzT-HA@mail.gmail.com>
- <CAHirt9hdtGSsEofxDb0FCtcFeAw9n9LKJALz23Qdqh4n2=Ua5A@mail.gmail.com>
- <CANiq72n7K8LcKrs+beF2sbt1XLdr4zEhEw4xcy3yh4wgTrvYeg@mail.gmail.com>
- <CAAhV-H72Hbfy7n6+AFSFFOzizo0GtpzA074sgo48-W-Dt0VR+w@mail.gmail.com>
- <CANiq72mEPnB7yEZvtUXAM5w0GgYmzdrM9OhioLGb_LzbAJKNOA@mail.gmail.com>
- <CAAhV-H6BFkgN-KzEexXk9zdnOGNCdBesCEEaczEvEp8x2K2YHw@mail.gmail.com> <CANiq72nv3Uw8GLNqbdGBC3b+viF+o8BeppS9KWhpzBFvjqZLUg@mail.gmail.com>
-In-Reply-To: <CANiq72nv3Uw8GLNqbdGBC3b+viF+o8BeppS9KWhpzBFvjqZLUg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 17 Jan 2024 12:34:29 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4-dfBN3icg6kczRiZ67DOX66M-vXXCrz7Me0iunp8kRA@mail.gmail.com>
-Message-ID: <CAAhV-H4-dfBN3icg6kczRiZ67DOX66M-vXXCrz7Me0iunp8kRA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: WANG Rui <wangrui@loongson.cn>, Boqun Feng <boqun.feng@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Miguel,
+The following changes since commit 0dd3ee31125508cd67f7e7172247f05b7fd1753a:
 
-On Tue, Jan 16, 2024 at 11:16=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Tue, Jan 16, 2024 at 10:31=E2=80=AFAM Huacai Chen <chenhuacai@kernel.o=
-rg> wrote:
-> >
-> > OK, since Linus said the merge window is paused now, I rebase and
-> > retag my tree and the Rust commit is like this, I think this is
-> > perfect now?
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongs=
-on.git/commit/?h=3Dloongarch-next&id=3D706f9e1ab7c7a58d80ef2c87d8720131253a=
-2256
->
-> Thanks a lot! That works, yeah.
->
-> I also took the chance to build LLVM and QEMU and I tested the tag --
-> it seems to work: I see the samples (built-in) printing in the kernel
-> log :)
->
-> So in case you end up rebasing for another reason and want to add it,
-> even if it is a simple check I did:
->
-> Tested-by: Miguel Ojeda <ojeda@kernel.org>
-OK, if Xuerui updates this patch, then I will rebase again.
-https://lore.kernel.org/loongarch/CAAhV-H7KteJvRVpj3Hz-Ui9VnmijcJq5D1Tb-KJv=
-qTO_+jjp2Q@mail.gmail.com/T/#t
+  Linux 6.7 (2024-01-07 12:18:38 -0800)
 
-Huacai
+are available in the Git repository at:
 
->
-> Cheers,
-> Miguel
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.8
+
+for you to fetch changes up to 6e441fa3ac475be73c03c9a85bd305d66ea476a6:
+
+  MAINTAINERS: Add BPF JIT for LOONGARCH entry (2024-01-17 12:43:13 +0800)
+
+----------------------------------------------------------------
+LoongArch changes for v6.8
+
+1, Raise minimum clang version to 18.0.0;
+2, Enable initial Rust support for LoongArch;
+3, Add built-in dtb support for LoongArch;
+4, Use generic interface to support crashkernel=X,[high,low];
+5, Some bug fixes and other small changes;
+6, Update the default config file.
+
+----------------------------------------------------------------
+Binbin Zhou (9):
+      dt-bindings: loongarch: Add CPU bindings for LoongArch
+      dt-bindings: loongarch: Add Loongson SoC boards compatibles
+      dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check warning for reg-names
+      dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check warning for interrupt-names
+      LoongArch: Allow device trees be built into the kernel
+      LoongArch: dts: DeviceTree for Loongson-2K0500
+      LoongArch: dts: DeviceTree for Loongson-2K1000
+      LoongArch: dts: DeviceTree for Loongson-2K2000
+      LoongArch: Parsing CPU-related information from DTS
+
+Hengqi Chen (2):
+      LoongArch: BPF: Support 64-bit pointers to kfuncs
+      LoongArch: BPF: Prevent out-of-bounds memory access
+
+Huacai Chen (4):
+      LoongArch: Add a missing call to efi_esrt_init()
+      LoongArch: Change SHMLBA from SZ_64K to PAGE_SIZE
+      LoongArch: Let cores_io_master cover the largest NR_CPUS
+      LoongArch: Update Loongson-3 default config file
+
+Tiezhu Yang (2):
+      LoongArch: Fix definition of ftrace_regs_set_instruction_pointer()
+      MAINTAINERS: Add BPF JIT for LOONGARCH entry
+
+WANG Rui (2):
+      scripts/min-tool-version.sh: Raise minimum clang version to 18.0.0 for loongarch
+      LoongArch: Enable initial Rust support
+
+WANG Xuerui (1):
+      modpost: Ignore relaxation and alignment marker relocs on LoongArch
+
+Xi Ruoyao (1):
+      LoongArch: Fix and simplify fcsr initialization on execve()
+
+Youling Tang (1):
+      LoongArch: Use generic interface to support crashkernel=X,[high,low]
+
+ Documentation/admin-guide/kernel-parameters.txt    |  24 +-
+ .../interrupt-controller/loongson,liointc.yaml     |  18 +-
+ .../devicetree/bindings/loongarch/cpus.yaml        |  61 +++
+ .../devicetree/bindings/loongarch/loongson.yaml    |  34 ++
+ Documentation/rust/arch-support.rst                |  13 +-
+ MAINTAINERS                                        |   7 +
+ arch/loongarch/Kbuild                              |   1 +
+ arch/loongarch/Kconfig                             |  22 +
+ arch/loongarch/Makefile                            |   6 +-
+ arch/loongarch/boot/dts/Makefile                   |   5 +-
+ arch/loongarch/boot/dts/loongson-2k0500-ref.dts    |  88 ++++
+ arch/loongarch/boot/dts/loongson-2k0500.dtsi       | 266 +++++++++++
+ arch/loongarch/boot/dts/loongson-2k1000-ref.dts    | 183 ++++++++
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi       | 492 +++++++++++++++++++++
+ arch/loongarch/boot/dts/loongson-2k2000-ref.dts    |  72 +++
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi       | 300 +++++++++++++
+ arch/loongarch/configs/loongson3_defconfig         |  55 ++-
+ arch/loongarch/include/asm/bootinfo.h              |   6 +-
+ arch/loongarch/include/asm/crash_core.h            |  12 +
+ arch/loongarch/include/asm/elf.h                   |   5 -
+ arch/loongarch/include/asm/ftrace.h                |   2 +-
+ arch/loongarch/include/asm/shmparam.h              |  12 -
+ arch/loongarch/kernel/acpi.c                       |   2 +-
+ arch/loongarch/kernel/efi.c                        |   2 +
+ arch/loongarch/kernel/elf.c                        |   5 -
+ arch/loongarch/kernel/env.c                        |  34 +-
+ arch/loongarch/kernel/head.S                       |  10 +
+ arch/loongarch/kernel/process.c                    |   1 +
+ arch/loongarch/kernel/setup.c                      |  56 +--
+ arch/loongarch/kernel/smp.c                        |   5 +-
+ arch/loongarch/net/bpf_jit.c                       |  10 +-
+ scripts/generate_rust_target.rs                    |   7 +
+ scripts/min-tool-version.sh                        |   2 +
+ scripts/mod/modpost.c                              |  19 +-
+ 34 files changed, 1735 insertions(+), 102 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/loongarch/cpus.yaml
+ create mode 100644 Documentation/devicetree/bindings/loongarch/loongson.yaml
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0500.dtsi
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k1000.dtsi
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k2000-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k2000.dtsi
+ create mode 100644 arch/loongarch/include/asm/crash_core.h
+ delete mode 100644 arch/loongarch/include/asm/shmparam.h
