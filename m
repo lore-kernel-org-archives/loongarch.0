@@ -1,63 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A3957888;
-	Fri, 19 Jan 2024 22:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEBF642
+	for <loongarch@lists.linux.dev>; Sat, 20 Jan 2024 00:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705704611; cv=none; b=Yx3D94HcGqCgI9RkwBjUlIICpehuSfa8odb1R6ePI1bKdWTW+BRhlQSZ2BkRleCt7cQhZ0+kMzWm8QerpvfhUQHWk/VfhHDQhA+uFor0fo3TitXOJV7wegu1soaCYyYDtpYBdfhYRGdD7EYXqQWqTA5NAQmaF+NnDjef1X/i5yc=
+	t=1705711466; cv=none; b=jvndNvsTokdiD5ZSwnF1L/2k18ZZA8fpRdvA0IAwDCI2FCkW/RFVjetRb0XNqGfmjvIcQsP0zUXsTgwK4eniLmwQzZx2nqiXBb3FIoIPKo058sR4gNIV2M8LAO+68Y8M7Gzgd30pY5dD1b6lqUGEVRttTzgc9RkOjXHTXVg9Clk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705704611; c=relaxed/simple;
-	bh=9U6ungNWwzmVSFdxVrZ0DAY4ZU2skUCpAiaiBwTMOaA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=e/a9BPiSmCKzrGai1hfj8hEQr8BtHA+jC77ksdMWMMlaNWHfVs4z7/c3NLOQSa9tMiPqStyf2ZzXd+hYjfv6onQnI2gZKXBoDwQipFxxmohZXw+IzdlkfXxYSuXiEstVz9DasJjbOH5dqWn4CBKzkgJ1aeU1+m0AdZNHulwPzTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIqtugHR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705711466; c=relaxed/simple;
+	bh=mLAwfTqW3JqPYfITefySSYIm5jxOBfJIzaZejnA2Hek=;
+	h=Date:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MwE2bjbpX0h2gbBEhZM2SPpapFUWCI+cwcEp1TA/9Y+UPyjeFcDvKzJ8tsKB/KV8UNbR8NvroZDzpuDFENu1PIBgg2ohm9JGHJD1LLht+2NdkQvo/tSYmVdrCj4t3O9SIZuKxcJ+eL1ykuRMPW1iiO99Ya3EsT+C44GadpcQxxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=gd1zjiaQ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIqtugHR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DB3C0C43394;
-	Fri, 19 Jan 2024 22:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705704610;
-	bh=9U6ungNWwzmVSFdxVrZ0DAY4ZU2skUCpAiaiBwTMOaA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=FIqtugHRbLBbM+qKZAd+f/2YrjemlVs2f613eJBtXEhDV0Gp/15KS/IJi9nlJpiID
-	 sM3spS1H6TpDG72x3IN6OHI5k92EpW6MseTqaDmOsklit5iPfAuP2EdcWyJ4gXvSID
-	 pCrFT/nyTm3KoDIB1rEKYsJtMGRkbGjcxOPFz/4GtA1ihPErdm+2ffVPlsN7Ot5PpJ
-	 U4fF0CNYo/9b7ZIMIy+tSYdu6t42aKjBCJGjvs9fjolm//8wbJBpVQ1Q93SdIfn2TV
-	 jaDAqVZYee+6ZNFtdaQ4hMiHYI9EhbMN3g9dbYgwO1BE1vaDBqeQIoOjRDFITdl6WH
-	 BNglo7G0nDMfA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BFB44D8C97A;
-	Fri, 19 Jan 2024 22:50:10 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v6.8
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240119110700.335741-1-chenhuacai@loongson.cn>
-References: <20240119110700.335741-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20240119110700.335741-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.8
-X-PR-Tracked-Commit-Id: 6e441fa3ac475be73c03c9a85bd305d66ea476a6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 24fdd5189914b36102cb51626a890a2d84501993
-Message-Id: <170570461076.3214.11103143930063535274.pr-tracker-bot@kernel.org>
-Date: Fri, 19 Jan 2024 22:50:10 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gd1zjiaQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1705711456;
+	bh=5EXJu33TqPCGL2xgGmr1B8pslMsApecSKH/SB8e0KQk=;
+	h=Date:From:Cc:Subject:In-Reply-To:References:From;
+	b=gd1zjiaQujA9BHI56crV1tmzzoTM2Bw2H+aMihqyVyYmiaL5RclU6TVkXzNM/IphG
+	 2BBJMFqiPJvSPWhAhAqCxDTMmAk7CUQCWO2GKyPweGROkN3AIojHuYS+EcRvuGCyy6
+	 Q+gpG9twBAPkdJ1J/estXqii4zlgwaCrZRsAk/9WvA1lSUzdHoZ/DHzGiKi1DoxOuX
+	 SCE+6dq+qApJduNW8b66JPI3+tyRfJcjylsQcHlv1kGJ93hW1yblC0wVBq1IoFiXAd
+	 edw+zfl8DBesIaM3k/FF5WbDPK1MzzO8HFu/8TjQ3ECpGsDHKzsa9WabQvxkYsYfQG
+	 Gj+rC253P0adg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TGyRM1LtBz4wx8;
+	Sat, 20 Jan 2024 11:44:15 +1100 (AEDT)
+Date: Sat, 20 Jan 2024 11:44:12 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Randy Dunlap
+ <rdunlap@infradead.org>, Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao
+ <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] LoongArch: KVM: Fix build due to API changes
+Message-ID: <20240120114412.2208a8c1@canb.auug.org.au>
+In-Reply-To: <20231220144024.7d9fd46b@canb.auug.org.au>
+References: <20231115090735.2404866-1-chenhuacai@loongson.cn>
+	<15ba5868-42de-4563-9903-ccd0297e2075@infradead.org>
+	<20231220144024.7d9fd46b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/Uo2ujjpjD/I=Dix6LsNA.i+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-The pull request you sent on Fri, 19 Jan 2024 19:07:00 +0800:
+--Sig_/Uo2ujjpjD/I=Dix6LsNA.i+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.8
+Hi all,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/24fdd5189914b36102cb51626a890a2d84501993
+On Wed, 20 Dec 2023 14:40:24 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Fri, 15 Dec 2023 21:08:06 -0800 Randy Dunlap <rdunlap@infradead.org> w=
+rote:
+> >
+> > Someone please merge this patch... =20
+>=20
+> I have applied it to my merge of the kvm tree today and will keep
+> applying it until it is applied to the kvm tree ...
+>=20
+> It looks like this:
+>=20
+> From: Huacai Chen <chenhuacai@loongson.cn>
+> To: Paolo Bonzini <pbonzini@redhat.com>,
+> 	Huacai Chen <chenhuacai@kernel.org>,
+> 	Tianrui Zhao <zhaotianrui@loongson.cn>,
+> 	Bibo Mao <maobibo@loongson.cn>
+> Cc: kvm@vger.kernel.org,
+> 	loongarch@lists.linux.dev,
+> 	linux-kernel@vger.kernel.org,
+> 	Xuerui Wang <kernel@xen0n.name>,
+> 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+> 	Huacai Chen <chenhuacai@loongson.cn>
+> Subject: [PATCH] LoongArch: KVM: Fix build due to API changes
+> Date: Wed, 15 Nov 2023 17:07:35 +0800
+>=20
+> Commit 8569992d64b8f750e34b7858eac ("KVM: Use gfn instead of hva for
+> mmu_notifier_retry") replaces mmu_invalidate_retry_hva() usage with
+> mmu_invalidate_retry_gfn() for X86, LoongArch also need similar changes
+> to fix build.
+>=20
+> Fixes: 8569992d64b8 ("KVM: Use gfn instead of hva for mmu_notifier_retry")
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  arch/loongarch/kvm/mmu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index 80480df5f550..9463ebecd39b 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -627,7 +627,7 @@ static bool fault_supports_huge_mapping(struct kvm_me=
+mory_slot *memslot,
+>   *
+>   * There are several ways to safely use this helper:
+>   *
+> - * - Check mmu_invalidate_retry_hva() after grabbing the mapping level, =
+before
+> + * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level, =
+before
+>   *   consuming it.  In this case, mmu_lock doesn't need to be held durin=
+g the
+>   *   lookup, but it does need to be held while checking the MMU notifier.
+>   *
+> @@ -807,7 +807,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsign=
+ed long gpa, bool write)
+> =20
+>  	/* Check if an invalidation has taken place since we got pfn */
+>  	spin_lock(&kvm->mmu_lock);
+> -	if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
+> +	if (mmu_invalidate_retry_gfn(kvm, mmu_seq, gfn)) {
+>  		/*
+>  		 * This can happen when mappings are changed asynchronously, but
+>  		 * also synchronously if a COW is triggered by
+> --=20
+> 2.39.3
+>=20
+> Though my Signed-off-by is not necessary if it applied to the kvm tree.
 
-Thank you!
+OK, so it needed to be applied to the merge commit when the loongarch
+tree was merged by Linus, but appears to have been forgotten. :-(
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Uo2ujjpjD/I=Dix6LsNA.i+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWrF1wACgkQAVBC80lX
+0GznHwf+J9OteK9Y4TvrZARvcVljc/vhMzpH0IOshhkyHVBuTKd4HGZC+feioXt8
+wrw0wYaXqR6UvcOl0ZRbhpIHPjgM5nvDC/YKgmR7i7Mpf+ui7OZ3GtXiOl2VjKWN
+68beXUCalkCnl60EhVVYDHhQhzPn4nCOcfcV7iNAcUcahDHwliglktfsQHL2nB1/
+iCoxmeHjplk/LoeFpe4Vrez+bRfoPxp/xvVaWy5TbtvUpkKb90XuLxnpRyA9CkTt
+0p4BZpGbEaqMh8KLyqu9r4vLfN8pQqrQeTXbpM2Kyz5dSZfQ9hVwvWdcHU3So1lr
+QCKupRyJOOwEpP7m3icFsf7qJz9Kqg==
+=Aan9
+-----END PGP SIGNATURE-----
+
+--Sig_/Uo2ujjpjD/I=Dix6LsNA.i+--
