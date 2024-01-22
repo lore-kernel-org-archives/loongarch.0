@@ -1,181 +1,138 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC0739AC5
-	for <loongarch@lists.linux.dev>; Mon, 22 Jan 2024 09:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A7E03A1B0;
+	Mon, 22 Jan 2024 10:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705915065; cv=none; b=MmJZoyrM0GYtJGktq+NYYeE4NJITkMO4TIesj1mo5g9NEr2YcQvjEZEcF3rIwJCUo7Qf5zEla1mXP3nXTs8pkVqRUY+GikIEZLzebUWW3GJCP1ZS2DlG0EFnhYyAvvbQ2BILvLzsaC00weV7IXjh/PRR0k2+gGb2gu/CKvZ7pPI=
+	t=1705917798; cv=none; b=h0G+YAekCktahoI34pL+klOHtddv7yDzWaz4s9eTTAqmC21TmpPXJwtqS814whfLFN8cRSOoOQR7qlfvdHXFWkoRsuK3qTSv9ANh46IrTrTtqqLm1KM09Mg+nKlOpHecboj3E3kEnlZbJAEIKKHRXjsXaoVY9BAWE3c9WTXwF3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705915065; c=relaxed/simple;
-	bh=GknMIjNfk3Q+3O5vnCYZusLGMvB08sdNWHOHlOIKyJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C0E1tpIRbcUzPT0OxXmep+C4DUu8wCb0jgWy+49OXLZDqOfHINy4W6a0IxYLyVYirc4yq9aQRzACtu2aZxs+Dxk+JYK1OrmM/JkaSX1l9dzkIVUaOeOMiQQ5/scAAiaf71Zghuam7x7KJIiBaSVU+oRMyI1uTNh6HEh4DMoAqn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=mTGoW4ui; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="mTGoW4ui"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5ffb07bed9bso7201887b3.0
-        for <loongarch@lists.linux.dev>; Mon, 22 Jan 2024 01:17:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1705915063; x=1706519863; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BroRkqnuO0Oy9O6+ZA0zuSl/25g6dyXPAFX1tfI4BB4=;
-        b=mTGoW4uiV8WzUiOs+GyQsE7Xxu9/sBTOHJ38NfP/LDmxcNtcffw81P6/w3NXZLGjdb
-         E+WZzPHPFbmYQzJEm1C0vFJ5Vcsfcv2H7LYhDvymfnL6tKwVUuZE68RL3sO6VZ2upAtv
-         gUE/LUaGfgyGfxoanSxp/kOrTPOnR25YW9n5TGs4DFlkGpDX+Zgf5D32Pkp0Qtzb0Apw
-         ReB9sk/dRjDuuVEGVhc/66tBuM5cZbsKD7EucYnwfN/Y6Q7kgWxMxnJEpDxCQBXuWWr6
-         dFk1xBzLZmkyoJ2IVsydLmnDdeqeeTo4yCWfLuMOl/AC6G22bsaIDCmYYt6eyE6OsLpk
-         0DPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705915063; x=1706519863;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BroRkqnuO0Oy9O6+ZA0zuSl/25g6dyXPAFX1tfI4BB4=;
-        b=M9OTjfwi/7l0oON8R/XgViVT3IyMbOiIrMQvzSPkxweanb+XZELTEDDZA23lGCkUC5
-         XkeL4OuQ+PT2E4Da1f2kzdKYpQO9/HWixEd3j4wZ/1PBix6iHRFjC51CZ0cddsTjOuu/
-         T2szLzt/F/ErIPCi34nTsetQf11u7GhoVBkSelsB7baQStyPnJctyG1HwFLpC5+IYMUu
-         rz+Owp1hyh41vdpwPpIwKSNHDGMludb6a1ctki7Sp+S+LIOlHhUTYiw3AkGTJEFmCpj2
-         +8O7PrzYge5JaZFjy6nItyLhY89iy8WsN1+DROBiv1fzslEf9hKWPBNKFrMZ8Vd/Y3fH
-         RjUA==
-X-Gm-Message-State: AOJu0Yzuf0sqaRVUe3eUVk1lJ5Cah+kT3T8JRZkgiH3IIIAPOxV1Wa+8
-	HISxOsOCHuh7hibOlt1whC9v87CMuFFMemtCbBDzmHyZ+PJtL0QGjc99S1a7uzO9wG/54TRCT5C
-	5+/CdEhmq+TD/B3Ts4ee9QX8uOeZTM9QICHZFQQ==
-X-Google-Smtp-Source: AGHT+IFg78aukicmcCb2fnJ5R9FQfLOdTdmjXGaSLvdppwU8sjOMbNpvwM8AI+ULHMD/rR0Ozx5UvcvwHM4zryjp3NA=
-X-Received: by 2002:a81:bf51:0:b0:5ff:7f45:3933 with SMTP id
- s17-20020a81bf51000000b005ff7f453933mr1605802ywk.80.1705915062981; Mon, 22
- Jan 2024 01:17:42 -0800 (PST)
+	s=arc-20240116; t=1705917798; c=relaxed/simple;
+	bh=QaI3TybrSwMrvvtSXZ4vLNzCCTaXiUn84Mwme6n7XeI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pZsQ7nD4Xlmz/TnbGOoI4ygrAo/M1j9Z19t44mCLCiSp7X3L2xNa6aP9oQepp3TZuIvecjhAVL7yRKQxKvHVxFUqtcX5k2z6sR2qXBfN4kdkU15iMTv5ZXmpDdEvEQ/xsYFuMG2Kthhi/eYQXTqd+tXBUvdJRgWbUU0SN36RuaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxWPBiPa5l7oMDAA--.14351S3;
+	Mon, 22 Jan 2024 18:03:14 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXs1hPa5l52oRAA--.11303S2;
+	Mon, 22 Jan 2024 18:03:13 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Juergen Gross <jgross@suse.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	kvm@vger.kernel.org
+Subject: [PATCH v3 0/6] LoongArch: Add pv ipi support on LoongArch VM
+Date: Mon, 22 Jan 2024 18:03:07 +0800
+Message-Id: <20240122100313.1589372-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231020155056.3495121-1-Jamie.Cunliffe@arm.com> <20231020155056.3495121-2-Jamie.Cunliffe@arm.com>
-In-Reply-To: <20231020155056.3495121-2-Jamie.Cunliffe@arm.com>
-From: Trevor Gross <tmgross@umich.edu>
-Date: Mon, 22 Jan 2024 03:17:31 -0600
-Message-ID: <CALNs47vzQm5MbfJtMQR3p+W1xub3KHiNqRgEQGWT3u28fpQ-oA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] rust: Refactor the build target to allow the use
- of builtin targets
-To: Jamie Cunliffe <Jamie.Cunliffe@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, rust-for-linux@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, steve.capper@arm.com, Asahi Lina <lina@asahilina.net>, 
-	boqun.feng@gmail.com, andrew@lunn.ch, Huacai Chen <chenhuacai@kernel.org>, 
-	loongarch@lists.linux.dev, Masahiro Yamada <masahiroy@kernel.org>, 
-	linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxXs1hPa5l52oRAA--.11303S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw47WF1kWF1kKF1fAFWfCrX_yoW5KryDpF
+	Zrurn3Wr4rGr93Zwnxt3srurn8Jr1xGw1ag3WayrWUC3yaqFyUZr4kGryDZFykJa1rJrW0
+	qr1rGw1ag3WUAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
 
-On Fri, Oct 20, 2023 at 10:59=E2=80=AFAM Jamie Cunliffe <Jamie.Cunliffe@arm=
-.com> wrote:
->
-> Eventually we want all architectures to be using the target as defined
-> by rustc. However currently some architectures can't do that and are
-> using the target.json specification. This puts in place the foundation
-> to allow the use of the builtin target definition or a target.json
-> specification.
->
-> Signed-off-by: Jamie Cunliffe <Jamie.Cunliffe@arm.com>
-> ---
->  Makefile          | 1 -
->  arch/x86/Makefile | 1 +
->  rust/Makefile     | 5 ++++-
->  scripts/Makefile  | 4 +++-
->  4 files changed, 8 insertions(+), 3 deletions(-)
+This patchset adds pv ipi support for VM. On physical machine, ipi HW
+uses IOCSR registers, however there is trap into hypervisor when vcpu
+accesses IOCSR registers if system is in VM mode. SWI is a interrupt
+mechanism like SGI on ARM, software can send interrupt to CPU, only that
+on LoongArch SWI can only be sent to local CPU now. So SWI can not used
+for IPI on real HW system, however it can be used on VM when combined with
+hypercall method. This patch uses SWI interrupt for IPI mechanism, SWI
+injection uses hypercall method. And there is one trap with IPI sending,
+however with SWI interrupt handler there is no trap.
 
-Adding LoongArch maintainers - this patch will need a small update to
-arch/loongarch/Makefile similar to the change in arch/x86/Makefile
-(included below), since that support is now in-tree and uses
-generate_rust_target [1]. Also a very minor conflict in docs at patch
-2/2.
+Here is the microbenchmarck data with perf bench futex wake case on 3C5000
+single-way machine, there are 16 cpus on 3C5000 single-way machine, VM
+has 16 vcpus also. The benchmark data is ms time unit to wakeup 16 threads,
+the performance is higher if data is smaller.
 
-I believe this patchset is still waiting on an ack from the kbuild
-team. Series at [2] for reference.
+perf bench futex wake, Wokeup 16 of 16 threads in ms
+--physical machine--   --VM original--   --VM with pv ipi patch--
+  0.0176 ms               0.1140 ms            0.0481 ms 
 
-Thanks,
-Trevor
+---
+Change in V3:
+  1. Add 128 vcpu ipi multicast support like x86
+  2. Change cpucfg base address from 0x10000000 to 0x40000000 which is
+used to dectect hypervisor type, in order to avoid confliction with future
+hw usage
+  3. Adjust patch order in this patchset, move patch 
+Refine-ipi-ops-on-LoongArch-platform to the first one.
 
-[1]: https://lore.kernel.org/rust-for-linux/20240108032117.215171-1-wangrui=
-@loongson.cn/
-[2]: https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Jamie.=
-Cunliffe@arm.com/
+Change in V2:
+  1. Add hw cpuid map support since ipi routing uses hw cpuid
+  2. Refine changelog description
+  3. Add hypercall statistic support for vcpu
+  4. Set percpu pv ipi message buffer aligned with cacheline
+  5. Refine pv ipi send logic, do not send ipi message with if there is
+pending ipi message.
+---
 
-> diff --git a/Makefile b/Makefile
-> index 88ebf6547964..23100f193da3 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -566,7 +566,6 @@ KBUILD_CFLAGS +=3D -fno-strict-aliasing
->
->  KBUILD_CPPFLAGS :=3D -D__KERNEL__
->  KBUILD_RUSTFLAGS :=3D $(rust_common_flags) \
-> -                   --target=3D$(objtree)/scripts/target.json \
->                     -Cpanic=3Dabort -Cembed-bitcode=3Dn -Clto=3Dn \
->                     -Cforce-unwind-tables=3Dn -Ccodegen-units=3D1 \
->                     -Csymbol-mangling-version=3Dv0 \
-> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> index 5bfe5caaa444..0f339d4abd40 100644
-> --- a/arch/x86/Makefile
-> +++ b/arch/x86/Makefile
-> @@ -68,6 +68,7 @@ export BITS
->  #    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D53383
->  #
->  KBUILD_CFLAGS +=3D -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx
-> +KBUILD_RUSTFLAGS +=3D --target=3D$(objtree)/scripts/target.json
->  KBUILD_RUSTFLAGS +=3D -Ctarget-feature=3D-sse,-sse2,-sse3,-ssse3,-sse4.1=
-,-sse4.2,-avx,-avx2
->
->  ifeq ($(CONFIG_X86_KERNEL_IBT),y)
-> diff --git a/rust/Makefile b/rust/Makefile
-> index 87958e864be0..8d75a6ffe951 100644
-> --- a/rust/Makefile
-> +++ b/rust/Makefile
-> @@ -428,8 +428,11 @@ $(obj)/core.o: private skip_clippy =3D 1
->  $(obj)/core.o: private skip_flags =3D -Dunreachable_pub
->  $(obj)/core.o: private rustc_objcopy =3D $(foreach sym,$(redirect-intrin=
-sics),--redefine-sym $(sym)=3D__rust$(sym))
->  $(obj)/core.o: private rustc_target_flags =3D $(core-cfgs)
-> -$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs scripts/target.json FORCE
-> +$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs FORCE
->         $(call if_changed_dep,rustc_library)
-> +ifdef CONFIG_X86_64
-> +$(obj)/core.o: scripts/target.json
-> +endif
->
->  $(obj)/compiler_builtins.o: private rustc_objcopy =3D -w -W '__*'
->  $(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.o FO=
-RCE
-> diff --git a/scripts/Makefile b/scripts/Makefile
-> index 576cf64be667..c85d130a4125 100644
-> --- a/scripts/Makefile
-> +++ b/scripts/Makefile
-> @@ -11,12 +11,14 @@ hostprogs-always-$(CONFIG_MODULE_SIG_FORMAT)         =
-       +=3D sign-file
->  hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)    +=3D insert-sys-c=
-ert
->  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=3D rust=
-doc_test_builder
->  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=3D rust=
-doc_test_gen
-> -always-$(CONFIG_RUST)                                  +=3D target.json
->
-> +ifdef CONFIG_X86_64
-> +always-$(CONFIG_RUST)                                  +=3D target.json
->  filechk_rust_target =3D $< < include/config/auto.conf
->
->  $(obj)/target.json: scripts/generate_rust_target include/config/auto.con=
-f FORCE
->         $(call filechk,rust_target)
-> +endif
->
->  hostprogs +=3D generate_rust_target
->  generate_rust_target-rust :=3D y
-> --
-> 2.30.2
->
->
+Bibo Mao (6):
+  LoongArch/smp: Refine ipi ops on LoongArch platform
+  LoongArch: KVM: Add hypercall instruction emulation support
+  LoongArch: KVM: Add cpucfg area for kvm hypervisor
+  LoongArch: Add paravirt interface for guest kernel
+  LoongArch: KVM: Add physical cpuid map support
+  LoongArch: Add pv ipi support on LoongArch system
+
+ arch/loongarch/Kconfig                        |   9 +
+ arch/loongarch/include/asm/Kbuild             |   1 -
+ arch/loongarch/include/asm/hardirq.h          |   5 +
+ arch/loongarch/include/asm/inst.h             |   1 +
+ arch/loongarch/include/asm/irq.h              |  10 +-
+ arch/loongarch/include/asm/kvm_host.h         |  27 +++
+ arch/loongarch/include/asm/kvm_para.h         | 157 ++++++++++++++++++
+ arch/loongarch/include/asm/kvm_vcpu.h         |   1 +
+ arch/loongarch/include/asm/loongarch.h        |  11 ++
+ arch/loongarch/include/asm/paravirt.h         |  27 +++
+ .../include/asm/paravirt_api_clock.h          |   1 +
+ arch/loongarch/include/asm/smp.h              |  31 ++--
+ arch/loongarch/include/uapi/asm/Kbuild        |   2 -
+ arch/loongarch/kernel/Makefile                |   1 +
+ arch/loongarch/kernel/irq.c                   |  24 +--
+ arch/loongarch/kernel/paravirt.c              | 154 +++++++++++++++++
+ arch/loongarch/kernel/perf_event.c            |  14 +-
+ arch/loongarch/kernel/setup.c                 |   2 +
+ arch/loongarch/kernel/smp.c                   |  60 ++++---
+ arch/loongarch/kernel/time.c                  |  12 +-
+ arch/loongarch/kvm/exit.c                     | 125 ++++++++++++--
+ arch/loongarch/kvm/vcpu.c                     |  94 ++++++++++-
+ arch/loongarch/kvm/vm.c                       |  11 ++
+ 23 files changed, 678 insertions(+), 102 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_para.h
+ create mode 100644 arch/loongarch/include/asm/paravirt.h
+ create mode 100644 arch/loongarch/include/asm/paravirt_api_clock.h
+ delete mode 100644 arch/loongarch/include/uapi/asm/Kbuild
+ create mode 100644 arch/loongarch/kernel/paravirt.c
+
+
+base-commit: 7a396820222d6d4c02057f41658b162bdcdadd0e
+-- 
+2.39.3
+
