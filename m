@@ -1,98 +1,111 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B829B482D6
-	for <loongarch@lists.linux.dev>; Mon, 22 Jan 2024 21:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170ED2570;
+	Tue, 23 Jan 2024 02:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705960594; cv=none; b=i8hjAvBWh8M9rJmYc5rKtMPrDFRlkZwR0w3mSwok36IeojqP+uYxDGK+0UJPizqLBPLXR/FseBQ1Ru7e2xAP6GMzRKtoMWLymdBUTzGhQ3Jj+kOqU9dO0bArlL0Jge4HAFdkGKwf94bVycri2uve7MUgDPNOemvS8CKsc4uPqn0=
+	t=1705977738; cv=none; b=nfCJN3C/yefW8eL7eP9Y7uOSbDQ88dDOydpSGwzH/VXRCpeynIBgnDVjRdCmmePoOEt1cNGQN9Tw+WnaHyA0ELegGqAJOfCWmTvLbhgVQFQFTxrt8rjB0SHrgC3A8MqRB6iHYtyZl02oz9TxXHldtcQ3g0p0chVtXsCMNNlBNHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705960594; c=relaxed/simple;
-	bh=J8tuHVuaRf99BTjAxEXGtJuL5FiKMuM5URapCqBOWYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lNMZvzMP28Cr9njWSm5dY5LwhGYOwmexYPGCarCthcqhhELbhXYnTof+hy9NZM+MBh2/BI8HqqLQ1Fu3hjDX5aKleAdRXsNlW/k+DsDnZgCL0cb4w6GvxIyYC/Ks7WaTBStMInOzsSWk6h2NUgVWxrx3JvUa1kNKImiIw+3r3HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=XtyKsMO6; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="XtyKsMO6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DlkxdPo00vFXMtifZbwmiD3pZWcfGIoDSDnanNUdXxo=; b=XtyKsMO6Yn2dYk1lNRNde3BiDP
-	un+RAJyMR6k8+9e/yJl2r+Ov0qOcDIbhiz/y/7GX3fw87B0GNJ/3HmCLVJiLb2Ks1V96LgACams6f
-	cX+obUMvFpeX/Pmcl6RnUH2y50c9vxvFy0DDxefuB+2qrsso/uyXuGtyvj3A9FRQHRH/QBhxa5OTm
-	Zz/RSWt46rOm+BHPj4216FX8QXMjUNV0DnJe0jlcqUzpr7YBglGllncVFHK+j40azOzpeA1xvOtkS
-	tXvN5txsFycplH3UgwgXX380INC6PxDJ2P3HQ+KLP+EUK49pbp89QiATkRHw/56ttdlNvv/I2Oqdt
-	A0vRazAA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50158)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rS2HI-0001cI-2Q;
-	Mon, 22 Jan 2024 21:56:24 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rS2HC-0001MW-T5; Mon, 22 Jan 2024 21:56:18 +0000
-Date: Mon, 22 Jan 2024 21:56:18 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 04/21] ACPI: processor: Register all CPUs from
- acpi_processor_get_info()
-Message-ID: <Za7kglu6qO1n5ZCg@shell.armlinux.org.uk>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
- <E1rDOg7-00Dvjq-VZ@rmk-PC.armlinux.org.uk>
- <CAJZ5v0je=-oVnSumZs=dzcyVuVUeVeTgO7yOnjGg1igyrS7EHQ@mail.gmail.com>
+	s=arc-20240116; t=1705977738; c=relaxed/simple;
+	bh=2KAfxXRILTyRg7HhJoRIjIBq03f0zaVqF8HojyrwGec=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JiXXS8V2XqaYSuPE+tnpvBhUDg5plg76XYU9+e/vwzsjL0YdFqeG0LCIlfKlWHTwmlOBLfsb4Wh18S7KyWOmucbyPMjfugTVdKdSufFFUPN50v5cxfp83fdHL+D+SYxLZOvwLluppOPgEiC4eQ2umFKubpDH0uCDtgSMQbRaYM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D314CC433C7;
+	Tue, 23 Jan 2024 02:42:14 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	stable@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 6.1.y and 6.6.y] LoongArch/smp: Call rcutree_report_cpu_starting() earlier
+Date: Tue, 23 Jan 2024 10:41:51 +0800
+Message-Id: <20240123024151.1365379-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0je=-oVnSumZs=dzcyVuVUeVeTgO7yOnjGg1igyrS7EHQ@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, Dec 18, 2023 at 09:30:50PM +0100, Rafael J. Wysocki wrote:
-> On Wed, Dec 13, 2023 at 1:49 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> > Systems can still be booted with 'acpi=off', or not include an
-> > ACPI description at all. For these, the CPUs continue to be
-> > registered by cpu_dev_register_generic().
-> >
-> > This moves the CPU register logic back to a subsys_initcall(),
-> > while the memory nodes will have been registered earlier.
-> 
-> Isn't this somewhat risky?
+rcutree_report_cpu_starting() must be called before cpu_probe() to avoid
+the following lockdep splat that triggered by calling __alloc_pages() when
+CONFIG_PROVE_RCU_LIST=y:
 
-Not really. The earlier full series moved the registration of CPUs
-from subsys (by the various architecture specific code) into the
-driver core - thus moving it much earlier. This patch merely
-restores it back to the subsys initialisation stage.
+ =============================
+ WARNING: suspicious RCU usage
+ 6.6.0+ #980 Not tainted
+ -----------------------------
+ kernel/locking/lockdep.c:3761 RCU-list traversed in non-reader section!!
+ other info that might help us debug this:
+ RCU used illegally from offline CPU!
+ rcu_scheduler_active = 1, debug_locks = 1
+ 1 lock held by swapper/1/0:
+  #0: 900000000c82ef98 (&pcp->lock){+.+.}-{2:2}, at: get_page_from_freelist+0x894/0x1790
+ CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.6.0+ #980
+ Stack : 0000000000000001 9000000004f79508 9000000004893670 9000000100310000
+         90000001003137d0 0000000000000000 90000001003137d8 9000000004f79508
+         0000000000000000 0000000000000001 0000000000000000 90000000048a3384
+         203a656d616e2065 ca43677b3687e616 90000001002c3480 0000000000000008
+         000000000000009d 0000000000000000 0000000000000001 80000000ffffe0b8
+         000000000000000d 0000000000000033 0000000007ec0000 13bbf50562dad831
+         9000000005140748 0000000000000000 9000000004f79508 0000000000000004
+         0000000000000000 9000000005140748 90000001002bad40 0000000000000000
+         90000001002ba400 0000000000000000 9000000003573ec8 0000000000000000
+         00000000000000b0 0000000000000004 0000000000000000 0000000000070000
+         ...
+ Call Trace:
+ [<9000000003573ec8>] show_stack+0x38/0x150
+ [<9000000004893670>] dump_stack_lvl+0x74/0xa8
+ [<900000000360d2bc>] lockdep_rcu_suspicious+0x14c/0x190
+ [<900000000361235c>] __lock_acquire+0xd0c/0x2740
+ [<90000000036146f4>] lock_acquire+0x104/0x2c0
+ [<90000000048a955c>] _raw_spin_lock_irqsave+0x5c/0x90
+ [<900000000381cd5c>] rmqueue_bulk+0x6c/0x950
+ [<900000000381fc0c>] get_page_from_freelist+0xd4c/0x1790
+ [<9000000003821c6c>] __alloc_pages+0x1bc/0x3e0
+ [<9000000003583b40>] tlb_init+0x150/0x2a0
+ [<90000000035742a0>] per_cpu_trap_init+0xf0/0x110
+ [<90000000035712fc>] cpu_probe+0x3dc/0x7a0
+ [<900000000357ed20>] start_secondary+0x40/0xb0
+ [<9000000004897138>] smpboot_entry+0x54/0x58
 
-There is a low chance that something _could_ have become reliant
-on that change - and the longer it takes for this change to be
-merged, the more risk there is that something could become reliant
-on CPUs being registered very early.
+raw_smp_processor_id() is required in order to avoid calling into lockdep
+before RCU has declared the CPU to be watched for readers.
 
-Maybe this ought to be spelt out more explicitly that it's merely
-restoring the point at which CPUs are registered.
+See also commit 29368e093921 ("x86/smpboot: Move rcu_cpu_starting() earlier"),
+commit de5d9dae150c ("s390/smp: move rcu_cpu_starting() earlier") and commit
+99f070b62322 ("powerpc/smp: Call rcu_cpu_starting() earlier").
 
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/smp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index d19c2ebdf47b..1b5f266813a2 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -504,8 +504,9 @@ asmlinkage void start_secondary(void)
+ 	unsigned int cpu;
+ 
+ 	sync_counter();
+-	cpu = smp_processor_id();
++	cpu = raw_smp_processor_id();
+ 	set_my_cpu_offset(per_cpu_offset(cpu));
++	rcu_cpu_starting(cpu);
+ 
+ 	cpu_probe();
+ 	constant_clockevent_init();
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.39.3
+
