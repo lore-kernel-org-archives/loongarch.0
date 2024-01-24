@@ -1,125 +1,321 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3899B4F210;
-	Tue, 23 Jan 2024 22:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6195E54C
+	for <loongarch@lists.linux.dev>; Wed, 24 Jan 2024 05:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706047558; cv=none; b=IRweOeDs8/mFpGwLN05kYD17UJP2BJLLCeZqsHBsYHyHhWUoe4/X9y/oxiv1MxJ2ARPUrStjH3b0OvEeyafvU4Syts8E4lpCR7rI+HI0prcW88FPOtVepVegk52Sx+OD539jlm4tT0p3Zrqg7nxwRr1CHzdGpME5Ob9d6OrqNZ8=
+	t=1706073192; cv=none; b=dF8LsAT0JTh50FtLjm9Qpf51x7RQBee4noiGqdEK0GEVgjRSA1UNOUNNZr3fyJvsze5wxaRdsMJlVDLWXG6B91EdCvKXvqoVqsDIPeWpAJ4Gwy9wL7nkWr5Xy9RhFZthF3YbF7KjZM6i4hJPFM4cWA/nnQrbkrG+tqMWieJNLyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706047558; c=relaxed/simple;
-	bh=vsmubtr6a+nVdA9yIIm0YwyEISa8CSnDyRWB8gYi33I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K8nKAmFjArJV/QV2zN2R5Tg4OKs/58vpBVklvD7VF4qTZo59BFbEIx//n6TxWdORLjj4G2ELRf6GgJT6IVaVdaI2mdTeF4R88sXvfaSUGVcTf2QJLp9vxOxrr64kl3dIyZ6yLvqnWA7QbpUYXetYZwDXam+taoJBO2gH9iewX6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5958d3f2d8aso430956eaf.1;
-        Tue, 23 Jan 2024 14:05:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706047556; x=1706652356;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aysBJhX0WuSz/+ETJ4n6CNlBN6IDxcYCfjo2tVGWMw8=;
-        b=lZGkul4HSY7VdE/YsCq9PlVj6+/bZWVc0LK9EK/N7SFoWr0cyd5xEZrGj4tsVz1yyi
-         8ks6ugTS17bCL5NIhfc8EevubDzum+ycoHNd65O7sad8IZcWhKE6G6jQy4Ok1STg8Kvx
-         4f/pbagVF7HSMdp4jifuau8YOFtYT24sJFH4ar7skWXJXtS0I5GrJLjDiBmkdBxD8k5o
-         dtHBMvNN3skKZE7GGnPxwr1pviD18rWCnWhMqCJwvePULJ550sqR/ZAm7ymxEzOEKBQo
-         7fXfPpMJxEiyuwGmsgqSQRRnKBL6nOI7K6aOehHFiagohraIqtt4j6t9qfLfsf1fiD00
-         6JOw==
-X-Gm-Message-State: AOJu0Yyg+B5Hecs450dX3a7p7V7Kxkx/Vj96V6YaZca3HP/hHwyvv7T5
-	D65NOCG+b89HkmiujtJtEueYpL1p8niX6JWrrXIN+9iYbxX5rCBZPfHxOacPHvy6mr8iupeNa6w
-	bOXnaYp5BDHK1RPQw+hj6SQs7zw8=
-X-Google-Smtp-Source: AGHT+IGxuSonfkyvyqMXYCwyYcKsBELyim/SUL0gp6b7rCRYXwswAvhbx4htB7UWDzGueWKNwDacix1RPMx7M/tNIDM=
-X-Received: by 2002:a05:6820:825:b0:599:a348:c582 with SMTP id
- bg37-20020a056820082500b00599a348c582mr614683oob.1.1706047556215; Tue, 23 Jan
- 2024 14:05:56 -0800 (PST)
+	s=arc-20240116; t=1706073192; c=relaxed/simple;
+	bh=8IRILIHbZzm7JiU2AP+iQrJP86mAIlHIlBV5y0BJ124=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=XL9vpg1CEW5frGCZ2hWaVLaE2qIWnCZ150vztHvxXCF18cFMaEK7ruWynvGWXQl7pEHpK6XUenwReiflAHodDAfGgLzE+mb/vBihjuTzZZ8249+RAdKigzNehLYAUASQU9bD6Cnl/r03cgI5VlT5xXkqz7nr22sMFZlTCW3O0Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C2aci20w; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C2aci20w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706073189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hMrXo75T+RiZg6Ni6slGNp8f5iS89iUB0hhC0nnqkcg=;
+	b=C2aci20wdMV5Vi5o20yvJ1F9+BoiGIJQ9Y5Iqgi36orCFSZLRjxkg1wSE+WvBFXMs4uGCw
+	ZFYF7J+8m2CfYSm6vJc7aAdpSvspYO39clem30gT0RPp8NW6YjVnfkKpFti00mYtNoxV0d
+	d5N60CHKf/Ld2UyOeqfIhXQgoi4uFjU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-272-wtN1dBuqPpKMsbqqxC-a1w-1; Wed,
+ 24 Jan 2024 00:13:05 -0500
+X-MC-Unique: wtN1dBuqPpKMsbqqxC-a1w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B2E81C04348;
+	Wed, 24 Jan 2024 05:13:05 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.116.117])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 417FF1C060AF;
+	Wed, 24 Jan 2024 05:12:57 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org,
+	x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	akpm@linux-foundation.org,
+	ebiederm@xmission.com,
+	hbathini@linux.ibm.com,
+	piliu@redhat.com,
+	viro@zeniv.linux.org.uk,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH linux-next v3 00/14] Split crash out from kexec and clean up related config items
+Date: Wed, 24 Jan 2024 13:12:40 +0800
+Message-ID: <20240124051254.67105-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJZ5v0h7wsLt8d3ZoLXsK1=crAx66T42WDKNoHcg8CiHpAjS8g@mail.gmail.com>
- <Za/q9jivG4OdZM0f@shell.armlinux.org.uk> <CAJZ5v0gwe02uzAQoX0QDHo35OTEozpbnqC6vukjM3aE6HMq9WQ@mail.gmail.com>
- <ZbADTBLDEFtdglho@shell.armlinux.org.uk> <CAJZ5v0jh-EdrnjkJep++UDo+Uv4hmR7VV4KYVdF4CK2K+5XLtg@mail.gmail.com>
- <ZbAMjZoybVfiAGcT@shell.armlinux.org.uk> <CAJZ5v0gt=MR1JGsPZnZG_AqudA-KMmb4BOa_A6H9B6+Rhe_+JQ@mail.gmail.com>
- <ZbAdAdqqfXRuY3Xj@shell.armlinux.org.uk> <CAJZ5v0gsqbeJc4qX-AefOqu53=rDme2XzFXacWz_0zbVBoaXjw@mail.gmail.com>
- <ZbAoJO8f66Dg0lGF@shell.armlinux.org.uk> <ZbArzbC19L1YxLHi@shell.armlinux.org.uk>
-In-Reply-To: <ZbArzbC19L1YxLHi@shell.armlinux.org.uk>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 23 Jan 2024 23:05:43 +0100
-Message-ID: <CAJZ5v0jvek=W-FNhiY_0DQha2wDCUv7YW_4jaHUeX0DbYJOX6Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 05/21] ACPI: Rename ACPI_HOTPLUG_CPU to include 'present'
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
-	acpica-devel@lists.linuxfoundation.org, linux-csky@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com, 
-	James Morse <james.morse@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On Tue, Jan 23, 2024 at 10:12=E2=80=AFPM Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
->
-> On Tue, Jan 23, 2024 at 08:57:08PM +0000, Russell King (Oracle) wrote:
-> > On Tue, Jan 23, 2024 at 09:17:18PM +0100, Rafael J. Wysocki wrote:
-> > > On Tue, Jan 23, 2024 at 9:09=E2=80=AFPM Russell King (Oracle)
-> > > <linux@armlinux.org.uk> wrote:
+Motivation:
+=============
+Previously, LKP reported a building error. When investigating, it can't
+be resolved reasonablly with the present messy kdump config items.
 
-[cut]
+ https://lore.kernel.org/oe-kbuild-all/202312182200.Ka7MzifQ-lkp@intel.com/
 
-> > Sorry, no point continuing this.
->
-> Let me be clear why I'm exhasperated by this.
->
-> I've been giving you a technical argument (Arm64 supporting ACPI
-> hotplug CPU, but ACPI_HOTPLUG_CPU=3Dn) for many many emails. You
-> seemed to misunderstand that, expecting ACPI_HOTPLUG_CPU to become
-> Y later in the series.
->
-> When that became clear that it wasn't, you've changed tack. It then
-> became about whether two functions get called or not.
->
-> When I pointed out that they are still going to be called, oh no,
-> it's not about whether those two functions will be called but
-> how they get called.
+The kdump (crash dumping) related config items could causes confusions:
 
-As I've said already in this thread, it is all about what "ACPI-based
-CPU hotplug" means to each of us.
+Firstly,
+---
+CRASH_CORE enables codes including
+ - crashkernel reservation;
+ - elfcorehdr updating;
+ - vmcoreinfo exporting;
+ - crash hotplug handling;
 
-I know what it means to me: Running the code that is compiled when
-ACPI_HOTPLUG_CPU is set via the processor scan handler.
+Now fadump of powerpc, kcore dynamic debugging and kdump all selects
+CRASH_CORE, while fadump
+ - fadump needs crashkernel parsing, vmcoreinfo exporting, and accessing
+   global variable 'elfcorehdr_addr';
+ - kcore only needs vmcoreinfo exporting;
+ - kdump needs all of the current kernel/crash_core.c.
 
-I'm not entirely sure what it means to you.
+So only enabling PROC_CORE or FA_DUMP will enable CRASH_CORE, this
+mislead people that we enable crash dumping, actual it's not.
 
-You are saying that the config option name needs to be changed,
-because it is going to stay N for ARM64 and it will support
-"ACPI-based CPU hotplug" and I'm not sure what exactly you mean by
-this.
+Secondly,
+---
+It's not reasonable to allow KEXEC_CORE select CRASH_CORE.
 
-To me, this just means that ARM64 is not going to use the processor
-scan handler in the way it is used on x86.
+Because KEXEC_CORE enables codes which allocate control pages, copy
+kexec/kdump segments, and prepare for switching. These codes are
+shared by both kexec reboot and kdump. We could want kexec reboot,
+but disable kdump. In that case, CRASH_CORE should not be selected.
 
-> Essentially, what this comes down to is that _you_ have no technical
-> argument against the change, just _you_ don't personally want it
-> and it doesn't matter what justification I come up with, you're
-> always going to tell me something different.
+ --------------------
+ CONFIG_CRASH_CORE=y
+ CONFIG_KEXEC_CORE=y
+ CONFIG_KEXEC=y
+ CONFIG_KEXEC_FILE=y
+ ---------------------
 
-Sorry, but I'm just not convinced by your justification.
+Thirdly,
+---
+It's not reasonable to allow CRASH_DUMP select KEXEC_CORE.
 
-> So why not state that you personally don't want it in the first
-> place? Why this game of cat and mouse and the constantly changing
-> arguments. I guess it's to waste developers time.
->
-> Well, I'm calling you out for this, because I'm that pissed off
-> at the amount of time you're causing to be wasted.
+That could make KEXEC_CORE, CRASH_DUMP are enabled independently from
+KEXEC or KEXEC_FILE. However, w/o KEXEC or KEXEC_FILE, the KEXEC_CORE
+code built in doesn't make any sense because no kernel loading or
+switching will happen to utilize the KEXEC_CORE code.
+ ---------------------
+ CONFIG_CRASH_CORE=y
+ CONFIG_KEXEC_CORE=y
+ CONFIG_CRASH_DUMP=y
+ ---------------------
 
-And I don't have to suffer this kind of abuse.  Sorry.
+In this case, what is worse, on arch sh and arm, KEXEC relies on MMU,
+while CRASH_DUMP can still be enabled when !MMU, then compiling error is
+seen as the lkp test robot reported in above link.
+
+ ------arch/sh/Kconfig------
+ config ARCH_SUPPORTS_KEXEC
+         def_bool MMU
+
+ config ARCH_SUPPORTS_CRASH_DUMP
+         def_bool BROKEN_ON_SMP
+ ---------------------------
+
+Changes:
+===========
+1, split out crash_reserve.c from crash_core.c;
+2, split out vmcore_infoc. from crash_core.c;
+3, move crash related codes in kexec_core.c into crash_core.c;
+4, remove dependency of FA_DUMP on CRASH_DUMP;
+5, clean up kdump related config items;
+6, wrap up crash codes in crash related ifdefs on all 8 arch-es
+   which support crash dumping, except of ppc;
+
+Achievement:
+===========
+With above changes, I can rearrange the config item logic as below (the right
+item depends on or is selected by the left item):
+
+    PROC_KCORE -----------> VMCORE_INFO
+
+               |----------> VMCORE_INFO
+    FA_DUMP----|
+               |----------> CRASH_RESERVE
+
+                                                    ---->VMCORE_INFO
+                                                   /
+                                                   |---->CRASH_RESERVE
+    KEXEC      --|                                /|
+                 |--> KEXEC_CORE--> CRASH_DUMP-->/-|---->PROC_VMCORE
+    KEXEC_FILE --|                               \ |
+                                                   \---->CRASH_HOTPLUG
+
+
+    KEXEC      --|
+                 |--> KEXEC_CORE (for kexec reboot only)
+    KEXEC_FILE --|
+
+Test
+========
+On all 8 architectures, including x86_64, arm64, s390x, sh, arm, mips,
+riscv, loongarch, I did below three cases of config item setting and
+building all passed. Take configs on x86_64 as exampmle here:
+
+(1) Both CONFIG_KEXEC and KEXEC_FILE is unset, then all kexec/kdump
+items are unset automatically:
+# Kexec and crash features
+# CONFIG_KEXEC is not set
+# CONFIG_KEXEC_FILE is not set
+# end of Kexec and crash features
+
+(2) set CONFIG_KEXEC_FILE and 'make olddefconfig':
+---------------
+# Kexec and crash features
+CONFIG_CRASH_RESERVE=y
+CONFIG_VMCORE_INFO=y
+CONFIG_KEXEC_CORE=y
+CONFIG_KEXEC_FILE=y
+CONFIG_CRASH_DUMP=y
+CONFIG_CRASH_HOTPLUG=y
+CONFIG_CRASH_MAX_MEMORY_RANGES=8192
+# end of Kexec and crash features
+---------------
+
+(3) unset CONFIG_CRASH_DUMP in case 2 and execute 'make olddefconfig':
+------------------------
+# Kexec and crash features
+CONFIG_KEXEC_CORE=y
+CONFIG_KEXEC_FILE=y
+# end of Kexec and crash features
+------------------------
+
+Note:
+For ppc, it needs investigation to make clear how to split out crash
+code in arch folder. Hope Hari and Pingfan can help have a look, see if
+it's doable. Now, I make it either have both kexec and crash enabled, or
+disable both of them altogether.
+
+Changelog
+==========
+v2->v3:
+- In patch 2, there's conflict when rebasing to linux-next in
+  kernel/crash_core.c because of below commits from Uladzislau:
+  - commit 699d9351822e ("mm: vmalloc: Fix a warning in the crash_save_vmcoreinfo_init()")
+  - commit 5f4c0c1e2a51 (:mm/vmalloc: remove vmap_area_list")
+- In patch 13, fix the lkp reported issue by using CONFIG_CRASH_RESERVE
+  ifdef, giving up the earlier IS_ENABLED(CONFIG_CRASH_RESERVE) checking in v2. 
+- In patch 14, update code change after below commit merged into
+  mainline:
+  - commit 78de91b45860 ("LoongArch: Use generic interface to support crashkernel=X,[high,low]")
+
+Baoquan He (14):
+  kexec: split crashkernel reservation code out from crash_core.c
+  crash: split vmcoreinfo exporting code out from crash_core.c
+  crash: remove dependency of FA_DUMP on CRASH_DUMP
+  crash: split crash dumping code out from kexec_core.c
+  crash: clean up kdump related config items
+  x86, crash: wrap crash dumping code into crash related ifdefs
+  arm64, crash: wrap crash dumping code into crash related ifdefs
+  ppc, crash: enforce KEXEC and KEXEC_FILE to select CRASH_DUMP
+  s390, crash: wrap crash dumping code into crash related ifdefs
+  sh, crash: wrap crash dumping code into crash related ifdefs
+  mips, crash: wrap crash dumping code into crash related ifdefs
+  riscv, crash: wrap crash dumping code into crash related ifdefs
+  arm, crash: wrap crash dumping code into crash related ifdefs
+  loongarch, crash: wrap crash dumping code into crash related ifdefs
+
+ arch/arm/kernel/setup.c                       |   4 +-
+ arch/arm64/Kconfig                            |   2 +-
+ .../asm/{crash_core.h => crash_reserve.h}     |   4 +-
+ arch/arm64/include/asm/kexec.h                |   2 +-
+ arch/arm64/kernel/Makefile                    |   2 +-
+ arch/arm64/kernel/machine_kexec.c             |   2 +-
+ arch/arm64/kernel/machine_kexec_file.c        |  10 +-
+ .../kernel/{crash_core.c => vmcore_info.c}    |   2 +-
+ arch/arm64/mm/init.c                          |   2 +-
+ arch/loongarch/kernel/setup.c                 |   2 +-
+ arch/mips/kernel/setup.c                      |  17 +-
+ arch/powerpc/Kconfig                          |   9 +-
+ arch/powerpc/kernel/setup-common.c            |   2 +-
+ arch/powerpc/mm/nohash/kaslr_booke.c          |   4 +-
+ arch/powerpc/platforms/powernv/opal-core.c    |   2 +-
+ arch/riscv/Kconfig                            |   2 +-
+ .../asm/{crash_core.h => crash_reserve.h}     |   4 +-
+ arch/riscv/kernel/Makefile                    |   2 +-
+ arch/riscv/kernel/elf_kexec.c                 |   9 +-
+ .../kernel/{crash_core.c => vmcore_info.c}    |   2 +-
+ arch/riscv/mm/init.c                          |   2 +-
+ arch/s390/kernel/kexec_elf.c                  |   2 +
+ arch/s390/kernel/kexec_image.c                |   2 +
+ arch/s390/kernel/machine_kexec_file.c         |  10 +
+ arch/sh/kernel/machine_kexec.c                |   3 +
+ arch/sh/kernel/setup.c                        |   2 +-
+ arch/x86/Kconfig                              |   2 +-
+ .../asm/{crash_core.h => crash_reserve.h}     |   6 +-
+ arch/x86/kernel/Makefile                      |   6 +-
+ arch/x86/kernel/cpu/mshyperv.c                |   4 +
+ arch/x86/kernel/kexec-bzimage64.c             |   4 +
+ arch/x86/kernel/kvm.c                         |   4 +-
+ arch/x86/kernel/machine_kexec_64.c            |   3 +
+ arch/x86/kernel/reboot.c                      |   2 +-
+ arch/x86/kernel/setup.c                       |   2 +-
+ arch/x86/kernel/smp.c                         |   2 +-
+ .../{crash_core_32.c => vmcore_info_32.c}     |   2 +-
+ .../{crash_core_64.c => vmcore_info_64.c}     |   2 +-
+ arch/x86/xen/enlighten_hvm.c                  |   4 +
+ drivers/base/cpu.c                            |   6 +-
+ drivers/firmware/qemu_fw_cfg.c                |  14 +-
+ fs/proc/Kconfig                               |   2 +-
+ fs/proc/kcore.c                               |   2 +-
+ include/linux/buildid.h                       |   2 +-
+ include/linux/crash_core.h                    | 152 ++--
+ include/linux/crash_reserve.h                 |  48 ++
+ include/linux/kexec.h                         |  47 +-
+ include/linux/vmcore_info.h                   |  81 ++
+ init/initramfs.c                              |   2 +-
+ kernel/Kconfig.kexec                          |  12 +-
+ kernel/Makefile                               |   5 +-
+ kernel/crash_core.c                           | 762 +++++-------------
+ kernel/crash_reserve.c                        | 464 +++++++++++
+ kernel/{crash_dump.c => elfcorehdr.c}         |   0
+ kernel/kexec.c                                |  11 +-
+ kernel/kexec_core.c                           | 250 +-----
+ kernel/kexec_file.c                           |  13 +-
+ kernel/kexec_internal.h                       |   2 +
+ kernel/ksysfs.c                               |  10 +-
+ kernel/printk/printk.c                        |   4 +-
+ kernel/vmcore_info.c                          | 231 ++++++
+ lib/buildid.c                                 |   2 +-
+ 62 files changed, 1228 insertions(+), 1043 deletions(-)
+ rename arch/arm64/include/asm/{crash_core.h => crash_reserve.h} (81%)
+ rename arch/arm64/kernel/{crash_core.c => vmcore_info.c} (97%)
+ rename arch/riscv/include/asm/{crash_core.h => crash_reserve.h} (78%)
+ rename arch/riscv/kernel/{crash_core.c => vmcore_info.c} (96%)
+ rename arch/x86/include/asm/{crash_core.h => crash_reserve.h} (92%)
+ rename arch/x86/kernel/{crash_core_32.c => vmcore_info_32.c} (90%)
+ rename arch/x86/kernel/{crash_core_64.c => vmcore_info_64.c} (94%)
+ create mode 100644 include/linux/crash_reserve.h
+ create mode 100644 include/linux/vmcore_info.h
+ create mode 100644 kernel/crash_reserve.c
+ rename kernel/{crash_dump.c => elfcorehdr.c} (100%)
+ create mode 100644 kernel/vmcore_info.c
+
+-- 
+2.41.0
+
