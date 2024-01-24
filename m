@@ -1,70 +1,60 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1477917BD5
-	for <loongarch@lists.linux.dev>; Wed, 24 Jan 2024 08:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD7F33982
+	for <loongarch@lists.linux.dev>; Wed, 24 Jan 2024 14:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706085926; cv=none; b=ct96Ud98Zuny3l/jtpto0L7IyloF4SnyKIeJo+hNM2o0cMe/0pfxaiQPmABc6Kunz62uCzVscvzNvyvJitc2trfMIkFJsAllEATb1VB0+LSQ3Dw9KIe+uLEwlmZSNn0YCeF5rxVnVftiAeCBAcgUXmZRov6qOL0ioppe0Fuddr4=
+	t=1706107138; cv=none; b=eKj4s9Gt7H8Q7or/ejI1y3R0la8a7uIvjxf+Rmw9EtZJNpsCPuQLlsBk1DmOICf68hd2Zq6g7RLX5xiVyfS/9BK1jCdmXgQ18TP3zRROrMBEFWwSCvf0cUTx2PSHLrw/RY/5u7m5E2gkPfS3fYru02mVkiEBPiGMVegwVsZDsk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706085926; c=relaxed/simple;
-	bh=/nsD3d+E0lLEEpr6zHa2aA4SWpngDZwV5I8Z0fUog+c=;
+	s=arc-20240116; t=1706107138; c=relaxed/simple;
+	bh=pok9Rb9/rau/3FIlKw2abb93LnnTtE0ZjzrxlzDpf9A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XrtB0+u//1luWw93EsaT9f6IQ4Rm0CdJOnvmI4jgRLGQBdHuR2roSnMEQUmg1IidIqDtJ48eLFjpTOLdtuuJ1JBbWvlTTQoUdp1Iir7+15ENQfD6w6ccgW6WyUe2PWGrsToib09sEsp/8tuqxNZS/l0vwbuO1lhqrbwUb6PZ1SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Nzo1kG4/; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=gngr84TwxHH9tgHJLWqetlRd0V2g2MJH+emR7U3RRhInocg2O/b/od2WxBN4Rm0F6SL5t9NX9ljij+35Y9j1uKvMY1s4Ky8udjX36a2U2gj3u1k0so0tPhPJBWyd+Hj4FGrcoSjkMNJlGABDapY+EIha+imzjHLCjUAJNYlsEH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OE72buKU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Nzo1kG4/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5lEen0G4yFCsLlAF+wT6cjA+TZeTYFwLA6f1OlJb35c=; b=Nzo1kG4/6uJi4JkVCN2GnsVPSP
-	MSCm4FbOrhPHehb1KUJVrH1BJ3z9cxxbnwCC0zxjG3bD8+skV/uIfdTD6Xjbum3MAfAlH46N/Wp+6
-	L7YV4CDoxK1vWQMcHAQgVJyJHoNDrjkuxOIry+Y5WoNfp7WvmbHn0uuneIMiaw3MbPLQllmBXaukX
-	TYMxIFTn6SoI9/QX7eY4T0qhBicf+VgU4zXx/IN3Fy2G80u7atBOa9GDJ5r57T/AsDstwl/th3j5P
-	hRfBkIRpb/e4q3+Na04s1TcgWKeqoYLVLCnejFkjHgtXQ41c1OGcmGHfEku7EHHcuxCj7+We0ZUXO
-	+zL7lf9w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41124)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rSYsi-0003f3-2f;
-	Wed, 24 Jan 2024 08:45:13 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rSYse-0002ld-Qu; Wed, 24 Jan 2024 08:45:08 +0000
-Date: Wed, 24 Jan 2024 08:45:08 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 05/21] ACPI: Rename ACPI_HOTPLUG_CPU to include
- 'present'
-Message-ID: <ZbDOFJeRjdaXtVJu@shell.armlinux.org.uk>
-References: <CAJZ5v0gwe02uzAQoX0QDHo35OTEozpbnqC6vukjM3aE6HMq9WQ@mail.gmail.com>
- <ZbADTBLDEFtdglho@shell.armlinux.org.uk>
- <CAJZ5v0jh-EdrnjkJep++UDo+Uv4hmR7VV4KYVdF4CK2K+5XLtg@mail.gmail.com>
- <ZbAMjZoybVfiAGcT@shell.armlinux.org.uk>
- <CAJZ5v0gt=MR1JGsPZnZG_AqudA-KMmb4BOa_A6H9B6+Rhe_+JQ@mail.gmail.com>
- <ZbAdAdqqfXRuY3Xj@shell.armlinux.org.uk>
- <CAJZ5v0gsqbeJc4qX-AefOqu53=rDme2XzFXacWz_0zbVBoaXjw@mail.gmail.com>
- <ZbAoJO8f66Dg0lGF@shell.armlinux.org.uk>
- <ZbArzbC19L1YxLHi@shell.armlinux.org.uk>
- <CAJZ5v0jvek=W-FNhiY_0DQha2wDCUv7YW_4jaHUeX0DbYJOX6Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OE72buKU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706107135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ls80tWWITZqF3iJAPsDuzCkVtKDTZBr/hmM0JE5RG5g=;
+	b=OE72buKUPfSsHbaUtld9zEUjC8JfvGlSbO+QOET+kSW/0pkPDF8YLy3uBCruEQjM2hZrE8
+	UMjq86r5Tfm8VQYcPLe89l09ftXIqUnPSykfMU7olJPvfwAQRfNC6yruungJcKUA9RXeYR
+	DJbjuepor8yKTpT2nBdK1mPGtwXFNBo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-695-hw5KzothNAWkK-1bR3SVuw-1; Wed,
+ 24 Jan 2024 09:38:53 -0500
+X-MC-Unique: hw5KzothNAWkK-1bR3SVuw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 254953806622;
+	Wed, 24 Jan 2024 14:38:53 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.117])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 49B49AC03;
+	Wed, 24 Jan 2024 14:38:51 +0000 (UTC)
+Date: Wed, 24 Jan 2024 22:38:49 +0800
+From: Baoquan He <bhe@redhat.com>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev, akpm@linux-foundation.org,
+	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH linux-next v3 10/14] sh, crash: wrap crash dumping code
+ into crash related ifdefs
+Message-ID: <ZbEg+aoWKPww71gW@MiWiFi-R3L-srv>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-11-bhe@redhat.com>
+ <27d8aa3a9e604a7e45c87b7fbc5b1ec2a63f03e3.camel@physik.fu-berlin.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -73,22 +63,40 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jvek=W-FNhiY_0DQha2wDCUv7YW_4jaHUeX0DbYJOX6Q@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <27d8aa3a9e604a7e45c87b7fbc5b1ec2a63f03e3.camel@physik.fu-berlin.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Tue, Jan 23, 2024 at 11:05:43PM +0100, Rafael J. Wysocki wrote:
-> > So why not state that you personally don't want it in the first
-> > place? Why this game of cat and mouse and the constantly changing
-> > arguments. I guess it's to waste developers time.
-> >
-> > Well, I'm calling you out for this, because I'm that pissed off
-> > at the amount of time you're causing to be wasted.
+On 01/24/24 at 09:13am, John Paul Adrian Glaubitz wrote:
+> Hello Baoquan,
 > 
-> And I don't have to suffer this kind of abuse.  Sorry.
+> On Wed, 2024-01-24 at 13:12 +0800, Baoquan He wrote:
+> > Now crash codes under kernel/ folder has been split out from kexec
+> > code, crash dumping can be separated from kexec reboot in config
+> > items on SuperH with some adjustments.
+> > 
+> > wrap up crash dumping codes with CONFIG_CRASH_DUMP ifdeffery, and
+> > use IS_ENABLED(CONFIG_CRASH_RESERVE) check to decide if compiling
+> > in the crashkernel reservation code.
+> 
+> Comparing this to the patches, it seems you missed the first word
+> "Here". Either amend that or write the word "wrap" capitalized.
+> 
+> I would omit "Here" as it's not necessary and just start the
+> sentence with "Wrap".
 
-And I've had enough of this crap, so I'm not walking away. Good
-riddance.
+You are right, thanks for careful checking. I will see if I need repost
+to include this update.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> 
+> -- 
+>  .''`.  John Paul Adrian Glaubitz
+> : :' :  Debian Developer
+> `. `'   Physicist
+>   `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
