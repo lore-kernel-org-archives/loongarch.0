@@ -1,205 +1,166 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9772B7460
-	for <loongarch@lists.linux.dev>; Thu, 25 Jan 2024 03:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807F279C1
+	for <loongarch@lists.linux.dev>; Thu, 25 Jan 2024 04:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706154396; cv=none; b=rECjqJeHdavW3UHau83N5nwlZR8qLWDXxJYvwTfo4ZsNT9HCmzFJZgX96rBMgJh+rQBhTDvh1Mz+U7HYYIG1lsJaOpTqfUYvQft2DclJUG6o1sB3fjkq8/bFl/UQyt//fxFeevEysKdTkzhb5Y0ViHmakHyKbmTPQUZg0c/TOQI=
+	t=1706155791; cv=none; b=erI6kI9tzbLlJqTylmEYmdt05uXYZx11jQPjyD6sklf8Hgs5rqXfNODyhgXt5ThafrEfMW0YkA/Elt2KMDU0KzCAwU2QxyMoJtzDBipJnz1hAmdNwZiiUZ2VsPxodoUv1LwHFI0m1jEYCqDXkB9PtAUzb2rZhlk8q26YIKs++kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706154396; c=relaxed/simple;
-	bh=6gfTMOxiLZKJg3StuFFOtAoyY3gEZtO6MaF5DJ40Glw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vB9oUeufBjqtdwGNB3dz/K0r0ptGSBf+yYK4/uW1omzjVAuKclCVvyOppOC+kwapBLrgTs1DSSgqq2qpv3qmLba0xg7KZpEAIPc8jAQ9UkMOzjyQMLnjjQyS2xt49TSsNU3ZTwYl5m3M8ULJev76oEW/igsLMe5kTE8gZbJz3Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.210.49])
-	by gateway (Coremail) with SMTP id _____8BxVfGU2bFlZE4FAA--.20773S3;
-	Thu, 25 Jan 2024 11:46:29 +0800 (CST)
-Received: from mail-ot1-f49.google.com (unknown [209.85.210.49])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxbs2Q2bFlD2gYAA--.38918S3;
-	Thu, 25 Jan 2024 11:46:27 +0800 (CST)
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6dddcf525f0so170427a34.0
-        for <loongarch@lists.linux.dev>; Wed, 24 Jan 2024 19:46:27 -0800 (PST)
-X-Gm-Message-State: AOJu0Yxg0SRJ07NsvIFx/6lKyTjLHYuC9YWVraKmwsW4tsIWpR5xya7p
-	T1uxBE34lsRFFWjqbTPpnF9xa8IDOSL6pb0KSzhPN0CJcpWOrSDxoDimip+nk/f2Est2PLc1jgi
-	hqLIojugNSVPLjwPWg2GbWAhz7uoqiAK5Cm6qvQ==
-X-Google-Smtp-Source: AGHT+IHpJvy+uoPwJQ7ep0HeUIHFzj8XP2fjNevYr3ODRNUs//WbEIINo71dKyNK1G8dpRw276rewQWOfKy6TPkVG2A=
-X-Received: by 2002:a25:aac2:0:b0:dc2:1faf:e7c6 with SMTP id
- t60-20020a25aac2000000b00dc21fafe7c6mr442935ybi.59.1706152803997; Wed, 24 Jan
- 2024 19:20:03 -0800 (PST)
+	s=arc-20240116; t=1706155791; c=relaxed/simple;
+	bh=zupGSwZyGzMVwBtWOwdtEe+wGr5W8ImseAYZk+EG1cI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YFAlqMr2KwK9/FMnz8E2o28UHLXwiKbj7NhV67XRXEZFGcFvQoq1V/EdZpt2bff9ZIE6lU1HMqlH1WTyVvoopItomFssvdh0E+CagQA3HnD2yvJhaVL1LnTFyfxbiYNRlBejA7coeFvJ44AM1DLmTwqgvxMcR5NCEU29AQNxKXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JI8EIXmr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JI8EIXmr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706155788;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mWkqIM1QddKJmlHq/W4wKL7ORpJYC0uhF5yya8pqsJ8=;
+	b=JI8EIXmrIXWSCpLj2QBsWu5Y3EyVBi56pwtHMRjQcZAw7MPLr5UEYbUXF2QU4nxiyE8gL1
+	jm1p3onesYmSyEm06J3wg1uc6hkD+RazEGIkp1jhJuvKpB8Z62Np04CgAQHSA6u0/eXXTU
+	Z7RoIduVK2FH8aMKnK9bZ6CCicTIjjE=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-400-AvLrlMuiMWWq7ooKHP2nsQ-1; Wed,
+ 24 Jan 2024 23:09:41 -0500
+X-MC-Unique: AvLrlMuiMWWq7ooKHP2nsQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7936A38143C1;
+	Thu, 25 Jan 2024 04:09:40 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.117])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 71F7F40C1430;
+	Thu, 25 Jan 2024 04:09:39 +0000 (UTC)
+Date: Thu, 25 Jan 2024 12:09:36 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"ebiederm@xmission.com" <ebiederm@xmission.com>,
+	"hbathini@linux.ibm.com" <hbathini@linux.ibm.com>,
+	"piliu@redhat.com" <piliu@redhat.com>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH linux-next v3 06/14] x86, crash: wrap crash dumping code
+ into crash related ifdefs
+Message-ID: <ZbHfACpwqi2U9vmK@MiWiFi-R3L-srv>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-7-bhe@redhat.com>
+ <SN6PR02MB4157931105FA68D72E3D3DB8D47B2@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231020155056.3495121-1-Jamie.Cunliffe@arm.com>
- <20231020155056.3495121-2-Jamie.Cunliffe@arm.com> <CALNs47vzQm5MbfJtMQR3p+W1xub3KHiNqRgEQGWT3u28fpQ-oA@mail.gmail.com>
-In-Reply-To: <CALNs47vzQm5MbfJtMQR3p+W1xub3KHiNqRgEQGWT3u28fpQ-oA@mail.gmail.com>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Thu, 25 Jan 2024 11:19:53 +0800
-X-Gmail-Original-Message-ID: <CAHirt9jhbnXz34D-pmHNecMfkefL4wTr9LYj_V28OsVd=fkdZA@mail.gmail.com>
-Message-ID: <CAHirt9jhbnXz34D-pmHNecMfkefL4wTr9LYj_V28OsVd=fkdZA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] rust: Refactor the build target to allow the use
- of builtin targets
-To: Trevor Gross <tmgross@umich.edu>
-Cc: Jamie Cunliffe <Jamie.Cunliffe@arm.com>, linux-arm-kernel@lists.infradead.org, 
-	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, steve.capper@arm.com, 
-	Asahi Lina <lina@asahilina.net>, boqun.feng@gmail.com, andrew@lunn.ch, 
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8Cxbs2Q2bFlD2gYAA--.38918S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZFyDJw1xXr4kCrW7AFy5Awc_yoWrtw4Dpa
-	n5CF4fAFW8J3yYga1xtFW3ur45Kws5Wr109F4xGw1jyr15WFn2grWIkr43uF1UCay7C3yr
-	XF1I9F97ur4UAwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUd529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Mq2tUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB4157931105FA68D72E3D3DB8D47B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Hello,
+On 01/24/24 at 11:02pm, Michael Kelley wrote:
+> > diff --git a/arch/x86/kernel/cpu/mshyperv.c
+> > b/arch/x86/kernel/cpu/mshyperv.c
+> > index 01fa06dd06b6..f8163a59026b 100644
+> > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > @@ -210,6 +210,7 @@ static void hv_machine_shutdown(void)
+> >  		hyperv_cleanup();
+> >  }
+> > 
+> > +#ifdef CONFIG_CRASH_DUMP
+> >  static void hv_machine_crash_shutdown(struct pt_regs *regs)
+> >  {
+> >  	if (hv_crash_handler)
+> > @@ -221,6 +222,7 @@ static void hv_machine_crash_shutdown(struct
+> > pt_regs *regs)
+> >  	/* Disable the hypercall page when there is only 1 active CPU. */
+> >  	hyperv_cleanup();
+> >  }
+> > +#endif
+> >  #endif /* CONFIG_KEXEC_CORE */
+> 
+> Note that the #ifdef CONFIG_CRASH_DUMP is nested inside
+> #ifdef CONFIG_KEXEC_CODE here, and in the other Hyper-V code
+> just below.   It's also nested in xen_hvm_guest_init() at the bottom
+> of this patch.  But the KVM case of setting crash_shutdown is
+> not nested -- you changed #ifdef CONFIG_KEXEC_CORE to #ifdef
+> CONFIG_CRASH_DUMP.
+> 
+> I think both approaches work because CONFIG_CRASH_DUMP implies
+> CONFIG_KEXEC_CORE, but I wonder if it would be better to *not* nest
+> in all cases.  I'd like to see the cases be consistent so in the future
+> someone doesn't wonder why there's a difference (unless there's
+> a reason for the difference that I missed).
 
-On Mon, Jan 22, 2024 at 5:17=E2=80=AFPM Trevor Gross <tmgross@umich.edu> wr=
-ote:
->
-> On Fri, Oct 20, 2023 at 10:59=E2=80=AFAM Jamie Cunliffe <Jamie.Cunliffe@a=
-rm.com> wrote:
-> >
-> > Eventually we want all architectures to be using the target as defined
-> > by rustc. However currently some architectures can't do that and are
-> > using the target.json specification. This puts in place the foundation
-> > to allow the use of the builtin target definition or a target.json
-> > specification.
-> >
-> > Signed-off-by: Jamie Cunliffe <Jamie.Cunliffe@arm.com>
-> > ---
-> >  Makefile          | 1 -
-> >  arch/x86/Makefile | 1 +
-> >  rust/Makefile     | 5 ++++-
-> >  scripts/Makefile  | 4 +++-
-> >  4 files changed, 8 insertions(+), 3 deletions(-)
->
-> Adding LoongArch maintainers - this patch will need a small update to
-> arch/loongarch/Makefile similar to the change in arch/x86/Makefile
-> (included below), since that support is now in-tree and uses
-> generate_rust_target [1]. Also a very minor conflict in docs at patch
-> 2/2.
->
-> I believe this patchset is still waiting on an ack from the kbuild
-> team. Series at [2] for reference.
->
-> Thanks,
-> Trevor
->
-> [1]: https://lore.kernel.org/rust-for-linux/20240108032117.215171-1-wangr=
-ui@loongson.cn/
-> [2]: https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Jami=
-e.Cunliffe@arm.com/
+I agree with you, it's a great suggestion. Thanks.
 
-I can confirm that the fix patch [2], based on patch [1], is suitable
-for LoongArch. LoongArch encounters no issues when using the built-in
-`loongarch64-unknown-none-softfloat` target. Once patch [1] is merged
-into the mainline, I'll send a patch to switch to using the built-in
-target.
+Do you think below draft patch includes all changes you are concerned
+about?
 
-Thanks,
-Rui
-
-[1]: https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Jamie.=
-Cunliffe@arm.com/
-[2]: https://github.com/heiher/linux/commit/c504d83a6edd963e2ba58ec538e3f06=
-da78b187e.patch
-
->
-> > diff --git a/Makefile b/Makefile
-> > index 88ebf6547964..23100f193da3 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -566,7 +566,6 @@ KBUILD_CFLAGS +=3D -fno-strict-aliasing
-> >
-> >  KBUILD_CPPFLAGS :=3D -D__KERNEL__
-> >  KBUILD_RUSTFLAGS :=3D $(rust_common_flags) \
-> > -                   --target=3D$(objtree)/scripts/target.json \
-> >                     -Cpanic=3Dabort -Cembed-bitcode=3Dn -Clto=3Dn \
-> >                     -Cforce-unwind-tables=3Dn -Ccodegen-units=3D1 \
-> >                     -Csymbol-mangling-version=3Dv0 \
-> > diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> > index 5bfe5caaa444..0f339d4abd40 100644
-> > --- a/arch/x86/Makefile
-> > +++ b/arch/x86/Makefile
-> > @@ -68,6 +68,7 @@ export BITS
-> >  #    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D53383
-> >  #
-> >  KBUILD_CFLAGS +=3D -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx
-> > +KBUILD_RUSTFLAGS +=3D --target=3D$(objtree)/scripts/target.json
-> >  KBUILD_RUSTFLAGS +=3D -Ctarget-feature=3D-sse,-sse2,-sse3,-ssse3,-sse4=
-.1,-sse4.2,-avx,-avx2
-> >
-> >  ifeq ($(CONFIG_X86_KERNEL_IBT),y)
-> > diff --git a/rust/Makefile b/rust/Makefile
-> > index 87958e864be0..8d75a6ffe951 100644
-> > --- a/rust/Makefile
-> > +++ b/rust/Makefile
-> > @@ -428,8 +428,11 @@ $(obj)/core.o: private skip_clippy =3D 1
-> >  $(obj)/core.o: private skip_flags =3D -Dunreachable_pub
-> >  $(obj)/core.o: private rustc_objcopy =3D $(foreach sym,$(redirect-intr=
-insics),--redefine-sym $(sym)=3D__rust$(sym))
-> >  $(obj)/core.o: private rustc_target_flags =3D $(core-cfgs)
-> > -$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs scripts/target.json FOR=
-CE
-> > +$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs FORCE
-> >         $(call if_changed_dep,rustc_library)
-> > +ifdef CONFIG_X86_64
-> > +$(obj)/core.o: scripts/target.json
-> > +endif
-> >
-> >  $(obj)/compiler_builtins.o: private rustc_objcopy =3D -w -W '__*'
-> >  $(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.o =
-FORCE
-> > diff --git a/scripts/Makefile b/scripts/Makefile
-> > index 576cf64be667..c85d130a4125 100644
-> > --- a/scripts/Makefile
-> > +++ b/scripts/Makefile
-> > @@ -11,12 +11,14 @@ hostprogs-always-$(CONFIG_MODULE_SIG_FORMAT)       =
-         +=3D sign-file
-> >  hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)    +=3D insert-sys=
--cert
-> >  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=3D ru=
-stdoc_test_builder
-> >  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=3D ru=
-stdoc_test_gen
-> > -always-$(CONFIG_RUST)                                  +=3D target.jso=
-n
-> >
-> > +ifdef CONFIG_X86_64
-> > +always-$(CONFIG_RUST)                                  +=3D target.jso=
-n
-> >  filechk_rust_target =3D $< < include/config/auto.conf
-> >
-> >  $(obj)/target.json: scripts/generate_rust_target include/config/auto.c=
-onf FORCE
-> >         $(call filechk,rust_target)
-> > +endif
-> >
-> >  hostprogs +=3D generate_rust_target
-> >  generate_rust_target-rust :=3D y
-> > --
-> > 2.30.2
-> >
-> >
->
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index f8163a59026b..2e8cd5a4ae85 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -209,6 +209,7 @@ static void hv_machine_shutdown(void)
+ 	if (kexec_in_progress)
+ 		hyperv_cleanup();
+ }
++#endif /* CONFIG_KEXEC_CORE */
+ 
+ #ifdef CONFIG_CRASH_DUMP
+ static void hv_machine_crash_shutdown(struct pt_regs *regs)
+@@ -222,8 +223,7 @@ static void hv_machine_crash_shutdown(struct pt_regs *regs)
+ 	/* Disable the hypercall page when there is only 1 active CPU. */
+ 	hyperv_cleanup();
+ }
+-#endif
+-#endif /* CONFIG_KEXEC_CORE */
++#endif /* CONFIG_CRASH_DUMP */
+ #endif /* CONFIG_HYPERV */
+ 
+ static uint32_t  __init ms_hyperv_platform(void)
+@@ -497,9 +497,11 @@ static void __init ms_hyperv_init_platform(void)
+ 	no_timer_check = 1;
+ #endif
+ 
+-#if IS_ENABLED(CONFIG_HYPERV) && defined(CONFIG_KEXEC_CORE)
++#if IS_ENABLED(CONFIG_HYPERV)
++#if defined(CONFIG_KEXEC_CORE)
+ 	machine_ops.shutdown = hv_machine_shutdown;
+-#ifdef CONFIG_CRASH_DUMP
++#endif
++#if defined(CONFIG_CRASH_DUMP)
+ 	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
+ #endif
+ #endif
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 1287b0d5962f..f3130f762784 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -826,7 +826,7 @@ void machine_halt(void)
+ 	machine_ops.halt();
+ }
+ 
+-#ifdef CONFIG_KEXEC_CORE
++#ifdef CONFIG_CRASH_DUMP
+ void machine_crash_shutdown(struct pt_regs *regs)
+ {
+ 	machine_ops.crash_shutdown(regs);
 
