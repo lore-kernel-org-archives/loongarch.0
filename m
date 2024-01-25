@@ -1,227 +1,274 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02olkn2065.outbound.protection.outlook.com [40.92.15.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295CA6E2BF;
-	Thu, 25 Jan 2024 14:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706193768; cv=none; b=efaU6+U/0jS/J5WS7LBj9I5kx/rldt3RVpYFazPyZcY8icvGIZHYXYYwDDFMMJTmJAM1nse9GEkb8eLe/M64Q5O4+lTXXsCjLuKl/FMkl1i6yVLFWxIhUC7oUxj76KgHxWJswV5bXD2O0UfUe65jVOQi/BfsoK/M1XT8g3RXFo8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706193768; c=relaxed/simple;
-	bh=JaK07Zkj3cT2yhn6Ow34x5ujcw/CKNJtlZf/Ls0PoA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pbZslrDJaKPlwZU1G/h2QbxCOX5IXjCYd0FuK7kpCBywYl9zdvdP2GwZmHkKlMDyVqxi2o6lB2TQL2FBbE9LtLoQ2orphGEFRwLn6bk8N4E1S9QAwaLQxLKzh3SkZIbo0RJon7wKVk4STGvKxys8SEIL5WLxkMudBbWKZj+XoF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bd4df21f4eso1294917b6e.1;
-        Thu, 25 Jan 2024 06:42:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706193766; x=1706798566;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WansAIK1kV2qngBkKGzUZEv8a9oLEEFRWHM6D4Yzd+M=;
-        b=bEFMrm0C7Sp5x5lXG04SVwie1cJR4oAHanq63eaPrVgrqjrfPVl5gCWcEEDMWZFTvl
-         Gwvbx05IagYZDdrUgpmnYJbfAYTZCV8EcqGzvADg3XYC5pFjuzzFv6WFM/7LQ1QLTDxO
-         NlV3mzgS+8AA5rmmQPj1Hr20y6ShIIjlXhQ+RL2nDvCVSRfi/42D10GgxeObZhnbiED5
-         /O3ZDj7WhIMVoOXa3fNZeyMj97J5EGoDPrNaLGm4eI85lsgZ72WpYiwLjYqbd3fnZ4YF
-         pWX65/04lyH4tpSbQoqSenW2NFKek7ytIvKX3FV6Q/LJe1J9+xvkzzY/sJMI8NxgjF1n
-         +D4w==
-X-Gm-Message-State: AOJu0YxynvhWFw1Uca9G5XXqH8tuI0wdVUv90NHvo3/gLEjC8V9qabfx
-	WO30t3Pb8Z3oYpNvfm5FrR6qF1BL5O4mQ9N2wBXr7qJrbRiT/tpj6yKEgvIgf/EUw8oQ97nQWqT
-	0OWdRuOnLiUY+22fuKjsaZmxXVKc=
-X-Google-Smtp-Source: AGHT+IHrMMS6irD8BFopNOqV65JYF32HklaFUv2M5fjsXBTp38AaiSFl3qoFRWI4K+lpO8xVl3bxSYdmwfq7Su82484=
-X-Received: by 2002:a05:6870:618a:b0:214:dbdd:a173 with SMTP id
- a10-20020a056870618a00b00214dbdda173mr987239oah.3.1706193766071; Thu, 25 Jan
- 2024 06:42:46 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36A873174
+	for <loongarch@lists.linux.dev>; Thu, 25 Jan 2024 15:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.15.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706196651; cv=fail; b=OW1j+ucJODqTTFgCpIv0biWHPZra57yD7vbV2WprY2aeNMpCZAeHLGvah/7MHBltd7+k8RMqGIL6lrqJRHXUduAH7oBXGyTZdbFNhZdPfDEbxCZoy9YMvbcIBUVQXUW/pGECzmrtn/Mc2lWMh+h1LaEx6WVz5Ms7cH/40rcZ1vQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706196651; c=relaxed/simple;
+	bh=49iPpjqiwCxzkmJGVwQFZBZ54dZrh+vA2b1sHXn+RQE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YVpL74NJVZJe0FzvXwqEYc7cvIHaGiJgKpJUylnuHCi+Y9pCL2mqubQQRV0OHq6nszmHxkEgKFjWexBUZZVIIHYa+dLLV6jkSxCbY3N+pzY1w6d7HvPQVNPEZgqTrv18l4JY9tzTYOgwUdBGNc5H2gp5lFTdaFU6c54Le6FdXfk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=IsB3UrNz; arc=fail smtp.client-ip=40.92.15.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="IsB3UrNz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wi2W5EnWM5ImiRa0u3ZgYBv3psB5MjmVL7e8z7LXvboMv5qA9rV3ohntOcVM+0cpqbhjsYovoDDhqO8TEKuJ4uB+OSNa9qc2FFo80qPdpI4vm5FrYrdMRAbvlPet36rcyqe1OJjpoWzDkR2iyORDJ6iieHxmg54QUKnr8be15dAtSbxZh9WC5AD1tA0b/QM/BP1pMkQnOKpKOlrou7hno44gjFk3GKZSEZ3oeVZIHw3LswBSIoMqQLLkEHzDY5cuhpLzScYTtZ0kZ4ZBQEQP8V7Fdqvz6jKGTjG2euum7pUbcKo7ES4oYeFbPaByWFnffyY97aZ+/yzzWshoGhlfvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eW2alejqAOYT8WAjMai/jwWkVOYlVlzir8+fWHfLoG4=;
+ b=KZduFnFM4kmyDwEwvMI1M8eJgwyGOExC/11Jx+u6UjbeQNotC6IVwL3CK4/nR4SojUtIuhpSlFpSf0LV1/C5RDSlZEmXPX5ip+07VwHVSXyH9aQzHkBP/O3dGu+X72kKuiatorFDtxeVvf2C/zegsssnE3ttw4V6y/3RR09hSnFa+YsD//WNjIvun3UsXgD5haUSuqznZq4Yd4D0sEiO780dJw+wzLOjEiWZS2q6+OFGCT+KMGdvBuKGtTwrvNbZrYNtiB9bGT92K/UwfWzfBKk9+3xQFzblFHU9R9WbmZWica6+Z0WG5JX32ohM9U+SsDnT+Egbi/Wtn2Ip1hq83g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eW2alejqAOYT8WAjMai/jwWkVOYlVlzir8+fWHfLoG4=;
+ b=IsB3UrNzu5Xn0UgYLY+hFfk9v7sdqDOpsfIpP1TB01DdZalsNRyvOSFwBuhU/OhlKKKSMj8AZYhE/YopziPalbqobev+gp6ALcF+EKAAU/MR//7VPs4kDUCHdh1u6mxmcOEPo0l5iJ5l4d7ioFfDt+31Yd7fMRGNvcnxD+0DmsfWtStaxEFeVE2wNmlye6Ic7A1Z56DiwbIyBuUxjEcfGAuK6760BuZtv1UsYxIDFrSWYg0E8CIIxOWrEkIm1fEm2AqnUYyTsJXpDlCtzQA8Mp+7FLSuAq6QFxwj1IJ8pV332UiwNKR/9Bvu22OETDLykJNNx7zaMO2bPInd/LGijA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH7PR02MB8980.namprd02.prod.outlook.com (2603:10b6:510:1f8::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.26; Thu, 25 Jan
+ 2024 15:30:46 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7228.022; Thu, 25 Jan 2024
+ 15:30:46 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Baoquan He <bhe@redhat.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>, "x86@kernel.org"
+	<x86@kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "linux-sh@vger.kernel.org"
+	<linux-sh@vger.kernel.org>, "linux-mips@vger.kernel.org"
+	<linux-mips@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>,
+	"hbathini@linux.ibm.com" <hbathini@linux.ibm.com>, "piliu@redhat.com"
+	<piliu@redhat.com>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: RE: [PATCH linux-next v3 06/14] x86, crash: wrap crash dumping code
+ into crash related ifdefs
+Thread-Topic: [PATCH linux-next v3 06/14] x86, crash: wrap crash dumping code
+ into crash related ifdefs
+Thread-Index: AQHaToRG7EZBXaVit0yb4RXbyvoNjrDpkK1ggABa6ACAAA/3oIAARgWAgABnw3A=
+Date: Thu, 25 Jan 2024 15:30:45 +0000
+Message-ID:
+ <SN6PR02MB41572FDAE703FC8A91974DFFD47A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-7-bhe@redhat.com>
+ <SN6PR02MB4157931105FA68D72E3D3DB8D47B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ZbHfACpwqi2U9vmK@MiWiFi-R3L-srv>
+ <SN6PR02MB4157E138C7EE4A281AB49C10D47A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ZbInIQeIoPj6R0kY@MiWiFi-R3L-srv>
+In-Reply-To: <ZbInIQeIoPj6R0kY@MiWiFi-R3L-srv>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [kBPvbuH5eMbnBowZglgoIczCWf/e+Xu7]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB8980:EE_
+x-ms-office365-filtering-correlation-id: 1dd18b5f-0428-4c59-dec9-08dc1dba99ba
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ /aH4jkmyv0ty76k9LAS6MR4nv2cgpKsOzP6GwHd+HQssdpDIfaJhh/vVCXR5kQsb2qLVdNOmHcA5A7cc3WeT/SgMcCPlMmhwYjkRKD4tHIHtGgseWm+MC7WitVnT0aUobih0TORAKdGV+vqg/MO5y3tIcKCGDSGgPKNxUmKtPJ3GAWl4/tFlLqiCTSaxsRdzLm1sKNVavQWi7KEoyAfEnw65Znm499uxsLJx2yJIla2Tu1HKJBDlhpZ1EqRFABkCrxz8RuGHmF/PjYwZpWzC1OuQ8cD+CxLJo0jD9tQC6ieY2984Tb4kTRt61JHprgz97soQWkbDSkOJAxZX6iNK7tcV85Dyjfyzptjsn6I65hFK5OPc0ax5aIsl3IEV0LvMIWdPbPP0aepx8DWPcZjpnDiYK++kS0uYGGFLS2NYNOqMa9SiJ2gLdb/2GuxHUldXbRgK2bexasJt+VsH5ay2gPBnT+OzSikbsY8Dp87eDbumkyM4IpzryLc6ioDtc18yaHOH451Lt6sII2q9gw5/kEiziqNxO7EcLKrAG/Pznz0GoepHww6mbTx1sTPc0uoF
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?rDZlZD2CA0+HKZCv3KEDs5f1ygEjqFw7Le+0at86EcWCnClczxvKx2gWWXZh?=
+ =?us-ascii?Q?JbXZBoacRbvSz0S9fsJbOF1HQ5pt1Ib5AwYgjpzrDMCmvHK/2UiPCnghx398?=
+ =?us-ascii?Q?g/qp60CEmCbZclWstEjir0GGZus9cVAYEa0RiV84MiBKR85t0Pc0TgC3HRAf?=
+ =?us-ascii?Q?PFUfGtzh3MXNZLZ8D719F5z5HVhgusVKAnDX9H14uGl8BgYbfRS5sZ4Y8/ww?=
+ =?us-ascii?Q?0DkFC8qalh1O5XFdGj7hrJllMzk8CFLlUqjnRM8VHGGUwHCfNF3vqh0aSNAG?=
+ =?us-ascii?Q?lLtAIRELT4IsacaRW0GOHFQZHDbl+dM0NmWA5lCv4ZZxtS76IBhxe55s55q1?=
+ =?us-ascii?Q?2YdIvaxuvTjCgWkZ6TPIKFTKBxaxyAkSQE5IyWsmRGMoadyyDmpc9OYzYmRj?=
+ =?us-ascii?Q?faZfO9KKf5xvzBBoy4UgjqNc8ncDfK8cA8exewsaH+GnwM8Omqq/av5h/v7n?=
+ =?us-ascii?Q?9fBGovW5O0iSx5dbmmR3LpuiRbXsa3ZJin8+0KEPYaE29nLpFq8wYtTVKLmd?=
+ =?us-ascii?Q?sRxm0Hn6GXn+CkqbRa3hz1vWu4TFvOZEtwv0yXZXnx5bXnUdGGBhC/0BR+bK?=
+ =?us-ascii?Q?UFnxsvs1His8sEVC+92IQA2QXHh/idK9Ig+PAzA8RJe4NqDuU+B5FYnzZB3a?=
+ =?us-ascii?Q?62kbTpJL0zZHePhkEtjTGrQVE8EPfjmpeBzHTrGULLJPlGOWvQmIYkgcnUOS?=
+ =?us-ascii?Q?z/Lro/YRiqVPdu2AyO3S+BkrakpN8qf3oxkwXGeNPlDfquw3gvm6gITjm67Q?=
+ =?us-ascii?Q?pxKl8IieqDV9/I0r4OC/18pFAauC/ka5PuZdzAm/xfYt4nQQxosh4iJ3FASs?=
+ =?us-ascii?Q?3bFMn/VpX/hnEJ70ue5gQDmmy1vCT1k1/DIcqlJNNhkX0XsALsbEp1kNwU1H?=
+ =?us-ascii?Q?kZcMKb88y4y18TWtb/4xo1XzDyOelY3iLVI4WE4u3o7wGA8QonVCPju9iEXG?=
+ =?us-ascii?Q?QHdxH3p4bwS94RK0v4l34kQZI2TPsTy2Ce6sX/UzGgxFyaVCdBEzUqKY/8cE?=
+ =?us-ascii?Q?zsISGi7fqdRCczg2ucuKHrAogLjBwq+/n3Cy1/YB2BHy7e7eyjGLJdCx8OQu?=
+ =?us-ascii?Q?oubPCrqiLbaB0K5Me0Ev65m3brFPi+BrNKb2gqodosLxPnVymUrG64ceVvIu?=
+ =?us-ascii?Q?of4og4ldjWPK70sCfx8Z8ky3MM1W5+40ir5tnA4unxxiJSXzirA/roTarfiP?=
+ =?us-ascii?Q?6Ye4JHUgUp+GufrhQnN5JU+26xNBlYQ7tRYSaA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk> <E1rDOg2-00Dvjk-RI@rmk-PC.armlinux.org.uk>
- <CAJZ5v0ju1JHgpjuFLHZVs4NZiARG6iBZN_wza6c2e0kDhZjK0w@mail.gmail.com>
- <ZaURtUvWQyjYfiiO@shell.armlinux.org.uk> <20240122160227.00002d83@Huawei.com>
- <CAJZ5v0hamuXJ_w-TSmVb=5jGide=Lb7sCjbzzNb_rFuPrvkgxQ@mail.gmail.com>
- <Za6mHRJVjb6M1mun@shell.armlinux.org.uk> <20240123092725.00004382@Huawei.com> <3A26D95F-7366-4354-A010-318A98660076@oracle.com>
-In-Reply-To: <3A26D95F-7366-4354-A010-318A98660076@oracle.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 25 Jan 2024 15:42:34 +0100
-Message-ID: <CAJZ5v0h1na9BQiT6a4dK==8anmt15S4sArktzuLiSyScvw=bqg@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 03/21] ACPI: processor: Register CPUs that are
- online, but not described in the DSDT
-To: Miguel Luis <miguel.luis@oracle.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	"Russell King (Oracle)" <linux@armlinux.org.uk>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, 
-	"acpica-devel@lists.linuxfoundation.org" <acpica-devel@lists.linuxfoundation.org>, 
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, 
-	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>, Salil Mehta <salil.mehta@huawei.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, "jianyong.wu@arm.com" <jianyong.wu@arm.com>, 
-	"justin.he@arm.com" <justin.he@arm.com>, James Morse <james.morse@arm.com>, 
-	"vishnu@os.amperecomputing.com" <vishnu@os.amperecomputing.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1dd18b5f-0428-4c59-dec9-08dc1dba99ba
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jan 2024 15:30:45.9873
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB8980
 
-Hi,
-
-On Thu, Jan 25, 2024 at 2:56=E2=80=AFPM Miguel Luis <miguel.luis@oracle.com=
-> wrote:
->
-> Hi
->
-> > On 23 Jan 2024, at 08:27, Jonathan Cameron <jonathan.cameron@huawei.com=
-> wrote:
+From: Baoquan He <bhe@redhat.com> Sent: Thursday, January 25, 2024 1:17 AM
+>=20
+> On 01/25/24 at 05:12am, Michael Kelley wrote:
+> > From: Baoquan He <bhe@redhat.com> Sent: Wednesday, January 24, 2024
+> 8:10 PM
+> > >
+> > > On 01/24/24 at 11:02pm, Michael Kelley wrote:
+> > > > > diff --git a/arch/x86/kernel/cpu/mshyperv.c
+> > > > > b/arch/x86/kernel/cpu/mshyperv.c
+> > > > > index 01fa06dd06b6..f8163a59026b 100644
+> > > > > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > > > > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > > > > @@ -210,6 +210,7 @@ static void hv_machine_shutdown(void)
+> > > > >  		hyperv_cleanup();
+> > > > >  }
+> > > > >
+> > > > > +#ifdef CONFIG_CRASH_DUMP
+> > > > >  static void hv_machine_crash_shutdown(struct pt_regs *regs)
+> > > > >  {
+> > > > >  	if (hv_crash_handler)
+> > > > > @@ -221,6 +222,7 @@ static void hv_machine_crash_shutdown(struct =
+pt_regs *regs)
+> > > > >  	/* Disable the hypercall page when there is only 1 active CPU. =
+*/
+> > > > >  	hyperv_cleanup();
+> > > > >  }
+> > > > > +#endif
+> > > > >  #endif /* CONFIG_KEXEC_CORE */
+> > > >
+> > > > Note that the #ifdef CONFIG_CRASH_DUMP is nested inside
+> > > > #ifdef CONFIG_KEXEC_CODE here, and in the other Hyper-V code
+> > > > just below.   It's also nested in xen_hvm_guest_init() at the botto=
+m
+> > > > of this patch.  But the KVM case of setting crash_shutdown is
+> > > > not nested -- you changed #ifdef CONFIG_KEXEC_CORE to #ifdef
+> > > > CONFIG_CRASH_DUMP.
+> > > >
+> > > > I think both approaches work because CONFIG_CRASH_DUMP implies
+> > > > CONFIG_KEXEC_CORE, but I wonder if it would be better to *not* nest
+> > > > in all cases.  I'd like to see the cases be consistent so in the fu=
+ture
+> > > > someone doesn't wonder why there's a difference (unless there's
+> > > > a reason for the difference that I missed).
+> > >
+> > > I agree with you, it's a great suggestion. Thanks.
+> > >
+> > > Do you think below draft patch includes all changes you are concerned
+> > > about?
 > >
-> > On Mon, 22 Jan 2024 17:30:05 +0000
-> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > Yes, these changes look good as a delta to your original patch.
 > >
-> >> On Mon, Jan 22, 2024 at 05:22:46PM +0100, Rafael J. Wysocki wrote:
-> >>> On Mon, Jan 22, 2024 at 5:02=E2=80=AFPM Jonathan Cameron
-> >>> <Jonathan.Cameron@huawei.com> wrote:
-> >>>>
-> >>>> On Mon, 15 Jan 2024 11:06:29 +0000
-> >>>> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> >>>>
-> >>>>> On Mon, Dec 18, 2023 at 09:22:03PM +0100, Rafael J. Wysocki wrote:
-> >>>>>> On Wed, Dec 13, 2023 at 1:49=E2=80=AFPM Russell King <rmk+kernel@a=
-rmlinux.org.uk> wrote:
-> >>>>>>>
-> >>>>>>> From: James Morse <james.morse@arm.com>
-> >>>>>>>
-> >>>>>>> ACPI has two descriptions of CPUs, one in the MADT/APIC table, th=
-e other
-> >>>>>>> in the DSDT. Both are required. (ACPI 6.5's 8.4 "Declaring Proces=
-sors"
-> >>>>>>> says "Each processor in the system must be declared in the ACPI
-> >>>>>>> namespace"). Having two descriptions allows firmware authors to g=
-et
-> >>>>>>> this wrong.
-> >>>>>>>
-> >>>>>>> If CPUs are described in the MADT/APIC, they will be brought onli=
-ne
-> >>>>>>> early during boot. Once the register_cpu() calls are moved to ACP=
-I,
-> >>>>>>> they will be based on the DSDT description of the CPUs. When CPUs=
- are
-> >>>>>>> missing from the DSDT description, they will end up online, but n=
-ot
-> >>>>>>> registered.
-> >>>>>>>
-> >>>>>>> Add a helper that runs after acpi_init() has completed to registe=
-r
-> >>>>>>> CPUs that are online, but weren't found in the DSDT. Any CPU that
-> >>>>>>> is registered by this code triggers a firmware-bug warning and ke=
-rnel
-> >>>>>>> taint.
-> >>>>>>>
-> >>>>>>> Qemu TCG only describes the first CPU in the DSDT, unless cpu-hot=
-plug
-> >>>>>>> is configured.
-> >>>>>>
-> >>>>>> So why is this a kernel problem?
-> >>>>>
-> >>>>> So what are you proposing should be the behaviour here? What this
-> >>>>> statement seems to be saying is that QEMU as it exists today only
-> >>>>> describes the first CPU in DSDT.
-> >>>>
-> >>>> This confuses me somewhat, because I'm far from sure which machines =
-this
-> >>>> is true for in QEMU.  I'm guessing it's a legacy thing with
-> >>>> some old distro version of QEMU - so we'll have to paper over it any=
-way
-> >>>> but for current QEMU I'm not sure it's true.
-> >>>>
-> >>>> Helpfully there are a bunch of ACPI table tests so I've been checkin=
-g
-> >>>> through all the multi CPU cases.
-> >>>>
-> >>>> CPU hotplug not enabled.
-> >>>> pc/DSDT.dimmpxm  - 4x Processor entries.  -smp 4
-> >>>> pc/DSDT.acpihmat - 2x Processor entries.  -smp 2
-> >>>> q35/DSDT.acpihmat - 2x Processor entries. -smp 2
-> >>>> virt/DSDT.acpihmatvirt - 4x ACPI0007 entries -smp 4
-> >>>> q35/DSDT.acpihmat-noinitiator - 4 x Processor () entries -smp 4
-> >>>> virt/DSDT.topology - 8x ACPI0007 entries
-> >>>>
-> >>>> I've also looked at the code and we have various types of
-> >>>> CPU hotplug on x86 but they all build appropriate numbers of
-> >>>> Processor() entries in DSDT.
-> >>>> Arm likewise seems to build the right number of ACPI0007 entries
-> >>>> (and doesn't yet have CPU HP support).
-> >>>>
-> >>>> If anyone can add a reference on why this is needed that would be ve=
-ry
-> >>>> helpful.
-> >>>
-> >>> Yes, it would.
-> >>>
-> >>> Personally, I would prefer to assume that it is not necessary until i=
-t
-> >>> turns out that (1) there is firmware with this issue actually in use
-> >>> and (2) updating the firmware in question to follow the specification
-> >>> is not practical.
-> >>>
-> >>> Otherwise, we'd make it easier to ship non-compliant firmware for no
-> >>> good reason.
-> >>
-> >> If Salil can't come up with a reason, then I'm in favour of dropping
-> >> the patch like already done for patch 2. If the code change serves no
-> >> useful purpose, there's no point in making the change.
-> >>
-> >
-> > Salil's out today, but I've messaged him to follow up later in the week=
-.
-> >
-> > It 'might' be the odd cold plug path where QEMU half comes up, then ext=
-ra
-> > CPUs are added, then it boots. (used by some orchestration frameworks)
-> > I don't have a set up for that and I won't get to creating one today an=
-yway
-> > (we all love start of the year planning workshops!)
-> >
-> > I've +CC'd a few people have run tests on the various iterations of thi=
-s
-> > work in the past.  Maybe one of them can shed some light on this?
-> >
->
-> IIUC, this patch covers a scenario for non compliant firmware and in whic=
-h my
-> tests for AArch64 using RFC v2 have been unable to trigger its error mess=
-age so
-> far. This does not mean, however, this patch should not be taken forward =
-though.
->
-> It seems benevolent enough detecting non compliant firmware and still pro=
-ceed
-> while having whoever uses that firmware to get to know that.
+> > But also look at xen_hvm_guest_init().  It looks like your original pat=
+ch
+> > does nesting there as well, and it could probably be "un-nested".
+>=20
+> Right. I checked them all in arch/x86 this time, hope nothing is missed
+> again. I can post a v4 to update this x86 patch later if no other
+> concern. Thanks.
 
-There is one issue with this approach, though.
+Yes -- everything looks good to me now.
 
-If this is done by Linux and Linux is used as a main testing vehicle
-for whoever produced that firmware, it may pass the tests and be
-shipped causing a problem for the rest of the industry (because other
-operating systems will not support that firmware and now they will be
-put in an awkward position).
+Michael
 
-I've seen enough breakage resulting from a similar policy in some
-other OS and with Linux on the receiving end that I'd rather avoid
-doing this to someone else.
+>=20
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c
+> b/arch/x86/kernel/cpu/mshyperv.c
+> index f8163a59026b..2e8cd5a4ae85 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -209,6 +209,7 @@ static void hv_machine_shutdown(void)
+>  	if (kexec_in_progress)
+>  		hyperv_cleanup();
+>  }
+> +#endif /* CONFIG_KEXEC_CORE */
+>=20
+>  #ifdef CONFIG_CRASH_DUMP
+>  static void hv_machine_crash_shutdown(struct pt_regs *regs)
+> @@ -222,8 +223,7 @@ static void hv_machine_crash_shutdown(struct
+> pt_regs *regs)
+>  	/* Disable the hypercall page when there is only 1 active CPU. */
+>  	hyperv_cleanup();
+>  }
+> -#endif
+> -#endif /* CONFIG_KEXEC_CORE */
+> +#endif /* CONFIG_CRASH_DUMP */
+>  #endif /* CONFIG_HYPERV */
+>=20
+>  static uint32_t  __init ms_hyperv_platform(void)
+> @@ -497,9 +497,11 @@ static void __init ms_hyperv_init_platform(void)
+>  	no_timer_check =3D 1;
+>  #endif
+>=20
+> -#if IS_ENABLED(CONFIG_HYPERV) && defined(CONFIG_KEXEC_CORE)
+> +#if IS_ENABLED(CONFIG_HYPERV)
+> +#if defined(CONFIG_KEXEC_CORE)
+>  	machine_ops.shutdown =3D hv_machine_shutdown;
+> -#ifdef CONFIG_CRASH_DUMP
+> +#endif
+> +#if defined(CONFIG_CRASH_DUMP)
+>  	machine_ops.crash_shutdown =3D hv_machine_crash_shutdown;
+>  #endif
+>  #endif
+> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> index 1287b0d5962f..f3130f762784 100644
+> --- a/arch/x86/kernel/reboot.c
+> +++ b/arch/x86/kernel/reboot.c
+> @@ -826,7 +826,7 @@ void machine_halt(void)
+>  	machine_ops.halt();
+>  }
+>=20
+> -#ifdef CONFIG_KEXEC_CORE
+> +#ifdef CONFIG_CRASH_DUMP
+>  void machine_crash_shutdown(struct pt_regs *regs)
+>  {
+>  	machine_ops.crash_shutdown(regs);
+> diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+> index 09e3db7ff990..0b367c1e086d 100644
+> --- a/arch/x86/xen/enlighten_hvm.c
+> +++ b/arch/x86/xen/enlighten_hvm.c
+> @@ -148,6 +148,7 @@ static void xen_hvm_shutdown(void)
+>  	if (kexec_in_progress)
+>  		xen_reboot(SHUTDOWN_soft_reset);
+>  }
+> +#endif
+>=20
+>  #ifdef CONFIG_CRASH_DUMP
+>  static void xen_hvm_crash_shutdown(struct pt_regs *regs)
+> @@ -156,7 +157,6 @@ static void xen_hvm_crash_shutdown(struct pt_regs
+> *regs)
+>  	xen_reboot(SHUTDOWN_soft_reset);
+>  }
+>  #endif
+> -#endif
+>=20
+>  static int xen_cpu_up_prepare_hvm(unsigned int cpu)
+>  {
+> @@ -238,10 +238,10 @@ static void __init xen_hvm_guest_init(void)
+>=20
+>  #ifdef CONFIG_KEXEC_CORE
+>  	machine_ops.shutdown =3D xen_hvm_shutdown;
+> +#endif
+>  #ifdef CONFIG_CRASH_DUMP
+>  	machine_ops.crash_shutdown =3D xen_hvm_crash_shutdown;
+>  #endif
+> -#endif
+>  }
+>=20
+>  static __init int xen_parse_nopv(char *arg)
 
-So if the firmware is not compliant, the best way to go is to ask
-whoever ships it to please fix their stuff, or if other OSes already
-work around the non-compliance, it's time to update the spec to
-reflect the reality (aka "industry practice").
-
-Thanks!
