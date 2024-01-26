@@ -1,130 +1,213 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC27F208B8
-	for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 18:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF64224EC
+	for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 19:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706292083; cv=none; b=TsUjwRAB+kVfK/CUlPrcw00yD93RpIzKELqkzqA00+H/9HEqTE43vkhQcYnnP5g+zdXCtjcWT/RCSOFPAacWAuX+g4FSkp9DLjTm29CpiLGYu/oz2+P1Ktik328Gi5P5CE/SMPl5u+Wzn2sO8tCOvU7wLaOjs53uUjwJmlFcZTI=
+	t=1706297892; cv=none; b=nmyZbzTTHXZl72nr7ss7CCYyw7ioiZ733kqDV1NnC6c9VMS3naBYtqVIowTnp9XmEzHWLqMmE/U40bpoagQoVM5Wh0opJHCsa2JTs0ix/g720sGUDjBwJQPQlM0i+RbikuwKj6N1f6dJXvZSMIjThQwazyu/fivJMZxUp43iifk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706292083; c=relaxed/simple;
-	bh=ILNAcCRYxFV2hBwDPjxHOp/jkyTMR71/MVIQgy9Ru1w=;
+	s=arc-20240116; t=1706297892; c=relaxed/simple;
+	bh=DHZJrekhJEmaJlDZd71ANYOAMo6Unun/a8pOYenqE8g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oFhvWei4qSGu9qw0Z9QZPaXTcaRhAGjAXdCeO6STKf/4NwtezmWQLs8rCpR/S9bWw+LIBbZ9LPJcFaG2Z/nyNa1c69GRCO3aFFe3kMLXV22Bj0I5GXQbD2HVm10LWx/DdchQLz0hKay05ofsDihBg8649+Kcq2slQeiE4YJVHYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TdkR9bLq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=o+RM4sRNq0yYcW66nDFZ/R1VgUyRPmrP9ENnW3bDDOc2XabsfvI8PD/jccaZX3cS1Z/ZxazCxtzHrHD3Ukc67Bvq+suQx+WQNwzFJxp1cbKeVZy+T9xnxbFfDtKKwnxVZcwg686UBAsXLZi7yQTr9tIaz1NoFWgEvesx9Tp5AyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfscMfuJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TdkR9bLq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706292080;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h1idEZmiqZ0PAWapQhsolthHnuhF6TvOu+W3q8ZLhUs=;
-	b=TdkR9bLqmFXLrv3z8dXXpJcFDxhkponzxXEp23N1Ay8Tybsj5GzzDGvpdoGgno9NCCsgpy
-	WReJjMMpA5NNomsAtDVHy4heUhHoeVwvEJoer3+wEdmxzfM0T4TPzLCI7xTsg0EBoeyK/d
-	kNa5LYA3Me7H6dT0OTvaBdNj0FukAog=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-619-Of7g0Fh3PfmxrWI1YadObA-1; Fri, 26 Jan 2024 13:01:19 -0500
-X-MC-Unique: Of7g0Fh3PfmxrWI1YadObA-1
-Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-5993598d215so649115eaf.1
-        for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 10:01:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706292078; x=1706896878;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h1idEZmiqZ0PAWapQhsolthHnuhF6TvOu+W3q8ZLhUs=;
-        b=pq6ZmKBUxErljPNICrpIlpMMHo7EwYDcGfciJJpLQ/bkLGSnV8vSE96FBccJltAqfs
-         qUuJdwXfFO7kRhuJRrpqzQiK/n5zBi0SxTjni+ilgUpyv7EAmlx8YWuUA4qwxOjAn2Dx
-         iRR1wwwfwrP9oyo0VWTpcr4i8zewoFICdWOGlGI5pwwqRxMCCztrjhJp4PoTcOYtpiRN
-         sv91ZhoWPCMAg2c2zMV7tUwZvd+Qc5x2nvR6OEa9aP3tQCTgNGArGTblH5/ATZgIod6y
-         DllUcmQE151bg4lWFZxZYd9lxdWvRUcYbBKYLERlORirAaw77Ft8PBr/RIAAm3QFvVdr
-         nsYg==
-X-Gm-Message-State: AOJu0Yxl7sbEn1ZyZDrOhMAG3X7hkZPAFJGDCstyv5UkK1oIYF5BJG5Z
-	3NgpQJOaPz2hn0t3iSfbDA6C6ZDXDMB/0PzslUZ+HxNzddFfopQlkN+dmijkdON62MsuitHR1Ut
-	2cfua+1UcHgf5TZ6cM1+t2HzUeV1wyUuHFrZQCb4GuMnKD7si64GWtKOjK4nyEFeQo5bI2kaGr7
-	0HQ88X6CCSFKCQOa7JLR5O3lm5DJVpMYy6
-X-Received: by 2002:a05:6359:321a:b0:175:b57e:7be1 with SMTP id rj26-20020a056359321a00b00175b57e7be1mr63144rwb.52.1706292078528;
-        Fri, 26 Jan 2024 10:01:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF/FiWt3RhBG2eZaUchUIE9MWYT+Vtp8D1XAoXVuiI7s21J/GldQs2rrbA47me4Q5yktW3RDvlHGE5BtjxRS6Q=
-X-Received: by 2002:a05:6359:321a:b0:175:b57e:7be1 with SMTP id
- rj26-20020a056359321a00b00175b57e7be1mr63124rwb.52.1706292078152; Fri, 26 Jan
- 2024 10:01:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfscMfuJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4CFEC433B1
+	for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 19:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706297891;
+	bh=DHZJrekhJEmaJlDZd71ANYOAMo6Unun/a8pOYenqE8g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nfscMfuJZ4CRp20E5Ko5Ib/VxY8EHv6hZvjKp8qYl4dXtB3/3/QSZh1GzwT4AWOJI
+	 8pI+iuWkEYXnVwoH84JJo8Xy24qWf8gwXzAWbxOTFtlivtsh+E7Jd9XqhtvEO95DeQ
+	 iUH4m4Jt1o3QdACeddhPXYVXMKaSvE+59KGXhLBa8P2yal/SauOJioMHRdQSRvy0YH
+	 7LThy3Li6jR4YcKhAqnGcHuHp1DUYDXpZtkblzJOmsj/Ri90+LUEQ5toCVPE3i5eQz
+	 Dfzr0JPExpHz7v2NyltWGNDk7c23CilHwWKdptVP5bdlBZQ0DI2L8b9m0qIbMDU8wJ
+	 sGUc5oL5dDpwA==
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e0d86d4659so512564a34.1
+        for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 11:38:11 -0800 (PST)
+X-Gm-Message-State: AOJu0YyXTJ+azhSXIHB45wyizm639EAEgnXSglg4ZhZrfj9NYUprSFLB
+	MfaDqiCi5nDx6YaJi5o5UtTddq+K2kBr0WIpyHazl7/ml3oniaUDchjxU5P8in/R8Cuy4L3V9oV
+	RF3LrzaVmunWsgP7OqWIC1WKIapQ=
+X-Google-Smtp-Source: AGHT+IHp9YTSTtcAhhp8RJx6QmlQQw7cMZANOe8NDrl+HUm6IkEyCLVNUfI5P+Eh1+rTAxBuqQDJY2AumjSWrUKuZKs=
+X-Received: by 2002:a05:6870:9347:b0:214:4bd7:2066 with SMTP id
+ j7-20020a056870934700b002144bd72066mr180354oak.24.1706297891250; Fri, 26 Jan
+ 2024 11:38:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231115090735.2404866-1-chenhuacai@loongson.cn>
-In-Reply-To: <20231115090735.2404866-1-chenhuacai@loongson.cn>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 26 Jan 2024 19:01:06 +0100
-Message-ID: <CABgObfYbv_rHto8eEWLB3srmCPj6Le7wDfG5XtYpUH17HBTcCw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Fix build due to API changes
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <20231020155056.3495121-1-Jamie.Cunliffe@arm.com>
+ <20231020155056.3495121-2-Jamie.Cunliffe@arm.com> <CALNs47vzQm5MbfJtMQR3p+W1xub3KHiNqRgEQGWT3u28fpQ-oA@mail.gmail.com>
+ <CAHirt9jhbnXz34D-pmHNecMfkefL4wTr9LYj_V28OsVd=fkdZA@mail.gmail.com>
+In-Reply-To: <CAHirt9jhbnXz34D-pmHNecMfkefL4wTr9LYj_V28OsVd=fkdZA@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 27 Jan 2024 04:37:35 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQKxrV-oxouv9F6+_i9-oGvJNBzFNLo+5PdqwWVd9qWZQ@mail.gmail.com>
+Message-ID: <CAK7LNAQKxrV-oxouv9F6+_i9-oGvJNBzFNLo+5PdqwWVd9qWZQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] rust: Refactor the build target to allow the use
+ of builtin targets
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Trevor Gross <tmgross@umich.edu>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, rust-for-linux@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, steve.capper@arm.com, Asahi Lina <lina@asahilina.net>, 
+	boqun.feng@gmail.com, andrew@lunn.ch, Huacai Chen <chenhuacai@kernel.org>, 
+	loongarch@lists.linux.dev, linux-kbuild@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 15, 2023 at 10:14=E2=80=AFAM Huacai Chen <chenhuacai@loongson.c=
-n> wrote:
+On Thu, Jan 25, 2024 at 12:20=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wro=
+te:
 >
-> Commit 8569992d64b8f750e34b7858eac ("KVM: Use gfn instead of hva for
-> mmu_notifier_retry") replaces mmu_invalidate_retry_hva() usage with
-> mmu_invalidate_retry_gfn() for X86, LoongArch also need similar changes
-> to fix build.
+> Hello,
 >
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> On Mon, Jan 22, 2024 at 5:17=E2=80=AFPM Trevor Gross <tmgross@umich.edu> =
+wrote:
+> >
+> > On Fri, Oct 20, 2023 at 10:59=E2=80=AFAM Jamie Cunliffe <Jamie.Cunliffe=
+@arm.com> wrote:
+> > >
+> > > Eventually we want all architectures to be using the target as define=
+d
+> > > by rustc. However currently some architectures can't do that and are
+> > > using the target.json specification. This puts in place the foundatio=
+n
+> > > to allow the use of the builtin target definition or a target.json
+> > > specification.
+> > >
+> > > Signed-off-by: Jamie Cunliffe <Jamie.Cunliffe@arm.com>
+> > > ---
+> > >  Makefile          | 1 -
+> > >  arch/x86/Makefile | 1 +
+> > >  rust/Makefile     | 5 ++++-
+> > >  scripts/Makefile  | 4 +++-
+> > >  4 files changed, 8 insertions(+), 3 deletions(-)
+> >
+> > Adding LoongArch maintainers - this patch will need a small update to
+> > arch/loongarch/Makefile similar to the change in arch/x86/Makefile
+> > (included below), since that support is now in-tree and uses
+> > generate_rust_target [1]. Also a very minor conflict in docs at patch
+> > 2/2.
+> >
+> > I believe this patchset is still waiting on an ack from the kbuild
+> > team. Series at [2] for reference.
+> >
+> > Thanks,
+> > Trevor
+> >
+> > [1]: https://lore.kernel.org/rust-for-linux/20240108032117.215171-1-wan=
+grui@loongson.cn/
+> > [2]: https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Ja=
+mie.Cunliffe@arm.com/
+>
+> I can confirm that the fix patch [2], based on patch [1], is suitable
+> for LoongArch. LoongArch encounters no issues when using the built-in
+> `loongarch64-unknown-none-softfloat` target. Once patch [1] is merged
+> into the mainline, I'll send a patch to switch to using the built-in
+> target.
 
-Applied, thanks.
+But, [1] and [2] must be squashed together.
+Otherwise, [1] is changing the behavior of loongach,
+while the commit description does not mention it.
 
-Paolo
 
-> ---
->  arch/loongarch/kvm/mmu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+
+
+> Thanks,
+> Rui
 >
-> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> index 80480df5f550..9463ebecd39b 100644
-> --- a/arch/loongarch/kvm/mmu.c
-> +++ b/arch/loongarch/kvm/mmu.c
-> @@ -627,7 +627,7 @@ static bool fault_supports_huge_mapping(struct kvm_me=
-mory_slot *memslot,
->   *
->   * There are several ways to safely use this helper:
->   *
-> - * - Check mmu_invalidate_retry_hva() after grabbing the mapping level, =
-before
-> + * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level, =
-before
->   *   consuming it.  In this case, mmu_lock doesn't need to be held durin=
-g the
->   *   lookup, but it does need to be held while checking the MMU notifier=
-.
->   *
-> @@ -807,7 +807,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsign=
-ed long gpa, bool write)
+> [1]: https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Jami=
+e.Cunliffe@arm.com/
+> [2]: https://github.com/heiher/linux/commit/c504d83a6edd963e2ba58ec538e3f=
+06da78b187e.patch
 >
->         /* Check if an invalidation has taken place since we got pfn */
->         spin_lock(&kvm->mmu_lock);
-> -       if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
-> +       if (mmu_invalidate_retry_gfn(kvm, mmu_seq, gfn)) {
->                 /*
->                  * This can happen when mappings are changed asynchronous=
-ly, but
->                  * also synchronously if a COW is triggered by
-> --
-> 2.39.3
+> >
+> > > diff --git a/Makefile b/Makefile
+> > > index 88ebf6547964..23100f193da3 100644
+> > > --- a/Makefile
+> > > +++ b/Makefile
+> > > @@ -566,7 +566,6 @@ KBUILD_CFLAGS +=3D -fno-strict-aliasing
+> > >
+> > >  KBUILD_CPPFLAGS :=3D -D__KERNEL__
+> > >  KBUILD_RUSTFLAGS :=3D $(rust_common_flags) \
+> > > -                   --target=3D$(objtree)/scripts/target.json \
+> > >                     -Cpanic=3Dabort -Cembed-bitcode=3Dn -Clto=3Dn \
+> > >                     -Cforce-unwind-tables=3Dn -Ccodegen-units=3D1 \
+> > >                     -Csymbol-mangling-version=3Dv0 \
+> > > diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> > > index 5bfe5caaa444..0f339d4abd40 100644
+> > > --- a/arch/x86/Makefile
+> > > +++ b/arch/x86/Makefile
+> > > @@ -68,6 +68,7 @@ export BITS
+> > >  #    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D53383
+> > >  #
+> > >  KBUILD_CFLAGS +=3D -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx
+> > > +KBUILD_RUSTFLAGS +=3D --target=3D$(objtree)/scripts/target.json
+> > >  KBUILD_RUSTFLAGS +=3D -Ctarget-feature=3D-sse,-sse2,-sse3,-ssse3,-ss=
+e4.1,-sse4.2,-avx,-avx2
+> > >
+> > >  ifeq ($(CONFIG_X86_KERNEL_IBT),y)
+> > > diff --git a/rust/Makefile b/rust/Makefile
+> > > index 87958e864be0..8d75a6ffe951 100644
+> > > --- a/rust/Makefile
+> > > +++ b/rust/Makefile
+> > > @@ -428,8 +428,11 @@ $(obj)/core.o: private skip_clippy =3D 1
+> > >  $(obj)/core.o: private skip_flags =3D -Dunreachable_pub
+> > >  $(obj)/core.o: private rustc_objcopy =3D $(foreach sym,$(redirect-in=
+trinsics),--redefine-sym $(sym)=3D__rust$(sym))
+> > >  $(obj)/core.o: private rustc_target_flags =3D $(core-cfgs)
+> > > -$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs scripts/target.json F=
+ORCE
+> > > +$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs FORCE
+> > >         $(call if_changed_dep,rustc_library)
+> > > +ifdef CONFIG_X86_64
+> > > +$(obj)/core.o: scripts/target.json
+> > > +endif
+> > >
+> > >  $(obj)/compiler_builtins.o: private rustc_objcopy =3D -w -W '__*'
+> > >  $(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.=
+o FORCE
+> > > diff --git a/scripts/Makefile b/scripts/Makefile
+> > > index 576cf64be667..c85d130a4125 100644
+> > > --- a/scripts/Makefile
+> > > +++ b/scripts/Makefile
+> > > @@ -11,12 +11,14 @@ hostprogs-always-$(CONFIG_MODULE_SIG_FORMAT)     =
+           +=3D sign-file
+> > >  hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)    +=3D insert-s=
+ys-cert
+> > >  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=3D =
+rustdoc_test_builder
+> > >  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=3D =
+rustdoc_test_gen
+> > > -always-$(CONFIG_RUST)                                  +=3D target.j=
+son
+> > >
+> > > +ifdef CONFIG_X86_64
+> > > +always-$(CONFIG_RUST)                                  +=3D target.j=
+son
+> > >  filechk_rust_target =3D $< < include/config/auto.conf
+> > >
+> > >  $(obj)/target.json: scripts/generate_rust_target include/config/auto=
+.conf FORCE
+> > >         $(call filechk,rust_target)
+> > > +endif
+> > >
+> > >  hostprogs +=3D generate_rust_target
+> > >  generate_rust_target-rust :=3D y
+> > > --
+> > > 2.30.2
+> > >
+> > >
+> >
+>
 >
 
+
+--=20
+Best Regards
+Masahiro Yamada
