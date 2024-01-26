@@ -1,118 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9836A11CB9
-	for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 06:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A98C2FE;
+	Fri, 26 Jan 2024 08:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706249259; cv=none; b=A1pAW2D24LdHbDKn02cZJ7z4kADz+Sxg05ofZzuFsomJk+YhQQl4TmsngOeKHGa6lZa3FOw2m+SCHH3Plt+Wl40BZWRJpv1r2Fckq0QCL6MFhH74Z/+EhuU54yAQVWdxsD8NtUQsv/sXcuxD+rdcV5se0OM8FVw3RmQBywLd4XY=
+	t=1706257144; cv=none; b=e760NwmiLXud/MMY0nbRdFaBkSs/fe7sWrCRZVb6ooiBgxacbQwJ9+bCwo1OQGYlydWx7I/YKXCuT3A7RbepnNyFfooF6XLABODOfvrxZPaRTP5AivmHVn8yTgKoZRF+onO6d4FL0Q7GG38APBxlyb7d89JFNk0L9UgfP611Ous=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706249259; c=relaxed/simple;
-	bh=DAbJ/11kkWV3NfOW/ZZ47OvYR00ddrGOrBip2EkiS9w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qxXGADP/KvdlyTJDuRnBqxT2SaWbsifVHI8Xy60AcUDcO1iKChKkEGdL1PxmU3v/UKBbjP/zDseA5zcjK5zmcqZ3pLFMAx58KdVpI45Bf8vLR0okYMP2PxXIMIlA6Y3Nmg7N0ufe+exyWqcUwWfApbxzOkfZg3Qo6buC9KNASkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DU0CFc04; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DU0CFc04"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706249256;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z72p/1NCFMOucyopgj4TN6714b15v6kjfWKT6hd64FE=;
-	b=DU0CFc04VHmtu8ZLll/iRJhhcriw3TXzpgiHxUwNFZXgkEa/mfy5OAChi7EKfUUi+w95KP
-	ikpU+H8JLdMAelFyRmPNPXx41hFnFywhnkJkxSb1u8lmdVsBWJZfC7JSPl5JEaXu1pOC9t
-	lh7KL7c6hbYjIVfvjybBUjFre5sqaew=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-551-Dvx_BaF4N36KKDvV0yy-Nw-1; Fri, 26 Jan 2024 01:07:33 -0500
-X-MC-Unique: Dvx_BaF4N36KKDvV0yy-Nw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 19D621013664;
-	Fri, 26 Jan 2024 06:07:32 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.117])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 925AD492BC6;
-	Fri, 26 Jan 2024 06:07:30 +0000 (UTC)
-Date: Fri, 26 Jan 2024 14:07:27 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev, akpm@linux-foundation.org,
-	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
-	viro@zeniv.linux.org.uk
-Subject: Re: [PATCH linux-next v3 00/14] Split crash out from kexec and clean
- up related config items
-Message-ID: <ZbNMHwVhWxMyvKH/@MiWiFi-R3L-srv>
-References: <20240124051254.67105-1-bhe@redhat.com>
- <20240126045551.GA126645@dev-arch.thelio-3990X>
+	s=arc-20240116; t=1706257144; c=relaxed/simple;
+	bh=f+Gwy14SwFK7pcA8QYgiUXjBJlBmX4ONW24NcH5+dtU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tT/AtgKI4dqjyecpLhrQWguRgxDhcyxI+BSxGgX/7ccLLx3XjZGKDxI7/0hi3ehZBg3ToJ13XQWfKcU4C/xT0CLDR42m1K/LE8gkzZQw6h4Z/183rlw9QOKAEpczifjyk1BOLT4UiwBDZQhQ3i5uLMituCBVaI1mhfdrL7jaiJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EB6C433F1;
+	Fri, 26 Jan 2024 08:19:02 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch/smp: Call rcutree_report_cpu_starting() at tlb_init()
+Date: Fri, 26 Jan 2024 16:18:43 +0800
+Message-Id: <20240126081843.2749-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240126045551.GA126645@dev-arch.thelio-3990X>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Content-Transfer-Encoding: 8bit
 
-On 01/25/24 at 09:55pm, Nathan Chancellor wrote:
-...... 
-> I am seeing a few build failures in my test matrix on next-20240125 that
-> appear to be caused by this series although I have not bisected. Some
-> reproduction steps:
+Machines which have more than 8 nodes fail to boot SMP after commit
+a2ccf46333d7b2cf96 ("LoongArch/smp: Call rcutree_report_cpu_starting()
+earlier"). Because such machines use tlb-based per-cpu base address
+rather than dmw-based per-cpu base address, resulting per-cpu variables
+can only be accessed after tlb_init(). But rcutree_report_cpu_starting()
+is now called before tlb_init() and accesses per-cpu variables indeed.
 
-Thanks for trying this, I have reproduced the linking failure on arm,
-will work out a way to fix it.
+Since the original patch want to avoid the lockdep warning caused by
+page allocation in tlb_init(), we can move rcutree_report_cpu_starting()
+to tlb_init() where after tlb exception configuration but before page
+allocation.
 
-It's weird, I remember I have built these and passed.
+Fixes: a2ccf46333d7b2cf96 ("LoongArch/smp: Call rcutree_report_cpu_starting() earlier")
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/smp.c |  1 -
+ arch/loongarch/mm/tlb.c     | 16 ++++++++++------
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
-> 
-> $ curl -LSso .config https://git.alpinelinux.org/aports/plain/community/linux-edge/config-edge.armv7
-> $ make -skj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- olddefconfig all
-> ...
-> arm-linux-gnueabi-ld: arch/arm/kernel/machine_kexec.o: in function `arch_crash_save_vmcoreinfo':
-> machine_kexec.c:(.text+0x488): undefined reference to `vmcoreinfo_append_str'
-> ...
-> 
-> $ curl -LSso .config https://github.com/archlinuxarm/PKGBUILDs/raw/master/core/linux-aarch64/config
-> $ make -skj"$(nproc)" ARCH=arm64 CROSS_COMPILE=aarch64-linux- olddefconfig all
-> ...
-> aarch64-linux-ld: kernel/kexec_file.o: in function `kexec_walk_memblock.constprop.0':
-> kexec_file.c:(.text+0x314): undefined reference to `crashk_res'
-> aarch64-linux-ld: kernel/kexec_file.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `crashk_res' which may bind externally can not be used when making a shared object; recompile with -fPIC
-> kexec_file.c:(.text+0x314): dangerous relocation: unsupported relocation
-> aarch64-linux-ld: kexec_file.c:(.text+0x318): undefined reference to `crashk_res'
-> aarch64-linux-ld: drivers/of/kexec.o: in function `of_kexec_alloc_and_setup_fdt':
-> kexec.c:(.text+0x580): undefined reference to `crashk_res'
-> aarch64-linux-ld: drivers/of/kexec.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `crashk_res' which may bind externally can not be used when making a shared object; recompile with -fPIC
-> kexec.c:(.text+0x580): dangerous relocation: unsupported relocation
-> aarch64-linux-ld: kexec.c:(.text+0x584): undefined reference to `crashk_res'
-> aarch64-linux-ld: kexec.c:(.text+0x590): undefined reference to `crashk_res'
-> aarch64-linux-ld: kexec.c:(.text+0x5b0): undefined reference to `crashk_low_res'
-> aarch64-linux-ld: drivers/of/kexec.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `crashk_low_res' which may bind externally can not be used when making a shared object; recompile with -fPIC
-> kexec.c:(.text+0x5b0): dangerous relocation: unsupported relocation
-> aarch64-linux-ld: kexec.c:(.text+0x5b4): undefined reference to `crashk_low_res'
-> aarch64-linux-ld: kexec.c:(.text+0x5c0): undefined reference to `crashk_low_res'
-> ...
-> 
-> $ curl -LSso .config https://git.alpinelinux.org/aports/plain/community/linux-edge/config-edge.x86_64
-> $ make -skj"$(nproc)" ARCH=x86_64 CROSS_COMPILE=x86_64-linux- olddefconfig all
-> ...
-> x86_64-linux-ld: arch/x86/xen/mmu_pv.o: in function `paddr_vmcoreinfo_note':
-> mmu_pv.c:(.text+0x3af3): undefined reference to `vmcoreinfo_note'
-> ...
-> 
-> Cheers,
-> Nathan
-> 
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index a16e3dbe9f09..2b49d30eb7c0 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -509,7 +509,6 @@ asmlinkage void start_secondary(void)
+ 	sync_counter();
+ 	cpu = raw_smp_processor_id();
+ 	set_my_cpu_offset(per_cpu_offset(cpu));
+-	rcutree_report_cpu_starting(cpu);
+ 
+ 	cpu_probe();
+ 	constant_clockevent_init();
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index 2c0a411f23aa..0b95d32b30c9 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -284,12 +284,16 @@ static void setup_tlb_handler(int cpu)
+ 		set_handler(EXCCODE_TLBNR * VECSIZE, handle_tlb_protect, VECSIZE);
+ 		set_handler(EXCCODE_TLBNX * VECSIZE, handle_tlb_protect, VECSIZE);
+ 		set_handler(EXCCODE_TLBPE * VECSIZE, handle_tlb_protect, VECSIZE);
+-	}
++	} else {
++		int vec_sz __maybe_unused;
++		void *addr __maybe_unused;
++		struct page *page __maybe_unused;
++
++		/* Avoid lockdep warning */
++		rcutree_report_cpu_starting(cpu);
++
+ #ifdef CONFIG_NUMA
+-	else {
+-		void *addr;
+-		struct page *page;
+-		const int vec_sz = sizeof(exception_handlers);
++		vec_sz = sizeof(exception_handlers);
+ 
+ 		if (pcpu_handlers[cpu])
+ 			return;
+@@ -305,8 +309,8 @@ static void setup_tlb_handler(int cpu)
+ 		csr_write64(pcpu_handlers[cpu], LOONGARCH_CSR_EENTRY);
+ 		csr_write64(pcpu_handlers[cpu], LOONGARCH_CSR_MERRENTRY);
+ 		csr_write64(pcpu_handlers[cpu] + 80*VECSIZE, LOONGARCH_CSR_TLBRENTRY);
+-	}
+ #endif
++	}
+ }
+ 
+ void tlb_init(int cpu)
+-- 
+2.39.3
 
