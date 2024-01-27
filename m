@@ -1,119 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FDC1DA20
-	for <loongarch@lists.linux.dev>; Sat, 27 Jan 2024 08:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF572D03D
+	for <loongarch@lists.linux.dev>; Sat, 27 Jan 2024 17:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706343488; cv=none; b=Gytf0kpcZE66Q7MJ5LPXUVSmjTeZEqN0R/Xr4Xz61lG09d3QB1DszUwIwK/DfodmiFcJde1GoMsgwTwnsNB8Dm3LNswbeh3RJwrw5PPKMa8eHWB83GAtawLZkj0Mwz3zFVVyx+j7UPQswf8aHqDxC507O3o4sxKYAJPLMWV32Vg=
+	t=1706376688; cv=none; b=VT91goXm2WIZFmJOSQliGWi5pnPh5EDKQCY66cLV3AcvAr9R9c7GK/pk0ZcU91ZwLGQWLDxcpa040TYDNUUg8cqDDvFjsqGd9WNadXVCPgv0F2WI6RfnrwEbgl5zKAaX5s7ozA13ES2Oy6i0gPr58queJ7R4Cvd3snf5L+c/IIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706343488; c=relaxed/simple;
-	bh=8LLLdtl9//0302xBmCAb5fVKYkH14Azx9Y+eiOFpAO8=;
+	s=arc-20240116; t=1706376688; c=relaxed/simple;
+	bh=v/eRmXnwcofzCLUu7NDTFXzeYjOhl/y7gybN3TxLwFI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g2Rgricsdj2Byib3H79sHlNCcbT34xs9UQcng9U0Qo9MTs8RS9+AkNrFI9iprhOwyYbU/r5UiugzbX+ZV3H58pRvbdynpY7f44PsAXrbjVF6vP9TxrDHEiRfFmsVATllMuMqSLSXstMcU5pTJ5yGMNNtVgVpj3EmZRcWIAezHpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcElxdZR; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=GUAsnjFhYiZJWcSayj7RAynezHZGkrVKTdYg6vcL/QeaHrrL5ENGI9Ks+nfgVipOf9ULYZr05+fcBE7ZletOMrgHxh6iexJFA1FeeF0H48JOwBCzl5ECNLLNjmq8SvwLJ5+og3UpW58EiRqnUW8238eGX/X0SMZAEFu3/1GvFFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mgNKZfzN; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcElxdZR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37ACC43394
-	for <loongarch@lists.linux.dev>; Sat, 27 Jan 2024 08:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706343487;
-	bh=8LLLdtl9//0302xBmCAb5fVKYkH14Azx9Y+eiOFpAO8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tcElxdZRnTaWsZzPC7p3aBqDTC4aQE52psLaEiaM4MbTL1R+0e/ZkyFK1w4LXot/g
-	 1Y70EW59o197oUXOdEcEr1OiBU7mt8TmuIPJzXlLwojfAdPuXHEC1RZMrQX0TKN8m2
-	 wwo1RSbYFf0so93MyKlCKL4lxZY4HLkVNY7PnFZMOw1MGgApyPIrk8ASAF0xBtOmmT
-	 /ChNYNQzoYx+75oXF4GJSEeQd1rJTbvzM9YM+7UL9kAuXzlUfo5mvmmWzlUlWCZMed
-	 V7ioLrPNwbY3IFw2F4Q2JeaQY5SA8tbpJbKPs0PI2ADccsDwoLksi8fhh+l3pS9HyX
-	 yusO6eyo6DK2g==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55a5e7fa471so850735a12.1
-        for <loongarch@lists.linux.dev>; Sat, 27 Jan 2024 00:18:07 -0800 (PST)
-X-Gm-Message-State: AOJu0Yx2qe3Zg8u9KLMLmTQEehEkmiMvct6DEBtBetJ0jJQDXkjU812X
-	JXx0jWSvngpKDzt958+EO5Ov1EwKTCh5usxs9uxR4UivjsRKUAbfFL6Nud1r+OUmbCRxrsRKRuI
-	EhnwnB6pQIjNKQjq57SHIIqAMUcQ=
-X-Google-Smtp-Source: AGHT+IGT2oaOQe+6LGqKk1utGK8v/4/ke1g5CH4yt8uO8c+K4HjhzynJLCp1L0QZDaO+dh5JgCFYR94L+8zzSAZbfAA=
-X-Received: by 2002:aa7:da08:0:b0:55e:ba92:21a6 with SMTP id
- r8-20020aa7da08000000b0055eba9221a6mr256577eds.19.1706343485949; Sat, 27 Jan
- 2024 00:18:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgNKZfzN"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc226bad48cso1168774276.3
+        for <loongarch@lists.linux.dev>; Sat, 27 Jan 2024 09:31:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706376686; x=1706981486; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v/eRmXnwcofzCLUu7NDTFXzeYjOhl/y7gybN3TxLwFI=;
+        b=mgNKZfzN2c2aE4kKgpwUjptuLb8wrmBBJb5kXMYDMuUa9mtjh8MhIzbQwLInBkehXC
+         MOmZnxE89XdsX08p7Pz+mcqfYlKmPR8tcxtnqopAmjWv9gXjekHWrdfr7tynuP4mm38q
+         F02ZbPjSfwHcUT74bOir+IgIyxnWmzIC7o3ofgC14fiShiipgODj4xQL96Lfp8R/yEpX
+         8jVYPGD+nNC7r5lrrBEHYaXY4px3wkEWVgj3am32JR2bGIJEIRCBNRo8Vi6kYrJqvyWp
+         KkDQqju7WHH7f50LSJGR8BX+OVnhDtNUnXMvdq+LmDobbxUCfcNpn+fvser4IJFkQzjr
+         IK6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706376686; x=1706981486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v/eRmXnwcofzCLUu7NDTFXzeYjOhl/y7gybN3TxLwFI=;
+        b=KlSsmyNCZl10jBLjhm5zuFQIo0Gxa8+SVOPXN52OV8t4nBcVkEHk/pb72AhkgpfYOi
+         q7t7NWqoxUTh4yIlWUuXyFkIkgwnvZZ+DwSdT3onDPWO/gP6Ach7v0gqOM51sjqEKdAH
+         0GQNYXM08tu60UUStR1DyiO8DLiOV6naYbh/pWcWXBUGQUPKMVPWZX2fM9Be9Z6SPLG2
+         2dSQc6/T7WEO/Bpw7QTP1posbPGd2BWOTH2qkNPadtuXhj5l6k2TkY2DEbw7KrX1BkuX
+         3FOkUweOhx590xgI5A9mwLnNl8fd9rdSa72Cg4t9nA4o3VS6dn6QpJMqyB8LrNI1Uajh
+         V9mg==
+X-Gm-Message-State: AOJu0YyuFtthpdcWjrof7OGNXO7FEIdi1LAE8sdvPf/i/3HdpEDVlzlM
+	CLmdHGdRk9jYX+P6kQs4Hsd6IPIoxXOUeV5bOJx3r9IOiRZRE1M63OfdRgGGYW3Ej0cy6QaxhzA
+	6O72/+HmlhHWFI6NQ0ek/qwRElCg=
+X-Google-Smtp-Source: AGHT+IGT6QA+Fv5einVWUruH4wFZtEDFhs+QsdbfleXhdDOmi22jhHOwpbUDt75IdkG3ywsAidiVPQmqlmIUB3+EsHY=
+X-Received: by 2002:a25:8c88:0:b0:dc6:3d4d:c953 with SMTP id
+ m8-20020a258c88000000b00dc63d4dc953mr823284ybl.68.1706376686077; Sat, 27 Jan
+ 2024 09:31:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231115090735.2404866-1-chenhuacai@loongson.cn> <CABgObfYbv_rHto8eEWLB3srmCPj6Le7wDfG5XtYpUH17HBTcCw@mail.gmail.com>
-In-Reply-To: <CABgObfYbv_rHto8eEWLB3srmCPj6Le7wDfG5XtYpUH17HBTcCw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 27 Jan 2024 16:17:55 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5OV4ije66YM=nTTL47nEmSb-N3KqnLWLYXx7UXeM=4PA@mail.gmail.com>
-Message-ID: <CAAhV-H5OV4ije66YM=nTTL47nEmSb-N3KqnLWLYXx7UXeM=4PA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Fix build due to API changes
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <20231020155056.3495121-1-Jamie.Cunliffe@arm.com>
+ <20231020155056.3495121-2-Jamie.Cunliffe@arm.com> <CALNs47vzQm5MbfJtMQR3p+W1xub3KHiNqRgEQGWT3u28fpQ-oA@mail.gmail.com>
+ <CAHirt9jhbnXz34D-pmHNecMfkefL4wTr9LYj_V28OsVd=fkdZA@mail.gmail.com>
+ <CAK7LNAQKxrV-oxouv9F6+_i9-oGvJNBzFNLo+5PdqwWVd9qWZQ@mail.gmail.com> <CAHirt9josVNzcwCM5Y3MsVJC9dz+iRg6r_64OK4NWPeOOo_X8g@mail.gmail.com>
+In-Reply-To: <CAHirt9josVNzcwCM5Y3MsVJC9dz+iRg6r_64OK4NWPeOOo_X8g@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 27 Jan 2024 18:31:14 +0100
+Message-ID: <CANiq72=aO-786owBb=0m5x09nMFenRendPZxd2fnsa6_nZHHCQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] rust: Refactor the build target to allow the use
+ of builtin targets
+To: WANG Rui <wangrui@loongson.cn>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Jamie Cunliffe <Jamie.Cunliffe@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
+	Will Deacon <will@kernel.org>, steve.capper@arm.com, Asahi Lina <lina@asahilina.net>, 
+	boqun.feng@gmail.com, andrew@lunn.ch, Huacai Chen <chenhuacai@kernel.org>, 
+	loongarch@lists.linux.dev, linux-kbuild@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Paolo,
+On Sat, Jan 27, 2024 at 6:08=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wrot=
+e:
+>
+> I agree. It would be great if Jamie could squash them together.
 
-On Sat, Jan 27, 2024 at 2:01=E2=80=AFAM Paolo Bonzini <pbonzini@redhat.com>=
- wrote:
->
-> On Wed, Nov 15, 2023 at 10:14=E2=80=AFAM Huacai Chen <chenhuacai@loongson=
-.cn> wrote:
-> >
-> > Commit 8569992d64b8f750e34b7858eac ("KVM: Use gfn instead of hva for
-> > mmu_notifier_retry") replaces mmu_invalidate_retry_hva() usage with
-> > mmu_invalidate_retry_gfn() for X86, LoongArch also need similar changes
-> > to fix build.
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> Applied, thanks.
-I'm sorry that I have already sent a PR to Linus which includes this
-one and together with some other patches.
+Either that or perhaps Catalin could do it at apply time with your
+Co-developed-by and/or Huacai's Acked-by? I could also take if needed.
 
-Huacai
+Thanks Masahiro & Rui!
 
->
-> Paolo
->
-> > ---
-> >  arch/loongarch/kvm/mmu.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> > index 80480df5f550..9463ebecd39b 100644
-> > --- a/arch/loongarch/kvm/mmu.c
-> > +++ b/arch/loongarch/kvm/mmu.c
-> > @@ -627,7 +627,7 @@ static bool fault_supports_huge_mapping(struct kvm_=
-memory_slot *memslot,
-> >   *
-> >   * There are several ways to safely use this helper:
-> >   *
-> > - * - Check mmu_invalidate_retry_hva() after grabbing the mapping level=
-, before
-> > + * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level=
-, before
-> >   *   consuming it.  In this case, mmu_lock doesn't need to be held dur=
-ing the
-> >   *   lookup, but it does need to be held while checking the MMU notifi=
-er.
-> >   *
-> > @@ -807,7 +807,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsi=
-gned long gpa, bool write)
-> >
-> >         /* Check if an invalidation has taken place since we got pfn */
-> >         spin_lock(&kvm->mmu_lock);
-> > -       if (mmu_invalidate_retry_hva(kvm, mmu_seq, hva)) {
-> > +       if (mmu_invalidate_retry_gfn(kvm, mmu_seq, gfn)) {
-> >                 /*
-> >                  * This can happen when mappings are changed asynchrono=
-usly, but
-> >                  * also synchronously if a COW is triggered by
-> > --
-> > 2.39.3
-> >
->
+Cheers,
+Miguel
