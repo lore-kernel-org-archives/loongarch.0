@@ -1,40 +1,32 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF64224EC
-	for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 19:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA85613ADC
+	for <loongarch@lists.linux.dev>; Sat, 27 Jan 2024 05:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706297892; cv=none; b=nmyZbzTTHXZl72nr7ss7CCYyw7ioiZ733kqDV1NnC6c9VMS3naBYtqVIowTnp9XmEzHWLqMmE/U40bpoagQoVM5Wh0opJHCsa2JTs0ix/g720sGUDjBwJQPQlM0i+RbikuwKj6N1f6dJXvZSMIjThQwazyu/fivJMZxUp43iifk=
+	t=1706332120; cv=none; b=esHEm4PYZCmColW4EPWR5ek9rNsZJkdD+BoCCaeitIkIkddEz6Ame7LHKhjaoACRpgBb0ylSn2/VWMMeB9YFiJgMxy7HYENcwDu3Q64hYKbQ+HDrRXzkV5k6bLbKRRmrU1OGZ4LPXXkfbwwGuYJ2GXlzpgTwm7/RjExrsV9tkcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706297892; c=relaxed/simple;
-	bh=DHZJrekhJEmaJlDZd71ANYOAMo6Unun/a8pOYenqE8g=;
+	s=arc-20240116; t=1706332120; c=relaxed/simple;
+	bh=du8JnSk1v2gC0WW2DoWM6Kkq19h+cimR9p2mzTXkIAc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o+RM4sRNq0yYcW66nDFZ/R1VgUyRPmrP9ENnW3bDDOc2XabsfvI8PD/jccaZX3cS1Z/ZxazCxtzHrHD3Ukc67Bvq+suQx+WQNwzFJxp1cbKeVZy+T9xnxbFfDtKKwnxVZcwg686UBAsXLZi7yQTr9tIaz1NoFWgEvesx9Tp5AyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfscMfuJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfscMfuJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4CFEC433B1
-	for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 19:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706297891;
-	bh=DHZJrekhJEmaJlDZd71ANYOAMo6Unun/a8pOYenqE8g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nfscMfuJZ4CRp20E5Ko5Ib/VxY8EHv6hZvjKp8qYl4dXtB3/3/QSZh1GzwT4AWOJI
-	 8pI+iuWkEYXnVwoH84JJo8Xy24qWf8gwXzAWbxOTFtlivtsh+E7Jd9XqhtvEO95DeQ
-	 iUH4m4Jt1o3QdACeddhPXYVXMKaSvE+59KGXhLBa8P2yal/SauOJioMHRdQSRvy0YH
-	 7LThy3Li6jR4YcKhAqnGcHuHp1DUYDXpZtkblzJOmsj/Ri90+LUEQ5toCVPE3i5eQz
-	 Dfzr0JPExpHz7v2NyltWGNDk7c23CilHwWKdptVP5bdlBZQ0DI2L8b9m0qIbMDU8wJ
-	 sGUc5oL5dDpwA==
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e0d86d4659so512564a34.1
-        for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 11:38:11 -0800 (PST)
-X-Gm-Message-State: AOJu0YyXTJ+azhSXIHB45wyizm639EAEgnXSglg4ZhZrfj9NYUprSFLB
-	MfaDqiCi5nDx6YaJi5o5UtTddq+K2kBr0WIpyHazl7/ml3oniaUDchjxU5P8in/R8Cuy4L3V9oV
-	RF3LrzaVmunWsgP7OqWIC1WKIapQ=
-X-Google-Smtp-Source: AGHT+IHp9YTSTtcAhhp8RJx6QmlQQw7cMZANOe8NDrl+HUm6IkEyCLVNUfI5P+Eh1+rTAxBuqQDJY2AumjSWrUKuZKs=
-X-Received: by 2002:a05:6870:9347:b0:214:4bd7:2066 with SMTP id
- j7-20020a056870934700b002144bd72066mr180354oak.24.1706297891250; Fri, 26 Jan
- 2024 11:38:11 -0800 (PST)
+	 To:Cc:Content-Type; b=Teub07OZsGXnmnPU3san6xB/YdkfPNWeKZz2jzfmvCsFH7qSbFYqrru+lrkrF6Y4qJSQcMCs8sia3Cpx0MvKgQB6PV57Llh0YVQ30gclFqFu9bN5D40GS/JufEVddz3SXJQlys/9NJQFnQODvOrU68CKVnHZlK+vXscglDbgVB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [209.85.128.178])
+	by gateway (Coremail) with SMTP id _____8BxSOjPj7Rlf8wGAA--.3443S3;
+	Sat, 27 Jan 2024 13:08:31 +0800 (CST)
+Received: from mail-yw1-f178.google.com (unknown [209.85.128.178])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c7Fj7RliU8eAA--.61937S3;
+	Sat, 27 Jan 2024 13:08:23 +0800 (CST)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5edfcba97e3so11906917b3.2
+        for <loongarch@lists.linux.dev>; Fri, 26 Jan 2024 21:08:23 -0800 (PST)
+X-Gm-Message-State: AOJu0YyA2tPf5+1Bswxsqv0V5pzP9R5kbqMDyFhxzczcL7gp6/DwXjEH
+	+4v+Ipzdx0D/BfD9h4tzQhIGNNr1rLvG7es52SWOABgChetKIFg0l4/6NaBA2NHH9DChN8wAkDY
+	XtWUlW+yF4Z8qFpUTCg3PY+P+iSCchtCrnzaGgQ==
+X-Google-Smtp-Source: AGHT+IGYDcc7xr0fWVHNVsv8o4zNLB5BZHFXPlFRotx1GpDxIomAF+hhYdD6JAwkil/3JgOZjO0/+g6/bVFcZBK7FCY=
+X-Received: by 2002:a0d:e88b:0:b0:5ff:8113:4d9d with SMTP id
+ r133-20020a0de88b000000b005ff81134d9dmr829991ywe.40.1706332099756; Fri, 26
+ Jan 2024 21:08:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,15 +35,15 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20231020155056.3495121-1-Jamie.Cunliffe@arm.com>
  <20231020155056.3495121-2-Jamie.Cunliffe@arm.com> <CALNs47vzQm5MbfJtMQR3p+W1xub3KHiNqRgEQGWT3u28fpQ-oA@mail.gmail.com>
- <CAHirt9jhbnXz34D-pmHNecMfkefL4wTr9LYj_V28OsVd=fkdZA@mail.gmail.com>
-In-Reply-To: <CAHirt9jhbnXz34D-pmHNecMfkefL4wTr9LYj_V28OsVd=fkdZA@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 27 Jan 2024 04:37:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQKxrV-oxouv9F6+_i9-oGvJNBzFNLo+5PdqwWVd9qWZQ@mail.gmail.com>
-Message-ID: <CAK7LNAQKxrV-oxouv9F6+_i9-oGvJNBzFNLo+5PdqwWVd9qWZQ@mail.gmail.com>
+ <CAHirt9jhbnXz34D-pmHNecMfkefL4wTr9LYj_V28OsVd=fkdZA@mail.gmail.com> <CAK7LNAQKxrV-oxouv9F6+_i9-oGvJNBzFNLo+5PdqwWVd9qWZQ@mail.gmail.com>
+In-Reply-To: <CAK7LNAQKxrV-oxouv9F6+_i9-oGvJNBzFNLo+5PdqwWVd9qWZQ@mail.gmail.com>
+From: WANG Rui <wangrui@loongson.cn>
+Date: Sat, 27 Jan 2024 13:08:08 +0800
+X-Gmail-Original-Message-ID: <CAHirt9josVNzcwCM5Y3MsVJC9dz+iRg6r_64OK4NWPeOOo_X8g@mail.gmail.com>
+Message-ID: <CAHirt9josVNzcwCM5Y3MsVJC9dz+iRg6r_64OK4NWPeOOo_X8g@mail.gmail.com>
 Subject: Re: [PATCH v4 1/2] rust: Refactor the build target to allow the use
  of builtin targets
-To: WANG Rui <wangrui@loongson.cn>
+To: Masahiro Yamada <masahiroy@kernel.org>
 Cc: Trevor Gross <tmgross@umich.edu>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>, 
 	linux-arm-kernel@lists.infradead.org, rust-for-linux@vger.kernel.org, 
 	Miguel Ojeda <ojeda@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
@@ -60,154 +52,185 @@ Cc: Trevor Gross <tmgross@umich.edu>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
 	loongarch@lists.linux.dev, linux-kbuild@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:AQAAf8Ax3c7Fj7RliU8eAA--.61937S3
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3XF1kXFyfZF45ur4xXF1kZwc_yoW7Aw1kpa
+	nYyF43AFWUJ3yUCws7tFy3Wr4Yyw1rKr10gF18Kw1jyr1qqFn2gr4Ikr43uF18Cw4UCrWr
+	XF1I9F97ur45AwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUP529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWU
+	XwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	kF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+	MxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20x
+	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8
+	JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8P8n5UUUUU==
 
-On Thu, Jan 25, 2024 at 12:20=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wro=
-te:
+On Sat, Jan 27, 2024 at 3:38=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
 >
-> Hello,
+> On Thu, Jan 25, 2024 at 12:20=E2=80=AFPM WANG Rui <wangrui@loongson.cn> w=
+rote:
+> >
+> > Hello,
+> >
+> > On Mon, Jan 22, 2024 at 5:17=E2=80=AFPM Trevor Gross <tmgross@umich.edu=
+> wrote:
+> > >
+> > > On Fri, Oct 20, 2023 at 10:59=E2=80=AFAM Jamie Cunliffe <Jamie.Cunlif=
+fe@arm.com> wrote:
+> > > >
+> > > > Eventually we want all architectures to be using the target as defi=
+ned
+> > > > by rustc. However currently some architectures can't do that and ar=
+e
+> > > > using the target.json specification. This puts in place the foundat=
+ion
+> > > > to allow the use of the builtin target definition or a target.json
+> > > > specification.
+> > > >
+> > > > Signed-off-by: Jamie Cunliffe <Jamie.Cunliffe@arm.com>
+> > > > ---
+> > > >  Makefile          | 1 -
+> > > >  arch/x86/Makefile | 1 +
+> > > >  rust/Makefile     | 5 ++++-
+> > > >  scripts/Makefile  | 4 +++-
+> > > >  4 files changed, 8 insertions(+), 3 deletions(-)
+> > >
+> > > Adding LoongArch maintainers - this patch will need a small update to
+> > > arch/loongarch/Makefile similar to the change in arch/x86/Makefile
+> > > (included below), since that support is now in-tree and uses
+> > > generate_rust_target [1]. Also a very minor conflict in docs at patch
+> > > 2/2.
+> > >
+> > > I believe this patchset is still waiting on an ack from the kbuild
+> > > team. Series at [2] for reference.
+> > >
+> > > Thanks,
+> > > Trevor
+> > >
+> > > [1]: https://lore.kernel.org/rust-for-linux/20240108032117.215171-1-w=
+angrui@loongson.cn/
+> > > [2]: https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-=
+Jamie.Cunliffe@arm.com/
+> >
+> > I can confirm that the fix patch [2], based on patch [1], is suitable
+> > for LoongArch. LoongArch encounters no issues when using the built-in
+> > `loongarch64-unknown-none-softfloat` target. Once patch [1] is merged
+> > into the mainline, I'll send a patch to switch to using the built-in
+> > target.
 >
-> On Mon, Jan 22, 2024 at 5:17=E2=80=AFPM Trevor Gross <tmgross@umich.edu> =
-wrote:
-> >
-> > On Fri, Oct 20, 2023 at 10:59=E2=80=AFAM Jamie Cunliffe <Jamie.Cunliffe=
-@arm.com> wrote:
-> > >
-> > > Eventually we want all architectures to be using the target as define=
-d
-> > > by rustc. However currently some architectures can't do that and are
-> > > using the target.json specification. This puts in place the foundatio=
-n
-> > > to allow the use of the builtin target definition or a target.json
-> > > specification.
-> > >
-> > > Signed-off-by: Jamie Cunliffe <Jamie.Cunliffe@arm.com>
-> > > ---
-> > >  Makefile          | 1 -
-> > >  arch/x86/Makefile | 1 +
-> > >  rust/Makefile     | 5 ++++-
-> > >  scripts/Makefile  | 4 +++-
-> > >  4 files changed, 8 insertions(+), 3 deletions(-)
-> >
-> > Adding LoongArch maintainers - this patch will need a small update to
-> > arch/loongarch/Makefile similar to the change in arch/x86/Makefile
-> > (included below), since that support is now in-tree and uses
-> > generate_rust_target [1]. Also a very minor conflict in docs at patch
-> > 2/2.
-> >
-> > I believe this patchset is still waiting on an ack from the kbuild
-> > team. Series at [2] for reference.
-> >
+> But, [1] and [2] must be squashed together.
+> Otherwise, [1] is changing the behavior of loongach,
+> while the commit description does not mention it.
+
+I agree. It would be great if Jamie could squash them together.
+
+Thanks,
+Rui
+
+>
+>
+>
+>
 > > Thanks,
-> > Trevor
+> > Rui
 > >
-> > [1]: https://lore.kernel.org/rust-for-linux/20240108032117.215171-1-wan=
-grui@loongson.cn/
-> > [2]: https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Ja=
+> > [1]: https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Ja=
 mie.Cunliffe@arm.com/
->
-> I can confirm that the fix patch [2], based on patch [1], is suitable
-> for LoongArch. LoongArch encounters no issues when using the built-in
-> `loongarch64-unknown-none-softfloat` target. Once patch [1] is merged
-> into the mainline, I'll send a patch to switch to using the built-in
-> target.
-
-But, [1] and [2] must be squashed together.
-Otherwise, [1] is changing the behavior of loongach,
-while the commit description does not mention it.
-
-
-
-
-> Thanks,
-> Rui
->
-> [1]: https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Jami=
-e.Cunliffe@arm.com/
-> [2]: https://github.com/heiher/linux/commit/c504d83a6edd963e2ba58ec538e3f=
-06da78b187e.patch
->
+> > [2]: https://github.com/heiher/linux/commit/c504d83a6edd963e2ba58ec538e=
+3f06da78b187e.patch
 > >
-> > > diff --git a/Makefile b/Makefile
-> > > index 88ebf6547964..23100f193da3 100644
-> > > --- a/Makefile
-> > > +++ b/Makefile
-> > > @@ -566,7 +566,6 @@ KBUILD_CFLAGS +=3D -fno-strict-aliasing
 > > >
-> > >  KBUILD_CPPFLAGS :=3D -D__KERNEL__
-> > >  KBUILD_RUSTFLAGS :=3D $(rust_common_flags) \
-> > > -                   --target=3D$(objtree)/scripts/target.json \
-> > >                     -Cpanic=3Dabort -Cembed-bitcode=3Dn -Clto=3Dn \
-> > >                     -Cforce-unwind-tables=3Dn -Ccodegen-units=3D1 \
-> > >                     -Csymbol-mangling-version=3Dv0 \
-> > > diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> > > index 5bfe5caaa444..0f339d4abd40 100644
-> > > --- a/arch/x86/Makefile
-> > > +++ b/arch/x86/Makefile
-> > > @@ -68,6 +68,7 @@ export BITS
-> > >  #    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D53383
-> > >  #
-> > >  KBUILD_CFLAGS +=3D -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx
-> > > +KBUILD_RUSTFLAGS +=3D --target=3D$(objtree)/scripts/target.json
-> > >  KBUILD_RUSTFLAGS +=3D -Ctarget-feature=3D-sse,-sse2,-sse3,-ssse3,-ss=
-e4.1,-sse4.2,-avx,-avx2
+> > > > diff --git a/Makefile b/Makefile
+> > > > index 88ebf6547964..23100f193da3 100644
+> > > > --- a/Makefile
+> > > > +++ b/Makefile
+> > > > @@ -566,7 +566,6 @@ KBUILD_CFLAGS +=3D -fno-strict-aliasing
+> > > >
+> > > >  KBUILD_CPPFLAGS :=3D -D__KERNEL__
+> > > >  KBUILD_RUSTFLAGS :=3D $(rust_common_flags) \
+> > > > -                   --target=3D$(objtree)/scripts/target.json \
+> > > >                     -Cpanic=3Dabort -Cembed-bitcode=3Dn -Clto=3Dn \
+> > > >                     -Cforce-unwind-tables=3Dn -Ccodegen-units=3D1 \
+> > > >                     -Csymbol-mangling-version=3Dv0 \
+> > > > diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> > > > index 5bfe5caaa444..0f339d4abd40 100644
+> > > > --- a/arch/x86/Makefile
+> > > > +++ b/arch/x86/Makefile
+> > > > @@ -68,6 +68,7 @@ export BITS
+> > > >  #    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D53383
+> > > >  #
+> > > >  KBUILD_CFLAGS +=3D -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx
+> > > > +KBUILD_RUSTFLAGS +=3D --target=3D$(objtree)/scripts/target.json
+> > > >  KBUILD_RUSTFLAGS +=3D -Ctarget-feature=3D-sse,-sse2,-sse3,-ssse3,-=
+sse4.1,-sse4.2,-avx,-avx2
+> > > >
+> > > >  ifeq ($(CONFIG_X86_KERNEL_IBT),y)
+> > > > diff --git a/rust/Makefile b/rust/Makefile
+> > > > index 87958e864be0..8d75a6ffe951 100644
+> > > > --- a/rust/Makefile
+> > > > +++ b/rust/Makefile
+> > > > @@ -428,8 +428,11 @@ $(obj)/core.o: private skip_clippy =3D 1
+> > > >  $(obj)/core.o: private skip_flags =3D -Dunreachable_pub
+> > > >  $(obj)/core.o: private rustc_objcopy =3D $(foreach sym,$(redirect-=
+intrinsics),--redefine-sym $(sym)=3D__rust$(sym))
+> > > >  $(obj)/core.o: private rustc_target_flags =3D $(core-cfgs)
+> > > > -$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs scripts/target.json=
+ FORCE
+> > > > +$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs FORCE
+> > > >         $(call if_changed_dep,rustc_library)
+> > > > +ifdef CONFIG_X86_64
+> > > > +$(obj)/core.o: scripts/target.json
+> > > > +endif
+> > > >
+> > > >  $(obj)/compiler_builtins.o: private rustc_objcopy =3D -w -W '__*'
+> > > >  $(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/cor=
+e.o FORCE
+> > > > diff --git a/scripts/Makefile b/scripts/Makefile
+> > > > index 576cf64be667..c85d130a4125 100644
+> > > > --- a/scripts/Makefile
+> > > > +++ b/scripts/Makefile
+> > > > @@ -11,12 +11,14 @@ hostprogs-always-$(CONFIG_MODULE_SIG_FORMAT)   =
+             +=3D sign-file
+> > > >  hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)    +=3D insert=
+-sys-cert
+> > > >  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=
+=3D rustdoc_test_builder
+> > > >  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=
+=3D rustdoc_test_gen
+> > > > -always-$(CONFIG_RUST)                                  +=3D target=
+.json
+> > > >
+> > > > +ifdef CONFIG_X86_64
+> > > > +always-$(CONFIG_RUST)                                  +=3D target=
+.json
+> > > >  filechk_rust_target =3D $< < include/config/auto.conf
+> > > >
+> > > >  $(obj)/target.json: scripts/generate_rust_target include/config/au=
+to.conf FORCE
+> > > >         $(call filechk,rust_target)
+> > > > +endif
+> > > >
+> > > >  hostprogs +=3D generate_rust_target
+> > > >  generate_rust_target-rust :=3D y
+> > > > --
+> > > > 2.30.2
+> > > >
+> > > >
 > > >
-> > >  ifeq ($(CONFIG_X86_KERNEL_IBT),y)
-> > > diff --git a/rust/Makefile b/rust/Makefile
-> > > index 87958e864be0..8d75a6ffe951 100644
-> > > --- a/rust/Makefile
-> > > +++ b/rust/Makefile
-> > > @@ -428,8 +428,11 @@ $(obj)/core.o: private skip_clippy =3D 1
-> > >  $(obj)/core.o: private skip_flags =3D -Dunreachable_pub
-> > >  $(obj)/core.o: private rustc_objcopy =3D $(foreach sym,$(redirect-in=
-trinsics),--redefine-sym $(sym)=3D__rust$(sym))
-> > >  $(obj)/core.o: private rustc_target_flags =3D $(core-cfgs)
-> > > -$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs scripts/target.json F=
-ORCE
-> > > +$(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs FORCE
-> > >         $(call if_changed_dep,rustc_library)
-> > > +ifdef CONFIG_X86_64
-> > > +$(obj)/core.o: scripts/target.json
-> > > +endif
-> > >
-> > >  $(obj)/compiler_builtins.o: private rustc_objcopy =3D -w -W '__*'
-> > >  $(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.=
-o FORCE
-> > > diff --git a/scripts/Makefile b/scripts/Makefile
-> > > index 576cf64be667..c85d130a4125 100644
-> > > --- a/scripts/Makefile
-> > > +++ b/scripts/Makefile
-> > > @@ -11,12 +11,14 @@ hostprogs-always-$(CONFIG_MODULE_SIG_FORMAT)     =
-           +=3D sign-file
-> > >  hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)    +=3D insert-s=
-ys-cert
-> > >  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=3D =
-rustdoc_test_builder
-> > >  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)                +=3D =
-rustdoc_test_gen
-> > > -always-$(CONFIG_RUST)                                  +=3D target.j=
-son
-> > >
-> > > +ifdef CONFIG_X86_64
-> > > +always-$(CONFIG_RUST)                                  +=3D target.j=
-son
-> > >  filechk_rust_target =3D $< < include/config/auto.conf
-> > >
-> > >  $(obj)/target.json: scripts/generate_rust_target include/config/auto=
-.conf FORCE
-> > >         $(call filechk,rust_target)
-> > > +endif
-> > >
-> > >  hostprogs +=3D generate_rust_target
-> > >  generate_rust_target-rust :=3D y
-> > > --
-> > > 2.30.2
-> > >
-> > >
+> >
 > >
 >
 >
+> --
+> Best Regards
+> Masahiro Yamada
+>
 
-
---=20
-Best Regards
-Masahiro Yamada
