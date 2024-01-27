@@ -1,89 +1,63 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF572D03D
-	for <loongarch@lists.linux.dev>; Sat, 27 Jan 2024 17:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922E42D04B;
+	Sat, 27 Jan 2024 17:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706376688; cv=none; b=VT91goXm2WIZFmJOSQliGWi5pnPh5EDKQCY66cLV3AcvAr9R9c7GK/pk0ZcU91ZwLGQWLDxcpa040TYDNUUg8cqDDvFjsqGd9WNadXVCPgv0F2WI6RfnrwEbgl5zKAaX5s7ozA13ES2Oy6i0gPr58queJ7R4Cvd3snf5L+c/IIQ=
+	t=1706377933; cv=none; b=uxV9a3BrMhKa/gsC6Ht/U8x3hIFzLc/mk2e4WfpDub+yFuZx6SjZUvq8xJLAAPJyAic0POzEoHH5X4NSw9B4KyQa1/DVUmtj0bjPXoeaHYA/iWXrmpt+qXh4YUcHusiT70Q90I1KcvOKsf5AJNuMcT+qlPI2egU+pbMGbuCQXVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706376688; c=relaxed/simple;
-	bh=v/eRmXnwcofzCLUu7NDTFXzeYjOhl/y7gybN3TxLwFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GUAsnjFhYiZJWcSayj7RAynezHZGkrVKTdYg6vcL/QeaHrrL5ENGI9Ks+nfgVipOf9ULYZr05+fcBE7ZletOMrgHxh6iexJFA1FeeF0H48JOwBCzl5ECNLLNjmq8SvwLJ5+og3UpW58EiRqnUW8238eGX/X0SMZAEFu3/1GvFFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mgNKZfzN; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706377933; c=relaxed/simple;
+	bh=cHUMv9BxHgjuTEkUZtkOw43yclWbhFewLbNmc9L9s/4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=YabZDrGG4Z8JnniryjyzgdJCuz5BKXuPSoVaUNf9IqFXWcn391ofIiOb0fhyleS3Ed9nM1/A09AykxnRbs9sJBWBF9bM4aETIrbe53JvFEY6P16ymSnpD/WEEt02nGd7P+WgM0AevfUBwQrpmYCV5i8agvtZNOoa6f0ddEt2hBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ho7zQpRj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgNKZfzN"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc226bad48cso1168774276.3
-        for <loongarch@lists.linux.dev>; Sat, 27 Jan 2024 09:31:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706376686; x=1706981486; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v/eRmXnwcofzCLUu7NDTFXzeYjOhl/y7gybN3TxLwFI=;
-        b=mgNKZfzN2c2aE4kKgpwUjptuLb8wrmBBJb5kXMYDMuUa9mtjh8MhIzbQwLInBkehXC
-         MOmZnxE89XdsX08p7Pz+mcqfYlKmPR8tcxtnqopAmjWv9gXjekHWrdfr7tynuP4mm38q
-         F02ZbPjSfwHcUT74bOir+IgIyxnWmzIC7o3ofgC14fiShiipgODj4xQL96Lfp8R/yEpX
-         8jVYPGD+nNC7r5lrrBEHYaXY4px3wkEWVgj3am32JR2bGIJEIRCBNRo8Vi6kYrJqvyWp
-         KkDQqju7WHH7f50LSJGR8BX+OVnhDtNUnXMvdq+LmDobbxUCfcNpn+fvser4IJFkQzjr
-         IK6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706376686; x=1706981486;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v/eRmXnwcofzCLUu7NDTFXzeYjOhl/y7gybN3TxLwFI=;
-        b=KlSsmyNCZl10jBLjhm5zuFQIo0Gxa8+SVOPXN52OV8t4nBcVkEHk/pb72AhkgpfYOi
-         q7t7NWqoxUTh4yIlWUuXyFkIkgwnvZZ+DwSdT3onDPWO/gP6Ach7v0gqOM51sjqEKdAH
-         0GQNYXM08tu60UUStR1DyiO8DLiOV6naYbh/pWcWXBUGQUPKMVPWZX2fM9Be9Z6SPLG2
-         2dSQc6/T7WEO/Bpw7QTP1posbPGd2BWOTH2qkNPadtuXhj5l6k2TkY2DEbw7KrX1BkuX
-         3FOkUweOhx590xgI5A9mwLnNl8fd9rdSa72Cg4t9nA4o3VS6dn6QpJMqyB8LrNI1Uajh
-         V9mg==
-X-Gm-Message-State: AOJu0YyuFtthpdcWjrof7OGNXO7FEIdi1LAE8sdvPf/i/3HdpEDVlzlM
-	CLmdHGdRk9jYX+P6kQs4Hsd6IPIoxXOUeV5bOJx3r9IOiRZRE1M63OfdRgGGYW3Ej0cy6QaxhzA
-	6O72/+HmlhHWFI6NQ0ek/qwRElCg=
-X-Google-Smtp-Source: AGHT+IGT6QA+Fv5einVWUruH4wFZtEDFhs+QsdbfleXhdDOmi22jhHOwpbUDt75IdkG3ywsAidiVPQmqlmIUB3+EsHY=
-X-Received: by 2002:a25:8c88:0:b0:dc6:3d4d:c953 with SMTP id
- m8-20020a258c88000000b00dc63d4dc953mr823284ybl.68.1706376686077; Sat, 27 Jan
- 2024 09:31:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ho7zQpRj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1825CC433F1;
+	Sat, 27 Jan 2024 17:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706377933;
+	bh=cHUMv9BxHgjuTEkUZtkOw43yclWbhFewLbNmc9L9s/4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ho7zQpRjTX0gyri29QJKmbqX4TPUzRrHZQwfONV6aJe2zW3ikbnY6WM0+icfQE0zj
+	 782rtegjHCm0p3qwOsuOZWbTi5qAN2W6HD3qQgKBtU/wWsKE03HJ2YlmbGl9Dl3Jkj
+	 0gbkeVxoLCq8T4KyxQAF7m1nNv2sH/+fZHOcJNPaTE8dBm4RYnN6E7AFO7wkcxnwWt
+	 Un3ibMNcxvK4iAiUlUJ1HG7PWKmy+I9FVbuYUdSIplxfUo+ACZy8iLULfROA2XIMn9
+	 NQsGYpaiuW4DDwLYDPsgiO4T+R+L9XP4DluZIbOEcu5D3B1JisbWxihnGEKseGZxEQ
+	 MwcMX/lGRafXw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 04344DFF762;
+	Sat, 27 Jan 2024 17:52:13 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.8-rc2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240127081412.810197-1-chenhuacai@loongson.cn>
+References: <20240127081412.810197-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20240127081412.810197-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.8-1
+X-PR-Tracked-Commit-Id: 48ef9e87b407f89f230f804815af7ac2031ec17a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 955340433a7926ab80838e904814461598adcd8c
+Message-Id: <170637793300.20657.2907853438443954078.pr-tracker-bot@kernel.org>
+Date: Sat, 27 Jan 2024 17:52:13 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20231020155056.3495121-1-Jamie.Cunliffe@arm.com>
- <20231020155056.3495121-2-Jamie.Cunliffe@arm.com> <CALNs47vzQm5MbfJtMQR3p+W1xub3KHiNqRgEQGWT3u28fpQ-oA@mail.gmail.com>
- <CAHirt9jhbnXz34D-pmHNecMfkefL4wTr9LYj_V28OsVd=fkdZA@mail.gmail.com>
- <CAK7LNAQKxrV-oxouv9F6+_i9-oGvJNBzFNLo+5PdqwWVd9qWZQ@mail.gmail.com> <CAHirt9josVNzcwCM5Y3MsVJC9dz+iRg6r_64OK4NWPeOOo_X8g@mail.gmail.com>
-In-Reply-To: <CAHirt9josVNzcwCM5Y3MsVJC9dz+iRg6r_64OK4NWPeOOo_X8g@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 27 Jan 2024 18:31:14 +0100
-Message-ID: <CANiq72=aO-786owBb=0m5x09nMFenRendPZxd2fnsa6_nZHHCQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] rust: Refactor the build target to allow the use
- of builtin targets
-To: WANG Rui <wangrui@loongson.cn>, Catalin Marinas <catalin.marinas@arm.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Jamie Cunliffe <Jamie.Cunliffe@arm.com>, linux-arm-kernel@lists.infradead.org, 
-	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Will Deacon <will@kernel.org>, steve.capper@arm.com, Asahi Lina <lina@asahilina.net>, 
-	boqun.feng@gmail.com, andrew@lunn.ch, Huacai Chen <chenhuacai@kernel.org>, 
-	loongarch@lists.linux.dev, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jan 27, 2024 at 6:08=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wrot=
-e:
->
-> I agree. It would be great if Jamie could squash them together.
+The pull request you sent on Sat, 27 Jan 2024 16:14:12 +0800:
 
-Either that or perhaps Catalin could do it at apply time with your
-Co-developed-by and/or Huacai's Acked-by? I could also take if needed.
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.8-1
 
-Thanks Masahiro & Rui!
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/955340433a7926ab80838e904814461598adcd8c
 
-Cheers,
-Miguel
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
