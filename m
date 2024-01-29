@@ -1,69 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A07565BA7;
-	Mon, 29 Jan 2024 14:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF44152DFA
+	for <loongarch@lists.linux.dev>; Mon, 29 Jan 2024 14:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706537775; cv=none; b=szYmyWjnoX6mnH66i78LPa270Z6hho4t2nHRDyyJAQvqUBwwhJTqfrfVhZ5Ux794HmuYQKdwsOWxbGPyskgUKmsaDROCxGMjms3NrnjQS6lT8xlNwEO2yXLweK3w/+wN8NByeZuaEkDM+fpK+GoVvM+pYkXem+vrvCIBucsC53A=
+	t=1706540146; cv=none; b=caMG8tVMLTY9ZvpYhKzs0ttCRniA4tOGY4wfAmnx3qM53Wpe/nDnxUtz/fRALKRRvKijSxuXP6zwQRbqf7yrwUmRUrYezLDRgN3umJ8gQFc2XB4xK3A9kh2e3cO6ps29qyJ0X8Bvsmw3Won5sQVMi7/LguwNZWhHk+MFPA9Rg5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706537775; c=relaxed/simple;
-	bh=GrmuLwJa+BiBDhS1HgVuwxQ+fKStrHIgXIe12Tm1gcU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IGUz6Yzcx117YTMmdGY/zDTUkqhjqPzkuKE6eYJ0phg6x1Om/EXdc8MMy2FEg7WF/wyMYalOZ5Fv0ShC8Qdvn9R2Qypo01DWsNY0odWPfJ8wSkUAEO2axwBtVwF0c+85skKE/6TfjI4haiWsTSzDQi9IOIt9xCseL3MJBruYbGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42891C433C7;
-	Mon, 29 Jan 2024 14:16:11 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>
-Cc: loongarch@lists.linux.dev,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Qing Zhang <diasyzhang@tencent.com>,
-	kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Fix earlycon parameter if KASAN enabled
-Date: Mon, 29 Jan 2024 22:15:50 +0800
-Message-Id: <20240129141550.3284498-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1706540146; c=relaxed/simple;
+	bh=N1VX0f01FK+lMbnRSIPKyBtfZOPatHcFypn75HDFeM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pTl55W7J7CVF7yABntfiZJ7QAZO4NIS9mueF7v54pT34fXfD1DESalxsHEXl/OquUXGLnPYWiRfNK0a0MmThfIBhpFkcrgwJYhOUC6hLO1P2ancGOS8/1+uacwfudcS8xQ9Cm9dIC9nz8dDFZ1D3N0AK0OOisGwuR7R2lPmZD28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=zshAlN5d; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zshAlN5d"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=M1dyK4/mPjmXezB9OECra+eUv49q0u5KCO/rCTgyWjo=; b=zshAlN5dO4KSpCUyuhnHvqGFw5
+	Gh7/mHP6cgVBHrE5nMDsXFPalTDr1ZzFPzRd+TI3s6neNq9Af58Vp3/mYT3mH1KRmbTzeAaN4hL6H
+	fwQhoOIa1yKFj+i7nMitwQv1yOG0Pz0nUWKhd2M/o536j+TlvQga+8v5LJ3avKX49iZjAYE3R321y
+	O2ps7v/NwXnLCZBPRDhB722lFSCJPiCiWdXOhGxpRCt+7PfqIGluNFkn4mXrYxw2Koq2c9Rr4ObDV
+	7YwmV/eFjDI793/wrAU7O0xFV+v50tPaN/a1bIX95nRfhzCTLPIOqUuhcS09c50fU0hLrjkOGJEos
+	mD5qTJTg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60316)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rUT2l-0000YR-0u;
+	Mon, 29 Jan 2024 14:55:27 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rUT2f-0004dh-CJ; Mon, 29 Jan 2024 14:55:21 +0000
+Date: Mon, 29 Jan 2024 14:55:21 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
+	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
+	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	jianyong.wu@arm.com, justin.he@arm.com,
+	James Morse <james.morse@arm.com>
+Subject: Re: [PATCH RFC v3 01/21] ACPI: Only enumerate enabled (or
+ functional) devices
+Message-ID: <Zbe8WQRASx6D6RaG@shell.armlinux.org.uk>
+References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
+ <ZXxxa+XZjPZtNfJ+@shell.armlinux.org.uk>
+ <20231215161539.00000940@Huawei.com>
+ <5760569.DvuYhMxLoT@kreacher>
+ <20240102143925.00004361@Huawei.com>
+ <20240111101949.000075dc@Huawei.com>
+ <ZZ/CR/6Voec066DR@shell.armlinux.org.uk>
+ <20240112115205.000043b0@Huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240112115205.000043b0@Huawei.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-The earlycon parameter is based on fixmap, and fixmap addresses are not
-supposed to be shadowed by KASAN. So return the kasan_early_shadow_page
-in kasan_mem_to_shadow() if the input address is above FIXADDR_START.
-Otherwise earlycon cannot work after kasan_init().
+Hi Jonathan,
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/mm/kasan_init.c | 3 +++
- 1 file changed, 3 insertions(+)
+On Fri, Jan 12, 2024 at 11:52:05AM +0000, Jonathan Cameron wrote:
+> On Thu, 11 Jan 2024 10:26:15 +0000
+> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > @@ -2381,16 +2388,38 @@ EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
+> >   * acpi_dev_ready_for_enumeration - Check if the ACPI device is ready for enumeration
+> >   * @device: Pointer to the &struct acpi_device to check
+> >   *
+> > - * Check if the device is present and has no unmet dependencies.
+> > + * Check if the device is functional or enabled and has no unmet dependencies.
+> >   *
+> > - * Return true if the device is ready for enumeratino. Otherwise, return false.
+> > + * Return true if the device is ready for enumeration. Otherwise, return false.
+> >   */
+> >  bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
+> >  {
+> >  	if (device->flags.honor_deps && device->dep_unmet)
+> >  		return false;
+> >  
+> > -	return acpi_device_is_present(device);
+> > +	/*
+> > +	 * ACPI 6.5's 6.3.7 "_STA (Device Status)" allows firmware to return
+> > +	 * (!present && functional) for certain types of devices that should be
+> > +	 * enumerated. Note that the enabled bit should not be set unless the
+> > +	 * present bit is set.
+> > +	 *
+> > +	 * However, limit this only to processor devices to reduce possible
+> > +	 * regressions with firmware.
+> > +	 */
+> > +	if (device->status.functional)
+> > +		return true;
 
-diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
-index cc3e81fe0186..c608adc99845 100644
---- a/arch/loongarch/mm/kasan_init.c
-+++ b/arch/loongarch/mm/kasan_init.c
-@@ -44,6 +44,9 @@ void *kasan_mem_to_shadow(const void *addr)
- 		unsigned long xrange = (maddr >> XRANGE_SHIFT) & 0xffff;
- 		unsigned long offset = 0;
- 
-+		if (maddr >= FIXADDR_START)
-+			return (void *)(kasan_early_shadow_page);
-+
- 		maddr &= XRANGE_SHADOW_MASK;
- 		switch (xrange) {
- 		case XKPRANGE_CC_SEG:
+I have a report from within Oracle that this causes testing failures
+with QEMU using -smp cpus=2,maxcpus=4. I think it needs to be:
+
+	if (!device->status.present)
+		return device->status.functional;
+
+	if (device->status.enabled)
+		return true;
+
+	return !acpi_device_is_processor(device);
+
+So we can better understand the history here, let's list it as a
+truth table. P=present, F=functional, E=enabled, Orig=how the code
+is in mainline, James=James' original proposal, Rafael=the proposed
+replacement but seems to be buggy, Rmk=the fixed version that passes
+tests:
+
+P F E	Orig	James	Rafael		Rmk
+0 0 0	0	0	0		0
+0 0 1	0	0	0		0
+0 1 0	1	1	1		1
+0 1 1	1	0	1		1
+1 0 0	1	0	!processor	!processor
+1 0 1	1	1	1		1
+1 1 0	1	0	1		!processor
+1 1 1	1	1	1		1
+
+Any objections to this?
+
 -- 
-2.39.3
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
