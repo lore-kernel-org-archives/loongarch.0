@@ -1,78 +1,125 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0066752F6D
-	for <loongarch@lists.linux.dev>; Tue, 30 Jan 2024 07:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901DB339AD
+	for <loongarch@lists.linux.dev>; Tue, 30 Jan 2024 23:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706599366; cv=none; b=GOW+q+heHjx4+T1FsJkhUNhsy2P1YcbZaE7bZlm8kknoW/ocfJGf0Dit3EcnkRJaJ0mtWSVaERrQfOzXfZs+SLPV7tfIyDzaiXXsTSrJCrXmmUJC1VqGtRvdwns0vlZdukxPb2W2jNxxIWiM6x8w08uV5N7b9N4dyzw4g0yuy5w=
+	t=1706657505; cv=none; b=tOYfrsom9b4TRWxOJxNSIi86/iVHDcuDe8u0nFQJzZKzKl4LiwzZN9wanMWY0d/4iMwlIg0RInIsgNeZarMvTrkIfMc6m9aFXEAAUhdXTeoP4PBlqvIB2dC4HiINnmRUlvonq5XorPkpd1w6MN0cJCA2m8y8zdxj3vhmY2GerL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706599366; c=relaxed/simple;
-	bh=s9M9qWXk7zaBkvkgi958JENo+Xs9EYVOYtq3eweY+VM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pU3hNMgpXB6smWHcWiHPi1vbxRGSiNNnghlaToeCyA44LhDrdTPUF4Hi9naGd3FLugwAfbD7VAEWMZPsSv7PV0cJxCI/qhCMOXYTprek99kWN7T+pqsw4Z70QQ8pkG/dEJhRt5twzbLatmOKFlECua+gy1AYb/Mod0qxXF3uihU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxXOm_o7hlnjoIAA--.15236S3;
-	Tue, 30 Jan 2024 15:22:40 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXs2+o7hlPo4nAA--.20587S2;
-	Tue, 30 Jan 2024 15:22:38 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org,
+	s=arc-20240116; t=1706657505; c=relaxed/simple;
+	bh=tjgkJWJHJ1m0/YqTb/xcrpYoub6gZSwUTnxfXo0y8mM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RK+x6qu8vOD3eqLq7oV1tMJkQ6NzB3LfLHe5p6yBm9NDuejyvH9ixm8L4VF+ciE26pZtepLgwPu2WwQtpCnejT1wB/gIEC2Boy0w1vWtnfnn3T5t3Nys8O7yi6+JAcOPP683z+3RHjuFsRFnHo2cnJUyvlNXeVbcXW5ew8+xKvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TzykNBCi; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TzykNBCi"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-59a87156cb8so276393eaf.2
+        for <loongarch@lists.linux.dev>; Tue, 30 Jan 2024 15:31:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706657502; x=1707262302; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PiOXMkAilXSlADbFG8aS86y0I95Of2JWiczoVplHqlw=;
+        b=TzykNBCi0So4J0HxuDGwHOU6B18Sv9ZLCGGh9ub9nZH6JJzy24BTEiTuzYdszJS6TR
+         p7PzjAWGBr7Q96TwKR62Ivbel8xcVnQ5SJQByAVZ5KAm0dXFPkU/TMGRF4sZl/xsl0wr
+         PL+FshLlVLXtwJzJf+2TYHnotNvCIWF7z4Zfk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706657502; x=1707262302;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PiOXMkAilXSlADbFG8aS86y0I95Of2JWiczoVplHqlw=;
+        b=gP78PkgycJKZQAy4zrvxABOn4HGS65aUuZaLSUDAHvIaF2MMPeKQ59Ri8sigKCMpjt
+         adKntxpVbYeXpzJ4w2HkBIGiqvUQTnLk99toqqzITp9s6egQ6Y4d7c6b6VzVwe5O2oTb
+         7aHMNGxlFPEtHGcrHarV7dVsnaSvSQTz5bnyH7wIsQeHpwZ+gHJWHNf007NT2XAr86aa
+         l7NNGotK9sZShEacPHVoMsJAJwZjYEcwngd+dypC0ZHcqpldjMDNmpEPMr4BsW4U0iJI
+         Jhh2BTPXAkqNSTKiuX7hNiF8RvOUDHSUMnJqK2eC1iFVYuoX1WxjjfCjXo85398Hyca6
+         mVfQ==
+X-Gm-Message-State: AOJu0YxB7R/Qah25flP3/5dl8Do/BXRqvE4pKx0PBfp6h3bQjSKJ3M5q
+	Iwua56JAQnz1Nq4XZhykcPAK5KUXIH82e0GgTOZ1Lu54GBu2lTpYbIewe7uPqw==
+X-Google-Smtp-Source: AGHT+IGGp57sIuxTKTDCF6nyyO91maNOKuzeOvSumXmlWoy42j5hwEgcNPzAvuL4+x+S4cRxfQM9KQ==
+X-Received: by 2002:a05:6358:ee4b:b0:176:503b:937c with SMTP id ik11-20020a056358ee4b00b00176503b937cmr11351112rwb.21.1706657502506;
+        Tue, 30 Jan 2024 15:31:42 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id e17-20020a656491000000b005d67862799asm4122554pgv.44.2024.01.30.15.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 15:31:42 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	kernel test robot <lkp@intel.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Fangrui Song <maskray@google.com>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] LoongArch: KVM: Start SW timer only when vcpu is blocking
-Date: Tue, 30 Jan 2024 15:22:36 +0800
-Message-Id: <20240130072238.2829831-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	Thomas Gleixner <tglx@linutronix.de>,
+	Qing Zhang <zhangqing@loongson.cn>,
+	Feiyang Chen <chenfeiyang@loongson.cn>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] LoongArch: vDSO: Disable UBSAN instrumentation
+Date: Tue, 30 Jan 2024 15:31:40 -0800
+Message-Id: <20240130233140.work.887-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1243; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=tjgkJWJHJ1m0/YqTb/xcrpYoub6gZSwUTnxfXo0y8mM=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBluYbcRNRE8eUz6tYFQAladg8P+XLUdL7e+q6Ay
+ HNwzQiW6pGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbmG3AAKCRCJcvTf3G3A
+ JqrGD/9KqwEPh/D8NLTeQy/ro72FzTNk6eJ4UoWbJyVz54451QNtyI8Oc+aW7x5mwjheN6IuiBH
+ NQWBKFcgrqimUJYO3XbnPOZ9OHF6ipf8Fx5/YGLbDOW/LvRGhQlfhhM/BrARH1xALcZOIemiMq+
+ NuU7tiZ/mCDZ/F642nIKE0HNndm4/hc5n2O6qywD9fGxto65WqauLwprzk8bha2cGSgza57ugq0
+ skX/qRMKo3j1tE/w2RqvkSBY3+GQpzZagNc3svK67YbiehX9F/OmhGV4MwHgq14GA+cdGeq7RqE
+ yDvPvSSAzv53zimYkjmzf1J1SJu0JGr1Z1oN1hp+9nCi0ERF7nII2Iuqrwg80fVRF1XcH1NbC4e
+ nNwMv8Y+SxYvohvqCUv7PPh7jG9px5qJckUoUTf4WfuvKS7YU2vOMXpjjfENAh8x25CZV8hgM7w
+ 9GsO/XTLRiPR1AHlUG8WmqX9X8WYkLGiJrQDYNfJfzURwyRzrE6DYCVqHFnF7biS08v15rdi/kK
+ uGO36RfIGaYGeB9X43uygcIWgMx8nAEyT7HAs65yjqtAQPXCwSN7dsKqUZ8MbVbqmfpULI8mwwN
+ cigKOOdVwkeauhMdkb25S1LXaQl0LOqZcCgvjDThmUbYmdv9piaEe9qYh7seS8iF/mJGyg/+e2Q
+ 1zZB3C8 wXNNI0+w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXs2+o7hlPo4nAA--.20587S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruF4rCF47WFWUJw45Xr45XFc_yoWfAFg_WF
-	WDtFW5t3s7Wrs0yFnYk34rJa40gr1UA3yDXFyftr47tFW7AF98WF4Duay7uFW7Xa1xJFnr
-	Xw4UWryxCw1aqosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZUUUUU=
 
-SW timer is enabled when vcpu thread is scheduled out, and it is
-to wake up vcpu from blocked queue. If vcpu thread is scheduled out
-however is not blocked, such as it is preempted by other threads,
-it is not necessary to enable SW timer. Since vcpu thread is still
-on running queue and SW timer is only to wake up tasks on blocking
-queue, so SW timer is not useful in this situation.
+The vDSO executes in userspace, so the kernel's UBSAN should not
+instrument it. Solves these kind of build errors:
 
-This patch enables SW timer only when vcpu is scheduled out and
-is blocking. Also when SW timer is expired, it only wakes up vcpu
-thread in blocking queue and need not restart SW timer.
+  loongarch64-linux-ld: arch/loongarch/vdso/vgettimeofday.o: in function `vdso_shift_ns':
+  lib/vdso/gettimeofday.c:23:(.text+0x3f8): undefined reference to `__ubsan_handle_shift_out_of_bounds'
 
-Bibo Mao (2):
-  LoongArch: KVM: Start SW timer only when vcpu is blocking
-  LoongArch: KVM: Do not restart SW timer when it is expired
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401310530.lZHCj1Zl-lkp@intel.com/
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Fangrui Song <maskray@google.com>
+Cc: loongarch@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/loongarch/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
- arch/loongarch/kvm/timer.c | 42 ++++++++------------------------------
- 1 file changed, 9 insertions(+), 33 deletions(-)
-
-
-base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index c74c9921304f..f597cd08a96b 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -2,6 +2,7 @@
+ # Objects to go into the VDSO.
+ 
+ KASAN_SANITIZE := n
++UBSAN_SANITIZE := n
+ KCOV_INSTRUMENT := n
+ 
+ # Include the generic Makefile to check the built vdso.
 -- 
-2.39.3
+2.34.1
 
