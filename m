@@ -1,95 +1,105 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC07912B79
-	for <loongarch@lists.linux.dev>; Wed, 31 Jan 2024 03:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593A93DBB8
+	for <loongarch@lists.linux.dev>; Wed, 31 Jan 2024 06:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706672910; cv=none; b=uDJ5haIDqTXl5tJrOxZloRTsMMdoQRR5lbaNDMw6lR7MDTKjobrp7rcu000Kwv7xngr6pI7qdibgCsXtGZtaqkcUTn0V+JZv5fZRVZEc3Tjhmbo5MgslqYxC7k1A821HSvi4jt+IV7g9e7FVc/YWabH3fUsSW7BLnf17gAYZlG0=
+	t=1706681148; cv=none; b=hUAc6wR5a/t1o7B+DMTaSja7RfvTWTE05fX4b//o5OQCQg/+5DeiNRv6Ivqz0HD8CSe8AwY9O9sEJu4GP2WHXBbUdzrrhlxk0m1pp5dzX6Is/sWFG4vBlV5u++VE7ZAuuKMNGH+yc8CnxftBUku+YsPuPz3aqnYM3dHlYw5ov5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706672910; c=relaxed/simple;
-	bh=WjJKpyNGS1blPKAfbNn8MquKPZSqvebdPCEZMuXh/+M=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YFaIUMcsIOlUIaKMA91UHRwBW0ow48aSRzdIAqSXMNE7lvo+A4iv87On3Vl9+QKgZW4KBRFtJ5UC6/rRJX+gWisLA74COYO1JBA1+Sb3viHNgOb7Fmt4TuARx3VS5/rn3so8uAdsCQB4KsrPDJbcBb2br3pAHgnRuoN/K6hUNzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8BxVfECw7llccMIAA--.26965S3;
-	Wed, 31 Jan 2024 11:48:19 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjhMAw7llOn0pAA--.40142S3;
-	Wed, 31 Jan 2024 11:48:18 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Remove unnecessary CSR register saving
- during enter guest
-From: maobibo <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240112035039.833974-1-maobibo@loongson.cn>
-Message-ID: <b7c08e0d-bd7d-aea9-250e-1649e95599b7@loongson.cn>
-Date: Wed, 31 Jan 2024 11:48:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1706681148; c=relaxed/simple;
+	bh=qus462gm4W7HacMHht7FDIF1aPdFbq/jFvbVSl4ZG8k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iaYpMBNu0we8zLq5AeKVZ8BhVMBI0LqIuDcLp4f9jGMK0Y1oejZhI0rrADbe/9P7mJMafhud+cMA4aCat/J0tVmmjsRZSLkhG9L6AR1sUnKMqmun27F7wnxRrvnE+AKOqR8XTtvsQyYrfArJnlP9fGv2Lw7EPKIKlKiKKPczmGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+jb6c12; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+jb6c12"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC749C433B1
+	for <loongarch@lists.linux.dev>; Wed, 31 Jan 2024 06:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706681148;
+	bh=qus462gm4W7HacMHht7FDIF1aPdFbq/jFvbVSl4ZG8k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=g+jb6c12d8VOgjf8jz/8K4lzJEZxQSdnJIr7gq+QvsjdRHksCVvWm+HE19kxYVM8j
+	 FAXWYfTNGf23ZWAg/fgjuKKkTWteW7PVFzazDRL0mAqhC6lvW/w5jhAjDF1yobzpvQ
+	 A8yFSwMGMNu0l0ec6XzZnWhcMyNDRTfrFv5M1SEEV61OirpTQ9H/nxIzJM1PRev80n
+	 1oEHKUBVA1gGQI7o49x/gb/TuTfwKTag8V4TEm5T1WjNwoa4QwWnS8CDkVEB7I/BKo
+	 K49+jyZkkcVFrdZytXIoS1dE04978gpZsUUhk56pL6+wTyzOdQRN/81MRLRMFJ1Sn5
+	 +wuSCBswmhiNg==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55f2b0c5ae9so2645431a12.2
+        for <loongarch@lists.linux.dev>; Tue, 30 Jan 2024 22:05:47 -0800 (PST)
+X-Gm-Message-State: AOJu0YzQojPQ3qqYpU3hrIjiRbOyVeT4G9++hkkOJ4jsEOcSAeC1LojC
+	mZ97oBv3OLcNN5s1QCpd0aFPHJS9y3Gp4JeHNTpIISfaE76dqrtkr9+sIZNRMTSU5me3r7mF65y
+	yGPKI5ciU64HMT0r3lldTYnGyJOI=
+X-Google-Smtp-Source: AGHT+IHMP57lqu49Bz1sgO3SY3xP1kdDdaLTG3RNWidC2zC0yg6vGI/LuqCrtHmyUQcj/kmKEjoPIECKS/K5l2qxrD0=
+X-Received: by 2002:a05:6402:ca3:b0:55f:6b5a:6310 with SMTP id
+ cn3-20020a0564020ca300b0055f6b5a6310mr302635edb.33.1706681146230; Tue, 30 Jan
+ 2024 22:05:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240112035039.833974-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxjhMAw7llOn0pAA--.40142S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKFyrur4rGrW5tr17ur1ruFX_yoWDGwb_X3
-	WIkw4Dur4fJa17u3yF9r98Xw1jq3WkG39a9ry8ZryxJa4FqrZ8Xr47Aa1rAw13KFWUJ3yf
-	ArWxKrZ3ur1ayosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZU
-	UUUU=
+References: <20240130233140.work.887-kees@kernel.org>
+In-Reply-To: <20240130233140.work.887-kees@kernel.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 31 Jan 2024 14:05:34 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H524mSc5SgiwVF3aATFkrp0_xo2W7-5sXk0nXyN+rBzrA@mail.gmail.com>
+Message-ID: <CAAhV-H524mSc5SgiwVF3aATFkrp0_xo2W7-5sXk0nXyN+rBzrA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: vDSO: Disable UBSAN instrumentation
+To: Kees Cook <keescook@chromium.org>
+Cc: kernel test robot <lkp@intel.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Fangrui Song <maskray@google.com>, loongarch@lists.linux.dev, 
+	Thomas Gleixner <tglx@linutronix.de>, Qing Zhang <zhangqing@loongson.cn>, 
+	Feiyang Chen <chenfeiyang@loongson.cn>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-slightly ping :)
+Queued, thanks.
 
-On 2024/1/12 上午11:50, Bibo Mao wrote:
-> Some CSR registers like CRMD/PRMD are saved during enter VM mode. However
-> they are not restored for actual use, saving for these CSR registers
-> can be removed.
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Huacai
+
+On Wed, Jan 31, 2024 at 7:31=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> The vDSO executes in userspace, so the kernel's UBSAN should not
+> instrument it. Solves these kind of build errors:
+>
+>   loongarch64-linux-ld: arch/loongarch/vdso/vgettimeofday.o: in function =
+`vdso_shift_ns':
+>   lib/vdso/gettimeofday.c:23:(.text+0x3f8): undefined reference to `__ubs=
+an_handle_shift_out_of_bounds'
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202401310530.lZHCj1Zl-lkp@i=
+ntel.com/
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Fangrui Song <maskray@google.com>
+> Cc: loongarch@lists.linux.dev
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->   arch/loongarch/kvm/switch.S | 6 ------
->   1 file changed, 6 deletions(-)
-> 
-> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-> index 0ed9040307b7..905b90de50e8 100644
-> --- a/arch/loongarch/kvm/switch.S
-> +++ b/arch/loongarch/kvm/switch.S
-> @@ -213,12 +213,6 @@ SYM_FUNC_START(kvm_enter_guest)
->   	/* Save host GPRs */
->   	kvm_save_host_gpr a2
->   
-> -	/* Save host CRMD, PRMD to stack */
-> -	csrrd	a3, LOONGARCH_CSR_CRMD
-> -	st.d	a3, a2, PT_CRMD
-> -	csrrd	a3, LOONGARCH_CSR_PRMD
-> -	st.d	a3, a2, PT_PRMD
-> -
->   	addi.d	a2, a1, KVM_VCPU_ARCH
->   	st.d	sp, a2, KVM_ARCH_HSP
->   	st.d	tp, a2, KVM_ARCH_HTP
-> 
-> base-commit: de927f6c0b07d9e698416c5b287c521b07694cac
-> 
-
+>  arch/loongarch/vdso/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index c74c9921304f..f597cd08a96b 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -2,6 +2,7 @@
+>  # Objects to go into the VDSO.
+>
+>  KASAN_SANITIZE :=3D n
+> +UBSAN_SANITIZE :=3D n
+>  KCOV_INSTRUMENT :=3D n
+>
+>  # Include the generic Makefile to check the built vdso.
+> --
+> 2.34.1
+>
