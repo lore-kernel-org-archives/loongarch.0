@@ -1,458 +1,422 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C5312C54B;
-	Wed, 31 Jan 2024 17:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706721958; cv=fail; b=qXapk0jqxUP0jEIcQ5bP6v+25pYyg8N1KvYSXxcN9/3Ij9U0KrsRQ+c0Z6PjRxdx6+jULop5w1FDhqi4ddEknkFIOEHz9gt4orFsSjAHBclH4NU8v21gZzM33p+rlS6hBfzjtgeioFvhzncqG7r29HFGiAOWwa5NSqjH4ymE6C4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706721958; c=relaxed/simple;
-	bh=6lwlahWQgRjGUyqoNVyjkxpREBr2N5caJeFnec4at7g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=KemZ/7MU+QfzTdVPZZu3WPObWI6KqQDIcW/NdVuhajd6ziS2rlHsu4OOelqWpQFLNdFdj4PnOOplk949FfRWW1yJvTL4N2TwAK4VIh/wbXLTY698E8IlakIVj1vSxo4U4DjyVqTQxvxroW7GLr+bX2JTGT7PHjXchsfNBe95+4c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VHerG/iw; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=OvbQt26t; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VHerG/iw";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="OvbQt26t"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40VHC3hU004756;
-	Wed, 31 Jan 2024 17:25:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=05fyeGhIMhB1lOJKioTUONn/STr+y5O4M3hrptRHV1k=;
- b=VHerG/iwekOA3DLY8gNPgGKTa1Z8JACw5wErcCpeBIxwE6a7yOSUzBPdPGeL1RgHWFkX
- yOrW1c3UW9OAeNMKgiy7Y1pkrYRGwtgCqCQDSax25ZI1i1m1owGPS6K8OM6Njoxdu47t
- qSFnA5ituVtg0OZSPDagwXQWi7LfLJhOB6T+xoYg8CEBJZIDSya3XBUyfnpFXeS2P0d5
- CqVkAX/4CAO5SBaocsMgOnsHu8IcAbljC4y8db14TCuwqO2+diY+8WVXwyLf63wQW+2U
- lGTu5G2yU+75bJD7MghYfaCYGZtZEHVBY27HJa1CtnCbQGBKqQ7Fg2K55Ug/uCKbromJ 9A== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vvsqb2ehv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 31 Jan 2024 17:25:33 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40VGvhw7036101;
-	Wed, 31 Jan 2024 17:25:32 GMT
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2041.outbound.protection.outlook.com [104.47.73.41])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vvr9fmncn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 31 Jan 2024 17:25:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VD93YpZEFVU6LMt5/v+xy0c7XiQMv+3zfhZXnYBaKVo1Lzo5ylO7YxnMUClu03Ea2X8LphlcT/p1glhaMeehTrwyJ55jEw613oJtNCjamozR7c8wS+Mg1xFrqYz9nHHIVQozxp0fEvnPzY1wvalKPmjWaHY45ri/xDe7dBl/pgSEy+zaGYVpC2W0/dKtqwpQkEoaQkQPBJdxWLn3k2eZeuly9LsqbAmYkO5FeZTpY8zZBv9F5YuKRoxa+6aQ1BK+bM0SYKXPpp42y1YoGUvLk9BdazK0Hif0aSK7/mVojDi2s1zjDznj1HcSk20nm7lF9X6K3fZ7dHpO3/4Zy/6n8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=05fyeGhIMhB1lOJKioTUONn/STr+y5O4M3hrptRHV1k=;
- b=oaJj3wI6Px5Pj5KvSEWoGHvx4hSVbNbzmP1FDOzOk8+/13GwaBPnFB7s3K8dtDJ3ocIHItyqKMfTG8ewZb4nttiwkwQrP99/XIJ0uQI6NNq38ulNuaSe8YQOWqAEgsAaj6MlE79wKGuv1F+G4IOd4ppylNqUSykM0hqXqiAvPeP11wfaTUBM7gD714VX504ltyCnygGw57GtQQBu+G++iI9C5moLe60PID6vV9XGgtzvW4mQhj+e/DhO/sBcaCtW4org1su79Bnkfg41ilx/PaOQVLZv0x94xvOOg5D5+rW+cZh6nh7RK1JD2irAjJjXZzHpfuIwUDcB6bFfVhg72g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=05fyeGhIMhB1lOJKioTUONn/STr+y5O4M3hrptRHV1k=;
- b=OvbQt26t5yfkM3UZU8qfnpK9aVWDXtta82ec0NXxzGauqL9immcHPtSkVYbi4Uxu+fOOo+wwEhPn03hRGMkoMky3nhfv04fifznGlHDYzyNx9/3L4mrOAlHVvHbwvLOpQS/bRt5Q9HgaSwQBcxQkcEAreW5Pnt/wveZI1G8xX/U=
-Received: from PH0PR10MB5433.namprd10.prod.outlook.com (2603:10b6:510:e0::9)
- by DS0PR10MB7979.namprd10.prod.outlook.com (2603:10b6:8:1ab::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Wed, 31 Jan
- 2024 17:25:29 +0000
-Received: from PH0PR10MB5433.namprd10.prod.outlook.com
- ([fe80::5997:266c:f3fd:6bf4]) by PH0PR10MB5433.namprd10.prod.outlook.com
- ([fe80::5997:266c:f3fd:6bf4%4]) with mapi id 15.20.7228.035; Wed, 31 Jan 2024
- 17:25:29 +0000
-From: Miguel Luis <miguel.luis@oracle.com>
-To: Russell King <rmk+kernel@armlinux.org.uk>
-CC: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>,
-        "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "acpica-devel@lists.linuxfoundation.org"
-	<acpica-devel@lists.linuxfoundation.org>,
-        "linux-csky@vger.kernel.org"
-	<linux-csky@vger.kernel.org>,
-        "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org"
-	<linux-ia64@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org"
-	<linux-parisc@vger.kernel.org>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        "jianyong.wu@arm.com"
-	<jianyong.wu@arm.com>,
-        "justin.he@arm.com" <justin.he@arm.com>,
-        James Morse
-	<james.morse@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH RFC v4 01/15] ACPI: Only enumerate enabled (or functional)
- processor devices
-Thread-Topic: [PATCH RFC v4 01/15] ACPI: Only enumerate enabled (or
- functional) processor devices
-Thread-Index: AQHaVGWXrmQ6tbct00qr+/5CouVONrD0LCkA
-Date: Wed, 31 Jan 2024 17:25:29 +0000
-Message-ID: <05A27863-22ED-4CF6-BBD6-5349ED1330A9@oracle.com>
-References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk>
- <E1rVDmP-0027YJ-EW@rmk-PC.armlinux.org.uk>
-In-Reply-To: <E1rVDmP-0027YJ-EW@rmk-PC.armlinux.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR10MB5433:EE_|DS0PR10MB7979:EE_
-x-ms-office365-filtering-correlation-id: 239c1c46-8156-4f08-0c80-08dc22819f37
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- 13rnIGOyd4jAamv+GHXnmeeqvZMxtl71EHFiI4+S7mbugbDBTVRGGfTgveZnuIDRV/UWqlbKEEI1kVEwSnVVUpbL+7Vh+NSkF4l4nTGt21quKeeZNR9tzv9JehVfDwQcuKU27UiWnvNMLNmXr4Ix8/vyjCqGCarIo1LA9M/w6BGDnRCYjsvS6FFZSUqb8R299G/sxVx17nRaWT7LfqX12qndkrHyX66HJdaeZVKC8moe4bbOJqat2/qXWX7Ok+xXGR+P5rx6cN8HRkiCLiMZkwiHI4zycoexC2c/szcxjhjlHdFD7/qsxwB1cdV1/tV1t12lVZzB7Yg9E/Aon2AXfP36Mo+xw1oBDGDLj+OWHZB4CvXv7/wV6o7WkJrqYzTRfyYk9zbHgp7lLpKj+PC3Y9HshGxqZX+gWFJhcCQAT98l2m7Dx7tjZ0QMOpYfN9+SOv5LTdJ+AB+9mQt4bwyfbcM09WYlVtitccEn/OR/4fIBQ2PTPDXvCGIrO6JdQ3WWXhIKHmKGVcwhzYnYewd/4j/jWymf8sMFQocy3cyxATW6NQ3BqHR1ltp3YR3kfmEAc3ql/IwnS0WKOdr+pKgYHuNqooMjH+gXytUgnghm9bXDC8R3NNoiCdbqaQjP4YUP1ZNo8TUIp+KbGEIbJW7OZzC35JXgEQSj4G1yGWl3u5BhWHI2SxrmMAJrlk9qg4yI
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5433.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(376002)(366004)(39860400002)(396003)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(83380400001)(36756003)(38070700009)(41300700001)(44832011)(8936002)(4326008)(8676002)(6512007)(2906002)(33656002)(2616005)(5660300002)(66946007)(478600001)(6486002)(966005)(76116006)(66446008)(64756008)(6506007)(38100700002)(86362001)(53546011)(91956017)(66476007)(54906003)(316002)(66556008)(71200400001)(7416002)(122000001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?KIKUvpWWX6fu8l7PCOEbuGh1nO+sAPXA/M+YwRYtT1pxbnnEyB0eLR0vAkuu?=
- =?us-ascii?Q?CoDZm653IdFhx2CqK+0nfUdV3kPy9vdrBoEkHiNiQq0OdPEixTa7g1bgziJC?=
- =?us-ascii?Q?EFwhOg6KEdgrThslD++FSEqJ4HfM9nnS4+/laMf3KlHMs/1dz7WrKrKVXo/N?=
- =?us-ascii?Q?ZZ3tSh57abYbBECTHicYtsweVnPLLY/OxNDDHbXWlbzOjWa6tReJHn0eg+Rn?=
- =?us-ascii?Q?nTTDMcqW6kD6LvA2c2WTqMOGtu+uSnlQbYXwOm+XQobTk4pwJuVkek4wHt75?=
- =?us-ascii?Q?BJ2HXMVCM4s8NQnjbfZE+TsWc6ny4+jMeE1xsclNJEULInKsiqF6ENmwdwm6?=
- =?us-ascii?Q?dIWaDuChs9/ikq/Cl3TD+PWGhAwBmuincI8qoh4MX2kT31P/pX+utmRMI7Hf?=
- =?us-ascii?Q?rwS44bN6AHf1vxJbDmIdSd5tbC+r3ajpWUSWFcV3CowDAJBCftpXpG6biGkg?=
- =?us-ascii?Q?LQjmXO2v1nfWoynXMqKmnORxKTnR1iuqiVG6QobvvnFNeHu5h+F3Axum42Kv?=
- =?us-ascii?Q?YoyTAc8l8IUI/wJlMDqbfOnfo6qFF/qky+LHUZFj2EfUWV0p+qaGfGwmDsD0?=
- =?us-ascii?Q?lcUz4Td8Bk0IJCF/abcgsRSO9UoHTU9bPyZZWxiwhxChjoglANE/jxh5Wz4I?=
- =?us-ascii?Q?TkVfHF1TXR4iZRlVM0tLz0tHc5AC11bdfv9xERPJc2M03XLLvVNB8KaqknRP?=
- =?us-ascii?Q?XNOzazwWmYWX+IhTqw6Feo3bmen/8oq/T+5R52S+khxb8W6sd4zrm/SL8EDI?=
- =?us-ascii?Q?R8XwWUrCWV+biKGEvod+ydHlewreq5eJPby6PhqRTQSbgE6Bek29you94g4l?=
- =?us-ascii?Q?WLBH7K8Ysp82hW9l6OHXjRy920RvgtF7ptq7CRRQJT7ON96xMcvNpB5uBGL7?=
- =?us-ascii?Q?D3DNHXbhy4f5jJidCQNS7yzmlP1+JInvf+bPyr2aE21PrWI04BWsV/Kmit8h?=
- =?us-ascii?Q?xZCYeAnZTtWwv8w5fpHSBLTnL0Mf8ZLtI4ldlPlI6L4bIK8wZoWfaRbOiR5x?=
- =?us-ascii?Q?TNW1gXYwGipYquYW88EnSQvBeVZVdssm9+k/xQIpeSPy82QIURaRqsJOpcLT?=
- =?us-ascii?Q?xgtWxuYRiMKA8dg1Aq82AOHnAvg5MY312+b7IU8Dabq61AmZZzxt77ph0txG?=
- =?us-ascii?Q?VKHK1GtgWfpgseVY4V+2O/wZAIGataKxCmIw+ujUvfPLdBzd6M95wkI7tQni?=
- =?us-ascii?Q?5KENat0Z3c52hODZahmIhCfu/kRleUmiL0L+LWWuLuEKaRi4zm18hQC/dmcw?=
- =?us-ascii?Q?WgsThR4nC4NPL6t6D3baUpxtrfJjXGgAuiuTlC/luil3caeXMYVCqCGMfCbE?=
- =?us-ascii?Q?L2NlXnQQlJ6HdL8kvf+jP4AKYvhZgbYVhRqLcoMxM0HzijJBzhI+dDyuXbAR?=
- =?us-ascii?Q?XRUCsqjRgltX4HjKF24buCOY6rhg+Oakqf/gihb9Pm3pB9FM+1bPEWUJZNCi?=
- =?us-ascii?Q?g1BQp1w4wO3B0x7t+sTWznQTBVqR5S0mTTx1bRTDabEiWydsRZ1Ia3fCS3mk?=
- =?us-ascii?Q?Qdt/w0UWZYi20X89mi52CZfmedI2Z9/+grMvb+FFgShROSxNzuDebg98RMFq?=
- =?us-ascii?Q?yUW18fYgt69iKWJPUXexslCT51JKbD7fZkrTOUMeZPBzLzoG1k/lSxLIMbpB?=
- =?us-ascii?Q?XEsnWMjWcqHt0aKGMKM+HIk=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8FC90E6C189EA44E9F8E6FF2032CAE53@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A09C23B282;
+	Thu,  1 Feb 2024 03:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706757596; cv=none; b=urXr98146FKkdHH2T63VU+nX58e/pDtxmtz5P76FL2moGCtQNOv06CgI/8ZMTQTBW4cD9OyTwQegca8STbzw2R3AEXRVVtl+nRqJYpGawNyKDIjDfsDWy+g320JUpTCiN491wsF1ESZ25+QJw56tVkWon/ufXnqC00NQB0ZhROU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706757596; c=relaxed/simple;
+	bh=XtfDaojH6r62otarE6N5h6lD5xFHPE5d3TsQsAN2tGE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZcYXfTXmkpdsIzyMSDHLgszGeVJsF++4miUKTEf/6pnM3uq+RQvq/JCGNmhqSz7oQWBnXhWPbfTM7VJ91pZluhK5bZgpSLv0iBEV4+2XbZNUYJbbTkWe4yEDcTs8LuyfAsSCUcksIguAy/c+kJzzGApJkWfD8aungo7qLM0f5Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxqvDXDbtlLlQJAA--.27800S3;
+	Thu, 01 Feb 2024 11:19:51 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxfRPWDbtltkIrAA--.3273S3;
+	Thu, 01 Feb 2024 11:19:51 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Juergen Gross <jgross@suse.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	kvm@vger.kernel.org
+Subject: [PATCH v4 1/6] LoongArch/smp: Refine ipi ops on LoongArch platform
+Date: Thu,  1 Feb 2024 11:19:45 +0800
+Message-Id: <20240201031950.3225626-2-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240201031950.3225626-1-maobibo@loongson.cn>
+References: <20240201031950.3225626-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	85+Cagi0gvsXMI9BJYndbO906L0RqDraYRDudbP+w/fmQrKuULcqPd2hapmV6EGOLXHSyoNBAVVoif62KxRldomV6jlMRMxzJAlIdeH5yyQE9jJC/X/3NoRIomL9vP9MqiwYK0tM15lKZ/HUC8/xIIpvgUM6ohWTIgB9wf1v0CXOD5fkYVrGuXVRBYLYnMkL2HKKhBWjPlzhOg/pQi9NOb3UoPCqhPj0V+lHOSGdVT/kpNQqtz+NT17zr+cnFXvxQUQ14pd+jZ8JT5UVKf8T2XK7zDb4Bb+Pnp0mbLy2IIPLAWAHiqPYzot0S8eJ9yvr3KTly1UbOOJvrG3/+GwXvd4k72VaETEFrhdMVazUVz1wGCcnsvloN7lrxppzW246WGeBbSXbH7BR4r9fMMxX+bhZqwQ4TF9qekDFvlLbmQZIBGqQ6dNCZn6mYNZxYDOcGorsODDjAi/MZdenuRzO9AmbtAImZjBh9ApSq8YccYV746NkEFXdqSmqhb+PKg25s+yMqR07j2FaL0smAcDeFD3Fd+Etm42QfNddJqHE5CsAy9vM1iHnOHStEslIB/lyHh2imHe7L4xhO8BJk5wxoHl5brzpcrBW/FwEyuIep4M=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5433.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 239c1c46-8156-4f08-0c80-08dc22819f37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2024 17:25:29.6579
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CMp6qsK4jiEKMN99JKVfk+YN9UNTHz4isX/uXu3wCNXwOpdtObrnvZyJ1lOzv3XZgExRW4aLkwstqc9RX1VO+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7979
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_10,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- spamscore=0 mlxlogscore=999 adultscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401310134
-X-Proofpoint-GUID: e3s_sTLO9TF_C4Po0IXfVKJiSDYXeFje
-X-Proofpoint-ORIG-GUID: e3s_sTLO9TF_C4Po0IXfVKJiSDYXeFje
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxfRPWDbtltkIrAA--.3273S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3KryfCFWrGry3Gw47Xw1kZwc_yoWktr4kpF
+	y3Zw4DKr4rWFnYv3s0ya98Zr15AFnagwsFqa17KayxAF12q3s8XF4kJF9FvF10k3yrua40
+	vFZ5Gr4IgF1UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU82g43UUUUU==
 
-Hi
+This patch refines ipi handling on LoongArch platform, there are
+three changes with this patch.
+1. Add generic get_percpu_irq() api, replace some percpu irq functions
+such as get_ipi_irq()/get_pmc_irq()/get_timer_irq() with get_percpu_irq().
 
-> On 31 Jan 2024, at 15:49, Russell King <rmk+kernel@armlinux.org.uk> wrote=
-:
->=20
-> From: James Morse <james.morse@arm.com>
->=20
-> Today the ACPI enumeration code 'visits' all devices that are present.
->=20
-> This is a problem for arm64, where CPUs are always present, but not
-> always enabled. When a device-check occurs because the firmware-policy
-> has changed and a CPU is now enabled, the following error occurs:
-> | acpi ACPI0007:48: Enumeration failure
->=20
-> This is ultimately because acpi_dev_ready_for_enumeration() returns
-> true for a device that is not enabled. The ACPI Processor driver
-> will not register such CPUs as they are not 'decoding their resources'.
->=20
-> ACPI allows a device to be functional instead of maintaining the
-> present and enabled bit, but we can't simply check the enabled bit
-> for all devices since firmware can be buggy.
->=20
-> If ACPI indicates that the device is present and enabled, then all well
-> and good, we can enumate it. However, if the device is present and not
+2. Change parameter action definition with function
+loongson_send_ipi_single() and loongson_send_ipi_mask(). Normal decimal
+encoding is used rather than binary bitmap encoding for ipi action, ipi
+hw sender uses devimal action code, and ipi receiver will get binary bitmap
+encoding, the ipi hw will convert it into bitmap in ipi message buffer.
 
-enumerate
+3. Add structure smp_ops on LoongArch platform so that pv ipi can be used
+later.
 
-> enabled, then we also check whether the device is a processor device
-> to limit the impact of this new check to just processor devices.
->=20
-> This avoids enumerating present && functional processor devices that
-> are not enabled.
->=20
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Co-developed-by: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
-> Changes since RFC v2:
-> * Incorporate comment suggestion by Gavin Shan.
-> Changes since RFC v3:
-> * Fixed "sert" typo.
-> Changes since RFC v3 (smaller series):
-> * Restrict checking the enabled bit to processor devices, update
->   commit comments.
-> * Use Rafael's suggestion in
->   https://lore.kernel.org/r/5760569.DvuYhMxLoT@kreacher
-> * Updated with a fix - see:
->   https://lore.kernel.org/all/Zbe8WQRASx6D6RaG@shell.armlinux.org.uk/
-> ---
-> drivers/acpi/acpi_processor.c | 11 +++++++++
-> drivers/acpi/device_pm.c      |  2 +-
-> drivers/acpi/device_sysfs.c   |  2 +-
-> drivers/acpi/internal.h       |  4 ++-
-> drivers/acpi/property.c       |  2 +-
-> drivers/acpi/scan.c           | 46 +++++++++++++++++++++++++++--------
-> 6 files changed, 53 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
-c
-> index 4fe2ef54088c..cf7c1cca69dd 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -626,6 +626,17 @@ static struct acpi_scan_handler processor_handler =
-=3D {
-> },
-> };
->=20
-> +bool acpi_device_is_processor(const struct acpi_device *adev)
-> +{
-> + if (adev->device_type =3D=3D ACPI_BUS_TYPE_PROCESSOR)
-> + return true;
-> +
-> + if (adev->device_type !=3D ACPI_BUS_TYPE_DEVICE)
-> + return false;
-> +
-> + return acpi_scan_check_handler(adev, &processor_handler);
-> +}
-> +
-> static int acpi_processor_container_attach(struct acpi_device *dev,
->   const struct acpi_device_id *id)
-> {
-> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> index 3b4d048c4941..e3c80f3b3b57 100644
-> --- a/drivers/acpi/device_pm.c
-> +++ b/drivers/acpi/device_pm.c
-> @@ -313,7 +313,7 @@ int acpi_bus_init_power(struct acpi_device *device)
-> return -EINVAL;
->=20
-> device->power.state =3D ACPI_STATE_UNKNOWN;
-> - if (!acpi_device_is_present(device)) {
-> + if (!acpi_dev_ready_for_enumeration(device)) {
-> device->flags.initialized =3D false;
-> return -ENXIO;
-> }
-> diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
-> index 23373faa35ec..a0256d2493a7 100644
-> --- a/drivers/acpi/device_sysfs.c
-> +++ b/drivers/acpi/device_sysfs.c
-> @@ -141,7 +141,7 @@ static int create_pnp_modalias(const struct acpi_devi=
-ce *acpi_dev, char *modalia
-> struct acpi_hardware_id *id;
->=20
-> /* Avoid unnecessarily loading modules for non present devices. */
-> - if (!acpi_device_is_present(acpi_dev))
-> + if (!acpi_dev_ready_for_enumeration(acpi_dev))
-> return 0;
->=20
-> /*
-> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-> index 6588525c45ef..1bc8b6db60c5 100644
-> --- a/drivers/acpi/internal.h
-> +++ b/drivers/acpi/internal.h
-> @@ -62,6 +62,8 @@ void acpi_sysfs_add_hotplug_profile(struct acpi_hotplug=
-_profile *hotplug,
-> int acpi_scan_add_handler_with_hotplug(struct acpi_scan_handler *handler,
->       const char *hotplug_profile_name);
-> void acpi_scan_hotplug_enabled(struct acpi_hotplug_profile *hotplug, bool=
- val);
-> +bool acpi_scan_check_handler(const struct acpi_device *adev,
-> +     struct acpi_scan_handler *handler);
->=20
-> #ifdef CONFIG_DEBUG_FS
-> extern struct dentry *acpi_debugfs_dir;
-> @@ -121,7 +123,6 @@ int acpi_device_setup_files(struct acpi_device *dev);
-> void acpi_device_remove_files(struct acpi_device *dev);
-> void acpi_device_add_finalize(struct acpi_device *device);
-> void acpi_free_pnp_ids(struct acpi_device_pnp *pnp);
-> -bool acpi_device_is_present(const struct acpi_device *adev);
-> bool acpi_device_is_battery(struct acpi_device *adev);
-> bool acpi_device_is_first_physical_node(struct acpi_device *adev,
-> const struct device *dev);
-> @@ -133,6 +134,7 @@ int acpi_bus_register_early_device(int type);
-> const struct acpi_device *acpi_companion_match(const struct device *dev);
-> int __acpi_device_uevent_modalias(const struct acpi_device *adev,
->  struct kobj_uevent_env *env);
-> +bool acpi_device_is_processor(const struct acpi_device *adev);
->=20
-> /* ----------------------------------------------------------------------=
-----
->                                   Power Resource
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index a6ead5204046..9f8d54038770 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -1486,7 +1486,7 @@ static bool acpi_fwnode_device_is_available(const s=
-truct fwnode_handle *fwnode)
-> if (!is_acpi_device_node(fwnode))
-> return false;
->=20
-> - return acpi_device_is_present(to_acpi_device_node(fwnode));
-> + return acpi_dev_ready_for_enumeration(to_acpi_device_node(fwnode));
-> }
->=20
-> static const void *
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index e6ed1ba91e5c..fd2e8b3a5749 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -304,7 +304,7 @@ static int acpi_scan_device_check(struct acpi_device =
-*adev)
-> int error;
->=20
-> acpi_bus_get_status(adev);
-> - if (acpi_device_is_present(adev)) {
-> + if (acpi_dev_ready_for_enumeration(adev)) {
-> /*
-> * This function is only called for device objects for which
-> * matching scan handlers exist.  The only situation in which
-> @@ -338,7 +338,7 @@ static int acpi_scan_bus_check(struct acpi_device *ad=
-ev, void *not_used)
-> int error;
->=20
-> acpi_bus_get_status(adev);
-> - if (!acpi_device_is_present(adev)) {
-> + if (!acpi_dev_ready_for_enumeration(adev)) {
-> acpi_scan_device_not_enumerated(adev);
-> return 0;
-> }
-> @@ -1917,11 +1917,6 @@ static bool acpi_device_should_be_hidden(acpi_hand=
-le handle)
-> return true;
-> }
->=20
-> -bool acpi_device_is_present(const struct acpi_device *adev)
-> -{
-> - return adev->status.present || adev->status.functional;
-> -}
-> -
-> static bool acpi_scan_handler_matching(struct acpi_scan_handler *handler,
->       const char *idstr,
->       const struct acpi_device_id **matchid)
-> @@ -1942,6 +1937,18 @@ static bool acpi_scan_handler_matching(struct acpi=
-_scan_handler *handler,
-> return false;
-> }
->=20
-> +bool acpi_scan_check_handler(const struct acpi_device *adev,
-> +     struct acpi_scan_handler *handler)
-> +{
-> + struct acpi_hardware_id *hwid;
-> +
-> + list_for_each_entry(hwid, &adev->pnp.ids, list)
-> + if (acpi_scan_handler_matching(handler, hwid->id, NULL))
-> + return true;
-> +
-> + return false;
-> +}
-> +
-> static struct acpi_scan_handler *acpi_scan_match_handler(const char *idst=
-r,
-> const struct acpi_device_id **matchid)
-> {
-> @@ -2405,16 +2412,35 @@ EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
->  * acpi_dev_ready_for_enumeration - Check if the ACPI device is ready for=
- enumeration
->  * @device: Pointer to the &struct acpi_device to check
->  *
-> - * Check if the device is present and has no unmet dependencies.
-> + * Check if the device is functional or enabled and has no unmet depende=
-ncies.
->  *
-> - * Return true if the device is ready for enumeratino. Otherwise, return=
- false.
-> + * Return true if the device is ready for enumeration. Otherwise, return=
- false.
->  */
-> bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
-> {
-> if (device->flags.honor_deps && device->dep_unmet)
-> return false;
->=20
-> - return acpi_device_is_present(device);
-> + /*
-> + * ACPI 6.5's 6.3.7 "_STA (Device Status)" allows firmware to return
-> + * (!present && functional) for certain types of devices that should be
-> + * enumerated. Note that the enabled bit should not be set unless the
-> + * present bit is set.
-> + *
-> + * However, limit this only to processor devices to reduce possible
-> + * regressions with firmware.
-> + */
-> + if (!device->status.present)
-> + return device->status.functional;
-> +
-> + /*
-> + * Fast path - if enabled is set, avoid the more expensive test to
-> + * check whether this device is a processor.
-> + */
-> + if (device->status.enabled)
-> + return true;
-> +
-> + return !acpi_device_is_processor(device);
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/hardirq.h |  4 ++
+ arch/loongarch/include/asm/irq.h     | 10 ++++-
+ arch/loongarch/include/asm/smp.h     | 31 +++++++--------
+ arch/loongarch/kernel/irq.c          | 22 +----------
+ arch/loongarch/kernel/perf_event.c   | 14 +------
+ arch/loongarch/kernel/smp.c          | 58 +++++++++++++++++++---------
+ arch/loongarch/kernel/time.c         | 12 +-----
+ 7 files changed, 71 insertions(+), 80 deletions(-)
 
-Otherwise, feel free to add:
-
-Reviewed-by: Miguel Luis <miguel.luis@oracle.com>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-
-Thanks
-
-Miguel
-
-> }
-> EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
->=20
-> --=20
-> 2.30.2
->=20
->=20
+diff --git a/arch/loongarch/include/asm/hardirq.h b/arch/loongarch/include/asm/hardirq.h
+index 0ef3b18f8980..9f0038e19c7f 100644
+--- a/arch/loongarch/include/asm/hardirq.h
++++ b/arch/loongarch/include/asm/hardirq.h
+@@ -12,6 +12,10 @@
+ extern void ack_bad_irq(unsigned int irq);
+ #define ack_bad_irq ack_bad_irq
+ 
++enum ipi_msg_type {
++	IPI_RESCHEDULE,
++	IPI_CALL_FUNCTION,
++};
+ #define NR_IPI	2
+ 
+ typedef struct {
+diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
+index 218b4da0ea90..00101b6d601e 100644
+--- a/arch/loongarch/include/asm/irq.h
++++ b/arch/loongarch/include/asm/irq.h
+@@ -117,8 +117,16 @@ extern struct fwnode_handle *liointc_handle;
+ extern struct fwnode_handle *pch_lpc_handle;
+ extern struct fwnode_handle *pch_pic_handle[MAX_IO_PICS];
+ 
+-extern irqreturn_t loongson_ipi_interrupt(int irq, void *dev);
++static inline int get_percpu_irq(int vector)
++{
++	struct irq_domain *d;
++
++	d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
++	if (d)
++		return irq_create_mapping(d, vector);
+ 
++	return -EINVAL;
++}
+ #include <asm-generic/irq.h>
+ 
+ #endif /* _ASM_IRQ_H */
+diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
+index f81e5f01d619..8a42632b038a 100644
+--- a/arch/loongarch/include/asm/smp.h
++++ b/arch/loongarch/include/asm/smp.h
+@@ -12,6 +12,13 @@
+ #include <linux/threads.h>
+ #include <linux/cpumask.h>
+ 
++struct smp_ops {
++	void (*init_ipi)(void);
++	void (*send_ipi_mask)(const struct cpumask *mask, unsigned int action);
++	void (*send_ipi_single)(int cpu, unsigned int action);
++};
++
++extern struct smp_ops smp_ops;
+ extern int smp_num_siblings;
+ extern int num_processors;
+ extern int disabled_cpus;
+@@ -24,8 +31,6 @@ void loongson_prepare_cpus(unsigned int max_cpus);
+ void loongson_boot_secondary(int cpu, struct task_struct *idle);
+ void loongson_init_secondary(void);
+ void loongson_smp_finish(void);
+-void loongson_send_ipi_single(int cpu, unsigned int action);
+-void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action);
+ #ifdef CONFIG_HOTPLUG_CPU
+ int loongson_cpu_disable(void);
+ void loongson_cpu_die(unsigned int cpu);
+@@ -59,9 +64,12 @@ extern int __cpu_logical_map[NR_CPUS];
+ 
+ #define cpu_physical_id(cpu)	cpu_logical_map(cpu)
+ 
+-#define SMP_BOOT_CPU		0x1
+-#define SMP_RESCHEDULE		0x2
+-#define SMP_CALL_FUNCTION	0x4
++#define ACTTION_BOOT_CPU	0
++#define ACTTION_RESCHEDULE	1
++#define ACTTION_CALL_FUNCTION	2
++#define SMP_BOOT_CPU		BIT(ACTTION_BOOT_CPU)
++#define SMP_RESCHEDULE		BIT(ACTTION_RESCHEDULE)
++#define SMP_CALL_FUNCTION	BIT(ACTTION_CALL_FUNCTION)
+ 
+ struct secondary_data {
+ 	unsigned long stack;
+@@ -71,7 +79,8 @@ extern struct secondary_data cpuboot_data;
+ 
+ extern asmlinkage void smpboot_entry(void);
+ extern asmlinkage void start_secondary(void);
+-
++extern void arch_send_call_function_single_ipi(int cpu);
++extern void arch_send_call_function_ipi_mask(const struct cpumask *mask);
+ extern void calculate_cpu_foreign_map(void);
+ 
+ /*
+@@ -79,16 +88,6 @@ extern void calculate_cpu_foreign_map(void);
+  */
+ extern void show_ipi_list(struct seq_file *p, int prec);
+ 
+-static inline void arch_send_call_function_single_ipi(int cpu)
+-{
+-	loongson_send_ipi_single(cpu, SMP_CALL_FUNCTION);
+-}
+-
+-static inline void arch_send_call_function_ipi_mask(const struct cpumask *mask)
+-{
+-	loongson_send_ipi_mask(mask, SMP_CALL_FUNCTION);
+-}
+-
+ #ifdef CONFIG_HOTPLUG_CPU
+ static inline int __cpu_disable(void)
+ {
+diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
+index 883e5066ae44..ce36897d1e5a 100644
+--- a/arch/loongarch/kernel/irq.c
++++ b/arch/loongarch/kernel/irq.c
+@@ -87,23 +87,9 @@ static void __init init_vec_parent_group(void)
+ 	acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
+ }
+ 
+-static int __init get_ipi_irq(void)
+-{
+-	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
+-
+-	if (d)
+-		return irq_create_mapping(d, INT_IPI);
+-
+-	return -EINVAL;
+-}
+-
+ void __init init_IRQ(void)
+ {
+ 	int i;
+-#ifdef CONFIG_SMP
+-	int r, ipi_irq;
+-	static int ipi_dummy_dev;
+-#endif
+ 	unsigned int order = get_order(IRQ_STACK_SIZE);
+ 	struct page *page;
+ 
+@@ -113,13 +99,7 @@ void __init init_IRQ(void)
+ 	init_vec_parent_group();
+ 	irqchip_init();
+ #ifdef CONFIG_SMP
+-	ipi_irq = get_ipi_irq();
+-	if (ipi_irq < 0)
+-		panic("IPI IRQ mapping failed\n");
+-	irq_set_percpu_devid(ipi_irq);
+-	r = request_percpu_irq(ipi_irq, loongson_ipi_interrupt, "IPI", &ipi_dummy_dev);
+-	if (r < 0)
+-		panic("IPI IRQ request failed\n");
++	smp_ops.init_ipi();
+ #endif
+ 
+ 	for (i = 0; i < NR_IRQS; i++)
+diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
+index 0491bf453cd4..3265c8f33223 100644
+--- a/arch/loongarch/kernel/perf_event.c
++++ b/arch/loongarch/kernel/perf_event.c
+@@ -456,16 +456,6 @@ static void loongarch_pmu_disable(struct pmu *pmu)
+ static DEFINE_MUTEX(pmu_reserve_mutex);
+ static atomic_t active_events = ATOMIC_INIT(0);
+ 
+-static int get_pmc_irq(void)
+-{
+-	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
+-
+-	if (d)
+-		return irq_create_mapping(d, INT_PCOV);
+-
+-	return -EINVAL;
+-}
+-
+ static void reset_counters(void *arg);
+ static int __hw_perf_event_init(struct perf_event *event);
+ 
+@@ -473,7 +463,7 @@ static void hw_perf_event_destroy(struct perf_event *event)
+ {
+ 	if (atomic_dec_and_mutex_lock(&active_events, &pmu_reserve_mutex)) {
+ 		on_each_cpu(reset_counters, NULL, 1);
+-		free_irq(get_pmc_irq(), &loongarch_pmu);
++		free_irq(get_percpu_irq(INT_PCOV), &loongarch_pmu);
+ 		mutex_unlock(&pmu_reserve_mutex);
+ 	}
+ }
+@@ -562,7 +552,7 @@ static int loongarch_pmu_event_init(struct perf_event *event)
+ 	if (event->cpu >= 0 && !cpu_online(event->cpu))
+ 		return -ENODEV;
+ 
+-	irq = get_pmc_irq();
++	irq = get_percpu_irq(INT_PCOV);
+ 	flags = IRQF_PERCPU | IRQF_NOBALANCING | IRQF_NO_THREAD | IRQF_NO_SUSPEND | IRQF_SHARED;
+ 	if (!atomic_inc_not_zero(&active_events)) {
+ 		mutex_lock(&pmu_reserve_mutex);
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index 2b49d30eb7c0..3d3ec07d1ec4 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -66,11 +66,6 @@ static cpumask_t cpu_core_setup_map;
+ struct secondary_data cpuboot_data;
+ static DEFINE_PER_CPU(int, cpu_state);
+ 
+-enum ipi_msg_type {
+-	IPI_RESCHEDULE,
+-	IPI_CALL_FUNCTION,
+-};
+-
+ static const char *ipi_types[NR_IPI] __tracepoint_string = {
+ 	[IPI_RESCHEDULE] = "Rescheduling interrupts",
+ 	[IPI_CALL_FUNCTION] = "Function call interrupts",
+@@ -123,24 +118,19 @@ static u32 ipi_read_clear(int cpu)
+ 
+ static void ipi_write_action(int cpu, u32 action)
+ {
+-	unsigned int irq = 0;
+-
+-	while ((irq = ffs(action))) {
+-		uint32_t val = IOCSR_IPI_SEND_BLOCKING;
++	uint32_t val;
+ 
+-		val |= (irq - 1);
+-		val |= (cpu << IOCSR_IPI_SEND_CPU_SHIFT);
+-		iocsr_write32(val, LOONGARCH_IOCSR_IPI_SEND);
+-		action &= ~BIT(irq - 1);
+-	}
++	val = IOCSR_IPI_SEND_BLOCKING | action;
++	val |= (cpu << IOCSR_IPI_SEND_CPU_SHIFT);
++	iocsr_write32(val, LOONGARCH_IOCSR_IPI_SEND);
+ }
+ 
+-void loongson_send_ipi_single(int cpu, unsigned int action)
++static void loongson_send_ipi_single(int cpu, unsigned int action)
+ {
+ 	ipi_write_action(cpu_logical_map(cpu), (u32)action);
+ }
+ 
+-void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
++static void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
+ {
+ 	unsigned int i;
+ 
+@@ -148,6 +138,16 @@ void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
+ 		ipi_write_action(cpu_logical_map(i), (u32)action);
+ }
+ 
++void arch_send_call_function_single_ipi(int cpu)
++{
++	smp_ops.send_ipi_single(cpu, ACTTION_CALL_FUNCTION);
++}
++
++void arch_send_call_function_ipi_mask(const struct cpumask *mask)
++{
++	smp_ops.send_ipi_mask(mask, ACTTION_CALL_FUNCTION);
++}
++
+ /*
+  * This function sends a 'reschedule' IPI to another CPU.
+  * it goes straight through and wastes no time serializing
+@@ -155,11 +155,11 @@ void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
+  */
+ void arch_smp_send_reschedule(int cpu)
+ {
+-	loongson_send_ipi_single(cpu, SMP_RESCHEDULE);
++	smp_ops.send_ipi_single(cpu, ACTTION_RESCHEDULE);
+ }
+ EXPORT_SYMBOL_GPL(arch_smp_send_reschedule);
+ 
+-irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
++static irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
+ {
+ 	unsigned int action;
+ 	unsigned int cpu = smp_processor_id();
+@@ -179,6 +179,26 @@ irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void loongson_init_ipi(void)
++{
++	int r, ipi_irq;
++
++	ipi_irq = get_percpu_irq(INT_IPI);
++	if (ipi_irq < 0)
++		panic("IPI IRQ mapping failed\n");
++
++	irq_set_percpu_devid(ipi_irq);
++	r = request_percpu_irq(ipi_irq, loongson_ipi_interrupt, "IPI", &irq_stat);
++	if (r < 0)
++		panic("IPI IRQ request failed\n");
++}
++
++struct smp_ops smp_ops = {
++	.init_ipi		= loongson_init_ipi,
++	.send_ipi_single	= loongson_send_ipi_single,
++	.send_ipi_mask		= loongson_send_ipi_mask,
++};
++
+ static void __init fdt_smp_setup(void)
+ {
+ #ifdef CONFIG_OF
+@@ -256,7 +276,7 @@ void loongson_boot_secondary(int cpu, struct task_struct *idle)
+ 
+ 	csr_mail_send(entry, cpu_logical_map(cpu), 0);
+ 
+-	loongson_send_ipi_single(cpu, SMP_BOOT_CPU);
++	loongson_send_ipi_single(cpu, ACTTION_BOOT_CPU);
+ }
+ 
+ /*
+diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+index e7015f7b70e3..fd5354f9be7c 100644
+--- a/arch/loongarch/kernel/time.c
++++ b/arch/loongarch/kernel/time.c
+@@ -123,16 +123,6 @@ void sync_counter(void)
+ 	csr_write64(init_offset, LOONGARCH_CSR_CNTC);
+ }
+ 
+-static int get_timer_irq(void)
+-{
+-	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
+-
+-	if (d)
+-		return irq_create_mapping(d, INT_TI);
+-
+-	return -EINVAL;
+-}
+-
+ int constant_clockevent_init(void)
+ {
+ 	unsigned int cpu = smp_processor_id();
+@@ -142,7 +132,7 @@ int constant_clockevent_init(void)
+ 	static int irq = 0, timer_irq_installed = 0;
+ 
+ 	if (!timer_irq_installed) {
+-		irq = get_timer_irq();
++		irq = get_percpu_irq(INT_TI);
+ 		if (irq < 0)
+ 			pr_err("Failed to map irq %d (timer)\n", irq);
+ 	}
+-- 
+2.39.3
 
