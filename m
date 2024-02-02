@@ -1,97 +1,258 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 911503A8C3
-	for <loongarch@lists.linux.dev>; Thu,  1 Feb 2024 03:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED4F17546
+	for <loongarch@lists.linux.dev>; Fri,  2 Feb 2024 05:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706758216; cv=none; b=YdgKtrcLVvI7UKC2t4a5HYuS3rvk73jHiUgpUnTbVXL84hAnHGcvRE3u/THtj+1InA/iorg56hz2hJkJ0EdK+vwccw4TC8XF1HW3xnnACpBECFHweYusSVrpWg7/bwbpR27vmxf21rOEZkISMVMr0CZAzSWjKeEmSHsOVImXTnY=
+	t=1706851482; cv=none; b=o8tOPNIyzBiSPjuRzNh1tXyaVN6pkM+y5kKh0LW/WoAOKQyGs4bYaqrplbVlrSzlpm1iWFwFkDFTrnulurVKwcGhQfesGF1WKSCNUfkr1Krm4zpMeWQmqRh+bVMhfITqBls4Zu+JreCuluS/QNX2VOWCX8uEaCd7/fB+aTKTZjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706758216; c=relaxed/simple;
-	bh=9uBM/8fJawcJ3y/dAPR6vQeEhlmYRiH/RTb/Lg63Fxg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=O21879v0IbjcNC9sOElcexJ8SqBpJkUcFt7eWo9UE1F+X6uv9mTmaO2B68TvfNrvqD2UU2UDoXDBlKiRXfXmAxMCU1akvfSU18mipAj+YCqOrG4l4k0rHctAE4CM81Xa4gYQItixF52vYM4foICdgVXpWAN7QELa5/+vqcZnGwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.183])
-	by gateway (Coremail) with SMTP id _____8DxqehEELtlFVYJAA--.8179S3;
-	Thu, 01 Feb 2024 11:30:12 +0800 (CST)
-Received: from [10.20.42.183] (unknown [10.20.42.183])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxfs1DELtlZEYrAA--.33789S3;
-	Thu, 01 Feb 2024 11:30:11 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Remove unnecessary CSR register saving
- during enter guest
-To: maobibo <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240112035039.833974-1-maobibo@loongson.cn>
- <b7c08e0d-bd7d-aea9-250e-1649e95599b7@loongson.cn>
-From: zhaotianrui <zhaotianrui@loongson.cn>
-Message-ID: <fbd8b226-1972-322b-d884-bb41d262dd16@loongson.cn>
-Date: Thu, 1 Feb 2024 11:29:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1706851482; c=relaxed/simple;
+	bh=dEPogJuBhjmuXNNnEJ1m37rCCFO37/TJ46+MI5/wWN8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DafnQgZyDLiutEswLLt0BHdpJimvweTTF3Y5pHGeYg4t2j8OkWd30J3phYiAybC79OE2kij60gPmw19DdV/3vJwuP8K9jQFy8lCbiHpjId4BC8CbdzQt+P673gU7k4kZnPsOr9pn06VcF918SRXBZq99s2oqmUmTmW2B9W8D8dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nPh+kCvN; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nPh+kCvN"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4124f8L7017387;
+	Fri, 2 Feb 2024 05:24:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=PDV06LOquyZ2c07ivE0vzxZrSRl419YEOX13JRF/udo=;
+ b=nPh+kCvNsnHIYDXWB0+2FRPhHygYiddpgBYz2W2SHiiN1BkFek2qQw4ycvxxYI/qpDU6
+ yTcyNuf7kUwLL+dKocLOKD9Ekbesc3adySbvz8eZZZo2Z5ceyoprZbKlKsbp/pRs/L+u
+ LoKmlG+vz37L6dQuBT680kuK7Hzw1dKKzpiIQ6ikpbCbLP8uFBLpJtSeBEj0PCvygnUT
+ 4NR2nL56TsuRsPlaZ56kvvRxLE4E+QskziTz+cZzPuCgZxD21oHVw4P/IY05CitLKyF1
+ eg9L8IxFl1XG9YTFEBQGzk6a4uzOmaa08XYF8RC/ZKiXNITRfrHPMBQBXQuNWjRLHcyu Mw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w0sev0xb0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 Feb 2024 05:24:26 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4124w2OJ002776;
+	Fri, 2 Feb 2024 05:23:50 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w0sev0wt4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 Feb 2024 05:23:50 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41240aMF011292;
+	Fri, 2 Feb 2024 05:23:31 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vwecm0xbv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 Feb 2024 05:23:31 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4125NTcC43254138
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 Feb 2024 05:23:29 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 755912004B;
+	Fri,  2 Feb 2024 05:23:29 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A5C9420040;
+	Fri,  2 Feb 2024 05:23:25 +0000 (GMT)
+Received: from [9.43.64.13] (unknown [9.43.64.13])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  2 Feb 2024 05:23:25 +0000 (GMT)
+Message-ID: <9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com>
+Date: Fri, 2 Feb 2024 10:53:23 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/14] Split crash out from kexec and clean up related
+ config items
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        loongarch@lists.linux.dev, akpm@linux-foundation.org,
+        ebiederm@xmission.com, piliu@redhat.com, viro@zeniv.linux.org.uk
+References: <20240119145241.769622-1-bhe@redhat.com>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <20240119145241.769622-1-bhe@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: RAVJ1hGQlGX9e6U_JEK40a_2LBSb9TD_
+X-Proofpoint-ORIG-GUID: tOhKLrcRaLdeupwFUmZ3kDNGA-MwGyC-
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <b7c08e0d-bd7d-aea9-250e-1649e95599b7@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxfs1DELtlZEYrAA--.33789S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw1xtr4rtF1DGr1xury8WFX_yoW8JFyUpF
-	97AF1vyFW5urn7ArWDKas8WryUJ347K3Z5WFyUJFy5Gr45Zry0gr1UXFn2gF1UZw48Jr18
-	uF1UJrnavFWUA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r
-	1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0
-	FALUUUUU=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-01_10,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ spamscore=0 clxscore=1011 malwarescore=0 suspectscore=0 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402020037
 
-Reviewed-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+Hi Baoquan,
 
-在 2024/1/31 上午11:48, maobibo 写道:
-> slightly ping :)
+On 19/01/24 8:22 pm, Baoquan He wrote:
+> Motivation:
+> =============
+> Previously, LKP reported a building error. When investigating, it can't
+> be resolved reasonablly with the present messy kdump config items.
 > 
-> On 2024/1/12 上午11:50, Bibo Mao wrote:
->> Some CSR registers like CRMD/PRMD are saved during enter VM mode. However
->> they are not restored for actual use, saving for these CSR registers
->> can be removed.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/kvm/switch.S | 6 ------
->>   1 file changed, 6 deletions(-)
->>
->> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
->> index 0ed9040307b7..905b90de50e8 100644
->> --- a/arch/loongarch/kvm/switch.S
->> +++ b/arch/loongarch/kvm/switch.S
->> @@ -213,12 +213,6 @@ SYM_FUNC_START(kvm_enter_guest)
->>       /* Save host GPRs */
->>       kvm_save_host_gpr a2
->> -    /* Save host CRMD, PRMD to stack */
->> -    csrrd    a3, LOONGARCH_CSR_CRMD
->> -    st.d    a3, a2, PT_CRMD
->> -    csrrd    a3, LOONGARCH_CSR_PRMD
->> -    st.d    a3, a2, PT_PRMD
->> -
->>       addi.d    a2, a1, KVM_VCPU_ARCH
->>       st.d    sp, a2, KVM_ARCH_HSP
->>       st.d    tp, a2, KVM_ARCH_HTP
->>
->> base-commit: de927f6c0b07d9e698416c5b287c521b07694cac
->>
+>   https://lore.kernel.org/oe-kbuild-all/202312182200.Ka7MzifQ-lkp@intel.com/
+> 
+> The kdump (crash dumping) related config items could causes confusions:
+> 
+> Firstly,
+> ---
+> CRASH_CORE enables codes including
+>   - crashkernel reservation;
+>   - elfcorehdr updating;
+>   - vmcoreinfo exporting;
+>   - crash hotplug handling;
+> 
+> Now fadump of powerpc, kcore dynamic debugging and kdump all selects
+> CRASH_CORE, while fadump
+>   - fadump needs crashkernel parsing, vmcoreinfo exporting, and accessing
+>     global variable 'elfcorehdr_addr';
+>   - kcore only needs vmcoreinfo exporting;
+>   - kdump needs all of the current kernel/crash_core.c.
+> 
+> So only enabling PROC_CORE or FA_DUMP will enable CRASH_CORE, this
+> mislead people that we enable crash dumping, actual it's not.
+> 
+> Secondly,
+> ---
+> It's not reasonable to allow KEXEC_CORE select CRASH_CORE.
+> 
+> Because KEXEC_CORE enables codes which allocate control pages, copy
+> kexec/kdump segments, and prepare for switching. These codes are
+> shared by both kexec reboot and kdump. We could want kexec reboot,
+> but disable kdump. In that case, CRASH_CORE should not be selected.
+> 
+>   --------------------
+>   CONFIG_CRASH_CORE=y
+>   CONFIG_KEXEC_CORE=y
+>   CONFIG_KEXEC=y
+>   CONFIG_KEXEC_FILE=y
+>      ---------------------
+> 
+> Thirdly,
+> ---
+> It's not reasonable to allow CRASH_DUMP select KEXEC_CORE.
+> 
+> That could make KEXEC_CORE, CRASH_DUMP are enabled independently from
+> KEXEC or KEXEC_FILE. However, w/o KEXEC or KEXEC_FILE, the KEXEC_CORE
+> code built in doesn't make any sense because no kernel loading or
+> switching will happen to utilize the KEXEC_CORE code.
+>   ---------------------
+>   CONFIG_CRASH_CORE=y
+>   CONFIG_KEXEC_CORE=y
+>   CONFIG_CRASH_DUMP=y
+>   ---------------------
+> 
+> In this case, what is worse, on arch sh and arm, KEXEC relies on MMU,
+> while CRASH_DUMP can still be enabled when !MMU, then compiling error is
+> seen as the lkp test robot reported in above link.
+> 
+>   ------arch/sh/Kconfig------
+>   config ARCH_SUPPORTS_KEXEC
+>           def_bool MMU
+> 
+>   config ARCH_SUPPORTS_CRASH_DUMP
+>           def_bool BROKEN_ON_SMP
+>   ---------------------------
+> 
+> Changes:
+> ===========
+> 1, split out crash_reserve.c from crash_core.c;
+> 2, split out vmcore_infoc. from crash_core.c;
+> 3, move crash related codes in kexec_core.c into crash_core.c;
+> 4, remove dependency of FA_DUMP on CRASH_DUMP;
+> 5, clean up kdump related config items;
+> 6, wrap up crash codes in crash related ifdefs on all 9 arch-es
+>     which support crash dumping;
+> 
+> Achievement:
+> ===========
+> With above changes, I can rearrange the config item logic as below (the right
+> item depends on or is selected by the left item):
+> 
+>      PROC_KCORE -----------> VMCORE_INFO
+> 
+>                 |----------> VMCORE_INFO
+>      FA_DUMP----|
+>                 |----------> CRASH_RESERVE
 
+FA_DUMP also needs PROC_VMCORE (CRASH_DUMP by dependency, I guess).
+So, the FA_DUMP related changes here will need a relook..
+
+
+>                                                      ---->VMCORE_INFO
+>                                                     /
+>                                                     |---->CRASH_RESERVE
+>      KEXEC      --|                                /|
+>                   |--> KEXEC_CORE--> CRASH_DUMP-->/-|---->PROC_VMCORE
+>      KEXEC_FILE --|                               \ |
+>                                                     \---->CRASH_HOTPLUG
+> 
+> 
+>      KEXEC      --|
+>                   |--> KEXEC_CORE (for kexec reboot only)
+>      KEXEC_FILE --|
+> 
+> Test
+> ========
+> On all 8 architectures, including x86_64, arm64, s390x, sh, arm, mips,
+> riscv, loongarch, I did below three cases of config item setting and
+> building all passed. Let me take configs on x86_64 as exampmle here:
+> 
+> (1) Both CONFIG_KEXEC and KEXEC_FILE is unset, then all kexec/kdump
+> items are unset automatically:
+> # Kexec and crash features
+> # CONFIG_KEXEC is not set
+> # CONFIG_KEXEC_FILE is not set
+> # end of Kexec and crash features
+> 
+> (2) set CONFIG_KEXEC_FILE and 'make olddefconfig':
+> ---------------
+> # Kexec and crash features
+> CONFIG_CRASH_RESERVE=y
+> CONFIG_VMCORE_INFO=y
+> CONFIG_KEXEC_CORE=y
+> CONFIG_KEXEC_FILE=y
+> CONFIG_CRASH_DUMP=y
+> CONFIG_CRASH_HOTPLUG=y
+> CONFIG_CRASH_MAX_MEMORY_RANGES=8192
+> # end of Kexec and crash features
+> ---------------
+> 
+> (3) unset CONFIG_CRASH_DUMP in case 2 and execute 'make olddefconfig':
+> ------------------------
+> # Kexec and crash features
+> CONFIG_KEXEC_CORE=y
+> CONFIG_KEXEC_FILE=y
+> # end of Kexec and crash features
+> ------------------------
+> 
+> Note:
+> For ppc, it needs investigation to make clear how to split out crash
+> code in arch folder.
+
+On powerpc, both kdump and fadump need PROC_VMCORE & CRASH_DUMP.
+Hope that clears things. So, patch 3/14 breaks things for FA_DUMP..
+
+> Hope Hari and Pingfan can help have a look, see if
+> it's doable. Now, I make it either have both kexec and crash enabled, or
+> disable both of them altogether.
+
+
+Sure. I will take a closer look...
+
+Thanks
+Hari
