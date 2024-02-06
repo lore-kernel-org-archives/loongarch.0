@@ -1,193 +1,100 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 110C310A0F
-	for <loongarch@lists.linux.dev>; Mon,  5 Feb 2024 07:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E05C745E8
+	for <loongarch@lists.linux.dev>; Tue,  6 Feb 2024 04:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707119412; cv=none; b=ORaoa8RH3uXz/XxDdtgxYi55tdl2zy8Kq30J5fe8VQDDIW4zm5I6yiA6bLcPI2Oa8sl20yhTjXJF0pFT1qo40QPkql8bdRetYAu1Rpd4WIKTjIA9eBHlOZwSOhtg/chQDGcWqP1U1fN1xF2hAyxKzWQU1TUW+zOE9HQeEMd5fQo=
+	t=1707192266; cv=none; b=ZvYxGxcoJxeFFm3dDZ4cNwK6c26CKOoryByiZumjCU+1WZH9kV6/GvSDYPGQCz0kSOvxVTA4cdQ1MrwnzOgVvg4iwRBehROWVdxOwPNn0aWlEdgiUf8I0iB3OSJDaUETTfYEAo63GY7OyVdDmHM1pWmZ7YHuD115DQjAKWXm/68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707119412; c=relaxed/simple;
-	bh=s/DcuOGFR/+eSImApTA3KtjZxPydZqpVORSw3JubMF8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oIUTxUMaERZHMbtiCdnGXlKnrreR3KgMcKMMaoVXI3DgcDld9/cCWpw1igR+b9ef3xv13I/7mvJvPkCBvRU15rs/3lnXgoWRY75Edfe0JDHzEcPP0txNoCLT6Yl6/lmLrpu7P7cM24bp/tBWJI4XUXUIgDK6hf/pILeHwfIRsYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Cx77suk8BliM8KAA--.10960S3;
-	Mon, 05 Feb 2024 15:50:06 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxrhMrk8BlsfwvAA--.59749S2;
-	Mon, 05 Feb 2024 15:50:03 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Add software breakpoint support
-Date: Mon,  5 Feb 2024 15:50:03 +0800
-Message-Id: <20240205075003.3970281-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1707192266; c=relaxed/simple;
+	bh=gjYVPn/YFpnMwXejyLvWj4ikLtJDZVwXdB0BNhrwtME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A7xJTWWuDgLKvNWkDzrJOoL55PnxI3B5zNUNoBUNUurzydPhHkSYgTlg6ZCuxfn49s7JVzmGggMOF5UyzTihp1ZE2JzskY/O5f96zOOQKemGY4EGaAYgVjQInL+EjHj24r4oXTve2a6AXnnH/UBlip0Z3ebELFC9aH3B9GeKhW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OWY7yztv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OWY7yztv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 327D2C433F1
+	for <loongarch@lists.linux.dev>; Tue,  6 Feb 2024 04:04:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707192266;
+	bh=gjYVPn/YFpnMwXejyLvWj4ikLtJDZVwXdB0BNhrwtME=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OWY7yztvDJFlPwyT9ZSGTPPLykqW5deu96VSGAPT+WEERJGQPJbIsM/PGpwBo5osb
+	 wz+xqaCLY3TM498RIH4LWjsi1Oa0T/cixDkHz6ablxypTx3fEdcWY77KPaWtTUoPZe
+	 ZBdsKNoLiadH1wxtjM87kam59rA0gVtcLkIZvrnvG16In9N/K+ARon+8AYsu/LPr40
+	 KaVPmdSUvGJOOU/e5kidg1PtOuolHQCQQ0bFmc491RPPqxmSWuwZNxYwkuSAVa74bR
+	 K8aNq9j0EjqmO9Illm1TNjnNR/2gvIFFFPhBe96lCPHnGh5A+rf368p2kChX3Jj2nq
+	 woX+frtmbjQZw==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5100cb238bcso9286048e87.3
+        for <loongarch@lists.linux.dev>; Mon, 05 Feb 2024 20:04:26 -0800 (PST)
+X-Gm-Message-State: AOJu0YyIht+qmo8KlsXx01LqpRy6RS5lP8P6vTjWdRwm/pDgaszl0nIZ
+	TgLvBU/cA2xgOIl4W6XPoZ4N7oCy0jR406DZLu4uAlsNfW28X2aoHCFxxrHVcQ+TKsU1LW/ar4d
+	FlPKXcA9XbkeeOGRPdrHWmnHNb8s=
+X-Google-Smtp-Source: AGHT+IFGiaxdS+q0jNB1zQEW84GYvpFJAoEuKs2W2qWpgcWKlRM99vTKyrvLhz1uzHwe+YPkBjkkSTclljrhx3Bm4Qc=
+X-Received: by 2002:ac2:5926:0:b0:511:4ff0:5323 with SMTP id
+ v6-20020ac25926000000b005114ff05323mr877963lfi.31.1707192264382; Mon, 05 Feb
+ 2024 20:04:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxrhMrk8BlsfwvAA--.59749S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGw13uw1DJw48KryfWryxXrc_yoWrZw1UpF
-	9rArn5Kr4rKrZ3C34xtws8ur43ta93Kr1Iqa4293ySyF12vw1rJrW09rZ8AFy5tw4rXFyI
-	qFn5Kw1YgFs8twbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
+References: <20240204134813.61884-1-masahiroy@kernel.org>
+In-Reply-To: <20240204134813.61884-1-masahiroy@kernel.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 6 Feb 2024 12:04:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Wfu4-X0zUJgwEpFC9DNCP5BPFQ0Dazo_fWXLpxzqK6w@mail.gmail.com>
+Message-ID: <CAAhV-H6Wfu4-X0zUJgwEpFC9DNCP5BPFQ0Dazo_fWXLpxzqK6w@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: select ARCH_ENABLE_THP_MIGRATION instead of
+ redefining it
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When VM runs in kvm mode, system will not exit to host mode if
-executing general software breakpoint instruction, one trap exception
-happens in guest mode rather than host mode. In order to debug guest
-kernel on host side, one mechanism should be used to let vm exit to
-host mode.
+Queued, thanks.
 
-Here one special hypercall code is used for software breakpoint usage,
-vm exists to host mode and kvm hypervisor identifies the special hypercall
-code and set exit_reason with KVM_EXIT_DEBUG, and then let qemu handle it.
+Huacai
 
-This patch uses hypercall code and needs hypercall instruction emulation
-handling, and it is dependent on this patchset:
-https://lore.kernel.org/all/20240201031950.3225626-1-maobibo@loongson.cn/
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_para.h |  2 ++
- arch/loongarch/include/uapi/asm/kvm.h |  3 +++
- arch/loongarch/kvm/exit.c             | 12 ++++++++++--
- arch/loongarch/kvm/vcpu.c             | 16 ++++++++++++++--
- arch/loongarch/kvm/vm.c               |  1 +
- 5 files changed, 30 insertions(+), 4 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-index a25a84e372b9..c44412feabb3 100644
---- a/arch/loongarch/include/asm/kvm_para.h
-+++ b/arch/loongarch/include/asm/kvm_para.h
-@@ -10,8 +10,10 @@
- #define HYPERCALL_CODE(vendor, code)	((vendor << HYPERVISOR_VENDOR_SHIFT) + code)
- 
- #define KVM_HC_CODE_SERVICE		0
-+#define KVM_HC_CODE_SWDBG		1
- #define KVM_HC_SERVICE			HYPERCALL_CODE(HYPERVISOR_KVM, KVM_HC_CODE_SERVICE)
- #define  KVM_HC_FUNC_IPI		1
-+#define KVM_HC_SWDBG			HYPERCALL_CODE(HYPERVISOR_KVM, KVM_HC_CODE_SWDBG)
- 
- /*
-  * LoongArch hypcall return code
-diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-index 923d0bd38294..ad6d79ff6742 100644
---- a/arch/loongarch/include/uapi/asm/kvm.h
-+++ b/arch/loongarch/include/uapi/asm/kvm.h
-@@ -15,10 +15,13 @@
-  */
- 
- #define __KVM_HAVE_READONLY_MEM
-+#define __KVM_HAVE_GUEST_DEBUG
- 
- #define KVM_COALESCED_MMIO_PAGE_OFFSET	1
- #define KVM_DIRTY_LOG_PAGE_OFFSET	64
- 
-+#define KVM_GUESTDBG_USE_SW_BP		0x00010000
-+
- /*
-  * for KVM_GET_REGS and KVM_SET_REGS
-  */
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 189b70bad825..01e3f30f041b 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -758,23 +758,31 @@ static int kvm_handle_hypcall(struct kvm_vcpu *vcpu)
- {
- 	larch_inst inst;
- 	unsigned int code;
-+	int ret;
- 
- 	inst.word = vcpu->arch.badi;
- 	code = inst.reg0i15_format.immediate;
--	update_pc(&vcpu->arch);
-+	ret = RESUME_GUEST;
- 
- 	switch (code) {
- 	case KVM_HC_SERVICE:
- 		vcpu->stat.hvcl_exits++;
- 		kvm_handle_pv_hcall(vcpu);
- 		break;
-+	case KVM_HC_SWDBG:
-+		vcpu->run->exit_reason = KVM_EXIT_DEBUG;
-+		ret = RESUME_HOST;
-+		break;
- 	default:
- 		/* Treat it as noop intruction, only set return value */
- 		vcpu->arch.gprs[LOONGARCH_GPR_A0] = KVM_HC_INVALID_CODE;
- 		break;
- 	}
- 
--	return RESUME_GUEST;
-+	if (ret == RESUME_GUEST)
-+		update_pc(&vcpu->arch);
-+
-+	return ret;
- }
- 
- /*
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 80e05ba9b48d..aa0d2eaddafe 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -245,10 +245,22 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
- 	return ret;
- }
- 
-+#define KVM_GUESTDBG_VALID_MASK (KVM_GUESTDBG_ENABLE | \
-+			KVM_GUESTDBG_USE_SW_BP | KVM_GUESTDBG_SINGLESTEP)
- int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
--					struct kvm_guest_debug *dbg)
-+			struct kvm_guest_debug *dbg)
- {
--	return -EINVAL;
-+	if (dbg->control & ~KVM_GUESTDBG_VALID_MASK)
-+		return -EINVAL;
-+
-+	if (dbg->control & KVM_GUESTDBG_ENABLE) {
-+		vcpu->guest_debug = dbg->control;
-+		/* No hardware breakpoint */
-+	} else {
-+		vcpu->guest_debug = 0;
-+	}
-+
-+	return 0;
- }
- 
- static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 6fd5916ebef3..44fb18118442 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -77,6 +77,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_IMMEDIATE_EXIT:
- 	case KVM_CAP_IOEVENTFD:
- 	case KVM_CAP_MP_STATE:
-+	case KVM_CAP_SET_GUEST_DEBUG:
- 		r = 1;
- 		break;
- 	case KVM_CAP_NR_VCPUS:
--- 
-2.39.3
-
+On Sun, Feb 4, 2024 at 9:48=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.or=
+g> wrote:
+>
+> ARCH_ENABLE_THP_MIGRATION is supposed to be selected by arch Kconfig.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  arch/loongarch/Kconfig | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 10959e6c3583..64e9a01c7f36 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -12,6 +12,7 @@ config LOONGARCH
+>         select ARCH_DISABLE_KASAN_INLINE
+>         select ARCH_ENABLE_MEMORY_HOTPLUG
+>         select ARCH_ENABLE_MEMORY_HOTREMOVE
+> +       select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+>         select ARCH_HAS_ACPI_TABLE_UPGRADE      if ACPI
+>         select ARCH_HAS_CPU_FINALIZE_INIT
+>         select ARCH_HAS_FORTIFY_SOURCE
+> @@ -667,10 +668,6 @@ config ARCH_SPARSEMEM_ENABLE
+>           or have huge holes in the physical address space for other reas=
+ons.
+>           See <file:Documentation/mm/numa.rst> for more.
+>
+> -config ARCH_ENABLE_THP_MIGRATION
+> -       def_bool y
+> -       depends on TRANSPARENT_HUGEPAGE
+> -
+>  config ARCH_MEMORY_PROBE
+>         def_bool y
+>         depends on MEMORY_HOTPLUG
+> --
+> 2.40.1
+>
+>
