@@ -1,63 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2621012B15D;
-	Wed,  7 Feb 2024 18:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DFD6EB4D
+	for <loongarch@lists.linux.dev>; Thu,  8 Feb 2024 10:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707329331; cv=none; b=mLnazkxXPYiCG/MjjVkq6pLiO1nQlfhVOmYWa0dRfSdR7xr2zMyGaGN8CgV52VvpVGJF0ZLXj+j8Ci9sHz+35oTMd4XNjRlz4nAh+Ag9KzgbLiZKZ6Ib+JMpHMekpqZSluobEJ0OFwQGKNP7H0bVo9P39dCUinlRiHR1E5nTWzg=
+	t=1707389489; cv=none; b=CBGqvAUDKsILJC1M9IyPi+RSJp6StAgXGPjAlf0XiS1E7MfPKHWqiArAWDQ5c3fq981cYaWRtNX3TimKFcXr0ZcfvAw1dwE66cxk7Oex3Tbj+a8iJQfkevWGEVsMWIHJDp7/XVOBJmUAa0GJmkAe9wxMEj0aha29/ffFmsEKpEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707329331; c=relaxed/simple;
-	bh=YVGw57OtAK5zBdIGrEi7tz/VsEgsPoy2IrSnNQ2b0aI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=uwgdVk6KMw/QR8To5uG8fg0+ejNGi+iZZ9Hxa/ixm6IkHz1NGYUfg4V+KyrF+eAdUD25amVQ6uHDUXwwhpp0DLH5C6zrJ+m+G5xGTvg0I5g3Gl7Yrqm4QB+x5q/+x0OjTGzfgFWTzkERza2CAOnCZy4vJYP229TtvLCBk/eR3yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDADnC07; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707389489; c=relaxed/simple;
+	bh=Emv88gdDG9pxYGUfTBsBEdEI0xWLZ5BnAsMkMUFkpJE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pwyrBkJ9o3j++n59SEDOGeS1YtVcNRAdd9nZPks0pKFQt+phvcKAgzGQhnjmIgD1dcl0muAvTrjhah47++JJ2E1vqyi7H9xQqFnu2/72Kn/jR7sc81cwqt5TVidRk4zxvfhQ7lO9xIYSM1AH18nmOaH/mHJhRCKRFcujAUhkz8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iNK4WqhD; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDADnC07"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A053C433F1;
-	Wed,  7 Feb 2024 18:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707329330;
-	bh=YVGw57OtAK5zBdIGrEi7tz/VsEgsPoy2IrSnNQ2b0aI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=pDADnC07xA8I6szpY3WSwXLnAYhtam9rUJRgcRLHFxcBrLtMfa9v3h7r+2Ea8fR9x
-	 Yijzo9/lrUToctR9gIdOM/AMtDQzN1Yl2MBGw7VuacoO6jm1povJnUUbsA51w+mUKj
-	 5DSD5wHRqGccWGoFnRyzyVtcRJ5+16jNKKs909lLFMTxxhOMdkC+2qw1bdsTUQ1kxg
-	 NVsnmxMtK84V3syc3Rv0fAFqO80NjsG4zwETxTvoXrQNxHXuKdPm7jWIxzN98Jzhgh
-	 TysJdK3DyQj7Rn2yKDDNjhVF5jDLdUR3sRtgBcolivu/CnYcV9TzS+Nf/e/zq08Tkp
-	 FdTBzNLj4IgDQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 737C7E2F2F1;
-	Wed,  7 Feb 2024 18:08:50 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.8-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240207121436.3845425-1-chenhuacai@loongson.cn>
-References: <20240207121436.3845425-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240207121436.3845425-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.8-2
-X-PR-Tracked-Commit-Id: cca5efe77a6a2d02b3da4960f799fa233e460ab1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 547ab8fc4cb04a1a6b34377dd8fad34cd2c8a8e3
-Message-Id: <170732933046.14404.13301953236605274396.pr-tracker-bot@kernel.org>
-Date: Wed, 07 Feb 2024 18:08:50 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iNK4WqhD"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4103fc91755so2560715e9.2
+        for <loongarch@lists.linux.dev>; Thu, 08 Feb 2024 02:51:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707389485; x=1707994285; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HNZpB/EZ4NWTASPOpVzKWYUje+5cX+UaG3ufU3H/M78=;
+        b=iNK4WqhDKmiSXg8wxXKL+r3hOuO1Kr9EhTUg0Mv0eWlr8POax3a6LTp9GJ911UCI2/
+         Wso5sD+ldykMkxd1KqV3RBrw4hO4qpD+hKsuxKzu+go8g6HHT/hkONMW4Tz5RpZIM8gm
+         ErOYFLCR8L1heWP8uy48pdh6fliZuglRDXgEeYCGvEKBrz01dwitvmwJajPQnXGYoOYZ
+         58sDziWxA39kU3CHLtfytyBzl9tDcEOTcrDX2d9pf6HzuBW3Wmb0JptDucGaJOFBOOjh
+         TIBUP65E8/R1qoa177+fldfW/3x+NukVH3Yt6PNIiRuMwcCyKas/9hoaEfmqm5qoBAyO
+         V+ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707389485; x=1707994285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HNZpB/EZ4NWTASPOpVzKWYUje+5cX+UaG3ufU3H/M78=;
+        b=lGHKsX2cI5NNRnIJd9WIY4x54s9FwtKpMp1Yn21rn6AWCMpInjfOneUzN0wps/b4cd
+         Dktwnw518R91/YhZe/MrH1S9JisMcuMQsHMMfD1O2fgsKeJjGXarvHg6WcTpG8u0PISd
+         AqYOAPuHqb4eulegYvnt/DYVVxFI6hpvmOHZgus/s4oR2ocNrAXi2CeImopb8cPErimm
+         Kbt4kU+TzMZAwXHmi+Je6d3ss5YcV3nzghueDqUBDPVVFQ8CG3LFRD3i6EfAQB7V3DjZ
+         cuXcIXdTqneAbLscsvRhsCquSJFgqN98go1jlkKl/jC/HE1+LlgmYlHMdMc1w90h0/P7
+         ypkQ==
+X-Gm-Message-State: AOJu0Yy2RBBrrJxSnJXo+glPnEmw/D6MC/ConIDW/h98JmiW26hACZXU
+	pGiplZVuFneTGJMyiQVaKqnCx8jWa6aivVnAB3avrNdZTm/puzAdvXfXZaYM6mE=
+X-Google-Smtp-Source: AGHT+IG/kpPi0hDLahtJf6Zl7iOAtwtOFLT5HQAwO/GC4rKQbHaL0ZIM+cfHVjTakOaZqbnsfVy1nw==
+X-Received: by 2002:adf:b196:0:b0:33b:58dd:84c5 with SMTP id q22-20020adfb196000000b0033b58dd84c5mr941338wra.53.1707389485245;
+        Thu, 08 Feb 2024 02:51:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVnciD60jji026n5unEXbnYRO2wX370lNj1yfb2eMmvYIkCLxGw+Fw70zuIAxqIwi24cZ1WAdRcI7uIY0UxF7OLxdCTQdWQtrcshhfQrCT1hh+T3i+WDxBHinbKaRqXDMgMGpwYRQ4rHj2cilTvoZ4nefbgo/ukzC83fTvCo2JKjvh85F+QXLcmoX8GVVG+2QegkzmYrt4O85p/0e7O3eV2HeYKqR6u6100FEaASTf370aYyyLBUSyo40zeNg5nzIwTUg==
+Received: from krzk-bin.. ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id g15-20020a056000118f00b0033af5716a7fsm3328649wrx.61.2024.02.08.02.51.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 02:51:24 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] LoongArch: dts: minor whitespace cleanup
+Date: Thu,  8 Feb 2024 11:51:21 +0100
+Message-Id: <20240208105121.128521-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Wed,  7 Feb 2024 20:14:36 +0800:
+The DTS code coding style expects exactly one space before '{'
+character.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.8-2
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ arch/loongarch/boot/dts/loongson-2k0500-ref.dts | 2 +-
+ arch/loongarch/boot/dts/loongson-2k1000-ref.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/547ab8fc4cb04a1a6b34377dd8fad34cd2c8a8e3
-
-Thank you!
-
+diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+index b38071a4d0b0..8aefb0c12672 100644
+--- a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
++++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+@@ -60,7 +60,7 @@ &i2c0 {
+ 
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+-	eeprom@57{
++	eeprom@57 {
+ 		compatible = "atmel,24c16";
+ 		reg = <0x57>;
+ 		pagesize = <16>;
+diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+index 132a2d1ea8bc..ed4d32434041 100644
+--- a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
++++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+@@ -78,7 +78,7 @@ &i2c2 {
+ 
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+-	eeprom@57{
++	eeprom@57 {
+ 		compatible = "atmel,24c16";
+ 		reg = <0x57>;
+ 		pagesize = <16>;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
