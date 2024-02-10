@@ -1,107 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2596D71B30
-	for <loongarch@lists.linux.dev>; Thu,  8 Feb 2024 12:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBD4364
+	for <loongarch@lists.linux.dev>; Sat, 10 Feb 2024 00:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707394543; cv=none; b=Dj6BWdPlcE2EyToqPnABDGDBKq2DW2ARxku3sgpjYCtSI5vNpdZHHDqHwYzmFrWLfsNxyvNPVfblnfIq/f73ZQMWYjBLMdh/ArJ3Y10rkm8VaVlnW/ISPnn9tIfB/ZybSmkKuhTjq08GL64tUSXqhOhkXUU0ARlGxilMmmg0NC8=
+	t=1707525116; cv=none; b=sspXmZ+ibsOd6LyGasL/FFALCqqliZBMJ29jFth9qdJUK08MtQeNpBdTUsUoN5zJpLcNDZjA2iNZpgSQq0wfvK1O22tLAP5KPsj8kCt5sJV7gpgUqATyezaGZXrkEicHl9VqGh8soa0C1pDkIeEqOVM3er+FHD4/3Fi9KUrTfeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707394543; c=relaxed/simple;
-	bh=HD8ssfrPCs3mudGxWOlRjwSvpuYcFmOaUuOszBVHbt0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AcL9FIsybD800cBjJpEM8wBQ8B90ZHNrRJVcV2ElTxiYddehA3lBg9MBOf/ADGces6GqJxdSq9SZI/ywn0YAn50KIESq0msD+suisKYhyxYVPhX/ILaM9lzr88vS1Z2/Mt10HwGtX0eOBeMQoRE7ozLt+1FekuySdUcGw709UVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rjcuxx9N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707525116; c=relaxed/simple;
+	bh=86ofy+kM5/T8yxYifh+rhywEk+E0E7T2saCw5ZL4pS4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jr/5q9CmAXj5d6Ph/utKrnwqHvTjFOYVbZjS8URvibG3rDf7MnGCsHumGPp+9ExEowMkoQZ7gbPHpQkcmmWWxCEeA20CIl6pkvj0T8lXE4Dau+FapyRVYVrxPVjR6jcydRmtRT8N8z6qxIruZim1i77WnVz0qazfdCZjx6cl63I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BI11iwot; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rjcuxx9N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2029C433A6
-	for <loongarch@lists.linux.dev>; Thu,  8 Feb 2024 12:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707394542;
-	bh=HD8ssfrPCs3mudGxWOlRjwSvpuYcFmOaUuOszBVHbt0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Rjcuxx9NhI8Phc0mWKFspNrSWPb9iHeL61bjn7QHLZjqOWaEy+Yk05x8NRx6ZdSNp
-	 OVD8Iq52NkQJoJNI9pCsXKt5opTW/phV6j9OxMu+hAAoRYQNKtQpEsPArqNad7PpRo
-	 QThHXWL6/P14tAIlL5HTluNiS+z23N+7zSTHmqszXL7VuHtwLwi0iBOWDmXw2b20wl
-	 ABO5ft1zfzrXcec8Zmlaz49E278kDEF2Mq/aJGXSFQ3B0E8WE1VRhJzBssbKj78sx5
-	 BGMe6YV2tYwVZLCTNwcMsGP3ScNz6vWFUZAbZZOpSywzou2bkoVwMeuDtinxXddbSS
-	 4DBYbAEUePDrg==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-55fcceb5f34so1880331a12.3
-        for <loongarch@lists.linux.dev>; Thu, 08 Feb 2024 04:15:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUdq4P0yHotaLJaq8ja4uQgL1Qln+k6EDs2M4VG9DrVshZBDx2tkiIY4VX33kZVSyV0wMhXAJ9RivAHZMw7W3JVRHcL4unAbebR
-X-Gm-Message-State: AOJu0YzTQzcytR82mG6kCWaF5tPuqd86JYu0+fttaicvv8zZK4i6vzVJ
-	N5XDZu7z38Wi7X8dpTM06CwMb0M+cmL6pGgaxWnmiejNIOMHbtD2Zjm5uhwVVKRnJl82PivPHt2
-	tjZT0see8SAvcr4r0yhl27eIohwE=
-X-Google-Smtp-Source: AGHT+IGc7wCpaZmzRLXw08H64IoAWQ6ApuS0ma8yFyLra7q7ckw32L6kWfj4rBPrKsub3Qtomy21hQ049VJ+4oa9wTM=
-X-Received: by 2002:a05:6402:2032:b0:55f:8d03:411c with SMTP id
- ay18-20020a056402203200b0055f8d03411cmr5833914edb.24.1707394541130; Thu, 08
- Feb 2024 04:15:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BI11iwot"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 419Nts6s031351;
+	Sat, 10 Feb 2024 00:29:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=Y+AILw3pX1T29zesxJoDs7erTQv/gDbeD35hCxK6nqc=; b=BI
+	11iwotVsHW4+YaVnK6MfOXbxyVFhGjjb7xTNKbO6c+0r8/TTeZnKJPcIA/bZrZxh
+	I1IfTPs5Gc9Vt7G8KjJGaGgL7UtHuBybizvQml1skqiDwNd2HF0xVuEio/6NdcuP
+	mL2TeLoY0dzn+9pw9P7v3rv9cnnLIRzgKBtzujicQwVsfkpe4iNj97Vey7bS/A1r
+	p/A+3uwcUjM2IMHGfyJXVrZiP/HmwTFSUTJ61djqQaXAK80AmnvYGBxUuOTh3dSF
+	TdXTPy28w+kL0dm3+24tS6jxna/hb5tyO80GpgGGsCa3LRogzbhdx38B4+p7EpaG
+	p25KzyVD5G73vZ+prKrg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w5u2k8c02-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 10 Feb 2024 00:29:48 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41A0TlCw025917
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 10 Feb 2024 00:29:47 GMT
+Received: from th-lint-014.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 9 Feb 2024 16:29:44 -0800
+From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+To: <chenhuacai@kernel.org>, <jonas@southpole.se>,
+        <stefan.kristiansson@saunalahti.fi>, <shorne@gmail.com>,
+        <ysato@users.sourceforge.jp>, <dalias@libc.org>,
+        <glaubitz@physik.fu-berlin.de>, <robh+dt@kernel.org>,
+        <frowand.list@gmail.com>
+CC: <linux-openrisc@vger.kernel.org>, <loongarch@lists.linux.dev>,
+        <linux-sh@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <kernel@quicinc.com>,
+        Oreoluwa Babatunde
+	<quic_obabatun@quicinc.com>
+Subject: [PATCH 0/3] Restructure init sequence to set aside reserved memory earlier
+Date: Fri, 9 Feb 2024 16:29:28 -0800
+Message-ID: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240208105121.128521-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240208105121.128521-1-krzysztof.kozlowski@linaro.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 8 Feb 2024 20:15:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7-+tKazjqgbqNckord+cpMDA2g8x77x8wKiQfKyhyf3w@mail.gmail.com>
-Message-ID: <CAAhV-H7-+tKazjqgbqNckord+cpMDA2g8x77x8wKiQfKyhyf3w@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: dts: minor whitespace cleanup
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: _wH-3-rOkUcyW1AYOaxCUEVnFN9qy5ZW
+X-Proofpoint-GUID: _wH-3-rOkUcyW1AYOaxCUEVnFN9qy5ZW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-09_20,2024-02-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=510 bulkscore=0
+ impostorscore=0 malwarescore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402100002
 
-Queued, thanks.
+The loongarch, openric, and sh architectures allocate memory from
+memblock before it gets the chance to set aside reserved memory regions.
+This means that there is a possibility for memblock to allocate from
+memory regions that are supposed to be reserved.
 
-Huacai
+This series makes changes to the arch specific setup code to call the
+functions responsible for setting aside the reserved memory regions earlier
+in the init sequence.
+Hence, by the time memblock starts being used to allocate memory, the
+reserved memory regions should already be set aside, and it will no
+longer be possible for allocations to come from them.
 
-On Thu, Feb 8, 2024 at 6:51=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> The DTS code coding style expects exactly one space before '{'
-> character.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  arch/loongarch/boot/dts/loongson-2k0500-ref.dts | 2 +-
->  arch/loongarch/boot/dts/loongson-2k1000-ref.dts | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loong=
-arch/boot/dts/loongson-2k0500-ref.dts
-> index b38071a4d0b0..8aefb0c12672 100644
-> --- a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-> +++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-> @@ -60,7 +60,7 @@ &i2c0 {
->
->         #address-cells =3D <1>;
->         #size-cells =3D <0>;
-> -       eeprom@57{
-> +       eeprom@57 {
->                 compatible =3D "atmel,24c16";
->                 reg =3D <0x57>;
->                 pagesize =3D <16>;
-> diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loong=
-arch/boot/dts/loongson-2k1000-ref.dts
-> index 132a2d1ea8bc..ed4d32434041 100644
-> --- a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-> +++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-> @@ -78,7 +78,7 @@ &i2c2 {
->
->         #address-cells =3D <1>;
->         #size-cells =3D <0>;
-> -       eeprom@57{
-> +       eeprom@57 {
->                 compatible =3D "atmel,24c16";
->                 reg =3D <0x57>;
->                 pagesize =3D <16>;
-> --
-> 2.34.1
->
->
+I am currnetly using an arm64 device, and so I will need assistance from
+the relevant arch maintainers to help check if this breaks anything from
+compilation to device bootup.
+
+Oreoluwa Babatunde (3):
+  loongarch: Call arch_mem_init() before platform_init() in the init
+    sequence
+  openrisc: Call setup_memory() earlier in the init sequence
+  sh: Call paging_init() earlier in the init sequence
+
+ arch/loongarch/kernel/setup.c | 2 +-
+ arch/openrisc/kernel/setup.c  | 6 +++---
+ arch/sh/kernel/setup.c        | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+-- 
