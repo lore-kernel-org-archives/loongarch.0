@@ -1,117 +1,92 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE044C622;
-	Mon, 12 Feb 2024 21:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1190954BFD;
+	Tue, 13 Feb 2024 00:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707772431; cv=none; b=AP9N1SGDAPoK1I1pG4ROW2deAdEbfNGFqjDRNvlPlT+9u8LIdVNK1ZU4PbyvvRIjKbKlOB5bLN+DQNuBGgZBFb/Lo8HGb9t/RLl+eFOtHAoNjZyoG2SwgYrgVJpm7AKlmQ8xlMZLXZRWvoeViTvDkQbVfzeEDA+8PbkvU/BfQSE=
+	t=1707783581; cv=none; b=LCReMO6eiK9YIIjtb9Gnihpq9q379rlFA12mqNPYeKisyCMq3KsF5pmM1QMCSkSUS+QKoYV3TnkwiMwp3KpW9xsIa0weT3sZwHBfvPYWDxykqH0k7kbG5gWAijFPxeJBMV6XNFUB8rAuoHakGhO6oWRLyuT/mVi9JH/RGNts7DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707772431; c=relaxed/simple;
-	bh=Tqh7OZHSz6fAN3kYNXxAMjdIAb78IYAc9VLmRUQtngo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G6skmyGQQve8h9pFclqQPSiZSYzp2hQ2u0ymnSU0Gz8/GKnv0sCP93IuBH5Nh9Qcv8H4IC3M7tZqOiMZ4QErgBfcqjBesV1mJ8BPOuu5daIgahMcJpxBEyB61KoPRnn9gD0GWG2P3GiCU4fJiCoUqyBnQnv1T5u1XaSiuuif6T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=kyi0Bic3; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1707783581; c=relaxed/simple;
+	bh=ZMnZk4FJawzyXVIxmEfV0kt8EySVmx3C69W8qzGNdmM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jvoMxE+gumxgMtULv5zo6iyCNaoDphhGgnfkQbXp0UJiyYUQ3uXMk/c7iYh3vEbJalXyGWFHGTynmmVQI1fUJ7fzBFc39ams6LlTINc8RCOMQ7Yj0uUMIz7f8/PiVzFWuntWJx9lWqzXXbnhmr1ceiQgB+E4s05a0jPZ7VZZP2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wjk+MFSp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kyi0Bic3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1707772427;
-	bh=yEvLWTPr0LqGWhlLjoaAQiYwHFzQnZvpJW4CZQANQm4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kyi0Bic3YAJaDss26kfd/8UJrvaZQ3YSVGMuPX7GoottCIvIBDMA9a1wXXstPX2fF
-	 auKKxBvZP5luN2wm7lvDctlt/J+va7kknf8giKnkZutstNeGvl0dHraM8Z1Osd194w
-	 pJhxP24ePkMiyVL0cGwhP55VnH38GYicHzzLU8x3WajEy5AKPPJQwj8tLcy2FfNmUP
-	 nH6TnCH5QgYD86nPApMQZY3XAVBGXeLNKlGmOamtFOwu7K+FCiEC+0q1Fzj9AGjO+6
-	 3xckzFLYfOrZMceWVe9FWvWEwqLhsSqD06wUSR/SY86kmjqlPjeot51unTZxSgPw37
-	 xmy309epKcmkA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TYcdP0jWWz4wcb;
-	Tue, 13 Feb 2024 08:13:45 +1100 (AEDT)
-Date: Tue, 13 Feb 2024 08:13:44 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alasdair G Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, "open list:LOONGARCH"
- <loongarch@lists.linux.dev>, Huacai Chen <chenhuacai@kernel.org>, Xuerui
- Wang <kernel@xen0n.name>, dm-devel@lists.linux.dev, Matthew Sakai
- <msakai@redhat.com>, "J. corwin Coburn" <corwin@hurlbutnet.net>, Thomas
- Jaskiewicz <tom@jaskiewicz.us>, Bruce Johnston <bjohnsto@redhat.com>, Ken
- Raeburn <raeburn@redhat.com>
-Subject: Re: linux-next: Tree for Feb 12
- (drivers/md/dm-vdo/thread-registry.c on arch/loongarch/)
-Message-ID: <20240213081344.5e80d898@canb.auug.org.au>
-In-Reply-To: <ea0554f6-e0f6-44eb-b98a-d25772273f6e@infradead.org>
-References: <20240212153137.2c37f7e6@canb.auug.org.au>
-	<ea0554f6-e0f6-44eb-b98a-d25772273f6e@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wjk+MFSp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05431C433B2;
+	Tue, 13 Feb 2024 00:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707783580;
+	bh=ZMnZk4FJawzyXVIxmEfV0kt8EySVmx3C69W8qzGNdmM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Wjk+MFSp7WyLYbOZoYoqheqKxtGXsMQR+aVpxV5Qr9klpP6s7Np+MuaoNo7c3f9kl
+	 vJmcIPLY/FmVcjZnwyNz5Hw3rv/ObFqUOqdCMEPMgM9VrL0wrZw+Scc5KAwdgEtbY7
+	 AnRlSnFoo5Jxal4udi8EMGIJX9y4hUxVvEPadC9PkO5FWumpkTWGNmz/AJZduCwSBc
+	 XHJK4ZcbV/7xViHEkCo16vTEGr/b+h80epkTAMqW6hYNd9+64b5H5GgVZcPC/z7xFj
+	 Vlhp/YD6O4EjlRCV+GtE9ue7me323H+s5B3U4xFdD6Ye3DMyp+SHKl+SX5y5+++nwc
+	 P6XS2A/T/6Q7g==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	chenhuacai@kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.7 39/58] LoongArch: Select ARCH_ENABLE_THP_MIGRATION instead of redefining it
+Date: Mon, 12 Feb 2024 19:17:45 -0500
+Message-ID: <20240213001837.668862-39-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240213001837.668862-1-sashal@kernel.org>
+References: <20240213001837.668862-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dDfWQ+Zn0XM4tHQuoUT5JSr";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7.4
+Content-Transfer-Encoding: 8bit
 
---Sig_/dDfWQ+Zn0XM4tHQuoUT5JSr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-Hi all,
+[ Upstream commit b3ff2d9c3a9c64cd0a011cdd407ffc38a6ea8788 ]
 
-On Mon, 12 Feb 2024 12:33:08 -0800 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
->
-> on loongarch:
->=20
-> ../drivers/md/dm-vdo/thread-registry.c: In function 'vdo_register_thread':
-> ../drivers/md/dm-vdo/thread-registry.c:32:28: error: 'current' undeclared=
- (first use in this function)
->    32 |         new_thread->task =3D current;
->       |                            ^~~~~~~
-> ../drivers/md/dm-vdo/thread-registry.c:32:28: note: each undeclared ident=
-ifier is reported only once for each function it appears in
-> ../drivers/md/dm-vdo/thread-registry.c: In function 'vdo_unregister_threa=
-d':
-> ../drivers/md/dm-vdo/thread-registry.c:61:37: error: 'current' undeclared=
- (first use in this function)
->    61 |                 if (thread->task =3D=3D current) {
->       |                                     ^~~~~~~
-> ../drivers/md/dm-vdo/thread-registry.c: In function 'vdo_lookup_thread':
-> ../drivers/md/dm-vdo/thread-registry.c:84:37: error: 'current' undeclared=
- (first use in this function)
->    84 |                 if (thread->task =3D=3D current) {
->       |                                     ^~~~~~~
+ARCH_ENABLE_THP_MIGRATION is supposed to be selected by arch Kconfig.
 
-Caused by commit
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/Kconfig | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-  bf28b754d024 ("dm vdo: add thread and synchronization utilities")
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index ee123820a476..709af7096acb 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -11,6 +11,7 @@ config LOONGARCH
+ 	select ARCH_DISABLE_KASAN_INLINE
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
++	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_CPU_FINALIZE_INIT
+ 	select ARCH_HAS_FORTIFY_SOURCE
+@@ -643,10 +644,6 @@ config ARCH_SPARSEMEM_ENABLE
+ 	  or have huge holes in the physical address space for other reasons.
+ 	  See <file:Documentation/mm/numa.rst> for more.
+ 
+-config ARCH_ENABLE_THP_MIGRATION
+-	def_bool y
+-	depends on TRANSPARENT_HUGEPAGE
+-
+ config ARCH_MEMORY_PROBE
+ 	def_bool y
+ 	depends on MEMORY_HOTPLUG
+-- 
+2.43.0
 
-from the device-mapper tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/dDfWQ+Zn0XM4tHQuoUT5JSr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXKiggACgkQAVBC80lX
-0GzSJAf7BwW0B5X4fJLFTv3mfUFzaedq4PNloK8E7F8roeGBZJ5KyvRUzItV+dP2
-ein1Swgq4mtxTg/9DSR3Oqu924EejTwFRuSjP+J3W+eNUht8Sd9GnBXl45ErRNpB
-NrThW8fwt0IcsSi0aFEzW+sd1Upv4lM9E/BF0oOOQTv0Q+ohRWKlBeH8GQy0ZgPp
-L0RsB/18LKm3/+dmwbyk/0FC8UIpE6b7pwVfpr+p+mRiPBjE8qrKIc7zo+9oqysR
-1B4ZDEMcdWC8o5MdWKWNvbeCHvBy4HNjLTDRmDEHe9eD/dccnOfcQW4JAG0zRSsz
-QkkxWuLgnE85igUrBdCKtGTB7o4m4w==
-=lZ5G
------END PGP SIGNATURE-----
-
---Sig_/dDfWQ+Zn0XM4tHQuoUT5JSr--
