@@ -1,56 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA4F63117;
-	Tue, 13 Feb 2024 00:21:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813A68061B;
+	Tue, 13 Feb 2024 00:23:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783708; cv=none; b=pDoJAdIYD/k1xh2rAjLEECWdZnNxL/FU5YzOaxRiuZKCrCeCVFw94FrkWeS8F6gY1iWwBQBS+j7lQb1oIfO6HE5Zn2a5PN4QZAd6M6QNLIHXZiIK51rRNz8uZQ7oLzbaGog+OpOG7TplhVloC2U/GBCEQdNSZPX4SH4aGEorfwo=
+	t=1707783785; cv=none; b=kQ4Fsd2bWOt1QC8KNB4dx22pBsOxT8aFqip3TM8JZSEaXPYtohOk/PzoLcuDPad5o18kj7RIj9slLBWlWbEAW9h0FFp9enIovq4sogX3I6CnfPL2/OP5TklGylXxWp4lJoMGMYUky/aL4+Im7Ox4Oo4xdALAPl5RFskE2FTraZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783708; c=relaxed/simple;
-	bh=w1jwcGRF9vZAy4gnFzNIyEL76DACT7ggXyEpj6J6IwY=;
+	s=arc-20240116; t=1707783785; c=relaxed/simple;
+	bh=U2gIa04sBLTHzW3iW2xOjULlwobPHjNmK6vAiygan7E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nd5hUJldVWVW/Fdx4dXjSbGVzWTKIxe0wkaIOpcwPAloi8Pu8r64hlexkzKgyZxh85HiVg2lhdzYnMCjdE1WsUKR6YeJOMj50Dse7LKx7M48ajTBuuZ69V0CwAyUfDMjnukNFFcCTii2PPQx5Ta0ytRexocwnY/fqJM/vvHZIRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+255kJY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AZRtiatzK3PVaSYV8rLMI1So/DixrpFwf5sOXWhS/jZtF/jJW9Ibc81S0omx1rH299JHhV3a/OxaSGFlssiEjbnXf/XYYQTq0T2YGxCPpMF0CaXJcgnLxg+X8PuubHCZNsGXHROiZIAP6R2x+77p2id8R03cadHtEEhf8k0zpsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j0z2DTt0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+255kJY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65715C43399;
-	Tue, 13 Feb 2024 00:21:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j0z2DTt0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C26C433F1;
+	Tue, 13 Feb 2024 00:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707783708;
-	bh=w1jwcGRF9vZAy4gnFzNIyEL76DACT7ggXyEpj6J6IwY=;
+	s=k20201202; t=1707783785;
+	bh=U2gIa04sBLTHzW3iW2xOjULlwobPHjNmK6vAiygan7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u+255kJYWRhDAHbVL6RseVSV2MjSybKMNwBMBEH77W53kxSIlroyi1Z3vymXQ9f7V
-	 JxZDpgqErYpN5wRyAHShASLYG469YlwtYewCfd5PQtsf0kCVuh3zzgFIxtTIqpNQGu
-	 cUhBhMri+5729tQ/U9GplMSX3coAfLzOM0+E5AawBKOXR7sBU8E00+NSbWF47vpn/1
-	 CV99VqYY1DxTnGjvJ95t7W2P7r4y+H0poKc/dtHc/76Z/4fQrDZrOdUJOKmjzKajNP
-	 40+J1gQFUNkP6BAiKCyEktuWPT7ooyOqd8MM5APSM9qDvL1p7/+73g2+7mUDJcOc4t
-	 pH2rHPR5gc4rA==
+	b=j0z2DTt0xImN+QCP4DgUEcyeFjAoZIouTQNiAiUM91LuOEWgOj4zZ5IzV8sx8EEzU
+	 2tJUExE+uDCocWGqba3/C8NJiS+0Ol4Iw3PPBivI+COlI6DfzgEPh9pls3DjTGmprP
+	 kPk94dGS6S1lxvzjUFzahSEy7ef9JUV0J0BOuaFSM0gng7E3rKcyjBr01GScisVoxL
+	 APRfkQsZz1Tzad83WT//sSBiBdmbC/6ia5Vf/Xj7TqsLAX85l3QYq7GjeTq1P5nZxE
+	 po1wq7Exr4ph6ztafqOiJvauOvb+RfbrVva+bHXljIuDv9F7+R+F/VfcFevQ9iiONX
+	 NUXRPM6g/JcWw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>,
-	kernel test robot <lkp@intel.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Fangrui Song <maskray@google.com>,
-	loongarch@lists.linux.dev,
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	Sasha Levin <sashal@kernel.org>,
-	git@xen0n.name,
-	guoren@kernel.org,
-	rmk+kernel@armlinux.org.uk,
-	chenfeiyang@loongson.cn,
-	zhangqing@loongson.cn
-Subject: [PATCH AUTOSEL 6.6 36/51] LoongArch: vDSO: Disable UBSAN instrumentation
-Date: Mon, 12 Feb 2024 19:20:13 -0500
-Message-ID: <20240213002052.670571-36-sashal@kernel.org>
+	chenhuacai@kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.1 20/28] LoongArch: Select ARCH_ENABLE_THP_MIGRATION instead of redefining it
+Date: Mon, 12 Feb 2024 19:22:18 -0500
+Message-ID: <20240213002235.671934-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240213002052.670571-1-sashal@kernel.org>
-References: <20240213002052.670571-1-sashal@kernel.org>
+In-Reply-To: <20240213002235.671934-1-sashal@kernel.org>
+References: <20240213002235.671934-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -59,47 +48,45 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.16
+X-stable-base: Linux 6.1.77
 Content-Transfer-Encoding: 8bit
 
-From: Kees Cook <keescook@chromium.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit cca5efe77a6a2d02b3da4960f799fa233e460ab1 ]
+[ Upstream commit b3ff2d9c3a9c64cd0a011cdd407ffc38a6ea8788 ]
 
-The vDSO executes in userspace, so the kernel's UBSAN should not
-instrument it. Solves these kind of build errors:
+ARCH_ENABLE_THP_MIGRATION is supposed to be selected by arch Kconfig.
 
-  loongarch64-linux-ld: arch/loongarch/vdso/vgettimeofday.o: in function `vdso_shift_ns':
-  lib/vdso/gettimeofday.c:23:(.text+0x3f8): undefined reference to `__ubsan_handle_shift_out_of_bounds'
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401310530.lZHCj1Zl-lkp@intel.com/
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Fangrui Song <maskray@google.com>
-Cc: loongarch@lists.linux.dev
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/loongarch/vdso/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/loongarch/Kconfig | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index 5c97d1463328..4305d99b3313 100644
---- a/arch/loongarch/vdso/Makefile
-+++ b/arch/loongarch/vdso/Makefile
-@@ -2,6 +2,7 @@
- # Objects to go into the VDSO.
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index e737dc8cd660..b1b4396dbac6 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -9,6 +9,7 @@ config LOONGARCH
+ 	select ARCH_BINFMT_ELF_STATE
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
++	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_PTE_SPECIAL
+@@ -495,10 +496,6 @@ config ARCH_SPARSEMEM_ENABLE
+ 	  or have huge holes in the physical address space for other reasons.
+ 	  See <file:Documentation/mm/numa.rst> for more.
  
- KASAN_SANITIZE := n
-+UBSAN_SANITIZE := n
- KCOV_INSTRUMENT := n
- 
- # Include the generic Makefile to check the built vdso.
+-config ARCH_ENABLE_THP_MIGRATION
+-	def_bool y
+-	depends on TRANSPARENT_HUGEPAGE
+-
+ config ARCH_MEMORY_PROBE
+ 	def_bool y
+ 	depends on MEMORY_HOTPLUG
 -- 
 2.43.0
 
