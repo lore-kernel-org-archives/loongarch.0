@@ -1,33 +1,33 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B50171A6
-	for <loongarch@lists.linux.dev>; Wed, 14 Feb 2024 10:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702D417571
+	for <loongarch@lists.linux.dev>; Wed, 14 Feb 2024 10:24:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707905775; cv=none; b=G5pezOX5J2zQCro+/9qvlH9DUG6qre8EbEbGdews32Zt7cFNy9rDiqAvvGybIL1gaBQhXIY0Kaj8SOARFFjFqxYQS17lqeQioFRHOFxU90ffcCcEFxcqPkOG+3XniaSQS+JcIY6TWnpZp3XQ9lYmauvYYQ8Tboml9uCqZF2AYrg=
+	t=1707906250; cv=none; b=F/p/WBT7O3d7jQJipQ87nqPrTzOP9LSSO8bTgEYRnJVIrDtWjWc7y8mfIU/Xm/H1pmFjys+224+eTdjggrVZKIpmb8JUIj0Ax5XlMl6wJVGy8n3J1yBPznCCvXrEcGaU6G4M9BiF1ZG26kqpdRMsiSgfeThpelFNuh4QlU7Fj44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707905775; c=relaxed/simple;
-	bh=eTiNyXEgBPCIo0Ta8sYgjRV8p1Xz0hDcVMygIqs3U3E=;
+	s=arc-20240116; t=1707906250; c=relaxed/simple;
+	bh=RLw0Ke+gAZcjvLomlJhUe4+W8YYZZSg0ARVq9aMVCrA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OtAIsSbmg4lb9G+2ttwya5/8A9AII6LexmUscBkJc4V+47GZG5sKhJrcMnWTMM2LNlXZ9RxmizQQwAZWhoGq/aR5AZKTr3CtHr2q8jSmxLZSRkrsfImh/lQMcLPSYyYSh3cociM706EII+F9tA0zDEzQBHtZakKAt7T0nEjf+mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=GlwHXq5K; arc=none smtp.client-ip=115.28.160.31
+	 MIME-Version; b=B8bhutAgH7F7xeQxo0Cn7WyCzuZGTIVMes8SOkay54g7qsFrVoADFIpVd+cN/jQXNc2jpoLG5SW1pUFCt7u1cWuipyT/dzKWIcPxIOz7zwUvf23BVyuQEj71wup+ePPv80p0LOmUn3amGfJn1Rxppr7mo1f16iI/E7hHgvxnRK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=QOQHz9Rr; arc=none smtp.client-ip=115.28.160.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="GlwHXq5K"
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="QOQHz9Rr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1707905769; bh=eTiNyXEgBPCIo0Ta8sYgjRV8p1Xz0hDcVMygIqs3U3E=;
+	t=1707905766; bh=RLw0Ke+gAZcjvLomlJhUe4+W8YYZZSg0ARVq9aMVCrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GlwHXq5KtlJN3WjzDugZTkyJEy5LHE+ExYx073zzj48EYrqsL7zgxjG0jH/CXdUWu
-	 lHC5BxTxuznnRWa29bxkSyDY9QBTn3MlyULKk31DvSXmHgOaImFsYVGo+Dmwyixr+h
-	 HhHqPrIQO+kYbav4MpoP9qcNYRLyGihzdZ4frvdI=
+	b=QOQHz9RrVavX6BeKFy7gBmTGpqvwBepZ7fDQO0dBCdOduCsqYJLFvZR1npngVfOZo
+	 euevnVDYHQHw0+mIjO6IUmsqD1OAMkmRUs4wVTAdK5f2AWFIKDAKD0m4MBRnCb+dnm
+	 ChKaWPTjcX54Vvg8n3XGSFoDOoSzsdBmc6iqHL/8=
 Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:5531:eef6:1274:cebe])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9843160562;
-	Wed, 14 Feb 2024 18:16:09 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 7B052601A7;
+	Wed, 14 Feb 2024 18:16:06 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -37,9 +37,9 @@ Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH for-6.8 5/5] KVM: LoongArch: Clean up comments of _kvm_get_cpucfg_mask and kvm_check_cpucfg
-Date: Wed, 14 Feb 2024 18:15:57 +0800
-Message-ID: <20240214101557.2900512-6-kernel@xen0n.name>
+Subject: [PATCH for-6.8 2/5] KVM: LoongArch: Fix kvm_check_cpucfg incorrectly accepting bad CPUCFG IDs
+Date: Wed, 14 Feb 2024 18:15:54 +0800
+Message-ID: <20240214101557.2900512-3-kernel@xen0n.name>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240214101557.2900512-1-kernel@xen0n.name>
 References: <20240214101557.2900512-1-kernel@xen0n.name>
@@ -53,73 +53,43 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Remove comments that are merely restatement of the code nearby, and
-paraphrase the rest so they read more natural for English speakers (that
-lack understanding of Chinese grammar). No functional changes.
+The return value of _kvm_get_cpucfg is meant to be checked, but this
+was not done, so bad CPUCFG IDs wrongly fall back to the default case
+and 0 is returned.
 
+Check the return value to fix the UAPI behavior.
+
+While at it, also remove the redundant range check, because
+_kvm_get_cpucfg already rejects all unrecognized input CPUCFG IDs.
+It was also wrong and no-op, in the same way as the former identical
+check in _kvm_get_cpucfg.
+
+Fixes: db1ecca22edf ("LoongArch: KVM: Add LSX (128bit SIMD) support")
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kvm/vcpu.c | 26 +++++++++++---------------
- 1 file changed, 11 insertions(+), 15 deletions(-)
+ arch/loongarch/kvm/vcpu.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 9e108ffaba30..ff51d6ba59aa 100644
+index c4a592623da6..cc2332b056ba 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -302,20 +302,14 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+@@ -328,12 +328,10 @@ static int _kvm_get_cpucfg(int id, u64 *v)
+ static int kvm_check_cpucfg(int id, u64 val)
  {
- 	switch (id) {
- 	case 2:
--		/* Return CPUCFG2 features which have been supported by KVM */
-+		/* CPUCFG2 features unconditionally supported by KVM */
- 		*v = CPUCFG2_FP     | CPUCFG2_FPSP  | CPUCFG2_FPDP     |
- 		     CPUCFG2_FPVERS | CPUCFG2_LLFTP | CPUCFG2_LLFTPREV |
- 		     CPUCFG2_LAM;
--		/*
--		 * If LSX is supported by CPU, it is also supported by KVM,
--		 * as we implement it.
--		 */
-+		/* If LSX is supported by the host, then it is also supported by KVM */
- 		if (cpu_has_lsx)
- 			*v |= CPUCFG2_LSX;
--		/*
--		 * if LASX is supported by CPU, it is also supported by KVM,
--		 * as we implement it.
--		 */
-+		/* Same with LASX */
- 		if (cpu_has_lasx)
- 			*v |= CPUCFG2_LASX;
+ 	u64 mask;
+-	int ret = 0;
+-
+-	if (id < 0 && id >= KVM_MAX_CPUCFG_REGS)
+-		return -EINVAL;
++	int ret;
  
-@@ -336,21 +330,23 @@ static int kvm_check_cpucfg(int id, u64 val)
+-	if (_kvm_get_cpucfg(id, &mask))
++	ret = _kvm_get_cpucfg(id, &mask);
++	if (ret)
+ 		return ret;
  
  	switch (id) {
- 	case 2:
--		/* CPUCFG2 features checking */
- 		if (val & ~mask)
--			/* The unsupported features should not be set */
-+			/* Unsupported features should not be set */
- 			return -EINVAL;
- 		if (!(val & CPUCFG2_LLFTP))
--			/* The LLFTP must be set, as guest must has a constant timer */
-+			/* Guests must have a constant timer */
- 			return -EINVAL;
- 		if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
--			/* Single and double float point must both be set when enable FP */
-+			/* Single and double float point must both be set when FP is enabled */
- 			return -EINVAL;
- 		if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
--			/* FP should be set when enable LSX */
-+			/* LSX is architecturally defined to imply FP */
- 			return -EINVAL;
- 		if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
--			/* LSX, FP should be set when enable LASX, and FP has been checked before. */
-+			/*
-+			 * LASX is architecturally defined to imply LSX and FP
-+			 * FP is checked just above
-+			 */
- 			return -EINVAL;
- 		return 0;
- 	default:
 -- 
 2.43.0
 
