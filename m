@@ -1,110 +1,107 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E1E1757A
-	for <loongarch@lists.linux.dev>; Wed, 14 Feb 2024 10:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD3A53380
+	for <loongarch@lists.linux.dev>; Wed, 14 Feb 2024 13:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707906251; cv=none; b=Qf1eM5pBlmM4diWjd0xnMZTc3II49uzoy/QGSwRmoUXPwncFQHXJoFl/PS9RwVShM5dhrZAn19tHmVAmdMFjD6fbyPzle5SCEiM4Skv09G3vC2hXhreYsUK8b4dIXiGQkUu0fNMISBms+8AefoDuOkS712vBZr9FMgyJVkld0cE=
+	t=1707915834; cv=none; b=AbtcI12rcK0k+LFosUNwilX5LDGML94EqQ2QUAqs4qJJySDSWXDwpjVNoCbSmhqyuRzHLTGHKsM0cuu5iswQZZvYJMeV9JGnEB/UubS8LAp/9dwl2JJtvRitcOPvPqzB49/n03J7WlJkhFAov0qlX2jGvgGxguE2H4Gn0HpyWyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707906251; c=relaxed/simple;
-	bh=UEF3EtzASKcetwcq4bXXyQ5NmYXr4KVcBieRDjHk7ok=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AmF+v2zuuLJ+cZXvpiGtgGFjtsOdQ3BrWdjiYCtA4X3BKb6Dhuth1CaUnnzfxtsYpApDVILM/9nMkCaLHMWi1YLa5neZSkVHz/fgldzO9dQWPeKdQ7vl4eOzbVsoQnsQrkL/EdSDCwN8QMrWUSiB1HSbMhBu2k5pKdH6+I9h1WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=cOXRPrNH; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+	s=arc-20240116; t=1707915834; c=relaxed/simple;
+	bh=Y5cCv6WN3AG3tMIqacma1w2YSEMZ6JaBHyisxC12c9w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UXwdbTZSOrryKwlob7xGvdHrK4UUVzJn84vpVQdAP6stEDNCDdGfHvgLeWIGTD+5iSzKQP4j1qTKWTuON/7bWW9lEeZq5FN31HCjLE3FoXMrYIx8dv13bEhRLBx9CgVmOj6cspIu2LMje01qFLxhDLQ2GR8+/jI0IwGBc7nLgwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvcT8YJo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="cOXRPrNH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1707905768; bh=UEF3EtzASKcetwcq4bXXyQ5NmYXr4KVcBieRDjHk7ok=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cOXRPrNHUvE8DHxSgDP4KOW6f/OrLuGnwlp5dJvrkprvNZtiBseCBWzy34+S2cOTV
-	 dKjfN/r4Z98QKBWNK3waITUgB5aV9t5UEheqlf46SUTbg2tDX5NboTSAp6G3iaD3Xv
-	 rGeZl+8u96PemsRIQ8TRmwxJnF7t4DD5z+er+/dM=
-Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:5531:eef6:1274:cebe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id A1FE5601C6;
-	Wed, 14 Feb 2024 18:16:08 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH for-6.8 4/5] KVM: LoongArch: Streamline control flow of kvm_check_cpucfg
-Date: Wed, 14 Feb 2024 18:15:56 +0800
-Message-ID: <20240214101557.2900512-5-kernel@xen0n.name>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240214101557.2900512-1-kernel@xen0n.name>
-References: <20240214101557.2900512-1-kernel@xen0n.name>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvcT8YJo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E0C7C43142
+	for <loongarch@lists.linux.dev>; Wed, 14 Feb 2024 13:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707915834;
+	bh=Y5cCv6WN3AG3tMIqacma1w2YSEMZ6JaBHyisxC12c9w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AvcT8YJoQNZs8sfRDTkmYygA8l0Kza6K8KEPY6U7YF/29oo0kvqwp44UZBHOO9osR
+	 TK4RFyjNq+qR4wlkN6n+/wJeiSFhvBNfCAObgM80sJtGSwoUvEgYM7erDzssa3Fx8B
+	 rxHRY+UhSYZjUxn+MgyDUGzHqPBf7DIS2+9n2BX6DogXsBakeZgX3CVQ6HNVmQJ2H9
+	 yg/6H+xw9ZzE5Sxgpwj4QToZs1eY5dOaaUEd2NWIZNm3z+/fcmPObmj+mQtJQzz4e3
+	 leKlh4ZGTJMSOlFYXtUASBH4/14g80J141xiKM29JjkRFxnMLfX5eKDJcXmKTbLqrx
+	 cYW5Fi/ic4yUA==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so7916445a12.2
+        for <loongarch@lists.linux.dev>; Wed, 14 Feb 2024 05:03:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUjx4C4S9Hn02TZxahj3R5PKzy2fQyuXTCpheiKgXu2wKldCAM1QV49TCLmy63TDJGxLccXsnk4rhishTR2MUkiNmvG6U2B9+Et
+X-Gm-Message-State: AOJu0YwoPuCe2pg2Pzz4tZ4+AWsIalI85p6zOywcdm2IVRkUzRavR6Hy
+	c6EdnR7WrzO0LhUs7OZ4ouzHQ48/FNB1n29qLbM0lP4YoIyPvSDXZND9B84KfdHuPxnwha8jq9u
+	3ubCE7zgLrkYfxOYKwfW0x5/Qe6Y=
+X-Google-Smtp-Source: AGHT+IGDqSWASlPOhhqmPfhR917mdVVEr1HDL41oniwRUbx8hEYlWBy0XN5Ku7zm3JoyjDeFMN3Gw5snyzzzzutcjwg=
+X-Received: by 2002:a05:6402:514f:b0:562:9f3:afeb with SMTP id
+ n15-20020a056402514f00b0056209f3afebmr1987648edd.20.1707915832828; Wed, 14
+ Feb 2024 05:03:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com> <1707524971-146908-2-git-send-email-quic_obabatun@quicinc.com>
+In-Reply-To: <1707524971-146908-2-git-send-email-quic_obabatun@quicinc.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 14 Feb 2024 21:03:49 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5f5e-cCaX7Gr20oG8F-aywJcosLn4ajxx2SQWoB8JtSA@mail.gmail.com>
+Message-ID: <CAAhV-H5f5e-cCaX7Gr20oG8F-aywJcosLn4ajxx2SQWoB8JtSA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] loongarch: Call arch_mem_init() before
+ platform_init() in the init sequence
+To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com, 
+	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, 
+	robh+dt@kernel.org, frowand.list@gmail.com, linux-openrisc@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-sh@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: WANG Xuerui <git@xen0n.name>
+Hi, Oreoluwa,
 
-All the checks currently done in kvm_check_cpucfg can be realized with
-early returns, so just do that to avoid extra cognitive burden related
-to the return value handling.
+On Sat, Feb 10, 2024 at 8:29=E2=80=AFAM Oreoluwa Babatunde
+<quic_obabatun@quicinc.com> wrote:
+>
+> The platform_init() function which is called during device bootup
+> contains a few calls to memblock_alloc().
+> This is an issue because these allocations are done before reserved
+> memory regions are set aside in arch_mem_init().
+> This means that there is a possibility for memblock to allocate memory
+> from any of the reserved memory regions.
+>
+> Hence, move the call to arch_mem_init() to be earlier in the init
+> sequence so that all reserved memory is set aside before any allocations
+> are made with memblock.
+>
+> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+> ---
+>  arch/loongarch/kernel/setup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
+c
+> index edf2bba..66c307c 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -597,8 +597,8 @@ void __init setup_arch(char **cmdline_p)
+>         parse_early_param();
+>         reserve_initrd_mem();
+>
+> -       platform_init();
+>         arch_mem_init(cmdline_p);
+> +       platform_init();
+Thank you for your patch, but I think we cannot simply exchange their
+order. If I'm right, you try to move all memblock_reserve() as early
+as possible, but both arch_mem_init() and platform_init() call
+memblock_reserve(), we should do a complete refactor for this. And
+since it works with the existing order, we can simply keep it as is
+now.
 
-The default branch is unreachable because of the earlier validation by
-_kvm_get_cpucfg_mask, so mark it as such too to make things clearer.
+Huacai
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/kvm/vcpu.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
-
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index e973500611b4..9e108ffaba30 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -339,24 +339,23 @@ static int kvm_check_cpucfg(int id, u64 val)
- 		/* CPUCFG2 features checking */
- 		if (val & ~mask)
- 			/* The unsupported features should not be set */
--			ret = -EINVAL;
--		else if (!(val & CPUCFG2_LLFTP))
-+			return -EINVAL;
-+		if (!(val & CPUCFG2_LLFTP))
- 			/* The LLFTP must be set, as guest must has a constant timer */
--			ret = -EINVAL;
--		else if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
-+			return -EINVAL;
-+		if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
- 			/* Single and double float point must both be set when enable FP */
--			ret = -EINVAL;
--		else if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
-+			return -EINVAL;
-+		if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
- 			/* FP should be set when enable LSX */
--			ret = -EINVAL;
--		else if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
-+			return -EINVAL;
-+		if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
- 			/* LSX, FP should be set when enable LASX, and FP has been checked before. */
--			ret = -EINVAL;
--		break;
-+			return -EINVAL;
-+		return 0;
- 	default:
--		break;
-+		unreachable();
- 	}
--	return ret;
- }
- 
- static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
--- 
-2.43.0
-
+>
+>         resource_init();
+>  #ifdef CONFIG_SMP
+> --
