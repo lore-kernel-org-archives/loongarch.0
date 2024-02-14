@@ -1,110 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E15980C02;
-	Tue, 13 Feb 2024 00:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B50171A6
+	for <loongarch@lists.linux.dev>; Wed, 14 Feb 2024 10:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783787; cv=none; b=A/5bm5UicjXS/9F8VCn8RPBTmuBIuvy4AwQJOjlDKOZ3Z/fHdZgQ69nNzNL1V3obZ766L/tOtq8PK51as20NCPtdvfVjDlx1ZMPJGrTPzjH3veCMJl7v4Mw5uJOA3gk8xfeZRI1HK0Cf1OcQDBauJsKe9jz0AZCGN2s9C/yPl+A=
+	t=1707905775; cv=none; b=G5pezOX5J2zQCro+/9qvlH9DUG6qre8EbEbGdews32Zt7cFNy9rDiqAvvGybIL1gaBQhXIY0Kaj8SOARFFjFqxYQS17lqeQioFRHOFxU90ffcCcEFxcqPkOG+3XniaSQS+JcIY6TWnpZp3XQ9lYmauvYYQ8Tboml9uCqZF2AYrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783787; c=relaxed/simple;
-	bh=c1l0pSe41YUkhs2Tw6L2wnUWVrWtQcjCg6uEUhLP0/A=;
+	s=arc-20240116; t=1707905775; c=relaxed/simple;
+	bh=eTiNyXEgBPCIo0Ta8sYgjRV8p1Xz0hDcVMygIqs3U3E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GIJidwcgwiAkL8nxm6bN+tNn9O4ZDTxSTmFfi3RM5dVj3fz5yBZ6BrsxGETU62mhR+xhN3Lf5j7rZoQ+Gx6fDHUrDRdcnHSixlV2sHWu+g9xvsiqiHtLg9uW5Uzjt+Qz7qNWvNIAs5g5fcuL9M8I9sfZzLXiqZ3lfRSxhWoV/gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fhg7r6hl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OtAIsSbmg4lb9G+2ttwya5/8A9AII6LexmUscBkJc4V+47GZG5sKhJrcMnWTMM2LNlXZ9RxmizQQwAZWhoGq/aR5AZKTr3CtHr2q8jSmxLZSRkrsfImh/lQMcLPSYyYSh3cociM706EII+F9tA0zDEzQBHtZakKAt7T0nEjf+mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=GlwHXq5K; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fhg7r6hl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72753C43390;
-	Tue, 13 Feb 2024 00:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707783786;
-	bh=c1l0pSe41YUkhs2Tw6L2wnUWVrWtQcjCg6uEUhLP0/A=;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="GlwHXq5K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1707905769; bh=eTiNyXEgBPCIo0Ta8sYgjRV8p1Xz0hDcVMygIqs3U3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Fhg7r6hlC1oTIEyC6PBpgKDfpf9thb2ADYMKSaGZ2HDejrctDv+zm4ps3jiScPVl/
-	 qMmXoRfc3soMyobx6cD5Gu3jlIR6Uva5a9TuFkrqH7/v2t9GZspOvejbzq8RoR8nvu
-	 KRqGH704uqx3jLHFMMqqHreFHdkO8ZDifIrBkyriAEmkmPIRhkQXlqq2BVeMVJ+5hd
-	 9vexgk0wPAZZCuDBN1heMTkFMz8ys64ApFPY5qBsQd26f8yDVFFB1BrMy8EaVWDVkh
-	 18S7/0u+bMKyYl45T8d2AtdEh36ck/vKKlwilWmEoUZZuxxOtZthJUHErXYvU7z0NE
-	 oFqlM4jRvicnA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 21/28] LoongArch: Select HAVE_ARCH_SECCOMP to use the common SECCOMP menu
-Date: Mon, 12 Feb 2024 19:22:19 -0500
-Message-ID: <20240213002235.671934-21-sashal@kernel.org>
+	b=GlwHXq5KtlJN3WjzDugZTkyJEy5LHE+ExYx073zzj48EYrqsL7zgxjG0jH/CXdUWu
+	 lHC5BxTxuznnRWa29bxkSyDY9QBTn3MlyULKk31DvSXmHgOaImFsYVGo+Dmwyixr+h
+	 HhHqPrIQO+kYbav4MpoP9qcNYRLyGihzdZ4frvdI=
+Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:5531:eef6:1274:cebe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9843160562;
+	Wed, 14 Feb 2024 18:16:09 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH for-6.8 5/5] KVM: LoongArch: Clean up comments of _kvm_get_cpucfg_mask and kvm_check_cpucfg
+Date: Wed, 14 Feb 2024 18:15:57 +0800
+Message-ID: <20240214101557.2900512-6-kernel@xen0n.name>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240213002235.671934-1-sashal@kernel.org>
-References: <20240213002235.671934-1-sashal@kernel.org>
+In-Reply-To: <20240214101557.2900512-1-kernel@xen0n.name>
+References: <20240214101557.2900512-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.77
 Content-Transfer-Encoding: 8bit
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: WANG Xuerui <git@xen0n.name>
 
-[ Upstream commit 6b79ecd084c99b31c8b4d0beda08893716d5558e ]
+Remove comments that are merely restatement of the code nearby, and
+paraphrase the rest so they read more natural for English speakers (that
+lack understanding of Chinese grammar). No functional changes.
 
-LoongArch missed the refactoring made by commit 282a181b1a0d ("seccomp:
-Move config option SECCOMP to arch/Kconfig") because LoongArch was not
-mainlined at that time.
-
-The 'depends on PROC_FS' statement is stale as described in that commit.
-Select HAVE_ARCH_SECCOMP, and remove the duplicated config entry.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/Kconfig | 18 +-----------------
- 1 file changed, 1 insertion(+), 17 deletions(-)
+ arch/loongarch/kvm/vcpu.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index b1b4396dbac6..fa3171f56327 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -81,6 +81,7 @@ config LOONGARCH
- 	select GPIOLIB
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_MMAP_RND_BITS if MMU
-+	select HAVE_ARCH_SECCOMP
- 	select HAVE_ARCH_SECCOMP_FILTER
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
-@@ -462,23 +463,6 @@ config PHYSICAL_START
- 	  specified in the "crashkernel=YM@XM" command line boot parameter
- 	  passed to the panic-ed kernel).
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 9e108ffaba30..ff51d6ba59aa 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -302,20 +302,14 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ {
+ 	switch (id) {
+ 	case 2:
+-		/* Return CPUCFG2 features which have been supported by KVM */
++		/* CPUCFG2 features unconditionally supported by KVM */
+ 		*v = CPUCFG2_FP     | CPUCFG2_FPSP  | CPUCFG2_FPDP     |
+ 		     CPUCFG2_FPVERS | CPUCFG2_LLFTP | CPUCFG2_LLFTPREV |
+ 		     CPUCFG2_LAM;
+-		/*
+-		 * If LSX is supported by CPU, it is also supported by KVM,
+-		 * as we implement it.
+-		 */
++		/* If LSX is supported by the host, then it is also supported by KVM */
+ 		if (cpu_has_lsx)
+ 			*v |= CPUCFG2_LSX;
+-		/*
+-		 * if LASX is supported by CPU, it is also supported by KVM,
+-		 * as we implement it.
+-		 */
++		/* Same with LASX */
+ 		if (cpu_has_lasx)
+ 			*v |= CPUCFG2_LASX;
  
--config SECCOMP
--	bool "Enable seccomp to safely compute untrusted bytecode"
--	depends on PROC_FS
--	default y
--	help
--	  This kernel feature is useful for number crunching applications
--	  that may need to compute untrusted bytecode during their
--	  execution. By using pipes or other transports made available to
--	  the process as file descriptors supporting the read/write
--	  syscalls, it's possible to isolate those applications in
--	  their own address space using seccomp. Once seccomp is
--	  enabled via /proc/<pid>/seccomp, it cannot be disabled
--	  and the task is only allowed to execute a few safe syscalls
--	  defined by each seccomp mode.
--
--	  If unsure, say Y. Only embedded should say N here.
--
- endmenu
+@@ -336,21 +330,23 @@ static int kvm_check_cpucfg(int id, u64 val)
  
- config ARCH_SELECT_MEMORY_MODEL
+ 	switch (id) {
+ 	case 2:
+-		/* CPUCFG2 features checking */
+ 		if (val & ~mask)
+-			/* The unsupported features should not be set */
++			/* Unsupported features should not be set */
+ 			return -EINVAL;
+ 		if (!(val & CPUCFG2_LLFTP))
+-			/* The LLFTP must be set, as guest must has a constant timer */
++			/* Guests must have a constant timer */
+ 			return -EINVAL;
+ 		if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
+-			/* Single and double float point must both be set when enable FP */
++			/* Single and double float point must both be set when FP is enabled */
+ 			return -EINVAL;
+ 		if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
+-			/* FP should be set when enable LSX */
++			/* LSX is architecturally defined to imply FP */
+ 			return -EINVAL;
+ 		if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
+-			/* LSX, FP should be set when enable LASX, and FP has been checked before. */
++			/*
++			 * LASX is architecturally defined to imply LSX and FP
++			 * FP is checked just above
++			 */
+ 			return -EINVAL;
+ 		return 0;
+ 	default:
 -- 
 2.43.0
 
