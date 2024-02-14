@@ -1,33 +1,33 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066025FF03
-	for <loongarch@lists.linux.dev>; Wed, 14 Feb 2024 16:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBEB5FF0B
+	for <loongarch@lists.linux.dev>; Wed, 14 Feb 2024 16:34:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707928447; cv=none; b=TkIwmLxSrN9OLxbjJclpDWY4jOP6b/9Fq56lEgPqgkaXth3/i9ZNlaIhxfM542z5wOrNoJ+UuCa56Q5pgAl/44kmwLvH32tuU131t9R5HXd2FhKl1JASyVbLoInwc6P8K+SvHrzTrTPuC2/3pe0tgOT5dZaiyW78zyH3bt4Jnvc=
+	t=1707928447; cv=none; b=KWfOs/UYtXmkZnwtnCTxy/uLYo92eytV2aDb4v507fNd8JYp0ZURHOhssZBRPhqHP6a5DWSYLs1yKlxtSoVh+h2SXAcz32uMySMFYk1UOi0u5FoK91CDtEi9GTNuWFygEAVpksq72aZYKg8pvZ1LtV6ZUEefFg0kKMMFP2nn5U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707928447; c=relaxed/simple;
-	bh=qUTm7/R3ovfw0MXxK4QrZKdILlZUuBNM9kI6bR5Fxzc=;
+	bh=PcrXxYoGFClCitVwkysGKdmr3Nu5wkP9upQVqRlzsuo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ivei1IOIwjwKAyITzNzRw4fDn6odhXQLq9+DZLX5yFXjTDEksF85Qh62GnSgzRz2W5EixYen/IC+QjjgzEUYkunxOlN6UF24r0zZXwJ0ZfA4B2RLmsnGn1Qm/TFbK9ixe0+3l8TtzAKkuSO4+2ryKYJtQ2u/b+QSM5FxuFp9XA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=ZNU0AkXX; arc=none smtp.client-ip=115.28.160.31
+	 MIME-Version; b=Eghpafef3CtFQyJfbRNsJIbrCYURjHReBRhK/0CyMCujMS5XvJN3Rz5lgLTi3Vn+d8fqQe7wNhM8aQ3U6wT+CN88voR2oHHzBsyQ6K8qx5gXrU+TzPmgzVh0BlRUJZT+CFMswx9yfhTdX9Plht53xOiCMApOad8+ymKsUkWCJok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=Jnf8OFkq; arc=none smtp.client-ip=115.28.160.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="ZNU0AkXX"
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="Jnf8OFkq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1707928441; bh=qUTm7/R3ovfw0MXxK4QrZKdILlZUuBNM9kI6bR5Fxzc=;
+	t=1707928443; bh=PcrXxYoGFClCitVwkysGKdmr3Nu5wkP9upQVqRlzsuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZNU0AkXX04CwM3rMQCCubKT7skrrj0VQW66Is5+V1MQyNxnY5LDUUe1L4voIFJ1vH
-	 NoEbvYoF9cKwr6ofnBvYlg2hkbMBUnEsHOxaDuSohruYvUH45ZJarDyHMElfK6rli4
-	 yTIfRvmdTBaROi9uTRmpVLZnSkX14DLrLQfnty54=
+	b=Jnf8OFkqtVlmQbPloTxNCJMJsQq5QNPAnVRqPabXSB43Whlxp1YmtdU/jbD4S+vkl
+	 HrAa37q3eBKxbJD2mOYrm7x3gELhFslp8k1/Mb6FI5uP7dUC5jAGRt4WnJ1Zu3JE05
+	 sU06Y5IQ5LoRTkJoOE8X8heQBpWmokFLBM0m74xw=
 Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:42e8:c06f:a0dc:12f8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 90E38601A7;
-	Thu, 15 Feb 2024 00:34:01 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 995CA60562;
+	Thu, 15 Feb 2024 00:34:03 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -37,9 +37,9 @@ Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH for-6.8 v2 1/4] KVM: LoongArch: Fix input value checking of _kvm_get_cpucfg
-Date: Thu, 15 Feb 2024 00:33:54 +0800
-Message-ID: <20240214163358.2913090-2-kernel@xen0n.name>
+Subject: [PATCH for-6.8 v2 4/4] KVM: LoongArch: Streamline kvm_check_cpucfg and improve comments
+Date: Thu, 15 Feb 2024 00:33:57 +0800
+Message-ID: <20240214163358.2913090-5-kernel@xen0n.name>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240214163358.2913090-1-kernel@xen0n.name>
 References: <20240214163358.2913090-1-kernel@xen0n.name>
@@ -53,52 +53,100 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-The range check for the CPUCFG ID is wrong (should have been a ||
-instead of &&), and pointless, because the default case a few lines
-below already serves to deny all unhandled cases.
+All the checks currently done in kvm_check_cpucfg can be realized with
+early returns, so just do that to avoid extra cognitive burden related
+to the return value handling.
 
-Furthermore, the juggling of the temp return value is unnecessary,
-because it is semantically equivalent and more readable to just
-return at every switch case's end. This is done too to avoid potential
-bugs in the future related to the unwanted complexity.
+The default branch should be unreachable because of the earlier
+validation by _kvm_get_cpucfg_mask, so we warn in case it is actually
+reached and return -EINVAL in that case too.
 
-Fixes: db1ecca22edf ("LoongArch: KVM: Add LSX (128bit SIMD) support")
+While at it, clean up comments of _kvm_get_cpucfg_mask and
+kvm_check_cpucfg, by removing comments that are merely restatement of
+the code nearby, and paraphrasing the rest so they read more natural
+for English speakers (that likely are not familiar with the actual
+Chinese-influenced grammar).
+
+No functional changes intended.
+
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kvm/vcpu.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ arch/loongarch/kvm/vcpu.c | 45 +++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 25 deletions(-)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 27701991886d..c4a592623da6 100644
+index e973500611b4..b467a44e670a 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -300,11 +300,6 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
- 
- static int _kvm_get_cpucfg(int id, u64 *v)
+@@ -302,20 +302,16 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
  {
--	int ret = 0;
--
--	if (id < 0 && id >= KVM_MAX_CPUCFG_REGS)
--		return -EINVAL;
--
  	switch (id) {
  	case 2:
- 		/* Return CPUCFG2 features which have been supported by KVM */
-@@ -324,12 +319,10 @@ static int _kvm_get_cpucfg(int id, u64 *v)
+-		/* Return CPUCFG2 features which have been supported by KVM */
++		/* CPUCFG2 features unconditionally supported by KVM */
+ 		*v = CPUCFG2_FP     | CPUCFG2_FPSP  | CPUCFG2_FPDP     |
+ 		     CPUCFG2_FPVERS | CPUCFG2_LLFTP | CPUCFG2_LLFTPREV |
+ 		     CPUCFG2_LAM;
+ 		/*
+-		 * If LSX is supported by CPU, it is also supported by KVM,
+-		 * as we implement it.
++		 * For the ISA extensions listed below, if one is supported
++		 * by the host, then it is also supported by KVM.
+ 		 */
+ 		if (cpu_has_lsx)
+ 			*v |= CPUCFG2_LSX;
+-		/*
+-		 * if LASX is supported by CPU, it is also supported by KVM,
+-		 * as we implement it.
+-		 */
  		if (cpu_has_lasx)
  			*v |= CPUCFG2_LASX;
  
+@@ -336,27 +332,26 @@ static int kvm_check_cpucfg(int id, u64 val)
+ 
+ 	switch (id) {
+ 	case 2:
+-		/* CPUCFG2 features checking */
+ 		if (val & ~mask)
+-			/* The unsupported features should not be set */
+-			ret = -EINVAL;
+-		else if (!(val & CPUCFG2_LLFTP))
+-			/* The LLFTP must be set, as guest must has a constant timer */
+-			ret = -EINVAL;
+-		else if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
+-			/* Single and double float point must both be set when enable FP */
+-			ret = -EINVAL;
+-		else if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
+-			/* FP should be set when enable LSX */
+-			ret = -EINVAL;
+-		else if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
+-			/* LSX, FP should be set when enable LASX, and FP has been checked before. */
+-			ret = -EINVAL;
 -		break;
++			/* Unsupported features should not be set */
++			return -EINVAL;
++		if (!(val & CPUCFG2_LLFTP))
++			/* Guests must have a constant timer */
++			return -EINVAL;
++		if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
++			/* Single and double float point must both be set when FP is enabled */
++			return -EINVAL;
++		if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
++			/* LSX architecturally implies FP but val does not satisfy that */
++			return -EINVAL;
++		if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
++			/* LASX architecturally implies LSX and FP but val does not satisfy that */
++			return -EINVAL;
 +		return 0;
  	default:
--		ret = -EINVAL;
 -		break;
++		WARN_ON_ONCE(1);
 +		return -EINVAL;
  	}
 -	return ret;
  }
  
- static int kvm_check_cpucfg(int id, u64 val)
+ static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
 -- 
 2.43.0
 
