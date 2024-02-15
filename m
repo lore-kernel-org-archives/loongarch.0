@@ -1,166 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A52D1B940
-	for <loongarch@lists.linux.dev>; Thu, 15 Feb 2024 09:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3618F18651;
+	Thu, 15 Feb 2024 10:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707989871; cv=none; b=mqBphtoaNygibm+xEDSm0tggU5OOE9enhFCjwefhiEK48yxYc5WcJ3UXjXR2DigBdfdRZgkggEWULNnPreMQNg3AkjOrK2zkjbQFMbz/nOvLbi0GAPMd6ep6ertJavyhvtMwu1N7/G93W4x1XHjI2XX3MaaFIz4jSATauGPHyE0=
+	t=1707991880; cv=none; b=Y5tZURc/NxGG7sKmg8zMUHFQznINMJlVuWKG2uXAsRzbU7vRC+a4atgyB+e6bO+2D8h8AWGDJaze/4wvZk7BkzTfW7hY6rq6MHQICR2iOmHDk3IG4Bl7MQahA2ZR2ulKE1+ITEElxHHM8+NikdUn42Qly2F9HNK7whlMZPu6ntM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707989871; c=relaxed/simple;
-	bh=XWzXYMIAl5du5PxNXpMtWrx/xUd9S1UtlNgDsdvpVYs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mT/GSWMgPusdLgE/4W42WfK9/qHWfhKGRVD1WVeGXE9wx3BXoSjNN5VWl5XWa1fuiL38HNsdioCVKZKCWzV7jB702PMCj+KhP9OZ+t+zUHplwVTr1jc5RxWAZoS+p4BzjHtzc8HYfs9Kc6Tp93SN8fHIF8CO7RFrKVu67sTgNpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tqbcpMwt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707991880; c=relaxed/simple;
+	bh=xW+SMn0yzEP/atgRxvcp9tLl5suSkW1RNJRYWpnVzMw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=evIdEcEJWOsMfS5pcffuz/4WxaBspfrhk+T3T7bg/RubsFJ+qA8fRZs1oxgpFZSby1iUNNYVgJRpDwYGB4KkoPw/QM8NTBKpd9Ll1Jx0/2taa49NUZNKBRrVMuWwP7pPMuG3HVfdkrGa/NksjYgaft85mKcKa9S/FTT6lzBD7DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=D8rhLhfm; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tqbcpMwt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B21E0C433A6
-	for <loongarch@lists.linux.dev>; Thu, 15 Feb 2024 09:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707989870;
-	bh=XWzXYMIAl5du5PxNXpMtWrx/xUd9S1UtlNgDsdvpVYs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tqbcpMwt+RJK0bT7zP5Thwu2cDEM//NkD7FkrqHiee0uQahAhGkG2bKaJHrDnrOkM
-	 /FVOdoC9PgkgNJ2liE5LmZoTTyQJ+S8LFWvEtyHL6RmenbCdbr6kBiHg+N2SzDWGdS
-	 PoQ4kO/UbSgPGgUUDW9MgcCl1rL+6AVaYsCjvLL9GZjGqzf8gVZYtkV4T7LTC4/PUQ
-	 3D2iXUaGlspgYCOy84t5gcugYZLsxQ9ZU/XJLWgaEQu0Ayjkn6NlG+M2EiP84niTsW
-	 egnLzkuT+sXI/5tGJUhQG/+2nKlqSSaYJCgsT8FtO0+8+/84DFpidNICbscDf7n1G5
-	 SDXRlw6yKlQ5w==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5639ffbcc10so793114a12.0
-        for <loongarch@lists.linux.dev>; Thu, 15 Feb 2024 01:37:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU1gczcyGnZfhygATf0f1kYyJsIJ4qQrhJV3okCjwWkXigp4R3vDQTtOvmMyU+KbH7ESIEmgO1r9YeH49WvPcC8whOvhcw+ZW8q
-X-Gm-Message-State: AOJu0YwT2KZdOVwyczBwI7ji8ip5Je5OdyueackOyVfY4eMajAnBVjys
-	AaRwuOuBxK6fQQrxjCvE8VZL/2Q5z8dzzrxz0ogQu00iAcgS9HZd6k0/C+MLcwZU7Pwl8fppFCa
-	zz2WaIFfpraN2oiJ6vwOi7xtaHlg=
-X-Google-Smtp-Source: AGHT+IEmBloe5542STqKSjMgCQLk/2kmMzo0mUwVRqwPEAS+jeamlb9AXP+9iombv2qJdh1ZY+MCjKhV36aat8bfIJI=
-X-Received: by 2002:aa7:cd46:0:b0:561:f211:fcdb with SMTP id
- v6-20020aa7cd46000000b00561f211fcdbmr871927edw.1.1707989869133; Thu, 15 Feb
- 2024 01:37:49 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="D8rhLhfm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1707991875; bh=xW+SMn0yzEP/atgRxvcp9tLl5suSkW1RNJRYWpnVzMw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=D8rhLhfmUsPVebdqxjmKjA3kZ3+hs01T1ZODKFHrBEuL4KR0WjE5tXdkjPjXvRuGC
+	 f2gVDGHZAr8bLZnWPJ8TFOcxDgRaNTPVeZZ+rtAJ04TTcR6/DMpX+OXJFmodbBg79o
+	 /1mtIiq5IregwWfi0EnZt1u/F/zuZWlae+14ueb0=
+Received: from [28.0.0.1] (unknown [49.93.119.4])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0960E60114;
+	Thu, 15 Feb 2024 18:11:14 +0800 (CST)
+Message-ID: <0f4d83e2-bff9-49d9-8066-9f194ce96306@xen0n.name>
+Date: Thu, 15 Feb 2024 18:11:14 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com>
- <1707524971-146908-2-git-send-email-quic_obabatun@quicinc.com>
- <CAAhV-H5f5e-cCaX7Gr20oG8F-aywJcosLn4ajxx2SQWoB8JtSA@mail.gmail.com> <03c2c48d-d05f-4906-b63b-711c94133489@quicinc.com>
-In-Reply-To: <03c2c48d-d05f-4906-b63b-711c94133489@quicinc.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 15 Feb 2024 17:37:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7LjadN99OAdpX4OxU-bcjVC45iUwrzTfQz28UMc0K0JQ@mail.gmail.com>
-Message-ID: <CAAhV-H7LjadN99OAdpX4OxU-bcjVC45iUwrzTfQz28UMc0K0JQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] loongarch: Call arch_mem_init() before
- platform_init() in the init sequence
-To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com, 
-	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, 
-	robh+dt@kernel.org, frowand.list@gmail.com, linux-openrisc@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-sh@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/6] LoongArch: Add pv ipi support on LoongArch VM
+Content-Language: en-US
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org
+References: <20240201031950.3225626-1-maobibo@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20240201031950.3225626-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi, Oreoluwa,
+Hi,
 
-On Thu, Feb 15, 2024 at 5:31=E2=80=AFAM Oreoluwa Babatunde
-<quic_obabatun@quicinc.com> wrote:
+On 2/1/24 11:19, Bibo Mao wrote:
+> [snip]
 >
->
-> On 2/14/2024 5:03 AM, Huacai Chen wrote:
-> > Hi, Oreoluwa,
-> >
-> > On Sat, Feb 10, 2024 at 8:29=E2=80=AFAM Oreoluwa Babatunde
-> > <quic_obabatun@quicinc.com> wrote:
-> >> The platform_init() function which is called during device bootup
-> >> contains a few calls to memblock_alloc().
-> >> This is an issue because these allocations are done before reserved
-> >> memory regions are set aside in arch_mem_init().
-> >> This means that there is a possibility for memblock to allocate memory
-> >> from any of the reserved memory regions.
-> >>
-> >> Hence, move the call to arch_mem_init() to be earlier in the init
-> >> sequence so that all reserved memory is set aside before any allocatio=
-ns
-> >> are made with memblock.
-> >>
-> >> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-> >> ---
-> >>  arch/loongarch/kernel/setup.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/set=
-up.c
-> >> index edf2bba..66c307c 100644
-> >> --- a/arch/loongarch/kernel/setup.c
-> >> +++ b/arch/loongarch/kernel/setup.c
-> >> @@ -597,8 +597,8 @@ void __init setup_arch(char **cmdline_p)
-> >>         parse_early_param();
-> >>         reserve_initrd_mem();
-> >>
-> >> -       platform_init();
-> >>         arch_mem_init(cmdline_p);
-> >> +       platform_init();
-> > Thank you for your patch, but I think we cannot simply exchange their
-> > order. If I'm right, you try to move all memblock_reserve() as early
-> > as possible, but both arch_mem_init() and platform_init() call
-> > memblock_reserve(), we should do a complete refactor for this. And
-> > since it works with the existing order, we can simply keep it as is
-> > now.
-> >
-> > Huacai
-> Hi Huacai,
->
-> Thank you for your response!
->
-> I'm not trying to move all memblock_reserve() to be as early as possible,
-> I'm trying to move the call to early_init_fdt_scan_reserved_mem() to be
-> as early as possible. This is the function that is used to set aside all =
-the
-> reserved memory regions that are meant for certain devices/drivers.
->
-> The reserved memory regions I am referring to are explicitly defined in
-> the DT. These regions are set aside so that the system will have either
-> limited access or no access to them at all.
-> Some of these regions are also defined with a property called no-map
-> which tells the system not to create a memory mapping for them.
-> https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/re=
-served-memory/reserved-memory.yaml#L79
->
-> Hence, setting aside these memory regions should take priority and should
-> be done first before any memblock allocations are done so that the system
-> does not  unknowingly allocate memory from a region that is meant to be
-> reserved for a device/driver.
->
-> Eg:
->     unflatten_and_copy_device_tree() eventually calls memblock_alloc():
->     https://elixir.bootlin.com/linux/latest/source/drivers/of/fdt.c#L1264
->
->     Since unflatten_and_copy_device_tree() is called in platform_init(), =
-this
->     allocation is done before we are able to set aside any of the reserve=
-d
->     memory regions from the DT which is supposed to be done by
->     early_init_fdt_scan_reserved_mem() in the arch_mem_init() function.
->
->     Hence, it is possible for unflatten_and_copy_device_tree() to allocat=
-e
->     memory from a region that is meant to be set aside for a device/drive=
-r
->     without the system knowing.
->
-> This can create problems for a device/driver if a region of memory that w=
-as
-> supposed to be set aside for it ends up being allocated for another use c=
-ase
-> by memblock_alloc*().
-OK, then I think the best solution is move
-early_init_fdt_scan_reserved_mem() to before
-unflatten_and_copy_device_tree() in platform_init().
+> Here is the microbenchmarck data with perf bench futex wake case on 3C5000
+> single-way machine, there are 16 cpus on 3C5000 single-way machine, VM
+> has 16 vcpus also. The benchmark data is ms time unit to wakeup 16 threads,
+> the performance is higher if data is smaller.
+> 
+> perf bench futex wake, Wokeup 16 of 16 threads in ms
+> --physical machine--   --VM original--   --VM with pv ipi patch--
+>    0.0176 ms               0.1140 ms            0.0481 ms
+> 
+> ---
+> Change in V4:
+>    1. Modfiy pv ipi hook function name call_func_ipi() and
+> call_func_single_ipi() with send_ipi_mask()/send_ipi_single(), since pv
+> ipi is used for both remote function call and reschedule notification.
+>    2. Refresh changelog.
+> 
+> Change in V3:
+>    1. Add 128 vcpu ipi multicast support like x86
+>    2. Change cpucfg base address from 0x10000000 to 0x40000000, in order
+> to avoid confliction with future hw usage
+>    3. Adjust patch order in this patchset, move patch
+> Refine-ipi-ops-on-LoongArch-platform to the first one.
 
-Huacai
+Sorry for the late reply (and Happy Chinese New Year), and thanks for 
+providing microbenchmark numbers! But it seems the more comprehensive 
+CoreMark results were omitted (that's also absent in v3)? While the 
+changes between v4 and v2 shouldn't be performance-sensitive IMO (I 
+haven't checked carefully though), it could be better to showcase the 
+improvements / non-harmfulness of the changes and make us confident in 
+accepting the changes.
 
->
-> Regards,
->
-> Oreoluwa
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
