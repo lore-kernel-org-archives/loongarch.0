@@ -1,336 +1,102 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49991384B8;
-	Thu, 15 Feb 2024 20:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3DD1B951
+	for <loongarch@lists.linux.dev>; Fri, 16 Feb 2024 08:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708027853; cv=none; b=BCdMH95mAam4SyGz3HasC+e7ZzHYwa2vMvsBJnwjBeJBW38N9hR2pD/i0qhDoS7WalQAEU65VA42sFcRy67gMVk/gAOt9bdNNx7ZsrzrzJ/WkoAKthwzg+vMzIrAg3HDW3klwvsGbacGiOPKq3Zf9PtdwJKV5ixcS7EosnTDhB4=
+	t=1708073914; cv=none; b=RIZKgUXnBh33n7dgnE5u0ksuk0PcRlb8U6MTx9H3MPXUL7xq3DoJzAE2FMlZ/P2Atjfsw/QLLL+lU5cLUz1NG097ovVnjEm/FE2NQBqKGa3viCKRFoD/i08a79uVgROwDPYulrP723PoQimKYjZiBN/WydY+ufPN+SIpJWFBvDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708027853; c=relaxed/simple;
-	bh=KWacMN9bKt8TXc2E1qM1MQU5P2gj1Hsam/+L01L4dKc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TykVS5OdMk5BbnOKWlkH8tz6sZ8dQlTo8yB+EIzNTEWRphLtucsHyWnDM1qTxuOboP+atylSAaJlikSuAPCsWS2UeEAezgZdv0EieRWBT5Dmhpq0cGHPD4lZAGzMVzwn+5yNXcCijn2/09/00TJATWk6STqYrVPivWcPuNm1VV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-59d8455a001so164701eaf.0;
-        Thu, 15 Feb 2024 12:10:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708027851; x=1708632651;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V5QgqQoXz8wizig56vqi0Oac+indEXSPpBlHYNqWGu8=;
-        b=viiHExRX7jqki3Y/k4+8pXgRtmQe4jIIz4WwHOtL4+LSYMM9eCZprfpORAl7RjpUsQ
-         AKH/WU35r0CtLVcQ1BvDsfHYBGkZQJ2269Zr8RSDUK9LNz2mSScLsZngo0LpgDsPauOf
-         /Q5Nc7QNxDCbQVD4FcjVJoX7CxGnZBXLBSXlC/3xfF9cU4HBt95TEUlNCT+DKNlNfTPk
-         Y+Ps3Leev5Fr0KlTLhR7hyztMJp/oV+0hDvPqK1LIQLaD1uUJZdz8RUtX9ep8wMg14ve
-         X7Zf6lrUtyJ7Xf62suxcBZx0f5GNFBelFA0gWSCdJzZAc4prGF7G92EoWz3VZuRaeQih
-         Yp8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWdQWcfFTEMC4zaFYD8JCbUpRhq/B4tSQadEd4P+CguzxlDPxKJiJU/4vdRigSQQcolOpKKda/ApVnaR8R1cI/KatvbNdfKhYyiLoQA/8RbYCbLpj/yXy6W0nEBOoLlYgZu
-X-Gm-Message-State: AOJu0YwFhP+H15g0/xiv8cLJX3Bo5dWaLdssVtkTOvdwEp29jvEqVMp3
-	LjSoaiKDsFgmn8/vdG5XJmNUlbW1OHOyCNC+VR6uIeVL0JyxaYCNQIDEp7TSGtYpHcv5kYo3Q5H
-	DCvC2QlCjySDsAySCRfGYG19ZBoo=
-X-Google-Smtp-Source: AGHT+IHkVX1K8sj+CkxR6/GyZWC/g8VGhJA3m1sRCcpy+7lmARmO8dgH6PnptuwtNDNHiVSlDhhEi0CLuZvIHBcTUt0=
-X-Received: by 2002:a05:6820:134d:b0:59f:881f:9318 with SMTP id
- b13-20020a056820134d00b0059f881f9318mr3192843oow.0.1708027850728; Thu, 15 Feb
- 2024 12:10:50 -0800 (PST)
+	s=arc-20240116; t=1708073914; c=relaxed/simple;
+	bh=6rGzVUEnAIPXFTtTRrlSD4OhQqOoYi3GoHpLdubGYK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aSVuWbdwBCPUHlLXPO7sKbr/WMQ9RXNM337uKgqZvGqlo5r8oVsmZJY1LFfKiZGNYnmZep2Cj+0jb/YXlXhd+enhMpYz13UkfULDojfnZ3/v/bFbb/ed+O4ytX0TlLtB5hAJd+4OTjYmO2jes1jyFcDXDqKr3fyCwJJt6oMmBhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=NLQtBI3X; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="NLQtBI3X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1708073909; bh=6rGzVUEnAIPXFTtTRrlSD4OhQqOoYi3GoHpLdubGYK8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NLQtBI3X1DWM6UJ8hj3z7FZFI5vgib6gb868bu/iQRvEdicp3LOtgbUdzBnGVDqpi
+	 IbwoKZDGgBscy1jAumcWEoUpfVUJlzva0C7PEEVUItMRweNOTTEGFMoyUt5iDiBdmd
+	 WmJd7iSmggXf/bMQruItZCRZ8T5PtqyTSJopcX4s=
+Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:cda4:aa27:b0f6:1748])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2A2E06011B;
+	Fri, 16 Feb 2024 16:58:26 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH for-6.8 v3 0/3] KVM: LoongArch: Fix wrong CPUCFG ID handling
+Date: Fri, 16 Feb 2024 16:58:19 +0800
+Message-ID: <20240216085822.3032984-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk> <E1rVDmP-0027YJ-EW@rmk-PC.armlinux.org.uk>
-In-Reply-To: <E1rVDmP-0027YJ-EW@rmk-PC.armlinux.org.uk>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 15 Feb 2024 21:10:39 +0100
-Message-ID: <CAJZ5v0hY_LXp41WMVPhiLosPe7YVzF38Uz=EhmJqVwqFn==Upw@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 01/15] ACPI: Only enumerate enabled (or functional)
- processor devices
-To: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
-	acpica-devel@lists.linuxfoundation.org, linux-csky@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com, 
-	James Morse <james.morse@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 31, 2024 at 5:49=E2=80=AFPM Russell King <rmk+kernel@armlinux.o=
-rg.uk> wrote:
->
-> From: James Morse <james.morse@arm.com>
->
-> Today the ACPI enumeration code 'visits' all devices that are present.
->
-> This is a problem for arm64, where CPUs are always present, but not
-> always enabled. When a device-check occurs because the firmware-policy
-> has changed and a CPU is now enabled, the following error occurs:
-> | acpi ACPI0007:48: Enumeration failure
->
-> This is ultimately because acpi_dev_ready_for_enumeration() returns
-> true for a device that is not enabled. The ACPI Processor driver
-> will not register such CPUs as they are not 'decoding their resources'.
->
-> ACPI allows a device to be functional instead of maintaining the
-> present and enabled bit, but we can't simply check the enabled bit
-> for all devices since firmware can be buggy.
->
-> If ACPI indicates that the device is present and enabled, then all well
-> and good, we can enumate it. However, if the device is present and not
-> enabled, then we also check whether the device is a processor device
-> to limit the impact of this new check to just processor devices.
->
-> This avoids enumerating present && functional processor devices that
-> are not enabled.
->
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Co-developed-by: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
-> Changes since RFC v2:
->  * Incorporate comment suggestion by Gavin Shan.
-> Changes since RFC v3:
->  * Fixed "sert" typo.
-> Changes since RFC v3 (smaller series):
->  * Restrict checking the enabled bit to processor devices, update
->    commit comments.
->  * Use Rafael's suggestion in
->    https://lore.kernel.org/r/5760569.DvuYhMxLoT@kreacher
->  * Updated with a fix - see:
->    https://lore.kernel.org/all/Zbe8WQRASx6D6RaG@shell.armlinux.org.uk/
-> ---
->  drivers/acpi/acpi_processor.c | 11 +++++++++
->  drivers/acpi/device_pm.c      |  2 +-
->  drivers/acpi/device_sysfs.c   |  2 +-
->  drivers/acpi/internal.h       |  4 ++-
->  drivers/acpi/property.c       |  2 +-
->  drivers/acpi/scan.c           | 46 +++++++++++++++++++++++++++--------
->  6 files changed, 53 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
-c
-> index 4fe2ef54088c..cf7c1cca69dd 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -626,6 +626,17 @@ static struct acpi_scan_handler processor_handler =
-=3D {
->         },
->  };
->
-> +bool acpi_device_is_processor(const struct acpi_device *adev)
-> +{
-> +       if (adev->device_type =3D=3D ACPI_BUS_TYPE_PROCESSOR)
-> +               return true;
-> +
-> +       if (adev->device_type !=3D ACPI_BUS_TYPE_DEVICE)
-> +               return false;
-> +
-> +       return acpi_scan_check_handler(adev, &processor_handler);
-> +}
-> +
->  static int acpi_processor_container_attach(struct acpi_device *dev,
->                                            const struct acpi_device_id *i=
-d)
->  {
-> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> index 3b4d048c4941..e3c80f3b3b57 100644
-> --- a/drivers/acpi/device_pm.c
-> +++ b/drivers/acpi/device_pm.c
-> @@ -313,7 +313,7 @@ int acpi_bus_init_power(struct acpi_device *device)
->                 return -EINVAL;
->
->         device->power.state =3D ACPI_STATE_UNKNOWN;
-> -       if (!acpi_device_is_present(device)) {
-> +       if (!acpi_dev_ready_for_enumeration(device)) {
->                 device->flags.initialized =3D false;
->                 return -ENXIO;
->         }
-> diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
-> index 23373faa35ec..a0256d2493a7 100644
-> --- a/drivers/acpi/device_sysfs.c
-> +++ b/drivers/acpi/device_sysfs.c
-> @@ -141,7 +141,7 @@ static int create_pnp_modalias(const struct acpi_devi=
-ce *acpi_dev, char *modalia
->         struct acpi_hardware_id *id;
->
->         /* Avoid unnecessarily loading modules for non present devices. *=
-/
-> -       if (!acpi_device_is_present(acpi_dev))
-> +       if (!acpi_dev_ready_for_enumeration(acpi_dev))
->                 return 0;
->
->         /*
-> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-> index 6588525c45ef..1bc8b6db60c5 100644
-> --- a/drivers/acpi/internal.h
-> +++ b/drivers/acpi/internal.h
-> @@ -62,6 +62,8 @@ void acpi_sysfs_add_hotplug_profile(struct acpi_hotplug=
-_profile *hotplug,
->  int acpi_scan_add_handler_with_hotplug(struct acpi_scan_handler *handler=
-,
->                                        const char *hotplug_profile_name);
->  void acpi_scan_hotplug_enabled(struct acpi_hotplug_profile *hotplug, boo=
-l val);
-> +bool acpi_scan_check_handler(const struct acpi_device *adev,
-> +                            struct acpi_scan_handler *handler);
->
->  #ifdef CONFIG_DEBUG_FS
->  extern struct dentry *acpi_debugfs_dir;
-> @@ -121,7 +123,6 @@ int acpi_device_setup_files(struct acpi_device *dev);
->  void acpi_device_remove_files(struct acpi_device *dev);
->  void acpi_device_add_finalize(struct acpi_device *device);
->  void acpi_free_pnp_ids(struct acpi_device_pnp *pnp);
-> -bool acpi_device_is_present(const struct acpi_device *adev);
->  bool acpi_device_is_battery(struct acpi_device *adev);
->  bool acpi_device_is_first_physical_node(struct acpi_device *adev,
->                                         const struct device *dev);
-> @@ -133,6 +134,7 @@ int acpi_bus_register_early_device(int type);
->  const struct acpi_device *acpi_companion_match(const struct device *dev)=
-;
->  int __acpi_device_uevent_modalias(const struct acpi_device *adev,
->                                   struct kobj_uevent_env *env);
-> +bool acpi_device_is_processor(const struct acpi_device *adev);
->
->  /* ---------------------------------------------------------------------=
------
->                                    Power Resource
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index a6ead5204046..9f8d54038770 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -1486,7 +1486,7 @@ static bool acpi_fwnode_device_is_available(const s=
-truct fwnode_handle *fwnode)
->         if (!is_acpi_device_node(fwnode))
->                 return false;
->
-> -       return acpi_device_is_present(to_acpi_device_node(fwnode));
-> +       return acpi_dev_ready_for_enumeration(to_acpi_device_node(fwnode)=
-);
->  }
->
->  static const void *
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index e6ed1ba91e5c..fd2e8b3a5749 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -304,7 +304,7 @@ static int acpi_scan_device_check(struct acpi_device =
-*adev)
->         int error;
->
->         acpi_bus_get_status(adev);
-> -       if (acpi_device_is_present(adev)) {
-> +       if (acpi_dev_ready_for_enumeration(adev)) {
->                 /*
->                  * This function is only called for device objects for wh=
-ich
->                  * matching scan handlers exist.  The only situation in w=
-hich
-> @@ -338,7 +338,7 @@ static int acpi_scan_bus_check(struct acpi_device *ad=
-ev, void *not_used)
->         int error;
->
->         acpi_bus_get_status(adev);
-> -       if (!acpi_device_is_present(adev)) {
-> +       if (!acpi_dev_ready_for_enumeration(adev)) {
->                 acpi_scan_device_not_enumerated(adev);
->                 return 0;
->         }
-> @@ -1917,11 +1917,6 @@ static bool acpi_device_should_be_hidden(acpi_hand=
-le handle)
->         return true;
->  }
->
-> -bool acpi_device_is_present(const struct acpi_device *adev)
-> -{
-> -       return adev->status.present || adev->status.functional;
-> -}
-> -
->  static bool acpi_scan_handler_matching(struct acpi_scan_handler *handler=
-,
->                                        const char *idstr,
->                                        const struct acpi_device_id **matc=
-hid)
-> @@ -1942,6 +1937,18 @@ static bool acpi_scan_handler_matching(struct acpi=
-_scan_handler *handler,
->         return false;
->  }
->
-> +bool acpi_scan_check_handler(const struct acpi_device *adev,
-> +                            struct acpi_scan_handler *handler)
-> +{
-> +       struct acpi_hardware_id *hwid;
-> +
-> +       list_for_each_entry(hwid, &adev->pnp.ids, list)
-> +               if (acpi_scan_handler_matching(handler, hwid->id, NULL))
-> +                       return true;
-> +
-> +       return false;
-> +}
-> +
->  static struct acpi_scan_handler *acpi_scan_match_handler(const char *ids=
-tr,
->                                         const struct acpi_device_id **mat=
-chid)
->  {
-> @@ -2405,16 +2412,35 @@ EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
->   * acpi_dev_ready_for_enumeration - Check if the ACPI device is ready fo=
-r enumeration
->   * @device: Pointer to the &struct acpi_device to check
->   *
-> - * Check if the device is present and has no unmet dependencies.
-> + * Check if the device is functional or enabled and has no unmet depende=
-ncies.
->   *
-> - * Return true if the device is ready for enumeratino. Otherwise, return=
- false.
-> + * Return true if the device is ready for enumeration. Otherwise, return=
- false.
->   */
->  bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
->  {
->         if (device->flags.honor_deps && device->dep_unmet)
->                 return false;
->
-> -       return acpi_device_is_present(device);
-> +       /*
-> +        * ACPI 6.5's 6.3.7 "_STA (Device Status)" allows firmware to ret=
-urn
-> +        * (!present && functional) for certain types of devices that sho=
-uld be
-> +        * enumerated. Note that the enabled bit should not be set unless=
- the
-> +        * present bit is set.
-> +        *
-> +        * However, limit this only to processor devices to reduce possib=
-le
-> +        * regressions with firmware.
-> +        */
-> +       if (!device->status.present)
-> +               return device->status.functional;
-> +
-> +       /*
-> +        * Fast path - if enabled is set, avoid the more expensive test t=
-o
-> +        * check whether this device is a processor.
-> +        */
-> +       if (device->status.enabled)
-> +               return true;
-> +
-> +       return !acpi_device_is_processor(device);
->  }
->  EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
->
-> --
+From: WANG Xuerui <git@xen0n.name>
 
-I can queue this up for 6.9 as it looks like the rest of the series
-will still need some work.  What do you think?
+Hi,
+
+While trying to add loongarch to the Rust kvm-bindings crate, I
+accidentally discovered faulty logic in the handling of CPUCFG IDs
+("leaves" for those more familiar with x86), that could result in
+incorrectly accepting every possible int for the ID; fortunately it is
+6.8 material that hasn't seen a release yet, so a fix is possible.
+
+The first patch contains the fix, while the rest are general
+drive-by refactoring and comment cleanups.
+
+Although it is currently the Chinese holiday season, Huacai told me
+over IM that he's able to test the series and handle the upstreaming, so
+going through the loongarch tree seems to be the way forward for the
+series.
+
+v3 changes:
+
+- Fixed the validation by accepting every CPUCFG IDs from 0 to 20
+  inclusive, instead of only 2; this was a misunderstanding of mine
+  regarding the userland. (currently the only known user, the QEMU
+  target/loongarch KVM code, expects to be able to set all these 21
+  CPUCFG leaves, even though 7~15 are undefined according to the
+  LoongArch reference manual.) This also had the effect of squashing the
+  first 2 patches.
+- Made the _kvm_get_cpucfg_mask return a mask in all valid cases,
+  allowing the mask check to be lifted out of the CPUCFG2 case.
+- Swapped the "LoongArch:" and "KVM:" tags because right now the patches
+  are likely to reach mainline through the loongarch tree, and having
+  the "LoongArch:" prefix first is the convention here.
+
+v2 changes:
+
+- Squashed the v1 patches 4 and 5 according to Huacai's review
+- Reworded comments according to Huacai's suggestion
+- Use WARN_ON_ONCE (instead of BUG) to replace unreachable() for not
+  crashing the kernel (per checkpatch.pl suggestion)
+
+WANG Xuerui (3):
+  LoongArch: KVM: Fix input validation of _kvm_get_cpucfg and
+    kvm_check_cpucfg
+  LoongArch: KVM: Rename _kvm_get_cpucfg to _kvm_get_cpucfg_mask
+  LoongArch: KVM: Streamline kvm_check_cpucfg and improve comments
+
+ arch/loongarch/kvm/vcpu.c | 81 ++++++++++++++++++---------------------
+ 1 file changed, 38 insertions(+), 43 deletions(-)
+
+-- 
+2.43.0
+
