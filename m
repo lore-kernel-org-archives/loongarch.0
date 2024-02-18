@@ -1,252 +1,366 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D25A1468E
-	for <loongarch@lists.linux.dev>; Sun, 18 Feb 2024 06:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3F14F5E3
+	for <loongarch@lists.linux.dev>; Sun, 18 Feb 2024 10:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708237994; cv=none; b=syz1ouq4yUJbJer5esP9wyDhbZnuRBtx0W8yAPGOP6jrcrDhNUg0b875HNxcWRirXDgNGrMMh3eg6yQ7hs/ZLvKrh2LKLZvuJEwKfkvLL5KbP5RnicYLIlLcphP7sCOfjWP6C2cf2teYidiNzv3uIzEeAxO7llQvaBBZypyVxcI=
+	t=1708253726; cv=none; b=dAv8MyWwcOUN6ifaKJpifiqqVjzYztD2m1apR8pmJopRSGvYlWO9NsAAsxhh+6ImdXRS3pDEZIRwV9usN7WNYQyfR0fBdRlbhZQzj09cAk9NAORpQhnwphkeMkc2fnHfsNow0dhdKi/+mzfS9ikG3X8P864Ainl80CqqqwaFKQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708237994; c=relaxed/simple;
-	bh=Ou67CknKNFvkJHA5VHdGs4weGL65WHqLtM05EXx8+gc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lPEJFNdLNJfjqa97Eorv0f/P4yx3C/Pd46enUazO4O1l+gUCY5fOERwXv+eyT35I5lCmnJIFxEWpM6UAdVrKVcVK0xh/3/614BsKMOA6CCMRMFApkypaVVi5wO6sg/h/hZaloF3+sL3o+1URGYoXGSD4PKQzMBxMBLNCGcrwhGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxSPCfpNFlNhIOAA--.38545S3;
-	Sun, 18 Feb 2024 14:33:03 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c6epNFlyos6AA--.18718S2;
-	Sun, 18 Feb 2024 14:33:02 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
+	s=arc-20240116; t=1708253726; c=relaxed/simple;
+	bh=F/YaYPJ8V8wxJoq8iKaAi5wUcntsQ57hZvlfbXqkYog=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nVuNMg+UUKtj+aRZZTC02kLbhsxHXt9SDvNhMU/a2ZdEDDQ2N4GDh4LBfywVq4NENdTK/ugzGEsma+xddptUJj5kvWEGeKnf+nfj5bWxoaWW6taU9pF7AwRIMEhIqzLU5zFfskRSo3Gf1S4AKXMW9CvfiDglksVPCQMFuT705ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4Td2d042xLz9v4H;
+	Sun, 18 Feb 2024 11:55:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id urVXLdsI6EiX; Sun, 18 Feb 2024 11:55:16 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Td2cz2Pmpz9v6V;
+	Sun, 18 Feb 2024 11:55:15 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 46CF68B76D;
+	Sun, 18 Feb 2024 11:55:15 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id rEsvBS4TS8KM; Sun, 18 Feb 2024 11:55:15 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.5])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1AA068B763;
+	Sun, 18 Feb 2024 11:55:13 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Zi Shen Lim <zlim.lnx@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Johan Almbladh <johan.almbladh@anyfinetworks.com>,
+	Paul Burton <paulburton@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Wang YanQing <udknight@gmail.com>,
+	David Ahern <dsahern@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [PATCH v3] LoongArch: KVM: Add software breakpoint support
-Date: Sun, 18 Feb 2024 14:33:02 +0800
-Message-Id: <20240218063302.218019-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
+Subject: [PATCH bpf-next 2/2] bpf: Take return from set_memory_rox() into account with bpf_jit_binary_lock_ro()
+Date: Sun, 18 Feb 2024 11:55:02 +0100
+Message-ID: <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
+References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708253703; l=8856; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=F/YaYPJ8V8wxJoq8iKaAi5wUcntsQ57hZvlfbXqkYog=; b=oU8HiyviiSeGIk0k0GAjj3fQB1TyRBBmCE0BcpDCSwK+KX/qz/F9OdNcuxIcvsLsHSgmSr7v0 ZO0ePFnefIsC4onqydi9thXiXyLzU7MLRwwrlycnNqGsCAnWz/OsqXA
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx_c6epNFlyos6AA--.18718S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Gw43GF1fCw1rWr45tFW8AFc_yoWxuF1DpF
-	9rArs5Gr4rKrZ3C340yr4Dur13Xa93Gr1Iqa42v3ySyF1Yq34rJrWkKr98AFy5Jw4rXa4I
-	q3Z3Kw1YvFn8t3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
 
-When VM runs in kvm mode, system will not exit to host mode if
-executing general software breakpoint instruction such as INSN_BREAK,
-trap exception happens in guest mode rather than host mode. In order to
-debug guest kernel on host side, one mechanism should be used to let vm
-exit to host mode.
+set_memory_rox() can fail, leaving memory unprotected.
 
-Here hypercall instruction with special code is used for software
-breakpoint usage, vm exists to host mode and kvm hypervisor identifies the
-special hypercall code and sets exit_reason with KVM_EXIT_DEBUG, and then
-let qemu handle it.
+Check return and bail out when bpf_jit_binary_lock_ro() returns
+and error.
 
-Idea comes from ppc kvm, one api KVM_REG_LOONGARCH_DEBUG_INST is added to
-get hypercall code. VMM needs get sw breakpoint instruction with this api
-and set the corresponding sw break point for guest kernel.
-
-Since it needs hypercall instruction emulation handling, and it is
-dependent on this patchset:
-https://lore.kernel.org/all/20240201031950.3225626-1-maobibo@loongson.cn/
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
-Changes in v3:
-1. Add api KVM_REG_LOONGARCH_DEBUG_INST to get sw breakpoint instruction
-for vmm.
-2. Check vcpu::guest_debug with value KVM_GUESTDBG_USE_SW_BP only, since
-another value KVM_GUESTDBG_ENABLE will be set if it is not zero.
-
-Changes in v2:
-1. Add checking for hypercall code KVM_HC_SWDBG, it is effective only if
-KVM_GUESTDBG_USE_SW_BP and KVM_GUESTDBG_ENABLE is set.
+Previous patch introduces a dependency on this patch because it modifies bpf_prog_lock_ro(), but they are independant.
+It is possible to apply this patch as standalone by handling trivial conflict with unmodified bpf_prog_lock_ro().
 ---
- arch/loongarch/include/asm/inst.h     |  1 +
- arch/loongarch/include/asm/kvm_host.h |  2 ++
- arch/loongarch/include/asm/kvm_para.h |  2 ++
- arch/loongarch/include/uapi/asm/kvm.h |  4 ++++
- arch/loongarch/kvm/exit.c             | 16 ++++++++++++++--
- arch/loongarch/kvm/vcpu.c             | 13 ++++++++++++-
- arch/loongarch/kvm/vm.c               |  1 +
- 7 files changed, 36 insertions(+), 3 deletions(-)
+ arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
+ arch/arm64/net/bpf_jit_comp.c    | 21 +++++++++++++++------
+ arch/loongarch/net/bpf_jit.c     | 21 +++++++++++++++------
+ arch/mips/net/bpf_jit_comp.c     |  3 ++-
+ arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
+ arch/s390/net/bpf_jit_comp.c     |  6 +++++-
+ arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
+ arch/x86/net/bpf_jit_comp32.c    |  3 +--
+ include/linux/filter.h           |  4 ++--
+ 9 files changed, 64 insertions(+), 33 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index ad120f924905..c3993fd88aba 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -12,6 +12,7 @@
+diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
+index 1d672457d02f..01516f83a95a 100644
+--- a/arch/arm/net/bpf_jit_32.c
++++ b/arch/arm/net/bpf_jit_32.c
+@@ -2222,28 +2222,21 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	/* If building the body of the JITed code fails somehow,
+ 	 * we fall back to the interpretation.
+ 	 */
+-	if (build_body(&ctx) < 0) {
+-		image_ptr = NULL;
+-		bpf_jit_binary_free(header);
+-		prog = orig_prog;
+-		goto out_imms;
+-	}
++	if (build_body(&ctx) < 0)
++		goto out_free;
+ 	build_epilogue(&ctx);
  
- #define INSN_NOP		0x03400000
- #define INSN_BREAK		0x002a0000
-+#define INSN_HVCL		0x002b8000
+ 	/* 3.) Extra pass to validate JITed Code */
+-	if (validate_code(&ctx)) {
+-		image_ptr = NULL;
+-		bpf_jit_binary_free(header);
+-		prog = orig_prog;
+-		goto out_imms;
+-	}
++	if (validate_code(&ctx))
++		goto out_free;
+ 	flush_icache_range((u32)header, (u32)(ctx.target + ctx.idx));
  
- #define ADDR_IMMMASK_LU52ID	0xFFF0000000000000
- #define ADDR_IMMMASK_LU32ID	0x000FFFFF00000000
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 1bf927e2bfac..ef4f1195d9fa 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -31,6 +31,8 @@
+ 	if (bpf_jit_enable > 1)
+ 		/* there are 2 passes here */
+ 		bpf_jit_dump(prog->len, image_size, 2, ctx.target);
  
- #define KVM_HALT_POLL_NS_DEFAULT	500000
+-	bpf_jit_binary_lock_ro(header);
++	if (bpf_jit_binary_lock_ro(header))
++		goto out_free;
+ 	prog->bpf_func = (void *)ctx.target;
+ 	prog->jited = 1;
+ 	prog->jited_len = image_size;
+@@ -2260,5 +2253,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 		bpf_jit_prog_release_other(prog, prog == orig_prog ?
+ 					   tmp : orig_prog);
+ 	return prog;
++
++out_free:
++	image_ptr = NULL;
++	bpf_jit_binary_free(header);
++	prog = orig_prog;
++	goto out_imms;
+ }
  
-+#define KVM_GUESTDBG_VALID_MASK		(KVM_GUESTDBG_ENABLE | \
-+			KVM_GUESTDBG_USE_SW_BP | KVM_GUESTDBG_SINGLESTEP)
- struct kvm_vm_stat {
- 	struct kvm_vm_stat_generic generic;
- 	u64 pages;
-diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-index a25a84e372b9..c44412feabb3 100644
---- a/arch/loongarch/include/asm/kvm_para.h
-+++ b/arch/loongarch/include/asm/kvm_para.h
-@@ -10,8 +10,10 @@
- #define HYPERCALL_CODE(vendor, code)	((vendor << HYPERVISOR_VENDOR_SHIFT) + code)
+diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
+index cfd5434de483..21a901d61aa1 100644
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -1639,16 +1639,18 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	bpf_flush_icache(header, ctx.image + ctx.idx);
  
- #define KVM_HC_CODE_SERVICE		0
-+#define KVM_HC_CODE_SWDBG		1
- #define KVM_HC_SERVICE			HYPERCALL_CODE(HYPERVISOR_KVM, KVM_HC_CODE_SERVICE)
- #define  KVM_HC_FUNC_IPI		1
-+#define KVM_HC_SWDBG			HYPERCALL_CODE(HYPERVISOR_KVM, KVM_HC_CODE_SWDBG)
+ 	if (!prog->is_func || extra_pass) {
++		int err;
++
+ 		if (extra_pass && ctx.idx != jit_data->ctx.idx) {
+ 			pr_err_once("multi-func JIT bug %d != %d\n",
+ 				    ctx.idx, jit_data->ctx.idx);
+-			bpf_jit_binary_free(header);
+-			prog->bpf_func = NULL;
+-			prog->jited = 0;
+-			prog->jited_len = 0;
+-			goto out_off;
++			goto out_free;
++		}
++		err = bpf_jit_binary_lock_ro(header);
++		if (err) {
++			pr_err_once("bpf_jit_binary_lock_ro() returned %d\n", err);
++			goto out_free;
+ 		}
+-		bpf_jit_binary_lock_ro(header);
+ 	} else {
+ 		jit_data->ctx = ctx;
+ 		jit_data->image = image_ptr;
+@@ -1675,6 +1677,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 		bpf_jit_prog_release_other(prog, prog == orig_prog ?
+ 					   tmp : orig_prog);
+ 	return prog;
++
++out_free:
++	bpf_jit_binary_free(header);
++	prog->bpf_func = NULL;
++	prog->jited = 0;
++	prog->jited_len = 0;
++	goto out_off;
+ }
  
- /*
-  * LoongArch hypcall return code
-diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-index 923d0bd38294..4cec8c16013c 100644
---- a/arch/loongarch/include/uapi/asm/kvm.h
-+++ b/arch/loongarch/include/uapi/asm/kvm.h
-@@ -15,10 +15,12 @@
-  */
+ bool bpf_jit_supports_kfunc_call(void)
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index e73323d759d0..aafc5037fd2b 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1294,16 +1294,18 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	flush_icache_range((unsigned long)header, (unsigned long)(ctx.image + ctx.idx));
  
- #define __KVM_HAVE_READONLY_MEM
-+#define __KVM_HAVE_GUEST_DEBUG
+ 	if (!prog->is_func || extra_pass) {
++		int err;
++
+ 		if (extra_pass && ctx.idx != jit_data->ctx.idx) {
+ 			pr_err_once("multi-func JIT bug %d != %d\n",
+ 				    ctx.idx, jit_data->ctx.idx);
+-			bpf_jit_binary_free(header);
+-			prog->bpf_func = NULL;
+-			prog->jited = 0;
+-			prog->jited_len = 0;
+-			goto out_offset;
++			goto out_free;
++		}
++		err = bpf_jit_binary_lock_ro(header);
++		if (err) {
++			pr_err_once("bpf_jit_binary_lock_ro() returned %d\n", err);
++			goto out_free;
+ 		}
+-		bpf_jit_binary_lock_ro(header);
+ 	} else {
+ 		jit_data->ctx = ctx;
+ 		jit_data->image = image_ptr;
+@@ -1334,6 +1336,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	out_offset = -1;
  
- #define KVM_COALESCED_MMIO_PAGE_OFFSET	1
- #define KVM_DIRTY_LOG_PAGE_OFFSET	64
+ 	return prog;
++
++out_free:
++	bpf_jit_binary_free(header);
++	prog->bpf_func = NULL;
++	prog->jited = 0;
++	prog->jited_len = 0;
++	goto out_offset;
+ }
  
-+#define KVM_GUESTDBG_USE_SW_BP		0x00010000
- /*
-  * for KVM_GET_REGS and KVM_SET_REGS
-  */
-@@ -74,6 +76,8 @@ struct kvm_fpu {
+ /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
+diff --git a/arch/mips/net/bpf_jit_comp.c b/arch/mips/net/bpf_jit_comp.c
+index a40d926b6513..e355dfca4400 100644
+--- a/arch/mips/net/bpf_jit_comp.c
++++ b/arch/mips/net/bpf_jit_comp.c
+@@ -1012,7 +1012,8 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	bpf_prog_fill_jited_linfo(prog, &ctx.descriptors[1]);
  
- #define KVM_REG_LOONGARCH_COUNTER	(KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 1)
- #define KVM_REG_LOONGARCH_VCPU_RESET	(KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 2)
-+/* Debugging: Special instruction for software breakpoint */
-+#define KVM_REG_LOONGARCH_DEBUG_INST	(KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 3)
+ 	/* Set as read-only exec and flush instruction cache */
+-	bpf_jit_binary_lock_ro(header);
++	if (bpf_jit_binary_lock_ro(header))
++		goto out_err;
+ 	flush_icache_range((unsigned long)header,
+ 			   (unsigned long)&ctx.target[ctx.jit_index]);
  
- #define LOONGARCH_REG_SHIFT		3
- #define LOONGARCH_REG_64(TYPE, REG)	(TYPE | KVM_REG_SIZE_U64 | (REG << LOONGARCH_REG_SHIFT))
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 189b70bad825..2a79d40ea2b2 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -758,23 +758,35 @@ static int kvm_handle_hypcall(struct kvm_vcpu *vcpu)
- {
- 	larch_inst inst;
- 	unsigned int code;
-+	int ret;
+diff --git a/arch/parisc/net/bpf_jit_core.c b/arch/parisc/net/bpf_jit_core.c
+index d6ee2fd45550..979f45d4d1fb 100644
+--- a/arch/parisc/net/bpf_jit_core.c
++++ b/arch/parisc/net/bpf_jit_core.c
+@@ -167,7 +167,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	bpf_flush_icache(jit_data->header, ctx->insns + ctx->ninsns);
  
- 	inst.word = vcpu->arch.badi;
- 	code = inst.reg0i15_format.immediate;
--	update_pc(&vcpu->arch);
-+	ret = RESUME_GUEST;
- 
- 	switch (code) {
- 	case KVM_HC_SERVICE:
- 		vcpu->stat.hvcl_exits++;
- 		kvm_handle_pv_hcall(vcpu);
- 		break;
-+	case KVM_HC_SWDBG:
-+		/* KVM_HC_SWDBG only in effective when SW_BP is enabled */
-+		if (vcpu->guest_debug & KVM_GUESTDBG_USE_SW_BP) {
-+			vcpu->run->exit_reason = KVM_EXIT_DEBUG;
-+			ret = RESUME_HOST;
-+		} else
-+			vcpu->arch.gprs[LOONGARCH_GPR_A0] = KVM_HC_INVALID_CODE;
-+		break;
- 	default:
- 		/* Treat it as noop intruction, only set return value */
- 		vcpu->arch.gprs[LOONGARCH_GPR_A0] = KVM_HC_INVALID_CODE;
- 		break;
+ 	if (!prog->is_func || extra_pass) {
+-		bpf_jit_binary_lock_ro(jit_data->header);
++		if (bpf_jit_binary_lock_ro(jit_data->header)) {
++			bpf_jit_binary_free(jit_data->header);
++			prog->bpf_func = NULL;
++			prog->jited = 0;
++			prog->jited_len = 0;
++			goto out_offset;
++		}
+ 		prologue_len = ctx->epilogue_offset - ctx->body_len;
+ 		for (i = 0; i < prog->len; i++)
+ 			ctx->offset[i] += prologue_len;
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index b418333bb086..e613eebfd349 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -2111,7 +2111,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
+ 		print_fn_code(jit.prg_buf, jit.size_prg);
  	}
+ 	if (!fp->is_func || extra_pass) {
+-		bpf_jit_binary_lock_ro(header);
++		if (bpf_jit_binary_lock_ro(header)) {
++			bpf_jit_binary_free(header);
++			fp = orig_fp;
++			goto free_addrs;
++		}
+ 	} else {
+ 		jit_data->header = header;
+ 		jit_data->ctx = jit;
+diff --git a/arch/sparc/net/bpf_jit_comp_64.c b/arch/sparc/net/bpf_jit_comp_64.c
+index fa0759bfe498..73bf0aea8baf 100644
+--- a/arch/sparc/net/bpf_jit_comp_64.c
++++ b/arch/sparc/net/bpf_jit_comp_64.c
+@@ -1602,7 +1602,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	bpf_flush_icache(header, (u8 *)header + header->size);
  
--	return RESUME_GUEST;
-+	if (ret == RESUME_GUEST)
-+		update_pc(&vcpu->arch);
-+
-+	return ret;
+ 	if (!prog->is_func || extra_pass) {
+-		bpf_jit_binary_lock_ro(header);
++		if (bpf_jit_binary_lock_ro(header)) {
++			bpf_jit_binary_free(header);
++			prog = orig_prog;
++			goto out_off;
++		}
+ 	} else {
+ 		jit_data->ctx = ctx;
+ 		jit_data->image = image_ptr;
+diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
+index b18ce19981ec..f2be1dcf3b24 100644
+--- a/arch/x86/net/bpf_jit_comp32.c
++++ b/arch/x86/net/bpf_jit_comp32.c
+@@ -2600,8 +2600,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	if (bpf_jit_enable > 1)
+ 		bpf_jit_dump(prog->len, proglen, pass + 1, image);
+ 
+-	if (image) {
+-		bpf_jit_binary_lock_ro(header);
++	if (image && !bpf_jit_binary_lock_ro(header)) {
+ 		prog->bpf_func = (void *)image;
+ 		prog->jited = 1;
+ 		prog->jited_len = proglen;
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index fc0994dc5c72..314414fa6d70 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -892,10 +892,10 @@ static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
+ 	return 0;
  }
  
- /*
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 80e05ba9b48d..273ac10eaba5 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -248,7 +248,15 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
- int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
- 					struct kvm_guest_debug *dbg)
+-static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
++static inline int __must_check bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
  {
--	return -EINVAL;
-+	if (dbg->control & ~KVM_GUESTDBG_VALID_MASK)
-+		return -EINVAL;
-+
-+	if (dbg->control & KVM_GUESTDBG_ENABLE)
-+		vcpu->guest_debug = dbg->control;
-+	else
-+		vcpu->guest_debug = 0;
-+
-+	return 0;
+ 	set_vm_flush_reset_perms(hdr);
+-	set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
++	return set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
  }
  
- static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
-@@ -482,6 +490,9 @@ static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
- 		case KVM_REG_LOONGARCH_COUNTER:
- 			*v = drdtime() + vcpu->kvm->arch.time_offset;
- 			break;
-+		case KVM_REG_LOONGARCH_DEBUG_INST:
-+			*v = INSN_HVCL + KVM_HC_SWDBG;
-+			break;
- 		default:
- 			ret = -EINVAL;
- 			break;
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 6fd5916ebef3..44fb18118442 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -77,6 +77,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_IMMEDIATE_EXIT:
- 	case KVM_CAP_IOEVENTFD:
- 	case KVM_CAP_MP_STATE:
-+	case KVM_CAP_SET_GUEST_DEBUG:
- 		r = 1;
- 		break;
- 	case KVM_CAP_NR_VCPUS:
-
-base-commit: 7e90b5c295ec1e47c8ad865429f046970c549a66
+ int sk_filter_trim_cap(struct sock *sk, struct sk_buff *skb, unsigned int cap);
 -- 
-2.39.3
+2.43.0
 
