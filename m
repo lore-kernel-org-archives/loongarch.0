@@ -1,80 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A066BFC7;
-	Sun, 18 Feb 2024 15:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804736BFD3
+	for <loongarch@lists.linux.dev>; Sun, 18 Feb 2024 15:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708269268; cv=none; b=t3AiYMaMkyk7r4yGSTihp47nRhSZUSdsYH8gZdpX/pQ7JUN/Ooy0eHqKVw/W5CPU09tWnJfsZ3D6bkO40S0tRYMhZza6KHyC+6FxiUN3FBr/RR5IDAh6NVksK3gCptjpYrEMGH79ZGovvnLhkOfBeJCrm5PjQ+pOF7BuQZ/bOf8=
+	t=1708269589; cv=none; b=o9V7YTvhWeXeNqY4ITDQYiWds2fr52Q0zQzYgQvbo3Obb/04MinENjlYrDSfOQBqtboz4vmSAcw8SkKTNHBOTYDxsOy2QL7z70U2rePxEM8NLq8V+fgYtQjzlxQKjE/lWRBshhcdEWThakf8QGd1M5jj/LrSNrYf8ylFyrIqv3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708269268; c=relaxed/simple;
-	bh=7ND1cr7GPflsn+fS87oYZAJbbZxVUvL0DV2PFVsYsnw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ls7yawe1zQJ9nZ7kWaRNn+5mtlgx/prp8rQzPkTaf4OnBU1Vzw1tUqU/n1WmE2MXAvZm/+Bj5+/FuP/G+69uhqSUJTjofSgSKQltfZAz8EPdbnYeIO8WPN3t4u3WCFm1Q922Tm8OANEf/aGGQQsr4ju0826axoMAYqleuRK5vnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 698DEC433C7;
-	Sun, 18 Feb 2024 15:14:25 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Subject: [PATCH] LoongArch: Call early_init_fdt_scan_reserved_mem() earlier
-Date: Sun, 18 Feb 2024 23:14:03 +0800
-Message-ID: <20240218151403.2206980-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1708269589; c=relaxed/simple;
+	bh=lYFHSwKGcbZg0KftqGMF5GiOnvyk1uaue8OvErSz/MI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LWg3ySiFx0ZSZE6Gruw159E3ngJkyDoFp9L2ywpDazH7vFsOZTJdgOlNvgDmoXwwza8u1BV/mYbToGQvBHJKli92rr9M5MBqki4PLud+D/FUVKff85MKN4lrKg5nV30DuuaJbmgbNrMGQm+z9b0hQGMebtQ6gBe9JGtGRI7wq+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MbKVmN6u; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MbKVmN6u"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e34d12404eso686284b3a.2
+        for <loongarch@lists.linux.dev>; Sun, 18 Feb 2024 07:19:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708269586; x=1708874386; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eiWOUozWnezeYn8cXQvtDvCvh6gTYyUB/9KcoNgO2S8=;
+        b=MbKVmN6ugYpZH4TQnhg8jyKn3OG+2CIke49FL0tDhesA1wVU+kkc5ADjXsc42wxYH/
+         XNYQdmil6mHZNPyTiVdAJOXLU1buNkZGyDFUoCU4ZHgDi4rGqW2wPDqZ+eyrXkOmyQf2
+         gopp7dh65hEPuPWAzpmfC6oic5m1Mw3mUd5yY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708269586; x=1708874386;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eiWOUozWnezeYn8cXQvtDvCvh6gTYyUB/9KcoNgO2S8=;
+        b=klvcePLGzTYR884OLwE5o1+y6U9FJ9dBnY9K+bvrS/vAl+bkmL+pKkxl/OULu0a977
+         5oR5k0acmEpSfE7NbPqrRC3Mk2I4Tj9ODDoeWEgLz+9bBYC6HKZcd8aTV8ivXeU85hin
+         QlbJVaLfBhlhXeR9dMqQFWxvCyuYftF0itPVf/sbO0d6z4kCW6tw14Lfuf3Dp0PFqoms
+         KgMPZQuaxUoTMwH4GjG+PMfRDEtyUNiWPV6ADc7rkrMH+gANhh3AEOxPDrWE6tELl6wM
+         YhmClWhhT1kDMibH7xFAmEIulA9Ye3NPO88n3Kas2Q1U/cFa+KZeutAsJ5iJ1825YoTc
+         X9yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhd54xgfmzJMFrNu1fEx7LrYT9dzcjwj7P7W4yrdycIYIb5CAESPCbWemgzFWVrJWgAGJYdaUrrZS+7JInngU6ZD0jh6c3vBvT
+X-Gm-Message-State: AOJu0YyPcESgBCxP2zbY1RwGxhuojsvYSZhRdrF8oITLxrz8OK3Y0l5o
+	wEdpVnWkBhFpNJgXcXn7MxAoOq4G2UvHX9PCRBlbm8I7+JTX7rF3ltoFqc8G5g==
+X-Google-Smtp-Source: AGHT+IHQkmCTEZjB8VrcrwmYPHm1xqN+oDo5E9U8MtwdiC0lI+BGRPycjpyIHGY52kr+uXWivxarDw==
+X-Received: by 2002:aa7:8202:0:b0:6e1:dbd:e800 with SMTP id k2-20020aa78202000000b006e10dbde800mr9961775pfi.17.1708269585774;
+        Sun, 18 Feb 2024 07:19:45 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r22-20020aa78456000000b006e24991dd5bsm2894532pfn.98.2024.02.18.07.19.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Feb 2024 07:19:45 -0800 (PST)
+Date: Sun, 18 Feb 2024 07:19:44 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Zi Shen Lim <zlim.lnx@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Johan Almbladh <johan.almbladh@anyfinetworks.com>,
+	Paul Burton <paulburton@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Ilya Leoshkevich <iii@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Wang YanQing <udknight@gmail.com>, David Ahern <dsahern@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, netdev@vger.kernel.org,
+	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH bpf-next 2/2] bpf: Take return from set_memory_rox() into
+ account with bpf_jit_binary_lock_ro()
+Message-ID: <202402180711.22F5C511E5@keescook>
+References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
+ <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
 
-The unflatten_and_copy_device_tree() function contains a call to
-memblock_alloc(). This means that memblock is allocating memory before
-any of the reserved memory regions are set aside in the arch_mem_init()
-function which calls early_init_fdt_scan_reserved_mem(). Therefore,
-there is a possibility for memblock to allocate from any of the
-reserved memory regions.
+On Sun, Feb 18, 2024 at 11:55:02AM +0100, Christophe Leroy wrote:
+> set_memory_rox() can fail, leaving memory unprotected.
+> 
+> Check return and bail out when bpf_jit_binary_lock_ro() returns
+> and error.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+> Previous patch introduces a dependency on this patch because it modifies bpf_prog_lock_ro(), but they are independant.
+> It is possible to apply this patch as standalone by handling trivial conflict with unmodified bpf_prog_lock_ro().
+> ---
+>  arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
+>  arch/arm64/net/bpf_jit_comp.c    | 21 +++++++++++++++------
+>  arch/loongarch/net/bpf_jit.c     | 21 +++++++++++++++------
+>  arch/mips/net/bpf_jit_comp.c     |  3 ++-
+>  arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
+>  arch/s390/net/bpf_jit_comp.c     |  6 +++++-
+>  arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
+>  arch/x86/net/bpf_jit_comp32.c    |  3 +--
+>  include/linux/filter.h           |  4 ++--
+>  9 files changed, 64 insertions(+), 33 deletions(-)
+> 
+> diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
+> index 1d672457d02f..01516f83a95a 100644
+> --- a/arch/arm/net/bpf_jit_32.c
+> +++ b/arch/arm/net/bpf_jit_32.c
+> @@ -2222,28 +2222,21 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+>  	/* If building the body of the JITed code fails somehow,
+>  	 * we fall back to the interpretation.
+>  	 */
+> -	if (build_body(&ctx) < 0) {
+> -		image_ptr = NULL;
+> -		bpf_jit_binary_free(header);
+> -		prog = orig_prog;
+> -		goto out_imms;
+> -	}
+> +	if (build_body(&ctx) < 0)
+> +		goto out_free;
+>  	build_epilogue(&ctx);
+>  
+>  	/* 3.) Extra pass to validate JITed Code */
+> -	if (validate_code(&ctx)) {
+> -		image_ptr = NULL;
+> -		bpf_jit_binary_free(header);
+> -		prog = orig_prog;
+> -		goto out_imms;
+> -	}
+> +	if (validate_code(&ctx))
+> +		goto out_free;
+>  	flush_icache_range((u32)header, (u32)(ctx.target + ctx.idx));
+>  
+>  	if (bpf_jit_enable > 1)
+>  		/* there are 2 passes here */
+>  		bpf_jit_dump(prog->len, image_size, 2, ctx.target);
+>  
+> -	bpf_jit_binary_lock_ro(header);
+> +	if (bpf_jit_binary_lock_ro(header))
+> +		goto out_free;
+>  	prog->bpf_func = (void *)ctx.target;
+>  	prog->jited = 1;
+>  	prog->jited_len = image_size;
+> @@ -2260,5 +2253,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+>  		bpf_jit_prog_release_other(prog, prog == orig_prog ?
+>  					   tmp : orig_prog);
+>  	return prog;
+> +
+> +out_free:
+> +	image_ptr = NULL;
+> +	bpf_jit_binary_free(header);
+> +	prog = orig_prog;
+> +	goto out_imms;
 
-Hence, move the call to early_init_fdt_scan_reserved_mem() to be earlier
-in the init sequence, so that the reserved memory regions are set aside
-before any allocations are done using memblock.
+These gotos give me the creeps, but yes, it does appear to be in the
+style of the existing error handling.
 
-Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/setup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> [...]
+> diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
+> index b18ce19981ec..f2be1dcf3b24 100644
+> --- a/arch/x86/net/bpf_jit_comp32.c
+> +++ b/arch/x86/net/bpf_jit_comp32.c
+> @@ -2600,8 +2600,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+>  	if (bpf_jit_enable > 1)
+>  		bpf_jit_dump(prog->len, proglen, pass + 1, image);
+>  
+> -	if (image) {
+> -		bpf_jit_binary_lock_ro(header);
+> +	if (image && !bpf_jit_binary_lock_ro(header)) {
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index edf2bba80130..634ef17fd38b 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -357,6 +357,8 @@ void __init platform_init(void)
- 	acpi_gbl_use_default_register_widths = false;
- 	acpi_boot_table_init();
- #endif
-+
-+	early_init_fdt_scan_reserved_mem();
- 	unflatten_and_copy_device_tree();
- 
- #ifdef CONFIG_NUMA
-@@ -390,8 +392,6 @@ static void __init arch_mem_init(char **cmdline_p)
- 
- 	check_kernel_sections_mem();
- 
--	early_init_fdt_scan_reserved_mem();
--
- 	/*
- 	 * In order to reduce the possibility of kernel panic when failed to
- 	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
+I find the "!" kind of hard to read the "inverted" logic (0 is success),
+so if this gets a revision, maybe do "== 0"?:
+
+	if (image && bpf_jit_binary_lock_ro(header) == 0) {
+
+But that's just me. So, regardless:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 -- 
-2.43.0
-
+Kees Cook
