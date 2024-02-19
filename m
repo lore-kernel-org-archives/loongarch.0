@@ -1,206 +1,456 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804736BFD3
-	for <loongarch@lists.linux.dev>; Sun, 18 Feb 2024 15:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9148E2103;
+	Mon, 19 Feb 2024 02:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708269589; cv=none; b=o9V7YTvhWeXeNqY4ITDQYiWds2fr52Q0zQzYgQvbo3Obb/04MinENjlYrDSfOQBqtboz4vmSAcw8SkKTNHBOTYDxsOy2QL7z70U2rePxEM8NLq8V+fgYtQjzlxQKjE/lWRBshhcdEWThakf8QGd1M5jj/LrSNrYf8ylFyrIqv3Y=
+	t=1708310347; cv=none; b=qbewKGB+kwgXtwTBfZgajrfVATdVoh1qesGstwRFOo5ARr/xh3eEeyKXTtZHfZSWrp6inMe5Wdb/QKR4Wzk7JggxEKkZgC0qYj6CxjSDXD54veQe3ovBZFahh17cUcHULHvtY7D38tqhVFAeWzYL4PN1ckyj+WTvtvv8h21/W6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708269589; c=relaxed/simple;
-	bh=lYFHSwKGcbZg0KftqGMF5GiOnvyk1uaue8OvErSz/MI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LWg3ySiFx0ZSZE6Gruw159E3ngJkyDoFp9L2ywpDazH7vFsOZTJdgOlNvgDmoXwwza8u1BV/mYbToGQvBHJKli92rr9M5MBqki4PLud+D/FUVKff85MKN4lrKg5nV30DuuaJbmgbNrMGQm+z9b0hQGMebtQ6gBe9JGtGRI7wq+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MbKVmN6u; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708310347; c=relaxed/simple;
+	bh=eE4dQtEyxc6jpePMX0Gn2TfKg89XRjcUV+bF2DFyKdA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jNzzvb4VR72sT872iQCLI/sahBWjMKeezhIciSPVFl+iAxYBiKMHNhj32YmEDnjUsGsCkXwC24NXIdUBtFbyHfuW3Ri9fDBUFikqXnyDokc7NESV3fNw8/D2aRcVbB3iFnatGeynJwsedIWSseRN7Ykb+jIrasQtDMKAv0GNvXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=miMqZf02; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MbKVmN6u"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e34d12404eso686284b3a.2
-        for <loongarch@lists.linux.dev>; Sun, 18 Feb 2024 07:19:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708269586; x=1708874386; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eiWOUozWnezeYn8cXQvtDvCvh6gTYyUB/9KcoNgO2S8=;
-        b=MbKVmN6ugYpZH4TQnhg8jyKn3OG+2CIke49FL0tDhesA1wVU+kkc5ADjXsc42wxYH/
-         XNYQdmil6mHZNPyTiVdAJOXLU1buNkZGyDFUoCU4ZHgDi4rGqW2wPDqZ+eyrXkOmyQf2
-         gopp7dh65hEPuPWAzpmfC6oic5m1Mw3mUd5yY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708269586; x=1708874386;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eiWOUozWnezeYn8cXQvtDvCvh6gTYyUB/9KcoNgO2S8=;
-        b=klvcePLGzTYR884OLwE5o1+y6U9FJ9dBnY9K+bvrS/vAl+bkmL+pKkxl/OULu0a977
-         5oR5k0acmEpSfE7NbPqrRC3Mk2I4Tj9ODDoeWEgLz+9bBYC6HKZcd8aTV8ivXeU85hin
-         QlbJVaLfBhlhXeR9dMqQFWxvCyuYftF0itPVf/sbO0d6z4kCW6tw14Lfuf3Dp0PFqoms
-         KgMPZQuaxUoTMwH4GjG+PMfRDEtyUNiWPV6ADc7rkrMH+gANhh3AEOxPDrWE6tELl6wM
-         YhmClWhhT1kDMibH7xFAmEIulA9Ye3NPO88n3Kas2Q1U/cFa+KZeutAsJ5iJ1825YoTc
-         X9yg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhd54xgfmzJMFrNu1fEx7LrYT9dzcjwj7P7W4yrdycIYIb5CAESPCbWemgzFWVrJWgAGJYdaUrrZS+7JInngU6ZD0jh6c3vBvT
-X-Gm-Message-State: AOJu0YyPcESgBCxP2zbY1RwGxhuojsvYSZhRdrF8oITLxrz8OK3Y0l5o
-	wEdpVnWkBhFpNJgXcXn7MxAoOq4G2UvHX9PCRBlbm8I7+JTX7rF3ltoFqc8G5g==
-X-Google-Smtp-Source: AGHT+IHQkmCTEZjB8VrcrwmYPHm1xqN+oDo5E9U8MtwdiC0lI+BGRPycjpyIHGY52kr+uXWivxarDw==
-X-Received: by 2002:aa7:8202:0:b0:6e1:dbd:e800 with SMTP id k2-20020aa78202000000b006e10dbde800mr9961775pfi.17.1708269585774;
-        Sun, 18 Feb 2024 07:19:45 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r22-20020aa78456000000b006e24991dd5bsm2894532pfn.98.2024.02.18.07.19.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Feb 2024 07:19:45 -0800 (PST)
-Date: Sun, 18 Feb 2024 07:19:44 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Zi Shen Lim <zlim.lnx@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Hengqi Chen <hengqi.chen@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Johan Almbladh <johan.almbladh@anyfinetworks.com>,
-	Paul Burton <paulburton@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Wang YanQing <udknight@gmail.com>, David Ahern <dsahern@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, netdev@vger.kernel.org,
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 2/2] bpf: Take return from set_memory_rox() into
- account with bpf_jit_binary_lock_ro()
-Message-ID: <202402180711.22F5C511E5@keescook>
-References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
- <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="miMqZf02"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 428C2C433C7;
+	Mon, 19 Feb 2024 02:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708310347;
+	bh=eE4dQtEyxc6jpePMX0Gn2TfKg89XRjcUV+bF2DFyKdA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=miMqZf02xzwN9NM5D7cLZylTF/LPBZ2P8XwshKsdqKbGIUIISoDRgTPzpn2MeUS5+
+	 LPqGjw4lsS+GQqVfuKjYEuztnq2KRk5diMfKXjGBonXKlGRYqwlIVQ18rpWMj0ZrZT
+	 tnB1GXXpwNUQRWbRSiLCW6jh2/nXC5KskJsAz9w/iOVMMhWL8XDgedK9hEqsJkklYP
+	 V+45N665ZWEJz+Qo9EmDelolXdkdfs6+0tE+azumvsi5KQH9bZM4O8qC5mqkYiQDWY
+	 wrka8+jOBI0pzCcOb1o5bEYFm4HFFm76CiGTUOBoirM1Gng3kXsuEw6lLLcDHcfndh
+	 3OnrFwQW1eLQA==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56439b7c7a9so1219726a12.3;
+        Sun, 18 Feb 2024 18:39:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXnB7MxWtBAjZGBf5Lqadt8IIPnBpgJuW5KdjACT2uYxfDbAPHLkNETUo5eSA1hwRs53sUwxt0SGQLkkrzphhkrtbpAxy/oUXPkHtH70XIMR4kpfVNNlcGlg4R35A8p9CBiwustScASB0k=
+X-Gm-Message-State: AOJu0YxOk2MkdZ3s4z0TsDnYzdksRVMRF5i1jUP7pYb2DH4TaFIkYTZf
+	LwztQaipeUvxmnHcnzmuvYeRs5JYAe88Z9Qe7DaNX7XUY6mTRzC0kSen97cT+UIEsjqKnZdDNgu
+	pESvjW5eoKr5aUUK0Pti+9wiB0wc=
+X-Google-Smtp-Source: AGHT+IFpmQDIYWUvAcDxjatN/NGkMOPN5VfceRcJ4NIje7M9u8Tr2EUfac2eQ1NONHwWj/vmcUr/jVOBnTeShaXe0PU=
+X-Received: by 2002:a05:6402:3788:b0:563:ccd1:26bf with SMTP id
+ et8-20020a056402378800b00563ccd126bfmr8977772edb.37.1708310345610; Sun, 18
+ Feb 2024 18:39:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
+References: <20240201031950.3225626-1-maobibo@loongson.cn> <20240201031950.3225626-2-maobibo@loongson.cn>
+In-Reply-To: <20240201031950.3225626-2-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 19 Feb 2024 10:39:03 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4d7uX9oQtfyXYr4UKTmBbiSHFxxEXjy1PZSuqDhsdREw@mail.gmail.com>
+Message-ID: <CAAhV-H4d7uX9oQtfyXYr4UKTmBbiSHFxxEXjy1PZSuqDhsdREw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] LoongArch/smp: Refine ipi ops on LoongArch platform
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 18, 2024 at 11:55:02AM +0100, Christophe Leroy wrote:
-> set_memory_rox() can fail, leaving memory unprotected.
-> 
-> Check return and bail out when bpf_jit_binary_lock_ro() returns
-> and error.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Hi, Bibo,
+
+On Thu, Feb 1, 2024 at 11:19=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> This patch refines ipi handling on LoongArch platform, there are
+> three changes with this patch.
+> 1. Add generic get_percpu_irq() api, replace some percpu irq functions
+> such as get_ipi_irq()/get_pmc_irq()/get_timer_irq() with get_percpu_irq()=
+.
+>
+> 2. Change parameter action definition with function
+> loongson_send_ipi_single() and loongson_send_ipi_mask(). Normal decimal
+> encoding is used rather than binary bitmap encoding for ipi action, ipi
+> hw sender uses devimal action code, and ipi receiver will get binary bitm=
+ap
+> encoding, the ipi hw will convert it into bitmap in ipi message buffer.
+What is "devimal" here? Maybe decimal?
+
+>
+> 3. Add structure smp_ops on LoongArch platform so that pv ipi can be used
+> later.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
-> Previous patch introduces a dependency on this patch because it modifies bpf_prog_lock_ro(), but they are independant.
-> It is possible to apply this patch as standalone by handling trivial conflict with unmodified bpf_prog_lock_ro().
-> ---
->  arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
->  arch/arm64/net/bpf_jit_comp.c    | 21 +++++++++++++++------
->  arch/loongarch/net/bpf_jit.c     | 21 +++++++++++++++------
->  arch/mips/net/bpf_jit_comp.c     |  3 ++-
->  arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
->  arch/s390/net/bpf_jit_comp.c     |  6 +++++-
->  arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
->  arch/x86/net/bpf_jit_comp32.c    |  3 +--
->  include/linux/filter.h           |  4 ++--
->  9 files changed, 64 insertions(+), 33 deletions(-)
-> 
-> diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
-> index 1d672457d02f..01516f83a95a 100644
-> --- a/arch/arm/net/bpf_jit_32.c
-> +++ b/arch/arm/net/bpf_jit_32.c
-> @@ -2222,28 +2222,21 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
->  	/* If building the body of the JITed code fails somehow,
->  	 * we fall back to the interpretation.
->  	 */
-> -	if (build_body(&ctx) < 0) {
-> -		image_ptr = NULL;
-> -		bpf_jit_binary_free(header);
-> -		prog = orig_prog;
-> -		goto out_imms;
-> -	}
-> +	if (build_body(&ctx) < 0)
-> +		goto out_free;
->  	build_epilogue(&ctx);
->  
->  	/* 3.) Extra pass to validate JITed Code */
-> -	if (validate_code(&ctx)) {
-> -		image_ptr = NULL;
-> -		bpf_jit_binary_free(header);
-> -		prog = orig_prog;
-> -		goto out_imms;
-> -	}
-> +	if (validate_code(&ctx))
-> +		goto out_free;
->  	flush_icache_range((u32)header, (u32)(ctx.target + ctx.idx));
->  
->  	if (bpf_jit_enable > 1)
->  		/* there are 2 passes here */
->  		bpf_jit_dump(prog->len, image_size, 2, ctx.target);
->  
-> -	bpf_jit_binary_lock_ro(header);
-> +	if (bpf_jit_binary_lock_ro(header))
-> +		goto out_free;
->  	prog->bpf_func = (void *)ctx.target;
->  	prog->jited = 1;
->  	prog->jited_len = image_size;
-> @@ -2260,5 +2253,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
->  		bpf_jit_prog_release_other(prog, prog == orig_prog ?
->  					   tmp : orig_prog);
->  	return prog;
+>  arch/loongarch/include/asm/hardirq.h |  4 ++
+>  arch/loongarch/include/asm/irq.h     | 10 ++++-
+>  arch/loongarch/include/asm/smp.h     | 31 +++++++--------
+>  arch/loongarch/kernel/irq.c          | 22 +----------
+>  arch/loongarch/kernel/perf_event.c   | 14 +------
+>  arch/loongarch/kernel/smp.c          | 58 +++++++++++++++++++---------
+>  arch/loongarch/kernel/time.c         | 12 +-----
+>  7 files changed, 71 insertions(+), 80 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/hardirq.h b/arch/loongarch/includ=
+e/asm/hardirq.h
+> index 0ef3b18f8980..9f0038e19c7f 100644
+> --- a/arch/loongarch/include/asm/hardirq.h
+> +++ b/arch/loongarch/include/asm/hardirq.h
+> @@ -12,6 +12,10 @@
+>  extern void ack_bad_irq(unsigned int irq);
+>  #define ack_bad_irq ack_bad_irq
+>
+> +enum ipi_msg_type {
+> +       IPI_RESCHEDULE,
+> +       IPI_CALL_FUNCTION,
+> +};
+>  #define NR_IPI 2
+>
+>  typedef struct {
+> diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/as=
+m/irq.h
+> index 218b4da0ea90..00101b6d601e 100644
+> --- a/arch/loongarch/include/asm/irq.h
+> +++ b/arch/loongarch/include/asm/irq.h
+> @@ -117,8 +117,16 @@ extern struct fwnode_handle *liointc_handle;
+>  extern struct fwnode_handle *pch_lpc_handle;
+>  extern struct fwnode_handle *pch_pic_handle[MAX_IO_PICS];
+>
+> -extern irqreturn_t loongson_ipi_interrupt(int irq, void *dev);
+> +static inline int get_percpu_irq(int vector)
+> +{
+> +       struct irq_domain *d;
 > +
-> +out_free:
-> +	image_ptr = NULL;
-> +	bpf_jit_binary_free(header);
-> +	prog = orig_prog;
-> +	goto out_imms;
+> +       d =3D irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
+> +       if (d)
+> +               return irq_create_mapping(d, vector);
+>
+> +       return -EINVAL;
+> +}
+>  #include <asm-generic/irq.h>
+>
+>  #endif /* _ASM_IRQ_H */
+> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/as=
+m/smp.h
+> index f81e5f01d619..8a42632b038a 100644
+> --- a/arch/loongarch/include/asm/smp.h
+> +++ b/arch/loongarch/include/asm/smp.h
+> @@ -12,6 +12,13 @@
+>  #include <linux/threads.h>
+>  #include <linux/cpumask.h>
+>
+> +struct smp_ops {
+> +       void (*init_ipi)(void);
+> +       void (*send_ipi_mask)(const struct cpumask *mask, unsigned int ac=
+tion);
+> +       void (*send_ipi_single)(int cpu, unsigned int action);
+> +};
+> +
+> +extern struct smp_ops smp_ops;
+>  extern int smp_num_siblings;
+>  extern int num_processors;
+>  extern int disabled_cpus;
+> @@ -24,8 +31,6 @@ void loongson_prepare_cpus(unsigned int max_cpus);
+>  void loongson_boot_secondary(int cpu, struct task_struct *idle);
+>  void loongson_init_secondary(void);
+>  void loongson_smp_finish(void);
+> -void loongson_send_ipi_single(int cpu, unsigned int action);
+> -void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int act=
+ion);
+>  #ifdef CONFIG_HOTPLUG_CPU
+>  int loongson_cpu_disable(void);
+>  void loongson_cpu_die(unsigned int cpu);
+> @@ -59,9 +64,12 @@ extern int __cpu_logical_map[NR_CPUS];
+>
+>  #define cpu_physical_id(cpu)   cpu_logical_map(cpu)
+>
+> -#define SMP_BOOT_CPU           0x1
+> -#define SMP_RESCHEDULE         0x2
+> -#define SMP_CALL_FUNCTION      0x4
+> +#define ACTTION_BOOT_CPU       0
+> +#define ACTTION_RESCHEDULE     1
+> +#define ACTTION_CALL_FUNCTION  2
+ACTTION? ACTION?
 
-These gotos give me the creeps, but yes, it does appear to be in the
-style of the existing error handling.
+Huacai
 
-> [...]
-> diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-> index b18ce19981ec..f2be1dcf3b24 100644
-> --- a/arch/x86/net/bpf_jit_comp32.c
-> +++ b/arch/x86/net/bpf_jit_comp32.c
-> @@ -2600,8 +2600,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
->  	if (bpf_jit_enable > 1)
->  		bpf_jit_dump(prog->len, proglen, pass + 1, image);
->  
-> -	if (image) {
-> -		bpf_jit_binary_lock_ro(header);
-> +	if (image && !bpf_jit_binary_lock_ro(header)) {
-
-I find the "!" kind of hard to read the "inverted" logic (0 is success),
-so if this gets a revision, maybe do "== 0"?:
-
-	if (image && bpf_jit_binary_lock_ro(header) == 0) {
-
-But that's just me. So, regardless:
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+> +#define SMP_BOOT_CPU           BIT(ACTTION_BOOT_CPU)
+> +#define SMP_RESCHEDULE         BIT(ACTTION_RESCHEDULE)
+> +#define SMP_CALL_FUNCTION      BIT(ACTTION_CALL_FUNCTION)
+>
+>  struct secondary_data {
+>         unsigned long stack;
+> @@ -71,7 +79,8 @@ extern struct secondary_data cpuboot_data;
+>
+>  extern asmlinkage void smpboot_entry(void);
+>  extern asmlinkage void start_secondary(void);
+> -
+> +extern void arch_send_call_function_single_ipi(int cpu);
+> +extern void arch_send_call_function_ipi_mask(const struct cpumask *mask)=
+;
+>  extern void calculate_cpu_foreign_map(void);
+>
+>  /*
+> @@ -79,16 +88,6 @@ extern void calculate_cpu_foreign_map(void);
+>   */
+>  extern void show_ipi_list(struct seq_file *p, int prec);
+>
+> -static inline void arch_send_call_function_single_ipi(int cpu)
+> -{
+> -       loongson_send_ipi_single(cpu, SMP_CALL_FUNCTION);
+> -}
+> -
+> -static inline void arch_send_call_function_ipi_mask(const struct cpumask=
+ *mask)
+> -{
+> -       loongson_send_ipi_mask(mask, SMP_CALL_FUNCTION);
+> -}
+> -
+>  #ifdef CONFIG_HOTPLUG_CPU
+>  static inline int __cpu_disable(void)
+>  {
+> diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
+> index 883e5066ae44..ce36897d1e5a 100644
+> --- a/arch/loongarch/kernel/irq.c
+> +++ b/arch/loongarch/kernel/irq.c
+> @@ -87,23 +87,9 @@ static void __init init_vec_parent_group(void)
+>         acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
+>  }
+>
+> -static int __init get_ipi_irq(void)
+> -{
+> -       struct irq_domain *d =3D irq_find_matching_fwnode(cpuintc_handle,=
+ DOMAIN_BUS_ANY);
+> -
+> -       if (d)
+> -               return irq_create_mapping(d, INT_IPI);
+> -
+> -       return -EINVAL;
+> -}
+> -
+>  void __init init_IRQ(void)
+>  {
+>         int i;
+> -#ifdef CONFIG_SMP
+> -       int r, ipi_irq;
+> -       static int ipi_dummy_dev;
+> -#endif
+>         unsigned int order =3D get_order(IRQ_STACK_SIZE);
+>         struct page *page;
+>
+> @@ -113,13 +99,7 @@ void __init init_IRQ(void)
+>         init_vec_parent_group();
+>         irqchip_init();
+>  #ifdef CONFIG_SMP
+> -       ipi_irq =3D get_ipi_irq();
+> -       if (ipi_irq < 0)
+> -               panic("IPI IRQ mapping failed\n");
+> -       irq_set_percpu_devid(ipi_irq);
+> -       r =3D request_percpu_irq(ipi_irq, loongson_ipi_interrupt, "IPI", =
+&ipi_dummy_dev);
+> -       if (r < 0)
+> -               panic("IPI IRQ request failed\n");
+> +       smp_ops.init_ipi();
+>  #endif
+>
+>         for (i =3D 0; i < NR_IRQS; i++)
+> diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/p=
+erf_event.c
+> index 0491bf453cd4..3265c8f33223 100644
+> --- a/arch/loongarch/kernel/perf_event.c
+> +++ b/arch/loongarch/kernel/perf_event.c
+> @@ -456,16 +456,6 @@ static void loongarch_pmu_disable(struct pmu *pmu)
+>  static DEFINE_MUTEX(pmu_reserve_mutex);
+>  static atomic_t active_events =3D ATOMIC_INIT(0);
+>
+> -static int get_pmc_irq(void)
+> -{
+> -       struct irq_domain *d =3D irq_find_matching_fwnode(cpuintc_handle,=
+ DOMAIN_BUS_ANY);
+> -
+> -       if (d)
+> -               return irq_create_mapping(d, INT_PCOV);
+> -
+> -       return -EINVAL;
+> -}
+> -
+>  static void reset_counters(void *arg);
+>  static int __hw_perf_event_init(struct perf_event *event);
+>
+> @@ -473,7 +463,7 @@ static void hw_perf_event_destroy(struct perf_event *=
+event)
+>  {
+>         if (atomic_dec_and_mutex_lock(&active_events, &pmu_reserve_mutex)=
+) {
+>                 on_each_cpu(reset_counters, NULL, 1);
+> -               free_irq(get_pmc_irq(), &loongarch_pmu);
+> +               free_irq(get_percpu_irq(INT_PCOV), &loongarch_pmu);
+>                 mutex_unlock(&pmu_reserve_mutex);
+>         }
+>  }
+> @@ -562,7 +552,7 @@ static int loongarch_pmu_event_init(struct perf_event=
+ *event)
+>         if (event->cpu >=3D 0 && !cpu_online(event->cpu))
+>                 return -ENODEV;
+>
+> -       irq =3D get_pmc_irq();
+> +       irq =3D get_percpu_irq(INT_PCOV);
+>         flags =3D IRQF_PERCPU | IRQF_NOBALANCING | IRQF_NO_THREAD | IRQF_=
+NO_SUSPEND | IRQF_SHARED;
+>         if (!atomic_inc_not_zero(&active_events)) {
+>                 mutex_lock(&pmu_reserve_mutex);
+> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> index 2b49d30eb7c0..3d3ec07d1ec4 100644
+> --- a/arch/loongarch/kernel/smp.c
+> +++ b/arch/loongarch/kernel/smp.c
+> @@ -66,11 +66,6 @@ static cpumask_t cpu_core_setup_map;
+>  struct secondary_data cpuboot_data;
+>  static DEFINE_PER_CPU(int, cpu_state);
+>
+> -enum ipi_msg_type {
+> -       IPI_RESCHEDULE,
+> -       IPI_CALL_FUNCTION,
+> -};
+> -
+>  static const char *ipi_types[NR_IPI] __tracepoint_string =3D {
+>         [IPI_RESCHEDULE] =3D "Rescheduling interrupts",
+>         [IPI_CALL_FUNCTION] =3D "Function call interrupts",
+> @@ -123,24 +118,19 @@ static u32 ipi_read_clear(int cpu)
+>
+>  static void ipi_write_action(int cpu, u32 action)
+>  {
+> -       unsigned int irq =3D 0;
+> -
+> -       while ((irq =3D ffs(action))) {
+> -               uint32_t val =3D IOCSR_IPI_SEND_BLOCKING;
+> +       uint32_t val;
+>
+> -               val |=3D (irq - 1);
+> -               val |=3D (cpu << IOCSR_IPI_SEND_CPU_SHIFT);
+> -               iocsr_write32(val, LOONGARCH_IOCSR_IPI_SEND);
+> -               action &=3D ~BIT(irq - 1);
+> -       }
+> +       val =3D IOCSR_IPI_SEND_BLOCKING | action;
+> +       val |=3D (cpu << IOCSR_IPI_SEND_CPU_SHIFT);
+> +       iocsr_write32(val, LOONGARCH_IOCSR_IPI_SEND);
+>  }
+>
+> -void loongson_send_ipi_single(int cpu, unsigned int action)
+> +static void loongson_send_ipi_single(int cpu, unsigned int action)
+>  {
+>         ipi_write_action(cpu_logical_map(cpu), (u32)action);
+>  }
+>
+> -void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int act=
+ion)
+> +static void loongson_send_ipi_mask(const struct cpumask *mask, unsigned =
+int action)
+>  {
+>         unsigned int i;
+>
+> @@ -148,6 +138,16 @@ void loongson_send_ipi_mask(const struct cpumask *ma=
+sk, unsigned int action)
+>                 ipi_write_action(cpu_logical_map(i), (u32)action);
+>  }
+>
+> +void arch_send_call_function_single_ipi(int cpu)
+> +{
+> +       smp_ops.send_ipi_single(cpu, ACTTION_CALL_FUNCTION);
+> +}
+> +
+> +void arch_send_call_function_ipi_mask(const struct cpumask *mask)
+> +{
+> +       smp_ops.send_ipi_mask(mask, ACTTION_CALL_FUNCTION);
+> +}
+> +
+>  /*
+>   * This function sends a 'reschedule' IPI to another CPU.
+>   * it goes straight through and wastes no time serializing
+> @@ -155,11 +155,11 @@ void loongson_send_ipi_mask(const struct cpumask *m=
+ask, unsigned int action)
+>   */
+>  void arch_smp_send_reschedule(int cpu)
+>  {
+> -       loongson_send_ipi_single(cpu, SMP_RESCHEDULE);
+> +       smp_ops.send_ipi_single(cpu, ACTTION_RESCHEDULE);
+>  }
+>  EXPORT_SYMBOL_GPL(arch_smp_send_reschedule);
+>
+> -irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
+> +static irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
+>  {
+>         unsigned int action;
+>         unsigned int cpu =3D smp_processor_id();
+> @@ -179,6 +179,26 @@ irqreturn_t loongson_ipi_interrupt(int irq, void *de=
+v)
+>         return IRQ_HANDLED;
+>  }
+>
+> +static void loongson_init_ipi(void)
+> +{
+> +       int r, ipi_irq;
+> +
+> +       ipi_irq =3D get_percpu_irq(INT_IPI);
+> +       if (ipi_irq < 0)
+> +               panic("IPI IRQ mapping failed\n");
+> +
+> +       irq_set_percpu_devid(ipi_irq);
+> +       r =3D request_percpu_irq(ipi_irq, loongson_ipi_interrupt, "IPI", =
+&irq_stat);
+> +       if (r < 0)
+> +               panic("IPI IRQ request failed\n");
+> +}
+> +
+> +struct smp_ops smp_ops =3D {
+> +       .init_ipi               =3D loongson_init_ipi,
+> +       .send_ipi_single        =3D loongson_send_ipi_single,
+> +       .send_ipi_mask          =3D loongson_send_ipi_mask,
+> +};
+> +
+>  static void __init fdt_smp_setup(void)
+>  {
+>  #ifdef CONFIG_OF
+> @@ -256,7 +276,7 @@ void loongson_boot_secondary(int cpu, struct task_str=
+uct *idle)
+>
+>         csr_mail_send(entry, cpu_logical_map(cpu), 0);
+>
+> -       loongson_send_ipi_single(cpu, SMP_BOOT_CPU);
+> +       loongson_send_ipi_single(cpu, ACTTION_BOOT_CPU);
+>  }
+>
+>  /*
+> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+> index e7015f7b70e3..fd5354f9be7c 100644
+> --- a/arch/loongarch/kernel/time.c
+> +++ b/arch/loongarch/kernel/time.c
+> @@ -123,16 +123,6 @@ void sync_counter(void)
+>         csr_write64(init_offset, LOONGARCH_CSR_CNTC);
+>  }
+>
+> -static int get_timer_irq(void)
+> -{
+> -       struct irq_domain *d =3D irq_find_matching_fwnode(cpuintc_handle,=
+ DOMAIN_BUS_ANY);
+> -
+> -       if (d)
+> -               return irq_create_mapping(d, INT_TI);
+> -
+> -       return -EINVAL;
+> -}
+> -
+>  int constant_clockevent_init(void)
+>  {
+>         unsigned int cpu =3D smp_processor_id();
+> @@ -142,7 +132,7 @@ int constant_clockevent_init(void)
+>         static int irq =3D 0, timer_irq_installed =3D 0;
+>
+>         if (!timer_irq_installed) {
+> -               irq =3D get_timer_irq();
+> +               irq =3D get_percpu_irq(INT_TI);
+>                 if (irq < 0)
+>                         pr_err("Failed to map irq %d (timer)\n", irq);
+>         }
+> --
+> 2.39.3
+>
