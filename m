@@ -1,347 +1,347 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB611AAC9;
-	Mon, 19 Feb 2024 09:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0B272420B;
+	Mon, 19 Feb 2024 09:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708335917; cv=none; b=r9syXUgEwwOlQa0exjOvjxdgxJCluBgGktg9oX7Tfz8mmIxMk6s+D2NZ5IegdeymCzHL5tgIBAlMnP3kxRl6BnUVU3wLqVKRmmJ9fGp16Twv899rIh09gANkg2fM/ICv6LX58z1Rnt4HqWvhmlKZe/e484lrwg9WKREGchDaBWM=
+	t=1708336204; cv=none; b=ANDHuHhksgXfqaoISdPNq2sODiTSh875INpyc0e+YPcNFNgije1vpRedM4CDkkNf0rGX3IOXuM4VEWgjIh+ynUxAsUQv9iAh7KqGThPWipsHq3NjTKCbCQhgl8EDPLLRH1ctJvezsyBZPstt48EGmdBEv4OuKK0BhRnT2OtYPG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708335917; c=relaxed/simple;
-	bh=QJM4j0j0pchCDOEJ6x+rLSknxQZs8Iclh87YDcHRPKc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oWFJj1ZJcS57sMAp2Ok2uqgdaEhqPQpnRhcACPPTvNUAjEhbGqsfgvfYnpDElVtNvGAZ1jAfJSGM56/chW+8zxqg9z9PJxPv8IWOJ83RL9cnK3JfPdfOlhsv7R8O+2YSm4VLTgMq3sD336ROQgQRMY/HSEtTnWSZaz7rjwM2NwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TdcxZ6qlqz6K97K;
-	Mon, 19 Feb 2024 17:41:38 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E8D83140DDB;
-	Mon, 19 Feb 2024 17:45:11 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 19 Feb
- 2024 09:45:11 +0000
-Date: Mon, 19 Feb 2024 09:45:10 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Russell King <rmk+kernel@armlinux.org.uk>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>, <x86@kernel.org>,
-	<acpica-devel@lists.linuxfoundation.org>, <linux-csky@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-	<linux-parisc@vger.kernel.org>, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, <jianyong.wu@arm.com>,
-	<justin.he@arm.com>, James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v4 01/15] ACPI: Only enumerate enabled (or
- functional) processor devices
-Message-ID: <20240219094510.00004843@Huawei.com>
-In-Reply-To: <CAJZ5v0hY_LXp41WMVPhiLosPe7YVzF38Uz=EhmJqVwqFn==Upw@mail.gmail.com>
-References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk>
-	<E1rVDmP-0027YJ-EW@rmk-PC.armlinux.org.uk>
-	<CAJZ5v0hY_LXp41WMVPhiLosPe7YVzF38Uz=EhmJqVwqFn==Upw@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1708336204; c=relaxed/simple;
+	bh=qVLktq4L4ue04kDObs/s6VXvHhJ8BL4Ga9qHhCok+Xw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=rmHAFdZfiuSTJ3brCLZfWAzBNPUA+uq+hVJGC6vL3EsXEbI055FwsSqvJ0RSBMbTOQ9mKBzL9lQePycbl2qsxNTPIMka8o1kox2K5H82ixx04u7LP709OHwHNwPnTNctqzgSfGTmvZ+0bUVG9rVJPK6qX/DR2woCoWQ5MozoMvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8CxmehHJNNlLk4OAA--.18725S3;
+	Mon, 19 Feb 2024 17:49:59 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxnhNDJNNlsOo7AA--.33312S3;
+	Mon, 19 Feb 2024 17:49:57 +0800 (CST)
+Subject: Re: [PATCH v4 4/6] LoongArch: Add paravirt interface for guest kernel
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ kvm@vger.kernel.org
+References: <20240201031950.3225626-1-maobibo@loongson.cn>
+ <20240201031950.3225626-5-maobibo@loongson.cn>
+ <CAAhV-H7dXsU+WM172PWi_m8TYpYmzG_SW-vVQcdnOdETUxQ9+w@mail.gmail.com>
+ <63f8bd29-c0da-167b-187d-61c56eb081a6@loongson.cn>
+ <CAAhV-H6HQHyu=0zyv6FVLRJTkOcmnkLk5h361yGd2igYnuMMng@mail.gmail.com>
+ <4dcbd5b2-ba69-e254-b3bb-75a75e5f9215@loongson.cn>
+ <CAAhV-H7UyOX6ifKzUdTQiPuueOwsBUO2Jhtfcb832Gc0DTpQKQ@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <b6482ad7-c800-beb9-ac49-989f8a044132@loongson.cn>
+Date: Mon, 19 Feb 2024 17:50:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+In-Reply-To: <CAAhV-H7UyOX6ifKzUdTQiPuueOwsBUO2Jhtfcb832Gc0DTpQKQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxnhNDJNNlsOo7AA--.33312S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3ZF47urW8GFy5ZF4UWr4ftFc_yoWDXry5pF
+	yUAF4kGF4UGr1xArnFq3y5Wrnxtrn7Gr17WF17t340yrsFvr17Jr18Jryj9FykJa1kGF10
+	qFy8Gr4a9F15J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
+	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07jOF4_UUUUU=
 
-On Thu, 15 Feb 2024 21:10:39 +0100
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-> On Wed, Jan 31, 2024 at 5:49=E2=80=AFPM Russell King <rmk+kernel@armlinux=
-.org.uk> wrote:
-> >
-> > From: James Morse <james.morse@arm.com>
-> >
-> > Today the ACPI enumeration code 'visits' all devices that are present.
-> >
-> > This is a problem for arm64, where CPUs are always present, but not
-> > always enabled. When a device-check occurs because the firmware-policy
-> > has changed and a CPU is now enabled, the following error occurs:
-> > | acpi ACPI0007:48: Enumeration failure
-> >
-> > This is ultimately because acpi_dev_ready_for_enumeration() returns
-> > true for a device that is not enabled. The ACPI Processor driver
-> > will not register such CPUs as they are not 'decoding their resources'.
-> >
-> > ACPI allows a device to be functional instead of maintaining the
-> > present and enabled bit, but we can't simply check the enabled bit
-> > for all devices since firmware can be buggy.
-> >
-> > If ACPI indicates that the device is present and enabled, then all well
-> > and good, we can enumate it. However, if the device is present and not
-> > enabled, then we also check whether the device is a processor device
-> > to limit the impact of this new check to just processor devices.
-> >
-> > This avoids enumerating present && functional processor devices that
-> > are not enabled.
-> >
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > Co-developed-by: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > ---
-> > Changes since RFC v2:
-> >  * Incorporate comment suggestion by Gavin Shan.
-> > Changes since RFC v3:
-> >  * Fixed "sert" typo.
-> > Changes since RFC v3 (smaller series):
-> >  * Restrict checking the enabled bit to processor devices, update
-> >    commit comments.
-> >  * Use Rafael's suggestion in
-> >    https://lore.kernel.org/r/5760569.DvuYhMxLoT@kreacher
-> >  * Updated with a fix - see:
-> >    https://lore.kernel.org/all/Zbe8WQRASx6D6RaG@shell.armlinux.org.uk/
-> > ---
-> >  drivers/acpi/acpi_processor.c | 11 +++++++++
-> >  drivers/acpi/device_pm.c      |  2 +-
-> >  drivers/acpi/device_sysfs.c   |  2 +-
-> >  drivers/acpi/internal.h       |  4 ++-
-> >  drivers/acpi/property.c       |  2 +-
-> >  drivers/acpi/scan.c           | 46 +++++++++++++++++++++++++++--------
-> >  6 files changed, 53 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processo=
-r.c
-> > index 4fe2ef54088c..cf7c1cca69dd 100644
-> > --- a/drivers/acpi/acpi_processor.c
-> > +++ b/drivers/acpi/acpi_processor.c
-> > @@ -626,6 +626,17 @@ static struct acpi_scan_handler processor_handler =
-=3D {
-> >         },
-> >  };
-> >
-> > +bool acpi_device_is_processor(const struct acpi_device *adev)
-> > +{
-> > +       if (adev->device_type =3D=3D ACPI_BUS_TYPE_PROCESSOR)
-> > +               return true;
-> > +
-> > +       if (adev->device_type !=3D ACPI_BUS_TYPE_DEVICE)
-> > +               return false;
-> > +
-> > +       return acpi_scan_check_handler(adev, &processor_handler);
-> > +}
-> > +
-> >  static int acpi_processor_container_attach(struct acpi_device *dev,
-> >                                            const struct acpi_device_id =
-*id)
-> >  {
-> > diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> > index 3b4d048c4941..e3c80f3b3b57 100644
-> > --- a/drivers/acpi/device_pm.c
-> > +++ b/drivers/acpi/device_pm.c
-> > @@ -313,7 +313,7 @@ int acpi_bus_init_power(struct acpi_device *device)
-> >                 return -EINVAL;
-> >
-> >         device->power.state =3D ACPI_STATE_UNKNOWN;
-> > -       if (!acpi_device_is_present(device)) {
-> > +       if (!acpi_dev_ready_for_enumeration(device)) {
-> >                 device->flags.initialized =3D false;
-> >                 return -ENXIO;
-> >         }
-> > diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
-> > index 23373faa35ec..a0256d2493a7 100644
-> > --- a/drivers/acpi/device_sysfs.c
-> > +++ b/drivers/acpi/device_sysfs.c
-> > @@ -141,7 +141,7 @@ static int create_pnp_modalias(const struct acpi_de=
-vice *acpi_dev, char *modalia
-> >         struct acpi_hardware_id *id;
-> >
-> >         /* Avoid unnecessarily loading modules for non present devices.=
- */
-> > -       if (!acpi_device_is_present(acpi_dev))
-> > +       if (!acpi_dev_ready_for_enumeration(acpi_dev))
-> >                 return 0;
-> >
-> >         /*
-> > diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-> > index 6588525c45ef..1bc8b6db60c5 100644
-> > --- a/drivers/acpi/internal.h
-> > +++ b/drivers/acpi/internal.h
-> > @@ -62,6 +62,8 @@ void acpi_sysfs_add_hotplug_profile(struct acpi_hotpl=
-ug_profile *hotplug,
-> >  int acpi_scan_add_handler_with_hotplug(struct acpi_scan_handler *handl=
-er,
-> >                                        const char *hotplug_profile_name=
-);
-> >  void acpi_scan_hotplug_enabled(struct acpi_hotplug_profile *hotplug, b=
-ool val);
-> > +bool acpi_scan_check_handler(const struct acpi_device *adev,
-> > +                            struct acpi_scan_handler *handler);
-> >
-> >  #ifdef CONFIG_DEBUG_FS
-> >  extern struct dentry *acpi_debugfs_dir;
-> > @@ -121,7 +123,6 @@ int acpi_device_setup_files(struct acpi_device *dev=
-);
-> >  void acpi_device_remove_files(struct acpi_device *dev);
-> >  void acpi_device_add_finalize(struct acpi_device *device);
-> >  void acpi_free_pnp_ids(struct acpi_device_pnp *pnp);
-> > -bool acpi_device_is_present(const struct acpi_device *adev);
-> >  bool acpi_device_is_battery(struct acpi_device *adev);
-> >  bool acpi_device_is_first_physical_node(struct acpi_device *adev,
-> >                                         const struct device *dev);
-> > @@ -133,6 +134,7 @@ int acpi_bus_register_early_device(int type);
-> >  const struct acpi_device *acpi_companion_match(const struct device *de=
-v);
-> >  int __acpi_device_uevent_modalias(const struct acpi_device *adev,
-> >                                   struct kobj_uevent_env *env);
-> > +bool acpi_device_is_processor(const struct acpi_device *adev);
-> >
-> >  /* -------------------------------------------------------------------=
--------
-> >                                    Power Resource
-> > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> > index a6ead5204046..9f8d54038770 100644
-> > --- a/drivers/acpi/property.c
-> > +++ b/drivers/acpi/property.c
-> > @@ -1486,7 +1486,7 @@ static bool acpi_fwnode_device_is_available(const=
- struct fwnode_handle *fwnode)
-> >         if (!is_acpi_device_node(fwnode))
-> >                 return false;
-> >
-> > -       return acpi_device_is_present(to_acpi_device_node(fwnode));
-> > +       return acpi_dev_ready_for_enumeration(to_acpi_device_node(fwnod=
-e));
-> >  }
-> >
-> >  static const void *
-> > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> > index e6ed1ba91e5c..fd2e8b3a5749 100644
-> > --- a/drivers/acpi/scan.c
-> > +++ b/drivers/acpi/scan.c
-> > @@ -304,7 +304,7 @@ static int acpi_scan_device_check(struct acpi_devic=
-e *adev)
-> >         int error;
-> >
-> >         acpi_bus_get_status(adev);
-> > -       if (acpi_device_is_present(adev)) {
-> > +       if (acpi_dev_ready_for_enumeration(adev)) {
-> >                 /*
-> >                  * This function is only called for device objects for =
-which
-> >                  * matching scan handlers exist.  The only situation in=
- which
-> > @@ -338,7 +338,7 @@ static int acpi_scan_bus_check(struct acpi_device *=
-adev, void *not_used)
-> >         int error;
-> >
-> >         acpi_bus_get_status(adev);
-> > -       if (!acpi_device_is_present(adev)) {
-> > +       if (!acpi_dev_ready_for_enumeration(adev)) {
-> >                 acpi_scan_device_not_enumerated(adev);
-> >                 return 0;
-> >         }
-> > @@ -1917,11 +1917,6 @@ static bool acpi_device_should_be_hidden(acpi_ha=
-ndle handle)
-> >         return true;
-> >  }
-> >
-> > -bool acpi_device_is_present(const struct acpi_device *adev)
-> > -{
-> > -       return adev->status.present || adev->status.functional;
-> > -}
-> > -
-> >  static bool acpi_scan_handler_matching(struct acpi_scan_handler *handl=
-er,
-> >                                        const char *idstr,
-> >                                        const struct acpi_device_id **ma=
-tchid)
-> > @@ -1942,6 +1937,18 @@ static bool acpi_scan_handler_matching(struct ac=
-pi_scan_handler *handler,
-> >         return false;
-> >  }
-> >
-> > +bool acpi_scan_check_handler(const struct acpi_device *adev,
-> > +                            struct acpi_scan_handler *handler)
-> > +{
-> > +       struct acpi_hardware_id *hwid;
-> > +
-> > +       list_for_each_entry(hwid, &adev->pnp.ids, list)
-> > +               if (acpi_scan_handler_matching(handler, hwid->id, NULL))
-> > +                       return true;
-> > +
-> > +       return false;
-> > +}
-> > +
-> >  static struct acpi_scan_handler *acpi_scan_match_handler(const char *i=
-dstr,
-> >                                         const struct acpi_device_id **m=
-atchid)
-> >  {
-> > @@ -2405,16 +2412,35 @@ EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
-> >   * acpi_dev_ready_for_enumeration - Check if the ACPI device is ready =
-for enumeration
-> >   * @device: Pointer to the &struct acpi_device to check
-> >   *
-> > - * Check if the device is present and has no unmet dependencies.
-> > + * Check if the device is functional or enabled and has no unmet depen=
-dencies.
-> >   *
-> > - * Return true if the device is ready for enumeratino. Otherwise, retu=
-rn false.
-> > + * Return true if the device is ready for enumeration. Otherwise, retu=
-rn false.
-> >   */
-> >  bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
-> >  {
-> >         if (device->flags.honor_deps && device->dep_unmet)
-> >                 return false;
-> >
-> > -       return acpi_device_is_present(device);
-> > +       /*
-> > +        * ACPI 6.5's 6.3.7 "_STA (Device Status)" allows firmware to r=
-eturn
-> > +        * (!present && functional) for certain types of devices that s=
-hould be
-> > +        * enumerated. Note that the enabled bit should not be set unle=
-ss the
-> > +        * present bit is set.
-> > +        *
-> > +        * However, limit this only to processor devices to reduce poss=
-ible
-> > +        * regressions with firmware.
-> > +        */
-> > +       if (!device->status.present)
-> > +               return device->status.functional;
-> > +
-> > +       /*
-> > +        * Fast path - if enabled is set, avoid the more expensive test=
- to
-> > +        * check whether this device is a processor.
-> > +        */
-> > +       if (device->status.enabled)
-> > +               return true;
-> > +
-> > +       return !acpi_device_is_processor(device);
-> >  }
-> >  EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
-> >
-> > -- =20
->=20
-> I can queue this up for 6.9 as it looks like the rest of the series
-> will still need some work.  What do you think?
 
-The sooner this goes in the sooner we discover if some of the bios bug
-workarounds we have dropped form the series are in reality necessary
-(i.e. get it into big board test farms).
+On 2024/2/19 下午5:38, Huacai Chen wrote:
+> On Mon, Feb 19, 2024 at 5:21 PM maobibo <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2024/2/19 下午4:48, Huacai Chen wrote:
+>>> On Mon, Feb 19, 2024 at 12:11 PM maobibo <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2024/2/19 上午10:42, Huacai Chen wrote:
+>>>>> Hi, Bibo,
+>>>>>
+>>>>> On Thu, Feb 1, 2024 at 11:19 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> The patch adds paravirt interface for guest kernel, function
+>>>>>> pv_guest_initi() firstly checks whether system runs on VM mode. If kernel
+>>>>>> runs on VM mode, it will call function kvm_para_available() to detect
+>>>>>> whether current VMM is KVM hypervisor. And the paravirt function can work
+>>>>>> only if current VMM is KVM hypervisor, since there is only KVM hypervisor
+>>>>>> supported on LoongArch now.
+>>>>>>
+>>>>>> This patch only adds paravirt interface for guest kernel, however there
+>>>>>> is not effective pv functions added here.
+>>>>>>
+>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>> ---
+>>>>>>     arch/loongarch/Kconfig                        |  9 ++++
+>>>>>>     arch/loongarch/include/asm/kvm_para.h         |  7 ++++
+>>>>>>     arch/loongarch/include/asm/paravirt.h         | 27 ++++++++++++
+>>>>>>     .../include/asm/paravirt_api_clock.h          |  1 +
+>>>>>>     arch/loongarch/kernel/Makefile                |  1 +
+>>>>>>     arch/loongarch/kernel/paravirt.c              | 41 +++++++++++++++++++
+>>>>>>     arch/loongarch/kernel/setup.c                 |  2 +
+>>>>>>     7 files changed, 88 insertions(+)
+>>>>>>     create mode 100644 arch/loongarch/include/asm/paravirt.h
+>>>>>>     create mode 100644 arch/loongarch/include/asm/paravirt_api_clock.h
+>>>>>>     create mode 100644 arch/loongarch/kernel/paravirt.c
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>>>>>> index 10959e6c3583..817a56dff80f 100644
+>>>>>> --- a/arch/loongarch/Kconfig
+>>>>>> +++ b/arch/loongarch/Kconfig
+>>>>>> @@ -585,6 +585,15 @@ config CPU_HAS_PREFETCH
+>>>>>>            bool
+>>>>>>            default y
+>>>>>>
+>>>>>> +config PARAVIRT
+>>>>>> +       bool "Enable paravirtualization code"
+>>>>>> +       depends on AS_HAS_LVZ_EXTENSION
+>>>>>> +       help
+>>>>>> +          This changes the kernel so it can modify itself when it is run
+>>>>>> +         under a hypervisor, potentially improving performance significantly
+>>>>>> +         over full virtualization.  However, when run without a hypervisor
+>>>>>> +         the kernel is theoretically slower and slightly larger.
+>>>>>> +
+>>>>>>     config ARCH_SUPPORTS_KEXEC
+>>>>>>            def_bool y
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+>>>>>> index 9425d3b7e486..41200e922a82 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_para.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_para.h
+>>>>>> @@ -2,6 +2,13 @@
+>>>>>>     #ifndef _ASM_LOONGARCH_KVM_PARA_H
+>>>>>>     #define _ASM_LOONGARCH_KVM_PARA_H
+>>>>>>
+>>>>>> +/*
+>>>>>> + * Hypcall code field
+>>>>>> + */
+>>>>>> +#define HYPERVISOR_KVM                 1
+>>>>>> +#define HYPERVISOR_VENDOR_SHIFT                8
+>>>>>> +#define HYPERCALL_CODE(vendor, code)   ((vendor << HYPERVISOR_VENDOR_SHIFT) + code)
+>>>>>> +
+>>>>>>     /*
+>>>>>>      * LoongArch hypcall return code
+>>>>>>      */
+>>>>>> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..b64813592ba0
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/loongarch/include/asm/paravirt.h
+>>>>>> @@ -0,0 +1,27 @@
+>>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>>>> +#ifndef _ASM_LOONGARCH_PARAVIRT_H
+>>>>>> +#define _ASM_LOONGARCH_PARAVIRT_H
+>>>>>> +
+>>>>>> +#ifdef CONFIG_PARAVIRT
+>>>>>> +#include <linux/static_call_types.h>
+>>>>>> +struct static_key;
+>>>>>> +extern struct static_key paravirt_steal_enabled;
+>>>>>> +extern struct static_key paravirt_steal_rq_enabled;
+>>>>>> +
+>>>>>> +u64 dummy_steal_clock(int cpu);
+>>>>>> +DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
+>>>>>> +
+>>>>>> +static inline u64 paravirt_steal_clock(int cpu)
+>>>>>> +{
+>>>>>> +       return static_call(pv_steal_clock)(cpu);
+>>>>>> +}
+>>>>> The steal time code can be removed in this patch, I think.
+>>>>>
+>>>> Originally I want to remove this piece of code, but it fails to compile
+>>>> if CONFIG_PARAVIRT is selected. Here is reference code, function
+>>>> paravirt_steal_clock() must be defined if CONFIG_PARAVIRT is selected.
+>>>>
+>>>> static __always_inline u64 steal_account_process_time(u64 maxtime)
+>>>> {
+>>>> #ifdef CONFIG_PARAVIRT
+>>>>            if (static_key_false(&paravirt_steal_enabled)) {
+>>>>                    u64 steal;
+>>>>
+>>>>                    steal = paravirt_steal_clock(smp_processor_id());
+>>>>                    steal -= this_rq()->prev_steal_time;
+>>>>                    steal = min(steal, maxtime);
+>>>>                    account_steal_time(steal);
+>>>>                    this_rq()->prev_steal_time += steal;
+>>>>
+>>>>                    return steal;
+>>>>            }
+>>>> #endif
+>>>>            return 0;
+>>>> }
+>>> OK, then keep it.
+>>>
+>>>>
+>>>>>> +
+>>>>>> +int pv_guest_init(void);
+>>>>>> +#else
+>>>>>> +static inline int pv_guest_init(void)
+>>>>>> +{
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +#endif // CONFIG_PARAVIRT
+>>>>>> +#endif
+>>>>>> diff --git a/arch/loongarch/include/asm/paravirt_api_clock.h b/arch/loongarch/include/asm/paravirt_api_clock.h
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..65ac7cee0dad
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/loongarch/include/asm/paravirt_api_clock.h
+>>>>>> @@ -0,0 +1 @@
+>>>>>> +#include <asm/paravirt.h>
+>>>>>> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+>>>>>> index 3c808c680370..662e6e9de12d 100644
+>>>>>> --- a/arch/loongarch/kernel/Makefile
+>>>>>> +++ b/arch/loongarch/kernel/Makefile
+>>>>>> @@ -48,6 +48,7 @@ obj-$(CONFIG_MODULES)         += module.o module-sections.o
+>>>>>>     obj-$(CONFIG_STACKTRACE)       += stacktrace.o
+>>>>>>
+>>>>>>     obj-$(CONFIG_PROC_FS)          += proc.o
+>>>>>> +obj-$(CONFIG_PARAVIRT)         += paravirt.o
+>>>>>>
+>>>>>>     obj-$(CONFIG_SMP)              += smp.o
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..21d01d05791a
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/loongarch/kernel/paravirt.c
+>>>>>> @@ -0,0 +1,41 @@
+>>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>>> +#include <linux/export.h>
+>>>>>> +#include <linux/types.h>
+>>>>>> +#include <linux/jump_label.h>
+>>>>>> +#include <linux/kvm_para.h>
+>>>>>> +#include <asm/paravirt.h>
+>>>>>> +#include <linux/static_call.h>
+>>>>>> +
+>>>>>> +struct static_key paravirt_steal_enabled;
+>>>>>> +struct static_key paravirt_steal_rq_enabled;
+>>>>>> +
+>>>>>> +static u64 native_steal_clock(int cpu)
+>>>>>> +{
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
+>>>>> The steal time code can be removed in this patch, I think.
+>>>> Ditto, the same reason with above.
+>>>>>
+>>>>>> +
+>>>>>> +static bool kvm_para_available(void)
+>>>>>> +{
+>>>>>> +       static int hypervisor_type;
+>>>>>> +       int config;
+>>>>>> +
+>>>>>> +       if (!hypervisor_type) {
+>>>>>> +               config = read_cpucfg(CPUCFG_KVM_SIG);
+>>>>>> +               if (!memcmp(&config, KVM_SIGNATURE, 4))
+>>>>>> +                       hypervisor_type = HYPERVISOR_KVM;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       return hypervisor_type == HYPERVISOR_KVM;
+>>>>>> +}
+>>>>>> +
+>>>>>> +int __init pv_guest_init(void)
+>>>>>> +{
+>>>>>> +       if (!cpu_has_hypervisor)
+>>>>>> +               return 0;
+>>>>>> +       if (!kvm_para_available())
+>>>>>> +               return 0;
+>>>>>> +
+>>>>>> +       return 1;
+>>>>>> +}
+>>>>>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+>>>>>> index edf2bba80130..de5c36dccc49 100644
+>>>>>> --- a/arch/loongarch/kernel/setup.c
+>>>>>> +++ b/arch/loongarch/kernel/setup.c
+>>>>>> @@ -43,6 +43,7 @@
+>>>>>>     #include <asm/efi.h>
+>>>>>>     #include <asm/loongson.h>
+>>>>>>     #include <asm/numa.h>
+>>>>>> +#include <asm/paravirt.h>
+>>>>>>     #include <asm/pgalloc.h>
+>>>>>>     #include <asm/sections.h>
+>>>>>>     #include <asm/setup.h>
+>>>>>> @@ -367,6 +368,7 @@ void __init platform_init(void)
+>>>>>>            pr_info("The BIOS Version: %s\n", b_info.bios_version);
+>>>>>>
+>>>>>>            efi_runtime_init();
+>>>>>> +       pv_guest_init();
+>>>>> I prefer use CONFIG_PARAVIRT here, though you have a dummy version for
+>>>>> !CONFIG_PARAVIRT, I think it is better to let others clearly know that
+>>>>> PARAVIRT is an optional feature.
+>>>> I remember that there is rule that CONFIG_xxx had better be used in
+>>>> header files rather than c code, so that the code looks neat. Am I wrong?
+>>> That depends on what we want, sometimes we want to hide the details,
+>>> but sometimes we want to give others a notice.
+>> I want to keep code clean here :)
+>>
+>>>
+>>> And there is another problem: if you want to centralize all pv init
+>>> functions, it is better to use pv_features_init() rather than
+>>> pv_guest_init(); if you want to give each feature an init function,
+>>> then we don't need pv_guest_init here, and we can then add a
+>>> pv_ipi_init() in the last patch.
+>> Currently I have no idea how to add other pv features like pv
+>> stealtimer, I will consider this when adding other pv features.
+>> pv_ipi_init/pv_guest_init is both ok for me, pv_ipi_init is better for now.
+> Then you want to add an init function for each feature, so please
+> rename to pv_ipi_init(), move to the last patch and in
+> loongson_smp_setup().
+Sure, will change function name with pv_ipi_init() and move sentences 
+calling this function to last patch.
 
-So I'm definitely keen to see this go in for 6.9.
+Regards
+Bibo Mao
 
-Hopefully we can make rapid progress on the rest of the series and
-hammer out which of the remaining subtle differences between
-the two flows are real vs code evolution issues.
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>
+>>>>> Huacai
+>>>>>>     }
+>>>>>>
+>>>>>>     static void __init check_kernel_sections_mem(void)
+>>>>>> --
+>>>>>> 2.39.3
+>>>>>>
+>>>>>>
+>>>>
+>>
 
-Jonathan
