@@ -1,95 +1,100 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A43EA23755
-	for <loongarch@lists.linux.dev>; Tue, 20 Feb 2024 01:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6455764AAD
+	for <loongarch@lists.linux.dev>; Tue, 20 Feb 2024 08:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708392179; cv=none; b=mnF73WzajVzLb0jk+s6srSEIuk/otSFpvahe0zZkKnTxT2OkBuU/iP6JKoqKKE09m0xLaKQBcD6PzZX2LU4dT0WM23Ld6Q9vnNnLwW+mF+ze1rYJVVBn08AQar+0Rq+yTNOcgNVbDll/cI3AeHCiSMJn64vIVjQrd/pW43HtUSg=
+	t=1708419387; cv=none; b=NF/YVSteMfZs1Ea/6Q0X8n0mKEozPtEAVkxf16NiHhLgbuPGBXxn3A0gwJ6xqVZ83YJrh56ovHDADoxG4w+CQrOTYAC/o4swTpojH9PJWn6NxM0/lc53taf2Xu3teTpXJ8IlINElJYuvCW5SiPxSfcER9SnKWFikA9zMqTpmHpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708392179; c=relaxed/simple;
-	bh=99PSqupxaWhciKD6PS2xAzi9+SnpFL6NS1UK09usFKg=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uKvL1BnoxW51aMI9dd75xroXhmnWLiyrj4/YRssZDId2fgMfPWHdfWbc+mkfF/33mI1IfWG8AbvdP/xGwNDDcFSGSLMku/eUWJG08ohjtZ0zOR+TU3VW72i4Ob/aWb6nkCiR7yZ6B7PAyz71gusPldh2w2PBQKBB0X6QlMoKZis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxDOvt_tNlEtMOAA--.29125S3;
-	Tue, 20 Feb 2024 09:22:53 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX8_l_tNlG2M8AA--.23719S3;
-	Tue, 20 Feb 2024 09:22:46 +0800 (CST)
-Subject: Re: [PATCH bpf-next 2/2] bpf: Take return from set_memory_rox() into
- account with bpf_jit_binary_lock_ro()
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Puranjay Mohan <puranjay12@gmail.com>, Zi Shen Lim <zlim.lnx@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Hengqi Chen <hengqi.chen@gmail.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Johan Almbladh <johan.almbladh@anyfinetworks.com>,
- Paul Burton <paulburton@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Ilya Leoshkevich <iii@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "David S. Miller"
- <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
- Wang YanQing <udknight@gmail.com>, David Ahern <dsahern@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
- <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
-Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
- netdev@vger.kernel.org, Kees Cook <keescook@chromium.org>,
- "linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <326d7b90-614f-ec2d-e224-5d325c06a349@loongson.cn>
-Date: Tue, 20 Feb 2024 09:22:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1708419387; c=relaxed/simple;
+	bh=XxS2PiR8TvPD6PooYcEaHBnRrtlm5KfcjvweKguWnMg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=giMdH0DcitI0hQWQWwz4AuS68034hTaowyphlDzaajZddd1LnGZobsJBCihX5CVTrf80jQgbNEiDYvoXm8OOYNbaCxd0gAHKMTRH5PtFUOuiyrbiUjTsAANzIzv7ZBinrv/iYx2QVsvisHvbplyyFtkY2/LOPg4J2p0xmtBuK18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anyfinetworks.com; spf=none smtp.mailfrom=anyfinetworks.com; dkim=pass (2048-bit key) header.d=anyfinetworks-com.20230601.gappssmtp.com header.i=@anyfinetworks-com.20230601.gappssmtp.com header.b=YgvaYNDs; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anyfinetworks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=anyfinetworks.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=anyfinetworks-com.20230601.gappssmtp.com header.i=@anyfinetworks-com.20230601.gappssmtp.com header.b="YgvaYNDs"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-299566373d4so1742785a91.1
+        for <loongarch@lists.linux.dev>; Tue, 20 Feb 2024 00:56:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anyfinetworks-com.20230601.gappssmtp.com; s=20230601; t=1708419384; x=1709024184; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dchRxoxVGKioFcq/L4EKVcfcET3Jr75StrPrjuqQjL0=;
+        b=YgvaYNDsh4I8ZNjXjh5lUatuz5qwAi5Y5DiwzHoaq45G9YKj9OgkdyR8f+aZ+v1gds
+         /39nypygG5JLaIQUBIPeweR0FOxzLHgEK4OpE+wN3358yyYmEcXE1dZ/NWvKE7Kwlec7
+         Vg+//tnwWY/6Rp+p8K4xKequ5ujjeB+zy+CJceM9atS83OkdQRV52mZr4AYYpBG8a0C0
+         3Cw/w7Oc252TOh4tWI5H5ucjLHEjigisgbhGdf1c5hi1qfPDd/ExViFJLxFl1YOH37UC
+         yaUqYPQDFYOIlp1JWIRcADedu4RDTI6Dm4yX3uEHKtMDKTPRxrWGA8BSwb2R79zF2Ae4
+         lQbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708419384; x=1709024184;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dchRxoxVGKioFcq/L4EKVcfcET3Jr75StrPrjuqQjL0=;
+        b=TiApzLP9P35uY5MG/0Gu+FxSL60HJIzi5CvhRFzbpc38wqSo1KWGLep2RQjC4CAnL/
+         H/O5GXMxPMcsJTUbHhdwcR0pZz79xswGZ19nhiP9nhmybLg+0hbOwGnzBnUuABhgMoWD
+         PopTl1DRpv+ql3VA2LHCha+dOGhPQXmMlC2KajmZOg2drlL45O14cxzlCBywob9DKjK8
+         QH9GeF52nm+uaw+TzpXK4UxGN2vBJY9tSJ17Io7nLRU4yhBQN9U8E1loQwPwZ6riHMai
+         QEcp1m2Nkt4C7g1MSoOrQuHjoeO9uqgvFeXmbAh+K15Vrb6bMdaXb0hqW3B+SfbTrOpo
+         FG/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWKkj7eZwdvvTkFBxW4RsBhhbQOS5+xoDQbDIXH9bs8ziEF1PB/GlOm8Q0+5T2nYAH6TjvVirpU4knx4x3pNgu3PXi+F2ecyxDQ
+X-Gm-Message-State: AOJu0Yxgyu0+lo+cyWweXjaw3QUpnln3Yp/EtYnTuoJsFSgKjxsaUkmB
+	QFxqBvU9htu0wIAU41btZQoGo1MzZ7OSCm4GwWJLOT0vNFWcX5ImM+MzjCF7b4PbEVeopsFq5JW
+	z43JPLWHfdjfxm49l1bDrOKsJiORdy8leutGOuA==
+X-Google-Smtp-Source: AGHT+IHl7TYiCYsEXMrh4VmDGMZtMQoKh4DXw10jPMT7TOqjy20gTUqscrvJKqfiSDRCNiwo83Vx2RGvwz2GtNa0WA4=
+X-Received: by 2002:a17:90a:34cf:b0:299:5b95:cd7d with SMTP id
+ m15-20020a17090a34cf00b002995b95cd7dmr4504419pjf.45.1708419384629; Tue, 20
+ Feb 2024 00:56:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
+ <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8AxX8_l_tNlG2M8AA--.23719S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWrW8GFy7ur13Jr17JrWxZrc_yoW5Aw17pF
-	9rZwnrCr4vgr4UWFsFk3WUXFZ3Z397Ka47urya9ryjg3Z0qF1kuayfKw1SgFW3ArWUXa18
-	Xa1vgryUuaykA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUjr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_GFv_Wryle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
-	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26rWY6Fy7MxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r4a6rW5MI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07bnDGOUUU
-	UU=
+From: Johan Almbladh <johan.almbladh@anyfinetworks.com>
+Date: Tue, 20 Feb 2024 09:56:13 +0100
+Message-ID: <CAM1=_QTF1amgOZUWJ4BA872RW3DE_papO5yi7ak+-WCkBfvC5g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/2] bpf: Take return from set_memory_rox() into
+ account with bpf_jit_binary_lock_ro()
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	Puranjay Mohan <puranjay12@gmail.com>, Zi Shen Lim <zlim.lnx@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Burton <paulburton@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Wang YanQing <udknight@gmail.com>, 
+	David Ahern <dsahern@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
+	netdev@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02/18/2024 06:55 PM, Christophe Leroy wrote:
+On Sun, Feb 18, 2024 at 11:55=E2=80=AFAM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
 > set_memory_rox() can fail, leaving memory unprotected.
 >
 > Check return and bail out when bpf_jit_binary_lock_ro() returns
@@ -97,85 +102,24 @@ On 02/18/2024 06:55 PM, Christophe Leroy wrote:
 >
 > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 > ---
+> Previous patch introduces a dependency on this patch because it modifies =
+bpf_prog_lock_ro(), but they are independant.
+> It is possible to apply this patch as standalone by handling trivial conf=
+lict with unmodified bpf_prog_lock_ro().
+> ---
+>  arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
+>  arch/arm64/net/bpf_jit_comp.c    | 21 +++++++++++++++------
+>  arch/loongarch/net/bpf_jit.c     | 21 +++++++++++++++------
+>  arch/mips/net/bpf_jit_comp.c     |  3 ++-
+>  arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
+>  arch/s390/net/bpf_jit_comp.c     |  6 +++++-
+>  arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
+>  arch/x86/net/bpf_jit_comp32.c    |  3 +--
+>  include/linux/filter.h           |  4 ++--
+>  9 files changed, 64 insertions(+), 33 deletions(-)
 
-...
-
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index e73323d759d0..aafc5037fd2b 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1294,16 +1294,18 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
->  	flush_icache_range((unsigned long)header, (unsigned long)(ctx.image + ctx.idx));
->
->  	if (!prog->is_func || extra_pass) {
-> +		int err;
-> +
->  		if (extra_pass && ctx.idx != jit_data->ctx.idx) {
->  			pr_err_once("multi-func JIT bug %d != %d\n",
->  				    ctx.idx, jit_data->ctx.idx);
-> -			bpf_jit_binary_free(header);
-> -			prog->bpf_func = NULL;
-> -			prog->jited = 0;
-> -			prog->jited_len = 0;
-> -			goto out_offset;
-> +			goto out_free;
-> +		}
-> +		err = bpf_jit_binary_lock_ro(header);
-> +		if (err) {
-> +			pr_err_once("bpf_jit_binary_lock_ro() returned %d\n", err);
-> +			goto out_free;
->  		}
-> -		bpf_jit_binary_lock_ro(header);
->  	} else {
->  		jit_data->ctx = ctx;
->  		jit_data->image = image_ptr;
-> @@ -1334,6 +1336,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
->  	out_offset = -1;
->
->  	return prog;
-> +
-> +out_free:
-> +	bpf_jit_binary_free(header);
-> +	prog->bpf_func = NULL;
-> +	prog->jited = 0;
-> +	prog->jited_len = 0;
-> +	goto out_offset;
->  }
->
->  /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
-
-...
-
-> diff --git a/include/linux/filter.h b/include/linux/filter.h
-> index fc0994dc5c72..314414fa6d70 100644
-> --- a/include/linux/filter.h
-> +++ b/include/linux/filter.h
-> @@ -892,10 +892,10 @@ static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
->  	return 0;
->  }
->
-> -static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
-> +static inline int __must_check bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
->  {
->  	set_vm_flush_reset_perms(hdr);
-> -	set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
-> +	return set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
->  }
->
->  int sk_filter_trim_cap(struct sock *sk, struct sk_buff *skb, unsigned int cap);
-
-LoongArch does not select CONFIG_ARCH_HAS_SET_MEMORY, set_memory_ro()
-and set_memory_x() always return 0, then set_memory_rox() also returns
-0, that is to say, bpf_jit_binary_lock_ro() will return 0, it seems
-that there is no obvious effect for LoongArch with this patch.
-
-But once CONFIG_ARCH_HAS_SET_MEMORY is selected and the arch-specified
-set_memory_*() functions are implemented in the future, it is necessary
-to handle the error cases. At least, in order to keep consistent with
-the other archs, the code itself looks good to me.
-
-Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>  # LoongArch
+For the MIPS part:
+Reviewed-by: Johan Almbladh <johan.almbladh@anyfinetworks.com>
 
 Thanks,
-Tiezhu
-
+Johan
