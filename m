@@ -1,36 +1,36 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510204A1D
-	for <loongarch@lists.linux.dev>; Wed, 21 Feb 2024 06:37:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5100C1FDB
+	for <loongarch@lists.linux.dev>; Wed, 21 Feb 2024 10:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708497437; cv=none; b=W+g4sXcWtumS0ihpg0SOzSIQ7XwRpmMqicdc4N6kIa/VMlPWyVKvGon1xqi11KTkQychbDrDi/XrlQsUMGDNnsBSGYqhuHjEoiYVS+Pe4CC7+E0goQ7ayJ2xe9Mf6s+AstidfnVGD1wiv1z/gCfyn7fkCROUqVg4vc5n+t1kUG8=
+	t=1708511516; cv=none; b=muEcWpTlDQh1vTzqTmva1WZ8Sn6iP9kWEKNsj+8CVdLHM3fHqtn7EkWcYhoigaumU4DJO6E7s2qHh0leC/0X7ERzg4HpI2xZLoVJzYIjqWfskAM6ViyPERWw0W7jNufYUiBUaF+jS5qeJrpUsrIkAASawXkI/SEuTiAEJWfMM4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708497437; c=relaxed/simple;
-	bh=cMPrnGzN+ogkgu90StJkUN75mH793GVfs2DsMEIqQBw=;
+	s=arc-20240116; t=1708511516; c=relaxed/simple;
+	bh=Oh3gvh1Pw1qxlpgIFh2j2ukWBybQ4o4q7lMKldkLy/E=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jsnKL3WlBjX4Ktkt52cgr0PN3v/EVTP0OHdK8+Aj2fI/231/KJzZVaWLaPx/QWhEONiuUu3hXyahpKoC7zWJW2DUHGw3AplU+k9Qtf9FrCS91wU/bEUvaFThsXl3lwzjvLjAKQ5B+Jfxcd5nnpknQltVYp2+DtJlcKKAW3Sdx94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=dqrHdjnV; arc=none smtp.client-ip=89.208.246.23
+	 Content-Type:MIME-Version; b=uOmaDGjJQZRC17HfECuM7vd3jkXWD2lMI4ZYyGr8YL3R8mXUCwH71KRb7UBRj3SDWql49kzlRK02g64azxE6MGyoNAdXiNKEPkKzMdPQn+Jv3wYzRCkwEI68Ic3SW8yaly7wHAbh6GtoEe+QdIuOa0HcgttUdrQsKCDzUFvhQHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=NGd6lt8p; arc=none smtp.client-ip=89.208.246.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="dqrHdjnV"
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="NGd6lt8p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1708497085;
-	bh=cMPrnGzN+ogkgu90StJkUN75mH793GVfs2DsMEIqQBw=;
+	s=default; t=1708511513;
+	bh=Oh3gvh1Pw1qxlpgIFh2j2ukWBybQ4o4q7lMKldkLy/E=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=dqrHdjnVqPyK89vn3kkQkzW2lVhL0QNWJ4PsjLlB/34Pos4Dx/HCA9zLywbogIoYM
-	 wb0KbhaC+Nnx9JmLkJi/CTmGiMfeN1G+2mEL1nzXBDurpWS2SMrP3YWWL0ZX0mjef7
-	 k3Y+Oh+OKywb/R/09Sk/Y/ouTw3NXbGxySqMVGcg=
-Received: from [IPv6:240e:454:8210:4ef6:8084:b400:afd2:c12] (unknown [IPv6:240e:454:8210:4ef6:8084:b400:afd2:c12])
+	b=NGd6lt8pyEA17xui9odAE9LSFX6wxR1ZmmYK8Gb06gBbOSfUJ3hh+cyXSeGNYKH5c
+	 AA87aRIpu9zAgNUIagytDHZR4HBh/2b6QoMaSvQQtqreWFrBHJiR0jjPl/FlKgqPLq
+	 vtLKOfDtXWmKRqTic+8hPNr9WqieNkpXUGvunf5o=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 5D42366F2E;
-	Wed, 21 Feb 2024 01:31:12 -0500 (EST)
-Message-ID: <f1a1bc708be543eb647df57b5eb0c0ef035baf8b.camel@xry111.site>
+	by xry111.site (Postfix) with ESMTPSA id A19CD6722C;
+	Wed, 21 Feb 2024 05:31:48 -0500 (EST)
+Message-ID: <2d25e3bb829cbca51387eb84985db919f50ccd37.camel@xry111.site>
 Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep
  argument inspection again?
 From: Xi Ruoyao <xry111@xry111.site>
@@ -43,9 +43,10 @@ Cc: Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>,
  "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, linux-arch
  <linux-arch@vger.kernel.org>, Linux Kernel Mailing List
  <linux-kernel@vger.kernel.org>
-Date: Wed, 21 Feb 2024 14:31:02 +0800
-In-Reply-To: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
+Date: Wed, 21 Feb 2024 18:31:46 +0800
+In-Reply-To: <f1a1bc708be543eb647df57b5eb0c0ef035baf8b.camel@xry111.site>
 References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
+	 <f1a1bc708be543eb647df57b5eb0c0ef035baf8b.camel@xry111.site>
 Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
  keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
 Content-Type: text/plain; charset="UTF-8"
@@ -58,26 +59,27 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Wed, 2024-02-21 at 14:09 +0800, WANG Xuerui wrote:
-
-> - just restore fstat and be done with it;
-> - add a flag to statx so we can do the equivalent of just fstat(fd,=20
-> &out) with statx, and ensuring an error happens if path is not empty in=
+On Wed, 2024-02-21 at 14:31 +0800, Xi Ruoyao wrote:
+> On Wed, 2024-02-21 at 14:09 +0800, WANG Xuerui wrote:
+>=20
+> > - just restore fstat and be done with it;
+> > - add a flag to statx so we can do the equivalent of just fstat(fd,=20
+> > &out) with statx, and ensuring an error happens if path is not empty in=
 =20
-> that case;
+> > that case;
+>=20
+> It's worse than "just restore fstat" considering the performance.=C2=A0 R=
+ead
+> this thread:
+> https://sourceware.org/pipermail/libc-alpha/2023-September/151320.html
 
-It's worse than "just restore fstat" considering the performance.  Read
-this thread:
-https://sourceware.org/pipermail/libc-alpha/2023-September/151320.html
+Hmm, but it looks like statx already suffers the same performance issue.
+And in this libc-alpha discussion Linus said:
 
-> - tackle the long-standing problem of seccomp deep argument inspection (!=
-).
-
-Frankly I'm never a fan of syscall blocklisting.  When I develop the
-Online Judge system for the programming contest training in Xidian
-University I deliberately avoid using seccomp.  This thing is very
-likely to break innocent programs with some system change innocent as
-well (for example Glibc or libstdc++ update).
+   If the user asked for 'fstat()', just give the user 'fstat()'.
+  =20
+So to me we should just add fstat (and use it in Glibc for LoongArch, only
+falling back to statx if fstat returns -ENOSYS), or am I missing something?
 
 --=20
 Xi Ruoyao <xry111@xry111.site>
