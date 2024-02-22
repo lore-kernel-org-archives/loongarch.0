@@ -1,159 +1,113 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64E4547A58
-	for <loongarch@lists.linux.dev>; Thu, 22 Feb 2024 12:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD2415098B;
+	Thu, 22 Feb 2024 16:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708603882; cv=none; b=XMY8IUbwSizPCp7fGlxjFUhC+qzZfeVYlp3g53Qae1s2sb0sqfee5J9FC6pf/J6fxnWcqEtMbLsYPpj/DGXhJjaCz1zP9D7wOS7kBCIVgCas6Eeg9Zp+60gbLMKmT4k6FBNN9W7q9uDUycckrqqy9Mq8VeZn98tybNORMzqp190=
+	t=1708619196; cv=none; b=chh6bMYKNDgp6ngyrVaZotDcnfzj9g1/qqyCoY/vHdmyuDJRlIVK0R5YV+rO9seY+L0Fg0jMT1u2m4mfbEnUe5hRP5zUSjaCHjyLQihN7UF7rtyjgeAoQShdGZc4v4TgzCjsLZRCPpsOUm1jBZt3OkzxSo3FxBVYIgRim/CF/uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708603882; c=relaxed/simple;
-	bh=mCi8+XxhULFtYlGGHGY0wqqU3zZCjmarzxh4FL+3HgE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PXOvIKrAE58279nD8tgCFt8H0zdbSlVoMR/trnuZvbVfZTPffaQnGQ0mhscRh3bOIl+ZI7LGg9UwociNWEmlHFg778nOlOd81vzLklPExCIHDRU84E3hGv96dnrPlAxVIxUBoCNDKVsql2IDRKOafLZ6qDHtYLzvfGUVr3k0dhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8AxOOjkOddlMTUQAA--.22342S3;
-	Thu, 22 Feb 2024 20:11:16 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxVMziOddlQcs+AA--.36218S3;
-	Thu, 22 Feb 2024 20:11:16 +0800 (CST)
-Subject: Re: [PATCH for-6.8 v4 3/3] LoongArch: KVM: Streamline
- kvm_check_cpucfg and improve comments
-To: WANG Xuerui <kernel@xen0n.name>, Paolo Bonzini <pbonzini@redhat.com>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- WANG Xuerui <git@xen0n.name>
-References: <20240222105109.2042732-1-kernel@xen0n.name>
- <20240222105109.2042732-4-kernel@xen0n.name>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <719c1a92-6ddc-f73a-0609-aa5d40dbee8a@loongson.cn>
-Date: Thu, 22 Feb 2024 20:11:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1708619196; c=relaxed/simple;
+	bh=rVeMAZ7c6DaGuMXw0XF4xBKuLLV2gnSN2mixhtkvwIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bOsXRWxwWbK1IYaxYKybAoeFBb76ENR4t3BA3WLyU7vCeBxnBWGgpIolACHK1OKOGXztFbDcy8maFG8oybVPWDCYFJYDxmtv9RqVMchgkEb0uuvTbwPVeByhPZrOPDluuDAKf0D8ydUvxIAvPL1IYzOc9L4VxdB0/dKI0tRfOAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imrqg2cr; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imrqg2cr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708619195; x=1740155195;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rVeMAZ7c6DaGuMXw0XF4xBKuLLV2gnSN2mixhtkvwIM=;
+  b=imrqg2cr7zi1GDxoNCQGmq045BG4DaKlNTxxfphIyNdFWkWgrtal8iJ3
+   74hQ+VlJ1IbsU7CKMqTakqviqZemLYXralX5n+AO2FG+2aPkTVE1kv2cs
+   ug2FLjmbme9O3TZowASm+rjiJwOgktz0surovfH4AO3EOx8S9SC6LQhFf
+   CPfUrWozKJrHTOa51g/DiXsXHEr+N3A8cO/T5Hy3+7AoFGCi7z+sBgYQT
+   5TdFpofPjl5/ZM+TFbA27e828ubWIEW3jtWFqhMxMKzqGqKcB+rhC1oQi
+   JKJtb4rpHN23dT/SMRkV6ACMXe7420+gEMVe503cGCCdvHFs6K/wpuSRV
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="20406865"
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="20406865"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 08:26:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="5857653"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 22 Feb 2024 08:26:22 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rdBtn-0006U6-33;
+	Thu, 22 Feb 2024 16:26:16 +0000
+Date: Fri, 23 Feb 2024 00:25:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de,
+	javierm@redhat.com, deller@gmx.de, suijingfeng@loongson.cn
+Cc: oe-kbuild-all@lists.linux.dev, linux-arch@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-sh@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH 3/3] arch: Rename fbdev header and source files
+Message-ID: <202402230023.xa2jjwui-lkp@intel.com>
+References: <20240221161431.8245-4-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240222105109.2042732-4-kernel@xen0n.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxVMziOddlQcs+AA--.36218S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXFWfWFW5uFW7urWkWFWfZwc_yoW5ZF4DpF
-	y3WwsxX3y5KryxJws29w1kXr45Ar4kGFnrXFZ5A3sYvw47ArnrGr40ya9av347C393AF1U
-	WF4DWay3CayDAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F
-	4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
-	cCD7UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240221161431.8245-4-tzimmermann@suse.de>
 
+Hi Thomas,
 
+kernel test robot noticed the following build errors:
 
-On 2024/2/22 下午6:51, WANG Xuerui wrote:
-> From: WANG Xuerui <git@xen0n.name>
-> 
-> All the checks currently done in kvm_check_cpucfg can be realized with
-> early returns, so just do that to avoid extra cognitive burden related
-> to the return value handling.
-> 
-> While at it, clean up comments of _kvm_get_cpucfg_mask and
-> kvm_check_cpucfg, by removing comments that are merely restatement of
-> the code nearby, and paraphrasing the rest so they read more natural
-> for English speakers (that likely are not familiar with the actual
-> Chinese-influenced grammar).
-> 
-> No functional changes intended.
-> 
-> Signed-off-by: WANG Xuerui <git@xen0n.name>
-> ---
->   arch/loongarch/kvm/vcpu.c | 42 +++++++++++++++++++--------------------
->   1 file changed, 20 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 9f63bbaf19c1..128b89d00ced 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -305,20 +305,16 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
->   
->   	switch (id) {
->   	case 2:
-> -		/* Return CPUCFG2 features which have been supported by KVM */
-> +		/* CPUCFG2 features unconditionally supported by KVM */
->   		*v = CPUCFG2_FP     | CPUCFG2_FPSP  | CPUCFG2_FPDP     |
->   		     CPUCFG2_FPVERS | CPUCFG2_LLFTP | CPUCFG2_LLFTPREV |
->   		     CPUCFG2_LAM;
->   		/*
-> -		 * If LSX is supported by CPU, it is also supported by KVM,
-> -		 * as we implement it.
-> +		 * For the ISA extensions listed below, if one is supported
-> +		 * by the host, then it is also supported by KVM.
->   		 */
->   		if (cpu_has_lsx)
->   			*v |= CPUCFG2_LSX;
-> -		/*
-> -		 * if LASX is supported by CPU, it is also supported by KVM,
-> -		 * as we implement it.
-> -		 */
->   		if (cpu_has_lasx)
->   			*v |= CPUCFG2_LASX;
->   
-> @@ -349,24 +345,26 @@ static int kvm_check_cpucfg(int id, u64 val)
->   
->   	switch (id) {
->   	case 2:
-> -		/* CPUCFG2 features checking */
->   		if (!(val & CPUCFG2_LLFTP))
-> -			/* The LLFTP must be set, as guest must has a constant timer */
-> -			ret = -EINVAL;
-> -		else if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
-> -			/* Single and double float point must both be set when enable FP */
-> -			ret = -EINVAL;
-> -		else if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
-> -			/* FP should be set when enable LSX */
-> -			ret = -EINVAL;
-> -		else if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
-> -			/* LSX, FP should be set when enable LASX, and FP has been checked before. */
-> -			ret = -EINVAL;
-> -		break;
-> +			/* Guests must have a constant timer */
-> +			return -EINVAL;
-> +		if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
-> +			/* Single and double float point must both be set when FP is enabled */
-> +			return -EINVAL;
-> +		if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
-> +			/* LSX architecturally implies FP but val does not satisfy that */
-> +			return -EINVAL;
-> +		if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
-> +			/* LASX architecturally implies LSX and FP but val does not satisfy that */
-> +			return -EINVAL;
-> +		return 0;
->   	default:
-> -		break;
-> +		/*
-> +		 * Values for the other CPUCFG IDs are not being further validated
-> +		 * besides the mask check above.
-> +		 */
-> +		return 0;
->   	}
-> -	return ret;
->   }
->   
->   static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
-> 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on deller-parisc/for-next arnd-asm-generic/master linus/master v6.8-rc5 next-20240221]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Zimmermann/arch-Select-fbdev-helpers-with-CONFIG_VIDEO/20240222-001622
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20240221161431.8245-4-tzimmermann%40suse.de
+patch subject: [PATCH 3/3] arch: Rename fbdev header and source files
+config: um-randconfig-r052-20240222 (https://download.01.org/0day-ci/archive/20240223/202402230023.xa2jjwui-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240223/202402230023.xa2jjwui-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402230023.xa2jjwui-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   /usr/bin/ld: drivers/video/fbdev/core/fb_io_fops.o: in function `fb_io_mmap':
+>> fb_io_fops.c:(.text+0x591): undefined reference to `pgprot_framebuffer'
+   collect2: error: ld returned 1 exit status
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
