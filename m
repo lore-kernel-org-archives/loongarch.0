@@ -1,139 +1,100 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248A04C8A
-	for <loongarch@lists.linux.dev>; Thu, 22 Feb 2024 05:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A874A175B5
+	for <loongarch@lists.linux.dev>; Thu, 22 Feb 2024 07:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708579067; cv=none; b=dACfQBU3PQ47foLMiw3c931egOqZVV2HzCnGsP1XYNAgUyd8bfzXxRkdAVhrDgiEB3rV/qX+2/oS26DGJjsEJQyhF4LBXlvXAYmNNnKPeHRgld+yPAEBXosnhSS4S6mPwLT71Ch4ecfd27201IS/tJZTTEZxOdQ3WMp5XKrVYQM=
+	t=1708585638; cv=none; b=PN9D0hS7iQCI7/oUyZfSVbFrva6iDTZwnn8AyD2xG+qTS171iim0rzjH4u4UZsLgUfk2JexuahJFOr7rf9d+l8x5AU1DngISFyMvc6tRlJG4RFpKlhcTNSLX+3a7Bvg1vc/7HBr9Qgj5u3o8FJaXqWP5TxdwvMD+p1ZJ+hSHhPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708579067; c=relaxed/simple;
-	bh=9gNhI/HsDtNamLxlDShpJ4poTz3S2AKFbaAKWidvA28=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=k8T0OWQsIh3zOXzGdts76GoI9IEO/jVpPl1jeHBRjUgDWdzHIpCd2QHhuU77tiSG4M0QAo1n0cr208A4lu9wMG0Fmjo2VZDpZ4qyvE7N6C99IxfEtHBBijb2VeWNY0nFqufhrbzCmVlZ6YH9rcd11TDsVo/7Vqu/bb1kup0yGh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=j2df0zYH; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1708585638; c=relaxed/simple;
+	bh=XPKVLBy6UQC9Sn82UWX+PNOQ0fEBJPFiiwTcFZ/REG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tHJaoiUjOYsroj8ekKv47wKZ8WQnEKxbZvE/LuqZsf1L992ImaaTXcrOk+uERYSgwhKoF4l4jcLjH8yI6J8fpAPYqJBdN49KiXhFopVKmjk0KwU0U45wq5IDkxOpDG7+ERyjqna3wMpsosa3hJDKVojg5lgAnrAcbKNejQ1eZy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fQWpuxce; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="j2df0zYH"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41M4R18H006546;
-	Thu, 22 Feb 2024 05:17:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=K/2wCf7f7QyZDGdorAUOAQQO5+gbW6WWu/gqndqtKoo=;
- b=j2df0zYHchuygCjJA8VvcPJMD5NOOimHOizytE+BsJqendgmCw6liiefKOdO4Xk7oI8Q
- gLl8/2EYckkCCycaJE4Szarj0rlNtu6VXE6fglTkfAs+zC42vvveYZ5Apuzi56mjFD6n
- ht6Ro0ysut5PTMuIhaFaVfKZ+JUHSXg9FO3O7gjfj+HLyqSANQMqT/KDC7PpAcclPX+o
- rcrcpXnXQEEFtArWb/OOPEkml2HwlyEwP6j4+5u7Eu91Xrsu8cRJ71wOeNbqtRSl5DLa
- HMao4YJOoPUb06NpNWUX1AmnN0OKe1mGq5EkL7G7K2+NEqVVboq5N1SbaAjZvCo+cb79 VQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wdy8g90us-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 05:17:39 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41M5El9B013094;
-	Thu, 22 Feb 2024 05:17:38 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wdy8g90tw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 05:17:38 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41M3Yqmv031143;
-	Thu, 22 Feb 2024 05:17:37 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wb9bm3my2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 05:17:36 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41M5HXgC65929482
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 Feb 2024 05:17:35 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 442CE2004E;
-	Thu, 22 Feb 2024 05:17:33 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7CF102004B;
-	Thu, 22 Feb 2024 05:17:30 +0000 (GMT)
-Received: from [9.203.115.195] (unknown [9.203.115.195])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 22 Feb 2024 05:17:30 +0000 (GMT)
-Message-ID: <3393a42f-d9b3-4031-bdef-78bb2ce758f1@linux.ibm.com>
-Date: Thu, 22 Feb 2024 10:47:29 +0530
-User-Agent: Mozilla Thunderbird
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fQWpuxce"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708585635;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j88KzvyAQZThT6aCL8ZS+o2FWYKBFq83FjUT4vcsoNg=;
+	b=fQWpuxce//4uZGr5U1PE3xBVtJWJN9xvv81sG9m70FLGad0Y12Fgio5BCkuxDgjVoEnxq2
+	ToSfroJJdzBWiu52cHddImf1qf206Jihjy+c2Nwrn0N3RuNKyiYHQKfI1I7P3B4caw2MFw
+	In7mU9mVI2otn5GmPDsPo2NxztTWMN4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-374-MaV-uow3NFqRm-_MOPABCw-1; Thu, 22 Feb 2024 02:07:12 -0500
+X-MC-Unique: MaV-uow3NFqRm-_MOPABCw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7B19A185A787;
+	Thu, 22 Feb 2024 07:07:11 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A8B5A492BC8;
+	Thu, 22 Feb 2024 07:07:08 +0000 (UTC)
+Date: Thu, 22 Feb 2024 15:07:05 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Hari Bathini <hbathini@linux.ibm.com>, linux-s390@vger.kernel.org,
+	piliu@redhat.com, linux-sh@vger.kernel.org, x86@kernel.org,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org, ebiederm@xmission.com,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+	viro@zeniv.linux.org.uk
 Subject: Re: [PATCH v2 00/14] Split crash out from kexec and clean up related
  config items
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-s390@vger.kernel.org, Baoquan He <bhe@redhat.com>, piliu@redhat.com,
-        linux-sh@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        ebiederm@xmission.com, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, viro@zeniv.linux.org.uk
+Message-ID: <Zdbymex3ABImSwI3@MiWiFi-R3L-srv>
 References: <20240119145241.769622-1-bhe@redhat.com>
  <9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com>
  <Zb8D1ASrgX0qVm9z@MiWiFi-R3L-srv>
  <559f2595-1477-4ef0-80e4-85ae8b426de7@linux.ibm.com>
  <20240221125752.36fbfe9c307496313198b60f@linux-foundation.org>
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <20240221125752.36fbfe9c307496313198b60f@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Uw-TiETYrrtmy9xa6nwhBWKWx0V7gLnU
-X-Proofpoint-ORIG-GUID: pNdWEEFYaOYyVGnBPerBSEQApCC4_Zph
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_03,2024-02-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 impostorscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402220039
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240221125752.36fbfe9c307496313198b60f@linux-foundation.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-
-
-On 22/02/24 2:27 am, Andrew Morton wrote:
+On 02/21/24 at 12:57pm, Andrew Morton wrote:
 > On Wed, 21 Feb 2024 11:15:00 +0530 Hari Bathini <hbathini@linux.ibm.com> wrote:
 > 
->> On 04/02/24 8:56 am, Baoquan He wrote:
->>>>> Hope Hari and Pingfan can help have a look, see if
->>>>> it's doable. Now, I make it either have both kexec and crash enabled, or
->>>>> disable both of them altogether.
->>>>
->>>> Sure. I will take a closer look...
->>> Thanks a lot. Please feel free to post patches to make that, or I can do
->>> it with your support or suggestion.
->>
->> Tested your changes and on top of these changes, came up with the below
->> changes to get it working for powerpc:
->>
->>   
->> https://lore.kernel.org/all/20240213113150.1148276-1-hbathini@linux.ibm.com/
+> > On 04/02/24 8:56 am, Baoquan He wrote:
+> > >>> Hope Hari and Pingfan can help have a look, see if
+> > >>> it's doable. Now, I make it either have both kexec and crash enabled, or
+> > >>> disable both of them altogether.
+> > >>
+> > >> Sure. I will take a closer look...
+> > > Thanks a lot. Please feel free to post patches to make that, or I can do
+> > > it with your support or suggestion.
+> > 
+> > Tested your changes and on top of these changes, came up with the below
+> > changes to get it working for powerpc:
+> > 
+> >  
+> > https://lore.kernel.org/all/20240213113150.1148276-1-hbathini@linux.ibm.com/
 > 
 > So can we take it that you're OK with Baoquan's series as-is?
+> 
+> Baoquan, do you believe the patches in mm-unstable are ready for moving
+> into mm-stable in preparation for an upstream merge?
 
-Hi Andrew,
+Yeah, I think they are ready to go for merging.
 
-If you mean
+For Hari's patchset, the main part was planned before. And I am not
+familiar with fadump in powerpc, the Kconfig fix from Hari is a good
+guarantee with the expertise. Surely, I will await Hari's comment on
+that.
 
-v3 (https://lore.kernel.org/all/20240124051254.67105-1-bhe@redhat.com/)
-+
-follow-up from Baoquan 
-(https://lore.kernel.org/all/Zb8D1ASrgX0qVm9z@MiWiFi-R3L-srv/)
-
-Yes.
-
-My changes are based on top of the above patches..
-
-Thanks
-Hari
