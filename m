@@ -1,230 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67CD1BC27;
-	Mon, 26 Feb 2024 06:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218221BDCB
+	for <loongarch@lists.linux.dev>; Mon, 26 Feb 2024 06:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708928041; cv=none; b=f+R1wvslXaRiwCGsuDQgk4lLWsSgUMxAZw+MDWpjHPRNlG9NFlg1YTQfKfHrw30g271oRptCDJkn1drM48wVmcXEWzhz//whJi7cc2H05cDzPj9r9hIYimbiK9iMOhCdlWGyXmiZucKXztWZmsRe5BK7nIDs67iX06PhLGmjJLc=
+	t=1708930694; cv=none; b=MUDsP05pLEfQIxvXI0DCRx43WeT2VA+8Re+FNTVWRENsc3pom1IRFtAkkpajCFV+dNZpLOSdqwafFsQUxa+jETGxBm8On6VF4SP97C8vfGpH2SgN4jjZzR7rTP/MHXza0q/LPhINvx10XzmST0AWYneX3McDY2FdNm7cYe8Jo7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708928041; c=relaxed/simple;
-	bh=veta97L3ID3YoBQ1toWeRCzS2ZbdS3Bqd91mRo/FXzQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iXCqqxtIl+Ol8xTady5OmV4ouRiQoDqMZt+SGCon0uL/JEI6RLtv0HWUExKm1EWrl3fILUxSdK4UnN2bfl+dj9YhV7B9NSZB8DmXogwEkSIu+nW5zbYXw1nZQuM130BkaM3KLQfscwW8mnKH7+tT9EXYYXgUauMdykhBy4e2imM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZOBKp7+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708930694; c=relaxed/simple;
+	bh=YvskMQL6vh3LHIbEKjAML+XytC66oTun1i9E9paZEoA=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=AcDUuFDvLMc6U/LVqJs3EQ/f+whB54FVFfvHGdwToYqYmT7oQCy7v+9gX3A5SuVIezkIQcsEQuvZul3IHVzteD2K+l/3hxnNPix99VExwxf1JkIq5IQFvA5bhy9W3aQV1pLK0YaD2vtWomNnUOi31mFfuW14DxTO/lY5rrySqEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=eC5LQlMC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DT7FJBbR; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZOBKp7+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD8DC433F1;
-	Mon, 26 Feb 2024 06:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708928040;
-	bh=veta97L3ID3YoBQ1toWeRCzS2ZbdS3Bqd91mRo/FXzQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jZOBKp7+VM4tsKjCcMCIb4gblvjyo67H84BdaWJRVg/Qbu8/Pbw5H9CqX9dPPdRN7
-	 aA2KBoB6tGbZHlqh3hF4IteE36tYpI/d0pyqCYeBSCRahSBpWtKQBqObKIJALrxqbm
-	 fmjmAc/Pzd3FW4Hgws4MBG4kJKaquROmNiv4DAkvhlBlenJ0SW/tr8fp0/NW8S1wLf
-	 CKHrEXrraOuEgqrMidlCmBBeSzgpJdkrYVnl08q9bgZ2zYVRsoPb5B+vGpLpizIKiE
-	 DijZwUstwHvbXUsTUNYBu09UpzL6XZTQSxRMOAA+J7QjepPn8GOUm+qfTEFUsH06q1
-	 EwDReaLOPGQoQ==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a3ed9cae56fso415246566b.1;
-        Sun, 25 Feb 2024 22:14:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWHA2F2YWtDa4EDu1YmcWYyOIeB8w8Xuf/dvhmMbW7/9+5tsjQWtCZuCV+vOGi52nKTskiRwtfD9SJtNYF5pgTGP1Whau266gHlGR9lKENmYlbz6anw7tHIS4CN/wFvaDwvqyTzUc/JWrI=
-X-Gm-Message-State: AOJu0YzaAugMEFziSTotMlugVXmKmZ9Cx16l5B0Au/ra0nIz28+5zqfK
-	K1dzlUpk7K5aGhjrchcxU9Nq2fNTQVLO2/7NoE7ZKi3Z/8z7sIk7tiR3R9sLz7hdAZ4nMxenlfB
-	Ej6Du1cSxdCRhCpRS5QK57eYX4XQ=
-X-Google-Smtp-Source: AGHT+IHD5xYoZZP56DdPlwvxfM+tSalcdEJDk27CoMnchaqYVBCCJdjScbiPHJ2xCvQqzhCCMI++wLrccA+EFzHQvrg=
-X-Received: by 2002:a17:906:d923:b0:a3f:1139:5a6b with SMTP id
- rn3-20020a170906d92300b00a3f11395a6bmr4636609ejb.32.1708927978885; Sun, 25
- Feb 2024 22:12:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="eC5LQlMC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DT7FJBbR"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 480DF1380083;
+	Mon, 26 Feb 2024 01:58:12 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 26 Feb 2024 01:58:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1708930692;
+	 x=1709017092; bh=JF2cDLEh4oupc3MOcy1bJ24fHuVp+oZVdvi9yntqhTs=; b=
+	eC5LQlMCgf6UFx421hPwE1Ne2iCquVkJzx/vOnsyi+GVCrjGuQkJxIoVqWBNd5FV
+	h1opcO/GgjifYyckc+tPoUdMSIV6D4D8zYKXpDRIJOK6zYN8kaJ5Pnzgzb3E7Qca
+	MoTXP/h68V8uJxvZ49opRfs40Jeg9+RfQRHgzLg56uY669E6ssWCunPG9Xf0G8XA
+	BMcjPCjlAvL0tSzsFqHh9wwFjZeW/z5deSfXP7JhmXYL2p6tws4hg2moHj6Fgcl4
+	OBaOPIfv07n7u41Ymjq6VACPL2vAowlGIfS1SZkejVMuNetC8BW22W3XjsurjDwR
+	STgVsFDZe1bLi/BdhueaaA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1708930692; x=
+	1709017092; bh=JF2cDLEh4oupc3MOcy1bJ24fHuVp+oZVdvi9yntqhTs=; b=D
+	T7FJBbR7x0v/24ipJPfItK+0hxVcbs9Xky4ADQNVeSFADRu1FnPUM7OrcJ9qre62
+	4nazByWE9ms4o0ZdldxeOVdyswtBGgW9N+dApv2OnY71STv7f4TGEIShKqFyWs57
+	iq01PwXw6BxSqw7Kdl6a2mWnK9gthJz8OOlWty5Q8vEixZYFPWohFrMZmAUvQ4NU
+	HRGe+SBThMSeKF+uvLnGz9mqNbcDNk642dZIHm8V37BgKJER23hONWAdsG9z3anD
+	V5aXAh4elNvOl+w3A/FfpLxLjmktMLf15+7Y0qYVNBzDiw0WPZpCVfpCqfgyTCk2
+	LCmJ2S7fDu2aUaZaJ+3Mw==
+X-ME-Sender: <xms:gzbcZbDcvKWLVESyuSYP-WAejrVYdKrMTvlhDn79x4twC6XLl2fRUg>
+    <xme:gzbcZRgz5pkSn6ffhBHC0VwX75hEaZy1qgdECraVPJU5QegE_BDQdiXwKhLpijTvP
+    kzzqGM8gUBgwinBJDc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgedugddutdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffkeejkeevveetfedugeefgffhjeeihefgleffhfegleeuffduheeijeel
+    geeuhfenucffohhmrghinhepshhouhhrtggvfigrrhgvrdhorhhgnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdgu
+    vg
+X-ME-Proxy: <xmx:gzbcZWmpazowYXdJH3A35_myKG16ol1yv6nV_hsK_S3pkwuw14PRVA>
+    <xmx:gzbcZdzjuhmReXfuYQCxnt3Musutnwrcb2sYbHjXMEmU-o-lsOe-_Q>
+    <xmx:gzbcZQRxXvCIgOUwnNgi1O95bsjvsOeuX3WTaqs2ViqFxMcnbc74kA>
+    <xmx:hDbcZcoi5ftvkS__B4edMHkfsG_cO5UpTXQrj6mW2TFegUkWFWLYnw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 61857B6008D; Mon, 26 Feb 2024 01:58:11 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240222032803.2177856-1-maobibo@loongson.cn> <20240222032803.2177856-4-maobibo@loongson.cn>
- <CAAhV-H5eqXMqTYVb6cAVqOsDNcEDeP9HzaMKw69KFQeVaAYEdA@mail.gmail.com> <d1a6c424-b710-74d6-29f6-e0d8e597e1fb@loongson.cn>
-In-Reply-To: <d1a6c424-b710-74d6-29f6-e0d8e597e1fb@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 26 Feb 2024 14:12:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7p114hWUVrYRfKiBX3teG8sG7xmEW-Q-QT3i+xdLqDEA@mail.gmail.com>
-Message-ID: <CAAhV-H7p114hWUVrYRfKiBX3teG8sG7xmEW-Q-QT3i+xdLqDEA@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
-To: maobibo <maobibo@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
-	kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <3c396b7c-adec-4762-9584-5824f310bf7b@app.fastmail.com>
+In-Reply-To: <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
+References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
+ <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
+ <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
+ <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
+ <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
+Date: Mon, 26 Feb 2024 07:56:38 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Icenowy Zheng" <uwu@icenowy.me>, "Xi Ruoyao" <xry111@xry111.site>,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>
+Cc: linux-api@vger.kernel.org, "Christian Brauner" <brauner@kernel.org>,
+ "Kees Cook" <keescook@chromium.org>, "Xuefeng Li" <lixuefeng@loongson.cn>,
+ "Jianmin Lv" <lvjianmin@loongson.cn>, "Xiaotian Wu" <wuxiaotian@loongson.cn>,
+ "WANG Rui" <wangrui@loongson.cn>, "Miao Wang" <shankerwangmiao@gmail.com>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep argument
+ inspection again?
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 26, 2024 at 10:04=E2=80=AFAM maobibo <maobibo@loongson.cn> wrot=
-e:
+On Mon, Feb 26, 2024, at 07:03, Icenowy Zheng wrote:
+> =E5=9C=A8 2024-02-25=E6=98=9F=E6=9C=9F=E6=97=A5=E7=9A=84 15:32 +0800=EF=
+=BC=8CXi Ruoyao=E5=86=99=E9=81=93=EF=BC=9A
+>> On Sun, 2024-02-25 at 14:51 +0800, Icenowy Zheng wrote:
+>> > My idea is this problem needs syscalls to be designed with deep
+>> > argument inspection in mind; syscalls before this should be
+>> > considered
+>> > as historical error and get fixed by resotring old syscalls.
+>>=20
+>> I'd not consider fstat an error as using statx for fstat has a
+>> performance impact (severe for some workflows), and Linus has
+>> concluded
 >
->
->
-> On 2024/2/24 =E4=B8=8B=E5=8D=885:13, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Thu, Feb 22, 2024 at 11:28=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
- wrote:
-> >>
-> >> Instruction cpucfg can be used to get processor features. And there
-> >> is trap exception when it is executed in VM mode, and also it is
-> >> to provide cpu features to VM. On real hardware cpucfg area 0 - 20
-> >> is used.  Here one specified area 0x40000000 -- 0x400000ff is used
-> >> for KVM hypervisor to privide PV features, and the area can be extende=
-d
-> >> for other hypervisors in future. This area will never be used for
-> >> real HW, it is only used by software.
-> > After reading and thinking, I find that the hypercall method which is
-> > used in our productive kernel is better than this cpucfg method.
-> > Because hypercall is more simple and straightforward, plus we don't
-> > worry about conflicting with the real hardware.
-> No, I do not think so. cpucfg is simper than hypercall, hypercall can
-> be in effect when system runs in guest mode. In some scenario like TCG
-> mode, hypercall is illegal intruction, however cpucfg can work.
-Nearly all architectures use hypercall except x86 for its historical
-reasons. If we use CPUCFG, then the hypervisor information is
-unnecessarily leaked to userspace, and this may be a security issue.
-Meanwhile, I don't think TCG mode needs PV features.
+> Sorry for clearance, I mean statx is an error in ABI design, not fstat.
 
-I consulted with Jiaxun before, and maybe he can give some more comments.
+The same has been said about seccomp(). ;-)
 
->
-> Extioi virtualization extension will be added later, cpucfg can be used
-> to get extioi features. It is unlikely that extioi driver depends on
-> PARA_VIRT macro if hypercall is used to get features.
-CPUCFG is per-core information, if we really need something about
-extioi, it should be in iocsr (LOONGARCH_IOCSR_FEATURES).
+It's clear that the two don't go well together at the moment.
 
+>> "if the user wants fstat, give them fstat" for the performance issue:
+>>=20
+>> https://sourceware.org/pipermail/libc-alpha/2023-September/151365.html
+>>=20
+>> However we only want fstat (actually "newfstat" in fs/stat.c), and it
+>> seems we don't want to resurrect newstat, newlstat, newfstatat, etc.
+>> (or
+>> am I missing any benefit - performance or "just pleasing seccomp" -
+>> of them comparing to statx?) so we don't want to just define
+>> __ARCH_WANT_NEW_STAT.=C2=A0 So it seems we need to add some new #if to
+>> fs/stat.c and include/uapi/asm-generic/unistd.h.
+>>=20
+>> And no, it's not a design issue of all other syscalls.=C2=A0 It's jus=
+t the
+>> design issue of seccomp.=C2=A0 There's no way to design a syscall all=
+owing
+>> seccomp to inspect a 100-character path in its argument unless
+>> refactoring seccomp entirely because we cannot fit a 100-character
+>> path
+>> into 8 registers.
+>
+> Well my meaning is that syscalls should be designed to be simple to
+> prevent this kind of circumstance.
 
-Huacai
+The problem I see with the 'use use fstat' approach is that this
+does not work on 32-bit architectures, unless we define a new
+fstatat64_time64() syscall, which is one of the things that statx()
+was trying to avoid.
 
->
-> Regards
-> Bibo Mao
->
-> >
-> > Huacai
-> >
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/include/asm/inst.h      |  1 +
-> >>   arch/loongarch/include/asm/loongarch.h | 10 ++++++
-> >>   arch/loongarch/kvm/exit.c              | 46 +++++++++++++++++-------=
---
-> >>   3 files changed, 41 insertions(+), 16 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/includ=
-e/asm/inst.h
-> >> index d8f637f9e400..ad120f924905 100644
-> >> --- a/arch/loongarch/include/asm/inst.h
-> >> +++ b/arch/loongarch/include/asm/inst.h
-> >> @@ -67,6 +67,7 @@ enum reg2_op {
-> >>          revhd_op        =3D 0x11,
-> >>          extwh_op        =3D 0x16,
-> >>          extwb_op        =3D 0x17,
-> >> +       cpucfg_op       =3D 0x1b,
-> >>          iocsrrdb_op     =3D 0x19200,
-> >>          iocsrrdh_op     =3D 0x19201,
-> >>          iocsrrdw_op     =3D 0x19202,
-> >> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/i=
-nclude/asm/loongarch.h
-> >> index 46366e783c84..a1d22e8b6f94 100644
-> >> --- a/arch/loongarch/include/asm/loongarch.h
-> >> +++ b/arch/loongarch/include/asm/loongarch.h
-> >> @@ -158,6 +158,16 @@
-> >>   #define  CPUCFG48_VFPU_CG              BIT(2)
-> >>   #define  CPUCFG48_RAM_CG               BIT(3)
-> >>
-> >> +/*
-> >> + * cpucfg index area: 0x40000000 -- 0x400000ff
-> >> + * SW emulation for KVM hypervirsor
-> >> + */
-> >> +#define CPUCFG_KVM_BASE                        0x40000000UL
-> >> +#define CPUCFG_KVM_SIZE                        0x100
-> >> +#define CPUCFG_KVM_SIG                 CPUCFG_KVM_BASE
-> >> +#define  KVM_SIGNATURE                 "KVM\0"
-> >> +#define CPUCFG_KVM_FEATURE             (CPUCFG_KVM_BASE + 4)
-> >> +
-> >>   #ifndef __ASSEMBLY__
-> >>
-> >>   /* CSR */
-> >> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> >> index 923bbca9bd22..6a38fd59d86d 100644
-> >> --- a/arch/loongarch/kvm/exit.c
-> >> +++ b/arch/loongarch/kvm/exit.c
-> >> @@ -206,10 +206,37 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
-> >>          return EMULATE_DONE;
-> >>   }
-> >>
-> >> -static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
-> >> +static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
-> >>   {
-> >>          int rd, rj;
-> >>          unsigned int index;
-> >> +
-> >> +       rd =3D inst.reg2_format.rd;
-> >> +       rj =3D inst.reg2_format.rj;
-> >> +       ++vcpu->stat.cpucfg_exits;
-> >> +       index =3D vcpu->arch.gprs[rj];
-> >> +
-> >> +       /*
-> >> +        * By LoongArch Reference Manual 2.2.10.5
-> >> +        * Return value is 0 for undefined cpucfg index
-> >> +        */
-> >> +       switch (index) {
-> >> +       case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
-> >> +               vcpu->arch.gprs[rd] =3D vcpu->arch.cpucfg[index];
-> >> +               break;
-> >> +       case CPUCFG_KVM_SIG:
-> >> +               vcpu->arch.gprs[rd] =3D *(unsigned int *)KVM_SIGNATURE=
-;
-> >> +               break;
-> >> +       default:
-> >> +               vcpu->arch.gprs[rd] =3D 0;
-> >> +               break;
-> >> +       }
-> >> +
-> >> +       return EMULATE_DONE;
-> >> +}
-> >> +
-> >> +static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
-> >> +{
-> >>          unsigned long curr_pc;
-> >>          larch_inst inst;
-> >>          enum emulation_result er =3D EMULATE_DONE;
-> >> @@ -224,21 +251,8 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *=
-vcpu)
-> >>          er =3D EMULATE_FAIL;
-> >>          switch (((inst.word >> 24) & 0xff)) {
-> >>          case 0x0: /* CPUCFG GSPR */
-> >> -               if (inst.reg2_format.opcode =3D=3D 0x1B) {
-> >> -                       rd =3D inst.reg2_format.rd;
-> >> -                       rj =3D inst.reg2_format.rj;
-> >> -                       ++vcpu->stat.cpucfg_exits;
-> >> -                       index =3D vcpu->arch.gprs[rj];
-> >> -                       er =3D EMULATE_DONE;
-> >> -                       /*
-> >> -                        * By LoongArch Reference Manual 2.2.10.5
-> >> -                        * return value is 0 for undefined cpucfg inde=
-x
-> >> -                        */
-> >> -                       if (index < KVM_MAX_CPUCFG_REGS)
-> >> -                               vcpu->arch.gprs[rd] =3D vcpu->arch.cpu=
-cfg[index];
-> >> -                       else
-> >> -                               vcpu->arch.gprs[rd] =3D 0;
-> >> -               }
-> >> +               if (inst.reg2_format.opcode =3D=3D cpucfg_op)
-> >> +                       er =3D kvm_emu_cpucfg(vcpu, inst);
-> >>                  break;
-> >>          case 0x4: /* CSR{RD,WR,XCHG} GSPR */
-> >>                  er =3D kvm_handle_csr(vcpu, inst);
-> >> --
-> >> 2.39.3
-> >>
->
->
+Whichever solution we end up with should work on both
+loongarch64 and on armv7 at least.
+
+    Arnd
