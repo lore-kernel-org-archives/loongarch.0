@@ -1,146 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7583D12C7F4;
-	Mon, 26 Feb 2024 16:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264BF60B9F
+	for <loongarch@lists.linux.dev>; Mon, 26 Feb 2024 16:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708964111; cv=none; b=E/Yq6LQ17wd1kPe/YuQaUug64lyw7CPU4vqG9WZ6NaJ2zMkxAZWp8w0gm2m8hhdC8JWFcobWRzUi+f6dFtAPLOsI0EXcHVgm44TTc10M0uw/LRWZOdqAmbROpbLPUr3+78BvfLXDASs6DH93wM1uDHCaILbsZd4n6apS/7QlkE0=
+	t=1708966211; cv=none; b=th2a0WUUIyvwaXzXntSIFD1pZy3Ce/SLIwxVDBVwEibInvMXuckzCJ4CEkvtwZNN8Y1NvLRiCJzs6hZzBnJPxTJxDEpFOdE6RyuRxtKMYn+Kk4Fl1zOn69C+qLStdJE/dhya6tzbTjA8y0WdtWIK8FPc9zQY4uKJ+dtH2IPmMYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708964111; c=relaxed/simple;
-	bh=AO14Twor4Epqfova99BdXRAOjLIWQcQyPi3BUqYZmuA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QEcppADMtfH7yYzbceLqJnAJ+ylNLVAYdkMie3GyPvINMkbsu0kIDWZiYRh+zPXWZ7RAkzb5ZLuwHfdOlKs/mW5aSftjjMGpnJ1ttHBPBe3QU3glZzcfLJArmB5tr37PUqwRDcIolhPoZWm7Sd9Kd+K+z9vBdautl5ipE4PLFp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZiZAMuXY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708966211; c=relaxed/simple;
+	bh=tYJtKOb5YnFqEfI64gUF97SWIUHpOFQPG5IqgXsQzxY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=l+5EpeeVXFJ8Mi8AIyexFstmkevRUK70Lz4ms7aOjQ9+TsPaGBMGAbXO5uHFd40ksr9UuSJJ/ubgEepMeEHk2oUxwHJqdVkJLAZzP1cSBn1RLYudB20cewMLDYD7Yjqtl4Sjgrfjh8An80FoSb1uPXLVRkCZTAoJX5jI/2PPQhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=M1bF301I; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZiZAMuXY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC888C433B2;
-	Mon, 26 Feb 2024 16:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708964110;
-	bh=AO14Twor4Epqfova99BdXRAOjLIWQcQyPi3BUqYZmuA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZiZAMuXYiDyR2hDknZ4xgVy8TWczoqlYaz+54BPEoKIfJs4BSV182oJ1ZYu9Y5JbD
-	 WmVlYt52eCJD6AGhn7U0y3EC75bLKVFGbI7wGmXiVDKgZPTwDaVuTJTSVkJKvUISzS
-	 2XRA3a5n6YOmUElWz/EoUJbwtBXGMm0MnBobEcfj+6UoFFgUN+ewdn1/f3BBURGCAf
-	 oK4FRWPsN9e+IXZu64v2vjYmcNQRQ8eM254ceqdZ/GIQhQ58ktIQY1PjwK8pNlnHUX
-	 azFtrkzqYG46sjmhqFVs4snXAZo3hTMRuuCQkCC5flzHnC0ice4Qu8BYIkByoxWD5F
-	 EP1u+qVkKv5IQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Kees Cook <keescook@chromium.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Matt Turner <mattst88@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Guo Ren <guoren@kernel.org>,
-	Brian Cain <bcain@quicinc.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Helge Deller <deller@gmx.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	x86@kernel.org,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: [PATCH 4/4] vdso: avoid including asm/page.h
-Date: Mon, 26 Feb 2024 17:14:14 +0100
-Message-Id: <20240226161414.2316610-5-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240226161414.2316610-1-arnd@kernel.org>
-References: <20240226161414.2316610-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="M1bF301I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1708966207;
+	bh=tYJtKOb5YnFqEfI64gUF97SWIUHpOFQPG5IqgXsQzxY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=M1bF301I5pHXWIqKowEvXZnugysDMbfT3wTfA7qcjhKz9uSu0mytoul7Sj3riwCki
+	 0btIqqUngLHgyE1W1pUD3G4BtlxJJy1uSZXjH1kIty7wGFzyWFe6dEWHVVFxHYGzty
+	 /x1VA7kY0mPFaP7OgjjseuG8Cb3rkoXO1MKcVzR0=
+Received: from [IPv6:240e:358:11b4:ae00:dc73:854d:832e:5] (unknown [IPv6:240e:358:11b4:ae00:dc73:854d:832e:5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id F41D466C2D;
+	Mon, 26 Feb 2024 11:49:57 -0500 (EST)
+Message-ID: <8e5e31daa3b76dc80ff5ec6ad46191bfd87f7df7.camel@xry111.site>
+Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep
+ argument inspection again?
+From: Xi Ruoyao <xry111@xry111.site>
+To: Christian Brauner <brauner@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Icenowy Zheng <uwu@icenowy.me>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>, linux-api@vger.kernel.org, Kees Cook
+ <keescook@chromium.org>, Xuefeng Li <lixuefeng@loongson.cn>, Jianmin Lv
+ <lvjianmin@loongson.cn>, Xiaotian Wu <wuxiaotian@loongson.cn>, WANG Rui
+ <wangrui@loongson.cn>, Miao Wang <shankerwangmiao@gmail.com>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, Linux-Arch
+ <linux-arch@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>
+Date: Tue, 27 Feb 2024 00:49:51 +0800
+In-Reply-To: <20240226-sandbank-bewerben-219120323e29@brauner>
+References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
+	 <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
+	 <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
+	 <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
+	 <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
+	 <3c396b7c-adec-4762-9584-5824f310bf7b@app.fastmail.com>
+	 <6f7a8e320f3c2bd5e9b704bb8d1f311714cd8644.camel@xry111.site>
+	 <b9fb0de1-bfb9-47a6-9730-325e7641c182@app.fastmail.com>
+	 <20240226-graustufen-hinsehen-6c578a744806@brauner>
+	 <ef732971-bf70-4d8c-9fe8-3ca163a0c29c@app.fastmail.com>
+	 <20240226-sandbank-bewerben-219120323e29@brauner>
+Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
+ keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Mon, 2024-02-26 at 16:40 +0100, Christian Brauner wrote:
 
-The recent change to the vdso_data_store broke building compat VDSO
-on at least arm64 because it includes headers outside of the include/vdso/
-namespace:
+> > I definitely don't want to see a new time32 API added to
+> > mips64 and the 32-bit architectures, so the existing stat64
+> > interface won't work as a statx replacement.
+>=20
+> I don't specifically care but the same way you don't want to see newer
+> time32 apis added to architectures I don't want to have hacks in our
+> system calls that aren't even a clear solution to the problem outlined
+> in this thread.
 
-In file included from arch/arm64/include/asm/lse.h:5,
-                 from arch/arm64/include/asm/cmpxchg.h:14,
-                 from arch/arm64/include/asm/atomic.h:16,
-                 from include/linux/atomic.h:7,
-                 from include/asm-generic/bitops/atomic.h:5,
-                 from arch/arm64/include/asm/bitops.h:25,
-                 from include/linux/bitops.h:68,
-                 from arch/arm64/include/asm/memory.h:209,
-                 from arch/arm64/include/asm/page.h:46,
-                 from include/vdso/datapage.h:22,
-                 from lib/vdso/gettimeofday.c:5,
-                 from <command-line>:
-arch/arm64/include/asm/atomic_ll_sc.h:298:9: error: unknown type name 'u128'
-  298 |         u128 full;
+So we should have a fstat_whatever64, IMO.
 
-Use an open-coded page size calculation based on the new CONFIG_PAGE_SHIFT
-Kconfig symbol instead.
+> Short of adding fstatx() the problem isn't solved by a new flag to
+> statx() as explained in my other mails. But I'm probably missing
+> something here because I find this notion of "design system calls for
+> seccomp and the Chromium sandbox" to be an absurd notion and it makes me
+> a bit impatient.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Fixes: a0d2fcd62ac2 ("vdso/ARM: Make union vdso_data_store available for all architectures")
-Link: https://lore.kernel.org/lkml/CA+G9fYtrXXm_KO9fNPz3XaRxHV7UD_yQp-TEuPQrNRHU+_0W_Q@mail.gmail.com/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/vdso/datapage.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I'm sharing the feeling on seccomp and/or (mis)uses of it, but using
+statx() or fstatat() for fstat() has a performance impact as they must
+inspect path (do a uaccess) and make sure it's an empty string, and
+Linus concluded "if the user want fstat, you should give the user fstat"
+for this issue:
 
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index 7ba44379a095..2c39a67d7e23 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -19,8 +19,6 @@
- #include <vdso/time32.h>
- #include <vdso/time64.h>
- 
--#include <asm/page.h>
--
- #ifdef CONFIG_ARCH_HAS_VDSO_DATA
- #include <asm/vdso/data.h>
- #else
-@@ -128,7 +126,7 @@ extern struct vdso_data _timens_data[CS_BASES] __attribute__((visibility("hidden
-  */
- union vdso_data_store {
- 	struct vdso_data	data[CS_BASES];
--	u8			page[PAGE_SIZE];
-+	u8			page[1ul << CONFIG_PAGE_SHIFT];
- };
- 
- /*
--- 
-2.39.2
+https://sourceware.org/pipermail/libc-alpha/2023-September/151365.html
 
+If it was just seccomp I'd not comment on this topic at all.
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
