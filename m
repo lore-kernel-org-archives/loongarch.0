@@ -1,103 +1,84 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F1F1C686
-	for <loongarch@lists.linux.dev>; Mon, 26 Feb 2024 08:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690E51CA97;
+	Mon, 26 Feb 2024 08:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708935347; cv=none; b=ejXyKO9J+1ilx7jwuweFaobCWm6wdK3B+fuaLZ3hwzEF2Fa294hsLEy1DqDLiCFSSjmicvWTragZLYaX2pzulft+GoZQKpHAoZG11L31+TC24Eu/mjPOPnQh9QctByBJR8HLOAaysGItmt7szFZtRL6VvbkvZ8Azk2rPqmFGbBc=
+	t=1708936005; cv=none; b=FCgf22hHmP0VL5+rJeaohWGcICKIuW6alxOADmmwar5UDKh0AJu4IRVqy6PPum19ZvSvFlVSNdXEhqIq248yBOlhVMYu+JtHmGrq5vWeNUT1D3/WAyfhwpxn+4H3SKLznstB6c/mM5oCHT01jJekxsIVtlfnIlx28bXeMYZD11U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708935347; c=relaxed/simple;
-	bh=gOnZYDgEPaUyxmyyfWi9fPSzeqDFwFnfKgtLfSpD0mg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qm0K/QXkS1kvEj3sDXvVCllyJMrsHhKG4oMDOTpPNtK+isPZxwoYgQb6cxbCGqC1bwPkAoGWazRMPGID4cnmF44tuP4c7e9puVtTVhJmAjzHlpw3V3uI+1nNBLbQIzlJOE7jvOefMDKuiYima6UWfE5Cq0yxrPo4lkXWA3OqKi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=v5/yDgLn; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+	s=arc-20240116; t=1708936005; c=relaxed/simple;
+	bh=haGI4n0YbA/4IGvdyThAvozbIdXURA6fZt37AbQcuwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ofgLHtjW3ijlVWOheD4/5aMINbb0KdlIrEjS7WSFmhgfReTT2sj04CeBCuhNm6WPRjTWyFZgmfImBfoKn359HMuTXGbyBLzp/6TU19X+6g2OtcRjbrIYMf4BAGUMy2gtgNKVzynUQtL5Y9DGXTNUcU2qetpcyORMeV1SDX/8JM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNmznQSW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="v5/yDgLn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1708935343; bh=gOnZYDgEPaUyxmyyfWi9fPSzeqDFwFnfKgtLfSpD0mg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=v5/yDgLnrAHr7z3v+SEOCCq/Lkm8yMusJ7UjwWPqzRvsFklNr6hu3irxieAkc0hmA
-	 OhAR2Gcwnki740xd5qLyXPGA0kcZu2z0TqVXwq6JRseFZH0phG7eZvZcIXgAsqqC0K
-	 7lFn2Wj2Vk7goqpcYu5B+YdUQwx9Z/yePRboBIKo=
-Received: from [28.0.0.1] (unknown [101.230.251.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9EE916006F;
-	Mon, 26 Feb 2024 16:15:43 +0800 (CST)
-Message-ID: <48afa638-9145-40ee-9868-fa82a1fce271@xen0n.name>
-Date: Mon, 26 Feb 2024 16:15:42 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNmznQSW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AF2C433F1;
+	Mon, 26 Feb 2024 08:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708936005;
+	bh=haGI4n0YbA/4IGvdyThAvozbIdXURA6fZt37AbQcuwQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gNmznQSWN2MhRkWhQYUIWP+Q7rle+L3MEZFkSXk5ZDHhsdKwJ3eKwV4yUx2xGVc4I
+	 nULj0FswhucxGEgmahSlP9vZQFhLMOChl5XMThaYhBcYOhMGRu9lJmLes4bYQ86Ojr
+	 SRE22RvpV0wPnWE+EZnfXbnSj8bp6h0jlq/aw+4smaqf+9FpCLumPKq+4k2ooPltCK
+	 est+fM5foWvlrRE+Dikaboekn76SBl4/WXLB2TiOnMt0bWzd0usIgjp3890azDNTm5
+	 chJjME7RTUEGY2OP1CYvdRqhUxiQJABmduh8XNhmVEZXqkPLY1D2ocCrIv5PgV0Yl7
+	 h0lp69Wyrzwmg==
+Date: Mon, 26 Feb 2024 09:26:38 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Kees Cook <keescook@chromium.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Xiaotian Wu <wuxiaotian@loongson.cn>, 
+	WANG Rui <wangrui@loongson.cn>, Miao Wang <shankerwangmiao@gmail.com>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, linux-arch <linux-arch@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep argument
+ inspection again?
+Message-ID: <20240226-granit-seilschaft-eccc2433014d@brauner>
+References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
+ <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
+ <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
+ <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
+ <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] loongarch/crypto: Clean up useless assignment operations
-Content-Language: en-US
-To: WangYuli <wangyuli@uniontech.com>, herbert@gondor.apana.org.au,
- davem@davemloft.net, chenhuacai@kernel.org
-Cc: linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Guan Wentao <guanwentao@uniontech.com>
-References: <20240226080328.334021-1-wangyuli@uniontech.com>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20240226080328.334021-1-wangyuli@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
 
-On 2/26/24 16:03, WangYuli wrote:
-> Both crc32 and crc32c hw accelerated funcs will calculate the
-> remaining len. Those codes are derived from
-> arch/mips/crypto/crc32-mips.c and "len -= sizeof(u32)" is not
-> necessary for 64-bit CPUs.
+On Mon, Feb 26, 2024 at 02:03:48PM +0800, Icenowy Zheng wrote:
+> 在 2024-02-25星期日的 15:32 +0800，Xi Ruoyao写道：
+> > On Sun, 2024-02-25 at 14:51 +0800, Icenowy Zheng wrote:
+> > > > From my point of view, I prefer to "restore fstat", because we
+> > > > need
+> > > > to
+> > > > use the Chrome sandbox everyday (even though it hasn't been
+> > > > upstream
+> > > > by now). But I also hope "seccomp deep argument inspection" can
+> > > > be
+> > > > solved in the future.
+> > > 
+> > > My idea is this problem needs syscalls to be designed with deep
+> > > argument inspection in mind; syscalls before this should be
+> > > considered
+> > > as historical error and get fixed by resotring old syscalls.
+> > 
+> > I'd not consider fstat an error as using statx for fstat has a
+> > performance impact (severe for some workflows), and Linus has
+> > concluded
 > 
-> Removing it can make context code style more unified and improve
-> code readability.
-> 
-> Suggested-by: Guan Wentao <guanwentao@uniontech.com>
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> ---
->   arch/loongarch/crypto/crc32-loongarch.c | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
-> index a49e507af38c..3eebea3a7b47 100644
-> --- a/arch/loongarch/crypto/crc32-loongarch.c
-> +++ b/arch/loongarch/crypto/crc32-loongarch.c
-> @@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
->   
->   		CRC32(crc, value, w);
->   		p += sizeof(u32);
-> -		len -= sizeof(u32);
->   	}
->   
->   	if (len & sizeof(u16)) {
-> @@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
->   
->   		CRC32C(crc, value, w);
->   		p += sizeof(u32);
-> -		len -= sizeof(u32);
->   	}
->   
->   	if (len & sizeof(u16)) {
+> Sorry for clearance, I mean statx is an error in ABI design, not fstat.
 
-Sure, but IIRC Loongson still has hopes in having 32-bit-only models 
-support upstream? The possibility cannot be ruled out because from 
-public information (e.g. the 2023-11-28 news event), Loongson is known 
-to be actively licensing their reduced 32-bit-only IP cores to third 
-parties.
-
-Ultimately whether we want to imply 64-bit operation with the crc32 
-module is up to Loongson to decide, and I think Huacai may have 
-something to add, but IMO at least we could gate the statement with 
-#ifdef's so we don't outright lose 32-bit compatibility with this code.
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+We will not be limited arbitrarly in system call design by seccomp being
+unable to do deep argument inspection. That ship has sailed many years
+ago. And it's a bit laughable to disalow pointer arguments and structs
+in system calls because seccomp isn't able to inspect them.
