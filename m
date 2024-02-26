@@ -1,59 +1,35 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07FA12F5BD
-	for <loongarch@lists.linux.dev>; Mon, 26 Feb 2024 16:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5E512FB24
+	for <loongarch@lists.linux.dev>; Mon, 26 Feb 2024 17:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966519; cv=none; b=XzXDdjY1hxTZKLcTU4cdISow0aDlTfOr1t7Bv37EoYIcjd2qxs54hFVvnsmrwCAgagbYG7cBAzNW5yLOMtBPdcRlByZkKX0mj0vt21vUdI6QUYeqfQCMZGyKGBhtnOU+SmacKb3XFTkkOgpR5jvqVRYJ0goRR64Vs+L/8KQMNp0=
+	t=1708969137; cv=none; b=R3rlVc3vvDjTOuX+C3/omImC3lmVRzM3YzfxgvCgjSdrKEwHBrTP5LPsOGR4GBueFchwi6Yqo+Rv/Vfzya1DA2BQp8ulqjXOtAfu70WjjBUrJRtLNMSdBZ0T8FY/AAG1M1MVG6oDd0SS2w7XJ8MGdzTLISdmIAsCrW4wbrOU2Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966519; c=relaxed/simple;
-	bh=efqSYWlmPvvmoW5hTpteGQgbaViN1str2LnrNPJgrD0=;
+	s=arc-20240116; t=1708969137; c=relaxed/simple;
+	bh=BqoV+f7qOQ3QlYoj2afq3XTuO91YwrBHlrZ8jcSxY2I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DoyeW06zcu3+flD3XeGgQTL5DdBViE+MZkeYq2ruGYPnIa8bBmTXHAzJCxkkdS9GwfXs7EvohwWCwn/iaui+EMon5kYhWOsfkax+JAjZR2ZDFJyMizifKx2V34gwlrWSZk8WiUHO0IrLzIwYdjmayZ1tk+XckGbzM0lzsYYC6i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=LhSeaKxG; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	 In-Reply-To:Content-Type; b=e58yHi8+GazjNTUePLW30nVcRC0PCXB4fyM2PirE1t9EfPkGFIbFUzzK7hg5FrqIWm1RhkzHhUszJhHPeV5Tv3ZQWTonRNwTMXeV/CT2DmAG0XwldSTLtjdAyI5gClay7F2Bz9MEEwizKLaInOrxDsK9hS8Znp2JzY9zY1p54JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=JjDaLd4L; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LhSeaKxG"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7c7b8fb8ba6so77232039f.2
-        for <loongarch@lists.linux.dev>; Mon, 26 Feb 2024 08:55:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1708966516; x=1709571316; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YapG2Iuz3DeMuojGrZ4IACVCP3buEgPcxL/agJvMeoI=;
-        b=LhSeaKxGnof6e+uLAqiMcd1Dv2SKkull/m6y9+zWyo1t+xLjKxpJFY4Q7CVQWANDqP
-         KnCRGbz05XYp5mBiHNS1tm3Xgx6NLytn60SdIdZLw22IhZeyCw8Vv7/W8R3am5aXucVE
-         a/9a0RlMhqD3b4I83DcpZCnYVvNsnDdIyxC/31C/r/+n0kfL2G0touCSan4Gkdqg4Yp9
-         L33kVtBCcxmk0nSl6R6OA3dx36xxdQik4qEDM9nhAGhPUw4GMe1oL0Pd5Vw3U5d0Af9A
-         k2nFyGzdIl7MwxGDFcUM2IMx4KCAaf3S3lUlc9Q+Z/gnQ2fHNqZXPTWtU4DtJTHVXo7q
-         tCQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708966516; x=1709571316;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YapG2Iuz3DeMuojGrZ4IACVCP3buEgPcxL/agJvMeoI=;
-        b=gLeIRhDEIAoGWNoFA4+DStcW+1TFoi5rBAxxhCI9gUq3EIxBCLTEzS/fHBXt2AnoZA
-         zN45sbrRJAF2vTOkqM5A3vTo8Qdipr03hWet+VrJEdtoXvw4Z0YHLnC9B8aUCggbFH8B
-         +8QAr3Vg27xg9IpeNLsdRAXdc1jp9lKohWo5YhRJuV/cGIsxKqduz+bg6WyGj2xp/431
-         5riR1Ve48l9vVJMlO29JJ7l3Ou4XbKwIXGJYAtuHHrtAbZ3knyc+mFTCKLR7Kg+gTp5F
-         Q5kJ6R2eetY6HPMPdMldhi73SpwS2I2jCq9g/bogk3W50YgyFrtgOjQqSZwdW/p+m8HM
-         F7Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWFC+jDvxwHcg6nfgAP3OQ0xT6c11qkKNG0AMJc6zY+KGoCv2N2QQcAp8jhEun7OiSj8TV3po4ynO8x9ZxXoQ/vEvp7OKkbCpzS
-X-Gm-Message-State: AOJu0YyeHGJeQ+8Gse/SP85IgUx9oXSGFcdyXmQ0bk+g9zWPiHTsnyIt
-	86IeyVmObADFGW8Q91JiHrjbCiVytqsAsPD5ygh7Jejdh/KRWfJ4xWuiCZf3UL8=
-X-Google-Smtp-Source: AGHT+IHuaCs5d/f2oApxcwZJ00c0VtAfeY0TQXQD6OLSfI1tJf749yVYK76BLp2wH1JUJFxCC31KGw==
-X-Received: by 2002:a5e:c819:0:b0:7c7:247e:34c7 with SMTP id y25-20020a5ec819000000b007c7247e34c7mr9575536iol.9.1708966515786;
-        Mon, 26 Feb 2024 08:55:15 -0800 (PST)
-Received: from [100.64.0.1] ([170.85.6.200])
-        by smtp.gmail.com with ESMTPSA id f23-20020a6be817000000b007c7938867adsm1309067ioh.33.2024.02.26.08.55.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 08:55:15 -0800 (PST)
-Message-ID: <764fafb0-2206-4ab1-84ea-ebb7848c8ff2@sifive.com>
-Date: Mon, 26 Feb 2024 10:55:11 -0600
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="JjDaLd4L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1708969132; bh=BqoV+f7qOQ3QlYoj2afq3XTuO91YwrBHlrZ8jcSxY2I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JjDaLd4LlwBUp3pN/hiU0KRjDLosm4DjD0dVWSd5jUYxRrAzt27XKJmyodUq0ITtn
+	 GW0h3MrmYXN8RGZC/qFtnGIfoMqcTvNUsUQGPPCqOFbxyZ7RliHpjDg+rlI4tc0HQM
+	 BaC1NJMw8QVygdA5lK3G3qEmDSHO7MD0mY7wgnEE=
+Received: from [IPV6:240e:388:8d00:6500:68e:73ae:46e1:716] (unknown [IPv6:240e:388:8d00:6500:68e:73ae:46e1:716])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 7D6CE60121;
+	Tue, 27 Feb 2024 01:38:52 +0800 (CST)
+Message-ID: <3f48b008-4d14-4711-b076-0c8ceccd03f5@xen0n.name>
+Date: Tue, 27 Feb 2024 01:38:52 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -61,232 +37,219 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] arch: consolidate existing CONFIG_PAGE_SIZE_*KB
- definitions
+Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep argument
+ inspection again?
 Content-Language: en-US
-To: Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Kees Cook <keescook@chromium.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>,
- Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>,
- Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller
- <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Andreas Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>,
- x86@kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
- Andy Lutomirski <luto@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>,
- Kieran Bingham <kbingham@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org
-References: <20240226161414.2316610-1-arnd@kernel.org>
- <20240226161414.2316610-2-arnd@kernel.org>
-From: Samuel Holland <samuel.holland@sifive.com>
-In-Reply-To: <20240226161414.2316610-2-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Christian Brauner <brauner@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Xi Ruoyao <xry111@xry111.site>,
+ Icenowy Zheng <uwu@icenowy.me>, Huacai Chen <chenhuacai@kernel.org>,
+ linux-api@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+ Xuefeng Li <lixuefeng@loongson.cn>, Jianmin Lv <lvjianmin@loongson.cn>,
+ Xiaotian Wu <wuxiaotian@loongson.cn>, WANG Rui <wangrui@loongson.cn>,
+ Miao Wang <shankerwangmiao@gmail.com>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
+ <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
+ <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
+ <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
+ <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
+ <3c396b7c-adec-4762-9584-5824f310bf7b@app.fastmail.com>
+ <6f7a8e320f3c2bd5e9b704bb8d1f311714cd8644.camel@xry111.site>
+ <b9fb0de1-bfb9-47a6-9730-325e7641c182@app.fastmail.com>
+ <20240226-graustufen-hinsehen-6c578a744806@brauner>
+ <7641391a-b109-49b3-84c8-7e72053210d8@xen0n.name>
+ <20240226-altmodisch-gedeutet-91c5ba2f6071@brauner>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20240226-altmodisch-gedeutet-91c5ba2f6071@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2024-02-26 10:14 AM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> These four architectures define the same Kconfig symbols for configuring
-> the page size. Move the logic into a common place where it can be shared
-> with all other architectures.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/Kconfig                      | 58 +++++++++++++++++++++++++++++--
->  arch/hexagon/Kconfig              | 25 +++----------
->  arch/hexagon/include/asm/page.h   |  6 +---
->  arch/loongarch/Kconfig            | 21 ++++-------
->  arch/loongarch/include/asm/page.h | 10 +-----
->  arch/mips/Kconfig                 | 58 +++----------------------------
->  arch/mips/include/asm/page.h      | 16 +--------
->  arch/sh/include/asm/page.h        | 13 +------
->  arch/sh/mm/Kconfig                | 42 +++++++---------------
->  9 files changed, 88 insertions(+), 161 deletions(-)
-> 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index a5af0edd3eb8..237cea01ed9b 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -1078,17 +1078,71 @@ config HAVE_ARCH_COMPAT_MMAP_BASES
->  	  and vice-versa 32-bit applications to call 64-bit mmap().
->  	  Required for applications doing different bitness syscalls.
->  
-> +config HAVE_PAGE_SIZE_4KB
-> +	bool
-> +
-> +config HAVE_PAGE_SIZE_8KB
-> +	bool
-> +
-> +config HAVE_PAGE_SIZE_16KB
-> +	bool
-> +
-> +config HAVE_PAGE_SIZE_32KB
-> +	bool
-> +
-> +config HAVE_PAGE_SIZE_64KB
-> +	bool
-> +
-> +config HAVE_PAGE_SIZE_256KB
-> +	bool
-> +
-> +choice
-> +	prompt "MMU page size"
 
-Should this have some generic help text (at least a warning about compatibility)?
+On 2/26/24 23:35, Christian Brauner wrote:
+> On Mon, Feb 26, 2024 at 10:00:05PM +0800, WANG Xuerui wrote:
+>> On 2/26/24 21:32, Christian Brauner wrote:
+>>> On Mon, Feb 26, 2024 at 10:20:23AM +0100, Arnd Bergmann wrote:
+>>>> On Mon, Feb 26, 2024, at 08:09, Xi Ruoyao wrote:
+>>>>> On Mon, 2024-02-26 at 07:56 +0100, Arnd Bergmann wrote:
+>>>>>> On Mon, Feb 26, 2024, at 07:03, Icenowy Zheng wrote:
+>>>>>>> 在 2024-02-25星期日的 15:32 +0800，Xi Ruoyao写道：
+>>>>>>>> On Sun, 2024-02-25 at 14:51 +0800, Icenowy Zheng wrote:
+>>>>>>>>> My idea is this problem needs syscalls to be designed with deep
+>>>>>>>>> argument inspection in mind; syscalls before this should be
+>>>>>>>>> considered
+>>>>>>>>> as historical error and get fixed by resotring old syscalls.
+>>>>>>>> I'd not consider fstat an error as using statx for fstat has a
+>>>>>>>> performance impact (severe for some workflows), and Linus has
+>>>>>>>> concluded
+>>>>>>> Sorry for clearance, I mean statx is an error in ABI design, not fstat.
+>>>>> I'm wondering why we decided to use AT_EMPTY_PATH/"" instead of
+>>>>> "AT_NULL_PATH"/nullptr in the first place?
+>>>> Not sure, but it's hard to change now since the libc
+>>>> implementation won't easily know whether using the NULL
+>>>> path is safe on a given kernel. It could check the kernel
+>>>> version number, but that adds another bit of complexity in
+>>>> the fast path and doesn't work on old kernels with the
+>>>> feature backported.
+>>>>
+>>>>> But it's not irrational to pass a path to syscall, as long as we still
+>>>>> have the concept of file system (maybe in 2371 or some year we'll use a
+>>>>> 128-bit UUID instead of path).
+>>>>>
+>>>>>> The problem I see with the 'use use fstat' approach is that this
+>>>>>> does not work on 32-bit architectures, unless we define a new
+>>>>>> fstatat64_time64() syscall, which is one of the things that statx()
+>>>>> "fstat64_time64".  Using statx for fstatat should be just fine.
+>>>> Right. It does feel wrong to have only an fstat() variant but not
+>>>> fstatat() if we go there.
+>>>>
+>>>>> Or maybe we can just introduce a new AT_something to make statx
+>>>>> completely ignore pathname but behave like AT_EMPTY_PATH + "".
+>>>> I think this is better than going back to fstat64_time64(), but
+>>>> it's still not great because
+>>>>
+>>>> - all the reserved flags on statx() are by definition incompatible
+>>>>     with existing kernels that return -EINVAL for any flag they do
+>>>>     not recognize.
+>>>>
+>>>> - you still need to convince libc developers to actually use
+>>>>     the flag despite the backwards compatibility problem, either
+>>>>     with a fallback to the current behavior or a version check.
+>>>>
+>>>> Using the NULL path as a fallback would solve the problem with
+>>>> seccomp, but it would not make the normal case any faster.
+>>>>
+>>>>>> was trying to avoid.
+>>>>> Oops.  I thought "newstat" should be using 64-bit time but it seems the
+>>>>> "new" is not what I'd expected...  The "new" actually means "newer than
+>>>>> Linux 0.9"! :(
+>>>>>
+>>>>> Let's not use "new" in future syscall names...
+>>>> Right, we definitely can't ever succeed. On some architectures
+>>>> we even had "oldstat" and "stat" before "newstat" and "stat64",
+>>>> and on some architectures we mix them up. E.g. x86_64 has fstat()
+>>>> and fstatat64() with the same structure but doesn't define
+>>>> __NR_newfstat. On mips64, there is a 'newstat' but it has 32-bit
+>>>> timestamps unlike all other 64-bit architectures.
+>>>>
+>>>> statx() was intended to solve these problems once and for all,
+>>>> and it appears that we have failed again.
+>>> New apis don't invalidate old apis necessarily. That's just not going to
+>>> work in an age where you have containerized workloads.
+>>>
+>>> statx() is just the beginning of this. A container may have aritrary
+>>> seccomp profiles that return ENOSYS or even EPERM for whatever reason
+>>> for any new api that exists. So not implementing fstat() might already
+>>> break container workloads.
+>>>
+>>> Another example: You can't just skip on implementing mount() and only
+>>> implement the new mount api for example. Because tools that look for api
+>>> simplicity and don't need complex setup will _always_ continue to use
+>>> mount() and have a right to do so.
+>>>
+>>> And fwiw, mount() isn't fully inspectable by seccomp since forever. The
+>>> list goes on and on.
+>>>
+>>> But let's look at the original mail. Why are they denying statx() and
+>>> what's that claim about it not being able to be rewritten to something
+>>> safe? Looking at:
+>>>
+>>> intptr_t SIGSYSFstatatHandler(const struct arch_seccomp_data& args,
+>>>                                 void* fs_denied_errno) {
+>>>     if (args.nr == __NR_fstatat_default) {
+>>>       if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&
+>>>           args.args[3] == static_cast<uint64_t>(AT_EMPTY_PATH)) {
+>>>         return syscall(__NR_fstat_default, static_cast<int>(args.args[0]),
+>>>                        reinterpret_cast<default_stat_struct*>(args.args[2]));
+>>>       }
+>>>       return -reinterpret_cast<intptr_t>(fs_denied_errno);
+>>>     }
+>>>
+>>> What this does it to rewrite fstatat() to fstat() if it was made with
+>>> AT_EMPTY_PATH and the path argument was "". That is easily doable for
+>>> statx() because it has the exact same AT_EMPTY_PATH semantics that
+>>> fstatat() has.
+>>>
+>>> Plus, they can even filter on mask and rewrite that to something that
+>>> they think is safe. For example, STATX_BASIC_STATS which is equivalent
+>>> to what any fstat() call returns. So it's pretty difficult to understand
+>>> what their actual gripe with statx() is.
+>>>
+>>> It can't be that statx() passes a struct because fstatat() and fstat()
+>>> do that too. So what exactly is that problem there?
+>>  From our investigation:
+>>
+>> For (new)fstatat calls that the sandboxed process may make, this SIGSYS
+>> handler either:
+>>
+>> * turns allowed calls (those looking at fd's) into fstat's that only have
+>> one argument (the fd) each, or
+>> * denies the call,
+> Yes, but look at the filtering that they do:
+>
+> if (args.nr == __NR_fstatat_default) {
+> 	if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&
+> 	    args.args[3] == static_cast<uint64_t>(AT_EMPTY_PATH)) {
+>
+> So if you have a statx() call instead of an fstatat() call this is
+> trivially:
+>
+> if (args.nr == __NR_statx) {
+> 	if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&
+> 	    args.args[2] == static_cast<uint64_t>(AT_EMPTY_PATH)) {
+>
+> maybe if they care about it also simply check
+> args.args[3] == STATX_BASIC_STATS.
+>
+> And then just as with fstatat() rewrite it to fstat().
 
-> +
-> +config PAGE_SIZE_4KB
-> +	bool "4KB pages"
-> +	depends on HAVE_PAGE_SIZE_4KB
-> +
-> +config PAGE_SIZE_8KB
-> +	bool "8KB pages"
-> +	depends on HAVE_PAGE_SIZE_8KB
-> +
-> +config PAGE_SIZE_16KB
-> +	bool "16KB pages"
-> +	depends on HAVE_PAGE_SIZE_16KB
-> +
-> +config PAGE_SIZE_32KB
-> +	bool "32KB pages"
-> +	depends on HAVE_PAGE_SIZE_32KB
-> +
-> +config PAGE_SIZE_64KB
-> +	bool "64KB pages"
-> +	depends on HAVE_PAGE_SIZE_64KB
-> +
-> +config PAGE_SIZE_256KB
-> +	bool "256KB pages"
-> +	depends on HAVE_PAGE_SIZE_256KB
-> +
-> +endchoice
-> +
->  config PAGE_SIZE_LESS_THAN_64KB
->  	def_bool y
-> -	depends on !ARM64_64K_PAGES
->  	depends on !PAGE_SIZE_64KB
-> -	depends on !PARISC_PAGE_SIZE_64KB
->  	depends on PAGE_SIZE_LESS_THAN_256KB
->  
->  config PAGE_SIZE_LESS_THAN_256KB
->  	def_bool y
->  	depends on !PAGE_SIZE_256KB
->  
-> +config PAGE_SHIFT
-> +	int
-> +	default 12 if PAGE_SIZE_4KB
-> +	default 13 if PAGE_SIZE_8KB
-> +	default 14 if PAGE_SIZE_16KB
-> +	default 15 if PAGE_SIZE_32KB
-> +	default 16 if PAGE_SIZE_64KB
-> +	default 18 if PAGE_SIZE_256KB
-> +
->  # This allows to use a set of generic functions to determine mmap base
->  # address by giving priority to top-down scheme only if the process
->  # is not in legacy mode (compat task, unlimited stack size or
-> diff --git a/arch/hexagon/Kconfig b/arch/hexagon/Kconfig
-> index a880ee067d2e..aac46ee1a000 100644
-> --- a/arch/hexagon/Kconfig
-> +++ b/arch/hexagon/Kconfig
-> @@ -8,6 +8,11 @@ config HEXAGON
->  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
->  	select ARCH_NO_PREEMPT
->  	select DMA_GLOBAL_POOL
-> +	select FRAME_POINTER
+But fstat() and fstatat() share the same return value type i.e. struct 
+stat, different from struct statx. And they are different enough that 
+their existing seccomp policy can distinguish. In the statx-only case 
+though, the seccomp policy cannot distinguish "statx actually called 
+with empty path" from "statx called with AT_EMPTY_PATH but non-empty 
+path" because in both cases the path would be a non-NULL pointer opaque 
+to the policy cBPF program.
 
-Looks like a paste error.
+>> so the sandbox only ever sees fstat calls and no (new)fstatat's, and the
+>> guarantee that only open fds can ever been stat'ed trivially holds.
+>>
+>> With statx, however, there's no way of guaranteeing "only look at fd"
+>> semantics without peeking into the path argument, because a non-empty path
+>> makes AT_EMPTY_PATH ineffective, and the flags are not validated prior to
+>> use making it near-impossible to introduce new semantics in a
+>> backwards-compatible manner.
+> I don't understand. That's exactly the same thing as for fstatat(). My
+> point is that you can turn statx() into fstat() just like you can turn
+> fstatat() into fstat(). So if you add fstat()/fstat64() what's left to
+> do?
+Yes, once fstat is restored it's a matter of transforming every allowed 
+statx into fstat, then translating struct stat back into struct statx. 
+What we're seeking is a possible way forward without re-introducing that 
+though, because we still have some time and don't have to rush.
+>>> What this tells me without knowing the exact reason is that they thought
+>>> "Oh, if we just return ENOSYS then the workload or glibc will just
+>>> always be able to fallback to fstat() or fstatat()". Which ultimately is
+>>> the exact same thing that containers often assume.
+>>>
+>>> So really, just skipping on various system calls isn't going to work.
+>>> You can't just implement new system calls and forget about the rest
+>>> unless you know exactly what workloads your architecure will run on.
+>>>
+>>> Please implement fstat() or fstatat() and stop inventing hacks for
+>>> statx() to make weird sandboxing rules work, please.
+>> We have already provided fstat(at) on LoongArch for a while by
+>> unconditionally doing statx and translating the returned structure -- see
+>> the [glibc] and [golang] [golang-2] implementations for example -- without
+> But you're doing that translation in userspace. I was talking about
+> adding the fstat()/fstat64() system calls.
+Hmm, yeah. I meant to provide some more context but I later realized 
+that the sandbox is in charge of rewriting the syscalls from inside the 
+sandbox, so the userland may not matter in the big picture after all.
 
-> +	select HAVE_PAGE_SIZE_4KB
-> +	select HAVE_PAGE_SIZE_16KB
-> +	select HAVE_PAGE_SIZE_64KB
-> +	select HAVE_PAGE_SIZE_256KB
->  	# Other pending projects/to-do items.
->  	# select HAVE_REGS_AND_STACK_ACCESS_API
->  	# select HAVE_HW_BREAKPOINT if PERF_EVENTS
-> @@ -120,26 +125,6 @@ config NR_CPUS
->  	  This is purely to save memory - each supported CPU adds
->  	  approximately eight kilobytes to the kernel image.
->  
-> -choice
-> -	prompt "Kernel page size"
-> -	default PAGE_SIZE_4KB
-> -	help
-> -	  Changes the default page size; use with caution.
-> -
-> -config PAGE_SIZE_4KB
-> -	bool "4KB"
-> -
-> -config PAGE_SIZE_16KB
-> -	bool "16KB"
-> -
-> -config PAGE_SIZE_64KB
-> -	bool "64KB"
-> -
-> -config PAGE_SIZE_256KB
-> -	bool "256KB"
-> -
-> -endchoice
-> -
->  source "kernel/Kconfig.hz"
->  
->  endmenu
-> diff --git a/arch/hexagon/include/asm/page.h b/arch/hexagon/include/asm/page.h
-> index 10f1bc07423c..65c9bac639fa 100644
-> --- a/arch/hexagon/include/asm/page.h
-> +++ b/arch/hexagon/include/asm/page.h
-> @@ -13,27 +13,22 @@
->  /*  This is probably not the most graceful way to handle this.  */
->  
->  #ifdef CONFIG_PAGE_SIZE_4KB
-> -#define PAGE_SHIFT 12
->  #define HEXAGON_L1_PTE_SIZE __HVM_PDE_S_4KB
->  #endif
->  
->  #ifdef CONFIG_PAGE_SIZE_16KB
-> -#define PAGE_SHIFT 14
->  #define HEXAGON_L1_PTE_SIZE __HVM_PDE_S_16KB
->  #endif
->  
->  #ifdef CONFIG_PAGE_SIZE_64KB
-> -#define PAGE_SHIFT 16
->  #define HEXAGON_L1_PTE_SIZE __HVM_PDE_S_64KB
->  #endif
->  
->  #ifdef CONFIG_PAGE_SIZE_256KB
-> -#define PAGE_SHIFT 18
->  #define HEXAGON_L1_PTE_SIZE __HVM_PDE_S_256KB
->  #endif
->  
->  #ifdef CONFIG_PAGE_SIZE_1MB
-> -#define PAGE_SHIFT 20
->  #define HEXAGON_L1_PTE_SIZE __HVM_PDE_S_1MB
->  #endif
+-- 
+WANG "xen0n" Xuerui
 
-The corresponding Kconfig option does not exist (and did not exist before this
-patch).
-
->  
-> @@ -50,6 +45,7 @@
->  #define HVM_HUGEPAGE_SIZE 0x5
->  #endif
->  
-> +#define PAGE_SHIFT CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE  (1UL << PAGE_SHIFT)
->  #define PAGE_MASK  (~((1 << PAGE_SHIFT) - 1))
->  
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
