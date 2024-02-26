@@ -1,101 +1,205 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874D212BEAF;
-	Mon, 26 Feb 2024 15:40:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEE7604A7;
+	Mon, 26 Feb 2024 16:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708962032; cv=none; b=n/wr0d2PaDruVpVlnqpNnZDK63R2c+y1YtfMI7GCjpEbxj5uNR2JFAEE4bimPzyMIR39r9TNu7DhCdylPzvEFKv2GKqH+DMmDeCg3erPmiwPHNd2PlARirh7T5BocvOGHHnsA+GH0qx97BDTzlxt3vT1Ed8+dwb4YZdYyzpCBbs=
+	t=1708964074; cv=none; b=SKNsP3AB76Z27dRKQvJMO194jmhCMGQoMoPq7tazGgSWXNLktisWG6+S5GaVJB9bNvcNdyPEJDCxWAa1c6NQAgr5e8vJCLc6Nd3XSWFLSChfSUO49QTKcJhwzhDy9poGL9fBuV/+N/B1Hrgo4c7E9gkjDokX2dD8uTN4DYw0kO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708962032; c=relaxed/simple;
-	bh=LqdZVF/5a5y9c7R0XJh34mAsJKHFvghTFVi0Kr3+2NY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nwC30FoeTXpKO/dNmwnO9GJXrNSRMXrZmgKg5AQFX/95eUR5VX2+WuDrRFU5OvLCLo7scsCVKbYanCm7Vo3IcpmhFL7qX2sTUAr0dT/t56SSBHZU0LN+NI3Ic4sd6jQNH3uVqMBjziUVb3/8SZEFRVhHhhrqNuGEv2KUFW+WdaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDxVS0q8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708964074; c=relaxed/simple;
+	bh=zxbqCp3xg1MTZv6nVkuYc0VOPy7Z/0KoLu5xdBZOcDY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y4iChQ2UuZf25lq9UumAyHHLuSd8Ri+0IcLnRkWadsISLl70JgGMzwAHsA3oqUXZFQO2pfETieol5457UVZvwy4XwdoEgoh9BIMfLdi013iX/Kfj0bHJaCZc3T66mqby6yQUBs6vdqp6eQb23gk55bUach6ffqnz8Birv+R/NBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouv+E5W1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDxVS0q8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C92C433C7;
-	Mon, 26 Feb 2024 15:40:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouv+E5W1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5D63C433C7;
+	Mon, 26 Feb 2024 16:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708962032;
-	bh=LqdZVF/5a5y9c7R0XJh34mAsJKHFvghTFVi0Kr3+2NY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pDxVS0q8Z3vpInLZ2QGBmd3bVTIaQVmD0Lg1FYweLvPwIbiCpQkMP7ZsWJjB8XGxz
-	 gzfyUh1+Ri7hI47ZLD0r2BbaP4NKvMOkYaCvn8A6uukIq4ZRgoAEGku8/mMxhNqzkA
-	 yvH2C6zhpPfy58dvkw+7jlsSzx5UfhYSmHsA0+tq1nwW+D9zb3A5R/sPl88jfUmX1O
-	 C2bPKjjaN4znMiobBOe3M/Kr19GSPeS6tZECdBbtUYH87T3HRdbua3LgIychQrhL6L
-	 E4SFQz52hUoq8sS6Y1U0lSrRsoxaUm8Lk/mld0Yd6oJw3qUFfKO2RjYMYTv722TFJQ
-	 aki7mnG1lzw/g==
-Date: Mon, 26 Feb 2024 16:40:25 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Xi Ruoyao <xry111@xry111.site>, Icenowy Zheng <uwu@icenowy.me>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-api@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Xiaotian Wu <wuxiaotian@loongson.cn>, 
-	WANG Rui <wangrui@loongson.cn>, Miao Wang <shankerwangmiao@gmail.com>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, Linux-Arch <linux-arch@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep argument
- inspection again?
-Message-ID: <20240226-sandbank-bewerben-219120323e29@brauner>
-References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
- <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
- <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
- <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
- <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
- <3c396b7c-adec-4762-9584-5824f310bf7b@app.fastmail.com>
- <6f7a8e320f3c2bd5e9b704bb8d1f311714cd8644.camel@xry111.site>
- <b9fb0de1-bfb9-47a6-9730-325e7641c182@app.fastmail.com>
- <20240226-graustufen-hinsehen-6c578a744806@brauner>
- <ef732971-bf70-4d8c-9fe8-3ca163a0c29c@app.fastmail.com>
+	s=k20201202; t=1708964073;
+	bh=zxbqCp3xg1MTZv6nVkuYc0VOPy7Z/0KoLu5xdBZOcDY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ouv+E5W1cQ1zHWEvJshxERHNgYSjJzR7JdvZMtKsmjTnnYsjb50xz7yQ6NNDLjL+R
+	 zIivYPxRBLqLiotGJhvVTBVfzRjkLFR+UKz+Blle7mLm83hZaxjZLxJiSIm8KsFpk8
+	 T2yQYC7g3LmUbscrU9t5jUZdMHfRtyoT7a/p66cZn/Wi8wvAOCFlueNWvORfaCli+Z
+	 S5t1BgjPEeJ3eGf1KMTEe7SIO0Rv5QLKXRaKqNQXL1yQWzRzHXLOOgf0gh7VMNEgGS
+	 /h/uyIFz30OGZTAygrSMurYRpnmZAOjoQMG9QUrFxlxLnbjp2UPK2IvIxVWUAhRAM9
+	 8PLY/d6Nx9Yzg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Kees Cook <keescook@chromium.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Matt Turner <mattst88@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Helge Deller <deller@gmx.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	x86@kernel.org,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org
+Subject: [PATCH 0/4] arch: mm, vdso: consolidate PAGE_SIZE definition
+Date: Mon, 26 Feb 2024 17:14:10 +0100
+Message-Id: <20240226161414.2316610-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ef732971-bf70-4d8c-9fe8-3ca163a0c29c@app.fastmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 26, 2024 at 02:46:49PM +0100, Arnd Bergmann wrote:
-> On Mon, Feb 26, 2024, at 14:32, Christian Brauner wrote:
-> > On Mon, Feb 26, 2024 at 10:20:23AM +0100, Arnd Bergmann wrote:
-> >> On Mon, Feb 26, 2024, at 08:09, Xi Ruoyao wrote:
-> >
-> > What this tells me without knowing the exact reason is that they thought
-> > "Oh, if we just return ENOSYS then the workload or glibc will just
-> > always be able to fallback to fstat() or fstatat()". Which ultimately is
-> > the exact same thing that containers often assume.
-> >
-> > So really, just skipping on various system calls isn't going to work.
-> > You can't just implement new system calls and forget about the rest
-> > unless you know exactly what workloads your architecure will run on.
-> >
-> > Please implement fstat() or fstatat() and stop inventing hacks for
-> > statx() to make weird sandboxing rules work, please.
-> 
-> Do you mean we should add fstat64_time64() for all architectures
-> then? Would use use the same structure layout as statx for this,
-> the 64-bit version of the 'struct stat' layout from
-> include/uapi/asm-generic/stat.h, or something new that solves
-> the same problems?
-> 
-> I definitely don't want to see a new time32 API added to
-> mips64 and the 32-bit architectures, so the existing stat64
-> interface won't work as a statx replacement.
+From: Arnd Bergmann <arnd@arndb.de>
 
-I don't specifically care but the same way you don't want to see newer
-time32 apis added to architectures I don't want to have hacks in our
-system calls that aren't even a clear solution to the problem outlined
-in this thread.
+Naresh noticed that the newly added usage of the PAGE_SIZE macro in
+include/vdso/datapage.h introduced a build regression. I had an older
+patch that I revived to have this defined through Kconfig rather than
+through including asm/page.h, which is not allowed in vdso code.
 
-Short of adding fstatx() the problem isn't solved by a new flag to
-statx() as explained in my other mails. But I'm probably missing
-something here because I find this notion of "design system calls for
-seccomp and the Chromium sandbox" to be an absurd notion and it makes me
-a bit impatient.
+I rebased and tested on top of the tip/timers/core branch that
+introduced the regression. If these patches get added, the
+compat VDSOs all build again, but the changes are a bit invasive.
 
-And fwiw, once mseal() lands seccomp should be a lot easier to get deep
-argument inspection.
+      Arnd
+
+Link: https://lore.kernel.org/lkml/CA+G9fYtrXXm_KO9fNPz3XaRxHV7UD_yQp-TEuPQrNRHU+_0W_Q@mail.gmail.com/
+Link: https://lore.kernel.org/all/65dc6c14.170a0220.f4a3f.91dd@mx.google.com/
+
+Arnd Bergmann (4):
+  arch: consolidate existing CONFIG_PAGE_SIZE_*KB definitions
+  arch: simplify architecture specific page size configuration
+  arch: define CONFIG_PAGE_SIZE_*KB on all architectures
+  vdso: avoid including asm/page.h
+
+ arch/Kconfig                       | 58 ++++++++++++++++++++++++++++--
+ arch/alpha/Kconfig                 |  1 +
+ arch/alpha/include/asm/page.h      |  2 +-
+ arch/arc/Kconfig                   |  3 ++
+ arch/arc/include/uapi/asm/page.h   |  6 ++--
+ arch/arm/Kconfig                   |  1 +
+ arch/arm/include/asm/page.h        |  2 +-
+ arch/arm64/Kconfig                 | 29 +++++++--------
+ arch/arm64/include/asm/page-def.h  |  2 +-
+ arch/csky/Kconfig                  |  1 +
+ arch/csky/include/asm/page.h       |  2 +-
+ arch/hexagon/Kconfig               | 25 +++----------
+ arch/hexagon/include/asm/page.h    |  6 +---
+ arch/loongarch/Kconfig             | 21 ++++-------
+ arch/loongarch/include/asm/page.h  | 10 +-----
+ arch/m68k/Kconfig                  |  3 ++
+ arch/m68k/Kconfig.cpu              |  2 ++
+ arch/m68k/include/asm/page.h       |  6 +---
+ arch/microblaze/Kconfig            |  1 +
+ arch/microblaze/include/asm/page.h |  2 +-
+ arch/mips/Kconfig                  | 58 +++---------------------------
+ arch/mips/include/asm/page.h       | 16 +--------
+ arch/nios2/Kconfig                 |  1 +
+ arch/nios2/include/asm/page.h      |  2 +-
+ arch/openrisc/Kconfig              |  1 +
+ arch/openrisc/include/asm/page.h   |  2 +-
+ arch/parisc/Kconfig                |  3 ++
+ arch/parisc/include/asm/page.h     | 10 +-----
+ arch/powerpc/Kconfig               | 31 ++++------------
+ arch/powerpc/include/asm/page.h    |  2 +-
+ arch/riscv/Kconfig                 |  1 +
+ arch/riscv/include/asm/page.h      |  2 +-
+ arch/s390/Kconfig                  |  1 +
+ arch/s390/include/asm/page.h       |  2 +-
+ arch/sh/include/asm/page.h         | 13 +------
+ arch/sh/mm/Kconfig                 | 42 +++++++---------------
+ arch/sparc/Kconfig                 |  2 ++
+ arch/sparc/include/asm/page_32.h   |  2 +-
+ arch/sparc/include/asm/page_64.h   |  3 +-
+ arch/um/Kconfig                    |  1 +
+ arch/um/include/asm/page.h         |  2 +-
+ arch/x86/Kconfig                   |  1 +
+ arch/x86/include/asm/page_types.h  |  2 +-
+ arch/xtensa/Kconfig                |  1 +
+ arch/xtensa/include/asm/page.h     |  2 +-
+ include/vdso/datapage.h            |  4 +--
+ scripts/gdb/linux/constants.py.in  |  2 +-
+ scripts/gdb/linux/mm.py            |  2 +-
+ 48 files changed, 153 insertions(+), 241 deletions(-)
+
+-- 
+2.39.2
+To: Thomas Gleixner <tglx@linutronix.de>
+To: Vincenzo Frascino <vincenzo.frascino@arm.com>
+To: Kees Cook <keescook@chromium.org>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Vineet Gupta <vgupta@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Brian Cain <bcain@quicinc.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michal Simek <monstr@monstr.eu>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Andreas Larsson <andreas@gaisler.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: x86@kernel.org
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Kieran Bingham <kbingham@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-csky@vger.kernel.org
+Cc: linux-hexagon@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-openrisc@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-um@lists.infradead.org
