@@ -1,519 +1,277 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466A5468E
-	for <loongarch@lists.linux.dev>; Tue, 27 Feb 2024 00:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECDBA1BF2A;
+	Tue, 27 Feb 2024 03:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708994993; cv=none; b=Z0JAsov1yfZUEvtWnEvgz6/TINWqFmQJHWVN0UEqttwJt51J/FNnlGppag1ujZ/l+e18LJVpm1AQQyo8MJyeZ1awq6gV2c1U9+kGg8qG6lrlsw+upn15W8c7ZuCDfGpz+H19aFpe7WNgF+AmrCKpQXsv1bVz26/H6azebHjQulQ=
+	t=1709003658; cv=none; b=fJ+zctGucjq8hGHKY/LKxo5mEvNcwALq5Akf3ozIAfwu4v30tRLdaqF8MjHls57+R5QHf5PFh0poBUimZ9+PT52Z2anw2+WLRGDHN8F0UQAZB0/w7Io9oCrv1apW7zENi1JA/ezs/ltprrNcteEYdorBtq47YLljXF9leELI6Q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708994993; c=relaxed/simple;
-	bh=rccfFAsIXXB1qR3NT1VIdPRPtfwefb4SHiEfUqybo3o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mRAzm0fRp8Zqhe7fz/SMdUQDG2V405qABjo6BsOAtQ+yrcSjJtT7kzext6i+eHKAMXYm+VFJVXqUdqpnB6LYbB3LdDVUIOtH+QGvtGSHQj5+HZLcCUB/ZkGLdTd9Y3eHQTIAvDkKjwmPr5CoATZ71oxLkMGm09lenHL+ccqQnVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hlb2FLF+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hlb2FLF+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB682C433F1
-	for <loongarch@lists.linux.dev>; Tue, 27 Feb 2024 00:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708994992;
-	bh=rccfFAsIXXB1qR3NT1VIdPRPtfwefb4SHiEfUqybo3o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hlb2FLF+7oSLe2uaiQD1GRNrdcUcZ76jkMNefv7y9z0d4avyL6FJ+ec7MgIsVWa5P
-	 wvDYvR10b8lFqBOgHmiA20/osMi1ld0TZqLNPYid52p2q5f1QA1scVPKtHhKfIDhrC
-	 q/svMK1Zm8VDLDLUYcDNUcNYAUTAdB82AhjafWTXrSI4iDZBqMRFNL534Smb8NdazI
-	 ymraKhDbxXSVTEhoYUArpoXZ2r5dqvW0+L+n8D1lFNRcYqnhaZWc3vUmQ45go8B2dM
-	 9JaWRnD/n3enlV67RX51LMpQ6+Gmgkk/xvPrcP0vyLUs5JSJ74i3u0JV/RpiWY7fzr
-	 YOZ11VkXCa1NQ==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d21cdbc85bso58428001fa.2
-        for <loongarch@lists.linux.dev>; Mon, 26 Feb 2024 16:49:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWbO0EMx3yZM4DX0KJORKmxYhp0IJpTv62gN+f+0T9umjZ1GXz15BYAqdxY61jpyUXZGMzdDwnB9RVd7OqlQ5zRCz01cTH6VTkT
-X-Gm-Message-State: AOJu0YwyRSZz0LcuBSMckSVO19BRo3Q3aack8F1Nvt9CxzFEYVSylPrM
-	tpSxk0OVd6wsyPWA4AV7wbh6FqkgDZmG3nFnqLITOh8SHbkS63KIX+8qQfIK4a1yx6c0lRyis+T
-	UYszdj767YGju4NVbcQQkXnpy7mE=
-X-Google-Smtp-Source: AGHT+IHMbxJ3SiFOofcXhuN9irkVPuqdMkmTsNwCqv7uyX1PBMjHMV5Lrsk8D9faur3ryNh+qAv630nq+LkptA51b9c=
-X-Received: by 2002:a05:6512:10d2:b0:512:cef7:4754 with SMTP id
- k18-20020a05651210d200b00512cef74754mr6391328lfg.5.1708994969841; Mon, 26 Feb
- 2024 16:49:29 -0800 (PST)
+	s=arc-20240116; t=1709003658; c=relaxed/simple;
+	bh=FqzHsKV7E++1r3+f9nmRVlX6daHy9V5Kk9QPAfSJO/I=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=eDpBjhIHgm7N5hr5pF9snwgwGCl6llcWhiBS58GCFvcKK8ej0g/2RK/Y2kqYVnFe+XujkwHIhiUnHIwrkiuwINaSo6te8LWFCijep0EOdhN/Ga4r20HY06oXL6xutV8W+DNHmwjdZzDOLVtHhpbTACK0bNYRNdksz5w/Y7y8HfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8Bxnut+U91lgdERAA--.44824S3;
+	Tue, 27 Feb 2024 11:14:07 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx8OR7U91l_AhHAA--.57350S3;
+	Tue, 27 Feb 2024 11:14:05 +0800 (CST)
+Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ kvm@vger.kernel.org
+References: <20240222032803.2177856-1-maobibo@loongson.cn>
+ <20240222032803.2177856-4-maobibo@loongson.cn>
+ <CAAhV-H5eqXMqTYVb6cAVqOsDNcEDeP9HzaMKw69KFQeVaAYEdA@mail.gmail.com>
+ <d1a6c424-b710-74d6-29f6-e0d8e597e1fb@loongson.cn>
+ <CAAhV-H7p114hWUVrYRfKiBX3teG8sG7xmEW-Q-QT3i+xdLqDEA@mail.gmail.com>
+ <06647e4a-0027-9c9f-f3bd-cd525d37b6d8@loongson.cn>
+ <85781278-f3e9-4755-8715-3b9ff714fb20@app.fastmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <0d428e30-07a8-5a91-a20c-c2469adbf613@loongson.cn>
+Date: Tue, 27 Feb 2024 11:14:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240226161414.2316610-1-arnd@kernel.org> <20240226161414.2316610-4-arnd@kernel.org>
-In-Reply-To: <20240226161414.2316610-4-arnd@kernel.org>
-From: Guo Ren <guoren@kernel.org>
-Date: Tue, 27 Feb 2024 08:49:18 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSCdXtCib2Wv_DQQSJ5srhDwHH6B3xgdrr1-SQECUL1VA@mail.gmail.com>
-Message-ID: <CAJF2gTSCdXtCib2Wv_DQQSJ5srhDwHH6B3xgdrr1-SQECUL1VA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] arch: define CONFIG_PAGE_SIZE_*KB on all architectures
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Kees Cook <keescook@chromium.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Andreas Larsson <andreas@gaisler.com>, 
-	Richard Weinberger <richard@nod.at>, x86@kernel.org, Max Filippov <jcmvbkbc@gmail.com>, 
-	Andy Lutomirski <luto@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Kieran Bingham <kbingham@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Feb 27, 2024 at 12:15=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wr=
-ote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> Most architectures only support a single hardcoded page size. In order
-> to ensure that each one of these sets the corresponding Kconfig symbols,
-> change over the PAGE_SHIFT definition to the common one and allow
-> only the hardware page size to be selected.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/alpha/Kconfig                 | 1 +
->  arch/alpha/include/asm/page.h      | 2 +-
->  arch/arm/Kconfig                   | 1 +
->  arch/arm/include/asm/page.h        | 2 +-
->  arch/csky/Kconfig                  | 1 +
->  arch/csky/include/asm/page.h       | 2 +-
->  arch/m68k/Kconfig                  | 3 +++
->  arch/m68k/Kconfig.cpu              | 2 ++
->  arch/m68k/include/asm/page.h       | 6 +-----
->  arch/microblaze/Kconfig            | 1 +
->  arch/microblaze/include/asm/page.h | 2 +-
->  arch/nios2/Kconfig                 | 1 +
->  arch/nios2/include/asm/page.h      | 2 +-
->  arch/openrisc/Kconfig              | 1 +
->  arch/openrisc/include/asm/page.h   | 2 +-
->  arch/riscv/Kconfig                 | 1 +
->  arch/riscv/include/asm/page.h      | 2 +-
->  arch/s390/Kconfig                  | 1 +
->  arch/s390/include/asm/page.h       | 2 +-
->  arch/sparc/Kconfig                 | 2 ++
->  arch/sparc/include/asm/page_32.h   | 2 +-
->  arch/sparc/include/asm/page_64.h   | 3 +--
->  arch/um/Kconfig                    | 1 +
->  arch/um/include/asm/page.h         | 2 +-
->  arch/x86/Kconfig                   | 1 +
->  arch/x86/include/asm/page_types.h  | 2 +-
->  arch/xtensa/Kconfig                | 1 +
->  arch/xtensa/include/asm/page.h     | 2 +-
->  28 files changed, 32 insertions(+), 19 deletions(-)
->
-> diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
-> index d6968d090d49..4f490250d323 100644
-> --- a/arch/alpha/Kconfig
-> +++ b/arch/alpha/Kconfig
-> @@ -14,6 +14,7 @@ config ALPHA
->         select PCI_DOMAINS if PCI
->         select PCI_SYSCALL if PCI
->         select HAVE_ASM_MODVERSIONS
-> +       select HAVE_PAGE_SIZE_8KB
->         select HAVE_PCSPKR_PLATFORM
->         select HAVE_PERF_EVENTS
->         select NEED_DMA_MAP_STATE
-> diff --git a/arch/alpha/include/asm/page.h b/arch/alpha/include/asm/page.=
-h
-> index 4db1ebc0ed99..70419e6be1a3 100644
-> --- a/arch/alpha/include/asm/page.h
-> +++ b/arch/alpha/include/asm/page.h
-> @@ -6,7 +6,7 @@
->  #include <asm/pal.h>
->
->  /* PAGE_SHIFT determines the page size */
-> -#define PAGE_SHIFT     13
-> +#define PAGE_SHIFT     CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE      (_AC(1,UL) << PAGE_SHIFT)
->  #define PAGE_MASK      (~(PAGE_SIZE-1))
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 0af6709570d1..9d52ba3a8ad1 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -116,6 +116,7 @@ config ARM
->         select HAVE_MOD_ARCH_SPECIFIC
->         select HAVE_NMI
->         select HAVE_OPTPROBES if !THUMB2_KERNEL
-> +       select HAVE_PAGE_SIZE_4KB
->         select HAVE_PCI if MMU
->         select HAVE_PERF_EVENTS
->         select HAVE_PERF_REGS
-> diff --git a/arch/arm/include/asm/page.h b/arch/arm/include/asm/page.h
-> index 119aa85d1feb..62af9f7f9e96 100644
-> --- a/arch/arm/include/asm/page.h
-> +++ b/arch/arm/include/asm/page.h
-> @@ -8,7 +8,7 @@
->  #define _ASMARM_PAGE_H
->
->  /* PAGE_SHIFT determines the page size */
-> -#define PAGE_SHIFT             12
-> +#define PAGE_SHIFT             CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE              (_AC(1,UL) << PAGE_SHIFT)
->  #define PAGE_MASK              (~((1 << PAGE_SHIFT) - 1))
->
-> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-> index cf2a6fd7dff8..9c2723ab1c94 100644
-> --- a/arch/csky/Kconfig
-> +++ b/arch/csky/Kconfig
-> @@ -89,6 +89,7 @@ config CSKY
->         select HAVE_KPROBES if !CPU_CK610
->         select HAVE_KPROBES_ON_FTRACE if !CPU_CK610
->         select HAVE_KRETPROBES if !CPU_CK610
-> +       select HAVE_PAGE_SIZE_4KB
->         select HAVE_PERF_EVENTS
->         select HAVE_PERF_REGS
->         select HAVE_PERF_USER_STACK_DUMP
-> diff --git a/arch/csky/include/asm/page.h b/arch/csky/include/asm/page.h
-> index 4a0502e324a6..f70f37402d75 100644
-> --- a/arch/csky/include/asm/page.h
-> +++ b/arch/csky/include/asm/page.h
-> @@ -10,7 +10,7 @@
->  /*
->   * PAGE_SHIFT determines the page size: 4KB
->   */
-> -#define PAGE_SHIFT     12
-> +#define PAGE_SHIFT     CONFIG_PAGE_SHIFT
-LGTM, thx.
-Acked-by: Guo Ren <guoren@kernel.org>
-
->  #define PAGE_SIZE      (_AC(1, UL) << PAGE_SHIFT)
->  #define PAGE_MASK      (~(PAGE_SIZE - 1))
->  #define THREAD_SIZE    (PAGE_SIZE * 2)
-> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-> index 4b3e93cac723..7b709453d5e7 100644
-> --- a/arch/m68k/Kconfig
-> +++ b/arch/m68k/Kconfig
-> @@ -84,12 +84,15 @@ config MMU
->
->  config MMU_MOTOROLA
->         bool
-> +       select HAVE_PAGE_SIZE_4KB
->
->  config MMU_COLDFIRE
-> +       select HAVE_PAGE_SIZE_8KB
->         bool
->
->  config MMU_SUN3
->         bool
-> +       select HAVE_PAGE_SIZE_8KB
->         depends on MMU && !MMU_MOTOROLA && !MMU_COLDFIRE
->
->  config ARCH_SUPPORTS_KEXEC
-> diff --git a/arch/m68k/Kconfig.cpu b/arch/m68k/Kconfig.cpu
-> index 9dcf245c9cbf..c777a129768a 100644
-> --- a/arch/m68k/Kconfig.cpu
-> +++ b/arch/m68k/Kconfig.cpu
-> @@ -30,6 +30,7 @@ config COLDFIRE
->         select GENERIC_CSUM
->         select GPIOLIB
->         select HAVE_LEGACY_CLK
-> +       select HAVE_PAGE_SIZE_8KB if !MMU
->
->  endchoice
->
-> @@ -45,6 +46,7 @@ config M68000
->         select GENERIC_CSUM
->         select CPU_NO_EFFICIENT_FFS
->         select HAVE_ARCH_HASH
-> +       select HAVE_PAGE_SIZE_4KB
->         select LEGACY_TIMER_TICK
->         help
->           The Freescale (was Motorola) 68000 CPU is the first generation =
-of
-> diff --git a/arch/m68k/include/asm/page.h b/arch/m68k/include/asm/page.h
-> index a5993ad83ed8..8cfb84b49975 100644
-> --- a/arch/m68k/include/asm/page.h
-> +++ b/arch/m68k/include/asm/page.h
-> @@ -7,11 +7,7 @@
->  #include <asm/page_offset.h>
->
->  /* PAGE_SHIFT determines the page size */
-> -#if defined(CONFIG_SUN3) || defined(CONFIG_COLDFIRE)
-> -#define PAGE_SHIFT     13
-> -#else
-> -#define PAGE_SHIFT     12
-> -#endif
-> +#define PAGE_SHIFT     CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE      (_AC(1, UL) << PAGE_SHIFT)
->  #define PAGE_MASK      (~(PAGE_SIZE-1))
->  #define PAGE_OFFSET    (PAGE_OFFSET_RAW)
-> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-> index 211f338d6235..f18ec02ddeb2 100644
-> --- a/arch/microblaze/Kconfig
-> +++ b/arch/microblaze/Kconfig
-> @@ -31,6 +31,7 @@ config MICROBLAZE
->         select HAVE_FTRACE_MCOUNT_RECORD
->         select HAVE_FUNCTION_GRAPH_TRACER
->         select HAVE_FUNCTION_TRACER
-> +       select HAVE_PAGE_SIZE_4KB
->         select HAVE_PCI
->         select IRQ_DOMAIN
->         select XILINX_INTC
-> diff --git a/arch/microblaze/include/asm/page.h b/arch/microblaze/include=
-/asm/page.h
-> index 86a4ce07c192..8810f4f1c3b0 100644
-> --- a/arch/microblaze/include/asm/page.h
-> +++ b/arch/microblaze/include/asm/page.h
-> @@ -20,7 +20,7 @@
->  #ifdef __KERNEL__
->
->  /* PAGE_SHIFT determines the page size */
-> -#define PAGE_SHIFT             12
-> +#define PAGE_SHIFT     CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE      (ASM_CONST(1) << PAGE_SHIFT)
->  #define PAGE_MASK      (~(PAGE_SIZE-1))
->
-> diff --git a/arch/nios2/Kconfig b/arch/nios2/Kconfig
-> index 58d9565dc2c7..79d3039b29f1 100644
-> --- a/arch/nios2/Kconfig
-> +++ b/arch/nios2/Kconfig
-> @@ -15,6 +15,7 @@ config NIOS2
->         select GENERIC_IRQ_SHOW
->         select HAVE_ARCH_TRACEHOOK
->         select HAVE_ARCH_KGDB
-> +       select HAVE_PAGE_SIZE_4KB
->         select IRQ_DOMAIN
->         select LOCK_MM_AND_FIND_VMA
->         select MODULES_USE_ELF_RELA
-> diff --git a/arch/nios2/include/asm/page.h b/arch/nios2/include/asm/page.=
-h
-> index 0ae7d9ce369b..0722f88e63cc 100644
-> --- a/arch/nios2/include/asm/page.h
-> +++ b/arch/nios2/include/asm/page.h
-> @@ -21,7 +21,7 @@
->  /*
->   * PAGE_SHIFT determines the page size
->   */
-> -#define PAGE_SHIFT     12
-> +#define PAGE_SHIFT     CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE      (_AC(1, UL) << PAGE_SHIFT)
->  #define PAGE_MASK      (~(PAGE_SIZE - 1))
->
-> diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
-> index fd9bb76a610b..3586cda55bde 100644
-> --- a/arch/openrisc/Kconfig
-> +++ b/arch/openrisc/Kconfig
-> @@ -25,6 +25,7 @@ config OPENRISC
->         select GENERIC_CPU_DEVICES
->         select HAVE_PCI
->         select HAVE_UID16
-> +       select HAVE_PAGE_SIZE_8KB
->         select GENERIC_ATOMIC64
->         select GENERIC_CLOCKEVENTS_BROADCAST
->         select GENERIC_SMP_IDLE_THREAD
-> diff --git a/arch/openrisc/include/asm/page.h b/arch/openrisc/include/asm=
-/page.h
-> index 44fc1fd56717..7925ce09ab5a 100644
-> --- a/arch/openrisc/include/asm/page.h
-> +++ b/arch/openrisc/include/asm/page.h
-> @@ -18,7 +18,7 @@
->
->  /* PAGE_SHIFT determines the page size */
->
-> -#define PAGE_SHIFT      13
-> +#define PAGE_SHIFT      CONFIG_PAGE_SHIFT
->  #ifdef __ASSEMBLY__
->  #define PAGE_SIZE       (1 << PAGE_SHIFT)
->  #else
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index bffbd869a068..792a337548f6 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -136,6 +136,7 @@ config RISCV
->         select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD
->         select HAVE_MOVE_PMD
->         select HAVE_MOVE_PUD
-> +       select HAVE_PAGE_SIZE_4KB
->         select HAVE_PCI
->         select HAVE_PERF_EVENTS
->         select HAVE_PERF_REGS
-> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.=
-h
-> index 57e887bfa34c..2947423b5082 100644
-> --- a/arch/riscv/include/asm/page.h
-> +++ b/arch/riscv/include/asm/page.h
-> @@ -12,7 +12,7 @@
->  #include <linux/pfn.h>
->  #include <linux/const.h>
->
-> -#define PAGE_SHIFT     (12)
-> +#define PAGE_SHIFT     CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE      (_AC(1, UL) << PAGE_SHIFT)
->  #define PAGE_MASK      (~(PAGE_SIZE - 1))
->
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index fe565f3a3a91..b61c74c10050 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -199,6 +199,7 @@ config S390
->         select HAVE_MOD_ARCH_SPECIFIC
->         select HAVE_NMI
->         select HAVE_NOP_MCOUNT
-> +       select HAVE_PAGE_SIZE_4KB
->         select HAVE_PCI
->         select HAVE_PERF_EVENTS
->         select HAVE_PERF_REGS
-> diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
-> index 73b9c3bf377f..ded9548d11d9 100644
-> --- a/arch/s390/include/asm/page.h
-> +++ b/arch/s390/include/asm/page.h
-> @@ -11,7 +11,7 @@
->  #include <linux/const.h>
->  #include <asm/types.h>
->
-> -#define _PAGE_SHIFT    12
-> +#define _PAGE_SHIFT    CONFIG_PAGE_SHIFT
->  #define _PAGE_SIZE     (_AC(1, UL) << _PAGE_SHIFT)
->  #define _PAGE_MASK     (~(_PAGE_SIZE - 1))
->
-> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-> index 204c43cb3d43..7e6bc6fff76b 100644
-> --- a/arch/sparc/Kconfig
-> +++ b/arch/sparc/Kconfig
-> @@ -58,6 +58,7 @@ config SPARC32
->         select DMA_DIRECT_REMAP
->         select GENERIC_ATOMIC64
->         select HAVE_UID16
-> +       select HAVE_PAGE_SIZE_4KB
->         select LOCK_MM_AND_FIND_VMA
->         select OLD_SIGACTION
->         select ZONE_DMA
-> @@ -75,6 +76,7 @@ config SPARC64
->         select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->         select HAVE_DYNAMIC_FTRACE
->         select HAVE_FTRACE_MCOUNT_RECORD
-> +       select HAVE_PAGE_SIZE_8KB
->         select HAVE_SYSCALL_TRACEPOINTS
->         select HAVE_CONTEXT_TRACKING_USER
->         select HAVE_TIF_NOHZ
-> diff --git a/arch/sparc/include/asm/page_32.h b/arch/sparc/include/asm/pa=
-ge_32.h
-> index 6be6f683f98f..9977c77374cd 100644
-> --- a/arch/sparc/include/asm/page_32.h
-> +++ b/arch/sparc/include/asm/page_32.h
-> @@ -11,7 +11,7 @@
->
->  #include <linux/const.h>
->
-> -#define PAGE_SHIFT   12
-> +#define PAGE_SHIFT   CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE    (_AC(1, UL) << PAGE_SHIFT)
->  #define PAGE_MASK    (~(PAGE_SIZE-1))
->
-> diff --git a/arch/sparc/include/asm/page_64.h b/arch/sparc/include/asm/pa=
-ge_64.h
-> index 254dffd85fb1..e9bd24821c93 100644
-> --- a/arch/sparc/include/asm/page_64.h
-> +++ b/arch/sparc/include/asm/page_64.h
-> @@ -4,8 +4,7 @@
->
->  #include <linux/const.h>
->
-> -#define PAGE_SHIFT   13
-> -
-> +#define PAGE_SHIFT   CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE    (_AC(1,UL) << PAGE_SHIFT)
->  #define PAGE_MASK    (~(PAGE_SIZE-1))
->
-> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> index b5e179360534..93a5a8999b07 100644
-> --- a/arch/um/Kconfig
-> +++ b/arch/um/Kconfig
-> @@ -20,6 +20,7 @@ config UML
->         select HAVE_UID16
->         select HAVE_DEBUG_KMEMLEAK
->         select HAVE_DEBUG_BUGVERBOSE
-> +       select HAVE_PAGE_SIZE_4KB
->         select NO_DMA if !UML_DMA_EMULATION
->         select OF_EARLY_FLATTREE if OF
->         select GENERIC_IRQ_SHOW
-> diff --git a/arch/um/include/asm/page.h b/arch/um/include/asm/page.h
-> index 84866127d074..9ef9a8aedfa6 100644
-> --- a/arch/um/include/asm/page.h
-> +++ b/arch/um/include/asm/page.h
-> @@ -10,7 +10,7 @@
->  #include <linux/const.h>
->
->  /* PAGE_SHIFT determines the page size */
-> -#define PAGE_SHIFT     12
-> +#define PAGE_SHIFT     CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE      (_AC(1, UL) << PAGE_SHIFT)
->  #define PAGE_MASK      (~(PAGE_SIZE-1))
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 5edec175b9bf..ba57eb362ec8 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -255,6 +255,7 @@ config X86
->         select HAVE_NOINSTR_VALIDATION          if HAVE_OBJTOOL
->         select HAVE_OBJTOOL                     if X86_64
->         select HAVE_OPTPROBES
-> +       select HAVE_PAGE_SIZE_4KB
->         select HAVE_PCSPKR_PLATFORM
->         select HAVE_PERF_EVENTS
->         select HAVE_PERF_EVENTS_NMI
-> diff --git a/arch/x86/include/asm/page_types.h b/arch/x86/include/asm/pag=
-e_types.h
-> index 86bd4311daf8..9da9c8a2f1df 100644
-> --- a/arch/x86/include/asm/page_types.h
-> +++ b/arch/x86/include/asm/page_types.h
-> @@ -7,7 +7,7 @@
->  #include <linux/mem_encrypt.h>
->
->  /* PAGE_SHIFT determines the page size */
-> -#define PAGE_SHIFT             12
-> +#define PAGE_SHIFT             CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE              (_AC(1,UL) << PAGE_SHIFT)
->  #define PAGE_MASK              (~(PAGE_SIZE-1))
->
-> diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
-> index 6f248d87e496..87ec35b3363b 100644
-> --- a/arch/xtensa/Kconfig
-> +++ b/arch/xtensa/Kconfig
-> @@ -44,6 +44,7 @@ config XTENSA
->         select HAVE_GCC_PLUGINS if GCC_VERSION >=3D 120000
->         select HAVE_HW_BREAKPOINT if PERF_EVENTS
->         select HAVE_IRQ_TIME_ACCOUNTING
-> +       select HAVE_PAGE_SIZE_4KB
->         select HAVE_PCI
->         select HAVE_PERF_EVENTS
->         select HAVE_STACKPROTECTOR
-> diff --git a/arch/xtensa/include/asm/page.h b/arch/xtensa/include/asm/pag=
-e.h
-> index a77d04972eb9..4db56ef052d2 100644
-> --- a/arch/xtensa/include/asm/page.h
-> +++ b/arch/xtensa/include/asm/page.h
-> @@ -22,7 +22,7 @@
->   * PAGE_SHIFT determines the page size
->   */
->
-> -#define PAGE_SHIFT     12
-> +#define PAGE_SHIFT     CONFIG_PAGE_SHIFT
->  #define PAGE_SIZE      (__XTENSA_UL_CONST(1) << PAGE_SHIFT)
->  #define PAGE_MASK      (~(PAGE_SIZE-1))
->
-> --
-> 2.39.2
->
+In-Reply-To: <85781278-f3e9-4755-8715-3b9ff714fb20@app.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bx8OR7U91l_AhHAA--.57350S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKFy3Jw15CF1Duw4rXFyxZwc_yoW3ArWxpr
+	W8AF1DCF48JrySyw42qw1UXrnIvr4kGr1xXry3J34UAF1DKr1xJr10kr4jkFykJw18CF10
+	qF4Utry3uF1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jjwZcUUUUU=
 
 
---=20
-Best Regards
- Guo Ren
+
+On 2024/2/27 上午4:02, Jiaxun Yang wrote:
+> 
+> 
+> 在2024年2月26日二月 上午8:04，maobibo写道：
+>> On 2024/2/26 下午2:12, Huacai Chen wrote:
+>>> On Mon, Feb 26, 2024 at 10:04 AM maobibo <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2024/2/24 下午5:13, Huacai Chen wrote:
+>>>>> Hi, Bibo,
+>>>>>
+>>>>> On Thu, Feb 22, 2024 at 11:28 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> Instruction cpucfg can be used to get processor features. And there
+>>>>>> is trap exception when it is executed in VM mode, and also it is
+>>>>>> to provide cpu features to VM. On real hardware cpucfg area 0 - 20
+>>>>>> is used.  Here one specified area 0x40000000 -- 0x400000ff is used
+>>>>>> for KVM hypervisor to privide PV features, and the area can be extended
+>>>>>> for other hypervisors in future. This area will never be used for
+>>>>>> real HW, it is only used by software.
+>>>>> After reading and thinking, I find that the hypercall method which is
+>>>>> used in our productive kernel is better than this cpucfg method.
+>>>>> Because hypercall is more simple and straightforward, plus we don't
+>>>>> worry about conflicting with the real hardware.
+>>>> No, I do not think so. cpucfg is simper than hypercall, hypercall can
+>>>> be in effect when system runs in guest mode. In some scenario like TCG
+>>>> mode, hypercall is illegal intruction, however cpucfg can work.
+>>> Nearly all architectures use hypercall except x86 for its historical
+>> Only x86 support multiple hypervisors and there is multiple hypervisor
+>> in x86 only. It is an advantage, not historical reason.
+> 
+> I do believe that all those stuff should not be exposed to guest user space
+> for security reasons.
+Can you add PLV checking when cpucfg 0x40000000-0x400000FF is emulated? 
+if it is user mode return value is zero and it is kernel mode emulated 
+value will be returned. It can avoid information leaking.
+
+> 
+> Also for different implementations of hypervisors they may have different
+> PV features behavior, using hypcall to perform feature detection
+> can pass more information to help us cope with hypervisor diversity.
+How do different hypervisors can be detected firstly?  On x86 MSR is 
+used for all hypervisors detection and on ARM64 hyperv used 
+acpi_gbl_FADT and kvm use smc forcely, host mode can execute smc 
+instruction without exception on ARM64.
+
+I do not know why hypercall is better than cpucfg on LoongArch, cpucfg 
+is basic intruction however hypercall is not, it is part of LVZ feature.
+
+>>
+>>> reasons. If we use CPUCFG, then the hypervisor information is
+>>> unnecessarily leaked to userspace, and this may be a security issue.
+>>> Meanwhile, I don't think TCG mode needs PV features.
+>> Besides PV features, there is other features different with real hw such
+>> as virtio device, virtual interrupt controller.
+> 
+> Those are *device* level information, they must be passed in firmware
+> interfaces to keep processor emulation sane.
+File arch/x86/hyperv/hv_apic.c can be referenced, apic features comes 
+from ms_hyperv.hints and HYPERV_CPUID_ENLIGHTMENT_INFO cpuid info, not 
+must be passed by firmware interface.
+
+Regards
+Bibo Mao
+> 
+> Thanks
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>
+>>>
+>>> I consulted with Jiaxun before, and maybe he can give some more comments.
+>>>
+>>>>
+>>>> Extioi virtualization extension will be added later, cpucfg can be used
+>>>> to get extioi features. It is unlikely that extioi driver depends on
+>>>> PARA_VIRT macro if hypercall is used to get features.
+>>> CPUCFG is per-core information, if we really need something about
+>>> extioi, it should be in iocsr (LOONGARCH_IOCSR_FEATURES).
+>>>
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>> ---
+>>>>>>     arch/loongarch/include/asm/inst.h      |  1 +
+>>>>>>     arch/loongarch/include/asm/loongarch.h | 10 ++++++
+>>>>>>     arch/loongarch/kvm/exit.c              | 46 +++++++++++++++++---------
+>>>>>>     3 files changed, 41 insertions(+), 16 deletions(-)
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+>>>>>> index d8f637f9e400..ad120f924905 100644
+>>>>>> --- a/arch/loongarch/include/asm/inst.h
+>>>>>> +++ b/arch/loongarch/include/asm/inst.h
+>>>>>> @@ -67,6 +67,7 @@ enum reg2_op {
+>>>>>>            revhd_op        = 0x11,
+>>>>>>            extwh_op        = 0x16,
+>>>>>>            extwb_op        = 0x17,
+>>>>>> +       cpucfg_op       = 0x1b,
+>>>>>>            iocsrrdb_op     = 0x19200,
+>>>>>>            iocsrrdh_op     = 0x19201,
+>>>>>>            iocsrrdw_op     = 0x19202,
+>>>>>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+>>>>>> index 46366e783c84..a1d22e8b6f94 100644
+>>>>>> --- a/arch/loongarch/include/asm/loongarch.h
+>>>>>> +++ b/arch/loongarch/include/asm/loongarch.h
+>>>>>> @@ -158,6 +158,16 @@
+>>>>>>     #define  CPUCFG48_VFPU_CG              BIT(2)
+>>>>>>     #define  CPUCFG48_RAM_CG               BIT(3)
+>>>>>>
+>>>>>> +/*
+>>>>>> + * cpucfg index area: 0x40000000 -- 0x400000ff
+>>>>>> + * SW emulation for KVM hypervirsor
+>>>>>> + */
+>>>>>> +#define CPUCFG_KVM_BASE                        0x40000000UL
+>>>>>> +#define CPUCFG_KVM_SIZE                        0x100
+>>>>>> +#define CPUCFG_KVM_SIG                 CPUCFG_KVM_BASE
+>>>>>> +#define  KVM_SIGNATURE                 "KVM\0"
+>>>>>> +#define CPUCFG_KVM_FEATURE             (CPUCFG_KVM_BASE + 4)
+>>>>>> +
+>>>>>>     #ifndef __ASSEMBLY__
+>>>>>>
+>>>>>>     /* CSR */
+>>>>>> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+>>>>>> index 923bbca9bd22..6a38fd59d86d 100644
+>>>>>> --- a/arch/loongarch/kvm/exit.c
+>>>>>> +++ b/arch/loongarch/kvm/exit.c
+>>>>>> @@ -206,10 +206,37 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
+>>>>>>            return EMULATE_DONE;
+>>>>>>     }
+>>>>>>
+>>>>>> -static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
+>>>>>> +static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+>>>>>>     {
+>>>>>>            int rd, rj;
+>>>>>>            unsigned int index;
+>>>>>> +
+>>>>>> +       rd = inst.reg2_format.rd;
+>>>>>> +       rj = inst.reg2_format.rj;
+>>>>>> +       ++vcpu->stat.cpucfg_exits;
+>>>>>> +       index = vcpu->arch.gprs[rj];
+>>>>>> +
+>>>>>> +       /*
+>>>>>> +        * By LoongArch Reference Manual 2.2.10.5
+>>>>>> +        * Return value is 0 for undefined cpucfg index
+>>>>>> +        */
+>>>>>> +       switch (index) {
+>>>>>> +       case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
+>>>>>> +               vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
+>>>>>> +               break;
+>>>>>> +       case CPUCFG_KVM_SIG:
+>>>>>> +               vcpu->arch.gprs[rd] = *(unsigned int *)KVM_SIGNATURE;
+>>>>>> +               break;
+>>>>>> +       default:
+>>>>>> +               vcpu->arch.gprs[rd] = 0;
+>>>>>> +               break;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       return EMULATE_DONE;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
+>>>>>> +{
+>>>>>>            unsigned long curr_pc;
+>>>>>>            larch_inst inst;
+>>>>>>            enum emulation_result er = EMULATE_DONE;
+>>>>>> @@ -224,21 +251,8 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
+>>>>>>            er = EMULATE_FAIL;
+>>>>>>            switch (((inst.word >> 24) & 0xff)) {
+>>>>>>            case 0x0: /* CPUCFG GSPR */
+>>>>>> -               if (inst.reg2_format.opcode == 0x1B) {
+>>>>>> -                       rd = inst.reg2_format.rd;
+>>>>>> -                       rj = inst.reg2_format.rj;
+>>>>>> -                       ++vcpu->stat.cpucfg_exits;
+>>>>>> -                       index = vcpu->arch.gprs[rj];
+>>>>>> -                       er = EMULATE_DONE;
+>>>>>> -                       /*
+>>>>>> -                        * By LoongArch Reference Manual 2.2.10.5
+>>>>>> -                        * return value is 0 for undefined cpucfg index
+>>>>>> -                        */
+>>>>>> -                       if (index < KVM_MAX_CPUCFG_REGS)
+>>>>>> -                               vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
+>>>>>> -                       else
+>>>>>> -                               vcpu->arch.gprs[rd] = 0;
+>>>>>> -               }
+>>>>>> +               if (inst.reg2_format.opcode == cpucfg_op)
+>>>>>> +                       er = kvm_emu_cpucfg(vcpu, inst);
+>>>>>>                    break;
+>>>>>>            case 0x4: /* CSR{RD,WR,XCHG} GSPR */
+>>>>>>                    er = kvm_handle_csr(vcpu, inst);
+>>>>>> --
+>>>>>> 2.39.3
+>>>>>>
+>>>>
+>>>>
+> 
+
