@@ -1,104 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0731854FA5;
-	Tue, 27 Feb 2024 13:35:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4299014532C;
+	Tue, 27 Feb 2024 13:46:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709040920; cv=none; b=MTj4IPGkPrCLXK8Gje43qnOrpLYXIpM6/qCz/hQdzkCMSR6OU7pFBSi8Js8bx5N4JdKWhUSyI2JQ8tVw9tvfaqn8etUhLrsPnludN7hkwI/7+Z5DAxgkSG0Zw5WFlpWxvtsNn1mO58z+P1iGndn7mAKUoOSiUZ5eiSq2ybkb0EI=
+	t=1709041574; cv=none; b=QOiIN86U9kmlJO9rxaQRW3e/zH2X3axohVd2H2G+A+L9/luwoCsX6JeyteIvmBufCZa3dmJJSi/G2ORzUaaguvIt+VZHKsV68OL5Nd0edRL6YUp+M5YHLbt3vZk1piGBUDupB34BhH61JgsjVH+tiwlaIM/iOW+DkY4NTzu60BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709040920; c=relaxed/simple;
-	bh=BjD48eO0ncryy69jvBn8vaB5qadO4+iBFiQpvSrfJsI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jJLaG1l8wNNcy3w7BT+bIG/Iyxz0vetCiRHzb3+MR2vQlDKfOo7Ed0FL1T+3xMwIm7w2gPvvb1Ew0DU+NWscx9HTsfulQL0Z4k16pFtqRUaayFt0epB19pqM2LFmt73/AQ7hibpJFt76dJUZzUWxY5qqAbQvmVaq1JRG9wgXqck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=u8gpb1B+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="u8gpb1B+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C480C433F1;
-	Tue, 27 Feb 2024 13:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709040919;
-	bh=BjD48eO0ncryy69jvBn8vaB5qadO4+iBFiQpvSrfJsI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u8gpb1B+H8iBJF+Lv29ymQMMYwWDSmB+NXpqqeGHs3Iw5UBUZCUXRTBIYkRuI9yur
-	 GXc3e6Z/8xqpHONWA36jh2cQ14ld1yePRRUf3MsytjC4UBM1ZjsqCmFhvXzB5zbZTF
-	 c2M1I7M6Y75hyEUPB08g+2enbziqC9M+iHl1ms5o=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	kernel test robot <lkp@intel.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
+	s=arc-20240116; t=1709041574; c=relaxed/simple;
+	bh=xRjDVtu3nytJp3c18npkYm9xnFy1VlKHPEHeJB+cX/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oc5+5G4SaTgzRzN17D7dI0mBLacpoeLLAj9VrF7/kVNW+IUozXtXvED7PTN9irklpDYXAJhOcs7AUqATgCUgqiQiKZ8AC3U09c4nCyugkvo8Ua8KSrBGaldjxRNfRWXwy72WdSpo7QDm+Rfgs1waoqCeERxhEV89qkKbAzY1Zpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1CC5C433C7;
+	Tue, 27 Feb 2024 13:46:05 +0000 (UTC)
+Date: Tue, 27 Feb 2024 13:46:03 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Fangrui Song <maskray@google.com>,
-	loongarch@lists.linux.dev,
 	Kees Cook <keescook@chromium.org>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 117/334] LoongArch: vDSO: Disable UBSAN instrumentation
-Date: Tue, 27 Feb 2024 14:19:35 +0100
-Message-ID: <20240227131634.246209554@linuxfoundation.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240227131630.636392135@linuxfoundation.org>
-References: <20240227131630.636392135@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>, x86@kernel.org,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org
+Subject: Re: [PATCH 2/4] arch: simplify architecture specific page size
+ configuration
+Message-ID: <Zd3nm4YNW8OwVQxm@arm.com>
+References: <20240226161414.2316610-1-arnd@kernel.org>
+ <20240226161414.2316610-3-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226161414.2316610-3-arnd@kernel.org>
 
-6.7-stable review patch.  If anyone has any objections, please let me know.
+On Mon, Feb 26, 2024 at 05:14:12PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> arc, arm64, parisc and powerpc all have their own Kconfig symbols
+> in place of the common CONFIG_PAGE_SIZE_4KB symbols. Change these
+> so the common symbols are the ones that are actually used, while
+> leaving the arhcitecture specific ones as the user visible
+> place for configuring it, to avoid breaking user configs.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-------------------
+For arm64:
 
-From: Kees Cook <keescook@chromium.org>
-
-[ Upstream commit cca5efe77a6a2d02b3da4960f799fa233e460ab1 ]
-
-The vDSO executes in userspace, so the kernel's UBSAN should not
-instrument it. Solves these kind of build errors:
-
-  loongarch64-linux-ld: arch/loongarch/vdso/vgettimeofday.o: in function `vdso_shift_ns':
-  lib/vdso/gettimeofday.c:23:(.text+0x3f8): undefined reference to `__ubsan_handle_shift_out_of_bounds'
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401310530.lZHCj1Zl-lkp@intel.com/
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Fangrui Song <maskray@google.com>
-Cc: loongarch@lists.linux.dev
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/vdso/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index c74c9921304f2..f597cd08a96be 100644
---- a/arch/loongarch/vdso/Makefile
-+++ b/arch/loongarch/vdso/Makefile
-@@ -2,6 +2,7 @@
- # Objects to go into the VDSO.
- 
- KASAN_SANITIZE := n
-+UBSAN_SANITIZE := n
- KCOV_INSTRUMENT := n
- 
- # Include the generic Makefile to check the built vdso.
--- 
-2.43.0
-
-
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
