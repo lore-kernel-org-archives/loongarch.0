@@ -1,233 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B7A1474DC;
-	Tue, 27 Feb 2024 14:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709045840; cv=none; b=BGD4N0ca72+orkbodomsjXRrWdie194w9+eW/l4lA9I+yD62jGk4PfSF5z6G+9hOKliorlDfRRqJs5i7wgPPkFd3OlJRY2IXOArsr7tng4qxy17O6nvbfnSxhtXTBqxCr7akMKlFvdAWWsFNjPR/E8vJfdEjav4WH7bx8QWNqa8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709045840; c=relaxed/simple;
-	bh=kNT7bnt1rPGgFookSGlOqrNUkGMcqjGSZ5SZmXT1qEs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=plLqZqrBVyLylTzIQgi8uE+kJzxQ8+1z8MeiwUb28757yNHycrsKREzLfZebBsMEoqY9v68bmUcLf7Kl0yxXKvU8vsX1BcCR+68S4HQdX5DjHwh08RqJmjEcipNvhB5xO1bMKHobifOZ56lekrqWurlwyBxDp+L+I0hbKc5Ef8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCLYeDkT; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E8814533A
+	for <loongarch@lists.linux.dev>; Tue, 27 Feb 2024 15:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709046053; cv=fail; b=qQeuc4FG6ja306XMkIk5Da8Dk4AMu/5qBkMja41sXxjerMdQGNXhSZ4Cq1jeXbApx5rOrzNBtNQJAFDj2xGtvuoFCXISEFoZ1dS97p34+5DVNIvm6KR85EqPUm4IWKVpM77GZbYUZkNyyYfnIXN2OVRk4RdVu3pJyQF9rOYSkbI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709046053; c=relaxed/simple;
+	bh=RaO181aJpDLW0Gx31CoopQlCEx26CfFWFo5NJgjOsvU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=L8yX4WEAgMVSZeF3Mr++1ALg2VSEGYUH5eDjMArQkwbTlcTJbk5T5Ov78eR+2aB1x4yUNXdon044+XKJwPuVxTlNo1ACjaHmLOLIIu5MDIKvfe7pq5WMosC77+j/xjsD01dyt5v+LELFf1+45BCdG+MU7/Kn49kPlU9Tk2RV2ng=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nY/Nn2r3; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCLYeDkT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4A04C43394;
-	Tue, 27 Feb 2024 14:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709045839;
-	bh=kNT7bnt1rPGgFookSGlOqrNUkGMcqjGSZ5SZmXT1qEs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bCLYeDkTii8jh+FByN5BtWWYY+ezhCi0eK0A2ZMWHaq7gdYoS8/xyeYPlUFfU/A1e
-	 om+suB8N5IxiB8E2xawB5g0iulSAUohgYpTJecuLF3w1ntZl2YT4FziYV8cnDAhHxa
-	 2YLQGJNFPBvHXfDUZyeTsHRQ2/EeiPt7kt48/xJk3LJaMtzIw7GML5O/MjTVIjFEjy
-	 NukCyKZK8ZdKuqYblwyFTEkv9uTNUXfbt7E+tF2NB+3JEDYPUywmUiFZ+aLT1e4ywF
-	 cnqBp+TOkumCRb1D0a4dPvEXhhF9728MB910fFEccclJmjFOVZbWjG8xi0oDOEU3ET
-	 SZFEYkmkUbBpQ==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512fb30dbc9so2389456e87.2;
-        Tue, 27 Feb 2024 06:57:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWYVyWGaApQtyLr7wNBT4bznysWxPwzyVplihItM29H9nnbmDeHAnQQ1gA9m5qCA5wUupVv1Q0jf7ryMqtmmE69U126hjVi7hNROJxZFWmkFb9DJb4lDzNnNAE5QFTAWFSCYYyAJoTqGPE=
-X-Gm-Message-State: AOJu0Yyxhkh8B8voc9FvUbM9mflpSTxtePpBJP8DZ+Nk1WzBq9oALJV9
-	vP2HZGN/v0NBm53Mcz1/tqP57nDXKQT2dnNZtfLmJXDrGi5dzwqrhWv6/eBaAqtnTaY667uzBus
-	OaxaCkGWAq7pztWiDPiBTymqbSN4=
-X-Google-Smtp-Source: AGHT+IHB9E4WvglrZzPpM9DyeTp5HFtYnqxx7WeFnVt/nlI/OHsBWtuzj7Rj/8+lT+gnSHZ/ooQZbrc3bgyia8WjSyg=
-X-Received: by 2002:a05:6512:68c:b0:512:f258:7d53 with SMTP id
- t12-20020a056512068c00b00512f2587d53mr7287290lfe.30.1709045837892; Tue, 27
- Feb 2024 06:57:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nY/Nn2r3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709046052; x=1740582052;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=RaO181aJpDLW0Gx31CoopQlCEx26CfFWFo5NJgjOsvU=;
+  b=nY/Nn2r3n1L72mdqvOt0X0UZGqO+vhvskNa9nMqE5zrWTEyAACNaBKnR
+   e88r5TlbpTfRzDsNGuJLeVA2gtc97Tli29H4WasGEDtBvu5ZEed0987Le
+   7tpnfWMJIvFklXkAJhADo/XUMiZQAkDBn3G2hWjRS51eAleNwweHP5cnD
+   tFaK2xGti10WAimmjWSgEqVfAsrZSP7XRv3lm2M4FRR0Taa55E9FF13xG
+   POQ+UajvUrR1B7QNFgzEVsBj49c5To2XuWi/OVgZa40jMF7uiWWFiXzhk
+   9a1sXx4e0VzmKYwzsrkv/fR+a844cEo0fC8qwEXXkz9mbZ83xA4LMeHfO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3943865"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="3943865"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 07:00:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="7422398"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Feb 2024 07:00:51 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 27 Feb 2024 07:00:49 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 27 Feb 2024 07:00:49 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 27 Feb 2024 07:00:49 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 27 Feb 2024 07:00:49 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rhx5OCNPR5DqxxSiH7VWBzNuF5O6pnD3MB2KUGgC0DExHSLeoi2Jkj/ZXaa3qTe6YiKr302uW3MHUa182e++UMNnjFmWrcqoM7gy7OI34ezr8Z/0eKQQRSte0kF5tuSUO2HyaLjoJZztiFjt7opCetp61ZuVRqqbZdayps71wNjfGQkNSQ7ofgR34UX2v0a2INukggHhDhxjXqmY9sj9058qhJgDnYNTEWFdf49aF5y/Lg+C/U4K4nmcPGKsdPclohOzs7w/WscTkIGL7WE95hkFUTdS3gOVHDr+XMo4HrpV4CbsozCoHLt5JWUkwOOcCc8r++vPY97+1EIsxJ5sJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RaO181aJpDLW0Gx31CoopQlCEx26CfFWFo5NJgjOsvU=;
+ b=oB6xDuRHh4HS3S5/pWtZSHVFZu6TpC5JOQz4i4glpNeBH8tuc4w2bgD8k3Nf61nTkSREX6x5cJsCsioioBCDPJ+h657kERVZHFkrBOFmC/MrDocvsZ0t5poz+gZrmfK/FI+vIPlf9QMzuzGKOMWUQ8g1PAcN9sr5nP+DmvmE3CU7X6DI3Rr+lJnXshCncEI2NSlrJTGbDUMgbaE0DKwvp4hRvwhVMhzGB9MYsDN3hFFhTh4sDHM61oPeU1UhewCPSS38HpwtPBaXuuRKOiWjDx9Sd0GEZ6Z33tim4J4G/U2JKIpUy+lc3/nUzUYSDukuukb1UP13JNqlKIiXHsGNOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by DM4PR11MB7397.namprd11.prod.outlook.com (2603:10b6:8:103::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.23; Tue, 27 Feb
+ 2024 15:00:46 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::fc9e:b72f:eeb5:6c7b]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::fc9e:b72f:eeb5:6c7b%5]) with mapi id 15.20.7339.022; Tue, 27 Feb 2024
+ 15:00:46 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "keescook@chromium.org" <keescook@chromium.org>, "luto@kernel.org"
+	<luto@kernel.org>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "debug@rivosinc.com" <debug@rivosinc.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "mingo@redhat.com"
+	<mingo@redhat.com>, "kirill.shutemov@linux.intel.com"
+	<kirill.shutemov@linux.intel.com>, "christophe.leroy@csgroup.eu"
+	<christophe.leroy@csgroup.eu>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"peterz@infradead.org" <peterz@infradead.org>, "bp@alien8.de" <bp@alien8.de>,
+	"x86@kernel.org" <x86@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>
+CC: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>,
+	"linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>, "linux-mips@vger.kernel.org"
+	<linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v2 5/9] mm: Initialize struct vm_unmapped_area_info
+Thread-Topic: [PATCH v2 5/9] mm: Initialize struct vm_unmapped_area_info
+Thread-Index: AQHaaOdsOIuf9v8cz0SXVaOI9gIdJbEdxC+AgACFfgA=
+Date: Tue, 27 Feb 2024 15:00:46 +0000
+Message-ID: <ad24469275325b86ed316df36153fcdb2863454f.camel@intel.com>
+References: <20240226190951.3240433-1-rick.p.edgecombe@intel.com>
+	 <20240226190951.3240433-6-rick.p.edgecombe@intel.com>
+	 <94a2b919-e03b-4ade-b13e-7774849dc02b@csgroup.eu>
+In-Reply-To: <94a2b919-e03b-4ade-b13e-7774849dc02b@csgroup.eu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|DM4PR11MB7397:EE_
+x-ms-office365-filtering-correlation-id: b0e66ae3-1da6-4204-2f5b-08dc37a4e0f9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mn748FgbHOul6iHua64XtMugo+/W6AWuTL2ZmEvCn/32vRDqj+An2YUhXTj5Kd5XgKWfSIkBmW163vFa3DmgpDSX1lWxzXnp9rLmmMy3oTa4ueSz1SJauO+w5cUXVjApSuUEsI1BbBMZkTOqNR9ra6VV+GWu/xCgFV7hNhEg7iqzolFBCSt52ioV+fq0PkM7AY0YG1lfNFrwU8Y3myfAoWmZ1LIZyq8X95N0lq8e/IU5wLVoClym37DOUkspkNpLSuV2tEUoxhRXhgwEi4Fv9ln045T/p8yINSWhz9vt3hfDpSLpsJVc+b5v5ccbuOJe8YjiYb8v9F8gOHBG989W4XuV4VzuLGsiYBVvUdYEFR8w154ivNrxDmzFEKduyFdywrZ4ctwGLM023Yya3EOi2vd9tHqlWi9LihxbLthz0HrvwyQJ41P4p/t3X6p4b5Kz4WzOakooRIRrc1nSBp1xl7E/ZdZI3i93nfzDBJILjTRxiyeKizKhQYvYLcNz/AD6+1SdlUOlV4CmdFP/V4UhOGsNz+YYpjehUlLxsdNo08N7pT6GkdQlZt9LzoD5PRCnVkrMcPD3kK+NZ84HV92W35IzZnv80i9jtBL4Z9Yvqv/yszMOWOHoGwTeV2V6Nf+EMUUMddGl7TTWfbxNekvS3uMb/NLR777XfryrdAd1PYlXzS/D6tHAlHJ0/9EzOLdMVKegGl/h3CXOtQYQdytWwcJr17JEPTzE1J8hPQdi1nk=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?blNCZzN4eStxZVV5am1FdjN0Q1MvTVBFS0Z6aDZGOU11UXR4SmNjR1B5cXRy?=
+ =?utf-8?B?OFEzcm9zbFJuWTZkMTlnRGV2ZHN3MG9MZURUdm5jTlZERlhIMDFmT2tvcERJ?=
+ =?utf-8?B?aU5JRnB6LzBvZmZ6cVllOTgzRDg1K0VDYUYyZGlUaUhGZXNyaThiSFV1SWNm?=
+ =?utf-8?B?U29QRDdxQ0Rib0F3dVA2d3FIMmFyT2M1ZS82UTZFRDE4S0FoTFNnS2d1RDBW?=
+ =?utf-8?B?UU54Ky9VOEsrY3lqQ3FBQ1JlN2lXMHFvbnB3OUlvbTVIcGI2djB3d2YrRmo3?=
+ =?utf-8?B?QnRYWXVHdDFUWUhlVmNsMk50cXgvTHV5cXZ4KzI4QzlQS01XTnV2N2Zlejcr?=
+ =?utf-8?B?NFpwbVdzaURMVGQyWkJUMFVBSjRMZytnZEpzeThOSzdZTUhDUldpTS9hT09x?=
+ =?utf-8?B?dU1meFFpVlY4MHRUZHJXUVM0QVk3MFNHR0hUTStyOUs4Mk1PZ2pmYTRpd3ZD?=
+ =?utf-8?B?NjlMVnM5SEEzOVlGV0ZiTWJUazZ3WVBrMUozZHl0K2Q5amhOSmppenkwdEtN?=
+ =?utf-8?B?Y1p0VjZBejhuRm9OaWxqaGZnU1RHZkZxajdaRk8rTUlka3AweFh0TjlzeE5G?=
+ =?utf-8?B?QjlmMXpkU1VVMjRidDJ4L2dJdXFNdU1UT1l3YXNEaFBWWVVBQ0llNHozazF1?=
+ =?utf-8?B?VVlHbnMrLzRkUTlUcGpNUWliMGZ3d21ERGFKZ1AvUDZXZjFhUFRURDRoNkhr?=
+ =?utf-8?B?NzlaMTIyZTNZdFdKQmN6QWVJR3ZNVHVLV0pIQUpCR1JhbzliS0YzUnZVY25u?=
+ =?utf-8?B?ckYrUmhsbUJIcVdlT0xWL0ZZcG9uK09wVzkraHJNaUlHZzhjaTY5Tm9rRXEy?=
+ =?utf-8?B?byt3MXM0LzVaK1VvTitqVHpJcHNiYUkwTHRma1o0dEdXWXEzeUxxQjA1YWNJ?=
+ =?utf-8?B?SnZUVlJsRmxIakJZVWpMdEpvTWRHOUU4QzVPZ1F5V2xGeTVFcmhsWEdoVHhJ?=
+ =?utf-8?B?dDcvd2x4aStBTFN1RXBUZnhndW1jdGxHeG5qNHFENWw0N0ROeUVzRG9UTmJQ?=
+ =?utf-8?B?a0txUVpkZ25CQzFiZ1VoaW0vMG45aDhBVUwrbkhuRXM4cjZhNFZnYmk1WUxk?=
+ =?utf-8?B?NkpYV0V2MXZQeVh5Q2U3ZnN4QTdEOGZqUDVzc1FWQ2pQcDZDdGhXUU5icDNq?=
+ =?utf-8?B?WnJzZ2hIVEIwZWdjdllJYXJhM215b2Vna2pDMUJvakNwb2NWeUQ0VGVHd1BB?=
+ =?utf-8?B?dnAwNmJnMzZYZThSQnhIMUZndFRQSWtTdlJZK0lpWElQb2YrbTE0MFF0L3V6?=
+ =?utf-8?B?RjRIUEhrakJvVW9tbGJsdlJPV0x1V2Yvd0JJaENSRHNkRnJVb3FISFJKYlk2?=
+ =?utf-8?B?aXFpYVRmVm1SdUFLQVJodUtRV2Y3S09FRlh0UWNFczJPTWNWamU3NzJtYTVK?=
+ =?utf-8?B?MDcwdXZzOEl6MCtkbWdwK2liYVQvdWlHbWlSd2RvbUtETVU5V1lhK3E5Mmph?=
+ =?utf-8?B?cmpQSmFPUDRVeUhscGVLMjNJMlpGR0o1cGxqOWRURjRiVElNNTlTc2tad1hl?=
+ =?utf-8?B?ZHUyVmpuQXVkb0VKUTFuOXZ6SDJnNWJIclJ2SExaSWdqVy9ZM1laUU9aSnBk?=
+ =?utf-8?B?cEVwM3UvejFGT2I4MFp6TUFVSVA4c3RQNmwxOXNxc3hPNEhXZmxYZUJ1bE1p?=
+ =?utf-8?B?TWJBOG1IS3IwZytONU8xOUhsYy91dHM1UUh6SXpERVhFYW1rbS9mVnV3cm12?=
+ =?utf-8?B?UHlYNTMxSWxkZmExV0I4UGRsSmdCbGV2SG9UZFkxczNSS3BraVB0b2tPNnRx?=
+ =?utf-8?B?OGJ5Rkh2QURHWUtBcnRZYnh6dkhhaTI5bW4zVTdNT2x6Z0FPSG9NeGQ5L2l1?=
+ =?utf-8?B?eG5MWTBMNzVyVXFoVDJqZjFwNElRMGNGY2pPVExKM3dWN1p6eFdFbTRNOTY0?=
+ =?utf-8?B?bjRoNU5mMlpib0dGK2ErT0xBTUJPV3FXNXVyZEd1ZlkrTGtMdk5ZbzRsNzBJ?=
+ =?utf-8?B?OTF2ajh3bWlhSVpHSjNNaUFBTmMrbXdDTTBtMC9WRTdXS2pHRGRXZzN2R2tK?=
+ =?utf-8?B?UUZkWVU0N2ZqWHVJeHZxV0VpWXVRZ3pDb2dpek9Zb2NveEUrK2c2eG9TWTB1?=
+ =?utf-8?B?U241NWx5SW51MmdkMTc0RXZOYjA5OHc0bkV0bklSWTZSTjFKNFQ2ZUVhTE1J?=
+ =?utf-8?B?bGZ4VzZHbWhneitlYjh0QlhlLzYySFF0Q2Z1WElVaks3Q0l1WHkwcWgvVVVI?=
+ =?utf-8?B?NWc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7382061C02003347A4536E29B25683C7@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240222032803.2177856-1-maobibo@loongson.cn> <20240222032803.2177856-4-maobibo@loongson.cn>
- <CAAhV-H5eqXMqTYVb6cAVqOsDNcEDeP9HzaMKw69KFQeVaAYEdA@mail.gmail.com>
- <d1a6c424-b710-74d6-29f6-e0d8e597e1fb@loongson.cn> <CAAhV-H7p114hWUVrYRfKiBX3teG8sG7xmEW-Q-QT3i+xdLqDEA@mail.gmail.com>
- <06647e4a-0027-9c9f-f3bd-cd525d37b6d8@loongson.cn> <85781278-f3e9-4755-8715-3b9ff714fb20@app.fastmail.com>
- <0d428e30-07a8-5a91-a20c-c2469adbf613@loongson.cn> <327808dd-ac34-4c61-9992-38642acc9419@xen0n.name>
- <62cc24fd-025a-53c6-1c8e-2d20de54d297@loongson.cn> <431111f3-d84a-4311-986d-eebd91559cd3@xen0n.name>
-In-Reply-To: <431111f3-d84a-4311-986d-eebd91559cd3@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 27 Feb 2024 22:57:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H47DCmYeT0jx3zkk=48amaMTxHDbDyGB0=WNPbsDR=dXQ@mail.gmail.com>
-Message-ID: <CAAhV-H47DCmYeT0jx3zkk=48amaMTxHDbDyGB0=WNPbsDR=dXQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
-To: WANG Xuerui <kernel@xen0n.name>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: maobibo <maobibo@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
-	kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0e66ae3-1da6-4204-2f5b-08dc37a4e0f9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2024 15:00:46.8284
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YXvuilbxmInYW6g2+xc0p3GXzLHwOPF9ZMYN3tJcDo/yeVM4+w48BtonVZlfjOnvxCCRB2x5fs9OSwqNhAeTMAvzaq+T/M2/Etj7M/QuabI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7397
+X-OriginatorOrg: intel.com
 
-Hi, Paolo,
-
-I'm very sorry to bother you, now we have a controversy about how to
-query hypervisor features (PV IPI, PV timer and maybe PV spinlock) on
-LoongArch, and we have two choices:
-1, Get from CPUCFG registers;
-2, Get from a hypercall.
-
-CPUCFG are unprivileged registers which can be read from user space,
-so the first method can unnecessarily leak information to userspace,
-but this method is more or less similar to x86's CPUID solution.
-Hypercall is of course a privileged method (so no info leak issues),
-and this method is used by ARM/ARM64 and most other architectures.
-
-Besides, LoongArch's CPUCFG is supposed to provide per-core features,
-while not all hypervisor features are per-core information (Of course
-PV IPI is, but others may be or may not be, while 'extioi' is
-obviously not). Bibo thinks that only CPUCFG has enough space to
-contain all hypervisor features (CSR and IOCSR are not enough).
-However it is obvious that we don't need any register space to hold
-these features, because they are held in the hypervisor's memory. The
-only information that needs register space is "whether I am in a VM"
-(in this case we really cannot use hypercall), but this feature is
-already in IOCSR (LOONGARCH_IOCSR_FEATURES).
-
-Now my question is: for a new architecture, which method is
-preferable, maintainable and extensible? Of course "they both OK" for
-the current purpose in this patch, but I think you can give us more
-useful information from a professor's view.
-
-More details are available in this thread, about the 3rd patch. Any
-suggestions are welcome.
-
-
-
-
-
-
-Huacai
-
-On Tue, Feb 27, 2024 at 6:19=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
-te:
->
-> On 2/27/24 18:12, maobibo wrote:
-> >
-> >
-> > On 2024/2/27 =E4=B8=8B=E5=8D=885:10, WANG Xuerui wrote:
-> >> On 2/27/24 11:14, maobibo wrote:
-> >>>
-> >>>
-> >>> On 2024/2/27 =E4=B8=8A=E5=8D=884:02, Jiaxun Yang wrote:
-> >>>>
-> >>>>
-> >>>> =E5=9C=A82024=E5=B9=B42=E6=9C=8826=E6=97=A5=E4=BA=8C=E6=9C=88 =E4=B8=
-=8A=E5=8D=888:04=EF=BC=8Cmaobibo=E5=86=99=E9=81=93=EF=BC=9A
-> >>>>> On 2024/2/26 =E4=B8=8B=E5=8D=882:12, Huacai Chen wrote:
-> >>>>>> On Mon, Feb 26, 2024 at 10:04=E2=80=AFAM maobibo <maobibo@loongson=
-.cn> wrote:
-> >>>>>>>
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> On 2024/2/24 =E4=B8=8B=E5=8D=885:13, Huacai Chen wrote:
-> >>>>>>>> Hi, Bibo,
-> >>>>>>>>
-> >>>>>>>> On Thu, Feb 22, 2024 at 11:28=E2=80=AFAM Bibo Mao <maobibo@loong=
-son.cn>
-> >>>>>>>> wrote:
-> >>>>>>>>>
-> >>>>>>>>> Instruction cpucfg can be used to get processor features. And
-> >>>>>>>>> there
-> >>>>>>>>> is trap exception when it is executed in VM mode, and also it i=
-s
-> >>>>>>>>> to provide cpu features to VM. On real hardware cpucfg area 0 -=
- 20
-> >>>>>>>>> is used.  Here one specified area 0x40000000 -- 0x400000ff is u=
-sed
-> >>>>>>>>> for KVM hypervisor to privide PV features, and the area can be
-> >>>>>>>>> extended
-> >>>>>>>>> for other hypervisors in future. This area will never be used f=
-or
-> >>>>>>>>> real HW, it is only used by software.
-> >>>>>>>> After reading and thinking, I find that the hypercall method
-> >>>>>>>> which is
-> >>>>>>>> used in our productive kernel is better than this cpucfg method.
-> >>>>>>>> Because hypercall is more simple and straightforward, plus we do=
-n't
-> >>>>>>>> worry about conflicting with the real hardware.
-> >>>>>>> No, I do not think so. cpucfg is simper than hypercall, hypercall
-> >>>>>>> can
-> >>>>>>> be in effect when system runs in guest mode. In some scenario
-> >>>>>>> like TCG
-> >>>>>>> mode, hypercall is illegal intruction, however cpucfg can work.
-> >>>>>> Nearly all architectures use hypercall except x86 for its historic=
-al
-> >>>>> Only x86 support multiple hypervisors and there is multiple hypervi=
-sor
-> >>>>> in x86 only. It is an advantage, not historical reason.
-> >>>>
-> >>>> I do believe that all those stuff should not be exposed to guest
-> >>>> user space
-> >>>> for security reasons.
-> >>> Can you add PLV checking when cpucfg 0x40000000-0x400000FF is
-> >>> emulated? if it is user mode return value is zero and it is kernel
-> >>> mode emulated value will be returned. It can avoid information leakin=
-g.
-> >>
-> >> I've suggested this approach in another reply [1], but I've rechecked
-> >> the manual, and it turns out this behavior is not permitted by the
-> >> current wording. See LoongArch Reference Manual v1.10, Volume 1,
-> >> Section 2.2.10.5 "CPUCFG":
-> >>
-> >>  > CPUCFG =E8=AE=BF=E9=97=AE=E6=9C=AA=E5=AE=9A=E4=B9=89=E7=9A=84=E9=85=
-=8D=E7=BD=AE=E5=AD=97=E5=B0=86=E8=AF=BB=E5=9B=9E=E5=85=A8 0 =E5=80=BC=E3=80=
-=82
-> >>  >
-> >>  > Reads of undefined CPUCFG configuration words shall return all-zero=
-es.
-> >>
-> >> This sentence mentions no distinction based on privilege modes, so it
-> >> can only mean the behavior applies universally regardless of privilege
-> >> modes.
-> >>
-> >> I think if you want to make CPUCFG behavior PLV-dependent, you may
-> >> have to ask the LoongArch spec editors, internally or in public, for a
-> >> new spec revision.
-> > No, CPUCFG behavior between CPUCFG0-CPUCFG21 is unchanged, only that it
-> > can be defined by software since CPUCFG 0x400000000 is used by software=
-.
->
-> The 0x40000000 range is not mentioned in the manuals. I know you've
-> confirmed privately with HW team but this needs to be properly
-> documented for public projects to properly rely on.
->
-> >> (There are already multiple third-party LoongArch implementers as of
-> >> late 2023, so any ISA-level change like this would best be
-> >> coordinated, to minimize surprises.)
-> > With document Vol 4-23
-> > https://www.intel.com/content/dam/develop/external/us/en/documents/3355=
-92-sdm-vol-4.pdf
-> >
-> > There is one line "MSR address range between 40000000H - 400000FFH is
-> > marked as a specially reserved range. All existing and
-> > future processors will not implement any features using any MSR in this
-> > range."
->
-> Thanks for providing this info, now at least we know why it's this
-> specific range of 0x400000XX that's chosen.
->
-> >
-> > It only says that it is reserved, it does not say detailed software
-> > behavior. Software behavior is defined in hypervisor such as:
-> > https://github.com/MicrosoftDocs/Virtualization-Documentation/blob/main=
-/tlfs/Requirements%20for%20Implementing%20the%20Microsoft%20Hypervisor%20In=
-terface.pdf
-> > https://kb.vmware.com/s/article/1009458
-> >
-> > If hypercall method is used, there should be ABI also like aarch64:
-> > https://documentation-service.arm.com/static/6013e5faeee5236980d08619
->
-> Yes proper documentation of public API surface is always necessary
-> *before* doing real work. Because right now the hypercall provider is
-> Linux KVM, maybe we can document the existing and planned hypercall
-> usage and ABI in the kernel docs along with code changes.
->
-> --
-> WANG "xen0n" Xuerui
->
-> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
->
+T24gVHVlLCAyMDI0LTAyLTI3IGF0IDA3OjAyICswMDAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
+Og0KPiA+IEl0IGNvdWxkIGJlIHBvc3NpYmxlIHRvIGluaXRpYWxpemUgdGhlIG5ldyBmaWVsZCBm
+b3IgZWFjaCBhcmNoIHRvDQo+ID4gMCwgYnV0DQo+ID4gaW5zdGVhZCBzaW1wbHkgaW5pYWxpemUg
+dGhlIGZpZWxkIHdpdGggYSBDOTkgc3RydWN0IGluaWFsaXppbmcNCj4gPiBzeW50YXguDQo+IA0K
+PiBXaHkgZG9pbmcgYSBmdWxsIGluaXQgb2YgdGhlIHN0cnVjdCB3aGVuIGFsbCBmaWVsZHMgYXJl
+IHJlLXdyaXR0ZW4gYQ0KPiBmZXcgDQo+IGxpbmVzIGFmdGVyID8NCj4gDQo+IElmIEkgdGFrZSB0
+aGUgZXhlbXBsZSBvZiBwb3dlcnBjIGZ1bmN0aW9uIHNsaWNlX2ZpbmRfYXJlYV9ib3R0b211cCgp
+Og0KPiANCj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCB2bV91bm1hcHBlZF9hcmVhX2luZm8gaW5m
+bzsNCj4gDQo+IMKgwqDCoMKgwqDCoMKgwqBpbmZvLmZsYWdzID0gMDsNCj4gwqDCoMKgwqDCoMKg
+wqDCoGluZm8ubGVuZ3RoID0gbGVuOw0KPiDCoMKgwqDCoMKgwqDCoMKgaW5mby5hbGlnbl9tYXNr
+ID0gUEFHRV9NQVNLICYgKCgxdWwgPDwgcHNoaWZ0KSAtIDEpOw0KPiDCoMKgwqDCoMKgwqDCoMKg
+aW5mby5hbGlnbl9vZmZzZXQgPSAwOw0KPiANCj4gRm9yIG1lIGl0IGxvb2tzIGJldHRlciB0byBq
+dXN0IGFkZDoNCj4gDQo+IMKgwqDCoMKgwqDCoMKgwqBpbmZvLm5ld19maWVsZCA9IDA7IC8qIG9y
+IHdoYXRldmVyIHZhbHVlIGl0IG5lZWRzIHRvIGhhdmUgKi8NCg0KSGksDQoNClRoYW5rcyBmb3Ig
+dGFraW5nIGEgbG9vay4gWWVzLCBJIGd1ZXNzIHRoYXQgc2hvdWxkIGhhdmUgc29tZQ0KanVzdGlm
+aWNhdGlvbi4gSSB3YXMgdGhpbmtpbmcgb2YgdHdvIHJlYXNvbnM6DQoxLiBObyBmdXR1cmUgYWRk
+aXRpb25zIG9mIG9wdGlvbmFsIHBhcmFtZXRlcnMgd291bGQgbmVlZCB0byBtYWtlIHRyZWUNCndp
+ZGUgY2hhbmdlcyBsaWtlIHRoaXMuDQoyLiBUaGUgY2hhbmdlIGlzIGVhc2llciB0byByZXZpZXcg
+YW5kIGdldCBjb3JyZWN0IGJlY2F1c2UgdGhlIG5lY2Vzc2FyeQ0KY29udGV4dCBpcyB3aXRoaW4g
+YSBzaW5nbGUgbGluZS4gRm9yIGV4YW1wbGUsIGluIHRoYXQgZnVuY3Rpb24gc29tZSBvZg0KbWVt
+YmVycyBhcmUgc2V0IHdpdGhpbiBhIHdoaWxlIGxvb3AuIFRoZSBwbGFjZSB5b3UgcG9pbnRlZCBz
+ZWVtcyB0byBiZQ0KdGhlIGNvcnJlY3Qgb25lLCBidXQgYSBkaWZmIHRoYXQgaGFkIHRoZSBuZXcg
+ZmllbGQgc2V0IGFmdGVyOg0KICAgaW5mby5oaWdoX2xpbWl0ID0gYWRkcjsNCi4uLndvdWxkIGxv
+b2sgY29ycmVjdCB0b28sIGJ1dCBub3QgYmUuDQoNCldoYXQgaXMgdGhlIGNvbmNlcm4gd2l0aCBD
+OTkgaW5pdGlhbGl6YXRpb24/IEZXSVcsIHRoZSBmdWxsIHNlcmllcyBhbHNvDQpyZW1vdmVzIGFu
+IGluZGlyZWN0IGJyYW5jaCwgYW5kIHByb2JhYmx5IGlzIGEgbmV0IHdpbiBmb3IgcGVyZm9ybWFu
+Y2UNCmluIHRoaXMgcGF0aC4NCg0K
