@@ -1,96 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D287E13DB92;
-	Tue, 27 Feb 2024 13:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEE81419B1;
+	Tue, 27 Feb 2024 13:51:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709041611; cv=none; b=Uiow/9/52fL7OVx5zvM+wzCHV5vilm24F/2snq9fLDxkj71TX9O8KmXoYrzdLBYa5z2LL+lpH36B8OFt/tCCnf7DZaENy8+GQ3OKHv4AYu7spuPTlPZ4/aq3B5cc25zAad5qrxIuegssEjrNivdyDSxebl0N/PGtjzGUFih8kD4=
+	t=1709041890; cv=none; b=pj4WIKPqDam8kfOtth9LDDwBYdDa/70es8O0t6zqrxsJICmbmWIg5flFioU0L8Y9hL3ncm1l/Sqb7wO29sX9dM90hDuu6LKyVXvFZcVk9VF6g9mht6kRPvgnlA+O9ftq/9FwJu0qVdfDfqHslX8cbeKP2PpuyxDESKt/+pwNT/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709041611; c=relaxed/simple;
-	bh=Kvh5mtk92pn+GmzhsBj3v6EsxD9iSlLWlQs86SKVnTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R9ILh6W56NEBa7dvDQ+OitMrG0rfE9qRy7rVt2hlpt3W61iN1mE63RhxfsdZHvPJz3M0Tq93SkDe8YvHFL1Gy9zO42LJCqt4TAmBhYX5g3KUHP1SwQPSKaz1rfOjv/Mc0iQd8xqkybyA2E7bWWZSFVjQGMUTuh+zGVXXtv/ZKU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CB54C43390;
-	Tue, 27 Feb 2024 13:46:42 +0000 (UTC)
-Date: Tue, 27 Feb 2024 13:46:40 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
+	s=arc-20240116; t=1709041890; c=relaxed/simple;
+	bh=whtIR4Ui0sW7an6vdql5d0SUkYIZojnIZ1HdNxRvrVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AvmuwY2iRlXWHxuzxf3bQ1bjT+4UnmeY1Aor/9ePJlLXjTsZGRyWAg0XDY4p3lg8imjnkXMP+M17UIwQZ9+ygjO/8FfKPIOnSEcgRWNNtVOGWBZ70H5zMx1KlKOog9aeuVgyJRKNtZn14oT+F95xkUUjUxRdj2F15ia1OTMfPgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sNJpqmlR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sNJpqmlR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335EBC433C7;
+	Tue, 27 Feb 2024 13:51:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709041889;
+	bh=whtIR4Ui0sW7an6vdql5d0SUkYIZojnIZ1HdNxRvrVU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sNJpqmlR6M4Z6z4UO1mE8AuESPu2tPfWZWHUPY6Csb5Iu/9hhJA6ZC6O3Q7+YnwCc
+	 K4m5h77wHxEn3UN/fXStKHG5aBOOWxY3vW2GawX0+T+Qffjc0lFvNZRtChiVB2Hn/i
+	 yd/HaXaWMKTPxGHrF31GGRuJgY1VFL19uYCbDopM=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	kernel test robot <lkp@intel.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
 	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Fangrui Song <maskray@google.com>,
+	loongarch@lists.linux.dev,
 	Kees Cook <keescook@chromium.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>, x86@kernel.org,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: Re: [PATCH 4/4] vdso: avoid including asm/page.h
-Message-ID: <Zd3nwGX2oevtj_hQ@arm.com>
-References: <20240226161414.2316610-1-arnd@kernel.org>
- <20240226161414.2316610-5-arnd@kernel.org>
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.6 105/299] LoongArch: vDSO: Disable UBSAN instrumentation
+Date: Tue, 27 Feb 2024 14:23:36 +0100
+Message-ID: <20240227131629.263693450@linuxfoundation.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240227131625.847743063@linuxfoundation.org>
+References: <20240227131625.847743063@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226161414.2316610-5-arnd@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 26, 2024 at 05:14:14PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The recent change to the vdso_data_store broke building compat VDSO
-> on at least arm64 because it includes headers outside of the include/vdso/
-> namespace:
-> 
-> In file included from arch/arm64/include/asm/lse.h:5,
->                  from arch/arm64/include/asm/cmpxchg.h:14,
->                  from arch/arm64/include/asm/atomic.h:16,
->                  from include/linux/atomic.h:7,
->                  from include/asm-generic/bitops/atomic.h:5,
->                  from arch/arm64/include/asm/bitops.h:25,
->                  from include/linux/bitops.h:68,
->                  from arch/arm64/include/asm/memory.h:209,
->                  from arch/arm64/include/asm/page.h:46,
->                  from include/vdso/datapage.h:22,
->                  from lib/vdso/gettimeofday.c:5,
->                  from <command-line>:
-> arch/arm64/include/asm/atomic_ll_sc.h:298:9: error: unknown type name 'u128'
->   298 |         u128 full;
-> 
-> Use an open-coded page size calculation based on the new CONFIG_PAGE_SHIFT
-> Kconfig symbol instead.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Fixes: a0d2fcd62ac2 ("vdso/ARM: Make union vdso_data_store available for all architectures")
-> Link: https://lore.kernel.org/lkml/CA+G9fYtrXXm_KO9fNPz3XaRxHV7UD_yQp-TEuPQrNRHU+_0W_Q@mail.gmail.com/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+6.6-stable review patch.  If anyone has any objections, please let me know.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+------------------
+
+From: Kees Cook <keescook@chromium.org>
+
+[ Upstream commit cca5efe77a6a2d02b3da4960f799fa233e460ab1 ]
+
+The vDSO executes in userspace, so the kernel's UBSAN should not
+instrument it. Solves these kind of build errors:
+
+  loongarch64-linux-ld: arch/loongarch/vdso/vgettimeofday.o: in function `vdso_shift_ns':
+  lib/vdso/gettimeofday.c:23:(.text+0x3f8): undefined reference to `__ubsan_handle_shift_out_of_bounds'
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401310530.lZHCj1Zl-lkp@intel.com/
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Fangrui Song <maskray@google.com>
+Cc: loongarch@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index 5c97d14633282..4305d99b33130 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -2,6 +2,7 @@
+ # Objects to go into the VDSO.
+ 
+ KASAN_SANITIZE := n
++UBSAN_SANITIZE := n
+ KCOV_INSTRUMENT := n
+ 
+ # Include the generic Makefile to check the built vdso.
+-- 
+2.43.0
+
+
+
