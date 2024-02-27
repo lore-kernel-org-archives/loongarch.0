@@ -1,165 +1,233 @@
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9023F13B798
-	for <loongarch@lists.linux.dev>; Tue, 27 Feb 2024 14:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.224
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B7A1474DC;
+	Tue, 27 Feb 2024 14:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709043543; cv=none; b=NpiEFzp5GbYrQTiDiCowNp9hdkMYody/xhmLD768WJJR2Mh/HNysg9Nr6wkyTO0jCfvYVV94TIqI0Qqz4oQjTzk/upl6HAcxzmhAv0NJoZ2qQfecYhwPDkIshK3wH7ZDN7WVwNr/ytOi5qKIGtB0X4/v6EDdN/ij7HmWh1RfWYQ=
+	t=1709045840; cv=none; b=BGD4N0ca72+orkbodomsjXRrWdie194w9+eW/l4lA9I+yD62jGk4PfSF5z6G+9hOKliorlDfRRqJs5i7wgPPkFd3OlJRY2IXOArsr7tng4qxy17O6nvbfnSxhtXTBqxCr7akMKlFvdAWWsFNjPR/E8vJfdEjav4WH7bx8QWNqa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709043543; c=relaxed/simple;
-	bh=A0FSY37d+vGzCQkk6DyCbgJvMDTFHRlUqhEcd+SIv+U=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=raAGq+m+fkfn7kvBxaNnDJROWdQUg4qn+vOAUqhOu6Y5oP3utHAOOo9EhhyXaah/ULbHDx5NpN8wf+WTEmFy+XG58aMFp++Y2UyoGCvyXApNbOvDhlwO3xzK90CkjS3G9AnbNzxwfO2oaBIEGYq64o2hOMyUpJb0rs190flsmyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=lPUTGKxS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NPNMT8iD; arc=none smtp.client-ip=66.111.4.224
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709045840; c=relaxed/simple;
+	bh=kNT7bnt1rPGgFookSGlOqrNUkGMcqjGSZ5SZmXT1qEs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=plLqZqrBVyLylTzIQgi8uE+kJzxQ8+1z8MeiwUb28757yNHycrsKREzLfZebBsMEoqY9v68bmUcLf7Kl0yxXKvU8vsX1BcCR+68S4HQdX5DjHwh08RqJmjEcipNvhB5xO1bMKHobifOZ56lekrqWurlwyBxDp+L+I0hbKc5Ef8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCLYeDkT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="lPUTGKxS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NPNMT8iD"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 8717758176A;
-	Tue, 27 Feb 2024 09:19:00 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 27 Feb 2024 09:19:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1709043540;
-	 x=1709050740; bh=lgwXV027qrMgBZRGGg484htOjeaxN2ck0Zcve0Dmzhs=; b=
-	lPUTGKxSZWT3KviA8nwQtQixUNSRKDoofN2NivSWKtva1+uopGcYEEr4RC46c0a4
-	vwDyryLlG3/SO1o0IgHaIAKElGDgOIftHdg/t1LowfBfp6kWJ/02DSeWOd9gO01Y
-	i2xNDAt65lcr61a9rbStiacnnPLSzVXxNfz+qirJEOwE6l4Mjsb9FPSq6beDfONs
-	IfFnZ9bxqqqY3xHHTJ0xelGfB0mkN5vK/R1PlQWSfAeazO2LUPLczof7Is+mk4YY
-	dS7xeAUB8mFbzZwvSoSrgsd+tbYj/Jm83Sm5bzumIEzMe8eZVlLb2zqJj5ACbn1Q
-	xHdhr1utw0PFFSmpN8T17A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1709043540; x=
-	1709050740; bh=lgwXV027qrMgBZRGGg484htOjeaxN2ck0Zcve0Dmzhs=; b=N
-	PNMT8iDaqBhcmripVnSD6nS3Lv42kN3UYBW99FRUWa3TpEGbwqC5etBXkzZPJQ97
-	b46+HgX1sO+sVYOqI7WWoftMMpP1d6mFgSc+COHXzownsJ7ep9c7luzipVKN/JSm
-	WvBS91t32eqhnz4okM6kGJHX7ja6nxAsDWD2f8/n1iyXi5CXN1O8cRQmzdP0MN3P
-	lXLGSaSOyRMNG2Klv5JGjNbEL+jZ99PzUXZkK0dRYXnY7Sh9tCeVVIPOdKairDq/
-	hVJllB8wVwsQCnLlNf4DWkeeaaUPJ42yyj0cK8PqRkYPiog+0wCNiowoUDAfMSZ0
-	TxOSo3YO5XIRZlykzYViQ==
-X-ME-Sender: <xms:Uu_dZWjk9CPDDtuHUq0spRBOyt_ieWSB_NQxrFGLmr24EkUFHc8YHg>
-    <xme:Uu_dZXDMUFx8ZF-9sPWppPSzjc83i6I1db9CmveKWGMIeJFPSdAeNSa88BpcqoNFB
-    jVJuLbK_PRbbcnDDkw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgeehgdefkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:Uu_dZeEDtHRL9UWe85NwoKrx0otX3SNqDfDiZ5hOf70Z6GsgUqDdIw>
-    <xmx:Uu_dZfQ4cWIo6G3rC1HFzafsQ2XymenYLV7MaNYtE0ltPhY45Lm3AA>
-    <xmx:Uu_dZTw8lPg-bwLBWej0tpp3R0mNAVRklOB_4I0L7nRbPx69459aug>
-    <xmx:VO_dZbOruGZOL_Pr3S4l_raiy6WMSNlORBuJgrWys66FFVcptlS8dQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 8FBCAB6008D; Tue, 27 Feb 2024 09:18:58 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCLYeDkT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4A04C43394;
+	Tue, 27 Feb 2024 14:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709045839;
+	bh=kNT7bnt1rPGgFookSGlOqrNUkGMcqjGSZ5SZmXT1qEs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bCLYeDkTii8jh+FByN5BtWWYY+ezhCi0eK0A2ZMWHaq7gdYoS8/xyeYPlUFfU/A1e
+	 om+suB8N5IxiB8E2xawB5g0iulSAUohgYpTJecuLF3w1ntZl2YT4FziYV8cnDAhHxa
+	 2YLQGJNFPBvHXfDUZyeTsHRQ2/EeiPt7kt48/xJk3LJaMtzIw7GML5O/MjTVIjFEjy
+	 NukCyKZK8ZdKuqYblwyFTEkv9uTNUXfbt7E+tF2NB+3JEDYPUywmUiFZ+aLT1e4ywF
+	 cnqBp+TOkumCRb1D0a4dPvEXhhF9728MB910fFEccclJmjFOVZbWjG8xi0oDOEU3ET
+	 SZFEYkmkUbBpQ==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512fb30dbc9so2389456e87.2;
+        Tue, 27 Feb 2024 06:57:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWYVyWGaApQtyLr7wNBT4bznysWxPwzyVplihItM29H9nnbmDeHAnQQ1gA9m5qCA5wUupVv1Q0jf7ryMqtmmE69U126hjVi7hNROJxZFWmkFb9DJb4lDzNnNAE5QFTAWFSCYYyAJoTqGPE=
+X-Gm-Message-State: AOJu0Yyxhkh8B8voc9FvUbM9mflpSTxtePpBJP8DZ+Nk1WzBq9oALJV9
+	vP2HZGN/v0NBm53Mcz1/tqP57nDXKQT2dnNZtfLmJXDrGi5dzwqrhWv6/eBaAqtnTaY667uzBus
+	OaxaCkGWAq7pztWiDPiBTymqbSN4=
+X-Google-Smtp-Source: AGHT+IHB9E4WvglrZzPpM9DyeTp5HFtYnqxx7WeFnVt/nlI/OHsBWtuzj7Rj/8+lT+gnSHZ/ooQZbrc3bgyia8WjSyg=
+X-Received: by 2002:a05:6512:68c:b0:512:f258:7d53 with SMTP id
+ t12-20020a056512068c00b00512f2587d53mr7287290lfe.30.1709045837892; Tue, 27
+ Feb 2024 06:57:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <7b62e73d-d3fa-4432-807d-c2e667814b17@app.fastmail.com>
-In-Reply-To: 
- <CAMuHMdXQYPtL0J4Phm81S1qWpi7no=1r4uStbLd8zbjn7fcWQw@mail.gmail.com>
-References: <20240226161414.2316610-1-arnd@kernel.org>
- <20240226161414.2316610-4-arnd@kernel.org>
- <CAMuHMdWRBQF95fJ+NkPUdvpu5VfRm2WyTnvdqB1Xe7d4vsvY2g@mail.gmail.com>
- <164616c2-94f6-40e8-86e0-850dc8da212e@app.fastmail.com>
- <CAMuHMdXQYPtL0J4Phm81S1qWpi7no=1r4uStbLd8zbjn7fcWQw@mail.gmail.com>
-Date: Tue, 27 Feb 2024 15:18:38 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc: "Arnd Bergmann" <arnd@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
- "Kees Cook" <keescook@chromium.org>,
- "Anna-Maria Gleixner" <anna-maria@linutronix.de>,
- "Matt Turner" <mattst88@gmail.com>, "Vineet Gupta" <vgupta@kernel.org>,
- "Russell King" <linux@armlinux.org.uk>,
- "Catalin Marinas" <catalin.marinas@arm.com>, guoren <guoren@kernel.org>,
- "Brian Cain" <bcain@quicinc.com>, "Huacai Chen" <chenhuacai@kernel.org>,
- "Michal Simek" <monstr@monstr.eu>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Helge Deller" <deller@gmx.de>, "Michael Ellerman" <mpe@ellerman.id.au>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "Andreas Larsson" <andreas@gaisler.com>,
- "Richard Weinberger" <richard@nod.at>, x86@kernel.org,
- "Max Filippov" <jcmvbkbc@gmail.com>, "Andy Lutomirski" <luto@kernel.org>,
- "Jan Kiszka" <jan.kiszka@siemens.com>,
- "Kieran Bingham" <kbingham@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, "Greg Ungerer" <gerg@linux-m68k.org>
-Subject: Re: [PATCH 3/4] arch: define CONFIG_PAGE_SIZE_*KB on all architectures
-Content-Type: text/plain;charset=utf-8
+References: <20240222032803.2177856-1-maobibo@loongson.cn> <20240222032803.2177856-4-maobibo@loongson.cn>
+ <CAAhV-H5eqXMqTYVb6cAVqOsDNcEDeP9HzaMKw69KFQeVaAYEdA@mail.gmail.com>
+ <d1a6c424-b710-74d6-29f6-e0d8e597e1fb@loongson.cn> <CAAhV-H7p114hWUVrYRfKiBX3teG8sG7xmEW-Q-QT3i+xdLqDEA@mail.gmail.com>
+ <06647e4a-0027-9c9f-f3bd-cd525d37b6d8@loongson.cn> <85781278-f3e9-4755-8715-3b9ff714fb20@app.fastmail.com>
+ <0d428e30-07a8-5a91-a20c-c2469adbf613@loongson.cn> <327808dd-ac34-4c61-9992-38642acc9419@xen0n.name>
+ <62cc24fd-025a-53c6-1c8e-2d20de54d297@loongson.cn> <431111f3-d84a-4311-986d-eebd91559cd3@xen0n.name>
+In-Reply-To: <431111f3-d84a-4311-986d-eebd91559cd3@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 27 Feb 2024 22:57:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H47DCmYeT0jx3zkk=48amaMTxHDbDyGB0=WNPbsDR=dXQ@mail.gmail.com>
+Message-ID: <CAAhV-H47DCmYeT0jx3zkk=48amaMTxHDbDyGB0=WNPbsDR=dXQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
+To: WANG Xuerui <kernel@xen0n.name>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: maobibo <maobibo@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024, at 12:12, Geert Uytterhoeven wrote:
-> On Tue, Feb 27, 2024 at 11:59=E2=80=AFAM Arnd Bergmann <arnd@arndb.de>=
- wrote:
->> On Tue, Feb 27, 2024, at 09:54, Geert Uytterhoeven wrote:
->> I was a bit unsure about how to best do this since there
->> is not really a need for a fixed page size on nommu kernels,
->> whereas the three MMU configs clearly tie the page size to
->> the MMU rather than the platform.
->>
->> There should be no reason for coldfire to have a different
->> page size from dragonball if neither of them actually uses
->> hardware pages, so one of them could be changed later.
+Hi, Paolo,
+
+I'm very sorry to bother you, now we have a controversy about how to
+query hypervisor features (PV IPI, PV timer and maybe PV spinlock) on
+LoongArch, and we have two choices:
+1, Get from CPUCFG registers;
+2, Get from a hypercall.
+
+CPUCFG are unprivileged registers which can be read from user space,
+so the first method can unnecessarily leak information to userspace,
+but this method is more or less similar to x86's CPUID solution.
+Hypercall is of course a privileged method (so no info leak issues),
+and this method is used by ARM/ARM64 and most other architectures.
+
+Besides, LoongArch's CPUCFG is supposed to provide per-core features,
+while not all hypervisor features are per-core information (Of course
+PV IPI is, but others may be or may not be, while 'extioi' is
+obviously not). Bibo thinks that only CPUCFG has enough space to
+contain all hypervisor features (CSR and IOCSR are not enough).
+However it is obvious that we don't need any register space to hold
+these features, because they are held in the hypervisor's memory. The
+only information that needs register space is "whether I am in a VM"
+(in this case we really cannot use hypercall), but this feature is
+already in IOCSR (LOONGARCH_IOCSR_FEATURES).
+
+Now my question is: for a new architecture, which method is
+preferable, maintainable and extensible? Of course "they both OK" for
+the current purpose in this patch, but I think you can give us more
+useful information from a professor's view.
+
+More details are available in this thread, about the 3rd patch. Any
+suggestions are welcome.
+
+
+
+
+
+
+Huacai
+
+On Tue, Feb 27, 2024 at 6:19=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
+te:
 >
-> Indeed, in theory, PAGE_SIZE doesn't matter for nommu, but the concept
-> of pages is used all over the place in Linux.
+> On 2/27/24 18:12, maobibo wrote:
+> >
+> >
+> > On 2024/2/27 =E4=B8=8B=E5=8D=885:10, WANG Xuerui wrote:
+> >> On 2/27/24 11:14, maobibo wrote:
+> >>>
+> >>>
+> >>> On 2024/2/27 =E4=B8=8A=E5=8D=884:02, Jiaxun Yang wrote:
+> >>>>
+> >>>>
+> >>>> =E5=9C=A82024=E5=B9=B42=E6=9C=8826=E6=97=A5=E4=BA=8C=E6=9C=88 =E4=B8=
+=8A=E5=8D=888:04=EF=BC=8Cmaobibo=E5=86=99=E9=81=93=EF=BC=9A
+> >>>>> On 2024/2/26 =E4=B8=8B=E5=8D=882:12, Huacai Chen wrote:
+> >>>>>> On Mon, Feb 26, 2024 at 10:04=E2=80=AFAM maobibo <maobibo@loongson=
+.cn> wrote:
+> >>>>>>>
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> On 2024/2/24 =E4=B8=8B=E5=8D=885:13, Huacai Chen wrote:
+> >>>>>>>> Hi, Bibo,
+> >>>>>>>>
+> >>>>>>>> On Thu, Feb 22, 2024 at 11:28=E2=80=AFAM Bibo Mao <maobibo@loong=
+son.cn>
+> >>>>>>>> wrote:
+> >>>>>>>>>
+> >>>>>>>>> Instruction cpucfg can be used to get processor features. And
+> >>>>>>>>> there
+> >>>>>>>>> is trap exception when it is executed in VM mode, and also it i=
+s
+> >>>>>>>>> to provide cpu features to VM. On real hardware cpucfg area 0 -=
+ 20
+> >>>>>>>>> is used.  Here one specified area 0x40000000 -- 0x400000ff is u=
+sed
+> >>>>>>>>> for KVM hypervisor to privide PV features, and the area can be
+> >>>>>>>>> extended
+> >>>>>>>>> for other hypervisors in future. This area will never be used f=
+or
+> >>>>>>>>> real HW, it is only used by software.
+> >>>>>>>> After reading and thinking, I find that the hypercall method
+> >>>>>>>> which is
+> >>>>>>>> used in our productive kernel is better than this cpucfg method.
+> >>>>>>>> Because hypercall is more simple and straightforward, plus we do=
+n't
+> >>>>>>>> worry about conflicting with the real hardware.
+> >>>>>>> No, I do not think so. cpucfg is simper than hypercall, hypercall
+> >>>>>>> can
+> >>>>>>> be in effect when system runs in guest mode. In some scenario
+> >>>>>>> like TCG
+> >>>>>>> mode, hypercall is illegal intruction, however cpucfg can work.
+> >>>>>> Nearly all architectures use hypercall except x86 for its historic=
+al
+> >>>>> Only x86 support multiple hypervisors and there is multiple hypervi=
+sor
+> >>>>> in x86 only. It is an advantage, not historical reason.
+> >>>>
+> >>>> I do believe that all those stuff should not be exposed to guest
+> >>>> user space
+> >>>> for security reasons.
+> >>> Can you add PLV checking when cpucfg 0x40000000-0x400000FF is
+> >>> emulated? if it is user mode return value is zero and it is kernel
+> >>> mode emulated value will be returned. It can avoid information leakin=
+g.
+> >>
+> >> I've suggested this approach in another reply [1], but I've rechecked
+> >> the manual, and it turns out this behavior is not permitted by the
+> >> current wording. See LoongArch Reference Manual v1.10, Volume 1,
+> >> Section 2.2.10.5 "CPUCFG":
+> >>
+> >>  > CPUCFG =E8=AE=BF=E9=97=AE=E6=9C=AA=E5=AE=9A=E4=B9=89=E7=9A=84=E9=85=
+=8D=E7=BD=AE=E5=AD=97=E5=B0=86=E8=AF=BB=E5=9B=9E=E5=85=A8 0 =E5=80=BC=E3=80=
+=82
+> >>  >
+> >>  > Reads of undefined CPUCFG configuration words shall return all-zero=
+es.
+> >>
+> >> This sentence mentions no distinction based on privilege modes, so it
+> >> can only mean the behavior applies universally regardless of privilege
+> >> modes.
+> >>
+> >> I think if you want to make CPUCFG behavior PLV-dependent, you may
+> >> have to ask the LoongArch spec editors, internally or in public, for a
+> >> new spec revision.
+> > No, CPUCFG behavior between CPUCFG0-CPUCFG21 is unchanged, only that it
+> > can be defined by software since CPUCFG 0x400000000 is used by software=
+.
 >
-> I'm mostly worried about some Coldfire code relying on the actual value
-> of PAGE_SIZE in some other context. e.g. for configuring non-cacheable
-> regions.
-
-Right, any change here would have to be carefully tested. I would
-expect that a 4K page size would reduce memory consumption even on
-NOMMU systems that should have the same tradeoffs for representing
-files in the page cache and in mem_map[].
-
-> And does this impact running nommu binaries on a system with MMU?
-> I.e. if nommu binaries were built with a 4 KiB PAGE_SIZE, do they
-> still run on MMU systems with an 8 KiB PAGE_SIZE (coldfire and sun3),
-> or are there some subtleties to take into account?
-
-As far as I understand, binaries have to be built and linked for
-the largest page size they can run on, so running them on a kernel
-with smaller page size usually works.
-
-One notable exception is sys_mmap2(), which on most architectures
-takes units of 4KiB but on m68k is actually written to take
-PAGE_SIZE units. As Al pointed out in f8b7256096a2 ("Unify
-sys_mmap*"), it has always been wrong on sun3, presumably
-because users of that predate modern glibc. Running coldfire
-nommu binaries on coldfire mmu kernels would run into the same
-bug if either of them changes PAGE_SIZE. If you can run
-coldfire nommu binaries on classic m68k, that is already
-broken in the same way.
-
-      Arnd
+> The 0x40000000 range is not mentioned in the manuals. I know you've
+> confirmed privately with HW team but this needs to be properly
+> documented for public projects to properly rely on.
+>
+> >> (There are already multiple third-party LoongArch implementers as of
+> >> late 2023, so any ISA-level change like this would best be
+> >> coordinated, to minimize surprises.)
+> > With document Vol 4-23
+> > https://www.intel.com/content/dam/develop/external/us/en/documents/3355=
+92-sdm-vol-4.pdf
+> >
+> > There is one line "MSR address range between 40000000H - 400000FFH is
+> > marked as a specially reserved range. All existing and
+> > future processors will not implement any features using any MSR in this
+> > range."
+>
+> Thanks for providing this info, now at least we know why it's this
+> specific range of 0x400000XX that's chosen.
+>
+> >
+> > It only says that it is reserved, it does not say detailed software
+> > behavior. Software behavior is defined in hypervisor such as:
+> > https://github.com/MicrosoftDocs/Virtualization-Documentation/blob/main=
+/tlfs/Requirements%20for%20Implementing%20the%20Microsoft%20Hypervisor%20In=
+terface.pdf
+> > https://kb.vmware.com/s/article/1009458
+> >
+> > If hypercall method is used, there should be ABI also like aarch64:
+> > https://documentation-service.arm.com/static/6013e5faeee5236980d08619
+>
+> Yes proper documentation of public API surface is always necessary
+> *before* doing real work. Because right now the hypercall provider is
+> Linux KVM, maybe we can document the existing and planned hypercall
+> usage and ABI in the kernel docs along with code changes.
+>
+> --
+> WANG "xen0n" Xuerui
+>
+> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+>
