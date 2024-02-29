@@ -1,108 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CDF3612E
-	for <loongarch@lists.linux.dev>; Thu, 29 Feb 2024 03:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7013658218
+	for <loongarch@lists.linux.dev>; Thu, 29 Feb 2024 09:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709175934; cv=none; b=nAHcjMBqFrsNpNIbuqkV7JbiqBwo2Yp76ypzUyBdd0lhvvRdU1r4xXziwITMkfCYthU+jV5J64GnXTSE2noLzrcVLLUt+FnSekl/LJyORLc/GeT47I89J0I972gehErsVqQtexm2ZzoYJo5yzXZWT0zfHqIw5Xxvhp07lfOwn+8=
+	t=1709198050; cv=none; b=nGCPt1HkT+j4vVf7gRXtjqTvLY8Kdpc67L4duc8HJiUwrjCmhZMmRTkUAz+aOXVHEEvwXa3gPJv75U1INsz+EqIsnj2X3fEQzhjgclJvp7myKpPDQNcFeFJFyUxJwT5Q3RIM1gKTMA7xHKMBFzAYNfdUAyBT/lmov7up0z7pzW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709175934; c=relaxed/simple;
-	bh=tQQ7xj//LU316ukpe78B00k15tsraKruobbXoWY9rrg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bTRDDc3mgO8KumFvJEQsjbZpweWvEFFwc42FhB6euuJMUXxcPoahZSU+r42R+DjPWjTJJHwEQlhjefBZ5Krn6clI9sdSp9rBEvHBYQdK3V/Ycx0yWrwJluDtlbimW/Gq6UYtreZunE0Rp6cdwO61vtMjKX0m5G/U4cNVPSNrJ3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfDx+ZC3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfDx+ZC3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E21C9C43394
-	for <loongarch@lists.linux.dev>; Thu, 29 Feb 2024 03:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709175933;
-	bh=tQQ7xj//LU316ukpe78B00k15tsraKruobbXoWY9rrg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hfDx+ZC3zkkvUftS+yS1ACatW+MtMEPct2+qyLpubHsSepAHkT4VCfSlxmUaZMPCV
-	 Aa1Ync3WIKtWPeQQMTlzKBsbu4sat0Ir8o1CvciviQ1J7fO0bW1XtcMcd4mGRg3fWr
-	 gaCHWUVwIGpk9AT+6xOmWYDuk5RLR6BYHhqU4YpZDZ19kzU0tGcciCk4/q+ZZKwrA1
-	 ksbyCBo/R9kIlbPTRXohCTNbprd69de0gNNMdjQArTh21cDvr1cHWOr+jyMECCxNIY
-	 lPf+gx+X6QAostn+hmh2agrgoA/PY/4ScDww9yi6nTMZqcxfZFZlxyDUMqvHcI3cs1
-	 bUtUoGbfzqNXA==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a441d7c6125so53618966b.2
-        for <loongarch@lists.linux.dev>; Wed, 28 Feb 2024 19:05:33 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWm+7JPj7gnP0CwReWf8B2ZKQ6cKi2rwek0zwTA4O1O50dC6ioEFHJzoQV5ezG4IPvdBaTI6hpqEoUUJ2ecNtHALiBwvJBIA+8R
-X-Gm-Message-State: AOJu0Yzti/z73bGV4HbcK2Fy2n5FeutnIZ9kabJRNKkHZ895cOCDcObX
-	yZpVtat3zWQ4giRPahuB/AEO01UCSFi0N8kGYzwA8qPGqV3n7rM0WBNymzMXysbLu7FT+fUIq1s
-	KxRDxV1pXTde/2kG4Ym+sesdwJvc=
-X-Google-Smtp-Source: AGHT+IFVMoyGoA0xQbS/JsIg1Cl7TXgTjZPzrXNORPXtgXO6d+4IGnmLrfhNOxwcomGzNF2eNNE8ozfcarOb4XUphl4=
-X-Received: by 2002:a17:906:ca49:b0:a44:1be1:66f0 with SMTP id
- jx9-20020a170906ca4900b00a441be166f0mr447407ejb.57.1709175932312; Wed, 28 Feb
- 2024 19:05:32 -0800 (PST)
+	s=arc-20240116; t=1709198050; c=relaxed/simple;
+	bh=fqVpiCKJyUf3+AVsKJYKVVJUv4ltfTVEWfbUmU3zcVI=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ogmekRDgHFL9Fmn85yLtfDPfPN1czaZ39DQisHcUhK3Iz4HlTmDVnyeqbo/6Vkvw8/5zYh4NoFEG3LV0GwKZ/R54aENhLRdLg62xAslEryiUohs/gnLQIWV7owsYiW9rOZ68okmUKqwU/oWhglFcvGPiKzAjLhssSrm+4+Bmd/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxmejYSuBlw9MSAA--.28120S3;
+	Thu, 29 Feb 2024 17:14:00 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXs3VSuBlb5JKAA--.63412S3;
+	Thu, 29 Feb 2024 17:13:58 +0800 (CST)
+Subject: Re: [PATCH v3 0/2] selftests/vDSO: Fix errors on LoongArch
+To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>
+References: <20231213012300.5640-1-yangtiezhu@loongson.cn>
+ <d73d107d-9e04-4250-f467-f6ff7eb92103@loongson.cn>
+ <e64b3529-fb62-3ddf-bde3-b3188f386bc0@loongson.cn>
+Cc: linux-kselftest@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <57438b7e-4188-428b-2456-10cfc10f35f9@loongson.cn>
+Date: Thu, 29 Feb 2024 17:13:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240226080328.334021-1-wangyuli@uniontech.com>
-In-Reply-To: <20240226080328.334021-1-wangyuli@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 29 Feb 2024 11:05:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4CXW5Lkn1=hMnMbcY3MO2eoos8bSr3Z5jY_piAbpP+5A@mail.gmail.com>
-Message-ID: <CAAhV-H4CXW5Lkn1=hMnMbcY3MO2eoos8bSr3Z5jY_piAbpP+5A@mail.gmail.com>
-Subject: Re: [PATCH] loongarch/crypto: Clean up useless assignment operations
-To: WangYuli <wangyuli@uniontech.com>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, kernel@xen0n.name, 
-	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Guan Wentao <guanwentao@uniontech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <e64b3529-fb62-3ddf-bde3-b3188f386bc0@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8BxXs3VSuBlb5JKAA--.63412S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cw13CrW3Kw48uw43Gw1kXrc_yoW8Jw4UpF
+	WfWayakF4rCrW0yas7K3srXFyavw1fC3WUu3y5Ja97Arn0vF1rtr4xG3y8Ga9xZrWxuw1Y
+	yr1IqFna9a4UArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU466zUUUUU
 
-Hi, Yuli,
+Hi Shuah and Andrew,
 
-The code is fine to me, please change loongarch to LoongArch in the
-subject, and update your commit message with Xuerui's review in V2.
+On 01/29/2024 04:27 PM, Tiezhu Yang wrote:
+>
+>
+> On 12/27/2023 03:55 PM, Tiezhu Yang wrote:
+>> + Andrew Morton <akpm@linux-foundation.org>
+>> + Mark Brown <broonie@kernel.org>
+>>
+>> On 12/13/2023 09:22 AM, Tiezhu Yang wrote:
+>>> v3: Rebase on the next branch of linux-kselftest.git,
+>>>     modify the patch title and update the commit message
+>>>
+>>> v2: Rebase on 6.5-rc1 and update the commit message
+>>>
+>>> Tiezhu Yang (2):
+>>>   selftests/vDSO: Fix building errors on LoongArch
+>>>   selftests/vDSO: Fix runtime errors on LoongArch
+>>>
+>>>  tools/testing/selftests/vDSO/vdso_config.h    |  6 ++++-
+>>>  .../testing/selftests/vDSO/vdso_test_getcpu.c | 16 +++++-------
+>>>  .../selftests/vDSO/vdso_test_gettimeofday.c   | 26 +++++--------------
+>>>  3 files changed, 18 insertions(+), 30 deletions(-)
+>>>
+>>
+>> Hi Shuah, Andrew and Mark,
+>>
+>> The patches still seem to apply cleanly.
+>> Could you please review and merge them for the upcoming merge window?
+>>
+>> https://lore.kernel.org/lkml/20231213012300.5640-1-yangtiezhu@loongson.cn/
+>>
+>
+> Ping, any comments?
 
-Huacai
+This series has received Reviewed-by and Tested-by for two months,
+since the merge window is coming soon, should it take through
+shuah/linux-kselftest.git or akpm/mm.git?
 
-On Mon, Feb 26, 2024 at 4:04=E2=80=AFPM WangYuli <wangyuli@uniontech.com> w=
-rote:
->
-> Both crc32 and crc32c hw accelerated funcs will calculate the
-> remaining len. Those codes are derived from
-> arch/mips/crypto/crc32-mips.c and "len -=3D sizeof(u32)" is not
-> necessary for 64-bit CPUs.
->
-> Removing it can make context code style more unified and improve
-> code readability.
->
-> Suggested-by: Guan Wentao <guanwentao@uniontech.com>
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> ---
->  arch/loongarch/crypto/crc32-loongarch.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/cry=
-pto/crc32-loongarch.c
-> index a49e507af38c..3eebea3a7b47 100644
-> --- a/arch/loongarch/crypto/crc32-loongarch.c
-> +++ b/arch/loongarch/crypto/crc32-loongarch.c
-> @@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, un=
-signed int len)
->
->                 CRC32(crc, value, w);
->                 p +=3D sizeof(u32);
-> -               len -=3D sizeof(u32);
->         }
->
->         if (len & sizeof(u16)) {
-> @@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, u=
-nsigned int len)
->
->                 CRC32C(crc, value, w);
->                 p +=3D sizeof(u32);
-> -               len -=3D sizeof(u32);
->         }
->
->         if (len & sizeof(u16)) {
-> --
-> 2.33.1
->
+Thanks,
+Tiezhu
+
