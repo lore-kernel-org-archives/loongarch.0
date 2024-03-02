@@ -1,163 +1,199 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E358ACA50
-	for <loongarch@lists.linux.dev>; Sat,  2 Mar 2024 01:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50D58110A;
+	Sat,  2 Mar 2024 02:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709344271; cv=none; b=ZE+AruTjAH8sm15kWhe7Rj9W3hTHkQALBxsI3Bzs53qsspjPMEZDTUn54tfHcD6/hUGFlycJ5E2gMSMVDjELVrkW/XD03Z/ndhKnB/vR89bZ6xpDXAjiBl0+QSAPYXK8d4qQBo+P6nWCQ4kkqaRlslTBiITXmrWaS/TAvJtPYjQ=
+	t=1709348283; cv=none; b=mMuky3klCtaNNU1BmToB3MuYbuXBB4YYh9ZAoNE91ESOSDgYpS3gR61fAAnjf2g4gnKQOZnrPOg9r0u2IEEtcmRUS0lsmUHA8hM6tgmqxDZmJYXKRzeCf1VRnX8aiLKyt26zbr4F3DA98sOOtP3Lj+yhKOonodPGmrThhqkYyAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709344271; c=relaxed/simple;
-	bh=/8oSmkPc0IaP5CM6+fKqf9jvC9DwK8RXxd3zPN60QIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tTvt9NzdZYaqDy1HBpP0ZMUmeU3wyhb2kexzrpizgf1Q6gagNN2cnEpwCR/EbADhQjTP+NHOU+KAFZhZeXN3r7Fvn8JNMB8K4m4OWiMaurnVQGHdQGbKlS5jkDVRit0r0+ummEoCP3dszezeYtxjjKpq8dm5jODJ4r6Ddad/YxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Xkc1Ql3w; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xkc1Ql3w"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6da9c834646so2390175b3a.3
-        for <loongarch@lists.linux.dev>; Fri, 01 Mar 2024 17:51:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709344269; x=1709949069; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1JOHRODJmattJBY3YtQ+51tfBSOEI55kux6+SckPNNk=;
-        b=Xkc1Ql3wzu5O0T8LL2leIabrTtYy2UEcLRUeCfO6alsG5+zfm+57pILbFmwgEG1HAw
-         2Lj97TbbrUAMJq0yXGuqAZOCWFLakqQt6FgtZIrHnLwYmOXtnLAOMlQ17SvgeJcPBszK
-         H/Fuc9OK3VnHUQiMZ6PkHP/DCxBtJbYRVjbMg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709344269; x=1709949069;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1JOHRODJmattJBY3YtQ+51tfBSOEI55kux6+SckPNNk=;
-        b=GRwynW/XbOAHBOqquER+6iTHPxWoARdWj5kXI8eb7H/8286AIHvRfMDxs5EpjcyfcA
-         SL8+yQI2zMV1OQeCS3wmG7UqemB+f9W56s+7VjP9k74A9RaQxLpvyI1jctlpTwajP0x0
-         rZwKecjvHym9qJzQ+X5iur3rmLrcOogIJrH+A0TqSLveiL0s5vYe3IGYPcYGJ0fHXC7Q
-         VQseZ2cZi33dcuIBVahcryn9MzzdpXDc1JB4ZgTrnmJpmyr3Kht1QEOjf20ujDLCQ8u6
-         /RReryxHyt7VXaQNeEyp7lghiYwB0e7Ho14NN1akh5R8g0XdYHVVR3ITzG2bNFpKiQNa
-         AmMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPWIFGIk7W///wVlQ5ZSmIDL/s00AddtKetaIvWwJRYzyTcaxSd1jPbFcY0nKj7zLj3CwGUPYozy6x5z5QIy14zbrNDGowDc1q
-X-Gm-Message-State: AOJu0YzTnEblx2eWCAsfri5VkSJQflhkD0d8a0qtP3Q6ztuVbh9yOcKa
-	yi4AYdDdiioLi/YQE18gf5VW51kCEdOqOMMdvmEOe1VabE8igs/PNTBCo+0Okw==
-X-Google-Smtp-Source: AGHT+IHRDk8dRy87orC5sOO0fLYLW475IUp9U1sSARPtPvgR8uAOkuMFjfqikjpTM+PGmCnZ+zOW8Q==
-X-Received: by 2002:a05:6a20:e11f:b0:1a0:ef1e:a5a7 with SMTP id kr31-20020a056a20e11f00b001a0ef1ea5a7mr3447528pzb.4.1709344269211;
-        Fri, 01 Mar 2024 17:51:09 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id rm12-20020a17090b3ecc00b002993f72ed02sm3845854pjb.34.2024.03.01.17.51.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 17:51:08 -0800 (PST)
-Date: Fri, 1 Mar 2024 17:51:08 -0800
-From: Kees Cook <keescook@chromium.org>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"luto@kernel.org" <luto@kernel.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"debug@rivosinc.com" <debug@rivosinc.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>,
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>,
-	"hpa@zytor.com" <hpa@zytor.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-	"broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v2 5/9] mm: Initialize struct vm_unmapped_area_info
-Message-ID: <202403011747.9ECFAD060B@keescook>
-References: <20240226190951.3240433-1-rick.p.edgecombe@intel.com>
- <20240226190951.3240433-6-rick.p.edgecombe@intel.com>
- <94a2b919-e03b-4ade-b13e-7774849dc02b@csgroup.eu>
- <202402271004.7145FDB53F@keescook>
- <8265f804-4540-4858-adc3-a09c11a677eb@csgroup.eu>
- <91384b505cb78b9d9b71ad58e037c1ed8dfb10d1.camel@intel.com>
- <def71a27-2d5f-40da-867e-979648afc4cf@csgroup.eu>
- <202402280912.33AEE7A9CF@keescook>
- <ac04c9aa134807bbc00e6086e7a14a58a682f221.camel@intel.com>
+	s=arc-20240116; t=1709348283; c=relaxed/simple;
+	bh=i9MXZrjdN4IaL/tM9+NfwWXuEZp3zXMWZ583WxUt7+0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dBZPSqpyZpe4pO48IgPHNRFIW3OY8oLavR29mp29XCSIwmltbzB02yustC3XCAzARtIL4CroTI9aUROd0xKZh4Q8Sgxp8Zo/vV4TaX8QfnRfyjFUi8QsPrHgdMmNQIBmuOCzxiWQeE2em6ehSVmphwbZhntDc4/6qzmwznlRoss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8CxXOmqleJl3XYTAA--.39491S3;
+	Sat, 02 Mar 2024 10:57:47 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxbROgleJlHyVMAA--.6327S3;
+	Sat, 02 Mar 2024 10:57:39 +0800 (CST)
+Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
+To: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ kvm@vger.kernel.org
+References: <20240222032803.2177856-1-maobibo@loongson.cn>
+ <20240222032803.2177856-4-maobibo@loongson.cn>
+ <CAAhV-H5eqXMqTYVb6cAVqOsDNcEDeP9HzaMKw69KFQeVaAYEdA@mail.gmail.com>
+ <d1a6c424-b710-74d6-29f6-e0d8e597e1fb@loongson.cn>
+ <CAAhV-H7p114hWUVrYRfKiBX3teG8sG7xmEW-Q-QT3i+xdLqDEA@mail.gmail.com>
+ <06647e4a-0027-9c9f-f3bd-cd525d37b6d8@loongson.cn>
+ <85781278-f3e9-4755-8715-3b9ff714fb20@app.fastmail.com>
+ <0d428e30-07a8-5a91-a20c-c2469adbf613@loongson.cn>
+ <327808dd-ac34-4c61-9992-38642acc9419@xen0n.name>
+ <62cc24fd-025a-53c6-1c8e-2d20de54d297@loongson.cn>
+ <431111f3-d84a-4311-986d-eebd91559cd3@xen0n.name>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <9881fa84-74c4-b7e8-63fb-607a22b1eee2@loongson.cn>
+Date: Sat, 2 Mar 2024 10:57:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <431111f3-d84a-4311-986d-eebd91559cd3@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ac04c9aa134807bbc00e6086e7a14a58a682f221.camel@intel.com>
+X-CM-TRANSID:AQAAf8CxbROgleJlHyVMAA--.6327S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Xry5Xry7uFWfuF18GFy7CFX_yoW7AryDpF
+	W8AF47Kr48JF4Iyws7tw1UZr1YyrW8JF48XF98AryDAryqyr1ftr40yr4Y9FyDGr1xCF1Y
+	vrW7tFy7Zw1DA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1wL05UU
+	UUU==
 
-On Sat, Mar 02, 2024 at 12:47:08AM +0000, Edgecombe, Rick P wrote:
-> On Wed, 2024-02-28 at 09:21 -0800, Kees Cook wrote:
-> > I totally understand. If the "uninitialized" warnings were actually
-> > reliable, I would agree. I look at it this way:
-> > 
-> > - initializations can be missed either in static initializers or via
-> > � run time initializers. (So the risk of mistake here is matched --
-> > � though I'd argue it's easier to *find* static initializers when
-> > adding
-> > � new struct members.)
-> > - uninitialized warnings are inconsistent (this becomes an unknown
-> > risk)
-> > - when a run time initializer is missed, the contents are whatever
-> > was
-> > � on the stack (high risk)
-> > - what a static initializer is missed, the content is 0 (low risk)
-> > 
-> > I think unambiguous state (always 0) is significantly more important
-> > for
-> > the safety of the system as a whole. Yes, individual cases maybe bad
-> > ("what uid should this be? root?!") but from a general memory safety
-> > perspective the value doesn't become potentially influenced by order
-> > of
-> > operations, leftover stack memory, etc.
-> > 
-> > I'd agree, lifting everything into a static initializer does seem
-> > cleanest of all the choices.
+
+
+On 2024/2/27 下午6:19, WANG Xuerui wrote:
+> On 2/27/24 18:12, maobibo wrote:
+>>
+>>
+>> On 2024/2/27 下午5:10, WANG Xuerui wrote:
+>>> On 2/27/24 11:14, maobibo wrote:
+>>>>
+>>>>
+>>>> On 2024/2/27 上午4:02, Jiaxun Yang wrote:
+>>>>>
+>>>>>
+>>>>> 在2024年2月26日二月 上午8:04，maobibo写道：
+>>>>>> On 2024/2/26 下午2:12, Huacai Chen wrote:
+>>>>>>> On Mon, Feb 26, 2024 at 10:04 AM maobibo <maobibo@loongson.cn> 
+>>>>>>> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 2024/2/24 下午5:13, Huacai Chen wrote:
+>>>>>>>>> Hi, Bibo,
+>>>>>>>>>
+>>>>>>>>> On Thu, Feb 22, 2024 at 11:28 AM Bibo Mao <maobibo@loongson.cn> 
+>>>>>>>>> wrote:
+>>>>>>>>>>
+>>>>>>>>>> Instruction cpucfg can be used to get processor features. And 
+>>>>>>>>>> there
+>>>>>>>>>> is trap exception when it is executed in VM mode, and also it is
+>>>>>>>>>> to provide cpu features to VM. On real hardware cpucfg area 0 
+>>>>>>>>>> - 20
+>>>>>>>>>> is used.  Here one specified area 0x40000000 -- 0x400000ff is 
+>>>>>>>>>> used
+>>>>>>>>>> for KVM hypervisor to privide PV features, and the area can be 
+>>>>>>>>>> extended
+>>>>>>>>>> for other hypervisors in future. This area will never be used for
+>>>>>>>>>> real HW, it is only used by software.
+>>>>>>>>> After reading and thinking, I find that the hypercall method 
+>>>>>>>>> which is
+>>>>>>>>> used in our productive kernel is better than this cpucfg method.
+>>>>>>>>> Because hypercall is more simple and straightforward, plus we 
+>>>>>>>>> don't
+>>>>>>>>> worry about conflicting with the real hardware.
+>>>>>>>> No, I do not think so. cpucfg is simper than hypercall, 
+>>>>>>>> hypercall can
+>>>>>>>> be in effect when system runs in guest mode. In some scenario 
+>>>>>>>> like TCG
+>>>>>>>> mode, hypercall is illegal intruction, however cpucfg can work.
+>>>>>>> Nearly all architectures use hypercall except x86 for its historical
+>>>>>> Only x86 support multiple hypervisors and there is multiple 
+>>>>>> hypervisor
+>>>>>> in x86 only. It is an advantage, not historical reason.
+>>>>>
+>>>>> I do believe that all those stuff should not be exposed to guest 
+>>>>> user space
+>>>>> for security reasons.
+>>>> Can you add PLV checking when cpucfg 0x40000000-0x400000FF is 
+>>>> emulated? if it is user mode return value is zero and it is kernel 
+>>>> mode emulated value will be returned. It can avoid information leaking.
+>>>
+>>> I've suggested this approach in another reply [1], but I've rechecked 
+>>> the manual, and it turns out this behavior is not permitted by the 
+>>> current wording. See LoongArch Reference Manual v1.10, Volume 1, 
+>>> Section 2.2.10.5 "CPUCFG":
+>>>
+>>>  > CPUCFG 访问未定义的配置字将读回全 0 值。
+>>>  >
+>>>  > Reads of undefined CPUCFG configuration words shall return 
+>>> all-zeroes.
+>>>
+>>> This sentence mentions no distinction based on privilege modes, so it 
+>>> can only mean the behavior applies universally regardless of 
+>>> privilege modes.
+>>>
+>>> I think if you want to make CPUCFG behavior PLV-dependent, you may 
+>>> have to ask the LoongArch spec editors, internally or in public, for 
+>>> a new spec revision.
+>> No, CPUCFG behavior between CPUCFG0-CPUCFG21 is unchanged, only that 
+>> it can be defined by software since CPUCFG 0x400000000 is used by 
+>> software.
 > 
-> Hi Kees,
+> The 0x40000000 range is not mentioned in the manuals. I know you've 
+> confirmed privately with HW team but this needs to be properly 
+> documented for public projects to properly rely on.
 > 
-> Well, I just gave this a try. It is giving me flashbacks of when I last
-> had to do a tree wide change that I couldn't fully test and the
-> breakage was caught by Linus.
+>>> (There are already multiple third-party LoongArch implementers as of 
+>>> late 2023, so any ISA-level change like this would best be 
+>>> coordinated, to minimize surprises.)
+>> With document Vol 4-23
+>> https://www.intel.com/content/dam/develop/external/us/en/documents/335592-sdm-vol-4.pdf 
+>>
+>>
+>> There is one line "MSR address range between 40000000H - 400000FFH is 
+>> marked as a specially reserved range. All existing and
+>> future processors will not implement any features using any MSR in 
+>> this range."
+> 
+> Thanks for providing this info, now at least we know why it's this 
+> specific range of 0x400000XX that's chosen.
+> 
+>>
+>> It only says that it is reserved, it does not say detailed software 
+>> behavior. Software behavior is defined in hypervisor such as:
+>> https://github.com/MicrosoftDocs/Virtualization-Documentation/blob/main/tlfs/Requirements%20for%20Implementing%20the%20Microsoft%20Hypervisor%20Interface.pdf 
+>>
+>> https://kb.vmware.com/s/article/1009458
+>>
+>> If hypercall method is used, there should be ABI also like aarch64:
+>> https://documentation-service.arm.com/static/6013e5faeee5236980d08619
+> 
+> Yes proper documentation of public API surface is always necessary 
+> *before* doing real work. Because right now the hypercall provider is 
+> Linux KVM, maybe we can document the existing and planned hypercall 
+> usage and ABI in the kernel docs along with code changes.
+> 
+yes, I will add hypercall in kernel docs.
 
-Yeah, testing isn't fun for these kinds of things. This is traditionally
-why the "obviously correct" changes tend to have an easier time landing
-(i.e. adding "= {}" to all of them).
+SMC calling convention is ABI between OS and secure firmware, LoongArch 
+has no secure mode, it not necessary to has such doc.The hypercall 
+calling convention is relative with hypervisor SW, not relative with CPU 
+HW vendor. Each hypervisor maybe has its separate hypercall calling 
+convention just like syscall ABIs.
 
-> Could you let me know if you think this is additionally worthwhile
-> cleanup outside of the guard gap improvements of this series? Because I
-> was thinking a more cowardly approach could be a new vm_unmapped_area()
-> variant that takes the new start gap member as a separate argument
-> outside of struct vm_unmapped_area_info. It would be kind of strange to
-> keep them separate, but it would be less likely to bump something.
+Regards
+Bibo Mao
 
-I think you want a new member -- AIUI, that's what that struct is for.
-
-Looking at this resulting set of patches, I do kinda think just adding
-the "= {}" in a single patch is more sensible. Having to split things
-that are know at the top of the function from the stuff known at the
-existing initialization time is rather awkward.
-
-Personally, I think a single patch that sets "= {}" for all of them and
-drop the all the "= 0" or "= NULL" assignments would be the cleanest way
-to go.
-
--Kees
-
--- 
-Kees Cook
