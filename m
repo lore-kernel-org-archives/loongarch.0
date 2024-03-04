@@ -1,145 +1,102 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB0743D38F
-	for <loongarch@lists.linux.dev>; Mon,  4 Mar 2024 14:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA794482DF
+	for <loongarch@lists.linux.dev>; Mon,  4 Mar 2024 16:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709561681; cv=none; b=tnOEtqz/KBl8gUFnmJ8dD/Wx6yndL/AP2ZeBoPDzp/0OWtWSbRTHDHCYFb06gHN7XKdBjU39gp/bCmXs+uavrzWlZxdPXHnrGAXjrOTEy91PxoMZPeVRosh2KJ9UVYoLVGgIqj2f/DJuT8QAFFxIHF81Kosg65jKURXA8QTqQXk=
+	t=1709568436; cv=none; b=GC8kcfEDXoSmoCHy6vhG8u8SDfs4t9iovST9PGU410FhflZa2du26F6AmCQ3xf/7R5lLnUObuaKvZ/IYUtDp/hy8j8xkjAFczeo0zXtEy6M+6XYR9kK/d/UeEBBzAiGnlu+GZgptrMBLKI6ZvSw6XocMhm4Yxe5K8DLNczbb5rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709561681; c=relaxed/simple;
-	bh=a6ig0GS31zoi7FrVgcAaLZb/F7cK+wdGRMSMu2PFpZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eCJOX9eeus5dfC0d+Uba/JyGvf2McP5io9JYWOqAWa7d20tZFfWa+Jr5NdInpCEaU4vdmT0z0wmMDCKtNsPPZUm68/NBwWNkSHZ5xoDyUZ+o+se5LzDfsGWPqtSJs6tOjyHMDB4eNnmO5OXoaNR1oLqewYLppgUbJ+VBgNnTHEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.22.233.39])
-	by gateway (Coremail) with SMTP id _____8Ax++hL1+VlqyQUAA--.30959S3;
-	Mon, 04 Mar 2024 22:14:35 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.22.233.39])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxzxND1+Vlkt1NAA--.20796S2;
-	Mon, 04 Mar 2024 22:14:30 +0800 (CST)
-From: WANG Rui <wangrui@loongson.cn>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn,
-	WANG Rui <wangrui@loongson.cn>
-Subject: [PATCH] loongarch: rust: Switch to use built-in rustc target
-Date: Mon,  4 Mar 2024 22:14:26 +0800
-Message-ID: <20240304141426.163517-1-wangrui@loongson.cn>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1709568436; c=relaxed/simple;
+	bh=k4TR10OnNmINkmPorunrjDAzeD+rHb7FeAaVbqOaY1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=crgQkzjNO49RtuL7ubKsaH/L7I8yOth4BTr99jMxsKOXIb4nrHTbMlBxsDXEc6VS47oIsFg/g4cfd+CBDlLa9m7C1sjpbKhNZwcvCZNOvk/8Y7ZBGTOC8xaoZlYD6kbxeWy46iL9f3XhaJIEyx/0cs22Rwos5yCxvLKbmrv3Dq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NJeivYzK; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJeivYzK"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e5a50d91b4so4427202b3a.2
+        for <loongarch@lists.linux.dev>; Mon, 04 Mar 2024 08:07:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709568434; x=1710173234; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k4TR10OnNmINkmPorunrjDAzeD+rHb7FeAaVbqOaY1M=;
+        b=NJeivYzKkIh6NN214ngL7au03A043hLAC9GtV80CbM+eZpzbJtWXhyQ9h3dAvqXFBs
+         FgQKWbKBdeo8yAb1d2M61ngLrlJcTFtxPjgMOGre2wkXOE/A88Ym5Fts4Phs/CRh6QM1
+         GFFqhtLe3CjfvpkFQ/sSLahY8LDYC6coXfkVU8lPDhs/ZmNBoHAvaHyp2G2YPAmq0Q3c
+         Bl4nhsoVkok2AwJpLv0jcVK4AzFj8XJBXaAjvPancHd9Pp8XxxTJZVkzZBoEE7ZZ4j4d
+         D3yjPd+wvquSRgxkNo9wBdgcw4chssqRFdGUQsNpxwRuPx1QQTRItooqywiSgoYRTJnJ
+         9tfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709568434; x=1710173234;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k4TR10OnNmINkmPorunrjDAzeD+rHb7FeAaVbqOaY1M=;
+        b=uXSwwIPC4ZAOpM/+kZRi5Spzo633fY/RzlL4NmsuOUJ9DC/8ydH7O7v2hIT3eBuT7o
+         TFUtIeNGt4kCQvwqVoXy07Z0WkLJ6ZpNP8YwFbgMyqJ9HTUX2dBvyWdHDu+zXZpCB48I
+         FZdQ/+TWzz/U4O8tovTEIt5M5xyR0nYH0u8jeWP0joDirF0kU615v3dmtYnCWSVA22H1
+         JZikuMbH7vgO9e45cFPgXy+U52gFH1GpSYVf9zOeEH03AicHuYAMXnqZ9E1InX3yVsEC
+         s0ZDp45+PU1t9s0i1bmBT8daquEsMQRHSE8qmTUXFfl5daOm8/toriuzx9ptI93pnRUr
+         1fDw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtKkQJ+9C8+hsAxkBNKivfr6E87z18cmaLcOOstV8n0GXXMu/EwWNcIpnTE6fz9KupWw3q6AVpxjSJdPjchxEBDdRMX+dn66Zr
+X-Gm-Message-State: AOJu0Yw7i1zJDKqMmXzOfAft2yUm0J2AXSFXIdYuHsvinpdyzAK7UwhV
+	ZYJD+hnn49cn/xGcHhYIq1Ft4XkePUZGme0n7rpoTVfWCppp2B+dXBEpDIiuxZfGErNiHK60qmM
+	x4oLhtoSKo+RJKzmxff4u/JCrEJg=
+X-Google-Smtp-Source: AGHT+IFlTw+graS1GYFpuHX/+si581ZuRx910SbrbDYCgQI+m5x+oiChingS48e76W97/gjoZixOgklCOzjzBhM/d4E=
+X-Received: by 2002:a05:6a20:160d:b0:1a0:dbf2:fd8f with SMTP id
+ l13-20020a056a20160d00b001a0dbf2fd8fmr11819869pzj.21.1709568434111; Mon, 04
+ Mar 2024 08:07:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxzxND1+Vlkt1NAA--.20796S2
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAF1DJr4rKryktw48Cr4rWFX_yoW5CrWDpa
-	9a9w4rArW0qrWktr4kJFyYgws0kFn8Wr1j9FWxGw10yr4fXrWIgrs2yrsxGF1rGa4Du3yr
-	Was3CF9rAF4UAwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUc9a9UUUUU
+References: <20240304141426.163517-1-wangrui@loongson.cn>
+In-Reply-To: <20240304141426.163517-1-wangrui@loongson.cn>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 4 Mar 2024 17:07:00 +0100
+Message-ID: <CANiq72mvdVrzN19PC8pNrvuBLkOEEQ3yX0WG6JcWc+RVaSM2nA@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: rust: Switch to use built-in rustc target
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, WANG Xuerui <kernel@xen0n.name>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This commit switches to using the built-in rustc
-loongarch64-unknown-none-softfloat target for LoongArch.
+On Mon, Mar 4, 2024 at 3:14=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wrote=
+:
+>
+> This commit switches to using the built-in rustc
+> loongarch64-unknown-none-softfloat target for LoongArch.
+>
+> The Rust samples have been tested with this commit.
+>
+> Signed-off-by: WANG Rui <wangrui@loongson.cn>
+> ---
+> base-commit: ("rust: Refactor the build target to allow the use of builti=
+n targets")
 
-The Rust samples have been tested with this commit.
+I couldn't apply it on top of commit f82811e22b48 in arm64's tree
+(which is the base? -- the offset differs significantly in the arch
+Makefile), but I nevertheless applied it manually on top of that one,
+build-tested it for loongarch64 and boot-tested it for x86_64:
 
-Signed-off-by: WANG Rui <wangrui@loongson.cn>
----
-base-commit: ("rust: Refactor the build target to allow the use of builtin targets")
-Link: https://lore.kernel.org/r/20231020155056.3495121-2-Jamie.Cunliffe@arm.com
----
- arch/loongarch/Makefile         | 2 +-
- rust/Makefile                   | 2 +-
- scripts/Makefile                | 2 +-
- scripts/generate_rust_target.rs | 7 +------
- 4 files changed, 4 insertions(+), 9 deletions(-)
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index df6caf79537a..17aabe7b0315 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -101,7 +101,7 @@ ifdef CONFIG_OBJTOOL
- KBUILD_CFLAGS			+= -fno-jump-tables
- endif
- 
--KBUILD_RUSTFLAGS			+= --target=$(objtree)/scripts/target.json
-+KBUILD_RUSTFLAGS			+= --target=loongarch64-unknown-none-softfloat
- KBUILD_RUSTFLAGS_MODULE		+= -Crelocation-model=pic
- 
- ifeq ($(CONFIG_RELOCATABLE),y)
-diff --git a/rust/Makefile b/rust/Makefile
-index fe045dbc701e..cb40a1ce1331 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -437,7 +437,7 @@ $(obj)/core.o: private rustc_objcopy = $(foreach sym,$(redirect-intrinsics),--re
- $(obj)/core.o: private rustc_target_flags = $(core-cfgs)
- $(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs FORCE
- 	$(call if_changed_dep,rustc_library)
--ifneq ($(or $(CONFIG_X86_64),$(CONFIG_LOONGARCH)),)
-+ifdef CONFIG_X86_64
- $(obj)/core.o: scripts/target.json
- endif
- 
-diff --git a/scripts/Makefile b/scripts/Makefile
-index bc90520a5426..fe56eeef09dd 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -12,7 +12,7 @@ hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)	+= insert-sys-cert
- hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_builder
- hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_gen
- 
--ifneq ($(or $(CONFIG_X86_64),$(CONFIG_LOONGARCH)),)
-+ifdef CONFIG_X86_64
- always-$(CONFIG_RUST)					+= target.json
- filechk_rust_target = $< < include/config/auto.conf
- 
-diff --git a/scripts/generate_rust_target.rs b/scripts/generate_rust_target.rs
-index 54919cf48621..acd3b1acef83 100644
---- a/scripts/generate_rust_target.rs
-+++ b/scripts/generate_rust_target.rs
-@@ -164,12 +164,7 @@ fn main() {
-         ts.push("llvm-target", "x86_64-linux-gnu");
-         ts.push("target-pointer-width", "64");
-     } else if cfg.has("LOONGARCH") {
--        ts.push("arch", "loongarch64");
--        ts.push("data-layout", "e-m:e-p:64:64-i64:64-i128:128-n64-S128");
--        ts.push("features", "-f,-d");
--        ts.push("llvm-target", "loongarch64-linux-gnusf");
--        ts.push("llvm-abiname", "lp64s");
--        ts.push("target-pointer-width", "64");
-+        panic!("loongarch uses the builtin rustc loongarch64-unknown-none-softfloat target");
-     } else {
-         panic!("Unsupported architecture");
-     }
--- 
-2.44.0
+Thanks!
 
+Cheers,
+Miguel
