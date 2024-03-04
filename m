@@ -1,203 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A2861686
-	for <loongarch@lists.linux.dev>; Mon,  4 Mar 2024 18:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709575436; cv=fail; b=iksFbNIWqCS+LEPE1IpADg6EZcAbWohGUweQK0zVas0/B1h26Zdv16WwmTLFEdrSXihcAiUF+ERIi4+/jtxo5nNF8LXTI3HN/NAcYorlfkxDTTM2sxu58EFx3DdJjkN8Jk680NEuacnK/W4YdHYdpF0aa7aJEcyQLn6VziKt1wM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709575436; c=relaxed/simple;
-	bh=G0DzSIeyP48E2AGpBeHy7G8Bf7aOpZbWUZKP7lVEh/g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=pR2VZwXXZ/neo6wl91OhbIMoXeLKGhLVBAyPxmuaM4uz6FNskIbrh7EwT0xQ3hzS9Nc+6KEtu2xu9fqnM+bw/MgKylyJEq7Q1ED+Gzc13YCZ//JJ7qUM4ycKeNzJeyTDQ2JoNm+FEQLYZUokwXC6Rjd/e+8dHMYOLCzYXCHsAuQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lOOQHYnj; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80E28F4E
+	for <loongarch@lists.linux.dev>; Mon,  4 Mar 2024 20:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709584486; cv=none; b=hnMPexw+pVvxJg88LJ+pKwgILqkj6mnf97kTGWW6YP33LYEecpwtm9Hgg8rZJ+OonokJeHPKoYYOCeYtuRs5J9+6376PtDVphREVs23N5Ojg1RAu9F0oBjv+Jqhqtgvn6TM8UUFgIe1RiRXqltV2xqGX8Ere5dxxZJizort86XY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709584486; c=relaxed/simple;
+	bh=agTGJ7mvTxHNHU2+yxW39F0Pesw+dn+kEI+hcsUMMM8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tk/vbV0LuL19B+yP+eNv9s/nvLNHNw0uQdcUbctjckLUUVHaoYEVMbA7sB3kUtIlbYnjll+vlKOoCx1p3toaKd1SkWa+45ZV3Kh8e7uDJoRYEV7VQnj+gZjmAurTSO8/LJJF+F6Io9tY/y99JHWxxWw/5+akLmQmhAqqXWx0MAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R4iKzh0T; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lOOQHYnj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709575434; x=1741111434;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=G0DzSIeyP48E2AGpBeHy7G8Bf7aOpZbWUZKP7lVEh/g=;
-  b=lOOQHYnjioUYZ30Jw/fUkUJV3QbMe+yLzvyLBu8VaOCjrbvrExYWTVNf
-   7T9Xfcc6EXcYz6h7MMn+agaduYbKvkr6LSN+uQj97455uSjNkl5dNQsC2
-   Up53DRkfJSZ+nBnGESVVP0RvygLnenD9v9ThjM7SxGPA4/h2R+6PvIr4+
-   lpMHT43tqOkMDcm/ADGK//JttpjPDZTOQqFUxP4k80uX2XYLs/fvUiZTc
-   dKvFzNF0YAc9uU2Pzg6qxaGc6Es3JoXA1kR8GIJ0XSt0F7lVn1KFjWqiT
-   PaurzxzutUT/bO61mTYTr9Hq4Z0yu4JZuO0/IlDb78jvYMuSLBNbQEbp0
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="3940698"
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="3940698"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 10:03:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="13746741"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Mar 2024 10:03:53 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 10:03:52 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 10:03:52 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 4 Mar 2024 10:03:52 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 4 Mar 2024 10:03:52 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LgnxxVQFZnKyLAC6ZwPiRq7BzpqmayvX1S4C8sx35e5lkR8Cx3DqKsKlgEZ8Q3kmPKoTEsbYQvPp+GFvWqgo31TG+7gHdtu1+qNtCfg1yYl6t39NqA1tlkqt0qY2XYpCTire7hqQOXAZdJ2i3cyhDvSz93SX2ABoYBIIAn1vkvhGYLZ7vP4+XypjyQJGc7wOpFZ8JjtS54jDHTiXPNcy9/ecUGqyBxIMc2FDmATQ3myMVcZGUm1nDxDHQUfhOxAthwuLzVobSewtAKErug89EwlMOx/cWa2v3OGvJN2hTJGz+GvJrQGQdFdqY3f4u9iuxEJvWftn8pnFkYX6MR5Dow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G0DzSIeyP48E2AGpBeHy7G8Bf7aOpZbWUZKP7lVEh/g=;
- b=A7LnfUSBrOrCe5fwYz8PJkhZdO0dOenNM/DVAh87E+JVWFUirRajQ+KWMcAszPK/anD6RH97JGn7MifrSPo7zFWTQ1XUbFuYp6ltqrBGExzUnEmTXM+AhWeyipmc/txCs2pjI8UlYnN4mlEx8VXKzwd0ZTwD9hizp/MmaYVPSzUsyoxbczAdRH5g9tJJ5Q8yAtusq+zP15wyQVw5lsRNYVbMExSIEuNuCfbTC97VlQ1pslQXVevrnD8OzyofeUifD0sqtgxRnb0lsdXXtV2sbsau8hcyq1nBwdTfGvqDGhO3eaigv9t682y+p2lhMH7sIlj5y0QQhsCDaSXgoN7iRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.22; Mon, 4 Mar
- 2024 18:03:48 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::fc9e:b72f:eeb5:6c7b]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::fc9e:b72f:eeb5:6c7b%5]) with mapi id 15.20.7362.019; Mon, 4 Mar 2024
- 18:03:47 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "keescook@chromium.org" <keescook@chromium.org>,
-	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>
-CC: "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"luto@kernel.org" <luto@kernel.org>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "debug@rivosinc.com" <debug@rivosinc.com>,
-	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "linux-parisc@vger.kernel.org"
-	<linux-parisc@vger.kernel.org>, "linux-snps-arc@lists.infradead.org"
-	<linux-snps-arc@lists.infradead.org>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "hpa@zytor.com"
-	<hpa@zytor.com>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "bp@alien8.de" <bp@alien8.de>,
-	"linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-mips@vger.kernel.org"
-	<linux-mips@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
-	"broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v2 5/9] mm: Initialize struct vm_unmapped_area_info
-Thread-Topic: [PATCH v2 5/9] mm: Initialize struct vm_unmapped_area_info
-Thread-Index: AQHaaOdsOIuf9v8cz0SXVaOI9gIdJbEdxC+AgAC5pQCAAAKPgIAAJA2AgAEcBICAAELjgIADoSeAgAAR4wCABDOQgIAAANoA
-Date: Mon, 4 Mar 2024 18:03:47 +0000
-Message-ID: <e617dea592ec336e991c4362e48cd8c648ba7b49.camel@intel.com>
-References: <20240226190951.3240433-1-rick.p.edgecombe@intel.com>
-	 <20240226190951.3240433-6-rick.p.edgecombe@intel.com>
-	 <94a2b919-e03b-4ade-b13e-7774849dc02b@csgroup.eu>
-	 <202402271004.7145FDB53F@keescook>
-	 <8265f804-4540-4858-adc3-a09c11a677eb@csgroup.eu>
-	 <91384b505cb78b9d9b71ad58e037c1ed8dfb10d1.camel@intel.com>
-	 <def71a27-2d5f-40da-867e-979648afc4cf@csgroup.eu>
-	 <202402280912.33AEE7A9CF@keescook>
-	 <ac04c9aa134807bbc00e6086e7a14a58a682f221.camel@intel.com>
-	 <202403011747.9ECFAD060B@keescook>
-	 <ec3e377a-c0a0-4dd3-9cb9-96517e54d17e@csgroup.eu>
-In-Reply-To: <ec3e377a-c0a0-4dd3-9cb9-96517e54d17e@csgroup.eu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|CO1PR11MB5089:EE_
-x-ms-office365-filtering-correlation-id: 6f9c4469-4e2a-426e-839e-08dc3c757079
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oA41TO9LzyDg1wdOBRaORGkpGJJ9gnc1Zjd0qvtm+wGCJCAELPTxlNAV0BTjg4SiFr+p9AXBnbSJY/WWl6eJzhnE8bHd++DeAraGZ1pv+VGNo3Qx+VkcEO7pp5E8/0dDSYXeESd8HZq1R4Tn9BQTrcoOP6QSm9y6Ljtult9FNEBQrAw/WeA5Gf9zShjy18fl/53k1fSlwrewymhivOwdPNV3gHB/jnH5BUFjmU6jq8tYhID8TLX/NeTkuqCa8witRbv7EfHWkJ0/j9koksUj8KfZgOC4CI2ypgxy1YAk84ONimp3Q4iugHx52lJZwM5SFp4vrocdlUtHe1wD5emByqv+QBctHBOPtBk7USWzD0rGY4n0OdbFYygFv4ObM/bUtpKnGh2ItYZG1brdkqSM2kCZEnBdfLPYvS0lJ1ub42VcNbCSr0wZbzeHF0RO+lDzjRN6+3uEF8wkKUCKyGqF603lmqv+FO121mKZb4QBKrWxshkiNIczkg92usRXX4mBkkmTwDO1amMabsqjf5zoScvBvqxQRhJK0L7jxsxGnQ21fKctNe/U2pqiHWpi959m0CCUFEL2VUamUTXx0WB5l/X+CYt6U8iG7Z7UT+ry77yHqh1EWgjM1tIvzfcOykRY/9JG3Q2d6lBBFqVcWKaaVRlnWie5s9flLVZkzJURUiu4ZHSA4CazeQJL4pUIBbNPQapA2/3x6iwJjCK21mX/RFn0fdJwRR0/T/rrpT4OO+E=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?T3NGbFFuMnlOSC81dStnYmx6WXVPV29jdWhmb21jc1JzNzR4bC9sNlY4VkNl?=
- =?utf-8?B?MG91bWtPWVZVVVdlZkc2S2FmQzloNnlESlFNemcrS0RYT0t0S3lwbzZuV1Zi?=
- =?utf-8?B?a01kWCtUR2UybGhqUTBrVEthZ1FpejFQcE8zMHVRK0lVZ2FzU2hITVkwMVJy?=
- =?utf-8?B?TCtSeTR0UmhidkRFeWYzQUphWUZJQytUVGp4VUYyR0FNdzFDVFYvb3krQ1Qz?=
- =?utf-8?B?WkVWcGpSUUljaWdVdUJZMDgxVHBJQm81VXJBQUU2ckFXdWowd0JLc0JkWEFp?=
- =?utf-8?B?RDRveGtQZmc2Q3hFTW8zMmcrZktJMW9BbDNPY0kzNFNvNmsrVGhDYzJDQmEx?=
- =?utf-8?B?Rnd0Z0NuZUdONVNxb1BaRXE5Z3lWT2xUUWxRY2hoSklTb3lMTldUN3kwazBG?=
- =?utf-8?B?bVNsalEvLzZ1bmNKbWVLOTBsWE5JVnlWU2lYNEQ4OWFVVitPRm93RHYyN2Jz?=
- =?utf-8?B?V1F0QmxkU29ScXc4bFZsK25KZHNkY0g5cU5lTXZGZ3A5WUlyU2lKQ0hMNmJj?=
- =?utf-8?B?L0szZG1iNUp0WVNKQ1FGYys1WWdnaFNGQjV5WDhtZHFXTlRVbWVUMzJhcmJq?=
- =?utf-8?B?dGpYcXF2T3dPOStSOW41eVUyOFJQVUVkRDFCaWZsUWdwcE55UUd0bXRFOGpY?=
- =?utf-8?B?bFB3UTFuRWg4VUwyVWlzK283c0dzRndETVhzMzE0R0kyUkJsSCtkT25BMmhz?=
- =?utf-8?B?bXNIZDZlWVZaZm02Ulplc1JWa0szSXdMaDN5UXFCclBnMEZneGwxRTVKdFRh?=
- =?utf-8?B?NTZLakk5UUJiNm5yYUpacytHZUxtS1hKMkVUUzlNck03ODFQUis2amplN25M?=
- =?utf-8?B?bHVGVW01dW5GL3dkdmg4MTZVSEhidnh3aGYxME54UEVWQXFPY2NVZmp4ZjZM?=
- =?utf-8?B?aUpSN3J0aGYwOEdrbzJWQmpsUjFtNis3ejBpQ0h1ckNjaU9SdEJ5bUMybTVn?=
- =?utf-8?B?WllkNWRIVSszUEozN2NPd1o1dVQxVWszN09McUd3VXd6NXFvSXZBbDAzbEJl?=
- =?utf-8?B?TG9GS3E5OVozUS80Um9mZTVyenJPNklmOXo1TnpzbWUzdy9OVUsya2NMd1Ba?=
- =?utf-8?B?VFlFUzhKSUZsWEZER21tYTU3N0NzdnJ0UzBGeUt5akFPZ1hOMW1QOWdyYmxZ?=
- =?utf-8?B?UmRMYWZuUWx2S1BxV3o0cUU0RWpNQmJHcEZBYUdkS1Nwc2JHNmw4MjlLbTVk?=
- =?utf-8?B?bkg2LzVDMjVKVGNiRjdYa2ZXWWg3MFU2U2FHMlJ6V2JQT1ZXeHV4MEhucE9r?=
- =?utf-8?B?Rk9lOVg3anNHV01Jenp6ZUpQRWdhdGpGWDB3VndIOUVXMzkxdU4xUW1ndkFD?=
- =?utf-8?B?WGNwYmljS2dMSmF4b2I0aUFaVllZZjFSRFpRbXBRVExuMFhHZExhSnRJMWo1?=
- =?utf-8?B?NkQraC93c3lwQkpVWDZyb2V0dHY4VklrWW8zRGFBOFBRb3E1d0l2T3l5QXVy?=
- =?utf-8?B?NStzWVJlalFlbS9mem9qYkh5UkJZc2VJc1RiQ3Y2YXdoTFNScHZsaUJYR09n?=
- =?utf-8?B?dzAwdUhLOVM5OTZuTC9CMGoyWHU0Q3pFeGtLWkxYc0NyNkNpR1dEUWd4Qmo3?=
- =?utf-8?B?bTZlWjhVeUdqdnNqejlzTFhnbHBEdHowWjErYjVsTkNtd084L3dyc09ZdFdy?=
- =?utf-8?B?QW9IYVlVdTBhTjJBVHh1VnpORS9qbU83TkdKYUlUUGlHRHBocUtaWVpvcThp?=
- =?utf-8?B?ejU2YUViY2hLVUVHTUtyRHJmMlowV3czVVo0ZkFjQWtTbjVKazZ4T1FLbjFE?=
- =?utf-8?B?Y2xTQVR6a2VaL3kvcHdXbVhyZTNIYkdNZG9XckdaUDBCOHBQVjBnbGxxdC9j?=
- =?utf-8?B?ek1pNTRXNDlvaE1vSzk1UkZNSWpBMVJscVlJbWxjTkpZSS9TQjh2K1QwZTFo?=
- =?utf-8?B?Mml4TEhRR250bGRrL2xTUGVEb2hueHk1K0dYNHA1Zk9KRThYWiswdEc5bEI1?=
- =?utf-8?B?S0h6MEh5Z0FrbWxiMUpjYTdoQWpDUDdOVy91M3dPTWljQldQSWlFZiswZUU4?=
- =?utf-8?B?bGtGUWI1RUlQM0R5OEdJQW0xeWRFYS90UWpJY2lyYXNQVG90Zk42Y1N0LzVk?=
- =?utf-8?B?U3Vubm0vK1Y2VWQrUWNIeVIwWlB4UU1IU21EYldUeXhtVmlHRXVZaWZxS2Fz?=
- =?utf-8?B?d1hBdHN6SGg1c011eGMzWGlIS2NYZmJDMUJnRVhhT0VEek51SUVsK2R3SEJ6?=
- =?utf-8?B?Q3c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3CDDD33D4622C94B9E2372E2F147B478@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4iKzh0T"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4ce2cd0cee2so1229871e0c.2
+        for <loongarch@lists.linux.dev>; Mon, 04 Mar 2024 12:34:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709584484; x=1710189284; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=B0Yidc7dQqIK4DELs1FgeItRWziYxfLhE7eHCKyDkTI=;
+        b=R4iKzh0T120jtmQ+OH2IjzqfpP1UuEdcTG42ObiVwAzOCLo7gNTJxTgk98MdOnXKMn
+         YgYSaeDIy5eikoNCWdAcU0EOHK1cfUSSG1UlDcfxHt7d/qW1Xh5u+f+PP5hl042utN9+
+         /v5ME6lGJ2dwrXlfwTQxQ+I9b+X/d1gOZTnPibFG/i4v+VZLAuw8R4YvIp3JUuOsaHM6
+         ZytOdwjPN+6cdlMqonUY1vsg5DJrsyPl7oYw8VnDc0EJxJFA6cZh3uLxj99farS+VFzt
+         tkr+qQCzqQluCmhKUY2cQnAByGEw0pt7+B3jypthi7atZmYjBwFYqKPpElYdow7+xZ7f
+         7Vog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709584484; x=1710189284;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B0Yidc7dQqIK4DELs1FgeItRWziYxfLhE7eHCKyDkTI=;
+        b=oxHWblrwZaQolFUk+nI1qtgOQX+TSOYYfHlrXG+IYaRwS4B5+E5V4X7gpj9vmJSoMz
+         9sJLIUQtiK3nj47SKYFviohkuAHgwegXRu5lPFQUXaTBFatE8iQXRyNYfprk57M6q6bc
+         KI3NDk+RpJ9Lkr3pJbA+dZ+N8c9Gfm2XAWiUQho+9k9LCYgAudUvmHmqX8RRPV2+iARa
+         dubqjysLvpSMhipvS1u9Mk9eWKfnBCa4qxdGSxCg9jo4O8eezC81QFy0sGkIIOv751wy
+         UBE+uEowIBzIE5qVn7UJOUSZNE1/aC/EE6CsG+pg+RhjJPpJQDVfyHuYE+QpCphK6z46
+         C14w==
+X-Forwarded-Encrypted: i=1; AJvYcCWX+OkkHmwwPlo6ldTQfBqtzT/93XYmoRs0fXw5hQBcdaBCP4A6BQmNt8gtTFwdkjF8/wGjVGc1z27oEFYkpvWOZBBrKs7EHX29
+X-Gm-Message-State: AOJu0Yz593LgxnFQOvP79+tWKBii932SzRUlpvLJVVtRgDohlxYbJ1LB
+	tOowlZHnMw4WnSAdGUMa5LQEg+QabaXBnlIWfggEGeqobONwkJ67YEnb17EMtwNbvQNPaVH0FWN
+	WH6PKcuj3nWTKKVxzzRZyhsuWYgtzLMQmJRXN
+X-Google-Smtp-Source: AGHT+IEijcQgtibxEwRnA6QNXpea6ijSEjSQ5ApXUicgRhVOR54sTsLFrR74KsQA1jxfPcT7XWfnAHFo60oN5NOisb8=
+X-Received: by 2002:a05:6122:4812:b0:4d3:3236:e91 with SMTP id
+ ef18-20020a056122481200b004d332360e91mr5181048vkb.11.1709584483711; Mon, 04
+ Mar 2024 12:34:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f9c4469-4e2a-426e-839e-08dc3c757079
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2024 18:03:47.5349
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gehXoEqLQIvc40AL6qt0R9sx0HXuFwzOAqon4b7GIaZqK95C7AgsT5xr+X6W9Z0gjiIFi32ssHQ1LXE39yv1A9pcOcLhhKgea6x6z3luF8Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5089
-X-OriginatorOrg: intel.com
+References: <f477329e-4ecf-4c6c-82b1-1e9b84443902@roeck-us.net>
+In-Reply-To: <f477329e-4ecf-4c6c-82b1-1e9b84443902@roeck-us.net>
+From: Marco Elver <elver@google.com>
+Date: Mon, 4 Mar 2024 21:34:05 +0100
+Message-ID: <CANpmjNMZD7-HY9FNGKnWTzHJ+Kibf2++rHj=j+3UTFKZ+Hr+EQ@mail.gmail.com>
+Subject: Re: hw_breakpoint unit test failures with various architectures/platforms
+ in qemu
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Peter Zijlstra <peterz@infradead.org>, Dmitry Vyukov <dvyukov@google.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-T24gTW9uLCAyMDI0LTAzLTA0IGF0IDE4OjAwICswMDAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
-Og0KPiA+IFBlcnNvbmFsbHksIEkgdGhpbmsgYSBzaW5nbGUgcGF0Y2ggdGhhdCBzZXRzICI9IHt9
-IiBmb3IgYWxsIG9mIHRoZW0NCj4gPiBhbmQNCj4gPiBkcm9wIHRoZSBhbGwgdGhlICI9IDAiIG9y
-ICI9IE5VTEwiIGFzc2lnbm1lbnRzIHdvdWxkIGJlIHRoZQ0KPiA+IGNsZWFuZXN0IHdheQ0KPiA+
-IHRvIGdvLg0KPiANCj4gSSBhZ3JlZSB3aXRoIEtlZXMsIHNldCA9IHt9IGFuZCBkcm9wIGFsbCB0
-aGUgInNvbWV0aGluZyA9IDA7IiBzdHVmZi4NCg0KVGhhbmtzLiBOb3cgc29tZSBvZiB0aGUgYXJj
-aCdzIGhhdmUgdmVyeSBuaWNlbHkgYWNrZWQgYW5kIHJldmlld2VkIHRoZQ0KZXhpc3RpbmcgcGF0
-Y2hlcy4gSSdsbCBsZWF2ZSB0aG9zZSBhcyBpcywgYW5kIGRvIHRoaXMgZm9yIGFueW9uZSB0aGF0
-DQpkb2Vzbid0IHJlc3BvbmQuDQo=
+On Mon, 4 Mar 2024 at 19:12, Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> Hi,
+>
+> I see a number of failures and tracebacks when running the hw_breakpoint
+> unit tests on various architectures in qemu. Some examples are below.
+>
+> Is this a potential problem with the unit tests, with the hardware,
+> or with the qemu emulation of that hardware ?
+
+The test is testing the accounting logic (allocating/deallocating HW
+breakpoints), not actually using the breakpoints. That requires that
+the architecture reports the correct number of HW breakpoints
+available. It looks like it's not doing that.
+
+> In other words, is it worthwhile to look into this further, or would
+> it make more sense to just disable those tests if they fail on a
+> given hardware/platform ?
+
+It's an arch bug:
+https://lore.kernel.org/lkml/Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com/
+
+Back then we decided to leave the test as-is, given it's reporting an
+actual issue. However, since then nothing has changed and the test
+continues to exist as a reminder the arch code needs fixing. I suspect
+none of us have the time to get to that soon, so we can either leave
+things as is, or skip the test on all the broken architectures.
+
+No idea what's going on with loongarch.
+
+Thanks,
+-- Marco
+
+> Thanks,
+> Guenter
+>
+> ---
+> arm:smdkc210:
+>
+> [    9.515572]     ok 2 test_many_cpus
+> [    9.519425] ########### searching unregister_test_bp
+> [    9.519989] ------------[ cut here ]------------
+> [    9.520995] ########### searching test_one_task_on_all_cpus
+> [    9.521318] WARNING: CPU: 1 PID: 63 at kernel/events/hw_breakpoint_test.c:49 test_one_task_on_all_cpus+0x90/0x1c4
+> [    9.521921] Modules linked in:
+> [    9.522532] CPU: 1 PID: 63 Comm: kunit_try_catch Tainted: G                 N 6.8.0-rc7-00028-g624465c9abd6 #1
+> [    9.523102] Hardware name: Samsung Exynos (Flattened Device Tree)
+> [    9.523610]  unwind_backtrace from show_stack+0x10/0x14
+> [    9.523936]  show_stack from dump_stack_lvl+0x68/0x90
+> [    9.524191]  dump_stack_lvl from __warn+0xbc/0x21c
+> [    9.524429]  __warn from warn_slowpath_fmt+0x1a8/0x1b0
+> [    9.524674]  warn_slowpath_fmt from test_one_task_on_all_cpus+0x90/0x1c4
+> [    9.524971]  test_one_task_on_all_cpus from kunit_try_run_case+0x58/0x18c
+> [    9.525273]  kunit_try_run_case from kunit_generic_run_threadfn_adapter+0x14/0x20
+> [    9.525593]  kunit_generic_run_threadfn_adapter from kthread+0x118/0x124
+> [    9.525889]  kthread from ret_from_fork+0x14/0x28
+> [    9.526200] Exception stack(0xf0ad5fb0 to 0xf0ad5ff8)
+> [    9.526663] 5fa0:                                     00000000 00000000 00000000 00000000
+> [    9.527112] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    9.527449] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> [    9.527876] irq event stamp: 113
+> [    9.528088] hardirqs last  enabled at (121): [<c01adfb4>] console_unlock+0x114/0x130
+> [    9.529049] hardirqs last disabled at (140): [<c01adfa0>] console_unlock+0x100/0x130
+> [    9.529501] softirqs last  enabled at (138): [<c010168c>] __do_softirq+0x340/0x520
+> [    9.529892] softirqs last disabled at (129): [<c012f23c>] irq_exit+0x190/0x1c0
+> [    9.530227] ---[ end trace 0000000000000000 ]---
+> [    9.531752]     # test_one_task_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [    9.531752]     Expected IS_ERR(bp) to be false, but is true
+> [    9.537757]     not ok 3 test_one_task_on_all_cpus
+>
+> ---
+> arm:raspi2b (and others):
+>
+> [   14.718608]     # Subtest: hw_breakpoint
+> [   14.719351]     # module: hw_breakpoint_test
+> [   14.722275]     1..9
+> [   14.737927]     # test_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [   14.737927]     Expected IS_ERR(bp) to be false, but is true
+> [   14.745960]     not ok 1 test_one_cpu
+> [   14.750052]     # test_many_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [   14.750052]     Expected IS_ERR(bp) to be false, but is true
+> [   14.791453]     not ok 2 test_many_cpus
+> [   14.805964]     # test_one_task_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [   14.805964]     Expected IS_ERR(bp) to be false, but is true
+> [   14.822662]     not ok 3 test_one_task_on_all_cpus
+> [   14.836897]     # test_two_tasks_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [   14.836897]     Expected IS_ERR(bp) to be false, but is true
+> [   14.869770]     not ok 4 test_two_tasks_on_all_cpus
+> [   14.913412]     # test_one_task_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [   14.913412]     Expected IS_ERR(bp) to be false, but is true
+> [   14.929852]     not ok 5 test_one_task_on_one_cpu
+> [   14.939676]     # test_one_task_mixed: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [   14.939676]     Expected IS_ERR(bp) to be false, but is true
+> [   14.953670]     not ok 6 test_one_task_mixed
+> [   14.964403]     # test_two_tasks_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [   14.964403]     Expected IS_ERR(bp) to be false, but is true
+> [   14.997262]     not ok 7 test_two_tasks_on_one_cpu
+> [   15.012825]     # test_two_tasks_on_one_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [   15.012825]     Expected IS_ERR(bp) to be false, but is true
+> [   15.045472]     not ok 8 test_two_tasks_on_one_all_cpus
+> [   15.070033]     # test_task_on_all_and_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [   15.070033]     Expected IS_ERR(bp) to be false, but is true
+> [   15.077092]     not ok 9 test_task_on_all_and_one_cpu
+>
+> ---
+> arm64:virt:
+>
+> [    7.753199]     ok 2 test_many_cpus
+> [    7.766356]     # test_one_task_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [    7.766356]     Expected IS_ERR(bp) to be false, but is true
+> [    7.775897]     not ok 3 test_one_task_on_all_cpus
+> [    7.786604]     # test_two_tasks_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [    7.786604]     Expected IS_ERR(bp) to be false, but is true
+> [    7.793878]     not ok 4 test_two_tasks_on_all_cpus
+> [    7.799954]     # test_one_task_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [    7.799954]     Expected IS_ERR(bp) to be false, but is true
+> [    7.811446]     not ok 5 test_one_task_on_one_cpu
+> [    7.823706]     # test_one_task_mixed: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [    7.823706]     Expected IS_ERR(bp) to be false, but is true
+> [    7.838892]     not ok 6 test_one_task_mixed
+> [    7.843594]     # test_two_tasks_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [    7.843594]     Expected IS_ERR(bp) to be false, but is true
+> [    7.862087]     not ok 7 test_two_tasks_on_one_cpu
+> [    7.869706]     # test_two_tasks_on_one_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [    7.869706]     Expected IS_ERR(bp) to be false, but is true
+> [    7.874499]     not ok 8 test_two_tasks_on_one_all_cpus
+> [    7.878321]     # test_task_on_all_and_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> [    7.878321]     Expected IS_ERR(bp) to be false, but is true
+> [    7.894138]     not ok 9 test_task_on_all_and_one_cpu
+> [    7.894501] # hw_breakpoint: pass:2 fail:7 skip:0 total:9
+> [    7.894911] # Totals: pass:2 fail:7 skip:0 total:9
+>
+> ---
+> loongarch:
+>
+> [    7.327439]     ok 2 test_many_cpus
+> [    7.330144] ------------[ cut here ]------------
+> [    7.330849] WARNING: CPU: 1 PID: 87 at kernel/events/hw_breakpoint_test.c:49 test_one_task_on_all_cpus+0x204/0x210
