@@ -1,305 +1,145 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4038A20300;
-	Mon,  4 Mar 2024 09:10:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB0743D38F
+	for <loongarch@lists.linux.dev>; Mon,  4 Mar 2024 14:14:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709543448; cv=none; b=n8YkNMng2GnK7BT/AmX6EZb93FnKCAgvTS2pexOYxjUf1wVlZ5oDxsxdhI5Q8eqlZqY/G/O/3NvCGD3tCC65+iErpjpLkMZsQUipTaQIykFBV/DmpzzdblPBV7HugG5ga3vpNEM/EF9pmE0TxTtETR5WFtNLmUwqVU+6n/iTj78=
+	t=1709561681; cv=none; b=tnOEtqz/KBl8gUFnmJ8dD/Wx6yndL/AP2ZeBoPDzp/0OWtWSbRTHDHCYFb06gHN7XKdBjU39gp/bCmXs+uavrzWlZxdPXHnrGAXjrOTEy91PxoMZPeVRosh2KJ9UVYoLVGgIqj2f/DJuT8QAFFxIHF81Kosg65jKURXA8QTqQXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709543448; c=relaxed/simple;
-	bh=ecM/81Cew8tqn1qCfB4rRxkuZKAfzrO6bVDhJi9nQiQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=GAx9VgqhXtci931LypnxbNnCu8vDldYmNyfy7JJ9j9OW0kWDpdYgd2h+s+mqXp7N4NKXXEy4gVT62wk2tH05dZRpOdDYZhmhuynHENdlnkall0Mh9Nvy16l5HmW+8oOjDeQn9qo9sfotk91RTIyVf37nGw6d+o0Fzh/0UIp/GNY=
+	s=arc-20240116; t=1709561681; c=relaxed/simple;
+	bh=a6ig0GS31zoi7FrVgcAaLZb/F7cK+wdGRMSMu2PFpZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eCJOX9eeus5dfC0d+Uba/JyGvf2McP5io9JYWOqAWa7d20tZFfWa+Jr5NdInpCEaU4vdmT0z0wmMDCKtNsPPZUm68/NBwWNkSHZ5xoDyUZ+o+se5LzDfsGWPqtSJs6tOjyHMDB4eNnmO5OXoaNR1oLqewYLppgUbJ+VBgNnTHEk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8DxqegHkOVlXwQUAA--.30903S3;
-	Mon, 04 Mar 2024 17:10:32 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXRMEkOVl7rBNAA--.9973S3;
-	Mon, 04 Mar 2024 17:10:30 +0800 (CST)
-Subject: Re: [PATCH v6 7/7] Documentation: KVM: Add hypercall for LoongArch
-To: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, kvm@vger.kernel.org
-References: <20240302082532.1415200-1-maobibo@loongson.cn>
- <20240302084724.1415344-1-maobibo@loongson.cn>
- <846a5e46-4e8f-4f73-ac5b-323e78ec1bb1@xen0n.name>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <853f2909-e455-bd1c-c6a4-6a13beb37125@loongson.cn>
-Date: Mon, 4 Mar 2024 17:10:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [112.22.233.39])
+	by gateway (Coremail) with SMTP id _____8Ax++hL1+VlqyQUAA--.30959S3;
+	Mon, 04 Mar 2024 22:14:35 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.22.233.39])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxzxND1+Vlkt1NAA--.20796S2;
+	Mon, 04 Mar 2024 22:14:30 +0800 (CST)
+From: WANG Rui <wangrui@loongson.cn>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn,
+	WANG Rui <wangrui@loongson.cn>
+Subject: [PATCH] loongarch: rust: Switch to use built-in rustc target
+Date: Mon,  4 Mar 2024 22:14:26 +0800
+Message-ID: <20240304141426.163517-1-wangrui@loongson.cn>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <846a5e46-4e8f-4f73-ac5b-323e78ec1bb1@xen0n.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXRMEkOVl7rBNAA--.9973S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WryUJr1UGrWfuFW7tF43urX_yoWfZw4fpF
-	95J3s7KrWkJryxAw17tw1UXryYyr1xJ3W7Jr18tFy8Jw45Zr1aqr4jqrn093W8Gw48AF1j
-	qr4jqr17ur1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:AQAAf8AxzxND1+Vlkt1NAA--.20796S2
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAF1DJr4rKryktw48Cr4rWFX_yoW5CrWDpa
+	9a9w4rArW0qrWktr4kJFyYgws0kFn8Wr1j9FWxGw10yr4fXrWIgrs2yrsxGF1rGa4Du3yr
+	Was3CF9rAF4UAwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
 	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8SdgUUU
-	UU=
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUc9a9UUUUU
 
+This commit switches to using the built-in rustc
+loongarch64-unknown-none-softfloat target for LoongArch.
 
+The Rust samples have been tested with this commit.
 
-On 2024/3/2 下午5:41, WANG Xuerui wrote:
-> On 3/2/24 16:47, Bibo Mao wrote:
->> Add documentation topic for using pv_virt when running as a guest
->> on KVM hypervisor.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   Documentation/virt/kvm/index.rst              |  1 +
->>   .../virt/kvm/loongarch/hypercalls.rst         | 79 +++++++++++++++++++
->>   Documentation/virt/kvm/loongarch/index.rst    | 10 +++
->>   3 files changed, 90 insertions(+)
->>   create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
->>   create mode 100644 Documentation/virt/kvm/loongarch/index.rst
->>
->> diff --git a/Documentation/virt/kvm/index.rst 
->> b/Documentation/virt/kvm/index.rst
->> index ad13ec55ddfe..9ca5a45c2140 100644
->> --- a/Documentation/virt/kvm/index.rst
->> +++ b/Documentation/virt/kvm/index.rst
->> @@ -14,6 +14,7 @@ KVM
->>      s390/index
->>      ppc-pv
->>      x86/index
->> +   loongarch/index
->>      locking
->>      vcpu-requests
->> diff --git a/Documentation/virt/kvm/loongarch/hypercalls.rst 
->> b/Documentation/virt/kvm/loongarch/hypercalls.rst
->> new file mode 100644
->> index 000000000000..1679e48d67d2
->> --- /dev/null
->> +++ b/Documentation/virt/kvm/loongarch/hypercalls.rst
->> @@ -0,0 +1,79 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +===================================
->> +The LoongArch paravirtual interface
->> +===================================
->> +
->> +KVM hypercalls use the HVCL instruction with code 0x100, and the 
->> hypercall
->> +number is put in a0 and up to five arguments may be placed in a1-a5, the
->> +return value is placed in v0 (alias with a0).
-> 
-> Just say a0: the name v0 is long deprecated (has been the case ever 
-> since LoongArch got mainlined).
-> 
-Sure, will modify since you are compiler export :)
+Signed-off-by: WANG Rui <wangrui@loongson.cn>
+---
+base-commit: ("rust: Refactor the build target to allow the use of builtin targets")
+Link: https://lore.kernel.org/r/20231020155056.3495121-2-Jamie.Cunliffe@arm.com
+---
+ arch/loongarch/Makefile         | 2 +-
+ rust/Makefile                   | 2 +-
+ scripts/Makefile                | 2 +-
+ scripts/generate_rust_target.rs | 7 +------
+ 4 files changed, 4 insertions(+), 9 deletions(-)
 
->> +
->> +The code for that interface can be found in arch/loongarch/kvm/*
->> +
->> +Querying for existence
->> +======================
->> +
->> +To find out if we're running on KVM or not, cpucfg can be used with 
->> index
->> +CPUCFG_KVM_BASE (0x40000000), cpucfg range between 0x40000000 - 
->> 0x400000FF
->> +is marked as a specially reserved range. All existing and future 
->> processors
->> +will not implement any features in this range.
->> +
->> +When Linux is running on KVM, cpucfg with index CPUCFG_KVM_BASE 
->> (0x40000000)
->> +returns magic string "KVM\0"
->> +
->> +Once you determined you're running under a PV capable KVM, you can 
->> now use
->> +hypercalls as described below.
-> 
-> So this is still the approach similar to the x86 CPUID-based 
-> implementation. But here the non-privileged behavior isn't specified -- 
-> I see there is PLV checking in Patch 3 but it's safer to have the 
-> requirement spelled out here too.
-> 
-> But I still think this approach touches more places than strictly 
-> needed. As it is currently the case in 
-> arch/loongarch/kernel/cpu-probe.c, the FEATURES IOCSR is checked for a 
-> bit IOCSRF_VM that already signifies presence of a hypervisor; if this 
-> information can be interpreted as availability of the HVCL instruction 
-> (which I suppose is the case -- a hypervisor can always trap-and-emulate 
-> in case HVCL isn't provided by hardware), here we can already start 
-> making calls with HVCL.
-> 
-> We can and should define a uniform interface for probing the hypervisor 
-> kind, similar to the centrally-managed RISC-V SBI implementation ID 
-> registry [1]: otherwise future non-KVM hypervisors would have to
-> 
-> 1. somehow pretend they are KVM and eventually fail to do so, leading to 
-> subtle incompatibilities,
-> 2. invent another way of probing for their existence,
-> 3. piggy-back on the current KVM definition, which is inelegant (reading 
-> the LoongArch-KVM-defined CPUCFG leaf only to find it's not KVM) and 
-> utterly makes the definition here *not* KVM-specific.
-> 
-> [1]: 
-> https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0/src/ext-base.adoc
-> 
-Sorry, I know nothing about riscv. Can you describe how sbi_get_mimpid() 
-is implemented in detailed? Is it a simple library or need trap into 
-secure mode or need trap into hypervisor mode?
-
-> My take on this:
-> 
-> To check if we are running on Linux KVM or not, first check IOCSR 0x8 
-> (``LOONGARCH_IOCSR_FEATURES``) for bit 11 (``IOCSRF_VM``); we are 
-> running under a hypervisor if the bit is set. Then invoke ``HVCL 0`` to 
-> find out the hypervisor implementation ID; a return value in ``$a0`` of 
-> 0x004d564b (``KVM\0``) means Linux KVM, in which case the rest of the 
-> convention applies.
-> 
-I do not think so. `HVCL 0` requires that hypercall ABIs need be unified 
-for all hypervisors. Instead it is not necessary, each hypervisor can 
-has its own hypercall ABI.
-
->> +
->> +KVM hypercall ABI
->> +=================
->> +
->> +Hypercall ABI on KVM is simple, only one scratch register a0 (v0) and 
->> at most
->> +five generic registers used as input parameter. FP register and 
->> vector register
->> +is not used for input register and should not be modified during 
->> hypercall.
->> +Hypercall function can be inlined since there is only one scratch 
->> register.
-> 
-> It should be pointed out explicitly that on hypercall return all 
-Well, return value description will added. What do think about the 
-meaning of return value for KVM_HCALL_FUNC_PV_IPI hypercall?  The number 
-of CPUs with IPI delivered successfully like kvm x86 or simply 
-success/failure?
-> architectural state except ``$a0`` is preserved. Or is the whole ``$a0 - 
-> $t8`` range clobbered, just like with Linux syscalls?
-> 
-what is advantage with $a0 - > $t8 clobbered?
-
-It seems that with linux Loongarch syscall, t0--t8 are clobber rather 
-than a0-t8. Am I wrong?
-
->> +
->> +The parameters are as follows:
->> +
->> +        ========    ================    ================
->> +    Register    IN            OUT
->> +        ========    ================    ================
->> +    a0        function number        Return code
->> +    a1        1st parameter        -
->> +    a2        2nd parameter        -
->> +    a3        3rd parameter        -
->> +    a4        4th parameter        -
->> +    a5        5th parameter        -
->> +        ========    ================    ================
->> +
->> +Return codes can be as follows:
->> +
->> +    ====        =========================
->> +    Code        Meaning
->> +    ====        =========================
->> +    0        Success
->> +    -1        Hypercall not implemented
->> +    -2        Hypercall parameter error
-> 
-> What about re-using well-known errno's, like -ENOSYS for "hypercall not 
-> implemented" and -EINVAL for "invalid parameter"? This could save people 
-> some hair when more error codes are added in the future.
-> 
-No, I do not think so. Here is hypercall return value, some OS need see 
-it. -ENOSYS/-EINVAL may be not understandable for non-Linux OS.
-
->> +    ====        =========================
->> +
->> +KVM Hypercalls Documentation
->> +============================
->> +
->> +The template for each hypercall is:
->> +1. Hypercall name
->> +2. Purpose
->> +
->> +1. KVM_HCALL_FUNC_PV_IPI
->> +------------------------
->> +
->> +:Purpose: Send IPIs to multiple vCPUs.
->> +
->> +- a0: KVM_HCALL_FUNC_PV_IPI
->> +- a1: lower part of the bitmap of destination physical CPUIDs
->> +- a2: higher part of the bitmap of destination physical CPUIDs
->> +- a3: the lowest physical CPUID in bitmap
-> 
-> "CPU ID", instead of "CPUID" for clarity: I suppose most people reading 
-> this also know about x86, so "CPUID" could evoke the wrong intuition.
-> 
-Both "CPU core id" or "CPUID" are ok for me since there is csr register 
-named LOONGARCH_CSR_CPUID already.
-
-> This function is equivalent to the C signature "void hypcall(int func, 
-> u128 mask, int lowest_cpu_id)", which I think is fine, but one can also 
-> see that the return value description is missing.
-> 
-Sure, the return value description will added.
-
-And it is not equivalent to the C signature "void hypcall(int func, u128 
-mask, int lowest_cpu_id)". int/u128/stucture is not permitted with 
-hypercall ABI, all parameter is "unsigned long".
-
-Regards
-Bibo Mao
-
->> +
->> +The hypercall lets a guest send multicast IPIs, with at most 128
->> +destinations per hypercall.  The destinations are represented by a 
->> bitmap
->> +contained in the first two arguments (a1 and a2). Bit 0 of a1 
->> corresponds
->> +to the physical CPUID in the third argument (a3), bit 1 corresponds 
->> to the
->> +physical ID a3+1, and so on.
->> diff --git a/Documentation/virt/kvm/loongarch/index.rst 
->> b/Documentation/virt/kvm/loongarch/index.rst
->> new file mode 100644
->> index 000000000000..83387b4c5345
->> --- /dev/null
->> +++ b/Documentation/virt/kvm/loongarch/index.rst
->> @@ -0,0 +1,10 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +=========================
->> +KVM for LoongArch systems
->> +=========================
->> +
->> +.. toctree::
->> +   :maxdepth: 2
->> +
->> +   hypercalls.rst
-> 
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index df6caf79537a..17aabe7b0315 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -101,7 +101,7 @@ ifdef CONFIG_OBJTOOL
+ KBUILD_CFLAGS			+= -fno-jump-tables
+ endif
+ 
+-KBUILD_RUSTFLAGS			+= --target=$(objtree)/scripts/target.json
++KBUILD_RUSTFLAGS			+= --target=loongarch64-unknown-none-softfloat
+ KBUILD_RUSTFLAGS_MODULE		+= -Crelocation-model=pic
+ 
+ ifeq ($(CONFIG_RELOCATABLE),y)
+diff --git a/rust/Makefile b/rust/Makefile
+index fe045dbc701e..cb40a1ce1331 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -437,7 +437,7 @@ $(obj)/core.o: private rustc_objcopy = $(foreach sym,$(redirect-intrinsics),--re
+ $(obj)/core.o: private rustc_target_flags = $(core-cfgs)
+ $(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs FORCE
+ 	$(call if_changed_dep,rustc_library)
+-ifneq ($(or $(CONFIG_X86_64),$(CONFIG_LOONGARCH)),)
++ifdef CONFIG_X86_64
+ $(obj)/core.o: scripts/target.json
+ endif
+ 
+diff --git a/scripts/Makefile b/scripts/Makefile
+index bc90520a5426..fe56eeef09dd 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -12,7 +12,7 @@ hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)	+= insert-sys-cert
+ hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_builder
+ hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_gen
+ 
+-ifneq ($(or $(CONFIG_X86_64),$(CONFIG_LOONGARCH)),)
++ifdef CONFIG_X86_64
+ always-$(CONFIG_RUST)					+= target.json
+ filechk_rust_target = $< < include/config/auto.conf
+ 
+diff --git a/scripts/generate_rust_target.rs b/scripts/generate_rust_target.rs
+index 54919cf48621..acd3b1acef83 100644
+--- a/scripts/generate_rust_target.rs
++++ b/scripts/generate_rust_target.rs
+@@ -164,12 +164,7 @@ fn main() {
+         ts.push("llvm-target", "x86_64-linux-gnu");
+         ts.push("target-pointer-width", "64");
+     } else if cfg.has("LOONGARCH") {
+-        ts.push("arch", "loongarch64");
+-        ts.push("data-layout", "e-m:e-p:64:64-i64:64-i128:128-n64-S128");
+-        ts.push("features", "-f,-d");
+-        ts.push("llvm-target", "loongarch64-linux-gnusf");
+-        ts.push("llvm-abiname", "lp64s");
+-        ts.push("target-pointer-width", "64");
++        panic!("loongarch uses the builtin rustc loongarch64-unknown-none-softfloat target");
+     } else {
+         panic!("Unsupported architecture");
+     }
+-- 
+2.44.0
 
