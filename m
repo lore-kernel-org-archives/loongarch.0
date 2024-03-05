@@ -1,145 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DA56127;
-	Tue,  5 Mar 2024 14:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E9418AE0;
+	Tue,  5 Mar 2024 18:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709649629; cv=none; b=oHX6gK2ykHNJXUetBgsNwgMbD6qdEA7JQD+VBGR8HGZqjvsPJcpUb3N2blwylerrlWpebTGXgqHTbO9HpxAMjUFS4ppTFmPZTbqZRNfxToMr/iw0nwayMkqv8lNEJ7WaDf8rcDgy/z4XaOuVhZ682ZIoR5WgdyAeGcMrS94NCQ8=
+	t=1709663183; cv=none; b=S4Z2tw4QIh8n/ReRSkSDfzoiEsm7G2F6khJNJ+xliqN6KDC669gAgYkea+d/zl3SfPtZvqk9zC4QwWCtIxtUZ6Dv7m94xYYWbUroGVHTSW+HNTnTXXCKhTav1RjDYZ4emvPrK9YpwmPFxD8GBNdtUSoMGZa245qGyXJr3Nd5aBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709649629; c=relaxed/simple;
-	bh=TzU/yVqfFw2Z0bXsBGHvM4X/+uETrSFIV0dy36+M3uA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rERsTf0r2KrTXAUhPfgo/coyjcXobz0wZsJxPl2atE0vtEXe/2HivOZW2fBzq455bhkndEvomGB+ff8SFCWQgjiKsw43rLUV4w8QzOwhxmYJvwG0LpeurEMo1FpLNS6Tf5cbN16pGkgBW/DMrmFiem0WXOmy8Hvyp1vFJb8B8qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E4AC433F1;
-	Tue,  5 Mar 2024 14:40:26 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Define the __io_aw() hook as mmiowb()
-Date: Tue,  5 Mar 2024 22:39:58 +0800
-Message-ID: <20240305143958.1752241-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1709663183; c=relaxed/simple;
+	bh=WNffBT41r5F0XyJ7MFk8QsD65CMScBYk1QPLYhExK8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aJbsy6H6SgN7lDCcIle+Q/qHZPZbJDiU2NinjnqiTEiJ3z0eg9+KxnsxPqzN2Fz2XgxtxMOlc5jfeEh4fQHgFdhCPp3cms2vF0yJfidu+ly0D4jh5yrRvOmbuL15qf4SisjH0AbU0jnUD/hyo6nPgciYg3lsokSgGjxnS8wHsq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=Gj3rJTE4; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="Gj3rJTE4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1709663171; bh=WNffBT41r5F0XyJ7MFk8QsD65CMScBYk1QPLYhExK8U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Gj3rJTE4Xx3wNJQce3qkYCM6NYncvK5hc0F86WWBKwv2x62hB2XsL2VccgAK0xs5s
+	 BG6+or8HD2sQlbxrbymoHoO5rdAmQfh8Ece349RdQGaJ5L0xKiGew2G03DpbzwAJEh
+	 dKrY3/3xm5Olljr7p+9afGsitGUuwP7AGyt9U0AE=
+Received: from [IPV6:240e:388:8d00:6500:3d21:65e4:41f4:2696] (unknown [IPv6:240e:388:8d00:6500:3d21:65e4:41f4:2696])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 18FFE60106;
+	Wed,  6 Mar 2024 02:26:11 +0800 (CST)
+Message-ID: <ec871702-388d-4a29-aec1-5cd6d1de6d0a@xen0n.name>
+Date: Wed, 6 Mar 2024 02:26:10 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 7/7] Documentation: KVM: Add hypercall for LoongArch
+Content-Language: en-US
+To: maobibo <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org
+References: <20240302082532.1415200-1-maobibo@loongson.cn>
+ <20240302084724.1415344-1-maobibo@loongson.cn>
+ <846a5e46-4e8f-4f73-ac5b-323e78ec1bb1@xen0n.name>
+ <853f2909-e455-bd1c-c6a4-6a13beb37125@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <853f2909-e455-bd1c-c6a4-6a13beb37125@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Commit fb24ea52f78e0d595852e ("drivers: Remove explicit invocations of
-mmiowb()") remove all mmiowb() in drivers, but it says:
+On 3/4/24 17:10, maobibo wrote:
+> On 2024/3/2 下午5:41, WANG Xuerui wrote:
+>> On 3/2/24 16:47, Bibo Mao wrote:
+>>> [snip]
+>>> +Querying for existence
+>>> +======================
+>>> +
+>>> +To find out if we're running on KVM or not, cpucfg can be used with 
+>>> index
+>>> +CPUCFG_KVM_BASE (0x40000000), cpucfg range between 0x40000000 - 
+>>> 0x400000FF
+>>> +is marked as a specially reserved range. All existing and future 
+>>> processors
+>>> +will not implement any features in this range.
+>>> +
+>>> +When Linux is running on KVM, cpucfg with index CPUCFG_KVM_BASE 
+>>> (0x40000000)
+>>> +returns magic string "KVM\0"
+>>> +
+>>> +Once you determined you're running under a PV capable KVM, you can 
+>>> now use
+>>> +hypercalls as described below.
+>>
+>> So this is still the approach similar to the x86 CPUID-based 
+>> implementation. But here the non-privileged behavior isn't specified 
+>> -- I see there is PLV checking in Patch 3 but it's safer to have the 
+>> requirement spelled out here too.
+>>
+>> But I still think this approach touches more places than strictly 
+>> needed. As it is currently the case in 
+>> arch/loongarch/kernel/cpu-probe.c, the FEATURES IOCSR is checked for a 
+>> bit IOCSRF_VM that already signifies presence of a hypervisor; if this 
+>> information can be interpreted as availability of the HVCL instruction 
+>> (which I suppose is the case -- a hypervisor can always 
+>> trap-and-emulate in case HVCL isn't provided by hardware), here we can 
+>> already start making calls with HVCL.
+>>
+>> We can and should define a uniform interface for probing the 
+>> hypervisor kind, similar to the centrally-managed RISC-V SBI 
+>> implementation ID registry [1]: otherwise future non-KVM hypervisors 
+>> would have to
+>>
+>> 1. somehow pretend they are KVM and eventually fail to do so, leading 
+>> to subtle incompatibilities,
+>> 2. invent another way of probing for their existence,
+>> 3. piggy-back on the current KVM definition, which is inelegant 
+>> (reading the LoongArch-KVM-defined CPUCFG leaf only to find it's not 
+>> KVM) and utterly makes the definition here *not* KVM-specific.
+>>
+>> [1]: 
+>> https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0/src/ext-base.adoc
+>>
+> Sorry, I know nothing about riscv. Can you describe how sbi_get_mimpid() 
+> is implemented in detailed? Is it a simple library or need trap into 
+> secure mode or need trap into hypervisor mode?
 
-"NOTE: mmiowb() has only ever guaranteed ordering in conjunction with
-spin_unlock(). However, pairing each mmiowb() removal in this patch with
-the corresponding call to spin_unlock() is not at all trivial, so there
-is a small chance that this change may regress any drivers incorrectly
-relying on mmiowb() to order MMIO writes between CPUs using lock-free
-synchronisation."
+For these simple interfaces you can expect trivial implementation. See 
+for example [OpenSBI]'s respective code.
 
-The mmio in radeon_ring_commit() is protected by a mutex rather than a
-spinlock, but in the mutex fastpath it behaves similar to spinlock. We
-can add mmiowb() calls in the radeon driver but the maintainer says he
-doesn't like such a workaround, and radeon is not the only example of
-mutex protected mmio.
+[OpenSBI]: 
+https://github.com/riscv-software-src/opensbi/blob/v1.4/lib/sbi/sbi_ecall.c#L29-L34
 
-So we should extend the mmiowb tracking system from spinlock to mutex,
-and maybe other locking primitives. This is not easy and error prone, so
-we solve it in the architectural code, by simply defining the __io_aw()
-hook as mmiowb(). And we no longer need to override queued_spin_unlock()
-so use the generic definition.
+>> My take on this:
+>>
+>> To check if we are running on Linux KVM or not, first check IOCSR 0x8 
+>> (``LOONGARCH_IOCSR_FEATURES``) for bit 11 (``IOCSRF_VM``); we are 
+>> running under a hypervisor if the bit is set. Then invoke ``HVCL 0`` 
+>> to find out the hypervisor implementation ID; a return value in 
+>> ``$a0`` of 0x004d564b (``KVM\0``) means Linux KVM, in which case the 
+>> rest of the convention applies.
+>>
+> I do not think so. `HVCL 0` requires that hypercall ABIs need be unified 
+> for all hypervisors. Instead it is not necessary, each hypervisor can 
+> has its own hypercall ABI.
 
-Without this, we get such an error when run 'glxgears' on weak ordering
-architectures such as LoongArch:
+I don't think agreeing upon the ABI of HVCL 0 is going to affect ABI of 
+other hypercalls. Plus, as long as people don't invent something that 
+they think is smart and deviate from the platform calling convention, 
+I'd expect every hypervisor to have identical ABI apart from the exact 
+HVCL operation ID chosen.
 
-radeon 0000:04:00.0: ring 0 stalled for more than 10324msec
-radeon 0000:04:00.0: ring 3 stalled for more than 10240msec
-radeon 0000:04:00.0: GPU lockup (current fence id 0x000000000001f412 last fence id 0x000000000001f414 on ring 3)
-radeon 0000:04:00.0: GPU lockup (current fence id 0x000000000000f940 last fence id 0x000000000000f941 on ring 0)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
+>>> +
+>>> +KVM hypercall ABI
+>>> +=================
+>>> +
+>>> +Hypercall ABI on KVM is simple, only one scratch register a0 (v0) 
+>>> and at most
+>>> +five generic registers used as input parameter. FP register and 
+>>> vector register
+>>> +is not used for input register and should not be modified during 
+>>> hypercall.
+>>> +Hypercall function can be inlined since there is only one scratch 
+>>> register.
+>>
+>> It should be pointed out explicitly that on hypercall return all 
+> Well, return value description will added. What do think about the 
+> meaning of return value for KVM_HCALL_FUNC_PV_IPI hypercall?  The number 
+> of CPUs with IPI delivered successfully like kvm x86 or simply 
+> success/failure?
+>> architectural state except ``$a0`` is preserved. Or is the whole ``$a0 
+>> - $t8`` range clobbered, just like with Linux syscalls?
+>>
+> what is advantage with $a0 - > $t8 clobbered?
 
-Link: https://lore.kernel.org/dri-devel/29df7e26-d7a8-4f67-b988-44353c4270ac@amd.com/T/#t
-Link: https://lore.kernel.org/linux-arch/20240301130532.3953167-1-chenhuacai@loongson.cn/T/#t
-Cc: stable@vger.kernel.org
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/Kbuild      |  1 +
- arch/loongarch/include/asm/io.h        |  2 ++
- arch/loongarch/include/asm/qspinlock.h | 18 ------------------
- 3 files changed, 3 insertions(+), 18 deletions(-)
- delete mode 100644 arch/loongarch/include/asm/qspinlock.h
+Because then a hypercall is going to behave identical as an ordinary C 
+function call, which is easy for people and compilers to understand.
 
-diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
-index a97c0edbb866..2dbec7853ae8 100644
---- a/arch/loongarch/include/asm/Kbuild
-+++ b/arch/loongarch/include/asm/Kbuild
-@@ -6,6 +6,7 @@ generic-y += mcs_spinlock.h
- generic-y += parport.h
- generic-y += early_ioremap.h
- generic-y += qrwlock.h
-+generic-y += qspinlock.h
- generic-y += rwsem.h
- generic-y += segment.h
- generic-y += user.h
-diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
-index c486c2341b66..4a8adcca329b 100644
---- a/arch/loongarch/include/asm/io.h
-+++ b/arch/loongarch/include/asm/io.h
-@@ -71,6 +71,8 @@ extern void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t
- #define memcpy_fromio(a, c, l) __memcpy_fromio((a), (c), (l))
- #define memcpy_toio(c, a, l)   __memcpy_toio((c), (a), (l))
- 
-+#define __io_aw() mmiowb()
-+
- #include <asm-generic/io.h>
- 
- #define ARCH_HAS_VALID_PHYS_ADDR_RANGE
-diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
-deleted file mode 100644
-index 34f43f8ad591..000000000000
---- a/arch/loongarch/include/asm/qspinlock.h
-+++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _ASM_QSPINLOCK_H
--#define _ASM_QSPINLOCK_H
--
--#include <asm-generic/qspinlock_types.h>
--
--#define queued_spin_unlock queued_spin_unlock
--
--static inline void queued_spin_unlock(struct qspinlock *lock)
--{
--	compiletime_assert_atomic_type(lock->locked);
--	c_sync();
--	WRITE_ONCE(lock->locked, 0);
--}
--
--#include <asm-generic/qspinlock.h>
--
--#endif /* _ASM_QSPINLOCK_H */
+> It seems that with linux Loongarch syscall, t0--t8 are clobber rather 
+> than a0-t8. Am I wrong?
+
+You're right, my memory has faded a bit. But I think my reasoning still 
+holds.
+
+>>> +
+>>> +The parameters are as follows:
+>>> +
+>>> +        ========    ================    ================
+>>> +    Register    IN            OUT
+>>> +        ========    ================    ================
+>>> +    a0        function number        Return code
+>>> +    a1        1st parameter        -
+>>> +    a2        2nd parameter        -
+>>> +    a3        3rd parameter        -
+>>> +    a4        4th parameter        -
+>>> +    a5        5th parameter        -
+>>> +        ========    ================    ================
+>>> +
+>>> +Return codes can be as follows:
+>>> +
+>>> +    ====        =========================
+>>> +    Code        Meaning
+>>> +    ====        =========================
+>>> +    0        Success
+>>> +    -1        Hypercall not implemented
+>>> +    -2        Hypercall parameter error
+>>
+>> What about re-using well-known errno's, like -ENOSYS for "hypercall 
+>> not implemented" and -EINVAL for "invalid parameter"? This could save 
+>> people some hair when more error codes are added in the future.
+>>
+> No, I do not think so. Here is hypercall return value, some OS need see 
+> it. -ENOSYS/-EINVAL may be not understandable for non-Linux OS.
+
+As long as you accept the associated costs (documentation, potential 
+mapping back-and-forth, proper conveyance of information etc.) I have no 
+problem with that either.
+
+>>> +    ====        =========================
+>>> +
+>>> +KVM Hypercalls Documentation
+>>> +============================
+>>> +
+>>> +The template for each hypercall is:
+>>> +1. Hypercall name
+>>> +2. Purpose
+>>> +
+>>> +1. KVM_HCALL_FUNC_PV_IPI
+>>> +------------------------
+>>> +
+>>> +:Purpose: Send IPIs to multiple vCPUs.
+>>> +
+>>> +- a0: KVM_HCALL_FUNC_PV_IPI
+>>> +- a1: lower part of the bitmap of destination physical CPUIDs
+>>> +- a2: higher part of the bitmap of destination physical CPUIDs
+>>> +- a3: the lowest physical CPUID in bitmap
+>>
+>> "CPU ID", instead of "CPUID" for clarity: I suppose most people 
+>> reading this also know about x86, so "CPUID" could evoke the wrong 
+>> intuition.
+>>
+> Both "CPU core id" or "CPUID" are ok for me since there is csr register 
+> named LOONGARCH_CSR_CPUID already.
+
+I was suggesting to minimize confusion even at theoretical level, 
+because you cannot assume anything about your readers. Feel free to 
+provide extra info (e.g. the "CPU core ID" you suggested) as long as it 
+helps to resolve any potential ambiguity / confusion.
+
+>> This function is equivalent to the C signature "void hypcall(int func, 
+>> u128 mask, int lowest_cpu_id)", which I think is fine, but one can 
+>> also see that the return value description is missing.
+>>
+> Sure, the return value description will added.
+> 
+> And it is not equivalent to the C signature "void hypcall(int func, u128 
+> mask, int lowest_cpu_id)". int/u128/stucture is not permitted with 
+> hypercall ABI, all parameter is "unsigned long".
+
+I was talking about the ABI in a C perspective, and the register usage 
+is identical. You can define the KVM hypercall ABI however you want but 
+having some nice analogy/equivalence would help a lot, especially for 
+people not already familiar with all the details.
+
 -- 
-2.43.0
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
