@@ -1,87 +1,124 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577DF59B7F;
-	Tue,  5 Mar 2024 10:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 476E454FA7
+	for <loongarch@lists.linux.dev>; Tue,  5 Mar 2024 11:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709636376; cv=none; b=aZz03g1KirEZW+iCT4kNzJbaAwc+A++gSJtpE46aUl58h0pIQFPRRfByPNJNvKGhhNzHD57ChrWTKMpwpP1DOgko5zPn1HzVskTEG3ZTzedOzeyvlWrAhMFFVLpAsYY+lGsfP1O2SVSInrO48+DmRE/RMgt6Oo+RFMe0GnZdvgo=
+	t=1709638429; cv=none; b=aIh35EUryRm/ui+AdWJa/34BEPRzktKnHK/Q5JhWv4RBDjSCeikEVMkkyM0/cDkanDoMp17Ap/eWhcymwz7/mYOaD2bTgpEfcvM9jnTtTX9TXUrzwarXeKMpSRialUgDbOO0mnU7ZsvSKjZBGqy1lw4/f/XM+P6zezJ3CPztcSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709636376; c=relaxed/simple;
-	bh=rkU/EUWBtwWWABqUxTFkTNu+QCtdjbQlVV4iGQMgjT8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=m2JUoL61m6nwAzeLs7V1xWdu+Z76w4eci5hdBe9OpDw49sp4Y31fOleCVVNzBDaSNEUBvF8xPWPehptTjyGWupux3YPQ1OneutJdPKb4mERinxuRtOiLnbyrRfoXxkpm3S/yyCVfPa7fXKtRamGRjuuRPQ36RSiQoUSXy9gxZew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=X7C4VvEe; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="X7C4VvEe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=FUU17H/883Su4y5t0ORguJT8aM0bkdnEyWS9d9zukeE=;
-	t=1709636375; x=1710845975; b=X7C4VvEe0XoukI77UaTDV4bGeCXBV771Gu9ERiz88HDBiMA
-	wiNhlP1PONCTqxxUB9re9XIa88z3+CUro2HByrE1SwpDCdmvJ9HpF6TuZok1Fd4UpvUKgtgeg1AO/
-	0vlwVi61MyGG2XAo8o11z/RxWuMl+aNIbXcBVj0pouC7eK8arBWgyrhCIT8tdKCfgrVLIKd+PbO9V
-	G/oFZNV3Uy8fq6YJZcgmiGaNWrnsz/DSuBFPGa+1OSISxTVNDNv7guStZ8OyeTzVhDLBGavPzligP
-	ihDx+kYtd9pcb9l2YFWRSJVg8dShtvbYbV2G+j6R2scs2U/kaX2K0cICt89n95ZA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rhSVn-00000002j5H-3fnE;
-	Tue, 05 Mar 2024 11:59:08 +0100
-Message-ID: <65f6e65e90ca5f134ef1a238a38ab02a6c1c3360.camel@sipsolutions.net>
-Subject: Re: [PATCH 3/4] arch: define CONFIG_PAGE_SIZE_*KB on all
- architectures
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Kees Cook
- <keescook@chromium.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet
- Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin
- Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>, Brian Cain
- <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, Geert
- Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller
- <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Palmer Dabbelt <palmer@dabbelt.com>, John
- Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,  Andreas Larsson
- <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, x86@kernel.org,
- Max Filippov <jcmvbkbc@gmail.com>, Andy Lutomirski <luto@kernel.org>, Jan
- Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org,  linux-um@lists.infradead.org
-Date: Tue, 05 Mar 2024 11:59:05 +0100
-In-Reply-To: <20240226161414.2316610-4-arnd@kernel.org>
-References: <20240226161414.2316610-1-arnd@kernel.org>
-	 <20240226161414.2316610-4-arnd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1709638429; c=relaxed/simple;
+	bh=Dob+dauGojVOH765x0xny+31pEVfg1FQeksdsGbh874=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WTa6J2aB35u5ox5Jsm8/WxV/4fBAQY2lQpNhV/JdMwkLjkIrt72S2k5AvcbEvzBaV1dMkUWBNkK4CJLI4bEn8msg8XYt5EXKPXIazibjXZ3/f0fP+O36EGcdr2dcOl0OxB3gYDmp6ZCjUMHbsnoX2oOCWAvwmgxc0jZBi7UdzZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxafAYA+dlgL8UAA--.52206S3;
+	Tue, 05 Mar 2024 19:33:45 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHBMXA+dlHIdOAA--.12290S2;
+	Tue, 05 Mar 2024 19:33:43 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH] LoongArch: KVM: Set reserved bit as zero about cpucfg
+Date: Tue,  5 Mar 2024 19:33:43 +0800
+Message-Id: <20240305113343.1667480-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxHBMXA+dlHIdOAA--.12290S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kw4xtFWrGF1xJr4xZrWfCrX_yoW8Zr4kpr
+	4Uurs5WryrKr1Iq3ZYqryv9r45Gr4xCrW7AFyFyayq9r1DWry7XrWrKFZxtF1rW34fuFyx
+	uws5Aa1Y9a1DAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
+	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU8fsqJUUUUU==
 
-On Mon, 2024-02-26 at 17:14 +0100, Arnd Bergmann wrote:
->=20
->  arch/um/Kconfig                    | 1 +
->  arch/um/include/asm/page.h         | 2 +-
+Supported cpucfg information comes from function _kvm_get_cpucfg_mask().
+It should be zero if it is reserved by HW or if it is not supported
+by KVM.
 
+Also LoongArch software page table walk feature defined in CPUCFG2_PTW
+is supported by KVM, it should be enabled by default.
 
-LGTM, thanks.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/vcpu.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
-Acked-by: Johannes Berg <johannes@sipsolutions.net>
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 36106922b5d7..fc25c406021c 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -304,11 +304,15 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ 		return -EINVAL;
+ 
+ 	switch (id) {
+-	case 2:
++	case LOONGARCH_CPUCFG1:
++		/* CPUCFG1_MSGINT is not supported by KVM */
++		*v = GENMASK(25, 0);
++		return 0;
++	case LOONGARCH_CPUCFG2:
+ 		/* CPUCFG2 features unconditionally supported by KVM */
+ 		*v = CPUCFG2_FP     | CPUCFG2_FPSP  | CPUCFG2_FPDP     |
+ 		     CPUCFG2_FPVERS | CPUCFG2_LLFTP | CPUCFG2_LLFTPREV |
+-		     CPUCFG2_LAM;
++		     CPUCFG2_LSPW | CPUCFG2_LAM;
+ 		/*
+ 		 * For the ISA extensions listed below, if one is supported
+ 		 * by the host, then it is also supported by KVM.
+@@ -318,6 +322,21 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ 		if (cpu_has_lasx)
+ 			*v |= CPUCFG2_LASX;
+ 
++		return 0;
++	case LOONGARCH_CPUCFG3:
++		*v = GENMASK(16, 0);
++		return 0;
++	case LOONGARCH_CPUCFG6:
++		/* PMU is not supported by KVM now */
++	case LOONGARCH_CPUCFG6 + 1 ... LOONGARCH_CPUCFG16 - 1:
++		/* Not used by HW now, need be zero */
++		*v = 0;
++		return 0;
++	case LOONGARCH_CPUCFG16:
++		*v = GENMASK(16, 0);
++		return 0;
++	case LOONGARCH_CPUCFG17 ... LOONGARCH_CPUCFG20:
++		*v = GENMASK(30, 0);
+ 		return 0;
+ 	default:
+ 		/*
+@@ -344,7 +363,7 @@ static int kvm_check_cpucfg(int id, u64 val)
+ 		return -EINVAL;
+ 
+ 	switch (id) {
+-	case 2:
++	case LOONGARCH_CPUCFG2:
+ 		if (!(val & CPUCFG2_LLFTP))
+ 			/* Guests must have a constant timer */
+ 			return -EINVAL;
+-- 
+2.39.3
 
-johannes
