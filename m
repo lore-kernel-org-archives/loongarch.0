@@ -1,192 +1,120 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614031B957
-	for <loongarch@lists.linux.dev>; Tue,  5 Mar 2024 18:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510441BC26
+	for <loongarch@lists.linux.dev>; Tue,  5 Mar 2024 18:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709664052; cv=none; b=uQuy2qCsg/vtKFLXfGBlEtBnksXR5LzmU3NGlwMlhidaPz6GiW1V5ZbqfVE0+1+rVOR8bMrDewzQsrRAxcyCXwBeEE9TYK94pnVERG/j6NTbgVnuH5OxrBMloiqWGlDTv/qgi5U1/H6QwjWiVmtkV5664XLER7NKoibgu5e7Xhg=
+	t=1709665179; cv=none; b=M7SBj6CgZE0bzP/LGdiRiccllbUn90Azwh3HmR0gqolezWDTP+WPgRMm2vdONc77xqNqlp/rTYFD/eRhV38ZQ8Lj1/socLG1pELu+UtpYFDldl1PQUwr8OFhFQpBAI7pO0oWsOV9C7VZG5Z0AohB6sObA39uHs9imA/Cga+c51w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709664052; c=relaxed/simple;
-	bh=noyTquE0oeh4bMQGWb9TTkaxmt5wl0t40DilAAM+zUE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lNj7/j65zBJoae1RpjzEKSBSkXJ3HBTZd5M8NKBKC+e+Zp1ajXEajQ1e6U6MDE8I8Avx3pXQW1Dq4Ky8g8QLuj+SJOSmM3yCPOna5F3e9BaLZqySMzBK30uoohnhCNbAFtLQ/BZn3I+M4/z1rgq9J739UDAhr5FC13qDRPiqWb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PJYP5f3j; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709665179; c=relaxed/simple;
+	bh=4qkJBm4gkwtI+rJ9ehfIMvBznLFDSZW3rxdS4otCPPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QcpXqtHeJUyU9G5CcUvdSty1nvAwgs0EkiZkFDkxQCLsdpXjrEghK3YOGxx5OVOAVTV5uR4LEiqhglIg6fHuoj2V5gpo98vuAan4jMuf/h+3IBGeduZFLvbpPcdwn4CnZ01WdiQmNSWdx/sv9AbP/nUsiU3ETjkHfqTtQzuaQks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dn9JJQPI; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJYP5f3j"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e627596554so1853208b3a.2
-        for <loongarch@lists.linux.dev>; Tue, 05 Mar 2024 10:40:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709664051; x=1710268851; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X0gUmPSeCCdcwdwoiei/E0Jjh2VpvFQYRxx27Vw8kHc=;
-        b=PJYP5f3jTIK9SoxMwPmkqV34jjpmUlpDv3vArLhXfw8fLNOVmskDNA1ywzEuzYQpWh
-         RqeraCHG3Wtnn8b471F2S+KIUPjYbjWPg7Uho5DBIkpjkSmP+jsjCS0930Z6YN/CXEZ5
-         xAyQUTZzYTpfRhQHYETAJZkHiYmkh5hS5sWvwjyG5c1d3uttAmm0oT0bE+sc8gE0tzbK
-         4FDPhoM63hYayAIbU589hZGf6Pw5KNhrNjY+HH8nTGVtJVBeZJmbrUiLbPZuQ8PGm98+
-         d5EmTQYZmHLcddBEMjRs6H7ISqEC0J/xoODpOwZLgY+4ViDEe804o+8Hnc3Rf9iwzQzS
-         SjvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709664051; x=1710268851;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=X0gUmPSeCCdcwdwoiei/E0Jjh2VpvFQYRxx27Vw8kHc=;
-        b=pBiSc/K3UM/z/sjnrTWHvIuUhgnCdPpDBPcPsJqrlhcCrbeTY6z5hRxuyFwv0hwZxS
-         kF7an+aRC5HQ0GBUifMsfKP+p8AUNeI99qs8Ovgxt5cK9K569IxIWmpOopHIL9eDlFFO
-         xsaRw/Y00E9Hn/4b8cqCdXXUPscPp9RiqmLPGw/62YtPQsqqXENezcqEWObek4uIVCM7
-         x6KYxcfxcbfNy/G/LGc7wUMmd98nBCJvaAUcFtiMGtKd8AeRso0fGWgG/I/ic0fAHSXD
-         RDhbptp0/Z4Mi0C+YSEr640mwFLQRe/rcBf347QSjk3p3s2D55JVUvubuattlJTtxiK9
-         g3iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvK7/nq9y0czzBuhqAt1hwOh8ak5juQd9V4hd8kOBoUCh3y54NSgdWScOn+o9uFmAJcAwu7yYgMNnmVfu9Tes3ZJuEpqpxxj16
-X-Gm-Message-State: AOJu0Yxntyj6YVQa3OKU4UAgXcvuiGkr+mdVhB+Hl9/6QQt/jxPg5Bgz
-	o3kParYldC0OixsmYsytrbdkXJUN1XEZW/G7798ETH3KwQ0TzYbvuuqtK4mb
-X-Google-Smtp-Source: AGHT+IEh5cNC1e3ALin9EYEqP1JMKTTzvFIxop5uA7PitJpNaz0+Cvy9gmZD//Z/el6YtUoATah/OA==
-X-Received: by 2002:a05:6a21:3403:b0:1a0:e089:e25e with SMTP id yn3-20020a056a21340300b001a0e089e25emr2819250pzb.46.1709664050630;
-        Tue, 05 Mar 2024 10:40:50 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p2-20020aa78602000000b006e24991dd5bsm9538237pfn.98.2024.03.05.10.40.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 10:40:49 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: linux-kselftest@vger.kernel.org
-Cc: David Airlie <airlied@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <keescook@chromium.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	kunit-dev@googlegroups.com,
-	linux-arch@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>
-Subject: [RFC PATCH 5/5] loongarch: Add support for suppressing warning tracebacks
-Date: Tue,  5 Mar 2024 10:40:33 -0800
-Message-Id: <20240305184033.425294-6-linux@roeck-us.net>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240305184033.425294-1-linux@roeck-us.net>
-References: <20240305184033.425294-1-linux@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dn9JJQPI"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4258tQh7001427;
+	Tue, 5 Mar 2024 18:59:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=JGG8vIlqUux9Ze8A1exSbeSM6qeUkyMclht+somW8Ic=; b=dn
+	9JJQPI2zIj8ksEvox7sikiFO6e/lGx6WDZdokvMoLavGD1IxVMAfH0My10+pZ1Et
+	uwX1R6JrzdwL0G+Y3+10AHm0pOsTHyj0K2A/GTDEJCJEDh6zvBgP2C541Gf7VPzn
+	4gvunfr+MfchRaBwuj5TLPM0Qe2sKGkXB0b4+DycBDP333BRioWqbPplPvEBwKJq
+	lx5mCfguTFZc6i4c4aXzHIbxyPEtfokaczfWsAenoq8GEEdnR+R23D0nd+/fZ4AP
+	sbrTxo3dXaTT/SK9MDPDoCAILi066eMKRxUjF8NjDyd+Zw7sYPolddzf+Hg+PCEa
+	/plorgR4PnsQYCR3XWgg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wp00x1bak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Mar 2024 18:59:31 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 425IxUCC028680
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 5 Mar 2024 18:59:30 GMT
+Received: from [10.71.110.192] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 5 Mar
+ 2024 10:59:27 -0800
+Message-ID: <467b8479-dfd8-43a4-92eb-d19dc65989cd@quicinc.com>
+Date: Tue, 5 Mar 2024 10:59:20 -0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Restructure init sequence to set aside reserved
+ memory earlier
+To: <chenhuacai@kernel.org>, <jonas@southpole.se>,
+        <stefan.kristiansson@saunalahti.fi>, <shorne@gmail.com>,
+        <ysato@users.sourceforge.jp>, <dalias@libc.org>,
+        <glaubitz@physik.fu-berlin.de>, <robh+dt@kernel.org>,
+        <frowand.list@gmail.com>
+CC: <linux-openrisc@vger.kernel.org>, <loongarch@lists.linux.dev>,
+        <linux-sh@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <kernel@quicinc.com>
+References: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com>
+Content-Language: en-US
+From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+In-Reply-To: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: CB9Kpu3dCVofJSSAHKIFdpa3x8HFPqVI
+X-Proofpoint-GUID: CB9Kpu3dCVofJSSAHKIFdpa3x8HFPqVI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-05_16,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1011 mlxscore=0 mlxlogscore=675
+ impostorscore=0 phishscore=0 adultscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403050152
 
-Add support for selectively suppressing WARNING tracebacks to loongarch.
-This requires adding the function triggering tracebacks to the __bug_table
-object section.
 
-To limit image size impact, the pointer to the function name is only added
-to the __bug_table section if both CONFIG_KUNIT and CONFIG_DEBUG_BUGVERBOSE
-are enabled. Otherwise, the __func__ assembly parameter is replaced with a
-(dummy) NULL parameter to avoid an image size increase due to unused
-__func__ entries (this is necessary because __func__ is not a define but a
-virtual variable).
+On 2/9/2024 4:29 PM, Oreoluwa Babatunde wrote:
+> The loongarch, openric, and sh architectures allocate memory from
+> memblock before it gets the chance to set aside reserved memory regions.
+> This means that there is a possibility for memblock to allocate from
+> memory regions that are supposed to be reserved.
+>
+> This series makes changes to the arch specific setup code to call the
+> functions responsible for setting aside the reserved memory regions earlier
+> in the init sequence.
+> Hence, by the time memblock starts being used to allocate memory, the
+> reserved memory regions should already be set aside, and it will no
+> longer be possible for allocations to come from them.
+>
+> I am currnetly using an arm64 device, and so I will need assistance from
+> the relevant arch maintainers to help check if this breaks anything from
+> compilation to device bootup.
+>
+> Oreoluwa Babatunde (3):
+>   loongarch: Call arch_mem_init() before platform_init() in the init
+>     sequence
+>   openrisc: Call setup_memory() earlier in the init sequence
+>   sh: Call paging_init() earlier in the init sequence
+>
+>  arch/loongarch/kernel/setup.c | 2 +-
+>  arch/openrisc/kernel/setup.c  | 6 +++---
+>  arch/sh/kernel/setup.c        | 4 ++--
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+Hello,
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- arch/loongarch/include/asm/bug.h | 38 +++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+Loongarch patch has already merged for this, but review is still pending
+from openrisc and sh architectures.
+Could someone please comment on these?
 
-diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
-index d4ca3ba25418..25f2b5ae7702 100644
---- a/arch/loongarch/include/asm/bug.h
-+++ b/arch/loongarch/include/asm/bug.h
-@@ -3,47 +3,63 @@
- #define __ASM_BUG_H
- 
- #include <asm/break.h>
-+#include <kunit/bug.h>
- #include <linux/stringify.h>
- 
- #ifndef CONFIG_DEBUG_BUGVERBOSE
--#define _BUGVERBOSE_LOCATION(file, line)
-+#define _BUGVERBOSE_LOCATION(file, func, line)
- #else
--#define __BUGVERBOSE_LOCATION(file, line)			\
-+#if IS_ENABLED(CONFIG_KUNIT)
-+# define HAVE_BUG_FUNCTION
-+# define __BUG_FUNC_PTR(func)  .long func - .;
-+#else
-+# define __BUG_FUNC_PTR(func)
-+#endif
-+
-+#define __BUGVERBOSE_LOCATION(file, func, line)			\
- 		.pushsection .rodata.str, "aMS", @progbits, 1;	\
- 	10002:	.string file;					\
- 		.popsection;					\
- 								\
- 		.long 10002b - .;				\
-+		__BUG_FUNC_PTR(func)				\
- 		.short line;
--#define _BUGVERBOSE_LOCATION(file, line) __BUGVERBOSE_LOCATION(file, line)
-+#define _BUGVERBOSE_LOCATION(file, func, line) __BUGVERBOSE_LOCATION(file, func, line)
- #endif
- 
- #ifndef CONFIG_GENERIC_BUG
--#define __BUG_ENTRY(flags)
-+#define __BUG_ENTRY(flags, func)
- #else
--#define __BUG_ENTRY(flags) 					\
-+#define __BUG_ENTRY(flags, func)				\
- 		.pushsection __bug_table, "aw";			\
- 		.align 2;					\
- 	10000:	.long 10001f - .;				\
--		_BUGVERBOSE_LOCATION(__FILE__, __LINE__)	\
-+		_BUGVERBOSE_LOCATION(__FILE__, func, __LINE__)	\
- 		.short flags; 					\
- 		.popsection;					\
- 	10001:
- #endif
- 
--#define ASM_BUG_FLAGS(flags)					\
--	__BUG_ENTRY(flags)					\
-+#define ASM_BUG_FLAGS(flags, func)				\
-+	__BUG_ENTRY(flags, func)				\
- 	break		BRK_BUG
- 
--#define ASM_BUG()	ASM_BUG_FLAGS(0)
-+#define ASM_BUG()	ASM_BUG_FLAGS(0, .)
-+
-+#ifdef HAVE_BUG_FUNCTION
-+# define __BUG_FUNC    __func__
-+#else
-+# define __BUG_FUNC    NULL
-+#endif
- 
- #define __BUG_FLAGS(flags)					\
--	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags)));
-+	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags, %0)) : : "i" (__BUG_FUNC));
- 
- #define __WARN_FLAGS(flags)					\
- do {								\
- 	instrumentation_begin();				\
--	__BUG_FLAGS(BUGFLAG_WARNING|(flags));			\
-+	if (!IS_SUPPRESSED_WARNING(__func__))			\
-+		__BUG_FLAGS(BUGFLAG_WARNING|(flags));		\
- 	instrumentation_end();					\
- } while (0)
- 
--- 
-2.39.2
+Regards,
 
+Oreoluwa
