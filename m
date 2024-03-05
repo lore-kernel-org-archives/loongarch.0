@@ -1,120 +1,114 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510441BC26
-	for <loongarch@lists.linux.dev>; Tue,  5 Mar 2024 18:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4925BAE6
+	for <loongarch@lists.linux.dev>; Tue,  5 Mar 2024 19:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709665179; cv=none; b=M7SBj6CgZE0bzP/LGdiRiccllbUn90Azwh3HmR0gqolezWDTP+WPgRMm2vdONc77xqNqlp/rTYFD/eRhV38ZQ8Lj1/socLG1pELu+UtpYFDldl1PQUwr8OFhFQpBAI7pO0oWsOV9C7VZG5Z0AohB6sObA39uHs9imA/Cga+c51w=
+	t=1709668449; cv=none; b=UViwD4iRzBtJWJKQbBBS4HZzel50Ofl/nTo16uwHemJ6BELC5ix2d5PudwYkImyItxrpEmBZ/A59Smi34UkxEsJvxaoznK/PgkvKbU9mzRflqsoDyjSyLPxo0oTMglIqcct6PCrcUwRKxGiwcicIUAX2XkTn2LCStNxLpITsDtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709665179; c=relaxed/simple;
-	bh=4qkJBm4gkwtI+rJ9ehfIMvBznLFDSZW3rxdS4otCPPo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QcpXqtHeJUyU9G5CcUvdSty1nvAwgs0EkiZkFDkxQCLsdpXjrEghK3YOGxx5OVOAVTV5uR4LEiqhglIg6fHuoj2V5gpo98vuAan4jMuf/h+3IBGeduZFLvbpPcdwn4CnZ01WdiQmNSWdx/sv9AbP/nUsiU3ETjkHfqTtQzuaQks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dn9JJQPI; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709668449; c=relaxed/simple;
+	bh=Thh+og9vWfifMZ7QUJajbgXYm3QoY+CJHcawNAefhMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WXlF50d9uALb60EFtkWilPke5aKS2dWfsBe5aRgddureQEB7Ioxh2xdfo7Y/WcII6aXCj/E572k0Q5KYbBH+sHBp6j71i09ylOmXTSsJyAfoocAZ+aQbW/MyXMJFgvMMVkS3lkH2Ej+ET+VSPYImqjnZPHN18ZwG2ijq6e2xpOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=E57OAP7e; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dn9JJQPI"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4258tQh7001427;
-	Tue, 5 Mar 2024 18:59:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=JGG8vIlqUux9Ze8A1exSbeSM6qeUkyMclht+somW8Ic=; b=dn
-	9JJQPI2zIj8ksEvox7sikiFO6e/lGx6WDZdokvMoLavGD1IxVMAfH0My10+pZ1Et
-	uwX1R6JrzdwL0G+Y3+10AHm0pOsTHyj0K2A/GTDEJCJEDh6zvBgP2C541Gf7VPzn
-	4gvunfr+MfchRaBwuj5TLPM0Qe2sKGkXB0b4+DycBDP333BRioWqbPplPvEBwKJq
-	lx5mCfguTFZc6i4c4aXzHIbxyPEtfokaczfWsAenoq8GEEdnR+R23D0nd+/fZ4AP
-	sbrTxo3dXaTT/SK9MDPDoCAILi066eMKRxUjF8NjDyd+Zw7sYPolddzf+Hg+PCEa
-	/plorgR4PnsQYCR3XWgg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wp00x1bak-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 18:59:31 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 425IxUCC028680
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 5 Mar 2024 18:59:30 GMT
-Received: from [10.71.110.192] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 5 Mar
- 2024 10:59:27 -0800
-Message-ID: <467b8479-dfd8-43a4-92eb-d19dc65989cd@quicinc.com>
-Date: Tue, 5 Mar 2024 10:59:20 -0800
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E57OAP7e"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e5a232fe80so100435b3a.0
+        for <loongarch@lists.linux.dev>; Tue, 05 Mar 2024 11:54:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709668448; x=1710273248; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8OJiIuppva2X62G3XuKOpZ18Of2oWMu+/RVVvODtp4M=;
+        b=E57OAP7eZPCWE+iRijCD7i0wCltqQJqRawgH5kufMarzozOUMUL/QchtOtdOhefR38
+         yRvu3n0XcH67gypv8tavWmm5lR2jjtG0CHHB0M5RsIfbKT12i+f2oSycqIk6bXGKGC1q
+         n4ctLQT4jucpcByp4INdwMoezvPE2a4p24Dww=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709668448; x=1710273248;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8OJiIuppva2X62G3XuKOpZ18Of2oWMu+/RVVvODtp4M=;
+        b=U8XlfmAKDJyKNeCjggyS6uq73oYQTdlxoNazvWkeK5r7iRBXtQWyFGxtL04p84kmhi
+         53D1SPEb/cADH2g9pRFKtE0jp9BIjlVk2I3DfOhVa0n2QppVu81yiR/nTm/bnACtiGBZ
+         N+esLHxw1nbBbZI4GTNzZJaVUrA9JswPEzv2QSccOI/3s8PLBeTpVdbiqm0MP5Mtqk7g
+         jOz9SBoubIietM1MeZEhPbJof79wotzKkPp5aOcXXpg0ovnRodo6ucje043h/ilHBJ0Z
+         TvLDzOFJWq2icBHCY6h7s9413OHxxyo0sXd/K4+zNDpC/EbKtot35OhcCPNhfzKwh//Z
+         in6A==
+X-Forwarded-Encrypted: i=1; AJvYcCU2ewHdXlSN8aqxqByrQhTFQmsIodcRS2CVlOuvWj5o2jS7HjZ623JfDy/9gOn6hkN7LZlF+lpW6EaolMI80DzaUfy8SNkQrY59
+X-Gm-Message-State: AOJu0YwN9DIwgP/4SgKgVydnqG0JzlDNAlAQyFMzGF0P6w1r/UHO3wbv
+	DnsgYScyk8GjjtCs8f23hdFoaikwrgAriSYB4GBnqYyY2ifBp2ZiV6qRvddd7A==
+X-Google-Smtp-Source: AGHT+IEPSGoV+PaXRY7JI9uSPnapXCs52p1ILPTe+H1wv+UxrhqJWz+AChv6CTzYH5Lp5odgHWXRGQ==
+X-Received: by 2002:a05:6a00:8cc:b0:6e6:1df9:af92 with SMTP id s12-20020a056a0008cc00b006e61df9af92mr4909513pfu.14.1709668447845;
+        Tue, 05 Mar 2024 11:54:07 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h5-20020aa786c5000000b006e52ce4ee2fsm9391340pfo.20.2024.03.05.11.54.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 11:54:07 -0800 (PST)
+Date: Tue, 5 Mar 2024 11:54:06 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	kunit-dev@googlegroups.com, linux-arch@vger.kernel.org
+Subject: Re: [RFC PATCH 1/5] bug: Core support for suppressing warning
+ backtraces
+Message-ID: <202403051149.547235C794@keescook>
+References: <20240305184033.425294-1-linux@roeck-us.net>
+ <20240305184033.425294-2-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Restructure init sequence to set aside reserved
- memory earlier
-To: <chenhuacai@kernel.org>, <jonas@southpole.se>,
-        <stefan.kristiansson@saunalahti.fi>, <shorne@gmail.com>,
-        <ysato@users.sourceforge.jp>, <dalias@libc.org>,
-        <glaubitz@physik.fu-berlin.de>, <robh+dt@kernel.org>,
-        <frowand.list@gmail.com>
-CC: <linux-openrisc@vger.kernel.org>, <loongarch@lists.linux.dev>,
-        <linux-sh@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <kernel@quicinc.com>
-References: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com>
-Content-Language: en-US
-From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-In-Reply-To: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: CB9Kpu3dCVofJSSAHKIFdpa3x8HFPqVI
-X-Proofpoint-GUID: CB9Kpu3dCVofJSSAHKIFdpa3x8HFPqVI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-05_16,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1011 mlxscore=0 mlxlogscore=675
- impostorscore=0 phishscore=0 adultscore=0 malwarescore=0 spamscore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403050152
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240305184033.425294-2-linux@roeck-us.net>
 
+On Tue, Mar 05, 2024 at 10:40:29AM -0800, Guenter Roeck wrote:
+> [...]
+>  	warning = (bug->flags & BUGFLAG_WARNING) != 0;
+>  	once = (bug->flags & BUGFLAG_ONCE) != 0;
+>  	done = (bug->flags & BUGFLAG_DONE) != 0;
+>  
+> +	if (warning && IS_SUPPRESSED_WARNING(function))
+> +		return BUG_TRAP_TYPE_WARN;
+> +
 
-On 2/9/2024 4:29 PM, Oreoluwa Babatunde wrote:
-> The loongarch, openric, and sh architectures allocate memory from
-> memblock before it gets the chance to set aside reserved memory regions.
-> This means that there is a possibility for memblock to allocate from
-> memory regions that are supposed to be reserved.
->
-> This series makes changes to the arch specific setup code to call the
-> functions responsible for setting aside the reserved memory regions earlier
-> in the init sequence.
-> Hence, by the time memblock starts being used to allocate memory, the
-> reserved memory regions should already be set aside, and it will no
-> longer be possible for allocations to come from them.
->
-> I am currnetly using an arm64 device, and so I will need assistance from
-> the relevant arch maintainers to help check if this breaks anything from
-> compilation to device bootup.
->
-> Oreoluwa Babatunde (3):
->   loongarch: Call arch_mem_init() before platform_init() in the init
->     sequence
->   openrisc: Call setup_memory() earlier in the init sequence
->   sh: Call paging_init() earlier in the init sequence
->
->  arch/loongarch/kernel/setup.c | 2 +-
->  arch/openrisc/kernel/setup.c  | 6 +++---
->  arch/sh/kernel/setup.c        | 4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
-Hello,
+I had to re-read __report_bug() more carefully, but yes, this works --
+it's basically leaving early, like "once" does.
 
-Loongarch patch has already merged for this, but review is still pending
-from openrisc and sh architectures.
-Could someone please comment on these?
+This looks like a reasonable approach!
 
-Regards,
+Something very similar to this is checking that a warning happens. i.e.
+you talk about drm selftests checking function return values, but I've
+got a bunch of tests (LKDTM) that live outside of KUnit because I haven't
+had a clean way to check for specific warnings/bugs. I feel like future
+changes built on top of this series could add counters or something that
+KUnit could examine. E.g. I did this manually for some fortify tests:
 
-Oreoluwa
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/hardening&id=4ce615e798a752d4431fcc52960478906dec2f0e
+
+-Kees
+
+-- 
+Kees Cook
