@@ -1,94 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8565F865
-	for <loongarch@lists.linux.dev>; Tue,  5 Mar 2024 10:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577DF59B7F;
+	Tue,  5 Mar 2024 10:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709634242; cv=none; b=rKUEV2TekXGvKU6j/G2D5io1R5ce4g24VXAwJ/LDoO2vp4uOTGU5J+uxfCghbYGixj+vnjahKXhORLFlqaKZ6Sl6qlZ6SnULwTffGXmxksSF+ufUwvEqoxJWfvale2QGqrd1dihxNhPx1q6aCRnuKaZwmvhNzn0Jsi/HX6iVRKc=
+	t=1709636376; cv=none; b=aZz03g1KirEZW+iCT4kNzJbaAwc+A++gSJtpE46aUl58h0pIQFPRRfByPNJNvKGhhNzHD57ChrWTKMpwpP1DOgko5zPn1HzVskTEG3ZTzedOzeyvlWrAhMFFVLpAsYY+lGsfP1O2SVSInrO48+DmRE/RMgt6Oo+RFMe0GnZdvgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709634242; c=relaxed/simple;
-	bh=i+xbX53pFEooWR3sjGG3TQr7rRgoWh5Ar98goRFmekY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gjdvspqsSb16zDDT1md4VGG36P8kxICtQ2TenHiOfQp0kDHBa+6faMnks842ErHAgiUryXLTVAf8rl5dctpW2Sdwzsw61qkHCYwwqsiWA6onZRJw8RpMyGa3L2xncFkUSPqWHi626RK1D8M54hC1AFHGW7AXWGQEz84F2W5kXn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKdfHfcm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709636376; c=relaxed/simple;
+	bh=rkU/EUWBtwWWABqUxTFkTNu+QCtdjbQlVV4iGQMgjT8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=m2JUoL61m6nwAzeLs7V1xWdu+Z76w4eci5hdBe9OpDw49sp4Y31fOleCVVNzBDaSNEUBvF8xPWPehptTjyGWupux3YPQ1OneutJdPKb4mERinxuRtOiLnbyrRfoXxkpm3S/yyCVfPa7fXKtRamGRjuuRPQ36RSiQoUSXy9gxZew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=X7C4VvEe; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKdfHfcm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9059C43141
-	for <loongarch@lists.linux.dev>; Tue,  5 Mar 2024 10:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709634241;
-	bh=i+xbX53pFEooWR3sjGG3TQr7rRgoWh5Ar98goRFmekY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OKdfHfcmPN+81pisf/rKa0Zwilc/5cJwS0t3t+RM7TVmVbw7w3TA7Hwu1DPzQ/9/Z
-	 Q2d01B9fxgMNYgG8rtUdxYx2TJx9Kb75eWVofGYYsyAkt+1OoQxvf21J4wYeRulShx
-	 5YRrbDHvpT1uCw9GfliSYHYk99ZIZ++iKdn6Ul70iWdcurULGz4CVmlwkCLlbNVsHp
-	 RhNOtBIU0w+0V7Phra3E4pNa118C0vmx+hyDA4RLrruqJ1elULt3RGtmkQiZ7BF3wq
-	 usTiEv+s3t6f1PmNdYQaKVE/qx3TY0Ow2pqrAxLWMraXAbKpVTcbnNas+CoEmjsE9k
-	 uWaZfuQHLu5YA==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-563d32ee33aso6585059a12.2
-        for <loongarch@lists.linux.dev>; Tue, 05 Mar 2024 02:24:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWjVdiVCZlp1XHNASCOkZ6wDWQ0M4VhWv1pgNxMP8HQ/+uAYaX0C9KNLSFHZopu1JhabwLSGCemxueURrPnwUt6NMlQwFJSxGfS
-X-Gm-Message-State: AOJu0YwsZZuwH/68x//48O3TzzXRJwEkBt/oOojmu96h8bBEdC5pcKMx
-	j7vlcdlhcUx0RqKYy03dpKwwIyEVolizxgnkTKN3M23xE5VBN6Vd/5bNdY3DNzFmeShAdKuKspN
-	+m5IJnVjoZgVZg83dOYorozQGUhs=
-X-Google-Smtp-Source: AGHT+IHlFvWBz3wnmsSjVMW5AspWGuH7n2lGRkbQpThZBFkZw5/Abym9wGNUQUXXO0A5jDAM1F8DOoKv++tOu+LpUqo=
-X-Received: by 2002:a17:906:4546:b0:a45:aef0:c3f0 with SMTP id
- s6-20020a170906454600b00a45aef0c3f0mr67378ejq.68.1709634240144; Tue, 05 Mar
- 2024 02:24:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="X7C4VvEe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=FUU17H/883Su4y5t0ORguJT8aM0bkdnEyWS9d9zukeE=;
+	t=1709636375; x=1710845975; b=X7C4VvEe0XoukI77UaTDV4bGeCXBV771Gu9ERiz88HDBiMA
+	wiNhlP1PONCTqxxUB9re9XIa88z3+CUro2HByrE1SwpDCdmvJ9HpF6TuZok1Fd4UpvUKgtgeg1AO/
+	0vlwVi61MyGG2XAo8o11z/RxWuMl+aNIbXcBVj0pouC7eK8arBWgyrhCIT8tdKCfgrVLIKd+PbO9V
+	G/oFZNV3Uy8fq6YJZcgmiGaNWrnsz/DSuBFPGa+1OSISxTVNDNv7guStZ8OyeTzVhDLBGavPzligP
+	ihDx+kYtd9pcb9l2YFWRSJVg8dShtvbYbV2G+j6R2scs2U/kaX2K0cICt89n95ZA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1rhSVn-00000002j5H-3fnE;
+	Tue, 05 Mar 2024 11:59:08 +0100
+Message-ID: <65f6e65e90ca5f134ef1a238a38ab02a6c1c3360.camel@sipsolutions.net>
+Subject: Re: [PATCH 3/4] arch: define CONFIG_PAGE_SIZE_*KB on all
+ architectures
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Kees Cook
+ <keescook@chromium.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet
+ Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin
+ Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>, Brian Cain
+ <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, Geert
+ Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller
+ <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Palmer Dabbelt <palmer@dabbelt.com>, John
+ Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,  Andreas Larsson
+ <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, x86@kernel.org,
+ Max Filippov <jcmvbkbc@gmail.com>, Andy Lutomirski <luto@kernel.org>, Jan
+ Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org,  linux-um@lists.infradead.org
+Date: Tue, 05 Mar 2024 11:59:05 +0100
+In-Reply-To: <20240226161414.2316610-4-arnd@kernel.org>
+References: <20240226161414.2316610-1-arnd@kernel.org>
+	 <20240226161414.2316610-4-arnd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240304141426.163517-1-wangrui@loongson.cn> <CANiq72mvdVrzN19PC8pNrvuBLkOEEQ3yX0WG6JcWc+RVaSM2nA@mail.gmail.com>
- <CAAhV-H666zsMadZuzvcRxxkUxSpkka1tt9AJO_WctHDL8j_HNg@mail.gmail.com> <CANiq72mHCNU2wGpELBbgOA8LKQhm_-RyG8+9bP9miYJOkUw2Uw@mail.gmail.com>
-In-Reply-To: <CANiq72mHCNU2wGpELBbgOA8LKQhm_-RyG8+9bP9miYJOkUw2Uw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 5 Mar 2024 18:23:48 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4-m8hETykn+i1pUzHEjAHtkm4rNXybAtDwc5QyXY+m6Q@mail.gmail.com>
-Message-ID: <CAAhV-H4-m8hETykn+i1pUzHEjAHtkm4rNXybAtDwc5QyXY+m6Q@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: rust: Switch to use built-in rustc target
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: WANG Rui <wangrui@loongson.cn>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Jamie Cunliffe <Jamie.Cunliffe@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, WANG Xuerui <kernel@xen0n.name>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-malware-bazaar: not-scanned
 
-On Tue, Mar 5, 2024 at 6:10=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Tue, Mar 5, 2024 at 10:58=E2=80=AFAM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> >
-> > The base of the loongarch tree doesn't contain the arm64 modifications
-> > now, so this patch is better to be applied on the rust tree with my
-> > Acked-by. But if you have some trouble doing that, I can also manually
-> > merge the arm64 parts to the loongarch tree, and then apply this
-> > patch. Thanks.
->
-> The rust tree doesn't have the arm64 changes either (i.e. they are in
-> the arm64 tree), so we would have the same issue.
->
-> Since it is quite late and there is no rush for this, I would suggest
-> applying it after the merge window in loongarch64 and thus avoiding a
-> merge. But, of course, up to you!
-OK, then you just need to do nothing, I will apply at a suitable time
-with your Acked-by.
+On Mon, 2024-02-26 at 17:14 +0100, Arnd Bergmann wrote:
+>=20
+>  arch/um/Kconfig                    | 1 +
+>  arch/um/include/asm/page.h         | 2 +-
 
-Huacai
 
->
-> Thanks!
->
-> Cheers,
-> Miguel
->
+LGTM, thanks.
+
+Acked-by: Johannes Berg <johannes@sipsolutions.net>
+
+johannes
