@@ -1,155 +1,155 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394B9604A7
-	for <loongarch@lists.linux.dev>; Wed,  6 Mar 2024 18:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E8E13E7CE
+	for <loongarch@lists.linux.dev>; Wed,  6 Mar 2024 18:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709749458; cv=none; b=aKDiVR8G3Ekfo2hwZ7ywfkfzPTzxlpYFJ2y2v1fTtEfVUbqo8GxX/VvpEYNKILFSGyHgEtOAqPw5ZIUy0xUcVwnAugElvReSdeiHeddDnNyOvLNmbmS8RInzK7w2Kl8U/so+vFmE89J22iaoU4Vc2qB6C/ks6BBCfLlXPOJvSuQ=
+	t=1709751437; cv=none; b=MMHtchYOvurmCLllI/7MjCqHr20N2T+Gj6Six2jGFPUtjz6Q3tvvKGr8fXQtviX9tzIkQ6jj8yXl6AYiWzVPV8Zaaed6HOYa0jDIn1kHg/cKPD/GUiTrFMhUpnQFe2WfCj6cMFU2uRd/CMUacaO2hRDZHZ3GY//krVCArYO6kOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709749458; c=relaxed/simple;
-	bh=WytS40ZdmsM5zwjaJMMr9w3erghzLSkCQiyje+s3eGY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=chel+otxsaMoIZ6KBGFbowI5DJQ+U1jGuCc3doI2fpqxR6n8Ha1AOTbbyfQT2tAVRSm8p3K+h9oDFPl1x9tEWxyROXKPOTYOWTF0hlRqVOplQ6Y2LbUyqty0geVWUG2mSZnmOyiNPT/cqIQu0yFi0Sn3BFm5rfiMWPuqxertCPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YZ68jhxo; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709751437; c=relaxed/simple;
+	bh=S1B66MxrwVuLPSQFyJ77+48RvxlkmOBerBkBYw8jSEA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AALgQLtEpogct7i6fzGuUvobXwRY+r7/eRaDOEqJrAFmkN3YYjU+OmU+tU2hibW+BmelD2G4AA2VxSw22kZRUgaO6CUifC21K+GvQQ0E07w037O7y9SzT8+kNU4WARrW7KebJDH6ptZ+0thExzfTg91cRVUW9gvvOOStvlJIHY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kel6Xf85; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YZ68jhxo"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5e42b4bbfa4so5238113a12.1
-        for <loongarch@lists.linux.dev>; Wed, 06 Mar 2024 10:24:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kel6Xf85"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-29b7164eef6so1104682a91.2
+        for <loongarch@lists.linux.dev>; Wed, 06 Mar 2024 10:57:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709749456; x=1710354256; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RWWS4LnVP/asDNzm/6wkKWnD1LdXMDQVgVaviFZ4aPg=;
-        b=YZ68jhxoMyYh6DPrDkp8BJJaBk7CYBVbV4cOF7jYWslLyRB6eODNn3e5R+XDCR1HhM
-         J4FJL57HjlFxStJ+MB8jLPatFWuygbkG0i+tTraeLTX1mk2ISdDXY+qbp33tukJV5OSH
-         hr285q8PjZoBKlqY1NwqgorC79CrKpmLPz/aBlka1tA7U/rA23lMlLJWQsvvoJiLwMby
-         YbuYpUVFu8c/B3r6s0fJVtDNZWock2YnPmwcRF+2LcjzS9tzzmWGZn352xqhRPz3Jrbi
-         ZvTQhSbourAEJ/QDUK9V6nYDud6cwCbfYL08dcvlZ0wIHbrmE2DTj/lwURRlzLAg+HVN
-         29Yg==
+        d=gmail.com; s=20230601; t=1709751435; x=1710356235; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=/3jW2QBDSgBnts4h6tssrFWwv5T7cgyrIwuez/CQaIA=;
+        b=kel6Xf85pDUMw7Xp3beEqTSMb3yN/+GN5FuJofgpsfoJLXZuFi08VMUIygFGw1ERzQ
+         UOiIMGmLDA3ql93qTq9qEbg1DE21P3AzIU4UGg1RZwLfricguNsnIOyNbSufPhUN64fl
+         1buMJw2WOs8w3HDifQAoW0diPwwoH6ibEG7G4RK7UW5LGNMdPCob4KDNZ3Def9aRl3I1
+         U2uBUBCcQ8GqKpj2I7ZWXyCYyyQtlSm8IfaRxbPleLXFmJyGzsjmDllczYpDrAOpUOKV
+         JvQuqQeM1aD+oP30VGFouV7tsX+TwggVbe07Vw5/d6MGwegFF4g2s4eUdOOAykhpHngQ
+         BkoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709749456; x=1710354256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RWWS4LnVP/asDNzm/6wkKWnD1LdXMDQVgVaviFZ4aPg=;
-        b=Rn1Je1hXm0VH5ZjaY+FkBpMA8gh0UQISJZeUy4PehXxspeaNoE9AXytS8kDfSofAed
-         /CHDxbBicbacscoS/QV9mRZDsjTI8imLLpK+xo0UGBu/lOwC0tE0fQOM3HgdGOKqqeFU
-         93pppnYxEBHK9t4y2Iq5TfagY5Mh92a1WkVTWWrFeQXo5Y8+8JC7MwSiTtg6zmiglPyG
-         W0Vsp5a/UtQ/EX9kRIP4AQq6z61i+hlHbFRmbr6qx6LOn1cDMnhIQEXRwo9rYr5pg+Hm
-         jAi3DHZbTrf7PXqfC015mj2gZz9VXtacVOyxsM6NMBWu1I/2OaV74GxSycg1vcPKJfa1
-         hfqw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0sWycamN1Tjd3holF+1RwtY51bGgo3ECWcisyDxwAtoVBfvhk0pwTDpRIM575WzMqGMkXZhlAuM4R5Qrdk8Er2TBHSgLR2+6i
-X-Gm-Message-State: AOJu0Yz8cYfhaB14gvDzcyReXNNHfogBh6b1A3QJeDdDcOiIO5JgBE7k
-	oXI46dIaTx1aAOVVoSUmSLXDopmb1CvXXgPJpXKozog2L74AxTz6iYlHamb3oyrNKYmipHgw+I8
-	jlFBgGTm+6H6NieMr87o1p4fpRKgvoQx5hHr46w==
-X-Google-Smtp-Source: AGHT+IHKPEqxOppMA9uKtWnzKAyEDN9QbdCsWR4IDnjuRlBVf+wG6gTH/NYYdjq2Jeob5XWC2zp4Hl1RW9kYPP1CSp8=
-X-Received: by 2002:a17:90a:8986:b0:29a:c886:243e with SMTP id
- v6-20020a17090a898600b0029ac886243emr14404213pjn.39.1709749456443; Wed, 06
- Mar 2024 10:24:16 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709751435; x=1710356235;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/3jW2QBDSgBnts4h6tssrFWwv5T7cgyrIwuez/CQaIA=;
+        b=I2fG8GAnyMaflaei1CoXPxmQRPcqFAf5ihbNqFwEljqPdBi8FFhJPGACZ46a7Ba0jy
+         kMyuuYRy9sKk1kbAt2dbaiOoMpFbl6hzQBu14VjhgZKB8gu9dogvG9fABKw3G1HhxwdZ
+         priwy6ld8ejxnfHNIFQYaBDbT5JyH3rzFH6U80lpQ7hiL1o10autN72Gj8beDJCvreSD
+         gbHSuHfsc3wkFWOtFvcEPuQlihxH1D7r4EAChYV1CCIXbmgpHNw4xJXD3LcGaXaKvCJ7
+         qOGPlOYUKTpc9Si+Gu4FuKT54sT4AibBTRPOXszDH1lDW5wHEwX8uRmZVueltpJa2v11
+         8iCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+MJapAJBQeP+LFOE7db1ML3gXqLo6ff+yFfi+AWPXWSEPgZ/21wqNzkAvSBiICKDUZB8K4BGpyw36/+h9IPU3zltprF4S88gE
+X-Gm-Message-State: AOJu0YzoRODCSqNMGStz5Jicw0O9PAjz02KNsjPrlvQ/f4zhGwgkBC7V
+	yWodxd3+teKuOhuA2Y/bvsZJuF9PgkCamZXO2ecuTOVV3M7BTs64
+X-Google-Smtp-Source: AGHT+IGiMoD748cTco9NIrvqXQZ2Af1R1FR7YjTHGXOpN+RqmiZs7H8a2bDhRE+JZP40vUT4bx0L6A==
+X-Received: by 2002:a17:90a:6c96:b0:29b:2fc9:197a with SMTP id y22-20020a17090a6c9600b0029b2fc9197amr12405643pjj.21.1709751435228;
+        Wed, 06 Mar 2024 10:57:15 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d11-20020a170902cecb00b001d739667fc3sm12881659plg.207.2024.03.06.10.57.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Mar 2024 10:57:14 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <b0cb0228-2c07-4fec-9943-d8a631d5c9a9@roeck-us.net>
+Date: Wed, 6 Mar 2024 10:57:12 -0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240305184033.425294-1-linux@roeck-us.net>
-In-Reply-To: <20240305184033.425294-1-linux@roeck-us.net>
-From: =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date: Wed, 6 Mar 2024 12:24:05 -0600
-Message-ID: <CAEUSe79fwDAhTdAD3OecCAw=LRzajxA3b-B2r8YtVDPeH7LCtA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC PATCH 0/5] Add support for suppressing warning backtraces
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook <keescook@chromium.org>, 
-	David Gow <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, 
-	=?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, kunit-dev@googlegroups.com, 
-	linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+To: =?UTF-8?Q?Daniel_D=C3=ADaz?= <daniel.diaz@linaro.org>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+ Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Kees Cook <keescook@chromium.org>, David Gow <davidgow@google.com>,
+ Arthur Grillo <arthurgrillo@riseup.net>,
+ Brendan Higgins <brendan.higgins@linux.dev>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard
+ <mripard@kernel.org>, =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?=
+ <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, kunit-dev@googlegroups.com,
+ linux-arch@vger.kernel.org
+References: <20240305184033.425294-1-linux@roeck-us.net>
+ <CAEUSe79fwDAhTdAD3OecCAw=LRzajxA3b-B2r8YtVDPeH7LCtA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <CAEUSe79fwDAhTdAD3OecCAw=LRzajxA3b-B2r8YtVDPeH7LCtA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello!
+Hi Daniel,
 
-On Tue, 5 Mar 2024 at 12:40, Guenter Roeck <linux@roeck-us.net> wrote:
-> Some unit tests intentionally trigger warning backtraces by passing bad
-> parameters to kernel API functions. Such unit tests typically check the
-> return value from such calls, not the existence of the warning backtrace.
->
-> Such intentionally generated warning backtraces are neither desirable
-> nor useful for a number of reasons.
-> - They can result in overlooked real problems.
-> - A warning that suddenly starts to show up in unit tests needs to be
->   investigated and has to be marked to be ignored, for example by
->   adjusting filter scripts. Such filters are ad-hoc because there is
->   no real standard format for warnings. On top of that, such filter
->   scripts would require constant maintenance.
->
-> One option to address problem would be to add messages such as "expected
-> warning backtraces start / end here" to the kernel log.  However, that
-> would again require filter scripts, it might result in missing real
-> problematic warning backtraces triggered while the test is running, and
-> the irrelevant backtrace(s) would still clog the kernel log.
->
-> Solve the problem by providing a means to identify and suppress specific
-> warning backtraces while executing test code. Support suppressing multipl=
-e
-> backtraces while at the same time limiting changes to generic code to the
-> absolute minimum. Architecture specific changes are kept at minimum by
-> retaining function names only if both CONFIG_DEBUG_BUGVERBOSE and
-> CONFIG_KUNIT are enabled.
->
-> The first patch of the series introduces the necessary infrastructure.
-> The second patch marks the warning message in drm_calc_scale() in the DRM
-> subsystem as intentional where warranted. This patch is intended to serve
-> as an example for the use of the functionality introduced with this serie=
-s.
-> The last three patches in the series introduce the necessary architecture
-> specific changes for x86, arm64, and loongarch.
->
-> This series is based on the RFC patch and subsequent discussion at
-> https://patchwork.kernel.org/project/linux-kselftest/patch/02546e59-1afe-=
-4b08-ba81-d94f3b691c9a@moroto.mountain/
-> and offers a more comprehensive solution of the problem discussed there.
->
-> Checkpatch note:
->   Remaining checkpatch errors and warnings were deliberately ignored.
->   Some are triggered by matching coding style or by comments interpreted
->   as code, others by assembler macros which are disliked by checkpatch.
->   Suggestions for improvements are welcome.
->
-> Some questions:
->
-> - Is the general approach promising ? If not, are there other possible
->   solutions ?
-> - Function pointers are only added to the __bug_table section if both
->   CONFIG_KUNIT and CONFIG_DEBUG_BUGVERBOSE are enabled. This avoids image
->   size increases if CONFIG_KUNIT=3Dn. Downside is slightly more complex
->   architecture specific assembler code. If function pointers were always
->   added to the __bug_table section, vmlinux image size would increase by
->   approximately 0.6-0.7%. Is the increased complexity in assembler code
->   worth the reduced image size ? I think so, but I would like to hear
->   other opinions.
-> - There are additional possibilities associated with storing the bug
->   function name in the __bug_table section. It could be independent of
->   KUNIT, it could be a configuration flag, and/or it could be used to
->   display the name of the offending function in BUG/WARN messages.
->   Is any of those of interest ?
+On 3/6/24 10:24, Daniel Díaz wrote:
+[ ... ]
+> 
+> Thank you SO very much for this work! This is very much appreciated!
 
-Thank you SO very much for this work! This is very much appreciated!
-We run into these warnings at LKFT all the time, and making sure that
-the noise doesn't drown the relevant signal is very important.
+Thanks a lot for the feedback.
 
-Greetings!
+> We run into these warnings at LKFT all the time, and making sure that
+> the noise doesn't drown the relevant signal is very important.
+> 
 
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+Can you send me a list of all the warnings you are seeing ? I do see
+lots of warnings when running drm tests in qemu, but I am not sure if
+those are caused by emulation problems or if they are expected.
+A list of warnings seen on real hardware would help me prepare
+additional patches to address (or, rather, suppress) those.
+
+Thanks,
+Guenter
+
