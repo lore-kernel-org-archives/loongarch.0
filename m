@@ -1,42 +1,42 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6484A5E08B
-	for <loongarch@lists.linux.dev>; Wed,  6 Mar 2024 17:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B5B1369BA
+	for <loongarch@lists.linux.dev>; Wed,  6 Mar 2024 17:18:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709745427; cv=none; b=J9cQwNyQDfoNFo0i/9OdLA48UowwLqXEm/zvJieeCLEac5qKac6HXJXo7QwxRrWqbiFMrQB3YkMdlN9xv7WWGUtK+osZnIcf2pxJqGOz/XhEFurIjiZ/XdR5xzqHzNVg6LFzGOhVrZghCDZ3botGwLqumfBQrjk34+emIzQEfSY=
+	t=1709745481; cv=none; b=E2/7mUeVG8hKR8wqGroH5jBuu0cypq0+okYdMpAHvQpBSczZ9qyI9opwPJmyhwlLBX0pSiKInoBsUIQZ4KODJvrGImor20wQYnY5QRv4VMX4RX57JSGt2R1qGUQHd03Bpb/yG8az9AIKSp7Gu2tYckpUTPoOdgdfISJ9DbUPPng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709745427; c=relaxed/simple;
-	bh=vbQn+OoB0S0JSESblEPZvsiWW6fd58wDKWFuC+9wmuM=;
+	s=arc-20240116; t=1709745481; c=relaxed/simple;
+	bh=cGH9oveyYZrJR4sQqUZvr3RgdUZ1IunEgpUKcc2IsXA=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gVb3Ms86ffz7nBwVPtEeJKei9B99Kr/SxBNRkORa+Px1osBGxmRx0Kk4/w9zszAbKlI83xxeqDkNps1DVYIR3S9n+McdbrBaQhAIQzHeqEMvfKDYYZvIXApRWS9FknPx8FdKQafKYc1L1sSn8A9AWVbUKGXg/SzJuTk904ZfnXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hqrivvwV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V6wMfLDO; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=PdCMc6kxoelxZbWp0EEjnQHbWCdce5IDZ//I6/CKtUsC4dpB///CMPevISvUbNJZltyHcMOu2bjVPzUHdUKFE/jTAeF0kniCJlrv4s/WsBbMkzNCos3+oGK4o2KNjGbuKmG9BHHI2YwDkrTz9geXc6/xlSiaaeJiv4KbSt0ut1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gDCCIQT1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ba8NRrLO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hqrivvwV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V6wMfLDO"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gDCCIQT1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ba8NRrLO"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709745424;
+	s=2020; t=1709745479;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vbQn+OoB0S0JSESblEPZvsiWW6fd58wDKWFuC+9wmuM=;
-	b=hqrivvwV8/uKaYSb4vgXogwmxXcmvHD/vpzX4SBT0qMvFOUGrraEFjzmhKWJFdAjgFwGGu
-	i0YzuY8UAmRYf0nsjTLgEHobhCl5xrMUkpEssGQL2qsxjWjlfnV1WwwZsck0s/iT0LXTQv
-	0Rl1eNFX6Z2fuzs4m8UZFZe3NmzD9v+oOARm8YY+Fk5f6y7mGuzj3DqaTd7Ikfe/xxEDxk
-	o/Gn2QgDdLN/gW/30q5PkH4obkwRFVxPLxZYjQeciiXq9oUFO60wX+E19iH4m+YvzQnm17
-	bk4e9hBXQ4eLzXkZtwKVSF+vzA64I5Uh6wxpGU8BVYlxcOrJXuu6QcrFCrnF8w==
+	bh=/OQqHSSiFO9QvgB4mY2J+LyWd+etZHTC3EZIIQab4fo=;
+	b=gDCCIQT1qxbWXTzhufSmoNS52MsO6T6khcDRU4R/DvjT4G7MoNh9Ky1nmGGMUA5kBJGmB5
+	azsjDUOsuP8fnYd10g8AahY82D+0bOAV5U3WP5daAn+croDLWUY3Ux3Xh7i9JWhMGu7ILz
+	CZx/MWC+XoyW1OE1/HgI9ImOzMQ3Hsu7ZGgFD0XsFBH1gJkU/OqCW7ZFdp75gTfSAIe5PP
+	r0Jjoh6AeTDkw4LFACDFt43V3o5FzJyQ23zOJdJCOPm4FdIlpDNblApjxSKyFng8p2xu18
+	6rz3+EZYW43r4daGc6RkeHzoLH9pHS88uirHCfRuC4FSfS7+MEcP8Bkyg26BgA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709745424;
+	s=2020e; t=1709745479;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vbQn+OoB0S0JSESblEPZvsiWW6fd58wDKWFuC+9wmuM=;
-	b=V6wMfLDOUa0xxXybHidon5vJJmDL46LPJZaLPA1eJ+JCds6w+m0GI846wFu3s4IZ8nf3hV
-	tO38zJpHmpndsvDg==
+	bh=/OQqHSSiFO9QvgB4mY2J+LyWd+etZHTC3EZIIQab4fo=;
+	b=Ba8NRrLO9SKa1kou0+rIbBztNEAwJsDv3WFMK2NllzRQnMhckZV3x6THtTFG81tO6REjSx
+	6aQnDwMJIY/8bAAA==
 To: Arnd Bergmann <arnd@kernel.org>, Anna-Maria Behnsen
  <anna-maria@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
  Kees Cook <keescook@chromium.org>
@@ -61,15 +61,12 @@ Cc: Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet
  linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
  linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
  linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>, Stafford
- Horne <shorne@gmail.com>, Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: [PATCH v2 3/3] arch: define CONFIG_PAGE_SIZE_*KB on all
- architectures
-In-Reply-To: <20240306141453.3900574-4-arnd@kernel.org>
+ linux-um@lists.infradead.org
+Subject: Re: [v2 PATCH 0/3] arch: mm, vdso: consolidate PAGE_SIZE definition
+In-Reply-To: <20240306141453.3900574-1-arnd@kernel.org>
 References: <20240306141453.3900574-1-arnd@kernel.org>
- <20240306141453.3900574-4-arnd@kernel.org>
-Date: Wed, 06 Mar 2024 18:17:04 +0100
-Message-ID: <87zfvbth4f.ffs@tglx>
+Date: Wed, 06 Mar 2024 18:17:58 +0100
+Message-ID: <87wmqfth2x.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -79,18 +76,17 @@ MIME-Version: 1.0
 Content-Type: text/plain
 
 On Wed, Mar 06 2024 at 15:14, Arnd Bergmann wrote:
-
 > From: Arnd Bergmann <arnd@arndb.de>
 >
-> Most architectures only support a single hardcoded page size. In order
-> to ensure that each one of these sets the corresponding Kconfig symbols,
-> change over the PAGE_SHIFT definition to the common one and allow
-> only the hardware page size to be selected.
+> Naresh noticed that the newly added usage of the PAGE_SIZE macro in
+> include/vdso/datapage.h introduced a build regression. I had an older
+> patch that I revived to have this defined through Kconfig rather than
+> through including asm/page.h, which is not allowed in vdso code.
 >
-> Acked-by: Guo Ren <guoren@kernel.org>
-> Acked-by: Heiko Carstens <hca@linux.ibm.com>
-> Acked-by: Stafford Horne <shorne@gmail.com>
-> Acked-by: Johannes Berg <johannes@sipsolutions.net>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> The vdso patch series now has a temporary workaround, but I still want to
+> get this into v6.9 so we can place the hack with CONFIG_PAGE_SIZE
+> in the vdso.
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Thank you for cleaning this up!
+
+      tglx
