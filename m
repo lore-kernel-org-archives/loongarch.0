@@ -1,106 +1,71 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245E01B94D
-	for <loongarch@lists.linux.dev>; Thu,  7 Mar 2024 14:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC951E865;
+	Thu,  7 Mar 2024 14:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709822609; cv=none; b=Wy/8U4y9IPcS9DNVwI7eoJcl8/vBgwIYL6hBXXM/kfrsozON6GTtw/vnOL8CSBVYKi4GPPEJP4/fcbJvaT4SVRifJUWkqdGf5PjGBlwIfrTPokmXYWHcLJHLCWAmgUrErc7RJwbraCTv0mNT4MhrCJNCoeClBltUIwRUqM5Xe/s=
+	t=1709823014; cv=none; b=AIbctfHstqM6s6SlejE/ivSxq004q0kWoDQQg7rDy50NgoWqpo11GV44mQ24x8xrTrRorl5EQfhvg0Zqw/XdikqFj+uh88ikuXFzXTLCU7h15BS1gY0v0NfZZzN9mLEzbzs+k/dVKEEDs5b0a4lZAmsKHe/CNCGPqtmYtb25mP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709822609; c=relaxed/simple;
-	bh=YmLmZj77zkxuMJT0tJQG78tQTce7Gx17YscP/2PSIVQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VuI2IU3Don5LTfdTMj0zDXP7EpteXWs5V/uymevruUIC+1m6tdK9uI/igcIQbRoxCKAGB+MoEUFhBDauEqjOdRNEbX2q7KL3FRZHs2NaNGE5dcVxXUxEVx8xA2jGqWvhFYjdoxr8p4RtFXZGCFIjjPBiD/yHixy6XBJDwzLcnFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=cI0rJs/n; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="cI0rJs/n"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4TrBqw0YTHz6871;
-	Thu,  7 Mar 2024 15:43:24 +0100 (CET)
-Received: from [192.168.0.25] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4TrBpz5w11z686W;
-	Thu,  7 Mar 2024 15:42:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=unoeuro; t=1709822603;
-	bh=9Vrev7IgmUrXRDq+27lTQvP4S7JHkTqf6RpOH6wBrY8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cI0rJs/n2a5JovKEHh1TYmBzRxJ87Bt5Bk9Xi2ViHf6tqC5yT0pNhekjnIplLA6zG
-	 +pFOMlnBFON+gaT+yppwquMwOHjqvX6GtdSnkG7oU1AsXu0gfEswgGVp6gSOiWhYfY
-	 6DpsBN4xKX8XZflxM1403bFN0rq2D47eZSFJCk/Y=
-Message-ID: <86cf6c72-e15a-4aa1-8c4b-499ec90a9a82@gaisler.com>
-Date: Thu, 7 Mar 2024 15:42:32 +0100
+	s=arc-20240116; t=1709823014; c=relaxed/simple;
+	bh=C/qCrjhoIs3jvOYBesJnb1uSBPlCckrGFa/pt10VT+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UxrW17U1pJYfE9LqtM5uFa8bhVU1u11nyoy+Pd4ptm0AQEGujl13bC5/9MOYgVSqh+PnftUV8wKIof/vWQtODJpgNzZaCBKm06DzafKhxutktFOqvFEGKnsuvOlObAV/ffpY5pCXWGad0EqbRn+HQSjnZhiOWx6TGnsR/6524Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB558C433C7;
+	Thu,  7 Mar 2024 14:50:11 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch KVM changes for v6.9
+Date: Thu,  7 Mar 2024 22:49:30 +0800
+Message-ID: <20240307144930.3919566-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arch: define CONFIG_PAGE_SIZE_*KB on all
- architectures
-Content-Language: en-US
-To: Arnd Bergmann <arnd@kernel.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Kees Cook <keescook@chromium.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>,
- Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>,
- Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller
- <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Richard Weinberger <richard@nod.at>, x86@kernel.org,
- Max Filippov <jcmvbkbc@gmail.com>, Andy Lutomirski <luto@kernel.org>,
- Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- Heiko Carstens <hca@linux.ibm.com>, Stafford Horne <shorne@gmail.com>,
- Johannes Berg <johannes@sipsolutions.net>
-References: <20240306141453.3900574-1-arnd@kernel.org>
- <20240306141453.3900574-4-arnd@kernel.org>
-From: Andreas Larsson <andreas@gaisler.com>
-In-Reply-To: <20240306141453.3900574-4-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024-03-06 15:14, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Most architectures only support a single hardcoded page size. In order
-> to ensure that each one of these sets the corresponding Kconfig symbols,
-> change over the PAGE_SHIFT definition to the common one and allow
-> only the hardware page size to be selected.
-> 
-> Acked-by: Guo Ren <guoren@kernel.org>
-> Acked-by: Heiko Carstens <hca@linux.ibm.com>
-> Acked-by: Stafford Horne <shorne@gmail.com>
-> Acked-by: Johannes Berg <johannes@sipsolutions.net>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> No changes from v1
+The following changes since commit 90d35da658da8cff0d4ecbb5113f5fac9d00eb72:
 
->  arch/sparc/Kconfig                 | 2 ++
->  arch/sparc/include/asm/page_32.h   | 2 +-
->  arch/sparc/include/asm/page_64.h   | 3 +--
+  Linux 6.8-rc7 (2024-03-03 13:02:52 -0800)
 
-Acked-by: Andreas Larsson <andreas@gaisler.com>
+are available in the Git repository at:
 
-Thanks,
-Andreas
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.9
 
+for you to fetch changes up to b99f783106ea5b2f8c9d74f4d3b1e2f77af9ec6e:
+
+  LoongArch: KVM: Remove unnecessary CSR register saving during enter guest (2024-03-06 09:12:13 +0800)
+
+----------------------------------------------------------------
+LoongArch KVM changes for v6.9
+
+1. Set reserved bits as zero in CPUCFG.
+2. Start SW timer only when vcpu is blocking.
+3. Do not restart SW timer when it is expired.
+4. Remove unnecessary CSR register saving during enter guest.
+
+KVM PV features are unfortunately missing in v6.9 for some
+implementation controversies, sigh.
+----------------------------------------------------------------
+Bibo Mao (4):
+      LoongArch: KVM: Set reserved bits as zero in CPUCFG
+      LoongArch: KVM: Start SW timer only when vcpu is blocking
+      LoongArch: KVM: Do not restart SW timer when it is expired
+      LoongArch: KVM: Remove unnecessary CSR register saving during enter guest
+
+ arch/loongarch/kvm/switch.S |  6 ------
+ arch/loongarch/kvm/timer.c  | 43 ++++++++++---------------------------------
+ arch/loongarch/kvm/vcpu.c   | 33 ++++++++++++++++++++++++++-------
+ 3 files changed, 36 insertions(+), 46 deletions(-)
