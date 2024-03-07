@@ -1,148 +1,122 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2779D3EA9B
-	for <loongarch@lists.linux.dev>; Wed,  6 Mar 2024 23:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E60E823BF
+	for <loongarch@lists.linux.dev>; Thu,  7 Mar 2024 09:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709768481; cv=none; b=ZJp/OMoPWnE4mua3bPjTwXGYHX+zt5Xfon1W2ktf109OF74cMo9mTKbBRQjE2T0z0YM5Ov7L/hptwuOVccXkblK6/wm9pKdZl9X7lSBsacq+xZKaQy4Ea/uLBkSXk1Tja5omAQAN2cxorzp/lpAUodKIuXNbtb4IwopafMOprMo=
+	t=1709803269; cv=none; b=TobuQzwcJsKfdtD8dTBPlG1VV8Z1qdWnRNbK7x2Gayuy2ztzTiPqlWfkFzsJB3iainnlVk1TUlGwWoLA4keXCblAFPzpFWi+h/Ac2FfXTCDdIdd3n9rrXs4XeguqniJabA6rW8U/mqImJhZlC5QqodnmgqzbEXdWm1IRqpUQVNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709768481; c=relaxed/simple;
-	bh=dZ6jOLMDzgPZpijPacAiasUg5Crtb+AP4LxE80M2xBA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SKRwOuo6y1iup38YGgWRPxTqglurLlNcvb4NYW/xsqbSNvYOP/00e8rK58DeFSlmCW+sTntcrQ8+lbEVN3qRdz/8v6esCCpilGBjDW/WiZabXC9fKc8BU6DaEZglVtgN52yt0BrideKJNLCXy5lOdjaby1KQyx6j8urtWjTsTqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=dfxSn7ES; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="dfxSn7ES"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1709768472;
-	bh=OHx3bVLlXnvaD4Lk/LqRAXihRU8d5iuk+jHowRU57+A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=dfxSn7ESt9feXa7Ah5VgnrgsTR94t0TrfqG0PcTuTf3mOM2nYClb7KzncEO44oWvJ
-	 z177IwNoKxwaRwuRElWO9dM9vGP1BGgcQEfox5PbPq0mqdcUVphkGszRXScQ0d7mcO
-	 jW4ikoUKpq/rq3DBl50CSj6CPBHJDbwDqtBF6NxW+foiGgFyBpZYE+I728npTZNMg3
-	 1t/2+QbQypMyzr9+0O+l4J8vO9YugJeJGU6R2JxmPiIz07vqQ4qeSoMI/Ta1CVt4Pi
-	 EW9aQ8ONAeTLEZ2I6yd+B+il/wLckJElOl67KFtvN0q8NsP2LkndTztEXc4YygJJsv
-	 te7iy+1YEdhjg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tqppm50HGz4wcN;
-	Thu,  7 Mar 2024 10:41:04 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Arnd Bergmann <arnd@kernel.org>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Vincenzo
- Frascino <vincenzo.frascino@arm.com>, Kees Cook <keescook@chromium.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet
- Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin
- Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>, Brian Cain
- <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, Geert
- Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller
- <deller@gmx.de>, Christophe Leroy <christophe.leroy@csgroup.eu>, Palmer
- Dabbelt <palmer@dabbelt.com>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>, Andreas Larsson <andreas@gaisler.com>,
- Richard Weinberger <richard@nod.at>, x86@kernel.org, Max Filippov
- <jcmvbkbc@gmail.com>, Andy Lutomirski <luto@kernel.org>, Jan Kiszka
- <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>, Andrew
- Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org
-Subject: Re: [PATCH v2 1/3] arch: consolidate existing CONFIG_PAGE_SIZE_*KB
- definitions
-In-Reply-To: <20240306141453.3900574-2-arnd@kernel.org>
-References: <20240306141453.3900574-1-arnd@kernel.org>
- <20240306141453.3900574-2-arnd@kernel.org>
-Date: Thu, 07 Mar 2024 10:41:02 +1100
-Message-ID: <87sf13nd2p.fsf@mail.lhotse>
+	s=arc-20240116; t=1709803269; c=relaxed/simple;
+	bh=EvwugGIkb2zpwheAiQ8y0YWSKolLwjatKDne0mg74F8=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Jffw3POd4cNteUukRnnXxj0H3VNYGjZxOz0YCwHm0LkWsGqIw94pGxWpPOEP6QZsJIGLGPS6Yp7Y646lsdmjZ4L+SOA7WIHa9BUjE8LuJYAe1z4p7tN7G6pDpcgBdiQGbcEG7Y9ChR1oSd10+CM/B8ez2lktU4TEgjps/7Av9X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxWPD6hullOsAVAA--.53735S3;
+	Thu, 07 Mar 2024 17:20:58 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxfs31hullHAFQAA--.14257S3;
+	Thu, 07 Mar 2024 17:20:53 +0800 (CST)
+Subject: Re: [PATCH v3 0/2] selftests/vDSO: Fix errors on LoongArch
+To: Andrew Morton <akpm@linux-foundation.org>
+References: <20231213012300.5640-1-yangtiezhu@loongson.cn>
+ <d73d107d-9e04-4250-f467-f6ff7eb92103@loongson.cn>
+ <e64b3529-fb62-3ddf-bde3-b3188f386bc0@loongson.cn>
+ <57438b7e-4188-428b-2456-10cfc10f35f9@loongson.cn>
+Cc: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Mark Brown <broonie@kernel.org>, linux-kselftest@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <a6ddf07a-99ac-9787-b879-63c3f318c84d@loongson.cn>
+Date: Thu, 7 Mar 2024 17:20:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <57438b7e-4188-428b-2456-10cfc10f35f9@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Dxfs31hullHAFQAA--.14257S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CrWrJFy5ZrWUAF4fArW5Jwc_yoW8ZrWrpF
+	WfGa15Kr4rtF18tF92gayDZF1av3W5C3W7u3yUJrWkZrn0v3WFqrWxWrW8ua9xXr97ur1Y
+	y3WIqasagayUAFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zw
+	Z7UUUUU==
 
-Hi Arnd,
-
-Arnd Bergmann <arnd@kernel.org> writes:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 02/29/2024 05:13 PM, Tiezhu Yang wrote:
+> Hi Shuah and Andrew,
 >
-> These four architectures define the same Kconfig symbols for configuring
-> the page size. Move the logic into a common place where it can be shared
-> with all other architectures.
+> On 01/29/2024 04:27 PM, Tiezhu Yang wrote:
+>>
+>>
+>> On 12/27/2023 03:55 PM, Tiezhu Yang wrote:
+>>> + Andrew Morton <akpm@linux-foundation.org>
+>>> + Mark Brown <broonie@kernel.org>
+>>>
+>>> On 12/13/2023 09:22 AM, Tiezhu Yang wrote:
+>>>> v3: Rebase on the next branch of linux-kselftest.git,
+>>>>     modify the patch title and update the commit message
+>>>>
+>>>> v2: Rebase on 6.5-rc1 and update the commit message
+>>>>
+>>>> Tiezhu Yang (2):
+>>>>   selftests/vDSO: Fix building errors on LoongArch
+>>>>   selftests/vDSO: Fix runtime errors on LoongArch
+>>>>
+>>>>  tools/testing/selftests/vDSO/vdso_config.h    |  6 ++++-
+>>>>  .../testing/selftests/vDSO/vdso_test_getcpu.c | 16 +++++-------
+>>>>  .../selftests/vDSO/vdso_test_gettimeofday.c   | 26 +++++--------------
+>>>>  3 files changed, 18 insertions(+), 30 deletions(-)
+>>>>
+>>>
+>>> Hi Shuah, Andrew and Mark,
+>>>
+>>> The patches still seem to apply cleanly.
+>>> Could you please review and merge them for the upcoming merge window?
+>>>
+>>> https://lore.kernel.org/lkml/20231213012300.5640-1-yangtiezhu@loongson.cn/
+>>>
+>>>
+>>
+>> Ping, any comments?
 >
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Changes from v1:
->  - improve Kconfig help texts
->  - fix Hexagon Kconfig
->
->  arch/Kconfig                      | 92 ++++++++++++++++++++++++++++++-
->  arch/hexagon/Kconfig              | 24 ++------
->  arch/hexagon/include/asm/page.h   |  6 +-
->  arch/loongarch/Kconfig            | 21 ++-----
->  arch/loongarch/include/asm/page.h | 10 +---
->  arch/mips/Kconfig                 | 58 ++-----------------
->  arch/mips/include/asm/page.h      | 16 +-----
->  arch/sh/include/asm/page.h        | 13 +----
->  arch/sh/mm/Kconfig                | 42 ++++----------
->  9 files changed, 121 insertions(+), 161 deletions(-)
-
-There's a few "help" lines missing, which breaks the build:
-
-  arch/Kconfig:1134: syntax error
-  arch/Kconfig:1133: invalid statement
-  arch/Kconfig:1134: invalid statement
-  arch/Kconfig:1135:warning: ignoring unsupported character '.'
-  arch/Kconfig:1135:warning: ignoring unsupported character '.'
-  arch/Kconfig:1135: invalid statement
-  arch/Kconfig:1136: invalid statement
-  arch/Kconfig:1137:warning: ignoring unsupported character '.'
-  arch/Kconfig:1137: invalid statement
-  arch/Kconfig:1143: syntax error
-  arch/Kconfig:1142: invalid statement
-  arch/Kconfig:1143: invalid statement
-  arch/Kconfig:1144:warning: ignoring unsupported character '.'
-  arch/Kconfig:1144: invalid statement
-  arch/Kconfig:1145: invalid statement
-  arch/Kconfig:1146: invalid statement
-  arch/Kconfig:1147: invalid statement
-  arch/Kconfig:1148:warning: ignoring unsupported character '.'
-  arch/Kconfig:1148: invalid statement
-  make[4]: *** [../scripts/kconfig/Makefile:85: syncconfig] Error 1
-
-Fixup diff is:
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 56d45a75f625..f2295fa3b48c 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -1130,6 +1130,7 @@ config PAGE_SIZE_16KB
- config PAGE_SIZE_32KB
-        bool "32KiB pages"
-        depends on HAVE_PAGE_SIZE_32KB
-+       help
-          Using 32KiB page size will result in slightly higher performance
-          kernel at the price of higher memory consumption compared to
-          16KiB pages.  This option is available only on cnMIPS cores.
-@@ -1139,6 +1140,7 @@ config PAGE_SIZE_32KB
- config PAGE_SIZE_64KB
-        bool "64KiB pages"
-        depends on HAVE_PAGE_SIZE_64KB
-+       help
-          Using 64KiB page size will result in slightly higher performance
-          kernel at the price of much higher memory consumption compared to
-          4KiB or 16KiB pages.
+> This series has received Reviewed-by and Tested-by for two months,
+> since the merge window is coming soon, should it take through
+> shuah/linux-kselftest.git or akpm/mm.git?
 
 
-cheers
+Hi Andrew,
+
+There is already a tag linux_kselftest-next-6.9-rc1 [1],
+it seems no chance to merge them through kselftest tree,
+would you be able to pick them up through your tree [2]?
+
+"If you cannot find a maintainer for the subsystem you are
+working on, Andrew Morton (akpm@linux-foundation.org) serves
+as a maintainer of last resort."
+
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/tag/?h=linux_kselftest-next-6.9-rc1
+[2] https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+
+Thanks,
+Tiezhu
+
