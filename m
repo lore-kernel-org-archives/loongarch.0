@@ -1,57 +1,57 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05965FB8B
-	for <loongarch@lists.linux.dev>; Fri,  8 Mar 2024 22:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B6060270
+	for <loongarch@lists.linux.dev>; Fri,  8 Mar 2024 22:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709936414; cv=none; b=fYB59zK6RTInSO/Wcpt0xZhvWofTXjiyGbxVwUez0FvBBRYKd50mjsn/7PeD+BqbOUj+I+jxSTt9wxvw55Gho9TeSuvYChvDrdn1z1nkQGjZ1EtPHpuyEJBC7oMlLWSXkuEOPvBCdRS4xwR4CBH8wyc3HR9kH+8KHzQWaXI5x9c=
+	t=1709936874; cv=none; b=UR2FWXp9skVaKwyEU8xAgfgUJmy/AHBpwEBqZIEyEn87XyLanqfeJ74nRckamoQIaQsifgh8S8Izqh3Qk97anBGm+9EiMlFwyXboryBNM6mvOh5KcI5Uv4zQh7KBg4UIGkouFoGTbnxvMuzjD4BSREDJ3ziUofXXULL4BIsXsyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709936414; c=relaxed/simple;
-	bh=UvaPv/XPHrH2WNEAzYheoSrYhZzFwh6ItrrN3RRyQiE=;
+	s=arc-20240116; t=1709936874; c=relaxed/simple;
+	bh=NPnRFZ5W/JRhURogsF+Y0uGFxMzLl4XSlbzwLW6Yauc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q/cyq5tFvl1P7/lCBjphgBsnVrgz6AtdmQ5/L4K/mG2P044EYXHx5gIW9Te5kQJ8W59zGnQSYunPM5B62P8bEKXcB+eMOYOdW8ZGbIlPoZRYLj0s351UV6ekuZPW9zufj2sy1OkL+fqziitt2FxoLAbovt8SkJp0KS27lwFR+FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QworHRiF; arc=none smtp.client-ip=209.85.128.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=IZC2LrwbszxkZVfLtmutwGA5m+JPWf+FeXxMkRTmwYtxeIJqjcOG6TDpORygWv4qsW8R6Qr+50r784xXrjviK/PW9xeu2lAELvFIH6aoaP4tZ9Tfg5lCvvbXodJpAgOFv+Yb1Gt+5hOarh1+DAtzEVFE1dS66dDNe+I2wwQPoAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kiJak8Uo; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QworHRiF"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4131f5f7d47so560785e9.1
-        for <loongarch@lists.linux.dev>; Fri, 08 Mar 2024 14:20:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiJak8Uo"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d26227d508so34370041fa.2
+        for <loongarch@lists.linux.dev>; Fri, 08 Mar 2024 14:27:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709936411; x=1710541211; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1709936870; x=1710541670; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j62oPnIVjNXEkLwc6x1vxDDwPNWZwfNz/IeZcBMO0U4=;
-        b=QworHRiFb2IsOyspBqQnrlfSDQ49EfQnGz26Lh5QndZhqJ4rJDb/AcFgB5ettrPb8g
-         LGLCPaKo8+6K5jQ4aGqI3dqtwiHR+5XWSL8omL726maqoCrnIcJgNJxbQGFRcu799kZ4
-         O1FhUvmjxWZGr3tRQQDu8Qo35FcDDAZKSsnQjF0FqJqeyLzMeO10DxMDZutThG6MbqGn
-         z+e9O7FoJTlrCmogmUx5/wNo3nuy2BuKr/gtWgLTPeqMIJR7Uzx13zkqCRMRbeJCHGTw
-         iuIxgU4RSO4HZJE7VlgsUGHTNlW/YJEDu1g+r6y5P++phXKxBDnBcx7gcB8H4oD2jB61
-         OiIw==
+        bh=d9Cm+sjEP7eeQzRpM/dyVnRkWK0R2O4wf+q730ac8Fc=;
+        b=kiJak8UoH/oA7ZP/zx2458UT8gfFvAe9lXxQi0+/7LGe+UvMrEWQZkA/EZSBSFpGto
+         eSpMoReAQtjXWF8Ti1iy9cYKYDS0hR46whnwxG5rEvpQ4Y47LbeBwjzsnFk9EzLBmjen
+         WcPJeGZvum1a7i1hbjzbG88Sc4/1X5eIYrlinKO5pv/+bLR2sY34kl3nb3t9H+2DWQ5H
+         SltViBitVFgvfAhLMkab35VLf38JwxF+yi279UnTQozuPuCzqY4I7egIPZf1sDmyYEbF
+         2lfus8JT1t2ZjB9EdDN3Hjoef1rm4lP0BZziqnqZ3MA67BeHUt4JR1E8KPMCPPfiGZn5
+         scxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709936411; x=1710541211;
+        d=1e100.net; s=20230601; t=1709936870; x=1710541670;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=j62oPnIVjNXEkLwc6x1vxDDwPNWZwfNz/IeZcBMO0U4=;
-        b=G1b5e69Np2+bz8Tp+CW6ZDbOKAKtuMctjV91CQbjztTPEZGchDrIF59hR69fCMDMDH
-         0sLczMAp37LUvX9r0ABlS09n1Ai6G2QG7BVYeCUmmdaJ0vVt9PC/L+ekP4uhUWReEjtF
-         Hkwd2flNJFMkWfBhaRHu7wVok8oSs+k6fuVjGhm/RyCsM8meY+fj8mxEMyF91J+oUZ9c
-         pnJNPRKLxqrEK/7+fgK9vR6mE4D2CiYbVz8VG40GekaapPNn2FVbzwMkEvCCSJF9jZ4g
-         hgk06k+C3T8DVx1FS0HdxFbmwL3X9d9xHy8Pkv7RFs8n8AF0mq+X2SOPCRkviyDECJVz
-         k87Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWaS8PCIZ7YBL9yBo9VgbEDc6jDz5Q5zEPZpLSsJoLnewfJMw7lZUtKXX3f+xXXEgYGhBDtkc7WbvYzHRUCgIDUBA56nJlYvKd2
-X-Gm-Message-State: AOJu0YxJaAaj10Kwtcz+rs91mZrRdTclSP3Mxe5z1BLv/GAoeQna2rwc
-	d+5FANe6o9G9sCmjlNKot+rjSdFo7NYGCBEYctP0y7B9kHsdM8/C
-X-Google-Smtp-Source: AGHT+IE5arD0uaO0cShKSZUbPrmiaI8REwNOOjBGWARkTT+WqsPSIbayV70MjZcasIR3uWjdwQ0JcQ==
-X-Received: by 2002:a05:600c:ccb:b0:413:1438:cbd4 with SMTP id fk11-20020a05600c0ccb00b004131438cbd4mr359744wmb.17.1709936410844;
-        Fri, 08 Mar 2024 14:20:10 -0800 (PST)
+        bh=d9Cm+sjEP7eeQzRpM/dyVnRkWK0R2O4wf+q730ac8Fc=;
+        b=blyCE2VTMhuVytw+Y9bVzg5YLIoalwtX+ii5/enuzNfxyqyT3mozv60LqPv/2xvw/x
+         2FwABvQvDjbkbDv44PpqCvNL8pF7Za+B5lfpbzj/gTt8yrHkZapZ5GF7st6O82Xqf+Qe
+         T5hGT7GE8UTF+tIUustRQkp7ky/yfO6pZM0WNyvy98mgcE0hka3h+E7V7YWwp8QEvwbv
+         GtEWq98qvrsSxyl/Fp/Sfj7Mt8ZH0g/Hx6Q/lnYxnjHqatHPuKzxRk2eMe1W5eSKzwIv
+         WPm9VOd4Pm1U/BGAuSAkGRylQqT4sQVcovQtr5F9q7QooRIrVere9bPxwP8kV0r/vqD9
+         0kHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyng3TyWcJ5spBKvDEF4MXUgwWqlPI/EhceMFSosA+tKjcO9Cv0+GSigGEMmtPfPNvphItN7+JV+b6ktZ+75nSIZsqiPEatF4s
+X-Gm-Message-State: AOJu0YyAAIklklP/VRzap+ViQxrkpeDcAQ2RxTaDpyoJFIw4TVm9jJWO
+	bzv4R6biPTuhVi2D6ZGsc80bs096vd55ZjDU+DuUy4hGD0tpaYdN
+X-Google-Smtp-Source: AGHT+IEefucnzeVaDrDXp7nL1ogp1q8ajUc4eKNA2EnYRvSPiplLYVDd8jWuXxI04LK1BlfLqEEo6A==
+X-Received: by 2002:ac2:44c7:0:b0:513:202b:9001 with SMTP id d7-20020ac244c7000000b00513202b9001mr214641lfm.6.1709936869789;
+        Fri, 08 Mar 2024 14:27:49 -0800 (PST)
 Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id hg6-20020a05600c538600b00412c8117a34sm608258wmb.47.2024.03.08.14.20.09
+        by smtp.gmail.com with ESMTPSA id z2-20020a5d44c2000000b0033e2b9f647asm437822wrr.31.2024.03.08.14.27.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 14:20:09 -0800 (PST)
-Date: Fri, 8 Mar 2024 22:20:08 +0000
+        Fri, 08 Mar 2024 14:27:48 -0800 (PST)
+Date: Fri, 8 Mar 2024 22:27:48 +0000
 From: Stafford Horne <shorne@gmail.com>
 To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 Cc: chenhuacai@kernel.org, jonas@southpole.se,
@@ -61,11 +61,11 @@ Cc: chenhuacai@kernel.org, jonas@southpole.se,
 	loongarch@lists.linux.dev, linux-sh@vger.kernel.org,
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 	kernel@quicinc.com
-Subject: Re: [PATCH 0/3] Restructure init sequence to set aside reserved
- memory earlier
-Message-ID: <ZeuPGOzPpOuUFTwF@antec>
+Subject: Re: [PATCH 2/3] openrisc: Call setup_memory() earlier in the init
+ sequence
+Message-ID: <ZeuQ5EFFCw3O8qkS@antec>
 References: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com>
- <467b8479-dfd8-43a4-92eb-d19dc65989cd@quicinc.com>
+ <1707524971-146908-3-git-send-email-quic_obabatun@quicinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -74,46 +74,49 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <467b8479-dfd8-43a4-92eb-d19dc65989cd@quicinc.com>
+In-Reply-To: <1707524971-146908-3-git-send-email-quic_obabatun@quicinc.com>
 
-On Tue, Mar 05, 2024 at 10:59:20AM -0800, Oreoluwa Babatunde wrote:
+On Fri, Feb 09, 2024 at 04:29:30PM -0800, Oreoluwa Babatunde wrote:
+> The unflatten_and_copy_device_tree() function contains a call to
+> memblock_alloc(). This means that memblock is allocating memory before
+> any of the reserved memory regions are set aside in the setup_memory()
+> function which calls early_init_fdt_scan_reserved_mem(). Therefore,
+> there is a possibility for memblock to allocate from any of the
+> reserved memory regions.
 > 
-> On 2/9/2024 4:29 PM, Oreoluwa Babatunde wrote:
-> > The loongarch, openric, and sh architectures allocate memory from
-> > memblock before it gets the chance to set aside reserved memory regions.
-> > This means that there is a possibility for memblock to allocate from
-> > memory regions that are supposed to be reserved.
-> >
-> > This series makes changes to the arch specific setup code to call the
-> > functions responsible for setting aside the reserved memory regions earlier
-> > in the init sequence.
-> > Hence, by the time memblock starts being used to allocate memory, the
-> > reserved memory regions should already be set aside, and it will no
-> > longer be possible for allocations to come from them.
-> >
-> > I am currnetly using an arm64 device, and so I will need assistance from
-> > the relevant arch maintainers to help check if this breaks anything from
-> > compilation to device bootup.
-> >
-> > Oreoluwa Babatunde (3):
-> >   loongarch: Call arch_mem_init() before platform_init() in the init
-> >     sequence
-> >   openrisc: Call setup_memory() earlier in the init sequence
-> >   sh: Call paging_init() earlier in the init sequence
-> >
-> >  arch/loongarch/kernel/setup.c | 2 +-
-> >  arch/openrisc/kernel/setup.c  | 6 +++---
-> >  arch/sh/kernel/setup.c        | 4 ++--
-> >  3 files changed, 6 insertions(+), 6 deletions(-)
-> Hello,
+> Hence, move the call to setup_memory() to be earlier in the init
+> sequence so that the reserved memory regions are set aside before any
+> allocations are done using memblock.
 > 
-> Loongarch patch has already merged for this, but review is still pending
-> from openrisc and sh architectures.
-> Could someone please comment on these?
+> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+> ---
+>  arch/openrisc/kernel/setup.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
+> index 9cf7fb6..be56eaa 100644
+> --- a/arch/openrisc/kernel/setup.c
+> +++ b/arch/openrisc/kernel/setup.c
+> @@ -255,6 +255,9 @@ void calibrate_delay(void)
+>  
+>  void __init setup_arch(char **cmdline_p)
+>  {
+> +	/* setup memblock allocator */
+> +	setup_memory();
+> +
+>  	unflatten_and_copy_device_tree();
+>  
+>  	setup_cpuinfo();
+> @@ -278,9 +281,6 @@ void __init setup_arch(char **cmdline_p)
+>  	}
+>  #endif
+>  
+> -	/* setup memblock allocator */
+> -	setup_memory();
+> -
+>  	/* paging_init() sets up the MMU and marks all pages as reserved */
+>  	paging_init();
 
-Hello,
-
-The OpenRISC patch looks fine to me.  I will test it out.  Sorry, I thought you
-were getting this merged via other means.
+This looks good.  I will merge it via the openrisc queue as you requested.
 
 -Stafford
