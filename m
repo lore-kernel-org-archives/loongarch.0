@@ -1,124 +1,75 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248AB4F5E6
-	for <loongarch@lists.linux.dev>; Fri,  8 Mar 2024 07:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FBA5380F;
+	Fri,  8 Mar 2024 10:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709883973; cv=none; b=X3Wts9hbjpvCzRIY+Vk0J/9/FAt7XogwwPz35E+9tMSoJQ47HNgVa1W5XbVYGAA/fILMMNXKMDFm74IkyZxZEP6m22oxZXcvGmwnwSpi7zNAyxYUCo3w9CMSuEAPi/3ZgajIMcS0Amz/SdlpuJUu/NdUMXElP+O0a2yg6WJUyP0=
+	t=1709893153; cv=none; b=EJJlf1pB3e3+a8CXMiYbBcvmHlq0gWDGTOwmVCdcM733XWhZDrJfpedhbNNga7PFsstKg1+kwO9OMH2E54JF3zvsn4vwqn/Z06fTf3vfcWaXzao4zMaYihLhPnGKwV2Zur5/rEVPeGi2hx1FNB90o+YQUgNQr/+8PgNLFaCEY4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709883973; c=relaxed/simple;
-	bh=qYxU7vhVFFHlVFqvJ2Oik7p3vX515hPOju269hebVfc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d/0zWC95Wv1uxir/A2c+MF0JabsRHQzPdU+OnbpO3asukPM19Fwko1DtXGSotaqwFmA5lExIkpChe8FXo31kQ5OagSLaumdP8T0yjyXwPbmBEAAR2eZVM/TjR8ARQeP2oJEAuaT5rQENZwiCvpVx8K1wEvu1qXHpoMSRdwdnCL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=UfUrAA+P; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="UfUrAA+P"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a26ed1e05c7so256080766b.2
-        for <loongarch@lists.linux.dev>; Thu, 07 Mar 2024 23:46:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1709883969; x=1710488769; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=40cCzbisoVSkufWvb0+W2WVn4MdIoueSCxQxubT81k8=;
-        b=UfUrAA+PUYGIaVf2HPIuJSNu2igYcKjTMSAqA6YuWjSFfDMYj4jXrFvbLYTLt1OyXj
-         s44Bkkg5ZWwXNXNRTUQaavft8MkTkh9VBQguqbld7P3/ehxThaEIZt+Q4vVU/EY/W/Jf
-         YrUs5UCZA9rwWNwO/RrkC/uMeh2IJP0Uk0uobI8x1cXfF00FH/L0mcQObKZZtrhD7AfX
-         TQfAaHpBa9WoMFeeeVvz057xIQ+05n3MYu38tijOmzdi77rrOJytDMaJP85XdePKuP13
-         YbgY2S0RiUxslxjIl446l4qgTI00sf1j/PkRrySO3u8pnZxGhSpdPAcEA1g4EZXY5bwU
-         mHmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709883969; x=1710488769;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=40cCzbisoVSkufWvb0+W2WVn4MdIoueSCxQxubT81k8=;
-        b=B4IaTpLOBSrY9ACDfm3G9xqVEQPU/cfzTpoCpps3l4eoezVvio88jz5P4UEGk3a93v
-         I2wCbbDJwj/Y7ux7oLTfFuQSQpWarOu45NeFSdf67sD37NGj/MlIQUZHqCXOqlx/Mokf
-         ndMNunTzm8sh+sV8eF53dQqSRwy30LJN50OX3LoYpgzdjnxgtmGl668k8hAX3pDHbOwp
-         riWww4eOt+bPGthC8qC7KfIc8AgslHT+BbvZjauPLhILYHMgNoLCHuF9HFokEHk8ueg0
-         uThh9RxvI7YWC8vF4ozOjSPRPHJ8++V45td8Ae+BDHrr63c8DF78J9UQl8aGIlrICjX2
-         kwuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKH5v+EbhBhWcSCKT5cotcZCJivhOsw8YgPdpH9It8uYVnaxttbYZzF2Zs7LrVKQ9EtMvRKWaOX41V7M28YlLtMmfSsINbLQMq
-X-Gm-Message-State: AOJu0YwwdkTplaKVSaB91MpbzyCGMUuf5SOH+kb6jWUTN9rH3xkZ9+KB
-	Ufk68SKZbxo8vCVc8Sq0XjLaMMzYh2x5pFiYXdVqLTuyDobq0A04AJfsNfTjt0E=
-X-Google-Smtp-Source: AGHT+IFxqxzhFl5fls7nuPQ3N6O0+2LnS2lPOt/oJpZRwzM4JKXx8cqtXXb20+EoKTDV9oeuAPfRTQ==
-X-Received: by 2002:a17:906:2b52:b0:a45:bdbd:5a1b with SMTP id b18-20020a1709062b5200b00a45bdbd5a1bmr4570721ejg.42.1709883969480;
-        Thu, 07 Mar 2024 23:46:09 -0800 (PST)
-Received: from raven.blarg.de (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id zh14-20020a170906880e00b00a456573f9c5sm4915505ejb.0.2024.03.07.23.46.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 23:46:09 -0800 (PST)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	lienze@kylinos.cn,
-	yangtiezhu@loongson.cn,
-	tglx@linutronix.de,
-	arnd@arndb.de,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] loongarch/pgtable.h: move {dmw,tlb}_virt_to_page() to page.h
-Date: Fri,  8 Mar 2024 08:46:00 +0100
-Message-Id: <20240308074600.3294338-1-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1709893153; c=relaxed/simple;
+	bh=o4kROZZaMlT9MHw4rxVnPT0wK6D0X294PyFRuzqQc9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=H9wMe97cmoWBDgebBfUKRaPIaNIyZs69iXRu/WZSB8Yl5HcfJfd4BhGDXzDGdNLdxiM2BBtI3GlfcziIcuMBggcAzC0d0NuhpD67djRNt6U3JaR1tJ2vmx7JYdA/y6TIMV1fVSltcm1XIblBvMRR1fdRnCiokryRk9v2YkmvnI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1riXJP-004rex-4M; Fri, 08 Mar 2024 18:18:48 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 08 Mar 2024 18:19:02 +0800
+Date: Fri, 8 Mar 2024 18:19:02 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: davem@davemloft.net, chenhuacai@kernel.org, kernel@xen0n.name,
+	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, wangyuli@uniontech.com,
+	guanwentao@uniontech.com
+Subject: Re: [PATCH v2] LoongArch/crypto: Clean up useless assignment
+ operations
+Message-ID: <ZermFgvsJymZkz4u@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79D75E042AE5B03F+20240229100449.1001261-1-wangyuli@uniontech.com>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
 
-These functions are implemented in pgtable.c, and they are needed only
-by the virt_to_pfn() macro in page.h.  Having the prototypes in
-pgtable.h causes a circular dependency between page.h and pgtable.h,
-because page.h's virt_to_pfn() needs pgtable.h for these two
-functions, and pgtable.h needs various definitions from page.h
-(e.g. pte_t and pgt_t).
+WangYuli <wangyuli@uniontech.com> wrote:
+> The LoongArch CRC32 hw acceleration is based on
+> arch/mips/crypto/crc32-mips.c. While the MIPS code supports both
+> MIPS32 and MIPS64, LA32 lacks the CRC instruction. As a result,
+> "line len -= sizeof(u32)" is unnecessary.
+> 
+> Removing it can make context code style more unified and improve
+> code readability.
+> 
+> Suggested-by: Guan Wentao <guanwentao@uniontech.com>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+> arch/loongarch/crypto/crc32-loongarch.c | 2 --
+> 1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
+> index a49e507af38c..3eebea3a7b47 100644
+> --- a/arch/loongarch/crypto/crc32-loongarch.c
+> +++ b/arch/loongarch/crypto/crc32-loongarch.c
+> @@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+> 
+>                CRC32(crc, value, w);
+>                p += sizeof(u32);
+> -               len -= sizeof(u32);
+>        }
 
-I suggest avoiding this circular dependency by moving the function
-prototypes to page.h, even though that is slightly incorrect, because
-they are not implemented in page.c but pgtable.c, but it's the
-simplest possible solution to this problem and the functions not used
-anywhere else.
+This makes no sense whatsoever.  Please review this patch carefully
+before you resubmit.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
- arch/loongarch/include/asm/page.h    | 3 +++
- arch/loongarch/include/asm/pgtable.h | 3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
-index afb6fa16b826..44027060c54a 100644
---- a/arch/loongarch/include/asm/page.h
-+++ b/arch/loongarch/include/asm/page.h
-@@ -75,6 +75,9 @@ typedef struct { unsigned long pgprot; } pgprot_t;
- #define pfn_to_kaddr(pfn)	__va((pfn) << PAGE_SHIFT)
- #define sym_to_pfn(x)		__phys_to_pfn(__pa_symbol(x))
- 
-+struct page *dmw_virt_to_page(unsigned long kaddr);
-+struct page *tlb_virt_to_page(unsigned long kaddr);
-+
- #define virt_to_pfn(kaddr)	PFN_DOWN(PHYSADDR(kaddr))
- 
- #define virt_to_page(kaddr)								\
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 8b5df1bbf9e9..af3acdf3481a 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -363,9 +363,6 @@ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *pt
- extern pgd_t swapper_pg_dir[];
- extern pgd_t invalid_pg_dir[];
- 
--struct page *dmw_virt_to_page(unsigned long kaddr);
--struct page *tlb_virt_to_page(unsigned long kaddr);
--
- /*
-  * The following only work if pte_present() is true.
-  * Undefined behaviour if not..
+Thanks,
 -- 
-2.39.2
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
