@@ -1,73 +1,97 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30A1535D7;
-	Fri,  8 Mar 2024 10:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63892E41F
+	for <loongarch@lists.linux.dev>; Fri,  8 Mar 2024 16:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709893497; cv=none; b=RNEnJZ02tziD+cgKNO456bOq7oZ5VORXtEpDhZ04FYE9eoqnV44NxaRgRiqYKX9XNKlM7E5bIvkXkubg0ZFoLjxeOv6XcPZiVRs/ACne9DSVYLnuoZD1hJ8XDNNv8AUOR8K+G4dxyxo93a3QXWzmvoQFBq/i3qWixYqPdcLZDHw=
+	t=1709915314; cv=none; b=dGNoNm+Fb2RVz2shwpsXDhrYqb1eBDOalIi9U7cOQkQxGpDmOc6rETVC5NeBBfcOQNVw2lDAPKq2czVxxq7S4poDqoykpZ6FqtJCDv5jlG/a2hiO/Q5G4ldnoyJaf7FUPkzYRoNGPKrUBAj/Ich5HQUDaz0feyVHEHM+jiiWsx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709893497; c=relaxed/simple;
-	bh=FHgKrmtpL5qJMcf6wT+EWhuFyHiWEd/Ju4BGzDwllvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pxtWMay3oWs5n8W+GFrXueKng1MW9PJlWrCrZ6qbqMSVXF5Ete+9ZZbM3SoOs9QEgKt1Ht66PvzCk+bGkEH6TlTKBunf2XKyKFJfYKhWRdHJVONy314zSkVo+6Jmj3DkuvzQKOcD/ryS/M2Jtg5vjBgxzuhHzWhOXk4mlr3s1GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1riXPB-004rot-G7; Fri, 08 Mar 2024 18:24:46 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 08 Mar 2024 18:25:01 +0800
-Date: Fri, 8 Mar 2024 18:25:01 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: davem@davemloft.net, chenhuacai@kernel.org, kernel@xen0n.name,
-	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, guanwentao@uniontech.com
-Subject: Re: [PATCH v2] LoongArch/crypto: Clean up useless assignment
- operations
-Message-ID: <ZernfR9PlbJzxhI+@gondor.apana.org.au>
-References: <79D75E042AE5B03F+20240229100449.1001261-1-wangyuli@uniontech.com>
- <ZermFgvsJymZkz4u@gondor.apana.org.au>
+	s=arc-20240116; t=1709915314; c=relaxed/simple;
+	bh=9j/NHJuOnCijcSwAMnGxtR70JgvZ3zyScIi+TGHHdhc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EZ0BKZg9HeENGwvy/UPk8m6UlPIZHSqbwbUOX/3nt9fQww3uRmh7pS3t2Jk6Zc2nufm95HSVDytp1URYNcz+6j4QRXt7FB0Rzp82qxEcIuIwlZGJ4RwXfOtJO2OscYfBXkaponLlDSddEafECXOFsTBb9Q8vXUqaLswhmEK+tRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86262C15;
+	Fri,  8 Mar 2024 08:29:08 -0800 (PST)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2D0F3F73F;
+	Fri,  8 Mar 2024 08:28:25 -0800 (PST)
+Message-ID: <5b2d7341-553d-42f0-977b-404f2da411e9@arm.com>
+Date: Fri, 8 Mar 2024 16:28:23 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZermFgvsJymZkz4u@gondor.apana.org.au>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2 PATCH 0/3] arch: mm, vdso: consolidate PAGE_SIZE definition
+To: Arnd Bergmann <arnd@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Kees Cook <keescook@chromium.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>,
+ Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>,
+ Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller
+ <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Andreas Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>,
+ x86@kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+ Andy Lutomirski <luto@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>,
+ Kieran Bingham <kbingham@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org
+References: <20240306141453.3900574-1-arnd@kernel.org>
+Content-Language: en-US
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+In-Reply-To: <20240306141453.3900574-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 08, 2024 at 06:19:02PM +0800, Herbert Xu wrote:
->
-> > diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
-> > index a49e507af38c..3eebea3a7b47 100644
-> > --- a/arch/loongarch/crypto/crc32-loongarch.c
-> > +++ b/arch/loongarch/crypto/crc32-loongarch.c
-> > @@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
-> > 
-> >                CRC32(crc, value, w);
-> >                p += sizeof(u32);
-> > -               len -= sizeof(u32);
-> >        }
+
+
+On 06/03/2024 14:14, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> This makes no sense whatsoever.  Please review this patch carefully
-> before you resubmit.
+> Naresh noticed that the newly added usage of the PAGE_SIZE macro in
+> include/vdso/datapage.h introduced a build regression. I had an older
+> patch that I revived to have this defined through Kconfig rather than
+> through including asm/page.h, which is not allowed in vdso code.
+> 
+> The vdso patch series now has a temporary workaround, but I still want to
+> get this into v6.9 so we can place the hack with CONFIG_PAGE_SIZE
+> in the vdso.
+> 
+> I've applied this to the asm-generic tree already, please let me know if
+> there are still remaining issues. It's really close to the merge window
+> already, so I'd probably give this a few more days before I send a pull
+> request, or defer it to v6.10 if anything goes wrong.
+> 
+> Sorry for the delay, I was still waiting to resolve the m68k question,
+> but there were no further replies in the end, so I kept my original
+> version.
+> 
+> Changes from v1:
+> 
+>  - improve Kconfig help texts
+>  - remove an extraneous line in hexagon
+> 
+>       Arnd
+>
 
-Nevermind, I see what's going on now.  Your reference to the lack
-of a CRC instruction utterly confused me.
+Thanks Arnd, looks good to me.
 
-The fact that len -= is unnecessary has nothing to do with whether
-there is a CRC instruction.
-
-Please modify your patch description so that it is not needlessly
-confusing.  You should simply state that len -= is unnecessary
-because you only test whether the relevant bit is set in len for
-the tail case.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
