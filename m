@@ -1,334 +1,124 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0368737159
-	for <loongarch@lists.linux.dev>; Fri,  8 Mar 2024 05:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248AB4F5E6
+	for <loongarch@lists.linux.dev>; Fri,  8 Mar 2024 07:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709876309; cv=none; b=RbgImZb9QPwAOOQiWWZ4G4ABOPLBpsnRBgtQlivBrIOw89lD37yqIZJv9cshsJ6HCfn9GNyIACFKRQyzwKqtMYvWkQpNA16rL6HQW7IzB8OIapGubPoOmTAvlafs5Y4sbT4JACGHqXGq77E8wewkzuAp4VwrAszLQEpVdUHM7Vc=
+	t=1709883973; cv=none; b=X3Wts9hbjpvCzRIY+Vk0J/9/FAt7XogwwPz35E+9tMSoJQ47HNgVa1W5XbVYGAA/fILMMNXKMDFm74IkyZxZEP6m22oxZXcvGmwnwSpi7zNAyxYUCo3w9CMSuEAPi/3ZgajIMcS0Amz/SdlpuJUu/NdUMXElP+O0a2yg6WJUyP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709876309; c=relaxed/simple;
-	bh=VB7aCjrEyzCQl6Nd/SXyLObblfAjTNf+f9jJHdI22IY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bqa8vodiHoin174dudj/okl4spKr4UPd81HS1xFFxuTTiNslF3plvprpTe0z5JsRShLfeXOYqFf7ycXGGOawuxYMcjGOM6JSRJZ2ZDFORy8Vdx9cF4cIYrl7jQk+1ozS/HVZBpvR+6HBYHWO05rh7ltNwPDJ5nRzFvqV8LRlbSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4TrZhS5TqJz9sq0;
-	Fri,  8 Mar 2024 06:38:16 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id iQWDwp23YgG0; Fri,  8 Mar 2024 06:38:16 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4TrZhR6Sgnz9sps;
-	Fri,  8 Mar 2024 06:38:15 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CBE128B775;
-	Fri,  8 Mar 2024 06:38:15 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id ENLZYn_Rd5af; Fri,  8 Mar 2024 06:38:15 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (PO23130.IDSI0.si.c-s.fr [192.168.232.110])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id B13378B774;
-	Fri,  8 Mar 2024 06:38:14 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Hengqi Chen <hengqi.chen@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Johan Almbladh <johan.almbladh@anyfinetworks.com>,
-	Paul Burton <paulburton@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Wang YanQing <udknight@gmail.com>,
-	David Ahern <dsahern@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1709883973; c=relaxed/simple;
+	bh=qYxU7vhVFFHlVFqvJ2Oik7p3vX515hPOju269hebVfc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d/0zWC95Wv1uxir/A2c+MF0JabsRHQzPdU+OnbpO3asukPM19Fwko1DtXGSotaqwFmA5lExIkpChe8FXo31kQ5OagSLaumdP8T0yjyXwPbmBEAAR2eZVM/TjR8ARQeP2oJEAuaT5rQENZwiCvpVx8K1wEvu1qXHpoMSRdwdnCL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=UfUrAA+P; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="UfUrAA+P"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a26ed1e05c7so256080766b.2
+        for <loongarch@lists.linux.dev>; Thu, 07 Mar 2024 23:46:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1709883969; x=1710488769; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=40cCzbisoVSkufWvb0+W2WVn4MdIoueSCxQxubT81k8=;
+        b=UfUrAA+PUYGIaVf2HPIuJSNu2igYcKjTMSAqA6YuWjSFfDMYj4jXrFvbLYTLt1OyXj
+         s44Bkkg5ZWwXNXNRTUQaavft8MkTkh9VBQguqbld7P3/ehxThaEIZt+Q4vVU/EY/W/Jf
+         YrUs5UCZA9rwWNwO/RrkC/uMeh2IJP0Uk0uobI8x1cXfF00FH/L0mcQObKZZtrhD7AfX
+         TQfAaHpBa9WoMFeeeVvz057xIQ+05n3MYu38tijOmzdi77rrOJytDMaJP85XdePKuP13
+         YbgY2S0RiUxslxjIl446l4qgTI00sf1j/PkRrySO3u8pnZxGhSpdPAcEA1g4EZXY5bwU
+         mHmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709883969; x=1710488769;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=40cCzbisoVSkufWvb0+W2WVn4MdIoueSCxQxubT81k8=;
+        b=B4IaTpLOBSrY9ACDfm3G9xqVEQPU/cfzTpoCpps3l4eoezVvio88jz5P4UEGk3a93v
+         I2wCbbDJwj/Y7ux7oLTfFuQSQpWarOu45NeFSdf67sD37NGj/MlIQUZHqCXOqlx/Mokf
+         ndMNunTzm8sh+sV8eF53dQqSRwy30LJN50OX3LoYpgzdjnxgtmGl668k8hAX3pDHbOwp
+         riWww4eOt+bPGthC8qC7KfIc8AgslHT+BbvZjauPLhILYHMgNoLCHuF9HFokEHk8ueg0
+         uThh9RxvI7YWC8vF4ozOjSPRPHJ8++V45td8Ae+BDHrr63c8DF78J9UQl8aGIlrICjX2
+         kwuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKH5v+EbhBhWcSCKT5cotcZCJivhOsw8YgPdpH9It8uYVnaxttbYZzF2Zs7LrVKQ9EtMvRKWaOX41V7M28YlLtMmfSsINbLQMq
+X-Gm-Message-State: AOJu0YwwdkTplaKVSaB91MpbzyCGMUuf5SOH+kb6jWUTN9rH3xkZ9+KB
+	Ufk68SKZbxo8vCVc8Sq0XjLaMMzYh2x5pFiYXdVqLTuyDobq0A04AJfsNfTjt0E=
+X-Google-Smtp-Source: AGHT+IFxqxzhFl5fls7nuPQ3N6O0+2LnS2lPOt/oJpZRwzM4JKXx8cqtXXb20+EoKTDV9oeuAPfRTQ==
+X-Received: by 2002:a17:906:2b52:b0:a45:bdbd:5a1b with SMTP id b18-20020a1709062b5200b00a45bdbd5a1bmr4570721ejg.42.1709883969480;
+        Thu, 07 Mar 2024 23:46:09 -0800 (PST)
+Received: from raven.blarg.de (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id zh14-20020a170906880e00b00a456573f9c5sm4915505ejb.0.2024.03.07.23.46.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 23:46:09 -0800 (PST)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	lienze@kylinos.cn,
+	yangtiezhu@loongson.cn,
+	tglx@linutronix.de,
+	arnd@arndb.de,
 	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	netdev@vger.kernel.org,
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>,
-	Kees Cook <keescook@chromium.org>
-Subject: [PATCH bpf-next v3 2/2] bpf: Take return from set_memory_rox() into account with bpf_jit_binary_lock_ro()
-Date: Fri,  8 Mar 2024 06:38:08 +0100
-Message-ID: <036b6393f23a2032ce75a1c92220b2afcb798d5d.1709850515.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <286def78955e04382b227cb3e4b6ba272a7442e3.1709850515.git.christophe.leroy@csgroup.eu>
-References: <286def78955e04382b227cb3e4b6ba272a7442e3.1709850515.git.christophe.leroy@csgroup.eu>
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH] loongarch/pgtable.h: move {dmw,tlb}_virt_to_page() to page.h
+Date: Fri,  8 Mar 2024 08:46:00 +0100
+Message-Id: <20240308074600.3294338-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709876288; l=8100; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=VB7aCjrEyzCQl6Nd/SXyLObblfAjTNf+f9jJHdI22IY=; b=W33lPIDIgr8PEUyjwxEMcKO+D+Z+D1qaqtgtxD+CJRhI5nR6avIRzXxN4xH8ZhGslueQokkTD 6pCCtavJARKCNfgTPc1pXtSM6n9j4jA+SIP+lOhNv4QtO4ONZe1cMHc
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
 
-set_memory_rox() can fail, leaving memory unprotected.
+These functions are implemented in pgtable.c, and they are needed only
+by the virt_to_pfn() macro in page.h.  Having the prototypes in
+pgtable.h causes a circular dependency between page.h and pgtable.h,
+because page.h's virt_to_pfn() needs pgtable.h for these two
+functions, and pgtable.h needs various definitions from page.h
+(e.g. pte_t and pgt_t).
 
-Check return and bail out when bpf_jit_binary_lock_ro() returns
-an error.
+I suggest avoiding this circular dependency by moving the function
+prototypes to page.h, even though that is slightly incorrect, because
+they are not implemented in page.c but pgtable.c, but it's the
+simplest possible solution to this problem and the functions not used
+anywhere else.
 
-Link: https://github.com/KSPP/linux/issues/7
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Puranjay Mohan <puranjay12@gmail.com>
-Reviewed-by: Ilya Leoshkevich <iii@linux.ibm.com>  # s390x
-Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>  # LoongArch
-Reviewed-by: Johan Almbladh <johan.almbladh@anyfinetworks.com> # MIPS Part
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
-Previous patch introduces a dependency on this patch because it modifies bpf_prog_lock_ro(), but they are independant.
-It is possible to apply this patch as standalone by handling trivial conflict with unmodified bpf_prog_lock_ro().
+ arch/loongarch/include/asm/page.h    | 3 +++
+ arch/loongarch/include/asm/pgtable.h | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-v3: No change.
-
-v2:
-- Dropped arm64 change following commit 1dad391daef1 ("bpf, arm64: use bpf_prog_pack for memory management")
-- Fixed too long lines reported by checkpatch
----
- arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
- arch/loongarch/net/bpf_jit.c     | 22 ++++++++++++++++------
- arch/mips/net/bpf_jit_comp.c     |  3 ++-
- arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
- arch/s390/net/bpf_jit_comp.c     |  6 +++++-
- arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
- arch/x86/net/bpf_jit_comp32.c    |  3 +--
- include/linux/filter.h           |  5 +++--
- 8 files changed, 51 insertions(+), 27 deletions(-)
-
-diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
-index 1d672457d02f..01516f83a95a 100644
---- a/arch/arm/net/bpf_jit_32.c
-+++ b/arch/arm/net/bpf_jit_32.c
-@@ -2222,28 +2222,21 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	/* If building the body of the JITed code fails somehow,
- 	 * we fall back to the interpretation.
- 	 */
--	if (build_body(&ctx) < 0) {
--		image_ptr = NULL;
--		bpf_jit_binary_free(header);
--		prog = orig_prog;
--		goto out_imms;
--	}
-+	if (build_body(&ctx) < 0)
-+		goto out_free;
- 	build_epilogue(&ctx);
+diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
+index afb6fa16b826..44027060c54a 100644
+--- a/arch/loongarch/include/asm/page.h
++++ b/arch/loongarch/include/asm/page.h
+@@ -75,6 +75,9 @@ typedef struct { unsigned long pgprot; } pgprot_t;
+ #define pfn_to_kaddr(pfn)	__va((pfn) << PAGE_SHIFT)
+ #define sym_to_pfn(x)		__phys_to_pfn(__pa_symbol(x))
  
- 	/* 3.) Extra pass to validate JITed Code */
--	if (validate_code(&ctx)) {
--		image_ptr = NULL;
--		bpf_jit_binary_free(header);
--		prog = orig_prog;
--		goto out_imms;
--	}
-+	if (validate_code(&ctx))
-+		goto out_free;
- 	flush_icache_range((u32)header, (u32)(ctx.target + ctx.idx));
- 
- 	if (bpf_jit_enable > 1)
- 		/* there are 2 passes here */
- 		bpf_jit_dump(prog->len, image_size, 2, ctx.target);
- 
--	bpf_jit_binary_lock_ro(header);
-+	if (bpf_jit_binary_lock_ro(header))
-+		goto out_free;
- 	prog->bpf_func = (void *)ctx.target;
- 	prog->jited = 1;
- 	prog->jited_len = image_size;
-@@ -2260,5 +2253,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 		bpf_jit_prog_release_other(prog, prog == orig_prog ?
- 					   tmp : orig_prog);
- 	return prog;
++struct page *dmw_virt_to_page(unsigned long kaddr);
++struct page *tlb_virt_to_page(unsigned long kaddr);
 +
-+out_free:
-+	image_ptr = NULL;
-+	bpf_jit_binary_free(header);
-+	prog = orig_prog;
-+	goto out_imms;
- }
+ #define virt_to_pfn(kaddr)	PFN_DOWN(PHYSADDR(kaddr))
  
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index e73323d759d0..7dbefd4ba210 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1294,16 +1294,19 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	flush_icache_range((unsigned long)header, (unsigned long)(ctx.image + ctx.idx));
+ #define virt_to_page(kaddr)								\
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index 8b5df1bbf9e9..af3acdf3481a 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -363,9 +363,6 @@ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *pt
+ extern pgd_t swapper_pg_dir[];
+ extern pgd_t invalid_pg_dir[];
  
- 	if (!prog->is_func || extra_pass) {
-+		int err;
-+
- 		if (extra_pass && ctx.idx != jit_data->ctx.idx) {
- 			pr_err_once("multi-func JIT bug %d != %d\n",
- 				    ctx.idx, jit_data->ctx.idx);
--			bpf_jit_binary_free(header);
--			prog->bpf_func = NULL;
--			prog->jited = 0;
--			prog->jited_len = 0;
--			goto out_offset;
-+			goto out_free;
-+		}
-+		err = bpf_jit_binary_lock_ro(header);
-+		if (err) {
-+			pr_err_once("bpf_jit_binary_lock_ro() returned %d\n",
-+				    err);
-+			goto out_free;
- 		}
--		bpf_jit_binary_lock_ro(header);
- 	} else {
- 		jit_data->ctx = ctx;
- 		jit_data->image = image_ptr;
-@@ -1334,6 +1337,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	out_offset = -1;
- 
- 	return prog;
-+
-+out_free:
-+	bpf_jit_binary_free(header);
-+	prog->bpf_func = NULL;
-+	prog->jited = 0;
-+	prog->jited_len = 0;
-+	goto out_offset;
- }
- 
- /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
-diff --git a/arch/mips/net/bpf_jit_comp.c b/arch/mips/net/bpf_jit_comp.c
-index a40d926b6513..e355dfca4400 100644
---- a/arch/mips/net/bpf_jit_comp.c
-+++ b/arch/mips/net/bpf_jit_comp.c
-@@ -1012,7 +1012,8 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	bpf_prog_fill_jited_linfo(prog, &ctx.descriptors[1]);
- 
- 	/* Set as read-only exec and flush instruction cache */
--	bpf_jit_binary_lock_ro(header);
-+	if (bpf_jit_binary_lock_ro(header))
-+		goto out_err;
- 	flush_icache_range((unsigned long)header,
- 			   (unsigned long)&ctx.target[ctx.jit_index]);
- 
-diff --git a/arch/parisc/net/bpf_jit_core.c b/arch/parisc/net/bpf_jit_core.c
-index d6ee2fd45550..979f45d4d1fb 100644
---- a/arch/parisc/net/bpf_jit_core.c
-+++ b/arch/parisc/net/bpf_jit_core.c
-@@ -167,7 +167,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	bpf_flush_icache(jit_data->header, ctx->insns + ctx->ninsns);
- 
- 	if (!prog->is_func || extra_pass) {
--		bpf_jit_binary_lock_ro(jit_data->header);
-+		if (bpf_jit_binary_lock_ro(jit_data->header)) {
-+			bpf_jit_binary_free(jit_data->header);
-+			prog->bpf_func = NULL;
-+			prog->jited = 0;
-+			prog->jited_len = 0;
-+			goto out_offset;
-+		}
- 		prologue_len = ctx->epilogue_offset - ctx->body_len;
- 		for (i = 0; i < prog->len; i++)
- 			ctx->offset[i] += prologue_len;
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index b418333bb086..e613eebfd349 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -2111,7 +2111,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- 		print_fn_code(jit.prg_buf, jit.size_prg);
- 	}
- 	if (!fp->is_func || extra_pass) {
--		bpf_jit_binary_lock_ro(header);
-+		if (bpf_jit_binary_lock_ro(header)) {
-+			bpf_jit_binary_free(header);
-+			fp = orig_fp;
-+			goto free_addrs;
-+		}
- 	} else {
- 		jit_data->header = header;
- 		jit_data->ctx = jit;
-diff --git a/arch/sparc/net/bpf_jit_comp_64.c b/arch/sparc/net/bpf_jit_comp_64.c
-index fa0759bfe498..73bf0aea8baf 100644
---- a/arch/sparc/net/bpf_jit_comp_64.c
-+++ b/arch/sparc/net/bpf_jit_comp_64.c
-@@ -1602,7 +1602,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	bpf_flush_icache(header, (u8 *)header + header->size);
- 
- 	if (!prog->is_func || extra_pass) {
--		bpf_jit_binary_lock_ro(header);
-+		if (bpf_jit_binary_lock_ro(header)) {
-+			bpf_jit_binary_free(header);
-+			prog = orig_prog;
-+			goto out_off;
-+		}
- 	} else {
- 		jit_data->ctx = ctx;
- 		jit_data->image = image_ptr;
-diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-index b18ce19981ec..f2be1dcf3b24 100644
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -2600,8 +2600,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	if (bpf_jit_enable > 1)
- 		bpf_jit_dump(prog->len, proglen, pass + 1, image);
- 
--	if (image) {
--		bpf_jit_binary_lock_ro(header);
-+	if (image && !bpf_jit_binary_lock_ro(header)) {
- 		prog->bpf_func = (void *)image;
- 		prog->jited = 1;
- 		prog->jited_len = proglen;
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 7dd59bccaeec..fc42dcfdbd62 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -895,10 +895,11 @@ static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
- 	return 0;
- }
- 
--static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
-+static inline int __must_check
-+bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
- {
- 	set_vm_flush_reset_perms(hdr);
--	set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
-+	return set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
- }
- 
- int sk_filter_trim_cap(struct sock *sk, struct sk_buff *skb, unsigned int cap);
+-struct page *dmw_virt_to_page(unsigned long kaddr);
+-struct page *tlb_virt_to_page(unsigned long kaddr);
+-
+ /*
+  * The following only work if pte_present() is true.
+  * Undefined behaviour if not..
 -- 
-2.43.0
+2.39.2
 
