@@ -1,122 +1,170 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B6060270
-	for <loongarch@lists.linux.dev>; Fri,  8 Mar 2024 22:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0256C23DB;
+	Sat,  9 Mar 2024 09:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709936874; cv=none; b=UR2FWXp9skVaKwyEU8xAgfgUJmy/AHBpwEBqZIEyEn87XyLanqfeJ74nRckamoQIaQsifgh8S8Izqh3Qk97anBGm+9EiMlFwyXboryBNM6mvOh5KcI5Uv4zQh7KBg4UIGkouFoGTbnxvMuzjD4BSREDJ3ziUofXXULL4BIsXsyM=
+	t=1709975473; cv=none; b=TEuc9qTmn4KhV1UT77mt1YXp3JWkRTHgdoCzVPUolAQZqyH5+nR++HrJ6/xYjLGvclceVFZtit0Dui9fWEBKhbfopWCJVb7xJk4iCibFgKihOZ+ZyYbqjR66it8UhlfkikbCCQ5oRb2E8XchJSWo/lPZH6Hb1LpNb/cqgiGj3WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709936874; c=relaxed/simple;
-	bh=NPnRFZ5W/JRhURogsF+Y0uGFxMzLl4XSlbzwLW6Yauc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IZC2LrwbszxkZVfLtmutwGA5m+JPWf+FeXxMkRTmwYtxeIJqjcOG6TDpORygWv4qsW8R6Qr+50r784xXrjviK/PW9xeu2lAELvFIH6aoaP4tZ9Tfg5lCvvbXodJpAgOFv+Yb1Gt+5hOarh1+DAtzEVFE1dS66dDNe+I2wwQPoAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kiJak8Uo; arc=none smtp.client-ip=209.85.208.172
+	s=arc-20240116; t=1709975473; c=relaxed/simple;
+	bh=K3WtC2amZZCVq3xeoEFYG11teftFq7BcqSEOPIPEFdY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dnP8f7sj/HCFOdjPVrO+Orx8Cc7MSQ68Dqlid0T1arNWxgatHLP0WoRhczRTYsY0C+QKeuICW9eJDgE3+PRXKWNixD4a5X5QLdmXvGp35NVILLugSp8Z3dwLmcBZENaplgv6hMoSsQHgw7DyOVhelvQUOhdb4wXrmKFBqSFDYlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ilCMCAin; arc=none smtp.client-ip=209.85.167.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiJak8Uo"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d26227d508so34370041fa.2
-        for <loongarch@lists.linux.dev>; Fri, 08 Mar 2024 14:27:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilCMCAin"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c1e6c32a55so818857b6e.2;
+        Sat, 09 Mar 2024 01:11:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709936870; x=1710541670; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d9Cm+sjEP7eeQzRpM/dyVnRkWK0R2O4wf+q730ac8Fc=;
-        b=kiJak8UoH/oA7ZP/zx2458UT8gfFvAe9lXxQi0+/7LGe+UvMrEWQZkA/EZSBSFpGto
-         eSpMoReAQtjXWF8Ti1iy9cYKYDS0hR46whnwxG5rEvpQ4Y47LbeBwjzsnFk9EzLBmjen
-         WcPJeGZvum1a7i1hbjzbG88Sc4/1X5eIYrlinKO5pv/+bLR2sY34kl3nb3t9H+2DWQ5H
-         SltViBitVFgvfAhLMkab35VLf38JwxF+yi279UnTQozuPuCzqY4I7egIPZf1sDmyYEbF
-         2lfus8JT1t2ZjB9EdDN3Hjoef1rm4lP0BZziqnqZ3MA67BeHUt4JR1E8KPMCPPfiGZn5
-         scxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709936870; x=1710541670;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1709975471; x=1710580271; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d9Cm+sjEP7eeQzRpM/dyVnRkWK0R2O4wf+q730ac8Fc=;
-        b=blyCE2VTMhuVytw+Y9bVzg5YLIoalwtX+ii5/enuzNfxyqyT3mozv60LqPv/2xvw/x
-         2FwABvQvDjbkbDv44PpqCvNL8pF7Za+B5lfpbzj/gTt8yrHkZapZ5GF7st6O82Xqf+Qe
-         T5hGT7GE8UTF+tIUustRQkp7ky/yfO6pZM0WNyvy98mgcE0hka3h+E7V7YWwp8QEvwbv
-         GtEWq98qvrsSxyl/Fp/Sfj7Mt8ZH0g/Hx6Q/lnYxnjHqatHPuKzxRk2eMe1W5eSKzwIv
-         WPm9VOd4Pm1U/BGAuSAkGRylQqT4sQVcovQtr5F9q7QooRIrVere9bPxwP8kV0r/vqD9
-         0kHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyng3TyWcJ5spBKvDEF4MXUgwWqlPI/EhceMFSosA+tKjcO9Cv0+GSigGEMmtPfPNvphItN7+JV+b6ktZ+75nSIZsqiPEatF4s
-X-Gm-Message-State: AOJu0YyAAIklklP/VRzap+ViQxrkpeDcAQ2RxTaDpyoJFIw4TVm9jJWO
-	bzv4R6biPTuhVi2D6ZGsc80bs096vd55ZjDU+DuUy4hGD0tpaYdN
-X-Google-Smtp-Source: AGHT+IEefucnzeVaDrDXp7nL1ogp1q8ajUc4eKNA2EnYRvSPiplLYVDd8jWuXxI04LK1BlfLqEEo6A==
-X-Received: by 2002:ac2:44c7:0:b0:513:202b:9001 with SMTP id d7-20020ac244c7000000b00513202b9001mr214641lfm.6.1709936869789;
-        Fri, 08 Mar 2024 14:27:49 -0800 (PST)
-Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id z2-20020a5d44c2000000b0033e2b9f647asm437822wrr.31.2024.03.08.14.27.48
+        bh=eqNmT55jTcvWbN7b37y3AhUIsk2g7VRwP9WuKg2uzU8=;
+        b=ilCMCAina0wgCkBGrTlkD7rie/BuKpTa6kPYfyAbKAFoQ9xfqTkkbPYHSh7T0dj4hW
+         zRqUZ7Ll9RjQNe+e0oyIshKkkBeBxfBy2UcVzxp2jQAk9MfIvmU5wihE+7Qj29B5DIeO
+         SeO371vVUZbp+lcw4A00/F1qDmG8rPWWUBTjNSWLEBI18CizzsjEwbOiWZ2ZPsGYmokz
+         +FoR5yv5uUsFoeh5XaVCQBrme3EK9MPbMHAAmEvUqmWsgyrA5WLIL7dxA4IVcNuNPwiU
+         Fnw9y/xI1EV3AGlwFGz9ZXsavp8vy32oJTtmbTKY65Hqk+DGTBLOeQUP/kTeVdCFFgU9
+         zbAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709975471; x=1710580271;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eqNmT55jTcvWbN7b37y3AhUIsk2g7VRwP9WuKg2uzU8=;
+        b=U+yiDLgxMNL5EF2GoyXDm4on2Q1sRbrxU3LXAlddeT19wK15efJcwzi7fFFltSvuXa
+         t3xfBllk5vsZ6W7qA8F7WWCC1hs3WFQJassA6y8HWq89F6F/ludZqp4ySN4CEu/GZqyG
+         Kfv5Q2vSLbmyHBE2DkVDqqd6tR0dN8yc4xdOOrGdbJ473k2dt1vo/DYCMacq/W4XyWGg
+         78FXJ0574e6k4+/vQcQNBLBgu2th9prBN/nkN2BMH/9nWqhwMEVwzpldaN6BNGjuqisT
+         z8Lf69xREHz4+iQCf2hbWNYAkyBRivKcoUDR1knKZHuYMEeORJucvOdHxGPcK0VoYc6t
+         +lgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCdW2EADrNvpagjrbz4fKOkVYEoxGAPZ2g1CurVc9l/auFqjlicA1SldlFnr86gQ2UBOzlPreDY0ItAB7drhBnrvvpCDB5Im34cwbE8zdkFoZBaioZmaCRk3OpfVFrsExvNhs3//i8PA==
+X-Gm-Message-State: AOJu0YxD273VrI1AEVfnbyfibD76S/TZw+acs9/I2VT58uylBA+f8iet
+	MR/zgw+F0jy+UMr/8GpJ/V/YcS0xMAnR9dOOLjN2owVNEkcfFBua
+X-Google-Smtp-Source: AGHT+IHgkCigzgpR227zt8SJGCW8WseyiFE/Ib1V5+cZSP43pd47WbyG6LUBLoGhFrucgeH0b0LRfQ==
+X-Received: by 2002:a05:6808:2204:b0:3c2:1db6:2513 with SMTP id bd4-20020a056808220400b003c21db62513mr1696818oib.56.1709975470849;
+        Sat, 09 Mar 2024 01:11:10 -0800 (PST)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id p5-20020a637f45000000b005dc1edf7371sm889096pgn.9.2024.03.09.01.11.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 14:27:48 -0800 (PST)
-Date: Fri, 8 Mar 2024 22:27:48 +0000
-From: Stafford Horne <shorne@gmail.com>
-To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Cc: chenhuacai@kernel.org, jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi, ysato@users.sourceforge.jp,
-	dalias@libc.org, glaubitz@physik.fu-berlin.de, robh+dt@kernel.org,
-	frowand.list@gmail.com, linux-openrisc@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-sh@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	kernel@quicinc.com
-Subject: Re: [PATCH 2/3] openrisc: Call setup_memory() earlier in the init
- sequence
-Message-ID: <ZeuQ5EFFCw3O8qkS@antec>
-References: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com>
- <1707524971-146908-3-git-send-email-quic_obabatun@quicinc.com>
+        Sat, 09 Mar 2024 01:11:10 -0800 (PST)
+From: Barry Song <21cnbao@gmail.com>
+To: lkp@intel.com,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: herbert@gondor.apana.org.au,
+	linux-crypto@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev,
+	v-songbaohua@oppo.com,
+	loongarch@lists.linux.dev
+Subject: Re: [herbert-cryptodev-2.6:master 80/80] crypto/scompress.c:174:38: warning: unused variable 'dst_page'
+Date: Sat,  9 Mar 2024 22:10:57 +1300
+Message-Id: <20240309091057.7954-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <202403091614.NeUw5zcv-lkp@intel.com>
+References: <202403091614.NeUw5zcv-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1707524971-146908-3-git-send-email-quic_obabatun@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 09, 2024 at 04:29:30PM -0800, Oreoluwa Babatunde wrote:
-> The unflatten_and_copy_device_tree() function contains a call to
-> memblock_alloc(). This means that memblock is allocating memory before
-> any of the reserved memory regions are set aside in the setup_memory()
-> function which calls early_init_fdt_scan_reserved_mem(). Therefore,
-> there is a possibility for memblock to allocate from any of the
-> reserved memory regions.
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
+> head:   77292bb8ca69c808741aadbd29207605296e24af
+> commit: 77292bb8ca69c808741aadbd29207605296e24af [80/80] crypto: scomp - remove memcpy if sg_nents is 1 and pages are lowmem
+> config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20240309/202403091614.NeUw5zcv-lkp@intel.com/config)
+> compiler: loongarch64-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240309/202403091614.NeUw5zcv-lkp@intel.com/reproduce)
 > 
-> Hence, move the call to setup_memory() to be earlier in the init
-> sequence so that the reserved memory regions are set aside before any
-> allocations are done using memblock.
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202403091614.NeUw5zcv-lkp@intel.com/
 > 
-> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-> ---
->  arch/openrisc/kernel/setup.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> All warnings (new ones prefixed by >>):
 > 
-> diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
-> index 9cf7fb6..be56eaa 100644
-> --- a/arch/openrisc/kernel/setup.c
-> +++ b/arch/openrisc/kernel/setup.c
-> @@ -255,6 +255,9 @@ void calibrate_delay(void)
->  
->  void __init setup_arch(char **cmdline_p)
->  {
-> +	/* setup memblock allocator */
-> +	setup_memory();
-> +
->  	unflatten_and_copy_device_tree();
->  
->  	setup_cpuinfo();
-> @@ -278,9 +281,6 @@ void __init setup_arch(char **cmdline_p)
->  	}
->  #endif
->  
-> -	/* setup memblock allocator */
-> -	setup_memory();
-> -
->  	/* paging_init() sets up the MMU and marks all pages as reserved */
->  	paging_init();
+>    In file included from crypto/scompress.c:12:
+>    include/crypto/scatterwalk.h: In function 'scatterwalk_pagedone':
+>    include/crypto/scatterwalk.h:76:30: warning: variable 'page' set but not used [-Wunused-but-set-variable]
+>       76 |                 struct page *page;
+>          |                              ^~~~
+>    crypto/scompress.c: In function 'scomp_acomp_comp_decomp':
+> >> crypto/scompress.c:174:38: warning: unused variable 'dst_page' [-Wunused-variable]
+>      174 |                         struct page *dst_page = sg_page(req->dst);
+>          |                                      ^~~~~~~~
+> 
+> 
+> vim +/dst_page +174 crypto/scompress.c
+> 
+>    112	
+>    113	static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
+>    114	{
+>    115		struct crypto_acomp *tfm = crypto_acomp_reqtfm(req);
+>    116		void **tfm_ctx = acomp_tfm_ctx(tfm);
+> [snipped]
+>    171			} else {
+>    172				int nr_pages = DIV_ROUND_UP(req->dst->offset + req->dlen, PAGE_SIZE);
+>    173				int i;
+>  > 174				struct page *dst_page = sg_page(req->dst);
+>    175	
+>    176				for (i = 0; i < nr_pages; i++)
+>    177					flush_dcache_page(dst_page + i);
 
-This looks good.  I will merge it via the openrisc queue as you requested.
++ Huacai, Xuerui
 
--Stafford
+loongarch code needs a fix, it should have removed the below
+two macros:
+
+diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
+index 80bd74106985..f8754d08a31a 100644
+--- a/arch/loongarch/include/asm/cacheflush.h
++++ b/arch/loongarch/include/asm/cacheflush.h
+@@ -37,8 +37,6 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
+ #define flush_icache_range     local_flush_icache_range
+ #define flush_icache_user_range        local_flush_icache_range
+ 
+-#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+-
+ #define flush_cache_all()                              do { } while (0)
+ #define flush_cache_mm(mm)                             do { } while (0)
+ #define flush_cache_dup_mm(mm)                         do { } while (0)
+@@ -47,7 +45,6 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
+ #define flush_cache_vmap(start, end)                   do { } while (0)
+ #define flush_cache_vunmap(start, end)                 do { } while (0)
+ #define flush_icache_user_page(vma, page, addr, len)   do { } while (0)
+-#define flush_dcache_page(page)                                do { } while (0)
+ #define flush_dcache_mmap_lock(mapping)                        do { } while (0)
+ #define flush_dcache_mmap_unlock(mapping)              do { } while (0)
+
+
+as include/asm-generic/cacheflush.h already has the below,
+
+#ifndef ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+static inline void flush_dcache_page(struct page *page)
+{
+}
+
+#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+#endif
+
+>    178			}
+>    179		}
+>    180	out:
+>    181		spin_unlock(&scratch->lock);
+>    182		return ret;
+>    183	}
+>    184	
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+
+Thanks
+Barry
+
