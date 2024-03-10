@@ -1,86 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17032C194
-	for <loongarch@lists.linux.dev>; Sun, 10 Mar 2024 14:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F398D219E9;
+	Sun, 10 Mar 2024 14:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710079428; cv=none; b=hQcHh5zQUBaVzW1mytLOEEhdfywKLl0BYk0u+tfokBgR44Iw87eLWZvlgGpg5ijIeLtCNNa6STdnzTN+e9tC40A1TwJNuoLL3MvnKQbUz/AotAw24S0lP0Xq6lxN9cNo8NXlYHserhd2KL5ikXFwp9jchyblAgJgdizUhcs1BO8=
+	t=1710079493; cv=none; b=N5XL68CHEkI/2ZpHnYL6LTKzU/dS91NYWO/OPOsPQ4Ic38S/TDgrQIK3v2CTKi5AlM+Lk3usJqF/dxwvd3TNId+2/+GoP82h9UVI7NT1o/z6Fa23B4ub370/Mc5gG9oCkCTMK5YFD4d8wEOXKntc9eSnsFVPUA8SSnb40LuX1eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710079428; c=relaxed/simple;
-	bh=bwiNExhP3G8/4ZF9l7HFtlTqhac5Y1om1nv7SCEhE0s=;
+	s=arc-20240116; t=1710079493; c=relaxed/simple;
+	bh=4cO05FTGfu5CYWVtNolCJgMtg0Om/u7O9trOND68qQI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BL51xYnC6m/ZdvSuhDqDRZrK44kAA3ffQDDETVFzK1MjRLdWBTOtVWlIUrEK2gwH+/z8QrjhIVULQ/L9Jykrj+AJyKwBNz3q2Nsw3Ho2Rg5mvqF/zW7Jmt5j+euGBmP95devI+y2tKTd/XgafVADfPGzE0WUdu4V5yCfq4tgGWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MrXAmr/F; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Rb+WB8i4ISqz2nbxZUn9+FlIDacXbnDxqMiVq13SHr5rDaF0FeH7iJHnRS33DuA6SO4EekLRiTKYIVIVNZ6gun/50qIEg3BuMCddLCUjxthrdmE3r6g2lSfsQAVi+Sv7vcPPSTK2f++ZjjfzgoIdZ4I5ajYKIkj2Vqol7CK2Plc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6RCFoWR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MrXAmr/F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85C2AC43394
-	for <loongarch@lists.linux.dev>; Sun, 10 Mar 2024 14:03:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6RCFoWR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1032C43390;
+	Sun, 10 Mar 2024 14:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710079427;
-	bh=bwiNExhP3G8/4ZF9l7HFtlTqhac5Y1om1nv7SCEhE0s=;
+	s=k20201202; t=1710079492;
+	bh=4cO05FTGfu5CYWVtNolCJgMtg0Om/u7O9trOND68qQI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MrXAmr/FhTA07M0n01frmkIyWEcGbzUxsBZ3MglRzMA1sj5v/+EIToP3BDzY2tTGt
-	 /cbyFRCTRKFSDyl7w0JWvI1Juc+PLpLIKiJv1Mu0vKZDGecbTd2pof3aaa/kBwWm+u
-	 e+KDYV/yCabWPpPlLag8CjPNMtJN7ak518OyBg1fOs5g1EjioPACaO7pK3Gj4VV/2U
-	 R7Wakre3MZB2i3QFN2E25FIXzcDY/14MuiyG9/KPly3Wo6SPR+eJZHBNItj1Rd+Og0
-	 v7LZxSD+pHZIQEeeRJtiQ6LnMDL19Dw57/vSawx6RbtQdyEnoqCZQGH66iif1jH07D
-	 yAYIjfPlaNVNA==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a44628725e3so391407966b.0
-        for <loongarch@lists.linux.dev>; Sun, 10 Mar 2024 07:03:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXRAMObNUfqaHMaH+5N2LMDT3dcKdi/tler+7sM0ROgVZ+5wvuCSjZKRprMVwb0T5Q4LjUYm19ih+d0tRAoX4uCzStGtnGJx1DR
-X-Gm-Message-State: AOJu0YxYAwaRoNI8tS//qne59ENjcorxEhlpyQWysnwweIxP9LZOOoFZ
-	OY2GFYkkYunuJjHSDpTjJqMX3YB39cWKZH3UuYWSyqWN1JA59Gs+KSrfUWfoNRicGVboKkIn2Gc
-	Q2xGSIuwIhoP3qX4vbcpwCZ8OKjs=
-X-Google-Smtp-Source: AGHT+IG4VFqfXMFmT5TrkFhnEebpwiC0lNv40gCZNo4v3r44FIWbSv/ZoWFpbWWWwdjnrXq3t8+SWp8OpqBOZQQYuos=
-X-Received: by 2002:a17:906:564b:b0:a46:2e:ffdb with SMTP id
- v11-20020a170906564b00b00a46002effdbmr2316785ejr.49.1710079426029; Sun, 10
- Mar 2024 07:03:46 -0700 (PDT)
+	b=d6RCFoWRL8uPShAzIgJId2f+LTftxOZiRCyVNvsDeeFp3VXjEeI6KgtToLg80Vu+4
+	 yNjYpq3EZKwfY5wU2Na/Ym0xmQgH+Danx6RySFpillJlY09nxW4++pjAibvjYxye9W
+	 xJSRnIY3YLeq2685oWUHC9sioBYiRnulmJc+5iZt15zdkdxvuBoV+YEJ+cbrnQrdR7
+	 wr8nqXB7H6OofXXTUFPQeEPLkMkpF+/MtLj5j8Gp8pCf4ExNP9Tpq6apSydy+XAbfn
+	 bxYCodFvC9mpHvlKo3aPXkRhOc45SHZt4ZsNFd/L2TXJq7GyGxjgIB7mxAnagyjqd9
+	 lTo3fDdjmNnQA==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d4360ab3daso8988191fa.3;
+        Sun, 10 Mar 2024 07:04:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUcH+N/ZbEzU3JUmOihWMi1NhbulK4HHrPPlPuyjirwYNPel3DnixOt5vg/IuWVHGWp4UlD1a63Pe1mKQehaMq+LLeZ1+JQ/2ix7xDPN0alR51elsCd9oCK/GHPJTUqZC7myRPwh7J/3Q==
+X-Gm-Message-State: AOJu0YxF6qzoD7Dze1fhVYhjAGQqqzn7F0dJk51Oz4tG6jYiP48KTY32
+	f+OQWKQ/ZqJ1PWXYAYczmWjkxxIEfR1DeohNnizhpP4oF4ZQFQiiAMwu7zij/5aBQikuUfAPhdg
+	BglCgUHu2rSTL9HUpSghH16v6YfU=
+X-Google-Smtp-Source: AGHT+IHXqojiC1EnAvsrKfFxmT1sF1AwpGUNcpQyx3evJzS8zLgF9OyQu2IBEMPqMaAmlHZf9OFN0VHL1RJu3GZ6CLQ=
+X-Received: by 2002:ac2:5926:0:b0:513:60f5:b488 with SMTP id
+ v6-20020ac25926000000b0051360f5b488mr2527791lfi.24.1710079490832; Sun, 10 Mar
+ 2024 07:04:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240308074600.3294338-1-max.kellermann@ionos.com>
- <CAAhV-H6O02es7ZsDRjWfO=9hz8owa1SWZXkyZ=p3BO28D+ix6A@mail.gmail.com> <CAKPOu+_j3FTcjpOfS6O+Pr5sFGEC63ofgU8qjHUFbSPRWtS6_Q@mail.gmail.com>
-In-Reply-To: <CAKPOu+_j3FTcjpOfS6O+Pr5sFGEC63ofgU8qjHUFbSPRWtS6_Q@mail.gmail.com>
+References: <202403091614.NeUw5zcv-lkp@intel.com> <20240309091057.7954-1-21cnbao@gmail.com>
+In-Reply-To: <20240309091057.7954-1-21cnbao@gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 10 Mar 2024 22:03:35 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7X2ViBwz7wz3SPmwaxn__9Mo-5pEL9SGe0xON7exj+wA@mail.gmail.com>
-Message-ID: <CAAhV-H7X2ViBwz7wz3SPmwaxn__9Mo-5pEL9SGe0xON7exj+wA@mail.gmail.com>
-Subject: Re: [PATCH] loongarch/pgtable.h: move {dmw,tlb}_virt_to_page() to page.h
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: kernel@xen0n.name, lienze@kylinos.cn, yangtiezhu@loongson.cn, 
-	tglx@linutronix.de, arnd@arndb.de, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Sun, 10 Mar 2024 22:04:40 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4VnM=Dw8N7j9ySWNpWVxCKeUnwFTmFOQBmLtTnfopRFQ@mail.gmail.com>
+Message-ID: <CAAhV-H4VnM=Dw8N7j9ySWNpWVxCKeUnwFTmFOQBmLtTnfopRFQ@mail.gmail.com>
+Subject: Re: [herbert-cryptodev-2.6:master 80/80] crypto/scompress.c:174:38:
+ warning: unused variable 'dst_page'
+To: Barry Song <21cnbao@gmail.com>
+Cc: lkp@intel.com, kernel@xen0n.name, herbert@gondor.apana.org.au, 
+	linux-crypto@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
+	v-songbaohua@oppo.com, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Max,
+Hi, Barry,
 
-On Sun, Mar 10, 2024 at 6:22=E2=80=AFPM Max Kellermann <max.kellermann@iono=
-s.com> wrote:
+On Sat, Mar 9, 2024 at 5:11=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrote=
+:
 >
-> On Sun, Mar 10, 2024 at 2:14=E2=80=AFAM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> > Could you please share what kind of configuration will cause a build er=
-ror?
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptod=
+ev-2.6.git master
+> > head:   77292bb8ca69c808741aadbd29207605296e24af
+> > commit: 77292bb8ca69c808741aadbd29207605296e24af [80/80] crypto: scomp =
+- remove memcpy if sg_nents is 1 and pages are lowmem
+> > config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20=
+240309/202403091614.NeUw5zcv-lkp@intel.com/config)
+> > compiler: loongarch64-linux-gcc (GCC) 13.2.0
+> > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arc=
+hive/20240309/202403091614.NeUw5zcv-lkp@intel.com/reproduce)
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
+rsion of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202403091614.NeUw5zcv-l=
+kp@intel.com/
+> >
+> > All warnings (new ones prefixed by >>):
+> >
+> >    In file included from crypto/scompress.c:12:
+> >    include/crypto/scatterwalk.h: In function 'scatterwalk_pagedone':
+> >    include/crypto/scatterwalk.h:76:30: warning: variable 'page' set but=
+ not used [-Wunused-but-set-variable]
+> >       76 |                 struct page *page;
+> >          |                              ^~~~
+> >    crypto/scompress.c: In function 'scomp_acomp_comp_decomp':
+> > >> crypto/scompress.c:174:38: warning: unused variable 'dst_page' [-Wun=
+used-variable]
+> >      174 |                         struct page *dst_page =3D sg_page(re=
+q->dst);
+> >          |                                      ^~~~~~~~
+> >
+> >
+> > vim +/dst_page +174 crypto/scompress.c
+> >
+> >    112
+> >    113        static int scomp_acomp_comp_decomp(struct acomp_req *req,=
+ int dir)
+> >    114        {
+> >    115                struct crypto_acomp *tfm =3D crypto_acomp_reqtfm(=
+req);
+> >    116                void **tfm_ctx =3D acomp_tfm_ctx(tfm);
+> > [snipped]
+> >    171                        } else {
+> >    172                                int nr_pages =3D DIV_ROUND_UP(req=
+->dst->offset + req->dlen, PAGE_SIZE);
+> >    173                                int i;
+> >  > 174                                struct page *dst_page =3D sg_page=
+(req->dst);
+> >    175
+> >    176                                for (i =3D 0; i < nr_pages; i++)
+> >    177                                        flush_dcache_page(dst_pag=
+e + i);
 >
-> With the current kernel, I found none; the problem is masked currently
-> due to the current order of include directives, but it caused problems
-> during my attempts to clean up linux/mm.h - see
-> https://lore.kernel.org/lkml/20240305085919.1601395-1-max.kellermann@iono=
-s.com/
-> for the most recent submission; a later (not-yet-submitted) version of
-> the series which reproduces the problem can be found here:
-> https://github.com/MaxKellermann/linux/commits/mm.h/
-OK, I will apply this patch if no one has objections.
+> + Huacai, Xuerui
+>
+> loongarch code needs a fix, it should have removed the below
+> two macros:
+OK, seems reasonable.
 
 Huacai
 
 >
-> I saw this problem with "randconfig KCONFIG_SEED=3D0x5D8A9172" - config a=
-ttached.
+> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/inc=
+lude/asm/cacheflush.h
+> index 80bd74106985..f8754d08a31a 100644
+> --- a/arch/loongarch/include/asm/cacheflush.h
+> +++ b/arch/loongarch/include/asm/cacheflush.h
+> @@ -37,8 +37,6 @@ void local_flush_icache_range(unsigned long start, unsi=
+gned long end);
+>  #define flush_icache_range     local_flush_icache_range
+>  #define flush_icache_user_range        local_flush_icache_range
 >
-> Max
+> -#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+> -
+>  #define flush_cache_all()                              do { } while (0)
+>  #define flush_cache_mm(mm)                             do { } while (0)
+>  #define flush_cache_dup_mm(mm)                         do { } while (0)
+> @@ -47,7 +45,6 @@ void local_flush_icache_range(unsigned long start, unsi=
+gned long end);
+>  #define flush_cache_vmap(start, end)                   do { } while (0)
+>  #define flush_cache_vunmap(start, end)                 do { } while (0)
+>  #define flush_icache_user_page(vma, page, addr, len)   do { } while (0)
+> -#define flush_dcache_page(page)                                do { } wh=
+ile (0)
+>  #define flush_dcache_mmap_lock(mapping)                        do { } wh=
+ile (0)
+>  #define flush_dcache_mmap_unlock(mapping)              do { } while (0)
+>
+>
+> as include/asm-generic/cacheflush.h already has the below,
+>
+> #ifndef ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+> static inline void flush_dcache_page(struct page *page)
+> {
+> }
+>
+> #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+> #endif
+>
+> >    178                        }
+> >    179                }
+> >    180        out:
+> >    181                spin_unlock(&scratch->lock);
+> >    182                return ret;
+> >    183        }
+> >    184
+> >
+> > --
+> > 0-DAY CI Kernel Test Service
+> > https://github.com/intel/lkp-tests/wiki
+>
+> Thanks
+> Barry
+>
