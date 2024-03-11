@@ -1,167 +1,160 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466B6290E
-	for <loongarch@lists.linux.dev>; Mon, 11 Mar 2024 04:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4042125755
+	for <loongarch@lists.linux.dev>; Mon, 11 Mar 2024 14:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710131775; cv=none; b=HCJLyscwqaT6whf+m0t4gnpUCxa5I6PpYnJPmA2NfeIyYUBIiEmCvS01OROKID5MbLjvTPMvglKxut6M5r7gCztLbFOYw2/ceGhAzByyUr0iOd0Z0H/cbKM0m1YiE3n/JOZsI25YI0BQ5hqhTipBkHMZ1/b+75TRFSQqw+Na5TU=
+	t=1710165734; cv=none; b=arILVZO3t7WpFdqF3k4W9qMbGvlGYAEDHWpF4tWy/XfANVbd+frnMrefdJBZI8qMfUjEiktiXaJDb8GBUTNaMyhgNm603viSPItVsRjhUuisb8jHeiF+2yNxmo70DR8Tdf3ec6qx8jEZUBsacRFeP6hoRuvEKNaA5ajCBEjzV/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710131775; c=relaxed/simple;
-	bh=gqmZzmP8nlpwp+4dLArAfocYsyqp64vuYa7f4fUPuiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n1iOm5TPHzun+PvQqP0rtkMKii7SK33bGCievtv9aRibKzZgnMLDWn03JQzRmHMRFp0Kbu8CSAGPIHvZtVS/7uRwiNLUzJIL+DF+tTzPNmgtw4WIX9bVg7Wd1UVZ5sbCgmE1ZSfTDdLhP0kP7QelEZxRyh29Nwgtc+sHFBEW+7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QOH5yyV6; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710165734; c=relaxed/simple;
+	bh=zudfJPfGKCSXtqr6xD9riAWqn5x9WVfEjygW7Pep6XY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eHJCVxJYLzMqyjSnKAwBcDZbrWNcpfpJwqSJ8jzoDuuS5LWJVrO/XTMjl5a5RorC47IYpSSwg8fOSemGAqN2g8RkWoh9vPlZrwM/yMNkaUv6U7IqRmerXAxHdrK+sR436CrdIYoEpsTyRNqbukwFrZc3Ahs710SgqdvQ2/i46Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WS4VDe4Q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOH5yyV6"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5e4b775e1d6so2623616a12.1
-        for <loongarch@lists.linux.dev>; Sun, 10 Mar 2024 21:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710131772; x=1710736572; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QiEYgTiVIfRWezz5AaQue6rBdCpnJEAVy8ZiGZDVI+E=;
-        b=QOH5yyV6f3kEYQXhHWOVJbewHusyjSO2/XQaF+8s8u+J4h8g/EpigP7NdbpvOwDz4H
-         eywH7NKY2jq5xlxQKv6AsifQ3pMVLn/Bo5fIES7fTcy+CUy0OE8SzdulwJrFkjW3UUag
-         MCLq1Gf4WV1weVvzvhXUocRJovAzQsgsyGURezZ/CwERoESw9W59rRoAsH60T/DJn326
-         pyzCiq9ralOuzk/evD/8Kk5djVhtXSUCte+t26HRoJt5+FWACGrObJnJR3H+z3QvYkKF
-         fUVUwnAl9pWd4aYf7juQFD5X8PPkEBPeyK9KDP3tt95e/PBmlDqe75Hw2sJwz3R/vnDe
-         Xbgg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WS4VDe4Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710165732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=l1lWiVrfJ9gyOKGKxf4UnXuQxCW1HqyRc+4zMGSrV/I=;
+	b=WS4VDe4QkhCgWEDd2pJNTLR8rM196JwtWsDjWlBx43lAjFWHdAnclrbTCA6UwV7LK+O3zQ
+	hR6QC1z46M0Ul84eB89W/JN66MPFiho3tY/sZvPmLlsoj4WwyLCZKJj6VrSUtGLXENtep4
+	EiKiZgwZtoYFGV+eXA9Jcrhj1a0up4g=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-360-PrpDu04YNimvwsQyCFluKw-1; Mon, 11 Mar 2024 10:02:10 -0400
+X-MC-Unique: PrpDu04YNimvwsQyCFluKw-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5684345c0ebso2100557a12.1
+        for <loongarch@lists.linux.dev>; Mon, 11 Mar 2024 07:02:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710131772; x=1710736572;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QiEYgTiVIfRWezz5AaQue6rBdCpnJEAVy8ZiGZDVI+E=;
-        b=UL1ce+OvDFoVVbhCpFbdUPEuzboy8iRswjReIAHZKDknZmyQ8a2at8IA/9U7Hpyjlo
-         FWGYroqGw+gPBnLzGtpJr9nGKOk1H2Jy2UZPjr5mZbIOwperFFGy1Z9LaMBOcEdLrtpP
-         kigMjKPdnTzWdh6bKGBBjqTiu9ryji0ExP/a4Rar1dNShp8u1sIZekHodXdQGGV7+5EY
-         qBG5vL7lhKqLIPOPclORJYI2IH7/oeHI/rTNnpZbDxhhtlGtFFO09PXFF/DOnfP6M9Oq
-         lfg3j9L4BFSKwvLJBHnYzojG1ThApckiZyz4n8xirKJLXLDd6JjIP4MCsmypnjfcfLjB
-         kBlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVY1l0hSzRoJ2ewBfkGRHrWGSm3hHKt38MtQ/2OcNIfDjhqsjPH3xKhM7KSDBNDq/2MCrsJQHRB4MolkNllNMOO2CZ0RVMzWSNO
-X-Gm-Message-State: AOJu0Ywz3NO8tCtthJs+/mncOpQNco65NZ8rHjANQRijDekzOn09Y/TP
-	KOwaLbxBRrRf3r630JreEPHHqIMObFSClJU4jXDBpR539+cQkq07LwPoksF6
-X-Google-Smtp-Source: AGHT+IH+D9y4G7q+l3gX0afrHis3jTndC+4q6rRWXxESOkmoncT+9xkRPwtY2kgZHGqK0rqBuSHufw==
-X-Received: by 2002:a17:90b:e8a:b0:29b:6cfb:14a6 with SMTP id fv10-20020a17090b0e8a00b0029b6cfb14a6mr8043401pjb.11.1710131772355;
-        Sun, 10 Mar 2024 21:36:12 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q10-20020a170902e30a00b001d9aa663282sm3583751plc.266.2024.03.10.21.36.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Mar 2024 21:36:11 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 10 Mar 2024 21:36:10 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: linux-kselftest@vger.kernel.org
-Cc: David Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <keescook@chromium.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	kunit-dev@googlegroups.com, linux-arch@vger.kernel.org
-Subject: Re: [RFC PATCH 0/5] Add support for suppressing warning backtraces
-Message-ID: <d24f147c-a304-4395-aefc-bed7490278b6@roeck-us.net>
-References: <20240305184033.425294-1-linux@roeck-us.net>
+        d=1e100.net; s=20230601; t=1710165729; x=1710770529;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l1lWiVrfJ9gyOKGKxf4UnXuQxCW1HqyRc+4zMGSrV/I=;
+        b=Q+Sgof4VP/QK3Y0PZjy/FHCYffjma0hry+lZztcRbzzjxDZLeQbw0Fno0hZMK0Aq4/
+         +VJzXhOso+n9PpNu9RY6inaAz3Gv9i57JWKFcAmkPMvsIZF6WOkITTx3yCRjSqoF/2my
+         K5HFsPYEtzwZHtUuN+DiPoGQBbS9gl+XAkkh5dGy2ZXARqOswjm2yu7hGfJB+4nhH2j4
+         E7BJ9oPy4w6TxcsU3vPn5LBA3IKaZQv3wTPv3vKGbjeIyp81lSE/CtQrSH8wkbH7Roii
+         wyK8Tt+qFkPwRUwkUWdiyPAnitHbz4+wDQm3KW+AjjBj75jzFlNc5v1bf6d/e+4QS5+b
+         Epjw==
+X-Forwarded-Encrypted: i=1; AJvYcCXODN6xR1/yvSDXkWTUlQjfbeoF5Vtp4seFS8cGD69HKWL6hYNJXNEaP2uCTYmig5BS99htulNhuzZqHayhGzWQRXe45xGjVX/h
+X-Gm-Message-State: AOJu0YxUbcHueXWY0QxBMD6ZVSNoeTcqSFW3pORXoz066hVBCvD30Wlf
+	OJ3hGRIbKygTlhsbTfHuQySBfu+uMeTjHTXsbbVtawtgSgKiO9VXeIcJCSsVM03uDC6lwH9YcYw
+	qt44zmHuVGrCBcRiibb6R6FRg8pumbi125obfeKUbODIw1cCBXJDKcJrgcw==
+X-Received: by 2002:a50:aacf:0:b0:568:145a:4a22 with SMTP id r15-20020a50aacf000000b00568145a4a22mr6746901edc.4.1710165729760;
+        Mon, 11 Mar 2024 07:02:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGhwYbM7JAcmCY0rptcO+QyNgjUt45vXfxZecF/gFi6BgI9yjqaxTSgh8WfEds4aQs8p50SPQ==
+X-Received: by 2002:a50:aacf:0:b0:568:145a:4a22 with SMTP id r15-20020a50aacf000000b00568145a4a22mr6746863edc.4.1710165729367;
+        Mon, 11 Mar 2024 07:02:09 -0700 (PDT)
+Received: from [192.168.10.81] ([151.49.77.21])
+        by smtp.googlemail.com with ESMTPSA id b2-20020aa7c902000000b00564e489ce9asm3016297edt.12.2024.03.11.07.02.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Mar 2024 07:02:08 -0700 (PDT)
+Message-ID: <208e03b7-374b-4062-bed2-dda595fcad77@redhat.com>
+Date: Mon, 11 Mar 2024 15:02:03 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305184033.425294-1-linux@roeck-us.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] LoongArch KVM changes for v6.9
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <20240307144930.3919566-1-chenhuacai@loongson.cn>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20240307144930.3919566-1-chenhuacai@loongson.cn>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 05, 2024 at 10:40:28AM -0800, Guenter Roeck wrote:
-> Some unit tests intentionally trigger warning backtraces by passing bad
-> parameters to kernel API functions. Such unit tests typically check the
-> return value from such calls, not the existence of the warning backtrace.
+On 3/7/24 15:49, Huacai Chen wrote:
+> The following changes since commit 90d35da658da8cff0d4ecbb5113f5fac9d00eb72:
 > 
-> Such intentionally generated warning backtraces are neither desirable
-> nor useful for a number of reasons.
-> - They can result in overlooked real problems.
-> - A warning that suddenly starts to show up in unit tests needs to be
->   investigated and has to be marked to be ignored, for example by
->   adjusting filter scripts. Such filters are ad-hoc because there is
->   no real standard format for warnings. On top of that, such filter
->   scripts would require constant maintenance.
+>    Linux 6.8-rc7 (2024-03-03 13:02:52 -0800)
 > 
-> One option to address problem would be to add messages such as "expected
-> warning backtraces start / end here" to the kernel log.  However, that
-> would again require filter scripts, it might result in missing real
-> problematic warning backtraces triggered while the test is running, and
-> the irrelevant backtrace(s) would still clog the kernel log.
+> are available in the Git repository at:
 > 
-> Solve the problem by providing a means to identify and suppress specific
-> warning backtraces while executing test code. Support suppressing multiple
-> backtraces while at the same time limiting changes to generic code to the
-> absolute minimum. Architecture specific changes are kept at minimum by
-> retaining function names only if both CONFIG_DEBUG_BUGVERBOSE and
-> CONFIG_KUNIT are enabled.
+>    git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.9
 > 
-> The first patch of the series introduces the necessary infrastructure.
-> The second patch marks the warning message in drm_calc_scale() in the DRM
-> subsystem as intentional where warranted. This patch is intended to serve
-> as an example for the use of the functionality introduced with this series.
-> The last three patches in the series introduce the necessary architecture
-> specific changes for x86, arm64, and loongarch.
+> for you to fetch changes up to b99f783106ea5b2f8c9d74f4d3b1e2f77af9ec6e:
 > 
-> This series is based on the RFC patch and subsequent discussion at
-> https://patchwork.kernel.org/project/linux-kselftest/patch/02546e59-1afe-4b08-ba81-d94f3b691c9a@moroto.mountain/
-> and offers a more comprehensive solution of the problem discussed there.
+>    LoongArch: KVM: Remove unnecessary CSR register saving during enter guest (2024-03-06 09:12:13 +0800)
+
+Pulled, thanks.
+
+Paolo
+
+> ----------------------------------------------------------------
+> LoongArch KVM changes for v6.9
 > 
-> Checkpatch note:
->   Remaining checkpatch errors and warnings were deliberately ignored.
->   Some are triggered by matching coding style or by comments interpreted
->   as code, others by assembler macros which are disliked by checkpatch.
->   Suggestions for improvements are welcome.
+> 1. Set reserved bits as zero in CPUCFG.
+> 2. Start SW timer only when vcpu is blocking.
+> 3. Do not restart SW timer when it is expired.
+> 4. Remove unnecessary CSR register saving during enter guest.
 > 
-> Some questions:
+> KVM PV features are unfortunately missing in v6.9 for some
+> implementation controversies, sigh.
+> ----------------------------------------------------------------
+> Bibo Mao (4):
+>        LoongArch: KVM: Set reserved bits as zero in CPUCFG
+>        LoongArch: KVM: Start SW timer only when vcpu is blocking
+>        LoongArch: KVM: Do not restart SW timer when it is expired
+>        LoongArch: KVM: Remove unnecessary CSR register saving during enter guest
 > 
-> - Is the general approach promising ? If not, are there other possible
->   solutions ?
-> - Function pointers are only added to the __bug_table section if both
->   CONFIG_KUNIT and CONFIG_DEBUG_BUGVERBOSE are enabled. This avoids image
->   size increases if CONFIG_KUNIT=n. Downside is slightly more complex
->   architecture specific assembler code. If function pointers were always
->   added to the __bug_table section, vmlinux image size would increase by
->   approximately 0.6-0.7%. Is the increased complexity in assembler code
->   worth the reduced image size ? I think so, but I would like to hear
->   other opinions.
-> - There are additional possibilities associated with storing the bug
->   function name in the __bug_table section. It could be independent of
->   KUNIT, it could be a configuration flag, and/or it could be used to
->   display the name of the offending function in BUG/WARN messages.
->   Is any of those of interest ?
+>   arch/loongarch/kvm/switch.S |  6 ------
+>   arch/loongarch/kvm/timer.c  | 43 ++++++++++---------------------------------
+>   arch/loongarch/kvm/vcpu.c   | 33 ++++++++++++++++++++++++++-------
+>   3 files changed, 36 insertions(+), 46 deletions(-)
 > 
 
-I am ready to send a full version of this series with support for
-all affected architectures. I am undecided if I should send it now,
-based on v6.8, and send v2 after rebasing it to v6.9-rc1, or if I
-should just wait for v6.9-rc1.
-
-I understand that some maintainers dislike getting new patch series
-while the commit window is is open. On the ther side, I tested the
-series thoroughly on top of v6.8-rc7, and initial v6.9 release candidates
-may have their own problems. Given that, I tend to send the series now.
-
-Any thoughts ? Unless there is strong negative feedback, I'll likely
-do that in a day or two.
-
-Thanks,
-Guenter
