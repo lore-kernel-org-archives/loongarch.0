@@ -1,57 +1,57 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D35B13A27D
-	for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 17:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A1213AA3C
+	for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 17:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710263008; cv=none; b=sivETQ1T/C/Y5qjNOZ6+CJaEYCp/z5H86ExYVM+3O1bz8Q+nvvCnpO+yTUFZIASVgAWQqAw17GzKwvBY1WUPzY5Ij0IWJPTTANXMzn7pHScd9d56v+sBL1xtHsPrfE+JvG+a4xPTggKhyCAnER4OBHte54zE2FPi2tvmuCzQ0Io=
+	t=1710263011; cv=none; b=e1CN7u3nAkfRVK/QLdfF0buPf9lOXy1fkHvfNEN0DCMO7blimThnW2Fx+MvbM10SVKEo2FWFetOB0Sdqvvgy04mTnNFz4cYWijWmpJXGHv1GXpaY4s0XDkugDG7m2ozbPqBph8ZUbs/AvZAXlInU3l1yWcVWjx9WFyXZQfHZ4fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710263008; c=relaxed/simple;
-	bh=knS+qppVrCuENhoPuTL59QYimH+PsuApCzIRiQQv0SM=;
+	s=arc-20240116; t=1710263011; c=relaxed/simple;
+	bh=2NHIPSEeh5V+X5+GdK5eLhFVjFh0D1jEmjx7oDfzWbY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WpNiEb/ShzTUCb4n6R+00qpO6GZzKHRW+w7dO9cx9nQZ9rrMZDkm9uSkQgv5MXuoXOaNexWLKSEB/wnLN7tvMWkXEWvLObBU276XFaPZsHRp0hGb6xnHKw4L41/hopmeY5G2Hvz7hykQM6QLBbxLXcGZBPUh7wvprTktgV/xiUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d2k92hFK; arc=none smtp.client-ip=209.85.214.182
+	 MIME-Version; b=SR2e4hAFVRoGFHZpA2W35FrRkzd/iu02nUwDFV2i39qnhG47qYv+iBOumC+VMVBP2xMhAr8bJTcz9qDF/9L8eP7Jx6uIPKlS62DKF8VdPFdnLp9bhi79d27yKUTGRSnG1DX/pCLR38XpEFOkWhtMn0FDfjutVpnOgk2GHfe9NWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cdkTBFu6; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2k92hFK"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dc3b4b9b62so276265ad.1;
-        Tue, 12 Mar 2024 10:03:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cdkTBFu6"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-29954bb87b4so2762881a91.2;
+        Tue, 12 Mar 2024 10:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710263006; x=1710867806; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1710263009; x=1710867809; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mFp+F6/qbMDKwppN9CX4ZWrh/15b9XKC6E4V4vAKNpU=;
-        b=d2k92hFKTD2tpwuDA8Q91UDnS7Kixhb/Rob56cwZuCufQQ+uRWTQK/xE+AzMdAJoqT
-         gmwPkgl40sBmsAdFx6e/Hj1nUs5OdaqLQG4ddvu26afjWx2KopEXcj4mSGGxD0NM3w7b
-         8J96xmvozN1/iZal9YO/l7qkuPrBqWULcIi9j7+fuG8hvhHeLDkU67BLqOxY2MPvZeVi
-         S1AViTWTNpGv4Lmkk+Nfcs+jWpI2a3lwAJYgwWFcNO8e8kRU3KPcqgKJ9HDCJ4wX3h8w
-         ZiMxpkkzu1FXZc9CJynt3fDaeM0bMCgq+rbmCnsMP9bga/vc7msD7w0UwIYIPjtYTT4o
-         CezA==
+        bh=5e/E6ddr2rv0O0qI6ESGYNVGq97JQ/YRs1mbYMxZhW0=;
+        b=cdkTBFu6q2Ra4YA/jpWqyCbrYqrNQVjiB/Og2HkD8L7AnaNqFw3fMEhmJod06yhtIN
+         C/+Lz0oKKDNBhVqzX1/b+O1SyMRR+N/wIFqFuxRgYn5cdk0K/m/r4QAiQ2BXHIKN7gVy
+         trIssh39RtHKIJSLLw3q8KerH1MUGu6h4lHFUnf40yrnC4ZnfJaxYXyRo8AnMHR7GYkC
+         kMZyxZpkWRsdk7YQ1NiyyFKsa8X1QJj9j6g6mYYybT5RqA57aeLOyVF0ahyWfoHJL2C1
+         UxS77x8J9gwShMOW18FAI2mNSHLofn5KtNsZ/mIa2gBlaeCMZA76jHQy72JTmAFCSh3d
+         0FAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710263006; x=1710867806;
+        d=1e100.net; s=20230601; t=1710263009; x=1710867809;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mFp+F6/qbMDKwppN9CX4ZWrh/15b9XKC6E4V4vAKNpU=;
-        b=MZlQICeJG4gSeZ58sOSuEHYjvtStJ4v6H21Ws6oVTa6KZ+HsXFs89Pq04e3n/NgW3p
-         tOQO9PePc957oGbA4sBu6velh5HqGRKVMgPcEtgGxeXlHTUt34m+AWdQik9NnN/hvWIB
-         4tdrJRh7FzvpCNAeD99c9GF626wssMgoiNnlHTrz052ipk08VJb8omFzKSiworQTtaSU
-         +rzx877DIo5L1wqZtMIbagM+C9qehAmwRwGWe9RvvWtrJTN+eIjBJTff/agVDcVm/ljA
-         mXtUmCSVYc0WNneu6rMOUlNQ2p5HpXxamQlyTseDTJBJZGVZL8SFJ6+fOfxtjGmO7Bgn
-         vYtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQdncuKpbLlwSie0y0sLg07qVgxkh6Xafki2GTI768dQPW5/Whp0M+4/z3fi3dEIlr+/khFOrOV5jNmC8/0fZ+HDYUuv5AVzgBvnEsM6H018qm29V/u6UVNf9UYACVauEu
-X-Gm-Message-State: AOJu0YzoM1+VLmBgoE2YcxD9UgBBCMFIaSQftZWSrLdi9/9wqmwSCG1D
-	uteBj3NwhTkiglVc85Yh+hu4G8yd99BvL5D91CjXGdIkZ2TQWjpc
-X-Google-Smtp-Source: AGHT+IFHgAu4TIvnFI5COGYb5tswxOQ5AvbfbseYntF0tu2SzSXjMyu1g4BetZFgaKzrp5WqY1rOuQ==
-X-Received: by 2002:a17:902:db10:b0:1dd:8ed0:59d0 with SMTP id m16-20020a170902db1000b001dd8ed059d0mr179469plx.17.1710263006272;
-        Tue, 12 Mar 2024 10:03:26 -0700 (PDT)
+        bh=5e/E6ddr2rv0O0qI6ESGYNVGq97JQ/YRs1mbYMxZhW0=;
+        b=AnmL8ToRW7mQlhuYyXYCfN1qWcxHaCtoH6kYvAVrTYfHXkk7gxmHuD4x/JQ77tQdQJ
+         PiqaNg1XIA1rwd+Tc+0CitS3Om6bVQP7eahkUddrL4Cdh+RVuLjGwyj5YMbperuxgKmi
+         iBlbpk+/SG5WKAveijUG8NR6zksgWYadfxE4GyHr8RhLAa0d/HqzAE/wJNDt2rLZ5+s8
+         uinm33UQTJVSigYEfvVlWuXDR0R3UmcGisbH3IKaB3jCG+iSFT5Bd5uZY/pjNTQB5yx0
+         z4bFwuUHmya4stIYPpZas3fWai9+rRcqJIaIG4XpMZdxFcgtvFfJF9cq0DCg6e68Vkyq
+         9mIg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7LEQfbwBst+EmVGRjaCh7wZMoVjvwHk0KYuth4Cdsc6WsyiIHqtWcLfEY8Po0Tj7h02G81XyuiPM+TrtLv8wxIwGQbKJbHsXmR33siBu1h49Ri7GQDgUHtUm6/jymj5YQ
+X-Gm-Message-State: AOJu0Yzjb63YJsyv7JiG7XQxibAyumDxzF1c1FmYmc35+hv4NkoTb5vO
+	PZhfj4LoZ52C7rZH7qioQ3aCYSDiNDtiZYN4XWrcChpdW5nrHDcm
+X-Google-Smtp-Source: AGHT+IHnpV6pQ4sbhTQFUz6ATEKXpUTcdarefNsnZ32RzB7TxwrdDKUDIv3vmdM+PJbrepqm0Atu1Q==
+X-Received: by 2002:a17:90a:ba93:b0:29c:844:a91 with SMTP id t19-20020a17090aba9300b0029c08440a91mr5600961pjr.48.1710263008670;
+        Tue, 12 Mar 2024 10:03:28 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b21-20020a170902ed1500b001d9a42f6183sm6958740pld.45.2024.03.12.10.03.25
+        by smtp.gmail.com with ESMTPSA id bf20-20020a17090b0b1400b0029bc2b845c4sm5986405pjb.11.2024.03.12.10.03.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 10:03:25 -0700 (PDT)
+        Tue, 12 Mar 2024 10:03:28 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
 From: Guenter Roeck <linux@roeck-us.net>
 To: linux-kselftest@vger.kernel.org
@@ -84,11 +84,10 @@ Cc: David Airlie <airlied@gmail.com>,
 	linux-sh@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	netdev@lists.linux.dev,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 06/14] net: kunit: Suppress lock warning noise at end of dev_addr_lists tests
-Date: Tue, 12 Mar 2024 10:03:01 -0700
-Message-Id: <20240312170309.2546362-7-linux@roeck-us.net>
+	Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 07/14] x86: Add support for suppressing warning backtraces
+Date: Tue, 12 Mar 2024 10:03:02 -0700
+Message-Id: <20240312170309.2546362-8-linux@roeck-us.net>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240312170309.2546362-1-linux@roeck-us.net>
 References: <20240312170309.2546362-1-linux@roeck-us.net>
@@ -100,65 +99,68 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-dev_addr_lists_test generates lock warning noise at the end of tests
-if lock debugging is enabled. There are two sets of warnings.
+Add name of functions triggering warning backtraces to the __bug_table
+object section to enable support for suppressing WARNING backtraces.
 
-WARNING: CPU: 0 PID: 689 at kernel/locking/mutex.c:923 __mutex_unlock_slowpath.constprop.0+0x13c/0x368
-DEBUG_LOCKS_WARN_ON(__owner_task(owner) != __get_current())
+To limit image size impact, the pointer to the function name is only added
+to the __bug_table section if both CONFIG_KUNIT and CONFIG_DEBUG_BUGVERBOSE
+are enabled. Otherwise, the __func__ assembly parameter is replaced with a
+(dummy) NULL parameter to avoid an image size increase due to unused
+__func__ entries (this is necessary because __func__ is not a define but a
+virtual variable).
 
-WARNING: kunit_try_catch/1336 still has locks held!
-
-KUnit test cleanup is not guaranteed to run in the same thread as the test
-itself. For this test, this means that rtnl_lock() and rtnl_unlock() may
-be called from different threads. This triggers the warnings.
-Suppress the warnings because they are irrelevant for the test and just
-confusing.
-
-The first warning can be suppressed by using START_SUPPRESSED_WARNING()
-and END_SUPPRESSED_WARNING() around the call to rtnl_unlock(). To suppress
-the second warning, it is necessary to set debug_locks_silent while the
-rtnl lock is held.
-
-Cc: David Gow <davidgow@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- net/core/dev_addr_lists_test.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/include/asm/bug.h | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/net/core/dev_addr_lists_test.c b/net/core/dev_addr_lists_test.c
-index 4dbd0dc6aea2..b427dd1a3c93 100644
---- a/net/core/dev_addr_lists_test.c
-+++ b/net/core/dev_addr_lists_test.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index a3ec87d198ac..d87bf8bab238 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -23,18 +23,28 @@
  
- #include <kunit/test.h>
-+#include <linux/debug_locks.h>
- #include <linux/etherdevice.h>
- #include <linux/netdevice.h>
- #include <linux/rtnetlink.h>
-@@ -49,6 +50,7 @@ static int dev_addr_test_init(struct kunit *test)
- 		KUNIT_FAIL(test, "Can't register netdev %d", err);
- 	}
+ #ifdef CONFIG_DEBUG_BUGVERBOSE
  
-+	debug_locks_silent = 1;
- 	rtnl_lock();
- 	return 0;
- }
-@@ -56,8 +58,12 @@ static int dev_addr_test_init(struct kunit *test)
- static void dev_addr_test_exit(struct kunit *test)
- {
- 	struct net_device *netdev = test->priv;
-+	DEFINE_SUPPRESSED_WARNING(__mutex_unlock_slowpath);
++#if IS_ENABLED(CONFIG_KUNIT)
++# define HAVE_BUG_FUNCTION
++# define __BUG_FUNC_PTR	__BUG_REL(%c1)
++# define __BUG_FUNC	__func__
++#else
++# define __BUG_FUNC_PTR
++# define __BUG_FUNC	NULL
++#endif /* IS_ENABLED(CONFIG_KUNIT) */
++
+ #define _BUG_FLAGS(ins, flags, extra)					\
+ do {									\
+ 	asm_inline volatile("1:\t" ins "\n"				\
+ 		     ".pushsection __bug_table,\"aw\"\n"		\
+ 		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+ 		     "\t"  __BUG_REL(%c0) "\t# bug_entry::file\n"	\
+-		     "\t.word %c1"        "\t# bug_entry::line\n"	\
+-		     "\t.word %c2"        "\t# bug_entry::flags\n"	\
+-		     "\t.org 2b+%c3\n"					\
++		     "\t"  __BUG_FUNC_PTR "\t# bug_entry::function\n"	\
++		     "\t.word %c2"        "\t# bug_entry::line\n"	\
++		     "\t.word %c3"        "\t# bug_entry::flags\n"	\
++		     "\t.org 2b+%c4\n"					\
+ 		     ".popsection\n"					\
+ 		     extra						\
+-		     : : "i" (__FILE__), "i" (__LINE__),		\
++		     : : "i" (__FILE__), "i" (__BUG_FUNC), "i" (__LINE__),\
+ 			 "i" (flags),					\
+ 			 "i" (sizeof(struct bug_entry)));		\
+ } while (0)
+@@ -80,7 +90,8 @@ do {								\
+ do {								\
+ 	__auto_type __flags = BUGFLAG_WARNING|(flags);		\
+ 	instrumentation_begin();				\
+-	_BUG_FLAGS(ASM_UD2, __flags, ASM_REACHABLE);		\
++	if (!IS_SUPPRESSED_WARNING(__func__))			\
++		_BUG_FLAGS(ASM_UD2, __flags, ASM_REACHABLE);	\
+ 	instrumentation_end();					\
+ } while (0)
  
-+	START_SUPPRESSED_WARNING(__mutex_unlock_slowpath);
- 	rtnl_unlock();
-+	END_SUPPRESSED_WARNING(__mutex_unlock_slowpath);
-+	debug_locks_silent = 0;
- 	unregister_netdev(netdev);
- 	free_netdev(netdev);
- }
 -- 
 2.39.2
 
