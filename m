@@ -1,54 +1,54 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CCE14374A
-	for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 22:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD05143748
+	for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 22:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710280862; cv=none; b=DjhARIn5mUtdELEn2clSrt/uP4uA0YQ9hiWjT/tY88Fl6a9+wLBWBgh6QCcN1qzYRu7qJQcRw6zm9HEEWSoBm7hAT/s9TwJq3KCuEALZYD3dFvn3WGotfKiuaRSVh3/MaEIY89Kod2aHOftYJGTjZlmPw5kvwsqtFSNU/0fLX8I=
+	t=1710280930; cv=none; b=m/pD9cD6/9v9W2o3myRAFVUQaSjAB9ZgZSo12kD7D0a6ZuComZi4yt6hUhHNYvKAFtQiMiOGX8K9Mqev5SJ2BWSewx4QFwkZlbKwUsbyfcKvTgR4m4z2mQkPn00ht5xCBPG5vvokifa6uocUmW+v2yhxFAZuz6I6WpbibXl1iCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710280862; c=relaxed/simple;
-	bh=wGnHuFYICWDAqpBS7st1+d1ZNPu8frSboYhyV8sLtoc=;
+	s=arc-20240116; t=1710280930; c=relaxed/simple;
+	bh=Icdql7YMVD0wcn4SegJGmiR0d0RGpgg+yMW7x3+7qcI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mudyd/jfk48brR9XbYm7DWq72MlNTduALiH1axnrrCqPoRQfDknoE4P9OrQmM55ZS3jhE7F7aObhkNS+7GfByvZfnAilI8aqdYKEtUQbhoc9GyL08VNVn2RB9rYssRAa4X5+HCCj2KRd4mivxtEC3//QKFD6ZBkarBiB8Ol+irc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ejeu6j+8; arc=none smtp.client-ip=209.85.216.43
+	 Content-Type:Content-Disposition:In-Reply-To; b=k1R9q5nlDZACAf9gEAZUkxkP0dLkoJ+SDloCzR/3Fim51cxJ/MXGqjMv/EfT2dfxMns4BVeu88dmaLk9g+TSL4yj5Y0alsj2cw5vJdU92jFgf6LogUVodUr5Ddqk6d4JsUKCR0Bvig0JoHG05DycDQ80R4lOG1Ku/cw+/6AriCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PuGlXlgl; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ejeu6j+8"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-29aa91e173dso4272250a91.0
-        for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 15:01:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PuGlXlgl"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e6b6a1b940so119383b3a.0
+        for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 15:02:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710280859; x=1710885659; darn=lists.linux.dev;
+        d=chromium.org; s=google; t=1710280927; x=1710885727; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lLq08iYnVcnWuDzFJHO0LDnyeIZ1/WCj/v6YSvUnsiY=;
-        b=ejeu6j+85TFajRur/1928VkZv7qEKJ09mK/fvyUBCxcx0jUNhmlPsKDBkjgokFE2Ts
-         VMm0o2pyfD9JNJRmJ/0x5u1B9g9l3muVs5X6MvJMLTTETNbBoNlS4fFIXofhc8WIh6Eo
-         +YpdYveNJfrnudHFAqyOA9pBhX3QMmrBztCCc=
+        bh=HfVz/RhW1d+ABxE62vHBaQjSqXe83Qgl8810kDikh7s=;
+        b=PuGlXlglWTa3/NUXX9FbmuLUner7MP9PQuVZfJAih4VsfALWO5uwPj4hEY0l6/V4fW
+         ntfmV+Y/NM+meaeyFhZnZLNgBZJB3YeQw5Eq1gdwGul8xdZDqJrOiE6A9nGF3jDDOVS3
+         HUShIYNR9QS/vHhXZV/8InQ4qzOQuNnKxgKy4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710280859; x=1710885659;
+        d=1e100.net; s=20230601; t=1710280927; x=1710885727;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lLq08iYnVcnWuDzFJHO0LDnyeIZ1/WCj/v6YSvUnsiY=;
-        b=VeXCNJpqf6X5ZZhvivD95ovq3znCLHu0/0MZ5tmDfKc4B3tP8f4KZXfdKkwzv+DHaw
-         5NeKBAfy6HGtT5V+ZoFDWcTdds2Nfgj6KTq03bdABj9GzuPyCWEDkTQTGw3hisHI4aeD
-         bcSgSXPViTjpFWkAAAIHmJzVV2lq4Mn+QVXuS6MtO+tVP/q5yNATUjedJskwvNX5gJZ4
-         aLkK1nU/L6/SHTMErEn1le/DM5RpBiJ3l7fFnIpIMoN61Lzl1VxjGH5HcAakV5SMk/yf
-         5u2bHN6BExmVuKNoujSL0w6n4W6mlJGcuKuqNc7SIBeTojiWGqe1jY1bSe6+TwgY8CqR
-         kLDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXotO+K5z+Fu6Ih+cDAIyQfPerEgK5h8ojcO9+mwGcJ3NiMrodKVf3iw6BxX+72BzmkvUOYIuj3oCTFVdwKBMjR1wrQ2FlLlpBl
-X-Gm-Message-State: AOJu0Yz2Zf+c84S2lCRfVI6/VpfWHbeYOULCMi/79fck00ihochRFFUg
-	pRmHaLU0silKHXefBm1hvemE4vmeRgVWGBHGr6Kf85TqlB9HGzoe2jNT/ve4hg==
-X-Google-Smtp-Source: AGHT+IHdha0C7GHgTOtn+h7GC1nV2SuVFIKnwQ0XR5LyRaxyHLt5ciUVNw2VJKedo24c6BQYxDb+PA==
-X-Received: by 2002:a17:90a:8b02:b0:299:4cc5:aa25 with SMTP id y2-20020a17090a8b0200b002994cc5aa25mr2853635pjn.25.1710280859551;
-        Tue, 12 Mar 2024 15:00:59 -0700 (PDT)
+        bh=HfVz/RhW1d+ABxE62vHBaQjSqXe83Qgl8810kDikh7s=;
+        b=ibemZ3OVNY13ZGswGkCePGIKXw0FHCbAwcQIX8FefhqSGzWjAD5Z6xUjOfDpHuG+2a
+         NFC1ILlNNcr7wS7k+bGRxs7ilUwAL97sX2H0/v5HAI9XK1RIzkiEUpm7Ygt3nJ0dLctN
+         j/9TMkesJop2F1kP/wGKCd+SisYk48jKy5bDGlisPNVYEnoQxFl7ZmoEZLVGXVDa6lf0
+         dTrgk0z4xXvomlbrRzAulD+sqtEejEEw/ZWKkbWXroF297OKJMPA8lDOwCCRprtGUZAE
+         KDhEfX5z8N15uGiUr/Xco1vGy8h/1Dt41ooE7PhjkTY3Omgrzgs2BOpVEArZ/2mf7D9+
+         vbNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwTT5wzWMeqiHkV2F2XK6fhMwFTcRu6vOHYmLN69kae7d4fSz+VKOkIAYgGBSJuz6k7aWsHv/ZYamXKXANSFj7UfOWtMC3ZTPa
+X-Gm-Message-State: AOJu0YxBzWeBGWrBNPNw7eyOdS3EwI3J4ZN/xxWxMegTniftA/JTGQ2f
+	8pXuh3dFQ2wpkPFnLk1E+gaBrP1mj7x+Qkz4Lg+IJpMrHKwGCt4KSd62THG5KQ==
+X-Google-Smtp-Source: AGHT+IFaAzHiJbVMwydAnFUAbBGgB4TiVXgXXf4Bmn7UNMuMdpujdzLwHr5uC0yhXwauRYk5a8qmzQ==
+X-Received: by 2002:a05:6a00:4fcb:b0:6e6:afa3:7b32 with SMTP id le11-20020a056a004fcb00b006e6afa37b32mr865695pfb.6.1710280926942;
+        Tue, 12 Mar 2024 15:02:06 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u8-20020a170902e5c800b001ddb57a4dffsm2232631plf.132.2024.03.12.15.00.58
+        by smtp.gmail.com with ESMTPSA id p35-20020a056a000a2300b006e6ab799457sm1315765pfh.110.2024.03.12.15.02.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 15:00:59 -0700 (PDT)
-Date: Tue, 12 Mar 2024 15:00:58 -0700
+        Tue, 12 Mar 2024 15:02:06 -0700 (PDT)
+Date: Tue, 12 Mar 2024 15:02:05 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Guenter Roeck <linux@roeck-us.net>
 Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
@@ -73,11 +73,10 @@ Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
 	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
 	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
 	netdev@lists.linux.dev
-Subject: Re: [PATCH 01/14] bug/kunit: Core support for suppressing warning
- backtraces
-Message-ID: <202403121500.64A2C02@keescook>
+Subject: Re: [PATCH 02/14] kunit: bug: Count suppressed warning backtraces
+Message-ID: <202403121501.F7CA06C@keescook>
 References: <20240312170309.2546362-1-linux@roeck-us.net>
- <20240312170309.2546362-2-linux@roeck-us.net>
+ <20240312170309.2546362-3-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -86,38 +85,83 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240312170309.2546362-2-linux@roeck-us.net>
+In-Reply-To: <20240312170309.2546362-3-linux@roeck-us.net>
 
-On Tue, Mar 12, 2024 at 10:02:56AM -0700, Guenter Roeck wrote:
-> Some unit tests intentionally trigger warning backtraces by passing
-> bad parameters to API functions. Such unit tests typically check the
-> return value from those calls, not the existence of the warning backtrace.
+On Tue, Mar 12, 2024 at 10:02:57AM -0700, Guenter Roeck wrote:
+> Count suppressed warning backtraces to enable code which suppresses
+> warning backtraces to check if the expected backtrace(s) have been
+> observed.
 > 
-> Such intentionally generated warning backtraces are neither desirable
-> nor useful for a number of reasons.
-> - They can result in overlooked real problems.
-> - A warning that suddenly starts to show up in unit tests needs to be
->   investigated and has to be marked to be ignored, for example by
->   adjusting filter scripts. Such filters are ad-hoc because there is
->   no real standard format for warnings. On top of that, such filter
->   scripts would require constant maintenance.
+> Using atomics for the backtrace count resulted in build errors on some
+> architectures due to include file recursion, so use a plain integer
+> for now.
 > 
-> One option to address problem would be to add messages such as "expected
-> warning backtraces start / end here" to the kernel log.  However, that
-> would again require filter scripts, it might result in missing real
-> problematic warning backtraces triggered while the test is running, and
-> the irrelevant backtrace(s) would still clog the kernel log.
-> 
-> Solve the problem by providing a means to identify and suppress specific
-> warning backtraces while executing test code.
-> 
-> Cc: Dan Carpenter <dan.carpenter@linaro.org>
-> Cc: Daniel Diaz <daniel.diaz@linaro.org>
-> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  include/kunit/bug.h | 7 ++++++-
+>  lib/kunit/bug.c     | 4 +++-
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/kunit/bug.h b/include/kunit/bug.h
+> index 1e34da961599..2097a854ac8c 100644
+> --- a/include/kunit/bug.h
+> +++ b/include/kunit/bug.h
+> @@ -20,6 +20,7 @@
+>  struct __suppressed_warning {
+>  	struct list_head node;
+>  	const char *function;
+> +	int counter;
 
-Yup, this looks fine to me.
+Thanks for adding a counter!
+
+>  };
+>  
+>  void __start_suppress_warning(struct __suppressed_warning *warning);
+> @@ -28,7 +29,7 @@ bool __is_suppressed_warning(const char *function);
+>  
+>  #define DEFINE_SUPPRESSED_WARNING(func)	\
+>  	struct __suppressed_warning __kunit_suppress_##func = \
+> -		{ .function = __stringify(func) }
+> +		{ .function = __stringify(func), .counter = 0 }
+>  
+>  #define START_SUPPRESSED_WARNING(func) \
+>  	__start_suppress_warning(&__kunit_suppress_##func)
+> @@ -39,12 +40,16 @@ bool __is_suppressed_warning(const char *function);
+>  #define IS_SUPPRESSED_WARNING(func) \
+>  	__is_suppressed_warning(func)
+>  
+> +#define SUPPRESSED_WARNING_COUNT(func) \
+> +	(__kunit_suppress_##func.counter)
+> +
+>  #else /* CONFIG_KUNIT */
+>  
+>  #define DEFINE_SUPPRESSED_WARNING(func)
+>  #define START_SUPPRESSED_WARNING(func)
+>  #define END_SUPPRESSED_WARNING(func)
+>  #define IS_SUPPRESSED_WARNING(func) (false)
+> +#define SUPPRESSED_WARNING_COUNT(func) (0)
+>  
+>  #endif /* CONFIG_KUNIT */
+>  #endif /* __ASSEMBLY__ */
+> diff --git a/lib/kunit/bug.c b/lib/kunit/bug.c
+> index f93544d7a9d1..13b3d896c114 100644
+> --- a/lib/kunit/bug.c
+> +++ b/lib/kunit/bug.c
+> @@ -32,8 +32,10 @@ bool __is_suppressed_warning(const char *function)
+>  		return false;
+>  
+>  	list_for_each_entry(warning, &suppressed_warnings, node) {
+> -		if (!strcmp(function, warning->function))
+> +		if (!strcmp(function, warning->function)) {
+> +			warning->counter++;
+>  			return true;
+> +		}
+>  	}
+>  	return false;
+>  }
+> -- 
+> 2.39.2
+> 
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
