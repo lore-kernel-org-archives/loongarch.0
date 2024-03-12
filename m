@@ -1,54 +1,54 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8972A4AEEB
-	for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 22:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60C614290A
+	for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 22:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710280970; cv=none; b=dJCPU5fNc2bzVbw8m/CwgLugHTmZQ4IjR5Ebu6XSa8jJ/WdnBOUxcgc/aHcpDvtDpPS4Nl0moI48S0dWcFfYhYXsmeWNd0DBO4C1MyJgSo+Q34yyA8LM0uqdpEpFbR0UjR1k/dUnWDZQ+CycXYEZcHDmzbRGraZ0bqPZiYVyLEk=
+	t=1710280988; cv=none; b=J4N5u6HrFN3R5oEyqhkWN1JFlIQLtnPGVHLWCPOAowfaNasesVLqwbgh2S8NlBzP4mpGuw5HN7xG8W0obsJ0C4QOrDhLKVwtI36eKJNwvLT4HbTpMGyN/4ovq4K+UmeIxquenp7m1RXtU8TDMdrpvKfgL0rbk6nQrH1fUdyH7Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710280970; c=relaxed/simple;
-	bh=oexVpmdnuJzE5NnIT+grB7HUdJL7OkTLS1ozx4Z/KWY=;
+	s=arc-20240116; t=1710280988; c=relaxed/simple;
+	bh=D4lY7fxdRPJh4W1hrWZC0Kv5/fDQzdNIZGvAvIvgwj8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iaWQrmjMT979qd0ciUM9FNCQ2E8HGt3G0O7LnECHdktfMvemxHz8GdKe4bhJsJo8G4t6tBWO0NVfiXThJl2VfLzyHl8TrtVCs2lq1w+eM7zEbp+v4oi0kLrtimJGDRrlGM3pSp3cymqgMcruMHzepogsw+OSNI4TBjdZxprQPcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ITBDOZIB; arc=none smtp.client-ip=209.85.210.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pptm898fwYGySPTSm1eWs9xRuHAa+fAeVEAVAaSv2/HkSTIpedGxAHaQ2owGCTDUGkFV0rnYjmSt987CwzBICFm05Oux7K7+L7jAFyMu6sd+QrYn5EoDCyMa+Sv5bhWquak7w4H4ma5AnH6kvc4UqGNYNH02VE2tUnbD0QxH4uY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NllEfewF; arc=none smtp.client-ip=209.85.166.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ITBDOZIB"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e6adc557f3so831387b3a.1
-        for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 15:02:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NllEfewF"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7c8a8428b09so13274839f.0
+        for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 15:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710280967; x=1710885767; darn=lists.linux.dev;
+        d=chromium.org; s=google; t=1710280986; x=1710885786; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1akdFCp/NrQTZkdZoE61av7sk42pTtpjjQoFP3uV05s=;
-        b=ITBDOZIB+SVanmc7Wd2033IC9qjhNfcUM8M0hX6Dd9dIZSAYEhNt3nslLMWxOlGVMY
-         QV6/4fNxm+jQ1YB9i9W1uDD1SRVFp6e3Pq3EeCXGiumHJNj9oBVg/injc7RL0sG7/x1h
-         075xCbu9yJOmZ8hIwFlTMdTaOTKKBNcs+sRPY=
+        bh=bFZkOPzjUiG9hBeGxmULl/XMqNk9IbEaqEvdeXcgD8s=;
+        b=NllEfewFq4RhoTe+o3JSviLnWxX9Qqmqz22Jh5uWDP5IVWi7jJPVHEDFTrJcMGoINq
+         Uaj350lbTa0EJoy/iRDZ61HxDTnFn2Y8Z3sD/gQW6ikmR83UgQZyzHdZd1p2prKbkyi6
+         KcEQdhSwi3Go860ECxxK0DFAQ769wVgeZDPUs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710280967; x=1710885767;
+        d=1e100.net; s=20230601; t=1710280986; x=1710885786;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1akdFCp/NrQTZkdZoE61av7sk42pTtpjjQoFP3uV05s=;
-        b=E8AC0ZpJF4733gwy7jk5rV06xeF8FoHOvtLOYAKA2yr8PS4MaXPe4Yc4oiGvzeaeXG
-         RfMGttjTwNtTlpUcEOW1n7aPFHn5KjgQ1XFDo2ntpdAEj5//mc0YiKaXfdyYhBCUQ/M2
-         Vo2fZgH7WrDEhikoZSMieFNwHEDX9vTXzyz1YLjUGifcMLK3pIyiffESNkwYIZcBNMBZ
-         bD6vzx2Rub2GrmI6cjUFh0sg4gwCvQomFT2CDSUBOTbP4h7cC5dvBnnjDjvNy39W4TaM
-         2lYkx+l+Yjna8i2Op0lhBqZzp58rO+XODMyjP3tv0lqa9qfCBDprXfckJG/lZZQvMUbV
-         jDSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXMY5/fKXXgDZTV73lfMRJ3EAomDBm8RBfb13HATiJlkOGb6LFfgkY9INeCFrg8FGR5Mvx7xTP8/7h4dpwxqN7/xVIVVJqQWjNq
-X-Gm-Message-State: AOJu0Yydipf3ZtWnEPSpVSQ4O/E0YKJD5ATZeM8EDCPLUmuftvDHnyci
-	yRtTXWwGVvfQ7g2jKAjwEV2tgmY7gBsnfWD/29ooGUj+P9FAkYqoksaGp/zY6Q==
-X-Google-Smtp-Source: AGHT+IFKZ+X2o3xvUM/DPjpn5dJMdSK/7jBm9riFOy6GxFDG2jNN2P7xmSx2+ecCvjPJ+atiR43WGA==
-X-Received: by 2002:a05:6a20:9382:b0:1a0:efd0:b183 with SMTP id x2-20020a056a20938200b001a0efd0b183mr14145890pzh.44.1710280967019;
-        Tue, 12 Mar 2024 15:02:47 -0700 (PDT)
+        bh=bFZkOPzjUiG9hBeGxmULl/XMqNk9IbEaqEvdeXcgD8s=;
+        b=cyLSJBw7E8s7pKLEWu2/osPjqMM0b4RvD/A7I9Fcp4QSePweIT6MRNpdn2eTU+MIiX
+         twELdJ6GnGsnB7iMlT/4M9yK6FfAyIRYbqHKXr795ZTHBKCUe+NhOpiZnV+8pptdjFVm
+         L16nPmwHgjQ722b+dZEy/jUlT5HUlWfoGnUuVb6yspwal/Lz5mna5sZHVxXAwG/cNMxV
+         92oFp5yXvPXORV8TgHNqyfkKNk5CbNfpBVd7L+qORVuiZbKABv8D9tpSNiG2JpfBIptj
+         xztAL5pEJ+1eB462DJjeBL1ZDTsleDRNHjuUqKp2CBLmkQzxKqcCP80caWA7HozzSSSR
+         Eh4g==
+X-Forwarded-Encrypted: i=1; AJvYcCV/sT8iWlk5HysMm8pR2l7DxefVBra0hLXANZk7H2VHcMp9DJkvZJu1klLL9IGatqo9DmSvOz4d/zx3xN+95yKmTs7GpCZdNtLT
+X-Gm-Message-State: AOJu0YxiSpFjYR/Hej/tlU8FOAWxZQJKEdQNIi/8ZiHJlbj86XNmvpns
+	ahj1zBaeJ16IB/pJQjO4ZeqY8JDXtKEab//8bxLZslrzES9cvLyOw1XlYQWpqQ==
+X-Google-Smtp-Source: AGHT+IEdwN1SY2GeciEHPDmRWgTgdPa04evl6KEFQYoPJeYQSV2BmWI4216WoCmzy6l7zJDsrZVhNw==
+X-Received: by 2002:a6b:e719:0:b0:7c8:bf15:5653 with SMTP id b25-20020a6be719000000b007c8bf155653mr4918871ioh.20.1710280986087;
+        Tue, 12 Mar 2024 15:03:06 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e11-20020a17090301cb00b001dd6c0800b4sm7193896plh.188.2024.03.12.15.02.46
+        by smtp.gmail.com with ESMTPSA id m14-20020a63ed4e000000b005dc816b2369sm6650251pgk.28.2024.03.12.15.03.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 15:02:46 -0700 (PDT)
-Date: Tue, 12 Mar 2024 15:02:46 -0700
+        Tue, 12 Mar 2024 15:03:05 -0700 (PDT)
+Date: Tue, 12 Mar 2024 15:03:05 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Guenter Roeck <linux@roeck-us.net>
 Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
@@ -73,11 +73,11 @@ Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
 	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
 	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
 	netdev@lists.linux.dev
-Subject: Re: [PATCH 03/14] kunit: Add test cases for backtrace warning
- suppression
-Message-ID: <202403121502.95F27A01@keescook>
+Subject: Re: [PATCH 04/14] kunit: Add documentation for warning backtrace
+ suppression API
+Message-ID: <202403121503.B97DE8A60E@keescook>
 References: <20240312170309.2546362-1-linux@roeck-us.net>
- <20240312170309.2546362-4-linux@roeck-us.net>
+ <20240312170309.2546362-5-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -86,14 +86,10 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240312170309.2546362-4-linux@roeck-us.net>
+In-Reply-To: <20240312170309.2546362-5-linux@roeck-us.net>
 
-On Tue, Mar 12, 2024 at 10:02:58AM -0700, Guenter Roeck wrote:
-> Add unit tests to verify that warning backtrace suppression works.
-> 
-> If backtrace suppression does _not_ work, the unit tests will likely
-> trigger unsuppressed backtraces, which should actually help to get
-> the affected architectures / platforms fixed.
+On Tue, Mar 12, 2024 at 10:02:59AM -0700, Guenter Roeck wrote:
+> Document API functions for suppressing warning backtraces.
 > 
 > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
