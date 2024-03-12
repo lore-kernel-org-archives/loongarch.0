@@ -1,57 +1,57 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F13213B2A0
-	for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 17:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9082113B2B8
+	for <loongarch@lists.linux.dev>; Tue, 12 Mar 2024 17:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710263013; cv=none; b=HpwhK2Af+lUFqFNr+jriTpwLfU0RoWslDHFlqWS2PgHaDhhPiEtdBiyIT0N0XYBh6xC9Aa9UH3FCQpCcFht5cnNu+3fXWV0cK8nAS1D2EG7bHL5GKV2b2ReH2Sd72yfHRR3Pk9zeR0FTA/aFJRP2MRIOg7cfobHxic+30CpvtqI=
+	t=1710263016; cv=none; b=Gy8vXPZR7bJ70mYbiRawwU1gmXwE6zA4SEK9TzTQDs+hT3pZSfOLLLu+BzsOHKsKagPDKhnDdk1T0tpVKphSLVPq7SFaF1+U8WoZ5whyuhnXYO/0Tc17X5ST4XmTCyJc1VGoqXpitzbF6z2G/BVyV1hIqiiBiulfFUTFwQPOW9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710263013; c=relaxed/simple;
-	bh=uZZ0pxvUudvGaQrFvHsY/MGGWPShLhBfmN2ecn70snU=;
+	s=arc-20240116; t=1710263016; c=relaxed/simple;
+	bh=g8p6Ru/ffP1jzehPrw/CRaeaF2IOojZZQLAZrCdrRdY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N64Buk0T3igT4yzYN7M17B6pRni5l8uRPYJKoLjRva89H0VCysVDdrrjpbm6Oogf36D2eVoqSgnv9V6ThZ9wjop8ltz6uCav4U5EN90+8/Av9A9yez7qql4DoU/wSeecFbmKJ88/rJ/DsA+UExfhtYhh2MYJ5CzO4q7fDlU1jZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QuBrG4OL; arc=none smtp.client-ip=209.85.210.175
+	 MIME-Version; b=sN7OOfe+JLG0KKU0aJnM919UFfiRXeRqc8B4yQiTZV2bMEyKsEFgGmRmfdaWa1UT2dm2hkcQGve3asUCHAuoh6O4DHB033V6NKhpf23JLdfFpFyT8QTxW5xA4EMyzJSqB6N8NjY1rD1ps6ovYYYE5kd+yF3/ZduQnObcyvw2UFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jI61zz1n; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuBrG4OL"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e5a232fe80so45149b3a.0;
-        Tue, 12 Mar 2024 10:03:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jI61zz1n"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29c52a90417so23564a91.1;
+        Tue, 12 Mar 2024 10:03:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710263012; x=1710867812; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1710263014; x=1710867814; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mgfFEM0oJIh4ATTR993DWw0sPyKQH24EY/4/QOUPczo=;
-        b=QuBrG4OLN3rGok+5ieAjftM8aaAuuxe8a7G/JMRYPrS3mmLZV7NcYtuxEkb5HpF9qE
-         oJuxAh87FluDzMPQXwyZZP9e+FTcEyNwqBKQf8m4/wx9kYMqdxn7C2mD/Ua6PlnQnBtB
-         ldGk2GIR2n7nsBsCttKaT+D6B3Ar/yC11n9C9PjTW2PGYy8qk9cHx7ohb2CTZMi7UftD
-         IQGAxuhyWkl60y3qF/W0GkubG0wpiZXlHjanWogUNVft++IpOfNG+eGVMA0qagM/hXC7
-         89Sx/m+GAgBmkt+5Pu05+XIVSPaKhv/bFPm7UCvC/5jki098OGQidCf/b30oihI5JoIN
-         4gQA==
+        bh=QaoPploMqkrEWkpIzUU4wfevhj/fOj8xGNuIym5RM4g=;
+        b=jI61zz1nxG7r2gzUSCHFR+HVATg4zZtioa85iifcrquk62mctXpg6gAd5D8itoGeet
+         hNmi1nQlKwenK5CGBCaN5yuSQ6VG/KdwunonBpL/cskocquSHg0oO1fVBMdT1UP710dN
+         o/ygdVpkgdpW7DLpi4KbBBs4DHbbJ0x3jJYKp558ujLnzuxi70uwixOzIohylk8YN6cZ
+         FpQsOLBgoE2VHngJGfwHxfMX1JaXUTixsdwDEhaxz6KXyY66M8fRpHjcxQ+IUUIirj71
+         v8mWON6SSCPANQ+PlMQZkxljD9w5W5F+gQk1lgsP6al/MmgBFUCusx7UizoV0PkJxzsQ
+         J26A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710263012; x=1710867812;
+        d=1e100.net; s=20230601; t=1710263014; x=1710867814;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mgfFEM0oJIh4ATTR993DWw0sPyKQH24EY/4/QOUPczo=;
-        b=bPdTW+flsuk1Ownz+uTtK7K1//+g0DSyaFQB6i5phAWnWT3CoskGNariOm5jfRIgN9
-         C1wD6VvgYzXVaLJlxagAuJTArvFfVYPog+50Kil7KvOIYFeUs1lhw+DPD9yb4jHTJS0M
-         TPsPhhQ6dg79WNaJY7NZU3En1f9TntGEVqDtA6ycd33/FHWGa6Lxd5Xl+kDBKZ7KeCYZ
-         NcCG4rMF20z1UHv36PJD9/3dbewwgr9AOETwNtVJ4wMbN8VJ93FU0slcxXqG+me6n+m8
-         qnuK9oO0sS2wvjuV1Etht/h0qIv0JOUnBXCDw0yHfBQRTJiMnGjxvPba0Pu/ZOcfM9pf
-         CeNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWiA9lz7UNIOryP+qVqN15xQ7XsI+VmpypLMdL6t67lF1WQwwOGLUpz6B/64m6blMcLTcNSL3bhJgETo+llH3MkvoyZfB9nHHCoaRr9c2jcIMbprOYL3Bt3E2ZMJMuq17oa
-X-Gm-Message-State: AOJu0Yzv9UXtagaet1dOEi36Wvn924mDZ4KzgDPSMI24+aqxwReDP1MA
-	81Q/82QFAobgQNZipS3ueIAIZCW1xetVN7xo7fsSD6ZqDLEdO9tt
-X-Google-Smtp-Source: AGHT+IFq2CL0ds18qlKLUiBCru+tEydVmq2O3jl6A2X5cUl3NOOBJhsozkjJ4JcvCmlm7vgxw0hJ7g==
-X-Received: by 2002:a05:6a00:3a0c:b0:6e6:96cb:3ab8 with SMTP id fj12-20020a056a003a0c00b006e696cb3ab8mr29726pfb.10.1710263011492;
-        Tue, 12 Mar 2024 10:03:31 -0700 (PDT)
+        bh=QaoPploMqkrEWkpIzUU4wfevhj/fOj8xGNuIym5RM4g=;
+        b=OZ0P/oqI1dfughsSfu42dEpa6c93c7M9+bc8XP+p6J/eEZ02CFCrRNcWKGefC3j4yG
+         ASgD/uub4cQKltYlTQFEw5L6pfjpFnAcriZcPgHm2BPR45FY+qMdeTGNfSD7rtu5TF2g
+         KAbMHVDFBwRTYjoUME6J9xOUUhRdVFbdDOupi1Ku31yvKdY/znYAPJczlFAC0sqcLHhl
+         FZDUwHCyJTgbLXdx6jGfDorcaZsujx4D8OZnRuvMieWAeV1+8GLov7fuyM1ts9fCMXwv
+         IM7/XtFVa7oMbNx+BB82lBv33CFqGi2hclzVdCSj4CnA3M06jmeQ8v5bTYmQJ8iCkxxv
+         Jxhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaHtDLkIr22tukHRXOQHX0XudfR214HhqLUmtRktcVR80fVRaaRCrvSSdE4dekx+btjDJ9YccM689UQSqUyR5c+LzCqYUr+CYfDlGJtLQGnCMeyjzUI2FnNIQGNlaneWBs
+X-Gm-Message-State: AOJu0Yw1o7/V7hbSxKpzAbcruIxGA++QpJari5/cgzI+J1etThLyQeo8
+	w5VQfPKv+LKmBtIKSYUbeTOP6ZuFPz0Tb4Xh2THIo7GWMgDf+H5N
+X-Google-Smtp-Source: AGHT+IGp1mJ0KTZ+LQYMSXPX4xCWLkAXoeTNJUTBRzyrNk3iCGaW03oMbFoz7IlCFWta+THFx92xXA==
+X-Received: by 2002:a17:90a:e514:b0:29a:9dd1:d45b with SMTP id t20-20020a17090ae51400b0029a9dd1d45bmr194372pjy.3.1710263013769;
+        Tue, 12 Mar 2024 10:03:33 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 29-20020a63125d000000b005dc98d9114bsm6228742pgs.43.2024.03.12.10.03.29
+        by smtp.gmail.com with ESMTPSA id e11-20020a17090a77cb00b0029bf32b524esm4052208pjs.13.2024.03.12.10.03.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 10:03:30 -0700 (PDT)
+        Tue, 12 Mar 2024 10:03:32 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
 From: Guenter Roeck <linux@roeck-us.net>
 To: linux-kselftest@vger.kernel.org
@@ -85,9 +85,9 @@ Cc: David Airlie <airlied@gmail.com>,
 	loongarch@lists.linux.dev,
 	netdev@lists.linux.dev,
 	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 08/14] arm64: Add support for suppressing warning backtraces
-Date: Tue, 12 Mar 2024 10:03:03 -0700
-Message-Id: <20240312170309.2546362-9-linux@roeck-us.net>
+Subject: [PATCH 09/14] loongarch: Add support for suppressing warning backtraces
+Date: Tue, 12 Mar 2024 10:03:04 -0700
+Message-Id: <20240312170309.2546362-10-linux@roeck-us.net>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240312170309.2546362-1-linux@roeck-us.net>
 References: <20240312170309.2546362-1-linux@roeck-us.net>
@@ -111,90 +111,88 @@ virtual variable).
 
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- arch/arm64/include/asm/asm-bug.h | 29 +++++++++++++++++++----------
- arch/arm64/include/asm/bug.h     |  8 +++++++-
- 2 files changed, 26 insertions(+), 11 deletions(-)
+ arch/loongarch/include/asm/bug.h | 38 +++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/include/asm/asm-bug.h b/arch/arm64/include/asm/asm-bug.h
-index c762038ba400..6884089a7191 100644
---- a/arch/arm64/include/asm/asm-bug.h
-+++ b/arch/arm64/include/asm/asm-bug.h
-@@ -8,36 +8,45 @@
- #include <asm/brk-imm.h>
+diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
+index d4ca3ba25418..25f2b5ae7702 100644
+--- a/arch/loongarch/include/asm/bug.h
++++ b/arch/loongarch/include/asm/bug.h
+@@ -3,47 +3,63 @@
+ #define __ASM_BUG_H
  
- #ifdef CONFIG_DEBUG_BUGVERBOSE
--#define _BUGVERBOSE_LOCATION(file, line) __BUGVERBOSE_LOCATION(file, line)
+ #include <asm/break.h>
++#include <kunit/bug.h>
+ #include <linux/stringify.h>
+ 
+ #ifndef CONFIG_DEBUG_BUGVERBOSE
+-#define _BUGVERBOSE_LOCATION(file, line)
++#define _BUGVERBOSE_LOCATION(file, func, line)
+ #else
 -#define __BUGVERBOSE_LOCATION(file, line)			\
-+
 +#if IS_ENABLED(CONFIG_KUNIT)
 +# define HAVE_BUG_FUNCTION
-+# define __BUG_FUNC_PTR(func)	.long func - .;
++# define __BUG_FUNC_PTR(func)  .long func - .;
 +#else
 +# define __BUG_FUNC_PTR(func)
 +#endif
 +
-+#define _BUGVERBOSE_LOCATION(file, func, line) __BUGVERBOSE_LOCATION(file, func, line)
-+#define __BUGVERBOSE_LOCATION(file, func, line)		\
- 		.pushsection .rodata.str,"aMS",@progbits,1;	\
- 	14472:	.string file;					\
++#define __BUGVERBOSE_LOCATION(file, func, line)			\
+ 		.pushsection .rodata.str, "aMS", @progbits, 1;	\
+ 	10002:	.string file;					\
  		.popsection;					\
  								\
- 		.long 14472b - .;				\
+ 		.long 10002b - .;				\
 +		__BUG_FUNC_PTR(func)				\
  		.short line;
- #else
--#define _BUGVERBOSE_LOCATION(file, line)
-+#define _BUGVERBOSE_LOCATION(file, func, line)
+-#define _BUGVERBOSE_LOCATION(file, line) __BUGVERBOSE_LOCATION(file, line)
++#define _BUGVERBOSE_LOCATION(file, func, line) __BUGVERBOSE_LOCATION(file, func, line)
  #endif
  
- #ifdef CONFIG_GENERIC_BUG
- 
--#define __BUG_ENTRY(flags) 				\
-+#define __BUG_ENTRY(flags, func)			\
- 		.pushsection __bug_table,"aw";		\
- 		.align 2;				\
- 	14470:	.long 14471f - .;			\
--_BUGVERBOSE_LOCATION(__FILE__, __LINE__)		\
--		.short flags; 				\
-+_BUGVERBOSE_LOCATION(__FILE__, func, __LINE__)		\
-+		.short flags;				\
- 		.popsection;				\
- 	14471:
- #else
+ #ifndef CONFIG_GENERIC_BUG
 -#define __BUG_ENTRY(flags)
 +#define __BUG_ENTRY(flags, func)
+ #else
+-#define __BUG_ENTRY(flags) 					\
++#define __BUG_ENTRY(flags, func)				\
+ 		.pushsection __bug_table, "aw";			\
+ 		.align 2;					\
+ 	10000:	.long 10001f - .;				\
+-		_BUGVERBOSE_LOCATION(__FILE__, __LINE__)	\
++		_BUGVERBOSE_LOCATION(__FILE__, func, __LINE__)	\
+ 		.short flags; 					\
+ 		.popsection;					\
+ 	10001:
  #endif
  
--#define ASM_BUG_FLAGS(flags)				\
--	__BUG_ENTRY(flags)				\
-+#define ASM_BUG_FLAGS(flags, func)			\
-+	__BUG_ENTRY(flags, func)			\
- 	brk	BUG_BRK_IMM
+-#define ASM_BUG_FLAGS(flags)					\
+-	__BUG_ENTRY(flags)					\
++#define ASM_BUG_FLAGS(flags, func)				\
++	__BUG_ENTRY(flags, func)				\
+ 	break		BRK_BUG
  
 -#define ASM_BUG()	ASM_BUG_FLAGS(0)
 +#define ASM_BUG()	ASM_BUG_FLAGS(0, .)
- 
- #endif /* __ASM_ASM_BUG_H */
-diff --git a/arch/arm64/include/asm/bug.h b/arch/arm64/include/asm/bug.h
-index 28be048db3f6..044c5e24a17d 100644
---- a/arch/arm64/include/asm/bug.h
-+++ b/arch/arm64/include/asm/bug.h
-@@ -11,8 +11,14 @@
- 
- #include <asm/asm-bug.h>
- 
-+#ifdef HAVE_BUG_FUNCTION
-+# define __BUG_FUNC	__func__
-+#else
-+# define __BUG_FUNC	NULL
-+#endif
 +
- #define __BUG_FLAGS(flags)				\
--	asm volatile (__stringify(ASM_BUG_FLAGS(flags)));
-+	asm volatile (__stringify(ASM_BUG_FLAGS(flags, %c0)) : : "i" (__BUG_FUNC));
++#ifdef HAVE_BUG_FUNCTION
++# define __BUG_FUNC    __func__
++#else
++# define __BUG_FUNC    NULL
++#endif
  
- #define BUG() do {					\
- 	__BUG_FLAGS(0);					\
+ #define __BUG_FLAGS(flags)					\
+-	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags)));
++	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags, %0)) : : "i" (__BUG_FUNC));
+ 
+ #define __WARN_FLAGS(flags)					\
+ do {								\
+ 	instrumentation_begin();				\
+-	__BUG_FLAGS(BUGFLAG_WARNING|(flags));			\
++	if (!IS_SUPPRESSED_WARNING(__func__))			\
++		__BUG_FLAGS(BUGFLAG_WARNING|(flags));		\
+ 	instrumentation_end();					\
+ } while (0)
+ 
 -- 
 2.39.2
 
