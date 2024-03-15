@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B78D2FA;
-	Fri, 15 Mar 2024 02:30:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98EB6ABF;
+	Fri, 15 Mar 2024 02:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710469831; cv=none; b=Mh4MEwuPWtmPFLKjX+38ME0FzIf000fe3r8745CouHRPp3nWFa9YE9SIvoEsRT/JNw3uEDvvm/4O78VaANzmmisxQ1n2RzJatRBmjOGawYRs/9gpxBByluqFzpmGp10m9BwVJ+e45ouflO6/KwxSfRMJo2HrVz8TykKtV1ngcGI=
+	t=1710470712; cv=none; b=YrSb3f7zYDbFGw7Nx1s9k3jHpmk0r1IWYVqO9DP6Xl3fX3Xh/Fc/oaey06+UVlW78+JF34VF8GpYA2OevPygUxSYOwm7ToGSiFINB/60gSaFFby9RW9JtA7+d0KNTqC2IcGxPUd4/xmXc9n14wCse1/KrehMRZXRL0fBvnzYooU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710469831; c=relaxed/simple;
-	bh=/DuxcoU5eU7Jg2W0UecnZo3j6aFQsVsJnqcpKoj3iDU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=mVDBStFU77eZ/LU1HaaOnd8nnpsBYTNRxmOTUPyheO72N4g9SOv8g2fG1ChRqxLKetY/647C3EcybO+MrHeiVehzInfSOEoUHekQX6N0r/V19qKPVJ9eKsqHWcu6DuMcxPkjNFvg9MXeoiSPzNHXR/v0POweoP8jdg9eXgVZOEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KP6FE4eq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KP6FE4eq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0D109C433C7;
-	Fri, 15 Mar 2024 02:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710469831;
-	bh=/DuxcoU5eU7Jg2W0UecnZo3j6aFQsVsJnqcpKoj3iDU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=KP6FE4eq9/myZv8B6rO85RyDC/5fy8vNg16+Nz/OmRAVWA0o5ldthsyQHF9xdmSQD
-	 3sGhNMgSv2xxV3C5rikVOXZzCyLxjUMljmmQHwVrrkUDmGrnQvOtpyCFOz0ZbHddh6
-	 meiyRECn3tp+MCoUkGwPalXjGO8yEUDPyJLjYi1k2TMOWcwI9VkkDp1EKWuhu8Waxg
-	 DHzRRIfjbJnniJwWQfZM9ckyC7Wq1VzEpcqorHyXiaMEQYz6Sk9RJECU67gJnNavX5
-	 CsyUGj74Bq5C3LTBLwmtQwd0mJbg1t/FxU1HdjS2cYKVqMT74jNfrEZZRl/+PZ1piE
-	 irzVcogN+JBCA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EFF08D84BAB;
-	Fri, 15 Mar 2024 02:30:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1710470712; c=relaxed/simple;
+	bh=gGdLKQeDx0rEaAwzLkXhbwbA9yc/pe+P9PvTcJ+1mAo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OlsPrzZM+YB70eWwRLZ9QPUDG3ZerLtvTWDvTE602PmvUqiMf90Rizw+mjBZWicBMfLn8c2FBZHwrE5DvQsZyby1/EEYwcHXu3KQ+rZbgIRAwofoXjpM4IczLcJe1EArpuNPgiui8hbdse4yAsqjnxYamDspCQzK6rB/S0ZWMkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89371C433F1;
+	Fri, 15 Mar 2024 02:45:09 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Select ARCH_HAS_CURRENT_STACK_POINTER in Kconfig
+Date: Fri, 15 Mar 2024 10:44:35 +0800
+Message-ID: <20240315024435.350013-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,51 +36,28 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v3 1/2] bpf: Take return from set_memory_ro() into
- account with bpf_prog_lock_ro()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171046983097.25404.15651868965957197359.git-patchwork-notify@kernel.org>
-Date: Fri, 15 Mar 2024 02:30:30 +0000
-References: <286def78955e04382b227cb3e4b6ba272a7442e3.1709850515.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <286def78955e04382b227cb3e4b6ba272a7442e3.1709850515.git.christophe.leroy@csgroup.eu>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@google.com, haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
- sparclinux@vger.kernel.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org, keescook@chromium.org
 
-Hello:
+LoongArch has implemented the current_stack_pointer macro, so select
+ARCH_HAS_CURRENT_STACK_POINTER in Kconfig. This will let it be used in
+non-arch places (like HARDENED_USERCOPY).
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Fri,  8 Mar 2024 06:38:07 +0100 you wrote:
-> set_memory_ro() can fail, leaving memory unprotected.
-> 
-> Check its return and take it into account as an error.
-> 
-> Link: https://github.com/KSPP/linux/issues/7
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> [...]
-
-Here is the summary with links:
-  - [bpf-next,v3,1/2] bpf: Take return from set_memory_ro() into account with bpf_prog_lock_ro()
-    https://git.kernel.org/bpf/bpf-next/c/7d2cc63eca0c
-  - [bpf-next,v3,2/2] bpf: Take return from set_memory_rox() into account with bpf_jit_binary_lock_ro()
-    https://git.kernel.org/bpf/bpf-next/c/e60adf513275
-
-You are awesome, thank you!
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index f90949aa7cda..277d00acd581 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -15,6 +15,7 @@ config LOONGARCH
+ 	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_CPU_FINALIZE_INIT
++	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_KCOV
+ 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
