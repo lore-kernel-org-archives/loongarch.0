@@ -1,242 +1,93 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ACA17BB13
-	for <loongarch@lists.linux.dev>; Tue, 19 Mar 2024 03:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D984F7C083
+	for <loongarch@lists.linux.dev>; Tue, 19 Mar 2024 03:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710819507; cv=none; b=HGq48IQm/1apStj+w+OFyIBwauiD1wrnu6QU+4JahaiRgzsoiVnYk12CATeBNZhJHTGMtBoYZdrW/D6FUECQTZpq4n401qBv2N6kFnZVDQzOUuA9jhG22PqP8bkc5+a/6U33MNBMjs6mbZA9QhkQiZgvpppY8G5KpQQhfJYP2BM=
+	t=1710820722; cv=none; b=egIgQUS3Qlog8vtGOESlPVooaQitU2Wg4vS/SRN2AJZN9Zvp8uUNSfglh/7vNI5Pxmn0TEldBpX0UHjZGbELlDZSPKIvGxe5tPlnixqBv9cx2z8Nqhu7gU/OfQr09CJwOvfE7NmAGf2z9n7KBu4nTo+6E3VYZAqALd52QQG3JSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710819507; c=relaxed/simple;
-	bh=FmZRKU5BT9yF+Rad8osguGw2+X0zD5+e6MUcgnvLH4U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oQID4SDcgIqhzFh5hT4IPJUJCaloZgC7NEo/7r2qrEBWIbaD0aj3sUIB4yFgLYxYt5xD4zpLAOjXmtaR8SQtIpNSLCAb0WlG4fUfQEj7Yqfv4oNwqgf5aFEBPRYFbDuUNC/BY3uV448dZlDiEPBh96LuDkiUDVxspvi8cDfDGoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Ax++isCPllV50aAA--.44088S3;
-	Tue, 19 Mar 2024 11:38:20 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvhOrCPllRRNdAA--.58700S2;
-	Tue, 19 Mar 2024 11:38:19 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [PATCH v4] LoongArch: KVM: Add software breakpoint support
-Date: Tue, 19 Mar 2024 11:38:19 +0800
-Message-Id: <20240319033819.3017483-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1710820722; c=relaxed/simple;
+	bh=mN37mmNJoVPK7QQbBgzp74gamlmqhD1FiCj4eiKeAF4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P8LiEJ2OE9XcnJmcsj2kwd/M6xbhCt0pf+eFMLgySZWSlNBDv6T4k1rqcwc/l6/Tn5fcJYdFehIsHgasnhktcd+WmSJP8Te57Xye/Ml9+G5p8OWLUJWDSmVvTQmUvV6LdS9JTgfiPypUqOkAlrDTVGxZ0t3muGaVJwxp4ohOAow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=keAe1F3R; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="keAe1F3R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81BCEC43394
+	for <loongarch@lists.linux.dev>; Tue, 19 Mar 2024 03:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710820722;
+	bh=mN37mmNJoVPK7QQbBgzp74gamlmqhD1FiCj4eiKeAF4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=keAe1F3RmmMP7Tie2NPjB+RHrEJqCcgRIqxePZoFdX+JZqG6E6EtVp1t0FF1W/3Gd
+	 2X4R/WXDYSBc2QOf9COgXT09ZHWEAsSuQr78UDso0juuyjzWgHwN9mLdr4VenzNl2E
+	 xLdqrdKG/B92gDxbtqLmGvqYEdUbKQs9csRJ4KGbo7ZyKL1qm4H9N9QLT0J+SwyBMJ
+	 /48VU9ImizfiBbW9o6GCsOC6S0BWPKOaD9DN9tjcEkaB0RIMVPjdP0woOrdA07+Vh5
+	 IGpVL3rNrQh8/UEHHzX7KNXONvCid8eps1A8QRs0UASlCMv0Y6whnMla0XYtnlesr9
+	 vL5J1poDQDfCw==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d52e65d4a8so18018381fa.0
+        for <loongarch@lists.linux.dev>; Mon, 18 Mar 2024 20:58:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUkQ+/QgXi9kmdSyww8T/R5WrJMHLMMbbZumzUSBwuYS1DyVNTk5y9fDxunD4cEC6IR4d+1SPDjTMQowi2WcFh/OGpz2GxYANRJ
+X-Gm-Message-State: AOJu0YyMwPyfoJKl3VxOMH2ifQtCtX8M9dfhOPNKhQKmfpevLkKFvI0Y
+	LOwdlelAKmu//Zs9UF5ARZBAbSwgcNXev4O3j6tMS7DmlCxYVHeLFpOHN/nBL2/ByHAl7Oc5Nk9
+	a9LKEI14rHvg6CqnsJcrtcVsyP9U=
+X-Google-Smtp-Source: AGHT+IFd2NGeNInZNlqtCpeiOvr1bD0MueLHfLC9SzxOiRd+5Xj4+sNLruulsJoDVw+pvqZy8NDOCch016Rg+/64beM=
+X-Received: by 2002:a2e:9092:0:b0:2d4:8db2:f79c with SMTP id
+ l18-20020a2e9092000000b002d48db2f79cmr771170ljg.50.1710820720895; Mon, 18 Mar
+ 2024 20:58:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxvhOrCPllRRNdAA--.58700S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20240315024435.350013-1-chenhuacai@loongson.cn>
+In-Reply-To: <20240315024435.350013-1-chenhuacai@loongson.cn>
+From: Guo Ren <guoren@kernel.org>
+Date: Tue, 19 Mar 2024 11:58:29 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTjt+wcmbgZm-2WHNM+_3pMy7=BPYVy8B22M9qZZnuZWA@mail.gmail.com>
+Message-ID: <CAJF2gTTjt+wcmbgZm-2WHNM+_3pMy7=BPYVy8B22M9qZZnuZWA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Select ARCH_HAS_CURRENT_STACK_POINTER in Kconfig
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When VM runs in kvm mode, system will not exit to host mode if
-executing general software breakpoint instruction such as INSN_BREAK,
-trap exception happens in guest mode rather than host mode. In order to
-debug guest kernel on host side, one mechanism should be used to let vm
-exit to host mode.
+On Fri, Mar 15, 2024 at 10:45=E2=80=AFAM Huacai Chen <chenhuacai@loongson.c=
+n> wrote:
+>
+> LoongArch has implemented the current_stack_pointer macro, so select
+> ARCH_HAS_CURRENT_STACK_POINTER in Kconfig. This will let it be used in
+> non-arch places (like HARDENED_USERCOPY).
+>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  arch/loongarch/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index f90949aa7cda..277d00acd581 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -15,6 +15,7 @@ config LOONGARCH
+>         select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+>         select ARCH_HAS_ACPI_TABLE_UPGRADE      if ACPI
+>         select ARCH_HAS_CPU_FINALIZE_INIT
+> +       select ARCH_HAS_CURRENT_STACK_POINTER
+>         select ARCH_HAS_FORTIFY_SOURCE
+>         select ARCH_HAS_KCOV
+>         select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+> --
+> 2.43.0
+>
+Yep, you forgot that.
 
-Here hypercall instruction with special code is used for software
-breakpoint usage, vm exists to host mode and kvm hypervisor identifies the
-special hypercall code and sets exit_reason with KVM_EXIT_DEBUG, and then
-let qemu handle it.
+Reviewed-by: Guo Ren <guoren@kernel.org>
 
-Idea comes from ppc kvm, one api KVM_REG_LOONGARCH_DEBUG_INST is added to
-get hypercall code. VMM needs get sw breakpoint instruction with this api
-and set the corresponding sw break point for guest kernel.
-
-Since it needs hypercall instruction emulation handling, and it is
-dependent on this patchset:
-https://lore.kernel.org/all/20240315080710.2812974-1-maobibo@loongson.cn/
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
-v3 -- v4:
-1. Rebase on the latest kernel, remove adding macro __KVM_HAVE_GUEST_DEBUG
-in arch specific header files since it is put in common kvm header
-files.
-2. Rebase on pv ipi patch, rename KVM_HC_SWDBG with KVM_HCALL_SWDBG.
-
-v2 -- v3:
-1. Add api KVM_REG_LOONGARCH_DEBUG_INST to get sw breakpoint instruction
-for vmm.
-2. Check vcpu::guest_debug with value KVM_GUESTDBG_USE_SW_BP only, since
-another value KVM_GUESTDBG_ENABLE will be set if it is not zero.
-
-v1 -- v2:
-1. Add checking for hypercall code KVM_HC_SWDBG, it is effective only if
-KVM_GUESTDBG_USE_SW_BP and KVM_GUESTDBG_ENABLE is set.
----
- arch/loongarch/include/asm/inst.h     |  1 +
- arch/loongarch/include/asm/kvm_host.h |  4 ++++
- arch/loongarch/include/asm/kvm_para.h |  2 ++
- arch/loongarch/include/uapi/asm/kvm.h |  3 +++
- arch/loongarch/kvm/exit.c             | 16 ++++++++++++++--
- arch/loongarch/kvm/vcpu.c             | 13 ++++++++++++-
- arch/loongarch/kvm/vm.c               |  1 +
- 7 files changed, 37 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index ad120f924905..c3993fd88aba 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -12,6 +12,7 @@
- 
- #define INSN_NOP		0x03400000
- #define INSN_BREAK		0x002a0000
-+#define INSN_HVCL		0x002b8000
- 
- #define ADDR_IMMMASK_LU52ID	0xFFF0000000000000
- #define ADDR_IMMMASK_LU32ID	0x000FFFFF00000000
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 0b96c6303cf7..c53946f8ef9f 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -31,6 +31,10 @@
- 
- #define KVM_HALT_POLL_NS_DEFAULT	500000
- 
-+#define KVM_GUESTDBG_VALID_MASK		(KVM_GUESTDBG_ENABLE | \
-+			KVM_GUESTDBG_USE_SW_BP | KVM_GUESTDBG_SINGLESTEP)
-+#define KVM_GUESTDBG_SW_BP_MASK		(KVM_GUESTDBG_ENABLE | \
-+			KVM_GUESTDBG_USE_SW_BP)
- struct kvm_vm_stat {
- 	struct kvm_vm_stat_generic generic;
- 	u64 pages;
-diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-index a5809a854bae..56775554402a 100644
---- a/arch/loongarch/include/asm/kvm_para.h
-+++ b/arch/loongarch/include/asm/kvm_para.h
-@@ -9,8 +9,10 @@
- #define HYPERVISOR_VENDOR_SHIFT		8
- #define HYPERCALL_CODE(vendor, code)	((vendor << HYPERVISOR_VENDOR_SHIFT) + code)
- #define KVM_HCALL_CODE_PV_SERVICE	0
-+#define KVM_HCALL_CODE_SWDBG		1
- #define KVM_HCALL_PV_SERVICE		HYPERCALL_CODE(HYPERVISOR_KVM, KVM_HCALL_CODE_PV_SERVICE)
- #define  KVM_HCALL_FUNC_PV_IPI		1
-+#define KVM_HCALL_SWDBG			HYPERCALL_CODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
- 
- /*
-  * LoongArch hypercall return code
-diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-index 109785922cf9..8f78b23672ac 100644
---- a/arch/loongarch/include/uapi/asm/kvm.h
-+++ b/arch/loongarch/include/uapi/asm/kvm.h
-@@ -17,6 +17,7 @@
- #define KVM_COALESCED_MMIO_PAGE_OFFSET	1
- #define KVM_DIRTY_LOG_PAGE_OFFSET	64
- 
-+#define KVM_GUESTDBG_USE_SW_BP		0x00010000
- /*
-  * for KVM_GET_REGS and KVM_SET_REGS
-  */
-@@ -72,6 +73,8 @@ struct kvm_fpu {
- 
- #define KVM_REG_LOONGARCH_COUNTER	(KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 1)
- #define KVM_REG_LOONGARCH_VCPU_RESET	(KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 2)
-+/* Debugging: Special instruction for software breakpoint */
-+#define KVM_REG_LOONGARCH_DEBUG_INST	(KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 3)
- 
- #define LOONGARCH_REG_SHIFT		3
- #define LOONGARCH_REG_64(TYPE, REG)	(TYPE | KVM_REG_SIZE_U64 | (REG << LOONGARCH_REG_SHIFT))
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 78857147bc14..d71172e2568e 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -774,23 +774,35 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
- {
- 	larch_inst inst;
- 	unsigned int code;
-+	int ret;
- 
- 	inst.word = vcpu->arch.badi;
- 	code = inst.reg0i15_format.immediate;
--	update_pc(&vcpu->arch);
-+	ret = RESUME_GUEST;
- 
- 	switch (code) {
- 	case KVM_HCALL_PV_SERVICE:
- 		vcpu->stat.hypercall_exits++;
- 		kvm_handle_pv_service(vcpu);
- 		break;
-+	case KVM_HCALL_SWDBG:
-+		/* KVM_HC_SWDBG only in effective when SW_BP is enabled */
-+		if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
-+			vcpu->run->exit_reason = KVM_EXIT_DEBUG;
-+			ret = RESUME_HOST;
-+			break;
-+		}
-+		fallthrough;
- 	default:
- 		/* Treat it as noop intruction, only set return value */
- 		kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCALL_INVALID_CODE);
- 		break;
- 	}
- 
--	return RESUME_GUEST;
-+	if (ret == RESUME_GUEST)
-+		update_pc(&vcpu->arch);
-+
-+	return ret;
- }
- 
- /*
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 76f2086ab68b..f22d10228cd2 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -248,7 +248,15 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
- int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
- 					struct kvm_guest_debug *dbg)
- {
--	return -EINVAL;
-+	if (dbg->control & ~KVM_GUESTDBG_VALID_MASK)
-+		return -EINVAL;
-+
-+	if (dbg->control & KVM_GUESTDBG_ENABLE)
-+		vcpu->guest_debug = dbg->control;
-+	else
-+		vcpu->guest_debug = 0;
-+
-+	return 0;
- }
- 
- static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
-@@ -500,6 +508,9 @@ static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
- 		case KVM_REG_LOONGARCH_COUNTER:
- 			*v = drdtime() + vcpu->kvm->arch.time_offset;
- 			break;
-+		case KVM_REG_LOONGARCH_DEBUG_INST:
-+			*v = INSN_HVCL + KVM_HCALL_SWDBG;
-+			break;
- 		default:
- 			ret = -EINVAL;
- 			break;
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 6006a28653ad..06fd746b03b6 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -77,6 +77,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_IMMEDIATE_EXIT:
- 	case KVM_CAP_IOEVENTFD:
- 	case KVM_CAP_MP_STATE:
-+	case KVM_CAP_SET_GUEST_DEBUG:
- 		r = 1;
- 		break;
- 	case KVM_CAP_NR_VCPUS:
-
-base-commit: 0a7b0acecea273c8816f4f5b0e189989470404cf
--- 
-2.39.3
-
+--=20
+Best Regards
+ Guo Ren
