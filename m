@@ -1,63 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462B54594E;
-	Tue, 19 Mar 2024 06:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC95B1CD1D
+	for <loongarch@lists.linux.dev>; Wed, 20 Mar 2024 10:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710829506; cv=none; b=l7rwtCtVzm9Mw6Hl01ko0JcVjNCVUtqXFE6d8yMihVgV6HX8eVBXm26rL9vdiMrNeo4Atan+wYwsWisj0lJCl7pxSW2WSwVufRwlN3E/Z2FAmk70AWWGUgO9UJih1VH6FWsaBWLPYhro2KYbTVcKWvh2UqllL41tTtP3nEdOb78=
+	t=1710931053; cv=none; b=av+Lrq2rAmRuluNLLZN1WwYwPELcxMXmevKkJPd1F8aLCTju9BZdnbRLbaCKTUU1qbUZnAeb+m3lPS/a5ZtzJ3HfmfOsxWuG4medSLMpYxs3FGVv16OarikMItINDeb30Ak5tbx1NGnJy/wEllu7KuADkuCes/lD9ksTDTZLJbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710829506; c=relaxed/simple;
-	bh=x5GRcJP4/69nKg2T9VOa0UIbcWd6tlxpikRifHHI+EY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pp+TfRMQ8E7Uek+xSjLleK0YMy+7QJRfp3Xf7/c+pFSUNFOegrMiKzboM7BWTRAWR+co+xbJ/XPuEFJ3yeMYPUxqOgMz5Q3Cx4kZ1AOcO8pD3rVdRv9hPSue9k0rynTalRfbhiUGCcVfZ0mOq2gpV1O6deWcDt9MyKxKltLBD9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55318C433F1;
-	Tue, 19 Mar 2024 06:25:03 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Select HAVE_ARCH_USERFAULTFD_MINOR in Kconfig
-Date: Tue, 19 Mar 2024 14:24:32 +0800
-Message-ID: <20240319062432.3529127-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1710931053; c=relaxed/simple;
+	bh=oMcExfi3dY3kbb1sQnyyDLt0+nzIomwQcaxWzI7t2qk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nXonQh6Z/89nT7obA0f1w9rh0ie+zvzyz77OvPApPEBFo+k4ffPOwWn1Dk+vGN5SdEs4xBVycRrLf1X9tmTQALv3b5jAFSL6JmOsPFViXRJJLcbox5LKiFnucCbVXZKDmjTHiNqDQtgdzNQULqL2P7psQ8zl9t5vgiEdawjLRSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=msLXyRZm; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="msLXyRZm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1710930453;
+	bh=oMcExfi3dY3kbb1sQnyyDLt0+nzIomwQcaxWzI7t2qk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=msLXyRZm3wWEhspe6etI170C6ugUOpgwoo8GpmrfFo1ZjZF8f9/yIqcpwlFXcxrtB
+	 7HMDws+TdWu9+7nRVYJvQQTCs60XeR+sJz48ZZ9tq+rCl7FFqgA2SEUjRSoLs3YY8O
+	 Drz1d2aFmIEOv1ZwQQIe7zrq6fMdn68HgV3URCmc=
+Received: from [192.168.124.9] (unknown [113.140.11.126])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id D09D166F79;
+	Wed, 20 Mar 2024 06:27:29 -0400 (EDT)
+Message-ID: <e8c4062df63f3e8bc8bb2d7209fa2a2a44bd7ed3.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Change __my_cpu_offset definition to avoid
+ mis-optimization
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li
+	 <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang
+	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
+	stable@vger.kernel.org, Xiaotian Wu <wuxiaotian@loongson.cn>, Miao Wang
+	 <shankerwangmiao@gmail.com>, Xing Li <lixing@loongson.cn>, Hongchen Zhang
+	 <zhanghongchen@loongson.cn>, Rui Wang <wangrui@loongson.cn>
+Date: Wed, 20 Mar 2024 18:27:26 +0800
+In-Reply-To: <20240315024526.394772-1-chenhuacai@loongson.cn>
+References: <20240315024526.394772-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This allocates the VM flag needed to support the userfaultfd minor fault
-functionality. See commit 7677f7fd8be7665 ("userfaultfd: add minor fault
-registration mode") for more information.
+On Fri, 2024-03-15 at 10:45 +0800, Huacai Chen wrote:
+> From GCC commit 3f13154553f8546a ("df-scan: remove ad-hoc handling of
+> global regs in asms"), global registers will no longer be forced to add
+> to the def-use chain. Then current_thread_info(), current_stack_pointer
+> and __my_cpu_offset may be lifted out of the loop because they are no
+> longer treated as "volatile variables".
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Ooops...  I'm wondering why this issue has not blown up our systems
+before.  The referred GCC commit is far before LoongArch CPUs are taped.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index ce8b55bdf68d..3da341bd48ef 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -105,6 +105,7 @@ config LOONGARCH
- 	select HAVE_ARCH_SECCOMP_FILTER
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
-+	select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
- 	select HAVE_ASM_MODVERSIONS
- 	select HAVE_CONTEXT_TRACKING_USER
- 	select HAVE_C_RECORDMCOUNT
--- 
-2.43.0
+> This optimization is still correct for the current_thread_info() and
+> current_stack_pointer usages because they are associated to a thread.
+> However it is wrong for __my_cpu_offset because it is associated to a
+> CPU rather than a thread: if the thread migrates to a different CPU in
+> the loop, __my_cpu_offset should be changed.
+>=20
+> Change __my_cpu_offset definition to treat it as a "volatile variable",
+> in order to avoid such a mis-optimization.
+>=20
+> Cc: stable@vger.kernel.org
 
+I suppose we should add Fixes: 5b0b14e550a0 ("LoongArch: Add
+atomic/locking header") here.
+
+> Reported-by: Xiaotian Wu <wuxiaotian@loongson.cn>
+> Reported-by: Miao Wang <shankerwangmiao@gmail.com>
+> Signed-off-by: Xing Li <lixing@loongson.cn>
+> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+> Signed-off-by: Rui Wang <wangrui@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> =C2=A0arch/loongarch/include/asm/percpu.h | 6 +++++-
+> =C2=A01 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include=
+/asm/percpu.h
+> index 9b36ac003f89..03b98491d301 100644
+> --- a/arch/loongarch/include/asm/percpu.h
+> +++ b/arch/loongarch/include/asm/percpu.h
+> @@ -29,7 +29,12 @@ static inline void set_my_cpu_offset(unsigned long off=
+)
+> =C2=A0	__my_cpu_offset =3D off;
+> =C2=A0	csr_write64(off, PERCPU_BASE_KS);
+> =C2=A0}
+> -#define __my_cpu_offset __my_cpu_offset
+> +
+> +#define __my_cpu_offset					\
+> +({							\
+> +	__asm__ __volatile__("":"+r"(__my_cpu_offset));	\
+> +	__my_cpu_offset;				\
+> +})
+> =C2=A0
+> =C2=A0#define PERCPU_OP(op, asm_op, c_op)					\
+> =C2=A0static __always_inline unsigned long __percpu_##op(void *ptr,		\
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
