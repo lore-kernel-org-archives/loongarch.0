@@ -1,170 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F5320DDB;
-	Fri, 22 Mar 2024 13:56:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39FC60EC9;
+	Fri, 22 Mar 2024 17:58:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711115797; cv=none; b=VZ7HfOtrfpZZyExDsV5u8dIBAs7RAixa1kdSqOesGUbTD8FWY1mM9KOtlettH9nX5VIJZa6DfmWirhpHXAq6Xggorude4tJOiRo4mPBMZevPK5+wb5bSQXzy9kIAsTUzMykFuCp0PkpipYbpUu37xk2J17W59zCHwdwaOPNCTkw=
+	t=1711130289; cv=none; b=rHgU395DKdxqZe54ZVs/p1bjAZ3eS0eilEoFM0hTIZqo+1ljeaYzg1vxPESU+Nr5B5cKja19nx0wLqMcbZ2c6ggLixoj6aOTYfehNuPdjJgHLiEaP4kKSyREKyMIQDoNMm43E8pqHqxiv3XNTKxEe7v7bdC0sV9peIDtaSYuwls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711115797; c=relaxed/simple;
-	bh=Ejq6XsWxRwejHf2Ip37awA8RsMAYWh0XyVNSy+WBD60=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d9r9kDgka+I5AilzmCrBel/cheQJgMDHlHbi2xSeC2G/h7+R79g3ZfcGR8nO6VzjqKJWAUyMV2DU9AbmhvACtO+TMU4i9Mj9y/YUwIeZ5d7LkP1wDfhXJsnT3aa8B/jhbDujSq+GN/kKnfPwiRdoQHrRpRRhTtqGJu6RytlI6+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC550C433C7;
-	Fri, 22 Mar 2024 13:56:34 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.9
-Date: Fri, 22 Mar 2024 21:56:19 +0800
-Message-ID: <20240322135619.1423490-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1711130289; c=relaxed/simple;
+	bh=Xd35sZTHKSyW1UdMmJMAmppQmB7EyY5U8777yvGvzn8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=BwDbsdU8Gx2JLRN8WPkgNOR/xH5dlfljONI/9h6fZU9Sq46TVaoTlVWpg6GvVFMDkNn76bu778AjeGP5ky+bA0FUT+MiYK6+Whwm+HylIroPMCHJjbRWrPEowlU5IXf2mmVmsi6WmHHTc2J8ht9F/wf1XvYJHxRmjsrrn5yrivw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eAZdFlKI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eAZdFlKI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B4BD2C43390;
+	Fri, 22 Mar 2024 17:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711130288;
+	bh=Xd35sZTHKSyW1UdMmJMAmppQmB7EyY5U8777yvGvzn8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=eAZdFlKIZ+K12i2bNA0CZLfmbeAMQIWOqGN7a2G5voPLf+TLqZKwtMlB1Zx1V0pfD
+	 MIfwh6UY0H4841hDgsiC6z/N+7qwX6jD2KeChZROM0vCBHskXNG+xwRdkk5NlJeuFJ
+	 KMF+pvRtP0mQq00Vi6I4wkN/Cw2fqavlOuK7StGIyfrp8CzkhmwUKkJpCY7CJmG5Qe
+	 pan82gcS01MCS9T4s09oMF7a9e+NcXghNsIiCdy0YV6jdKufiP4Uc3RgnQ0FWBMHaE
+	 UGWj911S7cGw7ZuRhx5/ztDOWMgcLRtgIPGkU/ppuwiS/WCWioXe5RqU60ZoF+YyXR
+	 P/cnsGA47GisQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AC043D95058;
+	Fri, 22 Mar 2024 17:58:08 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v6.9
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240322135619.1423490-1-chenhuacai@loongson.cn>
+References: <20240322135619.1423490-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240322135619.1423490-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.9
+X-PR-Tracked-Commit-Id: fea1c949f6ca5059e12de00d0483645debc5b206
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1e3cd03c54b76b4cbc8b31256dc3f18c417a6876
+Message-Id: <171113028870.2552.15726906786160766507.pr-tracker-bot@kernel.org>
+Date: Fri, 22 Mar 2024 17:58:08 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The following changes since commit e8f897f4afef0031fe618a8e94127a0934896aba:
+The pull request you sent on Fri, 22 Mar 2024 21:56:19 +0800:
 
-  Linux 6.8 (2024-03-10 13:38:09 -0700)
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.9
 
-are available in the Git repository at:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1e3cd03c54b76b4cbc8b31256dc3f18c417a6876
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.9
+Thank you!
 
-for you to fetch changes up to fea1c949f6ca5059e12de00d0483645debc5b206:
-
-  LoongArch/crypto: Clean up useless assignment operations (2024-03-19 15:50:34 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v6.9
-
-1, Add objtool support for LoongArch;
-2, Add ORC stack unwinder support for LoongArch;
-3, Add kernel livepatching support for LoongArch;
-4, Select ARCH_HAS_CURRENT_STACK_POINTER in Kconfig;
-5, Select HAVE_ARCH_USERFAULTFD_MINOR in Kconfig;
-6, Some bug fixes and other small changes.
-
-Note: There are conflicts in arch/loongarch/Kconfig and arch/loongarch/
-Makefile but can be simply fixed by adjusting context.
-
-----------------------------------------------------------------
-Huacai Chen (5):
-      LoongArch: Select ARCH_HAS_CURRENT_STACK_POINTER in Kconfig
-      LoongArch: Select HAVE_ARCH_USERFAULTFD_MINOR in Kconfig
-      LoongArch: Change __my_cpu_offset definition to avoid mis-optimization
-      LoongArch: Remove superfluous flush_dcache_page() definition
-      LoongArch: Define the __io_aw() hook as mmiowb()
-
-Jinyang He (1):
-      LoongArch: Add kernel livepatching support
-
-Max Kellermann (1):
-      LoongArch: Move {dmw,tlb}_virt_to_page() definition to page.h
-
-Tiezhu Yang (7):
-      objtool/LoongArch: Enable objtool to be built
-      objtool/LoongArch: Implement instruction decoder
-      objtool/x86: Separate arch-specific and generic parts
-      objtool/LoongArch: Enable orc to be built
-      objtool: Check local label in add_dead_ends()
-      objtool: Check local label in read_unwind_hints()
-      LoongArch: Add ORC stack unwinder support
-
-Yuli Wang (1):
-      LoongArch/crypto: Clean up useless assignment operations
-
- arch/loongarch/Kconfig                             |   8 +
- arch/loongarch/Kconfig.debug                       |  11 +
- arch/loongarch/Makefile                            |  23 +-
- arch/loongarch/crypto/crc32-loongarch.c            |   2 -
- arch/loongarch/include/asm/Kbuild                  |   3 +
- arch/loongarch/include/asm/bug.h                   |   1 +
- arch/loongarch/include/asm/cacheflush.h            |   3 -
- arch/loongarch/include/asm/exception.h             |   2 +
- arch/loongarch/include/asm/io.h                    |   2 +
- arch/loongarch/include/asm/module.h                |   7 +
- arch/loongarch/include/asm/orc_header.h            |  18 +
- arch/loongarch/include/asm/orc_lookup.h            |  31 ++
- arch/loongarch/include/asm/orc_types.h             |  58 +++
- arch/loongarch/include/asm/page.h                  |   3 +
- arch/loongarch/include/asm/percpu.h                |   7 +-
- arch/loongarch/include/asm/pgtable.h               |   3 -
- arch/loongarch/include/asm/qspinlock.h             |  18 -
- arch/loongarch/include/asm/stackframe.h            |   3 +
- arch/loongarch/include/asm/thread_info.h           |   2 +
- arch/loongarch/include/asm/unwind.h                |  20 +-
- arch/loongarch/include/asm/unwind_hints.h          |  28 ++
- arch/loongarch/kernel/Makefile                     |   4 +
- arch/loongarch/kernel/entry.S                      |   5 +
- arch/loongarch/kernel/fpu.S                        |   7 +
- arch/loongarch/kernel/genex.S                      |   6 +
- arch/loongarch/kernel/lbt.S                        |   3 +
- arch/loongarch/kernel/mcount_dyn.S                 |   6 +
- arch/loongarch/kernel/module.c                     |  22 +-
- arch/loongarch/kernel/relocate_kernel.S            |   7 +-
- arch/loongarch/kernel/rethook_trampoline.S         |   1 +
- arch/loongarch/kernel/setup.c                      |   2 +
- arch/loongarch/kernel/stacktrace.c                 |  41 ++
- arch/loongarch/kernel/traps.c                      |  42 +-
- arch/loongarch/kernel/unwind_orc.c                 | 528 +++++++++++++++++++++
- arch/loongarch/kernel/vmlinux.lds.S                |   3 +
- arch/loongarch/kvm/switch.S                        |   9 +-
- arch/loongarch/lib/clear_user.S                    |   3 +
- arch/loongarch/lib/copy_user.S                     |   3 +
- arch/loongarch/lib/memcpy.S                        |   3 +
- arch/loongarch/lib/memset.S                        |   3 +
- arch/loongarch/mm/tlb.c                            |  27 +-
- arch/loongarch/mm/tlbex.S                          |   9 +
- arch/loongarch/vdso/Makefile                       |   1 +
- include/linux/compiler.h                           |   9 +
- scripts/Makefile                                   |   7 +-
- tools/arch/loongarch/include/asm/inst.h            | 161 +++++++
- tools/arch/loongarch/include/asm/orc_types.h       |  58 +++
- tools/include/linux/bitops.h                       |  11 +
- tools/objtool/Makefile                             |   4 +
- tools/objtool/arch/loongarch/Build                 |   3 +
- tools/objtool/arch/loongarch/decode.c              | 356 ++++++++++++++
- .../objtool/arch/loongarch/include/arch/cfi_regs.h |  22 +
- tools/objtool/arch/loongarch/include/arch/elf.h    |  30 ++
- .../objtool/arch/loongarch/include/arch/special.h  |  33 ++
- tools/objtool/arch/loongarch/orc.c                 | 171 +++++++
- tools/objtool/arch/loongarch/special.c             |  15 +
- tools/objtool/arch/x86/Build                       |   1 +
- tools/objtool/arch/x86/orc.c                       | 188 ++++++++
- tools/objtool/check.c                              |  52 +-
- tools/objtool/include/objtool/elf.h                |   1 +
- tools/objtool/include/objtool/orc.h                |  14 +
- tools/objtool/orc_dump.c                           |  69 +--
- tools/objtool/orc_gen.c                            | 113 +----
- 63 files changed, 2040 insertions(+), 266 deletions(-)
- create mode 100644 arch/loongarch/include/asm/orc_header.h
- create mode 100644 arch/loongarch/include/asm/orc_lookup.h
- create mode 100644 arch/loongarch/include/asm/orc_types.h
- delete mode 100644 arch/loongarch/include/asm/qspinlock.h
- create mode 100644 arch/loongarch/include/asm/unwind_hints.h
- create mode 100644 arch/loongarch/kernel/unwind_orc.c
- create mode 100644 tools/arch/loongarch/include/asm/inst.h
- create mode 100644 tools/arch/loongarch/include/asm/orc_types.h
- create mode 100644 tools/objtool/arch/loongarch/Build
- create mode 100644 tools/objtool/arch/loongarch/decode.c
- create mode 100644 tools/objtool/arch/loongarch/include/arch/cfi_regs.h
- create mode 100644 tools/objtool/arch/loongarch/include/arch/elf.h
- create mode 100644 tools/objtool/arch/loongarch/include/arch/special.h
- create mode 100644 tools/objtool/arch/loongarch/orc.c
- create mode 100644 tools/objtool/arch/loongarch/special.c
- create mode 100644 tools/objtool/arch/x86/orc.c
- create mode 100644 tools/objtool/include/objtool/orc.h
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
