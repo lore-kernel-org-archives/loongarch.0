@@ -1,128 +1,116 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0195C1509A2
-	for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 08:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03F586AC5
+	for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 09:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711355095; cv=none; b=WUp1sBW6KIQwhSDt6fUnCRSj7Z32Gn3ycCve27/CIIBqSDrsEkN6t+htIUffrcgv4ihl+VlaCTKZ/7fPQTLLsjffd1l51TmFTLUGO6S1bWdAC1fVZ+mYXNi1bUSv2MLah6ZuWUJG6xVqTCr/I+8HTLagKan9iajaKk6pOk5ldHA=
+	t=1711360124; cv=none; b=CDDEWYXmNB8mHjfteCr0H6goG8eJGfnt1SruXGuG+bYmG+KSOHlBLVrHEbOGSL9z/KT4foQ3TzU7erJOGj4vVZOFyMzx1e5ipdJVpf1kMgLSN6UGe0e0zARrlRCgoUtsneE3MjkPINFGqoV9DQEDWIMGbZ/88NRx808Gm2xyAPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711355095; c=relaxed/simple;
-	bh=HdSwpyEJcq7QPVhfAp25p0Tw/TeM+r3NiX2oIuYDiE8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BeqBn4W1tyG1XCx9wf4kYhbzCtcPCobFQOEbkKlEX+y7UuwobA0DEOAjWRyGDsgujwatFWaeH+tc3KPw+d8H2CjAH8HApFPSWnW8F2uit29CJb5VgqT0dQ5INLiWD/hW82UyTowraSKP8wGXtMGesc1pWpw2XroTYkNFIbY3McQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcc71031680so3466522276.2
-        for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 01:24:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711355090; x=1711959890;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZEfLIiCMu33AlwMloMoi4ICYWpFuuaEkY/DY4cDIgmE=;
-        b=maMaBiMtlXkUvXb4o229NtHovb7q6qHJc86mp8cdxriFfuuXjdq98vDIBaDHSafYRl
-         ZFCjqOUyKdmtmr8t2lWnbFzPWJN+nN63yaz945cYkdoJjlRu4BSl2Erlbh6WIB7QM93z
-         9CK/uUk62NCfDBbA5M4yAs/8XiVpyfo428URKix9lSenuOIduvCIuzrxPHwXWWKubWpK
-         TRgvZGy1M246xoOLTBgMyKjbZbbKAdg7Ia5b9GECZSwg3f2OUG6FjnO5GhZUd8IBd/1t
-         Y6+tVAUPczsRJqSqIl0YllRK/6fyItmZjQIiDAXCamN02xd/dL73EcRsCPO1TKN0YHmt
-         UJ5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXimoYc7jZyn3unZqXRz7m2X4UOfOwHKKBLepdZssCrlOF8vp0ukLkBOcMwYsrJ/hIE46v90BDbWjq4MP/R7ysyph1wbzCJxueD
-X-Gm-Message-State: AOJu0YzPb/Uq9BxueK4VRU0mZXmmZ0HddqCLGVnBqHQ1fy+IIx0xw+DE
-	GoxvqZLnVGeCJPhQODP97bZcnENlh/VcfKrrvnFOO8m+iPuFEQS35qbrrrnE7AY=
-X-Google-Smtp-Source: AGHT+IFlKP2V26sKFLbXdBHhJ4vN3oSCcpjqnWrWoKZQgexZ/zeATxrOgLq2EUFC6XTwAbG6JWPN+Q==
-X-Received: by 2002:a25:ced0:0:b0:dc5:f51e:6a60 with SMTP id x199-20020a25ced0000000b00dc5f51e6a60mr272496ybe.6.1711355090037;
-        Mon, 25 Mar 2024 01:24:50 -0700 (PDT)
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
-        by smtp.gmail.com with ESMTPSA id g29-20020a25b11d000000b00dcd2c2e7550sm955323ybj.21.2024.03.25.01.24.49
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 01:24:49 -0700 (PDT)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dbed0710c74so3271200276.1
-        for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 01:24:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWr/LE9xiA+h2Y+QWw2cfYioYC9lbV0ofMgzrbWvXNCaJOopRS8TT3B6u673x+QNFcISjrpBRCc8pwc0bad0rzqQnfv/X940rOL
-X-Received: by 2002:a25:a2cf:0:b0:dcc:f0a:e495 with SMTP id
- c15-20020a25a2cf000000b00dcc0f0ae495mr4291545ybn.3.1711355089475; Mon, 25 Mar
- 2024 01:24:49 -0700 (PDT)
+	s=arc-20240116; t=1711360124; c=relaxed/simple;
+	bh=z7nQ+fuXBBJwghbwTKA/0pe69mO2YVrSsG63TX2xrh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eR49JOdsBC4zbNIbLmZtgsncyjOnc+Ym3TRzCM7JKXWYjJOy6AEdVw3j1eeqfvON+Rq0Kqamg+vgxHBMM9ZiWUp7faYu0sjKALb/sBAqR5A+3mxdUG2BKTRnRjkadErdSL+Uyj08OHzEvDnVRulJHVrM5X3pqMwUxyn44R0asBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d5QAGzkc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d5QAGzkc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711360121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BzvHsR0swPhNezye8rUpRIe+AmkradciiszFVdBH2qI=;
+	b=d5QAGzkcFVgfNPW1CO0oLPlhmxGApS7hScJ1cLqq6shPh9CB1aGymZAPlr5DzlZwPD5+xp
+	Gq5w9Iph9qjmesRKdP5Xe57/g8T80D7rcjalpl3kRP7o2ljlY/77P9AcXHokfr03tzhcfG
+	PdcgfvMh0EcJg3d8jU5382ubAFA9ES8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-81-sGBrjBOZPjWGzkRUL_JyGQ-1; Mon,
+ 25 Mar 2024 05:48:36 -0400
+X-MC-Unique: sGBrjBOZPjWGzkRUL_JyGQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9B0273C0BE29;
+	Mon, 25 Mar 2024 09:48:35 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4782E112131D;
+	Mon, 25 Mar 2024 09:48:25 +0000 (UTC)
+Date: Mon, 25 Mar 2024 17:48:18 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev, akpm@linux-foundation.org,
+	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH linux-next v3 02/14] crash: split vmcoreinfo exporting
+ code out from crash_core.c
+Message-ID: <ZgFIYuYULrgF1tFG@MiWiFi-R3L-srv>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-3-bhe@redhat.com>
+ <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240124051254.67105-1-bhe@redhat.com> <20240124051254.67105-3-bhe@redhat.com>
-In-Reply-To: <20240124051254.67105-3-bhe@redhat.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 25 Mar 2024 09:24:37 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
-Message-ID: <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
-Subject: Re: [PATCH linux-next v3 02/14] crash: split vmcoreinfo exporting
- code out from crash_core.c
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	loongarch@lists.linux.dev, akpm@linux-foundation.org, ebiederm@xmission.com, 
-	hbathini@linux.ibm.com, piliu@redhat.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Hi Baoquan,
+On 03/25/24 at 09:24am, Geert Uytterhoeven wrote:
+> Hi Baoquan,
+> 
+> On Wed, Jan 24, 2024 at 6:13 AM Baoquan He <bhe@redhat.com> wrote:
+> > Now move the relevant codes into separate files:
+> > kernel/crash_reserve.c, include/linux/crash_reserve.h.
+> >
+> > And add config item CRASH_RESERVE to control its enabling.
+> >
+> > And also update the old ifdeffery of CONFIG_CRASH_CORE, including of
+> > <linux/crash_core.h> and config item dependency on CRASH_CORE
+> > accordingly.
+> >
+> > And also do renaming as follows:
+> >  - arch/xxx/kernel/{crash_core.c => vmcore_info.c}
+> > because they are only related to vmcoreinfo exporting on x86, arm64,
+> > riscv.
+> >
+> > And also Remove config item CRASH_CORE, and rely on CONFIG_KEXEC_CORE to
+> > decide if build in crash_core.c.
+> >
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> > v2->v3:
+> > - There's conflict when rebasing to linux-next in kernel/crash_core.c
+> >   because of below commits from Uladzislau:
+> >   commit 699d9351822e ("mm: vmalloc: Fix a warning in the crash_save_vmcoreinfo_init()")
+> >   commit 5f4c0c1e2a51 (:mm/vmalloc: remove vmap_area_list")
+> 
+> Thanks for your patch, which is now commit 443cbaf9e2fdbef7
+> ("crash: split vmcoreinfo exporting code out from
+> crash_core.c") in v6.9-rc1.
+> 
+> After this, there are still two references left to CRASH_CORE:
+> 
+>   1. Documentation/admin-guide/kdump/kdump.rst:
+> 
+>          Subsequently, CRASH_CORE is selected by KEXEC_CORE::
+> 
+>   2. arch/loongarch/Kconfig
+> 
+>          config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+>              def_bool CRASH_CORE
 
-On Wed, Jan 24, 2024 at 6:13=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
-> Now move the relevant codes into separate files:
-> kernel/crash_reserve.c, include/linux/crash_reserve.h.
->
-> And add config item CRASH_RESERVE to control its enabling.
->
-> And also update the old ifdeffery of CONFIG_CRASH_CORE, including of
-> <linux/crash_core.h> and config item dependency on CRASH_CORE
-> accordingly.
->
-> And also do renaming as follows:
->  - arch/xxx/kernel/{crash_core.c =3D> vmcore_info.c}
-> because they are only related to vmcoreinfo exporting on x86, arm64,
-> riscv.
->
-> And also Remove config item CRASH_CORE, and rely on CONFIG_KEXEC_CORE to
-> decide if build in crash_core.c.
->
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
-> v2->v3:
-> - There's conflict when rebasing to linux-next in kernel/crash_core.c
->   because of below commits from Uladzislau:
->   commit 699d9351822e ("mm: vmalloc: Fix a warning in the crash_save_vmco=
-reinfo_init()")
->   commit 5f4c0c1e2a51 (:mm/vmalloc: remove vmap_area_list")
+Sure, will post patch to clean them up. Thanks a lot.
 
-Thanks for your patch, which is now commit 443cbaf9e2fdbef7
-("crash: split vmcoreinfo exporting code out from
-crash_core.c") in v6.9-rc1.
-
-After this, there are still two references left to CRASH_CORE:
-
-  1. Documentation/admin-guide/kdump/kdump.rst:
-
-         Subsequently, CRASH_CORE is selected by KEXEC_CORE::
-
-  2. arch/loongarch/Kconfig
-
-         config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-             def_bool CRASH_CORE
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
