@@ -1,118 +1,128 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A70947A70;
-	Sat, 23 Mar 2024 19:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0195C1509A2
+	for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 08:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711220544; cv=none; b=uOXEK2tBHPSEKhRc3L9Kv3DikyGdhvxnMOYRTT9JSvLTjvx0vPzDdndE+bH4G3Fx0Qlsfmoc/kR5MIWfG5AOptYeLhVC7fa+XJLOtvcepIlmPFEzJoyy6GnWdjCc1WVeAIKWulZRWYTDkJEz0KGd+zyX/z2f8GQGpEIXQ26eYQ8=
+	t=1711355095; cv=none; b=WUp1sBW6KIQwhSDt6fUnCRSj7Z32Gn3ycCve27/CIIBqSDrsEkN6t+htIUffrcgv4ihl+VlaCTKZ/7fPQTLLsjffd1l51TmFTLUGO6S1bWdAC1fVZ+mYXNi1bUSv2MLah6ZuWUJG6xVqTCr/I+8HTLagKan9iajaKk6pOk5ldHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711220544; c=relaxed/simple;
-	bh=tFoKc1U020apqjY0CyTn0PLkWp/8f59KT4myiLC5PH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YdBo7j13RMneFf3PXswFto5b+8yqsMjyhkL22wvz6cNHxnHDVGopZaN01AEVQRJ7nRZV/l+sRO9pFJJNVpereBg0Bpji9/l8LJL6AR3jbVnrftFXUho788p1tIkDURKedepIjoxFoxtY0uG4BNxyF3EIX1b22YBtRaNT2PzX/tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=ExGVrAu/; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="ExGVrAu/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1711220539; bh=tFoKc1U020apqjY0CyTn0PLkWp/8f59KT4myiLC5PH4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ExGVrAu/5SFYnug9FVfmW9AU5A4FlDHPTXX9W8cY+kxaBK1DgNwGWCfWo/O0VEWTx
-	 ZHNygDTnQ97aMEQOdKPQSi7o75izdTUhmIvu709DdWihl+1be7sP0NBJ3mWhFghB2m
-	 SojDik3yNPgo/XZyJA7ok+vj+uiGTba3DwFphci0=
-Received: from [IPV6:240e:388:8d00:6500:cccf:e2b8:7fab:4dfb] (unknown [IPv6:240e:388:8d00:6500:cccf:e2b8:7fab:4dfb])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 20B3C600A6;
-	Sun, 24 Mar 2024 03:02:19 +0800 (CST)
-Message-ID: <4668e606-a7b5-49b7-a68d-1c2af86f7d76@xen0n.name>
-Date: Sun, 24 Mar 2024 03:02:18 +0800
+	s=arc-20240116; t=1711355095; c=relaxed/simple;
+	bh=HdSwpyEJcq7QPVhfAp25p0Tw/TeM+r3NiX2oIuYDiE8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BeqBn4W1tyG1XCx9wf4kYhbzCtcPCobFQOEbkKlEX+y7UuwobA0DEOAjWRyGDsgujwatFWaeH+tc3KPw+d8H2CjAH8HApFPSWnW8F2uit29CJb5VgqT0dQ5INLiWD/hW82UyTowraSKP8wGXtMGesc1pWpw2XroTYkNFIbY3McQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcc71031680so3466522276.2
+        for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 01:24:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711355090; x=1711959890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZEfLIiCMu33AlwMloMoi4ICYWpFuuaEkY/DY4cDIgmE=;
+        b=maMaBiMtlXkUvXb4o229NtHovb7q6qHJc86mp8cdxriFfuuXjdq98vDIBaDHSafYRl
+         ZFCjqOUyKdmtmr8t2lWnbFzPWJN+nN63yaz945cYkdoJjlRu4BSl2Erlbh6WIB7QM93z
+         9CK/uUk62NCfDBbA5M4yAs/8XiVpyfo428URKix9lSenuOIduvCIuzrxPHwXWWKubWpK
+         TRgvZGy1M246xoOLTBgMyKjbZbbKAdg7Ia5b9GECZSwg3f2OUG6FjnO5GhZUd8IBd/1t
+         Y6+tVAUPczsRJqSqIl0YllRK/6fyItmZjQIiDAXCamN02xd/dL73EcRsCPO1TKN0YHmt
+         UJ5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXimoYc7jZyn3unZqXRz7m2X4UOfOwHKKBLepdZssCrlOF8vp0ukLkBOcMwYsrJ/hIE46v90BDbWjq4MP/R7ysyph1wbzCJxueD
+X-Gm-Message-State: AOJu0YzPb/Uq9BxueK4VRU0mZXmmZ0HddqCLGVnBqHQ1fy+IIx0xw+DE
+	GoxvqZLnVGeCJPhQODP97bZcnENlh/VcfKrrvnFOO8m+iPuFEQS35qbrrrnE7AY=
+X-Google-Smtp-Source: AGHT+IFlKP2V26sKFLbXdBHhJ4vN3oSCcpjqnWrWoKZQgexZ/zeATxrOgLq2EUFC6XTwAbG6JWPN+Q==
+X-Received: by 2002:a25:ced0:0:b0:dc5:f51e:6a60 with SMTP id x199-20020a25ced0000000b00dc5f51e6a60mr272496ybe.6.1711355090037;
+        Mon, 25 Mar 2024 01:24:50 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id g29-20020a25b11d000000b00dcd2c2e7550sm955323ybj.21.2024.03.25.01.24.49
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 01:24:49 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dbed0710c74so3271200276.1
+        for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 01:24:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWr/LE9xiA+h2Y+QWw2cfYioYC9lbV0ofMgzrbWvXNCaJOopRS8TT3B6u673x+QNFcISjrpBRCc8pwc0bad0rzqQnfv/X940rOL
+X-Received: by 2002:a25:a2cf:0:b0:dcc:f0a:e495 with SMTP id
+ c15-20020a25a2cf000000b00dcc0f0ae495mr4291545ybn.3.1711355089475; Mon, 25 Mar
+ 2024 01:24:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/7] LoongArch: KVM: Add cpucfg area for kvm hypervisor
-Content-Language: en-US
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, kvm@vger.kernel.org
-References: <20240315080710.2812974-1-maobibo@loongson.cn>
- <20240315080710.2812974-4-maobibo@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20240315080710.2812974-4-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240124051254.67105-1-bhe@redhat.com> <20240124051254.67105-3-bhe@redhat.com>
+In-Reply-To: <20240124051254.67105-3-bhe@redhat.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 25 Mar 2024 09:24:37 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
+Message-ID: <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
+Subject: Re: [PATCH linux-next v3 02/14] crash: split vmcoreinfo exporting
+ code out from crash_core.c
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	loongarch@lists.linux.dev, akpm@linux-foundation.org, ebiederm@xmission.com, 
+	hbathini@linux.ibm.com, piliu@redhat.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/15/24 16:07, Bibo Mao wrote:
-> Instruction cpucfg can be used to get processor features. And there
-> is trap exception when it is executed in VM mode, and also it is
-> to provide cpu features to VM. On real hardware cpucfg area 0 - 20
-> is used.  Here one specified area 0x40000000 -- 0x400000ff is used
-> for KVM hypervisor to privide PV features, and the area can be extended
-> for other hypervisors in future. This area will never be used for
-> real HW, it is only used by software.
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Hi Baoquan,
+
+On Wed, Jan 24, 2024 at 6:13=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+> Now move the relevant codes into separate files:
+> kernel/crash_reserve.c, include/linux/crash_reserve.h.
+>
+> And add config item CRASH_RESERVE to control its enabling.
+>
+> And also update the old ifdeffery of CONFIG_CRASH_CORE, including of
+> <linux/crash_core.h> and config item dependency on CRASH_CORE
+> accordingly.
+>
+> And also do renaming as follows:
+>  - arch/xxx/kernel/{crash_core.c =3D> vmcore_info.c}
+> because they are only related to vmcoreinfo exporting on x86, arm64,
+> riscv.
+>
+> And also Remove config item CRASH_CORE, and rely on CONFIG_KEXEC_CORE to
+> decide if build in crash_core.c.
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
->   arch/loongarch/include/asm/inst.h      |  1 +
->   arch/loongarch/include/asm/loongarch.h | 10 +++++
->   arch/loongarch/kvm/exit.c              | 59 +++++++++++++++++++-------
->   3 files changed, 54 insertions(+), 16 deletions(-)
-> 
+> v2->v3:
+> - There's conflict when rebasing to linux-next in kernel/crash_core.c
+>   because of below commits from Uladzislau:
+>   commit 699d9351822e ("mm: vmalloc: Fix a warning in the crash_save_vmco=
+reinfo_init()")
+>   commit 5f4c0c1e2a51 (:mm/vmalloc: remove vmap_area_list")
 
-Sorry for the late reply, but I think it may be a bit non-constructive 
-to repeatedly submit the same code without due explanation in our 
-previous review threads. Let me try to recollect some of the details 
-though...
+Thanks for your patch, which is now commit 443cbaf9e2fdbef7
+("crash: split vmcoreinfo exporting code out from
+crash_core.c") in v6.9-rc1.
 
-If I remember correctly, during the previous reviews, it was mentioned 
-that the only upsides of using CPUCFG were:
+After this, there are still two references left to CRASH_CORE:
 
-- it was exactly identical to the x86 approach,
-- it would not require access to the LoongArch Reference Manual Volume 3 
-to use, and
-- it was plain old data.
+  1. Documentation/admin-guide/kdump/kdump.rst:
 
-But, for the first point, we don't have to follow x86 convention after 
-all. The second reason might be compelling, but on the one hand that's 
-another problem orthogonal to the current one, and on the other hand 
-HVCL is:
+         Subsequently, CRASH_CORE is selected by KEXEC_CORE::
 
-- already effectively public because of the fact that this very patchset 
-is public,
-- its semantics is trivial to implement even without access to the LVZ 
-manual, because of its striking similarity with SYSCALL, and
-- by being a function call, we reserve the possibility for hypervisors 
-to invoke logic for self-identification purposes, even if this is likely 
-overkill from today's perspective.
+  2. arch/loongarch/Kconfig
 
-And, even if we decide that using HVCL for self-identification is 
-overkill after all, we still have another choice that's IOCSR. We 
-already read LOONGARCH_IOCSR_FEATURES (0x8) for its bit 11 (IOCSRF_VM) 
-to populate the CPU_FEATURE_HYPERVISOR bit, and it's only natural that 
-we put the identification word in the IOCSR space. As far as I can see, 
-the IOCSR space is plenty and equally available for making reservations; 
-it can only be even easier when it's done by a Loongson team.
+         config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+             def_bool CRASH_CORE
 
-Finally, I've mentioned multiple times, that varying CPUCFG behavior 
-based on PLV is not something well documented on the manuals, hence not 
-friendly to low-level developers. Devs of third-party firmware and/or 
-kernels do exist, I've personally spoken to some of them on the 
-2023-11-18 3A6000 release event; in order for the varying CPUCFG 
-behavior approach to pass for me, at the very least, the LoongArch 
-reference manual must be amended to explicitly include an explanation of 
-it, and a reference to potential use cases.
+Gr{oetje,eeting}s,
 
--- 
-WANG "xen0n" Xuerui
+                        Geert
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
