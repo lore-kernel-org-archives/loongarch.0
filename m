@@ -1,57 +1,57 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B0783A02
-	for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 17:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CA3128379
+	for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 17:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711389184; cv=none; b=c4Ee41XFw+/o91EddZgrTPsmtd08hyPdjswQhtGEcM7joAZrj6pf52yEVXqdiYB5rXQEw3NDlN1pfKWj/Xnb0iQaN5hf+TyNcDAE1GMhuLdMP+zenZh9l9TAGKPluV2MKJvLDbzwZnnF2QMfMK2d1JSWRxBxvWHolyeXvuBGYv4=
+	t=1711389185; cv=none; b=JA/62BbcL4JvfT7FSqlSkeRL7P9o8FJJ9MbdsH6cPXKTSgOmnlVVIm4oyFTtrzr6B0bN1zc0Htefy/HE3uCHFUBa8raYz5geQGWmu2fySP/zM5QvX9pMSIZ625cIcDHD64gBe9evINZtY4IWuhyAjJnxcqqTgnX0LsvJsfP7Hq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711389184; c=relaxed/simple;
-	bh=T+Ia0Pc3N4kwmjFvQN0LMacAar1RnknNeZiqXVkndLU=;
+	s=arc-20240116; t=1711389185; c=relaxed/simple;
+	bh=uf1EZIzeb5JONuf8FpS2iqxmJGsd3vztWjuaJxfsGis=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ASUnGzX8DsoHN13gWaAMlG45AMkmWq+ZkxAzavD2Ar38pK8YmVGTReqAyzHsCeOQdQnJXulQEAZu39k8QsaOvEdRT8WEs+hwC/gotUDV31+yB2A/YHqpXzza8hh+/WYG8Y/rM+mmVNG6yTLX8PtcLu+iDxefLCAcp2sn10n2BEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BBS0Gb6u; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=fB4pgdltuE3BnSFC/UIbzxc+Bn2r4R5kBKVPEf0ivLwjCl/D19m8DMQIOxUGz9VcEgW+w/CbxAXESUhfbuN59locx3sSq/E5iXVBNhLs9fnYrliQwESZNLVr4ummTdW2LKUQCT8FvUR7IdRaYym0DZeGrsZRvQEsSmdTI9+c3fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CMiTJVCt; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBS0Gb6u"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e6bee809b8so3977492b3a.1
-        for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 10:53:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMiTJVCt"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29de2dd22d8so2400844a91.2
+        for <loongarch@lists.linux.dev>; Mon, 25 Mar 2024 10:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711389182; x=1711993982; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1711389183; x=1711993983; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E5DnhCN93QNiYO14tG2AocbiB+DMWlDa/rXDsAPUdjs=;
-        b=BBS0Gb6u6apJynAbcpvA49TFr3lhZ+QikZrEcVeSNPX/E13zuMebnEyfl2dPHyYvfE
-         /vdI5gtIRvlmheSBZLfbJUnwVpSYANVujVOni+3yleYkyWnUt96YNxPWEWaigYjCgkwt
-         2deHnysX+d0rkGmbNG2KcDyVuuRfuy5xdwp1S/bafF5vzAqo1iscQUImhZ/8NNov0HIE
-         Q7Ox0366ZBO2bElHMCvzf7aOix04gN+A040XriHDXNyPHP3pTBpMDVpOKo1YcO5bLq+K
-         kOEa9x8GbTOGFhsflOT3nPxPToxRR9DOUGqeYrJDGkFZMWdyPz/mPX3Hnu0G0rok6oKR
-         2mYg==
+        bh=TSmEsP2HwUjZ+Kmad7RzlLHqlu7fphsCj8c3+UcbJqs=;
+        b=CMiTJVCtynu35r5LkyRtKJ9KA7qLzcYNtcWcjv0UB/gBjbFqPCsyGHS2/c7jxi3JQb
+         s7/mbAMU+Bpz+AdqQvEtXpBE6d7mxKCWYz9inilasWYwEkoQR4mAXeoCoS3DNme5iUXt
+         f05Ic0XA8udAHVoadCArsupqv467PzLiM9snfJDbaDSaJ4t1UVy+Fq1okxG1+eS40oz1
+         7qiLHkAWLUAfh9ObdL0BPt9Nw/wPJmuZ2F1jtuZcr4aYK3Qq0G4xv3PbFZU3Max1UXYB
+         iple5pKpSg6av5y5P6Wzd1izyGI2MzcuwuhG1CjfbltTZitWKkdjkW+1Cn/TN7ommuet
+         fwhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711389182; x=1711993982;
+        d=1e100.net; s=20230601; t=1711389183; x=1711993983;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=E5DnhCN93QNiYO14tG2AocbiB+DMWlDa/rXDsAPUdjs=;
-        b=jSDvkCGUXkgvtF63g+NXVDi5D/JFkejHz5Ox/0ebJizRzG7vf7vfz7Z6KefYWQmNJW
-         2R+iRPotkxcVavrqyaNhm6djA9Ot5V5V93jmxuoa4ROOPzsewAsMabytKw3AVg8DPqia
-         JLz0YF1CkokvSPg/At0gS5ZCe9J8vNkfjpCtJtf5RdeBRPhfhEN5wkkARTbS8TujkgtF
-         W5UzAWXp0tv9E6P2KWR5jYBgSnAby68c+XfmSiBdL7/XybzPkbVYzh3GeCLRzpC4D3FY
-         7wb44764/4ZrQ7S7IgdLGuQnjybqZlT0GORKSYmwg33eavfshvh/osxoik7dT8LZi5vF
-         fUPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvtb6RGpxvu7YL2XG8jCl6u6vyZNXsBnFDReUFiMmAe1zgWFfBRW1By/AVfasizQZplXjOOWeUDTI2lWvU5VAwcN4Wc4qzXxHH
-X-Gm-Message-State: AOJu0YwLfTFF0oxshHDPfJVYRWMmhDHbyuQIdWNa0/QR4uQFjcjNWKjV
-	uVT1QI0L46cFi3VM+Z8ZqoomFWbzZGwAfSmzuQXt+bTLrEv5lzxi
-X-Google-Smtp-Source: AGHT+IHUbFCxxsrPDRZqrZE3rVYi2h6yvmCQyCE4SU/FpvCJKM9Sju0fTz4yCOmRcDciiduCin1d7Q==
-X-Received: by 2002:a05:6a00:9298:b0:6e8:b78a:29fb with SMTP id jw24-20020a056a00929800b006e8b78a29fbmr9626545pfb.2.1711389181672;
-        Mon, 25 Mar 2024 10:53:01 -0700 (PDT)
+        bh=TSmEsP2HwUjZ+Kmad7RzlLHqlu7fphsCj8c3+UcbJqs=;
+        b=wyz7vjSgc85zzlOSLUhlTYRRCGtAYZKMlPnnTjHOrDMLW2ohYlSDB21MV+4nlUK4am
+         Pq07xyh93k+l0jjMNq7NF4rbYZ/KAUG46FcYcBZEs27Hf8cfcXa+HlYEtP1rtO8Uaruz
+         sa86dUrNHEI9mNue51i2N00It0G2m+6yyWQ9av0bp5PXfH6tO4jojgxVB88cdfxfU6la
+         O4YmHRQpk8vxc6AdQX/QLrjEkZO+CFnbylddJeNgTSIiDp4VkBFVzeidpC8HN+oCSHzr
+         PRtOHOnfLZJzikcXytvdmvGcaqJxbEVLS6deniKV4vrs+VBnL+Nidr8kQM75O3Qml+BK
+         D9/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVV6EGOFte0GiCK4b+eRP9g3THMY8kPGbMLEKk5nrM+s8cUI4RQsAuxNxpcdnnEPbjyEqMFFlWaXaDwSWs/fNsSBQq5GxGLEbb7
+X-Gm-Message-State: AOJu0Yy6HUD2ulOcrWxX53diVqVg3Q6iOGlWJiVbPqK4OJvIVmM4n7zf
+	Kqh6bTdFXy5vplOeKM0ejzyDnAythH5MK3zS4RZtI7onACwGMr0b
+X-Google-Smtp-Source: AGHT+IEVej1vJgDHyMhirxlQLl4uccA8YOz8D7GQmS3E1f+SiDCdIFMWODSUkw2joL6x2b4cQW8ruw==
+X-Received: by 2002:a17:90a:a88a:b0:2a0:486e:780a with SMTP id h10-20020a17090aa88a00b002a0486e780amr504319pjq.15.1711389183399;
+        Mon, 25 Mar 2024 10:53:03 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z24-20020a630a58000000b005e83b64021fsm5516536pgk.25.2024.03.25.10.53.00
+        by smtp.gmail.com with ESMTPSA id r12-20020a17090ad40c00b0029c68206e2bsm6603983pju.0.2024.03.25.10.53.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 10:53:01 -0700 (PDT)
+        Mon, 25 Mar 2024 10:53:02 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
 From: Guenter Roeck <linux@roeck-us.net>
 To: linux-kselftest@vger.kernel.org
@@ -86,9 +86,9 @@ Cc: David Airlie <airlied@gmail.com>,
 	netdev@vger.kernel.org,
 	Guenter Roeck <linux@roeck-us.net>,
 	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: [PATCH v2 04/14] kunit: Add documentation for warning backtrace suppression API
-Date: Mon, 25 Mar 2024 10:52:38 -0700
-Message-Id: <20240325175248.1499046-5-linux@roeck-us.net>
+Subject: [PATCH v2 05/14] drm: Suppress intentional warning backtraces in scaling unit tests
+Date: Mon, 25 Mar 2024 10:52:39 -0700
+Message-Id: <20240325175248.1499046-6-linux@roeck-us.net>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240325175248.1499046-1-linux@roeck-us.net>
 References: <20240325175248.1499046-1-linux@roeck-us.net>
@@ -100,65 +100,55 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document API functions for suppressing warning backtraces.
+The drm_test_rect_calc_hscale and drm_test_rect_calc_vscale unit tests
+intentionally trigger warning backtraces by providing bad parameters to
+the tested functions. What is tested is the return value, not the existence
+of a warning backtrace. Suppress the backtraces to avoid clogging the
+kernel log.
 
 Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
 - Rebased to v6.9-rc1
 - Added Tested-by:, Acked-by:, and Reviewed-by: tags
 
- Documentation/dev-tools/kunit/usage.rst | 30 ++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/tests/drm_rect_test.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index 22955d56b379..8d3d36d4103d 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -157,6 +157,34 @@ Alternatively, one can take full control over the error message by using
- 	if (some_setup_function())
- 		KUNIT_FAIL(test, "Failed to setup thing for testing");
+diff --git a/drivers/gpu/drm/tests/drm_rect_test.c b/drivers/gpu/drm/tests/drm_rect_test.c
+index 76332cd2ead8..75614cb4deb5 100644
+--- a/drivers/gpu/drm/tests/drm_rect_test.c
++++ b/drivers/gpu/drm/tests/drm_rect_test.c
+@@ -406,22 +406,28 @@ KUNIT_ARRAY_PARAM(drm_rect_scale, drm_rect_scale_cases, drm_rect_scale_case_desc
  
-+Suppressing warning backtraces
-+------------------------------
-+
-+Some unit tests trigger warning backtraces either intentionally or as side
-+effect. Such backtraces are normally undesirable since they distract from
-+the actual test and may result in the impression that there is a problem.
-+
-+Such backtraces can be suppressed. To suppress a backtrace in some_function(),
-+use the following code.
-+
-+.. code-block:: c
-+
-+	static void some_test(struct kunit *test)
-+	{
-+		DEFINE_SUPPRESSED_WARNING(some_function);
-+
-+		START_SUPPRESSED_WARNING(some_function);
-+		trigger_backtrace();
-+		END_SUPPRESSED_WARNING(some_function);
-+	}
-+
-+SUPPRESSED_WARNING_COUNT() returns the number of suppressed backtraces. If the
-+suppressed backtrace was triggered on purpose, this can be used to check if
-+the backtrace was actually triggered.
-+
-+.. code-block:: c
-+
-+	KUNIT_EXPECT_EQ(test, SUPPRESSED_WARNING_COUNT(some_function), 1);
+ static void drm_test_rect_calc_hscale(struct kunit *test)
+ {
++	DEFINE_SUPPRESSED_WARNING(drm_calc_scale);
+ 	const struct drm_rect_scale_case *params = test->param_value;
+ 	int scaling_factor;
  
- Test Suites
- ~~~~~~~~~~~
-@@ -857,4 +885,4 @@ For example:
- 		dev_managed_string = devm_kstrdup(fake_device, "Hello, World!");
++	START_SUPPRESSED_WARNING(drm_calc_scale);
+ 	scaling_factor = drm_rect_calc_hscale(&params->src, &params->dst,
+ 					      params->min_range, params->max_range);
++	END_SUPPRESSED_WARNING(drm_calc_scale);
  
- 		// Everything is cleaned up automatically when the test ends.
--	}
-\ No newline at end of file
-+	}
+ 	KUNIT_EXPECT_EQ(test, scaling_factor, params->expected_scaling_factor);
+ }
+ 
+ static void drm_test_rect_calc_vscale(struct kunit *test)
+ {
++	DEFINE_SUPPRESSED_WARNING(drm_calc_scale);
+ 	const struct drm_rect_scale_case *params = test->param_value;
+ 	int scaling_factor;
+ 
++	START_SUPPRESSED_WARNING(drm_calc_scale);
+ 	scaling_factor = drm_rect_calc_vscale(&params->src, &params->dst,
+ 					      params->min_range, params->max_range);
++	END_SUPPRESSED_WARNING(drm_calc_scale);
+ 
+ 	KUNIT_EXPECT_EQ(test, scaling_factor, params->expected_scaling_factor);
+ }
 -- 
 2.39.2
 
