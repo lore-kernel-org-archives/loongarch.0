@@ -1,22 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E35326E61B
-	for <loongarch@lists.linux.dev>; Tue, 26 Mar 2024 12:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F27C67172F
+	for <loongarch@lists.linux.dev>; Tue, 26 Mar 2024 12:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711455097; cv=none; b=Doh3vlp4yifzw466RnMrk8unP+W5VGSJ3HxdrzzE3QJcX74rZhEy8kykGoXRVeI0QrTPiGbjLchhBkocLhmzO/Le7IrnFPVvZYwENX6Yt2+p+pYVjzStDiA9Tv4QWyMGGd3hlscpvX/1j/K2OX7KyNJa5zezLRunX7UFG13uxJI=
+	t=1711455098; cv=none; b=uygbHHDVXI1V0vfATis3tSztYCCxdpTdbYZYCjs+5T4GWAXi3CgayXAeYiXhqz4bNqSeRaRjK+w7nUZ7AnQs2CIMeZ5JBDIXNiToQ3Y30FR8HcVGEY17TRl0L+AGxDLZpZrP41q8+qjh6LyLz4gyJibmx8pabmLoM49iJR6tSLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711455097; c=relaxed/simple;
-	bh=lsoSm34ubJ+R6ngdvSLEb9Nqtayv+QYEjzkROLHcyw8=;
+	s=arc-20240116; t=1711455098; c=relaxed/simple;
+	bh=5m4BnN7yVidmxnCnJgX/ChA9bEUto3lM71CJzMUOCf4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N25jplxPsxBtYqBlE6TJ+N02KL3iLgK93WS8rEC77kLOKGj4K5glqDADcjT5FATq5u2H2j4rJZoLUnz/SJ5/6Evk7IcP56MPxRL4zbaorVHjijiAgSafZauu+yzy6I60/nKvYPqSSqgfsxlPe6muTrbvB0W4bX8h7FFlD0QAEHU=
+	 MIME-Version; b=ZXSTuvE/k7yRWVKUS9fRe7NWvQC0j53Rs8lQDrjFd2L8LG/ax0MQPkjIGbyPJIBd51Q5a5K5A+XGpJGTrjRuyC8k51lY1B10++Z4cQ0N+x/8lC1LohrI7ZSGzP599sOSkWh4zl5tu7TNd1Zpbjp84y6yJCmO0NlRMpXi7tc+Srw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxifB2uwJmAF0eAA--.6243S3;
-	Tue, 26 Mar 2024 20:11:34 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxK+l3uwJmBl0eAA--.53037S3;
+	Tue, 26 Mar 2024 20:11:35 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTs1zuwJm8eVoAA--.8693S4;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTs1zuwJm8eVoAA--.8693S5;
 	Tue, 26 Mar 2024 20:11:34 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
@@ -26,9 +26,9 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v2 2/3] irqchip: Select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP for IRQ_LOONGARCH_CPU
-Date: Tue, 26 Mar 2024 20:11:29 +0800
-Message-ID: <20240326121130.16622-3-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 3/3] irqchip: Set CPU affinity only on SMP machines for LoongArch
+Date: Tue, 26 Mar 2024 20:11:30 +0800
+Message-ID: <20240326121130.16622-4-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240326121130.16622-1-yangtiezhu@loongson.cn>
 References: <20240326121130.16622-1-yangtiezhu@loongson.cn>
@@ -39,50 +39,65 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxTs1zuwJm8eVoAA--.8693S4
+X-CM-TRANSID:AQAAf8AxTs1zuwJm8eVoAA--.8693S5
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GFW3XryxGw47Gr4UXr48Zrc_yoWDJrX_Cr
-	yavFsrCa13CrW7tw1Iqa1fZrWYkan0gFs7Za1vvw1rX34xXwnxXF4IyF15XrsxGw4UtFna
-	9FWxCr1a9w12vosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
-	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
-	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x07jrPEfUUUUU=
+X-Coremail-Antispam: 1Uk129KBj93XoW7WrW3WrW8Zr4UAr1UJFWUGFX_yoW8Gw4fpr
+	WUCFn0vr43Ja4UWr9YkayDJryakr9IqrW7taya9a97ZFZ8Ja1DWF4rAF9xZF10k3y8GF12
+	gFs7WFW8ua15JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjxU4AhLUUUUU
 
-An IRQ's effective affinity can only be different from its configured
-affinity if there are multiple CPUs. Make it clear that this option is
-only meaningful when SMP is enabled. Otherwise, there exists "WARNING:
-unmet direct dependencies detected for GENERIC_IRQ_EFFECTIVE_AFF_MASK"
-when make menuconfig if CONFIG_SMP is not set on LoongArch.
+According to the code comment of "struct irq_chip" in include/linux/irq.h,
+the member "irq_set_affinity" is to set the CPU affinity on SMP machines,
+so define and call eiointc_set_irq_affinity() only under CONFIG_SMP.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-loongson-eiointc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 72c07a12f5e1..bfa1d77749f3 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -568,7 +568,7 @@ config IRQ_LOONGARCH_CPU
- 	bool
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN
--	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
-+	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
- 	select LOONGSON_HTVEC
- 	select LOONGSON_LIOINTC
- 	select LOONGSON_EIOINTC
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index b64cbe3052e8..4f5e6d21d77d 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -59,6 +59,7 @@ static int cpu_to_eio_node(int cpu)
+ 	return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
+ }
+ 
++#ifdef CONFIG_SMP
+ static void eiointc_set_irq_route(int pos, unsigned int cpu, unsigned int mnode, nodemask_t *node_map)
+ {
+ 	int i, node, cpu_node, route_node;
+@@ -126,6 +127,7 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
+ 
+ 	return IRQ_SET_MASK_OK;
+ }
++#endif
+ 
+ static int eiointc_index(int node)
+ {
+@@ -238,7 +240,9 @@ static struct irq_chip eiointc_irq_chip = {
+ 	.irq_ack		= eiointc_ack_irq,
+ 	.irq_mask		= eiointc_mask_irq,
+ 	.irq_unmask		= eiointc_unmask_irq,
++#ifdef CONFIG_SMP
+ 	.irq_set_affinity	= eiointc_set_irq_affinity,
++#endif
+ };
+ 
+ static int eiointc_domain_alloc(struct irq_domain *domain, unsigned int virq,
 -- 
 2.42.0
 
