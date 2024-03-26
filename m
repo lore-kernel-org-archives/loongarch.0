@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC8113C69D;
-	Tue, 26 Mar 2024 18:56:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED533DABF5;
+	Tue, 26 Mar 2024 18:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711479382; cv=none; b=n0tSDlNb5fRuDOsc+Dc/Eam/TmrafLhaYq2yU2Rb6lPTO8+PlhOk0CPTsRJl0O9yBEgpgrtM1RwDREHUxqIHQtDYoGppt2podo47ImQenJOrjPEqlXR7uJQa5LqYOFUEhpDDteC9maDcMSYwtBW5QUQYhVyAu06ORWEmO6dimtw=
+	t=1711479410; cv=none; b=ooJw0eUiCkxd1rxKW8AZKjR47pU7eSQH3mxaECUSlKfqMtHNxbtmxEQKUIIBCid4GYUqFaimJRdYFd8e5fAMksKBtvJmum8aw+e3RNk6gX+HEVAr6WSVV4hNxc9sRlX2ufT/WwUw5pdiBlSWeUoMpDjwYnt7gQH9EcKKxx9xKmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711479382; c=relaxed/simple;
-	bh=HeSCOyWRkgF4bDb2OVsj+wKkCFrlnU2oRKaZ9XqzH3k=;
+	s=arc-20240116; t=1711479410; c=relaxed/simple;
+	bh=ZdLEySwEsWnegupZpT4qm4uyz/jp9tNClkbP41nlTlo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7EA4BUXSRDWGYKbqIEuyVgeOzxKJKOtvnIK+hjeS8yTTXJgCuaEJJoP+Iy1vMd6rQNBtPAnD+HoQ9hwwMAZtXsQAS/D1s2pKlKdqt1LWWNwhbV1n2mzDhRHQ1u7Ipu1zxXHxeDvpsgdjpsWM9tA6YcMiZgVm2qxj+9BsHG9OOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyEAN5Jy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCNK8Cxs77TvGB9RzbseTI/c+PVW4EpIdFmYwIPPBy3mBwJt24EkTwQS3L497UEyUpVGaYcAsXjA5cLD7sOHf+hI0+WFFUt+y8oCm/vcP6lq8RKbqml8LILzjf/hdaYQR72UBacnqSUDXQCUefkn6uC66NTECQiYpTH/E0rrhPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQT9sDZi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyEAN5Jy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48BF5C43390;
-	Tue, 26 Mar 2024 18:56:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQT9sDZi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B83DCC43390;
+	Tue, 26 Mar 2024 18:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711479382;
-	bh=HeSCOyWRkgF4bDb2OVsj+wKkCFrlnU2oRKaZ9XqzH3k=;
+	s=k20201202; t=1711479410;
+	bh=ZdLEySwEsWnegupZpT4qm4uyz/jp9tNClkbP41nlTlo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nyEAN5JyF/m1Qv57aHSYEhlpYY2sILPOwySbnLRpB3T2H7ZkI/4Edsbn51vZGt9Qm
-	 N8SN1oZWC/kIanLsthnJGbKOCLAI47q8lJvaAY9w/97ydQbuR2HHjFvSyWrvxOBdwX
-	 VS7QLI5qW9Y2fFS70gtYYunGmYg7BZZpaqKwrZTRxWivmtmZEoosbEq/rHfVwcNJsW
-	 /u6Ril5qbCOrtX2gtS1UlykL0AD2ol9NVR8+enkCIuOPnmT7QnHRf6aFaixKboeJep
-	 9gyNvhPlP1nxulwWqssFzbC33Y3BvL79IdS0Mfkb5+UnxQut0mdiAZ2EhI3AE9GrHO
-	 ETtgfSEBR65rw==
-Date: Tue, 26 Mar 2024 18:56:17 +0000
+	b=QQT9sDZiA5tHkxV+fymk7CQNbW/LFcAZ6taHXgIdJAfF3c5uivkNKS3FocGWEfEyx
+	 NgHq78IVr5b07EFelaI25OE8kp2jxG4mRXKNNEupKUOEKjPE6YqL0MmIiYPZoV3HiV
+	 us8EI553UgmFL8VznOPNbXWgMA5y61AJgCVvKkhbepvMRmGAJYy9u8C7Ch9aXa4Sc1
+	 zbdxYu4HA3ckp0JSspvT5MZArm7fONwiPJOkdKVBV/xJcwzihLlM6WjO3vGYEfYvew
+	 mYR18HHRqEPOL233uvhzflI2eV0SlGxgs0KJoycnyTzFw0cS79Mjp7jSu0Gshu6/M7
+	 eFnLPPivi9lpw==
+Date: Tue, 26 Mar 2024 18:56:45 +0000
 From: Conor Dooley <conor@kernel.org>
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
@@ -40,11 +40,11 @@ Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	loongson-kernel@lists.loongnix.cn, linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 3/8] dt-bindings: clock: loongson2: add
- Loongson-2K0500 compatible
-Message-ID: <20240326-dimmer-undrafted-9cabaaec1abc@spud>
+Subject: Re: [PATCH v1 5/8] dt-bindings: clock: loongson2: add
+ Loongson-2K2000 compatible
+Message-ID: <20240326-pampered-ladylike-d157c60eaa70@spud>
 References: <cover.1710926402.git.zhoubinbin@loongson.cn>
- <7c7728451fdea3977c492f3daee260590af78d16.1710926402.git.zhoubinbin@loongson.cn>
+ <3b5d5a11530ca440477c46a1b751a4c8026f00f6.1710926402.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -52,52 +52,49 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="eFlUKDOKmoTO6ljZ"
+	protocol="application/pgp-signature"; boundary="OFe5CZMTprKdPRKa"
 Content-Disposition: inline
-In-Reply-To: <7c7728451fdea3977c492f3daee260590af78d16.1710926402.git.zhoubinbin@loongson.cn>
+In-Reply-To: <3b5d5a11530ca440477c46a1b751a4c8026f00f6.1710926402.git.zhoubinbin@loongson.cn>
 
 
---eFlUKDOKmoTO6ljZ
+--OFe5CZMTprKdPRKa
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 26, 2024 at 05:01:02PM +0800, Binbin Zhou wrote:
-> Add the devicetree compatible for Loongson-2K0500 clocks.
+On Tue, Mar 26, 2024 at 05:01:25PM +0800, Binbin Zhou wrote:
+> Add the devicetree compatible for Loongson-2K2000 clocks.
 >=20
 > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
->  Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
 > diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.ya=
 ml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> index 63a59015987e..83baee40e200 100644
+> index 83baee40e200..4f79cdb417ab 100644
 > --- a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
 > +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> @@ -16,7 +16,8 @@ description: |
->  properties:
->    compatible:
+> @@ -18,6 +18,7 @@ properties:
 >      enum:
-> -      - loongson,ls2k-clk
-> +      - loongson,ls2k0500-clk
-> +      - loongson,ls2k-clk  # This is for Loongson-2K1000
+>        - loongson,ls2k0500-clk
+>        - loongson,ls2k-clk  # This is for Loongson-2K1000
+> +      - loongson,ls2k2000-clk
 
-Ah yes, the generic "ls2k" compatibles strike again :)
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
 Thanks,
 Conor.
 
---eFlUKDOKmoTO6ljZ
+--OFe5CZMTprKdPRKa
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgMaUQAKCRB4tDGHoIJi
-0iQCAQDlCmyyuYtsHRjUL1psOLIvbbdZiQAV5e5mdGofHGaP+QEAqBFXxrR+h0QL
-QTrlkp/FPyBAkCZoDRYS23vA/77EHQU=
-=f9bv
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgMabQAKCRB4tDGHoIJi
+0gHfAQD0eQEFO+wcJjlSXV4bVuLBKpiRJCdOpMVxEwAjkCShRgEAn4L1em/4rIZb
+m9LldlvJ/Jhu1RHGNSXc2y9bZ4SHDww=
+=S9F2
 -----END PGP SIGNATURE-----
 
---eFlUKDOKmoTO6ljZ--
+--OFe5CZMTprKdPRKa--
