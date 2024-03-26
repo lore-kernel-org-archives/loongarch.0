@@ -1,100 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED533DABF5;
-	Tue, 26 Mar 2024 18:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11BD57353B
+	for <loongarch@lists.linux.dev>; Tue, 26 Mar 2024 21:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711479410; cv=none; b=ooJw0eUiCkxd1rxKW8AZKjR47pU7eSQH3mxaECUSlKfqMtHNxbtmxEQKUIIBCid4GYUqFaimJRdYFd8e5fAMksKBtvJmum8aw+e3RNk6gX+HEVAr6WSVV4hNxc9sRlX2ufT/WwUw5pdiBlSWeUoMpDjwYnt7gQH9EcKKxx9xKmY=
+	t=1711488658; cv=none; b=RLLfmkKk0Zoir3c5S+y9bauooinY6eGPsLE1gphQKjExeYFCugYYFAi3SrcPN/E92PDkWOsZ/+Ft5GeBHCayHYyzV3ADwbJeN0fmvCNnbxe+v25V57Ip5PmEiOyAILfRGvJICH0H5Ev9JkdHhw38k9KLXOg1b70CSLnv0vC/LWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711479410; c=relaxed/simple;
-	bh=ZdLEySwEsWnegupZpT4qm4uyz/jp9tNClkbP41nlTlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MCNK8Cxs77TvGB9RzbseTI/c+PVW4EpIdFmYwIPPBy3mBwJt24EkTwQS3L497UEyUpVGaYcAsXjA5cLD7sOHf+hI0+WFFUt+y8oCm/vcP6lq8RKbqml8LILzjf/hdaYQR72UBacnqSUDXQCUefkn6uC66NTECQiYpTH/E0rrhPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQT9sDZi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQT9sDZi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B83DCC43390;
-	Tue, 26 Mar 2024 18:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711479410;
-	bh=ZdLEySwEsWnegupZpT4qm4uyz/jp9tNClkbP41nlTlo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QQT9sDZiA5tHkxV+fymk7CQNbW/LFcAZ6taHXgIdJAfF3c5uivkNKS3FocGWEfEyx
-	 NgHq78IVr5b07EFelaI25OE8kp2jxG4mRXKNNEupKUOEKjPE6YqL0MmIiYPZoV3HiV
-	 us8EI553UgmFL8VznOPNbXWgMA5y61AJgCVvKkhbepvMRmGAJYy9u8C7Ch9aXa4Sc1
-	 zbdxYu4HA3ckp0JSspvT5MZArm7fONwiPJOkdKVBV/xJcwzihLlM6WjO3vGYEfYvew
-	 mYR18HHRqEPOL233uvhzflI2eV0SlGxgs0KJoycnyTzFw0cS79Mjp7jSu0Gshu6/M7
-	 eFnLPPivi9lpw==
-Date: Tue, 26 Mar 2024 18:56:45 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 5/8] dt-bindings: clock: loongson2: add
- Loongson-2K2000 compatible
-Message-ID: <20240326-pampered-ladylike-d157c60eaa70@spud>
-References: <cover.1710926402.git.zhoubinbin@loongson.cn>
- <3b5d5a11530ca440477c46a1b751a4c8026f00f6.1710926402.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1711488658; c=relaxed/simple;
+	bh=GQsOFn3z/ltzMiSqHOLQ6WIb6HGqbMhSL9srQPYMWSQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ffxVO7IsY+PaukwN6q+U8MIykET22hrsJSu/d2LYThxD/7XxdVGx4cyA4hamo5F93l2NCyN9KHCrIOTwFiLE5MGazx8hW8mFAh21UvFF6Sfep+CERssckYEVyo+0W7Fv/efmbowLJNUStzXjNZ7b1jt3/0OD2l5yrk7rFulSycc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [117.22.85.11])
+	by gateway (Coremail) with SMTP id _____8CxruuMPgNm7IoeAA--.6021S3;
+	Wed, 27 Mar 2024 05:30:52 +0800 (CST)
+Received: from [192.168.0.105] (unknown [117.22.85.11])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxrhOLPgNmX3RpAA--.21721S3;
+	Wed, 27 Mar 2024 05:30:52 +0800 (CST)
+Message-ID: <9d557c37-d376-40c3-0630-4e904db27528@loongson.cn>
+Date: Wed, 27 Mar 2024 05:30:58 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OFe5CZMTprKdPRKa"
-Content-Disposition: inline
-In-Reply-To: <3b5d5a11530ca440477c46a1b751a4c8026f00f6.1710926402.git.zhoubinbin@loongson.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH] LoongArch: Give chance to build under !CONFIG_SMP
+Content-Language: en-US
+To: maobibo <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
+ Marc Zyngier <maz@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+References: <20240326062101.9822-1-yangtiezhu@loongson.cn>
+ <55494710-ddaa-c35a-f6cd-5baf98b13931@loongson.cn>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+In-Reply-To: <55494710-ddaa-c35a-f6cd-5baf98b13931@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxrhOLPgNmX3RpAA--.21721S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WF43Xw17ZF47GF4UGFWUZFc_yoW8CFyfpF
+	WvyF4UtF409r1vkr97Jan5uFyrZrn3Ja9rGry3Ca4DJasxXrnaqr4vgwn0vFyDurWSq3W0
+	vFZrWa1fuF1Yq3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUU
+	UUU==
 
+Hi Bibo,
 
---OFe5CZMTprKdPRKa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 3/26/24 20:58, maobibo wrote:
+> 
+> 
+> On 2024/3/26 下午2:21, Tiezhu Yang wrote:
+>> In the current code, SMP is selected in Kconfig for LoongArch, the users
+>> can not unset it, this is reasonable for a multiprocessor machine. But as
+>> the help info of config SMP said, if you have a system with only one CPU,
+>> say N. On a uniprocessor machine, the kernel will run faster if you say N
+>> here.
+>>
+>> The Loongson-2K0500 is a single-core CPU for applications like industrial
+>> control, printing terminals, and BMC (Baseboard Management Controller),
+>> there are many development boards, products and solutions on the market,
+>> so it is better and necessary to give a chance to build under !CONFIG_SMP
+>> for a uniprocessor machine.
 
-On Tue, Mar 26, 2024 at 05:01:25PM +0800, Binbin Zhou wrote:
-> Add the devicetree compatible for Loongson-2K2000 clocks.
->=20
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.ya=
-ml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> index 83baee40e200..4f79cdb417ab 100644
-> --- a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> @@ -18,6 +18,7 @@ properties:
->      enum:
->        - loongson,ls2k0500-clk
->        - loongson,ls2k-clk  # This is for Loongson-2K1000
-> +      - loongson,ls2k2000-clk
+...
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>> +++ b/arch/loongarch/include/asm/smp.h
+>> @@ -6,6 +6,7 @@
+>>   #ifndef __ASM_SMP_H
+>>   #define __ASM_SMP_H
+>> +#ifdef CONFIG_SMP
+>>   #include <linux/atomic.h>
+>>   #include <linux/bitops.h>
+>>   #include <linux/linkage.h>
+>> @@ -101,4 +102,8 @@ static inline void __cpu_die(unsigned int cpu)
+>>   }
+>>   #endif
+>> +#else /* !CONFIG_SMP */
+>> +#define cpu_logical_map(cpu)    0
+> It is unsafe here though physical cpuid of BSP is 0 always.
+> It is better to use __cpu_logical_map[cpu] or read_csr_cpuid()
+> 
+>> +#endif
+
+...
+
+>> +++ b/arch/loongarch/power/suspend.c
+>> @@ -44,7 +44,9 @@ void loongarch_common_resume(void)
+>>   {
+>>       sync_counter();
+>>       local_flush_tlb_all();
+>> +#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
+>>       csr_write64(per_cpu_offset(0), PERCPU_BASE_KS);
+>> +#endif
+> It is another issue, CONFIG_HAVE_SETUP_PER_CPU_AREA should not depend on 
+> NUMA. PERCPU_BASE_KS should be set even for UP.
+
+Thanks for your review and suggestions.
+
+Let me wait for some days, if no more comments, I will address in v3 
+since the v2 has been sent.
 
 Thanks,
-Conor.
+Tiezhu
 
---OFe5CZMTprKdPRKa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgMabQAKCRB4tDGHoIJi
-0gHfAQD0eQEFO+wcJjlSXV4bVuLBKpiRJCdOpMVxEwAjkCShRgEAn4L1em/4rIZb
-m9LldlvJ/Jhu1RHGNSXc2y9bZ4SHDww=
-=S9F2
------END PGP SIGNATURE-----
-
---OFe5CZMTprKdPRKa--
