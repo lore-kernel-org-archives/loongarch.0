@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1DE15AAB3;
-	Wed, 27 Mar 2024 12:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D8315D5D2;
+	Wed, 27 Mar 2024 12:18:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541876; cv=none; b=lYhCvldhPA1Uw2JsgujzwwucoFHbGdFSAcPnwqeTW6VAj5wR/YsMdO0iPOyhpVPpYBIm6+KQYeFjpmKrq8EJeABT0jYsFFVyxQ9MAwyxtPv0G13eDgy34bksT3hm/Lkk0OmojZSOrGI7157uDzksBYJthexbl5fLKc+6agPE2/w=
+	t=1711541918; cv=none; b=kBs0twqB3znAd2H0g66fCPKfZeoO92pQIPoqPdUgDn7SdgPxX8mCDnkXjgSOxXh3/L9cFG9quUz7oycux7QDE7eIkoc9D8egVu6Ld0ahAAmxIGWlpvFSIXbb94cTxVqZ6kIEeROW2q67/MBA0RaE9ShQZB4S646o+/uf/WXSdpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541876; c=relaxed/simple;
-	bh=8KdgN4gMYpFIeyybpCJjFfRxR85qaQxrQ/OatPBxMwA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LSuHGbBAARpa7c0fnlZX4+WTjCuKGkQgjOGsLPAPozMFsBJd6h+VtLPFjz5Bt2HbPIgrOhqyQnXR+641RvC9TexztBWRpbMA5CFuDq+lVKqsclXmxtl/FRoyU1mxVOZxxvVMh+c+pyzXxiXX0mYje9LmURL3dzNAUFXlLHsxEXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNQFHsLT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711541918; c=relaxed/simple;
+	bh=nyDkxAtoumz6NapNC3ssvGii4GjOv4f2Xhot8O07yaE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P/S1BLZpiqlIqYQE22LVp90Peo7ks2TOoj6P4PgVpjSygo7CgBMtO4qvSZoTp+v5QtnWUbrM7NJwU2sIRc3wgXy+Zk1CIrAVn1Vhz/DRV/QCbamM8jRwBZ0Gzhu290C1UkSVjKzkLO6HCgfRECQPm40sia5eAKEUtCck+hcIcx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQ0/AQDV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNQFHsLT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D56C433C7;
-	Wed, 27 Mar 2024 12:17:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQ0/AQDV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E269DC433F1;
+	Wed, 27 Mar 2024 12:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711541875;
-	bh=8KdgN4gMYpFIeyybpCJjFfRxR85qaQxrQ/OatPBxMwA=;
+	s=k20201202; t=1711541918;
+	bh=nyDkxAtoumz6NapNC3ssvGii4GjOv4f2Xhot8O07yaE=;
 	h=From:To:Cc:Subject:Date:From;
-	b=YNQFHsLTdNvPTWB31tU1dFxyzsq0FhO/HlDDVg4XPljDU7oWiCXzyjRWDGkP/s1Kt
-	 ezrsWLMgpkYuKK/anHPpP5knLVSEtvBuGMP0xTekv6zbTPHrXoeN8uLOk25zGtfgvc
-	 RuvF8cvZNa1UxgnxDLjXt5b47ZIObq+SgnQU0nNmTfWUpP2X9uXzmShB74igCL8ZKX
-	 9MrerwISQJLNJ/bs+LOhs+JDnLxj4Ai4CnYryOjNTm/Htrww5D+kbpB6aGDvOcfbRT
-	 5w2rqOj9Lh4Jk5/MotrlxpqiHWmMHlSyIPv6aI4+sLBSOPN2YNpslNq3t1ksYRS/Ya
-	 Z1kNBZ7AvLzow==
+	b=MQ0/AQDVZpvUPIRzwLmMHUtIr9bqDDfn9P6vqdRqnICn5X+wPtNIVJ5twWoj+wGnR
+	 qwEKRq8t52Amp2iHl0k+zqmHo6Ly0KDXKhTduHZWU1PMypLe0+OV2TqUun7LT+3Wvk
+	 fPQ7chZb99nEj5/6LOJCwc/LzzJe5+MM9C4whH/034w66PM0kNPwvDf8L7T9qWWQBe
+	 CsNY+qNBEu/bdVH0cDAe91q+e0QJ/v+O/7j8+PLvtTTIKZrt+ooc6BJtr3AVbzo4Co
+	 igYJVKzeTQwj0vw7Jfs+8MyiqAM/qwMkpk64a8PkDyZAfpDUTv5cfivTQg2MVCLVRJ
+	 sKqhE8gtt1pTA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	wangyuli@uniontech.com
-Cc: WANG Xuerui <git@xen0n.name>,
-	Wentao Guan <guanwentao@uniontech.com>,
+	chenhuacai@kernel.org
+Cc: Xiaotian Wu <wuxiaotian@loongson.cn>,
+	Miao Wang <shankerwangmiao@gmail.com>,
+	Xing Li <lixing@loongson.cn>,
+	Hongchen Zhang <zhanghongchen@loongson.cn>,
+	Rui Wang <wangrui@loongson.cn>,
 	Huacai Chen <chenhuacai@loongson.cn>,
-	linux-crypto@vger.kernel.org,
+	linux-mm@kvack.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "LoongArch/crypto: Clean up useless assignment operations" failed to apply to 5.10-stable tree
-Date: Wed, 27 Mar 2024 08:17:53 -0400
-Message-ID: <20240327121753.2833881-1-sashal@kernel.org>
+Subject: FAILED: Patch "LoongArch: Change __my_cpu_offset definition to avoid mis-optimization" failed to apply to 5.10-stable tree
+Date: Wed, 27 Mar 2024 08:18:35 -0400
+Message-ID: <20240327121836.2834515-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -58,48 +61,56 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From fea1c949f6ca5059e12de00d0483645debc5b206 Mon Sep 17 00:00:00 2001
-From: Yuli Wang <wangyuli@uniontech.com>
+From c87e12e0e8c1241410e758e181ca6bf23efa5b5b Mon Sep 17 00:00:00 2001
+From: Huacai Chen <chenhuacai@loongson.cn>
 Date: Tue, 19 Mar 2024 15:50:34 +0800
-Subject: [PATCH] LoongArch/crypto: Clean up useless assignment operations
+Subject: [PATCH] LoongArch: Change __my_cpu_offset definition to avoid
+ mis-optimization
 
-The LoongArch CRC32 hw acceleration is based on arch/mips/crypto/
-crc32-mips.c. While the MIPS code supports both MIPS32 and MIPS64,
-but LoongArch32 lacks the CRC instruction. As a result, the line
-"len -= sizeof(u32)" is unnecessary.
+From GCC commit 3f13154553f8546a ("df-scan: remove ad-hoc handling of
+global regs in asms"), global registers will no longer be forced to add
+to the def-use chain. Then current_thread_info(), current_stack_pointer
+and __my_cpu_offset may be lifted out of the loop because they are no
+longer treated as "volatile variables".
 
-Removing it can make context code style more unified and improve
-code readability.
+This optimization is still correct for the current_thread_info() and
+current_stack_pointer usages because they are associated to a thread.
+However it is wrong for __my_cpu_offset because it is associated to a
+CPU rather than a thread: if the thread migrates to a different CPU in
+the loop, __my_cpu_offset should be changed.
+
+Change __my_cpu_offset definition to treat it as a "volatile variable",
+in order to avoid such a mis-optimization.
 
 Cc: stable@vger.kernel.org
-Reviewed-by: WANG Xuerui <git@xen0n.name>
-Suggested-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+Reported-by: Xiaotian Wu <wuxiaotian@loongson.cn>
+Reported-by: Miao Wang <shankerwangmiao@gmail.com>
+Signed-off-by: Xing Li <lixing@loongson.cn>
+Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+Signed-off-by: Rui Wang <wangrui@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/crypto/crc32-loongarch.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/loongarch/include/asm/percpu.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
-index a49e507af38c0..3eebea3a7b478 100644
---- a/arch/loongarch/crypto/crc32-loongarch.c
-+++ b/arch/loongarch/crypto/crc32-loongarch.c
-@@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include/asm/percpu.h
+index 9b36ac003f890..8f290e5546cf7 100644
+--- a/arch/loongarch/include/asm/percpu.h
++++ b/arch/loongarch/include/asm/percpu.h
+@@ -29,7 +29,12 @@ static inline void set_my_cpu_offset(unsigned long off)
+ 	__my_cpu_offset = off;
+ 	csr_write64(off, PERCPU_BASE_KS);
+ }
+-#define __my_cpu_offset __my_cpu_offset
++
++#define __my_cpu_offset					\
++({							\
++	__asm__ __volatile__("":"+r"(__my_cpu_offset));	\
++	__my_cpu_offset;				\
++})
  
- 		CRC32(crc, value, w);
- 		p += sizeof(u32);
--		len -= sizeof(u32);
- 	}
- 
- 	if (len & sizeof(u16)) {
-@@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
- 
- 		CRC32C(crc, value, w);
- 		p += sizeof(u32);
--		len -= sizeof(u32);
- 	}
- 
- 	if (len & sizeof(u16)) {
+ #define PERCPU_OP(op, asm_op, c_op)					\
+ static __always_inline unsigned long __percpu_##op(void *ptr,		\
 -- 
 2.43.0
 
