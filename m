@@ -1,34 +1,34 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B28714E2C4
-	for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 17:18:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3488A14E2D3
+	for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 17:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711559882; cv=none; b=P9tHdhYs0EKyepLsbg4mX5czCTGkCiXdnqEH2lHe2s1HKIxmWA5/62UtXs2y9ibaYC2/N6XungzxVZUyMQWz3AWpDVCbOO3B9Y5VWetCymdk9FTgrT0UC2cfFg9cHj4PEbXYR2uJzAHogceozsZ7b0XGixGKbaFozYDKy7s69F0=
+	t=1711559917; cv=none; b=fgnIBecakx33EPK6686H9JJeUgF/+Kb2gGuvtI8kLtjCREvwRgHq5ClThI5K2zrL8oa9xtYu/EomgMdUCc5gP/d14AovsdgR09m7bMabKJYBA2jryLkA574loR/vtfsGP9+zcfLD5yl8FD8ixdskrArzsPEqsE29QRL/ytL9QC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711559882; c=relaxed/simple;
-	bh=K6QrVU5PVZBLkr9lH/YmwLeLzn9IdrE/2j59eke5SYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JMwepg+ps67+F592RQQYhLeEiN3mLd30Bm8Y6FONt/y/uR1IeaLzfVn6XARLC35VyrEY2VQGpYFSJ6zv0Su5Lhd8p0kTp+KIu2AObsI0LDVnljow3BUG19m44xPI/XwMMc1eXab8ykRGiZBFKonsCBzTM6cwA/IDNR6g27gzgm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=MJ5m2FAV; arc=none smtp.client-ip=89.208.246.23
+	s=arc-20240116; t=1711559917; c=relaxed/simple;
+	bh=F1pqsc6yA/HV/3XyW47RmJKXv1PKsfVTHF8V7dly7UM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KbQJcgoDojUlfh3fCL/UTdnyZIc3LyU83xZ3lYLUlXTUgV7CYgATK3ka056LCuexfd5DsELfHCertr977uX/kHeNgV/jW17MoCDXYdl55kzLmYcETwXLL5fyQmrMIvPbw+eunBczTRMbrilvun0C/6PBANAO5XdIVpiy11nMyD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Fh6W9ymS; arc=none smtp.client-ip=89.208.246.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="MJ5m2FAV"
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Fh6W9ymS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1711559880;
-	bh=K6QrVU5PVZBLkr9lH/YmwLeLzn9IdrE/2j59eke5SYU=;
+	s=default; t=1711559915;
+	bh=F1pqsc6yA/HV/3XyW47RmJKXv1PKsfVTHF8V7dly7UM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=MJ5m2FAV9u/mzXXtMzeWGZzANo+OjhHwThNa2yxCvRBi54qpU0YfGTeI2DIf4Q+jK
-	 DIHEaFeos/HcvAmQeU0VmEitjIlJzQ1PYa9X7vfjukXw1kVN54v2Ut2CYgMz1wCDL7
-	 pxWjW/2W4y8ZK7MWvEtkJWkzq8sTnGvijThrHk9Q=
+	b=Fh6W9ymSD/DcjLV3NqlAW1P51PmWY56HAen4AMuo3f+cyaQXZkcgYyVl/Ydis5/AY
+	 MlagIngvWDwP0K3slPck15SpbCxMdsIpwTDKxBlORqCWxb8qY4ORH8V8kFm/U9tV6D
+	 Crh7v/kz1U3Lpk+LL7mYzDuSJnL29eLaik6BWpts=
 Received: from stargazer.. (unknown [IPv6:240e:358:111f:6100:dc73:854d:832e:8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 3CE0266B9E;
-	Wed, 27 Mar 2024 13:17:55 -0400 (EDT)
+	by xry111.site (Postfix) with ESMTPSA id B449666B9E;
+	Wed, 27 Mar 2024 13:18:31 -0400 (EDT)
 From: Xi Ruoyao <xry111@xry111.site>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>
@@ -36,9 +36,9 @@ Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tiezhu Yang <yangtiezhu@loongson.cn>,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH] LoongArch: Select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
-Date: Thu, 28 Mar 2024 01:17:37 +0800
-Message-ID: <20240327171737.27622-1-xry111@xry111.site>
+Subject: [PATCH] LoongArch: Select ARCH_HAS_FAST_MULTIPLIER
+Date: Thu, 28 Mar 2024 01:18:07 +0800
+Message-ID: <20240327171807.27741-1-xry111@xry111.site>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -48,8 +48,14 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This allows compiling a full 128-bit product of two 64-bit integers as
-a mul/mulh pair, instead of a nasty long sequence of 20+ instructions.
+LA464 and LA664 can do 32-bit/64-bit integer multiplication with a
+latency of 4 cycles and a throughput of 2 ops per cycle.  It's
+comparable to mainstream x86 and arm64 cores, so select
+ARCH_HAS_FAST_MULTIPLIER like them.
+
+It speeds up __sw_hweight32 in lib/hweight.c for about 14% on LA464 and
+11% on LA664, and __sw_hweight64 for about 30% on LA464 and 33% on
+LA664.
 
 Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
@@ -57,17 +63,17 @@ Signed-off-by: Xi Ruoyao <xry111@xry111.site>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index a5f300ec6f28..5a769bb92d7c 100644
+index 5a769bb92d7c..d52a95195e7f 100644
 --- a/arch/loongarch/Kconfig
 +++ b/arch/loongarch/Kconfig
-@@ -56,6 +56,7 @@ config LOONGARCH
- 	select ARCH_SUPPORTS_ACPI
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_HUGETLBFS
-+	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
- 	select ARCH_SUPPORTS_NUMA_BALANCING
+@@ -16,6 +16,7 @@ config LOONGARCH
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_CPU_FINALIZE_INIT
+ 	select ARCH_HAS_CURRENT_STACK_POINTER
++	select ARCH_HAS_FAST_MULTIPLIER
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_KCOV
+ 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
 -- 
 2.44.0
 
