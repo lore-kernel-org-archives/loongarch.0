@@ -1,141 +1,98 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF23517BB5
-	for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 01:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F34618E28
+	for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 01:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711501756; cv=none; b=S5gfwVgYRIhsXRki+klpmWzGgHvJQrTMKdLUDy1A/FLnKFPv7XnCnnAApmrKiMitM/HTtHJuTZlJSXe2gepD5HdzvP9iQOFoYNMT08HI3QDe9G5FLD/2z/U4vFZaBv1Hoq5AwYFMPqYnfNGWET7W6oHs0uua9KRKWibVVltJgPI=
+	t=1711502157; cv=none; b=UU7vhLC08LyQrCX0iQRdQXI9hbMhheKaQeKOskhvhINJniPsuKFU5Tjnks94t5s4dCez5uORqhrSJd00lMcPQdGw3oV7IQ+EIf2ueulaiBNkMgDnFsCbdLgb5Uo4kMwZoqMZaZIGHhjboJryZtOSVZOk2i7Se3sKTL7qaLR3uJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711501756; c=relaxed/simple;
-	bh=oYSMMACKnE94OhuF6KDrNencMCMsiO4LmGCxzYQmj50=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=g3MlnDMcwJ1Xe15TCEk8efU7YazeAuiW2itHkfGC6+6fzwi0TjbAygC81eqwNVjYRecNlLt9bP3leWgJl5olhqYnYim/fg+GnDeM2+3sK/xO3SQTLED2o9VarrpSnnX8y1vju1FLNKQ3scJsR26p3HYU8n1ibn0d95Kw3gXDVO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8Axeei3cQNmeZoeAA--.52467S3;
-	Wed, 27 Mar 2024 09:09:11 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxdRGwcQNmeY5pAA--.750S3;
-	Wed, 27 Mar 2024 09:09:06 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Give chance to build under !CONFIG_SMP
-To: loongson-kernel@lists.loongnix.cn, Huacai Chen <chenhuacai@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
- Marc Zyngier <maz@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240326062101.9822-1-yangtiezhu@loongson.cn>
- <55494710-ddaa-c35a-f6cd-5baf98b13931@loongson.cn>
- <9d557c37-d376-40c3-0630-4e904db27528@loongson.cn>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <dd5eb61b-8adf-4289-7342-7711e87dba0e@loongson.cn>
-Date: Wed, 27 Mar 2024 09:09:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1711502157; c=relaxed/simple;
+	bh=PLidVJaE//HxRhz5H/QzI3/xtp56vRobIOOw6V0NeqA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cvScATrg0eU4Vlgk05Fn6ZtDfFdqVHl9qVaJNAUeBtIT8KFRe/nVxwZjGZSP47jH9hwi1bZWxH/qxLMqtNnUUr+mlYxsbk91AAb2PNPzG8uZQQ2MYLInHZ6Q2oWJcDClHDkqGMWaacB+EDyx2h14k4cdQgQ6Lm8ZnUWDqyFNTzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PLoVAcID; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLoVAcID"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d4a901e284so116607561fa.1
+        for <loongarch@lists.linux.dev>; Tue, 26 Mar 2024 18:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711502155; x=1712106955; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+OHmV4irZFRN7yhkxXILCmLuBOPWKdOt3kQNZKrG9Qo=;
+        b=PLoVAcIDOJcRvpPS3/IptpXM8rL2NYdWX11bVVF7vEFoMXBsk9l8MWc0svQVJHwiIe
+         UDGtXRNCnm3n2j3QnXGtZPltpHm6TcCzJlXk2JIbBcbhzkB4TKvYP7tiY1C9SVH2Kf0y
+         Ma9nE6x4YXzi32h/3nMEsseqbBxxVy7mVXfTXpcMI5/UFoCF72Pt1j+IJyKBiQ9ChVUa
+         T+shd40Ow2IhhoB0aMGS2ZTTd6O4lrVo+OQ8f+gZaOZ0yuhqXs6WsXORtiwVottAzhCK
+         3xyaBKO+XBUjlKWiMOA9XfmQvDb3/Y0Gkn+OuLsClRIz6bLX6YdnW3lk1q9t2k8Tb0Ij
+         3ytg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711502155; x=1712106955;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+OHmV4irZFRN7yhkxXILCmLuBOPWKdOt3kQNZKrG9Qo=;
+        b=kz6CTBWWBCGdKGrTe6kmvns+0zLGiNM4CyQpy8DuyTxtXAvcdYsMufWmpDNSeTHQ1e
+         FI4gTp0m5Gfv+my3Lm5aiIyqSgFhMskZ20qg035fvQUOhCBlakT9euBBvBU8A+JrnxZ7
+         IgYgzTO/GRghfIZMSntTCA4H5VvODEI9AgJ6MR/pRvpz9MmzFtCk8x5pK+8GgeDRKac8
+         x06e5STTXI4JULbZ1cUReZHCzyuJ0Lz6swb5NjrnyUYQJUOSeTROiVXajO6oS6RzLFTF
+         rbnOCXc/1P9zGBwbu3bE2ndV/KW17syqbfwnfEX1EccE2gn9WKxfCKW2+L75pwah6Mqu
+         rO4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWFoc+SqijLAxMaeY9J73YIhjhMwo83vaFZLQ5OqgrGDFIpoA1EKR5V3nBWMxDplXLoMFPHtx+vPgeJZxtu8bz4BUq56yPph1b7
+X-Gm-Message-State: AOJu0YwnHrAXPbeFTMrYEI0BYr0SQ+CdFbx6a0L/xt6ZiimUlDHxbW31
+	zlcOFrgnAVmao6m8WxGGM6C8HDLBTuOYqhq8dOwLdr/IXrfLb2fLa4i9WPPrYCI3lsbANOfFIAu
+	3uu30MglARtF6tq8CTvlOa1/CsSs=
+X-Google-Smtp-Source: AGHT+IE6oY27Hvh1xBoRmMHbRBXrUqGabIUdZcpUuNN/8gTJHCNOgWIrkAnYswBuXrHRGBvH38Mqs7Kj5XNZBc+eiQw=
+X-Received: by 2002:a05:651c:10b9:b0:2d6:f408:fafe with SMTP id
+ k25-20020a05651c10b900b002d6f408fafemr984912ljn.42.1711502154359; Tue, 26 Mar
+ 2024 18:15:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <9d557c37-d376-40c3-0630-4e904db27528@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxdRGwcQNmeY5pAA--.750S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrWUXr13tw4DKF45tFW3CFX_yoW5JF1kpF
-	Wkta1UKF4kur1vkw1kJa4DuFyFyr15Ja47Gr15Wa4kJ39xJr1Sgr4jgwn09FWDZrsaq3W0
-	vrW3Ga1fuFy5XrgCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
+References: <cover.1710926402.git.zhoubinbin@loongson.cn> <0cfd237c2c7c1e4f89b6e5f7af0a64d306de1c8f.1710926402.git.zhoubinbin@loongson.cn>
+ <20240326-shifter-zeppelin-1d8616dc82f9@spud>
+In-Reply-To: <20240326-shifter-zeppelin-1d8616dc82f9@spud>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 27 Mar 2024 07:15:40 +0600
+Message-ID: <CAMpQs4JKYxJQ=+iRW6EqRc4t3wF=eNLVg0Y=943D+X+LmJyG=Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/8] dt-bindings: clock: add Loongson-2K expand clock index
+To: Conor Dooley <conor@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Mar 27, 2024 at 12:54=E2=80=AFAM Conor Dooley <conor@kernel.org> wr=
+ote:
+>
+> On Tue, Mar 26, 2024 at 05:01:00PM +0800, Binbin Zhou wrote:
+>
+> > -#define LOONGSON2_CLK_END                            18
+>
+>
+> > +#define LOONGSON2_CLK_END    35
+>
+> Please just delete this. If you can change it, it is not a binding.
+> Just define it in the driver if it is needed there.
 
+Hi Conor:
 
-On 2024/3/27 上午5:30, Tiezhu Yang wrote:
-> Hi Bibo,
-> 
-> On 3/26/24 20:58, maobibo wrote:
->>
->>
->> On 2024/3/26 下午2:21, Tiezhu Yang wrote:
->>> In the current code, SMP is selected in Kconfig for LoongArch, the users
->>> can not unset it, this is reasonable for a multiprocessor machine. 
->>> But as
->>> the help info of config SMP said, if you have a system with only one 
->>> CPU,
->>> say N. On a uniprocessor machine, the kernel will run faster if you 
->>> say N
->>> here.
->>>
->>> The Loongson-2K0500 is a single-core CPU for applications like 
->>> industrial
->>> control, printing terminals, and BMC (Baseboard Management Controller),
->>> there are many development boards, products and solutions on the market,
->>> so it is better and necessary to give a chance to build under 
->>> !CONFIG_SMP
->>> for a uniprocessor machine.
-> 
-> ...
-> 
->>> +++ b/arch/loongarch/include/asm/smp.h
->>> @@ -6,6 +6,7 @@
->>>   #ifndef __ASM_SMP_H
->>>   #define __ASM_SMP_H
->>> +#ifdef CONFIG_SMP
->>>   #include <linux/atomic.h>
->>>   #include <linux/bitops.h>
->>>   #include <linux/linkage.h>
->>> @@ -101,4 +102,8 @@ static inline void __cpu_die(unsigned int cpu)
->>>   }
->>>   #endif
->>> +#else /* !CONFIG_SMP */
->>> +#define cpu_logical_map(cpu)    0
->> It is unsafe here though physical cpuid of BSP is 0 always.
->> It is better to use __cpu_logical_map[cpu] or read_csr_cpuid()
->>
->>> +#endif
-If kernel run with AMP mode where each cpu has its separate kernel img, 
-physical cpuid of BSP will be not 0.
-> 
-> ...
-> 
->>> +++ b/arch/loongarch/power/suspend.c
->>> @@ -44,7 +44,9 @@ void loongarch_common_resume(void)
->>>   {
->>>       sync_counter();
->>>       local_flush_tlb_all();
->>> +#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
->>>       csr_write64(per_cpu_offset(0), PERCPU_BASE_KS);
->>> +#endif
->> It is another issue, CONFIG_HAVE_SETUP_PER_CPU_AREA should not depend 
->> on NUMA. PERCPU_BASE_KS should be set even for UP.
-> 
-> Thanks for your review and suggestions.
-> 
-> Let me wait for some days, if no more comments, I will address in v3 
-> since the v2 has been sent.
-It is fine to me. Do something is better than do nothing, only that we 
-should be careful and it will take much time.
+Ok, I will drop it in the next version.
 
-Regards
-Bibo Mao
-> 
+Thanks.
+Binbin
+>
 > Thanks,
-> Tiezhu
-> 
-> _______________________________________________
-> Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
-> To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
-
+> Conor.
