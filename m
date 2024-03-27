@@ -1,39 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA44B17BB16;
-	Wed, 27 Mar 2024 12:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004F618130E;
+	Wed, 27 Mar 2024 12:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542266; cv=none; b=E+TMmOlfQBbo8HsxC6BVHmzjZGT4E8BpM9juYStMdCyfX5t4D4jH54tRhOqzCT99iRE+5UJhekJ13h/BKZNtszu/ArxD+y0TUQYTnUkuGjDvdF1yqHTt0SVFzjXB+sdYEM2NzjVKjK/p3p/RdupUB/xeb1PJ3aKt6z/Z+1GYrpY=
+	t=1711542310; cv=none; b=RT8Vc7K6InTUAAPfTcVN8dfPMJ/KiZf+CF7hGbI5RgccvoypRY/xHQ+4yJboGwcs0XlP+msAMK0ZEREvxlwKn00LXz8QdYtcTdMWbSBbbeeziqqVJWU5xfA1YEV4eOqoazKMJhtxYR6eplE46clgSHQ1H7pj0ZWhj0hLP/xE9lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542266; c=relaxed/simple;
-	bh=8wwl9iaffk+ItBx7Dye4ifkhiDxHj7nROvvb57MzG5I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q7eADynNYqpwBqgezX0b2U3EgkvPNCe7oUs2aJ5awgDRyzLFfS/5YppL/U/rvfx+a8/JzyUgyCFk4gwk8NFP2QO8BHFPKkfOzXa/vSltpIq1Oj+SXshuH41XMW6UFa3RI+MbYiKhXxgL6fx+as0uLHMx0o8Ob1hKnW6PVG+9maw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWRML9tp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711542310; c=relaxed/simple;
+	bh=tQOdbfRc0uu9USqlT0ZH22KXVG2u9wYpVV+XI4OZdkY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n/ngrnw7wNaukmGPlk1enARSaWb9uwUEHZ9/pAR3eDPTMbsOtCQE5+UaD0blOIyk2eOONF2sIYJmxobJ52uvMu+i8SBWNCvC+zFeR21tgyVZgqFigqsiAV0UD+0eqlYKOLu6UHghQJ7Vrx/kCke7dYUh8XJzgTIE/9Cj93db8EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxM0JQ5x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWRML9tp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1966EC433F1;
-	Wed, 27 Mar 2024 12:24:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxM0JQ5x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2AFBC43390;
+	Wed, 27 Mar 2024 12:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542266;
-	bh=8wwl9iaffk+ItBx7Dye4ifkhiDxHj7nROvvb57MzG5I=;
+	s=k20201202; t=1711542309;
+	bh=tQOdbfRc0uu9USqlT0ZH22KXVG2u9wYpVV+XI4OZdkY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=bWRML9tp54JGMCy1TFm1QVFBoRH08PimQ4c7lUqOSqRfsM5mCpCcsKmuCP42DgjsQ
-	 gWxD3H5cg81UJ4gjZ2kkXLQL+7FMORQ9Z+hLtkpmi4U8MuZuwLpnYxuF7y6JA5zYDo
-	 SrIfR6LLbbjfCvAd+fQdblQmfBvQvUT6DzZ3CkNjr3i4AXNheks79S4FRfaWHQQuCR
-	 hmFGduVKfdoQXkwcp1eH0nJQjlG76on9yZY1/qrpUp974VJNs0vJXgirriLaj3Uv0F
-	 US/NV6Blb6PH14yjDi570cN3dtNZ5k6sxfTy+hS25ZAhasJRMS6rpn7Yj7Yay5WD63
-	 sHfcSNPPVjbKQ==
+	b=QxM0JQ5x48rsAOWhahTtzTy0vnnzWLCo640LJfpFw8aGudttKkJuGuZkviR2lvYot
+	 Rt/ZPjZ3zXAQ1Q4b58Uf7ZoyJuaaRCUf8gED2K9OcTEj5fvrQRN+mbNxcRb4bk52V8
+	 FNHPKekQoWt4ID9JFUlCVuMULNesm5zCtTfiLU+vwexq7q1E9ScwvyWV/HnJKvvp/y
+	 Hudu0iQ6po2l+KYQ/4oxkfDEMT5WUvPxrTozBGwDjhvmWEeCtmU88ttRTVMZaRmCeJ
+	 HhJYM0kP3zCOYi9zEBo5iVa1vcbRlhtguz9hSFxfLWYY8Dp08lmTkAc0Gpu2uoh5ZA
+	 HhvG98iLIsjWA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	chenhuacai@kernel.org
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	wangyuli@uniontech.com
+Cc: WANG Xuerui <git@xen0n.name>,
+	Wentao Guan <guanwentao@uniontech.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	linux-crypto@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "LoongArch: Define the __io_aw() hook as mmiowb()" failed to apply to 5.4-stable tree
-Date: Wed, 27 Mar 2024 08:24:24 -0400
-Message-ID: <20240327122425.2839392-1-sashal@kernel.org>
+Subject: FAILED: Patch "LoongArch/crypto: Clean up useless assignment operations" failed to apply to 4.19-stable tree
+Date: Wed, 27 Mar 2024 08:25:07 -0400
+Message-ID: <20240327122508.2839963-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -45,7 +48,7 @@ X-Patchwork-Hint: ignore
 X-stable: review
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 5.4-stable tree.
+The patch below does not apply to the 4.19-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
@@ -55,115 +58,48 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 9c68ece8b2a5c5ff9b2fcaea923dd73efeb174cd Mon Sep 17 00:00:00 2001
-From: Huacai Chen <chenhuacai@loongson.cn>
+From fea1c949f6ca5059e12de00d0483645debc5b206 Mon Sep 17 00:00:00 2001
+From: Yuli Wang <wangyuli@uniontech.com>
 Date: Tue, 19 Mar 2024 15:50:34 +0800
-Subject: [PATCH] LoongArch: Define the __io_aw() hook as mmiowb()
+Subject: [PATCH] LoongArch/crypto: Clean up useless assignment operations
 
-Commit fb24ea52f78e0d595852e ("drivers: Remove explicit invocations of
-mmiowb()") remove all mmiowb() in drivers, but it says:
+The LoongArch CRC32 hw acceleration is based on arch/mips/crypto/
+crc32-mips.c. While the MIPS code supports both MIPS32 and MIPS64,
+but LoongArch32 lacks the CRC instruction. As a result, the line
+"len -= sizeof(u32)" is unnecessary.
 
-"NOTE: mmiowb() has only ever guaranteed ordering in conjunction with
-spin_unlock(). However, pairing each mmiowb() removal in this patch with
-the corresponding call to spin_unlock() is not at all trivial, so there
-is a small chance that this change may regress any drivers incorrectly
-relying on mmiowb() to order MMIO writes between CPUs using lock-free
-synchronisation."
+Removing it can make context code style more unified and improve
+code readability.
 
-The mmio in radeon_ring_commit() is protected by a mutex rather than a
-spinlock, but in the mutex fastpath it behaves similar to spinlock. We
-can add mmiowb() calls in the radeon driver but the maintainer says he
-doesn't like such a workaround, and radeon is not the only example of
-mutex protected mmio.
-
-So we should extend the mmiowb tracking system from spinlock to mutex,
-and maybe other locking primitives. This is not easy and error prone, so
-we solve it in the architectural code, by simply defining the __io_aw()
-hook as mmiowb(). And we no longer need to override queued_spin_unlock()
-so use the generic definition.
-
-Without this, we get such an error when run 'glxgears' on weak ordering
-architectures such as LoongArch:
-
-radeon 0000:04:00.0: ring 0 stalled for more than 10324msec
-radeon 0000:04:00.0: ring 3 stalled for more than 10240msec
-radeon 0000:04:00.0: GPU lockup (current fence id 0x000000000001f412 last fence id 0x000000000001f414 on ring 3)
-radeon 0000:04:00.0: GPU lockup (current fence id 0x000000000000f940 last fence id 0x000000000000f941 on ring 0)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-radeon 0000:04:00.0: scheduling IB failed (-35).
-[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
-
-Link: https://lore.kernel.org/dri-devel/29df7e26-d7a8-4f67-b988-44353c4270ac@amd.com/T/#t
-Link: https://lore.kernel.org/linux-arch/20240301130532.3953167-1-chenhuacai@loongson.cn/T/#t
 Cc: stable@vger.kernel.org
+Reviewed-by: WANG Xuerui <git@xen0n.name>
+Suggested-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/include/asm/Kbuild      |  1 +
- arch/loongarch/include/asm/io.h        |  2 ++
- arch/loongarch/include/asm/qspinlock.h | 18 ------------------
- 3 files changed, 3 insertions(+), 18 deletions(-)
- delete mode 100644 arch/loongarch/include/asm/qspinlock.h
+ arch/loongarch/crypto/crc32-loongarch.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
-index a97c0edbb866a..2dbec7853ae86 100644
---- a/arch/loongarch/include/asm/Kbuild
-+++ b/arch/loongarch/include/asm/Kbuild
-@@ -6,6 +6,7 @@ generic-y += mcs_spinlock.h
- generic-y += parport.h
- generic-y += early_ioremap.h
- generic-y += qrwlock.h
-+generic-y += qspinlock.h
- generic-y += rwsem.h
- generic-y += segment.h
- generic-y += user.h
-diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
-index c486c2341b662..4a8adcca329b8 100644
---- a/arch/loongarch/include/asm/io.h
-+++ b/arch/loongarch/include/asm/io.h
-@@ -71,6 +71,8 @@ extern void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t
- #define memcpy_fromio(a, c, l) __memcpy_fromio((a), (c), (l))
- #define memcpy_toio(c, a, l)   __memcpy_toio((c), (a), (l))
+diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
+index a49e507af38c0..3eebea3a7b478 100644
+--- a/arch/loongarch/crypto/crc32-loongarch.c
++++ b/arch/loongarch/crypto/crc32-loongarch.c
+@@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
  
-+#define __io_aw() mmiowb()
-+
- #include <asm-generic/io.h>
+ 		CRC32(crc, value, w);
+ 		p += sizeof(u32);
+-		len -= sizeof(u32);
+ 	}
  
- #define ARCH_HAS_VALID_PHYS_ADDR_RANGE
-diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
-deleted file mode 100644
-index 34f43f8ad5912..0000000000000
---- a/arch/loongarch/include/asm/qspinlock.h
-+++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _ASM_QSPINLOCK_H
--#define _ASM_QSPINLOCK_H
--
--#include <asm-generic/qspinlock_types.h>
--
--#define queued_spin_unlock queued_spin_unlock
--
--static inline void queued_spin_unlock(struct qspinlock *lock)
--{
--	compiletime_assert_atomic_type(lock->locked);
--	c_sync();
--	WRITE_ONCE(lock->locked, 0);
--}
--
--#include <asm-generic/qspinlock.h>
--
--#endif /* _ASM_QSPINLOCK_H */
+ 	if (len & sizeof(u16)) {
+@@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+ 
+ 		CRC32C(crc, value, w);
+ 		p += sizeof(u32);
+-		len -= sizeof(u32);
+ 	}
+ 
+ 	if (len & sizeof(u16)) {
 -- 
 2.43.0
 
