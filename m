@@ -1,45 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D8315D5D2;
-	Wed, 27 Mar 2024 12:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE6516D31A;
+	Wed, 27 Mar 2024 12:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541918; cv=none; b=kBs0twqB3znAd2H0g66fCPKfZeoO92pQIPoqPdUgDn7SdgPxX8mCDnkXjgSOxXh3/L9cFG9quUz7oycux7QDE7eIkoc9D8egVu6Ld0ahAAmxIGWlpvFSIXbb94cTxVqZ6kIEeROW2q67/MBA0RaE9ShQZB4S646o+/uf/WXSdpU=
+	t=1711542034; cv=none; b=pyB3rAS0FqMjzT1u2Gr6lqXOI3HHfd7fpIPEugcIiykOxG9AwSNJc8N21VbOfwkDJjEdUuB8kUhrpJphuIEab/Ilr/OT14FCC5s4FdAEaULlYyuOUQO8BMUK7f7D1nTXfUNahLkF36+9IBJiVbDAke4sKswSJt4eDq/skLpRcpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541918; c=relaxed/simple;
-	bh=nyDkxAtoumz6NapNC3ssvGii4GjOv4f2Xhot8O07yaE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P/S1BLZpiqlIqYQE22LVp90Peo7ks2TOoj6P4PgVpjSygo7CgBMtO4qvSZoTp+v5QtnWUbrM7NJwU2sIRc3wgXy+Zk1CIrAVn1Vhz/DRV/QCbamM8jRwBZ0Gzhu290C1UkSVjKzkLO6HCgfRECQPm40sia5eAKEUtCck+hcIcx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQ0/AQDV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711542034; c=relaxed/simple;
+	bh=IdWLthWxUzEQ23ZE4yjF997vSGpqu22S+rDnFxolAZk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kekq52Wr4BeKvfJvDUtux3uKnxs9zA2AGAZHOcgyN2i6hoZ/gamilVJ4d2U/biquot0Z/peijkHai2f9fFlcsm3jWPb5dTTZrDA0ca7Q/gXK3L2mBNRWzFBIJBsB1v9rzFUmTbnfMrnVxBZdMncyN+S5jAJM2o2f9hes5jd7Ojs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MSyYrmfH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQ0/AQDV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E269DC433F1;
-	Wed, 27 Mar 2024 12:18:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MSyYrmfH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E521C433C7;
+	Wed, 27 Mar 2024 12:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711541918;
-	bh=nyDkxAtoumz6NapNC3ssvGii4GjOv4f2Xhot8O07yaE=;
+	s=k20201202; t=1711542033;
+	bh=IdWLthWxUzEQ23ZE4yjF997vSGpqu22S+rDnFxolAZk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=MQ0/AQDVZpvUPIRzwLmMHUtIr9bqDDfn9P6vqdRqnICn5X+wPtNIVJ5twWoj+wGnR
-	 qwEKRq8t52Amp2iHl0k+zqmHo6Ly0KDXKhTduHZWU1PMypLe0+OV2TqUun7LT+3Wvk
-	 fPQ7chZb99nEj5/6LOJCwc/LzzJe5+MM9C4whH/034w66PM0kNPwvDf8L7T9qWWQBe
-	 CsNY+qNBEu/bdVH0cDAe91q+e0QJ/v+O/7j8+PLvtTTIKZrt+ooc6BJtr3AVbzo4Co
-	 igYJVKzeTQwj0vw7Jfs+8MyiqAM/qwMkpk64a8PkDyZAfpDUTv5cfivTQg2MVCLVRJ
-	 sKqhE8gtt1pTA==
+	b=MSyYrmfHmCqqDiKrLCtDKMDkUXl47dUejp9ukVmHJdx2LJFQX862PqM6C7sVLtu24
+	 6fQAIck/tkuy2XHcIThxd4UIDqCtNhcM1YqamVZTIrcltwC6FzGLSXWj9qPvoIIz15
+	 NbAWCvBic/dXr0KlbH6FD9ltNvlEni8OY0dF0HwDbCBStGTLQueewOozcXkid23jGi
+	 5lwDUkZhLZ8umdRNVaSAqDBcXP8dWluW1kmATcGMshTTCOBtYFOKRmmjSxTn6rZPh5
+	 qE0pIWSCsvWsKteokJWryScZDC0Jm2U43qcGqbk/ziCzEc6lStJKVnymm7rLxjyU6C
+	 SkSJdbIoIHDxw==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	chenhuacai@kernel.org
-Cc: Xiaotian Wu <wuxiaotian@loongson.cn>,
-	Miao Wang <shankerwangmiao@gmail.com>,
-	Xing Li <lixing@loongson.cn>,
-	Hongchen Zhang <zhanghongchen@loongson.cn>,
-	Rui Wang <wangrui@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	linux-mm@kvack.org,
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "LoongArch: Change __my_cpu_offset definition to avoid mis-optimization" failed to apply to 5.10-stable tree
-Date: Wed, 27 Mar 2024 08:18:35 -0400
-Message-ID: <20240327121836.2834515-1-sashal@kernel.org>
+Subject: FAILED: Patch "LoongArch: Define the __io_aw() hook as mmiowb()" failed to apply to 5.10-stable tree
+Date: Wed, 27 Mar 2024 08:20:31 -0400
+Message-ID: <20240327122032.2836118-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,56 +55,115 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From c87e12e0e8c1241410e758e181ca6bf23efa5b5b Mon Sep 17 00:00:00 2001
+From 9c68ece8b2a5c5ff9b2fcaea923dd73efeb174cd Mon Sep 17 00:00:00 2001
 From: Huacai Chen <chenhuacai@loongson.cn>
 Date: Tue, 19 Mar 2024 15:50:34 +0800
-Subject: [PATCH] LoongArch: Change __my_cpu_offset definition to avoid
- mis-optimization
+Subject: [PATCH] LoongArch: Define the __io_aw() hook as mmiowb()
 
-From GCC commit 3f13154553f8546a ("df-scan: remove ad-hoc handling of
-global regs in asms"), global registers will no longer be forced to add
-to the def-use chain. Then current_thread_info(), current_stack_pointer
-and __my_cpu_offset may be lifted out of the loop because they are no
-longer treated as "volatile variables".
+Commit fb24ea52f78e0d595852e ("drivers: Remove explicit invocations of
+mmiowb()") remove all mmiowb() in drivers, but it says:
 
-This optimization is still correct for the current_thread_info() and
-current_stack_pointer usages because they are associated to a thread.
-However it is wrong for __my_cpu_offset because it is associated to a
-CPU rather than a thread: if the thread migrates to a different CPU in
-the loop, __my_cpu_offset should be changed.
+"NOTE: mmiowb() has only ever guaranteed ordering in conjunction with
+spin_unlock(). However, pairing each mmiowb() removal in this patch with
+the corresponding call to spin_unlock() is not at all trivial, so there
+is a small chance that this change may regress any drivers incorrectly
+relying on mmiowb() to order MMIO writes between CPUs using lock-free
+synchronisation."
 
-Change __my_cpu_offset definition to treat it as a "volatile variable",
-in order to avoid such a mis-optimization.
+The mmio in radeon_ring_commit() is protected by a mutex rather than a
+spinlock, but in the mutex fastpath it behaves similar to spinlock. We
+can add mmiowb() calls in the radeon driver but the maintainer says he
+doesn't like such a workaround, and radeon is not the only example of
+mutex protected mmio.
 
+So we should extend the mmiowb tracking system from spinlock to mutex,
+and maybe other locking primitives. This is not easy and error prone, so
+we solve it in the architectural code, by simply defining the __io_aw()
+hook as mmiowb(). And we no longer need to override queued_spin_unlock()
+so use the generic definition.
+
+Without this, we get such an error when run 'glxgears' on weak ordering
+architectures such as LoongArch:
+
+radeon 0000:04:00.0: ring 0 stalled for more than 10324msec
+radeon 0000:04:00.0: ring 3 stalled for more than 10240msec
+radeon 0000:04:00.0: GPU lockup (current fence id 0x000000000001f412 last fence id 0x000000000001f414 on ring 3)
+radeon 0000:04:00.0: GPU lockup (current fence id 0x000000000000f940 last fence id 0x000000000000f941 on ring 0)
+radeon 0000:04:00.0: scheduling IB failed (-35).
+[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
+radeon 0000:04:00.0: scheduling IB failed (-35).
+[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
+radeon 0000:04:00.0: scheduling IB failed (-35).
+[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
+radeon 0000:04:00.0: scheduling IB failed (-35).
+[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
+radeon 0000:04:00.0: scheduling IB failed (-35).
+[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
+radeon 0000:04:00.0: scheduling IB failed (-35).
+[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
+radeon 0000:04:00.0: scheduling IB failed (-35).
+[drm:radeon_gem_va_ioctl [radeon]] *ERROR* Couldn't update BO_VA (-35)
+
+Link: https://lore.kernel.org/dri-devel/29df7e26-d7a8-4f67-b988-44353c4270ac@amd.com/T/#t
+Link: https://lore.kernel.org/linux-arch/20240301130532.3953167-1-chenhuacai@loongson.cn/T/#t
 Cc: stable@vger.kernel.org
-Reported-by: Xiaotian Wu <wuxiaotian@loongson.cn>
-Reported-by: Miao Wang <shankerwangmiao@gmail.com>
-Signed-off-by: Xing Li <lixing@loongson.cn>
-Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-Signed-off-by: Rui Wang <wangrui@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/include/asm/percpu.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/loongarch/include/asm/Kbuild      |  1 +
+ arch/loongarch/include/asm/io.h        |  2 ++
+ arch/loongarch/include/asm/qspinlock.h | 18 ------------------
+ 3 files changed, 3 insertions(+), 18 deletions(-)
+ delete mode 100644 arch/loongarch/include/asm/qspinlock.h
 
-diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include/asm/percpu.h
-index 9b36ac003f890..8f290e5546cf7 100644
---- a/arch/loongarch/include/asm/percpu.h
-+++ b/arch/loongarch/include/asm/percpu.h
-@@ -29,7 +29,12 @@ static inline void set_my_cpu_offset(unsigned long off)
- 	__my_cpu_offset = off;
- 	csr_write64(off, PERCPU_BASE_KS);
- }
--#define __my_cpu_offset __my_cpu_offset
-+
-+#define __my_cpu_offset					\
-+({							\
-+	__asm__ __volatile__("":"+r"(__my_cpu_offset));	\
-+	__my_cpu_offset;				\
-+})
+diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
+index a97c0edbb866a..2dbec7853ae86 100644
+--- a/arch/loongarch/include/asm/Kbuild
++++ b/arch/loongarch/include/asm/Kbuild
+@@ -6,6 +6,7 @@ generic-y += mcs_spinlock.h
+ generic-y += parport.h
+ generic-y += early_ioremap.h
+ generic-y += qrwlock.h
++generic-y += qspinlock.h
+ generic-y += rwsem.h
+ generic-y += segment.h
+ generic-y += user.h
+diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+index c486c2341b662..4a8adcca329b8 100644
+--- a/arch/loongarch/include/asm/io.h
++++ b/arch/loongarch/include/asm/io.h
+@@ -71,6 +71,8 @@ extern void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t
+ #define memcpy_fromio(a, c, l) __memcpy_fromio((a), (c), (l))
+ #define memcpy_toio(c, a, l)   __memcpy_toio((c), (a), (l))
  
- #define PERCPU_OP(op, asm_op, c_op)					\
- static __always_inline unsigned long __percpu_##op(void *ptr,		\
++#define __io_aw() mmiowb()
++
+ #include <asm-generic/io.h>
+ 
+ #define ARCH_HAS_VALID_PHYS_ADDR_RANGE
+diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
+deleted file mode 100644
+index 34f43f8ad5912..0000000000000
+--- a/arch/loongarch/include/asm/qspinlock.h
++++ /dev/null
+@@ -1,18 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ASM_QSPINLOCK_H
+-#define _ASM_QSPINLOCK_H
+-
+-#include <asm-generic/qspinlock_types.h>
+-
+-#define queued_spin_unlock queued_spin_unlock
+-
+-static inline void queued_spin_unlock(struct qspinlock *lock)
+-{
+-	compiletime_assert_atomic_type(lock->locked);
+-	c_sync();
+-	WRITE_ONCE(lock->locked, 0);
+-}
+-
+-#include <asm-generic/qspinlock.h>
+-
+-#endif /* _ASM_QSPINLOCK_H */
 -- 
 2.43.0
 
