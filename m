@@ -1,102 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0775149E1A;
-	Wed, 27 Mar 2024 16:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B28714E2C4
+	for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 17:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711558541; cv=none; b=NNYRVXYvPSENBBOT7PBD/E43fCrZKCBkl4F1i4UkspN2jG98l58i899DPugr61zJo+1ZzDsnpYZPjp10rdm9Z9NFpYr6UddUBppMj7KFeZQcrTfxD47cFVmK//ENnoQmeQ2iAttxoq9kpyFOgBUDWchR06NiDivaiBLLhTn29y8=
+	t=1711559882; cv=none; b=P9tHdhYs0EKyepLsbg4mX5czCTGkCiXdnqEH2lHe2s1HKIxmWA5/62UtXs2y9ibaYC2/N6XungzxVZUyMQWz3AWpDVCbOO3B9Y5VWetCymdk9FTgrT0UC2cfFg9cHj4PEbXYR2uJzAHogceozsZ7b0XGixGKbaFozYDKy7s69F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711558541; c=relaxed/simple;
-	bh=9ybGAgC7s0iD76xqW9MDm9NbgH+kLRTQZGDj+gPL2W0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LMVXVBpa+m2/k6Vo6U7UzgNqBvA5AO4d1yFuj4r0jq5pX61+8A1d2/fEdJyckNLLBJZsi+yeEhyqLelDDi0eys/sioDxWPM/EUnfGVpt85nSRlNa8axyU5XsyoD8KHVTkX//a9530MafJTUMa9KXgQwxgBhadxx1ejrlY3hqnjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyHhINfn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711559882; c=relaxed/simple;
+	bh=K6QrVU5PVZBLkr9lH/YmwLeLzn9IdrE/2j59eke5SYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JMwepg+ps67+F592RQQYhLeEiN3mLd30Bm8Y6FONt/y/uR1IeaLzfVn6XARLC35VyrEY2VQGpYFSJ6zv0Su5Lhd8p0kTp+KIu2AObsI0LDVnljow3BUG19m44xPI/XwMMc1eXab8ykRGiZBFKonsCBzTM6cwA/IDNR6g27gzgm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=MJ5m2FAV; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyHhINfn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 699EDC433F1;
-	Wed, 27 Mar 2024 16:55:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711558541;
-	bh=9ybGAgC7s0iD76xqW9MDm9NbgH+kLRTQZGDj+gPL2W0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oyHhINfn6rCRc9UokRscIObGhysCBYNu29sU/QDaRBAZWr70H1wbWhhXDc1YVxvTq
-	 T5i8wGP2XUtgxN8hwdDV5aw4UtMYv4pEVCVujfToYLblLKwTxOHgcNDhyDl6TsCmC9
-	 Usl8v7Q6Z7rTI5H/09rFaRoLyzQdfoki06G7FF4SxPFaSBy6S57qxIE6Yg3kbHMjPM
-	 6BICEg1RgODnhiGfhu8XG9lKTIvdK/q+yN7pkZCQsaQ/5JifYore+lr3i3Yqnb6lXO
-	 JRPMfzJZR/fAhre/SUqgNR/IUEWpWMsNY8t9qZwNPuKQbnXS3FeE8kqSLXe9e+UsSS
-	 fKAmM86YCGEAQ==
-Date: Wed, 27 Mar 2024 16:55:36 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 1/8] dt-bindings: clock: add Loongson-2K expand clock
- index
-Message-ID: <20240327-spree-perjury-f0ac4b8156a8@spud>
-References: <cover.1710926402.git.zhoubinbin@loongson.cn>
- <0cfd237c2c7c1e4f89b6e5f7af0a64d306de1c8f.1710926402.git.zhoubinbin@loongson.cn>
- <20240326-shifter-zeppelin-1d8616dc82f9@spud>
- <CAMpQs4JKYxJQ=+iRW6EqRc4t3wF=eNLVg0Y=943D+X+LmJyG=Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="MJ5m2FAV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1711559880;
+	bh=K6QrVU5PVZBLkr9lH/YmwLeLzn9IdrE/2j59eke5SYU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MJ5m2FAV9u/mzXXtMzeWGZzANo+OjhHwThNa2yxCvRBi54qpU0YfGTeI2DIf4Q+jK
+	 DIHEaFeos/HcvAmQeU0VmEitjIlJzQ1PYa9X7vfjukXw1kVN54v2Ut2CYgMz1wCDL7
+	 pxWjW/2W4y8ZK7MWvEtkJWkzq8sTnGvijThrHk9Q=
+Received: from stargazer.. (unknown [IPv6:240e:358:111f:6100:dc73:854d:832e:8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 3CE0266B9E;
+	Wed, 27 Mar 2024 13:17:55 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] LoongArch: Select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+Date: Thu, 28 Mar 2024 01:17:37 +0800
+Message-ID: <20240327171737.27622-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4smSXZcEuLXSNdWf"
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4JKYxJQ=+iRW6EqRc4t3wF=eNLVg0Y=943D+X+LmJyG=Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
+This allows compiling a full 128-bit product of two 64-bit integers as
+a mul/mulh pair, instead of a nasty long sequence of 20+ instructions.
 
---4smSXZcEuLXSNdWf
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Wed, Mar 27, 2024 at 07:15:40AM +0600, Binbin Zhou wrote:
-> On Wed, Mar 27, 2024 at 12:54=E2=80=AFAM Conor Dooley <conor@kernel.org> =
-wrote:
-> >
-> > On Tue, Mar 26, 2024 at 05:01:00PM +0800, Binbin Zhou wrote:
-> >
-> > > -#define LOONGSON2_CLK_END                            18
-> >
-> >
-> > > +#define LOONGSON2_CLK_END    35
-> >
-> > Please just delete this. If you can change it, it is not a binding.
-> > Just define it in the driver if it is needed there.
->=20
-> Hi Conor:
->=20
-> Ok, I will drop it in the next version.
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index a5f300ec6f28..5a769bb92d7c 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -56,6 +56,7 @@ config LOONGARCH
+ 	select ARCH_SUPPORTS_ACPI
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_SUPPORTS_HUGETLBFS
++	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+ 	select ARCH_SUPPORTS_LTO_CLANG
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
+-- 
+2.44.0
 
-With that removed
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Thanks,
-Conor.
-
---4smSXZcEuLXSNdWf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgRPiAAKCRB4tDGHoIJi
-0nJ2AQC3w/jh/Fb0k9qAEMQ2PqVtwafqdZodCyOIYk5sPFYCEgEAteETm9FdYDKk
-WF/8+dplwlx1/TBgkIHAhQIyr2fIsgw=
-=X+Ut
------END PGP SIGNATURE-----
-
---4smSXZcEuLXSNdWf--
