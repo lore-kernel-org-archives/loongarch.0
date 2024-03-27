@@ -1,58 +1,57 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31C0154437
-	for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 20:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50658152166
+	for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 20:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711569737; cv=none; b=RDy9YOmbnJLyWekXw9BC7qS9M6KfRQUR2WbD4dfTbi8y671dz71t9jdutNYrxMxMmhlvmRDo3w808jPFIrVoh8JAJuvbjAoJczSP/iOhDxooEFOYFsRMR3oBfECY6Ff+tQl2yp5uMF/n5FVdda7zhmt+aLXLie+J41RNgHmQYGM=
+	t=1711569738; cv=none; b=uaMVh1zNswmGzfrvt/3Fh64K/yjy3UoQiOU2PVu8kBZQm7AoGcNm0kcOjeXnH/BXcamCXCCFiJ80LmrynKDLQM8y2iBByM6O9tXW/OueeCp+aRV2Zpd+lF86sgFT4clyUL8Nfv2f85Cb29TORJwkwtJZ9RbDZWv0TcMASQX+AnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711569737; c=relaxed/simple;
-	bh=g4mhkWbOPq5UTkZ8eyYBkXzUJ8zECj1QnaC6Culjcfw=;
+	s=arc-20240116; t=1711569738; c=relaxed/simple;
+	bh=GLOA3AwKqg2OXJCgfGVxEWRiYujUlmeNO1fdj8ZA+Yc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eZ2xW6h5qqYM13REKqlkpElItf+/evcB+R9yGfRsL0tjLLD2I4Paxh7qPnzTDKHbCBXP+KY7/8hOnKxGUMOJK3RmsOVdxmbyF7F2lxbZQto3ROMzMERY1SEIWi1mtB9yBoXjAnPbsZN6xsWahB8pFDHzoq9WIzqcosB6uToImU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=DG6Yp9EO; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=jMYOyQpOXal7yxQrkYeFs7bjO2YVsrAgGcvIocKSF02/i6gcvxJy3cK0Bby4t1ztuu/ymv21qD+KLp9WqhoqnsZZGfJvkeXM/dp9Jp9GxZICQ7t3PgoNFFNWb7eaBY8+xjYO/CDVcdW9C0gH+UwW+HTbzt9Z4S2Y8ujHFu1MA08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=berN1MEb; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DG6Yp9EO"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e034607879so2101525ad.0
-        for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 13:02:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="berN1MEb"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1dee5ef2a7bso1956345ad.1
+        for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 13:02:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711569735; x=1712174535; darn=lists.linux.dev;
+        d=sifive.com; s=google; t=1711569736; x=1712174536; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bM3Hi+5Alr7tzqsz3KXbQamZzAJvK/Ux1AY7aws8WNM=;
-        b=DG6Yp9EO4tCWKyUruEvw1tSd5VRweAxrSVViPaN1g3UvqKMGD+zy3yI0UmKjEuOYWX
-         Ig1n1PG/1fr+HHZ50izfswYzB7dc5bDq4M1Tb5mx3Av/uzB0cgWq+nMy8l8b3RhSPlqi
-         YRn9Ewb5P5JUBxP/JiTWzeifmjDYzF9ziCLp7OugmooiJDu2eGZdst+bHs/bx61pxFlc
-         bD7+emL+Fdn3j5OHfG4l8B+U6cUE9kyUf+c6GsCp4NJE9IkYvW+ARG5oYrT3rEJE+fKM
-         HxHDrQK8RfYiugUhBUkX3S6U2pjzTAC8B+ErPxki/A4uJdIUz9H9wq95iQmP8Ns+RFCd
-         Hx6Q==
+        bh=WUVdv0rxxPa8lHoyIaYtKDRoPzXAvzEPK1q3j7PbRrc=;
+        b=berN1MEbIDyferfsdnpZ8rJ9p6gSgS4AtdM1Mb6mM5R6qO+kROTTuOs4Ut5LDVMqrO
+         n3wc2BAC27UiWionRv1JwVoPlwM6jSBzqK8+TV1k2oc/9dIdD+gxyGcs3ZUL0sI0IPz3
+         UL8bV8b2Pj01Gjm1hET++BkA183cV8uZJCiHls/5ylhuwg2HUZkIwL/kYKtkYiWCVD2k
+         08ix8Vk8upAzsttmkTpfYlrlzsz5Gk/Xxs289ZYJdiA0y8dJDeXnv64aI/hDnYlpF6+y
+         uZlUKXII08olOY0cbzlOSIRtHLXAV6sYU0plQyMQAywwJr1aqbjEfiFIxkOzawgnpt+7
+         q/0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711569735; x=1712174535;
+        d=1e100.net; s=20230601; t=1711569736; x=1712174536;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bM3Hi+5Alr7tzqsz3KXbQamZzAJvK/Ux1AY7aws8WNM=;
-        b=QSB0/UQ2ZWBmBuAAp6As3cmOFEe9SK+9jZ45X3OD43/hAfcuFY5UVTU+JCnCrHkbRn
-         Gm5f3yFqvf9w4KUr+Lsh/YYtvAbBhEVrJS1EWQNe9rfg1+QZeMzm8RuYOyUHHMMVL27U
-         Ie2uWdexVWXgL/PPNEaBEHENU1f8qANwlAlvampyT30aa8cRjf6BlUhEUBb9woLij6qN
-         FCkYY9ihOLAvtYEHW4oBKhhVaWEGJvwPJ826xXD1IJY1Px5EJALIUwVn1fv21AsnIIYM
-         olKFxTiVGQLEFH0Mo8kt7gIuhjAMzUWHwb0kBrREpAO7f1RDpwTHAe+uLThW0YRHkQxk
-         hHcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXl3GJDfGg07BBghkyMoYtF8JvEfQsL3/eyGQUf+WQWE+0gTPZ9GBz48TD/ZpeW1BwXTarEzFbOja5MMRGOLCw0Isr6rlhOG8Ae
-X-Gm-Message-State: AOJu0YzDO145cES3M+Dwk4Fad5fFVD5h/JzwbcirM0fW+dPE9SvxqJ7S
-	Dly49SxKuuQaILfwi5OiaDCyoiK9IbEqDtQUujKbaKQ/8n+9ejbCNwVMu38axSjhWJzCmuvUI9i
-	I
-X-Google-Smtp-Source: AGHT+IFj0bwxlMv24MtX2R4pKVUBPTEZabeDrpj2jWHiUrD8cnm8OWyltVVZB2eEjF0aA2RcWrF1Pw==
-X-Received: by 2002:a17:902:e5c1:b0:1e0:c91d:4487 with SMTP id u1-20020a170902e5c100b001e0c91d4487mr958029plf.43.1711569735358;
-        Wed, 27 Mar 2024 13:02:15 -0700 (PDT)
+        bh=WUVdv0rxxPa8lHoyIaYtKDRoPzXAvzEPK1q3j7PbRrc=;
+        b=H+Cv+skefn4ZqzRvzEz2tGzHHtYECNbEkgYOnfdgUhfOJaGjJrU18yZuPaJLJFzP9h
+         TzY1OKEB/+s8u3OCn8AX6hWXxn1QpnljwKOkNJNPCq2ie7FkpRZssY1lLdbyOuz4SwPb
+         3PxSC436PplH1oBPYoSxm8/CIu1OFPuDhaH5UBrmtTS9JZgvf9jZgKmZ0IYRbclwtifk
+         sDUC7pvBWV2fVy9hY7YT6Qf5s39SEApy8ix42O32dxisf0KWasCer2vdpnX1dT6CQr7t
+         9kA3j2ItEyQHuqSESdwua+3/BL73+itfYBiFM269f3YeTlb4EXjCcsCfSdSNyWTR7SrE
+         3tCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUB5OqF7yf6Ma7HyKzw974SM/Uor3mMc5lUsa2hC7O4yvwpQ3KYaZ9G1SsNqzJQpaGTFcArhvxvgDe3YCoxUX7Ni8Fp+OmsSylL
+X-Gm-Message-State: AOJu0YzDUkIMUuUWymeYKFLBw32yMU2nysQ6Cchcw1oxXPpYBOBCXPxr
+	YrvvWkfx9vgvxLFOX7VRHjImNl5/TCz8CliEHJMEGS6Q+y+P4dHG4qWBAWN+6Vw=
+X-Google-Smtp-Source: AGHT+IElWB3obfH3WLoSJnhNdDLs9puYhG8ITpGoTToOUpNvi6XoJmk6eGirKGJFaRPnDc33GdSn9w==
+X-Received: by 2002:a17:902:b28c:b0:1e0:e85b:2d30 with SMTP id u12-20020a170902b28c00b001e0e85b2d30mr669199plr.42.1711569736542;
+        Wed, 27 Mar 2024 13:02:16 -0700 (PDT)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id u4-20020a170902e5c400b001dd0d0d26a4sm9446459plf.147.2024.03.27.13.02.14
+        by smtp.gmail.com with ESMTPSA id u4-20020a170902e5c400b001dd0d0d26a4sm9446459plf.147.2024.03.27.13.02.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 13:02:14 -0700 (PDT)
+        Wed, 27 Mar 2024 13:02:16 -0700 (PDT)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	linux-arm-kernel@lists.infradead.org,
@@ -64,11 +63,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	loongarch@lists.linux.dev,
 	amd-gfx@lists.freedesktop.org,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH v3 12/14] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
-Date: Wed, 27 Mar 2024 13:00:43 -0700
-Message-ID: <20240327200157.1097089-13-samuel.holland@sifive.com>
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v3 13/14] selftests/fpu: Move FP code to a separate translation unit
+Date: Wed, 27 Mar 2024 13:00:44 -0700
+Message-ID: <20240327200157.1097089-14-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.43.1
 In-Reply-To: <20240327200157.1097089-1-samuel.holland@sifive.com>
 References: <20240327200157.1097089-1-samuel.holland@sifive.com>
@@ -80,12 +78,10 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that all previously-supported architectures select
-ARCH_HAS_KERNEL_FPU_SUPPORT, this code can depend on that symbol instead
-of the existing list of architectures. It can also take advantage of the
-common kernel-mode FPU API and method of adjusting CFLAGS.
+This ensures no compiler-generated floating-point code can appear
+outside kernel_fpu_{begin,end}() sections, and some architectures
+enforce this separation.
 
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
@@ -93,177 +89,134 @@ Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 (no changes since v2)
 
 Changes in v2:
- - Split altivec removal to a separate patch
- - Use linux/fpu.h instead of asm/fpu.h in consumers
+ - Declare test_fpu() in a header
 
- drivers/gpu/drm/amd/display/Kconfig           |  2 +-
- .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    | 27 ++------------
- drivers/gpu/drm/amd/display/dc/dml/Makefile   | 36 ++-----------------
- drivers/gpu/drm/amd/display/dc/dml2/Makefile  | 36 ++-----------------
- 4 files changed, 7 insertions(+), 94 deletions(-)
+ lib/Makefile                        |  3 ++-
+ lib/test_fpu.h                      |  8 +++++++
+ lib/{test_fpu.c => test_fpu_glue.c} | 32 +------------------------
+ lib/test_fpu_impl.c                 | 37 +++++++++++++++++++++++++++++
+ 4 files changed, 48 insertions(+), 32 deletions(-)
+ create mode 100644 lib/test_fpu.h
+ rename lib/{test_fpu.c => test_fpu_glue.c} (71%)
+ create mode 100644 lib/test_fpu_impl.c
 
-diff --git a/drivers/gpu/drm/amd/display/Kconfig b/drivers/gpu/drm/amd/display/Kconfig
-index 901d1961b739..5fcd4f778dc3 100644
---- a/drivers/gpu/drm/amd/display/Kconfig
-+++ b/drivers/gpu/drm/amd/display/Kconfig
-@@ -8,7 +8,7 @@ config DRM_AMD_DC
- 	depends on BROKEN || !CC_IS_CLANG || ARM64 || RISCV || SPARC64 || X86_64
- 	select SND_HDA_COMPONENT if SND_HDA_CORE
- 	# !CC_IS_CLANG: https://github.com/ClangBuiltLinux/linux/issues/1752
--	select DRM_AMD_DC_FP if (X86 || LOONGARCH || (PPC64 && ALTIVEC) || (ARM64 && KERNEL_MODE_NEON && !CC_IS_CLANG))
-+	select DRM_AMD_DC_FP if ARCH_HAS_KERNEL_FPU_SUPPORT && (!ARM64 || !CC_IS_CLANG)
- 	help
- 	  Choose this option if you want to use the new display engine
- 	  support for AMDGPU. This adds required support for Vega and
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
-index 0de16796466b..e46f8ce41d87 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
-@@ -26,16 +26,7 @@
+diff --git a/lib/Makefile b/lib/Makefile
+index ffc6b2341b45..fcb35bf50979 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -133,7 +133,8 @@ FPU_CFLAGS += $(call cc-option,-msse -mpreferred-stack-boundary=3,-mpreferred-st
+ endif
  
- #include "dc_trace.h"
+ obj-$(CONFIG_TEST_FPU) += test_fpu.o
+-CFLAGS_test_fpu.o += $(FPU_CFLAGS)
++test_fpu-y := test_fpu_glue.o test_fpu_impl.o
++CFLAGS_test_fpu_impl.o += $(FPU_CFLAGS)
  
--#if defined(CONFIG_X86)
--#include <asm/fpu/api.h>
--#elif defined(CONFIG_PPC64)
--#include <asm/switch_to.h>
--#include <asm/cputable.h>
--#elif defined(CONFIG_ARM64)
--#include <asm/neon.h>
--#elif defined(CONFIG_LOONGARCH)
--#include <asm/fpu.h>
--#endif
-+#include <linux/fpu.h>
+ # Some KUnit files (hooks.o) need to be built-in even when KUnit is a module,
+ # so we can't just use obj-$(CONFIG_KUNIT).
+diff --git a/lib/test_fpu.h b/lib/test_fpu.h
+new file mode 100644
+index 000000000000..4459807084bc
+--- /dev/null
++++ b/lib/test_fpu.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++
++#ifndef _LIB_TEST_FPU_H
++#define _LIB_TEST_FPU_H
++
++int test_fpu(void);
++
++#endif
+diff --git a/lib/test_fpu.c b/lib/test_fpu_glue.c
+similarity index 71%
+rename from lib/test_fpu.c
+rename to lib/test_fpu_glue.c
+index e82db19fed84..85963d7be826 100644
+--- a/lib/test_fpu.c
++++ b/lib/test_fpu_glue.c
+@@ -19,37 +19,7 @@
+ #include <linux/debugfs.h>
+ #include <asm/fpu/api.h>
  
- /**
-  * DOC: DC FPU manipulation overview
-@@ -87,16 +78,9 @@ void dc_fpu_begin(const char *function_name, const int line)
- 	WARN_ON_ONCE(!in_task());
- 	preempt_disable();
- 	depth = __this_cpu_inc_return(fpu_recursion_depth);
+-static int test_fpu(void)
+-{
+-	/*
+-	 * This sequence of operations tests that rounding mode is
+-	 * to nearest and that denormal numbers are supported.
+-	 * Volatile variables are used to avoid compiler optimizing
+-	 * the calculations away.
+-	 */
+-	volatile double a, b, c, d, e, f, g;
 -
- 	if (depth == 1) {
--#if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
-+		BUG_ON(!kernel_fpu_available());
- 		kernel_fpu_begin();
--#elif defined(CONFIG_PPC64)
--		if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
--			enable_kernel_fp();
--#elif defined(CONFIG_ARM64)
--		kernel_neon_begin();
--#endif
- 	}
+-	a = 4.0;
+-	b = 1e-15;
+-	c = 1e-310;
+-
+-	/* Sets precision flag */
+-	d = a + b;
+-
+-	/* Result depends on rounding mode */
+-	e = a + b / 2;
+-
+-	/* Denormal and very large values */
+-	f = b / c;
+-
+-	/* Depends on denormal support */
+-	g = a + c * f;
+-
+-	if (d > a && e > a && g > a)
+-		return 0;
+-	else
+-		return -EINVAL;
+-}
++#include "test_fpu.h"
  
- 	TRACE_DCN_FPU(true, function_name, line, depth);
-@@ -118,14 +102,7 @@ void dc_fpu_end(const char *function_name, const int line)
- 
- 	depth = __this_cpu_dec_return(fpu_recursion_depth);
- 	if (depth == 0) {
--#if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
- 		kernel_fpu_end();
--#elif defined(CONFIG_PPC64)
--		if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
--			disable_kernel_fp();
--#elif defined(CONFIG_ARM64)
--		kernel_neon_end();
--#endif
- 	} else {
- 		WARN_ON_ONCE(depth < 0);
- 	}
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-index 59d3972341d2..a94b6d546cd1 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-@@ -25,40 +25,8 @@
- # It provides the general basic services required by other DAL
- # subcomponents.
- 
--ifdef CONFIG_X86
--dml_ccflags-$(CONFIG_CC_IS_GCC) := -mhard-float
--dml_ccflags := $(dml_ccflags-y) -msse
--endif
--
--ifdef CONFIG_PPC64
--dml_ccflags := -mhard-float
--endif
--
--ifdef CONFIG_ARM64
--dml_rcflags := -mgeneral-regs-only
--endif
--
--ifdef CONFIG_LOONGARCH
--dml_ccflags := -mfpu=64
--dml_rcflags := -msoft-float
--endif
--
--ifdef CONFIG_CC_IS_GCC
--ifneq ($(call gcc-min-version, 70100),y)
--IS_OLD_GCC = 1
--endif
--endif
--
--ifdef CONFIG_X86
--ifdef IS_OLD_GCC
--# Stack alignment mismatch, proceed with caution.
--# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
--# (8B stack alignment).
--dml_ccflags += -mpreferred-stack-boundary=4
--else
--dml_ccflags += -msse2
--endif
--endif
-+dml_ccflags := $(CC_FLAGS_FPU)
-+dml_rcflags := $(CC_FLAGS_NO_FPU)
- 
- ifneq ($(CONFIG_FRAME_WARN),0)
- ifeq ($(filter y,$(CONFIG_KASAN)$(CONFIG_KCSAN)),y)
-diff --git a/drivers/gpu/drm/amd/display/dc/dml2/Makefile b/drivers/gpu/drm/amd/display/dc/dml2/Makefile
-index 7b51364084b5..4f6c804a26ad 100644
---- a/drivers/gpu/drm/amd/display/dc/dml2/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml2/Makefile
-@@ -24,40 +24,8 @@
- #
- # Makefile for dml2.
- 
--ifdef CONFIG_X86
--dml2_ccflags-$(CONFIG_CC_IS_GCC) := -mhard-float
--dml2_ccflags := $(dml2_ccflags-y) -msse
--endif
--
--ifdef CONFIG_PPC64
--dml2_ccflags := -mhard-float
--endif
--
--ifdef CONFIG_ARM64
--dml2_rcflags := -mgeneral-regs-only
--endif
--
--ifdef CONFIG_LOONGARCH
--dml2_ccflags := -mfpu=64
--dml2_rcflags := -msoft-float
--endif
--
--ifdef CONFIG_CC_IS_GCC
--ifeq ($(call cc-ifversion, -lt, 0701, y), y)
--IS_OLD_GCC = 1
--endif
--endif
--
--ifdef CONFIG_X86
--ifdef IS_OLD_GCC
--# Stack alignment mismatch, proceed with caution.
--# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
--# (8B stack alignment).
--dml2_ccflags += -mpreferred-stack-boundary=4
--else
--dml2_ccflags += -msse2
--endif
--endif
-+dml2_ccflags := $(CC_FLAGS_FPU)
-+dml2_rcflags := $(CC_FLAGS_NO_FPU)
- 
- ifneq ($(CONFIG_FRAME_WARN),0)
- ifeq ($(filter y,$(CONFIG_KASAN)$(CONFIG_KCSAN)),y)
+ static int test_fpu_get(void *data, u64 *val)
+ {
+diff --git a/lib/test_fpu_impl.c b/lib/test_fpu_impl.c
+new file mode 100644
+index 000000000000..777894dbbe86
+--- /dev/null
++++ b/lib/test_fpu_impl.c
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++#include <linux/errno.h>
++
++#include "test_fpu.h"
++
++int test_fpu(void)
++{
++	/*
++	 * This sequence of operations tests that rounding mode is
++	 * to nearest and that denormal numbers are supported.
++	 * Volatile variables are used to avoid compiler optimizing
++	 * the calculations away.
++	 */
++	volatile double a, b, c, d, e, f, g;
++
++	a = 4.0;
++	b = 1e-15;
++	c = 1e-310;
++
++	/* Sets precision flag */
++	d = a + b;
++
++	/* Result depends on rounding mode */
++	e = a + b / 2;
++
++	/* Denormal and very large values */
++	f = b / c;
++
++	/* Depends on denormal support */
++	g = a + c * f;
++
++	if (d > a && e > a && g > a)
++		return 0;
++	else
++		return -EINVAL;
++}
 -- 
 2.43.1
 
