@@ -1,98 +1,108 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F34618E28
-	for <loongarch@lists.linux.dev>; Wed, 27 Mar 2024 01:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82951448F2;
+	Wed, 27 Mar 2024 12:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711502157; cv=none; b=UU7vhLC08LyQrCX0iQRdQXI9hbMhheKaQeKOskhvhINJniPsuKFU5Tjnks94t5s4dCez5uORqhrSJd00lMcPQdGw3oV7IQ+EIf2ueulaiBNkMgDnFsCbdLgb5Uo4kMwZoqMZaZIGHhjboJryZtOSVZOk2i7Se3sKTL7qaLR3uJ8=
+	t=1711541492; cv=none; b=QhXem+Miw4bfzc9/uUO5zzP0w6UsitZdN+w6PKNpQ5EtNIjfNN395EoJZUh6+gooZ6H0XQ87Z38rwKirLhwmFC2mkb8+Bf5KWmJ+Wsuk2uS1U49tXMfFd3BuOzVNg39DbT7CZUngjVveMupHj2/0Z6OELAHQNIERrOGgfWcaXCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711502157; c=relaxed/simple;
-	bh=PLidVJaE//HxRhz5H/QzI3/xtp56vRobIOOw6V0NeqA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cvScATrg0eU4Vlgk05Fn6ZtDfFdqVHl9qVaJNAUeBtIT8KFRe/nVxwZjGZSP47jH9hwi1bZWxH/qxLMqtNnUUr+mlYxsbk91AAb2PNPzG8uZQQ2MYLInHZ6Q2oWJcDClHDkqGMWaacB+EDyx2h14k4cdQgQ6Lm8ZnUWDqyFNTzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PLoVAcID; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711541492; c=relaxed/simple;
+	bh=8HKvH2ZmRNAoMNTGQiDhZZWKlMb08XtUGwUod/1FeTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AZ52nORKPTY2XV/mvFRA+XmBTArkC+zD+WmHQ8D4fESUVSdmDoqhDj/vBjmSboLOTo834f6rOWn0eR2/nhwLWziLfYZc+NOSTwapC+IZtiADNjoO4En4L2sKqnOnG+PMxx4MSX2uWhfUrIfu+IaZ7UQvET9i6O8h+7Fm4KvBNdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUB87MNe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLoVAcID"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d4a901e284so116607561fa.1
-        for <loongarch@lists.linux.dev>; Tue, 26 Mar 2024 18:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711502155; x=1712106955; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+OHmV4irZFRN7yhkxXILCmLuBOPWKdOt3kQNZKrG9Qo=;
-        b=PLoVAcIDOJcRvpPS3/IptpXM8rL2NYdWX11bVVF7vEFoMXBsk9l8MWc0svQVJHwiIe
-         UDGtXRNCnm3n2j3QnXGtZPltpHm6TcCzJlXk2JIbBcbhzkB4TKvYP7tiY1C9SVH2Kf0y
-         Ma9nE6x4YXzi32h/3nMEsseqbBxxVy7mVXfTXpcMI5/UFoCF72Pt1j+IJyKBiQ9ChVUa
-         T+shd40Ow2IhhoB0aMGS2ZTTd6O4lrVo+OQ8f+gZaOZ0yuhqXs6WsXORtiwVottAzhCK
-         3xyaBKO+XBUjlKWiMOA9XfmQvDb3/Y0Gkn+OuLsClRIz6bLX6YdnW3lk1q9t2k8Tb0Ij
-         3ytg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711502155; x=1712106955;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+OHmV4irZFRN7yhkxXILCmLuBOPWKdOt3kQNZKrG9Qo=;
-        b=kz6CTBWWBCGdKGrTe6kmvns+0zLGiNM4CyQpy8DuyTxtXAvcdYsMufWmpDNSeTHQ1e
-         FI4gTp0m5Gfv+my3Lm5aiIyqSgFhMskZ20qg035fvQUOhCBlakT9euBBvBU8A+JrnxZ7
-         IgYgzTO/GRghfIZMSntTCA4H5VvODEI9AgJ6MR/pRvpz9MmzFtCk8x5pK+8GgeDRKac8
-         x06e5STTXI4JULbZ1cUReZHCzyuJ0Lz6swb5NjrnyUYQJUOSeTROiVXajO6oS6RzLFTF
-         rbnOCXc/1P9zGBwbu3bE2ndV/KW17syqbfwnfEX1EccE2gn9WKxfCKW2+L75pwah6Mqu
-         rO4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWFoc+SqijLAxMaeY9J73YIhjhMwo83vaFZLQ5OqgrGDFIpoA1EKR5V3nBWMxDplXLoMFPHtx+vPgeJZxtu8bz4BUq56yPph1b7
-X-Gm-Message-State: AOJu0YwnHrAXPbeFTMrYEI0BYr0SQ+CdFbx6a0L/xt6ZiimUlDHxbW31
-	zlcOFrgnAVmao6m8WxGGM6C8HDLBTuOYqhq8dOwLdr/IXrfLb2fLa4i9WPPrYCI3lsbANOfFIAu
-	3uu30MglARtF6tq8CTvlOa1/CsSs=
-X-Google-Smtp-Source: AGHT+IE6oY27Hvh1xBoRmMHbRBXrUqGabIUdZcpUuNN/8gTJHCNOgWIrkAnYswBuXrHRGBvH38Mqs7Kj5XNZBc+eiQw=
-X-Received: by 2002:a05:651c:10b9:b0:2d6:f408:fafe with SMTP id
- k25-20020a05651c10b900b002d6f408fafemr984912ljn.42.1711502154359; Tue, 26 Mar
- 2024 18:15:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUB87MNe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE430C433F1;
+	Wed, 27 Mar 2024 12:11:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711541491;
+	bh=8HKvH2ZmRNAoMNTGQiDhZZWKlMb08XtUGwUod/1FeTU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DUB87MNexWr/B6y1mYCgbMqhl7Bb+34h9WrjNqGS8lsMhR6MSeU4o7SvoB0NVBYPP
+	 Ep+2izkyzLk7+p7m+cXtFNSOIyLW6QOno2qVz5S3oBp0xqCwmB3mvhw9o0D9o0IwS1
+	 7kzHhyWQbRvGSIQ3u3+YiaO2RLHTCRjPutHIngo/TeZrn93wmzyoRUE7u92D/3Ih6K
+	 gD/1eoLsVrGK/m4Vqi/h2s1McaaP64o4POo9hpz5koEOjaao1qYndAGIhDrUvdCkMD
+	 ntZ4rbFHnkJr67YfqWV+GYp4Kn4OIkuA1t5xPxfPK6H5VYXYqoS2CePGShYNUMTWFF
+	 5BYyPJ4OMXkyA==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	wangyuli@uniontech.com
+Cc: WANG Xuerui <git@xen0n.name>,
+	Wentao Guan <guanwentao@uniontech.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	linux-crypto@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "LoongArch/crypto: Clean up useless assignment operations" failed to apply to 6.1-stable tree
+Date: Wed, 27 Mar 2024 08:11:29 -0400
+Message-ID: <20240327121129.2828782-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1710926402.git.zhoubinbin@loongson.cn> <0cfd237c2c7c1e4f89b6e5f7af0a64d306de1c8f.1710926402.git.zhoubinbin@loongson.cn>
- <20240326-shifter-zeppelin-1d8616dc82f9@spud>
-In-Reply-To: <20240326-shifter-zeppelin-1d8616dc82f9@spud>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 27 Mar 2024 07:15:40 +0600
-Message-ID: <CAMpQs4JKYxJQ=+iRW6EqRc4t3wF=eNLVg0Y=943D+X+LmJyG=Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/8] dt-bindings: clock: add Loongson-2K expand clock index
-To: Conor Dooley <conor@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 12:54=E2=80=AFAM Conor Dooley <conor@kernel.org> wr=
-ote:
->
-> On Tue, Mar 26, 2024 at 05:01:00PM +0800, Binbin Zhou wrote:
->
-> > -#define LOONGSON2_CLK_END                            18
->
->
-> > +#define LOONGSON2_CLK_END    35
->
-> Please just delete this. If you can change it, it is not a binding.
-> Just define it in the driver if it is needed there.
+The patch below does not apply to the 6.1-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-Hi Conor:
+Thanks,
+Sasha
 
-Ok, I will drop it in the next version.
+------------------ original commit in Linus's tree ------------------
 
-Thanks.
-Binbin
->
-> Thanks,
-> Conor.
+From fea1c949f6ca5059e12de00d0483645debc5b206 Mon Sep 17 00:00:00 2001
+From: Yuli Wang <wangyuli@uniontech.com>
+Date: Tue, 19 Mar 2024 15:50:34 +0800
+Subject: [PATCH] LoongArch/crypto: Clean up useless assignment operations
+
+The LoongArch CRC32 hw acceleration is based on arch/mips/crypto/
+crc32-mips.c. While the MIPS code supports both MIPS32 and MIPS64,
+but LoongArch32 lacks the CRC instruction. As a result, the line
+"len -= sizeof(u32)" is unnecessary.
+
+Removing it can make context code style more unified and improve
+code readability.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: WANG Xuerui <git@xen0n.name>
+Suggested-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/crypto/crc32-loongarch.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
+index a49e507af38c0..3eebea3a7b478 100644
+--- a/arch/loongarch/crypto/crc32-loongarch.c
++++ b/arch/loongarch/crypto/crc32-loongarch.c
+@@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+ 
+ 		CRC32(crc, value, w);
+ 		p += sizeof(u32);
+-		len -= sizeof(u32);
+ 	}
+ 
+ 	if (len & sizeof(u16)) {
+@@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+ 
+ 		CRC32C(crc, value, w);
+ 		p += sizeof(u32);
+-		len -= sizeof(u32);
+ 	}
+ 
+ 	if (len & sizeof(u16)) {
+-- 
+2.43.0
+
+
+
+
