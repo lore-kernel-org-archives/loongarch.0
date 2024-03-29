@@ -1,57 +1,57 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E9552F72
-	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 07:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434CF535D7
+	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 07:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711697103; cv=none; b=lRir8dXe8eJKSMNLN6+n0CpND3Sb/N4/7937sIOuHxpJ3/eFIqNYuveAf7chu3EFONRmx2wFlQHunRYID3kEoxnisW8uo9nzcIzIBChydspvXPkCPHxtRUK5z2aU+fGLUVnnXyS0csWERr7u3Dz4BvVUyYXS7/R7Ee+ge5cFYHw=
+	t=1711697104; cv=none; b=QP4oa2BEUDAY0xsBrsV3kYdlJHQEr2FFxLkAyrPyJ9PgNdL0bgy/NER9jOEHafk0ZthypdVPE2UVC+0WlJQsF9TqG9/4SFQq5hk2PwLjruL7HZM1D7r2/uAs13AhNQCatxDRLiz1X+qmJkC47xxNasXDZnuGd1WD/AGudtccWfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711697103; c=relaxed/simple;
-	bh=3Jxdlw0MxGrCtqcQU2OdpgNfa0UAfuPKsYPLtYGhH+c=;
+	s=arc-20240116; t=1711697104; c=relaxed/simple;
+	bh=TtGeb77JJjuHILekBexWTEYwU/KUewLYw7aWzpsPJ+s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d2AbGy3HdPb/TQdg/NqyZcqt/7RIVMKWKJYB7FOEotx1YNDDGgO1Yh884fn/kFc8GDQ4mxH2nx97HJ1S5n4FbaysjYe1MV3h2f1kSAhQ3nX7yXeRUB2YlDNN2hPz3vgGy7mcS+PLW1Xz8HZ2HjY+caYLOeoaTh5LFITekZPKvOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=THDaXknp; arc=none smtp.client-ip=209.85.216.45
+	 MIME-Version; b=Gd1NFiSy4/71JT83soJyTFomyZ1rErVRIrbl1pZWZ5Rm0yLvyS2ltoKjKCezyXSSHM1Wi1YVLKMUav42WQacH97RSTwCU5sgmFe4Z99FFfJvms5Kp3NQxDsAj4ENybQWak8Nfvpcf/noCUAjmbVq0TSGoa7rm8q09WcOA4GP+1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=mLVAX2HF; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="THDaXknp"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2a209b8af12so915237a91.3
-        for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 00:25:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mLVAX2HF"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so1256024a12.1
+        for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 00:25:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711697101; x=1712301901; darn=lists.linux.dev;
+        d=sifive.com; s=google; t=1711697103; x=1712301903; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1ZUya0v8Oh5iLzX7Kw5hO2ocqVWj9tNi/iu8yR8eYow=;
-        b=THDaXknpgBu/oU+1arEbG0WNEl57Dm2voaFkuy8nYGzn3W1GzdFKVtSNcI+sN/374Z
-         QPywe3cr2ShFnq9794nQsJuqs0nCctv4oXHQeAjNFWsNqKtU/zP7QnbEE25d4m6OWDQq
-         CUp/bF8rWS//GfCTeRZ6udasGnZudHXQKVxwy4Gy0pGEvE2+1tSKhsbN4MkqYnnUaGcv
-         wFpsX3INI3RPEG4WIUREyeco49Aal+P/wd2y9V5BbRHQ53tDh071dD7pOEcquMh1MV6M
-         TwAdkMI+7QxcopdS77azU6m56iw1g2QSwgAUi+WMwAtO4sB4UfFPl3pKd6aksQE+GrBp
-         /otg==
+        bh=Z4EVp4FPE+/jeIRBNmVRsUyItk8Ntjq2i9UEb5o+3e0=;
+        b=mLVAX2HFY3GBsa9dqB3S1kus78sLbueKZ/Ehi02T1qQY6/sr00kFhHLa+wq7Wy4wmq
+         3S+tkBH9u0zL+oTWaFkIO4hcU/Z33BRrkPJ93uzYoy1580FnqzH4l0Ayd+nn5zESDM2U
+         LAK+NbwVZyGHE4BoYRrngrBV4sF83Nkrd+s6+8qYWD8WECOXsZp/ft1lsmu1+s3KN0OH
+         JDwbJmE05ChyPDaU12DlYBIHUPL7rph1Zcg1TET4po7nCR58KnnJ1HyFU+O8WrZjt4Ij
+         yG2zRygEIdP4/80Bo/J8o52JkXhFvjdwR70tb403Tb1wz+tIPcZu+f8yzX2XTNkrlXqm
+         N/OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711697101; x=1712301901;
+        d=1e100.net; s=20230601; t=1711697103; x=1712301903;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1ZUya0v8Oh5iLzX7Kw5hO2ocqVWj9tNi/iu8yR8eYow=;
-        b=JWLqWGb/mAU2omgCu78Q0g2lDeYJb3eQQg9+wk9UXO3rnTTx3a62X1+S2wvtytKrU6
-         jiX9G18VzO6kv6d5E+/XyrS2z35AR18UeQk1BEGGo5GkG+5WRG6Q9YOlDvH9IcmUxyv2
-         w0UorNJ/bJt0mHSYsiZxIBvVzRwPrjcLoHsIX8wXZbb+4rYKOdgBpCmG+AIsrw/MQA74
-         YHfdfDvEr/vVhdJpGDVejCgpALrolm9NGF8ROq+Eg9wap+CvMJM7GDqWCKSmZ9tp/1vc
-         jrSaJ43OqFTAee57Yf+BNLxos5Zlqb8iNM6FrWp4klRC1Y1UdZ00T+6t3EiSVKigpqsT
-         qoyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBC1CF9ZIDjEyMOs6lkI03Z7Qw1flLyX2jrsmZuI6U79TXa2hi0zwTO4NpUSr2/yUfyLo6piWO98dWiI/d02gsFBKqIhl2g1As
-X-Gm-Message-State: AOJu0Yx+uQBpt37O5S/ZcXqky/EQ6o2bqzlF4lcGSOlDPexbeQosWnHh
-	Kg6l6pMqh8BzXHc6fSegaE3Z3n5/WWDDe+EljcyedzIjNe27Qf4ZC0/utvXoVsU=
-X-Google-Smtp-Source: AGHT+IERKMtTUUrMNrNdpmOZyYX6MKtFB7fSH53v9LodH/8MB2comF4l1LxXs3fRZJNBleQgeI68Nw==
-X-Received: by 2002:a17:90a:b008:b0:2a0:5339:7751 with SMTP id x8-20020a17090ab00800b002a053397751mr1529473pjq.37.1711697101571;
-        Fri, 29 Mar 2024 00:25:01 -0700 (PDT)
+        bh=Z4EVp4FPE+/jeIRBNmVRsUyItk8Ntjq2i9UEb5o+3e0=;
+        b=YCjJLF1ULxuYYyc9L29EXyCKLE8/K7qze9s5V8RzXeAD+esRaWM3vmkc14fZl4ZtIz
+         lkb/A427QKKY8iVePTEanq55nfE1dFl8kSPNdQ49S3f3AeP+tgo10HOXIU7D3Fnr8VwU
+         qp/BGOhZgArslAbpOlRGDOWXCW2XuF3M8QRo13xP9IbaIw/Kbpyx/Pm6goEPe0XH7/wr
+         sQMWOd9oSPWPSWiUQdgJHUo4wLLaDhXobWyXQeWY/Y0V0uDdsBMXMhm8cdOhUir0nsgA
+         l11Su/V6XSz9h3VbASMFHAUlEdFg7BaoE47Mt23v67GgFsHbLvqnLO2n+LSHESRyxMEf
+         +beQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXib4x6wQOT/i83VraQ+pCKEoOe71hcAhlMs8Xp5o4zSHxE+fBXssoKVlOnXUJS70t3I49poK2OGJ0pNc2IQYb2vAToDqD+dON9
+X-Gm-Message-State: AOJu0YznnX1tSkgZe1GHtEdiCP2oQnSYQE9OFxgBO64OM5pX0PvrGmvj
+	3qRL55D9okQzq3ZttxnMktYFAvYld65d0CjpCY80j7/lJyeD3zen6kEYO66myng=
+X-Google-Smtp-Source: AGHT+IHObpmsfqDnVzwffSCR0G9zA2Nzm55W89HV7TW/i69TFVB/o13/9rds5tWd/Fn8feEYN1IDow==
+X-Received: by 2002:a17:90a:f2ce:b0:29f:cbd8:ea11 with SMTP id gt14-20020a17090af2ce00b0029fcbd8ea11mr1691675pjb.15.1711697102774;
+        Fri, 29 Mar 2024 00:25:02 -0700 (PDT)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id b8-20020a17090a010800b0029ddac03effsm4971798pjb.11.2024.03.29.00.25.00
+        by smtp.gmail.com with ESMTPSA id b8-20020a17090a010800b0029ddac03effsm4971798pjb.11.2024.03.29.00.25.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 00:25:01 -0700 (PDT)
+        Fri, 29 Mar 2024 00:25:02 -0700 (PDT)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	linux-arm-kernel@lists.infradead.org,
@@ -64,13 +64,10 @@ Cc: linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	amd-gfx@lists.freedesktop.org,
 	Samuel Holland <samuel.holland@sifive.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v4 10/15] x86: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
-Date: Fri, 29 Mar 2024 00:18:25 -0700
-Message-ID: <20240329072441.591471-11-samuel.holland@sifive.com>
+	Palmer Dabbelt <palmer@rivosinc.com>
+Subject: [PATCH v4 11/15] riscv: Add support for kernel-mode FPU
+Date: Fri, 29 Mar 2024 00:18:26 -0700
+Message-ID: <20240329072441.591471-12-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240329072441.591471-1-samuel.holland@sifive.com>
 References: <20240329072441.591471-1-samuel.holland@sifive.com>
@@ -82,84 +79,130 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-x86 already provides kernel_fpu_begin() and kernel_fpu_end(), but in a
-different header. Add a wrapper header, and export the CFLAGS
-adjustments as found in lib/Makefile.
+This is motivated by the amdgpu DRM driver, which needs floating-point
+code to support recent hardware. That code is not performance-critical,
+so only provide a minimal non-preemptible implementation for now.
 
+Support is limited to riscv64 because riscv32 requires runtime (libgcc)
+assistance to convert between doubles and 64-bit integers.
+
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+Reviewed-by: Palmer Dabbelt <palmer@rivosinc.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
 
-(no changes since v1)
+(no changes since v3)
 
- arch/x86/Kconfig           |  1 +
- arch/x86/Makefile          | 20 ++++++++++++++++++++
- arch/x86/include/asm/fpu.h | 13 +++++++++++++
- 3 files changed, 34 insertions(+)
- create mode 100644 arch/x86/include/asm/fpu.h
+Changes in v3:
+ - Limit riscv ARCH_HAS_KERNEL_FPU_SUPPORT to 64BIT
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 39886bab943a..7c9d032ee675 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -83,6 +83,7 @@ config X86
- 	select ARCH_HAS_FORTIFY_SOURCE
+Changes in v2:
+ - Remove RISC-V architecture-specific preprocessor check
+
+ arch/riscv/Kconfig                  |  1 +
+ arch/riscv/Makefile                 |  3 +++
+ arch/riscv/include/asm/fpu.h        | 16 ++++++++++++++++
+ arch/riscv/kernel/Makefile          |  1 +
+ arch/riscv/kernel/kernel_mode_fpu.c | 28 ++++++++++++++++++++++++++++
+ 5 files changed, 49 insertions(+)
+ create mode 100644 arch/riscv/include/asm/fpu.h
+ create mode 100644 arch/riscv/kernel/kernel_mode_fpu.c
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index be09c8836d56..3bcd0d250810 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -27,6 +27,7 @@ config RISCV
  	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_KCOV			if X86_64
-+	select ARCH_HAS_KERNEL_FPU_SUPPORT
- 	select ARCH_HAS_MEM_ENCRYPT
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_HAS_KCOV
++	select ARCH_HAS_KERNEL_FPU_SUPPORT if 64BIT && FPU
+ 	select ARCH_HAS_MEMBARRIER_CALLBACKS
  	select ARCH_HAS_MEMBARRIER_SYNC_CORE
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 662d9d4033e6..5a5f5999c505 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -74,6 +74,26 @@ KBUILD_CFLAGS += -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx
- KBUILD_RUSTFLAGS += --target=$(objtree)/scripts/target.json
- KBUILD_RUSTFLAGS += -Ctarget-feature=-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2,-avx,-avx2
+ 	select ARCH_HAS_MMIOWB
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index 252d63942f34..76ff4033c854 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -84,6 +84,9 @@ KBUILD_CFLAGS += -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64i
  
-+#
-+# CFLAGS for compiling floating point code inside the kernel.
-+#
-+CC_FLAGS_FPU := -msse -msse2
-+ifdef CONFIG_CC_IS_GCC
-+# Stack alignment mismatch, proceed with caution.
-+# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
-+# (8B stack alignment).
-+# See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53383
-+#
-+# The "-msse" in the first argument is there so that the
-+# -mpreferred-stack-boundary=3 build error:
-+#
-+#  -mpreferred-stack-boundary=3 is not between 4 and 12
-+#
-+# can be triggered. Otherwise gcc doesn't complain.
-+CC_FLAGS_FPU += -mhard-float
-+CC_FLAGS_FPU += $(call cc-option,-msse -mpreferred-stack-boundary=3,-mpreferred-stack-boundary=4)
-+endif
+ KBUILD_AFLAGS += -march=$(riscv-march-y)
+ 
++# For C code built with floating-point support, exclude V but keep F and D.
++CC_FLAGS_FPU  := -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)([^v_]*)v?/\1\2/')
 +
- ifeq ($(CONFIG_X86_KERNEL_IBT),y)
- #
- # Kernel IBT has S_CET.NOTRACK_EN=0, as such the compilers must not generate
-diff --git a/arch/x86/include/asm/fpu.h b/arch/x86/include/asm/fpu.h
+ KBUILD_CFLAGS += -mno-save-restore
+ KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
+ 
+diff --git a/arch/riscv/include/asm/fpu.h b/arch/riscv/include/asm/fpu.h
 new file mode 100644
-index 000000000000..b2743fe19339
+index 000000000000..91c04c244e12
 --- /dev/null
-+++ b/arch/x86/include/asm/fpu.h
-@@ -0,0 +1,13 @@
++++ b/arch/riscv/include/asm/fpu.h
+@@ -0,0 +1,16 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
 + * Copyright (C) 2023 SiFive
 + */
 +
-+#ifndef _ASM_X86_FPU_H
-+#define _ASM_X86_FPU_H
++#ifndef _ASM_RISCV_FPU_H
++#define _ASM_RISCV_FPU_H
 +
-+#include <asm/fpu/api.h>
++#include <asm/switch_to.h>
 +
-+#define kernel_fpu_available()	true
++#define kernel_fpu_available()	has_fpu()
 +
-+#endif /* ! _ASM_X86_FPU_H */
++void kernel_fpu_begin(void);
++void kernel_fpu_end(void);
++
++#endif /* ! _ASM_RISCV_FPU_H */
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index 81d94a8ee10f..5b243d46f4b1 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -67,6 +67,7 @@ obj-$(CONFIG_RISCV_MISALIGNED)	+= unaligned_access_speed.o
+ obj-$(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)	+= copy-unaligned.o
+ 
+ obj-$(CONFIG_FPU)		+= fpu.o
++obj-$(CONFIG_FPU)		+= kernel_mode_fpu.o
+ obj-$(CONFIG_RISCV_ISA_V)	+= vector.o
+ obj-$(CONFIG_RISCV_ISA_V)	+= kernel_mode_vector.o
+ obj-$(CONFIG_SMP)		+= smpboot.o
+diff --git a/arch/riscv/kernel/kernel_mode_fpu.c b/arch/riscv/kernel/kernel_mode_fpu.c
+new file mode 100644
+index 000000000000..0ac8348876c4
+--- /dev/null
++++ b/arch/riscv/kernel/kernel_mode_fpu.c
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2023 SiFive
++ */
++
++#include <linux/export.h>
++#include <linux/preempt.h>
++
++#include <asm/csr.h>
++#include <asm/fpu.h>
++#include <asm/processor.h>
++#include <asm/switch_to.h>
++
++void kernel_fpu_begin(void)
++{
++	preempt_disable();
++	fstate_save(current, task_pt_regs(current));
++	csr_set(CSR_SSTATUS, SR_FS);
++}
++EXPORT_SYMBOL_GPL(kernel_fpu_begin);
++
++void kernel_fpu_end(void)
++{
++	csr_clear(CSR_SSTATUS, SR_FS);
++	fstate_restore(current, task_pt_regs(current));
++	preempt_enable();
++}
++EXPORT_SYMBOL_GPL(kernel_fpu_end);
 -- 
 2.44.0
 
