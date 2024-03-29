@@ -1,57 +1,57 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2304086E
-	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 07:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F1140873
+	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 07:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711697100; cv=none; b=Jnq3UJzofy5s888NY/CxNH6zPQx7Og1Btv6g/c8u4dy+H2tXQxvBx8YdFAIh39M3+sXET7qtwfrBUgJxYzfuiXSJeSmU3HLus/CwjwMhzUqUy4kw07OMIKp5aEnxw/dTmmjo5jMZ3/SDCjzIS7zDz6FXGpo1Hm/S2V8BGxDBfLc=
+	t=1711697102; cv=none; b=e0R5ThxD9V+E9YakzUS6xJQIJo67FxEERGJ151joK+xFf7/HyM5XH22grEoQgNdjFhAe0Uz6T2jaUMJCiPhRAWP0ZSa5RDpX367KUSvdykGr/V8LgavH2QP8/1y0qWPflg55OxKws+HpNTEqebUHkQwHEPrw8VfNcNBhXbpt+UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711697100; c=relaxed/simple;
-	bh=b0p3yNyhI4gS1UO6/7FtNHSLtx6SD/wV4pT5We/leTo=;
+	s=arc-20240116; t=1711697102; c=relaxed/simple;
+	bh=dD+iV8uD7G5MpjHgE1LVjx/5PSgKP1NpMjf5jkr/+qc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aUF2mW2lv+mKW6f9ylBM3PMYsJfHF8F/j3VmAE2wHDuImZ0Y51LAAcMqWlE0NdnU1OzvbF55wvdHFtA6XW31hX/fxMjXdaM/8FyP4To/h3vwRJgH4gzMf5G4wh6veETLXEVKS2ewOVjlm1fXyisHjPhqc2gTYyUZeNjvmGJF56I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Q35v6fCP; arc=none smtp.client-ip=209.85.210.177
+	 MIME-Version; b=V9w02LF/DEoe4misaSe/yGd/VlkQcABtMsjSn9wqCSpwJ7QJJVlEKKPc2yecLKULk4IemEpmQPGjOC1GfgBcVrOHT+NxSDBIxmghsyBhizdb+yyiAlt+4MSSn5rbQ7oPFj0XxfuPCWyzjNDDFxUMVhzCW9tFkDRtz+X2wIp06G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=IpwlAx1M; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Q35v6fCP"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6eac64f2205so1527683b3a.2
-        for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 00:24:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="IpwlAx1M"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5ce6b5e3c4eso947382a12.2
+        for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 00:25:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711697099; x=1712301899; darn=lists.linux.dev;
+        d=sifive.com; s=google; t=1711697100; x=1712301900; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=miBOSRWGIbztCOf3acmBaICqQz/+WnlSIiHBb+4Rl8M=;
-        b=Q35v6fCPz4cKg+E1NnpDYu401VuRQEaZ/KMhhSQph4qGTsVb0u4U5awrpeAoFDsRWh
-         XO2zyu37FhChEOw3cDGAE8R4a+7yWeRU0UQtsV9N/2r+u3Wqyod6zOc5Dzsb1X4Ywb/w
-         1bGxs0kuCY8sOmJFq4UMYuXMNtbJhP21G1e+LZGhjxmgUAgNf/87aFjy523HwypUG1rN
-         keguey/sYeCNRv5ZKxOGE0GZw3dfSYNMN0NVAMv+Las8ND00bdAePJEZWXU6fS7kO5aj
-         Mz4ucjfZ4mNjYHaixjT9YONTgjQxKSTG9WGg1a+EcBXhefiVbF0aRwDIhsy8BUvdbT7b
-         /D5A==
+        bh=dzRar7ztYXEnRyKAelp48saozJM51jVm9Dh1Zr4pH8s=;
+        b=IpwlAx1Mi9jR7lHowLFMQUt9Wb36yR+rjZ1RE1P9OJx4a6A1om/iW7qMz76X3I77y0
+         FTjpYPZvlKDP26EWH+9Px/0UCl4a1QGKLVdoWXEjdrktIso4NrZ3hmUDKQWXqwK4Stb5
+         w7LoyMOj0cL7kMDUCsOienHzuDAzEznD5G7GIGB6hXjtkDUYXO4eU07quiH8/Rv6ziIw
+         MNe3442DXd8eqoXsD2W7ZA5tcyCjg6vHnNiUv34gtBGx9WWwMW2e3sb6b0e5+tDAEpRb
+         uec0I551Hi7sUKTgUgWRLa5JgZddAycgOqs75zT7FVMy9DE/d1n3xykUvmKESPjWegFF
+         aEmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711697099; x=1712301899;
+        d=1e100.net; s=20230601; t=1711697100; x=1712301900;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=miBOSRWGIbztCOf3acmBaICqQz/+WnlSIiHBb+4Rl8M=;
-        b=u/bHuFXragu29Ow93hZwxmNu2uCrN7T+z6hMBIxv2R4rOgQiV9TXS3W53LHHMdyEiw
-         vz+xMvs1gLCqx5D0AZW+k0kRrRrJk5O169ycmHmYVfBLxjS9S2pzlhXBSvaIi0XGg1aH
-         LnejP6naujJ/wLH3AV8/fp6XjM/gHXmMtzWQ061ja82S8/U4duua48V9qwNNNdsyGWIl
-         4PEYGQDsQCKdJgRWsngGblmkrtVcLcFAkjEJCd9Wm/IWdubnLpO3M5ylexLkL3wySc9t
-         WS7iou0mq5wN9q7mvAy8Zohjs30LLVYAUSmmd6MRnN+YCDGCMtqOD7/NUxveljSnQcHP
-         hmEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVztzcRISXIZk42lEUMiXc3V01gIWUAXGpEaXTv6D9crfeduOuSXjjmJ7+x2SxYLRCeMavQwq0wyiFj/2PGUaxKUyDKNAWOTvM1
-X-Gm-Message-State: AOJu0Yyup2lo2JVeFMpcz6hQ5BTkFCYybdoCmjKFLMFc/mXCo5tZATtA
-	e5+h+7eZZDopIOm2bSgboYqZQlAscg8fWTruesdkB3HFBC44UWjXka6REw4QENs=
-X-Google-Smtp-Source: AGHT+IHGvAdAnX/0WDZVeXS0a7ZQ/motGWeac64eqKBau0xYaG382zqiN+0tE34St5zugVtRmJL1tg==
-X-Received: by 2002:a05:6a20:549c:b0:1a3:baad:d566 with SMTP id i28-20020a056a20549c00b001a3baadd566mr1487303pzk.40.1711697098883;
-        Fri, 29 Mar 2024 00:24:58 -0700 (PDT)
+        bh=dzRar7ztYXEnRyKAelp48saozJM51jVm9Dh1Zr4pH8s=;
+        b=VI+qtvK9n8wr7wNQGoGCSLFb6qEhrqMiPtOTvN4RZHNtFA1r1TMvGnzJVxl2PkuLUb
+         BSZhbbnwafvO67/K3YCt15rGp9cQOoe7ImUUQn0iwIGCbBsBkcI3qGGrxJChPzPe0yNg
+         Cs2YPQwZQWl/0pP8y8e0FCez5zCf1pztoQh0UjQpvDungZAK49vX5rb6n5lx9b3ZaV1O
+         qXxMywCQfKeXBcrYEPS92LpBlGP6KrznLfe6TX/6fdbzkZYXrWn98AvWf5qlqp5SRV20
+         Xf3rDcbHDZLn/jhPF0cDmrnGWXVKrwmvHqeRJob4gmgO2Mfs4cYtZ4RqWg9NmXroRqn1
+         AsgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJZTbWDX0ecfjWzzj+f8aoz51uGpdMB93tEk9TSit/olK9PtAWZXyJp4EngcGfATcITWbY4cuLbmsft6+zWg4xxAYmeEB8nnkU
+X-Gm-Message-State: AOJu0Yxea5qqQRNgYpTn36s8qvKSwyY5sgOe6/Q7y9QRL7MWooOd5FG6
+	++WHlZvyJ0Xgg/MPqZPFt93IatV0uM8UoYTrca7j1gb9SJGzg7btAgt937b9p00=
+X-Google-Smtp-Source: AGHT+IEs8kBZu3dBChnRywCF22OnC9/Ej+znSx9gblpEFd+wsOZOeprciOlW3fwk28PpRrFgoWrM2Q==
+X-Received: by 2002:a17:90a:d3c3:b0:29e:975:3500 with SMTP id d3-20020a17090ad3c300b0029e09753500mr1446912pjw.28.1711697100232;
+        Fri, 29 Mar 2024 00:25:00 -0700 (PDT)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id b8-20020a17090a010800b0029ddac03effsm4971798pjb.11.2024.03.29.00.24.52
+        by smtp.gmail.com with ESMTPSA id b8-20020a17090a010800b0029ddac03effsm4971798pjb.11.2024.03.29.00.24.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 00:24:53 -0700 (PDT)
+        Fri, 29 Mar 2024 00:24:59 -0700 (PDT)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	linux-arm-kernel@lists.infradead.org,
@@ -64,10 +64,13 @@ Cc: linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	amd-gfx@lists.freedesktop.org,
 	Samuel Holland <samuel.holland@sifive.com>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v4 08/15] powerpc: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
-Date: Fri, 29 Mar 2024 00:18:23 -0700
-Message-ID: <20240329072441.591471-9-samuel.holland@sifive.com>
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v4 09/15] x86/fpu: Fix asm/fpu/types.h include guard
+Date: Fri, 29 Mar 2024 00:18:24 -0700
+Message-ID: <20240329072441.591471-10-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240329072441.591471-1-samuel.holland@sifive.com>
 References: <20240329072441.591471-1-samuel.holland@sifive.com>
@@ -79,93 +82,39 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PowerPC provides an equivalent to the common kernel-mode FPU API, but in
-a different header and using different function names. The PowerPC API
-also requires a non-preemptible context. Add a wrapper header, and
-export the CFLAGS adjustments.
+The include guard should match the filename, or it will conflict with
+the newly-added asm/fpu.h.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
 
-(no changes since v1)
+Changes in v4:
+ - New patch for v4
 
- arch/powerpc/Kconfig           |  1 +
- arch/powerpc/Makefile          |  5 ++++-
- arch/powerpc/include/asm/fpu.h | 28 ++++++++++++++++++++++++++++
- 3 files changed, 33 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/include/asm/fpu.h
+ arch/x86/include/asm/fpu/types.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1c4be3373686..c42a57b6839d 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -137,6 +137,7 @@ config PPC
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_HUGEPD			if HUGETLB_PAGE
- 	select ARCH_HAS_KCOV
-+	select ARCH_HAS_KERNEL_FPU_SUPPORT	if PPC_FPU
- 	select ARCH_HAS_MEMBARRIER_CALLBACKS
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
- 	select ARCH_HAS_MEMREMAP_COMPAT_ALIGN	if PPC_64S_HASH_MMU
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index 65261cbe5bfd..93d89f055b70 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -153,6 +153,9 @@ CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option, $(MULTIPLEWORD))
+diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
+index ace9aa3b78a3..eb17f31b06d2 100644
+--- a/arch/x86/include/asm/fpu/types.h
++++ b/arch/x86/include/asm/fpu/types.h
+@@ -2,8 +2,8 @@
+ /*
+  * FPU data structures:
+  */
+-#ifndef _ASM_X86_FPU_H
+-#define _ASM_X86_FPU_H
++#ifndef _ASM_X86_FPU_TYPES_H
++#define _ASM_X86_FPU_TYPES_H
  
- CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option,-mno-readonly-in-sdata)
+ #include <asm/page_types.h>
  
-+CC_FLAGS_FPU		:= $(call cc-option,-mhard-float)
-+CC_FLAGS_NO_FPU		:= $(call cc-option,-msoft-float)
-+
- ifdef CONFIG_FUNCTION_TRACER
- ifdef CONFIG_ARCH_USING_PATCHABLE_FUNCTION_ENTRY
- KBUILD_CPPFLAGS	+= -DCC_USING_PATCHABLE_FUNCTION_ENTRY
-@@ -174,7 +177,7 @@ asinstr := $(call as-instr,lis 9$(comma)foo@high,-DHAVE_AS_ATHIGH=1)
+@@ -596,4 +596,4 @@ struct fpu_state_config {
+ /* FPU state configuration information */
+ extern struct fpu_state_config fpu_kernel_cfg, fpu_user_cfg;
  
- KBUILD_CPPFLAGS	+= -I $(srctree)/arch/powerpc $(asinstr)
- KBUILD_AFLAGS	+= $(AFLAGS-y)
--KBUILD_CFLAGS	+= $(call cc-option,-msoft-float)
-+KBUILD_CFLAGS	+= $(CC_FLAGS_NO_FPU)
- KBUILD_CFLAGS	+= $(CFLAGS-y)
- CPP		= $(CC) -E $(KBUILD_CFLAGS)
- 
-diff --git a/arch/powerpc/include/asm/fpu.h b/arch/powerpc/include/asm/fpu.h
-new file mode 100644
-index 000000000000..ca584e4bc40f
---- /dev/null
-+++ b/arch/powerpc/include/asm/fpu.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2023 SiFive
-+ */
-+
-+#ifndef _ASM_POWERPC_FPU_H
-+#define _ASM_POWERPC_FPU_H
-+
-+#include <linux/preempt.h>
-+
-+#include <asm/cpu_has_feature.h>
-+#include <asm/switch_to.h>
-+
-+#define kernel_fpu_available()	(!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
-+
-+static inline void kernel_fpu_begin(void)
-+{
-+	preempt_disable();
-+	enable_kernel_fp();
-+}
-+
-+static inline void kernel_fpu_end(void)
-+{
-+	disable_kernel_fp();
-+	preempt_enable();
-+}
-+
-+#endif /* ! _ASM_POWERPC_FPU_H */
+-#endif /* _ASM_X86_FPU_H */
++#endif /* _ASM_X86_FPU_TYPES_H */
 -- 
 2.44.0
 
