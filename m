@@ -1,88 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2C44878F
-	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 02:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BFF17558
+	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 02:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711678206; cv=none; b=uidf46bOe+T2Ps9R4y+lsyUrVuc0xiu/BeymDnoiZ25m6S6Ac3+t55+jVH2jItFH9ELlyUh5OpPZEWwJ4ANuCwIv/6lR5FJNaMOK3rtUlDq89SINWENeuJ4Qcl84KK3cdLmMgWI8i2y5p1Hj8igMIx52PfetXBK/zQbt8ETk4bI=
+	t=1711678667; cv=none; b=VikqGObEolr2dU0JC6Y09Xk5Od3QE+q0ZWUt57iESXFOX58usLPEc9GxWXeknj5Fzcz2wBBZS+OPk7WpuWgOXbmeuEL9kCJPn+uUppoJMH97cJam82YMbqqbwhWqamdf6/5CSrvQ9XhXYY6A/LT/790OEwMAwf5pbVQVl84xXkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711678206; c=relaxed/simple;
-	bh=O7xbgBgQOtN6IeYuQy/GU/n6T4a1CY0hLFYa9laj4dg=;
+	s=arc-20240116; t=1711678667; c=relaxed/simple;
+	bh=xrCuD+YstyoRqhd48VlTTFtm9tGhlaBX9bc+CRj9pJ4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TZUBg7ZIsKe5pEqqPagLhxmQZXojqIw1r+K+N8dw+YxlUgMlRSHaCuOS4Pt3hgxI32rNxhsNLUw+Nu9lA5R9mGyvCNQFk5mehs30RzNsl7utH920dOISoniD9IcdgN8lN1g1aANJd/YjXIXLIkYBnlIy/GNcWJCyVMToz6lNciM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLwPVGdy; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=pgS9l1g8zeKYTeyVbFNLgFscwAlRaEnIyqMpBZgGpgTA9mnnTh2GBiCi/7wZu0c6UwMk8vTMWqyo1w75nRfTmoW2nFzuSIEYHaXqv9nx09ZCjvhMV2j8lGqurqOkxxNd1fUWndNYtg+7He4ecE1LopptQZCQgyg6nY7bCJUDz5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ED74/NW+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLwPVGdy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAB54C4166A
-	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 02:10:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ED74/NW+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED77C433A6
+	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 02:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711678205;
-	bh=O7xbgBgQOtN6IeYuQy/GU/n6T4a1CY0hLFYa9laj4dg=;
+	s=k20201202; t=1711678666;
+	bh=xrCuD+YstyoRqhd48VlTTFtm9tGhlaBX9bc+CRj9pJ4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rLwPVGdyfUQ9Q5txgWZV1ray66tLnDTvru7ZC00uj72yHNLM+5uQBAyuJqOx6oAw9
-	 abEHw0If2LAZPK8uSc6lmAyNOYXALEjIXNyd2eicIJFb8LyFzcbdYg/FWbDqn2W6xO
-	 OLV7xPd9JNSQULR57xL2cr74eruXBuq0DoxPUJ1IRnMr63FhQALGAopQ1Gd06OLmmq
-	 2zBE5Vr3Wkxt/ZdJe6cuoCw5wTNNRDb1AYJR4UjhgHi9TaAUMxBUAW/mlbM/pz7961
-	 Hnwl0VSIIy5GFdVZwgIFWK9sfSOrc/+jz5PzlpgkOVrB3dnWUwPdPqO0nXkz0NH+7s
-	 DTRJ3mwZ9tlPw==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a4749eecff7so172344266b.2
-        for <loongarch@lists.linux.dev>; Thu, 28 Mar 2024 19:10:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVdSIqsdjIsYdpL1ziv6IgIYo+BFzwp0PDwlV5KALIiYTcjiHNMGiz2i7LRs0tTA3o5N38wxFZHMTK4K4DSbZpJh3qc+D7vqTeo
-X-Gm-Message-State: AOJu0YxwSDyHUJt7FKWqpyLc4LvDLQzG17R4nhSQy1OfAVd2lEy7hy2O
-	sMURTanalYQs3osK/9qsUxnW+SiUYKeZbeBQsAlmUHJw50ATJgzC6mPVowF/06g4eqQ9UoYIsIY
-	FYkaE+goTxll5Hin2grLABXVcaLg=
-X-Google-Smtp-Source: AGHT+IGwe63tbdBszNS6sGYONK8L4hQI3wH9JIXEL9232tMVmuR5zTJK7GiELbRfCNUMrwys1rZgCxvDVwe/zgYgCS0=
-X-Received: by 2002:a17:907:868a:b0:a46:c11d:dd01 with SMTP id
- qa10-20020a170907868a00b00a46c11ddd01mr761930ejc.50.1711678204472; Thu, 28
- Mar 2024 19:10:04 -0700 (PDT)
+	b=ED74/NW+POTlHq7NAWGm2TOe4WbK8utSfi61/j+Y5rKuyvqJyOQig2xUr7i/3AQ3T
+	 onuBsM2xx0kcudMv8cbPt6fO1Z/Z7BxrKwYsSvt341yqldDSFMC1ILDKpHdQ3mDMwY
+	 HzGNkHYgXOitFZfOCAcJjBMLxEqVUwivLsnm8GlC/Uqp4L8zaMOk9/QQrVHZaLXJrE
+	 dl6g2jM4FTRVEoVJfqlhMaKkzB8M7DgU/j+wDTn6+cP3hkzy20/VlWK3zsTT+xD8a6
+	 Psa/Uj6iWKKJ6ao2vY/KEoCHhDlOkFBxnOdrgXgbDgZ8KHi2jAfL+/qIws5K2NyOyW
+	 fdK6ughAufu9Q==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51588f70d2dso1815712e87.3
+        for <loongarch@lists.linux.dev>; Thu, 28 Mar 2024 19:17:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUbKam7idZTFSAYbV+2PVIoD8WukM1yCRCwkxEILR2zuNzNo25fnS2L9+dqJkzLOZt7xaJnkJj6zr/yqvNppSGqjpQPzaJKxCIY
+X-Gm-Message-State: AOJu0YyO+YkylNnwwjguRyhBlpKmpWdc1Ebls8J/OmXa7e5smsK53Vj6
+	iHsjWWUD9U689c3CkAahdeuuczEctesk6/a5u7d/zwrRVaNfSE7UeKYDNCZnVuGr3Rb30raa8Ku
+	qjIaz00+8UF0MsMBjaR5HXvGth+s=
+X-Google-Smtp-Source: AGHT+IFIt3xKFHz8f3YRErRQ3+Wd4FtZ5zFcF6pJlLtCFXNYokfAsE16Un+jW38siA3PzcTudqOC3qItwnPJhds/970=
+X-Received: by 2002:a19:ca5c:0:b0:515:9150:ecc1 with SMTP id
+ h28-20020a19ca5c000000b005159150ecc1mr620038lfj.24.1711678664699; Thu, 28 Mar
+ 2024 19:17:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240327171737.27622-1-xry111@xry111.site>
-In-Reply-To: <20240327171737.27622-1-xry111@xry111.site>
+References: <c352829b-ed75-4ffd-af6e-0ea754e1bf3d@roeck-us.net>
+ <4d2373e3f0694fd02137a72181d054ee2ebcca45.camel@xry111.site> <19c0ec82-59ce-4f46-9a38-cdca059e8867@roeck-us.net>
+In-Reply-To: <19c0ec82-59ce-4f46-9a38-cdca059e8867@roeck-us.net>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 29 Mar 2024 10:09:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4ThOE0eC3tfpdXw5uTbqp6AwrZ2M7D_0L_WY6tTH8W9g@mail.gmail.com>
-Message-ID: <CAAhV-H4ThOE0eC3tfpdXw5uTbqp6AwrZ2M7D_0L_WY6tTH8W9g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>
+Date: Fri, 29 Mar 2024 10:17:34 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Po9B5WQMAUfB9jUmGAVit0+NiDbhV4jG5xKJUbWEBOw@mail.gmail.com>
+Message-ID: <CAAhV-H7Po9B5WQMAUfB9jUmGAVit0+NiDbhV4jG5xKJUbWEBOw@mail.gmail.com>
+Subject: Re: Kernel BUG with loongarch and CONFIG_KFENCE and CONFIG_DEBUG_SG
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
+	WANG Xuerui <kernel@xen0n.name>, Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Queued for loongarch-next, thanks.
+Hi, Guenter,
+
+Thank you for your report, we find there are several kfence-related
+problems, and we have solved part of them.
+Link: https://github.com/chenhuacai/linux/commits/loongarch-next
 
 Huacai
 
-On Thu, Mar 28, 2024 at 1:18=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
+On Thu, Mar 28, 2024 at 7:39=E2=80=AFAM Guenter Roeck <linux@roeck-us.net> =
+wrote:
 >
-> This allows compiling a full 128-bit product of two 64-bit integers as
-> a mul/mulh pair, instead of a nasty long sequence of 20+ instructions.
+> On Thu, Mar 28, 2024 at 03:33:03AM +0800, Xi Ruoyao wrote:
+> > On Wed, 2024-03-27 at 12:11 -0700, Guenter Roeck wrote:
+> > > Hi,
+> > >
+> > > when enabling both CONFIG_KFENCE and CONFIG_DEBUG_SG, I get the follo=
+wing
+> > > backtraces when running loongarch images in qemu.
+> > >
+> > > [    2.496257] kernel BUG at include/linux/scatterlist.h:187!
+> > > ...
+> > > [    2.501925] Call Trace:
+> > > [    2.501950] [<9000000004ad59c4>] sg_init_one+0xac/0xc0
+> > > [    2.502204] [<9000000004a438f8>] do_test_kpp+0x278/0x6e4
+> > > [    2.502353] [<9000000004a43dd4>] alg_test_kpp+0x70/0xf4
+> > > [    2.502494] [<9000000004a41b48>] alg_test+0x128/0x690
+> > > [    2.502631] [<9000000004a3d898>] cryptomgr_test+0x20/0x40
+> > > [    2.502775] [<90000000041b4508>] kthread+0x138/0x158
+> > > [    2.502912] [<9000000004161c48>] ret_from_kernel_thread+0xc/0xa4
+> > >
+> > > The backtrace is always similar but not exactly the same. It is alway=
+s
+> > > triggered from cryptomgr_test, but not always from the same test.
+> > >
+> > > Analysis shows that with CONFIG_KFENCE active, the address returned f=
+rom
+> > > kmalloc() and friends is not always below vm_map_base. It is allocate=
+d by
+> > > kfence_alloc() which at least sometimes seems to get its memory from =
+an
+> > > address space above vm_map_base. This causes virt_addr_valid() to ret=
+urn
+> > > false for the affected objects.
+> >
+> > Oops, Xuerui has been haunted by some "random" kernel crashes only
+> > occurring with CONFIG_KFENCE=3Dy for months but we weren't able to tria=
+ge
+> > the issue:
+> >
+> > https://github.com/loongson-community/discussions/issues/34
+> >
+> > Maybe the same issue or not.
+> >
 >
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> Good question. I suspect it might at least be related.
+>
+> Maybe people can try the patch below. It seems to fix the probem for me.
+> It might well be, though, that there are other instances in the code
+> where the same or a similar check is needed.
+>
+> Thanks,
+> Guenter
+>
 > ---
->  arch/loongarch/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+> diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
+> index a9630a81b38a..89af7c12e8c0 100644
+> --- a/arch/loongarch/mm/mmap.c
+> +++ b/arch/loongarch/mm/mmap.c
+> @@ -4,6 +4,7 @@
+>   */
+>  #include <linux/export.h>
+>  #include <linux/io.h>
+> +#include <linux/kfence.h>
+>  #include <linux/memblock.h>
+>  #include <linux/mm.h>
+>  #include <linux/mman.h>
+> @@ -111,6 +112,9 @@ int __virt_addr_valid(volatile void *kaddr)
+>  {
+>         unsigned long vaddr =3D (unsigned long)kaddr;
 >
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index a5f300ec6f28..5a769bb92d7c 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -56,6 +56,7 @@ config LOONGARCH
->         select ARCH_SUPPORTS_ACPI
->         select ARCH_SUPPORTS_ATOMIC_RMW
->         select ARCH_SUPPORTS_HUGETLBFS
-> +       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
->         select ARCH_SUPPORTS_LTO_CLANG
->         select ARCH_SUPPORTS_LTO_CLANG_THIN
->         select ARCH_SUPPORTS_NUMA_BALANCING
-> --
-> 2.44.0
+> +       if (is_kfence_address((void *)kaddr))
+> +               return 1;
+> +
+>         if ((vaddr < PAGE_OFFSET) || (vaddr >=3D vm_map_base))
+>                 return 0;
 >
 >
