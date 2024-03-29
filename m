@@ -1,146 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BFF17558
-	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 02:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003FA3FE44
+	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 07:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711678667; cv=none; b=VikqGObEolr2dU0JC6Y09Xk5Od3QE+q0ZWUt57iESXFOX58usLPEc9GxWXeknj5Fzcz2wBBZS+OPk7WpuWgOXbmeuEL9kCJPn+uUppoJMH97cJam82YMbqqbwhWqamdf6/5CSrvQ9XhXYY6A/LT/790OEwMAwf5pbVQVl84xXkI=
+	t=1711697085; cv=none; b=RkuBFmyjPcM+5YIdouCK3iJklZmxIzJe/6LkkSzpCndfNbCnfpiHGK0kPWDDGK5Uu7kKTlLYqLBPEfSlqPJZBQg6qDB1RY7HSR/WLXux+z+HavDxT5yOMin7S1i1Xr+nhxJ84khm4hLTvHh85Bkh8ghyu0UE/ve3+PeUlEAeGwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711678667; c=relaxed/simple;
-	bh=xrCuD+YstyoRqhd48VlTTFtm9tGhlaBX9bc+CRj9pJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pgS9l1g8zeKYTeyVbFNLgFscwAlRaEnIyqMpBZgGpgTA9mnnTh2GBiCi/7wZu0c6UwMk8vTMWqyo1w75nRfTmoW2nFzuSIEYHaXqv9nx09ZCjvhMV2j8lGqurqOkxxNd1fUWndNYtg+7He4ecE1LopptQZCQgyg6nY7bCJUDz5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ED74/NW+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711697085; c=relaxed/simple;
+	bh=cDdC7qSNGUzpG6UlyjsDWPh/KILcYk93sgCXZ4m0Ofk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A9VkjnLmpragxEM2Mgi4CdeBR070/+sqwa88Rl2gkTIbh8+qD78yiv4mVgBh3pe9DcVXerfBbemzvWp0JMX688XpL9oVBHNxtKH2roPAer/KeAHNHOsh/Y7koONGvi82YTXrxZ6Tr63Ie6equr1WWbUUyTrW5I4PPk9VJLi2QdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=lc3ALbLc; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ED74/NW+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED77C433A6
-	for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 02:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711678666;
-	bh=xrCuD+YstyoRqhd48VlTTFtm9tGhlaBX9bc+CRj9pJ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ED74/NW+POTlHq7NAWGm2TOe4WbK8utSfi61/j+Y5rKuyvqJyOQig2xUr7i/3AQ3T
-	 onuBsM2xx0kcudMv8cbPt6fO1Z/Z7BxrKwYsSvt341yqldDSFMC1ILDKpHdQ3mDMwY
-	 HzGNkHYgXOitFZfOCAcJjBMLxEqVUwivLsnm8GlC/Uqp4L8zaMOk9/QQrVHZaLXJrE
-	 dl6g2jM4FTRVEoVJfqlhMaKkzB8M7DgU/j+wDTn6+cP3hkzy20/VlWK3zsTT+xD8a6
-	 Psa/Uj6iWKKJ6ao2vY/KEoCHhDlOkFBxnOdrgXgbDgZ8KHi2jAfL+/qIws5K2NyOyW
-	 fdK6ughAufu9Q==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51588f70d2dso1815712e87.3
-        for <loongarch@lists.linux.dev>; Thu, 28 Mar 2024 19:17:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUbKam7idZTFSAYbV+2PVIoD8WukM1yCRCwkxEILR2zuNzNo25fnS2L9+dqJkzLOZt7xaJnkJj6zr/yqvNppSGqjpQPzaJKxCIY
-X-Gm-Message-State: AOJu0YyO+YkylNnwwjguRyhBlpKmpWdc1Ebls8J/OmXa7e5smsK53Vj6
-	iHsjWWUD9U689c3CkAahdeuuczEctesk6/a5u7d/zwrRVaNfSE7UeKYDNCZnVuGr3Rb30raa8Ku
-	qjIaz00+8UF0MsMBjaR5HXvGth+s=
-X-Google-Smtp-Source: AGHT+IFIt3xKFHz8f3YRErRQ3+Wd4FtZ5zFcF6pJlLtCFXNYokfAsE16Un+jW38siA3PzcTudqOC3qItwnPJhds/970=
-X-Received: by 2002:a19:ca5c:0:b0:515:9150:ecc1 with SMTP id
- h28-20020a19ca5c000000b005159150ecc1mr620038lfj.24.1711678664699; Thu, 28 Mar
- 2024 19:17:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lc3ALbLc"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so1028214a12.0
+        for <loongarch@lists.linux.dev>; Fri, 29 Mar 2024 00:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1711697083; x=1712301883; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+9VxbCTgzZ80UmziOWsKJFOvNNy0Qw1c5wWNUXcCD38=;
+        b=lc3ALbLcqs/l/x55OMPsS+ELyRksk/OvyH9Q7v0jgAk9pXZNpOQ2h1X4LVOwvJY6fL
+         l65J2ldMfGlrkrcY8zfEGZxXEbWhy2ariDz+tTP4o47llwtpouaDCndMWPdM/bo13MFg
+         KyNVsGiYBWuMxzQSWTi+MKCl8RoiUT5oYO3zsaPv3WB+PHlYhLb1o5Sk5OoAVRgM8seb
+         Q4CzeG+epdiUyv+MPh6LyvJTRhQSDse5tnzU1LSKgKo2/8fIHsL+QMF1Yqtcq1wVNhQL
+         Pb/USbpNtxQZlkuwbACBplh2etb+xw8bUiZbfeiaIMwBGYoSL8xU9CpkARmqpl+n4/07
+         bn5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711697083; x=1712301883;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+9VxbCTgzZ80UmziOWsKJFOvNNy0Qw1c5wWNUXcCD38=;
+        b=DFY5SH2j8rY83Q8EpxvtpMi0e/EEOj4Dq59y9FUIGRZzL40o3/Ye65ByYiJNWbVVTp
+         axRwZtfnJEmiCBphxg2Mzhi/URPpVqOiavZX0TytmOqqFARS5VvfbYq52APQhOmaGeIv
+         jlZ07dtEeC2T79M/0F204wZ7njo7ENWGHf02Eg8EP9KqRwjzNubxiuN428T2nfJop5pU
+         TcjEz/2z/rBfYPFcCLtlCe92OstCeau6Cmj7YMsUxnOpA3CWgAiFufkbWasZxwZ5/cb0
+         R9BWiBVY3tWCe1vL1O3Gh7LNaK2WaZK5YlTDAZCNbj56jokLEEdKLimyTxUsdvJTjtnJ
+         mwyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZeqmQPdmXILdjL7N/pAJO3oJZqe/hBs181NXYd6Q40HUWQen4o1+4ABOe/vjBY74Vp1C/9ZGvKhu/wpXTrwoIrI8kz6RUierc
+X-Gm-Message-State: AOJu0YxpLimt4QwbMqnf1d+cgN4k8EclBOYpw4F3poeRYPL4p7GYZGsJ
+	Y5p36sGyyscTK53ApY5N9YOJUqvMlzAdShW+ANuCDhQ717Im1SSx/FuBJ1FIYS8=
+X-Google-Smtp-Source: AGHT+IEb5QR4f0wxokXnCFueIg3e5DUC8zxXcfXICifgdBJpQrnHEBOFNWDHzDiuuKhBOVbgthprFw==
+X-Received: by 2002:a05:6a20:ce4d:b0:1a3:c460:1a4f with SMTP id id13-20020a056a20ce4d00b001a3c4601a4fmr1590367pzb.59.1711697083202;
+        Fri, 29 Mar 2024 00:24:43 -0700 (PDT)
+Received: from sw06.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id b8-20020a17090a010800b0029ddac03effsm4971798pjb.11.2024.03.29.00.24.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Mar 2024 00:24:42 -0700 (PDT)
+From: Samuel Holland <samuel.holland@sifive.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	Christoph Hellwig <hch@lst.de>,
+	loongarch@lists.linux.dev,
+	amd-gfx@lists.freedesktop.org,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH v4 00/15] Unified cross-architecture kernel-mode FPU API
+Date: Fri, 29 Mar 2024 00:18:15 -0700
+Message-ID: <20240329072441.591471-1-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <c352829b-ed75-4ffd-af6e-0ea754e1bf3d@roeck-us.net>
- <4d2373e3f0694fd02137a72181d054ee2ebcca45.camel@xry111.site> <19c0ec82-59ce-4f46-9a38-cdca059e8867@roeck-us.net>
-In-Reply-To: <19c0ec82-59ce-4f46-9a38-cdca059e8867@roeck-us.net>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 29 Mar 2024 10:17:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7Po9B5WQMAUfB9jUmGAVit0+NiDbhV4jG5xKJUbWEBOw@mail.gmail.com>
-Message-ID: <CAAhV-H7Po9B5WQMAUfB9jUmGAVit0+NiDbhV4jG5xKJUbWEBOw@mail.gmail.com>
-Subject: Re: Kernel BUG with loongarch and CONFIG_KFENCE and CONFIG_DEBUG_SG
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	WANG Xuerui <kernel@xen0n.name>, Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Guenter,
+This series unifies the kernel-mode FPU API across several architectures
+by wrapping the existing functions (where needed) in consistently-named
+functions placed in a consistent header location, with mostly the same
+semantics: they can be called from preemptible or non-preemptible task
+context, and are not assumed to be reentrant. Architectures are also
+expected to provide CFLAGS adjustments for compiling FPU-dependent code.
+For the moment, SIMD/vector units are out of scope for this common API.
 
-Thank you for your report, we find there are several kfence-related
-problems, and we have solved part of them.
-Link: https://github.com/chenhuacai/linux/commits/loongarch-next
+This allows us to remove the ifdeffery and duplicated Makefile logic at
+each FPU user. It then implements the common API on RISC-V, and converts
+a couple of users to the new API: the AMDGPU DRM driver, and the FPU
+self test.
 
-Huacai
+The underlying goal of this series is to allow using newer AMD GPUs
+(e.g. Navi) on RISC-V boards such as SiFive's HiFive Unmatched. Those
+GPUs need CONFIG_DRM_AMD_DC_FP to initialize, which requires kernel-mode
+FPU support.
 
-On Thu, Mar 28, 2024 at 7:39=E2=80=AFAM Guenter Roeck <linux@roeck-us.net> =
-wrote:
->
-> On Thu, Mar 28, 2024 at 03:33:03AM +0800, Xi Ruoyao wrote:
-> > On Wed, 2024-03-27 at 12:11 -0700, Guenter Roeck wrote:
-> > > Hi,
-> > >
-> > > when enabling both CONFIG_KFENCE and CONFIG_DEBUG_SG, I get the follo=
-wing
-> > > backtraces when running loongarch images in qemu.
-> > >
-> > > [    2.496257] kernel BUG at include/linux/scatterlist.h:187!
-> > > ...
-> > > [    2.501925] Call Trace:
-> > > [    2.501950] [<9000000004ad59c4>] sg_init_one+0xac/0xc0
-> > > [    2.502204] [<9000000004a438f8>] do_test_kpp+0x278/0x6e4
-> > > [    2.502353] [<9000000004a43dd4>] alg_test_kpp+0x70/0xf4
-> > > [    2.502494] [<9000000004a41b48>] alg_test+0x128/0x690
-> > > [    2.502631] [<9000000004a3d898>] cryptomgr_test+0x20/0x40
-> > > [    2.502775] [<90000000041b4508>] kthread+0x138/0x158
-> > > [    2.502912] [<9000000004161c48>] ret_from_kernel_thread+0xc/0xa4
-> > >
-> > > The backtrace is always similar but not exactly the same. It is alway=
-s
-> > > triggered from cryptomgr_test, but not always from the same test.
-> > >
-> > > Analysis shows that with CONFIG_KFENCE active, the address returned f=
-rom
-> > > kmalloc() and friends is not always below vm_map_base. It is allocate=
-d by
-> > > kfence_alloc() which at least sometimes seems to get its memory from =
-an
-> > > address space above vm_map_base. This causes virt_addr_valid() to ret=
-urn
-> > > false for the affected objects.
-> >
-> > Oops, Xuerui has been haunted by some "random" kernel crashes only
-> > occurring with CONFIG_KFENCE=3Dy for months but we weren't able to tria=
-ge
-> > the issue:
-> >
-> > https://github.com/loongson-community/discussions/issues/34
-> >
-> > Maybe the same issue or not.
-> >
->
-> Good question. I suspect it might at least be related.
->
-> Maybe people can try the patch below. It seems to fix the probem for me.
-> It might well be, though, that there are other instances in the code
-> where the same or a similar check is needed.
->
-> Thanks,
-> Guenter
->
-> ---
-> diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
-> index a9630a81b38a..89af7c12e8c0 100644
-> --- a/arch/loongarch/mm/mmap.c
-> +++ b/arch/loongarch/mm/mmap.c
-> @@ -4,6 +4,7 @@
->   */
->  #include <linux/export.h>
->  #include <linux/io.h>
-> +#include <linux/kfence.h>
->  #include <linux/memblock.h>
->  #include <linux/mm.h>
->  #include <linux/mman.h>
-> @@ -111,6 +112,9 @@ int __virt_addr_valid(volatile void *kaddr)
->  {
->         unsigned long vaddr =3D (unsigned long)kaddr;
->
-> +       if (is_kfence_address((void *)kaddr))
-> +               return 1;
-> +
->         if ((vaddr < PAGE_OFFSET) || (vaddr >=3D vm_map_base))
->                 return 0;
->
->
+Previous versions:
+v3: https://lore.kernel.org/linux-kernel/20240327200157.1097089-1-samuel.holland@sifive.com/
+v2: https://lore.kernel.org/linux-kernel/20231228014220.3562640-1-samuel.holland@sifive.com/
+v1: https://lore.kernel.org/linux-kernel/20231208055501.2916202-1-samuel.holland@sifive.com/
+v0: https://lore.kernel.org/linux-kernel/20231122030621.3759313-1-samuel.holland@sifive.com/
+
+Changes in v4:
+ - Add missed CFLAGS changes for recov_neon_inner.c
+   (fixes arm build failures)
+ - Fix x86 include guard issue (fixes x86 build failures)
+
+Changes in v3:
+ - Rebase on v6.9-rc1
+ - Limit riscv ARCH_HAS_KERNEL_FPU_SUPPORT to 64BIT
+
+Changes in v2:
+ - Add documentation explaining the built-time and runtime APIs
+ - Add a linux/fpu.h header for generic isolation enforcement
+ - Remove file name from header comment
+ - Clean up arch/arm64/lib/Makefile, like for arch/arm
+ - Remove RISC-V architecture-specific preprocessor check
+ - Split altivec removal to a separate patch
+ - Use linux/fpu.h instead of asm/fpu.h in consumers
+ - Declare test_fpu() in a header
+
+Michael Ellerman (1):
+  drm/amd/display: Only use hard-float, not altivec on powerpc
+
+Samuel Holland (14):
+  arch: Add ARCH_HAS_KERNEL_FPU_SUPPORT
+  ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  ARM: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
+  arm64: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  arm64: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
+  lib/raid6: Use CC_FLAGS_FPU for NEON CFLAGS
+  LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  powerpc: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  x86/fpu: Fix asm/fpu/types.h include guard
+  x86: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+  riscv: Add support for kernel-mode FPU
+  drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+  selftests/fpu: Move FP code to a separate translation unit
+  selftests/fpu: Allow building on other architectures
+
+ Documentation/core-api/floating-point.rst     | 78 +++++++++++++++++++
+ Documentation/core-api/index.rst              |  1 +
+ Makefile                                      |  5 ++
+ arch/Kconfig                                  |  6 ++
+ arch/arm/Kconfig                              |  1 +
+ arch/arm/Makefile                             |  7 ++
+ arch/arm/include/asm/fpu.h                    | 15 ++++
+ arch/arm/lib/Makefile                         |  3 +-
+ arch/arm64/Kconfig                            |  1 +
+ arch/arm64/Makefile                           |  9 ++-
+ arch/arm64/include/asm/fpu.h                  | 15 ++++
+ arch/arm64/lib/Makefile                       |  6 +-
+ arch/loongarch/Kconfig                        |  1 +
+ arch/loongarch/Makefile                       |  5 +-
+ arch/loongarch/include/asm/fpu.h              |  1 +
+ arch/powerpc/Kconfig                          |  1 +
+ arch/powerpc/Makefile                         |  5 +-
+ arch/powerpc/include/asm/fpu.h                | 28 +++++++
+ arch/riscv/Kconfig                            |  1 +
+ arch/riscv/Makefile                           |  3 +
+ arch/riscv/include/asm/fpu.h                  | 16 ++++
+ arch/riscv/kernel/Makefile                    |  1 +
+ arch/riscv/kernel/kernel_mode_fpu.c           | 28 +++++++
+ arch/x86/Kconfig                              |  1 +
+ arch/x86/Makefile                             | 20 +++++
+ arch/x86/include/asm/fpu.h                    | 13 ++++
+ arch/x86/include/asm/fpu/types.h              |  6 +-
+ drivers/gpu/drm/amd/display/Kconfig           |  2 +-
+ .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    | 35 +--------
+ drivers/gpu/drm/amd/display/dc/dml/Makefile   | 36 +--------
+ drivers/gpu/drm/amd/display/dc/dml2/Makefile  | 36 +--------
+ include/linux/fpu.h                           | 12 +++
+ lib/Kconfig.debug                             |  2 +-
+ lib/Makefile                                  | 26 +------
+ lib/raid6/Makefile                            | 33 +++-----
+ lib/test_fpu.h                                |  8 ++
+ lib/{test_fpu.c => test_fpu_glue.c}           | 37 ++-------
+ lib/test_fpu_impl.c                           | 37 +++++++++
+ 38 files changed, 348 insertions(+), 193 deletions(-)
+ create mode 100644 Documentation/core-api/floating-point.rst
+ create mode 100644 arch/arm/include/asm/fpu.h
+ create mode 100644 arch/arm64/include/asm/fpu.h
+ create mode 100644 arch/powerpc/include/asm/fpu.h
+ create mode 100644 arch/riscv/include/asm/fpu.h
+ create mode 100644 arch/riscv/kernel/kernel_mode_fpu.c
+ create mode 100644 arch/x86/include/asm/fpu.h
+ create mode 100644 include/linux/fpu.h
+ create mode 100644 lib/test_fpu.h
+ rename lib/{test_fpu.c => test_fpu_glue.c} (71%)
+ create mode 100644 lib/test_fpu_impl.c
+
+-- 
+2.44.0
+
