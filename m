@@ -1,115 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C93129D06
-	for <loongarch@lists.linux.dev>; Sat, 30 Mar 2024 13:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F8C1D540
+	for <loongarch@lists.linux.dev>; Sat, 30 Mar 2024 14:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711807198; cv=none; b=g1X7yDjoIlpTvrB9dgS8G6BORg3CuP6amwgy8DvYz9+a+pErKuVpqekd4cI1cnZANfv0BmTVbYFPVnv4Sem2Do2LDvWfVof6Qs8yNoXFOdbwT1SLd0WDRI1dB56dwFjbkMEMoA/GTWOs7/3532BpA70OqnKhC2pPbQkNLW9GhgY=
+	t=1711808659; cv=none; b=eZb75CjANSPydCB47zC7H8dA4yq+ahfrnvPlVqRaq16u/02ERK01DznoaFUmDlR63Nn15aCFAgPMm8AI/kTnc9Dbd6jV1F3ThDwmVgT8vi3YUwZE/tbSlLaldRmbfXkVn9ipdydUg4MO5MDTHfYBDw+f3EciHWiXfwnSDV5CiEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711807198; c=relaxed/simple;
-	bh=FGD97a2BLDJE4wXb5b/jxGrqNvSwEG6LTQPxYP1fNkQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QkEBfeOCD2IrhWTXhcJgvgPmwPDHc4AVfbas1FJk4u1rQNTczN4qyJyybRClcL++KwZ9fGazMj8pAgSAjfJMugeGcjCYIhE96jkgpowa7OApI8bI7fwGO4OEW6N/SV8ULb5F5+JF/DjAGhn399UVCSmgUWcKrLIwMT8ZIBRgf8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vl8F1+0G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711808659; c=relaxed/simple;
+	bh=RpXyyIUYJRFbE/drwS6Gi5Were0vXBmKDIXy6H9sZWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=ROmi04TfGmHlOYDFfOoOFGSu+YirryoFOXD8xRshHTL9Qy/RnNWVSRHuMREGb1H2x6owXAvz28cgRuK43HL39BetkcBT0vD21uTy49uaZ9lOdtLeJ85Wh9KFpFHSlMFMfbag5t7HJtUxDvE9hY7jAGmxOp2MfqYAz78D2mFxLKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VhsZYwqk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vl8F1+0G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E984C433F1
-	for <loongarch@lists.linux.dev>; Sat, 30 Mar 2024 13:59:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711807198;
-	bh=FGD97a2BLDJE4wXb5b/jxGrqNvSwEG6LTQPxYP1fNkQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Vl8F1+0G66SuOSa0IW5EuQqh1sHWTEhu8p5uCySHbMMhanIpU9WGcRYZro87GsOi0
-	 fW5I3bHSyNASIs9gHDTHdInBSI17sYC7w4x1lq8xxVwiFWZYRymZziMFeim3AIXwjr
-	 XXTHeokxjMa0FMC23DKWe/UmDaqptQKoehC9kzYD63z+IVVhg1dEB0Y+gZ8AU1Nw0C
-	 1bZR+4Maq9j99bXJDqNKBM34L6MnEwGH+L5efx9d8SzY3ohP+4AuMNBc9UMZQsyokU
-	 yl4hCNk0C74QNCU+LykeGCBfBMqiqvddSRcs1N105u0+Kbh8vg1GRZF3NYuULDIUS7
-	 8zslmdO9is0RA==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a4e39f5030dso161407466b.0
-        for <loongarch@lists.linux.dev>; Sat, 30 Mar 2024 06:59:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4ccs7ZLpKM6LzKoeNT2ZlTrjXTeiGp43AVZwsEOsqMcwv/yrcZXf8jTsDeb/wBTnxTeHeHPK+c3nXK3fSYRCNGoVqWAxO7Lfz
-X-Gm-Message-State: AOJu0Yx7WQihRVO7bJJpdnzKdV2mLLv8e3sCY64pvjdkUQrxADgssHq6
-	63OR/82Afw9XwV33FWa+ZAq0TtRtGK80jUAMSun2DoJTn8HSZY2x2LINswUXzS/wIL03vxnwGTC
-	T7Lejym0ikwvbWfNfysJFHfWe0Os=
-X-Google-Smtp-Source: AGHT+IHc3m2uZv7lcnXrkX1wRtlEpjeE35rVhJUzINHtpYXXLFAaIbzPIfaS5VBxQZkz1jOW3uw1Ht4ocwxkRM0QZUg=
-X-Received: by 2002:a17:906:48c6:b0:a4e:4bb2:2ab1 with SMTP id
- d6-20020a17090648c600b00a4e4bb22ab1mr1372473ejt.20.1711807196707; Sat, 30 Mar
- 2024 06:59:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VhsZYwqk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711808656;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8HbCGyy1GVrVUNL7zlMzVEy/UJRgHTJ0kZQntvsmDig=;
+	b=VhsZYwqkzQsUZyo0OdPkV9zY3G4/tckLsctVOLe+11dbutSY+VEAGT1UCf/dPynUXEeFUs
+	jTJr3mjQVrEQPofanNM+s2/8aJvCT7n9JJ/nY8sMqrZZkToUf3Fp8eBmbbdbqqWWbOqhP2
+	k/jDl/PBSfV5qpEXuZkAht/E9NLAWLI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-658-oZ4t53_4MXydy8zt9jpAOA-1; Sat,
+ 30 Mar 2024 10:24:12 -0400
+X-MC-Unique: oZ4t53_4MXydy8zt9jpAOA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9EE4638000A5;
+	Sat, 30 Mar 2024 14:24:11 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 468433C20;
+	Sat, 30 Mar 2024 14:24:09 +0000 (UTC)
+Date: Sat, 30 Mar 2024 22:23:47 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kexec@lists.infradead.org, akpm@linux-foundation.org,
+	geert@linux-m68k.org, WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH 1/2] arch/loongarch: clean up the left code and Kconfig
+ item related to CRASH_CORE
+Message-ID: <ZgggcyeJ1bnkfGOp@MiWiFi-R3L-srv>
+References: <20240329132825.1102459-1-bhe@redhat.com>
+ <20240329132825.1102459-2-bhe@redhat.com>
+ <CAAhV-H76-FOvcTXB_rW1B1wFthYK6txVtC+brfzk6nwOhar8iQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240329132825.1102459-1-bhe@redhat.com> <20240329132825.1102459-2-bhe@redhat.com>
-In-Reply-To: <20240329132825.1102459-2-bhe@redhat.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 30 Mar 2024 21:59:45 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H76-FOvcTXB_rW1B1wFthYK6txVtC+brfzk6nwOhar8iQ@mail.gmail.com>
-Message-ID: <CAAhV-H76-FOvcTXB_rW1B1wFthYK6txVtC+brfzk6nwOhar8iQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arch/loongarch: clean up the left code and Kconfig
- item related to CRASH_CORE
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, geert@linux-m68k.org, 
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H76-FOvcTXB_rW1B1wFthYK6txVtC+brfzk6nwOhar8iQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Queued, thanks.
+On 03/30/24 at 09:59pm, Huacai Chen wrote:
+> Queued, thanks.
 
-Huacai
+Thanks, Huacai. While I noticed Andrew has queued this patchset in his
+mm-unstable branch.
 
-On Fri, Mar 29, 2024 at 9:28=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
->
-> In commit 85fcde402db1 ("kexec: split crashkernel reservation code
-> out from crash_core.c"), crashkernel reservation code is split out from
-> crash_core.c, and add CRASH_RESERVE to control it. And also rename each
-> ARCH's <asm/crash_core.h> to <asm/crash_reserve.h> accordingly.
->
-> But the relevant part in loongarch is missed. Do it now.
->
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: loongarch@lists.linux.dev
-> ---
->  arch/loongarch/Kconfig                                       | 2 +-
->  arch/loongarch/include/asm/{crash_core.h =3D> crash_reserve.h} | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
->  rename arch/loongarch/include/asm/{crash_core.h =3D> crash_reserve.h} (7=
-5%)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index a5f300ec6f28..54ad04dacdee 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -595,7 +595,7 @@ config ARCH_SELECTS_CRASH_DUMP
->         select RELOCATABLE
->
->  config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> -       def_bool CRASH_CORE
-> +       def_bool CRASH_RESERVE
->
->  config RELOCATABLE
->         bool "Relocatable kernel"
-> diff --git a/arch/loongarch/include/asm/crash_core.h b/arch/loongarch/inc=
-lude/asm/crash_reserve.h
-> similarity index 75%
-> rename from arch/loongarch/include/asm/crash_core.h
-> rename to arch/loongarch/include/asm/crash_reserve.h
-> index 218bdbfa527b..a1d9b84b1c7d 100644
-> --- a/arch/loongarch/include/asm/crash_core.h
-> +++ b/arch/loongarch/include/asm/crash_reserve.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0-only */
-> -#ifndef _LOONGARCH_CRASH_CORE_H
-> -#define _LOONGARCH_CRASH_CORE_H
-> +#ifndef _LOONGARCH_CRASH_RESERVE_H
-> +#define _LOONGARCH_CRASH_RESERVE_H
->
->  #define CRASH_ALIGN                    SZ_2M
->
-> --
-> 2.41.0
->
+> 
+> Huacai
+> 
+> On Fri, Mar 29, 2024 at 9:28 PM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > In commit 85fcde402db1 ("kexec: split crashkernel reservation code
+> > out from crash_core.c"), crashkernel reservation code is split out from
+> > crash_core.c, and add CRASH_RESERVE to control it. And also rename each
+> > ARCH's <asm/crash_core.h> to <asm/crash_reserve.h> accordingly.
+> >
+> > But the relevant part in loongarch is missed. Do it now.
+> >
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > Cc: Huacai Chen <chenhuacai@kernel.org>
+> > Cc: WANG Xuerui <kernel@xen0n.name>
+> > Cc: loongarch@lists.linux.dev
+> > ---
+> >  arch/loongarch/Kconfig                                       | 2 +-
+> >  arch/loongarch/include/asm/{crash_core.h => crash_reserve.h} | 4 ++--
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> >  rename arch/loongarch/include/asm/{crash_core.h => crash_reserve.h} (75%)
+> >
+> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> > index a5f300ec6f28..54ad04dacdee 100644
+> > --- a/arch/loongarch/Kconfig
+> > +++ b/arch/loongarch/Kconfig
+> > @@ -595,7 +595,7 @@ config ARCH_SELECTS_CRASH_DUMP
+> >         select RELOCATABLE
+> >
+> >  config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> > -       def_bool CRASH_CORE
+> > +       def_bool CRASH_RESERVE
+> >
+> >  config RELOCATABLE
+> >         bool "Relocatable kernel"
+> > diff --git a/arch/loongarch/include/asm/crash_core.h b/arch/loongarch/include/asm/crash_reserve.h
+> > similarity index 75%
+> > rename from arch/loongarch/include/asm/crash_core.h
+> > rename to arch/loongarch/include/asm/crash_reserve.h
+> > index 218bdbfa527b..a1d9b84b1c7d 100644
+> > --- a/arch/loongarch/include/asm/crash_core.h
+> > +++ b/arch/loongarch/include/asm/crash_reserve.h
+> > @@ -1,6 +1,6 @@
+> >  /* SPDX-License-Identifier: GPL-2.0-only */
+> > -#ifndef _LOONGARCH_CRASH_CORE_H
+> > -#define _LOONGARCH_CRASH_CORE_H
+> > +#ifndef _LOONGARCH_CRASH_RESERVE_H
+> > +#define _LOONGARCH_CRASH_RESERVE_H
+> >
+> >  #define CRASH_ALIGN                    SZ_2M
+> >
+> > --
+> > 2.41.0
+> >
+> 
+
