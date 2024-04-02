@@ -1,62 +1,97 @@
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163C458AB2
-	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 10:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 460F1627FC
+	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 11:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712054770; cv=none; b=plw1wpXyPQ9F9AY6azlHWq9+f9BzBP2ReYSZnlggJhZXoO5+uThStC4hDlFv5jS//HYiZ2n+LN8HQbwIQ390KmNA6UXnCmz30OcI1lKkWoAcko7TfEmOqB/g/00OHvJiSbGvq5Bpfj42VNWd9jgb04gXq8CPwORF/w9Y68hJQeo=
+	t=1712056925; cv=none; b=MQ9QvJwaJhRsWAzz7Z/GlLPIChpIBqcx/3rfK++IF0tymOS4SGD415tTJ/6KPUOvAzBKkxeIsrBYuJK7cynuSKVmBLdWq7FIkNLdiRWP/4u4JxxZA/MCMhKAdPqS+0PidyQCphxp1SU67DiNDe9wiYf7VTsnutEiTUbzsrQXcns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712054770; c=relaxed/simple;
-	bh=BwFIqznhYSYPd8an0Q2AyYq224PV4XlpCYp/tz+LHdU=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=WcekwySxQHqBcDaeyPXzblRvgpG1qCgKFQ6FIGyTBTCleMnPVwvx3QGBcTK8dEv4AcVKVOMjYZHCUmDUqVU2ip5Ogtrsjp4zcxWr8nTxV4dnxGt7C0kHFDBKVg5VPwMX6xmhKL4Of/pwvbXRvNJpeXzSfpMp5y1fBvD3HCCgpdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-GoodBg: 1
-X-QQ-SSF: 00400000000000F0
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-FEAT: +ynUkgUhZJkXJ2GkVrAA9ITwCMeqGEJyg7gbtaR1iiaMCqpI6vaifUXdwjFYG
-	5U1zWO3XFcFaZ62i3wALBksaW6ZaL1uoFOV0eBC9Y7tpf6+apvRrZ7cES1KFu2PW59/go/k
-	WQ8pAOp73PrC5E/iWVNf68gxgIzYAkzuZvoz19mwB+j2ebVefaAzbUGnkTs+b+IQg/rpf2T
-	6omaPTc5D/nODZkslWljv/UPRXGjvWYkpDzd3D9dUH7U4r7S1Rgn9LKzhXGxVu7I95HgxWt
-	hcaLd3NEE8pG2KklyhD1azaU/MMS/Xy6Z1dQ6t97MvdZ1Q0fFU9XrhNnQpiXhT/ZzHq3Ju4
-	hRRGffWAnX+irMmcl4Q4aa+vhAIKMzI5bkzF+9TN2Ef7YNk0sT9BlpX68pPHw==
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: B4F1NIpmc8L+ioATNeMek/eIAECDvCDomBf9TwzzcB8=
-X-QQ-STYLE: 
-X-QQ-mid: t5gz7a-2t1712054752t2506555
-From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>, "=?utf-8?B?emhhb3RpYW5ydWk=?=" <zhaotianrui@loongson.cn>
-Cc: "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?a3Zt?=" <kvm@vger.kernel.org>
-Subject: Re: [PATCH] LoongArch: KVM: Remove useless MODULE macro for MODULE_DEVICE_TABLE
+	s=arc-20240116; t=1712056925; c=relaxed/simple;
+	bh=K2KF0PpTcBGK9pz41kFknD/l+QfW5T0zNmdQF5t5FsE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=M4nFgGsR3yRXFlIygB57KqtGeyq1xuoHZopYbNg35RLE0UVd/13t0Lj7DtRgWOpAE1RHqFvhIM3BWwfZuWewIyvi2A7QLmp0dHwigCMaNqWS+CrvaGk/IsVFDHqBoZB4bTEuY2BV+PEc+spS/H3f+v+zEsUuUj/qUwZhmlj+BGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8BxOPBX6gtmE04iAA--.13831S3;
+	Tue, 02 Apr 2024 19:21:59 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPBNT6gtmmctxAA--.23693S3;
+	Tue, 02 Apr 2024 19:21:57 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Remove useless MODULE macro for
+ MODULE_DEVICE_TABLE
+To: Wentao Guan <guanwentao@uniontech.com>, zhaotianrui@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Yuli Wang <wangyuli@uniontech.com>
+References: <20240402103942.20049-1-guanwentao@uniontech.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <31d39556-79d9-52eb-36aa-5897aea6e28e@loongson.cn>
+Date: Tue, 2 Apr 2024 19:21:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Tue, 2 Apr 2024 10:45:51 +0000
-X-Priority: 3
-Message-ID: <tencent_411F127936C0F14A261A445E@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <20240402103942.20049-1-guanwentao@uniontech.com>
-	<453b49801d789523f7366507d1620728315b1097.camel@xry111.site>
-In-Reply-To: <453b49801d789523f7366507d1620728315b1097.camel@xry111.site>
-X-QQ-ReplyHash: 4178647614
-X-BIZMAIL-ID: 486678769786288338
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Tue, 02 Apr 2024 18:45:53 +0800 (CST)
-Feedback-ID: t:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+MIME-Version: 1.0
+In-Reply-To: <20240402103942.20049-1-guanwentao@uniontech.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxPBNT6gtmmctxAA--.23693S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Gr1ruF1xKF1xtw1rGry7XFc_yoWDArb_Zr
+	17Jwn7urW8Xw12v3Wvg3W5G347W3WkGFs0ka42yrn7uF1SqrWayrs7Gwn8Aw1jqrWFyFs3
+	Aa95Z3ZIkw17tosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbakYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
+	wI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+	AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
+	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
+	WIevJa73UjIFyTuYvjxUcyxRUUUUU
 
-T0ssIGl0IHdpbGwgcmVzZW5kIGluIFBBVENIIFYyLg0KSSBoYXZlIGEgbWlzdGFrZSB0byBu
-b3QgYWRkICJfX21heWJlX3VudXNlZCIgaW4gY3B1X2ZlYXR1cmUgc3RydWN0dXJlLg==
+
+
+On 2024/4/2 下午6:39, Wentao Guan wrote:
+> MODULE_DEVICE_TABLE use ifdef MODULE macro in module.h,
+> just clean it up.
+> 
+> Suggested-by: Yuli Wang <wangyuli@uniontech.com>
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+> ---
+>   arch/loongarch/kvm/main.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> index 86a2f2d0cb27..7f2bd9a0814c 100644
+> --- a/arch/loongarch/kvm/main.c
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -410,10 +410,8 @@ static void kvm_loongarch_exit(void)
+>   module_init(kvm_loongarch_init);
+>   module_exit(kvm_loongarch_exit);
+>   
+> -#ifdef MODULE
+>   static const struct cpu_feature kvm_feature[] = {
+>   	{ .feature = cpu_feature(LOONGARCH_LVZ) },
+>   	{},
+>   };
+Wentao,
+
+Thanks for your patch, there is static variable kvm_feature
+which is embraced by macro MODULE also :-), besides MODULE_DEVICE_TABLE.
+
+Regards
+Bibo Mao
+>   MODULE_DEVICE_TABLE(cpu, kvm_feature);
+> -#endif
+> 
 
