@@ -1,81 +1,70 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D8C58172E
-	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 13:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8848312C526
+	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 14:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063222; cv=none; b=nZ+kWBlmPKfu9/YxKHOv5e3moM7hhwEeji9eenVJThKK0stA9ia9YBvls5VEc/PEYKkqiJyAyGYEsBcdoWDBb45QJ2pqsz8w2xrPBxmtZdklFWz6PbhDMKXbxBJC5kF+8KEabKg+2JqwzcoSoALgduWSY3Pu9hSimRcGl253qSo=
+	t=1712068760; cv=none; b=K9dJkobsV02aKfL6dohbJpvWnkgo1NmjwZwoWljr588eRBb0aiBjGOqROhJ/EvWL3Z9FUHkxIpLtzc3EqqXVz0LxVhqZ7Yq/ZRAAkBeGPNMi18hiIuhtlNkH9d7f1AsJSiWGhp8EimsA9Q7AhDEA3NyUWIgllmeGIN46K2CwbBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063222; c=relaxed/simple;
-	bh=2pwW/L80mNXkfO0ONij8M4+gNmy+QVEEYfMISxXbzYc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RtDUB3KJGoK9N+yBn+Elx26d7Uj0i+nVvElJs+DJa+0B3qoDq6ohPhgIhwtCWb4aS6UaDPyme6cXegWqlhJmz/1//ZC5lhkhSgY6ficmDpbZ7y54scJVOTwztXJnll/b+xgyDW31dljgXy31LriWYOwSqNP9BNypaLsrr/7QE7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8AxafDxAgxmHVUiAA--.14007S3;
-	Tue, 02 Apr 2024 21:06:58 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxCBLuAgxmG9hxAA--.13009S3;
-	Tue, 02 Apr 2024 21:06:56 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Remove useless MODULE macro for
- MODULE_DEVICE_TABLE
-To: Wentao Guan <guanwentao@uniontech.com>,
- zhaotianrui <zhaotianrui@loongson.cn>
-Cc: loongarch <loongarch@lists.linux.dev>,
- linux-kernel <linux-kernel@vger.kernel.org>, =?UTF-8?B?546L5pix5Yqb?=
- <wangyuli@uniontech.com>
-References: <20240402103942.20049-1-guanwentao@uniontech.com>
- <31d39556-79d9-52eb-36aa-5897aea6e28e@loongson.cn>
- <tencent_0ED20EAF678A7C93309EA4F6@qq.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <2ca6c120-858c-7c52-73c4-71609cd8c10c@loongson.cn>
-Date: Tue, 2 Apr 2024 21:06:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1712068760; c=relaxed/simple;
+	bh=G9e3W6N3bGr1P9TdCCpqgJEi3f3tuItHV5g5Hh8D9nI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FGS8OF43mpr+/xNDOdTko52zKNeNxKjzQ7GXyGUwLPdz2c8fEFPQc52noInX2QOAmSCPzuQfeRnOlz6ujTDTcYMdH2pwfQ1p48AJM706aE9eb13NtmalBWtIR4Y0UayDanwTqXquFYJ5TzlhqifIYcDvuMwvYXvjIR3LIytXQyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8/Ch1Ok; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8/Ch1Ok"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E72DC4167D
+	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 14:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712068760;
+	bh=G9e3W6N3bGr1P9TdCCpqgJEi3f3tuItHV5g5Hh8D9nI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=h8/Ch1OkS7CAP5n+48xcvGIE7UgD2heYBNjBFPUSY0UtPT7iahu/crhpOqwbN1/wt
+	 GeoiaX8ti1adi9NdAf7YNZ2g41djcGdMFl8RGx/CCaLFytbDByMmbTBikgynXmu3Bu
+	 yZ6gexjek6WsGEXN38EG95dT91IZUX2qBlJDGbNZYepcqbXAwbg29qwowe6+nDItCk
+	 HSWGwlm/ivw1lrWMx1rrNr+T/ar1R867hrkCBbBx3msQgUR/8cCBa4+PH9ojGBk1UH
+	 eWvs4fvgy8g10nb0RMY0MgNXO83gLbb9zEOx9rmda3HspF/27kMZidj+ARDffmiVnH
+	 JKoVlcdjS2MGQ==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a46cd9e7fcaso671881366b.1
+        for <loongarch@lists.linux.dev>; Tue, 02 Apr 2024 07:39:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW1w+7jjLKOIAki8TCuBSuEKVtjTikhrsxsfm39qHMZFWil1d0/68telJGIDyEVDx0wBDuDPzADhlrBqB5jMifcw2wxCQG9ENFr
+X-Gm-Message-State: AOJu0YyIb1BesA3X1IB0FEDeiPKaSKojmXUxlQzpiK6/bCkhJYBT61iM
+	uPpOlEg8rY6J/6mUt3eyjrlhseMoe16g2nZ2miuIUUh8eAmDjQ3Miox6/BJKO41R1/aLw7Ji9cj
+	DihOrlHdDRF0y2kvDn10b0AhqK90=
+X-Google-Smtp-Source: AGHT+IEDdSG9sDtVsGsvj6ZspsV1SWCK7mu10zLwlkz1tnJkelJ4bPKskClQLYly4SO9mHsh+ctTQKTSSIS21vop3EU=
+X-Received: by 2002:a17:906:957:b0:a4e:2ad1:52f2 with SMTP id
+ j23-20020a170906095700b00a4e2ad152f2mr9051652ejd.6.1712068758766; Tue, 02 Apr
+ 2024 07:39:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <tencent_0ED20EAF678A7C93309EA4F6@qq.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxCBLuAgxmG9hxAA--.13009S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
-	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-	cSsGvfC2KfnxnUUI43ZEXa7IU8oGQDUUUUU==
+References: <20240402103942.20049-1-guanwentao@uniontech.com>
+ <453b49801d789523f7366507d1620728315b1097.camel@xry111.site> <tencent_411F127936C0F14A261A445E@qq.com>
+In-Reply-To: <tencent_411F127936C0F14A261A445E@qq.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 2 Apr 2024 22:39:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4bCA=9yMEtDgpuj7bp5tE_+M0O2y22MBAvP8BhWXHO7Q@mail.gmail.com>
+Message-ID: <CAAhV-H4bCA=9yMEtDgpuj7bp5tE_+M0O2y22MBAvP8BhWXHO7Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Remove useless MODULE macro for MODULE_DEVICE_TABLE
+To: Wentao Guan <guanwentao@uniontech.com>
+Cc: Xi Ruoyao <xry111@xry111.site>, zhaotianrui <zhaotianrui@loongson.cn>, 
+	loongarch <loongarch@lists.linux.dev>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?B?546L5pix5Yqb?= <wangyuli@uniontech.com>, kvm <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 2, 2024 at 6:46=E2=80=AFPM Wentao Guan <guanwentao@uniontech.co=
+m> wrote:
+>
+> OK, it will resend in PATCH V2.
+> I have a mistake to not add "__maybe_unused" in cpu_feature structure.
 
+__maybe_unused is not encouraged unless there is no other solution, in
+this case it is better to keep the old style, which is the same as
+vmx.c and svm.c in x86.
 
-On 2024/4/2 下午8:47, Wentao Guan wrote:
-> Hello,Bibo,
-> 
-> I change this that we see other guys use "MODULE_DEVICE_TABLE(cpu,..."
-> without use that MODULE macro,and mark cpu_feature struct "__maybe_unused",
-> do the same way to avoid unused variable compiler warning  :).
-
-yeap, it looks good to me with __maybe_unused added.
-
-Regards
-Bibo Mao
-> 
-> BRs
-> Wentao Guan
-> 
-
+Huacai
