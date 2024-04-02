@@ -1,83 +1,62 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65875822A
-	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 10:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163C458AB2
+	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 10:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712054590; cv=none; b=jAkQkfFQ4+RKsTMUxsBkySFhgR8KOs6MJQQCtvZmyGtB7x4O20CuioPTk9PvxMXcAt7M/zra0TjvP2f/RHhmCMQtsIUXDSso6sN7XU9l5ocJ2unRTYIxwuS1XiIB5m6t8iH0oyR2LemY6IyviJEx+Zyam64iB0x2323+1Yx2mHI=
+	t=1712054770; cv=none; b=plw1wpXyPQ9F9AY6azlHWq9+f9BzBP2ReYSZnlggJhZXoO5+uThStC4hDlFv5jS//HYiZ2n+LN8HQbwIQ390KmNA6UXnCmz30OcI1lKkWoAcko7TfEmOqB/g/00OHvJiSbGvq5Bpfj42VNWd9jgb04gXq8CPwORF/w9Y68hJQeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712054590; c=relaxed/simple;
-	bh=5X/RCnWgW7Me0UMaw2a54c5PJ7QgmEA+BiHGMby2/AE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UPP0Xu1hd6usyG6r8PRgOYDrevfpjeqeqsoilY4q8CXDxPAMW6qXnj91H8oMCBGibxxlAPqdicnde4A0BejGUSpRpfTEQb6V4eu6IhE34Qs98OP6Fgni+d7ZD/Du+/ywK4G0RD0Z2Nb3k9Gbfg+aV1UQCRg2a1B2QKEYnfAFH+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=ie1knSeZ; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="ie1knSeZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1712054588;
-	bh=5X/RCnWgW7Me0UMaw2a54c5PJ7QgmEA+BiHGMby2/AE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ie1knSeZV6WxXfXRehWyULWzizmu//36sf/jGZSc3uuar4e8vx9iVOFmzmhBAteIj
-	 Faauyw/etLmyyayzivwSQdu1mkkgrbYGXnMW+e9c8EEWba05qlJxbeK4V+eTwczq1G
-	 yYavjHtvykqQoYVIXtNDAi+fofMbYcuTgK2953vQ=
-Received: from [192.168.124.9] (unknown [113.200.174.21])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 9054266FF7;
-	Tue,  2 Apr 2024 06:43:06 -0400 (EDT)
-Message-ID: <453b49801d789523f7366507d1620728315b1097.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: KVM: Remove useless MODULE macro for
- MODULE_DEVICE_TABLE
-From: Xi Ruoyao <xry111@xry111.site>
-To: Wentao Guan <guanwentao@uniontech.com>, zhaotianrui@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Yuli Wang
-	 <wangyuli@uniontech.com>, kvm@vger.kernel.org
-Date: Tue, 02 Apr 2024 18:43:04 +0800
-In-Reply-To: <20240402103942.20049-1-guanwentao@uniontech.com>
-References: <20240402103942.20049-1-guanwentao@uniontech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	s=arc-20240116; t=1712054770; c=relaxed/simple;
+	bh=BwFIqznhYSYPd8an0Q2AyYq224PV4XlpCYp/tz+LHdU=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=WcekwySxQHqBcDaeyPXzblRvgpG1qCgKFQ6FIGyTBTCleMnPVwvx3QGBcTK8dEv4AcVKVOMjYZHCUmDUqVU2ip5Ogtrsjp4zcxWr8nTxV4dnxGt7C0kHFDBKVg5VPwMX6xmhKL4Of/pwvbXRvNJpeXzSfpMp5y1fBvD3HCCgpdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=18.132.163.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-FEAT: +ynUkgUhZJkXJ2GkVrAA9ITwCMeqGEJyg7gbtaR1iiaMCqpI6vaifUXdwjFYG
+	5U1zWO3XFcFaZ62i3wALBksaW6ZaL1uoFOV0eBC9Y7tpf6+apvRrZ7cES1KFu2PW59/go/k
+	WQ8pAOp73PrC5E/iWVNf68gxgIzYAkzuZvoz19mwB+j2ebVefaAzbUGnkTs+b+IQg/rpf2T
+	6omaPTc5D/nODZkslWljv/UPRXGjvWYkpDzd3D9dUH7U4r7S1Rgn9LKzhXGxVu7I95HgxWt
+	hcaLd3NEE8pG2KklyhD1azaU/MMS/Xy6Z1dQ6t97MvdZ1Q0fFU9XrhNnQpiXhT/ZzHq3Ju4
+	hRRGffWAnX+irMmcl4Q4aa+vhAIKMzI5bkzF+9TN2Ef7YNk0sT9BlpX68pPHw==
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: B4F1NIpmc8L+ioATNeMek/eIAECDvCDomBf9TwzzcB8=
+X-QQ-STYLE: 
+X-QQ-mid: t5gz7a-2t1712054752t2506555
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>, "=?utf-8?B?emhhb3RpYW5ydWk=?=" <zhaotianrui@loongson.cn>
+Cc: "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?a3Zt?=" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] LoongArch: KVM: Remove useless MODULE macro for MODULE_DEVICE_TABLE
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Tue, 2 Apr 2024 10:45:51 +0000
+X-Priority: 3
+Message-ID: <tencent_411F127936C0F14A261A445E@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <20240402103942.20049-1-guanwentao@uniontech.com>
+	<453b49801d789523f7366507d1620728315b1097.camel@xry111.site>
+In-Reply-To: <453b49801d789523f7366507d1620728315b1097.camel@xry111.site>
+X-QQ-ReplyHash: 4178647614
+X-BIZMAIL-ID: 486678769786288338
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Tue, 02 Apr 2024 18:45:53 +0800 (CST)
+Feedback-ID: t:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-This should be Cc'ed to the KVM list.
+T0ssIGl0IHdpbGwgcmVzZW5kIGluIFBBVENIIFYyLg0KSSBoYXZlIGEgbWlzdGFrZSB0byBu
+b3QgYWRkICJfX21heWJlX3VudXNlZCIgaW4gY3B1X2ZlYXR1cmUgc3RydWN0dXJlLg==
 
-On Tue, 2024-04-02 at 18:39 +0800, Wentao Guan wrote:
-> MODULE_DEVICE_TABLE use ifdef MODULE macro in module.h,
-> just clean it up.
->=20
-> Suggested-by: Yuli Wang <wangyuli@uniontech.com>
-> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> ---
-> =C2=A0arch/loongarch/kvm/main.c | 2 --
-> =C2=A01 file changed, 2 deletions(-)
->=20
-> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> index 86a2f2d0cb27..7f2bd9a0814c 100644
-> --- a/arch/loongarch/kvm/main.c
-> +++ b/arch/loongarch/kvm/main.c
-> @@ -410,10 +410,8 @@ static void kvm_loongarch_exit(void)
-> =C2=A0module_init(kvm_loongarch_init);
-> =C2=A0module_exit(kvm_loongarch_exit);
-> =C2=A0
-> -#ifdef MODULE
-> =C2=A0static const struct cpu_feature kvm_feature[] =3D {
-> =C2=A0	{ .feature =3D cpu_feature(LOONGARCH_LVZ) },
-> =C2=A0	{},
-> =C2=A0};
-> =C2=A0MODULE_DEVICE_TABLE(cpu, kvm_feature);
-> -#endif
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
