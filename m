@@ -1,70 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8848312C526
-	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 14:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7407415A49F;
+	Tue,  2 Apr 2024 17:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712068760; cv=none; b=K9dJkobsV02aKfL6dohbJpvWnkgo1NmjwZwoWljr588eRBb0aiBjGOqROhJ/EvWL3Z9FUHkxIpLtzc3EqqXVz0LxVhqZ7Yq/ZRAAkBeGPNMi18hiIuhtlNkH9d7f1AsJSiWGhp8EimsA9Q7AhDEA3NyUWIgllmeGIN46K2CwbBM=
+	t=1712079283; cv=none; b=Flidz8CMW4Djpgv3p0/G9fVfs8BzUi1YJUi8ziO155PdiqIxnxPv+NZUnB/+iMci/rs6aolSBphCdl+LUVbFDCd3qNjAk4gk5RwpzSEuwjT5tyfiIaVSHJbxps1gl4sEJOMbmsoO9mBTodDQdvHC55qNzBmj9X3k68EUNPtBZy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712068760; c=relaxed/simple;
-	bh=G9e3W6N3bGr1P9TdCCpqgJEi3f3tuItHV5g5Hh8D9nI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FGS8OF43mpr+/xNDOdTko52zKNeNxKjzQ7GXyGUwLPdz2c8fEFPQc52noInX2QOAmSCPzuQfeRnOlz6ujTDTcYMdH2pwfQ1p48AJM706aE9eb13NtmalBWtIR4Y0UayDanwTqXquFYJ5TzlhqifIYcDvuMwvYXvjIR3LIytXQyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8/Ch1Ok; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712079283; c=relaxed/simple;
+	bh=fNYoNOn5B2vjF3chFRhRaoGkC5J7EsTH2AoQer+/ANQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZzJMsRlTRi8G6zB9JsqWvVf6AgnRstb/GxGTmr/eFzuHrU/u33k4d6FKtw0lXX0BBUsHySWoiggkR17H4CrB8tK3utPHKp8aEACWkHoS2jf3M51RFYZGumzS0xk84rWC9V561syWkOlahvFGXjTqpwUpqxMUzW1gs10DN2VB9aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UHCwRBRq; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8/Ch1Ok"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E72DC4167D
-	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 14:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712068760;
-	bh=G9e3W6N3bGr1P9TdCCpqgJEi3f3tuItHV5g5Hh8D9nI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=h8/Ch1OkS7CAP5n+48xcvGIE7UgD2heYBNjBFPUSY0UtPT7iahu/crhpOqwbN1/wt
-	 GeoiaX8ti1adi9NdAf7YNZ2g41djcGdMFl8RGx/CCaLFytbDByMmbTBikgynXmu3Bu
-	 yZ6gexjek6WsGEXN38EG95dT91IZUX2qBlJDGbNZYepcqbXAwbg29qwowe6+nDItCk
-	 HSWGwlm/ivw1lrWMx1rrNr+T/ar1R867hrkCBbBx3msQgUR/8cCBa4+PH9ojGBk1UH
-	 eWvs4fvgy8g10nb0RMY0MgNXO83gLbb9zEOx9rmda3HspF/27kMZidj+ARDffmiVnH
-	 JKoVlcdjS2MGQ==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a46cd9e7fcaso671881366b.1
-        for <loongarch@lists.linux.dev>; Tue, 02 Apr 2024 07:39:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW1w+7jjLKOIAki8TCuBSuEKVtjTikhrsxsfm39qHMZFWil1d0/68telJGIDyEVDx0wBDuDPzADhlrBqB5jMifcw2wxCQG9ENFr
-X-Gm-Message-State: AOJu0YyIb1BesA3X1IB0FEDeiPKaSKojmXUxlQzpiK6/bCkhJYBT61iM
-	uPpOlEg8rY6J/6mUt3eyjrlhseMoe16g2nZ2miuIUUh8eAmDjQ3Miox6/BJKO41R1/aLw7Ji9cj
-	DihOrlHdDRF0y2kvDn10b0AhqK90=
-X-Google-Smtp-Source: AGHT+IEDdSG9sDtVsGsvj6ZspsV1SWCK7mu10zLwlkz1tnJkelJ4bPKskClQLYly4SO9mHsh+ctTQKTSSIS21vop3EU=
-X-Received: by 2002:a17:906:957:b0:a4e:2ad1:52f2 with SMTP id
- j23-20020a170906095700b00a4e2ad152f2mr9051652ejd.6.1712068758766; Tue, 02 Apr
- 2024 07:39:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UHCwRBRq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712079281; x=1743615281;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fNYoNOn5B2vjF3chFRhRaoGkC5J7EsTH2AoQer+/ANQ=;
+  b=UHCwRBRq5A6Unz3E8uXorTmwX/IoFdipD6hrn5ECopTriEZN1N9PJa+z
+   MQjvlrpwMuJPKp+HLmqmB7332VvdefRDWTpYykqh14yjDsjRzAv7HGu9l
+   xJDIzk+Cqb+Fp7J0z2CBlMr2kZu8Pc1uLIrW/C1UzfZ5oPPG4Sw0tetQz
+   oJyIGxeAw7vtWQ4ra5I/+swijEOIQO8HjpP9Z1zTVMotGRcriTMEZRfOf
+   Zlo0R3+xpOCoCD5RXSSedJ1+tUy3rw/D4i2MDVJ+istj2VB32zXuDJyiE
+   /qUQ/XCaxY44XEaGn3lDvBOYvwcU0NiZ3elv3X+X5z5YlBCPHMgOVW4C3
+   g==;
+X-CSE-ConnectionGUID: um9DBSRvTv6k6iHHyR79Gw==
+X-CSE-MsgGUID: TAyJy+ewSEq1pCQd/HaeaA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7136177"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="7136177"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 10:34:39 -0700
+X-CSE-ConnectionGUID: OSeGEsaLQ6G3xhHefXNoRQ==
+X-CSE-MsgGUID: kGl3BvEEROiCz1mlLQHR4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="18255944"
+Received: from lkp-server02.sh.intel.com (HELO 90ee3aa53dbd) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 02 Apr 2024 10:34:36 -0700
+Received: from kbuild by 90ee3aa53dbd with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rri1q-0001Lz-0E;
+	Tue, 02 Apr 2024 17:34:34 +0000
+Date: Wed, 3 Apr 2024 01:34:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, loongson-kernel@lists.loongnix.cn,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 5/5] LoongArch: dts: Add PWM support to Loongson-2K2000
+Message-ID: <202404030108.rzArK10u-lkp@intel.com>
+References: <7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240402103942.20049-1-guanwentao@uniontech.com>
- <453b49801d789523f7366507d1620728315b1097.camel@xry111.site> <tencent_411F127936C0F14A261A445E@qq.com>
-In-Reply-To: <tencent_411F127936C0F14A261A445E@qq.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 2 Apr 2024 22:39:07 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4bCA=9yMEtDgpuj7bp5tE_+M0O2y22MBAvP8BhWXHO7Q@mail.gmail.com>
-Message-ID: <CAAhV-H4bCA=9yMEtDgpuj7bp5tE_+M0O2y22MBAvP8BhWXHO7Q@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Remove useless MODULE macro for MODULE_DEVICE_TABLE
-To: Wentao Guan <guanwentao@uniontech.com>
-Cc: Xi Ruoyao <xry111@xry111.site>, zhaotianrui <zhaotianrui@loongson.cn>, 
-	loongarch <loongarch@lists.linux.dev>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?B?546L5pix5Yqb?= <wangyuli@uniontech.com>, kvm <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin@loongson.cn>
 
-On Tue, Apr 2, 2024 at 6:46=E2=80=AFPM Wentao Guan <guanwentao@uniontech.co=
-m> wrote:
->
-> OK, it will resend in PATCH V2.
-> I have a mistake to not add "__maybe_unused" in cpu_feature structure.
+Hi Binbin,
 
-__maybe_unused is not encouraged unless there is no other solution, in
-this case it is better to keep the old style, which is the same as
-vmx.c and svm.c in x86.
+kernel test robot noticed the following build errors:
 
-Huacai
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on linus/master v6.9-rc2 next-20240402]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/dt-bindings-pwm-Add-Loongson-PWM-controller/20240402-160109
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v1 5/5] LoongArch: dts: Add PWM support to Loongson-2K2000
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20240403/202404030108.rzArK10u-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240403/202404030108.rzArK10u-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404030108.rzArK10u-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> Error: arch/loongarch/boot/dts/loongson-2k2000.dtsi:123.19-20 syntax error
+   FATAL ERROR: Unable to parse input tree
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
