@@ -1,47 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B248417BB7;
-	Tue,  2 Apr 2024 17:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3FB15B57E;
+	Tue,  2 Apr 2024 19:05:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712079654; cv=none; b=RPbURTwDGA3Ct3Qm7xCmliV7Hi2e/BKSHx31rEWnk2dywhf+LKHSYjkrZNyyhgAG4/sVC5yx/BdsMbLmhvzoy2RokEMMryxUx/D4G/rn3ZsqcWhDXcnxdlGrRq2GQMFO0WSD4NEuJ2Vm/CI+98QJgsg2499Ccd3Z3Vbtk/LUmxk=
+	t=1712084753; cv=none; b=MZEv86kbgBRt7LbfZn0KF0iAlqSYnRISqUD+RXLaoGwPqbJfPkeKmV2abP6QWoa0aXHwOnIlim6Gds8CEodJaTnEJOKe8SQtfwrRvymnX8EI1SZzDk/PUVgnneyjcAosijfsBlxi+atooH4NEWUSnjyahVRtj8HUV6XxrXSOuYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712079654; c=relaxed/simple;
-	bh=rOoYl8MM4akGFWw4ON4nG8u58BI+J0+HplPfMqOklfI=;
+	s=arc-20240116; t=1712084753; c=relaxed/simple;
+	bh=ivObVSKpIkBqCwHlwbBnTW/chcdv4hxzzU2Dqfw4oFY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ud/ROIP0+Q/OFG7F+cuhDcNy50tAoz6oSMoNvydXBSsKfTsViw8BLEwPHTtfEMGE1u/epRh+vcAYzSA12pO/acXXhHHcnvZeQ0kH5Cg/0oRHs+2NxaqPD18PxzbbAPZQ/onYrvr5tiAB4S/5CAME8hoUN1FSr1us/Tm42YpDLd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0pxRBGC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=k94cpCcBp3zL5BBScVgBH7eXGMffADxNkW8scsAe16iSQ3FYjthDvPup0YFERWkw3kZyof+GsU3xDgZ43uXioBpfgtCvWPQ1CNlSk6w1ZJKcc4PKTMPWXTF3/Zt5RRPLE+VPzdnZZGbDdcdDZdEQyUqLBxKnvAtp5FeXlIirz7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwwp3R1q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0pxRBGC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D083C433F1;
-	Tue,  2 Apr 2024 17:40:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwwp3R1q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174E5C433C7;
+	Tue,  2 Apr 2024 19:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712079654;
-	bh=rOoYl8MM4akGFWw4ON4nG8u58BI+J0+HplPfMqOklfI=;
+	s=k20201202; t=1712084752;
+	bh=ivObVSKpIkBqCwHlwbBnTW/chcdv4hxzzU2Dqfw4oFY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f0pxRBGC5oYHJ1ujp6gXFafw41NnQ3jxoE26RW7RoSamIfbwFjR/Y33cs7/ybbFrj
-	 RYFqFZVFcSeZUjVqhHspVQ/hCGu2y2Q6ppSe3EXI/7zHSjLfmI8J03/RCObfCD9Idz
-	 IeliCtKmWfWexphwnK/mx2wLcd2DY7yIKCAs/PsMHH0/68PjMDXAe09wcfoWT9gy0V
-	 8WTfWLie821GTLj6eOyHV+7HmdmPx3gmSU2bgKu3rmnCk8zcemevz4M6ewoQK2bXhX
-	 4TVhCXuGvJOVzzZmqlg7UOAtOrU6T9FRYxlCQMB1chirNx/6X5mdKfIQzYbnEAsVZm
-	 8zBSs0jtPDEjg==
-Date: Tue, 2 Apr 2024 12:40:51 -0500
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+	b=hwwp3R1q+T6P3wBULlM9JHA7unNDdzQ7FyQAUtX0BWJYLvoTcSvvCHVjCZCIVdCpp
+	 P3hH9eiYczkxNqEPQVprmxEGBBjdTDkm2i0W/ywueVCqBxiyfNB/jd8/8ayTftnI02
+	 M4H/eOWh4bn/Ygw7g56bJeYODFwZcPWGYCkn3uSNTytEJ/MI/De15gQoC2yuWB5IGj
+	 wAuTXHpQOJnJxkjgdHehxG1bRSCJBtOySRaGeOy42ZdtKoUpS5CRRoEU1D0PnH0iBU
+	 8Uk+I9y88XUSxVMrMygH39vnWX8Uwf8mWiw+V7NK/hpKeE+IqP03OkudSXAlGSwaK8
+	 pTIHCarE2rCRw==
+Date: Tue, 2 Apr 2024 12:05:49 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: peterx@redhat.com
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Yang Shi <shy828301@gmail.com>,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Andrew Jones <andrew.jones@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	James Houghton <jthoughton@google.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 1/5] dt-bindings: pwm: Add Loongson PWM controller
-Message-ID: <20240402174051.GA324804-robh@kernel.org>
-References: <cover.1711953223.git.zhoubinbin@loongson.cn>
- <edad2bb5b0045c633734c1499fb163c3c6776121.1711953223.git.zhoubinbin@loongson.cn>
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 05/13] mm/arch: Provide pud_pfn() fallback
+Message-ID: <20240402190549.GA706730@dev-arch.thelio-3990X>
+References: <20240327152332.950956-1-peterx@redhat.com>
+ <20240327152332.950956-6-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,92 +66,133 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <edad2bb5b0045c633734c1499fb163c3c6776121.1711953223.git.zhoubinbin@loongson.cn>
+In-Reply-To: <20240327152332.950956-6-peterx@redhat.com>
 
-On Tue, Apr 02, 2024 at 03:58:38PM +0800, Binbin Zhou wrote:
-> Add Loongson PWM controller binding with DT schema format using
-> json-schema.
+Hi Peter (and LoongArch folks),
+
+On Wed, Mar 27, 2024 at 11:23:24AM -0400, peterx@redhat.com wrote:
+> From: Peter Xu <peterx@redhat.com>
 > 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> The comment in the code explains the reasons.  We took a different approach
+> comparing to pmd_pfn() by providing a fallback function.
+> 
+> Another option is to provide some lower level config options (compare to
+> HUGETLB_PAGE or THP) to identify which layer an arch can support for such
+> huge mappings.  However that can be an overkill.
+> 
+> Cc: Mike Rapoport (IBM) <rppt@kernel.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
 > ---
->  .../devicetree/bindings/pwm/pwm-loongson.yaml | 64 +++++++++++++++++++
-
-Filename should match compatible.
-
->  MAINTAINERS                                   |  6 ++
->  2 files changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-loongson.yaml
+>  arch/riscv/include/asm/pgtable.h    |  1 +
+>  arch/s390/include/asm/pgtable.h     |  1 +
+>  arch/sparc/include/asm/pgtable_64.h |  1 +
+>  arch/x86/include/asm/pgtable.h      |  1 +
+>  include/linux/pgtable.h             | 10 ++++++++++
+>  5 files changed, 14 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-loongson.yaml b/Documentation/devicetree/bindings/pwm/pwm-loongson.yaml
-> new file mode 100644
-> index 000000000000..d25904468353
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-loongson.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-loongson.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index 20242402fc11..0ca28cc8e3fa 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -646,6 +646,7 @@ static inline unsigned long pmd_pfn(pmd_t pmd)
+>  
+>  #define __pud_to_phys(pud)  (__page_val_to_pfn(pud_val(pud)) << PAGE_SHIFT)
+>  
+> +#define pud_pfn pud_pfn
+>  static inline unsigned long pud_pfn(pud_t pud)
+>  {
+>  	return ((__pud_to_phys(pud) & PUD_MASK) >> PAGE_SHIFT);
+> diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+> index 1a71cb19c089..6cbbe473f680 100644
+> --- a/arch/s390/include/asm/pgtable.h
+> +++ b/arch/s390/include/asm/pgtable.h
+> @@ -1414,6 +1414,7 @@ static inline unsigned long pud_deref(pud_t pud)
+>  	return (unsigned long)__va(pud_val(pud) & origin_mask);
+>  }
+>  
+> +#define pud_pfn pud_pfn
+>  static inline unsigned long pud_pfn(pud_t pud)
+>  {
+>  	return __pa(pud_deref(pud)) >> PAGE_SHIFT;
+> diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
+> index 4d1bafaba942..26efc9bb644a 100644
+> --- a/arch/sparc/include/asm/pgtable_64.h
+> +++ b/arch/sparc/include/asm/pgtable_64.h
+> @@ -875,6 +875,7 @@ static inline bool pud_leaf(pud_t pud)
+>  	return pte_val(pte) & _PAGE_PMD_HUGE;
+>  }
+>  
+> +#define pud_pfn pud_pfn
+>  static inline unsigned long pud_pfn(pud_t pud)
+>  {
+>  	pte_t pte = __pte(pud_val(pud));
+> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+> index cefc7a84f7a4..273f7557218c 100644
+> --- a/arch/x86/include/asm/pgtable.h
+> +++ b/arch/x86/include/asm/pgtable.h
+> @@ -234,6 +234,7 @@ static inline unsigned long pmd_pfn(pmd_t pmd)
+>  	return (pfn & pmd_pfn_mask(pmd)) >> PAGE_SHIFT;
+>  }
+>  
+> +#define pud_pfn pud_pfn
+>  static inline unsigned long pud_pfn(pud_t pud)
+>  {
+>  	phys_addr_t pfn = pud_val(pud);
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 600e17d03659..75fe309a4e10 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -1817,6 +1817,16 @@ typedef unsigned int pgtbl_mod_mask;
+>  #define pte_leaf_size(x) PAGE_SIZE
+>  #endif
+>  
+> +/*
+> + * We always define pmd_pfn for all archs as it's used in lots of generic
+> + * code.  Now it happens too for pud_pfn (and can happen for larger
+> + * mappings too in the future; we're not there yet).  Instead of defining
+> + * it for all archs (like pmd_pfn), provide a fallback.
+> + */
+> +#ifndef pud_pfn
+> +#define pud_pfn(x) ({ BUILD_BUG(); 0; })
+> +#endif
 > +
-> +title: Loongson PWM Controller
-> +
-> +maintainers:
-> +  - Binbin Zhou <zhoubinbin@loongson.cn>
-> +
-> +description:
-> +  It is the generic PWM framework driver for Loongson family.
+>  /*
+>   * Some architectures have MMUs that are configurable or selectable at boot
+>   * time. These lead to variable PTRS_PER_x. For statically allocated arrays it
+> -- 
+> 2.44.0
+> 
 
-That's describing the driver. Not really relevant to the binding.
+This BUILD_BUG() triggers for LoongArch with their defconfig, so it
+seems like they need to provide an implementation of pud_pfn()?
 
+  In function 'follow_huge_pud',
+      inlined from 'follow_pud_mask' at mm/gup.c:1075:10,
+      inlined from 'follow_p4d_mask' at mm/gup.c:1105:9,
+      inlined from 'follow_page_mask' at mm/gup.c:1151:10:
+  include/linux/compiler_types.h:460:45: error: call to '__compiletime_assert_382' declared with attribute error: BUILD_BUG failed
+    460 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+        |                                             ^
+  include/linux/compiler_types.h:441:25: note: in definition of macro '__compiletime_assert'
+    441 |                         prefix ## suffix();                             \
+        |                         ^~~~~~
+  include/linux/compiler_types.h:460:9: note: in expansion of macro '_compiletime_assert'
+    460 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+        |         ^~~~~~~~~~~~~~~~~~~
+  include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+        |                                     ^~~~~~~~~~~~~~~~~~
+  include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+     59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+        |                     ^~~~~~~~~~~~~~~~
+  include/linux/pgtable.h:1887:23: note: in expansion of macro 'BUILD_BUG'
+   1887 | #define pud_pfn(x) ({ BUILD_BUG(); 0; })
+        |                       ^~~~~~~~~
+  mm/gup.c:679:29: note: in expansion of macro 'pud_pfn'
+    679 |         unsigned long pfn = pud_pfn(pud);
+        |                             ^~~~~~~
 
-> +  Each PWM has one pulse width output signal and one pulse input
-> +  signal to be measured.
-> +  It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips.
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: loongson,ls7a-pwm
-> +      - items:
-> +          - enum:
-> +              - loongson,ls2k0500-pwm
-> +              - loongson,ls2k1000-pwm
-> +              - loongson,ls2k2000-pwm
-> +          - const: loongson,ls7a-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  '#pwm-cells':
-> +    const: 3
-
-Please define what is in each cell. If there's only 2 signals, then the 
-first cell defines the output or input (what value for which one?).
-
-Really, the PWM binding is only for outputs, so is a cell even needed? I 
-suppose we could use it for inputs too, but that's really "input 
-capture" type operation that timers often have. I'll defer to the PWM 
-maintainers...
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - '#pwm-cells'
-
-pwm.yaml makes this required already.
-
-Rob
-
+Cheers,
+Nathan
