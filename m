@@ -1,145 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394F63D962
-	for <loongarch@lists.linux.dev>; Tue,  2 Apr 2024 23:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9B112E4E
+	for <loongarch@lists.linux.dev>; Wed,  3 Apr 2024 01:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712100953; cv=none; b=tJqxphXsvL9bQ6ao9PCp4l4P+2VyFuSZaUXeTva9K92SA+obvnDKKAnzX8m4IStrtOHGAi+x7yVKN2H8YUpYEs4KOTz0414XeVateR+17F65sGHEeCp1sxX684A+UQ+5/totszF4Fpp4OlbEbCJMTr+3MCl6GCyGA3aiJXzNwmU=
+	t=1712107976; cv=none; b=XI2OI5+uwwDasHX5seX8IsqNHyG7vHmjgWBKr+wyqyvEh5h24tHRRkHrieSerSDJ+1NpitwmCdAco5cqoZkEGT3MJMxG+7IDiK0Bl1DWSTkU2Zg1DqmDshKeotsO/OcX1+pgeMkPh1R5kjkCkUU3lopvN/ZjBMbWBjjaj17IZPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712100953; c=relaxed/simple;
-	bh=dCoRqma6yqwIrFc2Ju/9ocy+ca8jMOV5zqLtsYm4O98=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=tcICIzDQXjiL3bp4X5S3eZ6B5YOadC+SFNZoucAl1Wuq6bhou1e9IdHDbSZrlk+mzaz02wPOoxrPFf/fEzuhLA+84LQoYt91I4mNB8bACh3s3UjM9IeUwe+2fYg2D615o3Lv9Mpv1H25ASqJqaNpW84eR+Sax9nmG/6+hZA3NNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SernlilP; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1712107976; c=relaxed/simple;
+	bh=4/F6u8iBxsSiMArRogpzgvWtl01wXfPkB0e+I+HV6ag=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TML83VhQm+JadhQkkp3QYOxslfnDBMiYJLmEe/ynF9Cbxp96wnvP320QhIFZaDFzJj2Jp+fjLh5HwvbzV8q9cS3BotcSnFeBj6jieEelELAsaGQpEGFCP03UbxQSZLibcnJWiuMZpD1+o+o0UrXRbbO5ujZ92eo34Enf4DzJ08I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XIkIEnAz; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SernlilP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XIkIEnAz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712100951;
+	s=mimecast20190719; t=1712107973;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HP6iCpNSGY021srGiNxOfFS1yawEzwYl7dLs1n/YW+Y=;
-	b=SernlilPx0ivm1TcTtzb7+vEpxjwHEyJDuDBqj8+JyXykNsdXTQ+HHACBTxSxQ11VzxUqg
-	jMuV5q7ipH+LXIHpJd2lJTYx1H59Z9EHIpua3K+zyajwImDVX1FQE30CKeZ9C+Rah+Uo9E
-	gk69vgrtq6qhJefGuiVsjjtP3HkkVbM=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=alQirahUTAy9XOHb1eUbW0PkaQ3ocBpN1TA8r3nGi4M=;
+	b=XIkIEnAzxvqR2SF3mwW//kyyoAqcWaVKRwvFbDtUnc8y6QkgxPRT86hDB71QeH9UQZD4Dj
+	zH1Jz1MuV8vIzmdPvnPy2RUpBXiNCUYb0VjwNplNJRKZzF3lYyYMej/ne3q67hkchn9qqC
+	BhIdlK5YKGzgAb2P5Nbds1YM2s+vfEs=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-sHClzX7RMaGgDQihDJKJyQ-1; Tue, 02 Apr 2024 19:35:50 -0400
-X-MC-Unique: sHClzX7RMaGgDQihDJKJyQ-1
-Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-6e6b0efc193so2551209a34.0
-        for <loongarch@lists.linux.dev>; Tue, 02 Apr 2024 16:35:50 -0700 (PDT)
+ us-mta-148-8z05SPNfOp-7FtriNAblUQ-1; Tue, 02 Apr 2024 21:32:52 -0400
+X-MC-Unique: 8z05SPNfOp-7FtriNAblUQ-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-69925f44915so937176d6.1
+        for <loongarch@lists.linux.dev>; Tue, 02 Apr 2024 18:32:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712100949; x=1712705749;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HP6iCpNSGY021srGiNxOfFS1yawEzwYl7dLs1n/YW+Y=;
-        b=GPjBRQIcX9XBplWNOVb+1jR0ObruaG88/gQ7LEEqZqz9depdvyOUrGYZj1+fY5jJpE
-         VkKczE34eUukNQPEE8L0Y6YfvMmobsTiWReQ1znKePfV2BDcWLJ4J4Amx/lTtGxOOLCd
-         XAgtGdMUbNOgbynHaKVUk870p2Vpi0hxCTbP03NPFooxziwD0fPfmjgKy028VZ3MJn/C
-         j0fSEBSIida+2MZlRdOji7hFv2bmvs8X7t7O9g5t/YKyusx++go+CcjO6Go0aG7IM/NO
-         ilUnk5VPjHaU4jkFyFs9wCLqS0vWsRO6xnTgNPekywxhLeNls+pmX6Ncg5cD4LbRnWPQ
-         yR8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWby1LKkTSXx0NulPY77ch8rLj7SsEY8pJLRwR9FbqlcSDCYes6hK1uq15kUCmXGSWqmxSmrVgKyYOyf1XtvbS418DLN6qiaYsH
-X-Gm-Message-State: AOJu0YyXKqlmVk9KljXmgycy71oFz/ECSsQdqr4Ryw/SfIX7ocbXK6HI
-	GFWuAB1kjMoDacbhkO/OJ9w6q7NFT22aQT2hlCrAI9lj2EVfHy4/8alZXjbUn/ff/5NbnV/EWvT
-	o0/qrKxijfjtVtDbsO5wQKn6M56To+LV+aVQ9grz4BEGKcqtcWsUb7m9evg==
-X-Received: by 2002:a9d:4c86:0:b0:6e7:7ef6:10da with SMTP id m6-20020a9d4c86000000b006e77ef610damr13684100otf.1.1712100949125;
-        Tue, 02 Apr 2024 16:35:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEvGEFvbrAiLdQh8lUIUnqC+uQoSnGXUScHs/S+SFU0VVogBN2f5CbF/OzNKGljOo4S/t2faA==
-X-Received: by 2002:a9d:4c86:0:b0:6e7:7ef6:10da with SMTP id m6-20020a9d4c86000000b006e77ef610damr13684059otf.1.1712100948622;
-        Tue, 02 Apr 2024 16:35:48 -0700 (PDT)
-Received: from xz-m1.local ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id ob12-20020a0562142f8c00b0069046d929a3sm5893803qvb.145.2024.04.02.16.35.46
+        d=1e100.net; s=20230601; t=1712107972; x=1712712772;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=alQirahUTAy9XOHb1eUbW0PkaQ3ocBpN1TA8r3nGi4M=;
+        b=p9TGZZAXzViu8mQlI5I1Bwqxr9e4bOV2q6UCfgiuv/1trRUjg8x1GeNWbCsjaOUpiB
+         i5iPB3LJfW6HPu9ccQ2+okHP9SqtHZpoY0A2IBTuo3HW5jbSrfAOc8/Minn91n1eVwFe
+         JGtbchF64rrpaPLgFTAxeyVxHdq1wVypdKnhmhnIFjeAmFzYzz+bBtmubWsTMpvV+PQX
+         LUJEh04oQIAqMGxcfLtmGcyFYZbe941c7pK/LBHrb9T02+h7TVASYWTtoEvPAjz/nUwb
+         vgSIDHql4FvFgqPEsDbrn2eSt1QluMpGKsl1yeUZBizL/pfJ2v/+0H0W8V01+FAvXCFj
+         vkJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUYvckZErk2zENCSOj0mNOLgmLDN+lRmdKJ+bZLSBvYOO4Eek67TGVO1xGi6Mz9qp6KhMiffset7jY/PrvL1CV+GHfJyYa95hAZ
+X-Gm-Message-State: AOJu0YyviBAVy8vKxBgmSaTh5blRnIjrtWPdhsPxe3u/+uPfaP6iW5Lw
+	+yixBDD3NV1LvHqLm7c0wpjsnQrZqz7KATrWRfI7QND2LkwfIte2JxnA3IEi0kRR0pymvoki2RG
+	B7cZ4FRFyY/K8AdzkTZFF4r2H8u2m9HQiF/Ga3R6Kotl75XMpAdC1AJOJog==
+X-Received: by 2002:ad4:40cc:0:b0:699:278c:af6 with SMTP id x12-20020ad440cc000000b00699278c0af6mr312193qvp.6.1712107971665;
+        Tue, 02 Apr 2024 18:32:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHzMOlQyMY3IEr2RcmrbH+njx1OvgJqSnMVNsfmQpLAp7UAnBpSBVsRsaCyba/ZRTay46pfg==
+X-Received: by 2002:ad4:40cc:0:b0:699:278c:af6 with SMTP id x12-20020ad440cc000000b00699278c0af6mr312183qvp.6.1712107971127;
+        Tue, 02 Apr 2024 18:32:51 -0700 (PDT)
+Received: from x1n.redhat.com ([99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id qm18-20020a056214569200b0068ff8bda6c7sm6031687qvb.92.2024.04.02.18.32.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 16:35:48 -0700 (PDT)
-Date: Tue, 2 Apr 2024 19:35:45 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Yang Shi <shy828301@gmail.com>,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rik van Riel <riel@surriel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Andrea Arcangeli <aarcange@redhat.com>,
+        Tue, 02 Apr 2024 18:32:50 -0700 (PDT)
+From: peterx@redhat.com
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	peterx@redhat.com,
 	David Hildenbrand <david@redhat.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	James Houghton <jthoughton@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 05/13] mm/arch: Provide pud_pfn() fallback
-Message-ID: <ZgyWUYVdUsAiXCC4@xz-m1.local>
-References: <20240327152332.950956-1-peterx@redhat.com>
- <20240327152332.950956-6-peterx@redhat.com>
- <20240402190549.GA706730@dev-arch.thelio-3990X>
- <ZgyKLLVZ4vN56uZE@x1n>
- <20240402225320.GU946323@nvidia.com>
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	loongarch@lists.linux.dev
+Subject: [PATCH 0/3] mm/gup: fixups for hugetlb gup rework series
+Date: Tue,  2 Apr 2024 21:32:46 -0400
+Message-ID: <20240403013249.1418299-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240402225320.GU946323@nvidia.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 02, 2024 at 07:53:20PM -0300, Jason Gunthorpe wrote:
-> On Tue, Apr 02, 2024 at 06:43:56PM -0400, Peter Xu wrote:
-> 
-> > I actually tested this without hitting the issue (even though I didn't
-> > mention it in the cover letter..).  I re-kicked the build test, it turns
-> > out my "make alldefconfig" on loongarch will generate a config with both
-> > HUGETLB=n && THP=n, while arch/loongarch/configs/loongson3_defconfig has
-> > THP=y (which I assume was the one above build used).  I didn't further
-> > check how "make alldefconfig" generated the config; a bit surprising that
-> > it didn't fetch from there.
-> 
-> I suspect it is weird compiler variations.. Maybe something is not
-> being inlined.
-> 
-> > (and it also surprises me that this BUILD_BUG can trigger.. I used to try
-> >  triggering it elsewhere but failed..)
-> 
-> As the pud_leaf() == FALSE should result in the BUILD_BUG never being
-> called and the optimizer removing it.
+From: Peter Xu <peterx@redhat.com>
 
-Good point, for some reason loongarch defined pud_leaf() without defining
-pud_pfn(), which does look strange.
+Hi,
 
-#define pud_leaf(pud)		((pud_val(pud) & _PAGE_HUGE) != 0)
+This is a small patchset that will fix two known issues that got reported
+today on the previous hugetlb unification series on slow gup [1].
 
-But I noticed at least MIPS also does it..  Logically I think one arch
-should define either none of both.
+The first issue was reported by Ryan Roberts [2] on a test failure over
+gup_longterm.  Patch 1-2 should fix it.  Tested with 32MB hugepages on
+arm64 VM.
 
-> 
-> Perhaps the issue is that the pud_leaf() is too far from the pud_pfn?
+The second issue was reported by Nathan Chancellor [3] on a build issue
+over loongson's defconfig (loongson3_defconfig).  It can be easily
+reproduced with my own build setup [4], while patch 3 fixes it, and should
+hopefully fix similar archs where pud_pfn() is not defined even if
+pud_leaf() can return true.
 
-My understanding is follow_pud_mask() should completely get optimized and
-follow_huge_pud() will be dropped in the compiler output if pud_leaf()==false.
+For the 2nd issue, it's debatable whether it's an arch issue, because
+logically speaking pud_pfn() and pud_leaf() should either be both defined
+or both not.  But since the current fix will be the simplest and still safe
+(I at least checked loongarch doesn't support either pud dax or pud
+hugetlb), I think we can consider having this to unbreak the build first,
+assuming this could also happen to other archs.
+
+One note is that the last 2 patches should be squashed into corresponding
+patch, while the 1st patch should be kept standalone.
 
 Thanks,
 
+[1] https://lore.kernel.org/r/20240327152332.950956-1-peterx@redhat.com
+[2] https://lore.kernel.org/r/adfdd89b-ee56-4758-836e-c66a0be7de25@arm.com
+[3] https://lore.kernel.org/r/ZgyKLLVZ4vN56uZE@x1n
+[4] https://gitlab.com/peterx/lkb-harness/-/blob/main/config.json?ref_type=heads#L32
+
+Peter Xu (3):
+  mm: Allow anon exclusive check over hugetlb tail pages
+  fixup! mm/gup: handle huge pmd for follow_pmd_mask()
+  fixup! mm/arch: provide pud_pfn() fallback
+
+ include/linux/page-flags.h |  8 +++++++-
+ include/linux/pgtable.h    |  6 +++++-
+ mm/gup.c                   |  3 ---
+ mm/internal.h              | 10 ----------
+ 4 files changed, 12 insertions(+), 15 deletions(-)
+
 -- 
-Peter Xu
+2.44.0
 
