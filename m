@@ -1,119 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9E814F7F
-	for <loongarch@lists.linux.dev>; Wed,  3 Apr 2024 01:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B498F5C
+	for <loongarch@lists.linux.dev>; Wed,  3 Apr 2024 02:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712107979; cv=none; b=jBG9+eQ6+GkiSa34Hsv7BR6cKsfYcmW0u8WSx3qxwOMuFCo57PFkke/3wjOHoTHx+h2JHe6kEBBLUUoTV0LbVhgXTYu26xqpoKNC97lZxD6fnq1T5Lc5V4c8fLgMzq24ppqEv0S2ycZnXP1FWWOLVims9lNC+4bvlVBosZurjpY=
+	t=1712111872; cv=none; b=KmhAksy47DlNAt/PHDuVgeaANzw2lAGi5h63Pa3IZlhnBcbSilfTgwFlGhdGZjeliXyrSM5aaXQPZ6vUaTuUYidQu2OgjblhJGXb88C9CysgB/+nuXV0JijUTKMV/vcqHuGLDXvcd7ZpVc332rCfdaHaUnE/VccIWwvEAac2y+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712107979; c=relaxed/simple;
-	bh=z1GaugFYICjVSrn2n8rnHfGDwwW/vuxiZSFHEY4qUdg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XDdfZwmnE4n5ARP9q4bLgqE29U/s9mUbZ0JzMtGcfAG7qvPv8sZwYwVnyGF3E/qj5B67qbxH2C3ZukD7GYm3wCh8mViSFeZz5CD6aLwz3cujmdnzUWkzOaNW7+f03f4l6Rnoi8lAYwRNHi8I9ODm33uAqZYndw59yjbKf8aawWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FdxrEUo6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712111872; c=relaxed/simple;
+	bh=gJVxYjMFmwjl5aNG+BlSPzbU83ksogmImwDLukwQbYE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PUPbYsYwiPDjywx0rYH4fWgGm9qbjkPR5016uDSKJVjoLo2T7SJdAXiezSOKBd3h7x4zM+h5c+FtrWGhW2oVDG0fAz/4n1cAKk3s4fGthbW+29cQ6qqZvnFHvsl+Y4MZ9Iy8UCuCT4KPq8LV2Tr6813/H1jIYnTny+YiZ4aE8Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msFtEvqP; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FdxrEUo6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712107977;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PR/NBCt+5qJ4X31foyrecLlAlU9UbBCiiBiwAD7jaH8=;
-	b=FdxrEUo6wFSgOOFz7oF5QcO+6f5q47MHFDEAYapSATTxnembeBln8wXXAuxo85BrJY2kU5
-	ylmEUeGvGuCMmu2/tM6OxHQ+djz0/xE50pPskDl2hCM49Tm2+0oXTLN4TcCnyAzRcQZQA9
-	AmkBzrCTRxSUYpuR5u4By93PNHzlNcw=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-393-RvawHjjsOwiLaR5rbL24gg-1; Tue, 02 Apr 2024 21:32:55 -0400
-X-MC-Unique: RvawHjjsOwiLaR5rbL24gg-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78a59dd45edso15816585a.1
-        for <loongarch@lists.linux.dev>; Tue, 02 Apr 2024 18:32:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msFtEvqP"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-614b02f8ed6so4348797b3.0
+        for <loongarch@lists.linux.dev>; Tue, 02 Apr 2024 19:37:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712111870; x=1712716670; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CdnReuXFQgbpvjXMlLm8sCCXtyCSbBMw0wNSZs3OhSQ=;
+        b=msFtEvqPXhOS5M98xoKg0qVyfk0fbMUhXVa/nRBavrUn8eRFsWQVrA+ulX3Ie5GojT
+         zF1PKNo7J0LNStjeqlx2Rcy4dn18Jjs6vfnKnR59c/dwEJZNBc6RRUHQP0rhq1HfXUuS
+         Qhbu2fmMvsTQrmKp/8hm2g9QflEEvh77kb5UfuO3ti7uppkq0tZxgmsKGuLdssu/+Yi3
+         LA25hHfq40unUTtiqZGruVSuDsQEL5jgB2SsMnD5miUuuoh7W8KazUyO/IQxVioCXUVx
+         U1nSof/zsjhKJ3ThuRkYojHyJpSSUsgdI2Ytv4T6cNS53BukTzTvp2B5COQEJr2T9xdE
+         /OYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712107975; x=1712712775;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712111870; x=1712716670;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PR/NBCt+5qJ4X31foyrecLlAlU9UbBCiiBiwAD7jaH8=;
-        b=XW7fY4UrT1BrseUPq2Slx/s3qP5kVPJ4RC14FcUv5694t+acmHy2do/PEomqJcXB2s
-         A3zNiEsTRqdh4udZ4sf5XtSRPweQjYktxewAyjJOjZuz7lu9OWgmq0dIQXXJJDqP0TRi
-         zTSHsVxJ8gkeyCiRJ5UwNzDKSxiWQc5gZARrocRfILNN5PzeQI4NLH1r1S4kb2tkq5FO
-         jEwkLF5IqgoEMrsmMZ808uZIQvuTPDvtmOkbGir1HqkfSNVxVp+MP3tqsFAYMGp57J21
-         Npx3K/54qlY7wmGcUm4W16apuXDWrwKn3CzZJ0qSWf1fuvEZ+E/m1DWeHWxQXbtSAlYy
-         ZwAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/H/HksJY6J318J8P2Z2xJYXDnkFnFFzEiZN6xbLfWH+8SOFyK6XnGpQiFFlCO4ozfAXIfetw9WLFgT4KjJ6maNdM2a0siEJli
-X-Gm-Message-State: AOJu0YzIF4IgCJD/4lWlU3usy90Dv1giWYEE7PGgbFiE1iMctq3tHP6T
-	h1IhfNu/BzigpykyCjdJDCwxFewR1xWf2lI2kjpS8KnqFzo77AkqHpMR2buzyL4Y15wKxoA0MjR
-	JPPqf4k+WRgcdgzpgplZTIUAy/hN2SfrfUE/JADi/lR7G3DlHRPr7s/rnvg==
-X-Received: by 2002:ad4:46d3:0:b0:698:fc78:21ae with SMTP id pm19-20020ad446d3000000b00698fc7821aemr9828983qvb.6.1712107974908;
-        Tue, 02 Apr 2024 18:32:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEDjHRAOIt7pAcFSSzP58lew6Exi/iOo8/2ozkB/HO9HAPtSJzX+RWcE9OqEaW9cSxSEbXVlA==
-X-Received: by 2002:ad4:46d3:0:b0:698:fc78:21ae with SMTP id pm19-20020ad446d3000000b00698fc7821aemr9828970qvb.6.1712107974456;
-        Tue, 02 Apr 2024 18:32:54 -0700 (PDT)
-Received: from x1n.redhat.com ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id qm18-20020a056214569200b0068ff8bda6c7sm6031687qvb.92.2024.04.02.18.32.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 18:32:54 -0700 (PDT)
-From: peterx@redhat.com
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	peterx@redhat.com,
-	David Hildenbrand <david@redhat.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	loongarch@lists.linux.dev
-Subject: [PATCH 3/3] fixup! mm/arch: provide pud_pfn() fallback
-Date: Tue,  2 Apr 2024 21:32:49 -0400
-Message-ID: <20240403013249.1418299-4-peterx@redhat.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240403013249.1418299-1-peterx@redhat.com>
-References: <20240403013249.1418299-1-peterx@redhat.com>
+        bh=CdnReuXFQgbpvjXMlLm8sCCXtyCSbBMw0wNSZs3OhSQ=;
+        b=bUOt4AlZ39S2l9/NNMtd7nrOuz8PA8FvoN4zY2cukvBoXRq1GadZGP1yURRx9d0X83
+         X6/tL+6CpkuWhRvadY3T03t4Sv7umeyJPu8CeAdPgnrpz9l/4eCmd0vx6KZzJcqXk38g
+         kEMurU5CpV9s9MJMIL8xh3SvZLnqEPXI64HYvKm1lnFzojx9tzqzi0QzVPztksTfEnfA
+         krp+bYfRTARBUFE1LWMVrcrzN+7ZcJZ7QT5SQmprkfVDh8vruBSeq5AQdVMFws73Ubj8
+         R5TLd6kqHj7ZtZcmrgsOo0JH8JGEdtSeGgsj3CIg0+VNA+MI9gp8CnGvl1O8b8VqZyMP
+         74vg==
+X-Forwarded-Encrypted: i=1; AJvYcCW84OTqOVWfAfpUp/PgolV8yDw76q1V6B4X8Y0QLkvh747/6ZOEvqEIl0S1vSJpB+Z5NaJ4oOAO5z6i5BmRFqDPl4Usl6dTd/IR
+X-Gm-Message-State: AOJu0Yx9w6rw7AQiutOjK46PUuKLXRoZ26MrDu5OiGdCHqVbiMu2it8T
+	QwBz3a8Na+X5ICE7Su8dN7aZxCld0aQ3WNo+7CWEn9+g6tMg2+AKL/VVEAOlN71/2cSHgsNuu9L
+	3q8G6dPpDUn0ih9hvSnuuQHpzqoU=
+X-Google-Smtp-Source: AGHT+IFBVvAU6OTdnHdu7Xw1/T4rdlSGlORrystxeqc3lRDY5KIqE/wyDmxucmLtXjkRwhJNY3QiZOSSfrDs5Zda0f4=
+X-Received: by 2002:a81:5253:0:b0:615:1711:e9a1 with SMTP id
+ g80-20020a815253000000b006151711e9a1mr1028812ywb.14.1712111869896; Tue, 02
+ Apr 2024 19:37:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+References: <cover.1711953223.git.zhoubinbin@loongson.cn> <edad2bb5b0045c633734c1499fb163c3c6776121.1711953223.git.zhoubinbin@loongson.cn>
+ <20240402174051.GA324804-robh@kernel.org>
+In-Reply-To: <20240402174051.GA324804-robh@kernel.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 3 Apr 2024 08:37:37 +0600
+Message-ID: <CAMpQs4K_VSqdm7x=cSyMTBYQyOm=th0YrYKdZ74dp35hyRBXgQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] dt-bindings: pwm: Add Loongson PWM controller
+To: Rob Herring <robh@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Peter Xu <peterx@redhat.com>
+Hi Rob:
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- include/linux/pgtable.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thanks for your reply.
 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index fa8f92f6e2d7..0f4b2faa1d71 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1882,9 +1882,13 @@ typedef unsigned int pgtbl_mod_mask;
-  * code.  Now it happens too for pud_pfn (and can happen for larger
-  * mappings too in the future; we're not there yet).  Instead of defining
-  * it for all archs (like pmd_pfn), provide a fallback.
-+ *
-+ * Note that returning 0 here means any arch that didn't define this can
-+ * get severely wrong when it hits a real pud leaf.  It's arch's
-+ * responsibility to properly define it when a huge pud is possible.
-  */
- #ifndef pud_pfn
--#define pud_pfn(x) ({ BUILD_BUG(); 0; })
-+#define pud_pfn(x) 0
- #endif
- 
- /*
--- 
-2.44.0
+On Tue, Apr 2, 2024 at 11:40=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> On Tue, Apr 02, 2024 at 03:58:38PM +0800, Binbin Zhou wrote:
+> > Add Loongson PWM controller binding with DT schema format using
+> > json-schema.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  .../devicetree/bindings/pwm/pwm-loongson.yaml | 64 +++++++++++++++++++
+>
+> Filename should match compatible.
 
+Emm... How about renaming it as loongson, pwm.yaml?
+
+>
+> >  MAINTAINERS                                   |  6 ++
+> >  2 files changed, 70 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-loongson.=
+yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-loongson.yaml b/=
+Documentation/devicetree/bindings/pwm/pwm-loongson.yaml
+> > new file mode 100644
+> > index 000000000000..d25904468353
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-loongson.yaml
+> > @@ -0,0 +1,64 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/pwm-loongson.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Loongson PWM Controller
+> > +
+> > +maintainers:
+> > +  - Binbin Zhou <zhoubinbin@loongson.cn>
+> > +
+> > +description:
+> > +  It is the generic PWM framework driver for Loongson family.
+>
+> That's describing the driver. Not really relevant to the binding.
+>
+Ok ,I will rewrite this part.
+
+>
+> > +  Each PWM has one pulse width output signal and one pulse input
+> > +  signal to be measured.
+> > +  It can be found on Loongson-2K series cpus and Loongson LS7A bridge =
+chips.
+> > +
+> > +allOf:
+> > +  - $ref: pwm.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - const: loongson,ls7a-pwm
+> > +      - items:
+> > +          - enum:
+> > +              - loongson,ls2k0500-pwm
+> > +              - loongson,ls2k1000-pwm
+> > +              - loongson,ls2k2000-pwm
+> > +          - const: loongson,ls7a-pwm
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  '#pwm-cells':
+> > +    const: 3
+>
+> Please define what is in each cell. If there's only 2 signals, then the
+> first cell defines the output or input (what value for which one?).
+>
+> Really, the PWM binding is only for outputs, so is a cell even needed? I
+> suppose we could use it for inputs too, but that's really "input
+> capture" type operation that timers often have. I'll defer to the PWM
+> maintainers...
+
+Ok, I will try to add some description about it.
+
+If I understand correctly, the meaning of each cell in "#pwm-cells"is
+determined.
+The first cell specifies the per-chip index of the PWM to use, the
+second cell is the period in nanoseconds and the third cell is the
+polarity.
+
+>
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - '#pwm-cells'
+>
+> pwm.yaml makes this required already.
+>
+Yes, this is unnecessary. I will drop it in the next version.
+
+Thanks.
+Binbin
+> Rob
+>
