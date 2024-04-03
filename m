@@ -1,162 +1,201 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30288153598
-	for <loongarch@lists.linux.dev>; Wed,  3 Apr 2024 18:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24583D962
+	for <loongarch@lists.linux.dev>; Wed,  3 Apr 2024 21:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712168730; cv=none; b=TUIrYX686KlQP5oLT13yf6i4+CcuRbdP8T3tnfL/lR4TtgTcQAXiGAN3ZH9h0MrWtlgAJMJDC4dW6EccRroWPvOFAycrLNvhFfJe0vi8WZIhqzm3SGbL6q+UwbFvm6Wtaay/QE9ODYg7WCm8AZB1WRY9jNawCLknBTuv6VmQ5KE=
+	t=1712179238; cv=none; b=CB0xMruUnjZvBjPXr5tmDyM/IW+JNFtsretchjjorIwQZHZZp379ebsd9wY2zW3EHe2VPlYY9AugbMKBPqfujUlsu7d3Dlm3HYhS2p7VcVww9GuszOJEU1PZcs26ATS704fyaksKjtyvOhKQ0cMJ2Ud8wMyBfRkLVpiS/5/gMcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712168730; c=relaxed/simple;
-	bh=49xRMMJoQJIUdr7zdlVs8BfmW6KWUNR4b9vQnfKmZbA=;
+	s=arc-20240116; t=1712179238; c=relaxed/simple;
+	bh=qNCBndGvASRj94i9gCbn2Ois8Kwv0gWWiWeAMOMLgEQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=om0ZdJlstqASjUO8VI1MZfK7O2mvnsq8ODVger5PLNWjUzyb2r8aqNhdiR76WVFbKRk6eCFgFhoh5X9QrXmZ/lsHKjTHBSqjyGIfgO7C6oww3qXXPj+E+xGMmq4uEEebnHI5dNLWQAcwIhbArR9Yn7hoMRvqE5keg3eFlKDwg80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=heMLqqir; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=civ2Xe7YNab3qFZDFK3aSgDwAsrgvGOf47pkI3XDym/qLk8RIVl36COFBNa5DsWERad4UoXVYeQySPael9d0CF/bz98HmZXes532m3WaH+JVKrsc7kxGgGoKE4drunAYKz+OeAooWZBxhIUq6h85vdidxfpvOqIla/OB/dlM6Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jffrY+TH; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="heMLqqir"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712168728;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YXsmqoOHzY6mBushOHoxlZz3TK/EfZqT4lQukaq20AM=;
-	b=heMLqqirhetqkyRiPCH3Vkky/06M9DspI45IQqhjcTxHwRJubOfrEAI3s1DGL7zlp/MTy2
-	crdyh6BwsBeigM43muN/W90oqkQYyAKN72tVevCQkugKm/nHF0HYLETz6gAtdLkcSQWSTD
-	qivFh9/9bemWtTCaAawtsUFL7kXEX2A=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-266-OhYT0OKiOdyTA-9rPpTxYA-1; Wed, 03 Apr 2024 14:25:27 -0400
-X-MC-Unique: OhYT0OKiOdyTA-9rPpTxYA-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6991ad4ea9eso182706d6.0
-        for <loongarch@lists.linux.dev>; Wed, 03 Apr 2024 11:25:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jffrY+TH"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e28be94d32so2255295ad.0
+        for <loongarch@lists.linux.dev>; Wed, 03 Apr 2024 14:20:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712179236; x=1712784036; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gk/7t8bB/vPp5RYyhmHYp9/pKPIZpl1c0Hpc1VIArKM=;
+        b=jffrY+THbHOm5c6DokeQZh1YM1LNN5aX1+UFq5/zdcTLjQFwpIaw8YrX6obXmjUoIr
+         /3Jtf8k7riwNkmtCbug/zSvJ8n/Un+b2T87Fm2S7Y27nRMVOOFQhUz56X20t5OfxPMY8
+         DL2LaOkzgThmtGRXJvq8f9ePg9fT/m5DtyLKk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712168726; x=1712773526;
+        d=1e100.net; s=20230601; t=1712179236; x=1712784036;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YXsmqoOHzY6mBushOHoxlZz3TK/EfZqT4lQukaq20AM=;
-        b=CU+j5daNgO8NAxTRgJi3mTAFsmgt4PD1mfCXvQZXxL/HOPAIEz3ieZfsG7NXl8n7dP
-         ptS//iwjoJQnGVHIjklIvmPqTRPDjk3oc5BUA7qUJs4bjc1xvewK0ebYC/zARmkPFIFL
-         tFA4oPkH/xyhqmkV1ikyuHlAmN3d9UcdSTTFIcJuLLO4v5slWMQIN2GopljAqVLAbFlf
-         dTKkspcPHBdJtUqM7+pAjsF8juTeOmr5iJ0klbkzAAW9GwwfT/ppOD50zxf/g2lI5RuA
-         A0yJXwq0C1XQhv+a5TVVScm2eAesKhNgG1sI4LWCgWHECkhccnW8GsaH4hEaNFHGIPQf
-         zGfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUF7t1rRmJUeo1blKr0UhIoAYbuR9MaSFeY/6lg0C9Ciz7x+6dS01UB+nKQ/p+F2WV3q8uB0HeB5BSQGuN3w3BN8RmxPbm0Q7IU
-X-Gm-Message-State: AOJu0Yyn63l0EMbM+bscEvK4DhH8ftySu6RJaGInqUeLmQCQL1yYB95N
-	BfMhEmiESmcO7TEvghQ9aP1UEU7XQ+WaA4/qRN7C24Sw+SLY7cQ3yPNqOcMv5T002YaJTKn3btQ
-	GO7Il7fYgAiixEMLI1/wt/nDJiXdY2a849grjhyPgByvWKfWcZVq+n3k49g==
-X-Received: by 2002:ad4:5cab:0:b0:699:2242:4ee8 with SMTP id q11-20020ad45cab000000b0069922424ee8mr129114qvh.3.1712168724118;
-        Wed, 03 Apr 2024 11:25:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHOuNMZozoa6aScFD4XBgyXphotERni3kWeSwgWQ4wF27W29jsLbCwW0feeq4rwhZfTMS4o4A==
-X-Received: by 2002:ad4:5cab:0:b0:699:2242:4ee8 with SMTP id q11-20020ad45cab000000b0069922424ee8mr129072qvh.3.1712168723495;
-        Wed, 03 Apr 2024 11:25:23 -0700 (PDT)
-Received: from x1n ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id s15-20020a0562140caf00b00698fd63d167sm4435500qvs.123.2024.04.03.11.25.21
+        bh=gk/7t8bB/vPp5RYyhmHYp9/pKPIZpl1c0Hpc1VIArKM=;
+        b=L2BX+9oFvBfblHQfCaxXi0P66LlbQQI0+bRmSm3U5xfGjqgRMM1x8FQv8HtPBf3aOm
+         uxsVkWTiiSCZJhTowJ8hYfSHPGmVFGpgaY5cDsp6RfdQk1sM4sWKFoGb5u9NDA9wv0eq
+         wMTzw/cj57wDUQaXGQG52UnrN7Qeo/C7vCGzZ08K4L5DsZUmH4BYh+injCvAYqay3hEO
+         V6Nm1ZCRxLxQkRcwopAKmOifl1IdcFlvWbsa6+q3Vj8EWiHdULoNOiQ9xE0oPH+twbSE
+         e7Q7ndypepxx3Y6YV/9H4TIpliAtBvjkkiFJdquFmb53s2U6SN9cfb++4or1bHwHGc2K
+         Rqug==
+X-Forwarded-Encrypted: i=1; AJvYcCXrzau0kWnCfttojsk+JJ3K8DxN1ZXld0pEeTwjGQ4OLa5HebF95oA30Gu7fJpyWPEoBGEYY7T62XFNebY9jvo7sPgRd53nCIEL
+X-Gm-Message-State: AOJu0Yz+yPS9Cd+MHlBM19ic3fFPyXpXKUAuXQvIlImta5IaYl9vc45+
+	BylSvRlubEShfveidYf/IXkGXKmRdFiH9KCBP/WeBYEM3/X7ht/h2E6f49gcNw==
+X-Google-Smtp-Source: AGHT+IFNWSt+grv0aoo3QXgpCvCZ7QxZ9IBnA1B4gdZs5eLtWkdhNXO9ogb9Q/XDMKHoC6MfZl34Wg==
+X-Received: by 2002:a17:903:110f:b0:1e0:f25b:e795 with SMTP id n15-20020a170903110f00b001e0f25be795mr509491plh.11.1712179236057;
+        Wed, 03 Apr 2024 14:20:36 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id m16-20020a170902bb9000b001e2a87d7d2dsm163988pls.253.2024.04.03.14.20.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 11:25:23 -0700 (PDT)
-Date: Wed, 3 Apr 2024 14:25:20 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Yang Shi <shy828301@gmail.com>,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Wed, 03 Apr 2024 14:20:35 -0700 (PDT)
+Date: Wed, 3 Apr 2024 14:20:34 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rik van Riel <riel@surriel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	James Houghton <jthoughton@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 05/13] mm/arch: Provide pud_pfn() fallback
-Message-ID: <Zg2fEP4eEeLhgDwE@x1n>
-References: <20240327152332.950956-1-peterx@redhat.com>
- <20240327152332.950956-6-peterx@redhat.com>
- <20240402190549.GA706730@dev-arch.thelio-3990X>
- <ZgyKLLVZ4vN56uZE@x1n>
- <20240402225320.GU946323@nvidia.com>
- <ZgyWUYVdUsAiXCC4@xz-m1.local>
- <20240403120841.GB1723999@nvidia.com>
+	Maxime Ripard <mripard@kernel.org>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 00/15] Add support for suppressing warning backtraces
+Message-ID: <202404031414.645255D868@keescook>
+References: <20240403131936.787234-1-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240403120841.GB1723999@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240403131936.787234-1-linux@roeck-us.net>
 
-On Wed, Apr 03, 2024 at 09:08:41AM -0300, Jason Gunthorpe wrote:
-> On Tue, Apr 02, 2024 at 07:35:45PM -0400, Peter Xu wrote:
-> > On Tue, Apr 02, 2024 at 07:53:20PM -0300, Jason Gunthorpe wrote:
-> > > On Tue, Apr 02, 2024 at 06:43:56PM -0400, Peter Xu wrote:
-> > > 
-> > > > I actually tested this without hitting the issue (even though I didn't
-> > > > mention it in the cover letter..).  I re-kicked the build test, it turns
-> > > > out my "make alldefconfig" on loongarch will generate a config with both
-> > > > HUGETLB=n && THP=n, while arch/loongarch/configs/loongson3_defconfig has
-> > > > THP=y (which I assume was the one above build used).  I didn't further
-> > > > check how "make alldefconfig" generated the config; a bit surprising that
-> > > > it didn't fetch from there.
-> > > 
-> > > I suspect it is weird compiler variations.. Maybe something is not
-> > > being inlined.
-> > > 
-> > > > (and it also surprises me that this BUILD_BUG can trigger.. I used to try
-> > > >  triggering it elsewhere but failed..)
-> > > 
-> > > As the pud_leaf() == FALSE should result in the BUILD_BUG never being
-> > > called and the optimizer removing it.
-> > 
-> > Good point, for some reason loongarch defined pud_leaf() without defining
-> > pud_pfn(), which does look strange.
-> > 
-> > #define pud_leaf(pud)		((pud_val(pud) & _PAGE_HUGE) != 0)
-> > 
-> > But I noticed at least MIPS also does it..  Logically I think one arch
-> > should define either none of both.
+On Wed, Apr 03, 2024 at 06:19:21AM -0700, Guenter Roeck wrote:
+> Some unit tests intentionally trigger warning backtraces by passing bad
+> parameters to kernel API functions. Such unit tests typically check the
+> return value from such calls, not the existence of the warning backtrace.
 > 
-> Wow, this is definately an arch issue. You can't define pud_leaf() and
-> not have a pud_pfn(). It makes no sense at all..
+> Such intentionally generated warning backtraces are neither desirable
+> nor useful for a number of reasons.
+> - They can result in overlooked real problems.
+> - A warning that suddenly starts to show up in unit tests needs to be
+>   investigated and has to be marked to be ignored, for example by
+>   adjusting filter scripts. Such filters are ad-hoc because there is
+>   no real standard format for warnings. On top of that, such filter
+>   scripts would require constant maintenance.
 > 
-> I'd say the BUILD_BUG has done it's job and found an issue, fix it by
-> not defining pud_leaf? I don't see any calls to pud_leaf in loongarch
-> at least
+> One option to address problem would be to add messages such as "expected
+> warning backtraces start / end here" to the kernel log.  However, that
+> would again require filter scripts, it might result in missing real
+> problematic warning backtraces triggered while the test is running, and
+> the irrelevant backtrace(s) would still clog the kernel log.
+> 
+> Solve the problem by providing a means to identify and suppress specific
+> warning backtraces while executing test code. Support suppressing multiple
+> backtraces while at the same time limiting changes to generic code to the
+> absolute minimum. Architecture specific changes are kept at minimum by
+> retaining function names only if both CONFIG_DEBUG_BUGVERBOSE and
+> CONFIG_KUNIT are enabled.
+> 
+> The first patch of the series introduces the necessary infrastructure.
+> The second patch introduces support for counting suppressed backtraces.
+> This capability is used in patch three to implement unit tests.
+> Patch four documents the new API.
+> The next two patches add support for suppressing backtraces in drm_rect
+> and dev_addr_lists unit tests. These patches are intended to serve as
+> examples for the use of the functionality introduced with this series.
+> The remaining patches implement the necessary changes for all
+> architectures with GENERIC_BUG support.
+> 
+> With CONFIG_KUNIT enabled, image size increase with this series applied is
+> approximately 1%. The image size increase (and with it the functionality
+> introduced by this series) can be avoided by disabling
+> CONFIG_KUNIT_SUPPRESS_BACKTRACE.
+> 
+> This series is based on the RFC patch and subsequent discussion at
+> https://patchwork.kernel.org/project/linux-kselftest/patch/02546e59-1afe-4b08-ba81-d94f3b691c9a@moroto.mountain/
+> and offers a more comprehensive solution of the problem discussed there.
+> 
+> Design note:
+>   Function pointers are only added to the __bug_table section if both
+>   CONFIG_KUNIT_SUPPRESS_BACKTRACE and CONFIG_DEBUG_BUGVERBOSE are enabled
+>   to avoid image size increases if CONFIG_KUNIT is disabled. There would be
+>   some benefits to adding those pointers all the time (reduced complexity,
+>   ability to display function names in BUG/WARNING messages). That change,
+>   if desired, can be made later.
+> 
+> Checkpatch note:
+>   Remaining checkpatch errors and warnings were deliberately ignored.
+>   Some are triggered by matching coding style or by comments interpreted
+>   as code, others by assembler macros which are disliked by checkpatch.
+>   Suggestions for improvements are welcome.
+> 
+> Changes since RFC:
+> - Introduced CONFIG_KUNIT_SUPPRESS_BACKTRACE
+> - Minor cleanups and bug fixes
+> - Added support for all affected architectures
+> - Added support for counting suppressed warnings
+> - Added unit tests using those counters
+> - Added patch to suppress warning backtraces in dev_addr_lists tests
+> 
+> Changes since v1:
+> - Rebased to v6.9-rc1
+> - Added Tested-by:, Acked-by:, and Reviewed-by: tags
+>   [I retained those tags since there have been no functional changes]
+> - Introduced KUNIT_SUPPRESS_BACKTRACE configuration option, enabled by
+>   default.
+> 
+> Changes since v2:
+> - Rebased to v6.9-rc2
+> - Added comments to drm warning suppression explaining why it is needed.
+> - Added patch to move conditional code in arch/sh/include/asm/bug.h
+>   to avoid kerneldoc warning
+> - Added architecture maintainers to Cc: for architecture specific patches
+> - No functional changes
+> 
+> ----------------------------------------------------------------
+> Guenter Roeck (15):
+>       bug/kunit: Core support for suppressing warning backtraces
+>       kunit: bug: Count suppressed warning backtraces
+>       kunit: Add test cases for backtrace warning suppression
+>       kunit: Add documentation for warning backtrace suppression API
+>       drm: Suppress intentional warning backtraces in scaling unit tests
+>       net: kunit: Suppress lock warning noise at end of dev_addr_lists tests
+>       x86: Add support for suppressing warning backtraces
+>       arm64: Add support for suppressing warning backtraces
+>       loongarch: Add support for suppressing warning backtraces
+>       parisc: Add support for suppressing warning backtraces
+>       s390: Add support for suppressing warning backtraces
+>       sh: Add support for suppressing warning backtraces
+>       sh: Move defines needed for suppressing warning backtraces
+>       riscv: Add support for suppressing warning backtraces
+>       powerpc: Add support for suppressing warning backtraces
 
-Yes, that sounds better too to me, however it means we may also risk other
-archs that can fail another defconfig build.. and I worry I bring trouble
-to multiple such cases.  Fundamentally it's indeed my patch that broke
-those builds, so I still sent the change and leave that for arch developers
-to decide the best for the archs.
+Tested-by: Kees Cook <keescook@chromium.org>
 
-I think if wanted, we can add that BUILD_BUG() back when we're sure no arch
-will break with it.  So such changes from arch can still be proposed
-alongside of removal of BUILD_BUG() (and I'd guess some other arch will
-start to notice such build issue soon if existed.. so it still more or less
-has similar effect of a reminder..).
+(for x86 and um)
 
-Thanks,
+I was planning to add warning suppression for the "overflow" KUnit
+tests, but it seems the vmalloc routines aren't calling warn_alloc() any
+more for impossible sizes. So, I think, no patches needed for
+lib/overflow_kunit.c, but at the end of the day, I've tested this series
+is working for me. :P
 
 -- 
-Peter Xu
-
+Kees Cook
