@@ -1,214 +1,218 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2113.outbound.protection.outlook.com [40.107.237.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CEF146A99
-	for <loongarch@lists.linux.dev>; Wed,  3 Apr 2024 12:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712148672; cv=none; b=OTKrpfsBTC00vBYeH1+IGyCy3LAzpEqaaa3mZWboEszT5+8o23WIGa3aj8mB85ELLLyUrgRWksx02+xvNxO/9XH0XZYXJ1BOOCWg39yox6MBLnE9pg+AlmrSnkN3HWmzOTeymsGzNyPiVQdT25higM9cJ4iqHWxy7YuMGUDRCzg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712148672; c=relaxed/simple;
-	bh=zwy5/UeNKw0rdFTNUIENurIiqNiqQ2OzHWaKd+hx69E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nCiEOOoSVq06tOmvJQibRuYZv+0GOgQhX2d/F8ktP57j1LvOC2dudHA8xH4n8I2LPnQF1rJiTFFpCE5kQWLxyY6FOe1PDARjrLAP3f0VbNc8FBpELmLg+FwC4uUKATUWzmhw2WmKPeeMfatzTc6IKNlxr8YP4QoTTzH/EuQms1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BGoWRLnv; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CB8145FE4
+	for <loongarch@lists.linux.dev>; Wed,  3 Apr 2024 13:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.113
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712149686; cv=fail; b=qaeXFXsMJ/Sbh3Jhn/kLr1hCqx18klWXXsVBOyXNEMkt+MocvabdL8ub9Pmh29tqHJupaVOZ+ZXjNHFPudR/5GC0l3pw5Rb02uYeksAFH5Jigen4JG5952DDR5/Uz+S7IPh+l6W32L5LchLFdj0EFqFY7ePu1k9H6Bb7MNMV/a8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712149686; c=relaxed/simple;
+	bh=MzGPXBvbU3OqD5pgX8xsXafMi4TEN6TTqeXDnXMqqxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=UTiXQXhWiKbB4IF7eD8VjJ4Wl3MjMuCRjPupjswtodk+8eOXCotgTFJ63Z4dLzNyGc/mIoctgoegFEGZHVuxdmMHKN2n6m6AAgjk0lxYuqqbaftrvWoKQZKSv5/BCGtO9YESZal/1qmYz74W1qI8ArdlgxVWWVl5EZPB8pV+uA0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EZsUjcmo; arc=fail smtp.client-ip=40.107.237.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGoWRLnv"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-415584360c0so27731095e9.1
-        for <loongarch@lists.linux.dev>; Wed, 03 Apr 2024 05:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712148669; x=1712753469; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=29BgQt41fxpDRMixAlECbaCmewv1mm5rdtRovSAulMA=;
-        b=BGoWRLnv8rlRLv7GCIimx5HX/ZYSzHIPtmdMG0/vNNAmgb2P6+peoy3/ezza7jet85
-         Th0kwFR+GxBssEmmKE1dpO13uLXSDSRlO655q/XKETkTLEpfuojrhO2W4ElKq8FHCplh
-         StNm1ty9PEHJxPzV384ioxOmUuLUFGKnY3Zn339T6k7Auhemf3xf0TBqxkKksAvIP9/x
-         V+1LsOhPDrthQaYMawbH2EGflcMmSLmaUySyrq2/s8+NXEwqu5XTtKnyLqCe2mqggQGt
-         h7I7jNK7o4r7SNpor9oxSpXqP6yrT2Efi+W3SMJNe0PUO8Eff1rIQEyDUIOW6lArQtlY
-         wFlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712148669; x=1712753469;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=29BgQt41fxpDRMixAlECbaCmewv1mm5rdtRovSAulMA=;
-        b=nNRgCZd21lsVDwsizsmhxq8d6N26WTjhgQ6qSDCy1kvKUFUFdySlMnBOMKbWGzlJ3s
-         oLG7H+svSrYVT56K1IhKf0QIELUv9mmynRncVkOCL2c1S86So0OEr5rVhqujXp5qsozP
-         5d0UlYwAa9ZVvaBgkV1MkxC5sx2HEdGxevk/8224rlsoF70etk2xS0+CcSIkbq/cZT0D
-         rUiplFTnFDDJqV32VJ7VR27pxURsF1Q/m78ufdnTiyK/qgYfz6zNn466m8mv+04NB3L9
-         tJJjGLEUgnvC6+VAygG6J+dQJ1Kp+EC4+ljR9F5e5MzqZs2tW7KqGjQM+veW/kBdHjTn
-         ai9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVwtWLwhCi5Seu9ayrz90Im1xS3Iz0ZS74o0DTVXBUS1/X13HB5WA8PYrVqJ7fZ5uUbNvjTB9l5eK4mqfND07y3LdJnT/58LxYo
-X-Gm-Message-State: AOJu0Yz2XfNQg5jKRL9sg/igbSvxImNBre4CiBplGeDjUW711WF4SFQt
-	yE/7gxnxJG+xANT5QkKM3j2cJzkdsY3H0aU8ToNMTDqR8eB4zz5y
-X-Google-Smtp-Source: AGHT+IGiMxFFkzEMKwErZDGMsEh8QQujgECEb7hAYrnmXSB8PanQ6hfDeg6f6lJ/1vv3KfoIi9fU0w==
-X-Received: by 2002:a05:600c:5710:b0:414:9103:e38c with SMTP id jv16-20020a05600c571000b004149103e38cmr10494666wmb.22.1712148669149;
-        Wed, 03 Apr 2024 05:51:09 -0700 (PDT)
-Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
-        by smtp.gmail.com with ESMTPSA id dj11-20020a0560000b0b00b003437799a373sm3724238wrb.83.2024.04.03.05.51.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 05:51:08 -0700 (PDT)
-Message-ID: <0c95aa84-63e6-41be-8c70-3a6dadefd682@gmail.com>
-Date: Wed, 3 Apr 2024 14:51:04 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EZsUjcmo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N3w25fck0Xw5esq4kGkhlplhRtKt3Bhqc5wR4rOUIYDFeDszchdOTgHojSkhQ8Q8VNNgJHgzCYIeLCtfQT+PhnWk5CYcZNTnx/VdJ6K1/g66MfE0BiOuZ38MP8ojU8YXwz5QAmCTc5dStK/Awf/o1+DxQZPJhNMYkADcQCZ2CVzHY88dHt/86DJfbLKaVHSkcRH0irw+UFElzkc8VTelNReatVwY58LVHvrWoKwXpHr/qz/pZ6EyaYcWCNOgLS9uhLkVFqw230p3FQMjDm0UFdrWKKWQOD4CSt2I7yDJ+IbEvh3RfVRLqb57c69BPGKQtoRUKU8kBwqR+I1Kj4uO2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WPKLtrzmN9+lHp7by/pqxBXrsMwmMThT5Y3YwTuQlGM=;
+ b=R+/ISom/+zs1gxF6ifk2YxJpRCzfWk/YuHH5rg/F6xx/3WyPn5X/jmLcpTJRNR7LyCyMZLySUFIczydeXfJ0G30L/qT0U6Ux2B9JJabXXhknXJ1DJKYeDFRbYm+nx/U1IZ+CjWSYBcTj5U/0Kaz2F7c9PDatG3uewSaZxQsXZ4Eu9ccwcIKLPRilgaoVhfvrWG5vkYN1l/0RwrKxrObbpXNS5yi872f2L2UHAa1BJ5FAY4F6mOvjpVy5B9N95ut4cD4fMLlAcmWnDh9IHzfJeRhQfLRsiTCdfRVMHMJIWdQ/Eu+klXh22wSZOnzPfIL69DVpuBdfIXNqlMc+XGMY0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WPKLtrzmN9+lHp7by/pqxBXrsMwmMThT5Y3YwTuQlGM=;
+ b=EZsUjcmokCmLxDCQkCwetwzq8kIyQ1YN146Rv726L2IOJHQcDnvuVi+KdVxZXRq7oMliaWDFDw/NqYeCycOM61p+9GMS/5Zmx+Nhk9+rZzxFa8nzibbTgsyXFcFN9mqSRyFJQghxmLSbRyr/mrFXDQiQFQO5A0433vqccwe/0Hbc7QtPncpgJ5Hl3Hx+in0ABxn4kLDXAy24WGnjYwRIKAr5f+cjjd9qUUOyXPVmIsEZ5mgPaOkDkngZyDOwFvLOn3/FgHZb3HJTabByubeSSkcbvk+F+SaL00fck/VhZcxUEGD7kszJO35GmeINHfkM766eM4yOPcwACCW4Pw2tPw==
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by PH7PR12MB7308.namprd12.prod.outlook.com (2603:10b6:510:20c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
+ 2024 13:07:57 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::6aec:dbca:a593:a222]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::6aec:dbca:a593:a222%5]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
+ 13:07:54 +0000
+Date: Wed, 3 Apr 2024 10:07:52 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Peter Xu <peterx@redhat.com>, Nathan Chancellor <nathan@kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Yang Shi <shy828301@gmail.com>,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Andrew Jones <andrew.jones@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	James Houghton <jthoughton@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
+Subject: Re: [PATCH v4 05/13] mm/arch: Provide pud_pfn() fallback
+Message-ID: <20240403130752.GC1723999@nvidia.com>
+References: <20240327152332.950956-1-peterx@redhat.com>
+ <20240327152332.950956-6-peterx@redhat.com>
+ <20240402190549.GA706730@dev-arch.thelio-3990X>
+ <ZgyKLLVZ4vN56uZE@x1n>
+ <20240402225320.GU946323@nvidia.com>
+ <ZgyWUYVdUsAiXCC4@xz-m1.local>
+ <20240403120841.GB1723999@nvidia.com>
+ <3da59746-8acc-4a91-a19d-79a37ac75a8e@csgroup.eu>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3da59746-8acc-4a91-a19d-79a37ac75a8e@csgroup.eu>
+X-ClientProxiedBy: SA9P221CA0007.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:806:25::12) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/15] Unified cross-architecture kernel-mode FPU API
-To: Samuel Holland <samuel.holland@sifive.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, Borislav Petkov <bp@alien8.de>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
- Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>,
- Will Deacon <will@kernel.org>, linux-doc@vger.kernel.org,
- linux-kbuild@vger.kernel.org, "Wentland, Harry" <Harry.Wentland@amd.com>,
- Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-References: <20240329072441.591471-1-samuel.holland@sifive.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20240329072441.591471-1-samuel.holland@sifive.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|PH7PR12MB7308:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	2FN5sV7ggEC4QGfJXPKiiBqIaTFE1ktvqeTVs4zje0Ra+fmuIRfTH6zQWioXqzsuz6tnnTL+kD31bhztM3zXi5FrMsLbY10BvsaG5f9tfym04f2xdYEQp0768gTs5ndUv7sfA6Li0A3QSXvXKZE1Y49GXHJ5gg1rg0ur+PH6KS0Nr+CEJ+DsYN+Xc8AEt54prP0DLph29QZ8k8ND/vz1K/LNoycgpbjlk2Nq1jHd8lLJ1SUmNK9xye4SjDwBgaB6VSMtCTW7WyQaZjBwE3ufET2Gf5XAmUvUbIVht42svTXlPKX5X8CZiTQZiXIvx4mtQiE5i1h9xgr2Fq5moPkvNkXeKxHbqwAzMnXLFilcvY/LniK/WJoyjhNCh2l1pOONIWV3s84yfkLrCnWX2jxI/a/AV7LKGvIDixUNs+M9cSWQNA+NRR8QruTSAY8Mo0lp5t8Tz/fH3cs/EGmUtXjfh8Prsd1Nd5utyDZgKue/AHyMpzvFnqsnQeDosFDcx+7PUZCQtdLishtf+OxjH/6FOawBgwJ5OT7f5jVCLxJKiDK4kNC+qzA7Jh8Vw66aokhv+o+8bS8RuaSV2N85pV8zHot+IeL9raPWLxKi9PiFalW54XdBS/XeSsmc8xO+5FbHML7GV3DspL5GaUeXh1gb6LhsiJH7FwFLBaGIkYqMik0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MVB3NkR4ckdtWHhEcVRyZVA0RWpoWFIzTjZkOWZLSUREb1Mxck95Kzh6dVdT?=
+ =?utf-8?B?WU42MWg0ZW92SHI5ZlR0MHVTOEJHSnNCMDJBcnBORHlTRDBSNE01bEVrQ2Z0?=
+ =?utf-8?B?WlNhdk5TYXoyMU9WaUdVUExhQmJBbThxZTV2NjFITklSYjZBTktsQmU5VjFm?=
+ =?utf-8?B?N0NtRVQvZHpibVhYYkR0WDBJelpPVlh2ZDJ0c1NIZnpXdmJvRWkvelJMdzVR?=
+ =?utf-8?B?YXpxUzBGcEpUS3dxc1ZrMnZDUU9mdEszdU0wK3BYRC9NYkowb0tlaExySnp1?=
+ =?utf-8?B?SkMrWnlwWXlSS0tyV1VNTTFsMlM5Q05GQlZSZW5YZ2xvMDM0ZFMyTTB5a0ht?=
+ =?utf-8?B?NjREMW90SnRqbGpsVEZiWkhwRzF1ZHplUUdMY0FJODNEdFFYenpiczN5L0hi?=
+ =?utf-8?B?bnVOSDVsRDUyV2p3K0lKZ25hVWdMeTRDQnhZYUcvSnFTRk1PM2Y0WjFxeUM2?=
+ =?utf-8?B?MzRyRUI0Z3l4a01xTmFvbWNiTVp4OTJPRzNSSXlkNks1bi9ObDAvc2lDNU9t?=
+ =?utf-8?B?NzE4VUoyT3J1TzZMNko3NGsxMHN6V1F6ODhJN1pnZWJ0T2U5UktCUTUxRlJU?=
+ =?utf-8?B?VlRPZDhuRzJFUnpoKzlNZ2k1RnFpSk1YWjVGWEpaRzZ5eUdlejVpQWxLVndk?=
+ =?utf-8?B?cUhhMVZ3Qml2MVpOZ29EZ2NybnZWc1JUSTRBNmtOZ2FkdW5WbkpPMGpuUVRR?=
+ =?utf-8?B?enNnL3lHL0tuSjVhMU91VDRyKzU1dnlxQTU3dUtyMkFETE9OaERlS2hTRUpY?=
+ =?utf-8?B?bFBCdWsyRDZWbm5lbE1EcndhbVdmbTZLay9YVnRMSkM4SzAyUHFKQmVEVkJU?=
+ =?utf-8?B?WW13a2Y1Z2lvdTdmRk5ZaFp2RVprRDJYUW40cmRwOHhDR2FWTzIyS09XTzNC?=
+ =?utf-8?B?MFpaTHYzenhTQXZpUGFqR3NFa3RWVTd0dFFHU3Zjc0lpeDROSmpTNGhXYlFr?=
+ =?utf-8?B?Yk1WbXIwWG5jWjJPUytOaitFUit2NzhWOUROeXhYaHZlZC9NV3lBOTRLSWFl?=
+ =?utf-8?B?T25GYnMzaU5lRlV4NW5VZnZGME8vQzI4OFBRREVmUGdTT1NyNzdGaVZkTHc1?=
+ =?utf-8?B?M0FDdGJ4NjJSOSthcEV3Q1V4QXBoRVlLaUpUQkZKM2phcHp3NjZPdFVZSjJZ?=
+ =?utf-8?B?RFBWZW1QeG80b3VEdHh1ZUNCL0RQK00vQjhEK0wzQkhqOU02VkJoMVRVSHMx?=
+ =?utf-8?B?V1pGN1luNU1wVDA2QThMbmUzbXNZKzNuTFJOdGdmNG1iazY1TmVhTUFwM3d3?=
+ =?utf-8?B?V3BSYWpKSVpGUEhRTTI3MG96ZzJ1SWRIN2JQbDVOWnhCYm1LeXJwaDMzVnN1?=
+ =?utf-8?B?WnVNbHhENndmY3FJNTVvbkJJWkpvNExLNXNDTEtjbW5LU3liRENtdUVPUTBM?=
+ =?utf-8?B?a3BDVUVlUFI0MnhBTzd2STcxaG43WUJiQTZlM2FQVyt0a0dsTTJJM3BucFpS?=
+ =?utf-8?B?QWlueDlpaWFaVjZqd20xS1J5NGU5VzBVTzdjaDdyak1vYWFsZFFYajMxbDht?=
+ =?utf-8?B?WVk4UG91aUZ0c1d4RE1yR2NNc0JHUllFcmtHdjBGRENGUVJhT2xCazVxMXF4?=
+ =?utf-8?B?SlZWdW1TOW5RcUFVeTEyR0pMYnB2eUNoWkEwOVlLd29IM1BTV2xDOCsvTTRj?=
+ =?utf-8?B?d0VsSmVYOVlzcjlRRWU1ZWJkTGxQRjYzMlFnNisya01LNDR3V3FZVzhaTWRX?=
+ =?utf-8?B?STUvVU94cE9sQmYwRTJGR0ZIYzVCeVQ4SmQvOXR3UkVlN3dNVFlhSEpDQ2Yx?=
+ =?utf-8?B?MTVzMHNIYThxZkVmRnJDTUVia1Z1SXk2Um0zRVM5N1RmQ29zalF4VFpuRm1U?=
+ =?utf-8?B?UFJRYXFURnlFSWpkenpHNWFRVkpHaWpQV0RlSmxUbkszV2lkb2liOEE0QXhR?=
+ =?utf-8?B?SEhCdXpraU00MnJuUERYaUQzdXZ0c2REMHZKdmo0NXBYLzlONlZnempEUUx0?=
+ =?utf-8?B?aGszRlk1K0h0T1VxY1BGc0NjNTVHQWd2TTN1b28wSWR5Q2pCL051dEhBMVdj?=
+ =?utf-8?B?cDIyc201dFFub3JXbFdVakd2VXJxM0FaZFpmMmdwSTNBVkVtZ21mRWdYTnAw?=
+ =?utf-8?B?TEkyMFdnRjMwakVuN1ZHUndHYW82dWNEYVlBNEE1UWtIRVhnWVhHSFJqQ0FL?=
+ =?utf-8?Q?WZmjXLZHjTKALExzitY+uTAbW?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acc4e13c-4496-485c-17cf-08dc53df1337
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 13:07:54.6299
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H6oFKsgagNWFi9pA8yE6mLHKr7nCI/bWxa0QlCbovMHfTFY3OK5bntAFNu92bq5c
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7308
 
-I only skimmed over the platform patches and spend only a few minutes on 
-the amdgpu stuff.
+On Wed, Apr 03, 2024 at 12:26:43PM +0000, Christophe Leroy wrote:
+> 
+> 
+> Le 03/04/2024 à 14:08, Jason Gunthorpe a écrit :
+> > On Tue, Apr 02, 2024 at 07:35:45PM -0400, Peter Xu wrote:
+> >> On Tue, Apr 02, 2024 at 07:53:20PM -0300, Jason Gunthorpe wrote:
+> >>> On Tue, Apr 02, 2024 at 06:43:56PM -0400, Peter Xu wrote:
+> >>>
+> >>>> I actually tested this without hitting the issue (even though I didn't
+> >>>> mention it in the cover letter..).  I re-kicked the build test, it turns
+> >>>> out my "make alldefconfig" on loongarch will generate a config with both
+> >>>> HUGETLB=n && THP=n, while arch/loongarch/configs/loongson3_defconfig has
+> >>>> THP=y (which I assume was the one above build used).  I didn't further
+> >>>> check how "make alldefconfig" generated the config; a bit surprising that
+> >>>> it didn't fetch from there.
+> >>>
+> >>> I suspect it is weird compiler variations.. Maybe something is not
+> >>> being inlined.
+> >>>
+> >>>> (and it also surprises me that this BUILD_BUG can trigger.. I used to try
+> >>>>   triggering it elsewhere but failed..)
+> >>>
+> >>> As the pud_leaf() == FALSE should result in the BUILD_BUG never being
+> >>> called and the optimizer removing it.
+> >>
+> >> Good point, for some reason loongarch defined pud_leaf() without defining
+> >> pud_pfn(), which does look strange.
+> >>
+> >> #define pud_leaf(pud)		((pud_val(pud) & _PAGE_HUGE) != 0)
+> >>
+> >> But I noticed at least MIPS also does it..  Logically I think one arch
+> >> should define either none of both.
+> > 
+> > Wow, this is definately an arch issue. You can't define pud_leaf() and
+> > not have a pud_pfn(). It makes no sense at all..
+> > 
+> > I'd say the BUILD_BUG has done it's job and found an issue, fix it by
+> > not defining pud_leaf? I don't see any calls to pud_leaf in loongarch
+> > at least
+> 
+> As far as I can see it was added by commit 303be4b33562 ("LoongArch: mm: 
+> Add p?d_leaf() definitions").
 
- From what I've seen this series seems to make perfect sense to me, I 
-just can't fully judge everything.
+That commit makes it sounds like the arch supports huge PUD's through
+the hugepte mechanism - it says a LTP test failed so something
+populated a huge PUD at least??
 
-So feel free to add Acked-by: Christian König <christian.koenig@amd.com> 
-but I strongly suggest that Harry and Rodrigo take a look as well.
+So maybe this?
 
-Regards,
-Christian.
+#define pud_pfn pte_pfn
 
-Am 29.03.24 um 08:18 schrieb Samuel Holland:
-> This series unifies the kernel-mode FPU API across several architectures
-> by wrapping the existing functions (where needed) in consistently-named
-> functions placed in a consistent header location, with mostly the same
-> semantics: they can be called from preemptible or non-preemptible task
-> context, and are not assumed to be reentrant. Architectures are also
-> expected to provide CFLAGS adjustments for compiling FPU-dependent code.
-> For the moment, SIMD/vector units are out of scope for this common API.
->
-> This allows us to remove the ifdeffery and duplicated Makefile logic at
-> each FPU user. It then implements the common API on RISC-V, and converts
-> a couple of users to the new API: the AMDGPU DRM driver, and the FPU
-> self test.
->
-> The underlying goal of this series is to allow using newer AMD GPUs
-> (e.g. Navi) on RISC-V boards such as SiFive's HiFive Unmatched. Those
-> GPUs need CONFIG_DRM_AMD_DC_FP to initialize, which requires kernel-mode
-> FPU support.
->
-> Previous versions:
-> v3: https://lore.kernel.org/linux-kernel/20240327200157.1097089-1-samuel.holland@sifive.com/
-> v2: https://lore.kernel.org/linux-kernel/20231228014220.3562640-1-samuel.holland@sifive.com/
-> v1: https://lore.kernel.org/linux-kernel/20231208055501.2916202-1-samuel.holland@sifive.com/
-> v0: https://lore.kernel.org/linux-kernel/20231122030621.3759313-1-samuel.holland@sifive.com/
->
-> Changes in v4:
->   - Add missed CFLAGS changes for recov_neon_inner.c
->     (fixes arm build failures)
->   - Fix x86 include guard issue (fixes x86 build failures)
->
-> Changes in v3:
->   - Rebase on v6.9-rc1
->   - Limit riscv ARCH_HAS_KERNEL_FPU_SUPPORT to 64BIT
->
-> Changes in v2:
->   - Add documentation explaining the built-time and runtime APIs
->   - Add a linux/fpu.h header for generic isolation enforcement
->   - Remove file name from header comment
->   - Clean up arch/arm64/lib/Makefile, like for arch/arm
->   - Remove RISC-V architecture-specific preprocessor check
->   - Split altivec removal to a separate patch
->   - Use linux/fpu.h instead of asm/fpu.h in consumers
->   - Declare test_fpu() in a header
->
-> Michael Ellerman (1):
->    drm/amd/display: Only use hard-float, not altivec on powerpc
->
-> Samuel Holland (14):
->    arch: Add ARCH_HAS_KERNEL_FPU_SUPPORT
->    ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->    ARM: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
->    arm64: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->    arm64: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
->    lib/raid6: Use CC_FLAGS_FPU for NEON CFLAGS
->    LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->    powerpc: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->    x86/fpu: Fix asm/fpu/types.h include guard
->    x86: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->    riscv: Add support for kernel-mode FPU
->    drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
->    selftests/fpu: Move FP code to a separate translation unit
->    selftests/fpu: Allow building on other architectures
->
->   Documentation/core-api/floating-point.rst     | 78 +++++++++++++++++++
->   Documentation/core-api/index.rst              |  1 +
->   Makefile                                      |  5 ++
->   arch/Kconfig                                  |  6 ++
->   arch/arm/Kconfig                              |  1 +
->   arch/arm/Makefile                             |  7 ++
->   arch/arm/include/asm/fpu.h                    | 15 ++++
->   arch/arm/lib/Makefile                         |  3 +-
->   arch/arm64/Kconfig                            |  1 +
->   arch/arm64/Makefile                           |  9 ++-
->   arch/arm64/include/asm/fpu.h                  | 15 ++++
->   arch/arm64/lib/Makefile                       |  6 +-
->   arch/loongarch/Kconfig                        |  1 +
->   arch/loongarch/Makefile                       |  5 +-
->   arch/loongarch/include/asm/fpu.h              |  1 +
->   arch/powerpc/Kconfig                          |  1 +
->   arch/powerpc/Makefile                         |  5 +-
->   arch/powerpc/include/asm/fpu.h                | 28 +++++++
->   arch/riscv/Kconfig                            |  1 +
->   arch/riscv/Makefile                           |  3 +
->   arch/riscv/include/asm/fpu.h                  | 16 ++++
->   arch/riscv/kernel/Makefile                    |  1 +
->   arch/riscv/kernel/kernel_mode_fpu.c           | 28 +++++++
->   arch/x86/Kconfig                              |  1 +
->   arch/x86/Makefile                             | 20 +++++
->   arch/x86/include/asm/fpu.h                    | 13 ++++
->   arch/x86/include/asm/fpu/types.h              |  6 +-
->   drivers/gpu/drm/amd/display/Kconfig           |  2 +-
->   .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    | 35 +--------
->   drivers/gpu/drm/amd/display/dc/dml/Makefile   | 36 +--------
->   drivers/gpu/drm/amd/display/dc/dml2/Makefile  | 36 +--------
->   include/linux/fpu.h                           | 12 +++
->   lib/Kconfig.debug                             |  2 +-
->   lib/Makefile                                  | 26 +------
->   lib/raid6/Makefile                            | 33 +++-----
->   lib/test_fpu.h                                |  8 ++
->   lib/{test_fpu.c => test_fpu_glue.c}           | 37 ++-------
->   lib/test_fpu_impl.c                           | 37 +++++++++
->   38 files changed, 348 insertions(+), 193 deletions(-)
->   create mode 100644 Documentation/core-api/floating-point.rst
->   create mode 100644 arch/arm/include/asm/fpu.h
->   create mode 100644 arch/arm64/include/asm/fpu.h
->   create mode 100644 arch/powerpc/include/asm/fpu.h
->   create mode 100644 arch/riscv/include/asm/fpu.h
->   create mode 100644 arch/riscv/kernel/kernel_mode_fpu.c
->   create mode 100644 arch/x86/include/asm/fpu.h
->   create mode 100644 include/linux/fpu.h
->   create mode 100644 lib/test_fpu.h
->   rename lib/{test_fpu.c => test_fpu_glue.c} (71%)
->   create mode 100644 lib/test_fpu_impl.c
->
+> Not sure it was added for a good reason, and I'm not sure what was added 
+> is correct because arch/loongarch/include/asm/pgtable-bits.h has:
+> 
+> #define	_PAGE_HUGE_SHIFT	6  /* HUGE is a PMD bit */
+> 
+> So I'm not sure it is correct to use that bit for PUD, is it ?
 
+Could be, lots of arches repeat the bit layouts in each radix
+level.. It is essentially why the hugepte trick of pretending every
+level is a pte works.
+ 
+Jason
