@@ -1,95 +1,177 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BBEC71736
-	for <loongarch@lists.linux.dev>; Wed,  3 Apr 2024 11:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712142394; cv=none; b=V5hLbV1Gbp62z2BcO7hEhidHM7a/dGi8VJDLr8kyVJc/bQI8RQqozqLgYjfcfrdQicWBJW55zL4bb4NwQ3JBY2WVWjEE2M3ydmkG8JwQjmOOUlBGCdwd5ozO0a3d+JLq06lUtpAkK7/bWCq7l55tUe2K5nZqMsnqbEdkajXGsoo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712142394; c=relaxed/simple;
-	bh=Oe3Jdl4RWGcnPaKdQmGWYoniShsC0VVS9hxDqaL/GdA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fEwSAX6L8RUXiXsduCBQI+2oWJhs6ZD0Z2RVWsGL53hW2FIiYM0YA848WnFll97OQ+sE8ym14Se41FkOPL1seQ9N5HwEyPVdPFgbSQTLTys+NQC2wjSwwkn2viRBHaot3Dv30gryZMf5m1pnL+L8gmRVONVHYjAAYGlFWgXiM8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D30E21595;
-	Wed,  3 Apr 2024 04:07:02 -0700 (PDT)
-Received: from [10.57.72.245] (unknown [10.57.72.245])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38F4C3F64C;
-	Wed,  3 Apr 2024 04:06:30 -0700 (PDT)
-Message-ID: <dfb0873f-3559-4979-94d1-39c4a7a4ca3c@arm.com>
-Date: Wed, 3 Apr 2024 12:06:28 +0100
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2113.outbound.protection.outlook.com [40.107.243.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D61143869
+	for <loongarch@lists.linux.dev>; Wed,  3 Apr 2024 12:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.113
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712146128; cv=fail; b=MVUAKV1qPyv3k03Pt24wDfXriomfdyyQOzPBGn7z0EKOgO6HK8jRCk0M653/BH6VeFTqzFx6NnAntgFst+qtVxydfSY2LDju3TGtn22LcIHpFnqZ6MHy+txcmmQ01y4h+lkEPmDaLT/0Xu8ZfAQkFr0MJSGvThYQNCaP/dRHI+0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712146128; c=relaxed/simple;
+	bh=ey6GObOp6GAC6yvzCP0d4BEwZGPPCiEDNvj6pwYT46I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=SpfJ/6PSfUiLR0NrO1ybteIr2T/o7k1iA0gvtRbHPg+gsEziLwrmRlYVdg4IlfP7ojClXY50zIpVRCHGB+Ib3cy19pM8ukA43F588iNr8pivPUVUx+qL8C3pD6eBm7LMhOiI2jw0kl7MC42lssuOa/tx3OLd5ynkqYTRH6AHcWE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nNh21PyA; arc=fail smtp.client-ip=40.107.243.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nNh21PyA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mj6dg4NgXo2koQtkxJccWHqoD9exTFAZ7XqmMBHt2j6bzxzC9Fz+7Rv5redlgK8/FObJm573nkAHJzqj2moDyw90r0Gh6xYzND8Ny1fLsHtjJK88tN3CmRlxzdlhqswuK5DNc5PLmXQ66STFixqkFdqVgENTAaRYCyTWaU+m6bMvBOxo4Ze5/aif7N74JuJTT158/VJR9yLHE67SpilOVEkza2emlx+xz7lJzwcBUqlE85fpF+312HDjoYKwqHvxi0Q7Atg6ERfkyjPmDGo1IoQ/U173p38oJzmRmmZmOmjhXtz5qY15MWrjbtOdFoNWToe/zmOJnIpu8XIBn4/RRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y36j+coR/veq+AhDz/Y+4pEbXQYKqpMkg02kmZ1Xx7w=;
+ b=MuUizv83Rhxn4VS4aGFUcHnpuSZ5s8NNyf27SZnbUoIPUK6a1uPchW0fNkLvc1rTBvbnpPLjWBBEqn4lGyN8Y3dfR+j+1RiSwncXEzeAkJf05NqdKRIC514YnmjxYfcklVoWr8o2GxrCEdrw9V0l+pJRnLslDRIMQe1FapX7ojNIU0sjpl8GOVth+o43U/B1TIRKKmyWbKGauZtcQW1spBQNs4Q/4pdIPOepBKiTgsx87P3j5FzC15JmYiL7yFMGop6z01U6G9TPBn83jY3s/bRav4NrrM7NeUOu+gJagu4ZKPtoZQkt2Uro3BP6g7BrXrh5lROCskvP7bvtpiROug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y36j+coR/veq+AhDz/Y+4pEbXQYKqpMkg02kmZ1Xx7w=;
+ b=nNh21PyAgJxzCDOH2FGKmvSP/mLF96W2rtbne/m0oCpmtP94e9woHSJpUsOH+aemqUVMMuKDdIHs46WFpndxeR319vgq0bnSPY+S+2m1pGhI/ZTPlRwMha3SU0iUnw9SHTdzAYdAyvx0WCNQHkLaP+NSLwhwhM9kNnyazQnS5x1Tuca5sgdbM9qlKNG62RKORIx9Fa6g0lrkin+UPuHKbRZnMiVaCAnjj70H6QsINU7bnAp9KndAHHfnrzGgJOf4QETiaTfvXLdrP2owYTwc2A5OnXn3FpOFPIsa5LiQyWJWxiQMKg1RNNCaXf9juzVUBTxFraZCv3qcpVqzY/+/Bw==
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by DS7PR12MB8290.namprd12.prod.outlook.com (2603:10b6:8:d8::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
+ 2024 12:08:43 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::6aec:dbca:a593:a222]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::6aec:dbca:a593:a222%5]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
+ 12:08:42 +0000
+Date: Wed, 3 Apr 2024 09:08:41 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Peter Xu <peterx@redhat.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Yang Shi <shy828301@gmail.com>,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Andrew Jones <andrew.jones@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	James Houghton <jthoughton@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 05/13] mm/arch: Provide pud_pfn() fallback
+Message-ID: <20240403120841.GB1723999@nvidia.com>
+References: <20240327152332.950956-1-peterx@redhat.com>
+ <20240327152332.950956-6-peterx@redhat.com>
+ <20240402190549.GA706730@dev-arch.thelio-3990X>
+ <ZgyKLLVZ4vN56uZE@x1n>
+ <20240402225320.GU946323@nvidia.com>
+ <ZgyWUYVdUsAiXCC4@xz-m1.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgyWUYVdUsAiXCC4@xz-m1.local>
+X-ClientProxiedBy: SN7PR18CA0020.namprd18.prod.outlook.com
+ (2603:10b6:806:f3::14) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] mm/gup: fixups for hugetlb gup rework series
-Content-Language: en-GB
-To: peterx@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>, David Hildenbrand
- <david@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev
-References: <20240403013249.1418299-1-peterx@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240403013249.1418299-1-peterx@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|DS7PR12MB8290:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7d5Drxicj9Ag1dwLcDuEFcEjNK03/mtTdDuPv/+0E+qGLHKkCQJoVH/u/CbZuPLrYXgRmrapnirIFA8LOIf+KAfaAtuQOakqev5oc5paMcTrbB/rWzX3wTWeHLi21/NKaXJG56APRAl510740g0mTHTr8lLMD85wWg+80d5g9NphVzfb1lRhqUjSx0yGfper/3RV/PE9Yli757VwRSQOiRFhsmuSxeBOhc5rL2FbEXL6yPixi4l4pBHb9Td0rJ4i4+z5UuoErAraZgnUcmcSY/x+oE6T0DpI3R63biiThXd+OzETp+/QitfdEg7LPguZHqORJ4D/xSxj95U9DW/yKRP8tTG08s0Qc5fxiRndmgbumhCzY6hiB+cuuxCWWFRI38RMXo1h+Ox+E2quJoahUCdFKzQ+7KJKetSkAySmrnEl4SkHeWQmEXpPR7YE+QyumqVEODAP75hTSuPRdIP72xftv+wcahF27t2thJOk/GC3oQxqD6YvOzDGHQFHLaJ375C+wLidEWxjwdBzadQxyGdkqLgMWfuW1OlavfEVWoq4CVLpmb5U6fKT6eBf93R/Md9TZJESBJVclwGwhJs5c7tIp6OSjrqjbIrLWk9ZOvKHN8rLN3eb98PH3xJVzCnUFQHsX1m/QLHklfgCyxpbhTFMNWbe57Ujtcu4rQ+99lc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7dPeEXo85Anym/htRXm3/v05s5CWDH+IEgsNsIZxrBbSa8kn5SRwnvHx0zO3?=
+ =?us-ascii?Q?BiHLYAXHNVH4310Zc0aQpo/IA53d5xwMcckgup+QMmBYdDiYTJI39SvTszdT?=
+ =?us-ascii?Q?w4+SMkfeJ423XVaj8aWv4KY9fzYFLvV2BguAsBelaGL5yDUtPEsMewddwTpd?=
+ =?us-ascii?Q?bAE39gwVqcHAcz5L4hi2ap8lmvPD0zfXBO3HY9lxTcey7RbJO9SPZ8BARaif?=
+ =?us-ascii?Q?AaLTTChfm33lXZvRVq0aVLSpaizO5q8ONd1uLKApKp5cE+MktygcWLxJoP9U?=
+ =?us-ascii?Q?48G1Cr71fX+pJ0dr9EskqPz34ZuogK6Ta3P1ZXlEccpDminsRkRi+OhYpkbz?=
+ =?us-ascii?Q?enzlx6pmOLhXT94+xBfFiEjZg6TEVvMolza9Yx6fbdpki70z7CJL3OhWz3e/?=
+ =?us-ascii?Q?qAugtbHR/UIQmCOY1Nv/TRB053aqNDQjefiu9Yuvlz18iLNXmXrk2Gtd4ZSi?=
+ =?us-ascii?Q?aitrnwlZvae9Nv1wNyXYzZRNun7FsnPQz2OKFEt7F82FgWBSi4rz7yusGS0Y?=
+ =?us-ascii?Q?dKEfLYuBpz4Rz1ZfeRNYBg4U0M3nLn2cjMN+k7u5TmgSK6lBbO/5spPPUqDA?=
+ =?us-ascii?Q?ujD8wNlsxADVY1Tr+VCYGJa8v4kiMb9hq7VBbqfKUjgoHLgGydvvhi7ZVbHU?=
+ =?us-ascii?Q?iLoE3PuBsWei1yEomJKltHn/eNYZxluK3IdA+8CBuAc9OGHPP45pig/hl9pn?=
+ =?us-ascii?Q?AZoa0hOb5XMBhXJNrWL0CvRxTSLx5Q7tBtW04uznB1nn1jDphmqcWrjSkATz?=
+ =?us-ascii?Q?acZZST9v14dXv4V/2OzPvIf2ijICE6Tvv8FomZXAIRPBT/64w07xtBLQkpsg?=
+ =?us-ascii?Q?vL0BBbs675siQBIjCdJLm1m7hyraR+ObpFXPNmOgjRxaPC8liSnl9UQx72sM?=
+ =?us-ascii?Q?OQtVEiKj+F9gBoyVHX/LlZqTdp67drsWz7yZaKrOJEa3AVZwpOKC9Jm95v9c?=
+ =?us-ascii?Q?zCFqGnGIuZRVu/NYWCRk9v9dUflkdRz/dUCafujw0pqqWOdZZ87eGZ+vTsOT?=
+ =?us-ascii?Q?aJiE2PDliDXjGbjKNbqMOIGgl+AQJbzPASFsccVZjVKIfeifRcwaq2qFwWkm?=
+ =?us-ascii?Q?UCLQqw4ezq3R5C4awJ4PgiHUn13ZGJDFX+s4VEez9nX5VbfAVhnks6PnuEcA?=
+ =?us-ascii?Q?FaWkkh0hqECLGPcwbnsowCKTAu5C4Jha2qyKoWWBhAQn0mBMgB46bqvGpgS/?=
+ =?us-ascii?Q?ZTZKHixSfhL/U8OlgwTFeyrCe5xXkiV/tv1wPwmWo4HH8Q61yHeChKJ6R6pK?=
+ =?us-ascii?Q?skCGyu+XeoNzd+mvvlts5zud8to0B2FKqMeoS5jeiEgi7Pi/JjGPTIFokTGt?=
+ =?us-ascii?Q?0mhuOr0uOL0PRkESYaFn8u+ma29q0X+y8j9f90caka86CJLwhVXoj4oltS/i?=
+ =?us-ascii?Q?7hajPSpTT/8wgTYcSmYioLVmgs1WGhBFFz0LPUMsn/7yOVHCshnJcg1tXmng?=
+ =?us-ascii?Q?2SBXwnriXVc03Ow+KkTUNzeljeGL7W6zd25KiuC1XHWLuLdjCmaxTo9trLDs?=
+ =?us-ascii?Q?SenWy/wo3Yx1Le+tIv4gae89tC501DynX8L60nzeZTKTDQ7KLXrqfrab1e2X?=
+ =?us-ascii?Q?O3AG/VstJQkpQqp49tiE8dvlG1ySaio++uCogt3O?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ce796d5-6291-4946-c6c0-08dc53d6ce35
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 12:08:42.8975
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vcqeO8smnJ2yHXJiT4G/jEqlS6nSh+02kCcBY902wQMF8jp2DjJMB4trd+v+y+SW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8290
 
-On 03/04/2024 02:32, peterx@redhat.com wrote:
-> From: Peter Xu <peterx@redhat.com>
+On Tue, Apr 02, 2024 at 07:35:45PM -0400, Peter Xu wrote:
+> On Tue, Apr 02, 2024 at 07:53:20PM -0300, Jason Gunthorpe wrote:
+> > On Tue, Apr 02, 2024 at 06:43:56PM -0400, Peter Xu wrote:
+> > 
+> > > I actually tested this without hitting the issue (even though I didn't
+> > > mention it in the cover letter..).  I re-kicked the build test, it turns
+> > > out my "make alldefconfig" on loongarch will generate a config with both
+> > > HUGETLB=n && THP=n, while arch/loongarch/configs/loongson3_defconfig has
+> > > THP=y (which I assume was the one above build used).  I didn't further
+> > > check how "make alldefconfig" generated the config; a bit surprising that
+> > > it didn't fetch from there.
+> > 
+> > I suspect it is weird compiler variations.. Maybe something is not
+> > being inlined.
+> > 
+> > > (and it also surprises me that this BUILD_BUG can trigger.. I used to try
+> > >  triggering it elsewhere but failed..)
+> > 
+> > As the pud_leaf() == FALSE should result in the BUILD_BUG never being
+> > called and the optimizer removing it.
 > 
-> Hi,
+> Good point, for some reason loongarch defined pud_leaf() without defining
+> pud_pfn(), which does look strange.
 > 
-> This is a small patchset that will fix two known issues that got reported
-> today on the previous hugetlb unification series on slow gup [1].
+> #define pud_leaf(pud)		((pud_val(pud) & _PAGE_HUGE) != 0)
 > 
-> The first issue was reported by Ryan Roberts [2] on a test failure over
-> gup_longterm.  Patch 1-2 should fix it.  Tested with 32MB hugepages on
-> arm64 VM.
-> 
-> The second issue was reported by Nathan Chancellor [3] on a build issue
-> over loongson's defconfig (loongson3_defconfig).  It can be easily
-> reproduced with my own build setup [4], while patch 3 fixes it, and should
-> hopefully fix similar archs where pud_pfn() is not defined even if
-> pud_leaf() can return true.
-> 
-> For the 2nd issue, it's debatable whether it's an arch issue, because
-> logically speaking pud_pfn() and pud_leaf() should either be both defined
-> or both not.  But since the current fix will be the simplest and still safe
-> (I at least checked loongarch doesn't support either pud dax or pud
-> hugetlb), I think we can consider having this to unbreak the build first,
-> assuming this could also happen to other archs.
-> 
-> One note is that the last 2 patches should be squashed into corresponding
-> patch, while the 1st patch should be kept standalone.
-> 
-> Thanks,
-> 
-> [1] https://lore.kernel.org/r/20240327152332.950956-1-peterx@redhat.com
-> [2] https://lore.kernel.org/r/adfdd89b-ee56-4758-836e-c66a0be7de25@arm.com
-> [3] https://lore.kernel.org/r/ZgyKLLVZ4vN56uZE@x1n
-> [4] https://gitlab.com/peterx/lkb-harness/-/blob/main/config.json?ref_type=heads#L32
-> 
-> Peter Xu (3):
->   mm: Allow anon exclusive check over hugetlb tail pages
->   fixup! mm/gup: handle huge pmd for follow_pmd_mask()
->   fixup! mm/arch: provide pud_pfn() fallback
-> 
->  include/linux/page-flags.h |  8 +++++++-
->  include/linux/pgtable.h    |  6 +++++-
->  mm/gup.c                   |  3 ---
->  mm/internal.h              | 10 ----------
->  4 files changed, 12 insertions(+), 15 deletions(-)
-> 
+> But I noticed at least MIPS also does it..  Logically I think one arch
+> should define either none of both.
 
-With these applied, gup_longterm is now passing for me on arm64. So for the series:
+Wow, this is definately an arch issue. You can't define pud_leaf() and
+not have a pud_pfn(). It makes no sense at all..
 
-Tested-by: Ryan Roberts <ryan.roberts@arm.com>
+I'd say the BUILD_BUG has done it's job and found an issue, fix it by
+not defining pud_leaf? I don't see any calls to pud_leaf in loongarch
+at least
 
+Jason
