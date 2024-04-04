@@ -1,48 +1,65 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2108.outbound.protection.outlook.com [40.107.93.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECF68286A
-	for <loongarch@lists.linux.dev>; Thu,  4 Apr 2024 11:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.108
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712229851; cv=fail; b=PPvrI2qcnkYSwC1fA/EsNp505L9BeNAWifflTyBfuoWXMzRhPNUdKpoxo2aTSRmYReBtTNktCoyra0v0bGdo7xlOpP+eebW9taV7nxT/3pbXbTs+wL3kfwO4NG3feIBvCp1kj0DlzJFmKtgfbF97/LGBB64gyOyL8vxkTFTrtVc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712229851; c=relaxed/simple;
-	bh=drPXKAjgdlsGwlNJMNe6S1jM43W+0MoqtZD3dL7Lwig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=aLzI1H3OictTO4tdgTKgW42Atua4pMLDKUV3vu/QgYnuf3oIIR4RFAY2E/cNN1p1071cFtQyGOUSloIxvdbdpPIYUdmYVcj4emhLtynR4CtMFCFN+rBFR11ZOZ2TZSnvwDde6EZuuSMbj0RDRKR9Eb/aEs/YiUjRTBTIFXY9ugQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LMKNjkNJ; arc=fail smtp.client-ip=40.107.93.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9DA84FD8
+	for <loongarch@lists.linux.dev>; Thu,  4 Apr 2024 12:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712232055; cv=none; b=q9FGdCP0EhscyrWPcvAwTWdSFl9vsUSq2/Hd6d59umwjy7anD5J2EZM1BpoOGezNg64yz8gVtd7+rU5i46+A9+c0F3vVvjf97URb11DNxRXRaEuNOsx5X0kyILgpuuACQvG2zESnQ+NbkKx7/N03VegmJFWlTsGkTkRMJ+DWzrw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712232055; c=relaxed/simple;
+	bh=GZ85xvnSn7AShFQ6AU6qZKZ/QUsMQjF1VcpNN5Uuyx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=fp7Uw05dbjrXETny18OTumzjWfmj4UPL/hj++WFMwT7uyAFGJSp6NRTNEzobjzIGWbzWujkghhpFkfw214Iq7WivzMmnXo5iKAQlxdFIsm7kEZCHWV1CuBPodUaGUNvZ/Na3VYdSRE66dMPkF9N5PYeWyXvqEZpu2v8PbkIYFwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZJQO1LKQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LMKNjkNJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lrsSDNOqSyl7MNt5N2u5t+fg3Q0H6Rto8DApDQOr/Eq3Kh7GZVTa24aS+arm4WWBsXdcbDhJByAWIlfnlF+YZ6vzP2i5DGIxjVNg+SMMklz5PMBE8w3sEvwJV62+LnNaKPJi0Pr6p+5OVFu6wt9hUETOzanAHLpDJMGFZp1SyyApGNQjL8b2WnmqgUxw3sRzw/sBw/Q2Vlfp5WcN3HQLaRX9aaGAmxUV4CvIGaYIXmkDt7+qnOpUkIcAe7YaZPQmjPruWq6lzmFqnnycbaC100xzbyyOkCvbO+H3bwD2+ZrgyhVJSGbg2ICJuUhFB+PvPMYhnH7KyQEjJO1Evy9ntw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2kDkQ9/zv5NwfQuVZpmIVUSfPhkVZ48d4u/yZoLWCcM=;
- b=XfVSmChfBHTxZCnWu4ytknFPwhgqaGaShsUPhVGjRDru14mPB0e3+jFSteifIiSelIAfx9fb+FTTtDLK7uAM1MZgHSMCvER5KCa8tsNA0vg6lekpvqvLMwFqGkHUo3LMdcTDxdrTr41AJVwHzU1ubtqSe+HYTHymiSWlLSoqzQdKAlfvBXl5hEJeSbdtc9V6X+nTJhJPdj3V6GoECt2J7rlh7Fr2wLwX8QNaPMVUmmNtZzusWiudtAH+l/yrZF3yMhRuLevUTqrpUGp7vYvksveNjlmBB0pYDZGqGquWkerxAKgAxyN0QRUEvrrjw+5jFFFqiFnGtt0T3eDIf0FxMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2kDkQ9/zv5NwfQuVZpmIVUSfPhkVZ48d4u/yZoLWCcM=;
- b=LMKNjkNJNgspTQQeL9lBAdhoEJHpmrrbi3qlLaLKLMIn2D2PahxPUgWYg5m5fY5E4UxZrd34GcYHtGKfvG7iRofrFdIiSYSMbEFjnq9zB78dhiY3DU43sHMkGRBmy9VcDGxwqk3+Tq0D1DGgU0a43Ve9W0RvjPhq7dSpSreeSgFzkjwc/32n0cCrmkDLh/uOzVTFcvQDCSX27Cqfn71oHr4j8iJWkjyN7BWoSUDRps5rD4jcVgKGtWcnyPVTjm5ANr7BIH8gpc/zhJ9BtxT7NQ0hdePcGIeDMTgTswui/4JDpumKFSPio8MUWy9EkYdtnOD9HF32eIGqixBC7MiRIQ==
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by PH7PR12MB5974.namprd12.prod.outlook.com (2603:10b6:510:1d9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 4 Apr
- 2024 11:24:06 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::6aec:dbca:a593:a222]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::6aec:dbca:a593:a222%5]) with mapi id 15.20.7409.042; Thu, 4 Apr 2024
- 11:24:06 +0000
-Date: Thu, 4 Apr 2024 08:24:04 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Peter Xu <peterx@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZJQO1LKQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712232053;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qfuooD1IfgatoIS7OAIU70Y79yHtd6slmR6Wd2lGo90=;
+	b=ZJQO1LKQ4/YdGI4ahHtm0KHDzGiPpcFyi0D+eNTsS8jSj7xNYjiSNbeXK+IrEphm3v9lbN
+	fwLRrKlox7Xa/HcduDl+D0NX1FxoGzfU4qYy2Hf5sd12bU+m543M7zAnw9W9k8zMs18K0d
+	xgXaxFZjgJc/Gj5uUT2nryrwDpbzG/k=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-556-0hpoAETWPNWhqW30fR8aig-1; Thu, 04 Apr 2024 08:00:51 -0400
+X-MC-Unique: 0hpoAETWPNWhqW30fR8aig-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6992d40ea4aso1903706d6.1
+        for <loongarch@lists.linux.dev>; Thu, 04 Apr 2024 05:00:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712232051; x=1712836851;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qfuooD1IfgatoIS7OAIU70Y79yHtd6slmR6Wd2lGo90=;
+        b=QCQjXu3PNteRqkiC1prM6c+Ls7qQimLJv4VjXKhcHk0HcARh/UV4Ee7n50PZtLYQUA
+         /2pmaht5kH7XRA4xrZ0kUgv1q+oYe5LnZeL10SK7l9bo8URQw7Vh7GrQjcqFMBY36a/l
+         yzpb0Jbn+mlT7dlRwKNzqHCdQE/jNqkWC6COxDbUShIPcp40o7nlfnV5UU7cGWF5TzxX
+         HP+OZT9rcYk0ZMCkmgO6jtE2RxXckAn0YpyFs9ADig+1fQ3nbFjakGMqzIZAyqilxN7T
+         ELHI1+6YAKLjPNUiZTjlb2eKpXT12RSEEJtnUIq1b0n/8sIPcsZ+S+pfcup0x4Kk7Toz
+         cDPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVV7L3BFCT9ry+ykE6mCSIpBcmq3xQ6yyJqrmddOifCNWeCgP7MryGqOcSKs9ZpByO4SBNTHBoUyfIa9iX4+ffH4/L4LphWox6J
+X-Gm-Message-State: AOJu0YyuY6uy/9/kvx6D6bECowCf3vvvkBdRYP/FfMkcNm1rjsE0kwOB
+	bj1bxlF8//zFfvCm1NNfjKHO0mcpE806c4I6tIbQfq6aD/eKmuayCtCkbntY21JU+XBBKyPqgck
+	OmaLNLH7fh6G3UzjnRn8DOl3MknbnVDDavc7IofBUYp3aMVjMxBUFelbjfw==
+X-Received: by 2002:a05:6214:5007:b0:699:4d3:98dc with SMTP id jo7-20020a056214500700b0069904d398dcmr2122695qvb.0.1712232050940;
+        Thu, 04 Apr 2024 05:00:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMCWtQWiLpesBQTQo5kp7GWlhuKWfgLgdLeENDjrnl6Gj4+sgwXTUEXT7yElLHvch56DwpwQ==
+X-Received: by 2002:a05:6214:5007:b0:699:4d3:98dc with SMTP id jo7-20020a056214500700b0069904d398dcmr2122629qvb.0.1712232050343;
+        Thu, 04 Apr 2024 05:00:50 -0700 (PDT)
+Received: from x1n ([99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id jf14-20020a0562142a4e00b006987021a724sm7171209qvb.118.2024.04.04.05.00.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 05:00:50 -0700 (PDT)
+Date: Thu, 4 Apr 2024 08:00:47 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
 Cc: Nathan Chancellor <nathan@kernel.org>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org, Yang Shi <shy828301@gmail.com>,
 	"Kirill A . Shutemov" <kirill@shutemov.name>,
@@ -69,7 +86,7 @@ Cc: Nathan Chancellor <nathan@kernel.org>, linux-mm@kvack.org,
 	Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
 Subject: Re: [PATCH v4 05/13] mm/arch: Provide pud_pfn() fallback
-Message-ID: <20240404112404.GG1723999@nvidia.com>
+Message-ID: <Zg6WbzWkoLtbY2LZ@x1n>
 References: <20240327152332.950956-1-peterx@redhat.com>
  <20240327152332.950956-6-peterx@redhat.com>
  <20240402190549.GA706730@dev-arch.thelio-3990X>
@@ -78,85 +95,51 @@ References: <20240327152332.950956-1-peterx@redhat.com>
  <ZgyWUYVdUsAiXCC4@xz-m1.local>
  <20240403120841.GB1723999@nvidia.com>
  <Zg2fEP4eEeLhgDwE@x1n>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zg2fEP4eEeLhgDwE@x1n>
-X-ClientProxiedBy: SN7PR04CA0025.namprd04.prod.outlook.com
- (2603:10b6:806:f2::30) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+ <20240404112404.GG1723999@nvidia.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|PH7PR12MB5974:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	EhRUPTL0BFK+d07LVk9SoN/QpGp/aRHWcpkKHH75c+OpLEdeLbeLP4LipmcSfQW01jef+dp/vUsUvuiRjoaYUj1fEc2JfQ9BVpgUknslVXGsZww696g+WitO72VJ83lVLYQKeGYwJ/pXvgagNIRz8IQ2UmVEXFf7bTiiu2+QF/hQP1BK/dsNY3hoO796qQ8U7EfYwPjynbJXwSvDFI0H4/MCGbXI4/E2CQys0NPmVnMlfG6KFebLYfTIh+UPBNW2EfwD6aepXY1FSMuxrt/FMXWOEfI3YFbASKQ1e8MnbOlxj3EjLdL0aJOqjkeose2uEz2g+mCl8PoMUl26xHFmGVX7TAKPmDA/TH1dqDHz6hU8EJUyfcTYp41JAIrQiDxSUwwWfzpFc3H7yU+o9wvUgd1Q6xFaK39J3arscVvY07FsaHqtaCiG/nm2vV7xfAMj+CJ671pBRUuP1XIefnB9aYMtaJXg9GOVBf48d8kJGZmHticgHUpibHCzbzt1l+A0FFXU1sD0WrGKNgGzq2Q6NZl6xxl7ID99D2BCP+2nR7QiASNmN+5a0KlWTTPBcP2U6ZKfUHmCUefRmMpqPMhRvf4IZzc+3t2fgYZv63TP+5n4Bh2VgZ5LZwtQXpVSsKSOK0hVswNc9a6vD5Kw1W3wYliIc/+EQdtt6H5DQU2p97M=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?C854FYBwplDK2b2mVfpBsUhj7KjqPPDZPvQX/Sv7AeTTBoKA7jwQRfdtVaiH?=
- =?us-ascii?Q?s4kCGdb54LXgKv33xrh1BYMThIzDZCevShJm09H5t6HxKLYSnfdhFCkIrzoc?=
- =?us-ascii?Q?tQK7PJWEFGKuTJCOGPIwJVOm5Pav7Zag1S1EbSFwaR0x82eHo1YAQFCuwbvA?=
- =?us-ascii?Q?dtzuERFsFTilIUJ0Br1xorWmduXeAzdqHl2imqpmWMeftBHHxSdWIXhM3BZE?=
- =?us-ascii?Q?HA2ma9V+4MFUCFV4iFeJz+twk3iFOqT86DhwcnTZ2mL4yxSef60xzYjrjNXq?=
- =?us-ascii?Q?ibshr49kRiLmCKfArUEE7LhJcGYbyRecG5+M4QYHEgPDuKnByvp27CGxnTLt?=
- =?us-ascii?Q?IFDvqsrgMZ5Htrjjm4Ua16yxD2YEzv9dNCd+NkSBnEfwTjQARj/XCfqsd8vV?=
- =?us-ascii?Q?OYDqbY9g94G3Jkblw8X8Vr/GBaFLSl8srAAT8hv7eWHgcX4CcahQLpSkYyRi?=
- =?us-ascii?Q?l3AOuJEOO0qcS5c0yH/qTsPvEmyQf2m0C5rj7OsZFu0k/EmDj0Q0bD1E5+7Y?=
- =?us-ascii?Q?HXZhYOs1cjl1bRxkmDFFKL+phQZ3nrbLympGWFsT8efJy1NfQhB5mVx5ZAnn?=
- =?us-ascii?Q?vTuVymdxYee2EKJ5Qv+B95vijMw1fVuEF+ylmyFBOhl1TUqC7hMSsyW6iK+/?=
- =?us-ascii?Q?94fiH11XtEb07MYCH1IOp5GeFsbUZ94DCyc5Kl2O8tP7gFeqWM05zzfXKQhQ?=
- =?us-ascii?Q?0k2cK6ZtLk33tpEfwB5La2UBaYiWNylFpn6RFDqzb1IDv84iA27zSWV7Bpsr?=
- =?us-ascii?Q?S8XPe/4smKU04AeVuYI+C9rgCEpm8pORKyZ54gNXk0OVeo7fuMZONnYxjlic?=
- =?us-ascii?Q?RsVreaDPZ2+q2V2uq8SP56LYOsFty2uPVTBExUYnuZm7gpIfIDYg+aestGm1?=
- =?us-ascii?Q?2lqSZn79waVji4HSfr1sLBjQWMZRVuHoImozY1XXlViGhkbiUGYrL32ThnzG?=
- =?us-ascii?Q?El/lS/XOEROMwaLltHwo001l1s1hnFCNVbOufpHVcyLPPYQz1EZW6GeGwtEE?=
- =?us-ascii?Q?PlRteep2rKKrthhjjurgji5IXwHQmbUGrm4kCqDrzgFD92kLoqlNq1OGD5RD?=
- =?us-ascii?Q?KZ7C/x+G+4kZqd/o4S7G7Q2DdIQaYSvLyRyDEJhiF91ZJtMcDtEmkr1xMYSf?=
- =?us-ascii?Q?R30vU2/GUYVcVfQShrz4lHHjEVECTIvlqNrM0DS1JL8NOCWiwoVubmp13sOW?=
- =?us-ascii?Q?Y0zwUx4ZWeDu1Za2WwM/uNOgTz3wPkhiH0R5YMQbmYOF5WuTje7Yi+lZ0MAB?=
- =?us-ascii?Q?V6UVKVq++2a3eLYhffjA2/+WCvPg9Glp9i7BEbm2iiXBrOzKFT6rN10b/MH1?=
- =?us-ascii?Q?Zs/9nKaojeoy8fsE48hP/4XikCvwTtQ7M/bGDFGpg0q06oo0TBCX5prXoGwW?=
- =?us-ascii?Q?TyNxpYtkjqK2djj9EYpY692AIjIRMRlhjeIWDDf0VhRYyTuxHDYPOmbsgeVZ?=
- =?us-ascii?Q?NcXUFJYq+GNn124idWKscbVWwLLOWJl8E1Mkmot6LNJwKTZU1mhWCM+JjC7s?=
- =?us-ascii?Q?VqxaSv/SkfooBIUfVXe8EmVqcfQDknznDg8QWnolQTDlvhr/jI2P2/9vPJuH?=
- =?us-ascii?Q?2cJgd5jXQyqSZ8ix9G0Y+KNjjdocQd2AJCFRs3/5?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: edfc7635-92d2-44b6-3143-08dc5499bd29
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2024 11:24:06.3306
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IPAtOWolyisb3/wTTV8/MSg4tfw/iHU/cjfNRqEbNOnjvS+MN6kZEmxhEPCEbeIq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5974
+In-Reply-To: <20240404112404.GG1723999@nvidia.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Wed, Apr 03, 2024 at 02:25:20PM -0400, Peter Xu wrote:
-
-> > I'd say the BUILD_BUG has done it's job and found an issue, fix it by
-> > not defining pud_leaf? I don't see any calls to pud_leaf in loongarch
-> > at least
+On Thu, Apr 04, 2024 at 08:24:04AM -0300, Jason Gunthorpe wrote:
+> On Wed, Apr 03, 2024 at 02:25:20PM -0400, Peter Xu wrote:
 > 
-> Yes, that sounds better too to me, however it means we may also risk other
-> archs that can fail another defconfig build.. and I worry I bring trouble
-> to multiple such cases.  Fundamentally it's indeed my patch that broke
-> those builds, so I still sent the change and leave that for arch developers
-> to decide the best for the archs.
+> > > I'd say the BUILD_BUG has done it's job and found an issue, fix it by
+> > > not defining pud_leaf? I don't see any calls to pud_leaf in loongarch
+> > > at least
+> > 
+> > Yes, that sounds better too to me, however it means we may also risk other
+> > archs that can fail another defconfig build.. and I worry I bring trouble
+> > to multiple such cases.  Fundamentally it's indeed my patch that broke
+> > those builds, so I still sent the change and leave that for arch developers
+> > to decide the best for the archs.
+> 
+> But your change causes silent data corruption if the code path is
+> run.. I think we are overall better to wade through the compile time
+> bugs from linux-next. Honestly if there were alot then I'd think there
+> would be more complaints already.
+> 
+> Maybe it should just be a seperate step from this series.
 
-But your change causes silent data corruption if the code path is
-run.. I think we are overall better to wade through the compile time
-bugs from linux-next. Honestly if there were alot then I'd think there
-would be more complaints already.
+Right, that'll be imho better to be done separate, as I think we'd better
+consolidate the code.
 
-Maybe it should just be a seperate step from this series.
+One thing I don't worry is the warning would cause anything real to fail; I
+don't yet expect any arch that will not define pud_pfn when it needs
+it.. so it can mean all of the build errors may not cause real benefits as
+of now.  But I agree with you we'd better have it.  I'll take a todo and
+I'll try to add it back after all these fallouts.  With my cross build
+chains now it shouldn't be hard, just take some time to revisit each arch.
 
-Jason
+Thanks,
+
+-- 
+Peter Xu
+
