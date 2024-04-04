@@ -1,83 +1,87 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEF64689;
-	Thu,  4 Apr 2024 00:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8532414285;
+	Thu,  4 Apr 2024 01:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712189168; cv=none; b=BuRjEJq6iQndF8x/0p+T2aIYVXUD00+bU+zn1rgr0Wm2O6zlDHJope6UqNwfZ7UWz7Gq+rkMrXG57i5cgcnBfvRM/HUPUJ2MQCdejhfsi4c5kOamx/K4OCa//zbANLLmveiOOKvfDJnWEDTZIxpnMSHDVdAuuIjB55f4sMGevZk=
+	t=1712194455; cv=none; b=PH0a30A2BP3UeUxqqbbHn6XKGs9Qe9QcC294hECFJaFQP8RZKcBTL444TfQrhyC10vmyr/3LF+8zqKhV4vEz/k84hsM7vUdz1g3krF27/jlmqhr8Be0NQnfbSScHB3w7UsaytZz/NST6GoI7S9FFs/0PmQK7biFjaf7pgJi4jnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712189168; c=relaxed/simple;
-	bh=86HGuT92NJSuhazygmUlHsFjgMiiNB/mak1t22rWe5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eOw8ceAZ8v9Fort0/c5PSmQI+GePlgprNfiW0XimhNrpq0PInNm8T8W8jSuEvJ22NSp2p8Tter9vENdbzD7anObGYAu3A+HHZ3w7dq0fbL3SbJfXgiVGwbVHCBvJJs5yD2jdXuEmdulEZdI0ZJQx/a0sf/hyqlZ3knduR9jWSMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PVDumhZv; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1712194455; c=relaxed/simple;
+	bh=PLHX9CmuF+jzJhTft7r/1Y8OPKACX4mI6u4er178G2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kSymGw5ScfNgpXpy52rMtSiloUPRCHA5eJIHweEs9DSg5cnsmBOsotOjwrimS7dTw+pTckMMkFH6xLHT8fNTGh1lGtk8JmtHIhJtTdW+MtXHWGx5AhQe2TfBOTTO0ReN1f0FG4FIK/kgq+9KSTMR0r7e4kvlIZLBVeyDIHp3bqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qb1JzlHC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PVDumhZv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=MhHyco6xzCUVvkgLlQHxaZjjr+F8wY1VDbF9HT0EPEk=; b=PVDumhZvavwMCqaVxRJqsbjYqp
-	KJmz0/Tx3eUNvoC933V7Vr1eQHBJYCBsGuXvIr8UfZ8LMacSqG/9jfCUm/urGf5/j/KJc6DKjdgmK
-	sg22bYodFxLdcSqqweqoWC4nMNdd0ldiCw2k8ShOTyf9WhgcpLQF5UwJJr/N8b6YKlWhkCnttXhJ2
-	pqd4rnB6YlJTep2QWdde+vJgpJX41E8cPAKm2QbcQX7lKCZltPb79z4QGRPI53yNG9+kXWMS98LzY
-	9KdU2CyVAeCJo6E/m0e/573R/XtEchj+gtz+SRXjH8NzfvMP6QK0/OQEHlGtJXFkXbEylzdHvjWcz
-	jn5/ChDA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rsAc9-00000006m5v-26wq;
-	Thu, 04 Apr 2024 00:05:57 +0000
-Date: Thu, 4 Apr 2024 01:05:57 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: peterx@redhat.com
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Ryan Roberts <ryan.roberts@arm.com>, loongarch@lists.linux.dev
-Subject: Re: [PATCH 1/3] mm: Allow anon exclusive check over hugetlb tail
- pages
-Message-ID: <Zg3u5Sh9EbbYPhaI@casper.infradead.org>
-References: <20240403013249.1418299-1-peterx@redhat.com>
- <20240403013249.1418299-2-peterx@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qb1JzlHC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A94D4C433C7;
+	Thu,  4 Apr 2024 01:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712194455;
+	bh=PLHX9CmuF+jzJhTft7r/1Y8OPKACX4mI6u4er178G2M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qb1JzlHCkOQ0xQR9xEkxKvsw8OA1eBs2sTlr4JQ5PzuUXWpA08puhxOS0+HGL5xJt
+	 p+tSFhHdI0/W38jVkWUzbZ83SoA9Ze3oVX0I/xz35tzw9J8ehO4Ej2Z+v4WDgVFly6
+	 bK1uHAbfHAa/MKwQyDRnXJvZKbn2ZQDjArtD+Ho/3cPayZMvc1juvsoNzlmJRr/Ju4
+	 IiompHkE91W7nulKLmrSnjlpjrH1dYJE6//xltRqVI5kAJhGo2sMI29VSfrrA1CwJ3
+	 2VTX8Ds9j7vLv82qYyQgrRRjYVgNl7GVkee7GY7YJqfjkE9sRb6rgoQPF1hbD/SIKA
+	 JnLshHl50ZGTA==
+Date: Wed, 3 Apr 2024 18:34:12 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, Arnd
+ Bergmann <arnd@arndb.de>, =?UTF-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook
+ <keescook@chromium.org>, Daniel Diaz <daniel.diaz@linaro.org>, David Gow
+ <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>, Brendan
+ Higgins <brendan.higgins@linux.dev>, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, Ville
+ =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, Daniel Vetter
+ <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
+ netdev@vger.kernel.org, x86@kernel.org, Linux Kernel Functional Testing
+ <lkft@linaro.org>, Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH v3 06/15] net: kunit: Suppress lock warning noise at end
+ of dev_addr_lists tests
+Message-ID: <20240403183412.16254318@kernel.org>
+In-Reply-To: <20240403131936.787234-7-linux@roeck-us.net>
+References: <20240403131936.787234-1-linux@roeck-us.net>
+	<20240403131936.787234-7-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403013249.1418299-2-peterx@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 02, 2024 at 09:32:47PM -0400, peterx@redhat.com wrote:
-> +++ b/include/linux/page-flags.h
-> @@ -1095,7 +1095,13 @@ PAGEFLAG(Isolated, isolated, PF_ANY);
->  static __always_inline int PageAnonExclusive(const struct page *page)
->  {
->  	VM_BUG_ON_PGFLAGS(!PageAnon(page), page);
-> -	VM_BUG_ON_PGFLAGS(PageHuge(page) && !PageHead(page), page);
-> +	/*
-> +	 * Allow the anon-exclusive check to work on hugetlb tail pages.
-> +	 * Here hugetlb pages will always guarantee the anon-exclusiveness
-> +	 * of the head page represents the tail pages.
-> +	 */
-> +	if (PageHuge(page) && !PageHead(page))
-> +		page = compound_head(page);
+On Wed,  3 Apr 2024 06:19:27 -0700 Guenter Roeck wrote:
+> dev_addr_lists_test generates lock warning noise at the end of tests
+> if lock debugging is enabled. There are two sets of warnings.
+> 
+> WARNING: CPU: 0 PID: 689 at kernel/locking/mutex.c:923 __mutex_unlock_slowpath.constprop.0+0x13c/0x368
+> DEBUG_LOCKS_WARN_ON(__owner_task(owner) != __get_current())
+> 
+> WARNING: kunit_try_catch/1336 still has locks held!
+> 
+> KUnit test cleanup is not guaranteed to run in the same thread as the test
+> itself. For this test, this means that rtnl_lock() and rtnl_unlock() may
+> be called from different threads. This triggers the warnings.
+> Suppress the warnings because they are irrelevant for the test and just
+> confusing and distracting.
+> 
+> The first warning can be suppressed by using START_SUPPRESSED_WARNING()
+> and END_SUPPRESSED_WARNING() around the call to rtnl_unlock(). To suppress
+> the second warning, it is necessary to set debug_locks_silent while the
+> rtnl lock is held.
 
-I think this should be written as:
-
-	/*
-	 * HugeTLB stores this information on the head page; THP keeps
-	 * it per page
-	 */
-	if (PageHuge(page))
-		page = compound_head(page);
-
->  	return test_bit(PG_anon_exclusive, &PF_ANY(page, 1)->flags);
->  }
+Is it okay if I move the locking into the tests, instead?
+It's only 4 lines more and no magic required, seems to work fine.
