@@ -1,101 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C19128362;
-	Thu,  4 Apr 2024 13:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDE8127B51
+	for <loongarch@lists.linux.dev>; Thu,  4 Apr 2024 13:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712237843; cv=none; b=DVJOBGSnl3/6N8YxZs4J0V0OKxsNraNW6H0VE0JeqYCNgTSIQtgK4m2qZvd8je2A58iWbmy0dDGe5/nsFejYNRPKztr6fByzC3sJpqbtsgctRfM0ruUtcFh8zCS7gZrj/TaJfp9fJw5ZCMjXBcHdX5s6YDICWjv5aoj7F3VXlxk=
+	t=1712238366; cv=none; b=Q3HgWyXx0oW20tkU6hFWZRVxk5IbW4/1nULDSX0cQrkE+NPkWEFI+ukUprPQPBw7Chw/+7IbVM8YjiaHyH8HytsrFN/DRBd6B/QuUPv9Q53jX59vo+XpWoqhdTBWtoz30EfGprGN7ogdhLLqoko3rzgdGRWUWyMlgB836emmLAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712237843; c=relaxed/simple;
-	bh=L5JuVTwYjhYNtocqaBlZrcI4/RRu7dj6AmX+ESPnNdg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tECuZZQSqTJZjGFrfGiGUROpqWk88vcADcDBNUsLYT10bhsiWJ+aLTaZ4S4UJQWsV72xs3Pt2M0mbKUv26qAUL0SWd8EGqqaEZI3gOrmvyl+/MSVy6apioLTSCYxIWh1eF6elOoe8vg6NAdAI3VYrmVvbktsIB1Tj4gBdPaGpPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1989BC433F1;
-	Thu,  4 Apr 2024 13:37:19 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-mm@kvack.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 3/3] LoongArch: Make virt_addr_valid()/__virt_addr_valid() work with KFENCE
-Date: Thu,  4 Apr 2024 21:36:36 +0800
-Message-ID: <20240404133642.971583-4-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240404133642.971583-1-chenhuacai@loongson.cn>
-References: <20240404133642.971583-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1712238366; c=relaxed/simple;
+	bh=h7s8i68ZyCWn59nSV0PE6ZG8mJhzJGtaDhaD8CtIEkc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=C07J4BSOq8ChZxULYsZhgudsHgmtlZHfDWIkoq9rjK+zAFSdXJ/FCzG9OfLDBTNgNIZNJfUCiWCLIcIUuiU4nHGnpMXTOzRZdq35FrtPdpZ6W5bi7Pxd3F3/MzPjVoElfjws7OHT8Ew7fVkOiX/wNYiYa4EUA7Yahzi5fy/jVRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ekfguBny; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ekfguBny"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712238364;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EmzOZMLQMmyXptbwJ4TCleo+H/I/LAr89e90GsrIjic=;
+	b=ekfguBnycU5JvUlHfHc7OWdJld8xq9mb9XvIwEiqYXBFjQhlJAvD5QFg6qndYYh8q2St3I
+	7OY0SVEJRLuvUWh9zW3dkP4MAuonFKE7teMySR+nBpY2bv5pxgIaU6GbkHlqjyW1lXHMr1
+	rF6f9GdvdUys+/lCDL6dYLyLKFZGKls=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-534-H4N1MPZ2NmCP3ERM16KjAQ-1; Thu, 04 Apr 2024 09:46:02 -0400
+X-MC-Unique: H4N1MPZ2NmCP3ERM16KjAQ-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78d3ea0d2faso12030485a.0
+        for <loongarch@lists.linux.dev>; Thu, 04 Apr 2024 06:46:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712238362; x=1712843162;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EmzOZMLQMmyXptbwJ4TCleo+H/I/LAr89e90GsrIjic=;
+        b=NDbq2U9i1QNrFABbv4NPtHfqA2Ud7I6ZBpJ2rZ2rghTfj476ng+rXZy58fo79U+lNd
+         cK2WC+iYSbAl9Zy27vxPyshzp12ZP6PQ2RyLWrL1ATAVmfnRUAviN4SlYZ19iNDLyrV0
+         bqikgAIYwc3bIXAe5WIMGAjoX+fvYBTRX5rsyxCjWW/iqd+a+tuOniZ0BFqqgXhLD2qE
+         ZLVds7uSowlfhMgJ2zoq1bWXQB5N3wWKTORXKdAhUZPNUlEyCpOGbimgfX9ltd+e5Dav
+         GIV5uXTf8tHYnoDlGp19P9gDhLHqtPy5hWqfGApSqh3ZZxLw5vCV1t80D94Xrv2W9fpc
+         oQAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU07Sc3Vs8k0uU9FQX7LOpRseaiodTAJjQ4f0eo640JcZRjfvoLY9mrABhHmvUKsLol9Ol3WxmQhMiUmZQrR1FRFQ1BZzGEUZqw
+X-Gm-Message-State: AOJu0Yx2lRAvLHnM2GfGCz9eKWRdDPbpQTlYhh3yeWwidOfUCjB21BDW
+	caBmgWhMngX32gqS23lUM4rimAI7jv0+hmtUAkBQ1yxRE9rqSmt2Y3v00cjnriTTGB5WVSeCeDV
+	dTRcuqw/D9FnxW3r5zeDzO4wu4p6dB9thjff5ZjH/GeP7Qg9eYV0nR0SF7w==
+X-Received: by 2002:a05:6214:5084:b0:699:2f16:4d2d with SMTP id kk4-20020a056214508400b006992f164d2dmr2447157qvb.3.1712238361989;
+        Thu, 04 Apr 2024 06:46:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGJdNkFmzOBKBFyhb53lG1h+VUGQqqfUd/DRv4waZks+wqY9XKFnnPlb39Aj880wVEqUvqQog==
+X-Received: by 2002:a05:6214:5084:b0:699:2f16:4d2d with SMTP id kk4-20020a056214508400b006992f164d2dmr2447114qvb.3.1712238361317;
+        Thu, 04 Apr 2024 06:46:01 -0700 (PDT)
+Received: from x1n ([99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id g12-20020a0562141ccc00b0069915b47bf4sm2696616qvd.146.2024.04.04.06.46.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 06:46:01 -0700 (PDT)
+Date: Thu, 4 Apr 2024 09:45:58 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Ryan Roberts <ryan.roberts@arm.com>, loongarch@lists.linux.dev
+Subject: Re: [PATCH 1/3] mm: Allow anon exclusive check over hugetlb tail
+ pages
+Message-ID: <Zg6vFtciZAl4SQHW@x1n>
+References: <20240403013249.1418299-1-peterx@redhat.com>
+ <20240403013249.1418299-2-peterx@redhat.com>
+ <Zg3u5Sh9EbbYPhaI@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zg3u5Sh9EbbYPhaI@casper.infradead.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-When enabling both CONFIG_KFENCE and CONFIG_DEBUG_SG, I get the
-following backtraces when running LongArch kernels.
+On Thu, Apr 04, 2024 at 01:05:57AM +0100, Matthew Wilcox wrote:
+> On Tue, Apr 02, 2024 at 09:32:47PM -0400, peterx@redhat.com wrote:
+> > +++ b/include/linux/page-flags.h
+> > @@ -1095,7 +1095,13 @@ PAGEFLAG(Isolated, isolated, PF_ANY);
+> >  static __always_inline int PageAnonExclusive(const struct page *page)
+> >  {
+> >  	VM_BUG_ON_PGFLAGS(!PageAnon(page), page);
+> > -	VM_BUG_ON_PGFLAGS(PageHuge(page) && !PageHead(page), page);
+> > +	/*
+> > +	 * Allow the anon-exclusive check to work on hugetlb tail pages.
+> > +	 * Here hugetlb pages will always guarantee the anon-exclusiveness
+> > +	 * of the head page represents the tail pages.
+> > +	 */
+> > +	if (PageHuge(page) && !PageHead(page))
+> > +		page = compound_head(page);
+> 
+> I think this should be written as:
+> 
+> 	/*
+> 	 * HugeTLB stores this information on the head page; THP keeps
+> 	 * it per page
+> 	 */
 
-[    2.496257] kernel BUG at include/linux/scatterlist.h:187!
-...
-[    2.501925] Call Trace:
-[    2.501950] [<9000000004ad59c4>] sg_init_one+0xac/0xc0
-[    2.502204] [<9000000004a438f8>] do_test_kpp+0x278/0x6e4
-[    2.502353] [<9000000004a43dd4>] alg_test_kpp+0x70/0xf4
-[    2.502494] [<9000000004a41b48>] alg_test+0x128/0x690
-[    2.502631] [<9000000004a3d898>] cryptomgr_test+0x20/0x40
-[    2.502775] [<90000000041b4508>] kthread+0x138/0x158
-[    2.502912] [<9000000004161c48>] ret_from_kernel_thread+0xc/0xa4
+This comment does look clean and cleaner indeed.  And yes, mention THP can
+be helpful too.
 
-The backtrace is always similar but not exactly the same. It is always
-triggered from cryptomgr_test, but not always from the same test.
+> 	if (PageHuge(page))
+> 		page = compound_head(page);
 
-Analysis shows that with CONFIG_KFENCE active, the address returned from
-kmalloc() and friends is not always below vm_map_base. It is allocated
-by kfence_alloc() which at least sometimes seems to get its memory from
-an address space above vm_map_base. This causes __virt_addr_valid() to
-return false for the affected objects.
+I would think PageHead() check would help us to avoid compound_head() on
+heads, which should still be the majority cases iiuc (assuming page->flags
+is already around in the cache anyway).  I've no strong opinion though, as
+I can hardly tell a difference in reality.
 
-Let __virt_addr_valid() return 1 for kfence pool addresses, this make
-virt_addr_valid()/__virt_addr_valid() work with KFENCE.
+> 
+> >  	return test_bit(PG_anon_exclusive, &PF_ANY(page, 1)->flags);
+> >  }
+> 
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Suggested-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/mm/mmap.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks,
 
-diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
-index a9630a81b38a..89af7c12e8c0 100644
---- a/arch/loongarch/mm/mmap.c
-+++ b/arch/loongarch/mm/mmap.c
-@@ -4,6 +4,7 @@
-  */
- #include <linux/export.h>
- #include <linux/io.h>
-+#include <linux/kfence.h>
- #include <linux/memblock.h>
- #include <linux/mm.h>
- #include <linux/mman.h>
-@@ -111,6 +112,9 @@ int __virt_addr_valid(volatile void *kaddr)
- {
- 	unsigned long vaddr = (unsigned long)kaddr;
- 
-+	if (is_kfence_address((void *)kaddr))
-+		return 1;
-+
- 	if ((vaddr < PAGE_OFFSET) || (vaddr >= vm_map_base))
- 		return 0;
- 
 -- 
-2.43.0
+Peter Xu
 
