@@ -1,133 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A620F1CA87;
-	Fri,  5 Apr 2024 18:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FA41EB40
+	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 08:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712341871; cv=none; b=mivwRx7cOnANIQEOdIzbZx6Yl7y4rKHAv+Wp0RV44hCBr5lcHv0lKqrNhwcb4NhuyNtiKKUpeXho9blF8YBOOQePTGvkBgLnWYHCSuf7ghNwfqQPWKnI8u6w6+qbDP02JK0aY4kgNXTEjAZUi6D7cSEa7DOdsytdASKags1CJ0Y=
+	t=1712390955; cv=none; b=GSSlXw2EZpt13Pd/c1zeoDl5mXKbWXKCx0jpIWDLkO1ZoxSN9QZr1hSfgTJg9WQB3jb/Yb6NuLc243BlWuwwMDi8pPJNjzn4235JrM/1SR/B729aC0dbxB+DeSbUU4TRkVjsLRlUqmQ5IY/aCi+pJzX2jwtdGUOGPCGXdQsD1Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712341871; c=relaxed/simple;
-	bh=SpJ5IQ9UhqrJWD/qugetHjxi8hPNKx//RaZUEP7dXMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YSEkRGUj4YO3kqDQ6tWQAqyluFYXGnwxoAB/8Q6iKHrcxjNOZiqatuMhajZKC7wQw/nWHPXXkXkruWARn7hAyl4gSMXLPSoiOxRdxm15C8/fi2WCzYFToQCFRvVFfCpHqmFy6ujWQIK28xXm06yd4hTbirI6kSkoPCGzGEUlKIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjsNhh0f; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjsNhh0f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C78FFC433F1;
-	Fri,  5 Apr 2024 18:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712341871;
-	bh=SpJ5IQ9UhqrJWD/qugetHjxi8hPNKx//RaZUEP7dXMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PjsNhh0fjSHbdf2868fr6XGX0ymVpLd72hs4QqY449d2ixqqIbiOZ9KGWsTScBEdM
-	 MmD6oO1ZFR5n/8XBcvJfrg+1fJuE6RWAslDhUeScY/894NlfAHOyDlBtG+Jpj6Xgim
-	 AEpzgBbfrsVfqV97+U4MIZvB6mlskGvejsxy0uQkrvJ6HQBnEonvJPKwG4UwRXSFPC
-	 sokGvl/2IbsBR2HRjgP5VVh/y6bBeOez+JNtA6wzhbGF/BxyaWGie9mhpM3y8Fsgqy
-	 nccatqMs+mRkE11DcKuPOVmzq2/2RT6tsP9WZvm4sK8QAsHlkDj+GzXZn741rHxhYU
-	 UZgSQsgWkKskQ==
-Date: Fri, 5 Apr 2024 19:31:02 +0100
-From: Simon Horman <horms@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <keescook@chromium.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, x86@kernel.org,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: Re: [PATCH v3 13/15] sh: Move defines needed for suppressing warning
- backtraces
-Message-ID: <20240405183102.GU26556@kernel.org>
-References: <20240403131936.787234-1-linux@roeck-us.net>
- <20240403131936.787234-14-linux@roeck-us.net>
+	s=arc-20240116; t=1712390955; c=relaxed/simple;
+	bh=h0RhV8ibSEdOVAZU/kaIWg6VheFaanRrzHLKmEQKyOc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jB88Bx9nB5AmL9lxuH9k6FDEqe6rVjyE48NHXkSAGDNlHLUU5eCYyfFd3juNvdwK1VhJB7N0vtRbcSrHRCpe7T0ppGWrnOCbjc9oWw+OkBbin7fmphwxNaabnSwDK06nXkVlYp7RcGitPnttXfXi7iQjG9yxcY1YB8kydTkupHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VBSg06rc4z4f3jLq
+	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 16:09:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 71BCF1A0BA5
+	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 16:09:09 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxAjAxFmnZTkJA--.2125S4;
+	Sat, 06 Apr 2024 16:09:09 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	chenhuacai@kernel.org,
+	tj@kernel.org,
+	josef@toxicpanda.com,
+	jhs@mojatatu.com,
+	svenjoac@gmx.de,
+	raven@themaw.net,
+	pctammela@mojatatu.com,
+	yukuai3@huawei.com,
+	qde@naccy.de,
+	zhaotianrui@loongson.cn
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	cgroups@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH RFC v2 0/6] blk-throttle: support enable and disable during runtime
+Date: Sat,  6 Apr 2024 16:00:53 +0800
+Message-Id: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403131936.787234-14-linux@roeck-us.net>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHlxAjAxFmnZTkJA--.2125S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw13Kr4UJw1UXFWxXrWrXwb_yoW8Xr47pr
+	Waqr15Gr12gFn09Fn3Cw1SgrW8ta95GrWUJ3s8XF4SyryjkryIvFnYvr18ZayIvFW2yF42
+	vr15GryIkF1Uu37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	fUOmhFUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Wed, Apr 03, 2024 at 06:19:34AM -0700, Guenter Roeck wrote:
-> Declaring the defines needed for suppressing warning inside
-> '#ifdef CONFIG_DEBUG_BUGVERBOSE' results in a kerneldoc warning.
-> 
-> .../bug.h:29: warning: expecting prototype for _EMIT_BUG_ENTRY().
-> 	Prototype was for HAVE_BUG_FUNCTION() instead
-> 
-> Move the defines above the kerneldoc entry for _EMIT_BUG_ENTRY
-> to make kerneldoc happy.
-> 
-> Reported-by: Simon Horman <horms@kernel.org>
-> Cc: Simon Horman <horms@kernel.org>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> v3: Added patch. Possibly squash into previous patch.
+From: Yu Kuai <yukuai3@huawei.com>
 
-FWIIW, this looks good to me.
+Hi, all!
 
->  arch/sh/include/asm/bug.h | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
-> index 470ce6567d20..bf4947d51d69 100644
-> --- a/arch/sh/include/asm/bug.h
-> +++ b/arch/sh/include/asm/bug.h
-> @@ -11,6 +11,15 @@
->  #define HAVE_ARCH_BUG
->  #define HAVE_ARCH_WARN_ON
->  
-> +#ifdef CONFIG_DEBUG_BUGVERBOSE
-> +#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
-> +# define HAVE_BUG_FUNCTION
-> +# define __BUG_FUNC_PTR	"\t.long %O2\n"
-> +#else
-> +# define __BUG_FUNC_PTR
-> +#endif /* CONFIG_KUNIT_SUPPRESS_BACKTRACE */
-> +#endif /* CONFIG_DEBUG_BUGVERBOSE */
-> +
->  /**
->   * _EMIT_BUG_ENTRY
->   * %1 - __FILE__
-> @@ -25,13 +34,6 @@
->   */
->  #ifdef CONFIG_DEBUG_BUGVERBOSE
->  
-> -#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
-> -# define HAVE_BUG_FUNCTION
-> -# define __BUG_FUNC_PTR	"\t.long %O2\n"
-> -#else
-> -# define __BUG_FUNC_PTR
-> -#endif /* CONFIG_KUNIT_SUPPRESS_BACKTRACE */
-> -
->  #define _EMIT_BUG_ENTRY				\
->  	"\t.pushsection __bug_table,\"aw\"\n"	\
->  	"2:\t.long 1b, %O1\n"			\
-> -- 
-> 2.39.2
-> 
+I'm planning to support build all blk-throttle polices as kernel module,
+this is the first part for blk-throttle:
+
+- patch 1 remove THROTTLE LOW;
+- patch 2 delay initialization from disk initialization to
+configuration;
+- patch 3-5 support to destroy blk-throttle is it's disabled;
+- patch 6 switch blk-throttle to use rq_qos to stop exposing
+blk-throttle internal implementations;
+
+Changes from RFV v1:
+ - add missing places in patch 1;
+ - add patch 2-6;
+
+Yu Kuai (6):
+  blk-throttle: remove CONFIG_BLK_DEV_THROTTLING_LOW
+  blk-throttle: delay initialization until configuration
+  blk-throttle: expand tg_conf_updated() to return if any tg has rules
+  blk-cgroup: add a new helper blkg_conf_exit_blkg()
+  blk-throttle: support to destroy throtl_data when blk-throttle is
+    disabled
+  blk-throtl: switch to use rq_qos
+
+ Documentation/ABI/stable/sysfs-block       |   12 -
+ arch/loongarch/configs/loongson3_defconfig |    1 -
+ block/Kconfig                              |   11 -
+ block/bio.c                                |    1 -
+ block/blk-cgroup.c                         |   25 +-
+ block/blk-cgroup.h                         |    1 +
+ block/blk-core.c                           |    4 +-
+ block/blk-merge.c                          |    2 +-
+ block/blk-mq-debugfs.c                     |    2 +
+ block/blk-rq-qos.c                         |   13 +
+ block/blk-rq-qos.h                         |   11 +
+ block/blk-stat.c                           |    3 -
+ block/blk-sysfs.c                          |    9 -
+ block/blk-throttle.c                       | 1598 ++++++--------------
+ block/blk-throttle.h                       |   76 +-
+ block/blk.h                                |   11 -
+ block/genhd.c                              |    3 -
+ include/linux/blkdev.h                     |    4 -
+ 18 files changed, 495 insertions(+), 1292 deletions(-)
+
+-- 
+2.39.2
+
