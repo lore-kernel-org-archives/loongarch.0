@@ -1,28 +1,28 @@
 Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE0239847
-	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 08:09:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F8739FC6
+	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 08:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712390962; cv=none; b=IwVziX3NAzRXVFra5HYk7Z2TWxboelOqsBeFt5DYnEqSOv0zWyOugbeE028lE2NfvAkE/EndIxfuSFQ5pQW+WJ1hh3oWV/h7MzjmsZ9+mfNbLlZGDuZLqkclWYNaIZRAHDH3xZrMDl56x5h5dC2K5bb/F/lhieBSxMED+NHRoR8=
+	t=1712390963; cv=none; b=vFPJZNwTud/g6KZEjkN2dOk8I6uN6mtyoPVz9y2gaRhgcu8TfM5a6J0hrOIMKYG7zs5kQv/bfGFb+Dc0Kg+349Npbf7c7IQJGKceQ2wv+jlJFzstJLbYeAtq0v46IyBuR2ho5uOJUf34oiVe0uHH6RHAyqE+RahDaCQdS/1HWAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712390962; c=relaxed/simple;
-	bh=iCfeyhGX9RMMXq590xrJBnszC/V6SW+D0j93ZZWz8N4=;
+	s=arc-20240116; t=1712390963; c=relaxed/simple;
+	bh=y/WrU/OEcl5D+L2Pl2z0VOhvYq4DtNWAPdMONi5KRaM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Fgwt+PcBY4gqq/WBtSUyPeRoKXIyli4cFqzft7d+zFOTCAypmP/VFJcBctyQgLgJeCT1Xa9s5i38+e+60oaHL2ttYwwhD+/P5RQh1y2iQ8lMQrd7Vc8BOJ+aFWnr068RUh6uGQBIufVPnCZxaTMy8qxZilLNh92qEPvguT3A82w=
+	 MIME-Version; b=LCJ6atyC+iDPqKlVJUFk66KKak/n0YTrMCQKQZpW1CO1R2gVqTFgxtEVJMdsXOVq0cG/QnFxSBxD8fdxbDtc3XaxX/6j4n1T0nOC8ZOaBAoVrFE4qrEAqpqMJSxEnJPXIbjDlIV5hYDXo4kNEo2B0TxhwFbLefqijTjPm+d85zM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VBSg53WMBz4f3khV
-	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 16:09:05 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VBSg610chz4f3kGH
+	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 16:09:06 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 26FCA1A0572
+	by mail.maildlp.com (Postfix) with ESMTP id C49431A0172
 	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 16:09:12 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxAjAxFmnZTkJA--.2125S8;
-	Sat, 06 Apr 2024 16:09:11 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxAjAxFmnZTkJA--.2125S9;
+	Sat, 06 Apr 2024 16:09:12 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
 	chenhuacai@kernel.org,
@@ -42,9 +42,9 @@ Cc: linux-block@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH RFC v2 4/6] blk-cgroup: add a new helper blkg_conf_exit_blkg()
-Date: Sat,  6 Apr 2024 16:00:57 +0800
-Message-Id: <20240406080059.2248314-5-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC v2 5/6] blk-throttle: support to destroy throtl_data when blk-throttle is disabled
+Date: Sat,  6 Apr 2024 16:00:58 +0800
+Message-Id: <20240406080059.2248314-6-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
 References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
@@ -55,10 +55,10 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxAjAxFmnZTkJA--.2125S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr43GF1ktFyDCr1kWw4kJFb_yoW8Cr45p3
-	y2qr45K340gFnxZay3t3W7uryft3ykKry3J3yfGrWakr13try7uFn8AF40kFWrZFs7Ar45
-	XrWFqrW0kr18CrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:cCh0CgDHlxAjAxFmnZTkJA--.2125S9
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr1DKFyfury3tF1rCF4rXwb_yoWrGrWUpF
+	W5Aw45t3y0qrsFgry3tr1UJFWakws7Jry7J393G3yftF42v34DWF1kZFy0vFWfAF97WF43
+	CryktrW7GF18GrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -77,56 +77,141 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-The new helper just release the spin_lock 'queue_lock' and keep the
-mutex 'rq_qos_mutex' held, to allow blk_throttle and other cgroup
-policies to be destroyed when they are disabled by user.
+Currently once blk-throttle is enabled, it can't be destroyed until disk
+removal, even it's disabled.
+
+Also prepare to support building it as kernel module.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/blk-cgroup.c | 17 +++++++++++++++++
- block/blk-cgroup.h |  1 +
- 2 files changed, 18 insertions(+)
+ block/blk-throttle.c | 65 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 43 insertions(+), 22 deletions(-)
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index b5e626a16758..ada9258f78bc 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -949,6 +949,23 @@ void blkg_conf_exit(struct blkg_conf_ctx *ctx)
+diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+index b371442131fe..5c16be07a594 100644
+--- a/block/blk-throttle.c
++++ b/block/blk-throttle.c
+@@ -28,6 +28,7 @@
+ 
+ /* A workqueue to queue throttle related work */
+ static struct workqueue_struct *kthrotld_workqueue;
++static DECLARE_WAIT_QUEUE_HEAD(destroy_wait);
+ 
+ #define rb_entry_tg(node)	rb_entry((node), struct throtl_grp, rb_node)
+ 
+@@ -906,6 +907,11 @@ static void start_parent_slice_with_credit(struct throtl_grp *child_tg,
+ 
  }
- EXPORT_SYMBOL_GPL(blkg_conf_exit);
  
-+/*
-+ * blkg_conf_exit_blkg - like blkg_conf_exit() but only release queue_lock.
-+ * @ctx: blkg_conf_ctx initialized with blkg_conf_init()
-+ *
-+ * This function must be called on all blkg_conf_ctx's initialized with
-+ * blkg_conf_init().
-+ */
-+void blkg_conf_exit_blkg(struct blkg_conf_ctx *ctx)
-+	__releases(&ctx->bdev->bd_queue->queue_lock)
++static bool td_has_io(struct throtl_data *td)
 +{
-+	if (ctx->blkg) {
-+		spin_unlock_irq(&bdev_get_queue(ctx->bdev)->queue_lock);
-+		ctx->blkg = NULL;
-+	}
++	return td->nr_queued[READ] + td->nr_queued[WRITE] != 0;
 +}
-+EXPORT_SYMBOL_GPL(blkg_conf_exit_blkg);
 +
- static void blkg_iostat_set(struct blkg_iostat *dst, struct blkg_iostat *src)
+ static void tg_dispatch_one_bio(struct throtl_grp *tg, bool rw)
  {
- 	int i;
-diff --git a/block/blk-cgroup.h b/block/blk-cgroup.h
-index 78b74106bf10..009f96191e71 100644
---- a/block/blk-cgroup.h
-+++ b/block/blk-cgroup.h
-@@ -219,6 +219,7 @@ int blkg_conf_open_bdev(struct blkg_conf_ctx *ctx);
- int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
- 		   struct blkg_conf_ctx *ctx);
- void blkg_conf_exit(struct blkg_conf_ctx *ctx);
-+void blkg_conf_exit_blkg(struct blkg_conf_ctx *ctx);
+ 	struct throtl_service_queue *sq = &tg->service_queue;
+@@ -941,6 +947,8 @@ static void tg_dispatch_one_bio(struct throtl_grp *tg, bool rw)
+ 				     &parent_sq->queued[rw]);
+ 		BUG_ON(tg->td->nr_queued[rw] <= 0);
+ 		tg->td->nr_queued[rw]--;
++		if (!td_has_io(tg->td))
++			wake_up(&destroy_wait);
+ 	}
  
- /**
-  * bio_issue_as_root_blkg - see if this bio needs to be issued as root blkg
+ 	throtl_trim_slice(tg, rw);
+@@ -1268,6 +1276,31 @@ static int blk_throtl_init(struct gendisk *disk)
+ 	return ret;
+ }
+ 
++void blk_throtl_exit(struct gendisk *disk)
++{
++	struct request_queue *q = disk->queue;
++
++	if (!q->td)
++		return;
++
++	del_timer_sync(&q->td->service_queue.pending_timer);
++	cancel_work_sync(&q->td->dispatch_work);
++	blkcg_deactivate_policy(disk, &blkcg_policy_throtl);
++	kfree(q->td);
++	q->td = NULL;
++}
++
++static void blk_throtl_destroy(struct gendisk *disk)
++{
++	struct throtl_data *td = disk->queue->td;
++
++	/*
++	 * There are no rules, all throttled BIO should be dispatched
++	 * immediately.
++	 */
++	wait_event(destroy_wait, !td_has_io(td));
++	blk_throtl_exit(disk);
++}
+ 
+ static ssize_t tg_set_conf(struct kernfs_open_file *of,
+ 			   char *buf, size_t nbytes, loff_t off, bool is_u64)
+@@ -1308,7 +1341,11 @@ static ssize_t tg_set_conf(struct kernfs_open_file *of,
+ 	else
+ 		*(unsigned int *)((void *)tg + of_cft(of)->private) = v;
+ 
+-	tg_conf_updated(tg, false);
++	blkg_conf_exit_blkg(&ctx);
++
++	if (!tg_conf_updated(tg, false))
++		blk_throtl_destroy(ctx.bdev->bd_disk);
++
+ 	ret = 0;
+ out_finish:
+ 	blkg_conf_exit(&ctx);
+@@ -1516,7 +1553,11 @@ static ssize_t tg_set_limit(struct kernfs_open_file *of,
+ 	tg->iops[READ] = v[2];
+ 	tg->iops[WRITE] = v[3];
+ 
+-	tg_conf_updated(tg, false);
++	blkg_conf_exit_blkg(&ctx);
++
++	if (!tg_conf_updated(tg, false))
++		blk_throtl_destroy(ctx.bdev->bd_disk);
++
+ 	ret = 0;
+ out_finish:
+ 	blkg_conf_exit(&ctx);
+@@ -1533,13 +1574,6 @@ static struct cftype throtl_files[] = {
+ 	{ }	/* terminate */
+ };
+ 
+-static void throtl_shutdown_wq(struct request_queue *q)
+-{
+-	struct throtl_data *td = q->td;
+-
+-	cancel_work_sync(&td->dispatch_work);
+-}
+-
+ struct blkcg_policy blkcg_policy_throtl = {
+ 	.dfl_cftypes		= throtl_files,
+ 	.legacy_cftypes		= throtl_legacy_files,
+@@ -1688,19 +1722,6 @@ bool __blk_throtl_bio(struct bio *bio)
+ 	return throttled;
+ }
+ 
+-void blk_throtl_exit(struct gendisk *disk)
+-{
+-	struct request_queue *q = disk->queue;
+-
+-	if (!q->td)
+-		return;
+-
+-	del_timer_sync(&q->td->service_queue.pending_timer);
+-	throtl_shutdown_wq(q);
+-	blkcg_deactivate_policy(disk, &blkcg_policy_throtl);
+-	kfree(q->td);
+-}
+-
+ static int __init throtl_init(void)
+ {
+ 	kthrotld_workqueue = alloc_workqueue("kthrotld", WQ_MEM_RECLAIM, 0);
 -- 
 2.39.2
 
