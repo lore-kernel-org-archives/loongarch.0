@@ -1,816 +1,799 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FA639FC9
-	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 08:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E91184D
+	for <loongarch@lists.linux.dev>; Sun,  7 Apr 2024 04:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712390963; cv=none; b=AHA73OzOODFs9x9x0EEw/I3Vw5xnhH5jn2YH8bRnn0hREp5OqRnvwrVYwePy4Cs/Kmt70YUGNDuGtAHKDiVT4eHfsJSGYMpuNpfZJgZcztFegXL9nzDN/sD5wuaDfkXVkVDzzKHVXIoME01MlKkRQMB+P3rP2sM53g5tuZSMyy4=
+	t=1712465421; cv=none; b=Mv8916i1Z+Trc8FvFkP9grkaXP3zNWgdszL+jl0HurZFmw4vQ6X47tI0T776qzETnV5BAKdgQeWzJvVRoiK9QzGeUYAkLAB4Nkkp08CZPs/MZ/4RY53fkfAnKfVO5C+YrZCWaZK/+RxhVsMcVOvZAIgJXAi/mByKWZsSuWuSIC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712390963; c=relaxed/simple;
-	bh=WJeIAOXxuVPXb/26+piie2EBBu53zikCe5YpY+pHvKY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rxwmBqO3JrX3POW9el53E53AfiAwFAZm8VtIuBqUeO13yg00KY0ejBhk+dxV3DQlYPpJfcBZvz/DJplj2Fph/UYO5Lcy6ICKjLpeYFlH4Pf6BRRwTvNkfPLl9QAjfD6FVtG9pKdGTnskh7BkY6JSLQssNX9e6gultllmxdDSM8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VBSg65gvDz4f3khf
-	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 16:09:06 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 7018F1A0B29
-	for <loongarch@lists.linux.dev>; Sat,  6 Apr 2024 16:09:13 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxAjAxFmnZTkJA--.2125S10;
-	Sat, 06 Apr 2024 16:09:13 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: axboe@kernel.dk,
-	chenhuacai@kernel.org,
-	tj@kernel.org,
-	josef@toxicpanda.com,
-	jhs@mojatatu.com,
-	svenjoac@gmx.de,
-	raven@themaw.net,
-	pctammela@mojatatu.com,
-	yukuai3@huawei.com,
-	qde@naccy.de,
-	zhaotianrui@loongson.cn
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	cgroups@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH RFC v2 6/6] blk-throtl: switch to use rq_qos
-Date: Sat,  6 Apr 2024 16:00:59 +0800
-Message-Id: <20240406080059.2248314-7-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
-References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1712465421; c=relaxed/simple;
+	bh=CXKG7CR6Ad1RcyWyUm4BVZcLZ7MtFfDf+m7AFdG7I/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bu/Adpre+hZglw6FC9wht6248ZNEZq6VQnbRQqjz9T8KKDYr4uRH9N6aHC+cqZZxFyjU2Gr/EJNfsugAsKyAcx6w+NManStDa1zJS2dTmHew7M0VM54AO7rL6gH7AWUY5d2g421NTVuxk9WpiJ231u3jWrDOfAy23qYVN5cpEPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=OFKdQeuI; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="OFKdQeuI"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-36a0e43afd8so7741845ab.2
+        for <loongarch@lists.linux.dev>; Sat, 06 Apr 2024 21:50:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1712465417; x=1713070217; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eSOyMWuiKoh8+FxVm+reFs1vh/ly1S0wriyHj88dOco=;
+        b=OFKdQeuIkIefguFKCvQs4IbXRVXJcbQnya62Gs2ND5lyVzVVY6GfuCzUb7kbxTPTe1
+         fb3JJgotRodtLgS58qK0jC+hXo98Iahqo0z0hXJvB/iEf4/3vKGlkvVWN+U8V034j1e2
+         08DvpE/zl9DFqAnJY2srlEevxeCFcnVHO38lqT7Bd34nLPY2+fApPcRT5b9NwSYgE6mP
+         s2e7Cv8Nn+vm9Fx0LVCmMuW0Hy18tmiL/FBDnrjF0kxvD9ofO566ASGdmf8XGuGvTDmh
+         paVDvZQ+AvVAh4I6DfTIsnu11fu8Znc0sIMH8W/FBnpSndav+IAjgFk6F7+XdivnaKYq
+         iSMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712465417; x=1713070217;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eSOyMWuiKoh8+FxVm+reFs1vh/ly1S0wriyHj88dOco=;
+        b=Q/H8GnFtD03/3UZMDuFCM6xsX7Ztl3TtlouDYQiWZNbBy0HQR2U5riJRbsqQi5IyZ9
+         Fm6qBZ06vGEFSzhOeiajo0kKhSfDVwLYC97lHFzkW/a3d5vGwiln8rDXfCf8snhNIBg+
+         6a/mtuzUccydQF8KArzIHlFbGv6Qoh/xum0ESQL9oBlw91W7naDvRvEHMSoigNqk1APZ
+         7fPu+SDC/x5bRL+ZrqSE/VubOQiuE89r5GFD2UUQhwauW3q01wDb0W6QHeB4MEKztJ9V
+         yxgjeAeTv09LKgh6jT+6RL4JNhkaQDLEfkKe8Vo9wGiNwCLq72C8BkqX5JxaxhLHAqui
+         /NIg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6r7DaUjXKEe22X9dxZnuxpbz2ZW4vNbj5ZW2Eq/MYR84Oq13mD/tlcrnFStfW230WnC2IBsFiE0MvjK2IVIuTL3++0qxHRk9r
+X-Gm-Message-State: AOJu0YwAsGta7KkVGyNmk0RACtHVffPuG17+d7RnFvYu8gv9tv1sewjV
+	CX5p05RT4Xel9+QY8mVyoWdIXzuf5LtYsZaFjBNox/s4n1ePJQLHrkztYT/e6JJ8M/qAe8fAzKh
+	oN5qlgHUeaEerslVv/D6Ti9NqMHY3+rkX8lAxPQ==
+X-Google-Smtp-Source: AGHT+IEziIiZJFv2t0jKP6V2qifN/y4SuoxWAqldWlR3rrZlBX9Z/5AfdEzJNFyrwauRwTlIhTShFzey1rao1yYt3Lc=
+X-Received: by 2002:a05:6e02:1cae:b0:369:f8b7:f5a6 with SMTP id
+ x14-20020a056e021cae00b00369f8b7f5a6mr6303460ill.8.1712465416867; Sat, 06 Apr
+ 2024 21:50:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxAjAxFmnZTkJA--.2125S10
-X-Coremail-Antispam: 1UD129KBjvAXoWfuF4xWr45WF1kKr4kJFyUAwb_yoW8urW3Co
-	WfJFZ7XFn5K348trWYq3yxAr1fuw4vqr15ZrnYgrn5Z3W8Aa4jq347KFy5GFyfWF1IyF4x
-	AF1jqw4FvF4xGrZ5n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUO07AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r126s0DM28Irc
-	Ia0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l
-	84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJV
-	WxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE
-	3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2I
-	x0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8
-	JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2
-	ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfU
-	OBTYUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <20240405115815.3226315-1-pbonzini@redhat.com> <20240405115815.3226315-2-pbonzini@redhat.com>
+In-Reply-To: <20240405115815.3226315-2-pbonzini@redhat.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Sun, 7 Apr 2024 10:20:05 +0530
+Message-ID: <CAAhSdy0rmUPaQhKd_iuv805th4oUB3e5PYw8io3evKAhcrjSXw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
+	Atish Patra <atishp@atishpatra.org>, Sean Christopherson <seanjc@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Fri, Apr 5, 2024 at 5:28=E2=80=AFPM Paolo Bonzini <pbonzini@redhat.com> =
+wrote:
+>
+> The .change_pte() MMU notifier callback was intended as an
+> optimization. The original point of it was that KSM could tell KVM to fli=
+p
+> its secondary PTE to a new location without having to first zap it. At
+> the time there was also an .invalidate_page() callback; both of them were
+> *not* bracketed by calls to mmu_notifier_invalidate_range_{start,end}(),
+> and .invalidate_page() also doubled as a fallback implementation of
+> .change_pte().
+>
+> Later on, however, both callbacks were changed to occur within an
+> invalidate_range_start/end() block.
+>
+> In the case of .change_pte(), commit 6bdb913f0a70 ("mm: wrap calls to
+> set_pte_at_notify with invalidate_range_start and invalidate_range_end",
+> 2012-10-09) did so to remove the fallback from .invalidate_page() to
+> .change_pte() and allow sleepable .invalidate_page() hooks.
+>
+> This however made KVM's usage of the .change_pte() callback completely
+> moot, because KVM unmaps the sPTEs during .invalidate_range_start()
+> and therefore .change_pte() has no hope of finding a sPTE to change.
+> Drop the generic KVM code that dispatches to kvm_set_spte_gfn(), as
+> well as all the architecture specific implementations.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-To avoid exposing blk-throttle internal implementation to general block
-layer.
+For KVM RISC-V:
+Acked-by: Anup Patel <anup@brainfault.org>
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-cgroup.c     |   2 -
- block/blk-core.c       |   4 +-
- block/blk-merge.c      |   2 +-
- block/blk-mq-debugfs.c |   2 +
- block/blk-rq-qos.c     |  13 ++
- block/blk-rq-qos.h     |  11 ++
- block/blk-sysfs.c      |   1 -
- block/blk-throttle.c   | 387 +++++++++++++++++++++++------------------
- block/blk-throttle.h   |  50 ------
- block/genhd.c          |   3 -
- include/linux/blkdev.h |   4 -
- 11 files changed, 246 insertions(+), 233 deletions(-)
+Regards,
+Anup
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index ada9258f78bc..0eede352ece1 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -32,7 +32,6 @@
- #include "blk.h"
- #include "blk-cgroup.h"
- #include "blk-ioprio.h"
--#include "blk-throttle.h"
- 
- static void __blkcg_rstat_flush(struct blkcg *blkcg, int cpu);
- 
-@@ -1473,7 +1472,6 @@ int blkcg_init_disk(struct gendisk *disk)
- void blkcg_exit_disk(struct gendisk *disk)
- {
- 	blkg_destroy_all(disk);
--	blk_throtl_exit(disk);
- }
- 
- static void blkcg_exit(struct task_struct *tsk)
-diff --git a/block/blk-core.c b/block/blk-core.c
-index a16b5abdbbf5..27ccc55bac06 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -48,7 +48,7 @@
- #include "blk-mq-sched.h"
- #include "blk-pm.h"
- #include "blk-cgroup.h"
--#include "blk-throttle.h"
-+#include "blk-rq-qos.h"
- #include "blk-ioprio.h"
- 
- struct dentry *blk_debugfs_root;
-@@ -832,7 +832,7 @@ void submit_bio_noacct(struct bio *bio)
- 		goto not_supported;
- 	}
- 
--	if (blk_throtl_bio(bio))
-+	if (rq_qos_throttle_bio(q, bio))
- 		return;
- 	submit_bio_noacct_nocheck(bio);
- 	return;
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 2a06fd33039d..eb08b2d91ec5 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -14,9 +14,9 @@
- #include <trace/events/block.h>
- 
- #include "blk.h"
-+#include "blk-cgroup.h"
- #include "blk-mq-sched.h"
- #include "blk-rq-qos.h"
--#include "blk-throttle.h"
- 
- static inline void bio_get_first_bvec(struct bio *bio, struct bio_vec *bv)
- {
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index 94668e72ab09..b7613b811d86 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -756,6 +756,8 @@ void blk_mq_debugfs_unregister_sched(struct request_queue *q)
- static const char *rq_qos_id_to_name(enum rq_qos_id id)
- {
- 	switch (id) {
-+	case RQ_QOS_THROTTLE:
-+		return "throttle";
- 	case RQ_QOS_WBT:
- 		return "wbt";
- 	case RQ_QOS_LATENCY:
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index dd7310c94713..fc2fc4052708 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -59,6 +59,19 @@ void __rq_qos_requeue(struct rq_qos *rqos, struct request *rq)
- 	} while (rqos);
- }
- 
-+bool __rq_qos_throttle_bio(struct rq_qos *rqos, struct bio *bio)
-+{
-+	do {
-+		if (rqos->ops->throttle_bio &&
-+		    rqos->ops->throttle_bio(rqos, bio))
-+			return true;
-+
-+		rqos = rqos->next;
-+	} while (rqos);
-+
-+	return false;
-+}
-+
- void __rq_qos_throttle(struct rq_qos *rqos, struct bio *bio)
- {
- 	do {
-diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-index 37245c97ee61..03d8daab8ed6 100644
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -14,6 +14,7 @@
- struct blk_mq_debugfs_attr;
- 
- enum rq_qos_id {
-+	RQ_QOS_THROTTLE,
- 	RQ_QOS_WBT,
- 	RQ_QOS_LATENCY,
- 	RQ_QOS_COST,
-@@ -35,6 +36,7 @@ struct rq_qos {
- };
- 
- struct rq_qos_ops {
-+	bool (*throttle_bio)(struct rq_qos *, struct bio *);
- 	void (*throttle)(struct rq_qos *, struct bio *);
- 	void (*track)(struct rq_qos *, struct request *, struct bio *);
- 	void (*merge)(struct rq_qos *, struct request *, struct bio *);
-@@ -104,6 +106,7 @@ void __rq_qos_cleanup(struct rq_qos *rqos, struct bio *bio);
- void __rq_qos_done(struct rq_qos *rqos, struct request *rq);
- void __rq_qos_issue(struct rq_qos *rqos, struct request *rq);
- void __rq_qos_requeue(struct rq_qos *rqos, struct request *rq);
-+bool __rq_qos_throttle_bio(struct rq_qos *rqos, struct bio *bio);
- void __rq_qos_throttle(struct rq_qos *rqos, struct bio *bio);
- void __rq_qos_track(struct rq_qos *rqos, struct request *rq, struct bio *bio);
- void __rq_qos_merge(struct rq_qos *rqos, struct request *rq, struct bio *bio);
-@@ -144,6 +147,14 @@ static inline void rq_qos_done_bio(struct bio *bio)
- 	}
- }
- 
-+static inline bool rq_qos_throttle_bio(struct request_queue *q, struct bio *bio)
-+{
-+	if (q->rq_qos)
-+		return __rq_qos_throttle_bio(q->rq_qos, bio);
-+
-+	return false;
-+}
-+
- static inline void rq_qos_throttle(struct request_queue *q, struct bio *bio)
- {
- 	if (q->rq_qos) {
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 1e2a0b18360c..7f5ece4b8f9e 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -18,7 +18,6 @@
- #include "blk-rq-qos.h"
- #include "blk-wbt.h"
- #include "blk-cgroup.h"
--#include "blk-throttle.h"
- 
- struct queue_sysfs_entry {
- 	struct attribute attr;
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 5c16be07a594..b1ff0640a39a 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -11,6 +11,7 @@
- #include <linux/bio.h>
- #include <linux/blktrace_api.h>
- #include "blk.h"
-+#include "blk-rq-qos.h"
- #include "blk-cgroup-rwstat.h"
- #include "blk-stat.h"
- #include "blk-throttle.h"
-@@ -45,8 +46,8 @@ struct avg_latency_bucket {
- 	bool valid;
- };
- 
--struct throtl_data
--{
-+struct throtl_data {
-+	struct rq_qos rqos;
- 	/* service tree for active throtl groups */
- 	struct throtl_service_queue service_queue;
- 
-@@ -65,6 +66,19 @@ struct throtl_data
- 
- static void throtl_pending_timer_fn(struct timer_list *t);
- 
-+static struct throtl_data *rqos_to_td(struct rq_qos *rqos)
-+{
-+	if (!rqos)
-+		return NULL;
-+
-+	return container_of(rqos, struct throtl_data, rqos);
-+}
-+
-+static struct throtl_data *q_to_td(struct request_queue *q)
-+{
-+	return rqos_to_td(rq_qos_id(q, RQ_QOS_THROTTLE));
-+}
-+
- static inline struct blkcg_gq *tg_to_blkg(struct throtl_grp *tg)
- {
- 	return pd_to_blkg(&tg->pd);
-@@ -293,7 +307,7 @@ static void throtl_pd_init(struct blkg_policy_data *pd)
- {
- 	struct throtl_grp *tg = pd_to_tg(pd);
- 	struct blkcg_gq *blkg = tg_to_blkg(tg);
--	struct throtl_data *td = blkg->q->td;
-+	struct throtl_data *td = q_to_td(blkg->q);
- 	struct throtl_service_queue *sq = &tg->service_queue;
- 
- 	/*
-@@ -1230,6 +1244,192 @@ static bool tg_conf_updated(struct throtl_grp *tg, bool global)
- 	return has_rules;
- }
- 
-+static void blk_throtl_cancel_bios(struct request_queue *q)
-+{
-+	struct cgroup_subsys_state *pos_css;
-+	struct blkcg_gq *blkg;
-+
-+	spin_lock_irq(&q->queue_lock);
-+	/*
-+	 * queue_lock is held, rcu lock is not needed here technically.
-+	 * However, rcu lock is still held to emphasize that following
-+	 * path need RCU protection and to prevent warning from lockdep.
-+	 */
-+	rcu_read_lock();
-+	blkg_for_each_descendant_post(blkg, pos_css, q->root_blkg) {
-+		struct throtl_grp *tg = blkg_to_tg(blkg);
-+		struct throtl_service_queue *sq = &tg->service_queue;
-+
-+		/*
-+		 * Set the flag to make sure throtl_pending_timer_fn() won't
-+		 * stop until all throttled bios are dispatched.
-+		 */
-+		tg->flags |= THROTL_TG_CANCELING;
-+
-+		/*
-+		 * Do not dispatch cgroup without THROTL_TG_PENDING or cgroup
-+		 * will be inserted to service queue without THROTL_TG_PENDING
-+		 * set in tg_update_disptime below. Then IO dispatched from
-+		 * child in tg_dispatch_one_bio will trigger double insertion
-+		 * and corrupt the tree.
-+		 */
-+		if (!(tg->flags & THROTL_TG_PENDING))
-+			continue;
-+
-+		/*
-+		 * Update disptime after setting the above flag to make sure
-+		 * throtl_select_dispatch() won't exit without dispatching.
-+		 */
-+		tg_update_disptime(tg);
-+
-+		throtl_schedule_pending_timer(sq, jiffies + 1);
-+	}
-+	rcu_read_unlock();
-+	spin_unlock_irq(&q->queue_lock);
-+}
-+
-+static void blk_throtl_exit(struct rq_qos *rqos)
-+{
-+	struct throtl_data *td = rqos_to_td(rqos);
-+
-+	blk_throtl_cancel_bios(td->queue);
-+	/*
-+	 * There are no rules, all throttled BIO should be dispatched
-+	 * immediately.
-+	 */
-+	wait_event(destroy_wait, !td_has_io(td));
-+
-+	del_timer_sync(&td->service_queue.pending_timer);
-+	cancel_work_sync(&td->dispatch_work);
-+	blkcg_deactivate_policy(rqos->disk, &blkcg_policy_throtl);
-+	kfree(td);
-+}
-+
-+static bool blk_should_throtl(struct throtl_grp *tg, struct bio *bio)
-+{
-+	int rw = bio_data_dir(bio);
-+
-+	if (!cgroup_subsys_on_dfl(io_cgrp_subsys)) {
-+		if (!bio_flagged(bio, BIO_CGROUP_ACCT)) {
-+			bio_set_flag(bio, BIO_CGROUP_ACCT);
-+			blkg_rwstat_add(&tg->stat_bytes, bio->bi_opf,
-+					bio->bi_iter.bi_size);
-+		}
-+		blkg_rwstat_add(&tg->stat_ios, bio->bi_opf, 1);
-+	}
-+
-+	/* iops limit is always counted */
-+	if (tg->has_rules_iops[rw])
-+		return true;
-+
-+	if (tg->has_rules_bps[rw] && !bio_flagged(bio, BIO_BPS_THROTTLED))
-+		return true;
-+
-+	return false;
-+}
-+
-+static bool __blk_throtl_bio(struct throtl_grp *tg, struct bio *bio)
-+{
-+	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
-+	struct throtl_qnode *qn = NULL;
-+	struct throtl_service_queue *sq;
-+	bool rw = bio_data_dir(bio);
-+	bool throttled = false;
-+	struct throtl_data *td = tg->td;
-+
-+	rcu_read_lock();
-+	spin_lock_irq(&q->queue_lock);
-+	sq = &tg->service_queue;
-+
-+	while (true) {
-+		if (tg->last_low_overflow_time[rw] == 0)
-+			tg->last_low_overflow_time[rw] = jiffies;
-+		/* throtl is FIFO - if bios are already queued, should queue */
-+		if (sq->nr_queued[rw])
-+			break;
-+
-+		/* if above limits, break to queue */
-+		if (!tg_may_dispatch(tg, bio, NULL)) {
-+			tg->last_low_overflow_time[rw] = jiffies;
-+			break;
-+		}
-+
-+		/* within limits, let's charge and dispatch directly */
-+		throtl_charge_bio(tg, bio);
-+
-+		/*
-+		 * We need to trim slice even when bios are not being queued
-+		 * otherwise it might happen that a bio is not queued for
-+		 * a long time and slice keeps on extending and trim is not
-+		 * called for a long time. Now if limits are reduced suddenly
-+		 * we take into account all the IO dispatched so far at new
-+		 * low rate and * newly queued IO gets a really long dispatch
-+		 * time.
-+		 *
-+		 * So keep on trimming slice even if bio is not queued.
-+		 */
-+		throtl_trim_slice(tg, rw);
-+
-+		/*
-+		 * @bio passed through this layer without being throttled.
-+		 * Climb up the ladder.  If we're already at the top, it
-+		 * can be executed directly.
-+		 */
-+		qn = &tg->qnode_on_parent[rw];
-+		sq = sq->parent_sq;
-+		tg = sq_to_tg(sq);
-+		if (!tg) {
-+			bio_set_flag(bio, BIO_BPS_THROTTLED);
-+			goto out_unlock;
-+		}
-+	}
-+
-+	/* out-of-limit, queue to @tg */
-+	throtl_log(sq, "[%c] bio. bdisp=%llu sz=%u bps=%llu iodisp=%u iops=%u queued=%d/%d",
-+		   rw == READ ? 'R' : 'W',
-+		   tg->bytes_disp[rw], bio->bi_iter.bi_size,
-+		   tg_bps_limit(tg, rw),
-+		   tg->io_disp[rw], tg_iops_limit(tg, rw),
-+		   sq->nr_queued[READ], sq->nr_queued[WRITE]);
-+
-+	tg->last_low_overflow_time[rw] = jiffies;
-+
-+	td->nr_queued[rw]++;
-+	throtl_add_bio_tg(bio, qn, tg);
-+	throttled = true;
-+
-+	/*
-+	 * Update @tg's dispatch time and force schedule dispatch if @tg
-+	 * was empty before @bio.  The forced scheduling isn't likely to
-+	 * cause undue delay as @bio is likely to be dispatched directly if
-+	 * its @tg's disptime is not in the future.
-+	 */
-+	if (tg->flags & THROTL_TG_WAS_EMPTY) {
-+		tg_update_disptime(tg);
-+		throtl_schedule_next_dispatch(tg->service_queue.parent_sq, true);
-+	}
-+
-+out_unlock:
-+	spin_unlock_irq(&q->queue_lock);
-+
-+	rcu_read_unlock();
-+	return throttled;
-+}
-+
-+static bool blk_throtl_bio(struct rq_qos *rqos, struct bio *bio)
-+{
-+	struct throtl_grp *tg = blkg_to_tg(bio->bi_blkg);
-+
-+	if (!blk_should_throtl(tg, bio))
-+		return false;
-+
-+	return __blk_throtl_bio(tg, bio);
-+}
-+
-+static const struct rq_qos_ops throtl_rqos_ops = {
-+	.throttle_bio = blk_throtl_bio,
-+	.exit = blk_throtl_exit,
-+};
- static int blk_throtl_init(struct gendisk *disk)
- {
- 	struct request_queue *q = disk->queue;
-@@ -1243,20 +1443,21 @@ static int blk_throtl_init(struct gendisk *disk)
- 	INIT_WORK(&td->dispatch_work, blk_throtl_dispatch_work_fn);
- 	throtl_service_queue_init(&td->service_queue);
- 
--	/*
--	 * freeze queue before setting q->td, so that IO path won't see
--	 * q->td while policy is not activated yet.
--	 */
- 	blk_mq_freeze_queue(disk->queue);
- 	blk_mq_quiesce_queue(disk->queue);
- 
--	q->td = td;
- 	td->queue = q;
- 
-+	ret = rq_qos_add(&td->rqos, disk, RQ_QOS_THROTTLE, &throtl_rqos_ops);
-+	if (ret) {
-+		kfree(td);
-+		goto out;
-+	}
-+
- 	/* activate policy */
- 	ret = blkcg_activate_policy(disk, &blkcg_policy_throtl);
- 	if (ret) {
--		q->td = NULL;
-+		rq_qos_del(&td->rqos);
- 		kfree(td);
- 		goto out;
- 	}
-@@ -1276,30 +1477,14 @@ static int blk_throtl_init(struct gendisk *disk)
- 	return ret;
- }
- 
--void blk_throtl_exit(struct gendisk *disk)
--{
--	struct request_queue *q = disk->queue;
--
--	if (!q->td)
--		return;
--
--	del_timer_sync(&q->td->service_queue.pending_timer);
--	cancel_work_sync(&q->td->dispatch_work);
--	blkcg_deactivate_policy(disk, &blkcg_policy_throtl);
--	kfree(q->td);
--	q->td = NULL;
--}
--
- static void blk_throtl_destroy(struct gendisk *disk)
- {
--	struct throtl_data *td = disk->queue->td;
-+	struct throtl_data *td = q_to_td(disk->queue);
- 
--	/*
--	 * There are no rules, all throttled BIO should be dispatched
--	 * immediately.
--	 */
--	wait_event(destroy_wait, !td_has_io(td));
--	blk_throtl_exit(disk);
-+	lockdep_assert_held(&td->queue->rq_qos_mutex);
-+
-+	rq_qos_del(&td->rqos);
-+	blk_throtl_exit(&td->rqos);
- }
- 
- static ssize_t tg_set_conf(struct kernfs_open_file *of,
-@@ -1317,7 +1502,7 @@ static ssize_t tg_set_conf(struct kernfs_open_file *of,
- 	if (ret)
- 		goto out_finish;
- 
--	if (!ctx.bdev->bd_queue->td) {
-+	if (!q_to_td(ctx.bdev->bd_queue)) {
- 		ret = blk_throtl_init(ctx.bdev->bd_disk);
- 		if (ret)
- 			goto out_finish;
-@@ -1495,7 +1680,7 @@ static ssize_t tg_set_limit(struct kernfs_open_file *of,
- 	if (ret)
- 		goto out_finish;
- 
--	if (!ctx.bdev->bd_queue->td) {
-+	if (!q_to_td(ctx.bdev->bd_queue)) {
- 		ret = blk_throtl_init(ctx.bdev->bd_disk);
- 		if (ret)
- 			goto out_finish;
-@@ -1584,144 +1769,6 @@ struct blkcg_policy blkcg_policy_throtl = {
- 	.pd_free_fn		= throtl_pd_free,
- };
- 
--void blk_throtl_cancel_bios(struct gendisk *disk)
--{
--	struct request_queue *q = disk->queue;
--	struct cgroup_subsys_state *pos_css;
--	struct blkcg_gq *blkg;
--
--	if (!q->td)
--		return;
--
--	spin_lock_irq(&q->queue_lock);
--	/*
--	 * queue_lock is held, rcu lock is not needed here technically.
--	 * However, rcu lock is still held to emphasize that following
--	 * path need RCU protection and to prevent warning from lockdep.
--	 */
--	rcu_read_lock();
--	blkg_for_each_descendant_post(blkg, pos_css, q->root_blkg) {
--		struct throtl_grp *tg = blkg_to_tg(blkg);
--		struct throtl_service_queue *sq = &tg->service_queue;
--
--		/*
--		 * Set the flag to make sure throtl_pending_timer_fn() won't
--		 * stop until all throttled bios are dispatched.
--		 */
--		tg->flags |= THROTL_TG_CANCELING;
--
--		/*
--		 * Do not dispatch cgroup without THROTL_TG_PENDING or cgroup
--		 * will be inserted to service queue without THROTL_TG_PENDING
--		 * set in tg_update_disptime below. Then IO dispatched from
--		 * child in tg_dispatch_one_bio will trigger double insertion
--		 * and corrupt the tree.
--		 */
--		if (!(tg->flags & THROTL_TG_PENDING))
--			continue;
--
--		/*
--		 * Update disptime after setting the above flag to make sure
--		 * throtl_select_dispatch() won't exit without dispatching.
--		 */
--		tg_update_disptime(tg);
--
--		throtl_schedule_pending_timer(sq, jiffies + 1);
--	}
--	rcu_read_unlock();
--	spin_unlock_irq(&q->queue_lock);
--}
--
--bool __blk_throtl_bio(struct bio *bio)
--{
--	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
--	struct blkcg_gq *blkg = bio->bi_blkg;
--	struct throtl_qnode *qn = NULL;
--	struct throtl_grp *tg = blkg_to_tg(blkg);
--	struct throtl_service_queue *sq;
--	bool rw = bio_data_dir(bio);
--	bool throttled = false;
--	struct throtl_data *td = tg->td;
--
--	rcu_read_lock();
--	spin_lock_irq(&q->queue_lock);
--	sq = &tg->service_queue;
--
--	while (true) {
--		if (tg->last_low_overflow_time[rw] == 0)
--			tg->last_low_overflow_time[rw] = jiffies;
--		/* throtl is FIFO - if bios are already queued, should queue */
--		if (sq->nr_queued[rw])
--			break;
--
--		/* if above limits, break to queue */
--		if (!tg_may_dispatch(tg, bio, NULL)) {
--			tg->last_low_overflow_time[rw] = jiffies;
--			break;
--		}
--
--		/* within limits, let's charge and dispatch directly */
--		throtl_charge_bio(tg, bio);
--
--		/*
--		 * We need to trim slice even when bios are not being queued
--		 * otherwise it might happen that a bio is not queued for
--		 * a long time and slice keeps on extending and trim is not
--		 * called for a long time. Now if limits are reduced suddenly
--		 * we take into account all the IO dispatched so far at new
--		 * low rate and * newly queued IO gets a really long dispatch
--		 * time.
--		 *
--		 * So keep on trimming slice even if bio is not queued.
--		 */
--		throtl_trim_slice(tg, rw);
--
--		/*
--		 * @bio passed through this layer without being throttled.
--		 * Climb up the ladder.  If we're already at the top, it
--		 * can be executed directly.
--		 */
--		qn = &tg->qnode_on_parent[rw];
--		sq = sq->parent_sq;
--		tg = sq_to_tg(sq);
--		if (!tg) {
--			bio_set_flag(bio, BIO_BPS_THROTTLED);
--			goto out_unlock;
--		}
--	}
--
--	/* out-of-limit, queue to @tg */
--	throtl_log(sq, "[%c] bio. bdisp=%llu sz=%u bps=%llu iodisp=%u iops=%u queued=%d/%d",
--		   rw == READ ? 'R' : 'W',
--		   tg->bytes_disp[rw], bio->bi_iter.bi_size,
--		   tg_bps_limit(tg, rw),
--		   tg->io_disp[rw], tg_iops_limit(tg, rw),
--		   sq->nr_queued[READ], sq->nr_queued[WRITE]);
--
--	tg->last_low_overflow_time[rw] = jiffies;
--
--	td->nr_queued[rw]++;
--	throtl_add_bio_tg(bio, qn, tg);
--	throttled = true;
--
--	/*
--	 * Update @tg's dispatch time and force schedule dispatch if @tg
--	 * was empty before @bio.  The forced scheduling isn't likely to
--	 * cause undue delay as @bio is likely to be dispatched directly if
--	 * its @tg's disptime is not in the future.
--	 */
--	if (tg->flags & THROTL_TG_WAS_EMPTY) {
--		tg_update_disptime(tg);
--		throtl_schedule_next_dispatch(tg->service_queue.parent_sq, true);
--	}
--
--out_unlock:
--	spin_unlock_irq(&q->queue_lock);
--
--	rcu_read_unlock();
--	return throttled;
--}
--
- static int __init throtl_init(void)
- {
- 	kthrotld_workqueue = alloc_workqueue("kthrotld", WQ_MEM_RECLAIM, 0);
-diff --git a/block/blk-throttle.h b/block/blk-throttle.h
-index e7f5562a32e9..147940c4a7ca 100644
---- a/block/blk-throttle.h
-+++ b/block/blk-throttle.h
-@@ -146,54 +146,4 @@ static inline struct throtl_grp *blkg_to_tg(struct blkcg_gq *blkg)
- 	return pd_to_tg(blkg_to_pd(blkg, &blkcg_policy_throtl));
- }
- 
--/*
-- * Internal throttling interface
-- */
--#ifndef CONFIG_BLK_DEV_THROTTLING
--static inline void blk_throtl_exit(struct gendisk *disk) { }
--static inline bool blk_throtl_bio(struct bio *bio) { return false; }
--static inline void blk_throtl_cancel_bios(struct gendisk *disk) { }
--#else /* CONFIG_BLK_DEV_THROTTLING */
--void blk_throtl_exit(struct gendisk *disk);
--bool __blk_throtl_bio(struct bio *bio);
--void blk_throtl_cancel_bios(struct gendisk *disk);
--
--static inline bool blk_should_throtl(struct bio *bio)
--{
--	struct throtl_grp *tg;
--	int rw = bio_data_dir(bio);
--
--	if (!bio->bi_bdev->bd_queue->td)
--		return false;
--
--	tg = blkg_to_tg(bio->bi_blkg);
--	if (!cgroup_subsys_on_dfl(io_cgrp_subsys)) {
--		if (!bio_flagged(bio, BIO_CGROUP_ACCT)) {
--			bio_set_flag(bio, BIO_CGROUP_ACCT);
--			blkg_rwstat_add(&tg->stat_bytes, bio->bi_opf,
--					bio->bi_iter.bi_size);
--		}
--		blkg_rwstat_add(&tg->stat_ios, bio->bi_opf, 1);
--	}
--
--	/* iops limit is always counted */
--	if (tg->has_rules_iops[rw])
--		return true;
--
--	if (tg->has_rules_bps[rw] && !bio_flagged(bio, BIO_BPS_THROTTLED))
--		return true;
--
--	return false;
--}
--
--static inline bool blk_throtl_bio(struct bio *bio)
--{
--
--	if (!blk_should_throtl(bio))
--		return false;
--
--	return __blk_throtl_bio(bio);
--}
- #endif /* CONFIG_BLK_DEV_THROTTLING */
--
--#endif
-diff --git a/block/genhd.c b/block/genhd.c
-index bb29a68e1d67..9bc55321e606 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -27,7 +27,6 @@
- #include <linux/part_stat.h>
- #include <linux/blktrace_api.h>
- 
--#include "blk-throttle.h"
- #include "blk.h"
- #include "blk-mq-sched.h"
- #include "blk-rq-qos.h"
-@@ -699,8 +698,6 @@ void del_gendisk(struct gendisk *disk)
- 
- 	blk_mq_freeze_queue_wait(q);
- 
--	blk_throtl_cancel_bios(disk);
--
- 	blk_sync_queue(q);
- 	blk_flush_integrity();
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index c3e8f7cf96be..368f450f74f2 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -487,10 +487,6 @@ struct request_queue {
- 
- 	int			mq_freeze_depth;
- 
--#ifdef CONFIG_BLK_DEV_THROTTLING
--	/* Throttle data */
--	struct throtl_data *td;
--#endif
- 	struct rcu_head		rcu_head;
- 	wait_queue_head_t	mq_freeze_wq;
- 	/*
--- 
-2.39.2
-
+> ---
+>  arch/arm64/kvm/mmu.c                  | 34 -----------------
+>  arch/loongarch/include/asm/kvm_host.h |  1 -
+>  arch/loongarch/kvm/mmu.c              | 32 ----------------
+>  arch/mips/kvm/mmu.c                   | 30 ---------------
+>  arch/powerpc/include/asm/kvm_ppc.h    |  1 -
+>  arch/powerpc/kvm/book3s.c             |  5 ---
+>  arch/powerpc/kvm/book3s.h             |  1 -
+>  arch/powerpc/kvm/book3s_64_mmu_hv.c   | 12 ------
+>  arch/powerpc/kvm/book3s_hv.c          |  1 -
+>  arch/powerpc/kvm/book3s_pr.c          |  7 ----
+>  arch/powerpc/kvm/e500_mmu_host.c      |  6 ---
+>  arch/riscv/kvm/mmu.c                  | 20 ----------
+>  arch/x86/kvm/mmu/mmu.c                | 54 +--------------------------
+>  arch/x86/kvm/mmu/spte.c               | 16 --------
+>  arch/x86/kvm/mmu/spte.h               |  2 -
+>  arch/x86/kvm/mmu/tdp_mmu.c            | 46 -----------------------
+>  arch/x86/kvm/mmu/tdp_mmu.h            |  1 -
+>  include/linux/kvm_host.h              |  2 -
+>  include/trace/events/kvm.h            | 15 --------
+>  virt/kvm/kvm_main.c                   | 43 ---------------------
+>  20 files changed, 2 insertions(+), 327 deletions(-)
+>
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index dc04bc767865..ff17849be9f4 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -1768,40 +1768,6 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct k=
+vm_gfn_range *range)
+>         return false;
+>  }
+>
+> -bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> -{
+> -       kvm_pfn_t pfn =3D pte_pfn(range->arg.pte);
+> -
+> -       if (!kvm->arch.mmu.pgt)
+> -               return false;
+> -
+> -       WARN_ON(range->end - range->start !=3D 1);
+> -
+> -       /*
+> -        * If the page isn't tagged, defer to user_mem_abort() for saniti=
+sing
+> -        * the MTE tags. The S2 pte should have been unmapped by
+> -        * mmu_notifier_invalidate_range_end().
+> -        */
+> -       if (kvm_has_mte(kvm) && !page_mte_tagged(pfn_to_page(pfn)))
+> -               return false;
+> -
+> -       /*
+> -        * We've moved a page around, probably through CoW, so let's trea=
+t
+> -        * it just like a translation fault and the map handler will clea=
+n
+> -        * the cache to the PoC.
+> -        *
+> -        * The MMU notifiers will have unmapped a huge PMD before calling
+> -        * ->change_pte() (which in turn calls kvm_set_spte_gfn()) and
+> -        * therefore we never need to clear out a huge PMD through this
+> -        * calling path and a memcache is not required.
+> -        */
+> -       kvm_pgtable_stage2_map(kvm->arch.mmu.pgt, range->start << PAGE_SH=
+IFT,
+> -                              PAGE_SIZE, __pfn_to_phys(pfn),
+> -                              KVM_PGTABLE_PROT_R, NULL, 0);
+> -
+> -       return false;
+> -}
+> -
+>  bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>  {
+>         u64 size =3D (range->end - range->start) << PAGE_SHIFT;
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
+de/asm/kvm_host.h
+> index 2d62f7b0d377..69305441f40d 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -203,7 +203,6 @@ void kvm_flush_tlb_all(void);
+>  void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa);
+>  int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long badv, bool =
+write);
+>
+> -void kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+>  int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned l=
+ong end, bool blockable);
+>  int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end)=
+;
+>  int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index a556cff35740..98883aa23ab8 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -494,38 +494,6 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm=
+_gfn_range *range)
+>                         range->end << PAGE_SHIFT, &ctx);
+>  }
+>
+> -bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> -{
+> -       unsigned long prot_bits;
+> -       kvm_pte_t *ptep;
+> -       kvm_pfn_t pfn =3D pte_pfn(range->arg.pte);
+> -       gpa_t gpa =3D range->start << PAGE_SHIFT;
+> -
+> -       ptep =3D kvm_populate_gpa(kvm, NULL, gpa, 0);
+> -       if (!ptep)
+> -               return false;
+> -
+> -       /* Replacing an absent or old page doesn't need flushes */
+> -       if (!kvm_pte_present(NULL, ptep) || !kvm_pte_young(*ptep)) {
+> -               kvm_set_pte(ptep, 0);
+> -               return false;
+> -       }
+> -
+> -       /* Fill new pte if write protected or page migrated */
+> -       prot_bits =3D _PAGE_PRESENT | __READABLE;
+> -       prot_bits |=3D _CACHE_MASK & pte_val(range->arg.pte);
+> -
+> -       /*
+> -        * Set _PAGE_WRITE or _PAGE_DIRTY iff old and new pte both suppor=
+t
+> -        * _PAGE_WRITE for map_page_fast if next page write fault
+> -        * _PAGE_DIRTY since gpa has already recorded as dirty page
+> -        */
+> -       prot_bits |=3D __WRITEABLE & *ptep & pte_val(range->arg.pte);
+> -       kvm_set_pte(ptep, kvm_pfn_pte(pfn, __pgprot(prot_bits)));
+> -
+> -       return true;
+> -}
+> -
+>  bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>  {
+>         kvm_ptw_ctx ctx;
+> diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
+> index 467ee6b95ae1..c17157e700c0 100644
+> --- a/arch/mips/kvm/mmu.c
+> +++ b/arch/mips/kvm/mmu.c
+> @@ -444,36 +444,6 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm=
+_gfn_range *range)
+>         return true;
+>  }
+>
+> -bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> -{
+> -       gpa_t gpa =3D range->start << PAGE_SHIFT;
+> -       pte_t hva_pte =3D range->arg.pte;
+> -       pte_t *gpa_pte =3D kvm_mips_pte_for_gpa(kvm, NULL, gpa);
+> -       pte_t old_pte;
+> -
+> -       if (!gpa_pte)
+> -               return false;
+> -
+> -       /* Mapping may need adjusting depending on memslot flags */
+> -       old_pte =3D *gpa_pte;
+> -       if (range->slot->flags & KVM_MEM_LOG_DIRTY_PAGES && !pte_dirty(ol=
+d_pte))
+> -               hva_pte =3D pte_mkclean(hva_pte);
+> -       else if (range->slot->flags & KVM_MEM_READONLY)
+> -               hva_pte =3D pte_wrprotect(hva_pte);
+> -
+> -       set_pte(gpa_pte, hva_pte);
+> -
+> -       /* Replacing an absent or old page doesn't need flushes */
+> -       if (!pte_present(old_pte) || !pte_young(old_pte))
+> -               return false;
+> -
+> -       /* Pages swapped, aged, moved, or cleaned require flushes */
+> -       return !pte_present(hva_pte) ||
+> -              !pte_young(hva_pte) ||
+> -              pte_pfn(old_pte) !=3D pte_pfn(hva_pte) ||
+> -              (pte_dirty(old_pte) && !pte_dirty(hva_pte));
+> -}
+> -
+>  bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>  {
+>         return kvm_mips_mkold_gpa_pt(kvm, range->start, range->end);
+> diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/as=
+m/kvm_ppc.h
+> index 3281215097cc..ca3829d47ab7 100644
+> --- a/arch/powerpc/include/asm/kvm_ppc.h
+> +++ b/arch/powerpc/include/asm/kvm_ppc.h
+> @@ -287,7 +287,6 @@ struct kvmppc_ops {
+>         bool (*unmap_gfn_range)(struct kvm *kvm, struct kvm_gfn_range *ra=
+nge);
+>         bool (*age_gfn)(struct kvm *kvm, struct kvm_gfn_range *range);
+>         bool (*test_age_gfn)(struct kvm *kvm, struct kvm_gfn_range *range=
+);
+> -       bool (*set_spte_gfn)(struct kvm *kvm, struct kvm_gfn_range *range=
+);
+>         void (*free_memslot)(struct kvm_memory_slot *slot);
+>         int (*init_vm)(struct kvm *kvm);
+>         void (*destroy_vm)(struct kvm *kvm);
+> diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+> index 8acec144120e..0d0624088e6b 100644
+> --- a/arch/powerpc/kvm/book3s.c
+> +++ b/arch/powerpc/kvm/book3s.c
+> @@ -899,11 +899,6 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gf=
+n_range *range)
+>         return kvm->arch.kvm_ops->test_age_gfn(kvm, range);
+>  }
+>
+> -bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> -{
+> -       return kvm->arch.kvm_ops->set_spte_gfn(kvm, range);
+> -}
+> -
+>  int kvmppc_core_init_vm(struct kvm *kvm)
+>  {
+>
+> diff --git a/arch/powerpc/kvm/book3s.h b/arch/powerpc/kvm/book3s.h
+> index 58391b4b32ed..4aa2ab89afbc 100644
+> --- a/arch/powerpc/kvm/book3s.h
+> +++ b/arch/powerpc/kvm/book3s.h
+> @@ -12,7 +12,6 @@ extern void kvmppc_core_flush_memslot_hv(struct kvm *kv=
+m,
+>  extern bool kvm_unmap_gfn_range_hv(struct kvm *kvm, struct kvm_gfn_range=
+ *range);
+>  extern bool kvm_age_gfn_hv(struct kvm *kvm, struct kvm_gfn_range *range)=
+;
+>  extern bool kvm_test_age_gfn_hv(struct kvm *kvm, struct kvm_gfn_range *r=
+ange);
+> -extern bool kvm_set_spte_gfn_hv(struct kvm *kvm, struct kvm_gfn_range *r=
+ange);
+>
+>  extern int kvmppc_mmu_init_pr(struct kvm_vcpu *vcpu);
+>  extern void kvmppc_mmu_destroy_pr(struct kvm_vcpu *vcpu);
+> diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3=
+s_64_mmu_hv.c
+> index 2b1f0cdd8c18..1b51b1c4713b 100644
+> --- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> +++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> @@ -1010,18 +1010,6 @@ bool kvm_test_age_gfn_hv(struct kvm *kvm, struct k=
+vm_gfn_range *range)
+>                 return kvm_test_age_rmapp(kvm, range->slot, range->start)=
+;
+>  }
+>
+> -bool kvm_set_spte_gfn_hv(struct kvm *kvm, struct kvm_gfn_range *range)
+> -{
+> -       WARN_ON(range->start + 1 !=3D range->end);
+> -
+> -       if (kvm_is_radix(kvm))
+> -               kvm_unmap_radix(kvm, range->slot, range->start);
+> -       else
+> -               kvm_unmap_rmapp(kvm, range->slot, range->start);
+> -
+> -       return false;
+> -}
+> -
+>  static int vcpus_running(struct kvm *kvm)
+>  {
+>         return atomic_read(&kvm->arch.vcpus_running) !=3D 0;
+> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+> index 8e86eb577eb8..35cb014a0c51 100644
+> --- a/arch/powerpc/kvm/book3s_hv.c
+> +++ b/arch/powerpc/kvm/book3s_hv.c
+> @@ -6364,7 +6364,6 @@ static struct kvmppc_ops kvm_ops_hv =3D {
+>         .unmap_gfn_range =3D kvm_unmap_gfn_range_hv,
+>         .age_gfn =3D kvm_age_gfn_hv,
+>         .test_age_gfn =3D kvm_test_age_gfn_hv,
+> -       .set_spte_gfn =3D kvm_set_spte_gfn_hv,
+>         .free_memslot =3D kvmppc_core_free_memslot_hv,
+>         .init_vm =3D  kvmppc_core_init_vm_hv,
+>         .destroy_vm =3D kvmppc_core_destroy_vm_hv,
+> diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+> index 5b92619a05fd..a7d7137ea0c8 100644
+> --- a/arch/powerpc/kvm/book3s_pr.c
+> +++ b/arch/powerpc/kvm/book3s_pr.c
+> @@ -461,12 +461,6 @@ static bool kvm_test_age_gfn_pr(struct kvm *kvm, str=
+uct kvm_gfn_range *range)
+>         return false;
+>  }
+>
+> -static bool kvm_set_spte_gfn_pr(struct kvm *kvm, struct kvm_gfn_range *r=
+ange)
+> -{
+> -       /* The page will get remapped properly on its next fault */
+> -       return do_kvm_unmap_gfn(kvm, range);
+> -}
+> -
+>  /*****************************************/
+>
+>  static void kvmppc_set_msr_pr(struct kvm_vcpu *vcpu, u64 msr)
+> @@ -2071,7 +2065,6 @@ static struct kvmppc_ops kvm_ops_pr =3D {
+>         .unmap_gfn_range =3D kvm_unmap_gfn_range_pr,
+>         .age_gfn  =3D kvm_age_gfn_pr,
+>         .test_age_gfn =3D kvm_test_age_gfn_pr,
+> -       .set_spte_gfn =3D kvm_set_spte_gfn_pr,
+>         .free_memslot =3D kvmppc_core_free_memslot_pr,
+>         .init_vm =3D kvmppc_core_init_vm_pr,
+>         .destroy_vm =3D kvmppc_core_destroy_vm_pr,
+> diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu=
+_host.c
+> index ccb8f16ffe41..c664fdec75b1 100644
+> --- a/arch/powerpc/kvm/e500_mmu_host.c
+> +++ b/arch/powerpc/kvm/e500_mmu_host.c
+> @@ -747,12 +747,6 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gf=
+n_range *range)
+>         return false;
+>  }
+>
+> -bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> -{
+> -       /* The page will get remapped properly on its next fault */
+> -       return kvm_e500_mmu_unmap_gfn(kvm, range);
+> -}
+> -
+>  /*****************************************/
+>
+>  int e500_mmu_host_init(struct kvmppc_vcpu_e500 *vcpu_e500)
+> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+> index a9e2fd7245e1..b63650f9b966 100644
+> --- a/arch/riscv/kvm/mmu.c
+> +++ b/arch/riscv/kvm/mmu.c
+> @@ -550,26 +550,6 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm=
+_gfn_range *range)
+>         return false;
+>  }
+>
+> -bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> -{
+> -       int ret;
+> -       kvm_pfn_t pfn =3D pte_pfn(range->arg.pte);
+> -
+> -       if (!kvm->arch.pgd)
+> -               return false;
+> -
+> -       WARN_ON(range->end - range->start !=3D 1);
+> -
+> -       ret =3D gstage_map_page(kvm, NULL, range->start << PAGE_SHIFT,
+> -                             __pfn_to_phys(pfn), PAGE_SIZE, true, true);
+> -       if (ret) {
+> -               kvm_debug("Failed to map G-stage page (error %d)\n", ret)=
+;
+> -               return true;
+> -       }
+> -
+> -       return false;
+> -}
+> -
+>  bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>  {
+>         pte_t *ptep;
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 0049d49aa913..87ba2a9da196 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -432,8 +432,8 @@ static u64 __update_clear_spte_slow(u64 *sptep, u64 s=
+pte)
+>   * The idea using the light way get the spte on x86_32 guest is from
+>   * gup_get_pte (mm/gup.c).
+>   *
+> - * An spte tlb flush may be pending, because kvm_set_pte_rmap
+> - * coalesces them and we are running out of the MMU lock.  Therefore
+> + * An spte tlb flush may be pending, because they are coalesced and
+> + * we are running out of the MMU lock.  Therefore
+>   * we need to protect against in-progress updates of the spte.
+>   *
+>   * Reading the spte while an update is in progress may get the old value
+> @@ -1454,43 +1454,6 @@ static bool kvm_zap_rmap(struct kvm *kvm, struct k=
+vm_rmap_head *rmap_head,
+>         return __kvm_zap_rmap(kvm, rmap_head, slot);
+>  }
+>
+> -static bool kvm_set_pte_rmap(struct kvm *kvm, struct kvm_rmap_head *rmap=
+_head,
+> -                            struct kvm_memory_slot *slot, gfn_t gfn, int=
+ level,
+> -                            pte_t pte)
+> -{
+> -       u64 *sptep;
+> -       struct rmap_iterator iter;
+> -       bool need_flush =3D false;
+> -       u64 new_spte;
+> -       kvm_pfn_t new_pfn;
+> -
+> -       WARN_ON_ONCE(pte_huge(pte));
+> -       new_pfn =3D pte_pfn(pte);
+> -
+> -restart:
+> -       for_each_rmap_spte(rmap_head, &iter, sptep) {
+> -               need_flush =3D true;
+> -
+> -               if (pte_write(pte)) {
+> -                       kvm_zap_one_rmap_spte(kvm, rmap_head, sptep);
+> -                       goto restart;
+> -               } else {
+> -                       new_spte =3D kvm_mmu_changed_pte_notifier_make_sp=
+te(
+> -                                       *sptep, new_pfn);
+> -
+> -                       mmu_spte_clear_track_bits(kvm, sptep);
+> -                       mmu_spte_set(sptep, new_spte);
+> -               }
+> -       }
+> -
+> -       if (need_flush && kvm_available_flush_remote_tlbs_range()) {
+> -               kvm_flush_remote_tlbs_gfn(kvm, gfn, level);
+> -               return false;
+> -       }
+> -
+> -       return need_flush;
+> -}
+> -
+>  struct slot_rmap_walk_iterator {
+>         /* input fields. */
+>         const struct kvm_memory_slot *slot;
+> @@ -1596,19 +1559,6 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct k=
+vm_gfn_range *range)
+>         return flush;
+>  }
+>
+> -bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> -{
+> -       bool flush =3D false;
+> -
+> -       if (kvm_memslots_have_rmaps(kvm))
+> -               flush =3D kvm_handle_gfn_range(kvm, range, kvm_set_pte_rm=
+ap);
+> -
+> -       if (tdp_mmu_enabled)
+> -               flush |=3D kvm_tdp_mmu_set_spte_gfn(kvm, range);
+> -
+> -       return flush;
+> -}
+> -
+>  static bool kvm_age_rmap(struct kvm *kvm, struct kvm_rmap_head *rmap_hea=
+d,
+>                          struct kvm_memory_slot *slot, gfn_t gfn, int lev=
+el,
+>                          pte_t unused)
+> diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+> index 318135daf685..283af5b90016 100644
+> --- a/arch/x86/kvm/mmu/spte.c
+> +++ b/arch/x86/kvm/mmu/spte.c
+> @@ -322,22 +322,6 @@ u64 make_nonleaf_spte(u64 *child_pt, bool ad_disable=
+d)
+>         return spte;
+>  }
+>
+> -u64 kvm_mmu_changed_pte_notifier_make_spte(u64 old_spte, kvm_pfn_t new_p=
+fn)
+> -{
+> -       u64 new_spte;
+> -
+> -       new_spte =3D old_spte & ~SPTE_BASE_ADDR_MASK;
+> -       new_spte |=3D (u64)new_pfn << PAGE_SHIFT;
+> -
+> -       new_spte &=3D ~PT_WRITABLE_MASK;
+> -       new_spte &=3D ~shadow_host_writable_mask;
+> -       new_spte &=3D ~shadow_mmu_writable_mask;
+> -
+> -       new_spte =3D mark_spte_for_access_track(new_spte);
+> -
+> -       return new_spte;
+> -}
+> -
+>  u64 mark_spte_for_access_track(u64 spte)
+>  {
+>         if (spte_ad_enabled(spte))
+> diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+> index 1a163aee9ec6..92da4c419171 100644
+> --- a/arch/x86/kvm/mmu/spte.h
+> +++ b/arch/x86/kvm/mmu/spte.h
+> @@ -511,8 +511,6 @@ static inline u64 restore_acc_track_spte(u64 spte)
+>         return spte;
+>  }
+>
+> -u64 kvm_mmu_changed_pte_notifier_make_spte(u64 old_spte, kvm_pfn_t new_p=
+fn);
+> -
+>  void __init kvm_mmu_spte_module_init(void);
+>  void kvm_mmu_reset_all_pte_masks(void);
+>
+> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+> index 3627744fcab6..fbb86932b766 100644
+> --- a/arch/x86/kvm/mmu/tdp_mmu.c
+> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
+> @@ -1250,52 +1250,6 @@ bool kvm_tdp_mmu_test_age_gfn(struct kvm *kvm, str=
+uct kvm_gfn_range *range)
+>         return kvm_tdp_mmu_handle_gfn(kvm, range, test_age_gfn);
+>  }
+>
+> -static bool set_spte_gfn(struct kvm *kvm, struct tdp_iter *iter,
+> -                        struct kvm_gfn_range *range)
+> -{
+> -       u64 new_spte;
+> -
+> -       /* Huge pages aren't expected to be modified without first being =
+zapped. */
+> -       WARN_ON_ONCE(pte_huge(range->arg.pte) || range->start + 1 !=3D ra=
+nge->end);
+> -
+> -       if (iter->level !=3D PG_LEVEL_4K ||
+> -           !is_shadow_present_pte(iter->old_spte))
+> -               return false;
+> -
+> -       /*
+> -        * Note, when changing a read-only SPTE, it's not strictly necess=
+ary to
+> -        * zero the SPTE before setting the new PFN, but doing so preserv=
+es the
+> -        * invariant that the PFN of a present * leaf SPTE can never chan=
+ge.
+> -        * See handle_changed_spte().
+> -        */
+> -       tdp_mmu_iter_set_spte(kvm, iter, SHADOW_NONPRESENT_VALUE);
+> -
+> -       if (!pte_write(range->arg.pte)) {
+> -               new_spte =3D kvm_mmu_changed_pte_notifier_make_spte(iter-=
+>old_spte,
+> -                                                                 pte_pfn=
+(range->arg.pte));
+> -
+> -               tdp_mmu_iter_set_spte(kvm, iter, new_spte);
+> -       }
+> -
+> -       return true;
+> -}
+> -
+> -/*
+> - * Handle the changed_pte MMU notifier for the TDP MMU.
+> - * data is a pointer to the new pte_t mapping the HVA specified by the M=
+MU
+> - * notifier.
+> - * Returns non-zero if a flush is needed before releasing the MMU lock.
+> - */
+> -bool kvm_tdp_mmu_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *ran=
+ge)
+> -{
+> -       /*
+> -        * No need to handle the remote TLB flush under RCU protection, t=
+he
+> -        * target SPTE _must_ be a leaf SPTE, i.e. cannot result in freei=
+ng a
+> -        * shadow page. See the WARN on pfn_changed in handle_changed_spt=
+e().
+> -        */
+> -       return kvm_tdp_mmu_handle_gfn(kvm, range, set_spte_gfn);
+> -}
+> -
+>  /*
+>   * Remove write access from all SPTEs at or above min_level that map GFN=
+s
+>   * [start, end). Returns true if an SPTE has been changed and the TLBs n=
+eed to
+> diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
+> index 6e1ea04ca885..58b55e61bd33 100644
+> --- a/arch/x86/kvm/mmu/tdp_mmu.h
+> +++ b/arch/x86/kvm/mmu/tdp_mmu.h
+> @@ -31,7 +31,6 @@ bool kvm_tdp_mmu_unmap_gfn_range(struct kvm *kvm, struc=
+t kvm_gfn_range *range,
+>                                  bool flush);
+>  bool kvm_tdp_mmu_age_gfn_range(struct kvm *kvm, struct kvm_gfn_range *ra=
+nge);
+>  bool kvm_tdp_mmu_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *ran=
+ge);
+> -bool kvm_tdp_mmu_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *ran=
+ge);
+>
+>  bool kvm_tdp_mmu_wrprot_slot(struct kvm *kvm,
+>                              const struct kvm_memory_slot *slot, int min_=
+level);
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index ab439706ea2f..8dea11701ab2 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -259,7 +259,6 @@ int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
+>
+>  #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
+>  union kvm_mmu_notifier_arg {
+> -       pte_t pte;
+>         unsigned long attributes;
+>  };
+>
+> @@ -273,7 +272,6 @@ struct kvm_gfn_range {
+>  bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
+>  bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
+>  bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
+> -bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
+>  #endif
+>
+>  enum {
+> diff --git a/include/trace/events/kvm.h b/include/trace/events/kvm.h
+> index 011fba6b5552..74e40d5d4af4 100644
+> --- a/include/trace/events/kvm.h
+> +++ b/include/trace/events/kvm.h
+> @@ -456,21 +456,6 @@ TRACE_EVENT(kvm_unmap_hva_range,
+>                   __entry->start, __entry->end)
+>  );
+>
+> -TRACE_EVENT(kvm_set_spte_hva,
+> -       TP_PROTO(unsigned long hva),
+> -       TP_ARGS(hva),
+> -
+> -       TP_STRUCT__entry(
+> -               __field(        unsigned long,  hva             )
+> -       ),
+> -
+> -       TP_fast_assign(
+> -               __entry->hva            =3D hva;
+> -       ),
+> -
+> -       TP_printk("mmu notifier set pte hva: %#016lx", __entry->hva)
+> -);
+> -
+>  TRACE_EVENT(kvm_age_hva,
+>         TP_PROTO(unsigned long start, unsigned long end),
+>         TP_ARGS(start, end),
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 4eb8afd0b961..2fcd9979752a 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -717,48 +717,6 @@ static __always_inline int kvm_handle_hva_range_no_f=
+lush(struct mmu_notifier *mn
+>         return __kvm_handle_hva_range(kvm, &range).ret;
+>  }
+>
+> -static bool kvm_change_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *r=
+ange)
+> -{
+> -       /*
+> -        * Skipping invalid memslots is correct if and only change_pte() =
+is
+> -        * surrounded by invalidate_range_{start,end}(), which is current=
+ly
+> -        * guaranteed by the primary MMU.  If that ever changes, KVM need=
+s to
+> -        * unmap the memslot instead of skipping the memslot to ensure th=
+at KVM
+> -        * doesn't hold references to the old PFN.
+> -        */
+> -       WARN_ON_ONCE(!READ_ONCE(kvm->mn_active_invalidate_count));
+> -
+> -       if (range->slot->flags & KVM_MEMSLOT_INVALID)
+> -               return false;
+> -
+> -       return kvm_set_spte_gfn(kvm, range);
+> -}
+> -
+> -static void kvm_mmu_notifier_change_pte(struct mmu_notifier *mn,
+> -                                       struct mm_struct *mm,
+> -                                       unsigned long address,
+> -                                       pte_t pte)
+> -{
+> -       struct kvm *kvm =3D mmu_notifier_to_kvm(mn);
+> -       const union kvm_mmu_notifier_arg arg =3D { .pte =3D pte };
+> -
+> -       trace_kvm_set_spte_hva(address);
+> -
+> -       /*
+> -        * .change_pte() must be surrounded by .invalidate_range_{start,e=
+nd}().
+> -        * If mmu_invalidate_in_progress is zero, then no in-progress
+> -        * invalidations, including this one, found a relevant memslot at
+> -        * start(); rechecking memslots here is unnecessary.  Note, a fal=
+se
+> -        * positive (count elevated by a different invalidation) is sub-o=
+ptimal
+> -        * but functionally ok.
+> -        */
+> -       WARN_ON_ONCE(!READ_ONCE(kvm->mn_active_invalidate_count));
+> -       if (!READ_ONCE(kvm->mmu_invalidate_in_progress))
+> -               return;
+> -
+> -       kvm_handle_hva_range(mn, address, address + 1, arg, kvm_change_sp=
+te_gfn);
+> -}
+> -
+>  void kvm_mmu_invalidate_begin(struct kvm *kvm)
+>  {
+>         lockdep_assert_held_write(&kvm->mmu_lock);
+> @@ -976,7 +934,6 @@ static const struct mmu_notifier_ops kvm_mmu_notifier=
+_ops =3D {
+>         .clear_flush_young      =3D kvm_mmu_notifier_clear_flush_young,
+>         .clear_young            =3D kvm_mmu_notifier_clear_young,
+>         .test_young             =3D kvm_mmu_notifier_test_young,
+> -       .change_pte             =3D kvm_mmu_notifier_change_pte,
+>         .release                =3D kvm_mmu_notifier_release,
+>  };
+>
+> --
+> 2.43.0
+>
+>
