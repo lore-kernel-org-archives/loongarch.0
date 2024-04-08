@@ -1,66 +1,66 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BA725570
-	for <loongarch@lists.linux.dev>; Mon,  8 Apr 2024 07:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19559250EC
+	for <loongarch@lists.linux.dev>; Mon,  8 Apr 2024 07:36:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712561732; cv=none; b=AcJog8j9Y1Mc4DdArgPw/QqPV5DTPDLPVdEgMmobZcJ0zEJ/UNn6b/2mHmgI3nbRGmLBSdOfaM0Eyj6pzDwOOs4ElbdvK3kRpnrP9RSm7GoHcR532QOCJuoU56JgZNUEvMf70YQGxeKFxTLXQiPI0VBF6QGLpn4B2qVScAdLVEs=
+	t=1712561804; cv=none; b=nr9Sc6lyJrmYKXeCEamAGuH3WTFn93tmyoI3JUsLxYS5JR4ZSbeKFi93TZFYvtuzcGZhB24ICjkfomDac5aDOmLaLGVWl2Z9tY5bYtVVR40RHstF40IQIIXULIcNqG9cVDVv9rfdnbyhvrQWwGlAyF+4uiLgB3NobCcT1KneIZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712561732; c=relaxed/simple;
-	bh=0IHLjYsCH+95NP2eqcmqensUwJwYqzk/Xe0MSj34hRw=;
+	s=arc-20240116; t=1712561804; c=relaxed/simple;
+	bh=Px5BRqX0d1S4QkhBS9TZflqU7FFIrXPMnhSiTWMdLx4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YD2ctmUnxy06HXeReKAGF54JeXsYqTa8Mgsf0x8hka/vSCFkQQwJmA59BnZDPmTpbveJUFF8toFtsTWQd4vawhS0lXiWPtgYkctImCu8QSiTVGqMOVo4Sai/wXU0/zhQBnq4RJA4h7RokObPqugWmurATaGHfHeYqQ+kzUbM06g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IUzk4h0V; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=qYJkLJ+AF9JIQXnxaObLjHKYEIc2m8iZ/L/VohnHf9YZF5u/zZ6C9WG0rse2DCrQXto1P7ERXP5yM05OCQfNs6AcdIkJiyOQ44baZRS5kRqjma6VU9pfoDS3c6aJQ/ecHmll12UUywjXsDG5maGUUEne1Hu8PNo0PWRZ9p312u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z1D1bkMW; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IUzk4h0V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z1D1bkMW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712561730;
+	s=mimecast20190719; t=1712561802;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=d3GySbiGeorRsqZIt9Ijfkj1iWt87wQlFpIRAmiy934=;
-	b=IUzk4h0VU9CSrp8DWtoJ4joj57cmy/s+R0349d19QkeiCrHjt8hbzG1y5Xw8HrSG+2Rs8P
-	K31x+NNB0MTYnQ78JWuFGnEcCJ8LjtmxinV9/mBaX/QECfsnYnbHZf2hSpUwX4HX6WFP8E
-	Bwyqx0V5I04Vl6jNGbRrxgqDFjSIfIY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=si7yJK42Z2mZYAabXm2bLCAnwyhavot+uGq3e+m8mfg=;
+	b=Z1D1bkMW96r5iPhCfTmVwYKnUZ/5MBCu4qiKVdU4Jq9bTPuIE47ox6lJkCJIIIJuKfdI1F
+	b+wbfGGYO1oUkBiavU41gARjJLX1I9ZL7UIy4l121mheT1K8dIQtrxSWFX2nqVI0Gn0PHq
+	XCiZ9uBjkkp0y1wgVpVf0rirWS1ooyE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-619-j-2C9Ar6NMGwvagmp9885g-1; Mon, 08 Apr 2024 03:35:25 -0400
-X-MC-Unique: j-2C9Ar6NMGwvagmp9885g-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4162ba19021so17933935e9.2
-        for <loongarch@lists.linux.dev>; Mon, 08 Apr 2024 00:35:25 -0700 (PDT)
+ us-mta-85-Ww9aH_o-PU2qK_PQY1BohA-1; Mon, 08 Apr 2024 03:36:40 -0400
+X-MC-Unique: Ww9aH_o-PU2qK_PQY1BohA-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4162b93067dso15324805e9.3
+        for <loongarch@lists.linux.dev>; Mon, 08 Apr 2024 00:36:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712561724; x=1713166524;
+        d=1e100.net; s=20230601; t=1712561799; x=1713166599;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=d3GySbiGeorRsqZIt9Ijfkj1iWt87wQlFpIRAmiy934=;
-        b=imCjozFJCThyS0W77NvmG3DWBUlcVdD9k1tAoWqCsvgjdJHZy65bHJyzDuRmfMOz7I
-         j3sA1RJnJLQ2fWqTf4O7ZAjfBRrRwmPwqOKyYBQwUHslAJhA+Y8xS5Hpc8swucBDFK+z
-         6iqVFgwfo/H2uTCwrXlEZliNsREwEuEEPpLlRycEWEoNw296Rvy+HKIncppBm1mtq1hr
-         jlFLoaFuKlUgG9LW/Zfayq/tPdV+KNlqEUU59N5cOjZ5hfLS+w1052U/QiMr5Xsvbfcs
-         Yp9eIHo0mKK3A71Hen50hltOTnBwCuLZzKHu9elmM8DbArMV6JTxqf6NyUrfzqFHZ8lT
-         cJVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdbVBl8WrnsQxrVqhElcD/Qj/SeZZJwq2HXbQbHjBMtJg6dnY8ARWUGjccvuTapT5FNOKGOtKn1lmJlYJM/zQ20CheKBuJLHwD
-X-Gm-Message-State: AOJu0YxneljMoOK7dOWlRIHUBfyhlkf1pEE0edgH2yqaVnoLCmKYWwa+
-	oGTRpmQd63u3XJmkPmQ9gbUREQt2IDc5BCBTutKKKIi5+D1cuim0llPMQto5MTSIlNfjnGY5/qU
-	UEAQUJH/abQRC9zA1c/UWY4jFvm+utvjX5NgzKhT0YtuhX5I01qb/RNk2xA==
-X-Received: by 2002:a05:600c:4ece:b0:416:3365:b9c7 with SMTP id g14-20020a05600c4ece00b004163365b9c7mr4607154wmq.13.1712561724295;
-        Mon, 08 Apr 2024 00:35:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHjZ9VCYB4AUQb07oKhGHJ1GEtWztGeMgSbalcZWN1jAdx1q+6Zl+lVrclpocaKQsTfHoR1hQ==
-X-Received: by 2002:a05:600c:4ece:b0:416:3365:b9c7 with SMTP id g14-20020a05600c4ece00b004163365b9c7mr4607141wmq.13.1712561723921;
-        Mon, 08 Apr 2024 00:35:23 -0700 (PDT)
+        bh=si7yJK42Z2mZYAabXm2bLCAnwyhavot+uGq3e+m8mfg=;
+        b=TlF4fWmr7AbqhfHQN/HRW2XdZ9mhhlAN16fOpgQOXsk2CvTsiFY9hgImXAgu4u8N5v
+         y1/ssJkwumhX0pZXXTJM/P6o2N33WUdJltGOiG4SNC79HkA9GuKMZZUK3woHpTmlAqkp
+         Aq4XSQF7vijJXbAWDUFJv8XCiDbHouNdVXXJsomsslEH6tCRZCfu3Y7BpS04M2JTpKwn
+         zApkj0RY+zKZXXBoRZkt3EnPHDh8Yx0QmZDwDgV20hqx/2NcW6TO73au4aqGWA7S+KAt
+         uuz18OZ9UiRJof+okcGBheJucDDvVkev5oTScGLBFz3TMT+jwQRIQ2EVOhcCdq5YFFU7
+         gFow==
+X-Forwarded-Encrypted: i=1; AJvYcCX26lsvVXvP325R3Q+2XrpxJcW+JJG0K+3u1zDcLzIQSv2AGtNEm+Y8MropG6iltMOa+Or2frwHGjwNxguPjMv0D70W5RtGXJVC
+X-Gm-Message-State: AOJu0Yx4Xg0l3ATVmFFNhhxiDo8BdeQ/gwsquKTg0dyCwvUjVKdgL5gz
+	TIT7t7NHBX5eqdag3lq0oFx2LMvziihS3r7uND5zw8iUSCjoqvBhf2HHgtQcIYbNF3B3ncxerh1
+	pLef3sZux6qzbWuKB280SEl4D7fPZHMt5r96y6Q90obGKrN8vXis9LVZ04g==
+X-Received: by 2002:a05:600c:154c:b0:414:610b:13c3 with SMTP id f12-20020a05600c154c00b00414610b13c3mr5692673wmg.27.1712561799407;
+        Mon, 08 Apr 2024 00:36:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHMF/mJT7VmyvOfZP2wNJanQ7CydvAoWGwctBFe1iIdlIRCOMjrgJPMDYTawpM1YL4HfZjXbw==
+X-Received: by 2002:a05:600c:154c:b0:414:610b:13c3 with SMTP id f12-20020a05600c154c00b00414610b13c3mr5692661wmg.27.1712561799039;
+        Mon, 08 Apr 2024 00:36:39 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c718:1300:9860:66a2:fe4d:c379? (p200300cbc7181300986066a2fe4dc379.dip0.t-ipconnect.de. [2003:cb:c718:1300:9860:66a2:fe4d:c379])
-        by smtp.gmail.com with ESMTPSA id l35-20020a05600c1d2300b0041680911b0fsm1228331wms.30.2024.04.08.00.35.22
+        by smtp.gmail.com with ESMTPSA id c2-20020a05600c0a4200b004162bac1393sm12370535wmq.43.2024.04.08.00.36.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 00:35:23 -0700 (PDT)
-Message-ID: <e40ad5e2-6679-47f6-ab9f-14625627ac1e@redhat.com>
-Date: Mon, 8 Apr 2024 09:35:21 +0200
+        Mon, 08 Apr 2024 00:36:38 -0700 (PDT)
+Message-ID: <fb525c6b-4284-4cb2-b3e1-20275fc3c4f3@redhat.com>
+Date: Mon, 8 Apr 2024 09:36:37 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,7 +68,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] mmu_notifier: remove the .change_pte() callback
+Subject: Re: [PATCH 4/4] mm: replace set_pte_at_notify() with just
+ set_pte_at()
 To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
  kvm@vger.kernel.org
 Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
@@ -83,7 +84,7 @@ Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
  linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org
 References: <20240405115815.3226315-1-pbonzini@redhat.com>
- <20240405115815.3226315-4-pbonzini@redhat.com>
+ <20240405115815.3226315-5-pbonzini@redhat.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -130,7 +131,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20240405115815.3226315-4-pbonzini@redhat.com>
+In-Reply-To: <20240405115815.3226315-5-pbonzini@redhat.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -138,20 +139,14 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 05.04.24 13:58, Paolo Bonzini wrote:
-> The scope of set_pte_at_notify() has reduced more and more through the
-> years.  Initially, it was meant for when the change to the PTE was
-> not bracketed by mmu_notifier_invalidate_range_{start,end}().  However,
-> that has not been so for over ten years.  During all this period
-> the only implementation of .change_pte() was KVM and it
-> had no actual functionality, because it was called after
-> mmu_notifier_invalidate_range_start() zapped the secondary PTE.
-> 
-> Now that this (nonfunctional) user of the .change_pte() callback is
-> gone, the whole callback can be removed.  For now, leave in place
-> set_pte_at_notify() even though it is just a synonym for set_pte_at().
+> With the demise of the .change_pte() MMU notifier callback, there is no
+> notification happening in set_pte_at_notify().  It is a synonym of
+> set_pte_at() and can be replaced with it.
 > 
 > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
+
+A real joy seeing that gone
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
 
