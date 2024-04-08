@@ -1,136 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE5079955
-	for <loongarch@lists.linux.dev>; Mon,  8 Apr 2024 13:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22EE1442F2
+	for <loongarch@lists.linux.dev>; Mon,  8 Apr 2024 16:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712584589; cv=none; b=bbrqeUfpiPRiIIqz1QwFXIGKMeGl5igGL81HWk84XqLCuYbT+9yicL036XqxZwS5OaL8jmIBoASt1I0L3QLWm7MvGY/Go6jOTgFhPopmzE0AHJ1YS1dYyJorsVaPl8+EPSk6L41lqzlo9BrLFfjFsLghaKWKuWzrBB9s/kjPNyY=
+	t=1712594075; cv=none; b=C62xvoXIlheYMS6Oi9+D6KynFVcH2llPKUTBUFyd20vWFGviPJqDWHKfjMKfQ5QaqXk5BYZqhqX9FCsy2E9GaiNDMyApMA1cdqww/XF3l9neHw80cLAD5IM7XshLpycRqpwtK/zR18nIRMckx20en8GGSpAWPqqhz4V1fy2h99w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712584589; c=relaxed/simple;
-	bh=Sv1lonJMRVR+UVuirFpH2YmZNDikOQMGGjjjY3UJLc4=;
+	s=arc-20240116; t=1712594075; c=relaxed/simple;
+	bh=GDjg6EBXUVwAARwkkfl8HCARLRaI322ITo8J7xf4XpE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=s4HmnpxVIrDODSQFtrMGvV7STpTAzTQkzNqA8Yw1aNReC6oXVZSpDMESbxA1FTmho8gyH8pu+0LzRBlV5wZUjGUI3oJ3YCr0HQbRK8fy7EwDcLpVF3wnFN5JB37Lz7h1kD817yxoTQDkVuiBzo2Vd3Iqd+5S//etu2mST/OjC2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YknS0oZn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kgVbKgNqFb+5c5UnJ81yzx0OzQeZ5UcVuGtgFu2a9rE7AIO68vhhZFMsA0kDkBrTSfxHwGzT6DXpiT6DPeQ4UqBSETJ3X4F2ho2K29L6PgQVVoZtr40Kjynlr4CWRokeHzjKyO8gLerfBtYDvWALuBjcTqiHfhZLo9X6S0iWNtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q64tdBz4; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YknS0oZn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712584585;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rmNJpHW5Hyb1elegWpLMoq/S1yVvTDK8DJLj5yKd5mI=;
-	b=YknS0oZnF7n6p+YJDgLkjAUF/d5DU8J3xGo2qEWOu1Bers3mCY8BKYoRgMlPuhw4hypGPc
-	K8cj+M2M7przg0Q6oC5Jma/GDs/840REKdyR4dnR0HWRO88geWwKBj6iXvsHbE6CVdhUQo
-	uUsWii6QyJcjnHe260gnYCQ3zr4o63s=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-286-aySnkizxMPyx8u6ROR3NmA-1; Mon, 08 Apr 2024 09:56:24 -0400
-X-MC-Unique: aySnkizxMPyx8u6ROR3NmA-1
-Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-6ea20a966b0so46681a34.0
-        for <loongarch@lists.linux.dev>; Mon, 08 Apr 2024 06:56:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712584584; x=1713189384;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q64tdBz4"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e2b1cd446fso33546715ad.3
+        for <loongarch@lists.linux.dev>; Mon, 08 Apr 2024 09:34:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712594073; x=1713198873; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rmNJpHW5Hyb1elegWpLMoq/S1yVvTDK8DJLj5yKd5mI=;
-        b=p/+RimrXaq4i4RGorfjHl7tk7mSLaAi612lu/bPqC9QHmzssprnTaJ1MsGsOPH6byU
-         bambuHvoc5wz6haDY1SC03DRrzBpDkYecjn2VnL/14u9lEzbHu/bAvP1xc9WBC016Tcd
-         AniggTCymmD6qOWS6ED4V7YwNmYPd7lW7AwZn+d+2wspa1zeqABRdXMU//dcS/5nCT8Y
-         NVXPKxACRjsXBfhRGeZXluxE9lagqy6NDnHT2oEG87sfJw4urrowxE/eX78zIZ2gTMEo
-         VCa9E5cNh1KE9coSQGUGnfNOwBc1yQE0M7RvSI6ZU0lHO2hfrggGOxX4gJs3zir32qDx
-         c7Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0DS4Zt+FssrxsVhBMWyorK10YUfW+LOs8FBGezFLaYCJkXc1jbmgeyenUpVcQcqMnL9+WYDXhGKVCWmM8W1MPAHnGH+0zQjuM
-X-Gm-Message-State: AOJu0Yxnd6UcNlLc9z/M8BsacGuqqqvsZKcJTDDsFwli6fWASi3IpWt8
-	jZdOtFEeOi2ZEnb1pvLiIlg+DczjY+heGkwzDYyrSNlbcth+kOh9Kh5rhXoxWyx7TxOm2UZtt7M
-	21hH8EtqJjR2rJe1rM2Aw0Gj6x3mjdn/rF9oSjxVzmW+aXZp7xSwRXBrgEA==
-X-Received: by 2002:a05:6830:a5a:b0:6e7:592:87ab with SMTP id g26-20020a0568300a5a00b006e7059287abmr9702504otu.2.1712584583694;
-        Mon, 08 Apr 2024 06:56:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE/6cZVOu40ZE5XkeceEvB5GWIk5ESL9MdZGK/RmwIM5NG0Lyufyd1ejET8K1FRMeVweFzXgg==
-X-Received: by 2002:a05:6830:a5a:b0:6e7:592:87ab with SMTP id g26-20020a0568300a5a00b006e7059287abmr9702473otu.2.1712584583118;
-        Mon, 08 Apr 2024 06:56:23 -0700 (PDT)
-Received: from x1n ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id vw25-20020a05620a565900b0078d63baf516sm1301217qkn.129.2024.04.08.06.56.21
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y8W6JiQXMJlyRVh6G0P1/xRBUWDgR2AudHru0aHPOuY=;
+        b=Q64tdBz4CQNnjuIOInhN+F7zQhfO1PPrsE1xq48RzT2OoLginL4ewLceowDRoxo6WC
+         PvJGerLqhvLD1GmnpT3Mm5acBeD9V6u6ur/eoBs5yK8vo+VCsswUOFSfj6zV+Z2nZ+x5
+         7FSct2A2IBjTO/YuaNBOtS0WDTg9ndRnpNhkAZkwtTmgoHaPCo2iXAlDNLmT/HFZ54d/
+         CpL8JT3MeqUnkjYDTc/d/MwU0n9yB3fI8aKWdahUMqz9D1JCKwGgQGSbX+PGInpSv3Nh
+         a8f/6XamsC6D++kR+fmbaQKKVQVCmszEcEWpA69Qc2Jn1RwFEQDjqOQy2dy8kKS2ok1R
+         sn5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712594073; x=1713198873;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y8W6JiQXMJlyRVh6G0P1/xRBUWDgR2AudHru0aHPOuY=;
+        b=OT6hWK5B8UYpqaK2kOxRotO7uL2TZ5qFhMs8YTYXBXetvi2dfHOydpDoLkUsCe4UXW
+         6Y9v5f8O1mK8NMPokzAfF7dBffcgpZ4ezTVQoV8cLxNqmd6nWj2Ymp3F6qMIvEXM4djt
+         MJR2G6QHPWR4a2mb4R5Jng+tDaBuCHIWOqTQmm9piB3vmY9aFT/2mPT7JifKIdEuaDdY
+         xWRJM3sOz91YTvCeehH8Hd/2iygzuVhkbyOT1WRQ8B77i5GsTM/hI8a5/gGVhJaWcd+m
+         1KVHHIcuqnF91H4El7iGEFU4IuIeGPkromfs2Oi3EYecwyEq9X+D/tqzQbcdJZjqyl2C
+         MAUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiIHQAr9fBc3bFFvAHBew2V6loFbVOj+sUVvu6oCPJYHBwTx9036aZ1OBb3Q9smJHTClJgZS6vOapRVEioedgzbQGGrm4Laz6f
+X-Gm-Message-State: AOJu0Yzp2srAe1NnJu2/pgNNp/HAB2NZ/DILF7WpbXmUBSk1ZUeBLA8S
+	Fpbc239ZLKMJ7FUAMwmNQMVBWL4wxE72f6/i2zkycg/pi6q7ePI6
+X-Google-Smtp-Source: AGHT+IHjgwPwZy3e5AEopzEIQpEcmD2hcpsHcoA+sLwIBYMIqqkK3bLGAgIh/jDVDgJdWRaZ9xWs0g==
+X-Received: by 2002:a17:902:cec7:b0:1e3:f911:22b2 with SMTP id d7-20020a170902cec700b001e3f91122b2mr6050960plg.7.1712594073047;
+        Mon, 08 Apr 2024 09:34:33 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n4-20020a170902e54400b001e2b36d0c8esm7189331plf.7.2024.04.08.09.34.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 06:56:22 -0700 (PDT)
-Date: Mon, 8 Apr 2024 09:56:20 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Sean Christopherson <seanjc@google.com>,
+        Mon, 08 Apr 2024 09:34:32 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 8 Apr 2024 09:34:26 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-Message-ID: <ZhP3hDhe2Qwo9oCL@x1n>
-References: <20240405115815.3226315-1-pbonzini@redhat.com>
- <20240405115815.3226315-2-pbonzini@redhat.com>
+	Maxime Ripard <mripard@kernel.org>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, x86@kernel.org,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH v3 06/15] net: kunit: Suppress lock warning noise at end
+ of dev_addr_lists tests
+Message-ID: <9e8718bf-da81-463b-9436-6c8b0881a045@roeck-us.net>
+References: <20240403131936.787234-1-linux@roeck-us.net>
+ <20240403131936.787234-7-linux@roeck-us.net>
+ <20240403183412.16254318@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240405115815.3226315-2-pbonzini@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240403183412.16254318@kernel.org>
 
-On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
-> The .change_pte() MMU notifier callback was intended as an
-> optimization. The original point of it was that KSM could tell KVM to flip
-> its secondary PTE to a new location without having to first zap it. At
-> the time there was also an .invalidate_page() callback; both of them were
-> *not* bracketed by calls to mmu_notifier_invalidate_range_{start,end}(),
-> and .invalidate_page() also doubled as a fallback implementation of
-> .change_pte().
+On Wed, Apr 03, 2024 at 06:34:12PM -0700, Jakub Kicinski wrote:
+> On Wed,  3 Apr 2024 06:19:27 -0700 Guenter Roeck wrote:
+> > dev_addr_lists_test generates lock warning noise at the end of tests
+> > if lock debugging is enabled. There are two sets of warnings.
+> > 
+> > WARNING: CPU: 0 PID: 689 at kernel/locking/mutex.c:923 __mutex_unlock_slowpath.constprop.0+0x13c/0x368
+> > DEBUG_LOCKS_WARN_ON(__owner_task(owner) != __get_current())
+> > 
+> > WARNING: kunit_try_catch/1336 still has locks held!
+> > 
+> > KUnit test cleanup is not guaranteed to run in the same thread as the test
+> > itself. For this test, this means that rtnl_lock() and rtnl_unlock() may
+> > be called from different threads. This triggers the warnings.
+> > Suppress the warnings because they are irrelevant for the test and just
+> > confusing and distracting.
+> > 
+> > The first warning can be suppressed by using START_SUPPRESSED_WARNING()
+> > and END_SUPPRESSED_WARNING() around the call to rtnl_unlock(). To suppress
+> > the second warning, it is necessary to set debug_locks_silent while the
+> > rtnl lock is held.
 > 
-> Later on, however, both callbacks were changed to occur within an
-> invalidate_range_start/end() block.
-> 
-> In the case of .change_pte(), commit 6bdb913f0a70 ("mm: wrap calls to
-> set_pte_at_notify with invalidate_range_start and invalidate_range_end",
-> 2012-10-09) did so to remove the fallback from .invalidate_page() to
-> .change_pte() and allow sleepable .invalidate_page() hooks.
-> 
-> This however made KVM's usage of the .change_pte() callback completely
-> moot, because KVM unmaps the sPTEs during .invalidate_range_start()
-> and therefore .change_pte() has no hope of finding a sPTE to change.
-> Drop the generic KVM code that dispatches to kvm_set_spte_gfn(), as
-> well as all the architecture specific implementations.
+> Is it okay if I move the locking into the tests, instead?
+> It's only 4 lines more and no magic required, seems to work fine.
 
-Paolo,
+I don't think it is that simple. Unit tests run in a kernel thread
+and exit immediately if a test fails. While the unit test code _looks_
+sequential, that isn't really the case. Every instance of KUNIT_ASSERT_x
+or KUNIT_FAIL() results in immediate kernel thread termination. If
+that happens, any rtnl_unlock() in the failed function would not be
+executed. I am not aware of an equivalent of atexit() for kernel threads
+which would fix the problem. My understanding is that the kunit system
+doesn't support an equivalent either, but at least sometimes executes
+the exit function in a different thread context.
 
-I may miss a bunch of details here (as I still remember some change_pte
-patches previously on the list..), however not sure whether we considered
-enable it?  Asked because I remember Andrea used to have a custom tree
-maintaining that part:
-
-https://github.com/aagit/aa/commit/c761078df7a77d13ddfaeebe56a0f4bc128b1968
-
-Maybe it can't be enabled for some reason that I overlooked in the current
-tree, or we just decided to not to?
-
-Thanks,
-
--- 
-Peter Xu
-
+Guenter
