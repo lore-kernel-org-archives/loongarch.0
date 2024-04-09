@@ -1,167 +1,108 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCF817FBBC
-	for <loongarch@lists.linux.dev>; Tue,  9 Apr 2024 09:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EE215665B
+	for <loongarch@lists.linux.dev>; Tue,  9 Apr 2024 18:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712656155; cv=none; b=QPeviv5B8AbbvJOY3ZaWRE592+hbXqZemtgSrlgCrXCR98seWWkS2coMre//UXa1wmOhVqPthGB1sul+E5MyMNVCfORyelUAJlSvybGxxWC14h+xzpT9fy5qmNPfO4tK91TjTb8tXRYTdqKgR9gXknG21iCNsvNMtAi/1TrGUmU=
+	t=1712686266; cv=none; b=aedi0QvnnoIdeP2Pr8vFzQItIv/BCScuu7EblTaP7YtpfcomB5B+p2zYdxJ0wwBkrWxB0pCuea2hSuRjH75NVfUaeDN9cexlZpc4+LY3dupa4+XGaQZSHTqV9tc4N3dAXXXMJu96RJw6Ntyj3npZT1pRzq/jXe+JzsmCtXzLet4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712656155; c=relaxed/simple;
-	bh=bVjFJB/ecwokMGDFoxvj9jHQOPiauqjm5NYvAjOuAU8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BHzzH8of0ZqkBIfXzGfRibPbKsuLVMux+k4RcsYlOxWt8RlgVmWF4FD7aAnJFAZPfrUQLcA85NTizv9YwquTiaqN8ic4O8viLC9n01M/9odAry7sJIAZqso2B7qcypvuMunpneSeQnOTJSG/IJbVz/QLALeJ+8tyJQwK+C9oBrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxTOkNDxVmyc4kAA--.9115S3;
-	Tue, 09 Apr 2024 17:49:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHBMMDxVmrmd2AA--.31444S2;
-	Tue, 09 Apr 2024 17:49:00 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Add mmio trace support
-Date: Tue,  9 Apr 2024 17:49:00 +0800
-Message-Id: <20240409094900.1118699-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1712686266; c=relaxed/simple;
+	bh=HqaMdhT5LRYjCxR6gMHB6EOhgxJSaOa8vauHB4zv+2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VEcXLkEQW6JyFiEwmibcC3WtjFMfD79IkVnGtESa8JlYs4ay5DUpopaCaLfXmKFzko6SIUQtdxstnBUDafbxRBsJKoGPCrdA7Vk860hmUqt0Am/x1Qg+YQ4VBolz/2UF1AjyYYVKUKz3CWRCQ2HF0kScy+9Ca0RDkS80k4Y0/YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ImjJMFO5; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ImjJMFO5"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e411e339b8so19227535ad.3
+        for <loongarch@lists.linux.dev>; Tue, 09 Apr 2024 11:11:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712686264; x=1713291064; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J9dSAKFdynyhKujjaxO9n/FtMdq9OcS8F/T8JeifJ1k=;
+        b=ImjJMFO5D7Za5qC/+eJ8uucqq7eMdsCUo2FykmtYmGGWEKwiWMakd68kWnQWTEV62n
+         YKATOOTHTFgw2qi3AvUNCTyvTohWrJdiKOLmWKBRclVHYtpy72ztXEhZ0tBTUUCXn8QY
+         xOGPSu3tDKySBSxmcYu8OpDeLqZAQCROHsN1edymErhXGvcWqNYUYpkyhI9v0jLqBqyI
+         mHz2xwFuOy1IyyG2VthhG1k0fS5sWRFbhdf+8ir5oGPhqi01hX6VEG4jCImASjxDeOVh
+         bK8ajV07IgvSf4eU3m2I1K/BLfUawp/1TkxI+ZZEXXbRy8J4zftzAq3hS90QL1jlk3dz
+         /bSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712686264; x=1713291064;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J9dSAKFdynyhKujjaxO9n/FtMdq9OcS8F/T8JeifJ1k=;
+        b=OCOJ6yZ3DF6+jFa3XcNe7K9pZc0NoyBIzfIr5rDjvS4mMSIHlt647vaaq/FwRIAIok
+         UTXZciY351Q+/ogh8oXBTabampvYxEkKYaC4mu39lJ5gAn4tys46ZmCDHoOTs/IZy0Ts
+         TjigvJSi96mSYPo5tCjtYah2y2QRCwdJ8e5JWgYEhuhGSBacGZHs65eVCuZ8PcXeDXvE
+         P6iUFlB3t+ay5n2A4hIDDNHatZ0eO4qOmeW15c6ocYxcDUal3HABmzP7jHExo4yNDiTx
+         gNPiyFNwuPbFOaEu1yMcCJn+5Z2ehog6iFrgS/IhO1iRdPtHWTN+1adnFK2DO4fogM+r
+         iMRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUweda3VsyFGJQ2DXFqyFuiX4f0q0aDVICXKvjhgXYU28/uPGg74aCyxcjXq1dQoKughr4gaOQf5m69ukO6ELZ9HEERQgGTgUl3
+X-Gm-Message-State: AOJu0YwzuI7eVlOXLaJIpfIH3Nyfz/EhAHOa7YJwQY7jlTK6NUuqkVa/
+	mKQfRb4wULg1UrOhjaI/yugXn1aZjHWv12J84M+oMrPuGKynEGa6
+X-Google-Smtp-Source: AGHT+IGrjPVdFECKS3becNGGDDo38peM0R3uLnfzfKLi+hNrIYGQpqn6EkGBto25qlTyktqlNq6njg==
+X-Received: by 2002:a17:902:82c8:b0:1e2:3e1e:3d9 with SMTP id u8-20020a17090282c800b001e23e1e03d9mr529751plz.63.1712686263974;
+        Tue, 09 Apr 2024 11:11:03 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j18-20020a170902f25200b001e256cb48f7sm9195770plc.197.2024.04.09.11.11.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 11:11:03 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 9 Apr 2024 11:11:02 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: David Gow <davidgow@google.com>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, x86@kernel.org,
+	Linux Kernel Functional Testing <lkft@linaro.org>
+Subject: Re: [PATCH v3 03/15] kunit: Add test cases for backtrace warning
+ suppression
+Message-ID: <aad25d52-83ed-492f-9d56-71d26895173b@roeck-us.net>
+References: <20240403131936.787234-1-linux@roeck-us.net>
+ <20240403131936.787234-4-linux@roeck-us.net>
+ <CABVgOSknXkT=WU-fwi5wP4bWv04DKByxSYAPmhYhC--FaQH-PQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxHBMMDxVmrmd2AA--.31444S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABVgOSknXkT=WU-fwi5wP4bWv04DKByxSYAPmhYhC--FaQH-PQ@mail.gmail.com>
 
-Add mmio trace event support, currently generic mmio events
-KVM_TRACE_MMIO_WRITE/xxx_READ/xx_READ_UNSATISFIED are added here.
+On Tue, Apr 09, 2024 at 04:29:42PM +0800, David Gow wrote:
+> > +ifeq ($(CCONFIG_KUNIT_SUPPRESS_BACKTRACE),y)
+> 
+> s/CCONFIG_/CONFIG_/ ?
+> 
+> 
+Odd, I know I tested this (and it still works ;-).
+The additional "C" must have slipped in at some point.
+Thanks for noticing!
 
-Also vcpu id field is added for all kvm trace events, since perf
-KVM tool parses vcpu id information for kvm entry event.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/exit.c  |  7 +++++++
- arch/loongarch/kvm/trace.h | 20 ++++++++++++++------
- 2 files changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index ed1d89d53e2e..3c05aade0122 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -9,6 +9,7 @@
- #include <linux/module.h>
- #include <linux/preempt.h>
- #include <linux/vmalloc.h>
-+#include <trace/events/kvm.h>
- #include <asm/fpu.h>
- #include <asm/inst.h>
- #include <asm/loongarch.h>
-@@ -417,6 +418,8 @@ int kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
- 		vcpu->arch.io_gpr = rd;
- 		run->mmio.is_write = 0;
- 		vcpu->mmio_is_write = 0;
-+		trace_kvm_mmio(KVM_TRACE_MMIO_READ_UNSATISFIED, run->mmio.len,
-+				run->mmio.phys_addr, NULL);
- 	} else {
- 		kvm_err("Read not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
- 			inst.word, vcpu->arch.pc, vcpu->arch.badv);
-@@ -463,6 +466,8 @@ int kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 		break;
- 	}
- 
-+	trace_kvm_mmio(KVM_TRACE_MMIO_READ, run->mmio.len,
-+			run->mmio.phys_addr, run->mmio.data);
- 	return er;
- }
- 
-@@ -564,6 +569,8 @@ int kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
- 		run->mmio.is_write = 1;
- 		vcpu->mmio_needed = 1;
- 		vcpu->mmio_is_write = 1;
-+		trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, run->mmio.len,
-+				run->mmio.phys_addr, data);
- 	} else {
- 		vcpu->arch.pc = curr_pc;
- 		kvm_err("Write not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
-diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
-index c2484ad4cffa..1783397b1bc8 100644
---- a/arch/loongarch/kvm/trace.h
-+++ b/arch/loongarch/kvm/trace.h
-@@ -19,14 +19,16 @@ DECLARE_EVENT_CLASS(kvm_transition,
- 	TP_PROTO(struct kvm_vcpu *vcpu),
- 	TP_ARGS(vcpu),
- 	TP_STRUCT__entry(
-+		__field(unsigned int, vcpu_id)
- 		__field(unsigned long, pc)
- 	),
- 
- 	TP_fast_assign(
-+		__entry->vcpu_id = vcpu->vcpu_id;
- 		__entry->pc = vcpu->arch.pc;
- 	),
- 
--	TP_printk("PC: 0x%08lx", __entry->pc)
-+	TP_printk("vcpu %u PC: 0x%08lx", __entry->vcpu_id, __entry->pc)
- );
- 
- DEFINE_EVENT(kvm_transition, kvm_enter,
-@@ -54,19 +56,22 @@ DECLARE_EVENT_CLASS(kvm_exit,
- 	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
- 	    TP_ARGS(vcpu, reason),
- 	    TP_STRUCT__entry(
-+			__field(unsigned int, vcpu_id)
- 			__field(unsigned long, pc)
- 			__field(unsigned int, reason)
- 	    ),
- 
- 	    TP_fast_assign(
-+			__entry->vcpu_id = vcpu->vcpu_id;
- 			__entry->pc = vcpu->arch.pc;
- 			__entry->reason = reason;
- 	    ),
- 
--	    TP_printk("[%s]PC: 0x%08lx",
--		      __print_symbolic(__entry->reason,
--				       kvm_trace_symbol_exit_types),
--		      __entry->pc)
-+	    TP_printk("vcpu %u [%s] PC: 0x%08lx",
-+			__entry->vcpu_id,
-+			__print_symbolic(__entry->reason,
-+				kvm_trace_symbol_exit_types),
-+			__entry->pc)
- );
- 
- DEFINE_EVENT(kvm_exit, kvm_exit_idle,
-@@ -85,14 +90,17 @@ TRACE_EVENT(kvm_exit_gspr,
- 	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int inst_word),
- 	    TP_ARGS(vcpu, inst_word),
- 	    TP_STRUCT__entry(
-+			__field(unsigned int, vcpu_id)
- 			__field(unsigned int, inst_word)
- 	    ),
- 
- 	    TP_fast_assign(
-+			__entry->vcpu_id = vcpu->vcpu_id;
- 			__entry->inst_word = inst_word;
- 	    ),
- 
--	    TP_printk("Inst word: 0x%08x", __entry->inst_word)
-+	    TP_printk("vcpu %u Inst word: 0x%08x", __entry->vcpu_id,
-+			__entry->inst_word)
- );
- 
- #define KVM_TRACE_AUX_SAVE		0
-
-base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
--- 
-2.39.3
-
+Guenter
