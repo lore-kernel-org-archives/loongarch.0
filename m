@@ -1,254 +1,167 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950784EB51
-	for <loongarch@lists.linux.dev>; Tue,  9 Apr 2024 08:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCF817FBBC
+	for <loongarch@lists.linux.dev>; Tue,  9 Apr 2024 09:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712651406; cv=none; b=gDN9H+ru4KNJ3oBVgfx3imHx0zUANykeCjt4Jnff1wMVKjabSpsgfXc0gDHtVB16lZeVRGx9H/9A5Uyti9twj2VkE0JVKrU9ZaERPlRdMshaAqZHQN93LLAJYOpTgNU4RvV3MxkzFEKRptAW1u8tXaTAka/S6/yGpEAHn4olO2A=
+	t=1712656155; cv=none; b=QPeviv5B8AbbvJOY3ZaWRE592+hbXqZemtgSrlgCrXCR98seWWkS2coMre//UXa1wmOhVqPthGB1sul+E5MyMNVCfORyelUAJlSvybGxxWC14h+xzpT9fy5qmNPfO4tK91TjTb8tXRYTdqKgR9gXknG21iCNsvNMtAi/1TrGUmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712651406; c=relaxed/simple;
-	bh=kZXjwl7iGVqXn011mK/Xhbk5zVLndjcSPuly71rdFQQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DEVcAoIhqspENdlfNSWjMwWpf67xE8z8WU2djxy0yrRIK82KeWyYL2DbBHACdAmpIL0fyMPSkqXCGUSw7XJfHnLH79qaDkMc2EqnhbB0iPfr9ihR6f9RYj4MB+N0y+sajxTadxd10sj8Yyy87rBcVHBOJGSpB0CmylIEZgWff3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BzZi5Mil; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BzZi5Mil"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e67402a3fso10121a12.0
-        for <loongarch@lists.linux.dev>; Tue, 09 Apr 2024 01:30:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712651401; x=1713256201; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=25rcLcKzSeu0Z1zwviyZNomBEjhnTM7tnNxH+5o4CzI=;
-        b=BzZi5MilVMEyi+r0KarxV0SZkeRgAaSw9VMWBlHAzfzJlucE7fsny7RVDd2mcXQmOP
-         7TdyQ2sb56jSpdc3jMqf4kXXlIY0jLu/AtnRpdZrIftmHSSmCULWxztaiUmipF7M7AI8
-         aQ3cDttohTJQX5ahAE/OdODJbKIOzctLR6tF5/Ml4skrErCqY4GK5VIXFuJBdPqjrMuh
-         DoBnROnspCc52hsBlwc+47x1s/z1bMH1I8Eg8ZDdcnUcFBHlcFW0x/JsL2IGrKz0N0mi
-         gmkz73YF6WJ1Vno1WAg7uZsNE0fWushn8GjYSaPYHHleDYyx5vYD1djJhtPGQudp6z3A
-         dGow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712651401; x=1713256201;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=25rcLcKzSeu0Z1zwviyZNomBEjhnTM7tnNxH+5o4CzI=;
-        b=ToLwbbBFcCRZA9sEWbL30I7Z0j5O5syeRNm1VTv78lypW94ibzdCloTlzxy8jdFqEh
-         m1dJuSZU9BLqONrHzN4fJJN8x+E4IQ9RJbPoRGoC00IZlhNQGhSwMdrJZQKWAFtp7c8A
-         FY4ha9BhcE5ol37C4bpGYyCSrTY2Hd2pcBxAklVtgQXeGdoxEdLxXDW0XA0REP/vbYYt
-         0aopQZO3HJi0y6JcErAdSVYVMPrxkeqSDmuBKiVu/+KAAX3ksAiG8G0zU/dTHF6obLSt
-         VumKjE57naOO23fzmmGtIWsl1gY/xL1P/Aca+jEXYWOBx7KuLREoa4YBW0t5DD6yHrr4
-         aJkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyf7udEdMI0ipyHva74xLf9sWui0ufqkuPakgGQZJ/QlyLaZumYrX9ZLcGnylUgiMenmcx5kajkXQWX+CZdBztOJbQ/eH4EnxX
-X-Gm-Message-State: AOJu0YwN/6NmMqR5Uo9yNrAk3zVVAZsFf1vevjnlQhsbsG7vLOj9WfFR
-	UQg9BwwGYKfebbCHZXAi10kJoECwhsmRx9U2kimsn+bAIKDloCz8jcdfk0FBaf1OmNnajGt2sQc
-	MkYZBJap7kXmWxn5sasKnC+HFC0okalRVpdL2
-X-Google-Smtp-Source: AGHT+IHYaeERcEkkmGD/A4tACg9YKD4kdNmAMVD2CKRyiAat0V+rnkCQ2SItMKP8w6Jo/7F9MnxE50/WwG55IF7tH+4=
-X-Received: by 2002:aa7:d7da:0:b0:56e:76e:6ea9 with SMTP id
- e26-20020aa7d7da000000b0056e076e6ea9mr106213eds.6.1712651400934; Tue, 09 Apr
- 2024 01:30:00 -0700 (PDT)
+	s=arc-20240116; t=1712656155; c=relaxed/simple;
+	bh=bVjFJB/ecwokMGDFoxvj9jHQOPiauqjm5NYvAjOuAU8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BHzzH8of0ZqkBIfXzGfRibPbKsuLVMux+k4RcsYlOxWt8RlgVmWF4FD7aAnJFAZPfrUQLcA85NTizv9YwquTiaqN8ic4O8viLC9n01M/9odAry7sJIAZqso2B7qcypvuMunpneSeQnOTJSG/IJbVz/QLALeJ+8tyJQwK+C9oBrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxTOkNDxVmyc4kAA--.9115S3;
+	Tue, 09 Apr 2024 17:49:02 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHBMMDxVmrmd2AA--.31444S2;
+	Tue, 09 Apr 2024 17:49:00 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Add mmio trace support
+Date: Tue,  9 Apr 2024 17:49:00 +0800
+Message-Id: <20240409094900.1118699-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240403131936.787234-1-linux@roeck-us.net> <20240403131936.787234-5-linux@roeck-us.net>
-In-Reply-To: <20240403131936.787234-5-linux@roeck-us.net>
-From: David Gow <davidgow@google.com>
-Date: Tue, 9 Apr 2024 16:29:49 +0800
-Message-ID: <CABVgOSkk-QhmemH0p_VmiLrqLDs7SxD-mc-mjzfE4+1tj5mB+w@mail.gmail.com>
-Subject: Re: [PATCH v3 04/15] kunit: Add documentation for warning backtrace
- suppression API
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook <keescook@chromium.org>, 
-	Daniel Diaz <daniel.diaz@linaro.org>, Arthur Grillo <arthurgrillo@riseup.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, 
-	=?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org, 
-	kunit-dev@googlegroups.com, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	loongarch@lists.linux.dev, netdev@vger.kernel.org, x86@kernel.org, 
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000006786610615a5ba0a"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxHBMMDxVmrmd2AA--.31444S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
---0000000000006786610615a5ba0a
-Content-Type: text/plain; charset="UTF-8"
+Add mmio trace event support, currently generic mmio events
+KVM_TRACE_MMIO_WRITE/xxx_READ/xx_READ_UNSATISFIED are added here.
 
-On Wed, 3 Apr 2024 at 21:19, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> Document API functions for suppressing warning backtraces.
->
-> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
+Also vcpu id field is added for all kvm trace events, since perf
+KVM tool parses vcpu id information for kvm entry event.
 
-This looks good to me: thanks for adding the documentation!
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/exit.c  |  7 +++++++
+ arch/loongarch/kvm/trace.h | 20 ++++++++++++++------
+ 2 files changed, 21 insertions(+), 6 deletions(-)
 
-If we add integration between this and the KUnit resource system,
-we'll need to add that to this documentation.
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index ed1d89d53e2e..3c05aade0122 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/preempt.h>
+ #include <linux/vmalloc.h>
++#include <trace/events/kvm.h>
+ #include <asm/fpu.h>
+ #include <asm/inst.h>
+ #include <asm/loongarch.h>
+@@ -417,6 +418,8 @@ int kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
+ 		vcpu->arch.io_gpr = rd;
+ 		run->mmio.is_write = 0;
+ 		vcpu->mmio_is_write = 0;
++		trace_kvm_mmio(KVM_TRACE_MMIO_READ_UNSATISFIED, run->mmio.len,
++				run->mmio.phys_addr, NULL);
+ 	} else {
+ 		kvm_err("Read not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
+ 			inst.word, vcpu->arch.pc, vcpu->arch.badv);
+@@ -463,6 +466,8 @@ int kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ 		break;
+ 	}
+ 
++	trace_kvm_mmio(KVM_TRACE_MMIO_READ, run->mmio.len,
++			run->mmio.phys_addr, run->mmio.data);
+ 	return er;
+ }
+ 
+@@ -564,6 +569,8 @@ int kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
+ 		run->mmio.is_write = 1;
+ 		vcpu->mmio_needed = 1;
+ 		vcpu->mmio_is_write = 1;
++		trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, run->mmio.len,
++				run->mmio.phys_addr, data);
+ 	} else {
+ 		vcpu->arch.pc = curr_pc;
+ 		kvm_err("Write not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
+diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+index c2484ad4cffa..1783397b1bc8 100644
+--- a/arch/loongarch/kvm/trace.h
++++ b/arch/loongarch/kvm/trace.h
+@@ -19,14 +19,16 @@ DECLARE_EVENT_CLASS(kvm_transition,
+ 	TP_PROTO(struct kvm_vcpu *vcpu),
+ 	TP_ARGS(vcpu),
+ 	TP_STRUCT__entry(
++		__field(unsigned int, vcpu_id)
+ 		__field(unsigned long, pc)
+ 	),
+ 
+ 	TP_fast_assign(
++		__entry->vcpu_id = vcpu->vcpu_id;
+ 		__entry->pc = vcpu->arch.pc;
+ 	),
+ 
+-	TP_printk("PC: 0x%08lx", __entry->pc)
++	TP_printk("vcpu %u PC: 0x%08lx", __entry->vcpu_id, __entry->pc)
+ );
+ 
+ DEFINE_EVENT(kvm_transition, kvm_enter,
+@@ -54,19 +56,22 @@ DECLARE_EVENT_CLASS(kvm_exit,
+ 	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+ 	    TP_ARGS(vcpu, reason),
+ 	    TP_STRUCT__entry(
++			__field(unsigned int, vcpu_id)
+ 			__field(unsigned long, pc)
+ 			__field(unsigned int, reason)
+ 	    ),
+ 
+ 	    TP_fast_assign(
++			__entry->vcpu_id = vcpu->vcpu_id;
+ 			__entry->pc = vcpu->arch.pc;
+ 			__entry->reason = reason;
+ 	    ),
+ 
+-	    TP_printk("[%s]PC: 0x%08lx",
+-		      __print_symbolic(__entry->reason,
+-				       kvm_trace_symbol_exit_types),
+-		      __entry->pc)
++	    TP_printk("vcpu %u [%s] PC: 0x%08lx",
++			__entry->vcpu_id,
++			__print_symbolic(__entry->reason,
++				kvm_trace_symbol_exit_types),
++			__entry->pc)
+ );
+ 
+ DEFINE_EVENT(kvm_exit, kvm_exit_idle,
+@@ -85,14 +90,17 @@ TRACE_EVENT(kvm_exit_gspr,
+ 	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int inst_word),
+ 	    TP_ARGS(vcpu, inst_word),
+ 	    TP_STRUCT__entry(
++			__field(unsigned int, vcpu_id)
+ 			__field(unsigned int, inst_word)
+ 	    ),
+ 
+ 	    TP_fast_assign(
++			__entry->vcpu_id = vcpu->vcpu_id;
+ 			__entry->inst_word = inst_word;
+ 	    ),
+ 
+-	    TP_printk("Inst word: 0x%08x", __entry->inst_word)
++	    TP_printk("vcpu %u Inst word: 0x%08x", __entry->vcpu_id,
++			__entry->inst_word)
+ );
+ 
+ #define KVM_TRACE_AUX_SAVE		0
 
-I wonder if it would make sense to have an example where the
-DEFINE_SUPPRESSED_WARNING() is global, e.g., in the test init/exit
-functions. That might overcomplicate it a bit.
+base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
+-- 
+2.39.3
 
-It also might be nice to document the individual macros with kerneldoc
-comments. (Though, that could equally fit in patch #1).
-
-Still, this is the most important bit, so I'm happy to have it as-is.
-
-Reviewed-by: David Gow <davidgow@google.com>
-
-Cheers,
--- David
-
-
-> v2:
-> - Rebased to v6.9-rc1
-> - Added Tested-by:, Acked-by:, and Reviewed-by: tags
-> v3:
-> - Rebased to v6.9-rc2
->
->  Documentation/dev-tools/kunit/usage.rst | 30 ++++++++++++++++++++++++-
->  1 file changed, 29 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-> index 22955d56b379..8d3d36d4103d 100644
-> --- a/Documentation/dev-tools/kunit/usage.rst
-> +++ b/Documentation/dev-tools/kunit/usage.rst
-> @@ -157,6 +157,34 @@ Alternatively, one can take full control over the error message by using
->         if (some_setup_function())
->                 KUNIT_FAIL(test, "Failed to setup thing for testing");
->
-> +Suppressing warning backtraces
-> +------------------------------
-> +
-> +Some unit tests trigger warning backtraces either intentionally or as side
-> +effect. Such backtraces are normally undesirable since they distract from
-> +the actual test and may result in the impression that there is a problem.
-> +
-> +Such backtraces can be suppressed. To suppress a backtrace in some_function(),
-> +use the following code.
-> +
-> +.. code-block:: c
-> +
-> +       static void some_test(struct kunit *test)
-> +       {
-> +               DEFINE_SUPPRESSED_WARNING(some_function);
-> +
-> +               START_SUPPRESSED_WARNING(some_function);
-> +               trigger_backtrace();
-> +               END_SUPPRESSED_WARNING(some_function);
-> +       }
-> +
-> +SUPPRESSED_WARNING_COUNT() returns the number of suppressed backtraces. If the
-> +suppressed backtrace was triggered on purpose, this can be used to check if
-> +the backtrace was actually triggered.
-> +
-> +.. code-block:: c
-> +
-> +       KUNIT_EXPECT_EQ(test, SUPPRESSED_WARNING_COUNT(some_function), 1);
->
->  Test Suites
->  ~~~~~~~~~~~
-> @@ -857,4 +885,4 @@ For example:
->                 dev_managed_string = devm_kstrdup(fake_device, "Hello, World!");
->
->                 // Everything is cleaned up automatically when the test ends.
-> -       }
-> \ No newline at end of file
-> +       }
-> --
-> 2.39.2
->
-
---0000000000006786610615a5ba0a
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-7xDrOPfX3COqq162RFg/MFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
-BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
-BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
-Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
-FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
-YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
-AK0lDd6/eSh3qHmXaw1YUfIFy07B25BEcTvWgOdla99gF1O7sOsdYaTz/DFkZI5ghjgaPJCovgla
-mRMfNcxZCfoBtsB7mAS6iOYjuwFOZxi9cv6jhfiON6b89QWdMaPeDddg/F2Q0bxZ9Z2ZEBxyT34G
-wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
-5PHxFaT2a5Td/fj5yJ5hRSrqy/nj/hjT14w3/ZdX5uWg+cus6VjiiR/5qGSZRjHt8JoApD6t6/tg
-ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
-MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
-IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIMXhuV4hAHg3WgSFIsVm8yZuEYXLcz0bF2GnnCPTizkFMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDQwOTA4MzAwMVowaQYJKoZIhvcNAQkPMVww
-WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBDmb9s
-luNjFtSKUt94yd39an5GkioJdQi7RC0pT3hYcoy6KF55ujlFc7E549YObxZARF6tf59fXC/TQ1nI
-VkzuQXeeCx3jyjDBT2X/hZ/8/vo281f9Gi5wZmL51A+PK4VqiMELHh+2a1y1YRNlpwT8M4860S9j
-OCpKRcQFu1NMo9RHq35B2nYyjsqJCVJvEhvkhZXKyfSKXwYqH2VzB5YRJdrtGPFFMNsEFOOWOLZ3
-YmzFe3uye13PO4CKPtjeic5tmA6SrmKVXs78+06XherENkLGiMkChl3KDKXAr8dz3M+bmur0vO3k
-b/OoQc4mFepL31ZARxwvAIoOcJB1bh/F
---0000000000006786610615a5ba0a--
