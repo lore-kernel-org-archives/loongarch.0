@@ -1,93 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3F1180A7F;
-	Wed, 10 Apr 2024 19:08:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF98181BAB;
+	Wed, 10 Apr 2024 20:24:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712776099; cv=none; b=EtzrVovDPJtb3RcgD8shBseajdok2aUCNxOv/QJ5b3vg+oefJKWW2PUxlcm6Ekz3d8ZIjRl5p5HVNlnvaFqMMfa3oS5D0tkZmmRQRCS+wPuCCHHdLpRREtgLvC9B8EJH9RVUOmDHpCPmBjeeHmJ3kNPnJUvFwfMml+Ao5H0GEww=
+	t=1712780641; cv=none; b=lwcG5fKAp9Npv7480abDI26ke+YdLVVh8N8CT7bInuJnyA8YcHTeZrXgsY5JQQTIHQo2iM9m4fBPDbHLeG00OLuxHGQvrs7aKdBGG4Bep7Q0d6+C9rC8Xt7X0tojxEOwUSlfq5jbXb96PPixQAAW2ILEkIDyMWifcZp1T63Qbt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712776099; c=relaxed/simple;
-	bh=+eWLmlEP0bVT8/CZ2rvIUuWI74CBRr7mdsinkobDlzU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s0zAlb3obPdyyh6dEX0A0aj6cuu2F96psUrSjwzaXMHD56hbfgOJoBMD0S+bFRVwRym4rzZpntr0U554uCW6OuLeYbuLnHsF7SFDfRixwnsMmGTXeqVL12Qpg5AzJ/6vU2159QnWKOhNeORCUX46+7VBozzodqFRoEXAu7RPl90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBer6g/F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712780641; c=relaxed/simple;
+	bh=sWg/KbJxC90lruB1AIuChQK3GO6zYnkej0/XpbiRfcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f03nOKHNxoyhl8TiGIQxp8eTVjUqpmbRY5c/e8MuBOnGs1Xa49+d4mR12Gydmmyjs3ACdd7bwZHMsTk0JlpbTXJ52szMcnRObHhWz5eqhq8pzNuK43mukJgxMTN/SPzrCHskJTvs/sjLzLqAsxl0vOHem9wVtB4pveuyhcCU3yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/Jidtmb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBer6g/F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438AEC433C7;
-	Wed, 10 Apr 2024 19:08:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/Jidtmb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE937C433F1;
+	Wed, 10 Apr 2024 20:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712776099;
-	bh=+eWLmlEP0bVT8/CZ2rvIUuWI74CBRr7mdsinkobDlzU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kBer6g/FSVcQNlQN/dT52LUBGg0hkyFCcgbXq3fUnv4hC2VilA1zuyGqPVGaoI9rz
-	 0/MBcRSiQDjk5VbvTar8s1MII5Y0adKzNxjkxeYxriw3mc+K55GlJawuRxte3IPF3T
-	 0yjLhDefgapwQ1FYh/ibQke8EUvsYSFf2Bt7tSkMULO3L6dgzwxMmS2ZrG0XpBh0qj
-	 TZ6p5zrmOCPyTsntakq4I6xUnUrHcUgIY7EjynOD9Edj3qR4Uj1GT2QnyWxaffty1+
-	 T4vEkU9e25UakyTkLUOKd2E5zgMj5xwEQfwgEcWbJ/DWijYATCohmlmkXXuvdqLrVa
-	 rpMLs6ScIMD8Q==
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-22ed9094168so486563fac.1;
-        Wed, 10 Apr 2024 12:08:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVlzo3gOoZlNKdknrit0Z5p9r3aJz1u0/tBzSeuE6BGe+G1ZQA9UjUKh8HQMPw0eXf70y5bVmj8N4l0ZTZKLSYE16YJV6SwGayDtKtSzNrqACa3zhPO0d6IR8rnbRVTSVLz
-X-Gm-Message-State: AOJu0Yybw97FjNTmG2RKvwLooaKNbFG8OtBs+w1tOPR0aFW9iQAepC0A
-	qCLPPs8hYFqwnpPgaffceyn55uGnDY35I6y5GkOPWut/O4dVMI+3aEC8pe6cAPKcmwTRdUgpryW
-	SWLrzYpnlg96zHOJMoWaNGFvlUdI=
-X-Google-Smtp-Source: AGHT+IH4A92J5HCRnizSgBq3+DCMERDHMutgLTgDu/kxW+WK07c2IT8FOUNC46ZvoIhnKLsY7Mrt28XT6qdFy5OJWR8=
-X-Received: by 2002:a05:6870:219d:b0:22e:b2ea:5758 with SMTP id
- l29-20020a056870219d00b0022eb2ea5758mr3756127oae.0.1712776098584; Wed, 10 Apr
- 2024 12:08:18 -0700 (PDT)
+	s=k20201202; t=1712780641;
+	bh=sWg/KbJxC90lruB1AIuChQK3GO6zYnkej0/XpbiRfcw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e/JidtmbhgDCPRrt4YMse9xoD2smjvZqowOsjvxo836/beLksi7HKo+Sr+mwKtb1a
+	 eFZz92n0BSYMyLQVJnDIiBC8mgxw7FInK+k87kgaPVboQNhM3DeTXRYucxn8Swr3n1
+	 MnbDN+LCgTd5zalHKDY7QUua4Snu0rByMWMznfE0GWutTeawFnQKChbc36MrtLUI8z
+	 13/jzbFJcrVVn/5/FdKqjSpcXCOJKQBnqNhWcJ+hdMuniRYTTU7KwzkRDAYEoc9H91
+	 /BqKoSmA6Db58s94pGW/XHrJkgVKJaxPHzPncceVc9DASxprMayu7zCzbnJRln82RF
+	 /J0D7ADEUZXlQ==
+Date: Wed, 10 Apr 2024 15:23:58 -0500
+From: Rob Herring <robh@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	loongson-kernel@lists.loongnix.cn, linux-pm@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>, Amit Kucheria <amitk@kernel.org>,
+	loongarch@lists.linux.dev, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <git@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 2/4] dt-bindings: thermal: loongson,ls2k-thermal: Add
+ Loongson-2K0500 compaible
+Message-ID: <171278063662.1282741.14842048022599311146.robh@kernel.org>
+References: <cover.1712733065.git.zhoubinbin@loongson.cn>
+ <7f6a9ea7ad32584d3d3aa1553e5cc033870fb02c.1712733065.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk> <E1rVDmU-0027YP-Jz@rmk-PC.armlinux.org.uk>
- <CAJZ5v0iiJpUWq5GMSnKFWQTzn_bdwoQz9m=hDaXNg4Lj_ePF4g@mail.gmail.com>
- <20240322185327.00002416@Huawei.com> <20240410134318.0000193c@huawei.com>
- <CAJZ5v0ggD042sfz3jDXQVDUxQZu_AWaF2ox-Me8CvFeRB8nczw@mail.gmail.com>
- <20240410145005.00003050@Huawei.com> <ZhbgwBBvh6ccdO7x@shell.armlinux.org.uk>
-In-Reply-To: <ZhbgwBBvh6ccdO7x@shell.armlinux.org.uk>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 10 Apr 2024 21:08:06 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gG0xLajHsWXVM+-V+fQZAudvojechUa-DzFgwCs2q8Dg@mail.gmail.com>
-Message-ID: <CAJZ5v0gG0xLajHsWXVM+-V+fQZAudvojechUa-DzFgwCs2q8Dg@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 02/15] ACPI: processor: Register all CPUs from acpi_processor_get_info()
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
-	acpica-devel@lists.linuxfoundation.org, linux-csky@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com, 
-	James Morse <james.morse@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f6a9ea7ad32584d3d3aa1553e5cc033870fb02c.1712733065.git.zhoubinbin@loongson.cn>
 
-On Wed, Apr 10, 2024 at 8:56=E2=80=AFPM Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
->
-> On Wed, Apr 10, 2024 at 02:50:05PM +0100, Jonathan Cameron wrote:
-> > If we get rid of this catch all, solution would be to move the
-> > !acpi_disabled check into the arm64 version of arch_cpu_register()
-> > because we would only want the delayed registration path to be
-> > used on ACPI cases where the question of CPU availability can't
-> > yet be resolved.
->
-> Aren't we then needing two arch_register_cpu() implementations?
-> I'm assuming that you're suggesting that the !acpi_disabled, then
-> do nothing check is moved into arch_register_cpu() - or to put it
-> another way, arch_register_cpu() does nothing if ACPI is enabled.
->
-> If arch_register_cpu() does nothing if ACPI is enabled, how do
-> CPUs get registered (and sysfs files get created to control them)
-> on ACPI systems? ACPI wouldn't be able to call arch_register_cpu(),
-> so I suspect you'll need an ACPI-specific version of this function.
 
-arch_register_cpu() will do what it does, but it will check (upfront)
-if ACPI is enabled and if so, if the ACPI Namespace is available.  In
-the case when ACPI is enabled and the ACPI Namespace is not ready, it
-will return -EPROBE_DEFER (say).
+On Wed, 10 Apr 2024 17:49:01 +0800, Binbin Zhou wrote:
+> The thermal on the Loongson-2K0500 shares the design with the
+> Loongson-2K1000. Define corresponding compatible string, having the
+> loongson,ls2k1000-thermal as a fallback.
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  .../devicetree/bindings/thermal/loongson,ls2k-thermal.yaml       | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+
+Acked-by: Rob Herring <robh@kernel.org>
+
