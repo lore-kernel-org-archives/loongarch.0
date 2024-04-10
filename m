@@ -1,160 +1,154 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F171836C7
-	for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 22:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A4A132813
+	for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 22:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712787704; cv=none; b=haUjuhf42Fo0lKKdX1XdWBfFga08Uv26TmJ2vVimgyJTT9Y3cdbaTy8PyFVOoFl2mV1572Zg6sQLxxEg92jI+LXtVj0YZEVW2s5/k/BJIZqnLprUE1CtNpDFNvng8W1nB5seLvmRrhP3mnnpeiCz0M+0rvSSs5juRKuOvgUxChA=
+	t=1712789252; cv=none; b=UzCRQVpfY0uFmBvNjo8eVSx/Ji+xX3qTAFAw8wtElUJ04WYmPjrGgNm+Z0lmb8NVXSe4JfFwoqsjgB2HK0rHzQihH1KSOru5sT3kTXuPOzcWnqD/DmGxQB0Q8gLe5LQvtwGh/R+FU4X2yNrTjQtimdgdKG0nPJNPRGRMYlhn0KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712787704; c=relaxed/simple;
-	bh=SQyfDI1p8mtUjtI3BfAFLemnAtOtjnfc4UlRkBuRrI0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hETtSix4dWmrUlUDFZSKWAKFTY0FtGjCOGF7vTltuJAW+7//35bNstmBmo8kV8RuBhkcWI+krxBjAlNAjGhU5S17DidxxU+4Akgr+D4LtKMIDkCKHhaYF+huCyx3/L6pfH6Bn0jAxTCoYHO4Qf45EwTx8cZmHxOW5yAr3p2vAXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jdzi8z9G; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712789252; c=relaxed/simple;
+	bh=uDU3PtkfpbBDGwJOViI0NFiMEmcXnUAvLCRTEusiKVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tb6uvKxKCxw7GfD8TjuRSQFmyWjHLoDtWcZ6OSjVeey/aZ6LGqtAqLvItnKYV7FT2XxX+wieP+SRARzxBoUv5zqyEzkBlj+rYEeS3AqXIatR7E51xhE6FWa2rbHTtsbtDR9dHxCaDLW/66bSosftzBsLt2geSYDZAPr/e5T6YxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=W5AYhZ3X; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jdzi8z9G"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e4149e7695so29262845ad.0
-        for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 15:21:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="W5AYhZ3X"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5a9ec68784cso3493671eaf.2
+        for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 15:47:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712787702; x=1713392502; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UQ9C1Cr3AvASEU86K/hlf2OO0iCRrNUVuyjVHdlWHE4=;
-        b=jdzi8z9G1mj9DV3L8Vrcwj45HfaibSDaIjKuUBdla6kXkvd7LlVy7dNL8ZHpNJPrF8
-         3dRm1zUMPpZo8gFeUKLTJD34P5ViiyAT5xvXYrNAwOqJZZfqCnJ9DHm1Lc4mognC3I1H
-         DWcvpsLLxwKQsJvFI/korB5/f02PcT8zCpSu+VuMGUqVG91sKoQhrro6HGk7HeoixpM8
-         VVQpXqr8ph09hDo4/fkjw4CG1tBW+3TczNpQHCrgez2/chbm93zurVGEzIKAtKU6FYLL
-         OcK6hPvA/x7cVM0lfcbn5pIqZuPZNKyfmJp+DB/mK2uc5qZQ1zYcmslQi0hjZqFS0MNc
-         vjMw==
+        d=sifive.com; s=google; t=1712789250; x=1713394050; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jexQJX0oM9fCmEvziBSolme7TKZ0EEYhwHpwJAChgvs=;
+        b=W5AYhZ3Xepr1T6UxdcGTAyHZqtEaBtwm14/2o6NSuiS4jCvwrskBglnkRMmqh6V147
+         RwQ3m7rkp5oUWiC4FKWfO5bWkRAlHZB5b0F6lyPr/vPJFmF7pDq8qbk00LKNLkXJh/Nf
+         7Q87LBg5DnW5VbP4iJwyvmuwku7416+eTJS8+QtCWvZKElVRii46nIiPHvUxaf9arUbs
+         TYul5WcszUabRjD0eBMZIbIRpBGQIwNUJo732RBw8KQMWSD0II2r9bA749Su09RIBQwB
+         VrkACNDaBjj5jAoZ65Ap2BubzCES7F/vaMOn0fX2MgMVDHPz94Sjdse0BP5vO8IQ+WDN
+         vv4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712787702; x=1713392502;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UQ9C1Cr3AvASEU86K/hlf2OO0iCRrNUVuyjVHdlWHE4=;
-        b=cwd0JY/zPke5vSejmKRtQmQxK7FH00dsnE4rQ7OMENhoYRItl80wX22W8lSjaJR3VL
-         aXGj+tEzmcQVeX4xTl9hjYwuGBabgkB8l8Trkk75t9qwlC2lqG6IjTLwC5HsmaROgHpq
-         ipqJOjzVJF/I4nhpBJI2siyAgLHc8HfslZJag8+rbiFWXm2zwWZOuvpqlVghf/UB5icy
-         Lvl4eDXYBpmWG5eygqQjuQJ9pRjQ3UoyYDuVHWOrKlMOvdD6pIBJbYULsElXlNp/90G2
-         O7srfDYt3wbG/X+d8XhYl+dq67R/ryXQwcMzc+IeelyTaVYW0wszIOfA/DohZHY462xn
-         QFQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZQzc+SrDZXDOTH2fmxoI9ktIqzR8Lwa3jinVDsHTHfdkmeOqIJaHHdCa1Prm+eOzpABTzB9xaXDcUubMcXRJcGrsZ9C3FXF7y
-X-Gm-Message-State: AOJu0YzRGiIBljTbh1RDPRbWSAEhYYrg9P7T2vRc/5MdfQZlCDqJ7I61
-	suFKFTLYYbZQXGsoKwKjA5K5qm1+TN5VTWx3dpzDr5gcj3Tz+xCOzqtHa7g9zMI=
-X-Google-Smtp-Source: AGHT+IEyXjz5iWD+JzMbxman4f15iRJH7qvrzDvYbxC6J1pXkyjcclFUtxHEFXG2Dt+UzEnUxH7BCA==
-X-Received: by 2002:a17:902:e810:b0:1e3:e081:e7f5 with SMTP id u16-20020a170902e81000b001e3e081e7f5mr5334384plg.66.1712787701595;
-        Wed, 10 Apr 2024 15:21:41 -0700 (PDT)
-Received: from localhost ([2804:214:8686:5e16:705e:67c9:b3ef:a558])
-        by smtp.gmail.com with ESMTPSA id q8-20020a170902b10800b001e107222eb5sm39198plr.191.2024.04.10.15.21.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 15:21:41 -0700 (PDT)
-From: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-  linux-arm-kernel@lists.infradead.org,  x86@kernel.org,
-  linux-kernel@vger.kernel.org,  linux-arch@vger.kernel.org,
-  linuxppc-dev@lists.ozlabs.org,  linux-riscv@lists.infradead.org,
-  Christoph Hellwig <hch@lst.de>,  loongarch@lists.linux.dev,
-  amd-gfx@lists.freedesktop.org,  Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
-In-Reply-To: <20240329072441.591471-14-samuel.holland@sifive.com> (Samuel
-	Holland's message of "Fri, 29 Mar 2024 00:18:28 -0700")
-References: <20240329072441.591471-1-samuel.holland@sifive.com>
-	<20240329072441.591471-14-samuel.holland@sifive.com>
-User-Agent: mu4e 1.12.2; emacs 29.3
-Date: Wed, 10 Apr 2024 19:21:37 -0300
-Message-ID: <87wmp4oo3y.fsf@linaro.org>
+        d=1e100.net; s=20230601; t=1712789250; x=1713394050;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jexQJX0oM9fCmEvziBSolme7TKZ0EEYhwHpwJAChgvs=;
+        b=o0krZwaOL3NidA5iTPMsVa9ZK/CUcb/6SHd1SU/YwS3F5owREhLTHlYyb5nh9N/WY+
+         K+yoNAfmPMRQfkEadvaW0OTLnNNAMyjwU2GJI0gdfsPrwyUmXpIEHpvE02oOsm4H3mI9
+         ymUJITlXO3kwsFkxNZo5uSgNf/4381ZPqgiZFnFq0Vd+uFbrk8sPxhXmaTMeV3VBiCsa
+         Yv9GPHGIaWyFeAMaGITWF/57D1w1tzlZRZMGxm/Kq/DuXJTv88M2Wq61Wn4U7JHB/5vW
+         eKlD1uQZANj6cfL88IL3/n/vEGK7fWkOyDbJR9m4ylhXfp4S5tg5unUICbSSvPEfWm2m
+         bC8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXk0wX8Ga4b4PSrzlVekn2rRWd8PDy1VHn3YYTHqjqXNSRMSS/s94zgp85TSr9fL/+k+fhoHaqr1PHrhC0h5fYTfXGyMS7+gcHQ
+X-Gm-Message-State: AOJu0YwWz3XjCUkrFxjIi9dkOcdbcQ5gJyA3poW8xV8mnoS3nW8eRvCl
+	6Ki79kLBh1sfuLsKp/96OYbdFOjq+BbHYmEl8LN5FbFgDUMK6AX+vbidUDo1odY=
+X-Google-Smtp-Source: AGHT+IHLiKUoeBUB4OwLHReX4a7dcUh2Eqxld9pK8ip3FgSpidJgLmLzuSWt1Fnkq1wrPVQWu86Qjg==
+X-Received: by 2002:a05:6871:80a:b0:22d:f859:2225 with SMTP id q10-20020a056871080a00b0022df8592225mr3914938oap.6.1712789249782;
+        Wed, 10 Apr 2024 15:47:29 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.8.167])
+        by smtp.gmail.com with ESMTPSA id lf3-20020a0568700c4300b0022eba51882fsm75970oab.53.2024.04.10.15.47.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 15:47:29 -0700 (PDT)
+Message-ID: <75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com>
+Date: Wed, 10 Apr 2024 17:47:27 -0500
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+To: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>
+References: <20240329072441.591471-1-samuel.holland@sifive.com>
+ <20240329072441.591471-14-samuel.holland@sifive.com>
+ <87wmp4oo3y.fsf@linaro.org>
+Content-Language: en-US
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <87wmp4oo3y.fsf@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Hi Thiago,
 
-Hello,
+On 2024-04-10 5:21 PM, Thiago Jung Bauermann wrote:
+> Samuel Holland <samuel.holland@sifive.com> writes:
+> 
+>> Now that all previously-supported architectures select
+>> ARCH_HAS_KERNEL_FPU_SUPPORT, this code can depend on that symbol instead
+>> of the existing list of architectures. It can also take advantage of the
+>> common kernel-mode FPU API and method of adjusting CFLAGS.
+>>
+>> Acked-by: Alex Deucher <alexander.deucher@amd.com>
+>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> 
+> Unfortunately this patch causes build failures on arm with allyesconfig
+> and allmodconfig. Tested with next-20240410.
+> 
+> Error with allyesconfig:
+> 
+> $ make -j 8 \
+>     O=$HOME/.cache/builds/linux-cross-arm \
+>     ARCH=arm \
+>     CROSS_COMPILE=arm-linux-gnueabihf-
+> make[1]: Entering directory '/home/bauermann/.cache/builds/linux-cross-arm'
+>     ⋮
+> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml/dcn20/dcn20_fpu.o: in function `dcn20_populate_dml_pipes_from_context':
+> dcn20_fpu.c:(.text+0x20f4): undefined reference to `__aeabi_l2d'
+> arm-linux-gnueabihf-ld: dcn20_fpu.c:(.text+0x210c): undefined reference to `__aeabi_l2d'
+> arm-linux-gnueabihf-ld: dcn20_fpu.c:(.text+0x2124): undefined reference to `__aeabi_l2d'
+> arm-linux-gnueabihf-ld: dcn20_fpu.c:(.text+0x213c): undefined reference to `__aeabi_l2d'
+> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml/calcs/dcn_calcs.o: in function `pipe_ctx_to_e2e_pipe_params':
+> dcn_calcs.c:(.text+0x390): undefined reference to `__aeabi_l2d'
+> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml/calcs/dcn_calcs.o:dcn_calcs.c:(.text+0x3a4): more undefined references to `__aeabi_l2d' follow
+> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.o: in function `optimize_configuration':
+> dml2_wrapper.c:(.text+0xcbc): undefined reference to `__aeabi_d2ulz'
+> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.o: in function `populate_dml_plane_cfg_from_plane_state':
+> dml2_translation_helper.c:(.text+0x9e4): undefined reference to `__aeabi_l2d'
+> arm-linux-gnueabihf-ld: dml2_translation_helper.c:(.text+0xa20): undefined reference to `__aeabi_l2d'
+> arm-linux-gnueabihf-ld: dml2_translation_helper.c:(.text+0xa58): undefined reference to `__aeabi_l2d'
+> arm-linux-gnueabihf-ld: dml2_translation_helper.c:(.text+0xa90): undefined reference to `__aeabi_l2d'
+> make[3]: *** [/home/bauermann/src/linux/scripts/Makefile.vmlinux:37: vmlinux] Error 1
+> make[2]: *** [/home/bauermann/src/linux/Makefile:1165: vmlinux] Error 2
+> make[1]: *** [/home/bauermann/src/linux/Makefile:240: __sub-make] Error 2
+> make[1]: Leaving directory '/home/bauermann/.cache/builds/linux-cross-arm'
+> make: *** [Makefile:240: __sub-make] Error 2
+> 
+> The error with allmodconfig is slightly different:
+> 
+> $ make -j 8 \
+>     O=$HOME/.cache/builds/linux-cross-arm \
+>     ARCH=arm \
+>     CROSS_COMPILE=arm-linux-gnueabihf-
+> make[1]: Entering directory '/home/bauermann/.cache/builds/linux-cross-arm'
+>     ⋮
+> ERROR: modpost: "__aeabi_d2ulz" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+> ERROR: modpost: "__aeabi_l2d" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+> make[3]: *** [/home/bauermann/src/linux/scripts/Makefile.modpost:145: Module.symvers] Error 1
+> make[2]: *** [/home/bauermann/src/linux/Makefile:1876: modpost] Error 2
+> make[1]: *** [/home/bauermann/src/linux/Makefile:240: __sub-make] Error 2
+> make[1]: Leaving directory '/home/bauermann/.cache/builds/linux-cross-arm'
+> make: *** [Makefile:240: __sub-make] Error 2
 
-Samuel Holland <samuel.holland@sifive.com> writes:
+In both cases, the issue is that the toolchain requires runtime support to
+convert between `unsigned long long` and `double`, even when hardware FP is
+enabled. There was some past discussion about GCC inlining some of these
+conversions[1], but that did not get implemented.
 
-> Now that all previously-supported architectures select
-> ARCH_HAS_KERNEL_FPU_SUPPORT, this code can depend on that symbol instead
-> of the existing list of architectures. It can also take advantage of the
-> common kernel-mode FPU API and method of adjusting CFLAGS.
->
-> Acked-by: Alex Deucher <alexander.deucher@amd.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
+32-bit arm until we can provide these runtime library functions.
 
-Unfortunately this patch causes build failures on arm with allyesconfig
-and allmodconfig. Tested with next-20240410.
+Regards,
+Samuel
 
-Error with allyesconfig:
-
-$ make -j 8 \
-    O=3D$HOME/.cache/builds/linux-cross-arm \
-    ARCH=3Darm \
-    CROSS_COMPILE=3Darm-linux-gnueabihf-
-make[1]: Entering directory '/home/bauermann/.cache/builds/linux-cross-arm'
-    =E2=8B=AE
-arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml/dcn20/dcn20_fpu.=
-o: in function `dcn20_populate_dml_pipes_from_context':
-dcn20_fpu.c:(.text+0x20f4): undefined reference to `__aeabi_l2d'
-arm-linux-gnueabihf-ld: dcn20_fpu.c:(.text+0x210c): undefined reference to =
-`__aeabi_l2d'
-arm-linux-gnueabihf-ld: dcn20_fpu.c:(.text+0x2124): undefined reference to =
-`__aeabi_l2d'
-arm-linux-gnueabihf-ld: dcn20_fpu.c:(.text+0x213c): undefined reference to =
-`__aeabi_l2d'
-arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml/calcs/dcn_calcs.=
-o: in function `pipe_ctx_to_e2e_pipe_params':
-dcn_calcs.c:(.text+0x390): undefined reference to `__aeabi_l2d'
-arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml/calcs/dcn_calcs.=
-o:dcn_calcs.c:(.text+0x3a4): more undefined references to `__aeabi_l2d' fol=
-low
-arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.o:=
- in function `optimize_configuration':
-dml2_wrapper.c:(.text+0xcbc): undefined reference to `__aeabi_d2ulz'
-arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml2/dml2_translatio=
-n_helper.o: in function `populate_dml_plane_cfg_from_plane_state':
-dml2_translation_helper.c:(.text+0x9e4): undefined reference to `__aeabi_l2=
-d'
-arm-linux-gnueabihf-ld: dml2_translation_helper.c:(.text+0xa20): undefined =
-reference to `__aeabi_l2d'
-arm-linux-gnueabihf-ld: dml2_translation_helper.c:(.text+0xa58): undefined =
-reference to `__aeabi_l2d'
-arm-linux-gnueabihf-ld: dml2_translation_helper.c:(.text+0xa90): undefined =
-reference to `__aeabi_l2d'
-make[3]: *** [/home/bauermann/src/linux/scripts/Makefile.vmlinux:37: vmlinu=
-x] Error 1
-make[2]: *** [/home/bauermann/src/linux/Makefile:1165: vmlinux] Error 2
-make[1]: *** [/home/bauermann/src/linux/Makefile:240: __sub-make] Error 2
-make[1]: Leaving directory '/home/bauermann/.cache/builds/linux-cross-arm'
-make: *** [Makefile:240: __sub-make] Error 2
-
-The error with allmodconfig is slightly different:
-
-$ make -j 8 \
-    O=3D$HOME/.cache/builds/linux-cross-arm \
-    ARCH=3Darm \
-    CROSS_COMPILE=3Darm-linux-gnueabihf-
-make[1]: Entering directory '/home/bauermann/.cache/builds/linux-cross-arm'
-    =E2=8B=AE
-ERROR: modpost: "__aeabi_d2ulz" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] unde=
-fined!
-ERROR: modpost: "__aeabi_l2d" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefi=
-ned!
-make[3]: *** [/home/bauermann/src/linux/scripts/Makefile.modpost:145: Modul=
-e.symvers] Error 1
-make[2]: *** [/home/bauermann/src/linux/Makefile:1876: modpost] Error 2
-make[1]: *** [/home/bauermann/src/linux/Makefile:240: __sub-make] Error 2
-make[1]: Leaving directory '/home/bauermann/.cache/builds/linux-cross-arm'
-make: *** [Makefile:240: __sub-make] Error 2
-
---
-Thiago
+[1]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91970
