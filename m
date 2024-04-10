@@ -1,122 +1,72 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823BC158DAF;
-	Wed, 10 Apr 2024 12:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5509157A43;
+	Wed, 10 Apr 2024 13:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712753005; cv=none; b=Kv5KSey7fbEA7lINMK/0jKFt5y0XGn/Vtm4FUTDGQDcuVWAeDBwFviwu2OY3e0y6IZl/rJvviA+qeMwq3G+AgiVNxFHf1LngDsxvr9h33ePyBgwMVZ04WdT3u49bpRrVj2ucLQSYNGFSnnYHMqcYfq/HOnJnMFjD1V3Y3iBZ26k=
+	t=1712754797; cv=none; b=aipThA/Q5QAbbpxNFoqFSAGgEK7MDrjpC30HoQ8U1V0GQo52EibpGl7M1ijVAK6GPVKagd9kC1sKbv6hxJPjhUM1/VbU0cvG7+oQ1TtOrCflu0gR1lkg8WfBHAFbpzzwXAN+E6tAF0C118Autgzlwb6dZT6v9bzEbT6F044fPJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712753005; c=relaxed/simple;
-	bh=oNXkmJLZw0UUlzScvUERB+oZiwnYTzIkRhGzopuv6w0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ws4Gg/1iiYHcMWWyCXeIKoFnJakhxlq4eYWtDxOfVNgVoYMQwv9BxOmIdkHJzHI7m+FED27wG8aNGjj9cxAeYhReUbsEAsp2pFxblYgph5wusGAmxS/0b3xKRUZhyH6ZrZUXOQk9jodkrcvEvRJ2LxBSCUxG1L+LVjXEQKPy9ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VF2Wn6z5Vz6K6Cs;
-	Wed, 10 Apr 2024 20:41:41 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id AB478140DD4;
-	Wed, 10 Apr 2024 20:43:19 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Apr
- 2024 13:43:19 +0100
-Date: Wed, 10 Apr 2024 13:43:18 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Russell King <rmk+kernel@armlinux.org.uk>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>, <x86@kernel.org>,
-	<acpica-devel@lists.linuxfoundation.org>, <linux-csky@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-	<linux-parisc@vger.kernel.org>, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, <jianyong.wu@arm.com>,
-	<justin.he@arm.com>, James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v4 02/15] ACPI: processor: Register all CPUs from
- acpi_processor_get_info()
-Message-ID: <20240410134318.0000193c@huawei.com>
-In-Reply-To: <20240322185327.00002416@Huawei.com>
-References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk>
-	<E1rVDmU-0027YP-Jz@rmk-PC.armlinux.org.uk>
-	<CAJZ5v0iiJpUWq5GMSnKFWQTzn_bdwoQz9m=hDaXNg4Lj_ePF4g@mail.gmail.com>
-	<20240322185327.00002416@Huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+	s=arc-20240116; t=1712754797; c=relaxed/simple;
+	bh=q+2ZsW/z1cIJaAuFufmwzxUPgQDmh1sFna8GkV828NI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZWpaxt4y+jfjMkI0dml9L/9ZQct+7QMakr5V70aEBPrm/xZsjQ9weYiPJOb3IYpy7qO3Oy6We15kPVZCSmEYIIR4HRdj1N81nWpAgxG18xeZFAujPdYUgz2aDj827VBH2wVigltY1SPUvICf0/iBTjmMov7NVg0WHhJYMPjXFHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DBD5C433F1;
+	Wed, 10 Apr 2024 13:13:15 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Select THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
+Date: Wed, 10 Apr 2024 21:12:56 +0800
+Message-ID: <20240410131256.2165746-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-> >   
-> > > diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-> > > index 47de0f140ba6..13d052bf13f4 100644
-> > > --- a/drivers/base/cpu.c
-> > > +++ b/drivers/base/cpu.c
-> > > @@ -553,7 +553,11 @@ static void __init cpu_dev_register_generic(void)
-> > >  {
-> > >         int i, ret;
-> > >
-> > > -       if (!IS_ENABLED(CONFIG_GENERIC_CPU_DEVICES))
-> > > +       /*
-> > > +        * When ACPI is enabled, CPUs are registered via
-> > > +        * acpi_processor_get_info().
-> > > +        */
-> > > +       if (!IS_ENABLED(CONFIG_GENERIC_CPU_DEVICES) || !acpi_disabled)
-> > >                 return;    
-> > 
-> > Honestly, this looks like a quick hack to me and it absolutely
-> > requires an ACK from the x86 maintainers to go anywhere.  
-> Will address this separately.
-> 
+THP_SWAP has been proven to improve the swap throughput significantly on
+x86_64 system according to commit bd4c82c22c367e0 ("mm, THP, swap: delay
+splitting THP after swapped out"), on ARM64 system according to commit
+d0637c505f8a1d ("arm64: enable THP_SWAP for arm64") and on RISC-V system
+according to commit 87f81e66e2e84c7 ("riscv: enable THP_SWAP for RV64").
 
-So do people prefer this hack, or something along lines of the following?
+Enable THP_SWAP for LoongArch, testing the micro-benchmark which is
+introduced by commit d0637c505f8a1d ("arm64: enable THP_SWAP for arm64")
+shows below numbers on the Loongson-3A5000 board:
 
-static int __init cpu_dev_register_generic(void)
-{
-        int i, ret = 0;
+swp out bandwidth w/o patch: 1815716 bytes/ms (mean of 10 tests)
+swp out bandwidth w/  patch: 3410003 bytes/ms (mean of 10 tests)
 
-        for_each_online_cpu(i) {
-                if (!get_cpu_device(i)) {
-                        ret = arch_register_cpu(i);
-                        if (ret)
-                                pr_warn("register_cpu %d failed (%d)\n", i, ret);
-                }
-        }
-	//Probably just eat the error.
-        return 0;
-}
-subsys_initcall_sync(cpu_dev_register_generic);
+Improved by 46.75%!
 
-Which may look familiar at it's effectively patch 3 from v3 which was dealing
-with CPUs missing from DSDT (something we think doesn't happen).
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-It might be possible to elide the arch_register_cpu() in
-make_present() but that will mean we use different flows in this patch set
-for the hotplug and initially present cases which is a bit messy.
-
-I've tested this lightly on arm64 and x86 ACPI + DT booting and it "seems" fine.
-
-Jonathan
-
-> >   
-> > >
-> > >         for_each_present_cpu(i) {
-> > > --    
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index d52a95195e7f..41ddc39e1fc8 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -69,6 +69,7 @@ config LOONGARCH
+ 	select ARCH_WANT_LD_ORPHAN_WARN
+ 	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
+ 	select ARCH_WANTS_NO_INSTR
++	select ARCH_WANTS_THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select BUILDTIME_TABLE_SORT
+ 	select COMMON_CLK
+ 	select CPU_PM
+-- 
+2.43.0
 
