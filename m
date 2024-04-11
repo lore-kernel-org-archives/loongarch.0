@@ -1,136 +1,105 @@
-Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A10E13DBB6
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 07:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E52145CBD
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 09:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820712; cv=none; b=hSnhnWhShodI7T9aFqlS+GL6OLNz4DdlIB/Q7kkI0OdfgpfY30hC0ikcYAjqRa837hKPhwOjpAxSqE5/ZMs9k4PZXK6pppSMWS+Zcj+kkGT/qAMoyM1nHMG/Xc5wnCGohkO+2SHTm1ZSYgw0HwQXCUvdQ5aAG7G4uEY5DO2ySko=
+	t=1712827003; cv=none; b=BTO8uyYKnRN9Lag4ProAtOgkMD68Eyys8b3OvdQ9EwMWBU2eRF2F4HxZkzkiUz6tt2i9pngbre49r8KM8KNRB51+3jkeF7RzKm3uqC8Zfvw0Xxl6AmdCKtI1dySjgN1EAMAPciAfxP3ZDA+7wG+ckgPsInzRTxM8SgNvj2TY32I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820712; c=relaxed/simple;
-	bh=q5rsC/05nhzdHrqrF7mVpbW5ArjHrqlJx/EHmQo3OnI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=HgrBE2pCtYLSm8+giKhZuuMTJQRjh+iV1jVYD/MnCjnGgomRUikJNlCcBfwGuXAHti1XfGOow5EpR2/iAuBp7X08thFjXNvAMLSz49H2n6zSdyTipFDoF/OjT5H81OqWt000+0UoW/hvDVvORGCTCO4BobZF+91dE7EnFXpTyH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fAFRq2a4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DzSFGGOr; arc=none smtp.client-ip=64.147.123.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fAFRq2a4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DzSFGGOr"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 81E2218000CB;
-	Thu, 11 Apr 2024 03:31:48 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 11 Apr 2024 03:31:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1712820708; x=1712907108; bh=ss9obh18Sk
-	iQHEXzh7qcLFdvdlxpa80B0Z7MJyyJWOs=; b=fAFRq2a4RR5m0uoGjxvbSDZhhg
-	XBLt22beIqBHO1PhCVLZIYorAfbGnpIs6i0KjnrNMag6CtHF8mAtIX4+g4JkM/y4
-	oNakw3qvrAtMITJTRe3dP5XCRbSlUNRMtgb+FJogTSdTceTcdRzappHrax+eWmGC
-	C48KZTiW2+745Tpmz56zPJgFu5sXmnDOXQgOHhBxECqtppJaW42Os3TNEDRkpPfI
-	7xKy28dP14Q+rdv1IglqoN1MM2Wo71oJ88dpxu76wssTF5yL3dssA5ZNSuq2aEsa
-	sQ7EBo/MLbjI9e+DTEeltLlDImftLLOUzlWPomQgt5r5GI+C7bz29lbepBoQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1712820708; x=1712907108; bh=ss9obh18SkiQHEXzh7qcLFdvdlxp
-	a80B0Z7MJyyJWOs=; b=DzSFGGOr+zqR4sfSmeOxAZvA6tvMP0LGFanC2+BgYdJy
-	+4hbOwbt0daWkKElaJ7hw1qTgNt7659JrHfKx7+c2NRv2nXqcVlsOuvhc37YXOZ6
-	/5MKG6iTFCQ6aufnWu+0iv1mQHtdHJ4K9QX9ZNac5sLfv829dYcU7OrtBhvzAPeJ
-	qvI5fpyEZjo1rJqt0In+B4EMVZTz3BIN6xIPeqBy76lVWIdHpPj7mI1hWq7dyIWT
-	CnWqJQpCHMCE2NVdUfy2AgXYjJNlhFvPsLF/BoiRix4BR68kBN/e6viA7DoExAkP
-	1lsK1ob4cyEjdsraiMT0hwoBXzOe78DNkW/8wTm9dg==
-X-ME-Sender: <xms:45EXZr7T_OnGStrr7SKzpEUpju9NZAoJ-lpF9Idxf_AAZawFa25PqQ>
-    <xme:45EXZg74AAZ239bjRLX7EeRcHaT8wGi_jFHosNYQYKIaCYvcpDRxLFrBw8T1Wh8fR
-    jo4RGsgbbTYIfp5aDQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehjedguddujecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:45EXZieKjjVog6Wf67CQD8NJtTers1M6KFeWe75e-UlBkt2QP7uJXg>
-    <xmx:45EXZsJIp1DUMatuZM3plg1HZpaO63G81PNWgtOVl7mQ4q3U6QDMgA>
-    <xmx:45EXZvIKtC1NGjybHKKb-88n2S8h7w1gUs0XzOcd8JC5HH3wCWVBpA>
-    <xmx:45EXZlyxfKvoW4q6bfCKoSeKRYfJBEypsh0ZQzt4uZT200LeFEQ3Rw>
-    <xmx:45EXZuaOX9x1nVPc-UnZtz-zaIuHLseO3kmjE2oKiQEaEOt4QcV-JewM>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 5E761B60092; Thu, 11 Apr 2024 03:31:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	s=arc-20240116; t=1712827003; c=relaxed/simple;
+	bh=T8By7LcptEkMf509OxayDs7PkpG73tGV1biNGLfJozM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HFm4Dzq1cjci/ex0EdEX6VbgQ03yMlJkNzyz1YBpT5nM8mGVWWzPW/tPUn4o/AMXDnsXh8/9zy1MPFLNnFlqVDCJ9U1hbF5iWjAg5ewtQ5zxRe0ZCwVVWYFtWh2fIAMXMA7Qq95wxBtk2XsnJ2iq7oBk+oeauwqpmcRfAUV+Z/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.109.80])
+	by gateway (Coremail) with SMTP id _____8Bxyuh0qhdmRsQlAA--.1515S3;
+	Thu, 11 Apr 2024 17:16:36 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.80])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx6xJyqhdmmvV3AA--.37435S2;
+	Thu, 11 Apr 2024 17:16:35 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Juxin Gao <gaojuxin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 0/2] pwm: Introduce pwm driver for the Loongson family chips
+Date: Thu, 11 Apr 2024 17:16:21 +0800
+Message-ID: <cover.1712732719.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <c0e170f7-5498-40ed-ba35-2ac392c2dd2a@app.fastmail.com>
-In-Reply-To: 
- <CAMj1kXGW5XQxXrYaPhT6sCjH7s0EwqzNjWies3b8UWnUBW5Ngw@mail.gmail.com>
-References: <20240329072441.591471-1-samuel.holland@sifive.com>
- <20240329072441.591471-14-samuel.holland@sifive.com>
- <87wmp4oo3y.fsf@linaro.org> <75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com>
- <87wmp4ogoe.fsf@linaro.org> <4c8e63d6-ba33-47fe-8150-59eba8babf2d@sifive.com>
- <CAMj1kXGW5XQxXrYaPhT6sCjH7s0EwqzNjWies3b8UWnUBW5Ngw@mail.gmail.com>
-Date: Thu, 11 Apr 2024 09:31:27 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ard Biesheuvel" <ardb@kernel.org>,
- "Samuel Holland" <samuel.holland@sifive.com>
-Cc: "Thiago Jung Bauermann" <thiago.bauermann@linaro.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- "Christoph Hellwig" <hch@lst.de>, loongarch@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, "Alex Deucher" <alexander.deucher@amd.com>
-Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cx6xJyqhdmmvV3AA--.37435S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWrZw1Dtr45WrWrCw15tFykCrX_yoW8Jr1rpF
+	sxC34akr18tF47Arn3X3W8Cr1fZa4xJFsrKan3t34UXF98ua4YqrW3Kw45ArZxCrnrXFy2
+	vrySkr4UGa4UCrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07URE_tUUUUU=
 
-On Thu, Apr 11, 2024, at 09:15, Ard Biesheuvel wrote:
-> On Thu, 11 Apr 2024 at 03:11, Samuel Holland <samuel.holland@sifive.com> wrote:
->> On 2024-04-10 8:02 PM, Thiago Jung Bauermann wrote:
->> > Samuel Holland <samuel.holland@sifive.com> writes:
->>
->> >> The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
->> >> 32-bit arm until we can provide these runtime library functions.
->> >
->> > Does this mean that patch 2 in this series:
->> >
->> > [PATCH v4 02/15] ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->> >
->> > will be dropped?
->>
->> No, because later patches in the series (3, 6) depend on the definition of
->> CC_FLAGS_FPU from that patch. I will need to send a fixup patch unless I can
->> find a GPL-2 compatible implementation of the runtime library functions.
->>
->
-> Is there really a point to doing that? Do 32-bit ARM systems even have
-> enough address space to the map the BARs of the AMD GPUs that need
-> this support?
->
-> Given that this was not enabled before, I don't think the upshot of
-> this series should be that we enable support for something on 32-bit
-> ARM that may cause headaches down the road without any benefit.
->
-> So I'd prefer a fixup patch that opts ARM out of this over adding
-> support code for 64-bit conversions.
+Hi all:
 
-I have not found any dts file for a 32-bit platform with support
-for a 64-bit prefetchable BAR, and there are very few that even
-have a pcie slot (as opposed on on-board devices) you could
-plug a card into.
+This patchset introduce a generic PWM framework driver for Loongson
+family
 
-That said, I also don't think we should encourage the use of
-floating-point code in random device drivers. There is really
-no excuse for the amdgpu driver to use floating point math
-here, and we should get AMD to fix their driver instead.
+Each PWM has one pulse width output signal and one pulse input signal to
+be measured. It can be found on Loongson-2K series cpus and Loongson
+LS7A bridge chips.
 
-     Arnd
+Thanks.
+
+-------
+v2:
+- Remove the dts-related patches and update dts at once after all
+relevant drivers are complete.
+patch (1/2):
+ - The dt-binding filename should match compatible, rename it as
+   loongson,ls7a-pwm.yaml;
+ - Update binding description;
+ - Add description for each pwm cell;
+ - Drop '#pwm-cells' from required, for pwm.yaml makes it required already.
+
+Link to v1:
+https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: pwm: Add Loongson PWM controller
+  pwm: Add Loongson PWM controller support
+
+ .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
+ MAINTAINERS                                   |   7 +
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-loongson.c                    | 300 ++++++++++++++++++
+ 5 files changed, 384 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-loongson.c
+
+-- 
+2.43.0
+
