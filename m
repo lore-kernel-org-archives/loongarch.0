@@ -1,121 +1,110 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C7E13C9DD
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 06:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AF313DDB7
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 07:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712815628; cv=none; b=LMNJdbBg24/y0qN7Jx37qBYDDi2q8SeK7gfm9yb8bXLko4P4lBqixkyAiOdSe/LCunuQaFpYXTj8V5oNpzgNZ9HgxWLV1jlwzsr1V6f2C5K8j/SUk9Qc9JDha+KsRRaFIVfbqzAGpnX0cBhQxZa0aN+ML1mwuPoI24SOd+0bmLg=
+	t=1712819757; cv=none; b=aF0vHoqIMkcwREv1syUazF1yXA8suTfMFTU9cdVuJHoRzXcQVl5QymSZnVV3pIcpy9D89XTrjBESpoBJXjVRGBLOoDBm0G2dX48D8sUy9bKDsZxcfxliPtgJfhE0oh4JNeZNpNvlAsMqmFkvCD+lh20uJA0mGhfOz8obzHmiVxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712815628; c=relaxed/simple;
-	bh=F4MaVQ7pKoe7lUsUYa8MyhWTCFlXuCihjUDokKL4acc=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=G3K6WMbYQlUqy5OZK4e/M22LTLCoxqex2y/rcnEUH9YcgMC96qLReAjGFFEmhNz/2SdWRkxvsga/0mFuh/+qTpa0ARQnfPCAQu4WH6vPNJhE293hylS1xvZPgRO5YwKGr0NUCOOspAbXNbiRhclpU/Ns+NqRXIG+7bh+1QarQ5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Hksxhob8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=p/CmgsMN; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1712819757; c=relaxed/simple;
+	bh=EGxUFWIY3FhDr3OERYjKXmTSAvHQ47fM+usiXa4A2Co=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m0V75keWxhnsF6r8POaQfa0Q1sTrmIQhfJz2m3DfdVgpDSzJm85lrp2FGRFJo+hNENinOm3IwQUI2uhjjLrKn9WNjsvEM6GP+V0yVxU+zdwugkI7rKrQ5TFer1USwOL8Xh/wmqIryodhvaO31vU4YVaNXlOcOt0LCaJkZoTheSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PoTjX5JU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Hksxhob8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p/CmgsMN"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 57DF01C000D1;
-	Thu, 11 Apr 2024 02:07:05 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 11 Apr 2024 02:07:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1712815624; x=1712902024; bh=feFU2U3jUo
-	M8TSdlpJrca4UZF2kzeN8mwV/FEH7SomY=; b=Hksxhob8ya9CDW+zgnHMKadxcV
-	YoEn0Wg6as2ZmQYrcoeblFVIUDNsDNBvhmIe0+PH419P3I8C762MTfU8pYnIW0/O
-	sV3orsvvV+c8vOQgWR6AuFDPyrWhf3pa9sMRhTRs6NOljBSnBs73DN0fHrkk3ZXD
-	d8iFQPlWhr8R3Hi5DXNgJnhtwgkGxAa2wjwNz6yCyEtoSWexGqZF3kBbOf6VkxIf
-	KHYcCAO05dXHld+msEhEbl73x8F8uW9KL/lRuadcVqW9JXbXFKAE5zpqcEnYjGMb
-	AqBYA7ogKfdFByzam4bUh+PSHN5jN2uKzWTySlu5BEXQVnIITdzFem+swS5w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1712815624; x=1712902024; bh=feFU2U3jUoM8TSdlpJrca4UZF2kz
-	eN8mwV/FEH7SomY=; b=p/CmgsMNIhZkFvuuGipuBi9xtI53wdCVYTh89ELOmtK6
-	Sqlgs1IfAn2G6/dLbLScmHJGcWlHdJCdQUKs5cGHytnzNwjBqUwy1T7bFzm7MIAS
-	Ip6Y0Dn4dksNNwGO8AoqrTQB7QfOvmUINZg3B/pntcYzuDENMRfqEHKaFLV42FFj
-	8uF9SEGI2dDZqI6aL3HBcr07LcLTmWyLggGaEZxVwbY3RSgLuCFhIk5sU988jxoH
-	p5k27Z5HG9rhfExte9SnokO0oVtikR5zJS4ND5I5NSMHKu5WaROfpD3cbr/k+DGF
-	T5R4FU2uA/EMs9SemDo1Y4uV38x78elSq8wn1QwK5A==
-X-ME-Sender: <xms:B34XZpP6WngeL3EnSz8dClCizh8DVdGuwUvBUUBiOARml-Huux7aDQ>
-    <xme:B34XZr_eVr2oeYyTjnkHflLaNRU_KIfVa310nxcbwU0-jNGDR9tliakkviQFN9_qt
-    9Tmbequ6nDn6JzAbDM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehjedguddtfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:B34XZoTJkJvmR8TF4eE2EWju2ry5hIB5TJEPy0SlFPqvifnCRW11nQ>
-    <xmx:B34XZlvRRdRX7K_jI9nWH9GxdYgY_sMSLxAbDzuCuZSOwvuD4KNeVg>
-    <xmx:B34XZheq-UG7GBVXdJyZCwCDkfgcorjY2U_nsJef5L9GXLVZHIephA>
-    <xmx:B34XZh2yOKYhLUc1QtapjserGZNYMYQ6ioaGEs8zTpD9B9w1gYBHmA>
-    <xmx:CH4XZpQqGJux8MMYqWnYy31HZCN_tT5FtRDozZDMiEb0kxrXHisMoK8p>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 766FFB60093; Thu, 11 Apr 2024 02:07:03 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PoTjX5JU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 961F6C43394
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 07:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712819756;
+	bh=EGxUFWIY3FhDr3OERYjKXmTSAvHQ47fM+usiXa4A2Co=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=PoTjX5JUmRzsaa0P9y56kJydskXtPGFPN262bWdaHgDQod2o3roC0PZCNerABsCwG
+	 bfYoknQIk2nufau511D9CeAz99/c+XBDYy9O7yS9Z1jFNFtUA7xvKQxJ/mBKdpOcAQ
+	 8oBKA5LroCCkdcvSrmvcnHz8S4wEMgGzlbJBgQOBAwfoqFEvq51qHBY4tBRmieeKdp
+	 K1V/z2yZw+dZ7cxWukX9RlSxbg26oONq6miKxZS20ViA44IL5h1YPGHEH4QM1NDmps
+	 q4uBHpt3fB7RefgLPmbmEkh8QFaXUgnwKcsoM6Ruke9SxJbcWtDtjMPnbo5XIn7C6E
+	 5gAsmHwkNvlMw==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d6c9678cbdso97063131fa.2
+        for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 00:15:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV+tunw1ROgiEBE5/0Hvzr0hC7Li9MW8p/azUiwi4fvYH7tMQDGO130//aAnTpB+jpu5TEajFpQk8r2UwLZy+Q934i8tqf3jYsI
+X-Gm-Message-State: AOJu0Yx5JTGnR6OWa2OoDDaxHaYsjfomD8fF1V65EaXbRtwvw2rNu/f1
+	dnmyKkFG11I6Kow3kz/agM7hyNs2OX9msynIKdAQLX3y3rN3BRt6lEaZcSk5eNUWH/HORLqo9oa
+	FWZWuPKav9wtIksjL5QKxwkUU0zE=
+X-Google-Smtp-Source: AGHT+IEIbzlNGUw7dH6rrBUAPRiam7orrjfOi6n1jf8KoAxJeALyXjve8wFV4wHUyAY7FtZhkFPztybk10CRfm7afS8=
+X-Received: by 2002:a05:651c:211e:b0:2d8:d8b5:73d4 with SMTP id
+ a30-20020a05651c211e00b002d8d8b573d4mr2830394ljq.4.1712819754902; Thu, 11 Apr
+ 2024 00:15:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <b752273b-0e94-4325-9cf8-6f16a204818b@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H6bHudfUVE4SWY88mxmLhFok9DS8UyODSZEdUJ816V8Rg@mail.gmail.com>
-References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
- <CAAhV-H6bHudfUVE4SWY88mxmLhFok9DS8UyODSZEdUJ816V8Rg@mail.gmail.com>
-Date: Thu, 11 Apr 2024 08:06:43 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Huacai Chen" <chenhuacai@kernel.org>, "Marc Zyngier" <maz@kernel.org>,
- "Tiezhu Yang" <yangtiezhu@loongson.cn>
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 0/4] Give chance to build under !CONFIG_SMP for LoongArch
-Content-Type: text/plain
+References: <20240329072441.591471-1-samuel.holland@sifive.com>
+ <20240329072441.591471-14-samuel.holland@sifive.com> <87wmp4oo3y.fsf@linaro.org>
+ <75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com> <87wmp4ogoe.fsf@linaro.org> <4c8e63d6-ba33-47fe-8150-59eba8babf2d@sifive.com>
+In-Reply-To: <4c8e63d6-ba33-47fe-8150-59eba8babf2d@sifive.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 11 Apr 2024 09:15:43 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGW5XQxXrYaPhT6sCjH7s0EwqzNjWies3b8UWnUBW5Ngw@mail.gmail.com>
+Message-ID: <CAMj1kXGW5XQxXrYaPhT6sCjH7s0EwqzNjWies3b8UWnUBW5Ngw@mail.gmail.com>
+Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+To: Samuel Holland <samuel.holland@sifive.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Thiago Jung Bauermann <thiago.bauermann@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
+	Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 11, 2024, at 06:26, Huacai Chen wrote:
+(cc Arnd)
+
+On Thu, 11 Apr 2024 at 03:11, Samuel Holland <samuel.holland@sifive.com> wrote:
 >
-> I remember that you both suggested not introducing NOSMP support for a
-> modern architecture which brings additional complexity. I wonder if
-> you still have the same attitude now. I will merge this series only if
-> you think it is worthy to introduce NOSMP now.
+> Hi Thiago,
+>
+> On 2024-04-10 8:02 PM, Thiago Jung Bauermann wrote:
+> > Samuel Holland <samuel.holland@sifive.com> writes:
+> >> On 2024-04-10 5:21 PM, Thiago Jung Bauermann wrote:
+> >>>
+> >>> Unfortunately this patch causes build failures on arm with allyesconfig
+> >>> and allmodconfig. Tested with next-20240410.
+> >
+> > <snip>
+> >
+> >> In both cases, the issue is that the toolchain requires runtime support to
+> >> convert between `unsigned long long` and `double`, even when hardware FP is
+> >> enabled. There was some past discussion about GCC inlining some of these
+> >> conversions[1], but that did not get implemented.
+> >
+> > Thank you for the explanation and the bugzilla reference. I added a
+> > comment there mentioning that the problem came up again with this patch
+> > series.
+> >
+> >> The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
+> >> 32-bit arm until we can provide these runtime library functions.
+> >
+> > Does this mean that patch 2 in this series:
+> >
+> > [PATCH v4 02/15] ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+> >
+> > will be dropped?
+>
+> No, because later patches in the series (3, 6) depend on the definition of
+> CC_FLAGS_FPU from that patch. I will need to send a fixup patch unless I can
+> find a GPL-2 compatible implementation of the runtime library functions.
+>
 
-It's an interesting question, as we have recently discussed two
-opposite ideas and may end up doing both (or possible neither)
-in the future:
+Is there really a point to doing that? Do 32-bit ARM systems even have
+enough address space to the map the BARs of the AMD GPUs that need
+this support?
 
-- On x86, there is no real reason to need non-SMP kernels as the
-  memory savings are fairly small, and it tends to break because
-  of lack of users testing it.
+Given that this was not enabled before, I don't think the upshot of
+this series should be that we enable support for something on 32-bit
+ARM that may cause headaches down the road without any benefit.
 
-- On arm64, we have never supported non-SMP kernels, but I have
-  looked at possibly adding this because there are still popular
-  ARM based system-in-package products with less than 128MB of
-  built-in RAM and only a single CPU. As these are moving from
-  32-bit to 64-bit cores, it becomes more interesting to build
-  a 64-bit UP kernel and save multiple megabytes.
-
-I think loongarch64 is in the same place as arm64 and riscv64
-(which does allow non-SMP builds) here, and there are good
-reasons to allow it on all of them now, even if we previously
-never had a need for it.
-
-That said, both the 9% observed performance improvements that
-Tiezhu Yang reported, and the memory savings that I saw are
-probably higher than they should be, so we may also want to
-investigate that further to see if we can improve the SMP
-kernel to better support UP runs.
-
-    Arnd
+So I'd prefer a fixup patch that opts ARM out of this over adding
+support code for 64-bit conversions.
