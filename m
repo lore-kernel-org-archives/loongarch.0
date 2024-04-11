@@ -1,188 +1,207 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F311474BB
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 11:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A536113DBB6;
+	Thu, 11 Apr 2024 11:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712833635; cv=none; b=jIC5FPQdWob9VpYMb3iCnLk5ebwupts7UECB+ntZQEHoocqNtnEqGaCNMPZpg4DRgWStrRW44uVfJdA6CsPNNVIJW+hk1hqD6NJPvk63jVsSF9QzG11uhpQiwgwbgVuVnz94/cVUh+PbRvEXUOA0g9B5J58mX57UQDWvBju6DzI=
+	t=1712835329; cv=none; b=J1S5KyFJSODCUevM+3AmhofVCei85Z6mEOQM/675jCIr26KOUVCxHFPm3p6SxJUTfjc7jpRHuXGtatGOhzR/VlXTTL+ivWlnVK7VIAybJBI4y19TjmgrceP2BUzEfFQNsj9wbQcmJLZqqz6bcwWsv+JVnNfR6gsilYOnIfnTjFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712833635; c=relaxed/simple;
-	bh=fLit8VjED7zE79F2sopStkIe4xL2XjF5KSYypHS2ERM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TMb2wJvhC8jvY5N1W+MwjyMmAZdCptDcSrtqt+Lit1em/y83EiEky1k+x98RGGwdZrrEosWhfS48i58EeNx8aOiuPxQVyODNMJkufEGuGsobigqBdymEx2e5nb8B3NpwEVfn5RsWrOEAhyi2l1G9tfFj4z2yrgFklKafG4PtAhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lLbdwqns; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lLbdwqns"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-346b96f1483so282380f8f.1
-        for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 04:07:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712833631; x=1713438431; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=5GkNWGxakmJKXBqFXolPskgW0D6/XXw8rh7tWUsTVyk=;
-        b=lLbdwqnsM7zsadY0BGeUU14AgW63r38uODJRLH3lgqc/SCtwN79k4hY276E9o56kqf
-         QUO+pVH4s9faY0+hs4aufcwmq4Axa+VreUZlehu63OWBZz6ivDBabedcyljFrohubNYo
-         b2FHlqi9Pd5MH84bCKLrZY42DLG/85GtOjXDX+Rm0g6eHu/VovQWfs9WtzQwLWgmgDwM
-         pSuHX51qYZKeFsQhQ91z/445Q6fpSVgfZ5+Y7R9KYGCitQ+V3Zv9S5fIOQdzMEaoK7AI
-         0tzeQZ5fz1NAo/q87Xk83yuk4SCwGo9psMeLU8Tp57F5J+eyNBzdX8QcOkuhGe4Q58xy
-         xNEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712833631; x=1713438431;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5GkNWGxakmJKXBqFXolPskgW0D6/XXw8rh7tWUsTVyk=;
-        b=Tv35AFA78fe92atrJ8N01nIQ6ZzYFmIrav2P8jBl2Mz9OqYUvgW1ZbbNxWGAqrFlpS
-         KlNMHnQNivLU5nqwoIWMJ/GVx70CO/oxHYt29cUI+QShd9p/pOiU1HGl46/LWPNIxIMZ
-         I7OIZxwXXAykO0XTH46m698mDKCegKdnBvSS+ZWShXu5Tf/Au7kDnr2sTosU/Y/7nAd3
-         bJKnt002ewfwcsMA2oECJBiNITY4DY5Q6Yo2yXH0o9E50vs1HtiaOdPtp/7yq6aBBipL
-         cluIlAZLr81r3MjH24gwIyFRDdPk1jWiJEleL6UhZOJbL1MheKe3Xc1o1IbZ+aOMl+cn
-         6/TA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBi+5N0dorI1e42HZhs9KjB3PGuP4PM2eqTeO9GgTGlsoH1p0aGfYBU7kjFPu4JWJM4LYy2PkcMxKiZAV2J41TIn+EK8sbmEnG
-X-Gm-Message-State: AOJu0Yx2w2SloEu+g4+6x19L1i/5Kp7wt2R5T0P/5lEQA4AvPPOTYhfs
-	o7GpDV+wfa/xi5KN0z8PNgfPhRPoRJEwTS8vpmZwPaSqwd8mqah94elVE0OsU8w=
-X-Google-Smtp-Source: AGHT+IFi3hjMCBbMTtRxhlllfe8R3Fkj+JS8g2H80ShThs3gsytJR5CfKh/9xqbPBG0TvlGWGBjr0g==
-X-Received: by 2002:a5d:6542:0:b0:343:d23a:c977 with SMTP id z2-20020a5d6542000000b00343d23ac977mr1948319wrv.1.1712833631552;
-        Thu, 11 Apr 2024 04:07:11 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id q4-20020adff504000000b0034635bd6ba5sm1506039wro.92.2024.04.11.04.07.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 04:07:11 -0700 (PDT)
-Message-ID: <98d12a5e-e291-40f9-8334-3b5f53ed79a8@linaro.org>
-Date: Thu, 11 Apr 2024 13:07:09 +0200
+	s=arc-20240116; t=1712835329; c=relaxed/simple;
+	bh=2QoydNUa8ohr5BSqBTKFBG9DaUQmDb6Pl/IqqSheoek=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h1bDt3/TxnUvF+UaX7AjztPI0izG2tTxSA3q27I86F8RN3AINW/w68XztNjjdW/kDuCsy+D1r2j+6skgtnGTD4IYbXN8XvRolxm1PwVXAibTZG4w4Jk9kKx1TlgHTQVEqYhfN6fUu97e3truCNJjDQZ106sm3dsvdrHPd98RMds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VFcyt3VLqz6JB2Q;
+	Thu, 11 Apr 2024 19:33:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 09DC51400E7;
+	Thu, 11 Apr 2024 19:35:25 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 11 Apr
+ 2024 12:35:24 +0100
+Date: Thu, 11 Apr 2024 12:35:23 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-riscv@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, <acpica-devel@lists.linuxfoundation.org>,
+	<linux-csky@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-ia64@vger.kernel.org>, <linux-parisc@vger.kernel.org>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	<jianyong.wu@arm.com>, <justin.he@arm.com>, James Morse
+	<james.morse@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Luis
+	<miguel.luis@oracle.com>
+Subject: Re: [PATCH RFC v4 12/15] arm64: psci: Ignore DENIED CPUs
+Message-ID: <20240411123523.0000487a@huawei.com>
+In-Reply-To: <E1rVDnK-0027ZN-40@rmk-PC.armlinux.org.uk>
+References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk>
+	<E1rVDnK-0027ZN-40@rmk-PC.armlinux.org.uk>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: Add Loongson PWM controller
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
- <chenhuacai@loongson.cn>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Juxin Gao <gaojuxin@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-References: <cover.1712732719.git.zhoubinbin@loongson.cn>
- <38c234d548b4b9c334cda6e7664a803896b31f6f.1712732719.git.zhoubinbin@loongson.cn>
- <c1399191-6c6d-4eb4-b05b-f87a9f2b4152@linaro.org>
- <CAMpQs4JiLGJ-nBDmj1pe0SCqKeCnz5DrybJAKE8_6up293YNpw@mail.gmail.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAMpQs4JiLGJ-nBDmj1pe0SCqKeCnz5DrybJAKE8_6up293YNpw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 11/04/2024 13:01, Binbin Zhou wrote:
-> On Thu, Apr 11, 2024 at 4:26 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 11/04/2024 11:16, Binbin Zhou wrote:
->>> Add Loongson PWM controller binding with DT schema format using
->>> json-schema.
->>>
->>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
->>
->>
->>> +properties:
->>> +  compatible:
->>> +    oneOf:
->>> +      - const: loongson,ls7a-pwm
->>> +      - items:
->>> +          - enum:
->>> +              - loongson,ls2k0500-pwm
->>> +              - loongson,ls2k1000-pwm
->>> +              - loongson,ls2k2000-pwm
->>> +          - const: loongson,ls7a-pwm
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  clocks:
->>> +    maxItems: 1
->>> +
->>> +  '#pwm-cells':
->>> +    description:
->>> +      The first cell must have a value of 0, which specifies the PWM output signal;
->>
->> If you have always the same value in PWM phandle, why encoding it in the
->> phandle in the first place? What's the benefit of passing 0?
+On Wed, 31 Jan 2024 16:50:38 +0000
+Russell King (Oracle) <rmk+kernel@armlinux.org.uk> wrote:
+
+> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > 
-> Hi Krzysztof:
+> When a CPU is marked as disabled, but online capable in the MADT, PSCI
+> applies some firmware policy to control when it can be brought online.
+> PSCI returns DENIED to a CPU_ON request if this is not currently
+> permitted. The OS can learn the current policy from the _STA enabled bit.
 > 
-> My thoughts are:
-> First of all, our pwm has only one output signal, so it can only be 0.
-> Also, as you know from the pwm xlate function, the first cell is the
-> pwm index, so I fixed it to be 0 here.
+> Handle the PSCI DENIED return code gracefully instead of printing an
+> error.
 > 
-> The xlate function:
-> https://elixir.bootlin.com/linux/v6.8/source/drivers/pwm/core.c#L106
+> See https://developer.arm.com/documentation/den0022/f/?lang=en page 58.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> [ morse: Rewrote commit message ]
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
 
-You refer for xlate for PWM with three cells. You do not have three
-cells, as you have only on signal, so why insisting on using other
-xlate? Do you do the same for clocks? Or resets?
+This change to return failure from __cpu_up in non error cases exposes
+an possible issue with cpu_up() in kernel/cpu.c in that it brings the numa node
+before we try (and fail) to bring up CPUs that may be denied.
 
-I don't think you use appropriate argument in this discussion. We talk
-about hardware and your argument "I don't want to use my own xlate in
-the driver" is about driver.
+We could try offlining the numa node on error, or just register it later.
+
+Currently I'm testing this change which I think is harmless for cases that don't
+fail the cpu_up()
+
+For the cpu hotplug path note the node only comes online wiht the cpu online, not
+the earlier hotplug. Reasonable given there is nothing online in the node before
+that point.
+
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 537099bf5d02..a4730396ccea 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1742,10 +1742,6 @@ static int cpu_up(unsigned int cpu, enum cpuhp_state target)
+                return -EINVAL;
+        }
+
+-       err = try_online_node(cpu_to_node(cpu));
+-       if (err)
+-               return err;
+-
+        cpu_maps_update_begin();
+
+        if (cpu_hotplug_disabled) {
+@@ -1760,7 +1756,10 @@ static int cpu_up(unsigned int cpu, enum cpuhp_state target)
+        err = _cpu_up(cpu, 0, target);
+ out:
+        cpu_maps_update_done();
+-       return err;
++       if (err)
++               return err;
++
++       return try_online_node(cpu_to_node(cpu));
+ }
+
+There is a kicker in the remove path where currently check_cpu_on_node()
+checks for_each_present_cpu() whereas to work for us we need to use
+for_each_online_cpu() or the node is never removed.
+
+Now my current view is that we should only show
+nodes in /sys/bus/nodes/devices/ if there is a CPU online (assuming no other
+reasons the node should be online such as memory).
+That's easy enough to make work but all I'm really learning is that the semantics
+of what is an online form a node point of view is not consistent.
+
+Fixing this will create a minor change on x86 but does anyone really care
+about what happens in the offline path wrt to 'when' the node disappears?
+I think the corner case is.
+
+1. Add 2 CPUs (A, B) in a CPU only node.
+2. Online CPU A - this brings /sys/bus/devices/nodeX online
+3. Remove CPU A - no effect because the check for try_remove is on presence and CPU B is
+   still present.
+4. Online CPU B - no change.
+5. Offline CPU B - no change.
+4. Remove CPU B - /sys/bus/device/nodeX offline (disappears)
+
+To make it work on arm64 where we never make CPUs not present.
+
+1. Add 2 CPUs (A, B) in a CPU only node.
+2. Online CPU A - this brings /sys/bus/devices/nodeX online
+3. Remove CPU A - /sys/bus/devices/nodeX offline (disappears)
+4. Online CPU B - this brings /sys/bus/device/nodeX online
+5. Offline CPU B - no change (node updates only happen in hotplug code)
+6. Remove CPU B - /sys/bus/device/nodeX offline (disappears).
+
+Step 5 may seem weird but I think we can't mess with nodes there because
+userspace may well rely on them still being around for some reason
+(it's a much more common situation).
+
+My assumption is that step3 removing the node isn't going to hurt anyone?
+
+If no one shouts, i'll go ahead with rolling a v5 patch set where this is done.
 
 
-Best regards,
-Krzysztof
+Jonathan
+
+
+
+
+
+> Changes since RFC v2
+>  * Add specification reference
+>  * Use EPERM rather than EPROBE_DEFER
+> Changes since RFC v3:
+>  * Use EPERM everywhere
+>  * Drop unnecessary changes to drivers/firmware/psci/psci.c
+> ---
+>  arch/arm64/kernel/psci.c | 2 +-
+>  arch/arm64/kernel/smp.c  | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index 29a8e444db83..fabd732d0a2d 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -40,7 +40,7 @@ static int cpu_psci_cpu_boot(unsigned int cpu)
+>  {
+>  	phys_addr_t pa_secondary_entry = __pa_symbol(secondary_entry);
+>  	int err = psci_ops.cpu_on(cpu_logical_map(cpu), pa_secondary_entry);
+> -	if (err)
+> +	if (err && err != -EPERM)
+>  		pr_err("failed to boot CPU%d (%d)\n", cpu, err);
+>  
+>  	return err;
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 4ced34f62dab..dc0e0b3ec2d4 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -132,7 +132,8 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+>  	/* Now bring the CPU into our world */
+>  	ret = boot_secondary(cpu, idle);
+>  	if (ret) {
+> -		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
+> +		if (ret != -EPERM)
+> +			pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
+>  		return ret;
+>  	}
+>  
 
