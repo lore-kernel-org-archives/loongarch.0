@@ -1,112 +1,109 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA985FBA6
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 01:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D425D60B95
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 01:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712797334; cv=none; b=UoRUB5owMlwksdiAi2aTuoV74tavKISSQAWHnSreH3WGuW+GZYLOf634EgmIdiU/aUP7FpzRwgmzIzvlVdFxTHgdmL1wD8lHPr8nnvQ+X9000jv6TKPgNTV/Ft+Nrqdkmmr9w22DnHQB58PUvbm4SbsYXw89qHuPK/0qYuSE25s=
+	t=1712797520; cv=none; b=hnile6os5DQ/athhVWee9XxTnDw3TiNNDs3DAdzQC9NeqEl2zEke43dipI0UPWxcFzN97EoKqVx1Qx2Efzewq3UYrtnIoDZD7AwTTgcqBdDajicPKdagOdBZtzrifnRrtvqZvbdl0tyQhH2PDqPkwWdYo/XAghXiz2AoENANUdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712797334; c=relaxed/simple;
-	bh=kLD5kpB2LP2j5uUBOjlchyyyLOgJsQ4KSunDLcwJfvc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S44Kh4lBmnEpDThWMieu6GKXmox5EufNjab1jZ/Eqg/H9IGjEeotlfdEC3hXzHdl2BQ4O28DVbvNAKLKGNu2m9+coB54zwtPp4Ec7EryQk4P2hBpY1Sg+6YNTo3g6B/7gbmhO0lasLHFlI3js2qBPwCkrBR2N2Qf/yrueo19Uos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pMvnJwZs; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pMvnJwZs"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a4df5d83c7so2617409a91.0
-        for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 18:02:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712797332; x=1713402132; darn=lists.linux.dev;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kLD5kpB2LP2j5uUBOjlchyyyLOgJsQ4KSunDLcwJfvc=;
-        b=pMvnJwZsIXsFxMNPeJerFvXd/UTi526JRRFk+k1rGbflf/AYgobLXUMtc27YpyKjrN
-         ZaVpKn6ebTUBc6Lz38KFqdVabba63OprzWEu45J0wjx+KKY0h9KfKtWMHCPmU+/C7R3W
-         Dh78W0dGfKCEAat8knO/+9UoYhZwQr9bFsNo0SksSNnbq6tm6ck3wTP5Yw7JAoqHiQBg
-         n9Ygm9dCBIY/x0QOaUArApWx3uLa6K7fjnhAI4/vVYdXXucUEf5svI1lP8hJyhQDMaHk
-         lSQxI9QhcPxge3LgLbg2NrXkcDKgQ2kCRFhI3ZtzvPlkYi7Z0N6LykSXTguHqQKOKSyi
-         sqZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712797332; x=1713402132;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kLD5kpB2LP2j5uUBOjlchyyyLOgJsQ4KSunDLcwJfvc=;
-        b=hdHPvYRKfBb/U/8TOBOVu+5UPeSVmy4mN5vXXYfHqGppLZ9M+JldSD+OZkuAtCVUuI
-         lykhEkhHU5sNkdGgf5yympwm0RQ8fy8wo3iIhcPcJTg1uE7+f28MOR845rZ3KZqmgcUQ
-         yMOErHA+Wlc+b0RAzWMmV2qA9QtdXJnjsEUJQy6P6bhbBn60hXZomRJvHCHtx8jNNRZm
-         krr551/u00898tlYc2Z+Sj168dLoquYoAmMRNg8Al47G2mkdnvJq1UU1u1xHZOiK5Gm6
-         LEjW3YEdGORaKAaUP4hEmi0RgayAAEuiv13gsfmYFr3H5u2AN1TUz+1a1QvAPj13u78I
-         lnRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTetUvSAArUg2FY3ufFpG/PntA0W0igmcbbcQbPkiGDPyAHwNoqpV5ZW2IAakHaaQhnT+ZcEuzKr/ke63rNyknaEebvQ6f33cJ
-X-Gm-Message-State: AOJu0YxUY6Kp+GDuWE8sxFbOq3tBSECinbrW+Ywno0F3SYpKb2kgVSy3
-	OMFDHFMe8FtSN0JX8ECJYW31CAu4TCNz8g1eV+F49gYcsuk5MRLwKX05EtYJmcQ=
-X-Google-Smtp-Source: AGHT+IFCQFsX0y012c0RYVyy1pzruF/1YvRQvQO3mIZBA6xLw4Uhegn+z6nHl9NsGJg7fqoOGUPO2w==
-X-Received: by 2002:a17:90b:3643:b0:2a5:608e:1012 with SMTP id nh3-20020a17090b364300b002a5608e1012mr4531315pjb.21.1712797332116;
-        Wed, 10 Apr 2024 18:02:12 -0700 (PDT)
-Received: from localhost ([2804:14d:7e39:8470:fcac:9b42:fe81:c62f])
-        by smtp.gmail.com with ESMTPSA id q4-20020a17090a68c400b002a22c8e99afsm248176pjj.12.2024.04.10.18.02.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 18:02:11 -0700 (PDT)
-From: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-  linux-arm-kernel@lists.infradead.org,  x86@kernel.org,
-  linux-kernel@vger.kernel.org,  linux-arch@vger.kernel.org,
-  linuxppc-dev@lists.ozlabs.org,  linux-riscv@lists.infradead.org,
-  Christoph Hellwig <hch@lst.de>,  loongarch@lists.linux.dev,
-  amd-gfx@lists.freedesktop.org,  Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
-In-Reply-To: <75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com> (Samuel
-	Holland's message of "Wed, 10 Apr 2024 17:47:27 -0500")
-References: <20240329072441.591471-1-samuel.holland@sifive.com>
-	<20240329072441.591471-14-samuel.holland@sifive.com>
-	<87wmp4oo3y.fsf@linaro.org>
-	<75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com>
-User-Agent: mu4e 1.12.2; emacs 29.3
-Date: Wed, 10 Apr 2024 22:02:09 -0300
-Message-ID: <87wmp4ogoe.fsf@linaro.org>
+	s=arc-20240116; t=1712797520; c=relaxed/simple;
+	bh=uLjUWodJ/mW4SI5I2DSTZyWJ+aNR+7qDAvJxBsFdLtQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bNmasDbJ5WoNaDX3YRWIQUaWTv6aIVpOOd150a0ksbJspqB50GjzZI/Q3e0pY5CgU+1u9CLQDycdUNEOsAhyoTcXpfKFivZSEWNSzejD5G4KOT0jMXI1952IPc99TfUQBMLJBqnocNl/WGGvKEi9HkTEf500iSUoGQjJ7PS3c+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxafBMNxdm85AlAA--.21021S3;
+	Thu, 11 Apr 2024 09:05:16 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhhFHNxdmnrx3AA--.22869S5;
+	Thu, 11 Apr 2024 09:05:15 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v3 3/4] LoongArch: Save and restore PERCPU_BASE_KS for ACPI S3 state
+Date: Thu, 11 Apr 2024 09:05:09 +0800
+Message-ID: <20240411010510.22135-4-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240411010510.22135-1-yangtiezhu@loongson.cn>
+References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxhhFHNxdmnrx3AA--.22869S5
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WFyxAF4UCw13tFW8JF43Arc_yoW8CrWUpr
+	9FyFWDKw48tFn7CF90qa1UXr1UZ39agrWIqF9Fk3yj9rnrXry8Wr4rK3Z8XF10qwn5ua10
+	v3ySya4avF1UGwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU1xpnPUUUUU==
 
+Currently, per_cpu_offset(x) is defined as __per_cpu_offset[x])
+only under CONFIG_SMP in include/asm-generic/percpu.h, that is
+to say, the implementation of loongarch_common_resume() which
+calls per_cpu_offset(0) is not suitable for the case of non-SMP,
+so do not write per_cpu_offset(0) to PERCPU_BASE_KS when resume,
+just save the value of PERCPU_BASE_KS when suspend and restore
+it when resume to make it work well for both SMP and non-SMP.
 
-Hello Samuel,
+Tested with the command "rtcwake -d rtc1 -s 20 -m mem -v", dmesg
+shows that "PM: suspend entry (deep)" and "PM: suspend exit".
 
-Thank you for the quick reply!
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/power/suspend.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Samuel Holland <samuel.holland@sifive.com> writes:
-> On 2024-04-10 5:21 PM, Thiago Jung Bauermann wrote:
->>
->> Unfortunately this patch causes build failures on arm with allyesconfig
->> and allmodconfig. Tested with next-20240410.
+diff --git a/arch/loongarch/power/suspend.c b/arch/loongarch/power/suspend.c
+index 166d9e06a64b..7a97949ddade 100644
+--- a/arch/loongarch/power/suspend.c
++++ b/arch/loongarch/power/suspend.c
+@@ -16,6 +16,7 @@
+ #include <asm/tlbflush.h>
+ 
+ u64 loongarch_suspend_addr;
++static u64 saved_pcpu_base;
+ 
+ struct saved_registers {
+ 	u32 ecfg;
+@@ -36,6 +37,7 @@ void loongarch_common_suspend(void)
+ 	saved_regs.pwctl1 = csr_read32(LOONGARCH_CSR_PWCTL1);
+ 	saved_regs.ecfg = csr_read32(LOONGARCH_CSR_ECFG);
+ 	saved_regs.euen = csr_read32(LOONGARCH_CSR_EUEN);
++	saved_pcpu_base = csr_read64(PERCPU_BASE_KS);
+ 
+ 	loongarch_suspend_addr = loongson_sysconf.suspend_addr;
+ }
+@@ -44,7 +46,7 @@ void loongarch_common_resume(void)
+ {
+ 	sync_counter();
+ 	local_flush_tlb_all();
+-	csr_write64(per_cpu_offset(0), PERCPU_BASE_KS);
++	csr_write64(saved_pcpu_base, PERCPU_BASE_KS);
+ 	csr_write64(eentry, LOONGARCH_CSR_EENTRY);
+ 	csr_write64(eentry, LOONGARCH_CSR_MERRENTRY);
+ 	csr_write64(tlbrentry, LOONGARCH_CSR_TLBRENTRY);
+-- 
+2.42.0
 
-<snip>
-
-> In both cases, the issue is that the toolchain requires runtime support to
-> convert between `unsigned long long` and `double`, even when hardware FP is
-> enabled. There was some past discussion about GCC inlining some of these
-> conversions[1], but that did not get implemented.
-
-Thank you for the explanation and the bugzilla reference. I added a
-comment there mentioning that the problem came up again with this patch
-series.
-
-> The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
-> 32-bit arm until we can provide these runtime library functions.
-
-Does this mean that patch 2 in this series:
-
-[PATCH v4 02/15] ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
-
-will be dropped?
-
---
-Thiago
