@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41BD60877
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 01:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4860E60B95
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 01:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712797521; cv=none; b=Grw/6IY1XgMtuoYy6OQNC6Djtiv8rv/xH9r74NWyiWmkuGk/BT7PdOK/E9Gg6LE44XkCDcpv178D0GrkkwZYvT06p1mLmzdvo3syPs2U+qwd/5AWiLa4qBf7GG/oYuiMkVFU/0i/x24cHGOJcUvvlMMSpB2HefR03RVKtoqvS1w=
+	t=1712797522; cv=none; b=DsuTWHv8Bl+W+QCzG86uE76xOPbOD54RCam/A76gwYMatqvkDqE0vOZXFKstN9QVH4mYCsYUTkh5Vp28BsaHUL9D301kdIMHgqfpEfCdXfiW+wQuj5b5EGh3GRzeL27Im/u6ddUE4603O/twQ+2ATNgKdrMD8VEoERU2No4wwdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712797521; c=relaxed/simple;
-	bh=xo0Llg4p1LxmuJODEJTVpjH3Ymlve9IafDDhoC7HqB0=;
+	s=arc-20240116; t=1712797522; c=relaxed/simple;
+	bh=bUZXht1r8Me2Bybf8H3aka3zwa4D+6HaPcSWY3c8kLQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PUZO8eowuLQvxI/I5SIpkAZd3lVEexDSA8B8g+v00O5vpcULv28oLEqerndPEj+5/YWLnyqs8YGKCKYFNzW+6F7tw9ChRdyfreWD+x+i0ODvZK/MvmXjBHB3xlSgqkLrB7JEFkLjlvObrlYMKecrJQ0AgUnN3802SclFtTdO4Fc=
+	 MIME-Version; b=HGCaKhIIKdxgOYbQ8QYbOiSCORvww5992jClS6Q/NRwIhZ494Cc+PMTg1S08pOwzHVE6GbiFbdea+Nlm9lf6UCLCYs7V4bjCSDhLPAXy8YY4LgQhW7A37LIbYoDwpbm3umOpxUI9UrEST0sBduxiqF1vh+eaAsvL7TrgLYf9I98=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx2uhLNxdm7pAlAA--.959S3;
-	Thu, 11 Apr 2024 09:05:15 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Axx7lONxdm+5AlAA--.4868S3;
+	Thu, 11 Apr 2024 09:05:18 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhhFHNxdmnrx3AA--.22869S4;
-	Thu, 11 Apr 2024 09:05:15 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhhFHNxdmnrx3AA--.22869S6;
+	Thu, 11 Apr 2024 09:05:16 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -26,9 +26,9 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 2/4] LoongArch: Refactor get_acpi_id_for_cpu() related code
-Date: Thu, 11 Apr 2024 09:05:08 +0800
-Message-ID: <20240411010510.22135-3-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 4/4] LoongArch: Give chance to build under !CONFIG_SMP
+Date: Thu, 11 Apr 2024 09:05:10 +0800
+Message-ID: <20240411010510.22135-5-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240411010510.22135-1-yangtiezhu@loongson.cn>
 References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
@@ -39,81 +39,175 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxhhFHNxdmnrx3AA--.22869S4
+X-CM-TRANSID:AQAAf8AxhhFHNxdmnrx3AA--.22869S6
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFWkuFyxWrW3Kw1kZF4rCrX_yoW8tF15pF
-	nFyryDJrW8WFySkrWDJw4fWry5Jw1DCa4Sq3W2ka45AF47ur15Xr93tryqgFWqgw4rKw4S
-	vrn3JF1YkFWUXwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jr4UKFWDJw4kZF13Xw4DZFc_yoW7uF4UpF
+	WDAr4DJr4rWr1vyryqy3yfWr98Jr1kGay2qF17Cay8JFsrX34UXr1kKwnFqFyUKwsYgFWI
+	qFn3W3WaqF45AwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
 	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
 	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
 	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
 	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE
 	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
 	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU1xpnPUUUUU==
+	nUUI43ZEXa7IU8EeHDUUUUU==
 
-Currently, cpu_logical_map(cpu) is defined as __cpu_logical_map[cpu]
-in arch/loongarch/include/asm/smp.h and __cpu_logical_map[] is defined
-in arch/loongarch/kernel/smp.c, that is to say, cpu_logical_map(cpu) is
-vaild only under CONFIG_SMP, the implementation of get_acpi_id_for_cpu()
-which calls cpu_logical_map(cpu) is not suitable for the case of non-SMP,
-so refactor get_acpi_id_for_cpu() related code to make it work well for
-both SMP and non-SMP.
+In the current code, SMP is selected in Kconfig for LoongArch, the users
+can not unset it, this is reasonable for a multiprocessor machine. But as
+the help info of config SMP said, if you have a system with only one CPU,
+say N. On a uniprocessor machine, the kernel will run faster if you say N
+here.
+
+The Loongson-2K0500 is a single-core CPU for applications like industrial
+control, printing terminals, and BMC (Baseboard Management Controller),
+there are many development boards, products and solutions on the market,
+so it is better and necessary to give a chance to build under !CONFIG_SMP
+for a uniprocessor machine.
+
+First of all, do not select SMP for config LOONGARCH in Kconfig to make it
+possible to unset CONFIG_SMP. Then, do some changes to fix the warnings and
+errors if CONFIG_SMP is not set.
+
+(1) Define get_ipi_irq() only if CONFIG_SMP is set to fix the warning:
+arch/loongarch/kernel/irq.c:90:19: warning: 'get_ipi_irq' defined but not used [-Wunused-function]
+
+(2) Add "#ifdef CONFIG_SMP" in asm/smp.h to fix the warning:
+./arch/loongarch/include/asm/smp.h:49:9: warning: "raw_smp_processor_id" redefined
+   49 | #define raw_smp_processor_id raw_smp_processor_id
+      |         ^~~~~~~~~~~~~~~~~~~~
+./include/linux/smp.h:198:9: note: this is the location of the previous definition
+  198 | #define raw_smp_processor_id()                  0
+
+(3) Define machine_shutdown() as empty under !CONFIG_SMP to fix the error:
+arch/loongarch/kernel/machine_kexec.c: In function 'machine_shutdown':
+arch/loongarch/kernel/machine_kexec.c:233:25: error: implicit declaration of function 'cpu_device_up'; did you mean 'put_device'? [-Wimplicit-function-declaration]
+
+(4) Make config SCHED_SMT depends on SMP to fix many errors such as:
+kernel/sched/core.c: In function 'sched_core_find':
+kernel/sched/core.c:310:43: error: 'struct rq' has no member named 'cpu'
+
+(5) Define cpu_logical_map(cpu) as read_csr_cpuid() under !CONFIG_SMP
+in asm/smp.h and then include asm/smp.h in asm/acpi.h (because acpi.h
+is included in linux/irq.h indirectly) to fix many build errors under
+drivers/irqchip such as:
+drivers/irqchip/irq-loongson-eiointc.c: In function 'cpu_to_eio_node':
+drivers/irqchip/irq-loongson-eiointc.c:59:16: error: implicit declaration of function 'cpu_logical_map' [-Wimplicit-function-declaration]
+
+When running the UnixBench tests with "-c 1" single-streamed pass,
+the improvement in performance is about 9 percent with this patch.
+
+By the way, it is helpful to debug and analysis the kernel issue
+of multi-core system under !CONFIG_SMP.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/include/asm/acpi.h | 7 ++++++-
- arch/loongarch/kernel/acpi.c      | 9 ++++++++-
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ arch/loongarch/Kconfig                | 2 +-
+ arch/loongarch/include/asm/acpi.h     | 1 +
+ arch/loongarch/include/asm/smp.h      | 5 +++++
+ arch/loongarch/kernel/irq.c           | 2 ++
+ arch/loongarch/kernel/machine_kexec.c | 2 +-
+ 5 files changed, 10 insertions(+), 2 deletions(-)
 
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 64052ae2c2af..8946945daf34 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -174,7 +174,6 @@ config LOONGARCH
+ 	select PCI_QUIRKS
+ 	select PERF_USE_VMALLOC
+ 	select RTC_LIB
+-	select SMP
+ 	select SPARSE_IRQ
+ 	select SYSCTL_ARCH_UNALIGN_ALLOW
+ 	select SYSCTL_ARCH_UNALIGN_NO_WARN
+@@ -420,6 +419,7 @@ config EFI_STUB
+ 
+ config SCHED_SMT
+ 	bool "SMT scheduler support"
++	depends on SMP
+ 	default y
+ 	help
+ 	  Improves scheduler's performance when there are multiple
 diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
-index 49e29b29996f..a4ad3f75bd60 100644
+index a4ad3f75bd60..5174063ad08e 100644
 --- a/arch/loongarch/include/asm/acpi.h
 +++ b/arch/loongarch/include/asm/acpi.h
-@@ -39,9 +39,14 @@ extern struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
+@@ -8,6 +8,7 @@
+ #ifndef _ASM_LOONGARCH_ACPI_H
+ #define _ASM_LOONGARCH_ACPI_H
  
- extern int __init parse_acpi_topology(void);
++#include <asm/smp.h>
+ #include <asm/suspend.h>
  
-+static inline struct acpi_madt_core_pic *acpi_cpu_get_core_pic(int cpu)
-+{
-+	return &acpi_core_pic[cpu];
-+}
-+
- static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
- {
--	return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
-+	return acpi_cpu_get_core_pic(cpu)->processor_id;
+ #ifdef CONFIG_ACPI
+diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
+index f81e5f01d619..1ec11b57e60c 100644
+--- a/arch/loongarch/include/asm/smp.h
++++ b/arch/loongarch/include/asm/smp.h
+@@ -6,6 +6,7 @@
+ #ifndef __ASM_SMP_H
+ #define __ASM_SMP_H
+ 
++#ifdef CONFIG_SMP
+ #include <linux/atomic.h>
+ #include <linux/bitops.h>
+ #include <linux/linkage.h>
+@@ -101,4 +102,8 @@ static inline void __cpu_die(unsigned int cpu)
  }
- 
- #endif /* !CONFIG_ACPI */
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 5cf59c617126..ccfa90faf0ea 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -98,8 +98,15 @@ acpi_parse_processor(union acpi_subtable_headers *header, const unsigned long en
- 		return -EINVAL;
- 
- 	acpi_table_print_madt_entry(&header->common);
-+
-+	/*
-+	 * When CONFIG_SMP is disabled, mapping won't be created for all cpus.
-+	 * CPUs more than num_possible_cpus will be ignored.
-+	 */
-+	if (processor->core_id >= 0 && processor->core_id < num_possible_cpus())
-+		acpi_core_pic[processor->core_id] = *processor;
-+
- #ifdef CONFIG_SMP
--	acpi_core_pic[processor->core_id] = *processor;
- 	set_processor_mask(processor->core_id, processor->flags);
  #endif
  
++#else /* !CONFIG_SMP */
++#define cpu_logical_map(cpu)	read_csr_cpuid()
++#endif /* CONFIG_SMP */
++
+ #endif /* __ASM_SMP_H */
+diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
+index 883e5066ae44..e791fa275ec5 100644
+--- a/arch/loongarch/kernel/irq.c
++++ b/arch/loongarch/kernel/irq.c
+@@ -87,6 +87,7 @@ static void __init init_vec_parent_group(void)
+ 	acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
+ }
+ 
++#ifdef CONFIG_SMP
+ static int __init get_ipi_irq(void)
+ {
+ 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
+@@ -96,6 +97,7 @@ static int __init get_ipi_irq(void)
+ 
+ 	return -EINVAL;
+ }
++#endif
+ 
+ void __init init_IRQ(void)
+ {
+diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+index 2dcb9e003657..8ae641dc53bb 100644
+--- a/arch/loongarch/kernel/machine_kexec.c
++++ b/arch/loongarch/kernel/machine_kexec.c
+@@ -225,6 +225,7 @@ void crash_smp_send_stop(void)
+ 
+ void machine_shutdown(void)
+ {
++#ifdef CONFIG_SMP
+ 	int cpu;
+ 
+ 	/* All CPUs go to reboot_code_buffer */
+@@ -232,7 +233,6 @@ void machine_shutdown(void)
+ 		if (!cpu_online(cpu))
+ 			cpu_device_up(get_cpu_device(cpu));
+ 
+-#ifdef CONFIG_SMP
+ 	smp_call_function(kexec_shutdown_secondary, NULL, 0);
+ #endif
+ }
 -- 
 2.42.0
 
