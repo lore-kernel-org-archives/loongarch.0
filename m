@@ -1,120 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7FA1C0DE7
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 04:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C7E13C9DD
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 06:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712809896; cv=none; b=QzxBDwXbyFxdj0i9nR3DqBnaldpE8BBH13KicgQMU8x/fvvg6I9HU2moYdjbJJ6r7KTDwnmQTJROUCbDrUcM2FK5GoENNnk/Om+pOtmAYpzM8OqQ3c17qqmjvd9jNWJmrvi4nSxtuIpZqWfXk2dwQgkl2A90MVpFCWJNZQI0b3A=
+	t=1712815628; cv=none; b=LMNJdbBg24/y0qN7Jx37qBYDDi2q8SeK7gfm9yb8bXLko4P4lBqixkyAiOdSe/LCunuQaFpYXTj8V5oNpzgNZ9HgxWLV1jlwzsr1V6f2C5K8j/SUk9Qc9JDha+KsRRaFIVfbqzAGpnX0cBhQxZa0aN+ML1mwuPoI24SOd+0bmLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712809896; c=relaxed/simple;
-	bh=vrTyJSsz66VhcSci1RRtIF3jsVvFSQOsHe+hs0NSE9s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vEilN4ALaYC3+eUv1VKkda8yPB2M1nsqkA4zQ2PuSGp5U/WZHcZNPggIPVdu5MR2+ME9tRh5XDhd3Y9ifQLwuQPuILgIHwL/b/ydGztdTWXQbmAOASIdUFCBGv4MDFQWeAQmB7AQvSRpZO6wSjm3CbMSrcyaX2izT/6mCkknCjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHMFCn8q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712815628; c=relaxed/simple;
+	bh=F4MaVQ7pKoe7lUsUYa8MyhWTCFlXuCihjUDokKL4acc=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=G3K6WMbYQlUqy5OZK4e/M22LTLCoxqex2y/rcnEUH9YcgMC96qLReAjGFFEmhNz/2SdWRkxvsga/0mFuh/+qTpa0ARQnfPCAQu4WH6vPNJhE293hylS1xvZPgRO5YwKGr0NUCOOspAbXNbiRhclpU/Ns+NqRXIG+7bh+1QarQ5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Hksxhob8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=p/CmgsMN; arc=none smtp.client-ip=64.147.123.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHMFCn8q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB02C433F1
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 04:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712809896;
-	bh=vrTyJSsz66VhcSci1RRtIF3jsVvFSQOsHe+hs0NSE9s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uHMFCn8qPHjNAa0TdZJhUUMsr2B7NCGbIh1WKFYUvvBV6hv/AAOqUiiYeFuEIdLT3
-	 Lwqq14DMOxLWNR1nH6CZTQNXD6385U+ZUdN7lAi/wZsiEGFH37KcU86wjhDu5rVl76
-	 gvKlM+L4Qh2tIqjJsUhSnM8vmBy3ShMjeC5VPzqIPQDmuDjgKFzGXNlYybPI7GhO9N
-	 MidqLzXwPFxGqGAhMCNirM5+cYlnRYaTUrKZUdT4y8woXqTQa8LkKN+6dGNNGrSusE
-	 QM58RXBiJysogbUx4pPCn/LX5WjAFJMYqjwf4B6OwbHHkYpgc/y2ta7RWLkpS9zMzR
-	 5ELXpWXTpO0bA==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a51ddc783e3so480849266b.0
-        for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 21:31:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVakLEYP6rE8HSDV0OwDUZHlF3sMa+Aj9un56vBbJzhFvCN3LB2DaplokgZAp37kZ9QC0CiDSm2d3z2f1PFXh5qvnbM9jT9LgA
-X-Gm-Message-State: AOJu0YymGBMuRy3afrHObYIKSeQ4R6GIrvGKmfoM2pG4vCgqO7iNDaHv
-	+gLwa6fJig2Y6BkmlZz4byPItzGrrJcG9UChqV5o/dIYi9VBelztfvdxzbKWXp88+DCNOs/+NcQ
-	NCuZBWLZfyeuaGpBKnI1Sd5Cl0gs=
-X-Google-Smtp-Source: AGHT+IGL+/3vzAYK4K0QiuFLsO1aXZQYmTioRDYy4LKcuDF0qFutdNCevBoKbn4z3I0uejXah3+/f+nNYqIVBin3FsE=
-X-Received: by 2002:a17:906:c346:b0:a51:bc68:d61e with SMTP id
- ci6-20020a170906c34600b00a51bc68d61emr2614686ejb.30.1712809894523; Wed, 10
- Apr 2024 21:31:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Hksxhob8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p/CmgsMN"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id 57DF01C000D1;
+	Thu, 11 Apr 2024 02:07:05 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 11 Apr 2024 02:07:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1712815624; x=1712902024; bh=feFU2U3jUo
+	M8TSdlpJrca4UZF2kzeN8mwV/FEH7SomY=; b=Hksxhob8ya9CDW+zgnHMKadxcV
+	YoEn0Wg6as2ZmQYrcoeblFVIUDNsDNBvhmIe0+PH419P3I8C762MTfU8pYnIW0/O
+	sV3orsvvV+c8vOQgWR6AuFDPyrWhf3pa9sMRhTRs6NOljBSnBs73DN0fHrkk3ZXD
+	d8iFQPlWhr8R3Hi5DXNgJnhtwgkGxAa2wjwNz6yCyEtoSWexGqZF3kBbOf6VkxIf
+	KHYcCAO05dXHld+msEhEbl73x8F8uW9KL/lRuadcVqW9JXbXFKAE5zpqcEnYjGMb
+	AqBYA7ogKfdFByzam4bUh+PSHN5jN2uKzWTySlu5BEXQVnIITdzFem+swS5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1712815624; x=1712902024; bh=feFU2U3jUoM8TSdlpJrca4UZF2kz
+	eN8mwV/FEH7SomY=; b=p/CmgsMNIhZkFvuuGipuBi9xtI53wdCVYTh89ELOmtK6
+	Sqlgs1IfAn2G6/dLbLScmHJGcWlHdJCdQUKs5cGHytnzNwjBqUwy1T7bFzm7MIAS
+	Ip6Y0Dn4dksNNwGO8AoqrTQB7QfOvmUINZg3B/pntcYzuDENMRfqEHKaFLV42FFj
+	8uF9SEGI2dDZqI6aL3HBcr07LcLTmWyLggGaEZxVwbY3RSgLuCFhIk5sU988jxoH
+	p5k27Z5HG9rhfExte9SnokO0oVtikR5zJS4ND5I5NSMHKu5WaROfpD3cbr/k+DGF
+	T5R4FU2uA/EMs9SemDo1Y4uV38x78elSq8wn1QwK5A==
+X-ME-Sender: <xms:B34XZpP6WngeL3EnSz8dClCizh8DVdGuwUvBUUBiOARml-Huux7aDQ>
+    <xme:B34XZr_eVr2oeYyTjnkHflLaNRU_KIfVa310nxcbwU0-jNGDR9tliakkviQFN9_qt
+    9Tmbequ6nDn6JzAbDM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehjedguddtfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:B34XZoTJkJvmR8TF4eE2EWju2ry5hIB5TJEPy0SlFPqvifnCRW11nQ>
+    <xmx:B34XZlvRRdRX7K_jI9nWH9GxdYgY_sMSLxAbDzuCuZSOwvuD4KNeVg>
+    <xmx:B34XZheq-UG7GBVXdJyZCwCDkfgcorjY2U_nsJef5L9GXLVZHIephA>
+    <xmx:B34XZh2yOKYhLUc1QtapjserGZNYMYQ6ioaGEs8zTpD9B9w1gYBHmA>
+    <xmx:CH4XZpQqGJux8MMYqWnYy31HZCN_tT5FtRDozZDMiEb0kxrXHisMoK8p>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 766FFB60093; Thu, 11 Apr 2024 02:07:03 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1712731524.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1712731524.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 11 Apr 2024 12:31:20 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5QJVrTjDEyNFRw5p5x0f7ONYWYyL_4D91aHXSMrNd9nw@mail.gmail.com>
-Message-ID: <CAAhV-H5QJVrTjDEyNFRw5p5x0f7ONYWYyL_4D91aHXSMrNd9nw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Add Loongson-2k0500 and Loongson-2k2000 clock support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, loongson-kernel@lists.loongnix.cn, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <b752273b-0e94-4325-9cf8-6f16a204818b@app.fastmail.com>
+In-Reply-To: 
+ <CAAhV-H6bHudfUVE4SWY88mxmLhFok9DS8UyODSZEdUJ816V8Rg@mail.gmail.com>
+References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
+ <CAAhV-H6bHudfUVE4SWY88mxmLhFok9DS8UyODSZEdUJ816V8Rg@mail.gmail.com>
+Date: Thu, 11 Apr 2024 08:06:43 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Huacai Chen" <chenhuacai@kernel.org>, "Marc Zyngier" <maz@kernel.org>,
+ "Tiezhu Yang" <yangtiezhu@loongson.cn>
+Cc: "Thomas Gleixner" <tglx@linutronix.de>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 0/4] Give chance to build under !CONFIG_SMP for LoongArch
+Content-Type: text/plain
 
-For the whole series,
+On Thu, Apr 11, 2024, at 06:26, Huacai Chen wrote:
+>
+> I remember that you both suggested not introducing NOSMP support for a
+> modern architecture which brings additional complexity. I wonder if
+> you still have the same attitude now. I will merge this series only if
+> you think it is worthy to introduce NOSMP now.
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+It's an interesting question, as we have recently discussed two
+opposite ideas and may end up doing both (or possible neither)
+in the future:
 
-On Thu, Apr 11, 2024 at 10:58=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
-n> wrote:
->
-> Hi all:
->
-> As we know, the Loongson-2K family of SoCs (ls2k0500/ls2k1000/ls2k2000)
-> have a similar clock structure, and I support them to be configured with
-> different parameters (e.g., register offsets, etc.).
->
-> To make it easier to add support for different SoCs, I refactored the
-> original driver to make the whole driver as understandable as possible.
->
-> Briefly, I have divided all clocks into three categories according to
-> their properties and their parent clocks: Independent PLLs, clocks based
-> on frequency scales, and clock dividers.
->
-> Thanks.
->
-> ----
-> V3:
-> - Remove the dts-related patches and update dts at once after all relevan=
-t
->   drivers are complete.
-> patch(1/6):
->  - Drop unsuitable comments.
->
-> Link to V2:
-> https://lore.kernel.org/all/cover.1711504700.git.zhoubinbin@loongson.cn/
->
-> V2:
-> patch(1/8):
->  - Drop LOONGSON2_CLK_END, for it is not a binding.
-> patch(1/8)(3/8)(5/8):
->  - Add Acked-by tag from Conor, Thanks.
->
-> Link to V1:
-> https://lore.kernel.org/all/cover.1710926402.git.zhoubinbin@loongson.cn/
->
-> Binbin Zhou (6):
->   dt-bindings: clock: Add Loongson-2K expand clock index
->   clk: clk-loongson2: Refactor driver for adding new platforms
->   dt-bindings: clock: loongson2: Add Loongson-2K0500 compatible
->   clk: clk-loongson2: Add Loongson-2K0500 clock support
->   dt-bindings: clock: loongson2: Add Loongson-2K2000 compatible
->   clk: clk-loongson2: Add Loongson-2K2000 clock support
->
->  .../bindings/clock/loongson,ls2k-clk.yaml     |   4 +-
->  drivers/clk/clk-loongson2.c                   | 549 ++++++++++--------
->  include/dt-bindings/clock/loongson,ls2k-clk.h |  54 +-
->  3 files changed, 329 insertions(+), 278 deletions(-)
->
-> --
-> 2.43.0
->
+- On x86, there is no real reason to need non-SMP kernels as the
+  memory savings are fairly small, and it tends to break because
+  of lack of users testing it.
+
+- On arm64, we have never supported non-SMP kernels, but I have
+  looked at possibly adding this because there are still popular
+  ARM based system-in-package products with less than 128MB of
+  built-in RAM and only a single CPU. As these are moving from
+  32-bit to 64-bit cores, it becomes more interesting to build
+  a 64-bit UP kernel and save multiple megabytes.
+
+I think loongarch64 is in the same place as arm64 and riscv64
+(which does allow non-SMP builds) here, and there are good
+reasons to allow it on all of them now, even if we previously
+never had a need for it.
+
+That said, both the 9% observed performance improvements that
+Tiezhu Yang reported, and the memory savings that I saw are
+probably higher than they should be, so we may also want to
+investigate that further to see if we can improve the SMP
+kernel to better support UP runs.
+
+    Arnd
