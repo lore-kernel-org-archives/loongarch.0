@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E52145CBD
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 09:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9BCB143C62
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 09:16:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712827003; cv=none; b=BTO8uyYKnRN9Lag4ProAtOgkMD68Eyys8b3OvdQ9EwMWBU2eRF2F4HxZkzkiUz6tt2i9pngbre49r8KM8KNRB51+3jkeF7RzKm3uqC8Zfvw0Xxl6AmdCKtI1dySjgN1EAMAPciAfxP3ZDA+7wG+ckgPsInzRTxM8SgNvj2TY32I=
+	t=1712827004; cv=none; b=qGAms7+cfxDM4+Zli47mRFZWAclJ+HAmw+F01gSqoT30NCQVGOTbDC5cOmtYbn+fLMDJ3XWpY7NUe4ZAgQoMZ5CpUQ30OdEGLtPNy2tSOEuj6NRIy9S+ztoL0qoLSC7+M8Hh6D7ocu8RL90f+nx/WhRCHHMfESbHOAil/Gdp2wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712827003; c=relaxed/simple;
-	bh=T8By7LcptEkMf509OxayDs7PkpG73tGV1biNGLfJozM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HFm4Dzq1cjci/ex0EdEX6VbgQ03yMlJkNzyz1YBpT5nM8mGVWWzPW/tPUn4o/AMXDnsXh8/9zy1MPFLNnFlqVDCJ9U1hbF5iWjAg5ewtQ5zxRe0ZCwVVWYFtWh2fIAMXMA7Qq95wxBtk2XsnJ2iq7oBk+oeauwqpmcRfAUV+Z/0=
+	s=arc-20240116; t=1712827004; c=relaxed/simple;
+	bh=jbw8th2h2Mwk1HH9qV70EdNUquwbDBBMa0bWzqecrBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PK1YFY2srg9qv7Lj8doLnUwW3XnGVt92jX+L8bQuFqgWIXWbiHtqLz/GOaHBkkpSTSAa3WNCgtZHAref/6crPtbd2qw3OCMgMFCj35oF2zdXg7wXMjFN1BFC+IdecorGoTsRnVLLO4zbGYwZJynCLfQkWp9vOhzWl+g36ym0vnc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [112.20.109.80])
-	by gateway (Coremail) with SMTP id _____8Bxyuh0qhdmRsQlAA--.1515S3;
-	Thu, 11 Apr 2024 17:16:36 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxK+l3qhdmTsQlAA--.2636S3;
+	Thu, 11 Apr 2024 17:16:39 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.109.80])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx6xJyqhdmmvV3AA--.37435S2;
-	Thu, 11 Apr 2024 17:16:35 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx6xJyqhdmmvV3AA--.37435S3;
+	Thu, 11 Apr 2024 17:16:37 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -32,10 +33,12 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v2 0/2] pwm: Introduce pwm driver for the Loongson family chips
-Date: Thu, 11 Apr 2024 17:16:21 +0800
-Message-ID: <cover.1712732719.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v2 1/2] dt-bindings: pwm: Add Loongson PWM controller
+Date: Thu, 11 Apr 2024 17:16:22 +0800
+Message-ID: <38c234d548b4b9c334cda6e7664a803896b31f6f.1712732719.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1712732719.git.zhoubinbin@loongson.cn>
+References: <cover.1712732719.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,63 +46,124 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx6xJyqhdmmvV3AA--.37435S2
+X-CM-TRANSID:AQAAf8Cx6xJyqhdmmvV3AA--.37435S3
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWrZw1Dtr45WrWrCw15tFykCrX_yoW8Jr1rpF
-	sxC34akr18tF47Arn3X3W8Cr1fZa4xJFsrKan3t34UXF98ua4YqrW3Kw45ArZxCrnrXFy2
-	vrySkr4UGa4UCrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxGw1UZF4rJFW7uw4xZFy7Arc_yoW5WrW5pF
+	sxC3s2kr10qF17u398Wa48Cw1fZ3s5A3W2gFW7Aw1DKF98J3WYqw13KF1UZ3y3Cr1UXFWj
+	vF9a9r4UKa48CrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
 	67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
 	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
 	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
+	IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
 	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07URE_tUUUUU=
+	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UWKZAUUUUU=
 
-Hi all:
+Add Loongson PWM controller binding with DT schema format using
+json-schema.
 
-This patchset introduce a generic PWM framework driver for Loongson
-family
-
-Each PWM has one pulse width output signal and one pulse input signal to
-be measured. It can be found on Loongson-2K series cpus and Loongson
-LS7A bridge chips.
-
-Thanks.
-
--------
-v2:
-- Remove the dts-related patches and update dts at once after all
-relevant drivers are complete.
-patch (1/2):
- - The dt-binding filename should match compatible, rename it as
-   loongson,ls7a-pwm.yaml;
- - Update binding description;
- - Add description for each pwm cell;
- - Drop '#pwm-cells' from required, for pwm.yaml makes it required already.
-
-Link to v1:
-https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongson.cn/
-
-Binbin Zhou (2):
-  dt-bindings: pwm: Add Loongson PWM controller
-  pwm: Add Loongson PWM controller support
-
- .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
- MAINTAINERS                                   |   7 +
- drivers/pwm/Kconfig                           |  10 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-loongson.c                    | 300 ++++++++++++++++++
- 5 files changed, 384 insertions(+)
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ .../bindings/pwm/loongson,ls7a-pwm.yaml       | 66 +++++++++++++++++++
+ MAINTAINERS                                   |  6 ++
+ 2 files changed, 72 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
- create mode 100644 drivers/pwm/pwm-loongson.c
 
+diff --git a/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml b/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+new file mode 100644
+index 000000000000..d7b6a34a8e09
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/loongson,ls7a-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson PWM Controller
++
++maintainers:
++  - Binbin Zhou <zhoubinbin@loongson.cn>
++
++description:
++  The Loongson PWM has one pulse width output signal and one pulse input
++  signal to be measured.
++  It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips.
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    oneOf:
++      - const: loongson,ls7a-pwm
++      - items:
++          - enum:
++              - loongson,ls2k0500-pwm
++              - loongson,ls2k1000-pwm
++              - loongson,ls2k2000-pwm
++          - const: loongson,ls7a-pwm
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  '#pwm-cells':
++    description:
++      The first cell must have a value of 0, which specifies the PWM output signal;
++      The second cell is the period in nanoseconds;
++      The third cell flag supported by this binding is PWM_POLARITY_INVERTED.
++    const: 3
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/clock/loongson,ls2k-clk.h>
++    pwm@1fe22000 {
++        compatible = "loongson,ls2k1000-pwm", "loongson,ls7a-pwm";
++        reg = <0x1fe22000 0x10>;
++        interrupt-parent = <&liointc0>;
++        interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clk LOONGSON2_APB_CLK>;
++        #pwm-cells = <3>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aea47e04c3a5..cd0d4e2d02ff 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12757,6 +12757,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+ F:	drivers/i2c/busses/i2c-ls2x.c
+ 
++LOONGSON PWM DRIVER
++M:	Binbin Zhou <zhoubinbin@loongson.cn>
++L:	linux-pwm@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
++
+ LOONGSON-2 SOC SERIES CLOCK DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-clk@vger.kernel.org
 -- 
 2.43.0
 
