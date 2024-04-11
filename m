@@ -1,213 +1,117 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4860E60B95
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 01:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B4A604DD
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 01:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712797522; cv=none; b=DsuTWHv8Bl+W+QCzG86uE76xOPbOD54RCam/A76gwYMatqvkDqE0vOZXFKstN9QVH4mYCsYUTkh5Vp28BsaHUL9D301kdIMHgqfpEfCdXfiW+wQuj5b5EGh3GRzeL27Im/u6ddUE4603O/twQ+2ATNgKdrMD8VEoERU2No4wwdM=
+	t=1712797869; cv=none; b=k0vnw+GPW763K7ivKvANG+ukDgua2ZROMHCy2OaDRs2JCJ8GiRT0ybZSOVlQM1CzR8E2tetUWFnEZLmERwbGpUtBERGSKR/pQv8IS+RZhIjpAU/wV5N/j/kurLDx0Pb40AY0BkoLcSBV40tr+PDE+3lqRGJ1zjTohlkcOc4HGvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712797522; c=relaxed/simple;
-	bh=bUZXht1r8Me2Bybf8H3aka3zwa4D+6HaPcSWY3c8kLQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HGCaKhIIKdxgOYbQ8QYbOiSCORvww5992jClS6Q/NRwIhZ494Cc+PMTg1S08pOwzHVE6GbiFbdea+Nlm9lf6UCLCYs7V4bjCSDhLPAXy8YY4LgQhW7A37LIbYoDwpbm3umOpxUI9UrEST0sBduxiqF1vh+eaAsvL7TrgLYf9I98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axx7lONxdm+5AlAA--.4868S3;
-	Thu, 11 Apr 2024 09:05:18 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhhFHNxdmnrx3AA--.22869S6;
-	Thu, 11 Apr 2024 09:05:16 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Marc Zyngier <maz@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 4/4] LoongArch: Give chance to build under !CONFIG_SMP
-Date: Thu, 11 Apr 2024 09:05:10 +0800
-Message-ID: <20240411010510.22135-5-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240411010510.22135-1-yangtiezhu@loongson.cn>
-References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1712797869; c=relaxed/simple;
+	bh=9YyH9BgEo3s56+nSbcPZpFNHGs99BC+E0EcZLKOsSQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fGouS+G1D9waqcAqQ3q/YTCm9oK8wOgItxnuPhL1XeFXwZlzdDOwIsznEukHqvj5BJBAWnVzfzY2Nt1aMX6/uv4wkWnAxBHJdt24K8gfpC4dfmt+wRLbi+HxAzQnRKxLSGEvSxsRL2Lsk/i5DoNQrx9NoTQUiSfNSAThmvPW6/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=AxeOZmzO; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="AxeOZmzO"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5aa27dba8a1so2546663eaf.0
+        for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 18:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1712797866; x=1713402666; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K7z1/Srv4eZ2vooDSDvwwBej5oDKDz5itKY0SDj8VoQ=;
+        b=AxeOZmzOeiBzUg8svg270mxhH8c9jEeHK1QdGyghWgWBIpfdhpH+yoArqeYsct6TqD
+         6LzIvLAR3d0xYmqlOFc/TyqwTIMebmlXtM+CK2W/mHNnP+c4fnQ65BPabZqg9AYrEsdC
+         hAAS/xijw9CvPFNRlCa6S2/ntzmhNCoeCy+KPNY1ScIPSc4yvHXf38+yH15+hMimylXQ
+         haZVwE1VS8fHBGvSy4Gj5VXaO894cPErDz3nmUBOKHAF4H+iov+238oXXMiZtmIX+gz3
+         zVTafv9oOBufUs7PumrsqWzB+oxxD7JwzdI5WJS+NfxMs+pNs5PLAlrGg8kiILIZJp3m
+         kJAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712797866; x=1713402666;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K7z1/Srv4eZ2vooDSDvwwBej5oDKDz5itKY0SDj8VoQ=;
+        b=q9sYhyrLoIVDmqjzH65eraeeJVeFWB8z/gxiJdRjmg0ssOzKAvTv9U4dg67Jtv/SFB
+         U8xWR3F/AOJA7RrDFcVrJOX1hD7TENg5TYdEf/LpDEYeDSqSdyzvqfAkR/3qCnTJNVvG
+         iUwLg/Y/Rp3YwBRIibIo4reNm3ju4WYmXDfV0GDggmxUiVg4aNpTzbYISmoXLJxxY6q0
+         XPpJD3ZY0bKjq6G+h7TXd9RwJjR0Qs+AFZDvcScO9mW7j0B0exG+ui7G6Nv50owEgngV
+         AaLoG7p7HgPGtPro9TejhathxGMjOeXI1opRnht157xLDjUA0DqSnsl209GYyFJt0PPr
+         VJ3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUCvzdlCpXQzHK4Cc2BOro2dWkpWR+1h+MO+yOSGXEMLuPfMTiwNbtgzUnPAywQPwho6nTDTvlVL/m9DPyzTqAsuDN4l07AfqtC
+X-Gm-Message-State: AOJu0YxVODBUxoNuOHqH2I2DgvMF34mME3/+dMm9Xi1H1X/gzoEF57J3
+	jqko2TPH1R/l0TQ27ZYF091Qx21vMi6vqrS8gHycA8VlFVxUUwxPtMo/Vv0+s7U=
+X-Google-Smtp-Source: AGHT+IFvdAWGolMk2tEZ8bM2BAlC1TsYZtb/fNUYXyTQY+hWEfuiEC430lr0paNhGs3so4u/3MehIA==
+X-Received: by 2002:a4a:e9f3:0:b0:5aa:6a28:27ea with SMTP id w19-20020a4ae9f3000000b005aa6a2827eamr3725829ooc.6.1712797866523;
+        Wed, 10 Apr 2024 18:11:06 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.8.167])
+        by smtp.gmail.com with ESMTPSA id db1-20020a056820270100b005a4bc907f0asm113158oob.15.2024.04.10.18.11.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 18:11:06 -0700 (PDT)
+Message-ID: <4c8e63d6-ba33-47fe-8150-59eba8babf2d@sifive.com>
+Date: Wed, 10 Apr 2024 20:11:04 -0500
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxhhFHNxdmnrx3AA--.22869S6
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Jr4UKFWDJw4kZF13Xw4DZFc_yoW7uF4UpF
-	WDAr4DJr4rWr1vyryqy3yfWr98Jr1kGay2qF17Cay8JFsrX34UXr1kKwnFqFyUKwsYgFWI
-	qFn3W3WaqF45AwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
-	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU8EeHDUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+To: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>
+References: <20240329072441.591471-1-samuel.holland@sifive.com>
+ <20240329072441.591471-14-samuel.holland@sifive.com>
+ <87wmp4oo3y.fsf@linaro.org> <75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com>
+ <87wmp4ogoe.fsf@linaro.org>
+Content-Language: en-US
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <87wmp4ogoe.fsf@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In the current code, SMP is selected in Kconfig for LoongArch, the users
-can not unset it, this is reasonable for a multiprocessor machine. But as
-the help info of config SMP said, if you have a system with only one CPU,
-say N. On a uniprocessor machine, the kernel will run faster if you say N
-here.
+Hi Thiago,
 
-The Loongson-2K0500 is a single-core CPU for applications like industrial
-control, printing terminals, and BMC (Baseboard Management Controller),
-there are many development boards, products and solutions on the market,
-so it is better and necessary to give a chance to build under !CONFIG_SMP
-for a uniprocessor machine.
+On 2024-04-10 8:02 PM, Thiago Jung Bauermann wrote:
+> Samuel Holland <samuel.holland@sifive.com> writes:
+>> On 2024-04-10 5:21 PM, Thiago Jung Bauermann wrote:
+>>>
+>>> Unfortunately this patch causes build failures on arm with allyesconfig
+>>> and allmodconfig. Tested with next-20240410.
+> 
+> <snip>
+> 
+>> In both cases, the issue is that the toolchain requires runtime support to
+>> convert between `unsigned long long` and `double`, even when hardware FP is
+>> enabled. There was some past discussion about GCC inlining some of these
+>> conversions[1], but that did not get implemented.
+> 
+> Thank you for the explanation and the bugzilla reference. I added a
+> comment there mentioning that the problem came up again with this patch
+> series.
+> 
+>> The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
+>> 32-bit arm until we can provide these runtime library functions.
+> 
+> Does this mean that patch 2 in this series:
+> 
+> [PATCH v4 02/15] ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+> 
+> will be dropped?
 
-First of all, do not select SMP for config LOONGARCH in Kconfig to make it
-possible to unset CONFIG_SMP. Then, do some changes to fix the warnings and
-errors if CONFIG_SMP is not set.
+No, because later patches in the series (3, 6) depend on the definition of
+CC_FLAGS_FPU from that patch. I will need to send a fixup patch unless I can
+find a GPL-2 compatible implementation of the runtime library functions.
 
-(1) Define get_ipi_irq() only if CONFIG_SMP is set to fix the warning:
-arch/loongarch/kernel/irq.c:90:19: warning: 'get_ipi_irq' defined but not used [-Wunused-function]
-
-(2) Add "#ifdef CONFIG_SMP" in asm/smp.h to fix the warning:
-./arch/loongarch/include/asm/smp.h:49:9: warning: "raw_smp_processor_id" redefined
-   49 | #define raw_smp_processor_id raw_smp_processor_id
-      |         ^~~~~~~~~~~~~~~~~~~~
-./include/linux/smp.h:198:9: note: this is the location of the previous definition
-  198 | #define raw_smp_processor_id()                  0
-
-(3) Define machine_shutdown() as empty under !CONFIG_SMP to fix the error:
-arch/loongarch/kernel/machine_kexec.c: In function 'machine_shutdown':
-arch/loongarch/kernel/machine_kexec.c:233:25: error: implicit declaration of function 'cpu_device_up'; did you mean 'put_device'? [-Wimplicit-function-declaration]
-
-(4) Make config SCHED_SMT depends on SMP to fix many errors such as:
-kernel/sched/core.c: In function 'sched_core_find':
-kernel/sched/core.c:310:43: error: 'struct rq' has no member named 'cpu'
-
-(5) Define cpu_logical_map(cpu) as read_csr_cpuid() under !CONFIG_SMP
-in asm/smp.h and then include asm/smp.h in asm/acpi.h (because acpi.h
-is included in linux/irq.h indirectly) to fix many build errors under
-drivers/irqchip such as:
-drivers/irqchip/irq-loongson-eiointc.c: In function 'cpu_to_eio_node':
-drivers/irqchip/irq-loongson-eiointc.c:59:16: error: implicit declaration of function 'cpu_logical_map' [-Wimplicit-function-declaration]
-
-When running the UnixBench tests with "-c 1" single-streamed pass,
-the improvement in performance is about 9 percent with this patch.
-
-By the way, it is helpful to debug and analysis the kernel issue
-of multi-core system under !CONFIG_SMP.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/Kconfig                | 2 +-
- arch/loongarch/include/asm/acpi.h     | 1 +
- arch/loongarch/include/asm/smp.h      | 5 +++++
- arch/loongarch/kernel/irq.c           | 2 ++
- arch/loongarch/kernel/machine_kexec.c | 2 +-
- 5 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 64052ae2c2af..8946945daf34 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -174,7 +174,6 @@ config LOONGARCH
- 	select PCI_QUIRKS
- 	select PERF_USE_VMALLOC
- 	select RTC_LIB
--	select SMP
- 	select SPARSE_IRQ
- 	select SYSCTL_ARCH_UNALIGN_ALLOW
- 	select SYSCTL_ARCH_UNALIGN_NO_WARN
-@@ -420,6 +419,7 @@ config EFI_STUB
- 
- config SCHED_SMT
- 	bool "SMT scheduler support"
-+	depends on SMP
- 	default y
- 	help
- 	  Improves scheduler's performance when there are multiple
-diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
-index a4ad3f75bd60..5174063ad08e 100644
---- a/arch/loongarch/include/asm/acpi.h
-+++ b/arch/loongarch/include/asm/acpi.h
-@@ -8,6 +8,7 @@
- #ifndef _ASM_LOONGARCH_ACPI_H
- #define _ASM_LOONGARCH_ACPI_H
- 
-+#include <asm/smp.h>
- #include <asm/suspend.h>
- 
- #ifdef CONFIG_ACPI
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index f81e5f01d619..1ec11b57e60c 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -6,6 +6,7 @@
- #ifndef __ASM_SMP_H
- #define __ASM_SMP_H
- 
-+#ifdef CONFIG_SMP
- #include <linux/atomic.h>
- #include <linux/bitops.h>
- #include <linux/linkage.h>
-@@ -101,4 +102,8 @@ static inline void __cpu_die(unsigned int cpu)
- }
- #endif
- 
-+#else /* !CONFIG_SMP */
-+#define cpu_logical_map(cpu)	read_csr_cpuid()
-+#endif /* CONFIG_SMP */
-+
- #endif /* __ASM_SMP_H */
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index 883e5066ae44..e791fa275ec5 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -87,6 +87,7 @@ static void __init init_vec_parent_group(void)
- 	acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
- }
- 
-+#ifdef CONFIG_SMP
- static int __init get_ipi_irq(void)
- {
- 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
-@@ -96,6 +97,7 @@ static int __init get_ipi_irq(void)
- 
- 	return -EINVAL;
- }
-+#endif
- 
- void __init init_IRQ(void)
- {
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index 2dcb9e003657..8ae641dc53bb 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -225,6 +225,7 @@ void crash_smp_send_stop(void)
- 
- void machine_shutdown(void)
- {
-+#ifdef CONFIG_SMP
- 	int cpu;
- 
- 	/* All CPUs go to reboot_code_buffer */
-@@ -232,7 +233,6 @@ void machine_shutdown(void)
- 		if (!cpu_online(cpu))
- 			cpu_device_up(get_cpu_device(cpu));
- 
--#ifdef CONFIG_SMP
- 	smp_call_function(kexec_shutdown_secondary, NULL, 0);
- #endif
- }
--- 
-2.42.0
+Regards,
+Samuel
 
