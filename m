@@ -1,125 +1,147 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A3B60BBE
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 01:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1EE260DEA
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 02:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712798877; cv=none; b=obXY3bNmkA+8ecmSyUrfdY5WeHfiGAthi2e56xrViBkhJXZVSVh81zvhGfLQgkyRZFw90CMfu7v6SbW+byMB8uDYJmNerzOJ3NurH8Z/upfOasBhRFjup1dCz6zti6s9Ag7grmTcRpo+R9TIogv3Tw9f8oI8FSzUTFzq9I/+MsM=
+	t=1712804310; cv=none; b=EtCY25CO87Atpa8plK1x/3AgiY2kTOvZ18RemeDo8o+PPmGslVGNxq5HI9kTAKKRgvRT3y+7k/rxLZa3PdVorAJymn9hVdGiiJQvQzsrsjOsSWFcxT99IN8NckSzhtDE7E8D1FOhXqoU9CFWurrMk1Q+NF83sWRdFojtuvINBLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712798877; c=relaxed/simple;
-	bh=zY1vBuYzXUVAUPu7RYDaF9UtFORvIFjy44r4Y5Ige4g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kFnO2xfY1GlwErcPHH5bjjPMAc4V8r5oPhYxf76DQIwJgvBfsY73xHKHU1SEklCGuz8RGPwhPMn6BtnDxsxcJ7ZcNwUojJkflmZP+x0A2TkCTJq2nssFtPKSUl3fe9TK2ogJva/FMIxKMdV6oFXkkikYLJNEc8pkDBHXtbMuH5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mz0rZOLX; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mz0rZOLX"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-22ecc103220so3815085fac.2
-        for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 18:27:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712798875; x=1713403675; darn=lists.linux.dev;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zY1vBuYzXUVAUPu7RYDaF9UtFORvIFjy44r4Y5Ige4g=;
-        b=mz0rZOLXPBeaK5YWcMP51LJhPAe1FwsFd2CX0nqHuU+/77Mt3skcRGn4EpRqyeSXy5
-         iZoM+ZXWRK+xH7Hptj3YbjnC9CRARSxnh0ZSF2W7IJXiBbtMhlMyXrae6XA9zSl9eFh8
-         vhPiRbTh/fphhemFLvFjXy6IEWfrNNznYjUwmPIHcytyCGUE5mBs13qcEnAQu9QmZXni
-         C7cQi3e0BI0hZEQvsGN+OVEPaV8NoB20At21oFrrwiYy7Qmr7TmnwNctCyNczGoXvbLv
-         o7oyZkZnGl+ptCx1d0B6VLZ8aC7Ru4sxs5puO+AAumgkN14tRdTiP2IJGgBP7Drj7T0a
-         6NXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712798875; x=1713403675;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zY1vBuYzXUVAUPu7RYDaF9UtFORvIFjy44r4Y5Ige4g=;
-        b=kEg34fm8AlamlcoZ1E16GB+xlDxVPnjKoNt7rukC8BQGRS5RxO02cDihNNC6AYqK6T
-         u8fjoi1tJa+1KeITHVOnWQD55TgO5nTN01VsiULWoWhi1vrsx8/A5cwEQeIY3AR+j8lI
-         bWMRCcpoXy0EJ+TnCWbXFh1nj6JnV54tXcRVdU0coWaM+JqEHzxgwtpR819icO5hPayn
-         7Kc5rm2BfhPDBN6p9qIaYvKgGKfpDbVMU02OLm37fU7yIjMK53EDIz84kOc/5Z4nC7F4
-         A7SybPRm7Umxbemk8kaeUCSwRMWh1FkBVW3t1nbzO/q/gwTEze1DRHDoIwK8bcnjySuB
-         Vqjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBeI5bwJpDjuGsjcG8bHmOaJU6G0kEtxZS1HVM6hDRG0qvuqcvrVnDkhOGYF0G8gAfw8dAvXlZ14Vmcw3RnZgjD+Y4SEOdiCf/
-X-Gm-Message-State: AOJu0YzlbRoqYBo7pdnSJOdjrp55Cskynh/MEq8x6D+NcFMwf3oZOCH5
-	zOens/LLmHNk3//obVedkpYTvPYm3LYfQK4LaqSmMo4DjkgQ+u4/GU4eEwTxgQQ=
-X-Google-Smtp-Source: AGHT+IF8lPPFTalL1WPSfnBvduuYhf5K6F9EIeC9RLCCka0Vl/mHkW4wRauCXJubFXwb7faJCr3ffA==
-X-Received: by 2002:a05:6870:518:b0:22e:bcfd:deb0 with SMTP id j24-20020a056870051800b0022ebcfddeb0mr4667832oao.41.1712798874921;
-        Wed, 10 Apr 2024 18:27:54 -0700 (PDT)
-Received: from localhost ([2804:14d:7e39:8470:fcac:9b42:fe81:c62f])
-        by smtp.gmail.com with ESMTPSA id c1-20020aa78c01000000b006ed38291aebsm289791pfd.178.2024.04.10.18.27.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 18:27:54 -0700 (PDT)
-From: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-  linux-arm-kernel@lists.infradead.org,  x86@kernel.org,
-  linux-kernel@vger.kernel.org,  linux-arch@vger.kernel.org,
-  linuxppc-dev@lists.ozlabs.org,  linux-riscv@lists.infradead.org,
-  Christoph Hellwig <hch@lst.de>,  loongarch@lists.linux.dev,
-  amd-gfx@lists.freedesktop.org,  Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
-In-Reply-To: <4c8e63d6-ba33-47fe-8150-59eba8babf2d@sifive.com> (Samuel
-	Holland's message of "Wed, 10 Apr 2024 20:11:04 -0500")
-References: <20240329072441.591471-1-samuel.holland@sifive.com>
-	<20240329072441.591471-14-samuel.holland@sifive.com>
-	<87wmp4oo3y.fsf@linaro.org>
-	<75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com>
-	<87wmp4ogoe.fsf@linaro.org>
-	<4c8e63d6-ba33-47fe-8150-59eba8babf2d@sifive.com>
-User-Agent: mu4e 1.12.2; emacs 29.3
-Date: Wed, 10 Apr 2024 22:27:52 -0300
-Message-ID: <87le5kofhj.fsf@linaro.org>
+	s=arc-20240116; t=1712804310; c=relaxed/simple;
+	bh=KKPt3mnOeRFdM2h6wYgvIr/lSpNLERM7nn5k6LwUZnY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q/dCkIUfBQUQS5Hc2BpajR+YpvvPWJsTF9n0aGCTSc5pxbFE7i37kbP58DUvmOi54c/4jnB7qt+7PBwjpxt9otusrSQ5qg9JZ6wJVhtd+ZzPGku7jJ+wMqf6PlWQqJizPGmGgmjsoXyrshkVXuW/V0fzJXaPB4+HlL5r2riG+go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.109.80])
+	by gateway (Coremail) with SMTP id _____8CxG+nRURdmzZwlAA--.2038S3;
+	Thu, 11 Apr 2024 10:58:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.80])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLBPLURdmz8l3AA--.34105S3;
+	Thu, 11 Apr 2024 10:58:24 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v3 1/6] dt-bindings: clock: Add Loongson-2K expand clock index
+Date: Thu, 11 Apr 2024 10:58:06 +0800
+Message-ID: <76844e0e4dae290425f7c8025f7f36810cb3a3a8.1712731524.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1712731524.git.zhoubinbin@loongson.cn>
+References: <cover.1712731524.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxLBPLURdmz8l3AA--.34105S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCFyxXw15KF1rtr13Ww1DXFc_yoW5GrWkpr
+	4kuFW2gry7tF4xKw40qr15Kr43ur47Jw1UAF47ur4UXF17A3W8JwnruF4fJryUXF95GFyx
+	Aa1Duw40va9rXwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4ApnDUUUU
 
+In the new Loongson-2K family of SoCs, more clock indexes are needed,
+such as clock gates.
+The patch adds these clock indexes
 
-Hello Samuel,
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ include/dt-bindings/clock/loongson,ls2k-clk.h | 54 ++++++++++++-------
+ 1 file changed, 35 insertions(+), 19 deletions(-)
 
-Samuel Holland <samuel.holland@sifive.com> writes:
+diff --git a/include/dt-bindings/clock/loongson,ls2k-clk.h b/include/dt-bindings/clock/loongson,ls2k-clk.h
+index 3bc4dfc193c2..4279ba595f1e 100644
+--- a/include/dt-bindings/clock/loongson,ls2k-clk.h
++++ b/include/dt-bindings/clock/loongson,ls2k-clk.h
+@@ -7,24 +7,40 @@
+ #ifndef __DT_BINDINGS_CLOCK_LOONGSON2_H
+ #define __DT_BINDINGS_CLOCK_LOONGSON2_H
+ 
+-#define LOONGSON2_REF_100M				0
+-#define LOONGSON2_NODE_PLL				1
+-#define LOONGSON2_DDR_PLL				2
+-#define LOONGSON2_DC_PLL				3
+-#define LOONGSON2_PIX0_PLL				4
+-#define LOONGSON2_PIX1_PLL				5
+-#define LOONGSON2_NODE_CLK				6
+-#define LOONGSON2_HDA_CLK				7
+-#define LOONGSON2_GPU_CLK				8
+-#define LOONGSON2_DDR_CLK				9
+-#define LOONGSON2_GMAC_CLK				10
+-#define LOONGSON2_DC_CLK				11
+-#define LOONGSON2_APB_CLK				12
+-#define LOONGSON2_USB_CLK				13
+-#define LOONGSON2_SATA_CLK				14
+-#define LOONGSON2_PIX0_CLK				15
+-#define LOONGSON2_PIX1_CLK				16
+-#define LOONGSON2_BOOT_CLK				17
+-#define LOONGSON2_CLK_END				18
++#define LOONGSON2_REF_100M	0
++#define LOONGSON2_NODE_PLL	1
++#define LOONGSON2_DDR_PLL	2
++#define LOONGSON2_DC_PLL	3
++#define LOONGSON2_PIX0_PLL	4
++#define LOONGSON2_PIX1_PLL	5
++#define LOONGSON2_NODE_CLK	6
++#define LOONGSON2_HDA_CLK	7
++#define LOONGSON2_GPU_CLK	8
++#define LOONGSON2_DDR_CLK	9
++#define LOONGSON2_GMAC_CLK	10
++#define LOONGSON2_DC_CLK	11
++#define LOONGSON2_APB_CLK	12
++#define LOONGSON2_USB_CLK	13
++#define LOONGSON2_SATA_CLK	14
++#define LOONGSON2_PIX0_CLK	15
++#define LOONGSON2_PIX1_CLK	16
++#define LOONGSON2_BOOT_CLK	17
++#define LOONGSON2_OUT0_GATE	18
++#define LOONGSON2_GMAC_GATE	19
++#define LOONGSON2_RIO_GATE	20
++#define LOONGSON2_DC_GATE	21
++#define LOONGSON2_GPU_GATE	22
++#define LOONGSON2_DDR_GATE	23
++#define LOONGSON2_HDA_GATE	24
++#define LOONGSON2_NODE_GATE	25
++#define LOONGSON2_EMMC_GATE	26
++#define LOONGSON2_PIX0_GATE	27
++#define LOONGSON2_PIX1_GATE	28
++#define LOONGSON2_OUT0_CLK	29
++#define LOONGSON2_RIO_CLK	30
++#define LOONGSON2_EMMC_CLK	31
++#define LOONGSON2_DES_CLK	32
++#define LOONGSON2_I2S_CLK	33
++#define LOONGSON2_MISC_CLK	34
+ 
+ #endif
+-- 
+2.43.0
 
-> On 2024-04-10 8:02 PM, Thiago Jung Bauermann wrote:
->> Samuel Holland <samuel.holland@sifive.com> writes:
->>> On 2024-04-10 5:21 PM, Thiago Jung Bauermann wrote:
->>>>
->>>> Unfortunately this patch causes build failures on arm with allyesconfig
->>>> and allmodconfig. Tested with next-20240410.
->>
->> <snip>
->>
->>> In both cases, the issue is that the toolchain requires runtime support to
->>> convert between `unsigned long long` and `double`, even when hardware FP is
->>> enabled. There was some past discussion about GCC inlining some of these
->>> conversions[1], but that did not get implemented.
->>
->> Thank you for the explanation and the bugzilla reference. I added a
->> comment there mentioning that the problem came up again with this patch
->> series.
->>
->>> The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
->>> 32-bit arm until we can provide these runtime library functions.
->>
->> Does this mean that patch 2 in this series:
->>
->> [PATCH v4 02/15] ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->>
->> will be dropped?
->
-> No, because later patches in the series (3, 6) depend on the definition of
-> CC_FLAGS_FPU from that patch. I will need to send a fixup patch unless I can
-> find a GPL-2 compatible implementation of the runtime library functions.
-
-Ok, thank you for clarifying.
-
-Andrew Pinski just responded on the GCC bugzilla and if I understood his
-point correctly, it seems to be a matter of changing function names to
-what GCC (or actually the arm EABI) expects...
-
---
-Thiago
