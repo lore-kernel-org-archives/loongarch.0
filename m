@@ -1,154 +1,112 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A4A132813
-	for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 22:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA985FBA6
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 01:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712789252; cv=none; b=UzCRQVpfY0uFmBvNjo8eVSx/Ji+xX3qTAFAw8wtElUJ04WYmPjrGgNm+Z0lmb8NVXSe4JfFwoqsjgB2HK0rHzQihH1KSOru5sT3kTXuPOzcWnqD/DmGxQB0Q8gLe5LQvtwGh/R+FU4X2yNrTjQtimdgdKG0nPJNPRGRMYlhn0KM=
+	t=1712797334; cv=none; b=UoRUB5owMlwksdiAi2aTuoV74tavKISSQAWHnSreH3WGuW+GZYLOf634EgmIdiU/aUP7FpzRwgmzIzvlVdFxTHgdmL1wD8lHPr8nnvQ+X9000jv6TKPgNTV/Ft+Nrqdkmmr9w22DnHQB58PUvbm4SbsYXw89qHuPK/0qYuSE25s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712789252; c=relaxed/simple;
-	bh=uDU3PtkfpbBDGwJOViI0NFiMEmcXnUAvLCRTEusiKVk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tb6uvKxKCxw7GfD8TjuRSQFmyWjHLoDtWcZ6OSjVeey/aZ6LGqtAqLvItnKYV7FT2XxX+wieP+SRARzxBoUv5zqyEzkBlj+rYEeS3AqXIatR7E51xhE6FWa2rbHTtsbtDR9dHxCaDLW/66bSosftzBsLt2geSYDZAPr/e5T6YxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=W5AYhZ3X; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1712797334; c=relaxed/simple;
+	bh=kLD5kpB2LP2j5uUBOjlchyyyLOgJsQ4KSunDLcwJfvc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=S44Kh4lBmnEpDThWMieu6GKXmox5EufNjab1jZ/Eqg/H9IGjEeotlfdEC3hXzHdl2BQ4O28DVbvNAKLKGNu2m9+coB54zwtPp4Ec7EryQk4P2hBpY1Sg+6YNTo3g6B/7gbmhO0lasLHFlI3js2qBPwCkrBR2N2Qf/yrueo19Uos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pMvnJwZs; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="W5AYhZ3X"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5a9ec68784cso3493671eaf.2
-        for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 15:47:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pMvnJwZs"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a4df5d83c7so2617409a91.0
+        for <loongarch@lists.linux.dev>; Wed, 10 Apr 2024 18:02:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1712789250; x=1713394050; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jexQJX0oM9fCmEvziBSolme7TKZ0EEYhwHpwJAChgvs=;
-        b=W5AYhZ3Xepr1T6UxdcGTAyHZqtEaBtwm14/2o6NSuiS4jCvwrskBglnkRMmqh6V147
-         RwQ3m7rkp5oUWiC4FKWfO5bWkRAlHZB5b0F6lyPr/vPJFmF7pDq8qbk00LKNLkXJh/Nf
-         7Q87LBg5DnW5VbP4iJwyvmuwku7416+eTJS8+QtCWvZKElVRii46nIiPHvUxaf9arUbs
-         TYul5WcszUabRjD0eBMZIbIRpBGQIwNUJo732RBw8KQMWSD0II2r9bA749Su09RIBQwB
-         VrkACNDaBjj5jAoZ65Ap2BubzCES7F/vaMOn0fX2MgMVDHPz94Sjdse0BP5vO8IQ+WDN
-         vv4w==
+        d=linaro.org; s=google; t=1712797332; x=1713402132; darn=lists.linux.dev;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kLD5kpB2LP2j5uUBOjlchyyyLOgJsQ4KSunDLcwJfvc=;
+        b=pMvnJwZsIXsFxMNPeJerFvXd/UTi526JRRFk+k1rGbflf/AYgobLXUMtc27YpyKjrN
+         ZaVpKn6ebTUBc6Lz38KFqdVabba63OprzWEu45J0wjx+KKY0h9KfKtWMHCPmU+/C7R3W
+         Dh78W0dGfKCEAat8knO/+9UoYhZwQr9bFsNo0SksSNnbq6tm6ck3wTP5Yw7JAoqHiQBg
+         n9Ygm9dCBIY/x0QOaUArApWx3uLa6K7fjnhAI4/vVYdXXucUEf5svI1lP8hJyhQDMaHk
+         lSQxI9QhcPxge3LgLbg2NrXkcDKgQ2kCRFhI3ZtzvPlkYi7Z0N6LykSXTguHqQKOKSyi
+         sqZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712789250; x=1713394050;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jexQJX0oM9fCmEvziBSolme7TKZ0EEYhwHpwJAChgvs=;
-        b=o0krZwaOL3NidA5iTPMsVa9ZK/CUcb/6SHd1SU/YwS3F5owREhLTHlYyb5nh9N/WY+
-         K+yoNAfmPMRQfkEadvaW0OTLnNNAMyjwU2GJI0gdfsPrwyUmXpIEHpvE02oOsm4H3mI9
-         ymUJITlXO3kwsFkxNZo5uSgNf/4381ZPqgiZFnFq0Vd+uFbrk8sPxhXmaTMeV3VBiCsa
-         Yv9GPHGIaWyFeAMaGITWF/57D1w1tzlZRZMGxm/Kq/DuXJTv88M2Wq61Wn4U7JHB/5vW
-         eKlD1uQZANj6cfL88IL3/n/vEGK7fWkOyDbJR9m4ylhXfp4S5tg5unUICbSSvPEfWm2m
-         bC8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXk0wX8Ga4b4PSrzlVekn2rRWd8PDy1VHn3YYTHqjqXNSRMSS/s94zgp85TSr9fL/+k+fhoHaqr1PHrhC0h5fYTfXGyMS7+gcHQ
-X-Gm-Message-State: AOJu0YwWz3XjCUkrFxjIi9dkOcdbcQ5gJyA3poW8xV8mnoS3nW8eRvCl
-	6Ki79kLBh1sfuLsKp/96OYbdFOjq+BbHYmEl8LN5FbFgDUMK6AX+vbidUDo1odY=
-X-Google-Smtp-Source: AGHT+IHLiKUoeBUB4OwLHReX4a7dcUh2Eqxld9pK8ip3FgSpidJgLmLzuSWt1Fnkq1wrPVQWu86Qjg==
-X-Received: by 2002:a05:6871:80a:b0:22d:f859:2225 with SMTP id q10-20020a056871080a00b0022df8592225mr3914938oap.6.1712789249782;
-        Wed, 10 Apr 2024 15:47:29 -0700 (PDT)
-Received: from [100.64.0.1] ([170.85.8.167])
-        by smtp.gmail.com with ESMTPSA id lf3-20020a0568700c4300b0022eba51882fsm75970oab.53.2024.04.10.15.47.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 15:47:29 -0700 (PDT)
-Message-ID: <75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com>
-Date: Wed, 10 Apr 2024 17:47:27 -0500
+        d=1e100.net; s=20230601; t=1712797332; x=1713402132;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kLD5kpB2LP2j5uUBOjlchyyyLOgJsQ4KSunDLcwJfvc=;
+        b=hdHPvYRKfBb/U/8TOBOVu+5UPeSVmy4mN5vXXYfHqGppLZ9M+JldSD+OZkuAtCVUuI
+         lykhEkhHU5sNkdGgf5yympwm0RQ8fy8wo3iIhcPcJTg1uE7+f28MOR845rZ3KZqmgcUQ
+         yMOErHA+Wlc+b0RAzWMmV2qA9QtdXJnjsEUJQy6P6bhbBn60hXZomRJvHCHtx8jNNRZm
+         krr551/u00898tlYc2Z+Sj168dLoquYoAmMRNg8Al47G2mkdnvJq1UU1u1xHZOiK5Gm6
+         LEjW3YEdGORaKAaUP4hEmi0RgayAAEuiv13gsfmYFr3H5u2AN1TUz+1a1QvAPj13u78I
+         lnRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTetUvSAArUg2FY3ufFpG/PntA0W0igmcbbcQbPkiGDPyAHwNoqpV5ZW2IAakHaaQhnT+ZcEuzKr/ke63rNyknaEebvQ6f33cJ
+X-Gm-Message-State: AOJu0YxUY6Kp+GDuWE8sxFbOq3tBSECinbrW+Ywno0F3SYpKb2kgVSy3
+	OMFDHFMe8FtSN0JX8ECJYW31CAu4TCNz8g1eV+F49gYcsuk5MRLwKX05EtYJmcQ=
+X-Google-Smtp-Source: AGHT+IFCQFsX0y012c0RYVyy1pzruF/1YvRQvQO3mIZBA6xLw4Uhegn+z6nHl9NsGJg7fqoOGUPO2w==
+X-Received: by 2002:a17:90b:3643:b0:2a5:608e:1012 with SMTP id nh3-20020a17090b364300b002a5608e1012mr4531315pjb.21.1712797332116;
+        Wed, 10 Apr 2024 18:02:12 -0700 (PDT)
+Received: from localhost ([2804:14d:7e39:8470:fcac:9b42:fe81:c62f])
+        by smtp.gmail.com with ESMTPSA id q4-20020a17090a68c400b002a22c8e99afsm248176pjj.12.2024.04.10.18.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 18:02:11 -0700 (PDT)
+From: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+  linux-arm-kernel@lists.infradead.org,  x86@kernel.org,
+  linux-kernel@vger.kernel.org,  linux-arch@vger.kernel.org,
+  linuxppc-dev@lists.ozlabs.org,  linux-riscv@lists.infradead.org,
+  Christoph Hellwig <hch@lst.de>,  loongarch@lists.linux.dev,
+  amd-gfx@lists.freedesktop.org,  Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+In-Reply-To: <75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com> (Samuel
+	Holland's message of "Wed, 10 Apr 2024 17:47:27 -0500")
+References: <20240329072441.591471-1-samuel.holland@sifive.com>
+	<20240329072441.591471-14-samuel.holland@sifive.com>
+	<87wmp4oo3y.fsf@linaro.org>
+	<75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com>
+User-Agent: mu4e 1.12.2; emacs 29.3
+Date: Wed, 10 Apr 2024 22:02:09 -0300
+Message-ID: <87wmp4ogoe.fsf@linaro.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
-To: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>
-References: <20240329072441.591471-1-samuel.holland@sifive.com>
- <20240329072441.591471-14-samuel.holland@sifive.com>
- <87wmp4oo3y.fsf@linaro.org>
-Content-Language: en-US
-From: Samuel Holland <samuel.holland@sifive.com>
-In-Reply-To: <87wmp4oo3y.fsf@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi Thiago,
 
-On 2024-04-10 5:21 PM, Thiago Jung Bauermann wrote:
-> Samuel Holland <samuel.holland@sifive.com> writes:
-> 
->> Now that all previously-supported architectures select
->> ARCH_HAS_KERNEL_FPU_SUPPORT, this code can depend on that symbol instead
->> of the existing list of architectures. It can also take advantage of the
->> common kernel-mode FPU API and method of adjusting CFLAGS.
+Hello Samuel,
+
+Thank you for the quick reply!
+
+Samuel Holland <samuel.holland@sifive.com> writes:
+> On 2024-04-10 5:21 PM, Thiago Jung Bauermann wrote:
 >>
->> Acked-by: Alex Deucher <alexander.deucher@amd.com>
->> Reviewed-by: Christoph Hellwig <hch@lst.de>
->> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> 
-> Unfortunately this patch causes build failures on arm with allyesconfig
-> and allmodconfig. Tested with next-20240410.
-> 
-> Error with allyesconfig:
-> 
-> $ make -j 8 \
->     O=$HOME/.cache/builds/linux-cross-arm \
->     ARCH=arm \
->     CROSS_COMPILE=arm-linux-gnueabihf-
-> make[1]: Entering directory '/home/bauermann/.cache/builds/linux-cross-arm'
->     ⋮
-> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml/dcn20/dcn20_fpu.o: in function `dcn20_populate_dml_pipes_from_context':
-> dcn20_fpu.c:(.text+0x20f4): undefined reference to `__aeabi_l2d'
-> arm-linux-gnueabihf-ld: dcn20_fpu.c:(.text+0x210c): undefined reference to `__aeabi_l2d'
-> arm-linux-gnueabihf-ld: dcn20_fpu.c:(.text+0x2124): undefined reference to `__aeabi_l2d'
-> arm-linux-gnueabihf-ld: dcn20_fpu.c:(.text+0x213c): undefined reference to `__aeabi_l2d'
-> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml/calcs/dcn_calcs.o: in function `pipe_ctx_to_e2e_pipe_params':
-> dcn_calcs.c:(.text+0x390): undefined reference to `__aeabi_l2d'
-> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml/calcs/dcn_calcs.o:dcn_calcs.c:(.text+0x3a4): more undefined references to `__aeabi_l2d' follow
-> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.o: in function `optimize_configuration':
-> dml2_wrapper.c:(.text+0xcbc): undefined reference to `__aeabi_d2ulz'
-> arm-linux-gnueabihf-ld: drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.o: in function `populate_dml_plane_cfg_from_plane_state':
-> dml2_translation_helper.c:(.text+0x9e4): undefined reference to `__aeabi_l2d'
-> arm-linux-gnueabihf-ld: dml2_translation_helper.c:(.text+0xa20): undefined reference to `__aeabi_l2d'
-> arm-linux-gnueabihf-ld: dml2_translation_helper.c:(.text+0xa58): undefined reference to `__aeabi_l2d'
-> arm-linux-gnueabihf-ld: dml2_translation_helper.c:(.text+0xa90): undefined reference to `__aeabi_l2d'
-> make[3]: *** [/home/bauermann/src/linux/scripts/Makefile.vmlinux:37: vmlinux] Error 1
-> make[2]: *** [/home/bauermann/src/linux/Makefile:1165: vmlinux] Error 2
-> make[1]: *** [/home/bauermann/src/linux/Makefile:240: __sub-make] Error 2
-> make[1]: Leaving directory '/home/bauermann/.cache/builds/linux-cross-arm'
-> make: *** [Makefile:240: __sub-make] Error 2
-> 
-> The error with allmodconfig is slightly different:
-> 
-> $ make -j 8 \
->     O=$HOME/.cache/builds/linux-cross-arm \
->     ARCH=arm \
->     CROSS_COMPILE=arm-linux-gnueabihf-
-> make[1]: Entering directory '/home/bauermann/.cache/builds/linux-cross-arm'
->     ⋮
-> ERROR: modpost: "__aeabi_d2ulz" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
-> ERROR: modpost: "__aeabi_l2d" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
-> make[3]: *** [/home/bauermann/src/linux/scripts/Makefile.modpost:145: Module.symvers] Error 1
-> make[2]: *** [/home/bauermann/src/linux/Makefile:1876: modpost] Error 2
-> make[1]: *** [/home/bauermann/src/linux/Makefile:240: __sub-make] Error 2
-> make[1]: Leaving directory '/home/bauermann/.cache/builds/linux-cross-arm'
-> make: *** [Makefile:240: __sub-make] Error 2
+>> Unfortunately this patch causes build failures on arm with allyesconfig
+>> and allmodconfig. Tested with next-20240410.
 
-In both cases, the issue is that the toolchain requires runtime support to
-convert between `unsigned long long` and `double`, even when hardware FP is
-enabled. There was some past discussion about GCC inlining some of these
-conversions[1], but that did not get implemented.
+<snip>
 
-The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
-32-bit arm until we can provide these runtime library functions.
+> In both cases, the issue is that the toolchain requires runtime support to
+> convert between `unsigned long long` and `double`, even when hardware FP is
+> enabled. There was some past discussion about GCC inlining some of these
+> conversions[1], but that did not get implemented.
 
-Regards,
-Samuel
+Thank you for the explanation and the bugzilla reference. I added a
+comment there mentioning that the problem came up again with this patch
+series.
 
-[1]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91970
+> The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
+> 32-bit arm until we can provide these runtime library functions.
+
+Does this mean that patch 2 in this series:
+
+[PATCH v4 02/15] ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+
+will be dropped?
+
+--
+Thiago
