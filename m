@@ -1,117 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADE4139593;
-	Thu, 11 Apr 2024 16:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B111E480
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 16:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712851462; cv=none; b=iQhBwbcFW4ofeOLYf3G7vigTR81VEslTlNSyrk+OYHj7JcdBPPSjT0Y96nUaAO+qdha8H7hEzE0YSDmaiHdnY2Lh8ntC7UTLXArR2KVMjDevyQXHRvqOS9pWjy2PZU+/mTt567tQpu52ozCJcNpeDInAAn4YmUn0pvxkB7Ak/60=
+	t=1712854561; cv=none; b=DoBSZyNMgHQudC5QKRZj9LuP+0x3+xigxSNeZufiXcEGQPyzqWg6wv3ihTszgkf5m+FtjR3rTJYYm52ygHN9SeXVWsfzbsG1PZEy0Dv/w/4Wg+e2eBxRCTZO9+Tp/58+bTtWoSW6jYspOnqg/pzylo7YqzWCrp5NQpL9tmNNC3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712851462; c=relaxed/simple;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BD3pHuQclkBAFe2caaWI5oY4SOEUKJRc3L5jktQRUbizb6teNiYjC/+E3LjzlkMRq6epTtk3Cbu2+SIH6NNIUI51vEGJDNd5S3dlQtgFO56Sfvlk4vtiW2x4rcZp5WMAQIlDDxIzyycjatVBbAI5/V4zY6grndtgRsQ+kiw9Rcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxJIf0UP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712854561; c=relaxed/simple;
+	bh=mdyviDc2SZiHERUxq8FwGAUG2lksvejg1L3R6/TQq04=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j1uB71UsmWpTXmnaDOAuvrqJGmWBV4Q7No41j5kmUxQjHLWeJ0kOHWSr4iowYPp1WG6wipjE9UNCP2aWyWMXy31PaESGMT955cYaAeSIGckxiSdHyFaAKL2+5dTyfpPzfiIZsRmcu3KOJPmNiuMneg1KfHWFqN/UVRHgGDfYcQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CEmduPtL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxJIf0UP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1098C113CD;
-	Thu, 11 Apr 2024 16:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712851461;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SxJIf0UPAU/LSJIdhd5VJkQ97hM+Vopgra/mjrFIBCe+cviCEtH8l//T3816NvlXD
-	 JNi13TTDCZkr1Fg3WXdPtQ+MZRUJwf1k1qRoeQyxufSwG+h+JZeR8/tvkEBGc8TcVR
-	 4kRT3j5Stzw4SWMef8fiEbIX6jEtbDFYCl6VOLTAE7qUe+BaJYoN70qBRU9UyVdRdK
-	 SnPe3YHBtYQkdMJyF6t+OlokdAyToH6ZaN+xGGpQSe+9dEZuQCdf7HQ8nt9T2j9jQX
-	 o3VlR73dRPQLNATQXpf1b4JuRSG48Vtoma+TPIBkV3i2OZl6wAJsdHYuvFMkZ7Tt+a
-	 /PvhAgJJc2OoQ==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v4 15/15] bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
-Date: Thu, 11 Apr 2024 19:00:51 +0300
-Message-ID: <20240411160051.2093261-16-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411160051.2093261-1-rppt@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CEmduPtL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712854559;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zMWXkXzR0H7lOgn05ANda8bjR25lnib+pFQqcdAFtGw=;
+	b=CEmduPtL3NP5XNR+oFsDnVOJaZoVwlx7dy2SpDMkrYd+ByLjBPDNySLL9ouFDlwrBxagu3
+	BJkyt5CIUk3SQVwtjYimIGEWuF/N7Omn/wmbfHopdQCiAeWPKGQeIWT7U9sxB+ZjvYoz0W
+	M/50ajYZgsI8RUEvSFEfgE31ub9wAJI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-133-uPF31U5OMOyeos2aTteTNw-1; Thu, 11 Apr 2024 12:55:57 -0400
+X-MC-Unique: uPF31U5OMOyeos2aTteTNw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4155db7b58cso337185e9.1
+        for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 09:55:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712854557; x=1713459357;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zMWXkXzR0H7lOgn05ANda8bjR25lnib+pFQqcdAFtGw=;
+        b=IjRrN+XVX5dDM+kCLzDESj4hH/qlZxeZKGayY3ZfPjuOTLONsiG2AiLqOHjKllnRnx
+         4XRv6JVkjceFpWil4wk0e+uIzSFWYwz9BLJOo8kXwVbDJqpI2aXsaZ2dNXRs6PHyV5tH
+         R/Q97rygskUcp5DYZ9Nx+sEMyCDg0vImlzcZLJoVxoBE3f67nta+FVX9F6ZcAq/HweNH
+         QdqUPPje7/okoin/zQOXqIufZ9SXpwsP9uaBEtwGqX/PwSEeinciUFN5cNkCLGQDU6V3
+         ylh859jyuf6+m6Y8WD4BOK5M3kvduaih93ByoKC9aMhxB6WIVPnZHxANyd0SmjcZZkZ7
+         fEPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV35+v2Mq1w4MOCQnZGjzrwj6QmapGqecrbi4+mPapvh6TojfJXdLoHTmTYsCf/HuZptnDE9uyd7bDA6dNovMI3Unt/aF/nzEVH
+X-Gm-Message-State: AOJu0YwGkGKxkGBJr77S+FyEwZ6Un4Ip8JoQCpJhSXsa0ppb47NHCcrA
+	rtWI7049KFYJlY5qHFOOBXbUm7dpkJNRyght2ER3CW6ipmDV6Ae/K4w9JESUR73augjBmEwYCPD
+	FbL3R0IFe4beY3gJf1n7Xd+AZbDDq/gGBDHGtX1SOU3Wb2eGrLo/i0wptPYL6wC3zUeux0b3VXV
+	ksLu3MQnX5oLQzOGH02bll+vAZOQXtIK/y
+X-Received: by 2002:a5d:5143:0:b0:346:67fd:beeb with SMTP id u3-20020a5d5143000000b0034667fdbeebmr125067wrt.13.1712854556789;
+        Thu, 11 Apr 2024 09:55:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGD8Twrk+pSap7dr/hOyNv9dE7sPb5xWfugil3Ej7FN6UJvArBpNQmyBrQbHxp3h5Btn4P+dbeRSa2EBSrKO98=
+X-Received: by 2002:a5d:5143:0:b0:346:67fd:beeb with SMTP id
+ u3-20020a5d5143000000b0034667fdbeebmr125049wrt.13.1712854556481; Thu, 11 Apr
+ 2024 09:55:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240405115815.3226315-1-pbonzini@redhat.com> <20240405115815.3226315-2-pbonzini@redhat.com>
+ <ZhP3hDhe2Qwo9oCL@x1n>
+In-Reply-To: <ZhP3hDhe2Qwo9oCL@x1n>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Thu, 11 Apr 2024 18:55:44 +0200
+Message-ID: <CABgObfYwwXy9gQap-PJyOrVCcUr-VfK90AKNaRe0VO-G00G8SQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Sean Christopherson <seanjc@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+On Mon, Apr 8, 2024 at 3:56=E2=80=AFPM Peter Xu <peterx@redhat.com> wrote:
+> Paolo,
+>
+> I may miss a bunch of details here (as I still remember some change_pte
+> patches previously on the list..), however not sure whether we considered
+> enable it?  Asked because I remember Andrea used to have a custom tree
+> maintaining that part:
+>
+> https://github.com/aagit/aa/commit/c761078df7a77d13ddfaeebe56a0f4bc128b19=
+68
 
-BPF just-in-time compiler depended on CONFIG_MODULES because it used
-module_alloc() to allocate memory for the generated code.
+The patch enables it only for KSM, so it would still require a bunch
+of cleanups, for example I also would still use set_pte_at() in all
+the places that are not KSM. This would at least fix the issue with
+the poor documentation of where to use set_pte_at_notify() vs
+set_pte_at().
 
-Since code allocations are now implemented with execmem, drop dependency of
-CONFIG_BPF_JIT on CONFIG_MODULES and make it select CONFIG_EXECMEM.
+With regard to the implementation, I like the idea of disabling the
+invalidation on the MMU notifier side, but I would rather have
+MMU_NOTIFIER_CHANGE_PTE as a separate field in the range instead of
+overloading the event field.
 
-Suggested-by: Björn Töpel <bjorn@kernel.org>
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
----
- kernel/bpf/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Maybe it can't be enabled for some reason that I overlooked in the curren=
+t
+> tree, or we just decided to not to?
 
-diff --git a/kernel/bpf/Kconfig b/kernel/bpf/Kconfig
-index bc25f5098a25..f999e4e0b344 100644
---- a/kernel/bpf/Kconfig
-+++ b/kernel/bpf/Kconfig
-@@ -43,7 +43,7 @@ config BPF_JIT
- 	bool "Enable BPF Just In Time compiler"
- 	depends on BPF
- 	depends on HAVE_CBPF_JIT || HAVE_EBPF_JIT
--	depends on MODULES
-+	select EXECMEM
- 	help
- 	  BPF programs are normally handled by a BPF interpreter. This option
- 	  allows the kernel to generate native code when a program is loaded
--- 
-2.43.0
+I have just learnt about the patch, nobody had ever mentioned it even
+though it's almost 2 years old... It's a lot of code though and no one
+has ever reported an issue for over 10 years, so I think it's easiest
+to just rip the code out.
+
+Paolo
+
+> Thanks,
+>
+> --
+> Peter Xu
+>
 
