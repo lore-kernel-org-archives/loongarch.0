@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D425D60B95
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41F160882
 	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 01:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712797520; cv=none; b=hnile6os5DQ/athhVWee9XxTnDw3TiNNDs3DAdzQC9NeqEl2zEke43dipI0UPWxcFzN97EoKqVx1Qx2Efzewq3UYrtnIoDZD7AwTTgcqBdDajicPKdagOdBZtzrifnRrtvqZvbdl0tyQhH2PDqPkwWdYo/XAghXiz2AoENANUdk=
+	t=1712797520; cv=none; b=O3uXcTZFp80EZcTJiJK5AypZzPkv2Q/8UuTDJMAhYPkPSIyPaKLRg3XmD6aM96BoQOxw8DxLjOQWcNA6RrrufR8ek6UvQKBA+OQKExNniodEqpTImDSaFSkmAFw+vuI8t3F3mPff5F6o+uibkdSiQjNkbHXTAweiiVqzN2oj81M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712797520; c=relaxed/simple;
-	bh=uLjUWodJ/mW4SI5I2DSTZyWJ+aNR+7qDAvJxBsFdLtQ=;
+	bh=NeuRh8D5vX5nUv9iOk2eSOKmIKgQFNfWLUUhe4orCWM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bNmasDbJ5WoNaDX3YRWIQUaWTv6aIVpOOd150a0ksbJspqB50GjzZI/Q3e0pY5CgU+1u9CLQDycdUNEOsAhyoTcXpfKFivZSEWNSzejD5G4KOT0jMXI1952IPc99TfUQBMLJBqnocNl/WGGvKEi9HkTEf500iSUoGQjJ7PS3c+I=
+	 MIME-Version; b=C8/J9cMEwdWk5GyPM0lCeBFv/KIzVyfD+wvorA/2elvB07fSEWUG7wTzW6zMuVFF8VuNaNMZ2oOj//Z81NR40W5Z6ObBSxS5rIfLq5ETDO/wuhQNzT61iA2JWmwo1XIoY2annnyIXqUI4P0B4rDc20FBJaIxJmtRQJLfG9NM29o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxafBMNxdm85AlAA--.21021S3;
-	Thu, 11 Apr 2024 09:05:16 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhhFHNxdmnrx3AA--.22869S5;
+	by gateway (Coremail) with SMTP id _____8DxurpLNxdm5pAlAA--.5000S3;
 	Thu, 11 Apr 2024 09:05:15 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhhFHNxdmnrx3AA--.22869S3;
+	Thu, 11 Apr 2024 09:05:14 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -26,9 +26,9 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 3/4] LoongArch: Save and restore PERCPU_BASE_KS for ACPI S3 state
-Date: Thu, 11 Apr 2024 09:05:09 +0800
-Message-ID: <20240411010510.22135-4-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 1/4] LoongArch: Move CONFIG_HAVE_SETUP_PER_CPU_AREA related code to smp.c
+Date: Thu, 11 Apr 2024 09:05:07 +0800
+Message-ID: <20240411010510.22135-2-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240411010510.22135-1-yangtiezhu@loongson.cn>
 References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
@@ -39,71 +39,198 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxhhFHNxdmnrx3AA--.22869S5
+X-CM-TRANSID:AQAAf8AxhhFHNxdmnrx3AA--.22869S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WFyxAF4UCw13tFW8JF43Arc_yoW8CrWUpr
-	9FyFWDKw48tFn7CF90qa1UXr1UZ39agrWIqF9Fk3yj9rnrXry8Wr4rK3Z8XF10qwn5ua10
-	v3ySya4avF1UGwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jw4fZw4kZrW8XFW3Cr48uFX_yoW7ArW3pr
+	WfC39xtrW3W3s8J398t3yDury5Jr1kK3yxXa13CFWru3W7ZFn8Wr4vvryDXFWUWaykWa1F
+	vFZ5GF4UWF48JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
 	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
 	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU1xpnPUUUUU==
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
+	UjIFyTuYvjxU2-txDUUUU
 
-Currently, per_cpu_offset(x) is defined as __per_cpu_offset[x])
-only under CONFIG_SMP in include/asm-generic/percpu.h, that is
-to say, the implementation of loongarch_common_resume() which
-calls per_cpu_offset(0) is not suitable for the case of non-SMP,
-so do not write per_cpu_offset(0) to PERCPU_BASE_KS when resume,
-just save the value of PERCPU_BASE_KS when suspend and restore
-it when resume to make it work well for both SMP and non-SMP.
+Currently, if CONFIG_NUMA is not set but CONFIG_SMP is set, the arch
+specified setup_per_cpu_areas() in arch/loongarch/kernel/numa.c will
+not be built and the generic setup_per_cpu_areas() in mm/percpu.c is
+actually used, this is not reasonable and does not work as intended.
 
-Tested with the command "rtcwake -d rtc1 -s 20 -m mem -v", dmesg
-shows that "PM: suspend entry (deep)" and "PM: suspend exit".
+Let us select HAVE_SETUP_PER_CPU_AREA unconditionally and then move
+CONFIG_HAVE_SETUP_PER_CPU_AREA related code from numa.c to smp.c to
+avoid this problem.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/power/suspend.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/loongarch/Kconfig       |  2 +-
+ arch/loongarch/kernel/numa.c | 58 -----------------------------------
+ arch/loongarch/kernel/smp.c  | 59 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 60 insertions(+), 59 deletions(-)
 
-diff --git a/arch/loongarch/power/suspend.c b/arch/loongarch/power/suspend.c
-index 166d9e06a64b..7a97949ddade 100644
---- a/arch/loongarch/power/suspend.c
-+++ b/arch/loongarch/power/suspend.c
-@@ -16,6 +16,7 @@
- #include <asm/tlbflush.h>
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index a5f300ec6f28..64052ae2c2af 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -151,7 +151,7 @@ config LOONGARCH
+ 	select HAVE_RUST
+ 	select HAVE_SAMPLE_FTRACE_DIRECT
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+-	select HAVE_SETUP_PER_CPU_AREA if NUMA
++	select HAVE_SETUP_PER_CPU_AREA
+ 	select HAVE_STACK_VALIDATION if HAVE_OBJTOOL
+ 	select HAVE_STACKPROTECTOR
+ 	select HAVE_SYSCALL_TRACEPOINTS
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index 8fe21f868f72..49dc1d932ce2 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -48,64 +48,6 @@ EXPORT_SYMBOL(__cpuid_to_node);
  
- u64 loongarch_suspend_addr;
-+static u64 saved_pcpu_base;
+ nodemask_t numa_nodes_parsed __initdata;
  
- struct saved_registers {
- 	u32 ecfg;
-@@ -36,6 +37,7 @@ void loongarch_common_suspend(void)
- 	saved_regs.pwctl1 = csr_read32(LOONGARCH_CSR_PWCTL1);
- 	saved_regs.ecfg = csr_read32(LOONGARCH_CSR_ECFG);
- 	saved_regs.euen = csr_read32(LOONGARCH_CSR_EUEN);
-+	saved_pcpu_base = csr_read64(PERCPU_BASE_KS);
- 
- 	loongarch_suspend_addr = loongson_sysconf.suspend_addr;
+-#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
+-unsigned long __per_cpu_offset[NR_CPUS] __read_mostly;
+-EXPORT_SYMBOL(__per_cpu_offset);
+-
+-static int __init pcpu_cpu_to_node(int cpu)
+-{
+-	return early_cpu_to_node(cpu);
+-}
+-
+-static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
+-{
+-	if (early_cpu_to_node(from) == early_cpu_to_node(to))
+-		return LOCAL_DISTANCE;
+-	else
+-		return REMOTE_DISTANCE;
+-}
+-
+-void __init pcpu_populate_pte(unsigned long addr)
+-{
+-	populate_kernel_pte(addr);
+-}
+-
+-void __init setup_per_cpu_areas(void)
+-{
+-	unsigned long delta;
+-	unsigned int cpu;
+-	int rc = -EINVAL;
+-
+-	if (pcpu_chosen_fc == PCPU_FC_AUTO) {
+-		if (nr_node_ids >= 8)
+-			pcpu_chosen_fc = PCPU_FC_PAGE;
+-		else
+-			pcpu_chosen_fc = PCPU_FC_EMBED;
+-	}
+-
+-	/*
+-	 * Always reserve area for module percpu variables.  That's
+-	 * what the legacy allocator did.
+-	 */
+-	if (pcpu_chosen_fc != PCPU_FC_PAGE) {
+-		rc = pcpu_embed_first_chunk(PERCPU_MODULE_RESERVE,
+-					    PERCPU_DYNAMIC_RESERVE, PMD_SIZE,
+-					    pcpu_cpu_distance, pcpu_cpu_to_node);
+-		if (rc < 0)
+-			pr_warn("%s allocator failed (%d), falling back to page size\n",
+-				pcpu_fc_names[pcpu_chosen_fc], rc);
+-	}
+-	if (rc < 0)
+-		rc = pcpu_page_first_chunk(PERCPU_MODULE_RESERVE, pcpu_cpu_to_node);
+-	if (rc < 0)
+-		panic("cannot initialize percpu area (err=%d)", rc);
+-
+-	delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
+-	for_each_possible_cpu(cpu)
+-		__per_cpu_offset[cpu] = delta + pcpu_unit_offsets[cpu];
+-}
+-#endif
+-
+ /*
+  * Get nodeid by logical cpu number.
+  * __cpuid_to_node maps phyical cpu id to node, so we
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index aabee0b280fe..88b9c6b68d1e 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -29,6 +29,7 @@
+ #include <asm/loongson.h>
+ #include <asm/mmu_context.h>
+ #include <asm/numa.h>
++#include <asm/pgalloc.h>
+ #include <asm/processor.h>
+ #include <asm/setup.h>
+ #include <asm/time.h>
+@@ -717,3 +718,61 @@ void flush_tlb_one(unsigned long vaddr)
+ 	on_each_cpu(flush_tlb_one_ipi, (void *)vaddr, 1);
  }
-@@ -44,7 +46,7 @@ void loongarch_common_resume(void)
- {
- 	sync_counter();
- 	local_flush_tlb_all();
--	csr_write64(per_cpu_offset(0), PERCPU_BASE_KS);
-+	csr_write64(saved_pcpu_base, PERCPU_BASE_KS);
- 	csr_write64(eentry, LOONGARCH_CSR_EENTRY);
- 	csr_write64(eentry, LOONGARCH_CSR_MERRENTRY);
- 	csr_write64(tlbrentry, LOONGARCH_CSR_TLBRENTRY);
+ EXPORT_SYMBOL(flush_tlb_one);
++
++#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
++unsigned long __per_cpu_offset[NR_CPUS] __read_mostly;
++EXPORT_SYMBOL(__per_cpu_offset);
++
++static int __init pcpu_cpu_to_node(int cpu)
++{
++	return early_cpu_to_node(cpu);
++}
++
++static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
++{
++	if (early_cpu_to_node(from) == early_cpu_to_node(to))
++		return LOCAL_DISTANCE;
++	else
++		return REMOTE_DISTANCE;
++}
++
++void __init pcpu_populate_pte(unsigned long addr)
++{
++	populate_kernel_pte(addr);
++}
++
++void __init setup_per_cpu_areas(void)
++{
++	unsigned long delta;
++	unsigned int cpu;
++	int rc = -EINVAL;
++
++	if (pcpu_chosen_fc == PCPU_FC_AUTO) {
++		if (nr_node_ids >= 8)
++			pcpu_chosen_fc = PCPU_FC_PAGE;
++		else
++			pcpu_chosen_fc = PCPU_FC_EMBED;
++	}
++
++	/*
++	 * Always reserve area for module percpu variables.  That's
++	 * what the legacy allocator did.
++	 */
++	if (pcpu_chosen_fc != PCPU_FC_PAGE) {
++		rc = pcpu_embed_first_chunk(PERCPU_MODULE_RESERVE,
++					    PERCPU_DYNAMIC_RESERVE, PMD_SIZE,
++					    pcpu_cpu_distance, pcpu_cpu_to_node);
++		if (rc < 0)
++			pr_warn("%s allocator failed (%d), falling back to page size\n",
++				pcpu_fc_names[pcpu_chosen_fc], rc);
++	}
++	if (rc < 0)
++		rc = pcpu_page_first_chunk(PERCPU_MODULE_RESERVE, pcpu_cpu_to_node);
++	if (rc < 0)
++		panic("cannot initialize percpu area (err=%d)", rc);
++
++	delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
++	for_each_possible_cpu(cpu)
++		__per_cpu_offset[cpu] = delta + pcpu_unit_offsets[cpu];
++}
++#endif
 -- 
 2.42.0
 
