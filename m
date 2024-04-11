@@ -1,203 +1,382 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C07FF13AD2E
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 02:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B9413B5B4
+	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 03:10:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712804337; cv=none; b=jXWKNRkJ2EQZ0x2gdJWmZANES3/O0OLqeCXWcbvQSEY1bnfmE9Z584OrbZAACivv99qb+uJ2hgI1ajjeSDJACzMvCrAV8aA7jxOiWevcCthF9nB2vBV1pykRiwTIddTlR09R2i+xTMJOXoLNAxx1rKTbRZKhur6fMuxu9paPAjo=
+	t=1712805037; cv=none; b=tDM45AlMWZx3vF0mt+rYlrPjBKfV2WdnlxIScVbrqL99EeEH/+nkrpgrQkf6MrdNF2cmHeZJQ48L72KFNH7BWxLMrkt2r27trj1L9+3yWHp+Dxf57qQ27tVRRdsq4FZpfXmgBJfqoSVQc2a6Hu6m95fVKRmmDuKu8d/LiFAtiHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712804337; c=relaxed/simple;
-	bh=p5Ei0pRudkJ70dgUX671etY5Qn39dG0h5raf+4rXBZM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YBjKq2eN2eEJArW74brlJEWnRFy5vatT6sHiaQb0HhavP18P19Prs3DcanFPXLBrDn6o4kDq9Y8/HoRHAeMKsP9fMtB/9R6zmPUmvQI3rWBlbQ0uVweqqnhNQ7EOrN4tlQP0+OEZNkwdGwRuMmmvNtFinWhJ+1b5gg1lMPhxmPo=
+	s=arc-20240116; t=1712805037; c=relaxed/simple;
+	bh=htrm/Yh4VAbFCvWpIwTWRkmTcpgliu+KynnJiA5ucDQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TSBwiFmama6AnYIQOMuLU4TYt+KPCDIiGXplWPNa+kG4hpq4zftZUQEXgcOGe0h2vfG4KWN5QhIfLqgtKARNiTmBcfIQAwlFUvK/GLBcWfsgzJShP9dWUC9nVdxh33cDcWzgSFwvpOZHK9mj+i+wQGFz5asGivSAIDPqjw0zzkM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.109.80])
-	by gateway (Coremail) with SMTP id _____8CxbevtURdmNp0lAA--.20687S3;
-	Thu, 11 Apr 2024 10:58:53 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.80])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxfRPlURdmFcp3AA--.1321S4;
-	Thu, 11 Apr 2024 10:58:51 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v3 6/6] clk: clk-loongson2: Add Loongson-2K2000 clock support
-Date: Thu, 11 Apr 2024 10:58:33 +0800
-Message-ID: <8b0b5851783acf8ebe13b50391d15b58cc181613.1712731524.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1712731524.git.zhoubinbin@loongson.cn>
-References: <cover.1712731524.git.zhoubinbin@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8CxZbmnVBdmqZ4lAA--.5103S3;
+	Thu, 11 Apr 2024 11:10:32 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxNBGkVBdmgMt3AA--.22735S3;
+	Thu, 11 Apr 2024 11:10:30 +0800 (CST)
+Subject: Re: [PATCH 1/1] LoongArch: KVM: Add PMU support
+To: Song Gao <gaosong@loongson.cn>, linux-kernel@vger.kernel.org
+Cc: pbonzini@redhat.com, zhaotianrui@loongson.cn, chenhuacai@kernel.org,
+ kernel@xen0n.name, loongarch@lists.linux.dev
+References: <20240410095812.2943706-1-gaosong@loongson.cn>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <3642a669-1a6d-11ee-8c85-6584257f33d1@loongson.cn>
+Date: Thu, 11 Apr 2024 11:10:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20240410095812.2943706-1-gaosong@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxfRPlURdmFcp3AA--.1321S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Xw1kKry7KrykKFyrZFWfXrc_yoW7WFWkpF
-	9Yy3yfKws5trsYgr95XryDCrZ3AF47X3ZrtanFkr4DZ3Z7tr1IgF4FyFWxGF45WrykJa43
-	Zw4q9r47Ca1UXwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:AQAAf8DxNBGkVBdmgMt3AA--.22735S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Kw4DGrW5JF48Aw47JFWDAwc_yoWkXr1rpF
+	WDCws7WFW8KF1xG3WDJwnI9r43Wrs3Kw4aqry7trWSyF1jqry5Xr4kKrZrJFyrX34ftF1S
+	9Fn0k3Z5ZF4vywbCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
 	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
 	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jVeHDUUUUU=
+	JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7fMaUUUUU
 
-The Loongson-2K2000 and Loongson-2K1000 clock is similar, we add its
-support by different configurations.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/clk/clk-loongson2.c | 72 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
 
-diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
-index b5dd9d028826..0d82aeeadb45 100644
---- a/drivers/clk/clk-loongson2.c
-+++ b/drivers/clk/clk-loongson2.c
-@@ -22,6 +22,8 @@ enum loongson2_clk_type {
- 	CLK_TYPE_PLL,
- 	CLK_TYPE_SCALE,
- 	CLK_TYPE_DIVIDER,
-+	CLK_TYPE_GATE,
-+	CLK_TYPE_FIXED,
- 	CLK_TYPE_NONE,
- };
- 
-@@ -46,11 +48,13 @@ struct loongson2_clk_board_info {
- 	enum loongson2_clk_type type;
- 	const char *name;
- 	const char *parent_name;
-+	unsigned long fixed_rate;
- 	u8 reg_offset;
- 	u8 div_shift;
- 	u8 div_width;
- 	u8 mult_shift;
- 	u8 mult_width;
-+	u8 bit_idx;
- };
- 
- #define CLK_DIV(_id, _name, _pname, _offset, _dshift, _dwidth)	\
-@@ -90,6 +94,25 @@ struct loongson2_clk_board_info {
- 		.div_width	= _dwidth,			\
- 	}
- 
-+#define CLK_GATE(_id, _name, _pname, _offset, _bidx)		\
-+	{							\
-+		.id		= _id,				\
-+		.type		= CLK_TYPE_GATE,		\
-+		.name		= _name,			\
-+		.parent_name	= _pname,			\
-+		.reg_offset	= _offset,			\
-+		.bit_idx	= _bidx,			\
-+	}
-+
-+#define CLK_FIXED(_id, _name, _pname, _rate)			\
-+	{							\
-+		.id		= _id,				\
-+		.type		= CLK_TYPE_FIXED,		\
-+		.name		= _name,			\
-+		.parent_name	= _pname,			\
-+		.fixed_rate	= _rate,			\
-+	}
-+
- static const struct loongson2_clk_board_info ls2k0500_clks[] = {
- 	CLK_PLL(LOONGSON2_NODE_PLL,   "pll_node", 0,    16, 8, 8, 6),
- 	CLK_PLL(LOONGSON2_DDR_PLL,    "pll_ddr",  0x8,  16, 8, 8, 6),
-@@ -138,6 +161,44 @@ static const struct loongson2_clk_board_info ls2k1000_clks[] = {
- 	{ /* Sentinel */ },
- };
- 
-+static const struct loongson2_clk_board_info ls2k2000_clks[] = {
-+	CLK_PLL(LOONGSON2_DC_PLL,     "pll_0",    0,    21, 9, 32, 6),
-+	CLK_PLL(LOONGSON2_DDR_PLL,    "pll_1",    0x10, 21, 9, 32, 6),
-+	CLK_PLL(LOONGSON2_NODE_PLL,   "pll_2",    0x20, 21, 9, 32, 6),
-+	CLK_PLL(LOONGSON2_PIX0_PLL,   "pll_pix0", 0x30, 21, 9, 32, 6),
-+	CLK_PLL(LOONGSON2_PIX1_PLL,   "pll_pix1", 0x40, 21, 9, 32, 6),
-+	CLK_GATE(LOONGSON2_OUT0_GATE, "out0_gate", "pll_0",    0,    40),
-+	CLK_GATE(LOONGSON2_GMAC_GATE, "gmac_gate", "pll_0",    0,    41),
-+	CLK_GATE(LOONGSON2_RIO_GATE,  "rio_gate",  "pll_0",    0,    42),
-+	CLK_GATE(LOONGSON2_DC_GATE,   "dc_gate",   "pll_1",    0x10, 40),
-+	CLK_GATE(LOONGSON2_DDR_GATE,  "ddr_gate",  "pll_1",    0x10, 41),
-+	CLK_GATE(LOONGSON2_GPU_GATE,  "gpu_gate",  "pll_1",    0x10, 42),
-+	CLK_GATE(LOONGSON2_HDA_GATE,  "hda_gate",  "pll_2",    0x20, 40),
-+	CLK_GATE(LOONGSON2_NODE_GATE, "node_gate", "pll_2",    0x20, 41),
-+	CLK_GATE(LOONGSON2_EMMC_GATE, "emmc_gate", "pll_2",    0x20, 42),
-+	CLK_GATE(LOONGSON2_PIX0_GATE, "pix0_gate", "pll_pix0", 0x30, 40),
-+	CLK_GATE(LOONGSON2_PIX1_GATE, "pix1_gate", "pll_pix1", 0x40, 40),
-+	CLK_DIV(LOONGSON2_OUT0_CLK,   "clk_out0", "out0_gate", 0,    0,  6),
-+	CLK_DIV(LOONGSON2_GMAC_CLK,   "clk_gmac", "gmac_gate", 0,    7,  6),
-+	CLK_DIV(LOONGSON2_RIO_CLK,    "clk_rio",  "rio_gate",  0,    14, 6),
-+	CLK_DIV(LOONGSON2_DC_CLK,     "clk_dc",   "dc_gate",   0x10, 0,  6),
-+	CLK_DIV(LOONGSON2_GPU_CLK,    "clk_gpu",  "gpu_gate",  0x10, 7,  6),
-+	CLK_DIV(LOONGSON2_DDR_CLK,    "clk_ddr",  "ddr_gate",  0x10, 14, 6),
-+	CLK_DIV(LOONGSON2_HDA_CLK,    "clk_hda",  "hda_gate",  0x20, 0,  6),
-+	CLK_DIV(LOONGSON2_NODE_CLK,   "clk_node", "node_gate", 0x20, 7,  6),
-+	CLK_DIV(LOONGSON2_EMMC_CLK,   "clk_emmc", "emmc_gate", 0x20, 14, 6),
-+	CLK_DIV(LOONGSON2_PIX0_CLK,   "clk_pix0", "pll_pix0",  0x30, 0,  6),
-+	CLK_DIV(LOONGSON2_PIX1_CLK,   "clk_pix1", "pll_pix1",  0x40, 0,  6),
-+	CLK_SCALE(LOONGSON2_SATA_CLK, "clk_sata", "clk_out0",  0x50, 12, 3),
-+	CLK_SCALE(LOONGSON2_USB_CLK,  "clk_usb",  "clk_out0",  0x50, 16, 3),
-+	CLK_SCALE(LOONGSON2_APB_CLK,  "clk_apb",  "clk_node",  0x50, 20, 3),
-+	CLK_SCALE(LOONGSON2_BOOT_CLK, "clk_boot", NULL,        0x50, 23, 3),
-+	CLK_SCALE(LOONGSON2_DES_CLK,  "clk_des",  "clk_node",  0x50, 40, 3),
-+	CLK_SCALE(LOONGSON2_I2S_CLK,  "clk_i2s",  "clk_node",  0x50, 44, 3),
-+	CLK_FIXED(LOONGSON2_MISC_CLK, "clk_misc", NULL, 50000000),
-+	{ /* Sentinel */ },
-+};
-+
- static inline struct loongson2_clk_data *to_loongson2_clk(struct clk_hw *hw)
- {
- 	return container_of(hw, struct loongson2_clk_data, hw);
-@@ -266,6 +327,16 @@ static int loongson2_clk_probe(struct platform_device *pdev)
- 							  CLK_DIVIDER_ONE_BASED,
- 							  &clp->clk_lock);
- 			break;
-+		case CLK_TYPE_GATE:
-+			hw = devm_clk_hw_register_gate(dev, p->name, p->parent_name, 0,
-+						       clp->base + p->reg_offset,
-+						       p->bit_idx, 0,
-+						       &clp->clk_lock);
-+			break;
-+		case CLK_TYPE_FIXED:
-+			hw = clk_hw_register_fixed_rate_parent_data(dev, p->name, pdata,
-+								    0, p->fixed_rate);
-+			break;
- 		default:
- 			return dev_err_probe(dev, -EINVAL, "Invalid clk type\n");
- 		}
-@@ -284,6 +355,7 @@ static int loongson2_clk_probe(struct platform_device *pdev)
- static const struct of_device_id loongson2_clk_match_table[] = {
- 	{ .compatible = "loongson,ls2k0500-clk", .data = &ls2k0500_clks },
- 	{ .compatible = "loongson,ls2k-clk", .data = &ls2k1000_clks },
-+	{ .compatible = "loongson,ls2k2000-clk", .data = &ls2k2000_clks },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, loongson2_clk_match_table);
--- 
-2.43.0
+On 2024/4/10 下午5:58, Song Gao wrote:
+> This patch adds KVM PMU support. We save/restore the host PMU CSR
+> values to kvm_context. guest entry saves the host PMU CSR and
+> guest exit restores the host PMU CSR when the host supports PMU
+It will be better if there is description about hw/sw pmu virtualization 
+method, such as is it shared or separated with host pmu hardware, or is 
+it software emulated?
+
+> 
+> Signed-off-by: Song Gao <gaosong@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/kvm_csr.h   |   5 +
+>   arch/loongarch/include/asm/kvm_host.h  |  14 +++
+>   arch/loongarch/include/asm/kvm_vcpu.h  |   2 +
+>   arch/loongarch/include/asm/loongarch.h |   1 +
+>   arch/loongarch/kvm/exit.c              |   7 ++
+>   arch/loongarch/kvm/vcpu.c              | 140 ++++++++++++++++++++++++-
+>   6 files changed, 167 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/kvm_csr.h b/arch/loongarch/include/asm/kvm_csr.h
+> index 724ca8b7b401..dce556516c79 100644
+> --- a/arch/loongarch/include/asm/kvm_csr.h
+> +++ b/arch/loongarch/include/asm/kvm_csr.h
+> @@ -208,4 +208,9 @@ static __always_inline void kvm_change_sw_gcsr(struct loongarch_csrs *csr,
+>   	csr->csrs[gid] |= val & _mask;
+>   }
+>   
+> +#define KVM_PMU_PLV_ENABLE	(CSR_PERFCTRL_PLV0 |		\
+> +					CSR_PERFCTRL_PLV1 |	\
+> +					CSR_PERFCTRL_PLV2 |	\
+> +					CSR_PERFCTRL_PLV3)
+> +
+How about KVM_PMU_ENABLED or KVM_PMU_EVENT_ENABLED?
+
+>   #endif	/* __ASM_LOONGARCH_KVM_CSR_H__ */
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index 2d62f7b0d377..0daa0bde7742 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -54,6 +54,9 @@ struct kvm_arch_memory_slot {
+>   struct kvm_context {
+>   	unsigned long vpid_cache;
+>   	struct kvm_vcpu *last_vcpu;
+> +	/* Save host pmu csr */
+> +	u64 perf_ctrl[4];
+> +	u64 perf_cntr[4];
+It will be better if macro is used rather than hardcoded number 4.
+
+>   };
+>   
+>   struct kvm_world_switch {
+> @@ -99,6 +102,7 @@ enum emulation_result {
+>   #define KVM_LARCH_LASX		(0x1 << 2)
+>   #define KVM_LARCH_SWCSR_LATEST	(0x1 << 3)
+>   #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
+> +#define KVM_LARCH_PERF		(0x1 << 5)
+>   
+>   struct kvm_vcpu_arch {
+>   	/*
+> @@ -195,6 +199,16 @@ static inline bool kvm_guest_has_lasx(struct kvm_vcpu_arch *arch)
+>   	return arch->cpucfg[2] & CPUCFG2_LASX;
+>   }
+>   
+> +static inline bool kvm_guest_has_pmu(struct kvm_vcpu_arch *arch)
+> +{
+> +	return arch->cpucfg[6] & CPUCFG6_PMP;
+macro LOONGARCH_CPUCFG6 will be better.
+
+> +}
+> +
+> +static inline int kvm_get_pmu_num(struct kvm_vcpu_arch *arch)
+> +{
+> +	return (arch->cpucfg[6] & CPUCFG6_PMNUM) >> CPUCFG6_PMNUM_SHIFT;
+Ditto
+
+Regards
+Bibo Mao
+> +}
+> +
+>   /* Debug: dump vcpu state */
+>   int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
+>   
+> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+> index 0cb4fdb8a9b5..7212428022d1 100644
+> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+> @@ -75,6 +75,8 @@ static inline void kvm_save_lasx(struct loongarch_fpu *fpu) { }
+>   static inline void kvm_restore_lasx(struct loongarch_fpu *fpu) { }
+>   #endif
+>   
+> +int kvm_own_pmu(struct kvm_vcpu *vcpu);
+> +
+>   void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
+>   void kvm_reset_timer(struct kvm_vcpu *vcpu);
+>   void kvm_save_timer(struct kvm_vcpu *vcpu);
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+> index 46366e783c84..644380b6ebec 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -119,6 +119,7 @@
+>   #define  CPUCFG6_PMP			BIT(0)
+>   #define  CPUCFG6_PAMVER			GENMASK(3, 1)
+>   #define  CPUCFG6_PMNUM			GENMASK(7, 4)
+> +#define  CPUCFG6_PMNUM_SHIFT		4
+>   #define  CPUCFG6_PMBITS			GENMASK(13, 8)
+>   #define  CPUCFG6_UPM			BIT(14)
+>   
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index ed1d89d53e2e..ab17d9eb711f 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -83,6 +83,13 @@ static int kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
+>   	rj = inst.reg2csr_format.rj;
+>   	csrid = inst.reg2csr_format.csr;
+>   
+> +	if (LOONGARCH_CSR_PERFCTRL0 <= csrid && csrid <= LOONGARCH_CSR_PERFCNTR3) {
+> +		if(!kvm_own_pmu(vcpu)) {
+> +			vcpu->arch.pc -= 4;
+> +			return EMULATE_DONE;
+> +		}
+> +	}
+> +
+>   	/* Process CSR ops */
+>   	switch (rj) {
+>   	case 0: /* process csrrd */
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 3a8779065f73..6fb59b805807 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -333,6 +333,12 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>   	case LOONGARCH_CPUCFG5:
+>   		*v = GENMASK(31, 0);
+>   		return 0;
+> +	case LOONGARCH_CPUCFG6:
+> +		if (cpu_has_pmp)
+> +			*v = GENMASK(14, 0);
+> +		else
+> +			*v = 0;
+> +		return 0;
+>   	case LOONGARCH_CPUCFG16:
+>   		*v = GENMASK(16, 0);
+>   		return 0;
+> @@ -351,7 +357,7 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>   
+>   static int kvm_check_cpucfg(int id, u64 val)
+>   {
+> -	int ret;
+> +	int ret, host;
+>   	u64 mask = 0;
+>   
+>   	ret = _kvm_get_cpucfg_mask(id, &mask);
+> @@ -377,6 +383,18 @@ static int kvm_check_cpucfg(int id, u64 val)
+>   			/* LASX architecturally implies LSX and FP but val does not satisfy that */
+>   			return -EINVAL;
+>   		return 0;
+> +	case LOONGARCH_CPUCFG6:
+> +		if (val & CPUCFG6_PMP) {
+> +			host = read_cpucfg(LOONGARCH_CPUCFG6);
+> +			if ((val & CPUCFG6_PMBITS) != (host & CPUCFG6_PMBITS))
+> +				/* Guest pmbits must be the same with host */
+> +				return -EINVAL;
+> +			if ((val & CPUCFG6_PMNUM) > (host & CPUCFG6_PMNUM))
+> +				return -EINVAL;
+> +			if ((val & CPUCFG6_UPM) && !(host & CPUCFG6_UPM))
+> +				return -EINVAL;
+> +		}
+> +		return 0;
+>   	default:
+>   		/*
+>   		 * Values for the other CPUCFG IDs are not being further validated
+> @@ -552,7 +570,8 @@ static int kvm_loongarch_cpucfg_has_attr(struct kvm_vcpu *vcpu,
+>   					 struct kvm_device_attr *attr)
+>   {
+>   	switch (attr->attr) {
+> -	case 2:
+> +	case LOONGARCH_CPUCFG2:
+> +	case LOONGARCH_CPUCFG6:
+>   		return 0;
+>   	default:
+>   		return -ENXIO;
+> @@ -844,6 +863,119 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+>   	preempt_enable();
+>   }
+>   
+> +static inline void kvm_save_host_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_context *context;
+> +
+> +	context = this_cpu_ptr(vcpu->kvm->arch.vmcs);
+> +	context->perf_ctrl[0] = read_csr_perfctrl0();
+> +	context->perf_cntr[0] = read_csr_perfcntr0();
+> +	context->perf_ctrl[1] = read_csr_perfctrl1();
+> +	context->perf_cntr[1] = read_csr_perfcntr1();
+> +	context->perf_ctrl[2] = read_csr_perfctrl2();
+> +	context->perf_cntr[2] = read_csr_perfcntr2();
+> +	context->perf_ctrl[3] = read_csr_perfctrl3();
+> +	context->perf_cntr[3] = read_csr_perfcntr3();
+> +}
+> +
+> +static inline void kvm_restore_host_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_context *context;
+> +
+> +	context = this_cpu_ptr(vcpu->kvm->arch.vmcs);
+> +	write_csr_perfctrl0(context->perf_ctrl[0]);
+> +	write_csr_perfcntr0(context->perf_cntr[0]);
+> +	write_csr_perfctrl1(context->perf_ctrl[1]);
+> +	write_csr_perfcntr1(context->perf_cntr[1]);
+> +	write_csr_perfctrl2(context->perf_ctrl[2]);
+> +	write_csr_perfcntr2(context->perf_cntr[2]);
+> +	write_csr_perfctrl3(context->perf_ctrl[3]);
+> +	write_csr_perfcntr3(context->perf_cntr[3]);
+> +}
+> +
+> +static inline void kvm_save_guest_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	struct loongarch_csrs *csr = vcpu->arch.csr;
+> +
+> +	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL0);
+> +	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR0);
+> +	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL1);
+> +	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR1);
+> +	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL2);
+> +	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR2);
+> +	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL3);
+> +	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR3);
+> +	kvm_write_hw_gcsr(LOONGARCH_CSR_PERFCTRL0, 0);
+> +	kvm_write_hw_gcsr(LOONGARCH_CSR_PERFCTRL1, 0);
+> +	kvm_write_hw_gcsr(LOONGARCH_CSR_PERFCTRL2, 0);
+> +	kvm_write_hw_gcsr(LOONGARCH_CSR_PERFCTRL3, 0);
+> +}
+> +
+> +static inline void kvm_restore_guest_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	struct loongarch_csrs *csr = vcpu->arch.csr;
+> +
+> +	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL0);
+> +	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR0);
+> +	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL1);
+> +	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR1);
+> +	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL2);
+> +	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR2);
+> +	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL3);
+> +	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR3);
+> +}
+> +
+> +static void _kvm_own_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	unsigned long val;
+> +
+> +	kvm_save_host_pmu(vcpu);
+> +	/* Set PM0-PM(num) to Guest */
+> +	val = read_csr_gcfg() & ~CSR_GCFG_GPERF;
+> +	val |= (kvm_get_pmu_num(&vcpu->arch) + 1) << CSR_GCFG_GPERF_SHIFT;
+> +	write_csr_gcfg(val);
+> +	kvm_restore_guest_pmu(vcpu);
+> +}
+> +
+> +int kvm_own_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	if (!kvm_guest_has_pmu(&vcpu->arch))
+> +		return -EINVAL;
+> +
+> +	preempt_disable();
+> +	_kvm_own_pmu(vcpu);
+> +	vcpu->arch.aux_inuse |= KVM_LARCH_PERF;
+> +	preempt_enable();
+> +	return 0;
+> +}
+> +
+> +static void kvm_lose_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	struct loongarch_csrs *csr = vcpu->arch.csr;
+> +
+> +	if (!(vcpu->arch.aux_inuse & KVM_LARCH_PERF))
+> +		return;
+> +
+> +	kvm_save_guest_pmu(vcpu);
+> +	/* Disable pmu access from guest */
+> +	write_csr_gcfg(read_csr_gcfg() & ~CSR_GCFG_GPERF);
+> +	if (((kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL0) |
+> +		kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL1) |
+> +		kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL2) |
+> +		kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL3))
+> +			& KVM_PMU_PLV_ENABLE) == 0)
+> +		vcpu->arch.aux_inuse &= ~KVM_LARCH_PERF;
+> +	kvm_restore_host_pmu(vcpu);
+> +}
+> +
+> +static void kvm_restore_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	if (!(vcpu->arch.aux_inuse & KVM_LARCH_PERF))
+> +		return;
+> +
+> +	_kvm_own_pmu(vcpu);
+> +}
+> +
+>   int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
+>   {
+>   	int intr = (int)irq->irq;
+> @@ -982,6 +1114,9 @@ static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>   	/* Control guest page CCA attribute */
+>   	change_csr_gcfg(CSR_GCFG_MATC_MASK, CSR_GCFG_MATC_ROOT);
+>   
+> +	/* Restore hardware perf csr */
+> +	kvm_restore_pmu(vcpu);
+> +
+>   	/* Don't bother restoring registers multiple times unless necessary */
+>   	if (vcpu->arch.aux_inuse & KVM_LARCH_HWCSR_USABLE)
+>   		return 0;
+> @@ -1065,6 +1200,7 @@ static int _kvm_vcpu_put(struct kvm_vcpu *vcpu, int cpu)
+>   	struct loongarch_csrs *csr = vcpu->arch.csr;
+>   
+>   	kvm_lose_fpu(vcpu);
+> +	kvm_lose_pmu(vcpu);
+>   
+>   	/*
+>   	 * Update CSR state from hardware if software CSR state is stale,
+> 
 
