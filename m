@@ -1,106 +1,103 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA8814C593
-	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 17:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CDC14D2B7;
+	Fri, 12 Apr 2024 17:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712943022; cv=none; b=lbgD4jE4hOVHxh8HGmgYo2Fsh4HOtmlw+LTrVc+uV2Gw28ktUqCwdr5AzIoa+wzY4rX9reJOCaxQb1T9q48f/KNi59HO7gt+Scy/KA/SnatKZIT3SOOjEXRhKhroVPvXIDivJ+mbj8UPI3C2IHR7GCdwn2tErQJnDqtxdvRkqPE=
+	t=1712943753; cv=none; b=dp6SD6jM7InRr0jZvzLiMlJiufYqpifqiUS45JBDCzJ7Y1sYn2xLKl1rSCy+xm7aRugBUrxK0tC8ETXnLLfVWJG0Zr30w0P7alujdRmX4eCjAjxiRz2Vo7jmLTLr12CaBqgf3zfF4T8+i2nDNrJSH4ewq6d4bDCELzsXZgmxqac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712943022; c=relaxed/simple;
-	bh=3qJ7GhB7zga96XAHaSCPJZvl5n9zOw5sVXvClxshX7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RpUQUyCqTiYADpP3AUmQTc/g1yvdWL/pNdT3HnqfMHOUEOiCbCI6ZSA4kOjtJdy5Qn1VikgIWCl2iC44DHGClZcgn1pJNK2HJSyvxr6k/jqWuGWIZMvk/hPCCk6TbGh1U8dV2vjxn/Vx0X3IpG+hWzh8vRVxxzxxEgR2yIbP89U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k1wT9Z4p; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712943753; c=relaxed/simple;
+	bh=/nAjwVyb6TKfp7Se1ZzwuZHLhLGc0ePlRQ+AGjPxbpo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j8WMhv/WPGice/K0imOy1kZKjqMbJYibOcjhh7o5n+0n+Ivs4+cH0bANDPrcQVfqJPq+YaFhzBoxMHSj4Q65JhFJX8bnyJYYjEhd1ehys2ha6SfoJxHLZNgI/+W5Wu373h/Vb5dqV1p/v9AL/6czUuUfyfKFbE9LKNG/q8L4kF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TECRcDw+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1wT9Z4p"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso864716a12.3
-        for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 10:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712943020; x=1713547820; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7HvIZ4yZMepG+cf7hgtKWjOqNNehIy9rYBxOFPB9Ngs=;
-        b=k1wT9Z4pCpAiHiPct/N77pkZjPo0MMbGEYOtiKtulkaLOSh5U5cQJY7Wu4NFRJISJj
-         PXa0BrDu2FbqIOJ00ArgLwfmjaTMRRA+H/aYA8C8D9YRFeMxVbT81vwGCxI0/byDUKlf
-         FPscHdMWwJCv2NN8R408cfB8nb9kQPZcNM1xsxWMri3AMu6YGRoD291VmhYNIwFqPcIb
-         Gxp6RPr9b0btl11gOMhJWzhVr3/z+AMcTY5OAXhTBA8Zrp3EcthEzGUKUMspbkuqNZMA
-         GkVf/dfY9W2kJqpbYw59oqekYqiqr3dblVk+ycVptYNkriH+1u0NFrNaLdpsJf8yr7zw
-         aR8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712943020; x=1713547820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7HvIZ4yZMepG+cf7hgtKWjOqNNehIy9rYBxOFPB9Ngs=;
-        b=Lo2Lz3sQGFUxyPh+tFPXA056YxIyP1c8tJC5pmoOIOj7RQelqOwCdaN2Bs+vljFWVq
-         qucQH0Gs8VbC6RwCR6ydVqglNQjp9OWNb/lfSQO43osJtFiwcuNJRUjHcHJWV7ltYnad
-         h+Le9Ak3KpmoDeNA9qGkrGth4uKmW+m8Uwdfqx9DukjvRcdZQ5E4EiQDx6ENJqj3v0RL
-         gXnrdAswkR1WDjFRj90GwHRNBTiWqB3w/FQLDxpSoksOLQnqaSW/zpyCgPY8PEVXYg8o
-         QScAEWvs3BHlA6YNGm6Py4hKuHKje+Bfqp1Ke0xe24GaiM2lCuMsdve3+oALe7IR/lYx
-         BlIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRh7k+KAR+X+bOldnQS46whhxwZ2UnAneRpYsOaBAKbmlLmk2biPHwbcxMODPdzjfFp9Zsy9HwUtX2BTCZc4iBzuIPIIK77AjP
-X-Gm-Message-State: AOJu0YzMirbSW/SnOush98CmcuxPHtJBMunZSa7iYK/nqEmmdwXkvrwt
-	rlkcm4731Tnuvhsd/yhiFho3TupmJDIa1fWwxIDY9ZnpLYN0P/K2
-X-Google-Smtp-Source: AGHT+IFOQoE69f87zpD6YQnq234Mfpz5JzC0OB8EMW5zXOYwpclZRKZ6e8Pe0OO53ph+5XZzIgFyYQ==
-X-Received: by 2002:a17:90a:fa08:b0:2a4:7df8:bd71 with SMTP id cm8-20020a17090afa0800b002a47df8bd71mr3093948pjb.13.1712943020326;
-        Fri, 12 Apr 2024 10:30:20 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:a5f4])
-        by smtp.gmail.com with ESMTPSA id z2-20020a17090a6d0200b002a5290ad3d4sm3322636pjj.3.2024.04.12.10.30.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 10:30:19 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Fri, 12 Apr 2024 07:30:18 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, chenhuacai@kernel.org, josef@toxicpanda.com,
-	jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net,
-	pctammela@mojatatu.com, yukuai3@huawei.com, qde@naccy.de,
-	zhaotianrui@loongson.cn, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH RFC v2 1/6] blk-throttle: remove
- CONFIG_BLK_DEV_THROTTLING_LOW
-Message-ID: <ZhlvqqtSo_Aw2Hjo@slm.duckdns.org>
-References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
- <20240406080059.2248314-2-yukuai1@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TECRcDw+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC07C3277B;
+	Fri, 12 Apr 2024 17:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712943753;
+	bh=/nAjwVyb6TKfp7Se1ZzwuZHLhLGc0ePlRQ+AGjPxbpo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TECRcDw+dXBulhLRwfv++i443/tRB6tthncDN+3DL3HhBt2A4EDnpgO02vexkmcU3
+	 2LgDrH09+UuqO/u930N+XhYzdJ0aMZIze7JQkwfG1KzROQjoKkek6qm0y/IUGdbQ9D
+	 F8vr6x1yYO7OgFOmMnkRTaUp3uod5XkHD3zUx1HYhCAQ8FMrGjPdDPkvh/d0OzdRxe
+	 BZKbCDbT8f2pL+eu7SMtePgTaWadI5Ys+XN6vYTRMkrTHD1VpMXM+Sns5aaWkwNjOb
+	 3I2MNj8n3ObiRn2J9BttjJFP8l4gdtqnp2a0wvsBCNMoVGpCQfyGynPikfH1QTd6PT
+	 XIP7ufaACw6tQ==
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-22ede5f7e0fso66117fac.0;
+        Fri, 12 Apr 2024 10:42:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX5rlMX8OtSM1vqwSwzuLJbGWJ/EFy2T86+8pH5Z2GOhX6EgbLSq3HX8Aotsi4asyFgScQcknXEYKVtukGT51fgikxnyJHg0WgMg8Ly8M3JivODmoTq4jCfdRFewU4WsmU+
+X-Gm-Message-State: AOJu0YxP/L8qxEmOoOG6jXhPqhYaKN6Xy3kprP3igEB8jFdWp0tMAzSg
+	z3nE2xmxvtcndQiOiIufzMYz2VcXvIkfKVl0WwJfipoCqO9aISpNbGRWSKfYSQM28CI2lKYOpK7
+	kgVHMBGHuqmBxUQawp0F56MUNQQc=
+X-Google-Smtp-Source: AGHT+IEJkeZDJTEL4cW0rpgNkzY06HXCYCu+TPlftZJzus+GEzgTu7rAYtLbl0X+S7TeyXUBRD7Q6k9BVLA6c/AYvs4=
+X-Received: by 2002:a05:6870:e9a9:b0:229:e46d:763a with SMTP id
+ r41-20020a056870e9a900b00229e46d763amr3647483oao.0.1712943752217; Fri, 12 Apr
+ 2024 10:42:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240406080059.2248314-2-yukuai1@huaweicloud.com>
+References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com> <20240412143719.11398-2-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240412143719.11398-2-Jonathan.Cameron@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 12 Apr 2024 19:42:20 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gK1SjiHzUT05eWZ_G_43e7UzsimTdG_g+F=mVQ=812yA@mail.gmail.com>
+Message-ID: <CAJZ5v0gK1SjiHzUT05eWZ_G_43e7UzsimTdG_g+F=mVQ=812yA@mail.gmail.com>
+Subject: Re: [PATCH v5 01/18] cpu: Do not warn on arch_register_cpu()
+ returning -EPROBE_DEFER
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, x86@kernel.org, Russell King <linux@armlinux.org.uk>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, 
+	James Morse <james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, linuxarm@huawei.com, justin.he@arm.com, 
+	jianyong.wu@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 06, 2024 at 04:00:54PM +0800, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> One the one hand, it's marked EXPERIMENTAL since 2017, and looks like
-> there are no users since then, and no testers and no developers, it's
-> just not active at all.
-> 
-> On the other hand, even if the config is disabled, there are still many
-> fields in throtl_grp and throtl_data and many functions that are only
-> used for throtl low.
-> 
-> At last, currently blk-throtl is initialized during disk initialization,
-> and destroyed during disk removal, and it exposes many functions to be
-> called directly from block layer. Hence I'm planning to optimize
-> blk-throtl and finially support building it as kernel module. Remove
-> throtl low will make the work much easier.
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+On Fri, Apr 12, 2024 at 4:37=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> For arm64 the CPU registration cannot complete until the ACPI intepretter
+> us up and running so in those cases the arch specific
+> arch_register_cpu() will return -EPROBE_DEFER at this stage and the
+> registration will be attempted later.
+>
+> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-I haven't seen any usage but let's see if anyone complains.
-
-Thanks.
-
--- 
-tejun
+> ---
+> v5: New patch.
+>     Note that for now no arch_register_cpu() calls return -EPROBE_DEFER
+>     so it has no impact until the arm64 one is added later in this series=
+.
+> ---
+>  drivers/base/cpu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> index 56fba44ba391..b9d0d14e5960 100644
+> --- a/drivers/base/cpu.c
+> +++ b/drivers/base/cpu.c
+> @@ -558,7 +558,7 @@ static void __init cpu_dev_register_generic(void)
+>
+>         for_each_present_cpu(i) {
+>                 ret =3D arch_register_cpu(i);
+> -               if (ret)
+> +               if (ret !=3D -EPROBE_DEFER)
+>                         pr_warn("register_cpu %d failed (%d)\n", i, ret);
+>         }
+>  }
+> --
+> 2.39.2
+>
