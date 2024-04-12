@@ -1,92 +1,139 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 723FF54919
-	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 08:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E1714006
+	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 09:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712912296; cv=none; b=iCBLkfK+xIO0wLtUaC+M5Ha4ZvkrO5xj+Rzm+dQftaImBbVAbQoYQz7qqVr033Wm5Uqz64mMEYGB6mcQUCACsguCj0h7M354eP7ZcwwO20dobIjanP5zzwtcBoP/qCLIFHCcNidtyO8X+Qqb7teuqZktlKd6eNM8CLq6pDQewZc=
+	t=1712913377; cv=none; b=YedwduSz0e4/hUsAlyYMO3gb2hdK7GlSZNbdje1kFAlZ6aTwIep27kwKLVULNRm9ZkDdEC8YDYx/FAqNrvrcBhvtXG97Wrnnfdd2fXV/165LThtdGUJNs1fVbRavaS65blgiDBkkoENTaAyHHz6McqlW/YEenuuBRvKzi5jWjGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712912296; c=relaxed/simple;
-	bh=wvTxpBz/xlX0wCAj5ZppzKJswZIdN3eORJa84MXXZYU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=LcEIBWROR7Q3E2cVH8/1MV7rXNprG4BW633gIp2pwP8VkjcaGgkTeWCVTyabS9zOvC+5cPK5dWEex7ygBiDdvG0LKyoEN/j4qZ7ER2Ykrt55z4+JY0zkmq4eSlQV7xv1643zyzsdJNzVN2U4YAkCI4DWF7qbLvZsHFjCldTqfkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8Cxqrqh9xhmNk8mAA--.6520S3;
-	Fri, 12 Apr 2024 16:58:10 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxDBOe9xhmwZx4AA--.34934S3;
-	Fri, 12 Apr 2024 16:58:08 +0800 (CST)
-Subject: Re: [PATCH] KVM: loongarch: Add vcpu id check before create vcpu
-To: Wujie Duan <wjduan@linx-info.com>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, kernel@xen0n.name
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240412084703.1407412-1-wjduan@linx-info.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <2b6e60ad-1138-06cf-015a-40d7e6ca7a10@loongson.cn>
-Date: Fri, 12 Apr 2024 16:58:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1712913377; c=relaxed/simple;
+	bh=T/TL4P6RqoXnShkICgxGFcoEXV/L8guRkl+BR8oz3qQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ra6zP4ElDYTP0tsWtoX7uKraN2Fj4uGF707LCAB37cozdE29w55xB3xd0Zkby9UPN7Oxk8aI4me7VVNWYtCLWHY81VT6R6wmFuzna4JQkiyjs7UrcwtBGxUU1/s8fTQJDl39XoH8UbiIuUmOBH5IQfE0Rp1J+ShVeD6GTna4HPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SnAbkM09; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnAbkM09"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56c404da0ebso974822a12.0
+        for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 02:16:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712913374; x=1713518174; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1P5rS5dDZ6bz9RnNGWXjXGeZ5LSFZB2izV8TdsSyfhY=;
+        b=SnAbkM096rT3Vm/0q5mPIO+eXR+a1NgEWPKvc2JsKy3za7/Ve3cuc2slCp+gizuThO
+         qITNxrLWemmBo0TLqo7sq6Rb1CiHfeHW1LonBWLhL/qOe9awJzS/dU6wDrfLzc34oBOW
+         ExkA8wIKXhhXOVyMFxjfi6EnmC1LcA2UYJyos0CDjmSWXerekFK/tFOXb4c5WHfjwVcP
+         jrgBZJ4ll9vWw71vYmy5QaEcuM7D5Yb/EvVfOGoqUetRFQfTC3tgVYj8CIr6sVmCnsm2
+         5lu26oPYxA/y5r2F7GDuk32J05n9m0fOB1kS7ap+Nrq0oIz0+mPCeXrytZaWGnnu0aUt
+         5aGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712913374; x=1713518174;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1P5rS5dDZ6bz9RnNGWXjXGeZ5LSFZB2izV8TdsSyfhY=;
+        b=WSXekY++2K6c8ucu7blTtXSXqGkKBWkNaFsi1SU/TtIO+bVhCL2IPFZStUNubPsFxz
+         1mbbyrkMhU8bNgEKyXeEvr66c1jINtCNvMvE3tN4CLdCZhGwqYL2RuuYaAiHPyvwyt51
+         TmxKXkrtKbmS310efqtwTiWxyGeEgL86Xof1rAVMRQVim6PyQdtN5FuR8oKurZcAaLll
+         Cr60Hac7GlGC4Yl2o2bpsqhoLemOXYBLQkj3ZoO+kz/X8LDMv1jn1+RXILAqd+WQMb6z
+         ECwH/hbuA+1L4ubjuveOwUa68Kv+zDe+rHfgxbApTK1gAYQCTJpDRt+z2mh8GCsC5r4I
+         Rx6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVC5fVZE5bvPrlxTJWQ+lW/PUw8Y7RkXD17N4BQm+RFR8HOOjWxwreaXTB+SWFqOsEuHc+ttK4NqP1y7wfD0OgbM5cBW3l4r+I5
+X-Gm-Message-State: AOJu0YyRzWNsxyYT7GwIvZbYo1wqDyCHBiGpmIRSNrIaOCSjC9gLT0en
+	rFBus0s+avUOmqs7w+zmWVO3+emxcChf3yjsUzttglzPFvj4XWYO
+X-Google-Smtp-Source: AGHT+IF2JLt070H6U+NVwXUCGShMgUTVG3TFLf6L4pd2nPVSBBMwXn0qR7EXkAPf+SwG43RHlRZl8g==
+X-Received: by 2002:a50:f68d:0:b0:56e:4039:add5 with SMTP id d13-20020a50f68d000000b0056e4039add5mr1892328edn.22.1712913374186;
+        Fri, 12 Apr 2024 02:16:14 -0700 (PDT)
+Received: from gmail.com (1F2EF1A5.nat.pool.telekom.hu. [31.46.241.165])
+        by smtp.gmail.com with ESMTPSA id el9-20020a056402360900b0056fe755f1e6sm1454709edb.91.2024.04.12.02.16.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 02:16:13 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Fri, 12 Apr 2024 11:16:10 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
+Message-ID: <Zhj72l6uN9OFilxA@gmail.com>
+References: <20240411160051.2093261-1-rppt@kernel.org>
+ <20240411160051.2093261-6-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240412084703.1407412-1-wjduan@linx-info.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxDBOe9xhmwZx4AA--.34934S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKw1rKF43XF4DAr4fCry7XFc_yoW3CFb_Gr
-	1Ikw15KrW8J3Wvq3yqgr1fJryrJw4kJFZ0v3WUZr47J3ZrJr97urWvg3W7Cw4DKrW8Aa15
-	Aa90yr9xC34ayosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOeOJUUU
-	UU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411160051.2093261-6-rppt@kernel.org>
 
 
+* Mike Rapoport <rppt@kernel.org> wrote:
 
-On 2024/4/12 下午4:47, Wujie Duan wrote:
-> Add a pre-allocation arch condition to checks that vcpu id should
-> smaller than max_vcpus
-> 
-> Signed-off-by: Wujie Duan <wjduan@linx-info.com>
-> ---
->   arch/loongarch/kvm/vcpu.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 3a8779065f73..d41cacf39583 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -884,6 +884,9 @@ long kvm_arch_vcpu_async_ioctl(struct file *filp,
->   
->   int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
->   {
-> +	if (id >= kvm->max_vcpus)
-> +		return -EINVAL;
-> +
->   	return 0;
->   }
->   
-> 
-Good catch, and thanks for your contribution.
+> +/**
+> + * enum execmem_type - types of executable memory ranges
+> + *
+> + * There are several subsystems that allocate executable memory.
+> + * Architectures define different restrictions on placement,
+> + * permissions, alignment and other parameters for memory that can be used
+> + * by these subsystems.
+> + * Types in this enum identify subsystems that allocate executable memory
+> + * and let architectures define parameters for ranges suitable for
+> + * allocations by each subsystem.
+> + *
+> + * @EXECMEM_DEFAULT: default parameters that would be used for types that
+> + * are not explcitly defined.
+> + * @EXECMEM_MODULE_TEXT: parameters for module text sections
+> + * @EXECMEM_KPROBES: parameters for kprobes
+> + * @EXECMEM_FTRACE: parameters for ftrace
+> + * @EXECMEM_BPF: parameters for BPF
+> + * @EXECMEM_TYPE_MAX:
+> + */
+> +enum execmem_type {
+> +	EXECMEM_DEFAULT,
+> +	EXECMEM_MODULE_TEXT = EXECMEM_DEFAULT,
+> +	EXECMEM_KPROBES,
+> +	EXECMEM_FTRACE,
+> +	EXECMEM_BPF,
+> +	EXECMEM_TYPE_MAX,
+> +};
 
-Reviewed-by: bibo mao <maobibo@loongson.cn>
+s/explcitly
+ /explicitly
 
+Thanks,
+
+	Ingo
