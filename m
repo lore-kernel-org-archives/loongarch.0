@@ -1,55 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6580218637
-	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 04:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E473C1F60B
+	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 04:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712895159; cv=none; b=pq/wMLQ8v3GiLxDKzaCj0mtbp3vM2BPgvMaHSezu4y5FiKdcOYSTQDtekKdiQqSmf+DhUVUnDuyvv0Hv/il2+Q0C84COL89eQDiBokE76pnBsEKF8qcjRRWzotUH0Lofrq8xeE7WopCbuqyVwlIRhZZTuE6cmyDljjSE02nzPZ8=
+	t=1712895483; cv=none; b=cetJuOCXQPc2fpZKyY1OQPKaHK5tMUfe31IkEQS5IoMe57Vb5qAs+AGyLhBhep7TFzMgSMhU8Tp2yGQ/RwLC+IvlZshULce7ERdazF7Y5NXV7bKQn3oUQPNAbxKrmQoa1g5pLuB0gYgiqlHkqHupcoiIa3a3gB1nXsQUxogGX9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712895159; c=relaxed/simple;
-	bh=Cxe0KEo5HYGIG3uR4CS3mYn9ImiPTk34Rc1Q3j9rM4k=;
+	s=arc-20240116; t=1712895483; c=relaxed/simple;
+	bh=Rs6KpGntHCw4Yqslf2bcFsD9oUEkwjTy3lZ29ZNks2w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GQtmjITiWL6WeMmhroDUfQdmgWiSDcGV59ECSOjBxEUiJfR72+q3HcU56Eoj2zchnjZkCOhllk+cf25FhaKmDL7NgpGW75wWngjQ11GGo5GWfrRLq+1V1xoI7IzF8EtdiABGpGgHv5RmQxJstlHzOgtVJWF/+OYpGtAkNZM4NV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2F8IuTK; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=j8UUqaH1P4cF+Lw9tJ8DsAktg1FiXI9pO612zbaKmeZfuOmyy2GIMQGAYZL27reNkMO4dtjGttAJZL71LpgiimPfdKQmLpTf3tSnQQTJgNjMMYHxj1ak1LlMZkjLRrlrRqh2t04Y04jd0mjTK3+I71Sn2OrDm0IrMwzmx7QKMnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUtBk9Kt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2F8IuTK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C1DC2BD10
-	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 04:12:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lUtBk9Kt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E853C4AF07
+	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 04:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712895159;
-	bh=Cxe0KEo5HYGIG3uR4CS3mYn9ImiPTk34Rc1Q3j9rM4k=;
+	s=k20201202; t=1712895482;
+	bh=Rs6KpGntHCw4Yqslf2bcFsD9oUEkwjTy3lZ29ZNks2w=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=r2F8IuTK4sikJ+Pou47SWUWgxzG54/DdqSWoIc/+Mowpd67wIsCbkrxU10sgKECyy
-	 BE+psPx0XOQVNpeM/1Pii9YkuCXK/npyCLdZOjYxF7R0Hgr53ArPYeM2zhHrUU5nNG
-	 Y1z/ky8ppyF4829g1dTI3sMRBG+GQ1TjzxVpTiIs7Mh2ACCfwPFr6GJcs2CWqkpZh7
-	 hH7RYcnweMDYZuglAN+6ueMY8T2OBjL8gO2MJh1TnX5GuST5qtUi8mzCdJA/CbUvpu
-	 RERPTEo2ks+r7Kn/FjbuHZ+ca7iFqLl5SPHIxtLPp0Ew/WKjKcD/pQTxBaCxPPcD0Y
-	 rq/BMiHzrWhjg==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a51b5633c9cso50339866b.2
-        for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 21:12:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV6c7X6xgZf10AqFC83xhnz6D4zYd6jBISzVcQpq7ayPHpViGvIor2iH0ingbUGqoRbuYzl+fss07h+/q4XjemE0VCIE9rxkbAd
-X-Gm-Message-State: AOJu0YyX9ly0RlXxDYz2vUzTJjRuwWM1xb69zRE4P7QsdLf0uEm2Ttl8
-	LIAaIS9cSMAwUqReb7ZIqc1fljPZEEdsuj8nb5UG454qteBCxfcKK9rZJt6LJzMsaLGdRnH7seq
-	JeH6107XdHThDANVCCJuLwyBVhsI=
-X-Google-Smtp-Source: AGHT+IHEN3YuDi9aWyK/O9J7zZTQ0B1yZp/YaIsLZymqc/hpdrQrpSqJyjbcQyaJVA4ZhFWO6g4su/V+eiAkxJDq1o4=
-X-Received: by 2002:a17:906:80c7:b0:a52:2e54:7022 with SMTP id
- a7-20020a17090680c700b00a522e547022mr825073ejx.10.1712895157514; Thu, 11 Apr
- 2024 21:12:37 -0700 (PDT)
+	b=lUtBk9KtFqJI+UQlt0ApruN5aBNHlZbvkbOckd8ziZLXDZfNVgF7uC9qVaPnxLn2Y
+	 8ehodt8dWSY+IoOUo2uUHnRuoVi1MD68nR8aLjRAJXYVp+Fhyrb7CBKz1GxtWkVrWW
+	 04GtGTS+mcJLpoeCU5EcQk0d0kxMftVRHtXGyTOyUIeOzC0ZYFgCr22RmnsEwWc3lg
+	 CD+p4AvTR7rWmM7QEWVeRKzQ7VUboGq1QxICzqIfO0sTjGv4IH04HRtMJQdIRf96dR
+	 Y0dCiVMtbY4vAGZAt7YtZEV5TiPSZ88h1a6qk4DMCXT6yInwztRQiNyxFvjrJ/1rCn
+	 dmOKx0pA8uLDQ==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a5200afe39eso49993966b.1
+        for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 21:18:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX5Cg1DsM2Ob5kgDnf5+jcRMy2MvkUak2cJzRHQhqLlIlf52X/CpG2xymGgxtPbLbvsjrxKUFXv0UI8RAosmHY327WDBUVNp5Y6
+X-Gm-Message-State: AOJu0YwNqjVJQqUcD/fhEGwv5nkjVv005Pj/2WF6lFrKsaR06+JozJl/
+	rwrktATRWGyJgSniLtEj9Md0ejwXsX3ghOo8dUQQpjlYylPC2S1A1AVmWc6FZ0YupRAU5s9e59r
+	wm1vsaCGnlJOOjXALdBq9hY8g0RM=
+X-Google-Smtp-Source: AGHT+IFYR5HCm3SSxFDMVvvI/UdaA9zyJSKqVqwbLkJcA88e9XoV146pitINbiUotL67uHM+pps74EmDPuIAgZou5nU=
+X-Received: by 2002:a17:906:80c7:b0:a52:1a78:e3ca with SMTP id
+ a7-20020a17090680c700b00a521a78e3camr1209261ejx.6.1712895480760; Thu, 11 Apr
+ 2024 21:18:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240411010510.22135-1-yangtiezhu@loongson.cn> <20240411010510.22135-2-yangtiezhu@loongson.cn>
-In-Reply-To: <20240411010510.22135-2-yangtiezhu@loongson.cn>
+References: <20240411010510.22135-1-yangtiezhu@loongson.cn> <20240411010510.22135-3-yangtiezhu@loongson.cn>
+In-Reply-To: <20240411010510.22135-3-yangtiezhu@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 12 Apr 2024 12:12:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6TVEEB=xdr_ymuUnDqPDXwtM7R7yJBj03YhWpCwqjAiA@mail.gmail.com>
-Message-ID: <CAAhV-H6TVEEB=xdr_ymuUnDqPDXwtM7R7yJBj03YhWpCwqjAiA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] LoongArch: Move CONFIG_HAVE_SETUP_PER_CPU_AREA
- related code to smp.c
+Date: Fri, 12 Apr 2024 12:17:53 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H73d5hVM+anfHhTFHjWDmVtC2TJdxU9hANJvQgm-E3g6w@mail.gmail.com>
+Message-ID: <CAAhV-H73d5hVM+anfHhTFHjWDmVtC2TJdxU9hANJvQgm-E3g6w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] LoongArch: Refactor get_acpi_id_for_cpu() related code
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>, 
 	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
@@ -57,198 +56,74 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zy
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+Hi, Tiezhu,
+
 On Thu, Apr 11, 2024 at 9:05=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
 > wrote:
 >
-> Currently, if CONFIG_NUMA is not set but CONFIG_SMP is set, the arch
-> specified setup_per_cpu_areas() in arch/loongarch/kernel/numa.c will
-> not be built and the generic setup_per_cpu_areas() in mm/percpu.c is
-> actually used, this is not reasonable and does not work as intended.
-Why is the generic version not reasonable? We need a custom version
-just because it can put the percpu variable in the best node. If NUMA
-disabled, software can only see one node, how to optimize?
+> Currently, cpu_logical_map(cpu) is defined as __cpu_logical_map[cpu]
+> in arch/loongarch/include/asm/smp.h and __cpu_logical_map[] is defined
+> in arch/loongarch/kernel/smp.c, that is to say, cpu_logical_map(cpu) is
+> vaild only under CONFIG_SMP, the implementation of get_acpi_id_for_cpu()
+> which calls cpu_logical_map(cpu) is not suitable for the case of non-SMP,
+> so refactor get_acpi_id_for_cpu() related code to make it work well for
+> both SMP and non-SMP.
+But you implement cpu_logical_map(cpu) for non-SMP in the 4th patch, right?
 
 Huacai
-
->
-> Let us select HAVE_SETUP_PER_CPU_AREA unconditionally and then move
-> CONFIG_HAVE_SETUP_PER_CPU_AREA related code from numa.c to smp.c to
-> avoid this problem.
 >
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  arch/loongarch/Kconfig       |  2 +-
->  arch/loongarch/kernel/numa.c | 58 -----------------------------------
->  arch/loongarch/kernel/smp.c  | 59 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 60 insertions(+), 59 deletions(-)
+>  arch/loongarch/include/asm/acpi.h | 7 ++++++-
+>  arch/loongarch/kernel/acpi.c      | 9 ++++++++-
+>  2 files changed, 14 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index a5f300ec6f28..64052ae2c2af 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -151,7 +151,7 @@ config LOONGARCH
->         select HAVE_RUST
->         select HAVE_SAMPLE_FTRACE_DIRECT
->         select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
-> -       select HAVE_SETUP_PER_CPU_AREA if NUMA
-> +       select HAVE_SETUP_PER_CPU_AREA
->         select HAVE_STACK_VALIDATION if HAVE_OBJTOOL
->         select HAVE_STACKPROTECTOR
->         select HAVE_SYSCALL_TRACEPOINTS
-> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-> index 8fe21f868f72..49dc1d932ce2 100644
-> --- a/arch/loongarch/kernel/numa.c
-> +++ b/arch/loongarch/kernel/numa.c
-> @@ -48,64 +48,6 @@ EXPORT_SYMBOL(__cpuid_to_node);
+> diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/a=
+sm/acpi.h
+> index 49e29b29996f..a4ad3f75bd60 100644
+> --- a/arch/loongarch/include/asm/acpi.h
+> +++ b/arch/loongarch/include/asm/acpi.h
+> @@ -39,9 +39,14 @@ extern struct acpi_madt_core_pic acpi_core_pic[MAX_COR=
+E_PIC];
 >
->  nodemask_t numa_nodes_parsed __initdata;
+>  extern int __init parse_acpi_topology(void);
 >
-> -#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
-> -unsigned long __per_cpu_offset[NR_CPUS] __read_mostly;
-> -EXPORT_SYMBOL(__per_cpu_offset);
-> -
-> -static int __init pcpu_cpu_to_node(int cpu)
-> -{
-> -       return early_cpu_to_node(cpu);
-> -}
-> -
-> -static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
-> -{
-> -       if (early_cpu_to_node(from) =3D=3D early_cpu_to_node(to))
-> -               return LOCAL_DISTANCE;
-> -       else
-> -               return REMOTE_DISTANCE;
-> -}
-> -
-> -void __init pcpu_populate_pte(unsigned long addr)
-> -{
-> -       populate_kernel_pte(addr);
-> -}
-> -
-> -void __init setup_per_cpu_areas(void)
-> -{
-> -       unsigned long delta;
-> -       unsigned int cpu;
-> -       int rc =3D -EINVAL;
-> -
-> -       if (pcpu_chosen_fc =3D=3D PCPU_FC_AUTO) {
-> -               if (nr_node_ids >=3D 8)
-> -                       pcpu_chosen_fc =3D PCPU_FC_PAGE;
-> -               else
-> -                       pcpu_chosen_fc =3D PCPU_FC_EMBED;
-> -       }
-> -
-> -       /*
-> -        * Always reserve area for module percpu variables.  That's
-> -        * what the legacy allocator did.
-> -        */
-> -       if (pcpu_chosen_fc !=3D PCPU_FC_PAGE) {
-> -               rc =3D pcpu_embed_first_chunk(PERCPU_MODULE_RESERVE,
-> -                                           PERCPU_DYNAMIC_RESERVE, PMD_S=
-IZE,
-> -                                           pcpu_cpu_distance, pcpu_cpu_t=
-o_node);
-> -               if (rc < 0)
-> -                       pr_warn("%s allocator failed (%d), falling back t=
-o page size\n",
-> -                               pcpu_fc_names[pcpu_chosen_fc], rc);
-> -       }
-> -       if (rc < 0)
-> -               rc =3D pcpu_page_first_chunk(PERCPU_MODULE_RESERVE, pcpu_=
-cpu_to_node);
-> -       if (rc < 0)
-> -               panic("cannot initialize percpu area (err=3D%d)", rc);
-> -
-> -       delta =3D (unsigned long)pcpu_base_addr - (unsigned long)__per_cp=
-u_start;
-> -       for_each_possible_cpu(cpu)
-> -               __per_cpu_offset[cpu] =3D delta + pcpu_unit_offsets[cpu];
-> -}
-> -#endif
-> -
->  /*
->   * Get nodeid by logical cpu number.
->   * __cpuid_to_node maps phyical cpu id to node, so we
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index aabee0b280fe..88b9c6b68d1e 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -29,6 +29,7 @@
->  #include <asm/loongson.h>
->  #include <asm/mmu_context.h>
->  #include <asm/numa.h>
-> +#include <asm/pgalloc.h>
->  #include <asm/processor.h>
->  #include <asm/setup.h>
->  #include <asm/time.h>
-> @@ -717,3 +718,61 @@ void flush_tlb_one(unsigned long vaddr)
->         on_each_cpu(flush_tlb_one_ipi, (void *)vaddr, 1);
+> +static inline struct acpi_madt_core_pic *acpi_cpu_get_core_pic(int cpu)
+> +{
+> +       return &acpi_core_pic[cpu];
+> +}
+> +
+>  static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+>  {
+> -       return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
+> +       return acpi_cpu_get_core_pic(cpu)->processor_id;
 >  }
->  EXPORT_SYMBOL(flush_tlb_one);
-> +
-> +#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
-> +unsigned long __per_cpu_offset[NR_CPUS] __read_mostly;
-> +EXPORT_SYMBOL(__per_cpu_offset);
-> +
-> +static int __init pcpu_cpu_to_node(int cpu)
-> +{
-> +       return early_cpu_to_node(cpu);
-> +}
-> +
-> +static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
-> +{
-> +       if (early_cpu_to_node(from) =3D=3D early_cpu_to_node(to))
-> +               return LOCAL_DISTANCE;
-> +       else
-> +               return REMOTE_DISTANCE;
-> +}
-> +
-> +void __init pcpu_populate_pte(unsigned long addr)
-> +{
-> +       populate_kernel_pte(addr);
-> +}
-> +
-> +void __init setup_per_cpu_areas(void)
-> +{
-> +       unsigned long delta;
-> +       unsigned int cpu;
-> +       int rc =3D -EINVAL;
-> +
-> +       if (pcpu_chosen_fc =3D=3D PCPU_FC_AUTO) {
-> +               if (nr_node_ids >=3D 8)
-> +                       pcpu_chosen_fc =3D PCPU_FC_PAGE;
-> +               else
-> +                       pcpu_chosen_fc =3D PCPU_FC_EMBED;
-> +       }
+>
+>  #endif /* !CONFIG_ACPI */
+> diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+> index 5cf59c617126..ccfa90faf0ea 100644
+> --- a/arch/loongarch/kernel/acpi.c
+> +++ b/arch/loongarch/kernel/acpi.c
+> @@ -98,8 +98,15 @@ acpi_parse_processor(union acpi_subtable_headers *head=
+er, const unsigned long en
+>                 return -EINVAL;
+>
+>         acpi_table_print_madt_entry(&header->common);
 > +
 > +       /*
-> +        * Always reserve area for module percpu variables.  That's
-> +        * what the legacy allocator did.
+> +        * When CONFIG_SMP is disabled, mapping won't be created for all =
+cpus.
+> +        * CPUs more than num_possible_cpus will be ignored.
 > +        */
-> +       if (pcpu_chosen_fc !=3D PCPU_FC_PAGE) {
-> +               rc =3D pcpu_embed_first_chunk(PERCPU_MODULE_RESERVE,
-> +                                           PERCPU_DYNAMIC_RESERVE, PMD_S=
-IZE,
-> +                                           pcpu_cpu_distance, pcpu_cpu_t=
-o_node);
-> +               if (rc < 0)
-> +                       pr_warn("%s allocator failed (%d), falling back t=
-o page size\n",
-> +                               pcpu_fc_names[pcpu_chosen_fc], rc);
-> +       }
-> +       if (rc < 0)
-> +               rc =3D pcpu_page_first_chunk(PERCPU_MODULE_RESERVE, pcpu_=
-cpu_to_node);
-> +       if (rc < 0)
-> +               panic("cannot initialize percpu area (err=3D%d)", rc);
+> +       if (processor->core_id >=3D 0 && processor->core_id < num_possibl=
+e_cpus())
+> +               acpi_core_pic[processor->core_id] =3D *processor;
 > +
-> +       delta =3D (unsigned long)pcpu_base_addr - (unsigned long)__per_cp=
-u_start;
-> +       for_each_possible_cpu(cpu)
-> +               __per_cpu_offset[cpu] =3D delta + pcpu_unit_offsets[cpu];
-> +}
-> +#endif
+>  #ifdef CONFIG_SMP
+> -       acpi_core_pic[processor->core_id] =3D *processor;
+>         set_processor_mask(processor->core_id, processor->flags);
+>  #endif
+>
 > --
 > 2.42.0
->
 >
