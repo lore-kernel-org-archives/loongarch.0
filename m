@@ -1,97 +1,119 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A22D14E2FE
-	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 18:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF1314E2F2;
+	Fri, 12 Apr 2024 18:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712945138; cv=none; b=nZMIBUt4//wt2Pdy7ukNz9sMSutxsVuWWQESuuWNHb0kN16qr9fCBcmfNkLRJ8VsUxS23ofzobCY/iXAhuPKinL8jAWHx3/XhhdUHOL0he+WVOkoWcvqSZqmwTXl+/NdWBsYX92qIqMdV3a+8jGuSxQqvrNwko9+aI8N5zNepNo=
+	t=1712945467; cv=none; b=YnpE69NsX9r8nEjUKhK2Rmh6Wmtl/zegruSKEw4GgH19yEoU+mQnX2TZPuT/80L4kEcaJgHA6G8y7PDJVAFDagYv3QDMlOozMqVK6yE8I52yYAh11POeqQob9gt6PbfSfMkgn2B6ovLaQFpzLR6ZBPRq7l6p5piEnL3POhsCbWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712945138; c=relaxed/simple;
-	bh=/F4Q9+7tbP9ySS1ScciWSXO7ebXpuvtEIyWrRaLQfS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l2yhzEjdv1RvVqahVrzEuMXfhNnxLMBduNydNlyV4QmMq9Spi/r0qXnCWT4AgYtfmYxAzOZYBXiImVrdZY1suFlAItKVrB6DjtTVBUmuuBR0+y95OWMn/uzu3iQ/1wOkP7LHhFsEYgKFg1TZes5u0iHAQGwW5/LpucYdoQSCse0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gklLjh1A; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712945467; c=relaxed/simple;
+	bh=w0Rj2BE2ik1TfBrDf8LZJAbgRfaaZayTzrNsUAR3K2o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m2+0aM1WOg8qSEgCt+S1ol1dY1/smwWMpQx84KUUPXoX69mLjS0c7oBr2HKtV8FuEr2TjAtQvR9KsPADQb0a3IbspfkkQsPcVgBsBhRActwNqkb7n8N6JhVz8i/5UD1zlot0dNJ7+exkX4bOEV9xH35Qugrq1F5ULaiW5WL1u1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDoa0lyh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gklLjh1A"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e51398cc4eso11726825ad.2
-        for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 11:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712945136; x=1713549936; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=49adEIqrpP0J1XcwnyVGewM/PJvauGE++ZVC/WjnIFs=;
-        b=gklLjh1AVn4BuYyDJt5naFbdKXdHOdn1KePi5XGlV/I7fg5aoW/lLAVsjTYfssgNGl
-         OhBXBvUaZ/5tpkdjDgWALQV97jwIuRfaxFsaZCXhWdkGNfsHOFOmYo5AzRhCA9Rj53ao
-         oJ1LK54NWgk2mO1c1h1+rJu2X/Hk3eNaKuAE23c1fx8c8psdD4o1M0PflK5H2QKKAGrB
-         WjubVTMRcTUpLca7Qm2Rcfb8fQr+FZNhqLMmQgAqrTbuCnYbkeefGwlm+wSwhwacdps1
-         H5rlogs3xLNDHCHws64UbJmC10/I/7LPnrPUFeelu1a9SKX5VUmQvMvLg4tLftjNzvUd
-         szbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712945136; x=1713549936;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=49adEIqrpP0J1XcwnyVGewM/PJvauGE++ZVC/WjnIFs=;
-        b=dEzwx5XxBXb6WLvxdrj8q90SfDuz7MK8q6dOCjKozHhPEEYjnPspXcx4I5jgAvB0pA
-         wVhk7nBrr0HRAeRDSy35Ft5DlrqdIXrf8foID3Pku2MuZyCnezZksx0cMter3lxGV5rS
-         EsJ6ZRWvgIJRlXB1NPomI0j9AolDblvl3DVNt+/6ynkQPHohSSJD+pzlncQKcVZGvZ+4
-         vnTy1x0LKzTCOufCxEivCj4jVuGIJ55gDunotFFjQcpKDm3a7A1bOPMFtIgI0XR3xGHk
-         r5wk9bJWVOgGERflNew49zC01lr/rehJCV9Mk/ZrIVHlJgti++Fs59kIordBXzRN2UYm
-         N8NA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcgtSH4NzXzHRapbccYp8Yq1dQidZKUJAAQKYoxQA4CWF+y3u8rU6uK6/wqnGt9JLQTPkoT2NhUybzHcCO2S74G/jLvA9dL0cT
-X-Gm-Message-State: AOJu0YxbTx7CUZgqwRK+uO7/ClkRgLCcnGBYczLzjekw600lPiZ0gd4i
-	0YqrtWQcOxoxYg+PMLu+EoWHQpcLC+Sg0N67Lc1IwTmWs88ieHqJ
-X-Google-Smtp-Source: AGHT+IHYepwYRiV7O2n571JUT01a7WtvHGmQaaatE8xYsUy/fnmFllAFfc3bbHk4zZ1c/m5U+E2KjQ==
-X-Received: by 2002:a17:902:930c:b0:1e0:2977:9dfc with SMTP id bc12-20020a170902930c00b001e029779dfcmr3236218plb.55.1712945136393;
-        Fri, 12 Apr 2024 11:05:36 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:a5f4])
-        by smtp.gmail.com with ESMTPSA id f5-20020a17090274c500b001e0e8e4f7e3sm3256013plt.206.2024.04.12.11.05.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 11:05:35 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Fri, 12 Apr 2024 08:05:34 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, chenhuacai@kernel.org, josef@toxicpanda.com,
-	jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net,
-	pctammela@mojatatu.com, yukuai3@huawei.com, qde@naccy.de,
-	zhaotianrui@loongson.cn, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH RFC v2 5/6] blk-throttle: support to destroy throtl_data
- when blk-throttle is disabled
-Message-ID: <Zhl37slglnnTSMO7@slm.duckdns.org>
-References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
- <20240406080059.2248314-6-yukuai1@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDoa0lyh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 460A6C4AF08;
+	Fri, 12 Apr 2024 18:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712945467;
+	bh=w0Rj2BE2ik1TfBrDf8LZJAbgRfaaZayTzrNsUAR3K2o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KDoa0lyhtKdtCX/st2OM4yzUUFYH/wZdlPwfOk+/h8yG51SmuMko1dILZUaYH2o1m
+	 zQI3FRfCn/Hn+EN8T9pDEMxHFseYAmF9CSISfO9ZwiJPDeXtTPKj+rDaNAyokflBfS
+	 GTG4Dx+gn0cE091MRS9iZmeAxI2qMgvpwdGeEeY42wYLjOTm9feo+Mz2e9S5ZyQb5b
+	 ABCjuloula+NpOC95mrh3iqQfkSHIVDusunVEqmZXpMlqjaFIBvcMQ27MtXFcDHNrK
+	 +ik/LaCgimMKWnS1KZWhL+Rjs0uyr+OKK5KwxK9aOia+mvN/lXBmGyhG+Ieuo/kg0F
+	 rjoNjC118QESA==
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-22f211d761bso40763fac.0;
+        Fri, 12 Apr 2024 11:11:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV/Pk54E/boXYYh0EbGOutYOGzMAoAjtz+ypR9b2vXA+i9jr7pQXQjagK6uAvDqZVN6RPFE3FMfJYJCb6qyb/woqCYdPwAaGKhdZNdgO7tFb/jGjbrWE5Dn/NsUeDVmJEwG
+X-Gm-Message-State: AOJu0YxkSWdc7UeVvYnuVRjvKmWse2dQ/8azME1Hy+3cnU2jmjlkWjNE
+	E/K1L7KxHdtqRLEm70Wwbd97oNc/+/vlkZN+Efm3V3P7lt/n3jsUpsYS66+T+yI1P4SE0Xac8dw
+	X8rEMczzRV3Ft4A8ZN2PlOAnM6YE=
+X-Google-Smtp-Source: AGHT+IGKtcKlSO2lFAIq6OKvn2JNPJn0Ga+grmKCMWsQcAXz9raUofNuscAxbTpGInOFPwn5aIKNB4YKf2Ez0fmcZl8=
+X-Received: by 2002:a05:6870:9a97:b0:22e:6e96:ed41 with SMTP id
+ hp23-20020a0568709a9700b0022e6e96ed41mr3822217oab.2.1712945466524; Fri, 12
+ Apr 2024 11:11:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240406080059.2248314-6-yukuai1@huaweicloud.com>
+References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com> <20240412143719.11398-3-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240412143719.11398-3-Jonathan.Cameron@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 12 Apr 2024 20:10:54 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0izN5naWY7sTi16whds9ubXkLpgqV2gePQs869BoJTCDA@mail.gmail.com>
+Message-ID: <CAJZ5v0izN5naWY7sTi16whds9ubXkLpgqV2gePQs869BoJTCDA@mail.gmail.com>
+Subject: Re: [PATCH v5 02/18] ACPI: processor: Set the ACPI_COMPANION for the
+ struct cpu instance
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, x86@kernel.org, Russell King <linux@armlinux.org.uk>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, 
+	James Morse <james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, linuxarm@huawei.com, justin.he@arm.com, 
+	jianyong.wu@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, Apr 12, 2024 at 4:38=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> The arm64 specific arch_register_cpu() needs to access the _STA
+> method of the DSDT object so make it available by assigning the
+> appropriate handle to the struct cpu instance.
+>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/acpi/acpi_processor.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
+c
+> index 7a0dd35d62c9..93e029403d05 100644
+> --- a/drivers/acpi/acpi_processor.c
+> +++ b/drivers/acpi/acpi_processor.c
+> @@ -235,6 +235,7 @@ static int acpi_processor_get_info(struct acpi_device=
+ *device)
+>         union acpi_object object =3D { 0 };
+>         struct acpi_buffer buffer =3D { sizeof(union acpi_object), &objec=
+t };
+>         struct acpi_processor *pr =3D acpi_driver_data(device);
+> +       struct cpu *c;
+>         int device_declaration =3D 0;
+>         acpi_status status =3D AE_OK;
+>         static int cpu0_initialized;
+> @@ -314,6 +315,8 @@ static int acpi_processor_get_info(struct acpi_device=
+ *device)
+>                         cpufreq_add_device("acpi-cpufreq");
+>         }
+>
+> +       c =3D &per_cpu(cpu_devices, pr->id);
+> +       ACPI_COMPANION_SET(&c->dev, device);
 
-On Sat, Apr 06, 2024 at 04:00:58PM +0800, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Currently once blk-throttle is enabled, it can't be destroyed until disk
-> removal, even it's disabled.
-> 
-> Also prepare to support building it as kernel module.
+This is also set for per_cpu(cpu_sys_devices, pr->id) in
+acpi_processor_add(), via acpi_bind_one().
 
-The benefit of doing this whenever the ruleset becomes empty seems marginal.
-This isn't necessary to allow unloading blk-throttle and
-blkg_conf_exit_blkg() is also necessary because of this, right?
+Moreover, there is some pr->id validation in acpi_processor_add(), so
+it seems premature to use it here this way.
 
-Thanks.
+I think that ACPI_COMPANION_SET() should be called from here on
+per_cpu(cpu_sys_devices, pr->id) after validating pr->id (so the
+pr->id validation should all be done here) and then NULL can be passed
+as acpi_dev to acpi_bind_one() in acpi_processor_add().  Then, there
+will be one physical device corresponding to the processor ACPI device
+and no confusion.
 
--- 
-tejun
+>         /*
+>          *  Extra Processor objects may be enumerated on MP systems with
+>          *  less than the max # of CPUs. They should be ignored _iff
+> --
+> 2.39.2
+>
