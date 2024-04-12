@@ -1,190 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E180BD53E;
-	Fri, 12 Apr 2024 18:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A68B148FE0
+	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 18:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712946654; cv=none; b=oX9CWxw6OPgeZ+SvTf4SQ3EjarXDMlXaCLfrrts0gLg9YLOLPmfYSeSGLThMDZ2cbdLsaZEj/z+t9QiufjiOZcnRD7rRDFbjJnTDjvhfQAjgWxygzLoK8SsvVUeFf0OR1Tf/tgMYysyFUobUZPhNlFLXLvkAp4PR2hOEU1EavPo=
+	t=1712947312; cv=none; b=e67V5DzouqhBw2Vh8wH1IwlSaVf/1umEzuYSIgMOB8cpsTbpRaLsHt3kkbFNiNdLYs3tDezOcbJ4avMMAe71HFtpHZQ1QzkFbYDikldqEhjgO7DLwZstUpxzr64EG0go7PVhLd9RUXPPFgOnB1wLdGemml4ao1C25xSG8ddlLoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712946654; c=relaxed/simple;
-	bh=PjJ0r1jv+Gy40inFGbGqF8OvINrRwJDv/80NI2l5XUc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ob0vKW4xECMJ/+B/uGvV40f3JnGFPnUcXnjWoUnp/kjrMG7X4+b+B4F0FdNiznKELJ93pOC7fNJeEVBCQ0AYQtbUEXOQSmS6jEN7Bxc/u4Y0UCOCCgSinb9QkMJSlAca4ujV53hD8ZMHrkgSO7bkWq/faSEmoYaFFjwpQ0syU0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQQWusNG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712947312; c=relaxed/simple;
+	bh=RGNi9rzXqhjGiFDRNP+kvJNM7r5DsV922PEV+oBFzbA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Snn6uFBMcVhQktbJsnxF/GHEe8QEVqo7WIjthX1ZusGX09TLwcrw7+G/al4I79kycsel5t7fydVHlzVc1NSKWZ0Rcmx3Ioz0GTkAkaJFns+W5nEQrIVheSjejm86ucWmj1fbI5FlU0YIj56tjUGJyndntbi9l/jzImPIP3+WZk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SLOkBsRq; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQQWusNG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 732F4C32786;
-	Fri, 12 Apr 2024 18:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712946653;
-	bh=PjJ0r1jv+Gy40inFGbGqF8OvINrRwJDv/80NI2l5XUc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZQQWusNG6ExBvY436QlvONSgQH5kbBgDfbHpEXf21tXhje42q0jreHJC9+TdiOZTb
-	 /AEVXF46pkLyBL0qmtps6lIkaCDRZE06wX4rAI9ukziCq86KHNjF+ssi2wG5/ccvIw
-	 z19wt8wvGtJ8ZjwjOfLaLcex6/4MwD1lfR6DDBFkZ5fsnZiWIJN++FbgCcL7ko1EwI
-	 9btL93ZH4JI9iDwfPNB9Y7u2Tc9fw5RxLDg/eqbtvcoFWufEQBMk1DExUfDwCFJtww
-	 C7jYNeF52ysH7D2f2zo8BxxoyzRfqvk9xpAkNeCFmpKFwgtuNH//JHaOqaPCClC0fq
-	 2nJ877KMWCiDg==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-22ed9094168so239880fac.1;
-        Fri, 12 Apr 2024 11:30:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVOcMrqPwkhI7XSAKWKmdT5JDQlqDE82eLap96bYYWwym95Wnvg54cke3dDJ+vkqK/pH/IuULb1uMvfsKkZ5qhCKeMdLdJnUp3rGzub9bqR6i5PXhoS7C/VfF+jXKWNYAVr
-X-Gm-Message-State: AOJu0YxFypF5dceW5e9TehD8654ioljrfvyazi+1p+BE0vIfrHPA711R
-	o6SIbt1pUW02MVfDmli9rk5x2pVkKZEHzvVBwQ5ga4SLvuIO+0bPnUYh3wen09hRHkfgd09L1L0
-	ssh+cQbmEPGSWFkV5M904KjBGDo4=
-X-Google-Smtp-Source: AGHT+IFDKbKacACQlXu+Vha1dYER/o7zLL0gXJIc6Jg1rU5tcmimRio9VrXjAKDGAGecTYjA8A0m0vMnHNM03elbI48=
-X-Received: by 2002:a05:6871:612:b0:229:ee6d:77da with SMTP id
- w18-20020a056871061200b00229ee6d77damr3536849oan.2.1712946652664; Fri, 12 Apr
- 2024 11:30:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SLOkBsRq"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc647f65573so2263479276.2
+        for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 11:41:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712947310; x=1713552110; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PwPJQIO9PCSTWhMKnDqZU+F6U0uKGIbW0CebiQxQU+E=;
+        b=SLOkBsRqoPJf8l7NVWbVy2PlrieDFGe13OWyzfV35KyttvJiPLz8A6XZd1eX0USAbL
+         gwbe9p7oIKmTFKYqq5b3knNABb0asU3O3nYVpTP8WG7/G86Db3SHy5S74dVH5/xXsp2f
+         chzpZUYgi41mIZUbvr4z/R6UENO9QcMx9deXekskPjKC6cdJrC3cPVgw2jSVMh7zgwHy
+         Wjwkf9d+uR54mGWNm2LAN056Hs6etHO6EBbHvoi96IIfRryv7djIlEq33y2Y6QKdliYg
+         A2Ir13OKh20Bcx0sI1rkobGWuvoSFJ+cLlI2ESGlE67+L6mosp88CfZZ6j4xFvP/DreH
+         K9JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712947310; x=1713552110;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PwPJQIO9PCSTWhMKnDqZU+F6U0uKGIbW0CebiQxQU+E=;
+        b=SC4SMz9BAiL0AfvhQzuEiF4BsIzhaPItHKMCT6rYYQjy/iMvVltwEIYcDAmXfUKqVB
+         4+uT2uam3UVjof6KgzN8H6QQpX7fR67Hv+hEnBlWpblBpx21tosqlkXjgxFxu3WSH0mD
+         06MXlkntgTLpR3sz0N+4i4ekfJXxZZB4DSWX674/kXShZO9gJqfhwdr3igasoXvbkbLS
+         CpQKGOLeY0tbomAXMHxLq78dNoXKxF7n5qHDzRN2h79erE58vP+rlUyjrATRB/AwAmib
+         uxk+By3ReK3/L9GV/Mv1L5QRJyJkmaNZSo4/0uCcOgCAYrDKr6cZL+ZMam3t/gnlP2C4
+         ucsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNSS4Wi6hpMYmz46iFCFxWlZSAL0MEseJi8TUyKBnWZzyI2KKGUSKAP6B9tRE/X0THOBhy8+7u5e48/iLmquZv0BBGDtm6tcgx
+X-Gm-Message-State: AOJu0YxHAveO0SaiuyJaLvjIxZlN2ojaw760oJqQIbPUxqSFD8/z30Ea
+	zWl2vPgZofsF7D1m5ntGq4EVjzbY8NHlqdV3VJJa4bfUT8cQCY7lN+DyK8T3zqoMvElAdHbWqb0
+	mjg==
+X-Google-Smtp-Source: AGHT+IHybk309r9yeTtvrGIJ+BHxaTibsx4Sw52ihb2S/NcXRw6GqWp6D/rTYKOn+I51ZDcn7hlg9iX2MrM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1081:b0:dc7:8e30:e2e3 with SMTP id
+ v1-20020a056902108100b00dc78e30e2e3mr936126ybu.2.1712947310492; Fri, 12 Apr
+ 2024 11:41:50 -0700 (PDT)
+Date: Fri, 12 Apr 2024 11:41:48 -0700
+In-Reply-To: <20240412084703.1407412-1-wjduan@linx-info.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com> <20240412143719.11398-4-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20240412143719.11398-4-Jonathan.Cameron@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 12 Apr 2024 20:30:40 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
-Message-ID: <CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
-Subject: Re: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from acpi_processor_get_info()
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, x86@kernel.org, Russell King <linux@armlinux.org.uk>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, 
-	James Morse <james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, linuxarm@huawei.com, justin.he@arm.com, 
-	jianyong.wu@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20240412084703.1407412-1-wjduan@linx-info.com>
+Message-ID: <ZhmAbBGOvldKdkZu@google.com>
+Subject: Re: [PATCH] KVM: loongarch: Add vcpu id check before create vcpu
+From: Sean Christopherson <seanjc@google.com>
+To: Wujie Duan <wjduan@linx-info.com>
+Cc: zhaotianrui@loongson.cn, maobibo@loongson.cn, chenhuacai@kernel.org, 
+	kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Apr 12, 2024 at 4:38=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> From: James Morse <james.morse@arm.com>
->
-> The arm64 specific arch_register_cpu() call may defer CPU registration
-> until the ACPI interpreter is available and the _STA method can
-> be evaluated.
->
-> If this occurs, then a second attempt is made in
-> acpi_processor_get_info(). Note that the arm64 specific call has
-> not yet been added so for now this will never be successfully
-> called.
->
-> Systems can still be booted with 'acpi=3Doff', or not include an
-> ACPI description at all as in these cases arch_register_cpu()
-> will not have deferred registration when first called.
->
-> This moves the CPU register logic back to a subsys_initcall(),
-> while the memory nodes will have been registered earlier.
-> Note this is where the call was prior to the cleanup series so
-> there should be no side effects of moving it back again for this
-> specific case.
->
-> [PATCH 00/21] Initial cleanups for vCPU HP.
-> https://lore.kernel.org/all/ZVyz%2FVe5pPu8AWoA@shell.armlinux.org.uk/
->
-> e.g. 5b95f94c3b9f ("x86/topology: Switch over to GENERIC_CPU_DEVICES")
->
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-> Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
+On Fri, Apr 12, 2024, Wujie Duan wrote:
+> Add a pre-allocation arch condition to checks that vcpu id should
+> smaller than max_vcpus
+> 
+> Signed-off-by: Wujie Duan <wjduan@linx-info.com>
 > ---
-> v5: Update commit message to make it clear this is moving the
->     init back to where it was until very recently.
->
->     No longer change the condition in the earlier registration point
->     as that will be handled by the arm64 registration routine
->     deferring until called again here.
-> ---
->  drivers/acpi/acpi_processor.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
-c
-> index 93e029403d05..c78398cdd060 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -317,6 +317,18 @@ static int acpi_processor_get_info(struct acpi_devic=
-e *device)
->
->         c =3D &per_cpu(cpu_devices, pr->id);
->         ACPI_COMPANION_SET(&c->dev, device);
-> +       /*
-> +        * Register CPUs that are present. get_cpu_device() is used to sk=
-ip
-> +        * duplicate CPU descriptions from firmware.
-> +        */
-> +       if (!invalid_logical_cpuid(pr->id) && cpu_present(pr->id) &&
-> +           !get_cpu_device(pr->id)) {
-> +               int ret =3D arch_register_cpu(pr->id);
-> +
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
->         /*
->          *  Extra Processor objects may be enumerated on MP systems with
->          *  less than the max # of CPUs. They should be ignored _iff
-> --
+>  arch/loongarch/kvm/vcpu.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 3a8779065f73..d41cacf39583 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -884,6 +884,9 @@ long kvm_arch_vcpu_async_ioctl(struct file *filp,
+>  
+>  int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+>  {
+> +	if (id >= kvm->max_vcpus)
+> +		return -EINVAL;
 
-I am still unsure why there need to be two paths calling
-arch_register_cpu() in acpi_processor_get_info().
+Do you have a testcase for this?  If I'm following the LoongArch code correctly,
+I don't think this is actually necessary.
 
-Just below the comment partially pulled into the patch context above,
-there is this code:
+In arch/loongarch/include/asm/kvm_host.h:
 
-if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
-         int ret =3D acpi_processor_hotadd_init(pr);
+  #define KVM_MAX_VCPUS			256
 
-        if (ret)
-                return ret;
-}
+without a #define KVM_MAX_VCPU_IDS in loongarch/, AFAICT.  And so the common
+code in include/linux/kvm_host.h will do:
 
-For the sake of the argument, fold acpi_processor_hotadd_init() into
-it and drop the redundant _STA check from it:
+  #ifndef KVM_MAX_VCPU_IDS
+  #define KVM_MAX_VCPU_IDS KVM_MAX_VCPUS
+  #endif
 
-if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
-        if (invalid_phys_cpuid(pr->phys_id))
-                return -ENODEV;
+LoongArch's kvm_vm_ioctl_check_extension() reports that to userspace:
 
-        cpu_maps_update_begin();
-        cpus_write_lock();
+	case KVM_CAP_MAX_VCPU_ID:
+		r = KVM_MAX_VCPU_IDS;
 
-       ret =3D acpi_map_cpu(pr->handle, pr->phys_id, pr->acpi_id, &pr->id);
-       if (ret) {
-                cpus_write_unlock();
-                cpu_maps_update_done();
-                return ret;
-       }
-       ret =3D arch_register_cpu(pr->id);
-       if (ret) {
-                acpi_unmap_cpu(pr->id);
+and the common kvm_vm_ioctl_create_vcpu() does:
 
-                cpus_write_unlock();
-                cpu_maps_update_done();
-                return ret;
-       }
-      pr_info("CPU%d has been hot-added\n", pr->id);
-      pr->flags.need_hotplug_init =3D 1;
+	if (id >= KVM_MAX_VCPU_IDS)
+		return -EINVAL;
 
-      cpus_write_unlock();
-      cpu_maps_update_done();
-}
+and the common kvm_create_vm() does:
 
-so I'm not sure why this cannot be combined with the new code.
+	kvm->max_vcpus = KVM_MAX_VCPUS;
 
-Say acpi_map_cpu) / acpi_unmap_cpu() are turned into arch calls.
-What's the difference then?  The locking, which should be fine if I'm
-not mistaken and need_hotplug_init that needs to be set if this code
-runs after the processor driver has loaded AFAICS.
+with again no override of max_vcpus in LoongArch or common KVM.  So unless I'm
+missing something, manually checking max_vcpus in LoongArch's kvm_arch_vcpu_precreate()
+is unnecessary.
