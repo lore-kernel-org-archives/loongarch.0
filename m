@@ -1,106 +1,190 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A55438DC8
-	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 18:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E180BD53E;
+	Fri, 12 Apr 2024 18:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712945468; cv=none; b=BUDmgqFV87Wv+uWdITqldaurbQoTEEwojVzZAyjH2y6XhMjBU7LmpL9LAKnxrO5GtCWOEoVow2rVe0ysuq2qhDYarziJ26taXvwTFzUv10J29XXYL7W1smFsZoadqJ+/49DjtnkcrBkS/+U0fVWmHaOEEhkQ9Is735rngHEAIxU=
+	t=1712946654; cv=none; b=oX9CWxw6OPgeZ+SvTf4SQ3EjarXDMlXaCLfrrts0gLg9YLOLPmfYSeSGLThMDZ2cbdLsaZEj/z+t9QiufjiOZcnRD7rRDFbjJnTDjvhfQAjgWxygzLoK8SsvVUeFf0OR1Tf/tgMYysyFUobUZPhNlFLXLvkAp4PR2hOEU1EavPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712945468; c=relaxed/simple;
-	bh=X8JAZ83PISoSih6UqWtdaIMVzQTC/9WJWILUPIQBXJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nRHofX9591XTo6IkeCIZMgIq4ERbH3Y73NlPjlxncuP5el+1cmT8SAqctZIoDHk5Z5TMCYZNoOx0ZnuLFCeLC/cN8gDZ1SGjQhfVW0nmltlxVQH2BmlW34IMYBef/m5ay+grApzhgtz8Fdy3f1bgr6ZJQWFWI/G1tFftC+fwdbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mxpkxDII; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712946654; c=relaxed/simple;
+	bh=PjJ0r1jv+Gy40inFGbGqF8OvINrRwJDv/80NI2l5XUc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ob0vKW4xECMJ/+B/uGvV40f3JnGFPnUcXnjWoUnp/kjrMG7X4+b+B4F0FdNiznKELJ93pOC7fNJeEVBCQ0AYQtbUEXOQSmS6jEN7Bxc/u4Y0UCOCCgSinb9QkMJSlAca4ujV53hD8ZMHrkgSO7bkWq/faSEmoYaFFjwpQ0syU0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQQWusNG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxpkxDII"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e504f58230so10709555ad.2
-        for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 11:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712945466; x=1713550266; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0JthIKMm0QudgaXVbOYMQ9cuPyBbvwy6KmupLEHj/Ww=;
-        b=mxpkxDIIjjyq6dnlE527Tn61E3x3Fa6cfMjGmWnaBa2jEFVIRWsaOgsgoaxUzuNACp
-         EQqIdGYUkotHYqkt+NJMSKu3vr9n46J3EHOPLd5QEIMnosxxF8R0QcDOZT9rljdJoNfq
-         CM+6/9gpFAN+3Q/X8s14dGGlW8RHtoRrkUmeHt1SRDM4Zpy5IogpYuNE8snlPanlpN3G
-         H2blPJwNriaeYwC+TwWbbTvYnFr4A7pIUebNMsvTiTpXuw/NrTtVfHc4CCa9hwg4MU3w
-         QPsZrownXrvlB0XGyMABVlfarmQEvoorQlmZZjA2jEcFFdmv0F4M+g3lBANgA2qdXCsz
-         Ef/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712945466; x=1713550266;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0JthIKMm0QudgaXVbOYMQ9cuPyBbvwy6KmupLEHj/Ww=;
-        b=jnhem26+tW7P1BxoJBvDfOJzubbRL+K1AK0fcTNMuUFsIuuoDMbGzONnL5woZx8ksm
-         BiuihH/E+YWKNpft+P/RCjEsz8+Jx/e9OeMn7RlamcxilsCqIqRDUkcEIFmjqamzT+s0
-         p8Djqv6z6Dm0XgfrROp3gOMt3amFCaGZD6kptm9zX3uOswDsjM9emtPg/X7Bw/6uA1hd
-         NTsbdT3kodyDRgzC5a4g6X9MchCtVy1qnO8Y5m0i/rKCQa/lIpvhm1vDJ6eQFChVMWPo
-         0CwDLHA5hh4tts5yNaBaeH96lt0AMWJav24KSxZT4SZjc9hf0F2vhSAgJBdtZHt20lz9
-         unTg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5hA8ouTwMTwNzzeG/C3VT5EuNCtJLILf8gwAwqe2hRRzUbXilnOPHkElOH7r29DADmaZn1ILjKBu/QpbuVfmiBRi8Ww+IQJn9
-X-Gm-Message-State: AOJu0YxYZITBpCBYgL7DfKa6bYgwd6k9BZ7PjMs9KvVOhWmKIxLUq0Wh
-	zpS8vnDqIsHdp1ShY6l1/eh83kXkTS51PX3ozHq7Fi6oAp2vBKnE
-X-Google-Smtp-Source: AGHT+IE0PSTDSZKKtsu0hbpf/Klp71X2ePxEwc6wEp4D3GSUygJCRHA20izUrDuTvbH4UoBXRzSJUQ==
-X-Received: by 2002:a17:902:9a08:b0:1e5:870a:b2c0 with SMTP id v8-20020a1709029a0800b001e5870ab2c0mr3134934plp.14.1712945466289;
-        Fri, 12 Apr 2024 11:11:06 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:a5f4])
-        by smtp.gmail.com with ESMTPSA id h11-20020a170902680b00b001e0bcccc800sm1283613plk.35.2024.04.12.11.11.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 11:11:05 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Fri, 12 Apr 2024 08:11:04 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, chenhuacai@kernel.org, josef@toxicpanda.com,
-	jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net,
-	pctammela@mojatatu.com, yukuai3@huawei.com, qde@naccy.de,
-	zhaotianrui@loongson.cn, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH RFC v2 6/6] blk-throtl: switch to use rq_qos
-Message-ID: <Zhl5ONFlPg4vqjGj@slm.duckdns.org>
-References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
- <20240406080059.2248314-7-yukuai1@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQQWusNG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 732F4C32786;
+	Fri, 12 Apr 2024 18:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712946653;
+	bh=PjJ0r1jv+Gy40inFGbGqF8OvINrRwJDv/80NI2l5XUc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZQQWusNG6ExBvY436QlvONSgQH5kbBgDfbHpEXf21tXhje42q0jreHJC9+TdiOZTb
+	 /AEVXF46pkLyBL0qmtps6lIkaCDRZE06wX4rAI9ukziCq86KHNjF+ssi2wG5/ccvIw
+	 z19wt8wvGtJ8ZjwjOfLaLcex6/4MwD1lfR6DDBFkZ5fsnZiWIJN++FbgCcL7ko1EwI
+	 9btL93ZH4JI9iDwfPNB9Y7u2Tc9fw5RxLDg/eqbtvcoFWufEQBMk1DExUfDwCFJtww
+	 C7jYNeF52ysH7D2f2zo8BxxoyzRfqvk9xpAkNeCFmpKFwgtuNH//JHaOqaPCClC0fq
+	 2nJ877KMWCiDg==
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-22ed9094168so239880fac.1;
+        Fri, 12 Apr 2024 11:30:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVOcMrqPwkhI7XSAKWKmdT5JDQlqDE82eLap96bYYWwym95Wnvg54cke3dDJ+vkqK/pH/IuULb1uMvfsKkZ5qhCKeMdLdJnUp3rGzub9bqR6i5PXhoS7C/VfF+jXKWNYAVr
+X-Gm-Message-State: AOJu0YxFypF5dceW5e9TehD8654ioljrfvyazi+1p+BE0vIfrHPA711R
+	o6SIbt1pUW02MVfDmli9rk5x2pVkKZEHzvVBwQ5ga4SLvuIO+0bPnUYh3wen09hRHkfgd09L1L0
+	ssh+cQbmEPGSWFkV5M904KjBGDo4=
+X-Google-Smtp-Source: AGHT+IFDKbKacACQlXu+Vha1dYER/o7zLL0gXJIc6Jg1rU5tcmimRio9VrXjAKDGAGecTYjA8A0m0vMnHNM03elbI48=
+X-Received: by 2002:a05:6871:612:b0:229:ee6d:77da with SMTP id
+ w18-20020a056871061200b00229ee6d77damr3536849oan.2.1712946652664; Fri, 12 Apr
+ 2024 11:30:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240406080059.2248314-7-yukuai1@huaweicloud.com>
+References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com> <20240412143719.11398-4-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240412143719.11398-4-Jonathan.Cameron@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 12 Apr 2024 20:30:40 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
+Message-ID: <CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
+Subject: Re: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from acpi_processor_get_info()
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, x86@kernel.org, Russell King <linux@armlinux.org.uk>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, 
+	James Morse <james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, linuxarm@huawei.com, justin.he@arm.com, 
+	jianyong.wu@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, Apr 12, 2024 at 4:38=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> From: James Morse <james.morse@arm.com>
+>
+> The arm64 specific arch_register_cpu() call may defer CPU registration
+> until the ACPI interpreter is available and the _STA method can
+> be evaluated.
+>
+> If this occurs, then a second attempt is made in
+> acpi_processor_get_info(). Note that the arm64 specific call has
+> not yet been added so for now this will never be successfully
+> called.
+>
+> Systems can still be booted with 'acpi=3Doff', or not include an
+> ACPI description at all as in these cases arch_register_cpu()
+> will not have deferred registration when first called.
+>
+> This moves the CPU register logic back to a subsys_initcall(),
+> while the memory nodes will have been registered earlier.
+> Note this is where the call was prior to the cleanup series so
+> there should be no side effects of moving it back again for this
+> specific case.
+>
+> [PATCH 00/21] Initial cleanups for vCPU HP.
+> https://lore.kernel.org/all/ZVyz%2FVe5pPu8AWoA@shell.armlinux.org.uk/
+>
+> e.g. 5b95f94c3b9f ("x86/topology: Switch over to GENERIC_CPU_DEVICES")
+>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> v5: Update commit message to make it clear this is moving the
+>     init back to where it was until very recently.
+>
+>     No longer change the condition in the earlier registration point
+>     as that will be handled by the arm64 registration routine
+>     deferring until called again here.
+> ---
+>  drivers/acpi/acpi_processor.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
+c
+> index 93e029403d05..c78398cdd060 100644
+> --- a/drivers/acpi/acpi_processor.c
+> +++ b/drivers/acpi/acpi_processor.c
+> @@ -317,6 +317,18 @@ static int acpi_processor_get_info(struct acpi_devic=
+e *device)
+>
+>         c =3D &per_cpu(cpu_devices, pr->id);
+>         ACPI_COMPANION_SET(&c->dev, device);
+> +       /*
+> +        * Register CPUs that are present. get_cpu_device() is used to sk=
+ip
+> +        * duplicate CPU descriptions from firmware.
+> +        */
+> +       if (!invalid_logical_cpuid(pr->id) && cpu_present(pr->id) &&
+> +           !get_cpu_device(pr->id)) {
+> +               int ret =3D arch_register_cpu(pr->id);
+> +
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+>         /*
+>          *  Extra Processor objects may be enumerated on MP systems with
+>          *  less than the max # of CPUs. They should be ignored _iff
+> --
 
-On Sat, Apr 06, 2024 at 04:00:59PM +0800, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> To avoid exposing blk-throttle internal implementation to general block
-> layer.
-...
-> @@ -832,7 +832,7 @@ void submit_bio_noacct(struct bio *bio)
->  		goto not_supported;
->  	}
->  
-> -	if (blk_throtl_bio(bio))
-> +	if (rq_qos_throttle_bio(q, bio))
->  		return;
->  	submit_bio_noacct_nocheck(bio);
->  	return;
+I am still unsure why there need to be two paths calling
+arch_register_cpu() in acpi_processor_get_info().
 
-This is a half-way conversion, right? You're adding a dedicated hook to
-rq_qos and none of the other hooks can be used by blk-throtl. Even the name,
-rq_qos_throttle_bio(), becomes a misnomer. I'm not really sure this makes
-things better or worse. It makes certain things a bit cleaner but other
-things nastier. I don't know.
+Just below the comment partially pulled into the patch context above,
+there is this code:
 
-Thanks.
+if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
+         int ret =3D acpi_processor_hotadd_init(pr);
 
--- 
-tejun
+        if (ret)
+                return ret;
+}
+
+For the sake of the argument, fold acpi_processor_hotadd_init() into
+it and drop the redundant _STA check from it:
+
+if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
+        if (invalid_phys_cpuid(pr->phys_id))
+                return -ENODEV;
+
+        cpu_maps_update_begin();
+        cpus_write_lock();
+
+       ret =3D acpi_map_cpu(pr->handle, pr->phys_id, pr->acpi_id, &pr->id);
+       if (ret) {
+                cpus_write_unlock();
+                cpu_maps_update_done();
+                return ret;
+       }
+       ret =3D arch_register_cpu(pr->id);
+       if (ret) {
+                acpi_unmap_cpu(pr->id);
+
+                cpus_write_unlock();
+                cpu_maps_update_done();
+                return ret;
+       }
+      pr_info("CPU%d has been hot-added\n", pr->id);
+      pr->flags.need_hotplug_init =3D 1;
+
+      cpus_write_unlock();
+      cpu_maps_update_done();
+}
+
+so I'm not sure why this cannot be combined with the new code.
+
+Say acpi_map_cpu) / acpi_unmap_cpu() are turned into arch calls.
+What's the difference then?  The locking, which should be fine if I'm
+not mistaken and need_hotplug_init that needs to be set if this code
+runs after the processor driver has loaded AFAICS.
