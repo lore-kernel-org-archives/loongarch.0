@@ -1,105 +1,123 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E715027F
-	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 09:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9044E3FBA4;
+	Fri, 12 Apr 2024 10:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712914210; cv=none; b=s2zK3G2jLJ4R1psI7e+MiiDalxsotrYfomNRZg70ORoMXVJhAANV44Z8/0yXV1hVnBLL0zMAQKY41FlarNjPWtfQImC/WCUwtGISv4eTG1pgR5UPMRx7mxExZ7RlIKjThLRuJZ1etR46HvwNAhyLZP9JXlcmz5PAftQBWkMgnFA=
+	t=1712918657; cv=none; b=TK+OGF7d2kaWwNFhNFRtNoLx5wow7ZXtY7gZN36Rnsfry9XYl2sVHwb1L/x3QpzwRFUYzau/xLd+uSiisJDefEtkw8n8XDenDkMJxPdDK7Bpjv/JyrThd9PrezZLdv8uT1xo8lTCj5oQ1SL5TI/DtZZmkJPUJWDuMZ2rRCVMimA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712914210; c=relaxed/simple;
-	bh=HFqo7+vWZ0Wz3w2aeaZqrJQ+MORGGd/mtA2CPk//mpI=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ALccvGOqP1MVq6rk/TEYOBtL0jS7k43Xs6696fih0pUCzdhDHMQHpy4Ljqwr+W6gwnelo9Z1TA7orfYulklOIehmSB1ag/uPGJYKd7YUnCvw2UVtW1n3GT6uWZocF9ocExpx/QzbMOCEaq/yu7KeFq/tGM0Dy7awvPSosn5jPQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axjuse_xhmflMmAA--.21601S3;
-	Fri, 12 Apr 2024 17:30:06 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxHs8c_xhmV6N4AA--.34991S3;
-	Fri, 12 Apr 2024 17:30:05 +0800 (CST)
-Subject: Re: [PATCH v3 3/4] LoongArch: Save and restore PERCPU_BASE_KS for
- ACPI S3 state
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
- <20240411010510.22135-4-yangtiezhu@loongson.cn>
- <CAAhV-H7SqudMeyK6_+j0ah=N=ywsv=4kk_b=hxocEQFsKZ+0bA@mail.gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
- Marc Zyngier <maz@kernel.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <9b95e6d7-35d2-eeee-f6dc-fc7741a48b62@loongson.cn>
-Date: Fri, 12 Apr 2024 17:30:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1712918657; c=relaxed/simple;
+	bh=1VOBD4fGV0wS/+b3v+F56U0irySBTtLVMq1jk0/3aNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kZ5NrSGjR2vHbYESpFrN2YuDNHcmOK04iyfeOHTNeZxjqsiRqYBFem/P1ivJ8zV5RYg6WHGWhoNkka+Tx27diygzBGDek4g7aPRT4noMEB2DIcKmsEIqjZWuYNaJLVUa/jDVf3mH4lSeSfXkEcUzlyLMwNhjoK111FoOtn5pitg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5wzc5tB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5wzc5tB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E150DC2BD10;
+	Fri, 12 Apr 2024 10:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712918657;
+	bh=1VOBD4fGV0wS/+b3v+F56U0irySBTtLVMq1jk0/3aNs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q5wzc5tBoiGBsuRhpRnOXn+/JuA2Y0L1EtRojaOy61UqRCGrwmOi61B2T1bcDZaV7
+	 NbeRh9B8kksCJt8R7pFX3UfmmSq/2LH88b9pMLZWTv2gnx4GpA7DoH+Ua+/V5vG0Nk
+	 hQ9OiK295o+5817rlVHgqnSFpwuxD94ALmfSL/fo+n9Eqg2oPkF9PNzAWoq+5vRQyS
+	 L84JYDrUOnGdWUMq7ZD58Z1trqP5rnJGDBgLeKsRca2aKXrhpgBlqIPrNxvH9n1XP1
+	 tdm7TK+oNWh6Sghw9RDsr0XR1COHVxmNS79Ysf/5OIwilPqZvdbbq19zgYHTJOcM6C
+	 Q1X6HLwip4qhg==
+Date: Fri, 12 Apr 2024 11:44:09 +0100
+From: Will Deacon <will@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
+Message-ID: <20240412104408.GA27645@willie-the-truck>
+References: <20240405115815.3226315-1-pbonzini@redhat.com>
+ <20240405115815.3226315-2-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7SqudMeyK6_+j0ah=N=ywsv=4kk_b=hxocEQFsKZ+0bA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxHs8c_xhmV6N4AA--.34991S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tFW7KryUXw47ZFW5Ar1xCrX_yoW8Xw17pF
-	92yF4ktF40kFn7JF1qv3WqgF4UX393KrWIq3ZIk3yqkr9Fq3s8Wr4rt3WYgF1kWw1xAa10
-	v3yft343XFyUJabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4AhLUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405115815.3226315-2-pbonzini@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
+On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index dc04bc767865..ff17849be9f4 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -1768,40 +1768,6 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range)
+>  	return false;
+>  }
+>  
+> -bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> -{
+> -	kvm_pfn_t pfn = pte_pfn(range->arg.pte);
+> -
+> -	if (!kvm->arch.mmu.pgt)
+> -		return false;
+> -
+> -	WARN_ON(range->end - range->start != 1);
+> -
+> -	/*
+> -	 * If the page isn't tagged, defer to user_mem_abort() for sanitising
+> -	 * the MTE tags. The S2 pte should have been unmapped by
+> -	 * mmu_notifier_invalidate_range_end().
+> -	 */
+> -	if (kvm_has_mte(kvm) && !page_mte_tagged(pfn_to_page(pfn)))
+> -		return false;
+> -
+> -	/*
+> -	 * We've moved a page around, probably through CoW, so let's treat
+> -	 * it just like a translation fault and the map handler will clean
+> -	 * the cache to the PoC.
+> -	 *
+> -	 * The MMU notifiers will have unmapped a huge PMD before calling
+> -	 * ->change_pte() (which in turn calls kvm_set_spte_gfn()) and
+> -	 * therefore we never need to clear out a huge PMD through this
+> -	 * calling path and a memcache is not required.
+> -	 */
+> -	kvm_pgtable_stage2_map(kvm->arch.mmu.pgt, range->start << PAGE_SHIFT,
+> -			       PAGE_SIZE, __pfn_to_phys(pfn),
+> -			       KVM_PGTABLE_PROT_R, NULL, 0);
+> -
+> -	return false;
+> -}
+> -
+>  bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>  {
+>  	u64 size = (range->end - range->start) << PAGE_SHIFT;
 
+Thanks. It's nice to see this code retire:
 
-On 04/12/2024 12:18 PM, Huacai Chen wrote:
-> Hi, Tiezhu,
->
-> On Thu, Apr 11, 2024 at 9:05 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> Currently, per_cpu_offset(x) is defined as __per_cpu_offset[x])
->> only under CONFIG_SMP in include/asm-generic/percpu.h, that is
->> to say, the implementation of loongarch_common_resume() which
->> calls per_cpu_offset(0) is not suitable for the case of non-SMP,
->> so do not write per_cpu_offset(0) to PERCPU_BASE_KS when resume,
->> just save the value of PERCPU_BASE_KS when suspend and restore
->> it when resume to make it work well for both SMP and non-SMP.
-> For non-SMP you need PERCPU_BASE_KS to do what?
+Acked-by: Will Deacon <will@kernel.org>
 
-The initial aim is to avoid build error under !CONFIG_SMP
-and it works well on both !CONFIG_SMP and CONFIG_SMP, the
-changes are similar with the code in hibernate.c.
+Also, if you're in the business of hacking the MMU notifier code, it
+would be really great to change the .clear_flush_young() callback so
+that the architecture could handle the TLB invalidation. At the moment,
+the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
+being set by kvm_handle_hva_range(), whereas we could do a much
+lighter-weight and targetted TLBI in the architecture page-table code
+when we actually update the ptes for small ranges.
 
-An alternative way is to do the following simple change,
-but it seems a little ugly due to the ifdef, let me know
-what is your preference.
-
-diff --git a/arch/loongarch/power/suspend.c b/arch/loongarch/power/suspend.c
-index 166d9e06a64b..35191afefcda 100644
---- a/arch/loongarch/power/suspend.c
-+++ b/arch/loongarch/power/suspend.c
-@@ -44,7 +44,9 @@ void loongarch_common_resume(void)
-  {
-         sync_counter();
-         local_flush_tlb_all();
-+#ifdef
-         csr_write64(per_cpu_offset(0), PERCPU_BASE_KS);
-+#endif
-         csr_write64(eentry, LOONGARCH_CSR_EENTRY);
-         csr_write64(eentry, LOONGARCH_CSR_MERRENTRY);
-         csr_write64(tlbrentry, LOONGARCH_CSR_TLBRENTRY);
-
-Thanks,
-Tiezhu
-
+Will
