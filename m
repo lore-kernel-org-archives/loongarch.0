@@ -1,35 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A1B5029B
-	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 09:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41D165026B
+	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 09:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712914059; cv=none; b=Qy71YW4lGdmJQuIJN6RPUN/RzoC8xMB57u4iaePa0a+tzrvWlSz8nieIHZ0EJ4o9pZs07HLDLEb7epv7Yz2sB7xmKC3+HiB24XcEp5GM1wtZhhPuoIjCs7OJTRuK9nSULK3sKZLJXEMlfZkH5C0YGMOWLw4p9nshP8WOXWFK4T8=
+	t=1712914138; cv=none; b=F61bOlxjC0qhkYCxL5l2o7qLK7Q3L7U0hfxSJtFSA19+7wid3Az5c3MQWuwOUy9yb7IQwe4faSdoIK5A3Frx6G/yRmnlPB6xOmzq0yUN8FuNTWHaSGpM+gRDNF8Evgdoc9kN1gpcEakkaKzvODfEzsBO2qLvMCxLQP3Pmy7dtoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712914059; c=relaxed/simple;
-	bh=g/FtSzbMh7UWRlixc9gUFZ3pvuBaLRdoeR0cPDnORLU=;
+	s=arc-20240116; t=1712914138; c=relaxed/simple;
+	bh=3W/lvW+cd509tmRSShTncTH2iQD2ypL2DTjIec6w4UE=;
 	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=bzGLvz+DI9q/54+3doE5pbPP+SI/gDX1VWa9A2q6Yk2vkos9hUrHNIqBCYwbdFD7e6b7zwlR6twaljcRJZDIFvs8rl8DryXiuh2sd5132ZLF3QR6M0hGHctOC/WtdjblTNk2aNk2L3sTvC5qSm2mEGPUpcIHYacEu13ngjOu0m8=
+	 In-Reply-To:Content-Type; b=W/jZ4/CJFjEhrRT6k1SJGVEkY5aDeg5pOQz/rJmPUf4ueyg0QSgPbiGfarK27WkR6yKn+UKpJ/bPkN50l08s/ToLuin/ScMhP3/f6k8suMKrgkKzj3BIXNpLQAV7jLgo+MzX0k73+L6LmLQ5OaWvPdH8N2Nm02eSAvUHrOpfMi0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxfeuG_hhmGFMmAA--.21825S3;
-	Fri, 12 Apr 2024 17:27:34 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxG+nW_hhmTFMmAA--.3562S3;
+	Fri, 12 Apr 2024 17:28:54 +0800 (CST)
 Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTROD_hhmvKJ4AA--.35435S3;
-	Fri, 12 Apr 2024 17:27:32 +0800 (CST)
-Subject: Re: [PATCH v3 1/4] LoongArch: Move CONFIG_HAVE_SETUP_PER_CPU_AREA
- related code to smp.c
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxfRPU_hhm_KJ4AA--.2797S3;
+	Fri, 12 Apr 2024 17:28:53 +0800 (CST)
+Subject: Re: [PATCH v3 2/4] LoongArch: Refactor get_acpi_id_for_cpu() related
+ code
 To: Huacai Chen <chenhuacai@kernel.org>
 References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
- <20240411010510.22135-2-yangtiezhu@loongson.cn>
- <CAAhV-H6TVEEB=xdr_ymuUnDqPDXwtM7R7yJBj03YhWpCwqjAiA@mail.gmail.com>
+ <20240411010510.22135-3-yangtiezhu@loongson.cn>
+ <CAAhV-H73d5hVM+anfHhTFHjWDmVtC2TJdxU9hANJvQgm-E3g6w@mail.gmail.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
  Marc Zyngier <maz@kernel.org>, loongarch@lists.linux.dev,
  linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <dcf6e475-8219-6b1e-a99b-2cdf1e86289c@loongson.cn>
-Date: Fri, 12 Apr 2024 17:27:31 +0800
+Message-ID: <45a3ef9b-54f2-cea6-5902-d9681fad6a48@loongson.cn>
+Date: Fri, 12 Apr 2024 17:28:52 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -38,45 +38,83 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6TVEEB=xdr_ymuUnDqPDXwtM7R7yJBj03YhWpCwqjAiA@mail.gmail.com>
+In-Reply-To: <CAAhV-H73d5hVM+anfHhTFHjWDmVtC2TJdxU9hANJvQgm-E3g6w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxTROD_hhmvKJ4AA--.35435S3
+X-CM-TRANSID:AQAAf8DxfRPU_hhm_KJ4AA--.2797S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKF1kGrWxKryfKF4kKw1xZwc_yoW3KFbE9F
-	s5Wr1DCw18Xw4v9an7X34FvrZxJFyvgws8t3s2vry2yFy5t34rJr4kAFn3uw1FqF4rGr90
-	kayvqF9xCry09osvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoW7AFyDGry7XryfKw4xAF18Zwc_yoW8Cryfpa
+	ykt343trs2y34xuw4kGw13Gr15tr1DWFyIvF4IkFWrAa1kur15tFs7Ka429FZ8Wa18Gr4a
+	vrn3ta4j9a1UCabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4AhLUUUUU
 
 
 
-On 04/12/2024 12:12 PM, Huacai Chen wrote:
+On 04/12/2024 12:17 PM, Huacai Chen wrote:
+> Hi, Tiezhu,
+>
 > On Thu, Apr 11, 2024 at 9:05 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >>
->> Currently, if CONFIG_NUMA is not set but CONFIG_SMP is set, the arch
->> specified setup_per_cpu_areas() in arch/loongarch/kernel/numa.c will
->> not be built and the generic setup_per_cpu_areas() in mm/percpu.c is
->> actually used, this is not reasonable and does not work as intended.
-> Why is the generic version not reasonable? We need a custom version
-> just because it can put the percpu variable in the best node. If NUMA
-> disabled, software can only see one node, how to optimize?
+>> Currently, cpu_logical_map(cpu) is defined as __cpu_logical_map[cpu]
+>> in arch/loongarch/include/asm/smp.h and __cpu_logical_map[] is defined
+>> in arch/loongarch/kernel/smp.c, that is to say, cpu_logical_map(cpu) is
+>> vaild only under CONFIG_SMP, the implementation of get_acpi_id_for_cpu()
+>> which calls cpu_logical_map(cpu) is not suitable for the case of non-SMP,
+>> so refactor get_acpi_id_for_cpu() related code to make it work well for
+>> both SMP and non-SMP.
+> But you implement cpu_logical_map(cpu) for non-SMP in the 4th patch, right?
 
-The initial aim is to use the arch specific setup_per_cpu_areas()
-in any case under CONFIG_SMP, this patch can be dropped if it is
-meaningless for the case of !CONFIG_NUMA and CONFIG_SMP.
+The initial aim is to make get_acpi_id_for_cpu() only related with
+acpi stuff and referenced the following riscv code, this patch can
+be dropped if you think it is better to only define cpu_logical_map(cpu)
+under !CONFIG_SMP, I am not sure whether it needs to keep the changes
+in acpi.c at least.
+
+static int acpi_parse_madt_rintc(union acpi_subtable_headers *header, 
+const unsigned long end)
+{
+	struct acpi_madt_rintc *rintc = (struct acpi_madt_rintc *)header;
+	int cpuid;
+
+	if (!(rintc->flags & ACPI_MADT_ENABLED))
+		return 0;
+
+	cpuid = riscv_hartid_to_cpuid(rintc->hart_id);
+	/*
+	 * When CONFIG_SMP is disabled, mapping won't be created for
+	 * all cpus.
+	 * CPUs more than num_possible_cpus, will be ignored.
+	 */
+	if (cpuid >= 0 && cpuid < num_possible_cpus())
+		cpu_madt_rintc[cpuid] = *rintc;
+
+	return 0;
+}
+
+struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
+{
+	return &cpu_madt_rintc[cpu];
+}
+
+u32 get_acpi_id_for_cpu(int cpu)
+{
+	return acpi_cpu_get_madt_rintc(cpu)->uid;
+}
+
+https://elixir.bootlin.com/linux/v6.9-rc3/source/arch/riscv/kernel/acpi.c#L194
 
 Thanks,
 Tiezhu
