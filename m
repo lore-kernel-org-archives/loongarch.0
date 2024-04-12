@@ -1,199 +1,133 @@
-Received: from mailrelay1-1.pub.mailoutpod2-cph3.one.com (mailrelay1-1.pub.mailoutpod2-cph3.one.com [46.30.211.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2230B2941C
-	for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 20:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2582953A9
+	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 01:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712868899; cv=none; b=Wz8tpg/wKjgvvUzDpJCE1lyQ3tNi3sN9I+NwKcYMKLQflgdZbmMlRV49yKiyzt5sRIJxGNKDyrKM4CWo/RJ3evRte/IUiU9BXOm2vxlnG2zc3nu6hwBI2Qq8laQMDMrsoLvEEb6CPHiqHRmvHlxZ+dcntwT8nQhehTEgzOUNDYY=
+	t=1712886879; cv=none; b=rREldIn44wLanP8pFkN3tOkzncSCuElIQ6JH+WpIEIyaB7peuzui6dCBlwjljcR0MYE7iZhm2iZv+yyRAbea9FkwqUJoTmxxwfl5X3Q6POUuRxK621sasYYYVoBSvuZo50Dz8eiUS95ACLcnyvr1JJV3Eyc+F2awssyVWCQpqTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712868899; c=relaxed/simple;
-	bh=TF5y+t4h39/TPgiK6Hbd3LRpWjocizBPcHQbaJ6xqOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qIYs1H7moon2DVC22WSLEbJ+fico397QIaz1fyzznnZoWLD4fkgI2mYzKTgD5ct9mIP2zyveTGkoWktRUX79duJOQtHhMMizh8D31fu72rPNtb/zcd552TDZpzyxuT2Db3frZzwKcaRdgsPBRgD2/3M97o0YNSEgKu2b4XRf3vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=kv3VYS1n; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=2lz6/kgt; arc=none smtp.client-ip=46.30.211.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+	s=arc-20240116; t=1712886879; c=relaxed/simple;
+	bh=y4vlt8TB9yDjErxa7aoPppj34TQs7XIg9OjF7nGdMbk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gIGvdWT8BE5Yf+wceiyPfbr4z7uWtdzjoB//mOuIyjZr4Kw1o+zPEseQr8U7ZnOxFbXuu9/vCEptHFPcFszmKPjOlary1qRwfhg8UzE3TMx92fjnM0AMwRe6xxdnb0ybflM7b4oIkdRGBf1DcWRzgmTjynQ8PMPtHBGDsm+Byx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J/4ZdWwr; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="kv3VYS1n";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="2lz6/kgt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/4ZdWwr"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-346b09d474dso363181f8f.2
+        for <loongarch@lists.linux.dev>; Thu, 11 Apr 2024 18:54:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=8iZCIbXv/o+9vFGi/T/APUrhuAqs9LM6RRA1ferZ2wg=;
-	b=kv3VYS1nb+1jhVe9oEyryqOQdogTQlFfldT5zGFYz9zCFOW49UnzyKwrJoDnpG5By8Wz6/89q37/J
-	 74y1ANyGrc4+nAdiZLdwTQ7At1BMHShrpW21ksmQCnho4ndLVURK71dGIBPbwAmFDNXGQ3nhWfJORf
-	 kv6U7sF+UeIM9uVpTWy6T9yWjx+pcsw/GMhx3KJhDEBn/z0Ta31X9WEj03K6p1on5B6YlTztmnenxM
-	 6t/dz3ghpSDNSSOo+Nh+gwCqPRCFFIbfiAkM9VZsrPcOKFRvNMfm1iQmPZN5y4JbJlPGl97XHjBdfO
-	 1z6v1BSheYGCsHilS105+mOpPAp8U2Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=8iZCIbXv/o+9vFGi/T/APUrhuAqs9LM6RRA1ferZ2wg=;
-	b=2lz6/kgt5Ws9Bwhsrc83nOkDSczAnngGL2Yh8km6qYY8h6ibpExr6aVD63x7Bbyn4q9jSyAbA/9ij
-	 5z3+8uwDQ==
-X-HalOne-ID: 9634f2b2-f845-11ee-b2f6-516168859393
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay1.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 9634f2b2-f845-11ee-b2f6-516168859393;
-	Thu, 11 Apr 2024 20:53:48 +0000 (UTC)
-Date: Thu, 11 Apr 2024 22:53:46 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 06/15] mm/execmem, arch: convert simple overrides of
- module_alloc to execmem
-Message-ID: <20240411205346.GA66667@ravnborg.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-7-rppt@kernel.org>
+        d=gmail.com; s=20230601; t=1712886876; x=1713491676; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4vlt8TB9yDjErxa7aoPppj34TQs7XIg9OjF7nGdMbk=;
+        b=J/4ZdWwrgR9FX0L9SlZaYYYRazcM4OH7DNWVigqaIDzfN/5eT3DkJHhTbw43pMwdDo
+         FbctpmQbSSI7BMVn0hcRmv2nnfZZjZHInt/ILTODAPHf12IrzFZ4cFtJkkO+ubGRs1zg
+         9ovBJzIOJ7GdLzhec/wIuqXvzpNJ2OdQhFOl54dPrPZNfYXjIR16tR92vz3n/iYk0Xcu
+         FhcoD8qhd0E3eJ2yw9ReuXJjHogBlfRIeExjxV8HgSqYgA9LcMc7TD9bICNnkvAgUuOZ
+         rYt3Ootw92EekLzfo+To6y7lFyXfl/dl8Clk1DARzddHLnyox0C/Rz91S/VZsafZ2Txy
+         n6hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712886876; x=1713491676;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y4vlt8TB9yDjErxa7aoPppj34TQs7XIg9OjF7nGdMbk=;
+        b=rv3hFW5C1e8j5yXtW/7gOOUsFA7zOGVM7j2kIW5ZwqKv2049tr6Oleo7R/Q4Ay7GXp
+         /+tS6u9DuE7hjf3ihPeQVN5+hEA3Zsz9O4sBsgfxQRGFTL37OzvilcoKHokNewpUzSIX
+         iEEmOFPYxW+ISlg0E2+p+erUA4+a+RvAqgtAYDCLc6AWlVXlLro0S0hVEJOrYtFn6SAw
+         qWJDi7M1vQq1DE+5xutZfpYv07Py+UtstEaJ9o2gEMuCIXVZJrhYtH+vrvNx7I4JjxLv
+         kPEL7slblNqYw4nQb2e9Y7SdMpzkbFhJqfav18wBswz/ETZpy3XwrWNiAiFI6na1ZVeU
+         CqfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUg1az54kXxNPUC7PM2jtNkKQrbPayq+bk/Icuzi2vkmyxLelaEJtjXOMLF2z0GLvE7jM1PeT31wTJufqtaZB+Y2V+gSjn+9ynn
+X-Gm-Message-State: AOJu0Yxjf5Ws6kB7aZnuZDgjrO9OauWkC9ilhgfk8TKhh0OqwZXOjG2I
+	VSXqjJ0lAvrHpBgw6BBbkamLmZnpp3gniUVeWC4xvEFwJidDuK3frqGdg6l+yeyl6PKFbadi+CM
+	XpYh6uSeDHfQnbYeTyeQyMjo/wQ4=
+X-Google-Smtp-Source: AGHT+IH+PR4h3oVtQ8Ez0cRs6zyDvlUxECTYXxWqfVRSac34W79R5yeA3Zq4bIaDyQbovOeeCgfyqRUJHwPOnRqGQX0=
+X-Received: by 2002:a5d:474f:0:b0:33e:ca28:bb59 with SMTP id
+ o15-20020a5d474f000000b0033eca28bb59mr856430wrs.57.1712886876424; Thu, 11 Apr
+ 2024 18:54:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411160051.2093261-7-rppt@kernel.org>
+References: <20240329072441.591471-1-samuel.holland@sifive.com>
+ <20240329072441.591471-14-samuel.holland@sifive.com> <87wmp4oo3y.fsf@linaro.org>
+ <75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com> <87wmp4ogoe.fsf@linaro.org>
+ <4c8e63d6-ba33-47fe-8150-59eba8babf2d@sifive.com> <CAMj1kXGW5XQxXrYaPhT6sCjH7s0EwqzNjWies3b8UWnUBW5Ngw@mail.gmail.com>
+ <c0e170f7-5498-40ed-ba35-2ac392c2dd2a@app.fastmail.com>
+In-Reply-To: <c0e170f7-5498-40ed-ba35-2ac392c2dd2a@app.fastmail.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Fri, 12 Apr 2024 11:54:25 +1000
+Message-ID: <CAPM=9ty_9yKEk+cS6oJ8gD_UiB_K4X3P4mLv2RmKixLaq-1RfQ@mail.gmail.com>
+Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, 
+	Thiago Jung Bauermann <thiago.bauermann@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
+	Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mike.
+On Thu, 11 Apr 2024 at 17:32, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Thu, Apr 11, 2024, at 09:15, Ard Biesheuvel wrote:
+> > On Thu, 11 Apr 2024 at 03:11, Samuel Holland <samuel.holland@sifive.com> wrote:
+> >> On 2024-04-10 8:02 PM, Thiago Jung Bauermann wrote:
+> >> > Samuel Holland <samuel.holland@sifive.com> writes:
+> >>
+> >> >> The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
+> >> >> 32-bit arm until we can provide these runtime library functions.
+> >> >
+> >> > Does this mean that patch 2 in this series:
+> >> >
+> >> > [PATCH v4 02/15] ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+> >> >
+> >> > will be dropped?
+> >>
+> >> No, because later patches in the series (3, 6) depend on the definition of
+> >> CC_FLAGS_FPU from that patch. I will need to send a fixup patch unless I can
+> >> find a GPL-2 compatible implementation of the runtime library functions.
+> >>
+> >
+> > Is there really a point to doing that? Do 32-bit ARM systems even have
+> > enough address space to the map the BARs of the AMD GPUs that need
+> > this support?
+> >
+> > Given that this was not enabled before, I don't think the upshot of
+> > this series should be that we enable support for something on 32-bit
+> > ARM that may cause headaches down the road without any benefit.
+> >
+> > So I'd prefer a fixup patch that opts ARM out of this over adding
+> > support code for 64-bit conversions.
+>
+> I have not found any dts file for a 32-bit platform with support
+> for a 64-bit prefetchable BAR, and there are very few that even
+> have a pcie slot (as opposed on on-board devices) you could
+> plug a card into.
+>
+> That said, I also don't think we should encourage the use of
+> floating-point code in random device drivers. There is really
+> no excuse for the amdgpu driver to use floating point math
+> here, and we should get AMD to fix their driver instead.
 
-On Thu, Apr 11, 2024 at 07:00:42PM +0300, Mike Rapoport wrote:
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> 
-> Several architectures override module_alloc() only to define address
-> range for code allocations different than VMALLOC address space.
-> 
-> Provide a generic implementation in execmem that uses the parameters for
-> address space ranges, required alignment and page protections provided
-> by architectures.
-> 
-> The architectures must fill execmem_info structure and implement
-> execmem_arch_setup() that returns a pointer to that structure. This way the
-> execmem initialization won't be called from every architecture, but rather
-> from a central place, namely a core_initcall() in execmem.
-> 
-> The execmem provides execmem_alloc() API that wraps __vmalloc_node_range()
-> with the parameters defined by the architectures.  If an architecture does
-> not implement execmem_arch_setup(), execmem_alloc() will fall back to
-> module_alloc().
-> 
-> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> ---
+That would be nice, but it won't happen, there are many reasons for
+that code to exist like it does, unless someone can write an automated
+converter to fixed point and validate it produces the same results for
+a long series of input values, it isn't really something that will get
+"fixed".
 
-This code snippet could be more readable ...
-> diff --git a/arch/sparc/kernel/module.c b/arch/sparc/kernel/module.c
-> index 66c45a2764bc..b70047f944cc 100644
-> --- a/arch/sparc/kernel/module.c
-> +++ b/arch/sparc/kernel/module.c
-> @@ -14,6 +14,7 @@
->  #include <linux/string.h>
->  #include <linux/ctype.h>
->  #include <linux/mm.h>
-> +#include <linux/execmem.h>
->  
->  #include <asm/processor.h>
->  #include <asm/spitfire.h>
-> @@ -21,34 +22,26 @@
->  
->  #include "entry.h"
->  
-> +static struct execmem_info execmem_info __ro_after_init = {
-> +	.ranges = {
-> +		[EXECMEM_DEFAULT] = {
->  #ifdef CONFIG_SPARC64
-> -
-> -#include <linux/jump_label.h>
-> -
-> -static void *module_map(unsigned long size)
-> -{
-> -	if (PAGE_ALIGN(size) > MODULES_LEN)
-> -		return NULL;
-> -	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
-> -				GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE,
-> -				__builtin_return_address(0));
-> -}
-> +			.start = MODULES_VADDR,
-> +			.end = MODULES_END,
->  #else
-> -static void *module_map(unsigned long size)
-> +			.start = VMALLOC_START,
-> +			.end = VMALLOC_END,
-> +#endif
-> +			.alignment = 1,
-> +		},
-> +	},
-> +};
-> +
-> +struct execmem_info __init *execmem_arch_setup(void)
->  {
-> -	return vmalloc(size);
-> -}
-> -#endif /* CONFIG_SPARC64 */
-> -
-> -void *module_alloc(unsigned long size)
-> -{
-> -	void *ret;
-> -
-> -	ret = module_map(size);
-> -	if (ret)
-> -		memset(ret, 0, size);
-> +	execmem_info.ranges[EXECMEM_DEFAULT].pgprot = PAGE_KERNEL;
->  
-> -	return ret;
-> +	return &execmem_info;
->  }
->  
->  /* Make generic code ignore STT_REGISTER dummy undefined symbols.  */
+AMD's hardware team produces the calculations, and will only look into
+hardware problems in that area if the driver is using the calculations
+they produce and validate.
 
-... if the following was added:
+If you've looked at the calculation complexity you'd understand this
+isn't a trivial use of float-point for no reason.
 
-diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm/pgtable_32.h
-index 9e85d57ac3f2..62bcafe38b1f 100644
---- a/arch/sparc/include/asm/pgtable_32.h
-+++ b/arch/sparc/include/asm/pgtable_32.h
-@@ -432,6 +432,8 @@ static inline int io_remap_pfn_range(struct vm_area_struct *vma,
-
- #define VMALLOC_START           _AC(0xfe600000,UL)
- #define VMALLOC_END             _AC(0xffc00000,UL)
-+#define MODULES_VADDR           VMALLOC_START
-+#define MODULES_END             VMALLOC_END
-
-
-Then the #ifdef CONFIG_SPARC64 could be dropped and the code would be
-the same for 32 and 64 bits.
-
-Just a drive-by comment.
-
-	Sam
+Dave.
