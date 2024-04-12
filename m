@@ -1,139 +1,83 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E1714006
-	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 09:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A1B5029B
+	for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 09:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712913377; cv=none; b=YedwduSz0e4/hUsAlyYMO3gb2hdK7GlSZNbdje1kFAlZ6aTwIep27kwKLVULNRm9ZkDdEC8YDYx/FAqNrvrcBhvtXG97Wrnnfdd2fXV/165LThtdGUJNs1fVbRavaS65blgiDBkkoENTaAyHHz6McqlW/YEenuuBRvKzi5jWjGc=
+	t=1712914059; cv=none; b=Qy71YW4lGdmJQuIJN6RPUN/RzoC8xMB57u4iaePa0a+tzrvWlSz8nieIHZ0EJ4o9pZs07HLDLEb7epv7Yz2sB7xmKC3+HiB24XcEp5GM1wtZhhPuoIjCs7OJTRuK9nSULK3sKZLJXEMlfZkH5C0YGMOWLw4p9nshP8WOXWFK4T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712913377; c=relaxed/simple;
-	bh=T/TL4P6RqoXnShkICgxGFcoEXV/L8guRkl+BR8oz3qQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ra6zP4ElDYTP0tsWtoX7uKraN2Fj4uGF707LCAB37cozdE29w55xB3xd0Zkby9UPN7Oxk8aI4me7VVNWYtCLWHY81VT6R6wmFuzna4JQkiyjs7UrcwtBGxUU1/s8fTQJDl39XoH8UbiIuUmOBH5IQfE0Rp1J+ShVeD6GTna4HPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SnAbkM09; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnAbkM09"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56c404da0ebso974822a12.0
-        for <loongarch@lists.linux.dev>; Fri, 12 Apr 2024 02:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712913374; x=1713518174; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1P5rS5dDZ6bz9RnNGWXjXGeZ5LSFZB2izV8TdsSyfhY=;
-        b=SnAbkM096rT3Vm/0q5mPIO+eXR+a1NgEWPKvc2JsKy3za7/Ve3cuc2slCp+gizuThO
-         qITNxrLWemmBo0TLqo7sq6Rb1CiHfeHW1LonBWLhL/qOe9awJzS/dU6wDrfLzc34oBOW
-         ExkA8wIKXhhXOVyMFxjfi6EnmC1LcA2UYJyos0CDjmSWXerekFK/tFOXb4c5WHfjwVcP
-         jrgBZJ4ll9vWw71vYmy5QaEcuM7D5Yb/EvVfOGoqUetRFQfTC3tgVYj8CIr6sVmCnsm2
-         5lu26oPYxA/y5r2F7GDuk32J05n9m0fOB1kS7ap+Nrq0oIz0+mPCeXrytZaWGnnu0aUt
-         5aGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712913374; x=1713518174;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1P5rS5dDZ6bz9RnNGWXjXGeZ5LSFZB2izV8TdsSyfhY=;
-        b=WSXekY++2K6c8ucu7blTtXSXqGkKBWkNaFsi1SU/TtIO+bVhCL2IPFZStUNubPsFxz
-         1mbbyrkMhU8bNgEKyXeEvr66c1jINtCNvMvE3tN4CLdCZhGwqYL2RuuYaAiHPyvwyt51
-         TmxKXkrtKbmS310efqtwTiWxyGeEgL86Xof1rAVMRQVim6PyQdtN5FuR8oKurZcAaLll
-         Cr60Hac7GlGC4Yl2o2bpsqhoLemOXYBLQkj3ZoO+kz/X8LDMv1jn1+RXILAqd+WQMb6z
-         ECwH/hbuA+1L4ubjuveOwUa68Kv+zDe+rHfgxbApTK1gAYQCTJpDRt+z2mh8GCsC5r4I
-         Rx6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVC5fVZE5bvPrlxTJWQ+lW/PUw8Y7RkXD17N4BQm+RFR8HOOjWxwreaXTB+SWFqOsEuHc+ttK4NqP1y7wfD0OgbM5cBW3l4r+I5
-X-Gm-Message-State: AOJu0YyRzWNsxyYT7GwIvZbYo1wqDyCHBiGpmIRSNrIaOCSjC9gLT0en
-	rFBus0s+avUOmqs7w+zmWVO3+emxcChf3yjsUzttglzPFvj4XWYO
-X-Google-Smtp-Source: AGHT+IF2JLt070H6U+NVwXUCGShMgUTVG3TFLf6L4pd2nPVSBBMwXn0qR7EXkAPf+SwG43RHlRZl8g==
-X-Received: by 2002:a50:f68d:0:b0:56e:4039:add5 with SMTP id d13-20020a50f68d000000b0056e4039add5mr1892328edn.22.1712913374186;
-        Fri, 12 Apr 2024 02:16:14 -0700 (PDT)
-Received: from gmail.com (1F2EF1A5.nat.pool.telekom.hu. [31.46.241.165])
-        by smtp.gmail.com with ESMTPSA id el9-20020a056402360900b0056fe755f1e6sm1454709edb.91.2024.04.12.02.16.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 02:16:13 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Fri, 12 Apr 2024 11:16:10 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-Message-ID: <Zhj72l6uN9OFilxA@gmail.com>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-6-rppt@kernel.org>
+	s=arc-20240116; t=1712914059; c=relaxed/simple;
+	bh=g/FtSzbMh7UWRlixc9gUFZ3pvuBaLRdoeR0cPDnORLU=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=bzGLvz+DI9q/54+3doE5pbPP+SI/gDX1VWa9A2q6Yk2vkos9hUrHNIqBCYwbdFD7e6b7zwlR6twaljcRJZDIFvs8rl8DryXiuh2sd5132ZLF3QR6M0hGHctOC/WtdjblTNk2aNk2L3sTvC5qSm2mEGPUpcIHYacEu13ngjOu0m8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxfeuG_hhmGFMmAA--.21825S3;
+	Fri, 12 Apr 2024 17:27:34 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTROD_hhmvKJ4AA--.35435S3;
+	Fri, 12 Apr 2024 17:27:32 +0800 (CST)
+Subject: Re: [PATCH v3 1/4] LoongArch: Move CONFIG_HAVE_SETUP_PER_CPU_AREA
+ related code to smp.c
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
+ <20240411010510.22135-2-yangtiezhu@loongson.cn>
+ <CAAhV-H6TVEEB=xdr_ymuUnDqPDXwtM7R7yJBj03YhWpCwqjAiA@mail.gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
+ Marc Zyngier <maz@kernel.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <dcf6e475-8219-6b1e-a99b-2cdf1e86289c@loongson.cn>
+Date: Fri, 12 Apr 2024 17:27:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411160051.2093261-6-rppt@kernel.org>
+In-Reply-To: <CAAhV-H6TVEEB=xdr_ymuUnDqPDXwtM7R7yJBj03YhWpCwqjAiA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxTROD_hhmvKJ4AA--.35435S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKF1kGrWxKryfKF4kKw1xZwc_yoW3KFbE9F
+	s5Wr1DCw18Xw4v9an7X34FvrZxJFyvgws8t3s2vry2yFy5t34rJr4kAFn3uw1FqF4rGr90
+	kayvqF9xCry09osvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
 
 
-* Mike Rapoport <rppt@kernel.org> wrote:
 
-> +/**
-> + * enum execmem_type - types of executable memory ranges
-> + *
-> + * There are several subsystems that allocate executable memory.
-> + * Architectures define different restrictions on placement,
-> + * permissions, alignment and other parameters for memory that can be used
-> + * by these subsystems.
-> + * Types in this enum identify subsystems that allocate executable memory
-> + * and let architectures define parameters for ranges suitable for
-> + * allocations by each subsystem.
-> + *
-> + * @EXECMEM_DEFAULT: default parameters that would be used for types that
-> + * are not explcitly defined.
-> + * @EXECMEM_MODULE_TEXT: parameters for module text sections
-> + * @EXECMEM_KPROBES: parameters for kprobes
-> + * @EXECMEM_FTRACE: parameters for ftrace
-> + * @EXECMEM_BPF: parameters for BPF
-> + * @EXECMEM_TYPE_MAX:
-> + */
-> +enum execmem_type {
-> +	EXECMEM_DEFAULT,
-> +	EXECMEM_MODULE_TEXT = EXECMEM_DEFAULT,
-> +	EXECMEM_KPROBES,
-> +	EXECMEM_FTRACE,
-> +	EXECMEM_BPF,
-> +	EXECMEM_TYPE_MAX,
-> +};
+On 04/12/2024 12:12 PM, Huacai Chen wrote:
+> On Thu, Apr 11, 2024 at 9:05 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> Currently, if CONFIG_NUMA is not set but CONFIG_SMP is set, the arch
+>> specified setup_per_cpu_areas() in arch/loongarch/kernel/numa.c will
+>> not be built and the generic setup_per_cpu_areas() in mm/percpu.c is
+>> actually used, this is not reasonable and does not work as intended.
+> Why is the generic version not reasonable? We need a custom version
+> just because it can put the percpu variable in the best node. If NUMA
+> disabled, software can only see one node, how to optimize?
 
-s/explcitly
- /explicitly
+The initial aim is to use the arch specific setup_per_cpu_areas()
+in any case under CONFIG_SMP, this patch can be dropped if it is
+meaningless for the case of !CONFIG_NUMA and CONFIG_SMP.
 
 Thanks,
+Tiezhu
 
-	Ingo
