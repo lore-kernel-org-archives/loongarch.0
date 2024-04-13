@@ -1,158 +1,103 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C1415217D;
-	Fri, 12 Apr 2024 23:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5512CA62
+	for <loongarch@lists.linux.dev>; Sat, 13 Apr 2024 01:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712964233; cv=none; b=HEuBLnCz5ho+C6Nr9p6HLdP9LFqDxEOyf+WomaDzzGinXeQ0G1RC+HTu6cDrLjC5GU2WXebPr/b7GtrIQN/zzBRUS1FuujgVM46aoNItevlgPg5+esm3EH8F9MqffPNUiD1CwEfn03wrwn+UC3Bf+cHlZBBMIAzd8Xzm2ST/w/Q=
+	t=1712973458; cv=none; b=vF/895edxErQGw/ZdfqdYxLt5widx0IPnfZCnHpnrY7VOP/maOLDzejgT8nnXTs2WjwGgdqf63vxabpZe1mnyFrHYx2IaitYqfgiLkXkvIRaJR8NIj4w+z/NVH5t5vWC6qRZqojyCbJszDLhry3+09rX3dkt0Q7y/sE5pUhqTc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712964233; c=relaxed/simple;
-	bh=CbK4jt4ZdUloJNuVh6KOM2ueno3wxztt8Qa5vgstwIQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PwLx5P2uiQode9/rlPdVsm0S0/NihuwcKmScsrOnS6auK+GM+v2gT+8x+LzhNyWqQQyOxiJShttW9an50wNFXW5IPv2LesEi2zdeBr7A0WZhAYkkaKbhBUMByTIenVN3yFGwx7cI6ClQYsz20jaSSOhBEPnj60nPi4LtrRuQYtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tW6ap+zQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C6bVqxHC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tW6ap+zQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C6bVqxHC"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712964230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T5xu2FVtNRnOIqknb2Ux4D1eBvHtL7IvYUAUi+UDnWI=;
-	b=tW6ap+zQjCfPb0Iu5NRfFG9LND9NrDkPfEJWzzMV7FCLTiO/67DEBwqkhnToa6FAcP2EMM
-	6MUD2W5m6nuwV2lpFNG3h+9zzeXDVM+p+g58Cp/G+e4GRZcfa5YXlQCXsvhowZhIeayP0F
-	mX0bfZnV7zatQ27FSiwCVDCNzdKFDc9OqpMidB2qf2Cpn4vHrQKR1CDd5Jo0Vu7BskZTIr
-	zk34+SsJ8yxAruaTIUuw2IA0vIdHj/NMRshMO3Ypq0Afb5kNOeHECSYmsLQEyGEwXiqLV8
-	1HqLCmjoZ7R9k59MXcM+5pSKlvvx5MjGxECT/fcNGhgdh8TjLYqmzvmpqlulZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712964230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T5xu2FVtNRnOIqknb2Ux4D1eBvHtL7IvYUAUi+UDnWI=;
-	b=C6bVqxHCPN+wfRrnH1w7K16dZrgwWFLb9vxFt3+t2PJptgUt5gh64ablXIU/tU1hN5ia0j
-	DVRgHQA0LBs0mhCA==
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, linux-pm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- x86@kernel.org, Miguel Luis <miguel.luis@oracle.com>, James Morse
- <james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linuxarm@huawei.com, justin.he@arm.com, jianyong.wu@arm.com
-Subject: Re: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from
- acpi_processor_get_info()
-In-Reply-To: <ZhmtO6zBExkQGZLk@shell.armlinux.org.uk>
-References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
- <20240412143719.11398-4-Jonathan.Cameron@huawei.com>
- <CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
- <ZhmWkE+fCEG/WFoi@shell.armlinux.org.uk> <87bk6ez4hj.ffs@tglx>
- <ZhmtO6zBExkQGZLk@shell.armlinux.org.uk>
-Date: Sat, 13 Apr 2024 01:23:48 +0200
-Message-ID: <878r1iyxkr.ffs@tglx>
+	s=arc-20240116; t=1712973458; c=relaxed/simple;
+	bh=A1e8OPRY8KILZDvW0ygBRdHsPRIXsyzd3Bp+kruNinM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jLHqlqYOnKMQpF+/VKCooRvumOggx0qtkE4duo4tWbTJo2cPrrZ3mA+5m2mEAIaGlRiXIIuuZjZaaM15yr4wqu6nfmy07mk+vaUr2wHf0FvdGg1vFiVCwiZAyAGWbmHy7CzKBN2W0gk1ZQ0nJ3XmOlhHKfTozclW4La04P6XSp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VGc4s5xqNz4f3nTL
+	for <loongarch@lists.linux.dev>; Sat, 13 Apr 2024 09:57:17 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 925E71A0572
+	for <loongarch@lists.linux.dev>; Sat, 13 Apr 2024 09:57:26 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgBXKBGE5hlmiuVaJw--.14350S3;
+	Sat, 13 Apr 2024 09:57:26 +0800 (CST)
+Subject: Re: [PATCH RFC v2 1/6] blk-throttle: remove
+ CONFIG_BLK_DEV_THROTTLING_LOW
+To: Tejun Heo <tj@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, chenhuacai@kernel.org, josef@toxicpanda.com,
+ jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net, pctammela@mojatatu.com,
+ qde@naccy.de, zhaotianrui@loongson.cn, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
+ <20240406080059.2248314-2-yukuai1@huaweicloud.com>
+ <ZhlvqqtSo_Aw2Hjo@slm.duckdns.org>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <9edb4ff7-0094-d2b1-28e5-70daeb8b899c@huaweicloud.com>
+Date: Sat, 13 Apr 2024 09:57:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <ZhlvqqtSo_Aw2Hjo@slm.duckdns.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBXKBGE5hlmiuVaJw--.14350S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF1xWr15Cr18XFWUAr1xGrg_yoWDAFgEgF
+	WIkr97Kw47G3WIy3WUtrs09rWqkw45GrW7X3yfXF98JFnaqas8tasxKr9xZa18CanYyrnx
+	CrnxXrW2yrW7JjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3AFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUOmhFUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Russell!
+Hi,
 
-On Fri, Apr 12 2024 at 22:52, Russell King (Oracle) wrote:
-> On Fri, Apr 12, 2024 at 10:54:32PM +0200, Thomas Gleixner wrote:
->> > As for the cpu locking, I couldn't find anything in arch_register_cpu()
->> > that depends on the cpu_maps_update stuff nor needs the cpus_write_lock
->> > being taken - so I've no idea why the "make_present" case takes these
->> > locks.
->> 
->> Anything which updates a CPU mask, e.g. cpu_present_mask, after early
->> boot must hold the appropriate write locks. Otherwise it would be
->> possible to online a CPU which just got marked present, but the
->> registration has not completed yet.
->
-> Yes. As far as I've been able to determine, arch_register_cpu()
-> doesn't manipulate any of the CPU masks. All it seems to be doing
-> is initialising the struct cpu, registering the embedded struct
-> device, and setting up the sysfs links to its NUMA node.
->
-> There is nothing obvious in there which manipulates any CPU masks, and
-> this is rather my fundamental point when I said "I couldn't find
-> anything in arch_register_cpu() that depends on ...".
->
-> If there is something, then comments in the code would be a useful aid
-> because it's highly non-obvious where such a manipulation is located,
-> and hence why the locks are necessary.
+ÔÚ 2024/04/13 1:30, Tejun Heo Ð´µÀ:
+> On Sat, Apr 06, 2024 at 04:00:54PM +0800, Yu Kuai wrote:
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> One the one hand, it's marked EXPERIMENTAL since 2017, and looks like
+>> there are no users since then, and no testers and no developers, it's
+>> just not active at all.
+>>
+>> On the other hand, even if the config is disabled, there are still many
+>> fields in throtl_grp and throtl_data and many functions that are only
+>> used for throtl low.
+>>
+>> At last, currently blk-throtl is initialized during disk initialization,
+>> and destroyed during disk removal, and it exposes many functions to be
+>> called directly from block layer. Hence I'm planning to optimize
+>> blk-throtl and finially support building it as kernel module. Remove
+>> throtl low will make the work much easier.
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> 
+> Acked-by: Tejun Heo <tj@kernel.org>
+> 
+> I haven't seen any usage but let's see if anyone complains.
 
-acpi_processor_hotadd_init()
-...
-         acpi_map_cpu(pr->handle, pr->phys_id, pr->acpi_id, &pr->id);
+Thanks for the review!
+Kuai
 
-That ends up in fiddling with cpu_present_mask.
-
-I grant you that arch_register_cpu() is not, but it might rely on the
-external locking too. I could not be bothered to figure that out.
-
->> Define "real hotplug" :)
->> 
->> Real physical hotplug does not really exist. That's at least true for
->> x86, where the physical hotplug support was chased for a while, but
->> never ended up in production.
->> 
->> Though virtualization happily jumped on it to hot add/remove CPUs
->> to/from a guest.
->> 
->> There are limitations to this and we learned it the hard way on X86. At
->> the end we came up with the following restrictions:
->> 
->>     1) All possible CPUs have to be advertised at boot time via firmware
->>        (ACPI/DT/whatever) independent of them being present at boot time
->>        or not.
->> 
->>        That guarantees proper sizing and ensures that associations
->>        between hardware entities and software representations and the
->>        resulting topology are stable for the lifetime of a system.
->> 
->>        It is really required to know the full topology of the system at
->>        boot time especially with hybrid CPUs where some of the cores
->>        have hyperthreading and the others do not.
->> 
->> 
->>     2) Hot add can only mark an already registered (possible) CPU
->>        present. Adding non-registered CPUs after boot is not possible.
->> 
->>        The CPU must have been registered in #1 already to ensure that
->>        the system topology does not suddenly change in an incompatible
->>        way at run-time.
->> 
->> The same restriction would apply to real physical hotplug. I don't think
->> that's any different for ARM64 or any other architecture.
->
-> This makes me wonder whether the Arm64 has been barking up the wrong
-> tree then, and whether the whole "present" vs "enabled" thing comes
-> from a misunderstanding as far as a CPU goes.
->
-> However, there is a big difference between the two. On x86, a processor
-> is just a processor. On Arm64, a "processor" is a slice of the system
-> (includes the interrupt controller, PMUs etc) and we must enumerate
-> those even when the processor itself is not enabled. This is the whole
-> reason there's a difference between "present" and "enabled" and why
-> there's a difference between x86 cpu hotplug and arm64 cpu hotplug.
-> The processor never actually goes away in arm64, it's just prevented
-> from being used.
-
-It's the same on X86 at least in the physical world.
-
-Thanks,
-
-        tglx
+> 
+> Thanks.
+> 
 
