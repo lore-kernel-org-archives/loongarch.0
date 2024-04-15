@@ -1,184 +1,200 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEE6381B1
-	for <loongarch@lists.linux.dev>; Mon, 15 Apr 2024 08:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84B8241E1;
+	Mon, 15 Apr 2024 08:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713168255; cv=none; b=bhEB3LUYFJLnXwWJWOdRRFnP7HPxtrDScxvyPJ+NaXVyiPHRg4WdQeZJOwQ8TQ0SE46+Xhb+jrl0/srFD+CJ7+cTs0creorSMZmLgyZlASzbpmKIM2sH2WsmEmMkWhyArJkIOILO0e++p9YZRAK0dMOmW5e1gw0WM0SkrkpHwYo=
+	t=1713170759; cv=none; b=gBaPdjHwuc3+zG2LBuzkrDd8dyrcrZ8qWMeHj40jrnFgy49uT4jZp3IPYnQ2l+Vvg2SX+HkEBATiD3G69frfZodsQQdCJOJxSskcZsvXJEn32+a80l3b25xUJDV6ZDeBSa1gYjzUFwQ8QDkykurxEHkjXuYADl3tP5YfDiWfdqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713168255; c=relaxed/simple;
-	bh=UiNTy/XwQFjuHdHX/PXrqr/7gdd3eNWdYnpHroTPiKg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fq+z7pzXmZ2x3SLw0gsysFpao0feeecQqf2/xoPjNBB3c6aDxB7ltLhlV2aUMWcUb88ncXhWs0z+SXnE1q+aroSjqgr1w7S//25NUiGXzjVVEzLFWWbGFVqsOBkoaw7Xpb9mjoZwRuwB3Qm2qf8LI4Y73vAhiqSOmTtHW7PRZFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qkaw2/6u; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qkaw2/6u"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a5269c3f9c7so87741966b.2
-        for <loongarch@lists.linux.dev>; Mon, 15 Apr 2024 01:04:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713168250; x=1713773050; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wo/Ov/gBkdZgWyMrIJS5//z4aGUdM8HoDmUePeCASCE=;
-        b=qkaw2/6uxl7NYJDuUvriShcu4j7aBnQeF9CgpyLYX0dGUHnrPjP9IG9L/j1G+487c5
-         YlCCbN+lkwiXtFnJGXXxZCwHDPHSKi5Te5f2YVEaMGu4qDZA9vfzXXKH9qwGZ2Z3dvy/
-         2Zs6oedZq0+LeLdQvy7Lp82bYzajwY420SR6gijLFbq6v7a4ybT8owxtSfHYS1YnCQvV
-         2DkfrabxJaEeNUX00bvFmgZRi+z+7jRadUWGJMkjkll6hkyxgpJqzVAOIDGt2hAPb4nm
-         ZhmbcOb6/e/8aRDsAC6JdeC/x5vlAKf9jPzo3uV/PpdRNsPJyF9FXhFgB7MnaX31esqc
-         dLZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713168250; x=1713773050;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wo/Ov/gBkdZgWyMrIJS5//z4aGUdM8HoDmUePeCASCE=;
-        b=JhN+2S5aXPv5ERHEllBOZGrdHCxPtdH3fvciTQhu7VzL/rowWms5JrFF9ADSSp+Ggo
-         L2LQptNeETFAb8BWGLK5eSGf1CjFWfLnxJ55HYs7GI22q0sn3XAeczsAyVh9To+aosex
-         tPceJ9ZFzLN2wzYkTMZSQGJNiY4kH3MXlMbzJaaXR6tpPXbV+RrN5dNVeec1sKOP7oMU
-         2dCty4FYPiB1UeOIIl8CR+SVDlDH5iyH4QRa1lPxOML5NcaaJiweJFcKWzq+u4/vSHL3
-         ep0Pt9zv2p90fTI3CJxbokRqRktp74HRUkLUM53vbIolixGxtHJHQHSXRx8v1Vrdawnm
-         zqQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUWsS/yb+vhGonQT8PVQ50B/O2Z5mXXXWH2AAzIFcNgh6tTtLWVOFZS2OBKNRRsfi6XddRyBQgqY1cKqgFsXFjA1KBxa0pNyMu
-X-Gm-Message-State: AOJu0Yxhx3v0PADnAk00l+InsJv6nLnlZkqFb9vJqxN6WLGWP+nNO66Z
-	j7uarVNXmtuPH8akzv53Vww41iXcUkfytz6FhZFLO9p+Oa3n4IQdKUYFxGvGflw=
-X-Google-Smtp-Source: AGHT+IHVldk4+xIRPwEmOh9J1yYwenVSk+L7iaf0VYldevR5MT01e7rR3HVWmGUNHTQFjpvT0HM6nw==
-X-Received: by 2002:a17:906:1355:b0:a4e:4278:8a01 with SMTP id x21-20020a170906135500b00a4e42788a01mr5524245ejb.11.1713168250025;
-        Mon, 15 Apr 2024 01:04:10 -0700 (PDT)
-Received: from [10.230.170.72] (46-253-189-43.dynamic.monzoon.net. [46.253.189.43])
-        by smtp.gmail.com with ESMTPSA id mm10-20020a170906cc4a00b00a524531a580sm3205855ejb.152.2024.04.15.01.04.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Apr 2024 01:04:09 -0700 (PDT)
-Message-ID: <7396c6d4-878f-4b07-9b7f-bc793bebe4bd@linaro.org>
-Date: Mon, 15 Apr 2024 10:04:08 +0200
+	s=arc-20240116; t=1713170759; c=relaxed/simple;
+	bh=OgrKO1lLfj0QwPpIfKi+OF6oT15+1u+32KvRkSoVxV8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=egMj9IBPLe6HDI25x1d9k08CJljXiWYjre9TQbwxASgFTSj5jJSRrdARsJ78IP1zwcQaKEkrAeE7x+418fhzbJlt2WpskK2AFNr6KHRvwola2FS9ThMGdVEmjL3YBxuBAV0o5UuNB7XeOb8wcK/1bvzj2dFKqth/hgmoIUhcWKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VJ11F19yNz6K60r;
+	Mon, 15 Apr 2024 16:44:01 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 423101400E7;
+	Mon, 15 Apr 2024 16:45:54 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 15 Apr
+ 2024 09:45:53 +0100
+Date: Mon, 15 Apr 2024 09:45:52 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: "Russell King (Oracle)" <linux@armlinux.org.uk>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Miguel Luis
+	<miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: Re: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from
+ acpi_processor_get_info()
+Message-ID: <20240415094552.000008d7@Huawei.com>
+In-Reply-To: <878r1iyxkr.ffs@tglx>
+References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
+	<20240412143719.11398-4-Jonathan.Cameron@huawei.com>
+	<CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
+	<ZhmWkE+fCEG/WFoi@shell.armlinux.org.uk>
+	<87bk6ez4hj.ffs@tglx>
+	<ZhmtO6zBExkQGZLk@shell.armlinux.org.uk>
+	<878r1iyxkr.ffs@tglx>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] dt-bindings: thermal: loongson,ls2k-thermal: Fix
- incorrect compatible definition
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria
- <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- Yinbo Zhu <zhuyinbo@loongson.cn>, WANG Xuerui <git@xen0n.name>,
- loongarch@lists.linux.dev
-References: <cover.1713147645.git.zhoubinbin@loongson.cn>
- <9d2132d4713321a83cdeef3cdc8887b7d39340e6.1713147645.git.zhoubinbin@loongson.cn>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <9d2132d4713321a83cdeef3cdc8887b7d39340e6.1713147645.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 15/04/2024 04:31, Binbin Zhou wrote:
-> The temperature output register of the Loongson-2K2000 is defined in the
-> chip configuration domain, which is different from the Loongson-2K1000,
-> so it can't be fallbacked.
-> 
-> We need to use two groups of registers to describe it: the first group
-> is the high and low temperature threshold setting register; the second
-> group is the temperature output register.
-> 
-> It is true that this fix will cause ABI corruption, but it is necessary
-> otherwise the Loongson-2K2000 temperature sensor will not work properly.
-> 
-> Fixes: 72684d99a854 ("thermal: dt-bindings: add loongson-2 thermal")
-> Cc: Yinbo Zhu <zhuyinbo@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../thermal/loongson,ls2k-thermal.yaml        | 23 +++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
-> index 9748a479dcd4..fac6f64d6c67 100644
-> --- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
-> @@ -18,14 +18,15 @@ properties:
->      oneOf:
->        - enum:
->            - loongson,ls2k1000-thermal
-> +          - loongson,ls2k2000-thermal
->        - items:
->            - enum:
->                - loongson,ls2k0500-thermal
-> -              - loongson,ls2k2000-thermal
->            - const: loongson,ls2k1000-thermal
->  
->    reg:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 2
->  
->    interrupts:
->      maxItems: 1
-> @@ -41,6 +42,24 @@ required:
->  
->  unevaluatedProperties: false
->  
-> +if:
+On Sat, 13 Apr 2024 01:23:48 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-This goes before unevaluatedProperties, just like in example schema.
+> Russell!
+> 
+> On Fri, Apr 12 2024 at 22:52, Russell King (Oracle) wrote:
+> > On Fri, Apr 12, 2024 at 10:54:32PM +0200, Thomas Gleixner wrote:  
+> >> > As for the cpu locking, I couldn't find anything in arch_register_cpu()
+> >> > that depends on the cpu_maps_update stuff nor needs the cpus_write_lock
+> >> > being taken - so I've no idea why the "make_present" case takes these
+> >> > locks.  
+> >> 
+> >> Anything which updates a CPU mask, e.g. cpu_present_mask, after early
+> >> boot must hold the appropriate write locks. Otherwise it would be
+> >> possible to online a CPU which just got marked present, but the
+> >> registration has not completed yet.  
+> >
+> > Yes. As far as I've been able to determine, arch_register_cpu()
+> > doesn't manipulate any of the CPU masks. All it seems to be doing
+> > is initialising the struct cpu, registering the embedded struct
+> > device, and setting up the sysfs links to its NUMA node.
+> >
+> > There is nothing obvious in there which manipulates any CPU masks, and
+> > this is rather my fundamental point when I said "I couldn't find
+> > anything in arch_register_cpu() that depends on ...".
+> >
+> > If there is something, then comments in the code would be a useful aid
+> > because it's highly non-obvious where such a manipulation is located,
+> > and hence why the locks are necessary.  
+> 
+> acpi_processor_hotadd_init()
+> ...
+>          acpi_map_cpu(pr->handle, pr->phys_id, pr->acpi_id, &pr->id);
+> 
+> That ends up in fiddling with cpu_present_mask.
+> 
+> I grant you that arch_register_cpu() is not, but it might rely on the
+> external locking too. I could not be bothered to figure that out.
+> 
+> >> Define "real hotplug" :)
+> >> 
+> >> Real physical hotplug does not really exist. That's at least true for
+> >> x86, where the physical hotplug support was chased for a while, but
+> >> never ended up in production.
+> >> 
+> >> Though virtualization happily jumped on it to hot add/remove CPUs
+> >> to/from a guest.
+> >> 
+> >> There are limitations to this and we learned it the hard way on X86. At
+> >> the end we came up with the following restrictions:
+> >> 
+> >>     1) All possible CPUs have to be advertised at boot time via firmware
+> >>        (ACPI/DT/whatever) independent of them being present at boot time
+> >>        or not.
+> >> 
+> >>        That guarantees proper sizing and ensures that associations
+> >>        between hardware entities and software representations and the
+> >>        resulting topology are stable for the lifetime of a system.
+> >> 
+> >>        It is really required to know the full topology of the system at
+> >>        boot time especially with hybrid CPUs where some of the cores
+> >>        have hyperthreading and the others do not.
+> >> 
+> >> 
+> >>     2) Hot add can only mark an already registered (possible) CPU
+> >>        present. Adding non-registered CPUs after boot is not possible.
+> >> 
+> >>        The CPU must have been registered in #1 already to ensure that
+> >>        the system topology does not suddenly change in an incompatible
+> >>        way at run-time.
+> >> 
+> >> The same restriction would apply to real physical hotplug. I don't think
+> >> that's any different for ARM64 or any other architecture.  
+> >
+> > This makes me wonder whether the Arm64 has been barking up the wrong
+> > tree then, and whether the whole "present" vs "enabled" thing comes
+> > from a misunderstanding as far as a CPU goes.
+> >
+> > However, there is a big difference between the two. On x86, a processor
+> > is just a processor. On Arm64, a "processor" is a slice of the system
+> > (includes the interrupt controller, PMUs etc) and we must enumerate
+> > those even when the processor itself is not enabled. This is the whole
+> > reason there's a difference between "present" and "enabled" and why
+> > there's a difference between x86 cpu hotplug and arm64 cpu hotplug.
+> > The processor never actually goes away in arm64, it's just prevented
+> > from being used.  
+> 
+> It's the same on X86 at least in the physical world.
+
+There were public calls on this via the Linaro Open Discussions group,
+so I can talk a little about how we ended up here.  Note that (in my
+opinion) there is zero chance of this changing - it took us well over
+a year to get to this conclusion.  So if we ever want ARM vCPU HP
+we need to work within these constraints. 
+
+The ARM architecture folk (the ones defining the ARM ARM, relevant ACPI
+specs etc, not the kernel maintainers) are determined that they want
+to retain the option to do real physical CPU hotplug in the future
+with all the necessary work around dynamic interrupt controller
+initialization, debug and many other messy corners.
+
+Thus anything defined had to be structured in a way that was 'different'
+from that.
+
+I don't mind the proposed flattening of the 2 paths if the ARM kernel
+maintainers are fine with it but it will remove the distinctions and
+we will need to be very careful with the CPU masks - we can't handle
+them the same as x86 does.
+
+I'll get on with doing that, but do need input from Will / Catalin / James.
+There are some quirks that need calling out as it's not quite a simple
+as it appears from a high level.
+
+Another part of that long discussion established that there is userspace
+(Android IIRC) in which the CPU present mask must include all CPUs
+at boot. To change that would be userspace ABI breakage so we can't
+do that.  Hence the dance around adding yet another mask to allow the
+OS to understand which CPUs are 'present' but not possible to online.
+
+Flattening the two paths removes any distinction between calls that
+are for real hotplug and those that are for this online capable path.
+As a side note, the indicating bit for these flows is defined in ACPI
+for x86 from ACPI 6.3 as a flag in Processor Local APIC
+(the ARM64 definition is a cut and paste of that text).  So someone
+is interested in this distinction on x86. I can't say who but if
+you have a mantis account you can easily follow the history and it
+might be instructive to not everyone considering the current x86
+flow the right way to do it.
+
+Jonathan
 
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Best regards,
-Krzysztof
+> 
+> Thanks,
+> 
+>         tglx
+> 
 
