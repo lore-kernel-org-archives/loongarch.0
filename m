@@ -1,250 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A12578C86;
-	Mon, 15 Apr 2024 12:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC4576046;
+	Mon, 15 Apr 2024 15:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185503; cv=none; b=JHCFBclIMFrqJB5INbP/C7vTsAeQoPMUaZlsQ2vViKYhgrp9AtnLrEacl4FgCGTd727tepvSTfpc5fYcQKn6kYeqe7wwSNcLT3h1VqT5o1B5yQs/dctW0grloSma2ATp8Mqwqi+fAUbqkfPx6CTc+mXe2IVRRL1HUA9Mw1lH3u8=
+	t=1713195101; cv=none; b=FXnbQj/T9r9AnA6GxclY7/Rv/rys9EO2YUfdBOdwDq/d0TwkWqIcukKWrapDD5Ri7QOL7tIhR0l9hZ9ig2qeGxpxTMSBTobQMEUCypBaov87xn6Q1MK4/4X9x3AYwMcym3SdbGorPXE9QPYS2e5Fku6EEYEAU2h3blkTbqk6eqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185503; c=relaxed/simple;
-	bh=jYX09rpdrm93G+82PrvfVTaDeGwVFz87SiF1eL4uh4c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SPNvGCgYOzPmCLL+wACLZmu+o7fPu56/k8BBnS3IFTMuolw9IP9zyOboNnHV8O6A2T53gRyyTutmtGNvKHykrNrhAkDwR7fZUhTzZsYZnvTUBOawo7wtclMdfWX/iaoMVNEuIg/n6QGqXZy7jiHbgQu0P5GCft+rNalPctzPiNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2KOyKSr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2KOyKSr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CEFBC2BD10;
-	Mon, 15 Apr 2024 12:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185503;
-	bh=jYX09rpdrm93G+82PrvfVTaDeGwVFz87SiF1eL4uh4c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=X2KOyKSrplY3TQ4q9SahVWs6oObdsfm/oET5Ojm9a/yiX+Vr9aBmPSpc14PXj5UCK
-	 ntBzkaUVg5iooN/jydrxGrgMMl7jipjzJRfJs3MrizMt2uW8+9fGeuDEZxjmkRUi1m
-	 ZAqN4D+rTd34QSKZdRStpxcrZNhbDMhTJMfo15qa1/ype+RgrIaS2/Sx4sViDooTQ9
-	 UERyYrIsubkhpyGYFPYCnFqCG71NMOvoA2LDeMeaG9CT2/ncoYfFWyejLUphbcOYkn
-	 y8gZWT7SA55m7VvRNk2WK94Y5/T4GKaVyeX+CcwR3Wyw3p84a9VR4xy1i7LFDW9HpO
-	 v84WXL6ILkZfA==
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5a9ef9ba998so844109eaf.1;
-        Mon, 15 Apr 2024 05:51:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXzUBJiwSrkSPObExUH8atH+XQS5dOUgYBD8bU65yS5OM23ZTWkQZPtGma9JPz5k2HEr/3cq/VE04jvs4GYisVIOiXGsgiAIzQq/TmyJwRC8PQf4i/7KReqKoNizSalckmj
-X-Gm-Message-State: AOJu0YxZYDc96ucLZn3Xafsc3Bd5upetHDj/0iyeB4eZz/cABcU19aA/
-	kHZhEqutAaHxWFpICD/hGe6umHxp68CTX58Kwt23+Q1/3+0vI336JNNEFz9LWXa9YtLtxzFJS/i
-	ArpyxQBHSF0LZYj9esaKLfjMqC88=
-X-Google-Smtp-Source: AGHT+IG+/b2KS0keTNCgqFOHM9Mj89KNmkEnREchLeL6HLDGedvTzVt6H4r3tff+PQXQyqWIrKyVcHggoANlbHCH0sE=
-X-Received: by 2002:a05:6870:7a6:b0:22e:e006:e5ae with SMTP id
- en38-20020a05687007a600b0022ee006e5aemr11158428oab.0.1713185502514; Mon, 15
- Apr 2024 05:51:42 -0700 (PDT)
+	s=arc-20240116; t=1713195101; c=relaxed/simple;
+	bh=AnfXZ/kEtQnihfMDWl7HSBAFyH5D1ks4lLolnck7PS0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nP5f47AHrM2uIg7rihIFz31gxYxtwugGgXUBe9DLpyuHXFAGe6kLUGbB+s9kyxCUr5iJ+wLKmZ/DdN1/5o8E7EhUl8e8Vb3kFXMmPdQzr2aNIRBOV+Hia37WrTPVCrvKzoG7W3Y8f2JFcnNqMhoOvudnafwzRGsVOGaganzK5UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VJ9xs15pWz67yc8;
+	Mon, 15 Apr 2024 23:26:41 +0800 (CST)
+Received: from lhrpeml100002.china.huawei.com (unknown [7.191.160.241])
+	by mail.maildlp.com (Postfix) with ESMTPS id ED4CE1404FC;
+	Mon, 15 Apr 2024 23:31:35 +0800 (CST)
+Received: from lhrpeml500001.china.huawei.com (7.191.163.213) by
+ lhrpeml100002.china.huawei.com (7.191.160.241) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 15 Apr 2024 16:31:35 +0100
+Received: from lhrpeml500001.china.huawei.com ([7.191.163.213]) by
+ lhrpeml500001.china.huawei.com ([7.191.163.213]) with mapi id 15.01.2507.035;
+ Mon, 15 Apr 2024 16:31:35 +0100
+From: Salil Mehta <salil.mehta@huawei.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, "Russell King (Oracle)"
+	<linux@armlinux.org.uk>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, Miguel Luis
+	<miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, "Jean-Philippe
+ Brucker" <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Linuxarm
+	<linuxarm@huawei.com>, "justin.he@arm.com" <justin.he@arm.com>,
+	"jianyong.wu@arm.com" <jianyong.wu@arm.com>
+Subject: RE: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from
+ acpi_processor_get_info()
+Thread-Topic: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from
+ acpi_processor_get_info()
+Thread-Index: AQHajOchpfPN+k2lSk2QcH/fNdeOvbFk5HgAgAAdgQCAAAqxAIAEJ9JQgAAINICAACGBcA==
+Date: Mon, 15 Apr 2024 15:31:35 +0000
+Message-ID: <454d0d5c4ddd403c82610725b8e633d8@huawei.com>
+References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
+ <20240412143719.11398-4-Jonathan.Cameron@huawei.com>
+ <CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
+ <ZhmWkE+fCEG/WFoi@shell.armlinux.org.uk> <87bk6ez4hj.ffs@tglx>
+ <e80bfa8cb9b74997a4214e531366c71d@huawei.com>
+ <CAJZ5v0hgABc=c6L4ctTHZ+5afeQTM1-bXhxthEKGxs8hG8R=YQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hgABc=c6L4ctTHZ+5afeQTM1-bXhxthEKGxs8hG8R=YQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
- <20240412143719.11398-4-Jonathan.Cameron@huawei.com> <CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
- <ZhmWkE+fCEG/WFoi@shell.armlinux.org.uk> <87bk6ez4hj.ffs@tglx> <e80bfa8cb9b74997a4214e531366c71d@huawei.com>
-In-Reply-To: <e80bfa8cb9b74997a4214e531366c71d@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 15 Apr 2024 14:51:27 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hgABc=c6L4ctTHZ+5afeQTM1-bXhxthEKGxs8hG8R=YQ@mail.gmail.com>
-Message-ID: <CAJZ5v0hgABc=c6L4ctTHZ+5afeQTM1-bXhxthEKGxs8hG8R=YQ@mail.gmail.com>
-Subject: Re: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from acpi_processor_get_info()
-To: Salil Mehta <salil.mehta@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "Russell King (Oracle)" <linux@armlinux.org.uk>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, 
-	Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Linuxarm <linuxarm@huawei.com>, 
-	"justin.he@arm.com" <justin.he@arm.com>, "jianyong.wu@arm.com" <jianyong.wu@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 15, 2024 at 1:51=E2=80=AFPM Salil Mehta <salil.mehta@huawei.com=
-> wrote:
->
-> Hello,
->
-> >  From: Thomas Gleixner <tglx@linutronix.de>
-> >  Sent: Friday, April 12, 2024 9:55 PM
-> >
-> >  On Fri, Apr 12 2024 at 21:16, Russell King (Oracle) wrote:
-> >  > On Fri, Apr 12, 2024 at 08:30:40PM +0200, Rafael J. Wysocki wrote:
-> >  >> Say acpi_map_cpu) / acpi_unmap_cpu() are turned into arch calls.
-> >  >> What's the difference then?  The locking, which should be fine if I=
-'m
-> >  >> not mistaken and need_hotplug_init that needs to be set if this cod=
-e
-> >  >> runs after the processor driver has loaded AFAICS.
-> >  >
-> >  > It is over this that I walked away from progressing this code, becau=
-se
-> >  > I don't think it's quite as simple as you make it out to be.
-> >  >
-> >  > Yes, acpi_map_cpu() and acpi_unmap_cpu() are already arch
-> >  implemented
-> >  > functions, so Arm64 can easily provide stubs for these that do nothi=
-ng.
-> >  > That never caused me any concern.
-> >  >
-> >  > What does cause me great concern though are the finer details. For
-> >  > example, above you seem to drop the evaluation of _STA for the
-> >  > "make_present" case - I've no idea whether that is something that
-> >  > should be deleted or not (if it is something that can be deleted, th=
-en
-> >  > why not delete it now?)
-> >  >
-> >  > As for the cpu locking, I couldn't find anything in
-> >  > arch_register_cpu() that depends on the cpu_maps_update stuff nor
-> >  > needs the cpus_write_lock being taken - so I've no idea why the
-> >  > "make_present" case takes these locks.
-> >
-> >  Anything which updates a CPU mask, e.g. cpu_present_mask, after early
-> >  boot must hold the appropriate write locks. Otherwise it would be poss=
-ible
-> >  to online a CPU which just got marked present, but the registration ha=
-s not
-> >  completed yet.
-> >
-> >  > Finally, the "pr->flags.need_hotplug_init =3D 1" thing... it's not
-> >  > obvious that this is required - remember that with Arm64's "enabled"
-> >  > toggling, the "processor" is a slice of the system and doesn't
-> >  > actually go away - it's just "not enabled" for use.
-> >  >
-> >  > Again, as "processors" in Arm64 are slices of the system, they have =
-to
-> >  > be fully described in ACPI before the OS boots, and they will be
-> >  > marked as being "present", which means they will be enumerated, and
-> >  > the driver will be probed. Any processor that is not to be used will
-> >  > not have its enabled bit set. It is my understanding that every
-> >  > processor will result in the ACPI processor driver being bound to it
-> >  > whether its enabled or not.
-> >  >
-> >  > The difference between real hotplug and Arm64 hotplug is that real
-> >  > hotplug makes stuff not-present (and thus unenumerable). Arm64
-> >  hotplug
-> >  > makes stuff not-enabled which is still enumerable.
-> >
-> >  Define "real hotplug" :)
-> >
-> >  Real physical hotplug does not really exist. That's at least true for =
-x86, where
-> >  the physical hotplug support was chased for a while, but never ended u=
-p in
-> >  production.
-> >
-> >  Though virtualization happily jumped on it to hot add/remove CPUs to/f=
-rom
-> >  a guest.
-> >
-> >  There are limitations to this and we learned it the hard way on X86. A=
-t the
-> >  end we came up with the following restrictions:
-> >
-> >      1) All possible CPUs have to be advertised at boot time via firmwa=
-re
-> >         (ACPI/DT/whatever) independent of them being present at boot ti=
-me
-> >         or not.
-> >
-> >         That guarantees proper sizing and ensures that associations
-> >         between hardware entities and software representations and the
-> >         resulting topology are stable for the lifetime of a system.
-> >
-> >         It is really required to know the full topology of the system a=
-t
-> >         boot time especially with hybrid CPUs where some of the cores
-> >         have hyperthreading and the others do not.
-> >
-> >
-> >      2) Hot add can only mark an already registered (possible) CPU
-> >         present. Adding non-registered CPUs after boot is not possible.
-> >
-> >         The CPU must have been registered in #1 already to ensure that
-> >         the system topology does not suddenly change in an incompatible
-> >         way at run-time.
-> >
-> >  The same restriction would apply to real physical hotplug. I don't thi=
-nk that's
-> >  any different for ARM64 or any other architecture.
->
->
-> There is a difference:
->
-> 1.   ARM arch does not allows for any processor to be NOT present. Hence,=
- because of
-> this restriction any of its related per-cpu components must be present an=
-d enumerated
-> at the boot time as well (exposed by firmware and ACPI). This means all t=
-he enumerated
-> processors will be marked as 'present' but they might exist in NOT enable=
-d (_STA.enabled=3D0)
-> state.
->
-> There was one clear difference and please correct me if I'm wrong here,  =
-for x86, the LAPIC
-> associated with the x86 core can be brought online later even after boot?
->
-> But for ARM Arch, processors and its corresponding per-cpu components lik=
-e redistributors
-> all need to be present and enumerated during the boot time. Redistributor=
-s are part of
-> ALWAYS-ON power domain.
-
-OK
-
-So what exactly is the problem with this and what does
-acpi_processor_add() have to do with it?
-
-Do you want the per-CPU structures etc. to be created from the
-acpi_processor_add() path?
-
-This plain won't work because acpi_processor_add(), as defined in the
-mainline kernel today (and the Jonathan's patches don't change that
-AFAICS), returns an error for processor devices with the "enabled" bit
-clear in _STA (it returns an error if the "present" bit is clear too,
-but that's obvious), so it only gets to calling arch_register_cpu() if
-*both* "present" and "enabled" _STA bits are set for the given
-processor device.
-
-That, BTW, is why I keep saying that from the ACPI CPU enumeration
-code perspective, there is no difference between "present" and
-"enabled".
-
-> 2.  Agreed regarding the topology. Are you suggesting that we must call a=
-rch_register_cpu()
-> during boot time for all the 'present' CPUs? Even if that's the case, we =
-might still want to defer
-> registration of the cpu device (register_cpu() API) with the Linux device=
- model. Later is what
-> we are doing to hide/unhide the CPUs from the user while STA.Enabled Bit =
-is toggled due to
-> CPU (un)plug action.
-
-There are two ways to approach this IMV, and both seem to be valid in princ=
-iple.
-
-One would be to treat CPUs with the "enabled" bit clear as not present
-and create all of the requisite data structures for them when they
-become available (in analogy with the "real hot-add" case).
-
-The alternative one is to create all of the requisite data structures
-for the CPUs that you find during boot, but register CPU devices for
-those having the "enabled" _STA bit set.
-
-It looks like you have chosen the second approach, which is fine with
-me (although personally, I would rather choose the first one), but
-then your arch code needs to arrange for the requisite CPU data
-structures etc. to be set up before acpi_processor_add() gets called
-because, as per the above, the latter just rejects CPUs with the
-"enabled" _STA bit clear.
-
-Thanks!
+PiAgRnJvbTogUmFmYWVsIEouIFd5c29ja2kgPHJhZmFlbEBrZXJuZWwub3JnPg0KPiAgU2VudDog
+TW9uZGF5LCBBcHJpbCAxNSwgMjAyNCAxOjUxIFBNDQo+ICANCj4gIE9uIE1vbiwgQXByIDE1LCAy
+MDI0IGF0IDE6NTHigK9QTSBTYWxpbCBNZWh0YSA8c2FsaWwubWVodGFAaHVhd2VpLmNvbT4NCj4g
+IHdyb3RlOg0KPiAgPg0KPiAgPiBIZWxsbywNCj4gID4NCj4gID4gPiAgRnJvbTogVGhvbWFzIEds
+ZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+DQo+ICA+ID4gIFNlbnQ6IEZyaWRheSwgQXByaWwg
+MTIsIDIwMjQgOTo1NSBQTQ0KPiAgPiA+DQo+ICA+ID4gIE9uIEZyaSwgQXByIDEyIDIwMjQgYXQg
+MjE6MTYsIFJ1c3NlbGwgS2luZyAoT3JhY2xlKSB3cm90ZToNCj4gID4gPiAgPiBPbiBGcmksIEFw
+ciAxMiwgMjAyNCBhdCAwODozMDo0MFBNICswMjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90ZToN
+Cj4gID4gPiAgPj4gU2F5IGFjcGlfbWFwX2NwdSkgLyBhY3BpX3VubWFwX2NwdSgpIGFyZSB0dXJu
+ZWQgaW50byBhcmNoIGNhbGxzLg0KPiAgPiA+ICA+PiBXaGF0J3MgdGhlIGRpZmZlcmVuY2UgdGhl
+bj8gIFRoZSBsb2NraW5nLCB3aGljaCBzaG91bGQgYmUgZmluZQ0KPiAgPiA+IGlmIEknbSAgPj4g
+bm90IG1pc3Rha2VuIGFuZCBuZWVkX2hvdHBsdWdfaW5pdCB0aGF0IG5lZWRzIHRvIGJlIHNldA0K
+PiAgPiA+IGlmIHRoaXMgY29kZSAgPj4gcnVucyBhZnRlciB0aGUgcHJvY2Vzc29yIGRyaXZlciBo
+YXMgbG9hZGVkIEFGQUlDUy4NCj4gID4gPiAgPg0KPiAgPiA+ICA+IEl0IGlzIG92ZXIgdGhpcyB0
+aGF0IEkgd2Fsa2VkIGF3YXkgZnJvbSBwcm9ncmVzc2luZyB0aGlzIGNvZGUsDQo+ICA+ID4gYmVj
+YXVzZSAgPiBJIGRvbid0IHRoaW5rIGl0J3MgcXVpdGUgYXMgc2ltcGxlIGFzIHlvdSBtYWtlIGl0
+IG91dCB0byBiZS4NCj4gID4gPiAgPg0KPiAgPiA+ICA+IFllcywgYWNwaV9tYXBfY3B1KCkgYW5k
+IGFjcGlfdW5tYXBfY3B1KCkgYXJlIGFscmVhZHkgYXJjaA0KPiAgPiA+IGltcGxlbWVudGVkICA+
+IGZ1bmN0aW9ucywgc28gQXJtNjQgY2FuIGVhc2lseSBwcm92aWRlIHN0dWJzIGZvcg0KPiAgPiA+
+IHRoZXNlIHRoYXQgZG8gbm90aGluZy4NCj4gID4gPiAgPiBUaGF0IG5ldmVyIGNhdXNlZCBtZSBh
+bnkgY29uY2Vybi4NCj4gID4gPiAgPg0KPiAgPiA+ICA+IFdoYXQgZG9lcyBjYXVzZSBtZSBncmVh
+dCBjb25jZXJuIHRob3VnaCBhcmUgdGhlIGZpbmVyIGRldGFpbHMuDQo+ICA+ID4gRm9yICA+IGV4
+YW1wbGUsIGFib3ZlIHlvdSBzZWVtIHRvIGRyb3AgdGhlIGV2YWx1YXRpb24gb2YgX1NUQSBmb3IN
+Cj4gID4gPiB0aGUgID4gIm1ha2VfcHJlc2VudCIgY2FzZSAtIEkndmUgbm8gaWRlYSB3aGV0aGVy
+IHRoYXQgaXMgc29tZXRoaW5nDQo+ICA+ID4gdGhhdCAgPiBzaG91bGQgYmUgZGVsZXRlZCBvciBu
+b3QgKGlmIGl0IGlzIHNvbWV0aGluZyB0aGF0IGNhbiBiZQ0KPiAgPiA+IGRlbGV0ZWQsIHRoZW4g
+ID4gd2h5IG5vdCBkZWxldGUgaXQgbm93PykgID4gID4gQXMgZm9yIHRoZSBjcHUNCj4gID4gPiBs
+b2NraW5nLCBJIGNvdWxkbid0IGZpbmQgYW55dGhpbmcgaW4gID4gYXJjaF9yZWdpc3Rlcl9jcHUo
+KSB0aGF0DQo+ICA+ID4gZGVwZW5kcyBvbiB0aGUgY3B1X21hcHNfdXBkYXRlIHN0dWZmIG5vciAg
+PiBuZWVkcyB0aGUNCj4gID4gPiBjcHVzX3dyaXRlX2xvY2sgYmVpbmcgdGFrZW4gLSBzbyBJJ3Zl
+IG5vIGlkZWEgd2h5IHRoZSAgPg0KPiAgPiA+ICJtYWtlX3ByZXNlbnQiIGNhc2UgdGFrZXMgdGhl
+c2UgbG9ja3MuDQo+ICA+ID4NCj4gID4gPiAgQW55dGhpbmcgd2hpY2ggdXBkYXRlcyBhIENQVSBt
+YXNrLCBlLmcuIGNwdV9wcmVzZW50X21hc2ssIGFmdGVyDQo+ICA+ID4gZWFybHkgIGJvb3QgbXVz
+dCBob2xkIHRoZSBhcHByb3ByaWF0ZSB3cml0ZSBsb2Nrcy4gT3RoZXJ3aXNlIGl0DQo+ICA+ID4g
+d291bGQgYmUgcG9zc2libGUgIHRvIG9ubGluZSBhIENQVSB3aGljaCBqdXN0IGdvdCBtYXJrZWQg
+cHJlc2VudCwNCj4gID4gPiBidXQgdGhlIHJlZ2lzdHJhdGlvbiBoYXMgbm90ICBjb21wbGV0ZWQg
+eWV0Lg0KPiAgPiA+DQo+ICA+ID4gID4gRmluYWxseSwgdGhlICJwci0+ZmxhZ3MubmVlZF9ob3Rw
+bHVnX2luaXQgPSAxIiB0aGluZy4uLiBpdCdzIG5vdA0KPiAgPiA+ID4gb2J2aW91cyB0aGF0IHRo
+aXMgaXMgcmVxdWlyZWQgLSByZW1lbWJlciB0aGF0IHdpdGggQXJtNjQncyAiZW5hYmxlZCINCj4g
+ID4gPiAgPiB0b2dnbGluZywgdGhlICJwcm9jZXNzb3IiIGlzIGEgc2xpY2Ugb2YgdGhlIHN5c3Rl
+bSBhbmQgZG9lc24ndCAgPg0KPiAgPiA+IGFjdHVhbGx5IGdvIGF3YXkgLSBpdCdzIGp1c3QgIm5v
+dCBlbmFibGVkIiBmb3IgdXNlLg0KPiAgPiA+ICA+DQo+ICA+ID4gID4gQWdhaW4sIGFzICJwcm9j
+ZXNzb3JzIiBpbiBBcm02NCBhcmUgc2xpY2VzIG9mIHRoZSBzeXN0ZW0sIHRoZXkNCj4gID4gPiBo
+YXZlIHRvICA+IGJlIGZ1bGx5IGRlc2NyaWJlZCBpbiBBQ1BJIGJlZm9yZSB0aGUgT1MgYm9vdHMs
+IGFuZCB0aGV5DQo+ICA+ID4gd2lsbCBiZSAgPiBtYXJrZWQgYXMgYmVpbmcgInByZXNlbnQiLCB3
+aGljaCBtZWFucyB0aGV5IHdpbGwgYmUNCj4gID4gPiBlbnVtZXJhdGVkLCBhbmQgID4gdGhlIGRy
+aXZlciB3aWxsIGJlIHByb2JlZC4gQW55IHByb2Nlc3NvciB0aGF0IGlzDQo+ICA+ID4gbm90IHRv
+IGJlIHVzZWQgd2lsbCAgPiBub3QgaGF2ZSBpdHMgZW5hYmxlZCBiaXQgc2V0LiBJdCBpcyBteQ0K
+PiAgPiA+IHVuZGVyc3RhbmRpbmcgdGhhdCBldmVyeSAgPiBwcm9jZXNzb3Igd2lsbCByZXN1bHQg
+aW4gdGhlIEFDUEkNCj4gID4gPiBwcm9jZXNzb3IgZHJpdmVyIGJlaW5nIGJvdW5kIHRvIGl0ICA+
+IHdoZXRoZXIgaXRzIGVuYWJsZWQgb3Igbm90Lg0KPiAgPiA+ICA+DQo+ICA+ID4gID4gVGhlIGRp
+ZmZlcmVuY2UgYmV0d2VlbiByZWFsIGhvdHBsdWcgYW5kIEFybTY0IGhvdHBsdWcgaXMgdGhhdA0K
+PiAgPiA+IHJlYWwgID4gaG90cGx1ZyBtYWtlcyBzdHVmZiBub3QtcHJlc2VudCAoYW5kIHRodXMg
+dW5lbnVtZXJhYmxlKS4NCj4gID4gPiBBcm02NCAgaG90cGx1ZyAgPiBtYWtlcyBzdHVmZiBub3Qt
+ZW5hYmxlZCB3aGljaCBpcyBzdGlsbCBlbnVtZXJhYmxlLg0KPiAgPiA+DQo+ICA+ID4gIERlZmlu
+ZSAicmVhbCBob3RwbHVnIiA6KQ0KPiAgPiA+DQo+ICA+ID4gIFJlYWwgcGh5c2ljYWwgaG90cGx1
+ZyBkb2VzIG5vdCByZWFsbHkgZXhpc3QuIFRoYXQncyBhdCBsZWFzdCB0cnVlDQo+ICA+ID4gZm9y
+IHg4Niwgd2hlcmUgIHRoZSBwaHlzaWNhbCBob3RwbHVnIHN1cHBvcnQgd2FzIGNoYXNlZCBmb3Ig
+YSB3aGlsZSwNCj4gID4gPiBidXQgbmV2ZXIgZW5kZWQgdXAgaW4gIHByb2R1Y3Rpb24uDQo+ICA+
+ID4NCj4gID4gPiAgVGhvdWdoIHZpcnR1YWxpemF0aW9uIGhhcHBpbHkganVtcGVkIG9uIGl0IHRv
+IGhvdCBhZGQvcmVtb3ZlIENQVXMNCj4gID4gPiB0by9mcm9tICBhIGd1ZXN0Lg0KPiAgPiA+DQo+
+ICA+ID4gIFRoZXJlIGFyZSBsaW1pdGF0aW9ucyB0byB0aGlzIGFuZCB3ZSBsZWFybmVkIGl0IHRo
+ZSBoYXJkIHdheSBvbg0KPiAgPiA+IFg4Ni4gQXQgdGhlICBlbmQgd2UgY2FtZSB1cCB3aXRoIHRo
+ZSBmb2xsb3dpbmcgcmVzdHJpY3Rpb25zOg0KPiAgPiA+DQo+ICA+ID4gICAgICAxKSBBbGwgcG9z
+c2libGUgQ1BVcyBoYXZlIHRvIGJlIGFkdmVydGlzZWQgYXQgYm9vdCB0aW1lIHZpYSBmaXJtd2Fy
+ZQ0KPiAgPiA+ICAgICAgICAgKEFDUEkvRFQvd2hhdGV2ZXIpIGluZGVwZW5kZW50IG9mIHRoZW0g
+YmVpbmcgcHJlc2VudCBhdCBib290IHRpbWUNCj4gID4gPiAgICAgICAgIG9yIG5vdC4NCj4gID4g
+Pg0KPiAgPiA+ICAgICAgICAgVGhhdCBndWFyYW50ZWVzIHByb3BlciBzaXppbmcgYW5kIGVuc3Vy
+ZXMgdGhhdCBhc3NvY2lhdGlvbnMNCj4gID4gPiAgICAgICAgIGJldHdlZW4gaGFyZHdhcmUgZW50
+aXRpZXMgYW5kIHNvZnR3YXJlIHJlcHJlc2VudGF0aW9ucyBhbmQgdGhlDQo+ICA+ID4gICAgICAg
+ICByZXN1bHRpbmcgdG9wb2xvZ3kgYXJlIHN0YWJsZSBmb3IgdGhlIGxpZmV0aW1lIG9mIGEgc3lz
+dGVtLg0KPiAgPiA+DQo+ICA+ID4gICAgICAgICBJdCBpcyByZWFsbHkgcmVxdWlyZWQgdG8ga25v
+dyB0aGUgZnVsbCB0b3BvbG9neSBvZiB0aGUgc3lzdGVtIGF0DQo+ICA+ID4gICAgICAgICBib290
+IHRpbWUgZXNwZWNpYWxseSB3aXRoIGh5YnJpZCBDUFVzIHdoZXJlIHNvbWUgb2YgdGhlIGNvcmVz
+DQo+ICA+ID4gICAgICAgICBoYXZlIGh5cGVydGhyZWFkaW5nIGFuZCB0aGUgb3RoZXJzIGRvIG5v
+dC4NCj4gID4gPg0KPiAgPiA+DQo+ICA+ID4gICAgICAyKSBIb3QgYWRkIGNhbiBvbmx5IG1hcmsg
+YW4gYWxyZWFkeSByZWdpc3RlcmVkIChwb3NzaWJsZSkgQ1BVDQo+ICA+ID4gICAgICAgICBwcmVz
+ZW50LiBBZGRpbmcgbm9uLXJlZ2lzdGVyZWQgQ1BVcyBhZnRlciBib290IGlzIG5vdCBwb3NzaWJs
+ZS4NCj4gID4gPg0KPiAgPiA+ICAgICAgICAgVGhlIENQVSBtdXN0IGhhdmUgYmVlbiByZWdpc3Rl
+cmVkIGluICMxIGFscmVhZHkgdG8gZW5zdXJlIHRoYXQNCj4gID4gPiAgICAgICAgIHRoZSBzeXN0
+ZW0gdG9wb2xvZ3kgZG9lcyBub3Qgc3VkZGVubHkgY2hhbmdlIGluIGFuIGluY29tcGF0aWJsZQ0K
+PiAgPiA+ICAgICAgICAgd2F5IGF0IHJ1bi10aW1lLg0KPiAgPiA+DQo+ICA+ID4gIFRoZSBzYW1l
+IHJlc3RyaWN0aW9uIHdvdWxkIGFwcGx5IHRvIHJlYWwgcGh5c2ljYWwgaG90cGx1Zy4gSSBkb24n
+dA0KPiAgPiA+IHRoaW5rIHRoYXQncyAgYW55IGRpZmZlcmVudCBmb3IgQVJNNjQgb3IgYW55IG90
+aGVyIGFyY2hpdGVjdHVyZS4NCj4gID4NCj4gID4NCj4gID4gVGhlcmUgaXMgYSBkaWZmZXJlbmNl
+Og0KPiAgPg0KPiAgPiAxLiAgIEFSTSBhcmNoIGRvZXMgbm90IGFsbG93cyBmb3IgYW55IHByb2Nl
+c3NvciB0byBiZSBOT1QgcHJlc2VudC4gSGVuY2UsICBiZWNhdXNlIG9mDQo+ICA+IHRoaXMgcmVz
+dHJpY3Rpb24gYW55IG9mIGl0cyByZWxhdGVkIHBlci1jcHUgY29tcG9uZW50cyBtdXN0IGJlIHBy
+ZXNlbnQNCj4gID4gYW5kIGVudW1lcmF0ZWQgYXQgdGhlIGJvb3QgdGltZSBhcyB3ZWxsIChleHBv
+c2VkIGJ5IGZpcm13YXJlIGFuZA0KPiAgPiBBQ1BJKS4gVGhpcyBtZWFucyBhbGwgdGhlIGVudW1l
+cmF0ZWQgcHJvY2Vzc29ycyB3aWxsIGJlIG1hcmtlZCBhcw0KPiAgPiAncHJlc2VudCcgYnV0IHRo
+ZXkgbWlnaHQgZXhpc3QgaW4gTk9UIGVuYWJsZWQgKF9TVEEuZW5hYmxlZD0wKSBzdGF0ZS4NCj4g
+ID4NCj4gID4gVGhlcmUgd2FzIG9uZSBjbGVhciBkaWZmZXJlbmNlIGFuZCBwbGVhc2UgY29ycmVj
+dCBtZSBpZiBJJ20gd3JvbmcNCj4gID4gaGVyZSwgIGZvciB4ODYsIHRoZSBMQVBJQyBhc3NvY2lh
+dGVkIHdpdGggdGhlIHg4NiBjb3JlIGNhbiBiZSBicm91Z2h0IG9ubGluZSBsYXRlciBldmVuIGFm
+dGVyIGJvb3Q/DQo+ICA+DQo+ICA+IEJ1dCBmb3IgQVJNIEFyY2gsIHByb2Nlc3NvcnMgYW5kIGl0
+cyBjb3JyZXNwb25kaW5nIHBlci1jcHUgY29tcG9uZW50cw0KPiAgPiBsaWtlIHJlZGlzdHJpYnV0
+b3JzIGFsbCBuZWVkIHRvIGJlIHByZXNlbnQgYW5kIGVudW1lcmF0ZWQgZHVyaW5nIHRoZQ0KPiAg
+PiBib290IHRpbWUuIFJlZGlzdHJpYnV0b3JzIGFyZSBwYXJ0IG9mIEFMV0FZUy1PTiBwb3dlciBk
+b21haW4uDQo+ICANCj4gIE9LDQo+ICANCj4gIFNvIHdoYXQgZXhhY3RseSBpcyB0aGUgcHJvYmxl
+bSB3aXRoIHRoaXMgYW5kIHdoYXQgZG9lcw0KPiAgYWNwaV9wcm9jZXNzb3JfYWRkKCkgaGF2ZSB0
+byBkbyB3aXRoIGl0Pw0KDQoNCkZvciBBUk0gQXJjaCwgZHVyaW5nIGJvb3QgdGltZSwgaXQgc2hv
+dWxkIGFkZCBwcm9jZXNzb3IgYXMgaWYgbm8gaG90cGx1ZyBleGlzdHMuIEJ1dCBsYXRlciwNCmlu
+IGNvbnRleHQgdG8gdGhlIChmYWtlKSBob3RwbHVnIHRyaWdnZXIgZnJvbSB0aGUgdmlydHVhbGl6
+ZXIgYXMgYSByZXN1bHQgb2YgdGhlIENQVSAodW4pcGx1Zw0KYWN0aW9uICBpdCBzaG91bGQganVz
+dCBlbmQgdXAgaW4gcmVnaXN0ZXJpbmcgdGhlIGFscmVhZHkgcHJlc2VudCBDUFUgd2l0aCB0aGUg
+TGludXggRHJpdmVyIE1vZGVsLiANCg0KDQo+ICANCj4gIERvIHlvdSB3YW50IHRoZSBwZXItQ1BV
+IHN0cnVjdHVyZXMgZXRjLiB0byBiZSBjcmVhdGVkIGZyb20gdGhlDQo+ICBhY3BpX3Byb2Nlc3Nv
+cl9hZGQoKSBwYXRoPw0KDQoNCkkgcmVmZXJyZWQgdG8gdGhlIGNvbXBvbmVudHMgcmVsYXRlZCB0
+byBBUk0gQ1BVIEFyY2ggbGlrZSByZWRpc3RyaWJ1dG9ycyBldGMuDQp3aGljaCB3aWxsIGdldCBp
+bml0aWFsaXplZCBpbiBjb250ZXh0IHRvIEFyY2ggc3BlY2lmaWMgX2luaXQgY29kZSBub3QgaGVy
+ZS4gVGhpcw0KaS5lLiBhY3BpX3Byb2Nlc3Nvcl9hZGQoKSBpcyBhcmNoIGFnbm9zdGljIGNvZGUg
+Y29tbW9uIHRvIGFsbCBhcmNoaXRlY3R1cmVzLg0KDQpbIEEgZGlncmVzc2lvbjogWW91IGRvIGhh
+dmUgX3dlYWsgZnVuY3Rpb25zIHdoaWNoIGNhbiBiZSBvdmVycmlkZGVuIHRvIGFyY2ggc3BlY2lm
+aWMNCiBoYW5kbGluZyBsaWtlICBhcmNoXyh1biltYXBfY3B1KCkgZXRjLiBidXQgd2UgY2FuJ3Qg
+dXNlIHRob3NlIHRvIGRlZmVyIGluaXRpYWxpemUNCiB0aGUgQ1BVIHJlbGF0ZWQgY29tcG9uZW50
+cyAtIEFSTSBBcmNoIGNvbnN0cmFpbnQhXQ0KDQoNCj4gIA0KPiAgVGhpcyBwbGFpbiB3b24ndCB3
+b3JrIGJlY2F1c2UgYWNwaV9wcm9jZXNzb3JfYWRkKCksIGFzIGRlZmluZWQgaW4gdGhlDQo+ICBt
+YWlubGluZSBrZXJuZWwgdG9kYXkgKGFuZCB0aGUgSm9uYXRoYW4ncyBwYXRjaGVzIGRvbid0IGNo
+YW5nZSB0aGF0DQo+ICBBRkFJQ1MpLCByZXR1cm5zIGFuIGVycm9yIGZvciBwcm9jZXNzb3IgZGV2
+aWNlcyB3aXRoIHRoZSAiZW5hYmxlZCIgYml0IGNsZWFyDQo+ICBpbiBfU1RBIChpdCByZXR1cm5z
+IGFuIGVycm9yIGlmIHRoZSAicHJlc2VudCIgYml0IGlzIGNsZWFyIHRvbywgYnV0IHRoYXQncw0K
+PiAgb2J2aW91cyksIHNvIGl0IG9ubHkgZ2V0cyB0byBjYWxsaW5nIGFyY2hfcmVnaXN0ZXJfY3B1
+KCkgaWYNCj4gICpib3RoKiAicHJlc2VudCIgYW5kICJlbmFibGVkIiBfU1RBIGJpdHMgYXJlIHNl
+dCBmb3IgdGhlIGdpdmVuIHByb2Nlc3Nvcg0KPiAgZGV2aWNlLg0KDQoNCklmIHlvdSBhcmUgcmVm
+ZXJyaW5nIHRvIHRoZSBfU1RBIGNoZWNrIGluIHRoZSBYWF9ob3RfYWRkX2luaXQoKSB0aGVuIGlu
+IHRoZSBjdXJyZW50DQprZXJuZWwgY29kZSBpdCBvbmx5IGNoZWNrcyBmb3IgdGhlIEFDUElfU1RB
+X0RFVklDRV9QUkVTRU5UIGZsYWcgYW5kIG5vdA0KdGhlIEFDUElfU1RBX0RFVklDRV9FTkFCTEVE
+IGZsYWcoPykuIFRoZSBjb2RlIGJlaW5nIHJldmlld2VkIGhhcyBjaGFuZ2VkDQpleGFjdGx5IHRo
+YXQgYmVoYXZpb3IgZm9yIDIgbGVncyBpLmUuIG1ha2UtcHJlc2VudCBhbmQgbWFrZS1lbmFibGVk
+IGxlZ3MuDQoNCkknbSBvcGVuIHRvIGZ1cnRoZXIgYWRkcmVzcyB5b3VyIHBvaW50IGNsZWFybHku
+DQoNCj4gIA0KPiAgVGhhdCwgQlRXLCBpcyB3aHkgSSBrZWVwIHNheWluZyB0aGF0IGZyb20gdGhl
+IEFDUEkgQ1BVIGVudW1lcmF0aW9uIGNvZGUNCj4gIHBlcnNwZWN0aXZlLCB0aGVyZSBpcyBubyBk
+aWZmZXJlbmNlIGJldHdlZW4gInByZXNlbnQiIGFuZCAiZW5hYmxlZCIuDQoNCg0KQWdyZWVkIGJ1
+dCB0aGVyZSBpcyBzdGlsbCBhIHN1YnRsZSBkaWZmZXJlbmNlLiAgRW51bWVyYXRpb24gaGFwcGVu
+cyBvbmNlIGFuZA0KZm9yIGFsbCB0aGUgcHJvY2Vzc29ycyBkdXJpbmcgdGhlIGJvb3QgdGltZS4g
+QW5kIGFzIGNvbmZpcm1lZCBieSB5b3Vyc2VsZiBhbmQNClRob21hcyBhcyB3ZWxsIHRoYXQgZXZl
+biBpbiB4ODYgYXJjaCBhbGwgdGhlIHByb2Nlc3NvcnMgd2lsbCBiZSBkaXNjb3ZlcmVkIGFuZA0K
+dGhlaXIgdG9wb2xvZ3kgZml4ZWQgZHVyaW5nIHRoZSBib290IHRpbWUgd2hpY2ggaXMgZWZmZWN0
+aXZlbHkgdGhlIHNhbWUgYmVoYXZpb3INCmFzIGluIHRoZSBBUk0gQXJjaC4gQnV0IEFSTSBhc3N1
+bWVzIHRob3NlICdwcmVzZW50JyBiaXRzIGluIHRoZSBwcmVzZW50IG1hc2tzDQp0byBiZSBzZXQg
+ZHVyaW5nIHRoZSBib290IHRpbWUgd2hpY2ggaXMgbm90IGxpa2UgeDg2KD8pLiAgSGVuY2UsICdw
+cmVzZW50IGNwdScgQml0cw0Kd2lsbCBhbHdheXMgYmUgZXF1YWwgdG8gJ3Bvc3NpYmxlIGNwdScg
+Qml0cy4gVGhpcyBpcyBhIGNvbnN0cmFpbnQgcHV0IGJ5IHRoZSBBUk0NCm1haW50YWluZXJzIGFu
+ZCBsb29rcyB1bnNoYWthYmxlLiANCg0KDQo+ICANCj4gID4gMi4gIEFncmVlZCByZWdhcmRpbmcg
+dGhlIHRvcG9sb2d5LiBBcmUgeW91IHN1Z2dlc3RpbmcgdGhhdCB3ZSBtdXN0DQo+ICA+IGNhbGwg
+YXJjaF9yZWdpc3Rlcl9jcHUoKSBkdXJpbmcgYm9vdCB0aW1lIGZvciBhbGwgdGhlICdwcmVzZW50
+JyBDUFVzPw0KPiAgPiBFdmVuIGlmIHRoYXQncyB0aGUgY2FzZSwgd2UgbWlnaHQgc3RpbGwgd2Fu
+dCB0byBkZWZlciByZWdpc3RyYXRpb24gb2YNCj4gID4gdGhlIGNwdSBkZXZpY2UgKHJlZ2lzdGVy
+X2NwdSgpIEFQSSkgd2l0aCB0aGUgTGludXggZGV2aWNlIG1vZGVsLiBMYXRlcg0KPiAgPiBpcyB3
+aGF0IHdlIGFyZSBkb2luZyB0byBoaWRlL3VuaGlkZSB0aGUgQ1BVcyBmcm9tIHRoZSB1c2VyIHdo
+aWxlDQo+ICBTVEEuRW5hYmxlZCBCaXQgaXMgdG9nZ2xlZCBkdWUgdG8gQ1BVICh1bilwbHVnIGFj
+dGlvbi4NCj4gIA0KPiAgVGhlcmUgYXJlIHR3byB3YXlzIHRvIGFwcHJvYWNoIHRoaXMgSU1WLCBh
+bmQgYm90aCBzZWVtIHRvIGJlIHZhbGlkIGluDQo+ICBwcmluY2lwbGUuDQo+ICANCj4gIE9uZSB3
+b3VsZCBiZSB0byB0cmVhdCBDUFVzIHdpdGggdGhlICJlbmFibGVkIiBiaXQgY2xlYXIgYXMgbm90
+IHByZXNlbnQgYW5kDQo+ICBjcmVhdGUgYWxsIG9mIHRoZSByZXF1aXNpdGUgZGF0YSBzdHJ1Y3R1
+cmVzIGZvciB0aGVtIHdoZW4gdGhleSBiZWNvbWUNCj4gIGF2YWlsYWJsZSAoaW4gYW5hbG9neSB3
+aXRoIHRoZSAicmVhbCBob3QtYWRkIiBjYXNlKS4NCg0KDQpSaWdodC4gVGhpcyBvbmUgaXMgb3V0
+LW9mLXNjb3BlIGZvciBBUk0gQXJjaCBhcyB3ZSBjYW5ub3QgZGVmZXIgYW55IEFyY2gNCnNwZWNp
+ZmljIHNpemluZyBhbmQgaW5pdGlhbGl6YXRpb25zIGFmdGVyIGJvb3QgaS5lLiB3aGVuIHByb2Nl
+c3Nvcl9hZGQoKSBnZXRzDQpjYWxsZWQgYWdhaW4gbGF0ZXIgYXMgYSB0cmlnZ2VyIG9mIENQVSBw
+bHVnIGFjdGlvbiBhdCB0aGUgVmlydHVhbGl6ZXIuDQoNCg0KPiAgDQo+ICBUaGUgYWx0ZXJuYXRp
+dmUgb25lIGlzIHRvIGNyZWF0ZSBhbGwgb2YgdGhlIHJlcXVpc2l0ZSBkYXRhIHN0cnVjdHVyZXMg
+Zm9yIHRoZQ0KPiAgQ1BVcyB0aGF0IHlvdSBmaW5kIGR1cmluZyBib290LCBidXQgcmVnaXN0ZXIg
+Q1BVIGRldmljZXMgZm9yIHRob3NlIGhhdmluZw0KPiAgdGhlICJlbmFibGVkIiBfU1RBIGJpdCBz
+ZXQuDQoNCg0KQ29ycmVjdC4gYW5kIHdlIGRlZmVyIHRoZSByZWdpc3RyYXRpb24gZm9yIENQVXMg
+d2l0aCBvbmxpbmUtY2FwYWJsZSBCaXQNCnNldCBpbiB0aGUgQUNQSSBNQURUL0dJQ0MgZGF0YSBz
+dHJ1Y3R1cmUuIFRoZXNlIENQVXMgYmFzaWNhbGx5IGZvcm0NCnNldCBvZiBob3QtcGx1Z2dhYmxl
+IENQVXMgb24gQVJNLiANCg0KDQo+ICANCj4gIEl0IGxvb2tzIGxpa2UgeW91IGhhdmUgY2hvc2Vu
+IHRoZSBzZWNvbmQgYXBwcm9hY2gsIHdoaWNoIGlzIGZpbmUgd2l0aCBtZQ0KPiAgKGFsdGhvdWdo
+IHBlcnNvbmFsbHksIEkgd291bGQgcmF0aGVyIGNob29zZSB0aGUgZmlyc3Qgb25lKSwgYnV0IHRo
+ZW4geW91cg0KPiAgYXJjaCBjb2RlIG5lZWRzIHRvIGFycmFuZ2UgZm9yIHRoZSByZXF1aXNpdGUg
+Q1BVIGRhdGEgc3RydWN0dXJlcyBldGMuIHRvIGJlDQo+ICBzZXQgdXAgYmVmb3JlIGFjcGlfcHJv
+Y2Vzc29yX2FkZCgpIGdldHMgY2FsbGVkIGJlY2F1c2UsIGFzIHBlciB0aGUgYWJvdmUsDQo+ICB0
+aGUgbGF0dGVyIGp1c3QgcmVqZWN0cyBDUFVzIHdpdGggdGhlICJlbmFibGVkIiBfU1RBIGJpdCBj
+bGVhci4NCg0KWWVzLCBjb3JyZWN0LiBGaXJzdCBvbmUgaXMgbm90IHBvc3NpYmxlIC0gYXQgbGVh
+c3QgZm9yIG5vdyBhbmQgdG8gaGF2ZSB0aGF0IGl0IHdpbGwNCnJlcXVpcmUgbG90IG9mIHJld29y
+ayBlc3BlY2lhbGx5IGF0IEdJQy4gQnV0IHRoZXJlIGFyZSBtYW55IG90aGVyIGFyY2ggY29tcG9u
+ZW50cw0KKGxpa2UgdGltZXJzLCBQTVVzLCBldGMuKSB3aG9zZSBiZWhhdmlvciBuZWVkcyB0byBi
+ZSBzcGVjaWZpZWQgc29tZXdoZXJlIGluIHRoZQ0KYXJjaGl0ZWN0dXJlIGFzIHdlbGwuIEFsbCB0
+aGVzZSBhcmUgY2xvc2VseSBjb3VwbGVkIHdpdGggdGhlIEFSTSBDUFUgYXJjaGl0ZWN0dXJlLg0K
+KGl0J3MgYmV5b25kIHRoaXMgZGlzY3Vzc2lvbiBhbmQgbGV0cyBsZWF2ZSB0aGF0IHRvIEFSTSBm
+b2xrcykuDQoNClRoaXMgcGF0Y2gtc2V0IGhhcyBhIGNoYW5nZSB0byBkZWFsIHdpdGggQUNQSSBf
+U1RBLkVuYWJsZWQgQml0IGFjY29yZGluZ2x5Lg0KDQoNCkJlc3QgcmVnYXJkcw0KU2FsaWwuDQoN
+Cj4gIA0KPiAgVGhhbmtzIQ0K
