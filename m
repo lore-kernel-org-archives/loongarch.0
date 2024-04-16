@@ -1,103 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F22F130AEC
-	for <loongarch@lists.linux.dev>; Tue, 16 Apr 2024 14:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1755F130A76
+	for <loongarch@lists.linux.dev>; Tue, 16 Apr 2024 15:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713278981; cv=none; b=qA5+HOHkKlK4uMKnjpgAPao5Cz3vWpttYcBIvf5Fdlg8kmxr5s1C/7hXChIbUnEHFR+G1rnuehwQ4gg1Kar9BnRkyIztsaOE5XDzeCd3rlQRRXT5EsObUsixf27Ouhu+Psh4lCQAUpBKcUmyefWw9plSh2EcOsdA+8Luv3Ny7Ps=
+	t=1713282481; cv=none; b=agJXi+VLc9kuya+WUqKNA0Ruxvvl87Kk7phoOY8rWESLLDJMFXDT7+6vda9L74hcQE21YQF71SRR4CIUVkZbnh+zFPlHfEkXSyw2ERRgQhRh30cGH6Drbl2SQwXvtGcyY8sYQ6fGDDxDDt+7SAAqmdXL3SJU8PU0yK5NBjKEAD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713278981; c=relaxed/simple;
-	bh=7ARtCr6gtBIZWPixhMOKo/+c9HV56ed5oMvKe8ko6Dw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a2TFyMrV6p6Ql/opKVo/vITxDrP8oXfI3NNjX/oN7QWq/QQMmjUveJI2Tydjsy2U3B0JrlvYcQBV/X+vvFJYGdqDIlaZ9kBFGVr+/NOIYceAkT5eXJHbtGVTk+n+3Mltdz6FKtbq+yIOlvEhd3wGg5q8Rgsfffh0GNmak6+RPIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RrpBiHO1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713282481; c=relaxed/simple;
+	bh=NZbRBNmAfMK+3yRMDzPReQ4j2EbQWHeftMW0C5d1kgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i080KVV1QXoOxehGdSbGrrihZEiMz7xemf81qwSvq4ghiQ+4hKgomIdnskLAvon7zkeD3EXyz7+2g/IygN5/wUCr0gE/79v8xt5um94DtBeSyHfSvVawK7Rt26QBPIFTOTDH2Qg67OJ77vdg8Af1zbNLiydNGdQxOer1hmbvgS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=gf1F0DdC; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=gf1F0DdC; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RrpBiHO1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713278979;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Kro/6N3hNJUz0mvlhxtTHwRpm8U0aOExj9xAbQAp3R0=;
-	b=RrpBiHO1J9ueoJSFRY1JNYQkAQmKftHGnGlkKZAHe+j6pxRPKitgQhAS2ckgQA2bUd9ScV
-	1KTx/+t5g3SZlpPec3/6CRIF6SqiFhf0YoIVH9dtTb71kSc9Lor06auzZqHhwDLIYFcFze
-	lqmbnAynkzj7KgCbPm1Qfzq5Pu6xhUg=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-F48Bfbb7NgShjBLlx_GDCQ-1; Tue,
- 16 Apr 2024 10:49:35 -0400
-X-MC-Unique: F48Bfbb7NgShjBLlx_GDCQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="gf1F0DdC";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="gf1F0DdC"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 860931C4C3A0;
-	Tue, 16 Apr 2024 14:49:34 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.194.131])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C9847492BD4;
-	Tue, 16 Apr 2024 14:49:31 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	llvm@lists.linux.dev,
-	David Hildenbrand <david@redhat.com>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH v1] LoongArch/tlb: fix "error: parameter 'ptep' set but not used" due to __tlb_remove_tlb_entry()
-Date: Tue, 16 Apr 2024 16:49:26 +0200
-Message-ID: <20240416144926.599101-1-david@redhat.com>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E1741F839;
+	Tue, 16 Apr 2024 15:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1713282478; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XhHu6jDC7cPxVBgNGim8Ty4Xl/VPDyVPLXO3H+HEHLU=;
+	b=gf1F0DdCsPbSyTZntqKQhmd1fCFIF5GAMuucKYL9GyW+Rl53AIgDWqiFxtvWkMRvUg5ejE
+	AydMtfUHF8EbREB0/xk6Mna8SKL1XOvzTdKGeRFR+MHKvPFSLExHedp+wgBRSHGaavDk7o
+	bRNQoP9gKBZKvBgTS3LUcwfPUlR1PuI=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1713282478; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XhHu6jDC7cPxVBgNGim8Ty4Xl/VPDyVPLXO3H+HEHLU=;
+	b=gf1F0DdCsPbSyTZntqKQhmd1fCFIF5GAMuucKYL9GyW+Rl53AIgDWqiFxtvWkMRvUg5ejE
+	AydMtfUHF8EbREB0/xk6Mna8SKL1XOvzTdKGeRFR+MHKvPFSLExHedp+wgBRSHGaavDk7o
+	bRNQoP9gKBZKvBgTS3LUcwfPUlR1PuI=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2F83813931;
+	Tue, 16 Apr 2024 15:47:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Fo7uCq6dHmZKDwAAD6G6ig
+	(envelope-from <mkoutny@suse.com>); Tue, 16 Apr 2024 15:47:58 +0000
+Date: Tue, 16 Apr 2024 17:47:48 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, chenhuacai@kernel.org, tj@kernel.org, 
+	josef@toxicpanda.com, jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net, 
+	pctammela@mojatatu.com, yukuai3@huawei.com, qde@naccy.de, zhaotianrui@loongson.cn, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH RFC v2 1/6] blk-throttle: remove
+ CONFIG_BLK_DEV_THROTTLING_LOW
+Message-ID: <f3jd5hflezlknl2np2ybrcmqpqohcsow2ldoh53xdzfe2vieti@zkd7e4oj4cgm>
+References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
+ <20240406080059.2248314-2-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xrzldp3lzaugn3vy"
+Content-Disposition: inline
+In-Reply-To: <20240406080059.2248314-2-yukuai1@huaweicloud.com>
+X-Spam-Flag: NO
+X-Spam-Score: -5.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-5.80 / 50.00];
+	BAYES_HAM(-2.90)[99.57%];
+	SIGNED_PGP(-2.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmx.de];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.dk,kernel.org,toxicpanda.com,mojatatu.com,gmx.de,themaw.net,huawei.com,naccy.de,loongson.cn,vger.kernel.org,lists.linux.dev];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
 
-With LLVM=1 and W=1 we get:
 
-  ./include/asm-generic/tlb.h:629:10: error: parameter 'ptep' set
-  but not used [-Werror,-Wunused-but-set-parameter]
+--xrzldp3lzaugn3vy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-We fixed a similar issue via Arnd in the introducing commit, missed the
-loongarch variant. Turns out, there is no need for loongarch to have a
-custom variant, so let's just drop it and rely on the asm-generic one.
+On Sat, Apr 06, 2024 at 04:00:54PM +0800, Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>  Documentation/ABI/stable/sysfs-block       |  12 -
+>  arch/loongarch/configs/loongson3_defconfig |   1 -
+>  block/Kconfig                              |  11 -
+>  block/bio.c                                |   1 -
+>  block/blk-stat.c                           |   3 -
+>  block/blk-sysfs.c                          |   7 -
+>  block/blk-throttle.c                       | 901 +--------------------
+>  block/blk-throttle.h                       |  26 +-
+>  block/blk.h                                |  11 -
+>  9 files changed, 45 insertions(+), 928 deletions(-)
 
-Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Closes: https://lkml.kernel.org/r/CANiq72mQh3O9S4umbvrKBgMMorty48UMwS01U22FR0mRyd3cyQ@mail.gmail.com
-Fixes: 4d5bf0b6183f ("mm/mmu_gather: add tlb_remove_tlb_entries()")
-Tested-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/loongarch/include/asm/tlb.h | 2 --
- 1 file changed, 2 deletions(-)
+I'm (also) not aware of any users of (be)low throttling.
+I like this cleanup.
 
-diff --git a/arch/loongarch/include/asm/tlb.h b/arch/loongarch/include/asm/tlb.h
-index da7a3b5b9374a..e071f5e9e8580 100644
---- a/arch/loongarch/include/asm/tlb.h
-+++ b/arch/loongarch/include/asm/tlb.h
-@@ -132,8 +132,6 @@ static __always_inline void invtlb_all(u32 op, u32 info, u64 addr)
- 		);
- }
- 
--#define __tlb_remove_tlb_entry(tlb, ptep, address) do { } while (0)
--
- static void tlb_flush(struct mmu_gather *tlb);
- 
- #define tlb_flush tlb_flush
--- 
-2.44.0
+Michal
 
+--xrzldp3lzaugn3vy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZh6dogAKCRAGvrMr/1gc
+jmjlAPwLwNkZQJFhrEDRQd2UPVOTYJsmlBNuzIDoL+vMV1NMgAEAq01YDiSpW/+Z
+V1EP2A64wd4WcjGJKLfZ/x4r2l/8iA4=
+=cgb7
+-----END PGP SIGNATURE-----
+
+--xrzldp3lzaugn3vy--
