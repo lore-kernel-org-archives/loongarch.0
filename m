@@ -1,123 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE946523D
-	for <loongarch@lists.linux.dev>; Tue, 16 Apr 2024 02:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FAE8485
+	for <loongarch@lists.linux.dev>; Tue, 16 Apr 2024 02:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713232984; cv=none; b=o7O7m6gYeL06vbSKeDwb/1BUxTI1NZGjFgl7/d27lddOD4d84A6rjIjjKRIt6KUidkNQSzU4AOLbggpDMSILJXxcB40gPjB0TFbHFRiFvqyYKL0fuijp2kg5DuIeX7RLfwTEdKROV3Y2eDmmvq/nFX2EOAWriGPuCveS5MJmptI=
+	t=1713233530; cv=none; b=LUxmn1bBnUauv+0L7kRaKdmpfI6GqyI30I5EwrNKMu/CwWwqFnOG6RhYik7sTJFdTyHoIrqu8brjY+scB+er7VhRoDjchay/ZKWueqEDVzy7fzxvpykh9RMDvake7qP1av76qCUaM6I3N+qrJyrzoYoKP2i/UZudmNppFXWZJSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713232984; c=relaxed/simple;
-	bh=3WqifSbtN8TIzmVjYo0q7FTgSFMt6koRQCXwu0RxUxg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AZzMu7As8ThqUfNAg8/hbETBBgBl+w/XqaFrrMRspWq2WSTPrdKLQ1uFAQ4jmgVetYeirNJKOztVe+br5HUqPJMBoMZswsLIw1QKavfHhfZCkg/W8308eoTMbJm4NlgZSeQdaihp3dLebt5WkvWOH1Bh9ZJaQyFSl0wfOLg+uOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KrMBvdGX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KrMBvdGX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72D5BC113CC
-	for <loongarch@lists.linux.dev>; Tue, 16 Apr 2024 02:03:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713232983;
-	bh=3WqifSbtN8TIzmVjYo0q7FTgSFMt6koRQCXwu0RxUxg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KrMBvdGX3qtnsTUkbsy61M1J/DgQBkHBLehQP/ZNxVkuKgA+4AE+rY23k0E5984bB
-	 ooKyVK/0uXhUr6tgkoPVuQtUtMp6M6R34Nj7Wc/DlckPylg7uVbgxGh1ziLoEiw5jG
-	 v44gbYk75F/o0LlYFGISP+21rNcncbOYQlBaFmjoYHVG2heemjirsVoykoZeA9AhpD
-	 iZtHil2fpGvXs/F7yNnkNS98zThxIOse+vTxEsSrQzAJ9uCI8wtx2pUEMkSOiuD9ku
-	 NQoC1MuBWpMTMkVveKUezzHZV3aaTg96+8OLXioth0REW3wp/cgEH//hhO6t8WIp+c
-	 rVvzcrwlDNX8g==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-516cbf3fd3dso4868500e87.2
-        for <loongarch@lists.linux.dev>; Mon, 15 Apr 2024 19:03:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXHWSZJy/h64PewIg60fU/VcXHinr6onHp/oLS4n9HSM6IPW0kcWQAZYmxNnoB5ghi2C+yJFk4MZsiR5990b/2O80KPPplbvNbk
-X-Gm-Message-State: AOJu0YyM+8fbihtI8KW2/CdfKOAkXK8ZbHavQLfJWir2HFCNThirCc2G
-	kdXjMZ1E8w6nGHqP2J9jYYIJUo68qzY9q0+bH4OKbASvrX60Vy/NoqPUx4oD50lF7tMxZbckoJp
-	bjvpZtFa99X9Tt6mx300iyIriHVo=
-X-Google-Smtp-Source: AGHT+IE+pBbb2+flLNHamNgcJ6TPetBySIHq8I2RWZU+BI5eojLR2hOPtl+aTfxchzCeKtyQo6/m7n+2QtS6IyI+t3Y=
-X-Received: by 2002:a19:6447:0:b0:518:6e92:c1ac with SMTP id
- b7-20020a196447000000b005186e92c1acmr7868504lfj.17.1713232981856; Mon, 15 Apr
- 2024 19:03:01 -0700 (PDT)
+	s=arc-20240116; t=1713233530; c=relaxed/simple;
+	bh=DumwjCT+zsnFe2/rvMBe8hvDr+KZ6VVjoavyH4FnRiI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pJQ4k71KycYKnifdCtsv9xNnppkL5NOFI2vksW8A6uUO9/xb/pv30xKFLuvzE+K0H52sudeqlbnN1FyQ6bd54xOTB7ljgDaBzZMsCVKsqNYTlNBKYbrCcOEERM3RiqESzb+pLfLcnasQtZcAKQyr5XNl5tOWtNuP879HbrThmOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VJSGH1n7Zz4f3kFM
+	for <loongarch@lists.linux.dev>; Tue, 16 Apr 2024 10:11:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 5B8FE1A0175
+	for <loongarch@lists.linux.dev>; Tue, 16 Apr 2024 10:11:58 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgAn+RFr3h1mHPxnKA--.36211S3;
+	Tue, 16 Apr 2024 10:11:56 +0800 (CST)
+Subject: Re: [PATCH RFC v2 2/6] blk-throttle: delay initialization until
+ configuration
+To: Yu Kuai <yukuai1@huaweicloud.com>, Tejun Heo <tj@kernel.org>
+Cc: axboe@kernel.dk, chenhuacai@kernel.org, josef@toxicpanda.com,
+ jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net, pctammela@mojatatu.com,
+ qde@naccy.de, zhaotianrui@loongson.cn, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
+ <20240406080059.2248314-3-yukuai1@huaweicloud.com>
+ <Zhl2a2m3L3QEELtj@slm.duckdns.org>
+ <7531ba77-964a-169d-f55f-a8dcfcdbb450@huaweicloud.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <f1cbd12d-b66b-131d-44ed-8db67b9186db@huaweicloud.com>
+Date: Tue, 16 Apr 2024 10:11:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1713164810.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1713164810.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 16 Apr 2024 10:02:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Y+E6Kr1Nfd_3Mvyp8nyG-_vt6oz+usteNWV5T6Tyv0g@mail.gmail.com>
-Message-ID: <CAAhV-H4Y+E6Kr1Nfd_3Mvyp8nyG-_vt6oz+usteNWV5T6Tyv0g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] pwm: Introduce pwm driver for the Loongson family chips
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, loongson-kernel@lists.loongnix.cn, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <7531ba77-964a-169d-f55f-a8dcfcdbb450@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAn+RFr3h1mHPxnKA--.36211S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYy7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20E
+	Y4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQvtAUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-For the whole series,
+Hi, Tejun!
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+ÔÚ 2024/04/13 9:59, Yu Kuai Ð´µÀ:
+> Can you please also
+> add how you tested the change?
 
-On Tue, Apr 16, 2024 at 9:55=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> Hi all:
->
-> This patchset introduce a generic PWM framework driver for Loongson famil=
-y.
-> Each PWM has one pulse width output signal and one pulse input signal to =
-be measured.
->
-> It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips=
-.
->
-> Thanks.
->
-> -------
-> V3:
-> patch (1/2):
->  - Add Reviewed-by tag from Krzysztof, thanks.
-> patch (2/2):
->  - Several code stlye adjustments, such as line breaks.
->
-> Link to V2:
-> https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
->
-> v2:
-> - Remove the dts-related patches and update dts at once after all
-> relevant drivers are complete.
-> patch (1/2):
->  - The dt-binding filename should match compatible, rename it as
->    loongson,ls7a-pwm.yaml;
->  - Update binding description;
->  - Add description for each pwm cell;
->  - Drop '#pwm-cells' from required, for pwm.yaml makes it required alread=
-y.
->
-> Link to v1:
-> https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongso=
-n.cn/
->
-> Binbin Zhou (2):
->   dt-bindings: pwm: Add Loongson PWM controller
->   pwm: Add Loongson PWM controller support
->
->  .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
->  MAINTAINERS                                   |   7 +
->  drivers/pwm/Kconfig                           |  10 +
->  drivers/pwm/Makefile                          |   1 +
->  drivers/pwm/pwm-loongson.c                    | 298 ++++++++++++++++++
->  5 files changed, 382 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-p=
-wm.yaml
->  create mode 100644 drivers/pwm/pwm-loongson.c
->
-> --
-> 2.43.0
->
+I just sent a patchset to add some tests to blktests, a basic functional
+test and a few regression test, this is not enough but it's a start.
+
+https://lore.kernel.org/all/20240416020042.509291-1-yukuai1@huaweicloud.com/
+
+Thanks,
+Kuai
+
