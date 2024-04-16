@@ -1,180 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9336EB75;
-	Tue, 16 Apr 2024 07:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB518526E;
+	Tue, 16 Apr 2024 10:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713252206; cv=none; b=VHkeyzIbKbKGyGXLYc8WCAkzSIf45pmkXFPO39XulTqCp8JJt/VEmI/5zqg1Jqo6Wmy/ZVyh5thfkGWRbDRnp74yq47yDxrd7F053nt8oEP+d4VPJgUEmNNM5xh9f+yPPiB28qE+352P3m7l/fO/+G+uFsyTPbXrNkjMhaV64ZI=
+	t=1713263277; cv=none; b=X0ZGrYxQmYWhwjWsOthLazasU4tctJ+an6nvMD9IFoc03zMxcXTFt4ZlLQmopsD5902oa5WUoNK04O6WMfGsZPUnh3R7GUajXWKGQhGamYtAs+XzZHOyevtGNDlgLmof9eKmPB7mdI6NoXJFr0LKuGF9VIzARoXOO+X7w09eYV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713252206; c=relaxed/simple;
-	bh=ULqJjlTCraVJ0ruf913jYz2dlG1gS6UCOgmOiRdXRlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UjCvUPLzf0P3JLPBqJW2/Sn+xfkNer8nzPpJ1PQZr0VieC5pN2cPRDtF86WlRWoIMN163+SoQ1iEKRXtCwXwxWKOfl+DcQCsuFTcPeEUDF3NH+HFL84kVCy3ArKqnHlZf/m0tWDuZLJTDnBDJy2NWegGodnzs2laWUFeMHkhecM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekk8HCBF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713263277; c=relaxed/simple;
+	bh=MLsdr7kD3zzTJKBErjYyRBFMSvmh3TMK8QeAykYBK+I=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=q58BC4AlkQdUqwbJNAblpCud9U0MKroe96GsMlt0PUcbnp7e4PLtedw0XgMyLNCniFL6gs0TfIgU4V+0Ih/LUOeWSbQy1eXEY9sZfHjYRBmb3cjq9S+r73+yRykwuhE4fz5vFobyRs3QZmKMQqq7dCR7mI4fv0ByGucoEhPI49s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nkOifWpO; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekk8HCBF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BBECC113CE;
-	Tue, 16 Apr 2024 07:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713252205;
-	bh=ULqJjlTCraVJ0ruf913jYz2dlG1gS6UCOgmOiRdXRlo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ekk8HCBFjthC7O7PxrFN7j/GM7z/nWOuO8k9QOUSLiGyz09GAO2cg64dmGZlUlds7
-	 00Ewxyx3C6wcPZBoIkKGD6lbL3qbO2ksVpnRUlonLdQr9BhpV1yf7+bx9loZNn41At
-	 rywVk+bWOXuipnXUZImOPnzXQlyIpQamAXCi97V5XEUtgpABiSiT97flmkQAEFDr7A
-	 YcuRY0rwjZPTJIRXEph9PF+jUZc4mOVTGomsCx8EugJ6WC8EEbdEckfhASAJlczMAM
-	 pEgjXqHCw7T7cVdoBUzlejwen9ZBJYRh+vjYrzCI4CZ6xsCi82SwkYS2yHPnvfOsma
-	 Wo31Nl9r7Gz/Q==
-Date: Tue, 16 Apr 2024 10:22:14 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Bj\"orn T\"opel" <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-Message-ID: <Zh4nJp8rv1qRBs8m@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-6-rppt@kernel.org>
- <20240415075241.GF40213@noisy.programming.kicks-ass.net>
- <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkOifWpO"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso3187791a12.2;
+        Tue, 16 Apr 2024 03:27:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713263275; x=1713868075; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/cIoa81DXO6MS6g+ZMtYagosHO4PwrAmNMYS0AM8V8c=;
+        b=nkOifWpOVhuNgrOfRyluUtWBBFnG1Sv/M4W0EiBzZ6vWAbCoU/FUcW2ZoFL+fNdbra
+         UWvdy1bCLie4LFy/ZI4+F1IbF/hRNDyris52FH8TqwSkjOktVPY51V05HMw0i7xl1LyT
+         H9qVG7NEEz9NxgeBOh15lUkGna/EnSwRQAx/YwASOEOqPVqA/gDtvsnzmS/QzVYqUVNI
+         3MN05qSZ3ChsegSy713wOhU8pPBERBS3OwK9uJAry/m4OLOta89+D+33mcc1+FZiaqSW
+         eUWeKavQOd3eEpEkj7mT2dsuQC3E5df2h33fuLbnbsa6Q+4kkHqsT39U43SdusuDWKe/
+         yW6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713263275; x=1713868075;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/cIoa81DXO6MS6g+ZMtYagosHO4PwrAmNMYS0AM8V8c=;
+        b=G/C08gYlu4UD5jLvCxV7kIWRiNi8TJsKL9jFC5FrWA30MeqmPEEerqfvL5RLY6N6fu
+         n3MSlYeu6/Or2B5YCTXdJdw9j1bu3ksYd4OWSb+QrG09q1HAgWfoE6eggXUBlUg0GKdf
+         5c5siG+eHyik/Gj0rX83qUyy4vwv8B0dbQWrODnS7Zv4FVil28XfPUsNMG3FgiTHkZtd
+         ab3JY4n8dCgksYTOZG9A0pqkj142t0/dvSlE/qy8nxFCEJK4hLvL8dLY7bDIK3HpKU1V
+         Mo/smqvlaKMz1aYl38K1VuCTNLopAg0JgCX1XqKM+B64q+o5H28FQ8/7CkgVOyOla6D4
+         5iOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWa2cBZyo0s9GzckoIvqI0OBgtx0Tl3fm5mTH85ynsBM48fmIDWOrrcrTWPnTGpZt5C+Rwo719EZi6BScEiL8Xg1QiO633IafM2Bw2bRUTdrXycsC6lEvOiIEWYuPXH1Q==
+X-Gm-Message-State: AOJu0Yx5lPYgRzQd3X43z+If7b+m2cLbaA96BxceuMTSblGX0haugW0W
+	AJNjIEnauBO0eaoYe7sy1apGUF35l8AVn9hC/FsdI9R2RA6XM8n1MvbPYvpShiEgnmQgaY7qaoT
+	eSWnjRVezxN/KhRTXMiuzXy5T/5I=
+X-Google-Smtp-Source: AGHT+IEQCW1Umn5/jxfj5DsIuaZ2+exXuJmvDw88NBcTFIdc6HQg6SZiheR6MqEF6Ri8xe0SbEpGiX0n8YxTyu0/8v4=
+X-Received: by 2002:a17:90a:8b05:b0:2a7:40ba:48bc with SMTP id
+ y5-20020a17090a8b0500b002a740ba48bcmr10112056pjn.6.1713263275084; Tue, 16 Apr
+ 2024 03:27:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 16 Apr 2024 12:26:57 +0200
+Message-ID: <CANiq72mQh3O9S4umbvrKBgMMorty48UMwS01U22FR0mRyd3cyQ@mail.gmail.com>
+Subject: ./include/asm-generic/tlb.h:629:10: error: parameter 'ptep' set but
+ not used
+To: david@redhat.com, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Ryan Roberts <ryan.roberts@arm.com>, 
+	linux-arch <linux-arch@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, loongarch@lists.linux.dev, 
+	clang-built-linux <llvm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 15, 2024 at 06:36:39PM +0100, Mark Rutland wrote:
-> On Mon, Apr 15, 2024 at 09:52:41AM +0200, Peter Zijlstra wrote:
-> > On Thu, Apr 11, 2024 at 07:00:41PM +0300, Mike Rapoport wrote:
-> > > +/**
-> > > + * enum execmem_type - types of executable memory ranges
-> > > + *
-> > > + * There are several subsystems that allocate executable memory.
-> > > + * Architectures define different restrictions on placement,
-> > > + * permissions, alignment and other parameters for memory that can be used
-> > > + * by these subsystems.
-> > > + * Types in this enum identify subsystems that allocate executable memory
-> > > + * and let architectures define parameters for ranges suitable for
-> > > + * allocations by each subsystem.
-> > > + *
-> > > + * @EXECMEM_DEFAULT: default parameters that would be used for types that
-> > > + * are not explcitly defined.
-> > > + * @EXECMEM_MODULE_TEXT: parameters for module text sections
-> > > + * @EXECMEM_KPROBES: parameters for kprobes
-> > > + * @EXECMEM_FTRACE: parameters for ftrace
-> > > + * @EXECMEM_BPF: parameters for BPF
-> > > + * @EXECMEM_TYPE_MAX:
-> > > + */
-> > > +enum execmem_type {
-> > > +	EXECMEM_DEFAULT,
-> > > +	EXECMEM_MODULE_TEXT = EXECMEM_DEFAULT,
-> > > +	EXECMEM_KPROBES,
-> > > +	EXECMEM_FTRACE,
-> > > +	EXECMEM_BPF,
-> > > +	EXECMEM_TYPE_MAX,
-> > > +};
-> > 
-> > Can we please get a break-down of how all these types are actually
-> > different from one another?
-> > 
-> > I'm thinking some platforms have a tiny immediate space (arm64 comes to
-> > mind) and has less strict placement constraints for some of them?
-> 
-> Yeah, and really I'd *much* rather deal with that in arch code, as I have said
-> several times.
-> 
-> For arm64 we have two bsaic restrictions: 
-> 
-> 1) Direct branches can go +/-128M
->    We can expand this range by having direct branches go to PLTs, at a
->    performance cost.
-> 
-> 2) PREL32 relocations can go +/-2G
->    We cannot expand this further.
-> 
-> * We don't need to allocate memory for ftrace. We do not use trampolines.
-> 
-> * Kprobes XOL areas don't care about either of those; we don't place any
->   PC-relative instructions in those. Maybe we want to in future.
-> 
-> * Modules care about both; we'd *prefer* to place them within +/-128M of all
->   other kernel/module code, but if there's no space we can use PLTs and expand
->   that to +/-2G. Since modules can refreence other modules, that ends up
->   actually being halved, and modules have to fit within some 2G window that
->   also covers the kernel.
-> 
-> * I'm not sure about BPF's requirements; it seems happy doing the same as
->   modules.
+Hi David, Arnd, LoongArch,
 
-BPF are happy with vmalloc().
- 
-> So if we *must* use a common execmem allocator, what we'd reall want is our own
-> types, e.g.
-> 
-> 	EXECMEM_ANYWHERE
-> 	EXECMEM_NOPLT
-> 	EXECMEM_PREL32
-> 
-> ... and then we use those in arch code to implement module_alloc() and friends.
+In a linux-next defconfig LLVM=1 build today I got:
 
-I'm looking at execmem_types more as definition of the consumers, maybe I
-should have named the enum execmem_consumer at the first place.
+    ./include/asm-generic/tlb.h:629:10: error: parameter 'ptep' set
+but not used [-Werror,-Wunused-but-set-parameter]
+      629 |                 pte_t *ptep, unsigned int nr, unsigned long address)
+          |                        ^
 
-And the arch constrains defined in struct execmem_range describe how memory
-should be allocated for each consumer.
+Indeed, in loongarch, `__tlb_remove_tlb_entry` does not do anything.
+This seems the same that Arnd reported for arm64:
 
-These constraints are defined early at boot and remain static, so
-initializing them once and letting a common allocator use them makes
-perfect sense to me.
+    https://lore.kernel.org/all/20240221154549.2026073-1-arnd@kernel.org/
 
-I agree that fallback_{start,end} are not ideal, but we have 3
-architectures that have preferred and secondary range for modules. And arm
-and powerpc use the same logic for kprobes as well, and I don't see why this
-code should be duplicated.
+So perhaps the loongarch's one should also be changed into an static inline?
 
-And, for instance, if you decide to place PC-relative instructions if
-kprobes XOL areas, you'd only need to update execmem_range for kprobes to
-be more like the range for modules.
+I hope that helps!
 
-With central allocator it's easier to deal with the things like
-VM_FLUSH_RESET_PERMS and caching of ROX memory and I think it will be more
-maintainable that module_alloc(), alloc_insn_page() and
-bpf_jit_alloc_exec() spread all over the place.
- 
-> Mark.
-
--- 
-Sincerely yours,
-Mike.
+Cheers,
+Miguel
