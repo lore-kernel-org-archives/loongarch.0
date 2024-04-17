@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43FDF13848B
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4550E1384BE
 	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 09:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713347999; cv=none; b=oohh7D9EfpIAOukaM7UcrUbxKitriIim+QLOMnnjOBOsjPI37N20Yyr3h9YSKsIZ6WLf5QFHVoG5x3gAKB9ShvA5NNnwmp1FK6fF4uhODWrwvlVc7AQpPtUEeFl7pwu3sIMk6Mv1dDYPNVRU1kEqFQF2oZ/5tLm7I4tkuG5mwpk=
+	t=1713348000; cv=none; b=o4tmoTHSmA1AjdJhXvkyU3HyOYkq2pHoryeSIMFdqHytuQhvlYc88rWCQZVjkGmcwocFNmCzeOjBiC3RI7EldVxIRt/kICdLZFW/Embuj1IZ8E9kvjj6ujXb0aCdkC/fN0+5CXIR1qjnObjkDe7IjC3wIXf0gZxL1obKeal77iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713347999; c=relaxed/simple;
-	bh=4OHXa+TBQH27mQewJxobd0zpOvxg3J/Dc9Jj/i9H0L0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kou4CPlbZz5KX2OQaekS6x9g5sKpl2UTWPj0AWGfT1HsADrslqjPbEdZv2dLcFA2FTNHZMPY1Ir17G6qeIxjeGjW3HTjVWwnpmtHrqq76Ef3oWy43xXl4CgdB0C3liwOlHMU7S04w5hJA99h8lp5zKMmqoVPTqefCMmpHCkp+2I=
+	s=arc-20240116; t=1713348000; c=relaxed/simple;
+	bh=mHgaZJegfQ+stN8+YXhVA3PdfM0vALppszIpJsvRwX4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dein+2utIaudPaNK/YmVITZUn5dtb8lKr9mqFBwa6y8ft/+Ql8WImu5ZBh917S3q6W6mcWFYMg6slWskTxmbmHsQqFpUL2PRN2Qpu85hYk7EVbpbPRQaL+D++osws2LWQ/qomiXRW59gFTl35EhlbFAHmhm00wLusyv4tZsupZ4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxmfCbnR9mILgoAA--.27330S3;
-	Wed, 17 Apr 2024 17:59:55 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxKBKYnR9muOR9AA--.32535S4;
+	by gateway (Coremail) with SMTP id _____8AxSbqanR9mFLgoAA--.11262S3;
 	Wed, 17 Apr 2024 17:59:54 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxKBKYnR9muOR9AA--.32535S2;
+	Wed, 17 Apr 2024 17:59:52 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -26,12 +25,10 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v4 2/3] LoongArch: Modify ACPI S3 state function for non-SMP
-Date: Wed, 17 Apr 2024 17:59:50 +0800
-Message-ID: <20240417095951.2635-3-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 0/3] Give chance to build under !CONFIG_SMP for LoongArch
+Date: Wed, 17 Apr 2024 17:59:48 +0800
+Message-ID: <20240417095951.2635-1-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240417095951.2635-1-yangtiezhu@loongson.cn>
-References: <20240417095951.2635-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -39,73 +36,58 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxKBKYnR9muOR9AA--.32535S4
+X-CM-TRANSID:AQAAf8CxKBKYnR9muOR9AA--.32535S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WFyxAF4UCw13tFW8JF43Arc_yoW8Cw4kp3
-	sFyayUtw48trn7CFn0qa1UWr4UZ393KrWIvFZFy3yj9rnxXFyIgr4Yg3Z8WF1Fqwn5uF40
-	v3yFka4avF1UGwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7AFy3AF4DZrWkury8tw45twc_yoW8Gry8pF
+	W09r4DJF48Gr93Aayak348uF98trnxGry2gay7C34UAF1DXayjgr1vvF9rXF1jq3yfWr40
+	qFs3G34avFyUA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
-	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjxU4AhLUUUUU
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-Currently, per_cpu_offset(x) is defined as __per_cpu_offset[x])
-only under CONFIG_SMP in include/asm-generic/percpu.h, that is
-to say, the implementation of loongarch_common_resume() which
-calls per_cpu_offset(0) is not suitable for the case of non-SMP,
-so do not write per_cpu_offset(0) to PERCPU_BASE_KS when resume,
-just save the value of PERCPU_BASE_KS when suspend and restore
-it when resume to avoid compiling error for non-SMP and make it
-work well for both SMP and non-SMP.
+The changes of irqchip have been merged into the irq/core branch of tip.
 
-This is preparation for later patch. Tested with the command
-"rtcwake -d rtc1 -s 20 -m mem", dmesg shows that "PM: suspend
-entry (deep)" and "PM: suspend exit".
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=42a7d887664b
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=a64003da0ef8
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/power/suspend.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This version is only related with arch/loongarch and based on 6.9-rc4,
+drop the patch "LoongArch: Move CONFIG_HAVE_SETUP_PER_CPU_AREA related
+code to smp.c" to use the generic setup_per_cpu_areas() if CONFIG_NUMA
+is not set.
 
-diff --git a/arch/loongarch/power/suspend.c b/arch/loongarch/power/suspend.c
-index 166d9e06a64b..8571818b93dc 100644
---- a/arch/loongarch/power/suspend.c
-+++ b/arch/loongarch/power/suspend.c
-@@ -24,6 +24,7 @@ struct saved_registers {
- 	u64 kpgd;
- 	u32 pwctl0;
- 	u32 pwctl1;
-+	u64 pcpu_base;
- };
- static struct saved_registers saved_regs;
- 
-@@ -36,6 +37,7 @@ void loongarch_common_suspend(void)
- 	saved_regs.pwctl1 = csr_read32(LOONGARCH_CSR_PWCTL1);
- 	saved_regs.ecfg = csr_read32(LOONGARCH_CSR_ECFG);
- 	saved_regs.euen = csr_read32(LOONGARCH_CSR_EUEN);
-+	saved_regs.pcpu_base = csr_read64(PERCPU_BASE_KS);
- 
- 	loongarch_suspend_addr = loongson_sysconf.suspend_addr;
- }
-@@ -44,7 +46,7 @@ void loongarch_common_resume(void)
- {
- 	sync_counter();
- 	local_flush_tlb_all();
--	csr_write64(per_cpu_offset(0), PERCPU_BASE_KS);
-+	csr_write64(saved_regs.pcpu_base, PERCPU_BASE_KS);
- 	csr_write64(eentry, LOONGARCH_CSR_EENTRY);
- 	csr_write64(eentry, LOONGARCH_CSR_MERRENTRY);
- 	csr_write64(tlbrentry, LOONGARCH_CSR_TLBRENTRY);
+The first 2 patches with detailed commit message are preparations for
+patch #3.
+
+Tested with the following configs:
+(1) CONFIG_NUMA=n, CONFIG_SMP=n
+(2) CONFIG_NUMA=n, CONFIG_SMP=y
+(3) CONFIG_NUMA=y, CONFIG_SMP=n (not allowed due to NUMA select SMP)
+(4) CONFIG_NUMA=y, CONFIG_SMP=y
+
+Tiezhu Yang (3):
+  LoongArch: Modify acpi_parse_processor() for non-SMP
+  LoongArch: Modify ACPI S3 state function for non-SMP
+  LoongArch: Give chance to build under !CONFIG_SMP
+
+ arch/loongarch/Kconfig                | 2 +-
+ arch/loongarch/include/asm/acpi.h     | 1 +
+ arch/loongarch/include/asm/smp.h      | 5 +++++
+ arch/loongarch/kernel/acpi.c          | 9 ++++++++-
+ arch/loongarch/kernel/irq.c           | 2 ++
+ arch/loongarch/kernel/machine_kexec.c | 2 +-
+ arch/loongarch/power/suspend.c        | 4 +++-
+ 7 files changed, 21 insertions(+), 4 deletions(-)
+
 -- 
 2.42.0
 
