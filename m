@@ -1,131 +1,143 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819455244
-	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 01:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA16E1851
+	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 03:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713317995; cv=none; b=cQPZAXBqo7qmrI4hjH01ENMO1AL/bcZBoqIDilo/52tmoUOSOfgoGD1bu/FGNdOAMDGKSZ0CMEL0h0w3dHpBcn8c8A63cIuawidvHjhPlB26eUhb1CeH9rO7Cg2KFiBBF5VywT/CPV73mJWrkMq+3F/leNAAnSIeLMxfND+oueg=
+	t=1713323695; cv=none; b=MFOQa6V6KSQupErHC1qnBiJWRp/2fHwPK5D4qga1aOMj/Em25Pm47uc59Y2jhAQsrxm8cACuKzwb+syHNGVekiSwbgAxojCI64XAHE39N9RygMq/hc5mTgB7r8rtEUHrg2Q3Kb+OImO1AtrPc/FWM5TlZqpobrbrktnD5MTl4Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713317995; c=relaxed/simple;
-	bh=vUkyGPXH/WxKh8Mk0phahzeyUfhPSs5vaQQASy0FhlQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZI0+YJ8gL63JdPjFU5+HROGsO8UiILvJR5xeisam4H87w/sgeOXvex7KRTC2/xQmGYOFWzjYwI0JiqFsfsYMts9/Lg+PrM4FBJjNpX8cnaLzRaLZhPushjFjpe+3Six+hyGjWMb/ohwg61S8id7YgQXp+uKEMHXqa6Fisj3u56M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VK3Vc2fm0z4f3nTW
-	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 09:39:36 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 4808C1A0C47
-	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 09:39:45 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g5fKB9mO6K9KA--.49490S3;
-	Wed, 17 Apr 2024 09:39:45 +0800 (CST)
-Subject: Re: [PATCH RFC v2 5/6] blk-throttle: support to destroy throtl_data
- when blk-throttle is disabled
-To: Tejun Heo <tj@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, chenhuacai@kernel.org, josef@toxicpanda.com,
- jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net, pctammela@mojatatu.com,
- qde@naccy.de, zhaotianrui@loongson.cn, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
- <20240406080059.2248314-6-yukuai1@huaweicloud.com>
- <Zhl37slglnnTSMO7@slm.duckdns.org>
- <1bb85208-1224-77dc-f0b2-7b7a228ef70b@huaweicloud.com>
- <Zh6wx4mXZy_EOViH@slm.duckdns.org>
- <19086c09-3060-a4ce-4ac6-811a29653979@huaweicloud.com>
- <Zh8kPGAu2TG4Su2M@slm.duckdns.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <1ed63126-d2e6-f0b6-42ef-127ecb464955@huaweicloud.com>
-Date: Wed, 17 Apr 2024 09:39:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1713323695; c=relaxed/simple;
+	bh=GTVTtdoMrTHwBS2kkGpeq8wvd0niAoFCDltH1ZaIvEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pqpPewS7NxX4Qx7eJaMMWOP+Yyi91yW/QPYL/8EUAtqxKXTiN7oQzTGEvXaqK8l/E5ezPPV8pLyRYR7QDxgMUlR73Ee8L75tgF21odwpR8yfKMC4+nQQ9Pba1t/yCT3QEvde+TBKxwVyEanr7i6D+QBcpPYGiTZs4ZKKc3+2Dw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlKMHV6o; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlKMHV6o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FFBFC32786
+	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 03:14:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713323695;
+	bh=GTVTtdoMrTHwBS2kkGpeq8wvd0niAoFCDltH1ZaIvEI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZlKMHV6od03z3f1c2F1qeIGNVXfvqZFktcOPZct8A+h5P238qor4RGV+7DJybV4JX
+	 5mzDf9umhNNsvvRtm+0BpgIlKrubbUcr72tZqK5AzmzrtzqvKN+Dob1++lMj8P0fZ5
+	 0QTRPcyg3369sva3G5CvB9uBeK5qtPa/QDNi1RvI/X0HjBuhwALneHEKFQfyLMM2IE
+	 6/Gi9R+fixpK0oAFfpEnGKJ9Lpbq8V7omMTB3NWl9GqGy6ESp79yEAhV5wLLPpTKVa
+	 D5DQgCl8U27jdeblIQdgMTcM77MxTP2aGBV8b6Q97qduE+z+UD+TmAHv7XUy7WpesE
+	 WQZqxTg+pGm/w==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a51addddbd4so592863466b.0
+        for <loongarch@lists.linux.dev>; Tue, 16 Apr 2024 20:14:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUtX3As6KyXw8ip26xPpXXKQczSkgE5evP02d4WVEaK+bECd2aVm3168jantrP65JteRfS3qdyNWQ4wVTCGMFL03vAojcaczX8G
+X-Gm-Message-State: AOJu0YzRz4Y/bn7r4QoKQgHSQEjeGETsEoahITc7hsxbDTx7Wf/fDpp2
+	5RgrHc6kGui9pY84LmL+36KQAdIc9f6R852sLOgXlmoekmztzEk8crFLdOJr5+hWCzn1WEloaBS
+	mTuK075HZN1YDMfiB7U3TzrALbQ0=
+X-Google-Smtp-Source: AGHT+IF1jmsN2RBuY213tAWuSeHyonGmujLDyM8+rcOOXVKi4mc1ctOe5On9JsCQolROZAGoBMzrUUNRDBeRlqaIlk4=
+X-Received: by 2002:a17:906:29cb:b0:a52:61b9:be48 with SMTP id
+ y11-20020a17090629cb00b00a5261b9be48mr5129879eje.35.1713323693797; Tue, 16
+ Apr 2024 20:14:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <Zh8kPGAu2TG4Su2M@slm.duckdns.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g5fKB9mO6K9KA--.49490S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFy7tr17Gw1UKFWDJrW5ZFb_yoW8Cw45pF
-	W2qayrAr1kuF95Can7Aw48Wr4Syry3J3y5Jr95K342v345uryfZF1aqF45uay3Za1DWF10
-	va17X347Can8Z37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWr
-	Zr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x0JUQvtAUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <20240329132825.1102459-1-bhe@redhat.com> <20240329132825.1102459-2-bhe@redhat.com>
+ <CAAhV-H76-FOvcTXB_rW1B1wFthYK6txVtC+brfzk6nwOhar8iQ@mail.gmail.com> <ZgggcyeJ1bnkfGOp@MiWiFi-R3L-srv>
+In-Reply-To: <ZgggcyeJ1bnkfGOp@MiWiFi-R3L-srv>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 17 Apr 2024 11:14:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5xGDAkF2kjdveKoGd+GwYrmix8_E=YB0i=c98qOGvffw@mail.gmail.com>
+Message-ID: <CAAhV-H5xGDAkF2kjdveKoGd+GwYrmix8_E=YB0i=c98qOGvffw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arch/loongarch: clean up the left code and Kconfig
+ item related to CRASH_CORE
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, geert@linux-m68k.org, 
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi, Andrew,
 
-ÔÚ 2024/04/17 9:22, Tejun Heo Ð´µÀ:
-> Hello,
-> 
-> On Wed, Apr 17, 2024 at 09:13:34AM +0800, Yu Kuai wrote:
->>> Probably a better interface is for unloading to force blk-throtl to be
->>> deactivated rather than asking the user to nuke all configs.
->>
->> I was thinking that rmmod in this case should return busy, for example,
->> if bfq is currently used for some disk, rmmod bfq will return busy.
->>
->> Is there any example that unloading will deactivate resources that users
->> are still using?
-> 
-> Hmm... yeah, I'm not sure. Pinning the module while in use is definitely
-> more conventional, so let's stick with that. It's usually achieved by
-> inc'ing the module's ref on each usage, so here, the module refs would be
-> counting the number of active rules, I guess.
+On Sat, Mar 30, 2024 at 10:24=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 03/30/24 at 09:59pm, Huacai Chen wrote:
+> > Queued, thanks.
+>
+> Thanks, Huacai. While I noticed Andrew has queued this patchset in his
+> mm-unstable branch.
+If I'm not mistaken, mm-unstable is target for the next 6.10, not for
+the current 6.9. But I think this patch should be a fix for 6.9, so I
+think it is more suitable in the loongarch-fixes branch. What's your
+opinion?
 
-Yes, aggred.
-> 
-> I'm not sure about modularization tho mostly because we've historically had
-> a lot of lifetime issues around block and blkcg data structures and the
-> supposed gain here is rather minimal. We only have a handful of these
-> policies and they aren't that big.
-> 
-> If hot path overhead when not being used is concern, lazy init solves most
-> of it, no?
+The same question for this patch which fix a build warning:
+https://lore.kernel.org/loongarch/CANiq72kACt+FfeYXJxfQpmGH=3DuPqkDA0oprfne=
+bw52VSKyn7kQ@mail.gmail.com/T/#t
 
-For performance, yes. Another point is that we can reduce kernel size
-this way, without losing support for blk-cgroup policies.
 
-Yes, it's just blk-throttle is the most pain in the ass becasue it
-exposed lots of implementations to block layer. Other rq_qos based
-policy should be much easier.
+Huacai
 
-I guess I'll do lazy init first, and then modularization for rq_qos,
-and leave blk-throtl there for now. Perhaps add a new throtl model in
-iocost can replace blk-throtl in the future.
-
-BTW, currently during test of iocost, I found that iocost can already
-achieve that, for example, by following configure:
-
-echo "$dev enable=1 min=100 max=100" > qos
-echo "$dev wbps=4096 wseqiops=1 wrandiops=1" > model
-
-In the test, I found that wbps and iops is actually limited to the
-set value.
-
-Thanks,
-Kuai
-
-> 
-> Thanks.
-> 
-
+>
+> >
+> > Huacai
+> >
+> > On Fri, Mar 29, 2024 at 9:28=E2=80=AFPM Baoquan He <bhe@redhat.com> wro=
+te:
+> > >
+> > > In commit 85fcde402db1 ("kexec: split crashkernel reservation code
+> > > out from crash_core.c"), crashkernel reservation code is split out fr=
+om
+> > > crash_core.c, and add CRASH_RESERVE to control it. And also rename ea=
+ch
+> > > ARCH's <asm/crash_core.h> to <asm/crash_reserve.h> accordingly.
+> > >
+> > > But the relevant part in loongarch is missed. Do it now.
+> > >
+> > > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > > Cc: Huacai Chen <chenhuacai@kernel.org>
+> > > Cc: WANG Xuerui <kernel@xen0n.name>
+> > > Cc: loongarch@lists.linux.dev
+> > > ---
+> > >  arch/loongarch/Kconfig                                       | 2 +-
+> > >  arch/loongarch/include/asm/{crash_core.h =3D> crash_reserve.h} | 4 +=
++--
+> > >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > >  rename arch/loongarch/include/asm/{crash_core.h =3D> crash_reserve.h=
+} (75%)
+> > >
+> > > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> > > index a5f300ec6f28..54ad04dacdee 100644
+> > > --- a/arch/loongarch/Kconfig
+> > > +++ b/arch/loongarch/Kconfig
+> > > @@ -595,7 +595,7 @@ config ARCH_SELECTS_CRASH_DUMP
+> > >         select RELOCATABLE
+> > >
+> > >  config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> > > -       def_bool CRASH_CORE
+> > > +       def_bool CRASH_RESERVE
+> > >
+> > >  config RELOCATABLE
+> > >         bool "Relocatable kernel"
+> > > diff --git a/arch/loongarch/include/asm/crash_core.h b/arch/loongarch=
+/include/asm/crash_reserve.h
+> > > similarity index 75%
+> > > rename from arch/loongarch/include/asm/crash_core.h
+> > > rename to arch/loongarch/include/asm/crash_reserve.h
+> > > index 218bdbfa527b..a1d9b84b1c7d 100644
+> > > --- a/arch/loongarch/include/asm/crash_core.h
+> > > +++ b/arch/loongarch/include/asm/crash_reserve.h
+> > > @@ -1,6 +1,6 @@
+> > >  /* SPDX-License-Identifier: GPL-2.0-only */
+> > > -#ifndef _LOONGARCH_CRASH_CORE_H
+> > > -#define _LOONGARCH_CRASH_CORE_H
+> > > +#ifndef _LOONGARCH_CRASH_RESERVE_H
+> > > +#define _LOONGARCH_CRASH_RESERVE_H
+> > >
+> > >  #define CRASH_ALIGN                    SZ_2M
+> > >
+> > > --
+> > > 2.41.0
+> > >
+> >
+>
