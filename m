@@ -1,101 +1,94 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D32D42A93
-	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 07:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1CC6136E32
+	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 09:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713339190; cv=none; b=acQ3RhJUoBkq9hilTCv45ePIc19u01cftqOy4AFRB0RiE6YSP6ysfxZQ33l6J+wHYfklN/u3ABcO1JFRFgXcR4EX0H8DHGzoIh5vFqAXYnV7ylksnWJMDmWs95cg11jXqEP+kITEPeLcD2qnp0RJJNGsPRqBPH4XdYxXFSP3xKE=
+	t=1713347999; cv=none; b=j3NDj9XSmRYj4xE6ZsqwP1Gyll/5dkcxNhKomlxL/iWdLJrHoQS9kusQBe0v3DE/VTcC4JXsdD4TgvJi6d0qB40hM328EjXReElZjR7XcpDzU0UcBaHNXVohh+sBggn5Fk+kaANUd3tKrxHzqNEmI0ruyKLzPFaHd2VezBO9ejA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713339190; c=relaxed/simple;
-	bh=4M/fw1i0ckKST1BwB3ODxPa/j8j1yo4JskODZf2vzNY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sk7KSZR4fDWheJaDTO9mx/DltLvYc1RHZpgmsRrq8zpYcExJN7qiyGvKZ+IZiCBGXtFQ+AIuY32OC4cVm4tpzyFKWMLZfMBq4PKk4ufbibdreYHcyWnokD59LnDEF+7mLOEpCA9CcB11dO22cBL7v101jIHVzKG39NPSytJ5PhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc236729a2bso5064779276.0
-        for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 00:33:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713339187; x=1713943987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RWT+JVEfiwxFQ2uS0czPJ+Qjk2ZoL23ti+eoi7gGfk8=;
-        b=FKUGPIUPPCfV/mhHCTqbILF/dRJaW7s/wtXlgIBGYWg3Z5QfmGIFI8fkVsFcEGSxMl
-         B6SaewVb6gLGgK7FpQou4/QHXsEqjwb13IDqFnm7ZNC8xvxCR4/GUoTSgac06K5+7/OI
-         iEOmBdtOX5Sw5qj0vB4ryV2aehhhLOOddclb429zTH+dx86/FnRPKVFTWJcZS2W4slSx
-         0MlBxKwWIDMTfc7+2LqV9HyA7mpwekAKUGIP1MNNu+xgop89uJdwJAcj9CYphVC2rBnM
-         Nurnbqvon/RQ5Oq8X98S3vQQYRO6PyOIXTF8MMwa/6th+wDJC5lyt6duEA2QY0q7fbC4
-         5ofQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2k8E8s3BeTjTNDQugnobK76Hn4wohTmWkPhh4aSg241d7L3Ag1k4b6k2MsT3GGNmIRejO15T9TRo5MsVWHHm5BZQNwe1fRHxc
-X-Gm-Message-State: AOJu0YxdbH8jS/QMgR2GHeUslzPdM+8WAtOlRa/y687JVoHjAn4NpWLY
-	AbEFouRD95/BOHzoE6bp/qqyFfhb1nM6gJdhkKbRPQEGWxGdYTCsF/UmD4KE
-X-Google-Smtp-Source: AGHT+IEdko+QOjtyh3emr4/wuzFX9UNHspNDFL3Y55hO9qcsqVuEr+Tu3JOVrrbOonqe09Ig3LjNPA==
-X-Received: by 2002:a25:be50:0:b0:dcd:c3ba:d788 with SMTP id d16-20020a25be50000000b00dcdc3bad788mr13704981ybm.47.1713339187606;
-        Wed, 17 Apr 2024 00:33:07 -0700 (PDT)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
-        by smtp.gmail.com with ESMTPSA id g6-20020a25ef06000000b00dbf52d2844bsm2770137ybd.11.2024.04.17.00.33.07
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Apr 2024 00:33:07 -0700 (PDT)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-618944792c3so47097837b3.1
-        for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 00:33:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUdh567crvmS8fjjqEuSUyQHt0EqbxSHe3MYwX2Kc7mJymhLp9ssdN11GPDl8ZcMXUx5tCOHIf1U2C4+DXCrA8RFXrRS9bTqeqf
-X-Received: by 2002:a05:690c:989:b0:61b:97c:5ffa with SMTP id
- ce9-20020a05690c098900b0061b097c5ffamr866589ywb.22.1713339187177; Wed, 17 Apr
- 2024 00:33:07 -0700 (PDT)
+	s=arc-20240116; t=1713347999; c=relaxed/simple;
+	bh=QdgGWV9RX7cxuOd0TYtBwlJs6ULCACWNNmp/JLLF8lI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=V/mQ2hyAgrBXLuSVUjc2tHRtTFMosYFUdz0oZWEFwB3YMfYdpECepOEE794CX40StzQmrAO3H/py43zosyDDnEHuiG5gFp4CdLNxHMX8VAUJddHfPDzCVfXepLuY/yGZA2QFYYE/xOM9Jn501UHyaK1y8ejA7EpZ8Gd76DzPvH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxTOmanR9mGrgoAA--.17099S3;
+	Wed, 17 Apr 2024 17:59:54 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxKBKYnR9muOR9AA--.32535S3;
+	Wed, 17 Apr 2024 17:59:53 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v4 1/3] LoongArch: Modify acpi_parse_processor() for non-SMP
+Date: Wed, 17 Apr 2024 17:59:49 +0800
+Message-ID: <20240417095951.2635-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240417095951.2635-1-yangtiezhu@loongson.cn>
+References: <20240417095951.2635-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240329132825.1102459-1-bhe@redhat.com> <20240329132825.1102459-2-bhe@redhat.com>
- <CAAhV-H76-FOvcTXB_rW1B1wFthYK6txVtC+brfzk6nwOhar8iQ@mail.gmail.com>
- <ZgggcyeJ1bnkfGOp@MiWiFi-R3L-srv> <CAAhV-H5xGDAkF2kjdveKoGd+GwYrmix8_E=YB0i=c98qOGvffw@mail.gmail.com>
-In-Reply-To: <CAAhV-H5xGDAkF2kjdveKoGd+GwYrmix8_E=YB0i=c98qOGvffw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 17 Apr 2024 09:32:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVrFPJQ2B7-SBCq-m7tU9twKYwyH+0Czy-zB_n2F=VwrA@mail.gmail.com>
-Message-ID: <CAMuHMdVrFPJQ2B7-SBCq-m7tU9twKYwyH+0Czy-zB_n2F=VwrA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arch/loongarch: clean up the left code and Kconfig
- item related to CRASH_CORE
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, akpm@linux-foundation.org, 
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxKBKYnR9muOR9AA--.32535S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GrykAw4xKF1kZFWkGw17Arc_yoWkAFg_CF
+	nxJw18GrWrAFykur1UKayrur1jg34IgFyFkF1qv347C34rXryDXFZrJwn3uwsxJrWkKFZx
+	J3yUWas7ur4YyosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
+	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
+	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
+	vjDU0xZFpf9x07jrPEfUUUUU=
 
-On Wed, Apr 17, 2024 at 5:15=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
-> On Sat, Mar 30, 2024 at 10:24=E2=80=AFPM Baoquan He <bhe@redhat.com> wrot=
-e:
-> >
-> > On 03/30/24 at 09:59pm, Huacai Chen wrote:
-> > > Queued, thanks.
-> >
-> > Thanks, Huacai. While I noticed Andrew has queued this patchset in his
-> > mm-unstable branch.
-> If I'm not mistaken, mm-unstable is target for the next 6.10, not for
-> the current 6.9. But I think this patch should be a fix for 6.9, so I
-> think it is more suitable in the loongarch-fixes branch. What's your
-> opinion?
+When CONFIG_SMP is disabled, mapping won't be created for all cpus.
+CPUs more than num_possible_cpus will be ignored. This is preparation
+for later patch.
 
-This would have been slightly more obvious with
-Fixes: 85fcde402db191b5 ("kexec: split crashkernel reservation code
-out from crash_core.c")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/acpi.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Gr{oetje,eeting}s,
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 5cf59c617126..ccfa90faf0ea 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -98,8 +98,15 @@ acpi_parse_processor(union acpi_subtable_headers *header, const unsigned long en
+ 		return -EINVAL;
+ 
+ 	acpi_table_print_madt_entry(&header->common);
++
++	/*
++	 * When CONFIG_SMP is disabled, mapping won't be created for all cpus.
++	 * CPUs more than num_possible_cpus will be ignored.
++	 */
++	if (processor->core_id >= 0 && processor->core_id < num_possible_cpus())
++		acpi_core_pic[processor->core_id] = *processor;
++
+ #ifdef CONFIG_SMP
+-	acpi_core_pic[processor->core_id] = *processor;
+ 	set_processor_mask(processor->core_id, processor->flags);
+ #endif
+ 
+-- 
+2.42.0
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
