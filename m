@@ -1,147 +1,171 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D22113B295
-	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 10:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDE87FBA5;
+	Wed, 17 Apr 2024 10:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713349547; cv=none; b=XR9QdWVBLjAx3aFAMeYtWjER4GDDR3MqPeggeDvG1zlirrJke1h9/PJPx1N/bBw5bIpTGpal0qIabEZFs7MJQtFYS27pnBAnqNQSrF1iFE6u6TdXvIiYbimzl88adak9W7Qixh++lTSHv7Puc2afEmte160ZtTrBaAKCpmEdbic=
+	t=1713350393; cv=none; b=VNvkEAuIgC1Mn0/GztA7VGAn01ETMRSDn6z+1xab/3cWNaEspIlVJy5qWQmMBhPdfVoNloFNQQS6lpT20XtY5nnOA5+hH3tDpa2ShkAT5OHOud5sr+ZVPzebQ48fQIx/IdZs9hNhqtbHVur4/pyDTlIBZYz0qN3/hZrJ7lwqS6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713349547; c=relaxed/simple;
-	bh=NDbI6G+PFcKfCE8LvuHVfp8HdKCGX9NVA8UfW64rwDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PgkZmWckaX4nbUn2OOQFc8rlpHec1gf32DhrbbKE6hm3PAkGjgfbJKumM/pt0YeF9Y7AKV7yaH+TLVbOPsC5L0JzEihUvnlby0UTIn3SQGDnQ0GzZm992xIGi1KH/aciseFaeG/S8Ct4SppVxR1XWJU9aLdcKeC5fJxv2N5hakI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=g4qEvNbO; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=g4qEvNbO; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="g4qEvNbO";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="g4qEvNbO"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 359F9206F4;
-	Wed, 17 Apr 2024 10:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1713349544; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NDbI6G+PFcKfCE8LvuHVfp8HdKCGX9NVA8UfW64rwDM=;
-	b=g4qEvNbOw9Ygwp5FSKied5syvo6aREx4Kys21vR69y+oE6P02Rq+sm75q+9wMf5kgsMfGT
-	e/PODIsb3w7aGYYQf/+RKKdBGoalzFxHkqOMjPQLV1jb6D9eQOpgC4P/rXEZyIfiOtXaKG
-	53i1WFVxMmvgX0WlniHtMATq5JOm2BQ=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=g4qEvNbO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1713349544; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NDbI6G+PFcKfCE8LvuHVfp8HdKCGX9NVA8UfW64rwDM=;
-	b=g4qEvNbOw9Ygwp5FSKied5syvo6aREx4Kys21vR69y+oE6P02Rq+sm75q+9wMf5kgsMfGT
-	e/PODIsb3w7aGYYQf/+RKKdBGoalzFxHkqOMjPQLV1jb6D9eQOpgC4P/rXEZyIfiOtXaKG
-	53i1WFVxMmvgX0WlniHtMATq5JOm2BQ=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 223101384C;
-	Wed, 17 Apr 2024 10:25:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yDgjCKijH2aPbQAAD6G6ig
-	(envelope-from <mkoutny@suse.com>); Wed, 17 Apr 2024 10:25:44 +0000
-Date: Wed, 17 Apr 2024 12:25:42 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, chenhuacai@kernel.org, tj@kernel.org, 
-	josef@toxicpanda.com, jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net, 
-	pctammela@mojatatu.com, qde@naccy.de, zhaotianrui@loongson.cn, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: Re: [PATCH RFC v2 0/6] blk-throttle: support enable and disable
- during runtime
-Message-ID: <unns4jtkiqdde3v7hzmd4yi2y7ylh4fh545dsn3imytgbg4x72@iq3mwwemygh5>
-References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
- <4exmes2ilp2cmfj3evf3jhhhq6tapfzgfzuasjejrxbj6a3327@3ecptofffblf>
- <f721f06e-e2c8-608e-0dd0-41f41e948f0d@huaweicloud.com>
+	s=arc-20240116; t=1713350393; c=relaxed/simple;
+	bh=/XtRZN0ydfLzBjIUi0ukfwL5IcMWRM7rSQeDti6Shk4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MZYd/WKq26C/0akH9rRqqwpRE66PMU7omzIKlWlozD3M4dDO3ZfaiCDKTsbMcPWX8PWS7v1HGWwMJCrMZRwXUBCcCgk2ApA66/6MIUfgH1vVigARSUFA4+GjEy8jWt0wcPgGSf9ztz6bEt0t6yKAMrIgiytYYdFjxdrOlhVT1tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKHRc1ST4z6JB7k;
+	Wed, 17 Apr 2024 18:37:48 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id C2D22140A46;
+	Wed, 17 Apr 2024 18:39:47 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 17 Apr
+ 2024 11:39:47 +0100
+Date: Wed, 17 Apr 2024 11:39:46 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, "Russell King (Oracle)"
+	<linux@armlinux.org.uk>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, "Jean-Philippe
+ Brucker" <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: Re: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from
+ acpi_processor_get_info()
+Message-ID: <20240417113946.00000edb@Huawei.com>
+In-Reply-To: <CAJZ5v0iK61_ihUZX_tXoSGdhpYDWFhEBbEuFf6WFiiD0QSeTDg@mail.gmail.com>
+References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
+	<20240412143719.11398-4-Jonathan.Cameron@huawei.com>
+	<CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
+	<ZhmWkE+fCEG/WFoi@shell.armlinux.org.uk>
+	<87bk6ez4hj.ffs@tglx>
+	<ZhmtO6zBExkQGZLk@shell.armlinux.org.uk>
+	<878r1iyxkr.ffs@tglx>
+	<20240415094552.000008d7@Huawei.com>
+	<CAJZ5v0ireu4pOedLjMjK2NrLkq_2vySpdgEgGccQEiFC5=otWQ@mail.gmail.com>
+	<20240415125649.00001354@huawei.com>
+	<CAJZ5v0iNSmV6EsBOc5oYWSTR9UvFOeg8_mj8Ofhum4Tonb3kNQ@mail.gmail.com>
+	<20240415132351.00007439@huawei.com>
+	<20240416184116.0000513c@huawei.com>
+	<CAJZ5v0iK61_ihUZX_tXoSGdhpYDWFhEBbEuFf6WFiiD0QSeTDg@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mv5ylurrtbwdd6xr"
-Content-Disposition: inline
-In-Reply-To: <f721f06e-e2c8-608e-0dd0-41f41e948f0d@huaweicloud.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.89 / 50.00];
-	BAYES_HAM(-2.78)[99.06%];
-	SIGNED_PGP(-2.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.dk,kernel.org,toxicpanda.com,mojatatu.com,gmx.de,themaw.net,naccy.de,loongson.cn,vger.kernel.org,lists.linux.dev,huawei.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 359F9206F4
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -5.89
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Tue, 16 Apr 2024 21:02:02 +0200
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
---mv5ylurrtbwdd6xr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Tue, Apr 16, 2024 at 7:41=E2=80=AFPM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Mon, 15 Apr 2024 13:23:51 +0100
+> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> > =20
+> > > On Mon, 15 Apr 2024 14:04:26 +0200
+> > > "Rafael J. Wysocki" <rafael@kernel.org> wrote: =20
+>=20
+> [cut]
+>=20
+> > > > > I'm still very much stuck on the hotadd_init flag however, so any=
+ suggestions
+> > > > > on that would be very welcome! =20
+> > > >
+> > > > I need to do some investigation which will take some time I suppose=
+. =20
+> > >
+> > > I'll do so as well once I've gotten the rest sorted out.  That whole
+> > > structure seems overly complex and liable to race, though maybe suffi=
+cient
+> > > locking happens to be held that it's not a problem. =20
+> >
+> > Back to this a (maybe) last outstanding problem.
+> >
+> > Superficially I think we might be able to get around this by always
+> > doing the setup in the initial online. In brief that looks something the
+> > below code.  Relying on the cpu hotplug callback registration calling
+> > the acpi_soft_cpu_online for all instances that are already online.
+> >
+> > Very lightly tested on arm64 and x86 with cold and hotplugged CPUs.
+> > However this is all in emulation and I don't have access to any signifi=
+cant
+> > x86 test farms :( So help will be needed if it's not immediately obviou=
+s why
+> > we can't do this. =20
+>=20
+> AFAICS, this should work.  At least I don't see why it wouldn't.
+>=20
+> > Of course, I'm open to other suggestions!
+> >
+> > For now I'll put a tidied version of this one is as an RFC with the res=
+t of v6.
+> >
+> > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processo=
+r.c
+> > index 06e718b650e5..97ca53b516d0 100644
+> > --- a/drivers/acpi/acpi_processor.c
+> > +++ b/drivers/acpi/acpi_processor.c
+> > @@ -340,7 +340,7 @@ static int acpi_processor_get_info(struct acpi_devi=
+ce *device)
+> >          */
+> >         per_cpu(processor_device_array, pr->id) =3D device;
+> >         per_cpu(processors, pr->id) =3D pr;
+> > -
+> > +       pr->flags.need_hotplug_init =3D 1;
+> >         /*
+> >          *  Extra Processor objects may be enumerated on MP systems with
+> >          *  less than the max # of CPUs. They should be ignored _iff
+> > diff --git a/drivers/acpi/processor_driver.c b/drivers/acpi/processor_d=
+river.c
+> > index 67db60eda370..930f911fc435 100644
+> > --- a/drivers/acpi/processor_driver.c
+> > +++ b/drivers/acpi/processor_driver.c
+> > @@ -206,7 +206,7 @@ static int acpi_processor_start(struct device *dev)
+> >
+> >         /* Protect against concurrent CPU hotplug operations */
+> >         cpu_hotplug_disable();
+> > -       ret =3D __acpi_processor_start(device);
+> > +       //      ret =3D __acpi_processor_start(device);
+> >         cpu_hotplug_enable();
+> >         return ret;
+> >  } =20
+>=20
+> So it looks like acpi_processor_start() is not necessary any more, is it?
 
-On Wed, Apr 17, 2024 at 09:09:07AM +0800, Yu Kuai <yukuai1@huaweicloud.com> wrote:
-> Yes, bfq already support that,
+Absolutely.  This needs cleaning up beyond this hack.
 
-I've never noticed CONFIG_IOSCHED_BFQ is a tristate that explains (me) a
-lot. Thanks!
+Given pr has been initialized to 0, flipping the flag to be something
+like 'initialized' and having the driver set it on first online rather than
+in acpi_processor.c will clean it up further.
 
-> First of all, users can only load these policies when they need, and
-> reduce kernel size; Then, when these policies is not loaded, IO fast
-> path will be slightly shorter, and save some memory overhead for each
-> disk.
+Jonathan
+>=20
+> > @@ -279,7 +279,7 @@ static int __init acpi_processor_driver_init(void)
+> >         if (result < 0)
+> >                 return result;
+> >
+> > -       result =3D cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> > +       result =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+> >                                            "acpi/cpu-drv:online",
+> >                                            acpi_soft_cpu_online, NULL);
+> >         if (result < 0) =20
+> > >
+> > > Jonathan =20
+>=20
+> Thanks!
 
-...and there is no new complexity thanks to the above.
-
-(I'm only catching up with subthread of patch 5/6.)
-It seems the old complexity could be simplified by the way of lazy
-inits. Intereseting...
-
-Michal
-
---mv5ylurrtbwdd6xr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZh+jpAAKCRAGvrMr/1gc
-jtkfAP9yEajBdW3z7w7kWBfYAteHAXasz7VRVK4JZFJIWxNyeQD+Ii7z6SSsfVG5
-K3EEHsVXHAgD9UkHeoqy9ADSNVIGZQc=
-=l0yD
------END PGP SIGNATURE-----
-
---mv5ylurrtbwdd6xr--
