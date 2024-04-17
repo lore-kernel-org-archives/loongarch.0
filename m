@@ -1,90 +1,104 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE9F132C23;
-	Tue, 16 Apr 2024 19:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFDB812
+	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 01:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713295502; cv=none; b=CInxUSMw1s1Q5YFYDm/fBnD7bc9n1Cse3IPvmJ8QZpX/3N8Yk9aFOqpI9GemzEq0wE9+CgtapxGhTQKzVOjr0JCPVt8CPsMKE6TSwrj+lvAzkm6okPbN/SBv4fpijMaQ1VmJ//9+Phqii8BXweorVADczPpnsKzRgw22TvuVzvY=
+	t=1713316155; cv=none; b=ky2uEX5C//FOc8UAP0qGx5pLXnhopIrd7q5iHdPOYZYbavH5XyREkidEpzaQhTRbC+l8BrR2X7tgFSZ4p9Zl+HirLd/yXrLfDyB+cOz5DNeqN6kwF06l+xh8NhdnWKkax+kask71TBI3cGl//Bk0QDYDarQpd+OR6ou3tB74Ock=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713295502; c=relaxed/simple;
-	bh=7ffRkoqd8Raf8fUSuuAKNPwc8vUdDnYdW+Q6ugXQYuM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NsN+YA1TlKH9rkug52JR8HZhFnPQwkPa4OJZ+L9QR6uMG82h+PGbqRlirJfCpvIycTwGPkDtnjp8Bmh2m9UatACAnrXx30+kIaB03ijVUt/Qy5YqUtPuMzG4rGUGM9gvn/qu0Q3G968syLiD+qDYyuBTkc5ImFa0TxW5IUV8NZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HZxSa4oO; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZxSa4oO"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2a4b457769eso2895992a91.2;
-        Tue, 16 Apr 2024 12:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713295500; x=1713900300; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7ffRkoqd8Raf8fUSuuAKNPwc8vUdDnYdW+Q6ugXQYuM=;
-        b=HZxSa4oOR4vcRudhdaWXhhRzVf5ctF9uPD2O73/ON4hI94arsPMMitnJoXjcig+BjI
-         Eb6sRFginhtLJ9fE/qeyf18Vzcj8r+ObdyJSZeDknWvVh0XrTQGHgV5dbUZEUVV/H2S5
-         upiD6lG/wGcXPWMkNMecjf/IUtbuQ+jxgx7jgGsIZAafnRVYhGISVPk6RVpmHWu+qagh
-         k2JjVqw3Za8tKVFD41ZnELB5ysuzU8NwXeaxVcNecW0Y5WLmVzG36mQN9URmWuTI3s0W
-         JDRLzPK1E//pLG4eoQbWOmd5vrw3HNgKqahSkh3YZXpiCJdQa4r2LfZgP4YP52yU9t81
-         be7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713295500; x=1713900300;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7ffRkoqd8Raf8fUSuuAKNPwc8vUdDnYdW+Q6ugXQYuM=;
-        b=HyjjmnYSSN/4aJ7HKKO0hRd4QCzeh+e8H5u/8PS+Cn/V0hBjIUd9M+dxHFuz09gInA
-         U1yzjI5c2zgPFdNWT1pWN5IcZY1eg8vpVqqTYhCkDO8VA9J4k5o3cH5sw2J2Z7bkqGNk
-         JkmTc7z4pB3s7IsGOJAHXWH7gc0vm8pOfCxO1PZ5hadZN/FJpnhLUU4rkV5zh8dBVmiY
-         LsUuOJqrCvnKvL5ICnMO43xBACHWUkD02tfFcY8zUJTTgrhYdoFdTuNM11DOg8PDYHnq
-         sjJRnQzME51zGXhT6JC2G/jUXFSsBkjXrw6MO9E3F/jZHAJIsSb5HZkHKAkJS/SDlMNO
-         f6wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgRtPne3vyAE8rnqxGgcBEFu9KweeNCay4gVFKnt1QK0efrJiGNLJ/c73cJcVPhXYgbbcMXbXVpli/byMbmwF3C1MaQWBTTX+GmRyLhntW1EEJM+nPhRumgraW9//9Uw==
-X-Gm-Message-State: AOJu0Yyb6XKAuukDv18KclAmeBC2uT7abEhvk+EwZ+jtlTUQsdQaqZ0A
-	PbyuawLRhq215xkocNzREZ6BjhExCj+NPknPmokz0ZXhMzxujubKLhzTp8q/soctM6uuNHRmA9g
-	tjDVsy9dskjNe73sntA7BSR2Jz+4=
-X-Google-Smtp-Source: AGHT+IEacr+WK0M3ZF4z2ZTYY1pegpjK4L93Kit6rRktM90mWV0eYXk2xPvWNjCZQ+q0OF2du9cQzMc/KnT2IjI0uzI=
-X-Received: by 2002:a17:90b:4b4e:b0:29c:582d:bade with SMTP id
- mi14-20020a17090b4b4e00b0029c582dbademr11298028pjb.2.1713295500304; Tue, 16
- Apr 2024 12:25:00 -0700 (PDT)
+	s=arc-20240116; t=1713316155; c=relaxed/simple;
+	bh=6e1ar9zwNRxGZPT51PILThGT0Z1+J9uUvPSlF2J1dwQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jYdu31IEpEqGnRulJVasDVTAsYJ/ZirZdiB83Gn/Ktbcnmcj5pTGwDpPfrRxYNnj+y3w7XVuutB7jOWgvR5OX+HOnRAwwkLha0pm6ldFsL4x6ZIkxjTAC9Q4PCk+5o2rNOkRhz8M6Oj/VPgR4hvNH6MWfZgzPL1Rdm/z9HbEMos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VK2qN5Bsvz4f3mW2
+	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 09:09:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 596F41A0CF8
+	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 09:09:09 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgAX6REzIR9mbcG7KA--.61033S3;
+	Wed, 17 Apr 2024 09:09:09 +0800 (CST)
+Subject: Re: [PATCH RFC v2 0/6] blk-throttle: support enable and disable
+ during runtime
+To: =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+ Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, chenhuacai@kernel.org, tj@kernel.org,
+ josef@toxicpanda.com, jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net,
+ pctammela@mojatatu.com, qde@naccy.de, zhaotianrui@loongson.cn,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, cgroups@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
+ <4exmes2ilp2cmfj3evf3jhhhq6tapfzgfzuasjejrxbj6a3327@3ecptofffblf>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <f721f06e-e2c8-608e-0dd0-41f41e948f0d@huaweicloud.com>
+Date: Wed, 17 Apr 2024 09:09:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240416144926.599101-1-david@redhat.com>
-In-Reply-To: <20240416144926.599101-1-david@redhat.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 16 Apr 2024 21:24:01 +0200
-Message-ID: <CANiq72kACt+FfeYXJxfQpmGH=uPqkDA0oprfnebw52VSKyn7kQ@mail.gmail.com>
-Subject: Re: [PATCH v1] LoongArch/tlb: fix "error: parameter 'ptep' set but
- not used" due to __tlb_remove_tlb_entry()
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-arch@vger.kernel.org, loongarch@lists.linux.dev, llvm@lists.linux.dev, 
-	Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Nathan Chancellor <nathan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4exmes2ilp2cmfj3evf3jhhhq6tapfzgfzuasjejrxbj6a3327@3ecptofffblf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX6REzIR9mbcG7KA--.61033S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruFWfAFW7tw15tr17tFW7XFb_yoWDJFb_CF
+	1Y93yxK3s5Zw48GanxKF4rWrsrWF1Igr1qq34UXFWxtr12qryxAryDAwn7Xr4UCFs0yF1v
+	vr98KF4xAry29jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3AFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUOmhFUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Tue, Apr 16, 2024 at 4:49=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> With LLVM=3D1 and W=3D1 we get:
+Hi,
 
-Hmm... I didn't need W=3D1 to trigger it (LLVM 18.1.2).
+在 2024/04/16 23:56, Michal Koutný 写道:
+> On Sat, Apr 06, 2024 at 04:00:53PM +0800, Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>> I'm planning to support build all blk-throttle polices as kernel module,
+> 
+> There is only one blk-throttle policy (especially after your removal of
+> io.low). Did you mean blkcg policies in general?
 
-> Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Yes, bfq already support that, and others are all rq_qos based, they
+will be much easier than blk-throtl.
+> 
+> The current code is complex because of various lifecycles in
+> 	devices x cgroups.
+> Turning policies into modules seems to make it
+> 	devices x cgroups x policy modules
+> .
+> 
+> Could you please add more info why policies as modules is beneficial,
+> how to keep complexity capped?
 
-Thanks, looks good to me -- built-tested:
+First of all, users can only load these policies when they need, and
+reduce kernel size; Then, when these policies is not loaded, IO fast
+path will be slightly shorter, and save some memory overhead for each
+disk.
 
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+Thanks,
+Kuai
 
-Cheers,
-Miguel
+> 
+> Thanks,
+> Michal
+> 
+
