@@ -1,34 +1,46 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5842815B129
-	for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 11:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FDA160796;
+	Thu, 18 Apr 2024 13:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713438339; cv=none; b=ISTwgg8PHut4Gejmqr29IOzgRuZ1QUVZvAfHIcWIXzJFXNMXAAOgQgPKKvmF6H6FFsv5U38QYUeis+5OLFyyt+uvSv0lI1gBPCXnS1IqQONeK00oSdA5hGzIac5lckwuuIDYsm1osTtdFBZxLhybB3pMg2D4K7GEuT+wy/H6uy0=
+	t=1713448460; cv=none; b=tsllf4OmMVWAUP74NRlGsLIPqm+y0bluuyaDcGzggL6FOoXzSHzWfbH7XvW0+d3vZTeav+o7/fjcCSN+QtkQiNLnHTTML3Gi4KdMx2k/Pbm2968SXxmDJ53iLzbg/P9d+4nAPhUrNuCPU+/YZaKr4t3JAzF7Ry8oku6XF7T4gPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713438339; c=relaxed/simple;
-	bh=lUKbfHT2CeWuRaF2K1IWI2/Tr2D9SeaelyavaVNWbf8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tmSdzjMNUSbsjG8qN/lT/XqQZ8rfjQLFcogA7UzlPuAzW6aV/BVpZFtrf9TgtFBZEOtGRPXSUh2WNRI89k2iHi7KkHqgwzbVEbl6m+cwfWHrsbKMCCnzI56raXX5JyRw9IRs4qv1Nx2asZK8/zObu7H7bimwD8RVfE35lZYzcrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxOLpz_iBmPj0pAA--.12397S3;
-	Thu, 18 Apr 2024 19:05:23 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxuhJx_iBm9g1_AA--.34063S2;
-	Thu, 18 Apr 2024 19:05:21 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Marc Zyngier <maz@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v5] LoongArch: Give chance to build under !CONFIG_SMP
-Date: Thu, 18 Apr 2024 19:05:20 +0800
-Message-ID: <20240418110520.16915-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1713448460; c=relaxed/simple;
+	bh=yXKPO/hvrdFwE0im3psB1dSWiai6UVdyh79F1t1raf4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u/sB7UvpO7d59wQye03KLNtn6POtQQghniYN+mgQaQ1W6WJN++6v0SEMQoRRxO2522xRVR+PKqr4iuFuc+ORqXPTXIE1AZM4qsBlL41/r0Noo+w8I/cwSBAtxp5qlHWNNixZksWzvduWIbAf/p4DYT2KUHxosj4CGZb9PKVpxkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKzjQ2WsNz6K5sZ;
+	Thu, 18 Apr 2024 21:52:10 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9FF1D140119;
+	Thu, 18 Apr 2024 21:54:13 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 14:54:13 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v7 00/16] ACPI/arm64: add support for virtual cpu hotplug
+Date: Thu, 18 Apr 2024 14:53:56 +0100
+Message-ID: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,218 +48,177 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxuhJx_iBm9g1_AA--.34063S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Jr4UKFWDJw4kZF13Xw4DZFc_yoW3XrWrpF
-	yqyr4Dtr4rGrn7Aryqy3yrWr15Jr1kG3y2qFy2k3y8GFnrX348Xr4vgFnIqFyUKwsYgFWI
-	vFn3Wa4aqF1UAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-In the current code, SMP is selected in Kconfig for LoongArch, the users
-can not unset it, this is reasonable for a multiprocessor machine. But as
-the help info of config SMP said, if you have a system with only one CPU,
-say N. On a uniprocessor machine, the kernel will run faster if you say N
-here.
+Whilst it is a bit quick after v6, a couple of critical issues
+were pointed out by Russell, Salil and Rafael + one build issue
+had been missed, so it seems sensible to make sure those conducting
+testing or further review have access to a fixed version.
 
-The Loongson-2K0500 is a single-core CPU for applications like industrial
-control, printing terminals, and BMC (Baseboard Management Controller),
-there are many development boards, products and solutions on the market,
-so it is better and necessary to give a chance to build under !CONFIG_SMP
-for a uniprocessor machine.
+v7:
+  - Fix misplaced config guard that broke bisection.
+  - Greatly simplify the condition on which we call
+    acpi_processor_hotadd_init().
+  - Improve teardown ordering.
 
-First of all, do not select SMP for config LOONGARCH in Kconfig to make it
-possible to unset CONFIG_SMP. Then, do some changes to fix the warnings and
-errors if CONFIG_SMP is not set.
+Fundamental change v6+: At the level of common ACPI infrastructure, use
+the existing hotplug path for arm64 even though what needs to be
+done at the architecture specific level is quite different.
 
-(1) Define get_ipi_irq() only if CONFIG_SMP is set to fix the warning:
-arch/loongarch/kernel/irq.c:90:19: warning: 'get_ipi_irq' defined but not used [-Wunused-function]
+An explicit check in arch_register_cpu() for arm64 prevents
+this code doing anything if Physical CPU Hotplug is signalled.
 
-(2) Add "#ifdef CONFIG_SMP" in asm/smp.h to fix the warning:
-./arch/loongarch/include/asm/smp.h:49:9: warning: "raw_smp_processor_id" redefined
-   49 | #define raw_smp_processor_id raw_smp_processor_id
-      |         ^~~~~~~~~~~~~~~~~~~~
-./include/linux/smp.h:198:9: note: this is the location of the previous definition
-  198 | #define raw_smp_processor_id()                  0
+This should resolve any concerns about treating virtual CPU
+hotplug as if it were physical and potential unwanted side effects
+if physical CPU hotplug is added to the ARM architecture in the
+future.
 
-(3) Define machine_shutdown() as empty under !CONFIG_SMP to fix the error:
-arch/loongarch/kernel/machine_kexec.c: In function 'machine_shutdown':
-arch/loongarch/kernel/machine_kexec.c:233:25: error: implicit declaration of function 'cpu_device_up'; did you mean 'put_device'? [-Wimplicit-function-declaration]
+v6: Thanks to Rafael for extensive help with the approach + reviews.
+Specific changes:
+ - Do not differentiate wrt code flow between traditional CPU HP
+   and the new ARM flow.  The conditions on performing hotplug actions
+   do need to be adjusted though to incorporate the slightly different
+   state transition
+     Added PRESENT + !ENABLED -> PRESENT + ENABLED
+     to existing !PRESENT + !ENABLED -> PRESENT + ENABLED
+ - Enable ACPI_HOTPLUG_CPU on arm64 and drop the earlier patches that
+   took various code out of the protection of that.  Now the paths
+ - New patch to drop unnecessary _STA check in hotplug code. This
+   code cannot be entered unless ENABLED + PRESENT are set.
+ - New patch to unify the flow of already onlined (at time of driver
+   load) and hotplugged CPUs in acpi/processor_driver.c.
+   This change is necessary because we can't easily distinguish the
+   2 cases of deferred vs hotplug calls of register_cpu() on arm64.
+   It is also a nice simplification.
+ - Use flags rather than a structure for the extra parameter to
+   acpi_scan_check_and_detach() - Thank to Shameer for offline feedback.
 
-(4) Make config SCHED_SMT depends on SMP to fix many errors such as:
-kernel/sched/core.c: In function 'sched_core_find':
-kernel/sched/core.c:310:43: error: 'struct rq' has no member named 'cpu'
+Updated version of James' original introduction.
 
-(5) Define cpu_logical_map(cpu) as 0 under !CONFIG_SMP in asm/smp.h,
-then include asm/smp.h in asm/acpi.h (because acpi.h is included in
-linux/irq.h indirectly) to fix many build errors under drivers/irqchip
-such as:
-drivers/irqchip/irq-loongson-eiointc.c: In function 'cpu_to_eio_node':
-drivers/irqchip/irq-loongson-eiointc.c:59:16: error: implicit declaration of function 'cpu_logical_map' [-Wimplicit-function-declaration]
-
-(6) Do not write per_cpu_offset(0) to PERCPU_BASE_KS when resume
-because per_cpu_offset(x) is defined as __per_cpu_offset[x]) only
-under CONFIG_SMP in include/asm-generic/percpu.h, just save the
-value of PERCPU_BASE_KS when suspend and restore it when resume
-to fix the error:
-arch/loongarch/power/suspend.c: In function 'loongarch_common_resume':
-arch/loongarch/power/suspend.c:47:21: error: implicit declaration of function 'per_cpu_offset' [-Wimplicit-function-declaration]
-
-When running the UnixBench tests with "-c 1" single-streamed pass,
-the improvement in performance is about 9 percent with this patch.
-
-By the way, it is helpful to debug and analysis the kernel issue
-of multi-core system under !CONFIG_SMP.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-
-v5:
-  -- Drop the changes of arch/loongarch/kernel/acpi.c
-  -- Define cpu_logical_map(cpu) as 0 under !CONFIG_SMP
-  -- Squash the changes of suspend.c into one single patch
-
- arch/loongarch/Kconfig                | 2 +-
- arch/loongarch/include/asm/acpi.h     | 1 +
- arch/loongarch/include/asm/smp.h      | 5 +++++
- arch/loongarch/kernel/irq.c           | 2 ++
- arch/loongarch/kernel/machine_kexec.c | 2 +-
- arch/loongarch/power/suspend.c        | 4 +++-
- 6 files changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index a5f300ec6f28..8d892de0b7a8 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -174,7 +174,6 @@ config LOONGARCH
- 	select PCI_QUIRKS
- 	select PERF_USE_VMALLOC
- 	select RTC_LIB
--	select SMP
- 	select SPARSE_IRQ
- 	select SYSCTL_ARCH_UNALIGN_ALLOW
- 	select SYSCTL_ARCH_UNALIGN_NO_WARN
-@@ -420,6 +419,7 @@ config EFI_STUB
+This series adds what looks like cpuhotplug support to arm64 for use in
+virtual machines. It does this by moving the cpu_register() calls for
+architectures that support ACPI into an arch specific call made from
+the ACPI processor driver.
  
- config SCHED_SMT
- 	bool "SMT scheduler support"
-+	depends on SMP
- 	default y
- 	help
- 	  Improves scheduler's performance when there are multiple
-diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
-index 49e29b29996f..313f66f7913a 100644
---- a/arch/loongarch/include/asm/acpi.h
-+++ b/arch/loongarch/include/asm/acpi.h
-@@ -8,6 +8,7 @@
- #ifndef _ASM_LOONGARCH_ACPI_H
- #define _ASM_LOONGARCH_ACPI_H
+The kubernetes folk really want to be able to add CPUs to an existing VM,
+in exactly the same way they do on x86. The use-case is pre-booting guests
+with one CPU, then adding the number that were actually needed when the
+workload is provisioned.
+
+Wait? Doesn't arm64 support cpuhotplug already!?
+In the arm world, cpuhotplug gets used to mean removing the power from a CPU.
+The CPU is offline, and remains present. For x86, and ACPI, cpuhotplug
+has the additional step of physically removing the CPU, so that it isn't
+present anymore.
  
-+#include <asm/smp.h>
- #include <asm/suspend.h>
+Arm64 doesn't support this, and can't support it: CPUs are really a slice
+of the SoC, and there is not enough information in the existing ACPI tables
+to describe which bits of the slice also got removed. Without a reference
+machine: adding this support to the spec is a wild goose chase.
  
- #ifdef CONFIG_ACPI
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index f81e5f01d619..8190b093a687 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -6,6 +6,7 @@
- #ifndef __ASM_SMP_H
- #define __ASM_SMP_H
+Critically: everything described in the firmware tables must remain present.
  
-+#ifdef CONFIG_SMP
- #include <linux/atomic.h>
- #include <linux/bitops.h>
- #include <linux/linkage.h>
-@@ -101,4 +102,8 @@ static inline void __cpu_die(unsigned int cpu)
- }
- #endif
+For a virtual machine this is easy as all the other bits of 'virtual SoC'
+are emulated, so they can (and do) remain present when a vCPU is 'removed'.
+
+On a system that supports cpuhotplug the MADT has to describe every possible
+CPU at boot. Under KVM, the vGIC needs to know about every possible vCPU before
+the guest is started.
+With these constraints, virtual-cpuhotplug is really just a hypervisor/firmware
+policy about which CPUs can be brought online.
  
-+#else /* !CONFIG_SMP */
-+#define cpu_logical_map(cpu)	0
-+#endif /* CONFIG_SMP */
-+
- #endif /* __ASM_SMP_H */
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index 883e5066ae44..e791fa275ec5 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -87,6 +87,7 @@ static void __init init_vec_parent_group(void)
- 	acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
- }
+This series adds support for virtual-cpuhotplug as exactly that: firmware
+policy. This may even work on a physical machine too; for a guest the part of
+firmware is played by the VMM. (typically Qemu).
  
-+#ifdef CONFIG_SMP
- static int __init get_ipi_irq(void)
- {
- 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
-@@ -96,6 +97,7 @@ static int __init get_ipi_irq(void)
+PSCI support is modified to return 'DENIED' if the CPU can't be brought
+online/enabled yet. The CPU object's _STA method's enabled bit is used to
+indicate firmware's current disposition. If the CPU has its enabled bit clear,
+it will not be registered with sysfs, and attempts to bring it online will
+fail. The notifications that _STA has changed its value then work in the same
+way as physical hotplug, and firmware can cause the CPU to be registered some
+time later, allowing it to be brought online.
  
- 	return -EINVAL;
- }
-+#endif
+This creates something that looks like cpuhotplug to user-space and the
+kernel beyond arm64 architecture specific code, as the sysfs
+files appear and disappear, and the udev notifications look the same.
  
- void __init init_IRQ(void)
- {
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index 2dcb9e003657..8ae641dc53bb 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -225,6 +225,7 @@ void crash_smp_send_stop(void)
+One notable difference is the CPU present mask, which is exposed via sysfs.
+Because the CPUs remain present throughout, they can still be seen in that mask.
+This value does get used by webbrowsers to estimate the number of CPUs
+as the CPU online mask is constantly changed on mobile phones.
  
- void machine_shutdown(void)
- {
-+#ifdef CONFIG_SMP
- 	int cpu;
+Linux is tolerant of PSCI returning errors, as its always been allowed to do
+that. To avoid confusing OS that can't tolerate this, we needed an additional
+bit in the MADT GICC flags. This series copies ACPI_MADT_ONLINE_CAPABLE, which
+appears to be for this purpose, but calls it ACPI_MADT_GICC_CPU_CAPABLE as it
+has a different bit position in the GICC.
  
- 	/* All CPUs go to reboot_code_buffer */
-@@ -232,7 +233,6 @@ void machine_shutdown(void)
- 		if (!cpu_online(cpu))
- 			cpu_device_up(get_cpu_device(cpu));
+This code is unconditionally enabled for all ACPI architectures, though for
+now only arm64 will have deferred the cpu_register() calls.
+
+If folk want to play along at home, you'll need a copy of Qemu that supports this.
+https://github.com/salil-mehta/qemu.git virt-cpuhp-armv8/rfc-v2
+
+Replace your '-smp' argument with something like:
+ | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
  
--#ifdef CONFIG_SMP
- 	smp_call_function(kexec_shutdown_secondary, NULL, 0);
- #endif
- }
-diff --git a/arch/loongarch/power/suspend.c b/arch/loongarch/power/suspend.c
-index 166d9e06a64b..8571818b93dc 100644
---- a/arch/loongarch/power/suspend.c
-+++ b/arch/loongarch/power/suspend.c
-@@ -24,6 +24,7 @@ struct saved_registers {
- 	u64 kpgd;
- 	u32 pwctl0;
- 	u32 pwctl1;
-+	u64 pcpu_base;
- };
- static struct saved_registers saved_regs;
- 
-@@ -36,6 +37,7 @@ void loongarch_common_suspend(void)
- 	saved_regs.pwctl1 = csr_read32(LOONGARCH_CSR_PWCTL1);
- 	saved_regs.ecfg = csr_read32(LOONGARCH_CSR_ECFG);
- 	saved_regs.euen = csr_read32(LOONGARCH_CSR_EUEN);
-+	saved_regs.pcpu_base = csr_read64(PERCPU_BASE_KS);
- 
- 	loongarch_suspend_addr = loongson_sysconf.suspend_addr;
- }
-@@ -44,7 +46,7 @@ void loongarch_common_resume(void)
- {
- 	sync_counter();
- 	local_flush_tlb_all();
--	csr_write64(per_cpu_offset(0), PERCPU_BASE_KS);
-+	csr_write64(saved_regs.pcpu_base, PERCPU_BASE_KS);
- 	csr_write64(eentry, LOONGARCH_CSR_EENTRY);
- 	csr_write64(eentry, LOONGARCH_CSR_MERRENTRY);
- 	csr_write64(tlbrentry, LOONGARCH_CSR_TLBRENTRY);
+ then feed the following to the Qemu montior;
+ | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
+ | (qemu) device_del cpu1
+
+James Morse (7):
+  ACPI: processor: Register deferred CPUs from acpi_processor_get_info()
+  ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
+  arm64: acpi: Move get_cpu_for_acpi_id() to a header
+  irqchip/gic-v3: Don't return errors from gic_acpi_match_gicc()
+  irqchip/gic-v3: Add support for ACPI's disabled but 'online capable'
+    CPUs
+  arm64: document virtual CPU hotplug's expectations
+  cpumask: Add enabled cpumask for present CPUs that can be brought
+    online
+
+Jean-Philippe Brucker (1):
+  arm64: psci: Ignore DENIED CPUs
+
+Jonathan Cameron (8):
+  ACPI: processor: Simplify initial onlining to use same path for cold
+    and hotplug
+  cpu: Do not warn on arch_register_cpu() returning -EPROBE_DEFER
+  ACPI: processor: Drop duplicated check on _STA (enabled + present)
+  ACPI: processor: Move checks and availability of acpi_processor
+    earlier
+  ACPI: processor: Add acpi_get_processor_handle() helper
+  ACPI: scan: switch to flags for acpi_scan_check_and_detach()
+  arm64: arch_register_cpu() variant to check if an ACPI handle is now
+    available.
+  arm64: Kconfig: Enable hotplug CPU on arm64 if ACPI_PROCESSOR is
+    enabled.
+
+ .../ABI/testing/sysfs-devices-system-cpu      |   6 +
+ Documentation/arch/arm64/cpu-hotplug.rst      |  79 ++++++++++++
+ Documentation/arch/arm64/index.rst            |   1 +
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/include/asm/acpi.h                 |  11 ++
+ arch/arm64/kernel/acpi.c                      |  16 +++
+ arch/arm64/kernel/acpi_numa.c                 |  11 --
+ arch/arm64/kernel/psci.c                      |   2 +-
+ arch/arm64/kernel/smp.c                       |  56 ++++++++-
+ drivers/acpi/acpi_processor.c                 | 113 ++++++++++--------
+ drivers/acpi/processor_driver.c               |  44 ++-----
+ drivers/acpi/scan.c                           |  47 ++++++--
+ drivers/base/cpu.c                            |  12 +-
+ drivers/irqchip/irq-gic-v3.c                  |  32 +++--
+ include/acpi/acpi_bus.h                       |   1 +
+ include/acpi/processor.h                      |   2 +-
+ include/linux/acpi.h                          |  10 +-
+ include/linux/cpumask.h                       |  25 ++++
+ kernel/cpu.c                                  |   3 +
+ 19 files changed, 357 insertions(+), 115 deletions(-)
+ create mode 100644 Documentation/arch/arm64/cpu-hotplug.rst
+
 -- 
-2.42.0
+2.39.2
 
