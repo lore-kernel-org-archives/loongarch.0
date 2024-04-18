@@ -1,111 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265FD8F66;
-	Thu, 18 Apr 2024 03:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E234F1EB
+	for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 03:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713409407; cv=none; b=dLQaXfdzMlZDGhEWrQIgNOuAJPzIMKlJmzir68nb/BC0QhcTaHUZcSeQrVfhOt9iMpSetsLpfFh9dLZtXngpJQOFeLvTJLkVmHQIFJQO230Xoe0GmUDXtzKHmKf56NuQNTJ2ylSYGjZaZoQhsuf8nP8+wdGWCii2NtE/L5W8Wyw=
+	t=1713410114; cv=none; b=q2ezF9pTN7axNqlQOPSfMVMsBf+pz9WInPtrlDsMT0TS5XFx5IciJm957tyGzisptNFAB/ALE9JMixunsuie/W/SRtfYW/IBYrmGJFZlsrYwQyEQFBJqaBeuu69uxjljsiM2iAq0GmGfaiwHsb1jH8lDBhmOL1OCfIe18vmd2vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713409407; c=relaxed/simple;
-	bh=kfEJQjTwgGJh4Zkx43Z0VD1r+pL2rJMimsZzyjREVEM=;
+	s=arc-20240116; t=1713410114; c=relaxed/simple;
+	bh=E9AmNyGddq5Eb53DUqVaIzShMqppKvErLUvIciv93mA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=idbxgrIsfyS/1CyxhANwP59PhrAA7nkhxu0xyZQ2ermbCrKljh5KOAhva0SIVVADTWhU5jurGaLCbweT0OL7tZl4p1dNZjqOYxfQQZibJneayX6xGCxa5qsE2JGRF9JfAsPXF0ubJ2VOJ2aUNIn0FFqHw6cG+5sELUrsM6/CU58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyuRU+nb; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=KVF11WRigsdqbigJN1xgkviaOGCgLZBnOaLD1PwOnns5BpRPmqib9Gaw8IA4STrw8xERbYFDtkAns9hb0jnzEveLDNVf22l3cObPUBwpEUCSSyGMIV86B/aWIrkjC1gn808LxVSoT5eH7+WW/FfWJONNhIxtZBx/tzzwA3dxyho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AoW6bWee; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyuRU+nb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1774C072AA;
-	Thu, 18 Apr 2024 03:03:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AoW6bWee"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E73C2BD10
+	for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 03:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713409406;
-	bh=kfEJQjTwgGJh4Zkx43Z0VD1r+pL2rJMimsZzyjREVEM=;
+	s=k20201202; t=1713410113;
+	bh=E9AmNyGddq5Eb53DUqVaIzShMqppKvErLUvIciv93mA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DyuRU+nbBlfEefDgkjYMaeHuZxrD+lMlRPMalkQi5IC69YYTWZ6zEdir/RupkAap0
-	 17RzMJVBVaskBzoD8lhK/LtZy2kUP7k21+CDiY0gBXnPmT64owTkQbxHdf0JyAPAYx
-	 tx0a4zLTnGo0CFjFFObQkeT4Qn82jY+d6vAZT/fd9qDpC/vddsmWPQ9f5r1pkH+Cb2
-	 yh2V+NoEvWckhqYS09yUlUYUkVb0oMebHG0BQarTzSCq4o2/7SwOGQyDEXewhte9Sg
-	 Lhmm69YwKDOmE0MM0CShULZ5v9DJpyzWisMvETTr/zB7h29YiU62z1Gam5322XaIMS
-	 pcQhx3sXD225A==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a555b203587so28960266b.3;
-        Wed, 17 Apr 2024 20:03:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVBIskmZolVqDZTf6MiIO/0JbY/9vbjwI6mrPnXPxlL3RxIlwtEDZnjWTAZD6e6/h893CFyjw1aZdm6vM1r1RIEHYJTCSbsKnTA2OgI/8p3I4sshkKEhuqG4UTE8dDAiw==
-X-Gm-Message-State: AOJu0Yw+CW6+a8FG88BlNj6rmg9zYkeJjrPw0EuzDd81vovJ1cHgfJS0
-	U6qeL7Ql2J4Rwbo+6+jLfWMpNj3a1Q7OMtFxc+AuHlbdiTWmu7D3i4Yd90FCbnErLf9+uwl9y1l
-	+l1PxcKwMopRseqhXKCBsyuaslMA=
-X-Google-Smtp-Source: AGHT+IEGnzxcLzKogVMafWt/io2wledXtCG2nYVIAR7Lu4aQp3Gm16la5nxK3JKrgyWlsMhlzCjZG627hEMlqWAR0dk=
-X-Received: by 2002:a17:906:f8da:b0:a55:596b:c9ca with SMTP id
- lh26-20020a170906f8da00b00a55596bc9camr830982ejb.39.1713409405224; Wed, 17
- Apr 2024 20:03:25 -0700 (PDT)
+	b=AoW6bWee1E/bveIDufe2XczRcTRein3ATgmEHU0H1rlejql0PWVaaznSt5D54d4SA
+	 cCY+V75o23di5g8zo7qyBPldTlBVrj4o15WGWNg1idom16qcBDuLwK/K9q1tN2GdkE
+	 m5FRYKa4XVzdTgodN/YJjN5Kn+/OvQjmZOM+eQaX3mr9qYGWCSXBIGmRsrPLUuyxzT
+	 Z6+CNZ2uO7cOdI79+swl83QOjhUbKC5SHxmF+QbtU2ZBg5sq5yP3E/HgoK1w2gPbBs
+	 Kd4V04B8FYZhHAEvIv6cvoodK4cmp9Sj+pv3wqQZkkL/hdMdS2ByY0/nTEM0N7JIkS
+	 8w67aIfZSDMZA==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso283296a12.3
+        for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 20:15:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXGDKIn3YMeGE4ne3415/3B9aOF7WnsbgnZw6atwkwPX62c1mUYq23SMNlI/LuRcCfyeOjBTTndiq26Aq05XaNS6EVWEAA8LM2u
+X-Gm-Message-State: AOJu0Yzqp1X7ObmQF5y3antgGXrHbWkUYd4FyM1l7/B8yRhzbEXioZgu
+	JN2xGAM2Soct6UHGMFizh9ZtK2mqTKUl+uGLoV7AvTl1oaQQoabC01MzVVaYGVxc/cVdnPKRSIm
+	OdMQYynY5RB49cf+xSBVe4igvJ90=
+X-Google-Smtp-Source: AGHT+IH9z7hHQPUEX63FNBa0KnX03pY3RNYjUifUrqlFSfL67QP2/vgNuWA+OWw67fLYmM/RYW/MC4n3Rpv3BYH8l1U=
+X-Received: by 2002:a17:906:d113:b0:a52:7456:bac8 with SMTP id
+ b19-20020a170906d11300b00a527456bac8mr996857ejz.6.1713410112184; Wed, 17 Apr
+ 2024 20:15:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240416144926.599101-1-david@redhat.com> <CANiq72kACt+FfeYXJxfQpmGH=uPqkDA0oprfnebw52VSKyn7kQ@mail.gmail.com>
- <CAAhV-H5mt0GaaZ3s44CYb4aKqYeDYm+Q16hY__FdQ6xYJh+bgg@mail.gmail.com> <20240417135834.ddaa9c038a8a8af2bd9e39aa@linux-foundation.org>
-In-Reply-To: <20240417135834.ddaa9c038a8a8af2bd9e39aa@linux-foundation.org>
+References: <20240417095951.2635-1-yangtiezhu@loongson.cn> <20240417095951.2635-2-yangtiezhu@loongson.cn>
+In-Reply-To: <20240417095951.2635-2-yangtiezhu@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 18 Apr 2024 11:03:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4O6_9Ukgz-GrPcWTq3cAN2c1OkXQWRbUgMR2ZwUuQQHA@mail.gmail.com>
-Message-ID: <CAAhV-H4O6_9Ukgz-GrPcWTq3cAN2c1OkXQWRbUgMR2ZwUuQQHA@mail.gmail.com>
-Subject: Re: [PATCH v1] LoongArch/tlb: fix "error: parameter 'ptep' set but
- not used" due to __tlb_remove_tlb_entry()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, David Hildenbrand <david@redhat.com>, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-arch@vger.kernel.org, 
-	loongarch@lists.linux.dev, llvm@lists.linux.dev, 
-	Arnd Bergmann <arnd@arndb.de>, WANG Xuerui <kernel@xen0n.name>, Nathan Chancellor <nathan@kernel.org>
+Date: Thu, 18 Apr 2024 11:15:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4WxQa26cQ7jtt-dj6WrAvpo5LuzF0QXVS9pv3FywSbQA@mail.gmail.com>
+Message-ID: <CAAhV-H4WxQa26cQ7jtt-dj6WrAvpo5LuzF0QXVS9pv3FywSbQA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] LoongArch: Modify acpi_parse_processor() for non-SMP
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Andrew,
+Hi, Tiezhu,
 
-On Thu, Apr 18, 2024 at 4:58=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
+On Wed, Apr 17, 2024 at 6:00=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> On Wed, 17 Apr 2024 11:18:27 +0800 Huacai Chen <chenhuacai@kernel.org> wr=
-ote:
->
-> > On Wed, Apr 17, 2024 at 3:25=E2=80=AFAM Miguel Ojeda
-> > <miguel.ojeda.sandonis@gmail.com> wrote:
-> > >
-> > > On Tue, Apr 16, 2024 at 4:49=E2=80=AFPM David Hildenbrand <david@redh=
-at.com> wrote:
-> > > >
-> > > > With LLVM=3D1 and W=3D1 we get:
-> > >
-> > > Hmm... I didn't need W=3D1 to trigger it (LLVM 18.1.2).
-> > >
-> > > > Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> > >
-> > > Thanks, looks good to me -- built-tested:
-> > >
-> > > Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
-> > > Tested-by: Miguel Ojeda <ojeda@kernel.org>
-> > >
-> >
-> > Queued for loongarch-fixes, thanks.
-> >
->
-> (top-posting repaired so I can sensibly reply to this.  Please avoid
-> top-posting!)
-Sorry, I only top-posting with "Queued ...", "Applied ..." because I
-saw others do like this. If this is also unacceptable, I will not do
-it again.
-
->
-> I'd rather carry this in mm.git with your ack please.  Otherwise mm.git
-> won't compile without it and if I retain this patch we'll get
-> duplicate-patch emails from Stephen and I won't be able to merge
-> mm.git's mm-nonmm-stable tree into Linus until loongarch-fixes has
-> merged.
-loongarch-next always merges loongarch-fixes, so when I apply a patch
-it will be in linux-next. Now this patch I have already applied to
-loongarch-fixes and loongarch-next. In future, I will give an Acked-by
-for you if needed.
+> When CONFIG_SMP is disabled, mapping won't be created for all cpus.
+> CPUs more than num_possible_cpus will be ignored. This is preparation
+> for later patch.
+This patch makes no sense, don't "fix" anything unless it is broken.
 
 Huacai
 
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/kernel/acpi.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+> index 5cf59c617126..ccfa90faf0ea 100644
+> --- a/arch/loongarch/kernel/acpi.c
+> +++ b/arch/loongarch/kernel/acpi.c
+> @@ -98,8 +98,15 @@ acpi_parse_processor(union acpi_subtable_headers *head=
+er, const unsigned long en
+>                 return -EINVAL;
+>
+>         acpi_table_print_madt_entry(&header->common);
+> +
+> +       /*
+> +        * When CONFIG_SMP is disabled, mapping won't be created for all =
+cpus.
+> +        * CPUs more than num_possible_cpus will be ignored.
+> +        */
+> +       if (processor->core_id >=3D 0 && processor->core_id < num_possibl=
+e_cpus())
+> +               acpi_core_pic[processor->core_id] =3D *processor;
+> +
+>  #ifdef CONFIG_SMP
+> -       acpi_core_pic[processor->core_id] =3D *processor;
+>         set_processor_mask(processor->core_id, processor->flags);
+>  #endif
+>
+> --
+> 2.42.0
 >
 >
