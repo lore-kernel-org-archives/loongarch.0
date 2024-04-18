@@ -1,79 +1,142 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A147C175552
-	for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 17:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2311442F4;
+	Thu, 18 Apr 2024 17:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713462293; cv=none; b=IMD0IKLl62kCwx4DqHbVL1rncIyBycqR5Nt6u/cbwqlqkoK2ddBQWWITo8frtWZLQu74Pmeklfd6Nl7rGsdJmBHPyrFmr0RkTa/yhx3UPpo5bRw9PNv2ue/wXb4hOyck+owakZ5yBHEbWtrn/+nXk65S+hAA1EyORERPICHli44=
+	t=1713462839; cv=none; b=i9w5i8935nPo1sdrS6/UQmSKRCap9P+Ga8M96m0Aa2f/AaDznnb7SrkKX6zzJPlkzGj83Owk1yKukmnFLuQFHgUBDKAeCJDUXlKZERBL97VW/vtESPO+UH/iOIi0RdTKmrDjokSBxgUbb1c47Q6ersSVFvKXv18DQNEr6rzQYDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713462293; c=relaxed/simple;
-	bh=EndrSlUL8lOUGOcQbCMTZWu/7CtEhpYfDQ/0p0uQKLs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=T1IAEq3GJt1U36OeaUqjsRrXI8R9cGbfphL8+6ukEjfanTLIrshIrAhj6hGC9G4EtxWZUXXpF8dBP1l7cxm2nWkPVQ3+O+IT7a5RftPbBSj1lh0mhp9rzBH7YE4VhYY7hM2hZJ60A8rLHPFN6UEtNj0ZRLZ04C/qJeNWw2LMcmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=ZlEkK+hS; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1713462839; c=relaxed/simple;
+	bh=GVKHg9/GMb+Q7svthQO5bm+rPzNDL6zXlQZOsDeKWL0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iPDzZv5Y/UdvP5C0JHl0OsL2oiIyxexW4QoxqHuXhvBsKnOxQsbvnFrhuqK/y8RwqIwVgQLyace7C4RywoTWZIjx8w1Mvl2OrVeuA6YyeEuJdEVgz7BIGd8GYISmj1vCGm/Slf3tCd6PZdiqc/ocV0DX5HFZ9kCkgZCd25yjBMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qitx/umw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="ZlEkK+hS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1713462283;
-	bh=EndrSlUL8lOUGOcQbCMTZWu/7CtEhpYfDQ/0p0uQKLs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ZlEkK+hSEytOWrYlgHowGpBxHnRBlr2XVpDMd/0GBYgOboQopAsDNuFVcOC6n2wmY
-	 7xAhePZtZJisDQjP1mRpYoWGNRbuVgOxS8d8CGyJQ2THyRm4luUOCc00MamIW7jPAm
-	 cgWQ4EdxM3Tkkt65Eqz7cHwcpt9nJzvnF/8bwbNc=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A770C1A3F62;
-	Thu, 18 Apr 2024 13:44:41 -0400 (EDT)
-Message-ID: <5e005ed913086d7e641306b89baa29b070e0359b.camel@xry111.site>
-Subject: Re: [PATCH v3 0/4] Give chance to build under !CONFIG_SMP for
- LoongArch
-From: Xi Ruoyao <xry111@xry111.site>
-To: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, Marc
- Zyngier <maz@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Date: Fri, 19 Apr 2024 01:44:39 +0800
-In-Reply-To: <b752273b-0e94-4325-9cf8-6f16a204818b@app.fastmail.com>
-References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
-	 <CAAhV-H6bHudfUVE4SWY88mxmLhFok9DS8UyODSZEdUJ816V8Rg@mail.gmail.com>
-	 <b752273b-0e94-4325-9cf8-6f16a204818b@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qitx/umw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F12DC3277B;
+	Thu, 18 Apr 2024 17:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713462839;
+	bh=GVKHg9/GMb+Q7svthQO5bm+rPzNDL6zXlQZOsDeKWL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qitx/umwjvXDKNme47QxvztrUiipBcKV2Lg0Yvd1RXezrm9EMN+zfFrxXb923+dxO
+	 AxZ6KgXvjlorR3mUIjvBXST4+3n8nelthPynguxJTOQoS9rNBrqZ+3MIlU37kTQ9FA
+	 a4e+nx+8unMMLT17+KcFFJ93DVlkbK2eXc4Av0nU3f2Yxj+rBXrkR0WI95IANr/7qX
+	 uZj4q1Xb4qjUIP87QNJk+Jgy4oid7eW9FtvEPOx7D0x1Tt1iXSqSWNLPcTP4XbQ2OW
+	 z8BEya9Rxr0dlQHlDm5T4jpRs2aqcA2Iy8EkKuiv4ehWjUKDt48ywWZ7K+xjdgeN4d
+	 Qxf4CJCyjHkiA==
+Date: Thu, 18 Apr 2024 20:52:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Song Liu <song@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Topel <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
+Message-ID: <ZiFd567L4Zzm2okO@kernel.org>
+References: <20240411160051.2093261-1-rppt@kernel.org>
+ <20240411160051.2093261-6-rppt@kernel.org>
+ <20240415075241.GF40213@noisy.programming.kicks-ass.net>
+ <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
+ <Zh4nJp8rv1qRBs8m@kernel.org>
+ <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
+ <ZiE91CJcNw7gBj9g@kernel.org>
+ <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
 
-On Thu, 2024-04-11 at 08:06 +0200, Arnd Bergmann wrote:
-> On Thu, Apr 11, 2024, at 06:26, Huacai Chen wrote:
-> >=20
-> > I remember that you both suggested not introducing NOSMP support for a
-> > modern architecture which brings additional complexity. I wonder if
-> > you still have the same attitude now. I will merge this series only if
-> > you think it is worthy to introduce NOSMP now.
->=20
-> It's an interesting question, as we have recently discussed two
-> opposite ideas and may end up doing both (or possible neither)
-> in the future:
->=20
-> - On x86, there is no real reason to need non-SMP kernels as the
-> =C2=A0 memory savings are fairly small, and it tends to break because
-> =C2=A0 of lack of users testing it.
+On Thu, Apr 18, 2024 at 09:13:27AM -0700, Song Liu wrote:
+> On Thu, Apr 18, 2024 at 8:37 AM Mike Rapoport <rppt@kernel.org> wrote:
+> > > >
+> > > > I'm looking at execmem_types more as definition of the consumers, maybe I
+> > > > should have named the enum execmem_consumer at the first place.
+> > >
+> > > I think looking at execmem_type from consumers' point of view adds
+> > > unnecessary complexity. IIUC, for most (if not all) archs, ftrace, kprobe,
+> > > and bpf (and maybe also module text) all have the same requirements.
+> > > Did I miss something?
+> >
+> > It's enough to have one architecture with different constrains for kprobes
+> > and bpf to warrant a type for each.
+> 
+> AFAICT, some of these constraints can be changed without too much work.
 
-FWIW I'm still running the latest Linux kernel on a Athlon 64 3000+
-launched in 2004 with !CONFIG_SMP :).
+But why?
+I honestly don't understand what are you trying to optimize here. A few
+lines of initialization in execmem_info?
+What is the advantage in forcing architectures to have imposed limits on
+kprobes or bpf allocations?
 
-No objection to this paragraph (and other paragraphs) though.
+> > Where do you see unnecessary complexity?
+> >
+> > > IOW, we have
+> > >
+> > > enum execmem_type {
+> > >         EXECMEM_DEFAULT,
+> > >         EXECMEM_TEXT,
+> > >         EXECMEM_KPROBES = EXECMEM_TEXT,
+> > >         EXECMEM_FTRACE = EXECMEM_TEXT,
+> > >         EXECMEM_BPF = EXECMEM_TEXT,      /* we may end up without
+> > > _KPROBE, _FTRACE, _BPF */
+> > >         EXECMEM_DATA,  /* rw */
+> > >         EXECMEM_RO_DATA,
+> > >         EXECMEM_RO_AFTER_INIT,
+> > >         EXECMEM_TYPE_MAX,
+> > > };
+> > >
+> > > Does this make sense?
+> >
+> > How do you suggest to deal with e.g. riscv that has separate address spaces
+> > for modules, kprobes and bpf?
+> 
+> IIUC, modules and bpf use the same address space on riscv
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Not exactly, bpf is a subset of modules on riscv.
+
+> while kprobes use vmalloc address.
+
+The whole point of using the entire vmalloc for kprobes is to avoid
+pollution of limited modules space.
+ 
+> Thanks,
+> Song
+
+-- 
+Sincerely yours,
+Mike.
