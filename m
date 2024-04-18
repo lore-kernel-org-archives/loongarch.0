@@ -1,199 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9907086647
-	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 23:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFA16FB2
+	for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 02:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713396803; cv=none; b=J/Sa6gDrpUh8OO2dtKgrrQv0fMHXCCJ88NDdz4k/xiSPzkTpdIyTWiE1ku/BMIHcxa+I5wQClT9Gay3cVZQ6QyXZIjlwiPSOkxXGJrrbjhQ3S6hhWDglRE1i1WUe+qiKWlo287xwE4WBnnFDn1mx914cWuCR6dSXWMVBjvT4nmQ=
+	t=1713405918; cv=none; b=p48KRNErgrutfq2JbpUgYC82AjCEHBDH/8uB6iMSeDZi0JQm8qluBfZRPlYcJE71zvPzN+l7BzDWaOoSnY6e3+oXPmCPlSGWWo7ablsyimNYHaO6OMHnuWK0HcxLio/82aAKBc6DKKohZIJvZNHnLKDnkqvsyHCVg2LpQnSRaE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713396803; c=relaxed/simple;
-	bh=UVEJ59zmDjoboUO24xHkWUbtsfOaV4nMW96i+du0QWo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mhfz/6e6WHvOWkwl1AKsJeeJ0wkuSaiZ3tY+PzNStNinMf7svaM/WOCsAefWCwmDI0Fk1aXPE1cmlILyOzXIFCOfiRb1aTVRD425Cqz55EFkKRNoHb4JffUNeAeFn1Xns8/pPI9zJJfcBdRpUtvP1xLIEMr9aaY9mExOZVCTf58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctJEl6Ox; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713405918; c=relaxed/simple;
+	bh=73LVQrfjmvrDVO+kAsF3UE4WMxKTnsJSv1IvmJzeqnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s/20haU11nwrJ4rUzpsk8F0oLWkbVLvVTaohdIHVjp3tbMLbFXIL195KJ6kJyFrDN3gZFrgoc4roVTbCOD21NpFR1P7/TEhWsOAVJZPiOuAUBXSSJR82UidZpWnYsFEyTMtZLB3zwhp9ZvhZwGacttKV9cXyJEeEplJmMaKrGus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iqmC3WCl; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctJEl6Ox"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19BDEC116B1
-	for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 23:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713396803;
-	bh=UVEJ59zmDjoboUO24xHkWUbtsfOaV4nMW96i+du0QWo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ctJEl6OxbGN0Xa/zKZdRG4cmrNUa++7Za0jkJ76ZtS4yvfvZKwVdaTK6WvFe8qq4C
-	 3ubstYMLecmqUf7Ha1ZgPPuqdQCxKklwq+lyjmMnjegcfFrb3zYZZ8krQoi+g2yTe3
-	 1vkOF62ScCXzORqJTdBDsldzwZZCh3zMfKFWBWNgiEhQia++pLQr+3c9KsBx6W/8us
-	 IgbFDf2xdbJbGhNFpf1JmYC0vs8MUefllz7TMoEY7laoJOdYwDEFsi99WbLhKzvKWl
-	 5yYEVDRugTnRDaLu4cR88b/98Fy3f0gn/lzUqzLNogkEZMT9UHZdN790vLRHsHK2EP
-	 N1ddMLXRw9eYw==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56e1baf0380so303074a12.3
-        for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 16:33:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUepr19UMVkb0gibORCq/LL/bg70YWHIoGL+lv9mgy7p+24xeMKVbSWms/7y+HFv3uuObgLGh1vE7+RkmS2mnZ1+Ypjr3l7P3GC
-X-Gm-Message-State: AOJu0YyEqM0p7nmlKOmAV79LlJskoUYa0U2ZFBm/46tYQSjDNea49RdB
-	a1v1bp6k0DmgOmCu1IQhRJRWah5leSe9BqewJ5vhMB9b6t01kFmMHWg5g32RdHVymLzUoiGCfsq
-	8FPNQJi/w7dPZfY00qzCdOYxVycU=
-X-Google-Smtp-Source: AGHT+IEHuhOgcI3i5xgKWDt/RXWKyZ/pV78ei3ikSzZKT8X4nbojHe59GGn0FqOU5qFFQVvC8y10X+N0SPB8sxHbE0Q=
-X-Received: by 2002:a05:6512:3184:b0:519:b95:22b5 with SMTP id
- i4-20020a056512318400b005190b9522b5mr446945lfe.51.1713396780753; Wed, 17 Apr
- 2024 16:33:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqmC3WCl"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ecf8ebff50so265379b3a.1
+        for <loongarch@lists.linux.dev>; Wed, 17 Apr 2024 19:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713405916; x=1714010716; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Dav8LT6ZkkrV7Xf+PoaKXV2rDAf6ehRkqp4ZSiFp8Pw=;
+        b=iqmC3WCltWrq/cPBMr/yw0y1/3LTRGgs4kXWVvZ8+SlxpyCNjmDhYZ3g6F9yYSPcbF
+         wyY6KQhiJprBCvcEOJX0J3RjDvwR2oKm0URz97ic/cgrPrDSa1WwxGdzIfgtKqhmkDHV
+         aWLG1EGI0iAHSzQDBYoibEIszbhpUyeXtW9fDmmLapduc8R3RAs4TeEYN2XpcHUzWCUK
+         bzLjKjJcd45VVrelt1gJNNZSN09DhJfmFJiimZAlzc/HcjcMjdh7vdL3nJZZG5S2+XP3
+         7RDJPQfn6m9cZlZYpj1O7lnOsmI0n/hW8+fpYxXd40xot43CLOz3NTUNQmAr1Xcy8pTq
+         id9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713405916; x=1714010716;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dav8LT6ZkkrV7Xf+PoaKXV2rDAf6ehRkqp4ZSiFp8Pw=;
+        b=rgSVk0hDpUoZUmTrKYb73dwcxmGpO5vBDVlvQkJTBRbweE/QE+sEPpf3HRc64CyMQh
+         IJuu2I0iGP++3bkMT0Ruwr4KZss91ousIT8oikQFdCJ5LfEw4L7K/RlQTn1ePPTJ1fTw
+         NzFuW1zo/vab32Qy0v8J6Q/sGXbAoHhUshQM7wvPD5xAd/L0G/kJo2EU56z/ogR+ufs+
+         4iy1cdKON6iIsHFX8Z1qVVFl3S0vwfbswhAuf5tEyTIoQkfzRtB7cdcqmZuS9Dmiw3Ye
+         1Yzs/HQSdV8yze4zUEb2aKyyQWPyIJdcl/cgDbvg54B2Yct8jBxjP0rAG6GWfkR9pShW
+         oxUA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7Fn4174qxE8+Ui/BzzZPHNWKYP68nY53yQS61Rr2ZmfNgS/eH54PWJNELbBfmSS3FDxNGGDXMMOVen61QT3gKAwbcUOepgpha
+X-Gm-Message-State: AOJu0Yx+CvBUjT5Z3mIttL6aSyXm+ZKWm28prIQXmJVOnc1UY7qF/WDp
+	4R8jadhprc8xnn+17e2lvTJEJnc9XJDqSje4hiXVdXbvc9ItBxlf
+X-Google-Smtp-Source: AGHT+IG5SxIK07Q/miAgOz8egYZfpCoEBFkaUYGR29gIiRkZu7799/SYMMBv2tExbxkUjc8I2ntfzA==
+X-Received: by 2002:a05:6a00:2789:b0:6ed:4b2d:a764 with SMTP id bd9-20020a056a00278900b006ed4b2da764mr1361359pfb.11.1713405916495;
+        Wed, 17 Apr 2024 19:05:16 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:6f51])
+        by smtp.gmail.com with ESMTPSA id k26-20020aa7821a000000b006ed8379fe7csm350584pfi.75.2024.04.17.19.05.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 19:05:16 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 17 Apr 2024 16:05:14 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, chenhuacai@kernel.org, josef@toxicpanda.com,
+	jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net,
+	pctammela@mojatatu.com, qde@naccy.de, zhaotianrui@loongson.cn,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, cgroups@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com,
+	"yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH RFC v2 5/6] blk-throttle: support to destroy throtl_data
+ when blk-throttle is disabled
+Message-ID: <ZiB_2ryBOxq2_IyG@slm.duckdns.org>
+References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
+ <20240406080059.2248314-6-yukuai1@huaweicloud.com>
+ <Zhl37slglnnTSMO7@slm.duckdns.org>
+ <1bb85208-1224-77dc-f0b2-7b7a228ef70b@huaweicloud.com>
+ <Zh6wx4mXZy_EOViH@slm.duckdns.org>
+ <19086c09-3060-a4ce-4ac6-811a29653979@huaweicloud.com>
+ <Zh8kPGAu2TG4Su2M@slm.duckdns.org>
+ <1ed63126-d2e6-f0b6-42ef-127ecb464955@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240411160051.2093261-1-rppt@kernel.org> <20240411160051.2093261-6-rppt@kernel.org>
- <20240415075241.GF40213@noisy.programming.kicks-ass.net> <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
- <Zh4nJp8rv1qRBs8m@kernel.org>
-In-Reply-To: <Zh4nJp8rv1qRBs8m@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Wed, 17 Apr 2024 16:32:49 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
-Message-ID: <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Bjorn Topel <bjorn@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ed63126-d2e6-f0b6-42ef-127ecb464955@huaweicloud.com>
 
-On Tue, Apr 16, 2024 at 12:23=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wr=
-ote:
->
-> On Mon, Apr 15, 2024 at 06:36:39PM +0100, Mark Rutland wrote:
-> > On Mon, Apr 15, 2024 at 09:52:41AM +0200, Peter Zijlstra wrote:
-> > > On Thu, Apr 11, 2024 at 07:00:41PM +0300, Mike Rapoport wrote:
-> > > > +/**
-> > > > + * enum execmem_type - types of executable memory ranges
-> > > > + *
-> > > > + * There are several subsystems that allocate executable memory.
-> > > > + * Architectures define different restrictions on placement,
-> > > > + * permissions, alignment and other parameters for memory that can=
- be used
-> > > > + * by these subsystems.
-> > > > + * Types in this enum identify subsystems that allocate executable=
- memory
-> > > > + * and let architectures define parameters for ranges suitable for
-> > > > + * allocations by each subsystem.
-> > > > + *
-> > > > + * @EXECMEM_DEFAULT: default parameters that would be used for typ=
-es that
-> > > > + * are not explcitly defined.
-> > > > + * @EXECMEM_MODULE_TEXT: parameters for module text sections
-> > > > + * @EXECMEM_KPROBES: parameters for kprobes
-> > > > + * @EXECMEM_FTRACE: parameters for ftrace
-> > > > + * @EXECMEM_BPF: parameters for BPF
-> > > > + * @EXECMEM_TYPE_MAX:
-> > > > + */
-> > > > +enum execmem_type {
-> > > > + EXECMEM_DEFAULT,
-> > > > + EXECMEM_MODULE_TEXT =3D EXECMEM_DEFAULT,
-> > > > + EXECMEM_KPROBES,
-> > > > + EXECMEM_FTRACE,
-> > > > + EXECMEM_BPF,
-> > > > + EXECMEM_TYPE_MAX,
-> > > > +};
-> > >
-> > > Can we please get a break-down of how all these types are actually
-> > > different from one another?
-> > >
-> > > I'm thinking some platforms have a tiny immediate space (arm64 comes =
-to
-> > > mind) and has less strict placement constraints for some of them?
-> >
-> > Yeah, and really I'd *much* rather deal with that in arch code, as I ha=
-ve said
-> > several times.
-> >
-> > For arm64 we have two bsaic restrictions:
-> >
-> > 1) Direct branches can go +/-128M
-> >    We can expand this range by having direct branches go to PLTs, at a
-> >    performance cost.
-> >
-> > 2) PREL32 relocations can go +/-2G
-> >    We cannot expand this further.
-> >
-> > * We don't need to allocate memory for ftrace. We do not use trampoline=
-s.
-> >
-> > * Kprobes XOL areas don't care about either of those; we don't place an=
-y
-> >   PC-relative instructions in those. Maybe we want to in future.
-> >
-> > * Modules care about both; we'd *prefer* to place them within +/-128M o=
-f all
-> >   other kernel/module code, but if there's no space we can use PLTs and=
- expand
-> >   that to +/-2G. Since modules can refreence other modules, that ends u=
-p
-> >   actually being halved, and modules have to fit within some 2G window =
-that
-> >   also covers the kernel.
+Hello,
 
-Is +/- 2G enough for all realistic use cases? If so, I guess we don't
-really need
-EXECMEM_ANYWHERE below?
+On Wed, Apr 17, 2024 at 09:39:43AM +0800, Yu Kuai wrote:
+...
+> I guess I'll do lazy init first, and then modularization for rq_qos,
+> and leave blk-throtl there for now. Perhaps add a new throtl model in
+> iocost can replace blk-throtl in the future.
 
-> >
-> > * I'm not sure about BPF's requirements; it seems happy doing the same =
-as
-> >   modules.
->
-> BPF are happy with vmalloc().
->
-> > So if we *must* use a common execmem allocator, what we'd reall want is=
- our own
-> > types, e.g.
-> >
-> >       EXECMEM_ANYWHERE
-> >       EXECMEM_NOPLT
-> >       EXECMEM_PREL32
-> >
-> > ... and then we use those in arch code to implement module_alloc() and =
-friends.
->
-> I'm looking at execmem_types more as definition of the consumers, maybe I
-> should have named the enum execmem_consumer at the first place.
+That sounds like a plan.
 
-I think looking at execmem_type from consumers' point of view adds
-unnecessary complexity. IIUC, for most (if not all) archs, ftrace, kprobe,
-and bpf (and maybe also module text) all have the same requirements.
-Did I miss something?
+> BTW, currently during test of iocost, I found that iocost can already
+> achieve that, for example, by following configure:
+> 
+> echo "$dev enable=1 min=100 max=100" > qos
+> echo "$dev wbps=4096 wseqiops=1 wrandiops=1" > model
+> 
+> In the test, I found that wbps and iops is actually limited to the
+> set value.
 
-IOW, we have
+Yeah, it shouldn't be too difficult to add .max support to iocost so that
+you can say something like "this cgroup subtree can't use more than 60% of
+available capacity". That'd be really cool to have.
 
-enum execmem_type {
-        EXECMEM_DEFAULT,
-        EXECMEM_TEXT,
-        EXECMEM_KPROBES =3D EXECMEM_TEXT,
-        EXECMEM_FTRACE =3D EXECMEM_TEXT,
-        EXECMEM_BPF =3D EXECMEM_TEXT,      /* we may end up without
-_KPROBE, _FTRACE, _BPF */
-        EXECMEM_DATA,  /* rw */
-        EXECMEM_RO_DATA,
-        EXECMEM_RO_AFTER_INIT,
-        EXECMEM_TYPE_MAX,
-};
+Thanks.
 
-Does this make sense?
-
-Thanks,
-Song
+-- 
+tejun
