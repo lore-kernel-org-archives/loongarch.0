@@ -1,105 +1,276 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7185412AAEB
-	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 13:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25B912EBDD
+	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 14:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535091; cv=none; b=cxsPUDLbkQ0bbREooD0XSpnwX5B7wqqHmzdnZWpcyKtapY7gdgKJUpNRnvg8YAWMsh2GtWRdEc3w46l/g79LAAdP3YoAYd8rX4HBnpKQQvNI31rRcoG7XkSRzJlPycGG2to/ZaLCDF6dWNpXvUlEHUENZjUJ5V/fxh3bW1pt1a4=
+	t=1713537857; cv=none; b=ZFt1rqB0driea9yrLLvmNID7Bm//+8wmcIKoAvFw4M3TsNQZkkQkraEhg80Gwc4/bktEl+sAw8/9RlpOFL6I8dAfVCW3bZ/TRmak50a0u7MQMi+Xm7h5rhYCU6181QQm1MmP9nybi16BMs7j5Rv0Tu3/cnw9cbl1dT9PIgWgQJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713535091; c=relaxed/simple;
-	bh=gKtJtEltb2GnPLMyuxs+G7n5EiHdmrtpBSJFJerWnT0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Pt/+tg0vD0iMYAsmVekgBSV2oXR++VrttKfrpPrwu7amIc0CKUMKiPhhpOVcKB4QPPDCEBAlAKMyKF0zL8nS04qu0z3Nl7A0GSeMJh7/wJEoLmHjdjGr+E0EQlT49pmwwSz5cjDQGe3Gwa4C7vSxgsN4J7capsaHAQnBrHDiWBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AmC3DxMj; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713537857; c=relaxed/simple;
+	bh=bHA2xqYSMNatPFnZVCcx2yYhIKeXPn6D+Rojt/rhxIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NNyc9w7TQDo7kRzuZZ+qXWps+3oIg6JEiyWbCxlltmGcLDJI8DHOMItR8paoVcVWSritEcBYNGu4PIwNsp6W1Td2YW30M4gz4u1pB4Q1RZklftPfisbYjN0JzYmvaR1jX4BmFVzrjXX29j9SjTpfU63Yyq2JRH8SkKQgubaLuRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ubuk1P+X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AmC3DxMj"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso3836035276.1
-        for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 06:58:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713535088; x=1714139888; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgrnEQ6mmP0jFk5Zb1SZY9boKJybsIIVble8n571sqI=;
-        b=AmC3DxMjFCegBnTpEWg1lUcUpV/VxpGFZJlpGry2hKL07jxm+aL70Gd8MxvTIiV4iu
-         0S0610mUtepQsWNPvITcNz4Q3t5rwkWqojVMB+vH/uuKWDuUjqPXoKTJ7e76GDX+YbH4
-         ayXMXc6M9v4AxQ0gVx3oolqhHNY/PbiOKyDwnwv9Q4LNIQVTae9UItAu+BbtAop8F4Y/
-         Tvy9N5zBfq/Nw1iNHwT/qhX0acHc0w8ts9a2tzI6YA/7AU+9LeNoEBWStygreFBKctnF
-         TSrEP/Xd5GOp1jdZ4CGcXMN103RSI+3c6IYiHnT2RqMOC0xb2qpnrVryDJGuByNCy9Zn
-         Q2Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713535088; x=1714139888;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgrnEQ6mmP0jFk5Zb1SZY9boKJybsIIVble8n571sqI=;
-        b=LJcZFISyO8vEdJIHXN05UjBwhcv2rVfNRPEPLEcj6XLWzvhQMu1Vc3VkBUbLbe99dt
-         ausYTYoAJIq2blTfSerYwyODMFdCv2OH5JzY+qyKs4iQRr0uYGqLFzFS/BA9HkNcBoIM
-         5MfElhxUOzRKtAjw1Vk4ftp28E43xIWSs4ls5DZaX/0QCIQbWvL3/Hh3I3Gd33ptwPxG
-         RyUTEucHCwnSKq7DD2s0yL/6Qoekd0do9rzmB2RNdOinKOXjicLJyp+SiGjLxy44z90y
-         rxhPODLO1Y+/dfNx/hPyviQaaWN/X5y/04F5V80ETM4AfVIIP9iS8D+ONyX6Irxh5K7h
-         PijQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgDJGGWS1CL/zh8YZkYze0I5XYgfMiuZrqfgg2rWgaj5et0u2Bbg60nQ/P2zSlMjorB3xhoVSam3A+/vwBykVlu1ojNTLyO86K
-X-Gm-Message-State: AOJu0YwXWH9RqK2GONp+ffpr0a/a47ki5WakeBb2/ewPmP2ymWTDT8aN
-	+dXImsKdrb7A302x7F2xUfg+cH6e4v1Jb0Afu7sgZn3+bBPiQsCVLpRf7Zixn0WI6jcpFs0p+/X
-	GUQ==
-X-Google-Smtp-Source: AGHT+IGomtDJcb51lvQMFTT5YaGoxW/vZTzkUSuhiTLoa8vZxcxiKEVXH4dmB1G1pZ9i7NSp+ryn6A1areA=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:ad8d:0:b0:dc6:e5d3:5f03 with SMTP id
- z13-20020a25ad8d000000b00dc6e5d35f03mr543024ybi.4.1713535088599; Fri, 19 Apr
- 2024 06:58:08 -0700 (PDT)
-Date: Fri, 19 Apr 2024 06:58:06 -0700
-In-Reply-To: <20240419112432.GB2972@willie-the-truck>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ubuk1P+X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85EB8C3277B
+	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 14:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713537856;
+	bh=bHA2xqYSMNatPFnZVCcx2yYhIKeXPn6D+Rojt/rhxIM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ubuk1P+XYzyUgu8XpzmAZXn836Nvs/NecvZxdsmPmL1jH/Wxr1U7TVJKBG1OC9F6v
+	 eh64ptFLS91CPh0+8GEKcoFTouRYeX12HH1HT9VvKo1eN3AGHRQqRBzZB1wQ/OJs9s
+	 oBGjadfTNkTTbfAJNlkLjCrvpgA2UrcHk+c6hodcslLhT9bYL0MV/4NIy+ug1oJW4+
+	 jlvjzydXarqFF5E0b85vW+YKhf/pDrgPCCs3m36UNAH2E8Aiw7l5TBFOb+mryQ7cuT
+	 ZF8gCLJmZlpXWdsuNUxiv8VNhWlMgZrFC8gbm2IxsWcJR1Axs3CJ+ziq5+Y4P5jQRI
+	 O21Y/dOOY/SxA==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a51ddc783e3so255056566b.0
+        for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 07:44:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCULb1RdijEQmnL/MMLtk56wWLIzDrlVC57vn2MaWqnbBjIip/cwD85UfSPxrL9OJODQKODgYdDFc6Z3ApcIUzoBp41KlJVaqeyp
+X-Gm-Message-State: AOJu0YwOWoOZNq6J9R+WNOlbKHj6FxjH/7x+cbYlrZhLeaPTj3Ng8wHv
+	sohNbr2Fn2ZZKBStv5m4EjAWfHbMfan0n6E7zAkwYrAQR69dgffvKNxW8YQ5CgYEYLtG8iCOMsU
+	OQZqOKRIVq0N/BR5YOPYdENHzeSs=
+X-Google-Smtp-Source: AGHT+IFbSQDlWkPQVgfJ0eYSXvgM4ONQv6lH2pP3Y8Bhb/9GSi7H9+iJPa0PIVoNd5fJe1niEPm+hR/m9knopc3sovI=
+X-Received: by 2002:a17:906:70c2:b0:a55:65e6:ce9f with SMTP id
+ g2-20020a17090670c200b00a5565e6ce9fmr1469057ejk.20.1713537854956; Fri, 19 Apr
+ 2024 07:44:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240405115815.3226315-1-pbonzini@redhat.com> <20240405115815.3226315-2-pbonzini@redhat.com>
- <20240412104408.GA27645@willie-the-truck> <86jzl2sovz.wl-maz@kernel.org>
- <ZhlLHtfeSHk9gRRO@google.com> <86h6g5si0m.wl-maz@kernel.org>
- <Zh1d94Pl6gneVoDd@google.com> <20240418141932.GA1855@willie-the-truck>
- <ZiF6NgGYLSsPNEOg@google.com> <20240419112432.GB2972@willie-the-truck>
-Message-ID: <ZiJ4bqrBUPM0E8iq@google.com>
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-From: Sean Christopherson <seanjc@google.com>
-To: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20240418110520.16915-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20240418110520.16915-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 19 Apr 2024 22:44:03 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4p1jjBWjfmRJ-vWYMsBt4mkqa+MfxSuWC=Yf2_yCEp+w@mail.gmail.com>
+Message-ID: <CAAhV-H4p1jjBWjfmRJ-vWYMsBt4mkqa+MfxSuWC=Yf2_yCEp+w@mail.gmail.com>
+Subject: Re: [PATCH v5] LoongArch: Give chance to build under !CONFIG_SMP
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 19, 2024, Will Deacon wrote:
-> > @@ -663,10 +669,22 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
-> >  					break;
-> >  			}
-> >  			r.ret |= range->handler(kvm, &gfn_range);
-> > +
-> > +		       /*
-> > +			* Use a precise gfn-based TLB flush when possible, as
-> > +			* most mmu_notifier events affect a small-ish range.
-> > +			* Fall back to a full TLB flush if the gfn-based flush
-> > +			* fails, and don't bother trying the gfn-based flush
-> > +			* if a full flush is already pending.
-> > +			*/
-> > +		       if (range->flush_on_ret && !need_flush && r.ret &&
-> > +			   kvm_arch_flush_remote_tlbs_range(kvm, gfn_range.start,
-> > +							    gfn_range.end - gfn_range.start + 1))
-> 
-> What's that '+ 1' needed for here?
+Queued for loongarch-next, thanks.
 
- (a) To see if you're paying attention.
- (b) Because more is always better.
- (c) Because math is hard.
- (d) Because I haven't tested this.
- (e) Both (c) and (d).
+Huacai
+
+On Thu, Apr 18, 2024 at 7:05=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> In the current code, SMP is selected in Kconfig for LoongArch, the users
+> can not unset it, this is reasonable for a multiprocessor machine. But as
+> the help info of config SMP said, if you have a system with only one CPU,
+> say N. On a uniprocessor machine, the kernel will run faster if you say N
+> here.
+>
+> The Loongson-2K0500 is a single-core CPU for applications like industrial
+> control, printing terminals, and BMC (Baseboard Management Controller),
+> there are many development boards, products and solutions on the market,
+> so it is better and necessary to give a chance to build under !CONFIG_SMP
+> for a uniprocessor machine.
+>
+> First of all, do not select SMP for config LOONGARCH in Kconfig to make i=
+t
+> possible to unset CONFIG_SMP. Then, do some changes to fix the warnings a=
+nd
+> errors if CONFIG_SMP is not set.
+>
+> (1) Define get_ipi_irq() only if CONFIG_SMP is set to fix the warning:
+> arch/loongarch/kernel/irq.c:90:19: warning: 'get_ipi_irq' defined but not=
+ used [-Wunused-function]
+>
+> (2) Add "#ifdef CONFIG_SMP" in asm/smp.h to fix the warning:
+> ./arch/loongarch/include/asm/smp.h:49:9: warning: "raw_smp_processor_id" =
+redefined
+>    49 | #define raw_smp_processor_id raw_smp_processor_id
+>       |         ^~~~~~~~~~~~~~~~~~~~
+> ./include/linux/smp.h:198:9: note: this is the location of the previous d=
+efinition
+>   198 | #define raw_smp_processor_id()                  0
+>
+> (3) Define machine_shutdown() as empty under !CONFIG_SMP to fix the error=
+:
+> arch/loongarch/kernel/machine_kexec.c: In function 'machine_shutdown':
+> arch/loongarch/kernel/machine_kexec.c:233:25: error: implicit declaration=
+ of function 'cpu_device_up'; did you mean 'put_device'? [-Wimplicit-functi=
+on-declaration]
+>
+> (4) Make config SCHED_SMT depends on SMP to fix many errors such as:
+> kernel/sched/core.c: In function 'sched_core_find':
+> kernel/sched/core.c:310:43: error: 'struct rq' has no member named 'cpu'
+>
+> (5) Define cpu_logical_map(cpu) as 0 under !CONFIG_SMP in asm/smp.h,
+> then include asm/smp.h in asm/acpi.h (because acpi.h is included in
+> linux/irq.h indirectly) to fix many build errors under drivers/irqchip
+> such as:
+> drivers/irqchip/irq-loongson-eiointc.c: In function 'cpu_to_eio_node':
+> drivers/irqchip/irq-loongson-eiointc.c:59:16: error: implicit declaration=
+ of function 'cpu_logical_map' [-Wimplicit-function-declaration]
+>
+> (6) Do not write per_cpu_offset(0) to PERCPU_BASE_KS when resume
+> because per_cpu_offset(x) is defined as __per_cpu_offset[x]) only
+> under CONFIG_SMP in include/asm-generic/percpu.h, just save the
+> value of PERCPU_BASE_KS when suspend and restore it when resume
+> to fix the error:
+> arch/loongarch/power/suspend.c: In function 'loongarch_common_resume':
+> arch/loongarch/power/suspend.c:47:21: error: implicit declaration of func=
+tion 'per_cpu_offset' [-Wimplicit-function-declaration]
+>
+> When running the UnixBench tests with "-c 1" single-streamed pass,
+> the improvement in performance is about 9 percent with this patch.
+>
+> By the way, it is helpful to debug and analysis the kernel issue
+> of multi-core system under !CONFIG_SMP.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>
+> v5:
+>   -- Drop the changes of arch/loongarch/kernel/acpi.c
+>   -- Define cpu_logical_map(cpu) as 0 under !CONFIG_SMP
+>   -- Squash the changes of suspend.c into one single patch
+>
+>  arch/loongarch/Kconfig                | 2 +-
+>  arch/loongarch/include/asm/acpi.h     | 1 +
+>  arch/loongarch/include/asm/smp.h      | 5 +++++
+>  arch/loongarch/kernel/irq.c           | 2 ++
+>  arch/loongarch/kernel/machine_kexec.c | 2 +-
+>  arch/loongarch/power/suspend.c        | 4 +++-
+>  6 files changed, 13 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index a5f300ec6f28..8d892de0b7a8 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -174,7 +174,6 @@ config LOONGARCH
+>         select PCI_QUIRKS
+>         select PERF_USE_VMALLOC
+>         select RTC_LIB
+> -       select SMP
+>         select SPARSE_IRQ
+>         select SYSCTL_ARCH_UNALIGN_ALLOW
+>         select SYSCTL_ARCH_UNALIGN_NO_WARN
+> @@ -420,6 +419,7 @@ config EFI_STUB
+>
+>  config SCHED_SMT
+>         bool "SMT scheduler support"
+> +       depends on SMP
+>         default y
+>         help
+>           Improves scheduler's performance when there are multiple
+> diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/a=
+sm/acpi.h
+> index 49e29b29996f..313f66f7913a 100644
+> --- a/arch/loongarch/include/asm/acpi.h
+> +++ b/arch/loongarch/include/asm/acpi.h
+> @@ -8,6 +8,7 @@
+>  #ifndef _ASM_LOONGARCH_ACPI_H
+>  #define _ASM_LOONGARCH_ACPI_H
+>
+> +#include <asm/smp.h>
+>  #include <asm/suspend.h>
+>
+>  #ifdef CONFIG_ACPI
+> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/as=
+m/smp.h
+> index f81e5f01d619..8190b093a687 100644
+> --- a/arch/loongarch/include/asm/smp.h
+> +++ b/arch/loongarch/include/asm/smp.h
+> @@ -6,6 +6,7 @@
+>  #ifndef __ASM_SMP_H
+>  #define __ASM_SMP_H
+>
+> +#ifdef CONFIG_SMP
+>  #include <linux/atomic.h>
+>  #include <linux/bitops.h>
+>  #include <linux/linkage.h>
+> @@ -101,4 +102,8 @@ static inline void __cpu_die(unsigned int cpu)
+>  }
+>  #endif
+>
+> +#else /* !CONFIG_SMP */
+> +#define cpu_logical_map(cpu)   0
+> +#endif /* CONFIG_SMP */
+> +
+>  #endif /* __ASM_SMP_H */
+> diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
+> index 883e5066ae44..e791fa275ec5 100644
+> --- a/arch/loongarch/kernel/irq.c
+> +++ b/arch/loongarch/kernel/irq.c
+> @@ -87,6 +87,7 @@ static void __init init_vec_parent_group(void)
+>         acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
+>  }
+>
+> +#ifdef CONFIG_SMP
+>  static int __init get_ipi_irq(void)
+>  {
+>         struct irq_domain *d =3D irq_find_matching_fwnode(cpuintc_handle,=
+ DOMAIN_BUS_ANY);
+> @@ -96,6 +97,7 @@ static int __init get_ipi_irq(void)
+>
+>         return -EINVAL;
+>  }
+> +#endif
+>
+>  void __init init_IRQ(void)
+>  {
+> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kerne=
+l/machine_kexec.c
+> index 2dcb9e003657..8ae641dc53bb 100644
+> --- a/arch/loongarch/kernel/machine_kexec.c
+> +++ b/arch/loongarch/kernel/machine_kexec.c
+> @@ -225,6 +225,7 @@ void crash_smp_send_stop(void)
+>
+>  void machine_shutdown(void)
+>  {
+> +#ifdef CONFIG_SMP
+>         int cpu;
+>
+>         /* All CPUs go to reboot_code_buffer */
+> @@ -232,7 +233,6 @@ void machine_shutdown(void)
+>                 if (!cpu_online(cpu))
+>                         cpu_device_up(get_cpu_device(cpu));
+>
+> -#ifdef CONFIG_SMP
+>         smp_call_function(kexec_shutdown_secondary, NULL, 0);
+>  #endif
+>  }
+> diff --git a/arch/loongarch/power/suspend.c b/arch/loongarch/power/suspen=
+d.c
+> index 166d9e06a64b..8571818b93dc 100644
+> --- a/arch/loongarch/power/suspend.c
+> +++ b/arch/loongarch/power/suspend.c
+> @@ -24,6 +24,7 @@ struct saved_registers {
+>         u64 kpgd;
+>         u32 pwctl0;
+>         u32 pwctl1;
+> +       u64 pcpu_base;
+>  };
+>  static struct saved_registers saved_regs;
+>
+> @@ -36,6 +37,7 @@ void loongarch_common_suspend(void)
+>         saved_regs.pwctl1 =3D csr_read32(LOONGARCH_CSR_PWCTL1);
+>         saved_regs.ecfg =3D csr_read32(LOONGARCH_CSR_ECFG);
+>         saved_regs.euen =3D csr_read32(LOONGARCH_CSR_EUEN);
+> +       saved_regs.pcpu_base =3D csr_read64(PERCPU_BASE_KS);
+>
+>         loongarch_suspend_addr =3D loongson_sysconf.suspend_addr;
+>  }
+> @@ -44,7 +46,7 @@ void loongarch_common_resume(void)
+>  {
+>         sync_counter();
+>         local_flush_tlb_all();
+> -       csr_write64(per_cpu_offset(0), PERCPU_BASE_KS);
+> +       csr_write64(saved_regs.pcpu_base, PERCPU_BASE_KS);
+>         csr_write64(eentry, LOONGARCH_CSR_EENTRY);
+>         csr_write64(eentry, LOONGARCH_CSR_MERRENTRY);
+>         csr_write64(tlbrentry, LOONGARCH_CSR_TLBRENTRY);
+> --
+> 2.42.0
+>
