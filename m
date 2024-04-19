@@ -1,234 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4772AEC2
-	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 02:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933D1372
+	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 02:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713493854; cv=none; b=ZAHkjSu5PeLgXib3TWbi2fSGL/rlsAja+IQ/Fy/mbl6CPXwVvn3WlDX3jMpYqiUku0p0VsqhTKB9Hiv1iEvvVAvUqWXVkD62Orxujur/VrZURsLRqkSB+lyxIDJJWew40mxV+Mc2znwYo6LitkemjW3MQ4sKUqmcGi4huRIwzVk=
+	t=1713494182; cv=none; b=OWM3TIRSyg4Dm+E219XUeNJbJWDOZuazp2JsRLSJ1UxUXIH5jkYMTeNgF3o3Kve5bYwITRs6Ub5eAyMCd6Cs/U9EmOoTnLfQpLNQiydaFpqweKqAhlSJPJ3EijaqqpoHbaHtJjclyqaF1F4HpuhNfBjImDv2G9ibOTOwraZORZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713493854; c=relaxed/simple;
-	bh=d6wW8IGmEQgntlHj6l65gyKM6gL5uLkJ3e+TQqruBx4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pGdS+DsDqwwd7o8+tqcQOfI+1GwAtsnLu9u+ZY6RtiKXl52QS97F+u+hWH2ldT+LKR+4c0k7r+YPwbCYeDGSJcI+2Daq/EE4qtFUTpHU+MNrvnjg9xw0ci2kEgq6s7WFypvd7O3TQ+3w+yBImuRKEnM2KJgvm3pW5BQlKnSa8AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C52ZjNFI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C52ZjNFI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4D6EC113CC
-	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 02:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713493853;
-	bh=d6wW8IGmEQgntlHj6l65gyKM6gL5uLkJ3e+TQqruBx4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=C52ZjNFIWl4ZiE/uLi4k7EYHnvZlz8hFl+LqDA1ZOmSAXmzmP1KzGpbV9akNvy8Mb
-	 /z/3xs+XrnLjjGOICwlRCBC9wsib7z2Mj0VOIwY/CCiXDzZ1zBEL3o0zbhjtAH8uC4
-	 tKrbQMzFcIDPgrleTbeswqBC68BBWt090jawAa4hqxoqHnDGYb5V1aaUgqPXqrnUXY
-	 +3apsgatQv6/poPpcyEw76PU9v0vEmtNaVe+GkqSKMGoU2Dy+Kc8xqkAXDhKUYx4MS
-	 8h9mm3A9afn6Vz1gZNBhY8W07iFEj0r4gHLdVgFykv+Kwbw4O9vNajspTZ829uYUI0
-	 ZgL/5aQf5jO3Q==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a51addddbd4so148107466b.0
-        for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 19:30:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWdvpZSy0R8cTKK+PArQNH6t7brR0wHQ9GCgt2rf85JTcFBd+Tk3rF12yxDWrHz8+VWlf29lf+sf71Lq+sWCuDFmc9tqMO7Vr+e
-X-Gm-Message-State: AOJu0YwE674PF2INsMqCtVeDjYyRRjC7uKWJgtuF72QNx2s7bgaYbidD
-	D+Vc/KEe6WpxRs+frAbGoeJon0ky5MNLgsN8bJ+88PXGPbOETPoY8c3RXq9ZjADOo+W/bMJT0Us
-	+ZcsN823uZcs7ivKOXaZdPweU/oE=
-X-Google-Smtp-Source: AGHT+IGoeeamFkgPkxoIOkpZASJrJ6yNcuLdI6EcVcM4Cc/L85cXky+G13ZdEJA4cbPxywpA+E8uBy8UeBhcvF5ULYc=
-X-Received: by 2002:a17:906:684d:b0:a55:551c:5d28 with SMTP id
- a13-20020a170906684d00b00a55551c5d28mr444180ejs.6.1713493852416; Thu, 18 Apr
- 2024 19:30:52 -0700 (PDT)
+	s=arc-20240116; t=1713494182; c=relaxed/simple;
+	bh=qYMQuTSjMOuc6HgYpB2N1Ti9jC+RyfAZ9XKAK6mbNRw=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=bYO582p9OJsYtKuhUdu441adpASLYCK6+KdLL0T8BQmaqd8gplkuEFzgiuAEAT4ajLhV3OxD6frEXD8Mb2HdlsZnA0/X/lfhjtJrPrs6Wuz13RqQ6c6+xC1oPmn/VRC5Mc+pTFN3LmbfHzYizYPNGilxRCmK0eoKXU3nocCRQhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8DxK+mi2CFm5pkpAA--.10363S3;
+	Fri, 19 Apr 2024 10:36:18 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxRMyh2CFmJcV_AA--.37543S3;
+	Fri, 19 Apr 2024 10:36:17 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Add mmio trace support
+From: maobibo <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240409094900.1118699-1-maobibo@loongson.cn>
+Message-ID: <414a9d1d-842d-8cdd-377d-8272d753ebc8@loongson.cn>
+Date: Fri, 19 Apr 2024 10:36:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1713147645.git.zhoubinbin@loongson.cn> <f77f740164ec573dffcf24558a0ac371e098e0f3.1713147645.git.zhoubinbin@loongson.cn>
-In-Reply-To: <f77f740164ec573dffcf24558a0ac371e098e0f3.1713147645.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 19 Apr 2024 10:30:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6K-+dnwfcjrRM+A9UzOY37U66gTb9C9VQM3i-nXhFJPQ@mail.gmail.com>
-Message-ID: <CAAhV-H6K-+dnwfcjrRM+A9UzOY37U66gTb9C9VQM3i-nXhFJPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] thermal: loongson2: Trivial code style adjustment
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Yinbo Zhu <zhuyinbo@loongson.cn>, 
-	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240409094900.1118699-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxRMyh2CFmJcV_AA--.37543S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWrW5ZryUKF4fuw17AF1kJFc_yoWrWr45pF
+	1DCr1DWr4kKrnFywnrXwsY9rs8ZFZ3u34kXFy7WrWIvr1xXFn5Grn2grWqkFWUK39Y9F4x
+	XF4vkasrua1DZ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2nYF
+	DUUUU
 
-Hi, Binbin,
+slightly ping...
 
-On Mon, Apr 15, 2024 at 10:31=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
-n> wrote:
->
-> Here are some minor code style adjustment. Such as fix whitespace code
-> style; align function call arguments to opening parenthesis, and add
-> devm_thermal_add_hwmon_sysfs() return value checking.
->
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+On 2024/4/9 下午5:49, Bibo Mao wrote:
+> Add mmio trace event support, currently generic mmio events
+> KVM_TRACE_MMIO_WRITE/xxx_READ/xx_READ_UNSATISFIED are added here.
+> 
+> Also vcpu id field is added for all kvm trace events, since perf
+> KVM tool parses vcpu id information for kvm entry event.
+> 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  drivers/thermal/loongson2_thermal.c | 69 +++++++++++++++--------------
->  1 file changed, 35 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loongs=
-on2_thermal.c
-> index 0f475fe46bc9..d77d829c8b55 100644
-> --- a/drivers/thermal/loongson2_thermal.c
-> +++ b/drivers/thermal/loongson2_thermal.c
-> @@ -16,45 +16,49 @@
->  #include <linux/units.h>
->  #include "thermal_hwmon.h"
->
-> -#define LOONGSON2_MAX_SENSOR_SEL_NUM                   3
-> +#define LOONGSON2_MAX_SENSOR_SEL_NUM   3
->
-> -#define LOONGSON2_THSENS_CTRL_HI_REG                   0x0
-> -#define LOONGSON2_THSENS_CTRL_LOW_REG                  0x8
-> -#define LOONGSON2_THSENS_STATUS_REG                    0x10
-> -#define LOONGSON2_THSENS_OUT_REG                       0x14
-> +#define LOONGSON2_THSENS_CTRL_HI_REG   0x0
-> +#define LOONGSON2_THSENS_CTRL_LOW_REG  0x8
-> +#define LOONGSON2_THSENS_STATUS_REG    0x10
-> +#define LOONGSON2_THSENS_OUT_REG       0x14
->
-> -#define LOONGSON2_THSENS_INT_LO                                BIT(0)
-> -#define LOONGSON2_THSENS_INT_HIGH                      BIT(1)
-> -#define LOONGSON2_THSENS_OUT_MASK                      0xFF
-> +#define LOONGSON2_THSENS_INT_LO                BIT(0)
-> +#define LOONGSON2_THSENS_INT_HIGH      BIT(1)
-> +#define LOONGSON2_THSENS_INT_EN                (LOONGSON2_THSENS_INT_LO =
-| \
-> +                                        LOONGSON2_THSENS_INT_HIGH)
-> +#define LOONGSON2_THSENS_OUT_MASK      0xFF
->
->  struct loongson2_thermal_chip_data {
-> -       unsigned int    thermal_sensor_sel;
-> +       unsigned int thermal_sensor_sel;
->  };
->
->  struct loongson2_thermal_data {
-> -       void __iomem    *regs;
-> +       void __iomem *regs;
->         const struct loongson2_thermal_chip_data *chip_data;
->  };
->
-> -static int loongson2_thermal_set(struct loongson2_thermal_data *data,
-> -                                       int low, int high, bool enable)
-> +static void loongson2_set_ctrl_regs(struct loongson2_thermal_data *data,
-> +                                   int ctrl_data, bool low, bool enable)
->  {
-> -       u64 reg_ctrl =3D 0;
-> -       int reg_off =3D data->chip_data->thermal_sensor_sel * 2;
-> +       int reg_ctrl =3D 0;
-> +       int reg_off  =3D data->chip_data->thermal_sensor_sel * 2;
-> +       int ctrl_reg =3D low ? LOONGSON2_THSENS_CTRL_LOW_REG :
-> +                      LOONGSON2_THSENS_CTRL_HI_REG;
-Line break is unnecessary, because long lines is acceptable now.
+>   arch/loongarch/kvm/exit.c  |  7 +++++++
+>   arch/loongarch/kvm/trace.h | 20 ++++++++++++++------
+>   2 files changed, 21 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index ed1d89d53e2e..3c05aade0122 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -9,6 +9,7 @@
+>   #include <linux/module.h>
+>   #include <linux/preempt.h>
+>   #include <linux/vmalloc.h>
+> +#include <trace/events/kvm.h>
+>   #include <asm/fpu.h>
+>   #include <asm/inst.h>
+>   #include <asm/loongarch.h>
+> @@ -417,6 +418,8 @@ int kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
+>   		vcpu->arch.io_gpr = rd;
+>   		run->mmio.is_write = 0;
+>   		vcpu->mmio_is_write = 0;
+> +		trace_kvm_mmio(KVM_TRACE_MMIO_READ_UNSATISFIED, run->mmio.len,
+> +				run->mmio.phys_addr, NULL);
+>   	} else {
+>   		kvm_err("Read not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
+>   			inst.word, vcpu->arch.pc, vcpu->arch.badv);
+> @@ -463,6 +466,8 @@ int kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>   		break;
+>   	}
+>   
+> +	trace_kvm_mmio(KVM_TRACE_MMIO_READ, run->mmio.len,
+> +			run->mmio.phys_addr, run->mmio.data);
+>   	return er;
+>   }
+>   
+> @@ -564,6 +569,8 @@ int kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
+>   		run->mmio.is_write = 1;
+>   		vcpu->mmio_needed = 1;
+>   		vcpu->mmio_is_write = 1;
+> +		trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, run->mmio.len,
+> +				run->mmio.phys_addr, data);
+>   	} else {
+>   		vcpu->arch.pc = curr_pc;
+>   		kvm_err("Write not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
+> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+> index c2484ad4cffa..1783397b1bc8 100644
+> --- a/arch/loongarch/kvm/trace.h
+> +++ b/arch/loongarch/kvm/trace.h
+> @@ -19,14 +19,16 @@ DECLARE_EVENT_CLASS(kvm_transition,
+>   	TP_PROTO(struct kvm_vcpu *vcpu),
+>   	TP_ARGS(vcpu),
+>   	TP_STRUCT__entry(
+> +		__field(unsigned int, vcpu_id)
+>   		__field(unsigned long, pc)
+>   	),
+>   
+>   	TP_fast_assign(
+> +		__entry->vcpu_id = vcpu->vcpu_id;
+>   		__entry->pc = vcpu->arch.pc;
+>   	),
+>   
+> -	TP_printk("PC: 0x%08lx", __entry->pc)
+> +	TP_printk("vcpu %u PC: 0x%08lx", __entry->vcpu_id, __entry->pc)
+>   );
+>   
+>   DEFINE_EVENT(kvm_transition, kvm_enter,
+> @@ -54,19 +56,22 @@ DECLARE_EVENT_CLASS(kvm_exit,
+>   	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+>   	    TP_ARGS(vcpu, reason),
+>   	    TP_STRUCT__entry(
+> +			__field(unsigned int, vcpu_id)
+>   			__field(unsigned long, pc)
+>   			__field(unsigned int, reason)
+>   	    ),
+>   
+>   	    TP_fast_assign(
+> +			__entry->vcpu_id = vcpu->vcpu_id;
+>   			__entry->pc = vcpu->arch.pc;
+>   			__entry->reason = reason;
+>   	    ),
+>   
+> -	    TP_printk("[%s]PC: 0x%08lx",
+> -		      __print_symbolic(__entry->reason,
+> -				       kvm_trace_symbol_exit_types),
+> -		      __entry->pc)
+> +	    TP_printk("vcpu %u [%s] PC: 0x%08lx",
+> +			__entry->vcpu_id,
+> +			__print_symbolic(__entry->reason,
+> +				kvm_trace_symbol_exit_types),
+> +			__entry->pc)
+>   );
+>   
+>   DEFINE_EVENT(kvm_exit, kvm_exit_idle,
+> @@ -85,14 +90,17 @@ TRACE_EVENT(kvm_exit_gspr,
+>   	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int inst_word),
+>   	    TP_ARGS(vcpu, inst_word),
+>   	    TP_STRUCT__entry(
+> +			__field(unsigned int, vcpu_id)
+>   			__field(unsigned int, inst_word)
+>   	    ),
+>   
+>   	    TP_fast_assign(
+> +			__entry->vcpu_id = vcpu->vcpu_id;
+>   			__entry->inst_word = inst_word;
+>   	    ),
+>   
+> -	    TP_printk("Inst word: 0x%08x", __entry->inst_word)
+> +	    TP_printk("vcpu %u Inst word: 0x%08x", __entry->vcpu_id,
+> +			__entry->inst_word)
+>   );
+>   
+>   #define KVM_TRACE_AUX_SAVE		0
+> 
+> base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
+> 
 
-> +
-> +       reg_ctrl =3D ctrl_data + HECTO;
-> +       reg_ctrl |=3D enable ? 0x100 : 0;
-> +       writew(reg_ctrl, data->regs + ctrl_reg + reg_off);
-> +}
->
-> +static int loongson2_thermal_set(struct loongson2_thermal_data *data,
-> +                                int low, int high, bool enable)
-> +{
->         low =3D clamp(-40, low, high);
->         high =3D clamp(125, low, high);
->
-> -       low +=3D HECTO;
-> -       high +=3D HECTO;
-> -
-> -       reg_ctrl =3D low;
-> -       reg_ctrl |=3D enable ? 0x100 : 0;
-> -       writew(reg_ctrl, data->regs + LOONGSON2_THSENS_CTRL_LOW_REG + reg=
-_off);
-> -
-> -       reg_ctrl =3D high;
-> -       reg_ctrl |=3D enable ? 0x100 : 0;
-> -       writew(reg_ctrl, data->regs + LOONGSON2_THSENS_CTRL_HI_REG + reg_=
-off);
-> +       loongson2_set_ctrl_regs(data, low, true, enable);
-> +       loongson2_set_ctrl_regs(data, high, false, enable);
->
->         return 0;
->  }
-> @@ -75,15 +79,15 @@ static irqreturn_t loongson2_thermal_irq_thread(int i=
-rq, void *dev)
->         struct thermal_zone_device *tzd =3D dev;
->         struct loongson2_thermal_data *data =3D thermal_zone_device_priv(=
-tzd);
->
-> -       writeb(LOONGSON2_THSENS_INT_LO | LOONGSON2_THSENS_INT_HIGH, data-=
->regs +
-> -               LOONGSON2_THSENS_STATUS_REG);
-> +       writeb(LOONGSON2_THSENS_INT_EN, data->regs + LOONGSON2_THSENS_STA=
-TUS_REG);
->
->         thermal_zone_device_update(tzd, THERMAL_EVENT_UNSPECIFIED);
->
->         return IRQ_HANDLED;
->  }
->
-> -static int loongson2_thermal_set_trips(struct thermal_zone_device *tz, i=
-nt low, int high)
-> +static int loongson2_thermal_set_trips(struct thermal_zone_device *tz,
-> +                                      int low, int high)
-The same as above.
-
-Huacai
-
->  {
->         struct loongson2_thermal_data *data =3D thermal_zone_device_priv(=
-tz);
->
-> @@ -116,14 +120,13 @@ static int loongson2_thermal_probe(struct platform_=
-device *pdev)
->         if (irq < 0)
->                 return irq;
->
-> -       writeb(LOONGSON2_THSENS_INT_LO | LOONGSON2_THSENS_INT_HIGH, data-=
->regs +
-> -               LOONGSON2_THSENS_STATUS_REG);
-> +       writeb(LOONGSON2_THSENS_INT_EN, data->regs + LOONGSON2_THSENS_STA=
-TUS_REG);
->
->         loongson2_thermal_set(data, 0, 0, false);
->
->         for (i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
->                 tzd =3D devm_thermal_of_zone_register(dev, i, data,
-> -                       &loongson2_of_thermal_ops);
-> +                                                   &loongson2_of_thermal=
-_ops);
->
->                 if (!IS_ERR(tzd))
->                         break;
-> @@ -135,13 +138,11 @@ static int loongson2_thermal_probe(struct platform_=
-device *pdev)
->         }
->
->         ret =3D devm_request_threaded_irq(dev, irq, NULL, loongson2_therm=
-al_irq_thread,
-> -                       IRQF_ONESHOT, "loongson2_thermal", tzd);
-> +                                       IRQF_ONESHOT, "loongson2_thermal"=
-, tzd);
->         if (ret < 0)
->                 return dev_err_probe(dev, ret, "failed to request alarm i=
-rq\n");
->
-> -       devm_thermal_add_hwmon_sysfs(dev, tzd);
-> -
-> -       return 0;
-> +       return devm_thermal_add_hwmon_sysfs(dev, tzd);
->  }
->
->  static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k10=
-00_data =3D {
-> --
-> 2.43.0
->
