@@ -1,259 +1,147 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E183C64F
-	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 04:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BCC522E
+	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 04:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713501203; cv=none; b=FOiIXcSPp9Tzn5JwWv9Cv/My3KrVftyahT6sBKVjoznsYQpJxScG3+uqH2bqii7P7TuhgTid6vB6ccrAz8RU2fGrsc4srRDG8AJUFI0ceMHjZ9Y2KcMbBrdEBpLGp+AzaM+Je5ico6i6YB/FOcJscVpjcbuNziBJnZ9tuwEp/+k=
+	t=1713501449; cv=none; b=emFhoCeZyB0YBdFQpxC91cPlcqVh8zn9Q0h1pNbtZ+GuVdYmySqslQkhMVy94qxXQU+mTgrUDh787m8kGk3q2rf5GdM719IdmDsfDtIW4ooa0tukJbEwNAxlqxKN4wpBWHTI4h9tBL64XSXnwgOIv1WNctJ+4fEbEbvD889QZ2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713501203; c=relaxed/simple;
-	bh=JdNGLubn8zkHzoFnepQQh33d1j/JpQz1BMOEiWEROxQ=;
+	s=arc-20240116; t=1713501449; c=relaxed/simple;
+	bh=aA0eWf4lTjyJXrzsPGUfl9MnnAc/P4pB9uRI/dobEws=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EbRU2p5obim8jBjRLoJQXQUxTfE0iWKESTDWGJlQEqUm9G3z13sGBGvKW0XYFL5bnQ4wXRhVmjIxPtYmyfAxAuAi2wxhXzGETrTGVnXB7m1829ssxtjIeRxX7GlGNqorFSJlAOtO0BkaQ3evfC8cIo9SNDbeKrUBalI6mcqA9Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m8Xl7LK2; arc=none smtp.client-ip=209.85.128.172
+	 To:Cc:Content-Type; b=WjEIg0T6qK4cUTunp9TCpaYCb9lChzlVVW38f3pzPR3H9z2RRhrtfaf36TA7Xoy2QQwxvYP0fOLGHknTcxM6YC4TDNj4fIZylMqF1XaQV01IgCmtrSYb3EZX/d9Z+8/nJ8f7OjaHxlQjYUJM5RdQgQEKb4uvvdvDehRHwcbY6MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ea8Oqu/+; arc=none smtp.client-ip=209.85.219.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8Xl7LK2"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-617ddc988f5so17786967b3.2
-        for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 21:33:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ea8Oqu/+"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de45e5c3c68so1860246276.0
+        for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 21:37:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713501201; x=1714106001; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1713501446; x=1714106246; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TpkFbS/LUWYT+dYWFuL1kI/HN8/GTBk6GBVmp4Rcgxg=;
-        b=m8Xl7LK2vXQhpXQJ36bBPHWleWVHnHFUw9ZvW6n752XIYfd+m/mq6ye7V2FPCxz1oU
-         jHA3HYVWO6RokG/u6iOjPlt5hwC/Qcsig5MH4hU2RnzypFR5sS7/v0DSW1Hoz2p+k9XC
-         Z4XBBtijmGoruPWVoeyYPvygmKMT48l7Ft/v8cM5gEr9RGl3A5SWaXcLNnH1Fwm2zLrO
-         2Y04YVy0/SUaSJ46UH5tpAhSF5mpFFn8Pb4GxCYgUMLNfgPfpIldPs6rO2mpdBMr3yTx
-         ZbkE5gz/zaw2ea2VtFxGqkbxj9gqK8ClaryB5qANTImRlPvqMrC2pmW6Omx8jIDSE4JF
-         3aIg==
+        bh=CFpAdFUlK6c+FuOE2UkmdUUly6ellBWMJzLFthxSKp4=;
+        b=ea8Oqu/+HefRShJqIOKoH/sOgEAwMrYHkNLWFYU+acnQjjYRP7cNjSG4cbXNx7mpRf
+         LF5xg9pPQ7iTzEY2TVb6Dkq8+ByudJJisClDCzp0Ij8f1p0IL5wlBPohk2DWcDNuUG1+
+         rHWKxmqr1ZZYQN0QU+JWtIpNAc35QvlA+IPIyyleHVg16bHbXHFp1KYPx0L8LUW4xULR
+         1reyvQt3jCPv4xFcQXG5kgtuhgEq8H6hGEMrKJPWMTQEHbxn1AcIE1mksMo/ZHRysQ4z
+         ZzFgA/3Sc2+NJx1IZrnXqdItMU6HTapSnf0K8gtRqYlII5YTckIQxulse4tN6Za3U13R
+         qQIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713501201; x=1714106001;
+        d=1e100.net; s=20230601; t=1713501446; x=1714106246;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TpkFbS/LUWYT+dYWFuL1kI/HN8/GTBk6GBVmp4Rcgxg=;
-        b=l1UNkG8ty4cKsYpNsK6kEXYNg0X4Lb9tn+1JOBsU+5kyAacLjwLO6AzwDz+KR6iAeu
-         wFe1tW51HXnxrqFvCQsVUbsGlQipNxZRNvIlhv75w9EbVdd1JJmh82IZX8gVS0EkU1mB
-         8xlcZnt/ml0kzQyqrkq+E/CbLbeBNo3IyF7wN/S2/TmxLBrGhZ1UacAhutQqDQmoIVRj
-         VnYhq6vjzJz6PVAn4DUVCFn1AIPb2rZY6IodwoNcjT46hS60w+s1BjrCwPhFm/PqwXtp
-         a2v9aQK5weItS5zDJ982/V81EDqwc+XZPUKsEsbVDSWQq2C/FHFaCh80zo85+TwfIXCr
-         4XpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXN2cywBB6PBEOvNCGgEUiMtpd/nzlUBiehcABb9wve7G9KQGT//6B8bow+hk2ihRN1UaXEWKLqm/A0jgyJMPvHmIMDLZIBN/gk
-X-Gm-Message-State: AOJu0Yy9KI/nt+iLtBTYEludQNl+P8zo0904pmTjXk4O/orheoWxbO8P
-	mjYQNW6wW22zh3XhcGHYDFQqJLveuEqh8MQEdz1+A2hL3sCMMFEup/Np8EaF437E2wFd/ds3N9j
-	CC3tkjkgNC31Ldj4LCLMcUxCSQio=
-X-Google-Smtp-Source: AGHT+IE5CqiC7N0YJ16yoWVDy5wS7H6qJgW3Hc1t17tmyXH5OuiLdGmUl6Snv32Pa1LDU6RjziNlWRcj4FVaCbuNnRA=
-X-Received: by 2002:a05:690c:3345:b0:61a:d4ea:b856 with SMTP id
- fk5-20020a05690c334500b0061ad4eab856mr765751ywb.40.1713501200724; Thu, 18 Apr
- 2024 21:33:20 -0700 (PDT)
+        bh=CFpAdFUlK6c+FuOE2UkmdUUly6ellBWMJzLFthxSKp4=;
+        b=uCU04rW39jb50esAapdbcirRBW8VylJDR8+FHcK3bXjNyzvU1PkDCDjOADKkUj+1tx
+         U9lxV9x0Wsh3ZH6JPpRskuykM7n0efM/OZzrLoSj7Z/LeFtspB6fknPtvyEaUFqKOnap
+         Ko3N5bIm+Gacr6BEDFsjg+CkGnKoDbtgt6c0bRaRbgctPEguVYEwBYkwc0kLGFsdL4Ut
+         ZfdsIOmgVaS/yTPbNRcLIwCua/kzVdVwnNbwa3N0zIKIkF/BM/aUF8za22BnEhMzZw3S
+         tfdIK5eBkghnXtuhwX6GtxweD6m0x2G2MHgF0jWkgd5Kxbk+nFmWLTPSoeVhYqiAuNyF
+         rNYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVElnOLkFuSL07s184feV6xqShLtvPo/FV7//phO+B4LbWz68R4lHAuzz8j60cy5FPrBCwN0TVIUu4gU3vAdjy86rpbx0JLC2Z1
+X-Gm-Message-State: AOJu0Yzrb7917eEtciTMfzxd8yIp3HgiPhx3+ACumJN7nAn07GXqMJRX
+	YJ6qD4U0kI77o4Igt/FS8LzxmDjsQnCefbXCWx8squCoqPxHWnrEMcjioqwJfkGwqfImBRcDAeB
+	e8BOrvpxUbxzc7+1z2dWOsFN6Gos=
+X-Google-Smtp-Source: AGHT+IGTBPvZEpv98oIQFH2424OjkFzeVum4zf0vfYLvtPIGm4i4ccBnGSIz8ZL6mTZ/+r66PKpvcXJU8KZMx2xCLfg=
+X-Received: by 2002:a25:8046:0:b0:dc7:4c21:fbd5 with SMTP id
+ a6-20020a258046000000b00dc74c21fbd5mr716876ybn.0.1713501446407; Thu, 18 Apr
+ 2024 21:37:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1713147645.git.zhoubinbin@loongson.cn> <f77f740164ec573dffcf24558a0ac371e098e0f3.1713147645.git.zhoubinbin@loongson.cn>
- <CAAhV-H6K-+dnwfcjrRM+A9UzOY37U66gTb9C9VQM3i-nXhFJPQ@mail.gmail.com>
-In-Reply-To: <CAAhV-H6K-+dnwfcjrRM+A9UzOY37U66gTb9C9VQM3i-nXhFJPQ@mail.gmail.com>
+References: <cover.1713147645.git.zhoubinbin@loongson.cn> <9d2132d4713321a83cdeef3cdc8887b7d39340e6.1713147645.git.zhoubinbin@loongson.cn>
+ <7396c6d4-878f-4b07-9b7f-bc793bebe4bd@linaro.org>
+In-Reply-To: <7396c6d4-878f-4b07-9b7f-bc793bebe4bd@linaro.org>
 From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 19 Apr 2024 10:33:08 +0600
-Message-ID: <CAMpQs4LxBjaavSCyO6LkXV_auShw9tyNAAau5_w47OTDN_aKPg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] thermal: loongson2: Trivial code style adjustment
-To: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 19 Apr 2024 10:37:14 +0600
+Message-ID: <CAMpQs4JDWd3=ne3KisBXi3pYZWtRuu=3VsMv1+Gj0zHxL0TBRA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: thermal: loongson,ls2k-thermal: Fix
+ incorrect compatible definition
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
 	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
 	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Yinbo Zhu <zhuyinbo@loongson.cn>, 
-	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev
+	Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, 
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 19, 2024 at 8:30=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
+On Mon, Apr 15, 2024 at 2:04=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> Hi, Binbin,
->
-> On Mon, Apr 15, 2024 at 10:31=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson=
-.cn> wrote:
+> On 15/04/2024 04:31, Binbin Zhou wrote:
+> > The temperature output register of the Loongson-2K2000 is defined in th=
+e
+> > chip configuration domain, which is different from the Loongson-2K1000,
+> > so it can't be fallbacked.
 > >
-> > Here are some minor code style adjustment. Such as fix whitespace code
-> > style; align function call arguments to opening parenthesis, and add
-> > devm_thermal_add_hwmon_sysfs() return value checking.
+> > We need to use two groups of registers to describe it: the first group
+> > is the high and low temperature threshold setting register; the second
+> > group is the temperature output register.
 > >
+> > It is true that this fix will cause ABI corruption, but it is necessary
+> > otherwise the Loongson-2K2000 temperature sensor will not work properly=
+.
+> >
+> > Fixes: 72684d99a854 ("thermal: dt-bindings: add loongson-2 thermal")
+> > Cc: Yinbo Zhu <zhuyinbo@loongson.cn>
 > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > > ---
-> >  drivers/thermal/loongson2_thermal.c | 69 +++++++++++++++--------------
-> >  1 file changed, 35 insertions(+), 34 deletions(-)
+> >  .../thermal/loongson,ls2k-thermal.yaml        | 23 +++++++++++++++++--
+> >  1 file changed, 21 insertions(+), 2 deletions(-)
 > >
-> > diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loon=
-gson2_thermal.c
-> > index 0f475fe46bc9..d77d829c8b55 100644
-> > --- a/drivers/thermal/loongson2_thermal.c
-> > +++ b/drivers/thermal/loongson2_thermal.c
-> > @@ -16,45 +16,49 @@
-> >  #include <linux/units.h>
-> >  #include "thermal_hwmon.h"
+> > diff --git a/Documentation/devicetree/bindings/thermal/loongson,ls2k-th=
+ermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-therma=
+l.yaml
+> > index 9748a479dcd4..fac6f64d6c67 100644
+> > --- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.y=
+aml
+> > +++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.y=
+aml
+> > @@ -18,14 +18,15 @@ properties:
+> >      oneOf:
+> >        - enum:
+> >            - loongson,ls2k1000-thermal
+> > +          - loongson,ls2k2000-thermal
+> >        - items:
+> >            - enum:
+> >                - loongson,ls2k0500-thermal
+> > -              - loongson,ls2k2000-thermal
+> >            - const: loongson,ls2k1000-thermal
 > >
-> > -#define LOONGSON2_MAX_SENSOR_SEL_NUM                   3
-> > +#define LOONGSON2_MAX_SENSOR_SEL_NUM   3
+> >    reg:
+> > -    maxItems: 1
+> > +    minItems: 1
+> > +    maxItems: 2
 > >
-> > -#define LOONGSON2_THSENS_CTRL_HI_REG                   0x0
-> > -#define LOONGSON2_THSENS_CTRL_LOW_REG                  0x8
-> > -#define LOONGSON2_THSENS_STATUS_REG                    0x10
-> > -#define LOONGSON2_THSENS_OUT_REG                       0x14
-> > +#define LOONGSON2_THSENS_CTRL_HI_REG   0x0
-> > +#define LOONGSON2_THSENS_CTRL_LOW_REG  0x8
-> > +#define LOONGSON2_THSENS_STATUS_REG    0x10
-> > +#define LOONGSON2_THSENS_OUT_REG       0x14
+> >    interrupts:
+> >      maxItems: 1
+> > @@ -41,6 +42,24 @@ required:
 > >
-> > -#define LOONGSON2_THSENS_INT_LO                                BIT(0)
-> > -#define LOONGSON2_THSENS_INT_HIGH                      BIT(1)
-> > -#define LOONGSON2_THSENS_OUT_MASK                      0xFF
-> > +#define LOONGSON2_THSENS_INT_LO                BIT(0)
-> > +#define LOONGSON2_THSENS_INT_HIGH      BIT(1)
-> > +#define LOONGSON2_THSENS_INT_EN                (LOONGSON2_THSENS_INT_L=
-O | \
-> > +                                        LOONGSON2_THSENS_INT_HIGH)
-> > +#define LOONGSON2_THSENS_OUT_MASK      0xFF
+> >  unevaluatedProperties: false
 > >
-> >  struct loongson2_thermal_chip_data {
-> > -       unsigned int    thermal_sensor_sel;
-> > +       unsigned int thermal_sensor_sel;
-> >  };
-> >
-> >  struct loongson2_thermal_data {
-> > -       void __iomem    *regs;
-> > +       void __iomem *regs;
-> >         const struct loongson2_thermal_chip_data *chip_data;
-> >  };
-> >
-> > -static int loongson2_thermal_set(struct loongson2_thermal_data *data,
-> > -                                       int low, int high, bool enable)
-> > +static void loongson2_set_ctrl_regs(struct loongson2_thermal_data *dat=
-a,
-> > +                                   int ctrl_data, bool low, bool enabl=
-e)
-> >  {
-> > -       u64 reg_ctrl =3D 0;
-> > -       int reg_off =3D data->chip_data->thermal_sensor_sel * 2;
-> > +       int reg_ctrl =3D 0;
-> > +       int reg_off  =3D data->chip_data->thermal_sensor_sel * 2;
-> > +       int ctrl_reg =3D low ? LOONGSON2_THSENS_CTRL_LOW_REG :
-> > +                      LOONGSON2_THSENS_CTRL_HI_REG;
-> Line break is unnecessary, because long lines is acceptable now.
+> > +if:
 >
-OK, I would check the entire code again and fix it in the next version.
+> This goes before unevaluatedProperties, just like in example schema.
+>
+Hi Krzysztof:
 
+Thanks for your reply.
+I will adjust the position of this part in the next version.
 
 Thanks.
 Binbin
-
-> > +
-> > +       reg_ctrl =3D ctrl_data + HECTO;
-> > +       reg_ctrl |=3D enable ? 0x100 : 0;
-> > +       writew(reg_ctrl, data->regs + ctrl_reg + reg_off);
-> > +}
-> >
-> > +static int loongson2_thermal_set(struct loongson2_thermal_data *data,
-> > +                                int low, int high, bool enable)
-> > +{
-> >         low =3D clamp(-40, low, high);
-> >         high =3D clamp(125, low, high);
-> >
-> > -       low +=3D HECTO;
-> > -       high +=3D HECTO;
-> > -
-> > -       reg_ctrl =3D low;
-> > -       reg_ctrl |=3D enable ? 0x100 : 0;
-> > -       writew(reg_ctrl, data->regs + LOONGSON2_THSENS_CTRL_LOW_REG + r=
-eg_off);
-> > -
-> > -       reg_ctrl =3D high;
-> > -       reg_ctrl |=3D enable ? 0x100 : 0;
-> > -       writew(reg_ctrl, data->regs + LOONGSON2_THSENS_CTRL_HI_REG + re=
-g_off);
-> > +       loongson2_set_ctrl_regs(data, low, true, enable);
-> > +       loongson2_set_ctrl_regs(data, high, false, enable);
-> >
-> >         return 0;
-> >  }
-> > @@ -75,15 +79,15 @@ static irqreturn_t loongson2_thermal_irq_thread(int=
- irq, void *dev)
-> >         struct thermal_zone_device *tzd =3D dev;
-> >         struct loongson2_thermal_data *data =3D thermal_zone_device_pri=
-v(tzd);
-> >
-> > -       writeb(LOONGSON2_THSENS_INT_LO | LOONGSON2_THSENS_INT_HIGH, dat=
-a->regs +
-> > -               LOONGSON2_THSENS_STATUS_REG);
-> > +       writeb(LOONGSON2_THSENS_INT_EN, data->regs + LOONGSON2_THSENS_S=
-TATUS_REG);
-> >
-> >         thermal_zone_device_update(tzd, THERMAL_EVENT_UNSPECIFIED);
-> >
-> >         return IRQ_HANDLED;
-> >  }
-> >
-> > -static int loongson2_thermal_set_trips(struct thermal_zone_device *tz,=
- int low, int high)
-> > +static int loongson2_thermal_set_trips(struct thermal_zone_device *tz,
-> > +                                      int low, int high)
-> The same as above.
 >
-> Huacai
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Best regards,
+> Krzysztof
 >
-> >  {
-> >         struct loongson2_thermal_data *data =3D thermal_zone_device_pri=
-v(tz);
-> >
-> > @@ -116,14 +120,13 @@ static int loongson2_thermal_probe(struct platfor=
-m_device *pdev)
-> >         if (irq < 0)
-> >                 return irq;
-> >
-> > -       writeb(LOONGSON2_THSENS_INT_LO | LOONGSON2_THSENS_INT_HIGH, dat=
-a->regs +
-> > -               LOONGSON2_THSENS_STATUS_REG);
-> > +       writeb(LOONGSON2_THSENS_INT_EN, data->regs + LOONGSON2_THSENS_S=
-TATUS_REG);
-> >
-> >         loongson2_thermal_set(data, 0, 0, false);
-> >
-> >         for (i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
-> >                 tzd =3D devm_thermal_of_zone_register(dev, i, data,
-> > -                       &loongson2_of_thermal_ops);
-> > +                                                   &loongson2_of_therm=
-al_ops);
-> >
-> >                 if (!IS_ERR(tzd))
-> >                         break;
-> > @@ -135,13 +138,11 @@ static int loongson2_thermal_probe(struct platfor=
-m_device *pdev)
-> >         }
-> >
-> >         ret =3D devm_request_threaded_irq(dev, irq, NULL, loongson2_the=
-rmal_irq_thread,
-> > -                       IRQF_ONESHOT, "loongson2_thermal", tzd);
-> > +                                       IRQF_ONESHOT, "loongson2_therma=
-l", tzd);
-> >         if (ret < 0)
-> >                 return dev_err_probe(dev, ret, "failed to request alarm=
- irq\n");
-> >
-> > -       devm_thermal_add_hwmon_sysfs(dev, tzd);
-> > -
-> > -       return 0;
-> > +       return devm_thermal_add_hwmon_sysfs(dev, tzd);
-> >  }
-> >
-> >  static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k=
-1000_data =3D {
-> > --
-> > 2.43.0
-> >
