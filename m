@@ -1,115 +1,234 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71CF194C96
-	for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 21:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4772AEC2
+	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 02:30:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713474116; cv=none; b=a0IzK+N+IaiC+J7gbvX0F5S5U7q1UwOBmsnVC3qOY2ubkKkSrKp12XHNKjF4G+c33+L/43HmAzLLsbWTd2ZNT18McVJ+ecX5Y0WjKyXltK+EvGAxT6H71z358DphJxnnWdPzZBiE49KOEZclEtekL8kxBo439EqDHz0+DOGSAMo=
+	t=1713493854; cv=none; b=ZAHkjSu5PeLgXib3TWbi2fSGL/rlsAja+IQ/Fy/mbl6CPXwVvn3WlDX3jMpYqiUku0p0VsqhTKB9Hiv1iEvvVAvUqWXVkD62Orxujur/VrZURsLRqkSB+lyxIDJJWew40mxV+Mc2znwYo6LitkemjW3MQ4sKUqmcGi4huRIwzVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713474116; c=relaxed/simple;
-	bh=Q9xFEu3Y5LoeO0EqCkhUGHL0dsvPtZI4/AmKYvf5MnY=;
+	s=arc-20240116; t=1713493854; c=relaxed/simple;
+	bh=d6wW8IGmEQgntlHj6l65gyKM6gL5uLkJ3e+TQqruBx4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NswIbUAWwtOTDHLtoPxpvUFQiyFpkXqfAB/I1+Ite6UkCPfDYhkhvjJ5tjx6FbWIGsCq7d1W2i3bJlESsjtXs8r9huNQa9gYKf5u8Tc0VyOCkuR2facov90igWsy4pK3wBH8MMPG4l7gFv6QjYYA3vTEftR0SnJ8RE4p4bTRTUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LKsu6wgw; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=pGdS+DsDqwwd7o8+tqcQOfI+1GwAtsnLu9u+ZY6RtiKXl52QS97F+u+hWH2ldT+LKR+4c0k7r+YPwbCYeDGSJcI+2Daq/EE4qtFUTpHU+MNrvnjg9xw0ci2kEgq6s7WFypvd7O3TQ+3w+yBImuRKEnM2KJgvm3pW5BQlKnSa8AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C52ZjNFI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LKsu6wgw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E9B0C116B1
-	for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 21:01:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C52ZjNFI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4D6EC113CC
+	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 02:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713474116;
-	bh=Q9xFEu3Y5LoeO0EqCkhUGHL0dsvPtZI4/AmKYvf5MnY=;
+	s=k20201202; t=1713493853;
+	bh=d6wW8IGmEQgntlHj6l65gyKM6gL5uLkJ3e+TQqruBx4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LKsu6wgwztewDd1Kf4NCYPGtYXsdZ+ofFTa2d1MI2zHPuKQq+mmWhhJ/cfOoO74/D
-	 CmcZP1gphR1rk0/C2WrZMmDohWk9TLfoE/BVlmPcx4Ya9rM6Nh6AU0ABzg9gD2wvws
-	 H60UGmuK3KY+NjPIGsNka51Re3XwprsD1pbbtq74ctVkAghiYQUsQoRN8cLIcXPPsL
-	 rXx3eFrMppxOnjZtTYcB0+vT04YNLcaQFvbo1fn264bSOiuX8e1yptQTDfZHVYZ58/
-	 0oeaQEoE1JgibuYG0nL+yludx9odg4AlyJea9d8FGku7Y1tGZRmj1BnxpJESiJFknk
-	 jlSY0S/C8n1Cg==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5193363d255so1681038e87.3
-        for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 14:01:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXw5NjFOzjCGB5ifm8zBVaLpKFfBTTslpbwmGEiRVG9wX2XGwuC45KQTar8Yqkl5SecawC3ykACl6Q11HZ+JXZEo9nLo5E9cQh1
-X-Gm-Message-State: AOJu0Yzn7D5n2scI1vvrZV12qRDBmyf+3/er67AbxSlmub8DHy6NTBDn
-	UldlJrmUqxIb2Y9VazL8zaIqjWO68VesbUVv+B4NbiCyo9aK2xAuKNjTl57AcSre/1KFXjLqbZs
-	I8phWejjiDQ1chohZd56rCTbFzl8=
-X-Google-Smtp-Source: AGHT+IHNxy9sJsnZs3KQVfU0+czeg8tBpsYhbjwNsSaDNt4tlgSyRo9Mz2ssjEN7kjA5vVRJEg5DihQkgyMA2Jl/jC4=
-X-Received: by 2002:a05:6512:1251:b0:516:cec0:1fc0 with SMTP id
- fb17-20020a056512125100b00516cec01fc0mr104453lfb.63.1713474094462; Thu, 18
- Apr 2024 14:01:34 -0700 (PDT)
+	b=C52ZjNFIWl4ZiE/uLi4k7EYHnvZlz8hFl+LqDA1ZOmSAXmzmP1KzGpbV9akNvy8Mb
+	 /z/3xs+XrnLjjGOICwlRCBC9wsib7z2Mj0VOIwY/CCiXDzZ1zBEL3o0zbhjtAH8uC4
+	 tKrbQMzFcIDPgrleTbeswqBC68BBWt090jawAa4hqxoqHnDGYb5V1aaUgqPXqrnUXY
+	 +3apsgatQv6/poPpcyEw76PU9v0vEmtNaVe+GkqSKMGoU2Dy+Kc8xqkAXDhKUYx4MS
+	 8h9mm3A9afn6Vz1gZNBhY8W07iFEj0r4gHLdVgFykv+Kwbw4O9vNajspTZ829uYUI0
+	 ZgL/5aQf5jO3Q==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a51addddbd4so148107466b.0
+        for <loongarch@lists.linux.dev>; Thu, 18 Apr 2024 19:30:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWdvpZSy0R8cTKK+PArQNH6t7brR0wHQ9GCgt2rf85JTcFBd+Tk3rF12yxDWrHz8+VWlf29lf+sf71Lq+sWCuDFmc9tqMO7Vr+e
+X-Gm-Message-State: AOJu0YwE674PF2INsMqCtVeDjYyRRjC7uKWJgtuF72QNx2s7bgaYbidD
+	D+Vc/KEe6WpxRs+frAbGoeJon0ky5MNLgsN8bJ+88PXGPbOETPoY8c3RXq9ZjADOo+W/bMJT0Us
+	+ZcsN823uZcs7ivKOXaZdPweU/oE=
+X-Google-Smtp-Source: AGHT+IGoeeamFkgPkxoIOkpZASJrJ6yNcuLdI6EcVcM4Cc/L85cXky+G13ZdEJA4cbPxywpA+E8uBy8UeBhcvF5ULYc=
+X-Received: by 2002:a17:906:684d:b0:a55:551c:5d28 with SMTP id
+ a13-20020a170906684d00b00a55551c5d28mr444180ejs.6.1713493852416; Thu, 18 Apr
+ 2024 19:30:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240411160051.2093261-1-rppt@kernel.org> <20240411160051.2093261-6-rppt@kernel.org>
- <20240415075241.GF40213@noisy.programming.kicks-ass.net> <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
- <Zh4nJp8rv1qRBs8m@kernel.org> <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
- <ZiE91CJcNw7gBj9g@kernel.org> <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
- <ZiFd567L4Zzm2okO@kernel.org>
-In-Reply-To: <ZiFd567L4Zzm2okO@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Thu, 18 Apr 2024 14:01:22 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5SL4_=ZXdHZV8o0KS+5Vf25UMvEKhRgFQLioFtf2pgoQ@mail.gmail.com>
-Message-ID: <CAPhsuW5SL4_=ZXdHZV8o0KS+5Vf25UMvEKhRgFQLioFtf2pgoQ@mail.gmail.com>
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Bjorn Topel <bjorn@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+References: <cover.1713147645.git.zhoubinbin@loongson.cn> <f77f740164ec573dffcf24558a0ac371e098e0f3.1713147645.git.zhoubinbin@loongson.cn>
+In-Reply-To: <f77f740164ec573dffcf24558a0ac371e098e0f3.1713147645.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 19 Apr 2024 10:30:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6K-+dnwfcjrRM+A9UzOY37U66gTb9C9VQM3i-nXhFJPQ@mail.gmail.com>
+Message-ID: <CAAhV-H6K-+dnwfcjrRM+A9UzOY37U66gTb9C9VQM3i-nXhFJPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] thermal: loongson2: Trivial code style adjustment
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Yinbo Zhu <zhuyinbo@loongson.cn>, 
+	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18, 2024 at 10:54=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wr=
-ote:
->
-> On Thu, Apr 18, 2024 at 09:13:27AM -0700, Song Liu wrote:
-> > On Thu, Apr 18, 2024 at 8:37=E2=80=AFAM Mike Rapoport <rppt@kernel.org>=
- wrote:
-> > > > >
-> > > > > I'm looking at execmem_types more as definition of the consumers,=
- maybe I
-> > > > > should have named the enum execmem_consumer at the first place.
-> > > >
-> > > > I think looking at execmem_type from consumers' point of view adds
-> > > > unnecessary complexity. IIUC, for most (if not all) archs, ftrace, =
-kprobe,
-> > > > and bpf (and maybe also module text) all have the same requirements=
-.
-> > > > Did I miss something?
-> > >
-> > > It's enough to have one architecture with different constrains for kp=
-robes
-> > > and bpf to warrant a type for each.
-> >
-> > AFAICT, some of these constraints can be changed without too much work.
->
-> But why?
-> I honestly don't understand what are you trying to optimize here. A few
-> lines of initialization in execmem_info?
+Hi, Binbin,
 
-IIUC, having separate EXECMEM_BPF and EXECMEM_KPROBE makes it
-harder for bpf and kprobe to share the same ROX page. In many use cases,
-a 2MiB page (assuming x86_64) is enough for all BPF, kprobe, ftrace, and
-module text. It is not efficient if we have to allocate separate pages for =
-each
-of these use cases. If this is not a problem, the current approach works.
+On Mon, Apr 15, 2024 at 10:31=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
+n> wrote:
+>
+> Here are some minor code style adjustment. Such as fix whitespace code
+> style; align function call arguments to opening parenthesis, and add
+> devm_thermal_add_hwmon_sysfs() return value checking.
+>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  drivers/thermal/loongson2_thermal.c | 69 +++++++++++++++--------------
+>  1 file changed, 35 insertions(+), 34 deletions(-)
+>
+> diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loongs=
+on2_thermal.c
+> index 0f475fe46bc9..d77d829c8b55 100644
+> --- a/drivers/thermal/loongson2_thermal.c
+> +++ b/drivers/thermal/loongson2_thermal.c
+> @@ -16,45 +16,49 @@
+>  #include <linux/units.h>
+>  #include "thermal_hwmon.h"
+>
+> -#define LOONGSON2_MAX_SENSOR_SEL_NUM                   3
+> +#define LOONGSON2_MAX_SENSOR_SEL_NUM   3
+>
+> -#define LOONGSON2_THSENS_CTRL_HI_REG                   0x0
+> -#define LOONGSON2_THSENS_CTRL_LOW_REG                  0x8
+> -#define LOONGSON2_THSENS_STATUS_REG                    0x10
+> -#define LOONGSON2_THSENS_OUT_REG                       0x14
+> +#define LOONGSON2_THSENS_CTRL_HI_REG   0x0
+> +#define LOONGSON2_THSENS_CTRL_LOW_REG  0x8
+> +#define LOONGSON2_THSENS_STATUS_REG    0x10
+> +#define LOONGSON2_THSENS_OUT_REG       0x14
+>
+> -#define LOONGSON2_THSENS_INT_LO                                BIT(0)
+> -#define LOONGSON2_THSENS_INT_HIGH                      BIT(1)
+> -#define LOONGSON2_THSENS_OUT_MASK                      0xFF
+> +#define LOONGSON2_THSENS_INT_LO                BIT(0)
+> +#define LOONGSON2_THSENS_INT_HIGH      BIT(1)
+> +#define LOONGSON2_THSENS_INT_EN                (LOONGSON2_THSENS_INT_LO =
+| \
+> +                                        LOONGSON2_THSENS_INT_HIGH)
+> +#define LOONGSON2_THSENS_OUT_MASK      0xFF
+>
+>  struct loongson2_thermal_chip_data {
+> -       unsigned int    thermal_sensor_sel;
+> +       unsigned int thermal_sensor_sel;
+>  };
+>
+>  struct loongson2_thermal_data {
+> -       void __iomem    *regs;
+> +       void __iomem *regs;
+>         const struct loongson2_thermal_chip_data *chip_data;
+>  };
+>
+> -static int loongson2_thermal_set(struct loongson2_thermal_data *data,
+> -                                       int low, int high, bool enable)
+> +static void loongson2_set_ctrl_regs(struct loongson2_thermal_data *data,
+> +                                   int ctrl_data, bool low, bool enable)
+>  {
+> -       u64 reg_ctrl =3D 0;
+> -       int reg_off =3D data->chip_data->thermal_sensor_sel * 2;
+> +       int reg_ctrl =3D 0;
+> +       int reg_off  =3D data->chip_data->thermal_sensor_sel * 2;
+> +       int ctrl_reg =3D low ? LOONGSON2_THSENS_CTRL_LOW_REG :
+> +                      LOONGSON2_THSENS_CTRL_HI_REG;
+Line break is unnecessary, because long lines is acceptable now.
 
-Thanks,
-Song
+> +
+> +       reg_ctrl =3D ctrl_data + HECTO;
+> +       reg_ctrl |=3D enable ? 0x100 : 0;
+> +       writew(reg_ctrl, data->regs + ctrl_reg + reg_off);
+> +}
+>
+> +static int loongson2_thermal_set(struct loongson2_thermal_data *data,
+> +                                int low, int high, bool enable)
+> +{
+>         low =3D clamp(-40, low, high);
+>         high =3D clamp(125, low, high);
+>
+> -       low +=3D HECTO;
+> -       high +=3D HECTO;
+> -
+> -       reg_ctrl =3D low;
+> -       reg_ctrl |=3D enable ? 0x100 : 0;
+> -       writew(reg_ctrl, data->regs + LOONGSON2_THSENS_CTRL_LOW_REG + reg=
+_off);
+> -
+> -       reg_ctrl =3D high;
+> -       reg_ctrl |=3D enable ? 0x100 : 0;
+> -       writew(reg_ctrl, data->regs + LOONGSON2_THSENS_CTRL_HI_REG + reg_=
+off);
+> +       loongson2_set_ctrl_regs(data, low, true, enable);
+> +       loongson2_set_ctrl_regs(data, high, false, enable);
+>
+>         return 0;
+>  }
+> @@ -75,15 +79,15 @@ static irqreturn_t loongson2_thermal_irq_thread(int i=
+rq, void *dev)
+>         struct thermal_zone_device *tzd =3D dev;
+>         struct loongson2_thermal_data *data =3D thermal_zone_device_priv(=
+tzd);
+>
+> -       writeb(LOONGSON2_THSENS_INT_LO | LOONGSON2_THSENS_INT_HIGH, data-=
+>regs +
+> -               LOONGSON2_THSENS_STATUS_REG);
+> +       writeb(LOONGSON2_THSENS_INT_EN, data->regs + LOONGSON2_THSENS_STA=
+TUS_REG);
+>
+>         thermal_zone_device_update(tzd, THERMAL_EVENT_UNSPECIFIED);
+>
+>         return IRQ_HANDLED;
+>  }
+>
+> -static int loongson2_thermal_set_trips(struct thermal_zone_device *tz, i=
+nt low, int high)
+> +static int loongson2_thermal_set_trips(struct thermal_zone_device *tz,
+> +                                      int low, int high)
+The same as above.
+
+Huacai
+
+>  {
+>         struct loongson2_thermal_data *data =3D thermal_zone_device_priv(=
+tz);
+>
+> @@ -116,14 +120,13 @@ static int loongson2_thermal_probe(struct platform_=
+device *pdev)
+>         if (irq < 0)
+>                 return irq;
+>
+> -       writeb(LOONGSON2_THSENS_INT_LO | LOONGSON2_THSENS_INT_HIGH, data-=
+>regs +
+> -               LOONGSON2_THSENS_STATUS_REG);
+> +       writeb(LOONGSON2_THSENS_INT_EN, data->regs + LOONGSON2_THSENS_STA=
+TUS_REG);
+>
+>         loongson2_thermal_set(data, 0, 0, false);
+>
+>         for (i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
+>                 tzd =3D devm_thermal_of_zone_register(dev, i, data,
+> -                       &loongson2_of_thermal_ops);
+> +                                                   &loongson2_of_thermal=
+_ops);
+>
+>                 if (!IS_ERR(tzd))
+>                         break;
+> @@ -135,13 +138,11 @@ static int loongson2_thermal_probe(struct platform_=
+device *pdev)
+>         }
+>
+>         ret =3D devm_request_threaded_irq(dev, irq, NULL, loongson2_therm=
+al_irq_thread,
+> -                       IRQF_ONESHOT, "loongson2_thermal", tzd);
+> +                                       IRQF_ONESHOT, "loongson2_thermal"=
+, tzd);
+>         if (ret < 0)
+>                 return dev_err_probe(dev, ret, "failed to request alarm i=
+rq\n");
+>
+> -       devm_thermal_add_hwmon_sysfs(dev, tzd);
+> -
+> -       return 0;
+> +       return devm_thermal_add_hwmon_sysfs(dev, tzd);
+>  }
+>
+>  static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k10=
+00_data =3D {
+> --
+> 2.43.0
+>
