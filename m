@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E850E10F7
-	for <loongarch@lists.linux.dev>; Sat, 20 Apr 2024 01:46:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2747BA32
+	for <loongarch@lists.linux.dev>; Sat, 20 Apr 2024 01:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713577571; cv=none; b=bFIfN/mCkRVjY8U3v2HCMc/aKWmF/sVQROsOJGPzAH0FOuRbkUC4bOZDZXOwLzsmK72uCfVpUB2cR/sS5jlAsLS3LtYCOgKQbhZ+vuwXpVgMiRji/lQ9kYyqILYdV4s4SzY25FbZz5jKLddT6aRy0I8rR7RhRysi1Lr7GchoRiY=
+	t=1713577571; cv=none; b=siCV4ieiGCJEokF6adQAT3mQPNxd36Ysh6vb60P+9TJDWlNqZ9xCOPPDeTBE5KEic5QeVIgqYm33l7LHpeLtYrrKHZX4vlFX5VIE5t2l5o7JI0itjE6Hk4bg83jxPqs4vC2L9mKeG8yCb5ksZcUU7L0jpeE4z7dbKZU+1iCDSiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713577571; c=relaxed/simple;
-	bh=pfwfpF2VrbrFZCuWn51Pn2IA19jomPJvdPhTbYhXwhk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tA0tnX8kTSAKTo4qihzDZ414ybYwowDzD+Bi/Ndy6bX5ObzVW/zLsaK69mKL3hQ3V/OS/9dOw3U7A6FL6TOoweuj5Iu4/dGy6OOZakx4+mFQ5kOGSdkEiE9HSC8YqWD/Puts9Yy/IJjdbNqmG4b8vSaStkRaduuOcAK32YDpx/8=
+	bh=bJjpIGTuHq/tNnAK50kecEJdDZuq7kA9oC6gFX8UV9k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rN4GVV/+isAbyjT7bkrZkgJg6v17YFI+eb1t/Lp5ab0zhqk5qtFDRFhLSAf9w8OwN0yCsZSwHPNX4DJEu5mx3M8B30SYOO8MwN7oqhwf7SMk5xjbn4ut7MqgauP+dWgGhSpo6STo4aEaM6C2wliqL9eUK7vabwmWuKWmaTO+5a4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [112.20.112.218])
-	by gateway (Coremail) with SMTP id _____8Bx7_BbHiNmrDwAAA--.995S3;
-	Sat, 20 Apr 2024 09:46:03 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxUPFZHiNmmjwAAA--.1321S3;
+	Sat, 20 Apr 2024 09:46:01 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.112.218])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxIeBXHiNmAIIAAA--.2913S4;
-	Sat, 20 Apr 2024 09:46:02 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxIeBXHiNmAIIAAA--.2913S2;
+	Sat, 20 Apr 2024 09:46:00 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -35,14 +34,11 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Yinbo Zhu <zhuyinbo@loongson.cn>,
 	WANG Xuerui <git@xen0n.name>,
 	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 2/4] dt-bindings: thermal: loongson,ls2k-thermal: Add Loongson-2K0500 compatible
-Date: Sat, 20 Apr 2024 09:45:47 +0800
-Message-ID: <9ffbf62ad3815f81f5f8f154ca82eb21d98ce2a0.1713509889.git.zhoubinbin@loongson.cn>
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v3 0/4] thermal: loongson2: Add Loongson-2K0500 and Loongson-2K2000 thermal support
+Date: Sat, 20 Apr 2024 09:45:45 +0800
+Message-ID: <cover.1713509889.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1713509889.git.zhoubinbin@loongson.cn>
-References: <cover.1713509889.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,49 +46,72 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxIeBXHiNmAIIAAA--.2913S4
+X-CM-TRANSID:AQAAf8BxIeBXHiNmAIIAAA--.2913S2
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JrW5XrW7Ww43Zw1kXr13trc_yoWDZFc_Ca
-	4xtr1kJws3AF1ag34avr4xG3s8XanF93W5CF4kAF95G340qFZxWrykJ34YkrWrXrs5ur13
-	WFs7Gr1xZw1IqosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
-	JVW8Jr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4ZqXDUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZrWftFW8AryDZw45KFWUJrc_yoW8XryUpa
+	nxu3sxGr1UAF4UZw4fA3y8Ars09rWftayDWr4fJw1rArZ8Gw13t34rta1YvrZ7urW0gFW2
+	qrn5Kr4UCFn8CrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-The thermal on the Loongson-2K0500 shares the design with the
-Loongson-2K1000. Define corresponding compatible string, having the
-loongson,ls2k1000-thermal as a fallback.
+Hi all:
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+This patchset introduce the Loongson-2K0500 and Loongson-2K2000
+temperature sensors.
+
+The temperature sensors of Loongson-2K series CPUs are similar, except
+that the temperature reading method of the Loongson-2K2000 is
+different.
+
+Specifically, the temperature output register of the Loongson-2K2000 is
+defined in the chip configuration domain. We need to define it in dts
+and calculate it using different calculation methods.
+
+Thanks.
+
 ---
- .../devicetree/bindings/thermal/loongson,ls2k-thermal.yaml       | 1 +
- 1 file changed, 1 insertion(+)
+V3:
+- Collect Acked-by and Reviewed-by tag, thanks.
+patch(1/4):
+  - Several code stlye adjustments, such as line breaks.
+patch(3/4):
+  - If-else statement goes before unevaluatedProperties.
 
-diff --git a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
-index b634f57cd011..9748a479dcd4 100644
---- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
-@@ -20,6 +20,7 @@ properties:
-           - loongson,ls2k1000-thermal
-       - items:
-           - enum:
-+              - loongson,ls2k0500-thermal
-               - loongson,ls2k2000-thermal
-           - const: loongson,ls2k1000-thermal
- 
+Link to V2:
+https://lore.kernel.org/all/cover.1713147645.git.zhoubinbin@loongson.cn/
+
+V2:
+patch(2/4):
+ - Add Acked-by tag from Rob, thanks.
+patch(3/4):
+ - Add "minItems: 2" to the reg attribute of Loongson-2K2000.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1712733065.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (4):
+  thermal: loongson2: Trivial code style adjustment
+  dt-bindings: thermal: loongson,ls2k-thermal: Add Loongson-2K0500
+    compatible
+  dt-bindings: thermal: loongson,ls2k-thermal: Fix incorrect compatible
+    definition
+  thermal: loongson2: Add Loongson-2K2000 support
+
+ .../thermal/loongson,ls2k-thermal.yaml        |  24 +++-
+ drivers/thermal/loongson2_thermal.c           | 111 +++++++++++-------
+ 2 files changed, 93 insertions(+), 42 deletions(-)
+
 -- 
 2.43.0
 
