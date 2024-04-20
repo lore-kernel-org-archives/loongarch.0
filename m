@@ -1,141 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E71313CFA8
-	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 21:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E850E10F7
+	for <loongarch@lists.linux.dev>; Sat, 20 Apr 2024 01:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713562970; cv=none; b=U80GrPzwSkhLIrD3lyw7LUktKbj0cD6p31ndoqigoJ0HvN2HOJfdDZbWYgHCSJ9rR4W9+G7uzyZdux8CM6cZNyoYYZ62VJ3MCKlrDcVAgSWautT/UbDvll/rUHQByN2giLrdGopgA0SQaSRoqtsIIaZqeghlUjZPBDQbkJ/HF1g=
+	t=1713577571; cv=none; b=bFIfN/mCkRVjY8U3v2HCMc/aKWmF/sVQROsOJGPzAH0FOuRbkUC4bOZDZXOwLzsmK72uCfVpUB2cR/sS5jlAsLS3LtYCOgKQbhZ+vuwXpVgMiRji/lQ9kYyqILYdV4s4SzY25FbZz5jKLddT6aRy0I8rR7RhRysi1Lr7GchoRiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713562970; c=relaxed/simple;
-	bh=TCFccoU0QynIlhNVSwfE9PBflv6m2g3eer2smjEjHo0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LCoD/PNtXugWWJSbI6IQxLPDLz8MfhRDLQcv1K6LeIlaUIg5YYegAnyZUqbMO1kTbZoug+NwRLEbxyJL+/c9eUlRfJVuEGvGcwHhcxwZ3XOwdGIaF1AbpSHIrpmCxBCj1gpUrXfKTWW9MF6vhT089AL1FQNHXhShFwapWQYHfaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4HnPRVF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4HnPRVF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F279C116B1
-	for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 21:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713562970;
-	bh=TCFccoU0QynIlhNVSwfE9PBflv6m2g3eer2smjEjHo0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m4HnPRVFmWRnbZz8jQgaboXaGgGHKM6NiRHPnWxYnXriYRx79b4qxLh61hmOGchcc
-	 BeAAWFrwxoxYJkYzlzLPxW1HmMSHuQQ804wgQ9HB2dliWoJAMe+WuPJgC73w48qsaY
-	 8p0FVzWBN/to3b7K3DQ7j/PsKeJd4uV1W+Gch+w6NTUGukNdlDn0g0cB3UnAb3jQx7
-	 PSf8rBW9ZQhouGbP6ra7uug8JuzEdjBEg+XfggIiIEQt0h1ve10SOMFqY9M0wevTbL
-	 Eq6Fd3MJ0oNRWLCEy29E4JMXnQs2SedtXJyicXYfXpkSeddtxs7BNvLDpvfmOC5KQu
-	 tl/dlpBBhEWSQ==
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-343c2f5b50fso1630319f8f.2
-        for <loongarch@lists.linux.dev>; Fri, 19 Apr 2024 14:42:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVJ/Kusrfa0BleKMpIHqYFfh0HSiZg1uI2RbPx5YiY9kzUI8CznVbfCV9nsLjA94s8Aiva3N4ouipu5xyMA0lHLchf/7WZ8BsRJ
-X-Gm-Message-State: AOJu0YwUCQCeGA+pT3CklF4kPL/yiSSBOlQXIk8GIeVGlB47lDTvdtAW
-	jm32Ua9drnbNwotwMYnQuP7vl8htVa2F64I7PJe44sZh5I6z6/ALjGeTq+34Z6Vg7QaB97gAQA0
-	OImF+TuGBFuGgH1pNR4xHEUWLpHI=
-X-Google-Smtp-Source: AGHT+IH4AnwX5zN14P6kYOA/5jMldeW1Bv8FPwjpWGtVTE89ihBaxTYgE7/68A2MjqxVZZCm/ny8Sr/SdDVp6qchZyo=
-X-Received: by 2002:a19:5f4d:0:b0:519:5b84:1038 with SMTP id
- a13-20020a195f4d000000b005195b841038mr1897119lfj.20.1713562948432; Fri, 19
- Apr 2024 14:42:28 -0700 (PDT)
+	s=arc-20240116; t=1713577571; c=relaxed/simple;
+	bh=pfwfpF2VrbrFZCuWn51Pn2IA19jomPJvdPhTbYhXwhk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tA0tnX8kTSAKTo4qihzDZ414ybYwowDzD+Bi/Ndy6bX5ObzVW/zLsaK69mKL3hQ3V/OS/9dOw3U7A6FL6TOoweuj5Iu4/dGy6OOZakx4+mFQ5kOGSdkEiE9HSC8YqWD/Puts9Yy/IJjdbNqmG4b8vSaStkRaduuOcAK32YDpx/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.112.218])
+	by gateway (Coremail) with SMTP id _____8Bx7_BbHiNmrDwAAA--.995S3;
+	Sat, 20 Apr 2024 09:46:03 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.112.218])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxIeBXHiNmAIIAAA--.2913S4;
+	Sat, 20 Apr 2024 09:46:02 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Amit Kucheria <amitk@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	WANG Xuerui <git@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 2/4] dt-bindings: thermal: loongson,ls2k-thermal: Add Loongson-2K0500 compatible
+Date: Sat, 20 Apr 2024 09:45:47 +0800
+Message-ID: <9ffbf62ad3815f81f5f8f154ca82eb21d98ce2a0.1713509889.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1713509889.git.zhoubinbin@loongson.cn>
+References: <cover.1713509889.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <Zh4nJp8rv1qRBs8m@kernel.org> <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
- <ZiE91CJcNw7gBj9g@kernel.org> <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
- <ZiFd567L4Zzm2okO@kernel.org> <CAPhsuW5SL4_=ZXdHZV8o0KS+5Vf25UMvEKhRgFQLioFtf2pgoQ@mail.gmail.com>
- <ZiIVVBgaDN4RsroT@kernel.org> <CAPhsuW7WoU+a46FhqqH8f-3=ehxeD4wSgKDWegMin1pT49OSWw@mail.gmail.com>
- <ZiKjmaDgz_56ovbv@kernel.org> <CAPhsuW7Nj1Sa_9xQtTgHz9AmX39zdh2x2COqA-qmkfpfX9hNWw@mail.gmail.com>
- <ZiLNGgVSQ7_cg58y@kernel.org>
-In-Reply-To: <ZiLNGgVSQ7_cg58y@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Fri, 19 Apr 2024 14:42:16 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4KRM4O4RFbYQrt=Coqyh9w29WiF2YF=8soDfauLFsKBA@mail.gmail.com>
-Message-ID: <CAPhsuW4KRM4O4RFbYQrt=Coqyh9w29WiF2YF=8soDfauLFsKBA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Bjorn Topel <bjorn@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxIeBXHiNmAIIAAA--.2913S4
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JrW5XrW7Ww43Zw1kXr13trc_yoWDZFc_Ca
+	4xtr1kJws3AF1ag34avr4xG3s8XanF93W5CF4kAF95G340qFZxWrykJ34YkrWrXrs5ur13
+	WFs7Gr1xZw1IqosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4ZqXDUUUU
 
-On Fri, Apr 19, 2024 at 1:00=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-> On Fri, Apr 19, 2024 at 10:32:39AM -0700, Song Liu wrote:
-> > On Fri, Apr 19, 2024 at 10:03=E2=80=AFAM Mike Rapoport <rppt@kernel.org=
-> wrote:
-> > [...]
-> > > > >
-> > > > > [1] https://lore.kernel.org/all/20240411160526.2093408-1-rppt@ker=
-nel.org
-> > > >
-> > > > For the ROX to work, we need different users (module text, kprobe, =
-etc.) to have
-> > > > the same execmem_range. From [1]:
-> > > >
-> > > > static void *execmem_cache_alloc(struct execmem_range *range, size_=
-t size)
-> > > > {
-> > > > ...
-> > > >        p =3D __execmem_cache_alloc(size);
-> > > >        if (p)
-> > > >                return p;
-> > > >       err =3D execmem_cache_populate(range, size);
-> > > > ...
-> > > > }
-> > > >
-> > > > We are calling __execmem_cache_alloc() without range. For this to w=
-ork,
-> > > > we can only call execmem_cache_alloc() with one execmem_range.
-> > >
-> > > Actually, on x86 this will "just work" because everything shares the =
-same
-> > > address space :)
-> > >
-> > > The 2M pages in the cache will be in the modules space, so
-> > > __execmem_cache_alloc() will always return memory from that address s=
-pace.
-> > >
-> > > For other architectures this indeed needs to be fixed with passing th=
-e
-> > > range to __execmem_cache_alloc() and limiting search in the cache for=
- that
-> > > range.
-> >
-> > I think we at least need the "map to" concept (initially proposed by Th=
-omas)
-> > to get this work. For example, EXECMEM_BPF and EXECMEM_KPROBE
-> > maps to EXECMEM_MODULE_TEXT, so that all these actually share
-> > the same range.
->
-> Why?
+The thermal on the Loongson-2K0500 shares the design with the
+Loongson-2K1000. Define corresponding compatible string, having the
+loongson,ls2k1000-thermal as a fallback.
 
-IIUC, we need to update __execmem_cache_alloc() to take a range pointer as
-input. module text will use "range" for EXECMEM_MODULE_TEXT, while kprobe
-will use "range" for EXECMEM_KPROBE. Without "map to" concept or sharing
-the "range" object, we will have to compare different range parameters to c=
-heck
-we can share cached pages between module text and kprobe, which is not
-efficient. Did I miss something?
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ .../devicetree/bindings/thermal/loongson,ls2k-thermal.yaml       | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Song
+diff --git a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+index b634f57cd011..9748a479dcd4 100644
+--- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+@@ -20,6 +20,7 @@ properties:
+           - loongson,ls2k1000-thermal
+       - items:
+           - enum:
++              - loongson,ls2k0500-thermal
+               - loongson,ls2k2000-thermal
+           - const: loongson,ls2k1000-thermal
+ 
+-- 
+2.43.0
+
