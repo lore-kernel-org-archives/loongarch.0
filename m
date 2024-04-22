@@ -1,127 +1,290 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6306518F
-	for <loongarch@lists.linux.dev>; Mon, 22 Apr 2024 09:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26C064A98;
+	Mon, 22 Apr 2024 09:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713779067; cv=none; b=n+RnjfhHg47ETLx7K8mfEo1HizmwoHuBNi5OIlmmIe6ADmeNxDEIAHzifCnT4ezYj4xYimDntZ3Yeq9NAMH8MVBBX44aIWRV6ox9XoT8to0IN4IXRiWSKwHCSS5by8zxhpYcPZ7tJX6N3I/Rfc9oQDF+Vr/E8Iy3i4yM+ZmBtZM=
+	t=1713779096; cv=none; b=SqluZylL7KIZUHBIUQ5uMUeu5UVr81FPaXF4vteaky0scnC7DPKFnuWiGyEN9zz24Fk0bIDpCe8TwB2/5viaPuZb3R5af6IUOlXB9axEVHDVEvy1mcAEoTd/ouWFcA9P2EYOQZtWx2JpQjsjhrHnd5gECeeRYpoobFFDEmpl2eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713779067; c=relaxed/simple;
-	bh=fc72h3f1uuW1Y3i/oR5o+u9TvVvqU6JW02wnfcUEaYU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tPaENQt23K8cFfW7rJ6IBDQi7sXOaxz5etwzBguCPNgyUO9UyB/n+JlE6orJ1DTPQhNv6Tf4tpNXT/oOLAtTMpgyUs37EdiTFbnCV0OjyNhxp9uZZKXW9k4CBt4YaNNmsAP2Rn2mDhF4UfrluG7BzQ/gbGQ46pSCqD/L+Zlkd4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UlzL/OEh; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713779096; c=relaxed/simple;
+	bh=uCqbzvPZq288hG4XoIWQdXz6usWeZU9rInsRoxq3uRE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CYwl4CDrtEVa8D+6XQfLKmk42ujtL9gcUOfFREU27u3Dw4FYSRJj4zDz96JPoRWAtCwmvmWMlThlquDVjO3+EZTLP9TM3I9f46ZssAX9s7KkamQ1UuF+5PAjFNqICel7Ec/1tAOgbnla75q1x25ZiQ0yxllkQcGweEIThG7bY8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wq9oZW8S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UlzL/OEh"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41a72f3a20dso3088455e9.0
-        for <loongarch@lists.linux.dev>; Mon, 22 Apr 2024 02:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713779063; x=1714383863; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p8Wu3wsA6l8PNq8s+rNlFLDmhVVJi5fhCRWYrZwDPqQ=;
-        b=UlzL/OEheWwYJ3PP+BaHZzsj2Dvd9EsdLzfPAB0lawA675f1yzqSYqMQBbPQcYs2es
-         iLvuL6DPlth8+fDs3a4qVkRsfVCNpkPOji3+sst5QjL4AmaH8Rkk9rP/Vjrd26lCfD0P
-         EECU8bETMK9+rjWHHNyI/97s8RE+bWonxhc7GG26uByzozSz9b5xr7nPx5n4pvvJTcVA
-         NB/5xADElCqC30XNsaOUJwQVn5S9PBx+uHzDy/AkHcUganJJEVG8o9wnydBBz8GHH9MF
-         EyASHi/c3wkSApe5vd+SCQryCuWSf4XWVGvfoy//rUo0xhnGO7AwE50vYhrhh6kUW40s
-         J3AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713779063; x=1714383863;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p8Wu3wsA6l8PNq8s+rNlFLDmhVVJi5fhCRWYrZwDPqQ=;
-        b=gK8YP2ga+BsWQyszGo5sopvPACN2J208ktx2F9ARfL8O49eye4CVjq+746H1SqS8tw
-         PKxG/hrPAJAiogu5vXiHmdWzD02G3FzpPibo5bbXtIy5tzjkaVclDVnrqIIxB5XyqmWF
-         CFJ1kFL36y/52p4L11nRBrZ79u3bzgaUzP3dl4TxM/G1kZKHTRW+TFazWzCfE/RQ9wvT
-         ygTWTCzxgfl/LX1MX7BaFlbRg6fLeCbZWz8E4JpgPspEh6Ona86cRxlGmml1lzoNu3Hq
-         nLuEPtOtG/gZu9rfX0Tl6LfX0tRiCv6LI6gJikoVg6/1U/j3cqcHiFBYUxXod4P9ED8U
-         pYLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWS2iB8OHTf9prnWz8UIqfxsCQ/XNE13fdlNea4cILstMjz/mdA+ARr+Rfifr4CBk9e62JWfn9h24rgj2athSgj1xodtpofmHf+
-X-Gm-Message-State: AOJu0YxrAvAY8bs4adNpMkkTekdJuI04rtFE7+sYCm1shw4B4M3I0CXs
-	NJEfxaoQvDZmEm8vZ4Y8BGGzWRfxGT3Vanr1b8vbzfGDJdwGoO7tjF55Pkz4DH4=
-X-Google-Smtp-Source: AGHT+IEU6I0opmVnr591cUgtsGJXlxHYTlf3UTRKYdnkAFPg93fgVxLtjz27g4+8aBrCRFbltjjSxw==
-X-Received: by 2002:a05:600c:3b11:b0:418:17e9:c23f with SMTP id m17-20020a05600c3b1100b0041817e9c23fmr5820026wms.31.1713779063000;
-        Mon, 22 Apr 2024 02:44:23 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id jg23-20020a05600ca01700b004189cf6bd6esm19393018wmb.22.2024.04.22.02.44.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 02:44:22 -0700 (PDT)
-Message-ID: <e2cd6b13-62ca-415a-a015-0bf30e77535c@linaro.org>
-Date: Mon, 22 Apr 2024 11:44:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wq9oZW8S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D46DFC113CC;
+	Mon, 22 Apr 2024 09:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713779096;
+	bh=uCqbzvPZq288hG4XoIWQdXz6usWeZU9rInsRoxq3uRE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Wq9oZW8SV9WNeOAfK+Bh9tajEqJOu7XpQA9boPfE5CRhIfkMQ5hO3YWZqmNj+NRVy
+	 G/P1Hy7NQVOdzE1TMQkWDs+WOvNOCfW1dYE9EKGmQE0GnfBfUDoaUYBsOfSx+oSBMV
+	 lUKKjGabFq9nF+/RdR6r8ca/l8SpGRk/3NZl1XJxyaTzd/iIiY1XCeC+//4NRsLe6Q
+	 ALa8oxjXZUzOccZxS5fSVZKHaQGdavNvCnHSZJTEfZKu5hdYr3XxUB28TNrzWeoRJs
+	 xM4oY/OhGCkl5R+tw93mxLtZeazebNVE41NA1xXhf61OrXooP6l5uOFGUdFmWOc/Sj
+	 viOaUM46QxrWw==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Rapoport <rppt@kernel.org>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v5 00/15] mm: jit/text allocator
+Date: Mon, 22 Apr 2024 12:44:21 +0300
+Message-ID: <20240422094436.3625171-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] thermal: loongson2: Trivial code style adjustment
-Content-Language: en-US
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Amit Kucheria <amitk@kernel.org>,
- Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- Yinbo Zhu <zhuyinbo@loongson.cn>, WANG Xuerui <git@xen0n.name>,
- loongarch@lists.linux.dev
-References: <cover.1713509889.git.zhoubinbin@loongson.cn>
- <58c3a812746affb331147d0d9f2f5b8f62f120cf.1713509889.git.zhoubinbin@loongson.cn>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <58c3a812746affb331147d0d9f2f5b8f62f120cf.1713509889.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 20/04/2024 03:45, Binbin Zhou wrote:
-> Here are some minor code style adjustment. Such as fix whitespace code
-> style; align function call arguments to opening parenthesis, and add
-> devm_thermal_add_hwmon_sysfs() return value checking.
-> 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
+From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 
-[ ... ]
+(something went wrong with the prevois posting, sorry for the noise)
 
->   	}
->   
->   	ret = devm_request_threaded_irq(dev, irq, NULL, loongson2_thermal_irq_thread,
-> -			IRQF_ONESHOT, "loongson2_thermal", tzd);
-> +					IRQF_ONESHOT, "loongson2_thermal", tzd);
->   	if (ret < 0)
->   		return dev_err_probe(dev, ret, "failed to request alarm irq\n");
->   
-> -	devm_thermal_add_hwmon_sysfs(dev, tzd);
-> -
-> -	return 0;
-> +	return devm_thermal_add_hwmon_sysfs(dev, tzd);
+Hi,
 
-You may not want to do this change. If the devm_thermal_add_hwmon_sysfs 
-function fails, that does not jeopardize the initialization of this driver.
+Since v3 I looked into making execmem more of an utility toolbox, as we
+discussed at LPC with Mark Rutland, but it was getting more hairier than
+having a struct describing architecture constraints and a type identifying
+the consumer of execmem.
+
+And I do think that having the description of architecture constraints for
+allocations of executable memory in a single place is better than having it
+spread all over the place.
+
+The patches available via git:
+https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=execmem/v5
+
+v5 changes:
+* rebase on v6.9-rc4 to avoid a conflict in kprobes
+* add copyrights to mm/execmem.c (Luis)
+* fix spelling (Ingo)
+* define MODULES_VADDDR for sparc (Sam)
+* consistently initialize struct execmem_info (Peter)
+* reduce #ifdefs in function bodies in kprobes (Masami) 
+
+v4: https://lore.kernel.org/all/20240411160051.2093261-1-rppt@kernel.org
+* rebase on v6.9-rc2
+* rename execmem_params to execmem_info and execmem_arch_params() to
+  execmem_arch_setup()
+* use single execmem_alloc() API instead of execmem_{text,data}_alloc() (Song)
+* avoid extra copy of execmem parameters (Rick)
+* run execmem_init() as core_initcall() except for the architectures that
+  may allocated text really early (currently only x86) (Will)
+* add acks for some of arm64 and riscv changes, thanks Will and Alexandre
+* new commits:
+  - drop call to kasan_alloc_module_shadow() on arm64 because it's not
+    needed anymore
+  - rename MODULE_START to MODULES_VADDR on MIPS
+  - use CONFIG_EXECMEM instead of CONFIG_MODULES on powerpc as per Christophe:
+    https://lore.kernel.org/all/79062fa3-3402-47b3-8920-9231ad05e964@csgroup.eu/
+
+v3: https://lore.kernel.org/all/20230918072955.2507221-1-rppt@kernel.org
+* add type parameter to execmem allocation APIs
+* remove BPF dependency on modules
+
+v2: https://lore.kernel.org/all/20230616085038.4121892-1-rppt@kernel.org
+* Separate "module" and "others" allocations with execmem_text_alloc()
+and jit_text_alloc()
+* Drop ROX entailment on x86
+* Add ack for nios2 changes, thanks Dinh Nguyen
+
+v1: https://lore.kernel.org/all/20230601101257.530867-1-rppt@kernel.org
+
+= Cover letter from v1 (sligtly updated) =
+
+module_alloc() is used everywhere as a mean to allocate memory for code.
+
+Beside being semantically wrong, this unnecessarily ties all subsystmes
+that need to allocate code, such as ftrace, kprobes and BPF to modules and
+puts the burden of code allocation to the modules code.
+
+Several architectures override module_alloc() because of various
+constraints where the executable memory can be located and this causes
+additional obstacles for improvements of code allocation.
+
+A centralized infrastructure for code allocation allows allocations of
+executable memory as ROX, and future optimizations such as caching large
+pages for better iTLB performance and providing sub-page allocations for
+users that only need small jit code snippets.
+
+Rick Edgecombe proposed perm_alloc extension to vmalloc [1] and Song Liu
+proposed execmem_alloc [2], but both these approaches were targeting BPF
+allocations and lacked the ground work to abstract executable allocations
+and split them from the modules core.
+
+Thomas Gleixner suggested to express module allocation restrictions and
+requirements as struct mod_alloc_type_params [3] that would define ranges,
+protections and other parameters for different types of allocations used by
+modules and following that suggestion Song separated allocations of
+different types in modules (commit ac3b43283923 ("module: replace
+module_layout with module_memory")) and posted "Type aware module
+allocator" set [4].
+
+I liked the idea of parametrising code allocation requirements as a
+structure, but I believe the original proposal and Song's module allocator
+was too module centric, so I came up with these patches.
+
+This set splits code allocation from modules by introducing execmem_alloc()
+and and execmem_free(), APIs, replaces call sites of module_alloc() and
+module_memfree() with the new APIs and implements core text and related
+allocations in a central place.
+
+Instead of architecture specific overrides for module_alloc(), the
+architectures that require non-default behaviour for text allocation must
+fill execmem_info structure and implement execmem_arch_setup() that returns
+a pointer to that structure. If an architecture does not implement
+execmem_arch_setup(), the defaults compatible with the current
+modules::module_alloc() are used.
+
+Since architectures define different restrictions on placement,
+permissions, alignment and other parameters for memory that can be used by
+different subsystems that allocate executable memory, execmem APIs
+take a type argument, that will be used to identify the calling subsystem
+and to allow architectures to define parameters for ranges suitable for that
+subsystem.
+
+The new infrastructure allows decoupling of BPF, kprobes and ftrace from
+modules, and most importantly it paves the way for ROX allocations for
+executable memory.
+
+[1] https://lore.kernel.org/lkml/20201120202426.18009-1-rick.p.edgecombe@intel.com/
+[2] https://lore.kernel.org/all/20221107223921.3451913-1-song@kernel.org/
+[3] https://lore.kernel.org/all/87v8mndy3y.ffs@tglx/
+[4] https://lore.kernel.org/all/20230526051529.3387103-1-song@kernel.org
 
 
->   }
->   
->   static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k1000_data = {
-> @@ -167,4 +167,5 @@ static struct platform_driver loongson2_thermal_driver = {
->   module_platform_driver(loongson2_thermal_driver);
->   
->   MODULE_DESCRIPTION("Loongson2 thermal driver");
-> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
->   MODULE_LICENSE("GPL");
+Mike Rapoport (IBM) (15):
+  arm64: module: remove unneeded call to kasan_alloc_module_shadow()
+  mips: module: rename MODULE_START to MODULES_VADDR
+  nios2: define virtual address space for modules
+  sparc: simplify module_alloc()
+  module: make module_memory_{alloc,free} more self-contained
+  mm: introduce execmem_alloc() and execmem_free()
+  mm/execmem, arch: convert simple overrides of module_alloc to execmem
+  mm/execmem, arch: convert remaining overrides of module_alloc to
+    execmem
+  riscv: extend execmem_params for generated code allocations
+  powerpc: extend execmem_params for kprobes allocations
+  arch: make execmem setup available regardless of CONFIG_MODULES
+  x86/ftrace: enable dynamic ftrace without CONFIG_MODULES
+  powerpc: use CONFIG_EXECMEM instead of CONFIG_MODULES where
+    appropriate
+  kprobes: remove dependency on CONFIG_MODULES
+  bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
 
+ arch/Kconfig                         |   8 +-
+ arch/arm/kernel/module.c             |  34 -------
+ arch/arm/mm/init.c                   |  45 +++++++++
+ arch/arm64/kernel/module.c           | 126 -----------------------
+ arch/arm64/kernel/probes/kprobes.c   |   7 --
+ arch/arm64/mm/init.c                 | 140 ++++++++++++++++++++++++++
+ arch/arm64/net/bpf_jit_comp.c        |  11 --
+ arch/loongarch/kernel/module.c       |   6 --
+ arch/loongarch/mm/init.c             |  21 ++++
+ arch/mips/include/asm/pgtable-64.h   |   4 +-
+ arch/mips/kernel/module.c            |  10 --
+ arch/mips/mm/fault.c                 |   4 +-
+ arch/mips/mm/init.c                  |  23 +++++
+ arch/nios2/include/asm/pgtable.h     |   5 +-
+ arch/nios2/kernel/module.c           |  20 ----
+ arch/nios2/mm/init.c                 |  21 ++++
+ arch/parisc/kernel/module.c          |  12 ---
+ arch/parisc/mm/init.c                |  23 ++++-
+ arch/powerpc/Kconfig                 |   2 +-
+ arch/powerpc/include/asm/kasan.h     |   2 +-
+ arch/powerpc/kernel/head_8xx.S       |   4 +-
+ arch/powerpc/kernel/head_book3s_32.S |   6 +-
+ arch/powerpc/kernel/kprobes.c        |  22 +---
+ arch/powerpc/kernel/module.c         |  38 -------
+ arch/powerpc/lib/code-patching.c     |   2 +-
+ arch/powerpc/mm/book3s32/mmu.c       |   2 +-
+ arch/powerpc/mm/mem.c                |  64 ++++++++++++
+ arch/riscv/kernel/module.c           |  12 ---
+ arch/riscv/kernel/probes/kprobes.c   |  10 --
+ arch/riscv/mm/init.c                 |  45 +++++++++
+ arch/riscv/net/bpf_jit_core.c        |  13 ---
+ arch/s390/kernel/ftrace.c            |   4 +-
+ arch/s390/kernel/kprobes.c           |   4 +-
+ arch/s390/kernel/module.c            |  42 +-------
+ arch/s390/mm/init.c                  |  30 ++++++
+ arch/sparc/include/asm/pgtable_32.h  |   2 +
+ arch/sparc/kernel/module.c           |  30 ------
+ arch/sparc/mm/Makefile               |   2 +
+ arch/sparc/mm/execmem.c              |  21 ++++
+ arch/sparc/net/bpf_jit_comp_32.c     |   8 +-
+ arch/x86/Kconfig                     |   2 +
+ arch/x86/kernel/ftrace.c             |  16 +--
+ arch/x86/kernel/kprobes/core.c       |   4 +-
+ arch/x86/kernel/module.c             |  51 ----------
+ arch/x86/mm/init.c                   |  29 ++++++
+ include/linux/execmem.h              | 132 ++++++++++++++++++++++++
+ include/linux/module.h               |   9 ++
+ include/linux/moduleloader.h         |  15 ---
+ kernel/bpf/Kconfig                   |   2 +-
+ kernel/bpf/core.c                    |   6 +-
+ kernel/kprobes.c                     |  63 +++++++-----
+ kernel/module/Kconfig                |   1 +
+ kernel/module/main.c                 | 105 +++++++++----------
+ kernel/trace/trace_kprobe.c          |  20 +++-
+ mm/Kconfig                           |   3 +
+ mm/Makefile                          |   1 +
+ mm/execmem.c                         | 145 +++++++++++++++++++++++++++
+ mm/mm_init.c                         |   2 +
+ 58 files changed, 910 insertions(+), 581 deletions(-)
+ create mode 100644 arch/sparc/mm/execmem.c
+ create mode 100644 include/linux/execmem.h
+ create mode 100644 mm/execmem.c
+
+
+base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.43.0
 
