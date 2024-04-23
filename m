@@ -1,86 +1,121 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C480F56B9D;
-	Tue, 23 Apr 2024 09:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303C3768EC;
+	Tue, 23 Apr 2024 11:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865544; cv=none; b=cPBlr+IkZ+23k8QXM8100ZhkJz67U3AscoaR08vwLXVa1Tv5Y7cSD2ixoFpMUtb5xCaSCIRSEk+ZA0w63RczfcKaygkSEi8ViLW36mkUG1+tOlwr9xjhOK+1SE5Tz1nVSun8rA3gRdXHX42rnw2KM603FDlZI4A9Pq2c/NLahQQ=
+	t=1713870832; cv=none; b=f2kOBhR6AsV01ia+TLbSiyb91UYWk4pdPynLU7xjRqSvEGpR7y9bZfV70vA3CWd6jUxQ8cmifyengMMcZvdQXdtMLlMosGoI9bvTjTdDz7IKoAjc36kB+qxwfLQc/obsTTREP3gkD7B3Oa4GrRM/aPki6U9cflA6pSBM/kG1mg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713865544; c=relaxed/simple;
-	bh=unf/IKr9VmLOe/XGqyE5/FCvp/8jpLFn08Ee3ayn9vE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=FNtpK30RyIdq+cDU1VwbpG5a0C/1h5jEBDNloEsrb4wxb+/xkuNYqsNqPkncySX6rONuz95NldPlHCNJ7IUBE04A4f6DxJ+8M/GQbm8EUMom4mdGnUOx77XgkKfrYYak474tFlw1pld6dEV7F3QaTLbA8cdwwEGvlulW7OZ2NLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Tr6T8d3n; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Tr6T8d3n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713865502; x=1714470302; i=markus.elfring@web.de;
-	bh=unf/IKr9VmLOe/XGqyE5/FCvp/8jpLFn08Ee3ayn9vE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Tr6T8d3n2Z6QotE4Ah2/GuNN+n+H0MPh+Rib8eT9ZHFctn5z9bzoGFJa7fBLb89w
-	 PgQSmRGgsBjwGxyWM3dUQx9cV91Gyy03JNqIXHJD941+Q+JIy1cTMlKHnFTv8URBk
-	 aCkZG187W/mp6/Ao9Gq/vnfDdpZsL6tp0MgIH2U3ZLRkfziVmLk/K9rbSSeaGzfPZ
-	 0DpZdTl/aOTM7bLgeXM+oGSPj8MW/1aS1SugoA8Qts8gWt6BDO1LsJWjazsx6qdM3
-	 DyPkUTdCAzSjJNsCniEOBibmjgLqFuMU2JteTOxv8XLi6USby5YIHlu2R2xOFdgkp
-	 HQS/2Woaz2DrPKY/Qg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MjPQ6-1sR9k73YkM-00hArN; Tue, 23
- Apr 2024 11:45:01 +0200
-Message-ID: <1f15f7e3-32ff-486f-8e6f-bbe9183b05e5@web.de>
-Date: Tue, 23 Apr 2024 11:44:55 +0200
+	s=arc-20240116; t=1713870832; c=relaxed/simple;
+	bh=V1BUX1QiySmoJgp9S3EXm+goKQR4Zi8n7fSWoAHAIus=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gwazY/70HrJZvTPUka2GNATS40FSwDWBvgzeCqPASe/Rvj52XLaY7ApK5c4sMNq77UBi2chpVMmXLrNYIA3bgYomXZ5mIeVVZ+oXBPYCievrHULqOWygSMabqB0PFiepmb/13cqVMJTVLY/Icf5IFgib+jGjDNRePpdTouSpPZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VNztM487GzXlBp;
+	Tue, 23 Apr 2024 19:10:19 +0800 (CST)
+Received: from dggpemm500002.china.huawei.com (unknown [7.185.36.229])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8C64A140136;
+	Tue, 23 Apr 2024 19:13:47 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 23 Apr 2024 19:13:46 +0800
+Subject: Re: [PATCH v7 03/16] ACPI: processor: Drop duplicated check on _STA
+ (enabled + present)
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+	<linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Russell King
+	<linux@armlinux.org.uk>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <linuxarm@huawei.com>, <justin.he@arm.com>,
+	<jianyong.wu@arm.com>
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+ <20240418135412.14730-4-Jonathan.Cameron@huawei.com>
+ <c13f7424-3a7f-4c3e-3e8d-81e9fcf0caf7@huawei.com>
+ <CAJZ5v0gDJzCTkUP3i8H3pivrCHdU4-qVf3SVCvTF9hQyKJHtBQ@mail.gmail.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <e867fba1-3df4-8e1d-fb5e-e19ef4e0e588@huawei.com>
+Date: Tue, 23 Apr 2024 19:13:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Huacai Chen <chenhuacai@loongson.cn>,
- Jiantao Shan <shanjiantao@loongson.cn>, loongarch@lists.linux.dev,
- loongson-kernel@lists.loongnix.cn, linux-arch@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Guo Ren <guoren@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>
-References: <20240423074257.2480274-1-chenhuacai@loongson.cn>
-Subject: Re: [PATCH] LoongArch: Fix access error when read fault on a
- write-only VMA
+In-Reply-To: <CAJZ5v0gDJzCTkUP3i8H3pivrCHdU4-qVf3SVCvTF9hQyKJHtBQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240423074257.2480274-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5aAF/++CnrqQb4hr3ZNQgDjqdbWXV8FiY70vkX5EAL9c+pMnohp
- sKY5V/AoYCKJqdNqip9JJNcWrXuJfNvdZwzjZaLSkSq/mUjGiu4hVt3P/fBig1peL/Gl+cb
- P9HLBr4deryChgh/8nLct4XJM5XFQhZZlSkCVcum+5nO9kdvpMy22gS7NFaLB9t6SKz1hft
- wvb8Rwojp2UmKg/xrsVeA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uxmvR4l/YWM=;moCV0Xu1L3eQa1QE3ayecdIt6yI
- TFwIiOzdVBTn1XS7iqW/d+WA80gDD8hWX8R458DMLrZWMWJkL887aXirdoajoDlX2j0/7aA6/
- 5E2CEn2U2K9LWRORqLHkA/YhmUh0uBf3z7Eny3RmQMW46PgDKa6zUC0m0RP1gjMdDBn1ll1i9
- 3Gqg763E+MrPz/V47ZIyEfaM8O7xzUkYjev1P0pqAXQ9I73mJtT9+gTe9tAGbPnQjvB0pPXD1
- C6mkWZZuWdo9upJG0F48diq83XqbiJqFpQlkt3yAfBlNQ+XJhuqjMajL0kyVrRwwJALlj3tlE
- 4Q8CkFfl5ADIzGL6SHlfwwr7mjyuWMsKpsTqDTtk3pe+B2bl4n0xiIoMAzcHrQ9WaPkTZkkdG
- yP9U7Tn0DewYHscBzIpn09XDQhGsmNpYJTThlKudftUe2eCgX+5emdmWG1R0uTwMv/2yrRqcp
- gZWrinbZ0kRNYdOwCDHH02bewpnMIAdAp4rYKlvHREaktT5yubOy7j0nVyvgJal5r6g8dnvYZ
- ijYq/jrG2Sssc4Y3pBNOm9U8YkHY4hS2TpQRDdYoD817pOjto7TRBBxzwFThBkbNZ5abFT84F
- l++U4l98nVtct94Q/Yf8TfRsYEghVt1Zae4crHi9dDqyX7c5fmroIOk0yB44XfTQzfTtbJ23x
- TNlHEayPqfruBhlthohHs92c8hjE8wko5nY+O8WBklVGv2IvywPlmrdxNKJffBDGI/eeRGBlU
- +CaJx/7Cxcw1/HwK0wgEs4nbGwqaF5lpSHGpzpd2lxs7J0MDrjuBoi4hboaEMirmIt7ZgZRkV
- T7RbDHhJ1JomBCsixaL4mpI2UXiN7Mtbp9w5t1KWc/CTE=
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500002.china.huawei.com (7.185.36.229)
 
-> As with most architectures, allow handling of read faults in VMAs that
-> have VM_WRITE but without VM_READ (WRITE implies READ).
-=E2=80=A6
+On 2024/4/23 17:31, Rafael J. Wysocki wrote:
+> On Tue, Apr 23, 2024 at 8:49 AM Hanjun Guo <guohanjun@huawei.com> wrote:
+>>
+>> On 2024/4/18 21:53, Jonathan Cameron wrote:
+>>> The ACPI bus scan will only result in acpi_processor_add() being called
+>>> if _STA has already been checked and the result is that the
+>>> processor is enabled and present.  Hence drop this additional check.
+>>>
+>>> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+>>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>
+>>> ---
+>>> v7: No change
+>>> v6: New patch to drop this unnecessary code. Now I think we only
+>>>       need to explicitly read STA to print a warning in the ARM64
+>>>       arch_unregister_cpu() path where we want to know if the
+>>>       present bit has been unset as well.
+>>> ---
+>>>    drivers/acpi/acpi_processor.c | 6 ------
+>>>    1 file changed, 6 deletions(-)
+>>>
+>>> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+>>> index 7fc924aeeed0..ba0a6f0ac841 100644
+>>> --- a/drivers/acpi/acpi_processor.c
+>>> +++ b/drivers/acpi/acpi_processor.c
+>>> @@ -186,17 +186,11 @@ static void __init acpi_pcc_cpufreq_init(void) {}
+>>>    #ifdef CONFIG_ACPI_HOTPLUG_CPU
+>>>    static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+>>>    {
+>>> -     unsigned long long sta;
+>>> -     acpi_status status;
+>>>        int ret;
+>>>
+>>>        if (invalid_phys_cpuid(pr->phys_id))
+>>>                return -ENODEV;
+>>>
+>>> -     status = acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
+>>> -     if (ACPI_FAILURE(status) || !(sta & ACPI_STA_DEVICE_PRESENT))
+>>> -             return -ENODEV;
+>>> -
+>>>        cpu_maps_update_begin();
+>>>        cpus_write_lock();
+>>
+>> Since the status bits were checked before acpi_processor_add() being
+>> called, do we need to remove the if (!acpi_device_is_enabled(device))
+>> check in acpi_processor_add() as well?
+> 
+> No, because its caller only checks the present bit.  The function
+> itself checks the enabled bit.
 
-Will the tag =E2=80=9CFixes=E2=80=9D become relevant here?
+Thanks for the pointer, I can see the detail in the acpi_bus_attach()
+now,
 
-Regards,
-Markus
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+
+Thanks
+Hanjun
