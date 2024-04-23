@@ -1,109 +1,108 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay5-1.pub.mailoutpod2-cph3.one.com (mailrelay5-1.pub.mailoutpod2-cph3.one.com [46.30.211.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF1113C90D
-	for <loongarch@lists.linux.dev>; Tue, 23 Apr 2024 15:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F9213D294
+	for <loongarch@lists.linux.dev>; Tue, 23 Apr 2024 16:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713887678; cv=none; b=H7VrqLEl+uoZHb9P/K5CUxLCnhBpyOzpalcT7Edgm5vYIQZnL2svoq9Am4SIZs23iAgGbuR0/rp7J7tt8CZm37nAsF4EN79QbErBiNlyUFxonAhq17EA1XprkdKd7ymfouqTDoQMFeQ4grEzGsbmev+8CkA4LeGkH2BXhhsXt6k=
+	t=1713890494; cv=none; b=AW1SgTO8FTrgz5LEQNt3mGAunGfc4HWMaTHD5acjWykrIApWYzFe/HjyaKpY3GfQ9b5X47wlHnBkXlBc5wz760ZT7gOApIyYtrsc+ts0yt8r4co1nM2zATH8ApfP5Ky8Hvboa+u+9bzAYxgsuNBwRHD6fGsgY+ioKNo2JjKyquM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713887678; c=relaxed/simple;
-	bh=zOrR4N6W5yEjumIJlaR4j9bXUXeISdNMznsMzpCn11U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZteC2e5kigcEh+/TpZc6hdEUHRXrtAnKikQGdT+T0xwYZu5w7vcw/Vwdc8ZCZMRBwdHzdYPBftrLynbBmHLvDDyZ6PHhN2yMUzkOelbRx+x81SEc6iGpGrKRPd2wivCFieQedoKujHGF9YAcAf32XZacQtZh3sqkKqa6rmAr1Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oTLASh1i; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713890494; c=relaxed/simple;
+	bh=Ew4ZwP340aTNrveQuDNc86ipPLYtcqn5HIz7uAO7cFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QNgBKmlSr4fMa+N9is+Q6d6xeXigrYWI2AKXkqcFwzsb898NObS7YshlRbvJMajVJ3/vYIKJIFlzpw6yOPvnWkl7ExKuf45nFB+62Ki/M7kyD5ZBf4GVTYJH8UXXcA97olbmBagVztm9OcOHuJBD962zfpIMTvNTaeHfQpWvE44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=Tw8FQkWz; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=MCt7cKSc; arc=none smtp.client-ip=46.30.211.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oTLASh1i"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41a442c9dcbso19305815e9.2
-        for <loongarch@lists.linux.dev>; Tue, 23 Apr 2024 08:54:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="Tw8FQkWz";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="MCt7cKSc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713887675; x=1714492475; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2CEYkFgPQbfSpwnnDo2x7Wyyhx+vsMBr1IYLJirdNPw=;
-        b=oTLASh1iCgC0Kj1hZx8PVtek6ClElyXFFZr+n2sAp9VO+b/RbPkrZED9bS+i+wA0H5
-         1jHeXf8FLbaWOPCsQK1IcS4fSoyajC9fXUW8OlL0Vb25bpgCg+C0x77gJ/8D2ZL4i8LH
-         +AMhCC+Q0XR8eYKNjL9BOxS0nvqhba9Da/48YAwxZEJAXHBpdeDk+lLXpfF0V4fqCUcl
-         GdlSvGxz18a61WVzNNXV+chbUXR3ioPF04EyhBojeaI17C5JRH8l0zSVCKazjnQ9R3Cf
-         l7cEXHDdXWgE7S+k1IoRGJkDkOC5bBc7or43b/V28yh2mnt04EuPUsa3P4/4zNaiEmjf
-         +hWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713887675; x=1714492475;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2CEYkFgPQbfSpwnnDo2x7Wyyhx+vsMBr1IYLJirdNPw=;
-        b=Oq5kcUGTRQ20ml1IvAcFm7Ze06obtG0dcsS4EfiEwTsOlf34BD+x7YatpMpAunVbjQ
-         POC3kn42JRhf41erXsCPqAVpEPFjHx6vbzB6YwEqSpnT2VOxAz5IVQDy3WGiEkf5bgeW
-         xVx0rsVM47S6sjU+WrDm68gLxOf/KIoHT6nK/wLzzzJatx6b+Iapl7JgTejGY5/pEbLo
-         8aWUPxzGIfs91X2sbNZKR5zZHXSiDA8accTbN88/scOG/vxicMo9iYwx4AEoL3cMstiy
-         QxR0zKl/WZJk06dSDUGnEQ5L4ipp6GTcegbIae8i22SVlYZxDe8X+L9x7fcqcsnmz2O9
-         YDMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUoEaTRfxSovIhH90Xrkt13po0766VP+CzHOpD+2+MOxkUK8fa+vuu85bHDTKkSheMc8DmtIZZJNWAnWwZn+yexyakrFZLM56KB
-X-Gm-Message-State: AOJu0YxnG/NH/yuS1MkNbxgMzbw1bDX8uikSrskHKs2n2JLDM7R7jvHY
-	wQ1hHysqyZGn/CSmsBsWxcV3cLmFYHNlpjaqlJ073Gk0PcNxloY49qAr85lUBE0=
-X-Google-Smtp-Source: AGHT+IE0M1tVNbSGH6P4H6A7BokfgioaPGrg79dTjBg1s3qdqWoF9FuBSbISRUuyZlebNkOM8fxysw==
-X-Received: by 2002:a05:6000:e81:b0:346:c0f6:8b6 with SMTP id dz1-20020a0560000e8100b00346c0f608b6mr9421964wrb.32.1713887674930;
-        Tue, 23 Apr 2024 08:54:34 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id y5-20020adfe6c5000000b003436cb45f7esm14854289wrm.90.2024.04.23.08.54.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 08:54:33 -0700 (PDT)
-Message-ID: <d1bf86bc-b561-47c6-999d-fb5e3c99663e@linaro.org>
-Date: Tue, 23 Apr 2024 17:54:33 +0200
+	d=ravnborg.org; s=rsa1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=ce+ZqFlarA8IAt5zfwbr2hxRLFQAtI7f0O/GFL7QRfQ=;
+	b=Tw8FQkWzueJByde49pf2Etw1JNd+9Cs/a8VSdP4sAjZamDT998lpGJ8OUSXZPgdnq9YK80Ld79By0
+	 E1ZePxzkIVPPM3w68Ti2ki86ZQSTo/Qengh+ox/5EsZdMfGxT/LtyRbZzNkl+eBPCbtoD00qByBVfh
+	 QlogVQorbOUCuNhfuDWjsPIOEK757mimusKghDsKCrDlzJS1s6Psw/PaVE8r407gkh53FMLrF7D1dO
+	 uDYiPtxot3rmREDV43Zw4JTzOwK/+pqOJcBE6+tKyTzcGurjSzSuf0Roh28MmUDSp64HXkjpWwAEu0
+	 fCub6cvUfUdVz3Rx5TFyQR6t2+r0Tlw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=ce+ZqFlarA8IAt5zfwbr2hxRLFQAtI7f0O/GFL7QRfQ=;
+	b=MCt7cKScu1j54dhTCuf6RoKzDR6Pxv4AhcExl3aouinnY7Cygl2lgVcGjoVORGMB/icOvVzGnLV0S
+	 zdG43KuBQ==
+X-HalOne-ID: 4e317c2c-0190-11ef-8c96-edf132814434
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay5.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 4e317c2c-0190-11ef-8c96-edf132814434;
+	Tue, 23 Apr 2024 16:41:22 +0000 (UTC)
+Date: Tue, 23 Apr 2024 18:41:17 +0200
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 04/15] sparc: simplify module_alloc()
+Message-ID: <20240423164117.GA897977@ravnborg.org>
+References: <20240422094436.3625171-1-rppt@kernel.org>
+ <20240422094436.3625171-5-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/4] thermal: loongson2: Add Loongson-2K0500 and
- Loongson-2K2000 thermal support
-Content-Language: en-US
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Amit Kucheria <amitk@kernel.org>,
- Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- Yinbo Zhu <zhuyinbo@loongson.cn>, WANG Xuerui <git@xen0n.name>,
- loongarch@lists.linux.dev
-References: <cover.1713837379.git.zhoubinbin@loongson.cn>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <cover.1713837379.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240422094436.3625171-5-rppt@kernel.org>
 
-On 23/04/2024 03:58, Binbin Zhou wrote:
-> Hi all:
+Hi Mike,
+On Mon, Apr 22, 2024 at 12:44:25PM +0300, Mike Rapoport wrote:
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 > 
-> This patchset introduce the Loongson-2K0500 and Loongson-2K2000
-> temperature sensors.
+> Define MODULES_VADDR and MODULES_END as VMALLOC_START and VMALLOC_END
+> for 32-bit and reduce module_alloc() to
 > 
-> The temperature sensors of Loongson-2K series CPUs are similar, except
-> that the temperature reading method of the Loongson-2K2000 is
-> different.
+> 	__vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END, ...)
 > 
-> Specifically, the temperature output register of the Loongson-2K2000 is
-> defined in the chip configuration domain. We need to define it in dts
-> and calculate it using different calculation methods.
+> as with the new defines the allocations becames identical for both 32
+> and 64 bits.
 > 
-> Thanks.
+> While on it, drop unsed include of <linux/jump_label.h>
 > 
-> ---
+> Suggested-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
 
-Applied, thanks
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Looks good.
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
