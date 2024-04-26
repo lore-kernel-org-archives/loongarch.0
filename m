@@ -1,166 +1,199 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5DE147C63
-	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 13:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DF3147C89;
+	Fri, 26 Apr 2024 13:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139106; cv=none; b=MDmSQo9R0oARzy2GmvCVXm+8RcDJ9oJo7ShZvzzy5MoUavz5iyGtctKRNhwguXW1w3pULiM+xPpBVXixXL0LdbK/5Rl2ck5D0jAELn+eIvHc1r60UQ+TYUqIaRxjvg1nUbyVu05tOC8xZyvZHl6lmyCCctrQkcBDrLyW9EKsAT4=
+	t=1714139492; cv=none; b=sldNe7IokSVo0TRzU5BYC3dO/Ks/2oPeWiQ1nt75AQEvt0CoyhntSx3dudkD2wNsjExeE4yWYifRk8b1b+P0Ylv3aZZtyG9RTD0DvZ3gTGADhRLoERyrVDDHEzL42kmxz0mQ/gJWK5JFrkHeVqOkf3dds0l6rVOtZeEVyiK6j0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139106; c=relaxed/simple;
-	bh=/wyjt9d4AZ8Mo8vzASxA6mAa3oblPdVQKxM3OHzZLF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=RgWxwzShc9vRACLfYJEiKGBKhoIMSTWDbeMDO+9e5c9TC1LnpjEOt6lSdUqV7N+nnB1TrwM9h9AiMheLViLiXa9OQrv95Y0uAZMBs38QGWeMhIhT1S5efUC/gOVx1KntafpESg8ut9+IBdcH7sdE4g6B2QnyNBxX/930xHyX79c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AnQJ1dJI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AnQJ1dJI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714139104;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uF1kPlR2Ck3Z44kTNMrT7zanJ3tMGvooilBaXGx0yJc=;
-	b=AnQJ1dJI3MtJ+7I0tkcWnraRJUBm9MW1uPpoAEPQpP6czxDrPrFfY2kGvbxe30YS501/Gb
-	PSLgnbiOQZ/7zQJxoekoEhYqIxC3Za3r1Srf5f+U0V+3uinJqwqRjSzCEDqUXtxMa4WzCo
-	R83vtPBuT6SQIbOeXPccWXoDQIHCLVo=
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
- [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-478-nEucV_4dOkSUpCpQTY9FVA-1; Fri, 26 Apr 2024 09:45:02 -0400
-X-MC-Unique: nEucV_4dOkSUpCpQTY9FVA-1
-Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-6eba7dc8f1eso477072a34.3
-        for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 06:45:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714139102; x=1714743902;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uF1kPlR2Ck3Z44kTNMrT7zanJ3tMGvooilBaXGx0yJc=;
-        b=ppsHy+dxd/6xhtLg3gREVPvsE5xTGIqBMnvx4WJOnu/YF22Vk3Bb3UyMLEix2I0TK/
-         o5EWTFQ3aKjvhVGiijnqCo+id2SJtuBFeRIsONCvd4xdK5HPnQtIi0w0WZ2hFTaXhg0b
-         EVYidgOolQ8H2FOEhS7roDeAiuCamoCZW8dqOftXMEweikpjtpgc2ti8kv03KNa+gy1z
-         ZRctHHkRHlnSXfuA3IYdyMHbTJSInRfggYnbKosFqAYBDu8ITSeM/6mpooiP3224tbK6
-         w9VnyqCwa1MuV1rtMl2k5JtDOMdEOQoxCudz0qMJ7pgPCn3L/Ed9K5697EgwJwxaKWSI
-         2/kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFqqGoqgmzVKI+DuZCEKT2/GjtejBOGC7We2LaOHbEPdxj1mPqilm3aBrR155zwU3oyYyQITQfYtv1qBEzhKBsrFwfR1XOd6FW
-X-Gm-Message-State: AOJu0Yx0Dgqma9ceiHwkrMXOkJ4pRMe/ki7WGGnRYlo1iUYQX+TOxnJP
-	WKZTvBKKfo+M6/KUjTuF0W2dQqFdVTcF4r37mjVTvhKKe9FJDnE2odTPzdIzSO0z2X6WaMmZS5n
-	vO4pvo2DNfeB4A6YDtXyVVCOWl9WPH66Ogv9NJj+MTynPa6K6k4QguG1N9Q==
-X-Received: by 2002:a05:6808:d53:b0:3c5:f29a:5fda with SMTP id w19-20020a0568080d5300b003c5f29a5fdamr3101414oik.3.1714139101693;
-        Fri, 26 Apr 2024 06:45:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGzrxrCF28uWDRUo6q+zp4qFvioOS0q1e4hOagwn8iRvVD4UFCuaQuTxLkqj/Vp49yVezlG5g==
-X-Received: by 2002:a05:6808:d53:b0:3c5:f29a:5fda with SMTP id w19-20020a0568080d5300b003c5f29a5fdamr3101360oik.3.1714139100964;
-        Fri, 26 Apr 2024 06:45:00 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id w9-20020a0ca809000000b00696b1050be8sm6864026qva.133.2024.04.26.06.44.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 06:45:00 -0700 (PDT)
-Date: Fri, 26 Apr 2024 09:44:58 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
-Message-ID: <Ziuv2jLY1wgBITiP@x1n>
-References: <20240402125516.223131-1-david@redhat.com>
- <20240402125516.223131-2-david@redhat.com>
- <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
+	s=arc-20240116; t=1714139492; c=relaxed/simple;
+	bh=QHkwzm7yGBz1ZP6RZARRpVjRm5TBFngEPCESKKI1c/Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W8XDLqdxVEO6lrhBkAYmWIXf08IY4H0QeRIznq9ilpwqEttrCitP2QbBt6zzpZqP18vy9tyIYw9O//H2TrNcqlrH+mTHKtuzkvGcj9+qsYFItF50g7KNtN3UujQPxgrISDsevyXmTJZ2i3cBMKcBKRzjPWGbLb5SLesQ9YI7DBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvG10Yj3z6K6Nj;
+	Fri, 26 Apr 2024 21:48:57 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id C5D0C140A34;
+	Fri, 26 Apr 2024 21:51:25 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 26 Apr 2024 14:51:25 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v8 00/16] ACPI/arm64: add support for virtual cpu hotplug
+Date: Fri, 26 Apr 2024 14:51:10 +0100
+Message-ID: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, Apr 26, 2024 at 09:17:47AM +0200, David Hildenbrand wrote:
-> On 02.04.24 14:55, David Hildenbrand wrote:
-> > Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
-> > all relevant internal functions to start with "gup_fast", to make it
-> > clearer that this is not ordinary GUP. The current mixture of
-> > "lockless", "gup" and "gup_fast" is confusing.
-> > 
-> > Further, avoid the term "huge" when talking about a "leaf" -- for
-> > example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
-> > "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
-> > stays.
-> > 
-> > What remains is the "external" interface:
-> > * get_user_pages_fast_only()
-> > * get_user_pages_fast()
-> > * pin_user_pages_fast()
-> > 
-> > The high-level internal functions for GUP-fast (+slow fallback) are now:
-> > * internal_get_user_pages_fast() -> gup_fast_fallback()
-> > * lockless_pages_from_mm() -> gup_fast()
-> > 
-> > The basic GUP-fast walker functions:
-> > * gup_pgd_range() -> gup_fast_pgd_range()
-> > * gup_p4d_range() -> gup_fast_p4d_range()
-> > * gup_pud_range() -> gup_fast_pud_range()
-> > * gup_pmd_range() -> gup_fast_pmd_range()
-> > * gup_pte_range() -> gup_fast_pte_range()
-> > * gup_huge_pgd()  -> gup_fast_pgd_leaf()
-> > * gup_huge_pud()  -> gup_fast_pud_leaf()
-> > * gup_huge_pmd()  -> gup_fast_pmd_leaf()
-> > 
-> > The weird hugepd stuff:
-> > * gup_huge_pd() -> gup_fast_hugepd()
-> > * gup_hugepte() -> gup_fast_hugepte()
-> 
-> I just realized that we end up calling these from follow_hugepd() as well.
-> And something seems to be off, because gup_fast_hugepd() won't have the VMA
-> even in the slow-GUP case to pass it to gup_must_unshare().
-> 
-> So these are GUP-fast functions and the terminology seem correct. But the
-> usage from follow_hugepd() is questionable,
-> 
-> commit a12083d721d703f985f4403d6b333cc449f838f6
-> Author: Peter Xu <peterx@redhat.com>
-> Date:   Wed Mar 27 11:23:31 2024 -0400
-> 
->     mm/gup: handle hugepd for follow_page()
-> 
-> 
-> states "With previous refactors on fast-gup gup_huge_pd(), most of the code
-> can be leveraged", which doesn't look quite true just staring the the
-> gup_must_unshare() call where we don't pass the VMA. Also,
-> "unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense for
-> slow GUP ...
+Thanks to Rafael, Marc, Hanjun and Gavin for reviews of v8 and tags.
 
-Yes it's not needed, just doesn't look worthwhile to put another helper on
-top just for this.  I mentioned this in the commit message here:
+v8: Details and more minor stuff in individual patch descriptions
+  - Rewrite the handling of not enabled redistributors in the gicv3 driver
+    to keep impacts local. Note this needs a dance with a new cpuhp
+    callback that runs before CPU bring up reaches the section that
+    cannot fail. This avoids clearing bits in cpu_present_mask and
+    cpu_possible_mask making the solution much less fragile.
+  - Do not carry on for that CPU if acpi_processor_set_per_cpu() detects
+    a problem, but continue to leave enough in place to perform buggy bios
+    checks.
+  - Protect against a buggy BIOS that has apparently enabled CPUs in DSDT
+    that are not in MADT. The check makes sense anyway as on arm64 we have
+    not way to 'generate' an ID if one isn't present at acpi_map_cpu().
 
-  There's something not needed for follow page, for example, gup_hugepte()
-  tries to detect pgtable entry change which will never happen with slow
-  gup (which has the pgtable lock held), but that's not a problem to check.
+Updated version of James' original introduction.
 
-> 
-> @Peter, any insights?
+This series adds what looks like cpuhotplug support to arm64 for use in
+virtual machines. It does this by moving the cpu_register() calls for
+architectures that support ACPI into an arch specific call made from
+the ACPI processor driver.
+ 
+The kubernetes folk really want to be able to add CPUs to an existing VM,
+in exactly the same way they do on x86. The use-case is pre-booting guests
+with one CPU, then adding the number that were actually needed when the
+workload is provisioned.
 
-However I think we should pass vma in for sure, I guess I overlooked that,
-and it didn't expose in my tests too as I probably missed ./cow.
+Wait? Doesn't arm64 support cpuhotplug already!?
+In the arm world, cpuhotplug gets used to mean removing the power from a CPU.
+The CPU is offline, and remains present. For x86, and ACPI, cpuhotplug
+has the additional step of physically removing the CPU, so that it isn't
+present anymore.
+ 
+Arm64 doesn't support this, and can't support it: CPUs are really a slice
+of the SoC, and there is not enough information in the existing ACPI tables
+to describe which bits of the slice also got removed. Without a reference
+machine: adding this support to the spec is a wild goose chase.
+ 
+Critically: everything described in the firmware tables must remain present.
+ 
+For a virtual machine this is easy as all the other bits of 'virtual SoC'
+are emulated, so they can (and do) remain present when a vCPU is 'removed'.
 
-I'll prepare a separate patch on top of this series and the gup-fast rename
-patches (I saw this one just reached mm-stable), and I'll see whether I can
-test it too if I can find a Power system fast enough.  I'll probably drop
-the "fast" in the hugepd function names too.
+On a system that supports cpuhotplug the MADT has to describe every possible
+CPU at boot. Under KVM, the vGIC needs to know about every possible vCPU before
+the guest is started.
+With these constraints, virtual-cpuhotplug is really just a hypervisor/firmware
+policy about which CPUs can be brought online.
+ 
+This series adds support for virtual-cpuhotplug as exactly that: firmware
+policy. This may even work on a physical machine too; for a guest the part of
+firmware is played by the VMM. (typically Qemu).
+ 
+PSCI support is modified to return 'DENIED' if the CPU can't be brought
+online/enabled yet. The CPU object's _STA method's enabled bit is used to
+indicate firmware's current disposition. If the CPU has its enabled bit clear,
+it will not be registered with sysfs, and attempts to bring it online will
+fail. The notifications that _STA has changed its value then work in the same
+way as physical hotplug, and firmware can cause the CPU to be registered some
+time later, allowing it to be brought online.
+ 
+This creates something that looks like cpuhotplug to user-space and the
+kernel beyond arm64 architecture specific code, as the sysfs
+files appear and disappear, and the udev notifications look the same.
+ 
+One notable difference is the CPU present mask, which is exposed via sysfs.
+Because the CPUs remain present throughout, they can still be seen in that mask.
+This value does get used by webbrowsers to estimate the number of CPUs
+as the CPU online mask is constantly changed on mobile phones.
+ 
+Linux is tolerant of PSCI returning errors, as its always been allowed to do
+that. To avoid confusing OS that can't tolerate this, we needed an additional
+bit in the MADT GICC flags. This series copies ACPI_MADT_ONLINE_CAPABLE, which
+appears to be for this purpose, but calls it ACPI_MADT_GICC_CPU_CAPABLE as it
+has a different bit position in the GICC.
+ 
+This code is unconditionally enabled for all ACPI architectures, though for
+now only arm64 will have deferred the cpu_register() calls.
 
-Thanks,
+If folk want to play along at home, you'll need a copy of Qemu that supports this.
+https://github.com/salil-mehta/qemu.git virt-cpuhp-armv8/rfc-v2
+
+Replace your '-smp' argument with something like:
+ | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
+ 
+ then feed the following to the Qemu montior;
+ | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
+ | (qemu) device_del cpu1
+ 
+
+James Morse (7):
+  ACPI: processor: Register deferred CPUs from acpi_processor_get_info()
+  ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
+  arm64: acpi: Move get_cpu_for_acpi_id() to a header
+  irqchip/gic-v3: Don't return errors from gic_acpi_match_gicc()
+  irqchip/gic-v3: Add support for ACPI's disabled but 'online capable'
+    CPUs
+  arm64: document virtual CPU hotplug's expectations
+  cpumask: Add enabled cpumask for present CPUs that can be brought
+    online
+
+Jean-Philippe Brucker (1):
+  arm64: psci: Ignore DENIED CPUs
+
+Jonathan Cameron (8):
+  ACPI: processor: Simplify initial onlining to use same path for cold
+    and hotplug
+  cpu: Do not warn on arch_register_cpu() returning -EPROBE_DEFER
+  ACPI: processor: Drop duplicated check on _STA (enabled + present)
+  ACPI: processor: Move checks and availability of acpi_processor
+    earlier
+  ACPI: processor: Add acpi_get_processor_handle() helper
+  ACPI: scan: switch to flags for acpi_scan_check_and_detach()
+  arm64: arch_register_cpu() variant to check if an ACPI handle is now
+    available.
+  arm64: Kconfig: Enable hotplug CPU on arm64 if ACPI_PROCESSOR is
+    enabled.
+
+ .../ABI/testing/sysfs-devices-system-cpu      |   6 +
+ Documentation/arch/arm64/cpu-hotplug.rst      |  79 ++++++++++++
+ Documentation/arch/arm64/index.rst            |   1 +
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/include/asm/acpi.h                 |  11 ++
+ arch/arm64/kernel/acpi.c                      |  22 ++++
+ arch/arm64/kernel/acpi_numa.c                 |  11 --
+ arch/arm64/kernel/psci.c                      |   2 +-
+ arch/arm64/kernel/smp.c                       |  56 ++++++++-
+ drivers/acpi/acpi_processor.c                 | 115 +++++++++++-------
+ drivers/acpi/processor_driver.c               |  44 ++-----
+ drivers/acpi/scan.c                           |  47 +++++--
+ drivers/base/cpu.c                            |  12 +-
+ drivers/irqchip/irq-gic-v3.c                  |  49 ++++++--
+ include/acpi/acpi_bus.h                       |   1 +
+ include/acpi/processor.h                      |   2 +-
+ include/linux/acpi.h                          |  10 +-
+ include/linux/cpumask.h                       |  25 ++++
+ kernel/cpu.c                                  |   3 +
+ 19 files changed, 383 insertions(+), 114 deletions(-)
+ create mode 100644 Documentation/arch/arm64/cpu-hotplug.rst
 
 -- 
-Peter Xu
+2.39.2
 
