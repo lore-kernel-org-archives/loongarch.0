@@ -1,365 +1,85 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A89915ECD4;
-	Fri, 26 Apr 2024 18:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777DBB641
+	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 18:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714156147; cv=none; b=YuNXJmUZ46kMqLMBUt8yVbhX0j6HqWJNYvpFnykwT0TwWBNaIfc+114WUV+5Mmn3F4w4msMcbtb80e4SNuCaRAzWebYibS037ConXoK/DXmG1aRckc8kr1Nwbp5M0gkRX9sH+n/ZDUOBC/QQwhsLLO0/14UijoLuVaY8kOaM4vs=
+	t=1714157339; cv=none; b=KxgyWfRT+jO3nzs2WBsXnSZYzJPL7z6ZxKDVSS+y6B6OKeMfV+qzlho1/vwQuhaf9D6Zx3w5VBJDWXJYphVBQgDRxiLiD6a4AaTHEdws5UbTtTtdDAPwJ+LQVDDI5pQoBPdZK42f4aBYV5GDQfvJ2SDGl0clHc21Djn2cP1T7bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714156147; c=relaxed/simple;
-	bh=NFuS+MSfq1noDcfC0XJN/a3ASNj0F2Kz43ByXP/YL4s=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A+6s2uebGeaEHoottHsT5oFRhSlzer7lrAQ9y/ogroKwOq/Rot9LGsWUAAeCDJEPW5PZzPs7FpfZXlyAiwuLNLHb/FcesHRcgwQihwyFfzS64oCAn6F4aCi94Btu7QjHs12If+Hfgi4vwM40XrfaDMGzoccL0ua6a1oCkAsBHUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VR1QL36Mdz6JBGR;
-	Sat, 27 Apr 2024 02:26:34 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 40C2E14011D;
-	Sat, 27 Apr 2024 02:29:00 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 26 Apr
- 2024 19:28:59 +0100
-Date: Fri, 26 Apr 2024 19:28:58 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Marc Zyngier <maz@kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, "James Morse"
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Hanjun Guo
-	<guohanjun@huawei.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>, "Lorenzo
- Pieralisi" <lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v8 11/16] irqchip/gic-v3: Add support for ACPI's
- disabled but 'online capable' CPUs
-Message-ID: <20240426192858.000033d9@huawei.com>
-In-Reply-To: <87il04t7j2.wl-maz@kernel.org>
-References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
- <20240426135126.12802-12-Jonathan.Cameron@huawei.com>
- <87il04t7j2.wl-maz@kernel.org>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+	s=arc-20240116; t=1714157339; c=relaxed/simple;
+	bh=Hyt9cSwCpY4B/TYQfJ50zYLktchyWIPJ9BFUEyet93w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k+a8onfjaPZaEhM/68beeUvNgycMzW10C1LD9CIQeazKfnan6Oo4wMMU7UjoQUHXRov/ljAdggGn7FhiwuA1tx5x5IWx4A8+hqcDY5fEWA/HrYBJl1HidCKwk0ubXNZSwxsOt6fDMnzmMVLgiS84CYCw+ayy774l+bQ7fYMiUp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=omYAU1IX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="omYAU1IX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07082C32782
+	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 18:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714157339;
+	bh=Hyt9cSwCpY4B/TYQfJ50zYLktchyWIPJ9BFUEyet93w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=omYAU1IXV9+aEbDj3WzW0h9hh8slJ6O7XeR+/el/aPqUqQwmKhrubaGLHKe6F/qoN
+	 MF+QpGdmepVtXJUi7qama/N7eevr0uRpmYWfEfpXLSn6po+EWJvAbPwC2DhrLI3Kab
+	 hJ199D+YKxooUwvQVGdcrlpnMlIEyMQgklGmPUYAf/XrIPcYb3cOhCDCEb44zY+ScT
+	 8H+f6nd/+2QAaoW6Nq9tDlYwdHx4ptj/yBo6F5lGXLrMeKvbCOKH6aeIbvrbL7Fybn
+	 2RHvumUyuxx4wndL1SUhPGeKdgBggcopxtT5HeSovKS35OYcI+ydKSkv7psvdEYrD1
+	 k2XNEU9BvXk/A==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5724f26b8c9so2530188a12.1
+        for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 11:48:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVOdY/DGiv7nk26tuwioKJ5atUE2ICqHESOYCufStSC0pAZ8OmTwCj4+4HiAbBeMLt/uFbeHoc94mf79JY1TDxVHzmwGl3rPwdd
+X-Gm-Message-State: AOJu0YxHTRmAVrpyy4GSvbtb96gNZ9C3CMtcuXCV0yrckxTfByASnA0h
+	e6B0Ri8fWVAusVu32NJPqo/gQrlmpofB4sLjRMVp6zRLwLwKXu+2N329203NC9kLMt4o6uCj4hi
+	K9t0GlnY8XPLJZGHbZsoVMUqsKS0=
+X-Google-Smtp-Source: AGHT+IFMUG93L8El2Q8N1eCq6gv3PwlvgFwZKVcKUA/i/TE/TYvbrOCl1aD96inecCeUz3meYOs5/CsGWzmxgWNQdJE=
+X-Received: by 2002:a05:6512:5cb:b0:51a:cc71:b91d with SMTP id
+ o11-20020a05651205cb00b0051acc71b91dmr149470lfo.19.1714157316791; Fri, 26 Apr
+ 2024 11:48:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+References: <20240426082854.7355-1-rppt@kernel.org> <20240426082854.7355-6-rppt@kernel.org>
+In-Reply-To: <20240426082854.7355-6-rppt@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Fri, 26 Apr 2024 11:48:25 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW75813E1MrdMYrqJXvuunbiJ046vT_EoReXA-60HJxT+Q@mail.gmail.com>
+Message-ID: <CAPhsuW75813E1MrdMYrqJXvuunbiJ046vT_EoReXA-60HJxT+Q@mail.gmail.com>
+Subject: Re: [PATCH v6 05/16] module: make module_memory_{alloc,free} more self-contained
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
+	Sam Ravnborg <sam@ravnborg.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Will Deacon <will@kernel.org>, bpf@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-
-> > @@ -2363,11 +2381,24 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_he=
-aders *header,
-> >  				(struct acpi_madt_generic_interrupt *)header;
-> >  	u32 reg =3D readl_relaxed(acpi_data.dist_base + GICD_PIDR2) & GIC_PID=
-R2_ARCH_MASK;
-> >  	u32 size =3D reg =3D=3D GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_64K * =
-2;
-> > +	int cpu =3D get_cpu_for_acpi_id(gicc->uid);
-> >  	void __iomem *redist_base;
-> > =20
-> >  	if (!acpi_gicc_is_usable(gicc))
-> >  		return 0;
-> > =20
-> > +	/*
-> > +	 * Capable but disabled CPUs can be brought online later. What about
-> > +	 * the redistributor? ACPI doesn't want to say!
-> > +	 * Virtual hotplug systems can use the MADT's "always-on" GICR entrie=
-s.
-> > +	 * Otherwise, prevent such CPUs from being brought online.
-> > +	 */
-> > +	if (!(gicc->flags & ACPI_MADT_ENABLED)) { =20
->=20
-> Now this makes the above acpi_gicc_is_usable() very odd. It checks for
-> MADT_ENABLED *or* GICC_ONLINE_CAPABLE. But we definitely don't want to
-> deal with the lack of MADT_ENABLED.
->=20
-> So why don't we explicitly check for individual flags and get rid of
-> acpi_gicc_is_usable(), as its new definition doesn't tell you anything
-> useful?
-
-That does seem to have evolved to something rather odd.
-
-I messed around with various reorganizations of the boolean logic
-and ended up with same 2 conditions as here as otherwise
-the indent gets deep and the code becomes fiddlier to reason about
-(see below for result)
-
->=20
-> > +		return 0;
-> > +	}
-> > +
-> >  	redist_base =3D ioremap(gicc->gicr_base_address, size);
-> >  	if (!redist_base)
-> >  		return -ENOMEM;
-> > @@ -2413,9 +2444,12 @@ static int __init gic_acpi_match_gicc(union acpi=
-_subtable_headers *header,
-> > =20
-> >  	/*
-> >  	 * If GICC is enabled and has valid gicr base address, then it means
-> > -	 * GICR base is presented via GICC
-> > +	 * GICR base is presented via GICC. The redistributor is only known to
-> > +	 * be accessible if the GICC is marked as enabled. If this bit is not
-> > +	 * set, we'd need to add the redistributor at runtime, which isn't
-> > +	 * supported.
-> >  	 */
-> > -	if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address)
-> > +	if (gicc->flags & ACPI_MADT_ENABLED && gicc->gicr_base_address)
-> >  		acpi_data.enabled_rdists++;
-> > =20
-> >  	return 0;
-> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> > index 9844a3f9c4e5..fcfb7bb6789e 100644
-> > --- a/include/linux/acpi.h
-> > +++ b/include/linux/acpi.h
-> > @@ -239,7 +239,8 @@ void acpi_table_print_madt_entry (struct acpi_subta=
-ble_header *madt);
-> > =20
-> >  static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interr=
-upt *gicc)
-> >  {
-> > -	return gicc->flags & ACPI_MADT_ENABLED;
-> > +	return gicc->flags & (ACPI_MADT_ENABLED |
-> > +			      ACPI_MADT_GICC_ONLINE_CAPABLE);
-> >  }
-> > =20
-> >  /* the following numa functions are architecture-dependent */ =20
->=20
-> Thanks,
-
-I'll not send a formal v9 until early next week, so here is the current sta=
-te
-if you have time to take another look before then.
-
-=46rom a8a54cfbadccf1782b7cc04b93eb875dedbee7a9 Mon Sep 17 00:00:00 2001
-From: James Morse <james.morse@arm.com>
-Date: Thu, 18 Apr 2024 14:54:07 +0100
-Subject: [PATCH] irqchip/gic-v3: Add support for ACPI's disabled but 'online
- capable' CPUs
-
-To support virtual CPU hotplug, ACPI has added an 'online capable' bit
-to the MADT GICC entries. This indicates a disabled CPU entry may not
-be possible to online via PSCI until firmware has set enabled bit in
-_STA.
-
-This means that a "usable" GIC redistributor is one that is marked as
-either enabled, or online capable. The meaning of the
-acpi_gicc_is_usable() would become less clear than just checking the
-pair of flags at call sites. As such, drop that helper function.
-The test in gic_acpi_match_gicc() remains as testing just the
-enabled bit so the count of enabled distributors is correct.
-
-What about the redistributor in the GICC entry? ACPI doesn't want to say.
-Assume the worst: When a redistributor is described in the GICC entry,
-but the entry is marked as disabled at boot, assume the redistributor
-is inaccessible.
-
-The GICv3 driver doesn't support late online of redistributors, so this
-means the corresponding CPU can't be brought online either.
-Rather than modifying cpu masks that may already have been used,
-register a new cpuhp callback to fail this case. This must run earlier
-than the main gic_starting_cpu() so that this case can be rejected
-before the section of cpuhp that runs on the CPU that is coming up as
-that is not allowed to fail. This solution keeps the handling of this
-broken firmware corner case local to the GIC driver. As precise ordering
-of this callback doesn't need to be controlled as long as it is
-in that initial prepare phase, use CPUHP_BP_PREPARE_DYN.
-
-Systems that want CPU hotplug in a VM can ensure their redistributors
-are always-on, and describe them that way with a GICR entry in the MADT.
-
-Suggested-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
----
-v9: Thanks to Marc for quick follow up.
-Fix up description and drop the acpi_gicc_is_usable() check given that
-now doesn't actually mean they are usable.
-
-Thanks to Marc for review and suggestions!
-v8: Change the handling of broken rdists to fail cpuhp rather than
-    modifying the cpu_present and cpu_possible masks.
-    Updated commit text to reflect that.
-    Added a sb tag for Marc given this is more or less what he put
-    in his review comment.
----
- arch/arm64/kernel/smp.c       |  3 ++-
- drivers/acpi/processor_core.c |  3 ++-
- drivers/irqchip/irq-gic-v3.c  | 44 +++++++++++++++++++++++++++++++----
- include/linux/acpi.h          |  5 ----
- 4 files changed, 44 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 4ced34f62dab..afe835c1cbe2 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -523,7 +523,8 @@ acpi_map_gic_cpu_interface(struct acpi_madt_generic_int=
-errupt *processor)
- {
- 	u64 hwid =3D processor->arm_mpidr;
-=20
--	if (!acpi_gicc_is_usable(processor)) {
-+	if (!(processor->flags &
-+	      (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE))) {
- 		pr_debug("skipping disabled CPU entry with 0x%llx MPIDR\n", hwid);
- 		return;
- 	}
-diff --git a/drivers/acpi/processor_core.c b/drivers/acpi/processor_core.c
-index b203cfe28550..b04b684f3190 100644
---- a/drivers/acpi/processor_core.c
-+++ b/drivers/acpi/processor_core.c
-@@ -90,7 +90,8 @@ static int map_gicc_mpidr(struct acpi_subtable_header *en=
-try,
- 	struct acpi_madt_generic_interrupt *gicc =3D
- 	    container_of(entry, struct acpi_madt_generic_interrupt, header);
-=20
--	if (!acpi_gicc_is_usable(gicc))
-+	if (!(gicc->flags &
-+	      (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
- 		return -ENODEV;
-=20
- 	/* device_declaration means Device object in DSDT, in the
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 10af15f93d4d..45272316d155 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -44,6 +44,8 @@
-=20
- #define GIC_IRQ_TYPE_PARTITION	(GIC_IRQ_TYPE_LPI + 1)
-=20
-+static struct cpumask broken_rdists __read_mostly;
-+
- struct redist_region {
- 	void __iomem		*redist_base;
- 	phys_addr_t		phys_base;
-@@ -1293,6 +1295,18 @@ static void gic_cpu_init(void)
- #define MPIDR_TO_SGI_RS(mpidr)	(MPIDR_RS(mpidr) << ICC_SGI1R_RS_SHIFT)
- #define MPIDR_TO_SGI_CLUSTER_ID(mpidr)	((mpidr) & ~0xFUL)
-=20
-+/*
-+ * gic_starting_cpu() is called after the last point where cpuhp is allowed
-+ * to fail. So pre check for problems earlier.
-+ */
-+static int gic_check_rdist(unsigned int cpu)
-+{
-+	if (cpumask_test_cpu(cpu, &broken_rdists))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static int gic_starting_cpu(unsigned int cpu)
- {
- 	gic_cpu_init();
-@@ -1384,6 +1398,10 @@ static void __init gic_smp_init(void)
- 	};
- 	int base_sgi;
-=20
-+	cpuhp_setup_state_nocalls(CPUHP_BP_PREPARE_DYN,
-+				  "irqchip/arm/gicv3:checkrdist",
-+				  gic_check_rdist, NULL);
-+
- 	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
- 				  "irqchip/arm/gicv3:starting",
- 				  gic_starting_cpu, NULL);
-@@ -2363,11 +2381,25 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_header=
-s *header,
- 				(struct acpi_madt_generic_interrupt *)header;
- 	u32 reg =3D readl_relaxed(acpi_data.dist_base + GICD_PIDR2) & GIC_PIDR2_A=
-RCH_MASK;
- 	u32 size =3D reg =3D=3D GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_64K * 2;
-+	int cpu =3D get_cpu_for_acpi_id(gicc->uid);
- 	void __iomem *redist_base;
-=20
--	if (!acpi_gicc_is_usable(gicc))
-+	/* Neither enabled or online capable means it doesn't exist, skip it */
-+	if (!(gicc->flags & (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
- 		return 0;
-=20
-+	/*
-+	 * Capable but disabled CPUs can be brought online later. What about
-+	 * the redistributor? ACPI doesn't want to say!
-+	 * Virtual hotplug systems can use the MADT's "always-on" GICR entries.
-+	 * Otherwise, prevent such CPUs from being brought online.
-+	 */
-+	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
-+		pr_warn("CPU %u's redistributor is inaccessible: this CPU can't be broug=
-ht online\n", cpu);
-+		cpumask_set_cpu(cpu, &broken_rdists);
-+		return 0;
-+	}
-+
- 	redist_base =3D ioremap(gicc->gicr_base_address, size);
- 	if (!redist_base)
- 		return -ENOMEM;
-@@ -2413,9 +2445,12 @@ static int __init gic_acpi_match_gicc(union acpi_sub=
-table_headers *header,
-=20
- 	/*
- 	 * If GICC is enabled and has valid gicr base address, then it means
--	 * GICR base is presented via GICC
-+	 * GICR base is presented via GICC. The redistributor is only known to
-+	 * be accessible if the GICC is marked as enabled. If this bit is not
-+	 * set, we'd need to add the redistributor at runtime, which isn't
-+	 * supported.
- 	 */
--	if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address)
-+	if (gicc->flags & ACPI_MADT_ENABLED && gicc->gicr_base_address)
- 		acpi_data.enabled_rdists++;
-=20
- 	return 0;
-@@ -2474,7 +2509,8 @@ static int __init gic_acpi_parse_virt_madt_gicc(union=
- acpi_subtable_headers *hea
- 	int maint_irq_mode;
- 	static int first_madt =3D true;
-=20
--	if (!acpi_gicc_is_usable(gicc))
-+	if (!(gicc->flags &
-+	      (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
- 		return 0;
-=20
- 	maint_irq_mode =3D (gicc->flags & ACPI_MADT_VGIC_IRQ_MODE) ?
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 9844a3f9c4e5..cf5d2a6950ec 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -237,11 +237,6 @@ acpi_table_parse_cedt(enum acpi_cedt_type id,
- int acpi_parse_mcfg (struct acpi_table_header *header);
- void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
-=20
--static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interrupt =
-*gicc)
--{
--	return gicc->flags & ACPI_MADT_ENABLED;
--}
--
- /* the following numa functions are architecture-dependent */
- void acpi_numa_slit_init (struct acpi_table_slit *slit);
-=20
---=20
-2.39.2
-
-
-
->=20
-> 	M.
->=20
-
+On Fri, Apr 26, 2024 at 1:30=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+>
+> Move the logic related to the memory allocation and freeing into
+> module_memory_alloc() and module_memory_free().
+>
+> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Acked-by: Song Liu <song@kernel.org>
