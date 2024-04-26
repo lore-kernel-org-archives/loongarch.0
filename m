@@ -1,330 +1,266 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C5616D32E
-	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 17:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6546D15ECD3;
+	Fri, 26 Apr 2024 17:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714152519; cv=none; b=p/r6a+PsjnV05a5TwqzPdTqqU28vD5s4SKZrcOsHdzOl22aPA/fBNwK19JnbHRNnN0kib2SLpd9kBMW778CJhpcGaBiw5ajl2ktqH7JhSypqnlo6CbhXtOEg9vjbbH7Z315AA/5XhcxbVYTLPep4YRt9ChfAHqV93lMtLcmDUTo=
+	t=1714153797; cv=none; b=mO+E5kke5uLCGkMtUUaLhRJCJ+1myk6NEV7S9tK+1TcHAgxd4A/AzYjIJqVZ8AcMQlFqXPPXDXKaRVa6gHs12OCiRCSHnGPusnraGD7RdcWa8gSu7hZzp+DAiyQ/ZqFpsOaPAAL7kOTXy1yxHL3dTsPkPbzVtnn4WqPx5Wb93us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714152519; c=relaxed/simple;
-	bh=lUQ9lWBLKeg3L0+VFu19yPJOKbBf4DRp2XdW9ZemSGQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HrN0kwbO74E0tDtpPRRKCoiGOUJbayDRv3BmFpkeJFxrJFf3zjQAcGSm1gDdD+Io3h/sPd3MSCJ76iKpXAPhx+cgr6KnSMqSCMWS29WPN7spEr+xHE4CTe+VWu0X8UHI8rhA7rG4H0cFTbr8NvXHNPAWmaD4Bz+sR/qw00CdnMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gLBI32XC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLBI32XC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714152516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=sF1k7r79nP6D0Cz0V006l7HqgddaXC4/DaqrC5xv5NE=;
-	b=gLBI32XCsucmoKY05BxsHvvkqRMRjn0V+4EtVcDbUdNXMGt5GXbcrf7G+07PKUs9Wg6ABv
-	rC1JlN3BymaQ3h90Qyhpr+XcJddv8GRMnigw9Mt18qfe/CCUDN5nCjYCUGPkua1uI/V/bY
-	SOXQMzRxurNOUk23whBHQa3hhMmPG00=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-193-d9BSGzlNMv65M5YIp-RNcQ-1; Fri, 26 Apr 2024 13:28:34 -0400
-X-MC-Unique: d9BSGzlNMv65M5YIp-RNcQ-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-41a370b6acdso10513685e9.2
-        for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 10:28:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714152514; x=1714757314;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sF1k7r79nP6D0Cz0V006l7HqgddaXC4/DaqrC5xv5NE=;
-        b=srWhJeAqO5l/SGBiYFxIjVxAnBbkD0BRDZ/seIlJwLnutaqEw+KbB2lAwub+p4epOy
-         16Vw4f/sz4J3fl3LBAgdhsfooILleqrp2gD0/Bj6N1CXITUxRaSshlfjKFFEqYRvDj/z
-         MpWF8OEQcSUo/bAMI3cG2w2CJjXzptMO5P8IdjaWwZ4Mil0c3gtL5JHc5ro83uppIdoq
-         4TfDag2FHBGH6sfnEss4ySW6OfpsctYKC+ZCqJ/OOeG//4hGPftPI9UKPerG9Kg+LlT+
-         7X8QLnMuxhNJz8VuqjVMRCguvw0KmybFJtB4OwOVILqwZIiLfJITt90XOTOeicFevoe4
-         o25Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW1q0QTjn93r9FXRU5lB4JE5/Ty06bhep/H7HVdNzmNgTiIFqchmRhJHZcSq2R2KQZ4vzRQWyTHwAi3VRJ9LNH3wDfk64UW/MFu
-X-Gm-Message-State: AOJu0YxAHdASThxhORdNEtC2l7KUOwkz5DfqPoB1nc4OsqJKifPt7vCk
-	WPmEenbkTw2IlVE6p2nedOOtcJfRTAwq5hmDKArOJRdIaHjq8CUBfTlVBvnj1MpnvX6oIABOY/+
-	V4ezyQlGVXpOK8UI6s+tRZTS3XVqZCC/CiPqCgQYmkmQVEoynKK8RjR1WQg==
-X-Received: by 2002:a05:600c:4fd2:b0:418:969b:cb46 with SMTP id o18-20020a05600c4fd200b00418969bcb46mr2080072wmq.28.1714152513699;
-        Fri, 26 Apr 2024 10:28:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEr4IlE/4F2UM1XSXE5SI2ZMlVXBg8Azkjc4erF1BNEBHpvYYzXnx8PODT9MvcqXOUbLgfoug==
-X-Received: by 2002:a05:600c:4fd2:b0:418:969b:cb46 with SMTP id o18-20020a05600c4fd200b00418969bcb46mr2080052wmq.28.1714152513165;
-        Fri, 26 Apr 2024 10:28:33 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c726:6100:20f2:6848:5b74:ca82? (p200300cbc726610020f268485b74ca82.dip0.t-ipconnect.de. [2003:cb:c726:6100:20f2:6848:5b74:ca82])
-        by smtp.gmail.com with ESMTPSA id cm14-20020a5d5f4e000000b0034c3885df9asm3080559wrb.76.2024.04.26.10.28.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 10:28:32 -0700 (PDT)
-Message-ID: <8b42a24d-caf0-46ef-9e15-0f88d47d2f21@redhat.com>
-Date: Fri, 26 Apr 2024 19:28:31 +0200
+	s=arc-20240116; t=1714153797; c=relaxed/simple;
+	bh=erZZi9wDZX0ZOYNS/RLIvpcm6ff+QRDxGu84IpUs1F4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KgzSDdWnhfs5OE71GJ7d7l/CIIAKZ+mTVB6r/L82f6WnLhgpERT4aNJFGlkJtblvcwEb3GtMRj3EtO76U0IkHSWk219DagFICfSyax7oxfAed6lYMFb3M6CGkzJ2oqS0CjXZCras9ZyakFKotXmbZZVBqMRApiKRMQpQuGZZFkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VR0Y95yrxz6JBFj;
+	Sat, 27 Apr 2024 01:47:25 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8E2B51408F9;
+	Sat, 27 Apr 2024 01:49:51 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 26 Apr
+ 2024 18:49:50 +0100
+Date: Fri, 26 Apr 2024 18:49:49 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Miguel Luis <miguel.luis@oracle.com>
+CC: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, Russell King
+	<linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>, "James
+ Morse" <james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "linuxarm@huawei.com" <linuxarm@huawei.com>,
+	"justin.he@arm.com" <justin.he@arm.com>, "jianyong.wu@arm.com"
+	<jianyong.wu@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Sudeep
+ Holla" <sudeep.holla@arm.com>
+Subject: Re: [PATCH v8 01/16] ACPI: processor: Simplify initial onlining to
+ use same path for cold and hotplug
+Message-ID: <20240426184949.0000506d@Huawei.com>
+In-Reply-To: <2E688E98-F57F-444F-B326-5206FB6F5C1E@oracle.com>
+References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+	<20240426135126.12802-2-Jonathan.Cameron@huawei.com>
+	<6347020E-CB49-44ED-87B2-3BB2AA2F59E0@oracle.com>
+	<2E688E98-F57F-444F-B326-5206FB6F5C1E@oracle.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
- Jason Gunthorpe <jgg@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-riscv@lists.infradead.org, x86@kernel.org
-References: <20240402125516.223131-1-david@redhat.com>
- <20240402125516.223131-2-david@redhat.com>
- <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com> <Ziuv2jLY1wgBITiP@x1n>
- <ZivScN8-Uoi9eye8@x1n>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ZivScN8-Uoi9eye8@x1n>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 26.04.24 18:12, Peter Xu wrote:
-> On Fri, Apr 26, 2024 at 09:44:58AM -0400, Peter Xu wrote:
->> On Fri, Apr 26, 2024 at 09:17:47AM +0200, David Hildenbrand wrote:
->>> On 02.04.24 14:55, David Hildenbrand wrote:
->>>> Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
->>>> all relevant internal functions to start with "gup_fast", to make it
->>>> clearer that this is not ordinary GUP. The current mixture of
->>>> "lockless", "gup" and "gup_fast" is confusing.
->>>>
->>>> Further, avoid the term "huge" when talking about a "leaf" -- for
->>>> example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
->>>> "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
->>>> stays.
->>>>
->>>> What remains is the "external" interface:
->>>> * get_user_pages_fast_only()
->>>> * get_user_pages_fast()
->>>> * pin_user_pages_fast()
->>>>
->>>> The high-level internal functions for GUP-fast (+slow fallback) are now:
->>>> * internal_get_user_pages_fast() -> gup_fast_fallback()
->>>> * lockless_pages_from_mm() -> gup_fast()
->>>>
->>>> The basic GUP-fast walker functions:
->>>> * gup_pgd_range() -> gup_fast_pgd_range()
->>>> * gup_p4d_range() -> gup_fast_p4d_range()
->>>> * gup_pud_range() -> gup_fast_pud_range()
->>>> * gup_pmd_range() -> gup_fast_pmd_range()
->>>> * gup_pte_range() -> gup_fast_pte_range()
->>>> * gup_huge_pgd()  -> gup_fast_pgd_leaf()
->>>> * gup_huge_pud()  -> gup_fast_pud_leaf()
->>>> * gup_huge_pmd()  -> gup_fast_pmd_leaf()
->>>>
->>>> The weird hugepd stuff:
->>>> * gup_huge_pd() -> gup_fast_hugepd()
->>>> * gup_hugepte() -> gup_fast_hugepte()
->>>
->>> I just realized that we end up calling these from follow_hugepd() as well.
->>> And something seems to be off, because gup_fast_hugepd() won't have the VMA
->>> even in the slow-GUP case to pass it to gup_must_unshare().
->>>
->>> So these are GUP-fast functions and the terminology seem correct. But the
->>> usage from follow_hugepd() is questionable,
->>>
->>> commit a12083d721d703f985f4403d6b333cc449f838f6
->>> Author: Peter Xu <peterx@redhat.com>
->>> Date:   Wed Mar 27 11:23:31 2024 -0400
->>>
->>>      mm/gup: handle hugepd for follow_page()
->>>
->>>
->>> states "With previous refactors on fast-gup gup_huge_pd(), most of the code
->>> can be leveraged", which doesn't look quite true just staring the the
->>> gup_must_unshare() call where we don't pass the VMA. Also,
->>> "unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense for
->>> slow GUP ...
->>
->> Yes it's not needed, just doesn't look worthwhile to put another helper on
->> top just for this.  I mentioned this in the commit message here:
->>
->>    There's something not needed for follow page, for example, gup_hugepte()
->>    tries to detect pgtable entry change which will never happen with slow
->>    gup (which has the pgtable lock held), but that's not a problem to check.
->>
->>>
->>> @Peter, any insights?
->>
->> However I think we should pass vma in for sure, I guess I overlooked that,
->> and it didn't expose in my tests too as I probably missed ./cow.
->>
->> I'll prepare a separate patch on top of this series and the gup-fast rename
->> patches (I saw this one just reached mm-stable), and I'll see whether I can
->> test it too if I can find a Power system fast enough.  I'll probably drop
->> the "fast" in the hugepd function names too.
+On Fri, 26 Apr 2024 17:21:41 +0000
+Miguel Luis <miguel.luis@oracle.com> wrote:
+
+> Hi Jonathan, 
 > 
-
-For the missing VMA parameter, the cow.c test might not trigger it. We never need the VMA to make
-a pinning decision for anonymous memory. We'll trigger an unsharing fault, get an exclusive anonymous page
-and can continue.
-
-We need the VMA in gup_must_unshare(), when long-term pinning a file hugetlb page. I *think*
-the gup_longterm.c selftest should trigger that, especially:
-
-# [RUN] R/O longterm GUP-fast pin in MAP_SHARED file mapping ... with memfd hugetlb (2048 kB)
-...
-# [RUN] R/O longterm GUP-fast pin in MAP_SHARED file mapping ... with memfd hugetlb (1048576 kB)
-
-
-We need a MAP_SHARED page where the PTE is R/O that we want to long-term pin R/O.
-I don't remember from the top of my head if the test here might have a R/W-mapped
-folio. If so, we could extend it to cover that.
-
-> Hmm, so when I enable 2M hugetlb I found ./cow is even failing on x86.
+> > On 26 Apr 2024, at 16:05, Miguel Luis <miguel.luis@oracle.com> wrote:
+> > 
+> > 
+> >   
+> >> On 26 Apr 2024, at 13:51, Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> >> 
+> >> Separate code paths, combined with a flag set in acpi_processor.c to
+> >> indicate a struct acpi_processor was for a hotplugged CPU ensured that
+> >> per CPU data was only set up the first time that a CPU was initialized.
+> >> This appears to be unnecessary as the paths can be combined by letting
+> >> the online logic also handle any CPUs online at the time of driver load.
+> >> 
+> >> Motivation for this change, beyond simplification, is that ARM64
+> >> virtual CPU HP uses the same code paths for hotplug and cold path in
+> >> acpi_processor.c so had no easy way to set the flag for hotplug only.
+> >> Removing this necessity will enable ARM64 vCPU HP to reuse the existing
+> >> code paths.
+> >> 
+> >> Leave noisy pr_info() in place but update it to not state the CPU
+> >> was hotplugged.  
 > 
->    # ./cow  | grep -B1 "not ok"
->    # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
->    not ok 161 No leak from parent into child
->    --
->    # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with hugetlb (2048 kB)
->    not ok 215 No leak from parent into child
->    --
->    # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (2048 kB)
->    not ok 269 No leak from child into parent
->    --
->    # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (2048 kB)
->    not ok 323 No leak from child into parent
+> On a second thought, do we want to keep it? Can't we just assume that no 
+> news is good news while keeping the warn right after __acpi_processor_start ?
+
+Good question - my inclination was to keep this in place for now as removing
+it would remove a source of information people may expect on x86 hotplug.
+
+Then maybe propose dropping it as overly noisy kernel as a follow up
+patch after this series is merged.  Felt like a potential rat hole I didn't
+want to go down if I could avoid it.
+
+If any x86 experts want to shout that no one cares then I'll happily drop
+the print.  We've carefully made it so that on arm64 we have no way to tell
+if this is hotplug or normal cpu bring up so we can't just print it on
+hotplug.
+
+Jonathan
+
+
 > 
-> And it looks like it was always failing.. perhaps since the start?  We
-
-Yes!
-
-commit 7dad331be7816103eba8c12caeb88fbd3599c0b9
-Author: David Hildenbrand <david@redhat.com>
-Date:   Tue Sep 27 13:01:17 2022 +0200
-
-     selftests/vm: anon_cow: hugetlb tests
-     
-     Let's run all existing test cases with all hugetlb sizes we're able to
-     detect.
-     
-     Note that some tests cases still fail. This will, for example, be fixed
-     once vmsplice properly uses FOLL_PIN instead of FOLL_GET for pinning.
-     With 2 MiB and 1 GiB hugetlb on x86_64, the expected failures are:
-     
-      # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
-      not ok 23 No leak from parent into child
-      # [RUN] vmsplice() + unmap in child ... with hugetlb (1048576 kB)
-      not ok 24 No leak from parent into child
-      # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (2048 kB)
-      not ok 35 No leak from child into parent
-      # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (1048576 kB)
-      not ok 36 No leak from child into parent
-      # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (2048 kB)
-      not ok 47 No leak from child into parent
-      # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (1048576 kB)
-      not ok 48 No leak from child into parent
-     
-
-As it keeps confusing people (until somebody cares enough to fix vmsplice), I already
-thought about just disabling the test and adding a comment why it happens and
-why nobody cares.
-
-> didn't do the same on hugetlb v.s. normal anon from that regard on the
-> vmsplice() fix.
+> Miguel
 > 
-> I drafted a patch to allow refcount>1 detection as the same, then all tests
-> pass for me, as below.
+> >> 
+> >> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >> Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+> >> Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> >> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> >> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >> 
+> >> ---
+> >> v8: No change
+> >> ---
+> >> drivers/acpi/acpi_processor.c   |  1 -
+> >> drivers/acpi/processor_driver.c | 44 ++++++++++-----------------------
+> >> include/acpi/processor.h        |  2 +-
+> >> 3 files changed, 14 insertions(+), 33 deletions(-)
+> >> 
+> >> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+> >> index 7a0dd35d62c9..7fc924aeeed0 100644
+> >> --- a/drivers/acpi/acpi_processor.c
+> >> +++ b/drivers/acpi/acpi_processor.c
+> >> @@ -216,7 +216,6 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+> >> * gets online for the first time.
+> >> */
+> >> pr_info("CPU%d has been hot-added\n", pr->id);
+> >> - pr->flags.need_hotplug_init = 1;
+> >> 
+> >> out:
+> >> cpus_write_unlock();
+> >> diff --git a/drivers/acpi/processor_driver.c b/drivers/acpi/processor_driver.c
+> >> index 67db60eda370..55782eac3ff1 100644
+> >> --- a/drivers/acpi/processor_driver.c
+> >> +++ b/drivers/acpi/processor_driver.c
+> >> @@ -33,7 +33,6 @@ MODULE_AUTHOR("Paul Diefenbaugh");
+> >> MODULE_DESCRIPTION("ACPI Processor Driver");
+> >> MODULE_LICENSE("GPL");
+> >> 
+> >> -static int acpi_processor_start(struct device *dev);
+> >> static int acpi_processor_stop(struct device *dev);
+> >> 
+> >> static const struct acpi_device_id processor_device_ids[] = {
+> >> @@ -47,7 +46,6 @@ static struct device_driver acpi_processor_driver = {
+> >> .name = "processor",
+> >> .bus = &cpu_subsys,
+> >> .acpi_match_table = processor_device_ids,
+> >> - .probe = acpi_processor_start,
+> >> .remove = acpi_processor_stop,
+> >> };
+> >> 
+> >> @@ -115,12 +113,10 @@ static int acpi_soft_cpu_online(unsigned int cpu)
+> >> * CPU got physically hotplugged and onlined for the first time:
+> >> * Initialize missing things.
+> >> */
+> >> - if (pr->flags.need_hotplug_init) {
+> >> + if (!pr->flags.previously_online) {
+> >> int ret;
+> >> 
+> >> - pr_info("Will online and init hotplugged CPU: %d\n",
+> >> - pr->id);
+> >> - pr->flags.need_hotplug_init = 0;
+> >> + pr_info("Will online and init CPU: %d\n", pr->id);
+> >> ret = __acpi_processor_start(device);
+> >> WARN(ret, "Failed to start CPU: %d\n", pr->id);
+> >> } else {
+> >> @@ -167,9 +163,6 @@ static int __acpi_processor_start(struct acpi_device *device)
+> >> if (!pr)
+> >> return -ENODEV;
+> >> 
+> >> - if (pr->flags.need_hotplug_init)
+> >> - return 0;
+> >> -
+> >> result = acpi_cppc_processor_probe(pr);
+> >> if (result && !IS_ENABLED(CONFIG_ACPI_CPU_FREQ_PSS))
+> >> dev_dbg(&device->dev, "CPPC data invalid or not present\n");
+> >> @@ -185,32 +178,21 @@ static int __acpi_processor_start(struct acpi_device *device)
+> >> 
+> >> status = acpi_install_notify_handler(device->handle, ACPI_DEVICE_NOTIFY,
+> >>    acpi_processor_notify, device);
+> >> - if (ACPI_SUCCESS(status))
+> >> - return 0;
+> >> + if (!ACPI_SUCCESS(status)) {
+> >> + result = -ENODEV;
+> >> + goto err_thermal_exit;
+> >> + }
+> >> + pr->flags.previously_online = 1;
+> >> 
+> >> - result = -ENODEV;
+> >> - acpi_processor_thermal_exit(pr, device);
+> >> + return 0;
+> >> 
+> >> +err_thermal_exit:
+> >> + acpi_processor_thermal_exit(pr, device);
+> >> err_power_exit:
+> >> acpi_processor_power_exit(pr);
+> >> return result;
+> >> }
+> >> 
+> >> -static int acpi_processor_start(struct device *dev)
+> >> -{
+> >> - struct acpi_device *device = ACPI_COMPANION(dev);
+> >> - int ret;
+> >> -
+> >> - if (!device)
+> >> - return -ENODEV;
+> >> -
+> >> - /* Protect against concurrent CPU hotplug operations */
+> >> - cpu_hotplug_disable();
+> >> - ret = __acpi_processor_start(device);
+> >> - cpu_hotplug_enable();
+> >> - return ret;
+> >> -}
+> >> -
+> >> static int acpi_processor_stop(struct device *dev)
+> >> {
+> >> struct acpi_device *device = ACPI_COMPANION(dev);
+> >> @@ -279,9 +261,9 @@ static int __init acpi_processor_driver_init(void)
+> >> if (result < 0)
+> >> return result;
+> >> 
+> >> - result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> >> -   "acpi/cpu-drv:online",
+> >> -   acpi_soft_cpu_online, NULL);
+> >> + result = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+> >> +   "acpi/cpu-drv:online",
+> >> +   acpi_soft_cpu_online, NULL);
+> >> if (result < 0)
+> >> goto err;
+> >> hp_online = result;
+> >> diff --git a/include/acpi/processor.h b/include/acpi/processor.h
+> >> index 3f34ebb27525..e6f6074eadbf 100644
+> >> --- a/include/acpi/processor.h
+> >> +++ b/include/acpi/processor.h
+> >> @@ -217,7 +217,7 @@ struct acpi_processor_flags {
+> >> u8 has_lpi:1;
+> >> u8 power_setup_done:1;
+> >> u8 bm_rld_set:1;
+> >> - u8 need_hotplug_init:1;
+> >> + u8 previously_online:1;  
+> > 
+> > Reviewed-by: Miguel Luis <miguel.luis@oracle.com>
+> > 
+> > Miguel
+> >   
+> >> };
+> >> 
+> >> struct acpi_processor {
+> >> -- 
+> >> 2.39.2
+> >>   
+> >   
 > 
-> David, I'd like to double check with you before I post anything: is that
-> your intention to do so when working on the R/O pinning or not?
-
-Here certainly the "if it's easy it would already have done" principle applies. :)
-
-The issue is the following: hugetlb pages are scarce resources that cannot usually
-be overcommitted. For ordinary memory, we don't care if we COW in some corner case
-because there is an unexpected reference. You temporarily consume an additional page
-that gets freed as soon as the unexpected reference is dropped.
-
-For hugetlb, it is problematic. Assume you have reserved a single 1 GiB hugetlb page
-and your process uses that in a MAP_PRIVATE mapping. Then it calls fork() and the
-child quits immediately.
-
-If you decide to COW, you would need a second hugetlb page, which we don't have, so
-you have to crash the program.
-
-And in hugetlb it's extremely easy to not get folio_ref_count() == 1:
-
-hugetlb_fault() will do a folio_get(folio) before calling hugetlb_wp()!
-
-... so you essentially always copy.
-
-
-At that point I walked away from that, letting vmsplice() be fixed at some point. Dave
-Howells was close at some point IIRC ...
-
-I had some ideas about retrying until the other reference is gone (which cannot be a
-longterm GUP pin), but as vmsplice essentially does without FOLL_PIN|FOLL_LONGTERM,
-it's quit hopeless to resolve that as long as vmsplice holds longterm references the wrong
-way.
-
----
-
-One could argue that fork() with hugetlb and MAP_PRIVATE is stupid and fragile: assume
-your child MM is torn down deferred, and will unmap the hugetlb page deferred. Or assume
-you access the page concurrently with fork(). You'd have to COW and crash the program.
-BUT, there is a horribly ugly hack in hugetlb COW code where you *steal* the page form
-the child program and crash your child. I'm not making that up, it's horrible.
-
--- 
-Cheers,
-
-David / dhildenb
 
