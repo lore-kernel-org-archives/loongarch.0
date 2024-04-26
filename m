@@ -1,160 +1,190 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CC813C9BC
-	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 12:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC171E52A;
+	Fri, 26 Apr 2024 12:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714133698; cv=none; b=qzXCvuiHuxqVtA0YNVOjIbGO9nVmNr5ac/IIx3L7oZVQ9HZBKdS0c1RLRM4JXN4S0o0aoa4R06blIjrW8yQk6KA8wRRousjAYqHlZ+gQdx2NDuf69jQM/FYCwoD7qHiqb6Vv/RA1T+uG7+AGF9a+wR+LIMxMv3bDvFvOk8Fw8/I=
+	t=1714135292; cv=none; b=ptditzuVsph4EcSGNxPeRCtMaehWLWOM0nGBG+c89jhZLok631YhjJZsQIoWICo2mDsBouLBj7SlRku4XuNVqm9jM9kHsbMp/jK2UjEzFNtPYxiPjJAhzE4Z5hZeDiHmN1L/EpALIk8rvKBnbhFRORvFOz6csK5ipxffFQorUVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714133698; c=relaxed/simple;
-	bh=4J9T8dLyYXPXJscrNbpt1oBl/KJlwJW8Y+aBv80jApI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bZERsDevM2410YYiSRC3pGqbkLUpyKJBCT7H7gN7maRQZeB2GoikS2QFesW4Wswwkm10O1cJKJTSYWfQ9cGCtfUIOxUYKutfXdzDtp5O7xRIYmQVyDW1RuvDBasmDgQ+RQbyljPeYPjVeBsRqjklR3e42/Yozloa1vQb80NDTCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=LxwJxAt8; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1714135292; c=relaxed/simple;
+	bh=st9N10ArNUyvvV0O3ITMWIsRRo6eZ2Ebw9/XgVcbw0s=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bVz6mIsr5RknmejyLYItEgywEN4SPsAl5FJtz+VIpbRoQn1AyapCRnrZUR+kiOdXEgSivAdCjGJkBGo+we28eG48eU0vu10/QmRK21kg2m0qzwkKyEw3pWYM1fM4h+nyBompEujojIa02JO+xHif8wDiM8THlddMhO/8sr6IXWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhInhu73; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="LxwJxAt8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1714133695;
-	bh=4J9T8dLyYXPXJscrNbpt1oBl/KJlwJW8Y+aBv80jApI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LxwJxAt8/g6M7msXHMHks3zBsv3trPsFTq5Y3GkofG8RSK57Ri0OLsIDpRA3r87Rl
-	 yi3DK/U9VYkVRZe49CUSv4P60KOPSpVdJx4z+9sKWyUs2xWLDKkrr7aZs4jeWb+FBG
-	 tI0pACelksWmzua+P4kgZIyGfJcPFZASACmu3iP4=
-Received: from stargazer.. (unknown [IPv6:240e:358:1105:4a00:dc73:854d:832e:3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 3B6DC659FD;
-	Fri, 26 Apr 2024 08:14:50 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH] LoongArch: Provide __lshrti3, __ashrti3, and __ashrti3
-Date: Fri, 26 Apr 2024 20:14:42 +0800
-Message-ID: <20240426121442.882029-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nhInhu73"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95E7C113CD;
+	Fri, 26 Apr 2024 12:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714135291;
+	bh=st9N10ArNUyvvV0O3ITMWIsRRo6eZ2Ebw9/XgVcbw0s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nhInhu73+ejrsJQp7XW+TlWHiMfsPF9kDo/EibrlYTgEzK8TMbXBv6CeuCa5LxVXq
+	 PVqPQwuloEel+Isr+bhThUF4SmUs9Fn25FkAiESPt17ervqrh0S/dUDRRWWQlV/by9
+	 nUTr94h0OYz1bgnzhrDD/SufHJIxw9vT68YGCSfSAhz9HNFGR74uJUL2+F/raEZG9C
+	 LAP4IbiD2z5Kqq0CRxOhWYAhg/ysrzLrVT3N/0GWozDR3tnqmGrbDGDduDjY6S4uVG
+	 Y90lnGMNgYMYAtENSOHFBBjSi/lAIfpMPfj4331iav/zEl8giMzudkZgPVBvnLnGvg
+	 0QMiJ7Mk4oB+Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1s0KtM-008DZj-AC;
+	Fri, 26 Apr 2024 13:41:28 +0100
+Date: Fri, 26 Apr 2024 13:41:27 +0100
+Message-ID: <86bk5wqoso.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: <linuxarm@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra
+	<peterz@infradead.org>,
+	<linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>,
+	<x86@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	"Rafael J . Wysocki"
+	<rafael@kernel.org>,
+	Miguel Luis <miguel.luis@oracle.com>,
+	"James Morse"
+	<james.morse@arm.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe
+ Brucker <jean-philippe@linaro.org>,
+	Catalin Marinas
+	<catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ingo Molnar
+	<mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen
+	<dave.hansen@linux.intel.com>,
+	<justin.he@arm.com>,
+	<jianyong.wu@arm.com>
+Subject: Re: [PATCH v7 11/16] irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs
+In-Reply-To: <20240425175502.00007def@huawei.com>
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+	<20240418135412.14730-12-Jonathan.Cameron@huawei.com>
+	<20240422114020.0000294f@Huawei.com>
+	<87plugthim.wl-maz@kernel.org>
+	<20240424135438.00001ffc@huawei.com>
+	<86il06rd19.wl-maz@kernel.org>
+	<20240425133150.000009fa@Huawei.com>
+	<20240425155726.000063f7@huawei.com>
+	<20240425175502.00007def@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: Jonathan.Cameron@Huawei.com, linuxarm@huawei.com, tglx@linutronix.de, peterz@infradead.org, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, linux@armlinux.org.uk, rafael@kernel.org, miguel.luis@oracle.com, james.morse@arm.com, salil.mehta@huawei.com, jean-philippe@linaro.org, catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, justin.he@arm.com, jianyong.wu@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-After selecting ARCH_SUPPORTS_INT128, when optimizing for size the
-compiler generates calls to __lshrti3, __ashrti3, and __ashrti3 for
-shifting __int128 values, causing a link failure:
+On Thu, 25 Apr 2024 17:55:27 +0100,
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> 
+> On Thu, 25 Apr 2024 16:00:17 +0100
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> 
+> > On Thu, 25 Apr 2024 13:31:50 +0100
+> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > 
+> > > On Wed, 24 Apr 2024 16:33:22 +0100
+> > > Marc Zyngier <maz@kernel.org> wrote:
 
-    loongarch64-unknown-linux-gnu-ld: kernel/sched/fair.o: in
-    function `mul_u64_u32_shr':
-    <PATH>/include/linux/math64.h:161:(.text+0x5e4): undefined
-    reference to `__lshrti3'
+[...]
 
-Provide the implementation of these functions if ARCH_SUPPORTS_INT128.
+> > >   
+> > > > I'd expect the handling side to look like this (will not compile, but
+> > > > you'll get the idea):    
+> > > Hi Marc,
+> > > 
+> > > In general this looks good - but...
+> > > 
+> > > I haven't gotten to the bottom of why yet (and it might be a side
+> > > effect of how I hacked the test by lying in minimal fashion and
+> > > just frigging the MADT read functions) but the hotplug flow is only getting
+> > > as far as calling __cpu_up() before it seems to enter an infinite loop.
+> > > That is it never gets far enough to fail this test.
+> > > 
+> > > Getting stuck in a psci cpu_on call.  I'm guessing something that
+> > > we didn't get to in the earlier gicv3 calls before bailing out is blocking that?
+> > > Looks like it gets to
+> > > SMCCC smc
+> > > and is never seen again.
+> > > 
+> > > Any ideas on where to look?  The one advantage so far of the higher level
+> > > approach is we never tried the hotplug callbacks at all so avoided hitting
+> > > that call.  One (little bit horrible) solution that might avoid this would 
+> > > be to add another cpuhp state very early on and fail at that stage.
+> > > I'm not keen on doing that without a better explanation than I have so far!  
+> > 
+> > Whilst it still doesn't work I suspect I'm loosing ability to print to the console
+> > between that point and somewhat later and real problem is
+> > elsewhere.
 
-Reported-by: Huacai Chen <chenhuacai@kernel.org>
-Closes: https://lore.kernel.org/loongarch/CAAhV-H5EZ=7OF7CSiYyZ8_+wWuenpo=K2WT8-6mAT4CvzUC_4g@mail.gmail.com/
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- arch/loongarch/include/asm/asm-prototypes.h |  6 +++
- arch/loongarch/lib/Makefile                 |  2 +
- arch/loongarch/lib/tishift.S                | 56 +++++++++++++++++++++
- 3 files changed, 64 insertions(+)
- create mode 100644 arch/loongarch/lib/tishift.S
+Sorry, travelling at the moment, so only spotted this now.
 
-diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch/include/asm/asm-prototypes.h
-index cf8e1a4e7c19..51f224bcfc65 100644
---- a/arch/loongarch/include/asm/asm-prototypes.h
-+++ b/arch/loongarch/include/asm/asm-prototypes.h
-@@ -6,3 +6,9 @@
- #include <asm/page.h>
- #include <asm/ftrace.h>
- #include <asm-generic/asm-prototypes.h>
-+
-+#ifdef CONFIG_ARCH_SUPPORTS_INT128
-+__int128_t __ashlti3(__int128_t a, int b);
-+__int128_t __ashrti3(__int128_t a, int b);
-+__int128_t __lshrti3(__int128_t a, int b);
-+#endif
-diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
-index a77bf160bfc4..f61af161f16e 100644
---- a/arch/loongarch/lib/Makefile
-+++ b/arch/loongarch/lib/Makefile
-@@ -9,3 +9,5 @@ lib-y	+= delay.o memset.o memcpy.o memmove.o \
- obj-$(CONFIG_CPU_HAS_LSX) += xor_simd.o xor_simd_glue.o
- 
- obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
-+
-+obj-$(CONFIG_ARCH_SUPPORTS_INT128) += tishift.o
-diff --git a/arch/loongarch/lib/tishift.S b/arch/loongarch/lib/tishift.S
-new file mode 100644
-index 000000000000..eb43f29f4d0b
---- /dev/null
-+++ b/arch/loongarch/lib/tishift.S
-@@ -0,0 +1,56 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#include <asm/asmmacro.h>
-+#include <linux/linkage.h>
-+#include <linux/export.h>
-+
-+SYM_FUNC_START(__lshrti3)
-+	slli.d	t2, a1, 1
-+	nor	t3, zero, a2
-+	srl.d	t1, a0, a2
-+	sll.d	t2, t2, t3
-+	andi	t0, a2, 64
-+	srl.d	a1, a1, a2
-+	or	t1, t2, t1
-+	maskeqz	a0, a1, t0
-+	masknez	a1, a1, t0
-+	masknez	t0, t1, t0
-+	or	a0, t0, a0
-+	jr	ra
-+SYM_FUNC_END(__lshrti3)
-+EXPORT_SYMBOL(__lshrti3)
-+
-+SYM_FUNC_START(__ashrti3)
-+	nor	t3, zero, a2
-+	slli.d	t2, a1, 1
-+	srl.d	t1, a0, a2
-+	sll.d	t2, t2, t3
-+	andi	t0, a2, 64
-+	or	t1, t2, t1
-+	sra.d	a2, a1, a2
-+	srai.d	a1, a1, 63
-+	maskeqz	a0, a2, t0
-+	maskeqz	a1, a1, t0
-+	masknez	a2, a2, t0
-+	masknez	t0, t1, t0
-+	or	a1, a1, a2
-+	or	a0, t0, a0
-+	jr	ra
-+SYM_FUNC_END(__ashrti3)
-+EXPORT_SYMBOL(__ashrti3)
-+
-+SYM_FUNC_START(__ashlti3)
-+	srli.d	t2, a0, 1
-+	nor	t3, zero, a2
-+	sll.d	t1, a1, a2
-+	srl.d	t2, t2, t3
-+	andi	t0, a2, 64
-+	sll.d	a0, a0, a2
-+	or	t1, t2, t1
-+	maskeqz	a1, a0, t0
-+	masknez	a0, a0, t0
-+	masknez	t0, t1, t0
-+	or	a1, t0, a1
-+	jr	ra
-+SYM_FUNC_END(__ashlti3)
-+EXPORT_SYMBOL(__ashlti3)
+> 
+> Hi again,
+> 
+> Found it I think.  cpuhp calls between cpu:bringup and ap:online 
+> arm made from notify_cpu_starting() are clearly marked as nofail with a comment.
+> STARTING must not fail!
+> 
+> https://elixir.bootlin.com/linux/latest/source/kernel/cpu.c#L1642
+
+Ah, now that rings a bell! ;-)
+
+> 
+> Whilst I have no immediate idea why that comment is there it is pretty strong
+> argument against trying to have the CPUHP_AP_IRQ_GIC_STARTING callback fail
+> and expecting it to carry on working :( 
+> There would have been a nice print message, but given I don't appear to have
+> a working console after that stage I never see it.
+> 
+> So the best I have yet come up with for this is the option of a new callback registered
+> in gic_smp_init()
+> 
+> cpuhp_setup_state_nocalls(CPUHP_BP_PREPARE_DYN,
+> 			  "irqchip/arm/gicv3:checkrdist",
+> 			  gic_broken_rdist, NULL);
+> 
+> with callback being simply 
+> 
+> static int gic_broken_rdist(unsigned int cpu)
+> {
+> 	if (cpumask_test_cpu(cpu, &broken_rdists))
+> 		return -EINVAL;
+> 
+> 	return 0;
+> }
+> 
+> That gets called cpuhp_up_callbacks() and is allows to fail and roll back the steps.
+> 
+> Not particularly satisfying but keeps the logic confined to the gicv3 driver.
+> 
+> What do you think?
+
+Good enough for me. Cc me on the resulting patch when you repost it so
+that I can eyeball it, but this is IMO the right direction.
+
+Thanks,
+
+	M.
+
 -- 
-2.44.0
-
+Without deviation from the norm, progress is not possible.
