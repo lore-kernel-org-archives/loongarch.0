@@ -1,99 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4EA7EEF8
-	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 04:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E59326AE3
+	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 06:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714104026; cv=none; b=tEJDXfl0Etrd3trHN2Aby05rHI2GoeQWQl/bB9sA/LSzOCJrlAPwc1sq/IsEChDfw0c/Qkp0n7SaLgSkXp6/1ci4+01w43K9JVuckUcFM2tcfNPgtyYNhTdiJpzICOQ332+XJxYzf/Z8DHPYFQT+PzIPNzFbs3bBoB0+HJnSvd0=
+	t=1714111330; cv=none; b=CPs+OpYOcNEaY2F5ZVCHS8zFHJKAWmMOz+bMTuXNQbx7WNH6TM6hUJcg9CCiHMW3jnWH63pIuh5N6YOmT4YWEOn2BM2E2399LzxyPafNepRMuUUfdBPtOM8vTn6yeiWlLQRsjwgo4xH/ESdRRfrUlGg5zXCzlQsQE2NhlKBnljY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714104026; c=relaxed/simple;
-	bh=6IC3mHpeeZPSEwcTPiOjDlzU/H1EDBwij4FYzlBTHYY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h2DGoUQxWWUDW//Rr8eoetTEXNur43MKAOplun7qOUt86YNSd6H96yb6FuTaVJwxD9xlwgCPRKIWtYq5WBT7gY7goT6ua9c8QqSHvgLp+cMeesmWvCtg+0ZH12cnbawyohHWbZ1neuVwpohTTx/72Y32FeabCERPlRKFnGVzrJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwY5ltnj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714111330; c=relaxed/simple;
+	bh=3fagGxrg2kRluE5PpRIDkgUUaRTsE7xofY0NLRaL75A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=U5bRoZcFpmrqUHjENCh5zMhSvlmodHbPiD201alhb5kF3a25qxRAV3hn4yPMJQBQDmDJR3RRAKHrF5vPAMWhwQkJn1LmqqWQB/YhUNngUYJjCA3khMUMqsEZ5jsBJBJOMZy1WuGnXsqn+pN5Pdjrr8WfCIkMEIJ9aVLPcVxcqsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=nLeRzSY3; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwY5ltnj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD541C3277B
-	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 04:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714104025;
-	bh=6IC3mHpeeZPSEwcTPiOjDlzU/H1EDBwij4FYzlBTHYY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RwY5ltnjfloxnxt6e7hDwlYSn8WjhG8w44bQYv8c9N+gcEewrbLodw4s9gI+rXHGT
-	 B5Bztdw3RCcNVMQUAGRKskKnpscfN1H0uMB9Eg4i+3lubnbD4WJAt+vUTOnTFgzni0
-	 USDQAemTk25si6z3cTmyn8gaWPni6MxC3yoCZACn2a55Q3fg9HqtWBSlcpP8kq0A71
-	 IK9aHAZcxt5iv14oIGV5zFpehthh2kQwydzl5kNrGrJsq8qULkrEANrYuE0i/JtigD
-	 +hA2ZkjlwAQ2KXRNfAmpkrH7oiPoxobPs4subGQUfT0oIzI/JWdJFbrMeiL4BO3tzy
-	 jtN/yxSq98sTg==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57222fc625aso2004862a12.3
-        for <loongarch@lists.linux.dev>; Thu, 25 Apr 2024 21:00:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVfLfswWMquJttDClSotStZDUP4ctDlcPWG2VRX/0h3LU9/XWqiXgIoewMGdvmTmS+4D05+RcVc2aPO5vG5CzhIPdMopPptjcFn
-X-Gm-Message-State: AOJu0YzQ07JKqsFAXLgs4pJwIEKy8c9zMUG4GL22rWbAkDnkhDwmayd+
-	yGabMLGEne3FstUeuMWLLSE4Ial82oRuPDX4TbicIrMo2fNKbh/Jq3xEGhJCyY3IPAmjndnVjqS
-	c6dyhdI4sS2/J/1y79MngW+PwdMY=
-X-Google-Smtp-Source: AGHT+IGlV1fQ4e/01Fk7drH6BYjUSOd026QEWYqg7bGv4EhojS5MCTGIlnINl+VGCsn/MVXlgOIXvi/wnOTiZT+QjHc=
-X-Received: by 2002:a17:906:27c9:b0:a58:828b:a4a6 with SMTP id
- k9-20020a17090627c900b00a58828ba4a6mr1478943ejc.73.1714104024323; Thu, 25 Apr
- 2024 21:00:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="nLeRzSY3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1714110803;
+	bh=3fagGxrg2kRluE5PpRIDkgUUaRTsE7xofY0NLRaL75A=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=nLeRzSY3go+34A4lqIcsPe8yV4jdgTo1yaQyfaOGcjkd3/Hu9cReMDgE+1taZ5iQu
+	 K/ZZQEozsHVIZLzemDuzgWolgHHl3XY7yPZk64Wtgaa/jHDqcvkOUIgv3Gz76V4hCs
+	 BlA7UCgyfLkSXrLBpsFR+NSLTs9gE9yhJZYOPuoY=
+Received: from [IPv6:240e:358:1105:4a00:dc73:854d:832e:3] (unknown [IPv6:240e:358:1105:4a00:dc73:854d:832e:3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id DD9E666C6B;
+	Fri, 26 Apr 2024 01:53:19 -0400 (EDT)
+Message-ID: <ca10b9c005361e87dbebfd71c004f3aaf07e42ba.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>
+Date: Fri, 26 Apr 2024 13:53:12 +0800
+In-Reply-To: <CAAhV-H5EZ=7OF7CSiYyZ8_+wWuenpo=K2WT8-6mAT4CvzUC_4g@mail.gmail.com>
+References: <20240327171737.27622-1-xry111@xry111.site>
+	 <CAAhV-H5EZ=7OF7CSiYyZ8_+wWuenpo=K2WT8-6mAT4CvzUC_4g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240327171737.27622-1-xry111@xry111.site>
-In-Reply-To: <20240327171737.27622-1-xry111@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 26 Apr 2024 12:00:12 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5EZ=7OF7CSiYyZ8_+wWuenpo=K2WT8-6mAT4CvzUC_4g@mail.gmail.com>
-Message-ID: <CAAhV-H5EZ=7OF7CSiYyZ8_+wWuenpo=K2WT8-6mAT4CvzUC_4g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Ruoyao,
+On Fri, 2024-04-26 at 12:00 +0800, Huacai Chen wrote:
+> Hi, Ruoyao,
+>=20
+> If enable CONFIG_DEBUG_INFO_BTF, we get:
+>=20
+> loongarch64-unknown-linux-gnu-ld: kernel/sched/fair.o: in function
+> `mul_u64_u32_shr':
+> /home/chenhuacai/linux-test.git/./include/linux/math64.h:161:(.text+0x5e4=
+):
+> undefined reference to `__lshrti3'
+>=20
+> So, could you please implement _ashlti3(), __ashrti3(), and
+> __lshrti3() as commit fbac266f095de92b93e7 ("s390: select
+> ARCH_SUPPORTS_INT128") does?
 
-If enable CONFIG_DEBUG_INFO_BTF, we get:
+It seems not related to DEBUG_INFO_BTF, but related to
+CC_OPTIMIZE_FOR_SIZE.
 
-loongarch64-unknown-linux-gnu-ld: kernel/sched/fair.o: in function
-`mul_u64_u32_shr':
-/home/chenhuacai/linux-test.git/./include/linux/math64.h:161:(.text+0x5e4):
-undefined reference to `__lshrti3'
+I'm making a patch.
 
-So, could you please implement _ashlti3(), __ashrti3(), and
-__lshrti3() as commit fbac266f095de92b93e7 ("s390: select
-ARCH_SUPPORTS_INT128") does?
 
-Huacai
-
-On Thu, Mar 28, 2024 at 1:18=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> This allows compiling a full 128-bit product of two 64-bit integers as
-> a mul/mulh pair, instead of a nasty long sequence of 20+ instructions.
->
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/loongarch/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index a5f300ec6f28..5a769bb92d7c 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -56,6 +56,7 @@ config LOONGARCH
->         select ARCH_SUPPORTS_ACPI
->         select ARCH_SUPPORTS_ATOMIC_RMW
->         select ARCH_SUPPORTS_HUGETLBFS
-> +       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
->         select ARCH_SUPPORTS_LTO_CLANG
->         select ARCH_SUPPORTS_LTO_CLANG_THIN
->         select ARCH_SUPPORTS_NUMA_BALANCING
-> --
-> 2.44.0
->
->
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
