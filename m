@@ -1,54 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE9EB64C
-	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 18:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21321D540
+	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 18:54:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714157458; cv=none; b=OsgYi78Rd0lb+U40zIgxXZrncZw5zKjRPf8wWlha/xM26jr2QRd1wqO1NzQXik9fAH2y3GwoALk8B08vc4nlkwmnz7Qbo8LSO0rMP4R1bM2q6/Lb3kJMN1/3aQooa5lzgcbejqZ+RKRkNw42ONg3HKLjIQCRS6wgsYA5p42ymhg=
+	t=1714157679; cv=none; b=SiY/OirVSTQISpX758KtCR1oynHp1b2+/F0AJOOFY0bN2PM6YxwqDrL1d15kl8oTzKc87g89B+zMylUel7axkCcntlEb4+jI0ataZw5WJ6+jkMnyNSPNwiUo2Bw9b3xJizK7m9tJLooHJfwTD9XNmGOMFsHQqmSmHydwaK7mRX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714157458; c=relaxed/simple;
-	bh=qzSv2gnEZ82yuyykHlGJGrukq6yL7NdagG67pBjWhfw=;
+	s=arc-20240116; t=1714157679; c=relaxed/simple;
+	bh=Erw8uuVUeGio0PshYx2zkVsumWpV4GynBPxpYdsctHY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oDxN1QvGZnpuFT/gNg7fzY3YHTQEV/3fU8I71kA5aVSIP0ORK9bZOyJr5ElVnsuwLIA8tGF38YIyuOdGhm8ugoyByofNB86sWGwyqDPxF8kBmK6FfFh+NSFpotHh5TYL/YV6X2ZlZhO//vJm6m2khyyC5Cwhb/J/7AmznwVod+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G31cPiC6; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=f6xm70Zj9ny2Hijhf2f/ckxTCAIW7pnngFati5twSqXPMtcKT7fLCCqdOmhogTfjkRD4Hok6ZXHIslSIloTpCbFnvgi43xJlp/iACEaNhA3jXWV8y6zCQqIkUrjciDcwR7VsGadr0AZkIadOLU03qK9F15FpDrIL4113Cur9Z7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QeY0Q5CW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G31cPiC6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F0C0C2BD11
-	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 18:50:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QeY0Q5CW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F785C32782
+	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 18:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714157457;
-	bh=qzSv2gnEZ82yuyykHlGJGrukq6yL7NdagG67pBjWhfw=;
+	s=k20201202; t=1714157679;
+	bh=Erw8uuVUeGio0PshYx2zkVsumWpV4GynBPxpYdsctHY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=G31cPiC6TK9kOZfS+7vIsvfHb7uuZNOwj55DutBKEwvj1ZktMpti079oDLoQepzqx
-	 wVszL7O0AJVxtjaOjY0n9kY4/Bve7m6gE0ic4Iybrzklpad4O8Ro4Zf5m6HkkhiJ2+
-	 w3461SEnX9aUsT6TIAtdY2xAhX4Y1lrXomoRm91/r6VXYAPdqg/BAUR9Ku0+ffN2fF
-	 +m/rEaMDw+oIuNEa2S2MKLtCa+l5O0n2aCdo6H2uhPypnxbndLUx0bGMePJQhqLBqn
-	 5LBIsT64XdigQdLAx2qvxJDfAfqchkz63z7zPloWzIi6w7OHWw93PJ1yRE7jC7BXYK
-	 k1xLvs7Vr7U6Q==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a58e2740cd7so10659766b.1
-        for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 11:50:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUtO8il5rmJ6WdWibaGo5XmjAwp2vNwtDrOuUO3TtZkSmhykRY8AkxaLAk6xXtlK2PaiaNXh5BVXMBjYG0Ey8ViUG094NjuXPTb
-X-Gm-Message-State: AOJu0YzWRomECmpDeB2kIisd/AbQ7EbRxQr9ok0WIMR3KyYYAzd/HtLf
-	6VPuU97qicPMkuiEUdlkPtiveZAk29jJA76eJOdeneiEOVoxVJE9LBHaMcLeBbmkgnXMCHZLe5C
-	OUnWEbXWCTF0nM495Y3npi/BXOFU=
-X-Google-Smtp-Source: AGHT+IEtbFUWWfDryHUamYvitrmf8tAKbyELfuzd/vDmOPU4uvcIS74lAE+iFPq4wKESZs2zgaxMHYvoVHUDPQWBV9c=
-X-Received: by 2002:a05:6512:3116:b0:516:ce34:e4fc with SMTP id
- n22-20020a056512311600b00516ce34e4fcmr167995lfb.31.1714157435505; Fri, 26 Apr
- 2024 11:50:35 -0700 (PDT)
+	b=QeY0Q5CWKGUNkZV4cnTSE1WS5+eVGN0gFY1x99TWFJOz/NVZq+OjKksNbrH0CcX/L
+	 aFsWENgqvWMDoRx0SH9KLjE4OC22Bf5Qa/YglImk9bxrHhpE1cvJ4rGWoP1CmD3tyx
+	 5GVQHrCTqQ4hMaUzd/bPyc6futZG+WNd5KuMCzBntmiQO9LBrcntwqDWmLag8UFFnd
+	 KJjIeprHGBh5VFeH8ex6x8CUqFgQgt00rSl+aepgBxkP4M7ne4NCshtRBFGFAtb0T3
+	 ag90uwhMbViW+NGATzyAcLeYJJ3m5AxjLrtmYQZ6+zQePK+mZWBptrLFWzXfkeMx7C
+	 kFKBeHGA1rHAw==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a559b919303so323435866b.1
+        for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 11:54:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWVKj1+GiZ/5384ItGq9J7Y8N1cqawqjvCLkH72ujjcIwlOQ1CatBx7qQ6CEm3BPkDaTnPs12EToWRExlPCwGqrLJPRiXQTqKgA
+X-Gm-Message-State: AOJu0YxvDVkG31ALe3EDprYYk7u/2oPg21JFIACTZT9qAERJ1o8IWFID
+	IDLJrYTQn2gZhJEwEVPAklRCn7KWEJoGfjWJpjI9KmywzNdhOWyKo6CS2buC+E2NU1znSNCL6YM
+	tExWWlxrxy/w8UES0mRAdPAzWdak=
+X-Google-Smtp-Source: AGHT+IHR8dCzuYaMcfUu9DJ1W7DJuyt98T5r37UenPfdlzP0RlXEYGrXPEenPo3iSsrLDDgw6B5I00dbfOalDiVdMh8=
+X-Received: by 2002:ac2:5202:0:b0:51c:1fb4:2327 with SMTP id
+ a2-20020ac25202000000b0051c1fb42327mr2189866lfl.24.1714157657105; Fri, 26 Apr
+ 2024 11:54:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240426082854.7355-1-rppt@kernel.org> <20240426082854.7355-7-rppt@kernel.org>
-In-Reply-To: <20240426082854.7355-7-rppt@kernel.org>
+References: <20240426082854.7355-1-rppt@kernel.org> <20240426082854.7355-8-rppt@kernel.org>
+In-Reply-To: <20240426082854.7355-8-rppt@kernel.org>
 From: Song Liu <song@kernel.org>
-Date: Fri, 26 Apr 2024 11:50:24 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6FZqYXvk4anxby8MccwejPPK5DNU-NGmg7_6T1XDU=Hg@mail.gmail.com>
-Message-ID: <CAPhsuW6FZqYXvk4anxby8MccwejPPK5DNU-NGmg7_6T1XDU=Hg@mail.gmail.com>
-Subject: Re: [PATCH v6 06/16] mm: introduce execmem_alloc() and execmem_free()
+Date: Fri, 26 Apr 2024 11:54:06 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7+wmDA_aaZKhNLfEZ-F1aLpUKssXqu5tUs6s=P9yvB-Q@mail.gmail.com>
+Message-ID: <CAPhsuW7+wmDA_aaZKhNLfEZ-F1aLpUKssXqu5tUs6s=P9yvB-Q@mail.gmail.com>
+Subject: Re: [PATCH v6 07/16] mm/execmem, arch: convert simple overrides of
+ module_alloc to execmem
 To: Mike Rapoport <rppt@kernel.org>
 Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
 	Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
@@ -78,38 +79,27 @@ te:
 >
 > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 >
-> module_alloc() is used everywhere as a mean to allocate memory for code.
+> Several architectures override module_alloc() only to define address
+> range for code allocations different than VMALLOC address space.
 >
-> Beside being semantically wrong, this unnecessarily ties all subsystems
-> that need to allocate code, such as ftrace, kprobes and BPF to modules an=
-d
-> puts the burden of code allocation to the modules code.
+> Provide a generic implementation in execmem that uses the parameters for
+> address space ranges, required alignment and page protections provided
+> by architectures.
 >
-> Several architectures override module_alloc() because of various
-> constraints where the executable memory can be located and this causes
-> additional obstacles for improvements of code allocation.
+> The architectures must fill execmem_info structure and implement
+> execmem_arch_setup() that returns a pointer to that structure. This way t=
+he
+> execmem initialization won't be called from every architecture, but rathe=
+r
+> from a central place, namely a core_initcall() in execmem.
 >
-> Start splitting code allocation from modules by introducing execmem_alloc=
-()
-> and execmem_free() APIs.
->
-> Initially, execmem_alloc() is a wrapper for module_alloc() and
-> execmem_free() is a replacement of module_memfree() to allow updating all
-> call sites to use the new APIs.
->
-> Since architectures define different restrictions on placement,
-> permissions, alignment and other parameters for memory that can be used b=
-y
-> different subsystems that allocate executable memory, execmem_alloc() tak=
-es
-> a type argument, that will be used to identify the calling subsystem and =
-to
-> allow architectures define parameters for ranges suitable for that
-> subsystem.
->
-> No functional changes.
+> The execmem provides execmem_alloc() API that wraps __vmalloc_node_range(=
+)
+> with the parameters defined by the architectures.  If an architecture doe=
+s
+> not implement execmem_arch_setup(), execmem_alloc() will fall back to
+> module_alloc().
 >
 > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Acked-by: Song Liu <song@kernel.org>
