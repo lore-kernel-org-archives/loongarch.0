@@ -1,190 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC171E52A;
-	Fri, 26 Apr 2024 12:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5DE147C63
+	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 13:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714135292; cv=none; b=ptditzuVsph4EcSGNxPeRCtMaehWLWOM0nGBG+c89jhZLok631YhjJZsQIoWICo2mDsBouLBj7SlRku4XuNVqm9jM9kHsbMp/jK2UjEzFNtPYxiPjJAhzE4Z5hZeDiHmN1L/EpALIk8rvKBnbhFRORvFOz6csK5ipxffFQorUVc=
+	t=1714139106; cv=none; b=MDmSQo9R0oARzy2GmvCVXm+8RcDJ9oJo7ShZvzzy5MoUavz5iyGtctKRNhwguXW1w3pULiM+xPpBVXixXL0LdbK/5Rl2ck5D0jAELn+eIvHc1r60UQ+TYUqIaRxjvg1nUbyVu05tOC8xZyvZHl6lmyCCctrQkcBDrLyW9EKsAT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714135292; c=relaxed/simple;
-	bh=st9N10ArNUyvvV0O3ITMWIsRRo6eZ2Ebw9/XgVcbw0s=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bVz6mIsr5RknmejyLYItEgywEN4SPsAl5FJtz+VIpbRoQn1AyapCRnrZUR+kiOdXEgSivAdCjGJkBGo+we28eG48eU0vu10/QmRK21kg2m0qzwkKyEw3pWYM1fM4h+nyBompEujojIa02JO+xHif8wDiM8THlddMhO/8sr6IXWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhInhu73; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714139106; c=relaxed/simple;
+	bh=/wyjt9d4AZ8Mo8vzASxA6mAa3oblPdVQKxM3OHzZLF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=RgWxwzShc9vRACLfYJEiKGBKhoIMSTWDbeMDO+9e5c9TC1LnpjEOt6lSdUqV7N+nnB1TrwM9h9AiMheLViLiXa9OQrv95Y0uAZMBs38QGWeMhIhT1S5efUC/gOVx1KntafpESg8ut9+IBdcH7sdE4g6B2QnyNBxX/930xHyX79c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AnQJ1dJI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nhInhu73"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95E7C113CD;
-	Fri, 26 Apr 2024 12:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714135291;
-	bh=st9N10ArNUyvvV0O3ITMWIsRRo6eZ2Ebw9/XgVcbw0s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nhInhu73+ejrsJQp7XW+TlWHiMfsPF9kDo/EibrlYTgEzK8TMbXBv6CeuCa5LxVXq
-	 PVqPQwuloEel+Isr+bhThUF4SmUs9Fn25FkAiESPt17ervqrh0S/dUDRRWWQlV/by9
-	 nUTr94h0OYz1bgnzhrDD/SufHJIxw9vT68YGCSfSAhz9HNFGR74uJUL2+F/raEZG9C
-	 LAP4IbiD2z5Kqq0CRxOhWYAhg/ysrzLrVT3N/0GWozDR3tnqmGrbDGDduDjY6S4uVG
-	 Y90lnGMNgYMYAtENSOHFBBjSi/lAIfpMPfj4331iav/zEl8giMzudkZgPVBvnLnGvg
-	 0QMiJ7Mk4oB+Q==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1s0KtM-008DZj-AC;
-	Fri, 26 Apr 2024 13:41:28 +0100
-Date: Fri, 26 Apr 2024 13:41:27 +0100
-Message-ID: <86bk5wqoso.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: <linuxarm@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra
-	<peterz@infradead.org>,
-	<linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>,
-	<linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>,
-	<x86@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	"Rafael J . Wysocki"
-	<rafael@kernel.org>,
-	Miguel Luis <miguel.luis@oracle.com>,
-	"James Morse"
-	<james.morse@arm.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe
- Brucker <jean-philippe@linaro.org>,
-	Catalin Marinas
-	<catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ingo Molnar
-	<mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen
-	<dave.hansen@linux.intel.com>,
-	<justin.he@arm.com>,
-	<jianyong.wu@arm.com>
-Subject: Re: [PATCH v7 11/16] irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs
-In-Reply-To: <20240425175502.00007def@huawei.com>
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
-	<20240418135412.14730-12-Jonathan.Cameron@huawei.com>
-	<20240422114020.0000294f@Huawei.com>
-	<87plugthim.wl-maz@kernel.org>
-	<20240424135438.00001ffc@huawei.com>
-	<86il06rd19.wl-maz@kernel.org>
-	<20240425133150.000009fa@Huawei.com>
-	<20240425155726.000063f7@huawei.com>
-	<20240425175502.00007def@huawei.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AnQJ1dJI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714139104;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uF1kPlR2Ck3Z44kTNMrT7zanJ3tMGvooilBaXGx0yJc=;
+	b=AnQJ1dJI3MtJ+7I0tkcWnraRJUBm9MW1uPpoAEPQpP6czxDrPrFfY2kGvbxe30YS501/Gb
+	PSLgnbiOQZ/7zQJxoekoEhYqIxC3Za3r1Srf5f+U0V+3uinJqwqRjSzCEDqUXtxMa4WzCo
+	R83vtPBuT6SQIbOeXPccWXoDQIHCLVo=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-478-nEucV_4dOkSUpCpQTY9FVA-1; Fri, 26 Apr 2024 09:45:02 -0400
+X-MC-Unique: nEucV_4dOkSUpCpQTY9FVA-1
+Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-6eba7dc8f1eso477072a34.3
+        for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 06:45:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714139102; x=1714743902;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uF1kPlR2Ck3Z44kTNMrT7zanJ3tMGvooilBaXGx0yJc=;
+        b=ppsHy+dxd/6xhtLg3gREVPvsE5xTGIqBMnvx4WJOnu/YF22Vk3Bb3UyMLEix2I0TK/
+         o5EWTFQ3aKjvhVGiijnqCo+id2SJtuBFeRIsONCvd4xdK5HPnQtIi0w0WZ2hFTaXhg0b
+         EVYidgOolQ8H2FOEhS7roDeAiuCamoCZW8dqOftXMEweikpjtpgc2ti8kv03KNa+gy1z
+         ZRctHHkRHlnSXfuA3IYdyMHbTJSInRfggYnbKosFqAYBDu8ITSeM/6mpooiP3224tbK6
+         w9VnyqCwa1MuV1rtMl2k5JtDOMdEOQoxCudz0qMJ7pgPCn3L/Ed9K5697EgwJwxaKWSI
+         2/kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFqqGoqgmzVKI+DuZCEKT2/GjtejBOGC7We2LaOHbEPdxj1mPqilm3aBrR155zwU3oyYyQITQfYtv1qBEzhKBsrFwfR1XOd6FW
+X-Gm-Message-State: AOJu0Yx0Dgqma9ceiHwkrMXOkJ4pRMe/ki7WGGnRYlo1iUYQX+TOxnJP
+	WKZTvBKKfo+M6/KUjTuF0W2dQqFdVTcF4r37mjVTvhKKe9FJDnE2odTPzdIzSO0z2X6WaMmZS5n
+	vO4pvo2DNfeB4A6YDtXyVVCOWl9WPH66Ogv9NJj+MTynPa6K6k4QguG1N9Q==
+X-Received: by 2002:a05:6808:d53:b0:3c5:f29a:5fda with SMTP id w19-20020a0568080d5300b003c5f29a5fdamr3101414oik.3.1714139101693;
+        Fri, 26 Apr 2024 06:45:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzrxrCF28uWDRUo6q+zp4qFvioOS0q1e4hOagwn8iRvVD4UFCuaQuTxLkqj/Vp49yVezlG5g==
+X-Received: by 2002:a05:6808:d53:b0:3c5:f29a:5fda with SMTP id w19-20020a0568080d5300b003c5f29a5fdamr3101360oik.3.1714139100964;
+        Fri, 26 Apr 2024 06:45:00 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id w9-20020a0ca809000000b00696b1050be8sm6864026qva.133.2024.04.26.06.44.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 06:45:00 -0700 (PDT)
+Date: Fri, 26 Apr 2024 09:44:58 -0400
+From: Peter Xu <peterx@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
+Message-ID: <Ziuv2jLY1wgBITiP@x1n>
+References: <20240402125516.223131-1-david@redhat.com>
+ <20240402125516.223131-2-david@redhat.com>
+ <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: Jonathan.Cameron@Huawei.com, linuxarm@huawei.com, tglx@linutronix.de, peterz@infradead.org, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, linux@armlinux.org.uk, rafael@kernel.org, miguel.luis@oracle.com, james.morse@arm.com, salil.mehta@huawei.com, jean-philippe@linaro.org, catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, justin.he@arm.com, jianyong.wu@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+In-Reply-To: <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Thu, 25 Apr 2024 17:55:27 +0100,
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> On Thu, 25 Apr 2024 16:00:17 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> > On Thu, 25 Apr 2024 13:31:50 +0100
-> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Fri, Apr 26, 2024 at 09:17:47AM +0200, David Hildenbrand wrote:
+> On 02.04.24 14:55, David Hildenbrand wrote:
+> > Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
+> > all relevant internal functions to start with "gup_fast", to make it
+> > clearer that this is not ordinary GUP. The current mixture of
+> > "lockless", "gup" and "gup_fast" is confusing.
 > > 
-> > > On Wed, 24 Apr 2024 16:33:22 +0100
-> > > Marc Zyngier <maz@kernel.org> wrote:
-
-[...]
-
-> > >   
-> > > > I'd expect the handling side to look like this (will not compile, but
-> > > > you'll get the idea):    
-> > > Hi Marc,
-> > > 
-> > > In general this looks good - but...
-> > > 
-> > > I haven't gotten to the bottom of why yet (and it might be a side
-> > > effect of how I hacked the test by lying in minimal fashion and
-> > > just frigging the MADT read functions) but the hotplug flow is only getting
-> > > as far as calling __cpu_up() before it seems to enter an infinite loop.
-> > > That is it never gets far enough to fail this test.
-> > > 
-> > > Getting stuck in a psci cpu_on call.  I'm guessing something that
-> > > we didn't get to in the earlier gicv3 calls before bailing out is blocking that?
-> > > Looks like it gets to
-> > > SMCCC smc
-> > > and is never seen again.
-> > > 
-> > > Any ideas on where to look?  The one advantage so far of the higher level
-> > > approach is we never tried the hotplug callbacks at all so avoided hitting
-> > > that call.  One (little bit horrible) solution that might avoid this would 
-> > > be to add another cpuhp state very early on and fail at that stage.
-> > > I'm not keen on doing that without a better explanation than I have so far!  
+> > Further, avoid the term "huge" when talking about a "leaf" -- for
+> > example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
+> > "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
+> > stays.
 > > 
-> > Whilst it still doesn't work I suspect I'm loosing ability to print to the console
-> > between that point and somewhat later and real problem is
-> > elsewhere.
+> > What remains is the "external" interface:
+> > * get_user_pages_fast_only()
+> > * get_user_pages_fast()
+> > * pin_user_pages_fast()
+> > 
+> > The high-level internal functions for GUP-fast (+slow fallback) are now:
+> > * internal_get_user_pages_fast() -> gup_fast_fallback()
+> > * lockless_pages_from_mm() -> gup_fast()
+> > 
+> > The basic GUP-fast walker functions:
+> > * gup_pgd_range() -> gup_fast_pgd_range()
+> > * gup_p4d_range() -> gup_fast_p4d_range()
+> > * gup_pud_range() -> gup_fast_pud_range()
+> > * gup_pmd_range() -> gup_fast_pmd_range()
+> > * gup_pte_range() -> gup_fast_pte_range()
+> > * gup_huge_pgd()  -> gup_fast_pgd_leaf()
+> > * gup_huge_pud()  -> gup_fast_pud_leaf()
+> > * gup_huge_pmd()  -> gup_fast_pmd_leaf()
+> > 
+> > The weird hugepd stuff:
+> > * gup_huge_pd() -> gup_fast_hugepd()
+> > * gup_hugepte() -> gup_fast_hugepte()
+> 
+> I just realized that we end up calling these from follow_hugepd() as well.
+> And something seems to be off, because gup_fast_hugepd() won't have the VMA
+> even in the slow-GUP case to pass it to gup_must_unshare().
+> 
+> So these are GUP-fast functions and the terminology seem correct. But the
+> usage from follow_hugepd() is questionable,
+> 
+> commit a12083d721d703f985f4403d6b333cc449f838f6
+> Author: Peter Xu <peterx@redhat.com>
+> Date:   Wed Mar 27 11:23:31 2024 -0400
+> 
+>     mm/gup: handle hugepd for follow_page()
+> 
+> 
+> states "With previous refactors on fast-gup gup_huge_pd(), most of the code
+> can be leveraged", which doesn't look quite true just staring the the
+> gup_must_unshare() call where we don't pass the VMA. Also,
+> "unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense for
+> slow GUP ...
 
-Sorry, travelling at the moment, so only spotted this now.
+Yes it's not needed, just doesn't look worthwhile to put another helper on
+top just for this.  I mentioned this in the commit message here:
+
+  There's something not needed for follow page, for example, gup_hugepte()
+  tries to detect pgtable entry change which will never happen with slow
+  gup (which has the pgtable lock held), but that's not a problem to check.
 
 > 
-> Hi again,
-> 
-> Found it I think.  cpuhp calls between cpu:bringup and ap:online 
-> arm made from notify_cpu_starting() are clearly marked as nofail with a comment.
-> STARTING must not fail!
-> 
-> https://elixir.bootlin.com/linux/latest/source/kernel/cpu.c#L1642
+> @Peter, any insights?
 
-Ah, now that rings a bell! ;-)
+However I think we should pass vma in for sure, I guess I overlooked that,
+and it didn't expose in my tests too as I probably missed ./cow.
 
-> 
-> Whilst I have no immediate idea why that comment is there it is pretty strong
-> argument against trying to have the CPUHP_AP_IRQ_GIC_STARTING callback fail
-> and expecting it to carry on working :( 
-> There would have been a nice print message, but given I don't appear to have
-> a working console after that stage I never see it.
-> 
-> So the best I have yet come up with for this is the option of a new callback registered
-> in gic_smp_init()
-> 
-> cpuhp_setup_state_nocalls(CPUHP_BP_PREPARE_DYN,
-> 			  "irqchip/arm/gicv3:checkrdist",
-> 			  gic_broken_rdist, NULL);
-> 
-> with callback being simply 
-> 
-> static int gic_broken_rdist(unsigned int cpu)
-> {
-> 	if (cpumask_test_cpu(cpu, &broken_rdists))
-> 		return -EINVAL;
-> 
-> 	return 0;
-> }
-> 
-> That gets called cpuhp_up_callbacks() and is allows to fail and roll back the steps.
-> 
-> Not particularly satisfying but keeps the logic confined to the gicv3 driver.
-> 
-> What do you think?
-
-Good enough for me. Cc me on the resulting patch when you repost it so
-that I can eyeball it, but this is IMO the right direction.
+I'll prepare a separate patch on top of this series and the gup-fast rename
+patches (I saw this one just reached mm-stable), and I'll see whether I can
+test it too if I can find a Power system fast enough.  I'll probably drop
+the "fast" in the hugepd function names too.
 
 Thanks,
 
-	M.
-
 -- 
-Without deviation from the norm, progress is not possible.
+Peter Xu
+
