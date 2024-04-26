@@ -1,96 +1,160 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F76A14532B;
-	Fri, 26 Apr 2024 11:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CC813C9BC
+	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 12:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714132144; cv=none; b=RyAYLfDufqam67XtQrZ8xuJbDp/6sMBFw1I7Lca1BhWXO6lWnZbirIUt1+ZKpvWzaq7WsazajXTBncoAT1DJ6bLvmtzGd8/L9wRWQeJPhWhC3l3i6sEly2QfPkFwDCRqEZ91PdzSmj36fnQ3BCRtgNinrp9j5k+h1lqRnXNN/P0=
+	t=1714133698; cv=none; b=qzXCvuiHuxqVtA0YNVOjIbGO9nVmNr5ac/IIx3L7oZVQ9HZBKdS0c1RLRM4JXN4S0o0aoa4R06blIjrW8yQk6KA8wRRousjAYqHlZ+gQdx2NDuf69jQM/FYCwoD7qHiqb6Vv/RA1T+uG7+AGF9a+wR+LIMxMv3bDvFvOk8Fw8/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714132144; c=relaxed/simple;
-	bh=vuIcmnGQq4w4qRhii36oQpxwxZeKTg+NU3UP9tdpmnQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BUpJEatkY61ZR52MLv9p+q6oNJbuO4x7WW0QLrBWXmhDExLFNrqra2Bbravji0LiRwhOzIMRe7dkAU0dNKguNYPYOyHUfi54HW2310A0PvZUizrwEBastQH/cglUedtQEtp1qdXy5SZGLi345aulnFLLiNSZ5na0GGua3Vr8c6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQrbL5Lklz6DBjc;
-	Fri, 26 Apr 2024 19:48:46 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 46E26140447;
-	Fri, 26 Apr 2024 19:48:58 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 26 Apr
- 2024 12:48:57 +0100
-Date: Fri, 26 Apr 2024 12:48:55 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, "James Morse"
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	<linuxarm@huawei.com>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Dave
- Hansen" <dave.hansen@linux.intel.com>, <justin.he@arm.com>,
-	<jianyong.wu@arm.com>
-Subject: Re: [PATCH v7 08/16] ACPI: Add post_eject to struct
- acpi_scan_handler for cpu hotplug
-Message-ID: <20240426124836.00006cde@huawei.com>
-In-Reply-To: <20240418135412.14730-9-Jonathan.Cameron@huawei.com>
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
-	<20240418135412.14730-9-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1714133698; c=relaxed/simple;
+	bh=4J9T8dLyYXPXJscrNbpt1oBl/KJlwJW8Y+aBv80jApI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bZERsDevM2410YYiSRC3pGqbkLUpyKJBCT7H7gN7maRQZeB2GoikS2QFesW4Wswwkm10O1cJKJTSYWfQ9cGCtfUIOxUYKutfXdzDtp5O7xRIYmQVyDW1RuvDBasmDgQ+RQbyljPeYPjVeBsRqjklR3e42/Yozloa1vQb80NDTCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=LxwJxAt8; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="LxwJxAt8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1714133695;
+	bh=4J9T8dLyYXPXJscrNbpt1oBl/KJlwJW8Y+aBv80jApI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LxwJxAt8/g6M7msXHMHks3zBsv3trPsFTq5Y3GkofG8RSK57Ri0OLsIDpRA3r87Rl
+	 yi3DK/U9VYkVRZe49CUSv4P60KOPSpVdJx4z+9sKWyUs2xWLDKkrr7aZs4jeWb+FBG
+	 tI0pACelksWmzua+P4kgZIyGfJcPFZASACmu3iP4=
+Received: from stargazer.. (unknown [IPv6:240e:358:1105:4a00:dc73:854d:832e:3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 3B6DC659FD;
+	Fri, 26 Apr 2024 08:14:50 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] LoongArch: Provide __lshrti3, __ashrti3, and __ashrti3
+Date: Fri, 26 Apr 2024 20:14:42 +0800
+Message-ID: <20240426121442.882029-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Thu, 18 Apr 2024 14:54:04 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+After selecting ARCH_SUPPORTS_INT128, when optimizing for size the
+compiler generates calls to __lshrti3, __ashrti3, and __ashrti3 for
+shifting __int128 values, causing a link failure:
 
-> From: James Morse <james.morse@arm.com>
-> 
-> struct acpi_scan_handler has a detach callback that is used to remove
-> a driver when a bus is changed. When interacting with an eject-request,
-> the detach callback is called before _EJ0.
-> 
-> This means the ACPI processor driver can't use _STA to determine if a
-> CPU has been made not-present, or some of the other _STA bits have been
-> changed. acpi_processor_remove() needs to know the value of _STA after
-> _EJ0 has been called.
-> 
-> Add a post_eject callback to struct acpi_scan_handler. This is called
-> after acpi_scan_hot_remove() has successfully called _EJ0. Because
-> acpi_scan_check_and_detach() also clears the handler pointer,
-> it needs to be told if the caller will go on to call
-> acpi_bus_post_eject(), so that acpi_device_clear_enumerated()
-> and clearing the handler pointer can be deferred.
-> An extra flag is added to flags field introduced in the previous
-> patch to achieve this.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
+    loongarch64-unknown-linux-gnu-ld: kernel/sched/fair.o: in
+    function `mul_u64_u32_shr':
+    <PATH>/include/linux/math64.h:161:(.text+0x5e4): undefined
+    reference to `__lshrti3'
 
-Gavin's earlier review showed I can't type.
-Fixed up by dropping this RB seeing as I signed off anyway.
+Provide the implementation of these functions if ARCH_SUPPORTS_INT128.
 
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-> Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
+Reported-by: Huacai Chen <chenhuacai@kernel.org>
+Closes: https://lore.kernel.org/loongarch/CAAhV-H5EZ=7OF7CSiYyZ8_+wWuenpo=K2WT8-6mAT4CvzUC_4g@mail.gmail.com/
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ arch/loongarch/include/asm/asm-prototypes.h |  6 +++
+ arch/loongarch/lib/Makefile                 |  2 +
+ arch/loongarch/lib/tishift.S                | 56 +++++++++++++++++++++
+ 3 files changed, 64 insertions(+)
+ create mode 100644 arch/loongarch/lib/tishift.S
+
+diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch/include/asm/asm-prototypes.h
+index cf8e1a4e7c19..51f224bcfc65 100644
+--- a/arch/loongarch/include/asm/asm-prototypes.h
++++ b/arch/loongarch/include/asm/asm-prototypes.h
+@@ -6,3 +6,9 @@
+ #include <asm/page.h>
+ #include <asm/ftrace.h>
+ #include <asm-generic/asm-prototypes.h>
++
++#ifdef CONFIG_ARCH_SUPPORTS_INT128
++__int128_t __ashlti3(__int128_t a, int b);
++__int128_t __ashrti3(__int128_t a, int b);
++__int128_t __lshrti3(__int128_t a, int b);
++#endif
+diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
+index a77bf160bfc4..f61af161f16e 100644
+--- a/arch/loongarch/lib/Makefile
++++ b/arch/loongarch/lib/Makefile
+@@ -9,3 +9,5 @@ lib-y	+= delay.o memset.o memcpy.o memmove.o \
+ obj-$(CONFIG_CPU_HAS_LSX) += xor_simd.o xor_simd_glue.o
+ 
+ obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
++
++obj-$(CONFIG_ARCH_SUPPORTS_INT128) += tishift.o
+diff --git a/arch/loongarch/lib/tishift.S b/arch/loongarch/lib/tishift.S
+new file mode 100644
+index 000000000000..eb43f29f4d0b
+--- /dev/null
++++ b/arch/loongarch/lib/tishift.S
+@@ -0,0 +1,56 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#include <asm/asmmacro.h>
++#include <linux/linkage.h>
++#include <linux/export.h>
++
++SYM_FUNC_START(__lshrti3)
++	slli.d	t2, a1, 1
++	nor	t3, zero, a2
++	srl.d	t1, a0, a2
++	sll.d	t2, t2, t3
++	andi	t0, a2, 64
++	srl.d	a1, a1, a2
++	or	t1, t2, t1
++	maskeqz	a0, a1, t0
++	masknez	a1, a1, t0
++	masknez	t0, t1, t0
++	or	a0, t0, a0
++	jr	ra
++SYM_FUNC_END(__lshrti3)
++EXPORT_SYMBOL(__lshrti3)
++
++SYM_FUNC_START(__ashrti3)
++	nor	t3, zero, a2
++	slli.d	t2, a1, 1
++	srl.d	t1, a0, a2
++	sll.d	t2, t2, t3
++	andi	t0, a2, 64
++	or	t1, t2, t1
++	sra.d	a2, a1, a2
++	srai.d	a1, a1, 63
++	maskeqz	a0, a2, t0
++	maskeqz	a1, a1, t0
++	masknez	a2, a2, t0
++	masknez	t0, t1, t0
++	or	a1, a1, a2
++	or	a0, t0, a0
++	jr	ra
++SYM_FUNC_END(__ashrti3)
++EXPORT_SYMBOL(__ashrti3)
++
++SYM_FUNC_START(__ashlti3)
++	srli.d	t2, a0, 1
++	nor	t3, zero, a2
++	sll.d	t1, a1, a2
++	srl.d	t2, t2, t3
++	andi	t0, a2, 64
++	sll.d	a0, a0, a2
++	or	t1, t2, t1
++	maskeqz	a1, a0, t0
++	masknez	a0, a0, t0
++	masknez	t0, t1, t0
++	or	a1, t0, a1
++	jr	ra
++SYM_FUNC_END(__ashlti3)
++EXPORT_SYMBOL(__ashlti3)
+-- 
+2.44.0
+
