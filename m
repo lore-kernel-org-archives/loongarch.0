@@ -1,196 +1,287 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB9213BC0A
-	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 07:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F2F13C9BC;
+	Fri, 26 Apr 2024 08:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714115875; cv=none; b=eCAM+jfBsWBNoTNseIiTZSt0tUZGCTsKVX0aT2FOxmRtn4bZO/Vgt506Ms5bdg0Jqig1WjUOxCucxjA3y/0N9avfVE5DAaR17KyDmrStjgA2qyXvNCKwJoFkWMlnAl1HVdOvq/To/K/GV1QISNTdv0bZhzutxOPfPlo2O+ND4LQ=
+	t=1714120155; cv=none; b=IBeX1d7ELZ29ufOOCL/b2h3TC0xRiekrKoBNfs2zE2FyFrrR+nqvh5LZIJdvJJAiZDAWpkVPxxsOkqoh45T8uKyWiYztMRajcvx07nBXTYrkiyEDNK1Gcnd2HUWqq7xSVxv88NkCl0c3rzs3rshtwG/c2fV5B7rbj/ipE8MSCUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714115875; c=relaxed/simple;
-	bh=/IQdzt/FX7EnCChiCGBQqy1tgXqmr3oy/j/ZaYq1k/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U475qNxuP2prKWs6jald3bumA4l6++zAD4Sjmcytd2iTK0rfrol9DegKRNQYsecM8NloJ3bGxwX8rOQa9jbB1AtKvhfjVc3jIlWDOQArqz0sPgvfajjnUKyISD03mJGZgZjAD0vXtI95ppjjj3kFo1dLwXLvF58hlszWH5ZwCFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fEM4hzHD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714120155; c=relaxed/simple;
+	bh=bpZVCNetPyptINEqz5nCWQcjIsogDuW2407VcgZHC0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=otuWn4L0PUEOP86+aol6zjSYyvvr9+O4t5GRkD4xRZu3RlOcM8JiOBwQbD88y/ETVZIeDb78At085vd5J3thUKkBJ2I+dHpz5Gpz3orkYR81o4r6GTgmMcKAfiF7A2uBBSj5JxC3gYiUsuFOxdyE1EohHH3yQRrNmVxxsoHkJuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E44X2qyG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fEM4hzHD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714115873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+ui6jDL8G61kFh00hFF389OEWlO0ttAKpE3pTUl0yoI=;
-	b=fEM4hzHDdtxbgQjwV+RLW6dAaqSbqJ2eXNnml9tBtueyKgGu0SVuIJgCm5onfjJOmyWmxm
-	+eBXbQkVAbDf4yLqe9Zj5NV7LlwQnkRvtsx8Eo3lA2mop/dh/ZTBi/KhXHj77q+j5Ze0CE
-	dyPsQfs6mYL98rKmOWqRDwMHtd8Phu0=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-427-ab70BObnPC-53Lfaegx0MA-1; Fri, 26 Apr 2024 03:17:51 -0400
-X-MC-Unique: ab70BObnPC-53Lfaegx0MA-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2d9ee5db226so14681061fa.1
-        for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 00:17:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714115870; x=1714720670;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+ui6jDL8G61kFh00hFF389OEWlO0ttAKpE3pTUl0yoI=;
-        b=kUj8HSLpBfCMavMBKKLTIv3z3jRx7HtDY4rpKeebGRHSOJH8HE5UloDZCQKShBR6qD
-         7Dsyicg4xv8lPdNWAoZDyG4B2d+kGV3unfJxUKTM91u/X3fgiZTu1ltVaMgMRKQnRTFX
-         a/uxLsHypjNHMEGbb6siifkn3ggVZQ9LfvvxUfMfzyjcA+0AEsxblUsL02cRASoBjeB6
-         cTO9VIl2VVDF6sl7dwFSwyW30SLzUhYPL5y/U/prpVy2oK0A94xMuL1WSlaKPwmqScP1
-         Jpm0t5Z9sVwJ61eqE9MNks4fbGHviCPuyL979KjM0+RPvkjIgFtZyTXpg31GA2+qgG9h
-         pItA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNax7RXB9KKh2bGxjsDiDma7H3svdvFV7QRLnUhfn1QHMxP+zH4+PhJobXkt/CM8BXF4n3uvJA2fQc8O1/d3N0u1IEPYMOm4nZ
-X-Gm-Message-State: AOJu0YxkmRdL5/WYNzi9ksM25jLt6AGsm5CDMBIl37ltmjJcZ/Mq4fl+
-	iOxzsjjd4szk7gi8vRf3lb8rePgFFgMNQdIB8TgRt1429OKj89Febegi/ytzeE16MC2T2Ic8lZI
-	eKNeE81fm2ROHoGVzwyS+VaVjSuHZ42ZfyRn3B0TsGRLWIN036Tjsx14SRw==
-X-Received: by 2002:a05:651c:19a9:b0:2df:6eb1:c501 with SMTP id bx41-20020a05651c19a900b002df6eb1c501mr383311ljb.11.1714115869998;
-        Fri, 26 Apr 2024 00:17:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG24EL02T0x+m1JovGDBMONyU/2x7/q4VtFLKKFSWeomSG6lLj/kueLfpyifkJIct6xZaSxcg==
-X-Received: by 2002:a05:651c:19a9:b0:2df:6eb1:c501 with SMTP id bx41-20020a05651c19a900b002df6eb1c501mr383278ljb.11.1714115869533;
-        Fri, 26 Apr 2024 00:17:49 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c726:6100:20f2:6848:5b74:ca82? (p200300cbc726610020f268485b74ca82.dip0.t-ipconnect.de. [2003:cb:c726:6100:20f2:6848:5b74:ca82])
-        by smtp.gmail.com with ESMTPSA id u17-20020a05600c19d100b00416b163e52bsm33354825wmq.14.2024.04.26.00.17.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 00:17:49 -0700 (PDT)
-Message-ID: <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
-Date: Fri, 26 Apr 2024 09:17:47 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E44X2qyG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C63C113CD;
+	Fri, 26 Apr 2024 08:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714120154;
+	bh=bpZVCNetPyptINEqz5nCWQcjIsogDuW2407VcgZHC0c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=E44X2qyG2/tPBg7Ns9Pp27d8abTSd1/BDDwbCkeKJulUGHMsAqYEyRfC00z/x1rO7
+	 ZszG8GLXnQglIBQi8IQPPErabm6P7tCA8JwBkwZ/vfEdJz4OfetUOK19ZVQQ0nRst4
+	 vsjqQYS7pTankosz1dx1cr4jw7+3m7NeWFkmE2+xg5Q1f7VrQkzc98C7yOqJPulfLj
+	 OhFc7a4ZN72ewP9WixTiswpoW6Y899OMog1ge1uCePlSgcdMjUvYaR/bKGpJHiya6f
+	 o2EyJZGZ2FmGFIOqdlQ+J7zo101axix3gfHH3nWnh8JWL7BYuRgIz2Ok/p8N6Bj4Rs
+	 YAReSasOmax1Q==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Rapoport <rppt@kernel.org>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v6 00/16] mm: jit/text allocator
+Date: Fri, 26 Apr 2024 11:28:38 +0300
+Message-ID: <20240426082854.7355-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
-To: linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
- John Hubbard <jhubbard@nvidia.com>, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-riscv@lists.infradead.org,
- x86@kernel.org
-References: <20240402125516.223131-1-david@redhat.com>
- <20240402125516.223131-2-david@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240402125516.223131-2-david@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 02.04.24 14:55, David Hildenbrand wrote:
-> Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
-> all relevant internal functions to start with "gup_fast", to make it
-> clearer that this is not ordinary GUP. The current mixture of
-> "lockless", "gup" and "gup_fast" is confusing.
-> 
-> Further, avoid the term "huge" when talking about a "leaf" -- for
-> example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
-> "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
-> stays.
-> 
-> What remains is the "external" interface:
-> * get_user_pages_fast_only()
-> * get_user_pages_fast()
-> * pin_user_pages_fast()
-> 
-> The high-level internal functions for GUP-fast (+slow fallback) are now:
-> * internal_get_user_pages_fast() -> gup_fast_fallback()
-> * lockless_pages_from_mm() -> gup_fast()
-> 
-> The basic GUP-fast walker functions:
-> * gup_pgd_range() -> gup_fast_pgd_range()
-> * gup_p4d_range() -> gup_fast_p4d_range()
-> * gup_pud_range() -> gup_fast_pud_range()
-> * gup_pmd_range() -> gup_fast_pmd_range()
-> * gup_pte_range() -> gup_fast_pte_range()
-> * gup_huge_pgd()  -> gup_fast_pgd_leaf()
-> * gup_huge_pud()  -> gup_fast_pud_leaf()
-> * gup_huge_pmd()  -> gup_fast_pmd_leaf()
-> 
-> The weird hugepd stuff:
-> * gup_huge_pd() -> gup_fast_hugepd()
-> * gup_hugepte() -> gup_fast_hugepte()
+From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 
-I just realized that we end up calling these from follow_hugepd() as 
-well. And something seems to be off, because gup_fast_hugepd() won't 
-have the VMA even in the slow-GUP case to pass it to gup_must_unshare().
+Hi,
 
-So these are GUP-fast functions and the terminology seem correct. But 
-the usage from follow_hugepd() is questionable,
+The patches are also available in git:
+https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=execmem/v6
 
-commit a12083d721d703f985f4403d6b333cc449f838f6
-Author: Peter Xu <peterx@redhat.com>
-Date:   Wed Mar 27 11:23:31 2024 -0400
+v6 changes:
+* restore patch "arm64: extend execmem_info for generated code
+  allocations" that disappeared in v5 rebase
+* update execmem initialization so that by default it will be
+  initialized early while late initialization will be an opt-in
 
-     mm/gup: handle hugepd for follow_page()
+v5: https://lore.kernel.org/all/20240422094436.3625171-1-rppt@kernel.org
+* rebase on v6.9-rc4 to avoid a conflict in kprobes
+* add copyrights to mm/execmem.c (Luis)
+* fix spelling (Ingo)
+* define MODULES_VADDDR for sparc (Sam)
+* consistently initialize struct execmem_info (Peter)
+* reduce #ifdefs in function bodies in kprobes (Masami) 
+
+v4: https://lore.kernel.org/all/20240411160051.2093261-1-rppt@kernel.org
+* rebase on v6.9-rc2
+* rename execmem_params to execmem_info and execmem_arch_params() to
+  execmem_arch_setup()
+* use single execmem_alloc() API instead of execmem_{text,data}_alloc() (Song)
+* avoid extra copy of execmem parameters (Rick)
+* run execmem_init() as core_initcall() except for the architectures that
+  may allocated text really early (currently only x86) (Will)
+* add acks for some of arm64 and riscv changes, thanks Will and Alexandre
+* new commits:
+  - drop call to kasan_alloc_module_shadow() on arm64 because it's not
+    needed anymore
+  - rename MODULE_START to MODULES_VADDR on MIPS
+  - use CONFIG_EXECMEM instead of CONFIG_MODULES on powerpc as per Christophe:
+    https://lore.kernel.org/all/79062fa3-3402-47b3-8920-9231ad05e964@csgroup.eu/
+
+v3: https://lore.kernel.org/all/20230918072955.2507221-1-rppt@kernel.org
+* add type parameter to execmem allocation APIs
+* remove BPF dependency on modules
+
+v2: https://lore.kernel.org/all/20230616085038.4121892-1-rppt@kernel.org
+* Separate "module" and "others" allocations with execmem_text_alloc()
+and jit_text_alloc()
+* Drop ROX entailment on x86
+* Add ack for nios2 changes, thanks Dinh Nguyen
+
+v1: https://lore.kernel.org/all/20230601101257.530867-1-rppt@kernel.org
+
+= Cover letter from v1 (sligtly updated) =
+
+module_alloc() is used everywhere as a mean to allocate memory for code.
+
+Beside being semantically wrong, this unnecessarily ties all subsystmes
+that need to allocate code, such as ftrace, kprobes and BPF to modules and
+puts the burden of code allocation to the modules code.
+
+Several architectures override module_alloc() because of various
+constraints where the executable memory can be located and this causes
+additional obstacles for improvements of code allocation.
+
+A centralized infrastructure for code allocation allows allocations of
+executable memory as ROX, and future optimizations such as caching large
+pages for better iTLB performance and providing sub-page allocations for
+users that only need small jit code snippets.
+
+Rick Edgecombe proposed perm_alloc extension to vmalloc [1] and Song Liu
+proposed execmem_alloc [2], but both these approaches were targeting BPF
+allocations and lacked the ground work to abstract executable allocations
+and split them from the modules core.
+
+Thomas Gleixner suggested to express module allocation restrictions and
+requirements as struct mod_alloc_type_params [3] that would define ranges,
+protections and other parameters for different types of allocations used by
+modules and following that suggestion Song separated allocations of
+different types in modules (commit ac3b43283923 ("module: replace
+module_layout with module_memory")) and posted "Type aware module
+allocator" set [4].
+
+I liked the idea of parametrising code allocation requirements as a
+structure, but I believe the original proposal and Song's module allocator
+was too module centric, so I came up with these patches.
+
+This set splits code allocation from modules by introducing execmem_alloc()
+and and execmem_free(), APIs, replaces call sites of module_alloc() and
+module_memfree() with the new APIs and implements core text and related
+allocations in a central place.
+
+Instead of architecture specific overrides for module_alloc(), the
+architectures that require non-default behaviour for text allocation must
+fill execmem_info structure and implement execmem_arch_setup() that returns
+a pointer to that structure. If an architecture does not implement
+execmem_arch_setup(), the defaults compatible with the current
+modules::module_alloc() are used.
+
+Since architectures define different restrictions on placement,
+permissions, alignment and other parameters for memory that can be used by
+different subsystems that allocate executable memory, execmem APIs
+take a type argument, that will be used to identify the calling subsystem
+and to allow architectures to define parameters for ranges suitable for that
+subsystem.
+
+The new infrastructure allows decoupling of BPF, kprobes and ftrace from
+modules, and most importantly it paves the way for ROX allocations for
+executable memory.
+
+[1] https://lore.kernel.org/lkml/20201120202426.18009-1-rick.p.edgecombe@intel.com/
+[2] https://lore.kernel.org/all/20221107223921.3451913-1-song@kernel.org/
+[3] https://lore.kernel.org/all/87v8mndy3y.ffs@tglx/
+[4] https://lore.kernel.org/all/20230526051529.3387103-1-song@kernel.org
 
 
-states "With previous refactors on fast-gup gup_huge_pd(), most of the 
-code can be leveraged", which doesn't look quite true just staring the 
-the gup_must_unshare() call where we don't pass the VMA. Also, 
-"unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense 
-for slow GUP ...
+Mike Rapoport (IBM) (16):
+  arm64: module: remove unneeded call to kasan_alloc_module_shadow()
+  mips: module: rename MODULE_START to MODULES_VADDR
+  nios2: define virtual address space for modules
+  sparc: simplify module_alloc()
+  module: make module_memory_{alloc,free} more self-contained
+  mm: introduce execmem_alloc() and execmem_free()
+  mm/execmem, arch: convert simple overrides of module_alloc to execmem
+  mm/execmem, arch: convert remaining overrides of module_alloc to
+    execmem
+  riscv: extend execmem_params for generated code allocations
+  arm64: extend execmem_info for generated code allocations
+  powerpc: extend execmem_params for kprobes allocations
+  arch: make execmem setup available regardless of CONFIG_MODULES
+  x86/ftrace: enable dynamic ftrace without CONFIG_MODULES
+  powerpc: use CONFIG_EXECMEM instead of CONFIG_MODULES where
+    appropriate
+  kprobes: remove dependency on CONFIG_MODULES
+  bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
 
-@Peter, any insights?
+ arch/Kconfig                         |  10 +-
+ arch/arm/kernel/module.c             |  34 -------
+ arch/arm/mm/init.c                   |  45 +++++++++
+ arch/arm64/Kconfig                   |   1 +
+ arch/arm64/kernel/module.c           | 126 -----------------------
+ arch/arm64/kernel/probes/kprobes.c   |   7 --
+ arch/arm64/mm/init.c                 | 140 ++++++++++++++++++++++++++
+ arch/arm64/net/bpf_jit_comp.c        |  11 --
+ arch/loongarch/kernel/module.c       |   6 --
+ arch/loongarch/mm/init.c             |  21 ++++
+ arch/mips/include/asm/pgtable-64.h   |   4 +-
+ arch/mips/kernel/module.c            |  10 --
+ arch/mips/mm/fault.c                 |   4 +-
+ arch/mips/mm/init.c                  |  23 +++++
+ arch/nios2/include/asm/pgtable.h     |   5 +-
+ arch/nios2/kernel/module.c           |  20 ----
+ arch/nios2/mm/init.c                 |  21 ++++
+ arch/parisc/kernel/module.c          |  12 ---
+ arch/parisc/mm/init.c                |  23 ++++-
+ arch/powerpc/Kconfig                 |   2 +-
+ arch/powerpc/include/asm/kasan.h     |   2 +-
+ arch/powerpc/kernel/head_8xx.S       |   4 +-
+ arch/powerpc/kernel/head_book3s_32.S |   6 +-
+ arch/powerpc/kernel/kprobes.c        |  22 +---
+ arch/powerpc/kernel/module.c         |  38 -------
+ arch/powerpc/lib/code-patching.c     |   2 +-
+ arch/powerpc/mm/book3s32/mmu.c       |   2 +-
+ arch/powerpc/mm/mem.c                |  64 ++++++++++++
+ arch/riscv/kernel/module.c           |  12 ---
+ arch/riscv/kernel/probes/kprobes.c   |  10 --
+ arch/riscv/mm/init.c                 |  45 +++++++++
+ arch/riscv/net/bpf_jit_core.c        |  13 ---
+ arch/s390/kernel/ftrace.c            |   4 +-
+ arch/s390/kernel/kprobes.c           |   4 +-
+ arch/s390/kernel/module.c            |  42 +-------
+ arch/s390/mm/init.c                  |  30 ++++++
+ arch/sparc/include/asm/pgtable_32.h  |   2 +
+ arch/sparc/kernel/module.c           |  30 ------
+ arch/sparc/mm/Makefile               |   2 +
+ arch/sparc/mm/execmem.c              |  21 ++++
+ arch/sparc/net/bpf_jit_comp_32.c     |   8 +-
+ arch/x86/Kconfig                     |   1 +
+ arch/x86/kernel/ftrace.c             |  16 +--
+ arch/x86/kernel/kprobes/core.c       |   4 +-
+ arch/x86/kernel/module.c             |  51 ----------
+ arch/x86/mm/init.c                   |  29 ++++++
+ include/linux/execmem.h              | 132 ++++++++++++++++++++++++
+ include/linux/module.h               |   9 ++
+ include/linux/moduleloader.h         |  15 ---
+ kernel/bpf/Kconfig                   |   2 +-
+ kernel/bpf/core.c                    |   6 +-
+ kernel/kprobes.c                     |  63 +++++++-----
+ kernel/module/Kconfig                |   1 +
+ kernel/module/main.c                 | 105 +++++++++----------
+ kernel/trace/trace_kprobe.c          |  20 +++-
+ mm/Kconfig                           |   3 +
+ mm/Makefile                          |   1 +
+ mm/execmem.c                         | 144 +++++++++++++++++++++++++++
+ mm/mm_init.c                         |   2 +
+ 59 files changed, 911 insertions(+), 581 deletions(-)
+ create mode 100644 arch/sparc/mm/execmem.c
+ create mode 100644 include/linux/execmem.h
+ create mode 100644 mm/execmem.c
 
+
+base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
 -- 
-Cheers,
-
-David / dhildenb
+2.43.0
 
