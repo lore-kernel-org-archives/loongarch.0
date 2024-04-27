@@ -1,133 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FE4376EC
-	for <loongarch@lists.linux.dev>; Sat, 27 Apr 2024 07:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3313C485
+	for <loongarch@lists.linux.dev>; Sat, 27 Apr 2024 07:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714202469; cv=none; b=RMJnVrjnPmgaqFVtivnK8RssSLZA0/VB16S0r/vSRXaKgkytIPAI7C2p5Apy5jzTtipZpJGK7bds/kqm0j2kI/fhxe31gJLjMGsu37UmPR6k9q8KUT3YX2nFxqpo3h8et766TP6bv/9YW/EhMgDFQBDySg+m5t1yJX7pJiRsQrE=
+	t=1714204192; cv=none; b=D+cAipXRObqlD4VA8tka6kCW6kA0xC4A55kQikUbS3S/X43VEWOrYWL6oASYs7f1PEctnELmfGNwByqM7K6vMuePwOl+Y+OTD98cCTggVeSeTzuMPDpkbT5wVVdZkASFONICEMGlh/obOW+Mdv9n4TMtfgEWEI2ipj879zM915U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714202469; c=relaxed/simple;
-	bh=fIKMQoy1qd6Gq+28Yk3Ch3hYiaG++Dtnw8dmDRpSlkQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sdc5CCyjpNVUHPG4n3t0vQJ1RGSS2hKRezS5Zl8PW6r9wxyiiX3s446RDy69GU/MsPOxijy5+hovrYI5rL+XJuVQdE6VXTecfTYe2QxYB5biI3+B4f7F5E2qI5j078OlnfVCWNiCbkQLOr9J2BXTY5N88IBWfOiTmXPn1WAnjMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stlKKaU2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714204192; c=relaxed/simple;
+	bh=mUxT13d3le/sYzbS13OJP0O8pwkE/1ITfW2MS6a/btg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=M+wR7p9RmmmgszLkkBsPcOh8iB5YVwj4EXbJlxLb8k3OSng8mTlrrIzFk61bLeKNq1DKuQtE9dsPVJv3EprB3FSyctCHsdJCnJ1fBN3XErwyykN1OsMVzw6Bz6ZODNeYBeDrh2NNKS/8kBSej9x+tTwXnokEDp9vYyoRuDwJj7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=OqG39z5o; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stlKKaU2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7D62C4AF08
-	for <loongarch@lists.linux.dev>; Sat, 27 Apr 2024 07:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714202468;
-	bh=fIKMQoy1qd6Gq+28Yk3Ch3hYiaG++Dtnw8dmDRpSlkQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=stlKKaU2j2DjJyYwRzVaqC0juIAcGM+d33oITQw3cy+Zc7YSQlzZ7diR8n3WxvUyX
-	 e5wzdmswmkwiXhdYRu2Hk8k5hSnIB7JqNSVT1s42uUHIOLLeZpRCE4Fxm2PkdFPFtc
-	 oNxkk8sTHSlsuW+hpZSJFDNQwQovKgO4nuhW+S0RspLOAgX8dxf7kq/b4HIK36UKDN
-	 oj3mHBkom6uAInCMYAvtfdLngn0AdgYaD+GgVOVjaX5OolroPrtTxJJUrn2VlQzash
-	 xfZzZPJURQL459Pg7s+tA9u3fKVrtfeq8LNaQK0TGXEs2u8K7VObylbkCkZ61mtbda
-	 cTYDNB7931BGA==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a4702457ccbso386236966b.3
-        for <loongarch@lists.linux.dev>; Sat, 27 Apr 2024 00:21:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV1CYiw/vgKTKyKunRKUvyeiovc0M70urBjEYKXrmLN1xfhAN2ycRGoWvMAtCM1hXIuQz5sh+omsVCqiFyo1vLARhczHY5R1SZL
-X-Gm-Message-State: AOJu0YyeT5LUeA7SaHN5jIB3trIDCRdDpmFunKIMxvA7/3vW1peS+vJx
-	LAsaCCKvVISwayTDa2g8MVszbBPUHuk3emu4uabt6mH8bHanRaX4u4quuxV0S4C767fXNvK3TcD
-	S4Joifyury9AJUFUMEi5K9D9HAhY=
-X-Google-Smtp-Source: AGHT+IERNGO0O077Rbp+jM0YFOExBijTH2r3fxwSSGP/zOihb5L2+1soR8d5Hjmf0QZ0gefOQxQo01YVKKaB6OplKrc=
-X-Received: by 2002:a17:906:f348:b0:a52:6e3e:c55c with SMTP id
- hg8-20020a170906f34800b00a526e3ec55cmr3117324ejb.70.1714202467397; Sat, 27
- Apr 2024 00:21:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="OqG39z5o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1714204184;
+	bh=mUxT13d3le/sYzbS13OJP0O8pwkE/1ITfW2MS6a/btg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=OqG39z5oVRCPoCX2moeXHv/WSG375Ex9ypc8B6/2HxtangSFMZ8UPwTWD/qeDd16A
+	 Ll+yupcL29vzs5vk1Wg5Ja/oXCRUfbTwQqqTru4hyWCs8usetRUOADVKza6cSjub6C
+	 3BcC373LTeSYTz4W6Zb6XWpfMygGW+Mmsx5xmprw=
+Received: from [192.168.124.11] (unknown [113.200.174.101])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 303E166EA9;
+	Sat, 27 Apr 2024 03:49:42 -0400 (EDT)
+Message-ID: <a3df8ae7ad7c4af447c6143858ae44c3da453704.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Provide __lshrti3, __ashrti3, and __ashrti3
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>
+Date: Sat, 27 Apr 2024 15:49:40 +0800
+In-Reply-To: <CAAhV-H5vrCrBFhDKjTXchCGABWHT6Wxz1JK6hNsarOwp+vfHpg@mail.gmail.com>
+References: <20240426121442.882029-1-xry111@xry111.site>
+	 <CAAhV-H74cQ4XdDez5PipCxUZTpfS=CA6azL5qob=jGGebobD6g@mail.gmail.com>
+	 <dfdc9823a0b89c8582587fa75448bba5c3a7e15e.camel@xry111.site>
+	 <56414029e179d219442bde9b8eae81fa3e3ceec4.camel@xry111.site>
+	 <CAAhV-H5vrCrBFhDKjTXchCGABWHT6Wxz1JK6hNsarOwp+vfHpg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240426121442.882029-1-xry111@xry111.site> <CAAhV-H74cQ4XdDez5PipCxUZTpfS=CA6azL5qob=jGGebobD6g@mail.gmail.com>
- <dfdc9823a0b89c8582587fa75448bba5c3a7e15e.camel@xry111.site> <56414029e179d219442bde9b8eae81fa3e3ceec4.camel@xry111.site>
-In-Reply-To: <56414029e179d219442bde9b8eae81fa3e3ceec4.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 27 Apr 2024 15:20:55 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5vrCrBFhDKjTXchCGABWHT6Wxz1JK6hNsarOwp+vfHpg@mail.gmail.com>
-Message-ID: <CAAhV-H5vrCrBFhDKjTXchCGABWHT6Wxz1JK6hNsarOwp+vfHpg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Provide __lshrti3, __ashrti3, and __ashrti3
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 27, 2024 at 12:13=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
-te:
->
-> On Sat, 2024-04-27 at 12:00 +0800, Xi Ruoyao wrote:
-> > On Sat, 2024-04-27 at 10:50 +0800, Huacai Chen wrote:
-> > > Hi, Ruoyao,
-> > >
-> > > I don't think #ifdef CONFIG_ARCH_SUPPORTS_INT128 is needed here.
-> > > S390/ARM64/RISCV all built it unconditionally.
-> >
-> > The problem here is RISCV and ARM64 are using an incorrect prototype fo=
-r
-> > these functions in asm-prototypes.h:
-> >
-> > long long __lshrti3(long long a, int b);
-> > long long __ashrti3(long long a, int b);
+On Sat, 2024-04-27 at 15:20 +0800, Huacai Chen wrote:
+> > /* The prototypes are incorrect but this file is only used by
+> > =C2=A0=C2=A0=C2=A0 modpost which does not care.=C2=A0 */
 > > long long __ashlti3(long long a, int b);
-> >
-> > where "long long" is not 128-bit.  Despite this seems working for RISC-=
-V
-> > and ARM64 I really dislike it.
-> >
-> > S390 seems assuming CONFIG_ARCH_SUPPORTS_INT128 is always true, but I
-> > don't think we can assume it too (at least it'll likely to be false for
-> > LA32, so doing so will cause trouble when we add LA32 support).
-> >
-> > So if we don't want to check CONFIG_ARCH_SUPPORTS_INT128 and still use =
-a
-> > correct prototype, we'll do:
-> >
-> > diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongar=
-ch/include/asm/asm-prototypes.h
-> > index 51f224bcfc65..0a57db01116d 100644
-> > --- a/arch/loongarch/include/asm/asm-prototypes.h
-> > +++ b/arch/loongarch/include/asm/asm-prototypes.h
-> > @@ -7,8 +7,6 @@
-> >  #include <asm/ftrace.h>
-> >  #include <asm-generic/asm-prototypes.h>
-> >
-> > -#ifdef CONFIG_ARCH_SUPPORTS_INT128
-> > -__int128_t __ashlti3(__int128_t a, int b);
-> > -__int128_t __ashrti3(__int128_t a, int b);
-> > -__int128_t __lshrti3(__int128_t a, int b);
-> > -#endif
-> > +struct { u64 lo, hi; } __ashlti3(u64 lo, u64 hi, int b);
-> > +struct { u64 lo, hi; } __ashrti3(u64 lo, u64 hi, int b);
-> > +struct { u64 lo, hi; } __lshrti3(u64 lo, u64 hi, int b);
->
-> Whoops.  This is still incorrect for LA32.  On LA32 an "int128" (if it
-> ever exists) should be passed as a pointer, but this is passing it in 4
-> GPRs.  So if we want to keep the prototype correct we need to either use
-> "struct { u64 lo, hi; }" in the parameter list too, or guard it with
-> #ifdef CONFIG_64BIT.
->
-> So to me checking CONFIG_ARCH_SUPPORTS_INT128 is just easier.
->
-> If you insists on not checking CONFIG_ARCH_SUPPORTS_INT128 I'll just use
-> an incorrect prototype like RISC-V but put a comment here, like:
->
-> /* The prototypes are incorrect but this file is only used by
->    modpost which does not care.  */
-> long long __ashlti3(long long a, int b);
-> long long __ashrti3(long long a, int b);
-> long long __lshrti3(long long a, int b);
->
-> How do you think?
-OK, then just keep the original status.
+> > long long __ashrti3(long long a, int b);
+> > long long __lshrti3(long long a, int b);
+> >=20
+> > How do you think?
+> OK, then just keep the original status.
 
+Then I'll just send a patch squashing the origin version of this patch
+and the patch selecting ARCH_SUPPORTS_INT128 in a day if there are no
+other review comments.
 
-Huacai
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
->
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
