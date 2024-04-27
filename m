@@ -1,360 +1,180 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14283FB99
-	for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 22:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714172366; cv=fail; b=UqbpwsOFrRvrxWx/pQMz0Q9d9V3jBYg0C5k28kFWpS4x1pqsN/WJsqUkXGjPs1Ev+I5OG3k/jlgmP5yty2Z0cJvkvV5AexkqVKQRWf4xEG5qBxfPWdYMfMxEfR9kEOuljM/2fP51dlFYCOPazXubPYHt4jWsqanYLeO3sLtrp78=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714172366; c=relaxed/simple;
-	bh=9+15JeKZCXQULNIeva1r59CA8MXsC6BrGt95qD3gNgg=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=hmHt2cvrMiQExN9BY3WQF6/MCcDbkqOxRFMW883/za5CJ/fU9x6RTPIkdFXu4othS8s0F8M+dmI2XlNGVMU/Hr9FE2lOSWzJ/odMkhJllePX7MUfATRjrjRg+6xrcdl9m/hA7Obbx5U4uGhthUPGMTBIFt5DQhzGf7hW+GKNybQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=bRykfyl4; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=bBpFFiw5; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F3B39AF4
+	for <loongarch@lists.linux.dev>; Sat, 27 Apr 2024 02:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714186226; cv=none; b=Xbm5RrfEL5vVmr8ZQcBuRkAldDpX90EvUJ141Ihp4+Q8kVzj2mSriN9TaQFGjw82gOOC5nhnsRnbE3llZ5wLmrijtssoJmxcjb/7ITseiUF5QFJWS1rOeIpc/jE8FJgvNL1aMr5QHcPEOJpvOFoTRL8kwZP0nCMq9u523mOs+iI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714186226; c=relaxed/simple;
+	bh=drPixRzIsCAu9f877pcNV1e6g4ifHH4yrnxROSeHr4g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mJ1uC3n0f1/kHuNw2GiR0vCs1o+Da5zQyNQ4P145fggzuBkIipGqgtXUP3wa6nSbEmb2ddJwNtsPtYUcQP36PvfY2qnRZhIb4P+75fq7mjwrrJcGh4YTNGnc6OjAJfxW1InZ4Fv2/twGJELyz9tlK7glAIET1sCokJ55yw7i34E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btkVV4fK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bRykfyl4";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bBpFFiw5"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43QKAHh9023996;
-	Fri, 26 Apr 2024 22:58:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : content-transfer-encoding : content-type :
- mime-version; s=corp-2023-11-20;
- bh=VRm1zKzOv7prIgOmpi/44BLL96UZGLtnoHbf2/vxK/8=;
- b=bRykfyl46xqS9XdpGt3NdM/GQAzMUbUyZau9uLJJtMEzaD+GXVwiGfw0rqnGX93WPKHV
- aAfyjNYWZB3fXox+2xwdjPzePRpjPjC7HR+aYoHbNnwpd/gFET0lC/Qm8cUzXb66KsIs
- 7PtlTfWvWURSCAgioVfw/ZOss7Xa8caGNqTIg7TAr31giKJxKODGnLSOct250e8aK1/E
- qt/Re9FoctMI4L9fMVFW1SRw9F6IVFd1KhkHoLjTsD3yVS/JbPmQ/omEgugQ1I9hOg9S
- cAvS/GG5n4qngvwkEnR9OmWTL3dYyvL65jM0cqw5uUhNMQUe/TzETlmPKSMZZguo4Wzt sQ== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xm5auxc5k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Apr 2024 22:58:40 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43QKmkBZ019952;
-	Fri, 26 Apr 2024 22:58:39 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xpbf87t74-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Apr 2024 22:58:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lPyQ1R5QKmSgzbz8kWZ2PQqiNANvZi7+fmwT06qkqyQS0jtptNvD58pDAasINCvi7YjpHc/xIJtj/wubpwe/sWVc9VO0FspobGR8t+wUDs7FM1/qIrr6t0yCj9tCetC0de22Nwq1ELOGjiaF0J/qrbv6QqPnXIyVDtRHEbyjJ4kl/cIW/iLOKEHxZAi53y//eJpcu4C5+OiWF8Qj9OLDxgMx6vr/yjlFVFVJ3pI9FJm3Lorhep73FfjmEFKjTSaD7ZB0v7tqL71tAHDkkr4RDppr6kAp6N16e0Wyux1+pLI0qoYbg0o/SSMQ/Dv8639hAZIWFGXP6yh17KPHZuTh0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VRm1zKzOv7prIgOmpi/44BLL96UZGLtnoHbf2/vxK/8=;
- b=Qpya64SY42EYpMuzE8sbNtUBmD5XG1O6yr5d8QDDgiUU58SIErsCKbhoLvEb4Cd06JhaK1419bh7qavTiYecdpLk56XOqi0xNHTkLcckF45A65FM8KLQ6yisFa1apbsBV/nXSWnF48iKnmFsQgJgua+Qf0yDWGNcoRQAw+jY1Pfn9Ni/B7VUcvniwQIaa2qzIuZqHVvUThVOZEU8/ztPButiflRHJW+xy5y1Ob3Y88RPdu0UmSpSL0iT+kvsOvgVTMWoAQuYClxWaUEXhzaL0PyPnMPWLuVyxywaQU9wJwe2MJZK4/owHuzbN5rsHmNYzGGvx0yx8soAsUH7krDyUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VRm1zKzOv7prIgOmpi/44BLL96UZGLtnoHbf2/vxK/8=;
- b=bBpFFiw5xqV8LGmYM3hYMxtG/AOKxyTz9X8VTjMC4a2TjyW8WGSgRTOkcyzQkpPTOe4I59nX7unFyAFJzmIQ56yDBiYOHFOLpO+3pubYjVqkevBNiHcqjCOTYustCU9n2RLARa1adw0cdS77Le0uSI7C2pCfdzohPcNmtu+ccUM=
-Received: from PH8PR10MB6597.namprd10.prod.outlook.com (2603:10b6:510:226::20)
- by PH0PR10MB4694.namprd10.prod.outlook.com (2603:10b6:510:3e::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.49; Fri, 26 Apr
- 2024 22:58:36 +0000
-Received: from PH8PR10MB6597.namprd10.prod.outlook.com
- ([fe80::6874:4af6:bf0a:6ca]) by PH8PR10MB6597.namprd10.prod.outlook.com
- ([fe80::6874:4af6:bf0a:6ca%3]) with mapi id 15.20.7519.030; Fri, 26 Apr 2024
- 22:58:36 +0000
-From: Stephen Brennan <stephen.s.brennan@oracle.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc: Guo Ren <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org,
-        Stephen Brennan <stephen.s.brennan@oracle.com>
-Subject: [PATCH] kprobe/ftrace: bail out if ftrace was killed
-Date: Fri, 26 Apr 2024 15:58:34 -0700
-Message-Id: <20240426225834.993353-1-stephen.s.brennan@oracle.com>
-X-Mailer: git-send-email 2.39.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0163.namprd13.prod.outlook.com
- (2603:10b6:a03:2c7::18) To PH8PR10MB6597.namprd10.prod.outlook.com
- (2603:10b6:510:226::20)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btkVV4fK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72027C4AF07
+	for <loongarch@lists.linux.dev>; Sat, 27 Apr 2024 02:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714186226;
+	bh=drPixRzIsCAu9f877pcNV1e6g4ifHH4yrnxROSeHr4g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=btkVV4fKGoxngkXFbP+WAqBniYlfZgPOnmr7XCqK+QjUOz7txT2+pyIo4OqNYkiwk
+	 jQxX2uBu4wCsX00uUiFxPaGrSSVfTBImWhMhZehuOnuPiBe5PZ7cpJeLX0QYITpryl
+	 7Q8BWSubrgDlOGrNQwa4yT5AT8p0bCBVXLd+APciNDHRGy4vdsv/R7oxKY5pSa/apN
+	 7ikt46h77ZY/AwYBdIsSxpgl+TeppD9mCXTlIW8oHNxPlTvCylXv64nQwJG4uovT9t
+	 GBVPoDvsxLfiMFHsEWvGPzrf2AakxgFLdvyVNXTF6q7v+sGyTLz2BjiVP8H8sh3Jyi
+	 vNmpefXKcuwqQ==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56e6acb39d4so3491081a12.1
+        for <loongarch@lists.linux.dev>; Fri, 26 Apr 2024 19:50:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXsepoViNcCnSWE8NKgHyU84ToxeXft8utfQDwdM66sKy2YWvDwlKg3qFQOkfPgN0uSRNF6XRDHUOz5OfOL5n1PSxAiAgCFwmDl
+X-Gm-Message-State: AOJu0Yz46h6z9GaT+RMrrMeLYjuRNDjBCAmvFUgok2LrJdAuAXL84xGM
+	zPt248SDMX0AanAdeCDDhAm3s0FyYXNq40lcG1FPHeIkty8gfWm6AafxthxDw+mDtSEq7RiJQI3
+	9vTY7Kh+C8f8pfcy+GGw7QlU4oN4=
+X-Google-Smtp-Source: AGHT+IEiRXSE9z+ztJw1xDxNpukDmsgSS+b2Sfps4U5tpNL/NYNfW8WvdFlYkHS72+OYpiryOnOaSOB/LKfg5AFZRs4=
+X-Received: by 2002:a17:906:28d9:b0:a55:63de:9aa9 with SMTP id
+ p25-20020a17090628d900b00a5563de9aa9mr2892264ejd.49.1714186224939; Fri, 26
+ Apr 2024 19:50:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR10MB6597:EE_|PH0PR10MB4694:EE_
-X-MS-Office365-Filtering-Correlation-Id: 82f4d407-918a-4d3b-37b7-08dc66446771
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?kiCMIAoLbjCryuphqnVzdcFEGgO9BR6e7/V0caAn0YoJe86Np/gyco791tIH?=
- =?us-ascii?Q?283aSUsIC+CuZQme3ucFRZ7+EYYl5DFqcvc9loDxB4UeEU6tgH3NnkvmD7LY?=
- =?us-ascii?Q?WyqUzqeYRAJEN9VGc17ykW9gfQLIyBuH88ScR2kwR5HYm/vDmDRaHb2JZVpO?=
- =?us-ascii?Q?40TZlkSPnU22mlgbKjLDHJL/+27vun8QTKc39lsC2aKNtPYw5sLjex2cV8qh?=
- =?us-ascii?Q?OPyFEGdKYi3Eru5b5NyOqRazDmVEkIRUv8KGzjHIvWPYeMxMpndAs72s3v03?=
- =?us-ascii?Q?ZuO9R1ANfI7FnJoYHn4YpYICjTdJx+pVFmB1sgI6hVELKb7wmxnaOpI54Gr/?=
- =?us-ascii?Q?Aw7HACYu0CwEotMCJDoTOFZqJawhYZ1rlEKq2+QyYUdOE4D5w5TKNnmyrDpU?=
- =?us-ascii?Q?EOj4fZQJCjkwOgI8RDIaVxeUtLeaH9wOIHfiSiU6L7o5BQHAw1tIeL+5d4u1?=
- =?us-ascii?Q?W3vdEX3Q559F7r75U4gyQhxDRIljE3u13XbHKlpuPDN7oUS5rfe7vPxnfhni?=
- =?us-ascii?Q?g8gksMY3Lqcon2TKx6vOEzdLB+PKYeecKu30kYjNxNc8w0FR8MLmcH2byXRf?=
- =?us-ascii?Q?yosTdJJeqZd+cU1q5bv11Q8YWCUoMKEZY/UHFfcE7UJqpENNL7wcM2JDD4Eg?=
- =?us-ascii?Q?NvdJjB2y1NP/CxHOB5Mok7zt038SI24TtAyKJarc8lNShaWqa1GwPxFGXQux?=
- =?us-ascii?Q?oZGoV5xPJ2T8CxkN+WIb14LTJj2Gut49vfyofUh2JcFh3gsPNQb0D5L/ZTDx?=
- =?us-ascii?Q?8j7AzzZTU5Jf79xx08R7xH+BHen5Sf2SzDVncC9MFpz9IylF/XuI5ljB+Lmh?=
- =?us-ascii?Q?37VjdQE1HOT/7k2sxLLUY7XIwuiG9eSAaJiuwxLZHTg3sc5rtIanyANmUptD?=
- =?us-ascii?Q?mESXLBGsYoA+vnyZpTYKIc+x6UT6kRSTZSljqxxCMEKZcZUO7W1FoZbZPjyf?=
- =?us-ascii?Q?DTCEzWuw+fanOlgAJ3SbRwVe1RMUpLXx/kWMIGE9rXsVDibu2Y4UR5djUZ3T?=
- =?us-ascii?Q?UDyOLx/BWu46juh18UB06UbJO1DgcDZwFPOCEr/D7rW49FrP99pLyTfO6vkA?=
- =?us-ascii?Q?Z4kd+rSBkfmK+WJMq0PZeYvqqR8gnXWGN+BFnbAIspVhfpYXxdZwfI9rs+vw?=
- =?us-ascii?Q?KyN3jokTlIxib25+ZklT66/As4sqQS2U2nEhNCe6W7is8u9hxqMBwH3HgPGp?=
- =?us-ascii?Q?fMhipWBMvcg5uHxKDbSLBku6aC810eGlUALf8zWrqJ9hYfeummcC1pBVli5r?=
- =?us-ascii?Q?zQ5j4lnrHPPkY5j/x4+NTfvim8MFYt9NGMfV2Ke9tg=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6597.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?OtntTy/q3TAp3XJSuHDAJ5hvhjPYkHHomdTX/ZfGUwTXPaSKeQsgBhyPRZLI?=
- =?us-ascii?Q?Tee/JiULTV0ewYVbANOSWh2Pw9mn39SiGZAOHQdj9OLUrsWvcnSLsp7XUubg?=
- =?us-ascii?Q?5EB9LXfNprWEMGHmjM/lLcL28OtjYSg/aDCk7QXa0RAJkABcPo0ISq4CXSsb?=
- =?us-ascii?Q?2WakxV58GL0/mh7o58nvrYhAxB0mR0tS/zZgln3xe8vC0X7MUhZSwRQ77GaS?=
- =?us-ascii?Q?FbPgouYq0acuHl7WFXvS1e8lHVAHiMeOypOgodqYPKwH43x6wGLEDhJsmobO?=
- =?us-ascii?Q?9Uuwkza1oXD1XRZUj8QNZYz0AbkGPlnFHOM9xQ7pUFoF/vGTx3LsbSWklgCQ?=
- =?us-ascii?Q?/09I3e96/XmW4tfK7GEsec+h7HHIZ5mqCmJPCC1fjtSsuxt3mraFwVMCaeVH?=
- =?us-ascii?Q?cT0P6CWv6HbhXC/slJ8DRfymkAwHI2/tpQH4VWtG5lPGKHwrmKVmbf8gDlbe?=
- =?us-ascii?Q?2Hu9An80pPmFz5LLCk/EMO1Xe8sOrKOqV/LDQKlta1oIqMYscV4pS2LMrLpW?=
- =?us-ascii?Q?p/3on5EMmlC9oodnUsvrcqtrJLRhCjphIUHJ4N719gPIOpu7/YTHkCn4zb8s?=
- =?us-ascii?Q?7P6clsHLNVNi2UupGR7VYzWCJ/xdq2VP31mmkr35be2Q0QnyYke+3DiXTOhK?=
- =?us-ascii?Q?I4gA24JEnRMNbZ+vlrJhQCQApsNUyKNxek4XfzHW0DeWDcvhhj2urPkqCObo?=
- =?us-ascii?Q?kWynHJ0hdWpE2y+hGFqKeIqQJ1aEmqomh/g90cnA+7pMB36IjvFOfNi7LCjI?=
- =?us-ascii?Q?h/TgdADav1EFUyqzrPMa+8tJ6htlW3XoYCz9F0KL+FaC8cpKORjTDXKDAEAu?=
- =?us-ascii?Q?fJhbQZC9ItfzFhwUdO8fRaPoVSJFL8oSnsP/9vIjeNS8BF4wDe8YeqiO5Ez9?=
- =?us-ascii?Q?uuLSCiBhR8OyJqdfRgoMrFnz0b6i4qcFOp0HdpRtaUJgY+OPDhXaDnjf5S09?=
- =?us-ascii?Q?gOQgFgD5whyeRf/ZU/DyZNELY5Ei4iH4aBn5+VLjAYe5PNVqiPWCGY/nxxTC?=
- =?us-ascii?Q?gPfdlQUP8tpekpCGhCveSa8dqgksldGDjznmWvdC7oQfenAHCigmWs6GoAmo?=
- =?us-ascii?Q?aSbixke44yOQFmjud8WqdN5jUMGAtNKk2YiwSFt+/+fM98Qj1nlEjRsgO8Em?=
- =?us-ascii?Q?RnevgbdXVBKjuidyKMckvblRuIZRC2D4oxzPSuDmZwF4mKAKLdN05q9XV4dU?=
- =?us-ascii?Q?4uQmvbEZRIPO5C9xoefkfjx3dP1htlq9481yqQ2PrsQpGpFYQvQUk4Ru1pgH?=
- =?us-ascii?Q?YVci25vQ0skXUhKNtfPwVR0tDi9Nixxl9ikekzaSFyAnzHEx0iXdXlvBK/cQ?=
- =?us-ascii?Q?k0G1LrAsDjpduM6/oCt/hHdcAMOBiwNkJ8MT6H6X7912KTBnMzU4dag3L+9O?=
- =?us-ascii?Q?2KpQ1vvUTCnxCMC+NFe8MM3a7P0jveocHTt/yQkbWAOEqiIjX5DYqeFWqc8c?=
- =?us-ascii?Q?WdlJG4kCUtXe7FjoKBugtYSK9jx68FXhKt/n3RzNQIFt6987xQeXMMH3wpBi?=
- =?us-ascii?Q?1EvLnHUlbY0JVmH0+YMm8tB/iYY+wf026yqiCyrfzWJtE8Y12hdgsGT45BJv?=
- =?us-ascii?Q?PV+5/YIorLROz3KrYw/jfRj/rjaRUgUFZ6i73yJzbNOVC56c9WpLOv6+CInA?=
- =?us-ascii?Q?+IzPBULC3xYnRgSuTrwgKPfLNxbaX5G9w+7IGCpXDQOK?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	SOHR4gdaNtawl4FvMiQL1rc2NaWWn41z9l41EXIecoz6lVe26nDWoF4fNbCctyjOZhXF0P6si92UHSX8D96lItbx4+WP36OckSnPuxhPK4Yz77D2q2nGD9vF8DpyYpNt9Q9ZW30HC6IB6tbvlm5RuZSE6yrsQDYG7qr8s1Ws8z5nOXTUezEoNI3oZ9/boY0DCU20AaOWKArc7vfErHycTeFE9cswRTtSl5laCPcrEKFng2h3BUuo8WvJWRX5d20wkQ5yTNKGvQWXwUcuuUA8q2ZyuXpBWDcPOYCpFHx2VZ2btFPR8TcrioKI1yPtPlwJ2DN08ZDnykAGcE2VSHcaIuWlNlCt8RIzi0LBT1BBPXebaCe7wL9EgOfFL+/Hw93ly2x62dPzfMb+SV/ST0vBo3AyIftAl8u016ot0sZZQBsETHdOdGJYGw50iBYdyHWLTOEpeDI0X6Erh2apt4c9SkxCVWDjgFmpKDLzkDc/iGaotxd0LRjMU80RB8Y+fVMpZqu1eWHtib1CqtL+4ofotFjtM53+I+eNAKHG3BHaGpb04SLcSV3eXNEwm99cGqFvkKlbv0xHFqmRFPBgz9T1IOZsw+SV2ij+GSkPQosz1kM=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82f4d407-918a-4d3b-37b7-08dc66446771
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6597.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 22:58:36.0451
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YSufLIgt81kX+GNGVySU6FcWSrX5X00hqI4bjZu3MN2kkCHpS93gqxmKySbQDLW6tQSvJEOaWSlaltwNCLp2Fv69Rh5VQ8ZIGgB5xm2bFPA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4694
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-26_19,2024-04-26_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 phishscore=0 spamscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404260162
-X-Proofpoint-ORIG-GUID: i7bkeQEuAMyjOs69euwXYi6ZPc0bR2NI
-X-Proofpoint-GUID: i7bkeQEuAMyjOs69euwXYi6ZPc0bR2NI
+References: <20240426121442.882029-1-xry111@xry111.site>
+In-Reply-To: <20240426121442.882029-1-xry111@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 27 Apr 2024 10:50:12 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H74cQ4XdDez5PipCxUZTpfS=CA6azL5qob=jGGebobD6g@mail.gmail.com>
+Message-ID: <CAAhV-H74cQ4XdDez5PipCxUZTpfS=CA6azL5qob=jGGebobD6g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Provide __lshrti3, __ashrti3, and __ashrti3
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If an error happens in ftrace, ftrace_kill() will prevent disarming
-kprobes. Eventually, the ftrace_ops associated with the kprobes will be
-freed, yet the kprobes will still be active, and when triggered, they
-will use the freed memory, likely resulting in a page fault and panic.
+Hi, Ruoyao,
 
-This behavior can be reproduced quite easily, by creating a kprobe and
-then triggering a ftrace_kill(). For simplicity, we can simulate an
-ftrace error with a kernel module like [1]:
+I don't think #ifdef CONFIG_ARCH_SUPPORTS_INT128 is needed here.
+S390/ARM64/RISCV all built it unconditionally. And I think this patch
+can be squashed to the one enable ARCH_SUPPORTS_INT128, as S390 does.
 
-[1]: https://github.com/brenns10/kernel_stuff/tree/master/ftrace_killer
+Huacai
 
-  sudo perf probe --add commit_creds
-  sudo perf trace -e probe:commit_creds
-  # In another terminal
-  make
-  sudo insmod ftrace_killer.ko  # calls ftrace_kill(), simulating bug
-  # Back to perf terminal
-  # ctrl-c
-  sudo perf probe --del commit_creds
-
-After a short period, a page fault and panic would occur as the kprobe
-continues to execute and uses the freed ftrace_ops. While ftrace_kill()
-is supposed to be used only in extreme circumstances, it is invoked in
-FTRACE_WARN_ON() and so there are many places where an unexpected bug
-could be triggered, yet the system may continue operating, possibly
-without the administrator noticing. If ftrace_kill() does not panic the
-system, then we should do everything we can to continue operating,
-rather than leave a ticking time bomb.
-
-Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
----
-
-Apologies for the wide net cast here. I recognize that a change like this
-may need to be split up and go through arch-specific trees. I hoped to get
-feedback on the patch itself. If it's satisfactory and the architecture
-maintainers prefer it split out, I'm glad to do it. Thanks!
-
- arch/csky/kernel/probes/ftrace.c     | 3 +++
- arch/loongarch/kernel/ftrace_dyn.c   | 3 +++
- arch/parisc/kernel/ftrace.c          | 3 +++
- arch/powerpc/kernel/kprobes-ftrace.c | 3 +++
- arch/riscv/kernel/probes/ftrace.c    | 3 +++
- arch/s390/kernel/ftrace.c            | 3 +++
- arch/x86/kernel/kprobes/ftrace.c     | 3 +++
- include/linux/ftrace.h               | 2 ++
- 8 files changed, 23 insertions(+)
-
-diff --git a/arch/csky/kernel/probes/ftrace.c b/arch/csky/kernel/probes/ftrace.c
-index 834cffcfbce3..3931bf9f707b 100644
---- a/arch/csky/kernel/probes/ftrace.c
-+++ b/arch/csky/kernel/probes/ftrace.c
-@@ -12,6 +12,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 	struct kprobe_ctlblk *kcb;
- 	struct pt_regs *regs;
- 
-+	if (unlikely(ftrace_is_dead()))
-+		return;
-+
- 	bit = ftrace_test_recursion_trylock(ip, parent_ip);
- 	if (bit < 0)
- 		return;
-diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-index 73858c9029cc..82c952cb5be0 100644
---- a/arch/loongarch/kernel/ftrace_dyn.c
-+++ b/arch/loongarch/kernel/ftrace_dyn.c
-@@ -287,6 +287,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 	struct kprobe *p;
- 	struct kprobe_ctlblk *kcb;
- 
-+	if (unlikely(ftrace_is_dead()))
-+		return;
-+
- 	bit = ftrace_test_recursion_trylock(ip, parent_ip);
- 	if (bit < 0)
- 		return;
-diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index 621a4b386ae4..3660834f54c3 100644
---- a/arch/parisc/kernel/ftrace.c
-+++ b/arch/parisc/kernel/ftrace.c
-@@ -206,6 +206,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 	struct kprobe *p;
- 	int bit;
- 
-+	if (unlikely(ftrace_is_dead()))
-+		return;
-+
- 	bit = ftrace_test_recursion_trylock(ip, parent_ip);
- 	if (bit < 0)
- 		return;
-diff --git a/arch/powerpc/kernel/kprobes-ftrace.c b/arch/powerpc/kernel/kprobes-ftrace.c
-index 072ebe7f290b..85eb55aa1457 100644
---- a/arch/powerpc/kernel/kprobes-ftrace.c
-+++ b/arch/powerpc/kernel/kprobes-ftrace.c
-@@ -21,6 +21,9 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
- 	struct pt_regs *regs;
- 	int bit;
- 
-+	if (unlikely(ftrace_is_dead()))
-+		return;
-+
- 	bit = ftrace_test_recursion_trylock(nip, parent_nip);
- 	if (bit < 0)
- 		return;
-diff --git a/arch/riscv/kernel/probes/ftrace.c b/arch/riscv/kernel/probes/ftrace.c
-index 7142ec42e889..8814fbe4c888 100644
---- a/arch/riscv/kernel/probes/ftrace.c
-+++ b/arch/riscv/kernel/probes/ftrace.c
-@@ -11,6 +11,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 	struct kprobe_ctlblk *kcb;
- 	int bit;
- 
-+	if (unlikely(ftrace_is_dead()))
-+		return;
-+
- 	bit = ftrace_test_recursion_trylock(ip, parent_ip);
- 	if (bit < 0)
- 		return;
-diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
-index c46381ea04ec..ccbe8ccf945b 100644
---- a/arch/s390/kernel/ftrace.c
-+++ b/arch/s390/kernel/ftrace.c
-@@ -296,6 +296,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 	struct kprobe *p;
- 	int bit;
- 
-+	if (unlikely(ftrace_is_dead()))
-+		return;
-+
- 	bit = ftrace_test_recursion_trylock(ip, parent_ip);
- 	if (bit < 0)
- 		return;
-diff --git a/arch/x86/kernel/kprobes/ftrace.c b/arch/x86/kernel/kprobes/ftrace.c
-index dd2ec14adb77..c73f9ab7ff50 100644
---- a/arch/x86/kernel/kprobes/ftrace.c
-+++ b/arch/x86/kernel/kprobes/ftrace.c
-@@ -21,6 +21,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 	struct kprobe_ctlblk *kcb;
- 	int bit;
- 
-+	if (unlikely(ftrace_is_dead()))
-+		return;
-+
- 	bit = ftrace_test_recursion_trylock(ip, parent_ip);
- 	if (bit < 0)
- 		return;
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 54d53f345d14..ba83e99c1fbe 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -399,6 +399,7 @@ int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *a
- #define register_ftrace_function(ops) ({ 0; })
- #define unregister_ftrace_function(ops) ({ 0; })
- static inline void ftrace_kill(void) { }
-+static inline int ftrace_is_dead(void) { return 0; }
- static inline void ftrace_free_init_mem(void) { }
- static inline void ftrace_free_mem(struct module *mod, void *start, void *end) { }
- static inline int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *addrs)
-@@ -914,6 +915,7 @@ static inline bool is_ftrace_trampoline(unsigned long addr)
- 
- /* totally disable ftrace - can not re-enable after this */
- void ftrace_kill(void);
-+int ftrace_is_dead(void);
- 
- static inline void tracer_disable(void)
- {
--- 
-2.39.3
-
+On Fri, Apr 26, 2024 at 8:14=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> After selecting ARCH_SUPPORTS_INT128, when optimizing for size the
+> compiler generates calls to __lshrti3, __ashrti3, and __ashrti3 for
+> shifting __int128 values, causing a link failure:
+>
+>     loongarch64-unknown-linux-gnu-ld: kernel/sched/fair.o: in
+>     function `mul_u64_u32_shr':
+>     <PATH>/include/linux/math64.h:161:(.text+0x5e4): undefined
+>     reference to `__lshrti3'
+>
+> Provide the implementation of these functions if ARCH_SUPPORTS_INT128.
+>
+> Reported-by: Huacai Chen <chenhuacai@kernel.org>
+> Closes: https://lore.kernel.org/loongarch/CAAhV-H5EZ=3D7OF7CSiYyZ8_+wWuen=
+po=3DK2WT8-6mAT4CvzUC_4g@mail.gmail.com/
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>  arch/loongarch/include/asm/asm-prototypes.h |  6 +++
+>  arch/loongarch/lib/Makefile                 |  2 +
+>  arch/loongarch/lib/tishift.S                | 56 +++++++++++++++++++++
+>  3 files changed, 64 insertions(+)
+>  create mode 100644 arch/loongarch/lib/tishift.S
+>
+> diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch=
+/include/asm/asm-prototypes.h
+> index cf8e1a4e7c19..51f224bcfc65 100644
+> --- a/arch/loongarch/include/asm/asm-prototypes.h
+> +++ b/arch/loongarch/include/asm/asm-prototypes.h
+> @@ -6,3 +6,9 @@
+>  #include <asm/page.h>
+>  #include <asm/ftrace.h>
+>  #include <asm-generic/asm-prototypes.h>
+> +
+> +#ifdef CONFIG_ARCH_SUPPORTS_INT128
+> +__int128_t __ashlti3(__int128_t a, int b);
+> +__int128_t __ashrti3(__int128_t a, int b);
+> +__int128_t __lshrti3(__int128_t a, int b);
+> +#endif
+> diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
+> index a77bf160bfc4..f61af161f16e 100644
+> --- a/arch/loongarch/lib/Makefile
+> +++ b/arch/loongarch/lib/Makefile
+> @@ -9,3 +9,5 @@ lib-y   +=3D delay.o memset.o memcpy.o memmove.o \
+>  obj-$(CONFIG_CPU_HAS_LSX) +=3D xor_simd.o xor_simd_glue.o
+>
+>  obj-$(CONFIG_FUNCTION_ERROR_INJECTION) +=3D error-inject.o
+> +
+> +obj-$(CONFIG_ARCH_SUPPORTS_INT128) +=3D tishift.o
+> diff --git a/arch/loongarch/lib/tishift.S b/arch/loongarch/lib/tishift.S
+> new file mode 100644
+> index 000000000000..eb43f29f4d0b
+> --- /dev/null
+> +++ b/arch/loongarch/lib/tishift.S
+> @@ -0,0 +1,56 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#include <asm/asmmacro.h>
+> +#include <linux/linkage.h>
+> +#include <linux/export.h>
+> +
+> +SYM_FUNC_START(__lshrti3)
+> +       slli.d  t2, a1, 1
+> +       nor     t3, zero, a2
+> +       srl.d   t1, a0, a2
+> +       sll.d   t2, t2, t3
+> +       andi    t0, a2, 64
+> +       srl.d   a1, a1, a2
+> +       or      t1, t2, t1
+> +       maskeqz a0, a1, t0
+> +       masknez a1, a1, t0
+> +       masknez t0, t1, t0
+> +       or      a0, t0, a0
+> +       jr      ra
+> +SYM_FUNC_END(__lshrti3)
+> +EXPORT_SYMBOL(__lshrti3)
+> +
+> +SYM_FUNC_START(__ashrti3)
+> +       nor     t3, zero, a2
+> +       slli.d  t2, a1, 1
+> +       srl.d   t1, a0, a2
+> +       sll.d   t2, t2, t3
+> +       andi    t0, a2, 64
+> +       or      t1, t2, t1
+> +       sra.d   a2, a1, a2
+> +       srai.d  a1, a1, 63
+> +       maskeqz a0, a2, t0
+> +       maskeqz a1, a1, t0
+> +       masknez a2, a2, t0
+> +       masknez t0, t1, t0
+> +       or      a1, a1, a2
+> +       or      a0, t0, a0
+> +       jr      ra
+> +SYM_FUNC_END(__ashrti3)
+> +EXPORT_SYMBOL(__ashrti3)
+> +
+> +SYM_FUNC_START(__ashlti3)
+> +       srli.d  t2, a0, 1
+> +       nor     t3, zero, a2
+> +       sll.d   t1, a1, a2
+> +       srl.d   t2, t2, t3
+> +       andi    t0, a2, 64
+> +       sll.d   a0, a0, a2
+> +       or      t1, t2, t1
+> +       maskeqz a1, a0, t0
+> +       masknez a0, a0, t0
+> +       masknez t0, t1, t0
+> +       or      a1, t0, a1
+> +       jr      ra
+> +SYM_FUNC_END(__ashlti3)
+> +EXPORT_SYMBOL(__ashlti3)
+> --
+> 2.44.0
+>
