@@ -1,83 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F6B64C
-	for <loongarch@lists.linux.dev>; Sat, 27 Apr 2024 08:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81D6115A4
+	for <loongarch@lists.linux.dev>; Sun, 28 Apr 2024 03:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714207193; cv=none; b=FgDqgL++ZdagqUY39dtEh1nkgxbO2JP6ZGwEfuO9dBXQ3qp7HPCBgntg1cNQC+eC0Bz3gozfE1vfA0qgoczZ+Y+x9vtC/YbaD+oP5JTtVkFPDdKbp0VNp9zl+CoeTH810GZZF21wDQtmAzszFviq0RmdoH4P3gvBnFn54Aephsk=
+	t=1714273539; cv=none; b=s/LdJctCejZtrx/rFjXWk42Od0PqBWXTKTjGu25pQ259K+YXcAgMuudcp9lvr4wW3zOGoCjKOAPFtKHnK0wmsvTbKiRYYZVIrHH9cCzsaFdQhoAZKGUUUIEpZPjR7xZsZCtar2oZb+0QZ3YhgZ6b4ajxILbShQNbMP9VX/JJ6GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714207193; c=relaxed/simple;
-	bh=9UkwLsoFz9zLzP7eFObDUQEcnezh8fLG+6WW0kgWm8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TFxW3W1VBtarC3dz0Ah9kjsISyBWzWOErDdGu5RAEIcBvhYerZ9xt2sL1iGsrCz2bKCRDXFZgT0SK8QFjQyo2Kf2/IaBtTt/aYahp0OYsyYKCgCfaLuEECPg8BWHrE205JRakJlw6y2Z6/f62fGguYScndbZkaHgpiPKLVb1+D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qm0ZhP3u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qm0ZhP3u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0B5DC116B1
-	for <loongarch@lists.linux.dev>; Sat, 27 Apr 2024 08:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714207192;
-	bh=9UkwLsoFz9zLzP7eFObDUQEcnezh8fLG+6WW0kgWm8c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qm0ZhP3uKnBsPQQQ+i46d5ciyc5qlttfnYZkqMc2ZECIqpeODBDpxOWm8lGRJmCkc
-	 AL/3q9Tdbk9zxW+0VGcuBiFGpWwE3NEn5X6dot2etBlD1sLlKSbcX919OeWWkEmAT9
-	 FV03coIiAEm9kCLBcm2CWeOUp33iwzlF7WA+KX0q61SkqbyY091ZAIAUz+HWkqXHZG
-	 OyZSk8tqGjNnVuZcpvPmGXcZAUvK9B2nrge6CprDAGxYkZy9muivETbjc4KK/3r58a
-	 vIzJkU9bzEo8PENQiGqsyzWY9JjAngJmQIuqCPSF4LuHOpL8F8+zYCAklTG37nhEYv
-	 1wyGX9XXSlMpg==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2db6f5977e1so32528821fa.2
-        for <loongarch@lists.linux.dev>; Sat, 27 Apr 2024 01:39:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXqok/WNYIXn+lOfONkH929xDgfBO+MhtARaOVpTkI5BlzHYQiyVKJNYidHYzX0hRVIsxKneOt0UgCKypc860bNmx3d72986EdL
-X-Gm-Message-State: AOJu0YxfPD3D4gnFqfD7haeQQU/+v1sQLi1wolVxerWWI4bIseryZ9mx
-	0HSuUe/JVEHGnqEbB1vLuSfXdG3HyfOaGlxixymzFDp83yOmTJUXnPZvSIYImVHkXGzszRDofgP
-	qi82WVMRQDzSiZoqBAvTaMIJ+UnM=
-X-Google-Smtp-Source: AGHT+IFUDQr/uNIgyqM49IZAZopqDoStPK3MK55h2TsQs43NhAyCsa3E5kJ0YWg/v+GstTN8OaZ50u45oy+h3L7dcqE=
-X-Received: by 2002:a05:6512:3f17:b0:51a:a400:785e with SMTP id
- y23-20020a0565123f1700b0051aa400785emr3477964lfa.43.1714207190992; Sat, 27
- Apr 2024 01:39:50 -0700 (PDT)
+	s=arc-20240116; t=1714273539; c=relaxed/simple;
+	bh=89xKnrquSJ55ZQSj3G7AnO7K3P/VNVqEYgj/voWSLjw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oY8xpdNapEBzxiTVaDTmPyoFjxbDz7mwghTXPjqz3EJUbRkI8O7Ane4ZM652eL3BBg7JqlyB8ZiyrDDDClP8FXTJKHySBdFPdNzHp2WST1NzzzyDUkH0qu371Fa35FIJyvNWRgv4zdkS8GYKqV6O4rQVVF0OSIRI74Zt3KXsGqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxBev9vC1mJjcEAA--.3893S3;
+	Sun, 28 Apr 2024 11:05:33 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxHlX6vC1mZOcHAA--.5433S2;
+	Sun, 28 Apr 2024 11:05:31 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Shuah Khan <skhan@linuxfoundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Mark Brown <broonie@kernel.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	linux-kselftest@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] selftests/vDSO: Fix errors on LoongArch
+Date: Sun, 28 Apr 2024 11:05:28 +0800
+Message-ID: <20240428030530.24399-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240426121442.882029-1-xry111@xry111.site> <CAAhV-H74cQ4XdDez5PipCxUZTpfS=CA6azL5qob=jGGebobD6g@mail.gmail.com>
- <dfdc9823a0b89c8582587fa75448bba5c3a7e15e.camel@xry111.site>
- <56414029e179d219442bde9b8eae81fa3e3ceec4.camel@xry111.site>
- <CAAhV-H5vrCrBFhDKjTXchCGABWHT6Wxz1JK6hNsarOwp+vfHpg@mail.gmail.com> <a3df8ae7ad7c4af447c6143858ae44c3da453704.camel@xry111.site>
-In-Reply-To: <a3df8ae7ad7c4af447c6143858ae44c3da453704.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 27 Apr 2024 16:39:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5bq-PONAfUYR8+5Q_z=7+1mqtXOGTsDi9g_r71qrf9Cw@mail.gmail.com>
-Message-ID: <CAAhV-H5bq-PONAfUYR8+5Q_z=7+1mqtXOGTsDi9g_r71qrf9Cw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Provide __lshrti3, __ashrti3, and __ashrti3
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxHlX6vC1mZOcHAA--.5433S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUBKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280
+	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
+	kI7VAKI48JMxAqzxv262kKe7AKxVWUAVWUtwCF54CYxVCY1x0262kKe7AKxVWUAVWUtwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU82g43UUUUU==
 
-On Sat, Apr 27, 2024 at 3:49=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> On Sat, 2024-04-27 at 15:20 +0800, Huacai Chen wrote:
-> > > /* The prototypes are incorrect but this file is only used by
-> > >     modpost which does not care.  */
-> > > long long __ashlti3(long long a, int b);
-> > > long long __ashrti3(long long a, int b);
-> > > long long __lshrti3(long long a, int b);
-> > >
-> > > How do you think?
-> > OK, then just keep the original status.
->
-> Then I'll just send a patch squashing the origin version of this patch
-> and the patch selecting ARCH_SUPPORTS_INT128 in a day if there are no
-> other review comments.
-Needn't, I will squash it when I apply.
+Add Reviewed-by and Tested-by tags, no code changes.
 
-Huacai
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+Tiezhu Yang (2):
+  selftests/vDSO: Fix building errors on LoongArch
+  selftests/vDSO: Fix runtime errors on LoongArch
+
+ tools/testing/selftests/vDSO/vdso_config.h    |  6 ++++-
+ .../testing/selftests/vDSO/vdso_test_getcpu.c | 16 +++++-------
+ .../selftests/vDSO/vdso_test_gettimeofday.c   | 26 +++++--------------
+ 3 files changed, 18 insertions(+), 30 deletions(-)
+
+-- 
+2.42.0
+
