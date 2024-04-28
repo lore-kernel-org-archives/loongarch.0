@@ -1,366 +1,148 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C09905A4C6;
-	Sun, 28 Apr 2024 10:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FB042042;
+	Sun, 28 Apr 2024 11:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714298731; cv=none; b=QP14yOX6Oy/TYkm9Z2UZrvYI9dxYkGUKyxZNCcnkgBHwO1+tFPG8pKra17toM05W5sQkjUKZvCaMaknmyOo1apaauSeMuX6wkE3XAMHJKY7HMU/TRJIO89qtauyxXIToqmKckmE/ND+eBkRWV5QvDFkKRjx2ImZM+vRa/mZDVRE=
+	t=1714303690; cv=none; b=jCHu45UqSmYVQy1p7R1rEsgfmb64/oJ4CBLqjvGyFK5YDMxBwvWzkXFYFt7EWJdtuXRuNV0bBAxC4HwYgv9cxTecjZVSLF+E1VG82/1Pqr5QGX4xG5UKtjD1n5t2s5oAF4lkQdIk0G5mhBe4LuFgiwDgW2kAfS3SToKdqeT470k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714298731; c=relaxed/simple;
-	bh=L0P+jua0MdI3IQwh38hSaS606h8wjuq0EvWNRAtk/6s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NjHK2jU+53Xm8Q4wzjPlPy65PQuRqrJ8CS3LiooCJQFtj7Kqb9OR79RzdAuPevwTIFIKHRCEmpsCu6s5lOEqxm7QWif1iodzJ8XTVpyG77khrYp7ee1CsWR8rVj9N0fRYhNIP770f3bnUgLYmUHDC2UWjadGSB5nyS3WxyRttgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxNvBmHy5mw10EAA--.15974S3;
-	Sun, 28 Apr 2024 18:05:26 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxsFVeHy5maTIIAA--.5646S8;
-	Sun, 28 Apr 2024 18:05:25 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Juergen Gross <jgross@suse.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: [PATCH v8 6/6] LoongArch: Add pv ipi support on guest kernel side
-Date: Sun, 28 Apr 2024 18:05:18 +0800
-Message-Id: <20240428100518.1642324-7-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240428100518.1642324-1-maobibo@loongson.cn>
-References: <20240428100518.1642324-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1714303690; c=relaxed/simple;
+	bh=rJc04lQPGAte3sgRY0zpeVVbUDNqqGYs1de72FW6xAs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WL7DzwBEwdT/G5ln1GRke5Ktju4Ho3ChlskFC/dSYBux9v4CPAXAEN7kOkNgkCI3r5irlc+M/YsA4iUp+rcVyKjbsgUIDCPRWgly69AK7uYz3XNy0maF0ey3q+dqN6fzy7rjmxDfuInUMYmZJHXeGjQoCtfwBaViK+9MSm5IiH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Btaefxo1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Btaefxo1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E24C113CC;
+	Sun, 28 Apr 2024 11:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714303689;
+	bh=rJc04lQPGAte3sgRY0zpeVVbUDNqqGYs1de72FW6xAs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Btaefxo10uErlTPoPMBzc3QSERSMGWTlDvMlrSz90PUhcYtUja0aJH4eJKGek6fJf
+	 PtZQCrETOb541/H5bYGFFkda+JnADdkWOqXsCm5npThloYgFTJUCR0NNXroWbUx55M
+	 xYx9CyZlRwd6ZlMEOMRjD6jIeyFYgDhru/uKNcBCUB3I0WawgBPWl/7MFE1Ozy6olY
+	 AYHFd/1omU+ZP63jEkw2vtrxBrBNlvmrs5SLMZENl2ET1lAAQ1qtjk4hDgfKKMiXHD
+	 qNc1cNAs8A2HJ0CDp2o+STw+a6kt21n3Z1Fru2vOYQJ+4lTtiSX48rT2itnTVkOF8h
+	 CaJ539gHZWg4Q==
+Received: from 82-132-246-56.dab.02.net ([82.132.246.56] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1s12hS-008nyp-PJ;
+	Sun, 28 Apr 2024 12:28:07 +0100
+Date: Sun, 28 Apr 2024 12:28:03 +0100
+Message-ID: <87frv5u3p8.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra
+	<peterz@infradead.org>,
+	<linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>,
+	<x86@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	"Rafael J . Wysocki"
+	<rafael@kernel.org>,
+	Miguel Luis <miguel.luis@oracle.com>,
+	"James Morse"
+	<james.morse@arm.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe
+ Brucker <jean-philippe@linaro.org>,
+	Catalin Marinas
+	<catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Hanjun Guo
+	<guohanjun@huawei.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov
+	<bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	<linuxarm@huawei.com>,
+	<justin.he@arm.com>,
+	<jianyong.wu@arm.com>,
+	"Lorenzo\
+ Pieralisi" <lpieralisi@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v8 11/16] irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs
+In-Reply-To: <20240426192858.000033d9@huawei.com>
+References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+	<20240426135126.12802-12-Jonathan.Cameron@huawei.com>
+	<87il04t7j2.wl-maz@kernel.org>
+	<20240426192858.000033d9@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxsFVeHy5maTIIAA--.5646S8
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.246.56
+X-SA-Exim-Rcpt-To: Jonathan.Cameron@Huawei.com, tglx@linutronix.de, peterz@infradead.org, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, linux@armlinux.org.uk, rafael@kernel.org, miguel.luis@oracle.com, james.morse@arm.com, salil.mehta@huawei.com, jean-philippe@linaro.org, catalin.marinas@arm.com, will@kernel.org, guohanjun@huawei.com, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, linuxarm@huawei.com, justin.he@arm.com, jianyong.wu@arm.com, lpieralisi@kernel.org, sudeep.holla@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-PARAVIRT option and pv ipi is added on guest kernel side, function
-pv_ipi_init() is to add ipi sending and ipi receiving hooks. This function
-firstly checks whether system runs on VM mode. If kernel runs on VM mode,
-it will call function kvm_para_available() to detect current hypervirsor
-type. Now only KVM type detection is supported, the paravirt function can
-work only if current hypervisor type is KVM, since there is only KVM
-supported on LoongArch now.
+On Fri, 26 Apr 2024 19:28:58 +0100,
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> 
+> 
+> I'll not send a formal v9 until early next week, so here is the current state
+> if you have time to take another look before then.
 
-PV IPI uses virtual IPI sender and virtual IPI receiver function. With
-virutal IPI sender, ipi message is stored in DDR memory rather than
-emulated HW. IPI multicast is supported, and 128 vcpus can received IPIs
-at the same time like X86 KVM method. Hypercall method is used for IPI
-sending.
+Don't bother resending this on my account -- you only sent it on
+Friday and there hasn't been much response to it yet. There is still a
+problem (see below), but looks otherwise OK.
 
-With virtual IPI receiver, HW SW0 is used rather than real IPI HW. Since
-VCPU has separate HW SW0 like HW timer, there is no trap in IPI interrupt
-acknowledge. And IPI message is stored in DDR, no trap in get IPI message.
+[...]
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/Kconfig                        |   9 ++
- arch/loongarch/include/asm/hardirq.h          |   1 +
- arch/loongarch/include/asm/paravirt.h         |  27 ++++
- .../include/asm/paravirt_api_clock.h          |   1 +
- arch/loongarch/kernel/Makefile                |   1 +
- arch/loongarch/kernel/irq.c                   |   2 +-
- arch/loongarch/kernel/paravirt.c              | 151 ++++++++++++++++++
- arch/loongarch/kernel/smp.c                   |   4 +-
- 8 files changed, 194 insertions(+), 2 deletions(-)
- create mode 100644 arch/loongarch/include/asm/paravirt.h
- create mode 100644 arch/loongarch/include/asm/paravirt_api_clock.h
- create mode 100644 arch/loongarch/kernel/paravirt.c
+> @@ -2363,11 +2381,25 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
+>  				(struct acpi_madt_generic_interrupt *)header;
+>  	u32 reg = readl_relaxed(acpi_data.dist_base + GICD_PIDR2) & GIC_PIDR2_ARCH_MASK;
+>  	u32 size = reg == GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_64K * 2;
+> +	int cpu = get_cpu_for_acpi_id(gicc->uid);
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 54ad04dacdee..0a1540a8853e 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -583,6 +583,15 @@ config CPU_HAS_PREFETCH
- 	bool
- 	default y
- 
-+config PARAVIRT
-+	bool "Enable paravirtualization code"
-+	depends on AS_HAS_LVZ_EXTENSION
-+	help
-+          This changes the kernel so it can modify itself when it is run
-+	  under a hypervisor, potentially improving performance significantly
-+	  over full virtualization.  However, when run without a hypervisor
-+	  the kernel is theoretically slower and slightly larger.
-+
- config ARCH_SUPPORTS_KEXEC
- 	def_bool y
- 
-diff --git a/arch/loongarch/include/asm/hardirq.h b/arch/loongarch/include/asm/hardirq.h
-index 9f0038e19c7f..b26d596a73aa 100644
---- a/arch/loongarch/include/asm/hardirq.h
-+++ b/arch/loongarch/include/asm/hardirq.h
-@@ -21,6 +21,7 @@ enum ipi_msg_type {
- typedef struct {
- 	unsigned int ipi_irqs[NR_IPI];
- 	unsigned int __softirq_pending;
-+	atomic_t message ____cacheline_aligned_in_smp;
- } ____cacheline_aligned irq_cpustat_t;
- 
- DECLARE_PER_CPU_SHARED_ALIGNED(irq_cpustat_t, irq_stat);
-diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
-new file mode 100644
-index 000000000000..58f7b7b89f2c
---- /dev/null
-+++ b/arch/loongarch/include/asm/paravirt.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_LOONGARCH_PARAVIRT_H
-+#define _ASM_LOONGARCH_PARAVIRT_H
-+
-+#ifdef CONFIG_PARAVIRT
-+#include <linux/static_call_types.h>
-+struct static_key;
-+extern struct static_key paravirt_steal_enabled;
-+extern struct static_key paravirt_steal_rq_enabled;
-+
-+u64 dummy_steal_clock(int cpu);
-+DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
-+
-+static inline u64 paravirt_steal_clock(int cpu)
-+{
-+	return static_call(pv_steal_clock)(cpu);
-+}
-+
-+int pv_ipi_init(void);
-+#else
-+static inline int pv_ipi_init(void)
-+{
-+	return 0;
-+}
-+
-+#endif // CONFIG_PARAVIRT
-+#endif
-diff --git a/arch/loongarch/include/asm/paravirt_api_clock.h b/arch/loongarch/include/asm/paravirt_api_clock.h
-new file mode 100644
-index 000000000000..65ac7cee0dad
---- /dev/null
-+++ b/arch/loongarch/include/asm/paravirt_api_clock.h
-@@ -0,0 +1 @@
-+#include <asm/paravirt.h>
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 3a7620b66bc6..c9bfeda89e40 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -51,6 +51,7 @@ obj-$(CONFIG_MODULES)		+= module.o module-sections.o
- obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
- 
- obj-$(CONFIG_PROC_FS)		+= proc.o
-+obj-$(CONFIG_PARAVIRT)		+= paravirt.o
- 
- obj-$(CONFIG_SMP)		+= smp.o
- 
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index ce36897d1e5a..4863e6c1b739 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -113,5 +113,5 @@ void __init init_IRQ(void)
- 			per_cpu(irq_stack, i), per_cpu(irq_stack, i) + IRQ_STACK_SIZE);
- 	}
- 
--	set_csr_ecfg(ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 | ECFGF_IPI | ECFGF_PMC);
-+	set_csr_ecfg(ECFGF_SIP0 | ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 | ECFGF_IPI | ECFGF_PMC);
- }
-diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-new file mode 100644
-index 000000000000..9044ed62045c
---- /dev/null
-+++ b/arch/loongarch/kernel/paravirt.c
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/export.h>
-+#include <linux/types.h>
-+#include <linux/interrupt.h>
-+#include <linux/jump_label.h>
-+#include <linux/kvm_para.h>
-+#include <asm/paravirt.h>
-+#include <linux/static_call.h>
-+
-+struct static_key paravirt_steal_enabled;
-+struct static_key paravirt_steal_rq_enabled;
-+
-+static u64 native_steal_clock(int cpu)
-+{
-+	return 0;
-+}
-+
-+DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
-+
-+#ifdef CONFIG_SMP
-+static void pv_send_ipi_single(int cpu, unsigned int action)
-+{
-+	unsigned int min, old;
-+	irq_cpustat_t *info = &per_cpu(irq_stat, cpu);
-+
-+	old = atomic_fetch_or(BIT(action), &info->message);
-+	if (old)
-+		return;
-+
-+	min = cpu_logical_map(cpu);
-+	kvm_hypercall3(KVM_HCALL_FUNC_PV_IPI, 1, 0, min);
-+}
-+
-+#define KVM_IPI_CLUSTER_SIZE		(2 * BITS_PER_LONG)
-+static void pv_send_ipi_mask(const struct cpumask *mask, unsigned int action)
-+{
-+	unsigned int cpu, i, min = 0, max = 0, old;
-+	__uint128_t bitmap = 0;
-+	irq_cpustat_t *info;
-+
-+	if (cpumask_empty(mask))
-+		return;
-+
-+	action = BIT(action);
-+	for_each_cpu(i, mask) {
-+		info = &per_cpu(irq_stat, i);
-+		old = atomic_fetch_or(action, &info->message);
-+		if (old)
-+			continue;
-+
-+		cpu = cpu_logical_map(i);
-+		if (!bitmap) {
-+			min = max = cpu;
-+		} else if (cpu > min && cpu < min + KVM_IPI_CLUSTER_SIZE) {
-+			max = cpu > max ? cpu : max;
-+		} else if (cpu < min && (max - cpu) < KVM_IPI_CLUSTER_SIZE) {
-+			bitmap <<= min - cpu;
-+			min = cpu;
-+		} else {
-+			/*
-+			 * Physical cpuid is sorted in ascending order ascend
-+			 * for the next mask calculation, send IPI here
-+			 * directly and skip the remainding cpus
-+			 */
-+			kvm_hypercall3(KVM_HCALL_FUNC_PV_IPI,
-+				(unsigned long)bitmap,
-+				(unsigned long)(bitmap >> BITS_PER_LONG), min);
-+			min = max = cpu;
-+			bitmap = 0;
-+		}
-+		__set_bit(cpu - min, (unsigned long *)&bitmap);
-+	}
-+
-+	if (bitmap)
-+		kvm_hypercall3(KVM_HCALL_FUNC_PV_IPI, (unsigned long)bitmap,
-+				(unsigned long)(bitmap >> BITS_PER_LONG), min);
-+}
-+
-+static irqreturn_t loongson_do_swi(int irq, void *dev)
-+{
-+	irq_cpustat_t *info;
-+	long action;
-+
-+	/* Clear swi interrupt */
-+	clear_csr_estat(1 << INT_SWI0);
-+	info = this_cpu_ptr(&irq_stat);
-+	action = atomic_xchg(&info->message, 0);
-+	if (action & SMP_CALL_FUNCTION) {
-+		generic_smp_call_function_interrupt();
-+		info->ipi_irqs[IPI_CALL_FUNCTION]++;
-+	}
-+
-+	if (action & SMP_RESCHEDULE) {
-+		scheduler_ipi();
-+		info->ipi_irqs[IPI_RESCHEDULE]++;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void pv_init_ipi(void)
-+{
-+	int r, swi0;
-+
-+	swi0 = get_percpu_irq(INT_SWI0);
-+	if (swi0 < 0)
-+		panic("SWI0 IRQ mapping failed\n");
-+	irq_set_percpu_devid(swi0);
-+	r = request_percpu_irq(swi0, loongson_do_swi, "SWI0", &irq_stat);
-+	if (r < 0)
-+		panic("SWI0 IRQ request failed\n");
-+}
-+#endif
-+
-+static bool kvm_para_available(void)
-+{
-+	static int hypervisor_type;
-+	int config;
-+
-+	if (!hypervisor_type) {
-+		config = read_cpucfg(CPUCFG_KVM_SIG);
-+		if (!memcmp(&config, KVM_SIGNATURE, 4))
-+			hypervisor_type = HYPERVISOR_KVM;
-+	}
-+
-+	return hypervisor_type == HYPERVISOR_KVM;
-+}
-+
-+int __init pv_ipi_init(void)
-+{
-+	int feature;
-+
-+	if (!cpu_has_hypervisor)
-+		return 0;
-+	if (!kvm_para_available())
-+		return 0;
-+
-+	/*
-+	 * check whether KVM hypervisor supports pv_ipi or not
-+	 */
-+	feature = read_cpucfg(CPUCFG_KVM_FEATURE);
-+#ifdef CONFIG_SMP
-+	if (feature & KVM_FEATURE_PV_IPI) {
-+		smp_ops.init_ipi		= pv_init_ipi;
-+		smp_ops.send_ipi_single		= pv_send_ipi_single;
-+		smp_ops.send_ipi_mask		= pv_send_ipi_mask;
-+	}
-+#endif
-+
-+	return 1;
-+}
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 1fce775be4f6..9eff7aa4c552 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -29,6 +29,7 @@
- #include <asm/loongson.h>
- #include <asm/mmu_context.h>
- #include <asm/numa.h>
-+#include <asm/paravirt.h>
- #include <asm/processor.h>
- #include <asm/setup.h>
- #include <asm/time.h>
-@@ -309,6 +310,7 @@ void __init loongson_smp_setup(void)
- 	cpu_data[0].core = cpu_logical_map(0) % loongson_sysconf.cores_per_package;
- 	cpu_data[0].package = cpu_logical_map(0) / loongson_sysconf.cores_per_package;
- 
-+	pv_ipi_init();
- 	iocsr_write32(0xffffffff, LOONGARCH_IOCSR_IPI_EN);
- 	pr_info("Detected %i available CPU(s)\n", loongson_sysconf.nr_cpus);
- }
-@@ -352,7 +354,7 @@ void loongson_boot_secondary(int cpu, struct task_struct *idle)
- void loongson_init_secondary(void)
- {
- 	unsigned int cpu = smp_processor_id();
--	unsigned int imask = ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 |
-+	unsigned int imask = ECFGF_SIP0 | ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 |
- 			     ECFGF_IPI | ECFGF_PMC | ECFGF_TIMER;
- 
- 	change_csr_ecfg(ECFG0_IM, imask);
+I already commented that get_cpu_for_acpi_id() can...
+
+>  	void __iomem *redist_base;
+>  
+> -	if (!acpi_gicc_is_usable(gicc))
+> +	/* Neither enabled or online capable means it doesn't exist, skip it */
+> +	if (!(gicc->flags & (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
+>  		return 0;
+>  
+> +	/*
+> +	 * Capable but disabled CPUs can be brought online later. What about
+> +	 * the redistributor? ACPI doesn't want to say!
+> +	 * Virtual hotplug systems can use the MADT's "always-on" GICR entries.
+> +	 * Otherwise, prevent such CPUs from being brought online.
+> +	 */
+> +	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
+> +		pr_warn("CPU %u's redistributor is inaccessible: this CPU can't be brought online\n", cpu);
+> +		cpumask_set_cpu(cpu, &broken_rdists);
+
+... return -EINVAL, and then be passed to cpumask_set_cpu(), with
+interesting effects. It shouldn't happen, but I trust anything that
+comes from firmware tables as much as I trust a campaigning
+politician's promises. This should really result in the RD being
+considered unusable, but without affecting any CPU (there is no valid
+CPU the first place).
+
+Another question is what get_cpu_for acpi_id() returns for a disabled
+CPU. A valid CPU number? Or -EINVAL?
+
+Thanks,
+
+	M.
+
 -- 
-2.39.3
-
+Without deviation from the norm, progress is not possible.
