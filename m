@@ -1,148 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FB042042;
-	Sun, 28 Apr 2024 11:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FCA58119;
+	Sun, 28 Apr 2024 16:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714303690; cv=none; b=jCHu45UqSmYVQy1p7R1rEsgfmb64/oJ4CBLqjvGyFK5YDMxBwvWzkXFYFt7EWJdtuXRuNV0bBAxC4HwYgv9cxTecjZVSLF+E1VG82/1Pqr5QGX4xG5UKtjD1n5t2s5oAF4lkQdIk0G5mhBe4LuFgiwDgW2kAfS3SToKdqeT470k=
+	t=1714322324; cv=none; b=moruDPY8tLf5hb82H1O2qLQQgZ8bIZgoh8FHal6T4y5qcLegpKS1hfgYm9D+GcbX6L86dguSNNIirVaxhxQmBzZHuJqPwHb25+C4aVz0zZbBuYjCCQPMJ4QXPqpSpBw8RFkNmhhJlu4nTRwgHXKDM5g8x+A3/NsOCVRFoC4E+CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714303690; c=relaxed/simple;
-	bh=rJc04lQPGAte3sgRY0zpeVVbUDNqqGYs1de72FW6xAs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WL7DzwBEwdT/G5ln1GRke5Ktju4Ho3ChlskFC/dSYBux9v4CPAXAEN7kOkNgkCI3r5irlc+M/YsA4iUp+rcVyKjbsgUIDCPRWgly69AK7uYz3XNy0maF0ey3q+dqN6fzy7rjmxDfuInUMYmZJHXeGjQoCtfwBaViK+9MSm5IiH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Btaefxo1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714322324; c=relaxed/simple;
+	bh=WSj7lu2b4X/UglnfYC8ObjrLUSF53g3nGeBhb8ymiJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SB62skttQAONaW/syEIBrMummLRJe5VbFwIY5HC45caTtAjNgb+e2sxSg3SxicfA/l0gWezmHrZR9ew4mx15TvdcYLslCKDq1auI2FAjRK2fDSIF6OYhefnkcu2hM6c50PDMY0+cAWPmEShUBEDTXX3erFC/uQozaCFtriAzeWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNQp9fCz; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Btaefxo1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E24C113CC;
-	Sun, 28 Apr 2024 11:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714303689;
-	bh=rJc04lQPGAte3sgRY0zpeVVbUDNqqGYs1de72FW6xAs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Btaefxo10uErlTPoPMBzc3QSERSMGWTlDvMlrSz90PUhcYtUja0aJH4eJKGek6fJf
-	 PtZQCrETOb541/H5bYGFFkda+JnADdkWOqXsCm5npThloYgFTJUCR0NNXroWbUx55M
-	 xYx9CyZlRwd6ZlMEOMRjD6jIeyFYgDhru/uKNcBCUB3I0WawgBPWl/7MFE1Ozy6olY
-	 AYHFd/1omU+ZP63jEkw2vtrxBrBNlvmrs5SLMZENl2ET1lAAQ1qtjk4hDgfKKMiXHD
-	 qNc1cNAs8A2HJ0CDp2o+STw+a6kt21n3Z1Fru2vOYQJ+4lTtiSX48rT2itnTVkOF8h
-	 CaJ539gHZWg4Q==
-Received: from 82-132-246-56.dab.02.net ([82.132.246.56] helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1s12hS-008nyp-PJ;
-	Sun, 28 Apr 2024 12:28:07 +0100
-Date: Sun, 28 Apr 2024 12:28:03 +0100
-Message-ID: <87frv5u3p8.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra
-	<peterz@infradead.org>,
-	<linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>,
-	<linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>,
-	<x86@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	"Rafael J . Wysocki"
-	<rafael@kernel.org>,
-	Miguel Luis <miguel.luis@oracle.com>,
-	"James Morse"
-	<james.morse@arm.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe
- Brucker <jean-philippe@linaro.org>,
-	Catalin Marinas
-	<catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hanjun Guo
-	<guohanjun@huawei.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov
-	<bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	<linuxarm@huawei.com>,
-	<justin.he@arm.com>,
-	<jianyong.wu@arm.com>,
-	"Lorenzo\
- Pieralisi" <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v8 11/16] irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs
-In-Reply-To: <20240426192858.000033d9@huawei.com>
-References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
-	<20240426135126.12802-12-Jonathan.Cameron@huawei.com>
-	<87il04t7j2.wl-maz@kernel.org>
-	<20240426192858.000033d9@huawei.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNQp9fCz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714322321; x=1745858321;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WSj7lu2b4X/UglnfYC8ObjrLUSF53g3nGeBhb8ymiJQ=;
+  b=SNQp9fCzcERy5ol1k3spTGbe5+wk+UTIIatQtKQQVoYm16CN7Mlv/go2
+   pYcV0HjWP/N3P2YOySp0KSJ62QzYp6NhEkTNQNDQuZi7ZUfOEUagEzNx5
+   wJ4HueNxHIDvVJWmGz8e/4O65FsdutV+WtGLskfUcnzzn6A6OuwPH9oGK
+   8q6vdFnTtSNDwOPyZXaz3t0ffhUXsQmnayLxkmAj0YpAs0/xugoNpZ8tK
+   vJ6ARhadtJTP0q9S0BjEmV3ZI+85lWhr50eZSL81+nsee8fvY0JnHZm2J
+   VRc8CmXIshjzbPrssc+SQbtY6kswpuEHPn2MP8AwEbOCyi8/l5k2aXVIF
+   g==;
+X-CSE-ConnectionGUID: RdaoxUNhTEGsxyBw4ucz+Q==
+X-CSE-MsgGUID: bH7OOn7VT8qHp072xpUmaQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="27508325"
+X-IronPort-AV: E=Sophos;i="6.07,237,1708416000"; 
+   d="scan'208";a="27508325"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2024 09:38:40 -0700
+X-CSE-ConnectionGUID: 1lt0aqshR62GFUHxtdZWqw==
+X-CSE-MsgGUID: CKEGUDIXSTuDOL2KFztXMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,237,1708416000"; 
+   d="scan'208";a="26522158"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 28 Apr 2024 09:38:38 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s17Xv-0006Ue-1C;
+	Sun, 28 Apr 2024 16:38:35 +0000
+Date: Mon, 29 Apr 2024 00:38:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Juergen Gross <jgross@suse.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v8 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
+Message-ID: <202404290016.T9p5GhVr-lkp@intel.com>
+References: <20240428100518.1642324-4-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 82.132.246.56
-X-SA-Exim-Rcpt-To: Jonathan.Cameron@Huawei.com, tglx@linutronix.de, peterz@infradead.org, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, linux@armlinux.org.uk, rafael@kernel.org, miguel.luis@oracle.com, james.morse@arm.com, salil.mehta@huawei.com, jean-philippe@linaro.org, catalin.marinas@arm.com, will@kernel.org, guohanjun@huawei.com, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, linuxarm@huawei.com, justin.he@arm.com, jianyong.wu@arm.com, lpieralisi@kernel.org, sudeep.holla@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240428100518.1642324-4-maobibo@loongson.cn>
 
-On Fri, 26 Apr 2024 19:28:58 +0100,
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> 
-> I'll not send a formal v9 until early next week, so here is the current state
-> if you have time to take another look before then.
+Hi Bibo,
 
-Don't bother resending this on my account -- you only sent it on
-Friday and there hasn't been much response to it yet. There is still a
-problem (see below), but looks otherwise OK.
+kernel test robot noticed the following build warnings:
 
-[...]
+[auto build test WARNING on 5eb4573ea63d0c83bf58fb7c243fc2c2b6966c02]
 
-> @@ -2363,11 +2381,25 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
->  				(struct acpi_madt_generic_interrupt *)header;
->  	u32 reg = readl_relaxed(acpi_data.dist_base + GICD_PIDR2) & GIC_PIDR2_ARCH_MASK;
->  	u32 size = reg == GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_64K * 2;
-> +	int cpu = get_cpu_for_acpi_id(gicc->uid);
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-smp-Refine-some-ipi-functions-on-LoongArch-platform/20240428-180850
+base:   5eb4573ea63d0c83bf58fb7c243fc2c2b6966c02
+patch link:    https://lore.kernel.org/r/20240428100518.1642324-4-maobibo%40loongson.cn
+patch subject: [PATCH v8 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
+config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20240429/202404290016.T9p5GhVr-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240429/202404290016.T9p5GhVr-lkp@intel.com/reproduce)
 
-I already commented that get_cpu_for_acpi_id() can...
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404290016.T9p5GhVr-lkp@intel.com/
 
->  	void __iomem *redist_base;
->  
-> -	if (!acpi_gicc_is_usable(gicc))
-> +	/* Neither enabled or online capable means it doesn't exist, skip it */
-> +	if (!(gicc->flags & (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
->  		return 0;
->  
-> +	/*
-> +	 * Capable but disabled CPUs can be brought online later. What about
-> +	 * the redistributor? ACPI doesn't want to say!
-> +	 * Virtual hotplug systems can use the MADT's "always-on" GICR entries.
-> +	 * Otherwise, prevent such CPUs from being brought online.
-> +	 */
-> +	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
-> +		pr_warn("CPU %u's redistributor is inaccessible: this CPU can't be brought online\n", cpu);
-> +		cpumask_set_cpu(cpu, &broken_rdists);
+All warnings (new ones prefixed by >>):
 
-... return -EINVAL, and then be passed to cpumask_set_cpu(), with
-interesting effects. It shouldn't happen, but I trust anything that
-comes from firmware tables as much as I trust a campaigning
-politician's promises. This should really result in the RD being
-considered unusable, but without affecting any CPU (there is no valid
-CPU the first place).
+   arch/loongarch/kvm/exit.c: In function 'kvm_emu_cpucfg':
+>> arch/loongarch/kvm/exit.c:213:23: warning: variable 'plv' set but not used [-Wunused-but-set-variable]
+     213 |         unsigned long plv;
+         |                       ^~~
 
-Another question is what get_cpu_for acpi_id() returns for a disabled
-CPU. A valid CPU number? Or -EINVAL?
 
-Thanks,
+vim +/plv +213 arch/loongarch/kvm/exit.c
 
-	M.
+   208	
+   209	static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+   210	{
+   211		int rd, rj;
+   212		unsigned int index;
+ > 213		unsigned long plv;
+   214	
+   215		rd = inst.reg2_format.rd;
+   216		rj = inst.reg2_format.rj;
+   217		++vcpu->stat.cpucfg_exits;
+   218		index = vcpu->arch.gprs[rj];
+   219	
+   220		/*
+   221		 * By LoongArch Reference Manual 2.2.10.5
+   222		 * Return value is 0 for undefined cpucfg index
+   223		 *
+   224		 * Disable preemption since hw gcsr is accessed
+   225		 */
+   226		preempt_disable();
+   227		plv = kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD) >> CSR_CRMD_PLV_SHIFT;
+   228		switch (index) {
+   229		case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
+   230			vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
+   231			break;
+   232		case CPUCFG_KVM_SIG:
+   233			/* Cpucfg emulation between 0x40000000 -- 0x400000ff */
+   234			vcpu->arch.gprs[rd] = *(unsigned int *)KVM_SIGNATURE;
+   235			break;
+   236		default:
+   237			vcpu->arch.gprs[rd] = 0;
+   238			break;
+   239		}
+   240	
+   241		preempt_enable();
+   242		return EMULATE_DONE;
+   243	}
+   244	
 
 -- 
-Without deviation from the norm, progress is not possible.
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
