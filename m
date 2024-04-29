@@ -1,50 +1,25 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E2214AB7;
-	Mon, 29 Apr 2024 08:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13869171C8
+	for <loongarch@lists.linux.dev>; Mon, 29 Apr 2024 09:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714378879; cv=none; b=eOARJN8hYCI39j/l9H8z67MhXOCL7WcYGWbXaWYj8dePzYpNPrViYv3dEcmfrm029w0/ZfNwJtCuMCBpvm5e5/s/K+EUTHHAfXSKWbyOI+Hh2FVCjfIhdmklRXveHAYHEa5VghxlOQyFNc+gXgni+XRjSxceI0weGpChwm4givE=
+	t=1714381686; cv=none; b=Toxu1oUWCGeXp9vhVjt4ueL0E0d2JLVUjkgq82HvayQWo14KRqVBymokp1gCuP7XhkVx79ia1tEa9pyaV4zUQZkPFGHEYL3YCLnMCFrLbbe8JV0QFMQ4j2ts1MSBnO/yV2MO5t1l0GD2yTZ4i6T70ik0vMVO6JNxBkPIk6B410Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714378879; c=relaxed/simple;
-	bh=8JgsMZmmDtrljtiYk0KmNtO1KiklYvquJQzmiFrlFKU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SmLK5i0654VikTtrIfNJzgNjLNsPbaHx/fA+DHwQHD8/RIbs5ZPgrWjSLdYDYtH0IPGji6+EDpVXct1relmu2R2pOxznepWmfZEw+ljKu0AF+xulhDBshkZP2vBEczn91GpPtIzUdzC8mIhNwCljDvNkRp0M7Is46WLch2k/eWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=jz3Yxdhs; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="jz3Yxdhs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714378847; x=1714983647; i=markus.elfring@web.de;
-	bh=8JgsMZmmDtrljtiYk0KmNtO1KiklYvquJQzmiFrlFKU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=jz3YxdhsZB9z2L88XkxBSD7gp4WS9DUFe8Y3TdbbO129JIxHK+AGWWVnSNJb+XQ/
-	 ltmc2Jqvlrnu4RGrqyzaGvXwYepSKAN6zFIllxlu7fw+eFsEHGt099rJQQ+O7dDP/
-	 PSJzz/whvF6au/+o7AGXLQ1wx/cLv8AhMI6V9r0dhsqKU5ultR00rgXiG9+aD0mzA
-	 ZhCSJ1lyZ5CurY3ja7nR+px5yNtnqcQSZyikG6kdGbF3eKzK5N5qBe5EhYdFCHhSR
-	 v9RwijUiYSKM1lfc+4MuZWU5AQy9b0ZD4bIPprGLydfaXRWTNPow3enhwZJmVh/Pr
-	 KUOfbs9GcomUDY186w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MMp8Y-1sHnAp0YiK-00IG5k; Mon, 29
- Apr 2024 10:20:47 +0200
-Message-ID: <b50cf967-b5ab-49e9-a270-a4ff4ddc4559@web.de>
-Date: Mon, 29 Apr 2024 10:20:44 +0200
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	s=arc-20240116; t=1714381686; c=relaxed/simple;
+	bh=guNjjWLmvSp8lpG7nRF+0ukVE0ALG4fM2lUW1nukGDE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QiHibQJdz+HV9iKGE94XPzd/HNdtk9FvAJt5J/zA9Ch5uaW//ANoM/XWhk+Racg2ap6u/d5Yduis3yXK/IJmC7dCP2gHzp9t3fTw1z0UAQ5S4PcdyoMLKSASCTV7TcJvNsasroeeQJ7/BAGpN/jVODBbtCN+LYExBUY7SQ94qjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.239])
+	by gateway (Coremail) with SMTP id _____8AxK+puYy9mV9sEAA--.4502S3;
+	Mon, 29 Apr 2024 17:07:58 +0800 (CST)
+Received: from [10.20.42.239] (unknown [10.20.42.239])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxXN5rYy9mE+4JAA--.24418S3;
+	Mon, 29 Apr 2024 17:07:57 +0800 (CST)
 Subject: Re: [v3] LoongArch: KVM: Add PMU support
-To: Song Gao <gaosong@loongson.cn>, loongarch@lists.linux.dev,
+To: Markus Elfring <Markus.Elfring@web.de>, loongarch@lists.linux.dev,
  kernel-janitors@vger.kernel.org, maobibo@loongson.cn
 Cc: LKML <linux-kernel@vger.kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
  Paolo Bonzini <pbonzini@redhat.com>, Tianrui Zhao <zhaotianrui@loongson.cn>,
@@ -52,49 +27,58 @@ Cc: LKML <linux-kernel@vger.kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
 References: <20240424091813.1471440-1-gaosong@loongson.cn>
  <e68e09e0-75f3-43b8-b947-22cc0d1a0dae@web.de>
  <b8818597-2770-f2a3-03bd-1653cd26fc78@loongson.cn>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <b8818597-2770-f2a3-03bd-1653cd26fc78@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Y5Yp/ApPG9GOM2Ye34aPN4ka9s+kqq9SHP6K0xcyCgGQQT9oAOZ
- W686YPoqgaP/sRspCPkP9tBxVWUKHDiExnY1FBaZ7UXgc3Gxoz/lREcWEA2X1Bb+aE4gZyu
- KdhDSZU7LuPZ8yxgcmrCs7TlC1YXpYzTfNQfMtGm3EEJiqJDdv/AL7DIcntm42mCaZ7gXIK
- se5r+cHDpKSVaxUs9T+vA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:zS9BJorl81w=;q3pqBoET+GDs9NIV3SlC1m3l/9n
- 5UyEfpwRo24/7Og09E9ODYf7wodSJ/dybnHMp5/y8ZP+HKHviC0peE+OKBAmBYlRVpdiocjFl
- gh1Uje0SOGEWAU0qlhLO94XzxQGHSAbz9ulJPtiHUDZ/WyeOjTr91GxBabNf3QH9B+Hzrael1
- GvSZGa0a0QCJk/u0FUO7Ke/1RuEFq/QN/QOse0gDtQHTDmLstXDS4zXc6ZJcvTjCv1wubdLdG
- f3+rf+9Zos1GC4gxV2y6hA5LQBfkrsnpTFS1biR04ojREogqgcOLAq8Ia2Gqa+Xz8vN3iW/Iv
- 2Xa9OddAPRYHscNRIySVAsUWONxrgwspHeTyFvDiM4e8y99M9LsZjc/oI+/fMI13BDWXHNV67
- MStglUhZ4ifPdS/lkjSlFgi1ofmhIrUPj+ey5fEJNctnTQOZzsbHc18ia125wBMHbEsiQrqlE
- 7ypSSkDnQUN8j3dliWh2khAG/IZ5NK6InN3uRLeYyAFPukqO1U/86e6ZvigqFqc63ygT2LymV
- 97uYXUx+8aOuN4aXdGyTjvIUdnQOt4dWtfdMQ8nsm8z0EQMAFyNgQ4317Vh/Eu5NZ7SR2G11a
- Mx6aeuoFdcoTTJwM/tPpNx9n260gg0zGC2JKDV1VadMzc9R0i5UYOydmiQmxjFNjYZYveouXH
- FYoW3TU7IwbQyLpLFNikZeIly081nJCRTyi5KKPhW7te4afyvW7KnjbaK9VdP7YjKwrEl1XIS
- ShTjcWO8nqFI6jZq3g5ZR8/wRCXtHSSKrUb0SSmpNt/z+u46o/tXkr9ty92KX/g3LnoKkwf0D
- Rs7naDTZC+E9E0zIukflWIVUSrDleb8FSYwAKhddSK8tQ=
+ <b50cf967-b5ab-49e9-a270-a4ff4ddc4559@web.de>
+From: gaosong <gaosong@loongson.cn>
+Message-ID: <0a562fa1-8305-9ad5-cc6f-94b92bc63c7c@loongson.cn>
+Date: Mon, 29 Apr 2024 17:07:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <b50cf967-b5ab-49e9-a270-a4ff4ddc4559@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8DxXN5rYy9mE+4JAA--.24418S3
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s02
+	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
+	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U1CPfJUUUUU==
 
->> * How do you think about to avoid the repetition of version identifiers=
- here?
-> I'm new to this, is the following example correct?
-
-Different enumeration styles were published.
-
-
-> ---
+在 2024/4/29 下午4:20, Markus Elfring 写道:
+>>> * How do you think about to avoid the repetition of version identifiers here?
+>> I'm new to this, is the following example correct?
+> Different enumeration styles were published.
 >
-> v4:
+>
+>> ---
+>>
+>> v4:
+> Would you like to specify version identifiers with “V” consistently?
+>
+Yes.  I'll.
+>> Patch v1: https://lore.kernel.org/all/20240410095812.2943706-1-gaosong@loongson.cn/
+> You may specify such links also in each description section directly.
+OK,  thank you.
 
-Would you like to specify version identifiers with =E2=80=9CV=E2=80=9D con=
-sistently?
+Regards.
+Song Gao
+> Regards,
+> Markus
 
-
-> Patch v1: https://lore.kernel.org/all/20240410095812.2943706-1-gaosong@l=
-oongson.cn/
-
-You may specify such links also in each description section directly.
-
-Regards,
-Markus
