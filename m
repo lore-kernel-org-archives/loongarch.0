@@ -1,142 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FCA58119;
-	Sun, 28 Apr 2024 16:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A513FEED4
+	for <loongarch@lists.linux.dev>; Mon, 29 Apr 2024 07:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714322324; cv=none; b=moruDPY8tLf5hb82H1O2qLQQgZ8bIZgoh8FHal6T4y5qcLegpKS1hfgYm9D+GcbX6L86dguSNNIirVaxhxQmBzZHuJqPwHb25+C4aVz0zZbBuYjCCQPMJ4QXPqpSpBw8RFkNmhhJlu4nTRwgHXKDM5g8x+A3/NsOCVRFoC4E+CI=
+	t=1714375944; cv=none; b=N06acjy2NckjdL7pH4ghrh8M7AKxbRjmH2ojHSU3fV5wBIEhl2gZLRagxy6yyKtvAhEtIJI62i4e2cTxjwnQNfghhS0h+0dv8vWvl45Zgot6MYoOZIHZRFiSgzg9xg6lRW9NHsjFgA/zqrRsZwB9LCAm8UaJqlypycQNJcEU0Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714322324; c=relaxed/simple;
-	bh=WSj7lu2b4X/UglnfYC8ObjrLUSF53g3nGeBhb8ymiJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SB62skttQAONaW/syEIBrMummLRJe5VbFwIY5HC45caTtAjNgb+e2sxSg3SxicfA/l0gWezmHrZR9ew4mx15TvdcYLslCKDq1auI2FAjRK2fDSIF6OYhefnkcu2hM6c50PDMY0+cAWPmEShUBEDTXX3erFC/uQozaCFtriAzeWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNQp9fCz; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNQp9fCz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714322321; x=1745858321;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WSj7lu2b4X/UglnfYC8ObjrLUSF53g3nGeBhb8ymiJQ=;
-  b=SNQp9fCzcERy5ol1k3spTGbe5+wk+UTIIatQtKQQVoYm16CN7Mlv/go2
-   pYcV0HjWP/N3P2YOySp0KSJ62QzYp6NhEkTNQNDQuZi7ZUfOEUagEzNx5
-   wJ4HueNxHIDvVJWmGz8e/4O65FsdutV+WtGLskfUcnzzn6A6OuwPH9oGK
-   8q6vdFnTtSNDwOPyZXaz3t0ffhUXsQmnayLxkmAj0YpAs0/xugoNpZ8tK
-   vJ6ARhadtJTP0q9S0BjEmV3ZI+85lWhr50eZSL81+nsee8fvY0JnHZm2J
-   VRc8CmXIshjzbPrssc+SQbtY6kswpuEHPn2MP8AwEbOCyi8/l5k2aXVIF
-   g==;
-X-CSE-ConnectionGUID: RdaoxUNhTEGsxyBw4ucz+Q==
-X-CSE-MsgGUID: bH7OOn7VT8qHp072xpUmaQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="27508325"
-X-IronPort-AV: E=Sophos;i="6.07,237,1708416000"; 
-   d="scan'208";a="27508325"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2024 09:38:40 -0700
-X-CSE-ConnectionGUID: 1lt0aqshR62GFUHxtdZWqw==
-X-CSE-MsgGUID: CKEGUDIXSTuDOL2KFztXMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,237,1708416000"; 
-   d="scan'208";a="26522158"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 28 Apr 2024 09:38:38 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s17Xv-0006Ue-1C;
-	Sun, 28 Apr 2024 16:38:35 +0000
-Date: Mon, 29 Apr 2024 00:38:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Juergen Gross <jgross@suse.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v8 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
-Message-ID: <202404290016.T9p5GhVr-lkp@intel.com>
-References: <20240428100518.1642324-4-maobibo@loongson.cn>
+	s=arc-20240116; t=1714375944; c=relaxed/simple;
+	bh=XRXKieqHp1DvJ7IC6w1mftvCxe3LJrs0wxu9R+nqtiU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QjRPR+TRO87iatWjZc8c1rGyHJyryhZKjgNi0LBTQKX6oTcVdVFpSKVygQoAb14s4KKwyyFj+KcQEkLUoJ+pJbKaKHnn2jT95RmwfRHBfpxG2vwgVngtuUQ4Ll9BChgTR2X/0YPBwpnk9hklNhVs4pnvtJu2RXx/9MllTqqeYNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.239])
+	by gateway (Coremail) with SMTP id _____8Ax6un8TC9m1NUEAA--.4483S3;
+	Mon, 29 Apr 2024 15:32:13 +0800 (CST)
+Received: from [10.20.42.239] (unknown [10.20.42.239])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxIlb5TC9meN8JAA--.7916S3;
+	Mon, 29 Apr 2024 15:32:11 +0800 (CST)
+Subject: Re: [PATCH v3] LoongArch: KVM: Add PMU support
+To: Markus Elfring <Markus.Elfring@web.de>, loongarch@lists.linux.dev,
+ kernel-janitors@vger.kernel.org, maobibo@loongson.cn
+Cc: LKML <linux-kernel@vger.kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Wang Xuerui <kernel@xen0n.name>
+References: <20240424091813.1471440-1-gaosong@loongson.cn>
+ <e68e09e0-75f3-43b8-b947-22cc0d1a0dae@web.de>
+From: gaosong <gaosong@loongson.cn>
+Message-ID: <b8818597-2770-f2a3-03bd-1653cd26fc78@loongson.cn>
+Date: Mon, 29 Apr 2024 15:32:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240428100518.1642324-4-maobibo@loongson.cn>
+In-Reply-To: <e68e09e0-75f3-43b8-b947-22cc0d1a0dae@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8CxIlb5TC9meN8JAA--.7916S3
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WFW3JF15ur13GFWUJw15WrX_yoW8ArW3pF
+	4ruan0y3yDtF10kw4kX3yvyry7WrZ8Jr13urn7X3Z8JrZ8ZwnYvr1fZr1agFyDZ34rKFW2
+	q3Z3ArWF9FyDtFgCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjQ6JUUU
+	UU=
 
-Hi Bibo,
+在 2024/4/25 下午3:18, Markus Elfring 写道:
+> …
+>> On KVM side. we save the host PMU CSRs into structure kvm_context.
+>> If the host supports the PMU feature. When entering guest mode.
+>> we save the host PMU CSRs and restore the guest PMU CSRs.
+> …
+>
+> I suggest to reconsider the usage of a few dots in such a wording approach.
+>
+>
+> …
+> Signed-off-by: Song Gao <gaosong@loongson.cn>
+>
+> v2->V3:
+> …
+>
+> * Please put your version descriptions behind a marker line.
+>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.9-rc5#n713
+Got  it,  thank for you suggestion.
+> * How do you think about to avoid the repetition of version identifiers here?
+I'm new to this, is the following example correct?
 
-kernel test robot noticed the following build warnings:
+[...]
 
-[auto build test WARNING on 5eb4573ea63d0c83bf58fb7c243fc2c2b6966c02]
+Signed-off-by: Song Gao <gaosong@loongson.cn>
+---
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-smp-Refine-some-ipi-functions-on-LoongArch-platform/20240428-180850
-base:   5eb4573ea63d0c83bf58fb7c243fc2c2b6966c02
-patch link:    https://lore.kernel.org/r/20240428100518.1642324-4-maobibo%40loongson.cn
-patch subject: [PATCH v8 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
-config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20240429/202404290016.T9p5GhVr-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240429/202404290016.T9p5GhVr-lkp@intel.com/reproduce)
+v4:
+   - Use the macro kvm_read_clear_hw_gcsr to optimize the code
+     and remove redundant code.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404290016.T9p5GhVr-lkp@intel.com/
+V3:
+   - When saving the PMU context, clear the CTRL register
+      before reading the CNTR register.
+   - Put kvm_lose_pmu() in kvm_handler_exit().
 
-All warnings (new ones prefixed by >>):
+v2:
+   - Add new vcpu->request flag KVM_REQ_PMU. If we use PMU,
+     We need to set this flag;
+   - Add kvm_check_pmu() to kvm_pre_enter_guest();
+   - On _kvm_setcsr(), after modifying the PMU CSR register value,
+      if we use PMU, we need to set KVM_REQ_PMU.
 
-   arch/loongarch/kvm/exit.c: In function 'kvm_emu_cpucfg':
->> arch/loongarch/kvm/exit.c:213:23: warning: variable 'plv' set but not used [-Wunused-but-set-variable]
-     213 |         unsigned long plv;
-         |                       ^~~
+Patch v3: 
+https://lore.kernel.org/all/20240424091813.1471440-1-gaosong@loongson.cn/
+Patch v2: 
+https://lore.kernel.org/all/20240417065236.500011-1-gaosong@loongson.cn/
+Patch v1: 
+https://lore.kernel.org/all/20240410095812.2943706-1-gaosong@loongson.cn/
 
+---
 
-vim +/plv +213 arch/loongarch/kvm/exit.c
+[...]
 
-   208	
-   209	static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
-   210	{
-   211		int rd, rj;
-   212		unsigned int index;
- > 213		unsigned long plv;
-   214	
-   215		rd = inst.reg2_format.rd;
-   216		rj = inst.reg2_format.rj;
-   217		++vcpu->stat.cpucfg_exits;
-   218		index = vcpu->arch.gprs[rj];
-   219	
-   220		/*
-   221		 * By LoongArch Reference Manual 2.2.10.5
-   222		 * Return value is 0 for undefined cpucfg index
-   223		 *
-   224		 * Disable preemption since hw gcsr is accessed
-   225		 */
-   226		preempt_disable();
-   227		plv = kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD) >> CSR_CRMD_PLV_SHIFT;
-   228		switch (index) {
-   229		case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
-   230			vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
-   231			break;
-   232		case CPUCFG_KVM_SIG:
-   233			/* Cpucfg emulation between 0x40000000 -- 0x400000ff */
-   234			vcpu->arch.gprs[rd] = *(unsigned int *)KVM_SIGNATURE;
-   235			break;
-   236		default:
-   237			vcpu->arch.gprs[rd] = 0;
-   238			break;
-   239		}
-   240	
-   241		preempt_enable();
-   242		return EMULATE_DONE;
-   243	}
-   244	
+Regards.
+Song Gao
+>
+> Regards,
+> Markus
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
