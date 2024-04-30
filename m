@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3A6134B6
-	for <loongarch@lists.linux.dev>; Tue, 30 Apr 2024 04:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A030311CBD
+	for <loongarch@lists.linux.dev>; Tue, 30 Apr 2024 04:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714451186; cv=none; b=OPhezYK90X1MApOZOvmtFWbpHl/xBUHOBBrWNnLry66TxAKezjiW05AVHHE3VJyYXSUsnXrWg2kF1AdxxqnOzCTVhj1z5zXYe7O0S5COp2JnqKrhDY7H1UmhUM9c9u1zGmfTuFXrFxN57mJfDaygL9E6orrbGaehvQW78vuwI48=
+	t=1714451368; cv=none; b=R/4cc2SWy94v7LxbIXglokVef0OgfesWMzJvbOPZRVaQ7TkL5mvtZROaPEz9X/VTt3VHqSpUkskM4wKFQunfM39xNM8ZYwv6kbi70aUy8l58qdE6Brp/NrAkvljPQEUxvUnTwn1jjgQgXmu/ELeBKSYhT0wtpc7hF7E4IG7Qa6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714451186; c=relaxed/simple;
-	bh=7/LvDV66mDIzCX8Ki3ehENh2BWy+/8sMXmXZYQ9n3Gw=;
+	s=arc-20240116; t=1714451368; c=relaxed/simple;
+	bh=FEm1/PB329Jyi/kHvt9MX59QyNkI8IQyV5tTODOIcw4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bSJloE6hiu2MaB/0KOLM1vrb5g2MbZ4lMVAB5uFd1Qht0BO+40E/WI0nUG4Cxz5ln3+zevgDbTDi2bONR4bgxw9mcRPO9It6hEeN4yNVJ7GIczU879qsmKozjvfqD0cgS8ay+KAJqaLlvfoORSrcWOGJhU4KLssEEzqqXCFaWxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JosyabYK; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=nFqjbm1VXh7Vg/0Rk0GijDoXzaVry+69DLjqxeZDSMSTT7EyTicRdql2cPhsZvx8HyNah2R9oHs/SJZ4lWFApXVJSByZQ6dGQqQlCX+MCKhj+VSvkJOlph1lzqu8TwUxtyUHYq6dsZV9KTGlgW7lTEDvbShm4PcJtnC5EQURtXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LsBRgvgJ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JosyabYK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LsBRgvgJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714451183;
+	s=mimecast20190719; t=1714451365;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/j3/XOns0oFgwfO5bxhGBltITHmRiIbor4kORGQYrjA=;
-	b=JosyabYKWBB7JgkSX2dxfOPiRlu4cT/CIIwIhFb1RWyLRccf9DM1RFBRVlkgmQblQuE5Fa
-	CM919Py2nIDzKstn9H/E8Ga1EZLsuiNjtk5U2r7MmGdLgkp8sy4mTHLbeyKKgvTxbXS4T3
-	oWwSfuqS1mQgOptV6vfBoQ7LRUmvFJk=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=D1/gI69YXA+wRBrAlMSJILQJim8W89y0vmUYfYeJ+kM=;
+	b=LsBRgvgJg0DJY9hLiSKX3mvTo/b104JH3f1iJlOX1uHWgDdrtMwHIzQeZ+T2qFy/Agbbh2
+	TxnJg+My2fVPPSh5M4MVqXMGeK15gkg973HL1K6bsPY/2yQgO8YfQWb7Z/k1Vf09+FsauN
+	z9z6I5nqua/z+eatWEGYxG+Ifpch6j8=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-170-UaIfJOEFPVuGyrY9K_oESQ-1; Tue, 30 Apr 2024 00:26:19 -0400
-X-MC-Unique: UaIfJOEFPVuGyrY9K_oESQ-1
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-613dbdf5c1bso1755782a12.0
-        for <loongarch@lists.linux.dev>; Mon, 29 Apr 2024 21:26:19 -0700 (PDT)
+ us-mta-339-dqQ33-RPMKeTyjtk5_YsYw-1; Tue, 30 Apr 2024 00:29:24 -0400
+X-MC-Unique: dqQ33-RPMKeTyjtk5_YsYw-1
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3c5ed191fe3so7622722b6e.3
+        for <loongarch@lists.linux.dev>; Mon, 29 Apr 2024 21:29:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714451178; x=1715055978;
+        d=1e100.net; s=20230601; t=1714451363; x=1715056163;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/j3/XOns0oFgwfO5bxhGBltITHmRiIbor4kORGQYrjA=;
-        b=EjvsH7uF/ty+v2ayP/4C5KcT6sNTnnhFlrrh8O8IFphXoaikRD+DMPkFqPAOQRHd7r
-         sHMoR98r0g7aYjgnyRs854fyC22IJQtBClFBI0RdlWAlQncsFD1HZWi5TUouJkoGfItM
-         3MAOHB6lP/sIydCmgpF6g5FLTkK87ZW9iTUNPiM13Rsl6emlvpzcsFmkDHQ3smGRoX79
-         jmn35CyWtuCzxxeeVJqVEYZUyGSCHMyDtuW20MhflJimHykIy/uFAPWYMnQhYypEYvR1
-         hgF4SnS1Ehd65JpDvE7UQPmXGInxwfB0qm8i0YycGxUwWtcXicF05ilnyWcQ/oDMPmtF
-         eEpg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7YPWG0cNArvqKXLK67+W25JnE0IXoAhmCLmS+yBx0IYoVS+8ervbZCM9WeT5I7ym6rInahwMv7TtLf3endlzlXdWPtNddzMVD
-X-Gm-Message-State: AOJu0YwS4c0zw8wqZkCIn8ybzI5rRuJg66LZH2dvayg4vsy+HN178uGs
-	e+W7m7/D/zZPhkAYsBXTWGdaQ4xqVipT8n2mwhSOKTKiU1VcG7I/BDEZ8CFRr3KnIGwJsX2uGQS
-	5cqjGSp13oUvNbjnaXNHfM9dXJE5GMg2GF5KH2o5zfKD3vgvjLfeTofPZ8g==
-X-Received: by 2002:a05:6a20:43ab:b0:1af:597f:ffa4 with SMTP id i43-20020a056a2043ab00b001af597fffa4mr1773946pzl.14.1714451178655;
-        Mon, 29 Apr 2024 21:26:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH07U3E59OEv3uasYAdnnN9/WYRlSaTmrz5sCzeoOlurs0CWJYXB3V+LTa+nYaZB59wKOeCng==
-X-Received: by 2002:a05:6a20:43ab:b0:1af:597f:ffa4 with SMTP id i43-20020a056a2043ab00b001af597fffa4mr1773917pzl.14.1714451178308;
-        Mon, 29 Apr 2024 21:26:18 -0700 (PDT)
+        bh=D1/gI69YXA+wRBrAlMSJILQJim8W89y0vmUYfYeJ+kM=;
+        b=i0hSaXY2SDM+9HeIvo4RGcIpLzKWuN0SelCkLuWa759WcNRpE/dh1BO0uTJw++uDW0
+         K5ciwSZzFkJQgK8enk2IpdewPpRE7TE9q8bSFD8l/k0LTOAGnyB9SIawlByYYjVYliRV
+         XD0wcRzFPYPGsrFyW2sZIqRTXDVRpbPwL3C0MEsFTypaVdWCBpqnFndJozqMTaaTpR9o
+         MjsYRH9R2E6yJzo/K1j3rrWdLgpms4K+mI/aSiE6x27l4dMlvPcW6Cpn1NdKgXSz2UPP
+         cBnr3AbWAPm42tR8Gk9VbYcPn2iUpvknOxRaBlR83f43vYLjqQnYgS0z4K9ryCRehpGH
+         yHRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTy3uX9p2mIGoA09q/A8Ak1vl9SBOgH/jw+e8pigm9Z7pDCakbFS7AVR1NXM/ONgtoXz9Kvlu1y8cMy8NWsyZ5fa3TN3/Dvkvb
+X-Gm-Message-State: AOJu0Yxs4ZxTqUamnqUxLwA0upYKukx8X45Vif9ysYyz9FGb+DmomCq3
+	7KgapZ5sFIUf31Qx2irFGMr+5cYOqfruUtjpcVPC0vujOoW2mQ2LoFrenuNL5KrKaiQ7UupKsmx
+	lgrxb8QX20vGSQUDDpfjo5Qj0bjSgKZRRTiTCIxJVVMJdJS05EoeiDgncyQ==
+X-Received: by 2002:a05:6808:1b21:b0:3c8:42f1:40b2 with SMTP id bx33-20020a0568081b2100b003c842f140b2mr14918966oib.9.1714451363455;
+        Mon, 29 Apr 2024 21:29:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEma/8noQWxcMSK7hzaRRVetUMUXvHfjFYfu5UCMsY0GiHyeLt76asSKvhJFyxiVUNt5H/EkA==
+X-Received: by 2002:a05:6808:1b21:b0:3c8:42f1:40b2 with SMTP id bx33-20020a0568081b2100b003c842f140b2mr14918939oib.9.1714451363109;
+        Mon, 29 Apr 2024 21:29:23 -0700 (PDT)
 Received: from [192.168.68.50] ([43.252.112.88])
-        by smtp.gmail.com with ESMTPSA id p2-20020a170902e74200b001e223b9eb25sm21272994plf.153.2024.04.29.21.26.08
+        by smtp.gmail.com with ESMTPSA id b16-20020a63d810000000b005e438fe702dsm19772604pgh.65.2024.04.29.21.29.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 21:26:17 -0700 (PDT)
-Message-ID: <63f7c71a-fa01-4604-8fc6-9f52b5b31d6b@redhat.com>
-Date: Tue, 30 Apr 2024 14:26:06 +1000
+        Mon, 29 Apr 2024 21:29:22 -0700 (PDT)
+Message-ID: <eaac4ff8-4e88-4f66-b4ab-975a5b77c3a9@redhat.com>
+Date: Tue, 30 Apr 2024 14:29:11 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -67,8 +67,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 05/16] ACPI: processor: Add acpi_get_processor_handle()
- helper
+Subject: Re: [PATCH v8 12/16] arm64: psci: Ignore DENIED CPUs
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
  linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
@@ -87,9 +86,9 @@ Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  Sudeep Holla <sudeep.holla@arm.com>
 References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
- <20240426135126.12802-6-Jonathan.Cameron@huawei.com>
+ <20240426135126.12802-13-Jonathan.Cameron@huawei.com>
 From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20240426135126.12802-6-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240426135126.12802-13-Jonathan.Cameron@huawei.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -97,78 +96,45 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 4/26/24 23:51, Jonathan Cameron wrote:
-> If CONFIG_ACPI_PROCESSOR provide a helper to retrieve the
-> acpi_handle for a given CPU allowing access to methods
-> in DSDT.
+> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > 
+> When a CPU is marked as disabled, but online capable in the MADT, PSCI
+> applies some firmware policy to control when it can be brought online.
+> PSCI returns DENIED to a CPU_ON request if this is not currently
+> permitted. The OS can learn the current policy from the _STA enabled bit.
+> 
+> Handle the PSCI DENIED return code gracefully instead of printing an
+> error.
+> 
+> Note the alternatives to the PSCI cpu_boot() callback do not
+> return -EPERM so the change in smp.c has no affect.
+> 
+> See https://developer.arm.com/documentation/den0022/f/?lang=en page 58.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> [ morse: Rewrote commit message ]
+> Signed-off-by: James Morse <james.morse@arm.com>
 > Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
 > ---
-> v8: Code simplification suggested by Rafael.
->      Fixup ;; spotted by Gavin
+> v8: Note in commit message that the -EPERM guard on the error print
+>      only affects PSCI as other options never use this error code.
+>      Should they do so in future, that may well indicate that they
+>      now support similar refusal to boot.
 > ---
->   drivers/acpi/acpi_processor.c | 11 +++++++++++
->   include/linux/acpi.h          |  7 +++++++
->   2 files changed, 18 insertions(+)
+>   arch/arm64/kernel/psci.c | 2 +-
+>   arch/arm64/kernel/smp.c  | 3 ++-
+>   2 files changed, 3 insertions(+), 2 deletions(-)
 > 
+
+Thanks for the check and clarification that -EPERM is only sensible
+to PSCI. With the clarification:
 
 Reviewed-by: Gavin Shan <gshan@redhat.com>
-
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-> index 3b180e21f325..ecc2721fecae 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -35,6 +35,17 @@ EXPORT_PER_CPU_SYMBOL(processors);
->   struct acpi_processor_errata errata __read_mostly;
->   EXPORT_SYMBOL_GPL(errata);
->   
-> +acpi_handle acpi_get_processor_handle(int cpu)
-> +{
-> +	struct acpi_processor *pr;
-> +
-> +	pr = per_cpu(processors, cpu);
-> +	if (pr)
-> +		return pr->handle;
-> +
-> +	return NULL;
-> +}
-> +
-
-Maybe it's worthy to have more check here, something like below.
-However, it's also fine without the extra check.
-
-	if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
-		return NULL;
-
->   static int acpi_processor_errata_piix4(struct pci_dev *dev)
->   {
->   	u8 value1 = 0;
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 34829f2c517a..9844a3f9c4e5 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -309,6 +309,8 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
->   int acpi_unmap_cpu(int cpu);
->   #endif /* CONFIG_ACPI_HOTPLUG_CPU */
->   
-> +acpi_handle acpi_get_processor_handle(int cpu);
-> +
->   #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
->   int acpi_get_ioapic_id(acpi_handle handle, u32 gsi_base, u64 *phys_addr);
->   #endif
-> @@ -1077,6 +1079,11 @@ static inline bool acpi_sleep_state_supported(u8 sleep_state)
->   	return false;
->   }
->   
-> +static inline acpi_handle acpi_get_processor_handle(int cpu)
-> +{
-> +	return NULL;
-> +}
-> +
->   #endif	/* !CONFIG_ACPI */
->   
->   extern void arch_post_acpi_subsys_init(void);
 
 Thanks,
 Gavin
