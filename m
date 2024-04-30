@@ -1,141 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566D515ACB
-	for <loongarch@lists.linux.dev>; Tue, 30 Apr 2024 04:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF05639FEF
+	for <loongarch@lists.linux.dev>; Tue, 30 Apr 2024 07:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714451502; cv=none; b=jTWYOpBcFRc6fkLHreVlrKiN85eT0jKeC7unzb/HSHJ2SBh1VIgRIey+vzzOzZTnkZKwbdSIAZL99lJ+ojGU79QmC+53IOYMuPdA/JBNFwhklFValeEWIKPcrNfjqhCHNRW6MpLJyoa+Hx9ZvPGFgbSRDu17F70VVMEKFsSF5Rw=
+	t=1714462410; cv=none; b=I1/Fbs757hr0UST9bNn3HFdkk6dr3U0+Jezdqa7K+0lx/SO1BAufC3JEi+OT5E4w4DR20pqA6W6Hbw5U2I4LPGONQFIDfcuhBFhGCCcMFhoj4vvlx/8qhrjDfed9b2ZDBdKH7l91M69tK3M9l9zzhQyD0RnAkT6opGni8vIGZxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714451502; c=relaxed/simple;
-	bh=29uhAEoT45o4FIk7bCIeul9Jn+bmCAUKhTM2KMG4H2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eHidvFWuP3clFmYNeREh6AdKkLVE1HwmsqFA1bPwXYykO7HF4n77psVhb5IuO3Nd6sOsbhXKNKpTwUFj81m94PkImpEWJIRuPC14xuL95H7+Q9ZZyMPDQ78BkZ+z08w9FutUuiRdgx6ag+owjdOpUH+mpjoZ6yujMRZEyjSbabI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IDuJ1Br+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714462410; c=relaxed/simple;
+	bh=r3yZQOo7p6VsIe3U4P+tg3b/ZLhUdSJ+KRIWZpHmqME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kahqbWF2DHrpO/QDCUWPDqlCx+M4cgpvyll6Cf/Ls9X95ccGubfbEAod3zDw8+yDSGZezomB1nulYNd0n2+1sAEAK+FLja70cZYcMFS7LSKGW9dBuaypBbGDyVaep92vFItaipd+ozJv3Sa/y7Wuk3Yq5P2BtCMm93jnmG+N7ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M7Vnw/MV; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IDuJ1Br+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714451500;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i13MtWkwJ9CzG5rHobsEqX+W2OhJEVkbAyH/jjvfJXM=;
-	b=IDuJ1Br+s4bMYxIql/3p4Aaznb4kiewwFvFw0fIcUyfhCNMCMz5mZwHPRS/EF120Mxn/f6
-	HF0z7GFzsCnx5kT3gwgrAEs+7Fwu77zaNQJk3H8oM/UX3vNYIZ3WF5im4riyVIBtpx+duG
-	Rlxr/+wApBFF9Vql6bBcel9F0UexaL0=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-648-Fj5-ItpzPD-SSXcTEDXwCQ-1; Tue, 30 Apr 2024 00:31:35 -0400
-X-MC-Unique: Fj5-ItpzPD-SSXcTEDXwCQ-1
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1e2bbb6049eso46409085ad.0
-        for <loongarch@lists.linux.dev>; Mon, 29 Apr 2024 21:31:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7Vnw/MV"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-61be613d903so10610517b3.0
+        for <loongarch@lists.linux.dev>; Tue, 30 Apr 2024 00:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714462407; x=1715067207; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f1t1YtdVQhMuh5WLzKhqApsNSS87AIHqdVoWO4lvwyE=;
+        b=M7Vnw/MVmOg5YE80HHq4eo/BaLX4GDqZP93rtQ1bubrKZu/en4iF5N+OzApg3JiBfT
+         TcZNa6+7N7xfOAr69k4ifU1YGDyZOy6jq9CPk/zcLVEoJRw96WfiI8DvDGLjtXv0FEHA
+         lmkRFUiWpkjfYLLNVf+1yJlW7WqeWEW63418WeTYbq6e7D63sVAvt6zEWL5xHavxhXsi
+         4XdH6n5QzpGCvqZ84LgVH/aRkrCAGzRRxThVbgAW1Ti5YOJHw3QkMlvVryfiFwxHD1TC
+         FdYLc8O9G78qkxm1jzdeXMWzWMy7pj2maz8PDCPYYUZb6ETnGDvJe2kGP0DEVDy+zTIR
+         Ipdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714451494; x=1715056294;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i13MtWkwJ9CzG5rHobsEqX+W2OhJEVkbAyH/jjvfJXM=;
-        b=FKCC+g1f71MCOocNy8G6IqHN7dfEmq6f0NaTEW4Yu1JL8UDBVXu6AWuaztkzzE+KNh
-         kEp54JdntWlm4T5VWDdqakFyv3swazJJKNCpvfDqpCPtxK8SlsSlYrUTzLAYJQ6wRr4x
-         s0wnU3b9sCqE+wbRojI/tVZ17tta1u1OhnW33DFZuDYVSjKyN1aLFwcBWxfdh05q5cVV
-         UtfSExr4BwYsZuBA8Ouhq4lPipqR5B6Z8Pyubv2MAX9p/srn6r0H0MnY+u6qvAvNBVO6
-         25QcNks8hhi4nOdDXIxo3jCU7hnBaxe4o78uSOJlLNWQIKdfPIAZ03PYURnRSIBZ8VBY
-         UIOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjr3C60aF8DBbp9cQbNPWKoxNNqHMAJQA/2Wvmjm87OYNG97BgfT1W2mlDNGn748uW21pYaHD0RjhdkLNMlvcnmvM+pFhNW0Mn
-X-Gm-Message-State: AOJu0YwOkDTga2nk4TpoqXmx2T0dqz8EXtrJBDzH2Wwtq7OzQ1yRmrMw
-	8TDOB3xR6WXfRBWHNoao57W9D+aHFoizYya9HVLWlRRlFy75Qtyfe0+b69W6AsJCP14qAbq6X3s
-	stv9yv2AzB4EQxYt526w1m9noVinXDm+AVZFWG9aJc55ix0soSeQRZiGJvw==
-X-Received: by 2002:a17:902:d2c8:b0:1e4:4000:a576 with SMTP id n8-20020a170902d2c800b001e44000a576mr14606371plc.43.1714451494084;
-        Mon, 29 Apr 2024 21:31:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHAw003t6HOSoCLpW/XUCLqCM5arMxu8YIqu/zbz1Hwe4t+r/fC177o/TfutrGEBjD75Dh+aQ==
-X-Received: by 2002:a17:902:d2c8:b0:1e4:4000:a576 with SMTP id n8-20020a170902d2c800b001e44000a576mr14606349plc.43.1714451493684;
-        Mon, 29 Apr 2024 21:31:33 -0700 (PDT)
-Received: from [192.168.68.50] ([43.252.112.88])
-        by smtp.gmail.com with ESMTPSA id jv12-20020a170903058c00b001eab3baad5dsm8939394plb.4.2024.04.29.21.31.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 21:31:33 -0700 (PDT)
-Message-ID: <fb40d212-2f70-46b3-8045-1f4d40df3f6d@redhat.com>
-Date: Tue, 30 Apr 2024 14:31:22 +1000
+        d=1e100.net; s=20230601; t=1714462407; x=1715067207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f1t1YtdVQhMuh5WLzKhqApsNSS87AIHqdVoWO4lvwyE=;
+        b=d+PxkLahq07kAh1EicZn2aVUdwOo9AGO6eOJ8knbT6r0Xfd4kXMXypWk5PNYBjn0h+
+         VB8/V9Rf0N/2bv5jWN7iENPD9Eypt67KcolSzIREFhXJhYW9xqVnmwEmlYkzTM0SiHrT
+         ZM1/DkPFCIH1rnn9rswisweBeF385Fqf2LFmedFyKngI8U6Q2GNtx7gA/m0X0wauCIQ0
+         MjOllhSRBwfKVK9x+comM5vnuPPk6j8fbvtz7tQNg+6O9FxKq+GLizhWDPKkhP0lfXxq
+         gae7w17HNPkDKJO0tfPLqX/M3gXcy+0m7yicBnuunbJNH/1/J/10GQc1r+3eXcq2BhVc
+         lqjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlTbYkpSNjSG+lJDbFs7YzwBA/pyoTEs7MSWo5bCAj7H1xaMw7T/CvRgtyMx4HvqDTCuKgJtsq3Xy9fPuI9IBsO2fbtdCP///7
+X-Gm-Message-State: AOJu0YxB005SNLbj53KSY7IbyHJjK8NqJWze8t/xOcV/OkIu6Nfyn9Qu
+	01tZy2jt+RjMH2Hv00pZ7t/J8nG0m1prwrhplU+IofS2meJkXBqRAxQqF0GoZsiOlVZZBivW+AC
+	b9XierRmZSi4p+bp/tiLvDHSubrRlTfeTfpQ=
+X-Google-Smtp-Source: AGHT+IGdaXe0AdtKqsfeXw6soP40M1C7YdJ1S/7IP5X2AoM2UtipL8sYJvRDlyY2qFs1/W7AObRd05SaPuE5W/+FjBw=
+X-Received: by 2002:a05:690c:d1e:b0:618:2f6d:ca80 with SMTP id
+ cn30-20020a05690c0d1e00b006182f6dca80mr2400093ywb.12.1714462407621; Tue, 30
+ Apr 2024 00:33:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 13/16] arm64: arch_register_cpu() variant to check if
- an ACPI handle is now available.
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, x86@kernel.org, Russell King
- <linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>,
- Salil Mehta <salil.mehta@huawei.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com,
- justin.he@arm.com, jianyong.wu@arm.com,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Sudeep Holla <sudeep.holla@arm.com>
-References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
- <20240426135126.12802-14-Jonathan.Cameron@huawei.com>
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20240426135126.12802-14-Jonathan.Cameron@huawei.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <cover.1713164810.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1713164810.git.zhoubinbin@loongson.cn>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 30 Apr 2024 13:33:16 +0600
+Message-ID: <CAMpQs4LD6R6TgcE_MJ4akwgtDFVA5VHh4oTSTy0bzuLxUDXWxw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] pwm: Introduce pwm driver for the Loongson family chips
+To: Binbin Zhou <zhoubinbin@loongson.cn>, ukleinek@kernel.org
+Cc: Huacai Chen <chenhuacai@loongson.cn>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/26/24 23:51, Jonathan Cameron wrote:
-> The ARM64 architecture does not support physical CPU HP today.
-> To avoid any possibility of a bug against such an architecture if defined
-> in future, check for the physical CPU HP case (not present) and
-> return an error on any such attempt.
-> 
-> On ARM64 virtual CPU Hotplug relies on the status value that can be
-> queried via the AML method _STA for the CPU object.
-> 
-> There are two conditions in which the CPU can be registered.
-> 1) ACPI disabled.
-> 2) ACPI enabled and the acpi_handle is available.
->     _STA evaluates to the CPU is both enabled and present.
->     (Note that in absence of the _STA method they are always in this
->      state).
-> 
-> If neither of these conditions is met the CPU is not 'yet' ready
-> to be used and -EPROBE_DEFER is returned.
-> 
-> Success occurs in the early attempt to register the CPUs if we
-> are booting with DT (no concept yet of vCPU HP) if not it succeeds
-> for already enabled CPUs when the ACPI Processor driver attaches to
-> them.  Finally it may succeed via the CPU Hotplug code indicating that
-> the CPU is now enabled.
-> 
-> For ACPI if CONFIG_ACPI_PROCESSOR the only path to get to
-> arch_register_cpu() with that handle set is via
-> acpi_processor_hot_add_init() which is only called from an ACPI bus
-> scan in which _STA has already been queried there is no need to
-> repeat it here. Add a comment to remind us of this in the future.
-> 
-> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-> Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> V8: No change. (tags collected only)
-> ---
->   arch/arm64/kernel/smp.c | 53 +++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 53 insertions(+)
-> 
+On Tue, Apr 16, 2024 at 7:55=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
+>
+> Hi all:
+>
+> This patchset introduce a generic PWM framework driver for Loongson famil=
+y.
+> Each PWM has one pulse width output signal and one pulse input signal to =
+be measured.
+>
+> It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips=
+.
 
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+Hi Uwe:
 
+Gentle ping.
+The dt-binding part of the patchset looks good now, do you have any
+comments on the driver part?
+
+Thanks.
+Binbin
+>
+> Thanks.
+>
+> -------
+> V3:
+> patch (1/2):
+>  - Add Reviewed-by tag from Krzysztof, thanks.
+> patch (2/2):
+>  - Several code stlye adjustments, such as line breaks.
+>
+> Link to V2:
+> https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
+>
+> v2:
+> - Remove the dts-related patches and update dts at once after all
+> relevant drivers are complete.
+> patch (1/2):
+>  - The dt-binding filename should match compatible, rename it as
+>    loongson,ls7a-pwm.yaml;
+>  - Update binding description;
+>  - Add description for each pwm cell;
+>  - Drop '#pwm-cells' from required, for pwm.yaml makes it required alread=
+y.
+>
+> Link to v1:
+> https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongso=
+n.cn/
+>
+> Binbin Zhou (2):
+>   dt-bindings: pwm: Add Loongson PWM controller
+>   pwm: Add Loongson PWM controller support
+>
+>  .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
+>  MAINTAINERS                                   |   7 +
+>  drivers/pwm/Kconfig                           |  10 +
+>  drivers/pwm/Makefile                          |   1 +
+>  drivers/pwm/pwm-loongson.c                    | 298 ++++++++++++++++++
+>  5 files changed, 382 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-p=
+wm.yaml
+>  create mode 100644 drivers/pwm/pwm-loongson.c
+>
+> --
+> 2.43.0
+>
