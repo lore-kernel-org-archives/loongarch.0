@@ -1,229 +1,406 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B421BED72
-	for <loongarch@lists.linux.dev>; Tue, 30 Apr 2024 19:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714505531; cv=none; b=jJ6PYeCvmwOE361FbCRY+CBx0w2sqzOuYS6WUHdlKWF1swfVr8egM9njCDIZq/uzJfL611Rrd+09d3M11Mni5dWQVQZhdKp9MswNWTgrkoZ/4mPa97VGY4CUGyePQAtA1Ly5AVWsOVqeB8wW7uXaRrpcLLg6qauZiSnmzlyp+WA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714505531; c=relaxed/simple;
-	bh=9MhcqD3oLMqfUjo9TWK3GGfH4maBAFWA/FNunEEvlt0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HoZeHV8rnQb2ox045itcHWMQfGmJxFCQOEDjWAwNuBzu9dS8I1r+biZ+XmP4f3RzqwayPBAm5jYw3H6a0rKePeeFW9B1HNh4EqnPvrLSOTRGsw+amYgczeamQUk5h4kvehad3gd4IpHncfo4MKu7FPvbq1f+z0/ObnZC+rY/2/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bWo9xZmm; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9B217BB15
+	for <loongarch@lists.linux.dev>; Tue, 30 Apr 2024 23:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714518205; cv=fail; b=EjV5ojfFs1TGElhGE38DJCBoU2/TEtn5+SSKniJ4cauRMcRwiFgA9t9IGIVpFpeY73S9W6wDOlyiaGjMs59uODhddjyNYfPgPgdoHQ3skYXNNOpmKrJplkpP42/I6UBoPZpmXe75C1Ddw4yUFZuSqk9Mfptpq9c+GNL1xDhxTzM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714518205; c=relaxed/simple;
+	bh=BWLENVfAJp/NmxdUga5uiEHqAJmVpotDNhuRXfbHJx4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=WTVA4U2Spq7vcrhk+LFDpW6NnQL96F6m1VJw6AII2DD4GabMwT6UDpRcq9jTHRnQyCTnmeMov5X/gHDfSlI/olOgsUlfQwvfEdAJzNGXU2CUWTRdFuFp3lNpsQbW2u9uYqvgxpSS6KArgETwjU60yo63e/+l7aaNcC2iyHlEuK4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dRmAXMM0; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=y8TkkBM8; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bWo9xZmm"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61bea0c36bbso23638957b3.2
-        for <loongarch@lists.linux.dev>; Tue, 30 Apr 2024 12:32:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dRmAXMM0";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="y8TkkBM8"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43UKTgld017528;
+	Tue, 30 Apr 2024 23:02:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : in-reply-to : references : date : message-id : content-type :
+ mime-version; s=corp-2023-11-20;
+ bh=EL/hN2kBBnpDCBhosmnxg3lDM1xxbhAS0BsL10gyA8k=;
+ b=dRmAXMM066dO7yPWz1iWMf4DG015ndRPVcX6yIZB1yi3NeYkfoT/6Y91ctD0VlApGTkr
+ 4kF9eOKAIImXsE9drKdlCyCzFIiL+/2bEP53L79YzRdW7LXJvSYvQtD+rZAjTVHLE9tm
+ fa8Pz6Kp/oHwnBPkd4lha9D0CPLTzI4kNzHOknFjzvpNl920fPzQhAeA19XxjSYlaVaf
+ amyoeP+azzjRv4nvj2xnfVoF5MMotlOStyXqNxdKyavws68FcnEVlWT675icSzh/CvM5
+ kR/wYjG65VKlQYkFT6abeWJ81wT9k2I77we+gU5DTgOr6urhw1O9cuBm9DgFqCFdTvyc 8A== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xrswvpax9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Apr 2024 23:02:09 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43UMAgc7005069;
+	Tue, 30 Apr 2024 23:02:08 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2169.outbound.protection.outlook.com [104.47.73.169])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xrqt85fwq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Apr 2024 23:02:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZQwI9LnHQWce26XDNmjF/RFD1GyjbI2eAWUDMQzR2HJOg0/hqOZ9sufucnuNexB9cnGc+Y3ctUzks72A5+OmHvb3z01aEEo+SKH3xEn6MvdVQT3nIkPFMhj5Xvam/Z8T8gJQoqw9zVPCaEHO3J2tGwM8GRVCQCVSSfV5SbrY0KP3kfiSbENzAavdE4YDd2kkWK4ALZpsfrA/BWS2i4n+qaSUu1N+2xtb1zn5ouUc3X7awBwNKZ7yW1hxwmg8HOAoOts3CJIPb7lV3K64OKr+oylUEd0YkaWnGwSkYl3nh2lk7zCaW52bU7r0ccYy+NYhpszbCfNS7S05OFMTQPOx3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EL/hN2kBBnpDCBhosmnxg3lDM1xxbhAS0BsL10gyA8k=;
+ b=V5MBwoD6/kzan4WL/rS7iXv1bM65Ewq0Z8o8UxY2sl7CD3NVhILSCDl6CUM3GYZjWkuKwiZidxUT4B1MrYx0e5CcC+tMvIk8IQ59zftosedHdVmo5pbXTodNjRJb8qX7HWR2h7zwa2+VIHzp97EbTugRgaklV6GL6M8Ki4//Dmhj+O6HIKCC+3MI3gKQiOLploB0o2rW40XirkgHMByhGV2CxWGA9M4BhUZRqKyR0PB+5tS/MnlBLLnwqiB9n6bvXNqhtr3LNUnEd9NhfLLBS9jMFhnvQuDiiTMXFGLvjiQv9jOmznFtZ0kmVw7SeDwPSJEea3/ZrqUvaZPJKY80zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714505529; x=1715110329; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=zlyEud5d/bhoGiNpMEEmnNOfWYjdDQf4ZBXlBrFZHdU=;
-        b=bWo9xZmmDXJZ7ZOBCc0NWnqAi6M7lrNK/Y5z7qHBZ1Ka/Y+YvpEtieZhQi7DksAjPb
-         UnfFWZJakDHY8cfNL17tP9Roy5awylYHTlQM6AFyo6CpEsnA0YjzIfEsNC6+3wsngoVf
-         62aRiLivRG08RhoyJZKtOC1Is/wE9JJ64hYO3FVP7MBL0ekRBQ7ado1Gwj4zVM8sl90u
-         LiDd2+tSj+cFuRzd75y7InMLhtxzh/dsJzFnGEQKlWnnPox3PHb08NokUuKK4NKT7hI4
-         kjVeN96qoINX829shzMr4R0sLzV4X4L8i4T8ObweK6+uUHEGYCoNpErMnvf6xeQa/7TO
-         EG7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714505529; x=1715110329;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zlyEud5d/bhoGiNpMEEmnNOfWYjdDQf4ZBXlBrFZHdU=;
-        b=Qe5ty4J1e1diJZF7rEHMB1bno47TIQzs0ltX3KPKTJnHi7nKGOk2ROXhoEuP+7c+1Y
-         VoGLnJriYKYDoxqaTNdBuRekS42eiEkQEaluEVjsTeIQB04y59tNy5+W0ib8iketD2Tb
-         fUscvFnJlusemmqOT8ON3FKRBNhHLRBmEOYeylgiPYPVYmjf0J39qkqDIWtjMS2N6oAf
-         AHHZUYUBU9PJC27S7jvEYIOL9WMQhjW051Jv5v6xhmV1ul3wfMNeUjv0aNF2alvPnrtc
-         fWQZc1QtWB7CqZdBST/xMTvM/LR23yEniUn0Pvq+0hNL32LVtqD5PyBTx5BPifyQlxv+
-         ppOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVytIMGVB9mlREwrBNC5r30MoeItmSxkDpGBOIgO9v9t6jrFDGQDblul6tNoHhLi4I1JSGC+6AbFM8r0IxbiwYcHMjnS40en9Ll
-X-Gm-Message-State: AOJu0YzCbGIAy7WtmMEdLVKXsD2FqUsOTcRuiiTekONwSZVJke05hXNg
-	CHNPnvs6rdVHwQCDOIX/kSAK0W8sND0zlVZcpXqp1KRZLyzffsLnmm4Be6QRnZvZamJ8plzbvMi
-	W8g==
-X-Google-Smtp-Source: AGHT+IG4cB2+idKWRATGCb6OVW7YEX4JltpUlzKwSOtT4qBlUznDsr14mRRca16T5tdKvIRNLf2VCRL2BMM=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:d2c5:0:b0:61d:3304:c25e with SMTP id
- u188-20020a0dd2c5000000b0061d3304c25emr134509ywd.7.1714505528716; Tue, 30 Apr
- 2024 12:32:08 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 30 Apr 2024 12:31:57 -0700
-In-Reply-To: <20240430193157.419425-1-seanjc@google.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EL/hN2kBBnpDCBhosmnxg3lDM1xxbhAS0BsL10gyA8k=;
+ b=y8TkkBM85Xy9ONQ4/uLb7E48uPaF9Ht/Kh0X3ZoC4uuD9qJiF7hs4A6GZfbLEba7lUyD1KY0jAeQsjdZLcNpBshtibF2VebTMtMZ32xWVDCj/7tZUO1AUZlfAAWcvHXETQsyiSV/soy+fyiSL6ADZJvk9u5lqsisRLR91+GT/Lc=
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com (2603:10b6:510:226::20)
+ by SA1PR10MB7853.namprd10.prod.outlook.com (2603:10b6:806:3ac::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Tue, 30 Apr
+ 2024 23:01:44 +0000
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca]) by PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca%3]) with mapi id 15.20.7519.031; Tue, 30 Apr 2024
+ 23:01:44 +0000
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland
+ <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>,
+        Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        "James E.J.
+ Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller
+ <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin
+ <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav
+ Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2] kprobe/ftrace: bail out if ftrace was killed
+In-Reply-To: <20240429212933.327aae6e@gandalf.local.home>
+References: <20240426225834.993353-1-stephen.s.brennan@oracle.com>
+ <20240429174718.1347900-1-stephen.s.brennan@oracle.com>
+ <20240429212933.327aae6e@gandalf.local.home>
+Date: Tue, 30 Apr 2024 16:01:43 -0700
+Message-ID: <87r0emsbe0.fsf@oracle.com>
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR05CA0105.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::46) To PH8PR10MB6597.namprd10.prod.outlook.com
+ (2603:10b6:510:226::20)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240430193157.419425-1-seanjc@google.com>
-X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
-Message-ID: <20240430193157.419425-5-seanjc@google.com>
-Subject: [PATCH 4/4] KVM: Delete the now unused kvm_arch_sched_in()
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR10MB6597:EE_|SA1PR10MB7853:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f1c8aa0-cd97-450c-1fc7-08dc69698171
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|7416005|366007;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?r1K6VA0L6MsJHB0fa1/SMvct/u7qbLAcWiOWVCfhDecvfBiq/Tnk4ZZFWB8Q?=
+ =?us-ascii?Q?cj+znQX6zkeSQZ1qwjRjh0t3I3EP/KVvfmjaibsEP+dlHL9simsUs3EyzSXT?=
+ =?us-ascii?Q?ILz32+EEEQ3jL8AULOSdHjIToJYxfMHBmoQbnMEFCbd6LFvTEbnvcnbg8Hf3?=
+ =?us-ascii?Q?JyvNBcUHsHAzTybnLpprucuO2kUPBnC75OopwGh3DIOrhU7iSmSFSOhyJ4Iy?=
+ =?us-ascii?Q?RalaJb98DiMQgmZgQb93EDqmsalWhgqedrqg/+et6UNAST5hBwWQBjKhpF2I?=
+ =?us-ascii?Q?tvUcCKqe9KcLeCa6Rh9sJvRGm7qTtfcq2dEttNwvw7hAr5jWffDzk3rSTSJu?=
+ =?us-ascii?Q?14HWP95lN9uY6jwsE5aADA2dWpwFwV0w4mV1UErXHoQ5+e6C2Ezri7htBqbA?=
+ =?us-ascii?Q?HvFk++v3+ujA7trsvQyxl3mr5yunklqIF86IOGa1hz1TRInpQCvqhKIvkdyh?=
+ =?us-ascii?Q?W58MaWHcvcto+jd1CCSWCCSTrImz7PypfOHtO4xMa+YsooRlXyEXQXm2B5/b?=
+ =?us-ascii?Q?Xs0cyuaxMbmcmVnU2D6x+2FioztQz1cXkfVwcBlluN0m62Z/m/kvz4yWOmFf?=
+ =?us-ascii?Q?hG/2DZ07djjTD6hGNkbYa2HpYNRSDhULhiSWTRt7PE9RK3MDStOrf0b8GcRI?=
+ =?us-ascii?Q?go6tFyOLOMbRX+FoJnP+Pap9psO4OPsJnK+mM68bLT4ETD6RVMTJymedeMMt?=
+ =?us-ascii?Q?m8vttQiQGEY4ysR8dKCoMfrlyDVDhwigggkFHXYoCYeFVJHzgQ6YgIzDtRTF?=
+ =?us-ascii?Q?G1WGMxoMtw9x9r0wuNicOUZYrNnCvQit2weEK/lFz2UIxvpEi0hzg0fbgiTC?=
+ =?us-ascii?Q?m4oy5Tm2Pfdu242bOi8C2uM3lOazrDxr52mPKYH47oDb7WMuDduhvYOeQHwM?=
+ =?us-ascii?Q?vl+NCVAoIjp0jhwUWMBZ3C9Z1bZ5O5S3SyDouWOe+lohorwHPO1CWf3xwO7O?=
+ =?us-ascii?Q?RFla824/c6X3r5b+CgcBBTQg91delIOUN4vn6yoLyj06PU6Vlyh3HHxbJaSC?=
+ =?us-ascii?Q?KEe4BXjOSdbJAjhpRUdAQBTOXWnkVIEk9jXfQswwB9FGFMgGhhuiyZbxyLfv?=
+ =?us-ascii?Q?2YPBrLlsv38l3eOvfkFwuq3kkeEP91Q0hJHP63MpkR9e4trj8nLceCdMWvmI?=
+ =?us-ascii?Q?Mt2Jz+r/YJI8YrGikw6ObeIl94WnwGzX61aG5xZ0pE1zg/e4sEgtm5Ug+Xj+?=
+ =?us-ascii?Q?mSHXaH5XVwLhBzZVXFDFm40/NjN6tytGS0jf6f2W//kmCxyTtwJ+H7y9UwKb?=
+ =?us-ascii?Q?ceTGxh6xo+lNgvyHFezpxeVX/3vUWLkhEAyBy69ZsQ=3D=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6597.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?pXo/huBOXaQoihrnZoR8TwBcl9H9LRDz4xSrRGZrSnOreJm4f/j4GlfZrxx/?=
+ =?us-ascii?Q?Tb+GsIHeko/GIEidkYmfUCYbl3zmppV8jYsSeQEGmYym6vJQm35vRBKdqgHU?=
+ =?us-ascii?Q?R6/PyolgvDIVZwaqAHMn0bkliwY6VZk7jX/muUVZupj4AoG8/94XU/+9r9wX?=
+ =?us-ascii?Q?IpZA5WSarcQ4xjqB947JGyy89KW5hudxDYRzm2TtEgubIqLSUa1ZLUi69NaH?=
+ =?us-ascii?Q?EO8ccoF+TetrN+gFpU1lr37AhsjgNXufs1FwIyuAY3X8Xj/EwGCllsm89LFc?=
+ =?us-ascii?Q?VFJc9k9Hai8eC0odF8LzC1Y+vdJNm3BozJ4gF1W4huZnzl03MKrUVdcNIa/A?=
+ =?us-ascii?Q?G3n/uK9UM5Sm3uNg5Wpoc5A1tDq2IptFAs7JWYK4rYSSrjXExJ9e12DUUh/M?=
+ =?us-ascii?Q?dR+mvsBlgEqV2tfY+NcJEhGrGX1DHvBDppcqrnHXFCborrysY/XjwFXUM0a0?=
+ =?us-ascii?Q?cbgJfTf4vaZ0U3T1pQNh1eHg7IJN1jH54n9siZAJ28Dp9v6ejYhXAmXOZbeW?=
+ =?us-ascii?Q?t3Iw4uDwoH4U53bOcCE+Y/QiHV9iRMU6JWHmdESsHm3Q7WeZUEcaIGSnX4ZU?=
+ =?us-ascii?Q?zxISLlltfZOCsaNzRxQqBXHamiF45iX9XZ+xv0fSj4xqusovABOH0cm5IP/q?=
+ =?us-ascii?Q?MB7KrANI0hpHY9Y4Qa9onyVS1vhhAHe7n5PM/2vWZrlIip7fZrO/hqkNeNWu?=
+ =?us-ascii?Q?cYUezi86d/nDBWgsAVBb1DeFJwQT3szwhpvl11DF8hnbG869SCCqsTe6n80k?=
+ =?us-ascii?Q?AgyuPoue9qIchQ9qFfHzgZkH6E8UKMl7uoZmIH+zZ8m6BRgscyzfRvWDhyaR?=
+ =?us-ascii?Q?Ok2V2pK+ZOl0wC2nWDfanmG3nVd0Zh3N7wMI3fWM+5Q7WE7DV7Fb8S2qzUgK?=
+ =?us-ascii?Q?2J2bWTNA38UA7TsGEuotYc7FB+++lTa0BucBy4KmnY4f25JDDkakXzB46oNX?=
+ =?us-ascii?Q?G0BLj/F4Pda/Ns7DBKtohU6gJ8ivjI+UO7y9eZRR1TwRSHMrDO+h7fHx5jgL?=
+ =?us-ascii?Q?LQggmob/sDt21n88JjLdblngQYY8GipiLPre4bqwwC8dV5xZ9wHpFgd+wVht?=
+ =?us-ascii?Q?Ok/kWlpV8OAjiXfNnRYyEaDZiSeVNbqqHZvlTQ6dddBzu2VYp0z2UMM2aLd3?=
+ =?us-ascii?Q?ZA3YHL67c64Ey9c7qLHw9x6mPQYCgwjOcjSa/hykSslNeGt0AHt2scaUKrnc?=
+ =?us-ascii?Q?mCC0pfCjhtfNcS7mPU2GcKO4NKBjh7LRWZammVsWX5kamGAnC54n6EMFQTNr?=
+ =?us-ascii?Q?VZgym9z/rLswPcwbbDbJH9UUXIBIp53Jc7l8+A2iJXV07eB1FtY88RvZw/pL?=
+ =?us-ascii?Q?8IqaPPwmmQNVVR458J+YPGPncOq46shPt8InLh+NkVFqMF9KHsK0bTA7h8rT?=
+ =?us-ascii?Q?IoZEkdN0+3OhO6uZXRb+mvDonJhPKoG5LWWMIYDyLsmmPjwbZ8FGJPH1X6b+?=
+ =?us-ascii?Q?J/ytXKuxxTlGoI7UBDOVqTPTUTUnjbXK2NFY+T0XW+8zOtNS+cmvVC8BJYhz?=
+ =?us-ascii?Q?NGcHVM9MoZaE0FsnMFYF4oHVVi7l9XDQ1I2V4fYLRfLeROoLYSg44lp/nfVz?=
+ =?us-ascii?Q?e7B4NJwTdBmJZQ/m8DzNtqEOXPDEZtJKAKqGI4BEbeRudqaTrJpLsUJzAuPG?=
+ =?us-ascii?Q?/d4oF7Q1BQHoR/06KtihGhM=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	ifUFJ7L2wQRApi6G/SvYgmyWfkEQWEqJ2mqmZvoRswNygqj0OXFXPVkG9TZPnBRDyUnAZoqd2WiD64SFFKfGX3iKZTh5jRBmGaxSy39CpdfZcvjgWPn9g1JG6k4rhZw+Iz7S1FoS2YlHuEYKeZO79Lc4naGaO+1fBnWm5WdB/UmS5SU0pH/hLnj+aw+Ct9EQ44Yf3jaD4rI6EajAHiW+8W4sNG7g7/JPZtKJ0dQejASQptqVa+6l64H3Vr/iqBBcjKENYRhERugVGLKqEI0KLfaTLPE17exHPIthtkxOK1tB3rADie+3hgCWi7gtyJyD648h0aiES62r+I7VhayPqG+vwlpkbq3Bb1qSdQfYmVlwMsaHSY11kTZC2QhM3jN1TodXqgS2hh12DP/G/kVaug0ABivTkgM5C/Qe5uoK0QVlz+Ud8bL8u6gb+z60vbCOxo/TmqQ5Jj/kUFnOFQ04PoSUmlQfvKvcK2rOYq7hTS6W6iOfRHBU+VS0UPT1YDMPSmmNUDRLkFh0u7GeJD3Uj0XMuMiOU0DaYfaQkXXXkhDCtlNQs/ze4fJ0jYiw4wvSQYyLNYfM54zlMzE+8sMRuu/TvKst/q/CbNTNXXLOJN0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f1c8aa0-cd97-450c-1fc7-08dc69698171
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6597.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2024 23:01:44.6215
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MLWVJBuEBoY59icYc8TKxnePyI6NH9U5G/V8rNGFk7lTyXNpoeWSTQ825n75wT5STla3Gwg79dgkypgyXg5tOJb61XZk+DN5rGsSz6XI5c4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7853
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-30_14,2024-04-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 adultscore=0
+ phishscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404300163
+X-Proofpoint-GUID: -xZPmWW_3fkgZx_8ZuMwhJyzgCUF0MJH
+X-Proofpoint-ORIG-GUID: -xZPmWW_3fkgZx_8ZuMwhJyzgCUF0MJH
 
-Delete kvm_arch_sched_in() now that all implementations are nops.
+Steven Rostedt <rostedt@goodmis.org> writes:
+> On Mon, 29 Apr 2024 10:47:18 -0700
+> Stephen Brennan <stephen.s.brennan@oracle.com> wrote:
+>
+>> If an error happens in ftrace, ftrace_kill() will prevent disarming
+>> kprobes. Eventually, the ftrace_ops associated with the kprobes will be
+>> freed, yet the kprobes will still be active, and when triggered, they
+>> will use the freed memory, likely resulting in a page fault and panic.
+>> 
+>> This behavior can be reproduced quite easily, by creating a kprobe and
+>> then triggering a ftrace_kill(). For simplicity, we can simulate an
+>> ftrace error with a kernel module like [1]:
+>> 
+>> [1]: https://github.com/brenns10/kernel_stuff/tree/master/ftrace_killer
+>> 
+>>   sudo perf probe --add commit_creds
+>>   sudo perf trace -e probe:commit_creds
+>>   # In another terminal
+>>   make
+>>   sudo insmod ftrace_killer.ko  # calls ftrace_kill(), simulating bug
+>>   # Back to perf terminal
+>>   # ctrl-c
+>>   sudo perf probe --del commit_creds
+>> 
+>> After a short period, a page fault and panic would occur as the kprobe
+>> continues to execute and uses the freed ftrace_ops. While ftrace_kill()
+>> is supposed to be used only in extreme circumstances, it is invoked in
+>> FTRACE_WARN_ON() and so there are many places where an unexpected bug
+>> could be triggered, yet the system may continue operating, possibly
+>> without the administrator noticing. If ftrace_kill() does not panic the
+>> system, then we should do everything we can to continue operating,
+>> rather than leave a ticking time bomb.
+>> 
+>> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+>> ---
+>> Difference from v1: removed both existing declarations of ftrace_is_dead()
+>> from kernel/trace/trace.h.
+>> 
+>>  arch/csky/kernel/probes/ftrace.c     | 3 +++
+>>  arch/loongarch/kernel/ftrace_dyn.c   | 3 +++
+>>  arch/parisc/kernel/ftrace.c          | 3 +++
+>>  arch/powerpc/kernel/kprobes-ftrace.c | 3 +++
+>>  arch/riscv/kernel/probes/ftrace.c    | 3 +++
+>>  arch/s390/kernel/ftrace.c            | 3 +++
+>>  arch/x86/kernel/kprobes/ftrace.c     | 3 +++
+>>  include/linux/ftrace.h               | 2 ++
+>>  kernel/trace/trace.h                 | 2 --
+>>  9 files changed, 23 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/arch/csky/kernel/probes/ftrace.c b/arch/csky/kernel/probes/ftrace.c
+>> index 834cffcfbce3..3931bf9f707b 100644
+>> --- a/arch/csky/kernel/probes/ftrace.c
+>> +++ b/arch/csky/kernel/probes/ftrace.c
+>> @@ -12,6 +12,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe_ctlblk *kcb;
+>>  	struct pt_regs *regs;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+>> index 73858c9029cc..82c952cb5be0 100644
+>> --- a/arch/loongarch/kernel/ftrace_dyn.c
+>> +++ b/arch/loongarch/kernel/ftrace_dyn.c
+>> @@ -287,6 +287,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe *p;
+>>  	struct kprobe_ctlblk *kcb;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
+>> index 621a4b386ae4..3660834f54c3 100644
+>> --- a/arch/parisc/kernel/ftrace.c
+>> +++ b/arch/parisc/kernel/ftrace.c
+>> @@ -206,6 +206,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe *p;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/powerpc/kernel/kprobes-ftrace.c b/arch/powerpc/kernel/kprobes-ftrace.c
+>> index 072ebe7f290b..85eb55aa1457 100644
+>> --- a/arch/powerpc/kernel/kprobes-ftrace.c
+>> +++ b/arch/powerpc/kernel/kprobes-ftrace.c
+>> @@ -21,6 +21,9 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
+>>  	struct pt_regs *regs;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(nip, parent_nip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/riscv/kernel/probes/ftrace.c b/arch/riscv/kernel/probes/ftrace.c
+>> index 7142ec42e889..8814fbe4c888 100644
+>> --- a/arch/riscv/kernel/probes/ftrace.c
+>> +++ b/arch/riscv/kernel/probes/ftrace.c
+>> @@ -11,6 +11,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe_ctlblk *kcb;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
+>> index c46381ea04ec..ccbe8ccf945b 100644
+>> --- a/arch/s390/kernel/ftrace.c
+>> +++ b/arch/s390/kernel/ftrace.c
+>> @@ -296,6 +296,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe *p;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/x86/kernel/kprobes/ftrace.c b/arch/x86/kernel/kprobes/ftrace.c
+>> index dd2ec14adb77..c73f9ab7ff50 100644
+>> --- a/arch/x86/kernel/kprobes/ftrace.c
+>> +++ b/arch/x86/kernel/kprobes/ftrace.c
+>> @@ -21,6 +21,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe_ctlblk *kcb;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+>> index 54d53f345d14..ba83e99c1fbe 100644
+>> --- a/include/linux/ftrace.h
+>> +++ b/include/linux/ftrace.h
+>> @@ -399,6 +399,7 @@ int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *a
+>>  #define register_ftrace_function(ops) ({ 0; })
+>>  #define unregister_ftrace_function(ops) ({ 0; })
+>>  static inline void ftrace_kill(void) { }
+>> +static inline int ftrace_is_dead(void) { return 0; }
+>>  static inline void ftrace_free_init_mem(void) { }
+>>  static inline void ftrace_free_mem(struct module *mod, void *start, void *end) { }
+>>  static inline int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *addrs)
+>> @@ -914,6 +915,7 @@ static inline bool is_ftrace_trampoline(unsigned long addr)
+>>  
+>>  /* totally disable ftrace - can not re-enable after this */
+>>  void ftrace_kill(void);
+>> +int ftrace_is_dead(void);
+>>  
+>>  static inline void tracer_disable(void)
+>>  {
+>> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+>> index 64450615ca0c..70a37ee41813 100644
+>> --- a/kernel/trace/trace.h
+>> +++ b/kernel/trace/trace.h
+>> @@ -1026,7 +1026,6 @@ static inline int ftrace_trace_task(struct trace_array *tr)
+>>  	return this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid) !=
+>>  		FTRACE_PID_IGNORE;
+>>  }
+>> -extern int ftrace_is_dead(void);
+>
+> Honestly I rather not expose this function outside of the tracing
+> infrastructure. Instead, we should have a kprobe_ftrace_kill() function,
+> and have ftrace_kill() call that.
+>
+> Then kprobe_ftrace_kill() can set its own variable that is exposed to all
+> these functions and they can test that instead of adding the extra overhead
+> in the fast path of a function call to ftrace_is_dead()
+>
+> extern bool kprobes_ftrace_disabled __read_mostly;
+>
+> void kprobe_ftrace_kill(void)
+> {
+> 	kprobes_ftrace_disabled = true;
+> }
+>
+> And you can then replace all these with:
+>
+> 	if (kprobes_ftrace_disabled)
+> 		return;
+>
+> Which is faster.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/arm64/include/asm/kvm_host.h     | 1 -
- arch/loongarch/include/asm/kvm_host.h | 1 -
- arch/mips/include/asm/kvm_host.h      | 1 -
- arch/powerpc/include/asm/kvm_host.h   | 1 -
- arch/riscv/include/asm/kvm_host.h     | 1 -
- arch/s390/include/asm/kvm_host.h      | 1 -
- arch/x86/kvm/pmu.c                    | 6 +++---
- arch/x86/kvm/x86.c                    | 5 -----
- include/linux/kvm_host.h              | 2 --
- virt/kvm/kvm_main.c                   | 1 -
- 10 files changed, 3 insertions(+), 17 deletions(-)
+Thanks, that does make a lot more sense. It's faster, and doesn't
+involve exporting that function. I'll go ahead and use this approach.
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 9e8a496fb284..a12d3bb0b590 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -1180,7 +1180,6 @@ static inline bool kvm_system_needs_idmapped_vectors(void)
- }
- 
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
--static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- 
- void kvm_arm_init_debug(void);
- void kvm_arm_vcpu_init_debug(struct kvm_vcpu *vcpu);
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 69305441f40d..64ca60a3ce24 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -228,7 +228,6 @@ static inline bool kvm_is_ifetch_fault(struct kvm_vcpu_arch *arch)
- static inline void kvm_arch_hardware_unsetup(void) {}
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
- static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
--static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
- static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
- static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
-diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
-index 179f320cc231..6743a57c1ab4 100644
---- a/arch/mips/include/asm/kvm_host.h
-+++ b/arch/mips/include/asm/kvm_host.h
-@@ -890,7 +890,6 @@ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
- static inline void kvm_arch_free_memslot(struct kvm *kvm,
- 					 struct kvm_memory_slot *slot) {}
- static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
--static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
- static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
- 
-diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
-index 8abac532146e..c4fb6a27fb92 100644
---- a/arch/powerpc/include/asm/kvm_host.h
-+++ b/arch/powerpc/include/asm/kvm_host.h
-@@ -897,7 +897,6 @@ struct kvm_vcpu_arch {
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
- static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
- static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
--static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
- static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
- 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 484d04a92fa6..6cd7a576ef14 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -272,7 +272,6 @@ struct kvm_vcpu_arch {
- };
- 
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
--static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- 
- #define KVM_RISCV_GSTAGE_TLB_MIN_ORDER		12
- 
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index 95990461888f..e9fcaf4607a6 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -1045,7 +1045,6 @@ extern int kvm_s390_gisc_register(struct kvm *kvm, u32 gisc);
- extern int kvm_s390_gisc_unregister(struct kvm *kvm, u32 gisc);
- 
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
--static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- static inline void kvm_arch_free_memslot(struct kvm *kvm,
- 					 struct kvm_memory_slot *slot) {}
- static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index c397b28e3d1b..75346a588e13 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -521,9 +521,9 @@ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
- 	}
- 
- 	/*
--	 * Unused perf_events are only released if the corresponding MSRs
--	 * weren't accessed during the last vCPU time slice. kvm_arch_sched_in
--	 * triggers KVM_REQ_PMU if cleanup is needed.
-+	 * Release unused perf_events if the corresponding guest MSRs weren't
-+	 * accessed during the last vCPU time slice (need_cleanup is set when
-+	 * the vCPU is scheduled back in).
- 	 */
- 	if (unlikely(pmu->need_cleanup))
- 		kvm_pmu_cleanup(vcpu);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 9b0a21f2e56e..17d6ce0d4fa6 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -12577,11 +12577,6 @@ bool kvm_vcpu_is_bsp(struct kvm_vcpu *vcpu)
- 	return (vcpu->arch.apic_base & MSR_IA32_APICBASE_BSP) != 0;
- }
- 
--void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu)
--{
--
--}
--
- void kvm_arch_free_vm(struct kvm *kvm)
- {
- #if IS_ENABLED(CONFIG_HYPERV)
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 2f5e35eb7eab..85b6dd7927fe 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1496,8 +1496,6 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
- 					struct kvm_guest_debug *dbg);
- int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
- 
--void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu);
--
- void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu, bool sched_in);
- void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu);
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 4a4b29a9bace..b154b22a3b84 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -6278,7 +6278,6 @@ static void kvm_sched_in(struct preempt_notifier *pn, int cpu)
- 	WRITE_ONCE(vcpu->ready, false);
- 
- 	__this_cpu_write(kvm_running_vcpu, vcpu);
--	kvm_arch_sched_in(vcpu, cpu);
- 	kvm_arch_vcpu_load(vcpu, cpu, true);
- }
- 
--- 
-2.45.0.rc0.197.gbae5840b3b-goog
-
+Thanks,
+Stephen
