@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C1B56B63
-	for <loongarch@lists.linux.dev>; Wed,  1 May 2024 11:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857B97710B
+	for <loongarch@lists.linux.dev>; Wed,  1 May 2024 11:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714562105; cv=none; b=UmzirxOXSC6YHkUKOP/TBINqiA+jVZRKvA9uG/SxUl04vWXYUgytZ0u5pwSBMpFm1iFLqFUw1MOg7S+fGf/cxb15OPfmN5JyaOFBwktJf5d7KfixVic4XA7lboa03CxU2/ZeZ5sTAm610iW0bTYpLxXZMB4Ccy9peVmSxe9osnw=
+	t=1714563145; cv=none; b=r3eM9doqY7ANdwDJXaNZc4nwavC3dt9OQIYkb9lRVlTn1Zqbt8z74pfhaoutWRVouAfuA7JW1xiPtKhTiI1GB+MK3huIt9LtHZVtANkaPkOMXgzr+umUPnnp4/xKqIaF/PvJ4ltLfSSzXJuPmCKgCHwTtyIykO7Xv1RtUy3pm8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714562105; c=relaxed/simple;
-	bh=FQodAUfD1JkLmt1uTy5qfN1UspuJsm4imcTHYIOZ1zM=;
+	s=arc-20240116; t=1714563145; c=relaxed/simple;
+	bh=6F3ISMAbsRLy7q+h/9yXAkPtqY1kgaNN+BV2pg4j5gI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hxxIkpS6/dJyUtj32LP20c0kUTh8NqXZdb4OqHzUQgYIDmBZxD+fq5wFXsanJMFmoGtUbPDqq6uPfOXFkH/rUxt/27b0hTh0JL9w4Lzp9r2iK0hBoDdiUDdvVFiJEyvaJd8w4zKI0aqpQq7NpmGCFc5jnMlrztBzyBqlC1qu9+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QGRzVFwM; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=Gjb3+AMmJhL7Mu7kPALzKbA3NGZAPuQ+8vB5148HNKIiaTIwNqlELqBU/1BtmCBgNVviIZMdKKgpNMBY7vTzW2HTP4s99Tif0aTnDREtPwcf8N8rtPH27OsVdZVDfnE1VGmMS84zS+ODNb3JHqN8s/yeVv7dRwsQEJwysVSmQHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=drxtlTYy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QGRzVFwM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drxtlTYy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714562102;
+	s=mimecast20190719; t=1714563142;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m4zwGvBc/1zudle3Fu3mxvomgwnAp7EzJRWK4hmMCrY=;
-	b=QGRzVFwM4PeI30rFlRkRFuZq6UB3Z4zYRNIcS2thKyTFmGdbjiEqDPFrroi6KN2bo7V+3D
-	N4xNmBi8cBFgecv6LEnhRhKyLupXOaArDxIuQMREqwsMCtXhZMOdDhMxh/6t8YxRDesXQc
-	RZlEsMJbCgdu8r7mfF+LQWsW8vv9uFw=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=NvY4677tvfuT/jSAqPXkUvL4xI6+hoEBXpkjqJe2TxE=;
+	b=drxtlTYy8YrX81DrwyzVgoqqDJ11JHAqkkRsPvV8O+49Es7ta4Go/K+44QXy5VePjotDLH
+	kfLvciMIJh7IHi9OU+JTedHkeSUU9VPL+9VXbY1QULEVBLe8EBMfo+/vHbamHfnorsArE4
+	Ef8B8sIL1DHcD/X2JYIxRchx5jfVHMI=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-35-ndK002qTPUawWdajqdV2Iw-1; Wed, 01 May 2024 07:15:01 -0400
-X-MC-Unique: ndK002qTPUawWdajqdV2Iw-1
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2a4b48d7a19so647140a91.1
-        for <loongarch@lists.linux.dev>; Wed, 01 May 2024 04:15:01 -0700 (PDT)
+ us-mta-686-GdGBQ9NKON6LPMZ3YIHW4w-1; Wed, 01 May 2024 07:32:21 -0400
+X-MC-Unique: GdGBQ9NKON6LPMZ3YIHW4w-1
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1e4c75eb382so73935965ad.3
+        for <loongarch@lists.linux.dev>; Wed, 01 May 2024 04:32:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714562100; x=1715166900;
+        d=1e100.net; s=20230601; t=1714563140; x=1715167940;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m4zwGvBc/1zudle3Fu3mxvomgwnAp7EzJRWK4hmMCrY=;
-        b=WeziHREMPFAVjnG0MDPCH8/DLGbNs8ibTYSFjbEIXYVrR2JqDcY8kE87b7MEU1nOl3
-         NXgFghAXt6PMKlNuJNXuWQXmxG05IuMfXmNS26Z+yCqCU0bebT2Cp9XNlTpUsvCCtwTG
-         soxIGQuIkG/BBI9mxrKy9sfAy9ShuGFPhW6520oijLdKBiwkuirNdKkHFqYs8dQv6lWq
-         FAC8hbS9ZWqc0u2qJzaUytgJxPI7rps6Z8kQhhqGKB437MTVAHsKn/AkxJwoqH4+wtQ8
-         zm7rJiogNljgzHuBahQhnZJfjKrs4YnaY9rht5YYVRAdDpq9zyfjR7K9emlmQZTcnaXu
-         tskA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrPVZMk8vg+GKkKdsAEzB+4UkuVk1DaM8uWBhaYZoIP+rQ5l0+pzL7+zGl+4MAPftFs7xPdshG/RZAnnmnBuCTBY0iIEi9bQwI
-X-Gm-Message-State: AOJu0YyJOGxxRX1E9zMAyh/3gEq+9osoMsj7rfALNElER4PCQkDx4dig
-	gEXrKAgJ6PlTXeHO8bckFy2ffVHg30IBX5/hoPfqS1gJFRwBOaAk9MMFM4AQWxIr8qRHE+RHDdq
-	+Nlrf06WHCMnx9iYmjkU7MDm/SlzdVd7ZBVPOeXorIwdQUUOfiYtDK4PJmw==
-X-Received: by 2002:a17:90b:3749:b0:2b3:6898:d025 with SMTP id ne9-20020a17090b374900b002b36898d025mr189450pjb.9.1714562100005;
-        Wed, 01 May 2024 04:15:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEgkwe4UKKc3WldVwMV2boi6I+r208XEIsyNzplTWK4MFoORCuavWHQA0/i+SiniS3enNZ28Q==
-X-Received: by 2002:a17:90b:3749:b0:2b3:6898:d025 with SMTP id ne9-20020a17090b374900b002b36898d025mr189419pjb.9.1714562099556;
-        Wed, 01 May 2024 04:14:59 -0700 (PDT)
+        bh=NvY4677tvfuT/jSAqPXkUvL4xI6+hoEBXpkjqJe2TxE=;
+        b=Hx2VOZrjzcmC7dmUt+BjmYiQFtemMWgstZroWkE8oHH8LbNU0uwmBKRHi7aK0kEmwF
+         pruZTIsFu4SCrviFKZZpSPFi2Q05JyEIzOYmF3M2G+o28pnYCReGWHyoyEq+IPt+ayvV
+         jjieMC4VRWN5JJcnOuqCksRhr6iejt1+uVwD+pvqQxIoM/+jaSAijdGjv/FOpHVChjo2
+         hvcbFmHjLxBdURYv/D7P5Iuv3N1Dp6dMe26qHVJXj+hzRbWIfUfRnr+a91D/HR6qcnxD
+         CI1gBRIRXs3g+o8otUgqGvKFn4EIfsLF1eocGNbWFLw+Y7JEMcIgAI04k5UzOwKMagVV
+         1bzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJeAi6KPl/ce2Y6TxaWdFwi09CwwjLtF0aqr/yzS2m8GxL+b22QJZqbGgKipTxUG6hg/b8gkjRrNdRQALDcQIUBE2/Him/JCBb
+X-Gm-Message-State: AOJu0Yxr144OsHtRYBsnsS17zMb7wv+BqUdfgq+iDbjVWhoi5o4m4MG6
+	uZAxvK1fNGhOiil9OKRC0XB7OnkyAit3qMQM8rU7YfOOQ8EVYmvObuszrX4TNYM/CHn0aSwL7EJ
+	phWKrvCChf2M/v0KdKicMyzCCrr9BmAIKZNm+E3s9gRuOczU6Z9nCeoQ1uA==
+X-Received: by 2002:a17:903:22cb:b0:1dd:6ce3:7442 with SMTP id y11-20020a17090322cb00b001dd6ce37442mr2025094plg.39.1714563139927;
+        Wed, 01 May 2024 04:32:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHn/GVXiGegFVOAaktJ4SFkKCrfxZSExdPxCeZLOx/YtG8arQj1wuv7wQDNju0KSdPBov9xtA==
+X-Received: by 2002:a17:903:22cb:b0:1dd:6ce3:7442 with SMTP id y11-20020a17090322cb00b001dd6ce37442mr2025049plg.39.1714563139450;
+        Wed, 01 May 2024 04:32:19 -0700 (PDT)
 Received: from [192.168.68.50] ([43.252.112.88])
-        by smtp.gmail.com with ESMTPSA id h9-20020a17090a050900b002a55198259fsm3245338pjh.0.2024.05.01.04.14.50
+        by smtp.gmail.com with ESMTPSA id j14-20020a170903024e00b001e4753f7715sm23973521plh.12.2024.05.01.04.32.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 May 2024 04:14:59 -0700 (PDT)
-Message-ID: <27e48da5-e1d0-4e4b-978e-954f1766c350@redhat.com>
-Date: Wed, 1 May 2024 21:14:50 +1000
+        Wed, 01 May 2024 04:32:19 -0700 (PDT)
+Message-ID: <0f635267-d296-467a-a337-34192c35164b@redhat.com>
+Date: Wed, 1 May 2024 21:32:06 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 19/19] cpumask: Add enabled cpumask for present CPUs
- that can be brought online
+Subject: Re: [PATCH v9 18/19] arm64: document virtual CPU hotplug's
+ expectations
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
  linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
@@ -85,9 +85,9 @@ Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
  Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com,
  justin.he@arm.com, jianyong.wu@arm.com
 References: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
- <20240430142434.10471-20-Jonathan.Cameron@huawei.com>
+ <20240430142434.10471-19-Jonathan.Cameron@huawei.com>
 From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20240430142434.10471-20-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240430142434.10471-19-Jonathan.Cameron@huawei.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -97,34 +97,22 @@ Content-Transfer-Encoding: 7bit
 On 5/1/24 00:24, Jonathan Cameron wrote:
 > From: James Morse <james.morse@arm.com>
 > 
-> The 'offline' file in sysfs shows all offline CPUs, including those
-> that aren't present. User-space is expected to remove not-present CPUs
-> from this list to learn which CPUs could be brought online.
-> 
-> CPUs can be present but not-enabled. These CPUs can't be brought online
-> until the firmware policy changes, which comes with an ACPI notification
-> that will register the CPUs.
-> 
-> With only the offline and present files, user-space is unable to
-> determine which CPUs it can try to bring online. Add a new CPU mask
-> that shows this based on all the registered CPUs.
+> Add a description of physical and virtual CPU hotplug, explain the
+> differences and elaborate on what is required in ACPI for a working
+> virtual hotplug system.
 > 
 > Signed-off-by: James Morse <james.morse@arm.com>
-> Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> Tested-by: Miguel Luis <miguel.luis@oracle.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
 > ---
 > v9: No change
 > ---
->   .../ABI/testing/sysfs-devices-system-cpu      |  6 +++++
->   drivers/base/cpu.c                            | 10 ++++++++
->   include/linux/cpumask.h                       | 25 +++++++++++++++++++
->   kernel/cpu.c                                  |  3 +++
->   4 files changed, 44 insertions(+)
+>   Documentation/arch/arm64/cpu-hotplug.rst | 79 ++++++++++++++++++++++++
+>   Documentation/arch/arm64/index.rst       |  1 +
+>   2 files changed, 80 insertions(+)
 > 
 
 Reviewed-by: Gavin Shan <gshan@redhat.com>
