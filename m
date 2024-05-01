@@ -1,99 +1,117 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773233C17
-	for <loongarch@lists.linux.dev>; Wed,  1 May 2024 00:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53F9524DD
+	for <loongarch@lists.linux.dev>; Wed,  1 May 2024 10:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714523307; cv=none; b=XjrWlHH1kuR/iwahD8VVYiBNiXunojWyZi7jC8klknT9tiBUeFktU5RC6wSIA4YVTmf7TIT2SMb6lMfKmqWDb+otLuHd0bjGzECQfR8CUOOQNeb/1CKi+XbgHVfXVBeKyx2+by/OycW+PylcP6tuYp8bIW+PLeWhR+swd6zQQD8=
+	t=1714558737; cv=none; b=gmsQ/BTFTPa28SuOd8bZnGZkwCISsxNeExQaldnSH5offl18NxAjKcHtjOVbpP7vkTQ5Ji81Qc4IAMqbP5y9veUvMG6y/ZZZ7AOp6HzkTv237naanAE8/uMEZp+rozKan2VEdzucIGewvJ5HA6+Lwj36DA+maynY7PmryjDSLIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714523307; c=relaxed/simple;
-	bh=DpFUUK9f7pvRbaNn+oUsZkhipSX9ZbK/PMBvjjKew0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kQ5C6AQqiaOzN+XDqQu/FjePw4vriUzJnx5mz7fLpJXYELYdAOfb5UjECNzuulsESXgyswy4w/GbbrQgzkD1vuQIoedtpTiVO2D95P4pYvcOmoud6Fij0TKheslJhtvG6Q3UpPRa3Bua7fZednZiDt49Ng0OdO1+MbrHDCT9ehU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jt/Q3cVC; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1714558737; c=relaxed/simple;
+	bh=Ev3McdlDAs4BYS6y+XNElwdCdUSfrG/SuHrK3FK3B+Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pGYPVomb6Rl0WuWEy3u9CfANPldtmsGyuNZJkwZ6CRA7RPEpEWdyqG2t/W8r1IbsvQgtT4zodggRYRypiJwBp9/Lo8kUYaK6H47AjkJdH+Cw5ErLmnccJNNmIlEJt2N0XEFP2jAQ4Izx/iTljCQJ4aMjaS5Mm8NQGMstQlawCts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HqppKfNX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jt/Q3cVC"
-Date: Wed, 1 May 2024 00:28:15 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714523303;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HqppKfNX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714558734;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ioXgnZIoOxV6Gom6pZgkz9FqddFwrAkScDhYF7eexw0=;
-	b=jt/Q3cVCB5txoE/zQITpY+KTWb0keYgIpc0qkzhVQFsJAZZR5RjRVVdyLf1AD37xVVVKy5
-	AjuiDAvL2nLBEHIqEzLFqT7OazbzMr6NRwDmnhYgDnVnteqZKpKfa3eZfPYr7Wncyk+0Tk
-	iJCFdMrcVNqaWoqklmPV1Wqci3CPJlw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] KVM: Fold kvm_arch_sched_in() into
- kvm_arch_vcpu_load()
-Message-ID: <ZjGMn5tlq8edKZYv@linux.dev>
-References: <20240430193157.419425-1-seanjc@google.com>
+	bh=DxKl3udzzGpg1eT3+MxaYs7RsOyw5KvkU4S7GKrDV/g=;
+	b=HqppKfNXGTfgv0SYVLu6TlG/eqZ4d3IpPdCIufevQdNB1SgjdWJ4rR6VZJuaBhb1lte94D
+	Pk/yQ/9NhxNQ68P7GgRmtCcTx1VoT76tJFQSBgXjKR59/INjQ52yTTgM3wCTc5Z9YAAmO/
+	hJOg12kAaux9BJ5UlzU9Ob2Iy/N0Loc=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-509-Et39wt48Nsm2rK5Z3nw9sA-1; Wed, 01 May 2024 06:18:53 -0400
+X-MC-Unique: Et39wt48Nsm2rK5Z3nw9sA-1
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36c1af8f2f3so70854175ab.3
+        for <loongarch@lists.linux.dev>; Wed, 01 May 2024 03:18:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714558732; x=1715163532;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DxKl3udzzGpg1eT3+MxaYs7RsOyw5KvkU4S7GKrDV/g=;
+        b=oU1SyuS/vTY7G2yI2rQbHN3TZ3xy5+UBKtyAgxq/vT/TK7p5epkny1l7zSj/+0ix0F
+         kxMGuMi0HFMA9ZdRSEBdR/TIIGyfzGypdI99iMbHPQNO0BCnOJDssqCcHL+LDYTOy+SA
+         DLzWidGQw4c6Dr6EVtN0X60uv7D6fFH1ciAQpUXxYf8i1gftnwEvQwntVpZeBq8H4S30
+         AyxEZN8/hhbVVHd953rmvtiaPNLqM9yeKJ+KFmxtA10VJ+o9zBxSwBYi68bOHYgB4f+B
+         z3WHIdUjbkp5l3vYRopWbwoQkosAzpEbSh5M+cwItgdAgEB4Exf/CaDbF9VW+cYsQHtK
+         kOCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUD1yYLuQJcIIutp2GWco6qPSiUSB+Pbpy8ft1Wbnxe6Zut032fmJhabXS0t6V7H/VzLM02Drehy+ZX24iq+11IUyZrV0olO2sE
+X-Gm-Message-State: AOJu0YygrBdkm9h4+fIwi3LxmwSvu8ydQmiPlEXOLPG/G8mkh/PRCfDG
+	b3WQr41c51vKU13PcOx4/vG/sjT2sgXrL2BFr2jsYw+LG0tqH7h8pzEt/JRlr2HXkDZ4fspijOg
+	wYNW4v58jAEgCpe7jkGU2oS/eWyxDiKx7eP6pHj18gtLjeKhUd58phUrh6R6hOVROEQ==
+X-Received: by 2002:a92:cda8:0:b0:36c:5092:e6a1 with SMTP id g8-20020a92cda8000000b0036c5092e6a1mr2567003ild.29.1714558732161;
+        Wed, 01 May 2024 03:18:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXwbnm2St0QGkNYvo0Kzya2DtdxpDRe1dq5klNVqI1ZMi8KwgV+DlV3hJf4iiekAiT2koB1Q==
+X-Received: by 2002:a92:cda8:0:b0:36c:5092:e6a1 with SMTP id g8-20020a92cda8000000b0036c5092e6a1mr2566984ild.29.1714558731861;
+        Wed, 01 May 2024 03:18:51 -0700 (PDT)
+Received: from [192.168.68.50] ([43.252.112.88])
+        by smtp.gmail.com with ESMTPSA id x71-20020a63864a000000b00606dd49d3b8sm12183225pgd.57.2024.05.01.03.18.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 May 2024 03:18:51 -0700 (PDT)
+Message-ID: <08c6ff11-ab3d-4a4f-95ea-735134fca8cb@redhat.com>
+Date: Wed, 1 May 2024 20:18:40 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430193157.419425-1-seanjc@google.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 04/19] ACPI: processor: Return an error if
+ acpi_processor_get_info() fails in processor_add()
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+ linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, x86@kernel.org, Russell King
+ <linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>,
+ Salil Mehta <salil.mehta@huawei.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com,
+ justin.he@arm.com, jianyong.wu@arm.com
+References: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
+ <20240430142434.10471-5-Jonathan.Cameron@huawei.com>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20240430142434.10471-5-Jonathan.Cameron@huawei.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 30, 2024 at 12:31:53PM -0700, Sean Christopherson wrote:
-> Drop kvm_arch_sched_in() and instead pass a @sched_in boolean to
-> kvm_arch_vcpu_load().
+On 5/1/24 00:24, Jonathan Cameron wrote:
+> Rafael observed [1] that returning 0 from processor_add() will result in
+> acpi_default_enumeration() being called which will attempt to create a
+> platform device, but that makes little sense when the processor is known
+> to be not available.  So just return the error code from acpi_processor_get_info()
+> instead.
 > 
-> While fiddling with an idea for optimizing state management on AMD CPUs,
-> I wanted to skip re-saving certain host state when a vCPU is scheduled back
-> in, as the state (theoretically) shouldn't change for the task while it's
-> scheduled out.  Actually doing that was annoying and unnecessarily brittle
-> due to having a separate API for the kvm_sched_in() case (the state save
-> needed to be in kvm_arch_vcpu_load() for the common path).
+> Link: https://lore.kernel.org/all/CAJZ5v0iKU8ra9jR+EmgxbuNm=Uwx2m1-8vn_RAZ+aCiUVLe3Pw@mail.gmail.com/ [1]
+> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> E.g. I could have set a "temporary"-ish flag somewhere in kvm_vcpu, but (a)
-> that's gross and (b) it would rely on the arbitrary ordering between
-> sched_in() and vcpu_load() staying the same.
+> ---
+> v9: New patch following through from Gavin pointing out a memory leak later
+>      in the series.
+> ---
+>   drivers/acpi/acpi_processor.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Another option would be to change the rules around kvm_arch_sched_in()
-where the callee is expected to load the vCPU context.
+Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-The default implementation could just call kvm_arch_vcpu_load() directly
-and the x86 implementation can order things the way it wants before
-kvm_arch_vcpu_load().
-
-I say this because ...
-
-> The only real downside I see is that arm64 and riscv end up having to pass
-> "false" for their direct usage of kvm_arch_vcpu_load(), and passing boolean
-> literals isn't ideal.  But that can be solved by adding an inner helper that
-> omits the @sched_in param (I almost added a patch to do that, but I couldn't
-> convince myself it was necessary).
-
-Needing to pass @sched_in for other usage of kvm_arch_vcpu_load() hurts
-readability, especially when no other architecture besides x86 cares
-about it.
-
--- 
-Thanks,
-Oliver
