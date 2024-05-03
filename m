@@ -1,126 +1,140 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D8C1514E5
-	for <loongarch@lists.linux.dev>; Fri,  3 May 2024 15:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB63F1586FE
+	for <loongarch@lists.linux.dev>; Fri,  3 May 2024 18:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714750360; cv=none; b=OV2HBrgiY1KaF0JyMP7xOWziQPefEMO8QP7XoLBQwdnytO9OTbb5MfyZVQ1YCIVYvZszbUqVXYmzlBf0g86oTGUvk2qr22FqUYLAUGGr5mo/dh8QXFgqrdlzZOBle6RiAKGO+vfK2n8kBp8iNADz9lLSBGh3oFC6L4xqK7VTxP4=
+	t=1714760261; cv=none; b=rHTmiv7qYQaGV8f3STPWrjTkijs2/l8x0oB+Dg0vA4fgd0KSpCaab0SXIS7RtPWiR0gjdPMXhc+RNoLOih1movpN9STZj746nmqcjoVEtPVC8XsoNdevMwLU3zXWn9gTlxOnXa7Mx+Ai+he1SY9Bn845mtW3iJXMC5Gm8s17Kio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714750360; c=relaxed/simple;
-	bh=tKoOu+7zl6984Zo1ilV+FMzyq8BU3CQhO45WpXQ6Rhw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JjNuW4iDGL/Q8BlLS90LZvTpzFp51oQiZC37VpoyS8GJNHN2UUBFKOaA9BAjQ5BrozyN2YLgpCj9lFSovTDlrnazYAWOJxZDFK9SihqRqk8DDT395Psr7de2L+dVUqqeFJWhhC3v88HoQKUaSikhP9TlkLlyZyqC7sdu0qyk7lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id AB5E833B95;
-	Fri,  3 May 2024 15:32:37 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2BFDA139CB;
-	Fri,  3 May 2024 15:32:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id G/TgBZQDNWZ9LgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 03 May 2024 15:32:36 +0000
-Message-ID: <ec59624e-c872-4205-a45c-97163ae33301@suse.de>
-Date: Fri, 3 May 2024 17:32:35 +0200
+	s=arc-20240116; t=1714760261; c=relaxed/simple;
+	bh=xBGFTYdyUOnHArOcW3JXAxjXjjvPLqJKxAY8xK+n/W4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dlNLJe64OqSynX93MWI1Pgnddn2QjZXSEl+N1DL42IR9DPEAG/IAycENHYXiMU3sOcfqy8LcR7ZCSrGVqEalv0SYZQwnV6+uqoA96eGILHr5FMjh3VoZb/FJRe0kGBZURmqgncBnj7BimCnPSh0xG+b9Gq6X8LZdxnUJg+JHsHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M8zYmgK7; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M8zYmgK7"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61bea0c36bbso90160177b3.2
+        for <loongarch@lists.linux.dev>; Fri, 03 May 2024 11:17:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714760258; x=1715365058; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=u5lOataUl4CqNIE0BOfGoSKjtAnehJHFOaimjTGPj/Y=;
+        b=M8zYmgK7H8ZR3tH/Pd0Tnc+JzKUQ97DEi0kb5Q37krknML7LsvxpO09KYlhFcH1JBQ
+         PQn7Vr3FXexo0V77a0UvJCCF2NZK46J9a7bpZM75TtIqnPh/SvN+OsOOVAypwGQMT02C
+         flyZYr8KREbaUxACYLCvIVHDuzLczTf+H2glW8opNT0nTRUBEUExW3uiYKuODiSIIlgY
+         C1YVt6fpiQ1qht2IeX78zhMPFpBZ9Q/h1rwXN126ynnPbi4zNrNcQrRBzf4SUi/xNcvW
+         OlpCffX3eoYPft7m6p9/aYnJWaO/r4ZmOYBGLYC8SqkUI/M0T1UFNTeMdV8bfdCAT6TJ
+         Smcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714760258; x=1715365058;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u5lOataUl4CqNIE0BOfGoSKjtAnehJHFOaimjTGPj/Y=;
+        b=RBjCc2p50NVu6vad8/l75AIQIXrv3P1LqdDSr8J/NZM5xlEKYY2vwZ26UcbkE+klRc
+         2l8haPt18WJ1rM8eggJJ2mKpErO5AG4VhdG8+9mFd859urRTilUZIc9Aag9lefzWlxSu
+         f5x8ik0UrMin85JJGj37b4YVMDLlbJKgRZ6v0MOZuOGHuooFo241CSif5VTFrS75T1sx
+         G6JOvBGUMD9/zsvVmyOMCXnPKFlAb0V7SrJtDdvUU2Excw8cUaUKRvXCnA9cmfL5fS8l
+         niIQLbxJEjDkuKbZn5bGEs4NVJIuZK7/S91lgXHdptIv6qcsh6QVpwhspCXVFsVgJd9n
+         0f4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWk1Lw2lXOGQGgvrhDgKKbg9whFG9UCyvNavyCIP8ys3YhqYzRAKeTmMfmVIJuPU3vo2iqTxw7yQXVuBJquwf+wYsDJZuPWOe2O
+X-Gm-Message-State: AOJu0Yys6YgMt9QO9jX1ZR4jyhY+UGeX8r7DjFH3myvi8xzN2yicDtQn
+	u5nBJ5cvclpAZSkQ/GBaxp7nIlXk3ONOTyDvLa1Gw6/maImNlBtJ3tpC7Y2V3ViR76vVeX2FUSI
+	w1M2kGXe7yg==
+X-Google-Smtp-Source: AGHT+IGi/6BGSqLUvb7wYnWHXOlhd9obpauunW/BcufWuEVmkE7H211A4Dm9y03t3pfp70UoCYU1Se1aO50snA==
+X-Received: from dmatlack-n2d-128.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:1309])
+ (user=dmatlack job=sendgmr) by 2002:a05:6902:729:b0:dcc:c57c:8873 with SMTP
+ id l9-20020a056902072900b00dccc57c8873mr1104781ybt.9.1714760258668; Fri, 03
+ May 2024 11:17:38 -0700 (PDT)
+Date: Fri,  3 May 2024 11:17:31 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] arch: Remove fbdev dependency from video helpers
-To: Arnd Bergmann <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>,
- Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>,
- sui.jingfeng@linux.dev
-Cc: Linux-Arch <linux-arch@vger.kernel.org>, dri-devel@lists.freedesktop.org,
- linux-fbdev@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-parisc@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-snps-arc@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240329203450.7824-1-tzimmermann@suse.de>
- <c281bb8e-0719-4b28-a637-56615ad16913@suse.de>
- <2f8cfd1d-a478-4666-a181-040c8d92e8fd@app.fastmail.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <2f8cfd1d-a478-4666-a181-040c8d92e8fd@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: AB5E833B95
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240503181734.1467938-1-dmatlack@google.com>
+Subject: [PATCH v3 0/3] KVM: Set vcpu->preempted/ready iff scheduled out while running
+From: David Matlack <dmatlack@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	James Morse <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, David Hildenbrand <david@redhat.com>, 
+	Sean Christopherson <seanjc@google.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
+
+This series changes KVM to mark a vCPU as preempted/ready if-and-only-if
+it's scheduled out while running. i.e. Do not mark a vCPU
+preempted/ready if it's scheduled out during a non-KVM_RUN ioctl() or
+when userspace is doing KVM_RUN with immediate_exit=true.
+
+This is a logical extension of commit 54aa83c90198 ("KVM: x86: do not
+set st->preempted when going back to user space"), which  stopped
+marking a vCPU as preempted when returning to userspace. But if userspace
+invokes a KVM vCPU ioctl() that gets preempted, the vCPU will be marked
+preempted/ready. This is arguably incorrect behavior since the vCPU was
+not actually preempted while the guest was running, it was preempted
+while doing something on behalf of userspace.
+
+In practice, this avoids KVM dirtying guest memory via the steal time
+page after userspace has paused vCPUs, e.g. for Live Migration, which
+allows userspace to collect the final dirty bitmap before or in parallel
+with saving vCPU state without having to worry about saving vCPU state
+triggering writes to guest memory.
+
+Patch 1 introduces vcpu->wants_to_run to allow KVM to detect when a vCPU
+is in its core run loop.
+
+Patch 2 renames immediated_exit to immediated_exit__unsafe within KVM to
+ensure that any new references get extra scrutiny.
+
+Patch 3 perform leverages vcpu->wants_to_run to contrain when
+vcpu->preempted and vcpu->ready are set.
+
+v3:
+ - Use READ_ONCE() to read immediate_exit [Sean]
+ - Replace use of immediate_exit with !wants_to_run to avoid TOCTOU [Sean]
+ - Hide/Rename immediate_exit in KVM to harden against TOCTOU bugs [Sean]
+
+v2: https://lore.kernel.org/kvm/20240307163541.92138-1-dmatlack@google.com/
+ - Drop Google-specific "PRODKERNEL: " shortlog prefix [me]
+
+v1: https://lore.kernel.org/kvm/20231218185850.1659570-1-dmatlack@google.com/
+
+David Matlack (3):
+  KVM: Introduce vcpu->wants_to_run
+  KVM: Ensure new code that references immediate_exit gets extra
+    scrutiny
+  KVM: Mark a vCPU as preempted/ready iff it's scheduled out while
+    running
+
+ arch/arm64/kvm/arm.c       |  2 +-
+ arch/loongarch/kvm/vcpu.c  |  2 +-
+ arch/mips/kvm/mips.c       |  2 +-
+ arch/powerpc/kvm/powerpc.c |  2 +-
+ arch/riscv/kvm/vcpu.c      |  2 +-
+ arch/s390/kvm/kvm-s390.c   |  2 +-
+ arch/x86/kvm/x86.c         |  4 ++--
+ include/linux/kvm_host.h   |  1 +
+ include/uapi/linux/kvm.h   | 15 ++++++++++++++-
+ virt/kvm/kvm_main.c        |  5 ++++-
+ 10 files changed, 27 insertions(+), 10 deletions(-)
 
 
-
-Am 03.05.24 um 17:29 schrieb Arnd Bergmann:
-> On Fri, Apr 5, 2024, at 11:04, Thomas Zimmermann wrote:
->> Hi,
->>
->> if there are no further comments, can this series be merged through
->> asm-generic?
-> Sorry for the delay, I've merged these for asm-generic now.
-
-Thank you so much!
-
->
->        Arnd
->
-
+base-commit: 296655d9bf272cfdd9d2211d099bcb8a61b93037
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
