@@ -1,101 +1,111 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB4D13FD93
-	for <loongarch@lists.linux.dev>; Mon,  6 May 2024 10:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7F41422A2
+	for <loongarch@lists.linux.dev>; Mon,  6 May 2024 10:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714990102; cv=none; b=L46mCDYdfaLlh/Lpej+skskHxpNpM5wSB6/I4070cIigM2tX5XbQna/FODBh0jfJ+xjcfi5ZpSlIdfMSOge5zfYF33TlyQqMXTW1P5o3WYEyPzd0tVuz6dhQ/w0O3hfFCsX3kWjj3DTwwEyHQylxSeoSkgPwailJB58Zp+ytKro=
+	t=1714990681; cv=none; b=BqoPwVz/sBUyE5xr6VVP4Rvn4LSOsmygmGPQhlN9sZ1lYIYN36tkPjW5og1HCFXTFOuyJo1IOi4i809vFPyhFq7xwlwymFruHwbBDsF3665mhjmq2pyF3KIwKVsPHak+66lNJKWto+FjKQXRPWl1f85c/qnKm8zH31WD5cxQhHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714990102; c=relaxed/simple;
-	bh=5tt9UHxkjMRw9ZpmjC2bLDh0xKGB94yXOmNXH9DS2Yc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=plnM7Wo0qsbeAm6ayudx/eWLI8F0IBfN024cMQ+qHKsAmp/pRz59KG0Ya5BwOrQftL2OViJjYELbxU0OB//xd3ia3S96lq0ZA29bodOr2MRUwCOiDc8WTNkcw3b0ha8bZgX6bXI2Nw9svTG1LwAdU+Tlpyn9jd2+uVI81aFdk/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 8b6baaea0b9011ef9305a59a3cc225df-20240506
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:a472e662-3e4d-42be-9da1-17e8815f3882,IP:15,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:1
-X-CID-INFO: VERSION:1.1.37,REQID:a472e662-3e4d-42be-9da1-17e8815f3882,IP:15,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:1
-X-CID-META: VersionHash:6f543d0,CLOUDID:e470eda73e5737a57e1e885eb669231e,BulkI
-	D:240506172954AHTO5EQK,BulkQuantity:1,Recheck:0,SF:66|38|24|17|19|43|74|64
-	|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BE
-	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: 8b6baaea0b9011ef9305a59a3cc225df-20240506
-X-User: lijun01@kylinos.cn
-Received: from [172.30.60.202] [(39.156.73.13)] by mailgw.kylinos.cn
-	(envelope-from <lijun01@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1779528453; Mon, 06 May 2024 18:08:11 +0800
-Message-ID: <cbb24599-8b40-cd27-6ce7-215476c0ddf4@kylinos.cn>
-Date: Mon, 6 May 2024 18:08:10 +0800
+	s=arc-20240116; t=1714990681; c=relaxed/simple;
+	bh=FhKeXFv6MqdhsuG/vS9cuqQtrCTk4pnU1OTUUmRCoVo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dhl0BbbjIjaH8eSkwveu/QBL00LIpRF/BifnmxGupA6OuZkvaJKCwJowjB9sV3AcOZiIRcM54MHIZ3Jq0bg+hem91PScKYl2B+TR5uoU1bpjwNBoOdoz2vco3K5fTJ6E32UCuO0Wmk4nz1BCX4/xAQoeSL1GXpOIleZNQ4K2AF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=QHuHhiSi; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="QHuHhiSi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1714990676;
+	bh=FhKeXFv6MqdhsuG/vS9cuqQtrCTk4pnU1OTUUmRCoVo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=QHuHhiSiQAOaJ/caWbAGQn0r5gQoY0P1zgnEL34yvwjAZlpnZZMsIJVpOMsXJx2Py
+	 fLx3I839+I6nFKK9VVh5W6tT1/FO/6phxcBu0PHNMYxToYW74sty8gExEL23D26QUJ
+	 yPQje3F54/5Axyc0LLt4MhxE3TN5HHh1493tPhLw=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id B712366BEE;
+	Mon,  6 May 2024 06:17:54 -0400 (EDT)
+Message-ID: <cbd6ed9d5be1d7112d69117a72e0cb0081f9b64b.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Update the flush cache policy
+From: Xi Ruoyao <xry111@xry111.site>
+To: lijun <lijun01@kylinos.cn>, chenhuacai@kernel.org, kernel@xen0n.name, 
+	lvjianmin@loongson.cn, dongbiao@loongson.cn, zhangbaoqi@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Mon, 06 May 2024 18:17:51 +0800
+In-Reply-To: <cbb24599-8b40-cd27-6ce7-215476c0ddf4@kylinos.cn>
+References: <20240506092419.4109941-1-lijun01@kylinos.cn>
+	 <8a8135eb0f1dc724cfbb4402dc6daf08db5b0bc7.camel@xry111.site>
+	 <cbb24599-8b40-cd27-6ce7-215476c0ddf4@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] LoongArch: Update the flush cache policy
-To: Xi Ruoyao <xry111@xry111.site>, chenhuacai@kernel.org, kernel@xen0n.name,
- lvjianmin@loongson.cn, dongbiao@loongson.cn, zhangbaoqi@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240506092419.4109941-1-lijun01@kylinos.cn>
- <8a8135eb0f1dc724cfbb4402dc6daf08db5b0bc7.camel@xry111.site>
-Content-Language: en-US
-From: lijun <lijun01@kylinos.cn>
-In-Reply-To: <8a8135eb0f1dc724cfbb4402dc6daf08db5b0bc7.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-volatile prevents compiler optimization by allowing the compiler
+On Mon, 2024-05-06 at 18:08 +0800, lijun wrote:
+> volatile prevents compiler optimization by allowing the compiler
+>=20
+> =C2=A0=C2=A0to reread the address value of addr every time
 
-  to reread the address value of addr every time
+But why is this ever needed?  What's wrong if the compiler optimizes it?
 
-在 2024/5/6 17:28, Xi Ruoyao 写道:
-> On Mon, 2024-05-06 at 17:24 +0800, Li Jun wrote:
->> fix when LoongArch s3 resume, Can't find image information
->>
->> Signed-off-by: Li Jun <lijun01@kylinos.cn>
->> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
->> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
->> Signed-off-by: Biao Dong <dongbiao@loongson.cn>
->> ---
->>   arch/loongarch/mm/cache.c | 24 +++++++++++++++++++++++-
->>   1 file changed, 23 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/mm/cache.c b/arch/loongarch/mm/cache.c
->> index 6be04d36ca07..52872fa0e5d8 100644
->> --- a/arch/loongarch/mm/cache.c
->> +++ b/arch/loongarch/mm/cache.c
->> @@ -63,6 +63,28 @@ static void flush_cache_leaf(unsigned int leaf)
->>   	} while (--nr_nodes > 0);
->>   }
->>   
->> +static void flush_cache_last_level(unsigned int leaf)
->> +{
->> +	u64 addr;
->> +	int i, j, nr_nodes, way_size;
->> +	struct cache_desc *cdesc = current_cpu_data.cache_leaves +
->> leaf;
->> +
->> +	nr_nodes = loongson_sysconf.nr_nodes;
->> +
->> +	addr = CSR_DMW1_BASE;
->> +	iocsr_write32(0x1, 0x280);
->> +	way_size = cdesc->sets * cdesc->linesz;
->> +	do {
->> +		for (i = 0; i < (cdesc->ways * 3); i++) {
->> +			for (j = 0; j < (cdesc->sets); j++) {
->> +				*(volatile u32 *)addr;
-> ??? what does this line do?
->
+If the problem is the compiler may optimize it to cdesc->ways * 3 *
+cdesc->sets * cdesc->linesz, unknowing cdesc->ways etc may magically
+change, you should use READ_ONCE(cdesc->ways) etc.
+
+I.e. use READ_ONCE on the expression which may magically change, instead
+of hacking addr.  addr won't magically change.
+
+> =E5=9C=A8 2024/5/6 17:28, Xi Ruoyao =E5=86=99=E9=81=93:
+> > On Mon, 2024-05-06 at 17:24 +0800, Li Jun wrote:
+> > > fix when LoongArch s3 resume, Can't find image information
+> > >=20
+> > > Signed-off-by: Li Jun <lijun01@kylinos.cn>
+> > > Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+> > > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> > > Signed-off-by: Biao Dong <dongbiao@loongson.cn>
+> > > ---
+> > > =C2=A0=C2=A0arch/loongarch/mm/cache.c | 24 +++++++++++++++++++++++-
+> > > =C2=A0=C2=A01 file changed, 23 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/arch/loongarch/mm/cache.c b/arch/loongarch/mm/cache.c
+> > > index 6be04d36ca07..52872fa0e5d8 100644
+> > > --- a/arch/loongarch/mm/cache.c
+> > > +++ b/arch/loongarch/mm/cache.c
+> > > @@ -63,6 +63,28 @@ static void flush_cache_leaf(unsigned int leaf)
+> > > =C2=A0=C2=A0	} while (--nr_nodes > 0);
+> > > =C2=A0=C2=A0}
+> > > =C2=A0=20
+> > > +static void flush_cache_last_level(unsigned int leaf)
+> > > +{
+> > > +	u64 addr;
+> > > +	int i, j, nr_nodes, way_size;
+> > > +	struct cache_desc *cdesc =3D current_cpu_data.cache_leaves
+> > > +
+> > > leaf;
+> > > +
+> > > +	nr_nodes =3D loongson_sysconf.nr_nodes;
+> > > +
+> > > +	addr =3D CSR_DMW1_BASE;
+> > > +	iocsr_write32(0x1, 0x280);
+> > > +	way_size =3D cdesc->sets * cdesc->linesz;
+> > > +	do {
+> > > +		for (i =3D 0; i < (cdesc->ways * 3); i++) {
+> > > +			for (j =3D 0; j < (cdesc->sets); j++) {
+> > > +				*(volatile u32 *)addr;
+> > ??? what does this line do?
+> >=20
+>=20
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
