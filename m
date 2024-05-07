@@ -1,121 +1,106 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E1D13C3E6
-	for <loongarch@lists.linux.dev>; Tue,  7 May 2024 07:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDF913BC39
+	for <loongarch@lists.linux.dev>; Tue,  7 May 2024 07:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715067853; cv=none; b=HVUDFwD/A3di6UIZYqIMSXsZQJBj9u+KX4QxPaFbdumo5kop85oxcXbLgRLKyWLAp3HW+ZeR3ykBzIQ4xpwbkoENjApbXMgqJ7X2VKg2Y07Jp9cm5/ELo7pFlb/XpQ85NdTQXCcR1T299qOhu0mBAYu4VAvoVXjwsmZVaOphmq0=
+	t=1715068096; cv=none; b=ClRJ0mq3jVjqmsn3CuqWQeo7xIC9IGqWZ0DcBzHd7Jw3IiQ0eVMk2UJvIlb3ja/jSN5XYJI1B1EyX51t4njVPo6Z5RvmV0LOmu/I9fp3X71sTuWEMYEJl25xKjlKU2jd7Bd4I1/cdL55+QnMZ12mf4anQEuDtJeKAkrjaji5xw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715067853; c=relaxed/simple;
-	bh=dE9VGICyh+huStmvgxP1XR5gfGCKHKoL5yk42rNw5vc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cQohxXikk36hNfR2uF3Pxs6h/FrejijJHV4dPr/7+L8Vii2sk2suVGN12qz4b1Z5xchv9rWuFyNMp1EPfj4xNRWOdg2LnZSy1J+cLtebTyI5A7inEpXB1euILuDqBXemVEUuBuAam8W4szSwmE8eZFNOtt47Or22YWUU5WyDc14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 916f4ebe0c4511ef9305a59a3cc225df-20240507
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:fa673317-ca0d-47ab-870d-6b19f269f72a,IP:-13
-	,URL:0,TC:0,Content:0,EDM:-30,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:-52
-X-CID-INFO: VERSION:1.1.37,REQID:fa673317-ca0d-47ab-870d-6b19f269f72a,IP:-13,U
-	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:-9,FILE:0,BULK:0,RULE:EDM_GN8D19FE,ACT
-	ION:release,TS:-52
-X-CID-META: VersionHash:6f543d0,CLOUDID:54c47b824903fa8c38e66720df0171e7,BulkI
-	D:2405071544025Y87I3AH,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|43|74|10
-	2,TC:nil,Content:0,EDM:2,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
-	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
-	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
-	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
-X-UUID: 916f4ebe0c4511ef9305a59a3cc225df-20240507
-X-User: lijun01@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.14)] by mailgw.kylinos.cn
-	(envelope-from <lijun01@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1017552724; Tue, 07 May 2024 15:44:00 +0800
-From: Li Jun <lijun01@kylinos.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	lvjianmin@loongson.cn,
-	dongbiao@loongson.cn,
-	zhangbaoqi@loongson.cn
-Cc: lijun01@kylinos.cn,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Update the flush cache policy
-Date: Tue,  7 May 2024 15:43:57 +0800
-Message-Id: <20240507074357.2156083-1-lijun01@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715068096; c=relaxed/simple;
+	bh=QpWK8tGEk5ck2XW/s8yztEHz7kBviwnCEcPgX3pHC6c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GBlJVwDqEHgVEXWr2zZ+y5B36eKzLVP40ZY0b8VyGfXNB5YlF1Cc46+BEFDOKU4IAHnYokh2oWZ5SV+pxOjhzuEHbuGSXKdozODektfm6ujwYg9MdMidYzhNeGKJJkE4CDKxkKkGOtCAL3z7ZlwhvKT3TrOlDzEooay3j/EomVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=eFfL7MIw; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="eFfL7MIw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1715068091;
+	bh=QpWK8tGEk5ck2XW/s8yztEHz7kBviwnCEcPgX3pHC6c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=eFfL7MIwrp2A/VxUjep4YMKQVqF8O3SN3tqBicAghYfA6B05bOFPYzKluJaCEd/ZG
+	 2YmpET+UOQ7qg9OYJ1+b87/+2ZtqDbLoA6yngIJdC1o4Kf92FJEx96Ki3d0dZt7RAw
+	 KqQVlAwJcfDXFf5wxPdFgFuo14FBCcuG+N775SNg=
+Received: from [192.168.124.11] (unknown [113.200.174.35])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 528FC673F0;
+	Tue,  7 May 2024 03:48:09 -0400 (EDT)
+Message-ID: <d41a1f6e2940e9747f9efcb3721646186940da03.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Update the flush cache policy
+From: Xi Ruoyao <xry111@xry111.site>
+To: lijun <lijun01@kylinos.cn>, chenhuacai@kernel.org, kernel@xen0n.name, 
+	lvjianmin@loongson.cn, dongbiao@loongson.cn, zhangbaoqi@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Tue, 07 May 2024 15:48:05 +0800
+In-Reply-To: <18342368-ce79-9820-26be-01834876fc9e@kylinos.cn>
+References: <20240506092419.4109941-1-lijun01@kylinos.cn>
+	 <8a8135eb0f1dc724cfbb4402dc6daf08db5b0bc7.camel@xry111.site>
+	 <cbb24599-8b40-cd27-6ce7-215476c0ddf4@kylinos.cn>
+	 <cbd6ed9d5be1d7112d69117a72e0cb0081f9b64b.camel@xry111.site>
+	 <8809f5a7-de6e-0794-feab-726c26f87344@kylinos.cn>
+	 <cf5df629b88fe38ae04cfa5714b9de2a44792704.camel@xry111.site>
+	 <18342368-ce79-9820-26be-01834876fc9e@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-fix when LoongArch s3 resume, Can't find image information
+On Tue, 2024-05-07 at 14:38 +0800, lijun wrote:
+> I guess, final the value of addr is not important, just all of addr must=
+=20
+> read once is very important,
+>=20
+> so use two 'for()' and 'volatile' to flush all of addr=C2=A0 's cache,=
+=20
+> exactly as the name of the function is
+>=20
+> "flush_cache_last_level".
 
-Signed-off-by: Li Jun <lijun01@kylinos.cn>
-Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Biao Dong <dongbiao@loongson.cn>
----
- arch/loongarch/mm/cache.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+AFAIK do a read does not mean flushing the cache.  The cacop instruction
+is intended to do the cache flushing.
 
-diff --git a/arch/loongarch/mm/cache.c b/arch/loongarch/mm/cache.c
-index 6be04d36ca07..89eeb9a97dd5 100644
---- a/arch/loongarch/mm/cache.c
-+++ b/arch/loongarch/mm/cache.c
-@@ -63,6 +63,27 @@ static void flush_cache_leaf(unsigned int leaf)
- 	} while (--nr_nodes > 0);
- }
- 
-+static void flush_cache_last_level(unsigned int leaf)
-+{
-+	u64 addr;
-+	int i, j, nr_nodes;
-+	struct cache_desc *cdesc = current_cpu_data.cache_leaves + leaf;
-+
-+	nr_nodes = loongson_sysconf.nr_nodes;
-+
-+	addr = CSR_DMW1_BASE;
-+	iocsr_write32(0x1, 0x280);
-+	do {
-+		for (i = 0; i < (cdesc->ways * 3); i++) {
-+			for (j = 0; j < (cdesc->sets); j++) {
-+				*(volatile u32 *)addr;
-+				addr += cdesc->linesz;
-+			}
-+		}
-+		addr += 0x100000000000;
-+	} while (--nr_nodes > 0);
-+}
-+
- asmlinkage __visible void __flush_cache_all(void)
- {
- 	int leaf;
-@@ -71,7 +92,7 @@ asmlinkage __visible void __flush_cache_all(void)
- 
- 	leaf = cache_present - 1;
- 	if (cache_inclusive(cdesc + leaf)) {
--		flush_cache_leaf(leaf);
-+		flush_cache_last_level(leaf);
- 		return;
- 	}
- 
--- 
-2.34.1
+So why the cacop instruction in flush_cache_leaf is not enough to flush
+it?  Is there something wrong in flush_cache_leaf?  It currently reads:
 
+static void flush_cache_leaf(unsigned int leaf)
+{
+    int i, j, nr_nodes;
+    uint64_t addr =3D CSR_DMW0_BASE;
+    struct cache_desc *cdesc =3D current_cpu_data.cache_leaves + leaf;
+
+    nr_nodes =3D cache_private(cdesc) ? 1 : loongson_sysconf.nr_nodes;
+
+    do {
+        for (i =3D 0; i < cdesc->sets; i++) {
+            for (j =3D 0; j < cdesc->ways; j++) {
+                flush_cache_line(leaf, addr);
+                addr++;
+            }
+
+            addr -=3D cdesc->ways;
+            addr +=3D cdesc->linesz;
+        }
+        addr +=3D (1ULL << NODE_ADDRSPACE_SHIFT);
+    } while (--nr_nodes > 0);=20
+}
+
+There is something bizarre: the flush_cache_line function uses the cacop
+instruction in the Index Invalidate / Invalidate and Writeback mode, and
+if I read the LoongArch manual correctly in this mode CSR_DMW0_BASE and
+1ULL << NODE_ADDRSPACE_SHIFT are just ignored.
+
+Is this something undocumented or flush_cache_leaf is just "incorrect"?
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
