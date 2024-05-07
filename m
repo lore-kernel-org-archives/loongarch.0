@@ -1,141 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113E016D319;
-	Tue,  7 May 2024 19:05:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D7B12C48C;
+	Tue,  7 May 2024 22:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715108738; cv=none; b=L/yDg/OXdEts6v5q9nKAFYiiv8pEU706h97xbgTGXKrufZSFwK0S9sQoS1F/1xobMlHugZHCyHROyP3W47JgEgD2irQIo0MJw6+Yx8pQdbdo9ntCjdb21GfHUwbPaJffFr8By3st84/LwPQpq+FOdkQAajL2jOPGrIc/fgisQgA=
+	t=1715122707; cv=none; b=R5dMUa0/RXDAPGGUviqiqc0xqJEyR53HqIWeMlY5LaQpkXMc7LPYAd/yB/CCddyZDBuRpIpgx7eipeGPlByXtdASQGqCnsFQ+JiJocE+CdnVOHL4vQ26ASmZLq0XcowUUjJdDLnSVVprkY6zYlMoBrnUZTA9wzrrl8YZkAdAbRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715108738; c=relaxed/simple;
-	bh=RXjxiKuVIg66+4e4zRGgHnAS0eHWvtxBBhUDFGqspwU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PQrUjJ5/eDBhHxbfXmWSg71Ag+gG+W+tzapDmhGso0RqDwxeKakKsrxnoBZz2BYRMGtMO9FfrTYL7dvLHsqX4TfhJ3tXplOXRhBNMCEZfmdkW7RWVWLmB2PHGPEQacX8TZF0JC3LuFqOyk6xtbiawJoGtJ0hxCllLKABWKjpRj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjPMiHJ0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715122707; c=relaxed/simple;
+	bh=VGWXzDeBgl9unlqoh4SkGaKtK+l20m4UyrZeEUk0POc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZLDkG8s43ll9hHvuvuaNKFFe1rqbyIy2G1tK7pfzS7sKG3GjE4OTtrn968B3Cw6W1cYkDbFHX2MRpkjx9Cjfk/6Ys2Pgu8VUWaU7821vfUjTE8jft9M77YMGMll+4GeVIYCsfTYLzM8mXLxd6Pemu4e6zVuA6Ddkxh9BOhn5UWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUz4uGVY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjPMiHJ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB0FAC4DDE1;
-	Tue,  7 May 2024 19:05:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUz4uGVY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92785C4DDE0;
+	Tue,  7 May 2024 22:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715108737;
-	bh=RXjxiKuVIg66+4e4zRGgHnAS0eHWvtxBBhUDFGqspwU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AjPMiHJ0Hm2xzIl7Alq1yoV8rbkVe5bNuUm7RDM5BclkgOkJtvitJv2e7bVWYycat
-	 7GaD0KVba/JY9YXF/tjK6GYceA1f5LthmtyHahTlgFKhmk2YPu7aAwYQ7aeRIBWv/5
-	 Mvsk/lcZenuxg5AqQDNx3zr18qhJ316CzqRHbGQbViw+HR4qRqCRaSa24jdsIEtBws
-	 XXJNXAJ82uKlxAr1fxk/9Cz+NxsQPXcEWfcIpGDTdVCquspzfMK6bLQpWlqSDl8MIE
-	 8AzGaw91fcfsop+XTvUZQhTBV96vwhV19nqDBPyNysPdqgGisaHl4Vj//GZP5OR7Sp
-	 eXrTZVflejSog==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5acf5723325so897521eaf.0;
-        Tue, 07 May 2024 12:05:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7RsGf7DeaADiHIhn33l8ycfdvnPg3bNxBNwdvfLI6HF/deUqQfjZw/73vRH782nHA3rBbyokD1nQLs4T18yjpr75tkJ7qeV5kyycoFBO2YbPlt5Zb+ceFwhpQOS1X8oO3
-X-Gm-Message-State: AOJu0YyYfkINsSlqgjlg6nm8HzQP5XPdjv0vjgG1rLwQD6E4dPIWR5Gf
-	7U7yCuKgFj9x5wq6GSST+ep7GtrG/yNqrH8G6+6kTHIdd60nCQxirj6+JzOtv3j4BscRbfkO/rm
-	yZYbmau6XP6RZ3YLO/OZwIzRzAGQ=
-X-Google-Smtp-Source: AGHT+IF3DM1jvXt28nOSFpZ7axthsouZnF1Q5Tkxbf3eoVMe0Qp8gd2UpGhIK/KgeLsuVQ1JcjFRVflsYxqumunVBys=
-X-Received: by 2002:a05:6820:1f92:b0:5ac:6fc1:c2cb with SMTP id
- 006d021491bc7-5b24caad211mr423157eaf.0.1715108737184; Tue, 07 May 2024
- 12:05:37 -0700 (PDT)
+	s=k20201202; t=1715122706;
+	bh=VGWXzDeBgl9unlqoh4SkGaKtK+l20m4UyrZeEUk0POc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VUz4uGVYH7x9jrUD8vsKxqh/Ib3LcVBWZYUj+GMmq/2sohfnD5C8+0KpRxvvY7DUU
+	 3awzZe2WaJ58HKZhyo8yC7zSxTr72nQRR/B9PLws5SbYc1d6Bgnd5VjUvxtLLPG/uO
+	 TUoz6QBp3tCuIRrGwv9jhCQbITuuyg3NjTmv66fLayAfElFqqCAYIQql5SUfMnOfoo
+	 8/TMSMpKw4HSVq2YVbQhgj3ST8PirR6/g+3gAHdbTPFpOH/QU1A1zZGhto5VXxjYC2
+	 geTltFRnAcPOCAietTWEgW3gojldxQ6LqbUtnLcL2cYVjlZdB/2Wy9BrAjAYujuHW+
+	 2CUqH6+Nq0tvg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	chenhuacai@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.8 18/23] LoongArch: Lately init pmu after smp is online
+Date: Tue,  7 May 2024 18:56:44 -0400
+Message-ID: <20240507225725.390306-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240507225725.390306-1-sashal@kernel.org>
+References: <20240507225725.390306-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240430142434.10471-1-Jonathan.Cameron@huawei.com> <20240430142434.10471-8-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20240430142434.10471-8-Jonathan.Cameron@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 7 May 2024 21:05:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gBF56XspBYaxZ2CoF0P0idVovJ_=s1Kks3xe4O9LJf9A@mail.gmail.com>
-Message-ID: <CAJZ5v0gBF56XspBYaxZ2CoF0P0idVovJ_=s1Kks3xe4O9LJf9A@mail.gmail.com>
-Subject: Re: [PATCH v9 07/19] ACPI: processor: Add acpi_get_processor_handle() helper
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, linux-pm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
-	Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, 
-	Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Hanjun Guo <guohanjun@huawei.com>, Gavin Shan <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com, 
-	justin.he@arm.com, jianyong.wu@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.9
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 30, 2024 at 4:28=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> If CONFIG_ACPI_PROCESSOR provide a helper to retrieve the
-> acpi_handle for a given CPU allowing access to methods
-> in DSDT.
->
-> Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Bibo Mao <maobibo@loongson.cn>
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+[ Upstream commit f3334ebb8a2a1841c2824594dd992e66de19deb2 ]
 
->
-> ---
-> v9: Tags
-> ---
->  drivers/acpi/acpi_processor.c | 11 +++++++++++
->  include/linux/acpi.h          |  7 +++++++
->  2 files changed, 18 insertions(+)
->
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
-c
-> index 4a79b42d649e..e8cbe0e40dd0 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -35,6 +35,17 @@ EXPORT_PER_CPU_SYMBOL(processors);
->  struct acpi_processor_errata errata __read_mostly;
->  EXPORT_SYMBOL_GPL(errata);
->
-> +acpi_handle acpi_get_processor_handle(int cpu)
-> +{
-> +       struct acpi_processor *pr;
-> +
-> +       pr =3D per_cpu(processors, cpu);
-> +       if (pr)
-> +               return pr->handle;
-> +
-> +       return NULL;
-> +}
-> +
->  static int acpi_processor_errata_piix4(struct pci_dev *dev)
->  {
->         u8 value1 =3D 0;
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 34829f2c517a..9844a3f9c4e5 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -309,6 +309,8 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t phy=
-sid, u32 acpi_id,
->  int acpi_unmap_cpu(int cpu);
->  #endif /* CONFIG_ACPI_HOTPLUG_CPU */
->
-> +acpi_handle acpi_get_processor_handle(int cpu);
-> +
->  #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
->  int acpi_get_ioapic_id(acpi_handle handle, u32 gsi_base, u64 *phys_addr)=
-;
->  #endif
-> @@ -1077,6 +1079,11 @@ static inline bool acpi_sleep_state_supported(u8 s=
-leep_state)
->         return false;
->  }
->
-> +static inline acpi_handle acpi_get_processor_handle(int cpu)
-> +{
-> +       return NULL;
-> +}
-> +
->  #endif /* !CONFIG_ACPI */
->
->  extern void arch_post_acpi_subsys_init(void);
-> --
-> 2.39.2
->
+There is an smp function call named reset_counters() to init PMU
+registers of every CPU in PMU initialization state. It requires that all
+CPUs are online. However there is an early_initcall() wrapper for the
+PMU init funciton init_hw_perf_events(), so that pmu init funciton is
+called in do_pre_smp_initcalls() which before function smp_init().
+Function reset_counters() cannot work on other CPUs since they haven't
+boot up still.
+
+Here replace the wrapper early_initcall() with pure_initcall(), so that
+the PMU init function is called after every cpu is online.
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/kernel/perf_event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
+index 0491bf453cd49..cac7cba81b65f 100644
+--- a/arch/loongarch/kernel/perf_event.c
++++ b/arch/loongarch/kernel/perf_event.c
+@@ -884,4 +884,4 @@ static int __init init_hw_perf_events(void)
+ 
+ 	return 0;
+ }
+-early_initcall(init_hw_perf_events);
++pure_initcall(init_hw_perf_events);
+-- 
+2.43.0
+
