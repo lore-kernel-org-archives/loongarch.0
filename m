@@ -1,153 +1,99 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC77074267
-	for <loongarch@lists.linux.dev>; Tue,  7 May 2024 06:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216616D1CC;
+	Tue,  7 May 2024 06:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715063910; cv=none; b=OUb6sV7i3r0ORc+cH+y5k2dCkwKllXKnxJiwzSetGMXLls78/XWYNtPgPSynzjlKnveLxxWSQVAUKhpt5saEJbbVb5QsKWgXx+wrPBj7xtiOriZFC6NNgRM6Rgv5VY0hzt6/ljKnxq0GMhVe5ieWakEV4DfiuWHrV2B8pzCr2vo=
+	t=1715064285; cv=none; b=OiG9wRo0in2stUPhuZbWS3bY1uCaBGey7SZTrZd0mzhJOSdhvD1ddZuloberaSLPeAc5u6UMTQDypNvJMCDy/nkCxNx6QeKJMIbzRqqoOoF5OnwGw4/Jx89wyYSptWWP4XLADO7Ax81wC1AUxeOOZwKTU/XZjirjM8Tq0XNsFNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715063910; c=relaxed/simple;
-	bh=dEp3R47T5tHK8UzsdRnd6Hp9PzXbWW/9+dURtHMSmZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XbQchIU9BB/3ia3SQ5PM3g0lo7lclCdhCMXY7VarWPjNI4fLpj671o9KkonBzOLtP7OR3qorowGnkJjZU8A1TJtOw9zPX2rrC/NRKJLvxwHPQqHvjbdXRBZqba8FjLy71+aoSc3vQo8jCrb/obvU/m+zRoceCm/wgNfKvkLXMjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 6508af400c3c11ef9305a59a3cc225df-20240507
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:9e0df8ec-e169-4d7f-bc05-3f8e2edcf482,IP:25,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:16
-X-CID-INFO: VERSION:1.1.37,REQID:9e0df8ec-e169-4d7f-bc05-3f8e2edcf482,IP:25,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:16
-X-CID-META: VersionHash:6f543d0,CLOUDID:c6ffa1d6dfb8b6ea58f8b2298f38ddf0,BulkI
-	D:240506172954AHTO5EQK,BulkQuantity:6,Recheck:0,SF:17|19|43|74|64|66|38|24
-	|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,RT:nil,Bulk:40,QS:nil,BE
-	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,
-	TF_CID_SPAM_FAS
-X-UUID: 6508af400c3c11ef9305a59a3cc225df-20240507
-X-User: lijun01@kylinos.cn
-Received: from [172.30.60.202] [(39.156.73.13)] by mailgw.kylinos.cn
-	(envelope-from <lijun01@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1905821853; Tue, 07 May 2024 14:38:20 +0800
-Message-ID: <18342368-ce79-9820-26be-01834876fc9e@kylinos.cn>
-Date: Tue, 7 May 2024 14:38:19 +0800
+	s=arc-20240116; t=1715064285; c=relaxed/simple;
+	bh=1V7K+aUPbBwWZ9MVf0X+WSKhleKpWp++FFeYZHejQg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jzUGraDRV6nxZXeC0kMb+L7fDRgJO2W78GalQ89JrQK0inEaJteSYMHhr0ZMX/ZlvniSmdGZUPzzA61Q4i8UE/0l1VSbA7Lfb+KzsZLrhLgTZfePrBaXYomZJuO22Wnn7aYQhAFjvRGdplRotGuFO8CEw50DWI/Gelx7spjutxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04D41C2BBFC;
+	Tue,  7 May 2024 06:44:41 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Fix callchain parse error with kernel tracepoint events again
+Date: Tue,  7 May 2024 14:44:18 +0800
+Message-ID: <20240507064418.3407414-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] LoongArch: Update the flush cache policy
-Content-Language: en-US
-To: Xi Ruoyao <xry111@xry111.site>, chenhuacai@kernel.org, kernel@xen0n.name,
- lvjianmin@loongson.cn, dongbiao@loongson.cn, zhangbaoqi@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240506092419.4109941-1-lijun01@kylinos.cn>
- <8a8135eb0f1dc724cfbb4402dc6daf08db5b0bc7.camel@xry111.site>
- <cbb24599-8b40-cd27-6ce7-215476c0ddf4@kylinos.cn>
- <cbd6ed9d5be1d7112d69117a72e0cb0081f9b64b.camel@xry111.site>
- <8809f5a7-de6e-0794-feab-726c26f87344@kylinos.cn>
- <cf5df629b88fe38ae04cfa5714b9de2a44792704.camel@xry111.site>
-From: lijun <lijun01@kylinos.cn>
-In-Reply-To: <cf5df629b88fe38ae04cfa5714b9de2a44792704.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-I guess, final the value of addr is not important, just all of addr must 
-read once is very important,
+With commit d3119bc985fb645 ("LoongArch: Fix callchain parse error with
+kernel tracepoint events"), perf can parse kernel callchain, but not
+complete and sometimes maybe error. The reason is LoongArch's unwinders
+(guess, prologue and orc) don't really need fp (i.e., regs[22]), and
+they use sp (i.e., regs[3]) as the frame address rather than the current
+stack pointer.
 
-so use two 'for()' and 'volatile' to flush all of addr  's cache, 
-exactly as the name of the function is
+Fix that by removing the assignment of regs[22], and instead assign the
+__builtin_frame_address(0) to regs[3].
 
-"flush_cache_last_level".
+Without fix:
 
-在 2024/5/7 11:55, Xi Ruoyao 写道:
-> On Tue, 2024-05-07 at 08:53 +0800, lijun wrote:
->> The value of addr changes very very quickly, and 'volatile' ensures that
->> every change can be read
-> No, volatile has nothing to do with changing quickly or not.
->
-> It's only useful when the compiler cannot know the change, for example
-> it's changed by the hardware or another thread.
->
-> And in the Linux kernel memory model for the hardware change you should
-> use READ_ONCE/WRITE_ONCE instead (they are actually wrappers of volatile
-> so in the kernel you should almost never need to directly use volatile),
-> for the change from another thread using volatile is just wrong and you
-> should use some atomic or locked operation instead.
->
-> See
-> https://www.kernel.org/doc/html/latest/process/volatile-considered-harmful.html.
->
-> In this case I'd like to ask first: why won't a simple addr += cdesc-
->> linesz * cdesc->sets * cdesc->ways * 3 work?  Which value(s) of addr,
-> cdesc, or cdesc->{linesz,sets,ways} may change w/o the compiler's
-> knowledge?
->
->> 在 2024/5/6 18:17, Xi Ruoyao 写道:
->>> On Mon, 2024-05-06 at 18:08 +0800, lijun wrote:
->>>> volatile prevents compiler optimization by allowing the compiler
->>>>
->>>>     to reread the address value of addr every time
->>> But why is this ever needed?  What's wrong if the compiler optimizes
->>> it?
->>>
->>> If the problem is the compiler may optimize it to cdesc->ways * 3 *
->>> cdesc->sets * cdesc->linesz, unknowing cdesc->ways etc may magically
->>> change, you should use READ_ONCE(cdesc->ways) etc.
->>>
->>> I.e. use READ_ONCE on the expression which may magically change,
->>> instead
->>> of hacking addr.  addr won't magically change.
->>>
->>>> 在 2024/5/6 17:28, Xi Ruoyao 写道:
->>>>> On Mon, 2024-05-06 at 17:24 +0800, Li Jun wrote:
->>>>>> fix when LoongArch s3 resume, Can't find image information
->>>>>>
->>>>>> Signed-off-by: Li Jun <lijun01@kylinos.cn>
->>>>>> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
->>>>>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
->>>>>> Signed-off-by: Biao Dong <dongbiao@loongson.cn>
->>>>>> ---
->>>>>>     arch/loongarch/mm/cache.c | 24 +++++++++++++++++++++++-
->>>>>>     1 file changed, 23 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/arch/loongarch/mm/cache.c
->>>>>> b/arch/loongarch/mm/cache.c
->>>>>> index 6be04d36ca07..52872fa0e5d8 100644
->>>>>> --- a/arch/loongarch/mm/cache.c
->>>>>> +++ b/arch/loongarch/mm/cache.c
->>>>>> @@ -63,6 +63,28 @@ static void flush_cache_leaf(unsigned int
->>>>>> leaf)
->>>>>>     	} while (--nr_nodes > 0);
->>>>>>     }
->>>>>>     
->>>>>> +static void flush_cache_last_level(unsigned int leaf)
->>>>>> +{
->>>>>> +	u64 addr;
->>>>>> +	int i, j, nr_nodes, way_size;
->>>>>> +	struct cache_desc *cdesc =
->>>>>> current_cpu_data.cache_leaves
->>>>>> +
->>>>>> leaf;
->>>>>> +
->>>>>> +	nr_nodes = loongson_sysconf.nr_nodes;
->>>>>> +
->>>>>> +	addr = CSR_DMW1_BASE;
->>>>>> +	iocsr_write32(0x1, 0x280);
->>>>>> +	way_size = cdesc->sets * cdesc->linesz;
->>>>>> +	do {
->>>>>> +		for (i = 0; i < (cdesc->ways * 3); i++) {
->>>>>> +			for (j = 0; j < (cdesc->sets); j++) {
->>>>>> +				*(volatile u32 *)addr;
->>>>> ??? what does this line do?
->>>>>
+  Children      Self  Command        Shared Object      Symbol
+  ........  ........  .............  .................  ................
+  33.91%    33.91%    swapper        [kernel.vmlinux]   [k] __schedule
+            |
+            |--33.04%--__schedule
+            |
+             --0.87%--__arch_cpu_idle
+                       __schedule
+
+With this fix:
+
+  Children      Self  Command        Shared Object      Symbol
+  ........  ........  .............  .................  ................
+  31.16%    31.16%    swapper        [kernel.vmlinux]   [k] __schedule
+            |
+            |--20.63%--smpboot_entry
+            |          cpu_startup_entry
+            |          schedule_idle
+            |          __schedule
+            |
+             --10.53%--start_kernel
+                       cpu_startup_entry
+                       schedule_idle
+                       __schedule
+
+Fixes: d3119bc985fb645 ("LoongArch: Fix callchain parse error with kernel tracepoint events")
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/perf_event.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/perf_event.h b/arch/loongarch/include/asm/perf_event.h
+index 52b638059e40..f948a0676daf 100644
+--- a/arch/loongarch/include/asm/perf_event.h
++++ b/arch/loongarch/include/asm/perf_event.h
+@@ -13,8 +13,7 @@
+ 
+ #define perf_arch_fetch_caller_regs(regs, __ip) { \
+ 	(regs)->csr_era = (__ip); \
+-	(regs)->regs[3] = current_stack_pointer; \
+-	(regs)->regs[22] = (unsigned long) __builtin_frame_address(0); \
++	(regs)->regs[3] = (unsigned long) __builtin_frame_address(0); \
+ }
+ 
+ #endif /* __LOONGARCH_PERF_EVENT_H__ */
+-- 
+2.43.0
+
