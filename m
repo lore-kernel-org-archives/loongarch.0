@@ -1,34 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216616D1CC;
-	Tue,  7 May 2024 06:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E1D13C3E6
+	for <loongarch@lists.linux.dev>; Tue,  7 May 2024 07:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715064285; cv=none; b=OiG9wRo0in2stUPhuZbWS3bY1uCaBGey7SZTrZd0mzhJOSdhvD1ddZuloberaSLPeAc5u6UMTQDypNvJMCDy/nkCxNx6QeKJMIbzRqqoOoF5OnwGw4/Jx89wyYSptWWP4XLADO7Ax81wC1AUxeOOZwKTU/XZjirjM8Tq0XNsFNw=
+	t=1715067853; cv=none; b=HVUDFwD/A3di6UIZYqIMSXsZQJBj9u+KX4QxPaFbdumo5kop85oxcXbLgRLKyWLAp3HW+ZeR3ykBzIQ4xpwbkoENjApbXMgqJ7X2VKg2Y07Jp9cm5/ELo7pFlb/XpQ85NdTQXCcR1T299qOhu0mBAYu4VAvoVXjwsmZVaOphmq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715064285; c=relaxed/simple;
-	bh=1V7K+aUPbBwWZ9MVf0X+WSKhleKpWp++FFeYZHejQg0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jzUGraDRV6nxZXeC0kMb+L7fDRgJO2W78GalQ89JrQK0inEaJteSYMHhr0ZMX/ZlvniSmdGZUPzzA61Q4i8UE/0l1VSbA7Lfb+KzsZLrhLgTZfePrBaXYomZJuO22Wnn7aYQhAFjvRGdplRotGuFO8CEw50DWI/Gelx7spjutxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04D41C2BBFC;
-	Tue,  7 May 2024 06:44:41 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Fix callchain parse error with kernel tracepoint events again
-Date: Tue,  7 May 2024 14:44:18 +0800
-Message-ID: <20240507064418.3407414-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1715067853; c=relaxed/simple;
+	bh=dE9VGICyh+huStmvgxP1XR5gfGCKHKoL5yk42rNw5vc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cQohxXikk36hNfR2uF3Pxs6h/FrejijJHV4dPr/7+L8Vii2sk2suVGN12qz4b1Z5xchv9rWuFyNMp1EPfj4xNRWOdg2LnZSy1J+cLtebTyI5A7inEpXB1euILuDqBXemVEUuBuAam8W4szSwmE8eZFNOtt47Or22YWUU5WyDc14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 916f4ebe0c4511ef9305a59a3cc225df-20240507
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:fa673317-ca0d-47ab-870d-6b19f269f72a,IP:-13
+	,URL:0,TC:0,Content:0,EDM:-30,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-52
+X-CID-INFO: VERSION:1.1.37,REQID:fa673317-ca0d-47ab-870d-6b19f269f72a,IP:-13,U
+	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:-9,FILE:0,BULK:0,RULE:EDM_GN8D19FE,ACT
+	ION:release,TS:-52
+X-CID-META: VersionHash:6f543d0,CLOUDID:54c47b824903fa8c38e66720df0171e7,BulkI
+	D:2405071544025Y87I3AH,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|43|74|10
+	2,TC:nil,Content:0,EDM:2,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
+	ABX_MISS_RDNS
+X-UUID: 916f4ebe0c4511ef9305a59a3cc225df-20240507
+X-User: lijun01@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.14)] by mailgw.kylinos.cn
+	(envelope-from <lijun01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1017552724; Tue, 07 May 2024 15:44:00 +0800
+From: Li Jun <lijun01@kylinos.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	lvjianmin@loongson.cn,
+	dongbiao@loongson.cn,
+	zhangbaoqi@loongson.cn
+Cc: lijun01@kylinos.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: Update the flush cache policy
+Date: Tue,  7 May 2024 15:43:57 +0800
+Message-Id: <20240507074357.2156083-1-lijun01@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,63 +65,57 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With commit d3119bc985fb645 ("LoongArch: Fix callchain parse error with
-kernel tracepoint events"), perf can parse kernel callchain, but not
-complete and sometimes maybe error. The reason is LoongArch's unwinders
-(guess, prologue and orc) don't really need fp (i.e., regs[22]), and
-they use sp (i.e., regs[3]) as the frame address rather than the current
-stack pointer.
+fix when LoongArch s3 resume, Can't find image information
 
-Fix that by removing the assignment of regs[22], and instead assign the
-__builtin_frame_address(0) to regs[3].
-
-Without fix:
-
-  Children      Self  Command        Shared Object      Symbol
-  ........  ........  .............  .................  ................
-  33.91%    33.91%    swapper        [kernel.vmlinux]   [k] __schedule
-            |
-            |--33.04%--__schedule
-            |
-             --0.87%--__arch_cpu_idle
-                       __schedule
-
-With this fix:
-
-  Children      Self  Command        Shared Object      Symbol
-  ........  ........  .............  .................  ................
-  31.16%    31.16%    swapper        [kernel.vmlinux]   [k] __schedule
-            |
-            |--20.63%--smpboot_entry
-            |          cpu_startup_entry
-            |          schedule_idle
-            |          __schedule
-            |
-             --10.53%--start_kernel
-                       cpu_startup_entry
-                       schedule_idle
-                       __schedule
-
-Fixes: d3119bc985fb645 ("LoongArch: Fix callchain parse error with kernel tracepoint events")
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Li Jun <lijun01@kylinos.cn>
+Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+Signed-off-by: Biao Dong <dongbiao@loongson.cn>
 ---
- arch/loongarch/include/asm/perf_event.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/loongarch/mm/cache.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/perf_event.h b/arch/loongarch/include/asm/perf_event.h
-index 52b638059e40..f948a0676daf 100644
---- a/arch/loongarch/include/asm/perf_event.h
-+++ b/arch/loongarch/include/asm/perf_event.h
-@@ -13,8 +13,7 @@
- 
- #define perf_arch_fetch_caller_regs(regs, __ip) { \
- 	(regs)->csr_era = (__ip); \
--	(regs)->regs[3] = current_stack_pointer; \
--	(regs)->regs[22] = (unsigned long) __builtin_frame_address(0); \
-+	(regs)->regs[3] = (unsigned long) __builtin_frame_address(0); \
+diff --git a/arch/loongarch/mm/cache.c b/arch/loongarch/mm/cache.c
+index 6be04d36ca07..89eeb9a97dd5 100644
+--- a/arch/loongarch/mm/cache.c
++++ b/arch/loongarch/mm/cache.c
+@@ -63,6 +63,27 @@ static void flush_cache_leaf(unsigned int leaf)
+ 	} while (--nr_nodes > 0);
  }
  
- #endif /* __LOONGARCH_PERF_EVENT_H__ */
++static void flush_cache_last_level(unsigned int leaf)
++{
++	u64 addr;
++	int i, j, nr_nodes;
++	struct cache_desc *cdesc = current_cpu_data.cache_leaves + leaf;
++
++	nr_nodes = loongson_sysconf.nr_nodes;
++
++	addr = CSR_DMW1_BASE;
++	iocsr_write32(0x1, 0x280);
++	do {
++		for (i = 0; i < (cdesc->ways * 3); i++) {
++			for (j = 0; j < (cdesc->sets); j++) {
++				*(volatile u32 *)addr;
++				addr += cdesc->linesz;
++			}
++		}
++		addr += 0x100000000000;
++	} while (--nr_nodes > 0);
++}
++
+ asmlinkage __visible void __flush_cache_all(void)
+ {
+ 	int leaf;
+@@ -71,7 +92,7 @@ asmlinkage __visible void __flush_cache_all(void)
+ 
+ 	leaf = cache_present - 1;
+ 	if (cache_inclusive(cdesc + leaf)) {
+-		flush_cache_leaf(leaf);
++		flush_cache_last_level(leaf);
+ 		return;
+ 	}
+ 
 -- 
-2.43.0
+2.34.1
 
