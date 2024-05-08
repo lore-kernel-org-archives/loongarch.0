@@ -1,128 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC40C12BF20;
-	Wed,  8 May 2024 21:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E953213340E;
+	Wed,  8 May 2024 22:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715203765; cv=none; b=PaWV8tDlVUGOdq1Uf1NHOe5+rtRCombItT+6L1GAnnweYgbm//C5oL15/ai9f4Lhf4O4droN6k7V6I1lQnvVIRhxzwyJ4McjZQNXtGlorAQQR8Wq49xQbJm/C99JPkzGTBYpLsmTCCUBv9eSkEAvubicWxsei67uxmy2q4Gb0nY=
+	t=1715207391; cv=none; b=aeo0D32PKS+wy9P8kr6ovH1cJOQlbN4espE71o26+qxWnFIwYLtlUeMuhpykiGRhnnUsJnugBR9VDUqGpeQO0qpEn6FOvCUOMFMuSXMDyB757T489UzsT5AU1huuuTx2+6i7RTipYFZvFe+/LR/Dvyohh4Hx7qwGZr+DJ5FTeUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715203765; c=relaxed/simple;
-	bh=C8Xvi1dqxGMmUWFmC5443UIoMw0DmQtqXBALLo+P4cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g5P+eMo3qYToUvOwhC4fPQophf7sKVYKTctaQOdgGu7qgBN9JWGwGSxNS/7E/TYDBi+BRGvVWwnESS7Yhz1fNuNt33k1xfiAwYcEoGitCQuA2/6reuUzZlnCpCH+GRM/9fldp0qZPjgDKfr3DLApArKmtPb23Qwu8pj0zHBfoa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qt3eHpTi; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715207391; c=relaxed/simple;
+	bh=FzJBgrQxIdNzOxQOHuhjRfbO74jsiRprQUNagdrkAaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MInjMlLVG9FdGLdkgxQtLQdyKoKzcDSfHV+X16+X0rtoNRf1tdAkHYvnnVmV8QOhfXvbAMt0OyZ9e87mEem7Y2MF5Qmg97927zVLzxgAuQa5KqgBc0k70QULD8ROVhSKJJ8FOayebbEkjCPJXX9EDEC7fScxLc6/X5WGBQuYOtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d8tD27Us; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qt3eHpTi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715203762; x=1746739762;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C8Xvi1dqxGMmUWFmC5443UIoMw0DmQtqXBALLo+P4cs=;
-  b=Qt3eHpTiQRNKHlRnoreEcEFcKYLgsW6tjSYtbYMvLmKw9AQr15ie3BKH
-   DwFj21nizk9T6a3spB91zdTg3Yt0uefEoVMmkx8ahdkRd0RcnYMKWfPsX
-   3DCl9a50Fdx4i/aVaTY0VCbjm3+McbFPNL/Od7u6GXO+Xg7ZUfANdQxIL
-   mDzMAwdOUtd7SG74Yk0cMYaf9sviTbij9OTpqPnUP/sYm5k4mc8mFxxpE
-   /9qFGsPPr5AWEKUz3dQb04Ov4S9/RtPyE18XIg8LjthGGL+kic0JpzEg4
-   iXj7bZDDRqgm7b26gEXakGeGJTka8Lkmtw4UDYMt+QwXmFHt6aO1EsdoE
-   A==;
-X-CSE-ConnectionGUID: +FahSy2qR+6Atp27KHm1NA==
-X-CSE-MsgGUID: Ww7qO09ZRjyeJo+HOA0Vjw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="10944292"
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="10944292"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 14:29:21 -0700
-X-CSE-ConnectionGUID: iSeayxZASOe+bvS8jTtpbg==
-X-CSE-MsgGUID: 1lF8zhgzQeu+oVzzGWXuZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="33708469"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 08 May 2024 14:29:17 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4oqg-00047m-0I;
-	Wed, 08 May 2024 21:29:14 +0000
-Date: Thu, 9 May 2024 05:28:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
-	kernel@xen0n.name, tglx@linutronix.de, jiaxun.yang@flygoat.com,
-	gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
-	yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
-	dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
-	zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
-	zhoubinbin@loongson.cn
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Loongarch:Support loongarch avec
-Message-ID: <202405090419.xGNdK28X-lkp@intel.com>
-References: <20240507125953.9117-1-zhangtianyang@loongson.cn>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d8tD27Us"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=d6XhmtyByC67AvaiaMru39DJYEvRdT178Mi2caB30As=; b=d8tD27Usvg00XgSFQM+NPLWPb2
+	H580GLyvv8UpISBdrNnFqZw8uq7BmCDzdRVb3hTTjAa1zvLLVY3r+theec7SMIORmGqGiPDKoDrrW
+	rQ1ggvRwkXJa+jfgVl2OVVIL2I/xWRUsGfrvRFQBn1ZcfdzpdcvaABUKHNtXkikzrgvYk17hjxo72
+	cmmaWM0izaQlC6wpy01HAxzXSsMR7jBomGSDC4Mo5bbmRbEWXPBHx2rrQpbUuAPN2Fyk1JGkoNQju
+	EETZzYJReBw22RRvI4iuFFkaMBPQ0y8yWU9lbuxxmR0CASGv8oNeGqfC44XFpgejANGjt6nnGisNL
+	W1w4EwNg==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s4pnG-0000000H9uo-43cd;
+	Wed, 08 May 2024 22:29:47 +0000
+Message-ID: <c1f1b699-71ad-409a-a843-afe42640626a@infradead.org>
+Date: Wed, 8 May 2024 15:29:43 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507125953.9117-1-zhangtianyang@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] docs: Add advanced extended IRQ model description
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, siyanteng@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240507122228.5288-1-zhangtianyang@loongson.cn>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240507122228.5288-1-zhangtianyang@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Tianyang,
+Hi--
 
-kernel test robot noticed the following build warnings:
+On 5/7/24 5:22 AM, Tianyang Zhang wrote:
+> From 3C6000, Loongarch began to support advanced extended
+> interrupt mode, in which each CPU has an independent interrupt
+> vector number.This will enhance the architecture's ability
+> to support modern devices
+> 
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> ---
+>  .../arch/loongarch/irq-chip-model.rst         | 33 +++++++++++++++++
+>  .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 +++++++++++++++++--
+>  2 files changed, 67 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+> index 7988f4192363..79228741d1b9 100644
+> --- a/Documentation/arch/loongarch/irq-chip-model.rst
+> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
+> @@ -85,6 +85,39 @@ to CPUINTC directly::
+>      | Devices |
+>      +---------+
+>  
+> +Advanced Extended IRQ model
+> +=======================
 
-[auto build test WARNING on tip/irq/core]
-[also build test WARNING on linus/master v6.9-rc7]
-[cannot apply to next-20240508]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The === underline line needs to be at least as long as the line above it.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tianyang-Zhang/Loongarch-Support-loongarch-avec/20240507-210314
-base:   tip/irq/core
-patch link:    https://lore.kernel.org/r/20240507125953.9117-1-zhangtianyang%40loongson.cn
-patch subject: [PATCH 2/2] Loongarch:Support loongarch avec
-config: loongarch-randconfig-r113-20240508 (https://download.01.org/0day-ci/archive/20240509/202405090419.xGNdK28X-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240509/202405090419.xGNdK28X-lkp@intel.com/reproduce)
+> +
+> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
+> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts go to AVEC,
+> +and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC and gathered
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405090419.xGNdK28X-lkp@intel.com/
+                  CPUINTC.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/irqchip/irq-loongarch-avec.c:34:1: sparse: sparse: symbol '__pcpu_scope_pending_list' was not declared. Should it be static?
-   drivers/irqchip/irq-loongarch-avec.c:41:3: sparse: sparse: symbol 'loongarch_avec' was not declared. Should it be static?
-   drivers/irqchip/irq-loongarch-avec.c:181:31: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:181:31: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c:184:31: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:184:31: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c:187:31: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:187:31: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c:190:31: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:190:31: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c:215:18: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:215:18: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c: note: in included file (through include/linux/mmzone.h, include/linux/topology.h, include/linux/irq.h, ...):
-   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
-   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
-   drivers/irqchip/irq-loongarch-avec.c:164:6: sparse: sparse: context imbalance in 'complete_irq_moving' - different lock contexts for basic block
-   drivers/irqchip/irq-loongarch-avec.c: note: in included file (through arch/loongarch/include/asm/loongarch.h, arch/loongarch/include/asm/cpu-info.h, ...):
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:294:30: sparse: sparse: undefined identifier '__builtin_loongarch_iocsrrd_d'
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:294:11: sparse: sparse: cast from unknown type
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:332:3: sparse: sparse: undefined identifier '__builtin_loongarch_iocsrwr_d'
+> +by EIOINTC, and then go to CPUINTC directly::
+> +
+> + +-----+     +--------------------------+     +-------+
+> + | IPI | --> |           CPUINTC        | <-- | Timer |
+> + +-----+     +--------------------------+     +-------+
+> +              ^        ^             ^
+> +              |        |             |
+> +      +--------+  +---------+ +---------+     +-------+
+> +      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
+> +      +--------+  +---------+ +---------+     +-------+
+> +           ^            ^
+> +           |            |
+> +         +---------+  +---------+
+> +         |   MSI   |  | PCH-PIC |
+> +         +---------+  +---------+
+> +            ^          ^       ^
+> +            |          |       |
+> +    +---------+ +---------+ +---------+
+> +    | Devices | | PCH-LPC | | Devices |
+> +    +---------+ +---------+ +---------+
+> +                     ^
+> +                     |
+> +                +---------+
+> +                | Devices |
+> +                +---------+
+> +
+> +
+>  ACPI-related definitions
+>  ========================
+>  
 
-vim +/__pcpu_scope_pending_list +34 drivers/irqchip/irq-loongarch-avec.c
-
-    33	
-  > 34	DEFINE_PER_CPU(struct pending_list, pending_list);
-    35	
-
+thanks.
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
