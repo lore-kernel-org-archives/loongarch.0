@@ -1,290 +1,639 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695CA28FF;
-	Wed,  8 May 2024 08:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9475F757FF
+	for <loongarch@lists.linux.dev>; Wed,  8 May 2024 09:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715157866; cv=none; b=b8xCOs874SPc1BG2WNu38nz4XU/cYLuPoK+gkj2AYYmdv0FmzqPEgz6IgaJXPZW4WL8kdCQWGwM7gHZJSFvaHN4LMr5VNbmqAtBP7nGlXkRLwZ/gzVjEH0ZYRc4qnhdihzkvR72HRHyn4fXQP9QMclZc2ICt59Ye6tZLxlcjynM=
+	t=1715161399; cv=none; b=Wd5GWZ8dK/0EXI9cVUp5bI5k1VLIqY6aZxCrjdtnsp0S4l3CXGv9qVMSF5TFMRdgeb6QwrhokT6uEWns0yJAflIqSH1z98TneGLLNQkQYHx18i43OSx9ZlhPe2dQuJ/OYSQizr+rjMqTwBKOIO9PFCf0Ci4/LAIn4AEXNEdh9q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715157866; c=relaxed/simple;
-	bh=T5zecpj4li0OuIWBMVUt5WCfBkgXJbSbJgxIbR51vqs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=La1w5TDiLltcmAQE43yxxfhXJPAckEpNr+ViF9hOiTk9gRzmZ78dSc82r9S4EjKtuHWSAX6wrawM7J0uJiKvVlpvPI2+zjKWeNwy/Nhp+nBRB3J3mTMlHBUYq+EZLbu01Lal4drbd9mWhz3WCb/c+jLn+4oq+I9cLKBBmk4rWS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZ7sK1b83z6K6Kl;
-	Wed,  8 May 2024 16:41:09 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 44CD0140B54;
-	Wed,  8 May 2024 16:44:14 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 8 May
- 2024 09:44:13 +0100
-Date: Wed, 8 May 2024 09:44:11 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, Miguel Luis
-	<miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, Salil Mehta
-	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, "Gavin
- Shan" <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: Re: [PATCH v9 06/19] ACPI: processor: Move checks and availability
- of acpi_processor earlier
-Message-ID: <20240508094411.00001b92@Huawei.com>
-In-Reply-To: <CAJZ5v0g-Aenoj5H+pNPtoqTgV5U7K5RGNjdOnqobqxkyL5NMVQ@mail.gmail.com>
-References: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
-	<20240430142434.10471-7-Jonathan.Cameron@huawei.com>
-	<CAJZ5v0g-Aenoj5H+pNPtoqTgV5U7K5RGNjdOnqobqxkyL5NMVQ@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1715161399; c=relaxed/simple;
+	bh=ARhtpo8Jmx37/QbwR78hdvenhm1/JHnfsdvXDDIGO6c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Llqoc5l0JWDjq/t/XyAU0RGsTePB2FAytUZVs73pEImfuA6fVnGsrSNp8ZcjzWRGBnfyMxctCiVThmW6HGQk4CjrUOC/hdJeTR5ebgPxAvohNCGpWH5cf64rIfdkDHYbSlmOkKOG9QVogJopB/k+kljvSuDm7ePAYM9uaYSu9t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wz4e9Iw1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1im8+bRk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wz4e9Iw1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1im8+bRk"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1715161395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VprUFeKX/HznPHuWilhPGErbZk95Xg8FX1vIXsoDuLA=;
+	b=wz4e9Iw1x59+8YDdk0VmJyh2X5frQd6HaTTt3IL9/qZO7qXS5ZX7ie8E7wzv7YsUnn98iy
+	qvIP37sXHHsEOhj9/XWHfOCA6wbQc03Q/y24sXan1Kbnf4epwclmowY6Hyy9t3kJfC6lU7
+	68+jOmFRewYhSr7NK7/uMgQ+0Wrx7icKe8ndODHmncqKl1BWaXUf63ps3csMpRIUduhjzB
+	J0yt1HVwMcNf2mgJPz4JcsgaRRumpqxzfkxAMAbRiBb+U6zXaZ7NxmIEVtfNBc/RziK/Yp
+	+FriqN2shkpM/7x+SpjBoTpyd2M8oOIPv2BrfcHDw4GI0zuh7sFzeXj7AJI8qA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1715161395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VprUFeKX/HznPHuWilhPGErbZk95Xg8FX1vIXsoDuLA=;
+	b=1im8+bRkhkxb6649oVjaN6OiJpQhNiyYO7Q6N74UeHpn63IJFWL0w3U5c3AVaf8fn/g5+S
+	4cN4bcQZGwJ3VABQ==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, jiaxun.yang@flygoat.com, gaoliang@loongson.cn,
+ wangliupu@loongson.cn, lvjianmin@loongson.cn, zhangtianyang@loongson.cn,
+ yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
+ dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
+ zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
+ zhoubinbin@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Loongarch:Support loongarch avec
+In-Reply-To: <20240507125953.9117-1-zhangtianyang@loongson.cn>
+References: <20240507125953.9117-1-zhangtianyang@loongson.cn>
+Date: Wed, 08 May 2024 11:43:15 +0200
+Message-ID: <87a5l0prkc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain
 
-On Tue, 7 May 2024 21:04:26 +0200
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+On Tue, May 07 2024 at 20:59, Tianyang Zhang wrote:
+> From: zhangtianyang <zhangtianyang@loongson.cn>
 
-> On Tue, Apr 30, 2024 at 4:27=E2=80=AFPM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > Make the per_cpu(processors, cpu) entries available earlier so that
-> > they are available in arch_register_cpu() as ARM64 will need access
-> > to the acpi_handle to distinguish between acpi_processor_add()
-> > and earlier registration attempts (which will fail as _STA cannot
-> > be checked).
-> >
-> > Reorder the remove flow to clear this per_cpu() after
-> > arch_unregister_cpu() has completed, allowing it to be used in
-> > there as well.
-> >
-> > Note that on x86 for the CPU hotplug case, the pr->id prior to
-> > acpi_map_cpu() may be invalid. Thus the per_cpu() structures
-> > must be initialized after that call or after checking the ID
-> > is valid (not hotplug path).
-> >
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> =20
->=20
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->=20
-> One nit below.
+Please use your real name for the From line.
 
-Thanks.  Given timing, this is looking like 6.11 material.
-I'll tidy this up and post a v10 in a couple of weeks (so around
-rc1 time). Maybe we'll pick up some more tags for the ARM
-specific bits in the meantime.
+> +
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/msi.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/cpuhotplug.h>
+> +#include <linux/radix-tree.h>
 
-Thanks for all your help!
+Please put the includes in alphabethical order.
 
-Jonathan
+> +#include <asm/loongarch.h>
+> +#include <asm/setup.h>
+> +
+> +static phys_addr_t msi_base_v2;
+> +
+> +typedef struct irq_data *irq_map_t[NR_VECTORS];
 
->=20
-> > ---
-> > v9: Add back a blank line accidentally removed in code move.
-> >     Fix up error returns so that the new cleanup in processor_add()
-> >     is triggered on detection of the bios bug.
-> >     Combined with the previous 2 patches, should solve the leak
-> >     that Gavin identified.
-> > ---
-> >  drivers/acpi/acpi_processor.c | 80 +++++++++++++++++++++--------------
-> >  1 file changed, 49 insertions(+), 31 deletions(-)
-> >
-> > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processo=
-r.c
-> > index 16e36e55a560..4a79b42d649e 100644
-> > --- a/drivers/acpi/acpi_processor.c
-> > +++ b/drivers/acpi/acpi_processor.c
-> > @@ -183,8 +183,38 @@ static void __init acpi_pcc_cpufreq_init(void) {}
-> >  #endif /* CONFIG_X86 */
-> >
-> >  /* Initialization */
-> > +static DEFINE_PER_CPU(void *, processor_device_array);
-> > +
-> > +static bool acpi_processor_set_per_cpu(struct acpi_processor *pr,
-> > +                                      struct acpi_device *device)
-> > +{
-> > +       BUG_ON(pr->id >=3D nr_cpu_ids);
-> > +
-> > +       /*
-> > +        * Buggy BIOS check.
-> > +        * ACPI id of processors can be reported wrongly by the BIOS.
-> > +        * Don't trust it blindly
-> > +        */
-> > +       if (per_cpu(processor_device_array, pr->id) !=3D NULL &&
-> > +           per_cpu(processor_device_array, pr->id) !=3D device) {
-> > +               dev_warn(&device->dev,
-> > +                        "BIOS reported wrong ACPI id %d for the proces=
-sor\n",
-> > +                        pr->id);
-> > +               return false;
-> > +       }
-> > +       /*
-> > +        * processor_device_array is not cleared on errors to allow bug=
-gy BIOS
-> > +        * checks.
-> > +        */
-> > +       per_cpu(processor_device_array, pr->id) =3D device;
-> > +       per_cpu(processors, pr->id) =3D pr;
-> > +
-> > +       return true;
-> > +}
-> > +
-> >  #ifdef CONFIG_ACPI_HOTPLUG_CPU
-> > -static int acpi_processor_hotadd_init(struct acpi_processor *pr)
-> > +static int acpi_processor_hotadd_init(struct acpi_processor *pr,
-> > +                                     struct acpi_device *device)
-> >  {
-> >         int ret;
-> >
-> > @@ -198,8 +228,16 @@ static int acpi_processor_hotadd_init(struct acpi_=
-processor *pr)
-> >         if (ret)
-> >                 goto out;
-> >
-> > +       if (!acpi_processor_set_per_cpu(pr, device)) {
-> > +               ret =3D -EINVAL;
-> > +               acpi_unmap_cpu(pr->id);
-> > +               goto out;
-> > +       }
-> > +
-> >         ret =3D arch_register_cpu(pr->id);
-> >         if (ret) {
-> > +               /* Leave the processor device array in place to detect =
-buggy bios */
-> > +               per_cpu(processors, pr->id) =3D NULL;
-> >                 acpi_unmap_cpu(pr->id);
-> >                 goto out;
-> >         }
-> > @@ -217,7 +255,8 @@ static int acpi_processor_hotadd_init(struct acpi_p=
-rocessor *pr)
-> >         return ret;
-> >  }
-> >  #else
-> > -static inline int acpi_processor_hotadd_init(struct acpi_processor *pr)
-> > +static inline int acpi_processor_hotadd_init(struct acpi_processor *pr,
-> > +                                            struct acpi_device *device)
-> >  {
-> >         return -ENODEV;
-> >  }
-> > @@ -316,10 +355,13 @@ static int acpi_processor_get_info(struct acpi_de=
-vice *device)
-> >          *  because cpuid <-> apicid mapping is persistent now.
-> >          */
-> >         if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
-> > -               int ret =3D acpi_processor_hotadd_init(pr);
-> > +               int ret =3D acpi_processor_hotadd_init(pr, device);
-> >
-> >                 if (ret)
-> >                         return ret;
-> > +       } else {
-> > +               if (!acpi_processor_set_per_cpu(pr, device))
-> > +                       return -EINVAL;
-> >         } =20
->=20
-> This looks a bit odd.
->=20
-> I would make acpi_processor_set_per_cpu() return 0 on success and
-> -EINVAL on failure and the above would become
->=20
-> if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id))
->          ret =3D acpi_processor_hotadd_init(pr, device);
-> else
->         ret =3D acpi_processor_set_per_cpu(pr, device);
->=20
-> if (ret)
->         return ret;
->=20
-> (and of course ret needs to be defined at the beginning of the function).
->=20
-> >
-> >         /*
-> > @@ -365,8 +407,6 @@ static int acpi_processor_get_info(struct acpi_devi=
-ce *device)
-> >   * (cpu_data(cpu)) values, like CPU feature flags, family, model, etc.
-> >   * Such things have to be put in and set up by the processor driver's =
-.probe().
-> >   */
-> > -static DEFINE_PER_CPU(void *, processor_device_array);
-> > -
-> >  static int acpi_processor_add(struct acpi_device *device,
-> >                                         const struct acpi_device_id *id)
-> >  {
-> > @@ -395,28 +435,6 @@ static int acpi_processor_add(struct acpi_device *=
-device,
-> >         if (result) /* Processor is not physically present or unavailab=
-le */
-> >                 goto err_clear_driver_data;
-> >
-> > -       BUG_ON(pr->id >=3D nr_cpu_ids);
-> > -
-> > -       /*
-> > -        * Buggy BIOS check.
-> > -        * ACPI id of processors can be reported wrongly by the BIOS.
-> > -        * Don't trust it blindly
-> > -        */
-> > -       if (per_cpu(processor_device_array, pr->id) !=3D NULL &&
-> > -           per_cpu(processor_device_array, pr->id) !=3D device) {
-> > -               dev_warn(&device->dev,
-> > -                       "BIOS reported wrong ACPI id %d for the process=
-or\n",
-> > -                       pr->id);
-> > -               /* Give up, but do not abort the namespace scan. */
-> > -               goto err_clear_driver_data;
-> > -       }
-> > -       /*
-> > -        * processor_device_array is not cleared on errors to allow bug=
-gy BIOS
-> > -        * checks.
-> > -        */
-> > -       per_cpu(processor_device_array, pr->id) =3D device;
-> > -       per_cpu(processors, pr->id) =3D pr;
-> > -
-> >         dev =3D get_cpu_device(pr->id);
-> >         if (!dev) {
-> >                 result =3D -ENODEV;
-> > @@ -470,10 +488,6 @@ static void acpi_processor_remove(struct acpi_devi=
-ce *device)
-> >         device_release_driver(pr->dev);
-> >         acpi_unbind_one(pr->dev);
-> >
-> > -       /* Clean up. */
-> > -       per_cpu(processor_device_array, pr->id) =3D NULL;
-> > -       per_cpu(processors, pr->id) =3D NULL;
-> > -
-> >         cpu_maps_update_begin();
-> >         cpus_write_lock();
-> >
-> > @@ -481,6 +495,10 @@ static void acpi_processor_remove(struct acpi_devi=
-ce *device)
-> >         arch_unregister_cpu(pr->id);
-> >         acpi_unmap_cpu(pr->id);
-> >
-> > +       /* Clean up. */
-> > +       per_cpu(processor_device_array, pr->id) =3D NULL;
-> > +       per_cpu(processors, pr->id) =3D NULL;
-> > +
-> >         cpus_write_unlock();
-> >         cpu_maps_update_done();
-> >
-> > --
-> > 2.39.2
-> > =20
+No new pointless typedefs please.
 
+struct irq_map {
+	struct irq_data irqd[NR_VECTORS];
+};
+
+> +DECLARE_PER_CPU(irq_map_t, irq_map);
+
+What's this declaration for?
+
+> +DEFINE_PER_CPU(irq_map_t, irq_map) = {
+
+Why is this global and not static? 
+
+> +	[0 ... NR_VECTORS - 1] = NULL,
+
+No need to initialize to NULL. It's zeroed by default.
+
+> +};
+> +
+> +struct pending_list {
+> +	struct list_head head;
+> +	raw_spinlock_t	lock;
+> +};
+
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct-declarations-and-initializers
+
+> +DEFINE_PER_CPU(struct pending_list, pending_list);
+
+Why is this global?
+
+> +struct loongarch_avec_chip {
+> +	struct fwnode_handle	*fwnode;
+> +	struct irq_domain	*domain;
+> +	struct irq_matrix	*vector_matrix;
+> +	raw_spinlock_t		lock;
+> +} loongarch_avec;
+> +
+> +struct loongarch_avec_data {
+> +	struct list_head entry;
+> +	unsigned int cpu;
+> +	unsigned int vec;
+> +	unsigned int prev_cpu;
+> +	unsigned int prev_vec;
+> +};
+
+See link above.
+
+> +static int assign_irq_vector(struct irq_data *irqd, const struct cpumask *dest,
+> +		unsigned int *cpu, int *vector)
+
+Please read the line break section in the tip docomentation
+
+> +{
+> +	int ret;
+> +
+> +	ret = irq_matrix_alloc(loongarch_avec.vector_matrix, dest, false, cpu);
+> +	if (ret < 0)
+> +		return ret;
+> +	*vector = ret;
+> +
+> +	return 0;
+
+Why not simply returning the result of irq_matrix_alloc() and checking
+it for negative value at the call site. If not negative then use it as
+vector. That spares the whole indirection and makes the code readable.
+
+> +static void loongarch_avec_sync(struct loongarch_avec_data *adata)
+> +{
+> +	struct loongarch_avec_data *data;
+> +	struct pending_list *plist;
+> +
+> +	if (cpu_online(adata->prev_cpu)) {
+> +		plist = per_cpu_ptr(&pending_list, adata->prev_cpu);
+> +
+> +		data = kmalloc(sizeof(struct loongarch_avec_data), GFP_KERNEL);
+
+This is called from loongarch_avec_set_affinity() with raw spinlocks
+held and interrupts disabled. So GFP_KERNEL cannot work. You clearly did
+not test that code with proper debug options enabled.
+
+But even GFP_ATOMIC won't work when you want to support PREEMPT_RT as
+that does not allow allocations in such contexts.
+
+Look how x86 solves exactly this problem without allocations required.
+
+> +		if (!data) {
+> +			pr_warn("NO space for clean data\n");
+> +			return;
+> +		}
+> +		memcpy(data, adata, sizeof(struct loongarch_avec_data));
+> +		INIT_LIST_HEAD(&data->entry);
+> +
+> +		list_add_tail(&data->entry, &plist->head);
+> +		loongson_send_ipi_single(adata->prev_cpu, SMP_CLEAR_VECT);
+> +	}
+> +	adata->prev_cpu = adata->cpu;
+> +	adata->prev_vec = adata->vec;
+> +}
+> +
+> +static int loongarch_avec_set_affinity(struct irq_data *data,
+> +		const struct cpumask *dest, bool force)
+> +{
+> +	struct cpumask intersect_mask;
+
+No cpumasks on stack please. You can make that static as usage is always
+serialized via loongarch_avec.lock
+
+> +	struct loongarch_avec_data *adata;
+> +	unsigned int cpu, vector;
+> +	unsigned long flags;
+> +	int ret = 0;
+> +
+> +	raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+> +	adata = irq_data_get_irq_chip_data(data);
+> +
+> +	if (adata->vec && cpu_online(adata->cpu)
+> +			&& cpumask_test_cpu(adata->cpu, dest)) {
+
+Please align the condition proper when you need a line break:
+
+	if (adata->vec && cpu_online(adata->cpu) &&
+	    cpumask_test_cpu(adata->cpu, dest)) {
+
+But you don't need a line break here because 
+
+	if (adata->vec && cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest)) {
+
+fits into the 100 character line width limit.
+
+> +		raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +		return 0;
+> +	}
+> +
+> +	if (!cpumask_intersects(dest, cpu_online_mask)) {
+> +		raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +		return -EINVAL;
+> +	}
+> +
+> +	cpumask_and(&intersect_mask, dest, cpu_online_mask);
+
+The above intersect check is pointless as the matrix allocator already
+checks the cpumask and returns -EINVAL if empty.
+
+> +
+> +	ret = assign_irq_vector(data, &intersect_mask, &cpu, &vector);
+> +	if (ret) {
+> +		raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +		return ret;
+> +	}
+
+> +void complete_irq_moving(int *restart)
+
+What is the 'restart' argument for?
+
+> +{
+> +	struct pending_list *plist = this_cpu_ptr(&pending_list);
+> +	struct loongarch_avec_data *adata, *tmp;
+> +	int cpu, vector;
+> +	u32 bias;
+> +	u64 irr;
+> +
+> +	raw_spin_lock(&loongarch_avec.lock);
+> +
+> +	list_for_each_entry_safe(adata, tmp, &plist->head, entry) {
+> +
+> +		cpu = adata->prev_cpu;
+> +		vector = adata->prev_vec;
+> +		bias = vector/64;
+> +
+> +		switch (bias) {
+> +		case 0x0:
+> +			irr = csr_read64(LOONGARCH_CSR_IRR0);
+> +			break;
+> +		case 0x1:
+> +			irr = csr_read64(LOONGARCH_CSR_IRR1);
+> +			break;
+> +		case 0x2:
+> +			irr = csr_read64(LOONGARCH_CSR_IRR2);
+> +			break;
+> +		case 0x3:
+> +			irr = csr_read64(LOONGARCH_CSR_IRR3);
+> +			break;
+> +		default:
+> +			return;
+
+How can that happen ?
+
+> +		}
+
+                irr = csr_read64(LOONGARCH_CSR_IRR0 + vector / 64);
+
+should be good enough, no?
+
+Also please use a proper constant instead of '64', e.g. VECTORS_PER_IRR
+
+> +
+> +		if (irr & (1UL << (vector % 64))) {
+> +			loongson_send_ipi_single(cpu, SMP_CLEAR_VECT);
+
+So this sends an IPI to the current CPU. What guarantees that the
+pending interrupt is handled _before_ the IPI is handled again?
+
+> +			continue;
+> +		}
+> +		list_del(&adata->entry);
+> +		irq_matrix_free(loongarch_avec.vector_matrix, cpu, vector, false);
+> +		this_cpu_ptr(irq_map)[vector] = 0;
+
+s/0/NULL/ as this writes a pointer.
+
+                this_cpu_write(irq_map.irqd[vector], NULL);
+
+avoids the whole pointer indirection.
+
+> +		kfree(adata);
+
+Again this won't work with PREEMPT_RT.
+
+> +	}
+> +	raw_spin_unlock(&loongarch_avec.lock);
+> +}
+> +
+> +static void loongarch_avec_dispatch(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct irq_data *d;
+> +	unsigned long vector;
+> +
+> +	chained_irq_enter(chip, desc);
+> +	vector = csr_read64(LOONGARCH_CSR_ILR);
+> +	if (vector & 0x80000000)
+
+No magic numbers. Please use proper constant defines.
+
+> +		return;
+> +
+> +	vector &= 0xff;
+
+Ditto.
+
+> +
+> +	d = raw_cpu_ptr(irq_map)[vector];
+
+Why raw?
+
+        d = __this_cpu_read(...);
+
+Also, what is the point of storing irqdata in the irq_map if the only
+thing you use is d->irq. You can simply store the interrupt number, no?
+
+If you want to spare cycles for the lookup, then you want to store the
+interrupt descriptor like x86 does.
+
+> +	if (d)
+> +		generic_handle_irq(d->irq);
+> +	else
+> +		pr_warn("IRQ ERROR:Unexpected irq  occur on cpu %d[vector %d]\n",
+> +				smp_processor_id(), vector);
+
+See bracket rules in the tip documentation.
+
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int loongarch_avec_alloc(struct irq_domain *domain, unsigned int virq,
+> +		unsigned int nr_irqs, void *arg)
+> +{
+> +	struct loongarch_avec_data *adata;
+> +	struct irq_data *irqd;
+> +	unsigned int cpu, vector;
+> +	unsigned long flags;
+> +	int i, err;
+
+See variable declaration rules in the tip documentation
+
+> +	raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		irqd = irq_domain_get_irq_data(domain, virq + i);
+> +		adata = kzalloc(sizeof(*adata), GFP_KERNEL);
+> +		if (!adata) {
+> +			raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +			return -ENOMEM;
+> +		}
+> +		err = assign_irq_vector(irqd, cpu_online_mask, &cpu, &vector);
+> +		if (err) {
+> +			raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +			return err;
+> +		}
+> +		adata->prev_cpu = adata->cpu = cpu;
+> +		adata->prev_vec = adata->vec = vector;
+> +
+> +		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irqd;
+
+This needs to be set last, no?
+
+> +		irq_domain_set_info(domain, virq + i, virq, &loongarch_avec_controller,
+> +				adata, handle_edge_irq, NULL, NULL);
+> +		irqd_set_single_target(irqd);
+> +		irqd_set_affinity_on_activate(irqd);
+> +	}
+> +	raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +
+> +	return err;
+> +}
+> +
+> +static void loongarch_avec_free(struct irq_domain *domain, unsigned int virq,
+> +		unsigned int nr_irqs)
+> +{
+> +	struct loongarch_avec_data *adata;
+> +	struct irq_data *d;
+> +	unsigned long flags;
+> +	unsigned int i;
+> +
+> +	raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		d = irq_domain_get_irq_data(domain, virq + i);
+> +		adata = irq_data_get_irq_chip_data(d);
+> +		if (d) {
+> +			irq_matrix_free(loongarch_avec.vector_matrix,
+> +					adata->cpu,
+> +					adata->vec, false);
+> +			irq_domain_reset_irq_data(d);
+> +		}
+
+What cleans up the irq_map and pending cleanups? There is a UAF waiting
+around the corner.
+
+> +	}
+> +
+> +	raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +}
+
+> +static int __init loongarch_avec_init(struct irq_domain *parent)
+> +{
+> +	int ret = 0, parent_irq;
+> +	unsigned long tmp;
+> +
+> +	tmp = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> +	tmp |= IOCSR_MISC_FUNC_AVEC_EN;
+> +	iocsr_write64(tmp, LOONGARCH_IOCSR_MISC_FUNC);
+
+Enabling AVEC _before_ everything is set up is a patently bad idea.
+
+> +	raw_spin_lock_init(&loongarch_avec.lock);
+> +
+> +	loongarch_avec.fwnode = irq_domain_alloc_named_fwnode("CORE_AVEC");
+> +	if (!loongarch_avec.fwnode) {
+> +		pr_err("Unable to allocate domain handle\n");
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	loongarch_avec.domain = irq_domain_create_tree(loongarch_avec.fwnode,
+> +			&loongarch_avec_domain_ops, NULL);
+> +	if (!loongarch_avec.domain) {
+> +		pr_err("core-vec: cannot create IRQ domain\n");
+> +		ret = -ENOMEM;
+> +		goto out_free_handle;
+> +	}
+> +
+> +	parent_irq = irq_create_mapping(parent, INT_AVEC);
+> +	if (!parent_irq) {
+> +		pr_err("Failed to mapping hwirq\n");
+> +		ret = -EINVAL;
+> +		goto out_remove_domain;
+> +	}
+> +	irq_set_chained_handler_and_data(parent_irq, loongarch_avec_dispatch, NULL);
+> +
+> +	ret = irq_matrix_init();
+> +	if (ret) {
+> +		pr_err("Failed to init irq matrix\n");
+> +		goto out_free_matrix;
+> +	}
+> +
+> +	return ret;
+> +
+> +out_free_matrix:
+> +	kfree(loongarch_avec.vector_matrix);
+> +out_remove_domain:
+> +	irq_domain_remove(loongarch_avec.domain);
+> +out_free_handle:
+> +	irq_domain_free_fwnode(loongarch_avec.fwnode);
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int loongarch_avec_offline_cpu(unsigned int cpu)
+> +{
+> +	unsigned long flags;
+> +	struct pending_list *plist = per_cpu_ptr(&pending_list, cpu);
+> +
+> +	raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+> +	if (list_empty(&plist->head)) {
+> +		irq_matrix_offline(loongarch_avec.vector_matrix);
+> +	} else {
+> +		pr_warn("cpu %d advanced extioi is busy\n");
+> +		raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +		return -EBUSY;
+> +	}
+> +	raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +	return 0;
+> +}
+> +
+> +static int loongarch_avec_online_cpu(unsigned int cpu)
+> +{
+> +	struct pending_list *plist = per_cpu_ptr(&pending_list, cpu);
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+> +
+> +	irq_matrix_online(loongarch_avec.vector_matrix);
+> +
+> +	INIT_LIST_HEAD(&plist->head);
+> +
+> +	raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> +	return 0;
+> +}
+> +#if defined(CONFIG_ACPI)
+
+Missing newline before #if and also please use #ifdef CONFIG_ACPI
+
+> +static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+> +		const unsigned long end)
+> +{
+> +	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
+> +
+> +	msi_base_v2 = pchmsi_entry->msg_address;
+> +	return pch_msi_acpi_init_v2(loongarch_avec.domain, pchmsi_entry);
+> +}
+> +
+> +static inline int __init acpi_cascade_irqdomain_init(void)
+> +{
+> +	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
+> +}
+> +
+> +int __init loongarch_avec_acpi_init(struct irq_domain *parent)
+> +{
+> +	int ret = 0;
+> +
+> +	ret = loongarch_avec_init(parent);
+> +	if (ret) {
+> +		pr_err("Failed to init irq domain\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = acpi_cascade_irqdomain_init();
+> +	if (ret) {
+> +		pr_err("Failed to cascade IRQ domain\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> +			"loongarch_avec:online",
+> +			loongarch_avec_online_cpu, loongarch_avec_offline_cpu);
+
+You cannot online/offline the matrix and handle eventually pending
+cleanups from a CPUHP_AP_ONLINE_DYN state. That needs to happen in the
+STARTING section between CPUHP_AP_OFFLINE and CPUHP_AP_ONLINE
+
+> +	if (ret < 0) {
+> +		pr_err("loongarch_avec: failed to register hotplug callbacks.\n");
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+
+So if CONFIG_ACPI is disabled then loongarch_avec_init() is unused and
+results in a defined but not used build warning...
+
+> diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
+> index 6e1e1f011bb2..d1706080b4f4 100644
+> --- a/drivers/irqchip/irq-loongson-pch-msi.c
+> +++ b/drivers/irqchip/irq-loongson-pch-msi.c
+> @@ -16,7 +16,6 @@
+>  #include <linux/slab.h>
+>  
+>  static int nr_pics;
+> -
+>  struct pch_msi_data {
+>  	struct mutex	msi_map_lock;
+>  	phys_addr_t	doorbell;
+> @@ -100,6 +99,17 @@ static struct irq_chip middle_irq_chip = {
+>  	.irq_compose_msi_msg	= pch_msi_compose_msi_msg,
+>  };
+>  
+> +static struct irq_chip pch_msi_irq_chip_v2 = {
+> +	.name			= "MSI",
+> +	.irq_ack		= irq_chip_ack_parent,
+> +};
+> +
+> +static struct msi_domain_info pch_msi_domain_info_v2 = {
+> +	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> +			MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+> +	.chip	= &pch_msi_irq_chip_v2,
+> +};
+> +
+>  static int pch_msi_parent_domain_alloc(struct irq_domain *domain,
+>  					unsigned int virq, int hwirq)
+>  {
+> @@ -268,6 +278,9 @@ struct fwnode_handle *get_pch_msi_handle(int pci_segment)
+>  {
+>  	int i;
+>  
+> +	if (cpu_has_avecint)
+> +		return pch_msi_handle[0];
+> +
+>  	for (i = 0; i < MAX_IO_PICS; i++) {
+>  		if (msi_group[i].pci_segment == pci_segment)
+>  			return pch_msi_handle[i];
+> @@ -289,4 +302,34 @@ int __init pch_msi_acpi_init(struct irq_domain *parent,
+>  
+>  	return ret;
+>  }
+> +
+> +int __init pch_msi_acpi_init_v2(struct irq_domain *parent,
+> +		struct acpi_madt_msi_pic *msi_entry)
+> +{
+> +	struct irq_domain *msi_domain;
+> +
+> +	if (pch_msi_handle[0])
+> +		return 0;
+> +
+> +	pch_msi_handle[0] = irq_domain_alloc_named_fwnode("msipic-v2");
+> +	if (!pch_msi_handle[0]) {
+> +		pr_err("Unable to allocate domain handle\n");
+> +		kfree(pch_msi_handle[0]);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	msi_domain = pci_msi_create_irq_domain(pch_msi_handle[0],
+> +			&pch_msi_domain_info_v2,
+> +			parent);
+> +	if (!msi_domain) {
+> +		pr_err("Failed to create PCI MSI domain\n");
+> +		kfree(pch_msi_handle[0]);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	pr_info("IRQ domain MSIPIC-V2 init done.\n");
+> +	return 0;
+> +}
+> +
+> +
+
+Stray newlines. But as with the other CONFIG_ACPI part above a build
+with CONFIG_ACPI=n will result in defined but not used warnings ....
+
+Thanks,
+
+        tglx
