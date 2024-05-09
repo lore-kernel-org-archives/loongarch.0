@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62FB4146D69
-	for <loongarch@lists.linux.dev>; Thu,  9 May 2024 06:18:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A155D26D
+	for <loongarch@lists.linux.dev>; Thu,  9 May 2024 06:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715235513; cv=none; b=N6kGfjgoXEe6KTNwTPQw+uNGbJnOR1HdX5J092GSj7i/d+9vLsCUWCSBr8FTuMxkUNYKeZDGls5xjJVj/hVTOfg4RaSMeN30fWBHhr+ljnS1TExiVQqeNcDC3Nb19qIvm6qnjKDEcnx+4BIUP7gSY9Hgi6wnJSRD9aaC2kudgU0=
+	t=1715235513; cv=none; b=dJtRJK9ohLiNth1YR1NasMNwKf3VULGPSrackYehZSCQw7RhnmRPawShZEAtgtpWhRl+WGIFV1xwZL4dSmhCX0NRtnPzkLv9kH7m+Gk4sHlacYHsFCMMFAg3qGwvxHr6BZUsh6AXALBTyFBEKz1W4s3jjek+cZDwUh2PYAhl8ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715235513; c=relaxed/simple;
-	bh=Wc3keCQKKvf7gPclFIQIJ/Qgzx6dXq1JeC9F3nNsYZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AZa9YQeIAZsEXe2yHssHfKwykkIa/otuuxjSbY7j11mYfhuiEzZnbBvYsWwLHGcHpr7DL2P0JJMEgrObCzJwTmGphAzsr02G6VQ7G6FMTg7b+OFjG7I9I9/Vds6YMcuooCie/P3zdK3htyccFlgc4l8hEXqr8p6A/hIoE0phPGU=
+	bh=3VPqGc+FdyBZ3ueYad99QNTUre/x9bTl/6BcvVsgc4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g9Z1hj4om1QcgMs6iZTQOkmsQVizTdVyGO0+/u1LYQ02i7Z+7smSvvKzEBpe6q7+8Aty5c+xiST+xxwWpxAd8ctFj3U1X/Bt1DtbwKJVmF2hZVbC3CkKV1WhIg1T+HKnxvE4b70dIKnKQAzQLGuFCsGmZN1K4lAEP4p9NiI/0p0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [112.20.112.218])
-	by gateway (Coremail) with SMTP id _____8Dxk+quajxmoNUJAA--.13510S3;
+	by gateway (Coremail) with SMTP id _____8AxTeuvajxmp9UJAA--.19191S3;
 	Thu, 09 May 2024 14:18:23 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.112.218])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxT1WqajxmycoWAA--.26766S2;
-	Thu, 09 May 2024 14:18:19 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxT1WqajxmycoWAA--.26766S3;
+	Thu, 09 May 2024 14:18:22 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -28,11 +29,14 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongson-kernel@lists.loongnix.cn,
 	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v2 0/3] LoongArch: dts: Add more support device ndoes to Loongson-2K
-Date: Thu,  9 May 2024 14:18:03 +0800
-Message-ID: <cover.1715222938.git.zhoubinbin@loongson.cn>
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v2 1/3] LoongArch: dts: Remove "disabled" state of clock controller node
+Date: Thu,  9 May 2024 14:18:04 +0800
+Message-ID: <faa715748b70c8984fd6e47b933966bd8712d4e6.1715222938.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1715222938.git.zhoubinbin@loongson.cn>
+References: <cover.1715222938.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -40,59 +44,64 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxT1WqajxmycoWAA--.26766S2
+X-CM-TRANSID:AQAAf8BxT1WqajxmycoWAA--.26766S3
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XryDCr4UWry8Kw4rGr1kCrX_yoWkGwcEgF
-	yfWFykGw18WFykJayqqryrJ39Ivr4j9a1Ykas2qa4fKa43tr13XF4kua9xZF15urW2qrs8
-	JrW8Ga18Cr1agosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8nmRUUUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoW7WrWxCF13CrWrXFykWw45Arc_yoW8Gry5p3
+	sruwsrKrs7WrWfWr1DtryUWr1DZFykGrnrWanIkFyUGanFqw1UZr1rJF9YqF1UXa1rX3y0
+	gr1rGw13KF4DAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-Hi all:
+Things like clock controllers or architectural interrupt controllers, no
+one would disable them because otherwise they would have no usable
+system.
+So we just "enabled" them by default.
 
-Now, more Loongson-2K related deviers are supported, this patchset add
-these device nodes to dts files.
+Suggested-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ arch/loongarch/boot/dts/loongson-2k1000-ref.dts | 4 ----
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi    | 1 -
+ 2 files changed, 5 deletions(-)
 
-Additionally, we remove the "disable" state of the ls2k1000 clk node as
-it was unnecessary.
-
-Thanks.
-
--------
-V2:
-patch(1/3):
- - New patch. Follow Conor's comment, remove the "disable" state of the
-   ls2k1000 clk node as it was unnecessary.
-patch(2/3)(3/3):
- - Remove the "disable" state of the clk node as it was unnecessary;
- - Add cpu-alert trips.
-
-Link to V1:
-https://lore.kernel.org/all/cover.1715156107.git.zhoubinbin@loongson.cn/
-
-Binbin Zhou (3):
-  LoongArch: dts: Remove "disabled" state of clock controller node
-  LoongArch: dts: Add new supported device nodes to Loongson-2K0500
-  LoongArch: dts: Add new supported device nodes to Loongson-2K2000
-
- arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 85 ++++++++++++++++++-
- .../boot/dts/loongson-2k1000-ref.dts          |  4 -
- arch/loongarch/boot/dts/loongson-2k1000.dtsi  |  1 -
- arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 48 ++++++++++-
- 4 files changed, 126 insertions(+), 12 deletions(-)
-
+diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+index a7cd3912f30d..b3b2044a6c4a 100644
+--- a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
++++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
+@@ -137,10 +137,6 @@ &uart0 {
+ 	status = "okay";
+ };
+ 
+-&clk {
+-	status = "okay";
+-};
+-
+ &rtc0 {
+ 	status = "okay";
+ };
+diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+index 7aec76adefd9..bb6222a0af21 100644
+--- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
++++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+@@ -159,7 +159,6 @@ clk: clock-controller@1fe00480 {
+ 			#clock-cells = <1>;
+ 			clocks = <&ref_100m>;
+ 			clock-names = "ref_100m";
+-			status = "disabled";
+ 		};
+ 
+ 		gpio0: gpio@1fe00500 {
 -- 
 2.43.0
 
