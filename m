@@ -1,123 +1,116 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E953213340E;
-	Wed,  8 May 2024 22:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C598AFC12
+	for <loongarch@lists.linux.dev>; Thu,  9 May 2024 01:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715207391; cv=none; b=aeo0D32PKS+wy9P8kr6ovH1cJOQlbN4espE71o26+qxWnFIwYLtlUeMuhpykiGRhnnUsJnugBR9VDUqGpeQO0qpEn6FOvCUOMFMuSXMDyB757T489UzsT5AU1huuuTx2+6i7RTipYFZvFe+/LR/Dvyohh4Hx7qwGZr+DJ5FTeUk=
+	t=1715217043; cv=none; b=S7nvif++m+BJm/sBOq5JL5oXr7XK87cIfDcFsr0yp4HP4ghaneu/jtDTjSngJX1A45RpgMQWA/ufR8CmeV7OJ6A70dkDvR4fJvcMWWC57mJytPInnko0RfrdW1Kjm0Q4EoXtbhlK3ryVCULHlMxflNgphT8q7ZRd64swLPwIQTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715207391; c=relaxed/simple;
-	bh=FzJBgrQxIdNzOxQOHuhjRfbO74jsiRprQUNagdrkAaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MInjMlLVG9FdGLdkgxQtLQdyKoKzcDSfHV+X16+X0rtoNRf1tdAkHYvnnVmV8QOhfXvbAMt0OyZ9e87mEem7Y2MF5Qmg97927zVLzxgAuQa5KqgBc0k70QULD8ROVhSKJJ8FOayebbEkjCPJXX9EDEC7fScxLc6/X5WGBQuYOtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d8tD27Us; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1715217043; c=relaxed/simple;
+	bh=5s4453ri0t/LUDdGgzWfdUHbA1UcXjk0arUA2v3BwLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FvXQDo8fLGPgZai8SllujntN1iJ6tbKtIIYdS7fgH70gs2sJLNxVYrTvxlqNbd+XSKV/ZAAsSekudYzPl59npUNVF/TaoaNfKWUe6iuqZvxdYR16k2DUwf/RIxhww7xMTxYzQXbq7iGhVM8ZKzeQFKwxnW+6zRZzs88jasnfgMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CpKXR55K; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d8tD27Us"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=d6XhmtyByC67AvaiaMru39DJYEvRdT178Mi2caB30As=; b=d8tD27Usvg00XgSFQM+NPLWPb2
-	H580GLyvv8UpISBdrNnFqZw8uq7BmCDzdRVb3hTTjAa1zvLLVY3r+theec7SMIORmGqGiPDKoDrrW
-	rQ1ggvRwkXJa+jfgVl2OVVIL2I/xWRUsGfrvRFQBn1ZcfdzpdcvaABUKHNtXkikzrgvYk17hjxo72
-	cmmaWM0izaQlC6wpy01HAxzXSsMR7jBomGSDC4Mo5bbmRbEWXPBHx2rrQpbUuAPN2Fyk1JGkoNQju
-	EETZzYJReBw22RRvI4iuFFkaMBPQ0y8yWU9lbuxxmR0CASGv8oNeGqfC44XFpgejANGjt6nnGisNL
-	W1w4EwNg==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s4pnG-0000000H9uo-43cd;
-	Wed, 08 May 2024 22:29:47 +0000
-Message-ID: <c1f1b699-71ad-409a-a843-afe42640626a@infradead.org>
-Date: Wed, 8 May 2024 15:29:43 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpKXR55K"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-61be74097cbso3602027b3.1
+        for <loongarch@lists.linux.dev>; Wed, 08 May 2024 18:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715217041; x=1715821841; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DNoB9hp+UBqBvM+d/hhgzdG/cm3lBfAwJf8PWfwYx8c=;
+        b=CpKXR55K4K7WPTvqSGqS76bvFAzJzUx2whHtll7yCPs26PO0D5lpeKniyyOAwaVl4+
+         oEt5WbvyqusP3Eg843tZu4XdtJs87Fwua0Yxl0bpNRWThC9fyQj4mnj7N8R5weRkSNUA
+         Ln+jBRCRoylwcfUjEhtXXiLIZqONVQmIeFopqW56hJ9xGYPL7jTGg7rSJjgpqX6g3TcR
+         d1vmpTF9Szx+Krz33kVjWwQgttl5owu8f3TnyIf6HvaT7bGH8dU+9M4nvDsHB1Muiy3z
+         uekoi1va3zZ0su4oQammTeT7R8SYPvmKtAFuMMlcBqkuq76WUeEg2LiR12iJsr95ZEkk
+         uXxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715217041; x=1715821841;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DNoB9hp+UBqBvM+d/hhgzdG/cm3lBfAwJf8PWfwYx8c=;
+        b=Y2vCUvMERiQ4eA/yh/zH4ekseDx9NosT+V7Ixc+QhdVzlOg/H+HT6oBGgoMUcu+3k2
+         sD8r242HhbWzZMCOTLo3UhjdeIu3c/PT11OCgmvNW+OGO8Ew7/qKLaER8dQiiwxjYS5a
+         JAG/o6hsHkLMrevyRrwVdl4fMHqIpji8cswwOpXj0qoyvV3nmVdGK8ACCMd3Rfs9MKbb
+         qVV8cUWH9Q4RFqHCbYvDJtKQmefTV8luAhqc7XHns7yn2H5LW0VcUjYos7hucRt3c1n0
+         XLYDbZeWUkrEditjLzZ9F9btVarL6z8p3kozsfC4aCO6I0iyC5t8+97SKx40Eh3xSc24
+         l8tw==
+X-Forwarded-Encrypted: i=1; AJvYcCU86JSkU7fBGNzKkoBifbpGAdFflQv+j5tvufKukLNFkIjwAehms8UH7eFNpoT9IJqFNen7llLb7ALAC4zUT5xD1QDpCJVezcbd
+X-Gm-Message-State: AOJu0YxByMYdNMJu5EcPXHG+pUFFTJmoWdng1/5d87vpLoBXdlrx0Ndz
+	8J/qEFocKLP9AdhCDdXSFinHvDYUMWK9yxXy8LSmrvHqRIAcG36QpSvbzPZcE79IDn6cqbju9ka
+	Jjsw6RNuO5Mm1pVVC+n2rqJ+vDYs=
+X-Google-Smtp-Source: AGHT+IFWwh49cZI/Q8tBweaDC++8NhoQZwewekFVmONePoO0D7b745VQX/CxIVEkAlv4rNKhFsGGgCWBXsO79KJtqGQ=
+X-Received: by 2002:a81:4fc4:0:b0:620:50e0:c32 with SMTP id
+ 00721157ae682-62085af01c1mr41535147b3.36.1715217040642; Wed, 08 May 2024
+ 18:10:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] docs: Add advanced extended IRQ model description
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
- kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, siyanteng@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240507122228.5288-1-zhangtianyang@loongson.cn>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240507122228.5288-1-zhangtianyang@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1715156107.git.zhoubinbin@loongson.cn> <d0b25dedb43c000faad5b86cd0512dc6498e7839.1715156107.git.zhoubinbin@loongson.cn>
+ <20240508-startup-oblivious-d864191f524f@spud>
+In-Reply-To: <20240508-startup-oblivious-d864191f524f@spud>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Thu, 9 May 2024 07:10:27 +0600
+Message-ID: <CAMpQs4JyLSGKVWPzej39Rq0G_Z2QmJ0S+y3bMruBm4tO-ZWq+Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] LoongArch: dts: Add new supported device nodes to Loongson-2K0500
+To: Conor Dooley <conor@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi--
+On Wed, May 8, 2024 at 10:26=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Wed, May 08, 2024 at 04:29:10PM +0800, Binbin Zhou wrote:
+> > By now, more Loongson-2K0500 related drivers are supported, such as
+> > clock controller, thermal controller, and dma controller.
+> > Now we add these device nodes to the Loongson-2K0500 dts file.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  .../boot/dts/loongson-2k0500-ref.dts          |  4 +
+> >  arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 81 ++++++++++++++++++-
+> >  2 files changed, 82 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loo=
+ngarch/boot/dts/loongson-2k0500-ref.dts
+> > index 8aefb0c12672..62dad6297e82 100644
+> > --- a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+> > +++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
+> > @@ -41,6 +41,10 @@ linux,cma {
+> >       };
+> >  };
+> >
+> > +&clk {
+> > +     status =3D "okay";
+> > +};
+>
+> For most devices, doing the "disable in dtsi, enable in dts" approach is
+> the right thing to do, but for things like clock-controllers or
+> architectural interrupt controllers that no-one is going to disable
+> since they'll not have a usable system otherwise, it's not needed.
+>
+Hi Conor:
 
-On 5/7/24 5:22 AM, Tianyang Zhang wrote:
-> From 3C6000, Loongarch began to support advanced extended
-> interrupt mode, in which each CPU has an independent interrupt
-> vector number.This will enhance the architecture's ability
-> to support modern devices
-> 
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> ---
->  .../arch/loongarch/irq-chip-model.rst         | 33 +++++++++++++++++
->  .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 +++++++++++++++++--
->  2 files changed, 67 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
-> index 7988f4192363..79228741d1b9 100644
-> --- a/Documentation/arch/loongarch/irq-chip-model.rst
-> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
-> @@ -85,6 +85,39 @@ to CPUINTC directly::
->      | Devices |
->      +---------+
->  
-> +Advanced Extended IRQ model
-> +=======================
+Yes, as you said, it is not needed here. I will check it again.
 
-The === underline line needs to be at least as long as the line above it.
+Thanks.
+Binbin
 
-> +
-> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
-> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts go to AVEC,
-> +and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC and gathered
-
-                  CPUINTC.
-
-> +by EIOINTC, and then go to CPUINTC directly::
-> +
-> + +-----+     +--------------------------+     +-------+
-> + | IPI | --> |           CPUINTC        | <-- | Timer |
-> + +-----+     +--------------------------+     +-------+
-> +              ^        ^             ^
-> +              |        |             |
-> +      +--------+  +---------+ +---------+     +-------+
-> +      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
-> +      +--------+  +---------+ +---------+     +-------+
-> +           ^            ^
-> +           |            |
-> +         +---------+  +---------+
-> +         |   MSI   |  | PCH-PIC |
-> +         +---------+  +---------+
-> +            ^          ^       ^
-> +            |          |       |
-> +    +---------+ +---------+ +---------+
-> +    | Devices | | PCH-LPC | | Devices |
-> +    +---------+ +---------+ +---------+
-> +                     ^
-> +                     |
-> +                +---------+
-> +                | Devices |
-> +                +---------+
-> +
-> +
->  ACPI-related definitions
->  ========================
->  
-
-thanks.
--- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+> Cheers,
+> Conor.
