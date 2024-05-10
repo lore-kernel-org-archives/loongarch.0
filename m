@@ -1,153 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out0-205.mail.aliyun.com (out0-205.mail.aliyun.com [140.205.0.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CEE12C539
-	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 14:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3A2134CC
+	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 16:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715352318; cv=none; b=Zh5fNDsT0AzHjm13xye1txoAu2rVye6TKpaRz7TZVsqkM1hn60TzzXg8Wsv/edY0V3SEGQ4TCYS6l3rGZH7y3XnLFb67aQqTNgvnYK7ceuggHYAzdhrCpghkpxckxZzbczll/ZIgyAFjMOb9ptbq924gPL+som9QQWC3dbiBD1Q=
+	t=1715359326; cv=none; b=G5YrjlhuOYvLpKQs+PHydxfjbYPsRi6w2TwjDDCM4vw3VYEaH3hPhwiTgF96zhFdlZx7NbNOkD37ML9vEnF9rh1MIWbioWs2smlSHtLx/wXO5Vh0ex9XmYv+UNHigjnA5MydQCijgNnPxfW8/cjhlbWdmv1qd5h7HDN32nL42f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715352318; c=relaxed/simple;
-	bh=kmj44PEzEs1Hc7RYAG2y6Omx6rTiyxtrlA8AzcCTcUs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IFltvad8SstX9EWte9d+852otTYPNVUm9aGfc8DsMJOtV4LjMj3MfJtppwgwAUlungJvJQsePjapuPQB4xcSaLZMhvufVb1/pb+F4tPrs7MXdPWvIViOQyJIGqQJJLILGuW5CMOfIgGzyRHpt00pPeve2ckAI6xJJewtEdh0gtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T/R9ZiRD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715359326; c=relaxed/simple;
+	bh=ah2f+flPhjMWjq/tYuVImg54uB8bO07DeCFS0hFQSh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WNwty/vs6Q77BTRizuqvCgGAHLAqGw8KXgqVlD0YRKfn8YdN1w2CTN3cFJ9al7dQpIsFuC3aJ2dR1TS832b48txVXkIKHaIrRB46rcaO06aAQ8QW/+NZ6FArTpqqXA7bY0SlAJi8gY2SkcgvujA6/7uwylZ0mTvQZ2sIQ4wB+Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=VWjjNhtZ; arc=none smtp.client-ip=140.205.0.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T/R9ZiRD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715352315;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V0JbujFYt/9SItNTEbEiczRuSL3qAb2lZe4U6XNdsCE=;
-	b=T/R9ZiRD8cowlEvt6k45zjjee8Kz32Ig6uE04Hl+0adaxC7SEYVRZ9pHV6omzhdCLueWKJ
-	5Tr5u9HyopoRvIY/YBvdMI54UffAINO2tR/Fc+LDtxVUeMwEVeCeOlaxa0G4xa1LHr/WpC
-	VkRlaK5h061dzpV+hatkQdfPbrK6eH8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-580-KN1kYbJ_PLmg_b39VnpfxQ-1; Fri, 10 May 2024 10:44:58 -0400
-X-MC-Unique: KN1kYbJ_PLmg_b39VnpfxQ-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-34c93732095so818865f8f.0
-        for <loongarch@lists.linux.dev>; Fri, 10 May 2024 07:44:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715352297; x=1715957097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V0JbujFYt/9SItNTEbEiczRuSL3qAb2lZe4U6XNdsCE=;
-        b=cLdm6GIzZ2dg0zlP0kW3mhXrBjLohSVoo7UfZJJ5mjAhXequ3QRjDgyxnld3/GGEH8
-         k6ymqH3GnoU0WP+OnrBU5cP1FVgwrvdHc/TINo69VSbfDepSJTfTjG6XsqCz0+sd14ax
-         q68LCNCCSrOjCwd822fmkpiFu/dyRjckGJIpcYg2HLeruUQ8ZyW4JSP2OcGej+i6pkcY
-         9gSYiXkhcwktApLzZv6Zfm6ieorI/FmfBEBJPNNuDGAZDHmkNSc3W2Mof0bLk7XZ6OWi
-         /gYdyKmqZYyL8yRKkPOJEbFF1KXp4uRgfZfqlXeMEohde5MStTTOCHWyWt0N/yALUGEh
-         /I6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWeBiYFusgaa5kYDE+YzxL3RdaKhn5uVg0GgLjZacNP31aEW0UbW6Qw8sGwS5j2rUha7ctmzSq4RxS1MP006uSTzXf5lrZGCcu2
-X-Gm-Message-State: AOJu0YzoXajXgrzCBKEQmH7w7iUvcWofRUOgIh9gGWn77HFOk3aZ9ycp
-	DlB1om2w75imkNu0YxO6mgDsiM+aiSORBDh8frIbd80c5gcHAPn76qEWZZ0SZ6mA/6qp/l2O3wZ
-	PXFgTvv4BTIlvvEcrXsHZuQuwZvJwwiNx+wMoDc1frARHFELPky0oV66JP59X+2zt86nnbiOuEr
-	gNgQxz71puMVR+pFIIzYZ2t+2VI+BYEQSAj3xjiTGz
-X-Received: by 2002:a05:6000:1003:b0:33e:7f5c:a75d with SMTP id ffacd0b85a97d-3504a96cca2mr1881557f8f.57.1715352297328;
-        Fri, 10 May 2024 07:44:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEqPh3msW6mLhD5AYzc7IzmHoZiilZKRmz2o9qQNP3DbnrKVIBIgk/dOAj3od9jdxMGgdFJY8LFNOkvNb4LRmc=
-X-Received: by 2002:a05:6000:1003:b0:33e:7f5c:a75d with SMTP id
- ffacd0b85a97d-3504a96cca2mr1881542f8f.57.1715352296757; Fri, 10 May 2024
- 07:44:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="VWjjNhtZ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1715359316; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=qtTzD4p4/mI5FQfHMAQ4AseA2ZJSqFbFGgw9hxpmGnA=;
+	b=VWjjNhtZvjSw0qJkMx5d7tGd34B5mRjVsC1PXoBYAtjfADEY0klUl/9gpP4UZ2i8UBz3ZRxWqWEl39+ijxN6igPpzwaONaq+c6xSgdy1k6yZcclWwIpNOfM7Id5LANijWFA0Su8MP/LvPtDukQDGhYuZYPWRajNGYEUCDStR6sA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047212;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---.XYAMMf6_1715358997;
+Received: from 30.39.184.43(mailfrom:libang.li@antgroup.com fp:SMTPD_---.XYAMMf6_1715358997)
+          by smtp.aliyun-inc.com;
+          Sat, 11 May 2024 00:36:38 +0800
+Message-ID: <41acfd35-69b4-41bc-a45b-4426d5110077@antgroup.com>
+Date: Sat, 11 May 2024 00:36:35 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240508150240.225429-1-chenhuacai@loongson.cn>
-In-Reply-To: <20240508150240.225429-1-chenhuacai@loongson.cn>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 10 May 2024 16:44:44 +0200
-Message-ID: <CABgObfaivYUYZwmC9p2uwCWTC-hzJc4P_=rK0S244Hjx3X8kvg@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch KVM changes for v6.10
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] mm: Add update_mmu_tlb_range()
+To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
+ chenhuacai@kernel.org, tsbogend@alpha.franken.de, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, chris@zankel.net, jcmvbkbc@gmail.com
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ david@redhat.com, ioworker0@gmail.com, libang.linux@gmail.com,
+ baolin.wang@linux.alibaba.com
+References: <20240506155120.83105-1-libang.li@antgroup.com>
+ <20240506155120.83105-6-libang.li@antgroup.com>
+ <eb41fcb3-7207-40a8-9b49-0825a2e74e86@arm.com>
+Content-Language: en-US
+From: "Bang Li" <libang.li@antgroup.com>
+In-Reply-To: <eb41fcb3-7207-40a8-9b49-0825a2e74e86@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 8, 2024 at 5:11=E2=80=AFPM Huacai Chen <chenhuacai@loongson.cn>=
- wrote:
->
-> The following changes since commit dd5a440a31fae6e459c0d6271dddd628255053=
-61:
->
->   Linux 6.9-rc7 (2024-05-05 14:06:01 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
-.git tags/loongarch-kvm-6.10
->
-> for you to fetch changes up to 7b7e584f90bf670d5c6f2b1fff884bf3b972cad4:
->
->   LoongArch: KVM: Add mmio trace events support (2024-05-06 22:00:47 +080=
-0)
+Hi Ryan,
 
-Pulled, thanks.
+Thanks for you review!
 
-Paolo
+On 2024/5/10 17:05, Ryan Roberts wrote:
+> On 06/05/2024 16:51, Bang Li wrote:
+>> After the commit 19eaf44954df ("mm: thp: support allocation of anonymous
+>> multi-size THP"), it may need to batch update tlb of an address range
+>> through the update_mmu_tlb function. We can simplify this operation by
+>> adding the update_mmu_tlb_range function, which may also reduce the
+>> execution of some unnecessary code in some architectures.
+>>
+>> Signed-off-by: Bang Li <libang.li@antgroup.com>
+>> ---
+>>   include/linux/pgtable.h | 8 ++++++++
+>>   mm/memory.c             | 4 +---
+>>   2 files changed, 9 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>> index 18019f037bae..869bfe6054f1 100644
+>> --- a/include/linux/pgtable.h
+>> +++ b/include/linux/pgtable.h
+>> @@ -737,6 +737,14 @@ static inline void update_mmu_tlb(struct vm_area_struct *vma,
+>>   #define __HAVE_ARCH_UPDATE_MMU_TLB
+>>   #endif
+> 
+> Given you are implementing update_mmu_tlb_range() in all the arches that
+> currently override update_mmu_tlb() I wonder if it would be cleaner to remove
+> update_mmu_tlb() from all those arches, and define generically, removing the
+> ability for arches to override it:
+> 
+> static inline void update_mmu_tlb(struct vm_area_struct *vma,
+> 				unsigned long address, pte_t *ptep)
+> {
+> 	update_mmu_tlb_range(vma, address, ptep, 1);
+> }
 
-> ----------------------------------------------------------------
-> LoongArch KVM changes for v6.10
->
-> 1. Add ParaVirt IPI support.
-> 2. Add software breakpoint support.
-> 3. Add mmio trace events support.
->
-> ----------------------------------------------------------------
-> Bibo Mao (8):
->       LoongArch/smp: Refine some ipi functions on LoongArch platform
->       LoongArch: KVM: Add hypercall instruction emulation
->       LoongArch: KVM: Add cpucfg area for kvm hypervisor
->       LoongArch: KVM: Add vcpu mapping from physical cpuid
->       LoongArch: KVM: Add PV IPI support on host side
->       LoongArch: KVM: Add PV IPI support on guest side
->       LoongArch: KVM: Add software breakpoint support
->       LoongArch: KVM: Add mmio trace events support
->
->  arch/loongarch/Kconfig                          |   9 ++
->  arch/loongarch/include/asm/Kbuild               |   1 -
->  arch/loongarch/include/asm/hardirq.h            |   6 +
->  arch/loongarch/include/asm/inst.h               |   2 +
->  arch/loongarch/include/asm/irq.h                |  11 +-
->  arch/loongarch/include/asm/kvm_host.h           |  33 +++++
->  arch/loongarch/include/asm/kvm_para.h           | 161 ++++++++++++++++++=
-++++++
->  arch/loongarch/include/asm/kvm_vcpu.h           |  11 ++
->  arch/loongarch/include/asm/loongarch.h          |  12 ++
->  arch/loongarch/include/asm/paravirt.h           |  30 +++++
->  arch/loongarch/include/asm/paravirt_api_clock.h |   1 +
->  arch/loongarch/include/asm/smp.h                |  22 ++--
->  arch/loongarch/include/uapi/asm/kvm.h           |   4 +
->  arch/loongarch/kernel/Makefile                  |   1 +
->  arch/loongarch/kernel/irq.c                     |  24 +---
->  arch/loongarch/kernel/paravirt.c                | 151 ++++++++++++++++++=
-++++
->  arch/loongarch/kernel/perf_event.c              |  14 +--
->  arch/loongarch/kernel/smp.c                     |  52 +++++---
->  arch/loongarch/kernel/time.c                    |  12 +-
->  arch/loongarch/kvm/exit.c                       | 151 ++++++++++++++++++=
-+---
->  arch/loongarch/kvm/trace.h                      |  20 ++-
->  arch/loongarch/kvm/vcpu.c                       | 105 +++++++++++++++-
->  arch/loongarch/kvm/vm.c                         |  11 ++
->  23 files changed, 746 insertions(+), 98 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/kvm_para.h
->  create mode 100644 arch/loongarch/include/asm/paravirt.h
->  create mode 100644 arch/loongarch/include/asm/paravirt_api_clock.h
->  create mode 100644 arch/loongarch/kernel/paravirt.c
->
+Agreed! Thank you for your suggestion, I will modify it in the next version.
 
+> 
+>>   
+>> +#ifndef __HAVE_ARCH_UPDATE_MMU_TLB_RANGE
+>> +static inline void update_mmu_tlb_range(struct vm_area_struct *vma,
+>> +				unsigned long address, pte_t *ptep, unsigned int nr)
+>> +{
+>> +}
+>> +#define __HAVE_ARCH_UPDATE_MMU_TLB_RANGE
+>> +#endif
+> 
+> Then you could use the modern override scheme as Lance suggested and you won't
+> have any confusion with __HAVE_ARCH_UPDATE_MMU_TLB because it won't exist anymore.
+
+Yes, use update_mmu_tlb_range to implement update_mmu_tlb, we only need 
+to define the update_mmu_tlb_range macro.
+
+> 
+>> +
+>>   /*
+>>    * Some architectures may be able to avoid expensive synchronization
+>>    * primitives when modifications are made to PTE's which are already
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index eea6e4984eae..2d53e29cf76e 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -4421,7 +4421,6 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+>>   	vm_fault_t ret = 0;
+>>   	int nr_pages = 1;
+>>   	pte_t entry;
+>> -	int i;
+>>   
+>>   	/* File mapping without ->vm_ops ? */
+>>   	if (vma->vm_flags & VM_SHARED)
+>> @@ -4491,8 +4490,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+>>   		update_mmu_tlb(vma, addr, vmf->pte);
+>>   		goto release;
+>>   	} else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
+>> -		for (i = 0; i < nr_pages; i++)
+>> -			update_mmu_tlb(vma, addr + PAGE_SIZE * i, vmf->pte + i);
+>> +		update_mmu_tlb_range(vma, addr, vmf->pte, nr_pages);
+> 
+> I certainly agree that this will be a useful helper to have. I expect there will
+> be more users in future.
+
+Thank you for your affirmation. Baolin’s "add mTHP support for anonymous 
+shmem" series[1] can also use this function to simplify the code.
+
+[1] 
+https://lore.kernel.org/linux-mm/cover.1714978902.git.baolin.wang@linux.alibaba.com/
+
+Thanks,
+Bang
+
+> 
+>>   		goto release;
+>>   	}
+>>   
