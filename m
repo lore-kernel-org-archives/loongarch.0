@@ -1,105 +1,92 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out0-218.mail.aliyun.com (out0-218.mail.aliyun.com [140.205.0.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE63716F274
-	for <loongarch@lists.linux.dev>; Thu,  9 May 2024 15:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8E113B7A7
+	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 02:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715269518; cv=none; b=ouzDNKctFiKwPLkqK0x1czannWzVrTFGvdYBjkwBReEto7gf01sjUPADgxttDv6VpM6ItF/Oxax4R5j7+owVVH02InFMrvp6sS3rHiB2u1xcE+96tgK7lZWb/ka/Hw2ljiBYf5AwZGfdO4zGmv2Bu6ViOUgpiz0oOBuSv3pB0AU=
+	t=1715307530; cv=none; b=WYUF1JwdJ0HoOoSJ9sapg8SHIfwTt713bs9gsDD7nUAcQStsfOeKbkkTom7gYk6NEYSoAWJxiOeqNVZRASaHgHsIC4epRthNBqzkyPkO6qB6MeyaeU6SPawBhyOApCJKRvUjBtcIihrmh8JEcwXq68rUuDc+LV8ry4+B2Jl0cz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715269518; c=relaxed/simple;
-	bh=DZNYdSr3PQT2Ytv6yKADnFDz0/6OYvMONIsLOfnnwGs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=OhzQk4Q9ivqImV7nXamTIvL+7MXNnIyJUHK5Ft4cuKx34BWpnOxqQtdMvMHlwY5rKFrF17Y6rgpZXEOFLE+Yjb7Sj/Qud5YQhdZS04D5tWBjuVKUOHtWLdbtHtb1rYKWvFCCPBaDKhm56zFN8/ThonKclNl0JFpdD/BEeHrj3M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=bhC8aeqj; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1715307530; c=relaxed/simple;
+	bh=Bs/K1/cqrY9IU/a3teHI1MTK7lNsbQvLmxYdI6+My50=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nJjOrOJMRQXR9ojygo6G6uqeuhDyxOIT8xu0GGMMrUh9mltaJqALSt41let58NqQGcVWtF7P/dDx2MhH3C6Ih/KomEdPB1z5C5EE1l+SaFXgIwgindA4Ff3+RjyvzwwYGzXskC5YuB6nHNx7iHBdAbZakj9O0GgIwju6gfRsaAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=1oef9RVl; arc=none smtp.client-ip=140.205.0.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="bhC8aeqj"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7e1b520812fso307639f.1
-        for <loongarch@lists.linux.dev>; Thu, 09 May 2024 08:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1715269516; x=1715874316; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5gUCh8FY7gsl2h4E/kN2GFyVm9t1B96kSbiEPvae8u0=;
-        b=bhC8aeqjgGcaEN6ZCSQEWlmj1K5k3e/lcpW7ccJ+O98d/1Fsl0L2tcp4S4VZNb7Z2R
-         1kmsvLPvZbWi4bprh0h4ERQBqVahFmuYZuK8eL102x/YgnK8dYkOL0Qo4TT4ap+2DSiR
-         9x0hS74XWPfJcwU6YAPpEVtX/3r7N/yaKMbABvizsV/AMSEe0EDcF4dDl0cNjAuOcVlM
-         FaHf58f4qvbQzVzL9H215uATr0kY613mS1cYakIjsEyT0FtNiQIXrU81NlAHCoU4g4Co
-         WmBY1zKBGDxwI/ARgObh1BNuUSgxXaDI5NuHuiJNeaUxOjxHTPlEpaaCgADHyNyaZuJI
-         roiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715269516; x=1715874316;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5gUCh8FY7gsl2h4E/kN2GFyVm9t1B96kSbiEPvae8u0=;
-        b=iIQATZw9RkqLo8q7KvWShgtnFovTePPtdKZ0D9r9gNkxRDzFatX0gzcAl/PWiykG+N
-         qv4lRzq3MejEyZ/OenlxwG9mLSMR76LsVld2P7sfEfYISdk4T2FR77E7UmWD8et/MWeb
-         eweD6YwGiGYeE0n2u6wApztmPTcouiwxrY77s0vYhV3VlroBGvMWtz1lYSwVqdO6zORn
-         lcOSFkOzz0Qr0b0s8qaUQh2759zP2XJ4znNfB6GP+pxEt+1XUzo9uqgGso8FhefXrjIp
-         LujXEgr393Bk/p9JQnxEQOh3nn+yDMP7m6s1YUyuIz7hWeFr7RqRwOkxSghrWrcLzzNu
-         ww0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXU5y0HoyeMkOr9NaI23qtFXpYvJVRjmSK34ZSwv6BPEi1Gs571XPNMLiNMdzRbLFqabJ4GIAzNwj0NFDC4waiVWbF+EoAhfnPx
-X-Gm-Message-State: AOJu0YxyTkbYwIefICYbLBSwLM9K2W23M5G8NENVC98R/ZMN4ejcrjeK
-	sZo/jf+7qjJP6TnMh3fVDLM4ImjXLSILU7mui2WZQLiNBbhfdrJZEunNXa2g60YJPk2j1eQBrHC
-	H
-X-Google-Smtp-Source: AGHT+IEonISz5k6S+QhuL+vpC60UupW6zWwKsP/6j7LitGl0JXGDRiQ702VSRrcsV4zjn3bncreQ3Q==
-X-Received: by 2002:a6b:d101:0:b0:7e1:86e1:cd46 with SMTP id ca18e2360f4ac-7e1b520b2f8mr8525739f.2.1715269514443;
-        Thu, 09 May 2024 08:45:14 -0700 (PDT)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-489376de473sm416106173.154.2024.05.09.08.45.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 08:45:13 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: chenhuacai@kernel.org, tj@kernel.org, josef@toxicpanda.com, 
- victor@mojatatu.com, raven@themaw.net, yukuai3@huawei.com, 
- twoerner@gmail.com, zhaotianrui@loongson.cn, svenjoac@gmx.de, 
- jhs@mojatatu.com, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, cgroups@vger.kernel.org, yi.zhang@huawei.com, 
- yangerkun@huawei.com
-In-Reply-To: <20240509121107.3195568-1-yukuai1@huaweicloud.com>
-References: <20240509121107.3195568-1-yukuai1@huaweicloud.com>
-Subject: Re: [PATCH for-6.10/block 0/2] blk-throtl: delete throtl low and
- lay initialization
-Message-Id: <171526951316.85538.15766009475504777468.b4-ty@kernel.dk>
-Date: Thu, 09 May 2024 09:45:13 -0600
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="1oef9RVl"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1715307519; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=z3HIGnGQLgftTdCGksj44Ar9SYsXylJNvYIUDPPEOR8=;
+	b=1oef9RVl4+N/ZYuO1r199a6Nq3kwuoLZIbNsqS5eAeKrUwDDaUy7KWB/Rlypbubs9gEf2XfB085njZAef06aOsTdB2EJCquUI8JP9TcOTIRQhA72BMBM6Q4qdaLZSQHihol1xFjGr2HsGIEOtzU+btyAdAE7PCEGFyRkuI7exvU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047209;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---.XXRy7zj_1715307516;
+Received: from 30.230.92.230(mailfrom:libang.li@antgroup.com fp:SMTPD_---.XXRy7zj_1715307516)
+          by smtp.aliyun-inc.com;
+          Fri, 10 May 2024 10:18:37 +0800
+Message-ID: <282a3696-e883-49bb-9bb5-57d4762250cf@antgroup.com>
+Date: Fri, 10 May 2024 10:18:35 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] riscv: Add update_mmu_tlb_range()
+To: Alexandre Ghiti <alex@ghiti.fr>, akpm@linux-foundation.org,
+ chenhuacai@kernel.org, tsbogend@alpha.franken.de, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, chris@zankel.net, jcmvbkbc@gmail.com
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ david@redhat.com, ryan.roberts@arm.com, ioworker0@gmail.com,
+ libang.linux@gmail.com
+References: <20240506155120.83105-1-libang.li@antgroup.com>
+ <20240506155120.83105-4-libang.li@antgroup.com>
+ <5a812c84-c3bb-4874-b29c-0816494b77a8@ghiti.fr>
+Content-Language: en-US
+From: "Bang Li" <libang.li@antgroup.com>
+In-Reply-To: <5a812c84-c3bb-4874-b29c-0816494b77a8@ghiti.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Thanks, Alex!
 
-On Thu, 09 May 2024 20:11:05 +0800, Yu Kuai wrote:
-> Tested with the new blktests:
+On 2024/5/7 13:35, Alexandre Ghiti wrote:
+> Hi Bang,
 > 
-> https://lore.kernel.org/all/20240420084505.3624763-1-yukuai1@huaweicloud.com/
+> On 06/05/2024 17:51, Bang Li wrote:
+>> Added update_mmu_tlb_range function, we can batch update tlb of an
+>> address range.
+>>
+>> Signed-off-by: Bang Li <libang.li@antgroup.com>
+>> ---
+>>   arch/riscv/include/asm/pgtable.h | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/riscv/include/asm/pgtable.h 
+>> b/arch/riscv/include/asm/pgtable.h
+>> index 661b2b4fe758..f784c6dd2c66 100644
+>> --- a/arch/riscv/include/asm/pgtable.h
+>> +++ b/arch/riscv/include/asm/pgtable.h
+>> @@ -489,6 +489,10 @@ static inline void update_mmu_cache_range(struct 
+>> vm_fault *vmf,
+>>   #define __HAVE_ARCH_UPDATE_MMU_TLB
+>>   #define update_mmu_tlb update_mmu_cache
+>> +#define __HAVE_ARCH_UPDATE_MMU_TLB_RANGE
+>> +#define update_mmu_tlb_range(vma, addr, ptep, nr) \
+>> +    update_mmu_cache_range(NULL, vma, addr, ptep, nr)
+>> +
+>>   static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
+>>           unsigned long address, pmd_t *pmdp)
+>>   {
 > 
-> Changes from RFC:
->  - remove patches to support build blk-throtl as module;
->  - add ack tag for patch 1, also rebase on the top of for-6.10/block;
->  - some small changes for patch 2;
 > 
-> [...]
-
-Applied, thanks!
-
-[1/2] blk-throttle: remove CONFIG_BLK_DEV_THROTTLING_LOW
-      commit: bf20ab538c81bb32edab86f503fc0c55d8243bbc
-[2/2] blk-throttle: delay initialization until configuration
-      commit: a3166c51702bb00b8f8b84022090cbab8f37be1a
-
-Best regards,
--- 
-Jens Axboe
-
-
-
+> You can add:
+> 
+> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> 
+> Thanks,
+> 
+> Alex
