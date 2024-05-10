@@ -1,103 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6028416191A
-	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 10:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CEE12C539
+	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 14:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715336130; cv=none; b=fsfRvwCA3etsPo02ZjCDZtOB4sPPEXYzuey7bzpmUlfm8f86RHmkzv2htczHojX7joTZNuFDgCHPacwSsS3C6NJYHr4P9fz2aMLBP6OfT0Ydh0VGtwgKOhmk9B839YVKgDX9Ykvmg09SnOBOd+FZR1lzkA4NAN+/6qSf7fmGs5A=
+	t=1715352318; cv=none; b=Zh5fNDsT0AzHjm13xye1txoAu2rVye6TKpaRz7TZVsqkM1hn60TzzXg8Wsv/edY0V3SEGQ4TCYS6l3rGZH7y3XnLFb67aQqTNgvnYK7ceuggHYAzdhrCpghkpxckxZzbczll/ZIgyAFjMOb9ptbq924gPL+som9QQWC3dbiBD1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715336130; c=relaxed/simple;
-	bh=fuG/C5uoVJeB5he1R13vlv6JaFjBkCsdLihkGnNnFR4=;
+	s=arc-20240116; t=1715352318; c=relaxed/simple;
+	bh=kmj44PEzEs1Hc7RYAG2y6Omx6rTiyxtrlA8AzcCTcUs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fRbOUesdYDd9VjJX7808mS7aJiYZqiRhQy2DA3yKKqocK/2FGrv8wvqjuMLDJIfa0mZ8mujIexsL/ZxhTuU4hfdhylomWoyVgSnnjDm71m2VchbAsa4vQXubDixqWi6D+8HufglJmALP6CTZM5tNHatNaFlF9k0+wAOClX9z6sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yb5PoYI2; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=IFltvad8SstX9EWte9d+852otTYPNVUm9aGfc8DsMJOtV4LjMj3MfJtppwgwAUlungJvJQsePjapuPQB4xcSaLZMhvufVb1/pb+F4tPrs7MXdPWvIViOQyJIGqQJJLILGuW5CMOfIgGzyRHpt00pPeve2ckAI6xJJewtEdh0gtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T/R9ZiRD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yb5PoYI2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13EC3C4AF08
-	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 10:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715336130;
-	bh=fuG/C5uoVJeB5he1R13vlv6JaFjBkCsdLihkGnNnFR4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Yb5PoYI2f7kUeYKqTZbff2GCwQp1ZjLw9Xt2sP75SjPUcGOKJKOQ7nMCWK9RWGzvr
-	 f8qNfy+akA6GeuOf8WqHbEU6rArH8P1sqMttbrizRlKyiw5DJZtglpRf/wx2e5Figq
-	 FXmMn1o6CzTHTxEzZIOiq1xarbgk1yS3f4xi3SoaPlRH8wiuJj3vLrbVO5mzAiCbD1
-	 ByKXixmGvFP/e1TZNyMMuAL5aGcQGNb7zu3qom/eoFF45o1yqW3ezoP312fi4pZFkT
-	 GppWP1aWQc0/5AGHYXSriklh48pIdt8nQ9pnUrxHyyhYXj6v2cSdtcEjLtOFoyaFR7
-	 8uvZV9+09Oorw==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51fdc9af005so2945842e87.3
-        for <loongarch@lists.linux.dev>; Fri, 10 May 2024 03:15:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUvmM9NHwL7+QQMYbJCphNe2O9007lZ/0I34o6qfrGtNt2z+F5PjWLkrCHEnfCje/36bQZGB1+k9tkZRYTPAr24/I9zOephKfJa
-X-Gm-Message-State: AOJu0YzXCttk100t0l6ySwqDa3A273+WEblrSlDiO+Jv5nCe56bsUool
-	x2ub44yarqfaxHCMqmTQIl42dEeVNVxk/U4RZxXYiwfnXOEHBZLadfDZkLsxzvfjJEElny+2FAo
-	ZauPVg6uu/ZJW6II6hWtNkL7FxrQ=
-X-Google-Smtp-Source: AGHT+IHpA2hPeDINGwm2WivqVOTAivdj4Jj7oKDeK5FXs6PTXHahRnc0Iu44THVQzOHir8WHa1oL8OV0PP9125lWzzU=
-X-Received: by 2002:a05:6512:3e17:b0:51d:605e:f0ce with SMTP id
- 2adb3069b0e04-52210278698mr2442032e87.50.1715336128324; Fri, 10 May 2024
- 03:15:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T/R9ZiRD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715352315;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V0JbujFYt/9SItNTEbEiczRuSL3qAb2lZe4U6XNdsCE=;
+	b=T/R9ZiRD8cowlEvt6k45zjjee8Kz32Ig6uE04Hl+0adaxC7SEYVRZ9pHV6omzhdCLueWKJ
+	5Tr5u9HyopoRvIY/YBvdMI54UffAINO2tR/Fc+LDtxVUeMwEVeCeOlaxa0G4xa1LHr/WpC
+	VkRlaK5h061dzpV+hatkQdfPbrK6eH8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-580-KN1kYbJ_PLmg_b39VnpfxQ-1; Fri, 10 May 2024 10:44:58 -0400
+X-MC-Unique: KN1kYbJ_PLmg_b39VnpfxQ-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-34c93732095so818865f8f.0
+        for <loongarch@lists.linux.dev>; Fri, 10 May 2024 07:44:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715352297; x=1715957097;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V0JbujFYt/9SItNTEbEiczRuSL3qAb2lZe4U6XNdsCE=;
+        b=cLdm6GIzZ2dg0zlP0kW3mhXrBjLohSVoo7UfZJJ5mjAhXequ3QRjDgyxnld3/GGEH8
+         k6ymqH3GnoU0WP+OnrBU5cP1FVgwrvdHc/TINo69VSbfDepSJTfTjG6XsqCz0+sd14ax
+         q68LCNCCSrOjCwd822fmkpiFu/dyRjckGJIpcYg2HLeruUQ8ZyW4JSP2OcGej+i6pkcY
+         9gSYiXkhcwktApLzZv6Zfm6ieorI/FmfBEBJPNNuDGAZDHmkNSc3W2Mof0bLk7XZ6OWi
+         /gYdyKmqZYyL8yRKkPOJEbFF1KXp4uRgfZfqlXeMEohde5MStTTOCHWyWt0N/yALUGEh
+         /I6g==
+X-Forwarded-Encrypted: i=1; AJvYcCWeBiYFusgaa5kYDE+YzxL3RdaKhn5uVg0GgLjZacNP31aEW0UbW6Qw8sGwS5j2rUha7ctmzSq4RxS1MP006uSTzXf5lrZGCcu2
+X-Gm-Message-State: AOJu0YzoXajXgrzCBKEQmH7w7iUvcWofRUOgIh9gGWn77HFOk3aZ9ycp
+	DlB1om2w75imkNu0YxO6mgDsiM+aiSORBDh8frIbd80c5gcHAPn76qEWZZ0SZ6mA/6qp/l2O3wZ
+	PXFgTvv4BTIlvvEcrXsHZuQuwZvJwwiNx+wMoDc1frARHFELPky0oV66JP59X+2zt86nnbiOuEr
+	gNgQxz71puMVR+pFIIzYZ2t+2VI+BYEQSAj3xjiTGz
+X-Received: by 2002:a05:6000:1003:b0:33e:7f5c:a75d with SMTP id ffacd0b85a97d-3504a96cca2mr1881557f8f.57.1715352297328;
+        Fri, 10 May 2024 07:44:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEqPh3msW6mLhD5AYzc7IzmHoZiilZKRmz2o9qQNP3DbnrKVIBIgk/dOAj3od9jdxMGgdFJY8LFNOkvNb4LRmc=
+X-Received: by 2002:a05:6000:1003:b0:33e:7f5c:a75d with SMTP id
+ ffacd0b85a97d-3504a96cca2mr1881542f8f.57.1715352296757; Fri, 10 May 2024
+ 07:44:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1715222938.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1715222938.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 10 May 2024 18:15:15 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7+htp6nX6gTtdPSjN1H7UNgOv7M7=Jn5eJuqWfm0=OwQ@mail.gmail.com>
-Message-ID: <CAAhV-H7+htp6nX6gTtdPSjN1H7UNgOv7M7=Jn5eJuqWfm0=OwQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] LoongArch: dts: Add more support device ndoes to Loongson-2K
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+References: <20240508150240.225429-1-chenhuacai@loongson.cn>
+In-Reply-To: <20240508150240.225429-1-chenhuacai@loongson.cn>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Fri, 10 May 2024 16:44:44 +0200
+Message-ID: <CABgObfaivYUYZwmC9p2uwCWTC-hzJc4P_=rK0S244Hjx3X8kvg@mail.gmail.com>
+Subject: Re: [GIT PULL] LoongArch KVM changes for v6.10
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Queued, thanks.
-
-Huacai
-
-On Thu, May 9, 2024 at 2:18=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
+On Wed, May 8, 2024 at 5:11=E2=80=AFPM Huacai Chen <chenhuacai@loongson.cn>=
  wrote:
 >
-> Hi all:
+> The following changes since commit dd5a440a31fae6e459c0d6271dddd628255053=
+61:
 >
-> Now, more Loongson-2K related deviers are supported, this patchset add
-> these device nodes to dts files.
+>   Linux 6.9-rc7 (2024-05-05 14:06:01 -0700)
 >
-> Additionally, we remove the "disable" state of the ls2k1000 clk node as
-> it was unnecessary.
+> are available in the Git repository at:
 >
-> Thanks.
+>   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
+.git tags/loongarch-kvm-6.10
 >
-> -------
-> V2:
-> patch(1/3):
->  - New patch. Follow Conor's comment, remove the "disable" state of the
->    ls2k1000 clk node as it was unnecessary.
-> patch(2/3)(3/3):
->  - Remove the "disable" state of the clk node as it was unnecessary;
->  - Add cpu-alert trips.
+> for you to fetch changes up to 7b7e584f90bf670d5c6f2b1fff884bf3b972cad4:
 >
-> Link to V1:
-> https://lore.kernel.org/all/cover.1715156107.git.zhoubinbin@loongson.cn/
+>   LoongArch: KVM: Add mmio trace events support (2024-05-06 22:00:47 +080=
+0)
+
+Pulled, thanks.
+
+Paolo
+
+> ----------------------------------------------------------------
+> LoongArch KVM changes for v6.10
 >
-> Binbin Zhou (3):
->   LoongArch: dts: Remove "disabled" state of clock controller node
->   LoongArch: dts: Add new supported device nodes to Loongson-2K0500
->   LoongArch: dts: Add new supported device nodes to Loongson-2K2000
+> 1. Add ParaVirt IPI support.
+> 2. Add software breakpoint support.
+> 3. Add mmio trace events support.
 >
->  arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 85 ++++++++++++++++++-
->  .../boot/dts/loongson-2k1000-ref.dts          |  4 -
->  arch/loongarch/boot/dts/loongson-2k1000.dtsi  |  1 -
->  arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 48 ++++++++++-
->  4 files changed, 126 insertions(+), 12 deletions(-)
+> ----------------------------------------------------------------
+> Bibo Mao (8):
+>       LoongArch/smp: Refine some ipi functions on LoongArch platform
+>       LoongArch: KVM: Add hypercall instruction emulation
+>       LoongArch: KVM: Add cpucfg area for kvm hypervisor
+>       LoongArch: KVM: Add vcpu mapping from physical cpuid
+>       LoongArch: KVM: Add PV IPI support on host side
+>       LoongArch: KVM: Add PV IPI support on guest side
+>       LoongArch: KVM: Add software breakpoint support
+>       LoongArch: KVM: Add mmio trace events support
 >
-> --
-> 2.43.0
+>  arch/loongarch/Kconfig                          |   9 ++
+>  arch/loongarch/include/asm/Kbuild               |   1 -
+>  arch/loongarch/include/asm/hardirq.h            |   6 +
+>  arch/loongarch/include/asm/inst.h               |   2 +
+>  arch/loongarch/include/asm/irq.h                |  11 +-
+>  arch/loongarch/include/asm/kvm_host.h           |  33 +++++
+>  arch/loongarch/include/asm/kvm_para.h           | 161 ++++++++++++++++++=
+++++++
+>  arch/loongarch/include/asm/kvm_vcpu.h           |  11 ++
+>  arch/loongarch/include/asm/loongarch.h          |  12 ++
+>  arch/loongarch/include/asm/paravirt.h           |  30 +++++
+>  arch/loongarch/include/asm/paravirt_api_clock.h |   1 +
+>  arch/loongarch/include/asm/smp.h                |  22 ++--
+>  arch/loongarch/include/uapi/asm/kvm.h           |   4 +
+>  arch/loongarch/kernel/Makefile                  |   1 +
+>  arch/loongarch/kernel/irq.c                     |  24 +---
+>  arch/loongarch/kernel/paravirt.c                | 151 ++++++++++++++++++=
+++++
+>  arch/loongarch/kernel/perf_event.c              |  14 +--
+>  arch/loongarch/kernel/smp.c                     |  52 +++++---
+>  arch/loongarch/kernel/time.c                    |  12 +-
+>  arch/loongarch/kvm/exit.c                       | 151 ++++++++++++++++++=
++---
+>  arch/loongarch/kvm/trace.h                      |  20 ++-
+>  arch/loongarch/kvm/vcpu.c                       | 105 +++++++++++++++-
+>  arch/loongarch/kvm/vm.c                         |  11 ++
+>  23 files changed, 746 insertions(+), 98 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/kvm_para.h
+>  create mode 100644 arch/loongarch/include/asm/paravirt.h
+>  create mode 100644 arch/loongarch/include/asm/paravirt_api_clock.h
+>  create mode 100644 arch/loongarch/kernel/paravirt.c
 >
+
