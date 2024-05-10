@@ -1,172 +1,103 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14BF15FA9E
-	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 09:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6028416191A
+	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 10:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715332767; cv=none; b=gzaufXVMIogrvxikFPKtGBygYRE1TA4fyxZpJB/PoJHElzvzd479XGv/cbSF+SoFfKLU0FTHHl/Qj/AjyDFGIeTySEoj1S0tR/PQkvvR45uwLOqEQ6ISece+tHsw75xV2rotYYLHGW+IXRL/Ck1nr7jfU7FriNDV+uHNZ2QwDZY=
+	t=1715336130; cv=none; b=fsfRvwCA3etsPo02ZjCDZtOB4sPPEXYzuey7bzpmUlfm8f86RHmkzv2htczHojX7joTZNuFDgCHPacwSsS3C6NJYHr4P9fz2aMLBP6OfT0Ydh0VGtwgKOhmk9B839YVKgDX9Ykvmg09SnOBOd+FZR1lzkA4NAN+/6qSf7fmGs5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715332767; c=relaxed/simple;
-	bh=4ikwhSOG2kr9jeHmsF3QaKrCUASm16FF8rgh+Txf5Gc=;
+	s=arc-20240116; t=1715336130; c=relaxed/simple;
+	bh=fuG/C5uoVJeB5he1R13vlv6JaFjBkCsdLihkGnNnFR4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T1OD+36tZB94O3GO2TWXkodjgB5GvdAhcAH99CR5IAuuv9r2zdvcLuanxfDkewZiKEiB3YtWVzq2ybJbIbYpPakSHmL2v0eap1O1eN6c41yuWdZ7v1g6oocSTEjPJ3ltOZp9vCspDtahdltSsWzZqzVG9drSa8jJpStCZ4LaUUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f0ZOfk+C; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=fRbOUesdYDd9VjJX7808mS7aJiYZqiRhQy2DA3yKKqocK/2FGrv8wvqjuMLDJIfa0mZ8mujIexsL/ZxhTuU4hfdhylomWoyVgSnnjDm71m2VchbAsa4vQXubDixqWi6D+8HufglJmALP6CTZM5tNHatNaFlF9k0+wAOClX9z6sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yb5PoYI2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0ZOfk+C"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51f3761c96aso2225400e87.3
-        for <loongarch@lists.linux.dev>; Fri, 10 May 2024 02:19:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715332764; x=1715937564; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fwcye2cmMvVkzOb2RmQWM8DhgejhAa5fax0EB+I/fqo=;
-        b=f0ZOfk+CXR9OG0CXJUpDeU0R3pQ+7ybjyy+9m4ljHTKFvkJeQsp4T7vclF6u9i71/H
-         sBOrPUW62d04L6dhWiiThclGgj5jYuZfktbGQnnGBRmLqFdfgVKFjnzoavL2bvPhH5DP
-         H+M5Ze0xhDPN9MDA7XRFJWs+dTdGO6h3mVkzmf+IWYUYG9NQPZMFgmOCkpw2s4c2vjsZ
-         SiSKemZCLDYA9kTRRMsxRcCWBY0t6PgDjAtXWZwKP9pbX3+vZrPwuobZu8+xnpYFqRRm
-         tkYs2V1GK4VO2vAoM6En9T5xgdsGehrIdsUKGv+VTYFy+6fpUV2TTCUxrH1y9vJraM+m
-         BtJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715332764; x=1715937564;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fwcye2cmMvVkzOb2RmQWM8DhgejhAa5fax0EB+I/fqo=;
-        b=KQuh0EDL3ZhEX8eJLCVuTSFsPU7ykHfdJfqwANTCVWFB7MJuoKiXdKGF/bYiBei+Qv
-         hj/lCUTFkO0ksVhVe5wfwNUsX0MAoognQOgVh+tr1425ONnE04I2oXc7XOcxM34Vu8/h
-         +Zu+h1qa9IfINVVvZnDjqGAnEaAh77i8MsaxvY9jtPg0Sl0rMIN8OcpjmZe1BFJbFFt9
-         cFOv8i0R1IlLnVSn0dEyQiVmaV2iousV3a1YK2uIRg/Bj+RdQIydIv3g+VEndn/SRpup
-         izZGhQIv3VelZ/sjKDVTkOLoO71Y8jS6yUvVgf7UyPbwOyGEaxLCjsm4Il8SOafaVyOJ
-         fd2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ8CMZDDorMQMHnR5weVYkoK2ixZPBOH6qgkQORmtwTauHGElFEohrilCkAJ5wBV2z0Tyq8go6aRSTvzrBv/v4WkU4bhazXWD3
-X-Gm-Message-State: AOJu0Yxp0EHKaZZuwDAm5mm688RtuXwpbPWD6sjMvau0vXqU6zEurmbm
-	CqukqoM+P59ApOv9NsOfwyLf/ICcRxqJlxJT1eLdB6zPuNydjr5yPpVQ5mJJOcXuXYBPs3DjkTd
-	pr4pNrSvyFBwi/5nsNvM6c0qPdzw=
-X-Google-Smtp-Source: AGHT+IHc8ejS+uh+vZ4ONq0UjpSRCAJS/lYZfonb8VrowpLbGOm9rPid8UtfVuCRbn1pG5g/TjPFUolkPn0uDb6PLKo=
-X-Received: by 2002:a05:6512:3e01:b0:515:d1a6:1b07 with SMTP id
- 2adb3069b0e04-5220fc7bdc8mr2561142e87.15.1715332763829; Fri, 10 May 2024
- 02:19:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yb5PoYI2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13EC3C4AF08
+	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 10:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715336130;
+	bh=fuG/C5uoVJeB5he1R13vlv6JaFjBkCsdLihkGnNnFR4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Yb5PoYI2f7kUeYKqTZbff2GCwQp1ZjLw9Xt2sP75SjPUcGOKJKOQ7nMCWK9RWGzvr
+	 f8qNfy+akA6GeuOf8WqHbEU6rArH8P1sqMttbrizRlKyiw5DJZtglpRf/wx2e5Figq
+	 FXmMn1o6CzTHTxEzZIOiq1xarbgk1yS3f4xi3SoaPlRH8wiuJj3vLrbVO5mzAiCbD1
+	 ByKXixmGvFP/e1TZNyMMuAL5aGcQGNb7zu3qom/eoFF45o1yqW3ezoP312fi4pZFkT
+	 GppWP1aWQc0/5AGHYXSriklh48pIdt8nQ9pnUrxHyyhYXj6v2cSdtcEjLtOFoyaFR7
+	 8uvZV9+09Oorw==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51fdc9af005so2945842e87.3
+        for <loongarch@lists.linux.dev>; Fri, 10 May 2024 03:15:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUvmM9NHwL7+QQMYbJCphNe2O9007lZ/0I34o6qfrGtNt2z+F5PjWLkrCHEnfCje/36bQZGB1+k9tkZRYTPAr24/I9zOephKfJa
+X-Gm-Message-State: AOJu0YzXCttk100t0l6ySwqDa3A273+WEblrSlDiO+Jv5nCe56bsUool
+	x2ub44yarqfaxHCMqmTQIl42dEeVNVxk/U4RZxXYiwfnXOEHBZLadfDZkLsxzvfjJEElny+2FAo
+	ZauPVg6uu/ZJW6II6hWtNkL7FxrQ=
+X-Google-Smtp-Source: AGHT+IHpA2hPeDINGwm2WivqVOTAivdj4Jj7oKDeK5FXs6PTXHahRnc0Iu44THVQzOHir8WHa1oL8OV0PP9125lWzzU=
+X-Received: by 2002:a05:6512:3e17:b0:51d:605e:f0ce with SMTP id
+ 2adb3069b0e04-52210278698mr2442032e87.50.1715336128324; Fri, 10 May 2024
+ 03:15:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240506155120.83105-1-libang.li@antgroup.com>
- <20240506155120.83105-6-libang.li@antgroup.com> <eb41fcb3-7207-40a8-9b49-0825a2e74e86@arm.com>
-In-Reply-To: <eb41fcb3-7207-40a8-9b49-0825a2e74e86@arm.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Fri, 10 May 2024 17:19:12 +0800
-Message-ID: <CAK1f24mNZ5=HubBNcnuabzWAEqAALnnKVd3N9D5+jNBjxO6p+w@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] mm: Add update_mmu_tlb_range()
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Bang Li <libang.li@antgroup.com>, akpm@linux-foundation.org, 
-	chenhuacai@kernel.org, tsbogend@alpha.franken.de, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, chris@zankel.net, jcmvbkbc@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, david@redhat.com, libang.linux@gmail.com
+References: <cover.1715222938.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1715222938.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 10 May 2024 18:15:15 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7+htp6nX6gTtdPSjN1H7UNgOv7M7=Jn5eJuqWfm0=OwQ@mail.gmail.com>
+Message-ID: <CAAhV-H7+htp6nX6gTtdPSjN1H7UNgOv7M7=Jn5eJuqWfm0=OwQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] LoongArch: dts: Add more support device ndoes to Loongson-2K
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 10, 2024 at 5:05=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com>=
+Queued, thanks.
+
+Huacai
+
+On Thu, May 9, 2024 at 2:18=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
  wrote:
 >
-> On 06/05/2024 16:51, Bang Li wrote:
-> > After the commit 19eaf44954df ("mm: thp: support allocation of anonymou=
-s
-> > multi-size THP"), it may need to batch update tlb of an address range
-> > through the update_mmu_tlb function. We can simplify this operation by
-> > adding the update_mmu_tlb_range function, which may also reduce the
-> > execution of some unnecessary code in some architectures.
-> >
-> > Signed-off-by: Bang Li <libang.li@antgroup.com>
-> > ---
-> >  include/linux/pgtable.h | 8 ++++++++
-> >  mm/memory.c             | 4 +---
-> >  2 files changed, 9 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> > index 18019f037bae..869bfe6054f1 100644
-> > --- a/include/linux/pgtable.h
-> > +++ b/include/linux/pgtable.h
-> > @@ -737,6 +737,14 @@ static inline void update_mmu_tlb(struct vm_area_s=
-truct *vma,
-> >  #define __HAVE_ARCH_UPDATE_MMU_TLB
-> >  #endif
+> Hi all:
 >
-> Given you are implementing update_mmu_tlb_range() in all the arches that
-> currently override update_mmu_tlb() I wonder if it would be cleaner to re=
-move
-> update_mmu_tlb() from all those arches, and define generically, removing =
-the
-> ability for arches to override it:
-
-Sounds great! Let's get it done.
-
+> Now, more Loongson-2K related deviers are supported, this patchset add
+> these device nodes to dts files.
 >
-> static inline void update_mmu_tlb(struct vm_area_struct *vma,
->                                 unsigned long address, pte_t *ptep)
-> {
->         update_mmu_tlb_range(vma, address, ptep, 1);
-> }
+> Additionally, we remove the "disable" state of the ls2k1000 clk node as
+> it was unnecessary.
 >
-> >
-> > +#ifndef __HAVE_ARCH_UPDATE_MMU_TLB_RANGE
-> > +static inline void update_mmu_tlb_range(struct vm_area_struct *vma,
-> > +                             unsigned long address, pte_t *ptep, unsig=
-ned int nr)
-> > +{
-> > +}
-> > +#define __HAVE_ARCH_UPDATE_MMU_TLB_RANGE
-> > +#endif
+> Thanks.
 >
-> Then you could use the modern override scheme as Lance suggested and you =
-won't
-> have any confusion with __HAVE_ARCH_UPDATE_MMU_TLB because it won't exist=
- anymore.
-
-+1. It might be better to use the modern override scheme :)
-
-Thanks,
-Lance
-
+> -------
+> V2:
+> patch(1/3):
+>  - New patch. Follow Conor's comment, remove the "disable" state of the
+>    ls2k1000 clk node as it was unnecessary.
+> patch(2/3)(3/3):
+>  - Remove the "disable" state of the clk node as it was unnecessary;
+>  - Add cpu-alert trips.
 >
-> > +
-> >  /*
-> >   * Some architectures may be able to avoid expensive synchronization
-> >   * primitives when modifications are made to PTE's which are already
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index eea6e4984eae..2d53e29cf76e 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -4421,7 +4421,6 @@ static vm_fault_t do_anonymous_page(struct vm_fau=
-lt *vmf)
-> >       vm_fault_t ret =3D 0;
-> >       int nr_pages =3D 1;
-> >       pte_t entry;
-> > -     int i;
-> >
-> >       /* File mapping without ->vm_ops ? */
-> >       if (vma->vm_flags & VM_SHARED)
-> > @@ -4491,8 +4490,7 @@ static vm_fault_t do_anonymous_page(struct vm_fau=
-lt *vmf)
-> >               update_mmu_tlb(vma, addr, vmf->pte);
-> >               goto release;
-> >       } else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
-> > -             for (i =3D 0; i < nr_pages; i++)
-> > -                     update_mmu_tlb(vma, addr + PAGE_SIZE * i, vmf->pt=
-e + i);
-> > +             update_mmu_tlb_range(vma, addr, vmf->pte, nr_pages);
+> Link to V1:
+> https://lore.kernel.org/all/cover.1715156107.git.zhoubinbin@loongson.cn/
 >
-> I certainly agree that this will be a useful helper to have. I expect the=
-re will
-> be more users in future.
+> Binbin Zhou (3):
+>   LoongArch: dts: Remove "disabled" state of clock controller node
+>   LoongArch: dts: Add new supported device nodes to Loongson-2K0500
+>   LoongArch: dts: Add new supported device nodes to Loongson-2K2000
 >
-> >               goto release;
-> >       }
-> >
+>  arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 85 ++++++++++++++++++-
+>  .../boot/dts/loongson-2k1000-ref.dts          |  4 -
+>  arch/loongarch/boot/dts/loongson-2k1000.dtsi  |  1 -
+>  arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 48 ++++++++++-
+>  4 files changed, 126 insertions(+), 12 deletions(-)
+>
+> --
+> 2.43.0
 >
