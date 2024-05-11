@@ -1,149 +1,62 @@
-Received: from out0-205.mail.aliyun.com (out0-205.mail.aliyun.com [140.205.0.205])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3A2134CC
-	for <loongarch@lists.linux.dev>; Fri, 10 May 2024 16:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E922D2D600;
+	Sat, 11 May 2024 10:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715359326; cv=none; b=G5YrjlhuOYvLpKQs+PHydxfjbYPsRi6w2TwjDDCM4vw3VYEaH3hPhwiTgF96zhFdlZx7NbNOkD37ML9vEnF9rh1MIWbioWs2smlSHtLx/wXO5Vh0ex9XmYv+UNHigjnA5MydQCijgNnPxfW8/cjhlbWdmv1qd5h7HDN32nL42f0=
+	t=1715421681; cv=none; b=K5wIrboru5sAFjQ30qw4nJj93952D1x+ouRq+Ld4JNL2zHwUGZ5hWuCgYfFSjo1s/6KhZ3dByI95TWx7BburfKza2geI9oMyEtnppdKIebid36GGzpnHAvc9ihXaVatX6MtJeoj40dfBK3+iF78fpyQuef4cjP7aHMBfvqTj+jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715359326; c=relaxed/simple;
-	bh=ah2f+flPhjMWjq/tYuVImg54uB8bO07DeCFS0hFQSh0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WNwty/vs6Q77BTRizuqvCgGAHLAqGw8KXgqVlD0YRKfn8YdN1w2CTN3cFJ9al7dQpIsFuC3aJ2dR1TS832b48txVXkIKHaIrRB46rcaO06aAQ8QW/+NZ6FArTpqqXA7bY0SlAJi8gY2SkcgvujA6/7uwylZ0mTvQZ2sIQ4wB+Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=VWjjNhtZ; arc=none smtp.client-ip=140.205.0.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="VWjjNhtZ"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1715359316; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=qtTzD4p4/mI5FQfHMAQ4AseA2ZJSqFbFGgw9hxpmGnA=;
-	b=VWjjNhtZvjSw0qJkMx5d7tGd34B5mRjVsC1PXoBYAtjfADEY0klUl/9gpP4UZ2i8UBz3ZRxWqWEl39+ijxN6igPpzwaONaq+c6xSgdy1k6yZcclWwIpNOfM7Id5LANijWFA0Su8MP/LvPtDukQDGhYuZYPWRajNGYEUCDStR6sA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047212;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---.XYAMMf6_1715358997;
-Received: from 30.39.184.43(mailfrom:libang.li@antgroup.com fp:SMTPD_---.XYAMMf6_1715358997)
-          by smtp.aliyun-inc.com;
-          Sat, 11 May 2024 00:36:38 +0800
-Message-ID: <41acfd35-69b4-41bc-a45b-4426d5110077@antgroup.com>
-Date: Sat, 11 May 2024 00:36:35 +0800
+	s=arc-20240116; t=1715421681; c=relaxed/simple;
+	bh=tz2bqVg84OHNsrluO2Ojp3gIZJKwGxkDAKcS9LJ/I9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XHYBPCYlqept4FJMhikNUDbM393NcNsrAvHXRflC6g7euspaAdJm/ohntV7altZHmjH70liOG9n3bXg9k69tBIrMC2azSt/J7oCjWAJfBBXWDdiFLyl4QEaClyW+rH/MRIyXOpfNOmVn0q6CltpPZ0D0zjEHO2vjLyatQU+eNpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E52B1C2BBFC;
+	Sat, 11 May 2024 10:01:17 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Select ARCH_WANT_DEFAULT_BPF_JIT
+Date: Sat, 11 May 2024 18:01:05 +0800
+Message-ID: <20240511100105.2334509-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] mm: Add update_mmu_tlb_range()
-To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
- chenhuacai@kernel.org, tsbogend@alpha.franken.de, paul.walmsley@sifive.com,
- palmer@dabbelt.com, chris@zankel.net, jcmvbkbc@gmail.com
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- david@redhat.com, ioworker0@gmail.com, libang.linux@gmail.com,
- baolin.wang@linux.alibaba.com
-References: <20240506155120.83105-1-libang.li@antgroup.com>
- <20240506155120.83105-6-libang.li@antgroup.com>
- <eb41fcb3-7207-40a8-9b49-0825a2e74e86@arm.com>
-Content-Language: en-US
-From: "Bang Li" <libang.li@antgroup.com>
-In-Reply-To: <eb41fcb3-7207-40a8-9b49-0825a2e74e86@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Ryan,
+BPF JIT has better performance and more secure than BPF interpreter, so
+enable it by default, as most other architectures done.
 
-Thanks for you review!
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 2024/5/10 17:05, Ryan Roberts wrote:
-> On 06/05/2024 16:51, Bang Li wrote:
->> After the commit 19eaf44954df ("mm: thp: support allocation of anonymous
->> multi-size THP"), it may need to batch update tlb of an address range
->> through the update_mmu_tlb function. We can simplify this operation by
->> adding the update_mmu_tlb_range function, which may also reduce the
->> execution of some unnecessary code in some architectures.
->>
->> Signed-off-by: Bang Li <libang.li@antgroup.com>
->> ---
->>   include/linux/pgtable.h | 8 ++++++++
->>   mm/memory.c             | 4 +---
->>   2 files changed, 9 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->> index 18019f037bae..869bfe6054f1 100644
->> --- a/include/linux/pgtable.h
->> +++ b/include/linux/pgtable.h
->> @@ -737,6 +737,14 @@ static inline void update_mmu_tlb(struct vm_area_struct *vma,
->>   #define __HAVE_ARCH_UPDATE_MMU_TLB
->>   #endif
-> 
-> Given you are implementing update_mmu_tlb_range() in all the arches that
-> currently override update_mmu_tlb() I wonder if it would be cleaner to remove
-> update_mmu_tlb() from all those arches, and define generically, removing the
-> ability for arches to override it:
-> 
-> static inline void update_mmu_tlb(struct vm_area_struct *vma,
-> 				unsigned long address, pte_t *ptep)
-> {
-> 	update_mmu_tlb_range(vma, address, ptep, 1);
-> }
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 335a98b28167..24bce573dc2b 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -65,6 +65,7 @@ config LOONGARCH
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
++	select ARCH_WANT_DEFAULT_BPF_JIT
+ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+ 	select ARCH_WANT_LD_ORPHAN_WARN
+ 	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
+-- 
+2.43.0
 
-Agreed! Thank you for your suggestion, I will modify it in the next version.
-
-> 
->>   
->> +#ifndef __HAVE_ARCH_UPDATE_MMU_TLB_RANGE
->> +static inline void update_mmu_tlb_range(struct vm_area_struct *vma,
->> +				unsigned long address, pte_t *ptep, unsigned int nr)
->> +{
->> +}
->> +#define __HAVE_ARCH_UPDATE_MMU_TLB_RANGE
->> +#endif
-> 
-> Then you could use the modern override scheme as Lance suggested and you won't
-> have any confusion with __HAVE_ARCH_UPDATE_MMU_TLB because it won't exist anymore.
-
-Yes, use update_mmu_tlb_range to implement update_mmu_tlb, we only need 
-to define the update_mmu_tlb_range macro.
-
-> 
->> +
->>   /*
->>    * Some architectures may be able to avoid expensive synchronization
->>    * primitives when modifications are made to PTE's which are already
->> diff --git a/mm/memory.c b/mm/memory.c
->> index eea6e4984eae..2d53e29cf76e 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -4421,7 +4421,6 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
->>   	vm_fault_t ret = 0;
->>   	int nr_pages = 1;
->>   	pte_t entry;
->> -	int i;
->>   
->>   	/* File mapping without ->vm_ops ? */
->>   	if (vma->vm_flags & VM_SHARED)
->> @@ -4491,8 +4490,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
->>   		update_mmu_tlb(vma, addr, vmf->pte);
->>   		goto release;
->>   	} else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
->> -		for (i = 0; i < nr_pages; i++)
->> -			update_mmu_tlb(vma, addr + PAGE_SIZE * i, vmf->pte + i);
->> +		update_mmu_tlb_range(vma, addr, vmf->pte, nr_pages);
-> 
-> I certainly agree that this will be a useful helper to have. I expect there will
-> be more users in future.
-
-Thank you for your affirmation. Baolin’s "add mTHP support for anonymous 
-shmem" series[1] can also use this function to simplify the code.
-
-[1] 
-https://lore.kernel.org/linux-mm/cover.1714978902.git.baolin.wang@linux.alibaba.com/
-
-Thanks,
-Bang
-
-> 
->>   		goto release;
->>   	}
->>   
