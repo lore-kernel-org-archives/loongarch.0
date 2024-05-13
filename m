@@ -1,37 +1,37 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 029355B1E9
-	for <loongarch@lists.linux.dev>; Mon, 13 May 2024 06:41:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5FBD1FA1
+	for <loongarch@lists.linux.dev>; Mon, 13 May 2024 06:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715582510; cv=none; b=UOVAd1PxEOcXl0dmOpRiJq+acUVN3554I+E2gms9xJmVciBK038Gcbg7iQKhFB9VZZSIkcQF3K0rvARLXCaakTqshUSaZh/493rYkHw7w9/mPYMb7zseVRmYEEbWzFYKf4yYqKHSUb+Xmjt8jsQZt/fJkgLV9KAwewEA/ybRC14=
+	t=1715583206; cv=none; b=SAAEqtkwxHuEiuPLqGgzDM8mlK+YciCUx0gN1EnNtwFzjmt/r+3GAFheMMnefUdUbBhdsjaTT4clp7c1dbAbnkzKl3qianJA0Vdmx8BYnD8JfvVGqoPDNXmRW973zki+ByopRplEXG/y3d4iaO3uSyDaCEueWpNlhfQR/kYHCFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715582510; c=relaxed/simple;
-	bh=9CNcVsx6GH8f9RXjua1bE7voMwh312ilPJJw8WrRdxU=;
+	s=arc-20240116; t=1715583206; c=relaxed/simple;
+	bh=4uqUNynPkOPkXEWuNHEIT3tFGSflAsjSseN8vACiyh8=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=d+OD666Gey3+F+7fS5LovEhqP8MJKCJXQie2KV1aHUnXcWkGfzeURVViGQv8YIvyfzaPxn7prxH+F+SLaS5s9Y1vO+Aaq4W+0Zzp7xamlC9DnPfxxKLWAR2AXNwj6wuJon80snuy0ctjPbdp6NdmhRN4Yud8S9yHHCEvdjTr8o0=
+	 In-Reply-To:Content-Type; b=RJUsJ3Nl95mgedNEcMZEwaV/edNnJARMcfu2CGtmAXEJb58gozA1hetlAtIXOZXQy3B1nk5M8D5v1dUWQyh67GIQ+WQ1DbwPKabfOnZfJko9ygqhWzOxkcMgYUl31+EMmGIwQyrFRVdLx0Tu4Uy9KOM7XcVzAZnTZwpbL8zBtHU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8CxxOoqtkFm_RIMAA--.17610S3;
-	Mon, 13 May 2024 14:41:46 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxV_DguEFm1xMMAA--.29877S3;
+	Mon, 13 May 2024 14:53:20 +0800 (CST)
 Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxXN4ptkFmoqMcAA--.51510S3;
-	Mon, 13 May 2024 14:41:45 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxtFbcuEFmOKYcAA--.34665S3;
+	Mon, 13 May 2024 14:53:18 +0800 (CST)
 Subject: Re: [PATCH 2/2] Loongarch:Support loongarch avec
-To: Xi Ruoyao <xry111@xry111.site>, chenhuacai@kernel.org, kernel@xen0n.name,
+To: maobibo <maobibo@loongson.cn>, chenhuacai@kernel.org, kernel@xen0n.name,
  tglx@linutronix.de, jiaxun.yang@flygoat.com, gaoliang@loongson.cn,
  wangliupu@loongson.cn, lvjianmin@loongson.cn, yijun@loongson.cn,
  mhocko@suse.com, akpm@linux-foundation.org, dianders@chromium.org,
- maobibo@loongson.cn, zhaotianrui@loongson.cn, nathan@kernel.org,
+ xry111@xry111.site, zhaotianrui@loongson.cn, nathan@kernel.org,
  yangtiezhu@loongson.cn, zhoubinbin@loongson.cn
 Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20240507125953.9117-1-zhangtianyang@loongson.cn>
- <a0a896fef1aca8958a190801ab5355e22373081d.camel@xry111.site>
+ <bb7d1699-8cde-f27b-3374-39fe572a41ff@loongson.cn>
 From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <b38caf8e-b817-7ea2-50e3-eef78909b642@loongson.cn>
-Date: Mon, 13 May 2024 14:41:45 +0800
+Message-ID: <9b4b6ec2-c015-73ec-535b-9bf7317bdc59@loongson.cn>
+Date: Mon, 13 May 2024 14:53:16 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -40,32 +40,367 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <a0a896fef1aca8958a190801ab5355e22373081d.camel@xry111.site>
+In-Reply-To: <bb7d1699-8cde-f27b-3374-39fe572a41ff@loongson.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:AQAAf8DxXN4ptkFmoqMcAA--.51510S3
+X-CM-TRANSID:AQAAf8DxtFbcuEFmOKYcAA--.34665S3
 X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUm0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxAqzxv262kKe7AKxVWUAVWUtwCF54CYxVCY
-	1x0262kKe7AKxVWUAVWUtwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAV
-	WUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x07josjUUUUUU=
+X-Coremail-Antispam: 1Uk129KBj9fXoWfXw4UCrWrJw18CF4fWr4xZrc_yoW5tF4UXo
+	W3KF1rJr1rJr4jgryUJw1qqry3Xr1UJrnrJ347WrW7Ar18AF1UG3yUGryUtay7Jr1kGr1U
+	Ja4UGry0yFy7tr15l-sFpf9Il3svdjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUO07kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxhiSDU
+	UUU
 
 
-在 2024/5/7 下午10:20, Xi Ruoyao 写道:
-> On Tue, 2024-05-07 at 20:59 +0800, Tianyang Zhang wrote:
+在 2024/5/8 下午3:00, maobibo 写道:
+>
+>
+> On 2024/5/7 下午8:59, Tianyang Zhang wrote:
+>> From: zhangtianyang <zhangtianyang@loongson.cn>
+>>
+>> Introduce the advanced extended interrupt controllers,
+>> This feature will allow each core to have an independent
+>> 256 interrupt vectors, and MSI interrupts can be
+>> independently routed to any vector on any CPU.
+>
+> Hi tianyang,
+>
+> Thanks for provide the patch.
+>
+> One simple question, can old kernel without this driver such as kernel 
+> 6.8 run in the new hardware with advanced extended interrupt controllers?
+
+Hi Bibo,
+
+
+The new hardware is fully compatible with the old interrupt model, and 
+the old kernel will route interrupts in the original way
+
+>
+>>
+>> Co-developed-by: Jianmin Lv <lvjianmin@loongson.cn>
+>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>> Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
+>> Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
+>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>> ---
+>>   arch/loongarch/Kconfig                    |   1 +
+>>   arch/loongarch/include/asm/cpu-features.h |   1 +
+>>   arch/loongarch/include/asm/cpu.h          |   2 +
+>>   arch/loongarch/include/asm/hw_irq.h       |  10 +
+>>   arch/loongarch/include/asm/irq.h          |   7 +-
+>>   arch/loongarch/include/asm/loongarch.h    |  19 +-
+>>   arch/loongarch/include/asm/smp.h          |   1 +
+>>   arch/loongarch/kernel/cpu-probe.c         |   3 +-
+>>   arch/loongarch/kernel/smp.c               |   3 +
+>>   drivers/irqchip/Makefile                  |   2 +-
+>>   drivers/irqchip/irq-loongarch-avec.c      | 434 ++++++++++++++++++++++
+>>   drivers/irqchip/irq-loongarch-cpu.c       |   4 +-
+>>   drivers/irqchip/irq-loongson-eiointc.c    |   3 +
+>>   drivers/irqchip/irq-loongson-pch-msi.c    |  45 ++-
+>>   14 files changed, 525 insertions(+), 10 deletions(-)
+>>   create mode 100644 drivers/irqchip/irq-loongarch-avec.c
+>>
+>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>> index 10959e6c3583..71b8f19745e0 100644
+>> --- a/arch/loongarch/Kconfig
+>> +++ b/arch/loongarch/Kconfig
+>> @@ -76,6 +76,7 @@ config LOONGARCH
+>>       select GENERIC_ENTRY
+>>       select GENERIC_GETTIMEOFDAY
+>>       select GENERIC_IOREMAP if !ARCH_IOREMAP
+>> +    select GENERIC_IRQ_MATRIX_ALLOCATOR
+>>       select GENERIC_IRQ_MULTI_HANDLER
+>>       select GENERIC_IRQ_PROBE
+>>       select GENERIC_IRQ_SHOW
+>> diff --git a/arch/loongarch/include/asm/cpu-features.h 
+>> b/arch/loongarch/include/asm/cpu-features.h
+>> index 2eafe6a6aca8..16a716f88a5c 100644
+>> --- a/arch/loongarch/include/asm/cpu-features.h
+>> +++ b/arch/loongarch/include/asm/cpu-features.h
+>> @@ -65,5 +65,6 @@
+>>   #define cpu_has_guestid        cpu_opt(LOONGARCH_CPU_GUESTID)
+>>   #define cpu_has_hypervisor cpu_opt(LOONGARCH_CPU_HYPERVISOR)
+>>   #define cpu_has_ptw        cpu_opt(LOONGARCH_CPU_PTW)
+>> +#define cpu_has_avecint        cpu_opt(LOONGARCH_CPU_AVECINT)
+>>     #endif /* __ASM_CPU_FEATURES_H */
+>> diff --git a/arch/loongarch/include/asm/cpu.h 
+>> b/arch/loongarch/include/asm/cpu.h
+>> index 48b9f7168bcc..843f9c4ec980 100644
+>> --- a/arch/loongarch/include/asm/cpu.h
+>> +++ b/arch/loongarch/include/asm/cpu.h
+>> @@ -99,6 +99,7 @@ enum cpu_type_enum {
+>>   #define CPU_FEATURE_GUESTID        24    /* CPU has GuestID feature */
+>>   #define CPU_FEATURE_HYPERVISOR        25    /* CPU has hypervisor 
+>> (running in VM) */
+>>   #define CPU_FEATURE_PTW            26    /* CPU has hardware page 
+>> table walker */
+>> +#define CPU_FEATURE_AVECINT        27    /* CPU has avec interrupt */
+>>     #define LOONGARCH_CPU_CPUCFG BIT_ULL(CPU_FEATURE_CPUCFG)
+>>   #define LOONGARCH_CPU_LAM        BIT_ULL(CPU_FEATURE_LAM)
+>> @@ -127,5 +128,6 @@ enum cpu_type_enum {
+>>   #define LOONGARCH_CPU_GUESTID BIT_ULL(CPU_FEATURE_GUESTID)
+>>   #define LOONGARCH_CPU_HYPERVISOR BIT_ULL(CPU_FEATURE_HYPERVISOR)
+>>   #define LOONGARCH_CPU_PTW        BIT_ULL(CPU_FEATURE_PTW)
+>> +#define LOONGARCH_CPU_AVECINT BIT_ULL(CPU_FEATURE_AVECINT)
+>>     #endif /* _ASM_CPU_H */
+>> diff --git a/arch/loongarch/include/asm/hw_irq.h 
+>> b/arch/loongarch/include/asm/hw_irq.h
+>> index af4f4e8fbd85..521abce32135 100644
+>> --- a/arch/loongarch/include/asm/hw_irq.h
+>> +++ b/arch/loongarch/include/asm/hw_irq.h
+>> @@ -9,6 +9,16 @@
+>>     extern atomic_t irq_err_count;
+>>   +/*
+>> + * 256 vectors Map:
+>> + *
+>> + * 0 - 15: mapping legacy IPs, e.g. IP0-12.
+>> + * 16 - 255: mapping a vector for external IRQ.
+>> + *
+>> + */
+>> +#define NR_VECTORS    256
+>> +#define IRQ_MATRIX_BITS    NR_VECTORS
+>> +#define NR_LEGACY_VECTORS    16
+>>   /*
+>>    * interrupt-retrigger: NOP for now. This may not be appropriate 
+>> for all
+>>    * machines, we'll see ...
+>> diff --git a/arch/loongarch/include/asm/irq.h 
+>> b/arch/loongarch/include/asm/irq.h
+>> index 218b4da0ea90..e28bd96c6611 100644
+>> --- a/arch/loongarch/include/asm/irq.h
+>> +++ b/arch/loongarch/include/asm/irq.h
+>> @@ -65,7 +65,7 @@ extern struct acpi_vector_group 
+>> msi_group[MAX_IO_PICS];
+>>   #define LOONGSON_LPC_LAST_IRQ        (LOONGSON_LPC_IRQ_BASE + 15)
+>>     #define LOONGSON_CPU_IRQ_BASE        16
+>> -#define LOONGSON_CPU_LAST_IRQ        (LOONGSON_CPU_IRQ_BASE + 14)
+>> +#define LOONGSON_CPU_LAST_IRQ        (LOONGSON_CPU_IRQ_BASE + 15)
+>>     #define LOONGSON_PCH_IRQ_BASE        64
+>>   #define LOONGSON_PCH_ACPI_IRQ        (LOONGSON_PCH_IRQ_BASE + 47)
+>> @@ -101,6 +101,11 @@ int pch_msi_acpi_init(struct irq_domain *parent,
+>>                       struct acpi_madt_msi_pic *acpi_pchmsi);
+>>   int pch_pic_acpi_init(struct irq_domain *parent,
+>>                       struct acpi_madt_bio_pic *acpi_pchpic);
+>> +int __init pch_msi_acpi_init_v2(struct irq_domain *parent,
+>> +        struct acpi_madt_msi_pic *pch_msi_entry);
+>> +int __init loongarch_avec_acpi_init(struct irq_domain *parent);
+>> +void complete_irq_moving(int *restart);
+>> +
+>>   int find_pch_pic(u32 gsi);
+>>   struct fwnode_handle *get_pch_msi_handle(int pci_segment);
+>>   diff --git a/arch/loongarch/include/asm/loongarch.h 
+>> b/arch/loongarch/include/asm/loongarch.h
+>> index 46366e783c84..4d9a09861925 100644
+>> --- a/arch/loongarch/include/asm/loongarch.h
+>> +++ b/arch/loongarch/include/asm/loongarch.h
+>> @@ -72,7 +72,6 @@
+>>   #define  CPUCFG1_RPLV            BIT(23)
+>>   #define  CPUCFG1_HUGEPG            BIT(24)
+>>   #define  CPUCFG1_CRC32            BIT(25)
+>> -#define  CPUCFG1_MSGINT            BIT(26)
+>>     #define LOONGARCH_CPUCFG2        0x2
+>>   #define  CPUCFG2_FP            BIT(0)
+>> @@ -240,8 +239,8 @@
+>>   #define  CSR_ESTAT_EXC_WIDTH        6
+>>   #define  CSR_ESTAT_EXC            (_ULCAST_(0x3f) << 
+>> CSR_ESTAT_EXC_SHIFT)
+>>   #define  CSR_ESTAT_IS_SHIFT        0
+>> -#define  CSR_ESTAT_IS_WIDTH        14
+>> -#define  CSR_ESTAT_IS            (_ULCAST_(0x3fff) << 
+>> CSR_ESTAT_IS_SHIFT)
+>> +#define  CSR_ESTAT_IS_WIDTH        15
+>> +#define  CSR_ESTAT_IS            (_ULCAST_(0x7fff) << 
+>> CSR_ESTAT_IS_SHIFT)
+>>     #define LOONGARCH_CSR_ERA        0x6    /* ERA */
+>>   @@ -987,10 +986,17 @@
+>>   #define CSR_FWPC_SKIP_SHIFT        16
+>>   #define CSR_FWPC_SKIP            (_ULCAST_(1) << CSR_FWPC_SKIP_SHIFT)
+>>   +#define LOONGARCH_CSR_IRR0        0xa0
+>> +#define LOONGARCH_CSR_IRR1        0xa1
+>> +#define LOONGARCH_CSR_IRR2        0xa2
+>> +#define LOONGARCH_CSR_IRR3        0xa3
+>> +
+>> +#define    LOONGARCH_CSR_ILR        0xa4
+>> +
+>>   /*
+>>    * CSR_ECFG IM
+>>    */
+>> -#define ECFG0_IM        0x00001fff
+>> +#define ECFG0_IM        0x00005fff
+>>   #define ECFGB_SIP0        0
+>>   #define ECFGF_SIP0        (_ULCAST_(1) << ECFGB_SIP0)
+>>   #define ECFGB_SIP1        1
+>> @@ -1033,6 +1039,7 @@
+>>   #define  IOCSRF_EIODECODE        BIT_ULL(9)
+>>   #define  IOCSRF_FLATMODE        BIT_ULL(10)
+>>   #define  IOCSRF_VM            BIT_ULL(11)
+>> +#define  IOCSRF_AVEC            BIT_ULL(15)
+>>     #define LOONGARCH_IOCSR_VENDOR        0x10
+>>   @@ -1043,6 +1050,7 @@
+>>   #define LOONGARCH_IOCSR_MISC_FUNC    0x420
+>>   #define  IOCSR_MISC_FUNC_TIMER_RESET    BIT_ULL(21)
+>>   #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
+>> +#define  IOCSR_MISC_FUNC_AVEC_EN    BIT_ULL(51)
+>>     #define LOONGARCH_IOCSR_CPUTEMP        0x428
+>>   @@ -1363,9 +1371,10 @@ __BUILD_CSR_OP(tlbidx)
+>>   #define INT_TI        11    /* Timer */
+>>   #define INT_IPI        12
+>>   #define INT_NMI        13
+>> +#define INT_AVEC    14
+>>     /* ExcCodes corresponding to interrupts */
+>> -#define EXCCODE_INT_NUM        (INT_NMI + 1)
+>> +#define EXCCODE_INT_NUM        (INT_AVEC + 1)
+>>   #define EXCCODE_INT_START    64
+>>   #define EXCCODE_INT_END        (EXCCODE_INT_START + EXCCODE_INT_NUM 
+>> - 1)
+>>   diff --git a/arch/loongarch/include/asm/smp.h 
+>> b/arch/loongarch/include/asm/smp.h
+>> index f81e5f01d619..577f591c1c73 100644
+>> --- a/arch/loongarch/include/asm/smp.h
+>> +++ b/arch/loongarch/include/asm/smp.h
+>> @@ -62,6 +62,7 @@ extern int __cpu_logical_map[NR_CPUS];
+>>   #define SMP_BOOT_CPU        0x1
+>>   #define SMP_RESCHEDULE        0x2
+>>   #define SMP_CALL_FUNCTION    0x4
+>> +#define SMP_CLEAR_VECT        0x8
+>>     struct secondary_data {
+>>       unsigned long stack;
+>> diff --git a/arch/loongarch/kernel/cpu-probe.c 
+>> b/arch/loongarch/kernel/cpu-probe.c
+>> index 55320813ee08..3b2e72e8f9bd 100644
+>> --- a/arch/loongarch/kernel/cpu-probe.c
+>> +++ b/arch/loongarch/kernel/cpu-probe.c
+>> @@ -106,7 +106,6 @@ static void cpu_probe_common(struct 
+>> cpuinfo_loongarch *c)
+>>           elf_hwcap |= HWCAP_LOONGARCH_CRC32;
+>>       }
+>>   -
+>>       config = read_cpucfg(LOONGARCH_CPUCFG2);
+>>       if (config & CPUCFG2_LAM) {
+>>           c->options |= LOONGARCH_CPU_LAM;
+>> @@ -176,6 +175,8 @@ static void cpu_probe_common(struct 
+>> cpuinfo_loongarch *c)
+>>           c->options |= LOONGARCH_CPU_EIODECODE;
+>>       if (config & IOCSRF_VM)
+>>           c->options |= LOONGARCH_CPU_HYPERVISOR;
+>> +    if (config & IOCSRF_AVEC)
+>> +        c->options |= LOONGARCH_CPU_AVECINT;
+>>         config = csr_read32(LOONGARCH_CSR_ASID);
+>>       config = (config & CSR_ASID_BIT) >> CSR_ASID_BIT_SHIFT;
+>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+>> index a16e3dbe9f09..4fcf399a8b17 100644
+>> --- a/arch/loongarch/kernel/smp.c
+>> +++ b/arch/loongarch/kernel/smp.c
+>> @@ -176,6 +176,9 @@ irqreturn_t loongson_ipi_interrupt(int irq, void 
+>> *dev)
+>>           per_cpu(irq_stat, cpu).ipi_irqs[IPI_CALL_FUNCTION]++;
+>>       }
+>>   +    if (action & SMP_CLEAR_VECT)
+>> +        complete_irq_moving(NULL);
+>> +
+>>       return IRQ_HANDLED;
+>>   }
+>>   diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+>> index ec4a18380998..398db4c3e264 100644
+>> --- a/drivers/irqchip/Makefile
+>> +++ b/drivers/irqchip/Makefile
+>> @@ -105,7 +105,7 @@ obj-$(CONFIG_LS1X_IRQ)            += irq-ls1x.o
+>>   obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)    += irq-ti-sci-intr.o
+>>   obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)    += irq-ti-sci-inta.o
+>>   obj-$(CONFIG_TI_PRUSS_INTC)        += irq-pruss-intc.o
+>> -obj-$(CONFIG_IRQ_LOONGARCH_CPU)        += irq-loongarch-cpu.o
+>> +obj-$(CONFIG_IRQ_LOONGARCH_CPU)        += irq-loongarch-cpu.o 
+>> irq-loongarch-avec.o
+>>   obj-$(CONFIG_LOONGSON_LIOINTC)        += irq-loongson-liointc.o
+>>   obj-$(CONFIG_LOONGSON_EIOINTC)        += irq-loongson-eiointc.o
+>>   obj-$(CONFIG_LOONGSON_HTPIC)        += irq-loongson-htpic.o
+>> diff --git a/drivers/irqchip/irq-loongarch-avec.c 
+>> b/drivers/irqchip/irq-loongarch-avec.c
+>> new file mode 100644
+>> index 000000000000..71ce33db63db
+>> --- /dev/null
+>> +++ b/drivers/irqchip/irq-loongarch-avec.c
+>> @@ -0,0 +1,434 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2020 Loongson Technologies, Inc.
+>> + */
+>> +
+>> +#include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/irqchip.h>
+>> +#include <linux/irqdomain.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/msi.h>
+>> +#include <linux/irqchip/chained_irq.h>
+>> +#include <linux/cpuhotplug.h>
+>> +#include <linux/radix-tree.h>
+>> +
+>> +#include <asm/loongarch.h>
+>> +#include <asm/setup.h>
+>> +
+>> +static phys_addr_t msi_base_v2;
+>> +
+>> +typedef struct irq_data *irq_map_t[NR_VECTORS];
+>> +DECLARE_PER_CPU(irq_map_t, irq_map);
+>> +DEFINE_PER_CPU(irq_map_t, irq_map) = {
+>> +    [0 ... NR_VECTORS - 1] = NULL,
+>> +};
+>> +
+>> +struct pending_list {
+>> +    struct list_head head;
+>> +    raw_spinlock_t    lock;
+>> +};
+>> +
+>> +DEFINE_PER_CPU(struct pending_list, pending_list);
+>> +
+>> +struct loongarch_avec_chip {
+>> +    struct fwnode_handle    *fwnode;
+>> +    struct irq_domain    *domain;
+>> +    struct irq_matrix    *vector_matrix;
+>> +    raw_spinlock_t        lock;
+>> +} loongarch_avec;
+>> +
+>> +struct loongarch_avec_data {
+>> +    struct list_head entry;
+>> +    unsigned int cpu;
+>> +    unsigned int vec;
+>> +    unsigned int prev_cpu;
+>> +    unsigned int prev_vec;
+>> +};
+>> +
+>> +static int assign_irq_vector(struct irq_data *irqd, const struct 
+>> cpumask *dest,
+>> +        unsigned int *cpu, int *vector)
+>> +{
+>> +    int ret;
+>> +
+>> +    ret = irq_matrix_alloc(loongarch_avec.vector_matrix, dest, 
+>> false, cpu);
+>> +    if (ret < 0)
+>> +        return ret;
+>> +    *vector = ret;
+>> +
+>> +    return 0;
+>> +}
+>> +
 >> +static inline void loongarch_avec_ack_irq(struct irq_data *d)
 >> +{
 >> +}
@@ -77,9 +412,504 @@ X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 >> +static inline void loongarch_avec_mask_irq(struct irq_data *d)
 >> +{
 >> +}
-> "inline" has no use here because these functions are only called via
-> function pointers, thus such calls cannot be inline-able.  I'd suggest
-> to remove "inline" for them.
+>> +
+>> +static void loongarch_avec_sync(struct loongarch_avec_data *adata)
+>> +{
+>> +    struct loongarch_avec_data *data;
+>> +    struct pending_list *plist;
+>> +
+>> +    if (cpu_online(adata->prev_cpu)) {
+>> +        plist = per_cpu_ptr(&pending_list, adata->prev_cpu);
+>> +
+>> +        data = kmalloc(sizeof(struct loongarch_avec_data), GFP_KERNEL);
+>> +        if (!data) {
+>> +            pr_warn("NO space for clean data\n");
+>> +            return;
+>> +        }
+>> +        memcpy(data, adata, sizeof(struct loongarch_avec_data));
+>> +        INIT_LIST_HEAD(&data->entry);
+>> +
+>> +        list_add_tail(&data->entry, &plist->head);
+>> +        loongson_send_ipi_single(adata->prev_cpu, SMP_CLEAR_VECT);
+>> +    }
+>> +    adata->prev_cpu = adata->cpu;
+>> +    adata->prev_vec = adata->vec;
+>> +}
+>> +
+>> +static int loongarch_avec_set_affinity(struct irq_data *data,
+>> +        const struct cpumask *dest, bool force)
+>> +{
+>> +    struct cpumask intersect_mask;
+>> +    struct loongarch_avec_data *adata;
+>> +    unsigned int cpu, vector;
+>> +    unsigned long flags;
+>> +    int ret = 0;
+>> +
+>> +    raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>> +    adata = irq_data_get_irq_chip_data(data);
+>> +
+>> +    if (adata->vec && cpu_online(adata->cpu)
+>> +            && cpumask_test_cpu(adata->cpu, dest)) {
+>> +        raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +        return 0;
+>> +    }
+>> +
+>> +    if (!cpumask_intersects(dest, cpu_online_mask)) {
+>> +        raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    cpumask_and(&intersect_mask, dest, cpu_online_mask);
+>> +
+>> +    ret = assign_irq_vector(data, &intersect_mask, &cpu, &vector);
+>> +    if (ret) {
+>> +        raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +        return ret;
+>> +    }
+>> +
+>> +    adata->cpu = cpu;
+>> +    adata->vec = vector;
+>> +    per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = data;
+>> +    loongarch_avec_sync(adata);
+>> +
+>> +    raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +    irq_data_update_effective_affinity(data, cpumask_of(cpu));
+>> +
+>> +    return IRQ_SET_MASK_OK;
+>> +}
+>> +
+>> +static void loongarch_avec_compose_msg(struct irq_data *d,
+>> +        struct msi_msg *msg)
+>> +{
+>> +    struct loongarch_avec_data *avec_data;
+>> +
+>> +    avec_data = irq_data_get_irq_chip_data(d);
+>> +
+>> +    msg->address_hi = 0x0;
+>> +    msg->address_lo = msi_base_v2 | ((avec_data->vec & 0xff) << 4) |
+>> +        ((cpu_logical_map(avec_data->cpu & 0xffff)) << 12);
+> There is requirement for variable msi_base_v2 aligned with 1<< 28.
 >
-Thank you for your feedback. I will make the necessary changes here
+> Is that right? However there is no such checking in function 
+> pch_msi_parse_madt().
+>
+> Also it will be better if there is some notations.
+>
+>> +    msg->data = 0x0;
+>> +
+>> +}
+>> +
+>> +static struct irq_chip loongarch_avec_controller = {
+>> +    .name            = "CORE_AVEC",
+>> +    .irq_ack        = loongarch_avec_ack_irq,
+>> +    .irq_mask        = loongarch_avec_mask_irq,
+>> +    .irq_unmask        = loongarch_avec_unmask_irq,
+>> +    .irq_set_affinity    = loongarch_avec_set_affinity,
+>> +    .irq_compose_msi_msg    = loongarch_avec_compose_msg,
+>> +};
+>> +
+>> +void complete_irq_moving(int *restart)
+>> +{
+>> +    struct pending_list *plist = this_cpu_ptr(&pending_list);
+>> +    struct loongarch_avec_data *adata, *tmp;
+>> +    int cpu, vector;
+>> +    u32 bias;
+>> +    u64 irr;
+>> +
+>> +    raw_spin_lock(&loongarch_avec.lock);
+>> +
+>> +    list_for_each_entry_safe(adata, tmp, &plist->head, entry) {
+>> +
+>> +        cpu = adata->prev_cpu;
+>> +        vector = adata->prev_vec;
+>> +        bias = vector/64;
+>> +        switch (bias) {
+>> +        case 0x0:
+>> +            irr = csr_read64(LOONGARCH_CSR_IRR0);
+>> +            break;
+>> +        case 0x1:
+>> +            irr = csr_read64(LOONGARCH_CSR_IRR1);
+>> +            break;
+>> +        case 0x2:
+>> +            irr = csr_read64(LOONGARCH_CSR_IRR2);
+>> +            break;
+>> +        case 0x3:
+>> +            irr = csr_read64(LOONGARCH_CSR_IRR3);
+>> +            break;
+>> +        default:
+>> +            return;
+>> +        }
+>> +
+>> +        if (irr & (1UL << (vector % 64))) {
+>> +            loongson_send_ipi_single(cpu, SMP_CLEAR_VECT);
+>
+> It is strange that sending ipi to itself to clear MSI interrupt.
+> It requires that there cannot be loop check in ipi interrupt handler, 
+> else ipi hanlder loop checking will find new IPI message again.
+>
+> Is it possible to do_irq() for MSI interrupt directly in ipi handler?
+>     d = raw_cpu_ptr(irq_map)[vector];
+>     if (d)
+>         generic_handle_irq(d->irq);
+>
+>> +            continue;
+>> +        }
+>> +        list_del(&adata->entry);
+>> +        irq_matrix_free(loongarch_avec.vector_matrix, cpu, vector, 
+>> false);
+>> +        this_cpu_ptr(irq_map)[vector] = 0;
+>> +        kfree(adata);
+>> +    }
+>> +    raw_spin_unlock(&loongarch_avec.lock);
+>> +}
+>> +
+>> +static void loongarch_avec_dispatch(struct irq_desc *desc)
+>> +{
+>> +    struct irq_chip *chip = irq_desc_get_chip(desc);
+>> +    struct irq_data *d;
+>> +    unsigned long vector;
+>> +
+>> +    chained_irq_enter(chip, desc);
+>> +    vector = csr_read64(LOONGARCH_CSR_ILR);
+>> +    if (vector & 0x80000000)
+>> +        return;
+> what is the meaning of 0x80000000? It had better be defined as macro.
+>
+> Regards
+> Bibo Mao
+>> +
+>> +    vector &= 0xff;
+>> +
+>> +    d = raw_cpu_ptr(irq_map)[vector];
+>> +    if (d)
+>> +        generic_handle_irq(d->irq);
+>> +    else
+>> +        pr_warn("IRQ ERROR:Unexpected irq  occur on cpu %d[vector 
+>> %d]\n",
+>> +                smp_processor_id(), vector);
+>> +
+>> +    chained_irq_exit(chip, desc);
+>> +}
+>> +
+>> +static int loongarch_avec_alloc(struct irq_domain *domain, unsigned 
+>> int virq,
+>> +        unsigned int nr_irqs, void *arg)
+>> +{
+>> +    struct loongarch_avec_data *adata;
+>> +    struct irq_data *irqd;
+>> +    unsigned int cpu, vector;
+>> +    unsigned long flags;
+>> +    int i, err;
+>> +
+>> +    raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>> +    for (i = 0; i < nr_irqs; i++) {
+>> +        irqd = irq_domain_get_irq_data(domain, virq + i);
+>> +        adata = kzalloc(sizeof(*adata), GFP_KERNEL);
+>> +        if (!adata) {
+>> + raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +            return -ENOMEM;
+>> +        }
+>> +        err = assign_irq_vector(irqd, cpu_online_mask, &cpu, &vector);
+>> +        if (err) {
+>> + raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +            return err;
+>> +        }
+>> +        adata->prev_cpu = adata->cpu = cpu;
+>> +        adata->prev_vec = adata->vec = vector;
+>> +
+>> +        per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irqd;
+>> +        irq_domain_set_info(domain, virq + i, virq, 
+>> &loongarch_avec_controller,
+>> +                adata, handle_edge_irq, NULL, NULL);
+>> +        irqd_set_single_target(irqd);
+>> +        irqd_set_affinity_on_activate(irqd);
+>> +    }
+>> +    raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +
+>> +    return err;
+>> +}
+>> +
+>> +static void loongarch_avec_free(struct irq_domain *domain, unsigned 
+>> int virq,
+>> +        unsigned int nr_irqs)
+>> +{
+>> +    struct loongarch_avec_data *adata;
+>> +    struct irq_data *d;
+>> +    unsigned long flags;
+>> +    unsigned int i;
+>> +
+>> +    raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>> +    for (i = 0; i < nr_irqs; i++) {
+>> +        d = irq_domain_get_irq_data(domain, virq + i);
+>> +        adata = irq_data_get_irq_chip_data(d);
+>> +        if (d) {
+>> +            irq_matrix_free(loongarch_avec.vector_matrix,
+>> +                    adata->cpu,
+>> +                    adata->vec, false);
+>> +            irq_domain_reset_irq_data(d);
+>> +        }
+>> +    }
+>> +
+>> +    raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +}
+>> +
+>> +static const struct irq_domain_ops loongarch_avec_domain_ops = {
+>> +    .alloc        = loongarch_avec_alloc,
+>> +    .free        = loongarch_avec_free,
+>> +};
+>> +
+>> +static int __init irq_matrix_init(void)
+>> +{
+>> +    int i;
+>> +
+>> +    loongarch_avec.vector_matrix = irq_alloc_matrix(NR_VECTORS, 0, 
+>> NR_VECTORS - 1);
+>> +    if (!loongarch_avec.vector_matrix)
+>> +        return -ENOMEM;
+>> +    for (i = 0; i < NR_LEGACY_VECTORS; i++)
+>> +        irq_matrix_assign_system(loongarch_avec.vector_matrix, i, 
+>> false);
+>> +
+>> +    irq_matrix_online(loongarch_avec.vector_matrix);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int __init loongarch_avec_init(struct irq_domain *parent)
+>> +{
+>> +    int ret = 0, parent_irq;
+>> +    unsigned long tmp;
+>> +
+>> +    tmp = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+>> +    tmp |= IOCSR_MISC_FUNC_AVEC_EN;
+>> +    iocsr_write64(tmp, LOONGARCH_IOCSR_MISC_FUNC);
+>> +
+>> +    raw_spin_lock_init(&loongarch_avec.lock);
+>> +
+>> +    loongarch_avec.fwnode = irq_domain_alloc_named_fwnode("CORE_AVEC");
+>> +    if (!loongarch_avec.fwnode) {
+>> +        pr_err("Unable to allocate domain handle\n");
+>> +        ret = -ENOMEM;
+>> +        goto out;
+>> +    }
+>> +
+>> +    loongarch_avec.domain = 
+>> irq_domain_create_tree(loongarch_avec.fwnode,
+>> +            &loongarch_avec_domain_ops, NULL);
+>> +    if (!loongarch_avec.domain) {
+>> +        pr_err("core-vec: cannot create IRQ domain\n");
+>> +        ret = -ENOMEM;
+>> +        goto out_free_handle;
+>> +    }
+>> +
+>> +    parent_irq = irq_create_mapping(parent, INT_AVEC);
+>> +    if (!parent_irq) {
+>> +        pr_err("Failed to mapping hwirq\n");
+>> +        ret = -EINVAL;
+>> +        goto out_remove_domain;
+>> +    }
+>> +    irq_set_chained_handler_and_data(parent_irq, 
+>> loongarch_avec_dispatch, NULL);
+>> +
+>> +    ret = irq_matrix_init();
+>> +    if (ret) {
+>> +        pr_err("Failed to init irq matrix\n");
+>> +        goto out_free_matrix;
+>> +    }
+>> +
+>> +    return ret;
+>> +
+>> +out_free_matrix:
+>> +    kfree(loongarch_avec.vector_matrix);
+>> +out_remove_domain:
+>> +    irq_domain_remove(loongarch_avec.domain);
+>> +out_free_handle:
+>> +    irq_domain_free_fwnode(loongarch_avec.fwnode);
+>> +out:
+>> +    return ret;
+>> +}
+>> +
+>> +static int loongarch_avec_offline_cpu(unsigned int cpu)
+>> +{
+>> +    unsigned long flags;
+>> +    struct pending_list *plist = per_cpu_ptr(&pending_list, cpu);
+>> +
+>> +    raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>> +    if (list_empty(&plist->head)) {
+>> +        irq_matrix_offline(loongarch_avec.vector_matrix);
+>> +    } else {
+>> +        pr_warn("cpu %d advanced extioi is busy\n");
+>> +        raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +        return -EBUSY;
+>> +    }
+>> +    raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +    return 0;
+>> +}
+>> +
+>> +static int loongarch_avec_online_cpu(unsigned int cpu)
+>> +{
+>> +    struct pending_list *plist = per_cpu_ptr(&pending_list, cpu);
+>> +    unsigned long flags;
+>> +
+>> +    raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>> +
+>> +    irq_matrix_online(loongarch_avec.vector_matrix);
+>> +
+>> +    INIT_LIST_HEAD(&plist->head);
+>> +
+>> +    raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>> +    return 0;
+>> +}
+>> +#if defined(CONFIG_ACPI)
+>> +static int __init pch_msi_parse_madt(union acpi_subtable_headers 
+>> *header,
+>> +        const unsigned long end)
+>> +{
+>> +    struct acpi_madt_msi_pic *pchmsi_entry = (struct 
+>> acpi_madt_msi_pic *)header;
+>> +
+>> +    msi_base_v2 = pchmsi_entry->msg_address;
+>> +    return pch_msi_acpi_init_v2(loongarch_avec.domain, pchmsi_entry);
+>> +}
+>> +
+>> +static inline int __init acpi_cascade_irqdomain_init(void)
+>> +{
+>> +    return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, 
+>> pch_msi_parse_madt, 1);
+>> +}
+>> +
+>> +int __init loongarch_avec_acpi_init(struct irq_domain *parent)
+>> +{
+>> +    int ret = 0;
+>> +
+>> +    ret = loongarch_avec_init(parent);
+>> +    if (ret) {
+>> +        pr_err("Failed to init irq domain\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    ret = acpi_cascade_irqdomain_init();
+>> +    if (ret) {
+>> +        pr_err("Failed to cascade IRQ domain\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    ret = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+>> +            "loongarch_avec:online",
+>> +            loongarch_avec_online_cpu, loongarch_avec_offline_cpu);
+>> +    if (ret < 0) {
+>> +        pr_err("loongarch_avec: failed to register hotplug 
+>> callbacks.\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    return ret;
+>> +}
+>> +#endif
+>> diff --git a/drivers/irqchip/irq-loongarch-cpu.c 
+>> b/drivers/irqchip/irq-loongarch-cpu.c
+>> index 9d8f2c406043..1ecac59925c6 100644
+>> --- a/drivers/irqchip/irq-loongarch-cpu.c
+>> +++ b/drivers/irqchip/irq-loongarch-cpu.c
+>> @@ -138,7 +138,9 @@ static int __init acpi_cascade_irqdomain_init(void)
+>>       if (r < 0)
+>>           return r;
+>>   -    return 0;
+>> +    if (cpu_has_avecint)
+>> +        r = loongarch_avec_acpi_init(irq_domain);
+>> +    return r;
+>>   }
+>>     static int __init cpuintc_acpi_init(union acpi_subtable_headers 
+>> *header,
+>> diff --git a/drivers/irqchip/irq-loongson-eiointc.c 
+>> b/drivers/irqchip/irq-loongson-eiointc.c
+>> index 405f622a26ad..39795241304e 100644
+>> --- a/drivers/irqchip/irq-loongson-eiointc.c
+>> +++ b/drivers/irqchip/irq-loongson-eiointc.c
+>> @@ -359,6 +359,9 @@ static int __init acpi_cascade_irqdomain_init(void)
+>>       if (r < 0)
+>>           return r;
+>>   +    if (cpu_has_avecint)
+>> +        return 0;
+>> +
+>>       r = acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, 
+>> pch_msi_parse_madt, 1);
+>>       if (r < 0)
+>>           return r;
+>> diff --git a/drivers/irqchip/irq-loongson-pch-msi.c 
+>> b/drivers/irqchip/irq-loongson-pch-msi.c
+>> index 6e1e1f011bb2..d1706080b4f4 100644
+>> --- a/drivers/irqchip/irq-loongson-pch-msi.c
+>> +++ b/drivers/irqchip/irq-loongson-pch-msi.c
+>> @@ -16,7 +16,6 @@
+>>   #include <linux/slab.h>
+>>     static int nr_pics;
+>> -
+>>   struct pch_msi_data {
+>>       struct mutex    msi_map_lock;
+>>       phys_addr_t    doorbell;
+>> @@ -100,6 +99,17 @@ static struct irq_chip middle_irq_chip = {
+>>       .irq_compose_msi_msg    = pch_msi_compose_msi_msg,
+>>   };
+>>   +static struct irq_chip pch_msi_irq_chip_v2 = {
+>> +    .name            = "MSI",
+>> +    .irq_ack        = irq_chip_ack_parent,
+>> +};
+>> +
+>> +static struct msi_domain_info pch_msi_domain_info_v2 = {
+>> +    .flags        = MSI_FLAG_USE_DEF_DOM_OPS | 
+>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>> +            MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+>> +    .chip    = &pch_msi_irq_chip_v2,
+>> +};
+>> +
+>>   static int pch_msi_parent_domain_alloc(struct irq_domain *domain,
+>>                       unsigned int virq, int hwirq)
+>>   {
+>> @@ -268,6 +278,9 @@ struct fwnode_handle *get_pch_msi_handle(int 
+>> pci_segment)
+>>   {
+>>       int i;
+>>   +    if (cpu_has_avecint)
+>> +        return pch_msi_handle[0];
+>> +
+>>       for (i = 0; i < MAX_IO_PICS; i++) {
+>>           if (msi_group[i].pci_segment == pci_segment)
+>>               return pch_msi_handle[i];
+>> @@ -289,4 +302,34 @@ int __init pch_msi_acpi_init(struct irq_domain 
+>> *parent,
+>>         return ret;
+>>   }
+>> +
+>> +int __init pch_msi_acpi_init_v2(struct irq_domain *parent,
+>> +        struct acpi_madt_msi_pic *msi_entry)
+>> +{
+>> +    struct irq_domain *msi_domain;
+>> +
+>> +    if (pch_msi_handle[0])
+>> +        return 0;
+>> +
+>> +    pch_msi_handle[0] = irq_domain_alloc_named_fwnode("msipic-v2");
+>> +    if (!pch_msi_handle[0]) {
+>> +        pr_err("Unable to allocate domain handle\n");
+>> +        kfree(pch_msi_handle[0]);
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    msi_domain = pci_msi_create_irq_domain(pch_msi_handle[0],
+>> +            &pch_msi_domain_info_v2,
+>> +            parent);
+>> +    if (!msi_domain) {
+>> +        pr_err("Failed to create PCI MSI domain\n");
+>> +        kfree(pch_msi_handle[0]);
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    pr_info("IRQ domain MSIPIC-V2 init done.\n");
+>> +    return 0;
+>> +}
+>> +
+>> +
+>>   #endif
+>>
 
