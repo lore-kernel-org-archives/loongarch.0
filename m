@@ -1,33 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D3B14265
-	for <loongarch@lists.linux.dev>; Mon, 13 May 2024 06:38:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4999E626CB
+	for <loongarch@lists.linux.dev>; Mon, 13 May 2024 06:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715582326; cv=none; b=SjujRpDpQU7zg/4h7mq+WlA5wdMI/IbCCylRkGscqS+P4Zrq5k3mcgY3miaHecTJ2j0j5u3vLbH/MdWPdJ+Mi5pPFfaqxTg0b319DzzNG5fLIHohfp7CxfGjS/UrgQZyy99yKHtXPRGf+L5FX4XPO2fg4yYDgwrpPK/dGwVB67I=
+	t=1715582428; cv=none; b=QHlE3wM0c3ah/nRORcxV2ROq+ut0+nkTO/CeihGMLht9cwC4bqb0R3Npsh6eRFRZs4aSBV+GjCnbGJR2G4ZzIBkXshYD2fefXG399gUPlT+auweIFyNviR7LplY9PoqMphGDvJjAj646QjwkYWVjS93z1iy21AGuEIQwTYi+UUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715582326; c=relaxed/simple;
-	bh=TOKtOi8SMh5KrsAoqKzTKP4dRMSjSWxiBPerZzBEDYQ=;
+	s=arc-20240116; t=1715582428; c=relaxed/simple;
+	bh=s3KEVO2WVfNjujMY5GX/FpbgTHgOuPOWDdwQwaLheY0=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XwAb/wdafSIia2Ct8H/3RyFkbsYRhsp6y2mdGZaedELmaXx+2VRnglXBzbiq0/oAbaNlYcxmvYnD1DRUO1PzR7tUtkeRgoJw5TpnyhVBDPbFL2YXaPVAK2SXdK7UfzsZSN8OTqyWOsKZS9zlcenuKQFvR9cMcEbhTrdrkFse70Y=
+	 In-Reply-To:Content-Type; b=H8ULXHvqITEKjwqhYnYcXZUpZvm7ZmzyDmT+oJ7UoUxST/g0Pe5iFgPuEUmS8nTF9KkBqioKjtwhmdcGb39F17bCX4A3W+c5IDZXC7m/yfkMva1pPbWvVUtENjmegUtEvr1cko7UWGDbeLahssj2JDskDlUq47kP3nXusTVHdOo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8Dxd_BvtUFmkBIMAA--.30044S3;
-	Mon, 13 May 2024 14:38:40 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Ax5erYtUFmxxIMAA--.18021S3;
+	Mon, 13 May 2024 14:40:24 +0800 (CST)
 Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx4VVstUFmqqIcAA--.34663S3;
-	Mon, 13 May 2024 14:38:39 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxlFbXtUFmMqMcAA--.35005S3;
+	Mon, 13 May 2024 14:40:24 +0800 (CST)
 Subject: Re: [PATCH 1/2] docs: Add advanced extended IRQ model description
-To: Dongliang Mu <mudongliangabcd@gmail.com>
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, corbet@lwn.net,
- alexs@kernel.org, siyanteng@loongson.cn, loongarch@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, siyanteng@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 References: <20240507122228.5288-1-zhangtianyang@loongson.cn>
- <CAD-N9QV82w1_7ksGAWJDNVcRDyKHLgiEbx13b3sr4cTazobW5g@mail.gmail.com>
+ <c1f1b699-71ad-409a-a843-afe42640626a@infradead.org>
 From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <5648b40a-51fa-612d-d102-e2948866174f@loongson.cn>
-Date: Mon, 13 May 2024 14:38:36 +0800
+Message-ID: <a72f2d5b-ed6d-1b47-ac99-5c99f9cf257b@loongson.cn>
+Date: Mon, 13 May 2024 14:40:23 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -36,34 +36,35 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAD-N9QV82w1_7ksGAWJDNVcRDyKHLgiEbx13b3sr4cTazobW5g@mail.gmail.com>
+In-Reply-To: <c1f1b699-71ad-409a-a843-afe42640626a@infradead.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:AQAAf8Cx4VVstUFmqqIcAA--.34663S3
+X-CM-TRANSID:AQAAf8BxlFbXtUFmMqMcAA--.35005S3
 X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXw15Aw4UAr1UXryrAr1fGrX_yoW7JFy7pr
-	9xGF9avF48G345Wr17Jr48Wr13Jw1fK3WDtF1xKry8Xr1qyr1DJr1Utr1kXFW7G348Ar1j
-	qFW5Kw1DAw1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kw13GrWxury7JF43tw18Zwc_yoW8try3pr
+	Z3GF9avFs7t343WF13Jr1UXr13Jw1fJanrKF1xKry8Xw1qvr1Dtr1UXrykXFWUG340yr1j
+	qFW5G34DCw1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8nmRUUUUU
-	U==
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
+	14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4U
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
+	4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnI
+	WIevJa73UjIFyTuYvjxUwMKuUUUUU
 
 
-在 2024/5/9 上午10:24, Dongliang Mu 写道:
-> On Tue, May 7, 2024 at 8:24 PM Tianyang Zhang <zhangtianyang@loongson.cn> wrote:
+在 2024/5/9 上午6:29, Randy Dunlap 写道:
+> Hi--
+>
+> On 5/7/24 5:22 AM, Tianyang Zhang wrote:
 >>  From 3C6000, Loongarch began to support advanced extended
 >> interrupt mode, in which each CPU has an independent interrupt
 >> vector number.This will enhance the architecture's ability
@@ -82,13 +83,17 @@ X-Coremail-Antispam: 1Uk129KBj93XoWxXw15Aw4UAr1UXryrAr1fGrX_yoW7JFy7pr
 >> @@ -85,6 +85,39 @@ to CPUINTC directly::
 >>       | Devices |
 >>       +---------+
->>
+>>   
 >> +Advanced Extended IRQ model
 >> +=======================
+> The === underline line needs to be at least as long as the line above it.
+I will repair this problem
 >> +
 >> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
 >> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts go to AVEC,
 >> +and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC and gathered
+>                    CPUINTC.
+Thank you for the reminder
 >> +by EIOINTC, and then go to CPUINTC directly::
 >> +
 >> + +-----+     +--------------------------+     +-------+
@@ -118,67 +123,8 @@ X-Coremail-Antispam: 1Uk129KBj93XoWxXw15Aw4UAr1UXryrAr1fGrX_yoW7JFy7pr
 >> +
 >>   ACPI-related definitions
 >>   ========================
->>
->> diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
->> index f1e9ab18206c..7ccde82dd666 100644
->> --- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
->> +++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
->> @@ -9,9 +9,8 @@
->>   LoongArch的IRQ芯片模型（层级关系）
->>   ==================================
->>
->> -目前，基于LoongArch的处理器（如龙芯3A5000）只能与LS7A芯片组配合工作。LoongArch计算机
->> -中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、LIOINTC（
->> -Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
->> +LoongArch计算机中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、
->> +LIOINTC（Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
->>   HTVECINTC（Hyper-Transport Vector Interrupt Controller）、PCH-PIC（LS7A芯片组的主中
->>   断控制器）、PCH-LPC（LS7A芯片组的LPC中断控制器）和PCH-MSI（MSI中断控制器）。
->>
->> @@ -87,6 +86,38 @@ PCH-LPC/PCH-MSI，然后被EIOINTC统一收集，再直接到达CPUINTC::
->>       | Devices |
->>       +---------+
->>
->> +高级扩展IRQ模型
->> +=======================
->> +
->> +在这种模型里面，IPI（Inter-Processor Interrupt）和CPU本地时钟中断直接发送到CPUINTC，
->> +CPU串口（UARTs）中断发送到LIOINTC，MSI中断发送到AVEC,而后通过AVEC送达CPUINTC，而
-> AVEC is followed by an English comma (Translation: AVEC 后面一个英文逗号)
-> Dongliang Mu
-Ok, I will follow the advice
->> +其他所有设备的中断则分别发送到所连接的PCH-PIC/PCH-LPC，然后由EIOINTC统一收集，再直
->> +接到达CPUINTC::
->> +
->> + +-----+     +--------------------------+     +-------+
->> + | IPI | --> |           CPUINTC        | <-- | Timer |
->> + +-----+     +--------------------------+     +-------+
->> +              ^        ^             ^
->> +              |        |             |
->> +      +--------+  +---------+ +---------+     +-------+
->> +      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
->> +      +--------+  +---------+ +---------+     +-------+
->> +              ^        ^
->> +              |        |
->> +      +---------+  +-------------+
->> +      |   MSI   |  |   PCH-PIC   |
->> +      +---------+  +-------------+
->> +            ^          ^       ^
->> +            |          |       |
->> +    +---------+ +---------+ +---------+
->> +    | Devices | | PCH-LPC | | Devices |
->> +    +---------+ +---------+ +---------+
->> +                     ^
->> +                     |
->> +                +---------+
->> +                | Devices |
->> +                +---------+
->> +
->>   ACPI相关的定义
->>   ==============
->>
->> --
->> 2.20.1
->>
->>
+>>   
+> thanks.
+
+
 
