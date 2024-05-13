@@ -1,255 +1,184 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1FCFAD23
-	for <loongarch@lists.linux.dev>; Mon, 13 May 2024 01:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D3B14265
+	for <loongarch@lists.linux.dev>; Mon, 13 May 2024 06:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715562767; cv=none; b=U+JNi4Hu7X7MB7Q6Ir0b2jdOslgXIekittGMyIENgTJO1ET2w+zEVOLxZCF7F5qakj43yBukFTvHxBcTplSEGhgMPeUgU9WUE+6ERmzS4oGQkBswESu/KyAeF7haYzlp4jEdxD6N3BFYlMXaE0h2vnukq7/2USBEHpQwzpXHktI=
+	t=1715582326; cv=none; b=SjujRpDpQU7zg/4h7mq+WlA5wdMI/IbCCylRkGscqS+P4Zrq5k3mcgY3miaHecTJ2j0j5u3vLbH/MdWPdJ+Mi5pPFfaqxTg0b319DzzNG5fLIHohfp7CxfGjS/UrgQZyy99yKHtXPRGf+L5FX4XPO2fg4yYDgwrpPK/dGwVB67I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715562767; c=relaxed/simple;
-	bh=Rj2hbEDl3tCEubL5bDO9HGhlieWfkR8S3uT6W9Ra9G0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VksBfo2diRXK7otgWLIwH9zN2SL1C+F8gONnxjqY56LMFZ6FDUxTRq6xAICCrrC2lDvg8D4+e4djvNNs2kKL3uobUOdgkdpKufeWJ54EU9/1CMp5tXtxB0eEK9eNc0SFZ6rniaBf5NvveO4Fmun6b25oA66RE5/kiGA567G3LFc=
+	s=arc-20240116; t=1715582326; c=relaxed/simple;
+	bh=TOKtOi8SMh5KrsAoqKzTKP4dRMSjSWxiBPerZzBEDYQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=XwAb/wdafSIia2Ct8H/3RyFkbsYRhsp6y2mdGZaedELmaXx+2VRnglXBzbiq0/oAbaNlYcxmvYnD1DRUO1PzR7tUtkeRgoJw5TpnyhVBDPbFL2YXaPVAK2SXdK7UfzsZSN8OTqyWOsKZS9zlcenuKQFvR9cMcEbhTrdrkFse70Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxPOsEaUFmh_0LAA--.22868S3;
-	Mon, 13 May 2024 09:12:36 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax690DaUFmV1gcAA--.51334S3;
-	Mon, 13 May 2024 09:12:36 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] LoongArch: KVM: Add HW Binary Translation extension support
-Date: Mon, 13 May 2024 09:12:33 +0800
-Message-Id: <20240513011235.3233776-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240513011235.3233776-1-maobibo@loongson.cn>
-References: <20240513011235.3233776-1-maobibo@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Dxd_BvtUFmkBIMAA--.30044S3;
+	Mon, 13 May 2024 14:38:40 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx4VVstUFmqqIcAA--.34663S3;
+	Mon, 13 May 2024 14:38:39 +0800 (CST)
+Subject: Re: [PATCH 1/2] docs: Add advanced extended IRQ model description
+To: Dongliang Mu <mudongliangabcd@gmail.com>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, corbet@lwn.net,
+ alexs@kernel.org, siyanteng@loongson.cn, loongarch@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240507122228.5288-1-zhangtianyang@loongson.cn>
+ <CAD-N9QV82w1_7ksGAWJDNVcRDyKHLgiEbx13b3sr4cTazobW5g@mail.gmail.com>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <5648b40a-51fa-612d-d102-e2948866174f@loongson.cn>
+Date: Mon, 13 May 2024 14:38:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAD-N9QV82w1_7ksGAWJDNVcRDyKHLgiEbx13b3sr4cTazobW5g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax690DaUFmV1gcAA--.51334S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8Cx4VVstUFmqqIcAA--.34663S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXw15Aw4UAr1UXryrAr1fGrX_yoW7JFy7pr
+	9xGF9avF48G345Wr17Jr48Wr13Jw1fK3WDtF1xKry8Xr1qyr1DJr1Utr1kXFW7G348Ar1j
+	qFW5Kw1DAw1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8nmRUUUUU
+	U==
 
-Loongson Binary Translation (LBT) is used to accelerate binary translation,
-which contains 4 scratch registers (scr0 to scr3), x86/ARM eflags (eflags)
-and x87 fpu stack pointer (ftop).
 
-Like FPU extension, here late enabling method is used for LBT. LBT context
-is saved/restored on vcpu context switch path.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |  8 ++++
- arch/loongarch/include/asm/kvm_vcpu.h | 10 +++++
- arch/loongarch/kvm/exit.c             |  9 ++++
- arch/loongarch/kvm/vcpu.c             | 59 ++++++++++++++++++++++++++-
- 4 files changed, 85 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 30bda553c54d..63052449dc6b 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -130,6 +130,7 @@ enum emulation_result {
- #define KVM_LARCH_LASX		(0x1 << 2)
- #define KVM_LARCH_SWCSR_LATEST	(0x1 << 3)
- #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
-+#define KVM_LARCH_LBT		(0x1 << 5)
- 
- struct kvm_vcpu_arch {
- 	/*
-@@ -163,6 +164,7 @@ struct kvm_vcpu_arch {
- 
- 	/* FPU state */
- 	struct loongarch_fpu fpu FPU_ALIGN;
-+	struct loongarch_lbt lbt;
- 
- 	/* CSR state */
- 	struct loongarch_csrs *csr;
-@@ -232,6 +234,12 @@ static inline bool kvm_guest_has_lasx(struct kvm_vcpu_arch *arch)
- 	return arch->cpucfg[2] & CPUCFG2_LASX;
- }
- 
-+static inline bool kvm_guest_has_lbt(struct kvm_vcpu_arch *arch)
-+{
-+	return arch->cpucfg[2] & (CPUCFG2_X86BT | CPUCFG2_ARMBT
-+					| CPUCFG2_MIPSBT);
-+}
-+
- /* Debug: dump vcpu state */
- int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
- 
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index de6b17262d8e..e2961dd98413 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -75,6 +75,16 @@ static inline void kvm_save_lasx(struct loongarch_fpu *fpu) { }
- static inline void kvm_restore_lasx(struct loongarch_fpu *fpu) { }
- #endif
- 
-+#ifdef CONFIG_CPU_HAS_LBT
-+int kvm_own_lbt(struct kvm_vcpu *vcpu);
-+#else
-+static inline int kvm_own_lbt(struct kvm_vcpu *vcpu) { return -EINVAL; }
-+static inline void kvm_lose_lbt(struct kvm_vcpu *vcpu) { }
-+static inline void kvm_enable_lbt_fpu(struct kvm_vcpu *vcpu,
-+					unsigned long fcsr) { }
-+static inline void kvm_check_fcsr(struct kvm_vcpu *vcpu) { }
-+#endif
-+
- void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
- void kvm_reset_timer(struct kvm_vcpu *vcpu);
- void kvm_save_timer(struct kvm_vcpu *vcpu);
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index af0f1c46e4eb..683c3e95f630 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -819,6 +819,14 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
- 	return ret;
- }
- 
-+static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu)
-+{
-+	if (kvm_own_lbt(vcpu))
-+		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
-+
-+	return RESUME_GUEST;
-+}
-+
- /*
-  * LoongArch KVM callback handling for unimplemented guest exiting
-  */
-@@ -851,6 +859,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
- 	[EXCCODE_LASXDIS]		= kvm_handle_lasx_disabled,
- 	[EXCCODE_GSPR]			= kvm_handle_gspr,
- 	[EXCCODE_HVC]			= kvm_handle_hypercall,
-+	[EXCCODE_BTDIS]			= kvm_handle_lbt_disabled,
- };
- 
- int kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 4289a0f545fe..d93ec21269da 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -6,6 +6,7 @@
- #include <linux/kvm_host.h>
- #include <linux/entry-kvm.h>
- #include <asm/fpu.h>
-+#include <asm/lbt.h>
- #include <asm/loongarch.h>
- #include <asm/setup.h>
- #include <asm/time.h>
-@@ -947,12 +948,64 @@ int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
- 	return 0;
- }
- 
-+#ifdef CONFIG_CPU_HAS_LBT
-+int kvm_own_lbt(struct kvm_vcpu *vcpu)
-+{
-+	if (!kvm_guest_has_lbt(&vcpu->arch))
-+		return -EINVAL;
-+
-+	preempt_disable();
-+	set_csr_euen(CSR_EUEN_LBTEN);
-+
-+	_restore_lbt(&vcpu->arch.lbt);
-+	vcpu->arch.aux_inuse |= KVM_LARCH_LBT;
-+	preempt_enable();
-+	return 0;
-+}
-+
-+static void kvm_lose_lbt(struct kvm_vcpu *vcpu)
-+{
-+	preempt_disable();
-+	if (vcpu->arch.aux_inuse & KVM_LARCH_LBT) {
-+		_save_lbt(&vcpu->arch.lbt);
-+		clear_csr_euen(CSR_EUEN_LBTEN);
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_LBT;
-+	}
-+	preempt_enable();
-+}
-+
-+static void kvm_enable_lbt_fpu(struct kvm_vcpu *vcpu, unsigned long fcsr)
-+{
-+	/*
-+	 * if TM is enabled, top register save/restore will
-+	 * cause lbt exception, here enable lbt in advance
-+	 */
-+	if (fcsr & FPU_CSR_TM)
-+		kvm_own_lbt(vcpu);
-+}
-+
-+static void kvm_check_fcsr(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long fcsr;
-+
-+	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU)
-+		if (!(vcpu->arch.aux_inuse & KVM_LARCH_LBT)) {
-+			fcsr = read_fcsr(LOONGARCH_FCSR0);
-+			kvm_enable_lbt_fpu(vcpu, fcsr);
-+		}
-+}
-+#endif
-+
- /* Enable FPU and restore context */
- void kvm_own_fpu(struct kvm_vcpu *vcpu)
- {
- 	preempt_disable();
- 
--	/* Enable FPU */
-+	/*
-+	 * Enable FPU for guest
-+	 * We set FR and FRE according to guest context
-+	 */
-+	kvm_enable_lbt_fpu(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_FPEN);
- 
- 	kvm_restore_fpu(&vcpu->arch.fpu);
-@@ -972,6 +1025,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
- 	preempt_disable();
- 
- 	/* Enable LSX for guest */
-+	kvm_enable_lbt_fpu(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
- 	switch (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
- 	case KVM_LARCH_FPU:
-@@ -1006,6 +1060,7 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
- 
- 	preempt_disable();
- 
-+	kvm_enable_lbt_fpu(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
- 	switch (vcpu->arch.aux_inuse & (KVM_LARCH_FPU | KVM_LARCH_LSX)) {
- 	case KVM_LARCH_LSX:
-@@ -1037,6 +1092,7 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- {
- 	preempt_disable();
- 
-+	kvm_check_fcsr(vcpu);
- 	if (vcpu->arch.aux_inuse & KVM_LARCH_LASX) {
- 		kvm_save_lasx(&vcpu->arch.fpu);
- 		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU | KVM_LARCH_LASX);
-@@ -1059,6 +1115,7 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- 		/* Disable FPU */
- 		clear_csr_euen(CSR_EUEN_FPEN);
- 	}
-+	kvm_lose_lbt(vcpu);
- 
- 	preempt_enable();
- }
--- 
-2.39.3
+在 2024/5/9 上午10:24, Dongliang Mu 写道:
+> On Tue, May 7, 2024 at 8:24 PM Tianyang Zhang <zhangtianyang@loongson.cn> wrote:
+>>  From 3C6000, Loongarch began to support advanced extended
+>> interrupt mode, in which each CPU has an independent interrupt
+>> vector number.This will enhance the architecture's ability
+>> to support modern devices
+>>
+>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>> ---
+>>   .../arch/loongarch/irq-chip-model.rst         | 33 +++++++++++++++++
+>>   .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 +++++++++++++++++--
+>>   2 files changed, 67 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+>> index 7988f4192363..79228741d1b9 100644
+>> --- a/Documentation/arch/loongarch/irq-chip-model.rst
+>> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
+>> @@ -85,6 +85,39 @@ to CPUINTC directly::
+>>       | Devices |
+>>       +---------+
+>>
+>> +Advanced Extended IRQ model
+>> +=======================
+>> +
+>> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
+>> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts go to AVEC,
+>> +and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC and gathered
+>> +by EIOINTC, and then go to CPUINTC directly::
+>> +
+>> + +-----+     +--------------------------+     +-------+
+>> + | IPI | --> |           CPUINTC        | <-- | Timer |
+>> + +-----+     +--------------------------+     +-------+
+>> +              ^        ^             ^
+>> +              |        |             |
+>> +      +--------+  +---------+ +---------+     +-------+
+>> +      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
+>> +      +--------+  +---------+ +---------+     +-------+
+>> +           ^            ^
+>> +           |            |
+>> +         +---------+  +---------+
+>> +         |   MSI   |  | PCH-PIC |
+>> +         +---------+  +---------+
+>> +            ^          ^       ^
+>> +            |          |       |
+>> +    +---------+ +---------+ +---------+
+>> +    | Devices | | PCH-LPC | | Devices |
+>> +    +---------+ +---------+ +---------+
+>> +                     ^
+>> +                     |
+>> +                +---------+
+>> +                | Devices |
+>> +                +---------+
+>> +
+>> +
+>>   ACPI-related definitions
+>>   ========================
+>>
+>> diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+>> index f1e9ab18206c..7ccde82dd666 100644
+>> --- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+>> +++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+>> @@ -9,9 +9,8 @@
+>>   LoongArch的IRQ芯片模型（层级关系）
+>>   ==================================
+>>
+>> -目前，基于LoongArch的处理器（如龙芯3A5000）只能与LS7A芯片组配合工作。LoongArch计算机
+>> -中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、LIOINTC（
+>> -Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
+>> +LoongArch计算机中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、
+>> +LIOINTC（Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
+>>   HTVECINTC（Hyper-Transport Vector Interrupt Controller）、PCH-PIC（LS7A芯片组的主中
+>>   断控制器）、PCH-LPC（LS7A芯片组的LPC中断控制器）和PCH-MSI（MSI中断控制器）。
+>>
+>> @@ -87,6 +86,38 @@ PCH-LPC/PCH-MSI，然后被EIOINTC统一收集，再直接到达CPUINTC::
+>>       | Devices |
+>>       +---------+
+>>
+>> +高级扩展IRQ模型
+>> +=======================
+>> +
+>> +在这种模型里面，IPI（Inter-Processor Interrupt）和CPU本地时钟中断直接发送到CPUINTC，
+>> +CPU串口（UARTs）中断发送到LIOINTC，MSI中断发送到AVEC,而后通过AVEC送达CPUINTC，而
+> AVEC is followed by an English comma (Translation: AVEC 后面一个英文逗号)
+> Dongliang Mu
+Ok, I will follow the advice
+>> +其他所有设备的中断则分别发送到所连接的PCH-PIC/PCH-LPC，然后由EIOINTC统一收集，再直
+>> +接到达CPUINTC::
+>> +
+>> + +-----+     +--------------------------+     +-------+
+>> + | IPI | --> |           CPUINTC        | <-- | Timer |
+>> + +-----+     +--------------------------+     +-------+
+>> +              ^        ^             ^
+>> +              |        |             |
+>> +      +--------+  +---------+ +---------+     +-------+
+>> +      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
+>> +      +--------+  +---------+ +---------+     +-------+
+>> +              ^        ^
+>> +              |        |
+>> +      +---------+  +-------------+
+>> +      |   MSI   |  |   PCH-PIC   |
+>> +      +---------+  +-------------+
+>> +            ^          ^       ^
+>> +            |          |       |
+>> +    +---------+ +---------+ +---------+
+>> +    | Devices | | PCH-LPC | | Devices |
+>> +    +---------+ +---------+ +---------+
+>> +                     ^
+>> +                     |
+>> +                +---------+
+>> +                | Devices |
+>> +                +---------+
+>> +
+>>   ACPI相关的定义
+>>   ==============
+>>
+>> --
+>> 2.20.1
+>>
+>>
 
