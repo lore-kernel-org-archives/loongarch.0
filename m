@@ -1,139 +1,241 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4E110949
-	for <loongarch@lists.linux.dev>; Tue, 14 May 2024 07:45:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E276168C7
+	for <loongarch@lists.linux.dev>; Tue, 14 May 2024 10:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715672743; cv=none; b=dtAD3DpTwPdueiV91w0J9ZZeO3b7s1TlAVh/9xKIuTZ4q2BkysH3yX++bweniQkhmBMJdq4nip8/6eRCu0kFK5N3P2x740/mufVx5gCmoUkJ4J4tLSG4CSNcwB/nDbB9dBA4qs0/Ykowr7A8KivFtGX/oweezJf8IpwZILE8ZNo=
+	t=1715681510; cv=none; b=Kbb4Sr2T5m8S1/Y6K7UgEhIIPRu5g8ldlBY/KMjVj54Nz0OeDYF49lu5q0qlE8GN5HLLMSfT8O2ZxuRdmeLS4sZGBzPOhTRI28RwaxwKI+xjAUPGsfu6GmeLnkaWS5xMvejya+9uDA1TVfWdsi0IgXea7XXCdJn63+gQaIfe7fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715672743; c=relaxed/simple;
-	bh=EGS3ZuMGZ+F6WZx/X5Vj2TH/jG0ZBFzj2A5DAjkwPAI=;
+	s=arc-20240116; t=1715681510; c=relaxed/simple;
+	bh=uKQmHevj9qgPxSEUKRxkpZkuCmA3D/KeuYFmxfhUbEU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cuBKKVty5JlT0D6n3v2rlNbjRcQsH+Q5tLv87qtLkFvg7mtmLRNtf1VLIa6Rp5P2fIBxGs5OlHzAstvx5BbP87PTlFzQBKD2bsyQihJp11dt4N0oYTjqTvJUjgWkgjr+IMMQhhTck5jdbCCK1XYtB8T+VYSo3WmkuNwJB0LV+Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOjU5dzi; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=pQSbp99hEzpgKGhlZw1ivsyJBUCI1FG/h5fJJ5FRh8VSy6cLQuL6Q03l3L0AtAWNor2Qf4rN2j830MffnNNb25/wEt9hLbVivxyJuKU+jStvoyGVwZk6wCiiD5d2ArDbGE+XcWbSBq9cwzNQKggpLEeO76hJudGEEmBIKowsDkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwnlICT/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOjU5dzi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60740C32786
-	for <loongarch@lists.linux.dev>; Tue, 14 May 2024 07:45:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwnlICT/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9729C4AF07
+	for <loongarch@lists.linux.dev>; Tue, 14 May 2024 10:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715672743;
-	bh=EGS3ZuMGZ+F6WZx/X5Vj2TH/jG0ZBFzj2A5DAjkwPAI=;
+	s=k20201202; t=1715681509;
+	bh=uKQmHevj9qgPxSEUKRxkpZkuCmA3D/KeuYFmxfhUbEU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AOjU5dzizmJ+ccKgqPrPj4cKxv5pDyunMmD/rI6PXp1uKmJ273a7mFMEh3lp0Oj2t
-	 /6Q4NBUjAAyeUodIuavCcpV8+a/rRHdLFhT1wjNQXtlqP24QOK5A2h++kH43uMfc6d
-	 o16lekPQMIIu8gkTrZ0R76hkCfce2uo/lY3qsnducvDIpRUq6BnHMOnefYLpZvpmIO
-	 WI/VwJIYtOOay2VT2U1o42jtJrF2C78FW16cKmCtQhVoT2KMvhWVOgq6XuSxXrsYpV
-	 nA+6Nrb7gZDwwNW7vl7sYG7eNgoIoqoOmTvLp9UP2r7X7546O0yzvHiKCotwvGsprk
-	 8lT4rGrUyrh5g==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59a8f0d941so1281217966b.2
-        for <loongarch@lists.linux.dev>; Tue, 14 May 2024 00:45:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUoYCs/WJ8SekNAlA35LtAojnqWRtK7yLFfr9u4B673MgrutJMaqfsy/vKx6Gi3D68zoF+UkJwIZZ/NS+KC9axVRi07GJ+kedi2
-X-Gm-Message-State: AOJu0YzP/HeOharrtkEAsNljq8DIW/h9bzJbjEVLN9Esy6AQAZIFb7Qe
-	F/t5lM3Gb9YiOhzW0JAEMw+owt5nWTOqviJtSbuWi8xtsT1/4O1hSbZ+4Rh8sW9a3qH3l08li5L
-	6SZFdlCY23lnBn/xkXGaejpcl3qc=
-X-Google-Smtp-Source: AGHT+IG/vt7uex7Qy0NM4l2+AXyhPJrZt+Cl6DItLGM2nktOppCoa0s3wse2tMHclrvpOZKL68tnmNP+/iRxh+BiO0c=
-X-Received: by 2002:a17:906:6a1c:b0:a5a:6c0e:90f7 with SMTP id
- a640c23a62f3a-a5a6c0e91a4mr357298266b.42.1715672741853; Tue, 14 May 2024
- 00:45:41 -0700 (PDT)
+	b=BwnlICT/+bN+Wr7PMITNaw/PGTvG98iAfF3073CDGjWzTxFnguKCoUtA8eTXz2KOM
+	 ENuMlXWyQygcaI/ixhkb6+WCFSt/hm7kH10vPV3yxjvvo/FpOXCG0dYynC3ijkdypp
+	 yxEpPGyAB1dg7ysEYIFwJlUK+I9MuUU7Owkr/8xSOEN+s8hMjCKttNonPQ70mKxVNm
+	 V50X2FosDN1QtiR5KwKHARb/QMQkjrQttsNfw6xa2ix+KDmzF33ioTz10Ui1H5G5BI
+	 tgaB3UGffX9PDbQ1cJ/7W27NkWTWIFAYeGKxD8FSEqkPGAS1hWQhslibLfpNopX2qf
+	 Y0YspErr7AQBg==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a59a9d66a51so1255312766b.2
+        for <loongarch@lists.linux.dev>; Tue, 14 May 2024 03:11:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWp6ge/MTjBgKAHDrnVrc+wuJ0Xr+ejkWZhYl3jPgFbLGUem018w6cT03rxfRoYKU3prEnVgxIPfnVbl+btrl3bZ3dvzexBCRMP
+X-Gm-Message-State: AOJu0YwNmLsZzZ3lgvA7JxOWZwR4R17gsIOXW7qqvi096e1t058cRljQ
+	w0JrnxMLYc2Zw8sdkk2B8+hk4VhGvlZWUZETwvTGaE95BYy9e1jWfBAdI1Kik9mtgeCnFvNuHqb
+	SWKVq1KbvPJbqmk5Ri7MnFG3wfsw=
+X-Google-Smtp-Source: AGHT+IG2SJLZeJv9E723RPMYkjAggoAqnNUcuBjZL5KPzQ7ueRWKLf2UEtaPgF8M+K9KWHrfkkwXldPNn9gLjNl+WUk=
+X-Received: by 2002:a50:a40c:0:b0:56d:c928:ad76 with SMTP id
+ 4fb4d7f45d1cf-5734d67e8d0mr8314326a12.26.1715681508279; Tue, 14 May 2024
+ 03:11:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240514073910.27048-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20240514073910.27048-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 14 May 2024 15:45:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7iOuEEDZNHveirZA9pAH1Ax1+nRo=_miqhyzDSzzCWtw@mail.gmail.com>
-Message-ID: <CAAhV-H7iOuEEDZNHveirZA9pAH1Ax1+nRo=_miqhyzDSzzCWtw@mail.gmail.com>
-Subject: Re: [RFC PATCH] LoongArch: Remove ACPI related ifdefs in platform_init()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: rafael@kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240514073232.3694867-1-chenhuacai@loongson.cn>
+In-Reply-To: <20240514073232.3694867-1-chenhuacai@loongson.cn>
+From: Guo Ren <guoren@kernel.org>
+Date: Tue, 14 May 2024 18:11:36 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTUmpm+aTQL7gNyLEe57X=v-it3MT5TOCViCOEiEyraBA@mail.gmail.com>
+Message-ID: <CAJF2gTTUmpm+aTQL7gNyLEe57X=v-it3MT5TOCViCOEiEyraBA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add irq_work support via self IPIs
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Tiezhu,
-
-On Tue, May 14, 2024 at 3:39=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+On Tue, May 14, 2024 at 3:32=E2=80=AFPM Huacai Chen <chenhuacai@loongson.cn=
 > wrote:
 >
-> acpi_table_upgrade() and acpi_boot_table_init() are defined as
-> empty function under !CONFIG_ACPI_TABLE_UPGRADE and !CONFIG_ACPI
-> in include/linux/acpi.h, there are no implicit declaration errors
-> with various configs. Furthermore, CONFIG_ACPI is always set due
-> to config ACPI is selected by config LOONGARCH. Thus, just remove
-> ACPI related ifdefs to call the functions directly.
+> Add irq_work support for LoongArch via self IPIs. This make it possible
+> to run works in hardware interrupt context, which is a prerequisite for
+> NOHZ_FULL.
 >
->   #ifdef CONFIG_ACPI_TABLE_UPGRADE
->   void acpi_table_upgrade(void);
->   #else
->   static inline void acpi_table_upgrade(void) { }
->   #endif
+> Implement:
+>  - arch_irq_work_raise()
+>  - arch_irq_work_has_interrupt()
 >
->   #ifdef        CONFIG_ACPI
->   ...
->   void acpi_boot_table_init (void);
->   ...
->   #else /* !CONFIG_ACPI */
->   ...
->   static inline void acpi_boot_table_init(void)
->   {
->   }
->   ...
->   #endif        /* !CONFIG_ACPI */
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
+>  arch/loongarch/include/asm/hardirq.h  |  3 ++-
+>  arch/loongarch/include/asm/irq_work.h | 10 ++++++++++
+>  arch/loongarch/include/asm/smp.h      |  2 ++
+>  arch/loongarch/kernel/paravirt.c      |  6 ++++++
+>  arch/loongarch/kernel/smp.c           | 14 ++++++++++++++
+>  5 files changed, 34 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/loongarch/include/asm/irq_work.h
 >
-> Another way is to guard the related code under CONFIG_ACPI,
-> but I think it is not necessary, like this:
+> diff --git a/arch/loongarch/include/asm/hardirq.h b/arch/loongarch/includ=
+e/asm/hardirq.h
+> index d41138abcf26..1d7feb719515 100644
+> --- a/arch/loongarch/include/asm/hardirq.h
+> +++ b/arch/loongarch/include/asm/hardirq.h
+> @@ -12,11 +12,12 @@
+>  extern void ack_bad_irq(unsigned int irq);
+>  #define ack_bad_irq ack_bad_irq
 >
-> @@ -351,10 +351,8 @@ void __init platform_init(void)
->         arch_reserve_vmcore();
->         arch_reserve_crashkernel();
+> -#define NR_IPI 2
+> +#define NR_IPI 3
 >
-> -#ifdef CONFIG_ACPI_TABLE_UPGRADE
-> -       acpi_table_upgrade();
-> -#endif
->  #ifdef CONFIG_ACPI
-> +       acpi_table_upgrade();
->         acpi_gbl_use_default_register_widths =3D false;
->         acpi_boot_table_init();
->  #endif
-I agree to remove CONFIG_ACPI_TABLE_UPGRADE since it is ugly and
-unnecessary here. But I prefer to keep CONFIG_ACPI (in addition, put
-acpi_table_upgrade() after CONFIG_ACPI). Because CONFIG_ACPI is not
-just to prevent build error, but also a signal to tell us the code is
-ACPI-specific.
+>  enum ipi_msg_type {
+>         IPI_RESCHEDULE,
+>         IPI_CALL_FUNCTION,
+> +       IPI_IRQ_WORK,
+>  };
+>
+>  typedef struct {
+> diff --git a/arch/loongarch/include/asm/irq_work.h b/arch/loongarch/inclu=
+de/asm/irq_work.h
+> new file mode 100644
+> index 000000000000..d63076e9160d
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/irq_work.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_LOONGARCH_IRQ_WORK_H
+> +#define _ASM_LOONGARCH_IRQ_WORK_H
+> +
+> +static inline bool arch_irq_work_has_interrupt(void)
+> +{
+> +       return IS_ENABLED(CONFIG_SMP);
+I think it is "return true," or it will cause the warning.
 
-Huacai
+void __init tick_nohz_init(void)
+{
+        int cpu, ret;
 
+        if (!tick_nohz_full_running)
+                return;
+
+        /*
+         * Full dynticks uses IRQ work to drive the tick rescheduling on sa=
+fe
+         * locking contexts. But then we need IRQ work to raise its own
+         * interrupts to avoid circular dependency on the tick.
+         */
+        if (!arch_irq_work_has_interrupt()) {
+                pr_warn("NO_HZ: Can't run full dynticks because arch
+doesn't support IRQ work self-IPIs\n");
+                cpumask_clear(tick_nohz_full_mask);
+                tick_nohz_full_running =3D false;
+                return;
+        }
+
+Others LGTM!
+
+Reviewed-by: Guo Ren <guoren@kernel.org>
+
+> +}
+> +
+> +#endif /* _ASM_LOONGARCH_IRQ_WORK_H */
+> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/as=
+m/smp.h
+> index 278700cfee88..50db503f44e3 100644
+> --- a/arch/loongarch/include/asm/smp.h
+> +++ b/arch/loongarch/include/asm/smp.h
+> @@ -69,9 +69,11 @@ extern int __cpu_logical_map[NR_CPUS];
+>  #define ACTION_BOOT_CPU        0
+>  #define ACTION_RESCHEDULE      1
+>  #define ACTION_CALL_FUNCTION   2
+> +#define ACTION_IRQ_WORK                3
+>  #define SMP_BOOT_CPU           BIT(ACTION_BOOT_CPU)
+>  #define SMP_RESCHEDULE         BIT(ACTION_RESCHEDULE)
+>  #define SMP_CALL_FUNCTION      BIT(ACTION_CALL_FUNCTION)
+> +#define SMP_IRQ_WORK           BIT(ACTION_IRQ_WORK)
 >
->  arch/loongarch/kernel/setup.c | 4 ----
->  1 file changed, 4 deletions(-)
+>  struct secondary_data {
+>         unsigned long stack;
+> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/par=
+avirt.c
+> index 1633ed4f692f..4272d2447445 100644
+> --- a/arch/loongarch/kernel/paravirt.c
+> +++ b/arch/loongarch/kernel/paravirt.c
+> @@ -2,6 +2,7 @@
+>  #include <linux/export.h>
+>  #include <linux/types.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/irq_work.h>
+>  #include <linux/jump_label.h>
+>  #include <linux/kvm_para.h>
+>  #include <linux/static_call.h>
+> @@ -97,6 +98,11 @@ static irqreturn_t pv_ipi_interrupt(int irq, void *dev=
+)
+>                 info->ipi_irqs[IPI_CALL_FUNCTION]++;
+>         }
 >
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
-c
-> index 60e0fe97f61a..da96f871cf73 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -351,13 +351,9 @@ void __init platform_init(void)
->         arch_reserve_vmcore();
->         arch_reserve_crashkernel();
+> +       if (action & SMP_IRQ_WORK) {
+> +               irq_work_run();
+> +               info->ipi_irqs[IPI_IRQ_WORK]++;
+> +       }
+> +
+>         return IRQ_HANDLED;
+>  }
 >
-> -#ifdef CONFIG_ACPI_TABLE_UPGRADE
->         acpi_table_upgrade();
-> -#endif
-> -#ifdef CONFIG_ACPI
->         acpi_gbl_use_default_register_widths =3D false;
->         acpi_boot_table_init();
-> -#endif
+> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> index 0dfe2388ef41..7366de776f6e 100644
+> --- a/arch/loongarch/kernel/smp.c
+> +++ b/arch/loongarch/kernel/smp.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/cpumask.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/irq_work.h>
+>  #include <linux/profile.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/smp.h>
+> @@ -70,6 +71,7 @@ static DEFINE_PER_CPU(int, cpu_state);
+>  static const char *ipi_types[NR_IPI] __tracepoint_string =3D {
+>         [IPI_RESCHEDULE] =3D "Rescheduling interrupts",
+>         [IPI_CALL_FUNCTION] =3D "Function call interrupts",
+> +       [IPI_IRQ_WORK] =3D "IRQ work interrupts",
+>  };
 >
->         early_init_fdt_scan_reserved_mem();
->         unflatten_and_copy_device_tree();
+>  void show_ipi_list(struct seq_file *p, int prec)
+> @@ -217,6 +219,13 @@ void arch_smp_send_reschedule(int cpu)
+>  }
+>  EXPORT_SYMBOL_GPL(arch_smp_send_reschedule);
+>
+> +#ifdef CONFIG_IRQ_WORK
+> +void arch_irq_work_raise(void)
+> +{
+> +       mp_ops.send_ipi_single(smp_processor_id(), ACTION_IRQ_WORK);
+> +}
+> +#endif
+> +
+>  static irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
+>  {
+>         unsigned int action;
+> @@ -234,6 +243,11 @@ static irqreturn_t loongson_ipi_interrupt(int irq, v=
+oid *dev)
+>                 per_cpu(irq_stat, cpu).ipi_irqs[IPI_CALL_FUNCTION]++;
+>         }
+>
+> +       if (action & SMP_IRQ_WORK) {
+> +               irq_work_run();
+> +               per_cpu(irq_stat, cpu).ipi_irqs[IPI_IRQ_WORK]++;
+> +       }
+> +
+>         return IRQ_HANDLED;
+>  }
+>
 > --
-> 2.42.0
+> 2.43.0
 >
+
+
+--=20
+Best Regards
+ Guo Ren
