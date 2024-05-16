@@ -1,159 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3285B1877;
-	Thu, 16 May 2024 00:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E1415A4
+	for <loongarch@lists.linux.dev>; Thu, 16 May 2024 02:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715819046; cv=none; b=V/TIrWS3SwCcMSfMryZJ4Q64BlJjUobYFyQGbteHtMPbaeKF/DB7JC4tQp3pwcP4hrHK9/bKsHTCYimQ5lkEOaAkhnmJyyDXhsr5K/kUN4coeb0Uob0O7ZcSKlFKOm/BaklkchzUj70t0hqUZMON349WufcAHNC/WcSMxtK6N08=
+	t=1715827936; cv=none; b=QezdhfT7zdsWrAlm6BZFC8/QyROpd9BORXWNnbkCE9X4DQvyvFPlV0DOtGLbLkYUCtrRFu6KcWHYcHCmBnDf7E1qxEKdNgFhCoBIjMAM6Zd7XrM0HX35JgTbYkE6svI7/6fCZbEPB9mFWRkgu173ggsi9kyJauW4h3ohYDBZRCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715819046; c=relaxed/simple;
-	bh=2mTyV3yHsXnpIz+Hf8dHwdpSsS9bL76Nasiv3NlJOGU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=l1QI9khiLElR7VFjzE5or0yCKtQTm1UPHdHFUtG8qZM/wRHYZZaRZmRraCJx+an6l6BO1PV8A6GVEiqLQm20tEPYY995CkuIwhIYYNEczIM7+014gTqnGq+xOz5amnD7OukLZYAwkx/JrjT1pmJKQRzhBrH86B3fx+r4YzJTjj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyhYvQrh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyhYvQrh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B95C116B1;
-	Thu, 16 May 2024 00:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715819045;
-	bh=2mTyV3yHsXnpIz+Hf8dHwdpSsS9bL76Nasiv3NlJOGU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eyhYvQrhNljUOqI7QNUxGGddgXbxg9y2eAf3SrTd+rZn8BqfPQoiuSPf3cJR34dYa
-	 zSvce/f+OH48w4hBDOW3RJtYyeJg/nH46JmYm2E1PnSRHy3kF0o/T3lOVha7lvTJZL
-	 uwq0IQjHw/2eZmSVpTKVdnQCl4UR4thsmYHeiq/1GVjfoMBQqd3nuLCklTZ9PM9S84
-	 D8LoRdc+cO+u2c30aTUmBWeafhneREBkpHfzgJUF++utFsobb1GHqqrDGDR8WHyFxG
-	 uiknNVRd2iWPJ5aH2ELN/FibJPqRnrW3ba5PPk+Mf7re8cp/Bm8sj9dFC7CoxlOg4B
-	 VDJeBnkbZygiA==
-Date: Thu, 16 May 2024 09:23:55 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: Guo Ren <guoren@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Mark
- Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, "James E.J. Bottomley"
- <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K.V"
- <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v3] kprobe/ftrace: bail out if ftrace was killed
-Message-Id: <20240516092355.4eaab560b7f4e22953f73cfc@kernel.org>
-In-Reply-To: <87r0e2pvmn.fsf@oracle.com>
-References: <20240501162956.229427-1-stephen.s.brennan@oracle.com>
-	<CAJF2gTT8a4PBU3ekZFNTi6EuETT9hhKfhXrPgGGpn92rQMNSvg@mail.gmail.com>
-	<20240502110348.016f190e0b0565b7e9ecdb48@kernel.org>
-	<87r0e2pvmn.fsf@oracle.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715827936; c=relaxed/simple;
+	bh=Bpp2sS8JAC34w//706OVYxm4uK643Velk4anITvY9sQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=r3AggE/d3lJnWv7si1ilMIOMeoDBGfJnONAZPtlERBuE+HUL0tL0rfmYtwy0rKijLO1GEGmWvXJn1P8TmqlO+z9iDyTeIzgKsm8yTphlF75IKaPYfmrc+gW04C7XSnbturgPlzrXzJZx0bxVZ1+1T7dhMMBIBISTveqCpAAP0ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8AxTevadEVm+FsNAA--.25472S3;
+	Thu, 16 May 2024 10:52:10 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxb1XWdEVmdXkiAA--.2393S3;
+	Thu, 16 May 2024 10:52:08 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
+To: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
+ Xuefeng Li <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
+ stable@vger.kernel.org
+References: <20240511100157.2334539-1-chenhuacai@loongson.cn>
+ <f92e23be-3f3f-4bc6-8711-3bcf6beb7fa2@app.fastmail.com>
+ <3937d6b1-119b-195e-8b9b-314a0bfbeaeb@loongson.cn>
+ <ebf493ee-1e8b-426d-bcf4-d8e17d10844a@app.fastmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <14d52b91-58b2-6079-b66a-f01d1bac583f@loongson.cn>
+Date: Thu, 16 May 2024 10:52:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+In-Reply-To: <ebf493ee-1e8b-426d-bcf4-d8e17d10844a@app.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dxb1XWdEVmdXkiAA--.2393S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tF1kGrW5Cw1UtryrWr47KFX_yoW8XF17pF
+	WSgF1a9FWqyr1Syw4Ikw1DtFnYkryrJr45Z34FqryxAay5Xr13tr1FqrWUCFyaqFyxCFyj
+	va93Wa4fuFZ8ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-
+	UUUUU
 
-On Wed, 15 May 2024 15:18:08 -0700
-Stephen Brennan <stephen.s.brennan@oracle.com> wrote:
 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
-> > On Thu, 2 May 2024 01:35:16 +0800
-> > Guo Ren <guoren@kernel.org> wrote:
-> >
-> >> On Thu, May 2, 2024 at 12:30 AM Stephen Brennan
-> >> <stephen.s.brennan@oracle.com> wrote:
-> >> >
-> >> > If an error happens in ftrace, ftrace_kill() will prevent disarming
-> >> > kprobes. Eventually, the ftrace_ops associated with the kprobes will be
-> >> > freed, yet the kprobes will still be active, and when triggered, they
-> >> > will use the freed memory, likely resulting in a page fault and panic.
-> >> >
-> >> > This behavior can be reproduced quite easily, by creating a kprobe and
-> >> > then triggering a ftrace_kill(). For simplicity, we can simulate an
-> >> > ftrace error with a kernel module like [1]:
-> >> >
-> >> > [1]: https://github.com/brenns10/kernel_stuff/tree/master/ftrace_killer
-> >> >
-> >> >   sudo perf probe --add commit_creds
-> >> >   sudo perf trace -e probe:commit_creds
-> >> >   # In another terminal
-> >> >   make
-> >> >   sudo insmod ftrace_killer.ko  # calls ftrace_kill(), simulating bug
-> >> >   # Back to perf terminal
-> >> >   # ctrl-c
-> >> >   sudo perf probe --del commit_creds
-> >> >
-> >> > After a short period, a page fault and panic would occur as the kprobe
-> >> > continues to execute and uses the freed ftrace_ops. While ftrace_kill()
-> >> > is supposed to be used only in extreme circumstances, it is invoked in
-> >> > FTRACE_WARN_ON() and so there are many places where an unexpected bug
-> >> > could be triggered, yet the system may continue operating, possibly
-> >> > without the administrator noticing. If ftrace_kill() does not panic the
-> >> > system, then we should do everything we can to continue operating,
-> >> > rather than leave a ticking time bomb.
-> >> >
-> >> > Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
-> >> > ---
-> >> > Changes in v3:
-> >> >   Don't expose ftrace_is_dead(). Create a "kprobe_ftrace_disabled"
-> >> >   variable and check it directly in the kprobe handlers.
-> >> > Link to v1/v2 discussion:
-> >> >   https://lore.kernel.org/all/20240426225834.993353-1-stephen.s.brennan@oracle.com/
-> >> >
-> >> >  arch/csky/kernel/probes/ftrace.c     | 3 +++
-> >> >  arch/loongarch/kernel/ftrace_dyn.c   | 3 +++
-> >> >  arch/parisc/kernel/ftrace.c          | 3 +++
-> >> >  arch/powerpc/kernel/kprobes-ftrace.c | 3 +++
-> >> >  arch/riscv/kernel/probes/ftrace.c    | 3 +++
-> >> >  arch/s390/kernel/ftrace.c            | 3 +++
-> >> >  arch/x86/kernel/kprobes/ftrace.c     | 3 +++
-> >> >  include/linux/kprobes.h              | 7 +++++++
-> >> >  kernel/kprobes.c                     | 6 ++++++
-> >> >  kernel/trace/ftrace.c                | 1 +
-> >> >  10 files changed, 35 insertions(+)
-> >> >
-> >> > diff --git a/arch/csky/kernel/probes/ftrace.c b/arch/csky/kernel/probes/ftrace.c
-> >> > index 834cffcfbce3..7ba4b98076de 100644
-> >> > --- a/arch/csky/kernel/probes/ftrace.c
-> >> > +++ b/arch/csky/kernel/probes/ftrace.c
-> >> > @@ -12,6 +12,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
-> >> >         struct kprobe_ctlblk *kcb;
-> >> >         struct pt_regs *regs;
-> >> >
-> >> > +       if (unlikely(kprobe_ftrace_disabled))
-> >> > +               return;
-> >> > +
-> >> For csky part.
-> >> Acked-by: Guo Ren <guoren@kernel.org>
-> >
-> > Thanks Stephen, Guo and Steve!
-> >
-> > Let me pick this to probes/for-next!
+
+On 2024/5/15 下午10:25, Arnd Bergmann wrote:
+> On Wed, May 15, 2024, at 09:30, maobibo wrote:
+>> On 2024/5/11 下午8:17, Arnd Bergmann wrote:
+>>> On Sat, May 11, 2024, at 12:01, Huacai Chen wrote:
+>>>
+>>> Importantly, we can't just add fstatat64() on riscv32 because
+>>> there is no time64 version for it other than statx(), and I don't
+>>> want the architectures to diverge more than necessary.
+>> yes, I agree. Normally there is newfstatat() on 64-bit architectures but
+>> fstatat64() on 32-bit ones.
+>>
+>> I do not understand why fstatat64() can be added for riscv32 still.
+>> 32bit timestamp seems works well for the present, it is valid until
+>> (0x1UL << 32) / 365 / 24 / 3600 + 1970 == 2106 year. Year 2106 should
+>> be enough for 32bit system.
 > 
-> Thank you Masami!
+> There is a very small number of interfaces for which we ended up
+> not using a 64-bit time_t replacement, but those are only for
+> relative times, not epoch based offsets. The main problems
+> here are:
 > 
-> I did want to check, is this the correct git tree to be watching?
+> - time_t is defined to be a signed value in posix, and we need
+>    to handle file timestamps before 1970 in stat(), so changing
+>    this one to be unsigned is not an option.
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/log/?h=probes/for-next
+> - A lot of products have already shipped that will have to
+>    be supported past 2038 on existing 32-bit hardware. We
+>    cannot regress on architectures that have already been
+>    fixed to support this.
 > 
-> ( I'm not trying to pressure on timing, as I know the merge window is
->   hectic. Just making sure I'm watching the correct place! )
+> - file timestamps can also be set into the future, so applications
+>    relying on this are broken before 2038.
+I see. And thanks for detailed explanation.
 
-Sorry, I forgot to push it from my local tree. Now it should be there.
+Regards
+Bibo Mao
+> 
+>        Arnd
+> 
 
-Thanks,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
