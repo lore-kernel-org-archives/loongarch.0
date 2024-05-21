@@ -1,207 +1,149 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC2343AB0;
-	Tue, 21 May 2024 05:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661643B1A1
+	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 09:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716269821; cv=none; b=UdbEyU52jfXJt1FxuQvjXR/+gHsLUv1lgGZh95U4iIxtoIrWGcFwVuGYq98eU4JJ/VkTI4AAmBLftnIlt5FYp/t4p+BrufUqnnkNLA1btCGLdQzHzZYevO/xE78QAHQ7epFRUEf+vccqFNQjXeWYKMgSg9tFYLzYB/EP3C8T4FY=
+	t=1716283962; cv=none; b=XnP93O3gwDbIpWD6cCESL5FkNO0IPXgZ6Fp3uWYochT28uhsp/Jl0uR+owpFnU3euKNUh+4YriRzz6mrWoc+nHPl7nAssiACYNZSoAl/FZNPA6hBFKLPKAI13s9863uR1oSV0TYjYu6DqziiVKRG6E3woVRKba6HXBV4pIHue0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716269821; c=relaxed/simple;
-	bh=2VN2vCstMEu8dehVEzX+E54KclIkWatdqyR0czDkOX8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TyEepvskZEJpwxwbKizXRxel+31K2ittMKnWnYGwBpNIrgrpVhOeLKE8CKcOCNJLE0xP2VLNUyCzlf54ZhYBt5botiel8CJlHuBofv/gCe5JQg+a+zQ9I8zCcTz4X/paI3LQGXJskmopsB6vBYNm1hoG3dYHNobI8ja7+b5w3DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S3QAyOVn; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716283962; c=relaxed/simple;
+	bh=bN4vaIRu51h6A1Yf2L1aSTPlYQCcmlxwch8Sur/hDhw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=frBzTy9JKgOxp8fqXEok4GMOIWP5cq+p217cT5S+YWonac5Suusqo7GrXhJDCxKqPug2a8ammv/5jZd5hom5n4Wa3sCIoL1ntKU1pm11t0M9lDdZQ/41pISHs3WU4VDIew9kJqcXhZgRFA08kgROE3NxhGQkeIHA95JsMC/Rp1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H19XJn45; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3QAyOVn"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e52181c228so47268971fa.0;
-        Mon, 20 May 2024 22:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716269818; x=1716874618; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8X0+eNlzU7aWSFgffzqQI3ZbOHv/ydP087P5MpUwWWY=;
-        b=S3QAyOVnw9ONqu5o8/xY4xnDEEBbkC5/L83qfFXluUA9H/D+9/LLlBGWqCMqM0pWgr
-         pC4lhi1ApRAK1QlTU3y/lB7YWukdmmrndOIocJ9EOAj0xw/qZrng2QgeW1piKO5e0167
-         yFyIHMzOjZQ1mAE5yGLmZkqsq6XMAmB56+m35BGZdOXzAFL2waW+1ytyzYI5a4MOB/R4
-         5FhXCytmBYs+Q35+7kK1MLXRtcIS4Iqd9jouABGNPF4vFjyFykpYHD1QC66j74v0vu6v
-         pRhuVRdsE0p7xrrxlp6Wr7M8shufMxLPmO7MWqMZx8VBdVbZVMOv5eHi9rQZf+GmkKyz
-         1/gQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H19XJn45"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716283958;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NgC+KGcweDDcr4JLHi/PzXQgTCMQUUTRDzH5SvelxrE=;
+	b=H19XJn45bHiNG5szMVx84ZIcNu/knEe1t+W8V+WwlAOm0ib6UW49nNI9TOaaMvRhfXTZoR
+	K924xFQoe54rbvouY14fNE1vM1juZ7d/hCp5Xi/Q2BMiibWtGZoQFnx+wGq+/RFxm/SCm4
+	yiB2ZDG43P+VXZsTauxD4nPS1y51Peg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-152-Y-5dBRySNzSOT05-ga4jLQ-1; Tue, 21 May 2024 05:32:33 -0400
+X-MC-Unique: Y-5dBRySNzSOT05-ga4jLQ-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-351bf7f7f73so5257910f8f.0
+        for <loongarch@lists.linux.dev>; Tue, 21 May 2024 02:32:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716269818; x=1716874618;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8X0+eNlzU7aWSFgffzqQI3ZbOHv/ydP087P5MpUwWWY=;
-        b=Lme1bjh25bbsb45zHHFqfsy+g9wL7K/86j3nbMIgbd+w0wddhHBhyh09bsDYB0NFmR
-         kB4P02INtFvbLIM+wmMwoVb3LFHvcXKpLUyu6Ie2wXjBUtHWO0Mc8f/Se0mbYouYGFyq
-         Mgb2h0SF3zADrGdPy1vJNA72b3h2EKCl2VtPe/omYv11CMBrZ5xUX89EUgCkReI7Xq5w
-         YYkNQt7ypPAKL6sKaqnfVJ02gVBKkYDeGwG4JqUPy8C8MSQKMP+ZQNXttoEVg1p3ZYLY
-         YriuXJIvtlYFDcWualS3ybyT+Iq75sqX/sdmd0xNsMPMMLBPIv9EqQ5FONgsEYdOrNjf
-         pt1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWhJ4Uqr1fST7Eq6ZcOePNz3HLJKm/GMS49PBKiNhSSJtPOlFU8daz/QFtYhaVU1be52POMfuDHVyu7te6g3IfGl+eZ6F9cKqzhVJz2Gr3jQljz1DxRpQKg8dif/diZ1wo3d/81JDys
-X-Gm-Message-State: AOJu0YxMZV6N8/eeSyxD1lpfvNib7b2DqhCzqUmr4k1FxC/254+mKjoO
-	yDh7I/sK/55/Y6hdWFEPl0cooMd5mGj9MRZl6oAMKYUVRvYlLX8iyWfJL9LtKj/+7mqb2zf1NYo
-	i4rpQDSHGzCBuNzrBFkDYTOFj0+g=
-X-Google-Smtp-Source: AGHT+IEOuv6uBHGuy1kBgi3wLpvrtw9/MW5oRqRPcExCcQ7Flo7D93su7CrKiOr9ufpnZQ1Q1Cg69UJkVd4x5Efr5wk=
-X-Received: by 2002:a2e:86cc:0:b0:2d8:67a0:61b2 with SMTP id
- 38308e7fff4ca-2e51fe54024mr192133171fa.20.1716269817806; Mon, 20 May 2024
- 22:36:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716283950; x=1716888750;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NgC+KGcweDDcr4JLHi/PzXQgTCMQUUTRDzH5SvelxrE=;
+        b=OwTpKoiHYJfky7BbWwoPk0Dci0OPVmFpcaXSmxX/ny5ftZ914p1Vrnu3yGwDln5WGB
+         Sc6Isy3/qGOGZGVABaPw4JlZ8BNVlSFjdwMcT568rnv2kd7dSoswo17mWQlN5k0YUqDP
+         xOXqZ2VFXhs+ObavQwScy4e7l3TBtRuNGN3eRZruQUSlQIaedrHOuotWbEaq9r6wteyW
+         aJBYtEkWSslzyICJ04U42/whXjN9VCG9La/OlawYA5ryfhMvJq+pEh2EkRZwk3VATg7r
+         LEhp+6gR0Esp8y0JiDA53fX95agEcXS2jI0YMRrOP5GaMiRV1B2lkJyJm+IjSyDiWb/m
+         DmPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrip+ereA4zgecTnPefVWJRtwinlaW7LjgPiNXN31l47bjtPgRetwVH775Ok+7uffEBsi1YpZFr007v8PAXn6y+FhOlZ5fZln8
+X-Gm-Message-State: AOJu0YynRaUwdxORYOb+hAhjRi4k4Mil9gNkyPALMaXputxt76udSsCz
+	ORQh6dRp86OfChTM7yAUcgcIe6G9UeJE9sxWSVLsphYPDckwRphttHTs2Fqpu1qThgPrZk3xhzT
+	7M0d+NKyqZ1Dq8675brQ4oHX84rUBcBaT69imXLeLRiqGMfHNXksvnLK/MA==
+X-Received: by 2002:a05:6000:114c:b0:34c:6299:bafc with SMTP id ffacd0b85a97d-3504a737d01mr33574518f8f.38.1716283950349;
+        Tue, 21 May 2024 02:32:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEyUxF9SoVw3UmwONjtRAczmWjeT+U7MWKDeejzA0Vu1r12YQWrfapSjwjoQ76VIJEwjj219A==
+X-Received: by 2002:a05:6000:114c:b0:34c:6299:bafc with SMTP id ffacd0b85a97d-3504a737d01mr33574492f8f.38.1716283949935;
+        Tue, 21 May 2024 02:32:29 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-351d3bdad9bsm14835749f8f.46.2024.05.21.02.32.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 02:32:29 -0700 (PDT)
+Message-ID: <b356b558-d327-4bbc-9290-4e296877d145@redhat.com>
+Date: Tue, 21 May 2024 11:32:28 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1713778236.git.haibo1.xu@intel.com>
-In-Reply-To: <cover.1713778236.git.haibo1.xu@intel.com>
-From: Haibo Xu <xiaobo55x@gmail.com>
-Date: Tue, 21 May 2024 13:36:46 +0800
-Message-ID: <CAJve8o=bdE_g6ji78+ddjMp22_7iWtX54idmhr5OvtO8U8biHQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Add ACPI NUMA support for RISC-V
-To: Haibo Xu <haibo1.xu@intel.com>
-Cc: sunilvl@ventanamicro.com, arnd@arndb.de, ajones@ventanamicro.com, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Robert Moore <robert.moore@intel.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Guo Ren <guoren@kernel.org>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Baoquan He <bhe@redhat.com>, 
-	Greentime Hu <greentime.hu@sifive.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Zong Li <zong.li@sifive.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Chen Jiahao <chenjiahao16@huawei.com>, 
-	Jisheng Zhang <jszhang@kernel.org>, James Morse <james.morse@arm.com>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Evan Green <evan@rivosinc.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ard Biesheuvel <ardb@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	Yuntao Wang <ytcoode@gmail.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org, 
-	acpica-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] mm: Add update_mmu_tlb_range()
+To: Bang Li <libang.li@antgroup.com>, akpm@linux-foundation.org,
+ chenhuacai@kernel.org, tsbogend@alpha.franken.de, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, chris@zankel.net, jcmvbkbc@gmail.com
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ ryan.roberts@arm.com, ioworker0@gmail.com, libang.linux@gmail.com
+References: <20240518074914.52170-1-libang.li@antgroup.com>
+ <20240518074914.52170-2-libang.li@antgroup.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240518074914.52170-2-libang.li@antgroup.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-@Sunil V L
-
-Could you help have a review on this patch set?
-
-Thanks,
-Haibo
-
-On Wed, Apr 24, 2024 at 1:29=E2=80=AFPM Haibo Xu <haibo1.xu@intel.com> wrot=
-e:
->
-> This patch series enable RISC-V ACPI NUMA support which was based on
-> the recently approved ACPI ECR[1].
->
-> Patch 1/6 is generated from the acpica PR[2] and should be merged through
-> the acpica project. Due to this dependency, other 5 patches can only be
-> merged after the corresponding ACPICA patch was pulled into linux.
->
-> Patch 2/6 add RISC-V specific acpi_numa.c file to parse NUMA information
-> from SRAT and SLIT ACPI tables.
-> Patch 3/6 add the common SRAT RINTC affinity structure handler.
-> Patch 4/6 remove the '#if defined(CONFIG_ARCH)' condition to make some NU=
-MA
-> related parse functions common for all current architectures that support
-> ACPI_NUMA.
-> Patch 5/6 change the ACPI_NUMA to a hidden option since it would be selec=
-ted
-> by default on all supported platform.
-> Patch 6/6 replace pr_info with pr_debug in arch_acpi_numa_init() to avoid
-> potential boot noise on ACPI platforms that are not NUMA.
->
-> Based-on: https://github.com/linux-riscv/linux-riscv/tree/for-next
->
-> [1] https://drive.google.com/file/d/1YTdDx2IPm5IeZjAW932EYU-tUtgS08tX/vie=
-w?usp=3Dsharing
-> [2] https://github.com/acpica/acpica/pull/926
->
-> Testing:
-> Since the ACPI AIA/PLIC support patch set is still under upstream review,
-> hence it is tested using the poll based HVC SBI console and RAM disk.
-> 1) Build latest Qemu with the following patch backported
->    https://github.com/vlsunil/qemu/commit/42bd4eeefd5d4410a68f02d54fee406=
-d8a1269b0
->
-> 2) Build latest EDK-II
->    https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README=
-.md
->
-> 3) Build Linux with the following configs enabled
->    CONFIG_RISCV_SBI_V01=3Dy
->    CONFIG_SERIAL_EARLYCON_RISCV_SBI=3Dy
->    CONFIG_NONPORTABLE=3Dy
->    CONFIG_HVC_RISCV_SBI=3Dy
->    CONFIG_NUMA=3Dy
->    CONFIG_ACPI_NUMA=3Dy
->
-> 4) Build buildroot rootfs.cpio
->
-> 5) Launch the Qemu machine
->    qemu-system-riscv64 -nographic \
->    -machine virt,pflash0=3Dpflash0,pflash1=3Dpflash1 -smp 4 -m 8G \
->    -blockdev node-name=3Dpflash0,driver=3Dfile,read-only=3Don,filename=3D=
-RISCV_VIRT_CODE.fd \
->    -blockdev node-name=3Dpflash1,driver=3Dfile,filename=3DRISCV_VIRT_VARS=
-.fd \
->    -object memory-backend-ram,size=3D4G,id=3Dm0 \
->    -object memory-backend-ram,size=3D4G,id=3Dm1 \
->    -numa node,memdev=3Dm0,cpus=3D0-1,nodeid=3D0 \
->    -numa node,memdev=3Dm1,cpus=3D2-3,nodeid=3D1 \
->    -numa dist,src=3D0,dst=3D1,val=3D30 \
->    -kernel linux/arch/riscv/boot/Image \
->    -initrd buildroot/output/images/rootfs.cpio \
->    -append "root=3D/dev/ram ro console=3Dhvc0 earlycon=3Dsbi"
->
-> [    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x80000000-0x17fffffff]
-> [    0.000000] ACPI: SRAT: Node 1 PXM 1 [mem 0x180000000-0x27fffffff]
-> [    0.000000] NUMA: NODE_DATA [mem 0x17fe3bc40-0x17fe3cfff]
-> [    0.000000] NUMA: NODE_DATA [mem 0x27fff4c40-0x27fff5fff]
-> ...
-> [    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x0 -> Node 0
-> [    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x1 -> Node 0
-> [    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x2 -> Node 1
-> [    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x3 -> Node 1
->
+On 18.05.24 09:49, Bang Li wrote:
+> Added update_mmu_tlb_range(), we can batch update tlb of an
+> address range.
+> 
+> Signed-off-by: Bang Li <libang.li@antgroup.com>
 > ---
-> Changes since v2
->   - Rebase to Linux 6.9-rc1
->   - changed ACPI_NUMA to a hidden option in patch 5/6 per Arnd's suggesti=
-on
->   - Removed original 6/6 which was not needed with changes in patch 5/6
->   - Added a new patch 6/6 to replace pr_info to pr_debug in arch_acpi_num=
-a_init
->
-> Haibo Xu (6):
->   ACPICA: SRAT: Add RISC-V RINTC affinity structure
->   ACPI: RISCV: Add NUMA support based on SRAT and SLIT
->   ACPI: NUMA: Add handler for SRAT RINTC affinity structure
->   ACPI: NUMA: Make some NUMA related parse functions common
->   ACPI: NUMA: change the ACPI_NUMA to a hidden option
->   ACPI: NUMA: replace pr_info with pr_debug in arch_acpi_numa_init
->
->  arch/arm64/Kconfig            |   1 -
->  arch/loongarch/Kconfig        |   1 -
->  arch/riscv/include/asm/acpi.h |  15 +++-
->  arch/riscv/kernel/Makefile    |   1 +
->  arch/riscv/kernel/acpi.c      |   5 --
->  arch/riscv/kernel/acpi_numa.c | 131 ++++++++++++++++++++++++++++++++++
->  arch/riscv/kernel/setup.c     |   4 +-
->  arch/riscv/kernel/smpboot.c   |   2 -
->  drivers/acpi/numa/Kconfig     |   5 +-
->  drivers/acpi/numa/srat.c      |  40 ++++++++---
->  drivers/base/arch_numa.c      |   2 +-
->  include/acpi/actbl3.h         |  18 ++++-
->  include/linux/acpi.h          |   6 ++
->  13 files changed, 204 insertions(+), 27 deletions(-)
->  create mode 100644 arch/riscv/kernel/acpi_numa.c
->
-> --
-> 2.34.1
->
+
+The generic variant that is a NOP from patch #2 should go into this 
+patch as well.
+
+Apart from that LGTM
+
+-- 
+Cheers,
+
+David / dhildenb
+
